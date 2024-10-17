@@ -267,7 +267,8 @@ try:
         stableford_chart_type = st.radio(
                 "Choose Stableford chart type:",
                 ('Standard', 'Adjusted scale'),
-                key='stableford_chart_type'
+                key='stableford_chart_type',
+                horizontal=True
             )
         st.caption("Adjusted view 'zooms in' by showing performance vs. net par to more clearly show gaps between players")
 
@@ -311,7 +312,8 @@ try:
         grossvp_chart_type = st.radio(
             "Choose Green Jacket chart type:",
             ('Standard', 'Adjusted scale'),
-            key='grossvp_chart_type'
+            key='grossvp_chart_type',
+            horizontal=True
         )
         st.caption("Adjusted view 'zooms in' by showing performance vs. bogey golf to more clearly show gaps between players")
 
