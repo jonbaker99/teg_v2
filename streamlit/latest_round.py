@@ -1,24 +1,20 @@
 import streamlit as st
 import pandas as pd
-from utils import get_ranked_teg_data, get_ranked_round_data, get_ranked_frontback_data, safe_ordinal
+from utils import get_ranked_teg_data, get_ranked_round_data, get_ranked_frontback_data, safe_ordinal, load_all_data
 from utils import chosen_rd_context, chosen_teg_context, datawrapper_table_css
+from make_charts import create_round_graph
 
 # Initialize session state
 if 'teg_r' not in st.session_state:
     st.session_state.teg_r = None
 if 'rd_r' not in st.session_state:
     st.session_state.rd_r = None
-if 'teg_t' not in st.session_state:
-    st.session_state.teg_t = None
 
 datawrapper_table_css()
 
 def reset_round_selection():
     st.session_state.teg_r = max_teg_r
     st.session_state.rd_r = max_rd_in_max_teg
-
-def reset_teg_selection():
-    st.session_state.teg_t = max_teg_t
 
 st.subheader("Chosen Round in context")
 st.markdown('Shows how latest or selected rounds and TEGs compare to other rounds')
@@ -70,8 +66,10 @@ with col3:
 
 metrics = ['Sc', 'Stableford', 'GrossVP', 'NetVP']
 friendly_metrics = [inverted_name_mapping[metric] for metric in metrics]
+all_data = load_all_data(exclude_incomplete_tegs=False)
 
 tabs = st.tabs(friendly_metrics)
+
 
 for tab, friendly_metric in zip(tabs, friendly_metrics):
     with tab:
@@ -79,3 +77,8 @@ for tab, friendly_metric in zip(tabs, friendly_metrics):
         metric = name_mapping.get(friendly_metric,friendly_metric)
         output = chosen_rd_context(df_round, teg_r, rd_r, metric).rename(columns={metric: friendly_metric})
         st.write(output.to_html(index=False, justify='left', classes='jb-table-test, datawrapper-table'), unsafe_allow_html=True)
+
+        st.markdown(f"#### Cumulative {friendly_metric} through round")
+        cum_metric = f'{metric} Cum Round'
+        fig_rd = create_round_graph(all_data, chosen_teg=teg_r, chosen_round=rd_r, y_series=cum_metric,title=friendly_metric,y_axis_label=f'Cumulative {friendly_metric}')
+        st.plotly_chart(fig_rd, use_container_width=True, config=dict({'displayModeBar': False}))

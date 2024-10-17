@@ -105,3 +105,81 @@ def adjusted_stableford(data):
 
 def adjusted_grossvp(data):
     return data['GrossVP Cum TEG'] - data['TEG Count']
+
+
+
+def create_round_graph(df, chosen_teg, chosen_round, y_series, title, y_calculation=None, y_axis_label=None, chart_type='default'):
+    # Filter data based on the chosen TEG
+    rd_data = df[(df['TEG'] == chosen_teg) & (df['Round'] == chosen_round)].sort_values(['Hole'])
+    rd_data['x_value'] = rd_data['Hole']  # Create x-axis value based on rounds and holes
+
+    #max_round = teg_data['Round'].max()
+    x_axis_max = 18
+
+    fig = go.Figure()
+
+    # Generate color palette for players
+    colors = px.colors.qualitative.Plotly[:len(rd_data['Pl'].unique())]
+    color_map = dict(zip(rd_data['Pl'].unique(), colors))
+
+    traces = []
+    for player in rd_data['Pl'].unique():
+        player_data = rd_data[rd_data['Pl'] == player]
+        
+        # Apply custom y-calculation if provided
+        if y_calculation:
+            y_values = y_calculation(player_data)
+        else:
+            y_values = player_data[y_series]
+        
+        traces.append(go.Scatter(
+            x=player_data['x_value'],
+            y=y_values,
+            mode='lines',
+            name=player,
+            line=dict(width=2),
+        ))
+        
+        # Add end label
+        last_x = player_data['x_value'].iloc[-1]
+        last_y = y_values.iloc[-1]
+        formatted_value = format_value(last_y, chart_type)
+        fig.add_annotation(
+            x=last_x,
+            y=last_y,
+            text=f"{player}: {formatted_value}",
+            showarrow=False,
+            xanchor='left',
+            yanchor='middle',
+            xshift=5,
+            font=dict(
+                size=10,  # Increased from 8 to 10
+                color=color_map[player]
+            )
+        )
+
+    fig.add_traces(traces)
+
+    fig.update_layout(
+        #title=title,
+        #xaxis_title='Rounds',
+        yaxis_title=y_axis_label if y_axis_label else f'Cumulative {y_series}',
+        hovermode='x unified',
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, traceorder='normal', itemsizing='constant'),
+        margin=dict(r=100, t=0, b=10, l=0)
+    )
+
+    # add_round_annotations(fig, max_round)
+
+    fig.update_xaxes(tickvals=[], range=[0, x_axis_max])
+
+    for trace in fig.data:
+        player = trace.name
+        color = color_map[player]
+        fig.update_traces(selector=dict(name=player), line=dict(color=color))
+
+    #fig.update_layout(modebar_remove=['zoom', 'pan'])
+    fig.layout.xaxis.fixedrange = True
+    fig.layout.yaxis.fixedrange = True
+
+    return fig

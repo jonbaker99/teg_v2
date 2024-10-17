@@ -56,7 +56,7 @@ TEG_OVERRIDES = {
 }
 
 @st.cache_data
-def load_all_data(exclude_teg_50: bool = False, exclude_incomplete_tegs: bool = False) -> pd.DataFrame:
+def load_all_data(exclude_teg_50: bool = True, exclude_incomplete_tegs: bool = False) -> pd.DataFrame:
     """
     Load the main dataset from the specified file path with optional filters.
     
