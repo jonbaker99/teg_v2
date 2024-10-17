@@ -13,7 +13,7 @@ pb_page = st.Page("302Personal Best Rounds & TEGs.py", title="Personal Bests", i
 records_page = st.Page("300TEG Records.py", title="TEG Records", icon=":material/military_tech:") 
 hc_page = st.Page("500Handicaps.py", title="Handicaps", icon=":material/accessible:") 
 latest_rd_page = st.Page("500Round & TEG Context.py", title="Latest Round", icon=":material/sports_golf:")
-top_pages = st.Page("301Best_TEGs_and_Rounds.py", title="Best TEGs and Rounds", icon=":material/golf_course:")
+top_pages = st.Page("301Best_TEGs_and_Rounds.py", title="Best TEGs and Rounds", icon=":material/social_leaderboard:")
 scoring_pg = st.Page("400scoring.py", title="Scoring", icon=":material/strategy:")
 data_pg = st.Page("1000Data update.py", title="Data update")
 leaderboard_pg = st.Page("leaderboard.py", title="Latest Leaderboard", icon=":material/leaderboard:")

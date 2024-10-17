@@ -42,6 +42,12 @@ TEG_ROUNDS = {
     # Add more TEGs if necessary
 }
 
+TEGNUM_ROUNDS = {
+    1: 1,
+    2: 3,
+    # Add more TEGs if necessary
+}
+
 TEG_OVERRIDES = {
     'TEG 5': {
         'Best Net': 'Gregg WILLIAMS',
@@ -98,7 +104,7 @@ def exclude_incomplete_tegs_function(df: pd.DataFrame) -> pd.DataFrame:
     teg_rounds = observed_rounds.reset_index(name='ObservedRounds')
     
     # Apply get_teg_rounds to get the expected number of rounds per TEGNum
-    teg_rounds['ExpectedRounds'] = teg_rounds['TEGNum'].apply(get_teg_rounds)
+    teg_rounds['ExpectedRounds'] = teg_rounds['TEGNum'].apply(get_tegnum_rounds)
     
     # Identify incomplete TEGs where observed rounds do not match expected rounds
     incomplete_tegs = teg_rounds[teg_rounds['ObservedRounds'] != teg_rounds['ExpectedRounds']]['TEGNum']
@@ -480,6 +486,18 @@ def get_teg_rounds(TEG: str) -> int:
     """
     return TEG_ROUNDS.get(TEG, 4)
 
+def get_tegnum_rounds(TEGNum: int) -> int:
+    """
+    Return the number of rounds for a given TEG.
+    If the TEG is not found in the dictionary, return 4 as the default value.
+
+    Parameters:
+        TEG (str): The TEG identifier (e.g., 'TEG 1', 'TEG 2', etc.)
+
+    Returns:
+        int: The total number of rounds for the given TEG, defaulting to 4 if not found.
+    """
+    return TEGNUM_ROUNDS.get(TEGNum, 4)
 
 def format_vs_par(value: float) -> str:
     """
