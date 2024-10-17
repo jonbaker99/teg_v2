@@ -385,6 +385,7 @@ def update_all_data(csv_file: str, parquet_file: str, csv_output_file: str) -> N
 
     # Add round info
     df = add_round_info(df)
+    df['TEG-Round'] = df['TEG'] +'|R' + df['Round'].to_string
     logger.debug("Round info added.")
 
     # Apply cumulative score and average calculations
