@@ -19,7 +19,8 @@ scoring_pg = st.Page("400scoring.py", title="Scoring", icon=":material/strategy:
 birdies_pg = st.Page("birdies_etc.py", title="Eagles / Birdies / Pars", icon=":material/strategy:")
 bypar_pg = st.Page("ave_by_par.py", title="Average by par", icon=":material/strategy:")
 byteg_pg = st.Page("ave_by_teg.py", title="Average by TEG", icon=":material/strategy:")
-bycourse_pg = st.Page("ave_by_course.py", title="Average by course", icon=":material/strategy:")
+course_ave_pg = st.Page("ave_by_course.py", title="Average by course", icon=":material/strategy:")
+course_rds_pg = st.Page("score_by_course.py", title="All rounds by course", icon=":material/strategy:")
 streaks_pg = st.Page("streaks.py", title="Scoring streaks", icon=":material/strategy:")
 data_pg = st.Page("1000Data update.py", title="Data update")
 leaderboard_pg = st.Page("leaderboard.py", title="Latest Leaderboard", icon=":material/leaderboard:")
@@ -32,7 +33,7 @@ pg = st.navigation(
             #"Home": [home_page],
             "History": [history_page, results_page],
             "Records & PBs": [records_page, top_pages, pb_page],
-            "Scoring": [byteg_pg, bypar_pg, birdies_pg, streaks_pg, bycourse_pg],
+            "Scoring": [byteg_pg, bypar_pg, birdies_pg, streaks_pg, course_rds_pg, course_ave_pg],
             #"Players": [players_pg],
             "Latest TEG": [leaderboard_pg, latest_rd_page, latest_teg_page, hc_page],
             "Data":[data_pg]

@@ -837,7 +837,7 @@ def safe_ordinal(n):
     except ValueError:
         return str(n)  # or return a specific string for invalid inputs
 
-def chosen_rd_context(ranked_rd_df, teg = 'TEG 15',rd = 4, measure = None):
+def chosen_rd_context(ranked_rd_df, teg = 'TEG 16',rd = 4, measure = None):
     #@st.cache_data
     df = ranked_rd_df
     all_cnt = len(df)
