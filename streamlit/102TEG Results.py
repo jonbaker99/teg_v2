@@ -281,14 +281,16 @@ try:
                                                     f'Trophy race: {chosen_teg}',
                                                     y_axis_label='Cumulative Stableford Points',
                                                     chart_type='stableford')
+            cht_label = f'Trophy race: {chosen_teg}'
         else:
             fig_stableford = create_cumulative_graph(all_data, chosen_teg, 'Adjusted Stableford', 
                                                     f'Trophy race (Adjusted scale): {chosen_teg}', 
                                                     y_calculation=adjusted_stableford,
                                                     y_axis_label='Cumulative Stableford Points vs. net par',
                                                     chart_type='stableford')
+            cht_label = f'Trophy race (Adjusted scale): {chosen_teg}'
 
-        st.markdown(f'**Trophy race (Adjusted scale): {chosen_teg}**')
+        st.markdown(f'**{cht_label}**')
         st.caption('Higher = better')
         #st.plotly_chart(fig_stableford, use_container_width=True, config=dict({'staticPlot': True}))
         #st.plotly_chart(fig_stableford, use_container_width=True)
@@ -316,21 +318,23 @@ try:
             horizontal=True
         )
         st.caption("Adjusted view 'zooms in' by showing performance vs. bogey golf to more clearly show gaps between players")
-
+        
         # Create and display Green Jacket chart
         if grossvp_chart_type == 'Standard':
             fig_grossvp = create_cumulative_graph(all_data, chosen_teg, 'GrossVP Cum TEG', 
                                                 f'Green Jacket race: {chosen_teg}',
                                                 y_axis_label='Cumulative gross vs par',
                                                 chart_type='gross')
+            cht_label = f'Green Jacket race: {chosen_teg}'
         else:
             fig_grossvp = create_cumulative_graph(all_data, chosen_teg, 'Adjusted GrossVP', 
                                                 f'Green Jacket race (Adjusted scale): {chosen_teg}', 
                                                 y_calculation=adjusted_grossvp,
                                                 y_axis_label='Cumulative gross vs. bogey golf (par+1)',
                                                 chart_type='gross')
+            cht_label = f'Green Jacket race (Adjusted scale): {chosen_teg}'
 
-        st.markdown(f'**Green Jacket race (Adjusted scale): {chosen_teg}**')
+        st.markdown(f'**{cht_label}**')
         st.caption('Lower = better')
         #st.plotly_chart(fig_grossvp, use_container_width=True, config=dict({'staticPlot': True}))
         st.plotly_chart(fig_grossvp, use_container_width=True, config=dict({'displayModeBar': False}))
