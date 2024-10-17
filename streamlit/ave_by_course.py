@@ -108,12 +108,21 @@ def format_number(x):
     if pd.isna(x):
         return '-'
     elif isinstance(x, (int, float)) and not isinstance(x, bool):
-        return f"{x:.1f}"
+        return f"{x:+.1f}"
     else:
         return str(x)
 
 # Apply the formatting function to the entire DataFrame
 formatted_summary = summary.applymap(format_number)
 
-# Display the table using Streamlit
-st.dataframe(formatted_summary,use_container_width=True,height=35*len(summary)+38)
+tab1, tab2  = st.tabs(["Totals only", "By Player"])
+
+with tab2:
+
+    # Display the table using Streamlit
+    st.dataframe(formatted_summary,use_container_width=True,height=35*len(summary)+38)
+
+with tab1:
+    summary = summary[['Course','Total']]#.reset_index()
+    summary['Total'] = summary['Total'].apply(format_number)
+    st.dataframe(summary,use_container_width=True,height=35*len(summary)+38)
