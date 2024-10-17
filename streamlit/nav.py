@@ -18,6 +18,7 @@ top_pages = st.Page("301Best_TEGs_and_Rounds.py", title="Best TEGs and Rounds", 
 scoring_pg = st.Page("400scoring.py", title="Scoring", icon=":material/strategy:")
 birdies_pg = st.Page("birdies_etc.py", title="Eagles / Birdies / Pars", icon=":material/strategy:")
 bypar_pg = st.Page("ave_by_par.py", title="Average by par", icon=":material/strategy:")
+byteg_pg = st.Page("ave_by_teg.py", title="Average by TEG", icon=":material/strategy:")
 bycourse_pg = st.Page("ave_by_course.py", title="Average by course", icon=":material/strategy:")
 streaks_pg = st.Page("streaks.py", title="Scoring streaks", icon=":material/strategy:")
 data_pg = st.Page("1000Data update.py", title="Data update")
@@ -31,7 +32,7 @@ pg = st.navigation(
             #"Home": [home_page],
             "History": [history_page, results_page],
             "Records & PBs": [records_page, top_pages, pb_page],
-            "Scoring": [bypar_pg, birdies_pg, streaks_pg, bycourse_pg],
+            "Scoring": [byteg_pg, bypar_pg, birdies_pg, streaks_pg, bycourse_pg],
             #"Players": [players_pg],
             "Latest TEG": [leaderboard_pg, latest_rd_page, latest_teg_page, hc_page],
             "Data":[data_pg]
@@ -39,43 +40,3 @@ pg = st.navigation(
     )
 
 pg.run()
-
-
-
-
-
-
-# import pandas as pd
-
-# # Sample DataFrame
-# data = {
-#     'Player': ['John', 'Alice', 'Bob'],
-#     'Score': [10, 15, 12]
-# }
-
-# df = pd.DataFrame(data)
-# df = df.reset_index(drop=True)
-
-# # Apply Pandas Styler to left-align the 'Player' column
-# styled_df = df.style.set_properties(subset=['Player'], **{'text-align': 'left'})
-
-# # with stylable_container(
-#     key="container_with_border",
-#     css_styles="""
-#         {
-#             border: 1px solid rgba(49, 51, 63, 0.2);
-#             border-radius: 0.5rem;
-#             padding: calc(1em - 1px)
-#         }
-#         """,
-# ):
-#     st.markdown("This is a container with a border.")
-#     st.write(styled_df.to_html(index=False, classes='datawrapper-table'), unsafe_allow_html=True)
-
-# Display the styled DataFrame (in a Jupyter environment or export to HTML)
-#'index = false'
-
-# 'no index false'
-# st.write(styled_df.to_html(classes='datawrapper-table'), unsafe_allow_html=True)
-
-# st.markdown(styled_df.to_html)
