@@ -18,6 +18,7 @@ top_pages = st.Page("301Best_TEGs_and_Rounds.py", title="Best TEGs and Rounds", 
 scoring_pg = st.Page("400scoring.py", title="Scoring", icon=":material/strategy:")
 birdies_pg = st.Page("birdies_etc.py", title="Eagles / Birdies / Pars", icon=":material/strategy:")
 bypar_pg = st.Page("ave_by_par.py", title="Average by par", icon=":material/strategy:")
+bycourse_pg = st.Page("ave_by_course.py", title="Average by course", icon=":material/strategy:")
 streaks_pg = st.Page("streaks.py", title="Scoring streaks", icon=":material/strategy:")
 data_pg = st.Page("1000Data update.py", title="Data update")
 leaderboard_pg = st.Page("leaderboard.py", title="Latest Leaderboard", icon=":material/leaderboard:")
@@ -30,7 +31,7 @@ pg = st.navigation(
             #"Home": [home_page],
             "History": [history_page, results_page],
             "Records & PBs": [records_page, top_pages, pb_page],
-            "Scoring": [bypar_pg, birdies_pg, streaks_pg],
+            "Scoring": [bypar_pg, birdies_pg, streaks_pg, bycourse_pg],
             #"Players": [players_pg],
             "Latest TEG": [leaderboard_pg, latest_rd_page, latest_teg_page, hc_page],
             "Data":[data_pg]
