@@ -67,6 +67,17 @@ st.markdown('3. Doubles')
 # Show the 3 bar charts from the 'winners' page
 st.subheader("Competition wins")
 
+st.markdown(
+    """
+<style>
+button[title="View fullscreen"] {
+    display: none;
+}
+</style>
+""",
+    unsafe_allow_html=True,
+)
+
 col1, col2, col3 = st.columns(3,gap = 'medium')
 
 with col1:
