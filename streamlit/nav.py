@@ -27,7 +27,7 @@ pg = st.navigation(
             "Records & PBs": [records_page, top_pages, pb_page],
             "Scoring": [scoring_pg],
             #"Players": [players_pg],
-            "Latest TEG": [latest_rd_page],
+            "Latest TEG": [hc_page, latest_rd_page],
             "Data":[data_pg]
         }
     )

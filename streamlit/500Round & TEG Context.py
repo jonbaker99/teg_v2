@@ -31,10 +31,20 @@ name_mapping = {
 }
 inverted_name_mapping = {v: k for k, v in name_mapping.items()}
 
+# metrics = ['Sc', 'Stableford', 'GrossVP', 'NetVP'] #in order they'll appear
+# metrics_friendly = [inverted_name_mapping[metric] for metric in metrics]
+
+# cnt_fields = len(metrics)
+
+# tab_labels = [metrics_friendly[i][0] for i in range(cnt_fields)] #for use later
+# tabs = st.tabs(tab_labels)
+
+
 tab1, tab2 = st.tabs(["Chosen Round","Chosen TEG"])
 
 with tab1:
     df_round = get_ranked_round_data()
+    df_round = df_round.sort_values(by=['TEGNum','Round'])
     max_teg_r = df_round.loc[df_round['TEGNum'].idxmax(), 'TEG']
     max_rd_in_max_teg = df_round[df_round['TEG'] == max_teg_r]['Round'].max()
 
@@ -47,7 +57,8 @@ with tab1:
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        teg_options = sorted(df_round['TEG'].unique())
+        #teg_options = sorted(df_round['TEG'].unique())
+        teg_options = list(df_round['TEG'].unique())
         teg_index = teg_options.index(st.session_state.teg_r)
         teg_r = st.selectbox("Select TEG (Round)", options=teg_options, index=teg_index, key='teg_r_select')
         st.session_state.teg_r = teg_r
@@ -70,7 +81,7 @@ with tab1:
         st.write(output.to_html(index=False, justify='left', classes='jb-table-test, datawrapper-table'), unsafe_allow_html=True)
 
 with tab2:
-    df_teg = get_ranked_teg_data()
+    df_teg = get_ranked_teg_data().sort_values(by='TEGNum')
     max_teg_t = df_teg.loc[df_teg['TEGNum'].idxmax(), 'TEG']
 
     # Set initial value if not already set
@@ -80,7 +91,7 @@ with tab2:
     col1, col2 = st.columns(2)
 
     with col1:
-        teg_options = sorted(df_teg['TEG'].unique())
+        teg_options = list(df_round['TEG'].unique())
         teg_index = teg_options.index(st.session_state.teg_t)
         teg_t = st.selectbox("Select TEG", options=teg_options, index=teg_index, key='teg_t_select')
         st.session_state.teg_t = teg_t
