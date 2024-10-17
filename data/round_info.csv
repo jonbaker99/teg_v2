@@ -1,0 +1,64 @@
+﻿TEGNum,Round,Course,Date,TEGRd,TEG,FindPipe
+2,1,Boavista,16/05/2009,TEG 2|1,TEG 2,6
+2,2,Boavista,17/05/2009,TEG 2|2,TEG 2,6
+2,3,Boavista,18/05/2009,TEG 2|3,TEG 2,6
+3,1,Boavista,05/10/2010,TEG 3|1,TEG 3,6
+3,2,Boavista,06/10/2010,TEG 3|2,TEG 3,6
+3,3,Boavista,07/10/2010,TEG 3|3,TEG 3,6
+3,4,Boavista,08/10/2010,TEG 3|4,TEG 3,6
+4,1,Ashdown,29/08/2011,TEG 4|1,TEG 4,6
+4,2,Lingfield,30/08/2011,TEG 4|2,TEG 4,6
+4,3,Crowborough,31/08/2011,TEG 4|3,TEG 4,6
+4,4,Bletchingley,01/09/2011,TEG 4|4,TEG 4,6
+5,1,Boavista,03/06/2012,TEG 5|1,TEG 5,6
+5,2,Boavista,04/06/2012,TEG 5|2,TEG 5,6
+5,3,Boavista,05/06/2012,TEG 5|3,TEG 5,6
+5,4,Palmares - Lagos / Praia,06/06/2012,TEG 5|4,TEG 5,6
+6,1,PGA Catalunya - Tour,21/09/2013,TEG 6|1,TEG 6,6
+6,2,Costa Brava,22/09/2013,TEG 6|2,TEG 6,6
+6,3,El Prat - Rosa,23/09/2013,TEG 6|3,TEG 6,6
+6,4,PGA Catalunya - Stadium,24/09/2013,TEG 6|4,TEG 6,6
+7,1,Praia D'el Rey,02/10/2014,TEG 7|1,TEG 7,6
+7,2,Bom Sucesso,03/10/2014,TEG 7|2,TEG 7,6
+7,3,Royal Óbidos,04/10/2014,TEG 7|3,TEG 7,6
+7,4,Praia D'el Rey,05/10/2014,TEG 7|4,TEG 7,6
+8,1,Quinta da Marinha,25/11/2015,TEG 8|1,TEG 8,6
+8,2,Penha Longa,26/11/2015,TEG 8|2,TEG 8,6
+8,3,Quinta da Marinha,27/11/2015,TEG 8|3,TEG 8,6
+8,4,Oitavos Dunes,28/11/2015,TEG 8|4,TEG 8,6
+9,1,Royal Óbidos,30/09/2016,TEG 9|1,TEG 9,6
+9,2,Praia D'El Rey,01/10/2016,TEG 9|2,TEG 9,6
+9,3,Royal Óbidos,02/10/2016,TEG 9|3,TEG 9,6
+9,4,Praia D'El Rey,03/10/2016,TEG 9|4,TEG 9,6
+10,1,Boavista,30/09/2017,TEG 10|1,TEG 10,7
+10,2,Palmares - Praia / Alvor,01/10/2017,TEG 10|2,TEG 10,7
+10,3,Palmares - Alvor / Lagos,02/10/2017,TEG 10|3,TEG 10,7
+10,4,Boavista,03/10/2017,TEG 10|4,TEG 10,7
+11,1,PGA Catalunya - Stadium,04/10/2018,TEG 11|1,TEG 11,7
+11,2,PGA Catalunya - Tour,05/10/2018,TEG 11|2,TEG 11,7
+11,3,El Prat - Azul,06/10/2018,TEG 11|3,TEG 11,7
+11,4,PGA Catalunya - Stadium,07/10/2018,TEG 11|4,TEG 11,7
+12,1,PGA Catalunya - Tour,03/10/2019,TEG 12|1,TEG 12,7
+12,2,PGA Catalunya - Tour,04/10/2019,TEG 12|2,TEG 12,7
+12,3,PGA Catalunya - Stadium,05/10/2019,TEG 12|3,TEG 12,7
+12,4,PGA Catalunya - Stadium,06/10/2019,TEG 12|4,TEG 12,7
+13,1,Royal Cinque Ports,08/10/2020,TEG 13|1,TEG 13,7
+13,2,Prince's - Dunes / Himalayas,09/10/2020,TEG 13|2,TEG 13,7
+13,3,Littlestone,10/10/2020,TEG 13|3,TEG 13,7
+13,4,Prince's - Shore / Dunes,11/10/2020,TEG 13|4,TEG 13,7
+14,1,Royal Cinque Ports,04/11/2021,TEG 14|1,TEG 14,7
+14,2,Littlestone,05/11/2021,TEG 14|2,TEG 14,7
+14,3,Prince's - Shore / Dunes,06/11/2021,TEG 14|3,TEG 14,7
+14,4,Prince's - Shore / Dunes,07/11/2021,TEG 14|4,TEG 14,7
+15,1,Estoril,15/10/2022,TEG 15|1,TEG 15,7
+15,2,West Cliffs,16/10/2022,TEG 15|2,TEG 15,7
+15,3,Penha Longa,17/10/2022,TEG 15|3,TEG 15,7
+15,4,Oitavos Dunes,18/10/2022,TEG 15|4,TEG 15,7
+16,1,Oitavos Dunes,07/10/2023,TEG 16|1,TEG 16,7
+16,2,Troia,08/10/2023,TEG 16|2,TEG 16,7
+16,3,Penha Longa,09/10/2023,TEG 16|3,TEG 16,7
+16,4,Estoril,10/10/2023,TEG 16|4,TEG 16,7
+17,1,Praia D'El Rey,05/10/2024,TEG 17|1,TEG 17,
+17,2,West Cliffs,06/10/2024,TEG 17|2,TEG 17,
+17,3,Royal Óbidos,07/10/2024,TEG 17|3,TEG 17,
+17,4,Praia D'El Rey,08/10/2024,TEG 17|4,TEG 17,
