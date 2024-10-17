@@ -12,7 +12,8 @@ results_page = st.Page("102TEG Results.py", title="TEG Results", icon=":material
 pb_page = st.Page("302Personal Best Rounds & TEGs.py", title="Personal Bests", icon=":material/golf_course:") 
 records_page = st.Page("300TEG Records.py", title="TEG Records", icon=":material/military_tech:") 
 hc_page = st.Page("500Handicaps.py", title="Handicaps", icon=":material/accessible:") 
-latest_rd_page = st.Page("500Round & TEG Context.py", title="Latest Round", icon=":material/sports_golf:")
+latest_rd_page = st.Page("latest_round.py", title="Latest Round in context", icon=":material/sports_golf:")
+latest_teg_page = st.Page("latest_teg_context.py", title="Latest TEG in context", icon=":material/sports_golf:")
 top_pages = st.Page("301Best_TEGs_and_Rounds.py", title="Best TEGs and Rounds", icon=":material/social_leaderboard:")
 scoring_pg = st.Page("400scoring.py", title="Scoring", icon=":material/strategy:")
 data_pg = st.Page("1000Data update.py", title="Data update")
@@ -28,7 +29,7 @@ pg = st.navigation(
             "Records & PBs": [records_page, top_pages, pb_page],
             "Scoring": [scoring_pg],
             #"Players": [players_pg],
-            "Latest TEG": [leaderboard_pg, latest_rd_page, hc_page],
+            "Latest TEG": [leaderboard_pg, latest_rd_page, latest_teg_page, hc_page],
             "Data":[data_pg]
         }
     )

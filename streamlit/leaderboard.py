@@ -293,7 +293,7 @@ try:
                                                     y_axis_label='Cumulative Stableford Points vs. net par',
                                                     chart_type='stableford')
 
-        st.plotly_chart(fig_stableford, use_container_width=True)
+        st.plotly_chart(fig_stableford, use_container_width=True, config=dict({'displayModeBar': False}))
         st.caption('Higher = better')
 
     with tab2: 
@@ -330,7 +330,7 @@ try:
                                                 y_axis_label='Cumulative gross vs. bogey golf (par+1)',
                                                 chart_type='gross')
 
-        st.plotly_chart(fig_grossvp, use_container_width=True)
+        st.plotly_chart(fig_grossvp, use_container_width=True, config=dict({'displayModeBar': False}))
         st.caption('Lower = better')
 
 
