@@ -16,6 +16,7 @@ latest_rd_page = st.Page("500Round & TEG Context.py", title="Latest Round", icon
 top_pages = st.Page("301Best_TEGs_and_Rounds.py", title="Best TEGs and Rounds", icon=":material/golf_course:")
 scoring_pg = st.Page("400scoring.py", title="Scoring", icon=":material/strategy:")
 data_pg = st.Page("1000Data update.py", title="Data update")
+leaderboard_pg = st.Page("leaderboard.py", title="Latest Leaderboard", icon=":material/leaderboard:")
 #players_pg = st.Page("pages/players.py", title="The Players")
 
 #pg = st.navigation([results_page, history_page])
@@ -27,7 +28,7 @@ pg = st.navigation(
             "Records & PBs": [records_page, top_pages, pb_page],
             "Scoring": [scoring_pg],
             #"Players": [players_pg],
-            "Latest TEG": [hc_page, latest_rd_page],
+            "Latest TEG": [leaderboard_pg, latest_rd_page, hc_page],
             "Data":[data_pg]
         }
     )

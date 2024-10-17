@@ -211,14 +211,20 @@ def display_leaderboard(leaderboard_df: pd.DataFrame, value_column: str, title: 
 #st.set_page_config(page_title=PAGE_TITLE, page_icon=PAGE_ICON)
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
+ex_teg_50 = True
+if not ex_teg_50:
+    st.markdown("# TEG 50 IS INCLUDED... BE CAREFUL")
+
 if st.sidebar.button("Refresh Data"):
     st.cache_data.clear()
     st.rerun()
 
 try:
     with st.spinner("Loading data..."):
-        round_df = get_round_data()
-        all_data = load_all_data()
+        round_df = get_round_data(ex_50 = ex_teg_50)
+        all_data = load_all_data(exclude_teg_50=ex_teg_50)
+    
+    #st.write(round_df)
 
     required_columns = [PLAYER_COLUMN, 'TEGNum', 'TEG', 'Round'] + MEASURES
     missing_columns = [col for col in required_columns if col not in round_df.columns]
@@ -234,7 +240,8 @@ try:
         st.warning("No TEGs available in the data.")
         st.stop()
 
-    chosen_teg = st.radio('Select TEG', tegs, horizontal=True)
+    #chosen_teg = st.radio('Select TEG', tegs, horizontal=True)
+    chosen_teg = all_data.loc[all_data['TEGNum'].idxmax(), 'TEG']
 
     leaderboard_df = round_df[round_df['TEG'] == chosen_teg]
 
