@@ -7,7 +7,7 @@ def add_round_annotations(fig, max_round):
     for round_num in range(1, max_round + 1):
         x_pos = (round_num - 1) * 18
         fig.add_vline(x=x_pos, line=dict(color='lightgrey', width=1))
-        fig.add_annotation(x=x_pos + 9, y=0.11, text=f'Round {round_num}', 
+        fig.add_annotation(x=x_pos + 9, y=0.08, text=f'R{round_num}', 
                            showarrow=False, yref='paper', yshift=-40)
 
 def format_value(value, chart_type):
@@ -77,7 +77,7 @@ def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None,
 
     fig.update_layout(
         #title=title,
-        xaxis_title='Rounds',
+        #xaxis_title='Rounds',
         yaxis_title=y_axis_label if y_axis_label else f'Cumulative {y_series}',
         hovermode='x unified',
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, traceorder='normal', itemsizing='constant'),

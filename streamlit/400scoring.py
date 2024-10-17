@@ -156,7 +156,7 @@ def summarize_multi_score_running_sum(df):
 # summary_df.to_clipboard(index=False)
 # print("Summary copied to clipboard. You can now paste it into a text editor or spreadsheet.")
 
-all_data = load_all_data()
+all_data = load_all_data(exclude_teg_50=True)
 runsums = calculate_multi_score_running_sum(all_data)
 streak_summary = summarize_multi_score_running_sum(runsums)
 st.write(streak_summary.to_html(index=False, justify='left', classes = 'datawrapper-table'), unsafe_allow_html=True)
