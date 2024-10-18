@@ -16,13 +16,50 @@ from pathlib import Path
 logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
 
+
+def get_base_directory():
+    # Get the current working directory
+    current_dir = Path.cwd()
+    
+    # Check if we're in the Streamlit subfolder or not
+    if current_dir.name == "Streamlit":
+        # If we're in the Streamlit folder, go up one level to TEG
+        BASE_DIR = current_dir.parent
+    else:
+        # Assume we are already in the TEG directory
+        BASE_DIR = current_dir
+    
+    return BASE_DIR
+
+
 # Constants and Configurations
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the current file
+#BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the current file
+BASE_DIR = get_base_directory()
+DATA_DIR = BASE_DIR / 'data' 
+ALL_SCORES_PATH = BASE_DIR / 'data' / 'all-scores.csv'
+HANDICAPS_PATH = BASE_DIR / 'data' / 'handicaps.csv'
+PARQUET_FILE = BASE_DIR / 'data' / 'all-data.parquet'
+CSV_OUTPUT_FILE = BASE_DIR / 'data' / 'all-data.csv'
+ROUND_INFO_FILE = BASE_DIR / 'data' / 'round_info.csv'
+
+
+## DIRECTORY CHECKS
+# st.write(f'Current base dir variable: {BASE_DIR}')
+# st.write(f'Old base dir: {os.path.dirname(os.path.abspath(__file__))}')
+# st.write(f'Data dir path: {DATA_DIR}')
+# st.write(f'All scores path: {ALL_SCORES_PATH}')
+# st.write(f'parquet all_data path: {PARQUET_FILE}')
+# st.write(f'csv all data path: {CSV_OUTPUT_FILE}')
+
+
 CONFIG: Dict[str, str] = {
-    "ROUND_INFO_PATH": os.path.join(BASE_DIR, "../data/round_info.csv")  # Update this for round_info.csv
+    #"ROUND_INFO_PATH": os.path.join(DATA_DIR, "/round_info.csv")  # Update this for round_info.csv
+    "ROUND_INFO_PATH": ROUND_INFO_FILE
 }
 
-FILE_PATH_ALL_DATA = os.path.join(BASE_DIR, "../data/all-data.parquet")  # Dynamically construct the path
+#FILE_PATH_ALL_DATA = os.path.join(BASE_DIR, "../data/all-data.parquet")  # Dynamically construct the path
+FILE_PATH_ALL_DATA = PARQUET_FILE
+
 TOTAL_HOLES = 18
 
 PLAYER_DICT = {
@@ -71,6 +108,7 @@ def load_all_data(exclude_teg_50: bool = True, exclude_incomplete_tegs: bool = F
         df = pd.read_parquet(FILE_PATH_ALL_DATA)
     else:
         st.error(f"File not found: {FILE_PATH_ALL_DATA}")
+        st.error('THIS IS FROM LOAD_ALL_DATA FUNCTION IN UTILS')
         return pd.DataFrame()  # Return an empty DataFrame if file is missing
 
     # Ensure 'Year' is of integer type
@@ -357,7 +395,7 @@ def add_round_info(all_data: pd.DataFrame) -> pd.DataFrame:
     logger.info("Adding round information to the data.")
 
     # Read the round info CSV file
-    round_info = pd.read_csv(CONFIG["ROUND_INFO_PATH"])
+    round_info = pd.read_csv(ROUND_INFO_FILE)
 
     # Merge the round info with all_data based on TEGNum and Round
     merged_data = pd.merge(
@@ -1067,19 +1105,6 @@ def max_scoretype_per_round(df = None):
 
 #     return BASE_DIR
 
-def get_base_directory():
-    # Get the current working directory
-    current_dir = Path.cwd()
-    
-    # Check if we're in the Streamlit subfolder or not
-    if current_dir.name == "Streamlit":
-        # If we're in the Streamlit folder, go up one level to TEG
-        BASE_DIR = current_dir.parent
-    else:
-        # Assume we are already in the TEG directory
-        BASE_DIR = current_dir
-    
-    return BASE_DIR
 
 
 def datawrapper_table_css():

@@ -22,7 +22,8 @@ byteg_pg = st.Page("ave_by_teg.py", title="Average by TEG", icon=":material/stra
 course_ave_pg = st.Page("ave_by_course.py", title="Average by course", icon=":material/strategy:")
 course_rds_pg = st.Page("score_by_course.py", title="All rounds by course", icon=":material/strategy:")
 streaks_pg = st.Page("streaks.py", title="Scoring streaks", icon=":material/strategy:")
-data_pg = st.Page("1000Data update.py", title="Data update")
+data_pg = st.Page("1000Data update.py", title="Data update", icon=":material/update:")
+delete_pg = st.Page("delete_data.py", title="Delete data", icon=":material/skull:")
 leaderboard_pg = st.Page("leaderboard.py", title="Latest Leaderboard", icon=":material/leaderboard:")
 #players_pg = st.Page("pages/players.py", title="The Players")
 
@@ -36,7 +37,7 @@ pg = st.navigation(
             "Scoring": [byteg_pg, bypar_pg, birdies_pg, streaks_pg, course_rds_pg, course_ave_pg],
             #"Players": [players_pg],
             "Latest TEG": [leaderboard_pg, latest_rd_page, latest_teg_page, hc_page],
-            "Data":[data_pg]
+            "Data":[data_pg, delete_pg]
         }
     )
 

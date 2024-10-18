@@ -6,6 +6,10 @@ from utils import load_all_data, get_teg_winners, get_teg_rounds, datawrapper_ta
 # === LOAD DATA === #
 all_data = load_all_data(exclude_incomplete_tegs=True, exclude_teg_50=True)
 filtered_data = all_data.copy()
+
+#========== DELETE THIS!!!
+# st.write(filtered_data)
+
 datawrapper_table_css()
 # CREATE WINNERS TABLE
 
