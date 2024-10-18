@@ -449,6 +449,7 @@ def update_all_data(csv_file: str, parquet_file: str, csv_output_file: str) -> N
     logger.info(f"Transformed data saved to {csv_output_file}")
 
     st.cache_data.clear()
+    st.success("✅ Cache cleared")
 
 
 def check_for_complete_and_duplicate_data(all_scores_path: str, all_data_path: str) -> Dict[str, pd.DataFrame]:
