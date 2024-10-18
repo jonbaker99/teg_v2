@@ -5,8 +5,9 @@ from datetime import datetime
 import shutil
 from utils import ALL_SCORES_PATH, PARQUET_FILE, CSV_OUTPUT_FILE, BASE_DIR
 
-# Initialize session state variables
-if 'data_loaded' not in st.session_state:
+# Initialize all session state variables
+if 'initialized' not in st.session_state:
+    st.session_state.initialized = True
     st.session_state.data_loaded = False
     st.session_state.scores_df = None
     st.session_state.data_df = None
@@ -61,14 +62,15 @@ def delete_data_page():
     selected_teg = st.selectbox("Select TEGNum to delete data for:", teg_nums, index=0)
     st.session_state.selected_teg = selected_teg if selected_teg != '' else None
 
-    rounds = sorted(st.session_state.scores_df[st.session_state.scores_df['TEGNum'] == st.session_state.selected_teg]['Round'].unique())
-    st.write("Select Rounds to delete:")
-    st.session_state.selected_rounds = [round for round in rounds if st.checkbox(f"Round {round}", key=f"round_{round}")]
+    if st.session_state.selected_teg is not None:
+        rounds = sorted(st.session_state.scores_df[st.session_state.scores_df['TEGNum'] == st.session_state.selected_teg]['Round'].unique())
+        st.write("Select Rounds to delete:")
+        st.session_state.selected_rounds = [round for round in rounds if st.checkbox(f"Round {round}", key=f"round_{round}")]
 
-    if st.button("Preview Deletion"):
-        st.session_state.preview_clicked = True
+        if st.button("Preview Deletion"):
+            st.session_state.preview_clicked = True
 
-    if st.session_state.preview_clicked:
+    if st.session_state.preview_clicked and st.session_state.selected_teg is not None:
         preview_deletion()
 
 def preview_deletion():
@@ -117,5 +119,8 @@ def confirm_deletion():
         st.success("Data has been successfully deleted and files have been updated.")
         st.session_state.preview_clicked = False
         st.session_state.confirm_clicked = False
+        st.session_state.selected_teg = None
+        st.session_state.selected_rounds = []
+
 
 delete_data_page()
