@@ -22,7 +22,7 @@ def get_base_directory():
     current_dir = Path.cwd()
     
     # Check if we're in the Streamlit subfolder or not
-    if current_dir.name == "Streamlit":
+    if current_dir.name == "streamlit":
         # If we're in the Streamlit folder, go up one level to TEG
         BASE_DIR = current_dir.parent
     else:
@@ -862,6 +862,34 @@ def get_best(df, measure_to_use, player_level = False, top_n = 1):
 
     #measure_fn
     return df[df[measure_fn] <= top_n]
+
+def get_worst(df, measure_to_use, player_level = False, top_n = 1):
+    valid_measures = ['Sc', 'GrossVP', 'NetVP', 'Stableford']
+    if measure_to_use not in valid_measures:
+        error_message = f"Invalid measure: '{measure_to_use}'. Valid options are: {', '.join(valid_measures)}"
+
+    if player_level is None:
+        player_level = False
+
+    if top_n is None:
+        top_n = 1
+    
+    #measure_fn = 'Rank_within_' + ('player' if player_level else 'all') + f'_{measure_to_use}' 
+
+    if player_level == False:
+        if measure_to_use == 'Stableford':
+            #df = df.nsmallest(top_n, measure_to_use)
+            df = df[df[measure_to_use] == df[measure_to_use].min()]
+        else:
+            #df = df.nlargest(top_n, measure_to_use)
+            df = df[df[measure_to_use] == df[measure_to_use].max()]
+    else:
+        if measure_to_use == 'Stableford':
+            df = df.groupby('Player', group_keys=False).apply(lambda x: x.nsmallest(top_n, 'Measure_FN'))
+        else:
+            df = df.groupby('Player', group_keys=False).apply(lambda x: x.nlargest(top_n, 'Measure_FN'))
+
+    return df
 
 def ordinal(n):
     if 11 <= (n % 100) <= 13:

@@ -11,6 +11,7 @@ history_page = st.Page("101TEG History.py", title="TEG History", icon=":material
 results_page = st.Page("102TEG Results.py", title="TEG Results", icon=":material/sports_score:")
 pb_page = st.Page("302Personal Best Rounds & TEGs.py", title="Personal Bests", icon=":material/golf_course:") 
 records_page = st.Page("300TEG Records.py", title="TEG Records", icon=":material/military_tech:") 
+worsts_page = st.Page("teg_worsts.py", title="TEG Worsts", icon=":material/sentiment_sad:") 
 hc_page = st.Page("500Handicaps.py", title="Handicaps", icon=":material/accessible:") 
 latest_rd_page = st.Page("latest_round.py", title="Latest Round in context", icon=":material/sports_golf:")
 latest_teg_page = st.Page("latest_teg_context.py", title="Latest TEG in context", icon=":material/sports_golf:")
@@ -33,7 +34,7 @@ pg = st.navigation(
         {
             #"Home": [home_page],
             "History": [history_page, results_page],
-            "Records & PBs": [records_page, top_pages, pb_page],
+            "Records & PBs": [records_page, top_pages, pb_page, worsts_page],
             "Scoring": [byteg_pg, bypar_pg, birdies_pg, streaks_pg, course_rds_pg, course_ave_pg],
             #"Players": [players_pg],
             "Latest TEG": [leaderboard_pg, latest_rd_page, latest_teg_page, hc_page],
