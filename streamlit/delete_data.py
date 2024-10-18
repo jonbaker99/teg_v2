@@ -57,6 +57,11 @@ def delete_data_page():
         st.session_state.scores_df, st.session_state.data_df, st.session_state.parquet_df = load_data()
         st.session_state.data_loaded = True
 
+    if st.sidebar.button("Clear Cache"):
+        st.cache_data.clear()
+        st.cache_resource.clear()
+        st.sidebar.success("Cache cleared!")
+
     teg_nums = sorted(st.session_state.scores_df['TEGNum'].unique(), reverse=True)
     teg_nums = [''] + teg_nums  # Add an empty option at the beginning
     selected_teg = st.selectbox("Select TEGNum to delete data for:", teg_nums, index=0)
@@ -124,3 +129,4 @@ def confirm_deletion():
 
 
 delete_data_page()
+# commenting
