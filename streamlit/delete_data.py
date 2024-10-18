@@ -126,6 +126,8 @@ def confirm_deletion():
         st.session_state.confirm_clicked = False
         st.session_state.selected_teg = None
         st.session_state.selected_rounds = []
+        st.cache_data.clear()
+        st.cache_resource.clear()
 
 
 delete_data_page()
