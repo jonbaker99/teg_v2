@@ -1,8 +1,10 @@
 import streamlit as st
 import pandas as pd
-from utils import load_all_data
+from utils import load_all_data, datawrapper_table_css
 
 all_data = load_all_data()
+datawrapper_table_css()
+
 
 st.title('Golf Data Viewer')
 
