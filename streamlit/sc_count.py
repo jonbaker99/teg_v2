@@ -35,10 +35,11 @@ count_gvp = count_by_pl(filtered_data, 'GrossVP')
 count_sc = count_by_pl(filtered_data, 'Sc')
 
 st.markdown('### Count of Gross vs Par by player')
-st.write(count_gvp)
+st.dataframe(count_gvp, height = len(count_gvp) * 35 + 38)
 #st.write(count_gvp.to_html(classes='datawrapper-table'), unsafe_allow_html=True)
 '---'
 
 st.markdown('### Count of gross score by player')
+st.dataframe(count_sc, height = len(count_sc) * 35 + 38)
 st.write(count_sc)
 #st.write(count_sc.to_html(classes='datawrapper-table'), unsafe_allow_html=True)
