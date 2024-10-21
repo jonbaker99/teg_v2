@@ -26,6 +26,7 @@ streaks_pg = st.Page("streaks.py", title="Scoring streaks", icon=":material/stra
 data_pg = st.Page("1000Data update.py", title="Data update", icon=":material/update:")
 delete_pg = st.Page("delete_data.py", title="Delete data", icon=":material/skull:")
 leaderboard_pg = st.Page("leaderboard.py", title="Latest Leaderboard", icon=":material/leaderboard:")
+scorecard_pg = st.Page("scorecard.py", title="Scorecard", icon=":material/leaderboard:")
 #players_pg = st.Page("pages/players.py", title="The Players")
 
 #pg = st.navigation([results_page, history_page])
