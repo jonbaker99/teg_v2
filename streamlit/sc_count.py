@@ -7,8 +7,6 @@ datawrapper_table_css()
 
 st.title('Count of score by player')
 
-all_data = load_all_data(exclude_incomplete_tegs = True)
-
 tegnum_options = ['All TEGs'] + sorted(all_data['TEGNum'].unique().tolist())
 selected_tegnum = st.selectbox('Select TEG', tegnum_options, index=0)
 
