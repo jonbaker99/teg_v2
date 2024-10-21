@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from utils import load_all_data, datawrapper_table_css
 
-all_data = load_all_data()
+all_data = load_all_data(exclude_incomplete_tegs = False)
 datawrapper_table_css()
 
 
@@ -39,7 +39,7 @@ rd_data = all_data[
 
 # Display the filtered data
 output_cols = ['Hole', 'PAR', 'SI', 'HCStrokes', 'Sc', 'GrossVP', 'NetVP', 'Stableford']
-st.dataframe(rd_data[output_cols])
+st.write(rd_data.to_html(index=False, justify='left', classes = 'datawrapper-table'), unsafe_allow_html = True)
 
 # Additional statistics or visualizations can be added here
 st.write(f"Showing data for Player: {selected_pl}, TEGNum: {selected_tegnum}, Round: {selected_round}")
