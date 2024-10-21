@@ -9,7 +9,7 @@ st.title('Count of score by player')
 
 all_data = load_all_data(exclude_incomplete_tegs = True)
 
-def count_by_pl(df = all_data, field = 'GrossVP')
+def count_by_pl(df = all_data, field = 'GrossVP'):
 
     summary = all_data.groupby(['GrossVP', 'Pl']).size().unstack(fill_value=0)
     
