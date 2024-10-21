@@ -7,8 +7,11 @@ datawrapper_table_css()
 
 st.title('Count of score by player')
 
-tegnum_options = ['All TEGs'] + sorted(all_data['TEGNum'].unique().tolist())
-selected_tegnum = st.selectbox('Select TEG', tegnum_options, index=0)
+
+# tegnum_options = ['All TEGs'] + sorted(all_data['TEGNum'].unique().tolist())
+
+# selected_tegnum = st.selectbox('Select TEG', tegnum_options, index=0)
+selected_tegnum = 'All TEGs'
 
 # Filter data based on TEGNum selection
 if selected_tegnum != 'All TEGs':
