@@ -11,7 +11,7 @@ all_data = load_all_data(exclude_incomplete_tegs = True)
 
 def count_by_pl(df = all_data, field = 'GrossVP'):
 
-    summary = all_data.groupby(['GrossVP', 'Pl']).size().unstack(fill_value=0)
+    summary = all_data.groupby([field, 'Pl']).size().unstack(fill_value=0)
     
     # Sort the index (GrossVP) in descending order
     summary = summary.sort_index(ascending=True)
