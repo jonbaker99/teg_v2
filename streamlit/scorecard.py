@@ -20,15 +20,15 @@ def get_max_round(tegnum):
     return all_data[all_data['TEGNum'] == tegnum]['Round'].max()
 
 # Sidebar for selections
-with st.sidebar:
-    st.header('Select Options')
-    selected_pl = st.selectbox('Select Player', pl_options, index=pl_options.index(default_pl))
+
+st.header('Select Options')
+selected_pl = st.selectbox('Select Player', pl_options, index=pl_options.index(default_pl))
     
-    selected_tegnum = st.selectbox('Select TEGNum', tegnum_options, index=tegnum_options.index(default_tegnum))
+selected_tegnum = st.selectbox('Select TEGNum', tegnum_options, index=tegnum_options.index(default_tegnum))
     
-    max_round = get_max_round(selected_tegnum)
-    round_options = sorted(all_data[all_data['TEGNum'] == selected_tegnum]['Round'].unique())
-    selected_round = st.selectbox('Select Round', round_options, index=round_options.index(max_round) if max_round in round_options else 0)
+max_round = get_max_round(selected_tegnum)
+round_options = sorted(all_data[all_data['TEGNum'] == selected_tegnum]['Round'].unique())
+selected_round = st.selectbox('Select Round', round_options, index=round_options.index(max_round) if max_round in round_options else 0)
 
 # Filter data based on selections
 rd_data = all_data[
