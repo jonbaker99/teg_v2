@@ -27,9 +27,9 @@ count_sc = count_by_pl(all_data, 'Sc')
 
 st.markdown('### Count of Gross vs Par by player')
 st.write(count_gvp)
-st.write(count_gvp.to_html(escape=False, index=False, classes='datawrapper-table'), unsafe_allow_html=True)
+st.write(count_gvp.to_html(classes='datawrapper-table'), unsafe_allow_html=True)
 '---'
 
 st.markdown('### Count of gross score by player')
 st.write(count_sc)
-st.write(count_sc.to_html(escape=False, index=False, classes='datawrapper-table'), unsafe_allow_html=True)
+st.write(count_sc.to_html(classes='datawrapper-table'), unsafe_allow_html=True)
