@@ -8,20 +8,21 @@ datawrapper_table_css()
 st.title('Count of score by player')
 
 
-# tegnum_options = ['All TEGs'] + sorted(all_data['TEGNum'].unique().tolist())
+tegnum_options = ['All TEGs'] + sorted(all_data['TEGNum'].unique().tolist(),reverse=True)
+selected_tegnum = st.selectbox('Select TEG', tegnum_options, index=0)
 
-# selected_tegnum = st.selectbox('Select TEG', tegnum_options, index=0)
-selected_tegnum = 'All TEGs'
+#selected_tegnum = 'All TEGs'
 
 # Filter data based on TEGNum selection
 if selected_tegnum != 'All TEGs':
+    selected_tegnum = int(selected_tegnum)
     filtered_data = all_data[all_data['TEGNum'] == selected_tegnum]
 else:
     filtered_data = all_data
 
 def count_by_pl(df = all_data, field = 'GrossVP'):
 
-    summary = all_data.groupby([field, 'Pl']).size().unstack(fill_value=0)
+    summary = df.groupby([field, 'Pl']).size().unstack(fill_value=0)
     
     # Sort the index (GrossVP) in descending order
     summary = summary.sort_index(ascending=True)
