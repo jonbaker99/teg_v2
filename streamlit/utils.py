@@ -1168,5 +1168,11 @@ def datawrapper_table_css():
                     background-color: #f5f5f5 !important;
                 }
 
+                .datawrapper-table.bold-last-row tr:last-child td {
+                    font-weight: bold;
+                    #border-bottom: 2px solid #000 !important;
+                    border-bottom: none !important;
+                    border-top: 1px solid #000 !important;
+                }
             </style>
         """, unsafe_allow_html=True)

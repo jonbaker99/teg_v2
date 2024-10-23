@@ -6,7 +6,7 @@ all_data = load_all_data(exclude_incomplete_tegs = False)
 datawrapper_table_css()
 
 
-st.title('Golf Data Viewer')
+st.title('Scorecard for selected round')
 
 # Create dropdowns for Pl, TEGNum, and Round
 pl_options = sorted(all_data['Pl'].unique())
@@ -21,7 +21,7 @@ def get_max_round(tegnum):
 
 # Sidebar for selections
 
-st.header('Select Options')
+st.markdown('**Select round to view scorecard for**')
 selected_pl = st.selectbox('Select Player', pl_options, index=pl_options.index(default_pl))
     
 selected_tegnum = st.selectbox('Select TEGNum', tegnum_options, index=tegnum_options.index(default_tegnum))
@@ -29,6 +29,8 @@ selected_tegnum = st.selectbox('Select TEGNum', tegnum_options, index=tegnum_opt
 max_round = get_max_round(selected_tegnum)
 round_options = sorted(all_data[all_data['TEGNum'] == selected_tegnum]['Round'].unique())
 selected_round = st.selectbox('Select Round', round_options, index=round_options.index(max_round) if max_round in round_options else 0)
+
+st.caption(f"Scorecard | TEG {selected_tegnum} round {selected_round} | Player: {selected_pl} ")
 
 # Filter data based on selections
 rd_data = all_data[
@@ -41,10 +43,14 @@ rd_data = all_data[
 output_cols = ['Hole', 'PAR', 'SI', 'HCStrokes', 'Sc', 'GrossVP', 'NetVP', 'Stableford']
 output_data = rd_data[output_cols]
 
+
+
+
+
 # add totals for selected columns
 
 # List of columns you want to sum
-columns_to_sum = ['Sc', 'GrossVP', 'NetVP', 'Stableford']
+columns_to_sum = ['PAR','HCStrokes','Sc', 'GrossVP', 'NetVP', 'Stableford']
 
 # Filter to only existing columns
 existing_columns = [col for col in columns_to_sum if col in output_data.columns]
@@ -56,9 +62,18 @@ totals = pd.Series({col: output_data[col].sum() for col in existing_columns})
 output_data.loc['Total'] = totals
 
 
+def to_int_or_dash(x):
+    if pd.isna(x):
+        return ""
+    return int(x)
+
 # Convert only numeric columns while preserving other columns
 numeric_columns = output_data.select_dtypes(include=['float64', 'int64']).columns
-output_data[numeric_columns] = output_data[numeric_columns].astype(int)
+#output_data[numeric_columns] = output_data[numeric_columns].fillna(0).astype(int)
+for col in numeric_columns:
+    output_data[col] = output_data[col].map(to_int_or_dash)
+
+# Format gross and net
 
 columns_to_format = ['GrossVP', 'NetVP']
 for col in columns_to_format:
@@ -66,7 +81,4 @@ for col in columns_to_format:
         output_data[col] = output_data[col].apply(format_vs_par)
 
 
-st.write(output_data.to_html(index=False, justify='left', classes = 'datawrapper-table'), unsafe_allow_html = True)
-
-# Additional statistics or visualizations can be added here
-st.caption(f"Showing data for Player: {selected_pl}, TEGNum: {selected_tegnum}, Round: {selected_round}")
+st.write(output_data.to_html(index=False, justify='left', classes = 'datawrapper-table bold-last-row'), unsafe_allow_html = True)
