@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from utils import load_all_data, datawrapper_table_css
+from utils import load_all_data, datawrapper_table_css, format_vs_par
 
 all_data = load_all_data(exclude_incomplete_tegs = False)
 datawrapper_table_css()
@@ -44,6 +44,11 @@ output_data = rd_data[output_cols]
 # Convert only numeric columns while preserving other columns
 numeric_columns = output_data.select_dtypes(include=['float64', 'int64']).columns
 output_data[numeric_columns] = output_data[numeric_columns].astype(int)
+
+columns_to_format = ['GrossVP', 'NetVP']
+for col in columns_to_format:
+    if col in output_data.columns:
+        output_data[col] = output_data[col].apply(format_vs_par)
 
 
 st.write(output_data.to_html(index=False, justify='left', classes = 'datawrapper-table'), unsafe_allow_html = True)
