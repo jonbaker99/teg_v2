@@ -1176,3 +1176,6 @@ def datawrapper_table_css():
                 }
             </style>
         """, unsafe_allow_html=True)
+
+def datawrapper_table(df = None):
+    st.write(df.to_html(index=False,classes = 'datawrapper-table'), unsafe_allow_html = True)
