@@ -41,6 +41,21 @@ rd_data = all_data[
 output_cols = ['Hole', 'PAR', 'SI', 'HCStrokes', 'Sc', 'GrossVP', 'NetVP', 'Stableford']
 output_data = rd_data[output_cols]
 
+# add totals for selected columns
+
+# List of columns you want to sum
+columns_to_sum = ['Sc', 'GrossVP', 'NetVP', 'Stableford']
+
+# Filter to only existing columns
+existing_columns = [col for col in columns_to_sum if col in output_data.columns]
+
+# Create a Series with sums for those columns
+totals = pd.Series({col: output_data[col].sum() for col in existing_columns})
+
+# Add to dataframe
+output_data.loc['Total'] = totals
+
+
 # Convert only numeric columns while preserving other columns
 numeric_columns = output_data.select_dtypes(include=['float64', 'int64']).columns
 output_data[numeric_columns] = output_data[numeric_columns].astype(int)
