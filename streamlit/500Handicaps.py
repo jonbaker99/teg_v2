@@ -7,6 +7,12 @@ from utils import get_base_directory, datawrapper_table_css
 
 st.set_page_config(page_title="Handicaps")
 datawrapper_table_css()
+
+# Define the base directory dynamically
+BASE_DIR = get_base_directory()
+HANDICAPS_FILE_PATH = BASE_DIR / 'data' / 'handicaps.csv'
+
+
 def format_change(val):
     if val > 0:
         return f"+{val}"
@@ -27,9 +33,13 @@ st.title("Handicaps")
 current_handicaps = pd.DataFrame({
     'Handicap': ['Gregg WILLIAMS', 'Dave MULLIN', 'Jon BAKER', 'John PATTERSON', 'Stuart NEUMANN', 'Alex BAKER'],
     #'TEG 16': [16, 20, 19, 26, 29, 30],
-    'TEG 17': [16, 21, 22, 26, 27, 34],
-    'Change': [0, 1, 3, 0, -2, 3]
+    #'TEG 17': [16, 21, 22, 26, 27, 34],
+    'TEG 18': [20, 20, 18, 28, 27, 36],
+    'Change': [4, -1, -4, 2, 0, 2]
 })
+
+next_teg = 'TEG 18'
+current_handicaps = current_handicaps.sort_values(by = next_teg, ascending=True)
 
 # Format the "Change" column
 current_handicaps_formatted = current_handicaps.copy()
@@ -46,7 +56,7 @@ current_handicaps['Handicap_formatted'] = current_handicaps['Handicap'].apply(fo
 
 
 # Title
-st.header("TEG 17 Handicaps")
+st.header(f"{next_teg} Handicaps")
 
 # Create a container for custom metrics
 custom_metric_container = st.container()
@@ -65,7 +75,7 @@ with custom_metric_container:
             st.metric(
                 #label="TEG 17",
                 label = row['Handicap_formatted'],
-                value=row['TEG 17'],
+                value=row[next_teg],
                 delta=row['Change'],
                 delta_color='inverse'
             )
@@ -74,36 +84,7 @@ with custom_metric_container:
 # Optional: Add some spacing or additional information
 st.caption("Change shows difference in HC vs previous TEG")
 
-#'---'
-#st.write(current_handicaps_formatted.to_html(index=False, justify='left'), unsafe_allow_html=True)
 
-
-
-# st.write(current_handicaps)
-
-# # Create a container for metrics
-# metric_container = st.container()
-
-# with metric_container:
-    
-#     # Create six columns
-#     col1,col2,col3,col4,col5,col6 = st.columns(6)
-
-#     with col1:
-#         st.metric(label='Gregg WILLIAMS',value=16,delta=0,delta_color='inverse')
-
-#     with col2:
-#         st.metric(label='David MULLIN',value=21,delta=1,delta_color='inverse')
-
-
-
-# Define the base directory dynamically
-#BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-BASE_DIR = get_base_directory()
-
-# Update the path to the handicaps.csv file
-#HANDICAPS_FILE_PATH = os.path.join(BASE_DIR, "/data/handicaps.csv")
-HANDICAPS_FILE_PATH = BASE_DIR / 'data' / 'handicaps.csv'
 
 
 with st.expander("Handicap history"):
