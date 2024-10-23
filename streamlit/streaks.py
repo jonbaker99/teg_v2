@@ -15,7 +15,9 @@ def calculate_multi_score_running_sum(df):
     score_types = {
         'Pars_or_Better': lambda x: x <= 0,
         'Birdies': lambda x: x == -1,
-        'TBPs': lambda x: x > 2
+        'TBPs': lambda x: x > 2,
+        #'No TBP': lambda x: x < 3
+        'Bogey or better': lambda x: x < 2
     }
     
     # Initialize running sum columns
@@ -51,7 +53,7 @@ import pandas as pd
 
 def summarize_multi_score_running_sum(df):
     # Ensure the RunningSum columns exist
-    score_types = [ 'Birdies','Pars_or_Better', 'TBPs']
+    score_types = [ 'Birdies','Pars_or_Better', 'TBPs','Bogey or better']
     for score_type in score_types:
         if f'RunningSum_{score_type}' not in df.columns:
             raise ValueError(f"RunningSum_{score_type} column not found. Please calculate the running sums first.")

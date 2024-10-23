@@ -39,7 +39,14 @@ rd_data = all_data[
 
 # Display the filtered data
 output_cols = ['Hole', 'PAR', 'SI', 'HCStrokes', 'Sc', 'GrossVP', 'NetVP', 'Stableford']
-st.write(rd_data[output_cols].to_html(index=False, justify='left', classes = 'datawrapper-table'), unsafe_allow_html = True)
+output_data = rd_data[output_cols]
+
+# Convert only numeric columns while preserving other columns
+numeric_columns = output_data.select_dtypes(include=['float64', 'int64']).columns
+output_data[numeric_columns] = output_data[numeric_columns].astype(int)
+
+
+st.write(output_data.to_html(index=False, justify='left', classes = 'datawrapper-table'), unsafe_allow_html = True)
 
 # Additional statistics or visualizations can be added here
-st.write(f"Showing data for Player: {selected_pl}, TEGNum: {selected_tegnum}, Round: {selected_round}")
+st.caption(f"Showing data for Player: {selected_pl}, TEGNum: {selected_tegnum}, Round: {selected_round}")

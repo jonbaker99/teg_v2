@@ -8,8 +8,23 @@ datawrapper_table_css()
 st.title('Average score by Par')
 
 all_data = load_all_data(exclude_incomplete_tegs=False)
-avg_grossvp = all_data.groupby(['Player', 'PAR'])['GrossVP'].mean().unstack(fill_value=0)
-avg_grossvp['Total'] = all_data.groupby('Player')['GrossVP'].mean()
+
+tegnum_options = ['All TEGs'] + sorted(all_data['TEGNum'].unique().tolist(),reverse=True)
+selected_tegnum = st.selectbox('Select TEG', tegnum_options, index=0)
+
+#selected_tegnum = 'All TEGs'
+
+# Filter data based on TEGNum selection
+if selected_tegnum != 'All TEGs':
+    selected_tegnum = int(selected_tegnum)
+    filtered_data = all_data[all_data['TEGNum'] == selected_tegnum]
+else:
+    filtered_data = all_data
+
+
+
+avg_grossvp = filtered_data.groupby(['Player', 'PAR'])['GrossVP'].mean().unstack(fill_value=0)
+avg_grossvp['Total'] = filtered_data.groupby('Player')['GrossVP'].mean()
 avg_grossvp = avg_grossvp.sort_values('Total', ascending=True)
 avg_grossvp = avg_grossvp.round(2)
 
