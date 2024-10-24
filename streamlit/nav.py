@@ -20,7 +20,7 @@ scoring_pg = st.Page("400scoring.py", title="Scoring", icon=":material/strategy:
 birdies_pg = st.Page("birdies_etc.py", title="Eagles / Birdies / Pars", icon=":material/strategy:")
 bypar_pg = st.Page("ave_by_par.py", title="Average by par", icon=":material/strategy:")
 byteg_pg = st.Page("ave_by_teg.py", title="Average by TEG", icon=":material/strategy:")
-course_ave_pg = st.Page("ave_by_course.py", title="Average by course", icon=":material/strategy:")
+course_ave_pg = st.Page("ave_by_course.py", title="Course averages and records", icon=":material/strategy:")
 course_rds_pg = st.Page("score_by_course.py", title="All rounds by course", icon=":material/strategy:")
 streaks_pg = st.Page("streaks.py", title="Scoring streaks", icon=":material/strategy:")
 data_pg = st.Page("1000Data update.py", title="Data update", icon=":material/update:")

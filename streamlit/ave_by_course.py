@@ -1,72 +1,54 @@
-from utils import score_type_stats, load_all_data, apply_score_types, max_scoretype_per_round, format_vs_par, datawrapper_table_css
+from utils import get_round_data, datawrapper_table_css, datawrapper_table
 import streamlit as st
 import pandas as pd, altair as alt
 import numpy as np
 
 #st.set_page_config(page_title="TEG Scoring")
 datawrapper_table_css()
-st.title('Average score by Course')
+st.title('Course averages and records')
 
-all_data = load_all_data(exclude_incomplete_tegs=False)
+all_rd_data = get_round_data(ex_50 = True, ex_incomplete= False)
+rd_data = all_rd_data
 
-st.markdown(
-    """
-    <style>
-    [data-testid="stElementToolbar"] {
-        display: none;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+def by_course(df, aggfunc = 'mean'):
+    round_to = 1 if aggfunc == 'mean' else 0
+    rd_data = df.pivot_table(values='GrossVP', index='Course', columns='Pl', aggfunc=aggfunc)
+    rd_data.loc[:, rd_data.columns != 'Course'] = rd_data.loc[:, rd_data.columns != 'Course'].round(round_to)
+    rd_total = df.groupby('Course').agg({'GrossVP': aggfunc})
+    # if aggfunc == 'mean':
+        #rd_data.loc[:, rd_data.columns != 'Round'] = rd_data.loc[:, rd_data.columns != 'Course'].round(round_to)
+    #else:
+        #rd_data.loc[:, rd_data.columns != 'Round'] = rd_data.loc[:, rd_data.columns != 'Course'].apply(lambda x: int(x) if pd.notna(x) else x)
+    
+    rd_data['Total'] = rd_total
+    rd_data = rd_data.reset_index()
 
+    def format_number(x):
+        if isinstance(x, str):  # Check if x is already a string
+            return x  # Return the string as is
+        elif pd.isna(x):  # Check if x is NaN
+            return "-"  # You can return any placeholder or message for NaN
+        elif x == 0:
+            return "="  # Return '=' for zero
+        elif round_to == 0:
+            return f"{int(x):+d}"  # Return integer if round_to is 0
+        else:
+            return f"{x:+.{round_to}f}"  # Return floating point formatted string
 
-# Calculate the mean of GrossVP for each player in each course
-summary = all_data.pivot_table(values='GrossVP', index='Course', columns='Pl', aggfunc='mean')
+    rd_data = rd_data.applymap(format_number)
+    return(rd_data)
 
-# Multiply all values by 18
-summary = summary * 18
+mean_rd = by_course(rd_data, 'mean')
+min_rd = by_course(rd_data, 'min')
+max_rd = by_course(rd_data, 'max')
 
-# Calculate the total column based on the underlying dataset
-total = all_data.groupby('Course')['GrossVP'].mean() * 18
-summary['Total'] = total
-
-# Sort the DataFrame by the 'Total' column in descending order
-summary = summary.sort_values('Total', ascending=False)
-
-# Reset the index to make 'Course' a column
-summary = summary.reset_index()
-
-# Add a Rank column
-summary['Rank'] = range(1, len(summary) + 1)
-
-# Set Rank as the index
-summary = summary.set_index('Rank')
-
-# Reorder columns to put Course first
-columns = ['Course'] + [col for col in summary.columns if col not in ['Course', 'Rank']]
-summary = summary[columns]
-
-# Function to format numbers with 1 decimal place and display NaN as '-'
-def format_number(x):
-    if pd.isna(x):
-        return '-'
-    elif isinstance(x, (int, float)) and not isinstance(x, bool):
-        return f"{x:+.1f}"
-    else:
-        return str(x)
-
-# Apply the formatting function to the entire DataFrame
-formatted_summary = summary.applymap(format_number)
-
-tab1, tab2  = st.tabs(["Totals only", "By Player"])
-
-with tab2:
-
-    # Display the table using Streamlit
-    st.dataframe(formatted_summary,use_container_width=True,height=35*len(summary)+38)
+tab1, tab2, tab3  = st.tabs(["Course average", "Best Rounds", "Worst Rounds"])
 
 with tab1:
-    summary = summary[['Course','Total']]#.reset_index()
-    summary['Total'] = summary['Total'].apply(format_number)
-    st.dataframe(summary,use_container_width=True,height=35*len(summary)+38)
+    datawrapper_table(mean_rd)
+
+with tab2:
+    datawrapper_table(min_rd)
+
+with tab3:
+    datawrapper_table(max_rd)
