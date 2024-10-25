@@ -20,15 +20,19 @@ selected_par = st.selectbox('Filter by par (optional)', par_options, index=0)
 if selected_tegnum != 'All TEGs':
     selected_tegnum = int(selected_tegnum)
     filtered_data_teg = all_data[all_data['TEGNum'] == selected_tegnum]
+    teg_desc = f'TEG {selected_tegnum} only'
 else:
     filtered_data_teg = all_data
+    teg_desc = 'All TEGs'
 
 # Filter data based on par selection
 if selected_par != 'All holes':
     selected_par = int(selected_par)
     filtered_data = filtered_data_teg[all_data['PAR'] == selected_par]
+    par_desc = f'Par {selected_par}s only'
 else:
     filtered_data = filtered_data_teg
+    par_desc = 'All holes'
 
 def count_by_pl(df = all_data, field = 'GrossVP'):
 
@@ -46,11 +50,11 @@ def count_by_pl(df = all_data, field = 'GrossVP'):
 count_gvp = count_by_pl(filtered_data, 'GrossVP')
 count_sc = count_by_pl(filtered_data, 'Sc')
 
-
 tab1, tab2  = st.tabs(["Scores", "Scores vs Par"])
 
 with tab1:
     st.markdown('### Count of Gross vs Par by player')
+    st.caption(teg_desc + ' | ' +par_desc)
     # st.dataframe(count_gvp, height = len(count_gvp) * 35 + 38)
     count_gvp = count_gvp.reset_index()
     count_gvp['GrossVP'] = count_gvp['GrossVP'].apply(format_vs_par)
@@ -60,6 +64,7 @@ with tab1:
 
 with tab2:
     st.markdown('### Count of gross score by player')
+    st.caption(teg_desc + ' | ' +par_desc)
     # st.dataframe(count_sc, height = len(count_sc) * 35 + 38)
     count_sc = count_sc.reset_index()
     count_sc.columns.name = None
