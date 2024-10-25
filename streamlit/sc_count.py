@@ -9,16 +9,26 @@ st.title('Count of score by player')
 
 
 tegnum_options = ['All TEGs'] + sorted(all_data['TEGNum'].unique().tolist(),reverse=True)
-selected_tegnum = st.selectbox('Select TEG', tegnum_options, index=0)
+selected_tegnum = st.selectbox('Filter by TEG (optional)', tegnum_options, index=0)
+
+par_options = ['All holes'] + sorted(all_data['PAR'].unique().tolist())
+selected_par = st.selectbox('Filter by par (optional)', par_options, index=0)
 
 #selected_tegnum = 'All TEGs'
 
 # Filter data based on TEGNum selection
 if selected_tegnum != 'All TEGs':
     selected_tegnum = int(selected_tegnum)
-    filtered_data = all_data[all_data['TEGNum'] == selected_tegnum]
+    filtered_data_teg = all_data[all_data['TEGNum'] == selected_tegnum]
 else:
-    filtered_data = all_data
+    filtered_data_teg = all_data
+
+# Filter data based on par selection
+if selected_par != 'All holes':
+    selected_par = int(selected_par)
+    filtered_data = filtered_data_teg[all_data['PAR'] == selected_par]
+else:
+    filtered_data = filtered_data_teg
 
 def count_by_pl(df = all_data, field = 'GrossVP'):
 
@@ -54,5 +64,5 @@ with tab2:
     count_sc = count_sc.reset_index()
     count_sc.columns.name = None
     count_sc['Sc'] = count_sc['Sc'].astype(int)
-    count_gvp = count_gvp.rename(columns={'Sc': 'Score'})
+    count_sc = count_sc.rename(columns={'Sc': 'Score'})
     datawrapper_table(count_sc)
