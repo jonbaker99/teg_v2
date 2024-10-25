@@ -79,6 +79,18 @@ def make_percent_plot(df = None):
 tab1, tab2  = st.tabs(["Scores", "Scores vs Par"])
 
 with tab1:
+    st.markdown('### Count of gross score by player')
+    st.caption(teg_desc + ' | ' +par_desc)
+    # st.dataframe(count_sc, height = len(count_sc) * 35 + 38)
+    count_sc = count_sc.reset_index()
+    count_sc.columns.name = None
+    count_sc['Sc'] = count_sc['Sc'].astype(int)
+    count_sc = count_sc.rename(columns={'Sc': 'Score'})
+    datawrapper_table(count_sc)
+    st.plotly_chart(make_percent_plot(count_sc))
+
+
+with tab2:
     st.markdown('### Count of Gross vs Par by player')
     st.caption(teg_desc + ' | ' +par_desc)
     # st.dataframe(count_gvp, height = len(count_gvp) * 35 + 38)
@@ -89,15 +101,3 @@ with tab1:
     datawrapper_table(count_gvp)
     count_gvp.loc[count_gvp['vs Par'] == '=', 'vs Par'] = 0
     st.plotly_chart(make_percent_plot(count_gvp))
-
-
-with tab2:
-    st.markdown('### Count of gross score by player')
-    st.caption(teg_desc + ' | ' +par_desc)
-    # st.dataframe(count_sc, height = len(count_sc) * 35 + 38)
-    count_sc = count_sc.reset_index()
-    count_sc.columns.name = None
-    count_sc['Sc'] = count_sc['Sc'].astype(int)
-    count_sc = count_sc.rename(columns={'Sc': 'Score'})
-    datawrapper_table(count_sc)
-    st.plotly_chart(make_percent_plot(count_sc))
