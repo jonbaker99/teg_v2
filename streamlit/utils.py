@@ -8,6 +8,7 @@ import gspread
 from typing import Dict, Any, List
 import streamlit as st
 from pathlib import Path
+from typing import Optional
 
 #print("utils module is being imported")
 
@@ -1174,8 +1175,21 @@ def datawrapper_table_css():
                     border-bottom: none !important;
                     border-top: 1px solid #000 !important;
                 }
+                /* General styling for table-left-align, overriding datawrapper-table styles */
+                .datawrapper-table.table-left-align {
+                    text-align: left;
+                }
+
+                /* If you want to override specific rules from datawrapper-table */
+                .datawrapper-table.table-left-align td,
+                .datawrapper-table.table-left-align th {
+                    text-align: left !important;  /* !important can be used as a last resort */
+                }
             </style>
         """, unsafe_allow_html=True)
 
-def datawrapper_table(df = None):
-    st.write(df.to_html(index=False,classes = 'datawrapper-table'), unsafe_allow_html = True)
+def datawrapper_table(df=None, left_align: Optional[bool] = None):
+    if left_align:
+        st.write(df.to_html(index=False, classes='datawrapper-table table-left-align'), unsafe_allow_html=True)
+    else:
+        st.write(df.to_html(index=False, classes='datawrapper-table'), unsafe_allow_html=True)
