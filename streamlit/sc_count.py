@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from utils import load_all_data, datawrapper_table_css, datawrapper_table, format_vs_par
+import plotly.express as px
 
 all_data = load_all_data(exclude_incomplete_tegs = False)
 datawrapper_table_css()
@@ -50,6 +51,31 @@ def count_by_pl(df = all_data, field = 'GrossVP'):
 count_gvp = count_by_pl(filtered_data, 'GrossVP')
 count_sc = count_by_pl(filtered_data, 'Sc')
 
+
+def make_percent_plot(df = None):
+
+    # Set the first column (whatever it may be) as the index
+    df.set_index(df.columns[0], inplace=True)
+
+    # Calculate % of total for each column
+    df_percentage = df.div(df.sum(axis=0), axis=1) #* 100  # Calculate percentages
+
+    # Prepare the Plotly figure & customise
+    fig = px.bar(df_percentage, barmode='group') #, text_auto=True)
+    fig.update_layout(
+        title="% of total | " + teg_desc + ' | ' +par_desc,
+        xaxis_title=df.index.name,  # Use the name of the index (vs Par)
+        yaxis_title="% of Total",
+        legend_title="Pl",
+        bargap=0.3,
+        bargroupgap=0.0,    
+    )
+    fig.layout.xaxis.fixedrange = True # remove ability to zoom on x
+    fig.layout.yaxis.fixedrange = True # remove ability to zoom on y
+
+    return fig
+
+
 tab1, tab2  = st.tabs(["Scores", "Scores vs Par"])
 
 with tab1:
@@ -61,6 +87,9 @@ with tab1:
     count_gvp = count_gvp.rename(columns={'GrossVP': 'vs Par'})
     count_gvp.columns.name = None
     datawrapper_table(count_gvp)
+    count_gvp.loc[count_gvp['vs Par'] == '=', 'vs Par'] = 0
+    st.plotly_chart(make_percent_plot(count_gvp))
+
 
 with tab2:
     st.markdown('### Count of gross score by player')
@@ -71,3 +100,4 @@ with tab2:
     count_sc['Sc'] = count_sc['Sc'].astype(int)
     count_sc = count_sc.rename(columns={'Sc': 'Score'})
     datawrapper_table(count_sc)
+    st.plotly_chart(make_percent_plot(count_sc))
