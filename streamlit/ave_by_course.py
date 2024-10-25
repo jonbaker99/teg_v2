@@ -3,7 +3,6 @@ import streamlit as st
 import pandas as pd, altair as alt
 import numpy as np
 
-#st.set_page_config(page_title="TEG Scoring")
 datawrapper_table_css()
 st.title('Course averages and records')
 
@@ -22,6 +21,7 @@ def by_course(df, aggfunc = 'mean'):
     
     rd_data['Total'] = rd_total
     rd_data = rd_data.reset_index()
+    rd_data.columns.name = None
 
     def format_number(x):
         if isinstance(x, str):  # Check if x is already a string
