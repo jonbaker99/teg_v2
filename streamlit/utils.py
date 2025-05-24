@@ -292,6 +292,50 @@ def save_to_parquet(df: pd.DataFrame, output_file: str) -> None:
 
 def get_google_sheet(sheet_name: str, worksheet_name: str) -> pd.DataFrame:
     """
+    Load data from a specified Google Sheet and worksheet using credentials from 
+    Railway environment variables or Streamlit secrets.
+    """
+    logger.info(f"Fetching data from Google Sheet: {sheet_name}, Worksheet: {worksheet_name}")
+    
+    SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+
+    try:
+        # Try Railway environment variables first, fallback to st.secrets for local development
+        if os.getenv('GOOGLE_TYPE'):
+            # Railway environment variables
+            service_account_info = {
+                "type": os.getenv('GOOGLE_TYPE'),
+                "project_id": os.getenv('GOOGLE_PROJECT_ID'),
+                "private_key_id": os.getenv('GOOGLE_PRIVATE_KEY_ID'),
+                "private_key": os.getenv('GOOGLE_PRIVATE_KEY').replace('\\n', '\n'),
+                "client_email": os.getenv('GOOGLE_CLIENT_EMAIL'),
+                "client_id": os.getenv('GOOGLE_CLIENT_ID'),
+                "auth_uri": os.getenv('GOOGLE_AUTH_URI'),
+                "token_uri": os.getenv('GOOGLE_TOKEN_URI'),
+            }
+            logger.info("Using Railway environment variables for Google credentials")
+        else:
+            # Fallback for local development
+            service_account_info = st.secrets["google"]
+            logger.info("Using Streamlit secrets for Google credentials")
+        
+        creds = Credentials.from_service_account_info(service_account_info, scopes=SCOPE)
+        
+        # Rest of your existing code...
+        client = gspread.authorize(creds)
+        sheet = client.open(sheet_name).worksheet(worksheet_name)
+        
+        data = sheet.get_all_records()
+        df = pd.DataFrame(data)
+        logger.info("Data fetched successfully from Google Sheets.")
+        return df
+    except Exception as e:
+        logger.error(f"Error fetching data from Google Sheets: {e}")
+        st.error(f"Error fetching data: {e}")
+        raise
+
+def get_google_sheet_old(sheet_name: str, worksheet_name: str) -> pd.DataFrame:
+    """
     Load data from a specified Google Sheet and worksheet using credentials stored in Streamlit secrets.
     """
     logger.info(f"Fetching data from Google Sheet: {sheet_name}, Worksheet: {worksheet_name}")
