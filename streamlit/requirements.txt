@@ -2,3 +2,6 @@ google-auth
 gspread
 plotly
 streamlit_extras
+streamlit
+pandas
+numpy
