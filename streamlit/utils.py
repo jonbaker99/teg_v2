@@ -9,6 +9,9 @@ from typing import Dict, Any, List
 import streamlit as st
 from pathlib import Path
 from typing import Optional
+import base64
+from github import Github
+from io import BytesIO, StringIO
 
 #print("utils module is being imported")
 
@@ -31,6 +34,165 @@ def get_base_directory():
         BASE_DIR = current_dir
     
     return BASE_DIR
+
+### START OF NEW FUNCTIONS ###
+
+def is_running_on_railway():
+    """Detect if running on Railway or locally"""
+    return os.getenv('RAILWAY_ENVIRONMENT') is not None
+
+def get_github_client():
+    """Get authenticated GitHub client"""
+    if not is_running_on_railway():
+        return None
+    
+    token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
+    if not token:
+        raise ValueError("GitHub token not found in environment variables or secrets")
+    return Github(token)
+
+# Configuration
+GITHUB_REPO = "jonbaker99/teg_v2"  # UPDATE THIS
+GITHUB_BRANCH = "railway-deployment"  # UPDATE THIS IF NEEDED
+
+@st.cache_data(ttl=300)  # Cache for 5 minutes
+def read_file_from_storage(file_path, file_type='csv'):
+    """
+    Read file from local storage or GitHub depending on environment
+    
+    Args:
+        file_path: Path object or string path to file
+        file_type: 'csv', 'parquet', or 'text'
+    
+    Returns:
+        DataFrame for csv/parquet, string for text
+    """
+    if not is_running_on_railway():
+        # Local file reading
+        if file_type == 'csv':
+            return pd.read_csv(file_path)
+        elif file_type == 'parquet':
+            return pd.read_parquet(file_path)
+        elif file_type == 'text':
+            with open(file_path, 'r') as f:
+                return f.read()
+    else:
+        # GitHub file reading
+        try:
+            g = get_github_client()
+            repo = g.get_repo(GITHUB_REPO)
+            
+            # Convert Path to string and ensure forward slashes
+            github_path = str(file_path).replace('\\', '/').replace(str(get_base_directory()) + '/', '')
+
+            
+            file_content = repo.get_contents(github_path, ref=GITHUB_BRANCH)
+            
+            if file_type == 'csv':
+                content = base64.b64decode(file_content.content).decode('utf-8')
+                return pd.read_csv(StringIO(content))
+            elif file_type == 'parquet':
+                content = base64.b64decode(file_content.content)
+                return pd.read_parquet(BytesIO(content))
+            elif file_type == 'text':
+                return base64.b64decode(file_content.content).decode('utf-8')
+                
+        except Exception as e:
+            st.error(f"Error reading file from GitHub: {str(e)}")
+            raise
+
+def write_file_to_storage(file_path, data, file_type='csv', commit_message=None):
+    """
+    Write file to local storage or GitHub depending on environment
+    
+    Args:
+        file_path: Path object or string path to file
+        data: DataFrame for csv/parquet, string for text
+        file_type: 'csv', 'parquet', or 'text'
+        commit_message: Commit message for GitHub (optional)
+    """
+    if not is_running_on_railway():
+        # Local file writing
+        if file_type == 'csv':
+            data.to_csv(file_path, index=False)
+        elif file_type == 'parquet':
+            data.to_parquet(file_path, index=False)
+        elif file_type == 'text':
+            with open(file_path, 'w') as f:
+                f.write(data)
+    else:
+        # GitHub file writing
+        try:
+            g = get_github_client()
+            repo = g.get_repo(GITHUB_REPO)
+            
+            # Convert Path to string and ensure forward slashes
+            github_path = str(file_path).replace('\\', '/').replace(str(get_base_directory()) + '/', '')
+
+            
+            # Prepare content based on file type
+            if file_type == 'csv':
+                content = data.to_csv(index=False)
+            elif file_type == 'parquet':
+                buffer = BytesIO()
+                data.to_parquet(buffer, index=False)
+                content = buffer.getvalue()
+            elif file_type == 'text':
+                content = data
+            
+            # Set commit message
+            if not commit_message:
+                commit_message = f"Update {github_path}"
+            
+            # Try to get existing file (for update) or create new
+            try:
+                file = repo.get_contents(github_path, ref=GITHUB_BRANCH)
+                repo.update_file(
+                    github_path,
+                    commit_message,
+                    content,
+                    file.sha,
+                    branch=GITHUB_BRANCH
+                )
+            except:
+                # File doesn't exist, create it
+                repo.create_file(
+                    github_path,
+                    commit_message,
+                    content,
+                    branch=GITHUB_BRANCH
+                )
+            
+            # Clear cache after write
+            st.cache_data.clear()
+            
+        except Exception as e:
+            st.error(f"Error writing file to GitHub: {str(e)}")
+            raise
+
+def backup_file_on_storage(source_path, backup_path):
+    """
+    Create a backup of a file in storage
+    """
+    if not is_running_on_railway():
+        # Local backup using shutil
+        import shutil
+        shutil.copy(source_path, backup_path)
+    else:
+        # GitHub backup - read and write with new name
+        try:
+            # Read the source file
+            if str(source_path).endswith('.parquet'):
+                data = read_file_from_storage(source_path, 'parquet')
+                write_file_to_storage(backup_path, data, 'parquet', f"Backup of {source_path}")
+            else:
+                data = read_file_from_storage(source_path, 'csv')
+                write_file_to_storage(backup_path, data, 'csv', f"Backup of {source_path}")
+        except Exception as e:
+            st.error(f"Error creating backup on GitHub: {str(e)}")
+            raise
+
+### END OF NEW FUNCTIONS ###
 
 
 # Constants and Configurations
@@ -95,23 +257,13 @@ TEG_OVERRIDES = {
 
 @st.cache_data
 def load_all_data(exclude_teg_50: bool = True, exclude_incomplete_tegs: bool = False) -> pd.DataFrame:
-    """
-    Load the main dataset from the specified file path with optional filters.
-    
-    Parameters:
-        exclude_teg_50 (bool): If True, excludes data with TEG 50.
-        exclude_incomplete_tegs (bool): If True, excludes TEGs with incomplete rounds.
-    
-    Returns:
-        pd.DataFrame: The filtered dataset.
-    """
-    if os.path.exists(FILE_PATH_ALL_DATA):
-        df = pd.read_parquet(FILE_PATH_ALL_DATA)
-    else:
+    try:
+        df = read_file_from_storage(FILE_PATH_ALL_DATA, 'parquet')
+    except Exception as e:
         st.error(f"File not found: {FILE_PATH_ALL_DATA}")
         st.error('THIS IS FROM LOAD_ALL_DATA FUNCTION IN UTILS')
-        return pd.DataFrame()  # Return an empty DataFrame if file is missing
-
+        return pd.DataFrame()
+    
     # Ensure 'Year' is of integer type
     df['Year'] = df['Year'].astype('Int64')
     
@@ -286,7 +438,7 @@ def save_to_parquet(df: pd.DataFrame, output_file: str) -> None:
         df (pd.DataFrame): DataFrame containing the updated golf data.
         output_file (str): Path to save the Parquet file.
     """
-    df.to_parquet(output_file, index=False)
+    write_file_to_storage(output_file, df, 'parquet')
     logger.info(f"Data successfully saved to {output_file}")
 
 
@@ -398,8 +550,8 @@ def load_and_prepare_handicap_data(file_path: str) -> pd.DataFrame:
     """
     logger.info(f"Loading handicap data from {file_path}")
     try:
-        hc_lookup = pd.read_csv(file_path)
-    except FileNotFoundError:
+        hc_lookup = read_file_from_storage(file_path, 'csv')
+    except Exception as e:
         logger.error(f"File not found: {file_path}")
         raise
     hc_long = hc_lookup.melt(id_vars='TEG', var_name='Pl', value_name='HC')
@@ -440,7 +592,7 @@ def add_round_info(all_data: pd.DataFrame) -> pd.DataFrame:
     logger.info("Adding round information to the data.")
 
     # Read the round info CSV file
-    round_info = pd.read_csv(ROUND_INFO_FILE)
+    round_info = read_file_from_storage(ROUND_INFO_FILE, 'csv')
 
     # Merge the round info with all_data based on TEGNum and Round
     merged_data = pd.merge(
@@ -466,7 +618,7 @@ def update_all_data(csv_file: str, parquet_file: str, csv_output_file: str) -> N
 
     # Load the CSV file
     try:
-        df = pd.read_csv(csv_file)
+        df = read_file_from_storage(csv_file, 'csv')
         logger.debug("CSV data loaded.")
     except FileNotFoundError:
         logger.error(f"CSV file not found: {csv_file}")
@@ -490,7 +642,7 @@ def update_all_data(csv_file: str, parquet_file: str, csv_output_file: str) -> N
     save_to_parquet(df_transformed, parquet_file)
 
     # Save the transformed dataframe to a CSV file for manual review
-    df_transformed.to_csv(csv_output_file, index=False)
+    write_file_to_storage(csv_output_file, df_transformed, 'csv')
     logger.info(f"Transformed data saved to {csv_output_file}")
 
     st.cache_data.clear()
@@ -511,8 +663,8 @@ def check_for_complete_and_duplicate_data(all_scores_path: str, all_data_path: s
     logger.info("Checking for complete and duplicate data.")
 
     # Load the all-scores CSV file and the all-data Parquet file
-    all_scores_df = pd.read_csv(all_scores_path)
-    all_data_df = pd.read_parquet(all_data_path)
+    all_scores_df = read_file_from_storage(all_scores_path, 'csv')
+    all_data_df = read_file_from_storage(all_data_path, 'parquet')
     logger.debug("All-scores and all-data files loaded.")
 
     # Group by TEG, Round, and Player and count the number of entries

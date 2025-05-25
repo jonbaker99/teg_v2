@@ -5,3 +5,4 @@ streamlit_extras
 streamlit
 pandas
 numpy
+PyGithub
