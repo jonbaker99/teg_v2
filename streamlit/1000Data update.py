@@ -12,7 +12,9 @@ from utils import (
     summarise_existing_rd_data,
     update_all_data,
     check_for_complete_and_duplicate_data,
-    get_base_directory
+    get_base_directory,
+    read_file_from_storage, 
+    write_file_to_storage
 )
 
 # Configure Logging
@@ -170,7 +172,7 @@ try:
 
         with st.spinner("📂 Loading all-scores.csv..."):
             try:
-                all_scores_df = pd.read_csv(ALL_SCORES_PATH)
+                all_scores_df = read_file_from_storage(ALL_SCORES_PATH, 'csv')
                 st.success("📂 Loaded all-scores.csv.")
             except FileNotFoundError:
                 st.error(f"❌ File not found: {ALL_SCORES_PATH}. Please ensure the file exists.")
@@ -232,7 +234,9 @@ try:
                 st.write(f"✅ Appended {len(processed_rounds)} new records to all-scores.")
 
                 # Save the updated all-scores data
-                all_scores_df.to_csv(ALL_SCORES_PATH, index=False)
+                #all_scores_df.to_csv(ALL_SCORES_PATH, index=False)
+                write_file_to_storage(ALL_SCORES_PATH, all_scores_df, 'csv', 
+                     f"Updated data with {len(processed_rounds)} new records")
                 st.success(f"✅ Updated data saved to {ALL_SCORES_PATH}.")
 
                 # Run the update_all_data process
