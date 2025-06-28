@@ -1,6 +1,6 @@
 # === Credentials and secrets ===
-**/secrets.toml                     # Any secrets.toml in any folder
-streamlit/.streamlit/secrets.toml  # Explicit for VSCode/Git quirks
+**/secrets.toml
+streamlit/.streamlit/secrets.toml
 
 # === Exceptions (files we DO want to keep) ===
 !.streamlit/secrets.toml.template
