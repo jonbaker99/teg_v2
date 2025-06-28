@@ -53,7 +53,7 @@ def get_github_client():
 
 # Configuration
 GITHUB_REPO = "jonbaker99/teg_v2"  # UPDATE THIS
-GITHUB_BRANCH = "railway-deployment"  # UPDATE THIS IF NEEDED
+GITHUB_BRANCH = "railway-deployment-cursor-changes"  # UPDATE THIS IF NEEDED
 
 # File path constants for GitHub access (used by test file)
 ALL_SCORES_FILE = "data/all-scores.csv"
@@ -72,7 +72,14 @@ def read_file_from_storage(file_path, file_type='csv'):
         DataFrame for csv/parquet, string for text
     """
     if not is_running_on_railway():
-        # Local file reading
+        # Local file reading - convert string to Path if needed
+        if isinstance(file_path, str):
+            # If it's a relative path like "data/file.csv", make it absolute
+            if not file_path.startswith('/') and not file_path.startswith('C:'):
+                file_path = get_base_directory() / file_path
+            else:
+                file_path = Path(file_path)
+        
         if file_type == 'csv':
             return pd.read_csv(file_path)
         elif file_type == 'parquet':
@@ -89,13 +96,21 @@ def read_file_from_storage(file_path, file_type='csv'):
             # Convert Path to string and ensure forward slashes
             if isinstance(file_path, Path):
                 # If it's a Path object, convert to relative path from base directory
-                github_path = str(file_path.relative_to(get_base_directory())).replace('\\', '/')
+                try:
+                    github_path = str(file_path.relative_to(get_base_directory())).replace('\\', '/')
+                except ValueError:
+                    # If relative_to fails, assume it's already a relative path
+                    github_path = str(file_path).replace('\\', '/')
             else:
                 # If it's already a string, ensure it's relative to the repo root
                 github_path = str(file_path).replace('\\', '/')
-                # Remove any leading slashes or base directory references
-                if github_path.startswith('/'):
-                    github_path = github_path[1:]
+                # Remove any leading slashes or absolute path components
+                if github_path.startswith('/app/'):
+                    github_path = github_path[5:]  # Remove '/app/' prefix
+                elif github_path.startswith('/'):
+                    github_path = github_path[1:]  # Remove leading slash
+                
+                # Remove base directory references if they exist
                 base_dir_str = str(get_base_directory()).replace('\\', '/')
                 if github_path.startswith(base_dir_str):
                     github_path = github_path[len(base_dir_str):].lstrip('/')
@@ -220,14 +235,22 @@ def backup_file_on_storage(source_path, backup_path):
 
 
 # Constants and Configurations
-#BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Get the directory of the current file
 BASE_DIR = get_base_directory()
 DATA_DIR = BASE_DIR / 'data' 
+
+# For local file access (Path objects)
 ALL_SCORES_PATH = BASE_DIR / 'data' / 'all-scores.csv'
 HANDICAPS_PATH = BASE_DIR / 'data' / 'handicaps.csv'
-PARQUET_FILE = BASE_DIR / 'data' / 'all-data.parquet'
-CSV_OUTPUT_FILE = BASE_DIR / 'data' / 'all-data.csv'
-ROUND_INFO_FILE = BASE_DIR / 'data' / 'round_info.csv'
+PARQUET_FILE_PATH = BASE_DIR / 'data' / 'all-data.parquet'
+CSV_OUTPUT_FILE_PATH = BASE_DIR / 'data' / 'all-data.csv'
+ROUND_INFO_FILE_PATH = BASE_DIR / 'data' / 'round_info.csv'
+
+# For GitHub access (string paths relative to repo root)
+PARQUET_FILE = "data/all-data.parquet"
+ALL_SCORES_FILE = "data/all-scores.csv"
+HANDICAPS_FILE = "data/handicaps.csv"
+ROUND_INFO_FILE = "data/round_info.csv"
+CSV_OUTPUT_FILE = "data/all-data.csv"
 
 
 ## DIRECTORY CHECKS
