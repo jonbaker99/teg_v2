@@ -55,6 +55,10 @@ def get_github_client():
 GITHUB_REPO = "jonbaker99/teg_v2"  # UPDATE THIS
 GITHUB_BRANCH = "railway-deployment"  # UPDATE THIS IF NEEDED
 
+# File path constants for GitHub access (used by test file)
+ALL_SCORES_FILE = "data/all-scores.csv"
+HANDICAPS_FILE = "data/handicaps.csv"
+
 @st.cache_data(ttl=300)  # Cache for 5 minutes
 def read_file_from_storage(file_path, file_type='csv'):
     """
@@ -83,9 +87,19 @@ def read_file_from_storage(file_path, file_type='csv'):
             repo = g.get_repo(GITHUB_REPO)
             
             # Convert Path to string and ensure forward slashes
-            github_path = str(file_path).replace('\\', '/').replace(str(get_base_directory()) + '/', '')
+            if isinstance(file_path, Path):
+                # If it's a Path object, convert to relative path from base directory
+                github_path = str(file_path.relative_to(get_base_directory())).replace('\\', '/')
+            else:
+                # If it's already a string, ensure it's relative to the repo root
+                github_path = str(file_path).replace('\\', '/')
+                # Remove any leading slashes or base directory references
+                if github_path.startswith('/'):
+                    github_path = github_path[1:]
+                base_dir_str = str(get_base_directory()).replace('\\', '/')
+                if github_path.startswith(base_dir_str):
+                    github_path = github_path[len(base_dir_str):].lstrip('/')
 
-            
             file_content = repo.get_contents(github_path, ref=GITHUB_BRANCH)
             
             if file_type == 'csv':
@@ -127,9 +141,19 @@ def write_file_to_storage(file_path, data, file_type='csv', commit_message=None)
             repo = g.get_repo(GITHUB_REPO)
             
             # Convert Path to string and ensure forward slashes
-            github_path = str(file_path).replace('\\', '/').replace(str(get_base_directory()) + '/', '')
+            if isinstance(file_path, Path):
+                # If it's a Path object, convert to relative path from base directory
+                github_path = str(file_path.relative_to(get_base_directory())).replace('\\', '/')
+            else:
+                # If it's already a string, ensure it's relative to the repo root
+                github_path = str(file_path).replace('\\', '/')
+                # Remove any leading slashes or base directory references
+                if github_path.startswith('/'):
+                    github_path = github_path[1:]
+                base_dir_str = str(get_base_directory()).replace('\\', '/')
+                if github_path.startswith(base_dir_str):
+                    github_path = github_path[len(base_dir_str):].lstrip('/')
 
-            
             # Prepare content based on file type
             if file_type == 'csv':
                 content = data.to_csv(index=False)
@@ -459,11 +483,14 @@ def get_google_sheet(sheet_name: str, worksheet_name: str) -> pd.DataFrame:
                 "type": os.getenv('GOOGLE_TYPE'),
                 "project_id": os.getenv('GOOGLE_PROJECT_ID'),
                 "private_key_id": os.getenv('GOOGLE_PRIVATE_KEY_ID'),
-                "private_key": os.getenv('GOOGLE_PRIVATE_KEY').replace('\\n', '\n'),
+                "private_key": os.getenv('GOOGLE_PRIVATE_KEY').replace('\\n', '\n') if os.getenv('GOOGLE_PRIVATE_KEY') else None,
                 "client_email": os.getenv('GOOGLE_CLIENT_EMAIL'),
                 "client_id": os.getenv('GOOGLE_CLIENT_ID'),
                 "auth_uri": os.getenv('GOOGLE_AUTH_URI'),
                 "token_uri": os.getenv('GOOGLE_TOKEN_URI'),
+                "auth_provider_x509_cert_url": os.getenv('GOOGLE_AUTH_PROVIDER_X509_CERT_URL'),
+                "client_x509_cert_url": os.getenv('GOOGLE_CLIENT_X509_CERT_URL'),
+                "universe_domain": os.getenv('GOOGLE_UNIVERSE_DOMAIN'),
             }
             logger.info("Using Railway environment variables for Google credentials")
         else:
@@ -1394,7 +1421,7 @@ service_account_info = {
     "type": os.getenv('GOOGLE_TYPE'),
     "project_id": os.getenv('GOOGLE_PROJECT_ID'),
     "private_key_id": os.getenv('GOOGLE_PRIVATE_KEY_ID'),
-    "private_key": os.getenv('GOOGLE_PRIVATE_KEY').replace('\\n', '\n'),
+    "private_key": os.getenv('GOOGLE_PRIVATE_KEY').replace('\\n', '\n') if os.getenv('GOOGLE_PRIVATE_KEY') else None,
     "client_email": os.getenv('GOOGLE_CLIENT_EMAIL'),
     "client_id": os.getenv('GOOGLE_CLIENT_ID'),
     "auth_uri": os.getenv('GOOGLE_AUTH_URI'),
