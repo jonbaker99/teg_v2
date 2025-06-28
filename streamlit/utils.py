@@ -946,7 +946,7 @@ def get_teg_data_inc_in_progress():
     aggregated_data = aggregate_data(all_data,'TEG')
     return aggregated_data
 
-@st.cache_data
+#@st.cache_data
 def get_round_data(ex_50 = True, ex_incomplete= False):
     all_data = load_all_data(exclude_teg_50 = ex_50, exclude_incomplete_tegs = ex_incomplete)
     aggregated_data = aggregate_data(all_data,'Round')

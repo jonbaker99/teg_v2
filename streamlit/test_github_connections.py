@@ -200,3 +200,5 @@ except Exception as e:
     st.error(f"An error occurred during GitHub initial interaction: {e}")
     st.info("Check your GITHUB_TOKEN permissions and repository/branch names.")
     logger.error("GitHub initial interaction error:", exc_info=True)
+
+
