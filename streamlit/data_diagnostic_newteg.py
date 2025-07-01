@@ -8,7 +8,7 @@
 
 import streamlit as st
 from utils import load_all_data, get_round_data, get_tegnum_rounds
-from utils import read_file_from_storage
+from utils import read_file
 
 st.title("🔍 TEG 18 Diagnostic")
 
@@ -270,12 +270,12 @@ else:
 st.write("---")
 st.subheader("2. What the App is Actually Reading")
 
-# Test what read_file_from_storage actually returns
+# Test what read_file actually returns
 try:
-    st.write("**Using read_file_from_storage():**")
-    round_info = read_file_from_storage(ROUND_INFO_FILE, 'csv')
+    st.write("**Using read_file():**")
+    round_info = read_file(ROUND_INFO_FILE, 'csv')
     
-    st.success("✅ Successfully read round_info data via read_file_from_storage()")
+    st.success("✅ Successfully read round_info data via read_file()")
     st.write(f"Shape: {round_info.shape}")
     st.write(f"Columns: {list(round_info.columns)}")
     
@@ -309,7 +309,7 @@ try:
         st.error("❌ TEG 18 NOT found in round_info")
 
 except Exception as e:
-    st.error(f"Error reading via read_file_from_storage(): {e}")
+    st.error(f"Error reading via read_file(): {e}")
     import traceback
     st.code(traceback.format_exc())
 
@@ -543,11 +543,11 @@ st.write("---")
 st.title("📍 File Path Tracing")
 
 try:
-    from utils import read_file_from_storage, ROUND_INFO_FILE, ROUND_INFO_FILE_PATH, get_base_directory
+    from utils import read_file, ROUND_INFO_FILE, ROUND_INFO_FILE_PATH, get_base_directory
     import os
     
     st.write("## 1. File Path Constants")
-    st.write(f"**ROUND_INFO_FILE (for read_file_from_storage):** `{ROUND_INFO_FILE}`")
+    st.write(f"**ROUND_INFO_FILE (for read_file):** `{ROUND_INFO_FILE}`")
     st.write(f"**ROUND_INFO_FILE_PATH (local path):** `{ROUND_INFO_FILE_PATH}`")
     st.write(f"**Base directory:** `{get_base_directory()}`")
     
@@ -564,7 +564,7 @@ try:
     if expected_local_path.exists():
         st.write(f"**Expected path size:** {expected_local_path.stat().st_size} bytes")
     
-    st.write("## 3. Testing read_file_from_storage")
+    st.write("## 3. Testing read_file")
     
     # Monkey patch to see what file it's actually reading
     original_read_csv = __import__('pandas').read_csv
@@ -578,15 +578,15 @@ try:
     pd.read_csv = debug_read_csv
     
     try:
-        st.write("**Calling read_file_from_storage(ROUND_INFO_FILE, 'csv'):**")
-        round_info_via_function = read_file_from_storage(ROUND_INFO_FILE, 'csv')
+        st.write("**Calling read_file(ROUND_INFO_FILE, 'csv'):**")
+        round_info_via_function = read_file(ROUND_INFO_FILE, 'csv')
         st.write(f"Result shape: {round_info_via_function.shape}")
         
         teg18_via_function = round_info_via_function[round_info_via_function['TEGNum'] == 18]
         st.write(f"TEG 18 rows via function: {len(teg18_via_function)}")
         
     except Exception as e:
-        st.error(f"read_file_from_storage error: {e}")
+        st.error(f"read_file error: {e}")
     finally:
         # Restore original function
         pd.read_csv = original_read_csv
@@ -662,7 +662,7 @@ except Exception as e:
 
 st.write("## 6. Column Name Debug")
 try:
-    round_info = read_file_from_storage(ROUND_INFO_FILE, 'csv')
+    round_info = read_file(ROUND_INFO_FILE, 'csv')
     
     st.write("**Actual columns in round_info:**")
     st.write(list(round_info.columns))

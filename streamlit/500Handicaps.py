@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 from utils import get_base_directory, datawrapper_table_css
-from utils import read_file_from_storage
+from utils import read_file
 
 
 
@@ -92,7 +92,7 @@ st.caption("Change shows difference in HC vs previous TEG")
 with st.expander("Handicap history"):
     try:
         # historic_handicaps = pd.read_csv(HANDICAPS_FILE_PATH)
-        historic_handicaps = read_file_from_storage(HANDICAPS_FILE_PATH, 'csv')
+        historic_handicaps = read_file(HANDICAPS_FILE_PATH, 'csv')
         historic_handicaps = historic_handicaps[historic_handicaps['TEG']!='TEG 50']
         # Apply formatting to all columns except the first one (assuming the first column is names or dates)
         for col in historic_handicaps.columns[1:]:

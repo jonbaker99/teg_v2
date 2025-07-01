@@ -7,8 +7,8 @@ from utils import (
     GITHUB_REPO, 
     GITHUB_BRANCH,
     get_base_directory,
-    read_file_from_storage,
-    write_file_to_storage
+    read_file,
+    write_file
 )
 
 st.set_page_config(layout="wide")
@@ -69,7 +69,7 @@ for file_path in test_files:
     if st.button(f"Test Read: {file_path}", key=f"read_{file_path}"):
         try:
             # Test with string path
-            data = read_file_from_storage(file_path, 'csv' if file_path.endswith('.csv') else 'parquet')
+            data = read_file(file_path, 'csv' if file_path.endswith('.csv') else 'parquet')
             st.success(f"✅ Successfully read {file_path}")
             st.write(f"Data shape: {data.shape if hasattr(data, 'shape') else 'N/A'}")
         except Exception as e:
@@ -90,7 +90,7 @@ if st.button("Test Write to GitHub"):
         st.success(f"✅ Successfully wrote test file: {test_file}")
         
         # Try to read it back
-        read_data = read_file_from_storage(test_file, 'csv')
+        read_data = read_file(test_file, 'csv')
         st.success(f"✅ Successfully read back test file")
         st.dataframe(read_data)
         
@@ -116,7 +116,7 @@ for i, test_path in enumerate(test_paths):
         except ValueError as e:
             st.write(f"  → Error getting relative path: {e}")
     
-    # Test the conversion logic from read_file_from_storage
+    # Test the conversion logic from read_file
     try:
         if isinstance(test_path, Path):
             github_path = str(test_path.relative_to(get_base_directory())).replace('\\', '/')
