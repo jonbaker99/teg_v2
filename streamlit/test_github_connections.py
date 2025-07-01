@@ -6,6 +6,8 @@ from io import StringIO, BytesIO
 import base64
 import logging
 
+from utils import GITHUB_REPO, PARQUET_FILE, ALL_SCORES_FILE, HANDICAPS_FILE, ROUND_INFO_FILE, CSV_OUTPUT_FILE
+
 # Configure logger for the test file
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -73,15 +75,16 @@ except ImportError:
         "Could not import constants from utils.py. Using default paths for testing. "
         "Ensure utils.py is in the Python path or define constants directly in this test file if issues persist."
     )
-    # Fallback definitions
-    GITHUB_REPO = "jonbaker99/teg_v2"
-    GITHUB_BRANCH = "railway-deployment"
-    DATA_DIR_GITHUB = "data"
-    PARQUET_FILE = f"{DATA_DIR_GITHUB}/all-data.parquet"
-    ALL_SCORES_FILE = f"{DATA_DIR_GITHUB}/all-scores.csv"
-    HANDICAPS_FILE = f"{DATA_DIR_GITHUB}/handicaps.csv"
-    ROUND_INFO_FILE = f"{DATA_DIR_GITHUB}/round_info.csv"
-    CSV_OUTPUT_FILE = f"{DATA_DIR_GITHUB}/all-data.csv"
+
+    # # Fallback definitions
+    # GITHUB_REPO = "jonbaker99/teg_v2"
+    # GITHUB_BRANCH = "railway-deployment"
+    # DATA_DIR_GITHUB = "data"
+    # PARQUET_FILE = f"{DATA_DIR_GITHUB}/all-data.parquet"
+    # ALL_SCORES_FILE = f"{DATA_DIR_GITHUB}/all-scores.csv"
+    # HANDICAPS_FILE = f"{DATA_DIR_GITHUB}/handicaps.csv"
+    # ROUND_INFO_FILE = f"{DATA_DIR_GITHUB}/round_info.csv"
+    # CSV_OUTPUT_FILE = f"{DATA_DIR_GITHUB}/all-data.csv"
 
 try:
     auth = Auth.Token(github_token)
