@@ -60,30 +60,26 @@ ALL_DATA_CSV_MIRROR = "data/all-data.csv"
 
 def get_current_branch():
     """
-    Get the current git branch.
-    In Railway, it uses the 'GITHUB_BRANCH' environment variable.
-    Locally, it attempts to get the branch using a git command.
-    Defaults to 'main' if the branch cannot be determined.
+    Gets the current git branch.
+    - On Railway, it uses the built-in 'RAILWAY_GIT_BRANCH' environment variable.
+    - Locally, it attempts to get the branch using a git command.
+    - Defaults to 'main' if the branch cannot be determined.
     """
-    # First, try the specific environment variable for the branch name
-    branch = os.getenv('GITHUB_BRANCH')
+    # Railway provides this variable automatically
+    branch = os.getenv('RAILWAY_GIT_BRANCH')
     if branch:
-        logger.info(f"Using branch from GITHUB_BRANCH env var: {branch}")
+        logger.info(f"Using branch from RAILWAY_GIT_BRANCH env var: {branch}")
         return branch
 
-    # If not on Railway, try to get the branch from git
-    if not os.getenv('RAILWAY_ENVIRONMENT'):
-        try:
-            branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], text=True).strip()
-            logger.info(f"Determined git branch locally: {branch}")
-            return branch
-        except Exception as e:
-            logger.warning(f"Could not determine git branch locally: {e}. Defaulting to 'main'.")
-            return 'main'
-    
-    # As a final fallback for Railway or if git command fails
-    logger.info("Defaulting to 'main' branch.")
-    return 'main'
+    # For local development, try to get the branch from the local git repo
+    try:
+        branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], text=True).strip()
+        logger.info(f"Determined git branch locally: {branch}")
+        return branch
+    except Exception:
+        # Fallback for local if git is not available or other issues
+        logger.warning("Could not determine git branch locally. Defaulting to 'main'.")
+        return 'main'
 
 GITHUB_BRANCH = get_current_branch()
 
