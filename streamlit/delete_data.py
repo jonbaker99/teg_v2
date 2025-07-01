@@ -3,8 +3,15 @@ import pandas as pd
 import os
 from datetime import datetime
 import shutil
-from utils import ALL_SCORES_PATH, PARQUET_FILE, CSV_OUTPUT_FILE, BASE_DIR
-from utils import read_file, write_file, backup_file
+from utils import (
+    read_file, 
+    write_file, 
+    backup_file,
+    ALL_SCORES_PARQUET,
+    ALL_DATA_PARQUET,
+    ALL_DATA_CSV_MIRROR,
+    BASE_DIR
+)
 
 
 # Initialize all session state variables
@@ -31,15 +38,15 @@ if 'initialized' not in st.session_state:
 #     parquet_df.to_parquet(PARQUET_FILE, index=False)
 
 def load_data():
-    scores_df = read_file(ALL_SCORES_PATH, 'csv')
-    data_df = read_file(CSV_OUTPUT_FILE, 'csv')
-    parquet_df = read_file(PARQUET_FILE, 'parquet')
+    scores_df = read_file(ALL_SCORES_PARQUET)
+    data_df = read_file(ALL_DATA_CSV_MIRROR)
+    parquet_df = read_file(ALL_DATA_PARQUET)
     return scores_df, data_df, parquet_df
 
 def save_data(scores_df, data_df, parquet_df):
-    write_file(ALL_SCORES_PATH, scores_df, 'Delete data from all_scores')
-    write_file(CSV_OUTPUT_FILE, data_df, 'Delete data from all_data')
-    write_file(PARQUET_FILE, parquet_df, 'Delete data from parquet')
+    write_file(ALL_SCORES_PARQUET, scores_df, 'Delete data from all_scores')
+    write_file(ALL_DATA_CSV_MIRROR, data_df, 'Delete data from all_data')
+    write_file(ALL_DATA_PARQUET, parquet_df, 'Delete data from parquet')
 
 
 def create_backup():
@@ -48,13 +55,13 @@ def create_backup():
     
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
-    scores_backup = backup_folder / f'all_scores_backup_{timestamp}.csv'
-    # shutil.copy(ALL_SCORES_PATH, scores_backup)
-    backup_file(ALL_SCORES_PATH, scores_backup)
+    scores_backup_path = str(backup_folder / f'all_scores_backup_{timestamp}.parquet')
+    backup_file(ALL_SCORES_PARQUET, scores_backup_path)
     
-    parquet_backup = backup_folder / f'all_data_backup_{timestamp}.parquet'
-    # shutil.copy(PARQUET_FILE, parquet_backup)
-    backup_file(PARQUET_FILE, parquet_backup)
+    parquet_backup_path = str(backup_folder / f'all_data_backup_{timestamp}.parquet')
+    backup_file(ALL_DATA_PARQUET, parquet_backup_path)
+    
+    return scores_backup_path, parquet_backup_path
 
     
     return scores_backup, parquet_backup

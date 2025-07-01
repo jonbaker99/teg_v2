@@ -59,15 +59,31 @@ ROUND_INFO_CSV = "data/round_info.csv"
 ALL_DATA_CSV_MIRROR = "data/all-data.csv"
 
 def get_current_branch():
-    """Get current git branch - Railway uses env var, local uses git"""
-    if os.getenv('RAILWAY_ENVIRONMENT'):
-        return os.getenv('GITHUB_BRANCH', 'main')
-    try:
-        import subprocess
-        branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], text=True).strip()
+    """
+    Get the current git branch.
+    In Railway, it uses the 'GITHUB_BRANCH' environment variable.
+    Locally, it attempts to get the branch using a git command.
+    Defaults to 'main' if the branch cannot be determined.
+    """
+    # First, try the specific environment variable for the branch name
+    branch = os.getenv('GITHUB_BRANCH')
+    if branch:
+        logger.info(f"Using branch from GITHUB_BRANCH env var: {branch}")
         return branch
-    except:
-        return 'main'
+
+    # If not on Railway, try to get the branch from git
+    if not os.getenv('RAILWAY_ENVIRONMENT'):
+        try:
+            branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD'], text=True).strip()
+            logger.info(f"Determined git branch locally: {branch}")
+            return branch
+        except Exception as e:
+            logger.warning(f"Could not determine git branch locally: {e}. Defaulting to 'main'.")
+            return 'main'
+    
+    # As a final fallback for Railway or if git command fails
+    logger.info("Defaulting to 'main' branch.")
+    return 'main'
 
 GITHUB_BRANCH = get_current_branch()
 

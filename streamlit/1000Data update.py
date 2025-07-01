@@ -154,7 +154,10 @@ try:
                 st.write(f"✓ Loaded all-scores.parquet: {all_scores_df.shape}")  # Debug info
                 st.success("📂 Loaded all-scores.parquet.")
             except FileNotFoundError:
-                st.error(f"❌ File not found: {ALL_SCORES_PARQUET}. Please ensure the file exists.")
+                st.warning(f"⚠️ File not found: {ALL_SCORES_PARQUET}. Creating a new empty DataFrame.")
+                all_scores_df = pd.DataFrame()
+            except Exception as e:
+                st.error(f"An error occurred while reading {ALL_SCORES_PARQUET}: {e}")
                 st.stop()
 
         # Identify New TEG & Round Combinations
