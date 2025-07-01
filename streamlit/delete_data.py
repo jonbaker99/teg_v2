@@ -1,11 +1,9 @@
 import streamlit as st
 import pandas as pd
-import os
 from datetime import datetime
-import shutil
 from utils import (
-    read_file, 
-    write_file, 
+    read_file,
+    write_file,
     backup_file,
     ALL_SCORES_PARQUET,
     ALL_DATA_PARQUET,
@@ -13,46 +11,54 @@ from utils import (
     BASE_DIR
 )
 
+# Define states for the deletion process
+STATE_INITIAL = "initial"
+STATE_PREVIEW = "preview"
+STATE_CONFIRMED = "confirmed"
 
-# Initialize all session state variables
-if 'initialized' not in st.session_state:
-    st.session_state.initialized = True
-    st.session_state.data_loaded = False
-    st.session_state.scores_df = None
-    st.session_state.data_df = None
-    st.session_state.parquet_df = None
-    st.session_state.selected_teg = None
-    st.session_state.selected_rounds = []
-    st.session_state.preview_clicked = False
-    st.session_state.confirm_clicked = False
-
-# def load_data():
-#     scores_df = pd.read_csv(ALL_SCORES_PATH)
-#     data_df = pd.read_csv(CSV_OUTPUT_FILE)
-#     parquet_df = pd.read_parquet(PARQUET_FILE)
-#     return scores_df, data_df, parquet_df
-
-# def save_data(scores_df, data_df, parquet_df):
-#     scores_df.to_csv(ALL_SCORES_PATH, index=False)
-#     data_df.to_csv(CSV_OUTPUT_FILE, index=False)
-#     parquet_df.to_parquet(PARQUET_FILE, index=False)
+def initialize_state(force_reset=False):
+    """Initializes or resets the session state for the delete page."""
+    if force_reset or 'delete_page_state' not in st.session_state:
+        st.session_state.delete_page_state = STATE_INITIAL
+        st.session_state.scores_df = None
+        st.session_state.selected_teg = None
+        st.session_state.selected_rounds = []
 
 def load_data():
-    scores_df = read_file(ALL_SCORES_PARQUET)
+    """Loads the necessary data files into session state."""
+    st.session_state.scores_df = read_file(ALL_SCORES_PARQUET)
+
+def perform_deletion():
+    """Performs the backup and deletion of the selected data."""
+    # Create backups first
+    scores_backup_path, parquet_backup_path = create_backup()
+    st.info(f"Backups created:\n- {scores_backup_path}\n- {parquet_backup_path}")
+
+    # Load all data files
+    scores_df = st.session_state.scores_df
     data_df = read_file(ALL_DATA_CSV_MIRROR)
     parquet_df = read_file(ALL_DATA_PARQUET)
-    return scores_df, data_df, parquet_df
 
-def save_data(scores_df, data_df, parquet_df):
-    write_file(ALL_SCORES_PARQUET, scores_df, 'Delete data from all_scores')
-    write_file(ALL_DATA_CSV_MIRROR, data_df, 'Delete data from all_data')
-    write_file(ALL_DATA_PARQUET, parquet_df, 'Delete data from parquet')
+    # Filter out the selected data
+    teg_to_delete = st.session_state.selected_teg
+    rounds_to_delete = st.session_state.selected_rounds
+    
+    scores_df = scores_df[~((scores_df['TEGNum'] == teg_to_delete) & (scores_df['Round'].isin(rounds_to_delete)))]
+    data_df = data_df[~((data_df['TEGNum'] == teg_to_delete) & (data_df['Round'].isin(rounds_to_delete)))]
+    parquet_df = parquet_df[~((parquet_df['TEGNum'] == teg_to_delete) & (parquet_df['Round'].isin(rounds_to_delete)))]
 
+    # Save the updated data
+    write_file(ALL_SCORES_PARQUET, scores_df, f"Deleted TEG {teg_to_delete}, Rounds {rounds_to_delete}")
+    write_file(ALL_DATA_CSV_MIRROR, data_df, f"Deleted TEG {teg_to_delete}, Rounds {rounds_to_delete}")
+    write_file(ALL_DATA_PARQUET, parquet_df, f"Deleted TEG {teg_to_delete}, Rounds {rounds_to_delete}")
+    
+    st.success("Data has been successfully deleted and files have been updated.")
+    st.cache_data.clear()
 
 def create_backup():
+    """Creates timestamped backups of the scores and data files."""
     backup_folder = BASE_DIR / 'data' / 'backups'
     backup_folder.mkdir(exist_ok=True)
-    
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
     scores_backup_path = str(backup_folder / f'all_scores_backup_{timestamp}.parquet')
@@ -63,96 +69,64 @@ def create_backup():
     
     return scores_backup_path, parquet_backup_path
 
-    
-    return scores_backup, parquet_backup
+# --- App UI Starts Here ---
 
-def perform_deletion(scores_df, data_df, parquet_df, selected_teg, selected_rounds):
-    scores_df = scores_df[~((scores_df['TEGNum'] == selected_teg) & (scores_df['Round'].isin(selected_rounds)))]
-    data_df = data_df[~((data_df['TEGNum'] == selected_teg) & (data_df['Round'].isin(selected_rounds)))]
-    parquet_df = parquet_df[~((parquet_df['TEGNum'] == selected_teg) & (parquet_df['Round'].isin(selected_rounds)))]
+st.title("🗑️ Delete Tournament Data")
+initialize_state()
 
-    save_data(scores_df, data_df, parquet_df)
-    return scores_df, data_df, parquet_df
+# Load data if it's not already in the session state
+if st.session_state.scores_df is None:
+    with st.spinner("Loading data..."):
+        load_data()
 
-def delete_data_page():
-    st.title("Delete Tournament Data")
-
-    if not st.session_state.data_loaded:
-        st.session_state.scores_df, st.session_state.data_df, st.session_state.parquet_df = load_data()
-        st.session_state.data_loaded = True
-
-    if st.sidebar.button("Clear Cache"):
-        st.cache_data.clear()
-        st.cache_resource.clear()
-        st.sidebar.success("Cache cleared!")
-
+# --- STATE 1: INITIAL ---
+# Always show the selection interface in the initial state
+if st.session_state.delete_page_state == STATE_INITIAL:
     teg_nums = sorted(st.session_state.scores_df['TEGNum'].unique(), reverse=True)
-    teg_nums = [''] + teg_nums  # Add an empty option at the beginning
-    selected_teg = st.selectbox("Select TEGNum to delete data for:", teg_nums, index=0)
-    st.session_state.selected_teg = selected_teg if selected_teg != '' else None
-
-    if st.session_state.selected_teg is not None:
-        rounds = sorted(st.session_state.scores_df[st.session_state.scores_df['TEGNum'] == st.session_state.selected_teg]['Round'].unique())
+    selected_teg = st.selectbox("Select TEG to delete data for:", teg_nums)
+    
+    if selected_teg:
+        rounds = sorted(st.session_state.scores_df[st.session_state.scores_df['TEGNum'] == selected_teg]['Round'].unique())
         st.write("Select Rounds to delete:")
-        st.session_state.selected_rounds = [round for round in rounds if st.checkbox(f"Round {round}", key=f"round_{round}")]
+        selected_rounds = [r for r in rounds if st.checkbox(f"Round {r}", key=f"round_{r}")]
 
         if st.button("Preview Deletion"):
-            st.session_state.preview_clicked = True
+            if not selected_rounds:
+                st.warning("Please select at least one round to delete.")
+            else:
+                st.session_state.selected_teg = selected_teg
+                st.session_state.selected_rounds = selected_rounds
+                st.session_state.delete_page_state = STATE_PREVIEW
+                st.rerun()
 
-    if st.session_state.preview_clicked and st.session_state.selected_teg is not None:
-        preview_deletion()
-
-def preview_deletion():
+# --- STATE 2: PREVIEW ---
+elif st.session_state.delete_page_state == STATE_PREVIEW:
     st.subheader("Deletion Preview")
-    st.write(f"TEG: {st.session_state.selected_teg}")
-    st.write(f"Rounds: {', '.join(map(str, st.session_state.selected_rounds))}")
+    st.write(f"**TEG:** {st.session_state.selected_teg}")
+    st.write(f"**Rounds:** {', '.join(map(str, st.session_state.selected_rounds))}")
 
     scores_to_delete = st.session_state.scores_df[
         (st.session_state.scores_df['TEGNum'] == st.session_state.selected_teg) & 
         (st.session_state.scores_df['Round'].isin(st.session_state.selected_rounds))
     ]
-    data_to_delete = st.session_state.data_df[
-        (st.session_state.data_df['TEGNum'] == st.session_state.selected_teg) & 
-        (st.session_state.data_df['Round'].isin(st.session_state.selected_rounds))
-    ]
-    parquet_to_delete = st.session_state.parquet_df[
-        (st.session_state.parquet_df['TEGNum'] == st.session_state.selected_teg) & 
-        (st.session_state.parquet_df['Round'].isin(st.session_state.selected_rounds))
-    ]
+    st.write(f"Rows to be deleted from all_scores.parquet: **{len(scores_to_delete)}**")
+    st.dataframe(scores_to_delete)
 
-    st.write(f"Rows to be deleted from all_scores.csv: {len(scores_to_delete)}")
-    st.write(f"Rows to be deleted from all_data.csv: {len(data_to_delete)}")
-    st.write(f"Rows to be deleted from all_data.parquet: {len(parquet_to_delete)}")
+    st.warning("⚠️ This action will permanently delete the selected data.")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("✅ Confirm Deletion"):
+            st.session_state.delete_page_state = STATE_CONFIRMED
+            st.rerun()
+    with col2:
+        if st.button("🚫 Cancel"):
+            initialize_state(force_reset=True)
+            st.rerun()
 
-    st.warning("Warning: This action will permanently delete the selected data.")
-    if st.button("Confirm Deletion"):
-        st.session_state.confirm_clicked = True
-
-    if st.session_state.confirm_clicked:
-        confirm_deletion()
-
-def confirm_deletion():
-    st.warning("Are you absolutely sure you want to delete this data? This action cannot be undone.")
-    if st.button("Yes, I'm sure. Delete the data."):
-        scores_backup, parquet_backup = create_backup()
-        st.info(f"Backups created: \n{scores_backup}\n{parquet_backup}")
-        
-        st.session_state.scores_df, st.session_state.data_df, st.session_state.parquet_df = perform_deletion(
-            st.session_state.scores_df, 
-            st.session_state.data_df, 
-            st.session_state.parquet_df, 
-            st.session_state.selected_teg, 
-            st.session_state.selected_rounds
-        )
-        
-        st.success("Data has been successfully deleted and files have been updated.")
-        st.session_state.preview_clicked = False
-        st.session_state.confirm_clicked = False
-        st.session_state.selected_teg = None
-        st.session_state.selected_rounds = []
-        st.cache_data.clear()
-        st.cache_resource.clear()
-
-
-delete_data_page()
-# commenting
+# --- STATE 3: CONFIRMED & DELETING ---
+elif st.session_state.delete_page_state == STATE_CONFIRMED:
+    with st.spinner("Backing up and deleting data..."):
+        perform_deletion()
+    initialize_state(force_reset=True)
+    st.balloons()
