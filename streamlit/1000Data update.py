@@ -121,8 +121,9 @@ try:
 
     # Step 2: Show Summary and Continue/Cancel Buttons
     if st.session_state.data_loaded and not st.session_state.continue_processing and not st.session_state.overwrite_step_done:
-        summary_df = st.session_state.rounds_with_18_holes.groupby(['TEGNum', 'Round', 'Pl'])['Score'].sum().reset_index()
-        summary_pivot = summary_df.pivot(index='Pl', columns=['Round', 'TEGNum'], values='Score').fillna('-')
+        if st.session_state.rounds_with_18_holes is not None:
+            summary_df = st.session_state.rounds_with_18_holes.groupby(['TEGNum', 'Round', 'Pl'])['Score'].sum().reset_index()
+            summary_pivot = summary_df.pivot(index='Pl', columns=['Round', 'TEGNum'], values='Score').fillna('-')
 
         st.write("### 📊 Score Summary by Player, Round, and TEG:")
         st.dataframe(summary_pivot)
