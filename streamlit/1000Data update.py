@@ -211,6 +211,12 @@ try:
                 st.success("🔄 Rounds processed successfully.")
 
             if not processed_rounds.empty:
+                # Ensure consistent data types before concatenation
+                all_scores_df['TEGNum'] = pd.to_numeric(all_scores_df['TEGNum'])
+                all_scores_df['Round'] = pd.to_numeric(all_scores_df['Round'])
+                processed_rounds['TEGNum'] = pd.to_numeric(processed_rounds['TEGNum'])
+                processed_rounds['Round'] = pd.to_numeric(processed_rounds['Round'])
+                
                 # Append the processed data to all-scores
                 all_scores_df = pd.concat([all_scores_df, processed_rounds], ignore_index=True)
                 st.write(f"✅ Appended {len(processed_rounds)} new records to all-scores.")
