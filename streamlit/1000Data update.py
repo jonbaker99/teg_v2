@@ -124,9 +124,8 @@ try:
         if st.session_state.rounds_with_18_holes is not None:
             summary_df = st.session_state.rounds_with_18_holes.groupby(['TEGNum', 'Round', 'Pl'])['Score'].sum().reset_index()
             summary_pivot = summary_df.pivot(index='Pl', columns=['Round', 'TEGNum'], values='Score').fillna('-')
-
-        st.write("### 📊 Score Summary by Player, Round, and TEG:")
-        st.dataframe(summary_pivot)
+            st.write("### 📊 Score Summary by Player, Round, and TEG:")
+            st.dataframe(summary_pivot)
 
         # Continue and Cancel Buttons
         col1, col2 = st.columns(2)
