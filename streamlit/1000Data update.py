@@ -1,9 +1,6 @@
 import streamlit as st
 import pandas as pd
 import logging
-import os
-from pathlib import Path
-from typing import Optional
 from utils import (
     process_round_for_all_scores,
     get_google_sheet,
@@ -12,7 +9,7 @@ from utils import (
     summarise_existing_rd_data,
     update_all_data,
     check_for_complete_and_duplicate_data,
-    read_file, 
+    read_file,
     write_file,
     ALL_SCORES_PARQUET,
     HANDICAPS_CSV,
@@ -24,277 +21,158 @@ from utils import (
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Initialize Session State
-def initialize_session_state():
-    default_states = {
-        "data_loaded": False,
-        "rounds_with_18_holes": None,
-        "continue_processing": False,
-        "overwrite_data": False,
-        "overwrite_step_done": False,
-        "integrity_check_done": False,
-        "integrity_summary": None
-    }
-    for key, value in default_states.items():
-        if key not in st.session_state:
-            st.session_state[key] = value
+# Define the states for our state machine
+STATE_INITIAL = "initial"
+STATE_DATA_LOADED = "data_loaded"
+STATE_PROCESSING = "processing"
+STATE_OVERWRITE_CONFIRM = "overwrite_confirm"
 
-initialize_session_state()
+def initialize_state(force_reset=False):
+    """Initializes or resets the session state for this page."""
+    if force_reset or 'page_state' not in st.session_state:
+        st.session_state.page_state = STATE_INITIAL
+        st.session_state.new_data_df = None
+        st.session_state.existing_data_df = None
+        st.session_state.duplicates_df = None
 
-# Optional: Enable Debugging Mode
-DEBUG_MODE = False
-if DEBUG_MODE:
-    st.write("### Session State:", st.session_state)
+def process_loaded_data(df):
+    """Reshapes and filters the data loaded from Google Sheets."""
+    long_df = reshape_round_data(df, ['TEGNum', 'Round', 'Hole', 'Par', 'SI'])
+    long_df = long_df.dropna(subset=['Score'])[long_df['Score'] != 0]
+    rounds_with_18_holes = long_df.groupby(['TEGNum', 'Round', 'Pl']).filter(lambda x: len(x) == 18)
+    return rounds_with_18_holes
 
-# Function Definitions
+def check_for_duplicates():
+    """Checks if the new data already exists in the main scores file."""
+    try:
+        st.session_state.existing_data_df = read_file(ALL_SCORES_PARQUET)
+    except FileNotFoundError:
+        st.session_state.existing_data_df = pd.DataFrame(columns=['TEGNum', 'Round'])
 
-#@st.cache_data(show_spinner=False)
-def load_google_sheet(sheet_name: str, worksheet_name: str) -> pd.DataFrame:
-    """
-    Load data from a specified Google Sheet and worksheet.
-    """
-    logger.info("Fetching data from Google Sheets.")
-    return get_google_sheet(sheet_name, worksheet_name)
+    new_tegs_rounds = st.session_state.new_data_df[['TEGNum', 'Round']].drop_duplicates()
+    
+    # Ensure consistent types for merging
+    st.session_state.existing_data_df['TEGNum'] = st.session_state.existing_data_df['TEGNum'].astype(str)
+    st.session_state.existing_data_df['Round'] = st.session_state.existing_data_df['Round'].astype(str)
+    new_tegs_rounds['TEGNum'] = new_tegs_rounds['TEGNum'].astype(str)
+    new_tegs_rounds['Round'] = new_tegs_rounds['Round'].astype(str)
 
-#@st.cache_data(show_spinner=False)
-def load_handicap_data(path: str) -> pd.DataFrame:
-    """
-    Load and prepare handicap data.
-    """
-    logger.info("Loading handicap data.")
-    return load_and_prepare_handicap_data(path)
+    duplicates = st.session_state.existing_data_df.merge(new_tegs_rounds, on=['TEGNum', 'Round'], how='inner')
+    st.session_state.duplicates_df = duplicates
+    return not duplicates.empty
 
-def remove_duplicates(existing_df: pd.DataFrame, new_df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Remove duplicates from existing_df based on TEGNum and Round present in new_df.
-    """
-    logger.info("Identifying duplicates.")
-    duplicates = existing_df.merge(
-        new_df,
-        on=['TEGNum', 'Round'],
-        how='inner',
-        indicator=True
-    )
-    if not duplicates.empty:
-        logger.info(f"Found {len(duplicates)} duplicates. Removing them.")
-        existing_df = existing_df.merge(
-            new_df,
-            on=['TEGNum', 'Round'],
-            how='left',
-            indicator=True
-        )
+def run_update_process(overwrite=False):
+    """The main data processing and saving logic."""
+    existing_df = st.session_state.existing_data_df
+    new_data_df = st.session_state.new_data_df
+
+    if overwrite:
+        new_tegs_rounds = new_data_df[['TEGNum', 'Round']].drop_duplicates()
+        existing_df = existing_df.merge(new_tegs_rounds, on=['TEGNum', 'Round'], how='left', indicator=True)
         existing_df = existing_df[existing_df['_merge'] == 'left_only'].drop(columns=['_merge'])
-    else:
-        logger.info("No duplicates found.")
-    return existing_df, duplicates
 
-# Streamlit App Title
-st.title("🏌️‍♂️ TEG Round Data Processing")
-#st.write(st.secrets)
-try:
-    # Step 1: Load Data
-    if not st.session_state.data_loaded:
-        if st.button("🔄 Load Data", key="load_data_btn"):
-            with st.spinner("Loading data from Google Sheets..."):
-                df = load_google_sheet("TEG Round Input", "Scores")
-                st.success("✅ Data loaded from Google Sheets.")
+    hc_long = load_and_prepare_handicap_data(HANDICAPS_CSV)
+    processed_rounds = process_round_for_all_scores(new_data_df, hc_long)
 
-                # Reshape to Long Format
-                long_df = reshape_round_data(df, ['TEGNum', 'Round', 'Hole', 'Par', 'SI'])
-                st.info("🔄 Data reshaped to long format.")
+    if not processed_rounds.empty:
+        # Ensure consistent data types before concatenation
+        existing_df['TEGNum'] = pd.to_numeric(existing_df['TEGNum'])
+        existing_df['Round'] = pd.to_numeric(existing_df['Round'])
+        processed_rounds['TEGNum'] = pd.to_numeric(processed_rounds['TEGNum'])
+        processed_rounds['Round'] = pd.to_numeric(processed_rounds['Round'])
 
-                # Filter Scores
-                long_df = long_df.dropna(subset=['Score'])[long_df['Score'] != 0]
-                st.info("📊 Filtered out scores that are 0 or blank.")
-
-                # Check for 18 Holes
-                rounds_with_18_holes = long_df.groupby(['TEGNum', 'Round', 'Pl']).filter(lambda x: len(x) == 18)
-
-                if rounds_with_18_holes.empty:
-                    st.error("❌ No valid rounds found. Please check the data and try again.")
-                    st.stop()
-
-                # Update Session State
-                st.session_state.rounds_with_18_holes = rounds_with_18_holes
-                st.session_state.data_loaded = True
-                st.success("✅ Data loaded and processed successfully.")
-
-    # Step 2: Show Summary and Continue/Cancel Buttons
-    if st.session_state.data_loaded and not st.session_state.continue_processing and not st.session_state.overwrite_step_done:
-        if st.session_state.rounds_with_18_holes is not None:
-            summary_df = st.session_state.rounds_with_18_holes.groupby(['TEGNum', 'Round', 'Pl'])['Score'].sum().reset_index()
-            summary_pivot = summary_df.pivot(index='Pl', columns=['Round', 'TEGNum'], values='Score').fillna('-')
-            st.write("### 📊 Score Summary by Player, Round, and TEG:")
-            st.dataframe(summary_pivot)
-
-        # Continue and Cancel Buttons
-        col1, col2 = st.columns(2)
-        with col1:
-            if st.button("➡️ Continue", key="continue_btn"):
-                st.session_state.continue_processing = True
-                st.success("➡️ Proceeding to process the data...")
-        with col2:
-            if st.button("❌ Cancel", key="cancel_btn"):
-                st.warning("❌ Process cancelled by user.")
-                # Reset relevant session state
-                st.session_state.data_loaded = False
-                st.session_state.rounds_with_18_holes = None
-                st.stop()
-
-    # Step 3: Check for Existing Data Upon Continuing
-    if st.session_state.continue_processing and not st.session_state.overwrite_step_done:
+        final_df = pd.concat([existing_df, processed_rounds], ignore_index=True)
         
-        # --- GUARD CLAUSE ---
-        # If the user navigates away and comes back, this state might be lost.
-        # This check prevents errors by stopping execution if the data isn't ready.
-        if st.session_state.rounds_with_18_holes is None:
-            st.warning("Session data lost. Please start over by clicking 'Load Data'.")
-            st.stop()
-        # --- END GUARD CLAUSE ---
+        write_file(ALL_SCORES_PARQUET, final_df, f"Updated data with {len(processed_rounds)} new records")
+        st.success(f"✅ Updated data saved to {ALL_SCORES_PARQUET}.")
 
-        st.write("### 🔍 Checking for Existing Data...")
+        with st.spinner("💾 Updating all-data..."):
+            update_all_data(ALL_SCORES_PARQUET, ALL_DATA_PARQUET, ALL_DATA_CSV_MIRROR)
+            st.success("💾 All-data updated and CSV created.")
+    else:
+        st.warning("⚠️ No new records to append.")
 
-        with st.spinner("📂 Loading all-scores.parquet..."):
-            try:
-                all_scores_df = read_file(ALL_SCORES_PARQUET)
-                if all_scores_df is None:
-                    st.error("Failed to load all-scores.parquet - file returned None")
-                    st.stop()
-                st.write(f"✓ Loaded all-scores.parquet: {all_scores_df.shape}")  # Debug info
-                st.success("📂 Loaded all-scores.parquet.")
-            except FileNotFoundError:
-                st.warning(f"⚠️ File not found: {ALL_SCORES_PARQUET}. Creating a new empty DataFrame.")
-                all_scores_df = pd.DataFrame()
-            except Exception as e:
-                st.error(f"An error occurred while reading {ALL_SCORES_PARQUET}: {e}")
-                st.stop()
+# --- App UI Starts Here ---
 
-        # Identify New TEG & Round Combinations
-        new_tegs_rounds = st.session_state.rounds_with_18_holes[['TEGNum', 'Round']].drop_duplicates()
+st.title("🏌️‍♂️ TEG Round Data Processing")
+initialize_state()
 
-        # Ensure consistent data types
-        all_scores_df['TEGNum'] = all_scores_df['TEGNum'].astype(str).str.strip()
-        all_scores_df['Round'] = all_scores_df['Round'].astype(str).str.strip()
-        new_tegs_rounds['TEGNum'] = new_tegs_rounds['TEGNum'].astype(str).str.strip()
-        new_tegs_rounds['Round'] = new_tegs_rounds['Round'].astype(str).str.strip()
+# --- STATE 1: INITIAL ---
+if st.session_state.page_state == STATE_INITIAL:
+    st.write("Click the button below to load new round data from Google Sheets.")
+    if st.button("🔄 Load Data"):
+        with st.spinner("Loading and processing data from Google Sheets..."):
+            raw_df = get_google_sheet("TEG Round Input", "Scores")
+            processed_df = process_loaded_data(raw_df)
 
-        # Identify duplicates
-        all_scores_df, duplicates = remove_duplicates(all_scores_df, new_tegs_rounds)
-
-        if not duplicates.empty and not st.session_state.overwrite_data:
-            st.write("### ⚠️ Existing Data Found:")
-            st.write(summarise_existing_rd_data(duplicates))
-
-            # Overwrite and Cancel Overwrite Buttons
-            col1, col2 = st.columns(2)
-            with col1:
-                if st.button("✅ Overwrite", key="overwrite_btn"):
-                    st.session_state.overwrite_data = True
-                    st.success("✅ Overwrite confirmed. Proceeding to remove duplicates...")
-            with col2:
-                if st.button("🚫 Cancel Overwrite", key="cancel_overwrite_btn"):
-                    st.warning("🚫 Overwrite process cancelled by user.")
-                    # Reset relevant session state
-                    st.session_state.overwrite_data = False
-                    st.session_state.continue_processing = False
-                    st.stop()
-
-        # Proceed with processing if no duplicates or overwrite is confirmed
-        if (duplicates.empty or st.session_state.overwrite_data):
-            # Remove duplicates if overwrite is confirmed
-            if st.session_state.overwrite_data:
-                with st.spinner("🗑️ Removing duplicates..."):
-                    all_scores_df, _ = remove_duplicates(all_scores_df, new_tegs_rounds)
-                    st.success("🗑️ Duplicates removed successfully.")
-                # Reset overwrite flag
-                st.session_state.overwrite_data = False
-
-            # Load Handicap Data
-            with st.spinner("⛳ Loading handicap data..."):
-                hc_long = load_and_prepare_handicap_data(HANDICAPS_CSV)
-                st.success("⛳ Handicap data loaded.")
-
-            # Process Rounds
-            with st.spinner("🔄 Processing rounds..."):
-                processed_rounds = process_round_for_all_scores(st.session_state.rounds_with_18_holes, hc_long)
-                st.success("🔄 Rounds processed successfully.")
-
-            if not processed_rounds.empty:
-                # Ensure consistent data types before concatenation
-                all_scores_df['TEGNum'] = pd.to_numeric(all_scores_df['TEGNum'])
-                all_scores_df['Round'] = pd.to_numeric(all_scores_df['Round'])
-                processed_rounds['TEGNum'] = pd.to_numeric(processed_rounds['TEGNum'])
-                processed_rounds['Round'] = pd.to_numeric(processed_rounds['Round'])
-                
-                # Append the processed data to all-scores
-                all_scores_df = pd.concat([all_scores_df, processed_rounds], ignore_index=True)
-                st.write(f"✅ Appended {len(processed_rounds)} new records to all-scores.")
-
-                # Save the updated all-scores data
-                write_file(ALL_SCORES_PARQUET, all_scores_df, 
-                    f"Updated data with {len(processed_rounds)} new records")
-                st.success(f"✅ Updated data saved to {ALL_SCORES_PARQUET}.")
-
-                # Run the update_all_data process
-                with st.spinner("💾 Updating all-data..."):
-                    update_all_data(ALL_SCORES_PARQUET, ALL_DATA_PARQUET, ALL_DATA_CSV_MIRROR)
-                    st.success("💾 All-data updated and CSV created.")
+            if processed_df.empty:
+                st.error("❌ No valid rounds with 18 holes found. Please check the data and try again.")
             else:
-                st.warning("⚠️ No new records to append.")
+                st.session_state.new_data_df = processed_df
+                st.session_state.page_state = STATE_DATA_LOADED
+                st.rerun()
 
-            # Reset session state flags to allow for a new process
-            st.session_state.continue_processing = False
-            st.session_state.overwrite_step_done = False
-            st.session_state.data_loaded = False
-            st.session_state.rounds_with_18_holes = None
+# --- STATE 2: DATA LOADED, AWAITING CONFIRMATION ---
+elif st.session_state.page_state == STATE_DATA_LOADED:
+    st.write("### 📊 New Data Summary")
+    summary_df = st.session_state.new_data_df.groupby(['TEGNum', 'Round', 'Pl'])['Score'].sum().reset_index()
+    summary_pivot = summary_df.pivot(index='Pl', columns=['Round', 'TEGNum'], values='Score').fillna('-')
+    st.dataframe(summary_pivot)
 
-except Exception as e:
-    logger.error(f"An unexpected error occurred: {e}")
-    st.error(f"⚠️ An unexpected error occurred: {e}")
+    st.write("---")
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("➡️ Process This Data"):
+            if check_for_duplicates():
+                st.session_state.page_state = STATE_OVERWRITE_CONFIRM
+            else:
+                st.session_state.page_state = STATE_PROCESSING
+            st.rerun()
+    with col2:
+        if st.button("❌ Cancel"):
+            initialize_state(force_reset=True)
+            st.rerun()
 
-# Step 4: Data Integrity Check Button
+# --- STATE 3: OVERWRITE CONFIRMATION ---
+elif st.session_state.page_state == STATE_OVERWRITE_CONFIRM:
+    st.warning("⚠️ Existing Data Found!")
+    st.write("The following data already exists in the system. Do you want to overwrite it?")
+    st.dataframe(summarise_existing_rd_data(st.session_state.duplicates_df))
+    
+    st.write("---")
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("✅ Yes, Overwrite"):
+            st.session_state.page_state = STATE_PROCESSING
+            run_update_process(overwrite=True)
+            initialize_state(force_reset=True) # Reset for next run
+            st.success("✅ Data successfully overwritten and updated!")
+
+    with col2:
+        if st.button("🚫 No, Cancel"):
+            initialize_state(force_reset=True)
+            st.rerun()
+
+# --- STATE 4: PROCESSING ---
+elif st.session_state.page_state == STATE_PROCESSING:
+    with st.spinner("Processing and saving data..."):
+        run_update_process(overwrite=False)
+        initialize_state(force_reset=True) # Reset for next run
+        st.success("✅ Data successfully processed and saved!")
+
+# --- Data Integrity Check (Always available) ---
 st.write("---")
 st.write("### 🔍 Data Integrity Check")
-if st.button("🔍 Run Data Integrity Check", key="integrity_check_btn"):
+if st.button("🔍 Run Data Integrity Check"):
     with st.spinner("🔍 Running data integrity checks..."):
         summary = check_for_complete_and_duplicate_data(ALL_SCORES_PARQUET, ALL_DATA_PARQUET)
-
-        # Evaluate the summary dictionary to determine if there are issues
-        issues_found = False
-        issue_messages = []
-
-        if not summary['incomplete_scores'].empty:
-            issues_found = True
-            issue_messages.append("❗ Incomplete data found in **all-scores.csv**.")
-
-        if not summary['duplicate_scores'].empty:
-            issues_found = True
-            issue_messages.append("❗ Duplicate data found in **all-scores.csv**.")
-
-        if not summary['incomplete_data'].empty:
-            issues_found = True
-            issue_messages.append("❗ Incomplete data found in **all-data.parquet**.")
-
-        if not summary['duplicate_data'].empty:
-            issues_found = True
-            issue_messages.append("❗ Duplicate data found in **all-data.parquet**.")
+        issues_found = any(not df.empty for df in summary.values())
 
         if issues_found:
             st.error("⚠️ **Data Integrity Issues Detected:**")
-            for msg in issue_messages:
-                st.error(msg)
-            # Optionally, display detailed tables
-            if not summary['incomplete_scores'].empty:
-                st.write("#### 📌 Incomplete Scores in all-scores.csv:")
-                st.dataframe(summary['incomplete_scores'])
-            if not summary['duplicate_scores'].empty:
-                st.write("#### 📌 Duplicate Scores in all-scores.csv:")
-                st.dataframe(summary['duplicate_scores'])
-            if not summary['incomplete_data'].empty:
-                st.write("#### 📌 Incomplete Data in all-data.parquet:")
-                st.dataframe(summary['incomplete_data'])
-            if not summary['duplicate_data'].empty:
-                st.write("#### 📌 Duplicate Data in all-data.parquet:")
-                st.dataframe(summary['duplicate_data'])
+            for name, df in summary.items():
+                if not df.empty:
+                    st.write(f"#### 📌 {name.replace('_', ' ').title()}:")
+                    st.dataframe(df)
         else:
             st.success("✅ **Data Integrity Check Passed. No issues found.**")
