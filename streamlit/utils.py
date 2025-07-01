@@ -329,8 +329,8 @@ def process_round_for_all_scores(long_df: pd.DataFrame, hc_long: pd.DataFrame) -
     # Determine 'FrontBack' using vectorized operations
     long_df['FrontBack'] = np.where(long_df['Hole'] < 10, 'Front', 'Back')
 
-    # Map player names
-    long_df['Player'] = long_df['Pl'].apply(get_player_name)
+    # Map player names using the more efficient .map() method
+    long_df['Player'] = long_df['Pl'].map(PLAYER_DICT).fillna('Unknown Player')
 
     # Calculate 'HCStrokes' using vectorized operations
     long_df['HCStrokes'] = (long_df['HC'] // 18) + ((long_df['HC'] % 18 >= long_df['SI']).astype(int))
