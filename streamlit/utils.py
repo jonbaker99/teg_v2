@@ -37,26 +37,26 @@ def get_base_directory():
     return BASE_DIR
 
 # ============================================
-# SIMPLIFIED STORAGE FUNCTIONS
+#  CONSTANTS AND CONFIGURATIONS
 # ============================================
 
-# Constants
+# --- GitHub Repository ---
 GITHUB_REPO = "jonbaker99/teg_v2"
+
+# --- Base Directory ---
+# Determines the root directory of the project, whether running locally or on Streamlit/Railway.
 BASE_DIR = Path.cwd().parent if Path.cwd().name == "streamlit" else Path.cwd()
 
-# File paths for local access (Path objects)
-PARQUET_FILE_PATH = BASE_DIR / 'data' / 'all-data.parquet'
-ALL_SCORES_PATH = BASE_DIR / 'data' / 'all-scores.csv'
-HANDICAPS_PATH = BASE_DIR / 'data' / 'handicaps.csv'
-CSV_OUTPUT_FILE_PATH = BASE_DIR / 'data' / 'all-data.csv'
-ROUND_INFO_FILE_PATH = BASE_DIR / 'data' / 'round_info.csv'
+# --- Data File Paths ---
+# Defines the paths for all data files, used for both local and GitHub access.
+# Using Parquet for primary data files for performance.
+ALL_DATA_PARQUET = "data/all-data.parquet"
+ALL_SCORES_PARQUET = "data/all-scores.parquet" # Changed from .csv to .parquet
+HANDICAPS_CSV = "data/handicaps.csv"
+ROUND_INFO_CSV = "data/round_info.csv"
 
-# File paths for GitHub access (strings)
-PARQUET_FILE = "data/all-data.parquet"
-ALL_SCORES_FILE = "data/all-scores.csv"
-HANDICAPS_FILE = "data/handicaps.csv"
-ROUND_INFO_FILE = "data/round_info.csv"
-CSV_OUTPUT_FILE = "data/all-data.csv"
+# This is a mirrored version of the main data file, useful for ad-hoc analysis.
+ALL_DATA_CSV_MIRROR = "data/all-data.csv"
 
 def get_current_branch():
     """Get current git branch - Railway uses env var, local uses git"""
@@ -119,34 +119,37 @@ def write_to_github(file_path, data, commit_message="Update data"):
     # Clear cache after write
     st.cache_data.clear()
 
-def read_file(file_path, file_type='csv'):
-    """Simple file reading for any file"""
+def read_file(file_path: str) -> pd.DataFrame:
+    """
+    Reads a data file (CSV or Parquet) from the appropriate source (local or GitHub).
+    The function determines the file type from its extension.
+    """
     if os.getenv('RAILWAY_ENVIRONMENT'):
         return read_from_github(file_path)
     else:
-        local_path = BASE_DIR / file_path if not isinstance(file_path, Path) else file_path
-        if file_type == 'csv':
+        local_path = BASE_DIR / file_path
+        if file_path.endswith('.csv'):
             return pd.read_csv(local_path)
-        elif file_type == 'parquet':
+        elif file_path.endswith('.parquet'):
             return pd.read_parquet(local_path)
         else:
-            with open(local_path, 'r') as f:
-                return f.read()
+            raise ValueError(f"Unsupported file type: {file_path}")
 
-def write_file(file_path, data, commit_message="Update data"):
-    """Simple file writing"""
+def write_file(file_path: str, data: pd.DataFrame, commit_message: str = "Update data"):
+    """
+    Writes a DataFrame to a file (CSV or Parquet) in the appropriate location (local or GitHub).
+    The function determines the file type from its extension.
+    """
     if os.getenv('RAILWAY_ENVIRONMENT'):
         write_to_github(file_path, data, commit_message)
     else:
-        local_path = BASE_DIR / file_path if not isinstance(file_path, Path) else file_path
-        if isinstance(data, pd.DataFrame):
-            if str(file_path).endswith('.csv'):
-                data.to_csv(local_path, index=False)
-            elif str(file_path).endswith('.parquet'):
-                data.to_parquet(local_path, index=False)
+        local_path = BASE_DIR / file_path
+        if file_path.endswith('.csv'):
+            data.to_csv(local_path, index=False)
+        elif file_path.endswith('.parquet'):
+            data.to_parquet(local_path, index=False)
         else:
-            with open(local_path, 'w') as f:
-                f.write(data)
+            raise ValueError(f"Unsupported file type: {file_path}")
 
 def backup_file(source_path, backup_path):
     """Create a backup of a file"""
@@ -179,41 +182,8 @@ def backup_file(source_path, backup_path):
 
 
 
-# Constants and Configurations
-BASE_DIR = get_base_directory()
-DATA_DIR = BASE_DIR / 'data' 
-
-# For local file access (Path objects)
-ALL_SCORES_PATH = BASE_DIR / 'data' / 'all-scores.csv'
-HANDICAPS_PATH = BASE_DIR / 'data' / 'handicaps.csv'
-PARQUET_FILE_PATH = BASE_DIR / 'data' / 'all-data.parquet'
-CSV_OUTPUT_FILE_PATH = BASE_DIR / 'data' / 'all-data.csv'
-ROUND_INFO_FILE_PATH = BASE_DIR / 'data' / 'round_info.csv'
-
-# For GitHub access (string paths relative to repo root)
-PARQUET_FILE = "data/all-data.parquet"
-ALL_SCORES_FILE = "data/all-scores.csv"
-HANDICAPS_FILE = "data/handicaps.csv"
-ROUND_INFO_FILE = "data/round_info.csv"
-CSV_OUTPUT_FILE = "data/all-data.csv"
-
-
-## DIRECTORY CHECKS
-# st.write(f'Current base dir variable: {BASE_DIR}')
-# st.write(f'Old base dir: {os.path.dirname(os.path.abspath(__file__))}')
-# st.write(f'Data dir path: {DATA_DIR}')
-# st.write(f'All scores path: {ALL_SCORES_PATH}')
-# st.write(f'parquet all_data path: {PARQUET_FILE}')
-# st.write(f'csv all data path: {CSV_OUTPUT_FILE}')
-
-
-CONFIG: Dict[str, str] = {
-    #"ROUND_INFO_PATH": os.path.join(DATA_DIR, "/round_info.csv")  # Update this for round_info.csv
-    "ROUND_INFO_PATH": ROUND_INFO_FILE
-}
-
-#FILE_PATH_ALL_DATA = os.path.join(BASE_DIR, "../data/all-data.parquet")  # Dynamically construct the path
-FILE_PATH_ALL_DATA = PARQUET_FILE
+# FILE_PATH_ALL_DATA = os.path.join(BASE_DIR, "../data/all-data.parquet")  # Dynamically construct the path
+FILE_PATH_ALL_DATA = ALL_DATA_PARQUET
 
 TOTAL_HOLES = 18
 
@@ -250,10 +220,7 @@ TEG_OVERRIDES = {
 @st.cache_data(ttl=300)  # Cache for 5 minutes
 def load_all_data(exclude_teg_50: bool = True, exclude_incomplete_tegs: bool = False) -> pd.DataFrame:
     try:
-        if os.getenv('RAILWAY_ENVIRONMENT'):
-            df = read_from_github(PARQUET_FILE)
-        else:
-            df = pd.read_parquet(PARQUET_FILE_PATH)
+        df = read_file(ALL_DATA_PARQUET)
     except Exception as e:
         st.error(f"Error loading data: {e}")
         return pd.DataFrame()
@@ -535,6 +502,7 @@ def reshape_round_data(df: pd.DataFrame, id_vars: List[str]) -> pd.DataFrame:
     return reshaped_df
 
 
+@st.cache_data
 def load_and_prepare_handicap_data(file_path: str) -> pd.DataFrame:
     """
     Load and prepare handicap data from a CSV file.

@@ -12,42 +12,17 @@ from utils import (
     summarise_existing_rd_data,
     update_all_data,
     check_for_complete_and_duplicate_data,
-    get_base_directory,
     read_file, 
-    write_file
+    write_file,
+    ALL_SCORES_PARQUET,
+    HANDICAPS_CSV,
+    ALL_DATA_PARQUET,
+    ALL_DATA_CSV_MIRROR
 )
 
 # Configure Logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-# # Define the Base Directory (this ensures paths work on GitHub and locally)
-# BASE_DIR = Path(__file__).resolve().parent.parent.parent
-# #st.write(BASE_DIR)
-
-# # Function to find the root directory (TEG folder) by looking for the 'TEG' folder name
-# def find_project_root(current_path: Path, folder_name: str) -> Path:
-#     while current_path.name != folder_name:
-#         if current_path == current_path.parent:
-#             raise RuntimeError(f"Folder '{folder_name}' not found in the directory tree")
-#         current_path = current_path.parent
-#     return current_path
-
-# folder_name = 'TEG'
-
-# # Find the TEG directory (search for the folder named 'TEG')
-# BASE_DIR = find_project_root(Path(__file__).resolve(), folder_name)
-# #st.write(BASE_DIR)
-
-BASE_DIR = get_base_directory()
-#st.write(BASE_DIR)
-
-# Define Constants with Dynamic Paths
-#CREDS_PATH = BASE_DIR / 'credentials' / 'maps-1489139675490-41bee944be4e.json'
-ALL_SCORES_PATH = BASE_DIR / 'data' / 'all-scores.csv'
-HANDICAPS_PATH = BASE_DIR / 'data' / 'handicaps.csv'
-PARQUET_FILE = BASE_DIR / 'data' / 'all-data.parquet'
-CSV_OUTPUT_FILE = BASE_DIR / 'data' / 'all-data.csv'
 
 # Initialize Session State
 def initialize_session_state():
@@ -170,16 +145,16 @@ try:
     if st.session_state.continue_processing and not st.session_state.overwrite_step_done:
         st.write("### 🔍 Checking for Existing Data...")
 
-        with st.spinner("📂 Loading all-scores.csv..."):
+        with st.spinner("📂 Loading all-scores.parquet..."):
             try:
-                all_scores_df = read_file(ALL_SCORES_PATH, 'csv')
+                all_scores_df = read_file(ALL_SCORES_PARQUET)
                 if all_scores_df is None:
-                    st.error("Failed to load all_scores.csv - file returned None")
+                    st.error("Failed to load all-scores.parquet - file returned None")
                     st.stop()
-                st.write(f"✓ Loaded all_scores.csv: {all_scores_df.shape}")  # Debug info
-                st.success("📂 Loaded all-scores.csv.")
+                st.write(f"✓ Loaded all-scores.parquet: {all_scores_df.shape}")  # Debug info
+                st.success("📂 Loaded all-scores.parquet.")
             except FileNotFoundError:
-                st.error(f"❌ File not found: {ALL_SCORES_PATH}. Please ensure the file exists.")
+                st.error(f"❌ File not found: {ALL_SCORES_PARQUET}. Please ensure the file exists.")
                 st.stop()
 
         # Identify New TEG & Round Combinations
@@ -224,7 +199,7 @@ try:
 
             # Load Handicap Data
             with st.spinner("⛳ Loading handicap data..."):
-                hc_long = load_handicap_data(HANDICAPS_PATH)
+                hc_long = load_and_prepare_handicap_data(HANDICAPS_CSV)
                 st.success("⛳ Handicap data loaded.")
 
             # Process Rounds
@@ -238,14 +213,13 @@ try:
                 st.write(f"✅ Appended {len(processed_rounds)} new records to all-scores.")
 
                 # Save the updated all-scores data
-                #all_scores_df.to_csv(ALL_SCORES_PATH, index=False)
-                write_file(ALL_SCORES_PATH, all_scores_df, 
+                write_file(ALL_SCORES_PARQUET, all_scores_df, 
                     f"Updated data with {len(processed_rounds)} new records")
-                st.success(f"✅ Updated data saved to {ALL_SCORES_PATH}.")
+                st.success(f"✅ Updated data saved to {ALL_SCORES_PARQUET}.")
 
                 # Run the update_all_data process
                 with st.spinner("💾 Updating all-data..."):
-                    update_all_data(ALL_SCORES_PATH, PARQUET_FILE, CSV_OUTPUT_FILE)
+                    update_all_data(ALL_SCORES_PARQUET, ALL_DATA_PARQUET, ALL_DATA_CSV_MIRROR)
                     st.success("💾 All-data updated and CSV created.")
             else:
                 st.warning("⚠️ No new records to append.")
@@ -265,7 +239,7 @@ st.write("---")
 st.write("### 🔍 Data Integrity Check")
 if st.button("🔍 Run Data Integrity Check", key="integrity_check_btn"):
     with st.spinner("🔍 Running data integrity checks..."):
-        summary = check_for_complete_and_duplicate_data(ALL_SCORES_PATH, PARQUET_FILE)
+        summary = check_for_complete_and_duplicate_data(ALL_SCORES_PARQUET, ALL_DATA_PARQUET)
 
         # Evaluate the summary dictionary to determine if there are issues
         issues_found = False
