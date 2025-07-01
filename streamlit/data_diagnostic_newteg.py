@@ -273,7 +273,7 @@ st.subheader("2. What the App is Actually Reading")
 # Test what read_file actually returns
 try:
     st.write("**Using read_file():**")
-    round_info = read_file(ROUND_INFO_FILE, 'csv')
+    round_info = read_file(ROUND_INFO_FILE)
     
     st.success("✅ Successfully read round_info data via read_file()")
     st.write(f"Shape: {round_info.shape}")
@@ -578,8 +578,8 @@ try:
     pd.read_csv = debug_read_csv
     
     try:
-        st.write("**Calling read_file(ROUND_INFO_FILE, 'csv'):**")
-        round_info_via_function = read_file(ROUND_INFO_FILE, 'csv')
+        st.write("**Calling read_file(ROUND_INFO_FILE):**")
+        round_info_via_function = read_file(ROUND_INFO_FILE)
         st.write(f"Result shape: {round_info_via_function.shape}")
         
         teg18_via_function = round_info_via_function[round_info_via_function['TEGNum'] == 18]
@@ -662,7 +662,7 @@ except Exception as e:
 
 st.write("## 6. Column Name Debug")
 try:
-    round_info = read_file(ROUND_INFO_FILE, 'csv')
+    round_info = read_file(ROUND_INFO_FILE)
     
     st.write("**Actual columns in round_info:**")
     st.write(list(round_info.columns))
@@ -686,5 +686,3 @@ try:
         
 except Exception as e:
     st.error(f"Column debug error: {e}")
-
-

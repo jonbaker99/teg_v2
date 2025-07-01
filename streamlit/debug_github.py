@@ -69,7 +69,7 @@ for file_path in test_files:
     if st.button(f"Test Read: {file_path}", key=f"read_{file_path}"):
         try:
             # Test with string path
-            data = read_file(file_path, 'csv' if file_path.endswith('.csv') else 'parquet')
+            data = read_file(file_path)
             st.success(f"✅ Successfully read {file_path}")
             st.write(f"Data shape: {data.shape if hasattr(data, 'shape') else 'N/A'}")
         except Exception as e:
@@ -90,7 +90,7 @@ if st.button("Test Write to GitHub"):
         st.success(f"✅ Successfully wrote test file: {test_file}")
         
         # Try to read it back
-        read_data = read_file(test_file, 'csv')
+        read_data = read_file(test_file)
         st.success(f"✅ Successfully read back test file")
         st.dataframe(read_data)
         
@@ -130,4 +130,4 @@ for i, test_path in enumerate(test_paths):
         
         st.write(f"  → GitHub path: {github_path}")
     except Exception as e:
-        st.write(f"  → Error in conversion: {e}") 
+        st.write(f"  → Error in conversion: {e}")

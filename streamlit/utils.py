@@ -211,6 +211,7 @@ PLAYER_DICT = {
     'HM': 'Henry MELLER',
     'SN': 'Stuart NEUMANN',
     'JP': 'John PATTERSON',
+    'GP': 'Graham PATTERSON',
     # Add more player initials and names as needed
 }
 
@@ -531,7 +532,7 @@ def load_and_prepare_handicap_data(file_path: str) -> pd.DataFrame:
     """
     logger.info(f"Loading handicap data from {file_path}")
     try:
-        hc_lookup = read_file(file_path, 'csv')
+        hc_lookup = read_file(file_path)
     except Exception as e:
         logger.error(f"File not found: {file_path}")
         raise
@@ -573,7 +574,7 @@ def add_round_info(all_data: pd.DataFrame) -> pd.DataFrame:
     logger.info("Adding round information to the data.")
 
     # Read the round info CSV file
-    round_info = read_file(ROUND_INFO_FILE, 'csv')
+    round_info = read_file(ROUND_INFO_CSV)
 
     # Merge the round info with all_data based on TEGNum and Round
     merged_data = pd.merge(
@@ -599,7 +600,7 @@ def update_all_data(csv_file: str, parquet_file: str, csv_output_file: str) -> N
 
     # Load the CSV file
     try:
-        df = read_file(csv_file, 'csv')
+        df = read_file(csv_file)
         logger.debug("CSV data loaded.")
     except FileNotFoundError:
         logger.error(f"CSV file not found: {csv_file}")
@@ -644,8 +645,8 @@ def check_for_complete_and_duplicate_data(all_scores_path: str, all_data_path: s
     logger.info("Checking for complete and duplicate data.")
 
     # Load the all-scores CSV file and the all-data Parquet file
-    all_scores_df = read_file(all_scores_path, 'csv')
-    all_data_df = read_file(all_data_path, 'parquet')
+    all_scores_df = read_file(all_scores_path)
+    all_data_df = read_file(all_data_path)
     logger.debug("All-scores and all-data files loaded.")
 
     # Group by TEG, Round, and Player and count the number of entries
