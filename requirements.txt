@@ -7,3 +7,7 @@ pandas
 numpy
 PyGithub
 altair
+
+crewai
+openai      # or another LLM SDK you choose
+openrouter

@@ -280,7 +280,7 @@ PLAYER_DICT = {
     'HM': 'Henry MELLER',
     'SN': 'Stuart NEUMANN',
     'JP': 'John PATTERSON',
-    # Add more player initials and names as needed
+    'GP': 'Graham PATTERSON'   # Add more player initials and names as needed
 }
 
 TEG_ROUNDS = {
