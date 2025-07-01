@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 import shutil
 from utils import ALL_SCORES_PATH, PARQUET_FILE, CSV_OUTPUT_FILE, BASE_DIR
-from utils import read_file_from_storage, write_file_to_storage, backup_file_on_storage
+from utils import read_file, write_file, backup_file
 
 
 # Initialize all session state variables
@@ -31,15 +31,15 @@ if 'initialized' not in st.session_state:
 #     parquet_df.to_parquet(PARQUET_FILE, index=False)
 
 def load_data():
-    scores_df = read_file_from_storage(ALL_SCORES_PATH, 'csv')
-    data_df = read_file_from_storage(CSV_OUTPUT_FILE, 'csv')
-    parquet_df = read_file_from_storage(PARQUET_FILE, 'parquet')
+    scores_df = read_file(ALL_SCORES_PATH, 'csv')
+    data_df = read_file(CSV_OUTPUT_FILE, 'csv')
+    parquet_df = read_file(PARQUET_FILE, 'parquet')
     return scores_df, data_df, parquet_df
 
 def save_data(scores_df, data_df, parquet_df):
-    write_file_to_storage(ALL_SCORES_PATH, scores_df, 'csv', 'Delete data from all_scores')
-    write_file_to_storage(CSV_OUTPUT_FILE, data_df, 'csv', 'Delete data from all_data')
-    write_file_to_storage(PARQUET_FILE, parquet_df, 'parquet', 'Delete data from parquet')
+    write_file(ALL_SCORES_PATH, scores_df, 'Delete data from all_scores')
+    write_file(CSV_OUTPUT_FILE, data_df, 'Delete data from all_data')
+    write_file(PARQUET_FILE, parquet_df, 'Delete data from parquet')
 
 
 def create_backup():
@@ -50,11 +50,11 @@ def create_backup():
     
     scores_backup = backup_folder / f'all_scores_backup_{timestamp}.csv'
     # shutil.copy(ALL_SCORES_PATH, scores_backup)
-    backup_file_on_storage(ALL_SCORES_PATH, scores_backup)
+    backup_file(ALL_SCORES_PATH, scores_backup)
     
     parquet_backup = backup_folder / f'all_data_backup_{timestamp}.parquet'
     # shutil.copy(PARQUET_FILE, parquet_backup)
-    backup_file_on_storage(PARQUET_FILE, parquet_backup)
+    backup_file(PARQUET_FILE, parquet_backup)
 
     
     return scores_backup, parquet_backup

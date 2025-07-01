@@ -158,18 +158,26 @@ def backup_file(source_path, backup_path):
         import shutil
         shutil.copy(BASE_DIR / source_path, BASE_DIR / backup_path)
 
-# Temporary compatibility wrappers (remove after migration)
-def read_file_from_storage(file_path, file_type='csv'):
-    """Compatibility wrapper - will be removed after migration"""
-    return read_file(file_path, file_type)
+## Temporary compatibility wrappers (remove after migration)
+##  THESE CAN BE DELETED IF EVERYTHING IS RUNNING OK
 
-def write_file_to_storage(file_path, data, file_type='csv', commit_message="Update data"):
-    """Compatibility wrapper - will be removed after migration"""
-    write_file(file_path, data, commit_message)
 
-def backup_file_on_storage(source_path, backup_path):
-    """Compatibility wrapper - will be removed after migration"""
-    backup_file(source_path, backup_path)
+# def read_file_from_storage(file_path, file_type='csv'):
+#     """Compatibility wrapper - will be removed after migration"""
+#     return read_file(file_path, file_type)
+
+# def write_file_to_storage(file_path, data, file_type='csv', commit_message="Update data"):
+#     """Compatibility wrapper - will be removed after migration"""
+#     write_file(file_path, data, commit_message)
+
+# def backup_file_on_storage(source_path, backup_path):
+#     """Compatibility wrapper - will be removed after migration"""
+#     backup_file(source_path, backup_path)
+
+### END OF TEMPORARY COMPATIBILITY WRAPPERS
+
+
+
 
 # Constants and Configurations
 BASE_DIR = get_base_directory()
