@@ -143,6 +143,15 @@ try:
 
     # Step 3: Check for Existing Data Upon Continuing
     if st.session_state.continue_processing and not st.session_state.overwrite_step_done:
+        
+        # --- GUARD CLAUSE ---
+        # If the user navigates away and comes back, this state might be lost.
+        # This check prevents errors by stopping execution if the data isn't ready.
+        if st.session_state.rounds_with_18_holes is None:
+            st.warning("Session data lost. Please start over by clicking 'Load Data'.")
+            st.stop()
+        # --- END GUARD CLAUSE ---
+
         st.write("### 🔍 Checking for Existing Data...")
 
         with st.spinner("📂 Loading all-scores.parquet..."):
