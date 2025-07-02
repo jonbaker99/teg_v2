@@ -132,6 +132,11 @@ elif st.session_state.page_state == STATE_DATA_LOADED:
         if st.button("❌ Cancel"):
             initialize_state(force_reset=True)
             st.rerun()
+        
+    if st.button("🔄 Manual Cache Refresh"):
+        from utils import clear_all_caches
+        clear_all_caches()
+        st.success("All caches cleared successfully")
 
 # --- STATE 3: OVERWRITE CONFIRMATION ---
 elif st.session_state.page_state == STATE_OVERWRITE_CONFIRM:

@@ -21,6 +21,10 @@ import subprocess
 logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
 
+def clear_all_caches():
+    """Clears all Streamlit data caches"""
+    st.cache_data.clear()
+
 
 def get_base_directory():
     # Get the current working directory

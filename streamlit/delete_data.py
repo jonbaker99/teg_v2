@@ -129,3 +129,7 @@ elif st.session_state.delete_page_state == STATE_CONFIRMED:
         perform_deletion()
     initialize_state(force_reset=True)
     st.success('Data deleted', icon="✅")
+    
+    from utils import clear_all_caches
+    clear_all_caches()
+    st.success("♻️ All caches cleared")
