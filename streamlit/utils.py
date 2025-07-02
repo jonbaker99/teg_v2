@@ -171,12 +171,14 @@ def write_file(file_path: str, data: pd.DataFrame, commit_message: str = "Update
 def backup_file(source_path, backup_path):
     """Create a backup of a file"""
     if os.getenv('RAILWAY_ENVIRONMENT'):
-        # Read and write with new name
+        # Read and write with new name (to backups branch)
         data = read_from_github(source_path)
         write_to_github(backup_path, data, f"Backup of {source_path}")
     else:
         import shutil
-        shutil.copy(BASE_DIR / source_path, BASE_DIR / backup_path)
+        backup_full_path = BASE_DIR / backup_path
+        backup_full_path.parent.mkdir(parents=True, exist_ok=True)  # 👈 create folders if needed
+        shutil.copy(BASE_DIR / source_path, backup_full_path)
 
 ## Temporary compatibility wrappers (remove after migration)
 ##  THESE CAN BE DELETED IF EVERYTHING IS RUNNING OK

@@ -16,3 +16,6 @@ __pycache__/
 .env.local
 .env.*.local
 .venv
+
+# Local backup files (only used in local runs)
+data/backups/
