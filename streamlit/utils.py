@@ -105,15 +105,17 @@ def read_from_github(file_path):
         return content.decoded_content.decode()
 
 def write_to_github(file_path, data, commit_message="Update data"):
-    """Simple GitHub file writing"""
     from github import Github
     from io import BytesIO
-    
+
     token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
     g = Github(token)
     repo = g.get_repo(GITHUB_REPO)
-    branch = get_current_branch()
-    
+
+    # 🔁 Decide branch based on file path
+    is_backup = "backups" in file_path
+    branch = "backups" if is_backup else get_current_branch()
+
     # Prepare content
     if isinstance(data, pd.DataFrame):
         if file_path.endswith('.csv'):
@@ -124,15 +126,14 @@ def write_to_github(file_path, data, commit_message="Update data"):
             content = buffer.getvalue()
     else:
         content = data
-    
+
     # Try update, fallback to create
     try:
         file = repo.get_contents(file_path, ref=branch)
         repo.update_file(file_path, commit_message, content, file.sha, branch=branch)
     except:
         repo.create_file(file_path, commit_message, content, branch=branch)
-    
-    # Clear cache after write
+
     st.cache_data.clear()
 
 def read_file(file_path: str) -> pd.DataFrame:
