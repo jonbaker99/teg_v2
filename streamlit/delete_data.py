@@ -57,14 +57,13 @@ def perform_deletion():
 
 def create_backup():
     """Creates timestamped backups of the scores and data files."""
-    backup_folder = BASE_DIR / 'data' / 'backups'
-    backup_folder.mkdir(exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     
-    scores_backup_path = str(backup_folder / f'all_scores_backup_{timestamp}.parquet')
+    # Construct relative paths for GitHub
+    scores_backup_path = f"data/backups/all_scores_backup_{timestamp}.parquet"
     backup_file(ALL_SCORES_PARQUET, scores_backup_path)
     
-    parquet_backup_path = str(backup_folder / f'all_data_backup_{timestamp}.parquet')
+    parquet_backup_path = f"data/backups/all_data_backup_{timestamp}.parquet"
     backup_file(ALL_DATA_PARQUET, parquet_backup_path)
     
     return scores_backup_path, parquet_backup_path
@@ -129,4 +128,4 @@ elif st.session_state.delete_page_state == STATE_CONFIRMED:
     with st.spinner("Backing up and deleting data..."):
         perform_deletion()
     initialize_state(force_reset=True)
-    st.balloons()
+    st.success('Data deleted', icon="✅")
