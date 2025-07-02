@@ -27,6 +27,7 @@ data_pg = st.Page("1000Data update.py", title="Data update", icon=":material/upd
 delete_pg = st.Page("delete_data.py", title="Delete data", icon=":material/skull:")
 leaderboard_pg = st.Page("leaderboard.py", title="Latest Leaderboard", icon=":material/leaderboard:")
 scorecard_pg = st.Page("scorecard.py", title="Scorecard", icon=":material/leaderboard:")
+scorecardv2_pg = st.Page("scorecard_v2.py", title="Scorecard (new)", icon=":material/leaderboard:")
 #players_pg = st.Page("pages/players.py", title="The Players")
 sc_count_pg = st.Page("sc_count.py", title="Count by score & gross vs par", icon=":material/strategy:")
 bestball_pg = st.Page("bestball.py", title="Bestball and worstball", icon=":material/strategy:")
@@ -43,7 +44,7 @@ pg = st.navigation(
             "Records & PBs": [records_page, top_pages, pb_page, worsts_page],
             "Scoring": [byteg_pg, bypar_pg, birdies_pg, streaks_pg, course_rds_pg, course_ave_pg, sc_count_pg, bestball_pg, changes_pg],
             #"Players": [players_pg],
-            "Latest TEG": [leaderboard_pg, latest_rd_page, latest_teg_page, hc_page, scorecard_pg],
+            "Latest TEG": [leaderboard_pg, latest_rd_page, latest_teg_page, hc_page, scorecard_pg, scorecardv2_pg],
             #"Data":[data_pg, delete_pg, connection_test_pg, data_diagnostic_pg]
             "Data":[data_pg, delete_pg, connection_test_pg]
         }

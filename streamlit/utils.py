@@ -98,7 +98,7 @@ def read_from_github(file_path):
     content = repo.get_contents(file_path, ref=get_current_branch())
     
     if file_path.endswith('.csv'):
-        return pd.read_csv(StringIO(content.decoded_content.decode()))
+        return pd.read_csv(StringIO(content.content))
     elif file_path.endswith('.parquet'):
         return pd.read_parquet(BytesIO(content.decoded_content))
     else:
