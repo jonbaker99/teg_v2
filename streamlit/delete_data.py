@@ -34,26 +34,32 @@ def perform_deletion():
     scores_backup_path, parquet_backup_path = create_backup()
     st.info(f"Backups created:\n- {scores_backup_path}\n- {parquet_backup_path}")
 
-    # Load all data files
+    # Load data files (only use parquet - skip the problematic CSV mirror)
     scores_df = st.session_state.scores_df
-    data_df = read_file(ALL_DATA_CSV_MIRROR)
-    parquet_df = read_file(ALL_DATA_PARQUET)
+    
+    try:
+        parquet_df = read_file(ALL_DATA_PARQUET)
+    except Exception as e:
+        st.error(f"Error reading ALL_DATA_PARQUET: {e}")
+        return
 
     # Filter out the selected data
     teg_to_delete = st.session_state.selected_teg
     rounds_to_delete = st.session_state.selected_rounds
     
     scores_df = scores_df[~((scores_df['TEGNum'] == teg_to_delete) & (scores_df['Round'].isin(rounds_to_delete)))]
-    data_df = data_df[~((data_df['TEGNum'] == teg_to_delete) & (data_df['Round'].isin(rounds_to_delete)))]
     parquet_df = parquet_df[~((parquet_df['TEGNum'] == teg_to_delete) & (parquet_df['Round'].isin(rounds_to_delete)))]
 
     # Save the updated data
     write_file(ALL_SCORES_PARQUET, scores_df, f"Deleted TEG {teg_to_delete}, Rounds {rounds_to_delete}")
-    write_file(ALL_DATA_CSV_MIRROR, data_df, f"Deleted TEG {teg_to_delete}, Rounds {rounds_to_delete}")
     write_file(ALL_DATA_PARQUET, parquet_df, f"Deleted TEG {teg_to_delete}, Rounds {rounds_to_delete}")
+    
+    # Recreate the CSV mirror from the updated parquet data
+    write_file(ALL_DATA_CSV_MIRROR, parquet_df, f"Recreated CSV mirror after deletion")
     
     st.success("Data has been successfully deleted and files have been updated.")
     st.cache_data.clear()
+
 
 def create_backup():
     """Creates timestamped backups of the scores and data files."""
