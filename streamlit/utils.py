@@ -112,9 +112,7 @@ def write_to_github(file_path, data, commit_message="Update data"):
     g = Github(token)
     repo = g.get_repo(GITHUB_REPO)
 
-    # 🔁 Decide branch based on file path
-    is_backup = "backups" in file_path
-    branch = "backups" if is_backup else get_current_branch()
+    branch = get_current_branch()
 
     # Prepare content
     if isinstance(data, pd.DataFrame):
@@ -130,9 +128,9 @@ def write_to_github(file_path, data, commit_message="Update data"):
     # Try update, fallback to create
     try:
         file = repo.get_contents(file_path, ref=branch)
-        repo.update_file(file_path, commit_message, content, file.sha, branch=branch)
+        repo.update_file(file_path, commit_message, content, file.sha, branch=get_current_branch())
     except:
-        repo.create_file(file_path, commit_message, content, branch=branch)
+        repo.create_file(file_path, commit_message, content, branch=get_current_branch())
 
     st.cache_data.clear()
 
