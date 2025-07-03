@@ -2,160 +2,29 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from utils import load_all_data, format_vs_par
+from pathlib import Path
 
-# Inline CSS (more reliable than external file)
 def load_scorecard_css():
-    """Load scorecard CSS inline"""
-    st.markdown("""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+    """Load the scorecard CSS file and inject it into Streamlit"""
+    css_file = Path(__file__).parent / "scorecard_styles.css"
     
-    .scorecard-container {
-        background: white;
-        border-radius: 8px;
-        padding: 20px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        max-width: 1400px;
-        margin: 0 auto 30px auto;
-        font-family: 'Roboto', Arial, sans-serif;
-    }
-    
-    .scorecard-header {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-    
-    .scorecard-table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 2px;
-        font-size: 14px;
-        margin-bottom: 20px;
-    }
-    
-    .scorecard-table th,
-    .scorecard-table td {
-        padding: 6px;
-        text-align: center;
-        border: none;
-        font-weight: bold;
-        min-width: 32px;
-        height: 32px;
-        vertical-align: middle;
-        position: relative;
-        background-color: #f8f9fa;
-    }
-    
-    .score-cell {
-        position: relative;
-        background-color: white;
-    }
-    
-    .score-cell::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 28px;
-        height: 28px;
-        border-radius: 4px;
-        z-index: 1;
-    }
-    
-    .score-cell span {
-        position: relative;
-        z-index: 2;
-    }
-    
-    /* Score colors */
-    .score-cell[data-vs-par="-2"]::before { background-color: #FFD700; }
-    .score-cell[data-vs-par="-1"]::before { background-color: #90EE90; }
-    .score-cell[data-vs-par="0"]::before { background-color: #E6F3FF; }
-    .score-cell[data-vs-par="1"]::before { background-color: #FFE4B5; }
-    .score-cell[data-vs-par="2"]::before { background-color: #FFA07A; }
-    .score-cell[data-vs-par="3"]::before,
-    .score-cell[data-vs-par="4"]::before,
-    .score-cell[data-vs-par="5"]::before,
-    .score-cell[data-vs-par="6"]::before,
-    .score-cell[data-vs-par="7"]::before,
-    .score-cell[data-vs-par="8"]::before,
-    .score-cell[data-vs-par="9"]::before,
-    .score-cell[data-vs-par="10"]::before { background-color: #8B0000; }
-    
-    /* Stableford colors */
-    .score-cell[data-stableford="0"]::before { background-color: #ffffff; border: 1px solid #ddd; }
-    .score-cell[data-stableford="1"]::before { background-color: #e3f2fd; }
-    .score-cell[data-stableford="2"]::before { background-color: #bbdefb; }
-    .score-cell[data-stableford="3"]::before { background-color: #90caf9; }
-    .score-cell[data-stableford="4"]::before { background-color: #64b5f6; }
-    .score-cell[data-stableford="5"]::before,
-    .score-cell[data-stableford="6"]::before,
-    .score-cell[data-stableford="7"]::before,
-    .score-cell[data-stableford="8"]::before { background-color: #1976d2; }
-    
-    /* White text for dark backgrounds */
-    .score-cell[data-vs-par="3"] span,
-    .score-cell[data-vs-par="4"] span,
-    .score-cell[data-vs-par="5"] span,
-    .score-cell[data-vs-par="6"] span,
-    .score-cell[data-vs-par="7"] span,
-    .score-cell[data-vs-par="8"] span,
-    .score-cell[data-vs-par="9"] span,
-    .score-cell[data-vs-par="10"] span,
-    .score-cell[data-stableford="5"] span,
-    .score-cell[data-stableford="6"] span,
-    .score-cell[data-stableford="7"] span,
-    .score-cell[data-stableford="8"] span {
-        color: white;
-    }
-    
-    /* Layout styling */
-    .layout-single-round .label-column {
-        text-align: left;
-        min-width: 80px;
-        padding-left: 8px;
-    }
-    
-    .layout-single-round .hole-header {
-        border-bottom: 2px solid #333;
-    }
-    
-    .layout-single-round .front-back-divider {
-        border-right: 3px solid #333;
-    }
-    
-    .totals {
-        font-weight: bold;
-        background-color: #f8f9fa;
-    }
-    
-    @media (max-width: 768px) {
-        .scorecard-table { font-size: 12px; }
-        .scorecard-table th, .scorecard-table td { 
-            padding: 4px; 
-            min-width: 28px; 
-            height: 28px; 
-        }
-        .layout-single-round .label-column {
-            min-width: 60px;
-            font-size: 11px;
-        }
-    }
-    </style>
-    """, unsafe_allow_html=True)
+    try:
+        with open(css_file, 'r') as f:
+            css_content = f.read()
+        st.markdown(f"<style>{css_content}</style>", unsafe_allow_html=True)
+        return True
+    except FileNotFoundError:
+        st.error(f"CSS file not found: {css_file}")
+        return False
 
-def generate_scorecard_html(df, layout="single-round", title="Scorecard"):
-    """
-    Convert a pandas DataFrame to a golf scorecard HTML.
-    """
+def generate_single_round_html(df, title="Scorecard"):
+    """Generate HTML for single player, single round scorecard"""
     
-    # Ensure we have 18 holes
     if len(df) != 18:
         st.error(f"Expected 18 holes, got {len(df)} holes")
         return ""
     
-    # Calculate front 9, back 9, and total
+    # Calculate totals
     front_9 = df[df['Hole'] <= 9]
     back_9 = df[df['Hole'] > 9]
     
@@ -177,170 +46,461 @@ def generate_scorecard_html(df, layout="single-round", title="Scorecard"):
         'Stableford': int(df['Stableford'].sum())
     }
     
-    # Generate hole header row
-    hole_header = '<th class="label-column hole-header">Hole</th>'
-    for hole in range(1, 19):
-        if hole == 10:
-            hole_header += f'<th class="hole-header totals front-back-divider">OUT</th>'
-        hole_header += f'<th class="hole-header">{hole}</th>'
-    hole_header += '<th class="hole-header totals">IN</th><th class="hole-header totals">TOTAL</th>'
+    # Build HTML
+    html_parts = []
     
-    # Generate PAR row
-    par_row = '<th class="label-column">PAR</th>'
-    for hole in range(1, 19):
-        if hole == 10:
-            par_row += f'<th class="totals front-back-divider">{front_totals["PAR"]}</th>'
-        par_value = int(df[df['Hole'] == hole]['PAR'].iloc[0])
-        par_row += f'<th>{par_value}</th>'
-    par_row += f'<th class="totals">{back_totals["PAR"]}</th><th class="totals">{total_totals["PAR"]}</th>'
+    html_parts.append('<div class="scorecard-container layout-single-round">')
+    html_parts.append(f'<div class="scorecard-header"><h2>{title}</h2></div>')
+    html_parts.append('<table class="scorecard-table">')
     
-    # Generate score row with data attributes
-    score_row = '<td class="label-column">Score</td>'
-    for hole in range(1, 19):
-        if hole == 10:
-            score_row += f'<td class="totals front-back-divider">{front_totals["Sc"]}</td>'
-        
+    # Header section
+    html_parts.append('<thead>')
+    
+    # Hole numbers row
+    html_parts.append('<tr>')
+    html_parts.append('<th class="label-column hole-header">Hole</th>')
+    for hole in range(1, 10):
+        html_parts.append(f'<th class="hole-header">{hole}</th>')
+    html_parts.append('<th class="hole-header totals front-back-divider">OUT</th>')
+    for hole in range(10, 19):
+        html_parts.append(f'<th class="hole-header">{hole}</th>')
+    html_parts.append('<th class="hole-header totals">IN</th>')
+    html_parts.append('<th class="hole-header totals">TOTAL</th>')
+    html_parts.append('</tr>')
+    
+    # PAR row
+    html_parts.append('<tr>')
+    html_parts.append('<th class="label-column par-header">PAR</th>')
+    for hole in range(1, 10):
+        par_val = int(df[df['Hole'] == hole]['PAR'].iloc[0])
+        html_parts.append(f'<th class="par-header">{par_val}</th>')
+    html_parts.append(f'<th class="totals front-back-divider par-header">{front_totals["PAR"]}</th>')
+    for hole in range(10, 19):
+        par_val = int(df[df['Hole'] == hole]['PAR'].iloc[0])
+        html_parts.append(f'<th class="par-header">{par_val}</th>')
+    html_parts.append(f'<th class="totals par-header">{back_totals["PAR"]}</th>')
+    html_parts.append(f'<th class="totals par-header">{total_totals["PAR"]}</th>')
+    html_parts.append('</tr>')
+    
+    html_parts.append('</thead>')
+    
+    # Body section
+    html_parts.append('<tbody>')
+    
+    # Score row
+    html_parts.append('<tr>')
+    html_parts.append('<td class="label-column">Score</td>')
+    for hole in range(1, 10):
         hole_data = df[df['Hole'] == hole].iloc[0]
         vs_par = int(hole_data['GrossVP'])
         score = int(hole_data['Sc'])
-        
-        score_row += f'<td class="score-cell" data-vs-par="{vs_par}"><span>{score}</span></td>'
+        html_parts.append(f'<td class="score-cell" data-vs-par="{vs_par}"><span>{score}</span></td>')
+    html_parts.append(f'<td class="totals front-back-divider">{front_totals["Sc"]}</td>')
+    for hole in range(10, 19):
+        hole_data = df[df['Hole'] == hole].iloc[0]
+        vs_par = int(hole_data['GrossVP'])
+        score = int(hole_data['Sc'])
+        html_parts.append(f'<td class="score-cell" data-vs-par="{vs_par}"><span>{score}</span></td>')
+    html_parts.append(f'<td class="totals">{back_totals["Sc"]}</td>')
+    html_parts.append(f'<td class="totals">{total_totals["Sc"]}</td>')
+    html_parts.append('</tr>')
     
-    score_row += f'<td class="totals">{back_totals["Sc"]}</td><td class="totals">{total_totals["Sc"]}</td>'
-    
-    # Generate Stableford row with data attributes  
-    stableford_row = '<td class="label-column">Stableford</td>'
-    for hole in range(1, 19):
-        if hole == 10:
-            stableford_row += f'<td class="totals front-back-divider">{front_totals["Stableford"]}</td>'
-        
+    # Stableford row
+    html_parts.append('<tr>')
+    html_parts.append('<td class="label-column">Stableford</td>')
+    for hole in range(1, 10):
         hole_data = df[df['Hole'] == hole].iloc[0]
         stableford = int(hole_data['Stableford'])
-        
-        stableford_row += f'<td class="score-cell" data-stableford="{stableford}"><span>{stableford}</span></td>'
+        html_parts.append(f'<td class="score-cell" data-stableford="{stableford}"><span>{stableford}</span></td>')
+    html_parts.append(f'<td class="totals front-back-divider">{front_totals["Stableford"]}</td>')
+    for hole in range(10, 19):
+        hole_data = df[df['Hole'] == hole].iloc[0]
+        stableford = int(hole_data['Stableford'])
+        html_parts.append(f'<td class="score-cell" data-stableford="{stableford}"><span>{stableford}</span></td>')
+    html_parts.append(f'<td class="totals">{back_totals["Stableford"]}</td>')
+    html_parts.append(f'<td class="totals">{total_totals["Stableford"]}</td>')
+    html_parts.append('</tr>')
     
-    stableford_row += f'<td class="totals">{back_totals["Stableford"]}</td><td class="totals">{total_totals["Stableford"]}</td>'
+    html_parts.append('</tbody>')
+    html_parts.append('</table>')
+    html_parts.append('</div>')
     
-    # Combine into full HTML
-    html = f'''
-    <div class="scorecard-container layout-{layout}">
-        <div class="scorecard-header">
-            <h2>{title}</h2>
-        </div>
-        
-        <table class="scorecard-table">
-            <thead>
-                <tr>{hole_header}</tr>
-                <tr>{par_row}</tr>
-            </thead>
-            <tbody>
-                <tr>{score_row}</tr>
-                <tr>{stableford_row}</tr>
-            </tbody>
-        </table>
-    </div>
-    '''
-    
-    return html
+    return ''.join(html_parts)
 
-# Load CSS first
-load_scorecard_css()
+def generate_tournament_html(player_data, player_name, teg_name):
+    """Generate HTML for single player tournament view (all rounds)"""
+    
+    rounds = sorted(player_data['Round'].unique())
+    
+    html_parts = []
+    html_parts.append('<div class="scorecard-container layout-multi-round">')
+    html_parts.append(f'<div class="scorecard-header"><h2>{teg_name} Tournament | {player_name}</h2></div>')
+    
+    # Gross Scores Section
+    html_parts.append('<div class="section-header">Gross Scores</div>')
+    html_parts.append('<table class="scorecard-table">')
+    
+    # Header
+    html_parts.append('<thead>')
+    html_parts.append('<tr>')
+    html_parts.append('<th class="round-label">Round</th>')
+    for hole in range(1, 10):
+        html_parts.append(f'<th>{hole}</th>')
+    html_parts.append('<th class="totals front-back-divider">OUT</th>')
+    for hole in range(10, 19):
+        html_parts.append(f'<th>{hole}</th>')
+    html_parts.append('<th class="totals">IN</th>')
+    html_parts.append('<th class="totals">TOTAL</th>')
+    html_parts.append('</tr>')
+    html_parts.append('</thead>')
+    
+    # Body - one row per round
+    html_parts.append('<tbody>')
+    for round_num in rounds:
+        round_data = player_data[player_data['Round'] == round_num].sort_values('Hole')
+        
+        # Calculate totals
+        front_total = int(round_data[round_data['Hole'] <= 9]['Sc'].sum())
+        back_total = int(round_data[round_data['Hole'] > 9]['Sc'].sum())
+        total_score = int(round_data['Sc'].sum())
+        
+        html_parts.append('<tr>')
+        html_parts.append(f'<td class="round-label">Round {round_num}</td>')
+        
+        # Front 9
+        for hole in range(1, 10):
+            hole_data = round_data[round_data['Hole'] == hole].iloc[0]
+            vs_par = int(hole_data['GrossVP'])
+            score = int(hole_data['Sc'])
+            html_parts.append(f'<td class="score-cell" data-vs-par="{vs_par}"><span>{score}</span></td>')
+        
+        html_parts.append(f'<td class="totals front-back-divider">{front_total}</td>')
+        
+        # Back 9
+        for hole in range(10, 19):
+            hole_data = round_data[round_data['Hole'] == hole].iloc[0]
+            vs_par = int(hole_data['GrossVP'])
+            score = int(hole_data['Sc'])
+            html_parts.append(f'<td class="score-cell" data-vs-par="{vs_par}"><span>{score}</span></td>')
+        
+        html_parts.append(f'<td class="totals">{back_total}</td>')
+        html_parts.append(f'<td class="totals">{total_score}</td>')
+        html_parts.append('</tr>')
+    
+    html_parts.append('</tbody>')
+    html_parts.append('</table>')
+    
+    # Stableford Section
+    html_parts.append('<div class="section-header">Stableford Points</div>')
+    html_parts.append('<table class="scorecard-table">')
+    
+    # Header
+    html_parts.append('<thead>')
+    html_parts.append('<tr>')
+    html_parts.append('<th class="round-label">Round</th>')
+    for hole in range(1, 10):
+        html_parts.append(f'<th>{hole}</th>')
+    html_parts.append('<th class="totals front-back-divider">OUT</th>')
+    for hole in range(10, 19):
+        html_parts.append(f'<th>{hole}</th>')
+    html_parts.append('<th class="totals">IN</th>')
+    html_parts.append('<th class="totals">TOTAL</th>')
+    html_parts.append('</tr>')
+    html_parts.append('</thead>')
+    
+    # Body - Stableford scores
+    html_parts.append('<tbody>')
+    for round_num in rounds:
+        round_data = player_data[player_data['Round'] == round_num].sort_values('Hole')
+        
+        # Calculate totals
+        front_total = int(round_data[round_data['Hole'] <= 9]['Stableford'].sum())
+        back_total = int(round_data[round_data['Hole'] > 9]['Stableford'].sum())
+        total_stableford = int(round_data['Stableford'].sum())
+        
+        html_parts.append('<tr>')
+        html_parts.append(f'<td class="round-label">Round {round_num}</td>')
+        
+        # Front 9
+        for hole in range(1, 10):
+            hole_data = round_data[round_data['Hole'] == hole].iloc[0]
+            stableford = int(hole_data['Stableford'])
+            html_parts.append(f'<td class="score-cell" data-stableford="{stableford}"><span>{stableford}</span></td>')
+        
+        html_parts.append(f'<td class="totals front-back-divider">{front_total}</td>')
+        
+        # Back 9
+        for hole in range(10, 19):
+            hole_data = round_data[round_data['Hole'] == hole].iloc[0]
+            stableford = int(hole_data['Stableford'])
+            html_parts.append(f'<td class="score-cell" data-stableford="{stableford}"><span>{stableford}</span></td>')
+        
+        html_parts.append(f'<td class="totals">{back_total}</td>')
+        html_parts.append(f'<td class="totals">{total_stableford}</td>')
+        html_parts.append('</tr>')
+    
+    html_parts.append('</tbody>')
+    html_parts.append('</table>')
+    html_parts.append('</div>')
+    
+    return ''.join(html_parts)
+
+def generate_round_comparison_html(round_data, teg_name, round_num):
+    """Generate HTML for multi-player round comparison"""
+    
+    players = round_data['Pl'].unique()
+    
+    # Sort players by total score (ascending)
+    player_totals = []
+    for player in players:
+        player_data = round_data[round_data['Pl'] == player]
+        total_score = int(player_data['Sc'].sum())
+        player_name = player_data['Player'].iloc[0]
+        player_totals.append((total_score, player, player_name))
+    
+    player_totals.sort(key=lambda x: x[0])  # Sort by score
+    sorted_players = [(player, name) for _, player, name in player_totals]
+    
+    html_parts = []
+    html_parts.append('<div class="scorecard-container layout-multi-player">')
+    html_parts.append(f'<div class="scorecard-header"><h2>{teg_name} Round {round_num} | Player Comparison</h2></div>')
+    
+    # Gross Scores Section
+    html_parts.append('<div class="section-header">Gross Scores</div>')
+    html_parts.append('<table class="scorecard-table">')
+    
+    # Header
+    html_parts.append('<thead>')
+    html_parts.append('<tr>')
+    html_parts.append('<th class="player-label">Player</th>')
+    for hole in range(1, 10):
+        html_parts.append(f'<th>{hole}</th>')
+    html_parts.append('<th class="totals front-back-divider">OUT</th>')
+    for hole in range(10, 19):
+        html_parts.append(f'<th>{hole}</th>')
+    html_parts.append('<th class="totals">IN</th>')
+    html_parts.append('<th class="totals">TOTAL</th>')
+    html_parts.append('</tr>')
+    html_parts.append('</thead>')
+    
+    # Body - one row per player
+    html_parts.append('<tbody>')
+    for player_code, player_name in sorted_players:
+        player_data = round_data[round_data['Pl'] == player_code].sort_values('Hole')
+        
+        # Calculate totals
+        front_total = int(player_data[player_data['Hole'] <= 9]['Sc'].sum())
+        back_total = int(player_data[player_data['Hole'] > 9]['Sc'].sum())
+        total_score = int(player_data['Sc'].sum())
+        
+        html_parts.append('<tr>')
+        html_parts.append(f'<td class="player-label">{player_name}</td>')
+        
+        # Front 9
+        for hole in range(1, 10):
+            hole_data = player_data[player_data['Hole'] == hole].iloc[0]
+            vs_par = int(hole_data['GrossVP'])
+            score = int(hole_data['Sc'])
+            html_parts.append(f'<td class="score-cell" data-vs-par="{vs_par}"><span>{score}</span></td>')
+        
+        html_parts.append(f'<td class="totals front-back-divider">{front_total}</td>')
+        
+        # Back 9
+        for hole in range(10, 19):
+            hole_data = player_data[player_data['Hole'] == hole].iloc[0]
+            vs_par = int(hole_data['GrossVP'])
+            score = int(hole_data['Sc'])
+            html_parts.append(f'<td class="score-cell" data-vs-par="{vs_par}"><span>{score}</span></td>')
+        
+        html_parts.append(f'<td class="totals">{back_total}</td>')
+        html_parts.append(f'<td class="totals">{total_score}</td>')
+        html_parts.append('</tr>')
+    
+    html_parts.append('</tbody>')
+    html_parts.append('</table>')
+    
+    # Stableford Section
+    html_parts.append('<div class="section-header">Stableford Points</div>')
+    html_parts.append('<table class="scorecard-table">')
+    
+    # Header
+    html_parts.append('<thead>')
+    html_parts.append('<tr>')
+    html_parts.append('<th class="player-label">Player</th>')
+    for hole in range(1, 10):
+        html_parts.append(f'<th>{hole}</th>')
+    html_parts.append('<th class="totals front-back-divider">OUT</th>')
+    for hole in range(10, 19):
+        html_parts.append(f'<th>{hole}</th>')
+    html_parts.append('<th class="totals">IN</th>')
+    html_parts.append('<th class="totals">TOTAL</th>')
+    html_parts.append('</tr>')
+    html_parts.append('</thead>')
+    
+    # Body - Stableford scores  
+    html_parts.append('<tbody>')
+    for player_code, player_name in sorted_players:
+        player_data = round_data[round_data['Pl'] == player_code].sort_values('Hole')
+        
+        # Calculate totals
+        front_total = int(player_data[player_data['Hole'] <= 9]['Stableford'].sum())
+        back_total = int(player_data[player_data['Hole'] > 9]['Stableford'].sum())
+        total_stableford = int(player_data['Stableford'].sum())
+        
+        html_parts.append('<tr>')
+        html_parts.append(f'<td class="player-label">{player_name}</td>')
+        
+        # Front 9
+        for hole in range(1, 10):
+            hole_data = player_data[player_data['Hole'] == hole].iloc[0]
+            stableford = int(hole_data['Stableford'])
+            html_parts.append(f'<td class="score-cell" data-stableford="{stableford}"><span>{stableford}</span></td>')
+        
+        html_parts.append(f'<td class="totals front-back-divider">{front_total}</td>')
+        
+        # Back 9
+        for hole in range(10, 19):
+            hole_data = player_data[player_data['Hole'] == hole].iloc[0]
+            stableford = int(hole_data['Stableford'])
+            html_parts.append(f'<td class="score-cell" data-stableford="{stableford}"><span>{stableford}</span></td>')
+        
+        html_parts.append(f'<td class="totals">{back_total}</td>')
+        html_parts.append(f'<td class="totals">{total_stableford}</td>')
+        html_parts.append('</tr>')
+    
+    html_parts.append('</tbody>')
+    html_parts.append('</table>')
+    html_parts.append('</div>')
+    
+    return ''.join(html_parts)
+
+# Load CSS
+css_loaded = load_scorecard_css()
 
 st.title('Scorecard v2 - Enhanced Visual Design')
+
+if not css_loaded:
+    st.warning("CSS not loaded - scorecard may not display correctly")
 
 # Load data
 all_data = load_all_data(exclude_incomplete_tegs=False)
 
-# Create dropdowns for Pl, TEGNum, and Round
-pl_options = sorted(all_data['Pl'].unique())
-default_pl = pl_options[0] if pl_options else None
+# Create tabs
+tab1, tab2, tab3 = st.tabs(["Single Round", "Tournament View", "Round Comparison"])
 
-tegnum_options = sorted(all_data['TEGNum'].unique())
-default_tegnum = max(tegnum_options) if tegnum_options else None
-
-# Function to get the highest Round for a given TEGNum
-def get_max_round(tegnum):
-    return all_data[all_data['TEGNum'] == tegnum]['Round'].max()
-
-# Sidebar for selections
-st.markdown('**Select round to view enhanced scorecard**')
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    selected_pl = st.selectbox('Select Player', pl_options, index=pl_options.index(default_pl))
-
-with col2:    
-    selected_tegnum = st.selectbox('Select TEGNum', tegnum_options, index=tegnum_options.index(default_tegnum))
-
-with col3:
-    max_round = get_max_round(selected_tegnum)
-    round_options = sorted(all_data[all_data['TEGNum'] == selected_tegnum]['Round'].unique())
-    selected_round = st.selectbox('Select Round', round_options, index=round_options.index(max_round) if max_round in round_options else 0)
-
-# Filter data based on selections
-rd_data = all_data[
-    (all_data['Pl'] == selected_pl) &
-    (all_data['TEGNum'] == selected_tegnum) &
-    (all_data['Round'] == selected_round)
-]
-
-if len(rd_data) == 0:
-    st.error("No data found for the selected criteria.")
-    st.stop()
-
-# Prepare output data
-output_cols = ['Hole', 'PAR', 'SI', 'HCStrokes', 'Sc', 'GrossVP', 'NetVP', 'Stableford']
-output_data = rd_data[output_cols].copy()
-
-# Convert to appropriate data types
-def to_int_or_zero(x):
-    if pd.isna(x):
-        return 0
-    return int(x)
-
-numeric_columns = output_data.select_dtypes(include=['float64', 'int64']).columns
-for col in numeric_columns:
-    output_data[col] = output_data[col].map(to_int_or_zero)
-
-# Ensure we have exactly 18 holes
-if len(output_data) != 18:
-    st.error(f"Expected 18 holes, found {len(output_data)} holes for this round.")
-    st.stop()
-
-# Debug info
-with st.expander("Debug Info"):
-    st.write("Data shape:", output_data.shape)
-    st.write("Columns:", output_data.columns.tolist())
-    st.write("Sample data:")
-    st.dataframe(output_data.head())
-
-# Generate the enhanced scorecard
-title = f"TEG {selected_tegnum} Round {selected_round} | {selected_pl}"
-
-try:
-    scorecard_html = generate_scorecard_html(output_data, layout="single-round", title=title)
+# Tab 1: Single Round (existing functionality)
+with tab1:
+    st.markdown('**Select round to view enhanced scorecard**')
     
-    # Display the scorecard
-    if scorecard_html:
-        st.write(scorecard_html, unsafe_allow_html=True)
+    # Create dropdowns
+    pl_options = sorted(all_data['Pl'].unique())
+    default_pl = pl_options[0] if pl_options else None
+    
+    tegnum_options = sorted(all_data['TEGNum'].unique())
+    default_tegnum = max(tegnum_options) if tegnum_options else None
+    
+    def get_max_round(tegnum):
+        return all_data[all_data['TEGNum'] == tegnum]['Round'].max()
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        selected_pl = st.selectbox('Select Player', pl_options, index=pl_options.index(default_pl), key='tab1_player')
+    
+    with col2:    
+        selected_tegnum = st.selectbox('Select TEGNum', tegnum_options, index=tegnum_options.index(default_tegnum), key='tab1_teg')
+    
+    with col3:
+        max_round = get_max_round(selected_tegnum)
+        round_options = sorted(all_data[all_data['TEGNum'] == selected_tegnum]['Round'].unique())
+        selected_round = st.selectbox('Select Round', round_options, index=round_options.index(max_round) if max_round in round_options else 0, key='tab1_round')
+    
+    # Filter data
+    rd_data = all_data[
+        (all_data['Pl'] == selected_pl) &
+        (all_data['TEGNum'] == selected_tegnum) &
+        (all_data['Round'] == selected_round)
+    ]
+    
+    if len(rd_data) == 0:
+        st.error("No data found for the selected criteria.")
     else:
-        st.error("Failed to generate scorecard HTML")
+        # Prepare data
+        output_cols = ['Hole', 'PAR', 'SI', 'HCStrokes', 'Sc', 'GrossVP', 'NetVP', 'Stableford']
+        output_data = rd_data[output_cols].copy()
         
-except Exception as e:
-    st.error(f"Error generating scorecard: {str(e)}")
-    st.write("Falling back to original table format:")
+        def to_int_or_zero(x):
+            if pd.isna(x):
+                return 0
+            return int(x)
+        
+        numeric_columns = output_data.select_dtypes(include=['float64', 'int64']).columns
+        for col in numeric_columns:
+            output_data[col] = output_data[col].map(to_int_or_zero)
+        
+        if len(output_data) == 18:
+            title = f"TEG {selected_tegnum} Round {selected_round} | {selected_pl}"
+            scorecard_html = generate_single_round_html(output_data, title)
+            st.markdown(scorecard_html, unsafe_allow_html=True)
+        else:
+            st.error(f"Expected 18 holes, found {len(output_data)} holes for this round.")
+
+# Tab 2: Tournament View
+with tab2:
+    st.markdown('**Select player and tournament to view all rounds**')
     
-    # Fallback to original format
-    old_output_data = output_data.copy()
-    columns_to_sum = ['PAR','HCStrokes','Sc', 'GrossVP', 'NetVP', 'Stableford']
-    existing_columns = [col for col in columns_to_sum if col in old_output_data.columns]
-    totals = pd.Series({col: old_output_data[col].sum() for col in existing_columns})
-    old_output_data.loc['Total'] = totals
+    col1, col2 = st.columns(2)
     
-    columns_to_format = ['GrossVP', 'NetVP']
-    for col in columns_to_format:
-        if col in old_output_data.columns:
-            old_output_data[col] = old_output_data[col].apply(format_vs_par)
+    with col1:
+        pl_options_t2 = sorted(all_data['Pl'].unique())
+        selected_pl_t2 = st.selectbox('Select Player', pl_options_t2, key='tab2_player')
     
-    st.write(old_output_data.to_html(index=False, justify='left', classes='dataframe'), unsafe_allow_html=True)
+    with col2:
+        tegnum_options_t2 = sorted(all_data['TEGNum'].unique())
+        selected_tegnum_t2 = st.selectbox('Select Tournament', tegnum_options_t2, index=len(tegnum_options_t2)-1, key='tab2_teg')
+    
+    # Filter data for selected player and tournament
+    tournament_data = all_data[
+        (all_data['Pl'] == selected_pl_t2) &
+        (all_data['TEGNum'] == selected_tegnum_t2)
+    ]
+    
+    if len(tournament_data) == 0:
+        st.error("No data found for the selected player and tournament.")
+    else:
+        # Get player name and TEG name
+        player_name = tournament_data['Player'].iloc[0]
+        teg_name = f"TEG {selected_tegnum_t2}"
+        
+        # Generate tournament view
+        tournament_html = generate_tournament_html(tournament_data, player_name, teg_name)
+        st.markdown(tournament_html, unsafe_allow_html=True)
+
+# Tab 3: Round Comparison
+with tab3:
+    st.markdown('**Select tournament and round to compare all players**')
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        tegnum_options_t3 = sorted(all_data['TEGNum'].unique())
+        selected_tegnum_t3 = st.selectbox('Select Tournament', tegnum_options_t3, index=len(tegnum_options_t3)-1, key='tab3_teg')
+    
+    with col2:
+        round_options_t3 = sorted(all_data[all_data['TEGNum'] == selected_tegnum_t3]['Round'].unique())
+        selected_round_t3 = st.selectbox('Select Round', round_options_t3, index=len(round_options_t3)-1, key='tab3_round')
+    
+    # Filter data for selected tournament and round
+    comparison_data = all_data[
+        (all_data['TEGNum'] == selected_tegnum_t3) &
+        (all_data['Round'] == selected_round_t3)
+    ]
+    
+    if len(comparison_data) == 0:
+        st.error("No data found for the selected tournament and round.")
+    else:
+        teg_name = f"TEG {selected_tegnum_t3}"
+        
+        # Generate round comparison view
+        comparison_html = generate_round_comparison_html(comparison_data, teg_name, selected_round_t3)
+        st.markdown(comparison_html, unsafe_allow_html=True)
