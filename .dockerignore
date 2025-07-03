@@ -1,0 +1,57 @@
+# Data files (Railway uses GitHub storage, not local files)
+data/
+*.csv
+*.parquet
+*.backup
+data/backups/
+
+# Git and version control
+.git/
+.gitignore
+
+# Python cache and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+__pycache__
+*.so
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+.venv/
+venv/
+env/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Jupyter notebooks and temporary files
+*.ipynb
+.ipynb_checkpoints/
+
+# Node modules (if any)
+node_modules/
+
+# Streamlit secrets (local development only)
+.streamlit/secrets.toml
+
+# Backup and temporary files
+*.bak
+*.tmp
+*.temp

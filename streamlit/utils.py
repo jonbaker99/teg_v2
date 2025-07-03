@@ -88,9 +88,10 @@ def get_current_branch():
 GITHUB_BRANCH = get_current_branch()
 
 def read_from_github(file_path):
-    """Simple GitHub file reading"""
+    """Simple GitHub file reading with proper base64 decoding"""
     from github import Github
     from io import BytesIO, StringIO
+    import base64
     
     token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
     g = Github(token)
@@ -98,11 +99,16 @@ def read_from_github(file_path):
     content = repo.get_contents(file_path, ref=get_current_branch())
     
     if file_path.endswith('.csv'):
-        return pd.read_csv(StringIO(content.content))
+        # Decode the base64 content first
+        decoded_content = base64.b64decode(content.content).decode('utf-8')
+        return pd.read_csv(StringIO(decoded_content))
     elif file_path.endswith('.parquet'):
-        return pd.read_parquet(BytesIO(content.decoded_content))
+        # For parquet files, decode to bytes
+        decoded_bytes = base64.b64decode(content.content)
+        return pd.read_parquet(BytesIO(decoded_bytes))
     else:
-        return content.decoded_content.decode()
+        # For other files, return decoded string
+        return base64.b64decode(content.content).decode('utf-8')
 
 def write_to_github(file_path, data, commit_message="Update data"):
     from github import Github
