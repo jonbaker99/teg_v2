@@ -4,3 +4,6 @@ streamlit
 pandas
 numpy
 PyGithub
+streamlit-extras
+plotly
+altair
