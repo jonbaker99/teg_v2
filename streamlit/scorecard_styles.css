@@ -23,11 +23,14 @@
 
 /* ===== FLEXIBLE TABLE SYSTEM ===== */
 .scorecard-table {
-    width: 100%;
+    /* width: 100%; */
     border-collapse: separate;
     border-spacing: 2px;
     font-size: 14px;
     margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    
 }
 
 .scorecard-table th,
@@ -35,13 +38,23 @@
     padding: 6px;
     text-align: center;
     border: none;
-    font-weight: bold;
     min-width: 32px;
     height: 32px;
     vertical-align: middle;
     position: relative;
+    /* background-color: #f8f9fa; */
+}
+
+.scorecard-table td {
+    font-weight: normal;
+    background-color: #ffffff;
+}
+
+.scorecard-table th {
+    font-weight: bold;
     background-color: #f8f9fa;
 }
+
 
 /* ===== UNIVERSAL SCORE CELL SYSTEM ===== */
 .score-cell {
@@ -72,10 +85,10 @@ css
 /* ===== DATA-DRIVEN COLORS - CLASSIC VIBRANT WITH INSET SHADOWS ===== *//* Eagle (-2): Double circle, bright gold with inset shadows */
 .score-cell[data-vs-par="-2"]::before {
     background-color: #FFD700;
-    box-shadow:
-        inset 0 0 0 1px #B8860B,/* Inner line inside */
-        inset 0 0 0 3px white,/* White gap inside */
-        inset 0 0 0 4px #B8860B;/* Outer line inside */
+    /* box-shadow:
+        0 0 0 1px #B8860B,
+        inset 0 0 0 1px white,
+        inset 0 0 0 2px #B8860B; */
 }
 
 /* Birdie (-1): Circle, pale blue */
@@ -86,18 +99,18 @@ css
 
 /* Bogey (+1): Square with pale red fill */
 .score-cell[data-vs-par="1"]::before {
-    background-color: #FFB6C1;
-    border-radius: 6px;
+    background-color: #ffdee5;
+    border-radius: 0px;
 }
 
 /* Double bogey (+2): Double square with mid red fill and inset shadows */
 .score-cell[data-vs-par="2"]::before {
     background-color: #F08080;
-    border-radius: 6px;
-    box-shadow:
-        inset 0 0 0 1px #CD5C5C,/* Inner line inside */
-        inset 0 0 0 3px white,/* White gap inside */
-        inset 0 0 0 4px #CD5C5C;/* Outer line inside */
+    border-radius: 0px;
+    /*box-shadow:
+        0 0 0 1px #CD5C5C,
+        inset 0 0 0 1px white,
+        inset 0 0 0 2px #CD5C5C;*/
 }
 
 /* Triple bogey+ (+3 and above): Double square with dark red fill and inset shadows */
@@ -110,11 +123,11 @@ css
 .score-cell[data-vs-par="9"]::before,
 .score-cell[data-vs-par="10"]::before {
     background-color: #8B0000;
-    border-radius: 6px;
-    box-shadow:
-        inset 0 0 0 1px #660000,/* Inner line inside */
-        inset 0 0 0 3px white,/* White gap inside */
-        inset 0 0 0 4px #660000;/* Outer line inside */
+    border-radius: 0px;
+    /* box-shadow:
+        0 0 0 1px #660000,
+        inset 0 0 0 1px white,
+        inset 0 0 0 2px #660000; */
 }
 
 
@@ -147,6 +160,12 @@ css
 
 /* ===== LAYOUT VARIANTS ===== */
 
+.layout-single-round .label-column,
+.layout-multi-round .round-label,
+.layout-multi-player .player-label {
+    padding-right: 16px;
+}
+
 /* Single Round Layout */
 .layout-single-round .label-column {
     text-align: left;
@@ -161,7 +180,7 @@ css
 }
 
 .layout-single-round .front-back-divider {
-    border-right: 3px solid #333;
+    border-right: 0px solid #333;
 }
 
 /* Multi-Round Layout (4 rounds for one player) */
@@ -170,7 +189,7 @@ css
 }
 
 .layout-multi-round .round-label {
-    background-color: #e9ecef;
+    /* background-color: #e9ecef; */
     font-weight: bold;
     text-align: left;
     padding-left: 8px;
@@ -179,11 +198,13 @@ css
 
 /* Multi-Player Layout (multiple players, one round) */
 .layout-multi-player .player-label {
-    background-color: #e9ecef;
-    font-weight: bold;
+    /* background-color: #e9ecef; */
+    /* font-weight: bold; */
     text-align: left;
     padding-left: 8px;
-    min-width: 120px;
+    /* min-width: 120px; */
+    max-width: 150px;
+    white-space: nowrap;
 }
 
 /* ===== UTILITY CLASSES ===== */
@@ -193,7 +214,7 @@ css
 }
 
 .section-header {
-    background-color: #e9ecef;
+    /* background-color: #e9ecef; */
     font-weight: bold;
     font-size: 16px;
     padding: 10px;
@@ -205,8 +226,8 @@ css
     .scorecard-table { font-size: 12px; }
     .scorecard-table th, .scorecard-table td { 
         padding: 4px; 
-        min-width: 28px; 
-        height: 28px; 
+        min-width: 24px; 
+        height: 24px; 
     }
     .layout-single-round .label-column,
     .layout-multi-round .round-label,
