@@ -245,7 +245,7 @@ def generate_scorecard_html(df, layout="single-round", title="Scorecard"):
     html = f'''
     <div class="scorecard-container layout-{layout}">
         <div class="scorecard-header">
-            <h2>{title}</h2>
+            <p class="scorecard-title">{title}</p>
         </div>
         
         <table class="scorecard-table">
@@ -346,7 +346,7 @@ def generate_single_round_html(player_code, teg_num, round_num, title=None, subh
 
     # Header with title and optional subheader
     html_parts.append('<div class="scorecard-header">')
-    html_parts.append(f'<h2>{title}</h2>')
+    html_parts.append(f'<p class="scorecard-title">{title}</p>')
     if subheader:
         html_parts.append(f'<p class="scorecard-subheader">{subheader}</p>')
     html_parts.append('</div>')
@@ -441,6 +441,10 @@ def generate_tournament_html(player_code, teg_num, title=None, subheader=None):
         player_name = player_data['Player'].iloc[0]
         title = f"TEG {teg_num} Tournament | {player_name}"
     
+    
+    # Debug - remove this after testing
+    st.write("DEBUG metadata:", get_teg_metadata(teg_num))
+    
     # Generate default subheader if not provided
     if subheader is None:
         metadata = get_teg_metadata(teg_num)
@@ -462,7 +466,7 @@ def generate_tournament_html(player_code, teg_num, title=None, subheader=None):
 
     # Header with title and optional subheader
     html_parts.append('<div class="scorecard-header">')
-    html_parts.append(f'<h2>{title}</h2>')
+    html_parts.append(f'<p class="scorecard-title">{title}</p>')
     if subheader:
         html_parts.append(f'<p class="scorecard-subheader">{subheader}</p>')
     html_parts.append('</div>')
@@ -622,7 +626,7 @@ def generate_round_comparison_html(teg_num, round_num, title=None, subheader=Non
 
     # Header with title and optional subheader
     html_parts.append('<div class="scorecard-header">')
-    html_parts.append(f'<h2>{title}</h2>')
+    html_parts.append(f'<p class="scorecard-title">{title}</p>')
     if subheader:
         html_parts.append(f'<p class="scorecard-subheader">{subheader}</p>')
     html_parts.append('</div>')
