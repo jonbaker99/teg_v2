@@ -1393,4 +1393,103 @@ service_account_info = {
     "universe_domain": os.getenv('GOOGLE_UNIVERSE_DOMAIN'),
 }
 
-#SMALL CHANGE TO CHECK IF RAILWAY UPDATES & ANOTHER
+def get_teg_metadata(teg_num, round_num=None):
+    """
+    Get TEG metadata from round_info.csv
+    
+    Args:
+        teg_num: TEG number
+        round_num: Optional round number for round-specific data
+    
+    Returns:
+        dict: Metadata including area, course, date, year
+    """
+    try:
+        round_info = read_file(ROUND_INFO_CSV)
+        
+        if round_num:
+            # Get specific round data
+            round_data = round_info[(round_info['TEGNum'] == teg_num) & 
+                                  (round_info['Round'] == round_num)]
+            if round_data.empty:
+                return {}
+            return round_data.iloc[0].to_dict()
+        else:
+            # Get TEG-level data (from first round)
+            teg_data = round_info[round_info['TEGNum'] == teg_num]
+            if teg_data.empty:
+                return {}
+            return teg_data.iloc[0].to_dict()
+    except Exception:
+        return {}
+
+def format_date_for_scorecard(date_str):
+    """
+    Format date string to 'March 18, 2025' format for scorecard display
+    
+    Args:
+        date_str: Date string from CSV
+    
+    Returns:
+        str: Formatted date or None if parsing fails
+    """
+    if not date_str or pd.isna(date_str):
+        return None
+    
+    try:
+        # Try different date formats that might be in the CSV
+        for fmt in ['%d/%m/%Y', '%Y-%m-%d', '%d-%m-%Y']:
+            try:
+                date_obj = datetime.strptime(str(date_str), fmt)
+                return date_obj.strftime('%B %d, %Y')
+            except ValueError:
+                continue
+        return None
+    except Exception:
+        return None
+
+def get_scorecard_data(teg_num=None, round_num=None, player_code=None):
+    """
+    Get golf data for scorecard generation with optional filtering by TEG, Round, and/or Player
+    
+    Args:
+        teg_num: Optional TEG number filter
+        round_num: Optional round number filter  
+        player_code: Optional player code filter (e.g., 'JB')
+    
+    Returns:
+        pd.DataFrame: Filtered and sorted data
+        
+    Examples:
+        get_scorecard_data(18, 2, 'JB')     # One player's round
+        get_scorecard_data(18, 2)           # All players in round 2 of TEG 18
+        get_scorecard_data(18, player_code='JB')  # One player's tournament
+        get_scorecard_data(18)              # All data for TEG 18
+    """
+    all_data = load_all_data(exclude_incomplete_tegs=False)
+    
+    # Apply filters if provided
+    if teg_num is not None:
+        all_data = all_data[all_data['TEGNum'] == teg_num]
+    
+    if round_num is not None:
+        all_data = all_data[all_data['Round'] == round_num]
+    
+    if player_code is not None:
+        all_data = all_data[all_data['Pl'] == player_code]
+    
+    # Sort appropriately based on what filters were applied
+    if player_code is not None and round_num is not None:
+        # Single player, single round - sort by hole
+        sort_cols = ['Hole']
+    elif round_num is not None:
+        # Single round, multiple players - sort by player then hole
+        sort_cols = ['Pl', 'Hole']
+    else:
+        # Multiple rounds - sort by round then hole
+        sort_cols = ['Round', 'Hole']
+        if player_code is None:
+            # Multiple players too - add player to sort
+            sort_cols = ['Pl'] + sort_cols
+    
+    return all_data.sort_values(sort_cols)

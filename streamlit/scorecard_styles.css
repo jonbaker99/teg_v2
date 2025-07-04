@@ -13,6 +13,14 @@
     margin-bottom: 20px;
 }
 
+.scorecard-subheader {
+    font-size: 14px;
+    color: #666;
+    font-weight: normal;
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+
 /* ===== FLEXIBLE TABLE SYSTEM ===== */
 .scorecard-table {
     width: 100%;

@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from utils import load_all_data, format_vs_par
+from utils import load_all_data, format_vs_par, get_scorecard_data, get_teg_metadata, format_date_for_scorecard
 from pathlib import Path
 
 def load_scorecard_css():
@@ -17,12 +17,34 @@ def load_scorecard_css():
         st.error(f"CSS file not found: {css_file}")
         return False
 
-def generate_single_round_html(df, title="Scorecard"):
+def generate_single_round_html(player_code, teg_num, round_num, title=None, subheader=None):
     """Generate HTML for single player, single round scorecard"""
     
+    # Load data using new function
+    df = get_scorecard_data(teg_num, round_num, player_code)
+    
     if len(df) != 18:
-        st.error(f"Expected 18 holes, got {len(df)} holes")
-        return ""
+        return f"<div class='scorecard-container'><p>Error: Expected 18 holes, found {len(df)} holes.</p></div>"
+    
+    # Generate default title if not provided
+    if title is None:
+        player_name = df['Player'].iloc[0]
+        title = f"TEG {teg_num} Round {round_num} | {player_name}"
+    
+    # Generate default subheader if not provided
+    if subheader is None:
+        metadata = get_teg_metadata(teg_num, round_num)
+        course = metadata.get('Course')
+        date_str = metadata.get('Date')
+        formatted_date = format_date_for_scorecard(date_str)
+        
+        if course and formatted_date:
+            subheader = f"{course} | {formatted_date}"
+        elif course:
+            subheader = course
+        elif formatted_date:
+            subheader = formatted_date
+        # If neither available, subheader remains None
     
     # Calculate totals
     front_9 = df[df['Hole'] <= 9]
@@ -50,7 +72,14 @@ def generate_single_round_html(df, title="Scorecard"):
     html_parts = []
     
     html_parts.append('<div class="scorecard-container layout-single-round">')
-    html_parts.append(f'<div class="scorecard-header"><h2>{title}</h2></div>')
+
+    # Header with title and optional subheader
+    html_parts.append('<div class="scorecard-header">')
+    html_parts.append(f'<h2>{title}</h2>')
+    if subheader:
+        html_parts.append(f'<p class="scorecard-subheader">{subheader}</p>')
+    html_parts.append('</div>')
+
     html_parts.append('<table class="scorecard-table">')
     
     # Header section
@@ -127,14 +156,45 @@ def generate_single_round_html(df, title="Scorecard"):
     
     return ''.join(html_parts)
 
-def generate_tournament_html(player_data, player_name, teg_name):
+def generate_tournament_html(player_code, teg_num, title=None, subheader=None):
     """Generate HTML for single player tournament view (all rounds)"""
+    
+    # Load data using new function
+    player_data = get_scorecard_data(teg_num, player_code=player_code)
+    
+    if player_data.empty:
+        return f"<div class='scorecard-container'><p>Error: No data found for player {player_code} in TEG {teg_num}.</p></div>"
+    
+    # Generate default title if not provided
+    if title is None:
+        player_name = player_data['Player'].iloc[0]
+        title = f"TEG {teg_num} Tournament | {player_name}"
+    
+    # Generate default subheader if not provided
+    if subheader is None:
+        metadata = get_teg_metadata(teg_num)
+        area = metadata.get('Area')
+        year = metadata.get('Year')
+        
+        if area and year:
+            subheader = f"{area} | {year}"
+        elif area:
+            subheader = area
+        elif year:
+            subheader = str(year)
+        # If neither available, subheader remains None
     
     rounds = sorted(player_data['Round'].unique())
     
     html_parts = []
     html_parts.append('<div class="scorecard-container layout-multi-round">')
-    html_parts.append(f'<div class="scorecard-header"><h2>{teg_name} Tournament | {player_name}</h2></div>')
+
+    # Header with title and optional subheader
+    html_parts.append('<div class="scorecard-header">')
+    html_parts.append(f'<h2>{title}</h2>')
+    if subheader:
+        html_parts.append(f'<p class="scorecard-subheader">{subheader}</p>')
+    html_parts.append('</div>')
     
     # Gross Scores Section
     html_parts.append('<div class="section-header">Gross Scores</div>')
@@ -245,8 +305,33 @@ def generate_tournament_html(player_data, player_name, teg_name):
     
     return ''.join(html_parts)
 
-def generate_round_comparison_html(round_data, teg_name, round_num):
+def generate_round_comparison_html(teg_num, round_num, title=None, subheader=None):
     """Generate HTML for multi-player round comparison"""
+    
+    # Load data using new function
+    round_data = get_scorecard_data(teg_num, round_num)
+    
+    if round_data.empty:
+        return f"<div class='scorecard-container'><p>Error: No data found for TEG {teg_num} Round {round_num}.</p></div>"
+    
+    # Generate default title if not provided
+    if title is None:
+        title = f"TEG {teg_num} Round {round_num} | Player Comparison"
+    
+    # Generate default subheader if not provided
+    if subheader is None:
+        metadata = get_teg_metadata(teg_num, round_num)
+        course = metadata.get('Course')
+        date_str = metadata.get('Date')
+        formatted_date = format_date_for_scorecard(date_str)
+        
+        if course and formatted_date:
+            subheader = f"{course} | {formatted_date}"
+        elif course:
+            subheader = course
+        elif formatted_date:
+            subheader = formatted_date
+        # If neither available, subheader remains None
     
     players = round_data['Pl'].unique()
     
@@ -263,7 +348,13 @@ def generate_round_comparison_html(round_data, teg_name, round_num):
     
     html_parts = []
     html_parts.append('<div class="scorecard-container layout-multi-player">')
-    html_parts.append(f'<div class="scorecard-header"><h2>{teg_name} Round {round_num} | Player Comparison</h2></div>')
+
+    # Header with title and optional subheader
+    html_parts.append('<div class="scorecard-header">')
+    html_parts.append(f'<h2>{title}</h2>')
+    if subheader:
+        html_parts.append(f'<p class="scorecard-subheader">{subheader}</p>')
+    html_parts.append('</div>')
     
     # Gross Scores Section
     html_parts.append('<div class="section-header">Gross Scores</div>')
@@ -382,8 +473,6 @@ st.title('Scorecard v2 - Enhanced Visual Design')
 if not css_loaded:
     st.warning("CSS not loaded - scorecard may not display correctly")
 
-# Load data
-all_data = load_all_data(exclude_incomplete_tegs=False)
 
 # Create tabs
 tab1, tab2, tab3 = st.tabs(["Single Round", "Tournament View", "Round Comparison"])
@@ -416,11 +505,8 @@ with tab1:
         selected_round = st.selectbox('Select Round', round_options, index=round_options.index(max_round) if max_round in round_options else 0, key='tab1_round')
     
     # Filter data
-    rd_data = all_data[
-        (all_data['Pl'] == selected_pl) &
-        (all_data['TEGNum'] == selected_tegnum) &
-        (all_data['Round'] == selected_round)
-    ]
+    rd_data = get_scorecard_data(selected_tegnum, selected_round, selected_pl)
+
     
     if len(rd_data) == 0:
         st.error("No data found for the selected criteria.")
@@ -439,8 +525,7 @@ with tab1:
             output_data[col] = output_data[col].map(to_int_or_zero)
         
         if len(output_data) == 18:
-            title = f"TEG {selected_tegnum} Round {selected_round} | {selected_pl}"
-            scorecard_html = generate_single_round_html(output_data, title)
+            scorecard_html = generate_single_round_html(selected_pl, selected_tegnum, selected_round)
             st.markdown(scorecard_html, unsafe_allow_html=True)
         else:
             st.error(f"Expected 18 holes, found {len(output_data)} holes for this round.")
@@ -460,10 +545,8 @@ with tab2:
         selected_tegnum_t2 = st.selectbox('Select Tournament', tegnum_options_t2, index=len(tegnum_options_t2)-1, key='tab2_teg')
     
     # Filter data for selected player and tournament
-    tournament_data = all_data[
-        (all_data['Pl'] == selected_pl_t2) &
-        (all_data['TEGNum'] == selected_tegnum_t2)
-    ]
+    tournament_data = get_scorecard_data(selected_tegnum_t2, player_code=selected_pl_t2)
+
     
     if len(tournament_data) == 0:
         st.error("No data found for the selected player and tournament.")
@@ -473,7 +556,7 @@ with tab2:
         teg_name = f"TEG {selected_tegnum_t2}"
         
         # Generate tournament view
-        tournament_html = generate_tournament_html(tournament_data, player_name, teg_name)
+        tournament_html = generate_tournament_html(selected_pl_t2, selected_tegnum_t2)
         st.markdown(tournament_html, unsafe_allow_html=True)
 
 # Tab 3: Round Comparison
@@ -491,10 +574,7 @@ with tab3:
         selected_round_t3 = st.selectbox('Select Round', round_options_t3, index=len(round_options_t3)-1, key='tab3_round')
     
     # Filter data for selected tournament and round
-    comparison_data = all_data[
-        (all_data['TEGNum'] == selected_tegnum_t3) &
-        (all_data['Round'] == selected_round_t3)
-    ]
+    comparison_data = get_scorecard_data(selected_tegnum_t3, selected_round_t3)
     
     if len(comparison_data) == 0:
         st.error("No data found for the selected tournament and round.")
@@ -502,5 +582,5 @@ with tab3:
         teg_name = f"TEG {selected_tegnum_t3}"
         
         # Generate round comparison view
-        comparison_html = generate_round_comparison_html(comparison_data, teg_name, selected_round_t3)
+        comparison_html = generate_round_comparison_html(selected_tegnum_t3, selected_round_t3)
         st.markdown(comparison_html, unsafe_allow_html=True)
