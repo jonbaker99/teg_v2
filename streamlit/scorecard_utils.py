@@ -8,154 +8,6 @@ import pandas as pd
 from pathlib import Path
 from utils import get_scorecard_data, get_teg_metadata, format_date_for_scorecard
 
-def load_scorecard_css():
-    """Load the scorecard CSS file and inject it into Streamlit"""
-    css_file = Path(__file__).parent / "scorecard_styles.css"
-    
-    try:
-        with open(css_file, 'r') as f:
-            css_content = f.read()
-        st.markdown(f"<style>{css_content}</style>", unsafe_allow_html=True)
-    except FileNotFoundError:
-        # Fallback: inline CSS if file not found
-        st.markdown("""
-        <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-        
-        .scorecard-container {
-            background: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            max-width: 1400px;
-            margin: 0 auto 30px auto;
-            font-family: 'Roboto', Arial, sans-serif;
-        }
-        
-        .scorecard-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        .scorecard-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 2px;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        
-        .scorecard-table th,
-        .scorecard-table td {
-            padding: 6px;
-            text-align: center;
-            border: none;
-            font-weight: bold;
-            min-width: 32px;
-            height: 32px;
-            vertical-align: middle;
-            position: relative;
-            background-color: #f8f9fa;
-        }
-        
-        .score-cell {
-            position: relative;
-            background-color: white;
-        }
-        
-        .score-cell::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 28px;
-            height: 28px;
-            border-radius: 4px;
-            z-index: 1;
-        }
-        
-        .score-cell span {
-            position: relative;
-            z-index: 2;
-        }
-        
-        /* Score colors */
-        .score-cell[data-vs-par="-2"]::before { background-color: #FFD700; }
-        .score-cell[data-vs-par="-1"]::before { background-color: #90EE90; }
-        .score-cell[data-vs-par="0"]::before { background-color: #E6F3FF; }
-        .score-cell[data-vs-par="1"]::before { background-color: #FFE4B5; }
-        .score-cell[data-vs-par="2"]::before { background-color: #FFA07A; }
-        .score-cell[data-vs-par="3"]::before,
-        .score-cell[data-vs-par="4"]::before,
-        .score-cell[data-vs-par="5"]::before,
-        .score-cell[data-vs-par="6"]::before,
-        .score-cell[data-vs-par="7"]::before,
-        .score-cell[data-vs-par="8"]::before,
-        .score-cell[data-vs-par="9"]::before,
-        .score-cell[data-vs-par="10"]::before { background-color: #8B0000; }
-        
-        /* Stableford colors */
-        .score-cell[data-stableford="0"]::before { background-color: #ffffff; border: 1px solid #ddd; }
-        .score-cell[data-stableford="1"]::before { background-color: #e3f2fd; }
-        .score-cell[data-stableford="2"]::before { background-color: #bbdefb; }
-        .score-cell[data-stableford="3"]::before { background-color: #90caf9; }
-        .score-cell[data-stableford="4"]::before { background-color: #64b5f6; }
-        .score-cell[data-stableford="5"]::before,
-        .score-cell[data-stableford="6"]::before,
-        .score-cell[data-stableford="7"]::before,
-        .score-cell[data-stableford="8"]::before { background-color: #1976d2; }
-        
-        /* White text for dark backgrounds */
-        .score-cell[data-vs-par="3"] span,
-        .score-cell[data-vs-par="4"] span,
-        .score-cell[data-vs-par="5"] span,
-        .score-cell[data-vs-par="6"] span,
-        .score-cell[data-vs-par="7"] span,
-        .score-cell[data-vs-par="8"] span,
-        .score-cell[data-vs-par="9"] span,
-        .score-cell[data-vs-par="10"] span,
-        .score-cell[data-stableford="5"] span,
-        .score-cell[data-stableford="6"] span,
-        .score-cell[data-stableford="7"] span,
-        .score-cell[data-stableford="8"] span {
-            color: white;
-        }
-        
-        /* Layout styling */
-        .layout-single-round .label-column {
-            text-align: left;
-            min-width: 80px;
-            padding-left: 8px;
-        }
-        
-        .layout-single-round .hole-header {
-            border-bottom: 2px solid #333;
-        }
-        
-        .layout-single-round .front-back-divider {
-            border-right: 3px solid #333;
-        }
-        
-        .totals {
-            font-weight: bold;
-            background-color: #f8f9fa;
-        }
-        
-        @media (max-width: 768px) {
-            .scorecard-table { font-size: 12px; }
-            .scorecard-table th, .scorecard-table td { 
-                padding: 4px; 
-                min-width: 28px; 
-                height: 28px; 
-            }
-            .layout-single-round .label-column {
-                min-width: 60px;
-                font-size: 11px;
-            }
-        }
-        </style>
-        """, unsafe_allow_html=True)
 
 def generate_scorecard_html(df, layout="single-round", title="Scorecard"):
     """
@@ -393,9 +245,23 @@ def generate_single_round_html(player_code, teg_num, round_num, title=None, subh
     for hole in range(1, 10):
         hole_data = df[df['Hole'] == hole].iloc[0]
         vs_par = int(hole_data['GrossVP'])
+
+        # # Debug
+        # if vs_par == -2:
+        #     st.write(f"DEBUG: Eagle found on hole {hole}, vs_par={vs_par}")
+
         score = int(hole_data['Sc'])
         html_parts.append(f'<td class="score-cell" data-vs-par="{vs_par}"><span>{score}</span></td>')
+
+        # # Debug - show what HTML is being generated
+        # if vs_par == -2:
+        #     st.write(f"DEBUG: HTML generated: <td class=\"score-cell\" data-vs-par=\"{vs_par}\"><span>{score}</span></td>")
+
+
     html_parts.append(f'<td class="totals front-back-divider">{front_totals["Sc"]}</td>')
+
+
+
     for hole in range(10, 19):
         hole_data = df[df['Hole'] == hole].iloc[0]
         vs_par = int(hole_data['GrossVP'])
@@ -442,8 +308,8 @@ def generate_tournament_html(player_code, teg_num, title=None, subheader=None):
         title = f"TEG {teg_num} Tournament | {player_name}"
     
     
-    # Debug - remove this after testing
-    st.write("DEBUG metadata:", get_teg_metadata(teg_num))
+    # # Debug - remove this after testing
+    # st.write("DEBUG metadata:", get_teg_metadata(teg_num))
     
     # Generate default subheader if not provided
     if subheader is None:
