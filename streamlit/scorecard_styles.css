@@ -205,7 +205,7 @@
 /* Stableford coloring */
 .score-cell[data-stableford="0"]::before {
   background-color: var(--color-stableford-0);
-  border: 1px solid #ddd;
+  /* border: 1px solid #ddd; */
   border-radius: 50%;
 }
 
@@ -287,3 +287,22 @@
   
   .label-column { min-width: 60px; }
 }
+
+
+/* ===== STABLEFORD ZERO AS 'X' ===== */
+/* Hide the original '0' for stableford points */
+.score-cell[data-stableford="0"] span {
+    visibility: hidden; 
+  }
+  
+  /* Display 'X' using a pseudo-element */
+  .score-cell[data-stableford="0"] span::after {
+    content: "x";
+    visibility: visible; 
+    position: absolute; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--color-text); /* Ensures the 'X' is black or your default text color */
+    font-weight: 400; 
+  }
