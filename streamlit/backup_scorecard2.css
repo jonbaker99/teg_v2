@@ -1,0 +1,238 @@
+/* Golf Scorecard Flexible CSS Framework */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* ===== BASE STYLING ===== */
+.scorecard-container {
+    font-family: 'Roboto', Arial, sans-serif;
+    margin: 0 auto 30px auto;
+    width: 100%;
+}
+
+.scorecard-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.scorecard-subheader {
+    font-size: 14px;
+    color: #666;
+    font-weight: normal;
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+
+/* ===== FLEXIBLE TABLE SYSTEM ===== */
+.scorecard-table {
+    /* width: 100%; */
+    border-collapse: separate;
+    border-spacing: 2px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+.scorecard-table th,
+.scorecard-table td {
+    padding: 6px;
+    text-align: center;
+    border: none;
+    min-width: 32px;
+    height: 32px;
+    vertical-align: middle;
+    position: relative;
+    /* background-color: #f8f9fa; */
+}
+
+.scorecard-table td {
+    font-weight: normal;
+    background-color: #ffffff;
+}
+
+.scorecard-table th {
+    font-weight: bold;
+    background-color: #f8f9fa;
+}
+
+
+/* ===== UNIVERSAL SCORE CELL SYSTEM ===== */
+.score-cell {
+    position: relative;
+    background-color: white;
+}
+
+.score-cell::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.score-cell span {
+    position: relative;
+    z-index: 2;
+}
+
+
+
+css
+/* ===== DATA-DRIVEN COLORS - CLASSIC VIBRANT WITH INSET SHADOWS ===== *//* Eagle (-2): Double circle, bright gold with inset shadows */
+.score-cell[data-vs-par="-2"]::before {
+    background-color: #FFD700;
+    /* box-shadow:
+        0 0 0 1px #B8860B,
+        inset 0 0 0 1px white,
+        inset 0 0 0 2px #B8860B; */
+}
+
+/* Birdie (-1): Circle, pale blue */
+.score-cell[data-vs-par="-1"]::before { background-color: #ADD8E6; }
+
+/* Par (0): No shading */
+.score-cell[data-vs-par="0"]::before { background-color: transparent; }
+
+/* Bogey (+1): Square with pale red fill */
+.score-cell[data-vs-par="1"]::before {
+    background-color: #ffdee5;
+    border-radius: 0px;
+}
+
+/* Double bogey (+2): Double square with mid red fill and inset shadows */
+.score-cell[data-vs-par="2"]::before {
+    background-color: #F08080;
+    border-radius: 0px;
+    /*box-shadow:
+        0 0 0 1px #CD5C5C,
+        inset 0 0 0 1px white,
+        inset 0 0 0 2px #CD5C5C;*/
+}
+
+/* Triple bogey+ (+3 and above): Double square with dark red fill and inset shadows */
+.score-cell[data-vs-par="3"]::before,
+.score-cell[data-vs-par="4"]::before,
+.score-cell[data-vs-par="5"]::before,
+.score-cell[data-vs-par="6"]::before,
+.score-cell[data-vs-par="7"]::before,
+.score-cell[data-vs-par="8"]::before,
+.score-cell[data-vs-par="9"]::before,
+.score-cell[data-vs-par="10"]::before {
+    background-color: #8B0000;
+    border-radius: 0px;
+    /* box-shadow:
+        0 0 0 1px #660000,
+        inset 0 0 0 1px white,
+        inset 0 0 0 2px #660000; */
+}
+
+
+/* Stableford colors */
+.score-cell[data-stableford="0"]::before { background-color: #ffffff; border: 1px solid #ddd; }
+.score-cell[data-stableford="1"]::before { background-color: #e3f2fd; }
+.score-cell[data-stableford="2"]::before { background-color: #bbdefb; }
+.score-cell[data-stableford="3"]::before { background-color: #90caf9; }
+.score-cell[data-stableford="4"]::before { background-color: #64b5f6; }
+.score-cell[data-stableford="5"]::before,
+.score-cell[data-stableford="6"]::before,
+.score-cell[data-stableford="7"]::before,
+.score-cell[data-stableford="8"]::before { background-color: #1976d2; }
+
+/* White text for dark backgrounds */
+.score-cell[data-vs-par="3"] span,
+.score-cell[data-vs-par="4"] span,
+.score-cell[data-vs-par="5"] span,
+.score-cell[data-vs-par="6"] span,
+.score-cell[data-vs-par="7"] span,
+.score-cell[data-vs-par="8"] span,
+.score-cell[data-vs-par="9"] span,
+.score-cell[data-vs-par="10"] span,
+.score-cell[data-stableford="5"] span,
+.score-cell[data-stableford="6"] span,
+.score-cell[data-stableford="7"] span,
+.score-cell[data-stableford="8"] span {
+    color: white;
+}
+
+/* ===== LAYOUT VARIANTS ===== */
+
+.layout-single-round .label-column,
+.layout-multi-round .round-label,
+.layout-multi-player .player-label {
+    padding-right: 16px;
+}
+
+/* Single Round Layout */
+.layout-single-round .label-column {
+    text-align: left;
+    min-width: 80px;
+    padding-left: 8px;
+}
+
+.layout-single-round .par-header {
+    border-bottom: 2px solid #333;
+    font-weight: normal;
+    font-size: 12px;
+}
+
+.layout-single-round .front-back-divider {
+    border-right: 0px solid #333;
+}
+
+/* Multi-Round Layout (4 rounds for one player) */
+.layout-multi-round .round-section {
+    margin-bottom: 30px;
+}
+
+.layout-multi-round .round-label {
+    /* background-color: #e9ecef; */
+    font-weight: bold;
+    text-align: left;
+    padding-left: 8px;
+    min-width: 100px;
+}
+
+/* Multi-Player Layout (multiple players, one round) */
+.layout-multi-player .player-label {
+    /* background-color: #e9ecef; */
+    /* font-weight: bold; */
+    text-align: left;
+    padding-left: 8px;
+    /* min-width: 120px; */
+    max-width: 150px;
+    white-space: nowrap;
+}
+
+/* ===== UTILITY CLASSES ===== */
+.totals {
+    font-weight: bold;
+    background-color: #f8f9fa;
+}
+
+.section-header {
+    /* background-color: #e9ecef; */
+    font-weight: bold;
+    font-size: 16px;
+    padding: 10px;
+    text-align: center;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .scorecard-table { font-size: 12px; }
+    .scorecard-table th, .scorecard-table td { 
+        padding: 4px; 
+        min-width: 24px; 
+        height: 24px; 
+    }
+    .layout-single-round .label-column,
+    .layout-multi-round .round-label,
+    .layout-multi-player .player-label {
+        min-width: 60px;
+        font-size: 11px;
+    }
+}
