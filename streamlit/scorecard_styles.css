@@ -4,8 +4,11 @@
 /* ===== CSS VARIABLES ===== */
 :root {
   /* Colors */
-  --color-eagle: #fff900;
+  /* --color-eagle: #fff900; */
+  --color-eagle: #fefa00;
+  /* --color-eagle: #FF0C13; */
   --color-birdie: #FF0C13;
+  /* --color-birdie: #ffdfdf; */
   --color-par: #fff;
   --color-bogey: #e6e5e5;
   --color-double-bogey: #999;
@@ -14,10 +17,10 @@
   /* Stableford colors */
   --color-stableford-0: #ffffff;
   --color-stableford-1: #e3f2fd;
-  --color-stableford-2: #bbdefb;
-  --color-stableford-3: #90caf9;
-  --color-stableford-4: #64b5f6;
-  --color-stableford-5: #1976d2;
+  --color-stableford-2: #d0e8fc;
+  --color-stableford-3: #7fb8e6;
+  --color-stableford-4: #419be5;
+  --color-stableford-5: #005bb5;
   
   /* UI colors */
   --color-border: #e0e0e0;
@@ -40,6 +43,11 @@
   --font-size-small: 12px;
   --font-size-large: 16px;
   --font-size-header: 18px;
+
+  /* shapes */
+  --stableford-radius: 0px;
+
+
 }
 
 /* ===== BASE STYLES ===== */
@@ -77,6 +85,12 @@
   margin: 0 auto 20px;
 }
 
+/* Remove default top borders from all rows */
+
+.scorecard-table tr {
+    border-top: none;
+}
+  
 .scorecard-table th,
 .scorecard-table td {
   padding: var(--spacing-cell);
@@ -108,6 +122,7 @@
 .scorecard-table th {
   border-bottom: none;
 }
+
 
 /* Only PAR row gets the border */
 .scorecard-table th.par-header {
@@ -146,15 +161,18 @@
 .score-cell[data-vs-par="-2"]::before {
   background-color: var(--color-eagle);
   border-radius: 50%;
-  box-shadow: 
+  /* box-shadow: 
   0 0 0 1px white,
-  0 0 0 2px black;
+  0 0 0 2px black; */
+  border: 3px double black;
 }
 
 /* Birdie (-1): Circle with yellow */
 .score-cell[data-vs-par="-1"]::before {
   background-color: var(--color-birdie);
   border-radius: 50%;
+  /* border: 1px solid rgb(171, 0, 0); */
+  border: 3px solid white;
 }
 
 /* Par (0): Square with gray */
@@ -167,12 +185,14 @@
 .score-cell[data-vs-par="1"]::before {
   background-color: var(--color-bogey);
   border-radius: 0;
+  border: 2px solid white;
 }
 
 /* Double bogey (+2): Square with mid red */
 .score-cell[data-vs-par="2"]::before {
   background-color: var(--color-double-bogey);
   border-radius: 0;
+  border: 2px double white;
 }
 
 /* Triple bogey+ (+3 and above): Square with dark red */
@@ -186,6 +206,7 @@
 .score-cell[data-vs-par="10"]::before {
   background-color: var(--color-triple-bogey);
   border-radius: 0;
+  border: 3px double white;
 }
 
 /* White text for dark backgrounds */
@@ -202,31 +223,40 @@
   color: var(--color-text-inverse);
 }
 
+/* .score-cell[data-vs-par="-1"] span {
+    color: rgb(171, 0, 0);
+} */
+
 /* Stableford coloring */
 .score-cell[data-stableford="0"]::before {
   background-color: var(--color-stableford-0);
   /* border: 1px solid #ddd; */
-  border-radius: 50%;
+  /* border-radius: 50%; */
+  border-radius:var(--stableford-radius);
 }
 
 .score-cell[data-stableford="1"]::before {
   background-color: var(--color-stableford-1);
-  border-radius: 50%;
+  /* border-radius: 50%; */
+  border-radius:var(--stableford-radius);
 }
 
 .score-cell[data-stableford="2"]::before {
   background-color: var(--color-stableford-2);
-  border-radius: 50%;
+  /* border-radius: 50%; */
+  border-radius:var(--stableford-radius);
 }
 
 .score-cell[data-stableford="3"]::before {
   background-color: var(--color-stableford-3);
-  border-radius: 50%;
+  /* border-radius: 50%; */
+  border-radius:var(--stableford-radius);
 }
 
 .score-cell[data-stableford="4"]::before {
   background-color: var(--color-stableford-4);
-  border-radius: 50%;
+  /* border-radius: 50%; */
+  border-radius:var(--stableford-radius);
 }
 
 .score-cell[data-stableford="5"]::before,
@@ -234,9 +264,11 @@
 .score-cell[data-stableford="7"]::before,
 .score-cell[data-stableford="8"]::before {
   background-color: var(--color-stableford-5);
-  border-radius: 50%;
+  /* border-radius: 50%; */
+  border-radius:var(--stableford-radius);
 }
 
+.score-cell[data-stableford="4"] span,
 .score-cell[data-stableford="5"] span,
 .score-cell[data-stableford="6"] span,
 .score-cell[data-stableford="7"] span,
@@ -245,17 +277,17 @@
 }
 
 /* ===== SPECIAL COLUMNS ===== */
-.label-column,
-.round-label,
-.player-label {
+.scorecard-table td.label-column,
+.scorecard-table td.round-label,
+.scorecard-table td.player-label {
   text-align: left;
   padding-left: 8px;
   padding-right: 16px;
-}
 
-.label-column { min-width: 80px; }
-.round-label { min-width: 100px; font-weight: bold; }
-.player-label { max-width: 150px; white-space: nowrap; }
+  font-weight: 400;
+  white-space: nowrap;
+  max-width: 150px;
+}
 
 .totals {
   font-weight: bold;
