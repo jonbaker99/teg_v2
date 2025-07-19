@@ -35,7 +35,7 @@
   /* --color-eagle: #fefa00; */
   --color-eagle: #FF0C13;
   /* --color-birdie: #FF0C13; */
-  --color-birdie:#ffebee;
+  --color-birdie:#FF7175;
   --color-par: #fff;
   --color-bogey: #e6e5e5;
   --color-double-bogey: #999;
@@ -64,7 +64,7 @@
   
   /* Shape Sizes */
   --shape-size-eagle: var(--shape-size);
-  --shape-size-birdie: 23px;
+  --shape-size-birdie: var(--shape-size);
   --shape-size-par: var(--shape-size);
   --shape-size-bogey: var(--shape-size);
   --shape-size-double-bogey: var(--shape-size);
@@ -78,19 +78,22 @@
 
   /* Gross Score Types - Font Colors */
   --color-text-eagle: #fff;
-  --color-text-birdie: red;
+  --color-text-birdie: #fff;
   --color-text-par: #000;
   --color-text-bogey: #000;
   --color-text-double-bogey: #fff;
   --color-text-triple-bogey: #fff;
 
   /* Gross Score Types - Border Shortcuts */
-  --border-eagle: 3px double #fff;
-  --border-birdie: 1px solid red;
+  --border-eagle: 2px solid #fff;
+  --border-birdie: 2px solid #fff;
   --border-par: none;
   --border-bogey: 2px solid #fff;
   --border-double-bogey: 2px double #fff;
   --border-triple-bogey: 3px double #fff;
+
+  /* --boxshadow-eagle: 0 0 0 1px white, 0 0 0 3px red; */
+  --boxshadow-eagle: 0 0 0 1px red;
 
   /* Stableford Score Types - Font Colors */
   --color-text-stableford-0: #bcbcbc;
@@ -221,6 +224,7 @@
   width: var(--shape-size-eagle);
   height: var(--shape-size-eagle);
   border: var(--border-eagle);
+  box-shadow: var(--boxshadow-eagle);
 }
 
 .score-cell[data-vs-par="-2"] span {
