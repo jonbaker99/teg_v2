@@ -33,37 +33,35 @@ selected_tab = st.radio("Choose scorecard type:", tab_names,
                        horizontal=True,
                        key='scorecard_tab_selector')
 
-# # Update session state based on the radio selection
-# if 'scorecard_tab_selector' in st.session_state:
-#     st.session_state.active_scorecard_tab = tab_names.index(st.session_state.scorecard_tab_selector)
+
+# Page-level controls
+# st.markdown("---")
+st.caption("Scorecard selection")
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    pl_options = sorted(all_data['Pl'].unique())
+    selected_pl = st.selectbox('Player', pl_options, 
+                              disabled=(selected_tab == "Round Comparison"),
+                              key='page_player')
+
+with col2:
+    tegnum_options = sorted(all_data['TEGNum'].unique())
+    selected_tegnum = st.selectbox('Tournament', tegnum_options, 
+                                  index=len(tegnum_options)-1,
+                                  key='page_tegnum')
+
+with col3:
+    round_options = sorted(all_data[all_data['TEGNum'] == selected_tegnum]['Round'].unique())
+    selected_round = st.selectbox('Round', round_options,
+                                 disabled=(selected_tab == "Tournament View"),
+                                 index=len(round_options)-1,
+                                 key='page_round')
+
+# st.markdown("---")
 
 # Tab 1: Single Round (existing functionality)
 if selected_tab == "Single Round":
-    st.markdown('**Select scorecard to view**')
-    
-    # Create dropdowns
-    pl_options = sorted(all_data['Pl'].unique())
-    default_pl = pl_options[0] if pl_options else None
-    
-    tegnum_options = sorted(all_data['TEGNum'].unique())
-    default_tegnum = max(tegnum_options) if tegnum_options else None
-    
-    def get_max_round(tegnum):
-        return all_data[all_data['TEGNum'] == tegnum]['Round'].max()
-    
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        selected_pl = st.selectbox('Select Player', pl_options, index=pl_options.index(default_pl), key='tab1_player')
-    
-    with col2:    
-        selected_tegnum = st.selectbox('Select TEGNum', tegnum_options, index=tegnum_options.index(default_tegnum), key='tab1_teg')
-    
-    with col3:
-        max_round = get_max_round(selected_tegnum)
-        round_options = sorted(all_data[all_data['TEGNum'] == selected_tegnum]['Round'].unique())
-        selected_round = st.selectbox('Select Round', round_options, index=round_options.index(max_round) if max_round in round_options else 0, key='tab1_round')
-    
     # Filter data
     rd_data = get_scorecard_data(selected_tegnum, selected_round, selected_pl)
 
@@ -92,20 +90,8 @@ if selected_tab == "Single Round":
 
 # Tab 2: Tournament View
 elif selected_tab == "Tournament View":
-    st.markdown('**Select player and tournament**')
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        pl_options_t2 = sorted(all_data['Pl'].unique())
-        selected_pl_t2 = st.selectbox('Select Player', pl_options_t2, key='tab2_player')
-    
-    with col2:
-        tegnum_options_t2 = sorted(all_data['TEGNum'].unique())
-        selected_tegnum_t2 = st.selectbox('Select Tournament', tegnum_options_t2, index=len(tegnum_options_t2)-1, key='tab2_teg')
-    
     # Filter data for selected player and tournament
-    tournament_data = get_scorecard_data(selected_tegnum_t2, player_code=selected_pl_t2)
+    tournament_data = get_scorecard_data(selected_tegnum, player_code=selected_pl)
 
     
     if len(tournament_data) == 0:
@@ -113,35 +99,22 @@ elif selected_tab == "Tournament View":
     else:
         # Get player name and TEG name
         player_name = tournament_data['Player'].iloc[0]
-        teg_name = f"TEG {selected_tegnum_t2}"
+        teg_name = f"TEG {selected_tegnum}"
         
         # Generate tournament view
-        tournament_html = generate_tournament_html(selected_pl_t2, selected_tegnum_t2)
+        tournament_html = generate_tournament_html(selected_pl, selected_tegnum)
         st.markdown(tournament_html, unsafe_allow_html=True)
 
 # Tab 3: Round Comparison
 elif selected_tab == "Round Comparison":
-
-    st.markdown('**Select round to compare all players**')
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        tegnum_options_t3 = sorted(all_data['TEGNum'].unique())
-        selected_tegnum_t3 = st.selectbox('Select Tournament', tegnum_options_t3, index=len(tegnum_options_t3)-1, key='tab3_teg')
-    
-    with col2:
-        round_options_t3 = sorted(all_data[all_data['TEGNum'] == selected_tegnum_t3]['Round'].unique())
-        selected_round_t3 = st.selectbox('Select Round', round_options_t3, index=len(round_options_t3)-1, key='tab3_round')
-    
     # Filter data for selected tournament and round
-    comparison_data = get_scorecard_data(selected_tegnum_t3, selected_round_t3)
+    comparison_data = get_scorecard_data(selected_tegnum, selected_round)
     
     if len(comparison_data) == 0:
         st.error("No data found for the selected tournament and round.")
     else:
-        teg_name = f"TEG {selected_tegnum_t3}"
+        teg_name = f"TEG {selected_tegnum}"
         
         # Generate round comparison view
-        comparison_html = generate_round_comparison_html(selected_tegnum_t3, selected_round_t3)
+        comparison_html = generate_round_comparison_html(selected_tegnum, selected_round)
         st.markdown(comparison_html, unsafe_allow_html=True)
