@@ -153,7 +153,7 @@ def generate_single_round_html(player_code, teg_num, round_num, title=None, subh
     # Generate default title if not provided
     if title is None:
         player_name = df['Player'].iloc[0]
-        title = f"TEG {teg_num} Round {round_num} | {player_name}"
+        title = f"{player_name} | TEG {teg_num}, Round {round_num}"
     
     # Generate default subheader if not provided
     if subheader is None:
@@ -306,7 +306,7 @@ def generate_tournament_html(player_code, teg_num, title=None, subheader=None):
     # Generate default title if not provided
     if title is None:
         player_name = player_data['Player'].iloc[0]
-        title = f"TEG {teg_num} Tournament | {player_name}"
+        title = f"{player_name} | TEG {teg_num}"
     
     
     # # Debug - remove this after testing
@@ -458,7 +458,7 @@ def generate_round_comparison_html(teg_num, round_num, title=None, subheader=Non
     
     # Generate default title if not provided
     if title is None:
-        title = f"TEG {teg_num} Round {round_num} | All Players"
+        title = f"TEG {teg_num}, Round {round_num}"
     
     # Generate default subheader if not provided
     if subheader is None:
