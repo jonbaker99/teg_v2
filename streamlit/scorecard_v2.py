@@ -18,17 +18,27 @@ all_data = load_all_data(exclude_incomplete_tegs=False)
 # Load CSS
 css_loaded = load_scorecard_css()
 
-st.title('Scorecards [New version]')
+st.title('Scorecards v2')
 
 if not css_loaded:
     st.warning("CSS not loaded - scorecard will not display correctly")
 
 
-# Create tabs
-tab1, tab2, tab3 = st.tabs(["Single Round", "Tournament View", "Round Comparison"])
+# Create tabs with session state persistence
+if 'active_scorecard_tab' not in st.session_state:
+    st.session_state.active_scorecard_tab = 0
+
+tab_names = ["Single Round", "Tournament View", "Round Comparison"]
+selected_tab = st.radio("Choose scorecard type:", tab_names, 
+                       horizontal=True,
+                       key='scorecard_tab_selector')
+
+# # Update session state based on the radio selection
+# if 'scorecard_tab_selector' in st.session_state:
+#     st.session_state.active_scorecard_tab = tab_names.index(st.session_state.scorecard_tab_selector)
 
 # Tab 1: Single Round (existing functionality)
-with tab1:
+if selected_tab == "Single Round":
     st.markdown('**Select scorecard to view**')
     
     # Create dropdowns
@@ -81,7 +91,7 @@ with tab1:
             st.error(f"Expected 18 holes, found {len(output_data)} holes for this round.")
 
 # Tab 2: Tournament View
-with tab2:
+elif selected_tab == "Tournament View":
     st.markdown('**Select player and tournament**')
     
     col1, col2 = st.columns(2)
@@ -110,7 +120,8 @@ with tab2:
         st.markdown(tournament_html, unsafe_allow_html=True)
 
 # Tab 3: Round Comparison
-with tab3:
+elif selected_tab == "Round Comparison":
+
     st.markdown('**Select round to compare all players**')
     
     col1, col2 = st.columns(2)
