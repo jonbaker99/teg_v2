@@ -1424,31 +1424,69 @@ def get_teg_metadata(teg_num, round_num=None):
     except Exception:
         return {}
 
-def format_date_for_scorecard(date_str):
+def format_date_for_scorecard(date_str, input_format=None, output_format='%d/%m/%y'):
     """
-    Format date string to 'March 18, 2025' format for scorecard display
+    Format date string with flexible input and output formats (UK conventions)
     
     Args:
         date_str: Date string from CSV
+        input_format: Optional specific format (e.g., '%d/%m/%Y'). If None, tries common UK formats
+        output_format: Output format (default: '15/1/25' UK style without leading zeros)
     
     Returns:
-        str: Formatted date or None if parsing fails
+        str: Formatted date or original string if parsing fails
     """
     if not date_str or pd.isna(date_str):
-        return None
+        return str(date_str) if date_str else None
+    
+    date_str = str(date_str).strip()
     
     try:
-        # Try different date formats that might be in the CSV
-        for fmt in ['%d/%m/%Y', '%Y-%m-%d', '%d-%m-%Y']:
-            try:
-                date_obj = datetime.strptime(str(date_str), fmt)
-                return date_obj.strftime('%B %d, %Y')
-            except ValueError:
-                continue
-        return None
+        if input_format:
+            # Use specified format
+            date_obj = datetime.strptime(date_str, input_format)
+        else:
+            # Try common UK date formats (day first, no leading zeros supported)
+            uk_formats = [
+                '%d/%m/%Y',    # 15/1/2025 or 1/12/2025
+                '%d/%m/%y',    # 15/1/25 or 1/12/25
+                '%d-%m-%Y',    # 15-1-2025 or 1-12-2025
+                '%d-%m-%y',    # 15-1-25 or 1-12-25
+                '%d %b %Y',    # 15 Jan 2025
+                '%d %B %Y',    # 15 January 2025
+                '%Y-%m-%d',    # 2025-01-15 (ISO format)
+                '%d.%m.%Y',    # 15.1.2025
+                '%d.%m.%y',    # 15.1.25
+            ]
+            
+            date_obj = None
+            for fmt in uk_formats:
+                try:
+                    date_obj = datetime.strptime(date_str, fmt)
+                    break
+                except ValueError:
+                    continue
+            
+            if date_obj is None:
+                return date_str
+        
+        # Custom formatting to avoid leading zeros in day/month
+        if output_format == '%d/%m/%y':
+            return f"{date_obj.day}/{date_obj.month}/{date_obj.strftime('%y')}"
+        elif output_format == '%d/%m/%Y':
+            return f"{date_obj.day}/{date_obj.month}/{date_obj.year}"
+        elif output_format == '%d %B %Y':
+            return f"{date_obj.day} {date_obj.strftime('%B')} {date_obj.year}"
+        elif output_format == '%d %b %Y':
+            return f"{date_obj.day} {date_obj.strftime('%b')} {date_obj.year}"
+        elif output_format == '%d %b %y':
+            return f"{date_obj.day} {date_obj.strftime('%b')} {date_obj.strftime('%y')}"
+        else:
+            # For any other format, use standard strftime
+            return date_obj.strftime(output_format)
+            
     except Exception:
-        return None
-
+        return date_str
 def get_scorecard_data(teg_num=None, round_num=None, player_code=None):
     """
     Get golf data for scorecard generation with optional filtering by TEG, Round, and/or Player

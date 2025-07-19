@@ -8,6 +8,7 @@ import pandas as pd
 from pathlib import Path
 from utils import get_scorecard_data, get_teg_metadata, format_date_for_scorecard
 
+date_format = '%d %B %Y'
 
 def generate_scorecard_html(df, layout="single-round", title="Scorecard"):
     """
@@ -159,7 +160,7 @@ def generate_single_round_html(player_code, teg_num, round_num, title=None, subh
         metadata = get_teg_metadata(teg_num, round_num)
         course = metadata.get('Course')
         date_str = metadata.get('Date')
-        formatted_date = format_date_for_scorecard(date_str)
+        formatted_date = format_date_for_scorecard(date_str, output_format=date_format)
         
         if course and formatted_date:
             subheader = f"{course} | {formatted_date}"
@@ -457,14 +458,14 @@ def generate_round_comparison_html(teg_num, round_num, title=None, subheader=Non
     
     # Generate default title if not provided
     if title is None:
-        title = f"TEG {teg_num} Round {round_num} | Player Comparison"
+        title = f"TEG {teg_num} Round {round_num} | All Players"
     
     # Generate default subheader if not provided
     if subheader is None:
         metadata = get_teg_metadata(teg_num, round_num)
         course = metadata.get('Course')
         date_str = metadata.get('Date')
-        formatted_date = format_date_for_scorecard(date_str)
+        formatted_date = format_date_for_scorecard(date_str, output_format= date_format)
         
         if course and formatted_date:
             subheader = f"{course} | {formatted_date}"
