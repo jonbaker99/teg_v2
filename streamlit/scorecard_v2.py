@@ -18,10 +18,10 @@ all_data = load_all_data(exclude_incomplete_tegs=False)
 # Load CSS
 css_loaded = load_scorecard_css()
 
-st.title('Scorecard v2 - Enhanced Visual Design')
+st.title('Scorecards [New version]')
 
 if not css_loaded:
-    st.warning("CSS not loaded - scorecard may not display correctly")
+    st.warning("CSS not loaded - scorecard will not display correctly")
 
 
 # Create tabs
@@ -29,7 +29,7 @@ tab1, tab2, tab3 = st.tabs(["Single Round", "Tournament View", "Round Comparison
 
 # Tab 1: Single Round (existing functionality)
 with tab1:
-    st.markdown('**Select round to view enhanced scorecard**')
+    st.markdown('**Select scorecard to view**')
     
     # Create dropdowns
     pl_options = sorted(all_data['Pl'].unique())
@@ -59,7 +59,7 @@ with tab1:
 
     
     if len(rd_data) == 0:
-        st.error("No data found for the selected criteria.")
+        st.error("No data found for the selected round")
     else:
         # Prepare data
         output_cols = ['Hole', 'PAR', 'SI', 'HCStrokes', 'Sc', 'GrossVP', 'NetVP', 'Stableford']
@@ -82,7 +82,7 @@ with tab1:
 
 # Tab 2: Tournament View
 with tab2:
-    st.markdown('**Select player and tournament to view all rounds**')
+    st.markdown('**Select player and tournament**')
     
     col1, col2 = st.columns(2)
     
@@ -111,7 +111,7 @@ with tab2:
 
 # Tab 3: Round Comparison
 with tab3:
-    st.markdown('**Select tournament and round to compare all players**')
+    st.markdown('**Select round to compare all players**')
     
     col1, col2 = st.columns(2)
     

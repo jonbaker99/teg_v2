@@ -487,6 +487,12 @@ def generate_round_comparison_html(teg_num, round_num, title=None, subheader=Non
     player_totals.sort(key=lambda x: x[0])  # Sort by score
     sorted_players = [(player, name) for _, player, name in player_totals]
     
+    # Calculate PAR totals (using first player's data since PAR is same for all)
+    first_player_data = round_data[round_data['Pl'] == players[0]].sort_values('Hole')
+    front_par_total = int(first_player_data[first_player_data['Hole'] <= 9]['PAR'].sum())
+    back_par_total = int(first_player_data[first_player_data['Hole'] > 9]['PAR'].sum())
+    total_par = int(first_player_data['PAR'].sum())
+    
     html_parts = []
     html_parts.append('<div class="scorecard-container layout-multi-player">')
 
@@ -503,16 +509,33 @@ def generate_round_comparison_html(teg_num, round_num, title=None, subheader=Non
     
     # Header
     html_parts.append('<thead>')
+    
+    # Row 1: Hole numbers
     html_parts.append('<tr>')
-    html_parts.append('<th class="player-label">Player</th>')
+    html_parts.append('<th class="player-label hole-header">Player</th>')
     for hole in range(1, 10):
-        html_parts.append(f'<th>{hole}</th>')
-    html_parts.append('<th class="totals front-back-divider">OUT</th>')
+        html_parts.append(f'<th class="hole-header">{hole}</th>')
+    html_parts.append('<th class="hole-header totals front-back-divider">OUT</th>')
     for hole in range(10, 19):
-        html_parts.append(f'<th>{hole}</th>')
-    html_parts.append('<th class="totals">IN</th>')
-    html_parts.append('<th class="totals">TOTAL</th>')
+        html_parts.append(f'<th class="hole-header">{hole}</th>')
+    html_parts.append('<th class="hole-header totals">IN</th>')
+    html_parts.append('<th class="hole-header totals">TOTAL</th>')
     html_parts.append('</tr>')
+    
+    # Row 2: PAR values
+    html_parts.append('<tr>')
+    html_parts.append('<th class="player-label par-header">PAR</th>')
+    for hole in range(1, 10):
+        par_val = int(first_player_data[first_player_data['Hole'] == hole]['PAR'].iloc[0])
+        html_parts.append(f'<th class="par-header">{par_val}</th>')
+    html_parts.append(f'<th class="totals front-back-divider par-header">{front_par_total}</th>')
+    for hole in range(10, 19):
+        par_val = int(first_player_data[first_player_data['Hole'] == hole]['PAR'].iloc[0])
+        html_parts.append(f'<th class="par-header">{par_val}</th>')
+    html_parts.append(f'<th class="totals par-header">{back_par_total}</th>')
+    html_parts.append(f'<th class="totals par-header">{total_par}</th>')
+    html_parts.append('</tr>')
+    
     html_parts.append('</thead>')
     
     # Body - one row per player
@@ -557,16 +580,33 @@ def generate_round_comparison_html(teg_num, round_num, title=None, subheader=Non
     
     # Header
     html_parts.append('<thead>')
+    
+    # Row 1: Hole numbers
     html_parts.append('<tr>')
-    html_parts.append('<th class="player-label">Player</th>')
+    html_parts.append('<th class="player-label hole-header">Player</th>')
     for hole in range(1, 10):
-        html_parts.append(f'<th>{hole}</th>')
-    html_parts.append('<th class="totals front-back-divider">OUT</th>')
+        html_parts.append(f'<th class="hole-header">{hole}</th>')
+    html_parts.append('<th class="hole-header totals front-back-divider">OUT</th>')
     for hole in range(10, 19):
-        html_parts.append(f'<th>{hole}</th>')
-    html_parts.append('<th class="totals">IN</th>')
-    html_parts.append('<th class="totals">TOTAL</th>')
+        html_parts.append(f'<th class="hole-header">{hole}</th>')
+    html_parts.append('<th class="hole-header totals">IN</th>')
+    html_parts.append('<th class="hole-header totals">TOTAL</th>')
     html_parts.append('</tr>')
+    
+    # Row 2: PAR values (same for both sections)
+    html_parts.append('<tr>')
+    html_parts.append('<th class="player-label par-header">PAR</th>')
+    for hole in range(1, 10):
+        par_val = int(first_player_data[first_player_data['Hole'] == hole]['PAR'].iloc[0])
+        html_parts.append(f'<th class="par-header">{par_val}</th>')
+    html_parts.append(f'<th class="totals front-back-divider par-header">{front_par_total}</th>')
+    for hole in range(10, 19):
+        par_val = int(first_player_data[first_player_data['Hole'] == hole]['PAR'].iloc[0])
+        html_parts.append(f'<th class="par-header">{par_val}</th>')
+    html_parts.append(f'<th class="totals par-header">{back_par_total}</th>')
+    html_parts.append(f'<th class="totals par-header">{total_par}</th>')
+    html_parts.append('</tr>')
+    
     html_parts.append('</thead>')
     
     # Body - Stableford scores  
