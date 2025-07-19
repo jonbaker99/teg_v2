@@ -28,10 +28,17 @@ if not css_loaded:
 if 'active_scorecard_tab' not in st.session_state:
     st.session_state.active_scorecard_tab = 0
 
-tab_names = ["Single Round", "Tournament View", "Round Comparison"]
-selected_tab = st.radio("Choose scorecard type:", tab_names, 
+tab_names = ["1 Round / All Players", "1 Player / All Rounds", "1 Round / 1 Player"]
+
+# Display names
+display_names = ["Round Comparison", "Tournament view (single player)", "Single Player Round"]
+
+selected_tab_display  = st.radio("Choose scorecard type:", display_names, 
                        horizontal=True,
                        key='scorecard_tab_selector')
+
+selected_tab = tab_names[display_names.index(selected_tab_display)]
+
 
 
 # Page-level controls
@@ -42,7 +49,7 @@ col1, col2, col3 = st.columns(3)
 with col1:
     pl_options = sorted(all_data['Pl'].unique())
     selected_pl = st.selectbox('Player', pl_options, 
-                              disabled=(selected_tab == "Round Comparison"),
+                              disabled=(selected_tab == "1 Round / All Players"),
                               key='page_player')
 
 with col2:
@@ -54,14 +61,14 @@ with col2:
 with col3:
     round_options = sorted(all_data[all_data['TEGNum'] == selected_tegnum]['Round'].unique())
     selected_round = st.selectbox('Round', round_options,
-                                 disabled=(selected_tab == "Tournament View"),
+                                 disabled=(selected_tab == "1 Player / All Rounds"),
                                  index=len(round_options)-1,
                                  key='page_round')
 
-# st.markdown("---")
+st.markdown("---")
 
 # Tab 1: Single Round (existing functionality)
-if selected_tab == "Single Round":
+if selected_tab == "1 Round / 1 Player":
     # Filter data
     rd_data = get_scorecard_data(selected_tegnum, selected_round, selected_pl)
 
@@ -89,7 +96,7 @@ if selected_tab == "Single Round":
             st.error(f"Expected 18 holes, found {len(output_data)} holes for this round.")
 
 # Tab 2: Tournament View
-elif selected_tab == "Tournament View":
+elif selected_tab == "1 Player / All Rounds":
     # Filter data for selected player and tournament
     tournament_data = get_scorecard_data(selected_tegnum, player_code=selected_pl)
 
@@ -106,7 +113,7 @@ elif selected_tab == "Tournament View":
         st.markdown(tournament_html, unsafe_allow_html=True)
 
 # Tab 3: Round Comparison
-elif selected_tab == "Round Comparison":
+elif selected_tab == "1 Round / All Players":
     # Filter data for selected tournament and round
     comparison_data = get_scorecard_data(selected_tegnum, selected_round)
     
