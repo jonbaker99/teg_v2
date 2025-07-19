@@ -14,13 +14,20 @@
  --color-triple-bogey: #000;
  
  /* Stableford colors */
+
+    /*  ##### BLUE OPTIONS ####
  --color-stableford-0: #ffffff;
- --color-stableford-1: #e3f2fd;
- --color-stableford-2: #d0e8fc;
- --color-stableford-3: #7fb8e6;
- --color-stableford-4: #419be5;
- --color-stableford-5: #005bb5;
+ --color-stableford-1: #ffffff;
+ --color-stableford-2: #CAF0F8;
+ --color-stableford-3: #48CAE4;
+ --color-stableford-4: #0077B6;
+ --color-stableford-5: #03045E; */
  
+   /* #### ORANGE OPTIONS */
+ --color-stableford-0: #ffffff; --color-stableford-1: #ffffff; --color-stableford-2: #FFF3E0;
+ --color-stableford-3: #FFCF4D; --color-stableford-4: #FF8000; --color-stableford-5: #BD0000;
+
+
  /* UI colors */
  --color-border: #e0e0e0;
  --color-border-strong: #000;
@@ -95,7 +102,7 @@
  --border-width-triple-bogey: 3px;
 
  /* Stableford Score Types - Font Colors */
- --color-text-stableford-0: #000;
+ --color-text-stableford-0: #bcbcbc;
  --color-text-stableford-1: #000;
  --color-text-stableford-2: #000;
  --color-text-stableford-3: #000;
