@@ -1,317 +1,282 @@
-/* Golf Scorecard CSS - Corrected Version */
+/* Golf Scorecard CSS - With Border Shortcuts */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap'); */
 
-
 /* ===== CSS VARIABLES ===== */
 :root {
- /* Base Colors */
- --color-eagle: #fefa00;
- --color-birdie: #FF0C13;
- --color-par: #fff;
- --color-bogey: #e6e5e5;
- --color-double-bogey: #999;
- --color-triple-bogey: #000;
- 
- /* Stableford colors */
 
-    /*  ##### BLUE OPTIONS ####
- --color-stableford-0: #ffffff;
- --color-stableford-1: #ffffff;
- --color-stableford-2: #CAF0F8;
- --color-stableford-3: #48CAE4;
- --color-stableford-4: #0077B6;
- --color-stableford-5: #03045E; */
- 
-   /* #### ORANGE OPTIONS */
- --color-stableford-0: #ffffff; --color-stableford-1: #ffffff; --color-stableford-2: #FFF3E0;
- --color-stableford-3: #FFCF4D; --color-stableford-4: #FF8000; --color-stableford-5: #BD0000;
+  /* UI colors */
+  --color-border: #e0e0e0;
+  --color-border-strong: #000;
+  --color-background: #f8f9fa;
+  --color-hover: #f5f5f5;
+  --color-text: #000;
+  --color-text-secondary: #666;
+  --color-text-inverse: #fff;
+  
+  /* Spacing */
+  --spacing-cell: 6px;
+  --spacing-cell-large: 12px 8px;
+  
+  /* Sizes */
+  --cell-min-width: 32px;
+  --cell-height: 32px;
+  --shape-size: 28px;
+  --font-size-base: 14px;
+  --font-size-small: 12px;
+  --font-size-large: 16px;
+  --font-size-header: 18px;
+
+  /* shapes */
+  --stableford-radius: 0px;
+
+  /* Base Colors */
+
+  /* --color-eagle: #fefa00; */
+  --color-eagle: #FF0C13;
+  /* --color-birdie: #FF0C13; */
+  --color-birdie:#ffebee;
+  --color-par: #fff;
+  --color-bogey: #e6e5e5;
+  --color-double-bogey: #999;
+  --color-triple-bogey: #000;
+  
+  /* Stableford colors */
+  /*  ##### BLUE OPTIONS ####
+  --color-stableford-0: #ffffff;
+  --color-stableford-1: #ffffff;
+  --color-stableford-2: #CAF0F8;
+  --color-stableford-3: #48CAE4;
+  --color-stableford-4: #0077B6;
+  --color-stableford-5: #03045E; */
+  
+  /* #### ORANGE OPTIONS */
+  --color-stableford-0: #ffffff;
+  --color-stableford-1: #ffffff;
+  --color-stableford-2: #FFF3E0;
+  --color-stableford-3: #FFCF4D;
+  --color-stableford-4: #FF8000;
+  --color-stableford-5: #BD0000;
+  
 
 
- /* UI colors */
- --color-border: #e0e0e0;
- --color-border-strong: #000;
- --color-background: #f8f9fa;
- --color-hover: #f5f5f5;
- --color-text: #000;
- --color-text-secondary: #666;
- --color-text-inverse: #fff;
- 
- /* Spacing */
- --spacing-cell: 6px;
- --spacing-cell-large: 12px 8px;
- 
- /* Sizes */
- --cell-min-width: 32px;
- --cell-height: 32px;
- --shape-size: 28px;
- --font-size-base: 14px;
- --font-size-small: 12px;
- --font-size-large: 16px;
- --font-size-header: 18px;
+  /* === SCORE TYPE STYLING === */
+  
+  /* Shape Sizes */
+  --shape-size-eagle: var(--shape-size);
+  --shape-size-birdie: 23px;
+  --shape-size-par: var(--shape-size);
+  --shape-size-bogey: var(--shape-size);
+  --shape-size-double-bogey: var(--shape-size);
+  --shape-size-triple-bogey: var(--shape-size);
+  --shape-size-stableford-0: var(--shape-size);
+  --shape-size-stableford-1: var(--shape-size);
+  --shape-size-stableford-2: var(--shape-size);
+  --shape-size-stableford-3: var(--shape-size);
+  --shape-size-stableford-4: var(--shape-size);
+  --shape-size-stableford-5: var(--shape-size);
 
- /* shapes */
- --stableford-radius: 0px;
+  /* Gross Score Types - Font Colors */
+  --color-text-eagle: #fff;
+  --color-text-birdie: red;
+  --color-text-par: #000;
+  --color-text-bogey: #000;
+  --color-text-double-bogey: #fff;
+  --color-text-triple-bogey: #fff;
 
- /* === SCORE TYPE STYLING === */
- 
- /* Shape Sizes */
- --shape-size-eagle: var(--shape-size);
- --shape-size-birdie: var(--shape-size);
- --shape-size-par: var(--shape-size);
- --shape-size-bogey: var(--shape-size);
- --shape-size-double-bogey: var(--shape-size);
- --shape-size-triple-bogey: var(--shape-size);
- --shape-size-stableford-0: var(--shape-size);
- --shape-size-stableford-1: var(--shape-size);
- --shape-size-stableford-2: var(--shape-size);
- --shape-size-stableford-3: var(--shape-size);
- --shape-size-stableford-4: var(--shape-size);
- --shape-size-stableford-5: var(--shape-size);
+  /* Gross Score Types - Border Shortcuts */
+  --border-eagle: 3px double #fff;
+  --border-birdie: 1px solid red;
+  --border-par: none;
+  --border-bogey: 2px solid #fff;
+  --border-double-bogey: 2px double #fff;
+  --border-triple-bogey: 3px double #fff;
 
- /* Gross Score Types - Font Colors */
- --color-text-eagle: #000;
- --color-text-birdie: #fff;
- --color-text-par: #000;
- --color-text-bogey: #000;
- --color-text-double-bogey: #fff;
- --color-text-triple-bogey: #fff;
+  /* Stableford Score Types - Font Colors */
+  --color-text-stableford-0: #bcbcbc;
+  --color-text-stableford-1: #000;
+  --color-text-stableford-2: #000;
+  --color-text-stableford-3: #000;
+  --color-text-stableford-4: #fff;
+  --color-text-stableford-5: #fff;
 
- /* Gross Score Types - Border Colors */
- --border-color-eagle: #000;
- --border-color-birdie: #fff;
- --border-color-par: transparent;
- --border-color-bogey: #fff;
- --border-color-double-bogey: #fff;
- --border-color-triple-bogey: #fff;
-
- /* Gross Score Types - Border Styles */
- --border-style-eagle: double;
- --border-style-birdie: solid;
- --border-style-par: none;
- --border-style-bogey: solid;
- --border-style-double-bogey: double;
- --border-style-triple-bogey: double;
-
- /* Gross Score Types - Border Widths */
- --border-width-eagle: 3px;
- --border-width-birdie: 3px;
- --border-width-par: 0px;
- --border-width-bogey: 2px;
- --border-width-double-bogey: 2px;
- --border-width-triple-bogey: 3px;
-
- /* Stableford Score Types - Font Colors */
- --color-text-stableford-0: #bcbcbc;
- --color-text-stableford-1: #000;
- --color-text-stableford-2: #000;
- --color-text-stableford-3: #000;
- --color-text-stableford-4: #fff;
- --color-text-stableford-5: #fff;
-
- /* Stableford Score Types - Border Colors */
- --border-color-stableford-0: transparent;
- --border-color-stableford-1: transparent;
- --border-color-stableford-2: transparent;
- --border-color-stableford-3: transparent;
- --border-color-stableford-4: transparent;
- --border-color-stableford-5: transparent;
-
- /* Stableford Score Types - Border Styles */
- --border-style-stableford-0: none;
- --border-style-stableford-1: none;
- --border-style-stableford-2: none;
- --border-style-stableford-3: none;
- --border-style-stableford-4: none;
- --border-style-stableford-5: none;
-
- /* Stableford Score Types - Border Widths */
- --border-width-stableford-0: 0px;
- --border-width-stableford-1: 0px;
- --border-width-stableford-2: 0px;
- --border-width-stableford-3: 0px;
- --border-width-stableford-4: 0px;
- --border-width-stableford-5: 0px;
+  /* Stableford Score Types - Border Shortcuts */
+  --border-stableford-0: none;
+  --border-stableford-1: none;
+  --border-stableford-2: none;
+  --border-stableford-3: none;
+  --border-stableford-4: none;
+  --border-stableford-5: none;
 }
 
 /* ===== BASE STYLES ===== */
 .scorecard-container {
- font-family: 'Roboto', Arial, sans-serif;
- font-size: var(--font-size-base);
- margin: 0 auto 30px;
- width: 100%;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: var(--font-size-base);
+  margin: 0 auto 30px;
+  width: 100%;
 }
 
 .scorecard-header {
- text-align: center;
- margin-bottom: 20px;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .scorecard-header p {
- margin: 0;
+  margin: 0;
 }
 
 .scorecard-title {
- font-size: var(--font-size-header);
- font-weight: bold;
+  font-size: var(--font-size-header);
+  font-weight: bold;
 }
 
 .scorecard-subheader {
- font-size: var(--font-size-base);
- color: var(--color-text-secondary);
- margin-top: 5px;
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  margin-top: 5px;
 }
 
 /* ===== TABLE STRUCTURE ===== */
 .scorecard-table {
- border-collapse: separate;
- border-spacing: 2px;
- margin: 0 auto 20px;
+  border-collapse: separate;
+  border-spacing: 2px;
+  margin: 0 auto 20px;
 }
 
 /* Remove default top borders from all rows */
 .scorecard-table tr {
-   border-top: none;
+    border-top: none;
 }
- 
+  
 .scorecard-table th,
 .scorecard-table td {
- padding: var(--spacing-cell);
- text-align: center;
- min-width: var(--cell-min-width);
- height: var(--cell-height);
- vertical-align: middle;
- border: none;
- position: relative;
+  padding: var(--spacing-cell);
+  text-align: center;
+  min-width: var(--cell-min-width);
+  height: var(--cell-height);
+  vertical-align: middle;
+  border: none;
+  position: relative;
 }
 
 /* First column (labels) should be left-aligned */
 .scorecard-table th:first-child,
 .scorecard-table td:first-child {
- text-align: left;
- padding-left: 8px;
+  text-align: left;
+  padding-left: 8px;
 }
 
 .scorecard-table th {
- font-weight: bold;
- background-color: var(--color-background);
+  font-weight: bold;
+  background-color: var(--color-background);
 }
 
 .scorecard-table td {
- background-color: white;
+  background-color: white;
 }
 
 /* Remove border from regular header cells */
 .scorecard-table th {
- border-bottom: none;
+  border-bottom: none;
 }
 
 /* Only PAR row gets the border */
 .scorecard-table th.par-header {
- border-bottom: 2px solid var(--color-border-strong);
- font-weight: normal;
- font-size: var(--font-size-small);
+  border-bottom: 2px solid var(--color-border-strong);
+  font-weight: normal;
+  font-size: var(--font-size-small);
 }
 
 .scorecard-table tr:hover {
- background-color: var(--color-hover);
+  background-color: var(--color-hover);
 }
 
 /* ===== SCORE CELLS WITH SHAPES ===== */
 .score-cell {
- position: relative;
- background-color: white;
+  position: relative;
+  background-color: white;
 }
 
 .score-cell::before {
- content: '';
- position: absolute;
- top: 50%;
- left: 50%;
- transform: translate(-50%, -50%);
- z-index: 1;
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
 }
 
 .score-cell span {
- position: relative;
- z-index: 2;
+  position: relative;
+  z-index: 2;
 }
 
 /* === GROSS SCORE STYLING === */
 
 /* Eagle (-2) */
 .score-cell[data-vs-par="-2"]::before {
- background-color: var(--color-eagle);
- border-radius: 50%;
- width: var(--shape-size-eagle);
- height: var(--shape-size-eagle);
- border-width: var(--border-width-eagle);
- border-style: var(--border-style-eagle);
- border-color: var(--border-color-eagle);
+  background-color: var(--color-eagle);
+  border-radius: 50%;
+  width: var(--shape-size-eagle);
+  height: var(--shape-size-eagle);
+  border: var(--border-eagle);
 }
 
 .score-cell[data-vs-par="-2"] span {
- color: var(--color-text-eagle);
+  color: var(--color-text-eagle);
 }
 
 /* Birdie (-1) */
 .score-cell[data-vs-par="-1"]::before {
- background-color: var(--color-birdie);
- border-radius: 50%;
- width: var(--shape-size-birdie);
- height: var(--shape-size-birdie);
- border-width: var(--border-width-birdie);
- border-style: var(--border-style-birdie);
- border-color: var(--border-color-birdie);
+  background-color: var(--color-birdie);
+  border-radius: 50%;
+  width: var(--shape-size-birdie);
+  height: var(--shape-size-birdie);
+  border: var(--border-birdie);
 }
 
 .score-cell[data-vs-par="-1"] span {
- color: var(--color-text-birdie);
+  color: var(--color-text-birdie);
 }
 
 /* Par (0) */
 .score-cell[data-vs-par="0"]::before {
- background-color: var(--color-par);
- border-radius: 0;
- width: var(--shape-size-par);
- height: var(--shape-size-par);
- border-width: var(--border-width-par);
- border-style: var(--border-style-par);
- border-color: var(--border-color-par);
+  background-color: var(--color-par);
+  border-radius: 0;
+  width: var(--shape-size-par);
+  height: var(--shape-size-par);
+  border: var(--border-par);
 }
 
 .score-cell[data-vs-par="0"] span {
- color: var(--color-text-par);
+  color: var(--color-text-par);
 }
 
 /* Bogey (+1) */
 .score-cell[data-vs-par="1"]::before {
- background-color: var(--color-bogey);
- border-radius: 0;
- width: var(--shape-size-bogey);
- height: var(--shape-size-bogey);
- border-width: var(--border-width-bogey);
- border-style: var(--border-style-bogey);
- border-color: var(--border-color-bogey);
+  background-color: var(--color-bogey);
+  border-radius: 0;
+  width: var(--shape-size-bogey);
+  height: var(--shape-size-bogey);
+  border: var(--border-bogey);
 }
 
 .score-cell[data-vs-par="1"] span {
- color: var(--color-text-bogey);
+  color: var(--color-text-bogey);
 }
 
 /* Double bogey (+2) */
 .score-cell[data-vs-par="2"]::before {
- background-color: var(--color-double-bogey);
- border-radius: 0;
- width: var(--shape-size-double-bogey);
- height: var(--shape-size-double-bogey);
- border-width: var(--border-width-double-bogey);
- border-style: var(--border-style-double-bogey);
- border-color: var(--border-color-double-bogey);
+  background-color: var(--color-double-bogey);
+  border-radius: 0;
+  width: var(--shape-size-double-bogey);
+  height: var(--shape-size-double-bogey);
+  border: var(--border-double-bogey);
 }
 
 .score-cell[data-vs-par="2"] span {
- color: var(--color-text-double-bogey);
+  color: var(--color-text-double-bogey);
 }
 
 /* Triple bogey+ (+3 and above) */
@@ -323,13 +288,11 @@
 .score-cell[data-vs-par="8"]::before,
 .score-cell[data-vs-par="9"]::before,
 .score-cell[data-vs-par="10"]::before {
- background-color: var(--color-triple-bogey);
- border-radius: 0;
- width: var(--shape-size-triple-bogey);
- height: var(--shape-size-triple-bogey);
- border-width: var(--border-width-triple-bogey);
- border-style: var(--border-style-triple-bogey);
- border-color: var(--border-color-triple-bogey);
+  background-color: var(--color-triple-bogey);
+  border-radius: 0;
+  width: var(--shape-size-triple-bogey);
+  height: var(--shape-size-triple-bogey);
+  border: var(--border-triple-bogey);
 }
 
 .score-cell[data-vs-par="3"] span,
@@ -340,84 +303,74 @@
 .score-cell[data-vs-par="8"] span,
 .score-cell[data-vs-par="9"] span,
 .score-cell[data-vs-par="10"] span {
- color: var(--color-text-triple-bogey);
+  color: var(--color-text-triple-bogey);
 }
 
 /* === STABLEFORD STYLING === */
 
 /* Stableford 0 */
 .score-cell[data-stableford="0"]::before {
- background-color: var(--color-stableford-0);
- border-radius: var(--stableford-radius);
- width: var(--shape-size-stableford-0);
- height: var(--shape-size-stableford-0);
- border-width: var(--border-width-stableford-0);
- border-style: var(--border-style-stableford-0);
- border-color: var(--border-color-stableford-0);
+  background-color: var(--color-stableford-0);
+  border-radius: var(--stableford-radius);
+  width: var(--shape-size-stableford-0);
+  height: var(--shape-size-stableford-0);
+  border: var(--border-stableford-0);
 }
 
 .score-cell[data-stableford="0"] span {
- color: var(--color-text-stableford-0);
+  color: var(--color-text-stableford-0);
 }
 
 /* Stableford 1 */
 .score-cell[data-stableford="1"]::before {
- background-color: var(--color-stableford-1);
- border-radius: var(--stableford-radius);
- width: var(--shape-size-stableford-1);
- height: var(--shape-size-stableford-1);
- border-width: var(--border-width-stableford-1);
- border-style: var(--border-style-stableford-1);
- border-color: var(--border-color-stableford-1);
+  background-color: var(--color-stableford-1);
+  border-radius: var(--stableford-radius);
+  width: var(--shape-size-stableford-1);
+  height: var(--shape-size-stableford-1);
+  border: var(--border-stableford-1);
 }
 
 .score-cell[data-stableford="1"] span {
- color: var(--color-text-stableford-1);
+  color: var(--color-text-stableford-1);
 }
 
 /* Stableford 2 */
 .score-cell[data-stableford="2"]::before {
- background-color: var(--color-stableford-2);
- border-radius: var(--stableford-radius);
- width: var(--shape-size-stableford-2);
- height: var(--shape-size-stableford-2);
- border-width: var(--border-width-stableford-2);
- border-style: var(--border-style-stableford-2);
- border-color: var(--border-color-stableford-2);
+  background-color: var(--color-stableford-2);
+  border-radius: var(--stableford-radius);
+  width: var(--shape-size-stableford-2);
+  height: var(--shape-size-stableford-2);
+  border: var(--border-stableford-2);
 }
 
 .score-cell[data-stableford="2"] span {
- color: var(--color-text-stableford-2);
+  color: var(--color-text-stableford-2);
 }
 
 /* Stableford 3 */
 .score-cell[data-stableford="3"]::before {
- background-color: var(--color-stableford-3);
- border-radius: var(--stableford-radius);
- width: var(--shape-size-stableford-3);
- height: var(--shape-size-stableford-3);
- border-width: var(--border-width-stableford-3);
- border-style: var(--border-style-stableford-3);
- border-color: var(--border-color-stableford-3);
+  background-color: var(--color-stableford-3);
+  border-radius: var(--stableford-radius);
+  width: var(--shape-size-stableford-3);
+  height: var(--shape-size-stableford-3);
+  border: var(--border-stableford-3);
 }
 
 .score-cell[data-stableford="3"] span {
- color: var(--color-text-stableford-3);
+  color: var(--color-text-stableford-3);
 }
 
 /* Stableford 4 */
 .score-cell[data-stableford="4"]::before {
- background-color: var(--color-stableford-4);
- border-radius: var(--stableford-radius);
- width: var(--shape-size-stableford-4);
- height: var(--shape-size-stableford-4);
- border-width: var(--border-width-stableford-4);
- border-style: var(--border-style-stableford-4);
- border-color: var(--border-color-stableford-4);
+  background-color: var(--color-stableford-4);
+  border-radius: var(--stableford-radius);
+  width: var(--shape-size-stableford-4);
+  height: var(--shape-size-stableford-4);
+  border: var(--border-stableford-4);
 }
 
 .score-cell[data-stableford="4"] span {
- color: var(--color-text-stableford-4);
+  color: var(--color-text-stableford-4);
 }
 
 /* Stableford 5+ */
@@ -425,79 +378,77 @@
 .score-cell[data-stableford="6"]::before,
 .score-cell[data-stableford="7"]::before,
 .score-cell[data-stableford="8"]::before {
- background-color: var(--color-stableford-5);
- border-radius: var(--stableford-radius);
- width: var(--shape-size-stableford-5);
- height: var(--shape-size-stableford-5);
- border-width: var(--border-width-stableford-5);
- border-style: var(--border-style-stableford-5);
- border-color: var(--border-color-stableford-5);
+  background-color: var(--color-stableford-5);
+  border-radius: var(--stableford-radius);
+  width: var(--shape-size-stableford-5);
+  height: var(--shape-size-stableford-5);
+  border: var(--border-stableford-5);
 }
 
 .score-cell[data-stableford="5"] span,
 .score-cell[data-stableford="6"] span,
 .score-cell[data-stableford="7"] span,
 .score-cell[data-stableford="8"] span {
- color: var(--color-text-stableford-5);
+  color: var(--color-text-stableford-5);
 }
 
 /* ===== SPECIAL COLUMNS ===== */
 .scorecard-table td.label-column,
 .scorecard-table td.round-label,
 .scorecard-table td.player-label {
- text-align: left;
- padding-left: 8px;
- padding-right: 16px;
- font-weight: 400;
- white-space: nowrap;
- max-width: 150px;
+  text-align: left;
+  padding-left: 8px;
+  padding-right: 16px;
+  font-weight: 400;
+  white-space: nowrap;
+  max-width: 150px;
 }
 
 .totals {
- font-weight: bold;
- background-color: var(--color-background);
+  font-weight: bold;
+  background-color: var(--color-background);
 }
 
 .front-back-divider {
- border-right: 0;
+  border-right: 0;
 }
 
 /* ===== SECTION HEADERS ===== */
 .section-header {
- font-weight: bold;
- font-size: var(--font-size-large);
- padding: 10px;
- text-align: center;
+  font-weight: bold;
+  font-size: var(--font-size-large);
+  padding: 10px;
+  text-align: center;
 }
 
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
- :root {
-   --font-size-base: 12px;
-   --font-size-small: 11px;
-   --spacing-cell: 4px;
-   --cell-min-width: 24px;
-   --cell-height: 24px;
-   --shape-size: 24px;
- }
- 
- .label-column { min-width: 60px; }
+  :root {
+    --font-size-base: 12px;
+    --font-size-small: 11px;
+    --spacing-cell: 4px;
+    --cell-min-width: 24px;
+    --cell-height: 24px;
+    --shape-size: 24px;
+  }
+  
+  .label-column { min-width: 60px; }
 }
 
 /* ===== STABLEFORD ZERO AS 'X' ===== */
 /* Hide the original '0' for stableford points */
 .score-cell[data-stableford="0"] span {
-   visibility: hidden; 
+    visibility: hidden; 
 }
- 
+  
 /* Display 'X' using a pseudo-element */
 .score-cell[data-stableford="0"] span::after {
-   content: "x";
-   visibility: visible; 
-   position: absolute; 
-   top: 50%;
-   left: 50%;
-   transform: translate(-50%, -50%);
-   color: var(--color-text-stableford-0);
-   font-weight: 400; 
+    content: "x";
+    visibility: visible; 
+    position: absolute; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--color-text-stableford-0);
+    font-weight: 400; 
 }
