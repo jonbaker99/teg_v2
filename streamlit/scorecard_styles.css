@@ -456,3 +456,231 @@
     color: var(--color-text-stableford-0);
     font-weight: 400; 
 }
+
+/* ===== MOBILE SCORECARD EXTENSIONS ===== */
+/* Add this section to the end of your existing scorecard_styles.css file */
+
+/* Mobile-specific CSS variables (inherits all existing variables) */
+:root {
+  /* Mobile spacing adjustments */
+  --mobile-cell-width: 40px;
+  --mobile-cell-height: 28px;
+  --mobile-spacing-cell: 4px;
+  --mobile-font-size: 12px;
+  --mobile-font-size-small: 10px;
+  --mobile-header-padding: 8px 4px;
+}
+
+/* ===== MOBILE TABLE STRUCTURE ===== */
+.scorecard-table-mobile {
+  border-collapse: separate;
+  border-spacing: 1px;
+  margin: 0 auto 20px;
+  font-size: var(--mobile-font-size);
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Remove default borders from mobile table rows */
+.scorecard-table-mobile tr {
+  border-top: none;
+}
+
+.scorecard-table-mobile th,
+.scorecard-table-mobile td {
+  padding: var(--mobile-spacing-cell);
+  text-align: center;
+  width: var(--mobile-cell-width);
+  min-width: var(--mobile-cell-width);
+  height: var(--mobile-cell-height);
+  vertical-align: middle;
+  border: none;
+  position: relative;
+  font-size: var(--mobile-font-size);
+}
+
+/* Mobile first column (hole labels) should be left-aligned and wider */
+.scorecard-table-mobile th:first-child,
+.scorecard-table-mobile td:first-child {
+  text-align: left;
+  padding-left: 6px;
+  width: 50px;
+  min-width: 50px;
+  font-weight: 500;
+}
+
+.scorecard-table-mobile th {
+  font-weight: bold;
+  background-color: var(--color-background);
+  padding: var(--mobile-header-padding);
+}
+
+.scorecard-table-mobile td {
+  background-color: white;
+}
+
+/* Mobile PAR row styling */
+.scorecard-table-mobile th.par-header-mobile {
+  border-bottom: 2px solid var(--color-border-strong);
+  font-weight: normal;
+  font-size: var(--mobile-font-size-small);
+}
+
+/* ===== MOBILE SCORE CELLS ===== */
+/* Mobile score cells inherit ALL existing score styling via data attributes */
+.scorecard-table-mobile .score-cell {
+  position: relative;
+  background-color: white;
+}
+
+.scorecard-table-mobile .score-cell::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  /* Slightly smaller shapes for mobile */
+  width: 24px;
+  height: 24px;
+}
+
+.scorecard-table-mobile .score-cell span {
+  position: relative;
+  z-index: 2;
+  font-size: var(--mobile-font-size);
+}
+
+/* ===== MOBILE LAYOUT VARIATIONS ===== */
+
+/* Mobile Single Round Layout */
+.layout-mobile-single-round .hole-label-mobile {
+  text-align: left;
+  padding-left: 6px;
+  font-weight: 500;
+  width: 50px;
+}
+
+.layout-mobile-single-round .player-header-mobile {
+  font-weight: bold;
+  font-size: var(--mobile-font-size);
+  padding: var(--mobile-header-padding);
+}
+
+/* Mobile Tournament Layout (Multiple Rounds) */
+.layout-mobile-multi-round .hole-label-mobile {
+  text-align: left;
+  padding-left: 6px;
+  font-weight: 500;
+  width: 50px;
+}
+
+.layout-mobile-multi-round .round-header-mobile {
+  font-weight: bold;
+  font-size: var(--mobile-font-size);
+  padding: var(--mobile-header-padding);
+}
+
+/* Mobile Round Comparison Layout (Multiple Players) */
+.layout-mobile-multi-player .hole-label-mobile {
+  text-align: left;
+  padding-left: 6px;
+  font-weight: 500;
+  width: 50px;
+}
+
+.layout-mobile-multi-player .player-header-mobile {
+  font-weight: bold;
+  font-size: var(--mobile-font-size);
+  padding: var(--mobile-header-padding);
+}
+
+/* ===== MOBILE TOTALS STYLING ===== */
+.scorecard-table-mobile .totals-mobile {
+  font-weight: bold;
+  background-color: var(--color-background);
+  border-top: 1px solid var(--color-border-strong);
+  font-size: var(--mobile-font-size);
+}
+
+/* Mobile front/back divider (OUT row) */
+.scorecard-table-mobile .front-back-divider-mobile {
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-background);
+  font-weight: bold;
+}
+
+/* ===== MOBILE SECTION HEADERS ===== */
+.section-header-mobile {
+  font-weight: bold;
+  font-size: 14px;
+  padding: 8px;
+  text-align: center;
+  margin: 15px 0 10px 0;
+}
+
+/* ===== MOBILE CONTAINER ===== */
+.scorecard-container-mobile {
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: var(--mobile-font-size);
+  margin: 0 auto 20px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto; /* Allow horizontal scrolling if needed */
+}
+
+.scorecard-container-mobile .scorecard-header {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.scorecard-container-mobile .scorecard-title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.scorecard-container-mobile .scorecard-subheader {
+  font-size: var(--mobile-font-size);
+  color: var(--color-text-secondary);
+  margin-top: 5px;
+}
+
+/* ===== MOBILE RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 480px) {
+  :root {
+    --mobile-cell-width: 35px;
+    --mobile-cell-height: 24px;
+    --mobile-spacing-cell: 3px;
+    --mobile-font-size: 11px;
+    --mobile-font-size-small: 9px;
+  }
+  
+  .scorecard-table-mobile .score-cell::before {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .scorecard-table-mobile th:first-child,
+  .scorecard-table-mobile td:first-child {
+    width: 40px;
+    min-width: 40px;
+  }
+}
+
+/* ===== MOBILE STABLEFORD ZERO AS 'X' ===== */
+/* Mobile inherits the existing 'x' styling for stableford zero */
+.scorecard-table-mobile .score-cell[data-stableford="0"] span {
+  visibility: hidden; 
+}
+
+.scorecard-table-mobile .score-cell[data-stableford="0"] span::after {
+  content: "x";
+  visibility: visible; 
+  position: absolute; 
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--color-text-stableford-0);
+  font-weight: 400; 
+  font-size: var(--mobile-font-size);
+}
