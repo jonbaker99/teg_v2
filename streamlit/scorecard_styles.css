@@ -465,8 +465,8 @@
 :root {
   --mobile-cell-width: 36px;          /* Ideal target width */
   --mobile-cell-min-width: 26px;      /* Minimum before breaking */
-  --mobile-first-col-width: 36px;     /* Ideal first column width */
-  --mobile-first-col-min-width: 30px; /* Minimum first column width */
+  --mobile-first-col-width: 40px;     /* Ideal first column width */
+  --mobile-first-col-min-width: 34px; /* Minimum first column width */
   --mobile-cell-height: 28px;
   --mobile-spacing-cell: 4px;
   --mobile-font-size: 12px;
