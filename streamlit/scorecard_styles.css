@@ -457,13 +457,16 @@
     font-weight: 400; 
 }
 
-/* ===== MOBILE SCORECARD EXTENSIONS ===== */
-/* Add this section to the end of your existing scorecard_styles.css file */
 
-/* Mobile-specific CSS variables (inherits all existing variables) */
+/* ===== MOBILE SCORECARD EXTENSIONS ===== */
+/* Clean mobile CSS with single source of truth for widths */
+
+/* Mobile CSS variables - SINGLE SOURCE OF TRUTH FOR WIDTHS */
 :root {
-  /* Mobile spacing adjustments */
-  --mobile-cell-width: 40px;
+  --mobile-cell-width: 36px;          /* Ideal target width */
+  --mobile-cell-min-width: 26px;      /* Minimum before breaking */
+  --mobile-first-col-width: 36px;     /* Ideal first column width */
+  --mobile-first-col-min-width: 30px; /* Minimum first column width */
   --mobile-cell-height: 28px;
   --mobile-spacing-cell: 4px;
   --mobile-font-size: 12px;
@@ -473,25 +476,27 @@
 
 /* ===== MOBILE TABLE STRUCTURE ===== */
 .scorecard-table-mobile {
+  table-layout: fixed;
+  width: auto;
+  max-width: 100%;
   border-collapse: separate;
   border-spacing: 1px;
   margin: 0 auto 20px;
   font-size: var(--mobile-font-size);
-  width: 100%;
-  max-width: 100%;
 }
 
-/* Remove default borders from mobile table rows */
 .scorecard-table-mobile tr {
   border-top: none;
 }
 
+/* ALL mobile table cells - uniform width */
 .scorecard-table-mobile th,
 .scorecard-table-mobile td {
   padding: var(--mobile-spacing-cell);
   text-align: center;
-  width: var(--mobile-cell-width);
-  min-width: var(--mobile-cell-width);
+  width: var(--mobile-cell-width);           /* SINGLE WIDTH DEFINITION */
+  min-width: var(--mobile-cell-min-width);       /* SINGLE MIN-WIDTH DEFINITION */
+  max-width: var(--mobile-cell-width);       /* SINGLE MAX-WIDTH DEFINITION */
   height: var(--mobile-cell-height);
   vertical-align: middle;
   border: none;
@@ -499,13 +504,14 @@
   font-size: var(--mobile-font-size);
 }
 
-/* Mobile first column (hole labels) should be left-aligned and wider */
+/* ONLY the first column (hole labels) gets different width */
 .scorecard-table-mobile th:first-child,
 .scorecard-table-mobile td:first-child {
   text-align: left;
   padding-left: 6px;
-  width: 50px;
-  min-width: 50px;
+  width: var(--mobile-first-col-width);      /* SINGLE FIRST COLUMN WIDTH */
+  min-width: var(--mobile-first-col-min-width);  /* SINGLE FIRST COLUMN MIN-WIDTH */
+  max-width: var(--mobile-first-col-width);  /* SINGLE FIRST COLUMN MAX-WIDTH */
   font-weight: 500;
 }
 
@@ -552,19 +558,21 @@
 }
 
 /* ===== MOBILE LAYOUT VARIATIONS ===== */
+/* All layout variations use the same width variables - no overrides */
 
 /* Mobile Single Round Layout */
 .layout-mobile-single-round .hole-label-mobile {
   text-align: left;
   padding-left: 6px;
   font-weight: 500;
-  width: 50px;
+  /* Width inherited from first-child rules above */
 }
 
 .layout-mobile-single-round .player-header-mobile {
   font-weight: bold;
   font-size: var(--mobile-font-size);
   padding: var(--mobile-header-padding);
+  /* Width inherited from th/td rules above */
 }
 
 /* Mobile Tournament Layout (Multiple Rounds) */
@@ -572,13 +580,14 @@
   text-align: left;
   padding-left: 6px;
   font-weight: 500;
-  width: 50px;
+  /* Width inherited from first-child rules above */
 }
 
 .layout-mobile-multi-round .round-header-mobile {
   font-weight: bold;
   font-size: var(--mobile-font-size);
   padding: var(--mobile-header-padding);
+  /* Width inherited from th/td rules above */
 }
 
 /* Mobile Round Comparison Layout (Multiple Players) */
@@ -586,13 +595,14 @@
   text-align: left;
   padding-left: 6px;
   font-weight: 500;
-  width: 50px;
+  /* Width inherited from first-child rules above */
 }
 
 .layout-mobile-multi-player .player-header-mobile {
   font-weight: bold;
   font-size: var(--mobile-font-size);
   padding: var(--mobile-header-padding);
+  /* Width inherited from th/td rules above */
 }
 
 /* ===== MOBILE TOTALS STYLING ===== */
@@ -601,6 +611,7 @@
   background-color: var(--color-background);
   border-top: 1px solid var(--color-border-strong);
   font-size: var(--mobile-font-size);
+  /* Width inherited from th/td rules above */
 }
 
 /* Mobile front/back divider (OUT row) */
@@ -608,6 +619,7 @@
   border-top: 1px solid var(--color-border);
   background-color: var(--color-background);
   font-weight: bold;
+  /* Width inherited from th/td rules above */
 }
 
 /* ===== MOBILE SECTION HEADERS ===== */
@@ -648,22 +660,19 @@
 /* ===== MOBILE RESPONSIVE ADJUSTMENTS ===== */
 @media (max-width: 480px) {
   :root {
+    /* Override mobile variables for very small screens */
     --mobile-cell-width: 35px;
+    --mobile-first-col-width: 40px;
     --mobile-cell-height: 24px;
     --mobile-spacing-cell: 3px;
     --mobile-font-size: 11px;
     --mobile-font-size-small: 9px;
   }
   
+  /* Smaller score cell shapes for very small screens */
   .scorecard-table-mobile .score-cell::before {
     width: 20px;
     height: 20px;
-  }
-  
-  .scorecard-table-mobile th:first-child,
-  .scorecard-table-mobile td:first-child {
-    width: 40px;
-    min-width: 40px;
   }
 }
 
