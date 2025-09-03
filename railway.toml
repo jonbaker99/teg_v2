@@ -1,2 +1,2 @@
 [deploy]
-startCommand = "cd streamlit && streamlit run nav.py --server.port=$PORT --server.address=0.0.0.0"
+startCommand = "streamlit run streamlit/nav.py --server.port=$PORT --server.address=0.0.0.0"
