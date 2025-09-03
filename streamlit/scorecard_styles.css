@@ -465,8 +465,8 @@
 :root {
   --mobile-cell-width: 36px;          /* Ideal target width */
   --mobile-cell-min-width: 26px;      /* Minimum before breaking */
-  --mobile-first-col-width: 40px;     /* Ideal first column width */
-  --mobile-first-col-min-width: 34px; /* Minimum first column width */
+  --mobile-first-col-width: 46px;     /* Ideal first column width */
+  --mobile-first-col-min-width: 36px; /* Minimum first column width */
   --mobile-cell-height: 28px;
   --mobile-spacing-cell: 4px;
   --mobile-font-size: 12px;
@@ -474,10 +474,15 @@
   --mobile-header-padding: 8px 4px;
 }
 
+.scorecard-table-mobile th:first-child {
+  /* visibility: hidden;  Hides "Hole" from first row */
+  font-size: 0;
+}
+
 /* ===== MOBILE TABLE STRUCTURE ===== */
 .scorecard-table-mobile {
-  table-layout: fixed;
-  width: auto;
+  /* table-layout: fixed;
+  width: auto; */
   max-width: 100%;
   border-collapse: separate;
   border-spacing: 1px;
@@ -525,11 +530,10 @@
   background-color: white;
 }
 
-/* Mobile PAR row styling */
-.scorecard-table-mobile th.par-header-mobile {
-  border-bottom: 2px solid var(--color-border-strong);
-  font-weight: normal;
-  font-size: var(--mobile-font-size-small);
+
+/* border under header row */
+.scorecard-table-mobile th {
+  border-bottom: 1px solid var(--color-border-strong);
 }
 
 /* ===== MOBILE SCORE CELLS ===== */
@@ -606,7 +610,9 @@
 }
 
 /* ===== MOBILE TOTALS STYLING ===== */
-.scorecard-table-mobile .totals-mobile {
+.scorecard-table-mobile .totals-mobile,
+.scorecard-table-mobile .hole-label-mobile:has(~ .totals-mobile),
+.scorecard-table-mobile tr:has(.totals-mobile) .hole-label-mobile {
   font-weight: bold;
   background-color: var(--color-background);
   border-top: 1px solid var(--color-border-strong);
