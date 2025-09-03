@@ -1,10 +1,10 @@
 import streamlit as st
 import pandas as pd
-from utils import load_all_data, datawrapper_table_css, datawrapper_table, format_vs_par
+from utils import load_all_data, load_datawrapper_css, datawrapper_table, format_vs_par
 import plotly.express as px
 
 all_data = load_all_data(exclude_incomplete_tegs = False)
-datawrapper_table_css()
+load_datawrapper_css()
 
 st.title('Count of score by player')
 

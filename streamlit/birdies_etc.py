@@ -1,10 +1,10 @@
-from utils import score_type_stats, load_all_data, apply_score_types, max_scoretype_per_round, format_vs_par, datawrapper_table_css
+from utils import score_type_stats, load_all_data, apply_score_types, max_scoretype_per_round, format_vs_par, load_datawrapper_css
 import streamlit as st
 import pandas as pd, altair as alt
 import numpy as np
 
 #st.set_page_config(page_title="TEG Scoring")
-datawrapper_table_css()
+load_datawrapper_css()
 st.title("Career Eagles, Birdies, Pars and Triple Bogey+")
 
 # Calculate the stats

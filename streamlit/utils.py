@@ -1323,56 +1323,28 @@ def max_scoretype_per_round(df = None):
 
 #     return BASE_DIR
 
+def load_css_file(css_file_path: str):
+    """Load CSS from file and inject into Streamlit using proper path resolution"""
+    base_dir = get_base_directory()
+    
+    # If running from streamlit folder, styles are in same folder
+    if Path.cwd().name == "streamlit":
+        full_path = Path.cwd() / css_file_path
+    else:
+        # Running from project root, styles are in streamlit subfolder
+        full_path = base_dir / "streamlit" / css_file_path
+    
+    try:
+        with open(full_path, 'r') as f:
+            st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+    except FileNotFoundError:
+        st.error(f"CSS file not found: {full_path}")
+        st.write(f"Current working directory: {Path.cwd()}")
+        st.write(f"Base directory: {base_dir}")
 
-
-def datawrapper_table_css():
-    st.markdown("""
-            <style>
-                @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-
-                .datawrapper-table {
-                    font-family: Roboto, Arial, sans-serif !important;
-                    border-collapse: separate !important;
-                    border-spacing: 0 !important;
-                    font-size: 14px !important;
-                    width: 100%;
-                    max-width: 600px;
-                    margin-bottom: 40px !important;
-                    border: none !important; /* Removes the external table border */
-                }
-                .datawrapper-table th, .datawrapper-table td {
-                    text-align: center !important;
-                    padding: 12px 8px !important;
-                    border: none !important;
-                    border-bottom: 1px solid #e0e0e0 !important;
-                    word-wrap: break-word;
-                }
-                .datawrapper-table th {
-                    font-weight: bold !important;
-                    border-bottom: 2px solid #000 !important;
-                }
-                .datawrapper-table tr:hover {
-                    background-color: #f5f5f5 !important;
-                }
-
-                .datawrapper-table.bold-last-row tr:last-child td {
-                    font-weight: bold;
-                    #border-bottom: 2px solid #000 !important;
-                    border-bottom: none !important;
-                    border-top: 1px solid #000 !important;
-                }
-                /* General styling for table-left-align, overriding datawrapper-table styles */
-                .datawrapper-table.table-left-align {
-                    text-align: left;
-                }
-
-                /* If you want to override specific rules from datawrapper-table */
-                .datawrapper-table.table-left-align td,
-                .datawrapper-table.table-left-align th {
-                    text-align: left !important;  /* !important can be used as a last resort */
-                }
-            </style>
-        """, unsafe_allow_html=True)
+def load_datawrapper_css():
+    """Load datawrapper table CSS from external file"""
+    load_css_file('styles/datawrapper.css')
 
 def datawrapper_table(df=None, left_align: Optional[bool] = None):
     if left_align:

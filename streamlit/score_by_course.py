@@ -1,9 +1,9 @@
-from utils import load_all_data, get_best, get_ranked_teg_data, get_ranked_round_data, datawrapper_table_css, get_round_data
+from utils import load_all_data, get_best, get_ranked_teg_data, get_ranked_round_data, load_datawrapper_css, get_round_data
 import streamlit as st
 import numpy as np, pandas as pd
 
 st.title('Rounds by Course')
-datawrapper_table_css()
+load_datawrapper_css()
 
 rd_data = get_ranked_round_data()
 rd_data['Pl_count'] = rd_data.groupby('Pl')['Pl'].transform('count')

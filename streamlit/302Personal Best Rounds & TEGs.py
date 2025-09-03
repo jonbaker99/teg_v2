@@ -1,9 +1,9 @@
-from utils import load_all_data, get_best, get_ranked_teg_data, get_ranked_round_data, datawrapper_table_css
+from utils import load_all_data, get_best, get_ranked_teg_data, get_ranked_round_data, load_datawrapper_css
 import streamlit as st
 import numpy as np, pandas as pd
 
 st.title('Personal Best TEGs and Rounds')
-datawrapper_table_css()
+load_datawrapper_css()
 
 teg_data_ranked = get_ranked_teg_data()
 rd_data_ranked = get_ranked_round_data()
@@ -71,8 +71,8 @@ tab1, tab2 = st.tabs(["Best TEGs","Best Rounds"])
 
 with tab1:
     st.markdown(f'### Personal Best TEGs: {selected_friendly_name}')
-    st.write(best_t.to_html(escape=False, index=False, justify='left', classes='datawrapper-table'), unsafe_allow_html=True)
+    st.write(best_t.to_html(escape=False, index=False, justify='left', classes='datawrapper-table narrow-first left-second'), unsafe_allow_html=True)
 
 with tab2:
     st.markdown(f'### Personal Best Rounds: {selected_friendly_name}')
-    st.write(best_r.to_html(escape=False, index=False, justify='left', classes='datawrapper-table'), unsafe_allow_html=True)
+    st.write(best_r.to_html(escape=False, index=False, justify='left', classes='datawrapper-table narrow-first left-second'), unsafe_allow_html=True)

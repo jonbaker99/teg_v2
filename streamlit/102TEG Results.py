@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from typing import List, Dict, Any
 import logging
-from utils import get_teg_rounds, get_round_data, load_all_data
+from utils import get_teg_rounds, get_round_data, load_all_data, load_datawrapper_css
 from make_charts import create_cumulative_graph, adjusted_grossvp, adjusted_stableford
 
 # Configure logging
@@ -15,72 +15,8 @@ PAGE_ICON = "⛳"
 MEASURES = ['Sc', 'GrossVP', 'NetVP', 'Stableford']
 PLAYER_COLUMN = 'Player'
 
-# Custom CSS
-CUSTOM_CSS = """
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-    .datawrapper-table {
-        font-family: Roboto, Arial, sans-serif !important;
-        border-collapse: separate !important;
-        border-spacing: 0 !important;
-        font-size: 14px !important;
-        width: 100%;
-        max-width: 600px;
-        margin-bottom: 40px !important;
-    }
-    .datawrapper-table th, .datawrapper-table td {
-        text-align: center !important;
-        padding: 12px 8px !important;
-        border: none !important;
-        border-bottom: 1px solid #e0e0e0 !important;
-        word-wrap: break-word;
-    }
-    .datawrapper-table th {
-        font-weight: bold !important;
-        border-bottom: 2px solid #000 !important;
-    }
-    .datawrapper-table th.rank-header {
-        padding: 12px 8px !important;
-    }
-    .datawrapper-table tr:hover {
-        background-color: #f5f5f5 !important;
-    }
-    .datawrapper-table .total {
-        font-weight: bold !important;
-    }
-    .datawrapper-table td:nth-child(2),
-    .datawrapper-table th:nth-child(2) {
-        text-align: left !important;
-    }
-    .datawrapper-table td:first-child,
-    .datawrapper-table th:first-child {
-        font-size: 12px !important;
-        width: 30px !important;
-        max-width: 30px !important;
-    }
-    .datawrapper-table .top-rank {
-        background-color: #f7f7f7 !important;
-    }
-    .leaderboard-header {
-        font-size: 18px !important;
-        margin-top: 30px !important;
-        margin-bottom: 0px !important;
-        padding: 0px;
-    }
-    .divider {
-        border-top: 1px solid #e0e0e0;
-        margin: 40px 0;
-    }
 
-    @media (max-width: 300px) {
-        .datawrapper-table th:not(:first-child):not(:nth-child(2)):not(:last-child),
-        .datawrapper-table td:not(:first-child):not(:nth-child(2)):not(:last-child) {
-            display: none;
-        }
-    }
-</style>
-"""
 
 @st.cache_data
 def create_leaderboard(leaderboard_df: pd.DataFrame, value_column: str, ascending: bool = True) -> pd.DataFrame:
@@ -125,7 +61,7 @@ def generate_table_html(df: pd.DataFrame) -> str:
     Returns:
         str: HTML table string.
     """
-    html = ["<table class='datawrapper-table'>"]
+    html = ["<table class='datawrapper-table narrow-first left-second'>"]
     html.append("<thead><tr><th class='rank-header'></th>" + "".join(f"<th>{col}</th>" for col in df.columns[1:]) + "</tr></thead><tbody>")
 
     for _, row in df.iterrows():
@@ -209,8 +145,7 @@ def display_leaderboard(leaderboard_df: pd.DataFrame, value_column: str, title: 
 
 # =========== CODE TO MAKE PAGE
 
-#st.set_page_config(page_title=PAGE_TITLE, page_icon=PAGE_ICON)
-st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
+load_datawrapper_css()
 
 if st.sidebar.button("Refresh Data"):
     st.cache_data.clear()

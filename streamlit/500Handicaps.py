@@ -2,13 +2,13 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import os
-from utils import get_base_directory, datawrapper_table_css, HANDICAPS_CSV
+from utils import get_base_directory, load_datawrapper_css, HANDICAPS_CSV
 from utils import read_file
 
 
 
 st.set_page_config(page_title="Handicaps")
-datawrapper_table_css()
+load_datawrapper_css()
 
 
 def format_change(val):

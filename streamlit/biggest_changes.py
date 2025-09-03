@@ -1,7 +1,7 @@
-from utils import get_round_data, datawrapper_table_css, datawrapper_table
+from utils import get_round_data, load_datawrapper_css, datawrapper_table
 import streamlit as st
 
-datawrapper_table_css()
+load_datawrapper_css()
 st.title('Biggest score changes vs. prior round')
 
 

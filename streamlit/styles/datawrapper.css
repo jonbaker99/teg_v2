@@ -1,0 +1,102 @@
+/* Datawrapper Table Styling */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+.datawrapper-table {
+    font-family: Roboto, Arial, sans-serif;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 14px;
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 40px;
+    border: none; /* Removes the external table border */
+}
+
+.datawrapper-table th, 
+.datawrapper-table td {
+    text-align: center; /* Removed !important - this fixes your alignment bug */
+    padding: 12px 8px;
+    border: none;
+    border-bottom: 1px solid #e0e0e0;
+    word-wrap: break-word;
+}
+
+.datawrapper-table th {
+    font-weight: bold;
+    border-bottom: 2px solid #000;
+}
+
+.datawrapper-table th.rank-header {
+    padding: 12px 8px;
+}
+
+.datawrapper-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+.datawrapper-table .total {
+    font-weight: bold;
+}
+
+/* Column-specific alignment overrides - these will now work! */
+.datawrapper-table.left-second td:nth-child(2),
+.datawrapper-table.left-second th:nth-child(2) {
+    text-align: left;
+}
+
+/* Narrow first column - ONLY for ranking tables */
+.datawrapper-table.narrow-first td:first-child,
+.datawrapper-table.narrow-first th:first-child {
+    font-size: 12px;
+    width: 30px;
+    max-width: 30px;
+}
+
+/* Normal first column - default behavior */
+.datawrapper-table td:first-child,
+.datawrapper-table th:first-child {
+    text-align: left;
+    padding-left: 8px;
+}
+
+.datawrapper-table .top-rank {
+    background-color: #f7f7f7;
+}
+
+/* Bold last row variant */
+.datawrapper-table.bold-last-row tr:last-child td {
+    font-weight: bold;
+    border-bottom: none;
+    border-top: 1px solid #000;
+}
+
+/* Left align variant */
+.datawrapper-table.table-left-align {
+    text-align: left;
+}
+
+.datawrapper-table.table-left-align td,
+.datawrapper-table.table-left-align th {
+    text-align: left;
+}
+
+/* Leaderboard specific styles */
+.leaderboard-header {
+    font-size: 18px;
+    margin-top: 30px;
+    margin-bottom: 0px;
+    padding: 0px;
+}
+
+.divider {
+    border-top: 1px solid #e0e0e0;
+    margin: 40px 0;
+}
+
+/* Mobile responsive */
+@media (max-width: 300px) {
+    .datawrapper-table th:not(:first-child):not(:nth-child(2)):not(:last-child),
+    .datawrapper-table td:not(:first-child):not(:nth-child(2)):not(:last-child) {
+        display: none;
+    }
+}

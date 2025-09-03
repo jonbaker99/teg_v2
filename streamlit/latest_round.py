@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from utils import get_ranked_teg_data, get_ranked_round_data, get_ranked_frontback_data, safe_ordinal, load_all_data
-from utils import chosen_rd_context, chosen_teg_context, datawrapper_table_css
+from utils import chosen_rd_context, chosen_teg_context, load_datawrapper_css
 from make_charts import create_round_graph
 
 # Initialize session state
@@ -10,7 +10,7 @@ if 'teg_r' not in st.session_state:
 if 'rd_r' not in st.session_state:
     st.session_state.rd_r = None
 
-datawrapper_table_css()
+load_datawrapper_css()
 
 def reset_round_selection():
     st.session_state.teg_r = max_teg_r

@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from utils import load_all_data, datawrapper_table_css, format_vs_par
+from utils import load_all_data, load_datawrapper_css, format_vs_par
 
 all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
 all_data['TRH'] = all_data[['TEGNum', 'Round', 'Hole']].astype(str).agg('|'.join, axis=1)
@@ -8,7 +8,7 @@ bestball_cols = ['TEG','Round','Course','Year']
 value_cols = ['GrossVP','Sc']
 
 st.title("Best bestball and worst worstball")
-datawrapper_table_css()
+load_datawrapper_css()
 
 tegnum_options = ['All TEGs'] + sorted(all_data['TEGNum'].unique().tolist(),reverse=True)
 selected_tegnum = st.selectbox('Select TEG', tegnum_options, index=0)

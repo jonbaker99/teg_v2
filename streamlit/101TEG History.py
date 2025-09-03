@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
-from utils import load_all_data, get_teg_winners, get_teg_rounds, datawrapper_table_css, get_trophy_full_name
+from utils import load_all_data, get_teg_winners, get_teg_rounds, load_datawrapper_css, get_trophy_full_name
 from utils_win_tables import summarise_teg_wins, compress_ranges
 
 # === LOAD DATA === #
@@ -10,7 +10,7 @@ filtered_data = all_data.copy()
 comps = ['TEG Trophy', 'Green Jacket', 'HMM Wooden Spoon']
 
 
-datawrapper_table_css()
+load_datawrapper_css()
 # CREATE WINNERS TABLE
 
 winners = get_teg_winners(filtered_data).drop(columns=['Year'])

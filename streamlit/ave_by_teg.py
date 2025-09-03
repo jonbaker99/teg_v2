@@ -1,12 +1,12 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from utils import load_all_data, datawrapper_table_css
+from utils import load_all_data, load_datawrapper_css
 
 # Streamlit app title
 st.title('Player Performance Over Time')
 
-datawrapper_table_css()
+load_datawrapper_css()
 # Assuming all_data is your DataFrame
 # If not, replace this with your actual data loading code
 # all_data = pd.read_csv('your_data.csv')
