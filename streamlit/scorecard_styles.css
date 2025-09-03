@@ -471,7 +471,8 @@
   --mobile-spacing-cell: 4px;
   --mobile-font-size: 12px;
   --mobile-font-size-small: 10px;
-  --mobile-header-padding: 8px 4px;
+  /* --mobile-header-padding: 8px 4px; */
+  --mobile-header-padding: 4px;
 }
 
 .scorecard-table-mobile th:first-child {
