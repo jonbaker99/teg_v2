@@ -709,23 +709,22 @@ def generate_single_round_html_mobile(player_code, teg_num, round_num, title=Non
         html_parts.append(f'<p class="scorecard-subheader">{subheader}</p>')
     html_parts.append('</div>')
 
-    # Gross Scores Section
-    html_parts.append('<div class="section-header-mobile">Gross Scores</div>')
+    # Single table with both gross and stableford scores as columns
     html_parts.append('<table class="scorecard-table-mobile">')
     
     # Header section
     html_parts.append('<thead>')
     
-    # Header row: Hole | PAR | Score
+    # Header row: Hole | PAR | Gross | Stableford
     html_parts.append('<tr>')
     html_parts.append('<th class="hole-label-mobile">Hole</th>')
     html_parts.append('<th class="par-header-mobile">PAR</th>')
-    html_parts.append('<th class="player-header-mobile">Score</th>')
+    html_parts.append('<th class="player-header-mobile">Gross</th>')
+    html_parts.append('<th class="player-header-mobile">Stableford</th>')
     html_parts.append('</tr>')
-    
     html_parts.append('</thead>')
     
-    # Body section - one row per hole
+    # Body - one row per hole with both gross and stableford scores
     html_parts.append('<tbody>')
     
     # Front 9 holes
@@ -733,12 +732,14 @@ def generate_single_round_html_mobile(player_code, teg_num, round_num, title=Non
         hole_data = df[df['Hole'] == hole].iloc[0]
         par_val = int(hole_data['PAR'])
         vs_par = int(hole_data['GrossVP'])
-        score = int(hole_data['Sc'])
+        gross_score = int(hole_data['Sc'])
+        stableford = int(hole_data['Stableford'])
         
         html_parts.append('<tr>')
         html_parts.append(f'<td class="hole-label-mobile">{hole}</td>')
         html_parts.append(f'<td class="par-header-mobile">{par_val}</td>')
-        html_parts.append(f'<td class="score-cell" data-vs-par="{vs_par}"><span>{score}</span></td>')
+        html_parts.append(f'<td class="score-cell" data-vs-par="{vs_par}"><span>{gross_score}</span></td>')
+        html_parts.append(f'<td class="score-cell" data-stableford="{stableford}"><span>{stableford}</span></td>')
         html_parts.append('</tr>')
     
     # OUT row
@@ -746,70 +747,6 @@ def generate_single_round_html_mobile(player_code, teg_num, round_num, title=Non
     html_parts.append('<td class="hole-label-mobile"><strong>OUT</strong></td>')
     html_parts.append(f'<td class="totals-mobile">{front_totals["PAR"]}</td>')
     html_parts.append(f'<td class="totals-mobile">{front_totals["Sc"]}</td>')
-    html_parts.append('</tr>')
-    
-    # Back 9 holes
-    for hole in range(10, 19):
-        hole_data = df[df['Hole'] == hole].iloc[0]
-        par_val = int(hole_data['PAR'])
-        vs_par = int(hole_data['GrossVP'])
-        score = int(hole_data['Sc'])
-        
-        html_parts.append('<tr>')
-        html_parts.append(f'<td class="hole-label-mobile">{hole}</td>')
-        html_parts.append(f'<td class="par-header-mobile">{par_val}</td>')
-        html_parts.append(f'<td class="score-cell" data-vs-par="{vs_par}"><span>{score}</span></td>')
-        html_parts.append('</tr>')
-    
-    # IN row
-    html_parts.append('<tr>')
-    html_parts.append('<td class="hole-label-mobile"><strong>IN</strong></td>')
-    html_parts.append(f'<td class="totals-mobile">{back_totals["PAR"]}</td>')
-    html_parts.append(f'<td class="totals-mobile">{back_totals["Sc"]}</td>')
-    html_parts.append('</tr>')
-    
-    # TOTAL row
-    html_parts.append('<tr>')
-    html_parts.append('<td class="hole-label-mobile"><strong>TOTAL</strong></td>')
-    html_parts.append(f'<td class="totals-mobile">{total_totals["PAR"]}</td>')
-    html_parts.append(f'<td class="totals-mobile">{total_totals["Sc"]}</td>')
-    html_parts.append('</tr>')
-    
-    html_parts.append('</tbody>')
-    html_parts.append('</table>')
-    
-    # Stableford Section
-    html_parts.append('<div class="section-header-mobile">Stableford Points</div>')
-    html_parts.append('<table class="scorecard-table-mobile">')
-    
-    # Header
-    html_parts.append('<thead>')
-    html_parts.append('<tr>')
-    html_parts.append('<th class="hole-label-mobile">Hole</th>')
-    html_parts.append('<th class="par-header-mobile">PAR</th>')
-    html_parts.append('<th class="player-header-mobile">Points</th>')
-    html_parts.append('</tr>')
-    html_parts.append('</thead>')
-    
-    # Body - Stableford scores
-    html_parts.append('<tbody>')
-    
-    # Front 9 holes
-    for hole in range(1, 10):
-        hole_data = df[df['Hole'] == hole].iloc[0]
-        par_val = int(hole_data['PAR'])
-        stableford = int(hole_data['Stableford'])
-        
-        html_parts.append('<tr>')
-        html_parts.append(f'<td class="hole-label-mobile">{hole}</td>')
-        html_parts.append(f'<td class="par-header-mobile">{par_val}</td>')
-        html_parts.append(f'<td class="score-cell" data-stableford="{stableford}"><span>{stableford}</span></td>')
-        html_parts.append('</tr>')
-    
-    # OUT row
-    html_parts.append('<tr>')
-    html_parts.append('<td class="hole-label-mobile"><strong>OUT</strong></td>')
-    html_parts.append(f'<td class="totals-mobile">{front_totals["PAR"]}</td>')
     html_parts.append(f'<td class="totals-mobile">{front_totals["Stableford"]}</td>')
     html_parts.append('</tr>')
     
@@ -817,11 +754,14 @@ def generate_single_round_html_mobile(player_code, teg_num, round_num, title=Non
     for hole in range(10, 19):
         hole_data = df[df['Hole'] == hole].iloc[0]
         par_val = int(hole_data['PAR'])
+        vs_par = int(hole_data['GrossVP'])
+        gross_score = int(hole_data['Sc'])
         stableford = int(hole_data['Stableford'])
         
         html_parts.append('<tr>')
         html_parts.append(f'<td class="hole-label-mobile">{hole}</td>')
         html_parts.append(f'<td class="par-header-mobile">{par_val}</td>')
+        html_parts.append(f'<td class="score-cell" data-vs-par="{vs_par}"><span>{gross_score}</span></td>')
         html_parts.append(f'<td class="score-cell" data-stableford="{stableford}"><span>{stableford}</span></td>')
         html_parts.append('</tr>')
     
@@ -829,6 +769,7 @@ def generate_single_round_html_mobile(player_code, teg_num, round_num, title=Non
     html_parts.append('<tr>')
     html_parts.append('<td class="hole-label-mobile"><strong>IN</strong></td>')
     html_parts.append(f'<td class="totals-mobile">{back_totals["PAR"]}</td>')
+    html_parts.append(f'<td class="totals-mobile">{back_totals["Sc"]}</td>')
     html_parts.append(f'<td class="totals-mobile">{back_totals["Stableford"]}</td>')
     html_parts.append('</tr>')
     
@@ -836,6 +777,7 @@ def generate_single_round_html_mobile(player_code, teg_num, round_num, title=Non
     html_parts.append('<tr>')
     html_parts.append('<td class="hole-label-mobile"><strong>TOTAL</strong></td>')
     html_parts.append(f'<td class="totals-mobile">{total_totals["PAR"]}</td>')
+    html_parts.append(f'<td class="totals-mobile">{total_totals["Sc"]}</td>')
     html_parts.append(f'<td class="totals-mobile">{total_totals["Stableford"]}</td>')
     html_parts.append('</tr>')
     
