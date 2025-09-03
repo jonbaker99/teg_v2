@@ -2,10 +2,6 @@
 **/secrets.toml
 streamlit/.streamlit/secrets.toml
 
-# === Exceptions (files we DO want to keep) ===
-!.streamlit/secrets.toml.template
-!.streamlit/README.md
-
 # === Common junk ===
 *.pyc
 __pycache__/
@@ -16,6 +12,13 @@ __pycache__/
 .env.local
 .env.*.local
 .venv
+
+
+# === Exceptions (files we DO want to keep) ===
+!.streamlit/secrets.toml.template
+!.streamlit/README.md
+
+!dev_notebooks/winner_tables_notebook.ipynb
 
 # Local backup files (only used in local runs)
 data/backups/
