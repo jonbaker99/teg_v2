@@ -1,11 +1,14 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
-from utils import load_all_data, get_teg_winners, get_teg_rounds, datawrapper_table_css
+from utils import load_all_data, get_teg_winners, get_teg_rounds, datawrapper_table_css, get_trophy_full_name
+from utils_win_tables import summarise_teg_wins, compress_ranges
 
 # === LOAD DATA === #
 all_data = load_all_data(exclude_incomplete_tegs=True, exclude_teg_50=True)
 filtered_data = all_data.copy()
+comps = ['TEG Trophy', 'Green Jacket', 'HMM Wooden Spoon']
+
 
 datawrapper_table_css()
 # CREATE WINNERS TABLE
@@ -93,6 +96,57 @@ with col2:
 with col3:
     spoon_chart = create_bar_chart(spoon_sorted, 'Spoon', 'Player', 'Wooden Spoon Wins')
     st.altair_chart(spoon_chart, use_container_width=True)
+
+st.divider()
+
+# USING TABS
+
+long_labels = [get_trophy_full_name(c) for c in comps]
+
+st.subheader("Competition wins by player")
+tabs = st.tabs(long_labels)
+
+for comp, tab in zip(comps, tabs):
+    with tab:
+        st.write(f"{get_trophy_full_name(comp)} wins")
+        summary_table = summarise_teg_wins(winners, comp)
+        summary_table['TEGs'] = summary_table['TEGs'].str.replace('TEG ', '') # Removes 'TEG' prefix
+        summary_table['TEGs'] = summary_table['TEGs'].apply(compress_ranges, out_sep=", ") # Turns ranges of wins into a range (1,2,3 => 1-3)
+        st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table'), unsafe_allow_html=True)
+
+
+st.divider()
+
+# USING EXPANDERS
+
+long_labels = [get_trophy_full_name(c) for c in comps]
+
+st.subheader("Competition wins by player")
+
+for comp, label in zip(comps, long_labels):
+    with st.expander(label):
+        #st.write(f"{get_trophy_full_name(comp)} wins")
+        summary_table = summarise_teg_wins(winners, comp)
+        summary_table['TEGs'] = summary_table['TEGs'].str.replace('TEG ', '') # Removes 'TEG' prefix
+        summary_table['TEGs'] = summary_table['TEGs'].apply(compress_ranges, out_sep=", ") # Turns ranges of wins into a range (1,2,3 => 1-3)
+        st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table'), unsafe_allow_html=True)
+
+
+st.divider()
+
+# Show the winners table
+st.subheader("Competition Wins")
+
+for comp in comps:
+
+    summary_table = summarise_teg_wins(winners, comp)
+    summary_table['TEGs'] = summary_table['TEGs'].str.replace('TEG ', '') # Removes 'TEG' prefix
+    summary_table['TEGs'] = summary_table['TEGs'].apply(compress_ranges, out_sep=", ") # Turns ranges of wins into a range (1,2,3 => 1-3)
+
+    st.markdown(f"**{comp}**")
+    st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table'), unsafe_allow_html=True)
+    st.write(summary_table)
+
 
 st.divider()
 

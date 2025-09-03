@@ -1487,6 +1487,7 @@ def format_date_for_scorecard(date_str, input_format=None, output_format='%d/%m/
             
     except Exception:
         return date_str
+
 def get_scorecard_data(teg_num=None, round_num=None, player_code=None):
     """
     Get golf data for scorecard generation with optional filtering by TEG, Round, and/or Player
@@ -1532,3 +1533,60 @@ def get_scorecard_data(teg_num=None, round_num=None, player_code=None):
             sort_cols = ['Pl'] + sort_cols
     
     return all_data.sort_values(sort_cols)
+
+### CONVERT TROPHY NAMES BETWEEN SHORT VERSIONS AND FULL NAMES
+
+# short -> long
+TROPHY_NAME_LOOKUPS_SHORTLONG = {
+    "trophy": "TEG Trophy",
+    "jacket": "Green Jacket",
+    "spoon": "HMM Wooden Spoon",
+}
+
+# long -> short (keys normalised to lowercase for case-insensitive input)
+TROPHY_NAME_LOOKUPS_LONGSHORT = {v.lower(): k for k, v in TROPHY_NAME_LOOKUPS_SHORTLONG.items()}
+
+def convert_trophy_name(name: str) -> str:
+    """
+    Convert between short and long trophy names.
+
+    Input is case-insensitive.
+    Output always uses the canonical form from TROPHY_NAME_LOOKUPS.
+
+    Examples:
+        convert_trophy_name("trophy")       -> "TEG Trophy"
+        convert_trophy_name("TEG Trophy")   -> "trophy"
+        convert_trophy_name("jacket")       -> "Green Jacket"
+        convert_trophy_name("green jacket") -> "jacket"
+    """
+    key = name.strip().lower()
+
+    # short -> long
+    if key in TROPHY_NAME_LOOKUPS_SHORTLONG:
+        return TROPHY_NAME_LOOKUPS_SHORTLONG[key]
+    # long -> short
+    if key in TROPHY_NAME_LOOKUPS_LONGSHORT:
+        return TROPHY_NAME_LOOKUPS_LONGSHORT[key]
+
+    raise ValueError(f"Unknown trophy name: {name!r}")
+
+def get_trophy_full_name(trophy: str) -> str:
+    """
+    Get the full name of a trophy given its short name.
+
+    Args:
+        trophy (str): The short name of the trophy.
+
+    Returns:
+        str: The full name of the trophy.
+    """
+    key = trophy.strip()
+    
+    if key.lower() in TROPHY_NAME_LOOKUPS_LONGSHORT:  
+        # it's already a long name → use as-is
+        trophy_name = key
+    else:
+        # otherwise assume it's a short name → convert
+        trophy_name = convert_trophy_name(key)
+
+    return trophy_name
