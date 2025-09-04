@@ -111,11 +111,9 @@ st.markdown('3. Doubles')
 # USING TABS
 
 long_labels = [get_trophy_full_name(c) for c in comps]
+all_tabs = st.tabs(long_labels + ["Doubles"])
 
-st.subheader("Competition wins by player")
-tabs = st.tabs(long_labels)
-
-for comp, tab in zip(comps, tabs):
+for i, (comp, tab) in enumerate(zip(comps, all_tabs[:3])):
     with tab:
         # st.write(f"{get_trophy_full_name(comp)} wins")
         summary_table = summarise_teg_wins(winners, comp)
@@ -125,8 +123,30 @@ for comp, tab in zip(comps, tabs):
         if comp == 'Green Jacket':
             st.caption('*Green Jacket awarded in TEG 5 for best stableford round; DM had best gross score')
 
+with all_tabs[3]:
+    st.caption(f"There have been {same_player_both.shape[0]} trophy / jacket doubles")
+    st.write(player_doubles.to_html(index=False, justify='left', classes='datawrapper-table'), unsafe_allow_html=True)
 
 st.divider()
+
+# long_labels = [get_trophy_full_name(c) for c in comps]
+
+# st.subheader("Competition wins by player")
+# tabs = st.tabs(long_labels)
+
+# for comp, tab in zip(comps, tabs):
+#     with tab:
+#         # st.write(f"{get_trophy_full_name(comp)} wins")
+#         summary_table = summarise_teg_wins(winners, comp)
+#         summary_table['TEGs'] = summary_table['TEGs'].str.replace('TEG ', '') # Removes 'TEG' prefix
+#         summary_table['TEGs'] = summary_table['TEGs'].apply(compress_ranges, out_sep=", ") # Turns ranges of wins into a range (1,2,3 => 1-3)
+#         st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table wins-table'), unsafe_allow_html=True)
+#         if comp == 'Green Jacket':
+#             st.caption('*Green Jacket awarded in TEG 5 for best stableford round; DM had best gross score')
+
+
+# st.divider()
+
 
 # =============================================
 # ===== TEG HISTORY SECTION
@@ -138,9 +158,6 @@ st.divider()
 st.subheader("TEG History")
 # st.write(winners.to_html(index=False, justify='left', classes='datawrapper-table history-table'), unsafe_allow_html=True)
 # st.caption('*Green Jacket awarded in TEG 5 for best stableford round; DM had best gross score')
-
-
-
 winners_2 = get_teg_winners(filtered_data)
 
 # ----- THIS BIT HAS SEPARATE COLUMNS FOR YEAR AND TEG
@@ -167,10 +184,11 @@ st.divider()
 
 
 # Show the 'Doubles' section from the 'winners' page
-st.subheader("Doubles")
-st.caption(f"There have been {same_player_both.shape[0]} trophy / jacket doubles")
-st.write(player_doubles.to_html(index=False, justify='left', classes='datawrapper-table'), unsafe_allow_html=True)
+# st.subheader("Doubles")
+# st.caption(f"There have been {same_player_both.shape[0]} trophy / jacket doubles")
+# st.write(player_doubles.to_html(index=False, justify='left', classes='datawrapper-table'), unsafe_allow_html=True)
 
-st.divider()
+# st.divider()
+
 
 
