@@ -149,6 +149,16 @@
     min-width: 40px;
 }
 
+.datawrapper-table.history-table td:nth-child(2),
+.datawrapper-table.history-table th:nth-child(2){
+    font-weight: bold;
+}
+
+.datawrapper-table.history-table td,
+.datawrapper-table.history-table th{
+    text-align: left;
+}
+
 /* ---- history table with year */
 /* make columns other than first 2 wide */
 

@@ -135,7 +135,7 @@ st.divider()
 
 # Show the table and footnote from the 'history' page
 
-# st.subheader("TEG History")
+st.subheader("TEG History")
 # st.write(winners.to_html(index=False, justify='left', classes='datawrapper-table history-table'), unsafe_allow_html=True)
 # st.caption('*Green Jacket awarded in TEG 5 for best stableford round; DM had best gross score')
 
