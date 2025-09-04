@@ -46,6 +46,8 @@ def summarise_teg_wins(df, column_name):
     return sorted_summary_df
 
 
+from typing import Sequence, Union
+
 def compress_ranges(
     data: Union[str, Sequence[int]],
     *,
@@ -59,10 +61,12 @@ def compress_ranges(
       - a comma-separated string of integers (e.g. "1,2,3,5,6,9,11"), or
       - a sequence of integers (e.g. [1,2,3,5,6,9,11])
 
-    Returns a string with consecutive integers collapsed into ranges (e.g. "1-3,5-6,9,11").
+    Returns a string where only runs of >=3 consecutive integers are collapsed
+    into ranges (e.g. "1,2, 4-6, 9, 11"). Pairs are left uncollapsed.
 
     Options:
-      - sep: output separator (default ",")
+      - sep: input separator for string data (default ",")
+      - out_sep: output separator between items (default ", ")
       - sort: sort the numbers before compressing (default True)
       - dedupe: remove duplicates (default True)
     """
@@ -85,27 +89,30 @@ def compress_ranges(
     if sort:
         nums = sorted(nums)
     if dedupe:
-        # keep order while deduping (works both sorted/unsorted)
         seen = set()
         nums = [x for x in nums if (x not in seen and not seen.add(x))]
 
-    # 3) Collapse consecutive runs
-    ranges = []
+    # 3) Identify consecutive runs
+    runs = []
     start = prev = nums[0]
-
     for n in nums[1:]:
         if n == prev + 1:
             prev = n
             continue
-        # close current run
-        ranges.append((start, prev))
+        runs.append((start, prev))
         start = prev = n
+    runs.append((start, prev))  # close final run
 
-    ranges.append((start, prev))  # close final run
+    # 4) Build output parts: collapse only if run length >= 3
+    parts: list[str] = []
+    for a, b in runs:
+        length = b - a + 1
+        if length >= 3:
+            parts.append(f"{a}-{b}")
+        elif length == 2:
+            parts.extend([f"{a}", f"{b}"])
+        else:
+            parts.append(f"{a}")
 
-    # 4) Build output string
-    def fmt(a: int, b: int) -> str:
-        return f"{a}-{b}" if b != a else f"{a}"
-
-    return out_sep.join(fmt(a, b) for a, b in ranges)
+    return out_sep.join(parts)
 

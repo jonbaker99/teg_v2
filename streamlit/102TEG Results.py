@@ -61,7 +61,7 @@ def generate_table_html(df: pd.DataFrame) -> str:
     Returns:
         str: HTML table string.
     """
-    html = ["<table class='datawrapper-table narrow-first left-second'>"]
+    html = ["<table class='datawrapper-table narrow-first left-second full-width'>"]
     html.append("<thead><tr><th class='rank-header'></th>" + "".join(f"<th>{col}</th>" for col in df.columns[1:]) + "</tr></thead><tbody>")
 
     for _, row in df.iterrows():

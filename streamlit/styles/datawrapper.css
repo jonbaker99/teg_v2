@@ -22,7 +22,7 @@
 .datawrapper-table th, 
 .datawrapper-table td {
     text-align: center; /* Removed !important - this fixes your alignment bug */
-    padding: 12px 8px;
+    padding: 12px 12px;
     border: none;
     border-bottom: 1px solid #e0e0e0;
     word-wrap: break-word;
@@ -79,8 +79,11 @@
 .datawrapper-table.narrow-first td:first-child,
 .datawrapper-table.narrow-first th:first-child {
     font-size: 12px;
-    width: 30px;
-    max-width: 30px;
+    width: 25px;
+    max-width: 40px;
+    padding-left: 0px;
+    padding-right: 0px;
+    text-align: center;
 }
 
 /* --- Specific Row styling variants */
@@ -129,6 +132,12 @@
     width: 65px;
     text-align: center;
     font-weight: bold;
+}
+
+/* --- History table specific styles */
+.datawrapper-table.history-table td:not(:first-child),
+.datawrapper-table.history-table th:not(:first-child) {
+    width: 160px;
 }
 
 /* ==============================================

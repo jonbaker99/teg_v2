@@ -44,4 +44,4 @@ avg_grossvp.reset_index(inplace=True)
 avg_grossvp.columns.name = None
 avg_grossvp.columns = ['Player'] + [f'Par {col}' if col != 'Total' else col for col in avg_grossvp.columns[1:]]
 
-st.write(avg_grossvp.to_html(classes='dataframe, datawrapper-table', index=False, justify='left'), unsafe_allow_html=True)
+st.write(avg_grossvp.to_html(classes='dataframe, datawrapper-table full-width', index=False, justify='left'), unsafe_allow_html=True)
