@@ -64,40 +64,49 @@ st.title("TEG History")
 '---'
 st.markdown("### Contents")
 st.markdown('1. Number of wins by player')
-st.markdown('2. TEG winners by year')
+st.markdown('2. TEG history')
 st.markdown('3. Doubles')
 '---'
 
-# Show the 3 bar charts from the 'winners' page
-st.subheader("Competition wins")
+# ==================================
+# ==== Number of wins by player ====
+# ==================================
 
-st.markdown(
-    """
-<style>
-button[title="View fullscreen"] {
-    display: none;
-}
-</style>
-""",
-    unsafe_allow_html=True,
-)
+# === BAR CHART SECTION
 
-col1, col2, col3 = st.columns(3,gap = 'medium')
+# # Show the 3 bar charts from the 'winners' page
+# st.subheader("Competition wins")
 
-with col1:
-    trophy_chart = create_bar_chart(trophy_sorted, 'Trophy', 'Player', 'TEG Trophy Wins')
-    st.altair_chart(trophy_chart, use_container_width=True)
+# st.markdown(
+#     """
+# <style>
+# button[title="View fullscreen"] {
+#     display: none;
+# }
+# </style>
+# """,
+#     unsafe_allow_html=True,
+# )
 
-with col2:
-    jacket_chart = create_bar_chart(jacket_sorted, 'Jacket', 'Player', 'Green Jacket Wins')
-    st.altair_chart(jacket_chart, use_container_width=True)
-    st.caption('*Green Jacket awarded in TEG 5 to SN for best stableford round; DM had best gross score')
+# col1, col2, col3 = st.columns(3,gap = 'medium')
 
-with col3:
-    spoon_chart = create_bar_chart(spoon_sorted, 'Spoon', 'Player', 'Wooden Spoon Wins')
-    st.altair_chart(spoon_chart, use_container_width=True)
+# with col1:
+#     trophy_chart = create_bar_chart(trophy_sorted, 'Trophy', 'Player', 'TEG Trophy Wins')
+#     st.altair_chart(trophy_chart, use_container_width=True)
 
-st.divider()
+# with col2:
+#     jacket_chart = create_bar_chart(jacket_sorted, 'Jacket', 'Player', 'Green Jacket Wins')
+#     st.altair_chart(jacket_chart, use_container_width=True)
+#     st.caption('*Green Jacket awarded in TEG 5 to SN for best stableford round; DM had best gross score')
+
+# with col3:
+#     spoon_chart = create_bar_chart(spoon_sorted, 'Spoon', 'Player', 'Wooden Spoon Wins')
+#     st.altair_chart(spoon_chart, use_container_width=True)
+
+# st.divider()
+
+# === TABLES USING TABS
+
 
 # USING TABS
 
@@ -108,80 +117,86 @@ tabs = st.tabs(long_labels)
 
 for comp, tab in zip(comps, tabs):
     with tab:
-        st.write(f"{get_trophy_full_name(comp)} wins")
+        # st.write(f"{get_trophy_full_name(comp)} wins")
         summary_table = summarise_teg_wins(winners, comp)
         summary_table['TEGs'] = summary_table['TEGs'].str.replace('TEG ', '') # Removes 'TEG' prefix
         summary_table['TEGs'] = summary_table['TEGs'].apply(compress_ranges, out_sep=", ") # Turns ranges of wins into a range (1,2,3 => 1-3)
-        st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table'), unsafe_allow_html=True)
+        st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table wins-table'), unsafe_allow_html=True)
 
 
 st.divider()
 
-# USING COLUMNS AGAIN
+# # USING COLUMNS AGAIN
 
 
-long_labels = [get_trophy_full_name(c) for c in comps]
+# long_labels = [get_trophy_full_name(c) for c in comps]
 
-st.subheader("Competition wins by player")
+# st.subheader("Competition wins by player")
 
-# Create three columns (assumes there are three comps/labels)
-# colx, coly, colz = st.columns(3)
-# cols = [colx, coly, colz]
+# # Create three columns (assumes there are three comps/labels)
+# # colx, coly, colz = st.columns(3)
+# # cols = [colx, coly, colz]
 
+# # for comp, label, col in zip(comps, long_labels, cols):
+# #     with col:
+# #         st.write(f"{label} wins")
+# #         summary_table = summarise_teg_wins(winners, comp)
+# #         summary_table['TEGs'] = summary_table['TEGs'].str.replace('TEG ', '')  # Removes 'TEG' prefix
+# #         summary_table['TEGs'] = summary_table['TEGs'].apply(compress_ranges, out_sep=", ")  # e.g., 1,2,3 => 1-3
+# #         st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table wins-table'),
+# #                  unsafe_allow_html=True)
+
+# cols = st.columns(len(long_labels))
 # for comp, label, col in zip(comps, long_labels, cols):
 #     with col:
 #         st.write(f"{label} wins")
 #         summary_table = summarise_teg_wins(winners, comp)
 #         summary_table['TEGs'] = summary_table['TEGs'].str.replace('TEG ', '')  # Removes 'TEG' prefix
 #         summary_table['TEGs'] = summary_table['TEGs'].apply(compress_ranges, out_sep=", ")  # e.g., 1,2,3 => 1-3
-#         st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table'),
+#         st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table wins-table'),
 #                  unsafe_allow_html=True)
 
-cols = st.columns(len(long_labels))
-for comp, label, col in zip(comps, long_labels, cols):
-    with col:
-        st.write(f"{label} wins")
-        summary_table = summarise_teg_wins(winners, comp)
-        summary_table['TEGs'] = summary_table['TEGs'].str.replace('TEG ', '')  # Removes 'TEG' prefix
-        summary_table['TEGs'] = summary_table['TEGs'].apply(compress_ranges, out_sep=", ")  # e.g., 1,2,3 => 1-3
-        st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table wins-table'),
-                 unsafe_allow_html=True)
-
-st.divider()
+# st.divider()
 
 
-# USING EXPANDERS
+# # USING EXPANDERS
 
-long_labels = [get_trophy_full_name(c) for c in comps]
+# long_labels = [get_trophy_full_name(c) for c in comps]
 
-st.subheader("Competition wins by player")
+# st.subheader("Competition wins by player")
 
-for comp, label in zip(comps, long_labels):
-    with st.expander(label):
-        #st.write(f"{get_trophy_full_name(comp)} wins")
-        summary_table = summarise_teg_wins(winners, comp)
-        summary_table['TEGs'] = summary_table['TEGs'].str.replace('TEG ', '') # Removes 'TEG' prefix
-        summary_table['TEGs'] = summary_table['TEGs'].apply(compress_ranges, out_sep=", ") # Turns ranges of wins into a range (1,2,3 => 1-3)
-        st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table'), unsafe_allow_html=True)
+# for comp, label in zip(comps, long_labels):
+#     with st.expander(label):
+#         #st.write(f"{get_trophy_full_name(comp)} wins")
+#         summary_table = summarise_teg_wins(winners, comp)
+#         summary_table['TEGs'] = summary_table['TEGs'].str.replace('TEG ', '') # Removes 'TEG' prefix
+#         summary_table['TEGs'] = summary_table['TEGs'].apply(compress_ranges, out_sep=", ") # Turns ranges of wins into a range (1,2,3 => 1-3)
+#         st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table wins-table'), unsafe_allow_html=True)
+
+# st.divider()
 
 
-st.divider()
 
 # Show the winners table
-st.subheader("Competition Wins")
+# st.subheader("Competition Wins")
 
-for comp in comps:
+# for comp in comps:
 
-    summary_table = summarise_teg_wins(winners, comp)
-    summary_table['TEGs'] = summary_table['TEGs'].str.replace('TEG ', '') # Removes 'TEG' prefix
-    summary_table['TEGs'] = summary_table['TEGs'].apply(compress_ranges, out_sep=", ") # Turns ranges of wins into a range (1,2,3 => 1-3)
+#     summary_table = summarise_teg_wins(winners, comp)
+#     summary_table['TEGs'] = summary_table['TEGs'].str.replace('TEG ', '') # Removes 'TEG' prefix
+#     summary_table['TEGs'] = summary_table['TEGs'].apply(compress_ranges, out_sep=", ") # Turns ranges of wins into a range (1,2,3 => 1-3)
 
-    st.markdown(f"**{comp}**")
-    st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table'), unsafe_allow_html=True)
-    st.write(summary_table)
+#     st.markdown(f"**{comp}**")
+#     st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table wins-table'), unsafe_allow_html=True)
+#     st.write(summary_table)
 
 
 st.divider()
+
+# =============================================
+# ===== TEG HISTORY SECTION
+# ============================================
+
 
 # Show the table and footnote from the 'history' page
 st.subheader("TEG History")
