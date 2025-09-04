@@ -1,7 +1,7 @@
 [theme]
 base = "light"
 font = "Open Sans, Lora, monospace"
-headingFont = "Lora, Open Sans, monospace, Lora"
+headingFont = "Open Sans, monospace, Lora"
 codeFont = "monospace"
 
 # Lora Regular (400)

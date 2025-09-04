@@ -134,8 +134,8 @@ def display_leaderboard(leaderboard_df: pd.DataFrame, value_column: str, title: 
     for col in columns_to_format:
         leaderboard[col] = leaderboard[col].apply(lambda x: format_value(x, value_column))
 
+    st.subheader(f"{title}")
     st.markdown(f"""
-        <h3 class='leaderboard-header'>{title}</h3>
         <p>{leader_label}: {champions}</p>
         """, unsafe_allow_html=True)
 
@@ -185,7 +185,7 @@ try:
     page_header = f"{chosen_teg} Results" if is_complete else f"{chosen_teg} Scoreboard"
     leader_label = "Champion" if is_complete else "Leader"
 
-    st.subheader(page_header)
+    # st.subheader(page_header)
 
     tab1, tab2 = st.tabs(["TEG Trophy & Spoon", "Green Jacket"])
 
@@ -194,7 +194,7 @@ try:
         display_leaderboard(
             leaderboard_df, 
             'Stableford', 
-            "TEG Trophy Leaderboard (Best Stableford)",
+            f"{chosen_teg} Trophy Leaderboard (Best Stableford)",
             leader_label, 
             ascending=False
         )
@@ -226,6 +226,7 @@ try:
                                                     chart_type='stableford')
             cht_label = f'Trophy race (Adjusted scale): {chosen_teg}'
 
+        st.divider()
         st.markdown(f'**{cht_label}**')
         st.caption('Higher = better')
         #st.plotly_chart(fig_stableford, use_container_width=True, config=dict({'staticPlot': True}))
@@ -237,7 +238,7 @@ try:
         display_leaderboard(
             leaderboard_df, 
             'GrossVP', 
-            "Green Jacket Leaderboard (Best Gross)",
+            f"{chosen_teg} Green Jacket Leaderboard (Best Gross)",
             leader_label, 
             ascending=True
         )
@@ -271,6 +272,7 @@ try:
                                                 chart_type='gross')
             cht_label = f'Green Jacket race (Adjusted scale): {chosen_teg}'
 
+        st.divider()
         st.markdown(f'**{cht_label}**')
         st.caption('Lower = better')
         #st.plotly_chart(fig_grossvp, use_container_width=True, config=dict({'staticPlot': True}))
