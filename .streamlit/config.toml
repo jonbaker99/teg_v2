@@ -1,2 +1,92 @@
 [theme]
 base = "light"
+font = "Open Sans, Lora, monospace"
+headingFont = "Lora, Open Sans, monospace, Lora"
+codeFont = "monospace"
+
+# Lora Regular (400)
+[[theme.fontFaces]]
+family = "Lora"
+url    = "https://fonts.gstatic.com/s/lora/v36/0QIvMX1D_JOuMwr7Iw.woff2"
+style  = "normal"
+weight = "400"
+
+# Lora Bold (700)
+[[theme.fontFaces]]
+family = "Lora"
+url    = "https://fonts.gstatic.com/s/lora/v36/0QIvMX1D_JOuMwr7Iw.woff2"
+style  = "normal"
+weight = "700"
+
+# Lora Italic (400)
+[[theme.fontFaces]]
+family = "Lora"
+url    = "https://fonts.gstatic.com/s/lora/v36/0QIhMX1D_JOuMw_LIftL.woff2"
+style  = "italic"
+weight = "400"
+
+# Lora Italic Bold (700)
+[[theme.fontFaces]]
+family = "Lora"
+url    = "https://fonts.gstatic.com/s/lora/v36/0QIhMX1D_JOuMw_LIftL.woff2"
+style  = "italic"
+weight = "700"
+
+
+
+# Montserrat Regular (400)
+[[theme.fontFaces]]
+family = "Montserrat"
+url    = "https://fonts.gstatic.com/s/montserrat/v30/JTUSjIg1_i6t8kCHKm459Wlhyw.woff2"
+style  = "normal"
+weight = "400"
+
+# Montserrat Bold (700)
+[[theme.fontFaces]]
+family = "Montserrat"
+url    = "https://fonts.gstatic.com/s/montserrat/v30/JTUSjIg1_i6t8kCHKm459Wlhyw.woff2"
+style  = "normal"
+weight = "700"
+
+# Montserrat Italic (400)
+[[theme.fontFaces]]
+family = "Montserrat"
+url    = "https://fonts.gstatic.com/s/montserrat/v30/JTUQjIg1_i6t8kCHKm459WxRyS7m.woff2"
+style  = "italic"
+weight = "400"
+
+# Montserrat Italic Bold (700)
+[[theme.fontFaces]]
+family = "Montserrat"
+url    = "https://fonts.gstatic.com/s/montserrat/v30/JTUQjIg1_i6t8kCHKm459WxRyS7m.woff2"
+style  = "italic"
+weight = "700"
+
+
+# Open Sans Regular (400)
+[[theme.fontFaces]]
+family = "Open Sans"
+url    = "https://fonts.gstatic.com/s/opensans/v43/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTS-muw.woff2"
+style  = "normal"
+weight = "400"
+
+# Open Sans Bold (700)
+[[theme.fontFaces]]
+family = "Open Sans"
+url    = "https://fonts.gstatic.com/s/opensans/v43/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTS-muw.woff2"
+style  = "normal"
+weight = "700"
+
+# Open Sans Italic (400)
+[[theme.fontFaces]]
+family = "Open Sans"
+url    = "https://fonts.gstatic.com/s/opensans/v43/memtYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWqWuU6F.woff2"
+style  = "italic"
+weight = "400"
+
+# Open Sans Italic Bold (700)
+[[theme.fontFaces]]
+family = "Open Sans"
+url    = "https://fonts.gstatic.com/s/opensans/v43/memtYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWqWuU6F.woff2"
+style  = "italic"
+weight = "700"

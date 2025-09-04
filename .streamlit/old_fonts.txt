@@ -1,0 +1,96 @@
+
+# Inter Regular (400)
+[[theme.fontFaces]]
+family = "Inter"
+url    = "https://fonts.gstatic.com/s/inter/v19/UcCo3FwrK3iLTcviYwY.woff2"
+style  = "normal"
+weight = "400"
+
+# Inter Bold (700)
+[[theme.fontFaces]]
+family = "Inter"
+url    = "https://fonts.gstatic.com/s/inter/v19/UcCo3FwrK3iLTcviYwY.woff2"
+style  = "normal"
+weight = "700"
+
+# Inter Italic (400)
+[[theme.fontFaces]]
+family = "Inter"
+url    = "https://fonts.gstatic.com/s/inter/v19/UcCm3FwrK3iLTcvnUwQT9g.woff2"
+style  = "italic"
+weight = "400"
+
+# Inter Italic Bold (700)
+[[theme.fontFaces]]
+family = "Inter"
+url    = "https://fonts.gstatic.com/s/inter/v19/UcCm3FwrK3iLTcvnUwQT9g.woff2"
+style  = "italic"
+weight = "700"
+
+[[theme.fontFaces]]
+family="Nunito"
+url="https://fonts.gstatic.com/s/nunito/v31/XRXX3I6Li01BKofIMNaDRs7nczIH.woff2"
+style="italic"
+weight="200 1000"
+
+[[theme.fontFaces]]
+family="Nunito"
+url="https://fonts.gstatic.com/s/nunito/v31/XRXV3I6Li01BKofINeaBTMnFcQ.woff2"
+style="normal"
+weight="200 1000"
+
+# Montserrat Regular (400)
+[[theme.fontFaces]]
+family = "Montserrat"
+url    = "https://fonts.gstatic.com/s/montserrat/v30/JTUSjIg1_i6t8kCHKm459Wlhyw.woff2"
+style  = "normal"
+weight = "400"
+
+# Montserrat Bold (700)
+[[theme.fontFaces]]
+family = "Montserrat"
+url    = "https://fonts.gstatic.com/s/montserrat/v30/JTUSjIg1_i6t8kCHKm459Wlhyw.woff2"
+style  = "normal"
+weight = "700"
+
+# Montserrat Italic (400)
+[[theme.fontFaces]]
+family = "Montserrat"
+url    = "https://fonts.gstatic.com/s/montserrat/v30/JTUQjIg1_i6t8kCHKm459WxRyS7m.woff2"
+style  = "italic"
+weight = "400"
+
+# Montserrat Italic Bold (700)
+[[theme.fontFaces]]
+family = "Montserrat"
+url    = "https://fonts.gstatic.com/s/montserrat/v30/JTUQjIg1_i6t8kCHKm459WxRyS7m.woff2"
+style  = "italic"
+weight = "700"
+
+# Roboto Regular (400)
+[[theme.fontFaces]]
+family = "Roboto"
+url    = "https://fonts.gstatic.com/s/roboto/v48/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3yUBA.woff2"
+style  = "normal"
+weight = "400"
+
+# Roboto Bold (700)
+[[theme.fontFaces]]
+family = "Roboto"
+url    = "https://fonts.gstatic.com/s/roboto/v48/KFO7CnqEu92Fr1ME7kSn66aGLdTylUAMa3yUBA.woff2"
+style  = "normal"
+weight = "700"
+
+# Roboto Italic (400)
+[[theme.fontFaces]]
+family = "Roboto"
+url    = "https://fonts.gstatic.com/s/roboto/v48/KFO5CnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmkBnka.woff2"
+style  = "italic"
+weight = "400"
+
+# Roboto Italic Bold (700)
+[[theme.fontFaces]]
+family = "Roboto"
+url    = "https://fonts.gstatic.com/s/roboto/v48/KFO5CnqEu92Fr1Mu53ZEC9_Vu3r1gIhOszmkBnka.woff2"
+style  = "italic"
+weight = "700"
