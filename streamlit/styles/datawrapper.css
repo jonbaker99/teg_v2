@@ -9,7 +9,8 @@
    ============================================== */
 
 .datawrapper-table {
-    font-family: Roboto, Arial, sans-serif;
+    /* font-family: Roboto, Arial, sans-serif; */
+    font-family: monospace;
     border-collapse: separate;
     border-spacing: 0;
     font-size: 14px;
@@ -138,6 +139,29 @@
 .datawrapper-table.history-table td:not(:first-child),
 .datawrapper-table.history-table th:not(:first-child) {
     width: 160px;
+    min-width: 50px;
+}
+
+.datawrapper-table.history-table td:is(:first-child),
+.datawrapper-table.history-table th:is(:first-child) {
+    max-width: 150px;
+    width: 140px;
+    min-width: 40px;
+}
+
+/* ---- history table with year */
+/* make columns other than first 2 wide */
+
+.datawrapper-table.history-table-inc-yr :is(td, th):not(:nth-child(1), :nth-child(2)) {
+    width: 160px;
+}
+
+/* narrower columns for TEG & Year */
+
+.datawrapper-table.history-table-inc-yr :is(td, th):is(:nth-child(1), :nth-child(2)) {
+    width: 60px;
+    padding-left: 4px;
+    padding-right: 4px;
 }
 
 /* ==============================================

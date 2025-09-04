@@ -128,87 +128,49 @@ for comp, tab in zip(comps, tabs):
 
 st.divider()
 
-# # USING COLUMNS AGAIN
-
-
-# long_labels = [get_trophy_full_name(c) for c in comps]
-
-# st.subheader("Competition wins by player")
-
-# # Create three columns (assumes there are three comps/labels)
-# # colx, coly, colz = st.columns(3)
-# # cols = [colx, coly, colz]
-
-# # for comp, label, col in zip(comps, long_labels, cols):
-# #     with col:
-# #         st.write(f"{label} wins")
-# #         summary_table = summarise_teg_wins(winners, comp)
-# #         summary_table['TEGs'] = summary_table['TEGs'].str.replace('TEG ', '')  # Removes 'TEG' prefix
-# #         summary_table['TEGs'] = summary_table['TEGs'].apply(compress_ranges, out_sep=", ")  # e.g., 1,2,3 => 1-3
-# #         st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table wins-table'),
-# #                  unsafe_allow_html=True)
-
-# cols = st.columns(len(long_labels))
-# for comp, label, col in zip(comps, long_labels, cols):
-#     with col:
-#         st.write(f"{label} wins")
-#         summary_table = summarise_teg_wins(winners, comp)
-#         summary_table['TEGs'] = summary_table['TEGs'].str.replace('TEG ', '')  # Removes 'TEG' prefix
-#         summary_table['TEGs'] = summary_table['TEGs'].apply(compress_ranges, out_sep=", ")  # e.g., 1,2,3 => 1-3
-#         st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table wins-table'),
-#                  unsafe_allow_html=True)
-
-# st.divider()
-
-
-# # USING EXPANDERS
-
-# long_labels = [get_trophy_full_name(c) for c in comps]
-
-# st.subheader("Competition wins by player")
-
-# for comp, label in zip(comps, long_labels):
-#     with st.expander(label):
-#         #st.write(f"{get_trophy_full_name(comp)} wins")
-#         summary_table = summarise_teg_wins(winners, comp)
-#         summary_table['TEGs'] = summary_table['TEGs'].str.replace('TEG ', '') # Removes 'TEG' prefix
-#         summary_table['TEGs'] = summary_table['TEGs'].apply(compress_ranges, out_sep=", ") # Turns ranges of wins into a range (1,2,3 => 1-3)
-#         st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table wins-table'), unsafe_allow_html=True)
-
-# st.divider()
-
-
-
-# Show the winners table
-# st.subheader("Competition Wins")
-
-# for comp in comps:
-
-#     summary_table = summarise_teg_wins(winners, comp)
-#     summary_table['TEGs'] = summary_table['TEGs'].str.replace('TEG ', '') # Removes 'TEG' prefix
-#     summary_table['TEGs'] = summary_table['TEGs'].apply(compress_ranges, out_sep=", ") # Turns ranges of wins into a range (1,2,3 => 1-3)
-
-#     st.markdown(f"**{comp}**")
-#     st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table wins-table'), unsafe_allow_html=True)
-#     st.write(summary_table)
-
-
-st.divider()
-
 # =============================================
 # ===== TEG HISTORY SECTION
 # ============================================
 
 
 # Show the table and footnote from the 'history' page
-st.subheader("TEG History")
-st.write(winners.to_html(index=False, justify='left', classes='datawrapper-table history-table'), unsafe_allow_html=True)
+
+# st.subheader("TEG History")
+# st.write(winners.to_html(index=False, justify='left', classes='datawrapper-table history-table'), unsafe_allow_html=True)
+# st.caption('*Green Jacket awarded in TEG 5 for best stableford round; DM had best gross score')
+
+
+
+winners_2 = get_teg_winners(filtered_data)
+
+# ----- THIS BIT HAS SEPARATE COLUMNS FOR YEAR AND TEG
+
+# st.subheader("TEG History")
+# st.write(winners_2.to_html(index=False, justify='left', classes='datawrapper-table history-table-inc-yr full-width'), unsafe_allow_html=True)
+# st.caption('*Green Jacket awarded in TEG 5 for best stableford round; DM had best gross score')
+
+# st.divider()
+
+# ----- THIS BIT COMBINES YEAR AND TEG INTO ONE COLUMN
+
+winners_2["TEG"] = winners_2['TEG'].astype(str) + " (" + winners_2['Year'].astype(str) + ")"
+winners_2 = winners_2.drop(columns=['Year'])
+
+st.write(winners_2.to_html(index=False, justify='left', classes='datawrapper-table history-table full-width'), unsafe_allow_html=True)
 st.caption('*Green Jacket awarded in TEG 5 for best stableford round; DM had best gross score')
 
 st.divider()
+
+# =============================================
+# ===== DOUBLES
+# ============================================
 
 
 # Show the 'Doubles' section from the 'winners' page
 st.subheader("Doubles")
 st.caption(f"There have been {same_player_both.shape[0]} trophy / jacket doubles")
 st.write(player_doubles.to_html(index=False, justify='left', classes='datawrapper-table'), unsafe_allow_html=True)
+
+st.divider()
+
+
