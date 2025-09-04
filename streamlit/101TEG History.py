@@ -117,6 +117,39 @@ for comp, tab in zip(comps, tabs):
 
 st.divider()
 
+# USING COLUMNS AGAIN
+
+
+long_labels = [get_trophy_full_name(c) for c in comps]
+
+st.subheader("Competition wins by player")
+
+# Create three columns (assumes there are three comps/labels)
+# colx, coly, colz = st.columns(3)
+# cols = [colx, coly, colz]
+
+# for comp, label, col in zip(comps, long_labels, cols):
+#     with col:
+#         st.write(f"{label} wins")
+#         summary_table = summarise_teg_wins(winners, comp)
+#         summary_table['TEGs'] = summary_table['TEGs'].str.replace('TEG ', '')  # Removes 'TEG' prefix
+#         summary_table['TEGs'] = summary_table['TEGs'].apply(compress_ranges, out_sep=", ")  # e.g., 1,2,3 => 1-3
+#         st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table'),
+#                  unsafe_allow_html=True)
+
+cols = st.columns(len(long_labels))
+for comp, label, col in zip(comps, long_labels, cols):
+    with col:
+        st.write(f"{label} wins")
+        summary_table = summarise_teg_wins(winners, comp)
+        summary_table['TEGs'] = summary_table['TEGs'].str.replace('TEG ', '')  # Removes 'TEG' prefix
+        summary_table['TEGs'] = summary_table['TEGs'].apply(compress_ranges, out_sep=", ")  # e.g., 1,2,3 => 1-3
+        st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table wins-table'),
+                 unsafe_allow_html=True)
+
+st.divider()
+
+
 # USING EXPANDERS
 
 long_labels = [get_trophy_full_name(c) for c in comps]

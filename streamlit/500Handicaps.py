@@ -97,7 +97,7 @@ with st.expander("Handicap history"):
         # Display historic handicaps without index, non-sortable, and left-aligned headers
         st.write(historic_handicaps.to_html(index=False, justify='left', classes = 'datawrapper-table'), unsafe_allow_html=True)
     except FileNotFoundError:
-        st.error(f"File not found: {HANDICAPS_FILE_PATH}")
+        st.error(f"File not found: {HANDICAPS_CSV}")
         historic_handicaps = pd.DataFrame()  # Return an empty DataFrame if file is missing
     except pd.errors.EmptyDataError:
         st.warning("The file '/data/handicaps.csv' is empty.")

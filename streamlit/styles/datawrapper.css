@@ -6,10 +6,15 @@
     border-collapse: separate;
     border-spacing: 0;
     font-size: 14px;
-    width: 100%;
-    max-width: 600px;
+    width: auto;
+    max-width: 100%;
     margin-bottom: 40px;
     border: none; /* Removes the external table border */
+}
+
+/* .datawrapper-table.full-width, */
+.full-width {
+    width: 100%;
 }
 
 .datawrapper-table th, 
@@ -38,13 +43,13 @@
     font-weight: bold;
 }
 
-/* Column-specific alignment overrides - these will now work! */
+/* Column-specific alignment overrides */
 .datawrapper-table.left-second td:nth-child(2),
 .datawrapper-table.left-second th:nth-child(2) {
     text-align: left;
 }
 
-/* Narrow first column - ONLY for ranking tables */
+/* Narrow first column (e.g. for ranking 1st column) */
 .datawrapper-table.narrow-first td:first-child,
 .datawrapper-table.narrow-first th:first-child {
     font-size: 12px;
