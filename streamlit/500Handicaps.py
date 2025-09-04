@@ -95,7 +95,7 @@ with st.expander("Handicap history"):
             historic_handicaps[col] = historic_handicaps[col].apply(format_value)
         
         # Display historic handicaps without index, non-sortable, and left-aligned headers
-        st.write(historic_handicaps.to_html(index=False, justify='left', classes = 'datawrapper-table'), unsafe_allow_html=True)
+        st.write(historic_handicaps.to_html(index=False, justify='left', classes = 'datawrapper-table full-width'), unsafe_allow_html=True)
     except FileNotFoundError:
         st.error(f"File not found: {HANDICAPS_CSV}")
         historic_handicaps = pd.DataFrame()  # Return an empty DataFrame if file is missing

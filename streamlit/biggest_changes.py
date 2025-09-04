@@ -56,11 +56,11 @@ tab1, tab2  = st.tabs(["Biggest improvements", "Biggest worsenings"])
 
 with tab1:
     st.markdown('Best performance vs. previous round')
-    datawrapper_table(rd_data_best)
+    datawrapper_table(rd_data_best, css_classes='full-width')
 
 with tab2:
     st.markdown('Worst performance vs. previous round')
-    datawrapper_table(rd_data_worst)
+    datawrapper_table(rd_data_worst, css_classes='full-width')
 
 
 

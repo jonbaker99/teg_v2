@@ -62,4 +62,4 @@ for tab, friendly_metric in zip(tabs, friendly_metrics):
         st.markdown(f"#### {friendly_metric}")
         metric = name_mapping.get(friendly_metric,friendly_metric)
         output = chosen_teg_context(df_teg, teg_t, metric).rename(columns={metric: friendly_metric})
-        st.write(output.to_html(index=False, justify='left', classes='jb-table-test, datawrapper-table'), unsafe_allow_html=True)
+        st.write(output.to_html(index=False, justify='left', classes='jb-table-test, datawrapper-table full-width'), unsafe_allow_html=True)

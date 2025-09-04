@@ -75,13 +75,13 @@ course_count = course_count.rename(columns={'Count':'Rounds'})
 tab1, tab2, tab3, tab4  = st.tabs(["Summary by course","Course average", "Best Rounds", "Worst Rounds"])
 
 with tab1:
-    datawrapper_table(course_count, left_align= True)
+    datawrapper_table(course_count, css_classes='full-width')
 
 with tab2:
-    datawrapper_table(mean_rd, left_align= True)
+    datawrapper_table(mean_rd, css_classes='full-width')
 
 with tab3:
-    datawrapper_table(min_rd, left_align= True)
+    datawrapper_table(min_rd, css_classes='full-width')
 
 with tab4:
-    datawrapper_table(max_rd, left_align= True)
+    datawrapper_table(max_rd, css_classes='full-width')

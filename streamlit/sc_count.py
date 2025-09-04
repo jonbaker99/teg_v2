@@ -86,7 +86,7 @@ with tab1:
     count_sc.columns.name = None
     count_sc['Sc'] = count_sc['Sc'].astype(int)
     count_sc = count_sc.rename(columns={'Sc': 'Score'})
-    datawrapper_table(count_sc)
+    datawrapper_table(count_sc, css_classes='full-width')
     st.plotly_chart(make_percent_plot(count_sc))
 
 
@@ -98,6 +98,6 @@ with tab2:
     count_gvp['GrossVP'] = count_gvp['GrossVP'].apply(format_vs_par)
     count_gvp = count_gvp.rename(columns={'GrossVP': 'vs Par'})
     count_gvp.columns.name = None
-    datawrapper_table(count_gvp)
+    datawrapper_table(count_gvp, css_classes='full-width')
     count_gvp.loc[count_gvp['vs Par'] == '=', 'vs Par'] = 0
     st.plotly_chart(make_percent_plot(count_gvp))
