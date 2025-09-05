@@ -20,7 +20,7 @@ st.markdown(
 )
 
 
-home_page = st.Page("home.py", title="Home")
+# home_page = st.Page("home.py", title="Home")
 history_page = st.Page("101TEG History.py", title="TEG History", icon=":material/trophy:")
 results_page = st.Page("102TEG Results.py", title="TEG Results", icon=":material/sports_score:")
 pb_page = st.Page("302Personal Best Rounds & TEGs.py", title="Personal Bests", icon=":material/golf_course:") 
