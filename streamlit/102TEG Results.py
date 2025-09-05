@@ -115,6 +115,31 @@ def get_champions(df: pd.DataFrame) -> str:
     champions = df[df['Rank'] == 1][PLAYER_COLUMN].astype(str).tolist()
     return ', '.join(champions)
 
+def get_last_place(df: pd.DataFrame) -> str:
+    """
+    Get last place players from dataframe (including ties).
+
+    Args:
+        df (pd.DataFrame): Input dataframe.
+
+    Returns:
+        str: Comma-separated list of last place players.
+    """
+    df = df.copy()
+
+    # Remove '=' from Rank strings, then convert to numeric
+    df['Rank'] = (
+        df['Rank']
+        .astype(str)           # make sure it's string
+        .str.replace("=", "", regex=False)  # drop '=' sign
+        .astype(int)           # back to int
+    )
+
+    last_rank = df['Rank'].max()
+    last_place = df[df['Rank'] == last_rank][PLAYER_COLUMN].astype(str).tolist()
+    return ', '.join(last_place)
+
+
 def display_leaderboard(leaderboard_df: pd.DataFrame, value_column: str, title: str, leader_label: str, ascending: bool) -> None:
     """
     Display a leaderboard.
@@ -128,15 +153,25 @@ def display_leaderboard(leaderboard_df: pd.DataFrame, value_column: str, title: 
     """
     leaderboard = create_leaderboard(leaderboard_df, value_column, ascending)
     champions = get_champions(leaderboard)
+    losers = get_last_place(leaderboard)
 
     columns_to_format = [col for col in leaderboard.columns if col not in ['Rank', PLAYER_COLUMN]]
 
     for col in columns_to_format:
         leaderboard[col] = leaderboard[col].apply(lambda x: format_value(x, value_column))
 
-    st.subheader(f"{title}")
-    st.markdown(f"""
-        <p>{leader_label}: {champions}</p>
+    st.markdown(f'#### {title}')
+    # st.markdown(f"""
+    #     <p>{leader_label}: <b>{champions}</b></p>
+    #     """, unsafe_allow_html=True)
+
+    if value_column == 'Stableford':
+        st.markdown(f"""
+        <p>{leader_label}: <b>{champions}</b> | Wooden spoon: <b>{losers}</b></p>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown(f"""
+        <p>{leader_label}: <b>{champions}</b></p>
         """, unsafe_allow_html=True)
 
     table_html = generate_table_html(leaderboard)
@@ -185,6 +220,8 @@ try:
     page_header = f"{chosen_teg} Results" if is_complete else f"{chosen_teg} Scoreboard"
     leader_label = "Champion" if is_complete else "Leader"
 
+    st.markdown('')
+
     # st.subheader(page_header)
 
     tab1, tab2 = st.tabs(["TEG Trophy & Spoon", "Green Jacket"])
@@ -199,17 +236,26 @@ try:
             ascending=False
         )
 
-        stableford_chart_type = st.radio(
-                "Choose Stableford chart type:",
-                ('Standard', 'Adjusted scale'),
-                key='stableford_chart_type',
-                index=1, #set adjusted to default
-                horizontal=True
-            )
-        st.caption("Adjusted view 'zooms in' by showing performance vs. net par to more clearly show gaps between players")
+        # st.divider()
+        st.markdown('')
 
-        # fig_stableford = create_cumulative_graph(all_data, chosen_teg,  'Stableford Cum TEG', f'Trophy race: {chosen_teg}')
-        # st.plotly_chart(fig_stableford, use_container_width=True)
+        cht_label = f'TEG Trophy race: {chosen_teg}'
+        st.markdown(f'##### {cht_label}')
+
+        # Create containers
+        chart_container = st.container()
+        radio_container = st.container()
+
+        with radio_container:
+
+            stableford_chart_type = st.radio(
+                    "Choose Stableford chart type:",
+                    ('Standard', 'Adjusted scale (score vs. net par)'),
+                    key='stableford_chart_type',
+                    index=1, #set adjusted to default
+                    horizontal=True
+                )
+            st.caption("Adjusted view 'zooms in' by showing performance vs. net par to more clearly show gaps between players")
 
         # Create and display Stableford chart
         if stableford_chart_type == 'Standard':
@@ -218,6 +264,7 @@ try:
                                                     y_axis_label='Cumulative Stableford Points',
                                                     chart_type='stableford')
             cht_label = f'Trophy race: {chosen_teg}'
+            label_short = 'Cumulative stableford points'
         else:
             fig_stableford = create_cumulative_graph(all_data, chosen_teg, 'Adjusted Stableford', 
                                                     f'Trophy race (Adjusted scale): {chosen_teg}', 
@@ -225,37 +272,45 @@ try:
                                                     y_axis_label='Cumulative Stableford Points vs. net par',
                                                     chart_type='stableford')
             cht_label = f'Trophy race (Adjusted scale): {chosen_teg}'
+            label_short = 'Cumulative stableford points (adjusted scale)'
 
-        st.divider()
-        st.markdown(f'**{cht_label}**')
-        st.caption('Higher = better')
-        #st.plotly_chart(fig_stableford, use_container_width=True, config=dict({'staticPlot': True}))
-        #st.plotly_chart(fig_stableford, use_container_width=True)
-        st.plotly_chart(fig_stableford, use_container_width=True, config=dict({'displayModeBar': False}))
+        with chart_container:
+            # st.markdown(f'**{cht_label}**')
+            st.caption(f'{label_short} | Higher = better')
+            #st.plotly_chart(fig_stableford, use_container_width=True, config=dict({'staticPlot': True}))
+            #st.plotly_chart(fig_stableford, use_container_width=True)
+            st.plotly_chart(fig_stableford, use_container_width=True, config=dict({'displayModeBar': False}))
         
 
     with tab2: 
         display_leaderboard(
-            leaderboard_df, 
-            'GrossVP', 
-            f"{chosen_teg} Green Jacket Leaderboard (Best Gross)",
-            leader_label, 
+            leaderboard_df=leaderboard_df, 
+            value_column='GrossVP', 
+            title=f"{chosen_teg} Green Jacket Leaderboard (Best Gross)",
+            # title="",
+            leader_label=leader_label, 
             ascending=True
         )
 
-        # with st.expander("The race for the jacket..."):
-        #     fig_grossvp = create_cumulative_graph(all_data, chosen_teg, 'GrossVP Cum TEG', f'Cumulative gross for {chosen_teg}')
-        #     st.plotly_chart(fig_grossvp, use_container_width=True)
+        st.markdown('')
+        # st.divider()
 
+        cht_label = f'Green Jacket race: {chosen_teg}'
+        st.markdown(f'##### {cht_label}')
 
-        grossvp_chart_type = st.radio(
-            "Choose Green Jacket chart type:",
-            ('Standard', 'Adjusted scale'),
-            key='grossvp_chart_type',
-            index=1, #set adjusted to default
-            horizontal=True
-        )
-        st.caption("Adjusted view 'zooms in' by showing performance vs. bogey golf to more clearly show gaps between players")
+        # Create containers
+        chart_container = st.container()
+        radio_container = st.container()
+
+        with radio_container:
+            grossvp_chart_type = st.radio(
+                "Choose chart type:",
+                ('Standard', 'Adjusted scale (gross score vs. bogey)'),
+                key='grossvp_chart_type',
+                index=1, #set adjusted to default
+                horizontal=True
+            )
+            st.caption("Adjusted view 'zooms in' by showing performance vs. bogey golf to more clearly show gaps between players")
         
         # Create and display Green Jacket chart
         if grossvp_chart_type == 'Standard':
@@ -264,6 +319,7 @@ try:
                                                 y_axis_label='Cumulative gross vs par',
                                                 chart_type='gross')
             cht_label = f'Green Jacket race: {chosen_teg}'
+            label_short = 'Cumulative gross score vs. par'
         else:
             fig_grossvp = create_cumulative_graph(all_data, chosen_teg, 'Adjusted GrossVP', 
                                                 f'Green Jacket race (Adjusted scale): {chosen_teg}', 
@@ -271,12 +327,14 @@ try:
                                                 y_axis_label='Cumulative gross vs. bogey golf (par+1)',
                                                 chart_type='gross')
             cht_label = f'Green Jacket race (Adjusted scale): {chosen_teg}'
+            label_short = 'Cumulative gross score (adjusted scale vs. bogey)'
 
-        st.divider()
-        st.markdown(f'**{cht_label}**')
-        st.caption('Lower = better')
-        #st.plotly_chart(fig_grossvp, use_container_width=True, config=dict({'staticPlot': True}))
-        st.plotly_chart(fig_grossvp, use_container_width=True, config=dict({'displayModeBar': False}))
+        
+        with chart_container:
+            #st.markdown(f'**{cht_label}**')
+            st.caption(f'{label_short} | Lower = better')
+            #st.plotly_chart(fig_grossvp, use_container_width=True, config=dict({'staticPlot': True}))
+            st.plotly_chart(fig_grossvp, use_container_width=True, config=dict({'displayModeBar': False}))
 
 
 except Exception as e:
