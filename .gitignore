@@ -17,7 +17,5 @@ __pycache__/
 !.streamlit/secrets.toml.template
 !.streamlit/README.md
 
-!dev_notebooks/winner_tables_notebook.ipynb
-
 # Local backup files (only used in local runs)
 data/backups/
