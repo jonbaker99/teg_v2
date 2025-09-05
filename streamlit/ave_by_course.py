@@ -1,4 +1,5 @@
 from utils import get_round_data, load_datawrapper_css, datawrapper_table
+from utils import load_course_info
 import streamlit as st
 import pandas as pd, altair as alt
 import numpy as np
@@ -8,6 +9,24 @@ st.title('Course averages and records')
 
 all_rd_data = get_round_data(ex_50 = True, ex_incomplete= False)
 rd_data = all_rd_data
+
+course_info = load_course_info()
+unique_areas = sorted(course_info['Area'].unique().tolist())
+all_area_label = 'ALL AREAS'
+area_options = [all_area_label] + unique_areas
+
+selected_area = st.selectbox('Filter by area:', area_options)
+
+if selected_area == all_area_label:
+    # No filtering - use all data
+    rd_data = all_rd_data
+else:
+    # Get courses in the selected area
+    courses_in_area = course_info[course_info['Area'] == selected_area]['Course'].tolist()
+    
+    # Filter rd_data to only include those courses
+    rd_data = all_rd_data[all_rd_data['Course'].isin(courses_in_area)]
+    
 
 # Number of rounds at each course
 course_count = (
@@ -72,6 +91,7 @@ course_count['Ave'] = mean_rd['Total']
 course_count['Record'] = min_rd['Total']
 course_count['Worst'] = max_rd['Total']
 course_count = course_count.rename(columns={'Count':'Rounds'})
+
 tab1, tab2, tab3, tab4  = st.tabs(["Summary by course","Course average", "Best Rounds", "Worst Rounds"])
 
 with tab1:

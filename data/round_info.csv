@@ -18,18 +18,18 @@ TEGNum,Round,Course,Date,TEGRd,TEG,Area,Year
 6,2,Costa Brava,22/09/2013,TEG 6|2,TEG 6,"Catalonia, Spain",2013
 6,3,El Prat - Rosa,23/09/2013,TEG 6|3,TEG 6,"Catalonia, Spain",2013
 6,4,PGA Catalunya - Stadium,24/09/2013,TEG 6|4,TEG 6,"Catalonia, Spain",2013
-7,1,Praia D'El Rey,02/10/2014,TEG 7|1,TEG 7,"Silver Coast, Portugal",2014
-7,2,Bom Sucesso,03/10/2014,TEG 7|2,TEG 7,"Silver Coast, Portugal",2014
-7,3,Royal Óbidos,04/10/2014,TEG 7|3,TEG 7,"Silver Coast, Portugal",2014
-7,4,Praia D'El Rey,05/10/2014,TEG 7|4,TEG 7,"Silver Coast, Portugal",2014
-8,1,Quinta da Marinha,25/11/2015,TEG 8|1,TEG 8,"Cascais, Portugal",2015
-8,2,Penha Longa,26/11/2015,TEG 8|2,TEG 8,"Cascais, Portugal",2015
-8,3,Quinta da Marinha,27/11/2015,TEG 8|3,TEG 8,"Cascais, Portugal",2015
-8,4,Oitavos Dunes,28/11/2015,TEG 8|4,TEG 8,"Cascais, Portugal",2015
-9,1,Royal Óbidos,30/09/2016,TEG 9|1,TEG 9,"Silver Coast, Portugal",2016
-9,2,Praia D'El Rey,01/10/2016,TEG 9|2,TEG 9,"Silver Coast, Portugal",2016
-9,3,Royal Óbidos,02/10/2016,TEG 9|3,TEG 9,"Silver Coast, Portugal",2016
-9,4,Praia D'El Rey,03/10/2016,TEG 9|4,TEG 9,"Silver Coast, Portugal",2016
+7,1,Praia D'El Rey,02/10/2014,TEG 7|1,TEG 7,"Lisbon Coast, Portugal",2014
+7,2,Bom Sucesso,03/10/2014,TEG 7|2,TEG 7,"Lisbon Coast, Portugal",2014
+7,3,Royal Óbidos,04/10/2014,TEG 7|3,TEG 7,"Lisbon Coast, Portugal",2014
+7,4,Praia D'El Rey,05/10/2014,TEG 7|4,TEG 7,"Lisbon Coast, Portugal",2014
+8,1,Quinta da Marinha,25/11/2015,TEG 8|1,TEG 8,"Lisbon Coast, Portugal",2015
+8,2,Penha Longa,26/11/2015,TEG 8|2,TEG 8,"Lisbon Coast, Portugal",2015
+8,3,Quinta da Marinha,27/11/2015,TEG 8|3,TEG 8,"Lisbon Coast, Portugal",2015
+8,4,Oitavos Dunes,28/11/2015,TEG 8|4,TEG 8,"Lisbon Coast, Portugal",2015
+9,1,Royal Óbidos,30/09/2016,TEG 9|1,TEG 9,"Lisbon Coast, Portugal",2016
+9,2,Praia D'El Rey,01/10/2016,TEG 9|2,TEG 9,"Lisbon Coast, Portugal",2016
+9,3,Royal Óbidos,02/10/2016,TEG 9|3,TEG 9,"Lisbon Coast, Portugal",2016
+9,4,Praia D'El Rey,03/10/2016,TEG 9|4,TEG 9,"Lisbon Coast, Portugal",2016
 10,1,Boavista,30/09/2017,TEG 10|1,TEG 10,"Algarve, Portugal",2017
 10,2,Palmares - Praia / Alvor,01/10/2017,TEG 10|2,TEG 10,"Algarve, Portugal",2017
 10,3,Palmares - Alvor / Lagos,02/10/2017,TEG 10|3,TEG 10,"Algarve, Portugal",2017
@@ -50,19 +50,19 @@ TEGNum,Round,Course,Date,TEGRd,TEG,Area,Year
 14,2,Littlestone,05/11/2021,TEG 14|2,TEG 14,"Kent, England",2021
 14,3,Prince's - Shore / Dunes,06/11/2021,TEG 14|3,TEG 14,"Kent, England",2021
 14,4,Prince's - Shore / Dunes,07/11/2021,TEG 14|4,TEG 14,"Kent, England",2021
-15,1,Estoril,15/10/2022,TEG 15|1,TEG 15,"Cascais, Portugal",2022
-15,2,West Cliffs,16/10/2022,TEG 15|2,TEG 15,"Cascais, Portugal",2022
-15,3,Penha Longa,17/10/2022,TEG 15|3,TEG 15,"Cascais, Portugal",2022
-15,4,Oitavos Dunes,18/10/2022,TEG 15|4,TEG 15,"Cascais, Portugal",2022
-16,1,Oitavos Dunes,07/10/2023,TEG 16|1,TEG 16,"Cascais, Portugal",2023
-16,2,Troia,08/10/2023,TEG 16|2,TEG 16,"Cascais, Portugal",2023
-16,3,Penha Longa,09/10/2023,TEG 16|3,TEG 16,"Cascais, Portugal",2023
-16,4,Estoril,10/10/2023,TEG 16|4,TEG 16,"Cascais, Portugal",2023
-17,1,Praia D'El Rey,05/10/2024,TEG 17|1,TEG 17,"Cascais and Silver Coast, Portugal",2024
-17,2,West Cliffs,06/10/2024,TEG 17|2,TEG 17,"Cascais and Silver Coast, Portugal",2024
-17,3,Royal Óbidos,07/10/2024,TEG 17|3,TEG 17,"Cascais and Silver Coast, Portugal",2024
-17,4,Praia D'El Rey,08/10/2024,TEG 17|4,TEG 17,"Cascais and Silver Coast, Portugal",2024
-18,1,Test course,05/10/2025,TEG 18|1,TEG 18,"Catalonia, Spain",2025
-18,2,Test course,06/10/2025,TEG 18|2,TEG 18,"Catalonia, Spain",2025
-18,3,Test course,07/10/2025,TEG 18|3,TEG 18,"Catalonia, Spain",2025
-18,4,Test course,08/10/2025,TEG 18|4,TEG 18,"Catalonia, Spain",2025
+15,1,Estoril,15/10/2022,TEG 15|1,TEG 15,"Lisbon Coast, Portugal",2022
+15,2,West Cliffs,16/10/2022,TEG 15|2,TEG 15,"Lisbon Coast, Portugal",2022
+15,3,Penha Longa,17/10/2022,TEG 15|3,TEG 15,"Lisbon Coast, Portugal",2022
+15,4,Oitavos Dunes,18/10/2022,TEG 15|4,TEG 15,"Lisbon Coast, Portugal",2022
+16,1,Oitavos Dunes,07/10/2023,TEG 16|1,TEG 16,"Lisbon Coast, Portugal",2023
+16,2,Troia,08/10/2023,TEG 16|2,TEG 16,"Lisbon Coast, Portugal",2023
+16,3,Penha Longa,09/10/2023,TEG 16|3,TEG 16,"Lisbon Coast, Portugal",2023
+16,4,Estoril,10/10/2023,TEG 16|4,TEG 16,"Lisbon Coast, Portugal",2023
+17,1,Praia D'El Rey,05/10/2024,TEG 17|1,TEG 17,"Lisbon Coast, Portugal",2024
+17,2,West Cliffs,06/10/2024,TEG 17|2,TEG 17,"Lisbon Coast, Portugal",2024
+17,3,Royal Óbidos,07/10/2024,TEG 17|3,TEG 17,"Lisbon Coast, Portugal",2024
+17,4,Praia D'El Rey,08/10/2024,TEG 17|4,TEG 17,"Lisbon Coast, Portugal",2024
+18,1,Test course,11/10/2025,TEG 18|1,TEG 18,"Catalonia, Spain",2025
+18,2,Test course,12/10/2025,TEG 18|2,TEG 18,"Catalonia, Spain",2025
+18,3,Test course,13/10/2025,TEG 18|3,TEG 18,"Catalonia, Spain",2025
+18,4,Test course,14/10/2025,TEG 18|4,TEG 18,"Catalonia, Spain",2025

@@ -24,8 +24,8 @@
   --shape-size: 24px;
   --font-size-base: 13px;
   --font-size-small: 12px;
-  --font-size-large: 16px;
-  --font-size-header: 18px;
+  --font-size-large: 14px;
+  --font-size-header: 14px;
 
   /* shapes */
   --stableford-radius: 0px;
@@ -114,8 +114,8 @@
 
 /* ===== BASE STYLES ===== */
 .scorecard-container {
-  font-family: 'Inter', Arial, sans-serif;
-  font-size: var(--font-size-base);
+  /* font-family: 'Inter', Arial, sans-serif;
+  font-size: var(--font-size-base); */
   margin: 0 auto 30px;
   width: 100%;
 }
@@ -145,6 +145,8 @@
   border-collapse: separate;
   border-spacing: 2px;
   margin: 0 auto 20px;
+  font-family: monospace;
+  font-size: 14px;
 }
 
 /* Remove default top borders from all rows */
@@ -489,6 +491,7 @@
   border-spacing: 1px;
   margin: 0 auto 20px;
   font-size: var(--mobile-font-size);
+  font-family: monospace;
 }
 
 .scorecard-table-mobile tr {
@@ -640,8 +643,8 @@
 
 /* ===== MOBILE CONTAINER ===== */
 .scorecard-container-mobile {
-  font-family: 'Inter', Arial, sans-serif;
-  font-size: var(--mobile-font-size);
+  /* font-family: 'Inter', Arial, sans-serif; */
+  /* font-size: var(--mobile-font-size); */
   margin: 0 auto 20px;
   width: 100%;
   max-width: 100%;

@@ -5,12 +5,16 @@ import numpy as np, pandas as pd
 st.title('Rounds by Course')
 load_datawrapper_css()
 
+expander = st.expander("Select options", expanded=True)
+
 rd_data = get_ranked_round_data()
 rd_data['Pl_count'] = rd_data.groupby('Pl')['Pl'].transform('count')
 rd_data['All_count'] = len(rd_data)
 
 unique_courses = ['All courses'] + sorted(rd_data['Course'].unique().tolist())
-selected_course = st.selectbox('Select a course:', unique_courses)
+
+with expander:
+    selected_course = st.selectbox('Select a course:', unique_courses)
 
 if selected_course == 'All courses':
     filter_data = rd_data
@@ -24,9 +28,11 @@ else:
 unique_players = sorted(rd_data['Player'].unique().tolist())
 player_options = ['All players'] + unique_players
 
-# Create a selectbox for players
-selected_player = st.selectbox('Select a player:', player_options)
-#selected_player = st.radio('Select a player:', player_options, horizontal= True)
+
+with expander:
+    # Create a selectbox for players
+    selected_player = st.selectbox('Select a player:', player_options)
+    #selected_player = st.radio('Select a player:', player_options, horizontal= True)
 
 if selected_player == 'All players':
     filter_data = filter_data
@@ -50,7 +56,9 @@ inverted_name_mapping = {v: k for k, v in name_mapping.items()}
 
 # Use the friendly names for the radio buttons
 friendly_names = list(name_mapping.keys())
-selected_friendly_name = st.radio("Choose a measure:", friendly_names, horizontal=True)
+
+with expander:
+    selected_friendly_name = st.radio("Choose a measure:", friendly_names, horizontal=True)
 
 course_data = course_data.rename(columns=inverted_name_mapping)
 

@@ -1580,3 +1580,10 @@ def get_trophy_full_name(trophy: str) -> str:
         trophy_name = convert_trophy_name(key)
 
     return trophy_name
+
+@st.cache_data
+def load_course_info():
+    """Load unique course/area combinations from round_info.csv"""
+    round_info = read_file(ROUND_INFO_CSV)
+    course_info = round_info[['Course', 'Area']].drop_duplicates()
+    return course_info

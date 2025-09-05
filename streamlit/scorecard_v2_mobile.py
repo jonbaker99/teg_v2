@@ -18,7 +18,7 @@ all_data = load_all_data(exclude_incomplete_tegs=False)
 # Load CSS
 css_loaded = load_scorecard_css()
 
-st.title('Scorecards v2 Mobile')
+st.title('Scorecards (mobile layout)')
 
 if not css_loaded:
     st.warning("CSS not loaded - scorecard will not display correctly")
@@ -28,44 +28,46 @@ if not css_loaded:
 if 'active_scorecard_tab' not in st.session_state:
     st.session_state.active_scorecard_tab = 0
 
-tab_names = ["1 Round / All Players", "1 Player / All Rounds", "1 Round / 1 Player"]
+with st.expander("Scorecard selection", expanded=True):
 
-# Display names
-display_names = ["Round Comparison", "Tournament view (single player)", "Single Player Round"]
+    tab_names = ["1 Round / All Players", "1 Player / All Rounds", "1 Round / 1 Player"]
 
-selected_tab_display  = st.radio("Choose scorecard type:", display_names, 
-                       horizontal=True,
-                       key='scorecard_tab_selector_mobile')
+    # Display names
+    display_names = ["Round Comparison", "Tournament view (single player)", "Single Player Round"]
 
-selected_tab = tab_names[display_names.index(selected_tab_display)]
+    selected_tab_display  = st.radio("Choose scorecard type:", display_names, 
+                        horizontal=False,
+                        key='scorecard_tab_selector_mobile')
+
+    selected_tab = tab_names[display_names.index(selected_tab_display)]
 
 
 
-# Page-level controls
-# st.markdown("---")
-st.caption("Scorecard selection")
-col1, col2, col3 = st.columns(3)
+    # Page-level controls
+    # st.markdown("---")
+    st.caption("Scorecard selection")
+    col1, col2, col3 = st.columns(3)
 
-with col1:
-    pl_options = sorted(all_data['Pl'].unique())
-    selected_pl = st.selectbox('Player', pl_options, 
-                              disabled=(selected_tab == "1 Round / All Players"),
-                              key='page_player_mobile')
+    with col1:
+        pl_options = sorted(all_data['Pl'].unique())
+        selected_pl = st.selectbox('Player', pl_options, 
+                                disabled=(selected_tab == "1 Round / All Players"),
+                                key='page_player_mobile')
 
-with col2:
-    tegnum_options = sorted(all_data['TEGNum'].unique())
-    selected_tegnum = st.selectbox('Tournament', tegnum_options, 
-                                  index=len(tegnum_options)-1,
-                                  key='page_tegnum_mobile')
+    with col2:
+        tegnum_options = sorted(all_data['TEGNum'].unique())
+        selected_tegnum = st.selectbox('Tournament', tegnum_options, 
+                                    index=len(tegnum_options)-1,
+                                    key='page_tegnum_mobile')
 
-with col3:
-    round_options = sorted(all_data[all_data['TEGNum'] == selected_tegnum]['Round'].unique())
-    selected_round = st.selectbox('Round', round_options,
-                                 disabled=(selected_tab == "1 Player / All Rounds"),
-                                 index=len(round_options)-1,
-                                 key='page_round_mobile')
+    with col3:
+        round_options = sorted(all_data[all_data['TEGNum'] == selected_tegnum]['Round'].unique())
+        selected_round = st.selectbox('Round', round_options,
+                                    disabled=(selected_tab == "1 Player / All Rounds"),
+                                    index=len(round_options)-1,
+                                    key='page_round_mobile')
 
-st.markdown("---")
+    # st.markdown("---")
 
 # Tab 1: Single Round (using mobile function)
 if selected_tab == "1 Round / 1 Player":

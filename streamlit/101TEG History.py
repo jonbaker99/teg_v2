@@ -62,10 +62,9 @@ def create_bar_chart(df, x_col, y_col, title):
 st.title("TEG History")
 
 '---'
-st.markdown("### Contents")
+st.markdown("#### Contents")
 st.markdown('1. Number of wins by player')
 st.markdown('2. TEG history')
-st.markdown('3. Doubles')
 '---'
 
 # ==================================
@@ -109,6 +108,8 @@ st.markdown('3. Doubles')
 
 
 # USING TABS
+
+st.markdown("#### Wins by player")
 
 long_labels = [get_trophy_full_name(c) for c in comps]
 all_tabs = st.tabs(long_labels + ["Doubles"])
@@ -154,8 +155,8 @@ st.divider()
 
 
 # Show the table and footnote from the 'history' page
+st.markdown("#### TEG History")
 
-st.subheader("TEG History")
 # st.write(winners.to_html(index=False, justify='left', classes='datawrapper-table history-table'), unsafe_allow_html=True)
 # st.caption('*Green Jacket awarded in TEG 5 for best stableford round; DM had best gross score')
 winners_2 = get_teg_winners(filtered_data)

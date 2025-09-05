@@ -4,7 +4,21 @@ from pathlib import Path
 from streamlit_extras.stylable_container import stylable_container
 
 
-import streamlit as st
+st.markdown(
+    """
+    <style>
+    [data-testid="stSidebar"]::before {
+        content: "The El Golfo";
+        display: block;
+        font-size: 1.8rem;
+        font-weight: bold;
+        padding: 0.6rem 1rem 0.2rem 1rem;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 
 home_page = st.Page("home.py", title="Home")
 history_page = st.Page("101TEG History.py", title="TEG History", icon=":material/trophy:")
@@ -37,17 +51,23 @@ data_diagnostic_pg = st.Page("data_diagnostic_newteg.py", title="Data Diagnostic
 
 #pg = st.navigation([results_page, history_page])
 
+
+
 pg = st.navigation(
         {
             #"Home": [home_page],
             "History": [history_page, results_page],
             "Records & PBs": [records_page, top_pages, pb_page, worsts_page],
-            "Scoring": [byteg_pg, bypar_pg, birdies_pg, streaks_pg, course_rds_pg, course_ave_pg, sc_count_pg, bestball_pg, changes_pg],
+            "Scoring": [byteg_pg, bypar_pg, birdies_pg, streaks_pg, sc_count_pg, bestball_pg, changes_pg],
+            "Courses" :[course_ave_pg, course_rds_pg] ,
             #"Players": [players_pg],
             "Latest TEG": [leaderboard_pg, scorecard_pg, scorecard_mob_pg, latest_rd_page, latest_teg_page, hc_page],
             #"Data":[data_pg, delete_pg, connection_test_pg, data_diagnostic_pg]
             "Data":[data_pg, delete_pg, connection_test_pg]
         }
     )
+
+# st.sidebar.title("The El Golfo")
+# st.sidebar.header("TEG Golf Stats")
 
 pg.run()
