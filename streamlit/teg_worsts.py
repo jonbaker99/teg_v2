@@ -1,11 +1,23 @@
-from utils import get_ranked_teg_data, get_best, get_ranked_round_data, get_ranked_frontback_data, create_stat_section
-from utils import get_complete_teg_data, get_round_data, get_9_data, get_worst
+# === IMPORTS ===
 import streamlit as st
 import pandas as pd
 
-#st.set_page_config(page_title="TEG Records", page_icon="⛳")
+# Import data loading functions from main utils
+from utils import get_round_data, get_9_data, get_worst
+
+# Import worst performance helper functions
+from helpers.worst_performance_processing import (
+    get_performance_measure_titles,
+    load_worst_performance_custom_css,
+    create_worst_performance_section,
+    get_filtered_teg_data
+)
+
+
+# === CONFIGURATION ===
 st.title("TEG Worsts")
 
+# Page contents navigation
 '---'
 st.markdown("### Contents")
 st.markdown('1. Worst TEGs')
@@ -13,121 +25,60 @@ st.markdown('2. Worst Rounds')
 st.markdown('3. Worst 9s')
 '---'
 
-# Custom CSS
-st.markdown("""
-    <style>
-
-    div[data-testid="column"] {
-        background-color: #f0f0f0;
-        border-radius: 10px;
-        padding: 20px;
-        height: 100%;
-    }
-    # div[data-testid="column"]:first-child {
-    #     margin-right: 20px;
-    #     border-right: 1px solid #ccc;
-    #     padding-right: 40px;
-    # }
-    # div[data-testid="column"]:last-child {
-    #     margin-left: 20px;
-    #     padding-left: 40px;
-    # }
-    .stat-section {
-        margin-bottom: 20px;
-        background-color: rgb(240, 242, 246);
-        padding: 20px;
-        margin: 5px;
-    }
-    .stat-section h2 {
-        margin-bottom: 5px;
-        font-size: 22px;
-        line-height: 1.0;
-        color: #333;
-        padding: 0;
-    }
-    .stat-section h2 .title {
-        font-weight: normal;
-    }
-    .stat-section h2 .value {
-        font-weight: bold;
-    }
-    .stat-details {
-        font-size: 16px;
-        color: #999;
-        line-height: 1.4;
-    }
-    .stat-details .Player {
-    #    font-weight: bold;
-        color: #666;
-    }
-    .stat-details .Course {
-    #    font-style: italic;
-    }
-    .stat-details .Year {
-    #    color: #999;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+# load_worst_performance_custom_css() - Loads specialized styling for worst performance displays
+custom_css = load_worst_performance_custom_css()
+st.markdown(custom_css, unsafe_allow_html=True)
 
 
-MEASURE_TITLES = {
-    'Sc': "Worst Score",
-    'GrossVP': "Worst Gross",
-    'NetVP': "Worst Net",
-    'Stableford': "Worst Stableford"
-}
+# === DATA LOADING ===
+# Load TEG data excluding TEG 2 for meaningful worst performance analysis
+# Purpose: TEG 2 is considered anomalous and excluded from worst performance comparisons
+teg_data = get_filtered_teg_data()
 
-def format_value(value, measure):
-    return f"{int(value):+}" if measure in ['GrossVP', 'NetVP'] else str(int(value))
+# Load round data for worst round analysis
+# Purpose: Provides individual round performance data for worst round identification
+round_data = get_round_data()
 
-def prepare_df(best_records, record_type):
-    df = best_records.copy()
-    df['Year'] = df['Year'].astype(str)
-    
-    if record_type in ['round', 'frontback']:
-        df['Round'] = 'R' + df['Round'].astype(str)
-        df['TEG_Round'] = df['TEG'] + ', ' + df['Round']
-        
-        if record_type == 'frontback':
-            df['TEG_Round'] += ' ' + df['FrontBack'] + ' 9'
-        
-        df = df[['Player', 'Course', 'TEG_Round', 'Year']]
-    else:  # TEG
-        df = df[['Player', 'TEG', 'Year']]
-    
-    return df
+# Load 9-hole data for worst 9-hole segment analysis  
+# Purpose: Enables analysis of worst front/back 9 performances
+frontback_data = get_9_data()
+
+# get_performance_measure_titles() - Gets measure title mappings for display
+measure_titles = get_performance_measure_titles()
 
 
-#tegs_ranked = get_ranked_teg_data()
-teg = get_complete_teg_data()
-teg = teg[teg['TEGNum']!=2]
+# === USER INTERFACE ===
+# Worst TEGs section
 st.subheader('Worst TEGs')
-
 for measure in ['GrossVP', 'NetVP', 'Stableford']:
-    worst_records = get_worst(teg, measure_to_use=measure, top_n=1)
-    title = MEASURE_TITLES[measure]
-    value = format_value(worst_records[measure].iloc[0], measure)
-    df = prepare_df(worst_records, 'teg')
-    st.markdown(create_stat_section(title, value, df, "| "), unsafe_allow_html=True)
+    # get_worst() - Finds worst performance records for specified measure
+    worst_records = get_worst(teg_data, measure_to_use=measure, top_n=1)
+    
+    # create_worst_performance_section() - Creates formatted stat section for display
+    stat_section_html = create_worst_performance_section(worst_records, measure, 'teg', measure_titles)
+    st.markdown(stat_section_html, unsafe_allow_html=True)
+
 st.caption('Excludes TEG 2')
 '---'
-#rounds_ranked = get_ranked_round_data()
-rds = get_round_data()
+
+# Worst Rounds section
 st.subheader('Worst Rounds')
 for measure in ['GrossVP', 'Sc', 'NetVP', 'Stableford']:
-    worst_records = get_worst(rds, measure_to_use=measure, top_n=1)
-    title = MEASURE_TITLES[measure]
-    value = format_value(worst_records[measure].iloc[0], measure)
-    df = prepare_df(worst_records, 'round')
-    st.markdown(create_stat_section(title, value, df, "| "), unsafe_allow_html=True)
+    # get_worst() - Finds worst round performance records for specified measure
+    worst_records = get_worst(round_data, measure_to_use=measure, top_n=1)
+    
+    # create_worst_performance_section() - Creates formatted stat section for display
+    stat_section_html = create_worst_performance_section(worst_records, measure, 'round', measure_titles)
+    st.markdown(stat_section_html, unsafe_allow_html=True)
 
 '---'
-frontback = get_9_data()
-#frontback_ranked = get_ranked_frontback_data()
+
+# Worst 9s section
 st.subheader('Worst 9s')
 for measure in ['GrossVP', 'Sc', 'NetVP', 'Stableford']:
-    worst_records = get_worst(frontback, measure_to_use=measure, top_n=1)
-    title = MEASURE_TITLES[measure]
-    value = format_value(worst_records[measure].iloc[0], measure)
-    df = prepare_df(worst_records, 'frontback')
-    st.markdown(create_stat_section(title, value, df, "| "), unsafe_allow_html=True)
+    # get_worst() - Finds worst 9-hole performance records for specified measure
+    worst_records = get_worst(frontback_data, measure_to_use=measure, top_n=1)
+    
+    # create_worst_performance_section() - Creates formatted stat section for display  
+    stat_section_html = create_worst_performance_section(worst_records, measure, 'frontback', measure_titles)
+    st.markdown(stat_section_html, unsafe_allow_html=True)
