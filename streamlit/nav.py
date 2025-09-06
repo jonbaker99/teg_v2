@@ -47,7 +47,7 @@ sc_count_pg = st.Page("sc_count.py", title="Count by score & gross vs par", icon
 bestball_pg = st.Page("bestball.py", title="Bestball and worstball", icon=":material/strategy:")
 changes_pg = st.Page("biggest_changes.py", title="Changes vs previous round", icon=":material/strategy:")
 connection_test_pg = st.Page("test_github_connections.py", title="Github Connection Test", icon=":material/check_circle:")
-data_diagnostic_pg = st.Page("data_diagnostic_newteg.py", title="Data Diagnostic", icon=":material/check_circle:")
+# data_diagnostic_pg = st.Page("data_diagnostic_newteg.py", title="Data Diagnostic", icon=":material/check_circle:")
 
 #pg = st.navigation([results_page, history_page])
 
