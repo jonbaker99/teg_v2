@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Read(/C:\\Users\\jonba/**)"
+      "Read(/C:\\Users\\jonba/**)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []
