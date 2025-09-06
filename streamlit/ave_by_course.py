@@ -1,107 +1,76 @@
-from utils import get_round_data, load_datawrapper_css, datawrapper_table
-from utils import load_course_info
+# === IMPORTS ===
 import streamlit as st
-import pandas as pd, altair as alt
+import pandas as pd
 import numpy as np
+import altair as alt
 
-load_datawrapper_css()
-st.title('Course averages and records')
+# Import data loading functions from main utils
+from utils import get_round_data, load_course_info, load_datawrapper_css, datawrapper_table
 
-all_rd_data = get_round_data(ex_50 = True, ex_incomplete= False)
-rd_data = all_rd_data
-
-course_info = load_course_info()
-unique_areas = sorted(course_info['Area'].unique().tolist())
-all_area_label = 'ALL AREAS'
-area_options = [all_area_label] + unique_areas
-
-selected_area = st.selectbox('Filter by area:', area_options)
-
-if selected_area == all_area_label:
-    # No filtering - use all data
-    rd_data = all_rd_data
-else:
-    # Get courses in the selected area
-    courses_in_area = course_info[course_info['Area'] == selected_area]['Course'].tolist()
-    
-    # Filter rd_data to only include those courses
-    rd_data = all_rd_data[all_rd_data['Course'].isin(courses_in_area)]
-    
-
-# Number of rounds at each course
-course_count = (
-    rd_data[['Course', 'TEG', 'Round']]
-    .drop_duplicates()  # Ensure unique combinations of 'Course', 'TEG', 'Round'
-    .groupby('Course')  # Group by 'Course'
-    .size()  # Count the number of unique 'TEG', 'Round' per 'Course'
-    .reset_index(name='Count')  # Reset index and name the count column
-    .sort_values(by='Count', ascending=False)  # Sort by 'Count'
+# Import course analysis helper functions
+from helpers.course_analysis_processing import (
+    prepare_area_filter_options,
+    filter_data_by_area,
+    calculate_course_round_counts,
+    create_course_performance_table,
+    create_course_summary_table
 )
 
 
-def by_course(df, aggfunc = 'mean'):
-    round_to = 1 if aggfunc == 'mean' else 0
+# === CONFIGURATION ===
+st.title('Course averages and records')
 
-    course_count_df = (
-        df[['Course', 'TEG', 'Round']]
-        .drop_duplicates()  # Ensure unique combinations of 'Course', 'TEG', 'Round'
-        .groupby('Course')  # Group by 'Course'
-        .size()  # Count the number of unique 'TEG', 'Round' per 'Course'
-        .reset_index(name='Count')  # Reset index and name the count column
-        .sort_values(by='Count', ascending=False)  # Sort by 'Count'
-    )
-
-    #print(course_count)
+# Load CSS styling for consistent table appearance
+load_datawrapper_css()
 
 
-    rd_data = df.pivot_table(values='GrossVP', index='Course', columns='Pl', aggfunc=aggfunc)
-    rd_data.loc[:, rd_data.columns != 'Course'] = rd_data.loc[:, rd_data.columns != 'Course'].round(round_to)
-    rd_total = df.groupby('Course').agg({'GrossVP': aggfunc})
-    # if aggfunc == 'mean':
-        #rd_data.loc[:, rd_data.columns != 'Round'] = rd_data.loc[:, rd_data.columns != 'Course'].round(round_to)
-    #else:
-        #rd_data.loc[:, rd_data.columns != 'Round'] = rd_data.loc[:, rd_data.columns != 'Course'].apply(lambda x: int(x) if pd.notna(x) else x)
-    
-    rd_data['Total'] = rd_total
-    rd_data = rd_data.reset_index()
-    rd_data.columns.name = None
+# === DATA LOADING ===
+# Load round data excluding TEG 50 but including incomplete TEGs for current analysis
+# Purpose: Course analysis benefits from including current tournament data for up-to-date averages
+all_rd_data = get_round_data(ex_50=True, ex_incomplete=False)
 
-    def format_number(x):
-        if isinstance(x, str):  # Check if x is already a string
-            return x  # Return the string as is
-        elif pd.isna(x):  # Check if x is NaN
-            return "-"  # You can return any placeholder or message for NaN
-        elif x == 0:
-            return "="  # Return '=' for zero
-        elif round_to == 0:
-            return f"{int(x):+d}"  # Return integer if round_to is 0
-        else:
-            return f"{x:+.{round_to}f}"  # Return floating point formatted string
+# Load course information for area filtering
+# Purpose: Enables geographical analysis by grouping courses into regions/areas
+course_info = load_course_info()
 
-    rd_data = rd_data.applymap(format_number)
-    rd_data = pd.merge(rd_data, course_count_df, on='Course').sort_values(by = 'Count', ascending= False).drop(columns=['Count'])
+# prepare_area_filter_options() - Creates area dropdown options including "ALL AREAS"
+area_options, all_area_label = prepare_area_filter_options(course_info)
 
-    return(rd_data)
 
-mean_rd = by_course(rd_data, 'mean')
-min_rd = by_course(rd_data, 'min')
-max_rd = by_course(rd_data, 'max')
+# === USER INTERFACE ===
+# Area filtering selection
+selected_area = st.selectbox('Filter by area:', area_options)
 
-course_count['Ave'] = mean_rd['Total']
-course_count['Record'] = min_rd['Total']
-course_count['Worst'] = max_rd['Total']
-course_count = course_count.rename(columns={'Count':'Rounds'})
+# filter_data_by_area() - Applies geographical filter to round data
+filtered_rd_data = filter_data_by_area(all_rd_data, course_info, selected_area, all_area_label)
 
-tab1, tab2, tab3, tab4  = st.tabs(["Summary by course","Course average", "Best Rounds", "Worst Rounds"])
+# calculate_course_round_counts() - Counts rounds played at each course
+course_count = calculate_course_round_counts(filtered_rd_data)
+
+# create_course_performance_table() - Creates formatted performance matrices
+# Average performance by course and player
+mean_course_data = create_course_performance_table(filtered_rd_data, 'mean')
+
+# Best performance by course and player  
+min_course_data = create_course_performance_table(filtered_rd_data, 'min')
+
+# Worst performance by course and player
+max_course_data = create_course_performance_table(filtered_rd_data, 'max')
+
+# create_course_summary_table() - Combines key statistics for overview
+course_summary = create_course_summary_table(course_count, mean_course_data, min_course_data, max_course_data)
+
+# Display results in tabs
+tab1, tab2, tab3, tab4 = st.tabs(["Summary by course", "Course average", "Best Rounds", "Worst Rounds"])
 
 with tab1:
-    datawrapper_table(course_count, css_classes='full-width')
+    datawrapper_table(course_summary, css_classes='full-width')
 
 with tab2:
-    datawrapper_table(mean_rd, css_classes='full-width')
+    datawrapper_table(mean_course_data, css_classes='full-width')
 
 with tab3:
-    datawrapper_table(min_rd, css_classes='full-width')
+    datawrapper_table(min_course_data, css_classes='full-width')
 
 with tab4:
-    datawrapper_table(max_rd, css_classes='full-width')
+    datawrapper_table(max_course_data, css_classes='full-width')

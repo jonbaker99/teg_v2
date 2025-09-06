@@ -1,195 +1,126 @@
+# === IMPORTS ===
 import streamlit as st
 import pandas as pd
 import altair as alt
-from utils import load_all_data, get_teg_winners, get_teg_rounds, load_datawrapper_css, get_trophy_full_name
+
+# Import data loading functions from main utils
+from utils import load_all_data, get_teg_winners, get_trophy_full_name, load_datawrapper_css
 from utils_win_tables import summarise_teg_wins, compress_ranges
 
-# === LOAD DATA === #
-all_data = load_all_data(exclude_incomplete_tegs=True, exclude_teg_50=True)
-filtered_data = all_data.copy()
-comps = ['TEG Trophy', 'Green Jacket', 'HMM Wooden Spoon']
+# Import history-specific helper functions
+from helpers.history_data_processing import (
+    process_winners_for_charts,
+    calculate_trophy_jacket_doubles, 
+    prepare_history_table_display,
+    create_bar_chart
+)
 
 
-load_datawrapper_css()
-# CREATE WINNERS TABLE
-
-winners = get_teg_winners(filtered_data).drop(columns=['Year'])
-winner_df = winners.replace(r'\*', '', regex=True)
-
-# === GENERATE DATA FOR CHARTS AND DOUBLES === #
-# Melt the DataFrame for players and competitions in long format
-melted_winners = pd.melt(winner_df, id_vars=['TEG'], value_vars=['TEG Trophy', 'Green Jacket', 'HMM Wooden Spoon'],
-                         var_name='Competition', value_name='Player')
-
-# Group by player and competition, then count the occurrences
-player_wins = melted_winners.groupby(['Player', 'Competition']).size().unstack(fill_value=0).sort_values(by='TEG Trophy', ascending=False)
-player_wins = player_wins[['TEG Trophy', 'Green Jacket', 'HMM Wooden Spoon']]
-player_wins.columns = ['Trophy', 'Jacket', 'Spoon']
-
-# Sort data for each competition
-trophy_sorted = player_wins.sort_values(by='Trophy', ascending=False).reset_index()
-jacket_sorted = player_wins.sort_values(by='Jacket', ascending=False).reset_index()
-spoon_sorted = player_wins.sort_values(by='Spoon', ascending=False).reset_index()
-
-# Find players who won both the Trophy and Jacket in the same TEG
-same_player_both = winner_df[winner_df['TEG Trophy'] == winner_df['Green Jacket']]
-player_doubles = same_player_both['TEG Trophy'].value_counts().reset_index()
-player_doubles.columns = ['Player', 'Doubles']
-player_doubles = player_doubles.sort_values(by='Doubles', ascending=False)
-
-# Find the maximum number of wins across all competitions to set the x-axis range
-max_wins = max(trophy_sorted['Trophy'].max(), jacket_sorted['Jacket'].max(), spoon_sorted['Spoon'].max())
-
-# === FUNCTION TO CREATE A HORIZONTAL BAR CHART === #
-def create_bar_chart(df, x_col, y_col, title):
-    chart = alt.Chart(df).mark_bar().encode(
-        #x=alt.X(x_col, title=None, axis=alt.Axis(grid=False, labels=False, domain=False), scale=alt.Scale(domain=(0, max_wins+2))),
-        x=alt.X(x_col, title=None, axis=alt.Axis(grid=False, labels=False, domain=False)),
-        y=alt.Y(y_col, sort='-x', title=None),
-        #color=alt.value('steelblue')
-    ).properties(
-        title=title,
-        # width=350,
-        height=320
-    )
-    
-    text = chart.mark_text(align='left', baseline='middle', dx=3).encode(text=x_col)
-    
-    return chart + text
-
-# === DISPLAY CONTENT === #
-
+# === CONFIGURATION ===
 st.title("TEG History")
 
-'---'
+# Load CSS styling for consistent table appearance
+load_datawrapper_css()
+
+
+# === PAGE NAVIGATION ===
+st.markdown('---')
 st.markdown("#### Contents")
 st.markdown('1. Number of wins by player')
 st.markdown('2. TEG history')
-'---'
-
-# ==================================
-# ==== Number of wins by player ====
-# ==================================
-
-# === BAR CHART SECTION
-
-# # Show the 3 bar charts from the 'winners' page
-# st.subheader("Competition wins")
-
-# st.markdown(
-#     """
-# <style>
-# button[title="View fullscreen"] {
-#     display: none;
-# }
-# </style>
-# """,
-#     unsafe_allow_html=True,
-# )
-
-# col1, col2, col3 = st.columns(3,gap = 'medium')
-
-# with col1:
-#     trophy_chart = create_bar_chart(trophy_sorted, 'Trophy', 'Player', 'TEG Trophy Wins')
-#     st.altair_chart(trophy_chart, use_container_width=True)
-
-# with col2:
-#     jacket_chart = create_bar_chart(jacket_sorted, 'Jacket', 'Player', 'Green Jacket Wins')
-#     st.altair_chart(jacket_chart, use_container_width=True)
-#     st.caption('*Green Jacket awarded in TEG 5 to SN for best stableford round; DM had best gross score')
-
-# with col3:
-#     spoon_chart = create_bar_chart(spoon_sorted, 'Spoon', 'Player', 'Wooden Spoon Wins')
-#     st.altair_chart(spoon_chart, use_container_width=True)
-
-# st.divider()
-
-# === TABLES USING TABS
+st.markdown('---')
 
 
-# USING TABS
+# === DATA LOADING ===
+# Load complete TEG data (excludes incomplete TEGs and TEG 50)
+# Purpose: Historical analysis requires only completed tournaments for accurate records
+# TEG 50 excluded as it's a special case that shouldn't affect historical statistics
+all_data = load_all_data(exclude_incomplete_tegs=True, exclude_teg_50=True)
 
+# Load winners data for all completed TEGs
+# Purpose: Core dataset showing Trophy, Green Jacket, and Wooden Spoon winners by TEG
+winners_with_year = get_teg_winners(all_data)
+winners_clean = winners_with_year.drop(columns=['Year'])  # Version without year for processing
+
+# Define competition categories for consistent processing
+competitions = ['TEG Trophy', 'Green Jacket', 'HMM Wooden Spoon']
+
+
+# === DATA PROCESSING ===
+# process_winners_for_charts() - Transforms raw winners into chart-ready format
+# Returns sorted datasets for each competition and scaling information
+chart_data = process_winners_for_charts(winners_clean)
+
+# calculate_trophy_jacket_doubles() - Finds rare Trophy+Green Jacket double winners
+# Returns both summary table and total count for display
+doubles_table, doubles_count = calculate_trophy_jacket_doubles(winners_clean)
+
+# prepare_history_table_display() - Creates compact historical table format
+# Combines TEG name and year for cleaner display
+history_display_table = prepare_history_table_display(winners_with_year)
+
+
+# === SECTION 1: WINS BY PLAYER ===
 st.markdown("#### Wins by player")
 
-long_labels = [get_trophy_full_name(c) for c in comps]
+# Create tabs for each competition plus doubles
+long_labels = [get_trophy_full_name(comp) for comp in competitions]
 all_tabs = st.tabs(long_labels + ["Doubles"])
 
-for i, (comp, tab) in enumerate(zip(comps, all_tabs[:3])):
+# Display summary tables for each competition
+for i, (comp, tab) in enumerate(zip(competitions, all_tabs[:3])):
     with tab:
-        # st.write(f"{get_trophy_full_name(comp)} wins")
-        summary_table = summarise_teg_wins(winners, comp)
-        summary_table['TEGs'] = summary_table['TEGs'].str.replace('TEG ', '') # Removes 'TEG' prefix
-        summary_table['TEGs'] = summary_table['TEGs'].apply(compress_ranges, out_sep=", ") # Turns ranges of wins into a range (1,2,3 => 1-3)
-        st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table wins-table'), unsafe_allow_html=True)
+        # summarise_teg_wins() - Creates summary table with win counts and TEG lists
+        summary_table = summarise_teg_wins(winners_clean, comp)
+        
+        # Format TEG names for display (remove 'TEG' prefix, compress ranges)
+        summary_table['TEGs'] = summary_table['TEGs'].str.replace('TEG ', '')
+        # compress_ranges() - Converts "1,2,3" to "1-3" for cleaner display
+        summary_table['TEGs'] = summary_table['TEGs'].apply(compress_ranges, out_sep=", ")
+        
+        # Display formatted table
+        st.write(
+            summary_table.to_html(
+                index=False, 
+                justify='left', 
+                classes='datawrapper-table wins-table'
+            ), 
+            unsafe_allow_html=True
+        )
+        
+        # Add footnote for Green Jacket special case
         if comp == 'Green Jacket':
             st.caption('*Green Jacket awarded in TEG 5 for best stableford round; DM had best gross score')
 
+# Display doubles summary in final tab
 with all_tabs[3]:
-    st.caption(f"There have been {same_player_both.shape[0]} trophy / jacket doubles")
-    st.write(player_doubles.to_html(index=False, justify='left', classes='datawrapper-table'), unsafe_allow_html=True)
+    st.caption(f"There have been {doubles_count} trophy / jacket doubles")
+    st.write(
+        doubles_table.to_html(
+            index=False, 
+            justify='left', 
+            classes='datawrapper-table'
+        ), 
+        unsafe_allow_html=True
+    )
 
 st.divider()
 
-# long_labels = [get_trophy_full_name(c) for c in comps]
 
-# st.subheader("Competition wins by player")
-# tabs = st.tabs(long_labels)
-
-# for comp, tab in zip(comps, tabs):
-#     with tab:
-#         # st.write(f"{get_trophy_full_name(comp)} wins")
-#         summary_table = summarise_teg_wins(winners, comp)
-#         summary_table['TEGs'] = summary_table['TEGs'].str.replace('TEG ', '') # Removes 'TEG' prefix
-#         summary_table['TEGs'] = summary_table['TEGs'].apply(compress_ranges, out_sep=", ") # Turns ranges of wins into a range (1,2,3 => 1-3)
-#         st.write(summary_table.to_html(index=False, justify='left', classes='datawrapper-table wins-table'), unsafe_allow_html=True)
-#         if comp == 'Green Jacket':
-#             st.caption('*Green Jacket awarded in TEG 5 for best stableford round; DM had best gross score')
-
-
-# st.divider()
-
-
-# =============================================
-# ===== TEG HISTORY SECTION
-# ============================================
-
-
-# Show the table and footnote from the 'history' page
+# === SECTION 2: TEG HISTORY TABLE ===
 st.markdown("#### TEG History")
 
-# st.write(winners.to_html(index=False, justify='left', classes='datawrapper-table history-table'), unsafe_allow_html=True)
-# st.caption('*Green Jacket awarded in TEG 5 for best stableford round; DM had best gross score')
-winners_2 = get_teg_winners(filtered_data)
+# Display complete historical table with all winners by TEG
+st.write(
+    history_display_table.to_html(
+        index=False, 
+        justify='left', 
+        classes='datawrapper-table history-table full-width'
+    ), 
+    unsafe_allow_html=True
+)
 
-# ----- THIS BIT HAS SEPARATE COLUMNS FOR YEAR AND TEG
-
-# st.subheader("TEG History")
-# st.write(winners_2.to_html(index=False, justify='left', classes='datawrapper-table history-table-inc-yr full-width'), unsafe_allow_html=True)
-# st.caption('*Green Jacket awarded in TEG 5 for best stableford round; DM had best gross score')
-
-# st.divider()
-
-# ----- THIS BIT COMBINES YEAR AND TEG INTO ONE COLUMN
-
-winners_2["TEG"] = winners_2['TEG'].astype(str) + " (" + winners_2['Year'].astype(str) + ")"
-winners_2 = winners_2.drop(columns=['Year'])
-
-st.write(winners_2.to_html(index=False, justify='left', classes='datawrapper-table history-table full-width'), unsafe_allow_html=True)
+# Add footnote for historical context
 st.caption('*Green Jacket awarded in TEG 5 for best stableford round; DM had best gross score')
 
 st.divider()
-
-# =============================================
-# ===== DOUBLES
-# ============================================
-
-
-# Show the 'Doubles' section from the 'winners' page
-# st.subheader("Doubles")
-# st.caption(f"There have been {same_player_both.shape[0]} trophy / jacket doubles")
-# st.write(player_doubles.to_html(index=False, justify='left', classes='datawrapper-table'), unsafe_allow_html=True)
-
-# st.divider()
-
-
-

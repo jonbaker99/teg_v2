@@ -1,47 +1,56 @@
-from utils import score_type_stats, load_all_data, apply_score_types, max_scoretype_per_round, format_vs_par, load_datawrapper_css
+# === IMPORTS ===
 import streamlit as st
-import pandas as pd, altair as alt
+import pandas as pd
 import numpy as np
+import altair as alt
 
-#st.set_page_config(page_title="TEG Scoring")
-load_datawrapper_css()
+# Import data loading functions from main utils
+from utils import load_all_data, load_datawrapper_css
+
+# Import par analysis helper functions
+from helpers.par_analysis_processing import (
+    prepare_teg_filter_options,
+    filter_data_by_teg,
+    calculate_par_performance_matrix,
+    format_par_performance_table
+)
+
+
+# === CONFIGURATION ===
 st.title('Average score by Par')
 
+# Load CSS styling for consistent table appearance
+load_datawrapper_css()
+
+
+# === DATA LOADING ===
+# Load all TEG data including incomplete tournaments for current analysis
+# Purpose: Par analysis benefits from including current tournament data for up-to-date performance
 all_data = load_all_data(exclude_incomplete_tegs=False)
 
-tegnum_options = ['All TEGs'] + sorted(all_data['TEGNum'].unique().tolist(),reverse=True)
+# prepare_teg_filter_options() - Creates TEG dropdown options including "All TEGs"
+tegnum_options = prepare_teg_filter_options(all_data)
+
+
+# === USER INTERFACE ===
+# TEG filtering selection
 selected_tegnum = st.selectbox('Select TEG', tegnum_options, index=0)
 
-#selected_tegnum = 'All TEGs'
+# filter_data_by_teg() - Applies TEG filter to tournament data
+filtered_data = filter_data_by_teg(all_data, selected_tegnum)
 
-# Filter data based on TEGNum selection
-if selected_tegnum != 'All TEGs':
-    selected_tegnum = int(selected_tegnum)
-    filtered_data = all_data[all_data['TEGNum'] == selected_tegnum]
-else:
-    filtered_data = all_data
+# calculate_par_performance_matrix() - Creates player-by-par performance matrix
+par_performance_matrix = calculate_par_performance_matrix(filtered_data)
 
+# format_par_performance_table() - Formats table with vs-par notation and column names
+formatted_par_table = format_par_performance_table(par_performance_matrix)
 
-
-avg_grossvp = filtered_data.groupby(['Player', 'PAR'])['GrossVP'].mean().unstack(fill_value=0)
-avg_grossvp['Total'] = filtered_data.groupby('Player')['GrossVP'].mean()
-avg_grossvp = avg_grossvp.sort_values('Total', ascending=True)
-avg_grossvp = avg_grossvp.round(2)
-
-
-def format_value(value):
-    if value > 0:
-        return f"+{value:.2f}"
-    elif value < 0:
-        return f"{value:.2f}"
-    else:
-        return "="
-
-for column in avg_grossvp.columns:
-    avg_grossvp[column] = avg_grossvp[column].apply(format_value)
-
-avg_grossvp.reset_index(inplace=True)
-avg_grossvp.columns.name = None
-avg_grossvp.columns = ['Player'] + [f'Par {col}' if col != 'Total' else col for col in avg_grossvp.columns[1:]]
-
-st.write(avg_grossvp.to_html(classes='dataframe, datawrapper-table full-width', index=False, justify='left'), unsafe_allow_html=True)
+# Display formatted performance table
+st.write(
+    formatted_par_table.to_html(
+        classes='dataframe, datawrapper-table full-width', 
+        index=False, 
+        justify='left'
+    ), 
+    unsafe_allow_html=True
+)
