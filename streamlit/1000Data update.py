@@ -3,15 +3,11 @@ import streamlit as st
 import pandas as pd
 import logging
 
-# Import data loading and file operations from main utils
-from utils import (
-    get_google_sheet,
-    check_for_complete_and_duplicate_data,
-    summarise_existing_rd_data,
-    clear_all_caches,
-    ALL_SCORES_PARQUET,
-    ALL_DATA_PARQUET
-)
+# Import data loading and file operations from specialized modules
+from utils_data_input import get_google_sheet
+from utils_data_processing import check_for_complete_and_duplicate_data
+from utils_data_management import summarise_existing_rd_data, clear_all_caches
+from utils import ALL_SCORES_PARQUET, ALL_DATA_PARQUET
 
 # Import data update workflow functions
 from helpers.data_update_processing import (

@@ -4,8 +4,10 @@ import pandas as pd
 from typing import List, Dict, Any
 import logging
 
-# Import data loading functions from main utils
-from utils import get_teg_rounds, get_round_data, load_all_data, load_datawrapper_css
+# Import data loading functions from specialized modules
+from utils_data_retrieval import get_round_data, load_all_data
+from utils_helper_utilities import get_teg_rounds  
+from utils_display_formatting import load_datawrapper_css
 
 # Import chart creation functions
 from make_charts import create_cumulative_graph, adjusted_grossvp, adjusted_stableford

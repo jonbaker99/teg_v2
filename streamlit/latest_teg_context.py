@@ -3,7 +3,8 @@ import streamlit as st
 import pandas as pd
 
 # Import data loading functions from main utils
-from utils import get_ranked_teg_data, load_datawrapper_css
+from utils_data_retrieval import get_ranked_teg_data
+from utils_display_formatting import load_datawrapper_css
 
 # Import latest round/TEG helper functions (shared helper file)
 from helpers.latest_round_processing import (

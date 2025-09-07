@@ -5,7 +5,8 @@ import numpy as np
 import altair as alt
 
 # Import data loading functions from main utils
-from utils import load_all_data, load_datawrapper_css
+from utils_data_retrieval import load_all_data
+from utils_display_formatting import load_datawrapper_css
 
 # Import streak analysis helper functions
 from helpers.streak_analysis_processing import (

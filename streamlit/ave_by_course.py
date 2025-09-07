@@ -4,8 +4,9 @@ import pandas as pd
 import numpy as np
 import altair as alt
 
-# Import data loading functions from main utils
-from utils import get_round_data, load_course_info, load_datawrapper_css, datawrapper_table
+# Import data loading functions from specialized modules
+from utils_data_retrieval import get_round_data, load_course_info
+from utils_display_formatting import load_datawrapper_css, datawrapper_table
 
 # Import course analysis helper functions
 from helpers.course_analysis_processing import (

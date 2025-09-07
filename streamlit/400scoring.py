@@ -4,7 +4,9 @@ import pandas as pd
 import numpy as np
 
 # Import data loading and processing functions from main utils
-from utils import score_type_stats, load_all_data, max_scoretype_per_round, load_datawrapper_css
+from utils_data_retrieval import load_all_data
+from utils_display_formatting import load_datawrapper_css
+from utils import score_type_stats, max_scoretype_per_round
 
 # Import scoring-specific helper functions
 from helpers.scoring_data_processing import (

@@ -1,0 +1,58 @@
+line_number,function_name,full_signature,description,category_preliminary
+25,clear_all_caches,clear_all_caches(),Clears all Streamlit data caches,streamlit_functionality
+30,get_base_directory,get_base_directory(),Get the current working directory,helper_utilities
+66,get_current_branch,get_current_branch(),Gets the current git branch,helper_utilities
+91,read_from_github,read_from_github(file_path),Simple GitHub file reading with proper base64 decoding,core_io
+114,write_to_github,write_to_github(file_path data commit_message="Update data"),GitHub file writing,core_io
+144,read_file,read_file(file_path: str) -> pd.DataFrame,Environment-aware file reading,core_io
+160,write_file,write_file(file_path: str data: pd.DataFrame commit_message: str = "Update data"),Environment-aware file writing,core_io
+176,backup_file,backup_file(source_path backup_path),Create a backup of a file,core_io
+246,load_all_data,load_all_data(exclude_teg_50: bool = True exclude_incomplete_tegs: bool = False) -> pd.DataFrame,Primary cached data loading function,data_retrieval
+267,exclude_incomplete_tegs_function,exclude_incomplete_tegs_function(df: pd.DataFrame) -> pd.DataFrame,Exclude incomplete tournaments from analysis,data_retrieval
+294,get_player_name,get_player_name(initials: str) -> str,Convert player codes to full names,helper_utilities
+307,process_round_for_all_scores,process_round_for_all_scores(long_df: pd.DataFrame hc_long: pd.DataFrame) -> pd.DataFrame,Core scoring calculation engine,data_processing
+360,check_hc_strokes_combinations,check_hc_strokes_combinations(transformed_df: pd.DataFrame) -> pd.DataFrame,Check unique combinations of HC SI and HCStrokes,data_processing
+375,add_cumulative_scores,add_cumulative_scores(df: pd.DataFrame) -> pd.DataFrame,Add cumulative scores and averages,data_processing
+419,save_to_parquet,save_to_parquet(df: pd.DataFrame output_file: str) -> None,Save DataFrame to parquet format,core_io
+431,get_google_sheet,get_google_sheet(sheet_name: str worksheet_name: str) -> pd.DataFrame,Load data from Google Sheets,data_input
+479,reshape_round_data,reshape_round_data(df: pd.DataFrame id_vars: List[str]) -> pd.DataFrame,Reshape round data from wide to long format,data_processing
+504,load_and_prepare_handicap_data,load_and_prepare_handicap_data(file_path: str) -> pd.DataFrame,Load and prepare handicap data from CSV,data_input
+527,summarise_existing_rd_data,summarise_existing_rd_data(existing_rows: pd.DataFrame) -> pd.DataFrame,Summarize existing round data,data_processing
+545,add_round_info,add_round_info(all_data: pd.DataFrame) -> pd.DataFrame,Add round information to the DataFrame,data_processing
+571,update_all_data,update_all_data(csv_file: str parquet_file: str csv_output_file: str) -> None,Load data from CSV apply cumulative scores and save,data_update
+615,check_for_complete_and_duplicate_data,check_for_complete_and_duplicate_data(all_scores_path: str all_data_path: str) -> Dict[str pd.DataFrame],Check for complete and duplicate data,data_validation
+677,get_teg_rounds,get_teg_rounds(TEG: str) -> int,Return number of rounds for a given TEG,helper_utilities
+690,get_tegnum_rounds,get_tegnum_rounds(TEGNum: int) -> int,Return number of rounds for a given TEG number,helper_utilities
+703,format_vs_par,format_vs_par(value: float) -> str,Format value against par,display_formatting
+722,get_teg_winners,get_teg_winners(df: pd.DataFrame) -> pd.DataFrame,Generate TEG winners by TEG,statistical_analysis
+792,aggregate_data,aggregate_data(data: pd.DataFrame aggregation_level: str measures: List[str] = None additional_group_fields: List[str] = None) -> pd.DataFrame,Generalized aggregation function,data_processing
+851,get_complete_teg_data,get_complete_teg_data(),Get complete TEG-level data,data_retrieval
+857,get_teg_data_inc_in_progress,get_teg_data_inc_in_progress(),Get TEG data including in progress,data_retrieval
+863,get_round_data,get_round_data(ex_50 = True ex_incomplete= False),Get round-level data,data_retrieval
+869,get_9_data,get_9_data(),Get 9-hole front/back data,data_retrieval
+875,get_Pl_data,get_Pl_data(),Get player-level data,data_retrieval
+880,list_fields_by_aggregation_level,list_fields_by_aggregation_level(df),List available fields by aggregation level,helper_utilities
+909,add_ranks,add_ranks(df fields_to_rank=None rank_ascending=None),Add ranking columns to DataFrame,statistical_analysis
+976,get_ranked_teg_data,get_ranked_teg_data(),Get TEG data with rankings added,data_retrieval
+982,get_ranked_round_data,get_ranked_round_data(),Get round data with rankings added,data_retrieval
+988,get_ranked_frontback_data,get_ranked_frontback_data(),Get 9-hole data with rankings added,data_retrieval
+993,get_best,get_best(df measure_to_use player_level = False top_n = 1),Find best performances for specified measure,statistical_analysis
+1009,get_worst,get_worst(df measure_to_use player_level = False top_n = 1),Find worst performances for specified measure,statistical_analysis
+1037,ordinal,ordinal(n),Convert numbers to ordinal strings,display_formatting
+1044,safe_ordinal,safe_ordinal(n),Safe ordinal conversion with error handling,display_formatting
+1052,chosen_rd_context,chosen_rd_context(ranked_rd_df teg = 'TEG 16' rd = 4 measure = None),Provide context for specific round,statistical_analysis
+1074,chosen_teg_context,chosen_teg_context(ranked_teg_df teg = 'TEG 15' measure = None),Provide context for specific TEG,statistical_analysis
+1097,create_stat_section,create_stat_section(title value=None df=None divider=None),Create HTML stat sections for display,display_formatting
+1185,define_score_types,define_score_types(gross_vp),Define score types based on GrossVP values,statistical_analysis
+1202,apply_score_types,apply_score_types(df groupby_cols=['Player']),Apply score type definitions to DataFrame,statistical_analysis
+1227,score_type_stats,score_type_stats(df=None),Calculate career statistics for score types,statistical_analysis
+1253,max_scoretype_per_round,max_scoretype_per_round(df = None),Find maximum achievement counts in single rounds,statistical_analysis
+1290,load_css_file,load_css_file(css_file_path: str),Load CSS from file,display_formatting
+1309,load_datawrapper_css,load_datawrapper_css(),Load datawrapper table CSS,display_formatting
+1313,datawrapper_table,datawrapper_table(df left_align=None css_classes=None),Render DataFrame as HTML with datawrapper styling,display_formatting
+1351,get_teg_metadata,get_teg_metadata(teg_num round_num=None),Get TEG metadata from round_info.csv,data_retrieval
+1381,format_date_for_scorecard,format_date_for_scorecard(date_str input_format=None output_format='%d/%m/%y'),Format date string for scorecard display,display_formatting
+1445,get_scorecard_data,get_scorecard_data(teg_num=None round_num=None player_code=None),Get golf data for scorecard generation,data_retrieval
+1503,convert_trophy_name,convert_trophy_name(name: str) -> str,Convert between short and long trophy names,helper_utilities
+1527,get_trophy_full_name,get_trophy_full_name(trophy: str) -> str,Get full name of trophy given short name,helper_utilities
+1549,load_course_info,load_course_info(),Load unique course/area combinations,data_retrieval

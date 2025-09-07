@@ -3,7 +3,8 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 
-from utils import load_all_data, get_scorecard_data, get_teg_metadata, format_date_for_scorecard
+from utils_data_retrieval import load_all_data, get_scorecard_data, get_teg_metadata
+from utils import format_date_for_scorecard
 from scorecard_utils import (
     load_scorecard_css,
     generate_single_round_html_mobile, 

@@ -180,7 +180,8 @@ def get_filtered_teg_data():
         Excludes TEG 2 from worst performance analysis as it's considered anomalous
         Provides clean dataset for meaningful worst performance comparisons
     """
-    from utils import get_complete_teg_data
+    from utils_data_retrieval import get_complete_teg_data
+
     
     teg_data = get_complete_teg_data()
     filtered_teg_data = teg_data[teg_data['TEGNum'] != 2]

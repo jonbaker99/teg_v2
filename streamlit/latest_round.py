@@ -3,7 +3,8 @@ import streamlit as st
 import pandas as pd
 
 # Import data loading functions from main utils
-from utils import get_ranked_round_data, load_all_data, load_datawrapper_css
+from utils_data_retrieval import get_ranked_round_data, load_all_data
+from utils_display_formatting import load_datawrapper_css
 from make_charts import create_round_graph
 
 # Import latest round helper functions

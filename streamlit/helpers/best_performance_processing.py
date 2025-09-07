@@ -54,8 +54,8 @@ def prepare_best_teg_table(teg_data_ranked, selected_measure, selected_friendly_
     # Calculate ranking column name
     rank_measure = f'Rank_within_all_{selected_measure}'
     
-    # Get best performances from utils function
-    from utils import get_best
+    # Get best performances from statistical analysis module
+    from utils_statistical_analysis import get_best
     
     best_tegs = (get_best(teg_data_ranked, selected_measure, player_level=False, top_n=n_keep)
                  .sort_values(by=rank_measure, ascending=True)
@@ -95,8 +95,8 @@ def prepare_best_round_table(rd_data_ranked, selected_measure, selected_friendly
     # Calculate ranking column name
     rank_measure = f'Rank_within_all_{selected_measure}'
     
-    # Get best performances from utils function
-    from utils import get_best
+    # Get best performances from statistical analysis module
+    from utils_statistical_analysis import get_best
     
     best_rounds = (get_best(rd_data_ranked, selected_measure, player_level=False, top_n=n_keep)
                    .sort_values(by=rank_measure, ascending=True)

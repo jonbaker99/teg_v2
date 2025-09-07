@@ -3,8 +3,9 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-# Import data loading functions from main utils
-from utils import get_ranked_teg_data, get_ranked_round_data, load_datawrapper_css
+# Import data loading functions from specialized modules
+from utils_data_retrieval import get_ranked_teg_data, get_ranked_round_data
+from utils_display_formatting import load_datawrapper_css
 
 # Import best performance helper functions
 from helpers.best_performance_processing import (

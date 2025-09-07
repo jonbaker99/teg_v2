@@ -4,7 +4,9 @@ import pandas as pd
 import plotly.express as px
 
 # Import data loading functions from main utils
-from utils import load_all_data, load_datawrapper_css, datawrapper_table
+from utils_data_retrieval import load_all_data
+from utils_display_formatting import load_datawrapper_css
+from utils import datawrapper_table
 
 # Import score count analysis helper functions
 from helpers.score_count_processing import (

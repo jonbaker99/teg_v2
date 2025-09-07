@@ -2,8 +2,10 @@
 import streamlit as st
 import pandas as pd
 
-# Import data loading functions from main utils
-from utils import get_ranked_teg_data, get_best, get_ranked_round_data, get_ranked_frontback_data, create_stat_section
+# Import data loading functions from specialized modules
+from utils_data_retrieval import get_ranked_teg_data, get_ranked_round_data, get_ranked_frontback_data
+from utils_display_formatting import create_stat_section
+from utils_statistical_analysis import get_best
 
 # Import display helper functions and CSS
 # Using helpers/ subdirectory - no conflict with utils.py

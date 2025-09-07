@@ -65,6 +65,11 @@
     text-align: left;
 }
 
+.datawrapper-table.left-third td:nth-child(3),
+.datawrapper-table.left-third th:nth-child(3) {
+    text-align: left;
+}
+
 /* --- Full left align variants */
 
 .datawrapper-table.table-left-align {

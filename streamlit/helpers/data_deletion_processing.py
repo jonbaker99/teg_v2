@@ -10,7 +10,8 @@ This module contains functions for:
 import streamlit as st
 import pandas as pd
 from datetime import datetime
-from utils import read_file, write_file, backup_file, clear_all_caches
+from utils_data_management import clear_all_caches
+from utils_core_io import read_file, write_file, backup_file
 
 
 # State constants for deletion workflow

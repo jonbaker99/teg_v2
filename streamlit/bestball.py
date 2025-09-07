@@ -2,8 +2,9 @@
 import streamlit as st
 import pandas as pd
 
-# Import data loading functions from main utils
-from utils import load_all_data, load_datawrapper_css
+# Import data loading functions from specialized modules
+from utils_data_retrieval import load_all_data
+from utils_display_formatting import load_datawrapper_css
 
 # Import bestball analysis helper functions
 from helpers.bestball_processing import (
@@ -65,7 +66,7 @@ with tab1:
         bestball_output.to_html(
             index=False, 
             justify='left', 
-            classes='datawrapper-table'
+            classes='datawrapper-table left-third'
         ), 
         unsafe_allow_html=True
     )
@@ -76,7 +77,7 @@ with tab2:
         worstball_output.to_html(
             index=False, 
             justify='left', 
-            classes='datawrapper-table'
+            classes='datawrapper-table left-third'
         ), 
         unsafe_allow_html=True
     )

@@ -3,8 +3,11 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 
-# Import data loading functions from main utils
-from utils import load_all_data, get_teg_winners, get_trophy_full_name, load_datawrapper_css
+# Import data loading functions from specialized modules
+from utils_data_retrieval import load_all_data
+from utils_helper_utilities import get_trophy_full_name
+from utils_display_formatting import load_datawrapper_css
+from utils_statistical_analysis import get_teg_winners
 from utils_win_tables import summarise_teg_wins, compress_ranges
 
 # Import history-specific helper functions

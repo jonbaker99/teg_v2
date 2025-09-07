@@ -1,7 +1,8 @@
 from io import StringIO
 import pandas as pd
-from utils import convert_trophy_name, TROPHY_NAME_LOOKUPS_LONGSHORT, TROPHY_NAME_LOOKUPS_SHORTLONG
+from utils import  TROPHY_NAME_LOOKUPS_LONGSHORT, TROPHY_NAME_LOOKUPS_SHORTLONG
 from typing import Iterable, Sequence, Union
+from utils_helper_utilities import convert_trophy_name
 
 def summarise_teg_wins(df, column_name):
     """

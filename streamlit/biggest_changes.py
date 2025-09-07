@@ -1,4 +1,6 @@
-from utils import get_round_data, load_datawrapper_css, datawrapper_table
+from utils_data_retrieval import get_round_data
+from utils_display_formatting import load_datawrapper_css
+from utils import datawrapper_table
 import streamlit as st
 
 load_datawrapper_css()

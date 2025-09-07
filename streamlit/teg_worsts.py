@@ -2,8 +2,9 @@
 import streamlit as st
 import pandas as pd
 
-# Import data loading functions from main utils
-from utils import get_round_data, get_9_data, get_worst
+# Import data loading functions from specialized modules
+from utils_data_retrieval import get_round_data, get_9_data
+from utils_statistical_analysis import get_worst
 
 # Import worst performance helper functions
 from helpers.worst_performance_processing import (

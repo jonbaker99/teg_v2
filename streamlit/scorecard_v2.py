@@ -5,7 +5,8 @@ import numpy as np
 from pathlib import Path
 
 # Import data loading functions from main utils
-from utils import load_all_data, get_scorecard_data, get_teg_metadata, format_date_for_scorecard
+from utils_data_retrieval import load_all_data, get_scorecard_data, get_teg_metadata
+from utils import format_date_for_scorecard
 
 # Import scorecard generation functions (existing utilities)
 from scorecard_utils import (

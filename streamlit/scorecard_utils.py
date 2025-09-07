@@ -6,7 +6,8 @@ Converts pandas DataFrames to beautiful HTML golf scorecards
 import streamlit as st
 import pandas as pd
 from pathlib import Path
-from utils import get_scorecard_data, get_teg_metadata, format_date_for_scorecard
+from utils_data_retrieval import get_scorecard_data, get_teg_metadata
+from utils import format_date_for_scorecard
 
 date_format = '%d %B %Y'
 

@@ -2,8 +2,10 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import os
-from utils import get_base_directory, load_datawrapper_css, HANDICAPS_CSV
-from utils import read_file
+from utils import HANDICAPS_CSV
+from utils_core_io import read_file
+from utils_helper_utilities import get_base_directory
+from utils_display_formatting import load_datawrapper_css
 
 
 
