@@ -33,6 +33,7 @@ def load_records_page_css():
         }
         
         .stat-section h2 {
+            # font-family: monospace;
             margin-bottom: 5px;
             font-size: 22px;
             line-height: 1.0;
@@ -46,16 +47,19 @@ def load_records_page_css():
         
         .stat-section h2 .value {
             font-weight: bold;
+            # font-family: monospace;
         }
         
         .stat-details {
+            font-family: monospace;
             font-size: 16px;
             color: #999;
+            # color: #666;
             line-height: 1.4;
         }
         
         .stat-details .Player {
-            color: #666;
+            # color: #666;
         }
         
         </style>

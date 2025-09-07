@@ -29,7 +29,7 @@ worsts_page = st.Page("teg_worsts.py", title="TEG Worsts", icon=":material/senti
 hc_page = st.Page("500Handicaps.py", title="Handicaps", icon=":material/accessible:") 
 latest_rd_page = st.Page("latest_round.py", title="Latest Round in context", icon=":material/sports_golf:")
 latest_teg_page = st.Page("latest_teg_context.py", title="Latest TEG in context", icon=":material/sports_golf:")
-top_pages = st.Page("301Best_TEGs_and_Rounds.py", title="Best TEGs and Rounds", icon=":material/social_leaderboard:")
+top_pages = st.Page("301Best_TEGs_and_Rounds.py", title="Top TEGs and Rounds", icon=":material/social_leaderboard:")
 scoring_pg = st.Page("400scoring.py", title="Scoring", icon=":material/strategy:")
 birdies_pg = st.Page("birdies_etc.py", title="Eagles / Birdies / Pars", icon=":material/strategy:")
 bypar_pg = st.Page("ave_by_par.py", title="Average by par", icon=":material/strategy:")
@@ -42,23 +42,18 @@ delete_pg = st.Page("delete_data.py", title="Delete data", icon=":material/skull
 leaderboard_pg = st.Page("leaderboard.py", title="Latest Leaderboard", icon=":material/leaderboard:")
 scorecard_pg = st.Page("scorecard_v2.py", title="Scorecard", icon=":material/leaderboard:")
 scorecard_mob_pg = st.Page("scorecard_v2_mobile.py", title="Scorecard (mobile)", icon=":material/leaderboard:")
-#players_pg = st.Page("pages/players.py", title="The Players")
 sc_count_pg = st.Page("sc_count.py", title="Count by score & gross vs par", icon=":material/strategy:")
 bestball_pg = st.Page("bestball.py", title="Bestball and worstball", icon=":material/strategy:")
 changes_pg = st.Page("biggest_changes.py", title="Changes vs previous round", icon=":material/strategy:")
 connection_test_pg = st.Page("test_github_connections.py", title="Github Connection Test", icon=":material/check_circle:")
-# data_diagnostic_pg = st.Page("data_diagnostic_newteg.py", title="Data Diagnostic", icon=":material/check_circle:")
-
-#pg = st.navigation([results_page, history_page])
-
 
 
 pg = st.navigation(
         {
             #"Home": [home_page],
             "History": [history_page, results_page],
-            "Records & PBs": [records_page, top_pages, pb_page, worsts_page],
-            "Scoring": [byteg_pg, bypar_pg, birdies_pg, streaks_pg, sc_count_pg, bestball_pg, changes_pg],
+            "Records & PBs": [records_page, worsts_page, top_pages, pb_page],
+            "Scoring": [bypar_pg, birdies_pg, streaks_pg, sc_count_pg,byteg_pg,  bestball_pg, changes_pg],
             "Courses" :[course_ave_pg, course_rds_pg] ,
             #"Players": [players_pg],
             "Latest TEG": [leaderboard_pg, scorecard_pg, scorecard_mob_pg, latest_rd_page, latest_teg_page, hc_page],
@@ -66,8 +61,5 @@ pg = st.navigation(
             "Data":[data_pg, delete_pg, connection_test_pg]
         }
     )
-
-# st.sidebar.title("The El Golfo")
-# st.sidebar.header("TEG Golf Stats")
 
 pg.run()

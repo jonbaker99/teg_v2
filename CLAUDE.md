@@ -100,3 +100,18 @@ Always use the centralized `read_file()` function from `utils.py` which handles 
 - Subsequent loads are fast (cached data)
 - Cache shared across all users on Railway instance
 - Manual cache clearing ensures data freshness after updates
+
+## Design Philosophy
+
+### Core Development Principles
+- **Start with the simplest solution that works** - Don't over-engineer
+- **Use existing patterns and components from the codebase** - Maintain consistency
+- **Only add complexity when absolutely necessary** - Resist feature creep
+- **Prefer minimal, focused changes over comprehensive rewrites** UNLESS a rewrite will significantly simplify the codebase
+- **Ask "What's the smallest change that solves this?" before implementing** - Think minimalism first
+
+### Development Approach
+- Build incrementally on existing patterns
+- Prioritize code maintainability over clever solutions  
+- Test changes thoroughly before expanding scope
+- Document the reasoning behind architectural decisions

@@ -20,7 +20,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Page constants
-PAGE_TITLE = "Golf Scores"
+PAGE_TITLE = "TEG Results"
 PAGE_ICON = "⛳"
 MEASURES = ['Sc', 'GrossVP', 'NetVP', 'Stableford']
 PLAYER_COLUMN = 'Player'

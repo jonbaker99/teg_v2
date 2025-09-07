@@ -13,6 +13,10 @@ from helpers.worst_performance_processing import (
     get_filtered_teg_data
 )
 
+# Import display helper functions and CSS -> reuse from records page
+from helpers.records_css import load_records_page_css
+
+
 
 # === CONFIGURATION ===
 st.title("TEG Worsts")
@@ -25,9 +29,8 @@ st.markdown('2. Worst Rounds')
 st.markdown('3. Worst 9s')
 '---'
 
-# load_worst_performance_custom_css() - Loads specialized styling for worst performance displays
-custom_css = load_worst_performance_custom_css()
-st.markdown(custom_css, unsafe_allow_html=True)
+# Load page-specific CSS styling
+load_records_page_css()
 
 
 # === DATA LOADING ===

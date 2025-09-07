@@ -475,33 +475,6 @@ def get_google_sheet(sheet_name: str, worksheet_name: str) -> pd.DataFrame:
         st.error(f"Error fetching data: {e}")
         raise
 
-def get_google_sheet_old(sheet_name: str, worksheet_name: str) -> pd.DataFrame:
-    """
-    Load data from a specified Google Sheet and worksheet using credentials stored in Streamlit secrets.
-    """
-    logger.info(f"Fetching data from Google Sheet: {sheet_name}, Worksheet: {worksheet_name}")
-    
-    # Define the required scope for Google Sheets and Drive access
-    SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-
-    try:
-        # Use service account info from Streamlit secrets
-        service_account_info = st.secrets["google"]
-        creds = Credentials.from_service_account_info(service_account_info, scopes=SCOPE)
-        
-        # Authorize and access the Google Sheets API
-        client = gspread.authorize(creds)
-        sheet = client.open(sheet_name).worksheet(worksheet_name)
-        
-        # Fetch data from the sheet
-        data = sheet.get_all_records()
-        df = pd.DataFrame(data)
-        logger.info("Data fetched successfully from Google Sheets.")
-        return df
-    except Exception as e:
-        logger.error(f"Error fetching data from Google Sheets: {e}")
-        st.error(f"Error fetching data: {e}")
-        raise
 
 def reshape_round_data(df: pd.DataFrame, id_vars: List[str]) -> pd.DataFrame:
     """
@@ -1031,23 +1004,6 @@ def get_best(df, measure_to_use, player_level = False, top_n = 1):
     measure_fn = 'Rank_within_' + ('player' if player_level else 'all') + f'_{measure_to_use}' 
 
     #measure_fn
-    return df[df[measure_fn] == top_n]
-
-
-def get_best(df, measure_to_use, player_level = False, top_n = 1):
-    valid_measures = ['Sc', 'GrossVP', 'NetVP', 'Stableford']
-    if measure_to_use not in valid_measures:
-        error_message = f"Invalid measure: '{measure_to_use}'. Valid options are: {', '.join(valid_measures)}"
-
-    if player_level is None:
-        player_level = False
-
-    if top_n is None:
-        top_n = 1
-    
-    measure_fn = 'Rank_within_' + ('player' if player_level else 'all') + f'_{measure_to_use}' 
-
-    #measure_fn
     return df[df[measure_fn] <= top_n]
 
 def get_worst(df, measure_to_use, player_level = False, top_n = 1):
@@ -1139,8 +1095,6 @@ def chosen_teg_context(ranked_teg_df, teg = 'TEG 15', measure = None):
 
 
 def create_stat_section(title, value=None, df=None, divider=None):
-
-
     """
     Creates an HTML string representing a stat section with a title, optional value, and details from a DataFrame.
 
@@ -1181,7 +1135,7 @@ def create_stat_section(title, value=None, df=None, divider=None):
     <div class="stat-section">
         <h2><span class='title'>Top Score</span><span class='value'> 95</span></h2>
         <div class="stat-details">
-            <strong><span class='name'>John Doe</span> • <span class='score'>95</span> • <span class='date'>2023-05-01</span></strong>
+            <strong><span class='name'>John Doe</span></strong> • <span class='score'>95</span> • <span class='date'>2023-05-01</span>
         </div>
     </div>
     """
@@ -1194,16 +1148,25 @@ def create_stat_section(title, value=None, df=None, divider=None):
     if value is not None:
         title_html += f"<span class='value'> {value}</span>"
     title_html += "</h2>"
-    
+
     # Create the details part from the DataFrame
     details_html = ""
     if df is not None and not df.empty:
         rows = []
         for _, row in df.iterrows():
-            row_str = f" {divider}".join(f"<span class='{col}'>{row[col]}</span>" for col in df.columns)
-            rows.append(f"<strong>{row_str}</strong>")
+            # Make only the Player element strong
+            player_html = f"<strong><span class='Player'>{row['Player']}</span></strong>"
+            # Format other elements normally
+            other_elements = [
+                f"<span class='{col}'>{row[col]}</span>"
+                for col in df.columns if col != 'Player'
+            ]
+            # Join all elements with the divider
+            row_elements = [player_html] + other_elements
+            row_str = f" {divider}".join(row_elements)
+            rows.append(row_str)
         details_html = "<br>".join(rows)
-    
+
     # Combine all parts
     return f"""
     <div class="stat-section">
@@ -1213,6 +1176,7 @@ def create_stat_section(title, value=None, df=None, divider=None):
         </div>
     </div>
     """
+
 
 # utils.py
 
