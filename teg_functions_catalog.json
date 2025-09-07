@@ -1,0 +1,791 @@
+{
+  "metadata": {
+    "generated_date": "2025-09-07",
+    "description": "Comprehensive catalog of all functions in the TEG golf tournament analysis codebase",
+    "structure": "Functions organized by category and functional purpose",
+    "total_functions": 148
+  },
+  
+  "core_data_loading": {
+    "description": "Functions for reading, writing, and managing data from various sources",
+    "functions": [
+      {
+        "name": "read_file",
+        "file": "utils.py",
+        "line": 144,
+        "arguments": ["file_path: str"],
+        "returns": "pd.DataFrame",
+        "description": "Environment-aware data loading (local/GitHub) for CSV/Parquet files",
+        "used_by": ["Most pages that load tournament data"]
+      },
+      {
+        "name": "write_file", 
+        "file": "utils.py",
+        "line": 160,
+        "arguments": ["file_path: str", "data: pd.DataFrame", "commit_message: str = 'Update data'"],
+        "returns": "None",
+        "description": "Environment-aware data writing (local/GitHub) for CSV/Parquet files",
+        "used_by": ["1000Data update.py", "delete_data.py"]
+      },
+      {
+        "name": "read_from_github",
+        "file": "utils.py", 
+        "line": 91,
+        "arguments": ["file_path"],
+        "returns": "pd.DataFrame",
+        "description": "Direct GitHub API file reading with base64 decoding",
+        "used_by": ["read_file"]
+      },
+      {
+        "name": "write_to_github",
+        "file": "utils.py",
+        "line": 114, 
+        "arguments": ["file_path", "data", "commit_message='Update data'"],
+        "returns": "None",
+        "description": "Direct GitHub API file writing with commit functionality",
+        "used_by": ["write_file"]
+      },
+      {
+        "name": "load_all_data",
+        "file": "utils.py",
+        "line": 246,
+        "arguments": ["exclude_teg_50: bool = True", "exclude_incomplete_tegs: bool = False"],
+        "returns": "pd.DataFrame",
+        "description": "Main cached data loading function with filtering options",
+        "used_by": ["Most analysis pages"]
+      },
+      {
+        "name": "get_google_sheet",
+        "file": "utils.py",
+        "line": 431,
+        "arguments": ["sheet_name: str", "worksheet_name: str"],
+        "returns": "pd.DataFrame", 
+        "description": "Google Sheets data loading using service account credentials",
+        "used_by": ["1000Data update.py"]
+      },
+      {
+        "name": "backup_file",
+        "file": "utils.py",
+        "line": 176,
+        "arguments": ["source_path", "backup_path"],
+        "returns": "None",
+        "description": "Create timestamped backups of data files",
+        "used_by": ["delete_data.py", "data_deletion_processing.py"]
+      }
+    ]
+  },
+
+  "data_processing": {
+    "description": "Functions for transforming raw data into analysis-ready formats", 
+    "functions": [
+      {
+        "name": "process_round_for_all_scores",
+        "file": "utils.py",
+        "line": 307,
+        "arguments": ["long_df: pd.DataFrame", "hc_long: pd.DataFrame"],
+        "returns": "pd.DataFrame",
+        "description": "Core scoring calculation: handicap strokes, net scores, Stableford points",
+        "used_by": ["1000Data update.py", "data_update_processing.py"]
+      },
+      {
+        "name": "add_cumulative_scores",
+        "file": "utils.py", 
+        "line": 375,
+        "arguments": ["df: pd.DataFrame"],
+        "returns": "pd.DataFrame",
+        "description": "Add running totals and averages across rounds, TEGs, and career",
+        "used_by": ["update_all_data"]
+      },
+      {
+        "name": "aggregate_data",
+        "file": "utils.py",
+        "line": 819, 
+        "arguments": ["data: pd.DataFrame", "aggregation_level: str", "measures: List[str] = None", "additional_group_fields: List[str] = None"],
+        "returns": "pd.DataFrame",
+        "description": "Generalized data aggregation by Player/TEG/Round/FrontBack/Hole levels",
+        "used_by": ["get_complete_teg_data", "get_round_data", "get_9_data", "get_Pl_data"]
+      },
+      {
+        "name": "reshape_round_data",
+        "file": "utils.py",
+        "line": 506,
+        "arguments": ["df: pd.DataFrame", "id_vars: List[str]"],
+        "returns": "pd.DataFrame", 
+        "description": "Convert wide-format round data to long format by hole",
+        "used_by": ["data_update_processing.py"]
+      },
+      {
+        "name": "add_ranks",
+        "file": "utils.py",
+        "line": 936,
+        "arguments": ["df", "fields_to_rank=None", "rank_ascending=None"], 
+        "returns": "pd.DataFrame",
+        "description": "Add ranking columns for scoring metrics within player and across all",
+        "used_by": ["get_ranked_teg_data", "get_ranked_round_data", "get_ranked_frontback_data"]
+      },
+      {
+        "name": "add_round_info",
+        "file": "utils.py",
+        "line": 572,
+        "arguments": ["all_data: pd.DataFrame"],
+        "returns": "pd.DataFrame",
+        "description": "Merge course and date information from round_info.csv",
+        "used_by": ["update_all_data"]
+      }
+    ]
+  },
+
+  "display_formatting": {
+    "description": "Functions for formatting data and values for display",
+    "functions": [
+      {
+        "name": "format_vs_par",
+        "file": "utils.py",
+        "line": 730,
+        "arguments": ["value: float"],
+        "returns": "str",
+        "description": "Format vs-par scores as +3, -2, or = for display",
+        "used_by": ["Various display functions"]
+      },
+      {
+        "name": "format_record_value",
+        "file": "helpers/display_helpers.py",
+        "line": 24,
+        "arguments": ["value", "measure"],
+        "returns": "str", 
+        "description": "Format record values based on measure type (GrossVP, NetVP, Sc, Stableford)",
+        "used_by": ["Records pages"]
+      },
+      {
+        "name": "format_vs_par_value",
+        "file": "helpers/scoring_data_processing.py", 
+        "line": 16,
+        "arguments": ["value"],
+        "returns": "str",
+        "description": "Format vs-par values with decimal precision for scoring analysis",
+        "used_by": ["prepare_average_scores_by_par"]
+      },
+      {
+        "name": "format_date_for_scorecard",
+        "file": "utils.py",
+        "line": 1417,
+        "arguments": ["date_str", "input_format=None", "output_format='%d/%m/%y'"],
+        "returns": "str",
+        "description": "Flexible date formatting with UK conventions for scorecards",
+        "used_by": ["Scorecard generation functions"]
+      },
+      {
+        "name": "create_stat_section",
+        "file": "utils.py", 
+        "line": 1141,
+        "arguments": ["title", "value=None", "df=None", "divider=None"],
+        "returns": "str",
+        "description": "Generate HTML stat sections with title, value, and detail rows",
+        "used_by": ["Records and analysis pages"]
+      },
+      {
+        "name": "datawrapper_table",
+        "file": "utils.py",
+        "line": 1349,
+        "arguments": ["df", "left_align=None", "css_classes=None"],
+        "returns": "None",
+        "description": "Render DataFrame as styled HTML table with datawrapper styling",
+        "used_by": ["Many pages for table display"]
+      }
+    ]
+  },
+
+  "scorecard_generation": {
+    "description": "Functions for generating HTML golf scorecards in various formats",
+    "functions": [
+      {
+        "name": "generate_single_round_html",
+        "file": "scorecard_utils.py",
+        "line": 144,
+        "arguments": ["player_code", "teg_num", "round_num", "title=None", "subheader=None"],
+        "returns": "str",
+        "description": "Generate desktop HTML for single player round scorecard",
+        "used_by": ["scorecard_v2.py"]
+      },
+      {
+        "name": "generate_tournament_html", 
+        "file": "scorecard_utils.py",
+        "line": 297,
+        "arguments": ["player_code", "teg_num", "title=None", "subheader=None"],
+        "returns": "str",
+        "description": "Generate desktop HTML for single player tournament view (all rounds)",
+        "used_by": ["scorecard_v2.py"]
+      },
+      {
+        "name": "generate_round_comparison_html",
+        "file": "scorecard_utils.py", 
+        "line": 450,
+        "arguments": ["teg_num", "round_num", "title=None", "subheader=None"],
+        "returns": "str",
+        "description": "Generate desktop HTML for multi-player round comparison",
+        "used_by": ["scorecard_v2.py"]
+      },
+      {
+        "name": "generate_single_round_html_mobile",
+        "file": "scorecard_utils.py",
+        "line": 650, 
+        "arguments": ["player_code", "teg_num", "round_num", "title=None", "subheader=None"],
+        "returns": "str",
+        "description": "Generate mobile HTML for single round (holes as rows)",
+        "used_by": ["scorecard_v2_mobile.py"]
+      },
+      {
+        "name": "generate_tournament_html_mobile",
+        "file": "scorecard_utils.py",
+        "line": 790,
+        "arguments": ["player_code", "teg_num", "title=None", "subheader=None"],
+        "returns": "str", 
+        "description": "Generate mobile HTML for tournament view (holes as rows, rounds as columns)",
+        "used_by": ["scorecard_v2_mobile.py"]
+      },
+      {
+        "name": "generate_round_comparison_html_mobile", 
+        "file": "scorecard_utils.py",
+        "line": 1028,
+        "arguments": ["teg_num", "round_num", "title=None", "subheader=None"],
+        "returns": "str",
+        "description": "Generate mobile HTML for multi-player comparison (holes as rows)",
+        "used_by": ["scorecard_v2_mobile.py"]
+      },
+      {
+        "name": "get_scorecard_data",
+        "file": "utils.py",
+        "line": 1481,
+        "arguments": ["teg_num=None", "round_num=None", "player_code=None"],
+        "returns": "pd.DataFrame",
+        "description": "Get filtered and sorted golf data for scorecard generation",
+        "used_by": ["All scorecard generation functions"]
+      },
+      {
+        "name": "load_scorecard_css",
+        "file": "scorecard_utils.py",
+        "line": 131,
+        "arguments": [],
+        "returns": "bool",
+        "description": "Load and inject scorecard CSS styling into Streamlit",
+        "used_by": ["scorecard_v2.py", "scorecard_v2_mobile.py"]
+      }
+    ]
+  },
+
+  "chart_visualization": {
+    "description": "Functions for creating interactive charts and visualizations",
+    "functions": [
+      {
+        "name": "create_cumulative_graph",
+        "file": "make_charts.py", 
+        "line": 26,
+        "arguments": ["df", "chosen_teg", "y_series", "title", "y_calculation=None", "y_axis_label=None", "chart_type='default'"],
+        "returns": "plotly.graph_objects.Figure",
+        "description": "Create cumulative scoring charts across full tournament rounds",
+        "used_by": ["latest_teg_context.py", "latest_round.py"]
+      },
+      {
+        "name": "create_round_graph",
+        "file": "make_charts.py",
+        "line": 111, 
+        "arguments": ["df", "chosen_teg", "chosen_round", "y_series", "title", "y_calculation=None", "y_axis_label=None", "chart_type='default'"],
+        "returns": "plotly.graph_objects.Figure",
+        "description": "Create hole-by-hole scoring charts for single round",
+        "used_by": ["latest_round.py"]
+      },
+      {
+        "name": "add_round_annotations",
+        "file": "make_charts.py",
+        "line": 6,
+        "arguments": ["fig", "max_round"],
+        "returns": "None",
+        "description": "Add round dividers and labels to cumulative charts",
+        "used_by": ["create_cumulative_graph"]
+      },
+      {
+        "name": "adjusted_stableford",
+        "file": "make_charts.py",
+        "line": 103,
+        "arguments": ["data"],
+        "returns": "pandas.Series",
+        "description": "Calculate adjusted Stableford scores for comparison charts",
+        "used_by": ["Chart creation with custom y-calculations"]
+      },
+      {
+        "name": "adjusted_grossvp",
+        "file": "make_charts.py",
+        "line": 106,
+        "arguments": ["data"], 
+        "returns": "pandas.Series",
+        "description": "Calculate adjusted gross vs par for comparison charts",
+        "used_by": ["Chart creation with custom y-calculations"]
+      },
+      {
+        "name": "create_percentage_distribution_chart",
+        "file": "helpers/score_count_processing.py",
+        "line": 101,
+        "arguments": ["df", "teg_desc", "par_desc"],
+        "returns": "plotly.graph_objects.Figure",
+        "description": "Create percentage distribution charts for score analysis",
+        "used_by": ["sc_count.py"]
+      },
+      {
+        "name": "create_bar_chart",
+        "file": "helpers/history_data_processing.py",
+        "line": 122,
+        "arguments": ["df", "x_col", "y_col", "title"],
+        "returns": "plotly.express figure",
+        "description": "Create simple bar charts for trophy wins visualization",
+        "used_by": ["101TEG History.py"]
+      }
+    ]
+  },
+
+  "helper_utilities": {
+    "description": "General utility functions used across the application",
+    "functions": [
+      {
+        "name": "get_player_name",
+        "file": "utils.py",
+        "line": 294,
+        "arguments": ["initials: str"],
+        "returns": "str",
+        "description": "Convert player initials to full names using PLAYER_DICT",
+        "used_by": ["Data processing functions"]
+      },
+      {
+        "name": "get_current_branch",
+        "file": "utils.py",
+        "line": 66,
+        "arguments": [],
+        "returns": "str", 
+        "description": "Get current git branch for Railway/local environments",
+        "used_by": ["GitHub operations"]
+      },
+      {
+        "name": "get_base_directory",
+        "file": "utils.py",
+        "line": 30,
+        "arguments": [],
+        "returns": "Path",
+        "description": "Determine project root directory for path resolution",
+        "used_by": ["File operations"]
+      },
+      {
+        "name": "ordinal",
+        "file": "utils.py",
+        "line": 1081,
+        "arguments": ["n"],
+        "returns": "str",
+        "description": "Convert numbers to ordinal strings (1st, 2nd, 3rd, etc.)",
+        "used_by": ["Ranking displays"]
+      },
+      {
+        "name": "safe_ordinal", 
+        "file": "utils.py",
+        "line": 1088,
+        "arguments": ["n"],
+        "returns": "str",
+        "description": "Safe ordinal conversion handling NaN and invalid values",
+        "used_by": ["chosen_rd_context", "chosen_teg_context"]
+      },
+      {
+        "name": "convert_trophy_name",
+        "file": "utils.py",
+        "line": 1539,
+        "arguments": ["name: str"],
+        "returns": "str",
+        "description": "Convert between short and long trophy names (trophy <-> TEG Trophy)",
+        "used_by": ["utils_win_tables.py"]
+      },
+      {
+        "name": "compress_ranges",
+        "file": "utils_win_tables.py",
+        "line": 51,
+        "arguments": ["data", "sep=','", "out_sep=', '", "sort=True", "dedupe=True"],
+        "returns": "str",
+        "description": "Compress consecutive integers into ranges (1,2,3,5,6 -> 1-3, 5-6)",
+        "used_by": ["Trophy wins display"]
+      }
+    ]
+  },
+
+  "state_management": {
+    "description": "Functions for managing Streamlit session state and page workflows",
+    "functions": [
+      {
+        "name": "initialize_update_state", 
+        "file": "helpers/data_update_processing.py",
+        "line": 38,
+        "arguments": ["force_reset=False"],
+        "returns": "None",
+        "description": "Initialize session state for data update workflow",
+        "used_by": ["1000Data update.py"]
+      },
+      {
+        "name": "initialize_deletion_state",
+        "file": "helpers/data_deletion_processing.py",
+        "line": 22,
+        "arguments": ["force_reset=False"],
+        "returns": "None",
+        "description": "Initialize session state for data deletion workflow",
+        "used_by": ["delete_data.py"]
+      },
+      {
+        "name": "initialize_round_selection_state",
+        "file": "helpers/latest_round_processing.py", 
+        "line": 36,
+        "arguments": [],
+        "returns": "None",
+        "description": "Initialize session state for round selection controls",
+        "used_by": ["latest_round.py"]
+      },
+      {
+        "name": "initialize_teg_selection_state",
+        "file": "helpers/latest_round_processing.py",
+        "line": 186,
+        "arguments": [],
+        "returns": "None",
+        "description": "Initialize session state for TEG selection controls",
+        "used_by": ["latest_teg_context.py"]
+      },
+      {
+        "name": "initialize_scorecard_session_state",
+        "file": "helpers/scorecard_data_processing.py",
+        "line": 153,
+        "arguments": [],
+        "returns": "None",
+        "description": "Initialize session state for scorecard page controls",
+        "used_by": ["scorecard_v2.py"]
+      },
+      {
+        "name": "clear_all_caches",
+        "file": "utils.py",
+        "line": 25,
+        "arguments": [],
+        "returns": "None",
+        "description": "Clear all Streamlit data caches after updates",
+        "used_by": ["Data update and deletion operations"]
+      }
+    ]
+  },
+
+  "file_management": {
+    "description": "Functions for file operations, backups, and data integrity",
+    "functions": [
+      {
+        "name": "update_all_data",
+        "file": "utils.py",
+        "line": 598,
+        "arguments": ["csv_file: str", "parquet_file: str", "csv_output_file: str"],
+        "returns": "None",
+        "description": "Complete data pipeline: load, process, add cumulative stats, save",
+        "used_by": ["1000Data update.py"]
+      },
+      {
+        "name": "save_to_parquet",
+        "file": "utils.py",
+        "line": 419,
+        "arguments": ["df: pd.DataFrame", "output_file: str"],
+        "returns": "None",
+        "description": "Save DataFrame to Parquet file with environment awareness",
+        "used_by": ["update_all_data"]
+      },
+      {
+        "name": "check_for_complete_and_duplicate_data",
+        "file": "utils.py",
+        "line": 642,
+        "arguments": ["all_scores_path: str", "all_data_path: str"],
+        "returns": "Dict[str, pd.DataFrame]",
+        "description": "Comprehensive data integrity checking for incomplete/duplicate records",
+        "used_by": ["Data validation workflows"]
+      },
+      {
+        "name": "create_timestamped_backups",
+        "file": "helpers/data_deletion_processing.py",
+        "line": 79,
+        "arguments": [],
+        "returns": "None",
+        "description": "Create timestamped backups of main data files before deletion",
+        "used_by": ["delete_data.py"]
+      }
+    ]
+  },
+
+  "leaderboard_generation": {
+    "description": "Functions for creating tournament leaderboards and rankings",
+    "functions": [
+      {
+        "name": "create_leaderboard",
+        "file": "leaderboard_utils.py",
+        "line": 14,
+        "arguments": ["leaderboard_df: pd.DataFrame", "value_column: str", "ascending: bool = True"],
+        "returns": "pd.DataFrame",
+        "description": "Create pivot table leaderboard with rankings and total scores",
+        "used_by": ["leaderboard.py"]
+      },
+      {
+        "name": "display_leaderboard",
+        "file": "leaderboard_utils.py", 
+        "line": 139,
+        "arguments": ["leaderboard_df: pd.DataFrame", "value_column: str", "title: str", "leader_label: str", "ascending: bool"],
+        "returns": "None",
+        "description": "Complete leaderboard display with champions and formatting",
+        "used_by": ["leaderboard.py"]
+      },
+      {
+        "name": "get_champions",
+        "file": "leaderboard_utils.py",
+        "line": 100,
+        "arguments": ["df: pd.DataFrame"],
+        "returns": "str",
+        "description": "Get comma-separated list of players tied for first place",
+        "used_by": ["display_leaderboard"]
+      },
+      {
+        "name": "get_last_place",
+        "file": "leaderboard_utils.py",
+        "line": 114,
+        "arguments": ["df: pd.DataFrame"],
+        "returns": "str",
+        "description": "Get comma-separated list of players tied for last place",
+        "used_by": ["display_leaderboard"]
+      },
+      {
+        "name": "generate_table_html",
+        "file": "leaderboard_utils.py",
+        "line": 47,
+        "arguments": ["df: pd.DataFrame"],
+        "returns": "str",
+        "description": "Generate styled HTML table for leaderboard display",
+        "used_by": ["display_leaderboard"]
+      }
+    ]
+  },
+
+  "analysis_functions": {
+    "description": "Functions for statistical analysis and performance calculations",
+    "functions": [
+      {
+        "name": "get_teg_winners",
+        "file": "utils.py",
+        "line": 749,
+        "arguments": ["df: pd.DataFrame"],
+        "returns": "pd.DataFrame", 
+        "description": "Calculate TEG winners for all trophy categories with overrides",
+        "used_by": ["101TEG History.py", "102TEG Results.py"]
+      },
+      {
+        "name": "get_best",
+        "file": "utils.py",
+        "line": 1020,
+        "arguments": ["df", "measure_to_use", "player_level = False", "top_n = 1"],
+        "returns": "pd.DataFrame",
+        "description": "Get top N performances by measure (player-level or all-time)",
+        "used_by": ["Record analysis functions"]
+      },
+      {
+        "name": "get_worst",
+        "file": "utils.py",
+        "line": 1053,
+        "arguments": ["df", "measure_to_use", "player_level = False", "top_n = 1"],
+        "returns": "pd.DataFrame",
+        "description": "Get worst N performances by measure",
+        "used_by": ["teg_worsts.py"]
+      },
+      {
+        "name": "score_type_stats",
+        "file": "utils.py",
+        "line": 1263,
+        "arguments": ["df=None"],
+        "returns": "pd.DataFrame",
+        "description": "Calculate birdie/eagle/par rates and frequencies per player",
+        "used_by": ["birdies_etc.py"]
+      },
+      {
+        "name": "max_scoretype_per_round",
+        "file": "utils.py",
+        "line": 1289,
+        "arguments": ["df = None"],
+        "returns": "pd.DataFrame",
+        "description": "Find maximum birdies/eagles/pars per round for each player",
+        "used_by": ["Scoring achievement analysis"]
+      },
+      {
+        "name": "chosen_rd_context",
+        "file": "utils.py",
+        "line": 1096,
+        "arguments": ["ranked_rd_df", "teg = 'TEG 16'", "rd = 4", "measure = None"],
+        "returns": "pd.DataFrame",
+        "description": "Get performance context for specific round with player/all-time rankings",
+        "used_by": ["latest_round.py"]
+      },
+      {
+        "name": "chosen_teg_context",
+        "file": "utils.py",
+        "line": 1118,
+        "arguments": ["ranked_teg_df", "teg = 'TEG 15'", "measure = None"],
+        "returns": "pd.DataFrame", 
+        "description": "Get performance context for specific TEG with rankings",
+        "used_by": ["latest_teg_context.py"]
+      }
+    ]
+  },
+
+  "cached_data_functions": {
+    "description": "Streamlit cached functions for optimized data loading and processing",
+    "functions": [
+      {
+        "name": "get_complete_teg_data",
+        "file": "utils.py",
+        "line": 878,
+        "arguments": [],
+        "returns": "pd.DataFrame",
+        "description": "Get complete TEG-level data excluding incomplete tournaments",
+        "used_by": ["Analysis pages requiring complete TEGs only"]
+      },
+      {
+        "name": "get_teg_data_inc_in_progress",
+        "file": "utils.py",
+        "line": 884,
+        "arguments": [],
+        "returns": "pd.DataFrame",
+        "description": "Get TEG-level data including in-progress tournaments",
+        "used_by": ["Current TEG analysis"]
+      },
+      {
+        "name": "get_round_data",
+        "file": "utils.py",
+        "line": 890,
+        "arguments": ["ex_50 = True", "ex_incomplete= False"],
+        "returns": "pd.DataFrame",
+        "description": "Get round-level aggregated data with filtering options",
+        "used_by": ["Round analysis pages"]
+      },
+      {
+        "name": "get_9_data",
+        "file": "utils.py",
+        "line": 896,
+        "arguments": [],
+        "returns": "pd.DataFrame",
+        "description": "Get 9-hole (front/back) aggregated data",
+        "used_by": ["9-hole analysis"]
+      },
+      {
+        "name": "get_Pl_data",
+        "file": "utils.py",
+        "line": 902,
+        "arguments": [],
+        "returns": "pd.DataFrame",
+        "description": "Get player-level career aggregated data",
+        "used_by": ["Player career analysis"]
+      },
+      {
+        "name": "get_ranked_teg_data",
+        "file": "utils.py",
+        "line": 1003,
+        "arguments": [],
+        "returns": "pd.DataFrame", 
+        "description": "Get TEG data with ranking columns added",
+        "used_by": ["Records and best performance analysis"]
+      },
+      {
+        "name": "get_ranked_round_data",
+        "file": "utils.py",
+        "line": 1009,
+        "arguments": [],
+        "returns": "pd.DataFrame",
+        "description": "Get round data with ranking columns added", 
+        "used_by": ["Round records and context analysis"]
+      },
+      {
+        "name": "get_ranked_frontback_data",
+        "file": "utils.py",
+        "line": 1015,
+        "arguments": [],
+        "returns": "pd.DataFrame",
+        "description": "Get 9-hole data with ranking columns added",
+        "used_by": ["9-hole records analysis"]
+      },
+      {
+        "name": "load_and_prepare_handicap_data",
+        "file": "utils.py",
+        "line": 531,
+        "arguments": ["file_path: str"],
+        "returns": "pd.DataFrame",
+        "description": "Load and melt handicap lookup data for scoring calculations",
+        "used_by": ["Data update processing"]
+      },
+      {
+        "name": "load_course_info",
+        "file": "utils.py",
+        "line": 1585,
+        "arguments": [],
+        "returns": "pd.DataFrame",
+        "description": "Load unique course/area combinations from round_info.csv",
+        "used_by": ["Course analysis pages"]
+      }
+    ]
+  },
+
+  "specialized_processing": {
+    "description": "Functions for specific analysis types and specialized calculations",
+    "functions": [
+      {
+        "name": "calculate_multi_score_running_sum",
+        "file": "helpers/scoring_data_processing.py",
+        "line": 106,
+        "arguments": ["df"],
+        "returns": "pd.DataFrame",
+        "description": "Calculate running streaks for different score types (birdies, pars, etc.)",
+        "used_by": ["streaks.py"]
+      },
+      {
+        "name": "summarize_multi_score_running_sum", 
+        "file": "helpers/scoring_data_processing.py",
+        "line": 157,
+        "arguments": ["df"],
+        "returns": "pd.DataFrame",
+        "description": "Summarize maximum streak lengths for each player and score type",
+        "used_by": ["streaks.py"]
+      },
+      {
+        "name": "prepare_bestball_data",
+        "file": "helpers/bestball_processing.py",
+        "line": 14,
+        "arguments": ["all_data"],
+        "returns": "pd.DataFrame",
+        "description": "Prepare data for bestball analysis with hole-by-hole scores",
+        "used_by": ["bestball.py"]
+      },
+      {
+        "name": "calculate_bestball_scores",
+        "file": "helpers/bestball_processing.py",
+        "line": 55,
+        "arguments": ["filtered_data"],
+        "returns": "pd.DataFrame",
+        "description": "Calculate team bestball scores taking best score per hole",
+        "used_by": ["bestball.py"]
+      },
+      {
+        "name": "calculate_worstball_scores",
+        "file": "helpers/bestball_processing.py",
+        "line": 85,
+        "arguments": ["filtered_data"],
+        "returns": "pd.DataFrame",
+        "description": "Calculate team worstball scores taking worst score per hole",
+        "used_by": ["bestball.py"]
+      },
+      {
+        "name": "summarise_teg_wins",
+        "file": "utils_win_tables.py",
+        "line": 6,
+        "arguments": ["df", "column_name"],
+        "returns": "pd.DataFrame",
+        "description": "Summarize trophy wins by player with TEG list compression",
+        "used_by": ["Trophy analysis pages"]
+      }
+    ]
+  }
+}
