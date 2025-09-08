@@ -2,6 +2,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap'); */
 
+
+/* ===== REFERENCE AND NOTES */
+/*  European tour theme: */
+/*  Eagle = #ffb81c */ 
+/*  Birdie = #dc1a21 */
+
+/* #ffc300 also looks ok */
+
+
 /* ===== CSS VARIABLES ===== */
 :root {
 
@@ -32,10 +41,11 @@
 
   /* Base Colors */
 
-  /* --color-eagle: #fefa00; */
-  --color-eagle: #FF0C13;
-  /* --color-birdie: #FF0C13; */
-  --color-birdie:#FF7175;
+  /* --color-eagle: #ffb81c; */
+  --color-eagle: #0496ff;
+  /* --color-eagle: #FF0C13; */
+  --color-birdie: #dc1a21;
+  /* --color-birdie:#FF7175; */
   --color-par: #fff;
   --color-bogey: #e6e5e5;
   --color-double-bogey: #999;
@@ -49,6 +59,15 @@
   --color-stableford-3: #48CAE4;
   --color-stableford-4: #0077B6;
   --color-stableford-5: #03045E; */
+
+    /*  ##### BLUER OPTIONS ####
+    /* from here: https://coolors.co/palette/e3f2fd-bbdefb-90caf9-64b5f6-42a5f5-2196f3-1e88e5-1976d2-1565c0-0d47a1 */
+  /* --color-stableford-0: #ffffff;
+  --color-stableford-1: #ffffff;
+  --color-stableford-2: #E3F2FD;
+  --color-stableford-3: #BBDEFB;
+  --color-stableford-4: #2196F3;
+  --color-stableford-5: #0D47A1;  */
   
   /* #### ORANGE OPTIONS */
   --color-stableford-0: #ffffff;
@@ -93,7 +112,8 @@
   --border-triple-bogey: 3px double #fff;
 
   /* --boxshadow-eagle: 0 0 0 1px white, 0 0 0 3px red; */
-  --boxshadow-eagle: 0 0 0 1px red;
+  /* --boxshadow-eagle: 0 0 0 1px red; */
+  --boxshadow-eagle: 0 0 0 1px var(--color-eagle);
 
   /* Stableford Score Types - Font Colors */
   --color-text-stableford-0: #bcbcbc;

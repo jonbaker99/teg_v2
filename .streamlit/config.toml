@@ -3,6 +3,7 @@ base = "light"
 font = "Lora, Open Sans, Lora, monospace"
 headingFont = "Lora, Open Sans, monospace, Lora"
 codeFont = "monospace"
+primaryColor="forestGreen"
 
 [theme.sidebar]
 font = "Open Sans, sans-serif"

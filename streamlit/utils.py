@@ -1310,7 +1310,7 @@ def load_datawrapper_css():
     """Load datawrapper table CSS from external file"""
     load_css_file('styles/datawrapper.css')
 
-def datawrapper_table(df, left_align=None, css_classes=None):
+def datawrapper_table(df, left_align=None, css_classes=None, return_html=False):
     """
     Render a pandas DataFrame as HTML with datawrapper styling.
     
@@ -1318,6 +1318,7 @@ def datawrapper_table(df, left_align=None, css_classes=None):
         df: DataFrame to render
         left_align: If True, left-align all cells (backward compatibility)
         css_classes: Additional CSS classes as string (e.g., 'history-table narrow-first')
+        return_html: If True, return HTML string instead of writing to Streamlit
     """
     
     # Start with base class
@@ -1332,7 +1333,12 @@ def datawrapper_table(df, left_align=None, css_classes=None):
         classes += f' {css_classes}'
     
     # Render table
-    st.write(df.to_html(index=False, justify='left', classes=classes), unsafe_allow_html=True)
+    html = df.to_html(index=False, justify='left', classes=classes)
+    
+    if return_html:
+        return html
+    else:
+        st.write(html, unsafe_allow_html=True)
 
 service_account_info = {
     "type": os.getenv('GOOGLE_TYPE'),
