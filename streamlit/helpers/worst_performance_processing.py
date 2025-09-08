@@ -160,7 +160,7 @@ def create_worst_performance_section(worst_records, measure, record_type, measur
         Combines title, value, and details into formatted HTML
         Handles all record types with appropriate formatting
     """
-    from utils import create_stat_section
+    from utils_display_formatting import create_stat_section
     
     title = measure_titles[measure]
     value = format_performance_value(worst_records[measure].iloc[0], measure)

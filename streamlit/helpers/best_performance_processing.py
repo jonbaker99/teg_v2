@@ -156,7 +156,7 @@ def prepare_personal_best_teg_table(teg_data_ranked, selected_measure, selected_
     rank_all_time = f'Rank_within_all_{selected_measure}'
     
     # Get best performances from utils function (player_level=True gets 1 per player)
-    from utils import get_best
+    from utils_statistical_analysis import get_best
     
     personal_best_tegs = (get_best(teg_data_ranked, selected_measure, player_level=True, top_n=1)
                          .sort_values(by=rank_all_time, ascending=True)
@@ -196,7 +196,7 @@ def prepare_personal_best_round_table(rd_data_ranked, selected_measure, selected
     rank_all_time = f'Rank_within_all_{selected_measure}'
     
     # Get best performances from utils function (player_level=True gets 1 per player)
-    from utils import get_best
+    from utils_statistical_analysis import get_best
     
     personal_best_rounds = (get_best(rd_data_ranked, selected_measure, player_level=True, top_n=1)
                            .sort_values(by=rank_all_time, ascending=True)

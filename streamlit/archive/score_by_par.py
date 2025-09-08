@@ -1,4 +1,6 @@
-from utils import score_type_stats, load_all_data, apply_score_types, max_scoretype_per_round, format_vs_par, load_datawrapper_css
+from utils_data_retrieval import load_all_data
+from utils_display_formatting import format_vs_par, load_datawrapper_css
+from utils import score_type_stats, apply_score_types, max_scoretype_per_round
 import streamlit as st
 import pandas as pd, altair as alt
 import numpy as np

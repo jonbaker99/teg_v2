@@ -164,7 +164,7 @@ def prepare_score_count_display(count_data, score_field, display_name):
     if score_field == 'Sc':
         display_data[score_field] = display_data[score_field].astype(int)
     elif score_field == 'GrossVP':
-        from utils import format_vs_par
+        from utils_display_formatting import format_vs_par
         display_data[score_field] = display_data[score_field].apply(format_vs_par)
     
     # Rename score column to user-friendly name

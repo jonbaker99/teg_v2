@@ -7,7 +7,7 @@ import streamlit as st
 import pandas as pd
 from pathlib import Path
 from utils_data_retrieval import get_scorecard_data, get_teg_metadata
-from utils import format_date_for_scorecard
+from utils_display_formatting import format_date_for_scorecard
 
 date_format = '%d %B %Y'
 

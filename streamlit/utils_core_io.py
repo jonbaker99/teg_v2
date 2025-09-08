@@ -20,80 +20,6 @@ logger = logging.getLogger(__name__)
 # Get BASE_DIR from helper utilities
 BASE_DIR = get_base_directory()
 
-def read_from_github(file_path):
-    """
-    Simple GitHub file reading with proper base64 decoding.
-    
-    Parameters:
-        file_path (str): Path to file in GitHub repository
-        
-    Returns:
-        pd.DataFrame or str: File content as DataFrame or string
-        
-    Purpose:
-        Reads files from GitHub API for Railway deployment environment.
-        Handles both CSV and Parquet files with proper encoding.
-    """
-    from github import Github
-    from io import BytesIO, StringIO
-    import base64
-    
-    token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
-    g = Github(token)
-    repo = g.get_repo("jonbaker99/teg_v2")  # Direct repo reference
-    content = repo.get_contents(file_path, ref=get_current_branch())
-    
-    if file_path.endswith('.csv'):
-        # Decode the base64 content first
-        decoded_content = base64.b64decode(content.content).decode('utf-8')
-        return pd.read_csv(StringIO(decoded_content))
-    elif file_path.endswith('.parquet'):
-        # For parquet files, decode to bytes
-        decoded_bytes = base64.b64decode(content.content)
-        return pd.read_parquet(BytesIO(decoded_bytes))
-    else:
-        # For other files, return decoded string
-        return base64.b64decode(content.content).decode('utf-8')
-
-def write_to_github(file_path, data, commit_message="Update data"):
-    """
-    Write data to GitHub repository.
-    
-    Parameters:
-        file_path (str): Path to file in GitHub repository
-        data (pd.DataFrame or str): Data to write
-        commit_message (str): Commit message for the change
-        
-    Purpose:
-        Writes files to GitHub API for Railway deployment environment.
-        Handles both DataFrame and string data with proper encoding.
-    """
-    from github import Github
-    from io import BytesIO
-
-    token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
-    g = Github(token)
-    repo = g.get_repo("jonbaker99/teg_v2")  # Direct repo reference
-
-    branch = get_current_branch()
-
-    # Prepare content
-    if isinstance(data, pd.DataFrame):
-        if file_path.endswith('.csv'):
-            content = data.to_csv(index=False)
-        elif file_path.endswith('.parquet'):
-            buffer = BytesIO()
-            data.to_parquet(buffer, index=False)
-            content = buffer.getvalue()
-    else:
-        content = data
-
-    # Try update, fallback to create
-    try:
-        file = repo.get_contents(file_path, ref=branch)
-        repo.update_file(file_path, commit_message, content, file.sha, branch=get_current_branch())
-    except:
-        repo.create_file(file_path, commit_message, content, branch=get_current_branch())
 
 def read_file(file_path: str) -> pd.DataFrame:
     """
@@ -112,6 +38,7 @@ def read_file(file_path: str) -> pd.DataFrame:
         Used throughout the codebase for all data loading operations.
     """
     if os.getenv('RAILWAY_ENVIRONMENT'):
+        from utils_github import read_from_github
         return read_from_github(file_path)
     else:
         local_path = BASE_DIR / file_path
@@ -138,6 +65,7 @@ def write_file(file_path: str, data: pd.DataFrame, commit_message: str = "Update
         Used by data processing and update operations.
     """
     if os.getenv('RAILWAY_ENVIRONMENT'):
+        from utils_github import write_to_github
         write_to_github(file_path, data, commit_message)
     else:
         local_path = BASE_DIR / file_path
@@ -162,6 +90,7 @@ def backup_file(source_path, backup_path):
     """
     if os.getenv('RAILWAY_ENVIRONMENT'):
         # Read and write with new name (to backups branch)
+        from utils_github import read_from_github, write_to_github
         data = read_from_github(source_path)
         write_to_github(backup_path, data, f"Backup of {source_path}")
     else:

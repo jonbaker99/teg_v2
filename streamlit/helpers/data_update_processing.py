@@ -11,19 +11,12 @@ This module contains functions for:
 import streamlit as st
 import pandas as pd
 import logging
-from utils import (
-    reshape_round_data,
-    read_file,
-    write_file,
-    process_round_for_all_scores,
-    load_and_prepare_handicap_data,
-    update_all_data,
-    summarise_existing_rd_data,
-    ALL_SCORES_PARQUET,
-    HANDICAPS_CSV,
-    ALL_DATA_PARQUET,
-    ALL_DATA_CSV_MIRROR
-)
+# Import functions from specialized modules
+from utils_data_management import reshape_round_data, update_all_data, summarise_existing_rd_data
+from utils_core_io import read_file, write_file
+from utils_data_processing import process_round_for_all_scores
+from utils_data_input import load_and_prepare_handicap_data
+from utils import ALL_SCORES_PARQUET, HANDICAPS_CSV, ALL_DATA_PARQUET, ALL_DATA_CSV_MIRROR
 
 # Configure logging
 logger = logging.getLogger(__name__)

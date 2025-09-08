@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
-from utils import load_all_data, load_datawrapper_css, format_vs_par
+from utils_data_retrieval import load_all_data
+from utils_display_formatting import load_datawrapper_css, format_vs_par
 
 all_data = load_all_data(exclude_incomplete_tegs = False)
 load_datawrapper_css()

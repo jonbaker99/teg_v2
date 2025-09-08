@@ -127,7 +127,7 @@ def format_team_scores_for_display(team_data, sort_by_best=True):
         Sorts by GrossVP performance and formats vs-par values
         Creates display-ready data for HTML tables
     """
-    from utils import format_vs_par
+    from utils_display_formatting import format_vs_par
     
     bestball_cols, value_cols = get_bestball_columns()
     

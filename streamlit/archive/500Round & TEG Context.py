@@ -1,7 +1,9 @@
 import streamlit as st
 import pandas as pd
-from utils import get_ranked_teg_data, get_ranked_round_data, get_ranked_frontback_data, safe_ordinal
-from utils import chosen_rd_context, chosen_teg_context, load_datawrapper_css
+from utils_data_retrieval import get_ranked_teg_data, get_ranked_round_data, get_ranked_frontback_data
+from utils import safe_ordinal
+from utils_display_formatting import load_datawrapper_css
+from utils import chosen_rd_context, chosen_teg_context
 
 # Initialize session state
 if 'teg_r' not in st.session_state:

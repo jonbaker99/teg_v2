@@ -10,15 +10,15 @@ import streamlit as st
 from pathlib import Path
 from typing import Optional
 import base64
-from github import Github
-from io import BytesIO, StringIO
+# GitHub imports moved to utils_github.py to avoid cascade failures
 import subprocess
 from datetime import datetime
 from utils_statistical_analysis import add_ranks
-from utils_data_processing import add_cumulative_scores, aggregate_data, read_file
+from utils_data_processing import add_cumulative_scores, aggregate_data
 from utils_data_management import exclude_incomplete_tegs_function
 from utils_helper_utilities import get_current_branch
 from utils_data_retrieval import load_all_data
+from utils_core_io import read_file
 
 #print("utils module is being imported")
 
@@ -55,58 +55,8 @@ ALL_DATA_CSV_MIRROR = "data/all-data.csv"
 
 GITHUB_BRANCH = get_current_branch()
 
-def read_from_github(file_path):
-    """Simple GitHub file reading with proper base64 decoding"""
-    from github import Github
-    from io import BytesIO, StringIO
-    import base64
-    
-    token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
-    g = Github(token)
-    repo = g.get_repo(GITHUB_REPO)
-    content = repo.get_contents(file_path, ref=get_current_branch())
-    
-    if file_path.endswith('.csv'):
-        # Decode the base64 content first
-        decoded_content = base64.b64decode(content.content).decode('utf-8')
-        return pd.read_csv(StringIO(decoded_content))
-    elif file_path.endswith('.parquet'):
-        # For parquet files, decode to bytes
-        decoded_bytes = base64.b64decode(content.content)
-        return pd.read_parquet(BytesIO(decoded_bytes))
-    else:
-        # For other files, return decoded string
-        return base64.b64decode(content.content).decode('utf-8')
-
-def write_to_github(file_path, data, commit_message="Update data"):
-    from github import Github
-    from io import BytesIO
-
-    token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
-    g = Github(token)
-    repo = g.get_repo(GITHUB_REPO)
-
-    branch = get_current_branch()
-
-    # Prepare content
-    if isinstance(data, pd.DataFrame):
-        if file_path.endswith('.csv'):
-            content = data.to_csv(index=False)
-        elif file_path.endswith('.parquet'):
-            buffer = BytesIO()
-            data.to_parquet(buffer, index=False)
-            content = buffer.getvalue()
-    else:
-        content = data
-
-    # Try update, fallback to create
-    try:
-        file = repo.get_contents(file_path, ref=branch)
-        repo.update_file(file_path, commit_message, content, file.sha, branch=get_current_branch())
-    except:
-        repo.create_file(file_path, commit_message, content, branch=get_current_branch())
-
-    st.cache_data.clear()
+# GitHub functions moved to utils_github.py to avoid import cascade failures
+# Use: from utils_github import read_from_github, write_to_github
 
 
 

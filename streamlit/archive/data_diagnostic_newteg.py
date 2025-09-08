@@ -7,8 +7,9 @@
 # Add this to any Streamlit page temporarily
 
 import streamlit as st
-from utils import load_all_data, get_round_data, get_tegnum_rounds
-from utils import read_file
+from utils_data_retrieval import load_all_data, get_round_data
+from utils_helper_utilities import get_tegnum_rounds
+from utils_core_io import read_file
 
 st.title("🔍 TEG 18 Diagnostic")
 
@@ -146,7 +147,7 @@ try:
     st.write(f"Step 1 - load_all_data: TEG 18 present = {18 in all_data['TEGNum'].unique()}")
     
     # Step 2: Same aggregation as get_round_data() calls
-    from utils import aggregate_data
+    from utils_data_processing import aggregate_data
     aggregated = aggregate_data(all_data, 'Round')
     st.write(f"Step 2 - aggregate_data: TEG 18 present = {18 in aggregated['TEGNum'].unique()}")
     
@@ -166,7 +167,7 @@ st.write("---")
 st.subheader("🔍 Debugging aggregate_data()")
 
 try:
-    from utils import list_fields_by_aggregation_level
+    from utils_helper_utilities import list_fields_by_aggregation_level
     
     # Test the field detection
     all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
@@ -407,7 +408,7 @@ try:
     st.write("## Step 2: Reproducing aggregate_data() Logic")
     
     # Import the actual functions
-    from utils import list_fields_by_aggregation_level
+    from utils_helper_utilities import list_fields_by_aggregation_level
     
     # Get field detection
     fields_by_level = list_fields_by_aggregation_level(all_data)
@@ -543,7 +544,7 @@ st.write("---")
 st.title("📍 File Path Tracing")
 
 try:
-    from utils import read_file, ROUND_INFO_FILE, ROUND_INFO_FILE_PATH, get_base_directory
+    from utils_core_io import read_file, ROUND_INFO_FILE, ROUND_INFO_FILE_PATH, get_base_directory
     import os
     
     st.write("## 1. File Path Constants")
@@ -637,7 +638,7 @@ try:
     pd.read_csv = debug_read_csv
     
     try:
-        from utils import add_round_info
+        from utils_data_management import add_round_info
         st.write("**Calling add_round_info:**")
         result = add_round_info(teg18_sample)
         
