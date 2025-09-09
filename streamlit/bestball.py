@@ -15,7 +15,8 @@ from helpers.bestball_processing import (
 
 
 # === CONFIGURATION ===
-st.title("Best bestball and worst worstball")
+st.title("Bestballs & Worstballs")
+st.caption("Shows best & worst bestball / worstball across all players in a round")
 
 # Load CSS styling for consistent table appearance
 load_datawrapper_css()

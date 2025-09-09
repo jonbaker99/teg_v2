@@ -2,8 +2,8 @@ from utils import get_round_data, load_datawrapper_css, datawrapper_table
 import streamlit as st
 
 load_datawrapper_css()
-st.title('Biggest score changes vs. prior round')
-
+st.title('Score swings vs. previous round')
+st.caption("Shows the rounds with the biggest score differences to the player's previous round")
 
 all_rd_data = get_round_data(ex_50 = True, ex_incomplete= False)
 all_rd_data['TR'] = all_rd_data['TEGNum']*100 + all_rd_data['Round']

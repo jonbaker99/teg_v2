@@ -27,7 +27,8 @@ def load_records_page_css():
         
         .stat-section {
             margin-bottom: 20px;
-            background-color: rgb(240, 242, 246);
+            /* background-color: rgb(240, 242, 246); */
+            background-color: #F3F7F3;
             padding: 20px;
             margin: 5px;
         }

@@ -60,7 +60,8 @@ pg = st.navigation(
             "Latest TEG": [leaderboard_pg, scorecard_pg, scorecard_mob_pg, latest_rd_page, latest_teg_page, hc_page],
             #"Data":[data_pg, delete_pg, connection_test_pg, data_diagnostic_pg]
             "Data":[data_pg, delete_pg, connection_test_pg]
-        }
+        }      
+    # , position='top'
     )
 
 pg.run()

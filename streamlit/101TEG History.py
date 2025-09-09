@@ -26,8 +26,8 @@ load_datawrapper_css()
 # === PAGE NAVIGATION ===
 st.markdown('---')
 st.markdown("#### Contents")
-st.markdown('1. Number of wins by player')
-st.markdown('2. TEG history')
+st.markdown('1. TEG Honours Board')
+st.markdown('2. Winners by TEG')
 st.markdown('---')
 
 
@@ -108,7 +108,7 @@ st.divider()
 
 
 # === SECTION 2: TEG HISTORY TABLE ===
-st.markdown("#### TEG History")
+st.markdown("#### Winners by TEG")
 
 # Display complete historical table with all winners by TEG
 st.write(

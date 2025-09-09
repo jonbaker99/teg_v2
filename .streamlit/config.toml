@@ -6,7 +6,11 @@ codeFont = "monospace"
 primaryColor="forestGreen"
 
 [theme.sidebar]
-font = "Open Sans, sans-serif"
+font = "sans-serif"
+# backgroundColor="#114611"
+# textColor = "White"
+# backgroundColor="#F3F7F3"
+# backgroundColor="#DBE6DB"
 
 # Lora Regular (400)
 [[theme.fontFaces]]
