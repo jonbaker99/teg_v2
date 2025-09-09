@@ -64,7 +64,7 @@ with tab1:
         bestball_output.to_html(
             index=False, 
             justify='left', 
-            classes='datawrapper-table'
+            classes='datawrapper-table left-3rd full-width'
         ), 
         unsafe_allow_html=True
     )
@@ -75,7 +75,7 @@ with tab2:
         worstball_output.to_html(
             index=False, 
             justify='left', 
-            classes='datawrapper-table'
+            classes='datawrapper-table left-3rd full-width'
         ), 
         unsafe_allow_html=True
     )

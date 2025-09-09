@@ -62,7 +62,9 @@
 
 /* --- Specific column alignment variants */
 .datawrapper-table.left-second td:nth-child(2),
-.datawrapper-table.left-second th:nth-child(2) {
+.datawrapper-table.left-second th:nth-child(2),
+.datawrapper-table.left-3rd td:nth-child(3),
+.datawrapper-table.left-3rd th:nth-child(3) {
     text-align: left;
 }
 
