@@ -11,44 +11,6 @@ import pandas as pd
 import numpy as np
 
 
-def prepare_teg_filter_options(all_data):
-    """
-    Prepare TEG filtering options for par analysis.
-    
-    Args:
-        all_data (pd.DataFrame): Complete tournament data
-        
-    Returns:
-        list: TEG options including "All TEGs" and individual tournaments
-        
-    Purpose:
-        Enables analysis of par performance for specific tournaments or all-time
-        Orders TEGs in reverse chronological order (most recent first)
-    """
-    tegnum_options = ['All TEGs'] + sorted(all_data['TEGNum'].unique().tolist(), reverse=True)
-    return tegnum_options
-
-
-def filter_data_by_teg(all_data, selected_tegnum):
-    """
-    Filter data by selected TEG tournament.
-    
-    Args:
-        all_data (pd.DataFrame): Complete tournament data
-        selected_tegnum: Selected TEG number or "All TEGs"
-        
-    Returns:
-        pd.DataFrame: Filtered data for selected tournament or complete data
-        
-    Purpose:
-        Allows focused analysis of par performance for specific tournaments
-        Returns complete dataset when "All TEGs" is selected
-    """
-    if selected_tegnum != 'All TEGs':
-        selected_tegnum_int = int(selected_tegnum)
-        return all_data[all_data['TEGNum'] == selected_tegnum_int]
-    else:
-        return all_data
 
 
 def calculate_par_performance_matrix(filtered_data):
@@ -98,6 +60,8 @@ def format_par_performance_table(avg_grossvp):
     """
     def format_vs_par_value(value):
         """Format vs-par values with appropriate +/- symbols."""
+        if pd.isna(value):
+            return ""
         if value > 0:
             return f"+{value:.2f}"
         elif value < 0:

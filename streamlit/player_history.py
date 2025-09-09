@@ -8,7 +8,7 @@ import re
 from utils import get_complete_teg_data, load_datawrapper_css, datawrapper_table
 
 # === CONFIGURATION ===
-st.title("TEG Rankings by Scoring Type")
+st.title("Player Rankings by TEG")
 
 # Load CSS styling for consistent table appearance
 load_datawrapper_css()
@@ -147,8 +147,8 @@ def create_teg_ranking_table(teg_data: pd.DataFrame,
     return ranked_df
 
 # === USER INTERFACE ===
-st.markdown("Select a scoring type to see how each player ranked in each completed TEG.")
-st.markdown("**Note**: Only completed TEGs are included. Empty cells indicate the player did not participate in that TEG.")
+# st.markdown("Select a scoring type to see how each player ranked in each completed TEG.")
+# st.markdown("**Note**: Only completed TEGs are included. Empty cells indicate the player did not participate in that TEG.")
 
 # Scoring type selection
 scoring_options = {
@@ -167,7 +167,7 @@ selected_friendly = st.selectbox(
 selected_scoring_type = scoring_options[selected_friendly]
 
 # Bonus feature: Row/Column selection
-st.markdown("---")
+# st.markdown("---")
 with st.expander("Advanced Options"):
     col1, col2 = st.columns(2)
     
@@ -214,7 +214,7 @@ st.markdown(f"#### {selected_friendly} Rankings by TEG")
 # else:
 #     st.caption("Lower scores = better performance (1st place = lowest score)")
 
-st.caption("Numbers show rank within that TEG. Ties are marked with '='. Empty cells = did not participate.")
+# st.caption("Numbers show rank within that TEG. Ties are marked with '='. Empty cells = did not participate.")
 
 # Format the table for display
 if not ranking_table.empty:

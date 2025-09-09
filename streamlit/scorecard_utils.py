@@ -6,7 +6,7 @@ Converts pandas DataFrames to beautiful HTML golf scorecards
 import streamlit as st
 import pandas as pd
 from pathlib import Path
-from utils import get_scorecard_data, get_teg_metadata, format_date_for_scorecard
+from utils import get_scorecard_data, get_teg_metadata, format_date_for_scorecard, format_vs_par
 
 date_format = '%d %B %Y'
 
@@ -116,17 +116,6 @@ def generate_scorecard_html(df, layout="single-round", title="Scorecard"):
     
     return html
 
-def format_vs_par(value):
-    """Format vs par values for display"""
-    if pd.isna(value):
-        return ""
-    value = int(value)
-    if value > 0:
-        return f"+{value}"
-    elif value < 0:
-        return f"{value}"
-    else:
-        return "="
 
 def load_scorecard_css():
     """Load the scorecard CSS file and inject it into Streamlit"""

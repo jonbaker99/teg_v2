@@ -3,16 +3,14 @@ import streamlit as st
 import pandas as pd
 
 # Import data loading functions from main utils
-from utils import load_all_data, load_datawrapper_css
+from utils import load_all_data, load_datawrapper_css, get_teg_filter_options, filter_data_by_teg
 
 # Import bestball analysis helper functions
 from helpers.bestball_processing import (
     prepare_bestball_data,
     calculate_bestball_scores,
     calculate_worstball_scores,
-    format_team_scores_for_display,
-    get_teg_filter_options,
-    filter_data_by_teg_selection
+    format_team_scores_for_display
 )
 
 
@@ -39,8 +37,8 @@ tegnum_options = get_teg_filter_options(prepared_data)
 # TEG filtering selection
 selected_tegnum = st.selectbox('Select TEG', tegnum_options, index=0)
 
-# filter_data_by_teg_selection() - Applies TEG filter to tournament data
-filtered_data = filter_data_by_teg_selection(prepared_data, selected_tegnum)
+# filter_data_by_teg() - Applies TEG filter to tournament data
+filtered_data = filter_data_by_teg(prepared_data, selected_tegnum)
 
 # Best/Worst ranking selection
 best_or_worst = st.radio("Rank by best or worst:", ('Best', 'Worst'), horizontal=True)

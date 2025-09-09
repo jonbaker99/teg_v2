@@ -5,12 +5,10 @@ import numpy as np
 import altair as alt
 
 # Import data loading functions from main utils
-from utils import load_all_data, load_datawrapper_css
+from utils import load_all_data, load_datawrapper_css, get_teg_filter_options, filter_data_by_teg
 
 # Import par analysis helper functions
 from helpers.par_analysis_processing import (
-    prepare_teg_filter_options,
-    filter_data_by_teg,
     calculate_par_performance_matrix,
     format_par_performance_table
 )
@@ -28,8 +26,8 @@ load_datawrapper_css()
 # Purpose: Par analysis benefits from including current tournament data for up-to-date performance
 all_data = load_all_data(exclude_incomplete_tegs=False)
 
-# prepare_teg_filter_options() - Creates TEG dropdown options including "All TEGs"
-tegnum_options = prepare_teg_filter_options(all_data)
+# get_teg_filter_options() - Creates TEG dropdown options including "All TEGs"
+tegnum_options = get_teg_filter_options(all_data)
 
 
 # === USER INTERFACE ===

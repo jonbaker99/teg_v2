@@ -710,6 +710,8 @@ def format_vs_par(value: float) -> str:
     Returns:
         str: Formatted string.
     """
+    if pd.isna(value):
+        return ""
     value = int(value)
     if value > 0:
         return f"+{value}"
@@ -1557,3 +1559,43 @@ def load_course_info():
     round_info = read_file(ROUND_INFO_CSV)
     course_info = round_info[['Course', 'Area']].drop_duplicates()
     return course_info
+
+
+def get_teg_filter_options(all_data):
+    """
+    Get TEG filtering options for dropdown selections.
+    
+    Args:
+        all_data (pd.DataFrame): Complete tournament data
+        
+    Returns:
+        list: TEG options including "All TEGs" and individual tournaments in reverse chronological order
+        
+    Purpose:
+        Provides consistent TEG filtering options across different analysis pages
+        Orders TEGs in reverse chronological order (most recent first)
+    """
+    tegnum_options = ['All TEGs'] + sorted(all_data['TEGNum'].unique().tolist(), reverse=True)
+    return tegnum_options
+
+
+def filter_data_by_teg(all_data, selected_tegnum):
+    """
+    Filter data by selected TEG tournament.
+    
+    Args:
+        all_data (pd.DataFrame): Complete tournament data
+        selected_tegnum: Selected TEG number or "All TEGs"
+        
+    Returns:
+        pd.DataFrame: Filtered data for selected tournament or complete data
+        
+    Purpose:
+        Applies consistent TEG filtering logic across different analysis pages
+        Returns complete dataset when "All TEGs" is selected
+    """
+    if selected_tegnum != 'All TEGs':
+        selected_tegnum_int = int(selected_tegnum)
+        return all_data[all_data['TEGNum'] == selected_tegnum_int]
+    else:
+        return all_data
