@@ -42,10 +42,9 @@
   /* Base Colors */
 
   /* --color-eagle: #ffb81c; */
-  /* --color-eagle: #0496ff; */
+  --color-eagle: #0496ff;
   /* --color-eagle: #FF0C13; */
-  --color-eagle: #dc1a21;
-  --color-birdie: #FCEEEF;
+  --color-birdie: #dc1a21;
   /* --color-birdie:#FF7175; */
   --color-par: #fff;
   --color-bogey: #e6e5e5;
@@ -71,18 +70,13 @@
   --color-stableford-5: #0D47A1;  */
   
   /* #### ORANGE OPTIONS */
-  /* --color-stableford-0: #ffffff;
+  --color-stableford-0: #ffffff;
   --color-stableford-1: #ffffff;
   --color-stableford-2: #FFF3E0;
   --color-stableford-3: #FFCF4D;
   --color-stableford-4: #FF8000;
-  --color-stableford-5: #BD0000; */
-  --color-stableford-0: #ffffff;
-  --color-stableford-1: #ffffff;
-  --color-stableford-2: #FFF3E0;
-  --color-stableford-3: #FFD872;
-  --color-stableford-4: #F39439;
-  --color-stableford-5: #E75000;
+  --color-stableford-5: #BD0000;
+  
 
 
   /* === SCORE TYPE STYLING === */
@@ -103,30 +97,23 @@
 
   /* Gross Score Types - Font Colors */
   --color-text-eagle: #fff;
-  --color-text-birdie: #dc1a21;
+  --color-text-birdie: #fff;
   --color-text-par: #000;
   --color-text-bogey: #000;
   --color-text-double-bogey: #fff;
   --color-text-triple-bogey: #fff;
 
   /* Gross Score Types - Border Shortcuts */
-  /* --border-eagle: 2px solid #fff;
+  --border-eagle: 2px solid #fff;
   --border-birdie: 2px solid #fff;
   --border-par: none;
   --border-bogey: 2px solid #fff;
   --border-double-bogey: 2px double #fff;
-  --border-triple-bogey: 3px double #fff; */
-  --border-eagle: none;
-  --border-birdie: 1px solid var(--color-text-birdie);
-  --border-par: none;
-  --border-bogey: none;
-  --border-double-bogey: none;
-  --border-triple-bogey: none;
+  --border-triple-bogey: 3px double #fff;
 
-  --boxshadow-eagle: 0 0 0 1px white, 0 0 0 2px var(--color-eagle);
+  /* --boxshadow-eagle: 0 0 0 1px white, 0 0 0 3px red; */
   /* --boxshadow-eagle: 0 0 0 1px red; */
-  /* --boxshadow-eagle: 0 0 0 1px var(--color-eagle); */
-  /* --boxshadow-eagle: none; */
+  --boxshadow-eagle: 0 0 0 1px var(--color-eagle);
 
   /* Stableford Score Types - Font Colors */
   --color-text-stableford-0: #bcbcbc;
