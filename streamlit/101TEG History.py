@@ -61,7 +61,7 @@ history_display_table = prepare_history_table_display(winners_with_year)
 
 
 # === SECTION 1: WINS BY PLAYER ===
-st.markdown("#### Wins by player")
+st.markdown("#### TEG Honours Board")
 
 # Create tabs for each competition plus doubles
 long_labels = [get_trophy_full_name(comp) for comp in competitions]

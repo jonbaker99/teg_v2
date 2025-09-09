@@ -225,12 +225,23 @@
 }
 
 .player-ranking-table td,
-.player-ranking-table th{
+.player-ranking-table th {
     padding: 4px;
 }
 
 .player-ranking-table{
     width: 100%;
+}
+
+.position-table td,
+.position-table th {
+    padding: 4px 8px;
+}
+
+.datawrapper-table.position-table td:is(:first-child),
+.datawrapper-table.position-table th:is(:first-child) {
+    width: 60px;
+    min-width: 40px;
 }
 
 /* ==============================================
