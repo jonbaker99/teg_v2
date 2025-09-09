@@ -110,15 +110,79 @@ st.divider()
 # === SECTION 2: TEG HISTORY TABLE ===
 st.markdown("#### Winners by TEG")
 
+
+# history_display_table_2 = history_display_table.copy()
+h_tab_3 = history_display_table.copy()
+history_display_table['Area'] =  history_display_table['Area'].str.split(",").str[0].str.strip()
+
 # Display complete historical table with all winners by TEG
+# st.write(
+#     history_display_table.to_html(
+#         index=False, 
+#         justify='left', 
+#         classes='datawrapper-table history-table full-width'
+#     ), 
+#     unsafe_allow_html=True
+# )
+
+# history_display_table_2['Area'] =  history_display_table_2['Area'].str.split(",").str[0].str.strip()
+# history_display_table_2["TEG"] = history_display_table_2['TEG'] + "<br>" + history_display_table_2['Area']
+# history_display_table_2 = history_display_table_2.drop(columns=['Area'])
+
+# st.write(
+#     history_display_table_2.to_html(
+#         index=False, 
+#         classes='datawrapper-table history-table full-width',
+#         escape=False
+#     ), 
+#     unsafe_allow_html=True
+# )
+
+
+h_tab_3['Area'] = history_display_table['Area']
+h_tab_3["TEG"] = (
+    "<span class='teg-label'>" + h_tab_3["TEG"].astype(str) + "</span>"
+    "<span class='area-label'>" + h_tab_3["Area"].astype(str) + "</span>"
+)
+cols = ["TEG", "TEG Trophy", "Green Jacket", "HMM Wooden Spoon"]
+
 st.write(
-    history_display_table.to_html(
-        index=False, 
-        justify='left', 
-        classes='datawrapper-table history-table full-width'
-    ), 
+    h_tab_3[cols].to_html(
+        index=False,
+        justify="left",
+        classes="datawrapper-table history-table full-width hist2",
+        escape=False   # important so spans render
+    ),
     unsafe_allow_html=True
 )
+
+
+
+# #reset teg col
+# h_tab_3["TEG"] = history_display_table['TEG']
+# # Extract inside the parentheses (the year)
+# h_tab_3["Year"] = h_tab_3["TEG"].str.extract(r'\((\d{4})\)')
+# # Extract before the parentheses
+# h_tab_3["TEG"] = h_tab_3["TEG"].str.extract(r'^(.*?)\s*\(')
+
+# h_tab_3["TEG"] = (
+#     "<span class='teg-label'>" + h_tab_3["TEG"].astype(str) + "</span>"
+#     "<span class='area-label'>" + h_tab_3["Area"].astype(str) + "," + h_tab_3['Year'].astype(str) + "</span>"
+#     # "<span class='area-label'>" + h_tab_3["Area"].astype(str) + "</span>"
+# )
+
+# st.write(
+#     h_tab_3[cols].to_html(
+#         index=False,
+#         justify="left",
+#         classes="datawrapper-table history-table full-width hist2",
+#         escape=False   # important so spans render
+#     ),
+#     unsafe_allow_html=True
+# )
+
+
+
 
 # Add footnote for historical context
 st.caption('*Green Jacket awarded in TEG 5 for best stableford round; DM had best gross score')

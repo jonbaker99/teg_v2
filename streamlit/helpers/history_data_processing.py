@@ -98,14 +98,23 @@ def prepare_history_table_display(winners_df):
         winners_df (pd.DataFrame): Raw winners data with Year and TEG columns
         
     Returns:
-        pd.DataFrame: Formatted table with combined TEG(Year) column
+        pd.DataFrame: Formatted table with combined TEG(Year) column and Area
         
     Purpose:
         Creates compact historical view combining TEG name and year
-        Removes separate Year column for cleaner display
+        Adds Area as second column based on TEG lookup
     """
+    from utils import read_file, ROUND_INFO_CSV  # Import here to avoid circular imports
+    
     # Create a copy to avoid modifying original
     display_winners = winners_df.copy()
+    
+    # Get unique TEG-Area combinations from round_info
+    round_info = read_file(ROUND_INFO_CSV)
+    teg_areas = round_info[['TEG', 'Area']].drop_duplicates()
+    
+    # Join area data to winners table
+    display_winners = display_winners.merge(teg_areas, on='TEG', how='left')
     
     # Combine TEG and Year into single display column
     display_winners["TEG"] = (
@@ -113,11 +122,15 @@ def prepare_history_table_display(winners_df):
         display_winners['Year'].astype(str) + ")"
     )
     
-    # Remove separate Year column
+    # Remove separate Year column and reorder columns
     display_winners = display_winners.drop(columns=['Year'])
     
+    # Reorder columns: TEG, Area, then competition winners
+    competition_cols = [col for col in display_winners.columns if col not in ['TEG', 'Area']]
+    column_order = ['TEG', 'Area'] + competition_cols
+    display_winners = display_winners[column_order]
+    
     return display_winners
-
 
 def create_bar_chart(df, x_col, y_col, title):
     """

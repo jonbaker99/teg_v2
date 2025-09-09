@@ -11,6 +11,7 @@ __pycache__/
 .env.local
 .env.*.local
 .venv
+.vscode/
 
 
 # === Exceptions (files we DO want to keep) ===

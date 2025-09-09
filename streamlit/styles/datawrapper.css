@@ -139,7 +139,7 @@
     font-weight: bold;
 }
 
-/* --- History table specific styles */
+/* === History table specific styles */
 .datawrapper-table.history-table td:not(:first-child),
 .datawrapper-table.history-table th:not(:first-child) {
     width: 160px;
@@ -163,20 +163,32 @@
     text-align: left;
 }
 
-/* ---- history table with year */
-/* make columns other than first 2 wide */
+/* === 3rd VERSION OF HISTORY TABLE */
 
-.datawrapper-table.history-table-inc-yr :is(td, th):not(:nth-child(1), :nth-child(2)) {
-    width: 160px;
+.hist2 { table-layout: fixed }
+.hist2 td { 
+    padding: 8px 
 }
 
-/* narrower columns for TEG & Year */
-
-.datawrapper-table.history-table-inc-yr :is(td, th):is(:nth-child(1), :nth-child(2)) {
-    width: 60px;
-    padding-left: 4px;
-    padding-right: 4px;
+/* TEG on first line: heavier and slightly larger */
+.hist2 .teg-label {
+  display: block;
+  font-weight: normal;           /* bold but not shouty */
+  font-size: 14px;
 }
+
+/* Area on its own line: smaller, lighter, secondary */
+.hist2 .area-label {
+  display: block;
+  margin-top: -.2rem;
+  font-size: 12px;
+  color: #797979;                /* subtle secondary tone */
+}
+
+/* Optional: make the main trophy winner stand out a touch */
+.hist2 td:nth-child(2) { font-weight: bold; }
+
+
 
 
 /* == PLAYER RANK TABLE */
