@@ -408,7 +408,7 @@ for i, (friendly_name, scoring_type) in enumerate(scoring_options.items()):
             # st.markdown("##### Position Summary")
             st.markdown('')
             st.markdown('')
-            st.markdown('**Rankings summary**')
+            st.markdown(f"**{friendly_name} rankings summary**")
 
             position_summary = create_combined_position_summary(ranking_table, row_dimension)
             datawrapper_table(position_summary, css_classes='position-table')
