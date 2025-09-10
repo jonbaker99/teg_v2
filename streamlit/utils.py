@@ -721,6 +721,31 @@ def format_vs_par(value: float) -> str:
         return "="
 
 
+def get_net_competition_measure(teg_num: int) -> str:
+    """
+    Return the scoring measure to use for the net competition based on TEG number.
+    
+    Up to TEG 5, the net competition was based on total net vs par (NetVP).
+    From TEG 6 onwards, the net competition is based on total stableford points.
+    
+    Parameters:
+        teg_num (int): The TEG number
+        
+    Returns:
+        str: 'NetVP' for TEG 1-5, 'Stableford' for TEG 6+
+        
+    Examples:
+        >>> get_net_competition_measure(3)
+        'NetVP'
+        >>> get_net_competition_measure(8)
+        'Stableford'
+    """
+    if teg_num <= 5:
+        return 'NetVP'
+    else:
+        return 'Stableford'
+
+
 def get_teg_winners(df: pd.DataFrame) -> pd.DataFrame:
     """
     Generate TEG winners, best net, gross, and worst net by TEG.
@@ -736,6 +761,7 @@ def get_teg_winners(df: pd.DataFrame) -> pd.DataFrame:
     # Group by 'TEGNum' and 'Player', and calculate the sum for each player in each TEG
     grouped = df.groupby(['TEGNum', 'Player']).agg({
         'GrossVP': 'sum',
+        'NetVP': 'sum',
         'Stableford': 'sum'
     }).reset_index()
 
@@ -745,11 +771,21 @@ def get_teg_winners(df: pd.DataFrame) -> pd.DataFrame:
     for teg_num in df['TEGNum'].unique():
         # Filter data for the current TEG
         teg_data = grouped[grouped['TEGNum'] == teg_num]
+        
+        # Determine which measure to use for net competition based on TEG number
+        net_measure = get_net_competition_measure(teg_num)
 
         # Identify the best gross, best net, and worst net players
         best_gross_player = teg_data.loc[teg_data['GrossVP'].idxmin(), 'Player']
-        best_net_player = teg_data.loc[teg_data['Stableford'].idxmax(), 'Player']
-        worst_net_player = teg_data.loc[teg_data['Stableford'].idxmin(), 'Player']
+        
+        if net_measure == 'NetVP':
+            # For TEG 1-5: Lower NetVP is better (closer to or under par)
+            best_net_player = teg_data.loc[teg_data['NetVP'].idxmin(), 'Player']
+            worst_net_player = teg_data.loc[teg_data['NetVP'].idxmax(), 'Player']
+        else:
+            # For TEG 6+: Higher Stableford is better
+            best_net_player = teg_data.loc[teg_data['Stableford'].idxmax(), 'Player']
+            worst_net_player = teg_data.loc[teg_data['Stableford'].idxmin(), 'Player']
 
         # Apply manual overrides if any
         teg_label = f"TEG {teg_num}"

@@ -5,7 +5,7 @@ import logging
 import re
 
 # Import data loading functions from main utils
-from utils import get_complete_teg_data, load_datawrapper_css, datawrapper_table
+from utils import get_complete_teg_data, load_datawrapper_css, datawrapper_table, get_net_competition_measure
 
 # === CONFIGURATION ===
 st.title("Player Rankings by TEG")
@@ -246,6 +246,84 @@ def create_combined_position_summary(ranked_df: pd.DataFrame, player_col="Player
     
     return summary_df
 
+# === NET COMPETITION LOGIC ===
+def create_net_competition_ranking_table(teg_data: pd.DataFrame, 
+                                        row_dimension: str = 'Player', 
+                                        col_dimension: str = 'TEG') -> pd.DataFrame:
+    """
+    Create ranking table for TEG Trophy (net competition) using appropriate measure per TEG.
+    
+    Uses NetVP for TEG 1-5, Stableford for TEG 6+.
+    
+    Parameters:
+    - teg_data: DataFrame from get_complete_teg_data() or similar
+    - row_dimension: 'Player', 'Pl'
+    - col_dimension: 'TEG', 'TEGNum'
+    
+    Returns:
+    - DataFrame with Players as rows, TEGs as columns, ranks as values
+    """
+    logger.info("Creating net competition ranking table with dynamic measure selection")
+    
+    # Get unique TEGs in the data
+    if col_dimension == 'TEG':
+        unique_tegs = teg_data['TEG'].unique()
+        teg_to_num = {f"TEG {num}": num for num in teg_data['TEGNum'].unique()}
+    else:
+        unique_tegs = teg_data['TEGNum'].unique()
+        teg_to_num = {num: num for num in unique_tegs}
+    
+    # Create separate ranking tables for each measure
+    netvp_tegs = []
+    stableford_tegs = []
+    
+    for teg in unique_tegs:
+        teg_num = teg_to_num.get(teg, 999)
+        measure = get_net_competition_measure(teg_num)
+        
+        if measure == 'NetVP':
+            netvp_tegs.append(teg)
+        else:
+            stableford_tegs.append(teg)
+    
+    # Process each group separately
+    result_dfs = []
+    
+    if netvp_tegs:
+        netvp_data = teg_data[teg_data[col_dimension].isin(netvp_tegs)]
+        netvp_rankings = create_teg_ranking_table(netvp_data, 'NetVP', row_dimension, col_dimension)
+        result_dfs.append(netvp_rankings)
+    
+    if stableford_tegs:
+        stableford_data = teg_data[teg_data[col_dimension].isin(stableford_tegs)]
+        stableford_rankings = create_teg_ranking_table(stableford_data, 'Stableford', row_dimension, col_dimension)
+        result_dfs.append(stableford_rankings)
+    
+    # Combine the results
+    if len(result_dfs) == 1:
+        combined_df = result_dfs[0]
+    else:
+        # Merge on the row dimension (Player or Pl)
+        combined_df = result_dfs[0]
+        for df in result_dfs[1:]:
+            combined_df = combined_df.merge(df, on=row_dimension, how='outer')
+    
+    # Sort columns properly
+    if col_dimension == 'TEG':
+        def teg_sort_key(teg_name):
+            try:
+                return int(str(teg_name).replace('TEG ', ''))
+            except (ValueError, AttributeError):
+                return 999
+        
+        # Get all columns except the row dimension
+        teg_columns = [col for col in combined_df.columns if col != row_dimension]
+        sorted_columns = sorted(teg_columns, key=teg_sort_key)
+        combined_df = combined_df[[row_dimension] + sorted_columns]
+    
+    return combined_df
+
+
 # === CORE RANKING FUNCTION ===
 @st.cache_data
 def create_teg_ranking_table(teg_data: pd.DataFrame, 
@@ -331,18 +409,11 @@ def create_teg_ranking_table(teg_data: pd.DataFrame,
     return ranked_df
 
 # === USER INTERFACE ===
-# st.markdown("Select a scoring type to see how each player ranked in each completed TEG.")
-# st.markdown("**Note**: Only completed TEGs are included. Empty cells indicate the player did not participate in that TEG.")
+st.markdown("View player rankings across all completed TEGs for the two main competitions.")
+st.markdown("**Note**: Only completed TEGs are included. Empty cells indicate the player did not participate in that TEG.")
 
-scoring_options = {
-    # 'Gross Score': 'Sc',
-    'Stableford Points': 'Stableford',
-    'Gross vs Par': 'GrossVP', 
-    'Net vs Par': 'NetVP'
-}
-
-# Create tabs using the scoring options
-tabs = st.tabs(list(scoring_options.keys()))
+# Create tabs for the two main competitions
+tabs = st.tabs(["TEG Trophy", "Green Jacket"])
 
 # Load data once outside the tabs
 with st.spinner("Loading TEG data..."):
@@ -375,43 +446,77 @@ st.markdown("---")
 
 # === DATA PROCESSING AND DISPLAY ===
 
-# Iterate through each tab
-for i, (friendly_name, scoring_type) in enumerate(scoring_options.items()):
-    with tabs[i]:
-        with st.spinner(f"Calculating {friendly_name} rankings..."):
-            # Create the ranking table for this scoring type
-            ranking_table = create_teg_ranking_table(
-                teg_data=teg_data,
-                scoring_type=scoring_type,
-                row_dimension=row_dimension,
-                col_dimension=col_dimension
-            )
+# TEG Trophy Tab (Net Competition - dynamic measure selection)
+with tabs[0]:
+    with st.spinner("Calculating TEG Trophy rankings..."):
+        # Create the ranking table using dynamic net competition logic
+        trophy_ranking_table = create_net_competition_ranking_table(
+            teg_data=teg_data,
+            row_dimension=row_dimension,
+            col_dimension=col_dimension
+        )
 
-        # Display title and explanation
-        st.markdown(f"**{friendly_name} Rankings by TEG**")
-        # st.caption("Numbers show rank within that TEG. Ties are marked with '='. Empty cells = did not participate.")
+    # Display title and explanation
+    st.markdown("**TEG Trophy Rankings by TEG (Net Competition)**")
+    st.caption("Uses Net vs Par for TEG 1-5, Stableford Points for TEG 6+. Numbers show rank within that TEG. Ties are marked with '='. Empty cells = did not participate.")
 
-       # Format the table for display
-        if not ranking_table.empty:
-            display_table = (
-                ranking_table
-                    .reset_index(drop=True)   # drop the numeric index column
-            )
-            display_table.index.name = None   
-            display_table.columns.name = None # remove the 'TEG' columns name
+    # Format the table for display
+    if not trophy_ranking_table.empty:
+        display_table = (
+            trophy_ranking_table
+                .reset_index(drop=True)   # drop the numeric index column
+        )
+        display_table.index.name = None   
+        display_table.columns.name = None # remove the 'TEG' columns name
+        
+        # Use post-processed table with custom formatting
+        table_html = post_process_ranking_table(display_table, player_col=row_dimension)
+        st.write(table_html, unsafe_allow_html=True)
+        
+        st.markdown('')
+        st.markdown('')
+        st.markdown("**TEG Trophy rankings summary**")
+
+        position_summary = create_combined_position_summary(trophy_ranking_table, row_dimension)
+        datawrapper_table(position_summary, css_classes='position-table bold-2nd')
             
-            # Use post-processed table with custom formatting
-            table_html = post_process_ranking_table(display_table, player_col=row_dimension)
-            st.write(table_html, unsafe_allow_html=True)
-            
-            # # Add position summary
-            # st.markdown("##### Position Summary")
-            st.markdown('')
-            st.markdown('')
-            st.markdown(f"**{friendly_name} rankings summary**")
+    else:
+        st.warning("No data available for TEG Trophy rankings.")
 
-            position_summary = create_combined_position_summary(ranking_table, row_dimension)
-            datawrapper_table(position_summary, css_classes='position-table bold-2nd')
-                
-        else:
-            st.warning("No data available for the selected criteria.")
+# Green Jacket Tab (Gross vs Par)
+with tabs[1]:
+    with st.spinner("Calculating Green Jacket rankings..."):
+        # Create the ranking table for Gross vs Par
+        jacket_ranking_table = create_teg_ranking_table(
+            teg_data=teg_data,
+            scoring_type='GrossVP',
+            row_dimension=row_dimension,
+            col_dimension=col_dimension
+        )
+
+    # Display title and explanation
+    st.markdown("**Green Jacket Rankings by TEG (Gross vs Par)**")
+    st.caption("Lower scores are better. Numbers show rank within that TEG. Ties are marked with '='. Empty cells = did not participate.")
+
+    # Format the table for display
+    if not jacket_ranking_table.empty:
+        display_table = (
+            jacket_ranking_table
+                .reset_index(drop=True)   # drop the numeric index column
+        )
+        display_table.index.name = None   
+        display_table.columns.name = None # remove the 'TEG' columns name
+        
+        # Use post-processed table with custom formatting
+        table_html = post_process_ranking_table(display_table, player_col=row_dimension)
+        st.write(table_html, unsafe_allow_html=True)
+        
+        st.markdown('')
+        st.markdown('')
+        st.markdown("**Green Jacket rankings summary**")
+
+        position_summary = create_combined_position_summary(jacket_ranking_table, row_dimension)
+        datawrapper_table(position_summary, css_classes='position-table bold-2nd')
+            
+    else:
+        st.warning("No data available for Green Jacket rankings.")

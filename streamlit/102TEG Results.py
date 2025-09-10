@@ -11,7 +11,7 @@ from utils import get_teg_rounds, get_round_data, load_all_data, load_datawrappe
 from make_charts import create_cumulative_graph, adjusted_grossvp, adjusted_stableford
 
 # Import leaderboard display functions (shared utilities)
-from leaderboard_utils import create_leaderboard, generate_table_html, format_value, get_champions, get_last_place, display_leaderboard
+from leaderboard_utils import create_leaderboard, generate_table_html, format_value, get_champions, get_last_place, display_leaderboard, display_net_leaderboard
 
 
 # === CONFIGURATION ===
@@ -88,19 +88,17 @@ try:
     st.markdown('')  # Add spacing
 
     # === MAIN CONTENT TABS ===
-    # Two main competitions: Trophy (Stableford) and Green Jacket (Gross)
+    # Two main competitions: Trophy (Net) and Green Jacket (Gross)
     tab1, tab2 = st.tabs(["TEG Trophy & Spoon", "Green Jacket"])
 
-    # === TEG TROPHY TAB (STABLEFORD COMPETITION) ===
+    # === TEG TROPHY TAB (NET COMPETITION) ===
     with tab1:
 
-        # display_leaderboard() - Shows formatted leaderboard with rankings and wooden spoon
-        display_leaderboard(
+        # display_net_leaderboard() - Shows formatted leaderboard with automatic measure detection
+        display_net_leaderboard(
             leaderboard_df, 
-            'Stableford', 
-            f"{chosen_teg} Trophy Leaderboard (Best Stableford)",
-            leader_label, 
-            ascending=False  # Higher Stableford scores are better
+            f"{chosen_teg} Trophy Leaderboard",
+            leader_label
         )
 
         st.markdown('')  # Add spacing between sections
