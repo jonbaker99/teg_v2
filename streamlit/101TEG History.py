@@ -12,7 +12,9 @@ from helpers.history_data_processing import (
     process_winners_for_charts,
     calculate_trophy_jacket_doubles, 
     prepare_history_table_display,
-    create_bar_chart
+    create_bar_chart,
+    get_eagles_data,
+    get_holes_in_one_data
 )
 
 
@@ -63,9 +65,9 @@ history_display_table = prepare_history_table_display(winners_with_year)
 # === SECTION 1: WINS BY PLAYER ===
 st.markdown("#### TEG Honours Board")
 
-# Create tabs for each competition plus doubles
+# Create tabs for each competition plus doubles, eagles, and holes in one
 long_labels = [get_trophy_full_name(comp) for comp in competitions]
-all_tabs = st.tabs(long_labels + ["Doubles"])
+all_tabs = st.tabs(long_labels + ["Doubles", "Eagles", "Holes in One"])
 
 # Display summary tables for each competition
 for i, (comp, tab) in enumerate(zip(competitions, all_tabs[:3])):
@@ -103,6 +105,36 @@ with all_tabs[3]:
         ), 
         unsafe_allow_html=True
     )
+
+# Display Eagles tab
+with all_tabs[4]:
+    eagles_data = get_eagles_data(all_data)
+    if eagles_data.empty:
+        st.info("No eagles have been scored on a TEG")
+    else:
+        st.write(
+            eagles_data.to_html(
+                index=False, 
+                justify='left', 
+                classes='datawrapper-table table-left-align'
+            ), 
+            unsafe_allow_html=True
+        )
+
+# Display Holes in One tab
+with all_tabs[5]:
+    holes_in_one_data = get_holes_in_one_data(all_data)
+    if holes_in_one_data.empty:
+        st.info("No holes in one have been scored on a TEG")
+    else:
+        st.write(
+            holes_in_one_data.to_html(
+                index=False, 
+                justify='left', 
+                classes='datawrapper-table table-left-align'
+            ), 
+            unsafe_allow_html=True
+        )
 
 st.divider()
 

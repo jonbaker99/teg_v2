@@ -3,7 +3,9 @@
     "allow": [
       "Read(/C:\\Users\\jonba/**)",
       "Bash(mkdir:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(python:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

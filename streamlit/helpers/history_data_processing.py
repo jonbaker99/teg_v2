@@ -163,3 +163,71 @@ def create_bar_chart(df, x_col, y_col, title):
     
     # Combine chart and text labels
     return chart + text
+
+
+def get_eagles_data(all_data):
+    """
+    Find all Eagles (-2 gross vs par) scored in TEG history.
+    
+    Args:
+        all_data (pd.DataFrame): Complete scoring data with Par, Score, Player, TEG, Round, Hole columns
+        
+    Returns:
+        pd.DataFrame: Eagles data with Player, Date, Course, Hole columns
+        
+    Purpose:
+        Identifies all Eagles (score 2 under par) for honours board display
+    """
+    # Find all Eagles: Gross score is 2 under par
+    eagles = all_data[all_data['GrossVP'] == -2.0].copy()
+    
+    if eagles.empty:
+        return pd.DataFrame(columns=['Player', 'Date', 'Course', 'Hole'])
+    
+    # Create formatted hole information as "TEG X | Rd X | Hole X"
+    eagles['Hole'] = eagles['TEG'].astype(str) + ' | Rd ' + eagles['Round'].astype(str) + ' | Hole ' + eagles['Hole'].astype(str)
+    
+    # Select and order columns for display
+    eagles_display = eagles[['Player', 'Date', 'Course', 'Hole', 'TEGNum']].copy()
+    
+    # Sort by TEG, Round, Hole (using original numeric values)
+    eagles_display = eagles_display.sort_values(['TEGNum', 'Date'])
+    
+    # Remove TEGNum from final display
+    eagles_display = eagles_display[['Player', 'Date', 'Course', 'Hole']]
+    
+    return eagles_display
+
+
+def get_holes_in_one_data(all_data):
+    """
+    Find all Holes in One scored in TEG history.
+    
+    Args:
+        all_data (pd.DataFrame): Complete scoring data with Score, Player, TEG, Round, Hole columns
+        
+    Returns:
+        pd.DataFrame: Holes in One data with Player, Date, Course, Hole columns
+        
+    Purpose:
+        Identifies all Holes in One (score of 1) for honours board display
+    """
+    # Find all Holes in One: Gross score is 1
+    holes_in_one = all_data[all_data['Sc'] == 1.0].copy()
+    
+    if holes_in_one.empty:
+        return pd.DataFrame(columns=['Player', 'Date', 'Course', 'Hole'])
+    
+    # Create formatted hole information as "TEG X | Rd X | Hole X"
+    holes_in_one['Hole'] = holes_in_one['TEG'].astype(str) + ' | Rd ' + holes_in_one['Round'].astype(str) + ' | Hole ' + holes_in_one['Hole'].astype(str)
+    
+    # Select and order columns for display
+    holes_in_one_display = holes_in_one[['Player', 'Date', 'Course', 'Hole', 'TEGNum']].copy()
+    
+    # Sort by TEG, Round, Hole (using original numeric values)
+    holes_in_one_display = holes_in_one_display.sort_values(['TEGNum', 'Date'])
+    
+    # Remove TEGNum from final display
+    holes_in_one_display = holes_in_one_display[['Player', 'Date', 'Course', 'Hole']]
+    
+    return holes_in_one_display
