@@ -740,7 +740,7 @@ def get_net_competition_measure(teg_num: int) -> str:
         >>> get_net_competition_measure(8)
         'Stableford'
     """
-    if teg_num <= 5:
+    if teg_num <= 7:
         return 'NetVP'
     else:
         return 'Stableford'
