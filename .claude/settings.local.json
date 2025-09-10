@@ -9,6 +9,8 @@
       "Bash(git commit:*)"
     ],
     "deny": [],
-    "ask": []
+    "ask": [
+      "Bash(git push:*)"
+    ]
   }
 }
