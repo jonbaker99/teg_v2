@@ -46,6 +46,8 @@ scorecard_mob_pg = st.Page("scorecard_v2_mobile.py", title="Scorecard (mobile)",
 sc_count_pg = st.Page("sc_count.py", title="Count by score & gross vs par", icon=":material/strategy:")
 bestball_pg = st.Page("bestball.py", title="Bestball and worstball", icon=":material/strategy:")
 changes_pg = st.Page("biggest_changes.py", title="Changes vs previous round", icon=":material/strategy:")
+eclectic_pg = st.Page("eclectic.py", title="Eclectic Scores", icon=":material/golf_course:")
+eclectic_records_pg = st.Page("best_eclectics.py", title="Eclectic Records", icon=":material/emoji_events:")
 connection_test_pg = st.Page("test_github_connections.py", title="Github Connection Test", icon=":material/check_circle:")
 
 
@@ -54,8 +56,9 @@ pg = st.navigation(
             #"Home": [home_page],
             "History": [history_page, results_page, player_ranking_page],
             "Records & PBs": [records_page, worsts_page, top_pages, pb_page],
-            "Scoring": [bypar_pg, birdies_pg, streaks_pg, sc_count_pg,byteg_pg,  bestball_pg, changes_pg],
+            "Scoring": [bypar_pg, birdies_pg, streaks_pg, sc_count_pg,byteg_pg,  changes_pg],
             "Courses" :[course_ave_pg, course_rds_pg] ,
+            "Bestballs / Eclectics": [bestball_pg, eclectic_pg, eclectic_records_pg],
             #"Players": [players_pg],
             "Latest TEG": [leaderboard_pg, scorecard_pg, scorecard_mob_pg, latest_rd_page, latest_teg_page, hc_page],
             #"Data":[data_pg, delete_pg, connection_test_pg, data_diagnostic_pg]

@@ -68,6 +68,14 @@
     text-align: left;
 }
 
+.datawrapper-table.bold-2nd td:nth-child(2),
+.datawrapper-table.bold-2nd th:nth-child(2),
+.datawrapper-table.bold-3rd td:nth-child(3),
+.datawrapper-table.bold-3rd th:nth-child(3) {
+    font-weight: bold;
+}
+
+
 /* --- Full left align variants */
 
 .datawrapper-table.table-left-align {
@@ -118,7 +126,16 @@
    COMPLEX VARIANTS (semantic/multi-purpose)
    ============================================== */
 
-/* Currently none defined - add complex table types here as needed */
+/* === ECLECTIC TABLE - Final 18 columns (hole scores) styling */
+.datawrapper-table.eclectic td:nth-last-child(-n+18),
+.datawrapper-table.eclectic th:nth-last-child(-n+18) {
+    font-size: 10px;
+    padding: 8px 4px;
+    width: 22px;
+    min-width: 22px;
+    max-width: 22px;
+}
+
 /* Examples for future use:
 .datawrapper-table.leaderboard { ... }
 .datawrapper-table.scorecard { ... }
