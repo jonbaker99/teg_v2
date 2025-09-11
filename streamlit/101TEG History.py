@@ -7,7 +7,7 @@ from utils import load_all_data, get_teg_winners, load_datawrapper_css
 
 # Import history-specific helper functions
 from helpers.history_data_processing import (
-    prepare_history_table_display
+    prepare_complete_history_table
 )
 
 
@@ -33,9 +33,9 @@ all_data = load_all_data(exclude_incomplete_tegs=True, exclude_teg_50=True)
 winners_with_year = get_teg_winners(all_data)
 
 # === DATA PROCESSING ===
-# prepare_history_table_display() - Creates compact historical table format
-# Combines TEG name and year for cleaner display
-history_display_table = prepare_history_table_display(winners_with_year)
+# prepare_complete_history_table() - Creates comprehensive history including TBC entries
+# Includes completed TEGs with winners, plus incomplete/future TEGs with TBC
+history_display_table = prepare_complete_history_table(winners_with_year)
 
 
 # === TEG HISTORY TABLE ===
