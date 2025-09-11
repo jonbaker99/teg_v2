@@ -11,6 +11,8 @@ from helpers.best_performance_processing import (
     get_measure_name_mappings,
     prepare_best_teg_table,
     prepare_best_round_table,
+    prepare_worst_teg_table,
+    prepare_worst_round_table,
     prepare_round_data_with_identifiers
 )
 
@@ -62,8 +64,14 @@ best_tegs_table = prepare_best_teg_table(teg_data_ranked, selected_measure, sele
 # prepare_best_round_table() - Creates formatted table of top round performances  
 best_rounds_table = prepare_best_round_table(rd_data_formatted, selected_measure, selected_friendly_name, n_keep)
 
+# prepare_worst_teg_table() - Creates formatted table of worst TEG performances
+worst_tegs_table = prepare_worst_teg_table(teg_data_ranked, selected_measure, selected_friendly_name, n_keep)
+
+# prepare_worst_round_table() - Creates formatted table of worst round performances
+worst_rounds_table = prepare_worst_round_table(rd_data_formatted, selected_measure, selected_friendly_name, n_keep)
+
 # Display results in tabs
-tab1, tab2 = st.tabs(["Best TEGs", "Best Rounds"])
+tab1, tab2, tab3, tab4 = st.tabs(["Best TEGs", "Best Rounds", "Worst TEGs", "Worst Rounds"])
 
 with tab1:
     st.markdown(f'### Top {n_keep} TEGs: {selected_friendly_name}')
@@ -88,3 +96,30 @@ with tab2:
         ), 
         unsafe_allow_html=True
     )
+
+with tab3:
+    st.markdown(f'### Worst {n_keep} TEGs: {selected_friendly_name}')
+    st.write(
+        worst_tegs_table.to_html(
+            escape=False, 
+            index=False, 
+            justify='left', 
+            classes='datawrapper-table narrow-first left-second'
+        ), 
+        unsafe_allow_html=True
+    )
+
+with tab4:
+    st.markdown(f'### Worst {n_keep} Rounds: {selected_friendly_name}')
+    st.write(
+        worst_rounds_table.to_html(
+            escape=False, 
+            index=False, 
+            justify='left', 
+            classes='datawrapper-table narrow-first left-second'
+        ), 
+        unsafe_allow_html=True
+    )
+
+# Add note about TEG 2 exclusion
+st.caption("Note: TEG 2 is excluded from all TEG-level analysis as it only had 3 rounds compared to the standard 4 rounds.")

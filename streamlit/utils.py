@@ -1059,16 +1059,14 @@ def get_worst(df, measure_to_use, player_level = False, top_n = 1):
 
     if player_level == False:
         if measure_to_use == 'Stableford':
-            #df = df.nsmallest(top_n, measure_to_use)
-            df = df[df[measure_to_use] == df[measure_to_use].min()]
+            df = df.nsmallest(top_n, measure_to_use)
         else:
-            #df = df.nlargest(top_n, measure_to_use)
-            df = df[df[measure_to_use] == df[measure_to_use].max()]
+            df = df.nlargest(top_n, measure_to_use)
     else:
         if measure_to_use == 'Stableford':
-            df = df.groupby('Player', group_keys=False).apply(lambda x: x.nsmallest(top_n, 'Measure_FN'))
+            df = df.groupby('Player', group_keys=False).apply(lambda x: x.nsmallest(top_n, measure_to_use))
         else:
-            df = df.groupby('Player', group_keys=False).apply(lambda x: x.nlargest(top_n, 'Measure_FN'))
+            df = df.groupby('Player', group_keys=False).apply(lambda x: x.nlargest(top_n, measure_to_use))
 
     return df
 

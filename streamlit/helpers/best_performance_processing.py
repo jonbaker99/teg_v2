@@ -51,24 +51,40 @@ def prepare_best_teg_table(teg_data_ranked, selected_measure, selected_friendly_
     """
     name_mapping, inverted_name_mapping = get_measure_name_mappings()
     
-    # Calculate ranking column name
-    rank_measure = f'Rank_within_all_{selected_measure}'
+    # Filter out TEG 2 for all measures BEFORE getting best performances
+    # (TEG 2 only had 3 rounds, so not comparable to 4-round TEGs)
+    filtered_data = teg_data_ranked[teg_data_ranked['TEGNum'] != 2].copy()
     
-    # Get best performances from utils function
-    from utils import get_best
+    # For filtered data, we can't use the pre-calculated rankings (they include TEG 2)
+    # So we'll get the best scores directly using nsmallest/nlargest
+    if selected_measure == 'Stableford':
+        # For Stableford, higher is better
+        best_tegs = filtered_data.nlargest(n_keep, selected_measure)
+    else:
+        # For other measures, lower is better
+        best_tegs = filtered_data.nsmallest(n_keep, selected_measure)
     
-    best_tegs = (get_best(teg_data_ranked, selected_measure, player_level=False, top_n=n_keep)
-                 .sort_values(by=rank_measure, ascending=True)
-                 .rename(columns={rank_measure: '#'})
-                 .rename(columns=inverted_name_mapping))
+    # Add ranking column manually
+    best_tegs = best_tegs.copy()
+    best_tegs['#'] = range(1, len(best_tegs) + 1)
+    
+    # Rename columns for display
+    best_tegs = best_tegs.rename(columns=inverted_name_mapping)
     
     # Select and order columns for display
     display_columns = ['#', 'Player', selected_friendly_name, 'TEG', 'Year']
     best_tegs = best_tegs[display_columns]
     
-    # Convert numeric columns to integers for clean display
-    numeric_columns = best_tegs.select_dtypes(include=['float64', 'int64']).columns
-    best_tegs[numeric_columns] = best_tegs[numeric_columns].astype(int)
+    # Format vs par columns properly and convert other numeric columns to integers
+    from utils import format_vs_par
+    
+    if selected_friendly_name in ['Gross vs Par', 'Net vs Par']:
+        # Format vs par values with +/- notation
+        best_tegs[selected_friendly_name] = best_tegs[selected_friendly_name].apply(format_vs_par)
+    else:
+        # Convert numeric columns to integers for clean display
+        numeric_columns = best_tegs.select_dtypes(include=['float64', 'int64']).columns
+        best_tegs[numeric_columns] = best_tegs[numeric_columns].astype(int)
     
     return best_tegs
 
@@ -107,9 +123,16 @@ def prepare_best_round_table(rd_data_ranked, selected_measure, selected_friendly
     display_columns = ['#', 'Player', selected_friendly_name, 'Round', 'Course', 'Year']
     best_rounds = best_rounds[display_columns]
     
-    # Convert numeric columns to integers for clean display
-    numeric_columns = best_rounds.select_dtypes(include=['float64', 'int64']).columns
-    best_rounds[numeric_columns] = best_rounds[numeric_columns].astype(int)
+    # Format vs par columns properly and convert other numeric columns to integers
+    from utils import format_vs_par
+    
+    if selected_friendly_name in ['Gross vs Par', 'Net vs Par']:
+        # Format vs par values with +/- notation
+        best_rounds[selected_friendly_name] = best_rounds[selected_friendly_name].apply(format_vs_par)
+    else:
+        # Convert numeric columns to integers for clean display
+        numeric_columns = best_rounds.select_dtypes(include=['float64', 'int64']).columns
+        best_rounds[numeric_columns] = best_rounds[numeric_columns].astype(int)
     
     return best_rounds
 
@@ -212,3 +235,110 @@ def prepare_personal_best_round_table(rd_data_ranked, selected_measure, selected
     personal_best_rounds[numeric_columns] = personal_best_rounds[numeric_columns].astype(int)
     
     return personal_best_rounds
+
+
+def prepare_worst_teg_table(teg_data_ranked, selected_measure, selected_friendly_name, n_keep):
+    """
+    Create formatted table of worst TEG performances.
+    
+    Args:
+        teg_data_ranked (pd.DataFrame): Ranked TEG performance data
+        selected_measure (str): Internal measure name (e.g., 'GrossVP')
+        selected_friendly_name (str): Display name (e.g., 'Gross vs Par')
+        n_keep (int): Number of worst performances to show
+        
+    Returns:
+        pd.DataFrame: Formatted table ready for display
+        
+    Purpose:
+        Creates clean, ranked table showing worst TEG performances
+        Uses reverse sorting to get the highest (worst) scores
+    """
+    name_mapping, inverted_name_mapping = get_measure_name_mappings()
+    
+    # Filter out TEG 2 for all measures BEFORE getting worst performances
+    # (TEG 2 only had 3 rounds, so not comparable to 4-round TEGs)
+    filtered_data = teg_data_ranked[teg_data_ranked['TEGNum'] != 2].copy()
+    
+    # For filtered data, we can't use get_worst with pre-calculated rankings
+    # So we'll get the worst scores directly using nsmallest/nlargest
+    if selected_measure == 'Stableford':
+        # For Stableford, lower is worse
+        worst_tegs = filtered_data.nsmallest(n_keep, selected_measure)
+    else:
+        # For other measures, higher is worse
+        worst_tegs = filtered_data.nlargest(n_keep, selected_measure)
+    
+    # Add ranking column manually
+    worst_tegs = worst_tegs.copy()
+    worst_tegs['#'] = range(1, len(worst_tegs) + 1)
+    
+    # Rename columns for display
+    worst_tegs = worst_tegs.rename(columns=inverted_name_mapping)
+    
+    # Select and order columns for display
+    display_columns = ['#', 'Player', selected_friendly_name, 'TEG', 'Year']
+    worst_tegs = worst_tegs[display_columns]
+    
+    # Format vs par columns properly and convert other numeric columns to integers
+    from utils import format_vs_par
+    
+    if selected_friendly_name in ['Gross vs Par', 'Net vs Par']:
+        # Format vs par values with +/- notation
+        worst_tegs[selected_friendly_name] = worst_tegs[selected_friendly_name].apply(format_vs_par)
+    else:
+        # Convert numeric columns to integers for clean display
+        numeric_columns = worst_tegs.select_dtypes(include=['float64', 'int64']).columns
+        worst_tegs[numeric_columns] = worst_tegs[numeric_columns].astype(int)
+    
+    return worst_tegs
+
+
+def prepare_worst_round_table(rd_data_ranked, selected_measure, selected_friendly_name, n_keep):
+    """
+    Create formatted table of worst round performances.
+    
+    Args:
+        rd_data_ranked (pd.DataFrame): Ranked round performance data
+        selected_measure (str): Internal measure name (e.g., 'GrossVP')
+        selected_friendly_name (str): Display name (e.g., 'Gross vs Par')
+        n_keep (int): Number of worst performances to show
+        
+    Returns:
+        pd.DataFrame: Formatted table ready for display
+        
+    Purpose:
+        Creates clean, ranked table showing worst individual round performances
+        Uses reverse sorting to get the highest (worst) scores
+    """
+    name_mapping, inverted_name_mapping = get_measure_name_mappings()
+    
+    # Get worst performances from utils function
+    from utils import get_worst
+    
+    worst_rounds = (get_worst(rd_data_ranked, selected_measure, player_level=False, top_n=n_keep)
+                    .rename(columns=inverted_name_mapping))
+    
+    # Sort by measure in descending order (worst first)
+    sort_ascending = selected_measure == 'Stableford'  # Stableford: lower is worse
+    worst_rounds = worst_rounds.sort_values(by=selected_friendly_name, ascending=sort_ascending)
+    
+    # Add ranking column
+    worst_rounds['#'] = range(1, len(worst_rounds) + 1)
+    
+    # Select and order columns for display
+    display_columns = ['#', 'Player', selected_friendly_name, 'Round', 'Course', 'Year']
+    worst_rounds = worst_rounds[display_columns]
+    
+    # Format vs par columns properly and convert other numeric columns to integers
+    from utils import format_vs_par
+    
+    if selected_friendly_name in ['Gross vs Par', 'Net vs Par']:
+        # Format vs par values with +/- notation
+        worst_rounds[selected_friendly_name] = worst_rounds[selected_friendly_name].apply(format_vs_par)
+    else:
+        # Convert numeric columns to integers for clean display
+        numeric_columns = worst_rounds.select_dtypes(include=['float64', 'int64']).columns
+        worst_rounds[numeric_columns] = worst_rounds[numeric_columns].astype(int)
+    
+    return worst_rounds
