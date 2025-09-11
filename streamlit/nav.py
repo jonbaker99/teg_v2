@@ -65,7 +65,7 @@ pg = st.navigation(
             #"Data":[data_pg, delete_pg, connection_test_pg, data_diagnostic_pg]
             "Data":[data_pg, delete_pg, connection_test_pg]
         }      
-    # , position='top'
+    , position='top'
     )
 
 pg.run()
