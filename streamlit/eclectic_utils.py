@@ -14,7 +14,7 @@ def calculate_eclectic_by_dimension(data, dimension):
     
     # Group by dimension and hole, take minimum score
     group_cols = [dimension, 'Hole']
-    eclectic_holes = data.groupby(group_cols)['Sc'].min().reset_index()
+    eclectic_holes = data.groupby(group_cols)['GrossVP'].min().reset_index()
     
     # Count rounds contributing to each dimension's eclectic
     if dimension == 'TEGNum':
@@ -49,7 +49,7 @@ def calculate_eclectic_by_dimension(data, dimension):
         display_dimension = 'TEG'  # Use TEG for display
     
     # Pivot to get holes as columns
-    eclectic_pivot = eclectic_holes.pivot(index=display_dimension, columns='Hole', values='Sc')
+    eclectic_pivot = eclectic_holes.pivot(index=display_dimension, columns='Hole', values='GrossVP')
     
     # Clear the column index name to avoid extra header
     eclectic_pivot.columns.name = None
@@ -95,7 +95,7 @@ def calculate_team_eclectics(data):
             continue
             
         # Get best score for each hole across all team members
-        team_eclectic = team_data.groupby('Hole')['Sc'].min().reset_index()
+        team_eclectic = team_data.groupby('Hole')['GrossVP'].min().reset_index()
         team_eclectic['Team'] = team_name
         
         # Count total rounds for the team
@@ -111,7 +111,7 @@ def calculate_team_eclectics(data):
     all_teams = pd.concat(team_results, ignore_index=True)
     
     # Pivot to get holes as columns
-    team_pivot = all_teams.pivot(index='Team', columns='Hole', values='Sc')
+    team_pivot = all_teams.pivot(index='Team', columns='Hole', values='GrossVP')
     team_pivot.columns.name = None
     
     # Ensure all 18 holes are present
@@ -152,7 +152,7 @@ def calculate_combined_eclectic(data):
         return pd.DataFrame(), 'Combined'
     
     # Get best score for each hole across ALL data
-    combined_eclectic = data.groupby('Hole')['Sc'].min()
+    combined_eclectic = data.groupby('Hole')['GrossVP'].min()
     
     # Count total rounds
     total_rounds = len(data.groupby(['Player', 'TEGNum', 'Round']))

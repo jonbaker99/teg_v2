@@ -61,7 +61,7 @@ max_course_data = create_course_performance_table(filtered_rd_data, 'max')
 course_summary = create_course_summary_table(course_count, mean_course_data, min_course_data, max_course_data)
 
 # Display results in tabs
-tab1, tab2, tab3, tab4 = st.tabs(["Summary by course", "Course average", "Best Rounds", "Worst Rounds"])
+tab1, tab2, tab3, tab4 = st.tabs(["Summary by course", "Averages", "Bests", "Worsts"])
 
 with tab1:
     datawrapper_table(course_summary, css_classes='full-width')

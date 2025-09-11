@@ -8,6 +8,7 @@ import re
 from utils import get_complete_teg_data, load_datawrapper_css, datawrapper_table, get_net_competition_measure
 
 # === CONFIGURATION ===
+st.set_page_config(layout="wide")
 st.title("Player Rankings by TEG")
 
 # Load CSS styling for consistent table appearance
