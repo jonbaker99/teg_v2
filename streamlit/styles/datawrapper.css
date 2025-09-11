@@ -262,11 +262,14 @@
 .player-ranking-table td,
 .player-ranking-table th {
     padding: 4px;
+    width:35px;
+    min-width:20px;
+    max-width: 40px;
 }
 
-.player-ranking-table{
+/* .player-ranking-table{
     width: 100%;
-}
+} */
 
 .position-table td,
 .position-table th {
