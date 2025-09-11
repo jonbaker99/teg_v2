@@ -115,3 +115,4 @@ Always use the centralized `read_file()` function from `utils.py` which handles 
 - Prioritize code maintainability over clever solutions  
 - Test changes thoroughly before expanding scope
 - Document the reasoning behind architectural decisions
+- There are two competitions in each TEG, gross and net. Up to TEG 5, the net competition was based on total net vs par; from TEG 6 onwards the net competition was based on total stableford points
