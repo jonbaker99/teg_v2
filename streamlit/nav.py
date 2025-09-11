@@ -34,7 +34,7 @@ st.markdown(
     [data-testid="stToolbar"]::before {
         content: "The El Golfo";
         font-size: 1.6rem;
-        font-weight: 700;
+        font-weight: bold;
         line-height: 1;
         white-space: nowrap;        /* keep on one line */
         color: var(--text-color);
