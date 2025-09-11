@@ -103,3 +103,8 @@ with st.expander("Handicap history"):
         st.warning("The file '/data/handicaps.csv' is empty.")
     except Exception as e:
         st.error(f"An error occurred while reading the CSV file: {str(e)}")
+
+
+# TODO: Add draft handicaps calculation section for next TEG
+# REMINDER: Look at handicap calculation function again - may need debugging
+# The calculate_handicaps_for_teg() function exists in utils.py but needs review
