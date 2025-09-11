@@ -138,16 +138,17 @@ def get_last_place(df: pd.DataFrame) -> str:
     return ', '.join(last_place)
 
 
-def display_leaderboard(leaderboard_df: pd.DataFrame, value_column: str, title: str, leader_label: str, ascending: bool) -> None:
+def display_leaderboard(leaderboard_df: pd.DataFrame, value_column: str, title: str, leader_label: str, ascending: bool, competition_name: str = None) -> None:
     """
-    Display a leaderboard.
+    Display a leaderboard with dynamic title formatting.
 
     Args:
         leaderboard_df (pd.DataFrame): Input dataframe.
         value_column (str): Column to use for ranking.
-        title (str): Title of the leaderboard.
+        title (str): Base title of the leaderboard (used as fallback).
         leader_label (str): Label for the leader/champion.
         ascending (bool): Whether to sort in ascending order.
+        competition_name (str): Name of competition (e.g. "Trophy", "Green Jacket") for new title format.
     """
     leaderboard = create_leaderboard(leaderboard_df, value_column, ascending)
     champions = get_champions(leaderboard)
@@ -158,7 +159,15 @@ def display_leaderboard(leaderboard_df: pd.DataFrame, value_column: str, title: 
     for col in columns_to_format:
         leaderboard[col] = leaderboard[col].apply(lambda x: format_value(x, value_column))
 
-    st.markdown(f'#### {title}')
+    # Create new title format: "{Competition} standings after {n} rounds" or "{Competition} final results"
+    if competition_name:
+        status_text, is_complete = _get_tournament_status_text(leaderboard_df)
+        formatted_title = f"{competition_name} standings {status_text}"
+    else:
+        # Fallback to original title format
+        formatted_title = title
+
+    st.markdown(f'#### {formatted_title}')
 
     if value_column in ['Stableford', 'NetVP']:
         st.markdown(f"""
@@ -178,7 +187,7 @@ def display_net_leaderboard(leaderboard_df: pd.DataFrame, base_title: str, leade
     Display a net competition leaderboard with automatic measure detection.
     
     Automatically determines whether to use NetVP or Stableford based on the TEG number
-    in the dataset and displays the appropriate leaderboard with dynamic title.
+    in the dataset and displays the appropriate leaderboard using new title format.
     
     Args:
         leaderboard_df (pd.DataFrame): Input dataframe containing TEGNum column.
@@ -191,22 +200,46 @@ def display_net_leaderboard(leaderboard_df: pd.DataFrame, base_title: str, leade
         logger.warning("TEGNum column not found in leaderboard data. Defaulting to Stableford.")
         measure = 'Stableford'
         ascending = False
-        title_suffix = "best stableford"
     else:
         # Get the TEG number (assume all data is from the same TEG)
         teg_num = leaderboard_df['TEGNum'].iloc[0]
         measure = get_net_competition_measure(teg_num)
         
-        # Set sort order and title suffix based on measure
+        # Set sort order based on measure
         if measure == 'NetVP':
             ascending = True
-            title_suffix = "best net vs par"
         else:
             ascending = False
-            title_suffix = "best stableford"
     
-    # Create the dynamic title
-    dynamic_title = f"{base_title}: {title_suffix}"
+    # Call the existing display_leaderboard function with Trophy competition name
+    display_leaderboard(leaderboard_df, measure, base_title, leader_label, ascending, competition_name="Trophy")
+
+
+def _get_tournament_status_text(leaderboard_df: pd.DataFrame) -> tuple[str, bool]:
+    """
+    Get tournament status text and completion status.
     
-    # Call the existing display_leaderboard function with the determined parameters
-    display_leaderboard(leaderboard_df, measure, dynamic_title, leader_label, ascending)
+    Args:
+        leaderboard_df (pd.DataFrame): Input dataframe with Round column.
+        
+    Returns:
+        tuple: (status_text, is_complete) where status_text is the text to use in titles
+    """
+    from utils import get_teg_rounds
+    
+    # Get current and total rounds
+    current_rounds = leaderboard_df['Round'].nunique()
+    
+    # Get TEG name to determine total rounds
+    if 'TEG' in leaderboard_df.columns:
+        teg_name = leaderboard_df['TEG'].iloc[0]
+        total_rounds = get_teg_rounds(teg_name)
+    else:
+        # Fallback if TEG column not available
+        total_rounds = 4  # Standard TEG rounds
+    
+    # Determine status text
+    if current_rounds >= total_rounds:
+        return "final results", True
+    else:
+        return f"after {current_rounds} round{'s' if current_rounds != 1 else ''}", False

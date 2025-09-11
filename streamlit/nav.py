@@ -2,6 +2,9 @@ import os
 import streamlit as st
 from pathlib import Path
 from streamlit_extras.stylable_container import stylable_container
+import sys
+sys.path.append(str(Path(__file__).parent))
+from helpers.history_data_processing import get_incomplete_tegs
 
 
 st.markdown(
@@ -52,20 +55,44 @@ eclectic_records_pg = st.Page("best_eclectics.py", title="Eclectic Records", ico
 connection_test_pg = st.Page("test_github_connections.py", title="Github Connection Test", icon=":material/check_circle:")
 
 
-pg = st.navigation(
-        {
-            #"Home": [home_page],
-            "History": [history_page, honours_page, results_page, player_ranking_page],
-            "Records & PBs": [records_page, worsts_page, top_pages, pb_page],
-            "Scorecards": [scorecard_pg, scorecard_mob_pg],
-            "Scoring analysis": [bypar_pg, birdies_pg, streaks_pg, sc_count_pg,byteg_pg,  changes_pg],
-            "Course scoring" :[course_ave_pg, course_rds_pg] ,
-            "Bestballs / Eclectics": [bestball_pg, eclectic_pg, eclectic_records_pg],
-            #"Players": [players_pg],
-            "Latest TEG": [leaderboard_pg, latest_rd_page, latest_teg_page, hc_page],
-            "Data":[data_pg, delete_pg, connection_test_pg]
-        }      
-    , position='top'
-    )
+# Check if there are incomplete TEGs to determine navigation structure
+try:
+    incomplete_tegs = get_incomplete_tegs()
+    has_incomplete_teg = not incomplete_tegs.empty
+except:
+    # If there's any error checking for incomplete TEGs, default to no incomplete TEG
+    has_incomplete_teg = False
+
+# Build navigation structure based on TEG status
+if has_incomplete_teg:
+    # If TEG is in progress, show "Current TEG" section first
+    nav_structure = {
+        #"Home": [home_page],
+        "Current TEG": [leaderboard_pg, latest_rd_page, latest_teg_page,scorecard_pg, scorecard_mob_pg, hc_page],
+        "History": [history_page, honours_page, results_page, player_ranking_page],
+        "Records & PBs": [records_page, worsts_page, top_pages, pb_page],
+        # "Scorecards": [scorecard_pg, scorecard_mob_pg],
+        "Scoring analysis": [bypar_pg, birdies_pg, streaks_pg, sc_count_pg,byteg_pg,  changes_pg],
+        "Course scoring" :[course_ave_pg, course_rds_pg] ,
+        "Bestballs / Eclectics": [bestball_pg, eclectic_pg, eclectic_records_pg],
+        #"Players": [players_pg],
+        "Data":[data_pg, delete_pg, connection_test_pg]
+    }
+else:
+    # If no TEG in progress, use original structure with "Latest TEG" at the end
+    nav_structure = {
+        #"Home": [home_page],
+        "History": [history_page, honours_page, results_page, player_ranking_page],
+        "Records & PBs": [records_page, worsts_page, top_pages, pb_page],
+        "Scorecards": [scorecard_pg, scorecard_mob_pg],
+        "Scoring analysis": [bypar_pg, birdies_pg, streaks_pg, sc_count_pg,byteg_pg,  changes_pg],
+        "Course scoring" :[course_ave_pg, course_rds_pg] ,
+        "Bestballs / Eclectics": [bestball_pg, eclectic_pg, eclectic_records_pg],
+        #"Players": [players_pg],
+        "Latest TEG": [leaderboard_pg, latest_rd_page, latest_teg_page, hc_page],
+        "Data":[data_pg, delete_pg, connection_test_pg]
+    }
+
+pg = st.navigation(nav_structure, position='top')
 
 pg.run()

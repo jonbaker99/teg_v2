@@ -34,11 +34,6 @@ ex_teg_50 = True
 if not ex_teg_50:
     st.markdown("# TEG 50 IS INCLUDED... BE CAREFUL")
 
-# Add sidebar refresh button for data updates
-if st.sidebar.button("Refresh Data"):
-    st.cache_data.clear()
-    st.rerun()
-
 try:
     with st.spinner("Loading data..."):
         # Load round-level data (includes incomplete TEGs, excludes TEG 50)
@@ -85,7 +80,7 @@ try:
     is_complete = current_rounds >= total_rounds
 
     # Set appropriate labels based on tournament status
-    page_header = f"{chosen_teg} Results" if is_complete else f"{chosen_teg} Scoreboard"
+    page_header = f"{chosen_teg} Results" if is_complete else f"{chosen_teg} Leaderboard"
     leader_label = "Champion" if is_complete else "Leader"
 
     # Display page header
@@ -163,9 +158,10 @@ try:
         display_leaderboard(
             leaderboard_df=leaderboard_df, 
             value_column='GrossVP', 
-            title=f"{chosen_teg} Green Jacket Leaderboard (Best Gross)",
+            title=f"{chosen_teg} Green Jacket Leaderboard",
             leader_label=leader_label, 
-            ascending=True  # Lower gross scores are better
+            ascending=True,  # Lower gross scores are better
+            competition_name="Green Jacket"
         )
 
         st.markdown('')  # Add spacing between sections

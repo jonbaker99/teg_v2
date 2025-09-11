@@ -40,37 +40,40 @@ chart_fields_all = get_scoring_achievement_fields()
 
 # create_achievement_tab_labels() - Creates user-friendly tab labels
 tab_labels = create_achievement_tab_labels(chart_fields_all)
+
+# Add additional tab for single-round maximums
+tab_labels.append("Most in a single round")
 tabs = st.tabs(tab_labels)
 
 # Display achievement statistics in tabs
 for i, tab in enumerate(tabs):
     with tab:
-        chart_fields = chart_fields_all[i]
-        
-        # create_section_title() - Creates clean section title from field names
-        section_title = create_section_title(chart_fields)
-        st.markdown(f"**Career {section_title}**")
-        
-        # prepare_achievement_table_data() - Formats table with proper sorting and display formatting
-        formatted_table = prepare_achievement_table_data(scoring_stats, chart_fields)
-        st.write(
-            formatted_table.to_html(
-                index=False, 
-                justify='left', 
-                classes='datawrapper-table'
-            ), 
-            unsafe_allow_html=True
-        )
-
-'---'
-
-# Single-round maximums section
-st.subheader('Most in a single round')
-st.write(
-    max_by_round.to_html(
-        index=False, 
-        justify='left', 
-        classes='datawrapper-table'
-    ), 
-    unsafe_allow_html=True
-)
+        if i < len(chart_fields_all):
+            # Career achievement tabs
+            chart_fields = chart_fields_all[i]
+            
+            # create_section_title() - Creates clean section title from field names
+            section_title = create_section_title(chart_fields)
+            st.markdown(f"**Career {section_title}**")
+            
+            # prepare_achievement_table_data() - Formats table with proper sorting and display formatting
+            formatted_table = prepare_achievement_table_data(scoring_stats, chart_fields)
+            st.write(
+                formatted_table.to_html(
+                    index=False, 
+                    justify='left', 
+                    classes='datawrapper-table'
+                ), 
+                unsafe_allow_html=True
+            )
+        else:
+            # Single-round maximums tab
+            st.markdown("**Most in a single round**")
+            st.write(
+                max_by_round.to_html(
+                    index=False, 
+                    justify='left', 
+                    classes='datawrapper-table'
+                ), 
+                unsafe_allow_html=True
+            )
