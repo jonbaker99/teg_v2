@@ -10,17 +10,49 @@ from helpers.history_data_processing import get_incomplete_tegs
 st.markdown(
     """
     <style>
+    /* Keep for sidebar layout */
     [data-testid="stSidebar"]::before {
         content: "The El Golfo";
         display: block;
         font-size: 1.8rem;
         font-weight: bold;
         padding: 0.6rem 1rem 0.2rem 1rem;
+        color: var(--text-color);
+        font-family: var(--font);
+    }
+
+    /* TOP NAV: layout + spacing */
+    [data-testid="stToolbar"] {
+        display: flex;              /* ensure single row */
+        align-items: center;
+        flex-wrap: nowrap;          /* prevent wrapping */
+        padding-left: 0.75rem;      /* small left padding */
+        gap: 1rem;                  /* space between title and nav */
+    }
+
+    /* TOP NAV: title */
+    [data-testid="stToolbar"]::before {
+        content: "The El Golfo";
+        font-size: 1.6rem;
+        font-weight: 700;
+        line-height: 1;
+        white-space: nowrap;        /* keep on one line */
+        color: var(--text-color);
+        font-family: var(--font);
+    }
+
+    /* Hide titles on small screens */
+    @media (max-width: 640px) {
+        [data-testid="stSidebar"]::before,
+        [data-testid="stToolbar"]::before {
+            display: none;
+        }
     }
     </style>
     """,
     unsafe_allow_html=True
 )
+
 
 
 # home_page = st.Page("home.py", title="Home")
