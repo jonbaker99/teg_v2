@@ -287,6 +287,8 @@ def get_future_tegs():
     try:
         # Try to load future TEGs from a dedicated file
         future_tegs = read_file('data/future_tegs.csv')
+        # Convert Year column to integers to avoid decimal display
+        future_tegs['Year'] = future_tegs['Year'].astype(int)
         return future_tegs[['TEG', 'Year', 'Area']].sort_values('Year')
     except Exception:
         # If no future TEGs file exists, return empty DataFrame

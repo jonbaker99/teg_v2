@@ -43,6 +43,7 @@ course_ave_pg = st.Page("ave_by_course.py", title="Course averages and records",
 course_rds_pg = st.Page("score_by_course.py", title="All rounds by course", icon=":material/strategy:")
 streaks_pg = st.Page("streaks.py", title="Scoring streaks", icon=":material/strategy:")
 data_pg = st.Page("1000Data update.py", title="Data update", icon=":material/update:")
+data_edit_pg = st.Page("data_edit.py", title="Data edit", icon=":material/edit:")
 delete_pg = st.Page("delete_data.py", title="Delete data", icon=":material/skull:")
 leaderboard_pg = st.Page("leaderboard.py", title="Latest Leaderboard", icon=":material/leaderboard:")
 scorecard_pg = st.Page("scorecard_v2.py", title="Scorecard", icon=":material/leaderboard:")
@@ -76,7 +77,7 @@ if has_incomplete_teg:
         "Course scoring" :[course_ave_pg, course_rds_pg] ,
         "Bestballs / Eclectics": [bestball_pg, eclectic_pg, eclectic_records_pg],
         #"Players": [players_pg],
-        "Data":[data_pg, delete_pg, connection_test_pg]
+        "Data":[data_pg, data_edit_pg, delete_pg]
     }
 else:
     # If no TEG in progress, use original structure with "Latest TEG" at the end
@@ -90,7 +91,7 @@ else:
         "Bestballs / Eclectics": [bestball_pg, eclectic_pg, eclectic_records_pg],
         #"Players": [players_pg],
         "Latest TEG": [leaderboard_pg, latest_rd_page, latest_teg_page, hc_page],
-        "Data":[data_pg, delete_pg, connection_test_pg]
+        "Data":[data_pg, data_edit_pg, delete_pg]
     }
 
 pg = st.navigation(nav_structure, position='top')
