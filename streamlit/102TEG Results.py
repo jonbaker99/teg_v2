@@ -30,10 +30,10 @@ PLAYER_COLUMN = 'Player'
 # Load CSS styling for consistent table appearance
 load_datawrapper_css()
 
-# Add sidebar refresh button for data updates
-if st.sidebar.button("Refresh Data"):
-    st.cache_data.clear()
-    st.rerun()
+# # Add sidebar refresh button for data updates
+# if st.sidebar.button("Refresh Data"):
+#     st.cache_data.clear()
+#     st.rerun()
 
 try:
     with st.spinner("Loading data..."):

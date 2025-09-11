@@ -57,12 +57,12 @@ pg = st.navigation(
             #"Home": [home_page],
             "History": [history_page, honours_page, results_page, player_ranking_page],
             "Records & PBs": [records_page, worsts_page, top_pages, pb_page],
-            "Scoring": [bypar_pg, birdies_pg, streaks_pg, sc_count_pg,byteg_pg,  changes_pg],
-            "Courses" :[course_ave_pg, course_rds_pg] ,
+            "Scorecards": [scorecard_pg, scorecard_mob_pg],
+            "Scoring analysis": [bypar_pg, birdies_pg, streaks_pg, sc_count_pg,byteg_pg,  changes_pg],
+            "Course scoring" :[course_ave_pg, course_rds_pg] ,
             "Bestballs / Eclectics": [bestball_pg, eclectic_pg, eclectic_records_pg],
             #"Players": [players_pg],
-            "Latest TEG": [leaderboard_pg, scorecard_pg, scorecard_mob_pg, latest_rd_page, latest_teg_page, hc_page],
-            #"Data":[data_pg, delete_pg, connection_test_pg, data_diagnostic_pg]
+            "Latest TEG": [leaderboard_pg, latest_rd_page, latest_teg_page, hc_page],
             "Data":[data_pg, delete_pg, connection_test_pg]
         }      
     , position='top'
