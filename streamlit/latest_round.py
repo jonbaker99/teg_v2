@@ -91,7 +91,7 @@ for tab, friendly_metric in zip(tabs, friendly_metrics):
             context_display.to_html(
                 index=False, 
                 justify='left', 
-                classes='jb-table-test, datawrapper-table full-width'
+                classes='jb-table-test, datawrapper-table'
             ), 
             unsafe_allow_html=True
         )
