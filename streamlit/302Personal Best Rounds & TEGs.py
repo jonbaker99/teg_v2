@@ -11,12 +11,14 @@ from helpers.best_performance_processing import (
     get_measure_name_mappings,
     prepare_personal_best_teg_table,
     prepare_personal_best_round_table,
+    prepare_personal_worst_teg_table,
+    prepare_personal_worst_round_table,
     prepare_round_data_with_identifiers
 )
 
 
 # === CONFIGURATION ===
-st.title('Personal Best TEGs and Rounds')
+st.title('Personal Best and Worst TEGs and Rounds')
 
 # Load CSS styling for consistent table appearance
 load_datawrapper_css()
@@ -50,8 +52,14 @@ personal_best_tegs = prepare_personal_best_teg_table(teg_data_ranked, selected_m
 # prepare_personal_best_round_table() - Creates table with each player's best round performance
 personal_best_rounds = prepare_personal_best_round_table(rd_data_formatted, selected_measure, selected_friendly_name)
 
+# prepare_personal_worst_teg_table() - Creates table with each player's worst TEG performance
+personal_worst_tegs = prepare_personal_worst_teg_table(teg_data_ranked, selected_measure, selected_friendly_name)
+
+# prepare_personal_worst_round_table() - Creates table with each player's worst round performance
+personal_worst_rounds = prepare_personal_worst_round_table(rd_data_formatted, selected_measure, selected_friendly_name)
+
 # Display results in tabs
-tab1, tab2 = st.tabs(["Best TEGs", "Best Rounds"])
+tab1, tab2, tab3, tab4 = st.tabs(["Best TEGs", "Best Rounds", "Worst TEGs", "Worst Rounds"])
 
 with tab1:
     st.markdown(f'### Personal Best TEGs: {selected_friendly_name}')
@@ -76,3 +84,30 @@ with tab2:
         ), 
         unsafe_allow_html=True
     )
+
+with tab3:
+    st.markdown(f'### Personal Worst TEGs: {selected_friendly_name}')
+    st.write(
+        personal_worst_tegs.to_html(
+            escape=False, 
+            index=False, 
+            justify='left', 
+            classes='datawrapper-table narrow-first left-second'
+        ), 
+        unsafe_allow_html=True
+    )
+
+with tab4:
+    st.markdown(f'### Personal Worst Rounds: {selected_friendly_name}')
+    st.write(
+        personal_worst_rounds.to_html(
+            escape=False, 
+            index=False, 
+            justify='left', 
+            classes='datawrapper-table narrow-first left-second'
+        ), 
+        unsafe_allow_html=True
+    )
+
+# Add note about TEG 2 exclusion
+st.caption("Note: TEG 2 is excluded from all TEG-level analysis as it only had 3 rounds compared to the standard 4 rounds.")
