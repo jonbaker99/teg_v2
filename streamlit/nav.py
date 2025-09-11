@@ -21,7 +21,8 @@ st.markdown(
 
 
 # home_page = st.Page("home.py", title="Home")
-history_page = st.Page("101TEG History.py", title="TEG History", icon=":material/trophy:")
+honours_page = st.Page("101TEG Honours Board.py", title="TEG Honours Board", icon=":material/trophy:")
+history_page = st.Page("101TEG History.py", title="TEG History", icon=":material/history:")
 results_page = st.Page("102TEG Results.py", title="Detailed TEG Results", icon=":material/sports_score:")
 player_ranking_page = st.Page("player_history.py", title="Rankings by TEG by Player", icon=":material/123:")
 pb_page = st.Page("302Personal Best Rounds & TEGs.py", title="Personal Bests", icon=":material/golf_course:") 
@@ -54,7 +55,7 @@ connection_test_pg = st.Page("test_github_connections.py", title="Github Connect
 pg = st.navigation(
         {
             #"Home": [home_page],
-            "History": [history_page, results_page, player_ranking_page],
+            "History": [honours_page, history_page, results_page, player_ranking_page],
             "Records & PBs": [records_page, worsts_page, top_pages, pb_page],
             "Scoring": [bypar_pg, birdies_pg, streaks_pg, sc_count_pg,byteg_pg,  changes_pg],
             "Courses" :[course_ave_pg, course_rds_pg] ,
