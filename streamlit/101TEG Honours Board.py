@@ -103,7 +103,7 @@ with all_tabs[4]:
 with all_tabs[5]:
     holes_in_one_data = get_holes_in_one_data(all_data)
     if holes_in_one_data.empty:
-        st.info("No holes in one have been scored on a TEG")
+        st.markdown("No holes in one have been scored on a TEG")
     else:
         st.write(
             holes_in_one_data.to_html(

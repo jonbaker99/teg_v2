@@ -55,7 +55,7 @@ connection_test_pg = st.Page("test_github_connections.py", title="Github Connect
 pg = st.navigation(
         {
             #"Home": [home_page],
-            "History": [honours_page, history_page, results_page, player_ranking_page],
+            "History": [history_page, honours_page, results_page, player_ranking_page],
             "Records & PBs": [records_page, worsts_page, top_pages, pb_page],
             "Scoring": [bypar_pg, birdies_pg, streaks_pg, sc_count_pg,byteg_pg,  changes_pg],
             "Courses" :[course_ave_pg, course_rds_pg] ,

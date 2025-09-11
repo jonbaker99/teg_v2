@@ -19,7 +19,7 @@ load_datawrapper_css()
 
 
 # === PAGE DESCRIPTION ===
-st.markdown("Complete record of TEG tournament winners by year")
+st.markdown("TEG locations and winners by year")
 
 
 # === DATA LOADING ===
