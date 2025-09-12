@@ -22,9 +22,9 @@ def get_measure_name_mappings():
         Allows easy conversion between display names and database column names
     """
     name_mapping = {
-        'Gross vs Par': 'GrossVP',
+        'Gross': 'GrossVP',
         'Score': 'Sc',
-        'Net vs Par': 'NetVP',
+        'Net': 'NetVP',
         'Stableford': 'Stableford'
     }
     inverted_mapping = {v: k for k, v in name_mapping.items()}
@@ -39,7 +39,7 @@ def prepare_best_teg_table(teg_data_ranked, selected_measure, selected_friendly_
     Args:
         teg_data_ranked (pd.DataFrame): Ranked TEG performance data
         selected_measure (str): Internal measure name (e.g., 'GrossVP')
-        selected_friendly_name (str): Display name (e.g., 'Gross vs Par')
+        selected_friendly_name (str): Display name (e.g., 'Gross')
         n_keep (int): Number of top performances to show
         
     Returns:
@@ -72,13 +72,13 @@ def prepare_best_teg_table(teg_data_ranked, selected_measure, selected_friendly_
     best_tegs = best_tegs.rename(columns=inverted_name_mapping)
     
     # Select and order columns for display
-    display_columns = ['#', 'Player', selected_friendly_name, 'TEG', 'Year']
+    display_columns = ['#', 'Player', selected_friendly_name, 'TEG', 'Area', 'Year']
     best_tegs = best_tegs[display_columns]
     
     # Format vs par columns properly and convert other numeric columns to integers
     from utils import format_vs_par
     
-    if selected_friendly_name in ['Gross vs Par', 'Net vs Par']:
+    if selected_friendly_name in ['Gross', 'Net']:
         # Format vs par values with +/- notation
         best_tegs[selected_friendly_name] = best_tegs[selected_friendly_name].apply(format_vs_par)
     else:
@@ -96,7 +96,7 @@ def prepare_best_round_table(rd_data_ranked, selected_measure, selected_friendly
     Args:
         rd_data_ranked (pd.DataFrame): Ranked round performance data
         selected_measure (str): Internal measure name (e.g., 'GrossVP')
-        selected_friendly_name (str): Display name (e.g., 'Gross vs Par')
+        selected_friendly_name (str): Display name (e.g., 'Gross')
         n_keep (int): Number of top performances to show
         
     Returns:
@@ -126,7 +126,7 @@ def prepare_best_round_table(rd_data_ranked, selected_measure, selected_friendly
     # Format vs par columns properly and convert other numeric columns to integers
     from utils import format_vs_par
     
-    if selected_friendly_name in ['Gross vs Par', 'Net vs Par']:
+    if selected_friendly_name in ['Gross', 'Net']:
         # Format vs par values with +/- notation
         best_rounds[selected_friendly_name] = best_rounds[selected_friendly_name].apply(format_vs_par)
     else:
@@ -164,7 +164,7 @@ def prepare_personal_best_teg_table(teg_data_ranked, selected_measure, selected_
     Args:
         teg_data_ranked (pd.DataFrame): Ranked TEG performance data
         selected_measure (str): Internal measure name (e.g., 'GrossVP')
-        selected_friendly_name (str): Display name (e.g., 'Gross vs Par')
+        selected_friendly_name (str): Display name (e.g., 'Gross')
         
     Returns:
         pd.DataFrame: Formatted table with each player's best TEG performance
@@ -198,13 +198,13 @@ def prepare_personal_best_teg_table(teg_data_ranked, selected_measure, selected_
     personal_best_tegs = personal_best_tegs.rename(columns=inverted_name_mapping)
     
     # Select and order columns for display
-    display_columns = ['#', 'Player', selected_friendly_name, 'TEG', 'Year']
+    display_columns = ['#', 'Player', selected_friendly_name, 'TEG', 'Area', 'Year']
     personal_best_tegs = personal_best_tegs[display_columns]
     
     # Format vs par columns properly and convert other numeric columns to integers
     from utils import format_vs_par
     
-    if selected_friendly_name in ['Gross vs Par', 'Net vs Par']:
+    if selected_friendly_name in ['Gross', 'Net']:
         # Format vs par values with +/- notation (but not the # column)
         personal_best_tegs[selected_friendly_name] = personal_best_tegs[selected_friendly_name].apply(format_vs_par)
         # Convert other numeric columns (like #, Year) to integers
@@ -227,7 +227,7 @@ def prepare_personal_best_round_table(rd_data_ranked, selected_measure, selected
     Args:
         rd_data_ranked (pd.DataFrame): Ranked round performance data
         selected_measure (str): Internal measure name (e.g., 'GrossVP')
-        selected_friendly_name (str): Display name (e.g., 'Gross vs Par')
+        selected_friendly_name (str): Display name (e.g., 'Gross')
         
     Returns:
         pd.DataFrame: Formatted table with each player's best round performance
@@ -256,7 +256,7 @@ def prepare_personal_best_round_table(rd_data_ranked, selected_measure, selected
     # Format vs par columns properly and convert other numeric columns to integers
     from utils import format_vs_par
     
-    if selected_friendly_name in ['Gross vs Par', 'Net vs Par']:
+    if selected_friendly_name in ['Gross', 'Net']:
         # Format vs par values with +/- notation (but not the # column)
         personal_best_rounds[selected_friendly_name] = personal_best_rounds[selected_friendly_name].apply(format_vs_par)
         # Convert other numeric columns (like #, Year) to integers
@@ -279,7 +279,7 @@ def prepare_worst_teg_table(teg_data_ranked, selected_measure, selected_friendly
     Args:
         teg_data_ranked (pd.DataFrame): Ranked TEG performance data
         selected_measure (str): Internal measure name (e.g., 'GrossVP')
-        selected_friendly_name (str): Display name (e.g., 'Gross vs Par')
+        selected_friendly_name (str): Display name (e.g., 'Gross')
         n_keep (int): Number of worst performances to show
         
     Returns:
@@ -312,13 +312,13 @@ def prepare_worst_teg_table(teg_data_ranked, selected_measure, selected_friendly
     worst_tegs = worst_tegs.rename(columns=inverted_name_mapping)
     
     # Select and order columns for display
-    display_columns = ['#', 'Player', selected_friendly_name, 'TEG', 'Year']
+    display_columns = ['#', 'Player', selected_friendly_name, 'TEG', 'Area', 'Year']
     worst_tegs = worst_tegs[display_columns]
     
     # Format vs par columns properly and convert other numeric columns to integers
     from utils import format_vs_par
     
-    if selected_friendly_name in ['Gross vs Par', 'Net vs Par']:
+    if selected_friendly_name in ['Gross', 'Net']:
         # Format vs par values with +/- notation
         worst_tegs[selected_friendly_name] = worst_tegs[selected_friendly_name].apply(format_vs_par)
     else:
@@ -336,7 +336,7 @@ def prepare_worst_round_table(rd_data_ranked, selected_measure, selected_friendl
     Args:
         rd_data_ranked (pd.DataFrame): Ranked round performance data
         selected_measure (str): Internal measure name (e.g., 'GrossVP')
-        selected_friendly_name (str): Display name (e.g., 'Gross vs Par')
+        selected_friendly_name (str): Display name (e.g., 'Gross')
         n_keep (int): Number of worst performances to show
         
     Returns:
@@ -368,7 +368,7 @@ def prepare_worst_round_table(rd_data_ranked, selected_measure, selected_friendl
     # Format vs par columns properly and convert other numeric columns to integers
     from utils import format_vs_par
     
-    if selected_friendly_name in ['Gross vs Par', 'Net vs Par']:
+    if selected_friendly_name in ['Gross', 'Net']:
         # Format vs par values with +/- notation
         worst_rounds[selected_friendly_name] = worst_rounds[selected_friendly_name].apply(format_vs_par)
     else:
@@ -386,7 +386,7 @@ def prepare_personal_worst_teg_table(teg_data_ranked, selected_measure, selected
     Args:
         teg_data_ranked (pd.DataFrame): Ranked TEG performance data
         selected_measure (str): Internal measure name (e.g., 'GrossVP')
-        selected_friendly_name (str): Display name (e.g., 'Gross vs Par')
+        selected_friendly_name (str): Display name (e.g., 'Gross')
         
     Returns:
         pd.DataFrame: Formatted table with each player's worst TEG performance
@@ -414,13 +414,13 @@ def prepare_personal_worst_teg_table(teg_data_ranked, selected_measure, selected
     personal_worst_tegs['#'] = range(1, len(personal_worst_tegs) + 1)
     
     # Select and order columns for display
-    display_columns = ['#', 'Player', selected_friendly_name, 'TEG', 'Year']
+    display_columns = ['#', 'Player', selected_friendly_name, 'TEG', 'Area', 'Year']
     personal_worst_tegs = personal_worst_tegs[display_columns]
     
     # Format vs par columns properly and convert other numeric columns to integers
     from utils import format_vs_par
     
-    if selected_friendly_name in ['Gross vs Par', 'Net vs Par']:
+    if selected_friendly_name in ['Gross', 'Net']:
         # Format vs par values with +/- notation (but not the # column)
         personal_worst_tegs[selected_friendly_name] = personal_worst_tegs[selected_friendly_name].apply(format_vs_par)
         # Convert other numeric columns (like #, Year) to integers
@@ -443,7 +443,7 @@ def prepare_personal_worst_round_table(rd_data_ranked, selected_measure, selecte
     Args:
         rd_data_ranked (pd.DataFrame): Ranked round performance data
         selected_measure (str): Internal measure name (e.g., 'GrossVP')
-        selected_friendly_name (str): Display name (e.g., 'Gross vs Par')
+        selected_friendly_name (str): Display name (e.g., 'Gross')
         
     Returns:
         pd.DataFrame: Formatted table with each player's worst round performance
@@ -474,7 +474,7 @@ def prepare_personal_worst_round_table(rd_data_ranked, selected_measure, selecte
     # Format vs par columns properly and convert other numeric columns to integers
     from utils import format_vs_par
     
-    if selected_friendly_name in ['Gross vs Par', 'Net vs Par']:
+    if selected_friendly_name in ['Gross', 'Net']:
         # Format vs par values with +/- notation (but not the # column)
         personal_worst_rounds[selected_friendly_name] = personal_worst_rounds[selected_friendly_name].apply(format_vs_par)
         # Convert other numeric columns (like #, Year) to integers

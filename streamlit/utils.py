@@ -250,6 +250,15 @@ def load_all_data(exclude_teg_50: bool = True, exclude_incomplete_tegs: bool = F
         st.error(f"Error loading data: {e}")
         return pd.DataFrame()
     
+    # Load round info data to get Area information
+    try:
+        round_info = read_file(ROUND_INFO_CSV)
+        # Join to get Area information (select only columns we need to avoid duplicates)
+        round_info_subset = round_info[['TEGNum', 'Round', 'Area']].copy()
+        df = df.merge(round_info_subset, on=['TEGNum', 'Round'], how='left')
+    except Exception as e:
+        st.warning(f"Could not load round info for Area data: {e}")
+    
     # Ensure 'Year' is of integer type
     df['Year'] = df['Year'].astype('Int64')
     

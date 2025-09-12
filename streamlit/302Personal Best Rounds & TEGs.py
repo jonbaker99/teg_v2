@@ -49,8 +49,16 @@ name_mapping, inverted_name_mapping = get_measure_name_mappings()
 friendly_names = list(name_mapping.keys())
 
 # Initialize session state for selected measure if not already set
+# Also handle migration from old column names to new ones
 if 'selected_measure' not in st.session_state:
     st.session_state.selected_measure = friendly_names[0]  # Default to first measure
+elif st.session_state.selected_measure not in friendly_names:
+    # Handle migration from old names
+    name_migration = {'Gross vs Par': 'Gross', 'Net vs Par': 'Net'}
+    if st.session_state.selected_measure in name_migration:
+        st.session_state.selected_measure = name_migration[st.session_state.selected_measure]
+    else:
+        st.session_state.selected_measure = friendly_names[0]  # Default to first measure
 
 # Display tabs
 tab1, tab2, tab3, tab4, tab5 = st.tabs(["PB Summary", "Best TEGs", "Best Rounds", "Worst TEGs", "Worst Rounds"])
