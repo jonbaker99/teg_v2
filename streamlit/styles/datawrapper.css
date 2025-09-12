@@ -64,7 +64,11 @@
 .datawrapper-table.left-second td:nth-child(2),
 .datawrapper-table.left-second th:nth-child(2),
 .datawrapper-table.left-3rd td:nth-child(3),
-.datawrapper-table.left-3rd th:nth-child(3) {
+.datawrapper-table.left-3rd th:nth-child(3),
+.datawrapper-table.left-4th td:nth-child(4),
+.datawrapper-table.left-4th th:nth-child(4),
+.datawrapper-table.left-5th td:nth-child(5),
+.datawrapper-table.left-5th th:nth-child(5) {
     text-align: left;
 }
 
@@ -125,6 +129,42 @@
 /* ==============================================
    COMPLEX VARIANTS (semantic/multi-purpose)
    ============================================== */
+
+
+/* === PERSONAL BESTS TABLE */
+
+  .pb-table td,
+  .pb-table th{
+    padding: 8px;
+  }
+
+  .pb-score {
+      font-weight: bold;
+      /* color: #2c3e50; */
+  }
+
+  .pb-when {
+      font-size: 12px;
+      line-height: 80%;
+      /* color: #7f8c8d; */
+      /* font-style: italic; */
+  }
+
+  /* Center align the score columns */
+  .pb-table td:nth-child(n+2),
+  .pb-table th:nth-child(n+2) {
+      text-align: right;
+      width: 90px;
+      max-width: 100px;
+      min-width: 75px;
+  }
+
+  
+  .pb-table th:nth-child(n+2) {
+    padding: 8px 4px;
+  }
+
+
 
 /* === ECLECTIC TABLE - Final 18 columns (hole scores) styling */
 .datawrapper-table.eclectic td:nth-last-child(-n+18),

@@ -488,3 +488,98 @@ def prepare_personal_worst_round_table(rd_data_ranked, selected_measure, selecte
         personal_worst_rounds[numeric_columns] = personal_worst_rounds[numeric_columns].astype(int)
     
     return personal_worst_rounds
+
+
+def prepare_pb_teg_summary_table(teg_data_ranked):
+    """
+    Create summary table showing each player's personal best TEG across all measures.
+    
+    Args:
+        teg_data_ranked (pd.DataFrame): Ranked TEG performance data
+        
+    Returns:
+        pd.DataFrame: Summary table with columns for Score, Gross v Par, Net v Par, Stableford
+        
+    Purpose:
+        Shows each player's personal best performance across all four scoring measures
+        Provides a comprehensive view of each player's capabilities
+    """
+    from utils import format_vs_par
+    
+    # Filter out TEG 2 (3 rounds vs standard 4)
+    filtered_data = teg_data_ranked[teg_data_ranked['TEGNum'] != 2].copy()
+    
+    # Get unique players
+    players = sorted(filtered_data['Player'].unique())
+    
+    summary_data = []
+    
+    for player in players:
+        player_data = filtered_data[filtered_data['Player'] == player]
+        row = {'Player': player.replace(' ', '<br>')}
+        
+        # Score (lowest is best)
+        best_score = player_data.loc[player_data['Sc'].idxmin()]
+        row['Score'] = f"<span class='pb-score'>{int(best_score['Sc'])}</span><br><span class='pb-when'>{best_score['TEG']}</span>"
+        
+        # Gross vs Par (lowest is best)
+        best_gross = player_data.loc[player_data['GrossVP'].idxmin()]
+        row['Gross'] = f"<span class='pb-score'>{format_vs_par(best_gross['GrossVP'])}</span><br><span class='pb-when'>{best_gross['TEG']}</span>"
+        
+        # Net vs Par (lowest is best)
+        best_net = player_data.loc[player_data['NetVP'].idxmin()]
+        row['Net'] = f"<span class='pb-score'>{format_vs_par(best_net['NetVP'])}</span><br><span class='pb-when'>{best_net['TEG']}</span>"
+        
+        # Stableford (highest is best)
+        best_stableford = player_data.loc[player_data['Stableford'].idxmax()]
+        row['Stfd'] = f"<span class='pb-score'>{int(best_stableford['Stableford'])}</span><br><span class='pb-when'>{best_stableford['TEG']}</span>"
+        
+        summary_data.append(row)
+    
+    return pd.DataFrame(summary_data)
+
+
+def prepare_pb_round_summary_table(rd_data_ranked):
+    """
+    Create summary table showing each player's personal best round across all measures.
+    
+    Args:
+        rd_data_ranked (pd.DataFrame): Ranked round performance data
+        
+    Returns:
+        pd.DataFrame: Summary table with columns for Score, Gross v Par, Net v Par, Stableford
+        
+    Purpose:
+        Shows each player's personal best individual round performance across all four scoring measures
+        Provides a comprehensive view of each player's peak round performances
+    """
+    from utils import format_vs_par
+    
+    # Get unique players
+    players = sorted(rd_data_ranked['Player'].unique())
+    
+    summary_data = []
+    
+    for player in players:
+        player_data = rd_data_ranked[rd_data_ranked['Player'] == player]
+        row = {'Player': player.replace(' ', '<br>')}
+        
+        # Score (lowest is best)
+        best_score = player_data.loc[player_data['Sc'].idxmin()]
+        row['Score'] = f"<span class='pb-score'>{int(best_score['Sc'])}</span><br><span class='pb-when'>{best_score['TEG']}|R{best_score['Round']}</span>"
+        
+        # Gross vs Par (lowest is best)
+        best_gross = player_data.loc[player_data['GrossVP'].idxmin()]
+        row['Gross'] = f"<span class='pb-score'>{format_vs_par(best_gross['GrossVP'])}</span><br><span class='pb-when'>{best_gross['TEG']}|R{best_gross['Round']}</span>"
+        
+        # Net vs Par (lowest is best)
+        best_net = player_data.loc[player_data['NetVP'].idxmin()]
+        row['Net'] = f"<span class='pb-score'>{format_vs_par(best_net['NetVP'])}</span><br><span class='pb-when'>{best_net['TEG']}|R{best_net['Round']}</span>"
+        
+        # Stableford (highest is best)
+        best_stableford = player_data.loc[player_data['Stableford'].idxmax()]
+        row['Stfd'] = f"<span class='pb-score'>{int(best_stableford['Stableford'])}</span><br><span class='pb-when'>{best_stableford['TEG']}|R{best_stableford['Round']}</span>"
+        
+        summary_data.append(row)
+    
+    return pd.DataFrame(summary_data)
