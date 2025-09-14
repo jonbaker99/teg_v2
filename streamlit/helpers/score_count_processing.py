@@ -140,36 +140,45 @@ def create_percentage_distribution_chart(df, teg_desc, par_desc):
     return fig
 
 
-def prepare_score_count_display(count_data, score_field, display_name):
+def prepare_score_count_display(count_data, score_field, display_name, is_percentage=False):
     """
     Prepare score count data for table display.
-    
+
     Args:
-        count_data (pd.DataFrame): Raw score count matrix
+        count_data (pd.DataFrame): Raw score count matrix or percentage data
         score_field (str): Original score field name
         display_name (str): User-friendly display name
-        
+        is_percentage (bool): Whether data contains percentages that need formatting
+
     Returns:
         pd.DataFrame: Formatted data ready for display
-        
+
     Purpose:
         Formats score count data for clean table display
         Handles data type conversions and column renaming
         Resets index to make score field a regular column
+        Applies percentage formatting when needed
     """
     display_data = count_data.reset_index()
     display_data.columns.name = None
-    
-    # Handle specific formatting for different score types
+
+    # Handle specific formatting for the score field (first column)
     if score_field == 'Sc':
         display_data[score_field] = display_data[score_field].astype(int)
     elif score_field == 'GrossVP':
         from utils import format_vs_par
         display_data[score_field] = display_data[score_field].apply(format_vs_par)
-    
+
+    # Apply percentage formatting to player columns (not the first column)
+    if is_percentage:
+        player_columns = [col for col in display_data.columns if col != score_field]
+        for col in player_columns:
+            if pd.api.types.is_numeric_dtype(display_data[col]):
+                display_data[col] = display_data[col].apply(lambda x: f"{x:.1f}%" if pd.notna(x) else "0.0%")
+
     # Rename score column to user-friendly name
     display_data = display_data.rename(columns={score_field: display_name})
-    
+
     return display_data
 
 
@@ -197,3 +206,114 @@ def prepare_chart_data_with_special_handling(display_data, score_field):
         chart_data.loc[chart_data[display_column] == '=', display_column] = 0
     
     return chart_data
+
+
+def convert_counts_to_percentages(count_data):
+    """
+    Convert score count data to percentage distribution per player.
+
+    Args:
+        count_data (pd.DataFrame): Raw score count matrix with scores as rows, players as columns
+
+    Returns:
+        pd.DataFrame: Percentage distribution where each player's column sums to 100%
+
+    Purpose:
+        Converts absolute counts to percentages for relative comparison across players
+        Each player's scores sum to 100%, enabling pattern recognition regardless of total holes played
+    """
+    # Calculate percentage of total for each player (column-wise)
+    percentage_data = count_data.div(count_data.sum(axis=0), axis=1) * 100
+
+    # Round to 1 decimal place for clean display
+    percentage_data = percentage_data.round(1)
+
+    return percentage_data
+
+
+def format_percentage_for_display(percentage_data):
+    """
+    Format percentage data for table display with % symbols.
+
+    Args:
+        percentage_data (pd.DataFrame): Percentage data with numeric values
+
+    Returns:
+        pd.DataFrame: Formatted data with percentages as strings with % symbols
+
+    Purpose:
+        Converts numeric percentage values to formatted strings for clean table display
+        Applies consistent formatting as "25.5%" for readability
+    """
+    # Create a copy to avoid modifying original data
+    formatted_data = percentage_data.copy()
+
+    # Apply percentage formatting to all numeric columns
+    for col in formatted_data.columns:
+        if pd.api.types.is_numeric_dtype(formatted_data[col]):
+            formatted_data[col] = formatted_data[col].apply(lambda x: f"{x:.1f}%" if pd.notna(x) else "0.0%")
+
+    return formatted_data
+
+
+def create_stacked_bar_chart(count_data, teg_desc, par_desc, score_field):
+    """
+    Create stacked bar chart showing score distribution by player.
+
+    Args:
+        count_data (pd.DataFrame): Score count matrix with scores as rows, players as columns
+        teg_desc (str): TEG description for chart title
+        par_desc (str): Par description for chart title
+        score_field (str): Score field being analyzed ('GrossVP' or 'Sc')
+
+    Returns:
+        plotly.graph_objects.Figure: Stacked bar chart with one column per player
+
+    Purpose:
+        Creates visual representation of score distributions as stacked bars
+        Each player gets one column, with score types stacked and colored
+        Shows relative scoring patterns across players
+    """
+    # Convert to percentages for stacked display
+    percentage_data = convert_counts_to_percentages(count_data)
+
+    # Prepare data in long format for plotly express
+    # Reset index to make score values a column
+    melted_data = percentage_data.reset_index()
+
+    # Melt the dataframe to long format
+    plot_data = pd.melt(
+        melted_data,
+        id_vars=[melted_data.columns[0]],  # Score column
+        var_name='Player',
+        value_name='Percentage'
+    )
+
+    # Rename the score column for clarity
+    score_col_name = "Score" if score_field == 'Sc' else "vs Par"
+    plot_data.rename(columns={melted_data.columns[0]: score_col_name}, inplace=True)
+
+    # Create stacked bar chart
+    fig = px.bar(
+        plot_data,
+        x='Player',
+        y='Percentage',
+        color=score_col_name,
+        title=f"Score Distribution by Player | {teg_desc} | {par_desc}",
+        labels={'Percentage': 'Percentage of Holes'},
+        color_discrete_sequence=px.colors.qualitative.Set3
+    )
+
+    # Update layout for better display
+    fig.update_layout(
+        xaxis_title="Player",
+        yaxis_title="Percentage of Holes",
+        bargap=0.2,
+        yaxis=dict(ticksuffix='%')
+    )
+
+    # Disable zooming for cleaner user experience
+    fig.layout.xaxis.fixedrange = True
+    fig.layout.yaxis.fixedrange = True
+
+    return fig
