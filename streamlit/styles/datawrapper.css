@@ -91,6 +91,14 @@
     text-align: left;
 }
 
+/* --- Full right align (except first col) */
+
+.datawrapper-table.table-right-align td:not(:first-child),
+.datawrapper-table.table-right-align th:not(:first-child) {
+    text-align: right;
+}
+
+
 /* --- Column width variants */
 .datawrapper-table.narrow-first td:first-child,
 .datawrapper-table.narrow-first th:first-child {

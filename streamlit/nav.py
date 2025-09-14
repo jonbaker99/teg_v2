@@ -73,14 +73,13 @@ bypar_pg = st.Page("ave_by_par.py", title="Average by par", icon=":material/stra
 byteg_pg = st.Page("ave_by_teg.py", title="Average by TEG", icon=":material/strategy:")
 course_ave_pg = st.Page("ave_by_course.py", title="Course averages and records", icon=":material/strategy:")
 course_rds_pg = st.Page("score_by_course.py", title="All rounds by course", icon=":material/strategy:")
-streaks_pg = st.Page("streaks.py", title="Scoring streaks", icon=":material/strategy:")
 data_pg = st.Page("1000Data update.py", title="Data update", icon=":material/update:")
 data_edit_pg = st.Page("data_edit.py", title="Data edit", icon=":material/edit:")
 delete_pg = st.Page("delete_data.py", title="Delete data", icon=":material/skull:")
 leaderboard_pg = st.Page("leaderboard.py", title="Latest Leaderboard", icon=":material/leaderboard:")
 scorecard_pg = st.Page("scorecard_v2.py", title="Scorecard", icon=":material/leaderboard:")
 scorecard_mob_pg = st.Page("scorecard_v2_mobile.py", title="Scorecard (mobile)", icon=":material/leaderboard:")
-sc_count_pg = st.Page("sc_count.py", title="Count by score & gross vs par", icon=":material/strategy:")
+sc_count_pg = st.Page("sc_count.py", title="Scoring distributions", icon=":material/strategy:")
 bestball_pg = st.Page("bestball.py", title="Bestball and worstball", icon=":material/strategy:")
 changes_pg = st.Page("biggest_changes.py", title="Changes vs previous round", icon=":material/strategy:")
 eclectic_pg = st.Page("eclectic.py", title="Eclectic Scores", icon=":material/golf_course:")
@@ -105,7 +104,7 @@ if has_incomplete_teg:
         "History": [history_page, honours_page, results_page, player_ranking_page],
         "Records & PBs": [records_page, worsts_page, top_pages, pb_page],
         # "Scorecards": [scorecard_pg, scorecard_mob_pg],
-        "Scoring analysis": [bypar_pg, birdies_pg, streaks_pg, sc_count_pg,byteg_pg,  changes_pg],
+        "Scoring analysis": [birdies_pg, bypar_pg, sc_count_pg,byteg_pg,  changes_pg],
         "Course scoring" :[course_ave_pg, course_rds_pg] ,
         "Bestballs / Eclectics": [bestball_pg, eclectic_pg, eclectic_records_pg],
         #"Players": [players_pg],
@@ -118,7 +117,7 @@ else:
         "History": [history_page, honours_page, results_page, player_ranking_page],
         "Records & PBs": [records_page, worsts_page, top_pages, pb_page],
         "Scorecards": [scorecard_pg, scorecard_mob_pg],
-        "Scoring analysis": [bypar_pg, birdies_pg, streaks_pg, sc_count_pg,byteg_pg,  changes_pg],
+        "Scoring analysis": [birdies_pg, bypar_pg, sc_count_pg,byteg_pg,  changes_pg],
         "Course scoring" :[course_ave_pg, course_rds_pg] ,
         "Bestballs / Eclectics": [bestball_pg, eclectic_pg, eclectic_records_pg],
         #"Players": [players_pg],

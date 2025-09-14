@@ -14,10 +14,10 @@ This analysis reviews the TEG golf tournament application codebase with a focus 
 - Environment-aware data loading architecture
 
 **Priority Areas for Improvement:**
-- Large utility files need breaking up (utils.py: 1634 lines)
-- Inconsistent file organization and naming
-- Duplicate styling and CSS management
-- Variable import patterns and dependencies
+- Centralize CSS and styling management (high impact, low risk)
+- Complete page refactoring using established template (proven pattern)
+- Standardize import patterns for consistency
+- Address code duplication where it provides clear benefit
 
 ---
 
@@ -56,31 +56,14 @@ streamlit/
 
 ### Recommendations
 
-**File Organization Restructuring:**
-```
-streamlit/
-├── pages/
-│   ├── history/
-│   │   ├── teg_history.py
-│   │   ├── honours_board.py
-│   │   └── detailed_results.py
-│   ├── records/
-│   │   ├── teg_records.py
-│   │   └── personal_bests.py
-│   ├── scoring/
-│   │   ├── analysis.py
-│   │   └── course_analysis.py
-│   └── current/
-│       ├── leaderboard.py
-│       └── scorecard.py
-├── core/
-│   ├── data_loader.py      # Split from utils.py
-│   ├── github_client.py    # Split from utils.py
-│   ├── scorecard_engine.py # Split from scorecard_utils.py
-│   └── calculations.py     # Split from utils.py
-├── helpers/                # Keep current structure
-└── nav.py                  # Keep as entry point
-```
+**File Organization - Pragmatic Approach:**
+The current structure works well for this project size. Major reorganization adds complexity without clear benefits.
+
+**Focus Instead On:**
+- Completing page refactoring with proven template
+- CSS centralization for cleaner Python files
+- Import consistency for better readability
+- Helper module pattern expansion where beneficial
 
 ---
 
@@ -148,24 +131,10 @@ from helpers.history_processing import format_history_table
 
 ### 3.1 Large Files Requiring Breakdown
 
-**utils.py (1634 lines) - Critical Priority**
-Current responsibilities:
-- Data loading (GitHub integration)
-- File operations 
-- Data processing functions
-- Calculations and statistics
-- Formatting utilities
-- Configuration management
+**utils.py (1634 lines) - Architectural Note**
+While this file is large, breaking it up creates import complexity throughout the codebase without clear benefits. The file serves as a central utility hub that all pages can reliably import from.
 
-Recommended split:
-```python
-core/
-├── data_loader.py          # GitHub integration, file reading
-├── file_operations.py      # File writing, path management  
-├── calculations.py         # Statistical calculations
-├── formatters.py           # Data formatting utilities
-└── config.py              # Constants and configuration
-```
+**Decision**: Keep utils.py intact for now. Focus on improvements that provide clear benefits without adding architectural complexity.
 
 **scorecard_utils.py (1262 lines) - High Priority**
 - Contains complex HTML generation logic
@@ -268,16 +237,16 @@ def process_tournament_data(data: pd.DataFrame) -> pd.DataFrame:
 ## 5. Implementation Priority
 
 ### Phase 1: Critical (High Impact, Low Risk)
-1. **Break down utils.py** - Split into focused modules
-2. **Standardize import patterns** - Consistent across all files
-3. **Centralize CSS** - Remove inline styles, organize styling
+1. **Centralize CSS** - Remove inline styles from nav.py and other files, organize in styles/ directory
+2. **Complete page refactoring** - Apply proven 4-section template to remaining 12 pages
+3. **Standardize import patterns** - Consistent 3-section structure across all files
 4. **Add basic documentation** - Module docstrings and function headers
 
-### Phase 2: High Priority (Medium Impact, Medium Risk)
-1. **Reorganize file structure** - Group related functionality
-2. **Reduce code duplication** - Extract common patterns
-3. **Standardize error handling** - Consistent approaches
-4. **Improve helper module coverage** - More pages using helpers
+### Phase 2: Medium Priority (Lower Impact, Medium Risk)
+1. **Reduce meaningful code duplication** - Focus only on patterns that provide clear benefit
+2. **Standardize error handling** - Consistent approaches where needed
+3. **Enhanced documentation** - Improve existing documentation standards
+4. **Consider file organization** - Only if it significantly improves maintainability
 
 ### Phase 3: Maintenance (Ongoing)
 1. **Regular code reviews** - Maintain standards
@@ -376,8 +345,8 @@ The TEG codebase demonstrates good understanding of Streamlit development and sh
 
 The recommendations prioritize changes that will have immediate impact on developer experience while maintaining the current functionality and deployment approach. Most improvements can be implemented incrementally without disrupting the existing application behavior.
 
-**Estimated Impact:**
-- **Developer onboarding time:** Reduce from days to hours
-- **Bug fix complexity:** Significantly reduced due to smaller, focused files
-- **Feature development speed:** Increased through reusable components and patterns
-- **Code review efficiency:** Improved through consistent structure and documentation
+**Estimated Impact (Revised Priorities):**
+- **CSS Centralization:** Immediate improvement in file cleanliness and styling management
+- **Page Refactoring Completion:** Proven pattern that improves readability for beginners
+- **Import Standardization:** Better code scanning and consistency
+- **Overall Approach:** Focus on high-impact, low-risk changes that provide clear benefits without architectural complexity
