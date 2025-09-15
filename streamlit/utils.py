@@ -1741,3 +1741,37 @@ def get_next_teg_and_check_if_in_progress():
     in_progress = (teg_data_inc_progress['TEGNum'] == next_teg).any()
     
     return last_completed_teg, next_teg, in_progress
+
+def get_current_handicaps_formatted(last_completed_teg, next_teg):
+    """Get handicaps in exact same format as hardcoded version"""
+    # from utils import load_and_prepare_handicap_data, HANDICAPS_CSV, get_player_name
+    
+    hc_data = load_and_prepare_handicap_data(HANDICAPS_CSV)
+    
+    last_teg_str = f'TEG {last_completed_teg}'
+    next_teg_str = f'TEG {next_teg}'
+    
+    # Get current and previous handicaps
+    current_hc = hc_data[hc_data['TEG'] == next_teg_str]
+    previous_hc = hc_data[hc_data['TEG'] == last_teg_str]
+    
+    if current_hc.empty:
+        st.warning(f"No handicap data found for {next_teg_str}")
+        return pd.DataFrame()
+    
+    # Merge and calculate change
+    merged = current_hc.merge(previous_hc[['Pl', 'HC']], on='Pl', how='left', suffixes=('_current', '_previous'))
+    merged['HC_previous'] = merged['HC_previous'].fillna(merged['HC_current'])
+    merged['Change'] = merged['HC_current'] - merged['HC_previous']
+    
+    # Convert initials to full names using existing function
+    merged['FullName'] = merged['Pl'].apply(get_player_name)
+    
+    # Create result in exact format expected by rest of code
+    result = pd.DataFrame({
+        'Handicap': merged['FullName'].tolist(),
+        next_teg_str: merged['HC_current'].astype(int).tolist(),
+        'Change': merged['Change'].astype(int).tolist()
+    })
+    
+    return result
