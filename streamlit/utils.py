@@ -242,7 +242,7 @@ TEG_OVERRIDES = {
     }
 }
 
-@st.cache_data(ttl=300)  # Cache for 5 minutes
+@st.cache_data  
 def load_all_data(exclude_teg_50: bool = True, exclude_incomplete_tegs: bool = False) -> pd.DataFrame:
     try:
         df = read_file(ALL_DATA_PARQUET)
@@ -279,6 +279,22 @@ def get_number_of_completed_rounds_by_teg(df: pd.DataFrame) -> pd.DataFrame:
           .reset_index(name="num_rounds")
     )
     return num_rounds
+
+def get_incomplete_tegs(df: pd.DataFrame) -> pd.DataFrame:
+
+    # Compute the number of unique COMPLETED rounds per TEGNum
+    all_rounds = df.groupby('TEGNum')['Round'].nunique()
+    
+    # Create a DataFrame with TEGNum and observed rounds
+    teg_rounds = all_rounds.reset_index(name='AllRounds')
+    
+    # Apply get_teg_rounds to get the expected number of rounds per TEGNum
+    teg_rounds['ExpectedRounds'] = teg_rounds['TEGNum'].apply(get_tegnum_rounds)
+    
+    # Identify incomplete TEGs where observed rounds do not match expected rounds
+    incomplete_tegs = teg_rounds[teg_rounds['AllRounds'] != teg_rounds['ExpectedRounds']]['TEGNum'] 
+
+    return incomplete_tegs
 
 
 def exclude_incomplete_tegs_function(df: pd.DataFrame) -> pd.DataFrame:
@@ -1713,3 +1729,15 @@ def get_hc(TEG_needed: int | None = None) -> pd.DataFrame:
     # Add rounded version
     result['hc'] = result['hc_raw'].round(0).astype(int)
     return result
+
+@st.cache_data
+def get_next_teg_and_check_if_in_progress():
+    """Get TEG completion status (cached for performance)."""
+    teg_data_inc_progress = get_teg_data_inc_in_progress() 
+    teg_data_completed = get_complete_teg_data()  
+    
+    last_completed_teg = max(teg_data_completed['TEGNum']) 
+    next_teg = last_completed_teg + 1 
+    in_progress = (teg_data_inc_progress['TEGNum'] == next_teg).any()
+    
+    return last_completed_teg, next_teg, in_progress

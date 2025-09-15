@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 from utils import get_base_directory, load_datawrapper_css, HANDICAPS_CSV
-from utils import read_file, get_hc
+from utils import read_file, get_hc, get_next_teg_and_check_if_in_progress
 
 
 
@@ -35,6 +35,14 @@ current_handicaps = pd.DataFrame({
     'TEG 18': [20, 20, 18, 28, 27, 36],
     'Change': [4, -1, -4, 2, 0, 2]
 })
+
+### TO DO
+### - Identify next_teg from complete TEG info
+### - Import handicap for next TEG and latest TEG from handicaps.csv
+### - calculate handicap change
+### - sort by handicap ascending
+### output to current_handicaps
+
 
 next_teg = 'TEG 18'
 next_tegnum = int(next_teg.split()[1])
