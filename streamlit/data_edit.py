@@ -19,10 +19,10 @@ st.markdown("Edit CSV data files directly through the web interface. Changes are
 # === FILE SELECTION ===
 # Available CSV files for editing with descriptions
 AVAILABLE_FILES = {
-    "Test File": {
-        "path": "data/test_file.csv",
-        "description": "Sample data file for testing editing functionality"
-    },
+    # "Test File": {
+    #     "path": "data/test_file.csv",
+    #     "description": "Sample data file for testing editing functionality"
+    # },
     "Round Info": {
         "path": "data/round_info.csv",
         "description": "Tournament metadata: courses, dates, TEG information"
@@ -34,6 +34,10 @@ AVAILABLE_FILES = {
     "Handicaps": {
         "path": "data/handicaps.csv",
         "description": "Player handicap data for net scoring calculations"
+    },
+    "View Processed Data": {  # Add this entry
+        "path": "processed_data_view",
+        "description": "Read-only view of fully processed tournament data (all-data.parquet)"
     }
 }
 
@@ -52,6 +56,43 @@ selected_description = AVAILABLE_FILES[selected_file_name]["description"]
 
 st.markdown(f"**Selected File:** `{selected_file}`")
 st.markdown(f"**Description:** {selected_description}")
+
+# === SPECIAL HANDLING FOR READ-ONLY DATA ===
+if selected_file_name == "View Processed Data":
+    st.markdown("### 📊 Processed Tournament Data (Read-Only)")
+    
+    try:
+        with st.spinner("Loading processed data..."):
+            from utils import load_all_data
+            all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
+        
+        # Display basic info
+        st.info(f"**{len(all_data):,} records** across **{all_data['TEGNum'].nunique()} TEGs** and **{all_data['Pl'].nunique()} players**")
+        
+        # Display the data (read-only)
+        st.dataframe(
+            all_data,
+            use_container_width=True,
+            height=600
+        )
+        
+        # Optional: Add download button
+        if st.button("📥 Download as CSV"):
+            csv = all_data.to_csv(index=False)
+            st.download_button(
+                label="Download Full Dataset",
+                data=csv,
+                file_name=f"processed_data_{pd.Timestamp.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                mime="text/csv"
+            )
+        
+        # Stop here - don't show editing interface
+        st.stop()
+        
+    except Exception as e:
+        st.error(f"Error loading processed data: {e}")
+        st.stop()
+
 
 # === DATA LOADING ===
 try:

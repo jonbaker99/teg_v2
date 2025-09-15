@@ -100,6 +100,7 @@ with st.expander("Handicap history"):
     except Exception as e:
         st.error(f"An error occurred while reading the CSV file: {str(e)}")
 
+# in_progress = True
 
 if in_progress:
 
