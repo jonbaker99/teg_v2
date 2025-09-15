@@ -157,3 +157,8 @@ if st.button("🔍 Run Data Integrity Check"):
                     st.dataframe(df)
         else:
             st.success("✅ **Data Integrity Check Passed. No issues found.**")
+
+if st.button("🔄 Clear Cache"):
+    st.cache_data.clear()
+    st.success("All caches cleared!")
+    st.rerun()  # Refresh the page
