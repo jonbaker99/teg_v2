@@ -106,5 +106,6 @@ if in_progress:
     next_next_tegnum = next_tegnum + 1
 
     with st.expander(f"Draft handicaps for TEG {next_next_tegnum}"):
-        next_hc = get_hc(next_next_tegnum)
+        # next_hc = get_hc(next_next_tegnum)
+        next_hc = get_hc(next_next_tegnum).sort_values("hc_raw", ascending=True, na_position="last").reset_index(drop=True)
         st.write(next_hc.to_html(index=False, justify='left', classes = 'datawrapper-table'), unsafe_allow_html=True)

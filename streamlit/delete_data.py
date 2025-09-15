@@ -101,3 +101,10 @@ elif st.session_state.delete_page_state == STATE_CONFIRMED:
     initialize_deletion_state(force_reset=True)
     st.success('Data deleted', icon="✅")
     st.success("♻️ All caches cleared")
+
+# === REFRESH CACHES
+
+if st.button("🔄 Clear Cache"):
+    st.cache_data.clear()
+    st.success("All caches cleared!")
+    st.rerun()  # Refresh the page

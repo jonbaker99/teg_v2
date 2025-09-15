@@ -170,6 +170,15 @@ with st.expander("ℹ️ How to Use"):
     - Change column data types (automatically detected)
     """)
 
+
+# === REFRESH CACHES ===
+
+if st.button("🔄 Clear Cache"):
+    st.cache_data.clear()
+    st.success("All caches cleared!")
+    st.rerun()  # Refresh the page
+
+
 # === FILE STATUS ===
 st.markdown("---")
 st.markdown(f"**File:** `{selected_file}`")
