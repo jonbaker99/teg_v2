@@ -229,10 +229,10 @@ TEG_ROUNDS = {
     # Add more TEGs if necessary
 }
 
+# Auto-generated from TEG_ROUNDS
 TEGNUM_ROUNDS = {
-    1: 1,
-    2: 3,
-    # Add more TEGs if necessary
+    int(teg.split()[1]): rounds 
+    for teg, rounds in TEG_ROUNDS.items()
 }
 
 TEG_OVERRIDES = {
@@ -272,6 +272,14 @@ def load_all_data(exclude_teg_50: bool = True, exclude_incomplete_tegs: bool = F
     
     return df
 
+def get_number_of_completed_rounds_by_teg(df: pd.DataFrame) -> pd.DataFrame:
+    num_rounds = (
+        df.groupby(['TEGNum', 'TEG'])['Round']
+          .nunique()
+          .reset_index(name="num_rounds")
+    )
+    return num_rounds
+
 
 def exclude_incomplete_tegs_function(df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -283,7 +291,7 @@ def exclude_incomplete_tegs_function(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: The dataset with incomplete TEGs excluded.
     """
-    # Compute the number of unique rounds per TEGNum
+    # Compute the number of unique COMPLETED rounds per TEGNum
     observed_rounds = df.groupby('TEGNum')['Round'].nunique()
     
     # Create a DataFrame with TEGNum and observed rounds
@@ -1644,169 +1652,64 @@ def filter_data_by_teg(all_data, selected_tegnum):
         return all_data
 
 
-def calculate_handicaps_for_teg(target_teg_num: int, all_data: pd.DataFrame = None, include_incomplete: bool = False) -> pd.DataFrame:
+def get_hc(TEG_needed: int | None = None) -> pd.DataFrame:
     """
-    Calculate handicaps for a given TEG based on weighted average of previous two TEGs.
-    
-    IMPORTANT: Handicaps from handicaps.csv ALWAYS take precedence over calculated values.
-    This function will only calculate handicaps for players not already listed in handicaps.csv.
-    
-    Handicaps are calculated using:
-    - 75% weight from (target_teg_num - 1)  
-    - 25% weight from (target_teg_num - 2)
-    - Adjusted gross score = 36 - average stableford per round + handicap
-    - Players missing from a TEG are deemed to have scored 36 stableford points per round
-    
-    Args:
-        target_teg_num (int): TEG number to calculate handicaps for
-        all_data (pd.DataFrame, optional): Tournament data. If None, loads automatically
-        include_incomplete (bool): Whether to include incomplete TEGs in calculation
-        
-    Returns:
-        pd.DataFrame: DataFrame with columns ['Player', 'Handicap', 'TEG1_Score', 'TEG2_Score', 'TEG1_Adjusted', 'TEG2_Adjusted', 'Source']
-        
-    Example:
-        >>> handicaps = calculate_handicaps_for_teg(18)
-        >>> print(handicaps[['Player', 'Handicap', 'Source']])
+    Calculate handicaps for a given TEG.
+
+    Parameters
+    ----------
+    TEG_needed : int, optional
+        TEG number to calculate handicaps for.
+        Defaults to the next TEG after the highest TEGNum in teg_data.
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with columns ['Pl', 'hc_raw', 'hc'].
     """
-    # Load data if not provided
-    if all_data is None:
-        all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=not include_incomplete)
-    
-    # Ensure we have the required TEGs for calculation
-    teg1_num = target_teg_num - 1  # Most recent TEG (75% weight)
-    teg2_num = target_teg_num - 2  # Previous TEG (25% weight)
-    
-    if teg2_num < 15:  # Based on user requirement: doesn't need to work before TEG 15
-        raise ValueError(f"Cannot calculate handicaps for TEG {target_teg_num}: requires TEG 15 or later (needs 2 previous TEGs with reliable data)")
-    
-    # Get all players who have ever played (excluding Henry Meller)
-    all_players = sorted([p for p in all_data['Player'].unique() if p != 'Henry MELLER'])
-    
-    # Get handicaps from the handicaps.csv file
-    try:
-        handicaps_df = read_file(HANDICAPS_CSV)
-        target_teg_col = f'TEG {target_teg_num}'
-        teg1_col = f'TEG {teg1_num}'
-        teg2_col = f'TEG {teg2_num}'
-        
-        # Create a mapping of player codes to full names
-        player_mapping = {
-            'DM': 'David MULLIN',
-            'GW': 'Gregg WILLIAMS', 
-            'JP': 'John PATTERSON',
-            'JB': 'Jon BAKER',
-            'SN': 'Stuart NEUMANN',
-            'AB': 'Alex BAKER'
-        }
-        
-        # Check if target TEG already has handicaps - these take precedence
-        existing_handicaps = {}
-        target_row = handicaps_df[handicaps_df['TEG'] == target_teg_col]
-        if not target_row.empty:
-            row = target_row.iloc[0]
-            for code, full_name in player_mapping.items():
-                if code in handicaps_df.columns and not pd.isna(row[code]) and row[code] != 0:
-                    existing_handicaps[full_name] = float(row[code])
-        
-        # Get handicaps for previous TEGs (for calculation)
-        teg1_handicaps = {}
-        teg2_handicaps = {}
-        
-        # Find the rows for the two previous TEGs
-        teg1_row = handicaps_df[handicaps_df['TEG'] == teg1_col]
-        teg2_row = handicaps_df[handicaps_df['TEG'] == teg2_col]
-        
-        if not teg1_row.empty:
-            row = teg1_row.iloc[0]
-            for code, full_name in player_mapping.items():
-                if code in handicaps_df.columns and not pd.isna(row[code]) and row[code] != 0:
-                    teg1_handicaps[full_name] = float(row[code])
-                    
-        if not teg2_row.empty:
-            row = teg2_row.iloc[0]
-            for code, full_name in player_mapping.items():
-                if code in handicaps_df.columns and not pd.isna(row[code]) and row[code] != 0:
-                    teg2_handicaps[full_name] = float(row[code])
-    except:
-        # If handicaps file not available, use default handicaps
-        st.warning("Could not load handicaps file. Using default handicaps of 18 for all players.")
-        existing_handicaps = {}
-        teg1_handicaps = {player: 18 for player in all_players}
-        teg2_handicaps = {player: 18 for player in all_players}
-    
-    # Get TEG data for the two previous TEGs
-    teg1_data = all_data[all_data['TEGNum'] == teg1_num]
-    teg2_data = all_data[all_data['TEGNum'] == teg2_num]
-    
-    # Calculate average stableford per round for each player in each TEG
-    def get_teg_stableford_average(teg_data, player):
-        player_data = teg_data[teg_data['Player'] == player]
-        if len(player_data) == 0:
-            return None  # Player didn't participate
-        
-        # Get stableford points per round
-        rounds_data = player_data.groupby('Round')['Stableford'].sum()
-        return rounds_data.mean()
-    
-    # Calculate handicaps for each player
-    results = []
-    
-    for player in all_players:
-        # Check if player already has a handicap in handicaps.csv - these take precedence
-        if player in existing_handicaps:
-            # Use existing handicap from CSV file
-            final_handicap = existing_handicaps[player]
-            source = "handicaps.csv"
-            
-            # Still calculate the values for reference/debugging
-            teg1_stableford_avg = get_teg_stableford_average(teg1_data, player)
-            teg2_stableford_avg = get_teg_stableford_average(teg2_data, player)
-            
-            if teg1_stableford_avg is None:
-                teg1_stableford_avg = 36
-            if teg2_stableford_avg is None:
-                teg2_stableford_avg = 36
-                
-            teg1_handicap = teg1_handicaps.get(player, 18)
-            teg2_handicap = teg2_handicaps.get(player, 18)
-            teg1_adjusted_gross = 36 - teg1_stableford_avg + teg1_handicap
-            teg2_adjusted_gross = 36 - teg2_stableford_avg + teg2_handicap
-            
-        else:
-            # Calculate handicap using weighted average
-            teg1_stableford_avg = get_teg_stableford_average(teg1_data, player)
-            teg2_stableford_avg = get_teg_stableford_average(teg2_data, player)
-            
-            # Use 36 stableford points per round if player didn't participate
-            if teg1_stableford_avg is None:
-                teg1_stableford_avg = 36
-            if teg2_stableford_avg is None:
-                teg2_stableford_avg = 36
-                
-            # Get handicaps for the previous TEGs (default to 18 if not found)
-            teg1_handicap = teg1_handicaps.get(player, 18)
-            teg2_handicap = teg2_handicaps.get(player, 18)
-            
-            # Calculate adjusted gross scores
-            # Adjusted gross = 36 - average stableford per round + handicap
-            teg1_adjusted_gross = 36 - teg1_stableford_avg + teg1_handicap
-            teg2_adjusted_gross = 36 - teg2_stableford_avg + teg2_handicap
-            
-            # Calculate new handicap using weighted average (75% most recent, 25% previous)
-            final_handicap = round(0.75 * teg1_adjusted_gross + 0.25 * teg2_adjusted_gross)
-            source = "calculated"
-        
-        results.append({
-            'Player': player,
-            'Handicap': final_handicap,
-            'TEG1_Score': teg1_stableford_avg,
-            'TEG2_Score': teg2_stableford_avg, 
-            'TEG1_Adjusted': teg1_adjusted_gross,
-            'TEG2_Adjusted': teg2_adjusted_gross,
-            'TEG1_HC': teg1_handicap,
-            'TEG2_HC': teg2_handicap,
-            'Source': source
-        })
-    
-    return pd.DataFrame(results)
+
+    # Load handicap reference
+    hc = load_and_prepare_handicap_data(HANDICAPS_CSV)
+    hc['TEGNum'] = hc["TEG"].str[-2:].str.strip().astype(int)
+
+    # Load game data
+    all_data = load_all_data(exclude_incomplete_tegs=False)
+    teg_data = get_teg_data_inc_in_progress()
+    num_rounds = get_number_of_completed_rounds_by_teg(all_data)
+
+    # Default TEG_needed = next after highest available
+    if TEG_needed is None:
+        TEG_needed = teg_data["TEGNum"].max() + 1
+
+    # Previous two TEGs
+    TEG_1 = TEG_needed - 1
+    TEG_2 = TEG_needed - 2
+    tegnums = [TEG_1, TEG_2]
+
+    # Handicap data for previous TEGs
+    hc_x = hc[hc['TEGNum'].isin(tegnums)]
+
+    # Stableford data for previous TEGs
+    stab_x = teg_data.loc[teg_data['TEGNum'].isin(tegnums), ['Pl','Stableford','TEGNum']].copy()
+    stab_x = stab_x.merge(num_rounds[['TEGNum','num_rounds']], on="TEGNum", how="left")
+    stab_x['ave_stab'] = stab_x['Stableford'] / stab_x['num_rounds']
+
+    # Merge HC and Stableford
+    hc_merged = hc_x.merge(stab_x, on=['Pl','TEGNum'], how='left')
+    hc_merged['ave_stab'] = pd.to_numeric(hc_merged['ave_stab'], errors="coerce").fillna(36)
+
+    # Adjusted gross
+    hc_merged['AdjGross'] = 36 - hc_merged['ave_stab'] + hc_merged['HC']
+
+    # Pivot for weighted average
+    pivoted = hc_merged.pivot(index="Pl", columns="TEGNum", values="AdjGross")
+
+    # Weighted handicap calculation
+    result = (
+        0.75 * pivoted[TEG_1] +
+        0.25 * pivoted[TEG_2]
+    ).reset_index(name="hc_raw")
+
+    # Add rounded version
+    result['hc'] = result['hc_raw'].round(0).astype(int)
+    return result

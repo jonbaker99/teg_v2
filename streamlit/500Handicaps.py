@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 from utils import get_base_directory, load_datawrapper_css, HANDICAPS_CSV
-from utils import read_file
+from utils import read_file, get_hc
 
 
 
@@ -37,6 +37,7 @@ current_handicaps = pd.DataFrame({
 })
 
 next_teg = 'TEG 18'
+next_tegnum = int(next_teg.split()[1])
 current_handicaps = current_handicaps.sort_values(by = next_teg, ascending=True)
 
 # Format the "Change" column
@@ -104,6 +105,13 @@ with st.expander("Handicap history"):
     except Exception as e:
         st.error(f"An error occurred while reading the CSV file: {str(e)}")
 
+
+
+next_next_tegnum = next_tegnum + 1
+
+with st.expander(f"Draft handicaps for TEG {next_next_tegnum}"):
+    next_hc = get_hc(next_next_tegnum)
+    st.write(next_hc.to_html(index=False, justify='left', classes = 'datawrapper-table'), unsafe_allow_html=True)
 
 # TODO: Add draft handicaps calculation section for next TEG
 # REMINDER: Look at handicap calculation function again - may need debugging
