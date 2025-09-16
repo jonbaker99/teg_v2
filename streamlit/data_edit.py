@@ -35,6 +35,10 @@ AVAILABLE_FILES = {
         "path": "data/handicaps.csv",
         "description": "Player handicap data for net scoring calculations"
     },
+    "TEG Winners": {
+        "path": "data/teg_winners.csv",
+        "description": "Cached winners data for fast history page loading"
+    },
     "View Processed Data": {  # Add this entry
         "path": "processed_data_view",
         "description": "Read-only view of fully processed tournament data (all-data.parquet)"
@@ -110,6 +114,8 @@ try:
         st.info("ℹ️ **Note:** Changes to handicaps will affect net scoring calculations across all tournaments.")
     elif selected_file == "data/future_tegs.csv":
         st.info("ℹ️ **Note:** This file controls future tournament planning and navigation behavior.")
+    elif selected_file == "data/teg_winners.csv":
+        st.warning("⚠️ **Important:** This file contains cached winners data for performance. Manual edits should be used carefully as they may be overwritten when new tournaments are processed.")
     
 except FileNotFoundError:
     # Handle missing files based on file type

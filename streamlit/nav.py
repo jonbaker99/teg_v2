@@ -58,6 +58,7 @@ st.markdown(
 # home_page = st.Page("home.py", title="Home")
 honours_page = st.Page("101TEG Honours Board.py", title="TEG Honours Board", icon=":material/trophy:")
 history_page = st.Page("101TEG History.py", title="TEG History", icon=":material/lists:")
+history_fast_page = st.Page("101TEG History - Fast.py", title="TEG History (Fast)", icon=":material/speed:")
 results_page = st.Page("102TEG Results.py", title="Detailed TEG Results", icon=":material/sports_score:")
 player_ranking_page = st.Page("player_history.py", title="Rankings by TEG by Player", icon=":material/123:")
 pb_page = st.Page("302Personal Best Rounds & TEGs.py", title="Personal Bests", icon=":material/golf_course:") 
@@ -101,7 +102,7 @@ if has_incomplete_teg:
     nav_structure = {
         #"Home": [home_page],
         "Current TEG": [leaderboard_pg, latest_rd_page, latest_teg_page,scorecard_pg, scorecard_mob_pg, hc_page],
-        "History": [history_page, honours_page, results_page, player_ranking_page],
+        "History": [history_page, history_fast_page, honours_page, results_page, player_ranking_page],
         "Records & PBs": [records_page, pb_page, worsts_page, top_pages],
         # "Scorecards": [scorecard_pg, scorecard_mob_pg],
         "Scoring analysis": [birdies_pg, course_ave_pg,  bypar_pg, sc_count_pg,byteg_pg,  changes_pg, course_rds_pg],
@@ -113,7 +114,7 @@ else:
     # If no TEG in progress, use original structure with "Latest TEG" at the end
     nav_structure = {
         #"Home": [home_page],
-        "History": [history_page, honours_page, results_page, player_ranking_page],
+        "History": [history_page, history_fast_page, honours_page, results_page, player_ranking_page],
         "Records & PBs": [records_page, pb_page, worsts_page, top_pages],
         "Scorecards": [scorecard_pg, scorecard_mob_pg],
         "Scoring analysis": [birdies_pg, course_ave_pg,  bypar_pg, sc_count_pg,byteg_pg,  changes_pg, course_rds_pg],

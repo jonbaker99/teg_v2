@@ -371,5 +371,120 @@ def prepare_complete_history_table(winners_df):
     
     complete_history['_sort_order'] = complete_history['TEG'].apply(extract_teg_num)
     complete_history = complete_history.sort_values('_sort_order').drop('_sort_order', axis=1)
-    
+
+    return complete_history
+
+
+def load_cached_winners():
+    """
+    Load cached winners from teg_winners.csv file.
+
+    Returns:
+        pd.DataFrame: Cached winners data, or None if file doesn't exist
+
+    Purpose:
+        Fast loading of pre-computed winners data for performance optimization
+    """
+    from utils import read_file
+
+    try:
+        # Try to load cached winners
+        cached_winners = read_file('data/teg_winners.csv')
+
+        # Add TEG(Year) format for display consistency
+        cached_winners["TEG"] = (
+            cached_winners['TEG'].astype(str) + " (" +
+            cached_winners['Year'].astype(str) + ")"
+        )
+
+        # Remove separate Year column to match expected format
+        cached_winners = cached_winners.drop(columns=['Year'])
+
+        return cached_winners
+
+    except Exception as e:
+        # If cached file doesn't exist or has issues, return None
+        print(f"Could not load cached winners: {e}")
+        return None
+
+
+def prepare_complete_history_table_fast(cached_winners_df=None):
+    """
+    Prepare complete history table using cached winners data when available.
+
+    Args:
+        cached_winners_df (pd.DataFrame, optional): Pre-loaded cached winners data
+
+    Returns:
+        pd.DataFrame: Complete history table with TBC entries for incomplete/future TEGs
+
+    Purpose:
+        Fast version of prepare_complete_history_table that uses cached data
+    """
+
+    # Try to use provided cached data, or load it
+    if cached_winners_df is None:
+        cached_winners_df = load_cached_winners()
+
+    # If no cached data available, fall back to calculation
+    if cached_winners_df is None:
+        print("No cached winners data available, falling back to calculation...")
+        from utils import load_all_data, get_teg_winners
+        all_data = load_all_data(exclude_incomplete_tegs=True, exclude_teg_50=True)
+        winners_with_year = get_teg_winners(all_data)
+        completed_history = prepare_history_table_display(winners_with_year)
+    else:
+        completed_history = cached_winners_df.copy()
+
+    # Get future TEGs
+    future_tegs = get_future_tegs()
+
+    # Get all TEG names that already exist in completed data
+    existing_tegs = set()
+
+    # Add completed TEG names (extract from "TEG X (YYYY)" format)
+    import re
+    for teg_str in completed_history['TEG']:
+        match = re.search(r'(TEG \d+)', teg_str)
+        if match:
+            existing_tegs.add(match.group(1))
+
+    # Filter out future TEGs that already exist in the data
+    if not future_tegs.empty:
+        future_tegs = future_tegs[~future_tegs['TEG'].isin(existing_tegs)]
+
+    if future_tegs.empty:
+        return completed_history
+
+    # Create TBC entries for future TEGs
+    tbc_entries = []
+    for _, row in future_tegs.iterrows():
+        tbc_entry = {
+            'TEG': f"{row['TEG']} ({row['Year']})",
+            'Area': row['Area'],
+            'TEG Trophy': 'TBC',
+            'Green Jacket': 'TBC',
+            'HMM Wooden Spoon': 'TBC'
+        }
+        tbc_entries.append(tbc_entry)
+
+    # Convert to DataFrame
+    tbc_df = pd.DataFrame(tbc_entries)
+
+    # Combine completed and TBC entries
+    complete_history = pd.concat([completed_history, tbc_df], ignore_index=True)
+
+    # Sort by TEG number (extract from TEG name)
+    def extract_teg_num(teg_str):
+        try:
+            # Extract number from "TEG X (YYYY)" format
+            import re
+            match = re.search(r'TEG (\d+)', teg_str)
+            return int(match.group(1)) if match else 999
+        except:
+            return 999
+
+    complete_history['_sort_order'] = complete_history['TEG'].apply(extract_teg_num)
+    complete_history = complete_history.sort_values('_sort_order').drop('_sort_order', axis=1)
+
     return complete_history
