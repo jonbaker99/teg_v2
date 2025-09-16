@@ -72,7 +72,7 @@ birdies_pg = st.Page("birdies_etc.py", title="Eagles / Birdies / Pars", icon=":m
 bypar_pg = st.Page("ave_by_par.py", title="Average by par", icon=":material/strategy:")
 byteg_pg = st.Page("ave_by_teg.py", title="Average by TEG", icon=":material/strategy:")
 course_ave_pg = st.Page("ave_by_course.py", title="Course averages and records", icon=":material/strategy:")
-course_rds_pg = st.Page("score_by_course.py", title="All rounds by course", icon=":material/strategy:")
+course_rds_pg = st.Page("score_by_course.py", title="All rounds", icon=":material/strategy:")
 data_pg = st.Page("1000Data update.py", title="Data update", icon=":material/update:")
 data_edit_pg = st.Page("data_edit.py", title="Data edit", icon=":material/edit:")
 delete_pg = st.Page("delete_data.py", title="Delete data", icon=":material/skull:")
@@ -104,8 +104,7 @@ if has_incomplete_teg:
         "History": [history_page, honours_page, results_page, player_ranking_page],
         "Records & PBs": [records_page, worsts_page, top_pages, pb_page],
         # "Scorecards": [scorecard_pg, scorecard_mob_pg],
-        "Scoring analysis": [birdies_pg, bypar_pg, sc_count_pg,byteg_pg,  changes_pg],
-        "Course scoring" :[course_ave_pg, course_rds_pg] ,
+        "Scoring analysis": [birdies_pg, course_ave_pg,  bypar_pg, sc_count_pg,byteg_pg,  changes_pg, course_rds_pg],
         "Bestballs / Eclectics": [bestball_pg, eclectic_pg, eclectic_records_pg],
         #"Players": [players_pg],
         "Data":[data_pg, data_edit_pg, delete_pg]
@@ -117,8 +116,8 @@ else:
         "History": [history_page, honours_page, results_page, player_ranking_page],
         "Records & PBs": [records_page, worsts_page, top_pages, pb_page],
         "Scorecards": [scorecard_pg, scorecard_mob_pg],
-        "Scoring analysis": [birdies_pg, bypar_pg, sc_count_pg,byteg_pg,  changes_pg],
-        "Course scoring" :[course_ave_pg, course_rds_pg] ,
+        "Scoring analysis": [birdies_pg, course_ave_pg,  bypar_pg, sc_count_pg,byteg_pg,  changes_pg, course_rds_pg],
+        # "Course scoring" :[course_ave_pg, course_rds_pg] ,
         "Bestballs / Eclectics": [bestball_pg, eclectic_pg, eclectic_records_pg],
         #"Players": [players_pg],
         "Latest TEG": [leaderboard_pg, latest_rd_page, latest_teg_page, hc_page],
