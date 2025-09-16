@@ -50,26 +50,18 @@ all_data = load_all_data(exclude_teg_50=True)
 chart_fields_all = get_scoring_achievement_fields()
 
 # Create consolidated tab structure
-tab_labels = ["Number of Eagles etc", "Most in a round", "Streaks"]
+tab_labels = ["Number of Eagles etc", "Most in round", "Streaks"]
 tabs = st.tabs(tab_labels)
 
 # Display achievement statistics in tabs
 for i, tab in enumerate(tabs):
     with tab:
         if i == 0:
-            # Consolidated career achievements tab with radio button controls
-            # st.markdown("**Number of chosen score in career**")
+            
+            # Career achievements tab with sub-tabs for each score type
+            eagles_tab, birdies_tab, pars_tab, tbp_tab = st.tabs(["Eagles", "Birdies", "Pars or Better", "Triple Bogey+"])
 
-            # Create radio button options
-            score_type_options = ["Eagles", "Birdies", "Pars or Better", "Triple Bogey+"]
-            selected_score_type = st.radio(
-                "Select score type:",
-                score_type_options,
-                index=1,  # Default to Birdies
-                horizontal=True
-            )
-
-            # Map radio button selection to chart_fields
+            # Map score type tabs to chart_fields
             score_type_mapping = {
                 "Eagles": chart_fields_all[0],
                 "Birdies": chart_fields_all[1],
@@ -77,27 +69,29 @@ for i, tab in enumerate(tabs):
                 "Triple Bogey+": chart_fields_all[3]
             }
 
-            # Get the selected chart fields
-            selected_chart_fields = score_type_mapping[selected_score_type]
+            # Create content for each sub-tab
+            for tab_name, tab in [("Eagles", eagles_tab), ("Birdies", birdies_tab), ("Pars or Better", pars_tab), ("Triple Bogey+", tbp_tab)]:
+                with tab:
+                    # Get the chart fields for this score type
+                    selected_chart_fields = score_type_mapping[tab_name]
 
-            # create_section_title() - Creates clean section title from field names
-            section_title = create_section_title(selected_chart_fields)
-            st.markdown(f"**Career {section_title}**")
+                    # create_section_title() - Creates clean section title from field names
+                    section_title = create_section_title(selected_chart_fields)
+                    st.markdown(f"**Career {section_title}**")
 
-            # prepare_achievement_table_data() - Formats table with proper sorting and display formatting
-            formatted_table = prepare_achievement_table_data(scoring_stats, selected_chart_fields)
-            st.write(
-                formatted_table.to_html(
-                    index=False,
-                    justify='left',
-                    classes='datawrapper-table'
-                ),
-                unsafe_allow_html=True
-            )
+                    # prepare_achievement_table_data() - Formats table with proper sorting and display formatting
+                    formatted_table = prepare_achievement_table_data(scoring_stats, selected_chart_fields)
+                    st.write(
+                        formatted_table.to_html(
+                            index=False,
+                            justify='left',
+                            classes='datawrapper-table'
+                        ),
+                        unsafe_allow_html=True
+                    )
 
         elif i == 1:
             # Single-round maximums tab
-            st.markdown("**Most in a round**")
             st.write(
                 max_by_round.to_html(
                     index=False,
@@ -106,45 +100,42 @@ for i, tab in enumerate(tabs):
                 ),
                 unsafe_allow_html=True
             )
-        else:
-            # Longest streaks tab
-            st.markdown("**Longest Streaks WITH Score Type**")
+        elif i == 2:
+            # Streaks tab with sub-tabs
+            streak_sub_tab1, streak_sub_tab2 = st.tabs(["Streaks with...", "Streaks without..."])
 
-            # prepare_streak_data_for_display() - Calculates consecutive achievements and finds maximum streaks
-            # This function handles the complete workflow:
-            # 1. Tracks running streaks for multiple score types (birdies, pars, etc.)
-            # 2. Uses Career Count to maintain chronological order across all tournaments
-            # 3. Summarizes maximum streak length for each player and achievement type
-            streak_summary = prepare_streak_data_for_display(all_data)
+            with streak_sub_tab1:
+                # prepare_streak_data_for_display() - Calculates consecutive achievements and finds maximum streaks
+                # This function handles the complete workflow:
+                # 1. Tracks running streaks for multiple score types (birdies, pars, etc.)
+                # 2. Uses Career Count to maintain chronological order across all tournaments
+                # 3. Summarizes maximum streak length for each player and achievement type
+                streak_summary = prepare_streak_data_for_display(all_data)
 
-            # Display streak summary table
-            st.write(
-                streak_summary.to_html(
-                    index=False,
-                    justify='left',
-                    classes='datawrapper-table'
-                ),
-                unsafe_allow_html=True
-            )
+                # Display streak summary table
+                st.write(
+                    streak_summary.to_html(
+                        index=False,
+                        justify='left',
+                        classes='datawrapper-table'
+                    ),
+                    unsafe_allow_html=True
+                )
 
-            # Add spacing between tables
-            st.markdown("<br>", unsafe_allow_html=True)
+            with streak_sub_tab2:
+                # prepare_inverse_streak_data_for_display() - Calculates consecutive holes without achievements
+                # This function handles the complete inverse workflow:
+                # 1. Tracks running streaks for multiple inverse score types (without birdies, without pars, etc.)
+                # 2. Uses Career Count to maintain chronological order across all tournaments
+                # 3. Summarizes maximum inverse streak length for each player and achievement type
+                inverse_streak_summary = prepare_inverse_streak_data_for_display(all_data)
 
-            st.markdown("**Longest Streaks WITHOUT Score Type**")
-
-            # prepare_inverse_streak_data_for_display() - Calculates consecutive holes without achievements
-            # This function handles the complete inverse workflow:
-            # 1. Tracks running streaks for multiple inverse score types (without birdies, without pars, etc.)
-            # 2. Uses Career Count to maintain chronological order across all tournaments
-            # 3. Summarizes maximum inverse streak length for each player and achievement type
-            inverse_streak_summary = prepare_inverse_streak_data_for_display(all_data)
-
-            # Display inverse streak summary table
-            st.write(
-                inverse_streak_summary.to_html(
-                    index=False,
-                    justify='left',
-                    classes='datawrapper-table'
-                ),
-                unsafe_allow_html=True
-            )
+                # Display inverse streak summary table
+                st.write(
+                    inverse_streak_summary.to_html(
+                        index=False,
+                        justify='left',
+                        classes='datawrapper-table'
+                    ),
+                    unsafe_allow_html=True
+                )
