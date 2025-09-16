@@ -94,6 +94,39 @@ def create_course_records_table(filtered_data):
 
     return records_df
 
+# Create net course records table - showing best net vs par for each course with ties
+def create_net_course_records_table(filtered_data):
+    records_data = []
+
+    for course in filtered_data['Course'].unique():
+        course_data = filtered_data[filtered_data['Course'] == course]
+        min_net_vp = course_data['NetVP'].min()
+
+        best_rounds = course_data[course_data['NetVP'] == min_net_vp]
+
+        for _, round_data in best_rounds.iterrows():
+            # Format Net v Par
+            net_v_par = f"+{int(round_data['NetVP'])}" if round_data['NetVP'] > 0 else str(int(round_data['NetVP']))
+
+            # Combine TEG + Round
+            teg_round = f"{round_data['TEG']} R{int(round_data['Round'])}"
+
+            records_data.append({
+                'Course': course,
+                'Net vs Par': net_v_par,
+                'Player': round_data['Player'],
+                'Date': round_data['Date'],
+                'TEG / Round': teg_round
+            })
+
+    records_df = pd.DataFrame(records_data)
+    # Sort by Net vs Par ascending, then by Date ascending
+    records_df['_sort_score'] = records_df['Net vs Par'].str.replace('+', '').astype(int)
+    records_df = records_df.sort_values(['_sort_score', 'Date'])
+    records_df = records_df.drop('_sort_score', axis=1)
+
+    return records_df
+
 # Create course records summary table - showing how many courses each player holds records for
 def create_course_records_summary(filtered_data):
     player_courses = {}
@@ -123,14 +156,45 @@ def create_course_records_summary(filtered_data):
 
     return summary_df
 
+# Create net course records summary table - showing how many net courses each player holds records for
+def create_net_course_records_summary(filtered_data):
+    player_courses = {}
+
+    for course in filtered_data['Course'].unique():
+        course_data = filtered_data[filtered_data['Course'] == course]
+        min_net_vp = course_data['NetVP'].min()
+
+        # Get all players who achieved the minimum net vs par on this course
+        record_holders = course_data[course_data['NetVP'] == min_net_vp]['Player'].unique()
+
+        for player in record_holders:
+            if player not in player_courses:
+                player_courses[player] = set()
+            player_courses[player].add(course)
+
+    # Convert to DataFrame
+    summary_data = []
+    for player, courses in player_courses.items():
+        summary_data.append({
+            'Player': player,
+            'Net Records held': len(courses)
+        })
+
+    summary_df = pd.DataFrame(summary_data)
+    summary_df = summary_df.sort_values(['Net Records held', 'Player'], ascending=[False, True])
+
+    return summary_df
+
 course_records = create_course_records_table(filtered_rd_data)
 course_records_summary = create_course_records_summary(filtered_rd_data)
+net_course_records = create_net_course_records_table(filtered_rd_data)
+net_course_records_summary = create_net_course_records_summary(filtered_rd_data)
 
 # Display results in tabs
-tab1, tab2, tab3, tab4, tab5 = st.tabs(["Course Records", "Summary by course", "Averages", "Bests", "Worsts"])
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Course Records", "Net Records", "Summary by course", "Averages", "Bests", "Worsts"])
 
 with tab1:
-    st.markdown("**Course Records**")
+    st.markdown("**Course Records (Gross)**")
     datawrapper_table(course_records, css_classes='full-width table-left-align')
 
     st.divider()
@@ -139,13 +203,22 @@ with tab1:
     datawrapper_table(course_records_summary)
 
 with tab2:
-    datawrapper_table(course_summary, css_classes='full-width')
+    st.markdown("**Course Records (Net)**")
+    datawrapper_table(net_course_records, css_classes='full-width table-left-align')
+
+    st.divider()
+
+    st.markdown("**Net Records Summary by Player**")
+    datawrapper_table(net_course_records_summary)
 
 with tab3:
-    datawrapper_table(mean_course_data, css_classes='full-width')
+    datawrapper_table(course_summary, css_classes='full-width')
 
 with tab4:
-    datawrapper_table(min_course_data, css_classes='full-width')
+    datawrapper_table(mean_course_data, css_classes='full-width')
 
 with tab5:
+    datawrapper_table(min_course_data, css_classes='full-width')
+
+with tab6:
     datawrapper_table(max_course_data, css_classes='full-width')
