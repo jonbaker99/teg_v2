@@ -3,12 +3,11 @@ import streamlit as st
 import pandas as pd
 
 # Import data loading functions from main utils
-from utils import load_datawrapper_css
+from utils import load_all_data, get_teg_winners, load_datawrapper_css
 
 # Import history-specific helper functions
 from helpers.history_data_processing import (
-    prepare_complete_history_table_fast,
-    load_cached_winners
+    prepare_complete_history_table
 )
 
 
@@ -24,11 +23,19 @@ st.markdown("TEG locations and winners by year")
 
 
 # === DATA LOADING ===
-# Load cached winners data first
-cached_winners = load_cached_winners()
+# Load complete TEG data (excludes incomplete TEGs and TEG 50)
+# Purpose: Historical analysis requires only completed tournaments for accurate records
+# TEG 50 excluded as it's a special case that shouldn't affect historical statistics
+all_data = load_all_data(exclude_incomplete_tegs=True, exclude_teg_50=True)
 
-# Prepare complete history table using cached data
-history_display_table = prepare_complete_history_table_fast(cached_winners)
+# Load winners data for all completed TEGs
+# Purpose: Core dataset showing Trophy, Green Jacket, and Wooden Spoon winners by TEG
+winners_with_year = get_teg_winners(all_data)
+
+# === DATA PROCESSING ===
+# prepare_complete_history_table() - Creates comprehensive history including TBC entries
+# Includes completed TEGs with winners, plus incomplete/future TEGs with TBC
+history_display_table = prepare_complete_history_table(winners_with_year)
 
 
 # === TEG HISTORY TABLE ===
@@ -56,4 +63,3 @@ st.write(
 
 # Add footnote for historical context
 st.caption('*Green Jacket awarded in TEG 5 for best stableford round; DM had best gross score')
-
