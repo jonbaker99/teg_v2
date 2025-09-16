@@ -7,7 +7,9 @@
       "Bash(python:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(streamlit run:*)"
+      "Bash(streamlit run:*)",
+      "Bash(timeout 10 streamlit run streamlit/500Handicaps.py --server.headless=true --server.port=8502)",
+      "Bash(timeout 10 streamlit run streamlit/500Handicaps.py --server.headless=true --server.port=8503)"
     ],
     "deny": [],
     "ask": [

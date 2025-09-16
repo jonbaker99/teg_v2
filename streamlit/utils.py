@@ -1745,19 +1745,38 @@ def get_next_teg_and_check_if_in_progress():
 def get_current_handicaps_formatted(last_completed_teg, next_teg):
     """Get handicaps in exact same format as hardcoded version"""
     # from utils import load_and_prepare_handicap_data, HANDICAPS_CSV, get_player_name
-    
+
     hc_data = load_and_prepare_handicap_data(HANDICAPS_CSV)
-    
+
     last_teg_str = f'TEG {last_completed_teg}'
     next_teg_str = f'TEG {next_teg}'
-    
+
     # Get current and previous handicaps
     current_hc = hc_data[hc_data['TEG'] == next_teg_str]
     previous_hc = hc_data[hc_data['TEG'] == last_teg_str]
-    
+
+    # Track whether handicaps were calculated
+    handicaps_were_calculated = current_hc.empty
+
     if current_hc.empty:
-        st.warning(f"No handicap data found for {next_teg_str}")
-        return pd.DataFrame()
+        # Calculate missing handicaps and supplement the data
+        calculated_handicaps = get_hc(next_teg)
+
+        # Transform calculated handicaps to match hc_data structure
+        calculated_rows = []
+        for _, row in calculated_handicaps.iterrows():
+            calculated_rows.append({
+                'TEG': next_teg_str,
+                'Pl': row['Pl'],
+                'HC': row['hc']
+            })
+
+        # Add calculated handicaps to hc_data
+        calculated_df = pd.DataFrame(calculated_rows)
+        hc_data = pd.concat([hc_data, calculated_df], ignore_index=True)
+
+        # Now get the current handicaps (which will exist)
+        current_hc = hc_data[hc_data['TEG'] == next_teg_str]
     
     # Merge and calculate change
     merged = current_hc.merge(previous_hc[['Pl', 'HC']], on='Pl', how='left', suffixes=('_current', '_previous'))
@@ -1773,5 +1792,5 @@ def get_current_handicaps_formatted(last_completed_teg, next_teg):
         next_teg_str: merged['HC_current'].astype(int).tolist(),
         'Change': merged['Change'].astype(int).tolist()
     })
-    
-    return result
+
+    return result, handicaps_were_calculated

@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 from utils import get_base_directory, load_datawrapper_css, HANDICAPS_CSV, get_current_handicaps_formatted
-from utils import read_file, get_hc, get_next_teg_and_check_if_in_progress
+from utils import read_file, get_hc, get_next_teg_and_check_if_in_progress, write_file, get_player_name, clear_all_caches
 
 
 
@@ -28,10 +28,16 @@ def format_value(val):
 st.title("Handicaps")
 
 last_completed, next_tegnum, in_progress = get_next_teg_and_check_if_in_progress()
+
+###====== MANUAL OVERWRITE FOR TESTING -> comment out section to revert to normal
+# next_tegnum = 19
+# st.write("IN TESTING MODE")
+###====== END OF MANUAL OVERWRITE FOR TESTING
+
 next_teg = f'TEG {next_tegnum}'
 
 last_completed_teg = next_tegnum - 1
-current_handicaps = get_current_handicaps_formatted(last_completed_teg, next_tegnum)
+current_handicaps, handicaps_were_calculated = get_current_handicaps_formatted(last_completed_teg, next_tegnum)
 
 current_handicaps = current_handicaps.sort_values(by = next_teg, ascending=True)
 
@@ -50,7 +56,11 @@ current_handicaps['Handicap_formatted'] = current_handicaps['Handicap'].apply(fo
 
 
 # Title
-st.header(f"{next_teg} Handicaps")
+if not handicaps_were_calculated:
+    st.markdown(f"#### {next_teg} Handicaps")
+else:
+    st.markdown(f"#### {next_teg} Handicaps (Draft)")
+    st.info("ℹ️ Draft handicaps subject to final review")
 
 # Create a container for custom metrics
 custom_metric_container = st.container()
@@ -76,7 +86,61 @@ with custom_metric_container:
 
 
 # Optional: Add some spacing or additional information
-st.caption("Change shows difference in HC vs previous TEG")
+if not handicaps_were_calculated:
+    st.caption("Change shows difference in HC vs previous TEG")
+else:
+    st.caption("Change shows difference in HC vs previous TEG")
+
+# Add interface for writing calculated handicaps to CSV
+if handicaps_were_calculated:
+    st.markdown("Save Calculated Handicaps?")
+   
+    st.write("Press button below to save these calculated handicaps to the handicaps file")
+
+    if st.button("💾 Save to File", type="primary"):
+        try:
+            # Re-calculate handicaps to get the raw data for saving
+            calculated_handicaps_for_save = get_hc(next_tegnum)
+
+            # Transform calculated handicaps to CSV format
+            def transform_handicaps_to_csv_format(calc_hc_df, teg_num):
+                # Read existing handicaps file
+                existing_handicaps = read_file(HANDICAPS_CSV)
+
+                # Create new row for this TEG
+                teg_name = f"TEG {teg_num}"
+                new_row = {"TEG": teg_name}
+
+                # Add handicap for each player (using their initials as column names)
+                for _, row in calc_hc_df.iterrows():
+                    player_initial = row['Pl']
+                    handicap = row['hc']
+                    new_row[player_initial] = handicap
+
+                # Fill missing players with 0 (in case some players didn't get calculated handicaps)
+                for col in existing_handicaps.columns[1:]:  # Skip 'TEG' column
+                    if col not in new_row:
+                        new_row[col] = 0
+
+                # Add new row to existing data
+                new_row_df = pd.DataFrame([new_row])
+                updated_handicaps = pd.concat([existing_handicaps, new_row_df], ignore_index=True)
+
+                return updated_handicaps
+
+            # Transform and save
+            updated_handicaps = transform_handicaps_to_csv_format(calculated_handicaps_for_save, next_tegnum)
+            write_file(HANDICAPS_CSV, updated_handicaps, f"Add calculated handicaps for {next_teg}")
+
+            # Clear caches to ensure fresh data
+            clear_all_caches()
+
+            st.success(f"✅ Handicaps saved successfully to {HANDICAPS_CSV}!")
+            st.info("🔄 Page will refresh to show the saved handicaps...")
+            st.rerun()
+
+        except Exception as e:
+            st.error(f"❌ Error saving handicaps: {str(e)}")
 
 
 
