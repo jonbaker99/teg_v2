@@ -130,12 +130,12 @@ course_records_summary = create_course_records_summary(filtered_rd_data)
 tab1, tab2, tab3, tab4, tab5 = st.tabs(["Course Records", "Summary by course", "Averages", "Bests", "Worsts"])
 
 with tab1:
-    st.markdown("**Detailed Course Records**")
+    st.markdown("**Course Records**")
     datawrapper_table(course_records, css_classes='full-width table-left-align')
 
     st.divider()
 
-    st.markdown("**Course Records Summary**")
+    st.markdown("**Summary by Player**")
     datawrapper_table(course_records_summary)
 
 with tab2:
