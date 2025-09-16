@@ -64,32 +64,34 @@ elif st.session_state.selected_measure not in friendly_names:
 tab1, tab2, tab3, tab4, tab5 = st.tabs(["PB Summary", "Best TEGs", "Best Rounds", "Worst TEGs", "Worst Rounds"])
 
 with tab1:
+    # Create subtabs within PB Summary
+    pb_rounds_tab, pb_tegs_tab = st.tabs(["PB Rounds", "PB TEGs"])
 
-    st.markdown('#### Personal Best Rounds')
-    # st.markdown('Each player\'s best performance across all four measures for individual rounds.')
-    st.write(
-        pb_round_summary.to_html(
-            escape=False, 
-            index=False, 
-            justify='left', 
-            classes='datawrapper-table table-left-align pb-table'
-        ), 
-        unsafe_allow_html=True
-    )
+    with pb_rounds_tab:
+        st.markdown('#### Personal Best Rounds')
+        # st.markdown('Each player\'s best performance across all four measures for individual rounds.')
+        st.write(
+            pb_round_summary.to_html(
+                escape=False,
+                index=False,
+                justify='left',
+                classes='datawrapper-table table-left-align pb-table'
+            ),
+            unsafe_allow_html=True
+        )
 
-    
-    st.markdown('')
-    st.markdown('#### Personal Best TEGs')
-    # st.markdown('Each player\'s best performance across all four measures for complete TEGs.')
-    st.write(
-        pb_teg_summary.to_html(
-            escape=False, 
-            index=False, 
-            justify='left', 
-            classes='datawrapper-table table-left-align pb-table'
-        ), 
-        unsafe_allow_html=True
-    )
+    with pb_tegs_tab:
+        st.markdown('#### Personal Best TEGs')
+        # st.markdown('Each player\'s best performance across all four measures for complete TEGs.')
+        st.write(
+            pb_teg_summary.to_html(
+                escape=False,
+                index=False,
+                justify='left',
+                classes='datawrapper-table table-left-align pb-table'
+            ),
+            unsafe_allow_html=True
+        )
 
 # Tabs with measure selection that syncs across all tabs
 with tab2:
