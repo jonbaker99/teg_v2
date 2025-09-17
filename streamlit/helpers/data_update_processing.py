@@ -82,34 +82,19 @@ def process_google_sheets_data(raw_df):
 
 
 def check_for_duplicate_data():
-    """
-    Check if new data conflicts with existing data in the system.
-    
-    Returns:
-        bool: True if duplicates found, False otherwise
-        
-    Purpose:
-        Prevents accidental overwriting of existing data
-        Sets up session state for duplicate handling workflow
-        Ensures data integrity by detecting conflicts before processing
-    """
     try:
-        # Load existing data from the main scores file
         st.session_state.existing_data_df = read_file(ALL_SCORES_PARQUET)
     except FileNotFoundError:
-        # Create empty dataframe if no existing data
         st.session_state.existing_data_df = pd.DataFrame(columns=['TEGNum', 'Round'])
 
-    # Extract TEG/Round combinations from new data
     new_tegs_rounds = st.session_state.new_data_df[['TEGNum', 'Round']].drop_duplicates()
     
-    # Ensure consistent data types for merge operation
-    st.session_state.existing_data_df['TEGNum'] = st.session_state.existing_data_df['TEGNum'].astype(str)
-    st.session_state.existing_data_df['Round'] = st.session_state.existing_data_df['Round'].astype(str)
-    new_tegs_rounds['TEGNum'] = new_tegs_rounds['TEGNum'].astype(str)
-    new_tegs_rounds['Round'] = new_tegs_rounds['Round'].astype(str)
+    # Ensure NUMERIC types for both dataframes
+    st.session_state.existing_data_df['TEGNum'] = pd.to_numeric(st.session_state.existing_data_df['TEGNum'])
+    st.session_state.existing_data_df['Round'] = pd.to_numeric(st.session_state.existing_data_df['Round'])
+    new_tegs_rounds['TEGNum'] = pd.to_numeric(new_tegs_rounds['TEGNum'])
+    new_tegs_rounds['Round'] = pd.to_numeric(new_tegs_rounds['Round'])
 
-    # Find overlapping TEG/Round combinations
     duplicates = st.session_state.existing_data_df.merge(new_tegs_rounds, on=['TEGNum', 'Round'], how='inner')
     st.session_state.duplicates_df = duplicates
     
@@ -136,6 +121,10 @@ def execute_data_update(overwrite=False):
     if overwrite:
         # Remove existing data that will be replaced
         new_tegs_rounds = new_data_df[['TEGNum', 'Round']].drop_duplicates()
+        # Ensure numeric types (should already be correct from check_for_duplicate_data, but be safe)
+        new_tegs_rounds['TEGNum'] = pd.to_numeric(new_tegs_rounds['TEGNum'])
+        new_tegs_rounds['Round'] = pd.to_numeric(new_tegs_rounds['Round'])
+        
         existing_df = existing_df.merge(new_tegs_rounds, on=['TEGNum', 'Round'], how='left', indicator=True)
         existing_df = existing_df[existing_df['_merge'] == 'left_only'].drop(columns=['_merge'])
 
