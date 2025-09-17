@@ -3,7 +3,7 @@ import os
 import numpy as np
 import logging
 from math import floor
-# from google.oauth2.service_account import Credentials
+from google.oauth2.service_account import Credentials
 import gspread
 from typing import Dict, Any, List
 import streamlit as st
