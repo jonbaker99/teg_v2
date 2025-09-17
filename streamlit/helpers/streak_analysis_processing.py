@@ -26,7 +26,8 @@ def get_score_type_definitions():
         'Pars_or_Better': lambda x: x <= 0,    # At or under par
         'Birdies': lambda x: x == -1,           # Exactly one under par
         'TBPs': lambda x: x > 2,                # Triple bogey or worse (3+ over par)
-        'Bogey or better': lambda x: x < 2      # Better than double bogey
+        'Bogey or better': lambda x: x < 2,     # Better than double bogey
+        'Double Bogey or worse': lambda x: x >= 2  # Double bogey or worse (2+ over par)
     }
 
     return score_types
@@ -162,7 +163,7 @@ def summarize_multi_score_running_sum(df):
         Sorted by best "Pars or Better" streak for competitive comparison
     """
     # Define score types in display order
-    score_types = ['Birdies', 'Pars_or_Better', 'TBPs', 'Bogey or better']
+    score_types = ['Birdies', 'Pars_or_Better', 'TBPs', 'Bogey or better', 'Double Bogey or worse']
     
     # Validate that required columns exist
     for score_type in score_types:
@@ -263,3 +264,74 @@ def prepare_inverse_streak_data_for_display(all_data):
     inverse_streak_summary = summarize_inverse_multi_score_running_sum(data_with_inverse_streaks)
 
     return inverse_streak_summary
+
+
+def prepare_good_streaks_data(all_data):
+    """
+    Prepare good streaks data combining selected columns from both regular and inverse streaks.
+
+    Args:
+        all_data (pd.DataFrame): Raw tournament data
+
+    Returns:
+        pd.DataFrame: Table with good streak columns: Birdies [or better], Pars [or better], No +2s, No TBPs
+
+    Purpose:
+        Creates a focused table showing positive streaks for competitive display
+    """
+    # Get regular streaks (for Birdies, Pars or Better, Bogey or better)
+    data_with_streaks = calculate_multi_score_running_sum(all_data)
+    regular_summary = summarize_multi_score_running_sum(data_with_streaks)
+
+    # Get inverse streaks (for No TBPs)
+    data_with_inverse_streaks = calculate_inverse_multi_score_running_sum(all_data)
+    inverse_summary = summarize_inverse_multi_score_running_sum(data_with_inverse_streaks)
+
+    # Combine the relevant columns
+    good_streaks = pd.DataFrame()
+    good_streaks['Player'] = regular_summary['Player']
+    good_streaks['Birdies*'] = regular_summary['Birdies']
+    good_streaks['Pars*'] = regular_summary['Pars_or_Better']
+    good_streaks['No +2s**'] = regular_summary['Bogey or better']
+    good_streaks['No TBPs'] = inverse_summary['TBPs']
+
+    # Sort by Pars* for consistent ordering
+    good_streaks = good_streaks.sort_values('Pars*', ascending=False)
+
+    return good_streaks
+
+
+def prepare_bad_streaks_data(all_data):
+    """
+    Prepare bad streaks data combining selected columns from both regular and inverse streaks.
+
+    Args:
+        all_data (pd.DataFrame): Raw tournament data
+
+    Returns:
+        pd.DataFrame: Table with bad streak columns: No eagles, No birdies, Bogey or worse, Double Bogey or worse, TBP
+
+    Purpose:
+        Creates a focused table showing negative streaks for competitive display
+    """
+    # Get regular streaks (for TBP, Double Bogey or worse)
+    data_with_streaks = calculate_multi_score_running_sum(all_data)
+    regular_summary = summarize_multi_score_running_sum(data_with_streaks)
+
+    # Get inverse streaks (for No eagles, No birdies, Bogey or worse)
+    data_with_inverse_streaks = calculate_inverse_multi_score_running_sum(all_data)
+    inverse_summary = summarize_inverse_multi_score_running_sum(data_with_inverse_streaks)
+
+    # Combine the relevant columns
+    bad_streaks = pd.DataFrame()
+    bad_streaks['Player'] = inverse_summary['Player']
+    bad_streaks['No Eagles'] = inverse_summary['Eagles']
+    bad_streaks['No Birdies*'] = inverse_summary['Birdies']
+    bad_streaks['Over par'] = inverse_summary['Pars_or_Better']
+    bad_streaks['+2s**'] = regular_summary['Double Bogey or worse']
+    bad_streaks['TBPs'] = regular_summary['TBPs']
+
+    # Sort by Over par for consistent ordering
+    bad_streaks = bad_streaks.sort_values('Over par', ascending=False)
+
+    return bad_streaks

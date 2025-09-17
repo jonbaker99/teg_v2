@@ -9,7 +9,10 @@
       "Bash(git commit:*)",
       "Bash(streamlit run:*)",
       "Bash(timeout 10 streamlit run streamlit/500Handicaps.py --server.headless=true --server.port=8502)",
-      "Bash(timeout 10 streamlit run streamlit/500Handicaps.py --server.headless=true --server.port=8503)"
+      "Bash(timeout 10 streamlit run streamlit/500Handicaps.py --server.headless=true --server.port=8503)",
+      "Bash(timeout 10 streamlit run streamlit/ave_by_course.py --server.headless=true --server.port=8502)",
+      "Bash(sed:*)",
+      "Bash(timeout 10 streamlit run streamlit/nav.py --server.headless=true --server.port=8502)"
     ],
     "deny": [],
     "ask": [
