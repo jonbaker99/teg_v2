@@ -375,37 +375,210 @@ def prepare_complete_history_table(winners_df):
     return complete_history
 
 
-def load_cached_winners():
+# ============================================
+#  TEG COMPLETENESS CHECKING FUNCTIONS
+# ============================================
+
+def check_winner_completeness():
     """
-    Load cached winners from teg_winners.csv file.
+    Check if cached winners match completed TEGs status.
 
     Returns:
-        pd.DataFrame: Cached winners data, or None if file doesn't exist
-
-    Purpose:
-        Fast loading of pre-computed winners data for performance optimization
+        set: Set of TEG numbers that are completed but missing from winners cache
     """
     from utils import read_file
+
+    try:
+        # Load status files
+        completed_tegs = read_file('data/completed_tegs.csv')
+        cached_winners = read_file('data/teg_winners.csv')
+
+        # Extract TEG numbers from both sources
+        completed_teg_nums = set(completed_tegs['TEGNum']) if not completed_tegs.empty else set()
+
+        # Extract TEG numbers from cached winners (from TEG column like "TEG 18")
+        cached_teg_nums = set()
+        if not cached_winners.empty:
+            import re
+            for teg_str in cached_winners['TEG']:
+                match = re.search(r'TEG (\d+)', str(teg_str))
+                if match:
+                    cached_teg_nums.add(int(match.group(1)))
+
+        # Identify missing winners
+        missing_winners = completed_teg_nums - cached_teg_nums
+
+        return missing_winners
+
+    except Exception as e:
+        print(f"Error checking winner completeness: {e}")
+        return set()
+
+
+def display_completeness_status():
+    """
+    Show status if winners are missing for completed TEGs.
+    """
+    import streamlit as st
+
+    missing = check_winner_completeness()
+    if missing:
+        st.warning(f"Winners missing for completed TEGs: {sorted(missing)}")
+
+        # Offer to calculate and save winners for missing TEGs
+        if st.button("Calculate and Save Winners for Missing TEGs"):
+            with st.spinner("Calculating winners for completed TEGs..."):
+                calculate_and_save_missing_winners(missing)
+            st.success("Winners updated! Refreshing page...")
+            st.rerun()
+
+        st.info("Or run the data update process to refresh all winner information.")
+
+
+def calculate_and_save_missing_winners(missing_teg_nums):
+    """
+    Calculate and save winners for specific missing TEGs.
+
+    Args:
+        missing_teg_nums: Set of TEG numbers to calculate winners for
+    """
+    import streamlit as st
+    import pandas as pd
+    from utils import load_all_data, read_file, write_file
+
+    # Load all data (expensive operation)
+    all_data = load_all_data()
+
+    if all_data.empty:
+        st.error("No data available to calculate winners")
+        return
+
+    # Load existing cached winners
+    try:
+        cached_winners = read_file('data/teg_winners.csv')
+    except Exception:
+        # Create empty DataFrame with correct structure
+        cached_winners = pd.DataFrame(columns=['TEG', 'Year', 'Area', 'TEG Trophy', 'Green Jacket', 'HMM Wooden Spoon'])
+
+    # Calculate winners only for missing TEGs
+    new_winners = []
+    for teg_num in missing_teg_nums:
+        try:
+            # Get TEG data
+            teg_data = all_data[all_data['TEGNum'] == teg_num]
+            if teg_data.empty:
+                st.warning(f"No data found for TEG {teg_num}")
+                continue
+
+            # Get TEG info from data
+            teg_info = teg_data.iloc[0]
+            teg_name = teg_info['TEG']
+            year = teg_info['Year']
+            area = teg_info['Area'] if 'Area' in teg_info else "Unknown"
+
+            # Calculate winners using existing logic
+            from utils import get_teg_winners
+            winners_df = get_teg_winners(teg_data)
+
+            if not winners_df.empty:
+                # Get the row for this specific TEG
+                teg_winners = winners_df[winners_df['TEG'] == teg_name]
+                if not teg_winners.empty:
+                    winner_row = teg_winners.iloc[0]
+                    new_winner_row = {
+                        'TEG': teg_name,
+                        'Year': year,
+                        'Area': area,
+                        'TEG Trophy': winner_row.get('TEG Trophy', 'Unknown'),
+                        'Green Jacket': winner_row.get('Green Jacket', 'Unknown'),
+                        'HMM Wooden Spoon': winner_row.get('HMM Wooden Spoon', 'Unknown')
+                    }
+                    new_winners.append(new_winner_row)
+
+        except Exception as e:
+            st.error(f"Error calculating winners for TEG {teg_num}: {e}")
+
+    if new_winners:
+        # Add new winners to cached data
+        new_winners_df = pd.DataFrame(new_winners)
+        updated_winners = pd.concat([cached_winners, new_winners_df], ignore_index=True)
+
+        # Sort by Year to maintain order
+        updated_winners = updated_winners.sort_values('Year')
+
+        # Save updated winners
+        write_file('data/teg_winners.csv', updated_winners)
+
+        # Clear relevant caches after update
+        st.cache_data.clear()
+
+        st.success(f"Added winners for {len(new_winners)} TEGs to cache")
+    else:
+        st.warning("No winners could be calculated for the missing TEGs")
+
+
+def load_cached_winners():
+    """
+    Load cached winners from teg_winners.csv file and calculate any missing ones.
+
+    Returns:
+        tuple: (winners_data, missing_teg_nums) or (None, set()) if no cached file
+    """
+    import pandas as pd
+    from utils import read_file, load_all_data, get_teg_winners
 
     try:
         # Try to load cached winners
         cached_winners = read_file('data/teg_winners.csv')
 
-        # Add TEG(Year) format for display consistency
+        # Check for missing winners using existing function
+        missing = check_winner_completeness()
+
+        # If no missing winners, return cached data as before
+        if not missing:
+            cached_winners["TEG"] = (
+                cached_winners['TEG'].astype(str) + " (" +
+                cached_winners['Year'].astype(str) + ")"
+            )
+            cached_winners = cached_winners.drop(columns=['Year'])
+            return cached_winners, set()
+
+        # Calculate missing winners and append to display
+        all_data = load_all_data()
+        for teg_num in missing:
+            try:
+                teg_data = all_data[all_data['TEGNum'] == teg_num]
+                if not teg_data.empty:
+                    winners_df = get_teg_winners(teg_data)
+                    if not winners_df.empty:
+                        # Get winner info for this TEG
+                        teg_info = teg_data.iloc[0]
+                        winner_row = winners_df.iloc[0]
+                        new_row = {
+                            'TEG': teg_info['TEG'],
+                            'Year': teg_info['Year'],
+                            'Area': teg_info['Area'],
+                            'TEG Trophy': winner_row.get('TEG Trophy', 'Unknown'),
+                            'Green Jacket': winner_row.get('Green Jacket', 'Unknown'),
+                            'HMM Wooden Spoon': winner_row.get('HMM Wooden Spoon', 'Unknown')
+                        }
+                        cached_winners = pd.concat([cached_winners, pd.DataFrame([new_row])], ignore_index=True)
+            except Exception as e:
+                print(f"Error calculating winners for TEG {teg_num}: {e}")
+
+        # Format for display consistency
         cached_winners["TEG"] = (
             cached_winners['TEG'].astype(str) + " (" +
             cached_winners['Year'].astype(str) + ")"
         )
-
-        # Remove separate Year column to match expected format
         cached_winners = cached_winners.drop(columns=['Year'])
 
-        return cached_winners
+        return cached_winners, missing
 
     except Exception as e:
         # If cached file doesn't exist or has issues, return None
         print(f"Could not load cached winners: {e}")
-        return None
+        return None, set()
 
 
 def prepare_complete_history_table_fast(cached_winners_df=None):
@@ -488,3 +661,145 @@ def prepare_complete_history_table_fast(cached_winners_df=None):
     complete_history = complete_history.sort_values('_sort_order').drop('_sort_order', axis=1)
 
     return complete_history
+
+
+# ============================================
+#  TEG COMPLETENESS CHECKING FUNCTIONS
+# ============================================
+
+def check_winner_completeness():
+    """
+    Check if cached winners match completed TEGs status.
+
+    Returns:
+        set: Set of TEG numbers that are completed but missing from winners cache
+    """
+    from utils import read_file
+
+    try:
+        # Load status files
+        completed_tegs = read_file('data/completed_tegs.csv')
+        cached_winners = read_file('data/teg_winners.csv')
+
+        # Extract TEG numbers from both sources
+        completed_teg_nums = set(completed_tegs['TEGNum']) if not completed_tegs.empty else set()
+
+        # Extract TEG numbers from cached winners (from TEG column like "TEG 18")
+        cached_teg_nums = set()
+        if not cached_winners.empty:
+            import re
+            for teg_str in cached_winners['TEG']:
+                match = re.search(r'TEG (\d+)', str(teg_str))
+                if match:
+                    cached_teg_nums.add(int(match.group(1)))
+
+        # Identify missing winners
+        missing_winners = completed_teg_nums - cached_teg_nums
+
+        return missing_winners
+
+    except Exception as e:
+        print(f"Error checking winner completeness: {e}")
+        return set()
+
+
+def display_completeness_status():
+    """
+    Show status if winners are missing for completed TEGs.
+    """
+    import streamlit as st
+
+    missing = check_winner_completeness()
+    if missing:
+        st.warning(f"Winners missing for completed TEGs: {sorted(missing)}")
+
+        # Offer to calculate and save winners for missing TEGs
+        if st.button("Calculate and Save Winners for Missing TEGs"):
+            with st.spinner("Calculating winners for completed TEGs..."):
+                calculate_and_save_missing_winners(missing)
+            st.success("Winners updated! Refreshing page...")
+            st.rerun()
+
+        st.info("Or run the data update process to refresh all winner information.")
+
+
+def calculate_and_save_missing_winners(missing_teg_nums):
+    """
+    Calculate and save winners for specific missing TEGs.
+
+    Args:
+        missing_teg_nums: Set of TEG numbers to calculate winners for
+    """
+    import streamlit as st
+    import pandas as pd
+    from utils import load_all_data, read_file, write_file
+
+    # Load all data (expensive operation)
+    all_data = load_all_data()
+
+    if all_data.empty:
+        st.error("No data available to calculate winners")
+        return
+
+    # Load existing cached winners
+    try:
+        cached_winners = read_file('data/teg_winners.csv')
+    except Exception:
+        # Create empty DataFrame with correct structure
+        cached_winners = pd.DataFrame(columns=['TEG', 'Year', 'Area', 'TEG Trophy', 'Green Jacket', 'HMM Wooden Spoon'])
+
+    # Calculate winners only for missing TEGs
+    new_winners = []
+    for teg_num in missing_teg_nums:
+        try:
+            # Get TEG data
+            teg_data = all_data[all_data['TEGNum'] == teg_num]
+            if teg_data.empty:
+                st.warning(f"No data found for TEG {teg_num}")
+                continue
+
+            # Get TEG info from data
+            teg_info = teg_data.iloc[0]
+            teg_name = teg_info['TEG']
+            year = teg_info['Year']
+            area = teg_info['Area'] if 'Area' in teg_info else "Unknown"
+
+            # Calculate winners using existing logic
+            from utils import get_teg_winners
+            winners_df = get_teg_winners(teg_data)
+
+            if not winners_df.empty:
+                # Get the row for this specific TEG
+                teg_winners = winners_df[winners_df['TEG'] == teg_name]
+                if not teg_winners.empty:
+                    winner_row = teg_winners.iloc[0]
+                    new_winner_row = {
+                        'TEG': teg_name,
+                        'Year': year,
+                        'Area': area,
+                        'TEG Trophy': winner_row.get('TEG Trophy', 'Unknown'),
+                        'Green Jacket': winner_row.get('Green Jacket', 'Unknown'),
+                        'HMM Wooden Spoon': winner_row.get('HMM Wooden Spoon', 'Unknown')
+                    }
+                    new_winners.append(new_winner_row)
+
+        except Exception as e:
+            st.error(f"Error calculating winners for TEG {teg_num}: {e}")
+
+    if new_winners:
+        # Add new winners to cached data
+        new_winners_df = pd.DataFrame(new_winners)
+        updated_winners = pd.concat([cached_winners, new_winners_df], ignore_index=True)
+
+        # Sort by Year to maintain order
+        updated_winners = updated_winners.sort_values('Year')
+
+        # Save updated winners
+        write_file('data/teg_winners.csv', updated_winners)
+
+        # Clear relevant caches after update
+        st.cache_data.clear()
+
+        st.success(f"Added winners for {len(new_winners)} TEGs to cache")
+    else:
+        st.warning("No winners could be calculated for the missing TEGs")

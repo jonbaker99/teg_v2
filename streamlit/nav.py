@@ -4,7 +4,7 @@ from pathlib import Path
 from streamlit_extras.stylable_container import stylable_container
 import sys
 sys.path.append(str(Path(__file__).parent))
-from helpers.history_data_processing import get_incomplete_tegs
+from utils import has_incomplete_teg_fast
 
 
 st.markdown(
@@ -89,8 +89,7 @@ connection_test_pg = st.Page("test_github_connections.py", title="Github Connect
 
 # Check if there are incomplete TEGs to determine navigation structure
 try:
-    incomplete_tegs = get_incomplete_tegs()
-    has_incomplete_teg = not incomplete_tegs.empty
+    has_incomplete_teg = has_incomplete_teg_fast()
 except:
     # If there's any error checking for incomplete TEGs, default to no incomplete TEG
     has_incomplete_teg = False

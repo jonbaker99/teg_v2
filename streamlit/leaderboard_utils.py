@@ -217,29 +217,51 @@ def display_net_leaderboard(leaderboard_df: pd.DataFrame, base_title: str, leade
 
 def _get_tournament_status_text(leaderboard_df: pd.DataFrame) -> tuple[str, bool]:
     """
-    Get tournament status text and completion status.
-    
+    Get tournament status text and completion status using fast status files.
+
     Args:
-        leaderboard_df (pd.DataFrame): Input dataframe with Round column.
-        
+        leaderboard_df (pd.DataFrame): Input dataframe with TEG column.
+
     Returns:
         tuple: (status_text, is_complete) where status_text is the text to use in titles
     """
-    from utils import get_teg_rounds
-    
-    # Get current and total rounds
-    current_rounds = leaderboard_df['Round'].nunique()
-    
-    # Get TEG name to determine total rounds
+    from utils import read_file, get_teg_rounds
+
+    # Get TEG name and extract number
     if 'TEG' in leaderboard_df.columns:
         teg_name = leaderboard_df['TEG'].iloc[0]
-        total_rounds = get_teg_rounds(teg_name)
+        teg_num = int(teg_name.split()[-1])  # Extract number from "TEG 18"
     else:
-        # Fallback if TEG column not available
-        total_rounds = 4  # Standard TEG rounds
-    
-    # Determine status text
-    if current_rounds >= total_rounds:
-        return "final results", True
-    else:
+        # Fallback to original method if TEG column not available
+        current_rounds = leaderboard_df['Round'].nunique()
         return f"after {current_rounds} round{'s' if current_rounds != 1 else ''}", False
+
+    # Use fast status files to get round count and completion status
+    try:
+        # Check if TEG is completed
+        completed_tegs = read_file('data/completed_tegs.csv')
+        if not completed_tegs.empty and teg_num in completed_tegs['TEGNum'].values:
+            return "final results", True
+
+        # Check if TEG is in progress
+        in_progress_tegs = read_file('data/in_progress_tegs.csv')
+        if not in_progress_tegs.empty and teg_num in in_progress_tegs['TEGNum'].values:
+            current_rounds = in_progress_tegs[in_progress_tegs['TEGNum'] == teg_num]['Rounds'].iloc[0]
+            return f"after {current_rounds} round{'s' if current_rounds != 1 else ''}", False
+
+        # Fallback if not found in status files
+        current_rounds = leaderboard_df['Round'].nunique()
+        total_rounds = get_teg_rounds(teg_name)
+        if current_rounds >= total_rounds:
+            return "final results", True
+        else:
+            return f"after {current_rounds} round{'s' if current_rounds != 1 else ''}", False
+
+    except Exception:
+        # Fallback to original method if status files not available
+        current_rounds = leaderboard_df['Round'].nunique()
+        total_rounds = get_teg_rounds(teg_name)
+        if current_rounds >= total_rounds:
+            return "final results", True
+        else:
+            return f"after {current_rounds} round{'s' if current_rounds != 1 else ''}", False

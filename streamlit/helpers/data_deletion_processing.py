@@ -10,7 +10,7 @@ This module contains functions for:
 import streamlit as st
 import pandas as pd
 from datetime import datetime
-from utils import read_file, write_file, backup_file, clear_all_caches
+from utils import read_file, write_file, backup_file, clear_all_caches, update_teg_status_files
 
 
 # State constants for deletion workflow
@@ -178,10 +178,13 @@ def execute_data_deletion(selected_teg, selected_rounds):
     # Recreate CSV mirror from updated parquet data
     write_file(ALL_DATA_CSV_MIRROR, filtered_data_df, f"Recreated CSV mirror after deletion")
     
+    # Update TEG status files to reflect completion changes
+    update_teg_status_files()
+
     # Clear all caches to reflect changes
     st.cache_data.clear()
     clear_all_caches()
-    
+
     st.success("Data has been successfully deleted and files have been updated.")
 
 

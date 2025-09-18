@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 from utils import get_base_directory, load_datawrapper_css, HANDICAPS_CSV, get_current_handicaps_formatted
-from utils import read_file, get_hc, get_next_teg_and_check_if_in_progress, write_file, get_player_name, clear_all_caches
+from utils import read_file, get_hc, get_next_teg_and_check_if_in_progress_fast, get_current_in_progress_teg_fast, write_file, get_player_name, clear_all_caches
 
 
 
@@ -27,7 +27,7 @@ def format_value(val):
 
 st.title("Handicaps")
 
-last_completed, next_tegnum, in_progress = get_next_teg_and_check_if_in_progress()
+last_completed, next_tegnum, in_progress = get_next_teg_and_check_if_in_progress_fast()
 
 ###====== MANUAL OVERWRITE FOR TESTING -> comment out section to revert to normal
 # next_tegnum = 19
@@ -170,7 +170,10 @@ if in_progress:
 
     next_next_tegnum = next_tegnum + 1
 
-    with st.expander(f"Draft handicaps for TEG {next_next_tegnum}"):
+    # Get current in-progress TEG information for more descriptive title
+    in_progress_teg, rounds_played = get_current_in_progress_teg_fast()
+
+    with st.expander(f"Draft handicaps for TEG {next_next_tegnum} (after {rounds_played} rounds of TEG {in_progress_teg})"):
         # next_hc = get_hc(next_next_tegnum)
         next_hc = get_hc(next_next_tegnum).sort_values("hc_raw", ascending=True, na_position="last").reset_index(drop=True)
         st.write(next_hc.to_html(index=False, justify='left', classes = 'datawrapper-table'), unsafe_allow_html=True)

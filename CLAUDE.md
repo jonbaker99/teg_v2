@@ -115,4 +115,9 @@ Always use the centralized `read_file()` function from `utils.py` which handles 
 - Prioritize code maintainability over clever solutions  
 - Test changes thoroughly before expanding scope
 - Document the reasoning behind architectural decisions
+
+
+
+### general info
+- a 'teg' is a tournament. each teg consistents of a number of rounds (usually 4, with a few exceptions). each round consists of 18 holes. the 18 holes can be categorised as a 'front 9' (holes 1-9)  and 'back 9' (holes 10-18)
 - There are two competitions in each TEG, gross and net. Up to TEG 5, the net competition was based on total net vs par; from TEG 6 onwards the net competition was based on total stableford points

@@ -5,7 +5,7 @@ from typing import List, Dict, Any
 import logging
 
 # Import data loading functions from main utils
-from utils import get_teg_rounds, get_round_data, load_all_data, load_datawrapper_css
+from utils import get_teg_rounds, get_round_data, load_all_data, load_datawrapper_css, read_file
 
 # Import chart creation functions
 from make_charts import create_cumulative_graph, adjusted_grossvp, adjusted_stableford
@@ -74,10 +74,31 @@ try:
         st.stop()
 
     # === TOURNAMENT STATUS DETERMINATION ===
-    # Determine if tournament is complete or in progress
-    current_rounds = leaderboard_df['Round'].nunique()
-    total_rounds = get_teg_rounds(chosen_teg)  # Get expected rounds for this TEG
-    is_complete = current_rounds >= total_rounds
+    # Determine if tournament is complete or in progress using fast status files
+    teg_num = int(chosen_teg.split()[-1])  # Extract number from "TEG 18"
+
+    # Check if TEG is completed
+    try:
+        completed_tegs = read_file('data/completed_tegs.csv')
+        if not completed_tegs.empty and teg_num in completed_tegs['TEGNum'].values:
+            current_rounds = completed_tegs[completed_tegs['TEGNum'] == teg_num]['Rounds'].iloc[0]
+            is_complete = True
+        else:
+            # Check if TEG is in progress
+            in_progress_tegs = read_file('data/in_progress_tegs.csv')
+            if not in_progress_tegs.empty and teg_num in in_progress_tegs['TEGNum'].values:
+                current_rounds = in_progress_tegs[in_progress_tegs['TEGNum'] == teg_num]['Rounds'].iloc[0]
+                is_complete = False
+            else:
+                # Fallback to original method if not in status files
+                current_rounds = leaderboard_df['Round'].nunique()
+                total_rounds = get_teg_rounds(chosen_teg)
+                is_complete = current_rounds >= total_rounds
+    except Exception:
+        # Fallback to original method if status files not available
+        current_rounds = leaderboard_df['Round'].nunique()
+        total_rounds = get_teg_rounds(chosen_teg)
+        is_complete = current_rounds >= total_rounds
 
     # Set appropriate labels based on tournament status
     page_header = f"{chosen_teg} Results" if is_complete else f"{chosen_teg} Leaderboard"

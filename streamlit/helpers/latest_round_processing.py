@@ -9,6 +9,7 @@ This module contains functions for:
 
 import streamlit as st
 import pandas as pd
+from utils import get_current_in_progress_teg_fast, get_last_completed_teg_fast
 
 
 def get_round_metric_mappings():
@@ -50,23 +51,42 @@ def initialize_round_selection_state():
 
 def get_latest_round_defaults(df_round):
     """
-    Get default TEG and round values (latest available).
-    
+    Get default TEG and round values (latest available) using fast status files.
+
     Args:
-        df_round (pd.DataFrame): Round ranking data
-        
+        df_round (pd.DataFrame): Round ranking data (for fallback only)
+
     Returns:
         tuple: (max_teg, max_round_in_teg) representing latest available round
-        
+
     Purpose:
         Determines the most recent round for default selection
         Provides "Latest Round" button functionality
+        Now uses fast status CSV files instead of analyzing full dataset
     """
-    df_sorted = df_round.sort_values(by=['TEGNum', 'Round'])
-    max_teg = df_sorted.loc[df_sorted['TEGNum'].idxmax(), 'TEG']
-    max_round_in_max_teg = df_sorted[df_sorted['TEG'] == max_teg]['Round'].max()
-    
-    return max_teg, max_round_in_max_teg
+    try:
+        # Try fast method first: check if there's a TEG in progress
+        in_progress_teg, rounds_played = get_current_in_progress_teg_fast()
+        if in_progress_teg:
+            return f"TEG {in_progress_teg}", rounds_played
+
+        # If no TEG in progress, get last completed TEG
+        last_teg, rounds = get_last_completed_teg_fast()
+        if last_teg:
+            return f"TEG {last_teg}", rounds
+
+        # Fallback to original method if status files unavailable
+        df_sorted = df_round.sort_values(by=['TEGNum', 'Round'])
+        max_teg = df_sorted.loc[df_sorted['TEGNum'].idxmax(), 'TEG']
+        max_round_in_max_teg = df_sorted[df_sorted['TEG'] == max_teg]['Round'].max()
+        return max_teg, max_round_in_max_teg
+
+    except Exception:
+        # Fallback to original method on any error
+        df_sorted = df_round.sort_values(by=['TEGNum', 'Round'])
+        max_teg = df_sorted.loc[df_sorted['TEGNum'].idxmax(), 'TEG']
+        max_round_in_max_teg = df_sorted[df_sorted['TEG'] == max_teg]['Round'].max()
+        return max_teg, max_round_in_max_teg
 
 
 def update_session_state_defaults(df_round):
@@ -198,22 +218,40 @@ def initialize_teg_selection_state():
 
 def get_latest_teg_default(df_teg):
     """
-    Get default TEG value (latest available).
-    
+    Get default TEG value (latest available) using fast status files.
+
     Args:
-        df_teg (pd.DataFrame): TEG ranking data
-        
+        df_teg (pd.DataFrame): TEG ranking data (for fallback only)
+
     Returns:
         str: Latest available TEG for default selection
-        
+
     Purpose:
         Determines the most recent TEG for default selection
         Provides "Latest TEG" button functionality
+        Now uses fast status CSV files instead of analyzing full dataset
     """
-    df_sorted = df_teg.sort_values(by='TEGNum')
-    max_teg = df_sorted.loc[df_sorted['TEGNum'].idxmax(), 'TEG']
-    
-    return max_teg
+    try:
+        # Try fast method first: check if there's a TEG in progress
+        in_progress_teg, rounds_played = get_current_in_progress_teg_fast()
+        if in_progress_teg:
+            return f"TEG {in_progress_teg}"
+
+        # If no TEG in progress, get last completed TEG
+        last_teg, rounds = get_last_completed_teg_fast()
+        if last_teg:
+            return f"TEG {last_teg}"
+
+        # Fallback to original method if status files unavailable
+        df_sorted = df_teg.sort_values(by='TEGNum')
+        max_teg = df_sorted.loc[df_sorted['TEGNum'].idxmax(), 'TEG']
+        return max_teg
+
+    except Exception:
+        # Fallback to original method on any error
+        df_sorted = df_teg.sort_values(by='TEGNum')
+        max_teg = df_sorted.loc[df_sorted['TEGNum'].idxmax(), 'TEG']
+        return max_teg
 
 
 def update_teg_session_state_defaults(df_teg):

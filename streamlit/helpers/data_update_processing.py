@@ -19,6 +19,8 @@ from utils import (
     load_and_prepare_handicap_data,
     update_all_data,
     summarise_existing_rd_data,
+    update_teg_status_files,
+    clear_all_caches,
     ALL_SCORES_PARQUET,
     HANDICAPS_CSV,
     ALL_DATA_PARQUET,
@@ -153,6 +155,15 @@ def execute_data_update(overwrite=False):
             # update_all_data() - Regenerates master dataset with new records
             update_all_data(ALL_SCORES_PARQUET, ALL_DATA_PARQUET, ALL_DATA_CSV_MIRROR)
             st.success("💾 All-data updated and CSV created.")
+
+        # Update TEG status files to reflect completion changes
+        with st.spinner("📊 Updating TEG status files..."):
+            update_teg_status_files()
+            st.success("📊 TEG status files updated.")
+
+        # Clear all caches to reflect changes
+        st.cache_data.clear()
+        clear_all_caches()
     else:
         st.warning("⚠️ No new records to append.")
 

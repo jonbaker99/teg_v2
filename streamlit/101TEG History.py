@@ -8,7 +8,8 @@ from utils import load_datawrapper_css
 # Import history-specific helper functions
 from helpers.history_data_processing import (
     prepare_complete_history_table_fast,
-    load_cached_winners
+    load_cached_winners,
+    calculate_and_save_missing_winners
 )
 
 
@@ -24,10 +25,10 @@ st.markdown("TEG locations and winners by year")
 
 
 # === DATA LOADING ===
-# Load cached winners data first
-cached_winners = load_cached_winners()
+# Load cached winners with missing ones calculated automatically
+cached_winners, missing_teg_nums = load_cached_winners()
 
-# Prepare complete history table using cached data
+# Prepare complete history table using combined data
 history_display_table = prepare_complete_history_table_fast(cached_winners)
 
 
@@ -56,4 +57,20 @@ st.write(
 
 # Add footnote for historical context
 st.caption('*Green Jacket awarded in TEG 5 for best stableford round; DM had best gross score')
+
+# Display save prompt below table if there are calculated winners
+if missing_teg_nums:
+    st.markdown("---")
+    st.info(f"📊 Winners calculated for TEGs {sorted(missing_teg_nums)} are shown above but not yet saved to cache.")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("💾 Save Calculated Winners to Cache"):
+            with st.spinner("Saving winners to cache..."):
+                calculate_and_save_missing_winners(missing_teg_nums)
+            st.success("Winners saved! Page will refresh automatically.")
+            st.rerun()
+
+    with col2:
+        st.caption("Or use the data update process to refresh all winner information.")
 

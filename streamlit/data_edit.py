@@ -4,7 +4,7 @@ import pandas as pd
 import logging
 
 # Import data loading and file operations from main utils
-from utils import read_file, write_file, clear_all_caches
+from utils import read_file, write_file, clear_all_caches, update_teg_status_files
 
 # === CONFIGURATION ===
 st.title("📝 Data Edit")
@@ -38,6 +38,14 @@ AVAILABLE_FILES = {
     "TEG Winners": {
         "path": "data/teg_winners.csv",
         "description": "Cached winners data for fast history page loading"
+    },
+    "Completed TEGs": {
+        "path": "data/completed_tegs.csv",
+        "description": "Status tracking: TEGs with 4 completed rounds (auto-generated)"
+    },
+    "In-Progress TEGs": {
+        "path": "data/in_progress_tegs.csv",
+        "description": "Status tracking: TEGs with 1-3 completed rounds (auto-generated)"
     },
     "View Processed Data": {  # Add this entry
         "path": "processed_data_view",
@@ -116,6 +124,28 @@ try:
         st.info("ℹ️ **Note:** This file controls future tournament planning and navigation behavior.")
     elif selected_file == "data/teg_winners.csv":
         st.warning("⚠️ **Important:** This file contains cached winners data for performance. Manual edits should be used carefully as they may be overwritten when new tournaments are processed.")
+    elif selected_file in ["data/completed_tegs.csv", "data/in_progress_tegs.csv"]:
+        st.warning("⚠️ **Auto-Generated File:** This status tracking file is automatically updated when data changes. Manual edits are possible but will be overwritten during data updates/deletions.")
+
+        # Add regenerate button for status files
+        st.markdown("---")
+        st.markdown("### 🔄 Regenerate Status Files")
+        st.markdown("Click below to regenerate status files from current tournament data:")
+
+        col_regen1, col_regen2 = st.columns(2)
+        with col_regen1:
+            if st.button("🔄 Regenerate from Raw Data", type="secondary"):
+                try:
+                    with st.spinner("Regenerating TEG status files from raw data..."):
+                        update_teg_status_files()
+                    st.success("✅ Status files regenerated successfully!")
+                    st.info("💡 Page will refresh to show updated data")
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"❌ Error regenerating status files: {e}")
+
+        with col_regen2:
+            st.caption("This will analyze all tournament data and rebuild both completed_tegs.csv and in_progress_tegs.csv files.")
     
 except FileNotFoundError:
     # Handle missing files based on file type
@@ -139,6 +169,23 @@ except FileNotFoundError:
         except Exception as e:
             st.error(f"❌ Failed to create sample file: {str(e)}")
             st.stop()
+    elif selected_file in ["data/completed_tegs.csv", "data/in_progress_tegs.csv"]:
+        # Handle missing status files - offer to create them
+        st.warning(f"⚠️ {selected_file} not found. This status file can be generated from raw tournament data.")
+
+        if st.button("🔄 Generate Status Files from Raw Data", type="primary"):
+            try:
+                with st.spinner("Generating TEG status files from raw data..."):
+                    update_teg_status_files()
+                st.success("✅ Status files generated successfully!")
+                st.info("💡 Page will refresh to show the new file")
+                st.rerun()
+            except Exception as e:
+                st.error(f"❌ Error generating status files: {e}")
+                st.stop()
+
+        st.info("💡 Status files track which TEGs are complete (4 rounds) vs in-progress (1-3 rounds)")
+        st.stop()
     else:
         # For other files, show error and don't proceed
         st.error(f"❌ {selected_file} not found. This file may need to be created through other means.")

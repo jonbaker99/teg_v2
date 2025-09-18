@@ -1732,14 +1732,19 @@ def get_hc(TEG_needed: int | None = None) -> pd.DataFrame:
 
 @st.cache_data
 def get_next_teg_and_check_if_in_progress():
-    """Get TEG completion status (cached for performance)."""
-    teg_data_inc_progress = get_teg_data_inc_in_progress() 
-    teg_data_completed = get_complete_teg_data()  
-    
-    last_completed_teg = max(teg_data_completed['TEGNum']) 
-    next_teg = last_completed_teg + 1 
+    """
+    DEPRECATED: Use get_next_teg_and_check_if_in_progress_fast() instead.
+
+    Get TEG completion status (cached for performance).
+    This function is kept for backward compatibility but may be slow.
+    """
+    teg_data_inc_progress = get_teg_data_inc_in_progress()
+    teg_data_completed = get_complete_teg_data()
+
+    last_completed_teg = max(teg_data_completed['TEGNum'])
+    next_teg = last_completed_teg + 1
     in_progress = (teg_data_inc_progress['TEGNum'] == next_teg).any()
-    
+
     return last_completed_teg, next_teg, in_progress
 
 def get_current_handicaps_formatted(last_completed_teg, next_teg):
@@ -1794,3 +1799,180 @@ def get_current_handicaps_formatted(last_completed_teg, next_teg):
     })
 
     return result, handicaps_were_calculated
+
+
+# ============================================
+#  TEG STATUS TRACKING FUNCTIONS
+# ============================================
+
+def analyze_teg_completion(all_data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Determine completion status and round count for each TEG using existing get_incomplete_tegs() logic.
+
+    Args:
+        all_data: DataFrame with columns TEGNum, Round, Player, Hole
+
+    Returns:
+        DataFrame with columns: TEGNum, TEG, Year, Status, Rounds
+    """
+    # Get round info for TEG metadata
+    round_info = read_file(ROUND_INFO_CSV)
+
+    # Use existing get_incomplete_tegs() function to identify incomplete TEGs
+    incomplete_teg_nums = set(get_incomplete_tegs(all_data))
+
+    # Get all TEG numbers in the data
+    all_teg_nums = set(all_data['TEGNum'].unique())
+
+    # Build status analysis for each TEG
+    teg_analysis = []
+
+    for teg_num in all_teg_nums:
+        teg_data = all_data[all_data['TEGNum'] == teg_num]
+
+        # Determine status using get_incomplete_tegs() result
+        is_complete = teg_num not in incomplete_teg_nums
+        status = "complete" if is_complete else "in_progress"
+
+        # Get actual round count for this TEG
+        max_round = teg_data['Round'].max()
+
+        # Get TEG metadata from round_info
+        teg_info = round_info[round_info['TEGNum'] == teg_num].iloc[0]
+
+        teg_analysis.append({
+            'TEGNum': teg_num,
+            'TEG': teg_info['TEG'],
+            'Year': teg_info['Year'],
+            'Status': status,
+            'Rounds': max_round
+        })
+
+    return pd.DataFrame(teg_analysis)
+
+
+def save_teg_status_file(status_data: pd.DataFrame, filename: str):
+    """
+    Save TEG status data to CSV file.
+
+    Args:
+        status_data: DataFrame with TEG status information
+        filename: Name of the file (e.g., 'completed_tegs.csv')
+    """
+    # Sort by TEGNum for consistent ordering
+    status_data_sorted = status_data.sort_values('TEGNum') if not status_data.empty else status_data
+
+    # Use the relative path that write_file expects
+    file_path = f'data/{filename}'
+
+    # Write to file using existing write_file function
+    write_file(file_path, status_data_sorted)
+
+
+def update_teg_status_files():
+    """
+    Update TEG status files after data changes.
+    This should be called after data updates or deletions.
+    """
+    # Clear cache first to ensure we work with fresh data after deletions/updates
+    st.cache_data.clear()
+
+    # Load all data to determine TEG completion status
+    all_data = load_all_data(exclude_incomplete_tegs=False)
+
+    if all_data.empty:
+        logger.warning("No data available for TEG status analysis")
+        return
+
+    # Analyze completion by TEG
+    teg_completion = analyze_teg_completion(all_data)
+
+    # Split into completed and in-progress
+    completed_tegs = teg_completion[teg_completion['Status'] == 'complete']
+    in_progress_tegs = teg_completion[teg_completion['Status'] == 'in_progress']
+
+    # Save status files (this automatically handles TEG transitions and deletions)
+    save_teg_status_file(completed_tegs, 'completed_tegs.csv')
+    save_teg_status_file(in_progress_tegs, 'in_progress_tegs.csv')
+
+    logger.info(f"Updated TEG status files: {len(completed_tegs)} completed, {len(in_progress_tegs)} in progress")
+
+
+def get_next_teg_and_check_if_in_progress_fast():
+    """
+    Fast TEG status check using status files instead of loading full data.
+
+    Returns:
+        tuple: (last_completed_teg, next_teg, in_progress)
+    """
+    try:
+        completed_tegs = read_file('data/completed_tegs.csv')
+        in_progress_tegs = read_file('data/in_progress_tegs.csv')
+
+        last_completed_teg = completed_tegs['TEGNum'].max() if not completed_tegs.empty else 0
+        next_teg = last_completed_teg + 1
+        in_progress = (in_progress_tegs['TEGNum'] == next_teg).any() if not in_progress_tegs.empty else False
+
+        return last_completed_teg, next_teg, in_progress
+
+    except Exception as e:
+        logger.warning(f"Status files not available, falling back to slow method: {e}")
+        # Fallback to original method if status files don't exist
+        return get_next_teg_and_check_if_in_progress()
+
+
+def get_last_completed_teg_fast():
+    """
+    Get the highest TEG number from completed_tegs.csv with round count.
+
+    Returns:
+        tuple: (teg_num, rounds) or (None, 0) if no completed TEGs
+    """
+    try:
+        completed_tegs = read_file('data/completed_tegs.csv')
+        if completed_tegs.empty:
+            return None, 0
+
+        max_row = completed_tegs.loc[completed_tegs['TEGNum'].idxmax()]
+        return max_row['TEGNum'], max_row['Rounds']
+
+    except Exception as e:
+        logger.warning(f"Error reading completed TEGs status file: {e}")
+        return None, 0
+
+
+def get_current_in_progress_teg_fast():
+    """
+    Get the current in-progress TEG with round count.
+
+    Returns:
+        tuple: (teg_num, rounds) or (None, 0) if no TEGs in progress
+    """
+    try:
+        in_progress_tegs = read_file('data/in_progress_tegs.csv')
+        if in_progress_tegs.empty:
+            return None, 0
+
+        # Should typically be only one in-progress TEG, get the first one
+        current_row = in_progress_tegs.iloc[0]
+        return current_row['TEGNum'], current_row['Rounds']
+
+    except Exception as e:
+        logger.warning(f"Error reading in-progress TEGs status file: {e}")
+        return None, 0
+
+
+def has_incomplete_teg_fast():
+    """
+    Fast check if there are any incomplete TEGs using status files.
+
+    Returns:
+        bool: True if there are TEGs in progress, False otherwise
+    """
+    try:
+        in_progress_tegs = read_file('data/in_progress_tegs.csv')
+        return not in_progress_tegs.empty
+
+    except Exception as e:
+        logger.warning(f"Error checking for incomplete TEGs: {e}")
+        return False
