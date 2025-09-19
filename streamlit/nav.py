@@ -69,6 +69,7 @@ latest_teg_page = st.Page("latest_teg_context.py", title="Latest TEG in context"
 top_pages = st.Page("301Best_TEGs_and_Rounds.py", title="Top TEGs and Rounds", icon=":material/social_leaderboard:")
 scoring_pg = st.Page("400scoring.py", title="Scoring", icon=":material/strategy:")
 birdies_pg = st.Page("birdies_etc.py", title="Eagles / Birdies / Pars", icon=":material/strategy:")
+streaks_pg = st.Page("streaks.py", title="Streaks", icon=":material/trending_up:")
 bypar_pg = st.Page("ave_by_par.py", title="Average by par", icon=":material/strategy:")
 byteg_pg = st.Page("ave_by_teg.py", title="Average by TEG", icon=":material/strategy:")
 course_ave_pg = st.Page("ave_by_course.py", title="Course averages and records", icon=":material/strategy:")
@@ -103,7 +104,7 @@ if has_incomplete_teg:
         "History": [history_page, honours_page, results_page, player_ranking_page],
         "Records & PBs": [records_page, pb_page, worsts_page, top_pages],
         # "Scorecards": [scorecard_pg, scorecard_mob_pg],
-        "Scoring analysis": [birdies_pg, course_ave_pg,  bypar_pg, sc_count_pg,byteg_pg,  changes_pg, course_rds_pg],
+        "Scoring analysis": [birdies_pg, streaks_pg, course_ave_pg,  bypar_pg, sc_count_pg,byteg_pg,  changes_pg, course_rds_pg],
         "Bestballs / Eclectics": [bestball_pg, eclectic_pg, eclectic_records_pg],
         #"Players": [players_pg],
         "Data":[data_pg, data_edit_pg, delete_pg]
@@ -115,7 +116,7 @@ else:
         "History": [history_page, honours_page, results_page, player_ranking_page],
         "Records & PBs": [records_page, pb_page, worsts_page, top_pages],
         "Scorecards": [scorecard_pg, scorecard_mob_pg],
-        "Scoring analysis": [birdies_pg, course_ave_pg,  bypar_pg, sc_count_pg,byteg_pg,  changes_pg, course_rds_pg],
+        "Scoring analysis": [birdies_pg, streaks_pg, course_ave_pg,  bypar_pg, sc_count_pg,byteg_pg,  changes_pg, course_rds_pg],
         # "Course scoring" :[course_ave_pg, course_rds_pg] ,
         "Bestballs / Eclectics": [bestball_pg, eclectic_pg, eclectic_records_pg],
         #"Players": [players_pg],
