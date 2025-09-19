@@ -57,6 +57,7 @@ BASE_DIR = Path.cwd().parent if Path.cwd().name == "streamlit" else Path.cwd()
 # Using Parquet for primary data files for performance.
 ALL_DATA_PARQUET = "data/all-data.parquet"
 ALL_SCORES_PARQUET = "data/all-scores.parquet" # Changed from .csv to .parquet
+STREAKS_PARQUET = "data/streaks.parquet"
 HANDICAPS_CSV = "data/handicaps.csv"
 ROUND_INFO_CSV = "data/round_info.csv"
 
@@ -459,6 +460,44 @@ def save_to_parquet(df: pd.DataFrame, output_file: str) -> None:
     """
     write_file(output_file, df, "Save to parquet")
     logger.info(f"Data successfully saved to {output_file}")
+
+
+def update_streaks_cache():
+    """
+    Update the streaks cache file with current streak calculations.
+
+    This function:
+    1. Loads all data (including incomplete TEGs)
+    2. Calls build_streaks() to calculate streak data
+    3. Saves result to streaks.parquet
+    4. Clears streamlit cache
+
+    Called whenever source data changes (data updates, deletions).
+    """
+    try:
+        # Import build_streaks function
+        from helpers.streak_analysis_processing import build_streaks
+
+        # Load all data including incomplete TEGs for streak calculations
+        all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
+
+        if all_data.empty:
+            logger.warning("No data available for streak calculation")
+            return
+
+        # Calculate streaks using the build_streaks function
+        streaks_df = build_streaks(all_data)
+
+        # Save to streaks parquet file
+        write_file(STREAKS_PARQUET, streaks_df, "Update streaks cache")
+        logger.info(f"Streaks cache updated successfully: {STREAKS_PARQUET}")
+
+        # Clear streamlit cache to ensure fresh data on next load
+        clear_all_caches()
+
+    except Exception as e:
+        logger.error(f"Error updating streaks cache: {e}")
+        st.error(f"Failed to update streaks cache: {e}")
 
 
 def get_google_sheet(sheet_name: str, worksheet_name: str) -> pd.DataFrame:

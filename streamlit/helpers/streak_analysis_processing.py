@@ -268,73 +268,119 @@ def prepare_inverse_streak_data_for_display(all_data):
 
 def prepare_good_streaks_data(all_data):
     """
-    Prepare good streaks data combining selected columns from both regular and inverse streaks.
+    Prepare good streaks data using cached streak calculations with asterisk marking.
 
     Args:
-        all_data (pd.DataFrame): Raw tournament data
+        all_data (pd.DataFrame): Raw tournament data (used for player mapping only)
 
     Returns:
-        pd.DataFrame: Table with good streak columns: Birdies [or better], Pars [or better], No +2s, No TBPs
+        pd.DataFrame: Table with good streak columns: Birdies, Pars, No +2s, No TBPs
+                     Values marked with '*' when that max streak is currently active
 
     Purpose:
-        Creates a focused table showing positive streaks for competitive display
+        Creates a focused table showing positive streaks using fast cached data
     """
-    # Get regular streaks (for Birdies, Pars or Better, Bogey or better)
-    data_with_streaks = calculate_multi_score_running_sum(all_data)
-    regular_summary = summarize_multi_score_running_sum(data_with_streaks)
+    try:
+        from utils import read_file, STREAKS_PARQUET
 
-    # Get inverse streaks (for No TBPs)
-    data_with_inverse_streaks = calculate_inverse_multi_score_running_sum(all_data)
-    inverse_summary = summarize_inverse_multi_score_running_sum(data_with_inverse_streaks)
+        # Read cached streak data
+        streaks_df = read_file(STREAKS_PARQUET)
 
-    # Combine the relevant columns
-    good_streaks = pd.DataFrame()
-    good_streaks['Player'] = regular_summary['Player']
-    good_streaks['Birdies*'] = regular_summary['Birdies']
-    good_streaks['Pars*'] = regular_summary['Pars_or_Better']
-    good_streaks['No +2s**'] = regular_summary['Bogey or better']
-    good_streaks['No TBPs'] = inverse_summary['TBPs']
+        # Get player mapping from all_data
+        player_mapping = get_player_mapping(all_data)
 
-    # Sort by Pars* for consistent ordering
-    good_streaks = good_streaks.sort_values('Pars*', ascending=False)
+        # Get both max and current streaks for comparison
+        max_streaks = get_max_streaks(streaks_df)
+        current_streaks = get_current_streaks(streaks_df)
 
-    return good_streaks
+        # Identify where current equals max
+        equals_max = get_current_equals_max_streaks(max_streaks, current_streaks)
+
+        # Transform to display format with asterisk marking
+        good_streaks = transform_cached_good_streaks(max_streaks, player_mapping, equals_max)
+
+        return good_streaks
+
+    except Exception as e:
+        # Fallback to original calculation if cache not available
+        import logging
+        logging.warning(f"Could not read streaks cache, falling back to calculation: {e}")
+
+        # Original calculation code as fallback
+        data_with_streaks = calculate_multi_score_running_sum(all_data)
+        regular_summary = summarize_multi_score_running_sum(data_with_streaks)
+
+        data_with_inverse_streaks = calculate_inverse_multi_score_running_sum(all_data)
+        inverse_summary = summarize_inverse_multi_score_running_sum(data_with_inverse_streaks)
+
+        good_streaks = pd.DataFrame()
+        good_streaks['Player'] = regular_summary['Player']
+        good_streaks['Birdies'] = regular_summary['Birdies']
+        good_streaks['Pars'] = regular_summary['Pars_or_Better']
+        good_streaks['No +2s'] = regular_summary['Bogey or better']
+        good_streaks['No TBPs'] = inverse_summary['TBPs']
+
+        good_streaks = good_streaks.sort_values('Pars', ascending=False)
+        return good_streaks
 
 
 def prepare_bad_streaks_data(all_data):
     """
-    Prepare bad streaks data combining selected columns from both regular and inverse streaks.
+    Prepare bad streaks data using cached streak calculations with asterisk marking.
 
     Args:
-        all_data (pd.DataFrame): Raw tournament data
+        all_data (pd.DataFrame): Raw tournament data (used for player mapping only)
 
     Returns:
-        pd.DataFrame: Table with bad streak columns: No eagles, No birdies, Bogey or worse, Double Bogey or worse, TBP
+        pd.DataFrame: Table with bad streak columns: No eagles, No birdies, Over par, +2s, TBPs
+                     Values marked with '*' when that max streak is currently active
 
     Purpose:
-        Creates a focused table showing negative streaks for competitive display
+        Creates a focused table showing negative streaks using fast cached data
     """
-    # Get regular streaks (for TBP, Double Bogey or worse)
-    data_with_streaks = calculate_multi_score_running_sum(all_data)
-    regular_summary = summarize_multi_score_running_sum(data_with_streaks)
+    try:
+        from utils import read_file, STREAKS_PARQUET
 
-    # Get inverse streaks (for No eagles, No birdies, Bogey or worse)
-    data_with_inverse_streaks = calculate_inverse_multi_score_running_sum(all_data)
-    inverse_summary = summarize_inverse_multi_score_running_sum(data_with_inverse_streaks)
+        # Read cached streak data
+        streaks_df = read_file(STREAKS_PARQUET)
 
-    # Combine the relevant columns
-    bad_streaks = pd.DataFrame()
-    bad_streaks['Player'] = inverse_summary['Player']
-    bad_streaks['No Eagles'] = inverse_summary['Eagles']
-    bad_streaks['No Birdies*'] = inverse_summary['Birdies']
-    bad_streaks['Over par'] = inverse_summary['Pars_or_Better']
-    bad_streaks['+2s**'] = regular_summary['Double Bogey or worse']
-    bad_streaks['TBPs'] = regular_summary['TBPs']
+        # Get player mapping from all_data
+        player_mapping = get_player_mapping(all_data)
 
-    # Sort by Over par for consistent ordering
-    bad_streaks = bad_streaks.sort_values('Over par', ascending=False)
+        # Get both max and current streaks for comparison
+        max_streaks = get_max_streaks(streaks_df)
+        current_streaks = get_current_streaks(streaks_df)
 
-    return bad_streaks
+        # Identify where current equals max
+        equals_max = get_current_equals_max_streaks(max_streaks, current_streaks)
+
+        # Transform to display format with asterisk marking
+        bad_streaks = transform_cached_bad_streaks(max_streaks, player_mapping, equals_max)
+
+        return bad_streaks
+
+    except Exception as e:
+        # Fallback to original calculation if cache not available
+        import logging
+        logging.warning(f"Could not read streaks cache, falling back to calculation: {e}")
+
+        # Original calculation code as fallback
+        data_with_streaks = calculate_multi_score_running_sum(all_data)
+        regular_summary = summarize_multi_score_running_sum(data_with_streaks)
+
+        data_with_inverse_streaks = calculate_inverse_multi_score_running_sum(all_data)
+        inverse_summary = summarize_inverse_multi_score_running_sum(data_with_inverse_streaks)
+
+        bad_streaks = pd.DataFrame()
+        bad_streaks['Player'] = inverse_summary['Player']
+        bad_streaks['No Eagles'] = inverse_summary['Eagles']
+        bad_streaks['No Birdies'] = inverse_summary['Birdies']
+        bad_streaks['Over par'] = inverse_summary['Pars_or_Better']
+        bad_streaks['+2s'] = regular_summary['Double Bogey or worse']
+        bad_streaks['TBPs'] = regular_summary['TBPs']
+
+        bad_streaks = bad_streaks.sort_values('Over par', ascending=False)
+        return bad_streaks
 
 
 def get_current_streaks_data(all_data):
@@ -378,65 +424,111 @@ def get_current_streaks_data(all_data):
 
 def prepare_current_good_streaks_data(all_data):
     """
-    Prepare current good streaks data combining selected columns from both regular and inverse streaks.
+    Prepare current good streaks data using cached streak calculations with asterisk marking.
 
     Args:
-        all_data (pd.DataFrame): Raw tournament data
+        all_data (pd.DataFrame): Raw tournament data (used for player mapping only)
 
     Returns:
-        pd.DataFrame: Table with current good streak values: Birdies [or better], Pars [or better], No +2s, No TBPs
+        pd.DataFrame: Table with current good streak values: Birdies, Pars, No +2s, No TBPs
+                     Values marked with '*' when current equals historical maximum
 
     Purpose:
-        Shows current positive streaks - what good streaks players are currently on
-        Mirrors the structure of prepare_good_streaks_data but shows current rather than maximum values
+        Shows current positive streaks using fast cached data
     """
-    # Get current streak data
-    current_streaks = get_current_streaks_data(all_data)
+    try:
+        from utils import read_file, STREAKS_PARQUET
 
-    # Create good streaks table with current values
-    good_streaks = pd.DataFrame()
-    good_streaks['Player'] = current_streaks['Player']
-    good_streaks['Birdies*'] = current_streaks['RunningSum_Birdies']
-    good_streaks['Pars*'] = current_streaks['RunningSum_Pars_or_Better']
-    good_streaks['No +2s**'] = current_streaks['RunningSum_Bogey or better']
-    good_streaks['No TBPs'] = current_streaks['InverseRunningSum_TBPs']
+        # Read cached streak data
+        streaks_df = read_file(STREAKS_PARQUET)
 
-    # Sort by Pars* for consistent ordering
-    good_streaks = good_streaks.sort_values('Pars*', ascending=False)
+        # Get player mapping from all_data
+        player_mapping = get_player_mapping(all_data)
 
-    return good_streaks
+        # Get both max and current streaks for comparison
+        max_streaks = get_max_streaks(streaks_df)
+        current_streaks = get_current_streaks(streaks_df)
+
+        # Identify where current equals max
+        equals_max = get_current_equals_max_streaks(max_streaks, current_streaks)
+
+        # Transform to display format with asterisk marking
+        good_streaks = transform_cached_good_streaks(current_streaks, player_mapping, equals_max)
+
+        return good_streaks
+
+    except Exception as e:
+        # Fallback to original calculation if cache not available
+        import logging
+        logging.warning(f"Could not read streaks cache, falling back to calculation: {e}")
+
+        # Original calculation code as fallback
+        current_streaks = get_current_streaks_data(all_data)
+
+        good_streaks = pd.DataFrame()
+        good_streaks['Player'] = current_streaks['Player']
+        good_streaks['Birdies'] = current_streaks['RunningSum_Birdies']
+        good_streaks['Pars'] = current_streaks['RunningSum_Pars_or_Better']
+        good_streaks['No +2s'] = current_streaks['RunningSum_Bogey or better']
+        good_streaks['No TBPs'] = current_streaks['InverseRunningSum_TBPs']
+
+        good_streaks = good_streaks.sort_values('Pars', ascending=False)
+        return good_streaks
 
 
 def prepare_current_bad_streaks_data(all_data):
     """
-    Prepare current bad streaks data combining selected columns from both regular and inverse streaks.
+    Prepare current bad streaks data using cached streak calculations with asterisk marking.
 
     Args:
-        all_data (pd.DataFrame): Raw tournament data
+        all_data (pd.DataFrame): Raw tournament data (used for player mapping only)
 
     Returns:
-        pd.DataFrame: Table with current bad streak values: No eagles, No birdies, Bogey or worse, Double Bogey or worse, TBP
+        pd.DataFrame: Table with current bad streak values: No eagles, No birdies, Over par, +2s, TBPs
+                     Values marked with '*' when current equals historical maximum
 
     Purpose:
-        Shows current negative streaks - what bad streaks players are currently on
-        Mirrors the structure of prepare_bad_streaks_data but shows current rather than maximum values
+        Shows current negative streaks using fast cached data
     """
-    # Get current streak data
-    current_streaks = get_current_streaks_data(all_data)
+    try:
+        from utils import read_file, STREAKS_PARQUET
 
-    # Create bad streaks table with current values
-    bad_streaks = pd.DataFrame()
-    bad_streaks['Player'] = current_streaks['Player']
-    bad_streaks['No Eagles'] = current_streaks['InverseRunningSum_Eagles']
-    bad_streaks['No Birdies*'] = current_streaks['InverseRunningSum_Birdies']
-    bad_streaks['Over par'] = current_streaks['InverseRunningSum_Pars_or_Better']
-    bad_streaks['+2s**'] = current_streaks['RunningSum_Double Bogey or worse']
-    bad_streaks['TBPs'] = current_streaks['RunningSum_TBPs']
+        # Read cached streak data
+        streaks_df = read_file(STREAKS_PARQUET)
 
-    # Sort by Over par for consistent ordering
-    bad_streaks = bad_streaks.sort_values('Over par', ascending=False)
+        # Get player mapping from all_data
+        player_mapping = get_player_mapping(all_data)
 
-    return bad_streaks
+        # Get both max and current streaks for comparison
+        max_streaks = get_max_streaks(streaks_df)
+        current_streaks = get_current_streaks(streaks_df)
+
+        # Identify where current equals max
+        equals_max = get_current_equals_max_streaks(max_streaks, current_streaks)
+
+        # Transform to display format with asterisk marking
+        bad_streaks = transform_cached_bad_streaks(current_streaks, player_mapping, equals_max)
+
+        return bad_streaks
+
+    except Exception as e:
+        # Fallback to original calculation if cache not available
+        import logging
+        logging.warning(f"Could not read streaks cache, falling back to calculation: {e}")
+
+        # Original calculation code as fallback
+        current_streaks = get_current_streaks_data(all_data)
+
+        bad_streaks = pd.DataFrame()
+        bad_streaks['Player'] = current_streaks['Player']
+        bad_streaks['No Eagles'] = current_streaks['InverseRunningSum_Eagles']
+        bad_streaks['No Birdies'] = current_streaks['InverseRunningSum_Birdies']
+        bad_streaks['Over par'] = current_streaks['InverseRunningSum_Pars_or_Better']
+        bad_streaks['+2s'] = current_streaks['RunningSum_Double Bogey or worse']
+        bad_streaks['TBPs'] = current_streaks['RunningSum_TBPs']
+
+        bad_streaks = bad_streaks.sort_values('Over par', ascending=False)
+        return bad_streaks
 
 
 import pandas as pd
@@ -524,3 +616,144 @@ def get_current_streaks(streaks_df):
     scols = [c for c in streaks_df.columns if c.endswith("_streak")]
     latest_idx = streaks_df.groupby("Pl")["Career Count"].idxmax()
     return streaks_df.loc[latest_idx, ["Pl"] + scols].reset_index(drop=True)
+
+
+def get_player_mapping(all_data):
+    """Get mapping from Pl to Player names using existing data."""
+    return all_data[['Pl', 'Player']].drop_duplicates().set_index('Pl')['Player'].to_dict()
+
+
+def transform_cached_good_streaks(streaks_df, player_mapping, equals_max_df=None):
+    """
+    Transform cached streak data into good streaks display format.
+
+    Args:
+        streaks_df (pd.DataFrame): Output from get_max_streaks() or get_current_streaks()
+        player_mapping (dict): Mapping from Pl to Player names
+        equals_max_df (pd.DataFrame, optional): Boolean mask from get_current_equals_max_streaks()
+
+    Returns:
+        pd.DataFrame: Table with columns ['Player', 'Birdies', 'Pars', 'No +2s', 'No TBPs']
+                     Values marked with '*' when current equals max
+    """
+    # Create good streaks table with clean column names
+    good_streaks = pd.DataFrame()
+    good_streaks['Player'] = streaks_df['Pl'].map(player_mapping)
+
+    # Column mapping for good streaks
+    column_mapping = {
+        'Birdies': 'birdie_true_streak',
+        'Pars': 'par_better_true_streak',
+        'No +2s': 'double_bogey_false_streak',
+        'No TBPs': 'TBP_false_streak'
+    }
+
+    # Add each column with optional asterisk marking
+    for display_col, streak_col in column_mapping.items():
+        values = streaks_df[streak_col].astype(str)
+
+        # Add asterisks where current equals max
+        if equals_max_df is not None:
+            # Merge to align players
+            streak_with_equals = streaks_df[['Pl', streak_col]].merge(
+                equals_max_df[['Pl', streak_col]], on='Pl', suffixes=('', '_equals_max')
+            )
+
+            # Add asterisk where equals max is True
+            mask = streak_with_equals[f'{streak_col}_equals_max']
+            values = streak_with_equals[streak_col].astype(str)
+            values.loc[mask] = values.loc[mask] + '*'
+
+        good_streaks[display_col] = values
+
+    # Sort by Pars for consistent ordering (extract numeric value for sorting)
+    good_streaks['_pars_numeric'] = good_streaks['Pars'].str.replace('*', '').astype(int)
+    good_streaks = good_streaks.sort_values('_pars_numeric', ascending=False)
+    good_streaks = good_streaks.drop('_pars_numeric', axis=1)
+
+    return good_streaks
+
+
+def get_current_equals_max_streaks(max_streaks_df, current_streaks_df):
+    """
+    Identify which current streaks equal maximum streaks for each player.
+
+    Args:
+        max_streaks_df (pd.DataFrame): Output from get_max_streaks()
+        current_streaks_df (pd.DataFrame): Output from get_current_streaks()
+
+    Returns:
+        pd.DataFrame: Boolean mask showing where current equals max for each streak column
+    """
+    # Get streak columns only
+    streak_cols = [col for col in max_streaks_df.columns if col.endswith('_streak')]
+
+    # Merge dataframes on player ID for comparison
+    comparison = max_streaks_df[['Pl'] + streak_cols].merge(
+        current_streaks_df[['Pl'] + streak_cols],
+        on='Pl',
+        suffixes=('_max', '_current')
+    )
+
+    # Create boolean mask for each streak type
+    equals_max = pd.DataFrame()
+    equals_max['Pl'] = comparison['Pl']
+
+    for streak_type in streak_cols:
+        max_col = f'{streak_type}_max'
+        current_col = f'{streak_type}_current'
+        equals_max[streak_type] = comparison[max_col] == comparison[current_col]
+
+    return equals_max
+
+
+def transform_cached_bad_streaks(streaks_df, player_mapping, equals_max_df=None):
+    """
+    Transform cached streak data into bad streaks display format.
+
+    Args:
+        streaks_df (pd.DataFrame): Output from get_max_streaks() or get_current_streaks()
+        player_mapping (dict): Mapping from Pl to Player names
+        equals_max_df (pd.DataFrame, optional): Boolean mask from get_current_equals_max_streaks()
+
+    Returns:
+        pd.DataFrame: Table with columns ['Player', 'No Eagles', 'No Birdies', 'Over par', '+2s', 'TBPs']
+                     Values marked with '*' when current equals max
+    """
+    # Create bad streaks table with clean column names
+    bad_streaks = pd.DataFrame()
+    bad_streaks['Player'] = streaks_df['Pl'].map(player_mapping)
+
+    # Column mapping for bad streaks
+    column_mapping = {
+        'No Eagles': 'eagle_false_streak',
+        'No Birdies': 'birdie_false_streak',
+        'Over par': 'par_better_false_streak',
+        '+2s': 'double_bogey_true_streak',
+        'TBPs': 'TBP_true_streak'
+    }
+
+    # Add each column with optional asterisk marking
+    for display_col, streak_col in column_mapping.items():
+        values = streaks_df[streak_col].astype(str)
+
+        # Add asterisks where current equals max
+        if equals_max_df is not None:
+            # Merge to align players
+            streak_with_equals = streaks_df[['Pl', streak_col]].merge(
+                equals_max_df[['Pl', streak_col]], on='Pl', suffixes=('', '_equals_max')
+            )
+
+            # Add asterisk where equals max is True
+            mask = streak_with_equals[f'{streak_col}_equals_max']
+            values = streak_with_equals[streak_col].astype(str)
+            values.loc[mask] = values.loc[mask] + '*'
+
+        bad_streaks[display_col] = values
+
+    # Sort by Over par for consistent ordering (extract numeric value for sorting)
+    bad_streaks['_over_par_numeric'] = bad_streaks['Over par'].str.replace('*', '').astype(int)
+    bad_streaks = bad_streaks.sort_values('_over_par_numeric', ascending=False)
+    bad_streaks = bad_streaks.drop('_over_par_numeric', axis=1)
+
+    return bad_streaks

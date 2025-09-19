@@ -10,7 +10,7 @@ This module contains functions for:
 import streamlit as st
 import pandas as pd
 from datetime import datetime
-from utils import read_file, write_file, backup_file, clear_all_caches, update_teg_status_files
+from utils import read_file, write_file, backup_file, clear_all_caches, update_teg_status_files, update_streaks_cache
 
 
 # State constants for deletion workflow
@@ -180,6 +180,9 @@ def execute_data_deletion(selected_teg, selected_rounds):
     
     # Update TEG status files to reflect completion changes
     update_teg_status_files()
+
+    # Update streaks cache with latest data
+    update_streaks_cache()
 
     # Clear all caches to reflect changes
     st.cache_data.clear()

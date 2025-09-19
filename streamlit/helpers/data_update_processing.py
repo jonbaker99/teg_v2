@@ -18,6 +18,7 @@ from utils import (
     process_round_for_all_scores,
     load_and_prepare_handicap_data,
     update_all_data,
+    update_streaks_cache,
     summarise_existing_rd_data,
     update_teg_status_files,
     clear_all_caches,
@@ -252,6 +253,11 @@ def execute_data_update(overwrite=False, new_data_only=False):
         with st.spinner("📊 Updating TEG status files..."):
             update_teg_status_files()
             st.success("📊 TEG status files updated.")
+
+        # Update streaks cache with latest data
+        with st.spinner("🏁 Updating streaks cache..."):
+            update_streaks_cache()
+            st.success("🏁 Streaks cache updated.")
 
         # Clear all caches to reflect changes
         st.cache_data.clear()
