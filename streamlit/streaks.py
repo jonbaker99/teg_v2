@@ -27,6 +27,23 @@ load_datawrapper_css()
 # Purpose: TEG 50 is excluded for accurate streak analysis as it's a special case
 all_data = load_all_data(exclude_teg_50=True)
 
+# Cache all streak table calculations for performance
+@st.cache_data
+def get_all_streak_tables(all_data):
+    """
+    Cache all streak table calculations together for instant radio button switching.
+    Only recalculates when underlying data changes.
+    """
+    return {
+        'good_max': prepare_good_streaks_data(all_data),
+        'bad_max': prepare_bad_streaks_data(all_data),
+        'good_current': prepare_current_good_streaks_data(all_data),
+        'bad_current': prepare_current_bad_streaks_data(all_data)
+    }
+
+# Calculate all streak tables once
+streak_tables = get_all_streak_tables(all_data)
+
 
 # === USER INTERFACE ===
 # Radio button to choose between max and current streaks
@@ -44,23 +61,11 @@ tabs = st.tabs(tab_labels)
 for i, tab in enumerate(tabs):
     with tab:
         if i == 0:
-            # Good streaks tab
+            # Good streaks tab - select from cached tables
             if streak_type == "Max":
-                # prepare_good_streaks_data() - Combines positive streaks from both regular and inverse calculations
-                # This function displays:
-                # - Birdies [or better] - consecutive birdies
-                # - Pars [or better] - consecutive pars or better
-                # - No +2s - consecutive holes better than double bogey
-                # - No TBPs - consecutive holes without triple bogey or worse
-                good_streaks_summary = prepare_good_streaks_data(all_data)
+                good_streaks_summary = streak_tables['good_max']
             else:
-                # prepare_current_good_streaks_data() - Shows what good streaks players are currently on
-                # This function displays current values for:
-                # - Birdies [or better] - current consecutive birdies
-                # - Pars [or better] - current consecutive pars or better
-                # - No +2s - current consecutive holes better than double bogey
-                # - No TBPs - current consecutive holes without triple bogey or worse
-                good_streaks_summary = prepare_current_good_streaks_data(all_data)
+                good_streaks_summary = streak_tables['good_current']
 
             # Display good streaks summary table
             st.write(
@@ -74,25 +79,11 @@ for i, tab in enumerate(tabs):
             st.caption("*: current streak is maximum streak")
 
         elif i == 1:
-            # Bad streaks tab
+            # Bad streaks tab - select from cached tables
             if streak_type == "Max":
-                # prepare_bad_streaks_data() - Combines negative streaks from both regular and inverse calculations
-                # This function displays:
-                # - No eagles - consecutive holes without eagles
-                # - No birdies - consecutive holes without birdies
-                # - Bogey or worse - consecutive holes of bogey or worse
-                # - Double Bogey or worse - consecutive holes of double bogey or worse
-                # - TBP - consecutive triple bogeys or worse
-                bad_streaks_summary = prepare_bad_streaks_data(all_data)
+                bad_streaks_summary = streak_tables['bad_max']
             else:
-                # prepare_current_bad_streaks_data() - Shows what bad streaks players are currently on
-                # This function displays current values for:
-                # - No eagles - current consecutive holes without eagles
-                # - No birdies - current consecutive holes without birdies
-                # - Bogey or worse - current consecutive holes of bogey or worse
-                # - Double Bogey or worse - current consecutive holes of double bogey or worse
-                # - TBP - current consecutive triple bogeys or worse
-                bad_streaks_summary = prepare_current_bad_streaks_data(all_data)
+                bad_streaks_summary = streak_tables['bad_current']
 
             # Display bad streaks summary table
             st.write(

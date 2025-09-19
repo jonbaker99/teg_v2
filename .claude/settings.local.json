@@ -14,7 +14,8 @@
       "Bash(sed:*)",
       "Bash(timeout 10 streamlit run streamlit/nav.py --server.headless=true --server.port=8502)",
       "mcp__ide__executeCode",
-      "Bash(timeout 10 streamlit run:*)"
+      "Bash(timeout 10 streamlit run:*)",
+      "Bash(git pull:*)"
     ],
     "deny": [],
     "ask": [
