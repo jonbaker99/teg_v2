@@ -335,3 +335,192 @@ def prepare_bad_streaks_data(all_data):
     bad_streaks = bad_streaks.sort_values('Over par', ascending=False)
 
     return bad_streaks
+
+
+def get_current_streaks_data(all_data):
+    """
+    Calculate current (ongoing) streaks for all players and score types.
+
+    Args:
+        all_data (pd.DataFrame): Raw tournament data with Career Count column
+
+    Returns:
+        pd.DataFrame: Current streak values for each player and score type
+
+    Purpose:
+        Shows what streak each player is currently on (not their historical maximum)
+        Uses the most recently played hole for each player to determine current status
+    """
+    # Calculate all running streaks
+    df_with_streaks = calculate_multi_score_running_sum(all_data)
+    df_with_all_streaks = calculate_inverse_multi_score_running_sum(df_with_streaks)
+
+    # Find each player's most recent hole (maximum Career Count)
+    max_career_counts = df_with_all_streaks.groupby('Player')['Career Count'].max().reset_index()
+    max_career_counts.columns = ['Player', 'Max_Career_Count']
+
+    # Get current streak values at most recent hole for each player
+    current_streaks = df_with_all_streaks.merge(max_career_counts, on='Player')
+    current_streaks = current_streaks[current_streaks['Career Count'] == current_streaks['Max_Career_Count']]
+
+    # Select relevant columns for current streaks
+    score_types = list(get_score_type_definitions().keys())
+    inverse_score_types = list(get_inverse_score_type_definitions().keys())
+
+    streak_columns = ['Player'] + [f'RunningSum_{score_type}' for score_type in score_types]
+    inverse_streak_columns = [f'InverseRunningSum_{score_type}' for score_type in inverse_score_types]
+
+    all_columns = streak_columns + inverse_streak_columns + ['Career Count']
+    current_streaks = current_streaks[all_columns].copy()
+
+    return current_streaks
+
+
+def prepare_current_good_streaks_data(all_data):
+    """
+    Prepare current good streaks data combining selected columns from both regular and inverse streaks.
+
+    Args:
+        all_data (pd.DataFrame): Raw tournament data
+
+    Returns:
+        pd.DataFrame: Table with current good streak values: Birdies [or better], Pars [or better], No +2s, No TBPs
+
+    Purpose:
+        Shows current positive streaks - what good streaks players are currently on
+        Mirrors the structure of prepare_good_streaks_data but shows current rather than maximum values
+    """
+    # Get current streak data
+    current_streaks = get_current_streaks_data(all_data)
+
+    # Create good streaks table with current values
+    good_streaks = pd.DataFrame()
+    good_streaks['Player'] = current_streaks['Player']
+    good_streaks['Birdies*'] = current_streaks['RunningSum_Birdies']
+    good_streaks['Pars*'] = current_streaks['RunningSum_Pars_or_Better']
+    good_streaks['No +2s**'] = current_streaks['RunningSum_Bogey or better']
+    good_streaks['No TBPs'] = current_streaks['InverseRunningSum_TBPs']
+
+    # Sort by Pars* for consistent ordering
+    good_streaks = good_streaks.sort_values('Pars*', ascending=False)
+
+    return good_streaks
+
+
+def prepare_current_bad_streaks_data(all_data):
+    """
+    Prepare current bad streaks data combining selected columns from both regular and inverse streaks.
+
+    Args:
+        all_data (pd.DataFrame): Raw tournament data
+
+    Returns:
+        pd.DataFrame: Table with current bad streak values: No eagles, No birdies, Bogey or worse, Double Bogey or worse, TBP
+
+    Purpose:
+        Shows current negative streaks - what bad streaks players are currently on
+        Mirrors the structure of prepare_bad_streaks_data but shows current rather than maximum values
+    """
+    # Get current streak data
+    current_streaks = get_current_streaks_data(all_data)
+
+    # Create bad streaks table with current values
+    bad_streaks = pd.DataFrame()
+    bad_streaks['Player'] = current_streaks['Player']
+    bad_streaks['No Eagles'] = current_streaks['InverseRunningSum_Eagles']
+    bad_streaks['No Birdies*'] = current_streaks['InverseRunningSum_Birdies']
+    bad_streaks['Over par'] = current_streaks['InverseRunningSum_Pars_or_Better']
+    bad_streaks['+2s**'] = current_streaks['RunningSum_Double Bogey or worse']
+    bad_streaks['TBPs'] = current_streaks['RunningSum_TBPs']
+
+    # Sort by Over par for consistent ordering
+    bad_streaks = bad_streaks.sort_values('Over par', ascending=False)
+
+    return bad_streaks
+
+
+import pandas as pd
+
+BOOL_COLS = ["eagle", "birdie", "par_better", "double_bogey", "TBP"]
+
+def build_streaks(all_data: pd.DataFrame, assume_sorted: bool = False) -> pd.DataFrame:
+    """
+    Create streaks data (flags + true/false streak counters) from all_data.
+
+    Requires columns:
+      'Pl', 'HoleID', 'Sc', 'Career Count', 'GrossVP', 'Hole Order Ever'
+
+    Adds boolean flags:
+      - eagle         : GrossVP <= -2
+      - birdie        : GrossVP <= -1
+      - par_better    : GrossVP <= 0
+      - double_bogey  : GrossVP > 1
+      - TBP           : GrossVP > 2
+
+    Then, for each of the above, adds:
+      - <name>_true_streak   : consecutive Trues per player over Career Count
+      - <name>_false_streak  : consecutive Falses per player over Career Count
+
+    Parameters
+    ----------
+    all_data : pd.DataFrame
+        Source dataframe with at least the required columns.
+    assume_sorted : bool, default False
+        If True, assumes rows are already sorted by ['Pl', 'Career Count'].
+
+    Returns
+    -------
+    pd.DataFrame
+        A new dataframe containing the selected base columns, the boolean flags,
+        and the per-hole streak counters.
+    """
+    needed = ['Pl', 'HoleID', 'Sc', 'Career Count', 'GrossVP', 'Hole Order Ever']
+    missing = [c for c in needed if c not in all_data.columns]
+    if missing:
+        raise KeyError(f"build_streaks: missing columns in all_data: {missing}")
+
+    # Base subset
+    df = all_data[needed].copy()
+
+    # Boolean flags from GrossVP
+    df['eagle']        = df['GrossVP'] <= -2
+    df['birdie']       = df['GrossVP'] <= -1
+    df['par_better']   = df['GrossVP'] <= 0
+    df['double_bogey'] = df['GrossVP'] > 1
+    df['TBP']          = df['GrossVP'] > 2
+
+    # Sort once (stable) to ensure streak correctness
+    if not assume_sorted:
+        df = df.sort_values(['Pl', 'Career Count'], kind='mergesort').reset_index(drop=True)
+
+    # Add streak counters for each boolean column
+    for col in BOOL_COLS:
+        s = df[col].fillna(False).astype(bool)
+
+        # New streak segment when player changes OR value flips
+        reset = df['Pl'].ne(df['Pl'].shift()) | s.ne(s.shift())
+        seg_id = reset.cumsum()
+
+        # Position within each segment
+        pos = df.groupby(seg_id).cumcount() + 1
+
+        # True/False streaks (0 when condition not met)
+        df[f"{col}_true_streak"]  = pos.where(s, 0)
+        df[f"{col}_false_streak"] = pos.where(~s, 0)
+
+    return df
+
+def get_max_streaks(streaks_df):
+    """Return max streaks for each player in wide form."""
+    scols = [c for c in streaks_df.columns if c.endswith("_streak")]
+    return (
+        streaks_df
+        .groupby("Pl", as_index=False)[scols]
+        .max()
+    )
+
+def get_current_streaks(streaks_df):
+    """Return current (latest) streaks for each player in wide form."""
+    scols = [c for c in streaks_df.columns if c.endswith("_streak")]
+    latest_idx = streaks_df.groupby("Pl")["Career Count"].idxmax()
+    return streaks_df.loc[latest_idx, ["Pl"] + scols].reset_index(drop=True)

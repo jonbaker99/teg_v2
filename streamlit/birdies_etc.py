@@ -20,7 +20,9 @@ from helpers.streak_analysis_processing import (
     prepare_streak_data_for_display,
     prepare_inverse_streak_data_for_display,
     prepare_good_streaks_data,
-    prepare_bad_streaks_data
+    prepare_bad_streaks_data,
+    prepare_current_good_streaks_data,
+    prepare_current_bad_streaks_data
 )
 
 
@@ -52,7 +54,7 @@ all_data = load_all_data(exclude_teg_50=True)
 chart_fields_all = get_scoring_achievement_fields()
 
 # Create consolidated tab structure
-tab_labels = ["Number of Eagles etc", "Most in round", "Streaks"]
+tab_labels = ["Number of Eagles etc", "Most in round", "Streaks", "Current Streaks"]
 tabs = st.tabs(tab_labels)
 
 # Display achievement statistics in tabs
@@ -139,6 +141,52 @@ for i, tab in enumerate(tabs):
                 # Display bad streaks summary table
                 st.write(
                     bad_streaks_summary.to_html(
+                        index=False,
+                        justify='left',
+                        classes='datawrapper-table'
+                    ),
+                    unsafe_allow_html=True
+                )
+                st.caption("*: or better; **: or worse")
+        elif i == 3:
+            # Current Streaks tab with sub-tabs
+            current_streak_sub_tab1, current_streak_sub_tab2 = st.tabs(["Current good streaks", "Current bad streaks"])
+
+            with current_streak_sub_tab1:
+                # prepare_current_good_streaks_data() - Shows what good streaks players are currently on
+                # This function displays current values for:
+                # - Birdies [or better] - current consecutive birdies
+                # - Pars [or better] - current consecutive pars or better
+                # - No +2s - current consecutive holes better than double bogey
+                # - No TBPs - current consecutive holes without triple bogey or worse
+                current_good_streaks_summary = prepare_current_good_streaks_data(all_data)
+
+                st.markdown("**Current Good Streaks** - What streaks players are on right now")
+                # Display current good streaks summary table
+                st.write(
+                    current_good_streaks_summary.to_html(
+                        index=False,
+                        justify='left',
+                        classes='datawrapper-table'
+                    ),
+                    unsafe_allow_html=True
+                )
+                st.caption("*: or better; **: or worse")
+
+            with current_streak_sub_tab2:
+                # prepare_current_bad_streaks_data() - Shows what bad streaks players are currently on
+                # This function displays current values for:
+                # - No eagles - current consecutive holes without eagles
+                # - No birdies - current consecutive holes without birdies
+                # - Bogey or worse - current consecutive holes of bogey or worse
+                # - Double Bogey or worse - current consecutive holes of double bogey or worse
+                # - TBP - current consecutive triple bogeys or worse
+                current_bad_streaks_summary = prepare_current_bad_streaks_data(all_data)
+
+                st.markdown("**Current Bad Streaks** - What streaks players are on right now")
+                # Display current bad streaks summary table
+                st.write(
+                    current_bad_streaks_summary.to_html(
                         index=False,
                         justify='left',
                         classes='datawrapper-table'
