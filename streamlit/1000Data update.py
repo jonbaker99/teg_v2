@@ -18,6 +18,7 @@ from helpers.data_update_processing import (
     initialize_update_state,
     process_google_sheets_data,
     check_for_duplicate_data,
+    analyze_hole_level_differences,
     execute_data_update,
     create_data_summary_display,
     STATE_INITIAL,
@@ -100,28 +101,46 @@ elif st.session_state.page_state == STATE_DATA_LOADED:
         st.success("All caches cleared successfully")
 
 
-# === STATE 3: OVERWRITE CONFIRMATION - HANDLE DUPLICATES ===
+# === STATE 3: DUPLICATE DATA CONFIRMATION - HANDLE DUPLICATES ===
 elif st.session_state.page_state == STATE_OVERWRITE_CONFIRM:
-    st.warning("⚠️ Existing Data Found!")
-    st.write("The following data already exists in the system. Do you want to overwrite it?")
-    
-    # summarise_existing_rd_data() - Shows summary of conflicting data
+    st.write("## Duplicate Data Found")
+    st.write("Some data already exists in the system at hole level. Please review the differences and choose how to proceed.")
+
+    # Analyze differences between existing and new data
+    differences_df, has_differences = analyze_hole_level_differences()
+
+    if has_differences:
+        st.write("**Differences Found:**")
+        st.write("The following scores differ between existing data and Google Sheets data:")
+        st.dataframe(differences_df)
+    else:
+        st.write("**No Differences Found:** All duplicate data has identical scores between existing data and Google Sheets.")
+
+    # Show summary of duplicate data
+    st.write("**Summary of Duplicate Data:**")
     existing_summary = summarise_existing_rd_data(st.session_state.duplicates_df)
     st.dataframe(existing_summary)
-    
-    st.write("---")
-    col1, col2 = st.columns(2)
-    
+
+    st.write("**Choose Action:**")
+
+    col1, col2, col3 = st.columns(3)
+
     with col1:
-        if st.button("✅ Yes, Overwrite"):
+        if st.button("🔄 Overwrite All Data"):
             st.session_state.page_state = STATE_PROCESSING
             # execute_data_update() - Processes data with overwrite=True
             execute_data_update(overwrite=True)
             initialize_update_state(force_reset=True)  # Reset for next run
-            st.success("✅ Data successfully overwritten and updated!")
 
     with col2:
-        if st.button("🚫 No, Cancel"):
+        if st.button("➕ Write New Data Only"):
+            st.session_state.page_state = STATE_PROCESSING
+            # execute_data_update() - Processes only non-duplicate data
+            execute_data_update(new_data_only=True)
+            initialize_update_state(force_reset=True)  # Reset for next run
+
+    with col3:
+        if st.button("❌ Skip Update"):
             # Return to initial state without processing
             initialize_update_state(force_reset=True)
             st.rerun()

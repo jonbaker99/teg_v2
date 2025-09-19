@@ -84,32 +84,119 @@ def process_google_sheets_data(raw_df):
 
 
 def check_for_duplicate_data():
+    """
+    Check for duplicate data at hole level between existing data and new data.
+
+    Returns:
+        bool: True if duplicates exist, False otherwise
+
+    Side effects:
+        Sets session state variables:
+        - existing_data_df: The existing data
+        - duplicates_df: Duplicate records found at hole level
+        - new_data_keys: Unique hole-level keys from new data for comparison
+    """
     try:
         st.session_state.existing_data_df = read_file(ALL_SCORES_PARQUET)
     except FileNotFoundError:
-        st.session_state.existing_data_df = pd.DataFrame(columns=['TEGNum', 'Round'])
+        st.session_state.existing_data_df = pd.DataFrame(columns=['TEGNum', 'Round', 'Hole', 'Pl'])
 
-    new_tegs_rounds = st.session_state.new_data_df[['TEGNum', 'Round']].drop_duplicates()
-    
+    # Create hole-level keys for comparison (TEG, Round, Hole, Player)
+    new_data_keys = st.session_state.new_data_df[['TEGNum', 'Round', 'Hole', 'Pl']].drop_duplicates()
+
     # Ensure NUMERIC types for both dataframes
-    st.session_state.existing_data_df['TEGNum'] = pd.to_numeric(st.session_state.existing_data_df['TEGNum'])
-    st.session_state.existing_data_df['Round'] = pd.to_numeric(st.session_state.existing_data_df['Round'])
-    new_tegs_rounds['TEGNum'] = pd.to_numeric(new_tegs_rounds['TEGNum'])
-    new_tegs_rounds['Round'] = pd.to_numeric(new_tegs_rounds['Round'])
+    if not st.session_state.existing_data_df.empty:
+        st.session_state.existing_data_df['TEGNum'] = pd.to_numeric(st.session_state.existing_data_df['TEGNum'])
+        st.session_state.existing_data_df['Round'] = pd.to_numeric(st.session_state.existing_data_df['Round'])
+        st.session_state.existing_data_df['Hole'] = pd.to_numeric(st.session_state.existing_data_df['Hole'])
 
-    duplicates = st.session_state.existing_data_df.merge(new_tegs_rounds, on=['TEGNum', 'Round'], how='inner')
+    new_data_keys['TEGNum'] = pd.to_numeric(new_data_keys['TEGNum'])
+    new_data_keys['Round'] = pd.to_numeric(new_data_keys['Round'])
+    new_data_keys['Hole'] = pd.to_numeric(new_data_keys['Hole'])
+
+    # Find duplicates at hole level
+    duplicates = st.session_state.existing_data_df.merge(
+        new_data_keys,
+        on=['TEGNum', 'Round', 'Hole', 'Pl'],
+        how='inner'
+    )
+
+    # Store the actual duplicate keys (only records that exist in both datasets)
+    duplicate_keys_only = duplicates[['TEGNum', 'Round', 'Hole', 'Pl']].drop_duplicates()
+
     st.session_state.duplicates_df = duplicates
-    
+    st.session_state.duplicate_keys_only = duplicate_keys_only
+    st.session_state.all_new_data_keys = new_data_keys
+
     return not duplicates.empty
 
 
-def execute_data_update(overwrite=False):
+def analyze_hole_level_differences():
+    """
+    Analyze differences between existing data and new data for duplicate hole-level records.
+
+    Returns:
+        tuple: (differences_df, has_differences)
+        - differences_df: DataFrame with columns [Pl, TEG, Round, Hole, Score (existing), Score (google sheets)]
+        - has_differences: bool indicating if any score differences were found
+
+    Prerequisites:
+        Requires session state variables set by check_for_duplicate_data():
+        - existing_data_df: Existing data
+        - new_data_df: New data from Google Sheets
+        - duplicates_df: Duplicate records found
+    """
+    if st.session_state.duplicates_df.empty:
+        return pd.DataFrame(), False
+
+    # Get the duplicate hole-level keys
+    duplicate_keys = st.session_state.duplicates_df[['TEGNum', 'Round', 'Hole', 'Pl']].drop_duplicates()
+
+    # Get existing scores for duplicate records
+    existing_duplicates = st.session_state.existing_data_df.merge(
+        duplicate_keys,
+        on=['TEGNum', 'Round', 'Hole', 'Pl'],
+        how='inner'
+    )[['TEGNum', 'Round', 'Hole', 'Pl', 'Sc']].rename(columns={'Sc': 'Score_existing'})
+
+    # Get new scores for duplicate records
+    new_duplicates = st.session_state.new_data_df.merge(
+        duplicate_keys,
+        on=['TEGNum', 'Round', 'Hole', 'Pl'],
+        how='inner'
+    )[['TEGNum', 'Round', 'Hole', 'Pl', 'Score']].rename(columns={'Score': 'Score_new'})
+
+    # Merge to compare scores
+    comparison = existing_duplicates.merge(
+        new_duplicates,
+        on=['TEGNum', 'Round', 'Hole', 'Pl'],
+        how='inner'
+    )
+
+    # Find rows where scores differ
+    differences = comparison[comparison['Score_existing'] != comparison['Score_new']].copy()
+
+    # Format for display with requested column names
+    if not differences.empty:
+        differences_display = differences[['Pl', 'TEGNum', 'Round', 'Hole', 'Score_existing', 'Score_new']].copy()
+        differences_display.columns = ['Pl', 'TEG', 'Round', 'Hole', 'Score (existing)', 'Score (google sheets)']
+
+        # Sort for easy reading
+        differences_display = differences_display.sort_values(['TEG', 'Round', 'Pl', 'Hole'])
+
+        return differences_display, True
+    else:
+        return pd.DataFrame(), False
+
+
+def execute_data_update(overwrite=False, new_data_only=False):
     """
     Execute the main data update process.
-    
+
     Args:
         overwrite (bool): Whether to overwrite existing duplicate data
-        
+        new_data_only (bool): Whether to process only non-duplicate data
+
     Purpose:
         Core data processing function that:
         1. Handles overwrite logic if duplicates exist
@@ -121,14 +208,19 @@ def execute_data_update(overwrite=False):
     new_data_df = st.session_state.new_data_df
 
     if overwrite:
-        # Remove existing data that will be replaced
-        new_tegs_rounds = new_data_df[['TEGNum', 'Round']].drop_duplicates()
-        # Ensure numeric types (should already be correct from check_for_duplicate_data, but be safe)
-        new_tegs_rounds['TEGNum'] = pd.to_numeric(new_tegs_rounds['TEGNum'])
-        new_tegs_rounds['Round'] = pd.to_numeric(new_tegs_rounds['Round'])
-        
-        existing_df = existing_df.merge(new_tegs_rounds, on=['TEGNum', 'Round'], how='left', indicator=True)
-        existing_df = existing_df[existing_df['_merge'] == 'left_only'].drop(columns=['_merge'])
+        # Remove existing data that will be replaced (using hole-level matching now)
+        if hasattr(st.session_state, 'duplicate_keys_only') and not st.session_state.duplicate_keys_only.empty:
+            duplicate_keys = st.session_state.duplicate_keys_only
+            existing_df = existing_df.merge(duplicate_keys, on=['TEGNum', 'Round', 'Hole', 'Pl'], how='left', indicator=True)
+            existing_df = existing_df[existing_df['_merge'] == 'left_only'].drop(columns=['_merge'])
+
+    elif new_data_only:
+        # Filter new data to exclude duplicates (process only non-duplicate data)
+        if hasattr(st.session_state, 'duplicate_keys_only') and not st.session_state.duplicate_keys_only.empty:
+            duplicate_keys = st.session_state.duplicate_keys_only
+            # Remove duplicate records from new data, keeping only truly new records
+            new_data_df = new_data_df.merge(duplicate_keys, on=['TEGNum', 'Round', 'Hole', 'Pl'], how='left', indicator=True)
+            new_data_df = new_data_df[new_data_df['_merge'] == 'left_only'].drop(columns=['_merge'])
 
     # load_and_prepare_handicap_data() - Load player handicap data for scoring calculations
     hc_long = load_and_prepare_handicap_data(HANDICAPS_CSV)
