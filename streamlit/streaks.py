@@ -33,13 +33,22 @@ def get_all_streak_tables(all_data):
     """
     Cache all streak table calculations together for instant radio button switching.
     Only recalculates when underlying data changes.
+    All tables are sorted alphabetically by Player name.
     """
-    return {
+    # Get all streak tables
+    tables = {
         'good_max': prepare_good_streaks_data(all_data),
         'bad_max': prepare_bad_streaks_data(all_data),
         'good_current': prepare_current_good_streaks_data(all_data),
         'bad_current': prepare_current_bad_streaks_data(all_data)
     }
+
+    # Sort all tables alphabetically by Player
+    for key, table in tables.items():
+        if 'Player' in table.columns:
+            tables[key] = table.sort_values('Player').reset_index(drop=True)
+
+    return tables
 
 # Calculate all streak tables once
 streak_tables = get_all_streak_tables(all_data)
