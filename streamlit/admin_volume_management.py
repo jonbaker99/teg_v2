@@ -223,23 +223,92 @@ with col_github:
     github_files = get_github_files_list()
     
     if github_files:
-        st.markdown(f"**{len(github_files)} files found in GitHub data/ folder**")
+        st.markdown(f"**{len(github_files)} files found**")
         
-        # Display GitHub files list
-        for i, file_info in enumerate(github_files):
-            with st.container():
-                st.markdown(f"**📄 {file_info['name']}**")
+        # Create DataFrame for GitHub files
+        github_df = pd.DataFrame([
+            {
+                "File": f["name"],
+                "Size": f"{f['size']:,} bytes",
+                "Modified": f["modified"],
+                "Pull": False  # Checkbox column
+            }
+            for f in github_files
+        ])
+        
+        # Display editable table with checkboxes
+        edited_github = st.data_editor(
+            github_df,
+            column_config={
+                "File": st.column_config.TextColumn("File", width="medium"),
+                "Size": st.column_config.TextColumn("Size", width="small"),
+                "Modified": st.column_config.TextColumn("Modified", width="medium"),
+                "Pull": st.column_config.CheckboxColumn("Pull", width="small")
+            },
+            hide_index=True,
+            use_container_width=True,
+            key="github_files_table"
+        )
+        
+        # Pull selected files button
+        selected_for_pull = edited_github[edited_github['Pull'] == True]
+        if len(selected_for_pull) > 0:
+            if st.button(f"📥 Pull {len(selected_for_pull)} Selected Files", type="primary"):
+                success_count = 0
+                error_messages = []
                 
-                col_info, col_actions = st.columns([2, 1])
+                with st.spinner(f"Pulling {len(selected_for_pull)} files..."):
+                    for _, row in selected_for_pull.iterrows():
+                        # Find the file path
+                        file_info = next((f for f in github_files if f["name"] == row["File"]), None)
+                        if file_info:
+                            success, message = pull_file_from_github(file_info["path"])
+                            if success:
+                                success_count += 1
+                            else:
+                                error_messages.append(message)
+                    
+                    clear_all_caches()
                 
-                with col_info:
-                    st.caption(f"Size: {file_info['size']:,} bytes | Modified: {file_info['modified']}")
-                    st.caption(f"SHA: {file_info['sha']}")
+                if success_count > 0:
+                    st.success(f"✅ Successfully pulled {success_count} files")
                 
-                with col_actions:
-                    # Pull individual file
-                    if st.button("⬇️ Pull", key=f"pull_gh_{i}", help=f"Pull {file_info['name']} to volume"):
-                        with st.spinner(f"Pulling {file_info['name']}..."):
+                if error_messages:
+                    st.error(f"❌ {len(error_messages)} errors occurred")
+                    with st.expander("View errors"):
+                        for error in error_messages:
+                            st.error(error)
+                
+                time.sleep(1)
+                st.rerun()
+        
+        # Individual file management dropdown
+        st.markdown("**Individual File Actions:**")
+        selected_github_file = st.selectbox(
+            "Choose file to view:",
+            options=[f["name"] for f in github_files],
+            key="github_file_selector"
+        )
+        
+        if selected_github_file:
+            col_view, col_pull = st.columns(2)
+            
+            with col_view:
+                if st.button("👁️ View File", key="view_github_individual"):
+                    file_info = next((f for f in github_files if f["name"] == selected_github_file), None)
+                    if file_info:
+                        data = read_file_content(file_info["path"], source="github")
+                        if data is not None:
+                            st.markdown(f"**{selected_github_file}** ({data.shape[0]} rows × {data.shape[1]} cols)")
+                            st.dataframe(data.head(10), use_container_width=True)
+                            if len(data) > 10:
+                                st.caption(f"Showing first 10 rows of {len(data)} total")
+            
+            with col_pull:
+                if st.button("📥 Pull File", key="pull_github_individual"):
+                    file_info = next((f for f in github_files if f["name"] == selected_github_file), None)
+                    if file_info:
+                        with st.spinner(f"Pulling {selected_github_file}..."):
                             success, message = pull_file_from_github(file_info["path"])
                         
                         if success:
@@ -249,17 +318,6 @@ with col_github:
                         
                         time.sleep(1)
                         st.rerun()
-                    
-                    # View file from GitHub
-                    if st.button("👁️ View", key=f"view_gh_{i}", help=f"Preview {file_info['name']} from GitHub"):
-                        data = read_file_content(file_info["path"], source="github")
-                        if data is not None:
-                            st.markdown(f"**GitHub: {file_info['name']}** ({data.shape[0]} rows × {data.shape[1]} cols)")
-                            st.dataframe(data.head(10), use_container_width=True)
-                            if len(data) > 10:
-                                st.caption(f"Showing first 10 rows of {len(data)} total")
-                
-                st.markdown("---")
     else:
         st.info("No data files found in GitHub")
 
@@ -270,106 +328,92 @@ with col_volume:
     volume_files = get_volume_files_list()
     
     if volume_files:
-        st.markdown(f"**{len(volume_files)} files found in volume**")
+        st.markdown(f"**{len(volume_files)} files found**")
         
-        # Display volume files list
-        for i, file_info in enumerate(volume_files):
-            with st.container():
-                st.markdown(f"**📄 {file_info['name']}**")
-                
-                col_info, col_actions = st.columns([2, 1])
-                
-                with col_info:
-                    st.caption(f"Size: {file_info['size']:,} bytes | Modified: {file_info['modified']}")
-                    st.caption(f"Path: {file_info['full_path']}")
-                
-                with col_actions:
-                    # View file from volume
-                    if st.button("👁️ View", key=f"view_vol_{i}", help=f"Preview {file_info['name']} from volume"):
+        # Create DataFrame for volume files
+        volume_df = pd.DataFrame([
+            {
+                "File": f["name"],
+                "Size": f"{f['size']:,} bytes",
+                "Modified": f["modified"]
+            }
+            for f in volume_files
+        ])
+        
+        # Display simple table
+        st.dataframe(
+            volume_df,
+            column_config={
+                "File": st.column_config.TextColumn("File", width="medium"),
+                "Size": st.column_config.TextColumn("Size", width="small"),
+                "Modified": st.column_config.TextColumn("Modified", width="medium")
+            },
+            hide_index=True,
+            use_container_width=True
+        )
+        
+        # Individual file management dropdown
+        st.markdown("**File Actions:**")
+        selected_volume_file = st.selectbox(
+            "Choose file to manage:",
+            options=[f["name"] for f in volume_files],
+            key="volume_file_selector"
+        )
+        
+        if selected_volume_file:
+            col_view, col_download, col_delete = st.columns(3)
+            
+            with col_view:
+                if st.button("👁️ View", key="view_volume_individual"):
+                    file_info = next((f for f in volume_files if f["name"] == selected_volume_file), None)
+                    if file_info:
                         data = read_file_content(file_info["path"], source="volume")
                         if data is not None:
-                            st.markdown(f"**Volume: {file_info['name']}** ({data.shape[0]} rows × {data.shape[1]} cols)")
+                            st.markdown(f"**{selected_volume_file}** ({data.shape[0]} rows × {data.shape[1]} cols)")
                             st.dataframe(data.head(10), use_container_width=True)
                             if len(data) > 10:
                                 st.caption(f"Showing first 10 rows of {len(data)} total")
-                    
-                    # Download file
-                    if st.button("💾 Download", key=f"download_vol_{i}", help=f"Download {file_info['name']} from volume"):
+            
+            with col_download:
+                if st.button("💾 Download", key="download_volume_individual"):
+                    file_info = next((f for f in volume_files if f["name"] == selected_volume_file), None)
+                    if file_info:
                         try:
                             with open(file_info['full_path'], 'rb') as f:
                                 file_bytes = f.read()
                             
                             st.download_button(
-                                label=f"📥 {file_info['name']}",
+                                label=f"📥 {selected_volume_file}",
                                 data=file_bytes,
-                                file_name=file_info['name'],
+                                file_name=selected_volume_file,
                                 mime='application/octet-stream',
-                                key=f"dl_btn_{i}"
+                                key="download_button_individual"
                             )
                         except Exception as e:
                             st.error(f"Error preparing download: {e}")
-                    
-                    # Delete file
-                    if st.button("🗑️ Delete", key=f"delete_vol_{i}", help=f"Delete {file_info['name']} from volume"):
-                        if st.session_state.get(f'confirm_delete_{i}', False):
+            
+            with col_delete:
+                if st.button("🗑️ Delete", key="delete_volume_individual"):
+                    if st.session_state.get('confirm_delete_individual', False):
+                        file_info = next((f for f in volume_files if f["name"] == selected_volume_file), None)
+                        if file_info:
                             success, message = delete_volume_file(file_info["path"])
                             if success:
                                 st.success(message)
                             else:
                                 st.error(message)
-                            
-                            st.session_state[f'confirm_delete_{i}'] = False
-                            time.sleep(1)
-                            st.rerun()
-                        else:
-                            st.session_state[f'confirm_delete_{i}'] = True
-                            st.warning("⚠️ Click again to confirm")
-                
-                st.markdown("---")
+                        
+                        st.session_state['confirm_delete_individual'] = False
+                        time.sleep(1)
+                        st.rerun()
+                    else:
+                        st.session_state['confirm_delete_individual'] = True
+                        st.warning("⚠️ Click again to confirm")
     else:
         st.info("No files found in volume")
 
 # === BULK ACTIONS FOR GITHUB FILES ===
-if github_files:
-    st.markdown("### 📦 Bulk GitHub Actions")
-    
-    # Multi-select for GitHub files
-    selected_files = st.multiselect(
-        "Select GitHub files to pull:",
-        options=[f["name"] for f in github_files],
-        format_func=lambda x: f"📄 {x}",
-        help="Select multiple files to pull at once"
-    )
-    
-    if selected_files:
-        if st.button(f"📥 Pull Selected ({len(selected_files)} files)", type="secondary"):
-            success_count = 0
-            error_messages = []
-            
-            with st.spinner(f"Pulling {len(selected_files)} selected files..."):
-                for file_name in selected_files:
-                    # Find the full path for this file
-                    file_info = next((f for f in github_files if f["name"] == file_name), None)
-                    if file_info:
-                        success, message = pull_file_from_github(file_info["path"])
-                        if success:
-                            success_count += 1
-                        else:
-                            error_messages.append(message)
-                
-                clear_all_caches()  # Clear caches after sync
-            
-            if success_count > 0:
-                st.success(f"✅ Successfully pulled {success_count} selected files")
-            
-            if error_messages:
-                st.error(f"❌ {len(error_messages)} errors occurred")
-                with st.expander("View errors"):
-                    for error in error_messages:
-                        st.error(error)
-            
-            time.sleep(1)
-            st.rerun()
+# Removed - replaced with checkbox functionality in the table above
 
 # === HELP SECTION ===
 with st.expander("ℹ️ How to Use Volume Management"):
