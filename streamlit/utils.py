@@ -142,14 +142,52 @@ def write_to_github(file_path, data, commit_message="Update data"):
 
     st.cache_data.clear()
 
+# Enhanced read_file and write_file functions for utils.py
+# Replace your existing functions with these
+
 def read_file(file_path: str) -> pd.DataFrame:
     """
-    Reads a data file (CSV or Parquet) from the appropriate source (local or GitHub).
-    The function determines the file type from its extension.
+    Read from volume if exists, otherwise cache from GitHub.
+    No timestamp checking - simple cache with manual invalidation.
     """
     if os.getenv('RAILWAY_ENVIRONMENT'):
-        return read_from_github(file_path)
+        volume_path = f"/mnt/data_repo/{file_path}"
+        
+        # Simple check: does file exist in volume?
+        if os.path.exists(volume_path):
+            # Fast path: read from volume (NO API calls)
+            try:
+                if file_path.endswith('.csv'):
+                    return pd.read_csv(volume_path)
+                elif file_path.endswith('.parquet'):
+                    return pd.read_parquet(volume_path)
+                else:
+                    raise ValueError(f"Unsupported file type: {file_path}")
+            except Exception as e:
+                logger.warning(f"Error reading from volume {volume_path}: {e}")
+                # If volume read fails, fall back to GitHub
+                pass
+        
+        # File not cached or volume read failed: download and cache
+        try:
+            data = read_from_github(file_path)
+            
+            # Cache to volume for next time
+            os.makedirs(os.path.dirname(volume_path), exist_ok=True)
+            
+            if file_path.endswith('.csv'):
+                data.to_csv(volume_path, index=False)
+            elif file_path.endswith('.parquet'):
+                data.to_parquet(volume_path, index=False)
+            
+            logger.info(f"Cached {file_path} to volume for future reads")
+            return data
+            
+        except Exception as e:
+            logger.error(f"Error reading {file_path} from GitHub: {e}")
+            raise
     else:
+        # Local development unchanged
         local_path = BASE_DIR / file_path
         if file_path.endswith('.csv'):
             return pd.read_csv(local_path)
@@ -158,14 +196,41 @@ def read_file(file_path: str) -> pd.DataFrame:
         else:
             raise ValueError(f"Unsupported file type: {file_path}")
 
+
 def write_file(file_path: str, data: pd.DataFrame, commit_message: str = "Update data"):
     """
-    Writes a DataFrame to a file (CSV or Parquet) in the appropriate location (local or GitHub).
-    The function determines the file type from its extension.
+    Write to both volume (fast) and GitHub (sync) simultaneously.
     """
     if os.getenv('RAILWAY_ENVIRONMENT'):
-        write_to_github(file_path, data, commit_message)
+        # Write to volume first (fast local write)
+        volume_path = f"/mnt/data_repo/{file_path}"
+        
+        try:
+            os.makedirs(os.path.dirname(volume_path), exist_ok=True)
+            
+            if file_path.endswith('.csv'):
+                data.to_csv(volume_path, index=False)
+            elif file_path.endswith('.parquet'):
+                data.to_parquet(volume_path, index=False)
+            else:
+                raise ValueError(f"Unsupported file type: {file_path}")
+                
+            logger.info(f"Successfully wrote {file_path} to volume")
+            
+        except Exception as e:
+            logger.error(f"Error writing to volume {volume_path}: {e}")
+            # Continue to GitHub write even if volume fails
+        
+        # Write to GitHub (for cross-environment sync)
+        try:
+            write_to_github(file_path, data, commit_message)
+            logger.info(f"Successfully wrote {file_path} to GitHub")
+        except Exception as e:
+            logger.error(f"Error writing to GitHub: {e}")
+            raise  # Re-raise GitHub errors as they're critical
+            
     else:
+        # Local development unchanged
         local_path = BASE_DIR / file_path
         if file_path.endswith('.csv'):
             data.to_csv(local_path, index=False)
@@ -173,6 +238,43 @@ def write_file(file_path: str, data: pd.DataFrame, commit_message: str = "Update
             data.to_parquet(local_path, index=False)
         else:
             raise ValueError(f"Unsupported file type: {file_path}")
+    
+    # Clear caches after successful write
+    st.cache_data.clear()
+
+
+# Optional: Add this utility function for manual cache management
+def clear_volume_cache(file_path: str = None):
+    """
+    Clear volume cache for a specific file or all files.
+    Useful for forcing refresh from GitHub.
+    """
+    if not os.getenv('RAILWAY_ENVIRONMENT'):
+        return "Not running on Railway - no volume to clear"
+    
+    try:
+        if file_path:
+            # Clear specific file
+            volume_path = f"/mnt/data_repo/{file_path}"
+            if os.path.exists(volume_path):
+                os.remove(volume_path)
+                return f"Cleared volume cache for {file_path}"
+            else:
+                return f"File {file_path} not found in volume cache"
+        else:
+            # Clear entire volume
+            import shutil
+            volume_base = "/mnt/data_repo"
+            if os.path.exists(volume_base):
+                shutil.rmtree(volume_base)
+                return "Cleared entire volume cache"
+            else:
+                return "Volume cache already empty"
+                
+    except Exception as e:
+        return f"Error clearing volume cache: {e}"
+
+
 
 def backup_file(source_path, backup_path):
     """Create a backup of a file"""
