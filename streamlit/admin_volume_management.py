@@ -136,18 +136,91 @@ def delete_volume_file(file_path):
         return False, f"❌ Error deleting {file_path}: {str(e)}"
 
 def read_file_content(file_path, source="volume"):
-    """Read file content from volume or GitHub"""
+    """Read file content from volume or GitHub with better error handling"""
     try:
         if source == "volume":
             volume_path = f"/mnt/data_repo/{file_path}"
+            
+            # Check if file exists and has content
+            if not os.path.exists(volume_path):
+                st.error(f"File not found: {volume_path}")
+                return None
+            
+            # Check file size
+            file_size = os.path.getsize(volume_path)
+            if file_size == 0:
+                st.error(f"File is empty: {file_path}")
+                return None
+            
             if file_path.endswith('.csv'):
-                return pd.read_csv(volume_path)
+                # Try reading with different encodings and error handling
+                try:
+                    return pd.read_csv(volume_path, encoding='utf-8')
+                except UnicodeDecodeError:
+                    return pd.read_csv(volume_path, encoding='latin-1')
+                except pd.errors.EmptyDataError:
+                    st.error(f"CSV file appears to be empty or corrupted: {file_path}")
+                    return None
+                except Exception as e:
+                    st.error(f"Error reading CSV: {str(e)}")
+                    # Try to show first few lines of the file for debugging
+                    try:
+                        with open(volume_path, 'r', encoding='utf-8') as f:
+                            first_lines = f.read(500)
+                        st.text(f"First 500 characters of file:\n{first_lines}")
+                    except:
+                        pass
+                    return None
+                    
             elif file_path.endswith('.parquet'):
                 return pd.read_parquet(volume_path)
+            else:
+                st.error(f"Unsupported file type: {file_path}")
+                return None
+                
         else:  # GitHub
-            return read_from_github(file_path)
+            # Enhanced GitHub reading with better CSV handling
+            try:
+                data = read_from_github(file_path)
+                
+                # If we got a DataFrame, return it
+                if isinstance(data, pd.DataFrame):
+                    return data
+                
+                # If we got string data (shouldn't happen with current read_from_github), try to parse
+                if isinstance(data, str):
+                    from io import StringIO
+                    return pd.read_csv(StringIO(data))
+                    
+                return data
+                
+            except pd.errors.EmptyDataError:
+                st.error(f"GitHub file appears to be empty: {file_path}")
+                return None
+            except Exception as e:
+                st.error(f"Error reading from GitHub: {str(e)}")
+                
+                # Try to get raw content for debugging
+                try:
+                    from github import Github
+                    token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
+                    g = Github(token)
+                    repo = g.get_repo(GITHUB_REPO)
+                    file_content = repo.get_contents(file_path, ref=get_current_branch())
+                    
+                    import base64
+                    raw_content = base64.b64decode(file_content.content).decode('utf-8')
+                    
+                    st.text("Raw file content (first 500 chars):")
+                    st.text(raw_content[:500])
+                    
+                except Exception as debug_e:
+                    st.error(f"Could not fetch raw content for debugging: {debug_e}")
+                
+                return None
+            
     except Exception as e:
-        st.error(f"Error reading {file_path}: {e}")
+        st.error(f"Error reading {file_path} from {source}: {str(e)}")
         return None
 
 # === QUICK ACTIONS ===
@@ -449,7 +522,7 @@ with st.expander("🔧 Technical Information"):
     - GitHub Repository: `{GITHUB_REPO}`
     - Current Branch: `{get_current_branch()}`
     - Volume Mount: `/mnt/data_repo/`
-    
+    s
     **Volume Status:**
     - Volume exists: `{os.path.exists('/mnt/data_repo')}`
     - Data folder exists: `{os.path.exists('/mnt/data_repo/data')}`
