@@ -39,7 +39,7 @@ with tab1:
             escape=False,
             index=False,
             justify='left',
-            classes='datawrapper-table bold-2nd left-4th left-3rd full-width'
+            classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
         ),
         unsafe_allow_html=True
     )
@@ -50,7 +50,7 @@ with tab1:
             escape=False,
             index=False,
             justify='left',
-            classes='datawrapper-table bold-2nd left-4th left-3rd full-width'
+            classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
         ),
         unsafe_allow_html=True
     )
@@ -62,7 +62,7 @@ with tab2:
             escape=False,
             index=False,
             justify='left',
-            classes='datawrapper-table bold-2nd left-4th left-3rd full-width'
+            classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
         ),
         unsafe_allow_html=True
     )
@@ -73,7 +73,7 @@ with tab2:
             escape=False,
             index=False,
             justify='left',
-            classes='datawrapper-table bold-2nd left-4th left-3rd full-width'
+            classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
         ),
         unsafe_allow_html=True
     )
@@ -85,7 +85,7 @@ with tab3:
             escape=False,
             index=False,
             justify='left',
-            classes='datawrapper-table bold-2nd left-4th left-3rd full-width'
+            classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
         ),
         unsafe_allow_html=True
     )
@@ -96,7 +96,7 @@ with tab3:
             escape=False,
             index=False,
             justify='left',
-            classes='datawrapper-table bold-2nd left-4th left-3rd full-width'
+            classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
         ),
         unsafe_allow_html=True
     )

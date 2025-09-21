@@ -101,13 +101,13 @@ def prepare_records_table(data_source, record_type):
 
     # Define table title based on record type
     if record_type == 'teg':
-        table_title = 'Best TEGs'
+        table_title = 'Best TEGs:'
         measures = ['GrossVP', 'NetVP', 'Stableford']
     elif record_type == 'round':
-        table_title = 'Best Rounds'
+        table_title = 'Best Rounds:'
         measures = ['GrossVP', 'Sc', 'NetVP', 'Stableford']
     else:  # frontback
-        table_title = 'Best 9s'
+        table_title = 'Best 9s:'
         measures = ['GrossVP', 'Sc', 'NetVP', 'Stableford']
 
     records_data = []
@@ -182,13 +182,13 @@ def prepare_worst_records_table(data_source, record_type):
 
     # Define table title based on record type
     if record_type == 'teg':
-        table_title = 'Worst TEGs'
+        table_title = 'Worst TEGs:'
         measures = ['GrossVP', 'NetVP', 'Stableford']
     elif record_type == 'round':
-        table_title = 'Worst Rounds'
+        table_title = 'Worst Rounds:'
         measures = ['GrossVP', 'Sc', 'NetVP', 'Stableford']
     else:  # frontback
-        table_title = 'Worst 9s'
+        table_title = 'Worst 9s:'
         measures = ['GrossVP', 'Sc', 'NetVP', 'Stableford']
 
     records_data = []

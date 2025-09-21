@@ -135,6 +135,15 @@
     padding: 12px 8px;
 }
 
+/* Records table styling */
+.datawrapper-table.records-table * {
+    border: none !important;
+}
+
+.datawrapper-table.records-table th {
+    font-family: 'Lora', serif;
+}
+
 /* ==============================================
    COMPLEX VARIANTS (semantic/multi-purpose)
    ============================================== */
