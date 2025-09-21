@@ -85,7 +85,8 @@ bestball_pg = st.Page("bestball.py", title="Bestball and worstball", icon=":mate
 changes_pg = st.Page("biggest_changes.py", title="Changes vs previous round", icon=":material/strategy:")
 eclectic_pg = st.Page("eclectic.py", title="Eclectic Scores", icon=":material/golf_course:")
 eclectic_records_pg = st.Page("best_eclectics.py", title="Eclectic Records", icon=":material/emoji_events:")
-connection_test_pg = st.Page("test_github_connections.py", title="Github Connection Test", icon=":material/check_circle:")
+data_test_pg = st.Page("data_test_temp.py", title="TEMP DATA TESTING", icon=":material/check_circle:")
+
 
 
 # Check if there are incomplete TEGs to determine navigation structure
@@ -107,7 +108,7 @@ if has_incomplete_teg:
         "Scoring analysis": [birdies_pg, streaks_pg, course_ave_pg,  bypar_pg, sc_count_pg,byteg_pg,  changes_pg, course_rds_pg],
         "Bestballs / Eclectics": [bestball_pg, eclectic_pg, eclectic_records_pg],
         #"Players": [players_pg],
-        "Data":[data_pg, data_edit_pg, delete_pg]
+        "Data":[data_pg, data_edit_pg, delete_pg, data_test_pg]
     }
 else:
     # If no TEG in progress, use original structure with "Latest TEG" at the end
@@ -121,7 +122,7 @@ else:
         "Bestballs / Eclectics": [bestball_pg, eclectic_pg, eclectic_records_pg],
         #"Players": [players_pg],
         "Latest TEG": [leaderboard_pg, latest_rd_page, latest_teg_page, hc_page],
-        "Data":[data_pg, data_edit_pg, delete_pg]
+        "Data":[data_pg, data_edit_pg, delete_pg, data_test_pg]
     }
 
 pg = st.navigation(nav_structure, position='top')
