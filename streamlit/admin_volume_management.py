@@ -50,11 +50,19 @@ def get_github_files_list():
             if item.type == "file":
                 # Include common data file extensions
                 if item.name.endswith(('.csv', '.parquet', '.json', '.xlsx')):
+                    # Get commit info for last modified date
+                    try:
+                        commits = repo.get_commits(path=f"data/{item.name}", sha=get_current_branch())
+                        last_commit = commits[0] if commits.totalCount > 0 else None
+                        modified_date = last_commit.commit.committer.date.strftime('%Y-%m-%d %H:%M:%S') if last_commit else "Unknown"
+                    except:
+                        modified_date = "Unknown"
+                    
                     github_files.append({
                         "name": item.name,
                         "path": f"data/{item.name}",
                         "size": item.size,
-                        "modified": item.last_modified.strftime('%Y-%m-%d %H:%M:%S'),
+                        "modified": modified_date,
                         "sha": item.sha[:8]
                     })
         
