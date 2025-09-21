@@ -30,26 +30,9 @@ if not os.getenv('RAILWAY_ENVIRONMENT'):
 
 # === HELPER FUNCTIONS ===
 
-@st.cache_data(ttl=60)  # Cache for 1 minute to avoid excessive API calls
-def get_data_files_list():
-    """Get list of all data files to manage"""
-    return [
-        "data/all-data.csv",            # Human-readable data mirror
-        "data/all-data.parquet",        # Processed data storage
-        "data/all-scores.csv",          # Legacy scores format
-        "data/all-scores.parquet",      # Primary analysis dataset
-        "data/completed_tegs.csv",      # TEG status tracking
-        "data/future_tegs.csv",         # Planned tournaments
-        "data/handicaps.csv",           # Player handicap data
-        "data/in_progress_tegs.csv",    # TEG status tracking
-        "data/round_info.csv",          # Course and tournament metadata
-        "data/streaks.parquet",         # Streaks analysis data
-        "data/teg_winners.csv",         # Cached winners data
-        "data/test_file.csv"            # Test/development file
-    ]
-
-def get_github_file_info(file_path):
-    """Get GitHub file information"""
+@st.cache_data(ttl=300)  # Cache for 5 minutes to avoid excessive API calls
+def get_github_files_list():
+    """Dynamically discover data files from GitHub data/ folder (files only, no subfolders)"""
     try:
         from github import Github
         
@@ -57,60 +40,62 @@ def get_github_file_info(file_path):
         g = Github(token)
         repo = g.get_repo(GITHUB_REPO)
         
-        try:
-            github_file = repo.get_contents(file_path, ref=get_current_branch())
-            return {
-                "exists": True,
-                "size": github_file.size,
-                "modified": github_file.last_modified.strftime('%Y-%m-%d %H:%M:%S'),
-                "modified_timestamp": github_file.last_modified.timestamp(),
-                "sha": github_file.sha[:8]
-            }
-        except:
-            return {
-                "exists": False,
-                "size": 0,
-                "modified": "N/A",
-                "modified_timestamp": 0,
-                "sha": "N/A"
-            }
-            
+        # Get all contents of the data/ directory
+        contents = repo.get_contents("data", ref=get_current_branch())
+        
+        # Filter for files only (exclude directories) and common data formats
+        github_files = []
+        for item in contents:
+            # Only include files (not directories) directly in data/ folder
+            if item.type == "file":
+                # Include common data file extensions
+                if item.name.endswith(('.csv', '.parquet', '.json', '.xlsx')):
+                    github_files.append({
+                        "name": item.name,
+                        "path": f"data/{item.name}",
+                        "size": item.size,
+                        "modified": item.last_modified.strftime('%Y-%m-%d %H:%M:%S'),
+                        "sha": item.sha[:8]
+                    })
+        
+        # Sort by name for consistent display
+        return sorted(github_files, key=lambda x: x["name"])
+        
     except Exception as e:
-        st.error(f"GitHub API error: {e}")
-        return None
+        st.error(f"Could not fetch GitHub file list: {e}")
+        return []
 
-def get_volume_file_info(file_path):
-    """Get volume file information"""
-    volume_path = f"/mnt/data_repo/{file_path}"
+def get_volume_files_list():
+    """Get list of all files in Railway volume data/ folder"""
+    volume_data_path = "/mnt/data_repo/data"
+    volume_files = []
     
     try:
-        if os.path.exists(volume_path):
-            stat = os.stat(volume_path)
-            return {
-                "exists": True,
-                "size": stat.st_size,
-                "modified": datetime.fromtimestamp(stat.st_mtime).strftime('%Y-%m-%d %H:%M:%S'),
-                "modified_timestamp": stat.st_mtime,
-                "path": volume_path
-            }
-        else:
-            return {
-                "exists": False,
-                "size": 0,
-                "modified": "N/A",
-                "modified_timestamp": 0,
-                "path": volume_path
-            }
+        if os.path.exists(volume_data_path):
+            for item in os.listdir(volume_data_path):
+                item_path = os.path.join(volume_data_path, item)
+                
+                # Only include files (not directories)
+                if os.path.isfile(item_path):
+                    # Include common data file extensions
+                    if item.endswith(('.csv', '.parquet', '.json', '.xlsx')):
+                        stat = os.stat(item_path)
+                        volume_files.append({
+                            "name": item,
+                            "path": f"data/{item}",
+                            "full_path": item_path,
+                            "size": stat.st_size,
+                            "modified": datetime.fromtimestamp(stat.st_mtime).strftime('%Y-%m-%d %H:%M:%S')
+                        })
+        
+        # Sort by name for consistent display
+        return sorted(volume_files, key=lambda x: x["name"])
+        
     except Exception as e:
-        return {
-            "exists": False,
-            "size": 0,
-            "modified": f"Error: {e}",
-            "modified_timestamp": 0,
-            "path": volume_path
-        }
+        st.error(f"Could not read volume files: {e}")
+        return []
 
-def sync_single_file_from_github(file_path):
+def pull_file_from_github(file_path):
     """Pull a single file from GitHub to volume"""
     try:
         # Read from GitHub
@@ -125,302 +110,283 @@ def sync_single_file_from_github(file_path):
         elif file_path.endswith('.parquet'):
             data.to_parquet(volume_path, index=False)
         
-        return True, f"✅ Successfully synced {file_path}"
+        return True, f"✅ Successfully pulled {file_path}"
         
     except Exception as e:
-        return False, f"❌ Error syncing {file_path}: {str(e)}"
+        return False, f"❌ Error pulling {file_path}: {str(e)}"
 
-def sync_all_files_from_github():
-    """Pull all data files from GitHub to volume"""
-    results = {"success": [], "errors": []}
-    
-    for file_path in get_data_files_list():
-        success, message = sync_single_file_from_github(file_path)
-        if success:
-            results["success"].append(file_path)
-        else:
-            results["errors"].append(message)
-    
-    return results
-
-def clear_volume_cache():
-    """Clear all files from Railway volume"""
+def delete_volume_file(file_path):
+    """Delete a file from the volume"""
     try:
-        import shutil
-        volume_base = "/mnt/data_repo"
-        
-        if os.path.exists(volume_base):
-            shutil.rmtree(volume_base)
-            return True, f"✅ Volume cleared: {volume_base}"
+        volume_path = f"/mnt/data_repo/{file_path}"
+        if os.path.exists(volume_path):
+            os.remove(volume_path)
+            return True, f"✅ Deleted {file_path} from volume"
         else:
-            return True, f"ℹ️ Volume already empty: {volume_base}"
-            
+            return False, f"❌ File {file_path} not found in volume"
     except Exception as e:
-        return False, f"❌ Error clearing volume: {e}"
+        return False, f"❌ Error deleting {file_path}: {str(e)}"
 
-# === QUICK ACTIONS SECTION ===
+def read_file_content(file_path, source="volume"):
+    """Read file content from volume or GitHub"""
+    try:
+        if source == "volume":
+            volume_path = f"/mnt/data_repo/{file_path}"
+            if file_path.endswith('.csv'):
+                return pd.read_csv(volume_path)
+            elif file_path.endswith('.parquet'):
+                return pd.read_parquet(volume_path)
+        else:  # GitHub
+            return read_from_github(file_path)
+    except Exception as e:
+        st.error(f"Error reading {file_path}: {e}")
+        return None
+
+# === QUICK ACTIONS ===
 st.markdown("### 🚀 Quick Actions")
 
-col1, col2, col3, col4 = st.columns(4)
+col1, col2, col3 = st.columns(3)
 
 with col1:
     if st.button("📥 Pull All from GitHub", type="primary", use_container_width=True):
-        with st.spinner("Syncing all files from GitHub..."):
-            results = sync_all_files_from_github()
-            clear_all_caches()  # Automatically clear caches after sync
+        github_files = get_github_files_list()
+        
+        if github_files:
+            success_count = 0
+            error_messages = []
             
-        if results["success"]:
-            st.success(f"✅ Successfully synced {len(results['success'])} files and cleared caches")
-            with st.expander("View synced files"):
-                for file in results["success"]:
-                    st.success(f"  • {file}")
+            with st.spinner(f"Pulling {len(github_files)} files from GitHub..."):
+                for file_info in github_files:
+                    success, message = pull_file_from_github(file_info["path"])
+                    if success:
+                        success_count += 1
+                    else:
+                        error_messages.append(message)
+                
+                clear_all_caches()  # Clear caches after sync
+            
+            if success_count > 0:
+                st.success(f"✅ Successfully pulled {success_count} files and cleared caches")
+            
+            if error_messages:
+                st.error(f"❌ {len(error_messages)} errors occurred")
+                with st.expander("View errors"):
+                    for error in error_messages:
+                        st.error(error)
+        else:
+            st.warning("No files found in GitHub to pull")
         
-        if results["errors"]:
-            st.error(f"❌ {len(results['errors'])} errors occurred")
-            with st.expander("View errors"):
-                for error in results["errors"]:
-                    st.error(f"  • {error}")
-        
-        # Auto-refresh the status table
         time.sleep(1)
         st.rerun()
 
 with col2:
-    if st.button("🗑️ Clear Volume", use_container_width=True):
-        success, message = clear_volume_cache()
-        if success:
-            clear_all_caches()
-            st.info(message)
+    if st.button("🗑️ Clear All Volume Files", use_container_width=True):
+        if st.session_state.get('confirm_clear_all', False):
+            try:
+                import shutil
+                volume_data_path = "/mnt/data_repo/data"
+                if os.path.exists(volume_data_path):
+                    shutil.rmtree(volume_data_path)
+                    clear_all_caches()
+                    st.success("✅ All volume files cleared")
+                else:
+                    st.info("ℹ️ Volume already empty")
+                st.session_state['confirm_clear_all'] = False
+                time.sleep(1)
+                st.rerun()
+            except Exception as e:
+                st.error(f"❌ Error clearing volume: {e}")
         else:
-            st.error(message)
-        time.sleep(1)
-        st.rerun()
+            st.session_state['confirm_clear_all'] = True
+            st.warning("⚠️ Click again to confirm clearing ALL volume files")
 
 with col3:
-    if st.button("🔄 Refresh Status", use_container_width=True):
-        # Clear the cache and refresh
-        get_data_files_list.clear()
+    if st.button("🔄 Refresh Lists", use_container_width=True):
+        get_github_files_list.clear()
         st.rerun()
 
-with col4:
-    if st.button("🧹 Clear App Cache", use_container_width=True):
-        clear_all_caches()
-        st.success("App caches cleared!")
+# === TWO-COLUMN LAYOUT ===
+col_github, col_volume = st.columns(2)
 
-# === FILE STATUS TABLE ===
-st.markdown("### 📊 File Status Comparison")
-
-try:
-    # Build status data
-    status_data = []
+# === GITHUB FILES SECTION ===
+with col_github:
+    st.markdown("### ☁️ GitHub Data Files")
     
-    for file_path in get_data_files_list():
-        github_info = get_github_file_info(file_path)
-        volume_info = get_volume_file_info(file_path)
-        
-        if github_info is None:
-            continue
-            
-        # Determine sync status
-        if not github_info["exists"] and not volume_info["exists"]:
-            status = "❌ Missing"
-            status_priority = 4
-        elif not volume_info["exists"]:
-            status = "⬇️ Pull needed"
-            status_priority = 3
-        elif not github_info["exists"]:
-            status = "⚠️ Volume only"
-            status_priority = 2
-        elif github_info["modified_timestamp"] > volume_info["modified_timestamp"]:
-            status = "⬇️ GitHub newer"
-            status_priority = 3
-        elif volume_info["modified_timestamp"] > github_info["modified_timestamp"]:
-            status = "⬆️ Volume newer"
-            status_priority = 1
-        else:
-            status = "✅ In sync"
-            status_priority = 0
-            
-        status_data.append({
-            "File": file_path.replace("data/", ""),
-            "Status": status,
-            "GitHub Modified": github_info["modified"],
-            "Volume Modified": volume_info["modified"],
-            "GitHub Size": f"{github_info['size']:,} bytes" if github_info["exists"] else "N/A",
-            "Volume Size": f"{volume_info['size']:,} bytes" if volume_info["exists"] else "N/A",
-            "GitHub SHA": github_info["sha"],
-            "Full Path": file_path,
-            "Status Priority": status_priority
-        })
+    github_files = get_github_files_list()
     
-    if status_data:
-        df = pd.DataFrame(status_data)
+    if github_files:
+        st.markdown(f"**{len(github_files)} files found in GitHub data/ folder**")
         
-        # Sort by status priority (most important first)
-        df = df.sort_values("Status Priority", ascending=False)
-        
-        # Display main columns
-        display_df = df[["File", "Status", "GitHub Modified", "Volume Modified"]].copy()
-        
-        # Style the dataframe
-        st.dataframe(
-            display_df,
-            use_container_width=True,
-            column_config={
-                "File": st.column_config.TextColumn("File", width="medium"),
-                "Status": st.column_config.TextColumn("Status", width="small"),
-                "GitHub Modified": st.column_config.TextColumn("GitHub Modified", width="medium"),
-                "Volume Modified": st.column_config.TextColumn("Volume Modified", width="medium")
-            },
-            hide_index=True
-        )
-        
-        # Summary metrics
-        st.markdown("### 📈 Summary")
-        status_counts = df['Status'].value_counts()
-        
-        col1, col2, col3, col4, col5 = st.columns(5)
-        
-        with col1:
-            sync_count = status_counts.get('✅ In sync', 0)
-            st.metric("In Sync", sync_count)
-            
-        with col2:
-            pull_count = (status_counts.get('⬇️ GitHub newer', 0) + 
-                         status_counts.get('⬇️ Pull needed', 0))
-            st.metric("Need Pull", pull_count)
-            
-        with col3:
-            volume_count = status_counts.get('⬆️ Volume newer', 0)
-            st.metric("Volume Newer", volume_count)
-            
-        with col4:
-            missing_count = status_counts.get('❌ Missing', 0)
-            st.metric("Missing", missing_count)
-            
-        with col5:
-            total_files = len(df)
-            st.metric("Total Files", total_files)
-    
+        # Display GitHub files list
+        for i, file_info in enumerate(github_files):
+            with st.container():
+                st.markdown(f"**📄 {file_info['name']}**")
+                
+                col_info, col_actions = st.columns([2, 1])
+                
+                with col_info:
+                    st.caption(f"Size: {file_info['size']:,} bytes | Modified: {file_info['modified']}")
+                    st.caption(f"SHA: {file_info['sha']}")
+                
+                with col_actions:
+                    # Pull individual file
+                    if st.button("⬇️ Pull", key=f"pull_gh_{i}", help=f"Pull {file_info['name']} to volume"):
+                        with st.spinner(f"Pulling {file_info['name']}..."):
+                            success, message = pull_file_from_github(file_info["path"])
+                        
+                        if success:
+                            st.success(message)
+                        else:
+                            st.error(message)
+                        
+                        time.sleep(1)
+                        st.rerun()
+                    
+                    # View file from GitHub
+                    if st.button("👁️ View", key=f"view_gh_{i}", help=f"Preview {file_info['name']} from GitHub"):
+                        data = read_file_content(file_info["path"], source="github")
+                        if data is not None:
+                            st.markdown(f"**GitHub: {file_info['name']}** ({data.shape[0]} rows × {data.shape[1]} cols)")
+                            st.dataframe(data.head(10), use_container_width=True)
+                            if len(data) > 10:
+                                st.caption(f"Showing first 10 rows of {len(data)} total")
+                
+                st.markdown("---")
     else:
-        st.warning("No file status data available")
-        
-except Exception as e:
-    st.error(f"Error generating file status: {e}")
-    st.exception(e)
+        st.info("No data files found in GitHub")
 
-# === INDIVIDUAL FILE ACTIONS ===
-st.markdown("### 🎯 Individual File Actions")
-
-# File selector for individual actions
-if 'status_data' in locals() and status_data:
-    # Create options with status indicators
-    file_options = []
-    for item in status_data:
-        status_emoji = item["Status"].split()[0]
-        file_options.append(f"{status_emoji} {item['File']}")
+# === VOLUME FILES SECTION ===
+with col_volume:
+    st.markdown("### 📁 Railway Volume Files")
     
-    selected_display = st.selectbox(
-        "Select file for individual actions:",
-        file_options,
-        help="Files are sorted by priority (issues first)"
+    volume_files = get_volume_files_list()
+    
+    if volume_files:
+        st.markdown(f"**{len(volume_files)} files found in volume**")
+        
+        # Display volume files list
+        for i, file_info in enumerate(volume_files):
+            with st.container():
+                st.markdown(f"**📄 {file_info['name']}**")
+                
+                col_info, col_actions = st.columns([2, 1])
+                
+                with col_info:
+                    st.caption(f"Size: {file_info['size']:,} bytes | Modified: {file_info['modified']}")
+                    st.caption(f"Path: {file_info['full_path']}")
+                
+                with col_actions:
+                    # View file from volume
+                    if st.button("👁️ View", key=f"view_vol_{i}", help=f"Preview {file_info['name']} from volume"):
+                        data = read_file_content(file_info["path"], source="volume")
+                        if data is not None:
+                            st.markdown(f"**Volume: {file_info['name']}** ({data.shape[0]} rows × {data.shape[1]} cols)")
+                            st.dataframe(data.head(10), use_container_width=True)
+                            if len(data) > 10:
+                                st.caption(f"Showing first 10 rows of {len(data)} total")
+                    
+                    # Download file
+                    if st.button("💾 Download", key=f"download_vol_{i}", help=f"Download {file_info['name']} from volume"):
+                        try:
+                            with open(file_info['full_path'], 'rb') as f:
+                                file_bytes = f.read()
+                            
+                            st.download_button(
+                                label=f"📥 {file_info['name']}",
+                                data=file_bytes,
+                                file_name=file_info['name'],
+                                mime='application/octet-stream',
+                                key=f"dl_btn_{i}"
+                            )
+                        except Exception as e:
+                            st.error(f"Error preparing download: {e}")
+                    
+                    # Delete file
+                    if st.button("🗑️ Delete", key=f"delete_vol_{i}", help=f"Delete {file_info['name']} from volume"):
+                        if st.session_state.get(f'confirm_delete_{i}', False):
+                            success, message = delete_volume_file(file_info["path"])
+                            if success:
+                                st.success(message)
+                            else:
+                                st.error(message)
+                            
+                            st.session_state[f'confirm_delete_{i}'] = False
+                            time.sleep(1)
+                            st.rerun()
+                        else:
+                            st.session_state[f'confirm_delete_{i}'] = True
+                            st.warning("⚠️ Click again to confirm")
+                
+                st.markdown("---")
+    else:
+        st.info("No files found in volume")
+
+# === BULK ACTIONS FOR GITHUB FILES ===
+if github_files:
+    st.markdown("### 📦 Bulk GitHub Actions")
+    
+    # Multi-select for GitHub files
+    selected_files = st.multiselect(
+        "Select GitHub files to pull:",
+        options=[f["name"] for f in github_files],
+        format_func=lambda x: f"📄 {x}",
+        help="Select multiple files to pull at once"
     )
     
-    # Extract the actual file path
-    selected_file_name = selected_display.split(" ", 1)[1]  # Remove emoji
-    selected_file_path = f"data/{selected_file_name}"
-    
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        if st.button(f"⬇️ Pull {selected_file_name}", use_container_width=True):
-            with st.spinner(f"Pulling {selected_file_name}..."):
-                success, message = sync_single_file_from_github(selected_file_path)
+    if selected_files:
+        if st.button(f"📥 Pull Selected ({len(selected_files)} files)", type="secondary"):
+            success_count = 0
+            error_messages = []
             
-            if success:
-                st.success(message)
-            else:
-                st.error(message)
+            with st.spinner(f"Pulling {len(selected_files)} selected files..."):
+                for file_name in selected_files:
+                    # Find the full path for this file
+                    file_info = next((f for f in github_files if f["name"] == file_name), None)
+                    if file_info:
+                        success, message = pull_file_from_github(file_info["path"])
+                        if success:
+                            success_count += 1
+                        else:
+                            error_messages.append(message)
+                
+                clear_all_caches()  # Clear caches after sync
+            
+            if success_count > 0:
+                st.success(f"✅ Successfully pulled {success_count} selected files")
+            
+            if error_messages:
+                st.error(f"❌ {len(error_messages)} errors occurred")
+                with st.expander("View errors"):
+                    for error in error_messages:
+                        st.error(error)
             
             time.sleep(1)
             st.rerun()
 
-    with col2:
-        if st.button(f"👁️ View {selected_file_name}", use_container_width=True):
-            try:
-                volume_path = f"/mnt/data_repo/{selected_file_path}"
-                
-                # Try volume first, fallback to GitHub
-                if os.path.exists(volume_path):
-                    if selected_file_path.endswith('.csv'):
-                        data = pd.read_csv(volume_path)
-                    else:
-                        data = pd.read_parquet(volume_path)
-                    st.info(f"📁 Showing from volume: {data.shape[0]} rows × {data.shape[1]} columns")
-                else:
-                    data = read_from_github(selected_file_path)
-                    st.info(f"☁️ Showing from GitHub: {data.shape[0]} rows × {data.shape[1]} columns")
-                
-                st.dataframe(data.head(10), use_container_width=True)
-                
-                if len(data) > 10:
-                    st.caption(f"Showing first 10 rows of {len(data)} total rows")
-                
-            except Exception as e:
-                st.error(f"❌ Error viewing {selected_file_name}: {e}")
-
-    with col3:
-        if st.button(f"ℹ️ Info {selected_file_name}", use_container_width=True):
-            # Show detailed file information
-            github_info = get_github_file_info(selected_file_path)
-            volume_info = get_volume_file_info(selected_file_path)
-            
-            col_gh, col_vol = st.columns(2)
-            
-            with col_gh:
-                st.markdown("**GitHub Info:**")
-                if github_info and github_info["exists"]:
-                    st.text(f"Size: {github_info['size']:,} bytes")
-                    st.text(f"Modified: {github_info['modified']}")
-                    st.text(f"SHA: {github_info['sha']}")
-                else:
-                    st.text("File not found in GitHub")
-            
-            with col_vol:
-                st.markdown("**Volume Info:**")
-                if volume_info["exists"]:
-                    st.text(f"Size: {volume_info['size']:,} bytes")
-                    st.text(f"Modified: {volume_info['modified']}")
-                    st.text(f"Path: {volume_info['path']}")
-                else:
-                    st.text("File not found in volume")
-
 # === HELP SECTION ===
 with st.expander("ℹ️ How to Use Volume Management"):
     st.markdown("""
+    **GitHub Files (Left Column):**
+    - **⬇️ Pull**: Download individual file from GitHub to volume
+    - **👁️ View**: Preview file contents directly from GitHub
+    
+    **Volume Files (Right Column):**
+    - **👁️ View**: Preview file contents from volume  
+    - **💾 Download**: Download file to your computer
+    - **🗑️ Delete**: Remove file from volume (requires confirmation)
+    
     **Quick Actions:**
-    - **📥 Pull All from GitHub**: Downloads all data files to volume for fast access
-    - **🗑️ Clear Volume**: Removes all volume files (next access will reload from GitHub)  
-    - **🔄 Refresh Status**: Updates the file comparison table
-    - **🧹 Clear App Cache**: Clears Streamlit's data caches
+    - **📥 Pull All from GitHub**: Download all GitHub data files to volume
+    - **🗑️ Clear All Volume Files**: Remove all files from volume (requires confirmation)
+    - **🔄 Refresh Lists**: Update both file lists
     
-    **File Status Meanings:**
-    - **✅ In sync**: GitHub and volume have same timestamp
-    - **⬇️ GitHub newer**: GitHub file modified after volume file (pull recommended)
-    - **⬇️ Pull needed**: File exists on GitHub but not in volume
-    - **⬆️ Volume newer**: Volume file modified after GitHub (unusual - check for unsaved changes)
-    - **❌ Missing**: File doesn't exist in either location
-    - **⚠️ Volume only**: File exists in volume but not GitHub (unusual)
+    **Bulk Actions:**
+    - **Select multiple GitHub files**: Use checkboxes to pull multiple files at once
     
-    **Individual Actions:**
-    - **⬇️ Pull**: Download specific file from GitHub to volume
-    - **👁️ View**: Preview file contents (tries volume first, then GitHub)
-    - **ℹ️ Info**: Show detailed file information and timestamps
-    
-    **When to Use:**
-    - **After laptop changes**: Use "Pull All" or individual "Pull" buttons
-    - **Fresh deployment**: Use "Pull All" to populate volume cache
-    - **Troubleshooting**: Use "Clear Volume" to reset and start fresh
+    **File Management:**
+    - Volume files are cached for fast app performance
+    - GitHub files are the authoritative source
+    - After pulling files, app caches are automatically cleared
     """)
 
 # === TECHNICAL INFO ===
@@ -434,10 +400,12 @@ with st.expander("🔧 Technical Information"):
     
     **Volume Status:**
     - Volume exists: `{os.path.exists('/mnt/data_repo')}`
+    - Data folder exists: `{os.path.exists('/mnt/data_repo/data')}`
     - Volume writable: `{os.access('/mnt/data_repo', os.W_OK) if os.path.exists('/mnt/data_repo') else 'N/A'}`
     
-    **File Operations:**
-    - This page only manages volume ↔ GitHub sync
-    - App updates still use standard write_file() function
-    - Volume serves as high-speed cache for GitHub data
+    **File Discovery:**
+    - GitHub files: Discovered via API from data/ folder
+    - Volume files: Scanned from /mnt/data_repo/data/
+    - Supported formats: .csv, .parquet, .json, .xlsx
+    - Subfolders: Excluded from sync
     """)
