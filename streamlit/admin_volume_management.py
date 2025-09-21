@@ -34,18 +34,18 @@ if not os.getenv('RAILWAY_ENVIRONMENT'):
 def get_data_files_list():
     """Get list of all data files to manage"""
     return [
-        "data/all-scores.parquet",
-        "data/all-data.parquet", 
-        "data/all-data.csv",
-        "data/handicaps.csv",
-        "data/round_info.csv",
-        "data/players.csv",
-        "data/sc-data-by-r.csv",
-        "data/teg-all-data-long.csv",
-        "data/future_tegs.csv",
-        "data/teg_winners.csv",
-        "data/completed_tegs.csv",
-        "data/in_progress_tegs.csv"
+        "data/all-data.csv",            # Human-readable data mirror
+        "data/all-data.parquet",        # Processed data storage
+        "data/all-scores.csv",          # Legacy scores format
+        "data/all-scores.parquet",      # Primary analysis dataset
+        "data/completed_tegs.csv",      # TEG status tracking
+        "data/future_tegs.csv",         # Planned tournaments
+        "data/handicaps.csv",           # Player handicap data
+        "data/in_progress_tegs.csv",    # TEG status tracking
+        "data/round_info.csv",          # Course and tournament metadata
+        "data/streaks.parquet",         # Streaks analysis data
+        "data/teg_winners.csv",         # Cached winners data
+        "data/test_file.csv"            # Test/development file
     ]
 
 def get_github_file_info(file_path):
@@ -167,10 +167,10 @@ with col1:
     if st.button("📥 Pull All from GitHub", type="primary", use_container_width=True):
         with st.spinner("Syncing all files from GitHub..."):
             results = sync_all_files_from_github()
-            clear_all_caches()  # Clear Streamlit caches
+            clear_all_caches()  # Automatically clear caches after sync
             
         if results["success"]:
-            st.success(f"✅ Successfully synced {len(results['success'])} files")
+            st.success(f"✅ Successfully synced {len(results['success'])} files and cleared caches")
             with st.expander("View synced files"):
                 for file in results["success"]:
                     st.success(f"  • {file}")
