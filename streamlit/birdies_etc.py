@@ -40,48 +40,43 @@ max_by_round = max_scoretype_per_round()
 # get_scoring_achievement_fields() - Defines achievement categories and their metrics
 chart_fields_all = get_scoring_achievement_fields()
 
-# Create consolidated tab structure
-tab_labels = ["Number of Eagles etc", "Most in round"]
+# Create single-level tab structure
+tab_labels = ["Eagles", "Birdies", "Pars or Better", "Triple Bogey+", "Most in Round"]
 tabs = st.tabs(tab_labels)
 
-# Display achievement statistics in tabs
+# Map score type tabs to chart_fields
+score_type_mapping = {
+    "Eagles": chart_fields_all[0],
+    "Birdies": chart_fields_all[1],
+    "Pars or Better": chart_fields_all[2],
+    "Triple Bogey+": chart_fields_all[3]
+}
+
+# Display content in each tab
 for i, tab in enumerate(tabs):
     with tab:
-        if i == 0:
-            
-            # Career achievements tab with sub-tabs for each score type
-            eagles_tab, birdies_tab, pars_tab, tbp_tab = st.tabs(["Eagles", "Birdies", "Pars or Better", "Triple Bogey+"])
+        if i < 4:  # Score type tabs (Eagles, Birdies, Pars or Better, Triple Bogey+)
+            tab_name = tab_labels[i]
 
-            # Map score type tabs to chart_fields
-            score_type_mapping = {
-                "Eagles": chart_fields_all[0],
-                "Birdies": chart_fields_all[1],
-                "Pars or Better": chart_fields_all[2],
-                "Triple Bogey+": chart_fields_all[3]
-            }
+            # Get the chart fields for this score type
+            selected_chart_fields = score_type_mapping[tab_name]
 
-            # Create content for each sub-tab
-            for tab_name, tab in [("Eagles", eagles_tab), ("Birdies", birdies_tab), ("Pars or Better", pars_tab), ("Triple Bogey+", tbp_tab)]:
-                with tab:
-                    # Get the chart fields for this score type
-                    selected_chart_fields = score_type_mapping[tab_name]
+            # create_section_title() - Creates clean section title from field names
+            section_title = create_section_title(selected_chart_fields)
+            st.markdown(f"**Career {section_title}**")
 
-                    # create_section_title() - Creates clean section title from field names
-                    section_title = create_section_title(selected_chart_fields)
-                    st.markdown(f"**Career {section_title}**")
+            # prepare_achievement_table_data() - Formats table with proper sorting and display formatting
+            formatted_table = prepare_achievement_table_data(scoring_stats, selected_chart_fields)
+            st.write(
+                formatted_table.to_html(
+                    index=False,
+                    justify='left',
+                    classes='datawrapper-table'
+                ),
+                unsafe_allow_html=True
+            )
 
-                    # prepare_achievement_table_data() - Formats table with proper sorting and display formatting
-                    formatted_table = prepare_achievement_table_data(scoring_stats, selected_chart_fields)
-                    st.write(
-                        formatted_table.to_html(
-                            index=False,
-                            justify='left',
-                            classes='datawrapper-table'
-                        ),
-                        unsafe_allow_html=True
-                    )
-
-        elif i == 1:
+        else:  # "Most in Round" tab
             # Single-round maximums tab
             st.write(
                 max_by_round.to_html(
