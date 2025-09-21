@@ -18,7 +18,7 @@ from utils import (
 )
 
 # === PAGE CONFIGURATION ===
-st.set_page_config(page_title="Volume Management", layout="wide")
+st.set_page_config(page_title="Volume Management")
 st.title("🔄 Volume Management")
 st.markdown("Manage Railway volume sync with GitHub data storage")
 
