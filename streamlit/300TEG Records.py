@@ -3,10 +3,11 @@ import streamlit as st
 import pandas as pd
 
 # Import data loading functions from main utils
-from utils import get_ranked_teg_data, get_ranked_round_data, get_ranked_frontback_data, load_datawrapper_css
+from utils import get_ranked_teg_data, get_ranked_round_data, get_ranked_frontback_data, load_datawrapper_css, get_round_data, get_9_data
 
 # Import display helper functions
-from helpers.display_helpers import prepare_records_table
+from helpers.display_helpers import prepare_records_table, prepare_worst_records_table
+from helpers.worst_performance_processing import get_filtered_teg_data
 
 
 # === PAGE CONFIGURATION ===
@@ -17,54 +18,85 @@ load_datawrapper_css()
 
 
 # === DATA LOADING ===
-# Load ranked TEG data (complete TEGs only, excludes TEG 50)
+# Load ranked data for best records (complete TEGs only, excludes TEG 50)
 tegs_ranked = get_ranked_teg_data()
-
-# Load ranked round data (complete TEGs only, excludes TEG 50)
 rounds_ranked = get_ranked_round_data()
-
-# Load ranked 9-hole data (complete TEGs only, excludes TEG 50)
 frontback_ranked = get_ranked_frontback_data()
+
+# Load data for worst records
+teg_data = get_filtered_teg_data()  # Excludes TEG 2
+round_data = get_round_data()
+frontback_data = get_9_data()
 
 
 # === TABBED RECORDS DISPLAY ===
-tab1, tab2, tab3 = st.tabs(["Best TEGs", "Best Rounds", "Best 9s"])
+tab1, tab2, tab3 = st.tabs(["TEG Records", "Round Records", "9-Hole Records"])
 
 with tab1:
-    st.markdown("### TEG Records")
     teg_records_table = prepare_records_table(tegs_ranked, 'teg')
     st.write(
         teg_records_table.to_html(
             escape=False,
             index=False,
             justify='left',
-            classes='datawrapper-table bold-2nd left-4th left-3rd'
+            classes='datawrapper-table bold-2nd left-4th left-3rd full-width'
+        ),
+        unsafe_allow_html=True
+    )
+
+    teg_worst_table = prepare_worst_records_table(teg_data, 'teg')
+    st.write(
+        teg_worst_table.to_html(
+            escape=False,
+            index=False,
+            justify='left',
+            classes='datawrapper-table bold-2nd left-4th left-3rd full-width'
         ),
         unsafe_allow_html=True
     )
 
 with tab2:
-    st.markdown("### Round Records")
     round_records_table = prepare_records_table(rounds_ranked, 'round')
     st.write(
         round_records_table.to_html(
             escape=False,
             index=False,
             justify='left',
-            classes='datawrapper-table bold-2nd left-4th left-3rd'
+            classes='datawrapper-table bold-2nd left-4th left-3rd full-width'
+        ),
+        unsafe_allow_html=True
+    )
+
+    round_worst_table = prepare_worst_records_table(round_data, 'round')
+    st.write(
+        round_worst_table.to_html(
+            escape=False,
+            index=False,
+            justify='left',
+            classes='datawrapper-table bold-2nd left-4th left-3rd full-width'
         ),
         unsafe_allow_html=True
     )
 
 with tab3:
-    st.markdown("### 9-Hole Records")
     nine_records_table = prepare_records_table(frontback_ranked, 'frontback')
     st.write(
         nine_records_table.to_html(
             escape=False,
             index=False,
             justify='left',
-            classes='datawrapper-table bold-2nd left-4th left-3rd'
+            classes='datawrapper-table bold-2nd left-4th left-3rd full-width'
+        ),
+        unsafe_allow_html=True
+    )
+
+    nine_worst_table = prepare_worst_records_table(frontback_data, 'frontback')
+    st.write(
+        nine_worst_table.to_html(
+            escape=False,
+            index=False,
+            justify='left',
+            classes='datawrapper-table bold-2nd left-4th left-3rd full-width'
         ),
         unsafe_allow_html=True
     )

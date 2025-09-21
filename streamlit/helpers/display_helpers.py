@@ -91,7 +91,7 @@ def prepare_records_table(data_source, record_type):
         record_type (str): Type of record - 'teg', 'round', or 'frontback'
 
     Returns:
-        pd.DataFrame: Table with columns: Measure, Score, Who, When
+        pd.DataFrame: Table with custom header based on record type
 
     Purpose:
         Creates a unified table showing best records across all measures for easy comparison.
@@ -99,10 +99,15 @@ def prepare_records_table(data_source, record_type):
     """
     from utils import get_best
 
-    # Define measures for each record type
+    # Define table title based on record type
     if record_type == 'teg':
+        table_title = 'Best TEGs'
         measures = ['GrossVP', 'NetVP', 'Stableford']
-    else:  # round or frontback
+    elif record_type == 'round':
+        table_title = 'Best Rounds'
+        measures = ['GrossVP', 'Sc', 'NetVP', 'Stableford']
+    else:  # frontback
+        table_title = 'Best 9s'
         measures = ['GrossVP', 'Sc', 'NetVP', 'Stableford']
 
     records_data = []
@@ -141,10 +146,91 @@ def prepare_records_table(data_source, record_type):
                 when = f"{record_row['TEG']} Rd {record_row['Round']} {record_row['FrontBack']} ({record_row['Course']}, {month_year})"
 
             records_data.append({
-                'Measure': MEASURE_TITLES[measure],
-                'Score': format_record_value(record_row[measure], measure),
-                'Who': record_row['Player'],
-                'When': when
+                table_title: MEASURE_TITLES[measure],
+                '': format_record_value(record_row[measure], measure),
+                ' ': record_row['Player'],
+                '  ': when
+            })
+
+    return pd.DataFrame(records_data)
+
+
+def prepare_worst_records_table(data_source, record_type):
+    """
+    Prepare a consolidated worst records table showing all measures for a given record type.
+
+    Args:
+        data_source (pd.DataFrame): Data source (teg, round, or frontback data)
+        record_type (str): Type of record - 'teg', 'round', or 'frontback'
+
+    Returns:
+        pd.DataFrame: Table with custom header based on record type
+
+    Purpose:
+        Creates a unified table showing worst records across all measures for easy comparison.
+        Replaces individual stat cards with a consolidated tabular view (worst performance version).
+    """
+    from utils import get_worst
+
+    # Define worst measure titles
+    WORST_MEASURE_TITLES = {
+        'Sc': "Worst Score",
+        'GrossVP': "Worst Gross",
+        'NetVP': "Worst Net",
+        'Stableford': "Worst Stableford"
+    }
+
+    # Define table title based on record type
+    if record_type == 'teg':
+        table_title = 'Worst TEGs'
+        measures = ['GrossVP', 'NetVP', 'Stableford']
+    elif record_type == 'round':
+        table_title = 'Worst Rounds'
+        measures = ['GrossVP', 'Sc', 'NetVP', 'Stableford']
+    else:  # frontback
+        table_title = 'Worst 9s'
+        measures = ['GrossVP', 'Sc', 'NetVP', 'Stableford']
+
+    records_data = []
+
+    for measure in measures:
+        # Get worst record for this measure
+        worst_record = get_worst(data_source, measure_to_use=measure, top_n=1)
+
+        if not worst_record.empty:
+            record_row = worst_record.iloc[0]
+
+            # Format the "When" column based on record type
+            if record_type == 'teg':
+                when = f"{record_row['TEG']} ({record_row['Area']}, {record_row['Year']})"
+            elif record_type == 'round':
+                # Format date to get month/year
+                if 'Date' in record_row and pd.notna(record_row['Date']):
+                    try:
+                        date_obj = pd.to_datetime(record_row['Date'])
+                        month_year = date_obj.strftime('%b %Y')
+                    except:
+                        month_year = str(record_row['Year'])
+                else:
+                    month_year = str(record_row['Year'])
+                when = f"{record_row['TEG']} Rd {record_row['Round']} ({record_row['Course']}, {month_year})"
+            else:  # frontback
+                # Format date to get month/year
+                if 'Date' in record_row and pd.notna(record_row['Date']):
+                    try:
+                        date_obj = pd.to_datetime(record_row['Date'])
+                        month_year = date_obj.strftime('%b %Y')
+                    except:
+                        month_year = str(record_row['Year'])
+                else:
+                    month_year = str(record_row['Year'])
+                when = f"{record_row['TEG']} Rd {record_row['Round']} {record_row['FrontBack']} ({record_row['Course']}, {month_year})"
+
+            records_data.append({
+                table_title: WORST_MEASURE_TITLES[measure],
+                '': format_record_value(record_row[measure], measure),
+                ' ': record_row['Player'],
+                '  ': when
             })
 
     return pd.DataFrame(records_data)

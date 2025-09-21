@@ -62,7 +62,7 @@ results_page = st.Page("102TEG Results.py", title="Detailed TEG Results", icon="
 player_ranking_page = st.Page("player_history.py", title="Rankings by TEG by Player", icon=":material/123:")
 pb_page = st.Page("302Personal Best Rounds & TEGs.py", title="Personal Bests", icon=":material/golf_course:") 
 records_page = st.Page("300TEG Records.py", title="TEG Records", icon=":material/military_tech:") 
-worsts_page = st.Page("teg_worsts.py", title="TEG Worsts", icon=":material/sentiment_sad:") 
+ 
 hc_page = st.Page("500Handicaps.py", title="Handicaps", icon=":material/accessible:") 
 latest_rd_page = st.Page("latest_round.py", title="Latest Round in context", icon=":material/sports_golf:")
 latest_teg_page = st.Page("latest_teg_context.py", title="Latest TEG in context", icon=":material/sports_golf:")
@@ -104,7 +104,7 @@ if has_incomplete_teg:
         #"Home": [home_page],
         "Current TEG": [leaderboard_pg, latest_rd_page, latest_teg_page,scorecard_pg, scorecard_mob_pg, hc_page],
         "History": [history_page, honours_page, results_page, player_ranking_page],
-        "Records & PBs": [records_page, pb_page, worsts_page, top_pages],
+        "Records & PBs": [records_page, pb_page, top_pages],
         # "Scorecards": [scorecard_pg, scorecard_mob_pg],
         "Scoring analysis": [birdies_pg, streaks_pg, course_ave_pg,  bypar_pg, sc_count_pg,byteg_pg,  changes_pg, course_rds_pg],
         "Bestballs / Eclectics": [bestball_pg, eclectic_pg, eclectic_records_pg],
@@ -116,7 +116,7 @@ else:
     nav_structure = {
         #"Home": [home_page],
         "History": [history_page, honours_page, results_page, player_ranking_page],
-        "Records & PBs": [records_page, pb_page, worsts_page, top_pages],
+        "Records & PBs": [records_page, pb_page, top_pages],
         "Scorecards": [scorecard_pg, scorecard_mob_pg],
         "Scoring analysis": [birdies_pg, streaks_pg, course_ave_pg,  bypar_pg, sc_count_pg,byteg_pg,  changes_pg, course_rds_pg],
         # "Course scoring" :[course_ave_pg, course_rds_pg] ,
