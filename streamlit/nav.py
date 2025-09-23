@@ -58,7 +58,7 @@ st.markdown(
 # home_page = st.Page("home.py", title="Home")
 honours_page = st.Page("101TEG Honours Board.py", title="TEG Honours Board", icon=":material/trophy:")
 history_page = st.Page("101TEG History.py", title="TEG History", icon=":material/lists:")
-results_page = st.Page("102TEG Results.py", title="Detailed TEG Results", icon=":material/sports_score:")
+results_page = st.Page("102TEG Results.py", title="Full Results", icon=":material/sports_score:")
 player_ranking_page = st.Page("player_history.py", title="Rankings by TEG by Player", icon=":material/123:")
 pb_page = st.Page("302Personal Best Rounds & TEGs.py", title="Personal Bests", icon=":material/golf_course:") 
 records_page = st.Page("300TEG Records.py", title="TEG Records", icon=":material/military_tech:") 

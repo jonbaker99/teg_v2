@@ -13,6 +13,9 @@ from make_charts import create_cumulative_graph, adjusted_grossvp, adjusted_stab
 # Import leaderboard display functions (shared utilities)
 from leaderboard_utils import create_leaderboard, generate_table_html, format_value, get_champions, get_last_place, display_leaderboard, display_net_leaderboard
 
+# Import scorecard generation functions
+from scorecard_utils import generate_round_comparison_html, load_scorecard_css
+
 
 # === CONFIGURATION ===
 # Configure logging for debugging and monitoring
@@ -29,6 +32,9 @@ PLAYER_COLUMN = 'Player'
 # === DATA LOADING ===
 # Load CSS styling for consistent table appearance
 load_datawrapper_css()
+
+# Load scorecard CSS styling for the scorecards tab
+load_scorecard_css()
 
 # # Add sidebar refresh button for data updates
 # if st.sidebar.button("Refresh Data"):
@@ -88,8 +94,8 @@ try:
     st.markdown('')  # Add spacing
 
     # === MAIN CONTENT TABS ===
-    # Two main competitions: Trophy (Net) and Green Jacket (Gross)
-    tab1, tab2 = st.tabs(["TEG Trophy & Spoon", "Green Jacket"])
+    # Three main sections: Trophy (Net), Green Jacket (Gross), and Scorecards
+    tab1, tab2, tab3 = st.tabs(["TEG Trophy & Spoon", "Green Jacket", "Scorecards"])
 
     # === TEG TROPHY TAB (NET COMPETITION) ===
     with tab1:
@@ -213,6 +219,43 @@ try:
             st.caption(f'{label_short} | Lower = better')
             # st.plotly_chart() - Renders interactive chart with disabled toolbar
             st.plotly_chart(fig_grossvp, use_container_width=True, config=dict({'displayModeBar': False}))
+
+    # === SCORECARDS TAB ===
+    with tab3:
+        st.markdown(f'### {chosen_teg} Scorecards')
+        # st.caption('Detailed hole-by-hole scorecards for each round')
+
+        # Extract TEG number from chosen_teg string (e.g., "TEG 18" -> 18)
+        try:
+            teg_num = int(chosen_teg.split()[-1])
+        except (ValueError, IndexError):
+            st.error(f"Could not extract TEG number from '{chosen_teg}'")
+            teg_num = None
+
+        if teg_num is not None:
+            # Get available rounds for this TEG
+            available_rounds = sorted(leaderboard_df['Round'].unique())
+
+            if not available_rounds:
+                st.warning(f"No round data available for {chosen_teg}")
+            else:
+                # Create sub-tabs for each round
+                round_labels = [f"Round {round_num}" for round_num in available_rounds]
+                round_tabs = st.tabs(round_labels)
+
+                # Display scorecard for each round in its own sub-tab
+                for i, round_num in enumerate(available_rounds):
+                    with round_tabs[i]:
+                        try:
+                            # Generate the round comparison HTML using existing function
+                            scorecard_html = generate_round_comparison_html(teg_num, round_num)
+
+                            # Display the scorecard
+                            st.markdown(scorecard_html, unsafe_allow_html=True)
+
+                        except Exception as round_error:
+                            st.error(f"Error loading scorecard for Round {round_num}: {str(round_error)}")
+                            logger.error(f"Error loading scorecard for TEG {teg_num} Round {round_num}: {str(round_error)}")
 
 
 except Exception as e:

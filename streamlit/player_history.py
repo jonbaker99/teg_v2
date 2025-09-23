@@ -410,8 +410,8 @@ def create_teg_ranking_table(teg_data: pd.DataFrame,
     return ranked_df
 
 # === USER INTERFACE ===
-st.markdown("View player rankings across all completed TEGs for the two main competitions.")
-st.markdown("**Note**: Only completed TEGs are included. Empty cells indicate the player did not participate in that TEG.")
+# st.markdown("View player rankings across all completed TEGs for the two main competitions.")
+# st.markdown("**Note**: Only completed TEGs are included. Empty cells indicate the player did not participate in that TEG.")
 
 # Create tabs for the two main competitions
 tabs = st.tabs(["TEG Trophy", "Green Jacket"])
@@ -459,7 +459,7 @@ with tabs[0]:
 
     # Display title and explanation
     st.markdown("**TEG Trophy Rankings by TEG (Net Competition)**")
-    st.caption("Uses Net vs Par for TEG 1-5, Stableford Points for TEG 6+. Numbers show rank within that TEG. Ties are marked with '='. Empty cells = did not participate.")
+    st.caption("Uses Net vs Par for TEGs 2-7, Stableford Points for TEG 8+.")
 
     # Format the table for display
     if not trophy_ranking_table.empty:
@@ -497,7 +497,7 @@ with tabs[1]:
 
     # Display title and explanation
     st.markdown("**Green Jacket Rankings by TEG (Gross vs Par)**")
-    st.caption("Lower scores are better. Numbers show rank within that TEG. Ties are marked with '='. Empty cells = did not participate.")
+    # st.caption("Lower scores are better. Numbers show rank within that TEG. Ties are marked with '='. Empty cells = did not participate.")
 
     # Format the table for display
     if not jacket_ranking_table.empty:

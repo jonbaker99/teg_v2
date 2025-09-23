@@ -899,14 +899,14 @@ def get_net_competition_measure(teg_num: int) -> str:
     """
     Return the scoring measure to use for the net competition based on TEG number.
     
-    Up to TEG 5, the net competition was based on total net vs par (NetVP).
-    From TEG 6 onwards, the net competition is based on total stableford points.
+    Up to TEG 7, the net competition was based on total net vs par (NetVP).
+    From TEG 8 onwards, the net competition is based on total stableford points.
     
     Parameters:
         teg_num (int): The TEG number
         
     Returns:
-        str: 'NetVP' for TEG 1-5, 'Stableford' for TEG 6+
+        str: 'NetVP' for TEG 1-7, 'Stableford' for TEG 8+
         
     Examples:
         >>> get_net_competition_measure(3)
