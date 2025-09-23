@@ -20,7 +20,7 @@ from helpers.best_performance_processing import (
 
 
 # === CONFIGURATION ===
-st.title('Personal Best and Worst TEGs and Rounds')
+st.title('Personal Bests & Worsts')
 
 # Load CSS styling for consistent table appearance
 load_datawrapper_css()
@@ -65,7 +65,7 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs(["PB Summary", "Best TEGs", "Best Rounds"
 
 with tab1:
     # Create subtabs within PB Summary
-    pb_rounds_tab, pb_tegs_tab = st.tabs(["PB Rounds", "PB TEGs"])
+    pb_rounds_tab, pb_tegs_tab = st.tabs(["Best Rounds", "Best TEGs"])
 
     with pb_rounds_tab:
         st.markdown('#### Personal Best Rounds')

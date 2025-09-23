@@ -41,14 +41,14 @@ max_by_round = max_scoretype_per_round()
 chart_fields_all = get_scoring_achievement_fields()
 
 # Create single-level tab structure
-tab_labels = ["Eagles", "Birdies", "Pars or Better", "Triple Bogey+", "Most in Round"]
+tab_labels = ["Eagles", "Birdies", "Pars", "Triple Bogey+", "Most in Round"]
 tabs = st.tabs(tab_labels)
 
 # Map score type tabs to chart_fields
 score_type_mapping = {
     "Eagles": chart_fields_all[0],
     "Birdies": chart_fields_all[1],
-    "Pars or Better": chart_fields_all[2],
+    "Pars": chart_fields_all[2],
     "Triple Bogey+": chart_fields_all[3]
 }
 
@@ -78,8 +78,13 @@ for i, tab in enumerate(tabs):
 
         else:  # "Most in Round" tab
             # Single-round maximums tab
+            # Reorder columns: Eagles, Birdies, Pars, TBPs
+            # Also rename 'Pars_or_Better' to 'Pars'
+            reordered_table = max_by_round[['Player', 'Eagles', 'Birdies', 'Pars_or_Better', 'TBPs']].copy()
+            reordered_table = reordered_table.rename(columns={'Pars_or_Better': 'Pars'})
+
             st.write(
-                max_by_round.to_html(
+                reordered_table.to_html(
                     index=False,
                     justify='left',
                     classes='datawrapper-table'
