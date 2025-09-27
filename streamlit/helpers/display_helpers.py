@@ -113,44 +113,51 @@ def prepare_records_table(data_source, record_type):
     records_data = []
 
     for measure in measures:
-        # Get best record for this measure
-        best_record = get_best(data_source, measure_to_use=measure, top_n=1)
+        # Get all records tied for best (rank 1) for this measure
+        rank_column = f'Rank_within_all_{measure}'
 
-        if not best_record.empty:
-            record_row = best_record.iloc[0]
+        if rank_column in data_source.columns:
+            # Get all records with rank 1 (includes ties)
+            tied_records = data_source[data_source[rank_column] == 1]
+        else:
+            # Fallback to old method if ranking column doesn't exist
+            tied_records = get_best(data_source, measure_to_use=measure, top_n=1)
 
-            # Format the "When" column based on record type
-            if record_type == 'teg':
-                when = f"{record_row['TEG']} ({record_row['Area']}, {record_row['Year']})"
-            elif record_type == 'round':
-                # Format date to get month/year
-                if 'Date' in record_row and pd.notna(record_row['Date']):
-                    try:
-                        date_obj = pd.to_datetime(record_row['Date'])
-                        month_year = date_obj.strftime('%b %Y')
-                    except:
+        if not tied_records.empty:
+            # Handle multiple tied records
+            for idx, record_row in tied_records.iterrows():
+                # Format the "When" column based on record type
+                if record_type == 'teg':
+                    when = f"{record_row['TEG']} ({record_row['Area']}, {record_row['Year']})"
+                elif record_type == 'round':
+                    # Format date to get month/year
+                    if 'Date' in record_row and pd.notna(record_row['Date']):
+                        try:
+                            date_obj = pd.to_datetime(record_row['Date'])
+                            month_year = date_obj.strftime('%b %Y')
+                        except:
+                            month_year = str(record_row['Year'])
+                    else:
                         month_year = str(record_row['Year'])
-                else:
-                    month_year = str(record_row['Year'])
-                when = f"{record_row['TEG']} Rd {record_row['Round']} ({record_row['Course']}, {month_year})"
-            else:  # frontback
-                # Format date to get month/year
-                if 'Date' in record_row and pd.notna(record_row['Date']):
-                    try:
-                        date_obj = pd.to_datetime(record_row['Date'])
-                        month_year = date_obj.strftime('%b %Y')
-                    except:
+                    when = f"{record_row['TEG']} Rd {record_row['Round']} ({record_row['Course']}, {month_year})"
+                else:  # frontback
+                    # Format date to get month/year
+                    if 'Date' in record_row and pd.notna(record_row['Date']):
+                        try:
+                            date_obj = pd.to_datetime(record_row['Date'])
+                            month_year = date_obj.strftime('%b %Y')
+                        except:
+                            month_year = str(record_row['Year'])
+                    else:
                         month_year = str(record_row['Year'])
-                else:
-                    month_year = str(record_row['Year'])
-                when = f"{record_row['TEG']} Rd {record_row['Round']} {record_row['FrontBack']} ({record_row['Course']}, {month_year})"
+                    when = f"{record_row['TEG']} Rd {record_row['Round']} {record_row['FrontBack']} ({record_row['Course']}, {month_year})"
 
-            records_data.append({
-                table_title: MEASURE_TITLES[measure],
-                '': format_record_value(record_row[measure], measure),
-                ' ': record_row['Player'],
-                '  ': when
-            })
+                records_data.append({
+                    table_title: MEASURE_TITLES[measure],
+                    '': format_record_value(record_row[measure], measure),
+                    ' ': record_row['Player'],
+                    '  ': when
+                })
 
     return pd.DataFrame(records_data)
 
@@ -194,43 +201,48 @@ def prepare_worst_records_table(data_source, record_type):
     records_data = []
 
     for measure in measures:
-        # Get worst record for this measure
-        worst_record = get_worst(data_source, measure_to_use=measure, top_n=1)
+        # Get all records tied for worst for this measure
+        if measure == 'Stableford':
+            # For Stableford, lower is worse
+            tied_worst_records = data_source.nsmallest(1, measure, keep='all')
+        else:
+            # For other measures, higher is worse
+            tied_worst_records = data_source.nlargest(1, measure, keep='all')
 
-        if not worst_record.empty:
-            record_row = worst_record.iloc[0]
-
-            # Format the "When" column based on record type
-            if record_type == 'teg':
-                when = f"{record_row['TEG']} ({record_row['Area']}, {record_row['Year']})"
-            elif record_type == 'round':
-                # Format date to get month/year
-                if 'Date' in record_row and pd.notna(record_row['Date']):
-                    try:
-                        date_obj = pd.to_datetime(record_row['Date'])
-                        month_year = date_obj.strftime('%b %Y')
-                    except:
+        if not tied_worst_records.empty:
+            # Handle multiple tied records
+            for idx, record_row in tied_worst_records.iterrows():
+                # Format the "When" column based on record type
+                if record_type == 'teg':
+                    when = f"{record_row['TEG']} ({record_row['Area']}, {record_row['Year']})"
+                elif record_type == 'round':
+                    # Format date to get month/year
+                    if 'Date' in record_row and pd.notna(record_row['Date']):
+                        try:
+                            date_obj = pd.to_datetime(record_row['Date'])
+                            month_year = date_obj.strftime('%b %Y')
+                        except:
+                            month_year = str(record_row['Year'])
+                    else:
                         month_year = str(record_row['Year'])
-                else:
-                    month_year = str(record_row['Year'])
-                when = f"{record_row['TEG']} Rd {record_row['Round']} ({record_row['Course']}, {month_year})"
-            else:  # frontback
-                # Format date to get month/year
-                if 'Date' in record_row and pd.notna(record_row['Date']):
-                    try:
-                        date_obj = pd.to_datetime(record_row['Date'])
-                        month_year = date_obj.strftime('%b %Y')
-                    except:
+                    when = f"{record_row['TEG']} Rd {record_row['Round']} ({record_row['Course']}, {month_year})"
+                else:  # frontback
+                    # Format date to get month/year
+                    if 'Date' in record_row and pd.notna(record_row['Date']):
+                        try:
+                            date_obj = pd.to_datetime(record_row['Date'])
+                            month_year = date_obj.strftime('%b %Y')
+                        except:
+                            month_year = str(record_row['Year'])
+                    else:
                         month_year = str(record_row['Year'])
-                else:
-                    month_year = str(record_row['Year'])
-                when = f"{record_row['TEG']} Rd {record_row['Round']} {record_row['FrontBack']} ({record_row['Course']}, {month_year})"
+                    when = f"{record_row['TEG']} Rd {record_row['Round']} {record_row['FrontBack']} ({record_row['Course']}, {month_year})"
 
-            records_data.append({
-                table_title: WORST_MEASURE_TITLES[measure],
-                '': format_record_value(record_row[measure], measure),
-                ' ': record_row['Player'],
-                '  ': when
-            })
+                records_data.append({
+                    table_title: WORST_MEASURE_TITLES[measure],
+                    '': format_record_value(record_row[measure], measure),
+                    ' ': record_row['Player'],
+                    '  ': when
+                })
 
     return pd.DataFrame(records_data)
