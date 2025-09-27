@@ -81,7 +81,8 @@ def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None,
         yaxis_title=y_axis_label if y_axis_label else f'Cumulative {y_series}',
         hovermode='x unified',
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, traceorder='normal', itemsizing='constant'),
-        margin=dict(r=100, t=0, b=10, l=0)
+        margin=dict(r=100, t=0, b=10, l=0),
+        font=dict(family="monospace")
     )
 
     add_round_annotations(fig, max_round)
@@ -166,7 +167,8 @@ def create_round_graph(df, chosen_teg, chosen_round, y_series, title, y_calculat
         yaxis_title=y_axis_label if y_axis_label else f'Cumulative {y_series}',
         hovermode='x unified',
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, traceorder='normal', itemsizing='constant'),
-        margin=dict(r=100, t=0, b=10, l=0)
+        margin=dict(r=100, t=0, b=10, l=0),
+        font=dict(family="monospace")
     )
 
     # add_round_annotations(fig, max_round)

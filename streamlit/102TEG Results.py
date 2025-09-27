@@ -163,11 +163,12 @@ try:
         
         # display_leaderboard() - Shows formatted leaderboard for gross scores
         display_leaderboard(
-            leaderboard_df=leaderboard_df, 
-            value_column='GrossVP', 
+            leaderboard_df=leaderboard_df,
+            value_column='GrossVP',
             title=f"{chosen_teg} Green Jacket Leaderboard (Best Gross)",
-            leader_label=leader_label, 
-            ascending=True  # Lower gross scores are better
+            leader_label=leader_label,
+            ascending=True,  # Lower gross scores are better
+            competition_name="Green Jacket"
         )
 
         st.markdown('')  # Add spacing between sections

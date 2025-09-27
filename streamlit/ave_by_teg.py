@@ -23,7 +23,7 @@ graph_data['TEGNum'] = 'TEG ' + graph_data['TEGNum'].astype(str)
 
 # Create the line graph with markers
 fig = px.line(graph_data, x='TEGNum', y='GrossVP', color='Pl',
-              labels={'TEGNum': 'TEG Number', 'GrossVP': 'Average Gross VP * 18', 'Pl': 'Player'},
+              labels={'TEGNum': '', 'GrossVP': 'Average Gross VP * 18', 'Pl': 'Player'},
               line_shape='linear', render_mode='svg')
 
 # Add markers to the lines
@@ -31,13 +31,15 @@ fig.update_traces(mode='lines+markers', marker=dict(size=8))
 
 # Customize the layout
 fig.update_layout(
-    xaxis_title='TEG Number',
+    # xaxis_title='TEG Number',
+    xaxis_title='',
     yaxis_title='Average Gross vs Par',
     legend_title='Player',
     legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='left', x=0),
     hovermode='x unified',
     margin=dict(t=50, l=0),  # Increase top margin to accommodate the legend
-    xaxis=dict(tickfont=dict(color='black')),  # Set x-axis tick label color to black
+    font=dict(family="monospace"),  # Set all text to monospace
+    xaxis=dict(tickfont=dict(color='black'), tickangle=270),  # Set x-axis tick label color to black and rotate 90 degrees
     yaxis=dict(tickfont=dict(color='black'))   # Set y-axis tick label color to black
 )
 

@@ -159,10 +159,13 @@ def display_leaderboard(leaderboard_df: pd.DataFrame, value_column: str, title: 
     for col in columns_to_format:
         leaderboard[col] = leaderboard[col].apply(lambda x: format_value(x, value_column))
 
-    # Create new title format: "{Competition} standings after {n} rounds" or "{Competition} final results"
+    # Create new title format: "{Competition} Final/Latest Leaderboard"
     if competition_name:
         status_text, is_complete = _get_tournament_status_text(leaderboard_df)
-        formatted_title = f"{competition_name} standings {status_text}"
+        if is_complete:
+            formatted_title = f"{competition_name} Final Leaderboard"
+        else:
+            formatted_title = f"{competition_name} Latest Leaderboard"
     else:
         # Fallback to original title format
         formatted_title = title
@@ -211,8 +214,8 @@ def display_net_leaderboard(leaderboard_df: pd.DataFrame, base_title: str, leade
         else:
             ascending = False
     
-    # Call the existing display_leaderboard function with Trophy competition name
-    display_leaderboard(leaderboard_df, measure, base_title, leader_label, ascending, competition_name="Trophy")
+    # Call the existing display_leaderboard function with TEG Trophy competition name
+    display_leaderboard(leaderboard_df, measure, base_title, leader_label, ascending, competition_name="TEG Trophy")
 
 
 def _get_tournament_status_text(leaderboard_df: pd.DataFrame) -> tuple[str, bool]:
