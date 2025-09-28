@@ -8,7 +8,7 @@ a.custom-nav-link {
     font-family: monospace, 'open sans';
     font-size: 14px;
     color: black;
-    padding: 4px 10px;
+    padding: 6px 10px;
     text-decoration: none;
     display: inline-block;
 }
@@ -17,4 +17,21 @@ a.custom-nav-link:hover {
     color: forestgreen;
     font-weight: bold;
     text-decoration: none !important;
+}
+
+/* Navigation header styling - reduces spacing between header and navigation links
+.nav-header {
+    margin-bottom: 0.2em;
+    margin-top: 0.5em;
+} */
+
+.nav-list {
+    background-color: #f6f6f6;   
+    width: 100%; 
+}
+
+.nav-label {
+    font-weight: bold;
+    font-size: 14px;
+    padding-left: 8px;
 }

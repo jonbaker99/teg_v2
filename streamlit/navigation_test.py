@@ -62,3 +62,58 @@ add_custom_navigation_links("Records", layout="vertical")
 
 st.markdown("**Column layout:**")
 add_custom_navigation_links("History", layout="columns")
+
+"---"
+
+import streamlit as st
+
+st.title("add_custom_navigation_links – test harness")
+
+st.write("This page exercises all layouts with `render=True` and `render=False` using `input_value='History'`.")
+
+# --- 1) HORIZONTAL -----------------------------------------------------------
+st.subheader("Horizontal")
+st.caption("render=True (backward-compatible)")
+st.markdown("**Related links:**")
+add_custom_navigation_links("History", layout="horizontal", separator=" | ", render=True)
+
+st.caption("render=False (inline the label + links in one call to remove spacing)")
+links_html = add_custom_navigation_links("History", layout="horizontal", separator=" | ", render=False)
+st.markdown(
+    f'<div class="nav-list"><span class="nav-label">Related links:</span> {links_html}</div>',
+    unsafe_allow_html=True
+)
+
+st.divider()
+
+# --- 2) VERTICAL --------------------------------------------------------------
+st.subheader("Vertical")
+st.caption("render=True (backward-compatible)")
+st.markdown("**Related links:**")
+add_custom_navigation_links("History", layout="vertical", render=True)
+
+st.caption("render=False (compose yourself; here we add a line break after the label)")
+links_html_v = add_custom_navigation_links("History", layout="vertical", render=False)
+st.markdown(f"**Related links:**<br/>{links_html_v}", unsafe_allow_html=True)
+
+st.divider()
+
+# --- 3) COLUMNS ---------------------------------------------------------------
+st.subheader("Columns")
+st.caption("render=True (backward-compatible)")
+st.markdown("**Related links:**")
+add_custom_navigation_links("History", layout="columns", render=True)
+
+st.caption("render=False (returns List[List[str]]; you decide placement)")
+cols_links = add_custom_navigation_links("History", layout="columns", render=False)
+num_cols = len(cols_links)
+st.markdown("**Related links:**")
+cols = st.columns(num_cols)
+
+for i, links_in_col in enumerate(cols_links):
+    with cols[i]:
+        # Join links in each column with a separator if there are multiple
+        if links_in_col:
+            st.markdown(" | ".join(links_in_col), unsafe_allow_html=True)
+        else:
+            st.write("")  # keep column alignment even if empty

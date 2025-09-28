@@ -155,4 +155,11 @@ else:
 
 # === NAVIGATION LINKS ===
 from utils import add_custom_navigation_links
-add_custom_navigation_links(__file__, layout="horizontal", separator=" | ")
+st.markdown("")
+links_html = add_custom_navigation_links(
+    __file__, layout="horizontal", separator=" | ", render=False
+)
+st.markdown(
+    f'<div class="nav-list"><span class="nav-label">Related links:</span> {links_html}</div>',
+    unsafe_allow_html=True
+)

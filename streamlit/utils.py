@@ -2297,7 +2297,7 @@ def create_custom_page_link(page_file, col, css_class="custom-nav-link"):
         )
 
 
-def add_custom_navigation_links(input_value, css_class="custom-nav-link", layout="columns", separator=" | ", exclude_current=True):
+def add_custom_navigation_links_DEPRECATED(input_value, css_class="custom-nav-link", layout="columns", separator=" | ", exclude_current=True):
     """Add custom HTML navigation links with full styling control
 
     Args:
@@ -2394,6 +2394,114 @@ def add_custom_navigation_links(input_value, css_class="custom-nav-link", layout
             # Create and display link
             link_html = f'<a href="{full_url}" target="_self" class="{css_class}">{title}</a>'
             st.markdown(link_html, unsafe_allow_html=True)
+
+
+
+def add_custom_navigation_links(
+    input_value,
+    css_class="custom-nav-link",
+    layout="columns",                 # "columns" | "horizontal" | "vertical"
+    separator=" | ",
+    exclude_current=True,
+    render=True,                      # NEW: default True => fully backward-compatible
+):
+    """
+    Add custom navigation links for a section or page.
+
+    Args:
+        input_value: Page filename (e.g. "101TEG History.py") OR section name (e.g. "History")
+        css_class: CSS class for anchor elements
+        layout: "columns" | "horizontal" | "vertical"
+        separator: used for horizontal layout
+        exclude_current: exclude current page when input_value is a page
+        render: if True (default), writes to the Streamlit app (backward-compatible behaviour).
+                if False, returns content:
+                    - "horizontal"/"vertical": returns one HTML string
+                    - "columns": returns List[List[str]] (each inner list = links for that column)
+    Returns:
+        None (when render=True)
+        str (HTML) for horizontal/vertical when render=False
+        List[List[str]] for columns when render=False
+        "" if nothing to render
+    """
+    # --- Determine section & pages -------------------------------------------
+    if isinstance(input_value, str) and input_value.endswith(".py"):
+        current_page_file = os.path.basename(input_value)
+        current_page_info = PAGE_DEFINITIONS.get(current_page_file)
+        if not current_page_info:
+            return "" if not render else None
+        section = current_page_info["section"]
+
+        if exclude_current:
+            section_pages = [
+                file for file, info in PAGE_DEFINITIONS.items()
+                if info["section"] == section and file != current_page_file
+            ]
+        else:
+            section_pages = [
+                file for file, info in PAGE_DEFINITIONS.items()
+                if info["section"] == section
+            ]
+    else:
+        section = input_value
+        section_pages = [
+            file for file, info in PAGE_DEFINITIONS.items()
+            if info["section"] == section
+        ]
+
+    if not section_pages:
+        return "" if not render else None
+
+    # --- Ensure CSS is present (safe to no-op if already applied) ------------
+    apply_custom_navigation_css()
+
+    # --- Helpers --------------------------------------------------------------
+    def _link_html(page_file: str) -> str:
+        page_info = PAGE_DEFINITIONS.get(page_file, {})
+        title = page_info.get("title", page_file)
+        base_url = get_app_base_url()
+        page_name = convert_filename_to_streamlit_url(page_file)
+        full_url = f"{base_url}/{page_name}"
+        return f'<a href="{full_url}" target="_self" class="{css_class}">{title}</a>'
+
+    # --- Layouts --------------------------------------------------------------
+    if layout == "horizontal":
+        links_html = [_link_html(pf) for pf in section_pages]
+        navigation_html = separator.join(links_html)
+        if render:
+            st.markdown(navigation_html, unsafe_allow_html=True)
+            return None
+        else:
+            return navigation_html
+
+    elif layout == "vertical":
+        links_html = [_link_html(pf) for pf in section_pages]
+        navigation_html = "<br/>".join(links_html)
+        if render:
+            st.markdown(navigation_html, unsafe_allow_html=True)
+            return None
+        else:
+            return navigation_html
+
+    elif layout == "columns":
+        num_cols = SECTION_LAYOUTS.get(section, 3)
+        if render:
+            cols = st.columns(num_cols)
+            for i, page_file in enumerate(section_pages):
+                col_index = i % num_cols
+                # your original renderer
+                create_custom_page_link(page_file, cols[col_index], css_class)
+            return None
+        else:
+            # return data structure the caller can place as they wish
+            cols_data = [[] for _ in range(num_cols)]
+            for i, page_file in enumerate(section_pages):
+                col_index = i % num_cols
+                cols_data[col_index].append(_link_html(page_file))
+            return cols_data
+
+    else:
+        raise ValueError(f"Unknown layout: {layout!r}")
 
 
 def create_custom_navigation_section(section_name, pages, current_page, container_class="nav-section"):
