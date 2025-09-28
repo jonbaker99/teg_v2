@@ -5,7 +5,7 @@ sys.path.append(str(Path(__file__).parent))
 
 # Import navigation functions
 from utils import (
-    create_custom_page_link,
+    add_custom_navigation_links,
     PAGE_DEFINITIONS
 )
 
@@ -15,42 +15,40 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("🧪 Navigation System Test Page")
+st.title("🧪 Navigation Layout Options")
 
 st.markdown("""
-This page compares the two navigation approaches available in the TEG app.
+This page demonstrates the different layout options for navigation links.
+Using the "History" section as an example to test main page URL handling.
 """)
 
-# Test pages for both sections
-test_pages = [
-    "300TEG Records.py",  # numbered
-    "101TEG History.py",  # numbered
-    "leaderboard.py",     # non-numbered
-    "streaks.py"          # non-numbered
-]
+# ===== HORIZONTAL LAYOUTS =====
+st.subheader("📍 Horizontal Layouts")
 
-# ===== CUSTOM HTML NAVIGATION (TOP) =====
-st.subheader("✨ Custom HTML Navigation")
-st.markdown("*New system with full CSS control*")
+st.markdown("**Horizontal with pipe separator:**")
+add_custom_navigation_links("101TEG Honours Board.py", layout="horizontal", separator=" | ")
 
-st.markdown("**Links to test pages:**")
+st.markdown("**Horizontal with dash separator:**")
+add_custom_navigation_links("101TEG Honours Board.py", layout="horizontal", separator=" - ")
 
-# Create custom navigation using individual links
-cols = st.columns(len(test_pages))
-for i, page_file in enumerate(test_pages):
-    create_custom_page_link(page_file, cols[i], css_class="custom-nav-link")
+st.markdown("**Horizontal with spaces:**")
+add_custom_navigation_links("101TEG Honours Board.py", layout="horizontal", separator="   ")
+
+st.markdown("**Horizontal with bullet separator:**")
+add_custom_navigation_links("101TEG Honours Board.py", layout="horizontal", separator=" • ")
 
 st.markdown("---")
 
-# ===== STANDARD NAVIGATION (BOTTOM) =====
-st.subheader("🔗 Standard Navigation (st.page_link)")
-st.markdown("*Current system using Streamlit's built-in page_link function*")
+# ===== VERTICAL LAYOUT =====
+st.subheader("📝 Vertical Layout")
 
-st.markdown("**Links to test pages:**")
+st.markdown("**Vertical (each link on new line):**")
+add_custom_navigation_links("101TEG Honours Board.py", layout="vertical")
 
-cols = st.columns(len(test_pages))
-for i, page_file in enumerate(test_pages):
-    page_info = PAGE_DEFINITIONS.get(page_file, {})
-    title = page_info.get("title", page_file)
-    with cols[i]:
-        st.page_link(page_file, label=title)
+st.markdown("---")
+
+# ===== COLUMN LAYOUT (ORIGINAL) =====
+st.subheader("📋 Column Layout (Original)")
+
+st.markdown("**Columns (original layout):**")
+add_custom_navigation_links("101TEG Honours Board.py", layout="columns")

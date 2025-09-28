@@ -2147,13 +2147,20 @@ def convert_filename_to_streamlit_url(page_file):
     """Convert a page filename to Streamlit's URL format.
 
     Streamlit strips leading numbers from filenames when creating URLs.
+    The main page (first page in navigation) is accessible at root URL.
+
     Examples:
+    - "101TEG History.py" → "" (main page, accessible at root)
     - "300TEG Records.py" → "TEG_Records"
-    - "101TEG History.py" → "TEG_History"
     - "500Handicaps.py" → "Handicaps"
     - "leaderboard.py" → "leaderboard"
     """
     import re
+
+    # Special case: main page (TEG History) should redirect to root
+    if page_file == "101TEG History.py":
+        return ""
+
     # Remove .py extension
     page_name = page_file.replace('.py', '')
     # Replace spaces with underscores
@@ -2290,8 +2297,15 @@ def create_custom_page_link(page_file, col, css_class="custom-nav-link"):
         )
 
 
-def add_custom_navigation_links(current_page_file, css_class="custom-nav-link"):
-    """Add custom HTML navigation links with full styling control"""
+def add_custom_navigation_links(current_page_file, css_class="custom-nav-link", layout="columns", separator=" | "):
+    """Add custom HTML navigation links with full styling control
+
+    Args:
+        current_page_file: The current page file (usually __file__)
+        css_class: CSS class for the links (default: "custom-nav-link")
+        layout: Layout style - "columns", "horizontal", or "vertical" (default: "columns")
+        separator: Separator for horizontal layout (default: " | ")
+    """
     # Handle both full path and just filename
     if os.path.sep in current_page_file:
         current_page_file = os.path.basename(current_page_file)
@@ -2316,14 +2330,52 @@ def add_custom_navigation_links(current_page_file, css_class="custom-nav-link"):
     st.markdown("---")
     st.markdown("**Links to related pages:**")
 
-    # Get column count for this section
-    num_cols = SECTION_LAYOUTS.get(section, 3)
-    cols = st.columns(num_cols)
+    # Auto-load CSS styles
+    apply_custom_navigation_css()
 
-    # Create custom HTML links
-    for i, page_file in enumerate(section_pages):
-        col_index = i % num_cols
-        create_custom_page_link(page_file, cols[col_index], css_class)
+    # Handle different layout types
+    if layout == "columns":
+        # Original column-based layout
+        num_cols = SECTION_LAYOUTS.get(section, 3)
+        cols = st.columns(num_cols)
+        for i, page_file in enumerate(section_pages):
+            col_index = i % num_cols
+            create_custom_page_link(page_file, cols[col_index], css_class)
+
+    elif layout == "horizontal":
+        # Horizontal layout with custom separator
+        links_html = []
+        for page_file in section_pages:
+            page_info = PAGE_DEFINITIONS.get(page_file, {})
+            title = page_info.get("title", page_file)
+
+            # Generate URL
+            base_url = get_app_base_url()
+            page_name = convert_filename_to_streamlit_url(page_file)
+            full_url = f"{base_url}/{page_name}"
+
+            # Create link HTML
+            link_html = f'<a href="{full_url}" target="_self" class="{css_class}">{title}</a>'
+            links_html.append(link_html)
+
+        # Join with separator and display
+        navigation_html = separator.join(links_html)
+        st.markdown(navigation_html, unsafe_allow_html=True)
+
+    elif layout == "vertical":
+        # Vertical layout - each link on new line
+        for page_file in section_pages:
+            page_info = PAGE_DEFINITIONS.get(page_file, {})
+            title = page_info.get("title", page_file)
+
+            # Generate URL
+            base_url = get_app_base_url()
+            page_name = convert_filename_to_streamlit_url(page_file)
+            full_url = f"{base_url}/{page_name}"
+
+            # Create and display link
+            link_html = f'<a href="{full_url}" target="_self" class="{css_class}">{title}</a>'
+            st.markdown(link_html, unsafe_allow_html=True)
 
 
 def create_custom_navigation_section(section_name, pages, current_page, container_class="nav-section"):

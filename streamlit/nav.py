@@ -102,9 +102,9 @@ except:
 if has_incomplete_teg:
     # If TEG is in progress, show "Current TEG" section first
     nav_structure = {
-        #"Home": [home_page],
-        "Current TEG": [leaderboard_pg, latest_rd_page, latest_teg_page,scorecard_pg, scorecard_mob_pg, hc_page],
+        #"Home": [home_page],        
         "History": [history_page, honours_page, results_page, player_ranking_page],
+        "Current TEG": [leaderboard_pg, latest_rd_page, latest_teg_page,scorecard_pg, scorecard_mob_pg, hc_page],
         "Records & PBs": [records_page, pb_page, top_pages],
         # "Scorecards": [scorecard_pg, scorecard_mob_pg],
         "Scoring analysis": [birdies_pg, streaks_pg, course_ave_pg,  bypar_pg, sc_count_pg,byteg_pg,  changes_pg, course_rds_pg],
