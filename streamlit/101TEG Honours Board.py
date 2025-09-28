@@ -5,6 +5,7 @@ import pandas as pd
 # Import data loading functions from main utils
 from utils import load_all_data, get_teg_winners, get_trophy_full_name, load_datawrapper_css
 from utils_win_tables import summarise_teg_wins, compress_ranges
+from utils import add_custom_navigation_links
 
 # Import history-specific helper functions
 from helpers.history_data_processing import (
@@ -15,15 +16,15 @@ from helpers.history_data_processing import (
 
 
 # === NAVIGATION LINKS ===
-from utils import add_custom_navigation_links
-st.markdown("")
-links_html = add_custom_navigation_links(
-    __file__, layout="horizontal", separator=" | ", render=False
-)
-st.markdown(
-    f'<div class="nav-list"><span class="nav-label">Related links:</span> {links_html}</div>',
-    unsafe_allow_html=True
-)
+# 
+# st.markdown("")
+# links_html = add_custom_navigation_links(
+#     __file__, layout="horizontal", separator=" | ", render=False
+# )
+# st.markdown(
+#     f'<div class="nav-list"><span class="nav-label">Related links:</span> {links_html}</div>',
+#     unsafe_allow_html=True
+# )
 
 # === CONFIGURATION ===
 st.title("TEG Honours Board")
