@@ -107,5 +107,5 @@ st.write(course_output.to_html(escape=False, index=False, justify='left', classe
 # st.write(course_output_all.to_html(escape=False, index=False, justify='left', classes='datawrapper-table'), unsafe_allow_html=True)
 
 # === NAVIGATION LINKS ===
-from utils import add_navigation_links
-add_navigation_links(__file__)
+from utils import add_custom_navigation_links
+add_custom_navigation_links(__file__, layout="horizontal", separator=" | ")

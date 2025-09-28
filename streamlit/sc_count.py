@@ -119,5 +119,5 @@ with tab2:
     st.plotly_chart(stacked_chart_gvp)
 
 # === NAVIGATION LINKS ===
-from utils import add_navigation_links
-add_navigation_links(__file__)
+from utils import add_custom_navigation_links
+add_custom_navigation_links(__file__, layout="horizontal", separator=" | ")

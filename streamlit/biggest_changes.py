@@ -78,8 +78,8 @@ with tab2:
 # datawrapper_table(rd_data_output)
 
 # === NAVIGATION LINKS ===
-from utils import add_navigation_links
-add_navigation_links(__file__)
+from utils import add_custom_navigation_links
+add_custom_navigation_links(__file__, layout="horizontal", separator=" | ")
 
 # rd_data = filtered_data
 
@@ -97,5 +97,5 @@ add_navigation_links(__file__)
 # datawrapper_table(rd_data_output)
 
 # === NAVIGATION LINKS ===
-from utils import add_navigation_links
-add_navigation_links(__file__)
+from utils import add_custom_navigation_links
+add_custom_navigation_links(__file__, layout="horizontal", separator=" | ")

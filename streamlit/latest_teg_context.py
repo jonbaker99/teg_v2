@@ -84,5 +84,5 @@ for tab, friendly_metric in zip(tabs, friendly_metrics):
         )
 
 # === NAVIGATION LINKS ===
-from utils import add_navigation_links
-add_navigation_links(__file__)
+from utils import add_custom_navigation_links
+add_custom_navigation_links(__file__, layout="horizontal", separator=" | ")

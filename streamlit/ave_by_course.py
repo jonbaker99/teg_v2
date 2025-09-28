@@ -224,5 +224,5 @@ with tab6:
     datawrapper_table(max_course_data, css_classes='full-width')
 
 # === NAVIGATION LINKS ===
-from utils import add_navigation_links
-add_navigation_links(__file__)
+from utils import add_custom_navigation_links
+add_custom_navigation_links(__file__, layout="horizontal", separator=" | ")

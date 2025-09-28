@@ -48,18 +48,29 @@ Streamlit's `st.page_link()` has styling limitations:
 
 ## Usage Options
 
-### Option 1: Simple (Recommended for Basic Control)
+### Option 1: Enhanced Navigation (Recommended)
 
-**One-line replacement:**
+**Page-based navigation (original behavior):**
 ```python
-# OLD
-add_navigation_links(__file__)
+# Creates links to other pages in same section
+add_custom_navigation_links(__file__)
 
-# NEW
-add_simple_navigation_links(__file__)
+# With layout options
+add_custom_navigation_links(__file__, layout="horizontal", separator=" | ")
+add_custom_navigation_links(__file__, layout="vertical")
+add_custom_navigation_links(__file__, layout="columns")
 ```
 
-**Custom styling:**
+**Section-based navigation (NEW):**
+```python
+# Creates links to ALL pages in specified section
+add_custom_navigation_links("History")
+add_custom_navigation_links("Records", layout="horizontal", separator=" - ")
+add_custom_navigation_links("Scoring", layout="vertical")
+```
+
+### Option 2: Simple CSS-Only Navigation
+
 ```python
 add_simple_navigation_links(
     __file__,
@@ -68,13 +79,6 @@ add_simple_navigation_links(
     color="#d32f2f",
     hover_color="#8b0000"
 )
-```
-
-### Option 2: Advanced CSS Themes
-
-```python
-apply_custom_navigation_css("modern")  # or "minimal", "glass", etc.
-add_custom_navigation_links(__file__)
 ```
 
 ### Option 3: Complete Custom Control
@@ -90,13 +94,16 @@ st.markdown(nav_html, unsafe_allow_html=True)
 1. **Works Everywhere**: Both local development and Railway deployment
 2. **Centralized**: Still uses existing `PAGE_DEFINITIONS` system
 3. **Progressive**: Can migrate gradually, page by page
-4. **Simple**: Basic font/color control requires just one function call
-5. **Flexible**: Advanced themes available when needed
+4. **Flexible Layouts**: Horizontal (with custom separators), vertical, or columns
+5. **Smart Input**: Accepts both page filenames and section names
+6. **Auto-CSS Loading**: CSS automatically loaded from external file
+7. **Main Page Fix**: Correctly handles main page URL redirection
 
 ## Technical Details
 
 ### URL Generation
-- Converts `"300TEG Records.py"` → `"/300TEG_Records"`
+- Converts `"300TEG Records.py"` → `"/TEG_Records"` (strips leading numbers)
+- **Main page fix**: `"101TEG History.py"` → `"/"` (root URL)
 - Handles spaces in filenames automatically
 - Works with both localhost and Railway domains
 
@@ -105,10 +112,15 @@ st.markdown(nav_html, unsafe_allow_html=True)
 - Falls back to localhost for local development
 - Automatic switching with no configuration needed
 
-### CSS Classes
-- **Simple**: `.simple-nav-link` (minimal styling)
-- **Custom**: `.custom-nav-link` (full theme support)
-- **Advanced**: Multiple theme classes available
+### Layout Options
+- **Columns**: Original Streamlit column layout (default)
+- **Horizontal**: Single line with customizable separators (`" | "`, `" - "`, etc.)
+- **Vertical**: Each link on separate line
+
+### CSS System
+- **Auto-loading**: CSS loaded from `styles/navigation.css`
+- **Fallback**: Inline CSS if external file not found
+- **Customizable**: Monospace font, black text, forestgreen hover
 
 ## Migration Strategy
 
@@ -127,12 +139,20 @@ st.markdown(nav_html, unsafe_allow_html=True)
 
 ## Recommended Next Steps
 
-For your specific needs (font, color, size, hover control):
+1. **Choose your approach**:
+   - **Enhanced navigation**: Use `add_custom_navigation_links()` for layout flexibility
+   - **Simple navigation**: Use `add_simple_navigation_links()` for basic styling only
 
-1. **Try the simple approach**: Use `add_simple_navigation_links()` on one page
-2. **Test colors**: Adjust the color parameters to match your design
-3. **Choose font**: Set a consistent font family across navigation
-4. **Deploy**: Test that it works on Railway deployment
-5. **Migrate**: Replace existing navigation gradually
+2. **Test layout options**:
+   - Try horizontal with different separators: `" | "`, `" - "`, `" • "`
+   - Test vertical layout for clean stacked appearance
+   - Compare with original column layout
 
-The simple system gives you exactly what you asked for - easy control over font face, color, size, and hover color - without any unnecessary complexity.
+3. **Implement gradually**:
+   - Start with one section (e.g., History pages)
+   - Test both page-based and section-based navigation
+   - Verify main page links work correctly
+
+4. **Deploy and verify**: Test that it works on Railway deployment
+
+The enhanced system gives you complete layout control while maintaining the simple CSS styling you requested - monospace font, black text, forestgreen hover, and customizable separators.

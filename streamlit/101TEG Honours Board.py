@@ -14,6 +14,10 @@ from helpers.history_data_processing import (
 )
 
 
+# === NAVIGATION LINKS ===
+from utils import add_custom_navigation_links
+add_custom_navigation_links(__file__, layout="horizontal", separator=" | ")
+
 # === CONFIGURATION ===
 st.title("TEG Honours Board")
 
@@ -118,8 +122,6 @@ with all_tabs[5]:
 # st.caption('*Green Jacket awarded in TEG 5 for best stableford round; DM had best gross score')
 
 # === NAVIGATION LINKS ===
-from utils import add_navigation_links, add_custom_navigation_links
-add_navigation_links(__file__)
-
-st.markdown("---")
+# from utils import add_custom_navigation_links
+st.markdown("**Related links:**")
 add_custom_navigation_links(__file__, layout="horizontal", separator=" | ")

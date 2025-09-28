@@ -139,20 +139,25 @@ To change layouts, update `SECTION_LAYOUTS` in `utils.py`.
 - **Bestball section (3 files)**: bestball.py, eclectic.py, best_eclectics.py
 - **Latest TEG section (4 files)**: leaderboard.py, latest_round.py, latest_teg_context.py, 500Handicaps.py
 
-## Manual Navigation System (Custom HTML)
+## Enhanced Navigation System
 
 ### Overview
 
-In addition to the centralized `st.page_link()` system, we now have a manual navigation system that gives you complete control over styling. This system generates custom HTML links instead of using Streamlit's built-in navigation.
+The enhanced navigation system provides flexible layout options and smart input detection while maintaining complete CSS control. This system generates custom HTML links with automatic CSS loading.
 
-### Why Manual Navigation?
+### Key Features
 
-The `st.page_link()` approach has styling limitations - CSS classes and custom styling don't work effectively because Streamlit controls the rendering. Manual navigation solves this by:
+- **Smart Input Detection**: Accepts both page filenames and section names
+- **Multiple Layouts**: Horizontal (with custom separators), vertical, and columns
+- **Auto CSS Loading**: Automatically loads styling from external CSS file
+- **Main Page Fix**: Correctly handles main page URL redirection
+- **Backward Compatible**: Existing code continues to work unchanged
 
-- **Full CSS Control**: Complete control over font, colors, sizes, hover effects
-- **Custom Styling**: Apply any CSS styles or themes you want
-- **Cross-Platform**: Works in both local development and Railway deployment
-- **Centralized**: Still uses the same `PAGE_DEFINITIONS` for consistency
+### Layout Options
+
+1. **Horizontal Layout**: Links in single line with customizable separators
+2. **Vertical Layout**: Each link on separate line (clean stacked appearance)
+3. **Column Layout**: Original Streamlit column system (default for backward compatibility)
 
 ### Implementation
 
@@ -167,10 +172,19 @@ def get_app_base_url():
         return "http://localhost:8501"
 ```
 
-#### 2. Custom Navigation Functions
+#### 2. Enhanced Navigation Functions
 ```python
-# Drop-in replacement for add_navigation_links()
+# Page-based navigation (original behavior)
 add_custom_navigation_links(__file__)
+
+# Section-based navigation (NEW)
+add_custom_navigation_links("History")
+add_custom_navigation_links("Records")
+
+# Layout options
+add_custom_navigation_links(__file__, layout="horizontal", separator=" | ")
+add_custom_navigation_links("Scoring", layout="vertical")
+add_custom_navigation_links("Records", layout="columns")
 
 # Individual custom links
 create_custom_page_link(page_file, col, css_class="custom-nav-link")
@@ -179,55 +193,70 @@ create_custom_page_link(page_file, col, css_class="custom-nav-link")
 create_custom_navigation_section(section_name, pages, current_page)
 ```
 
-#### 3. Simple CSS Application
+#### 3. Automatic CSS Loading
 ```python
-# Basic styling (recommended for simple control)
-apply_custom_navigation_css("simple")
+# CSS automatically loaded from styles/navigation.css
+# No manual CSS application needed
+add_custom_navigation_links(__file__)  # CSS auto-loaded
 
-# Custom styling with your own CSS
-apply_custom_navigation_css("custom", custom_css="your-css-here")
+# For manual CSS control
+apply_custom_navigation_css()  # Loads external CSS file
 ```
 
 ### Basic Usage
 
-**Step 1: Replace existing navigation**
+**Enhanced Navigation (Recommended)**
 ```python
-# OLD WAY
-from utils import add_navigation_links
-add_navigation_links(__file__)
+# Page-based navigation (excludes current page)
+from utils import add_custom_navigation_links
+add_custom_navigation_links(__file__)
 
-# NEW WAY
-from utils import add_custom_navigation_links, apply_custom_navigation_css
-apply_custom_navigation_css("simple")  # Apply basic styling
-add_custom_navigation_links(__file__)  # Same interface, custom HTML
+# Section-based navigation (all pages in section)
+add_custom_navigation_links("History")
+add_custom_navigation_links("Records")
+
+# With layout options
+add_custom_navigation_links(__file__, layout="horizontal", separator=" | ")
+add_custom_navigation_links("Scoring", layout="vertical")
+add_custom_navigation_links("Records", layout="columns")
 ```
 
-**Step 2: Customize styling**
+**Simple CSS-Only Navigation**
 ```python
-# Simple theme with just font/color control
-apply_custom_navigation_css("simple", {
-    "font_family": "Arial, sans-serif",
-    "font_size": "16px",
-    "color": "#1e90ff",
-    "hover_color": "#0066cc"
-})
+from utils import add_simple_navigation_links
+add_simple_navigation_links(
+    __file__,
+    font_family="Arial, sans-serif",
+    font_size="16px",
+    color="#1e90ff",
+    hover_color="#0066cc"
+)
 ```
 
-### Key Files Added
+### Key Files Modified/Added
 
-- **`utils.py`**: Added `get_app_base_url()`, `add_custom_navigation_links()`, `apply_custom_navigation_css()`
-- **`styles/navigation.css`**: Comprehensive CSS library (can be simplified)
-- **`navigation_test.py`**: Test page demonstrating both approaches (registered in `nav.py`)
+- **`utils.py`**: Enhanced `add_custom_navigation_links()` with smart input detection and layout options
+- **`styles/navigation.css`**: Simplified CSS with monospace font, black text, forestgreen hover
+- **`navigation_test.py`**: Demonstrates all layout options and input methods
+- **History section pages**: All updated with enhanced navigation for testing
 
 ### Important Notes
 
-1. **Page Registration**: Manual navigation works from any page, but `st.page_link()` only works from pages registered in `nav.py`
+1. **Smart Input Detection**:
+   - Page files: `"101TEG History.py"` → Creates links to other pages in same section
+   - Section names: `"History"` → Creates links to ALL pages in that section
 
 2. **URL Format**: The system converts page filenames to URLs:
-   - `"300TEG Records.py"` → `"/300TEG_Records"`
-   - `"101TEG History.py"` → `"/101TEG_History"`
+   - `"300TEG Records.py"` → `"/TEG_Records"` (strips leading numbers)
+   - `"101TEG History.py"` → `"/"` (main page redirects to root)
+   - `"leaderboard.py"` → `"/leaderboard"`
 
-3. **Environment Detection**: Automatically works in both local development and Railway deployment
+3. **Layout Options**:
+   - `layout="horizontal"` with custom `separator=" | "` (or `" - "`, `" • "`, etc.)
+   - `layout="vertical"` for stacked links
+   - `layout="columns"` for original column behavior
+
+4. **Environment Detection**: Automatically works in both local development and Railway deployment
 
 ### Troubleshooting
 
@@ -241,10 +270,15 @@ apply_custom_navigation_css("simple", {
 
 ### Migration Path
 
-1. **Test**: Use `navigation_test.py` to compare approaches
-2. **Choose**: Pick either simple CSS control or keep existing `st.page_link()`
-3. **Implement**: Replace `add_navigation_links()` calls gradually
-4. **Customize**: Apply your preferred font/color styling
+1. **Test**: Use `navigation_test.py` to see all layout options and input methods
+2. **Choose your approach**:
+   - Enhanced navigation: `add_custom_navigation_links()` for layout flexibility
+   - Simple navigation: `add_simple_navigation_links()` for basic styling only
+3. **Implement gradually**:
+   - Replace `add_navigation_links()` calls with enhanced version
+   - Test both page-based and section-based navigation
+   - Choose preferred layout and separator options
+4. **Verify**: Test main page links and all layout options work correctly
 
 ## Future Enhancements
 

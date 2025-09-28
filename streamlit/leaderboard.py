@@ -285,5 +285,5 @@ except Exception as e:
     logger.error(f"An error occurred: {str(e)}", exc_info=True)
 
 # === NAVIGATION LINKS ===
-from utils import add_navigation_links
-add_navigation_links(__file__)
+from utils import add_custom_navigation_links
+add_custom_navigation_links(__file__, layout="horizontal", separator=" | ")

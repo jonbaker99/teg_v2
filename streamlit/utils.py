@@ -2297,39 +2297,57 @@ def create_custom_page_link(page_file, col, css_class="custom-nav-link"):
         )
 
 
-def add_custom_navigation_links(current_page_file, css_class="custom-nav-link", layout="columns", separator=" | "):
+def add_custom_navigation_links(input_value, css_class="custom-nav-link", layout="columns", separator=" | ", exclude_current=True):
     """Add custom HTML navigation links with full styling control
 
     Args:
-        current_page_file: The current page file (usually __file__)
+        input_value: Page filename (e.g. "101TEG History.py") OR section name (e.g. "History")
         css_class: CSS class for the links (default: "custom-nav-link")
         layout: Layout style - "columns", "horizontal", or "vertical" (default: "columns")
         separator: Separator for horizontal layout (default: " | ")
+        exclude_current: Whether to exclude current page from navigation (default: True)
     """
-    # Handle both full path and just filename
-    if os.path.sep in current_page_file:
-        current_page_file = os.path.basename(current_page_file)
+    # Smart detection: determine if input is page file or section name
+    if input_value.endswith('.py'):
+        # Input is a page filename
+        # Handle both full path and just filename
+        if os.path.sep in input_value:
+            current_page_file = os.path.basename(input_value)
+        else:
+            current_page_file = input_value
 
-    # Get current page info
-    current_page_info = PAGE_DEFINITIONS.get(current_page_file)
-    if not current_page_info:
-        return  # No navigation for pages not in the system
+        # Get current page info
+        current_page_info = PAGE_DEFINITIONS.get(current_page_file)
+        if not current_page_info:
+            return  # No navigation for pages not in the system
 
-    section = current_page_info["section"]
+        section = current_page_info["section"]
 
-    # Get all pages in this section except current page
-    section_pages = [
-        file for file, info in PAGE_DEFINITIONS.items()
-        if info["section"] == section and file != current_page_file
-    ]
+        # Get all pages in this section, optionally excluding current page
+        if exclude_current:
+            section_pages = [
+                file for file, info in PAGE_DEFINITIONS.items()
+                if info["section"] == section and file != current_page_file
+            ]
+        else:
+            section_pages = [
+                file for file, info in PAGE_DEFINITIONS.items()
+                if info["section"] == section
+            ]
+    else:
+        # Input is a section name
+        section = input_value
+
+        # Get all pages in this section
+        section_pages = [
+            file for file, info in PAGE_DEFINITIONS.items()
+            if info["section"] == section
+        ]
 
     if not section_pages:
         return  # No other pages in section
 
     # Create navigation UI
-    st.markdown("---")
-    st.markdown("**Links to related pages:**")
-
     # Auto-load CSS styles
     apply_custom_navigation_css()
 

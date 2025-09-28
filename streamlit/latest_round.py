@@ -110,5 +110,5 @@ for tab, friendly_metric in zip(tabs, friendly_metrics):
         st.plotly_chart(fig_rd, use_container_width=True, config=dict({'displayModeBar': False}))
 
 # === NAVIGATION LINKS ===
-from utils import add_navigation_links
-add_navigation_links(__file__)
+from utils import add_custom_navigation_links
+add_custom_navigation_links(__file__, layout="horizontal", separator=" | ")
