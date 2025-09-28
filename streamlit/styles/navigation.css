@@ -1,0 +1,290 @@
+/* ==========================================
+   TEG APP - CUSTOM NAVIGATION STYLES
+   ========================================== */
+
+/* ====================
+   BASE NAVIGATION STYLES
+   ==================== */
+
+.custom-nav-link {
+    display: inline-block;
+    padding: 0.75rem 1.25rem;
+    margin: 0.25rem;
+    text-decoration: none !important;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    border: 1px solid transparent;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    font-family: inherit;
+}
+
+.custom-nav-link:hover {
+    text-decoration: none !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.custom-nav-link:active {
+    transform: translateY(0);
+}
+
+/* ====================
+   THEME: DEFAULT GRADIENT
+   ==================== */
+
+.custom-nav-link.theme-default {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.custom-nav-link.theme-default:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* ====================
+   THEME: MODERN BLUE
+   ==================== */
+
+.custom-nav-link.theme-modern {
+    background: rgba(30, 144, 255, 0.1);
+    color: #1e90ff !important;
+    border: 2px solid #1e90ff;
+    font-weight: 600;
+}
+
+.custom-nav-link.theme-modern:hover {
+    background: #1e90ff;
+    color: white !important;
+    box-shadow: 0 6px 20px rgba(30, 144, 255, 0.4);
+}
+
+/* ====================
+   THEME: MINIMAL UNDERLINE
+   ==================== */
+
+.custom-nav-link.theme-minimal {
+    background: transparent;
+    color: inherit !important;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    padding: 0.5rem 0;
+    margin: 0 1rem 0 0;
+}
+
+.custom-nav-link.theme-minimal:hover {
+    border-bottom-color: #1e90ff;
+    transform: none;
+    box-shadow: none;
+    background: rgba(30, 144, 255, 0.05);
+}
+
+/* ====================
+   THEME: GLASS MORPHISM
+   ==================== */
+
+.custom-nav-link.theme-glass {
+    background: rgba(255, 255, 255, 0.1);
+    color: inherit !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.custom-nav-link.theme-glass:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+}
+
+/* ====================
+   THEME: NEON GLOW
+   ==================== */
+
+.custom-nav-link.theme-neon {
+    background: transparent;
+    color: #00ffff !important;
+    border: 1px solid #00ffff;
+    text-shadow: 0 0 5px #00ffff;
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+}
+
+.custom-nav-link.theme-neon:hover {
+    background: rgba(0, 255, 255, 0.1);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.6), 0 0 30px rgba(0, 255, 255, 0.3);
+    text-shadow: 0 0 10px #00ffff;
+}
+
+/* ====================
+   THEME: SOFT MATERIAL
+   ==================== */
+
+.custom-nav-link.theme-material {
+    background: #f5f5f5;
+    color: #333 !important;
+    border: none;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.custom-nav-link.theme-material:hover {
+    background: #e0e0e0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ====================
+   NAVIGATION SECTIONS
+   ==================== */
+
+.nav-section {
+    margin: 1rem 0;
+    padding: 1rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.nav-section.theme-glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-section-title {
+    margin: 0 0 1rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    border-bottom: 2px solid #1e90ff;
+    padding-bottom: 0.5rem;
+}
+
+.nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.nav-links .nav-link {
+    flex: 1;
+    min-width: 200px;
+    text-align: center;
+}
+
+/* ====================
+   RESPONSIVE DESIGN
+   ==================== */
+
+@media (max-width: 768px) {
+    .nav-links .nav-link {
+        min-width: 100%;
+    }
+
+    .custom-nav-link {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .custom-nav-link.theme-minimal {
+        margin: 0 0 0.5rem 0;
+        padding: 0.5rem;
+        border-bottom: 1px solid rgba(30, 144, 255, 0.3);
+    }
+}
+
+/* ====================
+   SPECIAL EFFECTS
+   ==================== */
+
+/* Pulse animation for important links */
+.custom-nav-link.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Slide-in animation */
+.custom-nav-link.slide-in {
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Focus states for accessibility */
+.custom-nav-link:focus {
+    outline: 2px solid #1e90ff;
+    outline-offset: 2px;
+}
+
+/* ====================
+   UTILITY CLASSES
+   ==================== */
+
+.nav-link-small {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+}
+
+.nav-link-large {
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+}
+
+.nav-link-full-width {
+    width: 100%;
+    text-align: center;
+}
+
+.nav-link-icon::before {
+    content: "→";
+    margin-right: 0.5rem;
+    transition: transform 0.3s ease;
+}
+
+.nav-link-icon:hover::before {
+    transform: translateX(4px);
+}
+
+/* ====================
+   DARK MODE SUPPORT
+   ==================== */
+
+@media (prefers-color-scheme: dark) {
+    .custom-nav-link.theme-material {
+        background: #333;
+        color: #fff !important;
+    }
+
+    .custom-nav-link.theme-material:hover {
+        background: #444;
+    }
+
+    .nav-section {
+        background: rgba(255, 255, 255, 0.05);
+    }
+}

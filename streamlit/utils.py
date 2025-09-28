@@ -2123,6 +2123,25 @@ def has_incomplete_teg_fast():
 #  CENTRALIZED NAVIGATION SYSTEM
 # ============================================
 
+def get_app_base_url():
+    """
+    Dynamically get the base URL for the current Streamlit app.
+
+    Returns:
+        str: Base URL for the app (e.g., 'http://localhost:8501' or 'https://app.railway.app')
+    """
+    if os.getenv('RAILWAY_ENVIRONMENT'):
+        # Railway deployment - check for public domain
+        railway_domain = os.getenv('RAILWAY_PUBLIC_DOMAIN')
+        if railway_domain:
+            return f"https://{railway_domain}"
+        else:
+            # Fallback - this should be updated with your actual Railway URL
+            return "https://your-railway-app.railway.app"
+    else:
+        # Local development - use default Streamlit port
+        return "http://localhost:8501"
+
 # Page definitions with titles and optional icons
 PAGE_DEFINITIONS = {
     # History section
@@ -2217,3 +2236,263 @@ def add_navigation_links(current_page_file):
     for i, page_file in enumerate(section_pages):
         col_index = i % num_cols
         create_page_link(page_file, cols[col_index])
+
+
+# ============================================
+#  CUSTOM NAVIGATION SYSTEM (Manual HTML)
+# ============================================
+
+def create_custom_page_link(page_file, col, css_class="custom-nav-link"):
+    """Create a custom HTML page link with full styling control"""
+    page_info = PAGE_DEFINITIONS.get(page_file)
+    if not page_info:
+        return
+
+    # Build label with optional icon
+    icon = page_info.get("icon", "")
+    title = page_info["title"]
+    label = f"{icon} {title}".strip() if icon else title
+
+    # Generate the page URL
+    base_url = get_app_base_url()
+    # Convert filename to URL format (remove .py and handle spaces)
+    page_name = page_file.replace('.py', '').replace(' ', '_')
+    full_url = f"{base_url}/{page_name}"
+
+    with col:
+        st.markdown(
+            f'<a href="{full_url}" target="_self" class="{css_class}">{label}</a>',
+            unsafe_allow_html=True
+        )
+
+
+def add_custom_navigation_links(current_page_file, css_class="custom-nav-link"):
+    """Add custom HTML navigation links with full styling control"""
+    # Handle both full path and just filename
+    if os.path.sep in current_page_file:
+        current_page_file = os.path.basename(current_page_file)
+
+    # Get current page info
+    current_page_info = PAGE_DEFINITIONS.get(current_page_file)
+    if not current_page_info:
+        return  # No navigation for pages not in the system
+
+    section = current_page_info["section"]
+
+    # Get all pages in this section except current page
+    section_pages = [
+        file for file, info in PAGE_DEFINITIONS.items()
+        if info["section"] == section and file != current_page_file
+    ]
+
+    if not section_pages:
+        return  # No other pages in section
+
+    # Create navigation UI
+    st.markdown("---")
+    st.markdown("**Links to related pages:**")
+
+    # Get column count for this section
+    num_cols = SECTION_LAYOUTS.get(section, 3)
+    cols = st.columns(num_cols)
+
+    # Create custom HTML links
+    for i, page_file in enumerate(section_pages):
+        col_index = i % num_cols
+        create_custom_page_link(page_file, cols[col_index], css_class)
+
+
+def create_custom_navigation_section(section_name, pages, current_page, container_class="nav-section"):
+    """Create a fully custom navigation section with advanced HTML structure"""
+    base_url = get_app_base_url()
+
+    # Filter out current page
+    filtered_pages = [p for p in pages if p != current_page]
+    if not filtered_pages:
+        return ""
+
+    # Create custom HTML structure
+    nav_html = f'<div class="{container_class}" data-section="{section_name}">'
+    nav_html += f'<h4 class="nav-section-title">{section_name}</h4>'
+    nav_html += '<div class="nav-links">'
+
+    for page_file in filtered_pages:
+        page_info = PAGE_DEFINITIONS.get(page_file, {})
+        title = page_info.get("title", page_file)
+        icon = page_info.get("icon", "")
+        label = f"{icon} {title}".strip() if icon else title
+
+        # Convert filename to URL format
+        page_name = page_file.replace('.py', '').replace(' ', '_')
+        full_url = f"{base_url}/{page_name}"
+
+        nav_html += f'''
+        <a href="{full_url}"
+           target="_self"
+           class="nav-link"
+           data-page="{page_file}"
+           title="{title}">
+           {label}
+        </a>
+        '''
+
+    nav_html += '</div></div>'
+    return nav_html
+
+
+def apply_custom_navigation_css(theme="default"):
+    """
+    Apply comprehensive CSS styles for custom navigation.
+
+    Args:
+        theme (str): CSS theme to apply. Options: 'default', 'modern', 'minimal', 'glass'
+    """
+
+    # Base CSS that applies to all themes
+    base_css = """
+    <style>
+    /* Base navigation styles */
+    .custom-nav-link {
+        display: inline-block;
+        padding: 0.75rem 1.25rem;
+        margin: 0.25rem;
+        text-decoration: none !important;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        border: 1px solid transparent;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .custom-nav-link:hover {
+        text-decoration: none !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .custom-nav-link:active {
+        transform: translateY(0);
+    }
+
+    /* Navigation section styling */
+    .nav-section {
+        margin: 1rem 0;
+        padding: 1rem;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    .nav-section-title {
+        margin: 0 0 1rem 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-color);
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 0.5rem;
+    }
+
+    .nav-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .nav-links .nav-link {
+        flex: 1;
+        min-width: 200px;
+        text-align: center;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+        .nav-links .nav-link {
+            min-width: 100%;
+        }
+
+        .custom-nav-link {
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+        }
+    }
+    """
+
+    # Theme-specific CSS
+    theme_css = {
+        "default": """
+        .custom-nav-link {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white !important;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .custom-nav-link:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        """,
+
+        "modern": """
+        .custom-nav-link {
+            background: rgba(30, 144, 255, 0.1);
+            color: #1e90ff !important;
+            border: 2px solid #1e90ff;
+            font-weight: 600;
+        }
+
+        .custom-nav-link:hover {
+            background: #1e90ff;
+            color: white !important;
+            box-shadow: 0 6px 20px rgba(30, 144, 255, 0.4);
+        }
+        """,
+
+        "minimal": """
+        .custom-nav-link {
+            background: transparent;
+            color: var(--text-color) !important;
+            border-bottom: 2px solid transparent;
+            border-radius: 0;
+            padding: 0.5rem 0;
+            margin: 0 1rem 0 0;
+        }
+
+        .custom-nav-link:hover {
+            border-bottom-color: var(--primary-color);
+            transform: none;
+            box-shadow: none;
+            background: rgba(var(--primary-color-rgb), 0.05);
+        }
+        """,
+
+        "glass": """
+        .custom-nav-link {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-color) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .custom-nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+        }
+
+        .nav-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        """
+    }
+
+    # Combine base CSS with theme CSS
+    selected_theme_css = theme_css.get(theme, theme_css["default"])
+    full_css = base_css + selected_theme_css + "</style>"
+
+    st.markdown(full_css, unsafe_allow_html=True)

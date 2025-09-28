@@ -87,6 +87,7 @@ eclectic_pg = st.Page("eclectic.py", title="Eclectic Scores", icon=":material/go
 eclectic_records_pg = st.Page("best_eclectics.py", title="Eclectic Records", icon=":material/emoji_events:")
 data_test_pg = st.Page("data_test_temp.py", title="TEMP DATA TESTING", icon=":material/check_circle:")
 data_management_pg = st.Page("admin_volume_management.py", title="Data volume management", icon=":material/check_circle:")
+navigation_test_pg = st.Page("navigation_test.py", title="Navigation Test", icon=":material/science:")
 
 
 
@@ -109,7 +110,7 @@ if has_incomplete_teg:
         "Scoring analysis": [birdies_pg, streaks_pg, course_ave_pg,  bypar_pg, sc_count_pg,byteg_pg,  changes_pg, course_rds_pg],
         "Bestballs / Eclectics": [bestball_pg, eclectic_pg, eclectic_records_pg],
         #"Players": [players_pg],
-        "Data":[data_pg, data_edit_pg, delete_pg, data_test_pg, data_management_pg]
+        "Data":[data_pg, data_edit_pg, delete_pg, data_test_pg, data_management_pg, navigation_test_pg]
     }
 else:
     # If no TEG in progress, use original structure with "Latest TEG" at the end
@@ -123,7 +124,7 @@ else:
         "Bestballs / Eclectics": [bestball_pg, eclectic_pg, eclectic_records_pg],
         #"Players": [players_pg],
         "Latest TEG": [leaderboard_pg, latest_rd_page, latest_teg_page, hc_page],
-        "Data":[data_pg, data_edit_pg, delete_pg, data_test_pg, data_management_pg]
+        "Data":[data_pg, data_edit_pg, delete_pg, data_test_pg, data_management_pg, navigation_test_pg]
     }
 
 pg = st.navigation(nav_structure, position='top')
