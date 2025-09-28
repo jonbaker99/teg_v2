@@ -21,7 +21,7 @@ PAGE_DEFINITIONS = {
     "302Personal Best Rounds & TEGs.py": {"title": "Personal Bests", "icon": ":material/golf_course:", "section": "Records"},
 
     # Scoring analysis section
-    "400scoring.py": {"title": "Scoring", "icon": ":material/strategy:", "section": "Scoring"},
+    # "400scoring.py": {"title": "Scoring", "icon": ":material/strategy:", "section": "Scoring"},
     "birdies_etc.py": {"title": "Eagles / Birdies / Pars", "icon": ":material/strategy:", "section": "Scoring"},
     "streaks.py": {"title": "Streaks", "icon": ":material/trending_up:", "section": "Scoring"},
     "ave_by_par.py": {"title": "Average by par", "icon": ":material/strategy:", "section": "Scoring"},

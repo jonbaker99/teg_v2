@@ -2174,86 +2174,12 @@ def convert_filename_to_streamlit_url(page_file):
 from page_config import PAGE_DEFINITIONS, SECTION_LAYOUTS, SECTION_CONFIG
 
 
-def create_page_link(page_file, col):
-    """Create a single page link in the specified column"""
-    page_info = PAGE_DEFINITIONS.get(page_file)
-    if not page_info:
-        return
-
-    # Build label with optional icon
-    icon = page_info.get("icon", "")
-    title = page_info["title"]
-    label = f"{icon} {title}".strip() if icon else title
-
-    with col:
-        st.page_link(page_file, label=label)
-
-
-def add_navigation_links(current_page_file):
-    """Add navigation links for the current page's section"""
-    # Handle both full path and just filename
-    if os.path.sep in current_page_file:
-        current_page_file = os.path.basename(current_page_file)
-
-    # Get current page info
-    current_page_info = PAGE_DEFINITIONS.get(current_page_file)
-    if not current_page_info:
-        return  # No navigation for pages not in the system
-
-    section = current_page_info["section"]
-
-    # Get all pages in this section except current page
-    section_pages = [
-        file for file, info in PAGE_DEFINITIONS.items()
-        if info["section"] == section and file != current_page_file
-    ]
-
-    if not section_pages:
-        return  # No other pages in section
-
-    # Create navigation UI
-    st.markdown("---")
-    st.markdown("**Links to related pages:**")
-
-    # Get column count for this section
-    num_cols = SECTION_LAYOUTS.get(section, 3)
-    cols = st.columns(num_cols)
-
-    # Create links using the individual page function
-    for i, page_file in enumerate(section_pages):
-        col_index = i % num_cols
-        create_page_link(page_file, cols[col_index])
 
 
 # ============================================
 #  CUSTOM NAVIGATION SYSTEM (Manual HTML)
 # ============================================
 
-def create_custom_page_link(page_file, col, css_class="custom-nav-link"):
-    """Create a custom HTML page link with full styling control"""
-    # Auto-load CSS styles
-    apply_custom_navigation_css()
-
-    page_info = PAGE_DEFINITIONS.get(page_file)
-    if not page_info:
-        return
-
-    # Build label with optional icon
-    icon = page_info.get("icon", "")
-    title = page_info["title"]
-    label = f"{icon} {title}".strip() if icon else title
-
-    # Generate the page URL
-    base_url = get_app_base_url()
-    # Convert filename to URL format (Streamlit strips leading numbers)
-    page_name = convert_filename_to_streamlit_url(page_file)
-    full_url = f"{base_url}/{page_name}"
-
-    with col:
-        st.markdown(
-            f'<a href="{full_url}" target="_self" class="{css_class}">{label}</a>',
-            unsafe_allow_html=True
-        )
 
 
 def add_custom_navigation_links_DEPRECATED(input_value, css_class="custom-nav-link", layout="columns", separator=" | ", exclude_current=True):
@@ -2540,23 +2466,3 @@ def apply_custom_navigation_css():
     </style>
     """
     st.markdown(fallback_css, unsafe_allow_html=True)
-
-
-def add_simple_navigation_links(current_page_file, font_family="inherit", font_size="1rem", color="#1e90ff", hover_color="#0066cc"):
-    """
-    Add simple custom navigation links with minimal styling.
-
-    This is the simplest way to get custom styling control over navigation.
-
-    Args:
-        current_page_file: The current page file (usually __file__)
-        font_family: Font family for the links
-        font_size: Font size for the links
-        color: Normal link color
-        hover_color: Hover link color
-    """
-    # Apply the simple CSS
-    apply_simple_navigation_css(font_family, font_size, color, hover_color)
-
-    # Use the existing custom navigation logic but with simple CSS class
-    add_custom_navigation_links(current_page_file, css_class="simple-nav-link")
