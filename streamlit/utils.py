@@ -2142,6 +2142,27 @@ def get_app_base_url():
         # Local development - use default Streamlit port
         return "http://localhost:8501"
 
+
+def convert_filename_to_streamlit_url(page_file):
+    """Convert a page filename to Streamlit's URL format.
+
+    Streamlit strips leading numbers from filenames when creating URLs.
+    Examples:
+    - "300TEG Records.py" → "TEG_Records"
+    - "101TEG History.py" → "TEG_History"
+    - "500Handicaps.py" → "Handicaps"
+    - "leaderboard.py" → "leaderboard"
+    """
+    import re
+    # Remove .py extension
+    page_name = page_file.replace('.py', '')
+    # Replace spaces with underscores
+    page_name = page_name.replace(' ', '_')
+    # Remove leading digits (Streamlit does this automatically)
+    page_name = re.sub(r'^\d+', '', page_name)
+    return page_name
+
+
 # Page definitions with titles and optional icons
 PAGE_DEFINITIONS = {
     # History section
@@ -2244,6 +2265,9 @@ def add_navigation_links(current_page_file):
 
 def create_custom_page_link(page_file, col, css_class="custom-nav-link"):
     """Create a custom HTML page link with full styling control"""
+    # Auto-load CSS styles
+    apply_custom_navigation_css()
+
     page_info = PAGE_DEFINITIONS.get(page_file)
     if not page_info:
         return
@@ -2255,8 +2279,8 @@ def create_custom_page_link(page_file, col, css_class="custom-nav-link"):
 
     # Generate the page URL
     base_url = get_app_base_url()
-    # Convert filename to URL format (remove .py and handle spaces)
-    page_name = page_file.replace('.py', '').replace(' ', '_')
+    # Convert filename to URL format (Streamlit strips leading numbers)
+    page_name = convert_filename_to_streamlit_url(page_file)
     full_url = f"{base_url}/{page_name}"
 
     with col:
@@ -2322,8 +2346,8 @@ def create_custom_navigation_section(section_name, pages, current_page, containe
         icon = page_info.get("icon", "")
         label = f"{icon} {title}".strip() if icon else title
 
-        # Convert filename to URL format
-        page_name = page_file.replace('.py', '').replace(' ', '_')
+        # Convert filename to URL format (Streamlit strips leading numbers)
+        page_name = convert_filename_to_streamlit_url(page_file)
         full_url = f"{base_url}/{page_name}"
 
         nav_html += f'''
@@ -2340,159 +2364,62 @@ def create_custom_navigation_section(section_name, pages, current_page, containe
     return nav_html
 
 
-def apply_custom_navigation_css(theme="default"):
+def apply_custom_navigation_css():
     """
-    Apply comprehensive CSS styles for custom navigation.
+    Load and apply CSS styles from the external navigation.css file.
+    """
+    import os
+    from pathlib import Path
+
+    # Get the path to the CSS file
+    css_file_path = Path(__file__).parent / "styles" / "navigation.css"
+
+    try:
+        with open(css_file_path, 'r', encoding='utf-8') as f:
+            css_content = f.read()
+
+        # Apply the CSS
+        st.markdown(f"<style>{css_content}</style>", unsafe_allow_html=True)
+        return
+    except FileNotFoundError:
+        # Fallback: basic inline CSS if file doesn't exist
+        pass
+
+    # Fallback CSS if file doesn't exist
+    fallback_css = """
+    <style>
+    .custom-nav-link {
+        font-family: inherit;
+        font-size: 1rem;
+        color: #1e90ff;
+        padding: 0.75rem 1.25rem;
+        text-decoration: none !important;
+        display: inline-block;
+    }
+    .custom-nav-link:hover {
+        color: #0066cc;
+        text-decoration: none !important;
+    }
+    </style>
+    """
+    st.markdown(fallback_css, unsafe_allow_html=True)
+
+
+def add_simple_navigation_links(current_page_file, font_family="inherit", font_size="1rem", color="#1e90ff", hover_color="#0066cc"):
+    """
+    Add simple custom navigation links with minimal styling.
+
+    This is the simplest way to get custom styling control over navigation.
 
     Args:
-        theme (str): CSS theme to apply. Options: 'default', 'modern', 'minimal', 'glass'
+        current_page_file: The current page file (usually __file__)
+        font_family: Font family for the links
+        font_size: Font size for the links
+        color: Normal link color
+        hover_color: Hover link color
     """
+    # Apply the simple CSS
+    apply_simple_navigation_css(font_family, font_size, color, hover_color)
 
-    # Base CSS that applies to all themes
-    base_css = """
-    <style>
-    /* Base navigation styles */
-    .custom-nav-link {
-        display: inline-block;
-        padding: 0.75rem 1.25rem;
-        margin: 0.25rem;
-        text-decoration: none !important;
-        border-radius: 6px;
-        transition: all 0.3s ease;
-        font-weight: 500;
-        border: 1px solid transparent;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .custom-nav-link:hover {
-        text-decoration: none !important;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .custom-nav-link:active {
-        transform: translateY(0);
-    }
-
-    /* Navigation section styling */
-    .nav-section {
-        margin: 1rem 0;
-        padding: 1rem;
-        border-radius: 8px;
-        background: rgba(255, 255, 255, 0.02);
-    }
-
-    .nav-section-title {
-        margin: 0 0 1rem 0;
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: var(--text-color);
-        border-bottom: 2px solid var(--primary-color);
-        padding-bottom: 0.5rem;
-    }
-
-    .nav-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-
-    .nav-links .nav-link {
-        flex: 1;
-        min-width: 200px;
-        text-align: center;
-    }
-
-    /* Responsive design */
-    @media (max-width: 768px) {
-        .nav-links .nav-link {
-            min-width: 100%;
-        }
-
-        .custom-nav-link {
-            padding: 0.6rem 1rem;
-            font-size: 0.9rem;
-        }
-    }
-    """
-
-    # Theme-specific CSS
-    theme_css = {
-        "default": """
-        .custom-nav-link {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white !important;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .custom-nav-link:hover {
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-            border-color: rgba(255, 255, 255, 0.4);
-        }
-        """,
-
-        "modern": """
-        .custom-nav-link {
-            background: rgba(30, 144, 255, 0.1);
-            color: #1e90ff !important;
-            border: 2px solid #1e90ff;
-            font-weight: 600;
-        }
-
-        .custom-nav-link:hover {
-            background: #1e90ff;
-            color: white !important;
-            box-shadow: 0 6px 20px rgba(30, 144, 255, 0.4);
-        }
-        """,
-
-        "minimal": """
-        .custom-nav-link {
-            background: transparent;
-            color: var(--text-color) !important;
-            border-bottom: 2px solid transparent;
-            border-radius: 0;
-            padding: 0.5rem 0;
-            margin: 0 1rem 0 0;
-        }
-
-        .custom-nav-link:hover {
-            border-bottom-color: var(--primary-color);
-            transform: none;
-            box-shadow: none;
-            background: rgba(var(--primary-color-rgb), 0.05);
-        }
-        """,
-
-        "glass": """
-        .custom-nav-link {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-color) !important;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        .custom-nav-link:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-        }
-
-        .nav-section {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        """
-    }
-
-    # Combine base CSS with theme CSS
-    selected_theme_css = theme_css.get(theme, theme_css["default"])
-    full_css = base_css + selected_theme_css + "</style>"
-
-    st.markdown(full_css, unsafe_allow_html=True)
+    # Use the existing custom navigation logic but with simple CSS class
+    add_custom_navigation_links(current_page_file, css_class="simple-nav-link")

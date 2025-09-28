@@ -139,11 +139,119 @@ To change layouts, update `SECTION_LAYOUTS` in `utils.py`.
 - **Bestball section (3 files)**: bestball.py, eclectic.py, best_eclectics.py
 - **Latest TEG section (4 files)**: leaderboard.py, latest_round.py, latest_teg_context.py, 500Handicaps.py
 
+## Manual Navigation System (Custom HTML)
+
+### Overview
+
+In addition to the centralized `st.page_link()` system, we now have a manual navigation system that gives you complete control over styling. This system generates custom HTML links instead of using Streamlit's built-in navigation.
+
+### Why Manual Navigation?
+
+The `st.page_link()` approach has styling limitations - CSS classes and custom styling don't work effectively because Streamlit controls the rendering. Manual navigation solves this by:
+
+- **Full CSS Control**: Complete control over font, colors, sizes, hover effects
+- **Custom Styling**: Apply any CSS styles or themes you want
+- **Cross-Platform**: Works in both local development and Railway deployment
+- **Centralized**: Still uses the same `PAGE_DEFINITIONS` for consistency
+
+### Implementation
+
+#### 1. Dynamic URL Detection
+```python
+def get_app_base_url():
+    """Auto-detects Railway vs local environment and returns appropriate base URL"""
+    if os.getenv('RAILWAY_ENVIRONMENT'):
+        railway_domain = os.getenv('RAILWAY_PUBLIC_DOMAIN')
+        return f"https://{railway_domain}" if railway_domain else "https://fallback-url"
+    else:
+        return "http://localhost:8501"
+```
+
+#### 2. Custom Navigation Functions
+```python
+# Drop-in replacement for add_navigation_links()
+add_custom_navigation_links(__file__)
+
+# Individual custom links
+create_custom_page_link(page_file, col, css_class="custom-nav-link")
+
+# Advanced custom sections
+create_custom_navigation_section(section_name, pages, current_page)
+```
+
+#### 3. Simple CSS Application
+```python
+# Basic styling (recommended for simple control)
+apply_custom_navigation_css("simple")
+
+# Custom styling with your own CSS
+apply_custom_navigation_css("custom", custom_css="your-css-here")
+```
+
+### Basic Usage
+
+**Step 1: Replace existing navigation**
+```python
+# OLD WAY
+from utils import add_navigation_links
+add_navigation_links(__file__)
+
+# NEW WAY
+from utils import add_custom_navigation_links, apply_custom_navigation_css
+apply_custom_navigation_css("simple")  # Apply basic styling
+add_custom_navigation_links(__file__)  # Same interface, custom HTML
+```
+
+**Step 2: Customize styling**
+```python
+# Simple theme with just font/color control
+apply_custom_navigation_css("simple", {
+    "font_family": "Arial, sans-serif",
+    "font_size": "16px",
+    "color": "#1e90ff",
+    "hover_color": "#0066cc"
+})
+```
+
+### Key Files Added
+
+- **`utils.py`**: Added `get_app_base_url()`, `add_custom_navigation_links()`, `apply_custom_navigation_css()`
+- **`styles/navigation.css`**: Comprehensive CSS library (can be simplified)
+- **`navigation_test.py`**: Test page demonstrating both approaches (registered in `nav.py`)
+
+### Important Notes
+
+1. **Page Registration**: Manual navigation works from any page, but `st.page_link()` only works from pages registered in `nav.py`
+
+2. **URL Format**: The system converts page filenames to URLs:
+   - `"300TEG Records.py"` → `"/300TEG_Records"`
+   - `"101TEG History.py"` → `"/101TEG_History"`
+
+3. **Environment Detection**: Automatically works in both local development and Railway deployment
+
+### Troubleshooting
+
+**Error: `KeyError: 'url_pathname'`**
+- This occurs when using `st.page_link()` from unregistered pages
+- Solution: Either register the page in `nav.py` or use custom navigation instead
+
+**Links not working on Railway**
+- Check that `RAILWAY_PUBLIC_DOMAIN` environment variable is set
+- Verify the URL generation in the test page
+
+### Migration Path
+
+1. **Test**: Use `navigation_test.py` to compare approaches
+2. **Choose**: Pick either simple CSS control or keep existing `st.page_link()`
+3. **Implement**: Replace `add_navigation_links()` calls gradually
+4. **Customize**: Apply your preferred font/color styling
+
 ## Future Enhancements
 
-With the centralized system in place, consider:
+With both navigation systems in place, consider:
 - Dynamic navigation based on user preferences
 - Breadcrumb navigation
 - Recently viewed pages functionality
 - Keyboard shortcuts for navigation
 - Analytics on page navigation patterns
+- Responsive navigation for mobile devices
