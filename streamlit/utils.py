@@ -2170,49 +2170,8 @@ def convert_filename_to_streamlit_url(page_file):
     return page_name
 
 
-# Page definitions with titles and optional icons
-PAGE_DEFINITIONS = {
-    # History section
-    "101TEG History.py": {"title": "TEG History", "icon": "", "section": "History"},
-    "101TEG Honours Board.py": {"title": "TEG Honours Board", "icon": "", "section": "History"},
-    "102TEG Results.py": {"title": "Full Results", "icon": "", "section": "History"},
-    "player_history.py": {"title": "Rankings by TEG by Player", "icon": "", "section": "History"},
-
-    # Records section
-    "300TEG Records.py": {"title": "TEG Records", "icon": "", "section": "Records"},
-    "301Best_TEGs_and_Rounds.py": {"title": "Top TEGs and Rounds", "icon": "", "section": "Records"},
-    "302Personal Best Rounds & TEGs.py": {"title": "Personal Bests", "icon": "", "section": "Records"},
-
-    # Scoring analysis section
-    "birdies_etc.py": {"title": "Eagles/Birdies/Pars", "icon": "", "section": "Scoring"},
-    "streaks.py": {"title": "Streaks", "icon": "", "section": "Scoring"},
-    "ave_by_course.py": {"title": "Course averages", "icon": "", "section": "Scoring"},
-    "ave_by_par.py": {"title": "Average by par", "icon": "", "section": "Scoring"},
-    "sc_count.py": {"title": "Scoring distributions", "icon": "", "section": "Scoring"},
-    "ave_by_teg.py": {"title": "Average by TEG", "icon": "", "section": "Scoring"},
-    "biggest_changes.py": {"title": "Changes vs previous", "icon": "", "section": "Scoring"},
-    "score_by_course.py": {"title": "All rounds", "icon": "", "section": "Scoring"},
-
-    # Bestball/Eclectics section
-    "bestball.py": {"title": "Bestball and worstball", "icon": "", "section": "Bestball"},
-    "eclectic.py": {"title": "Eclectic Scores", "icon": "", "section": "Bestball"},
-    "best_eclectics.py": {"title": "Eclectic Records", "icon": "", "section": "Bestball"},
-
-    # Latest TEG section
-    "leaderboard.py": {"title": "Latest Leaderboard", "icon": "", "section": "Latest"},
-    "latest_round.py": {"title": "Latest Round", "icon": "", "section": "Latest"},
-    "latest_teg_context.py": {"title": "Latest TEG", "icon": "", "section": "Latest"},
-    "500Handicaps.py": {"title": "Handicaps", "icon": "", "section": "Latest"},
-}
-
-# Section layouts (how many columns to use)
-SECTION_LAYOUTS = {
-    "History": 3,
-    "Records": 2,
-    "Scoring": 4,
-    "Bestball": 2,
-    "Latest": 3
-}
+# Import page configuration from dedicated config file
+from page_config import PAGE_DEFINITIONS, SECTION_LAYOUTS, SECTION_CONFIG
 
 
 def create_page_link(page_file, col):
