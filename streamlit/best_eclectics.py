@@ -148,3 +148,7 @@ with tab2:
         datawrapper_table(formatted_pb_courses, css_classes='left-second bold-3rd')
     else:
         st.warning("No course data available.")
+
+# === NAVIGATION LINKS ===
+from utils import add_navigation_links
+add_navigation_links(__file__)

@@ -177,3 +177,7 @@ if in_progress:
         # next_hc = get_hc(next_next_tegnum)
         next_hc = get_hc(next_next_tegnum).sort_values("hc_raw", ascending=True, na_position="last").reset_index(drop=True)
         st.write(next_hc.to_html(index=False, justify='left', classes = 'datawrapper-table'), unsafe_allow_html=True)
+
+# === NAVIGATION LINKS ===
+from utils import add_navigation_links
+add_navigation_links(__file__)

@@ -108,3 +108,7 @@ for tab, friendly_metric in zip(tabs, friendly_metrics):
             y_axis_label=f'Cumulative {friendly_metric}'
         )
         st.plotly_chart(fig_rd, use_container_width=True, config=dict({'displayModeBar': False}))
+
+# === NAVIGATION LINKS ===
+from utils import add_navigation_links
+add_navigation_links(__file__)

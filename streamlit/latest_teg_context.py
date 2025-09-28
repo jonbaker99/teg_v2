@@ -79,6 +79,10 @@ for tab, friendly_metric in zip(tabs, friendly_metrics):
                 index=False, 
                 justify='left', 
                 classes='jb-table-test, datawrapper-table full-width'
-            ), 
+            ),
             unsafe_allow_html=True
         )
+
+# === NAVIGATION LINKS ===
+from utils import add_navigation_links
+add_navigation_links(__file__)

@@ -116,3 +116,7 @@ with all_tabs[5]:
 
 # Add footnote for historical context
 # st.caption('*Green Jacket awarded in TEG 5 for best stableford round; DM had best gross score')
+
+# === NAVIGATION LINKS ===
+from utils import add_navigation_links
+add_navigation_links(__file__)

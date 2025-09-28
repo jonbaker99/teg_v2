@@ -105,3 +105,7 @@ st.write(course_output.to_html(escape=False, index=False, justify='left', classe
 
 # st.markdown(f'### All TEG rounds at {selected_course} (sorted by {selected_friendly_name})')
 # st.write(course_output_all.to_html(escape=False, index=False, justify='left', classes='datawrapper-table'), unsafe_allow_html=True)
+
+# === NAVIGATION LINKS ===
+from utils import add_navigation_links
+add_navigation_links(__file__)

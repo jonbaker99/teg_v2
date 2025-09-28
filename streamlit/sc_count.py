@@ -117,3 +117,7 @@ with tab2:
     # Add stacked bar chart
     stacked_chart_gvp = create_stacked_bar_chart(count_gvp, teg_desc, par_desc, 'GrossVP')
     st.plotly_chart(stacked_chart_gvp)
+
+# === NAVIGATION LINKS ===
+from utils import add_navigation_links
+add_navigation_links(__file__)

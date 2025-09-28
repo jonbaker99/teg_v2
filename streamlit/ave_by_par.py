@@ -49,6 +49,10 @@ st.write(
         classes='dataframe, datawrapper-table full-width', 
         index=False, 
         justify='left'
-    ), 
+    ),
     unsafe_allow_html=True
 )
+
+# === NAVIGATION LINKS ===
+from utils import add_navigation_links
+add_navigation_links(__file__)

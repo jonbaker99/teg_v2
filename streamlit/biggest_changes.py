@@ -77,6 +77,10 @@ with tab2:
 
 # datawrapper_table(rd_data_output)
 
+# === NAVIGATION LINKS ===
+from utils import add_navigation_links
+add_navigation_links(__file__)
+
 # rd_data = filtered_data
 
 # rd_data.sort_values(['Pl', 'TR'], inplace=True)
@@ -91,3 +95,7 @@ with tab2:
 # rd_data_output = rd_data[['Pl','TEG','Round','Course','Year','Sc','prev_Sc','diff']]
 
 # datawrapper_table(rd_data_output)
+
+# === NAVIGATION LINKS ===
+from utils import add_navigation_links
+add_navigation_links(__file__)

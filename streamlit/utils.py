@@ -2117,3 +2117,103 @@ def has_incomplete_teg_fast():
     except Exception as e:
         logger.warning(f"Error checking for incomplete TEGs: {e}")
         return False
+
+
+# ============================================
+#  CENTRALIZED NAVIGATION SYSTEM
+# ============================================
+
+# Page definitions with titles and optional icons
+PAGE_DEFINITIONS = {
+    # History section
+    "101TEG History.py": {"title": "TEG History", "icon": "", "section": "History"},
+    "101TEG Honours Board.py": {"title": "TEG Honours Board", "icon": "", "section": "History"},
+    "102TEG Results.py": {"title": "Full Results", "icon": "", "section": "History"},
+    "player_history.py": {"title": "Rankings by TEG by Player", "icon": "", "section": "History"},
+
+    # Records section
+    "300TEG Records.py": {"title": "TEG Records", "icon": "", "section": "Records"},
+    "301Best_TEGs_and_Rounds.py": {"title": "Top TEGs and Rounds", "icon": "", "section": "Records"},
+    "302Personal Best Rounds & TEGs.py": {"title": "Personal Bests", "icon": "", "section": "Records"},
+
+    # Scoring analysis section
+    "birdies_etc.py": {"title": "Eagles/Birdies/Pars", "icon": "", "section": "Scoring"},
+    "streaks.py": {"title": "Streaks", "icon": "", "section": "Scoring"},
+    "ave_by_course.py": {"title": "Course averages", "icon": "", "section": "Scoring"},
+    "ave_by_par.py": {"title": "Average by par", "icon": "", "section": "Scoring"},
+    "sc_count.py": {"title": "Scoring distributions", "icon": "", "section": "Scoring"},
+    "ave_by_teg.py": {"title": "Average by TEG", "icon": "", "section": "Scoring"},
+    "biggest_changes.py": {"title": "Changes vs previous", "icon": "", "section": "Scoring"},
+    "score_by_course.py": {"title": "All rounds", "icon": "", "section": "Scoring"},
+
+    # Bestball/Eclectics section
+    "bestball.py": {"title": "Bestball and worstball", "icon": "", "section": "Bestball"},
+    "eclectic.py": {"title": "Eclectic Scores", "icon": "", "section": "Bestball"},
+    "best_eclectics.py": {"title": "Eclectic Records", "icon": "", "section": "Bestball"},
+
+    # Latest TEG section
+    "leaderboard.py": {"title": "Latest Leaderboard", "icon": "", "section": "Latest"},
+    "latest_round.py": {"title": "Latest Round", "icon": "", "section": "Latest"},
+    "latest_teg_context.py": {"title": "Latest TEG", "icon": "", "section": "Latest"},
+    "500Handicaps.py": {"title": "Handicaps", "icon": "", "section": "Latest"},
+}
+
+# Section layouts (how many columns to use)
+SECTION_LAYOUTS = {
+    "History": 3,
+    "Records": 2,
+    "Scoring": 4,
+    "Bestball": 2,
+    "Latest": 3
+}
+
+
+def create_page_link(page_file, col):
+    """Create a single page link in the specified column"""
+    page_info = PAGE_DEFINITIONS.get(page_file)
+    if not page_info:
+        return
+
+    # Build label with optional icon
+    icon = page_info.get("icon", "")
+    title = page_info["title"]
+    label = f"{icon} {title}".strip() if icon else title
+
+    with col:
+        st.page_link(page_file, label=label)
+
+
+def add_navigation_links(current_page_file):
+    """Add navigation links for the current page's section"""
+    # Handle both full path and just filename
+    if os.path.sep in current_page_file:
+        current_page_file = os.path.basename(current_page_file)
+
+    # Get current page info
+    current_page_info = PAGE_DEFINITIONS.get(current_page_file)
+    if not current_page_info:
+        return  # No navigation for pages not in the system
+
+    section = current_page_info["section"]
+
+    # Get all pages in this section except current page
+    section_pages = [
+        file for file, info in PAGE_DEFINITIONS.items()
+        if info["section"] == section and file != current_page_file
+    ]
+
+    if not section_pages:
+        return  # No other pages in section
+
+    # Create navigation UI
+    st.markdown("---")
+    st.markdown("**Links to related pages:**")
+
+    # Get column count for this section
+    num_cols = SECTION_LAYOUTS.get(section, 3)
+    cols = st.columns(num_cols)
+
+    # Create links using the individual page function
+    for i, page_file in enumerate(section_pages):
+        col_index = i % num_cols
+        create_page_link(page_file, cols[col_index])

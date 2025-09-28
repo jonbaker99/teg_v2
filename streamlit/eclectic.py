@@ -152,3 +152,7 @@ else:
         
         # Display table
         datawrapper_table(formatted_results, css_classes='full-width eclectic bold-2nd')
+
+# === NAVIGATION LINKS ===
+from utils import add_navigation_links
+add_navigation_links(__file__)

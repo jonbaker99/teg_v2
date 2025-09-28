@@ -73,9 +73,13 @@ with tab2:
     st.markdown(f'**{best_or_worst} worstball**')
     st.write(
         worstball_output.to_html(
-            index=False, 
-            justify='left', 
+            index=False,
+            justify='left',
             classes='datawrapper-table left-3rd full-width'
-        ), 
+        ),
         unsafe_allow_html=True
     )
+
+# === NAVIGATION LINKS ===
+from utils import add_navigation_links
+add_navigation_links(__file__)

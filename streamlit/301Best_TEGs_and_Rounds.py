@@ -123,3 +123,7 @@ with tab4:
 
 # Add note about TEG 2 exclusion
 st.caption("Note: TEG 2 is excluded from all TEG-level analysis as it only had 3 rounds compared to the standard 4 rounds.")
+
+# === NAVIGATION LINKS ===
+from utils import add_navigation_links
+add_navigation_links(__file__)

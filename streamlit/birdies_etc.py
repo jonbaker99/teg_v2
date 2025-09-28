@@ -91,3 +91,7 @@ for i, tab in enumerate(tabs):
                 ),
                 unsafe_allow_html=True
             )
+
+# === NAVIGATION LINKS ===
+from utils import add_navigation_links
+add_navigation_links(__file__)

@@ -263,3 +263,7 @@ except Exception as e:
     # Comprehensive error handling for production stability
     st.error(f"An error occurred: {str(e)}")
     logger.error(f"An error occurred: {str(e)}", exc_info=True)
+
+# === NAVIGATION LINKS ===
+from utils import add_navigation_links
+add_navigation_links(__file__)
