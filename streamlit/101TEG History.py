@@ -75,6 +75,9 @@ if missing_teg_nums:
         st.caption("Or use the data update process to refresh all winner information.")
 
 # === NAVIGATION LINKS ===
-from utils import add_navigation_links
+from utils import add_navigation_links, add_custom_navigation_links
 add_navigation_links(__file__)
+
+st.markdown("---")
+add_custom_navigation_links(__file__, layout="horizontal", separator=" | ")
 

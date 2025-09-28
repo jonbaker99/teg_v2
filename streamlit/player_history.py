@@ -523,5 +523,8 @@ with tabs[1]:
         st.warning("No data available for Green Jacket rankings.")
 
 # === NAVIGATION LINKS ===
-from utils import add_navigation_links
+from utils import add_navigation_links, add_custom_navigation_links
 add_navigation_links(__file__)
+
+st.markdown("---")
+add_custom_navigation_links(__file__, layout="horizontal", separator=" | ")
