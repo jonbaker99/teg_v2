@@ -35,3 +35,12 @@ a.custom-nav-link:hover {
     font-size: 14px;
     padding-left: 8px;
 }
+
+.nav-list.nav-sections {
+    background: none;
+    color: grey;
+}
+
+.nav-sections a.custom-nav-link {
+    color: grey;
+}

@@ -5,7 +5,7 @@ import pandas as pd
 # Import data loading functions from main utils
 from utils import load_all_data, get_teg_winners, get_trophy_full_name, load_datawrapper_css
 from utils_win_tables import summarise_teg_wins, compress_ranges
-from utils import add_custom_navigation_links
+from utils import add_custom_navigation_links, add_section_navigation_links
 
 # Import history-specific helper functions
 from helpers.history_data_processing import (
@@ -141,3 +141,22 @@ st.markdown(
     f'<div class="nav-list"><span class="nav-label">Related links:</span> {links_html}</div>',
     unsafe_allow_html=True
 )
+
+# with st.expander("Other Sections"):
+#     sections_html = add_section_navigation_links(
+#         __file__, layout="vertical", separator=" | ", render=False, exclude_current=True
+#     )
+#     # st.markdown(
+#     #     f'<div class="nav-list nav-sections"><span class="nav-label">Sections:</span>{sections_html}</div>',
+#     #     unsafe_allow_html=True
+#     # )
+#     st.markdown(
+#         f'<div class="nav-list nav-sections">{sections_html}</div>',
+#         unsafe_allow_html=True
+#     )
+
+
+#     st.markdown(
+#         f'<div class="nav-list"><span class="nav-label">Related links:</span> {links_html}<br><span class="nav-label">Sections:</span>{sections_html}</div>',
+#         unsafe_allow_html=True
+#     )

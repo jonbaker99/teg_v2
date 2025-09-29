@@ -2389,6 +2389,143 @@ def add_custom_navigation_links(
         raise ValueError(f"Unknown layout: {layout!r}")
 
 
+def add_section_navigation_links(
+    input_value=None,
+    css_class="custom-nav-link",
+    layout="columns",                 # "columns" | "horizontal" | "vertical"
+    separator=" | ",
+    exclude_current=True,
+    exclude_data=True,
+    render=True,
+):
+    """
+    Add navigation links to sections (each link goes to the first page in that section).
+
+    Args:
+        input_value: Page filename (e.g. "__file__") to determine current page for exclusion
+        css_class: CSS class for anchor elements
+        layout: "columns" | "horizontal" | "vertical"
+        separator: used for horizontal layout
+        exclude_current: exclude current page's section from the links
+        exclude_data: exclude "Data" section from the links (default True)
+        render: if True (default), writes to the Streamlit app (backward-compatible behaviour).
+                if False, returns content:
+                    - "horizontal"/"vertical": returns one HTML string
+                    - "columns": returns List[List[str]] (each inner list = links for that column)
+    Returns:
+        None (when render=True)
+        str (HTML) for horizontal/vertical when render=False
+        List[List[str]] for columns when render=False
+        "" if nothing to render
+    """
+    # --- Get all sections and their first pages ---
+    sections_data = {}
+    # Preserve the order from PAGE_DEFINITIONS (don't sort alphabetically)
+    for filename, page_info in PAGE_DEFINITIONS.items():
+        section = page_info["section"]
+        if section not in sections_data:
+            sections_data[section] = []
+        sections_data[section].append(filename)
+
+    # Pages are already in definition order, so first page is sections_data[section][0]
+
+    # --- Handle exclusions ---
+    # Exclude Data section if requested
+    if exclude_data and "Data" in sections_data:
+        del sections_data["Data"]
+
+    # Exclude current page's section if requested
+    if exclude_current and input_value:
+        try:
+            # Extract just the filename from potentially full path
+            current_page_file = os.path.basename(input_value)
+            current_page_info = PAGE_DEFINITIONS.get(current_page_file)
+            if current_page_info:
+                current_section = current_page_info["section"]
+                if current_section in sections_data:
+                    del sections_data[current_section]
+        except:
+            # If we can't determine current page, continue without exclusion
+            pass
+
+    if not sections_data:
+        return "" if not render else None
+
+    # --- Create section links data ---
+    section_links = []
+
+    # Get sections in order using SECTION_CONFIG
+    section_order = []
+    for section in sections_data.keys():
+        section_config = SECTION_CONFIG.get(section, {})
+        order = section_config.get("order", 999)
+        section_order.append((order, section))
+
+    section_order.sort(key=lambda x: x[0])
+
+    # Build links for each section
+    for order, section in section_order:
+        first_page = sections_data[section][0]  # First page in sorted order
+        section_config = SECTION_CONFIG.get(section, {})
+        display_name = section_config.get("display_name", section)
+
+        section_links.append((first_page, display_name))
+
+    if not section_links:
+        return "" if not render else None
+
+    # --- Ensure CSS is present ---
+    apply_custom_navigation_css()
+
+    # --- Helper function ---
+    def _section_link_html(page_file: str, section_title: str) -> str:
+        base_url = get_app_base_url()
+        page_name = convert_filename_to_streamlit_url(page_file)
+        full_url = f"{base_url}/{page_name}"
+        return f'<a href="{full_url}" target="_self" class="{css_class}">{section_title}</a>'
+
+    # --- Layouts ---
+    if layout == "horizontal":
+        links_html = [_section_link_html(pf, title) for pf, title in section_links]
+        navigation_html = separator.join(links_html)
+        if render:
+            st.markdown(navigation_html, unsafe_allow_html=True)
+            return None
+        else:
+            return navigation_html
+
+    elif layout == "vertical":
+        links_html = [_section_link_html(pf, title) for pf, title in section_links]
+        navigation_html = "<br/>".join(links_html)
+        if render:
+            st.markdown(navigation_html, unsafe_allow_html=True)
+            return None
+        else:
+            return navigation_html
+
+    elif layout == "columns":
+        # Use 3 columns as default for sections (fewer items than pages typically)
+        num_cols = min(3, len(section_links))
+        if render:
+            cols = st.columns(num_cols)
+            for i, (page_file, section_title) in enumerate(section_links):
+                col_index = i % num_cols
+                # Create the link directly in the column
+                link_html = _section_link_html(page_file, section_title)
+                cols[col_index].markdown(link_html, unsafe_allow_html=True)
+            return None
+        else:
+            # return data structure the caller can place as they wish
+            cols_data = [[] for _ in range(num_cols)]
+            for i, (page_file, section_title) in enumerate(section_links):
+                col_index = i % num_cols
+                cols_data[col_index].append(_section_link_html(page_file, section_title))
+            return cols_data
+
+    else:
+        raise ValueError(f"Unknown layout: {layout!r}")
+
+
 def create_custom_navigation_section(section_name, pages, current_page, container_class="nav-section"):
     """Create a fully custom navigation section with advanced HTML structure"""
     base_url = get_app_base_url()
