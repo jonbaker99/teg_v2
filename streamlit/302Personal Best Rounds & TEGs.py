@@ -64,10 +64,15 @@ elif st.session_state.selected_measure not in friendly_names:
 tab1, tab2, tab3, tab4, tab5 = st.tabs(["PB Summary", "Best TEGs", "Best Rounds", "Worst TEGs", "Worst Rounds"])
 
 with tab1:
-    # Create subtabs within PB Summary
-    pb_rounds_tab, pb_tegs_tab = st.tabs(["Best Rounds", "Best TEGs"])
+    # Segmented control for PB Summary view selection
+    pb_view = st.segmented_control(
+        "View",
+        ["Best Rounds", "Best TEGs"],
+        default="Best Rounds",
+        selection_mode="single"
+    )
 
-    with pb_rounds_tab:
+    if pb_view == "Best Rounds":
         st.markdown('#### Personal Best Rounds')
         # st.markdown('Each player\'s best performance across all four measures for individual rounds.')
         st.write(
@@ -79,8 +84,7 @@ with tab1:
             ),
             unsafe_allow_html=True
         )
-
-    with pb_tegs_tab:
+    else:  # Best TEGs
         st.markdown('#### Personal Best TEGs')
         # st.markdown('Each player\'s best performance across all four measures for complete TEGs.')
         st.write(
@@ -95,16 +99,16 @@ with tab1:
 
 # Tabs with measure selection that syncs across all tabs
 with tab2:
-    # Radio button that updates session state
-    selected_friendly_name = st.radio(
-        "Choose a measure:", 
-        friendly_names, 
-        horizontal=True, 
-        key="best_tegs_radio",
-        index=friendly_names.index(st.session_state.selected_measure)
+    # Segmented control that updates session state
+    selected_friendly_name = st.segmented_control(
+        "Choose a measure:",
+        friendly_names,
+        default=st.session_state.selected_measure,
+        selection_mode="single",
+        key="best_tegs_segmented"
     )
-    
-    # Update session state when radio button changes
+
+    # Update session state when segmented control changes
     if selected_friendly_name != st.session_state.selected_measure:
         st.session_state.selected_measure = selected_friendly_name
         st.rerun()
@@ -124,16 +128,16 @@ with tab2:
     )
 
 with tab3:
-    # Radio button that syncs with session state
-    selected_friendly_name = st.radio(
-        "Choose a measure:", 
-        friendly_names, 
-        horizontal=True, 
-        key="best_rounds_radio",
-        index=friendly_names.index(st.session_state.selected_measure)
+    # Segmented control that syncs with session state
+    selected_friendly_name = st.segmented_control(
+        "Choose a measure:",
+        friendly_names,
+        default=st.session_state.selected_measure,
+        selection_mode="single",
+        key="best_rounds_segmented"
     )
-    
-    # Update session state when radio button changes
+
+    # Update session state when segmented control changes
     if selected_friendly_name != st.session_state.selected_measure:
         st.session_state.selected_measure = selected_friendly_name
         st.rerun()
@@ -153,16 +157,16 @@ with tab3:
     )
 
 with tab4:
-    # Radio button that syncs with session state
-    selected_friendly_name = st.radio(
-        "Choose a measure:", 
-        friendly_names, 
-        horizontal=True, 
-        key="worst_tegs_radio",
-        index=friendly_names.index(st.session_state.selected_measure)
+    # Segmented control that syncs with session state
+    selected_friendly_name = st.segmented_control(
+        "Choose a measure:",
+        friendly_names,
+        default=st.session_state.selected_measure,
+        selection_mode="single",
+        key="worst_tegs_segmented"
     )
-    
-    # Update session state when radio button changes
+
+    # Update session state when segmented control changes
     if selected_friendly_name != st.session_state.selected_measure:
         st.session_state.selected_measure = selected_friendly_name
         st.rerun()
@@ -182,16 +186,16 @@ with tab4:
     )
 
 with tab5:
-    # Radio button that syncs with session state
-    selected_friendly_name = st.radio(
-        "Choose a measure:", 
-        friendly_names, 
-        horizontal=True, 
-        key="worst_rounds_radio",
-        index=friendly_names.index(st.session_state.selected_measure)
+    # Segmented control that syncs with session state
+    selected_friendly_name = st.segmented_control(
+        "Choose a measure:",
+        friendly_names,
+        default=st.session_state.selected_measure,
+        selection_mode="single",
+        key="worst_rounds_segmented"
     )
-    
-    # Update session state when radio button changes
+
+    # Update session state when segmented control changes
     if selected_friendly_name != st.session_state.selected_measure:
         st.session_state.selected_measure = selected_friendly_name
         st.rerun()

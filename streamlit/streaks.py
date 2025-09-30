@@ -4,14 +4,15 @@ import pandas as pd
 import numpy as np
 
 # Import data loading functions from main utils
-from utils import load_datawrapper_css, load_all_data
+from utils import load_datawrapper_css, load_all_data, read_file, STREAKS_PARQUET
 
 # Import streak analysis helper functions
 from helpers.streak_analysis_processing import (
     prepare_good_streaks_data,
     prepare_bad_streaks_data,
     prepare_current_good_streaks_data,
-    prepare_current_bad_streaks_data
+    prepare_current_bad_streaks_data,
+    calculate_window_streaks
 )
 
 
@@ -63,7 +64,7 @@ streak_type = st.radio(
 )
 
 # Create main tab structure for streaks
-tab_labels = ["Good Streaks", "Bad Streaks"]
+tab_labels = ["Good Streaks", "Bad Streaks", "Streak detail"]
 tabs = st.tabs(tab_labels)
 
 # Display streak statistics in tabs
@@ -104,6 +105,86 @@ for i, tab in enumerate(tabs):
                 unsafe_allow_html=True
             )
             st.caption("*: current streak is maximum streak")
+
+        elif i == 2:
+            # Streak detail tab - TEG/Round level analysis
+            st.write("Select filters to analyze streaks within a specific window (TEG, Round, or Player).")
+            st.write("Leave filters blank to see all data.")
+
+            # Load and prepare data for window analysis
+            streaks_df = read_file(STREAKS_PARQUET)
+            df = streaks_df.merge(
+                all_data[['HoleID', 'TEG', 'TEGNum', 'Round', 'Pl', 'Player']],
+                on=['HoleID', 'Pl']
+            )
+            df = df.sort_values(['Pl', 'TEGNum', 'Round', 'Career Count'])
+
+            # Create filter dropdowns
+            col1, col2, col3 = st.columns(3)
+
+            with col1:
+                # Get unique TEGs sorted by TEGNum
+                teg_options = ['All'] + sorted(df['TEG'].unique(), key=lambda x: int(x.split()[1]))
+                selected_teg = st.selectbox('TEG', teg_options)
+
+            with col2:
+                # Get unique rounds sorted numerically
+                round_options = ['All'] + sorted(df['Round'].unique())
+                selected_round = st.selectbox('Round', round_options)
+
+            with col3:
+                # Get unique players sorted by Pl
+                player_options = ['All'] + sorted(df['Pl'].unique())
+                selected_player = st.selectbox('Player', player_options)
+
+            # Apply filters
+            filtered_df = df.copy()
+
+            if selected_teg != 'All':
+                filtered_df = filtered_df[filtered_df['TEG'] == selected_teg]
+
+            if selected_round != 'All':
+                filtered_df = filtered_df[filtered_df['Round'] == selected_round]
+
+            if selected_player != 'All':
+                filtered_df = filtered_df[filtered_df['Pl'] == selected_player]
+
+            # Display filter summary
+            filter_summary = []
+            if selected_teg != 'All':
+                filter_summary.append(f"TEG: {selected_teg}")
+            if selected_round != 'All':
+                filter_summary.append(f"Round: {selected_round}")
+            if selected_player != 'All':
+                player_name = filtered_df['Player'].iloc[0] if len(filtered_df) > 0 else selected_player
+                filter_summary.append(f"Player: {player_name}")
+
+            if filter_summary:
+                st.write(f"**Showing streaks for:** {', '.join(filter_summary)}")
+            else:
+                st.write("**Showing streaks for:** All data (career-level)")
+
+            st.write(f"*Analyzing {len(filtered_df)} holes*")
+
+            # Calculate and display results
+            if len(filtered_df) > 0:
+                with st.spinner("Calculating adjusted streaks..."):
+                    results_df = calculate_window_streaks(filtered_df)
+
+                if len(results_df) > 0:
+                    # Display results table
+                    st.write(
+                        results_df.to_html(
+                            index=False,
+                            justify='left',
+                            classes='datawrapper-table'
+                        ),
+                        unsafe_allow_html=True
+                    )
+                else:
+                    st.info("No streak data available for the selected filters.")
+            else:
+                st.warning("No data matches the selected filters.")
 
 # === NAVIGATION LINKS ===
 from utils import add_custom_navigation_links
