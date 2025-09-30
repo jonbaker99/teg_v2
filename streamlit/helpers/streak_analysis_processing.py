@@ -757,3 +757,192 @@ def transform_cached_bad_streaks(streaks_df, player_mapping, equals_max_df=None)
     bad_streaks = bad_streaks.drop('_over_par_numeric', axis=1)
 
     return bad_streaks
+
+
+# === TEG/ROUND WINDOW STREAK FUNCTIONS ===
+
+def adjust_opening_streak(series):
+    """
+    Adjust streak values to be relative to the start of the selected window.
+
+    Args:
+        series: pandas Series of streak values
+
+    Returns:
+        pandas Series with adjusted values
+
+    Purpose:
+        When analyzing streaks within a specific window (TEG or Round),
+        we need to adjust for any pre-existing streak. For example, if a player
+        enters a TEG with a 4-hole par streak and pars the first 3 holes,
+        their career streak shows 5,6,7 but the TEG-level streak should be 1,2,3.
+    """
+    if len(series) == 0:
+        return series
+
+    opening_val = series.iloc[0]
+
+    # No adjustment needed if starting at 0
+    if opening_val == 0:
+        return series
+
+    # Check if streak resets to 0 within the window
+    has_reset = (series == 0).any()
+
+    if has_reset:
+        # Find first reset point
+        reset_idx = (series == 0).idxmax()
+        result = series.copy()
+
+        # Adjust values before reset (these carry over from before the window)
+        mask = series.index < reset_idx
+        result.loc[mask] = result.loc[mask] - opening_val + 1
+
+        # Values after reset are already relative to the window
+        return result
+    else:
+        # No reset in window, adjust all values
+        return series - opening_val + 1
+
+
+def find_streak_location(window_data, streak_col, max_value):
+    """
+    Find where the maximum streak occurred (start and end holes).
+
+    Args:
+        window_data: DataFrame with streak data for the window
+        streak_col: Name of the adjusted streak column
+        max_value: The maximum streak value to locate
+
+    Returns:
+        tuple: (from_holeid, to_holeid) or (None, None) if not found
+
+    Purpose:
+        Identifies the exact holes where a max streak occurred to provide
+        detailed location information (e.g., "T10 R1 H3 to T10 R1 H8").
+    """
+    if max_value == 0:
+        return None, None
+
+    # Find where this max value occurs
+    max_locations = window_data[window_data[streak_col] == max_value]
+
+    if len(max_locations) == 0:
+        return None, None
+
+    # Take the last occurrence (end of the streak)
+    end_idx = max_locations.index[-1]
+    end_hole = window_data.loc[end_idx, 'HoleID']
+
+    # Work backwards to find the start
+    start_idx = end_idx - max_value + 1
+    if start_idx < window_data.index[0]:
+        start_idx = window_data.index[0]
+
+    start_hole = window_data.loc[start_idx, 'HoleID']
+
+    return start_hole, end_hole
+
+
+def format_hole_location(hole_id):
+    """
+    Convert HoleID format (T10|R01|H01) to display format (T10 R1 H1).
+
+    Args:
+        hole_id: String in format "T{teg}|R{round}|H{hole}"
+
+    Returns:
+        String in format "T{teg} R{round} H{hole}" with leading zeros removed
+    """
+    if pd.isna(hole_id) or hole_id is None:
+        return ""
+
+    parts = str(hole_id).split('|')
+    if len(parts) != 3:
+        return hole_id
+
+    teg = parts[0]  # T10
+    round_num = int(parts[1].replace('R', ''))  # R01 -> 1
+    hole_num = int(parts[2].replace('H', ''))  # H01 -> 1
+
+    return f"{teg} R{round_num} H{hole_num}"
+
+
+def calculate_window_streaks(window_data):
+    """
+    Calculate adjusted streaks for a selected window and return detailed results.
+
+    Args:
+        window_data: Filtered DataFrame for the selected window (must include
+                    'Player', 'HoleID', and all streak columns)
+
+    Returns:
+        DataFrame with columns: ['Streak Type', 'Player', 'Max Streak', 'Location']
+
+    Purpose:
+        Main function for calculating TEG/Round-level streaks. Takes a filtered
+        window of data and calculates max streaks adjusted for any pre-existing
+        streaks at the start of the window. Also identifies where each max streak
+        occurred within the window.
+    """
+    if len(window_data) == 0:
+        return pd.DataFrame()
+
+    # Get all streak columns
+    streak_cols = [c for c in window_data.columns if c.endswith('_streak')]
+
+    # Define friendly names for streak types
+    streak_names = {
+        'eagle_true_streak': 'Eagles',
+        'eagle_false_streak': 'No Eagles',
+        'birdie_true_streak': 'Birdies',
+        'birdie_false_streak': 'No Birdies',
+        'par_better_true_streak': 'Pars or Better',
+        'par_better_false_streak': 'Over Par',
+        'double_bogey_true_streak': '+2s or Worse',
+        'double_bogey_false_streak': 'No +2s',
+        'TBP_true_streak': 'TBPs',
+        'TBP_false_streak': 'No TBPs'
+    }
+
+    results = []
+
+    # Process each player in the window
+    for player in window_data['Player'].unique():
+        player_data = window_data[window_data['Player'] == player].copy()
+
+        # Calculate adjusted streaks for each type
+        for streak_col in streak_cols:
+            adj_col = f'{streak_col}_adj'
+            player_data[adj_col] = adjust_opening_streak(player_data[streak_col])
+
+            # Get max value
+            max_streak = player_data[adj_col].max()
+
+            # Find location
+            from_hole, to_hole = find_streak_location(player_data, adj_col, max_streak)
+
+            # Format location
+            if from_hole and to_hole:
+                location = f"{format_hole_location(from_hole)} to {format_hole_location(to_hole)}"
+            else:
+                location = "-"
+
+            results.append({
+                'Streak Type': streak_names.get(streak_col, streak_col),
+                'Player': player,
+                'Max Streak': int(max_streak),
+                'Location': location
+            })
+
+    results_df = pd.DataFrame(results)
+
+    # Sort by streak type (good streaks first, then bad streaks)
+    good_streaks_order = ['Eagles', 'Birdies', 'Pars or Better', 'No +2s', 'No TBPs']
+    bad_streaks_order = ['No Eagles', 'No Birdies', 'Over Par', '+2s or Worse', 'TBPs']
+    streak_order = good_streaks_order + bad_streaks_order
+
+    results_df['_order'] = results_df['Streak Type'].map({s: i for i, s in enumerate(streak_order)})
+    results_df = results_df.sort_values(['_order', 'Player']).drop('_order', axis=1)
+
+    return results_df
