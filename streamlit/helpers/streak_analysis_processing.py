@@ -946,3 +946,59 @@ def calculate_window_streaks(window_data):
     results_df = results_df.sort_values(['_order', 'Player']).drop('_order', axis=1)
 
     return results_df
+
+
+def get_player_window_streaks(all_data, streaks_df, player=None, teg=None, round_num=None):
+    """
+    Quick lookup function to get streak stats for a TEG/Round window.
+
+    Args:
+        all_data: Main DataFrame with all golf data
+        streaks_df: Streaks DataFrame from read_file(STREAKS_PARQUET)
+        player: Player code (e.g., 'JB', 'DM') - optional, if None returns all players
+        teg: TEG name (e.g., 'TEG 10') - optional
+        round_num: Round number (e.g., 1, 2, 3, 4) - optional
+
+    Returns:
+        DataFrame with streak results for the specified window
+        Columns: ['Streak Type', 'Player', 'Max Streak', 'Location']
+
+    Example:
+        # Get all players' streaks for TEG 10
+        result = get_player_window_streaks(all_data, streaks_df, teg='TEG 10')
+
+        # Get JB's streaks for TEG 10
+        result = get_player_window_streaks(all_data, streaks_df, player='JB', teg='TEG 10')
+
+        # Get all players' streaks for Round 1 of TEG 10
+        result = get_player_window_streaks(all_data, streaks_df, teg='TEG 10', round_num=1)
+
+        # Get JB's streaks for Round 1 of TEG 10
+        result = get_player_window_streaks(all_data, streaks_df, player='JB', teg='TEG 10', round_num=1)
+    """
+    # Merge TEG/Round info
+    df = streaks_df.merge(
+        all_data[['HoleID', 'TEG', 'TEGNum', 'Round', 'Pl', 'Player']],
+        on=['HoleID', 'Pl']
+    )
+
+    # Apply filters
+    filtered = df.copy()
+
+    if player:
+        filtered = filtered[filtered['Pl'] == player]
+
+    if teg:
+        filtered = filtered[filtered['TEG'] == teg]
+
+    if round_num is not None:
+        filtered = filtered[filtered['Round'] == round_num]
+
+    if len(filtered) == 0:
+        return pd.DataFrame()
+
+    # Sort and calculate
+    filtered = filtered.sort_values(['Pl', 'TEGNum', 'Round', 'Career Count'])
+
+    # Calculate window streaks
+    return calculate_window_streaks(filtered)
