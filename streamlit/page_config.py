@@ -50,9 +50,9 @@ PAGE_DEFINITIONS = {
     "1000Data update.py": {"title": "Data update", "icon": ":material/update:", "section": "Data"},
     "data_edit.py": {"title": "Data edit", "icon": ":material/edit:", "section": "Data"},
     "delete_data.py": {"title": "Delete data", "icon": ":material/skull:", "section": "Data"},
-    "data_test_temp.py": {"title": "TEMP DATA TESTING", "icon": ":material/check_circle:", "section": "Data"},
+    # "data_test_temp.py": {"title": "TEMP DATA TESTING", "icon": ":material/check_circle:", "section": "Data"},
     "admin_volume_management.py": {"title": "Data volume management", "icon": ":material/check_circle:", "section": "Data"},
-    "navigation_test.py": {"title": "Navigation Test", "icon": ":material/science:", "section": "Data"},
+    # "navigation_test.py": {"title": "Navigation Test", "icon": ":material/science:", "section": "Data"},
 }
 
 # Section display names and conditional logic
