@@ -37,9 +37,32 @@ tegnum_options, par_options = get_filtering_options(all_data)
 
 
 # === USER INTERFACE ===
+# Score type selector (affects all tabs)
+score_field_option = st.segmented_control(
+    'Score type',
+    ['Scores', 'Scores vs Par', 'Stableford Points'],
+    default='Stableford Points'
+)
+
+# Map display name to field name
+field_mapping = {
+    'Scores': 'Sc',
+    'Scores vs Par': 'GrossVP',
+    'Stableford Points': 'Stableford'
+}
+selected_field = field_mapping[score_field_option]
+display_name_mapping = {
+    'Sc': 'Score',
+    'GrossVP': 'vs Par',
+    'Stableford': 'Stableford'
+}
+selected_display_name = display_name_mapping[selected_field]
+
 # Filtering controls
+player_options = ['All players'] + sorted(all_data['Pl'].unique().tolist())
+selected_player = st.selectbox('Filter by player (optional)', player_options, index=0)
 selected_tegnum = st.selectbox('Filter by TEG (optional)', tegnum_options, index=0)
-selected_par = st.selectbox('Filter by par (optional)', par_options, index=0)
+selected_par = st.segmented_control('Filter by par (optional)', par_options, default=par_options[0])
 
 # Display mode control
 display_mode = st.radio(
@@ -49,74 +72,86 @@ display_mode = st.radio(
     horizontal=True
 )
 
+# Apply filters
 # apply_teg_and_par_filters() - Applies user-selected filters and creates descriptive labels
 filtered_data, teg_desc, par_desc = apply_teg_and_par_filters(all_data, selected_tegnum, selected_par)
 
-# count_scores_by_player() - Creates score distribution matrices for both score types
-count_gvp = count_scores_by_player(filtered_data, 'GrossVP')
-count_sc = count_scores_by_player(filtered_data, 'Sc')
+# Apply player filter if selected
+if selected_player != 'All players':
+    filtered_data = filtered_data[filtered_data['Pl'] == selected_player]
+    player_desc = selected_player
+else:
+    player_desc = 'All players'
+
+# count_scores_by_player() - Creates score distribution matrix for selected score type
+count_data = count_scores_by_player(filtered_data, selected_field)
 
 # Display results in tabs
-tab1, tab2 = st.tabs(["Scores", "Scores vs Par"])
+tab1, tab2 = st.tabs(["By Player", "By TEG"])
 
 with tab1:
-    # Dynamic title and data based on display mode
+    # By Player tab - shows distribution of selected score type across players
     if display_mode == "Count":
-        st.markdown('### Count of gross score by player')
-        display_data = count_sc
+        st.markdown(f'### Count of {score_field_option} by player')
+        display_data = count_data
         is_percentage_mode = False
     else:
-        st.markdown('### Percentage of gross score by player')
-        display_data = convert_counts_to_percentages(count_sc)
+        st.markdown(f'### Percentage of {score_field_option} by player')
+        display_data = convert_counts_to_percentages(count_data)
         is_percentage_mode = True
 
-    st.caption(f'{teg_desc} | {par_desc}')
+    st.caption(f'{player_desc} | {teg_desc} | {par_desc}')
 
     # prepare_score_count_display() - Formats score count data for table display
-    score_display_data = prepare_score_count_display(display_data, 'Sc', 'Score', is_percentage_mode)
-    datawrapper_table(score_display_data, css_classes='full-width table-right-align')
+    table_display_data = prepare_score_count_display(display_data, selected_field, selected_display_name, is_percentage_mode)
+    datawrapper_table(table_display_data, css_classes='full-width table-right-align')
 
     # For charts, always use numeric data (not formatted)
-    chart_data = prepare_score_count_display(count_sc, 'Sc', 'Score', False)  # Always use counts for charts
+    chart_data = prepare_score_count_display(count_data, selected_field, selected_display_name, False)
+
+    # Handle special case for vs par charting
+    if selected_field == 'GrossVP':
+        chart_data = prepare_chart_data_with_special_handling(chart_data, 'GrossVP')
 
     # create_percentage_distribution_chart() - Creates percentage distribution chart
-    score_chart = create_percentage_distribution_chart(chart_data, teg_desc, par_desc)
-    st.plotly_chart(score_chart)
-
-    # Add stacked bar chart
-    stacked_chart = create_stacked_bar_chart(count_sc, teg_desc, par_desc, 'Sc')
-    st.plotly_chart(stacked_chart)
+    chart = create_percentage_distribution_chart(chart_data, teg_desc, par_desc)
+    st.plotly_chart(chart)
 
 with tab2:
-    # Dynamic title and data based on display mode
-    if display_mode == "Count":
-        st.markdown('### Count of Gross vs Par by player')
-        display_data_gvp = count_gvp
-        is_percentage_mode_gvp = False
-    else:
-        st.markdown('### Percentage of Gross vs Par by player')
-        display_data_gvp = convert_counts_to_percentages(count_gvp)
-        is_percentage_mode_gvp = True
+    # By TEG tab - shows distribution of selected score type across TEGs
+    st.markdown(f'### {score_field_option} Distribution by TEG')
 
-    st.caption(f'{teg_desc} | {par_desc}')
+    # Use filtered data (respects par filter but not player filter for this view)
+    teg_filtered_data, _, _ = apply_teg_and_par_filters(all_data, selected_tegnum, selected_par)
 
-    # prepare_score_count_display() - Formats vs-par data for table display
-    vspar_display_data = prepare_score_count_display(display_data_gvp, 'GrossVP', 'vs Par', is_percentage_mode_gvp)
-    datawrapper_table(vspar_display_data, css_classes='full-width table-right-align')
+    # Apply player filter if selected
+    if selected_player != 'All players':
+        teg_filtered_data = teg_filtered_data[teg_filtered_data['Pl'] == selected_player]
 
-    # For charts, always use numeric data (not formatted)
-    vspar_chart_raw = prepare_score_count_display(count_gvp, 'GrossVP', 'vs Par', False)  # Always use counts for charts
+    # Create crosstab of TEGNum vs selected score field
+    crosstab = pd.crosstab(teg_filtered_data['TEGNum'], teg_filtered_data[selected_field], normalize='index') * 100
+    crosstab = crosstab.round(1)
 
-    # prepare_chart_data_with_special_handling() - Handles "=" to 0 conversion for charting
-    vspar_chart_data = prepare_chart_data_with_special_handling(vspar_chart_raw, 'GrossVP')
+    # Prepare for display
+    display_data_teg = crosstab.reset_index()
+    display_data_teg.columns.name = None
 
-    # create_percentage_distribution_chart() - Creates percentage distribution chart
-    vspar_chart = create_percentage_distribution_chart(vspar_chart_data, teg_desc, par_desc)
-    st.plotly_chart(vspar_chart)
+    # Format column headers for GrossVP
+    if selected_field == 'GrossVP':
+        from utils import format_vs_par
+        new_cols = {col: format_vs_par(col) if col != 'TEGNum' else col for col in display_data_teg.columns}
+        display_data_teg = display_data_teg.rename(columns=new_cols)
 
-    # Add stacked bar chart
-    stacked_chart_gvp = create_stacked_bar_chart(count_gvp, teg_desc, par_desc, 'GrossVP')
-    st.plotly_chart(stacked_chart_gvp)
+    # Format percentage values
+    for col in display_data_teg.columns:
+        if col != 'TEGNum':
+            display_data_teg[col] = display_data_teg[col].apply(lambda x: f"{x:.1f}%" if pd.notna(x) else "0.0%")
+
+    # Rename TEGNum column
+    display_data_teg = display_data_teg.rename(columns={'TEGNum': 'TEG'})
+
+    st.caption(f'{player_desc} | {par_desc}')
+    datawrapper_table(display_data_teg, css_classes='full-width table-right-align')
 
 # === NAVIGATION LINKS ===
 from utils import add_custom_navigation_links
