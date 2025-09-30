@@ -552,6 +552,51 @@ def add_cumulative_scores(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def add_rankings_and_gaps(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Add TEG-level rankings and gaps to leader for cumulative scores.
+
+    This function adds four columns:
+    - Rank_GrossVP_TEG: Player's rank based on cumulative GrossVP at each hole in the TEG
+    - Rank_Stableford_TEG: Player's rank based on cumulative Stableford at each hole in the TEG
+    - Gap_GrossVP_TEG: Difference from leader's cumulative GrossVP
+    - Gap_Stableford_TEG: Difference from leader's cumulative Stableford
+
+    Parameters:
+        df (pd.DataFrame): DataFrame with cumulative scores already calculated
+
+    Returns:
+        pd.DataFrame: DataFrame with ranking and gap columns added
+    """
+    logger.info("Adding TEG rankings and gaps to leader.")
+
+    # Create TEG_Hole column for grouping (cumulative hole number within TEG)
+    df['TEG_Hole'] = df['Hole'] + 18 * (df['Round'] - 1)
+
+    # Add rankings for GrossVP (lower is better - ascending)
+    df['Rank_GrossVP_TEG'] = df.groupby(['TEGNum', 'TEG_Hole'])['GrossVP Cum TEG'].rank(
+        method='min', ascending=True, na_option='keep'
+    )
+
+    # Add rankings for Stableford (higher is better - descending)
+    df['Rank_Stableford_TEG'] = df.groupby(['TEGNum', 'TEG_Hole'])['Stableford Cum TEG'].rank(
+        method='min', ascending=False, na_option='keep'
+    )
+
+    # Add gap to leader for GrossVP (leader has minimum, so gap = player - leader)
+    df['Gap_GrossVP_TEG'] = df.groupby(['TEGNum', 'TEG_Hole'])['GrossVP Cum TEG'].transform(
+        lambda x: x - x.min()
+    )
+
+    # Add gap to leader for Stableford (leader has maximum, so gap = leader - player)
+    df['Gap_Stableford_TEG'] = df.groupby(['TEGNum', 'TEG_Hole'])['Stableford Cum TEG'].transform(
+        lambda x: x.max() - x
+    )
+
+    logger.info("TEG rankings and gaps to leader added.")
+    return df
+
+
 def save_to_parquet(df: pd.DataFrame, output_file: str) -> None:
     """
     Save DataFrame to a Parquet file.
@@ -769,6 +814,10 @@ def update_all_data(csv_file: str, parquet_file: str, csv_output_file: str) -> N
     # Apply cumulative score and average calculations
     df_transformed = add_cumulative_scores(df)
     logger.debug("Cumulative scores and averages applied.")
+
+    # Add rankings and gaps to leader
+    df_transformed = add_rankings_and_gaps(df_transformed)
+    logger.debug("Rankings and gaps to leader added.")
 
     # Add 'Year' column and convert to pandas nullable integer type
     df_transformed['Year'] = pd.to_datetime(
