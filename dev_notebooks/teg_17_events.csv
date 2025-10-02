@@ -1,0 +1,203 @@
+﻿TEG,TEGNum,Round,Hole,Player,Pl,Par,Sc,GrossVP,Stableford,Final_Hole_Flag,Event,Metric,Rank_Gross_Before,Rank_Gross_After,Rank_Stableford_Before,Rank_Stableford_After
+TEG 17,17,1,1,Alex BAKER,AB,4,5,1,3,FALSE,Took Lead (Gross),,,1,,1
+TEG 17,17,1,1,Gregg WILLIAMS,GW,4,5,1,2,FALSE,Took Lead (Gross),,,1,,2
+TEG 17,17,1,1,Jon BAKER,JB,4,5,1,2,FALSE,Took Lead (Gross),,,1,,2
+TEG 17,17,1,1,Alex BAKER,AB,4,5,1,3,FALSE,Took Lead (Stableford),,,1,,1
+TEG 17,17,1,1,David MULLIN,DM,4,7,3,0,FALSE,Triple Bogey or Worse,3,,4,,4
+TEG 17,17,1,1,John PATTERSON,JP,4,8,4,0,FALSE,Triple Bogey or Worse,4,,5,,4
+TEG 17,17,1,1,David MULLIN,DM,4,7,3,0,FALSE,Zero Points,0,,4,,4
+TEG 17,17,1,1,John PATTERSON,JP,4,8,4,0,FALSE,Zero Points,0,,5,,4
+TEG 17,17,1,2,David MULLIN,DM,5,8,3,0,FALSE,Hit Bottom (Spoon),,4,5,4,5
+TEG 17,17,1,2,Alex BAKER,AB,5,6,1,3,FALSE,Lost Lead (Gross),,1,2,1,1
+TEG 17,17,1,2,Gregg WILLIAMS,GW,5,6,1,2,FALSE,Lost Lead (Gross),,1,2,2,3
+TEG 17,17,1,2,David MULLIN,DM,5,8,3,0,FALSE,Triple Bogey or Worse,3,4,5,4,5
+TEG 17,17,1,2,David MULLIN,DM,5,8,3,0,FALSE,Zero Points,0,4,5,4,5
+TEG 17,17,1,3,Alex BAKER,AB,3,6,3,0,FALSE,Lost Lead (Stableford),,2,3,1,2
+TEG 17,17,1,3,Jon BAKER,JB,3,3,0,3,FALSE,Took Lead (Stableford),,1,1,2,1
+TEG 17,17,1,3,Alex BAKER,AB,3,6,3,0,FALSE,Triple Bogey or Worse,3,2,3,1,2
+TEG 17,17,1,3,Alex BAKER,AB,3,6,3,0,FALSE,Zero Points,0,2,3,1,2
+TEG 17,17,1,4,Alex BAKER,AB,4,8,4,0,FALSE,Triple Bogey or Worse,4,3,4,2,3
+TEG 17,17,1,4,Alex BAKER,AB,4,8,4,0,FALSE,Zero Points,0,3,4,2,3
+TEG 17,17,1,5,Alex BAKER,AB,4,10,6,0,FALSE,Quintuple Bogey or Worse,6,4,5,3,4
+TEG 17,17,1,5,Alex BAKER,AB,4,10,6,0,FALSE,Triple Bogey or Worse,6,4,5,3,4
+TEG 17,17,1,5,Gregg WILLIAMS,GW,4,8,4,0,FALSE,Triple Bogey or Worse,4,2,2,2,3
+TEG 17,17,1,5,Alex BAKER,AB,4,10,6,0,FALSE,Zero Points,0,4,5,3,4
+TEG 17,17,1,5,Gregg WILLIAMS,GW,4,8,4,0,FALSE,Zero Points,0,2,2,2,3
+TEG 17,17,1,6,John PATTERSON,JP,4,8,4,0,FALSE,Triple Bogey or Worse,4,3,3,2,3
+TEG 17,17,1,6,John PATTERSON,JP,4,8,4,0,FALSE,Zero Points,0,3,3,2,3
+TEG 17,17,1,7,Alex BAKER,AB,5,8,3,1,FALSE,Triple Bogey or Worse,3,5,5,3,3
+TEG 17,17,1,8,David MULLIN,DM,3,6,3,0,FALSE,Triple Bogey or Worse,3,4,4,5,5
+TEG 17,17,1,8,David MULLIN,DM,3,6,3,0,FALSE,Zero Points,0,4,4,5,5
+TEG 17,17,1,9,John PATTERSON,JP,4,4,0,4,FALSE,4+ Points,4,3,3,4,2
+TEG 17,17,1,10,Jon BAKER,JB,5,8,3,0,FALSE,Triple Bogey or Worse,3,1,1,1,1
+TEG 17,17,1,10,Jon BAKER,JB,5,8,3,0,FALSE,Zero Points,0,1,1,1,1
+TEG 17,17,1,11,Alex BAKER,AB,3,3,0,4,FALSE,4+ Points,4,5,5,3,2
+TEG 17,17,1,12,John PATTERSON,JP,5,4,-1,4,FALSE,4+ Points,4,3,3,3,2
+TEG 17,17,1,12,John PATTERSON,JP,5,4,-1,4,FALSE,Birdie,-1,3,3,3,2
+TEG 17,17,1,12,Alex BAKER,AB,5,8,3,1,FALSE,Triple Bogey or Worse,3,5,5,2,3
+TEG 17,17,1,13,David MULLIN,DM,4,3,-1,4,FALSE,4+ Points,4,4,4,5,5
+TEG 17,17,1,13,David MULLIN,DM,4,3,-1,4,FALSE,Birdie,-1,4,4,5,5
+TEG 17,17,1,14,David MULLIN,DM,3,3,0,3,FALSE,Left Bottom (Spoon),,4,3,5,4
+TEG 17,17,1,15,John PATTERSON,JP,4,4,0,4,FALSE,4+ Points,4,3,3,2,2
+TEG 17,17,1,15,Gregg WILLIAMS,GW,4,5,1,2,FALSE,Hit Bottom (Spoon),,2,2,4,5
+TEG 17,17,1,15,Alex BAKER,AB,4,7,3,1,FALSE,Triple Bogey or Worse,3,5,5,3,3
+TEG 17,17,1,16,John PATTERSON,JP,4,4,0,4,FALSE,4+ Points,4,3,2,2,1
+TEG 17,17,1,16,Jon BAKER,JB,4,6,2,1,FALSE,Lost Lead (Stableford),,1,1,1,2
+TEG 17,17,1,16,John PATTERSON,JP,4,4,0,4,FALSE,Took Lead (Stableford),,3,2,2,1
+TEG 17,17,1,16,Alex BAKER,AB,4,7,3,1,FALSE,Triple Bogey or Worse,3,5,5,3,4
+TEG 17,17,1,17,Gregg WILLIAMS,GW,5,5,0,3,FALSE,Took Lead (Gross),,3,1,5,5
+TEG 17,17,1,17,David MULLIN,DM,5,8,3,1,FALSE,Triple Bogey or Worse,3,3,4,3,3
+TEG 17,17,1,17,Jon BAKER,JB,5,8,3,1,FALSE,Triple Bogey or Worse,3,1,1,2,2
+TEG 17,17,1,18,Alex BAKER,AB,4,9,5,0,TRUE,Hit Bottom (Spoon),,5,5,3,5
+TEG 17,17,1,18,Gregg WILLIAMS,GW,4,5,1,2,TRUE,Left Bottom (Spoon),,1,1,5,3
+TEG 17,17,1,18,Alex BAKER,AB,4,9,5,0,TRUE,Quintuple Bogey or Worse,5,5,5,3,5
+TEG 17,17,1,18,Alex BAKER,AB,4,9,5,0,TRUE,Triple Bogey or Worse,5,5,5,3,5
+TEG 17,17,1,18,John PATTERSON,JP,4,7,3,0,TRUE,Triple Bogey or Worse,3,3,3,1,1
+TEG 17,17,1,18,Alex BAKER,AB,4,9,5,0,TRUE,Zero Points,0,5,5,3,5
+TEG 17,17,1,18,John PATTERSON,JP,4,7,3,0,TRUE,Zero Points,0,3,3,1,1
+TEG 17,17,2,1,Alex BAKER,AB,4,6,2,1,FALSE,Left Bottom (Spoon),,5,5,5,4
+TEG 17,17,2,1,Gregg WILLIAMS,GW,4,6,2,0,FALSE,Lost Lead (Gross),,1,2,3,4
+TEG 17,17,2,1,John PATTERSON,JP,4,7,3,0,FALSE,Lost Lead (Stableford),,3,4,1,2
+TEG 17,17,2,1,Jon BAKER,JB,4,5,1,2,FALSE,Took Lead (Stableford),,1,1,2,1
+TEG 17,17,2,1,John PATTERSON,JP,4,7,3,0,FALSE,Triple Bogey or Worse,3,3,4,1,2
+TEG 17,17,2,1,Gregg WILLIAMS,GW,4,6,2,0,FALSE,Zero Points,0,1,2,3,4
+TEG 17,17,2,1,John PATTERSON,JP,4,7,3,0,FALSE,Zero Points,0,3,4,1,2
+TEG 17,17,2,2,Gregg WILLIAMS,GW,3,4,1,2,FALSE,Hit Bottom (Spoon),,2,2,4,5
+TEG 17,17,2,3,Jon BAKER,JB,4,4,0,4,FALSE,4+ Points,4,1,1,1,1
+TEG 17,17,2,3,Alex BAKER,AB,4,7,3,1,FALSE,Triple Bogey or Worse,3,5,5,4,4
+TEG 17,17,2,3,Gregg WILLIAMS,GW,4,7,3,0,FALSE,Triple Bogey or Worse,3,2,2,5,5
+TEG 17,17,2,3,John PATTERSON,JP,4,8,4,0,FALSE,Triple Bogey or Worse,4,4,4,2,2
+TEG 17,17,2,3,Gregg WILLIAMS,GW,4,7,3,0,FALSE,Zero Points,0,2,2,5,5
+TEG 17,17,2,3,John PATTERSON,JP,4,8,4,0,FALSE,Zero Points,0,4,4,2,2
+TEG 17,17,2,4,Jon BAKER,JB,4,3,-1,4,FALSE,4+ Points,4,1,1,1,1
+TEG 17,17,2,4,Jon BAKER,JB,4,3,-1,4,FALSE,Birdie,-1,1,1,1,1
+TEG 17,17,2,5,Alex BAKER,AB,3,3,0,4,FALSE,4+ Points,4,5,5,4,4
+TEG 17,17,2,5,Gregg WILLIAMS,GW,3,2,-1,4,FALSE,4+ Points,4,2,2,5,5
+TEG 17,17,2,5,Gregg WILLIAMS,GW,3,2,-1,4,FALSE,Birdie,-1,2,2,5,5
+TEG 17,17,2,6,John PATTERSON,JP,5,8,3,0,FALSE,Triple Bogey or Worse,3,4,4,2,2
+TEG 17,17,2,6,John PATTERSON,JP,5,8,3,0,FALSE,Zero Points,0,4,4,2,2
+TEG 17,17,2,7,Jon BAKER,JB,5,8,3,1,FALSE,Triple Bogey or Worse,3,1,1,1,1
+TEG 17,17,2,9,David MULLIN,DM,4,3,-1,4,FALSE,4+ Points,4,3,2,2,2
+TEG 17,17,2,9,David MULLIN,DM,4,3,-1,4,FALSE,Birdie,-1,3,2,2,2
+TEG 17,17,2,9,John PATTERSON,JP,4,7,3,0,FALSE,Triple Bogey or Worse,3,4,4,4,4
+TEG 17,17,2,9,John PATTERSON,JP,4,7,3,0,FALSE,Zero Points,0,4,4,4,4
+TEG 17,17,2,10,David MULLIN,DM,4,3,-1,4,FALSE,4+ Points,4,2,2,2,2
+TEG 17,17,2,10,David MULLIN,DM,4,3,-1,4,FALSE,Birdie,-1,2,2,2,2
+TEG 17,17,2,10,John PATTERSON,JP,4,7,3,0,FALSE,Hit Bottom (Spoon),,4,4,4,5
+TEG 17,17,2,10,Gregg WILLIAMS,GW,4,5,1,2,FALSE,Left Bottom (Spoon),,2,3,5,4
+TEG 17,17,2,10,Alex BAKER,AB,4,8,4,0,FALSE,Triple Bogey or Worse,4,5,5,3,3
+TEG 17,17,2,10,John PATTERSON,JP,4,7,3,0,FALSE,Triple Bogey or Worse,3,4,4,4,5
+TEG 17,17,2,10,Alex BAKER,AB,4,8,4,0,FALSE,Zero Points,0,5,5,3,3
+TEG 17,17,2,10,John PATTERSON,JP,4,7,3,0,FALSE,Zero Points,0,4,4,4,5
+TEG 17,17,2,11,Alex BAKER,AB,4,8,4,0,FALSE,Triple Bogey or Worse,4,5,5,3,3
+TEG 17,17,2,11,John PATTERSON,JP,4,7,3,0,FALSE,Triple Bogey or Worse,3,4,4,5,5
+TEG 17,17,2,11,Alex BAKER,AB,4,8,4,0,FALSE,Zero Points,0,5,5,3,3
+TEG 17,17,2,11,John PATTERSON,JP,4,7,3,0,FALSE,Zero Points,0,4,4,5,5
+TEG 17,17,2,12,Alex BAKER,AB,3,2,-1,4,FALSE,4+ Points,4,5,5,3,3
+TEG 17,17,2,12,Alex BAKER,AB,3,2,-1,4,FALSE,Birdie,-1,5,5,3,3
+TEG 17,17,2,12,Gregg WILLIAMS,GW,3,5,2,0,FALSE,Zero Points,0,3,3,4,4
+TEG 17,17,2,13,John PATTERSON,JP,5,10,5,0,FALSE,Quintuple Bogey or Worse,5,4,4,5,5
+TEG 17,17,2,13,Alex BAKER,AB,5,8,3,1,FALSE,Triple Bogey or Worse,3,5,5,3,3
+TEG 17,17,2,13,John PATTERSON,JP,5,10,5,0,FALSE,Triple Bogey or Worse,5,4,4,5,5
+TEG 17,17,2,13,John PATTERSON,JP,5,10,5,0,FALSE,Zero Points,0,4,4,5,5
+TEG 17,17,2,14,Alex BAKER,AB,4,7,3,1,FALSE,Triple Bogey or Worse,3,5,5,3,3
+TEG 17,17,2,14,John PATTERSON,JP,4,7,3,1,FALSE,Triple Bogey or Worse,3,4,4,5,5
+TEG 17,17,2,15,David MULLIN,DM,5,4,-1,4,FALSE,4+ Points,4,2,2,2,2
+TEG 17,17,2,15,David MULLIN,DM,5,4,-1,4,FALSE,Birdie,-1,2,2,2,2
+TEG 17,17,2,15,John PATTERSON,JP,5,11,6,0,FALSE,Quintuple Bogey or Worse,6,4,4,5,5
+TEG 17,17,2,15,John PATTERSON,JP,5,11,6,0,FALSE,Triple Bogey or Worse,6,4,4,5,5
+TEG 17,17,2,15,John PATTERSON,JP,5,11,6,0,FALSE,Zero Points,0,4,4,5,5
+TEG 17,17,2,17,Jon BAKER,JB,4,7,3,0,FALSE,Triple Bogey or Worse,3,1,1,1,1
+TEG 17,17,2,17,Jon BAKER,JB,4,7,3,0,FALSE,Zero Points,0,1,1,1,1
+TEG 17,17,2,18,John PATTERSON,JP,4,4,0,4,TRUE,4+ Points,4,4,4,5,5
+TEG 17,17,2,18,David MULLIN,DM,4,4,0,3,TRUE,Took Lead (Gross),,2,1,2,2
+TEG 17,17,2,18,Alex BAKER,AB,4,7,3,1,TRUE,Triple Bogey or Worse,3,5,5,3,3
+TEG 17,17,3,1,Jon BAKER,JB,4,7,3,0,FALSE,Lost Lead (Gross),,1,2,1,1
+TEG 17,17,3,1,Jon BAKER,JB,4,7,3,0,FALSE,Triple Bogey or Worse,3,1,2,1,1
+TEG 17,17,3,1,Jon BAKER,JB,4,7,3,0,FALSE,Zero Points,0,1,2,1,1
+TEG 17,17,3,2,Alex BAKER,AB,5,5,0,4,FALSE,4+ Points,4,5,5,3,3
+TEG 17,17,3,2,Jon BAKER,JB,5,6,1,3,FALSE,Took Lead (Gross),,2,1,1,1
+TEG 17,17,3,2,John PATTERSON,JP,5,8,3,1,FALSE,Triple Bogey or Worse,3,4,4,5,5
+TEG 17,17,3,3,Alex BAKER,AB,3,2,-1,5,FALSE,4+ Points,5,5,5,3,3
+TEG 17,17,3,3,Alex BAKER,AB,3,2,-1,5,FALSE,5+ Points,5,5,5,3,3
+TEG 17,17,3,3,Alex BAKER,AB,3,2,-1,5,FALSE,Birdie,-1,5,5,3,3
+TEG 17,17,3,4,Alex BAKER,AB,4,8,4,0,FALSE,Triple Bogey or Worse,4,5,5,3,3
+TEG 17,17,3,4,Alex BAKER,AB,4,8,4,0,FALSE,Zero Points,0,5,5,3,3
+TEG 17,17,3,5,David MULLIN,DM,5,7,2,1,FALSE,Lost Lead (Gross),,1,2,2,2
+TEG 17,17,3,5,Alex BAKER,AB,5,9,4,0,FALSE,Triple Bogey or Worse,4,5,5,3,3
+TEG 17,17,3,5,Gregg WILLIAMS,GW,5,9,4,0,FALSE,Triple Bogey or Worse,4,3,3,4,4
+TEG 17,17,3,5,John PATTERSON,JP,5,8,3,0,FALSE,Triple Bogey or Worse,3,4,4,5,5
+TEG 17,17,3,5,Alex BAKER,AB,5,9,4,0,FALSE,Zero Points,0,5,5,3,3
+TEG 17,17,3,5,Gregg WILLIAMS,GW,5,9,4,0,FALSE,Zero Points,0,3,3,4,4
+TEG 17,17,3,5,John PATTERSON,JP,5,8,3,0,FALSE,Zero Points,0,4,4,5,5
+TEG 17,17,3,6,Jon BAKER,JB,3,5,2,1,FALSE,Lost Lead (Gross),,1,2,1,1
+TEG 17,17,3,6,David MULLIN,DM,3,3,0,3,FALSE,Took Lead (Gross),,2,1,2,2
+TEG 17,17,3,7,Jon BAKER,JB,5,6,1,2,FALSE,Took Lead (Gross),,2,1,1,1
+TEG 17,17,3,8,John PATTERSON,JP,3,2,-1,4,FALSE,4+ Points,4,4,4,5,5
+TEG 17,17,3,8,John PATTERSON,JP,3,2,-1,4,FALSE,Birdie,-1,4,4,5,5
+TEG 17,17,3,8,David MULLIN,DM,3,5,2,1,FALSE,Lost Lead (Gross),,1,2,2,2
+TEG 17,17,3,9,John PATTERSON,JP,4,7,3,0,FALSE,Triple Bogey or Worse,3,4,4,5,5
+TEG 17,17,3,9,John PATTERSON,JP,4,7,3,0,FALSE,Zero Points,0,4,4,5,5
+TEG 17,17,3,11,Gregg WILLIAMS,GW,5,4,-1,4,FALSE,4+ Points,4,3,3,4,4
+TEG 17,17,3,11,Jon BAKER,JB,5,4,-1,4,FALSE,4+ Points,4,1,1,1,1
+TEG 17,17,3,11,Gregg WILLIAMS,GW,5,4,-1,4,FALSE,Birdie,-1,3,3,4,4
+TEG 17,17,3,11,Jon BAKER,JB,5,4,-1,4,FALSE,Birdie,-1,1,1,1,1
+TEG 17,17,3,11,John PATTERSON,JP,5,9,4,0,FALSE,Triple Bogey or Worse,4,4,4,5,5
+TEG 17,17,3,11,John PATTERSON,JP,5,9,4,0,FALSE,Zero Points,0,4,4,5,5
+TEG 17,17,3,12,John PATTERSON,JP,4,4,0,4,FALSE,4+ Points,4,4,4,5,5
+TEG 17,17,3,13,Jon BAKER,JB,3,2,-1,4,FALSE,4+ Points,4,1,1,1,1
+TEG 17,17,3,13,Jon BAKER,JB,3,2,-1,4,FALSE,Birdie,-1,1,1,1,1
+TEG 17,17,3,13,Gregg WILLIAMS,GW,3,5,2,0,FALSE,Zero Points,0,3,3,4,4
+TEG 17,17,3,14,Gregg WILLIAMS,GW,4,6,2,1,FALSE,Hit Bottom (Spoon),,3,3,4,5
+TEG 17,17,3,14,John PATTERSON,JP,4,5,1,3,FALSE,Left Bottom (Spoon),,4,4,5,4
+TEG 17,17,3,14,Alex BAKER,AB,4,10,6,0,FALSE,Quintuple Bogey or Worse,6,5,5,3,3
+TEG 17,17,3,14,Alex BAKER,AB,4,10,6,0,FALSE,Triple Bogey or Worse,6,5,5,3,3
+TEG 17,17,3,14,Alex BAKER,AB,4,10,6,0,FALSE,Zero Points,0,5,5,3,3
+TEG 17,17,3,16,Alex BAKER,AB,4,7,3,1,FALSE,Triple Bogey or Worse,3,5,5,3,3
+TEG 17,17,3,18,John PATTERSON,JP,5,5,0,4,TRUE,4+ Points,4,4,4,4,4
+TEG 17,17,3,18,Alex BAKER,AB,5,9,4,0,TRUE,Triple Bogey or Worse,4,5,5,3,3
+TEG 17,17,3,18,Alex BAKER,AB,5,9,4,0,TRUE,Zero Points,0,5,5,3,3
+TEG 17,17,4,1,Gregg WILLIAMS,GW,4,9,5,0,FALSE,Quintuple Bogey or Worse,5,3,3,5,5
+TEG 17,17,4,1,David MULLIN,DM,4,7,3,0,FALSE,Triple Bogey or Worse,3,2,2,2,2
+TEG 17,17,4,1,Gregg WILLIAMS,GW,4,9,5,0,FALSE,Triple Bogey or Worse,5,3,3,5,5
+TEG 17,17,4,1,John PATTERSON,JP,4,8,4,0,FALSE,Triple Bogey or Worse,4,4,4,4,4
+TEG 17,17,4,1,David MULLIN,DM,4,7,3,0,FALSE,Zero Points,0,2,2,2,2
+TEG 17,17,4,1,Gregg WILLIAMS,GW,4,9,5,0,FALSE,Zero Points,0,3,3,5,5
+TEG 17,17,4,1,John PATTERSON,JP,4,8,4,0,FALSE,Zero Points,0,4,4,4,4
+TEG 17,17,4,2,John PATTERSON,JP,5,4,-1,4,FALSE,4+ Points,4,4,4,4,4
+TEG 17,17,4,2,John PATTERSON,JP,5,4,-1,4,FALSE,Birdie,-1,4,4,4,4
+TEG 17,17,4,3,Gregg WILLIAMS,GW,3,5,2,0,FALSE,Zero Points,0,3,3,5,5
+TEG 17,17,4,4,Jon BAKER,JB,4,3,-1,4,FALSE,4+ Points,4,1,1,1,1
+TEG 17,17,4,4,Jon BAKER,JB,4,3,-1,4,FALSE,Birdie,-1,1,1,1,1
+TEG 17,17,4,5,Jon BAKER,JB,4,3,-1,5,FALSE,4+ Points,5,1,1,1,1
+TEG 17,17,4,5,Jon BAKER,JB,4,3,-1,5,FALSE,5+ Points,5,1,1,1,1
+TEG 17,17,4,5,Jon BAKER,JB,4,3,-1,5,FALSE,Birdie,-1,1,1,1,1
+TEG 17,17,4,6,David MULLIN,DM,4,7,3,0,FALSE,Triple Bogey or Worse,3,2,2,2,2
+TEG 17,17,4,6,David MULLIN,DM,4,7,3,0,FALSE,Zero Points,0,2,2,2,2
+TEG 17,17,4,7,Alex BAKER,AB,5,8,3,1,FALSE,Triple Bogey or Worse,3,5,5,3,3
+TEG 17,17,4,7,Jon BAKER,JB,5,8,3,0,FALSE,Triple Bogey or Worse,3,1,1,1,1
+TEG 17,17,4,7,Jon BAKER,JB,5,8,3,0,FALSE,Zero Points,0,1,1,1,1
+TEG 17,17,4,8,Alex BAKER,AB,3,6,3,1,FALSE,Triple Bogey or Worse,3,5,5,3,3
+TEG 17,17,4,10,Jon BAKER,JB,5,9,4,0,FALSE,Triple Bogey or Worse,4,1,1,1,1
+TEG 17,17,4,10,John PATTERSON,JP,5,8,3,1,FALSE,Triple Bogey or Worse,3,4,4,3,3
+TEG 17,17,4,10,Jon BAKER,JB,5,9,4,0,FALSE,Zero Points,0,1,1,1,1
+TEG 17,17,4,11,Alex BAKER,AB,3,6,3,1,FALSE,Triple Bogey or Worse,3,5,5,3,3
+TEG 17,17,4,12,Alex BAKER,AB,5,9,4,0,FALSE,Triple Bogey or Worse,4,5,5,3,4
+TEG 17,17,4,12,Alex BAKER,AB,5,9,4,0,FALSE,Zero Points,0,5,5,3,4
+TEG 17,17,4,13,Alex BAKER,AB,4,8,4,0,FALSE,Triple Bogey or Worse,4,5,5,4,4
+TEG 17,17,4,13,Alex BAKER,AB,4,8,4,0,FALSE,Zero Points,0,5,5,4,4
+TEG 17,17,4,14,John PATTERSON,JP,3,9,6,0,FALSE,Quintuple Bogey or Worse,6,4,4,3,3
+TEG 17,17,4,14,John PATTERSON,JP,3,9,6,0,FALSE,Triple Bogey or Worse,6,4,4,3,3
+TEG 17,17,4,14,John PATTERSON,JP,3,9,6,0,FALSE,Zero Points,0,4,4,3,3
+TEG 17,17,4,15,John PATTERSON,JP,4,10,6,0,FALSE,Quintuple Bogey or Worse,6,4,4,3,3
+TEG 17,17,4,15,Alex BAKER,AB,4,7,3,1,FALSE,Triple Bogey or Worse,3,5,5,4,4
+TEG 17,17,4,15,John PATTERSON,JP,4,10,6,0,FALSE,Triple Bogey or Worse,6,4,4,3,3
+TEG 17,17,4,15,John PATTERSON,JP,4,10,6,0,FALSE,Zero Points,0,4,4,3,3
+TEG 17,17,4,16,John PATTERSON,JP,4,4,0,4,FALSE,4+ Points,4,4,4,3,3
+TEG 17,17,4,17,Jon BAKER,JB,5,9,4,0,FALSE,Triple Bogey or Worse,4,1,1,1,1
+TEG 17,17,4,17,John PATTERSON,JP,5,8,3,1,FALSE,Triple Bogey or Worse,3,4,4,3,3
+TEG 17,17,4,17,Jon BAKER,JB,5,9,4,0,FALSE,Zero Points,0,1,1,1,1
+TEG 17,17,4,18,David MULLIN,DM,4,7,3,0,TRUE,Triple Bogey or Worse,3,2,2,2,2
+TEG 17,17,4,18,John PATTERSON,JP,4,8,4,0,TRUE,Triple Bogey or Worse,4,4,4,3,3
+TEG 17,17,4,18,David MULLIN,DM,4,7,3,0,TRUE,Zero Points,0,2,2,2,2
+TEG 17,17,4,18,John PATTERSON,JP,4,8,4,0,TRUE,Zero Points,0,4,4,3,3
