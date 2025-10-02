@@ -122,7 +122,7 @@ for i, tab in enumerate(tabs):
                     best_streaks.to_html(
                         index=False,
                         justify='left',
-                        classes='datawrapper-table'
+                        classes='datawrapper-table table-left-align centre-2nd'
                     ),
                     unsafe_allow_html=True
                 )
@@ -135,7 +135,7 @@ for i, tab in enumerate(tabs):
                     worst_streaks.to_html(
                         index=False,
                         justify='left',
-                        classes='datawrapper-table'
+                        classes='datawrapper-table table-left-align centre-2nd'
                     ),
                     unsafe_allow_html=True
                 )
@@ -212,7 +212,7 @@ for i, tab in enumerate(tabs):
                         results_df.to_html(
                             index=False,
                             justify='left',
-                            classes='datawrapper-table'
+                            classes='datawrapper-table table-left-align centre-3rd'
                         ),
                         unsafe_allow_html=True
                     )

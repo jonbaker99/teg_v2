@@ -2498,11 +2498,17 @@ def chosen_rd_context(ranked_rd_df, teg = 'TEG 16',rd = 4, measure = None):
     chosen_rd['Pl rank'] = (chosen_rd['Rank_within_player_' + measure].astype(int).astype(str) + 
                         ' / ' + 
                         chosen_rd['Pl_count'].astype(str))
-    chosen_rd['All time rank'] = (chosen_rd['Rank_within_all_' + measure].astype(int).astype(str) + 
-                              ' / ' + 
+    chosen_rd['All time rank'] = (chosen_rd['Rank_within_all_' + measure].astype(int).astype(str) +
+                              ' / ' +
                               str(all_cnt))
     chosen_rd_context = chosen_rd[['Player',measure,'Pl rank','All time rank']]
-    chosen_rd_context[measure] = chosen_rd_context[measure].astype(int)
+
+    # Format the measure column appropriately
+    if measure in ['GrossVP', 'NetVP']:
+        chosen_rd_context[measure] = chosen_rd_context[measure].apply(format_vs_par)
+    else:
+        chosen_rd_context[measure] = chosen_rd_context[measure].astype(int)
+
     return chosen_rd_context
 
 def chosen_teg_context(ranked_teg_df, teg = 'TEG 15', measure = None):
@@ -2520,11 +2526,17 @@ def chosen_teg_context(ranked_teg_df, teg = 'TEG 15', measure = None):
     chosen_teg['Pl rank'] = (chosen_teg['Rank_within_player_' + measure].astype(int).astype(str) + 
                         ' / ' + 
                         chosen_teg['Pl_count'].astype(str))
-    chosen_teg['All time rank'] = (chosen_teg['Rank_within_all_' + measure].astype(int).astype(str) + 
-                              ' / ' + 
+    chosen_teg['All time rank'] = (chosen_teg['Rank_within_all_' + measure].astype(int).astype(str) +
+                              ' / ' +
                               str(all_cnt))
     chosen_teg_context = chosen_teg[['Player',measure,'Pl rank','All time rank']]
-    chosen_teg_context[measure] = chosen_teg_context[measure].astype(int)
+
+    # Format the measure column appropriately
+    if measure in ['GrossVP', 'NetVP']:
+        chosen_teg_context[measure] = chosen_teg_context[measure].apply(format_vs_par)
+    else:
+        chosen_teg_context[measure] = chosen_teg_context[measure].astype(int)
+
     return chosen_teg_context
 
 

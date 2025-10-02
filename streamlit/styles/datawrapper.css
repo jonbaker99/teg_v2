@@ -73,6 +73,18 @@
     text-align: left;
 }
 
+/* --- Specific column alignment variants */
+.datawrapper-table.centre-2nd td:nth-child(2),
+.datawrapper-table.centre-2nd th:nth-child(2),
+.datawrapper-table.centre-3rd td:nth-child(3),
+.datawrapper-table.centre-3rd th:nth-child(3),
+.datawrapper-table.centre-4th td:nth-child(4),
+.datawrapper-table.centre-4th th:nth-child(4),
+.datawrapper-table.centre-5th td:nth-child(5),
+.datawrapper-table.centre-5th th:nth-child(5) {
+    text-align: center;
+}
+
 .datawrapper-table.bold-2nd td:nth-child(2),
 .datawrapper-table.bold-2nd th:nth-child(2),
 .datawrapper-table.bold-3rd td:nth-child(3),
