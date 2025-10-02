@@ -178,6 +178,11 @@ def prepare_streak_records_table(streak_data, table_title):
         Formats streak records to match the style of other records tables on the page.
         When 3+ players share the same record, consolidates them into one row showing player initials.
     """
+    from utils import PLAYER_DICT
+
+    # Create reverse lookup: full name to initials
+    name_to_initials = {name: initials for initials, name in PLAYER_DICT.items()}
+
     records_data = []
 
     # Group by Streak Type and Record to find shared records
@@ -190,16 +195,17 @@ def prepare_streak_records_table(streak_data, table_title):
             # Consolidate into one row with player initials (deduplicated, maintaining order)
             player_initials = []
             seen = set()
-            for player in group['Player']:
-                if player not in seen:
-                    player_initials.append(player)
-                    seen.add(player)
+            for player_name in group['Player']:
+                initials = name_to_initials.get(player_name, player_name)
+                if initials not in seen:
+                    player_initials.append(initials)
+                    seen.add(initials)
             initials_str = ' / '.join(player_initials)
 
             records_data.append({
                 table_title: streak_type,
                 '': record_value,
-                ' ': '→',
+                ' ': f'({num_holders} times)',
                 '  ': initials_str
             })
         else:

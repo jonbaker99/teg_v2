@@ -3479,107 +3479,6 @@ from page_config import PAGE_DEFINITIONS, SECTION_LAYOUTS, SECTION_CONFIG
 # ============================================
 
 
-
-def add_custom_navigation_links_DEPRECATED(input_value, css_class="custom-nav-link", layout="columns", separator=" | ", exclude_current=True):
-    """Add custom HTML navigation links with full styling control
-
-    Args:
-        input_value: Page filename (e.g. "101TEG History.py") OR section name (e.g. "History")
-        css_class: CSS class for the links (default: "custom-nav-link")
-        layout: Layout style - "columns", "horizontal", or "vertical" (default: "columns")
-        separator: Separator for horizontal layout (default: " | ")
-        exclude_current: Whether to exclude current page from navigation (default: True)
-    """
-    # Smart detection: determine if input is page file or section name
-    if input_value.endswith('.py'):
-        # Input is a page filename
-        # Handle both full path and just filename
-        if os.path.sep in input_value:
-            current_page_file = os.path.basename(input_value)
-        else:
-            current_page_file = input_value
-
-        # Get current page info
-        current_page_info = PAGE_DEFINITIONS.get(current_page_file)
-        if not current_page_info:
-            return  # No navigation for pages not in the system
-
-        section = current_page_info["section"]
-
-        # Get all pages in this section, optionally excluding current page
-        if exclude_current:
-            section_pages = [
-                file for file, info in PAGE_DEFINITIONS.items()
-                if info["section"] == section and file != current_page_file
-            ]
-        else:
-            section_pages = [
-                file for file, info in PAGE_DEFINITIONS.items()
-                if info["section"] == section
-            ]
-    else:
-        # Input is a section name
-        section = input_value
-
-        # Get all pages in this section
-        section_pages = [
-            file for file, info in PAGE_DEFINITIONS.items()
-            if info["section"] == section
-        ]
-
-    if not section_pages:
-        return  # No other pages in section
-
-    # Create navigation UI
-    # Auto-load CSS styles
-    apply_custom_navigation_css()
-
-    # Handle different layout types
-    if layout == "columns":
-        # Original column-based layout
-        num_cols = SECTION_LAYOUTS.get(section, 3)
-        cols = st.columns(num_cols)
-        for i, page_file in enumerate(section_pages):
-            col_index = i % num_cols
-            create_custom_page_link(page_file, cols[col_index], css_class)
-
-    elif layout == "horizontal":
-        # Horizontal layout with custom separator
-        links_html = []
-        for page_file in section_pages:
-            page_info = PAGE_DEFINITIONS.get(page_file, {})
-            title = page_info.get("title", page_file)
-
-            # Generate URL
-            base_url = get_app_base_url()
-            page_name = convert_filename_to_streamlit_url(page_file)
-            full_url = f"{base_url}/{page_name}"
-
-            # Create link HTML
-            link_html = f'<a href="{full_url}" target="_self" class="{css_class}">{title}</a>'
-            links_html.append(link_html)
-
-        # Join with separator and display
-        navigation_html = separator.join(links_html)
-        st.markdown(navigation_html, unsafe_allow_html=True)
-
-    elif layout == "vertical":
-        # Vertical layout - each link on new line
-        for page_file in section_pages:
-            page_info = PAGE_DEFINITIONS.get(page_file, {})
-            title = page_info.get("title", page_file)
-
-            # Generate URL
-            base_url = get_app_base_url()
-            page_name = convert_filename_to_streamlit_url(page_file)
-            full_url = f"{base_url}/{page_name}"
-
-            # Create and display link
-            link_html = f'<a href="{full_url}" target="_self" class="{css_class}">{title}</a>'
-            st.markdown(link_html, unsafe_allow_html=True)
-
-
-
 def add_custom_navigation_links(
     input_value,
     css_class="custom-nav-link",
@@ -3673,7 +3572,8 @@ def add_custom_navigation_links(
             for i, page_file in enumerate(section_pages):
                 col_index = i % num_cols
                 # your original renderer
-                create_custom_page_link(page_file, cols[col_index], css_class)
+                # create_custom_page_link(page_file, cols[col_index], css_class)
+                st.write("create_custom_page_link function missing")
             return None
         else:
             # return data structure the caller can place as they wish
