@@ -170,28 +170,52 @@ def execute_data_deletion(selected_teg, selected_rounds):
     filtered_scores_df = scores_df[~deletion_filter]
     filtered_data_df = data_df[~((data_df['TEGNum'] == selected_teg) & (data_df['Round'].isin(selected_rounds)))]
 
+    # Collect all files for batch commit to GitHub
+    import os
+    batch_files = []
+    is_railway = os.getenv('RAILWAY_ENVIRONMENT')
+
     # Update all data files with filtered data
     deletion_message = f"Deleted TEG {selected_teg}, Rounds {selected_rounds}"
-    write_file(ALL_SCORES_PARQUET, filtered_scores_df, deletion_message)
-    write_file(ALL_DATA_PARQUET, filtered_data_df, deletion_message)
-    
+    file_info = write_file(ALL_SCORES_PARQUET, filtered_scores_df, deletion_message, defer_github=is_railway)
+    if file_info:
+        batch_files.append(file_info)
+
+    file_info = write_file(ALL_DATA_PARQUET, filtered_data_df, deletion_message, defer_github=is_railway)
+    if file_info:
+        batch_files.append(file_info)
+
     # Recreate CSV mirror from updated parquet data
-    write_file(ALL_DATA_CSV_MIRROR, filtered_data_df, f"Recreated CSV mirror after deletion")
-    
+    file_info = write_file(ALL_DATA_CSV_MIRROR, filtered_data_df, f"Recreated CSV mirror after deletion", defer_github=is_railway)
+    if file_info:
+        batch_files.append(file_info)
+
     # Update TEG status files to reflect completion changes
-    update_teg_status_files()
+    status_files = update_teg_status_files(defer_github=is_railway)
+    if status_files:
+        batch_files.extend(status_files)
 
     # Update streaks cache with latest data
-    update_streaks_cache()
+    streaks_file = update_streaks_cache(defer_github=is_railway)
+    if streaks_file:
+        batch_files.append(streaks_file)
 
     # Update commentary caches with latest data
-    update_commentary_caches()
+    commentary_files = update_commentary_caches(defer_github=is_railway)
+    if commentary_files:
+        batch_files.extend(commentary_files)
 
     # Update bestball cache with latest data
-    update_bestball_cache()
+    bestball_file = update_bestball_cache(defer_github=is_railway)
+    if bestball_file:
+        batch_files.append(bestball_file)
 
-    # Update bestball cache with latest data
-    update_bestball_cache()
+    # Batch commit all files to GitHub in single commit (Railway only)
+    if is_railway and batch_files:
+        with st.spinner(f"🚀 Pushing {len(batch_files)} files to GitHub..."):
+            from utils import batch_commit_to_github
+            batch_commit_to_github(batch_files, deletion_message)
+            st.success(f"🚀 Pushed {len(batch_files)} files to GitHub in single commit.")
 
     # Clear all caches to reflect changes
     st.cache_data.clear()

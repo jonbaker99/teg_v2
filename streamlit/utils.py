@@ -150,6 +150,72 @@ def write_to_github(file_path, data, commit_message="Update data"):
 
     st.cache_data.clear()
 
+
+def batch_commit_to_github(files_data: list, commit_message: str = "Batch update data"):
+    """
+    Commit multiple files to GitHub in a single commit.
+
+    Args:
+        files_data (list): List of dicts with 'file_path' and 'data' keys
+                          Example: [{'file_path': 'data/file.csv', 'data': df}, ...]
+        commit_message (str): Commit message for the batch update
+
+    Purpose:
+        Optimizes GitHub API usage by creating a single commit with multiple file changes
+        instead of one commit per file. Significantly faster for bulk updates.
+    """
+    from github import Github, InputGitTreeElement
+    from io import BytesIO
+
+    token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
+    g = Github(token)
+    repo = g.get_repo(GITHUB_REPO)
+    branch = get_current_branch()
+
+    # Get the current commit SHA
+    ref = repo.get_git_ref(f"heads/{branch}")
+    base_tree = repo.get_git_commit(ref.object.sha).tree
+
+    # Prepare all file contents
+    tree_elements = []
+    for file_info in files_data:
+        file_path = file_info['file_path']
+        data = file_info['data']
+
+        # Prepare content based on file type
+        if isinstance(data, pd.DataFrame):
+            if file_path.endswith('.csv'):
+                content = data.to_csv(index=False)
+            elif file_path.endswith('.parquet'):
+                buffer = BytesIO()
+                data.to_parquet(buffer, index=False)
+                content = buffer.getvalue()
+        else:
+            content = data
+
+        # Create tree element
+        tree_elements.append(
+            InputGitTreeElement(
+                path=file_path,
+                mode='100644',
+                type='blob',
+                content=content
+            )
+        )
+
+    # Create new tree with all changes
+    new_tree = repo.create_git_tree(tree_elements, base_tree)
+
+    # Create commit
+    parent = repo.get_git_commit(ref.object.sha)
+    new_commit = repo.create_git_commit(commit_message, new_tree, [parent])
+
+    # Update reference
+    ref.edit(new_commit.sha)
+
+    logger.info(f"Batch committed {len(files_data)} files to GitHub in single commit")
+    st.cache_data.clear()
+
 # Enhanced read_file and write_file functions for utils.py
 # Replace your existing functions with these
 
@@ -205,38 +271,52 @@ def read_file(file_path: str) -> pd.DataFrame:
             raise ValueError(f"Unsupported file type: {file_path}")
 
 
-def write_file(file_path: str, data: pd.DataFrame, commit_message: str = "Update data"):
+def write_file(file_path: str, data: pd.DataFrame, commit_message: str = "Update data", defer_github: bool = False):
     """
-    Write to both volume (fast) and GitHub (sync) simultaneously.
+    Write to both volume (fast) and optionally GitHub (sync).
+
+    Args:
+        file_path (str): Path to file relative to data directory
+        data (pd.DataFrame): Data to write
+        commit_message (str): Commit message for GitHub (if not deferred)
+        defer_github (bool): If True, skip GitHub push (for batch commits). Default False for backward compatibility.
+
+    Returns:
+        dict: File info for batch commits (when defer_github=True)
     """
     if os.getenv('RAILWAY_ENVIRONMENT'):
         # Write to volume first (fast local write)
         volume_path = f"/mnt/data_repo/{file_path}"
-        
+
         try:
             os.makedirs(os.path.dirname(volume_path), exist_ok=True)
-            
+
             if file_path.endswith('.csv'):
                 data.to_csv(volume_path, index=False)
             elif file_path.endswith('.parquet'):
                 data.to_parquet(volume_path, index=False)
             else:
                 raise ValueError(f"Unsupported file type: {file_path}")
-                
+
             logger.info(f"Successfully wrote {file_path} to volume")
-            
+
         except Exception as e:
             logger.error(f"Error writing to volume {volume_path}: {e}")
             # Continue to GitHub write even if volume fails
-        
-        # Write to GitHub (for cross-environment sync)
-        try:
-            write_to_github(file_path, data, commit_message)
-            logger.info(f"Successfully wrote {file_path} to GitHub")
-        except Exception as e:
-            logger.error(f"Error writing to GitHub: {e}")
-            raise  # Re-raise GitHub errors as they're critical
-            
+
+        # Write to GitHub (for cross-environment sync) unless deferred
+        if not defer_github:
+            try:
+                write_to_github(file_path, data, commit_message)
+                logger.info(f"Successfully wrote {file_path} to GitHub")
+            except Exception as e:
+                logger.error(f"Error writing to GitHub: {e}")
+                raise  # Re-raise GitHub errors as they're critical
+        else:
+            # Return file info for later batch commit
+            logger.info(f"Deferred GitHub push for {file_path}")
+            return {'file_path': file_path, 'data': data}
+
     else:
         # Local development unchanged
         local_path = BASE_DIR / file_path
@@ -246,9 +326,10 @@ def write_file(file_path: str, data: pd.DataFrame, commit_message: str = "Update
             data.to_parquet(local_path, index=False)
         else:
             raise ValueError(f"Unsupported file type: {file_path}")
-    
-    # Clear caches after successful write
-    st.cache_data.clear()
+
+    # Clear caches after successful write (only if not deferred)
+    if not defer_github:
+        st.cache_data.clear()
 
 
 # Optional: Add this utility function for manual cache management
@@ -617,9 +698,15 @@ def save_to_parquet(df: pd.DataFrame, output_file: str) -> None:
     logger.info(f"Data successfully saved to {output_file}")
 
 
-def update_streaks_cache():
+def update_streaks_cache(defer_github: bool = False):
     """
     Update the streaks cache file with current streak calculations.
+
+    Args:
+        defer_github (bool): If True, defer GitHub push for batch commit
+
+    Returns:
+        dict: File info if defer_github=True, None otherwise
 
     This function:
     1. Loads all data (including incomplete TEGs)
@@ -638,26 +725,36 @@ def update_streaks_cache():
 
         if all_data.empty:
             logger.warning("No data available for streak calculation")
-            return
+            return None
 
         # Calculate streaks using the build_streaks function
         streaks_df = build_streaks(all_data)
 
         # Save to streaks parquet file
-        write_file(STREAKS_PARQUET, streaks_df, "Update streaks cache")
+        file_info = write_file(STREAKS_PARQUET, streaks_df, "Update streaks cache", defer_github=defer_github)
         logger.info(f"Streaks cache updated successfully: {STREAKS_PARQUET}")
 
-        # Clear streamlit cache to ensure fresh data on next load
-        clear_all_caches()
+        # Clear streamlit cache to ensure fresh data on next load (only if not deferred)
+        if not defer_github:
+            clear_all_caches()
+
+        return file_info
 
     except Exception as e:
         logger.error(f"Error updating streaks cache: {e}")
         st.error(f"Failed to update streaks cache: {e}")
+        return None
 
 
-def update_bestball_cache():
+def update_bestball_cache(defer_github: bool = False):
     """
     Update the bestball/worstball cache file.
+
+    Args:
+        defer_github (bool): If True, defer GitHub push for batch commit
+
+    Returns:
+        dict: File info if defer_github=True, None otherwise
 
     This function:
     1. Loads all data (including incomplete TEGs)
@@ -671,7 +768,7 @@ def update_bestball_cache():
 
         if all_data.empty:
             logger.warning("No data available for bestball calculation")
-            return
+            return None
 
         # Import processing functions
         from helpers.bestball_processing import prepare_bestball_data, calculate_bestball_scores, calculate_worstball_scores
@@ -691,16 +788,25 @@ def update_bestball_cache():
         combined_df = pd.concat([bestball_data, worstball_data], ignore_index=True)
 
         # Save to parquet file
-        write_file(BESTBALL_PARQUET, combined_df, "Update bestball/worstball cache")
+        file_info = write_file(BESTBALL_PARQUET, combined_df, "Update bestball/worstball cache", defer_github=defer_github)
         logger.info(f"Bestball/worstball cache updated successfully: {BESTBALL_PARQUET}")
+
+        return file_info
 
     except Exception as e:
         logger.error(f"Error updating bestball cache: {e}")
         st.error(f"Failed to update bestball cache: {e}")
+        return None
 
-def update_commentary_caches():
+def update_commentary_caches(defer_github: bool = False):
     """
     Update the commentary cache files with current event and summary data.
+
+    Args:
+        defer_github (bool): If True, defer GitHub push for batch commit
+
+    Returns:
+        list: List of file infos if defer_github=True, None otherwise
 
     This function:
     1. Loads all data (including incomplete TEGs)
@@ -717,12 +823,14 @@ def update_commentary_caches():
     try:
         logger.info("Updating commentary cache files")
 
+        file_infos = []
+
         # Load all data including incomplete TEGs for commentary
         all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
 
         if all_data.empty:
             logger.warning("No data available for commentary generation")
-            return
+            return None
 
         # Load round info and streaks data
         round_info = read_file(ROUND_INFO_CSV)
@@ -731,41 +839,55 @@ def update_commentary_caches():
         # Generate round events
         logger.info("Generating round events...")
         events_df = create_round_events(all_data_df=all_data)
-        write_file(COMMENTARY_ROUND_EVENTS_PARQUET, events_df, "Update commentary round events cache")
+        file_info = write_file(COMMENTARY_ROUND_EVENTS_PARQUET, events_df, "Update commentary round events cache", defer_github=defer_github)
+        if file_info:
+            file_infos.append(file_info)
         logger.info(f"Round events cache updated: {COMMENTARY_ROUND_EVENTS_PARQUET}")
 
         # Generate round summary
         logger.info("Generating round summary...")
         round_summary_df = create_round_summary(all_data_df=all_data, round_info_df=round_info)
-        write_file(COMMENTARY_ROUND_SUMMARY_PARQUET, round_summary_df, "Update commentary round summary cache")
+        file_info = write_file(COMMENTARY_ROUND_SUMMARY_PARQUET, round_summary_df, "Update commentary round summary cache", defer_github=defer_github)
+        if file_info:
+            file_infos.append(file_info)
         logger.info(f"Round summary cache updated: {COMMENTARY_ROUND_SUMMARY_PARQUET}")
 
         # Generate tournament summary
         logger.info("Generating tournament summary...")
         tournament_summary_df = create_tournament_summary(all_data_df=all_data, round_info_df=round_info)
-        write_file(COMMENTARY_TOURNAMENT_SUMMARY_PARQUET, tournament_summary_df, "Update commentary tournament summary cache")
+        file_info = write_file(COMMENTARY_TOURNAMENT_SUMMARY_PARQUET, tournament_summary_df, "Update commentary tournament summary cache", defer_github=defer_github)
+        if file_info:
+            file_infos.append(file_info)
         logger.info(f"Tournament summary cache updated: {COMMENTARY_TOURNAMENT_SUMMARY_PARQUET}")
 
         # Generate round streaks summary
         logger.info("Generating round streaks summary...")
         round_streaks_df = create_round_streaks_summary(all_data_df=all_data, streaks_df=streaks_df)
-        write_file(COMMENTARY_ROUND_STREAKS_PARQUET, round_streaks_df, "Update commentary round streaks cache")
+        file_info = write_file(COMMENTARY_ROUND_STREAKS_PARQUET, round_streaks_df, "Update commentary round streaks cache", defer_github=defer_github)
+        if file_info:
+            file_infos.append(file_info)
         logger.info(f"Round streaks cache updated: {COMMENTARY_ROUND_STREAKS_PARQUET}")
 
         # Generate tournament streaks summary
         logger.info("Generating tournament streaks summary...")
         tournament_streaks_df = create_tournament_streaks_summary(all_data_df=all_data, streaks_df=streaks_df)
-        write_file(COMMENTARY_TOURNAMENT_STREAKS_PARQUET, tournament_streaks_df, "Update commentary tournament streaks cache")
+        file_info = write_file(COMMENTARY_TOURNAMENT_STREAKS_PARQUET, tournament_streaks_df, "Update commentary tournament streaks cache", defer_github=defer_github)
+        if file_info:
+            file_infos.append(file_info)
         logger.info(f"Tournament streaks cache updated: {COMMENTARY_TOURNAMENT_STREAKS_PARQUET}")
 
-        # Clear streamlit cache to ensure fresh data on next load
-        clear_all_caches()
+        # Clear streamlit cache to ensure fresh data on next load (only if not deferred)
+        if not defer_github:
+            clear_all_caches()
 
         logger.info("Commentary cache files updated successfully")
+
+        return file_infos if defer_github else None
 
     except Exception as e:
         logger.error(f"Error updating commentary caches: {e}")
         st.error(f"Failed to update commentary caches: {e}")
+        return None
 
 
 def get_google_sheet(sheet_name: str, worksheet_name: str) -> pd.DataFrame:
@@ -908,7 +1030,7 @@ def add_round_info(all_data: pd.DataFrame) -> pd.DataFrame:
     return merged_data
 
 
-def update_all_data(csv_file: str, parquet_file: str, csv_output_file: str) -> None:
+def update_all_data(csv_file: str, parquet_file: str, csv_output_file: str, defer_github: bool = False):
     """
     Load data from a CSV file, apply cumulative scores and averages, and save it as both a Parquet file and a CSV file.
 
@@ -916,8 +1038,14 @@ def update_all_data(csv_file: str, parquet_file: str, csv_output_file: str) -> N
         csv_file (str): Path to the input CSV file.
         parquet_file (str): Path to the output Parquet file.
         csv_output_file (str): Path to the output CSV file for review.
+        defer_github (bool): If True, defer GitHub push for batch commit
+
+    Returns:
+        list: List of file infos if defer_github=True, None otherwise
     """
     logger.info(f"Updating all data from {csv_file} to {parquet_file} and {csv_output_file}")
+
+    file_infos = []
 
     # Load the CSV file
     try:
@@ -946,14 +1074,21 @@ def update_all_data(csv_file: str, parquet_file: str, csv_output_file: str) -> N
     ).dt.year.astype('Int64')
 
     # Save the transformed dataframe to a Parquet file
-    save_to_parquet(df_transformed, parquet_file)
+    file_info = write_file(parquet_file, df_transformed, "Update all-data parquet", defer_github=defer_github)
+    if file_info:
+        file_infos.append(file_info)
 
     # Save the transformed dataframe to a CSV file for manual review
-    write_file(csv_output_file, df_transformed, "Update all-data CSV")
+    file_info = write_file(csv_output_file, df_transformed, "Update all-data CSV", defer_github=defer_github)
+    if file_info:
+        file_infos.append(file_info)
     logger.info(f"Transformed data saved to {csv_output_file}")
 
-    st.cache_data.clear()
-    st.success("✅ Cache cleared")
+    if not defer_github:
+        st.cache_data.clear()
+        st.success("✅ Cache cleared")
+
+    return file_infos if defer_github else None
 
 
 def create_round_summary(all_data_df=None, round_info_df=None):
@@ -3290,13 +3425,17 @@ def analyze_teg_completion(all_data: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(teg_analysis)
 
 
-def save_teg_status_file(status_data: pd.DataFrame, filename: str):
+def save_teg_status_file(status_data: pd.DataFrame, filename: str, defer_github: bool = False):
     """
     Save TEG status data to CSV file.
 
     Args:
         status_data: DataFrame with TEG status information
         filename: Name of the file (e.g., 'completed_tegs.csv')
+        defer_github (bool): If True, defer GitHub push for batch commit
+
+    Returns:
+        dict: File info if defer_github=True, None otherwise
     """
     # Sort by TEGNum for consistent ordering
     status_data_sorted = status_data.sort_values('TEGNum') if not status_data.empty else status_data
@@ -3305,23 +3444,32 @@ def save_teg_status_file(status_data: pd.DataFrame, filename: str):
     file_path = f'data/{filename}'
 
     # Write to file using existing write_file function
-    write_file(file_path, status_data_sorted)
+    return write_file(file_path, status_data_sorted, defer_github=defer_github)
 
 
-def update_teg_status_files():
+def update_teg_status_files(defer_github: bool = False):
     """
     Update TEG status files after data changes.
     This should be called after data updates or deletions.
+
+    Args:
+        defer_github (bool): If True, defer GitHub push for batch commit
+
+    Returns:
+        list: List of file infos if defer_github=True, None otherwise
     """
-    # Clear cache first to ensure we work with fresh data after deletions/updates
-    st.cache_data.clear()
+    # Clear cache first to ensure we work with fresh data after deletions/updates (only if not deferred)
+    if not defer_github:
+        st.cache_data.clear()
+
+    file_infos = []
 
     # Load all data to determine TEG completion status
     all_data = load_all_data(exclude_incomplete_tegs=False)
 
     if all_data.empty:
         logger.warning("No data available for TEG status analysis")
-        return
+        return None
 
     # Analyze completion by TEG
     teg_completion = analyze_teg_completion(all_data)
@@ -3331,10 +3479,17 @@ def update_teg_status_files():
     in_progress_tegs = teg_completion[teg_completion['Status'] == 'in_progress']
 
     # Save status files (this automatically handles TEG transitions and deletions)
-    save_teg_status_file(completed_tegs, 'completed_tegs.csv')
-    save_teg_status_file(in_progress_tegs, 'in_progress_tegs.csv')
+    file_info = save_teg_status_file(completed_tegs, 'completed_tegs.csv', defer_github=defer_github)
+    if file_info:
+        file_infos.append(file_info)
+
+    file_info = save_teg_status_file(in_progress_tegs, 'in_progress_tegs.csv', defer_github=defer_github)
+    if file_info:
+        file_infos.append(file_info)
 
     logger.info(f"Updated TEG status files: {len(completed_tegs)} completed, {len(in_progress_tegs)} in progress")
+
+    return file_infos if defer_github else None
 
 
 def get_next_teg_and_check_if_in_progress_fast():

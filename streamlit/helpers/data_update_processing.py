@@ -240,36 +240,60 @@ def execute_data_update(overwrite=False, new_data_only=False):
 
         # Combine existing and new data
         final_df = pd.concat([existing_df, processed_rounds], ignore_index=True)
-        
+
+        # Collect all files for batch commit to GitHub
+        import os
+        batch_files = []
+        is_railway = os.getenv('RAILWAY_ENVIRONMENT')
+
         # write_file() - Save updated dataset to main scores file
-        write_file(ALL_SCORES_PARQUET, final_df, f"Updated data with {len(processed_rounds)} new records")
+        file_info = write_file(ALL_SCORES_PARQUET, final_df, f"Updated data with {len(processed_rounds)} new records", defer_github=is_railway)
+        if file_info:
+            batch_files.append(file_info)
         st.success(f"✅ Updated data saved to {ALL_SCORES_PARQUET}.")
 
         # Update derivative datasets and clear caches
         with st.spinner("💾 Updating all-data..."):
-            # update_all_data() - Regenerates master dataset with new records
-            update_all_data(ALL_SCORES_PARQUET, ALL_DATA_PARQUET, ALL_DATA_CSV_MIRROR)
+            # update_all_data() - Regenerates master dataset with new records (returns file infos)
+            update_files = update_all_data(ALL_SCORES_PARQUET, ALL_DATA_PARQUET, ALL_DATA_CSV_MIRROR, defer_github=is_railway)
+            if update_files:
+                batch_files.extend(update_files)
             st.success("💾 All-data updated and CSV created.")
 
         # Update TEG status files to reflect completion changes
         with st.spinner("📊 Updating TEG status files..."):
-            update_teg_status_files()
+            status_files = update_teg_status_files(defer_github=is_railway)
+            if status_files:
+                batch_files.extend(status_files)
             st.success("📊 TEG status files updated.")
 
         # Update streaks cache with latest data
         with st.spinner("🏁 Updating streaks cache..."):
-            update_streaks_cache()
+            streaks_file = update_streaks_cache(defer_github=is_railway)
+            if streaks_file:
+                batch_files.append(streaks_file)
             st.success("🏁 Streaks cache updated.")
 
         # Update commentary caches with latest data
         with st.spinner("📝 Updating commentary caches..."):
-            update_commentary_caches()
+            commentary_files = update_commentary_caches(defer_github=is_railway)
+            if commentary_files:
+                batch_files.extend(commentary_files)
             st.success("📝 Commentary caches updated.")
 
         # Update bestball cache with latest data
         with st.spinner("🏀 Updating bestball cache..."):
-            update_bestball_cache()
+            bestball_file = update_bestball_cache(defer_github=is_railway)
+            if bestball_file:
+                batch_files.append(bestball_file)
             st.success("🏀 Bestball cache updated.")
+
+        # Batch commit all files to GitHub in single commit (Railway only)
+        if is_railway and batch_files:
+            with st.spinner(f"🚀 Pushing {len(batch_files)} files to GitHub..."):
+                from utils import batch_commit_to_github
+                batch_commit_to_github(batch_files, f"Data update: {len(processed_rounds)} new records + cache updates")
+                st.success(f"🚀 Pushed {len(batch_files)} files to GitHub in single commit.")
 
         # Clear all caches to reflect changes
         st.cache_data.clear()
