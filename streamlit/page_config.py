@@ -44,7 +44,7 @@ PAGE_DEFINITIONS = {
 
     # Scorecards section
     "scorecard_v2.py": {"title": "Scorecard", "icon": ":material/leaderboard:", "section": "Scorecards"},
-    "scorecard_v2_mobile.py": {"title": "Scorecard (mobile)", "icon": ":material/leaderboard:", "section": "Scorecards"},
+    # "scorecard_v2_mobile.py": {"title": "Scorecard (mobile)", "icon": ":material/leaderboard:", "section": "Scorecards"},
 
     # Data management section
     "1000Data update.py": {"title": "Data update", "icon": ":material/update:", "section": "Data"},
