@@ -166,6 +166,7 @@ def batch_commit_to_github(files_data: list, commit_message: str = "Batch update
     """
     from github import Github, InputGitTreeElement
     from io import BytesIO
+    import base64
 
     token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
     g = Github(token)
@@ -176,7 +177,7 @@ def batch_commit_to_github(files_data: list, commit_message: str = "Batch update
     ref = repo.get_git_ref(f"heads/{branch}")
     base_tree = repo.get_git_commit(ref.object.sha).tree
 
-    # Prepare all file contents
+    # Prepare all file contents and create blobs
     tree_elements = []
     for file_info in files_data:
         file_path = file_info['file_path']
@@ -193,13 +194,20 @@ def batch_commit_to_github(files_data: list, commit_message: str = "Batch update
         else:
             content = data
 
-        # Create tree element
+        # Create blob for this file
+        # PyGithub expects base64-encoded content for binary files
+        if isinstance(content, bytes):
+            blob = repo.create_git_blob(base64.b64encode(content).decode('utf-8'), 'base64')
+        else:
+            blob = repo.create_git_blob(content, 'utf-8')
+
+        # Create tree element referencing the blob
         tree_elements.append(
             InputGitTreeElement(
                 path=file_path,
                 mode='100644',
                 type='blob',
-                content=content
+                sha=blob.sha
             )
         )
 
