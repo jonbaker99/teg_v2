@@ -18,7 +18,9 @@
       "Bash(git pull:*)",
       "Bash(timeout 15 streamlit run \"streamlit/300TEG Records.py\" --server.headless=true --server.port=8502)",
       "Bash(pip show:*)",
-      "Bash(timeout 15 streamlit run \"streamlit/streaks_prototype.py\" --server.headless=true --server.port=8502)"
+      "Bash(timeout 15 streamlit run \"streamlit/streaks_prototype.py\" --server.headless=true --server.port=8502)",
+      "Bash(timeout 15 streamlit run \"streamlit/latest_round.py\" --server.headless=true --server.port=8503)",
+      "Bash(timeout 15 streamlit run \"streamlit/latest_teg_context.py\" --server.headless=true --server.port=8502)"
     ],
     "deny": [],
     "ask": [

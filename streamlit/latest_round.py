@@ -77,7 +77,7 @@ with col2:
     st.session_state.rd_r = rd_r
 
 # === MAIN TAB STRUCTURE ===
-main_tabs = st.tabs(["Scoreboards", "Scorecard", "Scoring", "Streaks"])
+main_tabs = st.tabs(["Scoreboards", "Scorecard", "Scoring", "Streaks", "Records & PBs"])
 
 # === SCOREBOARDS TAB ===
 with main_tabs[0]:
@@ -286,6 +286,59 @@ with main_tabs[3]:
         st.caption("Eagles / birdies / par / bogeys are all 'or better'")
     else:
         st.info("No streak data available for this round.")
+
+# === RECORDS & PBs TAB ===
+with main_tabs[4]:
+    st.markdown("#### Records & Personal Bests")
+
+    from helpers.records_identification import (
+        identify_aggregate_records_and_pbs,
+        identify_all_time_worsts,
+        identify_9hole_records_and_pbs,
+        identify_streak_records,
+        identify_score_count_records,
+        display_records_and_pbs_summary
+    )
+
+    # Collect all records and PBs
+    records_dict = {}
+
+    # Phase 1: Aggregate score records and PBs
+    aggregate_results = identify_aggregate_records_and_pbs(df_round, teg_r, rd_r)
+    records_dict.update({
+        'aggregate_records': aggregate_results['records'],
+        'aggregate_pbs': aggregate_results['personal_bests'],
+        'aggregate_worsts': aggregate_results['personal_worsts']
+    })
+
+    # All-time worsts
+    all_time_worsts = identify_all_time_worsts(df_round, teg_r, rd_r)
+    records_dict.update({
+        'all_time_worsts': all_time_worsts
+    })
+
+    # Phase 2: 9-hole records and PBs (round only)
+    nine_hole_results = identify_9hole_records_and_pbs(teg_r, rd_r)
+    records_dict.update({
+        '9hole_records': nine_hole_results['records'],
+        '9hole_pbs': nine_hole_results['personal_bests']
+    })
+
+    # Phase 3: Streak records
+    streak_results = identify_streak_records(all_data, streaks_df, teg_r, rd_r)
+    records_dict.update({
+        'streak_records': streak_results['records']
+    })
+
+    # Score count records
+    score_count_results = identify_score_count_records(all_data, teg_r, rd_r)
+    records_dict.update({
+        'best_score_counts': score_count_results['best_score_counts'],
+        'worst_score_counts': score_count_results['worst_score_counts']
+    })
+
+    # Display records and PBs summary
+    display_records_and_pbs_summary(records_dict, page_type='Round')
 
 # === NAVIGATION LINKS ===
 from utils import add_custom_navigation_links

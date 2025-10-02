@@ -65,7 +65,7 @@ with col2:
     st.button("Latest TEG", on_click=reset_teg_selection)
 
 # === MAIN TAB STRUCTURE ===
-main_tabs = st.tabs(["Aggregate Score", "Scoring", "Streaks"])
+main_tabs = st.tabs(["Aggregate Score", "Scoring", "Streaks", "Records & PBs"])
 
 # === AGGREGATE SCORE TAB ===
 with main_tabs[0]:
@@ -247,6 +247,51 @@ with main_tabs[2]:
             st.info("No streak data available for this TEG.")
     else:
         st.info("No data available for this TEG.")
+
+# === RECORDS & PBs TAB ===
+with main_tabs[3]:
+    st.markdown("#### Records & Personal Bests")
+
+    from helpers.records_identification import (
+        identify_aggregate_records_and_pbs,
+        identify_all_time_worsts,
+        identify_streak_records,
+        identify_score_count_records,
+        display_records_and_pbs_summary
+    )
+
+    # Collect all records and PBs
+    records_dict = {}
+
+    # Phase 1: Aggregate score records and PBs
+    aggregate_results = identify_aggregate_records_and_pbs(df_teg, teg_t)
+    records_dict.update({
+        'aggregate_records': aggregate_results['records'],
+        'aggregate_pbs': aggregate_results['personal_bests'],
+        'aggregate_worsts': aggregate_results['personal_worsts']
+    })
+
+    # All-time worsts
+    all_time_worsts = identify_all_time_worsts(df_teg, teg_t)
+    records_dict.update({
+        'all_time_worsts': all_time_worsts
+    })
+
+    # Phase 3: Streak records
+    streak_results = identify_streak_records(all_data, streaks_df, teg_t)
+    records_dict.update({
+        'streak_records': streak_results['records']
+    })
+
+    # Score count records
+    score_count_results = identify_score_count_records(all_data, teg_t)
+    records_dict.update({
+        'best_score_counts': score_count_results['best_score_counts'],
+        'worst_score_counts': score_count_results['worst_score_counts']
+    })
+
+    # Display records and PBs summary
+    display_records_and_pbs_summary(records_dict, page_type='TEG')
 
 # === NAVIGATION LINKS ===
 from utils import add_custom_navigation_links

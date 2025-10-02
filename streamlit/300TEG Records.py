@@ -6,7 +6,7 @@ import pandas as pd
 from utils import get_ranked_teg_data, get_ranked_round_data, get_ranked_frontback_data, load_datawrapper_css, get_round_data, get_9_data, load_all_data
 
 # Import display helper functions
-from helpers.display_helpers import prepare_records_table, prepare_worst_records_table, prepare_streak_records_table
+from helpers.display_helpers import prepare_records_table, prepare_worst_records_table, prepare_streak_records_table, prepare_score_count_records_table
 from helpers.worst_performance_processing import get_filtered_teg_data
 
 # Import streak analysis functions
@@ -33,7 +33,7 @@ frontback_data = get_9_data()
 
 
 # === TABBED RECORDS DISPLAY ===
-tab1, tab2, tab3, tab4 = st.tabs(["TEG Records", "Round Records", "9-Hole Records", "Streaks"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["TEG Records", "Round Records", "9-Hole Records", "Streaks", "Score Counts"])
 
 with tab1:
     teg_records_table = prepare_records_table(tegs_ranked, 'teg')
@@ -133,6 +133,37 @@ with tab4:
         ),
         unsafe_allow_html=True
     )
+
+with tab5:
+    # Score Count Records
+    best_score_counts, worst_score_counts = prepare_score_count_records_table(all_data)
+
+    # Display best score counts
+    if not best_score_counts.empty:
+        st.write(
+            best_score_counts.to_html(
+                escape=False,
+                index=False,
+                justify='left',
+                classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
+            ),
+            unsafe_allow_html=True
+        )
+
+    # Display worst score counts
+    if not worst_score_counts.empty:
+        st.write(
+            worst_score_counts.to_html(
+                escape=False,
+                index=False,
+                justify='left',
+                classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
+            ),
+            unsafe_allow_html=True
+        )
+
+    # Caption explaining score count logic
+    st.caption("Eagles, Birdies and Pars also include better scores")
 
 # === NAVIGATION LINKS ===
 from utils import add_custom_navigation_links

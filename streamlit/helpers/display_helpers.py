@@ -189,6 +189,180 @@ def prepare_streak_records_table(streak_data, table_title):
     return pd.DataFrame(records_data)
 
 
+def prepare_score_count_records_table(all_data):
+    """
+    Prepare score count records tables for best (Eagles, Birdies, Pars) and worst (TBPs).
+
+    Args:
+        all_data (pd.DataFrame): All tournament data
+
+    Returns:
+        tuple: (best_records_df, worst_records_df) formatted for records page display
+
+    Purpose:
+        Finds all-time records for score counts:
+        - Best: Most Eagles, Birdies (or better), Pars (or better) in TEG/Round
+        - Worst: Most TBPs in TEG/Round
+    """
+    from helpers.score_count_processing import count_scores_by_player
+
+    # Define score categories
+    score_categories = {
+        'Eagles': [-2],
+        'Birdies': [-2, -1],
+        'Pars': [-2, -1, 0],
+        'TBPs': [3, 4, 5, 6, 7, 8, 9, 10]
+    }
+
+    best_records_data = []
+    worst_records_data = []
+
+    # Process each category
+    for category, scores in score_categories.items():
+        # Find records at TEG level
+        teg_record_count = 0
+        teg_record_holders = []
+
+        for teg_num, group in all_data.groupby('TEGNum'):
+            score_counts = count_scores_by_player(group, field='GrossVP')
+            player_cols = [col for col in score_counts.columns]
+
+            for player in player_cols:
+                total = 0
+                for score in scores:
+                    if score in score_counts.index:
+                        total += score_counts.loc[score, player]
+
+                if total > teg_record_count:
+                    teg_record_count = total
+                    teg_record_holders = [(player, teg_num, group)]
+                elif total == teg_record_count and total > 0:
+                    teg_record_holders.append((player, teg_num, group))
+
+        # Add TEG records
+        if teg_record_count > 0:
+            # If 3+ holders, consolidate into one row
+            if len(teg_record_holders) >= 3:
+                # Get player initials (deduplicated, maintaining order)
+                player_initials = []
+                seen = set()
+                for p in teg_record_holders:
+                    if p[0] not in seen:
+                        player_initials.append(p[0])
+                        seen.add(p[0])
+                initials_str = ' / '.join(player_initials)
+
+                record_data = {
+                    'Best Score Counts:' if category != 'TBPs' else 'Worst Score Counts:': f"Most {category} in a TEG",
+                    '': str(teg_record_count),
+                    ' ': '→',
+                    '  ': initials_str
+                }
+
+                if category == 'TBPs':
+                    worst_records_data.append(record_data)
+                else:
+                    best_records_data.append(record_data)
+            else:
+                # Show each record separately (1-2 holders)
+                for player, teg_num, group in teg_record_holders:
+                    teg_name = f"TEG {teg_num}"
+                    area = group['Area'].iloc[0] if 'Area' in group.columns else ''
+                    year = group['Year'].iloc[0] if 'Year' in group.columns else ''
+                    when = f"{teg_name} ({area}, {year})"
+
+                    record_data = {
+                        'Best Score Counts:' if category != 'TBPs' else 'Worst Score Counts:': f"Most {category} in a TEG",
+                        '': str(teg_record_count),
+                        ' ': player,
+                        '  ': when
+                    }
+
+                    if category == 'TBPs':
+                        worst_records_data.append(record_data)
+                    else:
+                        best_records_data.append(record_data)
+
+        # Find records at Round level
+        round_record_count = 0
+        round_record_holders = []
+
+        for (teg_num, round_num), group in all_data.groupby(['TEGNum', 'Round']):
+            score_counts = count_scores_by_player(group, field='GrossVP')
+            player_cols = [col for col in score_counts.columns]
+
+            for player in player_cols:
+                total = 0
+                for score in scores:
+                    if score in score_counts.index:
+                        total += score_counts.loc[score, player]
+
+                if total > round_record_count:
+                    round_record_count = total
+                    round_record_holders = [(player, teg_num, round_num, group)]
+                elif total == round_record_count and total > 0:
+                    round_record_holders.append((player, teg_num, round_num, group))
+
+        # Add Round records
+        if round_record_count > 0:
+            # If 3+ holders, consolidate into one row
+            if len(round_record_holders) >= 3:
+                # Get player initials (deduplicated, maintaining order)
+                player_initials = []
+                seen = set()
+                for p in round_record_holders:
+                    if p[0] not in seen:
+                        player_initials.append(p[0])
+                        seen.add(p[0])
+                initials_str = ' / '.join(player_initials)
+
+                record_data = {
+                    'Best Score Counts:' if category != 'TBPs' else 'Worst Score Counts:': f"Most {category} in a Round",
+                    '': str(round_record_count),
+                    ' ': '→',
+                    '  ': initials_str
+                }
+
+                if category == 'TBPs':
+                    worst_records_data.append(record_data)
+                else:
+                    best_records_data.append(record_data)
+            else:
+                # Show each record separately (1-2 holders)
+                for player, teg_num, round_num, group in round_record_holders:
+                    teg_name = f"TEG {teg_num}"
+                    course = group['Course'].iloc[0] if 'Course' in group.columns else ''
+
+                    # Format date
+                    if 'Date' in group.columns and pd.notna(group['Date'].iloc[0]):
+                        try:
+                            date_obj = pd.to_datetime(group['Date'].iloc[0])
+                            month_year = date_obj.strftime('%b %Y')
+                        except:
+                            month_year = str(group['Year'].iloc[0]) if 'Year' in group.columns else ''
+                    else:
+                        month_year = str(group['Year'].iloc[0]) if 'Year' in group.columns else ''
+
+                    when = f"{teg_name} Rd {round_num} ({course}, {month_year})"
+
+                    record_data = {
+                        'Best Score Counts:' if category != 'TBPs' else 'Worst Score Counts:': f"Most {category} in a Round",
+                        '': str(round_record_count),
+                        ' ': player,
+                        '  ': when
+                    }
+
+                    if category == 'TBPs':
+                        worst_records_data.append(record_data)
+                    else:
+                        best_records_data.append(record_data)
+
+    best_df = pd.DataFrame(best_records_data) if best_records_data else pd.DataFrame()
+    worst_df = pd.DataFrame(worst_records_data) if worst_records_data else pd.DataFrame()
+
+    return best_df, worst_df
+
+
 def prepare_worst_records_table(data_source, record_type):
     """
     Prepare a consolidated worst records table showing all measures for a given record type.
