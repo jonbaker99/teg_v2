@@ -165,6 +165,7 @@ def prepare_records_table(data_source, record_type):
 def prepare_streak_records_table(streak_data, table_title):
     """
     Prepare a streak records table with title in header row.
+    Consolidates records with 3+ holders into a single row.
 
     Args:
         streak_data (pd.DataFrame): Streak data with columns ['Streak Type', 'Record', 'Player', 'When']
@@ -174,17 +175,42 @@ def prepare_streak_records_table(streak_data, table_title):
         pd.DataFrame: Table formatted for records page display with title in header
 
     Purpose:
-        Formats streak records to match the style of other records tables on the page
+        Formats streak records to match the style of other records tables on the page.
+        When 3+ players share the same record, consolidates them into one row showing player initials.
     """
     records_data = []
 
-    for _, row in streak_data.iterrows():
-        records_data.append({
-            table_title: row['Streak Type'],
-            '': row['Record'],
-            ' ': row['Player'],
-            '  ': row['When']
-        })
+    # Group by Streak Type and Record to find shared records
+    grouped = streak_data.groupby(['Streak Type', 'Record'])
+
+    for (streak_type, record_value), group in grouped:
+        num_holders = len(group)
+
+        if num_holders >= 3:
+            # Consolidate into one row with player initials (deduplicated, maintaining order)
+            player_initials = []
+            seen = set()
+            for player in group['Player']:
+                if player not in seen:
+                    player_initials.append(player)
+                    seen.add(player)
+            initials_str = ' / '.join(player_initials)
+
+            records_data.append({
+                table_title: streak_type,
+                '': record_value,
+                ' ': '→',
+                '  ': initials_str
+            })
+        else:
+            # Show each record separately (1-2 holders)
+            for _, row in group.iterrows():
+                records_data.append({
+                    table_title: streak_type,
+                    '': row['Record'],
+                    ' ': row['Player'],
+                    '  ': row['When']
+                })
 
     return pd.DataFrame(records_data)
 

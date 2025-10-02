@@ -52,6 +52,13 @@ player_options = ['All players'] + unique_players
 with expander:
     # Create a selectbox for players
     selected_player = st.selectbox('Select a player:', player_options)
+    n_keep = st.number_input(
+        "Number of Rounds to show",
+        min_value=1,
+        max_value=100,
+        value=10,
+        step=1
+    )
     #selected_player = st.radio('Select a player:', player_options, horizontal= True)
 
 if selected_player == 'All players':
@@ -93,7 +100,8 @@ course_output = course_friendly[field_list].rename(columns={pl_rnk: 'PB Rank'})
 course_output['PB Rank'] = course_output['PB Rank'].astype(int).astype(str) +'/'+course_output['Pl_count'].astype(int).astype(str)
 course_output = course_output.drop('Pl_count', axis=1)
 numeric_columns = course_output.select_dtypes(include=['float64', 'int64']).columns
-course_output[numeric_columns] = course_output[numeric_columns].astype(int)
+course_output[numeric_columns] = course_output[numeric_columns].astype(int) 
+course_output = course_output.head(n_keep)
 
 st.markdown(f'### All rounds for {selected_player} at {selected_course}')
 st.write(course_output.to_html(escape=False, index=False, justify='left', classes='datawrapper-table left-second'), unsafe_allow_html=True)

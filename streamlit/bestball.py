@@ -45,6 +45,15 @@ filtered_data = filter_data_by_teg(prepared_data, selected_tegnum)
 best_or_worst = st.radio("Rank by best or worst:", ('Best', 'Worst'), horizontal=True)
 sort_by_best = (best_or_worst == 'Best')
 
+# Number of results to show
+n_keep = st.number_input(
+    "Number of rows to show",
+    min_value=1,
+    max_value=100,
+    value=3,
+    step=1
+)
+
 # calculate_bestball_scores() - Computes team scores using best score per hole
 bestball_data = calculate_bestball_scores(filtered_data)
 
@@ -54,6 +63,10 @@ worstball_data = calculate_worstball_scores(filtered_data)
 # format_team_scores_for_display() - Formats team scores with proper sorting and vs-par notation
 bestball_output = format_team_scores_for_display(bestball_data, sort_by_best)
 worstball_output = format_team_scores_for_display(worstball_data, sort_by_best)
+
+# Apply n_keep limit
+bestball_output = bestball_output.head(n_keep)
+worstball_output = worstball_output.head(n_keep)
 
 # Display results in tabs
 tab1, tab2 = st.tabs(["Bestball", "Worstball"])

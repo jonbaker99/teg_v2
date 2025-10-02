@@ -2699,7 +2699,7 @@ def score_type_stats(df=None):
 def max_scoretype_per_round(df = None):
 
     if df is None:
-        df = load_all_data(exclude_teg_50=True)
+        df = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
 
     # Apply score types with grouping by Player, Round, and TEG
     scores = apply_score_types(df, groupby_cols=['Player', 'Round', 'TEG'])
@@ -2714,6 +2714,24 @@ def max_scoretype_per_round(df = None):
     
     return max_scores
 
+
+def max_scoretype_per_teg(df = None):
+
+    if df is None:
+        df = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
+
+    # Apply score types with grouping by Player, Round, and TEG
+    scores = apply_score_types(df, groupby_cols=['Player', 'TEG'])
+    
+    # Find the maximum scores across rounds and TEGs for each player
+    max_scores = scores.groupby('Player').agg({
+        'Pars_or_Better': 'max',
+        'Birdies': 'max',
+        'Eagles': 'max',
+        'TBPs': 'max'
+    }).reset_index()
+    
+    return max_scores
 
 # Function to find the root directory (TEG folder) by looking for the 'TEG' folder name
 # def find_project_root(current_path: Path, folder_name: str) -> Path:

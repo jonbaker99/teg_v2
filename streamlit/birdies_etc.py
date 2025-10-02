@@ -5,7 +5,7 @@ import numpy as np
 import altair as alt
 
 # Import data loading functions from main utils
-from utils import score_type_stats, max_scoretype_per_round, load_datawrapper_css
+from utils import score_type_stats, max_scoretype_per_round, load_datawrapper_css, max_scoretype_per_teg
 
 # Import scoring achievements helper functions
 from helpers.scoring_achievements_processing import (
@@ -34,6 +34,9 @@ scoring_stats = score_type_stats()
 # Purpose: Shows best single-round performances for comparison
 max_by_round = max_scoretype_per_round()
 
+# Load single-teg achievement maximums
+# Purpose: Shows best single-round performances for comparison
+max_by_teg = max_scoretype_per_teg()
 
 
 # === USER INTERFACE ===
@@ -41,7 +44,7 @@ max_by_round = max_scoretype_per_round()
 chart_fields_all = get_scoring_achievement_fields()
 
 # Create single-level tab structure
-tab_labels = ["Eagles", "Birdies", "Pars", "Triple Bogey+", "Most in Round"]
+tab_labels = ["Eagles", "Birdies", "Pars", "Triple Bogey+", "Most in Round", "Most in a TEG"]
 tabs = st.tabs(tab_labels)
 
 # Map score type tabs to chart_fields
@@ -76,11 +79,27 @@ for i, tab in enumerate(tabs):
                 unsafe_allow_html=True
             )
 
-        else:  # "Most in Round" tab
+        if i == 4:  # "Most in Round" tab
             # Single-round maximums tab
             # Reorder columns: Eagles, Birdies, Pars, TBPs
             # Also rename 'Pars_or_Better' to 'Pars'
             reordered_table = max_by_round[['Player', 'Eagles', 'Birdies', 'Pars_or_Better', 'TBPs']].copy()
+            reordered_table = reordered_table.rename(columns={'Pars_or_Better': 'Pars'})
+
+            st.write(
+                reordered_table.to_html(
+                    index=False,
+                    justify='left',
+                    classes='datawrapper-table'
+                ),
+                unsafe_allow_html=True
+            )
+
+        if i == 5:  # "Most in TEG" tab
+            # Single-TEG maximums tab
+            # Reorder columns: Eagles, Birdies, Pars, TBPs
+            # Also rename 'Pars_or_Better' to 'Pars'
+            reordered_table = max_by_teg[['Player', 'Eagles', 'Birdies', 'Pars_or_Better', 'TBPs']].copy()
             reordered_table = reordered_table.rename(columns={'Pars_or_Better': 'Pars'})
 
             st.write(
