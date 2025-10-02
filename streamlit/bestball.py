@@ -45,23 +45,27 @@ with st.expander("More display options"):
     # TEG filtering selection
     selected_tegnum = st.selectbox('Select TEG', tegnum_options, index=0)
 
-    # Best/Worst ranking selection
-    # best_or_worst = st.radio("Sort order:", ('Best', 'Worst'), horizontal=True)
-    best_or_worst = st.segmented_control(
-        "Sort order:",
-        ('Best', 'Worst'),
-        default='Best'
-    )
-    sort_by_best = (best_or_worst == 'Best')
+    # Place sort_order and n_keep in two columns
+    col1, col2 = st.columns(2)  # adjust ratios if you want them wider/narrower
 
-    # Number of results to show
-    n_keep = st.number_input(
-        "Number of rows to show",
-        min_value=1,
-        max_value=100,
-        value=3,
-        step=1
-    )
+    with col1:
+        sort_order = st.segmented_control(
+            "Sort order:",
+            ('Normal', 'Reversed'),
+            default='Normal'
+        )
+
+    with col2:
+        n_keep = st.number_input(
+            "Number of rows to show",
+            min_value=1,
+            max_value=100,
+            value=3,
+            step=1
+        )
+
+best_or_worst = "Best" if (view_mode == "Bestball") == (sort_order == "Normal") else "Worst"
+sort_by_best = best_or_worst == "Best"
 
 # filter_data_by_teg() - Applies TEG filter to the cached bestball data
 filtered_data = filter_data_by_teg(all_bestball_data, selected_tegnum)

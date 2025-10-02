@@ -58,6 +58,7 @@ BASE_DIR = Path.cwd().parent if Path.cwd().name == "streamlit" else Path.cwd()
 ALL_DATA_PARQUET = "data/all-data.parquet"
 ALL_SCORES_PARQUET = "data/all-scores.parquet" # Changed from .csv to .parquet
 STREAKS_PARQUET = "data/streaks.parquet"
+BESTBALL_PARQUET = "data/bestball.parquet"
 HANDICAPS_CSV = "data/handicaps.csv"
 ROUND_INFO_CSV = "data/round_info.csv"
 
@@ -653,6 +654,49 @@ def update_streaks_cache():
         logger.error(f"Error updating streaks cache: {e}")
         st.error(f"Failed to update streaks cache: {e}")
 
+
+def update_bestball_cache():
+    """
+    Update the bestball/worstball cache file.
+
+    This function:
+    1. Loads all data (including incomplete TEGs)
+    2. Calculates bestball scores
+    3. Calculates worstball scores
+    4. Combines them and saves to bestball.parquet
+    """
+    try:
+        # Load all data including incomplete TEGs for up-to-date analysis
+        all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
+
+        if all_data.empty:
+            logger.warning("No data available for bestball calculation")
+            return
+
+        # Import processing functions
+        from helpers.bestball_processing import prepare_bestball_data, calculate_bestball_scores, calculate_worstball_scores
+
+        # Prepare data
+        prepared_data = prepare_bestball_data(all_data)
+
+        # Calculate scores
+        bestball_data = calculate_bestball_scores(prepared_data)
+        worstball_data = calculate_worstball_scores(prepared_data)
+
+        # Add a 'Format' column to distinguish them
+        bestball_data['Format'] = 'Bestball'
+        worstball_data['Format'] = 'Worstball'
+
+        # Combine into a single DataFrame
+        combined_df = pd.concat([bestball_data, worstball_data], ignore_index=True)
+
+        # Save to parquet file
+        write_file(BESTBALL_PARQUET, combined_df, "Update bestball/worstball cache")
+        logger.info(f"Bestball/worstball cache updated successfully: {BESTBALL_PARQUET}")
+
+    except Exception as e:
+        logger.error(f"Error updating bestball cache: {e}")
+        st.error(f"Failed to update bestball cache: {e}")
 
 def update_commentary_caches():
     """

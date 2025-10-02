@@ -20,6 +20,7 @@ from utils import (
     update_all_data,
     update_streaks_cache,
     update_commentary_caches,
+    update_bestball_cache,
     summarise_existing_rd_data,
     update_teg_status_files,
     clear_all_caches,
@@ -264,6 +265,11 @@ def execute_data_update(overwrite=False, new_data_only=False):
         with st.spinner("📝 Updating commentary caches..."):
             update_commentary_caches()
             st.success("📝 Commentary caches updated.")
+
+        # Update bestball cache with latest data
+        with st.spinner("🏀 Updating bestball cache..."):
+            update_bestball_cache()
+            st.success("🏀 Bestball cache updated.")
 
         # Clear all caches to reflect changes
         st.cache_data.clear()
