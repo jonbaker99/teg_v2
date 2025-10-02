@@ -2,16 +2,11 @@
 import streamlit as st
 import pandas as pd
 
-# Import data loading functions from main utils
-from utils import load_all_data, load_datawrapper_css, get_teg_filter_options, filter_data_by_teg
+# Import data loading and utility functions from main utils
+from utils import read_file, load_datawrapper_css, get_teg_filter_options, filter_data_by_teg, BESTBALL_PARQUET
 
 # Import bestball analysis helper functions
-from helpers.bestball_processing import (
-    prepare_bestball_data,
-    calculate_bestball_scores,
-    calculate_worstball_scores,
-    format_team_scores_for_display
-)
+from helpers.bestball_processing import format_team_scores_for_display
 
 
 # === CONFIGURATION ===
@@ -23,75 +18,92 @@ load_datawrapper_css()
 
 
 # === DATA LOADING ===
-# Load TEG data excluding TEG 50 but including incomplete tournaments for current analysis
-# Purpose: Team format analysis benefits from current tournament data for up-to-date comparisons
-all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
+# Load pre-calculated bestball/worstball data from the cache file
+# Purpose: Improves performance by avoiding live calculations
+try:
+    all_bestball_data = read_file(BESTBALL_PARQUET)
+except FileNotFoundError:
+    st.error(f"Bestball data file not found at `{BESTBALL_PARQUET}`. Please run a data update to generate it.")
+    st.stop()
 
-# prepare_bestball_data() - Adds TEG|Round|Hole identifiers for team format calculations
-prepared_data = prepare_bestball_data(all_data)
-
-# get_teg_filter_options() - Creates TEG dropdown options including "All TEGs"
-tegnum_options = get_teg_filter_options(prepared_data)
+# get_teg_filter_options() - Creates TEG dropdown options including "All TEGs" from the loaded data
+tegnum_options = get_teg_filter_options(all_bestball_data)
 
 
 # === USER INTERFACE ===
-# TEG filtering selection
-selected_tegnum = st.selectbox('Select TEG', tegnum_options, index=0)
 
-# filter_data_by_teg() - Applies TEG filter to tournament data
-filtered_data = filter_data_by_teg(prepared_data, selected_tegnum)
-
-# Best/Worst ranking selection
-best_or_worst = st.radio("Rank by best or worst:", ('Best', 'Worst'), horizontal=True)
-sort_by_best = (best_or_worst == 'Best')
-
-# Number of results to show
-n_keep = st.number_input(
-    "Number of rows to show",
-    min_value=1,
-    max_value=100,
-    value=3,
-    step=1
+# === VIEW SWITCHER (Bestball / Worstball) ===
+view_mode = st.segmented_control(
+    "View",
+    ("Bestball", "Worstball"),
+    default="Bestball",
+    key="bb_view_mode",
 )
 
-# calculate_bestball_scores() - Computes team scores using best score per hole
-bestball_data = calculate_bestball_scores(filtered_data)
+with st.expander("More display options"):
 
-# calculate_worstball_scores() - Computes team scores using worst score per hole
-worstball_data = calculate_worstball_scores(filtered_data)
+    # TEG filtering selection
+    selected_tegnum = st.selectbox('Select TEG', tegnum_options, index=0)
+
+    # Best/Worst ranking selection
+    # best_or_worst = st.radio("Sort order:", ('Best', 'Worst'), horizontal=True)
+    best_or_worst = st.segmented_control(
+        "Sort order:",
+        ('Best', 'Worst'),
+        default='Best'
+    )
+    sort_by_best = (best_or_worst == 'Best')
+
+    # Number of results to show
+    n_keep = st.number_input(
+        "Number of rows to show",
+        min_value=1,
+        max_value=100,
+        value=3,
+        step=1
+    )
+
+# filter_data_by_teg() - Applies TEG filter to the cached bestball data
+filtered_data = filter_data_by_teg(all_bestball_data, selected_tegnum)
+
+# Separate bestball and worstball data from the filtered set
+bestball_data = filtered_data[filtered_data['Format'] == 'Bestball']
+worstball_data = filtered_data[filtered_data['Format'] == 'Worstball']
+
 
 # format_team_scores_for_display() - Formats team scores with proper sorting and vs-par notation
 bestball_output = format_team_scores_for_display(bestball_data, sort_by_best)
 worstball_output = format_team_scores_for_display(worstball_data, sort_by_best)
 
 # Apply n_keep limit
-bestball_output = bestball_output.head(n_keep)
-worstball_output = worstball_output.head(n_keep)
+bestball_output = bestball_output.head(n_keep).drop(columns = "TEGNum")
+worstball_output = worstball_output.head(n_keep).drop(columns = "TEGNum")
 
-# Display results in tabs
-tab1, tab2 = st.tabs(["Bestball", "Worstball"])
 
-with tab1:
-    st.markdown(f'**{best_or_worst} bestball**')
-    st.write(
-        bestball_output.to_html(
-            index=False, 
-            justify='left', 
-            classes='datawrapper-table left-3rd full-width'
-        ), 
-        unsafe_allow_html=True
-    )
 
-with tab2:
-    st.markdown(f'**{best_or_worst} worstball**')
-    st.write(
-        worstball_output.to_html(
-            index=False,
-            justify='left',
-            classes='datawrapper-table left-3rd full-width'
-        ),
-        unsafe_allow_html=True
-    )
+# Pick the right slice based on the segmented control
+data_map = {
+    "Bestball": bestball_data,
+    "Worstball": worstball_data,
+}
+selected_data = data_map[view_mode]
+
+# Format, limit rows, and hide TEGNum for display
+output = (
+    format_team_scores_for_display(selected_data, sort_by_best)
+      .head(n_keep)
+      .drop(columns="TEGNum", errors="ignore")
+)
+
+st.markdown(f"**{best_or_worst} {view_mode.lower()}**")
+st.write(
+    output.to_html(
+        index=False,
+        justify="left",
+        classes="datawrapper-table left-3rd full-width",
+    ),
+    unsafe_allow_html=True,
+)
 
 # === NAVIGATION LINKS ===
 from utils import add_custom_navigation_links

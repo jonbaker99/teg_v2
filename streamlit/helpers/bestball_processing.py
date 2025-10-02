@@ -45,13 +45,12 @@ def get_bestball_columns():
         Centralizes column definitions for consistent processing
         Separates grouping fields from value fields for aggregation
     """
-    bestball_cols = ['TEG', 'Round', 'Course', 'Year']
+    bestball_cols = ['TEG', 'TEGNum', 'Round', 'Course', 'Year']
     value_cols = ['GrossVP', 'Sc']
     
     return bestball_cols, value_cols
 
 
-@st.cache_data
 def calculate_bestball_scores(filtered_data):
     """
     Calculate bestball team scores (best score per hole).
@@ -81,7 +80,6 @@ def calculate_bestball_scores(filtered_data):
     return bestball_rounds
 
 
-@st.cache_data
 def calculate_worstball_scores(filtered_data):
     """
     Calculate worstball team scores (worst score per hole).
@@ -141,5 +139,3 @@ def format_team_scores_for_display(team_data, sort_by_best=True):
     formatted_data['GrossVP'] = formatted_data['GrossVP'].apply(format_vs_par)
     
     return formatted_data
-
-

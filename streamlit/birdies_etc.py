@@ -52,7 +52,7 @@ score_type_mapping = {
 }
 
 # Create a new tab structure
-tab1, tab2, tab3 = st.tabs(["Career Counts", "Most in a Round", "Most in a TEG"])
+tab1, tab2, tab3 = st.tabs(["Career Totals", "Most in a Round", "Most in a TEG"])
 
 with tab1:
     # Use a segmented control to select the score type

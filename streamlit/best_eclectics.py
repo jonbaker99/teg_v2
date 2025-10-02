@@ -115,7 +115,7 @@ with tab1:
         st.warning("No TEG data available.")
     
     st.markdown('')
-    st.markdown("#### Personal Best TEGs")
+    st.markdown("#### Personal Best TEG Eclectics")
     # st.caption("Each player's best TEG eclectic (including ties)")
     
     pb_tegs = get_personal_best_eclectics(all_data, 'TEGNum')
