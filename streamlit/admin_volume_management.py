@@ -312,6 +312,8 @@ with tab_help:
     st.markdown(
         """
 **How this works**
+-updated jb
+
 
 - GitHub (`data/`) is the **authoritative** source.  
 - **Sync to volume** copies selected GitHub files to the Railway volume.  
