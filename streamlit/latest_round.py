@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 
 # Import data loading functions from main utils
-from utils import get_ranked_round_data, load_all_data, load_datawrapper_css
+from utils import get_ranked_round_data, load_all_data, load_datawrapper_css, read_file, STREAKS_PARQUET
 from make_charts import create_round_graph
 
 # Import latest round helper functions
@@ -11,11 +11,23 @@ from helpers.latest_round_processing import (
     get_round_metric_mappings,
     initialize_round_selection_state,
     update_session_state_defaults,
-    create_round_selection_reset_function,
     get_teg_and_round_options,
     create_metric_tabs_data,
     prepare_round_context_display
 )
+
+# Import scorecard generation functions
+from scorecard_utils import (
+    load_scorecard_css,
+    generate_round_comparison_html,
+    generate_round_comparison_html_mobile
+)
+
+# Import score count processing
+from helpers.score_count_processing import count_scores_by_player
+
+# Import streak analysis functions
+from helpers.streak_analysis_processing import get_player_window_streaks
 
 
 # === CONFIGURATION ===
@@ -24,6 +36,9 @@ st.markdown('Shows how latest or selected rounds and TEGs compare to other round
 
 # Load CSS styling for consistent table appearance
 load_datawrapper_css()
+
+# Load scorecard CSS for scorecard tab
+load_scorecard_css()
 
 # initialize_round_selection_state() - Sets up session state for TEG/round selection
 initialize_round_selection_state()
@@ -42,13 +57,10 @@ all_data = load_all_data(exclude_incomplete_tegs=False)
 # update_session_state_defaults() - Sets session state to latest round if not initialized
 update_session_state_defaults(df_round)
 
-# create_round_selection_reset_function() - Creates callback for "Latest Round" button
-reset_round_selection = create_round_selection_reset_function(df_round)
-
 
 # === USER INTERFACE ===
 # Round selection controls
-col1, col2, col3 = st.columns(3)
+col1, col2 = st.columns(2)
 
 with col1:
     # get_teg_and_round_options() - Gets available TEG options
@@ -64,50 +76,216 @@ with col2:
     rd_r = st.selectbox("Select Round", options=round_options, index=rd_index, key='rd_r_select')
     st.session_state.rd_r = rd_r
 
-with col3:
-    st.button("Latest Round", on_click=reset_round_selection)
+# === MAIN TAB STRUCTURE ===
+main_tabs = st.tabs(["Scoreboards", "Scorecard", "Scoring", "Streaks"])
 
-# Metric tabs setup
-metrics = ['Sc', 'Stableford', 'GrossVP', 'NetVP']
+# === SCOREBOARDS TAB ===
+with main_tabs[0]:
+    # Metric tabs setup
+    metrics = ['Sc', 'Stableford', 'GrossVP', 'NetVP']
 
-# create_metric_tabs_data() - Prepares metric names and friendly labels for tabs
-metrics, friendly_metrics = create_metric_tabs_data(metrics)
-tabs = st.tabs(friendly_metrics)
+    # create_metric_tabs_data() - Prepares metric names and friendly labels for tabs
+    metrics, friendly_metrics = create_metric_tabs_data(metrics)
+    metric_tabs = st.tabs(friendly_metrics)
 
-# get_round_metric_mappings() - Gets mapping for metric name conversion
-name_mapping, inverted_name_mapping = get_round_metric_mappings()
+    # get_round_metric_mappings() - Gets mapping for metric name conversion
+    name_mapping, inverted_name_mapping = get_round_metric_mappings()
 
-# Display metric-specific analysis in each tab
-for tab, friendly_metric in zip(tabs, friendly_metrics):
-    with tab:
-        st.markdown(f"#### {friendly_metric}")
-        
-        # Convert friendly name back to internal metric name
-        metric = name_mapping.get(friendly_metric, friendly_metric)
-        
-        # prepare_round_context_display() - Creates context table for selected round
-        context_display = prepare_round_context_display(df_round, teg_r, rd_r, metric, friendly_metric)
+    # Display metric-specific analysis in each tab
+    for tab, friendly_metric in zip(metric_tabs, friendly_metrics):
+        with tab:
+            st.markdown(f"#### {friendly_metric}")
+
+            # Convert friendly name back to internal metric name
+            metric = name_mapping.get(friendly_metric, friendly_metric)
+
+            # prepare_round_context_display() - Creates context table for selected round
+            context_display = prepare_round_context_display(df_round, teg_r, rd_r, metric, friendly_metric)
+            st.write(
+                context_display.to_html(
+                    index=False,
+                    justify='left',
+                    classes='jb-table-test, datawrapper-table'
+                ),
+                unsafe_allow_html=True
+            )
+
+            # create_round_graph() - Creates cumulative performance chart through selected round
+            st.markdown(f"#### Cumulative {friendly_metric} through round")
+            cum_metric = f'{metric} Cum Round'
+            fig_rd = create_round_graph(
+                all_data,
+                chosen_teg=teg_r,
+                chosen_round=rd_r,
+                y_series=cum_metric,
+                title=friendly_metric,
+                y_axis_label=f'Cumulative {friendly_metric}'
+            )
+            st.plotly_chart(fig_rd, use_container_width=True, config=dict({'displayModeBar': False}))
+
+# === SCORECARD TAB ===
+with main_tabs[1]:
+    st.markdown("#### Scorecard")
+
+    # Scorecard view toggle
+    scorecard_view = st.segmented_control(
+        "Scorecard view",
+        options=["Desktop", "Mobile"],
+        default="Desktop"
+    )
+
+    # Extract TEGNum from TEG string (e.g., "TEG 17" -> 17)
+    teg_num = int(teg_r.split()[1])
+
+    # Generate appropriate scorecard
+    if scorecard_view == "Desktop":
+        scorecard_html = generate_round_comparison_html(teg_num, rd_r)
+    else:
+        scorecard_html = generate_round_comparison_html_mobile(teg_num, rd_r)
+
+    st.markdown(scorecard_html, unsafe_allow_html=True)
+
+# === SCORING TAB ===
+with main_tabs[2]:
+    st.markdown("#### Scoring")
+
+    # Scoring type toggle
+    scoring_type = st.segmented_control(
+        "Scoring type",
+        options=["Gross vs Par", "Stableford"],
+        default="Gross vs Par"
+    )
+
+    # Extract TEGNum from TEG string (e.g., "TEG 17" -> 17)
+    teg_num = int(teg_r.split()[1])
+
+    # Filter data for selected round
+    round_data = all_data[(all_data['TEGNum'] == teg_num) & (all_data['Round'] == rd_r)]
+
+    # Count scores by player
+    if scoring_type == "Gross vs Par":
+        score_counts = count_scores_by_player(round_data, field='GrossVP')
+        score_counts = score_counts.reset_index()
+        score_counts.columns.name = None
+
+        # Format vs par values
+        from utils import format_vs_par
+        score_counts['GrossVP'] = score_counts['GrossVP'].apply(format_vs_par)
+        score_counts = score_counts.rename(columns={'GrossVP': 'vs Par'})
+
+        # Replace 0 values with '-' in player columns
+        player_cols = [col for col in score_counts.columns if col != 'vs Par']
+        for col in player_cols:
+            score_counts[col] = score_counts[col].replace(0, '-')
+    else:
+        score_counts = count_scores_by_player(round_data, field='Stableford')
+        # Sort by Stableford value in descending order
+        score_counts = score_counts.sort_index(ascending=False)
+        score_counts = score_counts.reset_index()
+        score_counts.columns.name = None
+
+        # Convert Stableford column to integer
+        score_counts['Stableford'] = score_counts['Stableford'].astype(int)
+
+        # Replace 0 values with '-' in player columns
+        player_cols = [col for col in score_counts.columns if col != 'Stableford']
+        for col in player_cols:
+            score_counts[col] = score_counts[col].replace(0, '-')
+
+        score_counts = score_counts.rename(columns={'Stableford': 'Stableford'})
+
+    # Display score count table
+    st.write(
+        score_counts.to_html(
+            index=False,
+            justify='left',
+            classes='datawrapper-table'
+        ),
+        unsafe_allow_html=True
+    )
+
+# === STREAKS TAB ===
+with main_tabs[3]:
+    st.markdown("#### Streaks")
+
+    # Load streak data
+    streaks_df = read_file(STREAKS_PARQUET)
+
+    # Get streaks for the selected round (teg_r is already in "TEG 17" format)
+    round_streaks = get_player_window_streaks(
+        all_data,
+        streaks_df,
+        teg=teg_r,
+        round_num=rd_r
+    )
+
+    if len(round_streaks) > 0:
+        # Pivot table to show players in columns and streak types in rows
+        # Current format: ['Streak Type', 'Player', 'Max Streak', 'Location']
+        # Target format: Streak Type | Player1 | Player2 | ...
+
+        streaks_pivot = round_streaks.pivot(
+            index='Streak Type',
+            columns='Player',
+            values='Max Streak'
+        )
+
+        # Reset index to make Streak Type a column
+        streaks_pivot = streaks_pivot.reset_index()
+
+        # Remove the columns name to avoid extra header
+        streaks_pivot.columns.name = None
+
+        # Define streak mapping for filtering and renaming
+        streak_mapping = {
+            'Eagles': 'Eagles',
+            'Birdies': 'Birdies',
+            'Pars or Better': 'Pars',
+            'No +2s': 'Bogeys',
+            'Over Par': 'Over par',
+            'TBPs': 'TBPs'
+        }
+
+        # Filter to only show desired streaks and apply mapping
+        streaks_pivot = streaks_pivot[streaks_pivot['Streak Type'].isin(streak_mapping.keys())].copy()
+        streaks_pivot['Streak Type'] = streaks_pivot['Streak Type'].map(streak_mapping)
+
+        # Define desired order
+        desired_order = ['Eagles', 'Birdies', 'Pars', 'Bogeys', 'Over par', 'TBPs']
+
+        # Sort by desired order
+        streaks_pivot['_order'] = streaks_pivot['Streak Type'].map({s: i for i, s in enumerate(desired_order)})
+        streaks_pivot = streaks_pivot.sort_values('_order').drop('_order', axis=1)
+
+        # Filter out Eagles and Birdies rows if all values are 0
+        # Get player columns (all except 'Streak Type')
+        player_cols = [col for col in streaks_pivot.columns if col != 'Streak Type']
+
+        # Remove Eagles row only if ALL players have 0 (max value is 0)
+        if 'Eagles' in streaks_pivot['Streak Type'].values:
+            eagles_max = streaks_pivot[streaks_pivot['Streak Type'] == 'Eagles'][player_cols].max(axis=1).iloc[0]
+            if eagles_max == 0:
+                streaks_pivot = streaks_pivot[streaks_pivot['Streak Type'] != 'Eagles']
+
+        # Remove Birdies row only if ALL players have 0 (max value is 0)
+        if 'Birdies' in streaks_pivot['Streak Type'].values:
+            birdies_max = streaks_pivot[streaks_pivot['Streak Type'] == 'Birdies'][player_cols].max(axis=1).iloc[0]
+            if birdies_max == 0:
+                streaks_pivot = streaks_pivot[streaks_pivot['Streak Type'] != 'Birdies']
+
+        # Display pivoted streaks table
         st.write(
-            context_display.to_html(
-                index=False, 
-                justify='left', 
-                classes='jb-table-test, datawrapper-table'
-            ), 
+            streaks_pivot.to_html(
+                index=False,
+                justify='left',
+                classes='datawrapper-table'
+            ),
             unsafe_allow_html=True
         )
 
-        # create_round_graph() - Creates cumulative performance chart through selected round
-        st.markdown(f"#### Cumulative {friendly_metric} through round")
-        cum_metric = f'{metric} Cum Round'
-        fig_rd = create_round_graph(
-            all_data, 
-            chosen_teg=teg_r, 
-            chosen_round=rd_r, 
-            y_series=cum_metric,
-            title=friendly_metric,
-            y_axis_label=f'Cumulative {friendly_metric}'
-        )
-        st.plotly_chart(fig_rd, use_container_width=True, config=dict({'displayModeBar': False}))
+        st.caption("Eagles / birdies / par / bogeys are all 'or better'")
+    else:
+        st.info("No streak data available for this round.")
 
 # === NAVIGATION LINKS ===
 from utils import add_custom_navigation_links

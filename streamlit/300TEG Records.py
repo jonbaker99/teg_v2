@@ -3,11 +3,14 @@ import streamlit as st
 import pandas as pd
 
 # Import data loading functions from main utils
-from utils import get_ranked_teg_data, get_ranked_round_data, get_ranked_frontback_data, load_datawrapper_css, get_round_data, get_9_data
+from utils import get_ranked_teg_data, get_ranked_round_data, get_ranked_frontback_data, load_datawrapper_css, get_round_data, get_9_data, load_all_data
 
 # Import display helper functions
-from helpers.display_helpers import prepare_records_table, prepare_worst_records_table
+from helpers.display_helpers import prepare_records_table, prepare_worst_records_table, prepare_streak_records_table
 from helpers.worst_performance_processing import get_filtered_teg_data
+
+# Import streak analysis functions
+from helpers.streak_analysis_processing import prepare_record_best_streaks_data, prepare_record_worst_streaks_data
 
 
 # === PAGE CONFIGURATION ===
@@ -30,7 +33,7 @@ frontback_data = get_9_data()
 
 
 # === TABBED RECORDS DISPLAY ===
-tab1, tab2, tab3 = st.tabs(["TEG Records", "Round Records", "9-Hole Records"])
+tab1, tab2, tab3, tab4 = st.tabs(["TEG Records", "Round Records", "9-Hole Records", "Streaks"])
 
 with tab1:
     teg_records_table = prepare_records_table(tegs_ranked, 'teg')
@@ -93,6 +96,36 @@ with tab3:
     nine_worst_table = prepare_worst_records_table(frontback_data, 'frontback')
     st.write(
         nine_worst_table.to_html(
+            escape=False,
+            index=False,
+            justify='left',
+            classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
+        ),
+        unsafe_allow_html=True
+    )
+
+with tab4:
+    # Load data for streak records (excluding TEG 50 like other streak analysis)
+    all_data = load_all_data(exclude_teg_50=True)
+
+    # Best Streaks table
+    best_streaks_data = prepare_record_best_streaks_data(all_data)
+    best_streaks_table = prepare_streak_records_table(best_streaks_data, 'Best Streaks:')
+    st.write(
+        best_streaks_table.to_html(
+            escape=False,
+            index=False,
+            justify='left',
+            classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
+        ),
+        unsafe_allow_html=True
+    )
+
+    # Worst Streaks table
+    worst_streaks_data = prepare_record_worst_streaks_data(all_data)
+    worst_streaks_table = prepare_streak_records_table(worst_streaks_data, 'Worst Streaks:')
+    st.write(
+        worst_streaks_table.to_html(
             escape=False,
             index=False,
             justify='left',

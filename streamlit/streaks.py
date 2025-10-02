@@ -12,7 +12,9 @@ from helpers.streak_analysis_processing import (
     prepare_bad_streaks_data,
     prepare_current_good_streaks_data,
     prepare_current_bad_streaks_data,
-    calculate_window_streaks
+    calculate_window_streaks,
+    prepare_record_best_streaks_data,
+    prepare_record_worst_streaks_data
 )
 
 
@@ -56,30 +58,48 @@ streak_tables = get_all_streak_tables(all_data)
 
 
 # === USER INTERFACE ===
-# Radio button to choose between max and current streaks
-streak_type = st.radio(
-    "Select streak type:",
-    ["Max", "Current"],
-    horizontal=True
-)
-
 # Create main tab structure for streaks
-tab_labels = ["Good Streaks", "Bad Streaks", "Streak detail"]
+tab_labels = ["Streaks by Player", "Record Streaks", "Streak detail"]
 tabs = st.tabs(tab_labels)
 
 # Display streak statistics in tabs
 for i, tab in enumerate(tabs):
     with tab:
         if i == 0:
-            # Good streaks tab - select from cached tables
-            if streak_type == "Max":
-                good_streaks_summary = streak_tables['good_max']
-            else:
-                good_streaks_summary = streak_tables['good_current']
+            # Streaks by Player tab - good vs bad, max vs current
+            st.write("**Select streak type:**")
 
-            # Display good streaks summary table
+            streak_category = st.segmented_control(
+                "Good / Bad",
+                ["Good", "Bad"],
+                default="Good",
+                key="streak_category",
+                label_visibility="collapsed"
+            )
+
+            streak_type = st.segmented_control(
+                "Max / Current",
+                ["Max", "Current"],
+                default="Max",
+                key="streak_type",
+                label_visibility="collapsed"
+            )
+
+            # Select appropriate table based on controls
+            if streak_category == "Good":
+                if streak_type == "Max":
+                    streaks_summary = streak_tables['good_max']
+                else:
+                    streaks_summary = streak_tables['good_current']
+            else:  # Bad
+                if streak_type == "Max":
+                    streaks_summary = streak_tables['bad_max']
+                else:
+                    streaks_summary = streak_tables['bad_current']
+
+            # Display streaks summary table
             st.write(
-                good_streaks_summary.to_html(
+                streaks_summary.to_html(
                     index=False,
                     justify='left',
                     classes='datawrapper-table'
@@ -89,22 +109,37 @@ for i, tab in enumerate(tabs):
             st.caption("*: current streak is maximum streak")
 
         elif i == 1:
-            # Bad streaks tab - select from cached tables
-            if streak_type == "Max":
-                bad_streaks_summary = streak_tables['bad_max']
-            else:
-                bad_streaks_summary = streak_tables['bad_current']
+            # Record Streaks tab - All-time records for each streak type
+            st.write("All-time record streaks for each streak type across all players and tournaments.")
 
-            # Display bad streaks summary table
-            st.write(
-                bad_streaks_summary.to_html(
-                    index=False,
-                    justify='left',
-                    classes='datawrapper-table'
-                ),
-                unsafe_allow_html=True
-            )
-            st.caption("*: current streak is maximum streak")
+            # Create subtabs for Best and Worst streaks
+            record_tabs = st.tabs(["Best Streaks", "Worst Streaks"])
+
+            with record_tabs[0]:
+                # Best (good) streaks records
+                best_streaks = prepare_record_best_streaks_data(all_data)
+                st.write(
+                    best_streaks.to_html(
+                        index=False,
+                        justify='left',
+                        classes='datawrapper-table'
+                    ),
+                    unsafe_allow_html=True
+                )
+                st.caption("*: current streak is record streak")
+
+            with record_tabs[1]:
+                # Worst (bad) streaks records
+                worst_streaks = prepare_record_worst_streaks_data(all_data)
+                st.write(
+                    worst_streaks.to_html(
+                        index=False,
+                        justify='left',
+                        classes='datawrapper-table'
+                    ),
+                    unsafe_allow_html=True
+                )
+                st.caption("*: current streak is record streak")
 
         elif i == 2:
             # Streak detail tab - TEG/Round level analysis

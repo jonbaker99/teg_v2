@@ -1002,3 +1002,147 @@ def get_player_window_streaks(all_data, streaks_df, player=None, teg=None, round
 
     # Calculate window streaks
     return calculate_window_streaks(filtered)
+
+
+def prepare_record_best_streaks_data(all_data):
+    """
+    Prepare record best (good) streaks data from all career streaks.
+
+    Args:
+        all_data (pd.DataFrame): Raw tournament data
+
+    Returns:
+        pd.DataFrame: Table with columns ['Streak Type', 'Record', 'Player', 'When']
+                     showing the maximum streak for each good streak type
+                     Returns all players who share the record (multiple rows per streak type)
+                     Marks current streaks with asterisk (*)
+
+    Purpose:
+        Identifies all-time record holders for each positive streak type
+        Only includes streaks > 1
+    """
+    from utils import read_file, STREAKS_PARQUET
+
+    # Load streak data
+    streaks_df = read_file(STREAKS_PARQUET)
+
+    # Merge with tournament data to get TEG/Round/Player info
+    df = streaks_df.merge(
+        all_data[['HoleID', 'TEG', 'TEGNum', 'Round', 'Pl', 'Player']],
+        on=['HoleID', 'Pl']
+    )
+
+    # Find the last hole played overall (maximum HoleID by sorting)
+    last_hole = df.sort_values('Hole Order Ever').iloc[-1]['HoleID']
+
+    # Calculate window streaks for all data (no filters)
+    df = df.sort_values(['Pl', 'TEGNum', 'Round', 'Career Count'])
+    all_streaks = calculate_window_streaks(df)
+
+    # Define good streak types
+    good_streak_types = ['Eagles', 'Birdies', 'Pars or Better', 'No +2s', 'No TBPs']
+
+    # Filter for good streaks only
+    good_streaks = all_streaks[all_streaks['Streak Type'].isin(good_streak_types)]
+
+    # Find the maximum streak for each streak type and return all matching records
+    records = []
+    for streak_type in good_streak_types:
+        type_data = good_streaks[good_streaks['Streak Type'] == streak_type]
+        if len(type_data) > 0:
+            max_streak = type_data['Max Streak'].max()
+
+            # Only include if streak is > 1
+            if max_streak > 1:
+                # Get all rows that match the maximum
+                max_rows = type_data[type_data['Max Streak'] == max_streak]
+
+                for _, row in max_rows.iterrows():
+                    # Check if this streak ends at the last hole (i.e., it's current)
+                    location = row['Location']
+                    is_current = location.endswith(format_hole_location(last_hole))
+
+                    # Add asterisk if current
+                    record_display = f"{row['Max Streak']}*" if is_current else str(row['Max Streak'])
+
+                    records.append({
+                        'Streak Type': streak_type,
+                        'Record': record_display,
+                        'Player': row['Player'],
+                        'When': location
+                    })
+
+    records_df = pd.DataFrame(records)
+    return records_df
+
+
+def prepare_record_worst_streaks_data(all_data):
+    """
+    Prepare record worst (bad) streaks data from all career streaks.
+
+    Args:
+        all_data (pd.DataFrame): Raw tournament data
+
+    Returns:
+        pd.DataFrame: Table with columns ['Streak Type', 'Record', 'Player', 'When']
+                     showing the maximum streak for each bad streak type
+                     Returns all players who share the record (multiple rows per streak type)
+                     Marks current streaks with asterisk (*)
+
+    Purpose:
+        Identifies all-time record holders for each negative streak type
+        Only includes streaks > 1
+    """
+    from utils import read_file, STREAKS_PARQUET
+
+    # Load streak data
+    streaks_df = read_file(STREAKS_PARQUET)
+
+    # Merge with tournament data to get TEG/Round/Player info
+    df = streaks_df.merge(
+        all_data[['HoleID', 'TEG', 'TEGNum', 'Round', 'Pl', 'Player']],
+        on=['HoleID', 'Pl']
+    )
+
+    # Find the last hole played overall (maximum HoleID by sorting)
+    last_hole = df.sort_values('Hole Order Ever').iloc[-1]['HoleID']
+
+    # Calculate window streaks for all data (no filters)
+    df = df.sort_values(['Pl', 'TEGNum', 'Round', 'Career Count'])
+    all_streaks = calculate_window_streaks(df)
+
+    # Define bad streak types
+    bad_streak_types = ['No Eagles', 'No Birdies', 'Over Par', '+2s or Worse', 'TBPs']
+
+    # Filter for bad streaks only
+    bad_streaks = all_streaks[all_streaks['Streak Type'].isin(bad_streak_types)]
+
+    # Find the maximum streak for each streak type and return all matching records
+    records = []
+    for streak_type in bad_streak_types:
+        type_data = bad_streaks[bad_streaks['Streak Type'] == streak_type]
+        if len(type_data) > 0:
+            max_streak = type_data['Max Streak'].max()
+
+            # Only include if streak is > 1
+            if max_streak > 1:
+                # Get all rows that match the maximum
+                max_rows = type_data[type_data['Max Streak'] == max_streak]
+
+                for _, row in max_rows.iterrows():
+                    # Check if this streak ends at the last hole (i.e., it's current)
+                    location = row['Location']
+                    is_current = location.endswith(format_hole_location(last_hole))
+
+                    # Add asterisk if current
+                    record_display = f"{row['Max Streak']}*" if is_current else str(row['Max Streak'])
+
+                    records.append({
+                        'Streak Type': streak_type,
+                        'Record': record_display,
+                        'Player': row['Player'],
+                        'When': location
+                    })
+
+    records_df = pd.DataFrame(records)
+    return records_df

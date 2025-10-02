@@ -162,6 +162,33 @@ def prepare_records_table(data_source, record_type):
     return pd.DataFrame(records_data)
 
 
+def prepare_streak_records_table(streak_data, table_title):
+    """
+    Prepare a streak records table with title in header row.
+
+    Args:
+        streak_data (pd.DataFrame): Streak data with columns ['Streak Type', 'Record', 'Player', 'When']
+        table_title (str): Title for the table (e.g., 'Best Streaks:', 'Worst Streaks:')
+
+    Returns:
+        pd.DataFrame: Table formatted for records page display with title in header
+
+    Purpose:
+        Formats streak records to match the style of other records tables on the page
+    """
+    records_data = []
+
+    for _, row in streak_data.iterrows():
+        records_data.append({
+            table_title: row['Streak Type'],
+            '': row['Record'],
+            ' ': row['Player'],
+            '  ': row['When']
+        })
+
+    return pd.DataFrame(records_data)
+
+
 def prepare_worst_records_table(data_source, record_type):
     """
     Prepare a consolidated worst records table showing all measures for a given record type.

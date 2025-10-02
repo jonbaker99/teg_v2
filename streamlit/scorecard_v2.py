@@ -10,9 +10,12 @@ from utils import load_all_data, get_scorecard_data, get_teg_metadata, format_da
 # Import scorecard generation functions (existing utilities)
 from scorecard_utils import (
     load_scorecard_css,
-    generate_single_round_html, 
+    generate_single_round_html,
     generate_tournament_html,
-    generate_round_comparison_html
+    generate_round_comparison_html,
+    generate_single_round_html_mobile,
+    generate_tournament_html_mobile,
+    generate_round_comparison_html_mobile
 )
 
 # Import scorecard-specific helper functions
@@ -51,14 +54,21 @@ selection_options = prepare_scorecard_selection_options(all_data)
 
 # === USER INTERFACE - SCORECARD TYPE AND SELECTION ===
 with st.expander("Scorecard selection", expanded=True):
-    
+
+    # Scorecard layout selection
+    scorecard_layout = st.segmented_control(
+        "Scorecard layout",
+        options=["Desktop", "Mobile"],
+        default="Desktop"
+    )
+
     # Get scorecard type mappings
     tab_names, display_names = get_scorecard_type_mapping()
 
     # Scorecard type selection radio buttons
     selected_tab_display = st.radio(
-        "Choose scorecard type:", 
-        display_names, 
+        "Choose scorecard type:",
+        display_names,
         horizontal=False,
         key='scorecard_tab_selector'
     )
@@ -107,25 +117,28 @@ with st.expander("Scorecard selection", expanded=True):
 
 # === SINGLE PLAYER ROUND SCORECARD ===
 if selected_tab == "1 Round / 1 Player":
-    
+
     # get_scorecard_data() - Loads hole-by-hole data for specific player/round
     rd_data = get_scorecard_data(selected_tegnum, selected_round, selected_pl)
 
     # validate_and_prepare_single_round_data() - Ensures complete 18-hole data
     is_valid, prepared_data, error_message = validate_and_prepare_single_round_data(rd_data)
-    
+
     if not is_valid:
         st.error(error_message)
     else:
-        # generate_single_round_html() - Creates formatted scorecard HTML
-        scorecard_html = generate_single_round_html(selected_pl, selected_tegnum, selected_round)
+        # Generate scorecard based on selected layout
+        if scorecard_layout == "Desktop":
+            scorecard_html = generate_single_round_html(selected_pl, selected_tegnum, selected_round)
+        else:
+            scorecard_html = generate_single_round_html_mobile(selected_pl, selected_tegnum, selected_round)
         st.markdown(scorecard_html, unsafe_allow_html=True)
 
 
 # === TOURNAMENT VIEW (ONE PLAYER, ALL ROUNDS) ===
 elif selected_tab == "1 Player / All Rounds":
-    
-    # get_scorecard_data() - Loads all round data for specific player/tournament  
+
+    # get_scorecard_data() - Loads all round data for specific player/tournament
     tournament_data = get_scorecard_data(selected_tegnum, player_code=selected_pl)
 
     if len(tournament_data) == 0:
@@ -133,21 +146,27 @@ elif selected_tab == "1 Player / All Rounds":
     else:
         # prepare_tournament_display_data() - Extracts player/tournament names for display
         display_info = prepare_tournament_display_data(tournament_data)
-        
-        # generate_tournament_html() - Creates multi-round tournament scorecard
-        tournament_html = generate_tournament_html(selected_pl, selected_tegnum)
+
+        # Generate scorecard based on selected layout
+        if scorecard_layout == "Desktop":
+            tournament_html = generate_tournament_html(selected_pl, selected_tegnum)
+        else:
+            tournament_html = generate_tournament_html_mobile(selected_pl, selected_tegnum)
         st.markdown(tournament_html, unsafe_allow_html=True)
 
 
 # === ROUND COMPARISON (ALL PLAYERS, ONE ROUND) ===
 elif selected_tab == "1 Round / All Players":
-    
+
     # get_scorecard_data() - Loads data for all players in specific round
     comparison_data = get_scorecard_data(selected_tegnum, selected_round)
-    
+
     if len(comparison_data) == 0:
         st.error("No data found for the selected tournament and round.")
     else:
-        # generate_round_comparison_html() - Creates side-by-side player comparison
-        comparison_html = generate_round_comparison_html(selected_tegnum, selected_round)
+        # Generate scorecard based on selected layout
+        if scorecard_layout == "Desktop":
+            comparison_html = generate_round_comparison_html(selected_tegnum, selected_round)
+        else:
+            comparison_html = generate_round_comparison_html_mobile(selected_tegnum, selected_round)
         st.markdown(comparison_html, unsafe_allow_html=True)

@@ -701,6 +701,19 @@
   margin-top: 5px;
 }
 
+/* ===== MOBILE SCORECARD SECTIONS FLEX LAYOUT ===== */
+.scorecard-sections-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center; /* Center the sections horizontally */
+}
+
+.scorecard-section-wrapper {
+  flex: 0 0 auto; /* Don't grow or shrink, use natural width */
+  min-width: 300px;
+}
+
 /* ===== MOBILE RESPONSIVE ADJUSTMENTS ===== */
 @media (max-width: 480px) {
   :root {

@@ -778,33 +778,33 @@ def generate_single_round_html_mobile(player_code, teg_num, round_num, title=Non
 
 def generate_tournament_html_mobile(player_code, teg_num, title=None, subheader=None):
     """Generate mobile HTML for single player tournament view (holes as rows, rounds as columns)"""
-    
+
     # Load data using existing function
     player_data = get_scorecard_data(teg_num, player_code=player_code)
-    
+
     if player_data.empty:
         return f"<div class='scorecard-container-mobile'><p>Error: No data found for player {player_code} in TEG {teg_num}.</p></div>"
-    
+
     # Generate default title if not provided
     if title is None:
         player_name = player_data['Player'].iloc[0]
         title = f"{player_name} | TEG {teg_num}"
-    
+
     # Generate default subheader if not provided
     if subheader is None:
         metadata = get_teg_metadata(teg_num)
         area = metadata.get('Area')
         year = metadata.get('Year')
-        
+
         if area and year:
             subheader = f"{area} | {year}"
         elif area:
             subheader = area
         elif year:
             subheader = str(year)
-    
+
     rounds = sorted(player_data['Round'].unique())
-    
+
     html_parts = []
     html_parts.append('<div class="scorecard-container-mobile layout-mobile-multi-round">')
 
@@ -814,8 +814,12 @@ def generate_tournament_html_mobile(player_code, teg_num, title=None, subheader=
     if subheader:
         html_parts.append(f'<p class="scorecard-subheader">{subheader}</p>')
     html_parts.append('</div>')
-    
+
+    # Flex container for side-by-side layout on wider screens
+    html_parts.append('<div class="scorecard-sections-container">')
+
     # Gross Scores Section
+    html_parts.append('<div class="scorecard-section-wrapper">')
     html_parts.append('<div class="section-header-mobile">Gross Scores</div>')
     html_parts.append('<table class="scorecard-table-mobile">')
     
@@ -913,14 +917,16 @@ def generate_tournament_html_mobile(player_code, teg_num, title=None, subheader=
         html_parts.append(f'<td class="totals-mobile">{total_score}</td>')
     
     html_parts.append('</tr>')
-    
+
     html_parts.append('</tbody>')
     html_parts.append('</table>')
-    
+    html_parts.append('</div>')  # Close scorecard-section-wrapper for Gross
+
     # Stableford Section
+    html_parts.append('<div class="scorecard-section-wrapper">')
     html_parts.append('<div class="section-header-mobile">Stableford Points</div>')
     html_parts.append('<table class="scorecard-table-mobile">')
-    
+
     # Header
     html_parts.append('<thead>')
     html_parts.append('<tr>')
@@ -1005,60 +1011,63 @@ def generate_tournament_html_mobile(player_code, teg_num, title=None, subheader=
         round_data = player_data[player_data['Round'] == round_num]
         total_stableford = int(round_data['Stableford'].sum())
         html_parts.append(f'<td class="totals-mobile">{total_stableford}</td>')
-    
+
     html_parts.append('</tr>')
-    
+
     html_parts.append('</tbody>')
     html_parts.append('</table>')
-    html_parts.append('</div>')
-    
+    html_parts.append('</div>')  # Close scorecard-section-wrapper for Stableford
+    html_parts.append('</div>')  # Close scorecard-sections-container
+
+    html_parts.append('</div>')  # Close scorecard-container-mobile
+
     return ''.join(html_parts)
 
 def generate_round_comparison_html_mobile(teg_num, round_num, title=None, subheader=None):
     """Generate mobile HTML for multi-player round comparison (holes as rows, players as columns)"""
-    
+
     # Load data using existing function
     round_data = get_scorecard_data(teg_num, round_num)
-    
+
     if round_data.empty:
         return f"<div class='scorecard-container-mobile'><p>Error: No data found for TEG {teg_num} Round {round_num}.</p></div>"
-    
+
     # Generate default title if not provided
     if title is None:
         title = f"TEG {teg_num}, Round {round_num}"
-    
+
     # Generate default subheader if not provided
     if subheader is None:
         metadata = get_teg_metadata(teg_num, round_num)
         course = metadata.get('Course')
         date_str = metadata.get('Date')
         formatted_date = format_date_for_scorecard(date_str, output_format='%d %B %Y')
-        
+
         if course and formatted_date:
             subheader = f"{course} | {formatted_date}"
         elif course:
             subheader = course
         elif formatted_date:
             subheader = formatted_date
-    
+
     players = round_data['Pl'].unique()
-    
+
     # Sort players by total score (ascending)
     player_totals = []
     for player in players:
         player_data = round_data[round_data['Pl'] == player]
         total_score = int(player_data['Sc'].sum())
         player_totals.append((total_score, player))
-    
+
     player_totals.sort(key=lambda x: x[0])  # Sort by score
     sorted_players = [player for _, player in player_totals]
-    
+
     # Calculate PAR totals (using first player's data since PAR is same for all)
     first_player_data = round_data[round_data['Pl'] == players[0]].sort_values('Hole')
     front_par_total = int(first_player_data[first_player_data['Hole'] <= 9]['PAR'].sum())
     back_par_total = int(first_player_data[first_player_data['Hole'] > 9]['PAR'].sum())
     total_par = int(first_player_data['PAR'].sum())
-    
+
     html_parts = []
     html_parts.append('<div class="scorecard-container-mobile layout-mobile-multi-player">')
 
@@ -1068,8 +1077,12 @@ def generate_round_comparison_html_mobile(teg_num, round_num, title=None, subhea
     if subheader:
         html_parts.append(f'<p class="scorecard-subheader">{subheader}</p>')
     html_parts.append('</div>')
-    
+
+    # Flex container for side-by-side layout on wider screens
+    html_parts.append('<div class="scorecard-sections-container">')
+
     # Gross Scores Section
+    html_parts.append('<div class="scorecard-section-wrapper">')
     html_parts.append('<div class="section-header-mobile">Gross Scores</div>')
     html_parts.append('<table class="scorecard-table-mobile">')
     
@@ -1161,14 +1174,16 @@ def generate_round_comparison_html_mobile(teg_num, round_num, title=None, subhea
         html_parts.append(f'<td class="totals-mobile">{total_score}</td>')
     
     html_parts.append('</tr>')
-    
+
     html_parts.append('</tbody>')
     html_parts.append('</table>')
-    
+    html_parts.append('</div>')  # Close scorecard-section-wrapper for Gross
+
     # Stableford Section
+    html_parts.append('<div class="scorecard-section-wrapper">')
     html_parts.append('<div class="section-header-mobile">Stableford Points</div>')
     html_parts.append('<table class="scorecard-table-mobile">')
-    
+
     # Header
     html_parts.append('<thead>')
     html_parts.append('<tr>')
@@ -1253,11 +1268,14 @@ def generate_round_comparison_html_mobile(teg_num, round_num, title=None, subhea
         player_data = round_data[round_data['Pl'] == player_code]
         total_stableford = int(player_data['Stableford'].sum())
         html_parts.append(f'<td class="totals-mobile">{total_stableford}</td>')
-    
+
     html_parts.append('</tr>')
-    
+
     html_parts.append('</tbody>')
     html_parts.append('</table>')
-    html_parts.append('</div>')
-    
+    html_parts.append('</div>')  # Close scorecard-section-wrapper for Stableford
+    html_parts.append('</div>')  # Close scorecard-sections-container
+
+    html_parts.append('</div>')  # Close scorecard-container-mobile
+
     return ''.join(html_parts)
