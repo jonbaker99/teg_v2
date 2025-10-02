@@ -43,73 +43,62 @@ max_by_teg = max_scoretype_per_teg()
 # get_scoring_achievement_fields() - Defines achievement categories and their metrics
 chart_fields_all = get_scoring_achievement_fields()
 
-# Create single-level tab structure
-tab_labels = ["Eagles", "Birdies", "Pars", "Triple Bogey+", "Most in Round", "Most in a TEG"]
-tabs = st.tabs(tab_labels)
-
 # Map score type tabs to chart_fields
 score_type_mapping = {
     "Eagles": chart_fields_all[0],
     "Birdies": chart_fields_all[1],
     "Pars": chart_fields_all[2],
-    "Triple Bogey+": chart_fields_all[3]
+    "Triple Bogey+": chart_fields_all[3],
 }
 
-# Display content in each tab
-for i, tab in enumerate(tabs):
-    with tab:
-        if i < 4:  # Score type tabs (Eagles, Birdies, Pars or Better, Triple Bogey+)
-            tab_name = tab_labels[i]
+# Create a new tab structure
+tab1, tab2, tab3 = st.tabs(["Career Counts", "Most in a Round", "Most in a TEG"])
 
-            # Get the chart fields for this score type
-            selected_chart_fields = score_type_mapping[tab_name]
+with tab1:
+    # Use a segmented control to select the score type
+    score_type_options = list(score_type_mapping.keys())
+    selected_score_type = st.segmented_control(
+        "Select score type:",
+        score_type_options,
+        label_visibility="collapsed",
+        default="Eagles",
+    )
 
-            # create_section_title() - Creates clean section title from field names
-            section_title = create_section_title(selected_chart_fields)
-            st.markdown(f"**Career {section_title}**")
+    # Get the chart fields for the selected score type
+    selected_chart_fields = score_type_mapping[selected_score_type]
 
-            # prepare_achievement_table_data() - Formats table with proper sorting and display formatting
-            formatted_table = prepare_achievement_table_data(scoring_stats, selected_chart_fields)
-            st.write(
-                formatted_table.to_html(
-                    index=False,
-                    justify='left',
-                    classes='datawrapper-table'
-                ),
-                unsafe_allow_html=True
-            )
+    # create_section_title() - Creates clean section title from field names
+    section_title = create_section_title(selected_chart_fields)
+    st.markdown(f"**Career {section_title}**")
 
-        if i == 4:  # "Most in Round" tab
-            # Single-round maximums tab
-            # Reorder columns: Eagles, Birdies, Pars, TBPs
-            # Also rename 'Pars_or_Better' to 'Pars'
-            reordered_table = max_by_round[['Player', 'Eagles', 'Birdies', 'Pars_or_Better', 'TBPs']].copy()
-            reordered_table = reordered_table.rename(columns={'Pars_or_Better': 'Pars'})
+    # prepare_achievement_table_data() - Formats table with proper sorting and display formatting
+    formatted_table = prepare_achievement_table_data(scoring_stats, selected_chart_fields)
+    st.write(
+        formatted_table.to_html(
+            index=False,
+            justify='left',
+            classes='datawrapper-table'
+        ),
+        unsafe_allow_html=True
+    )
 
-            st.write(
-                reordered_table.to_html(
-                    index=False,
-                    justify='left',
-                    classes='datawrapper-table'
-                ),
-                unsafe_allow_html=True
-            )
+with tab2:
+    # Single-round maximums tab
+    reordered_table = max_by_round[['Player', 'Eagles', 'Birdies', 'Pars_or_Better', 'TBPs']].copy()
+    reordered_table = reordered_table.rename(columns={'Pars_or_Better': 'Pars'})
+    st.write(
+        reordered_table.to_html(index=False, justify='left', classes='datawrapper-table'),
+        unsafe_allow_html=True
+    )
 
-        if i == 5:  # "Most in TEG" tab
-            # Single-TEG maximums tab
-            # Reorder columns: Eagles, Birdies, Pars, TBPs
-            # Also rename 'Pars_or_Better' to 'Pars'
-            reordered_table = max_by_teg[['Player', 'Eagles', 'Birdies', 'Pars_or_Better', 'TBPs']].copy()
-            reordered_table = reordered_table.rename(columns={'Pars_or_Better': 'Pars'})
-
-            st.write(
-                reordered_table.to_html(
-                    index=False,
-                    justify='left',
-                    classes='datawrapper-table'
-                ),
-                unsafe_allow_html=True
-            )
+with tab3:
+    # Single-TEG maximums tab
+    reordered_table = max_by_teg[['Player', 'Eagles', 'Birdies', 'Pars_or_Better', 'TBPs']].copy()
+    reordered_table = reordered_table.rename(columns={'Pars_or_Better': 'Pars'})
+    st.write(
+        reordered_table.to_html(index=False, justify='left', classes='datawrapper-table'),
+        unsafe_allow_html=True
+    )
 
 # === NAVIGATION LINKS ===
 from utils import add_custom_navigation_links
