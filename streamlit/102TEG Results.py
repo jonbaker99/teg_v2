@@ -135,41 +135,56 @@ try:
 
         # Chart type selection controls
         with radio_container:
-            stableford_chart_type = st.radio(
+            stableford_chart_type = st.segmented_control(
                 "Choose Stableford chart type:",
-                ('Standard', 'Adjusted scale (score vs. net par)'),
+                options=['Standard', 'Adjusted scale (score vs. net par)', 'Ranking'],
                 key='stableford_chart_type',
-                index=1,  # Default to adjusted scale for better visualization
-                horizontal=True
+                default='Adjusted scale (score vs. net par)'  # Default to adjusted scale for better visualization
             )
-            st.caption("Adjusted view 'zooms in' by showing performance vs. net par to more clearly show gaps between players")
+            if stableford_chart_type == 'Ranking':
+                st.caption("Shows tournament ranking progression (1st, 2nd, 3rd, etc.)")
+            else:
+                st.caption("Adjusted view 'zooms in' by showing performance vs. net par to more clearly show gaps between players")
 
         # Chart generation based on user selection
         if stableford_chart_type == 'Standard':
             # create_cumulative_graph() - Generates interactive Plotly chart showing cumulative progress
             fig_stableford = create_cumulative_graph(
-                all_data, chosen_teg, 'Stableford Cum TEG', 
+                all_data, chosen_teg, 'Stableford Cum TEG',
                 f'Trophy race: {chosen_teg}',
                 y_axis_label='Cumulative Stableford Points',
                 chart_type='stableford'
             )
             cht_label = f'Trophy race: {chosen_teg}'
             label_short = 'Cumulative stableford points'
-        else:
+        elif stableford_chart_type == 'Adjusted scale (score vs. net par)':
             # Adjusted scale chart uses different calculation for better visualization
             fig_stableford = create_cumulative_graph(
-                all_data, chosen_teg, 'Adjusted Stableford', 
-                f'Trophy race (Adjusted scale): {chosen_teg}', 
+                all_data, chosen_teg, 'Adjusted Stableford',
+                f'Trophy race (Adjusted scale): {chosen_teg}',
                 y_calculation=adjusted_stableford,  # Custom calculation function
                 y_axis_label='Cumulative Stableford Points vs. net par',
                 chart_type='stableford'
             )
             cht_label = f'Trophy race (Adjusted scale): {chosen_teg}'
             label_short = 'Cumulative stableford points (adjusted scale)'
+        else:  # Ranking
+            # Ranking chart shows tournament position over time
+            fig_stableford = create_cumulative_graph(
+                all_data, chosen_teg, 'Rank_Stableford_TEG',
+                f'Trophy race (Ranking): {chosen_teg}',
+                y_axis_label='Tournament Ranking',
+                chart_type='ranking'
+            )
+            cht_label = f'Trophy race (Ranking): {chosen_teg}'
+            label_short = 'Tournament ranking progression'
 
         # Display the chart
         with chart_container:
-            st.caption(f'{label_short} | Higher = better')
+            if stableford_chart_type == 'Ranking':
+                st.caption(f'{label_short} | Lower = better')
+            else:
+                st.caption(f'{label_short} | Higher = better')
             # st.plotly_chart() - Renders interactive chart with disabled toolbar for cleaner appearance
             st.plotly_chart(fig_stableford, use_container_width=True, config=dict({'displayModeBar': False}))
         
@@ -199,37 +214,49 @@ try:
 
         # Chart type selection controls
         with radio_container:
-            grossvp_chart_type = st.radio(
+            grossvp_chart_type = st.segmented_control(
                 "Choose chart type:",
-                ('Standard', 'Adjusted scale (gross score vs. bogey)'),
+                options=['Standard', 'Adjusted scale (gross score vs. bogey)', 'Ranking'],
                 key='grossvp_chart_type',
-                index=1,  # Default to adjusted scale for better visualization
-                horizontal=True
+                default='Adjusted scale (gross score vs. bogey)'  # Default to adjusted scale for better visualization
             )
-            st.caption("Adjusted view 'zooms in' by showing performance vs. bogey golf to more clearly show gaps between players")
+            if grossvp_chart_type == 'Ranking':
+                st.caption("Shows tournament ranking progression (1st, 2nd, 3rd, etc.)")
+            else:
+                st.caption("Adjusted view 'zooms in' by showing performance vs. bogey golf to more clearly show gaps between players")
         
         # Chart generation based on user selection
         if grossvp_chart_type == 'Standard':
             # create_cumulative_graph() - Standard cumulative gross vs par chart
             fig_grossvp = create_cumulative_graph(
-                all_data, chosen_teg, 'GrossVP Cum TEG', 
+                all_data, chosen_teg, 'GrossVP Cum TEG',
                 f'Green Jacket race: {chosen_teg}',
                 y_axis_label='Cumulative gross vs par',
                 chart_type='gross'
             )
             cht_label = f'Green Jacket race: {chosen_teg}'
             label_short = 'Cumulative gross score vs. par'
-        else:
+        elif grossvp_chart_type == 'Adjusted scale (gross score vs. bogey)':
             # Adjusted scale shows performance vs bogey golf for better comparison
             fig_grossvp = create_cumulative_graph(
-                all_data, chosen_teg, 'Adjusted GrossVP', 
-                f'Green Jacket race (Adjusted scale): {chosen_teg}', 
+                all_data, chosen_teg, 'Adjusted GrossVP',
+                f'Green Jacket race (Adjusted scale): {chosen_teg}',
                 y_calculation=adjusted_grossvp,  # Custom calculation function
                 y_axis_label='Cumulative gross vs. bogey golf (par+1)',
                 chart_type='gross'
             )
             cht_label = f'Green Jacket race (Adjusted scale): {chosen_teg}'
             label_short = 'Cumulative gross score (adjusted scale vs. bogey)'
+        else:  # Ranking
+            # Ranking chart shows tournament position over time
+            fig_grossvp = create_cumulative_graph(
+                all_data, chosen_teg, 'Rank_GrossVP_TEG',
+                f'Green Jacket race (Ranking): {chosen_teg}',
+                y_axis_label='Tournament Ranking',
+                chart_type='ranking'
+            )
+            cht_label = f'Green Jacket race (Ranking): {chosen_teg}'
+            label_short = 'Tournament ranking progression'
 
         # Display the chart
         with chart_container:

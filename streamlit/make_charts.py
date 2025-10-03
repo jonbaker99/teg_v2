@@ -20,6 +20,17 @@ def format_value(value, chart_type):
             return f"{value:.0f}"
         else:
             return "="
+    elif chart_type == 'ranking':
+        # Format ranking as ordinal (1st, 2nd, 3rd, etc.)
+        rank = int(value)
+        if rank == 1:
+            return "1st"
+        elif rank == 2:
+            return "2nd"
+        elif rank == 3:
+            return "3rd"
+        else:
+            return f"{rank}th"
     else:
         return f"{value:.0f}"  # Default formatting
 
@@ -88,6 +99,10 @@ def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None,
     add_round_annotations(fig, max_round)
 
     fig.update_xaxes(tickvals=[], range=[0, x_axis_max])
+
+    # For ranking charts, reverse the y-axis so 1st place is at the top
+    if chart_type == 'ranking':
+        fig.update_yaxes(autorange='reversed')
 
     for trace in fig.data:
         player = trace.name
