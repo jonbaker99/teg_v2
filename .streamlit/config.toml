@@ -1,7 +1,7 @@
 [theme]
 base = "light"
-font = "Lora, Open Sans, Lora, monospace"
-headingFont = "Lora, Open Sans, monospace, Lora"
+font = "Lora, Open Sans, Roboto Mono, monospace"
+headingFont = "Lora, Open Sans, Roboto Mono, monospace"
 codeFont = "monospace"
 primaryColor="forestGreen"
 
@@ -98,3 +98,4 @@ family = "Open Sans"
 url    = "https://fonts.gstatic.com/s/opensans/v43/memtYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWqWuU6F.woff2"
 style  = "italic"
 weight = "700"
+
