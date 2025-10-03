@@ -1,3 +1,17 @@
+"""Streamlit page for displaying and managing TEG handicaps.
+
+This page provides a comprehensive view of player handicaps, including:
+- Current handicaps for the upcoming TEG, with changes from the previous one.
+- A history of all past handicaps.
+- A "Draft" handicap calculation for the next TEG if a tournament is in
+  progress.
+- An interface for saving newly calculated handicaps to the system.
+
+The page uses helper functions to:
+- Determine the current and next TEG.
+- Calculate and format handicaps.
+- Display the data in a clear and user-friendly manner.
+"""
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -11,7 +25,15 @@ st.set_page_config(page_title="Handicaps")
 load_datawrapper_css()
 
 
-def format_change(val):
+def format_change(val: float) -> str:
+    """Formats the change in handicap for display.
+
+    Args:
+        val (float): The change in handicap.
+
+    Returns:
+        str: The formatted string (e.g., "+2", "-1", "-").
+    """
     if val > 0:
         return f"+{val}"
     elif val < 0:
@@ -19,7 +41,15 @@ def format_change(val):
     else:
         return "-"
 
-def format_value(val):
+def format_value(val: float) -> str:
+    """Formats a numeric value for display, handling NaNs and zeros.
+
+    Args:
+        val (float): The value to format.
+
+    Returns:
+        str: The formatted string, or "-" for NaNs and zeros.
+    """
     if pd.isna(val) or val == 0:
         return "-"
     return str(int(val))

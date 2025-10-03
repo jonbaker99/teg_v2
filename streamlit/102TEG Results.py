@@ -1,3 +1,19 @@
+"""Streamlit page for displaying TEG results.
+
+This page provides a detailed view of the results for a selected TEG,
+including leaderboards, charts, and scorecards. It allows users to switch
+between different competitions and view the data in various formats.
+
+The page is structured with three main tabs:
+- **TEG Trophy & Spoon**: Displays the net competition leaderboard and chart.
+- **Green Jacket**: Displays the gross competition leaderboard and chart.
+- **Scorecards**: Shows detailed hole-by-hole scorecards for each round.
+
+Helper functions are used to:
+- Load and process the data.
+- Create interactive leaderboards and charts.
+- Generate formatted scorecards.
+"""
 # === IMPORTS ===
 import streamlit as st
 import pandas as pd

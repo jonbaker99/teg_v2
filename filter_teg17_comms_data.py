@@ -1,7 +1,11 @@
-"""
-Filter commentary data for TEG 17 and save to CSV files
-"""
+"""Filter commentary data for TEG 17 and save to CSV files.
 
+This script reads the main commentary cache files (round streaks, tournament
+streaks, and tournament summary), filters the data to include only records
+for TEG 17, and saves the filtered data to separate CSV files. This is
+useful for creating smaller, more manageable data files for specific analysis
+or testing purposes.
+"""
 import sys
 sys.path.append('streamlit')
 

@@ -1,3 +1,14 @@
+"""Streamlit page for analyzing average scores by par.
+
+This page displays a breakdown of player performance based on the par of the
+hole (Par 3, 4, and 5). It allows users to filter the data by TEG to see
+performance in a specific tournament or across all tournaments.
+
+The page uses helper functions to:
+- Load and filter the data.
+- Calculate the average performance matrix.
+- Format the data into a clean, readable table.
+"""
 # === IMPORTS ===
 import streamlit as st
 import pandas as pd

@@ -1,26 +1,23 @@
-"""
-Data processing functions for streak analysis and consecutive scoring achievements.
+"""Data processing functions for streak analysis.
 
-This module contains functions for:
-- Calculating consecutive scoring achievements (birdies, pars, etc.)
-- Tracking running streaks across player careers
-- Summarizing maximum streaks by player and score type
+This module contains functions for calculating consecutive scoring achievements
+(birdies, pars, etc.), tracking running streaks across player careers, and
+summarizing maximum streaks by player and score type.
 """
 
 import pandas as pd
 import numpy as np
 
 
-def get_score_type_definitions():
-    """
-    Define score type conditions for streak analysis.
+def get_score_type_definitions() -> dict:
+    """Defines score type conditions for streak analysis.
+
+    This function centralizes the score type definitions for consistent streak
+    calculations. Each condition returns True when the streak should continue.
 
     Returns:
-        dict: Score type definitions with lambda functions for conditions
-
-    Purpose:
-        Centralizes score type definitions for consistent streak calculations
-        Each condition returns True when the streak should continue
+        dict: A dictionary of score type definitions with lambda functions for
+        the conditions.
     """
     score_types = {
         'Pars_or_Better': lambda x: x <= 0,    # At or under par
@@ -33,16 +30,16 @@ def get_score_type_definitions():
     return score_types
 
 
-def get_inverse_score_type_definitions():
-    """
-    Define inverse score type conditions for streak analysis (consecutive holes WITHOUT each score type).
+def get_inverse_score_type_definitions() -> dict:
+    """Defines inverse score type conditions for streak analysis.
+
+    This function centralizes the inverse score type definitions for
+    consistent streak calculations (i.e., consecutive holes WITHOUT a certain
+    score type).
 
     Returns:
-        dict: Inverse score type definitions with lambda functions for conditions
-
-    Purpose:
-        Centralizes inverse score type definitions for consistent streak calculations
-        Each condition returns True when the streak should continue (i.e., when NOT achieving the score type)
+        dict: A dictionary of inverse score type definitions with lambda
+        functions for the conditions.
     """
     inverse_score_types = {
         'Eagles': lambda x: x >= -1,            # NOT eagles (birdie or worse)

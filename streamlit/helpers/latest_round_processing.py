@@ -1,10 +1,8 @@
-"""
-Data processing functions for latest round analysis and context display.
+"""Data processing functions for latest round analysis and context display.
 
-This module contains functions for:
-- Managing round selection session state
-- Processing round ranking data for display
-- Creating metric-specific context tables and charts
+This module contains functions for managing round selection session state,
+processing round ranking data for display, and creating metric-specific context
+tables and charts.
 """
 
 import streamlit as st
@@ -12,16 +10,14 @@ import pandas as pd
 from utils import get_current_in_progress_teg_fast, get_last_completed_teg_fast
 
 
-def get_round_metric_mappings():
-    """
-    Get mapping between user-friendly names and internal metric names for rounds.
-    
+def get_round_metric_mappings() -> tuple[dict, dict]:
+    """Gets mappings between user-friendly and internal metric names for rounds.
+
     Returns:
-        tuple: (name_mapping, inverted_mapping) for display and processing
-        
-    Purpose:
-        Provides consistent naming between user interface and data processing
-        Same mapping pattern as other performance analysis pages
+        tuple: A tuple containing two dictionaries:
+            - name_mapping (dict): Maps user-friendly names to internal names.
+            - inverted_mapping (dict): Maps internal names to user-friendly
+              names.
     """
     name_mapping = {
         'Gross vs Par': 'GrossVP',
@@ -35,13 +31,10 @@ def get_round_metric_mappings():
 
 
 def initialize_round_selection_state():
-    """
-    Initialize session state variables for round selection.
-    
-    Purpose:
-        Sets up persistent state for TEG and round selection
-        Prevents UI reset issues during navigation
-        Maintains user's current selection across interactions
+    """Initializes session state variables for round selection.
+
+    This function sets up a persistent state for TEG and round selection to
+    prevent UI resets and maintain the user's current selection.
     """
     if 'teg_r' not in st.session_state:
         st.session_state.teg_r = None
@@ -49,20 +42,18 @@ def initialize_round_selection_state():
         st.session_state.rd_r = None
 
 
-def get_latest_round_defaults(df_round):
-    """
-    Get default TEG and round values (latest available) using fast status files.
+def get_latest_round_defaults(df_round: pd.DataFrame) -> tuple[str, int]:
+    """Gets the default TEG and round values (the latest available).
+
+    This function determines the most recent round for default selection,
+    which is used for the "Latest Round" button functionality.
 
     Args:
-        df_round (pd.DataFrame): Round ranking data (for fallback only)
+        df_round (pd.DataFrame): A DataFrame of round ranking data, used as a
+            fallback.
 
     Returns:
-        tuple: (max_teg, max_round_in_teg) representing latest available round
-
-    Purpose:
-        Determines the most recent round for default selection
-        Provides "Latest Round" button functionality
-        Now uses fast status CSV files instead of analyzing full dataset
+        tuple: A tuple containing the max TEG and max round in that TEG.
     """
     try:
         # Try fast method first: check if there's a TEG in progress
@@ -89,16 +80,14 @@ def get_latest_round_defaults(df_round):
         return max_teg, max_round_in_max_teg
 
 
-def update_session_state_defaults(df_round):
-    """
-    Set session state to latest round if not already initialized.
-    
+def update_session_state_defaults(df_round: pd.DataFrame):
+    """Sets the session state to the latest round if not already initialized.
+
+    This function ensures that the session state has valid default values on
+    the first load, using the latest available round as a sensible default.
+
     Args:
-        df_round (pd.DataFrame): Round ranking data
-        
-    Purpose:
-        Ensures session state has valid default values on first load
-        Uses latest available round as sensible default
+        df_round (pd.DataFrame): The round ranking data.
     """
     max_teg, max_round_in_max_teg = get_latest_round_defaults(df_round)
     
@@ -108,19 +97,18 @@ def update_session_state_defaults(df_round):
         st.session_state.rd_r = max_round_in_max_teg
 
 
-def create_round_selection_reset_function(df_round):
-    """
-    Create callback function for "Latest Round" button.
-    
+def create_round_selection_reset_function(df_round: pd.DataFrame) -> callable:
+    """Creates a callback function for the "Latest Round" button.
+
+    This function provides a one-click reset to the most recent round by
+    updating the session state when the button is clicked.
+
     Args:
-        df_round (pd.DataFrame): Round ranking data
-        
+        df_round (pd.DataFrame): The round ranking data.
+
     Returns:
-        function: Callback function that resets selection to latest round
-        
-    Purpose:
-        Provides one-click reset to most recent round
-        Updates session state when button is clicked
+        callable: A callback function that resets the selection to the
+        latest round.
     """
     max_teg, max_round_in_max_teg = get_latest_round_defaults(df_round)
     
@@ -131,20 +119,21 @@ def create_round_selection_reset_function(df_round):
     return reset_to_latest
 
 
-def get_teg_and_round_options(df_round, selected_teg):
-    """
-    Get available TEG and round options for selection dropdowns.
-    
+def get_teg_and_round_options(df_round: pd.DataFrame, selected_teg: str) -> tuple[list, list]:
+    """Gets available TEG and round options for selection dropdowns.
+
+    This function provides filtered options for dynamic dropdown menus, where
+    the round options update based on the selected TEG.
+
     Args:
-        df_round (pd.DataFrame): Round ranking data
-        selected_teg (str): Currently selected TEG
-        
+        df_round (pd.DataFrame): The round ranking data.
+        selected_teg (str): The currently selected TEG.
+
     Returns:
-        tuple: (teg_options, round_options) for dropdown menus
-        
-    Purpose:
-        Provides filtered options for dynamic dropdown menus
-        Round options update based on selected TEG
+        tuple: A tuple containing:
+            - teg_options (list): A list of TEG options.
+            - round_options (list): A list of round options for the
+              selected TEG.
     """
     teg_options = list(df_round['TEG'].unique())
     round_options = sorted(df_round[df_round['TEG'] == selected_teg]['Round'].unique())
@@ -152,19 +141,19 @@ def get_teg_and_round_options(df_round, selected_teg):
     return teg_options, round_options
 
 
-def create_metric_tabs_data(metrics):
-    """
-    Prepare metric data for tabbed display.
-    
+def create_metric_tabs_data(metrics: list) -> tuple[list, list]:
+    """Prepares metric data for tabbed display.
+
+    This function creates user-friendly tab labels from internal metric names
+    and maintains a mapping for data processing within each tab.
+
     Args:
-        metrics (list): List of internal metric names
-        
+        metrics (list): A list of internal metric names.
+
     Returns:
-        tuple: (metrics, friendly_metrics) for tab creation and processing
-        
-    Purpose:
-        Creates user-friendly tab labels from internal metric names
-        Maintains mapping for data processing within each tab
+        tuple: A tuple containing:
+            - metrics (list): The original list of internal metric names.
+            - friendly_metrics (list): A list of user-friendly metric names.
     """
     name_mapping, inverted_name_mapping = get_round_metric_mappings()
     friendly_metrics = [inverted_name_mapping[metric] for metric in metrics]
@@ -172,23 +161,21 @@ def create_metric_tabs_data(metrics):
     return metrics, friendly_metrics
 
 
-def prepare_round_context_display(df_round, teg_r, rd_r, metric, friendly_metric):
-    """
-    Prepare round context data for display in a specific metric tab.
-    
+def prepare_round_context_display(df_round: pd.DataFrame, teg_r: str, rd_r: int, metric: str, friendly_metric: str) -> pd.DataFrame:
+    """Prepares round context data for display in a specific metric tab.
+
+    This function creates a context table showing how the selected round
+    compares to other rounds.
+
     Args:
-        df_round (pd.DataFrame): Round ranking data
-        teg_r (str): Selected TEG
-        rd_r (str): Selected round
-        metric (str): Internal metric name
-        friendly_metric (str): User-friendly metric name
-        
+        df_round (pd.DataFrame): The round ranking data.
+        teg_r (str): The selected TEG.
+        rd_r (int): The selected round.
+        metric (str): The internal metric name.
+        friendly_metric (str): The user-friendly metric name.
+
     Returns:
-        pd.DataFrame: Context table with renamed columns for display
-        
-    Purpose:
-        Creates context table showing how selected round compares to other rounds
-        Uses chosen_rd_context from utils for core logic, adds display formatting
+        pd.DataFrame: A context table with renamed columns for display.
     """
     from utils import chosen_rd_context
     
@@ -204,32 +191,27 @@ def prepare_round_context_display(df_round, teg_r, rd_r, metric, friendly_metric
 # === TEG CONTEXT FUNCTIONS ===
 
 def initialize_teg_selection_state():
-    """
-    Initialize session state variables for TEG selection.
-    
-    Purpose:
-        Sets up persistent state for TEG selection
-        Prevents UI reset issues during navigation
-        Maintains user's current selection across interactions
+    """Initializes session state variables for TEG selection.
+
+    This function sets up a persistent state for TEG selection to prevent UI
+    resets and maintain the user's current selection.
     """
     if 'teg_t' not in st.session_state:
         st.session_state.teg_t = None
 
 
-def get_latest_teg_default(df_teg):
-    """
-    Get default TEG value (latest available) using fast status files.
+def get_latest_teg_default(df_teg: pd.DataFrame) -> str:
+    """Gets the default TEG value (the latest available).
+
+    This function determines the most recent TEG for default selection, which
+    is used for the "Latest TEG" button functionality.
 
     Args:
-        df_teg (pd.DataFrame): TEG ranking data (for fallback only)
+        df_teg (pd.DataFrame): A DataFrame of TEG ranking data, used as a
+            fallback.
 
     Returns:
-        str: Latest available TEG for default selection
-
-    Purpose:
-        Determines the most recent TEG for default selection
-        Provides "Latest TEG" button functionality
-        Now uses fast status CSV files instead of analyzing full dataset
+        str: The latest available TEG for default selection.
     """
     try:
         # Try fast method first: check if there's a TEG in progress
@@ -254,16 +236,14 @@ def get_latest_teg_default(df_teg):
         return max_teg
 
 
-def update_teg_session_state_defaults(df_teg):
-    """
-    Set session state to latest TEG if not already initialized.
-    
+def update_teg_session_state_defaults(df_teg: pd.DataFrame):
+    """Sets the session state to the latest TEG if not already initialized.
+
+    This function ensures that the session state has a valid default value on
+    the first load, using the latest available TEG as a sensible default.
+
     Args:
-        df_teg (pd.DataFrame): TEG ranking data
-        
-    Purpose:
-        Ensures session state has valid default value on first load
-        Uses latest available TEG as sensible default
+        df_teg (pd.DataFrame): The TEG ranking data.
     """
     max_teg = get_latest_teg_default(df_teg)
     
@@ -271,19 +251,18 @@ def update_teg_session_state_defaults(df_teg):
         st.session_state.teg_t = max_teg
 
 
-def create_teg_selection_reset_function(df_teg):
-    """
-    Create callback function for "Latest TEG" button.
-    
+def create_teg_selection_reset_function(df_teg: pd.DataFrame) -> callable:
+    """Creates a callback function for the "Latest TEG" button.
+
+    This function provides a one-click reset to the most recent TEG by
+    updating the session state when the button is clicked.
+
     Args:
-        df_teg (pd.DataFrame): TEG ranking data
-        
+        df_teg (pd.DataFrame): The TEG ranking data.
+
     Returns:
-        function: Callback function that resets selection to latest TEG
-        
-    Purpose:
-        Provides one-click reset to most recent TEG
-        Updates session state when button is clicked
+        callable: A callback function that resets the selection to the
+        latest TEG.
     """
     max_teg = get_latest_teg_default(df_teg)
     
@@ -293,39 +272,32 @@ def create_teg_selection_reset_function(df_teg):
     return reset_to_latest_teg
 
 
-def get_teg_options(df_teg):
-    """
-    Get available TEG options for selection dropdown.
-    
+def get_teg_options(df_teg: pd.DataFrame) -> list:
+    """Gets available TEG options for the selection dropdown.
+
     Args:
-        df_teg (pd.DataFrame): TEG ranking data
-        
+        df_teg (pd.DataFrame): The TEG ranking data.
+
     Returns:
-        list: TEG options for dropdown menu
-        
-    Purpose:
-        Provides all available TEG options for selection
-        Maintains chronological order for user convenience
+        list: A list of TEG options for the dropdown menu.
     """
     return list(df_teg['TEG'].unique())
 
 
-def prepare_teg_context_display(df_teg, teg_t, metric, friendly_metric):
-    """
-    Prepare TEG context data for display in a specific metric tab.
-    
+def prepare_teg_context_display(df_teg: pd.DataFrame, teg_t: str, metric: str, friendly_metric: str) -> pd.DataFrame:
+    """Prepares TEG context data for display in a specific metric tab.
+
+    This function creates a context table showing how the selected TEG
+    compares to other TEGs.
+
     Args:
-        df_teg (pd.DataFrame): TEG ranking data
-        teg_t (str): Selected TEG
-        metric (str): Internal metric name
-        friendly_metric (str): User-friendly metric name
-        
+        df_teg (pd.DataFrame): The TEG ranking data.
+        teg_t (str): The selected TEG.
+        metric (str): The internal metric name.
+        friendly_metric (str): The user-friendly metric name.
+
     Returns:
-        pd.DataFrame: Context table with renamed columns for display
-        
-    Purpose:
-        Creates context table showing how selected TEG compares to other TEGs
-        Uses chosen_teg_context from utils for core logic, adds display formatting
+        pd.DataFrame: A context table with renamed columns for display.
     """
     from utils import chosen_teg_context
     

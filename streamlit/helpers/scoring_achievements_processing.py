@@ -1,27 +1,23 @@
-"""
-Data processing functions for scoring achievements analysis (eagles, birdies, etc.).
+"""Data processing functions for scoring achievements analysis.
 
-This module contains functions for:
-- Processing career scoring achievements statistics
-- Formatting achievement data for display
-- Creating tabbed displays for different score types
+This module contains functions for processing career scoring achievements
+statistics, formatting the data for display, and creating tabbed displays for
+different score types.
 """
 
 import pandas as pd
 import numpy as np
 
 
-def get_scoring_achievement_fields():
-    """
-    Define score achievement fields for tabbed display.
-    
+def get_scoring_achievement_fields() -> list[list[str]]:
+    """Defines the score achievement fields for the tabbed display.
+
+    This function centralizes the definition of score achievement categories,
+    where each pair contains the achievement count and the holes per
+    achievement metric.
+
     Returns:
-        list: Field pairs for achievements and frequency metrics
-        
-    Purpose:
-        Centralizes definition of score achievement categories
-        Each pair contains [achievement_count, holes_per_achievement]
-        Used for both data processing and UI tab creation
+        list: A list of field pairs for achievements and frequency metrics.
     """
     chart_fields = [
         ['Eagles', 'Holes_per_Eagle'],
@@ -33,38 +29,33 @@ def get_scoring_achievement_fields():
     return chart_fields
 
 
-def create_achievement_tab_labels(chart_fields_all):
-    """
-    Create user-friendly tab labels from achievement field names.
-    
+def create_achievement_tab_labels(chart_fields_all: list[list[str]]) -> list[str]:
+    """Creates user-friendly tab labels from achievement field names.
+
+    This function converts internal field names to display-ready tab labels by
+    replacing underscores with spaces for a cleaner UI presentation.
+
     Args:
-        chart_fields_all (list): All achievement field pairs
-        
+        chart_fields_all (list): A list of all achievement field pairs.
+
     Returns:
-        list: Tab labels with underscores replaced by spaces
-        
-    Purpose:
-        Converts internal field names to display-ready tab labels
-        Removes underscores for cleaner UI presentation
+        list: A list of tab labels.
     """
     tab_labels = [chart_fields[0].replace("_", " ") for chart_fields in chart_fields_all]
     return tab_labels
 
 
-def format_achievement_dataframe_columns(df):
-    """
-    Format achievement dataframe columns for display.
-    
+def format_achievement_dataframe_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Formats the achievement DataFrame columns for display.
+
+    This function formats achievement counts as integers and frequency ratios
+    as decimals, handling infinite values and cleaning up column names.
+
     Args:
-        df (pd.DataFrame): Raw achievement data with counts and ratios
-        
+        df (pd.DataFrame): The raw achievement data with counts and ratios.
+
     Returns:
-        pd.DataFrame: Formatted dataframe ready for HTML display
-        
-    Purpose:
-        Formats achievement counts as integers and frequency ratios as decimals
-        Handles infinite values (when no achievements) with "n/a"
-        Cleans column names by removing underscores
+        pd.DataFrame: A formatted DataFrame ready for HTML display.
     """
     # Create copy to avoid modifying original dataframe
     formatted_df = df.copy()
@@ -83,21 +74,18 @@ def format_achievement_dataframe_columns(df):
     return formatted_df
 
 
-def prepare_achievement_table_data(scoring_stats, chart_fields):
-    """
-    Prepare achievement table data for a specific score type.
-    
+def prepare_achievement_table_data(scoring_stats: pd.DataFrame, chart_fields: list) -> pd.DataFrame:
+    """Prepares achievement table data for a specific score type.
+
+    This function extracts the relevant columns for a specific achievement
+    type, sorts the data, and applies formatting for a clean display.
+
     Args:
-        scoring_stats (pd.DataFrame): Complete scoring statistics data
-        chart_fields (list): Field pair for specific achievement type
-        
+        scoring_stats (pd.DataFrame): The complete scoring statistics data.
+        chart_fields (list): A field pair for a specific achievement type.
+
     Returns:
-        pd.DataFrame: Formatted table ready for display
-        
-    Purpose:
-        Extracts relevant columns for specific achievement type
-        Sorts by achievement count (descending) and frequency (ascending)
-        Applies formatting for clean display
+        pd.DataFrame: A formatted table ready for display.
     """
     # Select relevant columns for this achievement type
     table_columns = ['Player'] + chart_fields
@@ -112,19 +100,17 @@ def prepare_achievement_table_data(scoring_stats, chart_fields):
     return formatted_table
 
 
-def create_section_title(chart_fields):
-    """
-    Create section title from achievement field names.
-    
+def create_section_title(chart_fields: list) -> str:
+    """Creates a section title from achievement field names.
+
+    This function converts an internal field name to a user-friendly section
+    title by removing underscores and adding proper context.
+
     Args:
-        chart_fields (list): Field pair for achievement type
-        
+        chart_fields (list): A field pair for an achievement type.
+
     Returns:
-        str: Cleaned section title for display
-        
-    Purpose:
-        Converts field name to user-friendly section title
-        Removes underscores and adds proper context
+        str: A cleaned section title for display.
     """
     section_title = chart_fields[0].replace("_", " ")
     return section_title

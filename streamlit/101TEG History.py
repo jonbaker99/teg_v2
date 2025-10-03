@@ -1,3 +1,18 @@
+"""Streamlit page for displaying the complete history of TEG winners.
+
+This page provides a comprehensive overview of all TEG events, including past
+winners, in-progress tournaments, and future planned events. It displays a
+summary table with the winners of the "TEG Trophy," "Green Jacket," and "HMM
+Wooden Spoon" for each TEG.
+
+The page uses helper functions to:
+- Load cached winner data for fast performance.
+- Automatically calculate and display winners for any completed TEGs that are
+  missing from the cache.
+- Provide an option to save newly calculated winners to the cache.
+- Display a complete history table including completed, in-progress, and
+  future TEGs.
+"""
 # === IMPORTS ===
 import streamlit as st
 import pandas as pd

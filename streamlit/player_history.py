@@ -1,3 +1,17 @@
+"""Streamlit page for displaying player rankings by TEG.
+
+This page provides a historical view of player rankings across all completed
+TEGs for the two main competitions: the "TEG Trophy" (Net) and the "Green
+Jacket" (Gross). It allows users to see how players have performed over time
+and includes summary tables for position counts and average finishing
+positions.
+
+The page uses helper functions to:
+- Load and process the data for completed TEGs.
+- Create ranking tables for each competition.
+- Post-process the tables with custom formatting for display.
+- Generate summary statistics for player performance.
+"""
 # === IMPORTS ===
 import streamlit as st
 import pandas as pd

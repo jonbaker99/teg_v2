@@ -1,3 +1,15 @@
+"""Streamlit page for displaying eclectic score records.
+
+This page showcases the best eclectic scores, both overall and for individual
+players, categorized by TEG and course. An eclectic score is the best score a
+player has achieved on each hole of a course or tournament over multiple
+rounds.
+
+The page uses helper functions to:
+- Load and process the data.
+- Calculate eclectic scores based on different dimensions.
+- Format the data for a clean and readable display.
+"""
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -21,8 +33,18 @@ load_datawrapper_css()
 all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
 
 # === HELPER FUNCTIONS ===
-def get_overall_top_eclectics(data, dimension, top_n=3):
-    """Get the overall top N eclectics across all players, including ties"""
+def get_overall_top_eclectics(data: pd.DataFrame, dimension: str, top_n: int = 3) -> pd.DataFrame:
+    """Gets the overall top N eclectics across all players, including ties.
+
+    Args:
+        data (pd.DataFrame): The input DataFrame.
+        dimension (str): The dimension to group by (e.g., 'TEGNum', 'Course').
+        top_n (int, optional): The number of top records to return.
+            Defaults to 3.
+
+    Returns:
+        pd.DataFrame: A DataFrame of the top eclectic scores.
+    """
     all_results = []
     players = sorted(data['Player'].unique())
     
@@ -52,8 +74,16 @@ def get_overall_top_eclectics(data, dimension, top_n=3):
     else:
         return combined_results
 
-def get_personal_best_eclectics(data, dimension):
-    """Get each player's best eclectic(s), including ties"""
+def get_personal_best_eclectics(data: pd.DataFrame, dimension: str) -> pd.DataFrame:
+    """Gets each player's best eclectic score(s), including ties.
+
+    Args:
+        data (pd.DataFrame): The input DataFrame.
+        dimension (str): The dimension to group by.
+
+    Returns:
+        pd.DataFrame: A DataFrame of each player's best eclectic scores.
+    """
     all_results = []
     players = sorted(data['Player'].unique())
     
@@ -77,8 +107,15 @@ def get_personal_best_eclectics(data, dimension):
     
     return pd.concat(all_results, ignore_index=True).sort_values(['Total', 'Player'])
 
-def format_eclectic_display_table(df):
-    """Format eclectics table for display - summary columns only"""
+def format_eclectic_display_table(df: pd.DataFrame) -> pd.DataFrame:
+    """Formats the eclectic table for display with summary columns only.
+
+    Args:
+        df (pd.DataFrame): The eclectic scores DataFrame.
+
+    Returns:
+        pd.DataFrame: A formatted DataFrame ready for display.
+    """
     if df.empty:
         return pd.DataFrame()
     

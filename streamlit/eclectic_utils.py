@@ -1,8 +1,23 @@
 import pandas as pd
 import numpy as np
 
-def calculate_eclectic_by_dimension(data, dimension):
-    """Calculate eclectic scores grouped by dimension"""
+def calculate_eclectic_by_dimension(data: pd.DataFrame, dimension: str) -> tuple[pd.DataFrame, str]:
+    """Calculates eclectic scores grouped by a specified dimension.
+
+    This function computes the best score for each hole based on a given
+    dimension (e.g., 'Player', 'Course'). It handles special cases for 'Teams'
+    and 'Combined' dimensions.
+
+    Args:
+        data (pd.DataFrame): The input DataFrame with hole-by-hole scores.
+        dimension (str): The dimension to group by for the eclectic
+            calculation.
+
+    Returns:
+        tuple: A tuple containing:
+            - pd.DataFrame: A DataFrame of eclectic scores.
+            - str: The display name for the dimension.
+    """
     if data.empty:
         return pd.DataFrame()
     
@@ -77,8 +92,17 @@ def calculate_eclectic_by_dimension(data, dimension):
     
     return eclectic_pivot, display_dimension
 
-def calculate_team_eclectics(data):
-    """Calculate eclectic scores for Heroes vs Wildcats teams"""
+def calculate_team_eclectics(data: pd.DataFrame) -> tuple[pd.DataFrame, str]:
+    """Calculates eclectic scores for the Heroes vs. Wildcats teams.
+
+    Args:
+        data (pd.DataFrame): The input DataFrame with hole-by-hole scores.
+
+    Returns:
+        tuple: A tuple containing:
+            - pd.DataFrame: A DataFrame of team eclectic scores.
+            - str: The dimension name ('Team').
+    """
     # Define team compositions
     heroes = ['Jon BAKER', 'David MULLIN', 'Stuart NEUMANN']
     wildcats = ['Alex BAKER', 'Gregg WILLIAMS', 'John PATTERSON']
@@ -146,8 +170,17 @@ def calculate_team_eclectics(data):
     
     return team_pivot, 'Team'
 
-def calculate_combined_eclectic(data):
-    """Calculate a single combined eclectic from all data"""
+def calculate_combined_eclectic(data: pd.DataFrame) -> tuple[pd.DataFrame, str]:
+    """Calculates a single combined eclectic score from all data.
+
+    Args:
+        data (pd.DataFrame): The input DataFrame with hole-by-hole scores.
+
+    Returns:
+        tuple: A tuple containing:
+            - pd.DataFrame: A DataFrame with the combined eclectic score.
+            - str: The dimension name ('Combined').
+    """
     if data.empty:
         return pd.DataFrame(), 'Combined'
     
@@ -187,8 +220,16 @@ def calculate_combined_eclectic(data):
     
     return result_df, 'Combined'
 
-def format_eclectic_table(eclectic_df, dimension):
-    """Format the eclectic table for display"""
+def format_eclectic_table(eclectic_df: pd.DataFrame, dimension: str) -> pd.DataFrame:
+    """Formats the eclectic table for display.
+
+    Args:
+        eclectic_df (pd.DataFrame): The eclectic scores DataFrame.
+        dimension (str): The dimension column name.
+
+    Returns:
+        pd.DataFrame: A formatted DataFrame ready for display.
+    """
     if eclectic_df.empty:
         return pd.DataFrame()
     

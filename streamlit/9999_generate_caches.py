@@ -1,3 +1,15 @@
+"""Streamlit page for manually generating and refreshing all analysis cache files.
+
+This page provides a user interface to trigger the generation of various cached
+data files used throughout the application. This is particularly useful after
+making changes to the data processing logic or for initializing the cache files
+for the first time.
+
+The page includes buttons to:
+- Generate all cache files, including TEG status, streaks, bestball, and
+  commentary caches.
+- Generate only the bestball cache for more targeted updates.
+"""
 import streamlit as st
 from utils import (
     update_streaks_cache,

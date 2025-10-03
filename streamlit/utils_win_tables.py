@@ -3,12 +3,11 @@ import pandas as pd
 from utils import convert_trophy_name, TROPHY_NAME_LOOKUPS_LONGSHORT, TROPHY_NAME_LOOKUPS_SHORTLONG
 from typing import Iterable, Sequence, Union
 
-def summarise_teg_wins(df, column_name):
-    """
-    Summarises a DataFrame by a specified column, counting TEGs and listing them.
+def summarise_teg_wins(df: pd.DataFrame, column_name: str) -> pd.DataFrame:
+    """Summarizes a DataFrame by a specified column, counting TEGs and listing them.
 
     Args:
-        df (pd.DataFrame): The input DataFrame
+        df (pd.DataFrame): The input DataFrame.
         column_name (str): The column to group by.
 
     Returns:
@@ -56,19 +55,26 @@ def compress_ranges(
     sort: bool = True,
     dedupe: bool = True
 ) -> str:
-    """
-    Accepts either:
-      - a comma-separated string of integers (e.g. "1,2,3,5,6,9,11"), or
-      - a sequence of integers (e.g. [1,2,3,5,6,9,11])
+    """Compresses a sequence of integers into a string with ranges.
 
-    Returns a string where only runs of >=3 consecutive integers are collapsed
-    into ranges (e.g. "1,2, 4-6, 9, 11"). Pairs are left uncollapsed.
+    This function takes a sequence of integers (or a string representation) and
+    compresses consecutive numbers into ranges (e.g., "1-3" for 1, 2, 3).
+    Only runs of 3 or more consecutive integers are collapsed.
 
-    Options:
-      - sep: input separator for string data (default ",")
-      - out_sep: output separator between items (default ", ")
-      - sort: sort the numbers before compressing (default True)
-      - dedupe: remove duplicates (default True)
+    Args:
+        data (Union[str, Sequence[int]]): A comma-separated string of
+            integers or a sequence of integers.
+        sep (str, optional): The input separator for string data. Defaults
+            to ",".
+        out_sep (str, optional): The output separator between items. Defaults
+            to ", ".
+        sort (bool, optional): Whether to sort the numbers before
+            compressing. Defaults to True.
+        dedupe (bool, optional): Whether to remove duplicates. Defaults to
+            True.
+
+    Returns:
+        str: A string with consecutive integers compressed into ranges.
     """
     # 1) Normalise input -> list[int]
     if isinstance(data, str):

@@ -1,3 +1,14 @@
+"""Streamlit page for analyzing player performance by course.
+
+This page provides a detailed analysis of player performance by course,
+allowing users to filter by geographical area and view various statistics,
+including course records, averages, and best/worst performances.
+
+The page uses helper functions to:
+- Load and filter the data.
+- Calculate and format performance metrics.
+- Display the data in clear, readable tables.
+"""
 # === IMPORTS ===
 import streamlit as st
 import pandas as pd

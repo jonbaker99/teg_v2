@@ -1,3 +1,15 @@
+"""Streamlit page for displaying personal bests and worsts.
+
+This page provides a detailed view of each player's personal best and worst
+performances, categorized by TEGs and individual rounds. It features a tabbed
+interface to explore different performance metrics and includes a summary view
+for a quick overview of personal bests across all measures.
+
+The page uses helper functions to:
+- Load and process ranked TEG and round data.
+- Prepare formatted tables for personal bests and worsts.
+- Handle user selections for different scoring measures.
+"""
 # === IMPORTS ===
 import streamlit as st
 import pandas as pd

@@ -1,3 +1,16 @@
+"""Streamlit page for detailed scoring analysis.
+
+This page provides a deep dive into various scoring metrics, including:
+- Average scores by par value (Par 3, 4, 5).
+- Career scoring statistics for eagles, birdies, pars, and triple bogeys.
+- Single-round records for the most of each score type.
+- Longest streaks for different scoring achievements.
+
+The page uses helper functions to:
+- Load and process the complete dataset.
+- Calculate and format scoring statistics.
+- Display the data in clear, readable tables.
+"""
 # === IMPORTS ===
 import streamlit as st
 import pandas as pd

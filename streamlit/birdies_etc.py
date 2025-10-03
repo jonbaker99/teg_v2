@@ -1,3 +1,15 @@
+"""Streamlit page for analyzing scoring achievements like eagles, birdies, and pars.
+
+This page provides a detailed breakdown of various scoring achievements,
+allowing users to explore career totals, single-round bests, and single-TEG
+bests. It uses a tabbed interface to separate these different views for a
+clear and organized user experience.
+
+The page uses helper functions to:
+- Load and process scoring statistics.
+- Create and format display tables for different achievement types.
+- Handle user selections for different scoring categories.
+"""
 # === IMPORTS ===
 import streamlit as st
 import pandas as pd

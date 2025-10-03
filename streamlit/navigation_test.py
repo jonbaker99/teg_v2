@@ -1,3 +1,10 @@
+"""Streamlit page for testing and demonstrating navigation components.
+
+This page serves as a test harness for the `add_custom_navigation_links`
+function, showcasing its different layout options and input methods. It is
+intended for development and debugging purposes to ensure that the navigation
+components behave as expected.
+"""
 import streamlit as st
 import sys
 from pathlib import Path

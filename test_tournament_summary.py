@@ -1,7 +1,14 @@
-"""
-Test script for create_tournament_summary function
-"""
+"""Test script for the `create_tournament_summary` function.
 
+This script tests the creation of the tournament summary and outputs the
+results to a CSV file for verification. It performs the following steps:
+1.  Calls the `create_tournament_summary` function to generate the summary
+    data.
+2.  Verifies the created summary and prints summary statistics.
+3.  Displays the column names and sample data.
+4.  Presents some interesting findings from the summary data.
+5.  Saves the complete summary to `test_tournament_summary.csv`.
+"""
 import sys
 sys.path.append('streamlit')
 

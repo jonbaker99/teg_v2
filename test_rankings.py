@@ -1,5 +1,15 @@
-"""
-Test script to verify add_rankings_and_gaps function on two random TEGs
+"""Test script for verifying the `add_rankings_and_gaps` function.
+
+This script tests the `add_rankings_and_gaps` function by applying it to a
+random sample of two TEGs from the main dataset. It performs the following
+steps:
+1.  Loads the `all-data.parquet` file.
+2.  Selects two random TEGs for testing.
+3.  Applies the `add_rankings_and_gaps` function to the filtered data.
+4.  Prints sample results at different points in the tournament (e.g.,
+    mid-point and final hole).
+5.  Performs validation checks to ensure the leader's gap is always zero.
+6.  Saves the full results to a CSV file for manual review.
 """
 import pandas as pd
 import sys

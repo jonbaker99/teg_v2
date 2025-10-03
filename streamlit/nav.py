@@ -1,3 +1,13 @@
+"""Main navigation configuration for the Streamlit application.
+
+This script sets up the primary navigation for the TEG Streamlit application
+using `st.navigation`. It dynamically generates the navigation structure based
+on the page definitions in `page_config.py` and the current status of the TEG
+tournaments (i.e., whether there is an incomplete TEG).
+
+The script also injects custom CSS to style the sidebar and top navigation bar,
+ensuring a consistent look and feel across the application.
+"""
 import os
 import streamlit as st
 from pathlib import Path

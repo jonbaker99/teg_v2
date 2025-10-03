@@ -1,3 +1,16 @@
+"""Streamlit page for analyzing bestball and worstball scores.
+
+This page displays the best and worst team performances for each round,
+calculated using bestball (best score per hole) and worstball (worst score
+per hole) formats. It allows users to:
+- Switch between bestball and worstball views.
+- Filter the data by TEG to analyze specific tournaments.
+- Customize the sorting order and number of rows to display.
+
+The page uses helper functions to:
+- Load pre-calculated bestball and worstball data.
+- Format the data for a clean and readable table display.
+"""
 # === IMPORTS ===
 import streamlit as st
 import pandas as pd

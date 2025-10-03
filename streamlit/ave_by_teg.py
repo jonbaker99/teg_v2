@@ -1,3 +1,16 @@
+"""Streamlit page for analyzing average scores by TEG.
+
+This page visualizes player performance over time by showing the average
+Gross vs. Par score for each player in every TEG. It includes:
+- A line chart comparing the performance trends of all players across all
+  tournaments.
+- A summary table with the same data for detailed inspection.
+
+The page uses helper functions to:
+- Load the complete dataset.
+- Calculate and format the average scores.
+- Display the data in a line chart and a table.
+"""
 import streamlit as st
 import pandas as pd
 import plotly.express as px

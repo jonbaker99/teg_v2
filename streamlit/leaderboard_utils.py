@@ -13,16 +13,16 @@ PLAYER_COLUMN = 'Player'
 
 @st.cache_data
 def create_leaderboard(leaderboard_df: pd.DataFrame, value_column: str, ascending: bool = True) -> pd.DataFrame:
-    """
-    Create a leaderboard from the given dataframe.
+    """Creates a leaderboard from the given DataFrame.
 
     Args:
-        leaderboard_df (pd.DataFrame): Input dataframe.
-        value_column (str): Column to use for ranking.
-        ascending (bool): Whether to sort in ascending order.
+        leaderboard_df (pd.DataFrame): The input DataFrame.
+        value_column (str): The column to use for ranking.
+        ascending (bool, optional): Whether to sort in ascending order.
+            Defaults to True.
 
     Returns:
-        pd.DataFrame: Leaderboard dataframe.
+        pd.DataFrame: A leaderboard DataFrame.
     """
     pivot_df = leaderboard_df.pivot_table(
         index=PLAYER_COLUMN, 
@@ -46,14 +46,13 @@ def create_leaderboard(leaderboard_df: pd.DataFrame, value_column: str, ascendin
 
 
 def generate_table_html(df: pd.DataFrame) -> str:
-    """
-    Generate HTML table from dataframe.
+    """Generates an HTML table from a DataFrame.
 
     Args:
-        df (pd.DataFrame): Input dataframe.
+        df (pd.DataFrame): The input DataFrame.
 
     Returns:
-        str: HTML table string.
+        str: An HTML table as a string.
     """
     html = ["<table class='datawrapper-table narrow-first left-second full-width'>"]
     html.append("<thead><tr><th class='rank-header'></th>" + "".join(f"<th>{col}</th>" for col in df.columns[1:]) + "</tr></thead><tbody>")
@@ -71,15 +70,15 @@ def generate_table_html(df: pd.DataFrame) -> str:
 
 
 def format_value(value: Any, value_type: str) -> str:
-    """
-    Format values based on their type.
+    """Formats values based on their type.
 
     Args:
         value (Any): The value to format.
-        value_type (str): The type of value ('GrossVP', 'NetVP', or 'Stableford').
+        value_type (str): The type of the value ('GrossVP', 'NetVP', or
+            'Stableford').
 
     Returns:
-        str: Formatted value string.
+        str: The formatted value as a string.
     """
     try:
         num = float(value)
@@ -100,28 +99,26 @@ def format_value(value: Any, value_type: str) -> str:
 
 
 def get_champions(df: pd.DataFrame) -> str:
-    """
-    Get champions from dataframe.
+    """Gets the champions from a DataFrame.
 
     Args:
-        df (pd.DataFrame): Input dataframe.
+        df (pd.DataFrame): The input DataFrame.
 
     Returns:
-        str: Comma-separated list of champions.
+        str: A comma-separated list of champions.
     """
     champions = df[df['Rank'] == 1][PLAYER_COLUMN].astype(str).tolist()
     return ', '.join(champions)
 
 
 def get_last_place(df: pd.DataFrame) -> str:
-    """
-    Get last place players from dataframe (including ties).
+    """Gets the last place players from a DataFrame, including ties.
 
     Args:
-        df (pd.DataFrame): Input dataframe.
+        df (pd.DataFrame): The input DataFrame.
 
     Returns:
-        str: Comma-separated list of last place players.
+        str: A comma-separated list of last place players.
     """
     df = df.copy()
 
@@ -138,17 +135,17 @@ def get_last_place(df: pd.DataFrame) -> str:
     return ', '.join(last_place)
 
 
-def display_leaderboard(leaderboard_df: pd.DataFrame, value_column: str, title: str, leader_label: str, ascending: bool, competition_name: str = None) -> None:
-    """
-    Display a leaderboard with dynamic title formatting.
+def display_leaderboard(leaderboard_df: pd.DataFrame, value_column: str, title: str, leader_label: str, ascending: bool, competition_name: str = None):
+    """Displays a leaderboard with dynamic title formatting.
 
     Args:
-        leaderboard_df (pd.DataFrame): Input dataframe.
-        value_column (str): Column to use for ranking.
-        title (str): Base title of the leaderboard (used as fallback).
-        leader_label (str): Label for the leader/champion.
+        leaderboard_df (pd.DataFrame): The input DataFrame.
+        value_column (str): The column to use for ranking.
+        title (str): The base title of the leaderboard (used as a fallback).
+        leader_label (str): The label for the leader/champion.
         ascending (bool): Whether to sort in ascending order.
-        competition_name (str): Name of competition (e.g. "Trophy", "Green Jacket") for new title format.
+        competition_name (str, optional): The name of the competition for the
+            title format. Defaults to None.
     """
     leaderboard = create_leaderboard(leaderboard_df, value_column, ascending)
     champions = get_champions(leaderboard)
@@ -185,17 +182,18 @@ def display_leaderboard(leaderboard_df: pd.DataFrame, value_column: str, title: 
     st.markdown(table_html, unsafe_allow_html=True)
 
 
-def display_net_leaderboard(leaderboard_df: pd.DataFrame, base_title: str, leader_label: str) -> None:
-    """
-    Display a net competition leaderboard with automatic measure detection.
-    
-    Automatically determines whether to use NetVP or Stableford based on the TEG number
-    in the dataset and displays the appropriate leaderboard using new title format.
-    
+def display_net_leaderboard(leaderboard_df: pd.DataFrame, base_title: str, leader_label: str):
+    """Displays a net competition leaderboard with automatic measure detection.
+
+    This function automatically determines whether to use 'NetVP' or
+    'Stableford' based on the TEG number and displays the appropriate
+    leaderboard.
+
     Args:
-        leaderboard_df (pd.DataFrame): Input dataframe containing TEGNum column.
-        base_title (str): Base title (e.g., "TEG 15 Trophy Leaderboard").
-        leader_label (str): Label for the leader/champion.
+        leaderboard_df (pd.DataFrame): The input DataFrame containing a
+            'TEGNum' column.
+        base_title (str): The base title for the leaderboard.
+        leader_label (str): The label for the leader/champion.
     """
     # Determine the TEG number from the data
     if 'TEGNum' not in leaderboard_df.columns:
@@ -219,14 +217,16 @@ def display_net_leaderboard(leaderboard_df: pd.DataFrame, base_title: str, leade
 
 
 def _get_tournament_status_text(leaderboard_df: pd.DataFrame) -> tuple[str, bool]:
-    """
-    Get tournament status text and completion status using fast status files.
+    """Gets the tournament status text and completion status.
 
     Args:
-        leaderboard_df (pd.DataFrame): Input dataframe with TEG column.
+        leaderboard_df (pd.DataFrame): The input DataFrame with a 'TEG'
+            column.
 
     Returns:
-        tuple: (status_text, is_complete) where status_text is the text to use in titles
+        tuple: A tuple containing:
+            - status_text (str): The text to use in the title.
+            - is_complete (bool): The completion status.
     """
     from utils import read_file, get_teg_rounds
 

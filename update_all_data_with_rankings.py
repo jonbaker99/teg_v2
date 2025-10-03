@@ -1,5 +1,9 @@
-"""
-One-off script to add rankings and gaps to all-data.parquet and all-data.csv
+"""One-off script to add rankings and gaps to the main data files.
+
+This script is designed to be run once to add TEG-level rankings and gap-to-
+leader columns to the `all-data.parquet` and `all-data.csv` files. It
+loads the data, applies the `add_rankings_and_gaps` function, and saves the
+updated files back to the `data/` directory.
 """
 import pandas as pd
 import sys

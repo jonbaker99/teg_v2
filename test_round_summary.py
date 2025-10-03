@@ -1,8 +1,12 @@
-"""
-Test script for the create_round_summary function.
-This script tests the round summary creation and outputs results to test_round_info.csv
-"""
+"""Test script for the `create_round_summary` function.
 
+This script tests the creation of the round summary and outputs the results to
+a CSV file for verification. It performs the following steps:
+1.  Calls the `create_round_summary` function to generate the summary data.
+2.  Verifies the created summary and prints summary statistics.
+3.  Displays the column names and sample data.
+4.  Saves the complete summary to `test_round_info.csv`.
+"""
 import sys
 from pathlib import Path
 

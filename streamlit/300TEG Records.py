@@ -1,3 +1,15 @@
+"""Streamlit page for displaying TEG records.
+
+This page presents a comprehensive view of all-time records for the TEG
+competition, categorized into TEG records, round records, 9-hole records,
+streaks, and score counts. It uses a tabbed interface to separate these
+categories for easy navigation.
+
+The page uses helper functions to:
+- Load and process ranked data for different record types.
+- Prepare and format the data for display in clean, readable tables.
+- Handle both best and worst records for a complete picture of performance.
+"""
 # === IMPORTS ===
 import streamlit as st
 import pandas as pd
