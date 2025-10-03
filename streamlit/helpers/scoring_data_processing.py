@@ -1,10 +1,7 @@
-"""
-Data processing functions for scoring analysis pages.
+"""Data processing functions for scoring analysis pages.
 
-This module contains functions for:
-- Score formatting and aggregation
-- Streak calculations and analysis
-- Score type statistics processing
+This module contains functions for score formatting and aggregation, streak
+calculations and analysis, and score type statistics processing.
 """
 
 import pandas as pd
@@ -13,18 +10,17 @@ import numpy as np
 
 # === SCORE FORMATTING ===
 
-def format_vs_par_value(value):
-    """
-    Format vs-par values for display (e.g., +1.5, -0.5, =).
-    
+def format_vs_par_value(value: float) -> str:
+    """Formats vs-par values for display.
+
+    This function provides consistent formatting for vs-par scores across all
+    scoring displays.
+
     Args:
-        value (float): The vs-par value to format
-        
+        value (float): The vs-par value to format.
+
     Returns:
-        str: Formatted string (e.g., "+1.50", "-0.50", "=")
-        
-    Purpose:
-        Consistent formatting for vs-par scores across all scoring displays
+        str: A formatted string (e.g., "+1.50", "-0.50", "=").
     """
     if value > 0:
         return f"+{value:.2f}"
@@ -34,19 +30,18 @@ def format_vs_par_value(value):
         return "="
 
 
-def prepare_average_scores_by_par(all_data):
-    """
-    Calculate and format average scores by par value for each player.
-    
+def prepare_average_scores_by_par(all_data: pd.DataFrame) -> pd.DataFrame:
+    """Calculates and formats average scores by par value for each player.
+
+    This function shows how each player performs on different par values (Par
+    3, 4, 5) to help identify strengths and weaknesses.
+
     Args:
-        all_data (pd.DataFrame): Complete hole-by-hole scoring data
-        
+        all_data (pd.DataFrame): The complete hole-by-hole scoring data.
+
     Returns:
-        pd.DataFrame: Formatted table with average scores by par, ready for display
-        
-    Purpose:
-        Shows how each player performs on different par values (Par 3, 4, 5)
-        Helps identify strengths and weaknesses by hole difficulty
+        pd.DataFrame: A formatted table with average scores by par, ready for
+        display.
     """
     # Calculate average GrossVP by player and par value
     avg_grossvp = all_data.groupby(['Player', 'PAR'])['GrossVP'].mean().unstack(fill_value=0)
@@ -70,19 +65,17 @@ def prepare_average_scores_by_par(all_data):
     return avg_grossvp
 
 
-def format_scoring_stats_columns(df):
-    """
-    Format columns in scoring statistics dataframe for display.
-    
+def format_scoring_stats_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Formats columns in the scoring statistics DataFrame for display.
+
+    This function standardizes number formatting and column names for scoring
+    tables, and handles infinite values.
+
     Args:
-        df (pd.DataFrame): Raw scoring statistics data
-        
+        df (pd.DataFrame): The raw scoring statistics data.
+
     Returns:
-        pd.DataFrame: Formatted dataframe ready for display
-        
-    Purpose:
-        Standardizes number formatting and column names for scoring tables
-        Handles infinite values (when player has 0 of a score type)
+        pd.DataFrame: A formatted DataFrame ready for display.
     """
     # Create a copy to avoid modifying the original
     formatted_df = df.copy()
@@ -103,19 +96,18 @@ def format_scoring_stats_columns(df):
 
 # === STREAK CALCULATIONS ===
 
-def calculate_multi_score_running_sum(df):
-    """
-    Calculate running streaks for different score types (birdies, pars, etc.).
-    
+def calculate_multi_score_running_sum(df: pd.DataFrame) -> pd.DataFrame:
+    """Calculates running streaks for different score types.
+
+    This function tracks consecutive achievements (e.g., birdies, pars or
+    better) to find the longest streaks for each player.
+
     Args:
-        df (pd.DataFrame): Hole-by-hole data with Career Count ordering
-        
+        df (pd.DataFrame): Hole-by-hole data with 'Career Count' for ordering.
+
     Returns:
-        pd.DataFrame: Original data with added RunningSum columns for each score type
-        
-    Purpose:
-        Tracks consecutive achievements (e.g., consecutive birdies, pars or better)
-        Used to find longest streaks for each player
+        pd.DataFrame: The original data with added 'RunningSum' columns for
+        each score type.
     """
     # Sort by player and chronological order
     df_sorted = df.sort_values(['Player', 'Career Count'])
@@ -154,18 +146,19 @@ def calculate_multi_score_running_sum(df):
     return df
 
 
-def summarize_multi_score_running_sum(df):
-    """
-    Summarize maximum streak lengths for each player and score type.
-    
+def summarize_multi_score_running_sum(df: pd.DataFrame) -> pd.DataFrame:
+    """Summarizes the maximum streak lengths for each player and score type.
+
+    This function creates the final "Longest Streaks" table showing each
+    player's best streaks.
+
     Args:
-        df (pd.DataFrame): Data with RunningSum columns from calculate_multi_score_running_sum()
-        
+        df (pd.DataFrame): Data with 'RunningSum' columns from
+            `calculate_multi_score_running_sum()`.
+
     Returns:
-        pd.DataFrame: Summary showing longest streak for each player/score type
-        
-    Purpose:
-        Creates the final "Longest Streaks" table showing each player's best streaks
+        pd.DataFrame: A summary showing the longest streak for each player and
+        score type.
     """
     score_types = ['Birdies', 'Pars_or_Better', 'TBPs']
     

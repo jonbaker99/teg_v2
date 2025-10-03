@@ -1,3 +1,17 @@
+"""Streamlit page for the TEG Honours Board.
+
+This page displays a summary of TEG achievements, including:
+- Winners of the "TEG Trophy," "Green Jacket," and "HMM Wooden Spoon" for
+  each TEG.
+- A list of players who have won both the Trophy and Green Jacket in the same
+  TEG ("Doubles").
+- A record of all eagles and holes-in-one scored in TEG history.
+
+The page uses helper functions to:
+- Load and process winner data.
+- Calculate and display statistics for each competition.
+- Format the data into clean, readable tables.
+"""
 # === IMPORTS ===
 import streamlit as st
 import pandas as pd

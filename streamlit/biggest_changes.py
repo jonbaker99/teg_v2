@@ -1,3 +1,15 @@
+"""Streamlit page for analyzing score swings between rounds.
+
+This page displays the rounds with the biggest score differences compared to
+the player's previous round. It allows users to see both the biggest
+improvements and the biggest declines in performance.
+
+The page uses helper functions to:
+- Load and filter the round data.
+- Calculate the score difference between consecutive rounds.
+- Display the results in two tabs: "Biggest improvements" and "Biggest
+  worsenings".
+"""
 from utils import get_round_data, load_datawrapper_css, datawrapper_table
 import streamlit as st
 

@@ -1,32 +1,26 @@
-"""
-Data processing functions for par-based scoring analysis.
+"""Data processing functions for par-based scoring analysis.
 
-This module contains functions for:
-- Processing scores by par value (Par 3, Par 4, Par 5)
-- Creating player performance matrices by par
-- Formatting vs-par values for display
+This module contains functions for processing scores by par value (Par 3, Par 4,
+Par 5), creating player performance matrices by par, and formatting vs-par
+values for display.
 """
 
 import pandas as pd
 import numpy as np
 
 
+def calculate_par_performance_matrix(filtered_data: pd.DataFrame) -> pd.DataFrame:
+    """Calculates the average GrossVP performance by player and par value.
 
+    This function creates a comprehensive view of how each player performs on
+    different par holes, including an overall average for comparison.
 
-def calculate_par_performance_matrix(filtered_data):
-    """
-    Calculate average GrossVP performance by player and par value.
-    
     Args:
-        filtered_data (pd.DataFrame): Tournament data for analysis
-        
+        filtered_data (pd.DataFrame): The tournament data for analysis.
+
     Returns:
-        pd.DataFrame: Player-by-par performance matrix with totals
-        
-    Purpose:
-        Creates comprehensive view of how each player performs on different par holes
-        Includes overall average for comparison across players
-        Sorted by total performance (best to worst)
+        pd.DataFrame: A player-by-par performance matrix with totals, sorted
+        by total performance.
     """
     # Create pivot table of average GrossVP by player and par
     avg_grossvp = filtered_data.groupby(['Player', 'PAR'])['GrossVP'].mean().unstack(fill_value=0)
@@ -43,20 +37,17 @@ def calculate_par_performance_matrix(filtered_data):
     return avg_grossvp
 
 
-def format_par_performance_table(avg_grossvp):
-    """
-    Format par performance table for display with proper vs-par notation.
-    
+def format_par_performance_table(avg_grossvp: pd.DataFrame) -> pd.DataFrame:
+    """Formats the par performance table for display.
+
+    This function applies consistent formatting for vs-par values, using +/-
+    notation and renaming columns for a user-friendly display.
+
     Args:
-        avg_grossvp (pd.DataFrame): Raw performance matrix
-        
+        avg_grossvp (pd.DataFrame): The raw performance matrix.
+
     Returns:
-        pd.DataFrame: Formatted table ready for HTML display
-        
-    Purpose:
-        Applies consistent formatting for vs-par values
-        Uses +/- notation and "=" for even par
-        Renames columns for user-friendly display
+        pd.DataFrame: A formatted table ready for HTML display.
     """
     def format_vs_par_value(value):
         """Format vs-par values with appropriate +/- symbols."""

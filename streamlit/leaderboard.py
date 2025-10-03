@@ -1,3 +1,18 @@
+"""Streamlit page for displaying the current TEG leaderboard.
+
+This page automatically displays the leaderboard for the most recent TEG,
+whether it is in progress or completed. It provides a detailed view of the
+competition, including:
+- Leaderboards for the "TEG Trophy & Spoon" (Net) and "Green Jacket" (Gross)
+  competitions.
+- Interactive charts showing the cumulative progress of each player.
+- Detailed scorecards for each round of the tournament.
+
+The page uses helper functions to:
+- Load and process the data for the latest tournament.
+- Automatically detect the tournament status (in-progress or complete).
+- Create and display formatted leaderboards, charts, and scorecards.
+"""
 # === IMPORTS ===
 import streamlit as st
 import pandas as pd

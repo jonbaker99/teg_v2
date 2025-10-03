@@ -1,3 +1,16 @@
+"""Streamlit page for editing various data files.
+
+This page provides a web interface for editing several key CSV files used in
+the application, such as round information, handicaps, and TEG winners. It
+also includes a read-only view for the main processed data file.
+
+The page uses helper functions to:
+- Load and display the selected data file.
+- Handle file creation for missing files (e.g., test files).
+- Save changes back to the repository via GitHub.
+- Provide a user-friendly interface for data management with clear
+  instructions and warnings.
+"""
 # === IMPORTS ===
 import streamlit as st
 import pandas as pd

@@ -1,7 +1,14 @@
-"""
-Test script for complete commentary cache system (all three files)
-"""
+"""Test script for the complete commentary cache system.
 
+This script tests the `update_commentary_caches()` function and verifies all
+three of its output files to ensure that the entire commentary cache
+generation process is working correctly. It performs the following steps:
+1.  Generates the commentary cache files.
+2.  Checks if all three expected Parquet files were created.
+3.  Loads and verifies the content of each file.
+4.  Displays summary statistics and interesting findings from the generated
+    data.
+"""
 import sys
 import os
 sys.path.append('streamlit')

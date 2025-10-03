@@ -1,11 +1,8 @@
-"""
-Data processing functions for score distribution analysis.
+"""Data processing functions for score distribution analysis.
 
-This module contains functions for:
-- Counting score distributions by player
-- Creating percentage distribution charts
-- Filtering data by TEG and par value
-- Formatting score count data for display
+This module contains functions for counting score distributions by player,
+creating percentage distribution charts, filtering data by TEG and par value,
+and formatting score count data for display.
 """
 
 import pandas as pd
@@ -13,19 +10,19 @@ import plotly.express as px
 import streamlit as st
 
 
-def get_filtering_options(all_data):
-    """
-    Get filtering options for score count analysis.
-    
+def get_filtering_options(all_data: pd.DataFrame) -> tuple[list, list]:
+    """Gets filtering options for score count analysis.
+
+    This function provides filtering options for score distribution analysis,
+    enabling focused analysis by tournament or par value.
+
     Args:
-        all_data (pd.DataFrame): Complete tournament data
-        
+        all_data (pd.DataFrame): The complete tournament data.
+
     Returns:
-        tuple: (tegnum_options, par_options) for dropdown selections
-        
-    Purpose:
-        Provides filtering options for score distribution analysis
-        Enables focused analysis by tournament or par value
+        tuple: A tuple containing:
+            - tegnum_options (list): A list of TEG number options.
+            - par_options (list): A list of par value options.
     """
     tegnum_options = ['All TEGs'] + sorted(all_data['TEGNum'].unique().tolist(), reverse=True)
     par_options = ['All holes'] + sorted(all_data['PAR'].unique().tolist())
@@ -33,21 +30,22 @@ def get_filtering_options(all_data):
     return tegnum_options, par_options
 
 
-def apply_teg_and_par_filters(all_data, selected_tegnum, selected_par):
-    """
-    Apply TEG and par filters to tournament data.
-    
+def apply_teg_and_par_filters(all_data: pd.DataFrame, selected_tegnum: str or int, selected_par: str or int) -> tuple[pd.DataFrame, str, str]:
+    """Applies TEG and par filters to tournament data.
+
+    This function applies user-selected filters for score distribution
+    analysis and returns descriptive labels for chart titles and captions.
+
     Args:
-        all_data (pd.DataFrame): Complete tournament data
-        selected_tegnum: Selected TEG number or "All TEGs"
-        selected_par: Selected par value or "All holes"
-        
+        all_data (pd.DataFrame): The complete tournament data.
+        selected_tegnum (str or int): The selected TEG number or "All TEGs".
+        selected_par (str or int): The selected par value or "All holes".
+
     Returns:
-        tuple: (filtered_data, teg_desc, par_desc) for analysis and display
-        
-    Purpose:
-        Applies user-selected filters for score distribution analysis
-        Returns descriptive labels for chart titles and captions
+        tuple: A tuple containing:
+            - filtered_data (pd.DataFrame): The filtered data.
+            - teg_desc (str): A description of the TEG filter.
+            - par_desc (str): A description of the par filter.
     """
     # Apply TEG filter
     if selected_tegnum != 'All TEGs':
@@ -70,21 +68,20 @@ def apply_teg_and_par_filters(all_data, selected_tegnum, selected_par):
     return filtered_data, teg_desc, par_desc
 
 
-def count_scores_by_player(df, field='GrossVP'):
-    """
-    Count score distributions by player.
-    
+def count_scores_by_player(df: pd.DataFrame, field: str = 'GrossVP') -> pd.DataFrame:
+    """Counts score distributions by player.
+
+    This function creates a distribution matrix showing how many times each
+    player achieved each score, enabling comparison of scoring patterns.
+
     Args:
-        df (pd.DataFrame): Filtered tournament data
-        field (str): Score field to analyze ('GrossVP' or 'Sc')
-        
+        df (pd.DataFrame): The filtered tournament data.
+        field (str, optional): The score field to analyze ('GrossVP' or
+            'Sc'). Defaults to 'GrossVP'.
+
     Returns:
-        pd.DataFrame: Score count matrix with players as columns, scores as rows
-        
-    Purpose:
-        Creates distribution matrix showing how many times each player achieved each score
-        Enables comparison of scoring patterns across players
-        Sorted by score value for logical display order
+        pd.DataFrame: A score count matrix with players as columns and scores
+        as rows.
     """
     # Group by score and player, count occurrences
     summary = df.groupby([field, 'Pl']).size().unstack(fill_value=0)
@@ -98,22 +95,20 @@ def count_scores_by_player(df, field='GrossVP'):
     return summary
 
 
-def create_percentage_distribution_chart(df, teg_desc, par_desc):
-    """
-    Create percentage distribution bar chart for score counts.
-    
+def create_percentage_distribution_chart(df: pd.DataFrame, teg_desc: str, par_desc: str) -> px.bar:
+    """Creates a percentage distribution bar chart for score counts.
+
+    This function provides a visual representation of score distributions as
+    percentages, showing the relative frequency of each score for each player.
+
     Args:
-        df (pd.DataFrame): Score count data with first column as index
-        teg_desc (str): TEG description for chart title
-        par_desc (str): Par description for chart title
-        
+        df (pd.DataFrame): The score count data with the first column as the
+            index.
+        teg_desc (str): A description of the TEG for the chart title.
+        par_desc (str): A description of the par for the chart title.
+
     Returns:
-        plotly.graph_objects.Figure: Percentage distribution bar chart
-        
-    Purpose:
-        Creates visual representation of score distributions as percentages
-        Shows relative frequency of each score for each player
-        Enables pattern recognition across different scoring categories
+        plotly.graph_objects.Figure: A percentage distribution bar chart.
     """
     # Prepare dataframe with first column as index
     chart_df = df.copy()
@@ -140,24 +135,23 @@ def create_percentage_distribution_chart(df, teg_desc, par_desc):
     return fig
 
 
-def prepare_score_count_display(count_data, score_field, display_name, is_percentage=False):
-    """
-    Prepare score count data for table display.
+def prepare_score_count_display(count_data: pd.DataFrame, score_field: str, display_name: str, is_percentage: bool = False) -> pd.DataFrame:
+    """Prepares score count data for table display.
+
+    This function formats score count data for a clean table display,
+    handling data type conversions, column renaming, and percentage
+    formatting.
 
     Args:
-        count_data (pd.DataFrame): Raw score count matrix or percentage data
-        score_field (str): Original score field name
-        display_name (str): User-friendly display name
-        is_percentage (bool): Whether data contains percentages that need formatting
+        count_data (pd.DataFrame): The raw score count matrix or percentage
+            data.
+        score_field (str): The original score field name.
+        display_name (str): The user-friendly display name.
+        is_percentage (bool, optional): Whether the data contains
+            percentages that need formatting. Defaults to False.
 
     Returns:
-        pd.DataFrame: Formatted data ready for display
-
-    Purpose:
-        Formats score count data for clean table display
-        Handles data type conversions and column renaming
-        Resets index to make score field a regular column
-        Applies percentage formatting when needed
+        pd.DataFrame: The formatted data ready for display.
     """
     display_data = count_data.reset_index()
     display_data.columns.name = None
@@ -184,21 +178,18 @@ def prepare_score_count_display(count_data, score_field, display_name, is_percen
     return display_data
 
 
-def prepare_chart_data_with_special_handling(display_data, score_field):
-    """
-    Prepare data for chart with special value handling.
-    
+def prepare_chart_data_with_special_handling(display_data: pd.DataFrame, score_field: str) -> pd.DataFrame:
+    """Prepares data for a chart with special value handling.
+
+    This function handles special formatting cases for charting, such as
+    converting formatted values back to numeric for proper display.
+
     Args:
-        display_data (pd.DataFrame): Formatted display data
-        score_field (str): Original score field name
-        
+        display_data (pd.DataFrame): The formatted display data.
+        score_field (str): The original score field name.
+
     Returns:
-        pd.DataFrame: Chart-ready data with special values converted
-        
-    Purpose:
-        Handles special formatting cases for charting
-        Converts formatted values back to numeric for proper chart display
-        Specifically handles "=" (even par) conversion to 0
+        pd.DataFrame: Chart-ready data with special values converted.
     """
     chart_data = display_data.copy()
     
@@ -210,19 +201,19 @@ def prepare_chart_data_with_special_handling(display_data, score_field):
     return chart_data
 
 
-def convert_counts_to_percentages(count_data):
-    """
-    Convert score count data to percentage distribution per player.
+def convert_counts_to_percentages(count_data: pd.DataFrame) -> pd.DataFrame:
+    """Converts score count data to a percentage distribution per player.
+
+    This function converts absolute counts to percentages for relative
+    comparison across players.
 
     Args:
-        count_data (pd.DataFrame): Raw score count matrix with scores as rows, players as columns
+        count_data (pd.DataFrame): A raw score count matrix with scores as
+            rows and players as columns.
 
     Returns:
-        pd.DataFrame: Percentage distribution where each player's column sums to 100%
-
-    Purpose:
-        Converts absolute counts to percentages for relative comparison across players
-        Each player's scores sum to 100%, enabling pattern recognition regardless of total holes played
+        pd.DataFrame: A percentage distribution where each player's column
+        sums to 100%.
     """
     # Calculate percentage of total for each player (column-wise)
     percentage_data = count_data.div(count_data.sum(axis=0), axis=1) * 100
@@ -233,19 +224,18 @@ def convert_counts_to_percentages(count_data):
     return percentage_data
 
 
-def format_percentage_for_display(percentage_data):
-    """
-    Format percentage data for table display with % symbols.
+def format_percentage_for_display(percentage_data: pd.DataFrame) -> pd.DataFrame:
+    """Formats percentage data for table display with '%' symbols.
+
+    This function converts numeric percentage values to formatted strings for
+    a clean table display.
 
     Args:
-        percentage_data (pd.DataFrame): Percentage data with numeric values
+        percentage_data (pd.DataFrame): The percentage data with numeric
+            values.
 
     Returns:
-        pd.DataFrame: Formatted data with percentages as strings with % symbols
-
-    Purpose:
-        Converts numeric percentage values to formatted strings for clean table display
-        Applies consistent formatting as "25.5%" for readability
+        pd.DataFrame: Formatted data with percentages as strings.
     """
     # Create a copy to avoid modifying original data
     formatted_data = percentage_data.copy()
@@ -258,23 +248,21 @@ def format_percentage_for_display(percentage_data):
     return formatted_data
 
 
-def create_stacked_bar_chart(count_data, teg_desc, par_desc, score_field):
-    """
-    Create stacked bar chart showing score distribution by player.
+def create_stacked_bar_chart(count_data: pd.DataFrame, teg_desc: str, par_desc: str, score_field: str) -> px.bar:
+    """Creates a stacked bar chart showing the score distribution by player.
+
+    This function provides a visual representation of score distributions as
+    stacked bars, with each player represented by a column.
 
     Args:
-        count_data (pd.DataFrame): Score count matrix with scores as rows, players as columns
-        teg_desc (str): TEG description for chart title
-        par_desc (str): Par description for chart title
-        score_field (str): Score field being analyzed ('GrossVP' or 'Sc')
+        count_data (pd.DataFrame): The score count matrix with scores as rows
+            and players as columns.
+        teg_desc (str): A description of the TEG for the chart title.
+        par_desc (str): A description of the par for the chart title.
+        score_field (str): The score field being analyzed ('GrossVP' or 'Sc').
 
     Returns:
-        plotly.graph_objects.Figure: Stacked bar chart with one column per player
-
-    Purpose:
-        Creates visual representation of score distributions as stacked bars
-        Each player gets one column, with score types stacked and colored
-        Shows relative scoring patterns across players
+        plotly.graph_objects.Figure: A stacked bar chart.
     """
     # Convert to percentages for stacked display
     percentage_data = convert_counts_to_percentages(count_data)

@@ -1,11 +1,8 @@
-"""
-Data processing functions for TEG data update operations.
+"""Data processing functions for TEG data update operations.
 
-This module contains functions for:
-- Processing and validating Google Sheets data
-- Checking for duplicate data  
-- State management for data update workflow
-- Data integrity validation
+This module provides functions for processing and validating Google Sheets data,
+checking for duplicate data, managing the data update workflow state, and
+ensuring data integrity.
 """
 
 import streamlit as st
@@ -40,16 +37,15 @@ STATE_PROCESSING = "processing"
 STATE_OVERWRITE_CONFIRM = "overwrite_confirm"
 
 
-def initialize_update_state(force_reset=False):
-    """
-    Initialize or reset the session state for data update page.
-    
+def initialize_update_state(force_reset: bool = False):
+    """Initializes or resets the session state for the data update page.
+
+    This function manages the multi-step data update workflow using Streamlit
+    session state to ensure a clean state between different update operations.
+
     Args:
-        force_reset (bool): Force reset of all state variables
-        
-    Purpose:
-        Manages the multi-step data update workflow using Streamlit session state
-        Ensures clean state between different update operations
+        force_reset (bool, optional): If True, forces a reset of all state
+            variables. Defaults to False.
     """
     if force_reset or 'page_state' not in st.session_state:
         st.session_state.page_state = STATE_INITIAL
@@ -58,20 +54,19 @@ def initialize_update_state(force_reset=False):
         st.session_state.duplicates_df = None
 
 
-def process_google_sheets_data(raw_df):
-    """
-    Process and validate data loaded from Google Sheets.
-    
+def process_google_sheets_data(raw_df: pd.DataFrame) -> pd.DataFrame:
+    """Processes and validates data loaded from Google Sheets.
+
+    This function transforms wide-format Google Sheets data into a long format,
+    filters out incomplete rounds and invalid scores, and ensures data quality
+    before further processing.
+
     Args:
-        raw_df (pd.DataFrame): Raw data from Google Sheets
-        
+        raw_df (pd.DataFrame): The raw data from Google Sheets.
+
     Returns:
-        pd.DataFrame: Processed data with only complete 18-hole rounds
-        
-    Purpose:
-        Transforms wide-format Google Sheets data into long format
-        Filters out incomplete rounds and invalid scores
-        Ensures data quality before processing
+        pd.DataFrame: The processed data containing only complete 18-hole
+        rounds.
     """
     # reshape_round_data() - Converts wide format to long format by hole
     long_df = reshape_round_data(raw_df, ['TEGNum', 'Round', 'Hole', 'Par', 'SI'])
@@ -86,18 +81,14 @@ def process_google_sheets_data(raw_df):
     return rounds_with_18_holes
 
 
-def check_for_duplicate_data():
-    """
-    Check for duplicate data at hole level between existing data and new data.
+def check_for_duplicate_data() -> bool:
+    """Checks for duplicate data at the hole level.
+
+    This function compares the new data with existing data to identify any
+    duplicate entries at the hole level.
 
     Returns:
-        bool: True if duplicates exist, False otherwise
-
-    Side effects:
-        Sets session state variables:
-        - existing_data_df: The existing data
-        - duplicates_df: Duplicate records found at hole level
-        - new_data_keys: Unique hole-level keys from new data for comparison
+        bool: True if duplicates are found, False otherwise.
     """
     try:
         st.session_state.existing_data_df = read_file(ALL_SCORES_PARQUET)
@@ -134,20 +125,18 @@ def check_for_duplicate_data():
     return not duplicates.empty
 
 
-def analyze_hole_level_differences():
-    """
-    Analyze differences between existing data and new data for duplicate hole-level records.
+def analyze_hole_level_differences() -> tuple[pd.DataFrame, bool]:
+    """Analyzes differences between existing and new data for duplicate records.
+
+    This function compares the scores of duplicate records at the hole level
+    to identify any discrepancies.
 
     Returns:
-        tuple: (differences_df, has_differences)
-        - differences_df: DataFrame with columns [Pl, TEG, Round, Hole, Score (existing), Score (google sheets)]
-        - has_differences: bool indicating if any score differences were found
-
-    Prerequisites:
-        Requires session state variables set by check_for_duplicate_data():
-        - existing_data_df: Existing data
-        - new_data_df: New data from Google Sheets
-        - duplicates_df: Duplicate records found
+        tuple: A tuple containing:
+            - differences_df (pd.DataFrame): A DataFrame showing the
+              differences.
+            - has_differences (bool): True if any differences were found,
+              False otherwise.
     """
     if st.session_state.duplicates_df.empty:
         return pd.DataFrame(), False
@@ -192,20 +181,18 @@ def analyze_hole_level_differences():
         return pd.DataFrame(), False
 
 
-def execute_data_update(overwrite=False, new_data_only=False):
-    """
-    Execute the main data update process.
+def execute_data_update(overwrite: bool = False, new_data_only: bool = False):
+    """Executes the main data update process.
+
+    This is the core data processing function that handles the overwrite
+    logic, processes raw rounds into calculated scoring data, updates the main
+    data files, and triggers a cache refresh.
 
     Args:
-        overwrite (bool): Whether to overwrite existing duplicate data
-        new_data_only (bool): Whether to process only non-duplicate data
-
-    Purpose:
-        Core data processing function that:
-        1. Handles overwrite logic if duplicates exist
-        2. Processes raw rounds into calculated scoring data
-        3. Updates main data files
-        4. Triggers cache refresh
+        overwrite (bool, optional): Whether to overwrite existing duplicate
+            data. Defaults to False.
+        new_data_only (bool, optional): Whether to process only non-duplicate
+            data. Defaults to False.
     """
     existing_df = st.session_state.existing_data_df
     new_data_df = st.session_state.new_data_df
@@ -302,19 +289,18 @@ def execute_data_update(overwrite=False, new_data_only=False):
         st.warning("⚠️ No new records to append.")
 
 
-def create_data_summary_display(new_data_df):
-    """
-    Create summary display of loaded data for user confirmation.
-    
+def create_data_summary_display(new_data_df: pd.DataFrame) -> pd.DataFrame:
+    """Creates a summary display of the loaded data for user confirmation.
+
+    This function provides a clear summary view of the data that will be
+    processed, allowing the user to verify that it is correct before
+    proceeding.
+
     Args:
-        new_data_df (pd.DataFrame): Newly loaded data
-        
+        new_data_df (pd.DataFrame): The newly loaded data.
+
     Returns:
-        pd.DataFrame: Pivot table showing scores by player and round
-        
-    Purpose:
-        Provides clear summary view of what data will be processed
-        Allows user to verify data looks correct before proceeding
+        pd.DataFrame: A pivot table showing scores by player and round.
     """
     # Group by key dimensions and sum scores for overview
     summary_df = new_data_df.groupby(['TEGNum', 'Round', 'Pl'])['Score'].sum().reset_index()

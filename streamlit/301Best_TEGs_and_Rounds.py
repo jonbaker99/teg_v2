@@ -1,3 +1,15 @@
+"""Streamlit page for displaying top TEG and round performances.
+
+This page allows users to explore the best and worst TEGs and individual
+rounds based on different scoring measures (Gross, Score, Net, Stableford).
+It features a tabbed interface to separate the different categories of
+performance and allows the user to select the number of records to display.
+
+The page uses helper functions to:
+- Load and process ranked TEG and round data.
+- Prepare formatted tables for both best and worst performances.
+- Handle user selections for scoring measures and the number of records.
+"""
 # === IMPORTS ===
 import streamlit as st
 import pandas as pd

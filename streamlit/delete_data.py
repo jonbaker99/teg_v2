@@ -1,3 +1,18 @@
+"""Streamlit page for deleting tournament data.
+
+This page provides a safe and controlled workflow for deleting tournament data
+from the system. It uses a multi-step process to prevent accidental data loss,
+including:
+- Selection of the TEG and rounds to be deleted.
+- A preview of the data that will be deleted for user confirmation.
+- Automatic creation of timestamped backups before deletion.
+- Execution of the deletion across all relevant data files and caches.
+
+The page uses helper functions to:
+- Manage the state of the deletion workflow.
+- Load and filter the data.
+- Execute the deletion and update all related data files.
+"""
 # === IMPORTS ===
 import streamlit as st
 import pandas as pd

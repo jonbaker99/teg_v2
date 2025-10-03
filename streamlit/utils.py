@@ -23,11 +23,24 @@ logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
 
 def clear_all_caches():
-    """Clears all Streamlit data caches"""
+    """Clears all Streamlit data caches.
+
+    This function is a simple wrapper around `st.cache_data.clear()` to provide a
+    centralized way to manage cache clearing.
+    """
     st.cache_data.clear()
 
 
 def get_base_directory():
+    """Determines the base directory of the project.
+
+    This function checks if the current working directory is the `streamlit`
+    subfolder. If it is, it returns the parent directory. Otherwise, it assumes
+    the current directory is the project root.
+
+    Returns:
+        pathlib.Path: The absolute path to the base directory of the project.
+    """
     # Get the current working directory
     current_dir = Path.cwd()
     
@@ -73,11 +86,15 @@ COMMENTARY_TOURNAMENT_STREAKS_PARQUET = "data/commentary_tournament_streaks.parq
 ALL_DATA_CSV_MIRROR = "data/all-data.csv"
 
 def get_current_branch():
-    """
-    Gets the current git branch.
-    - On Railway, it uses the built-in 'RAILWAY_GIT_BRANCH' environment variable.
-    - Locally, it attempts to get the branch using a git command.
-    - Defaults to 'main' if the branch cannot be determined.
+    """Gets the current git branch.
+
+    This function determines the current git branch by checking for the
+    `RAILWAY_GIT_BRANCH` environment variable (on Railway deployments) or by
+    executing a git command locally. It defaults to 'main' if the branch
+    cannot be determined.
+
+    Returns:
+        str: The name of the current git branch.
     """
     # Railway provides this variable automatically
     branch = os.getenv('RAILWAY_GIT_BRANCH')
@@ -97,8 +114,19 @@ def get_current_branch():
 
 GITHUB_BRANCH = get_current_branch()
 
-def read_from_github(file_path):
-    """Simple GitHub file reading with proper base64 decoding"""
+def read_from_github(file_path: str) -> pd.DataFrame or str:
+    """Reads a file from the GitHub repository.
+
+    This function reads a file from the specified path in the GitHub repository.
+    It handles both CSV and Parquet files, decoding them appropriately.
+
+    Args:
+        file_path (str): The path to the file in the GitHub repository.
+
+    Returns:
+        pd.DataFrame or str: A pandas DataFrame if the file is a CSV or
+        Parquet file, otherwise the decoded content of the file as a string.
+    """
     from github import Github
     from io import BytesIO, StringIO
     import base64
@@ -120,7 +148,20 @@ def read_from_github(file_path):
         # For other files, return decoded string
         return base64.b64decode(content.content).decode('utf-8')
 
-def write_to_github(file_path, data, commit_message="Update data"):
+def write_to_github(file_path: str, data: pd.DataFrame or str, commit_message: str = "Update data"):
+    """Writes a file to the GitHub repository.
+
+    This function writes data to the specified file path in the GitHub
+    repository. It can handle both pandas DataFrames (CSV or Parquet) and
+    string data. If the file already exists, it will be updated. Otherwise,
+    a new file will be created.
+
+    Args:
+        file_path (str): The path to the file in the GitHub repository.
+        data (pd.DataFrame or str): The data to write to the file.
+        commit_message (str, optional): The commit message to use for the
+            write operation. Defaults to "Update data".
+    """
     from github import Github
     from io import BytesIO
 
@@ -152,17 +193,18 @@ def write_to_github(file_path, data, commit_message="Update data"):
 
 
 def batch_commit_to_github(files_data: list, commit_message: str = "Batch update data"):
-    """
-    Commit multiple files to GitHub in a single commit.
+    """Commits multiple files to GitHub in a single commit.
+
+    This function optimizes GitHub API usage by creating a single commit with
+    multiple file changes, which is significantly faster for bulk updates than
+    committing each file individually.
 
     Args:
-        files_data (list): List of dicts with 'file_path' and 'data' keys
-                          Example: [{'file_path': 'data/file.csv', 'data': df}, ...]
-        commit_message (str): Commit message for the batch update
-
-    Purpose:
-        Optimizes GitHub API usage by creating a single commit with multiple file changes
-        instead of one commit per file. Significantly faster for bulk updates.
+        files_data (list): A list of dictionaries, where each dictionary
+            contains the `file_path` and `data` for a file to be committed.
+            Example: `[{'file_path': 'data/file.csv', 'data': df}, ...]`.
+        commit_message (str, optional): The commit message for the batch
+            update. Defaults to "Batch update data".
     """
     from github import Github, InputGitTreeElement
     from io import BytesIO
@@ -228,9 +270,20 @@ def batch_commit_to_github(files_data: list, commit_message: str = "Batch update
 # Replace your existing functions with these
 
 def read_file(file_path: str) -> pd.DataFrame:
-    """
-    Read from volume if exists, otherwise cache from GitHub.
-    No timestamp checking - simple cache with manual invalidation.
+    """Reads a file from the local filesystem or a mounted volume.
+
+    This function reads a file from a mounted volume if running on Railway,
+    or from the local filesystem if running locally. If the file is not
+    found in the volume on Railway, it caches it from GitHub.
+
+    Args:
+        file_path (str): The path to the file.
+
+    Returns:
+        pd.DataFrame: The content of the file as a pandas DataFrame.
+
+    Raises:
+        ValueError: If the file type is not supported.
     """
     if os.getenv('RAILWAY_ENVIRONMENT'):
         volume_path = f"/mnt/data_repo/{file_path}"
@@ -280,17 +333,25 @@ def read_file(file_path: str) -> pd.DataFrame:
 
 
 def write_file(file_path: str, data: pd.DataFrame, commit_message: str = "Update data", defer_github: bool = False):
-    """
-    Write to both volume (fast) and optionally GitHub (sync).
+    """Writes a file to the local filesystem or a mounted volume.
+
+    This function writes a file to a mounted volume and optionally to GitHub
+    if running on Railway, or to the local filesystem if running locally.
 
     Args:
-        file_path (str): Path to file relative to data directory
-        data (pd.DataFrame): Data to write
-        commit_message (str): Commit message for GitHub (if not deferred)
-        defer_github (bool): If True, skip GitHub push (for batch commits). Default False for backward compatibility.
+        file_path (str): The path to the file.
+        data (pd.DataFrame): The data to write.
+        commit_message (str, optional): The commit message for the GitHub
+            commit. Defaults to "Update data".
+        defer_github (bool, optional): If True, the GitHub push is deferred
+            for a batch commit. Defaults to False.
 
     Returns:
-        dict: File info for batch commits (when defer_github=True)
+        dict or None: A dictionary with file information for batch commits
+        if `defer_github` is True, otherwise None.
+
+    Raises:
+        ValueError: If the file type is not supported.
     """
     if os.getenv('RAILWAY_ENVIRONMENT'):
         # Write to volume first (fast local write)
@@ -341,10 +402,19 @@ def write_file(file_path: str, data: pd.DataFrame, commit_message: str = "Update
 
 
 # Optional: Add this utility function for manual cache management
-def clear_volume_cache(file_path: str = None):
-    """
-    Clear volume cache for a specific file or all files.
-    Useful for forcing refresh from GitHub.
+def clear_volume_cache(file_path: str = None) -> str:
+    """Clears the volume cache for a specific file or all files.
+
+    This function is useful for forcing a refresh from GitHub. It clears the
+    cache on the mounted volume in a Railway environment.
+
+    Args:
+        file_path (str, optional): The path to the file to clear from the
+            cache. If None, the entire volume cache is cleared. Defaults to
+            None.
+
+    Returns:
+        str: A message indicating the result of the operation.
     """
     if not os.getenv('RAILWAY_ENVIRONMENT'):
         return "Not running on Railway - no volume to clear"
@@ -373,8 +443,16 @@ def clear_volume_cache(file_path: str = None):
 
 
 
-def backup_file(source_path, backup_path):
-    """Create a backup of a file"""
+def backup_file(source_path: str, backup_path: str):
+    """Creates a backup of a file.
+
+    This function creates a backup of a file by copying it to a new location.
+    It handles both Railway and local environments.
+
+    Args:
+        source_path (str): The path to the source file.
+        backup_path (str): The path to the backup file.
+    """
     if os.getenv('RAILWAY_ENVIRONMENT'):
         # Read and write with new name (to backups branch)
         data = read_from_github(source_path)
@@ -442,14 +520,28 @@ TEG_OVERRIDES = {
     }
 }
 
-@st.cache_data  
+@st.cache_data
 def load_all_data(exclude_teg_50: bool = True, exclude_incomplete_tegs: bool = False) -> pd.DataFrame:
+    """Loads all data from the Parquet file and prepares it for use.
+
+    This function loads the main data file, merges it with round information,
+    and provides options to exclude certain data.
+
+    Args:
+        exclude_teg_50 (bool, optional): Whether to exclude TEG 50.
+            Defaults to True.
+        exclude_incomplete_tegs (bool, optional): Whether to exclude
+            incomplete TEGs. Defaults to False.
+
+    Returns:
+        pd.DataFrame: The loaded and prepared data as a pandas DataFrame.
+    """
     try:
         df = read_file(ALL_DATA_PARQUET)
     except Exception as e:
         st.error(f"Error loading data: {e}")
         return pd.DataFrame()
-    
+
     # Load round info data to get Area information
     try:
         round_info = read_file(ROUND_INFO_CSV)
@@ -458,95 +550,118 @@ def load_all_data(exclude_teg_50: bool = True, exclude_incomplete_tegs: bool = F
         df = df.merge(round_info_subset, on=['TEGNum', 'Round'], how='left')
     except Exception as e:
         st.warning(f"Could not load round info for Area data: {e}")
-    
+
     # Ensure 'Year' is of integer type
     df['Year'] = df['Year'].astype('Int64')
-    
+
     # Exclude TEG 50 if the flag is set
     if exclude_teg_50:
         df = df[df['TEGNum'] != 50]
-    
+
     # Exclude incomplete TEGs if the flag is set
     if exclude_incomplete_tegs:
         df = exclude_incomplete_tegs_function(df)
-    
+
     return df
 
+
 def get_number_of_completed_rounds_by_teg(df: pd.DataFrame) -> pd.DataFrame:
+    """Gets the number of completed rounds for each TEG.
+
+    Args:
+        df (pd.DataFrame): The input DataFrame.
+
+    Returns:
+        pd.DataFrame: A DataFrame with the number of completed rounds for
+        each TEG.
+    """
     num_rounds = (
         df.groupby(['TEGNum', 'TEG'])['Round']
-          .nunique()
-          .reset_index(name="num_rounds")
+        .nunique()
+        .reset_index(name="num_rounds")
     )
     return num_rounds
 
-def get_incomplete_tegs(df: pd.DataFrame) -> pd.DataFrame:
 
+def get_incomplete_tegs(df: pd.DataFrame) -> pd.DataFrame:
+    """Gets a list of incomplete TEGs.
+
+    Args:
+        df (pd.DataFrame): The input DataFrame.
+
+    Returns:
+        pd.DataFrame: A DataFrame with the TEG numbers of incomplete TEGs.
+    """
     # Compute the number of unique COMPLETED rounds per TEGNum
     all_rounds = df.groupby('TEGNum')['Round'].nunique()
-    
+
     # Create a DataFrame with TEGNum and observed rounds
     teg_rounds = all_rounds.reset_index(name='AllRounds')
-    
+
     # Apply get_teg_rounds to get the expected number of rounds per TEGNum
     teg_rounds['ExpectedRounds'] = teg_rounds['TEGNum'].apply(get_tegnum_rounds)
-    
+
     # Identify incomplete TEGs where observed rounds do not match expected rounds
-    incomplete_tegs = teg_rounds[teg_rounds['AllRounds'] != teg_rounds['ExpectedRounds']]['TEGNum'] 
+    incomplete_tegs = teg_rounds[teg_rounds['AllRounds'] != teg_rounds['ExpectedRounds']]['TEGNum']
 
     return incomplete_tegs
 
 
 def exclude_incomplete_tegs_function(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Exclude TEGs with incomplete rounds based on the number of unique rounds in the data.
-    
-    Parameters:
-        df (pd.DataFrame): The dataset to filter.
-    
+    """Excludes TEGs with incomplete rounds from the DataFrame.
+
+    This function identifies and removes TEGs that do not have the expected
+    number of rounds.
+
+    Args:
+        df (pd.DataFrame): The input DataFrame.
+
     Returns:
-        pd.DataFrame: The dataset with incomplete TEGs excluded.
+        pd.DataFrame: A DataFrame with incomplete TEGs excluded.
     """
     # Compute the number of unique COMPLETED rounds per TEGNum
     observed_rounds = df.groupby('TEGNum')['Round'].nunique()
-    
+
     # Create a DataFrame with TEGNum and observed rounds
     teg_rounds = observed_rounds.reset_index(name='ObservedRounds')
-    
+
     # Apply get_teg_rounds to get the expected number of rounds per TEGNum
     teg_rounds['ExpectedRounds'] = teg_rounds['TEGNum'].apply(get_tegnum_rounds)
-    
+
     # Identify incomplete TEGs where observed rounds do not match expected rounds
     incomplete_tegs = teg_rounds[teg_rounds['ObservedRounds'] != teg_rounds['ExpectedRounds']]['TEGNum']
-    
+
     # Exclude the incomplete TEGs from the dataset
     df_filtered = df[~df['TEGNum'].isin(incomplete_tegs)]
-    
+
     return df_filtered
 
-def get_player_name(initials: str) -> str:
-    """
-    Retrieve the player's full name based on their initials.
 
-    Parameters:
+def get_player_name(initials: str) -> str:
+    """Retrieves the full name of a player from their initials.
+
+    Args:
         initials (str): The initials of the player.
 
     Returns:
-        str: Full name of the player or 'Unknown Player' if not found.
+        str: The full name of the player, or 'Unknown Player' if the
+        initials are not found.
     """
     return PLAYER_DICT.get(initials.upper(), 'Unknown Player')
 
 
 def process_round_for_all_scores(long_df: pd.DataFrame, hc_long: pd.DataFrame) -> pd.DataFrame:
-    """
-    Process round data for all scores by computing various metrics.
+    """Processes round data to calculate various scores and metrics.
 
-    Parameters:
+    This function takes long-format round data and handicap data, merges them,
+    and calculates a variety of scores including Gross, Net, and Stableford.
+
+    Args:
         long_df (pd.DataFrame): DataFrame containing round data.
         hc_long (pd.DataFrame): DataFrame containing handicap data.
 
     Returns:
-        pd.DataFrame: Processed DataFrame with additional computed columns.
+        pd.DataFrame: A processed DataFrame with additional computed columns.
     """
     logger.info("Processing rounds for all scores.")
 
@@ -591,14 +706,15 @@ def process_round_for_all_scores(long_df: pd.DataFrame, hc_long: pd.DataFrame) -
 
 
 def check_hc_strokes_combinations(transformed_df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Check unique combinations of HC, SI, and HCStrokes.
+    """Checks for unique combinations of HC, SI, and HCStrokes.
 
-    Parameters:
-        transformed_df (pd.DataFrame): DataFrame containing the transformed golf data.
+    Args:
+        transformed_df (pd.DataFrame): DataFrame containing the transformed
+            golf data.
 
     Returns:
-        pd.DataFrame: DataFrame with unique combinations of HC, SI, and HCStrokes.
+        pd.DataFrame: A DataFrame with unique combinations of HC, SI, and
+        HCStrokes.
     """
     hc_si_strokes_df = transformed_df[['HC', 'SI', 'HCStrokes']].drop_duplicates()
     logger.info("Unique combinations of HC, SI, and HCStrokes obtained.")
@@ -606,14 +722,17 @@ def check_hc_strokes_combinations(transformed_df: pd.DataFrame) -> pd.DataFrame:
 
 
 def add_cumulative_scores(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Add cumulative scores and averages for specified measures across rounds, TEGs, and career.
+    """Adds cumulative scores and averages to the DataFrame.
 
-    Parameters:
-        df (pd.DataFrame): DataFrame containing the golf data.
+    This function calculates cumulative scores and averages for various
+    measures across different periods (Round, TEG, Career).
+
+    Args:
+        df (pd.DataFrame): The input DataFrame.
 
     Returns:
-        pd.DataFrame: DataFrame with cumulative and average scores added.
+        pd.DataFrame: The DataFrame with added cumulative scores and
+        averages.
     """
     logger.info("Adding cumulative scores and averages.")
 
@@ -650,20 +769,20 @@ def add_cumulative_scores(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def add_rankings_and_gaps(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Add TEG-level rankings and gaps to leader for cumulative scores.
+    """Adds TEG-level rankings and gaps to the leader for cumulative scores.
 
-    This function adds four columns:
-    - Rank_GrossVP_TEG: Player's rank based on cumulative GrossVP at each hole in the TEG
-    - Rank_Stableford_TEG: Player's rank based on cumulative Stableford at each hole in the TEG
-    - Gap_GrossVP_TEG: Difference from leader's cumulative GrossVP
-    - Gap_Stableford_TEG: Difference from leader's cumulative Stableford
+    This function adds the following columns:
+    - Rank_GrossVP_TEG: Player's rank based on cumulative GrossVP.
+    - Rank_Stableford_TEG: Player's rank based on cumulative Stableford.
+    - Gap_GrossVP_TEG: Difference from the leader's cumulative GrossVP.
+    - Gap_Stableford_TEG: Difference from the leader's cumulative Stableford.
 
-    Parameters:
-        df (pd.DataFrame): DataFrame with cumulative scores already calculated
+    Args:
+        df (pd.DataFrame): DataFrame with cumulative scores already
+            calculated.
 
     Returns:
-        pd.DataFrame: DataFrame with ranking and gap columns added
+        pd.DataFrame: The DataFrame with added ranking and gap columns.
     """
     logger.info("Adding TEG rankings and gaps to leader.")
 
@@ -694,13 +813,12 @@ def add_rankings_and_gaps(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def save_to_parquet(df: pd.DataFrame, output_file: str) -> None:
-    """
-    Save DataFrame to a Parquet file.
+def save_to_parquet(df: pd.DataFrame, output_file: str):
+    """Saves a DataFrame to a Parquet file.
 
-    Parameters:
-        df (pd.DataFrame): DataFrame containing the updated golf data.
-        output_file (str): Path to save the Parquet file.
+    Args:
+        df (pd.DataFrame): The DataFrame to save.
+        output_file (str): The path to the output Parquet file.
     """
     write_file(output_file, df, "Save to parquet")
     logger.info(f"Data successfully saved to {output_file}")

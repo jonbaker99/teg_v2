@@ -1,3 +1,25 @@
+"""Streamlit page for analyzing a selected round in context.
+
+This page allows users to select a specific round and view its performance
+in comparison to all other rounds. It provides a comprehensive analysis
+through a tabbed interface, including:
+- **Scoreboards**: Compares the selected round against others on various
+  metrics (Score, Stableford, Gross vs. Par, Net vs. Par).
+- **Scorecard**: Displays a detailed hole-by-hole scorecard for the selected
+  round.
+- **Scoring**: Shows the distribution of scores (Gross vs. Par or Stableford)
+  for the selected round.
+- **Streaks**: Displays the longest streaks for various achievements within
+  the selected round.
+- **Records & PBs**: Highlights any all-time records or personal bests
+  achieved in the selected round.
+
+The page uses helper functions to:
+- Load and process ranked round data.
+- Create interactive charts and tables for comparison.
+- Generate formatted scorecards.
+- Identify and display records and personal bests.
+"""
 # === IMPORTS ===
 import streamlit as st
 import pandas as pd

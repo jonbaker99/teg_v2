@@ -1,3 +1,13 @@
+"""Streamlit page for managing data synchronization between GitHub and Railway.
+
+This page provides an administrative interface to manage the data volume on
+Railway, ensuring that it stays in sync with the authoritative `data/` folder
+in the GitHub repository. It allows users to:
+- View a comparison of files between GitHub and the Railway volume.
+- Sync selected files from GitHub to the volume.
+- Delete files from the volume.
+- Preview the content of files from both sources.
+"""
 # streamlit/admin_volume_management.py
 import os
 from datetime import datetime

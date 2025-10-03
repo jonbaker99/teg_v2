@@ -1,6 +1,7 @@
-"""
-Golf Scorecard Generation Utilities
-Converts pandas DataFrames to beautiful HTML golf scorecards
+"""Golf Scorecard Generation Utilities.
+
+This module provides functions to convert pandas DataFrames into beautifully
+formatted HTML golf scorecards for display in Streamlit applications.
 """
 
 import streamlit as st
@@ -10,17 +11,23 @@ from utils import get_scorecard_data, get_teg_metadata, format_date_for_scorecar
 
 date_format = '%d %B %Y'
 
-def generate_scorecard_html(df, layout="single-round", title="Scorecard"):
-    """
-    Convert a pandas DataFrame to a golf scorecard HTML.
-    
+
+def generate_scorecard_html(df: pd.DataFrame, layout: str = "single-round", title: str = "Scorecard") -> str:
+    """Converts a pandas DataFrame to an HTML golf scorecard.
+
     Args:
-        df: DataFrame with columns: Hole, PAR, SI, HCStrokes, Sc, GrossVP, NetVP, Stableford
-        layout: "single-round", "multi-round", or "multi-player" 
-        title: Title for the scorecard
-    
+        df (pd.DataFrame): A DataFrame with scorecard data, including columns
+            like 'Hole', 'PAR', 'SI', 'HCStrokes', 'Sc', 'GrossVP', 'NetVP',
+            and 'Stableford'.
+        layout (str, optional): The layout of the scorecard. Can be
+            "single-round", "multi-round", or "multi-player". Defaults to
+            "single-round".
+        title (str, optional): The title for the scorecard. Defaults to
+            "Scorecard".
+
     Returns:
-        HTML string ready for st.write(unsafe_allow_html=True)
+        str: An HTML string representing the scorecard, ready to be displayed
+        with `st.write(unsafe_allow_html=True)`.
     """
     
     # Ensure we have 18 holes

@@ -1,10 +1,8 @@
-"""
-Records and Personal Bests identification functions.
+"""Records and Personal Bests identification functions.
 
-This module contains functions for:
-- Identifying all-time records from ranked data
-- Identifying personal bests and worsts
-- Displaying records/PBs in clean summary format
+This module contains functions for identifying all-time records, personal
+bests, and personal worsts from ranked data, as well as displaying them in a
+clean summary format.
 """
 
 import pandas as pd
@@ -12,15 +10,14 @@ import streamlit as st
 from collections import defaultdict
 
 
-def get_friendly_metric_name(metric):
-    """
-    Convert internal metric name to user-friendly display name.
+def get_friendly_metric_name(metric: str) -> str:
+    """Converts an internal metric name to a user-friendly display name.
 
     Args:
-        metric (str): Internal metric name (Sc, GrossVP, NetVP, Stableford)
+        metric (str): The internal metric name (e.g., 'Sc', 'GrossVP').
 
     Returns:
-        str: User-friendly metric name
+        str: The user-friendly metric name.
     """
     name_mapping = {
         'Sc': 'Score',
@@ -31,16 +28,15 @@ def get_friendly_metric_name(metric):
     return name_mapping.get(metric, metric)
 
 
-def format_value(value, metric):
-    """
-    Format value based on metric type.
+def format_value(value: float, metric: str) -> str:
+    """Formats a value based on its metric type.
 
     Args:
-        value: Numeric value to format
-        metric (str): Metric type (Sc, GrossVP, NetVP, Stableford)
+        value (float): The numeric value to format.
+        metric (str): The metric type (e.g., 'Sc', 'GrossVP').
 
     Returns:
-        str: Formatted value
+        str: The formatted value as a string.
     """
     from utils import format_vs_par
 
@@ -50,22 +46,21 @@ def format_value(value, metric):
         return str(int(value))
 
 
-def identify_aggregate_records_and_pbs(df_teg_or_round, selected_teg, selected_round=None):
-    """
-    Identify records and PBs from aggregate score metrics.
+def identify_aggregate_records_and_pbs(df_teg_or_round: pd.DataFrame, selected_teg: str, selected_round: int = None) -> dict:
+    """Identifies records and personal bests from aggregate score metrics.
+
+    This function scans ranked data for all-time records, personal bests, and
+    personal worsts using pre-calculated ranking columns.
 
     Args:
-        df_teg_or_round (pd.DataFrame): Ranked TEG or round data
-        selected_teg (str): Selected TEG string (e.g., "TEG 17")
-        selected_round (int, optional): Selected round number (for rounds only)
+        df_teg_or_round (pd.DataFrame): The ranked TEG or round data.
+        selected_teg (str): The selected TEG (e.g., "TEG 17").
+        selected_round (int, optional): The selected round number. Defaults
+            to None.
 
     Returns:
-        dict: Dictionary with keys 'records', 'personal_bests', 'personal_worsts'
-              Each is a list of dicts containing player, metric, value, friendly_name
-
-    Purpose:
-        Scans ranked data for all-time records, personal bests, and personal worsts
-        Uses existing Rank_within_all and Rank_within_player columns
+        dict: A dictionary containing lists of records, personal bests, and
+        personal worsts.
     """
     # Filter to selected TEG/round
     if selected_round is not None:
@@ -136,21 +131,19 @@ def identify_aggregate_records_and_pbs(df_teg_or_round, selected_teg, selected_r
     }
 
 
-def identify_9hole_records_and_pbs(selected_teg, selected_round):
-    """
-    Identify 9-hole records and PBs for the selected round.
+def identify_9hole_records_and_pbs(selected_teg: str, selected_round: int) -> dict:
+    """Identifies 9-hole records and personal bests for the selected round.
+
+    This function checks if the front 9 or back 9 of the selected round set
+    any records or personal bests.
 
     Args:
-        selected_teg (str): Selected TEG string (e.g., "TEG 17")
-        selected_round (int): Selected round number
+        selected_teg (str): The selected TEG (e.g., "TEG 17").
+        selected_round (int): The selected round number.
 
     Returns:
-        dict: Dictionary with keys 'records' and 'personal_bests'
-              Each is a list of dicts containing player, metric, value, friendly_name, segment
-
-    Purpose:
-        Checks if front 9 or back 9 of selected round set any records or PBs
-        Uses same ranking logic as aggregate scores
+        dict: A dictionary containing lists of records and personal bests for
+        9-hole segments.
     """
     from utils import get_ranked_frontback_data
 
@@ -213,23 +206,21 @@ def identify_9hole_records_and_pbs(selected_teg, selected_round):
     }
 
 
-def identify_streak_records(all_data, streaks_df, selected_teg, selected_round=None):
-    """
-    Identify streak records for selected TEG/round.
+def identify_streak_records(all_data: pd.DataFrame, streaks_df: pd.DataFrame, selected_teg: str, selected_round: int = None) -> dict:
+    """Identifies streak records for the selected TEG or round.
+
+    This function compares the displayed streak values against all-time streak
+    records to identify when a player's streak matches a record.
 
     Args:
-        all_data (pd.DataFrame): All tournament data
-        streaks_df (pd.DataFrame): Streak data
-        selected_teg (str): Selected TEG string (e.g., "TEG 17")
-        selected_round (int, optional): Selected round number (for rounds only)
+        all_data (pd.DataFrame): The complete tournament data.
+        streaks_df (pd.DataFrame): The streak data.
+        selected_teg (str): The selected TEG (e.g., "TEG 17").
+        selected_round (int, optional): The selected round number. Defaults
+            to None.
 
     Returns:
-        dict: Dictionary with key 'records' containing list of streak records
-              Each record contains player, streak_type, value
-
-    Purpose:
-        Compares displayed streak values against all-time streak records
-        Identifies when a player's streak matches the record value
+        dict: A dictionary containing a list of streak records.
     """
     from helpers.streak_analysis_processing import (
         prepare_record_best_streaks_data,
@@ -302,21 +293,21 @@ def identify_streak_records(all_data, streaks_df, selected_teg, selected_round=N
         return {'records': []}
 
 
-def identify_all_time_worsts(df_teg_or_round, selected_teg, selected_round=None):
-    """
-    Identify all-time worst performances from aggregate score metrics.
+def identify_all_time_worsts(df_teg_or_round: pd.DataFrame, selected_teg: str, selected_round: int = None) -> list:
+    """Identifies all-time worst performances from aggregate score metrics.
+
+    This function identifies if the selected TEG or round contains any
+    all-time worst performances by checking for the maximum rank.
 
     Args:
-        df_teg_or_round (pd.DataFrame): Ranked TEG or round data
-        selected_teg (str): Selected TEG string (e.g., "TEG 17")
-        selected_round (int, optional): Selected round number (for rounds only)
+        df_teg_or_round (pd.DataFrame): The ranked TEG or round data.
+        selected_teg (str): The selected TEG (e.g., "TEG 17").
+        selected_round (int, optional): The selected round number. Defaults
+            to None.
 
     Returns:
-        list: List of dicts containing player, metric, value, friendly_name for worsts
-
-    Purpose:
-        Identifies if selected TEG/round contains any all-time worst performances
-        Uses existing Rank_within_all columns but checks for maximum rank (worst)
+        list: A list of dictionaries containing information about the worst
+        performances.
     """
     # Filter to selected TEG/round
     if selected_round is not None:
@@ -358,23 +349,21 @@ def identify_all_time_worsts(df_teg_or_round, selected_teg, selected_round=None)
     return all_time_worsts
 
 
-def identify_score_count_records(all_data, selected_teg, selected_round=None):
-    """
-    Identify score count records (eagles, birdies, pars, TBPs) for selected TEG/round.
+def identify_score_count_records(all_data: pd.DataFrame, selected_teg: str, selected_round: int = None) -> dict:
+    """Identifies score count records for the selected TEG or round.
+
+    This function identifies records for specific score types, such as most
+    Eagles, Birdies, Pars, or TBPs.
 
     Args:
-        all_data (pd.DataFrame): All tournament data
-        selected_teg (str): Selected TEG string (e.g., "TEG 17")
-        selected_round (int, optional): Selected round number (for rounds only)
+        all_data (pd.DataFrame): The complete tournament data.
+        selected_teg (str): The selected TEG (e.g., "TEG 17").
+        selected_round (int, optional): The selected round number. Defaults
+            to None.
 
     Returns:
-        dict: Dictionary with keys 'best_score_counts' and 'worst_score_counts'
-              Each is a list of dicts containing player, score_type, count, record_type
-
-    Purpose:
-        Identifies records for specific score types:
-        - Best: Eagles, Birdies (or better), Pars (or better)
-        - Worst: TBPs (triple bogeys or worse)
+        dict: A dictionary containing lists of the best and worst score count
+        records.
     """
     from helpers.score_count_processing import count_scores_by_player
 
@@ -454,18 +443,18 @@ def identify_score_count_records(all_data, selected_teg, selected_round=None):
         return {'best_score_counts': [], 'worst_score_counts': []}
 
 
-def get_all_time_score_count_record(all_data, category, scores, is_round_level=True):
-    """
-    Get the all-time record for a specific score count category.
+def get_all_time_score_count_record(all_data: pd.DataFrame, category: str, scores: list, is_round_level: bool = True) -> int:
+    """Gets the all-time record for a specific score count category.
 
     Args:
-        all_data (pd.DataFrame): All tournament data
-        category (str): Score category name
-        scores (list): List of score values to include
-        is_round_level (bool): True for round records, False for TEG records
+        all_data (pd.DataFrame): The complete tournament data.
+        category (str): The name of the score category.
+        scores (list): A list of score values to include in the count.
+        is_round_level (bool, optional): True for round-level records, False
+            for TEG-level records. Defaults to True.
 
     Returns:
-        int: Maximum count across all history
+        int: The maximum count for the category across all history.
     """
     from helpers.score_count_processing import count_scores_by_player
 
@@ -503,20 +492,18 @@ def get_all_time_score_count_record(all_data, category, scores, is_round_level=T
         return 0
 
 
-def display_records_and_pbs_summary(records_dict, page_type='TEG'):
-    """
-    Display records and PBs in an expandable section.
+def display_records_and_pbs_summary(records_dict: dict, page_type: str = 'TEG'):
+    """Displays records and personal bests in an expandable section.
+
+    This function creates a clean, expandable UI to show all records and
+    personal bests for the selected TEG or round, grouping them by player for
+    readability.
 
     Args:
-        records_dict (dict): Combined dict from all identification phases
-                            Keys: aggregate_records, aggregate_pbs, aggregate_worsts,
-                                  9hole_records, 9hole_pbs, streak_records
-        page_type (str): 'TEG' or 'Round' for display purposes
-
-    Purpose:
-        Creates clean, expandable UI showing all records and PBs for selected TEG/round
-        Groups personal bests and worsts by player for readability
-        Only displays section if records/PBs exist
+        records_dict (dict): A dictionary containing all identified records
+            and personal bests.
+        page_type (str, optional): The type of page ('TEG' or 'Round') for
+            display purposes. Defaults to 'TEG'.
     """
     # Count total items
     total_items = (

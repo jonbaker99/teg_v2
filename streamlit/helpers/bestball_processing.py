@@ -1,30 +1,26 @@
-"""
-Data processing functions for bestball and worstball team format analysis.
+"""Data processing functions for bestball and worstball team format analysis.
 
-This module contains functions for:
-- Calculating bestball (best score per hole) team scores
-- Calculating worstball (worst score per hole) team scores
-- Formatting and preparing data for team format displays
+This module contains functions for calculating bestball (best score per hole)
+and worstball (worst score per hole) team scores, as well as formatting and
+preparing data for team format displays.
 """
 
 import pandas as pd
 import streamlit as st
 
 
-def prepare_bestball_data(all_data):
-    """
-    Prepare data for bestball analysis by adding team round hole identifiers.
-    
+def prepare_bestball_data(all_data: pd.DataFrame) -> pd.DataFrame:
+    """Prepares data for bestball analysis by adding team round hole identifiers.
+
+    This function creates a unique identifier for each hole in each round,
+    which is essential for grouping and team format calculations.
+
     Args:
-        all_data (pd.DataFrame): Complete tournament data
-        
+        all_data (pd.DataFrame): The complete tournament data.
+
     Returns:
-        pd.DataFrame: Data with TRH (TEG|Round|Hole) identifiers for grouping
-        
-    Purpose:
-        Creates unique identifiers for each hole in each round
-        Enables grouping by hole to find best/worst scores per hole
-        Essential for team format calculations
+        pd.DataFrame: The data with a 'TRH' (TEG|Round|Hole) identifier
+        column.
     """
     prepared_data = all_data.copy()
     
@@ -34,16 +30,17 @@ def prepare_bestball_data(all_data):
     return prepared_data
 
 
-def get_bestball_columns():
-    """
-    Define column sets for bestball analysis.
-    
+def get_bestball_columns() -> tuple[list, list]:
+    """Defines the column sets for bestball analysis.
+
+    This function centralizes the column definitions to ensure consistent
+    processing by separating grouping fields from value fields.
+
     Returns:
-        tuple: (grouping_columns, value_columns) for data processing
-        
-    Purpose:
-        Centralizes column definitions for consistent processing
-        Separates grouping fields from value fields for aggregation
+        tuple: A tuple containing two lists:
+            - bestball_cols (list): The columns to use for grouping.
+            - value_cols (list): The columns containing the values to be
+              aggregated.
     """
     bestball_cols = ['TEG', 'TEGNum', 'Round', 'Course', 'Year']
     value_cols = ['GrossVP', 'Sc']
@@ -51,20 +48,18 @@ def get_bestball_columns():
     return bestball_cols, value_cols
 
 
-def calculate_bestball_scores(filtered_data):
-    """
-    Calculate bestball team scores (best score per hole).
-    
+def calculate_bestball_scores(filtered_data: pd.DataFrame) -> pd.DataFrame:
+    """Calculates bestball team scores (best score per hole).
+
+    This function creates a team format where the best player's score counts
+    for each hole. It groups by hole and takes the lowest score, then
+    aggregates the scores to create round totals.
+
     Args:
-        filtered_data (pd.DataFrame): Filtered tournament data
-        
+        filtered_data (pd.DataFrame): The filtered tournament data.
+
     Returns:
-        pd.DataFrame: Bestball team scores by round with total scores
-        
-    Purpose:
-        Creates team format where best player score counts for each hole
-        Groups by TRH (TEG|Round|Hole) and takes lowest score per hole
-        Aggregates hole scores to create round totals
+        pd.DataFrame: A DataFrame of bestball team scores by round.
     """
     bestball_cols, value_cols = get_bestball_columns()
     
@@ -80,20 +75,18 @@ def calculate_bestball_scores(filtered_data):
     return bestball_rounds
 
 
-def calculate_worstball_scores(filtered_data):
-    """
-    Calculate worstball team scores (worst score per hole).
-    
+def calculate_worstball_scores(filtered_data: pd.DataFrame) -> pd.DataFrame:
+    """Calculates worstball team scores (worst score per hole).
+
+    This function creates a team format where the worst player's score counts
+    for each hole. It groups by hole and takes the highest score, then
+    aggregates the scores to create round totals.
+
     Args:
-        filtered_data (pd.DataFrame): Filtered tournament data
-        
+        filtered_data (pd.DataFrame): The filtered tournament data.
+
     Returns:
-        pd.DataFrame: Worstball team scores by round with total scores
-        
-    Purpose:
-        Creates team format where worst player score counts for each hole
-        Groups by TRH (TEG|Round|Hole) and takes highest score per hole
-        Aggregates hole scores to create round totals
+        pd.DataFrame: A DataFrame of worstball team scores by round.
     """
     bestball_cols, value_cols = get_bestball_columns()
     
@@ -109,21 +102,19 @@ def calculate_worstball_scores(filtered_data):
     return worstball_rounds
 
 
-def format_team_scores_for_display(team_data, sort_by_best=True):
-    """
-    Format team scores for display with proper sorting and vs-par formatting.
-    
+def format_team_scores_for_display(team_data: pd.DataFrame, sort_by_best: bool = True) -> pd.DataFrame:
+    """Formats team scores for display.
+
+    This function applies consistent formatting for team format displays,
+    including sorting by performance and formatting vs-par values.
+
     Args:
-        team_data (pd.DataFrame): Raw team scores data
-        sort_by_best (bool): True for best-first, False for worst-first
-        
+        team_data (pd.DataFrame): The raw team scores data.
+        sort_by_best (bool, optional): Whether to sort by best performance
+            (True) or worst (False). Defaults to True.
+
     Returns:
-        pd.DataFrame: Formatted team scores ready for display
-        
-    Purpose:
-        Applies consistent formatting for team format displays
-        Sorts by GrossVP performance and formats vs-par values
-        Creates display-ready data for HTML tables
+        pd.DataFrame: A formatted DataFrame ready for display.
     """
     from utils import format_vs_par
     

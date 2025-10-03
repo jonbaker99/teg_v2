@@ -1,7 +1,14 @@
-"""
-Test script for complete commentary cache system including streaks
-"""
+"""Test script for the complete commentary cache system, including streaks.
 
+This script tests the `update_commentary_caches()` function and verifies all
+five of its output files, including the streak-related caches. It performs
+the following steps:
+1.  Generates the commentary cache files.
+2.  Checks if all five expected Parquet files were created.
+3.  Loads and verifies the content of each file.
+4.  Displays detailed statistics for the streak-related cache files.
+5.  Provides a summary of all generated commentary cache files.
+"""
 import sys
 import os
 sys.path.append('streamlit')

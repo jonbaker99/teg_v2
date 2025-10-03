@@ -1,29 +1,26 @@
-"""
-Data processing functions for TEG History analysis.
+"""Data processing functions for TEG History analysis.
 
-This module contains functions for:
-- Processing winners data and competition statistics  
-- Creating winner summary tables and charts data
-- Calculating doubles (Trophy + Green Jacket same player/TEG)
+This module contains functions for processing winners' data, creating summary
+tables and charts, and calculating doubles (winning both the Trophy and Green
+Jacket in the same TEG).
 """
 
 import pandas as pd
 import altair as alt
 
 
-def process_winners_for_charts(winners_df):
-    """
-    Process winners data to create chart-ready datasets for each competition.
-    
+def process_winners_for_charts(winners_df: pd.DataFrame) -> dict:
+    """Processes winners data to create datasets for charts.
+
+    This function transforms the winners' data into a format suitable for bar
+    charts and tables, counting the wins per player for each competition.
+
     Args:
-        winners_df (pd.DataFrame): Raw winners data with TEG Trophy, Green Jacket, Wooden Spoon columns
-        
+        winners_df (pd.DataFrame): A DataFrame with raw winners data.
+
     Returns:
-        dict: Contains sorted dataframes for each competition and max wins value
-        
-    Purpose:
-        Transforms winners data into format needed for bar charts and tables
-        Counts wins per player for each competition type
+        dict: A dictionary containing sorted DataFrames for each competition
+        and the maximum number of wins.
     """
     # Clean asterisks from winner names (used for footnotes)
     clean_winners = winners_df.replace(r'\*', '', regex=True)
@@ -62,19 +59,19 @@ def process_winners_for_charts(winners_df):
     }
 
 
-def calculate_trophy_jacket_doubles(winners_df):
-    """
-    Find players who won both Trophy and Green Jacket in the same TEG.
-    
+def calculate_trophy_jacket_doubles(winners_df: pd.DataFrame) -> tuple[pd.DataFrame, int]:
+    """Calculates players who won both the Trophy and Green Jacket in the same TEG.
+
+    This function identifies the rare achievement of winning both main
+    competitions in a single TEG.
+
     Args:
-        winners_df (pd.DataFrame): Winners data with clean player names (no asterisks)
-        
+        winners_df (pd.DataFrame): A DataFrame with winners data.
+
     Returns:
-        tuple: (doubles_df, count) where doubles_df shows player doubles and count is total
-        
-    Purpose:
-        Identifies rare achievement of winning both main competitions in single TEG
-        Used for "Doubles" tab and statistics display
+        tuple: A tuple containing:
+            - doubles_df (pd.DataFrame): A DataFrame showing player doubles.
+            - count (int): The total number of doubles.
     """
     # Clean asterisks from winner names
     clean_winners = winners_df.replace(r'\*', '', regex=True)
@@ -90,19 +87,18 @@ def calculate_trophy_jacket_doubles(winners_df):
     return player_doubles, same_player_both.shape[0]
 
 
-def prepare_history_table_display(winners_df):
-    """
-    Prepare winners data for historical display table.
-    
+def prepare_history_table_display(winners_df: pd.DataFrame) -> pd.DataFrame:
+    """Prepares winners data for the historical display table.
+
+    This function creates a compact historical view by combining the TEG name
+    and year, and adding the area for each TEG.
+
     Args:
-        winners_df (pd.DataFrame): Raw winners data with Year and TEG columns
-        
+        winners_df (pd.DataFrame): A DataFrame with raw winners data.
+
     Returns:
-        pd.DataFrame: Formatted table with combined TEG(Year) column and Area
-        
-    Purpose:
-        Creates compact historical view combining TEG name and year
-        Adds Area as second column based on TEG lookup
+        pd.DataFrame: A formatted DataFrame with a combined TEG(Year) column
+        and an Area column.
     """
     from utils import read_file, ROUND_INFO_CSV  # Import here to avoid circular imports
     
@@ -132,22 +128,20 @@ def prepare_history_table_display(winners_df):
     
     return display_winners
 
-def create_bar_chart(df, x_col, y_col, title):
-    """
-    Create horizontal bar chart for competition wins.
-    
+def create_bar_chart(df: pd.DataFrame, x_col: str, y_col: str, title: str) -> alt.Chart:
+    """Creates a horizontal bar chart for competition wins.
+
+    This function provides a standardized way to create bar charts for the
+    Trophy, Green Jacket, and Wooden Spoon wins.
+
     Args:
-        df (pd.DataFrame): Data with player and win count columns
-        x_col (str): Column name for x-axis (win counts)
-        y_col (str): Column name for y-axis (player names)  
-        title (str): Chart title
-        
+        df (pd.DataFrame): A DataFrame with player and win count columns.
+        x_col (str): The column name for the x-axis (win counts).
+        y_col (str): The column name for the y-axis (player names).
+        title (str): The title of the chart.
+
     Returns:
-        alt.Chart: Altair chart object ready for display
-        
-    Purpose:
-        Standardized chart creation for Trophy, Green Jacket, and Wooden Spoon wins
-        Creates horizontal bars with value labels
+        alt.Chart: An Altair chart object ready for display.
     """
     # Create base bar chart
     chart = alt.Chart(df).mark_bar().encode(
@@ -165,18 +159,15 @@ def create_bar_chart(df, x_col, y_col, title):
     return chart + text
 
 
-def get_eagles_data(all_data):
-    """
-    Find all Eagles (-2 gross vs par) scored in TEG history.
-    
+def get_eagles_data(all_data: pd.DataFrame) -> pd.DataFrame:
+    """Finds all Eagles (-2 gross vs par) scored in TEG history.
+
     Args:
-        all_data (pd.DataFrame): Complete scoring data with Par, Score, Player, TEG, Round, Hole columns
-        
+        all_data (pd.DataFrame): The complete scoring data.
+
     Returns:
-        pd.DataFrame: Eagles data with Player, Date, Course, Hole columns
-        
-    Purpose:
-        Identifies all Eagles (score 2 under par) for honours board display
+        pd.DataFrame: A DataFrame of Eagles data with Player, Date, Course,
+        and Hole columns.
     """
     # Find all Eagles: Gross score is 2 under par
     eagles = all_data[all_data['GrossVP'] == -2.0].copy()
@@ -199,18 +190,15 @@ def get_eagles_data(all_data):
     return eagles_display
 
 
-def get_holes_in_one_data(all_data):
-    """
-    Find all Holes in One scored in TEG history.
-    
+def get_holes_in_one_data(all_data: pd.DataFrame) -> pd.DataFrame:
+    """Finds all Holes in One scored in TEG history.
+
     Args:
-        all_data (pd.DataFrame): Complete scoring data with Score, Player, TEG, Round, Hole columns
-        
+        all_data (pd.DataFrame): The complete scoring data.
+
     Returns:
-        pd.DataFrame: Holes in One data with Player, Date, Course, Hole columns
-        
-    Purpose:
-        Identifies all Holes in One (score of 1) for honours board display
+        pd.DataFrame: A DataFrame of Holes in One data with Player, Date,
+        Course, and Hole columns.
     """
     # Find all Holes in One: Gross score is 1
     holes_in_one = all_data[all_data['Sc'] == 1.0].copy()
@@ -233,15 +221,15 @@ def get_holes_in_one_data(all_data):
     return holes_in_one_display
 
 
-def get_incomplete_tegs():
-    """
-    Find TEGs that are in progress (have some data but incomplete rounds).
-    
+def get_incomplete_tegs() -> pd.DataFrame:
+    """Finds TEGs that are in progress.
+
+    This function identifies TEGs that have started but have not yet been
+    completed, for display in the history table.
+
     Returns:
-        pd.DataFrame: Incomplete TEG data with TEG, Year, Area columns
-        
-    Purpose:
-        Identifies TEGs that have started but not finished for history display
+        pd.DataFrame: A DataFrame of incomplete TEG data with TEG, Year, and
+        Area columns.
     """
     from utils import load_all_data, read_file, ROUND_INFO_CSV, exclude_incomplete_tegs_function
     
@@ -272,15 +260,12 @@ def get_incomplete_tegs():
     return incomplete_summary
 
 
-def get_future_tegs():
-    """
-    Load planned future TEGs that haven't started yet.
-    
+def get_future_tegs() -> pd.DataFrame:
+    """Loads planned future TEGs that have not yet started.
+
     Returns:
-        pd.DataFrame: Future TEG data with TEG, Year, Area columns
-        
-    Purpose:
-        Gets TEGs that are planned but haven't started for history display
+        pd.DataFrame: A DataFrame of future TEG data with TEG, Year, and Area
+        columns.
     """
     from utils import read_file
     
@@ -295,18 +280,19 @@ def get_future_tegs():
         return pd.DataFrame(columns=['TEG', 'Year', 'Area'])
 
 
-def prepare_complete_history_table(winners_df):
-    """
-    Prepare complete history table including completed, incomplete, and future TEGs.
-    
+def prepare_complete_history_table(winners_df: pd.DataFrame) -> pd.DataFrame:
+    """Prepares a complete history table.
+
+    This function includes completed, incomplete, and future TEGs in a single
+    table for a comprehensive historical view.
+
     Args:
-        winners_df (pd.DataFrame): Winners data from completed TEGs only
-        
+        winners_df (pd.DataFrame): A DataFrame of winners data from completed
+            TEGs.
+
     Returns:
-        pd.DataFrame: Complete history table with TBC entries for incomplete/future TEGs
-        
-    Purpose:
-        Creates comprehensive history view showing all TEGs regardless of completion status
+        pd.DataFrame: A complete history table with "TBC" entries for
+        incomplete or future TEGs.
     """
     # Start with completed TEGs history
     completed_history = prepare_history_table_display(winners_df)
@@ -379,12 +365,12 @@ def prepare_complete_history_table(winners_df):
 #  TEG COMPLETENESS CHECKING FUNCTIONS
 # ============================================
 
-def check_winner_completeness():
-    """
-    Check if cached winners match completed TEGs status.
+def check_winner_completeness() -> set:
+    """Checks if the cached winners match the completed TEGs status.
 
     Returns:
-        set: Set of TEG numbers that are completed but missing from winners cache
+        set: A set of TEG numbers that are completed but missing from the
+        winners cache.
     """
     from utils import read_file
 
@@ -416,9 +402,7 @@ def check_winner_completeness():
 
 
 def display_completeness_status():
-    """
-    Show status if winners are missing for completed TEGs.
-    """
+    """Shows a status message if winners are missing for completed TEGs."""
     import streamlit as st
 
     missing = check_winner_completeness()
@@ -435,12 +419,12 @@ def display_completeness_status():
         st.info("Or run the data update process to refresh all winner information.")
 
 
-def calculate_and_save_missing_winners(missing_teg_nums):
-    """
-    Calculate and save winners for specific missing TEGs.
+def calculate_and_save_missing_winners(missing_teg_nums: set):
+    """Calculates and saves the winners for a specific set of missing TEGs.
 
     Args:
-        missing_teg_nums: Set of TEG numbers to calculate winners for
+        missing_teg_nums (set): A set of TEG numbers to calculate winners
+            for.
     """
     import streamlit as st
     import pandas as pd
@@ -517,12 +501,15 @@ def calculate_and_save_missing_winners(missing_teg_nums):
         st.warning("No winners could be calculated for the missing TEGs")
 
 
-def load_cached_winners():
-    """
-    Load cached winners from teg_winners.csv file and calculate any missing ones.
+def load_cached_winners() -> tuple[pd.DataFrame, set] or tuple[None, set]:
+    """Loads cached winners and calculates any missing ones.
 
     Returns:
-        tuple: (winners_data, missing_teg_nums) or (None, set()) if no cached file
+        tuple: A tuple containing:
+            - winners_data (pd.DataFrame or None): The winners data, or None
+              if the cached file does not exist.
+            - missing_teg_nums (set): A set of TEG numbers for which winners
+              were missing.
     """
     import pandas as pd
     from utils import read_file, load_all_data, get_teg_winners
@@ -581,18 +568,19 @@ def load_cached_winners():
         return None, set()
 
 
-def prepare_complete_history_table_fast(cached_winners_df=None):
-    """
-    Prepare complete history table using cached winners data when available.
+def prepare_complete_history_table_fast(cached_winners_df: pd.DataFrame = None) -> pd.DataFrame:
+    """Prepares a complete history table using cached winners data.
+
+    This is a faster version of `prepare_complete_history_table` that uses
+    cached data when available.
 
     Args:
-        cached_winners_df (pd.DataFrame, optional): Pre-loaded cached winners data
+        cached_winners_df (pd.DataFrame, optional): Pre-loaded cached winners
+            data. Defaults to None.
 
     Returns:
-        pd.DataFrame: Complete history table with TBC entries for incomplete/future TEGs
-
-    Purpose:
-        Fast version of prepare_complete_history_table that uses cached data
+        pd.DataFrame: A complete history table with "TBC" entries for
+        incomplete or future TEGs.
     """
 
     # Try to use provided cached data, or load it

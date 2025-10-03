@@ -1,3 +1,17 @@
+"""Streamlit page for calculating and displaying eclectic scores.
+
+An eclectic score represents the best score achieved on each hole over a
+series of rounds, creating a theoretical best possible round. This page allows
+users to:
+- Filter the data by player, TEG, and course.
+- Compare eclectic scores across different dimensions (e.g., by Player,
+  TEG, Course, Teams).
+
+The page uses helper functions to:
+- Load and filter the data.
+- Calculate eclectic scores based on user selections.
+- Format the data into a clean, readable table.
+"""
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -25,16 +39,34 @@ all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
 course_info = load_course_info()
 
 # === HELPER FUNCTIONS ===
-def get_selection_options(all_data, course_info):
-    """Get options for dropdowns"""
+def get_selection_options(all_data: pd.DataFrame, course_info: pd.DataFrame) -> tuple[list, list, list]:
+    """Gets the options for the selection dropdowns.
+
+    Args:
+        all_data (pd.DataFrame): The complete tournament data.
+        course_info (pd.DataFrame): The course information data.
+
+    Returns:
+        tuple: A tuple containing lists of players, TEGs, and courses.
+    """
     players = sorted(all_data['Player'].unique().tolist())
     tegs = sorted(all_data['TEGNum'].unique().tolist(), reverse=True)
     courses = sorted(course_info['Course'].unique().tolist())
     
     return players, tegs, courses
 
-def filter_data_for_eclectic(all_data, selected_player, selected_teg, selected_course):
-    """Filter data based on selections"""
+def filter_data_for_eclectic(all_data: pd.DataFrame, selected_player: str, selected_teg: str, selected_course: str) -> pd.DataFrame:
+    """Filters the data based on user selections.
+
+    Args:
+        all_data (pd.DataFrame): The complete tournament data.
+        selected_player (str): The selected player.
+        selected_teg (str): The selected TEG.
+        selected_course (str): The selected course.
+
+    Returns:
+        pd.DataFrame: The filtered DataFrame.
+    """
     filtered = all_data.copy()
     
     if selected_player != 'All Players':

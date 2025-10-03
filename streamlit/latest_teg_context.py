@@ -1,3 +1,22 @@
+"""Streamlit page for analyzing a selected TEG in context.
+
+This page allows users to select a TEG and view its performance in comparison
+to all other TEGs. It provides a comprehensive analysis through a tabbed
+interface, including:
+- **Aggregate Score**: Compares the selected TEG against others on various
+  metrics (Score, Stableford, Gross vs. Par, Net vs. Par).
+- **Scoring**: Shows the distribution of scores (Gross vs. Par or Stableford)
+  for the selected TEG.
+- **Streaks**: Displays the longest streaks for various achievements within
+  the selected TEG.
+- **Records & PBs**: Highlights any all-time records or personal bests
+  achieved in the selected TEG.
+
+The page uses helper functions to:
+- Load and process ranked TEG data.
+- Create interactive charts and tables for comparison.
+- Identify and display records and personal bests.
+"""
 # === IMPORTS ===
 import streamlit as st
 import pandas as pd

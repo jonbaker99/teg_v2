@@ -1,10 +1,7 @@
-"""
-Display helper functions for Records pages.
+"""Display helper functions for Records pages.
 
-This module contains reusable functions for:
-- Value formatting (scores, vs-par displays)
-- Data preparation for display
-- Constants and mappings for consistent labeling
+This module contains reusable functions for value formatting, data preparation
+for display, and constants and mappings for consistent labeling.
 """
 
 import pandas as pd
@@ -21,21 +18,16 @@ MEASURE_TITLES = {
 
 # === FORMATTING FUNCTIONS ===
 
-def format_record_value(value, measure):
-    """
-    Format a record value for display based on measure type.
-    
+def format_record_value(value: float, measure: str) -> str:
+    """Formats a record value for display based on the measure type.
+
     Args:
-        value: The numeric value to format
-        measure: The measure type ('GrossVP', 'NetVP', 'Sc', 'Stableford')
-    
+        value (float): The numeric value to format.
+        measure (str): The measure type ('GrossVP', 'NetVP', 'Sc',
+            'Stableford').
+
     Returns:
-        str: Formatted value (e.g., "+3", "-2", "85")
-        
-    Example:
-        format_record_value(3, 'GrossVP') -> "+3"
-        format_record_value(-2, 'NetVP') -> "-2" 
-        format_record_value(85, 'Sc') -> "85"
+        str: The formatted value as a string (e.g., "+3", "-2", "85").
     """
     if measure in ['GrossVP', 'NetVP']:
         return f"{int(value):+}"  # Shows +3 or -2
@@ -43,22 +35,19 @@ def format_record_value(value, measure):
         return str(int(value))    # Shows 85
 
 
-def prepare_records_display(best_records, record_type):
-    """
-    Prepare record data for display by formatting columns and selecting relevant fields.
+def prepare_records_display(best_records: pd.DataFrame, record_type: str) -> pd.DataFrame:
+    """Prepares record data for display.
+
+    This function formats columns and selects relevant fields based on the
+    record type.
 
     Args:
-        best_records (pd.DataFrame): Raw record data from database
-        record_type (str): Type of record - 'teg', 'round', or 'frontback'
+        best_records (pd.DataFrame): The raw record data.
+        record_type (str): The type of record ('teg', 'round', or
+            'frontback').
 
     Returns:
-        pd.DataFrame: Formatted data ready for display
-
-    Purpose:
-        Different record types need different column combinations:
-        - TEG records: Player, TEG, Year
-        - Round records: Player, Course, TEG+Round, Year
-        - 9-hole records: Player, Course, TEG+Round+FrontBack, Year
+        pd.DataFrame: The formatted data ready for display.
     """
     df = best_records.copy()
     df['Year'] = df['Year'].astype(str)
@@ -82,20 +71,20 @@ def prepare_records_display(best_records, record_type):
     return df
 
 
-def prepare_records_table(data_source, record_type):
-    """
-    Prepare a consolidated records table showing all measures for a given record type.
+def prepare_records_table(data_source: pd.DataFrame, record_type: str) -> pd.DataFrame:
+    """Prepares a consolidated records table.
+
+    This function creates a unified table showing the best records across all
+    measures for a given record type.
 
     Args:
-        data_source (pd.DataFrame): Ranked data (teg, round, or frontback)
-        record_type (str): Type of record - 'teg', 'round', or 'frontback'
+        data_source (pd.DataFrame): The ranked data (teg, round, or
+            frontback).
+        record_type (str): The type of record ('teg', 'round', or
+            'frontback').
 
     Returns:
-        pd.DataFrame: Table with custom header based on record type
-
-    Purpose:
-        Creates a unified table showing best records across all measures for easy comparison.
-        Replaces individual stat cards with a consolidated tabular view.
+        pd.DataFrame: A table with a custom header based on the record type.
     """
     from utils import get_best
 
@@ -162,21 +151,18 @@ def prepare_records_table(data_source, record_type):
     return pd.DataFrame(records_data)
 
 
-def prepare_streak_records_table(streak_data, table_title):
-    """
-    Prepare a streak records table with title in header row.
-    Consolidates records with 3+ holders into a single row.
+def prepare_streak_records_table(streak_data: pd.DataFrame, table_title: str) -> pd.DataFrame:
+    """Prepares a streak records table with a title in the header row.
+
+    This function formats streak records to match the style of other records
+    tables and consolidates records with 3 or more holders into a single row.
 
     Args:
-        streak_data (pd.DataFrame): Streak data with columns ['Streak Type', 'Record', 'Player', 'When']
-        table_title (str): Title for the table (e.g., 'Best Streaks:', 'Worst Streaks:')
+        streak_data (pd.DataFrame): DataFrame with streak data.
+        table_title (str): The title for the table.
 
     Returns:
-        pd.DataFrame: Table formatted for records page display with title in header
-
-    Purpose:
-        Formats streak records to match the style of other records tables on the page.
-        When 3+ players share the same record, consolidates them into one row showing player initials.
+        pd.DataFrame: A formatted table for display on the records page.
     """
     from utils import PLAYER_DICT
 
@@ -221,20 +207,21 @@ def prepare_streak_records_table(streak_data, table_title):
     return pd.DataFrame(records_data)
 
 
-def prepare_score_count_records_table(all_data):
-    """
-    Prepare score count records tables for best (Eagles, Birdies, Pars) and worst (TBPs).
+def prepare_score_count_records_table(all_data: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Prepares score count records tables.
+
+    This function finds all-time records for score counts, including best
+    (most Eagles, Birdies, Pars) and worst (most TBPs) in a TEG or round.
 
     Args:
-        all_data (pd.DataFrame): All tournament data
+        all_data (pd.DataFrame): The complete tournament data.
 
     Returns:
-        tuple: (best_records_df, worst_records_df) formatted for records page display
-
-    Purpose:
-        Finds all-time records for score counts:
-        - Best: Most Eagles, Birdies (or better), Pars (or better) in TEG/Round
-        - Worst: Most TBPs in TEG/Round
+        tuple: A tuple containing two DataFrames:
+            - best_records_df (pd.DataFrame): Formatted table of the best
+              score count records.
+            - worst_records_df (pd.DataFrame): Formatted table of the worst
+              score count records.
     """
     from helpers.score_count_processing import count_scores_by_player
 
@@ -395,20 +382,20 @@ def prepare_score_count_records_table(all_data):
     return best_df, worst_df
 
 
-def prepare_worst_records_table(data_source, record_type):
-    """
-    Prepare a consolidated worst records table showing all measures for a given record type.
+def prepare_worst_records_table(data_source: pd.DataFrame, record_type: str) -> pd.DataFrame:
+    """Prepares a consolidated worst records table.
+
+    This function creates a unified table showing the worst records across all
+    measures for a given record type.
 
     Args:
-        data_source (pd.DataFrame): Data source (teg, round, or frontback data)
-        record_type (str): Type of record - 'teg', 'round', or 'frontback'
+        data_source (pd.DataFrame): The data source (teg, round, or
+            frontback).
+        record_type (str): The type of record ('teg', 'round', or
+            'frontback').
 
     Returns:
-        pd.DataFrame: Table with custom header based on record type
-
-    Purpose:
-        Creates a unified table showing worst records across all measures for easy comparison.
-        Replaces individual stat cards with a consolidated tabular view (worst performance version).
+        pd.DataFrame: A table with a custom header based on the record type.
     """
     from utils import get_worst
 

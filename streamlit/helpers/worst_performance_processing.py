@@ -1,25 +1,21 @@
-"""
-Data processing functions for worst performance analysis (worst TEGs, rounds, 9s).
+"""Data processing functions for worst performance analysis.
 
-This module contains functions for:
-- Processing worst performance records across different levels
-- Formatting worst performance data for display
-- Creating performance stat sections with proper formatting
+This module contains functions for processing worst performance records,
+formatting the data for display, and creating performance stat sections with
+proper formatting.
 """
 
 import pandas as pd
 
 
-def get_performance_measure_titles():
-    """
-    Define measure titles for worst performance displays.
-    
+def get_performance_measure_titles() -> dict:
+    """Defines measure titles for worst performance displays.
+
+    This function provides consistent titles for worst performance statistics
+    by separating internal field names from user-facing descriptions.
+
     Returns:
-        dict: Mapping of internal measure names to display titles
-        
-    Purpose:
-        Provides consistent titles for worst performance statistics
-        Separates internal field names from user-facing descriptions
+        dict: A mapping of internal measure names to display titles.
     """
     measure_titles = {
         'Sc': "Worst Score",
@@ -31,20 +27,18 @@ def get_performance_measure_titles():
     return measure_titles
 
 
-def format_performance_value(value, measure):
-    """
-    Format performance values for display with appropriate notation.
-    
+def format_performance_value(value: float, measure: str) -> str:
+    """Formats performance values for display with appropriate notation.
+
+    This function applies consistent formatting for worst performance values,
+    using +/- notation for vs-par measures and plain integers for others.
+
     Args:
-        value: Performance value to format
-        measure (str): Performance measure type
-        
+        value (float): The performance value to format.
+        measure (str): The performance measure type.
+
     Returns:
-        str: Formatted value with +/- notation for vs-par measures
-        
-    Purpose:
-        Applies consistent formatting for worst performance values
-        Uses +/- notation for vs-par measures, plain integers for others
+        str: The formatted value with +/- notation for vs-par measures.
     """
     if measure in ['GrossVP', 'NetVP']:
         return f"{int(value):+}"  # Shows +5 or -2
@@ -52,21 +46,20 @@ def format_performance_value(value, measure):
         return str(int(value))    # Shows 85
 
 
-def prepare_worst_performance_dataframe(worst_records, record_type):
-    """
-    Prepare worst performance dataframe for stat section display.
-    
+def prepare_worst_performance_dataframe(worst_records: pd.DataFrame, record_type: str) -> pd.DataFrame:
+    """Prepares the worst performance DataFrame for stat section display.
+
+    This function formats worst performance data for a clean stat section
+    display, handling different record types with appropriate column selection
+    and creating combined identifiers for rounds and 9-hole segments.
+
     Args:
-        worst_records (pd.DataFrame): Raw worst performance records
-        record_type (str): Type of record ('teg', 'round', 'frontback')
-        
+        worst_records (pd.DataFrame): The raw worst performance records.
+        record_type (str): The type of record ('teg', 'round', or
+            'frontback').
+
     Returns:
-        pd.DataFrame: Formatted dataframe ready for stat section display
-        
-    Purpose:
-        Formats worst performance data for clean stat section display
-        Handles different record types with appropriate column selection
-        Creates combined identifiers for rounds and 9-hole segments
+        pd.DataFrame: A formatted DataFrame ready for stat section display.
     """
     df = worst_records.copy()
     df['Year'] = df['Year'].astype(str)
@@ -89,17 +82,15 @@ def prepare_worst_performance_dataframe(worst_records, record_type):
     return df
 
 
-def load_worst_performance_custom_css():
-    """
-    Load custom CSS styling for worst performance page.
-    
+def load_worst_performance_custom_css() -> str:
+    """Loads custom CSS styling for the worst performance page.
+
+    This function provides specialized styling for worst performance displays,
+    creating a consistent visual layout for stat sections and defining
+    typography and color schemes.
+
     Returns:
-        str: CSS styling for stat sections and layout
-        
-    Purpose:
-        Provides specialized styling for worst performance displays
-        Creates consistent visual layout for stat sections
-        Defines typography and color schemes for performance data
+        str: A string of CSS styling for stat sections and layout.
     """
     css_styles = """
     <style>
@@ -142,23 +133,21 @@ def load_worst_performance_custom_css():
     return css_styles
 
 
-def create_worst_performance_section(worst_records, measure, record_type, measure_titles):
-    """
-    Create complete worst performance stat section.
-    
+def create_worst_performance_section(worst_records: pd.DataFrame, measure: str, record_type: str, measure_titles: dict) -> str:
+    """Creates a complete worst performance stat section.
+
+    This function generates a complete stat section for the worst performance
+    display, combining the title, value, and details into formatted HTML.
+
     Args:
-        worst_records (pd.DataFrame): Worst performance records
-        measure (str): Performance measure
-        record_type (str): Type of record ('teg', 'round', 'frontback')
-        measure_titles (dict): Measure title mappings
-        
+        worst_records (pd.DataFrame): The worst performance records.
+        measure (str): The performance measure.
+        record_type (str): The type of record ('teg', 'round', or
+            'frontback').
+        measure_titles (dict): A dictionary of measure title mappings.
+
     Returns:
-        str: HTML for stat section display
-        
-    Purpose:
-        Creates complete stat section for worst performance display
-        Combines title, value, and details into formatted HTML
-        Handles all record types with appropriate formatting
+        str: The HTML for the stat section display.
     """
     from utils import create_stat_section
     
@@ -169,16 +158,15 @@ def create_worst_performance_section(worst_records, measure, record_type, measur
     return create_stat_section(title, value, df, "| ")
 
 
-def get_filtered_teg_data():
-    """
-    Get TEG data with TEG 2 excluded for worst performance analysis.
-    
+def get_filtered_teg_data() -> pd.DataFrame:
+    """Gets TEG data with TEG 2 excluded for worst performance analysis.
+
+    This function excludes TEG 2 from the worst performance analysis as it is
+    considered anomalous, providing a clean dataset for meaningful
+    comparisons.
+
     Returns:
-        pd.DataFrame: TEG data with TEG 2 excluded
-        
-    Purpose:
-        Excludes TEG 2 from worst performance analysis as it's considered anomalous
-        Provides clean dataset for meaningful worst performance comparisons
+        pd.DataFrame: The TEG data with TEG 2 excluded.
     """
     from utils import get_complete_teg_data
     

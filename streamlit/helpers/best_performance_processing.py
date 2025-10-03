@@ -1,25 +1,25 @@
-"""
-Data processing functions for best TEGs and rounds analysis.
+"""Data processing functions for best TEGs and rounds analysis.
 
-This module contains functions for:
-- Processing ranked TEG and round data
-- Creating performance tables with proper formatting
-- Handling measure name mappings for user interface
+This module contains functions for processing ranked TEG and round data,
+creating performance tables with proper formatting, and handling measure name
+mappings for the user interface.
 """
 
 import pandas as pd
 
 
-def get_measure_name_mappings():
-    """
-    Get mapping between user-friendly names and internal measure names.
-    
+def get_measure_name_mappings() -> tuple[dict, dict]:
+    """Gets mappings between user-friendly and internal measure names.
+
+    This function provides a consistent way to map between the display names
+    used in the user interface (e.g., 'Gross') and the internal column names
+    used in the data (e.g., 'GrossVP').
+
     Returns:
-        tuple: (name_mapping, inverted_mapping) for display and processing
-        
-    Purpose:
-        Provides consistent naming between user interface and data processing
-        Allows easy conversion between display names and database column names
+        tuple: A tuple containing two dictionaries:
+            - name_mapping (dict): Maps user-friendly names to internal names.
+            - inverted_mapping (dict): Maps internal names to user-friendly
+              names.
     """
     name_mapping = {
         'Gross': 'GrossVP',
@@ -32,22 +32,22 @@ def get_measure_name_mappings():
     return name_mapping, inverted_mapping
 
 
-def prepare_best_teg_table(teg_data_ranked, selected_measure, selected_friendly_name, n_keep):
-    """
-    Create formatted table of best TEG performances.
-    
+def prepare_best_teg_table(teg_data_ranked: pd.DataFrame, selected_measure: str, selected_friendly_name: str, n_keep: int) -> pd.DataFrame:
+    """Creates a formatted table of the best TEG performances.
+
+    This function filters and formats the TEG data to create a clean, ranked
+    table of the top TEG performances for a selected measure.
+
     Args:
-        teg_data_ranked (pd.DataFrame): Ranked TEG performance data
-        selected_measure (str): Internal measure name (e.g., 'GrossVP')
-        selected_friendly_name (str): Display name (e.g., 'Gross')
-        n_keep (int): Number of top performances to show
-        
+        teg_data_ranked (pd.DataFrame): DataFrame containing ranked TEG
+            performance data.
+        selected_measure (str): The internal measure name (e.g., 'GrossVP').
+        selected_friendly_name (str): The display name for the measure (e.g.,
+            'Gross').
+        n_keep (int): The number of top performances to show.
+
     Returns:
-        pd.DataFrame: Formatted table ready for display
-        
-    Purpose:
-        Creates clean, ranked table showing top TEG performances
-        Handles column renaming and data type formatting for display
+        pd.DataFrame: A formatted DataFrame ready for display.
     """
     name_mapping, inverted_name_mapping = get_measure_name_mappings()
     
@@ -89,22 +89,22 @@ def prepare_best_teg_table(teg_data_ranked, selected_measure, selected_friendly_
     return best_tegs
 
 
-def prepare_best_round_table(rd_data_ranked, selected_measure, selected_friendly_name, n_keep):
-    """
-    Create formatted table of best round performances.
-    
+def prepare_best_round_table(rd_data_ranked: pd.DataFrame, selected_measure: str, selected_friendly_name: str, n_keep: int) -> pd.DataFrame:
+    """Creates a formatted table of the best round performances.
+
+    This function filters and formats the round data to create a clean, ranked
+    table of the top individual round performances for a selected measure.
+
     Args:
-        rd_data_ranked (pd.DataFrame): Ranked round performance data
-        selected_measure (str): Internal measure name (e.g., 'GrossVP')
-        selected_friendly_name (str): Display name (e.g., 'Gross')
-        n_keep (int): Number of top performances to show
-        
+        rd_data_ranked (pd.DataFrame): DataFrame containing ranked round
+            performance data.
+        selected_measure (str): The internal measure name (e.g., 'GrossVP').
+        selected_friendly_name (str): The display name for the measure (e.g.,
+            'Gross').
+        n_keep (int): The number of top performances to show.
+
     Returns:
-        pd.DataFrame: Formatted table ready for display
-        
-    Purpose:
-        Creates clean, ranked table showing top individual round performances
-        Formats round identifiers and handles data type conversions
+        pd.DataFrame: A formatted DataFrame ready for display.
     """
     name_mapping, inverted_name_mapping = get_measure_name_mappings()
     
@@ -137,19 +137,18 @@ def prepare_best_round_table(rd_data_ranked, selected_measure, selected_friendly
     return best_rounds
 
 
-def prepare_round_data_with_identifiers(rd_data_ranked):
-    """
-    Prepare round data with combined TEG|Round identifiers.
-    
+def prepare_round_data_with_identifiers(rd_data_ranked: pd.DataFrame) -> pd.DataFrame:
+    """Prepares round data with combined TEG and round identifiers.
+
+    This function creates a readable round identifier by combining the TEG and
+    round number (e.g., "TEG 15|R1").
+
     Args:
-        rd_data_ranked (pd.DataFrame): Raw ranked round data
-        
+        rd_data_ranked (pd.DataFrame): DataFrame containing raw ranked round
+            data.
+
     Returns:
-        pd.DataFrame: Round data with formatted round identifiers
-        
-    Purpose:
-        Creates readable round identifiers combining TEG and round number
-        Format: "TEG 15|R1" for TEG 15, Round 1
+        pd.DataFrame: The round data with a formatted 'Round' column.
     """
     rd_data_formatted = rd_data_ranked.copy()
     rd_data_formatted['Round'] = rd_data_formatted['TEG'] + '|R' + rd_data_formatted['Round'].astype(str)
@@ -157,21 +156,22 @@ def prepare_round_data_with_identifiers(rd_data_ranked):
     return rd_data_formatted
 
 
-def prepare_personal_best_teg_table(teg_data_ranked, selected_measure, selected_friendly_name):
-    """
-    Create formatted table of personal best TEG performances for each player.
-    
+def prepare_personal_best_teg_table(teg_data_ranked: pd.DataFrame, selected_measure: str, selected_friendly_name: str) -> pd.DataFrame:
+    """Creates a formatted table of personal best TEG performances for each player.
+
+    This function identifies and formats each player's best TEG performance for
+    a selected measure, including their overall ranking.
+
     Args:
-        teg_data_ranked (pd.DataFrame): Ranked TEG performance data
-        selected_measure (str): Internal measure name (e.g., 'GrossVP')
-        selected_friendly_name (str): Display name (e.g., 'Gross')
-        
+        teg_data_ranked (pd.DataFrame): DataFrame containing ranked TEG
+            performance data.
+        selected_measure (str): The internal measure name (e.g., 'GrossVP').
+        selected_friendly_name (str): The display name for the measure (e.g.,
+            'Gross').
+
     Returns:
-        pd.DataFrame: Formatted table with each player's best TEG performance
-        
-    Purpose:
-        Shows each player's personal best TEG performance in the selected measure
-        Includes overall ranking to show how personal bests compare across all players
+        pd.DataFrame: A formatted DataFrame with each player's best TEG
+        performance.
     """
     name_mapping, inverted_name_mapping = get_measure_name_mappings()
     
@@ -220,21 +220,22 @@ def prepare_personal_best_teg_table(teg_data_ranked, selected_measure, selected_
     return personal_best_tegs
 
 
-def prepare_personal_best_round_table(rd_data_ranked, selected_measure, selected_friendly_name):
-    """
-    Create formatted table of personal best round performances for each player.
-    
+def prepare_personal_best_round_table(rd_data_ranked: pd.DataFrame, selected_measure: str, selected_friendly_name: str) -> pd.DataFrame:
+    """Creates a formatted table of personal best round performances for each player.
+
+    This function identifies and formats each player's best individual round
+    performance for a selected measure, including their overall ranking.
+
     Args:
-        rd_data_ranked (pd.DataFrame): Ranked round performance data
-        selected_measure (str): Internal measure name (e.g., 'GrossVP')
-        selected_friendly_name (str): Display name (e.g., 'Gross')
-        
+        rd_data_ranked (pd.DataFrame): DataFrame containing ranked round
+            performance data.
+        selected_measure (str): The internal measure name (e.g., 'GrossVP').
+        selected_friendly_name (str): The display name for the measure (e.g.,
+            'Gross').
+
     Returns:
-        pd.DataFrame: Formatted table with each player's best round performance
-        
-    Purpose:
-        Shows each player's personal best individual round performance
-        Includes overall ranking to show how personal bests compare across all players
+        pd.DataFrame: A formatted DataFrame with each player's best round
+        performance.
     """
     name_mapping, inverted_name_mapping = get_measure_name_mappings()
     
@@ -272,22 +273,22 @@ def prepare_personal_best_round_table(rd_data_ranked, selected_measure, selected
     return personal_best_rounds
 
 
-def prepare_worst_teg_table(teg_data_ranked, selected_measure, selected_friendly_name, n_keep):
-    """
-    Create formatted table of worst TEG performances.
-    
+def prepare_worst_teg_table(teg_data_ranked: pd.DataFrame, selected_measure: str, selected_friendly_name: str, n_keep: int) -> pd.DataFrame:
+    """Creates a formatted table of the worst TEG performances.
+
+    This function filters and formats the TEG data to create a clean, ranked
+    table of the worst TEG performances for a selected measure.
+
     Args:
-        teg_data_ranked (pd.DataFrame): Ranked TEG performance data
-        selected_measure (str): Internal measure name (e.g., 'GrossVP')
-        selected_friendly_name (str): Display name (e.g., 'Gross')
-        n_keep (int): Number of worst performances to show
-        
+        teg_data_ranked (pd.DataFrame): DataFrame containing ranked TEG
+            performance data.
+        selected_measure (str): The internal measure name (e.g., 'GrossVP').
+        selected_friendly_name (str): The display name for the measure (e.g.,
+            'Gross').
+        n_keep (int): The number of worst performances to show.
+
     Returns:
-        pd.DataFrame: Formatted table ready for display
-        
-    Purpose:
-        Creates clean, ranked table showing worst TEG performances
-        Uses reverse sorting to get the highest (worst) scores
+        pd.DataFrame: A formatted DataFrame ready for display.
     """
     name_mapping, inverted_name_mapping = get_measure_name_mappings()
     
@@ -329,22 +330,22 @@ def prepare_worst_teg_table(teg_data_ranked, selected_measure, selected_friendly
     return worst_tegs
 
 
-def prepare_worst_round_table(rd_data_ranked, selected_measure, selected_friendly_name, n_keep):
-    """
-    Create formatted table of worst round performances.
-    
+def prepare_worst_round_table(rd_data_ranked: pd.DataFrame, selected_measure: str, selected_friendly_name: str, n_keep: int) -> pd.DataFrame:
+    """Creates a formatted table of the worst round performances.
+
+    This function filters and formats the round data to create a clean, ranked
+    table of the worst individual round performances for a selected measure.
+
     Args:
-        rd_data_ranked (pd.DataFrame): Ranked round performance data
-        selected_measure (str): Internal measure name (e.g., 'GrossVP')
-        selected_friendly_name (str): Display name (e.g., 'Gross')
-        n_keep (int): Number of worst performances to show
-        
+        rd_data_ranked (pd.DataFrame): DataFrame containing ranked round
+            performance data.
+        selected_measure (str): The internal measure name (e.g., 'GrossVP').
+        selected_friendly_name (str): The display name for the measure (e.g.,
+            'Gross').
+        n_keep (int): The number of worst performances to show.
+
     Returns:
-        pd.DataFrame: Formatted table ready for display
-        
-    Purpose:
-        Creates clean, ranked table showing worst individual round performances
-        Uses reverse sorting to get the highest (worst) scores
+        pd.DataFrame: A formatted DataFrame ready for display.
     """
     name_mapping, inverted_name_mapping = get_measure_name_mappings()
     
@@ -379,21 +380,22 @@ def prepare_worst_round_table(rd_data_ranked, selected_measure, selected_friendl
     return worst_rounds
 
 
-def prepare_personal_worst_teg_table(teg_data_ranked, selected_measure, selected_friendly_name):
-    """
-    Create formatted table of personal worst TEG performances for each player.
-    
+def prepare_personal_worst_teg_table(teg_data_ranked: pd.DataFrame, selected_measure: str, selected_friendly_name: str) -> pd.DataFrame:
+    """Creates a formatted table of personal worst TEG performances for each player.
+
+    This function identifies and formats each player's worst TEG performance
+    for a selected measure, including their overall ranking.
+
     Args:
-        teg_data_ranked (pd.DataFrame): Ranked TEG performance data
-        selected_measure (str): Internal measure name (e.g., 'GrossVP')
-        selected_friendly_name (str): Display name (e.g., 'Gross')
-        
+        teg_data_ranked (pd.DataFrame): DataFrame containing ranked TEG
+            performance data.
+        selected_measure (str): The internal measure name (e.g., 'GrossVP').
+        selected_friendly_name (str): The display name for the measure (e.g.,
+            'Gross').
+
     Returns:
-        pd.DataFrame: Formatted table with each player's worst TEG performance
-        
-    Purpose:
-        Shows each player's personal worst TEG performance in the selected measure
-        Includes overall ranking to show how personal worsts compare across all players
+        pd.DataFrame: A formatted DataFrame with each player's worst TEG
+        performance.
     """
     name_mapping, inverted_name_mapping = get_measure_name_mappings()
     
@@ -436,21 +438,22 @@ def prepare_personal_worst_teg_table(teg_data_ranked, selected_measure, selected
     return personal_worst_tegs
 
 
-def prepare_personal_worst_round_table(rd_data_ranked, selected_measure, selected_friendly_name):
-    """
-    Create formatted table of personal worst round performances for each player.
-    
+def prepare_personal_worst_round_table(rd_data_ranked: pd.DataFrame, selected_measure: str, selected_friendly_name: str) -> pd.DataFrame:
+    """Creates a formatted table of personal worst round performances for each player.
+
+    This function identifies and formats each player's worst individual round
+    performance for a selected measure, including their overall ranking.
+
     Args:
-        rd_data_ranked (pd.DataFrame): Ranked round performance data
-        selected_measure (str): Internal measure name (e.g., 'GrossVP')
-        selected_friendly_name (str): Display name (e.g., 'Gross')
-        
+        rd_data_ranked (pd.DataFrame): DataFrame containing ranked round
+            performance data.
+        selected_measure (str): The internal measure name (e.g., 'GrossVP').
+        selected_friendly_name (str): The display name for the measure (e.g.,
+            'Gross').
+
     Returns:
-        pd.DataFrame: Formatted table with each player's worst round performance
-        
-    Purpose:
-        Shows each player's personal worst individual round performance
-        Includes overall ranking to show how personal worsts compare across all players
+        pd.DataFrame: A formatted DataFrame with each player's worst round
+        performance.
     """
     name_mapping, inverted_name_mapping = get_measure_name_mappings()
     
@@ -490,19 +493,19 @@ def prepare_personal_worst_round_table(rd_data_ranked, selected_measure, selecte
     return personal_worst_rounds
 
 
-def prepare_pb_teg_summary_table(teg_data_ranked):
-    """
-    Create summary table showing each player's personal best TEG across all measures.
-    
+def prepare_pb_teg_summary_table(teg_data_ranked: pd.DataFrame) -> pd.DataFrame:
+    """Creates a summary table of each player's personal best TEG.
+
+    This function generates a summary table showing each player's personal best
+    TEG performance across all scoring measures.
+
     Args:
-        teg_data_ranked (pd.DataFrame): Ranked TEG performance data
-        
+        teg_data_ranked (pd.DataFrame): DataFrame containing ranked TEG
+            performance data.
+
     Returns:
-        pd.DataFrame: Summary table with columns for Score, Gross v Par, Net v Par, Stableford
-        
-    Purpose:
-        Shows each player's personal best performance across all four scoring measures
-        Provides a comprehensive view of each player's capabilities
+        pd.DataFrame: A summary DataFrame with columns for Score, Gross v Par,
+        Net v Par, and Stableford.
     """
     from utils import format_vs_par
     
@@ -539,19 +542,19 @@ def prepare_pb_teg_summary_table(teg_data_ranked):
     return pd.DataFrame(summary_data)
 
 
-def prepare_pb_round_summary_table(rd_data_ranked):
-    """
-    Create summary table showing each player's personal best round across all measures.
-    
+def prepare_pb_round_summary_table(rd_data_ranked: pd.DataFrame) -> pd.DataFrame:
+    """Creates a summary table of each player's personal best round.
+
+    This function generates a summary table showing each player's personal best
+    individual round performance across all scoring measures.
+
     Args:
-        rd_data_ranked (pd.DataFrame): Ranked round performance data
-        
+        rd_data_ranked (pd.DataFrame): DataFrame containing ranked round
+            performance data.
+
     Returns:
-        pd.DataFrame: Summary table with columns for Score, Gross v Par, Net v Par, Stableford
-        
-    Purpose:
-        Shows each player's personal best individual round performance across all four scoring measures
-        Provides a comprehensive view of each player's peak round performances
+        pd.DataFrame: A summary DataFrame with columns for Score, Gross v Par,
+        Net v Par, and Stableford.
     """
     from utils import format_vs_par
     

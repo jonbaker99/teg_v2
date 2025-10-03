@@ -1,30 +1,29 @@
-"""
-Data processing functions for course analysis and averages.
+"""Data processing functions for course analysis and averages.
 
-This module contains functions for:
-- Processing course-specific performance data
-- Creating pivot tables for course averages and records
-- Handling area filtering and course grouping
-- Formatting performance data for display
+This module contains functions for processing course-specific performance data,
+creating pivot tables for course averages and records, handling area filtering
+and course grouping, and formatting performance data for display.
 """
 
 import pandas as pd
 import numpy as np
 
 
-def prepare_area_filter_options(course_info):
-    """
-    Prepare area filtering options for course selection.
-    
+def prepare_area_filter_options(course_info: pd.DataFrame) -> tuple[list, str]:
+    """Prepares area filtering options for course selection.
+
+    This function creates a list of unique areas for dropdown selection,
+    including an "ALL AREAS" option for unfiltered data.
+
     Args:
-        course_info (pd.DataFrame): Course information with areas
-        
+        course_info (pd.DataFrame): DataFrame containing course information
+            with an 'Area' column.
+
     Returns:
-        tuple: (area_options, all_area_label) for dropdown selection
-        
-    Purpose:
-        Creates consistent area filtering options across course analysis pages
-        Includes "ALL AREAS" option for unfiltered data
+        tuple: A tuple containing:
+            - area_options (list): A list of area options for dropdown
+              selection.
+            - all_area_label (str): The label for the "all areas" option.
     """
     unique_areas = sorted(course_info['Area'].unique().tolist())
     all_area_label = 'ALL AREAS'
@@ -33,22 +32,22 @@ def prepare_area_filter_options(course_info):
     return area_options, all_area_label
 
 
-def filter_data_by_area(all_rd_data, course_info, selected_area, all_area_label):
-    """
-    Filter round data by selected geographical area.
-    
+def filter_data_by_area(all_rd_data: pd.DataFrame, course_info: pd.DataFrame, selected_area: str, all_area_label: str) -> pd.DataFrame:
+    """Filters round data by the selected geographical area.
+
+    This function enables geographical analysis by filtering the data to
+    courses in a specific area. It returns the complete dataset if "ALL AREAS"
+    is selected.
+
     Args:
-        all_rd_data (pd.DataFrame): Complete round data
-        course_info (pd.DataFrame): Course information with area mapping
-        selected_area (str): Selected area filter
-        all_area_label (str): Label for "all areas" option
-        
+        all_rd_data (pd.DataFrame): The complete round data.
+        course_info (pd.DataFrame): DataFrame containing course information
+            with an 'Area' column.
+        selected_area (str): The selected area to filter by.
+        all_area_label (str): The label for the "all areas" option.
+
     Returns:
-        pd.DataFrame: Filtered round data for selected area
-        
-    Purpose:
-        Enables geographical analysis by filtering to courses in specific areas
-        Returns complete dataset when "ALL AREAS" is selected
+        pd.DataFrame: The filtered round data for the selected area.
     """
     if selected_area == all_area_label:
         return all_rd_data
@@ -60,19 +59,18 @@ def filter_data_by_area(all_rd_data, course_info, selected_area, all_area_label)
         return all_rd_data[all_rd_data['Course'].isin(courses_in_area)]
 
 
-def calculate_course_round_counts(rd_data):
-    """
-    Calculate number of rounds played at each course.
-    
+def calculate_course_round_counts(rd_data: pd.DataFrame) -> pd.DataFrame:
+    """Calculates the number of rounds played at each course.
+
+    This function provides context for course analysis by showing the sample
+    size for each course, which helps in assessing statistical reliability.
+
     Args:
-        rd_data (pd.DataFrame): Round data for counting
-        
+        rd_data (pd.DataFrame): The round data to be counted.
+
     Returns:
-        pd.DataFrame: Course round counts sorted by frequency
-        
-    Purpose:
-        Provides context for course analysis by showing sample sizes
-        Helps identify courses with limited data for statistical reliability
+        pd.DataFrame: A DataFrame with course round counts, sorted by
+        frequency.
     """
     course_count = (
         rd_data[['Course', 'TEG', 'Round']]
@@ -86,21 +84,20 @@ def calculate_course_round_counts(rd_data):
     return course_count
 
 
-def create_course_performance_table(df, aggfunc='mean'):
-    """
-    Create pivot table of course performance by player and aggregation function.
-    
+def create_course_performance_table(df: pd.DataFrame, aggfunc: str = 'mean') -> pd.DataFrame:
+    """Creates a pivot table of course performance by player.
+
+    This function generates a player-by-course matrix showing performance
+    statistics based on the specified aggregation function (e.g., mean, min,
+    max).
+
     Args:
-        df (pd.DataFrame): Round data for analysis
-        aggfunc (str): Aggregation function ('mean', 'min', 'max')
-        
+        df (pd.DataFrame): The round data for analysis.
+        aggfunc (str, optional): The aggregation function to use ('mean',
+            'min', 'max'). Defaults to 'mean'.
+
     Returns:
-        pd.DataFrame: Formatted pivot table with performance data
-        
-    Purpose:
-        Creates player-by-course matrix showing performance statistics
-        Handles different aggregation types (averages, bests, worsts)
-        Formats values appropriately for display (decimals for averages, +/- for vs par)
+        pd.DataFrame: A formatted pivot table with performance data.
     """
     round_to = 1 if aggfunc == 'mean' else 0
     
@@ -140,22 +137,21 @@ def create_course_performance_table(df, aggfunc='mean'):
     return course_data
 
 
-def create_course_summary_table(course_count, mean_data, min_data, max_data):
-    """
-    Create summary table with course statistics and key performance metrics.
-    
+def create_course_summary_table(course_count: pd.DataFrame, mean_data: pd.DataFrame, min_data: pd.DataFrame, max_data: pd.DataFrame) -> pd.DataFrame:
+    """Creates a summary table with course statistics and key performance metrics.
+
+    This function provides a high-level overview of course difficulty and
+    performance by combining key statistics for easy comparison across courses.
+
     Args:
-        course_count (pd.DataFrame): Round counts by course
-        mean_data (pd.DataFrame): Average performance data
-        min_data (pd.DataFrame): Best performance data  
-        max_data (pd.DataFrame): Worst performance data
-        
+        course_count (pd.DataFrame): DataFrame with round counts by course.
+        mean_data (pd.DataFrame): DataFrame with average performance data.
+        min_data (pd.DataFrame): DataFrame with best performance data.
+        max_data (pd.DataFrame): DataFrame with worst performance data.
+
     Returns:
-        pd.DataFrame: Summary table with rounds, averages, records, and worst performances
-        
-    Purpose:
-        Provides high-level overview of course difficulty and performance
-        Combines key statistics for easy comparison across courses
+        pd.DataFrame: A summary table with rounds, averages, records, and
+        worst performances.
     """
     summary = course_count.copy()
     summary['Ave'] = mean_data['Total']

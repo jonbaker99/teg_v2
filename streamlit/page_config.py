@@ -1,8 +1,9 @@
-"""
-Page configuration for TEG Streamlit application.
+"""Page configuration for the TEG Streamlit application.
 
 This file serves as the single source of truth for all page definitions,
-section groupings, and navigation configuration.
+section groupings, and navigation configuration. It defines the structure of
+the application's navigation, including page titles, icons, and section
+layouts.
 """
 
 import streamlit as st
@@ -103,8 +104,16 @@ SECTION_CONFIG = {
 }
 
 
-def get_section_layouts():
-    """Calculate optimal column layout based on page counts per section"""
+def get_section_layouts() -> dict:
+    """Calculates the optimal column layout for each section.
+
+    This function determines the number of columns to use for displaying pages
+    within each section, based on the number of pages in that section.
+
+    Returns:
+        dict: A dictionary mapping each section to its optimal number of
+        columns.
+    """
     section_counts = {}
     for page_info in PAGE_DEFINITIONS.values():
         section = page_info["section"]
@@ -126,8 +135,20 @@ def get_section_layouts():
 SECTION_LAYOUTS = get_section_layouts()
 
 
-def generate_navigation_structure(has_incomplete_teg=False):
-    """Generate navigation structure from PAGE_DEFINITIONS"""
+def generate_navigation_structure(has_incomplete_teg: bool = False) -> dict:
+    """Generates the navigation structure from the page definitions.
+
+    This function builds the navigation structure for the Streamlit app based
+    on the page definitions and the current TEG status.
+
+    Args:
+        has_incomplete_teg (bool, optional): Whether there is an incomplete
+            TEG. Defaults to False.
+
+    Returns:
+        dict: A dictionary representing the navigation structure, where keys
+        are section display names and values are lists of `st.Page` objects.
+    """
     # Group pages by section
     sections = {}
     for filename, page_info in PAGE_DEFINITIONS.items():

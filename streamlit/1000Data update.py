@@ -1,3 +1,16 @@
+"""Streamlit page for updating TEG round data from Google Sheets.
+
+This page provides a user interface for loading, validating, and processing new
+golf round data. It uses a state machine to guide the user through a safe
+data update workflow, which includes:
+- Loading data from a specified Google Sheet.
+- Summarizing the new data for user confirmation.
+- Detecting and handling duplicate records.
+- Executing the data update and refreshing all related data caches.
+
+The page also includes a data integrity check to validate the consistency of
+the main data files.
+"""
 # === IMPORTS ===
 import streamlit as st
 import pandas as pd

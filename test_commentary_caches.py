@@ -1,8 +1,15 @@
-"""
-Test script for commentary cache file generation.
-Tests update_commentary_caches() function and verifies output files.
-"""
+"""Test script for commentary cache file generation.
 
+This script tests the `update_commentary_caches()` function and verifies the
+output files to ensure that the commentary cache generation process is working
+correctly. It performs the following steps:
+1.  Generates the commentary cache files by calling `update_commentary_caches()`.
+2.  Checks if the expected Parquet files were created.
+3.  Loads and verifies the content of the generated files, including checking
+    the number of rows, columns, and unique values.
+4.  Displays sample statistics from the summary file.
+5.  Shows the file sizes of the generated cache files.
+"""
 import sys
 from pathlib import Path
 

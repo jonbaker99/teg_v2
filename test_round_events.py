@@ -1,8 +1,13 @@
-"""
-Test script for the create_round_events function.
-This script tests the round events creation and outputs results to test_round_events.csv
-"""
+"""Test script for the `create_round_events` function.
 
+This script tests the creation of round events and outputs the results to a
+CSV file for verification. It performs the following steps:
+1.  Calls the `create_round_events` function to generate the events log.
+2.  Verifies the created events log and prints summary statistics.
+3.  Displays sample data for different types of events (position changes,
+    scoring achievements).
+4.  Saves the complete events log to `test_round_events.csv`.
+"""
 import sys
 from pathlib import Path
 

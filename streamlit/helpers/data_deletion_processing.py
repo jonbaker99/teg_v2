@@ -1,10 +1,8 @@
-"""
-Data processing functions for tournament data deletion operations.
+"""Data processing functions for tournament data deletion operations.
 
-This module contains functions for:
-- Managing deletion workflow state machine
-- Creating data backups before deletion
-- Performing safe data deletion with validation
+This module provides functions for managing the data deletion workflow,
+including state management, data backups, and safe data deletion with
+validation.
 """
 
 import streamlit as st
@@ -19,17 +17,16 @@ STATE_PREVIEW = "preview"
 STATE_CONFIRMED = "confirmed"
 
 
-def initialize_deletion_state(force_reset=False):
-    """
-    Initialize or reset session state for data deletion workflow.
-    
+def initialize_deletion_state(force_reset: bool = False):
+    """Initializes or resets the session state for the data deletion workflow.
+
+    This function manages the multi-step data deletion process using session
+    state to ensure a clean state between operations and prevent accidental
+    data loss.
+
     Args:
-        force_reset (bool): Force reset of all state variables
-        
-    Purpose:
-        Manages the multi-step data deletion workflow using session state
-        Ensures clean state between different deletion operations
-        Prevents accidental data loss through controlled state management
+        force_reset (bool, optional): If True, forces a reset of all state
+            variables. Defaults to False.
     """
     if force_reset or 'delete_page_state' not in st.session_state:
         st.session_state.delete_page_state = STATE_INITIAL
@@ -39,33 +36,31 @@ def initialize_deletion_state(force_reset=False):
 
 
 def load_scores_data():
-    """
-    Load tournament scores data into session state.
-    
-    Purpose:
-        Loads main scores dataset for deletion operations
-        Uses session state to avoid repeated file reads
-        Provides data for TEG and round selection
+    """Loads tournament scores data into the session state.
+
+    This function loads the main scores dataset for deletion operations and
+    uses the session state to avoid repeated file reads.
     """
     from utils import ALL_SCORES_PARQUET
     
     st.session_state.scores_df = read_file(ALL_SCORES_PARQUET)
 
 
-def get_available_tegs_and_rounds(scores_df):
-    """
-    Get available TEGs and their rounds for selection.
-    
+def get_available_tegs_and_rounds(scores_df: pd.DataFrame) -> tuple[list, callable]:
+    """Gets the available TEGs and their rounds for selection.
+
+    This function provides the available options for data deletion, ordering
+    the TEGs in reverse chronological order and enabling dynamic round
+    selection based on the chosen TEG.
+
     Args:
-        scores_df (pd.DataFrame): Tournament scores data
-        
+        scores_df (pd.DataFrame): The tournament scores data.
+
     Returns:
-        tuple: (teg_nums, rounds_by_teg_function) for UI selection
-        
-    Purpose:
-        Provides available options for data deletion
-        Orders TEGs in reverse chronological order (most recent first)
-        Enables dynamic round selection based on selected TEG
+        tuple: A tuple containing:
+            - teg_nums (list): A list of available TEG numbers.
+            - get_rounds_for_teg (callable): A function that returns the
+              available rounds for a given TEG.
     """
     teg_nums = sorted(scores_df['TEGNum'].unique(), reverse=True)
     
@@ -76,17 +71,15 @@ def get_available_tegs_and_rounds(scores_df):
     return teg_nums, get_rounds_for_teg
 
 
-def create_timestamped_backups():
-    """
-    Create timestamped backups of main data files before deletion.
-    
+def create_timestamped_backups() -> tuple[str, str]:
+    """Creates timestamped backups of the main data files before deletion.
+
+    This function creates safety backups before any data deletion operation,
+    using timestamps to ensure unique filenames and provide a recovery path.
+
     Returns:
-        tuple: (scores_backup_path, data_backup_path) for confirmation display
-        
-    Purpose:
-        Creates safety backups before any data deletion operations
-        Uses timestamps to ensure unique backup file names
-        Provides recovery path in case deletion needs to be reversed
+        tuple: A tuple containing the paths to the backed-up scores and data
+        files.
     """
     from utils import ALL_SCORES_PARQUET, ALL_DATA_PARQUET
     
@@ -102,22 +95,20 @@ def create_timestamped_backups():
     return scores_backup_path, data_backup_path
 
 
-def preview_deletion_data(scores_df, selected_teg, selected_rounds):
-    """
-    Create preview of data that will be deleted.
-    
+def preview_deletion_data(scores_df: pd.DataFrame, selected_teg: int, selected_rounds: list) -> pd.DataFrame:
+    """Creates a preview of the data that will be deleted.
+
+    This function shows the user exactly what data will be removed before
+    confirmation, providing a final safety check before an irreversible
+    operation.
+
     Args:
-        scores_df (pd.DataFrame): Tournament scores data
-        selected_teg (int): Selected TEG number
-        selected_rounds (list): Selected round numbers
-        
+        scores_df (pd.DataFrame): The tournament scores data.
+        selected_teg (int): The selected TEG number.
+        selected_rounds (list): The selected round numbers.
+
     Returns:
-        pd.DataFrame: Data rows that will be deleted
-        
-    Purpose:
-        Shows user exactly what data will be removed before confirmation
-        Enables validation that correct data is selected for deletion
-        Provides final safety check before irreversible operation
+        pd.DataFrame: A DataFrame containing the rows that will be deleted.
     """
     deletion_filter = (
         (scores_df['TEGNum'] == selected_teg) & 
@@ -129,21 +120,16 @@ def preview_deletion_data(scores_df, selected_teg, selected_rounds):
     return scores_to_delete
 
 
-def execute_data_deletion(selected_teg, selected_rounds):
-    """
-    Execute the complete data deletion workflow.
-    
+def execute_data_deletion(selected_teg: int, selected_rounds: list):
+    """Executes the complete data deletion workflow.
+
+    This function performs the entire deletion process, including creating
+    backups, filtering the data, removing the selected data from all relevant
+    files, updating the CSV mirror, and clearing caches.
+
     Args:
-        selected_teg (int): TEG number to delete
-        selected_rounds (list): Round numbers to delete
-        
-    Purpose:
-        Performs the complete deletion workflow:
-        1. Creates backups for safety
-        2. Loads and filters both main data files
-        3. Removes selected data from all relevant files
-        4. Updates CSV mirror file
-        5. Clears caches to reflect changes
+        selected_teg (int): The TEG number to delete.
+        selected_rounds (list): The round numbers to delete.
     """
     from utils import ALL_SCORES_PARQUET, ALL_DATA_PARQUET, ALL_DATA_CSV_MIRROR
     
@@ -224,18 +210,16 @@ def execute_data_deletion(selected_teg, selected_rounds):
     st.success("Data has been successfully deleted and files have been updated.")
 
 
-def validate_deletion_selection(selected_rounds):
-    """
-    Validate that deletion selection is valid.
-    
+def validate_deletion_selection(selected_rounds: list) -> bool:
+    """Validates that the deletion selection is valid.
+
+    This function ensures that the user has selected at least one round for
+    deletion to prevent accidental empty deletion operations.
+
     Args:
-        selected_rounds (list): Selected round numbers
-        
+        selected_rounds (list): The list of selected round numbers.
+
     Returns:
-        bool: True if selection is valid, False otherwise
-        
-    Purpose:
-        Ensures user has selected at least one round for deletion
-        Prevents accidental empty deletion operations
+        bool: True if the selection is valid, False otherwise.
     """
     return len(selected_rounds) > 0
