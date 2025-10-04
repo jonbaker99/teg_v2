@@ -58,6 +58,11 @@ Analyze the provided tournament data and create a story blueprint that identifie
 Provide a structured breakdown with:
 - Main narrative arc for Stableford (2-3 sentences)
 - Gross competition summary (1-2 sentences, highlight if different winner or interesting contrast)
+- **Round-by-round breakdown** (CRITICAL - provide for each round):
+  - Round 1: Key performances, who took the lead, notable scores
+  - Round 2: Momentum shifts, lead changes, standout rounds
+  - Round 3: Developments, player trajectories
+  - Round 4 (if applicable): Final day drama, how the winner sealed it
 - Key dramatic moments (bulleted list with hole/round specifics)
 - Player storylines (3-5 key players with their arcs)
 - Noteworthy statistics (only the most impactful numbers)
@@ -116,6 +121,14 @@ Guidelines for player info usage:
 3. **Vary your language** - Mix sentence structures, avoid repetition
 4. **Use stats strategically** - Embed numbers in action for impact
 5. **Emphasize drama** - Amplify contrasts, conflicts, momentum shifts
+
+**Article Structure - IMPORTANT:**
+Your article MUST include round-by-round reporting:
+- Create distinct sections or paragraphs for each round
+- Show how the tournament unfolded chronologically
+- Track lead changes, momentum shifts, and player trajectories round by round
+- Use headings or clear transitions to separate rounds (e.g., "Round 1: The Opening Salvo", "The Second Round Shift")
+- Build narrative tension by showing how things developed over time
 
 **Opening Strategies** (vary these):
 - Drop into mid-action drama
