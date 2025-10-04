@@ -16,6 +16,8 @@ The page uses helper functions to:
 # === IMPORTS ===
 import streamlit as st
 import pandas as pd
+import re
+
 
 # Import data loading functions from main utils
 from utils import load_datawrapper_css
@@ -50,13 +52,26 @@ history_display_table = prepare_complete_history_table_fast(cached_winners)
 # === TEG HISTORY TABLE ===
 # Format display table with area information
 h_tab_3 = history_display_table.copy()
-history_display_table['Area'] = history_display_table['Area'].str.split(",").str[0].str.strip()
+h_tab_3['Area'] = h_tab_3['Area'].str.split(",").str[0].str.strip()
 
-h_tab_3['Area'] = history_display_table['Area']
+# Add TEG + Area labels
 h_tab_3["TEG"] = (
     "<span class='teg-label'>" + h_tab_3["TEG"].astype(str) + "</span>"
     "<span class='area-label'>" + h_tab_3["Area"].astype(str) + "</span>"
 )
+
+# Wrap player names for responsive line break
+NAME_COLS = ["TEG Trophy", "Green Jacket", "HMM Wooden Spoon"]
+
+def wrap_player_name(name: str) -> str:
+    if not isinstance(name, str) or not name.strip():
+        return "" if name is None else str(name)
+    first, *rest = re.split(r"\s+", name.strip(), maxsplit=1)
+    last = rest[0] if rest else ""
+    return f"<span class='player-name'><span class='first'>{first}</span> <span class='last'>{last}</span></span>"
+
+h_tab_3[NAME_COLS] = h_tab_3[NAME_COLS].applymap(wrap_player_name)
+
 cols = ["TEG", "TEG Trophy", "Green Jacket", "HMM Wooden Spoon"]
 
 # Display complete historical table with all winners by TEG

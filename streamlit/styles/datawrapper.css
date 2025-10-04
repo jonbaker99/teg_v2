@@ -279,7 +279,31 @@
 /* Optional: make the main trophy winner stand out a touch */
 .hist2 td:nth-child(2) { font-weight: bold; }
 
+.hist2 td, .hist2 th {
+  word-break: keep-all;     /* don’t split words */
+  white-space: normal;      /* allow normal wrapping between words */
+}
 
+/* Default: inline first+last on wider screens */
+.hist2 .player-name .first { display: inline; }
+
+/* Narrow screens: force line break between first and last */
+@media (max-width: 650px) {
+
+  .hist2 .player-name { display: inline-block; } /* ensures layout inside cell */
+  
+  .hist2 .player-name .first { display: block; }  /* ← forces break */
+  
+  .hist2 .player-name .last { display: block; }   /* optional; keeps tidy */
+
+  .datawrapper-table.history-table td:not(:first-child),
+  .datawrapper-table.history-table th:not(:first-child) {
+        width: auto;
+        min-width: 50px;
+        max-width: 100px;
+}
+
+}
 
 
 /* == PLAYER RANK TABLE */

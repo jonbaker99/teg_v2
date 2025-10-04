@@ -3068,12 +3068,18 @@ def load_css_file(css_file_path: str):
         full_path = base_dir / "streamlit" / css_file_path
     
     try:
-        with open(full_path, 'r') as f:
-            st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+        with open(full_path, "r", encoding="utf-8") as f:   # ✅ force UTF-8
+            css = f.read()
+            st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
     except FileNotFoundError:
         st.error(f"CSS file not found: {full_path}")
         st.write(f"Current working directory: {Path.cwd()}")
         st.write(f"Base directory: {base_dir}")
+    except UnicodeDecodeError:
+        # fallback in case file has odd characters or BOM
+        with open(full_path, "r", encoding="utf-8-sig", errors="replace") as f:
+            css = f.read()
+            st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 def load_datawrapper_css():
     """Load datawrapper table CSS from external file"""
