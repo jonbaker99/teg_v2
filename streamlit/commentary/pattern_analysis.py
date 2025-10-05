@@ -296,12 +296,16 @@ def drill_down_patterns(momentum_patterns, nine_patterns, teg_num):
         ].sort_values('Hole')
 
         # Find notable holes in window
-        birdies = window_df[window_df['Stableford'] >= 4]['Hole'].tolist()
+        # IMPORTANT: Only count GROSS birdies (GrossVP=-1), not just 4-point Stableford scores
+        birdies = window_df[window_df['GrossVP'] == -1]['Hole'].tolist()
+        # Track 4-point holes separately (these may be pars with good handicap)
+        four_point_holes = window_df[window_df['Stableford'] >= 4]['Hole'].tolist()
         disasters = window_df[window_df['Stableford'] == 0]['Hole'].tolist()
 
         pattern_details.append({
             **pattern,  # Include original pattern
             'birdies_in_window': birdies,
+            'four_point_holes_in_window': four_point_holes,
             'disasters_in_window': disasters,
             'hole_scores': window_df[['Hole', 'Stableford', 'GrossVP']].to_dict('records')
         })
@@ -320,12 +324,15 @@ def drill_down_patterns(momentum_patterns, nine_patterns, teg_num):
         ].sort_values('Hole')
 
         # Find what made it strong
-        birdies = nine_df[nine_df['Stableford'] >= 4]['Hole'].tolist()
+        # IMPORTANT: Only count GROSS birdies (GrossVP=-1), not just 4-point Stableford scores
+        birdies = nine_df[nine_df['GrossVP'] == -1]['Hole'].tolist()
+        four_point_holes = nine_df[nine_df['Stableford'] >= 4]['Hole'].tolist()
         disasters = nine_df[nine_df['Stableford'] == 0]['Hole'].tolist()
 
         pattern_details.append({
             **pattern,
             'birdies': birdies,
+            'four_point_holes': four_point_holes,
             'disasters': disasters,
             'hole_scores': nine_df[['Hole', 'Stableford', 'GrossVP']].to_dict('records')
         })
@@ -333,9 +340,197 @@ def drill_down_patterns(momentum_patterns, nine_patterns, teg_num):
     return pattern_details
 
 
+def identify_round_records_and_pbs(teg_num, round_num):
+    """
+    Identify all records and personal bests for a specific round.
+
+    Uses pre-calculated ranking data to identify:
+    - All-time TEG records (bests and worsts)
+    - Personal bests
+    - Personal worsts
+
+    Args:
+        teg_num: Tournament number
+        round_num: Round number
+
+    Returns:
+        Dict with categorized records and PBs:
+        - all_time_records: List of all-time best records
+        - all_time_worsts: List of all-time worst records
+        - personal_bests: List of personal bests
+        - personal_worsts: List of personal worsts
+    """
+    # Load round summary data which has pre-calculated rankings
+    round_summary = pd.read_parquet('data/commentary_round_summary.parquet')
+
+    # Filter to this specific round
+    round_data = round_summary[
+        (round_summary['TEGNum'] == teg_num) &
+        (round_summary['Round'] == round_num)
+    ]
+
+    if round_data.empty:
+        return {
+            'all_time_records': [],
+            'all_time_worsts': [],
+            'personal_bests': [],
+            'personal_worsts': []
+        }
+
+    all_time_records = []
+    all_time_worsts = []
+    personal_bests = []
+    personal_worsts = []
+
+    # Metrics to check: Gross and Stableford (focus on main competitions)
+    metrics = [
+        ('Gross', 'Round_Score_Gross', 'Round_Rank_In_All_History_Gross', 'Round_Rank_In_Player_History_Gross'),
+        ('Stableford', 'Round_Score_Stableford', 'Round_Rank_In_All_History_Stableford', 'Round_Rank_In_Player_History_Stableford')
+    ]
+
+    for metric_name, value_col, all_rank_col, player_rank_col in metrics:
+        for _, row in round_data.iterrows():
+            player = row['Player']
+            value = row[value_col]
+
+            # Parse rank strings like "3 of 61" or "1 of 325"
+            all_rank_str = str(row[all_rank_col])
+            player_rank_str = str(row[player_rank_col])
+
+            if ' of ' in all_rank_str:
+                all_rank = int(all_rank_str.split(' of ')[0])
+                all_total = int(all_rank_str.split(' of ')[1])
+            else:
+                continue
+
+            if ' of ' in player_rank_str:
+                player_rank = int(player_rank_str.split(' of ')[0])
+                player_total = int(player_rank_str.split(' of ')[1])
+            else:
+                continue
+
+            # All-time record (rank 1 of all)
+            if all_rank == 1:
+                all_time_records.append({
+                    'player': player,
+                    'metric': metric_name,
+                    'value': value,
+                    'rank': all_rank_str
+                })
+
+            # All-time worst (highest rank of all)
+            if all_rank == all_total and all_total > 1:
+                all_time_worsts.append({
+                    'player': player,
+                    'metric': metric_name,
+                    'value': value,
+                    'rank': all_rank_str
+                })
+
+            # Personal best (rank 1 for player)
+            if player_rank == 1:
+                personal_bests.append({
+                    'player': player,
+                    'metric': metric_name,
+                    'value': value,
+                    'rank': player_rank_str
+                })
+
+            # Personal worst (highest rank for player)
+            if player_rank == player_total and player_total > 1:
+                personal_worsts.append({
+                    'player': player,
+                    'metric': metric_name,
+                    'value': value,
+                    'rank': player_rank_str
+                })
+
+    return {
+        'all_time_records': all_time_records,
+        'all_time_worsts': all_time_worsts,
+        'personal_bests': personal_bests,
+        'personal_worsts': personal_worsts
+    }
+
+
+def identify_course_records(teg_num, round_num):
+    """
+    Identify course records for the round (gross score only).
+
+    Only includes courses that have been played >2 times (>2 unique TEG+Round combinations).
+
+    Args:
+        teg_num: Tournament number
+        round_num: Round number
+
+    Returns:
+        List of course record dicts, one per course in the round:
+        - course: Course name
+        - times_played: Number of unique TEG+Round combinations
+        - record_score: Best gross score on course (e.g., 83)
+        - record_vs_par: Best gross vs par on course (e.g., +10)
+        - record_holders: List of players who hold the record
+        - is_record_this_round: True if record was set/tied this round
+        - record_players_this_round: Players who set/tied record this round
+    """
+    # Load round summary data
+    round_summary = pd.read_parquet('data/commentary_round_summary.parquet')
+
+    # Get course for this round
+    this_round_data = round_summary[
+        (round_summary['TEGNum'] == teg_num) &
+        (round_summary['Round'] == round_num)
+    ]
+
+    if this_round_data.empty:
+        return []
+
+    course = this_round_data['Course'].iloc[0]
+
+    # Get all rounds played on this course
+    course_data = round_summary[round_summary['Course'] == course].copy()
+
+    # Count unique TEG+Round combinations
+    times_played = course_data[['TEGNum', 'Round']].drop_duplicates().shape[0]
+
+    # Only include courses with >2 rounds
+    if times_played <= 2:
+        return []
+
+    # Find best gross score on this course
+    best_gross = course_data['Round_Score_Gross'].min()
+
+    # Find all players who achieved this score
+    record_holders_data = course_data[course_data['Round_Score_Gross'] == best_gross]
+    record_holders = record_holders_data[['Player', 'TEGNum', 'Round']].to_dict('records')
+
+    # Check if record was set/tied this round
+    this_round_records = record_holders_data[
+        (record_holders_data['TEGNum'] == teg_num) &
+        (record_holders_data['Round'] == round_num)
+    ]
+
+    is_record_this_round = len(this_round_records) > 0
+    record_players_this_round = this_round_records['Player'].tolist() if is_record_this_round else []
+
+    # Get the score and vs par from one of the record holders
+    record_score = int(record_holders_data['Round_Score_Sc'].iloc[0])
+    record_vs_par = int(best_gross)
+
+    return [{
+        'course': course,
+        'times_played': times_played,
+        'record_score': record_score,
+        'record_vs_par': record_vs_par,
+        'record_holders': record_holders,
+        'is_record_this_round': is_record_this_round,
+        'record_players_this_round': record_players_this_round
+    }]
+
+
 def process_all_data_types(teg_num):
     """
-    Master function to run all 6 data type processing passes.
+    Master function to run all 7 data type processing passes.
 
     Executes the complete Level 1 data processing pipeline,
     creating structured data ready for story generation.
@@ -351,6 +546,8 @@ def process_all_data_types(teg_num):
         - pattern_details
         - round_events
         - round_summary
+        - records_by_round: Dict mapping round_num -> records/PBs
+        - course_records_by_round: Dict mapping round_num -> course records
     """
     print(f"Processing data for TEG {teg_num}...")
 
@@ -385,6 +582,37 @@ def process_all_data_types(teg_num):
     print(f"  > Loaded {len(round_events)} round events")
     print(f"  > Loaded {len(round_summary)} round summaries")
 
+    # Pass 7: Identify records and personal bests for each round
+    print("Pass 7: Identifying records and personal bests...")
+    num_rounds = get_teg_rounds(teg_num)
+    records_by_round = {}
+    course_records_by_round = {}
+
+    total_records = 0
+    total_course_records = 0
+
+    for round_num in range(1, num_rounds + 1):
+        # Get records/PBs for this round
+        records_data = identify_round_records_and_pbs(teg_num, round_num)
+        records_by_round[round_num] = records_data
+
+        # Count items
+        round_total = (
+            len(records_data['all_time_records']) +
+            len(records_data['all_time_worsts']) +
+            len(records_data['personal_bests']) +
+            len(records_data['personal_worsts'])
+        )
+        total_records += round_total
+
+        # Get course records for this round
+        course_records = identify_course_records(teg_num, round_num)
+        course_records_by_round[round_num] = course_records
+        total_course_records += len(course_records)
+
+    print(f"  > Identified {total_records} records/PBs across {num_rounds} rounds")
+    print(f"  > Identified {total_course_records} course record checks")
+
     print(f"\n> All data processing complete for TEG {teg_num}\n")
 
     return {
@@ -393,7 +621,9 @@ def process_all_data_types(teg_num):
         'nine_data': nine_data,
         'pattern_details': pattern_details,
         'round_events': round_events.to_dict('records'),
-        'round_summary': round_summary.to_dict('records')
+        'round_summary': round_summary.to_dict('records'),
+        'records_by_round': records_by_round,
+        'course_records_by_round': course_records_by_round
     }
 
 

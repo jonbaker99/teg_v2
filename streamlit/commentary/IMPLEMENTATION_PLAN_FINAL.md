@@ -1,17 +1,20 @@
 # Tournament Story Generation - Final Implementation Plan
 
-## ✅ IMPLEMENTATION STATUS (Updated 2025-01-05)
+## ✅ IMPLEMENTATION STATUS (Updated 2025-01-06)
 
-**STATUS: COMPLETE AND TESTED**
+**STATUS: COMPLETE AND ENHANCED**
 
 All components have been built, tested, and are working correctly. The pipeline generates structured story notes (bullet points/facts) that can be used as foundation for final report generation.
 
 ### What's Complete
-- ✅ `streamlit/commentary/pattern_analysis.py` - All 6 data processing functions
+- ✅ `streamlit/commentary/pattern_analysis.py` - All 7 data processing passes
 - ✅ `streamlit/commentary/data_loader.py` - 2 data loading functions
-- ✅ `streamlit/commentary/generate_tournament_commentary_v2.py` - Main pipeline
+- ✅ `streamlit/commentary/generate_tournament_commentary_v2.py` - Main pipeline with career context
 - ✅ `streamlit/commentary/prompts.py` - Updated with structured note-generation prompts
 - ✅ Tested on TEG 17 Round 1 - Produces correct structured bullet format
+- ✅ **NEW**: Direct addition of factual sections (venue, records, course records) - saves ~2500-4500 tokens/tournament
+- ✅ **NEW**: Career context added to tournament synthesis (recent finishes + position counts, PRE-TOURNAMENT only)
+- ✅ **NEW**: INCLUDE_STREAKS toggle for easy feature testing
 
 ### How to Use (See "HOW TO USE" section below)
 ```bash
@@ -73,8 +76,10 @@ Pass 3: Front/back 9 analysis → nine_patterns.json
 Pass 4: Pattern drill-down → pattern_details.json
 Pass 5: Reuse commentary_round_events.parquet (already exists)
 Pass 6: Reuse commentary_round_summary.parquet (already exists)
+Pass 7: Identify records & personal bests → records_by_round
+Pass 8: Load streak data (OPTIONAL - controlled by INCLUDE_STREAKS flag)
 
-Output: 6 structured data files (JSON/parquet)
+Output: 7-8 structured data files (JSON/parquet)
 Cost: Free (Python processing)
 Time: Fast (no LLM calls)
 ```
@@ -272,23 +277,59 @@ python streamlit/commentary/generate_tournament_commentary_v2.py 17
 
 ## 🚀 NEXT STEPS (Future Development)
 
-### Level 3: Report Generation (Not Yet Implemented)
+### Level 3: Report Generation (PROMPTS COMPLETE - 2025-01-05)
+
+**STATUS:** Report generation prompts have been created and are ready to use.
 
 Generate narrative prose reports from story notes:
 
-**What to build:**
-1. New script: `generate_reports_from_notes.py`
-2. New prompts: Use narrative-style prompts (similar to those accidentally generated in first test)
-3. Input: `teg_X_story_notes.md` (structured bullets)
-4. Output: `teg_X_main_report.md` (narrative prose)
+**Prompts Created (in `prompts.py`):**
 
-**Report types to support:**
-- Detailed tournament report (like existing `teg_17_main_report.md`)
-- Brief summary (2-3 paragraphs)
-- Player profiles
-- Round-specific reports
+1. **MAIN_REPORT_PROMPT** (lines 478-585)
+   - Input: `{story_notes}` (structured bullets from Level 2)
+   - Output: Full narrative tournament report
+   - Structure:
+     - Tournament Summary (3-4 paragraphs): Winner, highlights, records
+     - Round-by-Round Report (detailed narrative for each round with catchy titles)
+     - Tournament Recap (2-3 paragraphs): Overall significance
+   - Style: Barney Ronay-inspired, entertaining, witty, dramatic
+   - **Critical feature:** Uses specific hole numbers from notes extensively
+   - Includes examples of good vs bad writing
 
-**Key insight:** The prompts from our first test (that generated narrative prose) should be saved and reused for this Level 3 implementation. They work perfectly - they were just being used at the wrong stage.
+2. **BRIEF_SUMMARY_PROMPT** (lines 212-259)
+   - Input: `{story_notes}` (structured bullets from Level 2)
+   - Output: Concise 2-3 paragraph summary
+   - Focus: Winner, key moments, tournament significance
+   - Style: Punchy and entertaining while being brief
+   - Includes specific examples of concise writing
+
+**How These Prompts Work:**
+- Both take the structured story notes (bullets/facts) as input
+- Transform structured data into engaging narrative prose
+- Maintain specific hole references from notes
+- Based on the "accidentally generated" narrative style that worked perfectly
+- Ready to be used in report generation functions
+
+**What Still Needs Building:**
+1. Functions in `generate_tournament_commentary_v2.py` to call these prompts:
+   - `generate_main_report_from_notes(teg_num)` - Uses MAIN_REPORT_PROMPT
+   - `generate_brief_summary_from_notes(teg_num)` - Uses BRIEF_SUMMARY_PROMPT
+   - `generate_player_profiles_from_notes(teg_num)` - Uses PLAYER_PROFILES_PROMPT (may need update)
+2. CLI commands to invoke report generation
+3. Output file management (`teg_X_main_report.md`, `teg_X_brief_summary.md`)
+
+**Usage Pattern (when built):**
+```bash
+# Step 1: Generate structured story notes (Level 2 - already works)
+python streamlit/commentary/generate_tournament_commentary_v2.py 17
+
+# Step 2: Generate reports from notes (Level 3 - prompts ready, functions needed)
+python streamlit/commentary/generate_tournament_commentary_v2.py 17 --generate-report
+python streamlit/commentary/generate_tournament_commentary_v2.py 17 --generate-summary
+python streamlit/commentary/generate_tournament_commentary_v2.py 17 --generate-profiles
+```
+
+**Key Insight:** The prompts from our first test (that accidentally generated narrative prose instead of bullets) have been refined and are now properly positioned for Level 3. They work perfectly - they were just being used at the wrong stage before.
 
 ---
 

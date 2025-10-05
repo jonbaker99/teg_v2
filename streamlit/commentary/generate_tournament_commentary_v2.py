@@ -26,8 +26,12 @@ from collections import defaultdict, deque
 RATE_BUDGET_INPUT_TOKENS_PER_MIN = 30000
 RATE_SAFETY = 0.90  # adjust 0.85–0.95 as you like
 
-DRY_RUN = True   # set to False when you're ready to actually call the LLM
+DRY_RUN = False   # set to False when you're ready to actually call the LLM
 DEBUG   = True   # master switch for all debug prints & debug file saves
+
+# Feature toggles
+INCLUDE_STREAKS = True  # Include streak data (Birdies, Eagles, +2s or Worse) in round story generation
+                        # Set to False to exclude streak data if it doesn't add value
 
 # Small helper for gated printing
 def dprint(*args, **kwargs):
@@ -43,7 +47,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from pattern_analysis import process_all_data_types
 from data_loader import load_round_data, get_round_ending_context
-from prompts import ROUND_STORY_PROMPT, TOURNAMENT_SYNTHESIS_PROMPT
+from prompts import ROUND_STORY_PROMPT, TOURNAMENT_SYNTHESIS_PROMPT, MAIN_REPORT_PROMPT, BRIEF_SUMMARY_PROMPT
 from utils import get_teg_rounds
 import anthropic
 
@@ -327,7 +331,7 @@ class TokenMinuteLimiter:
         wait = self.plan_wait(tokens)
         used = self.used_last_min()
         if self.debug:
-            print(f"    · Rate-limit (rolling): used≈{used:,} tok / budget={self.budget:,}, next='{label}', est_input≈{tokens:,}, planned_sleep={wait}s")
+            print(f"    - Rate-limit (rolling): used~{used:,} tok / budget={self.budget:,}, next='{label}', est_input~{tokens:,}, planned_sleep={wait}s")
         now = self._now()
         if self.dry_run:
             self.events.append((now, tokens))  # simulate consumption
@@ -404,7 +408,8 @@ except ImportError:
 
 def generate_round_story(teg_num, round_num, round_data, previous_context):
     """
-    Generate story notes for a single round using all 6 data types.
+    Generate story notes for a single round.
+    Note: Records/PBs/course records are added directly after LLM generation (not in prompt).
     """
     print(f"\n  Generating Round {round_num} story...")
 
@@ -419,7 +424,7 @@ def generate_round_story(teg_num, round_num, round_data, previous_context):
         if previous_context else "First round of the tournament"
     )
 
-    # Build prompt
+    # Build prompt (NO records/PBs/course records - those are added directly)
     prompt_body = ROUND_STORY_PROMPT.format(
         round_num=round_num,
         round_data=round_data_json,
@@ -470,23 +475,181 @@ def generate_round_story(teg_num, round_num, round_data, previous_context):
     print(f"    > Round {round_num} story complete ({len(round_story)} chars)")
     return round_story, ending_context
 
+def build_venue_context(teg_num):
+    """
+    Build venue and course context for tournament synthesis.
+    Returns formatted string with area, course history, and return context.
+    """
+    # Load course/area data
+    rounds_df = pd.read_csv('data/round_info.csv')
+
+    # Get this TEG's information
+    current_teg = rounds_df[rounds_df['TEGNum'] == teg_num]
+    if len(current_teg) == 0:
+        return "Venue information not available."
+
+    area = current_teg['Area'].iloc[0]
+    year = current_teg['Year'].iloc[0]
+    courses = current_teg[['Round', 'Course']].values.tolist()
+
+    # Build context string
+    context_lines = []
+    context_lines.append(f"Tournament Area: {area} ({year})")
+    context_lines.append("")
+
+    # Check for area returns
+    all_teg_areas = rounds_df[['TEGNum', 'Area']].drop_duplicates().sort_values('TEGNum')
+    same_area_tegs = all_teg_areas[all_teg_areas['Area'] == area]
+    previous_in_area = same_area_tegs[same_area_tegs['TEGNum'] < teg_num]
+
+    if len(previous_in_area) > 0:
+        last_teg_in_area = previous_in_area.iloc[-1]['TEGNum']
+        gap = teg_num - last_teg_in_area
+        if gap > 1:
+            context_lines.append(f"Area Return: {gap}-TEG gap since TEG {int(last_teg_in_area)}")
+        else:
+            context_lines.append(f"Area Return: Consecutive TEG (following TEG {int(last_teg_in_area)})")
+    else:
+        # Check for broader geographic returns (e.g., different England areas)
+        area_country = area.split(',')[-1].strip() if ',' in area else area
+        country_tegs = all_teg_areas[all_teg_areas['Area'].str.contains(area_country, na=False, regex=False)]
+        previous_in_country = country_tegs[country_tegs['TEGNum'] < teg_num]
+
+        if len(previous_in_country) > 0:
+            last_teg_in_country = previous_in_country.iloc[-1]['TEGNum']
+            last_area = previous_in_country.iloc[-1]['Area']
+            gap = teg_num - last_teg_in_country
+            context_lines.append(f"First time in {area}")
+            if gap > 1:
+                context_lines.append(f"Return to {area_country} after {gap}-TEG gap (last: TEG {int(last_teg_in_country)} in {last_area})")
+        else:
+            context_lines.append(f"NEW DESTINATION: First TEG in {area}")
+
+    context_lines.append("")
+    context_lines.append("Courses:")
+
+    # Course information with history
+    all_courses = rounds_df[['TEGNum', 'Course']].drop_duplicates()
+    previous_all_tegs = all_courses[all_courses['TEGNum'] < teg_num]
+
+    for round_num, course in courses:
+        course_history = previous_all_tegs[previous_all_tegs['Course'] == course]
+        if len(course_history) > 0:
+            prev_tegs = sorted(course_history['TEGNum'].unique())
+            prev_teg_str = ', '.join([f"TEG {int(t)}" for t in prev_tegs])
+            context_lines.append(f"- Round {round_num}: {course} (previously: {prev_teg_str})")
+        else:
+            context_lines.append(f"- Round {round_num}: {course} (NEW COURSE)")
+
+    return "\n".join(context_lines)
+
+def build_career_context(teg_num, players_in_teg):
+    """
+    Build career context for players BEFORE this tournament.
+
+    IMPORTANT: Only includes data from TEGs BEFORE this one (TEGNum < teg_num).
+    This ensures no "future" information is leaked from the perspective of this tournament.
+
+    Args:
+        teg_num: Current tournament number
+        players_in_teg: List of player names in this tournament
+
+    Returns:
+        Formatted string with career context for each player
+    """
+    all_tournament_data = pd.read_parquet('data/commentary_tournament_summary.parquet')
+
+    # CRITICAL: Only use data BEFORE this TEG
+    pre_tournament_data = all_tournament_data[all_tournament_data['TEGNum'] < teg_num].copy()
+
+    career_context = "**PRE-TOURNAMENT Career Context (all data BEFORE this TEG):**\n\n"
+
+    for player in sorted(players_in_teg):
+        player_history = pre_tournament_data[pre_tournament_data['Player'] == player].copy()
+
+        if len(player_history) == 0:
+            # Debut player
+            career_context += f"**{player}**: DEBUT (first TEG)\n\n"
+            continue
+
+        # Sort by TEGNum to get chronological order
+        player_history = player_history.sort_values('TEGNum')
+
+        # Recent finishes (last 3-5 TEGs they played, in reverse chronological order)
+        recent_tegs = player_history.tail(5).sort_values('TEGNum', ascending=False)
+        recent_finishes = []
+        for _, row in recent_tegs.iterrows():
+            teg_label = f"TEG {int(row['TEGNum'])}"
+            position = f"{int(row['Final_Rank_Stableford'])}"
+            recent_finishes.append(f"{teg_label}: {position}")
+
+        # Position counts (Stableford/Trophy competition)
+        position_counts = {}
+        for _, row in player_history.iterrows():
+            pos = int(row['Final_Rank_Stableford'])
+            position_counts[pos] = position_counts.get(pos, 0) + 1
+
+        # Format position counts (1st, 2nd, 3rd, etc.)
+        pos_count_str = ", ".join([f"{pos}: {count}" for pos, count in sorted(position_counts.items())])
+
+        # Build player summary
+        career_context += f"**{player}**:\n"
+        career_context += f"- Recent: {', '.join(recent_finishes)}\n"
+        career_context += f"- Career positions: {pos_count_str}\n\n"
+
+    return career_context
+
 def generate_tournament_synthesis(round_stories, teg_num):
     """
     Generate tournament-level sections using all round stories.
-    Respects DRY_RUN to avoid any paid API calls during diagnosis.
+    Note: Venue context is added directly after LLM generation (not in prompt).
     """
     print(f"\n  Generating tournament synthesis...")
 
-    tournament_summary = pd.read_parquet('data/commentary_tournament_summary.parquet')
-    tournament_summary = tournament_summary[tournament_summary['TEGNum'] == teg_num]
+    # Load tournament summary
+    all_tournament_data = pd.read_parquet('data/commentary_tournament_summary.parquet')
+    tournament_summary = all_tournament_data[all_tournament_data['TEGNum'] == teg_num].copy()
+
+    # Add historical context: count wins BEFORE this TEG for each player
+    def calc_wins_before(row):
+        player_history = all_tournament_data[
+            (all_tournament_data['Player'] == row['Player']) &
+            (all_tournament_data['TEGNum'] < row['TEGNum'])
+        ]
+        stableford_wins = int(player_history['Won_Stableford'].sum())  # Trophy = Stableford winner
+        gross_wins = int(player_history['Won_Gross'].sum())  # Green Jacket = Gross winner
+        wooden_spoons = int(player_history['Wooden_Spoon'].sum())
+        return pd.Series({
+            'teg_trophy_wins_before': stableford_wins,
+            'green_jacket_wins_before': gross_wins,
+            'wooden_spoons_before': wooden_spoons
+        })
+
+    historical_counts = tournament_summary.apply(calc_wins_before, axis=1)
+    tournament_summary = pd.concat([tournament_summary, historical_counts], axis=1)
 
     round_summaries_text = "\n\n".join([f"## Round {i+1}\n{story}" for i, story in enumerate(round_stories)])
     tournament_data_json = json.dumps(tournament_summary.to_dict('records'), indent=2, default=str)
 
+    # Build historical context summary (win counts)
+    historical_context = "**Historical wins BEFORE this tournament (for context on '1st', '2nd', etc.):**\n"
+    for _, row in tournament_summary.iterrows():
+        player = row['Player']
+        trophies = row['teg_trophy_wins_before']
+        jackets = row['green_jacket_wins_before']
+        spoons = row['wooden_spoons_before']
+        historical_context += f"- {player}: {trophies} Trophy wins (Stableford), {jackets} Green Jacket wins (Gross), {spoons} Wooden Spoons\n"
+
+    # Build career context (recent finishes + position counts)
+    players_in_teg = tournament_summary['Player'].tolist()
+    career_context = build_career_context(teg_num, players_in_teg)
+
+    # Build prompt (NO venue context - that's added directly)
     prompt = TOURNAMENT_SYNTHESIS_PROMPT.format(
         round_summaries=round_summaries_text,
         tournament_data=tournament_data_json,
-        historical_context="[Historical context placeholder - will be enhanced in future version]"
+        historical_context=historical_context,
+        career_context=career_context
     )
 
     if DEBUG:
@@ -530,14 +693,454 @@ def generate_tournament_synthesis(round_stories, teg_num):
     return synthesis
 
 # ========================
+# LEVEL 3: Report Generation (from story notes)
+# ========================
+
+def generate_main_report(teg_num):
+    """
+    Generate full narrative tournament report from existing story notes.
+    Reads story notes file and transforms structured bullets into prose.
+    """
+    print(f"\n{'='*60}")
+    print(f"GENERATING MAIN REPORT FOR TEG {teg_num}")
+    print(f"{'='*60}\n")
+
+    # Read story notes file
+    story_notes_path = f"streamlit/commentary/outputs/teg_{teg_num}_story_notes.md"
+    if not os.path.exists(story_notes_path):
+        raise FileNotFoundError(f"Story notes not found: {story_notes_path}\nGenerate story notes first using: python generate_tournament_commentary_v2.py {teg_num}")
+
+    with open(story_notes_path, 'r', encoding='utf-8') as f:
+        story_notes = f.read()
+
+    print(f"Read story notes from: {story_notes_path}")
+    print(f"Story notes length: {len(story_notes):,} characters")
+
+    # Build prompt
+    prompt = MAIN_REPORT_PROMPT.format(story_notes=story_notes)
+
+    # Rate limiting
+    est_in_tokens = _est_tokens(prompt)
+    TOKEN_LIMITER.acquire(est_in_tokens, label=f"MainReport-TEG{teg_num}")
+
+    dprint("    · Main Report prompt stats:")
+    dprint("      " + _blob_stats("story_notes", story_notes))
+    dprint("      " + _blob_stats("FULL prompt", prompt))
+
+    # DRY RUN gate
+    if DRY_RUN:
+        dprint("    ⚙️  DRY RUN: Skipping LLM call")
+        return "DRY_RUN_MAIN_REPORT"
+
+    # Real call
+    api_key = get_api_key()
+    if not api_key:
+        raise ValueError("ANTHROPIC_API_KEY not found in Streamlit secrets or environment variables")
+    client = anthropic.Anthropic(api_key=api_key)
+
+    message = safe_create_message(
+        client,
+        model="claude-sonnet-4-5",
+        max_tokens=8000,
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    main_report = message.content[0].text
+
+    # Save output
+    output_path = f"streamlit/commentary/outputs/teg_{teg_num}_main_report.md"
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(main_report)
+
+    print(f"\n{'='*60}")
+    print(f"MAIN REPORT COMPLETE")
+    print(f"{'='*60}")
+    print(f"Saved to: {output_path}")
+    print(f"Report length: {len(main_report):,} characters")
+    print(f"{'='*60}\n")
+
+    return main_report
+
+def generate_brief_summary(teg_num):
+    """
+    Generate concise 2-3 paragraph summary from existing story notes.
+    """
+    print(f"\n{'='*60}")
+    print(f"GENERATING BRIEF SUMMARY FOR TEG {teg_num}")
+    print(f"{'='*60}\n")
+
+    # Read story notes file
+    story_notes_path = f"streamlit/commentary/outputs/teg_{teg_num}_story_notes.md"
+    if not os.path.exists(story_notes_path):
+        raise FileNotFoundError(f"Story notes not found: {story_notes_path}\nGenerate story notes first using: python generate_tournament_commentary_v2.py {teg_num}")
+
+    with open(story_notes_path, 'r', encoding='utf-8') as f:
+        story_notes = f.read()
+
+    print(f"Read story notes from: {story_notes_path}")
+    print(f"Story notes length: {len(story_notes):,} characters")
+
+    # Build prompt
+    prompt = BRIEF_SUMMARY_PROMPT.format(story_notes=story_notes)
+
+    # Rate limiting
+    est_in_tokens = _est_tokens(prompt)
+    TOKEN_LIMITER.acquire(est_in_tokens, label=f"BriefSummary-TEG{teg_num}")
+
+    dprint("    · Brief Summary prompt stats:")
+    dprint("      " + _blob_stats("story_notes", story_notes))
+    dprint("      " + _blob_stats("FULL prompt", prompt))
+
+    # DRY RUN gate
+    if DRY_RUN:
+        dprint("    ⚙️  DRY RUN: Skipping LLM call")
+        return "DRY_RUN_BRIEF_SUMMARY"
+
+    # Real call
+    api_key = get_api_key()
+    if not api_key:
+        raise ValueError("ANTHROPIC_API_KEY not found in Streamlit secrets or environment variables")
+    client = anthropic.Anthropic(api_key=api_key)
+
+    message = safe_create_message(
+        client,
+        model="claude-sonnet-4-5",
+        max_tokens=2000,
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    brief_summary = message.content[0].text
+
+    # Save output
+    output_path = f"streamlit/commentary/outputs/teg_{teg_num}_brief_summary.md"
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(brief_summary)
+
+    print(f"\n{'='*60}")
+    print(f"BRIEF SUMMARY COMPLETE")
+    print(f"{'='*60}")
+    print(f"Saved to: {output_path}")
+    print(f"Summary length: {len(brief_summary):,} characters")
+    print(f"{'='*60}\n")
+
+    return brief_summary
+
+def generate_reports_from_story_notes(teg_num, main_report=True, brief_summary=True):
+    """
+    Generate reports from existing story notes.
+
+    Args:
+        teg_num: Tournament number
+        main_report: Generate full narrative report (default True)
+        brief_summary: Generate concise summary (default True)
+
+    Returns:
+        Dict with generated reports
+    """
+    results = {}
+
+    if main_report:
+        results['main_report'] = generate_main_report(teg_num)
+
+    if brief_summary:
+        results['brief_summary'] = generate_brief_summary(teg_num)
+
+    return results
+
+# ========================
+# Factual Section Formatting (Direct Addition)
+# ========================
+
+def format_venue_section(teg_num):
+    """
+    Format venue context as markdown section (direct addition, no LLM).
+    Returns formatted Location & Venue section.
+    """
+    venue_context = build_venue_context(teg_num)
+
+    # Parse venue_context to extract key info
+    lines = venue_context.split('\n')
+    area_line = lines[0] if len(lines) > 0 else ""
+
+    # Extract area and year
+    area = ""
+    if "Tournament Area:" in area_line:
+        area = area_line.replace("Tournament Area:", "").strip()
+
+    # Find return context
+    return_context = ""
+    for line in lines:
+        if "Area Return:" in line or "Return to" in line or "NEW DESTINATION:" in line or "First time in" in line:
+            return_context = line.strip()
+            break
+
+    # Extract courses
+    courses = []
+    in_courses = False
+    for line in lines:
+        if line.strip() == "Courses:":
+            in_courses = True
+            continue
+        if in_courses and line.strip().startswith("- Round"):
+            courses.append(line.strip()[2:])  # Remove "- " prefix
+
+    # Build formatted section
+    section = "## Location & Venue\n"
+    if area:
+        if return_context:
+            section += f"- {area}\n"
+            section += f"- {return_context}\n"
+        else:
+            section += f"- {area}\n"
+
+    if courses:
+        section += "- Courses:\n"
+        for course in courses:
+            section += f"  - {course}\n"
+
+    return section
+
+def _stringify_holders(value) -> str | None:
+    """Normalise holder(s) into a clean string."""
+    if value is None:
+        return None
+    if isinstance(value, (list, tuple, set)):
+        vals = [str(v).strip() for v in value if str(v).strip()]
+        if not vals:
+            return None
+        return " & ".join(vals) if len(vals) == 2 else ", ".join(vals)
+    s = str(value).strip()
+    return s or None
+
+
+def _coerce_record_dict(cr: dict, current_teg_num: int | None = None) -> dict:
+    """
+    Canonicalise record dictionaries so downstream formatting never KeyErrors.
+    Returns keys: course, record_holder, record_score, record_teg.
+
+    Known input variants handled:
+      - course / Course
+      - record_holders / record_players_this_round / record_holder / holder / player / name
+      - record_score / score / value
+      - record_teg / teg / TEG / teg_num
+      - is_record_this_round (if True and no explicit teg found => use f"TEG {current_teg_num}")
+    """
+    def pick(d, *names):
+        for n in names:
+            if n in d and d[n] not in (None, ""):
+                return d[n]
+        return None
+
+    course = pick(cr, "course", "Course")
+
+    # holders can be a list or a string under several keys
+    raw_holders = pick(
+        cr,
+        "record_holder",
+        "record_holders",
+        "record_players_this_round",
+        "holder",
+        "player",
+        "name",
+        "Record Holder",
+    )
+    holder_str = _stringify_holders(raw_holders)
+
+    # score
+    record_score = pick(cr, "record_score", "score", "value", "Record Score")
+
+    # teg: try direct keys, else infer from flag
+    record_teg = pick(cr, "record_teg", "record_set_in_teg", "teg", "TEG", "teg_num")
+    if not record_teg:
+        is_this_round = bool(cr.get("is_record_this_round"))
+        if is_this_round and current_teg_num is not None:
+            record_teg = f"TEG {current_teg_num}"
+        elif is_this_round:
+            record_teg = "this round"
+        else:
+            record_teg = "previous"
+
+    return {
+        "course": course,
+        "record_holder": holder_str,
+        "record_score": record_score,
+        "record_teg": record_teg,
+    }
+
+
+def _normalise_records_payload(all_processed_data: dict, teg_num: int) -> None:
+    """
+    In-place normalisation of records payload so downstream formatters get canonical keys.
+    Expects course-level records under all_processed_data['records']['course_records'].
+    Safe no-op if path or types don't match.
+    """
+    records = all_processed_data.get("records")
+    if not isinstance(records, dict):
+        return
+    course_records = records.get("course_records")
+    if not isinstance(course_records, list):
+        return
+    normalised = []
+    for cr in course_records:
+        if isinstance(cr, dict):
+            normalised.append(_coerce_record_dict(cr, current_teg_num=teg_num))
+
+    records["course_records"] = normalised
+    all_processed_data["records"] = records
+
+
+def format_records_and_pbs_section(all_processed_data, teg_num):
+    """
+    Format records and personal bests as markdown sections (direct addition, no LLM).
+    Returns formatted sections for each round.
+    """
+    num_rounds = get_teg_rounds(teg_num)
+    sections = {}
+
+    for round_num in range(1, num_rounds + 1):
+        records_data = all_processed_data['records_by_round'].get(round_num, {})
+        course_records = all_processed_data['course_records_by_round'].get(round_num, [])
+
+        round_section = ""
+
+        # Add records & PBs if any exist
+        if any(records_data.values()):
+            round_section += "\n### Records & Personal Bests\n"
+
+            # All-time records
+            if records_data.get('all_time_records'):
+                round_section += "**All-Time TEG Records:**\n"
+                for record in records_data['all_time_records']:
+                    round_section += f"- {record['player']}: {record['value']} ({record['metric']}) - {record['rank']}\n"
+
+            # All-time worsts
+            if records_data.get('all_time_worsts'):
+                round_section += "**All-Time TEG Worsts:**\n"
+                for record in records_data['all_time_worsts']:
+                    round_section += f"- {record['player']}: {record['value']} ({record['metric']}) - {record['rank']}\n"
+
+            # Personal bests
+            if records_data.get('personal_bests'):
+                round_section += "**Personal Bests:**\n"
+                for pb in records_data['personal_bests']:
+                    round_section += f"- {pb['player']}: {pb['value']} ({pb['metric']}) - {pb['rank']}\n"
+
+            # Personal worsts
+            if records_data.get('personal_worsts'):
+                round_section += "**Personal Worsts:**\n"
+                for pw in records_data['personal_worsts']:
+                    round_section += f"- {pw['player']}: {pw['value']} ({pw['metric']}) - {pw['rank']}\n"
+
+        # Add course records if any exist
+        if course_records:
+            round_section += "\n### Course Records\n"
+            for cr in course_records:
+                # round_section += f"- {cr['course']}: {cr['record_holder']} {cr['record_score']} ({cr['record_teg']})\n"
+                if not isinstance(cr, dict):
+                    raise TypeError(f"Record entry is not a dict: {type(cr)}")
+
+                crn = _coerce_record_dict(cr, current_teg_num=teg_num)
+
+                missing = [k for k in ("course", "record_holder", "record_score", "record_teg") if not crn.get(k)]
+                if missing:
+                    raise KeyError(
+                        f"format_records_and_pbs_section: missing fields {missing}; original keys={sorted(cr.keys())}"
+                    )
+
+                round_section += f"- {crn['course']}: {crn['record_holder']} {crn['record_score']} ({crn['record_teg']})\n"
+
+                if cr.get('tied_or_set_this_round'):
+                    round_section += f"  - **Record {'tied' if cr.get('tied') else 'set'} this round by {cr['player_this_round']}**\n"
+
+        sections[round_num] = round_section
+
+    return sections
+
+
+def append_factual_sections(story_notes, teg_num, all_processed_data):
+    """
+    Append factual sections (venue, records, PBs) directly to story notes.
+    This data doesn't need LLM synthesis - just formatting.
+
+    Args:
+        story_notes: LLM-generated story notes string
+        teg_num: Tournament number
+        all_processed_data: Dict with all processed data from pattern_analysis
+
+    Returns:
+        Complete story notes with factual sections appended
+    """
+    
+    _normalise_records_payload(all_processed_data, teg_num)
+
+    
+    lines = story_notes.split('\n')
+
+    # Find where to insert venue section (after synthesis, before round notes)
+    # Look for first "## Round" heading
+    insert_pos = 0
+    for i, line in enumerate(lines):
+        if line.startswith("## Round"):
+            insert_pos = i
+            break
+
+    # Insert venue section before first round
+    venue_section = format_venue_section(teg_num)
+    if insert_pos > 0:
+        lines.insert(insert_pos, venue_section)
+        insert_pos += venue_section.count('\n') + 1
+
+    # Get records/PBs sections for each round
+    records_sections = format_records_and_pbs_section(all_processed_data, teg_num)
+
+    # Insert records/PBs after each round's notes
+    # Work backwards to preserve line numbers
+    num_rounds = get_teg_rounds(teg_num)
+    for round_num in range(num_rounds, 0, -1):
+        # Find end of this round's section
+        round_header = f"## Round {round_num} Notes"
+        next_round_header = f"## Round {round_num + 1} Notes" if round_num < num_rounds else None
+
+        start_idx = None
+        end_idx = len(lines)
+
+        for i, line in enumerate(lines):
+            if round_header in line:
+                start_idx = i
+            elif next_round_header and next_round_header in line:
+                end_idx = i
+                break
+
+        if start_idx is not None and records_sections.get(round_num):
+            # Insert before next round (or at end)
+            lines.insert(end_idx, records_sections[round_num])
+
+    return '\n'.join(lines)
+
+
+# ========================
 # File assembly
 # ========================
 
-def build_story_notes_file(teg_num, round_stories, synthesis):
+def build_story_notes_file(teg_num, round_stories, synthesis, all_processed_data):
+    """
+    Build complete story notes file with LLM-generated content + factual sections.
+
+    Args:
+        teg_num: Tournament number
+        round_stories: List of LLM-generated round stories
+        synthesis: LLM-generated tournament synthesis
+        all_processed_data: Dict with all processed data (for factual sections)
+    """
+    # Build initial content from LLM-generated parts
     content = f"# TEG {teg_num} Story Notes\n\n"
     content += synthesis + "\n\n"
     for i, round_notes in enumerate(round_stories, 1):
         content += round_notes + "\n\n"
+
+    # Append factual sections (venue, records, PBs)
+    content = append_factual_sections(content, teg_num, all_processed_data)
+
     return content
 
 # ========================
@@ -577,7 +1180,7 @@ def generate_complete_story_notes(teg_num):
     synthesis = generate_tournament_synthesis(round_stories, teg_num)
     print("> Tournament synthesis complete")
 
-    story_notes = build_story_notes_file(teg_num, round_stories, synthesis)
+    story_notes = build_story_notes_file(teg_num, round_stories, synthesis, all_data)
 
     output_path = f"streamlit/commentary/outputs/teg_{teg_num}_story_notes.md"
     with open(output_path, 'w', encoding='utf-8') as f:
@@ -717,7 +1320,34 @@ if __name__ == "__main__":
 
     print(f"DRY_RUN mode is {'ON' if DRY_RUN else 'OFF'} • DEBUG is {'ON' if DEBUG else 'OFF'}")
 
-    parser = argparse.ArgumentParser(description='Generate tournament story notes')
+    parser = argparse.ArgumentParser(
+        description='Generate tournament story notes and reports',
+        epilog='''
+Examples:
+  # Generate story notes only
+  python %(prog)s 17
+
+  # Generate story notes for partial tournament (first 2 rounds)
+  python %(prog)s 17 --partial 2
+
+  # Generate reports from existing story notes
+  python %(prog)s 17 --generate-reports
+
+  # Generate story notes AND reports in one go
+  python %(prog)s 17 --full-pipeline
+
+  # Generate only main report (no brief summary)
+  python %(prog)s 17 --main-report-only
+
+  # Generate only brief summary (no main report)
+  python %(prog)s 17 --brief-summary-only
+
+  # Process multiple tournaments
+  python %(prog)s --range 10 12
+        ''',
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+
     # Either provide a single TEG number (positional) OR use --range START END
     parser.add_argument('teg_num', type=int, nargs='?', help='Single tournament number (omit if using --range)')
     parser.add_argument('--partial', type=int, help='Number of completed rounds (for in-progress tournaments)')
@@ -725,6 +1355,17 @@ if __name__ == "__main__":
                         help='Run a range of TEGs inclusive, e.g. --range 10 12')
     parser.add_argument('--stop-on-error', action='store_true', help='Abort batch on first error')
     parser.add_argument('--pause-between', type=float, default=0.0, help='Seconds to pause between tournaments')
+
+    # Report generation options (Level 3)
+    parser.add_argument('--generate-reports', action='store_true',
+                        help='Generate reports from existing story notes (both main report and brief summary)')
+    parser.add_argument('--main-report-only', action='store_true',
+                        help='Generate only the main report from existing story notes')
+    parser.add_argument('--brief-summary-only', action='store_true',
+                        help='Generate only the brief summary from existing story notes')
+    parser.add_argument('--full-pipeline', action='store_true',
+                        help='Generate story notes AND reports in one go')
+
     args = parser.parse_args()
 
     if args.range:
@@ -738,7 +1379,27 @@ if __name__ == "__main__":
     else:
         if args.teg_num is None:
             parser.error("Provide a single TEG number or --range START END")
-        if args.partial:
-            generate_story_notes_up_to_round(args.teg_num, args.partial)
+
+        # Handle report generation modes
+        if args.generate_reports:
+            generate_reports_from_story_notes(args.teg_num, main_report=True, brief_summary=True)
+        elif args.main_report_only:
+            generate_main_report(args.teg_num)
+        elif args.brief_summary_only:
+            generate_brief_summary(args.teg_num)
+        elif args.full_pipeline:
+            # Generate story notes first
+            if args.partial:
+                generate_story_notes_up_to_round(args.teg_num, args.partial)
+                print("\nSkipping report generation for partial tournament (story notes only)")
+            else:
+                generate_complete_story_notes(args.teg_num)
+                # Then generate reports
+                print("\nProceeding to report generation...")
+                generate_reports_from_story_notes(args.teg_num, main_report=True, brief_summary=True)
         else:
-            generate_complete_story_notes(args.teg_num)
+            # Default behavior: story notes only
+            if args.partial:
+                generate_story_notes_up_to_round(args.teg_num, args.partial)
+            else:
+                generate_complete_story_notes(args.teg_num)

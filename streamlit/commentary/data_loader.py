@@ -17,7 +17,7 @@ def load_round_data(teg_num, round_num, all_processed_data):
     Load all data for a specific round from processed data.
 
     Filters multi-round data to just this round, creating a focused
-    dataset of ~120-180 data points for story generation.
+    dataset including records, PBs, and course records.
 
     Args:
         teg_num: Tournament number
@@ -25,7 +25,7 @@ def load_round_data(teg_num, round_num, all_processed_data):
         all_processed_data: Output from process_all_data_types()
 
     Returns:
-        Dict with ~120-180 focused data points for this round:
+        Dict with focused data points for this round:
         - round: Round number
         - lead_timeline: Leader info for this round
         - lead_changes: Lead changes in this round
@@ -34,6 +34,8 @@ def load_round_data(teg_num, round_num, all_processed_data):
         - pattern_details: Enriched patterns with hole details
         - events: Notable events from this round
         - summary: Round summary data for all players
+        - records_and_pbs: Records and personal bests for this round
+        - course_records: Course records for this round
     """
     # Filter lead data to this round
     lead_timeline = [
@@ -76,6 +78,17 @@ def load_round_data(teg_num, round_num, all_processed_data):
         if summary['Round'] == round_num
     ]
 
+    # Get records and PBs for this round
+    records_and_pbs = all_processed_data['records_by_round'].get(round_num, {
+        'all_time_records': [],
+        'all_time_worsts': [],
+        'personal_bests': [],
+        'personal_worsts': []
+    })
+
+    # Get course records for this round
+    course_records = all_processed_data['course_records_by_round'].get(round_num, [])
+
     return {
         'round': round_num,
         'lead_timeline': lead_timeline,
@@ -84,7 +97,9 @@ def load_round_data(teg_num, round_num, all_processed_data):
         'nine_patterns': nine_patterns,
         'pattern_details': pattern_details,
         'events': round_events,
-        'summary': round_summary
+        'summary': round_summary,
+        'records_and_pbs': records_and_pbs,
+        'course_records': course_records
     }
 
 

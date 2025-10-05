@@ -1,3 +1,6 @@
 {
-  "python.defaultInterpreterPath": ".venv/Scripts/python.exe"
+  "python.defaultInterpreterPath": ".venv/Scripts/python.exe",
+  "workbench.editorAssociations": {
+    "file:/**/*.parquet": "jupyter-data-wrangler"
+  }
 }

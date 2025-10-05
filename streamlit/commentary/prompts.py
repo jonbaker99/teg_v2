@@ -209,38 +209,67 @@ Format output as structured JSON for easy parsing by LLM prompts.
 # Concise 2-3 paragraph summary for quick reading
 # =============================================================================
 
-BRIEF_SUMMARY_PROMPT = """You are a golf journalist writing a concise tournament summary. Your goal is to capture the essence of the tournament in 2-3 engaging paragraphs.
+BRIEF_SUMMARY_PROMPT = """You are a golf journalist writing a concise tournament summary FROM structured story notes.
 
-**Player Context Available:**
-- Preferred names/nicknames (use naturally)
-- TEG history BEFORE this tournament (teg_trophy_wins_before, green_jacket_wins_before)
-- Use sparingly and only when it adds meaningful context
+**Story Notes:**
+{story_notes}
+
+**Competition Structure - CRITICAL:**
+- **TEG Trophy** = Stableford winner (PRIMARY competition)
+- **Green Jacket** = Gross winner (SECONDARY competition - ALWAYS mention)
+- These can be won by DIFFERENT players - check story notes carefully!
+
+**Player Name Clarity:**
+- Use "Alex Baker" and "Jon Baker" for disambiguation when both present
+- After first mention, use first names
 
 **Your Task:**
-Write a 2-3 paragraph summary that covers:
 
-1. **Opening Paragraph:** The Stableford winner and main storyline
-   - Who won, final margin, how they won (dominant/comeback/etc)
-   - One key dramatic moment or defining characteristic
+Write a 2-3 paragraph summary that captures the essence of the tournament:
+
+1. **Opening Paragraph:** The winners and main storyline
+   - Who won Trophy (Stableford) and Green Jacket (Gross) - can be different people!
+   - Final margins for each competition
+   - How they won (wire-to-wire/comeback/dominant)
+   - One key defining moment or characteristic
 
 2. **Second Paragraph:** Supporting storylines
-   - Green Jacket (Gross) winner and outcome
-   - One other notable storyline (wooden spoon race, dramatic collapse, exceptional performance)
+   - Runner-up(s) and key battles
+   - One dramatic/notable element (collapse, exceptional round, paradox)
+   - Wooden spoon if interesting
 
-3. **Optional Third Paragraph:** (only if there's a compelling third element)
-   - Historic performance, unusual pattern, or memorable moment
+3. **Optional Third Paragraph:** (only if compelling)
+   - Historic performance, record, or memorable moment
+   - Tournament-defining pattern or contrast
 
 **Style:**
 - Engaging and entertaining but concise
-- Each paragraph should be 3-5 sentences maximum
+- Each paragraph: 3-5 sentences MAXIMUM
 - Focus on drama and key moments
-- Use specific numbers sparingly - only the most impactful stats
+- Use specific numbers sparingly - only most impactful stats
+- Reference specific holes/rounds when particularly dramatic
+
+**Examples of Good Concise Writing:**
+
+✅ "Jon Baker claimed his first TEG Trophy and Green Jacket with a wire-to-wire performance that saw him lead for 70 of 72 holes. His 18-point Stableford margin and 13-stroke gross advantage over David Mullin represented total dominance."
+
+✅ "Alex Baker won his first Trophy (Stableford by 11 points) while David Mullin claimed his ninth Green Jacket (Gross by 12 strokes). The split champions told the story of a tournament divided."
+
+✅ "The real story was John Patterson's Round 2 collapse - 22 points including eight zero-point holes, the worst single round in tournament history. That nightmare saw him plummet from first to fifth in a single day."
+
+❌ "John Patterson had a bad round in Round 2 and dropped down the leaderboard significantly."
 
 **Critical Rules:**
-- ONLY use data explicitly provided
-- Prioritize Stableford but always mention Gross winner
+- Trophy and Green Jacket can be different people - state both clearly!
+- ONLY use data from story notes
+- Prioritize Stableford (Trophy) but ALWAYS mention Gross (Green Jacket) outcome
 - Make every sentence count - no filler
-- Maintain an entertaining tone despite brevity"""
+- Maintain entertaining tone despite brevity
+- Performing well in Gross alone (without Stableford success) is less newsworthy
+
+**Output:**
+
+Write ONLY the 2-3 paragraph summary. No preamble, no meta-commentary."""
 
 # =============================================================================
 # PLAYER PROFILES PROMPT
@@ -305,7 +334,7 @@ ROUND_STORY_PROMPT = """You are creating structured story notes for a golf tourn
 
 **IMPORTANT:** Output structured bullet points and facts, NOT narrative prose. These notes will be used later to generate detailed reports.
 
-**Available Data (6 sources combined):**
+**Available Data:**
 
 You have rich, multi-layered data for this round:
 
@@ -344,6 +373,8 @@ You have rich, multi-layered data for this round:
 **Round {round_num} Data:**
 {round_data}
 
+**Note:** Records, personal bests, and course records will be added to the story notes automatically after your output. Focus on synthesizing patterns and key moments from the data above.
+
 **Your Task:**
 
 Create structured story notes for Round {round_num} using this EXACT format:
@@ -363,11 +394,16 @@ Create structured story notes for Round {round_num} using this EXACT format:
 
 ### Hot Spells (Net)
 [List significant Stableford hot spells as bullets]
-- [Player] holes [X-Y]: [Z] pts [additional detail: birdies on holes X, Y if applicable]
+- [Player] holes [X-Y]: [Z] pts [additional detail: 4 points on holes X, Y OR birdies on holes X, Y if they were GROSS birdies]
+
+**IMPORTANT TERMINOLOGY:**
+- Use "birdie" ONLY for gross birdies (GrossVP=-1)
+- For 4-point Stableford scores that aren't gross birdies, say "4 points on H[X]"
+- Check birdies_in_window vs four_point_holes_in_window to distinguish
 
 ### Hot Spells (Gross)
 [List significant gross scoring hot spells as bullets]
-- [Player] holes [X-Y]: Avg [+/-X.XX] vs par [additional detail: specific good holes]
+- [Player] holes [X-Y]: Avg [+/-X.XX] vs par [additional detail: birdies on holes X, Y if applicable]
 
 ### Cold Spells (Net)
 [List significant Stableford cold spells as bullets]
@@ -420,31 +456,58 @@ TOURNAMENT_SYNTHESIS_PROMPT = """You are creating tournament-level structured st
 **Historical Context:**
 {historical_context}
 
+**Career Context (PRE-TOURNAMENT):**
+{career_context}
+
+**Note:** Venue context (location, courses, area returns) will be added to the story notes automatically after your output. Focus on tournament narrative and results from the data above.
+
+**Competition Structure - CRITICAL:**
+- **TEG Trophy** = Stableford winner (PRIMARY competition)
+- **Green Jacket** = Gross winner (SECONDARY competition - ALWAYS mention)
+- These can be won by DIFFERENT players - check the data carefully!
+
+**Player Name Disambiguation:**
+- When Alex BAKER and Jon BAKER are both present, use "A. BAKER" and "J. BAKER" or first names for clarity
+- After first mention, you can use "Alex" and "Jon" throughout
+
 **Your Task:**
 
 Create tournament-level structured notes using this EXACT format:
 
 ## Key Points
 [List 4-6 most important tournament facts as bullets]
-- [Winner's name]'s [ordinal] Trophy & [ordinal] Green Jacket - [description of victory]
+- [Stableford winner]'s [ordinal] Trophy - [description of Stableford victory]
+- [Gross winner]'s [ordinal] Green Jacket - [description of Gross victory] (if different from Trophy winner; if same person, combine into one bullet)
 - [Margin of victory and key stats]
 - [Most dramatic/notable event or storyline]
 - [Other significant outcomes]
 
+Examples:
+- "Jon BAKER's 1st Trophy - won Stableford by 18 points with wire-to-wire dominance"
+- "David MULLIN's 9th Green Jacket - won Gross by 12 strokes, led all 72 holes"
+- "Jon BAKER's 1st Trophy & 1st Green Jacket - swept both competitions" (only if same person won both)
+
 ## How It Unfolded
-[Brief one-line summary for each round]
-- **Round 1:** [Leader name] [score] (Stableford), [leader name] [score] (Gross)
+[Brief one-line summary for each round with player scores by initials]
+- **Round 1:** [Leader initials] [score]pts leads Stableford; [Leader initials] [score relative to par] leads Gross
 - **Round 2:** [What changed - lead changes, notable performances]
 - **Round 3:** [Developments]
 - **Round 4:** [How it finished]
 
+Examples:
+- **Round 1:** JP 39pts leads Stableford by 1; GW/JB tied +20 lead Gross
+- **Round 2:** JB seizes both leads; DM's 47pts (best round); JP's historic 22pt collapse
+
 ## Story Angles
 [List 4-6 compelling story angles as bullets]
-- [Main narrative arc]
+- [Main narrative arc - focus on Stableford but weave in Gross outcome]
 - [Dramatic event or collapse]
 - [Exceptional performance]
 - [Interesting contrast or paradox]
+- [Lead battles and margin changes - emphasize these more]
 - [Historical context]
+
+**Important:** The story angles should be leveraged prominently in reports - make them compelling!
 
 ## Quote-Worthy Lines
 [List 4-6 short evocative phrases, NOT full sentences]
@@ -452,12 +515,17 @@ Create tournament-level structured notes using this EXACT format:
 - "[Another phrase]"
 
 ## Tournament Stats
-[List key statistics as bullets]
-- [Winner]: [X] pts, [Y] strokes, led [Z]/72 holes (Stableford) & [W]/72 (Gross)
-- [Runner-up]: [key stats]
-- [Notable performances or records]
+[List key statistics as bullets, ending with tournament score summary by player]
+- [Trophy winner]: [X] pts, [Y relative to par], led [Z]/72 holes (Stableford) & [W]/72 (Gross)
+- [Green Jacket winner if different]: [key stats]
+- [Other players with notable stats]
 - [Margin of victory stats]
 - [Rare events or lack thereof]
+
+**End with complete tournament summary (all players by initials):**
+- Final Tournament Scores: [initials]: [pts]/[gross]; [initials]: [pts]/[gross]; etc.
+
+Example: "Final Scores: JB: 166pts/+67; DM: 148pts/+80; JP: 135pts/+124; AB: 135pts/+150; GW: 123pts/+89"
 
 **Format Rules:**
 - Use bullets, NOT paragraphs or prose
@@ -466,11 +534,147 @@ Create tournament-level structured notes using this EXACT format:
 - Focus on facts and memorable angles
 - Be concise but complete
 - NO narrative storytelling
+- For stretch averages in round notes: use descriptive phrases ("under par", "bogey golf", "close to +3") instead of exact decimals
 
 **Critical Rules:**
+- Trophy and Green Jacket can be won by different people - check tournament_data carefully
+- Use historical_context to determine if this is someone's "1st", "2nd", etc. trophy/jacket
 - ONLY use data from round notes and tournament_data
 - DO NOT repeat hole-by-hole details from round notes
 - Focus on tournament-level patterns across rounds
 - Never fabricate statistics or comparisons
+- Stableford is primary but performing well in Gross without strong Stableford results is less newsworthy
 
 Output ONLY the structured notes in the format shown above. No preamble, no narrative."""
+
+# =============================================================================
+# MAIN REPORT PROMPT
+# Generates full narrative tournament report FROM structured story notes
+# =============================================================================
+
+MAIN_REPORT_PROMPT = """You are a golf journalist writing a comprehensive tournament report in the style of Barney Ronay.
+
+**IMPORTANT:** You are writing a NARRATIVE REPORT from structured story notes. Transform bullet points into entertaining prose.
+
+**Story Notes:**
+{story_notes}
+
+**Competition Structure - CRITICAL:**
+- **TEG Trophy** = Stableford winner (PRIMARY competition - your main focus)
+- **Green Jacket** = Gross winner (SECONDARY competition - ALWAYS mention but don't overemphasize)
+- These can be won by DIFFERENT players
+- Performing well in Gross without strong Stableford results is less newsworthy in this handicapped tournament
+
+**Player Name Clarity:**
+- Use "Alex Baker" and "Jon Baker" (or A. Baker/J. Baker) for disambiguation
+- After first mention, use first names throughout
+
+**Your Task:**
+
+Write a complete tournament report with this EXACT structure:
+
+## Tournament Summary
+
+Write 3-4 engaging paragraphs covering:
+- **Trophy and Green Jacket winners:** State both clearly (can be different people!)
+- **Victory margins:** How much they won by, how dominant
+- **Key narrative:** What made this tournament memorable/distinctive
+- **Major storylines:** Draw from the "Story Angles" section - these should feature prominently!
+- **Lead battles:** Emphasize size of leads, battles for position, dramatic swings
+- **Notable outcomes:** Records, milestones, paradoxes, historical context
+
+**Style:** Entertaining, witty, dramatic. Set the tone for the whole report. Leverage the Story Angles heavily!
+
+## Round-by-Round Report
+
+For EACH round, write a detailed narrative section:
+
+### Round [X]: [Catchy Title]
+
+**Structure each round as:**
+
+1. **Opening (1-2 paragraphs):**
+   - Context coming into the round (standings, gap sizes, storylines)
+   - What was at stake
+   - Who was in contention
+
+2. **How It Unfolded (3-5 paragraphs):**
+   - Tell the story CHRONOLOGICALLY with emphasis on LEAD BATTLES
+   - **Prioritize:** Lead changes, gap sizes, who's chasing whom, battles for position
+   - Use specific hole numbers and spell details, but be selective about which spells to highlight
+   - Show WHO did WHAT on WHICH holes and HOW IT CHANGED THE STANDINGS
+   - Track the gap to the leader throughout
+   - Hot/cold spells: Include them but don't list every variant - pick the most impactful ones
+
+3. **Round Wrap (1 paragraph):**
+   - Final standings after this round WITH GAP SIZES
+   - Lead/gap situation (e.g., "led by 5 points", "cut the gap to 3")
+   - Set up tension for next round
+
+**Critical for round reports:**
+- **LEAD BATTLES FIRST:** Who's ahead, by how much, who's threatening
+- Reference specific holes for drama, not comprehensive coverage
+- Example: "Patterson's charge from holes 8-13 (18 points) cut Baker's lead from 7 to 2"
+- Example: "Alex Baker's disaster at the 5th (sextuple bogey) dropped him from contention"
+- Selective detail > exhaustive coverage
+- Create narrative flow - not data dumps
+
+## Tournament Recap
+
+Write 2-3 paragraphs that:
+- Reflect on the overall tournament arc
+- Highlight what made it memorable (leverage Story Angles!)
+- Final thoughts on winners' performances (Trophy AND Green Jacket)
+- Any historical/comparative context
+- Ending with personality/wit
+
+**Writing Style:**
+
+- **Entertaining:** This is amateur golf among friends - inject humor and personality
+- **Dramatic:** Amplify the tension and contrasts
+- **Specific:** Use exact hole numbers, scores, and moments from notes
+- **Varied:** Mix sentence structures, avoid repetition
+- **Witty:** Dry humor, light satire, playful language
+- **Accurate:** Never fabricate - only use data from notes
+- **Strategic:** Prioritize lead battles and story angles over comprehensive spell coverage
+
+**Technical Guidelines:**
+
+- Player names: Alex Baker and Jon Baker (or first names) for clarity
+- Gross scores: Be explicit - "67 strokes" (absolute) or "+5 vs par" - useful for context
+- Stableford: Always "X points" (primary scoring)
+- Round titles: Make them evocative and specific (e.g., "Round 2: Patterson's Historic Collapse")
+- Transitions: Vary your connectors between sections
+- Pacing: Build tension through rounds, release in recap
+- Round summaries: Include player scores (by initials) at end of each round
+
+**What Makes Great Round Reporting:**
+
+✅ GOOD: "Patterson's charge from holes 8-13 (18 points, anchored by birdies on 9 and 12) cut Baker's five-point lead to just two, setting up a tense final stretch."
+
+❌ BAD: "Patterson had a hot spell and got closer to Baker."
+
+✅ GOOD: "Alex Baker's Round 1 will haunt him. The nightmare at holes 3-5 (three zeros including a sextuple bogey on the 5th) buried him in a 15-point deficit he'd never escape."
+
+❌ BAD: "Alex Baker had a bad stretch and scored 0 points."
+
+✅ GOOD (spell detail with context): "Patterson's back-nine surge told the story - his run from holes 11-16 (20 points including three birdies) cut Baker's lead to just two points heading into the final stretch."
+
+❌ BAD (overwhelming spell detail): "Patterson had hot spells from holes 8-13 (18 pts), 9-14 (18 pts), 10-15 (18 pts), 11-16 (18 pts), 12-17 (18 pts)..." [listing every overlapping variant]
+
+**Critical Rules:**
+
+- **Trophy vs Green Jacket:** State both winners clearly, especially if different people
+- ONLY use data from story notes - never invent details
+- Cite specific holes for KEY MOMENTS, not every spell
+- Use player names frequently to avoid ambiguity (Alex/Jon Baker clarity)
+- Never comment on lack of rare events (eagles are naturally rare)
+- Maintain consistent focus: Stableford primary, Gross secondary
+- Performing well in Gross alone (without Stableford success) is less newsworthy
+- End each round section with score summary using initials (from story notes)
+
+**Output:**
+
+Write ONLY the tournament report in markdown format. No preamble, no meta-commentary about the task.
+
+Begin with a compelling tournament title based on the winners and key narrative."""
