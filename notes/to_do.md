@@ -38,6 +38,15 @@ REVIEW PROMPT AT END AGAIN FOR CLARITY
 [ ] add those to the story points without LLM needed (e.g. add after). can they be programatically added?
 [ ] do records and PBs need LLM too or can they be programatically added?
 
+
+NOTES
+-> don't talk about the differences between gross and stableford as though they're interesting
+-> quoting 'disasters' too frequently, use varied language and illustrate with hole scores (e.g. "a 10 on the par 4 7th")
+
+Add double figure gross scores?
+
+[*] CACHE PROMPTS TO SAVE TOKENS...
+
 ----------------
 
 Starting Prompt for Next Conversation
