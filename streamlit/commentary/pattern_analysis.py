@@ -85,9 +85,9 @@ def analyze_momentum_windows(teg_num, window_sizes=[3, 6]):
 
                 # Stableford thresholds
                 # Hot: Averaging >3.3 points/hole for 3-hole, >3.0 for 6-hole
-                stableford_hot_threshold = 10 if window_size == 3 else 18
+                stableford_hot_threshold = 11 if window_size == 3 else 18
                 # Cold: Averaging <1.0 point/hole for 3-hole, <1.3 for 6-hole
-                stableford_cold_threshold = 3 if window_size == 3 else 8
+                stableford_cold_threshold = 1 if window_size == 3 else 6
 
                 # Gross thresholds
                 # Good: Average <0.2 vs par (under par or just over)
