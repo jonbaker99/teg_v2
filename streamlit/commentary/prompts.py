@@ -85,7 +85,7 @@ GOLF_JOURNALIST_PROMPT = """You are a golf journalist writing in the style of to
 
 **Player Context (Use Sparingly):**
 You have player information including:
-- Preferred names/nicknames (use naturally - e.g., "Dave" instead of "David MULLIN")
+- Preferred names/nicknames (use naturally - e.g., "David" instead of "David MULLIN")
 - TEG history BEFORE this tournament (e.g., "three-time champion" or "seeking his first win")
   - Use: teg_trophy_wins_before, green_jacket_wins_before, wooden_spoons_before
   - These reflect what they had achieved BEFORE this tournament started
@@ -259,7 +259,7 @@ For each player, write a 2-4 sentence summary that captures their tournament sto
 
 **Structure for each player:**
 1. **Opening sentence:** Their finish and primary competition result
-   - e.g., "Dave claimed his fourth TEG Trophy with a dominant wire-to-wire performance"
+   - e.g., "David claimed his fourth TEG Trophy with a dominant wire-to-wire performance"
    - OR "Charlie finished 4th in Stableford, 8 points adrift"
 
 2. **Middle sentence(s):** Key highlights or storyline
@@ -294,3 +294,183 @@ For each player, write a 2-4 sentence summary that captures their tournament sto
 - Each player gets their moment - find what made their tournament interesting
 - If a player had a truly unremarkable tournament, keep it brief (2 sentences)
 - Maintain consistent entertainment value across all players"""
+
+# =============================================================================
+# ROUND STORY NOTES PROMPT
+# For multi-pass story notes generation - creates structured bullet points
+# NOTE: This generates NOTES (bullets/facts), not narrative prose
+# =============================================================================
+
+ROUND_STORY_PROMPT = """You are creating structured story notes for a golf tournament round.
+
+**IMPORTANT:** Output structured bullet points and facts, NOT narrative prose. These notes will be used later to generate detailed reports.
+
+**Available Data (6 sources combined):**
+
+You have rich, multi-layered data for this round:
+
+1. **Lead Progression** (lead_timeline):
+   - Who led after this round
+   - Margin to 2nd place
+   - Whether it was a tight battle or breakaway
+
+2. **Momentum Patterns** (momentum_patterns, pattern_details):
+   - Hot spells: 3-6 hole windows with exceptional scoring
+   - Cold spells: 3-6 hole windows with poor scoring
+   - Specific hole ranges for each pattern (e.g., "holes 5-8")
+   - Both NET (Stableford points) and GROSS (vs par) scoring patterns
+   - Drill-down details: which specific holes drove each pattern
+   - Birdies and disasters within each window
+
+3. **Front/Back Nine** (nine_patterns):
+   - Significant front 9 vs back 9 differences
+   - Strong starters vs strong finishers
+   - Specific scores for each nine
+
+4. **Events** (events):
+   - Eagles, disasters, significant moments
+   - Exact holes for each event
+   - Ranking changes
+
+5. **Round Summary** (summary):
+   - Tournament context before round (standings, gaps)
+   - Tournament context after round (new standings, gaps)
+   - Round scores, ranking changes
+   - Front 9 and back 9 scores
+
+6. **Previous Round Context:**
+{previous_context}
+
+**Round {round_num} Data:**
+{round_data}
+
+**Your Task:**
+
+Create structured story notes for Round {round_num} using this EXACT format:
+
+## Round {round_num} Notes
+
+### Key Moments
+[List as bullets, include specific holes and what happened]
+- H[hole]: [Player] [what happened - be specific: birdie/disaster/lead change]
+[Continue with most dramatic/important moments from this round]
+
+### Lead After Round
+- **Leader:** [Player name]
+- **Margin:** [X] points to 2nd place
+- **Status:** [Tight battle / Breakaway / etc]
+- **Lead change:** [Yes/No - if yes, note who lost lead]
+
+### Hot Spells (Net)
+[List significant Stableford hot spells as bullets]
+- [Player] holes [X-Y]: [Z] pts [additional detail: birdies on holes X, Y if applicable]
+
+### Hot Spells (Gross)
+[List significant gross scoring hot spells as bullets]
+- [Player] holes [X-Y]: Avg [+/-X.XX] vs par [additional detail: specific good holes]
+
+### Cold Spells (Net)
+[List significant Stableford cold spells as bullets]
+- [Player] holes [X-Y]: [Z] pts [additional detail: disasters on holes X, Y if applicable]
+
+### Cold Spells (Gross)
+[List significant gross scoring cold spells as bullets]
+- [Player] holes [X-Y]: Avg [+X.XX] vs par [additional detail: specific disasters]
+
+### Front/Back 9 Patterns
+[List significant F9/B9 differences as bullets]
+- [Player]: [Strong starter/finisher] - F9: [X] pts, B9: [Y] pts (diff: [Z])
+
+### Round Stats
+- [Player]: [X] pts (Stableford), [Y] gross, rank [Z]
+[List key stats for top players and notable performances]
+
+**Format Rules:**
+- Use bullets, NOT paragraphs
+- Include specific hole numbers whenever available
+- Be concise but complete
+- Focus on facts and data points
+- NO narrative prose or flowing sentences
+- Each bullet should be a discrete fact
+
+**Critical Rules:**
+- ONLY use data explicitly provided in round_data
+- Always cite specific holes when available
+- Stableford points: "X pts", Gross scores: "X gross" or "+X vs par"
+- Never fabricate numbers or events
+
+Output ONLY the structured notes in the format shown above. No preamble, no narrative."""
+
+# =============================================================================
+# TOURNAMENT SYNTHESIS NOTES PROMPT
+# Adds tournament-level structured notes after all round notes are complete
+# NOTE: This generates NOTES (bullets/facts), not narrative prose
+# =============================================================================
+
+TOURNAMENT_SYNTHESIS_PROMPT = """You are creating tournament-level structured story notes.
+
+**IMPORTANT:** Output structured bullet points and facts, NOT narrative prose.
+
+**Round Notes:**
+{round_summaries}
+
+**Tournament Data:**
+{tournament_data}
+
+**Historical Context:**
+{historical_context}
+
+**Your Task:**
+
+Create tournament-level structured notes using this EXACT format:
+
+## Key Points
+[List 4-6 most important tournament facts as bullets]
+- [Winner's name]'s [ordinal] Trophy & [ordinal] Green Jacket - [description of victory]
+- [Margin of victory and key stats]
+- [Most dramatic/notable event or storyline]
+- [Other significant outcomes]
+
+## How It Unfolded
+[Brief one-line summary for each round]
+- **Round 1:** [Leader name] [score] (Stableford), [leader name] [score] (Gross)
+- **Round 2:** [What changed - lead changes, notable performances]
+- **Round 3:** [Developments]
+- **Round 4:** [How it finished]
+
+## Story Angles
+[List 4-6 compelling story angles as bullets]
+- [Main narrative arc]
+- [Dramatic event or collapse]
+- [Exceptional performance]
+- [Interesting contrast or paradox]
+- [Historical context]
+
+## Quote-Worthy Lines
+[List 4-6 short evocative phrases, NOT full sentences]
+- "[Short memorable phrase]"
+- "[Another phrase]"
+
+## Tournament Stats
+[List key statistics as bullets]
+- [Winner]: [X] pts, [Y] strokes, led [Z]/72 holes (Stableford) & [W]/72 (Gross)
+- [Runner-up]: [key stats]
+- [Notable performances or records]
+- [Margin of victory stats]
+- [Rare events or lack thereof]
+
+**Format Rules:**
+- Use bullets, NOT paragraphs or prose
+- Keep "How It Unfolded" to ONE LINE per round
+- "Quote-Worthy Lines" should be SHORT PHRASES (3-5 words each)
+- Focus on facts and memorable angles
+- Be concise but complete
+- NO narrative storytelling
+
+**Critical Rules:**
+- ONLY use data from round notes and tournament_data
+- DO NOT repeat hole-by-hole details from round notes
+- Focus on tournament-level patterns across rounds
+- Never fabricate statistics or comparisons
+
+Output ONLY the structured notes in the format shown above. No preamble, no narrative."""

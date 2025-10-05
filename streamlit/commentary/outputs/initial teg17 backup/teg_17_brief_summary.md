@@ -10,9 +10,9 @@
 
 Jon Baker delivered a masterclass in sustained dominance at TEG 17, claiming both the TEG Trophy and Green Jacket with crushing margins that made the outcome a foregone conclusion by mid-tournament.
 
-Leading for 67 of 72 holes in Stableford and an absurd 70 of 72 in Gross, Baker's wire-to-wire procession left his rivals fighting for minor placings while he strolled serenely to his personal best performance—his best TEG ever, and ninth all-time in the competition's history.
+Leading for 67 of 72 holes in Stableford and an absurd 70 of 72 in gross, Baker's wire-to-wire procession left his rivals fighting for minor placings while he strolled serenely to his personal best performance—his best TEG ever, and ninth all-time in the competition's history.
 
-The margins tell the story: 18 Stableford points and 13 strokes clear in Gross. This wasn't a tournament; it was a coronation.
+The margins tell the story: 18 Stableford points and 13 strokes clear in gross. This wasn't a tournament; it was a coronation.
 
 ### What Little Drama There Was
 
@@ -20,7 +20,7 @@ The margins tell the story: 18 Stableford points and 13 strokes clear in Gross. 
 
 **David Mullin's Futile Brilliance:** Posted the tournament's best round—47 Stableford points in Round 2 at West Cliffs, including three birdies. It earned him runner-up by 18 points. Couldn't maintain momentum, enduring a 39-hole birdie drought from Round 2 hole 16 to the finish.
 
-**The Wooden Spoon Paradox:** Gregg Williams finished third in the Gross competition (89 strokes) while simultaneously claiming last place in Stableford and the Wooden Spoon. A testament to golf's ability to reward and punish simultaneously.
+**The Wooden Spoon Paradox:** Gregg Williams finished third in the gross competition (89 strokes) while simultaneously claiming last place in Stableford and the Wooden Spoon. A testament to golf's ability to reward and punish simultaneously.
 
 ### The Numbers
 

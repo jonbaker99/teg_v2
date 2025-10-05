@@ -7,3 +7,4 @@ PyGithub
 streamlit-extras
 plotly
 altair
+markdown>=3.4 

@@ -226,7 +226,7 @@ def create_story_blueprint(tournament_data: Dict[str, Any], api_key: str) -> str
     data_summary = json.dumps(tournament_data, indent=2, default=str)
 
     message = client.messages.create(
-        model="claude-sonnet-4-20250514",
+        model="claude-sonnet-4-5",
         max_tokens=4000,
         system=[
             {
@@ -265,7 +265,7 @@ def write_tournament_article(story_blueprint: str, tournament_data: Dict[str, An
     data_summary = json.dumps(tournament_data, indent=2, default=str)
 
     message = client.messages.create(
-        model="claude-sonnet-4-20250514",
+        model="claude-sonnet-4-5",
         max_tokens=8000,
         system=[
             {
@@ -309,7 +309,7 @@ def generate_brief_summary(tournament_data: Dict[str, Any], api_key: str) -> str
     data_summary = json.dumps(tournament_data, indent=2, default=str)
 
     message = client.messages.create(
-        model="claude-sonnet-4-20250514",
+        model="claude-sonnet-4-5",
         max_tokens=2000,
         system=[
             {
@@ -347,7 +347,7 @@ def generate_player_profiles(tournament_data: Dict[str, Any], api_key: str) -> s
     data_summary = json.dumps(tournament_data, indent=2, default=str)
 
     message = client.messages.create(
-        model="claude-sonnet-4-20250514",
+        model="claude-sonnet-4-5",
         max_tokens=4000,
         system=[
             {

@@ -40,7 +40,7 @@ David Mullin spent TEG 17 proving that you can produce a moment of absolute bril
 
 **The Drought:** From hole 16 of Round 2 to the final putt of the tournament, Mullin went 39 holes without a birdie. Thirty-nine holes. That's not a drought; that's a desert. That's golf's version of writer's block, except instead of staring at a blank page, you're staring at a succession of bogeys wondering where your talent went.
 
-**Brief Moment of Hope:** Took the Gross lead after Round 1. Held it for exactly one round before Baker remembered he was playing a golf tournament and politely reclaimed it.
+**Brief Moment of Hope:** Took the gross lead after Round 1. Held it for exactly one round before Baker remembered he was playing a golf tournament and politely reclaimed it.
 
 **Signature Moment:** Round 2's 47-point masterpiece, which will be remembered primarily as "that time Mullin was brilliant and it still didn't matter."
 
@@ -60,7 +60,7 @@ John Patterson's TEG 17 can be neatly divided into two categories: "That was sur
 
 **The Promise:** Round 1 was glorious—39 Stableford points, leading the tournament, playing golf that suggested he might actually have a say in proceedings. For one round, Patterson was a contender.
 
-**The Catastrophe:** Round 2 was... less glorious. Twenty-two Stableford points. Nine holes of triple-bogey-or-worse carnage. A 44 Gross score that suggested he'd perhaps mistaken West Cliffs for a minigolf course and was dismayed to discover real bunkers.
+**The Catastrophe:** Round 2 was... less glorious. Twenty-two Stableford points. Nine holes of triple-bogey-or-worse carnage. A 44 gross score that suggested he'd perhaps mistaken West Cliffs for a minigolf course and was dismayed to discover real bunkers.
 
 **The Mathematics of Disaster:** Patterson plummeted from first to fifth in one round. That's not a collapse; that's an implosion. That's golf's version of a stock market crash, except instead of losing money, you lose your dignity and the lead simultaneously.
 
@@ -84,21 +84,21 @@ John Patterson's TEG 17 can be neatly divided into two categories: "That was sur
 
 Gregg Williams accomplished something truly special at TEG 17: finishing third in one competition while simultaneously claiming last place in the other. This is golf's version of quantum physics—existing in two states simultaneously, both of them confusing.
 
-**The Gross Story:** Williams posted 89 strokes, good enough for bronze. Respectable. Solid. The kind of performance that suggests competence.
+**The gross Story:** Williams posted 89 strokes, good enough for bronze. Respectable. Solid. The kind of performance that suggests competence.
 
 **The Stableford Story:** Williams posted 123 points, comfortably last, earning him the Wooden Spoon. The kind of performance that suggests someone forgot how Stableford scoring works.
 
-**The Great Mystery:** How does one finish third in Gross but last in Stableford? The answer involves a fundamental misunderstanding of where to place one's disasters. Williams chose poorly.
+**The Great Mystery:** How does one finish third in gross but last in Stableford? The answer involves a fundamental misunderstanding of where to place one's disasters. Williams chose poorly.
 
-**The Evidence:** Led Gross after Round 1 with 20 strokes. Then proceeded to demonstrate that early leads in one competition don't prevent last place finishes in another. It's a skill, really.
+**The Evidence:** Led gross after Round 1 with 20 strokes. Then proceeded to demonstrate that early leads in one competition don't prevent last place finishes in another. It's a skill, really.
 
 **Birdie Count:** Two. For the entire tournament. Williams treated birdies like rare collectibles—something to be admired occasionally but never actually acquired in meaningful quantities.
 
-**Signature Moment:** Collecting the Wooden Spoon while simultaneously accepting congratulations for third in Gross. The cognitive dissonance must have been spectacular.
+**Signature Moment:** Collecting the Wooden Spoon while simultaneously accepting congratulations for third in gross. The cognitive dissonance must have been spectacular.
 
 **Overall Assessment:** Williams is TEG 17's greatest enigma—simultaneously successful and disastrous. He's Schrödinger's golfer: both good and terrible until you check the scorecard.
 
-**Rating:** 6/10 for Gross. 2/10 for Stableford. 10/10 for confusion.
+**Rating:** 6/10 for gross. 2/10 for Stableford. 10/10 for confusion.
 
 ---
 
@@ -133,13 +133,13 @@ Alex Baker's TEG 17 performance can be summarized in one word: present. He was t
 
 ## Tournament Awards
 
-**Most Dominant:** Jon Baker (Led 70/72 holes in Gross. That's not winning; that's squatting.)
+**Most Dominant:** Jon Baker (Led 70/72 holes in gross. That's not winning; that's squatting.)
 
 **Best Single Round:** David Mullin, R2 (47 points of futile brilliance)
 
 **Worst Single Round:** John Patterson, R2 (22 points of existential crisis)
 
-**Most Confusing:** Gregg Williams (3rd in Gross, last in Stableford. Pick a lane!)
+**Most Confusing:** Gregg Williams (3rd in gross, last in Stableford. Pick a lane!)
 
 **Most Consistent Mediocrity:** Alex Baker (32-37-34-32. Did someone program a robot?)
 
