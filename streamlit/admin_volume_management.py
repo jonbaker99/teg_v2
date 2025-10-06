@@ -160,20 +160,22 @@ def list_volume_files() -> pd.DataFrame:
         df = pd.DataFrame(columns=["File", "Volume modified", "Volume size", "Volume path"])
     return df
 
-def _status_row(gh_row, vol_row) -> str:
-    """Derive status classification comparing GitHub vs Volume."""
-    if pd.isna(gh_row["File"]):
+def _status_row(row) -> str:
+    """Derive status classification comparing GitHub vs Volume (NaN-safe)."""
+    # sizes are coerced to ints in merged_status(), so these are safe:
+    gsz = int(row.get("GitHub size", 0))
+    vsz = int(row.get("Volume size", 0))
+
+    gdt = row.get("GitHub modified")
+    vdt = row.get("Volume modified")
+
+    if pd.isna(row.get("GitHub path")) and not pd.isna(row.get("Volume path")):
         return "Only on volume"
-    if pd.isna(vol_row["File"]):
+    if pd.isna(row.get("Volume path")) and not pd.isna(row.get("GitHub path")):
         return "Only on GitHub"
 
-    gsz = int(gh_row.get("GitHub size") or 0)
-    vsz = int(vol_row.get("Volume size") or 0)
-    gdt = gh_row.get("GitHub modified")
-    vdt = vol_row.get("Volume modified")
-
     # If either date missing, lean on size diff
-    if gdt is None or vdt is None:
+    if (gdt is None or pd.isna(gdt)) or (vdt is None or pd.isna(vdt)):
         if gsz != vsz:
             return "Different size"
         return "Check required"
@@ -181,6 +183,7 @@ def _status_row(gh_row, vol_row) -> str:
     # Time comparison tolerance (seconds)
     tol = 2
     delta = (gdt - vdt).total_seconds()
+
     if abs(delta) <= tol and gsz == vsz:
         return "Match"
     if delta > tol:
@@ -195,22 +198,32 @@ def _status_row(gh_row, vol_row) -> str:
 def merged_status() -> pd.DataFrame:
     gh = list_github_files()
     vol = list_volume_files()
-    merged = pd.merge(gh, vol, how="outer", on="File", suffixes=("_gh", "_vol"))
+
+    merged = pd.merge(
+        gh, vol, how="outer", on="File", suffixes=("", "")
+    )  # columns already distinct (GitHub/Volume prefixes in names)
+
     if merged.empty:
-        merged = pd.DataFrame(
+        return pd.DataFrame(
             columns=[
                 "File", "GitHub modified", "GitHub size", "GitHub path",
                 "Volume modified", "Volume size", "Volume path", "Status"
             ]
         )
-        return merged
 
-    # Ensure datetime tz aware for display
+    # Ensure proper dtypes
+    # Dates → datetime (tz-aware)
     for col in ["GitHub modified", "Volume modified"]:
         if col in merged.columns:
             merged[col] = pd.to_datetime(merged[col], utc=True, errors="coerce")
 
-    merged["Status"] = merged.apply(lambda r: _status_row(r, r), axis=1)
+    # Sizes → numeric, NaN→0, int
+    for col in ["GitHub size", "Volume size"]:
+        if col in merged.columns:
+            merged[col] = pd.to_numeric(merged[col], errors="coerce").fillna(0).astype(int)
+
+    # Derive status
+    merged["Status"] = merged.apply(_status_row, axis=1)
 
     # Sort: most actionable first
     order = pd.CategoricalDtype(
