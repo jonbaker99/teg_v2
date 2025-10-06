@@ -27,7 +27,7 @@ RATE_BUDGET_INPUT_TOKENS_PER_MIN = 30000
 RATE_SAFETY = 0.90  # adjust 0.85–0.95 as you like
 
 DRY_RUN = False   # set to False when you're ready to actually call the LLM
-DEBUG   = False   # master switch for all debug prints & debug file saves
+DEBUG   = True   # master switch for all debug prints & debug file saves
 
 # Feature toggles
 INCLUDE_STREAKS = True  # Include streak data (Birdies, Eagles, +2s or Worse) in round story generation

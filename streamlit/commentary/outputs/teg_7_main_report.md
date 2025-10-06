@@ -1,0 +1,81 @@
+# TEG 7: Meller's Magnificent Redemption on the Lisbon Coast
+
+Henry Meller's first TEG Trophy arrived with the narrative symmetry of a Hollywood screenplay. Two years, two Wooden Spoons, and now—finally—the championship. Meller led for 69 of 72 holes in a wire-to-wire masterclass that transformed him from perennial cellar-dweller to champion, holding off a three-way dogfight for second to claim victory by five points with 175 on Portugal's Lisbon Coast. Yet this was a tournament of split verdicts: while Meller dominated the Stableford, David Mullin captured his record-extending sixth Green Jacket with a 15-stroke Gross triumph, finishing at +53 to complete his career slam. Mullin's clinical ball-striking wasn't enough to overcome his Stableford shortfall—he and Gregg Williams deadlocked at 170 points, five adrift of Meller's winning total, with Stuart Neumann lurking just one point further back. Alex Baker, making his TEG debut, collected the tournament's other trophy: a Wooden Spoon, finishing 23 points behind Meller at 152.
+
+What made Meller's triumph so compelling was its wire-to-wire inevitability punctuated by fleeting moments of jeopardy. He seized the Stableford lead on the first hole of Round 1 and never relinquished it, stretching his advantage from two points after the opener to ten by Round 2's conclusion, before weathering late challenges to secure the five-point cushion. His Round 2 explosion—a TEG record-equaling 51 points—created separation that proved insurmountable despite a volatile final round where he tumbled to 38 points while Williams and Neumann both surged to 48. The redemption arc was complete: from back-to-back spoons to the summit in one transformative tournament.
+
+Mullin's Gross dominance told a different story. Leading for 46 of 72 holes with strokes to spare, he authored rounds of uncommon consistency—his +53 total represented excellence by any measure on these demanding Portuguese layouts. But the handicap gods were unforgiving: solid without being spectacular in Stableford, Mullin's 170 points left him tied with Williams and one clear of Neumann, five points shy of Meller's winning margin. This split verdict—Meller's Trophy, Mullin's Jacket—underscored the tournament's dual nature: stroke play brilliance insufficient to overcome the leveling power of the Stableford format.
+
+The depth of competition revealed itself in that remarkable second-place logjam. Williams and Mullin both finished on 170, with Neumann's 169 making it a three-point spread covering three players. Jon Baker's 164 secured fifth, while Alex Baker's debut struggles left him 23 points adrift. For a first-time winner breaking through after consecutive last-place finishes, Meller couldn't have asked for a more complete validation: wire-to-wire control, a record-tying round, and a comfortable final margin despite late wobbles.
+
+## Round-by-Round Report
+
+### Round 1: Opening Salvos at Praia D'El Rey
+
+The TEG's maiden voyage to Portugal's Lisbon Coast began with volatility befitting a new venue. Praia D'El Rey, making its tournament debut, witnessed nine lead changes across the opening 18 holes—a frenetic scramble that saw Meller and Jon Baker trade blows while David Mullin lurked ominously.
+
+Meller announced his intentions immediately, posting four points on the first hole to seize the Stableford lead while Jon Baker's birdie gave him the early Gross advantage. But Baker's disaster at the second—a quadruple bogey that yielded zero points—handed Meller control of both competitions. What followed was a masterclass in maintaining pole position despite occasional turbulence. Meller's nightmare at the eighth (quadruple bogey, zero points) briefly surrendered the Stableford lead to Mullin and Jon Baker, but his response was immediate and emphatic. From holes 9-14, Meller compiled 18 points—anchored by four-point returns on the 11th and 14th—to reclaim command. His hot spell from 10-15 yielded 19 points, a stretch of net scoring excellence that set the tone for what was to come.
+
+Jon Baker's round ebbed and flowed. His birdie on the sixth delivered five points and briefly restored his Stableford lead, but inconsistency plagued him. Meller's four-pointer at the 14th proved decisive, wrestling back both the Stableford and Gross leads. By the 18th, Jon Baker had slipped behind in both competitions despite averaging level par from 16-18. Mullin, meanwhile, played the bridesmaid: his birdie at the fifth gave him a fleeting Gross lead, and his front-nine 23 points suggested serious intent, but a back-nine fade to 17 points left him fourth in Stableford despite solid ball-striking.
+
+The round's cautionary tale belonged to Alex Baker. His quintuple bogey at the fifth (zero points) announced a difficult debut, part of a catastrophic stretch from holes 3-5 averaging +2.33. Further disasters at the 10th and 14th compounded his misery, leaving him averaging +3.00 across holes 5-10 and finishing the round with 36 points—13 adrift of Meller.
+
+Meller's 49 points equaled a TEG record and gave him a two-point cushion over Jon Baker (47), with Gary Walsh third on 43. Mullin's 40 left him fourth, five points off second and seven behind Meller. The gap was narrow, the battle engaged, but the man who'd finished last twice was leading after 18 holes.
+
+**Scores: HM 49pts/+12; JB 47pts/+11; GW 43pts/+25; DM 40pts/+16; SN 39pts/+20; AB 36pts/+37**
+
+### Round 2: Meller's Breakaway at Bom Sucesso
+
+If Round 1 sketched the narrative outline, Round 2 rendered it in bold strokes. Meller's 51-point explosion at Bom Sucesso—matching his own day-old TEG record—transformed a precarious two-point advantage into a commanding ten-point lead, effectively settling the Stableford contest with two rounds remaining.
+
+The round began with brief drama. Stuart Neumann's opening birdie vaulted him from fifth to fourth in Stableford, while Alex Baker's quadruple bogey disaster continued his debut nightmare. Jon Baker briefly seized the Stableford lead at the second before Meller, ominously, reclaimed it at the third and never looked back. What followed was one of the great TEG rounds. Meller's birdie at the seventh sparked a run of brilliance: his stretch from holes 5-7 yielded 11 points, expanding to 19 points across 10-15 and 20 points from holes 3-8 and 7-12. The consistency was remarkable—averaging level par from holes 5-7 and 6-8, he was striking the ball beautifully while maximizing his handicap returns.
+
+Mullin matched Meller's birdie at the seventh, anchoring his own hot spell (18 points from holes 2-7 and again from 6-11), but couldn't maintain the pace. His front-nine 27 points represented excellent golf, yet Meller's 51-point total dwarfed everyone. Jon Baker (43 points) and Neumann (49 points, including birdies at the first and tenth) mounted credible challenges, but neither could sustain pressure on a player in this form.
+
+The Gross battle told a different story. Meller took the lead at the 12th, only for Jon Baker to reclaim it at the 13th, before Mullin seized control at the 15th. That hole proved pivotal: Jon Baker's triple bogey (zero points) and Gregg Williams' quintuple disaster marked a swing in Gross fortunes. Mullin's quadruple disaster at the 17th surrendered the lead, but by then the damage was done to his Stableford challenge—his 46 points, excellent in isolation, left him trailing Meller by ten.
+
+Alex Baker offered the sole bright spot in an otherwise dismal debut, posting 42 points—his personal best by six—though remaining rooted to sixth place. Williams' 38 points dropped him to fifth, while Jon Baker's 43 kept him second, seven points behind Meller.
+
+After 36 holes, Meller stood at 100 points with daylight behind him. Jon Baker (90) held second, Neumann (88) third, Mullin (86) fourth. The Gross standings showed Meller tied with Mullin and Neumann at +22, but it was the ten-point Stableford cushion that told the true story. Barring disaster, the Trophy was heading to the former Wooden Spoon holder.
+
+**Scores: HM 51pts/+10; JB 43pts/+14; SN 49pts/+10; DM 46pts/+9; GW 38pts/+31; AB 42pts/+30**
+
+### Round 3: Mullin's Gross Surge at Royal Óbidos
+
+Royal Óbidos, the third new venue in three rounds, witnessed David Mullin stake his claim to the Green Jacket with a Gross performance that finally separated him from the Stableford pack. His birdie at the third seized the Gross lead from Meller at the fourth, a position he would maintain through to the finish despite late drama. The six-stroke Gross advantage he'd built by round's end signaled his inevitable march to the Jacket, even as Meller's Stableford cushion remained unassailable.
+
+Meller entered with a ten-point lead and promptly extended it. His 37 points—modest by his recent standards—were sufficient to maintain control as his pursuers failed to mount coordinated pressure. Williams surged to 41 points (the round's best) with a birdie at the eighth anchoring his hot stretch from 5-10 (18 points) and 7-12 (19 points), but his front-nine 25 points couldn't overcome Meller's accumulated advantage. Mullin's 39 points kept him in the hunt, though his quintuple disaster at the 15th (zero points) bookended a round of contradictions: brilliant ball-striking marred by catastrophic errors.
+
+The round belonged to attrition. Jon Baker's consecutive disasters at the second and third (averaging +3.33 across holes 1-3) yielded just 33 points, dropping him further adrift. Neumann matched that total despite a birdie at the 13th, his response to consecutive disasters at the 11th and 12th. Alex Baker's 36 points maintained his sixth-place position, though his disaster at the sixth and the overall stretch averaging +2.67 from holes 4-6 continued his difficult introduction to TEG golf.
+
+Meller's four-pointer at the 14th briefly reclaimed the Gross lead before his own disaster at the 17th—part of a nightmarish stretch averaging +2.67 from 15-17—surrendered it back to Mullin for good. But the Stableford lead never wavered. Meller's 137 points after 54 holes gave him a 12-point cushion over Mullin (125) and Williams (124), with Neumann (121) and Jon Baker (120) fading from contention. The Trophy was all but secured; only the margin remained in doubt.
+
+The Gross standings told a clearer story: Mullin's +60 led Meller's +66 by six strokes, with Neumann (+68) well back. The split verdict was taking shape—Meller's Stableford excellence and Mullin's Gross dominance pointing toward different winners in the tournament's two competitions.
+
+**Scores: HM 37pts/+24; DM 39pts/+18; JB 33pts/+26; GW 41pts/+28; SN 33pts/+27; AB 36pts/+36**
+
+### Round 4: Holding On Through the Storm
+
+The return to Praia D'El Rey for the final round promised coronation but delivered chaos. Meller's 38-point collapse—down 14 points from his Round 2 peak and 13 from his opening salvo—invited late challenges from Williams and Neumann, both surging to 48 points. Yet Meller's accumulated cushion proved insurmountable, his five-point final margin reflecting control more than comfort.
+
+Jon Baker's round imploded spectacularly at holes 10-11. His sextuple disaster at the tenth (zero points, +6 versus par) followed by a quadruple at the 11th (zero points, +4) epitomized the round's brutality. The stretch from 9-11 averaged a scarcely believable +3.67, dropping him from second to fifth in Stableford and obliterating any lingering Trophy aspirations. His earlier hot spell from holes 2-7 (18 points, anchored by a four-pointer at the fifth) felt like ancient history by the back nine.
+
+Williams mounted the day's most serious challenge, his 48 points vaulting him from fourth to a share of second place. His four-pointer at the tenth proved crucial, part of a 18-point surge from holes 5-10 that closed the gap to Meller decisively. But starting 13 points behind, even a 10-point round differential wasn't enough—Williams finished level with Mullin on 170, five behind Meller's 175.
+
+Neumann matched Williams' 48-point round, his birdies at the second and seventh (both worth four points) anchoring a hot streak from 2-7 (18 points, averaging +0.17) that showcased his best golf of the tournament. His stretch of level par from 10-12 maintained momentum, and his Round 4 surge from fifth to fourth in Stableford (169 points) represented the tournament's most dramatic late climb. Yet like Williams, he'd left himself too much to do.
+
+Mullin secured the Green Jacket with workmanlike efficiency. His 45 points and +10 round kept him second in Stableford (tied with Williams) while his +53 tournament total gave him a 15-stroke Gross victory over Neumann (+68). His birdies at the 11th and 17th (the latter worth five points) punctuated a round that mixed brilliance (averaging level par from 4-6 and 5-7) with occasional disaster (triple bogey at the tenth). The sixth Jacket extended his record, but the five-point Stableford deficit to Meller underscored the tournament's essential narrative: Gross excellence insufficient to claim the Trophy.
+
+Alex Baker's debut Wooden Spoon was confirmed with 38 points—matching Meller's total but lacking any context for consolation. His disasters at the first (+3), third (quadruple, zero points), sixth (quintuple, zero points), tenth (+3), and 16th (quintuple, zero points) told the story of a round—and a tournament—defined by catastrophe. The stretch from holes 1-6 averaged +2.67, while 2-7 and 3-8 barely improved. His birdie at the 14th (five points) offered brief respite, part of an 18-point surge from 10-15, but by then the damage was irreversible.
+
+Meller's quadruple disaster at the ninth (zero points) and triple at the 18th (zero points, part of a +2.33 stretch from 7-9) injected late drama, but his overnight lead absorbed the blows. His back-nine recovery—22 points to offset a front-nine 16—epitomized the resilience that transformed a two-time Wooden Spoon winner into champion. Williams and Neumann's 48-point rounds cut the final margin to five, but Meller's cumulative excellence across four rounds—particularly that Round 2 masterclass—had built an unassailable foundation.
+
+**Final Scores: HM 38pts/+23; GW 48pts/+20; SN 48pts/+11; DM 45pts/+10; JB 41pts/+20; AB 38pts/+36**
+
+## Tournament Recap
+
+Henry Meller's first TEG Trophy arrived as the perfect redemption narrative: wire-to-wire control, a record-tying round, and the decisive five-point margin that separated champion from chasing pack. His 175 points across four Portuguese courses represented consistent excellence—49, 51, 37, 38—with that Round 2 explosion at Bom Sucesso providing the separation his rivals could never close. Leading for 69 of 72 Stableford holes told the story of dominance; holding off Williams and Mullin (both 170 points) and Neumann (169) in the final accounting confirmed quality of opposition. Two years, two Wooden Spoons, one magnificent reversal of fortune.
+
+Yet this was emphatically a split-verdict tournament. David Mullin's sixth Green Jacket—secured by 15 comfortable strokes over Neumann—extended his Gross championship record and completed his career slam. His +53 total represented clinical ball-striking across four demanding layouts, leading for 46 of 72 Gross holes despite Stableford shortcomings. That he fell five points short in the Trophy race underscored the tournament's essential paradox: Gross brilliance trumped by handicapped competition, stroke play excellence insufficient to overcome Stableford leveling.
+
+The Lisbon Coast proved a worthy debut venue, its three new courses—Praia D'El Rey (Rounds 1 and 4), Bom Sucesso (Round 2), and Royal Óbidos (Round 3)—testing every aspect of the field's games. Meller's transformation from perennial last to wire-to-wire champion completed one of TEG's great redemption arcs. Mullin's dual status—Jacket winner but Trophy runner-up—captured the tournament's split personality. And Alex Baker's debut Wooden Spoon, finishing 23 points adrift, reminded everyone that TEG glory remains cruelly selective. First-time winners don't come more comprehensively than Henry Meller in Portugal: from wooden spoon to silver Trophy in one glorious, wire-to-wire triumph.
