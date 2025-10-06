@@ -119,7 +119,10 @@ with tab1:
 
 with tab2:
     # By TEG tab - shows distribution of selected score type across TEGs
-    st.markdown(f'### {score_field_option} Distribution by TEG')
+    if display_mode == "Count":
+        st.markdown(f'### Count of {score_field_option} by TEG')
+    else:
+        st.markdown(f'### Percentage of {score_field_option} by TEG')
 
     # Use filtered data (respects par filter but not player filter for this view)
     teg_filtered_data, _, _ = apply_teg_and_par_filters(all_data, selected_tegnum, selected_par)
@@ -129,8 +132,11 @@ with tab2:
         teg_filtered_data = teg_filtered_data[teg_filtered_data['Pl'] == selected_player]
 
     # Create crosstab of TEGNum vs selected score field
-    crosstab = pd.crosstab(teg_filtered_data['TEGNum'], teg_filtered_data[selected_field], normalize='index') * 100
-    crosstab = crosstab.round(1)
+    if display_mode == "Count":
+        crosstab = pd.crosstab(teg_filtered_data['TEGNum'], teg_filtered_data[selected_field])
+    else:
+        crosstab = pd.crosstab(teg_filtered_data['TEGNum'], teg_filtered_data[selected_field], normalize='index') * 100
+        crosstab = crosstab.round(1)
 
     # Prepare for display
     display_data_teg = crosstab.reset_index()
@@ -142,10 +148,16 @@ with tab2:
         new_cols = {col: format_vs_par(col) if col != 'TEGNum' else col for col in display_data_teg.columns}
         display_data_teg = display_data_teg.rename(columns=new_cols)
 
-    # Format percentage values
-    for col in display_data_teg.columns:
-        if col != 'TEGNum':
-            display_data_teg[col] = display_data_teg[col].apply(lambda x: f"{x:.1f}%" if pd.notna(x) else "0.0%")
+    # Format values based on display mode
+    if display_mode == "Percentage":
+        for col in display_data_teg.columns:
+            if col != 'TEGNum':
+                display_data_teg[col] = display_data_teg[col].apply(lambda x: f"{x:.1f}%" if pd.notna(x) else "0.0%")
+    else:
+        # Convert counts to integers for cleaner display
+        for col in display_data_teg.columns:
+            if col != 'TEGNum':
+                display_data_teg[col] = display_data_teg[col].apply(lambda x: int(x) if pd.notna(x) else 0)
 
     # Rename TEGNum column
     display_data_teg = display_data_teg.rename(columns={'TEGNum': 'TEG'})
