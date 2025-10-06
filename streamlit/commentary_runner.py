@@ -13,6 +13,20 @@ st.title("📝 Tournament Commentary Runner")
 import importlib.util, sys
 from pathlib import Path
 
+# Make sure data is available at ./data
+def ensure_data_symlink():
+    if os.getenv("RAILWAY_ENVIRONMENT"):
+        src = Path("/mnt/data_repo/data")
+        dst = Path("data")
+        if src.exists() and not dst.exists():
+            try:
+                dst.symlink_to(src, target_is_directory=True)
+            except Exception:
+                # fallback: create local folder and let Option A copy into it
+                dst.mkdir(parents=True, exist_ok=True)
+
+ensure_data_symlink()
+
 def _find_generator():
     here = Path(__file__).resolve()
     candidates = [
