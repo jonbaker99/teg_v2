@@ -27,7 +27,7 @@ RATE_BUDGET_INPUT_TOKENS_PER_MIN = 30000
 RATE_SAFETY = 0.90  # adjust 0.85–0.95 as you like
 
 DRY_RUN = False   # set to False when you're ready to actually call the LLM
-DEBUG   = True   # master switch for all debug prints & debug file saves
+DEBUG   = False   # master switch for all debug prints & debug file saves
 
 # Feature toggles
 INCLUDE_STREAKS = True  # Include streak data (Birdies, Eagles, +2s or Worse) in round story generation
@@ -424,31 +424,39 @@ def generate_round_story(teg_num, round_num, round_data, previous_context):
         if previous_context else "First round of the tournament"
     )
 
-    # Build prompt (NO records/PBs/course records - those are added directly)
-    prompt_body = ROUND_STORY_PROMPT.format(
-        round_num=round_num,
-        round_data=round_data_json,
-        previous_context=previous_context_json
-    )
-    prompt = legend_text + "\n\n" + prompt_body
+# Build prompt (NO records/PBs/course records - those are added directly)
+    # Don't format the prompt - keep it static for caching
+    system_prompt = legend_text + "\n\n" + ROUND_STORY_PROMPT
+
+    # Pass the variable data in the user message instead
+    user_message = f"""**Round Number:** {round_num}
+
+    **Round Data:**
+    {round_data_json}
+
+    **Previous Context:**
+    {previous_context_json}"""
+
+    # Combine for debugging and token estimation
+    full_prompt_for_debug = system_prompt + "\n\n" + user_message
 
     # ---- Rolling-minute limiter (simulate in DRY_RUN, sleep when live) ----
-    est_in_tokens = _est_tokens(prompt)
+    est_in_tokens = _est_tokens(full_prompt_for_debug)
     TOKEN_LIMITER.acquire(est_in_tokens, label=f"R{round_num}")
 
     # Debug-only instrumentation
     dprint("    · Prompt section sizes:")
     dprint("      " + _blob_stats("round_data_json", round_data_json))
     dprint("      " + _blob_stats("previous_context_json", previous_context_json))
-    dprint("      " + _blob_stats("FULL prompt", prompt))
+    dprint("      " + _blob_stats("FULL prompt", full_prompt_for_debug))
 
     # Debug-only prompt dump & inspection bundle
     if DEBUG:
         debug_dir = "streamlit/commentary/debug_prompts"
         os.makedirs(debug_dir, exist_ok=True)
         with open(os.path.join(debug_dir, f"teg_{teg_num}_round_{round_num}_prompt.txt"), "w", encoding="utf-8") as fdbg:
-            fdbg.write(prompt)
-        write_round_inspection(teg_num, round_num, round_data, previous_context, prompt)
+            fdbg.write(full_prompt_for_debug)
+        write_round_inspection(teg_num, round_num, round_data, previous_context, full_prompt_for_debug)
 
     # ---- DRY RUN gate FIRST (no API key required) ----
     if DRY_RUN:
@@ -467,7 +475,19 @@ def generate_round_story(teg_num, round_num, round_data, previous_context):
         client,
         model="claude-sonnet-4-5",
         max_tokens=4000,
-        messages=[{"role": "user", "content": prompt}]
+        system=[
+            {
+                "type": "text",
+                "text": system_prompt,
+                "cache_control": {"type": "ephemeral"}
+            }
+        ],
+        messages=[
+            {
+                "role": "user",
+                "content": user_message
+            }
+        ]
     )
 
     round_story = message.content[0].text
@@ -644,32 +664,44 @@ def generate_tournament_synthesis(round_stories, teg_num):
     players_in_teg = tournament_summary['Player'].tolist()
     career_context = build_career_context(teg_num, players_in_teg)
 
-    # Build prompt (NO venue context - that's added directly)
-    prompt = TOURNAMENT_SYNTHESIS_PROMPT.format(
-        round_summaries=round_summaries_text,
-        tournament_data=tournament_data_json,
-        historical_context=historical_context,
-        career_context=career_context
-    )
+# Build prompt (NO venue context - that's added directly)
+    # Don't format - keep static for caching
+    system_prompt = TOURNAMENT_SYNTHESIS_PROMPT
+    
+    # Pass variable data in user message
+    user_message = f"""Round Summaries:
+    {round_summaries_text}
+
+    Tournament Data:
+    {tournament_data_json}
+
+    Historical Context:
+    {historical_context}
+
+    Career Context:
+    {career_context}"""
+
+    # Combine for debugging and token estimation
+    full_prompt_for_debug = system_prompt + "\n\n" + user_message
 
     if DEBUG:
-        write_synthesis_inspection(teg_num, round_stories, prompt, tournament_summary)
+        write_synthesis_inspection(teg_num, round_stories, full_prompt_for_debug, tournament_summary)
 
     # Rolling-minute limiter for synthesis
-    est_in_tokens = _est_tokens(prompt)
+    est_in_tokens = _est_tokens(full_prompt_for_debug)
     TOKEN_LIMITER.acquire(est_in_tokens, label="SYN")
 
     # Debug-only instrumentation & prompt dump
     dprint("    · Synthesis prompt sizes:")
     dprint("      " + _blob_stats("round_summaries_text", round_summaries_text))
     dprint("      " + _blob_stats("tournament_data_json", tournament_data_json))
-    dprint("      " + _blob_stats("FULL prompt", prompt))
+    dprint("      " + _blob_stats("FULL prompt", full_prompt_for_debug))
 
     if DEBUG:
         debug_dir = "streamlit/commentary/debug_prompts"
         os.makedirs(debug_dir, exist_ok=True)
         with open(os.path.join(debug_dir, f"teg_{teg_num}_synthesis_prompt.txt"), "w", encoding="utf-8") as fdbg:
-            fdbg.write(prompt)
+            fdbg.write(full_prompt_for_debug)
 
     dprint(f"    DRY_RUN (synthesis) = {DRY_RUN}")
     if DRY_RUN:
@@ -685,9 +717,22 @@ def generate_tournament_synthesis(round_stories, teg_num):
     message = safe_create_message(
         client,
         model="claude-sonnet-4-5",
-        max_tokens=3000,
-        messages=[{"role": "user", "content": prompt}]
+        max_tokens=4000,
+        system=[
+            {
+                "type": "text",
+                "text": system_prompt,
+                "cache_control": {"type": "ephemeral"}
+            }
+        ],
+        messages=[
+            {
+                "role": "user",
+                "content": user_message
+            }
+        ]
     )
+
     synthesis = message.content[0].text
     print(f"    > Tournament synthesis complete ({len(synthesis)} chars)")
     return synthesis
@@ -716,16 +761,18 @@ def generate_main_report(teg_num):
     print(f"Read story notes from: {story_notes_path}")
     print(f"Story notes length: {len(story_notes):,} characters")
 
-    # Build prompt
-    prompt = MAIN_REPORT_PROMPT.format(story_notes=story_notes)
+    # Build prompt - don't format, keep static for caching
+    system_prompt = MAIN_REPORT_PROMPT
+    user_message = f"Story Notes:\n\n{story_notes}"
+    full_prompt_for_debug = system_prompt + "\n\n" + user_message
 
     # Rate limiting
-    est_in_tokens = _est_tokens(prompt)
+    est_in_tokens = _est_tokens(full_prompt_for_debug)
     TOKEN_LIMITER.acquire(est_in_tokens, label=f"MainReport-TEG{teg_num}")
 
     dprint("    · Main Report prompt stats:")
     dprint("      " + _blob_stats("story_notes", story_notes))
-    dprint("      " + _blob_stats("FULL prompt", prompt))
+    dprint("      " + _blob_stats("FULL prompt", full_prompt_for_debug))
 
     # DRY RUN gate
     if DRY_RUN:
@@ -742,7 +789,19 @@ def generate_main_report(teg_num):
         client,
         model="claude-sonnet-4-5",
         max_tokens=8000,
-        messages=[{"role": "user", "content": prompt}]
+        system=[
+            {
+                "type": "text",
+                "text": system_prompt,
+                "cache_control": {"type": "ephemeral"}
+            }
+        ],
+        messages=[
+            {
+                "role": "user",
+                "content": user_message
+            }
+        ]
     )
 
     main_report = message.content[0].text
@@ -780,16 +839,18 @@ def generate_brief_summary(teg_num):
     print(f"Read story notes from: {story_notes_path}")
     print(f"Story notes length: {len(story_notes):,} characters")
 
-    # Build prompt
-    prompt = BRIEF_SUMMARY_PROMPT.format(story_notes=story_notes)
+    # Build prompt - don't format, keep static for caching
+    system_prompt = BRIEF_SUMMARY_PROMPT
+    user_message = f"Story Notes:\n\n{story_notes}"
+    full_prompt_for_debug = system_prompt + "\n\n" + user_message
 
     # Rate limiting
-    est_in_tokens = _est_tokens(prompt)
+    est_in_tokens = _est_tokens(full_prompt_for_debug)
     TOKEN_LIMITER.acquire(est_in_tokens, label=f"BriefSummary-TEG{teg_num}")
 
     dprint("    · Brief Summary prompt stats:")
     dprint("      " + _blob_stats("story_notes", story_notes))
-    dprint("      " + _blob_stats("FULL prompt", prompt))
+    dprint("      " + _blob_stats("FULL prompt", full_prompt_for_debug))
 
     # DRY RUN gate
     if DRY_RUN:
@@ -806,7 +867,19 @@ def generate_brief_summary(teg_num):
         client,
         model="claude-sonnet-4-5",
         max_tokens=2000,
-        messages=[{"role": "user", "content": prompt}]
+        system=[
+            {
+                "type": "text",
+                "text": system_prompt,
+                "cache_control": {"type": "ephemeral"}
+            }
+        ],
+        messages=[
+            {
+                "role": "user",
+                "content": user_message
+            }
+        ]
     )
 
     brief_summary = message.content[0].text
@@ -1365,17 +1438,68 @@ Examples:
                         help='Generate only the brief summary from existing story notes')
     parser.add_argument('--full-pipeline', action='store_true',
                         help='Generate story notes AND reports in one go')
+    parser.add_argument('--batch-reports', action='store_true',
+                        help='When using --range, batch reports by type for optimal prompt caching (all main reports, then all summaries)')
 
     args = parser.parse_args()
 
     if args.range:
         start, end = args.range
-        generate_story_notes_for_teg_range(
-            start, end,
-            partial=args.partial,
-            stop_on_error=args.stop_on_error,
-            pause_between=args.pause_between,
-        )
+        
+        # Batch reports mode: optimize for prompt caching
+        if args.batch_reports:
+            print(f"\n{'='*60}")
+            print(f"BATCH MODE: Optimized for prompt caching")
+            print(f"{'='*60}\n")
+            
+            successful_tegs = []
+            
+            # Phase 1: Generate all story notes (unless skipped)
+            if not (args.generate_reports or args.main_report_only or args.brief_summary_only):
+                print("Phase 1: Generating story notes for all TEGs...")
+                for teg in range(start, end + 1):
+                    try:
+                        if args.partial:
+                            generate_story_notes_up_to_round(teg, args.partial)
+                        else:
+                            generate_complete_story_notes(teg)
+                        successful_tegs.append(teg)
+                    except Exception as e:
+                        print(f"✗ TEG {teg} story notes failed: {e}")
+            else:
+                # If only generating reports, assume all TEGs succeeded
+                successful_tegs = list(range(start, end + 1))
+            
+            # Phase 2: Generate main reports (batched)
+            if args.generate_reports or args.main_report_only or args.full_pipeline:
+                print(f"\nPhase 2: Generating main reports (batched for caching)...")
+                for teg in successful_tegs:
+                    try:
+                        generate_main_report(teg)
+                    except Exception as e:
+                        print(f"✗ TEG {teg} main report failed: {e}")
+            
+            # Phase 3: Generate brief summaries (batched)
+            if args.generate_reports or args.brief_summary_only or args.full_pipeline:
+                print(f"\nPhase 3: Generating brief summaries (batched for caching)...")
+                for teg in successful_tegs:
+                    try:
+                        generate_brief_summary(teg)
+                    except Exception as e:
+                        print(f"✗ TEG {teg} brief summary failed: {e}")
+            
+            print(f"\n{'='*60}")
+            print(f"BATCH COMPLETE: Processed TEGs {successful_tegs}")
+            print(f"{'='*60}\n")
+        
+        # Normal mode: process each TEG completely before moving to next
+        else:
+            generate_story_notes_for_teg_range(
+                start, end,
+                partial=args.partial,
+                stop_on_error=args.stop_on_error,
+                pause_between=args.pause_between,
+            )
     else:
         if args.teg_num is None:
             parser.error("Provide a single TEG number or --range START END")

@@ -211,8 +211,9 @@ Format output as structured JSON for easy parsing by LLM prompts.
 
 BRIEF_SUMMARY_PROMPT = """You are a golf journalist writing a concise tournament summary FROM structured story notes.
 
-**Story Notes:**
-{story_notes}
+**Data Provided:**
+
+The user message contains the complete story notes file with all tournament data, round notes, venue context, records, and statistics.
 
 **Competition Structure - CRITICAL:**
 - **TEG Trophy** = Stableford winner (PRIMARY competition)
@@ -367,13 +368,14 @@ You have rich, multi-layered data for this round:
    - Round scores, ranking changes
    - Front 9 and back 9 scores
 
-6. **Previous Round Context:**
-{previous_context}
+**Data Provided:**
 
-**Round {round_num} Data:**
-{round_data}
+The user message contains:
+- Round number
+- Round data (JSON format with abbreviated keys - see legend above)
+- Previous round context (or "First round of the tournament" if Round 1)
 
-**Note:** Records, personal bests, and course records will be added to the story notes automatically after your output. Focus on synthesizing patterns and key moments from the data above.
+**Note:** Records, personal bests, and course records will be added to the story notes automatically after your output. Focus on synthesizing patterns and key moments from the data provided.
 
 **Your Task:**
 
@@ -447,19 +449,15 @@ TOURNAMENT_SYNTHESIS_PROMPT = """You are creating tournament-level structured st
 
 **IMPORTANT:** Output structured bullet points and facts, NOT narrative prose.
 
-**Round Notes:**
-{round_summaries}
+**Data Provided:**
 
-**Tournament Data:**
-{tournament_data}
+The user message contains:
+- Round Summaries: All round notes generated previously
+- Tournament Data: Final standings and tournament totals (JSON format)
+- Historical Context: Win counts before this tournament for each player
+- Career Context (PRE-TOURNAMENT): Recent finishes and position counts for each player
 
-**Historical Context:**
-{historical_context}
-
-**Career Context (PRE-TOURNAMENT):**
-{career_context}
-
-**Note:** Venue context (location, courses, area returns) will be added to the story notes automatically after your output. Focus on tournament narrative and results from the data above.
+**Note:** Venue context (location, courses, area returns) will be added to the story notes automatically after your output. Focus on tournament narrative and results from the data provided.
 
 **Competition Structure - CRITICAL:**
 - **TEG Trophy** = Stableford winner (PRIMARY competition)
@@ -556,8 +554,9 @@ MAIN_REPORT_PROMPT = """You are a golf journalist writing a comprehensive tourna
 
 **IMPORTANT:** You are writing a NARRATIVE REPORT from structured story notes. Transform bullet points into entertaining prose.
 
-**Story Notes:**
-{story_notes}
+**Data Provided:**
+
+The user message contains the complete story notes file with all tournament data, round notes, venue context, records, and statistics.
 
 **Competition Structure - CRITICAL:**
 - **TEG Trophy** = Stableford winner (PRIMARY competition - your main focus)
