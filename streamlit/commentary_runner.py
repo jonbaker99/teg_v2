@@ -9,7 +9,15 @@ st.set_page_config(page_title="Tournament Commentary Runner", page_icon="📝", 
 st.title("📝 Tournament Commentary Runner")
 
 # === Import generator + utils ===
-from streamlit.commentary import generate_tournament_commentary_v2 as gen  # your module
+import importlib.util, sys
+from pathlib import Path
+
+_gen_path = Path(__file__).resolve().parent / "commentary" / "generate_tournament_commentary_v2.py"
+_spec = importlib.util.spec_from_file_location("teg_commentary_gen", _gen_path)
+gen = importlib.util.module_from_spec(_spec)
+sys.modules[_spec.name] = gen
+_spec.loader.exec_module(gen)
+
 try:
     # Imported as requested; not used for .md (current impl supports csv/parquet only)
     from utils import write_file  # noqa: F401
@@ -40,6 +48,15 @@ def save_markdown_to_volume(rel_path: str, text: str) -> Path:
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(text, encoding="utf-8")
     return out
+
+# Utility to list volume markdown files
+
+def list_volume_md_files():
+    try:
+        files = sorted(VOLUME_COMMENTARY.glob("*.md"), key=lambda p: p.stat().st_mtime, reverse=True)
+    except Exception:
+        files = []
+    return files
 
 # === UI controls ===
 report_type = st.radio(
@@ -158,6 +175,45 @@ if run_btn:
 
     st.divider()
     st.write(f"Done. ✅ **{ok_count}** succeeded, ❌ **{fail_count}** failed.")
+
+# === Browse / open generated files ===
+st.subheader("📁 Commentary folder (Railway volume)")
+refresh = st.button("Refresh file list", key="refresh_files")
+files = list_volume_md_files()
+if not files:
+    st.info(f"No markdown files found in {VOLUME_COMMENTARY}")
+else:
+    for p in files:
+        info = p.stat()
+        cols = st.columns([3,2,1,1,1])
+        cols[0].markdown(f"**{p.name}**  \n`{p}`")
+        cols[1].markdown(time.strftime("%Y-%m-%d %H:%M", time.localtime(info.st_mtime)))
+        if cols[2].button("👁 View", key=f"view_{p.name}"):
+            st.session_state['view_file'] = str(p)
+        with p.open('rb') as f:
+            data = f.read()
+        cols[3].download_button("⬇️ Download", data=data, file_name=p.name, mime="text/markdown", key=f"dl_{p.name}")
+        cols[4].markdown(f"[Open link](?view={p.name})")
+
+    # Handle query param 'view'
+    try:
+        params = st.experimental_get_query_params()
+        if 'view' in params:
+            candidate = VOLUME_COMMENTARY / params['view'][0]
+            if candidate.exists():
+                st.session_state['view_file'] = str(candidate)
+    except Exception:
+        pass
+
+    if 'view_file' in st.session_state:
+        vp = Path(st.session_state['view_file'])
+        if vp.exists():
+            st.markdown("---")
+            st.subheader(f"Preview: {vp.name}")
+            text = vp.read_text(encoding='utf-8')
+            st.markdown(text)
+            with st.expander("Show raw Markdown"):
+                st.code(text, language="markdown")
 
 # === Footer context ===
 with st.expander("Where files go / why this path"):
