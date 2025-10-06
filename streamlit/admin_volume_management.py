@@ -1,340 +1,492 @@
-"""Streamlit page for managing data synchronization between GitHub and Railway.
-
-This page provides an administrative interface to manage the data volume on
-Railway, ensuring that it stays in sync with the authoritative `data/` folder
-in the GitHub repository. It allows users to:
-- View a comparison of files between GitHub and the Railway volume.
-- Sync selected files from GitHub to the volume.
-- Delete files from the volume.
-- Preview the content of files from both sources.
-"""
 # streamlit/admin_volume_management.py
+# Two-way Data Sync: GitHub <-> Railway Volume
+
 import os
-from datetime import datetime
+import io
 import time
+import base64
+from datetime import datetime, timezone
 from pathlib import Path
+from typing import Dict, Tuple, Optional, List
+
+import requests
 import pandas as pd
 import streamlit as st
 
-from utils import (
-    read_from_github,
-    write_to_github,  # not used here but you may later
-    get_current_branch,
-    GITHUB_REPO,
-    clear_all_caches,
-)
+# === IMPORTS FROM YOUR UTILS (reused when available) ===
+try:
+    from utils import (
+        read_from_github,        # Optional helper (not required)
+        write_to_github,         # Optional helper (not required)
+        get_current_branch,      # Required or we'll fallback to env/default
+        GITHUB_REPO,             # Required or we'll fallback to env
+        clear_all_caches         # Optional helper; we'll fallback to st.cache_data.clear()
+    )
+except Exception:
+    # Minimal fallbacks if utils aren't importable (keeps this page self-contained)
+    read_from_github = None
+    write_to_github = None
+    def get_current_branch() -> str:
+        return os.getenv("GIT_BRANCH") or os.getenv("RAILWAY_GIT_BRANCH") or "main"
+    GITHUB_REPO = os.getenv("GITHUB_REPO", "your-org/your-repo")
+    def clear_all_caches():
+        st.cache_data.clear()
 
-st.set_page_config(page_title="Volume Management", layout="wide")
+# === PAGE CONFIG ===
+st.set_page_config(page_title="Data sync: GitHub ↔ Railway volume", page_icon="🔁")
+st.title("🔁 Data sync: GitHub ↔ Railway volume")
+st.caption("Keep your Railway volume and the GitHub `data/` folder in step, in **both** directions.")
 
-# ---- Guards ---------------------------------------------------------------
-st.title("🔄 Data sync: GitHub → Railway volume")
-st.caption("Keep your volume in step with the authoritative `data/` folder in GitHub.")
-
+# === ENVIRONMENT GUARD ===
 if not os.getenv("RAILWAY_ENVIRONMENT"):
-    st.error("This page only works on Railway (volume not available locally).")
-    st.info("In local dev, files are read directly from your filesystem.")
+    st.error("❌ This page only works on Railway (volume not available locally).")
+    st.info("💡 On local development, files are read directly from your local filesystem; no Railway volume attached.")
     st.stop()
 
-VOLUME_ROOT = "/mnt/data_repo"
-VOLUME_DATA = f"{VOLUME_ROOT}/data"
+# === CONSTANTS & CONFIG ===
+# Where the Railway volume is mounted. Adjust if you’ve mounted elsewhere.
+VOLUME_DIR = os.getenv("RAILWAY_VOLUME_MOUNT_PATH", "/data")  # e.g., "/data"
+# We compare by filename; GitHub uses "data/<filename>" paths. Volume stores them directly in VOLUME_DIR.
+DATA_PREFIX = "data"
+API_BASE = "https://api.github.com"
+# For Contents API calls (create/update/list)
+GH_ACCEPT = "application/vnd.github+json"
 
-# ---- Data fetch -----------------------------------------------------------
+# === AUTH ===
+def _get_token() -> Optional[str]:
+    return os.getenv("GITHUB_TOKEN") or st.secrets.get("GITHUB_TOKEN")
+
+def _headers() -> Dict[str, str]:
+    token = _get_token()
+    if not token:
+        return {}
+    return {"Authorization": f"Bearer {token}", "Accept": GH_ACCEPT}
+
+# === BRANCH / REPO RESOLUTION ===
+def _get_repo_and_branch() -> Tuple[str, str]:
+    repo = GITHUB_REPO or os.getenv("GITHUB_REPO", "")
+    branch = get_current_branch() if callable(get_current_branch) else (os.getenv("GIT_BRANCH") or "main")
+    return repo, branch
+
+# === TIME HELPERS ===
+def _to_utc(dt: datetime) -> datetime:
+    if dt.tzinfo is None:
+        return dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone.utc)
+
+def _parse_github_date(s: str) -> datetime:
+    # e.g. "2025-10-06T09:41:33Z"
+    return datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+
+# === GITHUB LISTING ===
 @st.cache_data(ttl=300)
-def get_github_files_list():
-    from github import Github
-    token = os.getenv("GITHUB_TOKEN") or st.secrets.get("GITHUB_TOKEN")
-    g = Github(token)
-    repo = g.get_repo(GITHUB_REPO)
-    contents = repo.get_contents("data", ref=get_current_branch())
+def list_github_files() -> pd.DataFrame:
+    """List files under GitHub 'data/' with last commit timestamp and size."""
+    repo, branch = _get_repo_and_branch()
+    token = _get_token()
+    if not token:
+        raise RuntimeError("Missing GITHUB_TOKEN (set in env or st.secrets).")
 
-    rows = []
-    for item in contents:
-        if item.type != "file":
-            continue
-        if not item.name.endswith((".csv", ".parquet", ".json", ".xlsx")):
-            continue
-        # last commit date
-        try:
-            commits = repo.get_commits(path=f"data/{item.name}", sha=get_current_branch())
-            last_commit = commits[0] if commits.totalCount > 0 else None
-            gh_modified = (
-                last_commit.commit.committer.date.strftime("%Y-%m-%d %H:%M:%S")
-                if last_commit
-                else "Unknown"
-            )
-        except Exception:
-            gh_modified = "Unknown"
+    # 1) List directory contents for data/
+    r = requests.get(
+        f"{API_BASE}/repos/{repo}/contents/{DATA_PREFIX}?ref={branch}",
+        headers=_headers(),
+        timeout=30,
+    )
+    if r.status_code == 404:
+        # No 'data/' directory found
+        return pd.DataFrame(columns=["File", "GitHub modified", "GitHub size", "GitHub path"])
+    r.raise_for_status()
+    entries = r.json()
 
-        rows.append(
-            dict(
-                file=item.name,
-                gh_path=f"data/{item.name}",
-                gh_size=item.size,
-                gh_modified=gh_modified,
-                gh_sha=item.sha[:8],
-            )
+    files = []
+    for item in entries:
+        if item.get("type") != "file":
+            continue
+        name = item["name"]
+        size = int(item.get("size") or 0)
+        path = item["path"]
+
+        # 2) Get last commit for that path (per_page=1)
+        c = requests.get(
+            f"{API_BASE}/repos/{repo}/commits",
+            params={"path": path, "per_page": 1, "sha": branch},
+            headers=_headers(),
+            timeout=30,
         )
-    return pd.DataFrame(rows).sort_values("file")
+        if c.status_code == 200 and isinstance(c.json(), list) and c.json():
+            commit = c.json()[0]
+            dt = commit["commit"]["committer"]["date"]  # ISO string
+            modified = _parse_github_date(dt)
+        else:
+            modified = None
 
-def get_volume_files_list():
+        files.append(
+            {
+                "File": name,
+                "GitHub modified": modified,
+                "GitHub size": size,
+                "GitHub path": path,
+            }
+        )
+
+    df = pd.DataFrame(files)
+    if df.empty:
+        df = pd.DataFrame(columns=["File", "GitHub modified", "GitHub size", "GitHub path"])
+    return df
+
+# === VOLUME LISTING ===
+@st.cache_data(ttl=60)
+def list_volume_files() -> pd.DataFrame:
+    """List files on the Railway volume root (VOLUME_DIR)."""
+    p = Path(VOLUME_DIR)
+    if not p.exists():
+        return pd.DataFrame(columns=["File", "Volume modified", "Volume size", "Volume path"])
+
     rows = []
-    if os.path.exists(VOLUME_DATA):
-        for fname in os.listdir(VOLUME_DATA):
-            fpath = os.path.join(VOLUME_DATA, fname)
-            if not os.path.isfile(fpath):
-                continue
-            if not fname.endswith((".csv", ".parquet", ".json", ".xlsx")):
-                continue
-            stat = os.stat(fpath)
+    for child in p.iterdir():
+        if child.is_file():
+            stat = child.stat()
             rows.append(
-                dict(
-                    file=fname,
-                    vol_path=f"data/{fname}",
-                    vol_full=fpath,
-                    vol_size=stat.st_size,
-                    vol_modified=datetime.fromtimestamp(stat.st_mtime).strftime("%Y-%m-%d %H:%M:%S"),
-                )
+                {
+                    "File": child.name,
+                    "Volume modified": datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc),
+                    "Volume size": stat.st_size,
+                    "Volume path": str(child),
+                }
             )
-    return pd.DataFrame(rows).sort_values("file") if rows else pd.DataFrame(rows)
+    df = pd.DataFrame(rows)
+    if df.empty:
+        df = pd.DataFrame(columns=["File", "Volume modified", "Volume size", "Volume path"])
+    return df
 
-def diff_files(gh_df: pd.DataFrame, vol_df: pd.DataFrame) -> pd.DataFrame:
-    df = pd.merge(gh_df, vol_df, on="file", how="outer", validate="m:1")
-    def status(row):
-        if pd.isna(row.get("gh_path")):            return "Only on volume"
-        if pd.isna(row.get("vol_path")):           return "Missing on volume"
-        # Compare modified timestamps when both exist
-        try:
-            gh = pd.to_datetime(row["gh_modified"])
-            vol = pd.to_datetime(row["vol_modified"])
-            if gh > vol:                            return "Newer on GitHub"
-            if vol > gh:                            return "Newer on volume"
-            if int(row.get("gh_size", -1)) != int(row.get("vol_size", -2)):
-                return "Different size"
-            return "Match"
-        except Exception:
-            return "Check required"
-    df["Status"] = df.apply(status, axis=1)
-    # Nice display columns
-    display = df[
-        [
-            "file",
-            "gh_modified",
-            "vol_modified",
-            "gh_size",
-            "vol_size",
-            "Status",
-        ]
-    ].rename(
-        columns={
-            "file": "File",
-            "gh_modified": "GitHub modified",
-            "vol_modified": "Volume modified",
-            "gh_size": "GitHub size",
-            "vol_size": "Volume size",
-        }
-    )
-    return display
+def _status_row(gh_row, vol_row) -> str:
+    """Derive status classification comparing GitHub vs Volume."""
+    if pd.isna(gh_row["File"]):
+        return "Only on volume"
+    if pd.isna(vol_row["File"]):
+        return "Only on GitHub"
 
-# ---- Actions --------------------------------------------------------------
-def pull_file_from_github(file_path: str):
-    try:
-        data = read_from_github(file_path)
-        volume_path = f"{VOLUME_ROOT}/{file_path}"
-        os.makedirs(os.path.dirname(volume_path), exist_ok=True)
-        if file_path.endswith(".csv"):
-            data.to_csv(volume_path, index=False)
-        elif file_path.endswith(".parquet"):
-            data.to_parquet(volume_path, index=False)
-        elif file_path.endswith(".json"):
-            data.to_json(volume_path, orient="records")
-        else:
-            # best-effort raw write fallback
-            try:
-                data.to_csv(volume_path, index=False)
-            except Exception:
-                return False, f"Unsupported format for {file_path}"
-        return True, f"Synced {file_path} → volume"
-    except Exception as e:
-        return False, str(e)
+    gsz = int(gh_row.get("GitHub size") or 0)
+    vsz = int(vol_row.get("Volume size") or 0)
+    gdt = gh_row.get("GitHub modified")
+    vdt = vol_row.get("Volume modified")
 
-def delete_volume_file(file_path: str):
-    try:
-        vpath = f"{VOLUME_ROOT}/{file_path}"
-        if os.path.exists(vpath):
-            os.remove(vpath)
-            return True, f"Deleted {file_path} from volume"
-        return False, f"File not found: {file_path}"
-    except Exception as e:
-        return False, str(e)
+    # If either date missing, lean on size diff
+    if gdt is None or vdt is None:
+        if gsz != vsz:
+            return "Different size"
+        return "Check required"
 
-def read_file_preview(file_path: str, source: str):
-    try:
-        if source == "GitHub":
-            data = read_from_github(file_path)
-            return data if isinstance(data, pd.DataFrame) else None
-        else:
-            vpath = f"{VOLUME_ROOT}/{file_path}"
-            if file_path.endswith(".csv"):
-                return pd.read_csv(vpath)
-            if file_path.endswith(".parquet"):
-                return pd.read_parquet(vpath)
-            if file_path.endswith(".json"):
-                return pd.read_json(vpath)
-            return None
-    except Exception:
-        return None
+    # Time comparison tolerance (seconds)
+    tol = 2
+    delta = (gdt - vdt).total_seconds()
+    if abs(delta) <= tol and gsz == vsz:
+        return "Match"
+    if delta > tol:
+        return "Newer on GitHub"
+    if delta < -tol:
+        return "Newer on volume"
+    if gsz != vsz:
+        return "Different size"
+    return "Check required"
 
-# ---- Header / summary -----------------------------------------------------
-gh = get_github_files_list()
-vol = get_volume_files_list()
-merged = diff_files(gh, vol)
-
-left, right = st.columns([3, 2])
-with left:
-    st.subheader("Files")
-    st.caption(
-        f"GitHub branch: **{get_current_branch()}** · Repo: **{GITHUB_REPO}** · "
-        f"GitHub files: **{len(gh)}** · Volume files: **{len(vol)}**"
-    )
-with right:
-    c1, c2 = st.columns(2)
-    if c1.button("🔁 Refresh", use_container_width=True):
-        get_github_files_list.clear()
-        st.rerun()
-    # Danger button uses confirm flag
-    if c2.button("🗑️ Clear entire volume", use_container_width=True):
-        st.session_state["confirm_clear_all"] = True
-
-if st.session_state.get("confirm_clear_all"):
-    st.warning("This will remove **all** files from the volume. Click again to confirm.")
-    cc1, cc2 = st.columns([1, 1])
-    if cc1.button("Confirm delete", type="primary"):
-        import shutil
-        if os.path.exists(VOLUME_DATA):
-            shutil.rmtree(VOLUME_DATA)
-        clear_all_caches()
-        st.session_state["confirm_clear_all"] = False
-        st.toast("Volume cleared")
-        time.sleep(0.6)
-        st.rerun()
-    if cc2.button("Cancel"):
-        st.session_state["confirm_clear_all"] = False
-
-# ---- Tabs -----------------------------------------------------------------
-tab_files, tab_preview, tab_help = st.tabs(["Files", "Preview", "Help"])
-
-with tab_files:
-    # Select rows to sync (to volume)
-    st.markdown("#### Sync planner")
-    # Status chips explanation
-    with st.popover("What the statuses mean"):
-        st.markdown(
-            "- **Missing on volume**: not present in volume → will sync\n"
-            "- **Newer on GitHub**: GitHub newer → should sync\n"
-            "- **Newer on volume**: volume newer → check if expected\n"
-            "- **Match**: no action needed\n"
-            "- **Only on volume**: not in GitHub → usually delete or ignore"
+@st.cache_data(ttl=60)
+def merged_status() -> pd.DataFrame:
+    gh = list_github_files()
+    vol = list_volume_files()
+    merged = pd.merge(gh, vol, how="outer", on="File", suffixes=("_gh", "_vol"))
+    if merged.empty:
+        merged = pd.DataFrame(
+            columns=[
+                "File", "GitHub modified", "GitHub size", "GitHub path",
+                "Volume modified", "Volume size", "Volume path", "Status"
+            ]
         )
+        return merged
 
-    # Pre-select sensible rows to sync (missing or newer on GitHub or different size)
-    default_select = merged["Status"].isin(
-        ["Missing on volume", "Newer on GitHub", "Different size", "Check required"]
+    # Ensure datetime tz aware for display
+    for col in ["GitHub modified", "Volume modified"]:
+        if col in merged.columns:
+            merged[col] = pd.to_datetime(merged[col], utc=True, errors="coerce")
+
+    merged["Status"] = merged.apply(lambda r: _status_row(r, r), axis=1)
+
+    # Sort: most actionable first
+    order = pd.CategoricalDtype(
+        categories=[
+            "Only on volume", "Newer on volume",
+            "Only on GitHub", "Newer on GitHub",
+            "Different size", "Check required", "Match"
+        ],
+        ordered=True,
     )
-    selected_rows = st.data_editor(
-        merged.assign(**{"Sync to volume": default_select}),
+    merged["Status"] = merged["Status"].astype(order)
+    merged = merged.sort_values(["Status", "File"]).reset_index(drop=True)
+    return merged
+
+# === LOW-LEVEL GITHUB CONTENT OPS (REST) ===
+def gh_get_contents_path(gh_path: str) -> Optional[Dict]:
+    repo, branch = _get_repo_and_branch()
+    r = requests.get(
+        f"{API_BASE}/repos/{repo}/contents/{gh_path}",
+        params={"ref": branch},
+        headers=_headers(),
+        timeout=30,
+    )
+    if r.status_code == 404:
+        return None
+    r.raise_for_status()
+    return r.json()
+
+def gh_download_bytes(gh_path: str) -> bytes:
+    data = gh_get_contents_path(gh_path)
+    if not data:
+        raise FileNotFoundError(f"GitHub path not found: {gh_path}")
+    if data.get("encoding") == "base64" and "content" in data:
+        return base64.b64decode(data["content"])
+    # Fallback to download_url if provided
+    dl = data.get("download_url")
+    if not dl:
+        raise RuntimeError(f"No content available for {gh_path}")
+    r = requests.get(dl, headers=_headers(), timeout=30)
+    r.raise_for_status()
+    return r.content
+
+def gh_put_file(gh_path: str, content_bytes: bytes, message: str) -> Tuple[bool, str]:
+    """Create or update file using Contents API; detects existing file for sha."""
+    repo, branch = _get_repo_and_branch()
+    existing = gh_get_contents_path(gh_path)
+    payload = {
+        "message": message,
+        "content": base64.b64encode(content_bytes).decode("utf-8"),
+        "branch": branch,
+    }
+    if isinstance(existing, dict) and existing.get("sha"):
+        payload["sha"] = existing["sha"]
+
+    r = requests.put(
+        f"{API_BASE}/repos/{repo}/contents/{gh_path}",
+        headers=_headers(),
+        json=payload,
+        timeout=60,
+    )
+    if r.status_code in (200, 201):
+        return True, ("Updated" if "sha" in payload else "Created") + f" {gh_path}"
+    try:
+        detail = r.json()
+    except Exception:
+        detail = r.text
+    return False, f"GitHub API error {r.status_code}: {detail}"
+
+# === FILE OPS (VOLUME) ===
+def vol_write_bytes(filename: str, raw: bytes) -> None:
+    out = Path(VOLUME_DIR) / filename
+    out.parent.mkdir(parents=True, exist_ok=True)
+    with open(out, "wb") as f:
+        f.write(raw)
+
+def vol_read_bytes(filename: str) -> bytes:
+    p = Path(VOLUME_DIR) / filename
+    if not p.exists():
+        raise FileNotFoundError(str(p))
+    return p.read_bytes()
+
+# === SUMMARY / CONTEXT BOX ===
+repo, branch = _get_repo_and_branch()
+info1, info2, info3, info4 = st.columns([2.2, 1.5, 2, 2])
+info1.metric("GitHub repo", repo)
+info2.metric("Branch", branch)
+info3.metric("Volume path", VOLUME_DIR)
+info4.metric("Auth", "✅ Token found" if _get_token() else "❌ Missing GITHUB_TOKEN")
+
+st.divider()
+
+# === STATUS TABLE ===
+st.subheader("Status overview")
+with st.popover("How statuses are decided"):
+    st.markdown(
+        """
+- **Only on volume**: Exists on the Railway volume but not in GitHub → good candidate to push.
+- **Newer on volume**: Volume last-modified is newer → push to GitHub.
+- **Only on GitHub**: Exists on GitHub but not on volume → pull to volume.
+- **Newer on GitHub**: GitHub last-modified is newer → pull to volume.
+- **Different size**: Sizes differ; push or pull based on what you trust.
+- **Check required**: Couldn’t determine; inspect and choose.
+- **Match**: Same size and near-identical modified time.
+        """
+    )
+
+merged = merged_status()
+if merged.empty:
+    st.info("No files found on GitHub `data/` or on the Railway volume.")
+else:
+    df_show = merged.copy()
+    # Pretty datetime for display (localise to browser later; keep UTC for consistency)
+    for col in ["GitHub modified", "Volume modified"]:
+        if col in df_show.columns:
+            df_show[col] = df_show[col].dt.strftime("%Y-%m-%d %H:%M:%S UTC")
+    st.dataframe(
+        df_show.drop(columns=["GitHub path", "Volume path"], errors="ignore"),
+        use_container_width=True,
+        hide_index=True,
+    )
+
+st.divider()
+
+# === GITHUB -> VOLUME (PULL) ===
+st.subheader("⬇️ GitHub → Volume")
+st.caption("Copy selected files from GitHub `data/` down to the Railway volume.")
+
+if merged.empty:
+    st.info("No files to pull.")
+else:
+    pull_default = merged["Status"].isin(
+        ["Only on GitHub", "Newer on GitHub", "Different size", "Check required"]
+    )
+
+    pull_editor = st.data_editor(
+        merged.assign(**{"Pull to Volume": pull_default}),
         hide_index=True,
         use_container_width=True,
         column_config={
             "GitHub size": st.column_config.NumberColumn(format="%d"),
             "Volume size": st.column_config.NumberColumn(format="%d"),
-            "Sync to volume": st.column_config.CheckboxColumn(),
+            "Pull to Volume": st.column_config.CheckboxColumn(),
         },
-        disabled=["File", "GitHub modified", "Volume modified", "GitHub size", "Volume size", "Status"],
-        key="sync_table",
+        disabled=[
+            "File", "GitHub modified", "Volume modified",
+            "GitHub size", "Volume size", "Status"
+        ],
+        key="pull_table",
     )
 
-    # Primary call-to-action
-    to_sync = selected_rows[selected_rows["Sync to volume"] == True]["File"].tolist()
-    cta_col1, cta_col2 = st.columns([1, 5])
-    if cta_col1.button(f"⬇️ Sync selected ({len(to_sync)})", type="primary", use_container_width=True, disabled=(len(to_sync) == 0)):
-        errors = []
-        ok = 0
-        with st.spinner("Syncing files…"):
-            for fname in to_sync:
-                gh_row = gh[gh["file"] == fname].iloc[0]
-                success, msg = pull_file_from_github(gh_row["gh_path"])
-                if success:
-                    ok += 1
-                else:
-                    errors.append(f"{fname}: {msg}")
+    to_pull = pull_editor[pull_editor["Pull to Volume"] == True]["File"].tolist()
+
+    col_a, col_b = st.columns([3, 2])
+    with col_a:
+        st.write("Selected to pull:", ", ".join(to_pull) or "—")
+    do_pull = col_b.button(
+        f"Pull selected ({len(to_pull)})",
+        type="primary",
+        use_container_width=True,
+        disabled=(len(to_pull) == 0),
+    )
+
+    if do_pull:
+        if not _get_token():
+            st.error("Missing GITHUB_TOKEN; cannot pull from GitHub.")
+        else:
+            ok, fails = 0, []
+            with st.spinner("Pulling from GitHub…"):
+                for fname in to_pull:
+                    gh_path = f"{DATA_PREFIX}/{fname}"
+                    try:
+                        raw = gh_download_bytes(gh_path)
+                        vol_write_bytes(fname, raw)
+                        ok += 1
+                    except Exception as e:
+                        fails.append(f"{fname}: {e}")
+
+            # Clear caches so the status view reflects the updated state
+            list_github_files.clear()
+            list_volume_files.clear()
+            merged_status.clear()
             clear_all_caches()
-        st.toast(f"Synced {ok} file(s)")
-        if errors:
-            with st.expander("Some files failed"):
-                for e in errors:
-                    st.error(e)
-        time.sleep(0.6)
-        st.rerun()
 
-    # Row-level actions
-    st.markdown("#### Volume housekeeping")
-    hc1, hc2 = st.columns([2, 3])
-    victim = hc1.selectbox(
-        "Delete a volume file",
-        options=sorted(vol["file"].tolist()) if not vol.empty else [],
-        index=0 if (not vol.empty) else None,
-        placeholder="Choose file",
+            st.toast(f"Pulled {ok} file(s) to volume")
+            if fails:
+                with st.expander("Some files failed"):
+                    for msg in fails:
+                        st.error(msg)
+            time.sleep(0.6)
+            st.rerun()
+
+st.divider()
+
+# === VOLUME -> GITHUB (PUSH) ===
+st.subheader("⬆️ Volume → GitHub")
+st.caption("Copy selected files from the Railway volume up to the GitHub `data/` folder.")
+
+if merged.empty:
+    st.info("No files to push.")
+else:
+    push_default = merged["Status"].isin(
+        ["Only on volume", "Newer on volume", "Different size", "Check required"]
     )
-    if hc2.button("🗑️ Delete selected volume file", disabled=(not victim)):
-        key = "confirm_delete_one"
-        if not st.session_state.get(key):
-            st.session_state[key] = True
-            st.warning("Click again to confirm deletion.")
-        else:
-            ok, msg = delete_volume_file(f"data/{victim}")
-            st.session_state[key] = False
-            if ok:
-                st.toast("File deleted")
-                time.sleep(0.5)
-                st.rerun()
-            else:
-                st.error(msg)
 
-with tab_preview:
-    st.markdown("#### Quick preview (first 10 rows)")
-    c1, c2, c3 = st.columns([3, 2, 2])
-    fname = c1.selectbox(
-        "File",
-        options=sorted(set(merged["File"].dropna().tolist())),
-        placeholder="Choose a file",
+    push_editor = st.data_editor(
+        merged.assign(**{"Push to GitHub": push_default}),
+        hide_index=True,
+        use_container_width=True,
+        column_config={
+            "GitHub size": st.column_config.NumberColumn(format="%d"),
+            "Volume size": st.column_config.NumberColumn(format="%d"),
+            "Push to GitHub": st.column_config.CheckboxColumn(),
+        },
+        disabled=[
+            "File", "GitHub modified", "Volume modified",
+            "GitHub size", "Volume size", "Status"
+        ],
+        key="push_table",
     )
-    source = c2.radio("Source", ["GitHub", "Volume"], horizontal=True)
-    if c3.button("Preview", use_container_width=True, disabled=(not fname)):
-        path = f"data/{fname}"
-        df = read_file_preview(path, source)
-        if df is None:
-            st.error("Could not read the file.")
-        else:
-            st.caption(f"{fname} · {len(df):,} rows × {df.shape[1]} cols")
-            st.dataframe(df.head(10), use_container_width=True)
 
-with tab_help:
+    to_push = push_editor[push_editor["Push to GitHub"] == True]["File"].tolist()
+
+    col_m, col_btn = st.columns([3, 2])
+    commit_message = col_m.text_input(
+        "Commit message",
+        value=f"Sync from Railway volume on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+        help="Used for all selected files."
+    )
+    do_push = col_btn.button(
+        f"Push selected ({len(to_push)})",
+        type="primary",
+        use_container_width=True,
+        disabled=(len(to_push) == 0),
+    )
+
+    if do_push:
+        if not _get_token():
+            st.error("Missing GITHUB_TOKEN; cannot push to GitHub.")
+        else:
+            ok, fails = 0, []
+            with st.spinner("Pushing to GitHub…"):
+                for fname in to_push:
+                    try:
+                        raw = vol_read_bytes(fname)
+                        gh_path = f"{DATA_PREFIX}/{fname}"
+                        success, msg = gh_put_file(gh_path, raw, commit_message)
+                        if success:
+                            ok += 1
+                        else:
+                            fails.append(f"{fname}: {msg}")
+                    except Exception as e:
+                        fails.append(f"{fname}: {e}")
+
+            # Clear caches so the status view reflects the updated state
+            list_github_files.clear()
+            list_volume_files.clear()
+            merged_status.clear()
+            clear_all_caches()
+
+            st.toast(f"Pushed {ok} file(s) to GitHub")
+            if fails:
+                with st.expander("Some files failed"):
+                    for msg in fails:
+                        st.error(msg)
+            time.sleep(0.6)
+            st.rerun()
+
+# === FOOTER TIPS ===
+with st.expander("Tips & notes"):
     st.markdown(
         """
-**How this works**
--updated jb
-
-
-- GitHub (`data/`) is the **authoritative** source.  
-- **Sync to volume** copies selected GitHub files to the Railway volume.  
-- Use **Delete** only for files that shouldn’t exist on the volume.  
-- Caches clear automatically after a sync.
-"""
-    )
-    st.code(
-        f"""Environment
-- Railway: {os.getenv('RAILWAY_ENVIRONMENT', 'Not set')}
-- Repo: {GITHUB_REPO}
-- Branch: {get_current_branch()}
-- Volume: {VOLUME_ROOT}"""
+- Set **`GITHUB_TOKEN`** in Railway variables or in `st.secrets` with `repo` scope.
+- Repo/branch are taken from your `utils` (`GITHUB_REPO`, `get_current_branch()`), or from
+  env vars `GITHUB_REPO` / `GIT_BRANCH`.
+- Statuses are computed using **last-commit time (GitHub)** vs **file mtime (volume)** and **size**.
+- If you often work Volume → GitHub, keep the push section selected by default (as configured).
+- Use the **status table** to eyeball anything flagged as _Different size_ or _Check required_.
+        """
     )
