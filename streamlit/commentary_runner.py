@@ -9,14 +9,29 @@ st.set_page_config(page_title="Tournament Commentary Runner", page_icon="📝", 
 st.title("📝 Tournament Commentary Runner")
 
 # === Import generator + utils ===
+# Path-based import to avoid clashing with the installed 'streamlit' package
 import importlib.util, sys
 from pathlib import Path
 
-_gen_path = Path(__file__).resolve().parent / "commentary" / "generate_tournament_commentary_v2.py"
+# Base directories
+_base = Path(__file__).resolve().parent.parent      # /app/streamlit
+_gen_path = _base / "commentary" / "generate_tournament_commentary_v2.py"
+_gen_dir = _gen_path.parent                         # /app/streamlit/commentary
+
+# Make sure local imports like `import pattern_analysis` resolve
+for p in (str(_gen_dir), str(_base)):
+    if p not in sys.path:
+        sys.path.insert(0, p)
+
+# Load the generator module
 _spec = importlib.util.spec_from_file_location("teg_commentary_gen", _gen_path)
 gen = importlib.util.module_from_spec(_spec)
 sys.modules[_spec.name] = gen
 _spec.loader.exec_module(gen)
+
+# Optional sanity check
+assert hasattr(gen, "generate_complete_story_notes"), f"Could not find generator functions in {_gen_path}"
+
 
 try:
     # Imported as requested; not used for .md (current impl supports csv/parquet only)
