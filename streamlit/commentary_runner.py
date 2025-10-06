@@ -13,13 +13,37 @@ st.title("📝 Tournament Commentary Runner")
 import importlib.util, sys
 from pathlib import Path
 
-# Base directories
-_base = Path(__file__).resolve().parent.parent      # /app/streamlit
-_gen_path = _base / "commentary" / "generate_tournament_commentary_v2.py"
-_gen_dir = _gen_path.parent                         # /app/streamlit/commentary
+def _find_generator():
+    here = Path(__file__).resolve()
+    candidates = [
+        # runner in streamlit/ → streamlit/commentary/...
+        here.parent / "commentary" / "generate_tournament_commentary_v2.py",
+        # runner in streamlit/pages/ → streamlit/commentary/...
+        here.parent.parent / "commentary" / "generate_tournament_commentary_v2.py",
+        # fallback: cwd/streamlit/commentary/...
+        Path.cwd() / "streamlit" / "commentary" / "generate_tournament_commentary_v2.py",
+    ]
+    # also try the nearest parent actually named "streamlit"
+    for p in here.parents:
+        if p.name == "streamlit":
+            candidates.append(p / "commentary" / "generate_tournament_commentary_v2.py")
+            break
 
-# Make sure local imports like `import pattern_analysis` resolve
-for p in (str(_gen_dir), str(_base)):
+    for cand in candidates:
+        if cand.exists():
+            return cand
+
+    raise FileNotFoundError(
+        "Could not find generate_tournament_commentary_v2.py. Tried:\n" +
+        "\n".join(str(c) for c in candidates)
+    )
+
+_gen_path = _find_generator()
+_gen_dir = _gen_path.parent               # .../streamlit/commentary
+_streamlit_base = _gen_dir.parent         # .../streamlit
+
+# Ensure sibling imports like `import pattern_analysis` resolve
+for p in (str(_gen_dir), str(_streamlit_base)):
     if p not in sys.path:
         sys.path.insert(0, p)
 
@@ -30,7 +54,8 @@ sys.modules[_spec.name] = gen
 _spec.loader.exec_module(gen)
 
 # Optional sanity check
-assert hasattr(gen, "generate_complete_story_notes"), f"Could not find generator functions in {_gen_path}"
+assert hasattr(gen, "generate_complete_story_notes"), f"Generator functions not found in {_gen_path}"
+
 
 
 try:
