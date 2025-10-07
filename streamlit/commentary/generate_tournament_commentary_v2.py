@@ -28,6 +28,7 @@ RATE_SAFETY = 0.90  # adjust 0.85–0.95 as you like
 
 DRY_RUN = False   # set to False when you're ready to actually call the LLM
 DEBUG   = True   # master switch for all debug prints & debug file saves
+DEBUG_WRITE = False # write debug files
 
 # Feature toggles
 INCLUDE_STREAKS = True  # Include streak data (Birdies, Eagles, +2s or Worse) in round story generation
@@ -78,9 +79,9 @@ def write_round_inspection(
     prompt_text: str
 ) -> None:
     """
-    Writes an inspection bundle for this round (only when DEBUG=True).
+    Writes an inspection bundle for this round (only when DEBUG_WRITE=True).
     """
-    if not DEBUG:
+    if not DEBUG_WRITE:
         return
 
     base = Path("streamlit/commentary/inspection") / f"teg_{teg_num}" / f"round_{round_num}"
@@ -451,7 +452,7 @@ def generate_round_story(teg_num, round_num, round_data, previous_context):
     dprint("      " + _blob_stats("FULL prompt", full_prompt_for_debug))
 
     # Debug-only prompt dump & inspection bundle
-    if DEBUG:
+    if DEBUG_WRITE:
         debug_dir = "streamlit/commentary/debug_prompts"
         os.makedirs(debug_dir, exist_ok=True)
         with open(os.path.join(debug_dir, f"teg_{teg_num}_round_{round_num}_prompt.txt"), "w", encoding="utf-8") as fdbg:
@@ -697,7 +698,7 @@ def generate_tournament_synthesis(round_stories, teg_num):
     dprint("      " + _blob_stats("tournament_data_json", tournament_data_json))
     dprint("      " + _blob_stats("FULL prompt", full_prompt_for_debug))
 
-    if DEBUG:
+    if DEBUG_WRITE:
         debug_dir = "streamlit/commentary/debug_prompts"
         os.makedirs(debug_dir, exist_ok=True)
         with open(os.path.join(debug_dir, f"teg_{teg_num}_synthesis_prompt.txt"), "w", encoding="utf-8") as fdbg:

@@ -264,9 +264,12 @@ Choose relevant details for your summary: focus on the most dramatic or signific
 
 **Your Task:**
 
-Write a 2-3 paragraph summary that captures the essence of the tournament:
+Write a 3-4 paragraph summary that captures the essence of the tournament:
 
-1. **Opening Paragraph:** The winners and main storyline
+1. **The setting**
+   - Year, location and courses played
+
+2. **Main Opening Paragraph:** The winners and main storyline
    - Who won Trophy (Stableford) and Green Jacket (Gross) - can be different people!
    - Final margins for each competition
    - How they won (wire-to-wire/comeback/dominant)
@@ -840,7 +843,7 @@ For EACH round, write a focused narrative section:
 ### Round [X]: [Catchy Title]
 
 **Opening (~40 words, 2-3 sentences):**
-- Context: standings, gaps, what's at stake
+- Context: course, standings, gaps, what's at stake
 - Set up the round quickly
 
 **How It Unfolded (~150 words, 3-4 SHORT paragraphs):**
@@ -939,7 +942,7 @@ If your final draft contains the word “disaster” more than once or any “�
 
 ---
 
-**FOLLOW ALL 19 STYLE GUIDE RULES**
+**FOLLOW ALL STYLE GUIDE RULES**
 
 **Output:**
 
