@@ -49,6 +49,7 @@ PAGE_DEFINITIONS = {
 
     # Data management section
     "1000Data update.py": {"title": "Data update", "icon": ":material/update:", "section": "Data"},
+    "1001Report Generation.py": {"title": "Report generation", "icon": ":material/robot:", "section": "Data"},
     "data_edit.py": {"title": "Data edit", "icon": ":material/edit:", "section": "Data"},
     "delete_data.py": {"title": "Delete data", "icon": ":material/skull:", "section": "Data"},
     # "data_test_temp.py": {"title": "TEMP DATA TESTING", "icon": ":material/check_circle:", "section": "Data"},
