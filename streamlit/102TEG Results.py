@@ -1,27 +1,31 @@
 """Streamlit page for displaying TEG results.
 
 This page provides a detailed view of the results for a selected TEG,
-including leaderboards, charts, and scorecards. It allows users to switch
+including leaderboards, charts, scorecards, and tournament reports. It allows users to switch
 between different competitions and view the data in various formats.
 
-The page is structured with three main tabs:
+The page is structured with four main tabs:
 - **TEG Trophy & Spoon**: Displays the net competition leaderboard and chart.
 - **Green Jacket**: Displays the gross competition leaderboard and chart.
 - **Scorecards**: Shows detailed hole-by-hole scorecards for each round.
+- **Report**: Displays the tournament commentary report (if available).
 
 Helper functions are used to:
 - Load and process the data.
 - Create interactive leaderboards and charts.
 - Generate formatted scorecards.
+- Load and render markdown tournament reports.
 """
 # === IMPORTS ===
 import streamlit as st
 import pandas as pd
 from typing import List, Dict, Any
 import logging
+from pathlib import Path
+import importlib.util
 
 # Import data loading functions from main utils
-from utils import get_teg_rounds, get_round_data, load_all_data, load_datawrapper_css
+from utils import get_teg_rounds, get_round_data, load_all_data, load_datawrapper_css, load_teg_reports_css
 
 # Import chart creation functions
 from make_charts import create_cumulative_graph, adjusted_grossvp, adjusted_stableford
@@ -45,12 +49,52 @@ MEASURES = ['Sc', 'GrossVP', 'NetVP', 'Stableford']
 PLAYER_COLUMN = 'Player'
 
 
+# === HELPER FUNCTIONS ===
+@st.cache_data(show_spinner=False)
+def load_markdown(p: Path) -> str:
+    """Load markdown content from file"""
+    return p.read_text(encoding="utf-8")
+
+
+def render_report(md_text: str):
+    """Render markdown report as HTML with TEG report styling"""
+    has_markdown = importlib.util.find_spec("markdown") is not None
+    if has_markdown:
+        import markdown as md
+        html_body = md.markdown(md_text, extensions=["extra", "sane_lists", "smarty", "toc"])
+        full_html = f"<div class='teg-report'>{html_body}</div>"
+        st.markdown(full_html, unsafe_allow_html=True)
+    else:
+        st.error("Markdown library not available. Please install with: pip install markdown")
+
+
+def get_commentary_dir() -> Path:
+    """Locate the commentary outputs folder"""
+    here = Path(__file__).resolve()
+    candidates = [
+        here.parent / "commentary" / "to_use",           # .../streamlit/commentary/to_use
+        here.parent.parent / "commentary" / "to_use",    # parent dir
+    ]
+    commentary_dir = next((p for p in candidates if p.exists()), None)
+    if commentary_dir is None:
+        # Fallback to outputs folder if to_use doesn't exist
+        candidates = [
+            here.parent / "commentary" / "outputs",
+            here.parent.parent / "commentary" / "outputs",
+        ]
+        commentary_dir = next((p for p in candidates if p.exists()), None)
+    return commentary_dir
+
+
 # === DATA LOADING ===
 # Load CSS styling for consistent table appearance
 load_datawrapper_css()
 
 # Load scorecard CSS styling for the scorecards tab
 load_scorecard_css()
+
+# Load TEG reports CSS styling for the report tab
+load_teg_reports_css()
 
 # # Add sidebar refresh button for data updates
 # if st.sidebar.button("Refresh Data"):
@@ -110,8 +154,8 @@ try:
     st.markdown('')  # Add spacing
 
     # === MAIN CONTENT TABS ===
-    # Three main sections: Trophy (Net), Green Jacket (Gross), and Scorecards
-    tab1, tab2, tab3 = st.tabs(["TEG Trophy & Spoon", "Green Jacket", "Scorecards"])
+    # Four main sections: Trophy (Net), Green Jacket (Gross), Scorecards, and Report
+    tab1, tab2, tab3, tab4 = st.tabs(["TEG Trophy & Spoon", "Green Jacket", "Scorecards", "Report"])
 
     # === TEG TROPHY TAB (NET COMPETITION) ===
     with tab1:
@@ -300,6 +344,39 @@ try:
                         except Exception as round_error:
                             st.error(f"Error loading scorecard for Round {round_num}: {str(round_error)}")
                             logger.error(f"Error loading scorecard for TEG {teg_num} Round {round_num}: {str(round_error)}")
+
+    # === REPORT TAB ===
+    with tab4:
+        # st.markdown(f'### {chosen_teg} Tournament Report')
+
+        # Extract TEG number from chosen_teg string (e.g., "TEG 18" -> 18)
+        try:
+            teg_num = int(chosen_teg.split()[-1])
+        except (ValueError, IndexError):
+            st.error(f"Could not extract TEG number from '{chosen_teg}'")
+            teg_num = None
+
+        if teg_num is not None:
+            # Locate commentary directory
+            commentary_dir = get_commentary_dir()
+
+            if commentary_dir is None:
+                st.warning("Commentary folder not found. Reports are not available.")
+            else:
+                # Construct path to report file
+                report_filename = f"teg_{teg_num}_main_report.md"
+                report_path = commentary_dir / report_filename
+
+                if report_path.exists():
+                    # Load and render the report
+                    try:
+                        md_text = load_markdown(report_path)
+                        render_report(md_text)
+                    except Exception as report_error:
+                        st.error(f"Error loading report: {str(report_error)}")
+                        logger.error(f"Error loading report for TEG {teg_num}: {str(report_error)}")
+                else:
+                    st.info(f"No report available yet for {chosen_teg}.")
 
 
 except Exception as e:
