@@ -1,66 +1,67 @@
 .teg-report {
-    max-width: 960px;
+    max-width: 800px;
     margin: 2rem auto;
     padding: 1.5rem 2rem;
     font-family: "Lora", "Georgia", "Times New Roman", serif;
     line-height: 1.7;
     text-align: justify;
     color: #222;
-    background: #fdfcf8;
+    background: #f3f3f3;
     border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    column-count: 2;
-    column-gap: 2.5rem;
+    /* box-shadow: 0 2px 6px rgba(0,0,0,0.08); */
+    /* column-count: 2; */
+    /* column-gap: 2.5rem; */
 }
-.teg-report h1:first-of-type {
+
+/* HEADLINE */
+/* .teg-report h1:first-of-type { */
+.teg-report .report-title {
     column-span: all;
-    text-align: center;
-    font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+    text-align: left;
+    font-size: 30px;
     line-height: 1.2;
     letter-spacing: 0.5px;
-    margin: 0 0 0.75rem 0;
     font-weight: 700;
+    padding-bottom: 0px;
+    color: forestgreen;
 }
 
-/* --- Dateline (the bold line immediately after the H1) --- */
-.teg-report h1:first-of-type + p {
-  column-span: all;
-  text-align: center;
-  margin: 0 0 0.75rem 0;
-}
-
-.teg-report h1:first-of-type + p strong {
-  font-weight: 700;
-  font-variant-caps: small-caps;   /* nice newspaper feel */
-  letter-spacing: 0.06em;
-  color: blue;                  /* tweak to taste */
-}
-
-/* --- Drop cap on the first narrative paragraph (after the dateline) --- */
-.teg-report h1:first-of-type + p + p::first-letter {
-  float: left;
-  font-size: 3.4rem;
-  line-height: 1;
-  margin-right: 0.25rem;
-  font-weight: 700;
-  color: #a00;
-}
 
 /* --- DATELINE FORMAT ---*/
-#dateline {
+.dateline {
     font-weight: normal;
     text-transform: uppercase;
-    column-span: all;
-    text-align: center;
-    color: darkgrey;
     font-family: 'Open Sans';
+    column-span: all;
+    text-align: left;
+    color: darkgrey;
+    column-span: all;
+    margin: 0 0 14px 0;
 }
+
+/* DROP CAPS IN FIRST PARAGRAPH */
+.teg-report .dateline + p::first-letter {
+  float: left;
+  font-size: 3.4em;       /* adjust size to taste */
+  line-height: 0.9;
+  font-weight: bold;
+  margin-right: 0.08em;
+  margin-top: 0.05em;
+  color: forestgreen;            /* or a muted accent colour */
+  /* font-family: 'Lato', serif; */
+}
+
 
 .teg-report h2, .teg-report h3 {
     column-span: all;
-    text-align: center;
-    margin-top: 1.2rem;
+    text-align: left;
+    margin-top: 14px;
+    margin-bottom: 8px;
+    padding: 4px 0;
+    font-size: 20px;
+    color: forestgreen;
 }
+
 .teg-report blockquote {
     column-span: all;
     font-style: italic;
@@ -71,17 +72,10 @@
 .teg-report hr {
     column-span: all;
     border: none;
-    border-top: 1px solid #ccc;
-    margin: 2rem 0;
+    border-top: 1px solid forestgreen;
+    margin: 1rem 0;
 }
 
-/* Make the AT-A-GLANCE section full width (no columns) */
-.teg-report h2#at-a-glance,
-.teg-report h2#at-a-glance ~ * {
-  column-span: all;      /* break out of the multi-column flow */
-  text-align: left;      /* optional: override your justified body copy */
-  hyphens: none;         /* optional: avoid odd breaks in short lines */
-}
 
 /* Restore columns starting from the *next* heading after AT-A-GLANCE */
 .teg-report h2#at-a-glance ~ :is(h2,h3,h4,h5,h6),

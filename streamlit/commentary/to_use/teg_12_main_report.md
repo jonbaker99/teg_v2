@@ -1,10 +1,10 @@
-# TEG 12: Two Jons, 32 Lead Changes and Epic Collapses {#report-title}
+# TEG 12: Two Jons, 32 Lead Changes and Epic Collapses {.report-title}
 
-**Catalonia, Spain • 2019**
+<p class="dateline">Catalonia, Spain • 2019</p>
 
 ---
 
-## At-a-Glance {#at-a-glance}
+## At-a-Glance {.at-a-glance}
 
 **Trophy Winner:** Jon PATTERSON (2nd Trophy)  
 **Jacket Winner:** Jon BAKER (2nd Jacket)  
@@ -20,7 +20,7 @@ The peculiar mathematics of dual-format golf produced its rarest outcome: David 
 
 ---
 
-## Round 1: Opening Salvos {#round-1}
+## Round 1: Opening Salvos {.round-1}
 
 The Tour Course opened with immediate chaos. Patterson took both leads at the first before hemorrhaging eight strokes at the fourth, a twelve that removed him from contention by the fifth hole. Alex Baker registered zeros at the opening two holes, plummeting to the Spoon position inside eighteen minutes.
 
@@ -35,7 +35,7 @@ Williams closed with a three at the 18th to win the round with 46 points, one cl
 
 ---
 
-## Round 2: Tour Twice {#round-2}
+## Round 2: Tour Twice {.round-2}
 
 Williams held firm through the opening stretch before an eight at the fourth cost him the Jacket lead. His birdie at the tenth briefly restored it before Baker reclaimed control with a two at the 11th. Baker's response to that gain was immediate and catastrophic: a seven at the 12th that bled three precious points.
 
@@ -50,7 +50,7 @@ Williams clung to a one-point Trophy advantage. Baker's sixteen-stroke round mat
 
 ---
 
-## Round 3: Stadium Carnage {#round-3}
+## Round 3: Stadium Carnage {.round-3}
 
 The Stadium Course shredded reputations. Patterson opened with a five that restored his Trophy lead. Williams snatched it back at the second before Patterson's quintuple bogey at the third, a ten that should have finished his challenge.
 
@@ -65,7 +65,7 @@ Baker's birdie at the 12th and steady eighteen-stroke round extended his Jacket 
 
 ---
 
-## Round 4: Record and Ruin {#round-4}
+## Round 4: Record and Ruin {.round-4}
 
 Patterson stumbled from the gates with a triple bogey but his eight-point cushion absorbed the blow. Williams chased gamely, his birdie at the seventh briefly threatening before Patterson steadied. The volatility that defined his week never truly endangered the outcome.
 
@@ -80,7 +80,7 @@ Patterson's 40-point finale, matched by Alex Baker and Neumann, delivered the Tr
 
 ---
 
-## Tournament Verdict {#recap}
+## Tournament Verdict {.recap}
 
 Jon Patterson's second Trophy arrived through survival rather than mastery. He led forty-eight of seventy-two holes whilst enduring scoring volatility that would sink lesser champions. His quintuple bogey at Round 3's third hole somehow didn't derail him; the ten at Round 2's 15th merely punctuated a performance defined by resilience rather than consistency. Thirty-two lead changes across the week tell the story: Patterson won because he outlasted the chaos he helped create.
 
@@ -94,7 +94,7 @@ Stuart Neumann's eagle at the 15th in Round 4 stands as the tournament's rarest 
 
 ---
 
-## Player-by-Player Summary {#player-summary}
+## Player-by-Player Summary {.player-summary}
 
 **Jon PATTERSON (1st):** Claimed his second Trophy through spectacular chaos, leading 48 of 72 holes whilst surviving two quintuple bogeys and 32 lead changes. His Round 3 surge created an eight-point cushion that absorbed the final-round wobbles, ultimately winning by ten points despite gross scoring that ranked fourth.
 

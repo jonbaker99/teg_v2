@@ -1,10 +1,10 @@
-# TEG 16: Wire-to-Wire Sweep Delivers Breakthrough and Redemption {#report-title}
+# TEG 16: Wire-to-Wire Sweep Delivers Breakthrough and Redemption {.report-title}
 
-**Lisbon Coast, Portugal • 2023**
+<p class="dateline">Lisbon Coast, Portugal • 2023</p>
 
 ---
 
-## At-a-Glance {#at-a-glance}
+## At-a-Glance {.at-a-glance}
 
 **Trophy Winner:** Stuart Neumann (1st Trophy)  
 **Green Jacket Winner:** Gregg Williams (2nd Jacket)  
@@ -12,7 +12,7 @@
 
 ---
 
-## Tournament Summary {#recap}
+## Tournament Summary {.recap}
 
 Stuart Neumann claimed his first TEG Trophy with a dominant wire-to-wire performance across Portugal's finest courses, erasing three previous wooden spoon finishes with authority. Leading all 72 holes in the Stableford competition, Neumann's 156-point total secured a crushing 13-point victory over Gregg Williams, who mounted no serious challenge despite finishing runner-up.
 
@@ -22,7 +22,7 @@ David Mullin threatened briefly in Round 2 but faded to third. Jon Baker's chall
 
 ---
 
-## Round 1: Opening Salvo at Oitavos {#round-1}
+## Round 1: Opening Salvo at Oitavos {.round-1}
 
 Stuart Neumann seized the Trophy lead at the first hole of the tournament and never relinquished it. His opening 39 points at Oitavos Dunes established a five-point cushion over a congested chasing pack. Williams and Jon Baker tied at 34 points, whilst Williams and David Mullin shared the early Jacket lead at +18.
 
@@ -35,7 +35,7 @@ Neumann's authority wasn't flawless. An eight at the seventh and matching sevens
 
 ---
 
-## Round 2: Troia Trebles and Birdie Bonanza {#round-2}
+## Round 2: Troia Trebles and Birdie Bonanza {.round-2}
 
 Neumann extended his Trophy lead to seven points at the new venue, Troia, despite a closing wobble that threatened his authority. A brilliant holes 10-12 stretch—featuring a birdie at the tenth and 11 Stableford points—built a commanding cushion before late blow-ups at the 13th, 16th and 17th allowed Mullin to close within seven.
 
@@ -48,7 +48,7 @@ Jon Baker traded the Jacket lead twice during the round, gaining it at the 11th 
 
 ---
 
-## Round 3: Penha Longa Carnage {#round-3}
+## Round 3: Penha Longa Carnage {.round-3}
 
 Neumann broke away at Penha Longa with 39 points, extending his Trophy lead to 12 whilst Williams posted the tournament's finest gross round: 87, just +15. Three birdies lit up the round—Neumann at the sixth, Jon Baker at the seventh, Williams at the fifth—before Penha's mountains exacted revenge.
 
@@ -61,7 +61,7 @@ Williams' back nine brilliance separated him further in the Jacket race. Fifteen
 
 ---
 
-## Round 4: Coronation at Estoril {#round-4}
+## Round 4: Coronation at Estoril {.round-4}
 
 Neumann cruised home with 43 points at Estoril, never threatened as Williams claimed second with 42. A fifth-point birdie at the second set the tone: 18 points from the opening six holes. Even a nine at the eighth—his only zero of the round—couldn't derail the procession.
 
@@ -74,7 +74,7 @@ Alex Baker's nightmare concluded with the tournament's most horrific moment. The
 
 ---
 
-## Tournament Recap {#recap}
+## Tournament Recap {.recap}
 
 Stuart Neumann's maiden Trophy arrived via the most commanding wire-to-wire performance in recent tournament memory. Leading all 72 holes, his 156-point total crushed Williams by 13 and the wooden spooner by 29. Three career wooden spoons erased in one dominant week.
 
@@ -86,7 +86,7 @@ Alex Baker's wooden spoon became inevitable after the opening hole's nine. Thirt
 
 ---
 
-## Player-by-Player Summary {#player-summary}
+## Player-by-Player Summary {.player-summary}
 
 **Stuart Neumann (1st Trophy):** Claimed his first Trophy with wire-to-wire authority, leading all 72 holes and winning by 13 points. His five-point opening cushion never looked threatened across four consistent rounds (39-35-39-43). Three previous wooden spoons erased in emphatic fashion.
 
@@ -100,13 +100,13 @@ Alex Baker's wooden spoon became inevitable after the opening hole's nine. Thirt
 
 ---
 
-## RECORDS AND PERSONAL BESTS {#records-pbs}
+## RECORDS AND PERSONAL BESTS {.records-pbs}
 
 No new TEG records or Personal Bests were set in this tournament.
 
 ---
 
-## TOURNAMENT STATISTICS {#stats}
+## TOURNAMENT STATISTICS {.stats}
 
 → **Wire-to-wire sweep:** Both competitions led for all 72 holes by their respective winners—only the second time this has occurred in TEG history  
 → **Dominant margins:** Neumann's 13-point Trophy win and Williams' 16-stroke Jacket victory both rank in the top 5 largest margins  

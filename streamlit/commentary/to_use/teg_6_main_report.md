@@ -1,6 +1,6 @@
-# TEG 6: Wire-to-Wire Drama and Championship Collapses {#report-title}
+# TEG 6: Wire-to-Wire Drama and Championship Collapses {.report-title}
 
-**Catalonia, Spain • 2013**
+<p class="dateline">Catalonia, Spain • 2013</p>
 
 Gregg Williams secured his first TEG Trophy with a commanding wire-to-wire performance across Catalonia's finest courses, leading 69 of 72 holes despite finishing fifth in the gross competition. His nine-point advantage after an opening 48-point masterclass at PGA Catalunya proved insurmountable, even as a catastrophic final-round collapse threatened to derail his coronation.
 
@@ -8,7 +8,7 @@ David Mullin claimed his fifth Green Jacket in dramatic fashion, reclaiming the 
 
 The tournament's defining paradox saw Williams dominate the Stableford competition whilst posting the field's worst gross score of 128-over par. His extraordinary 20-point swing between opening and closing rounds encapsulated the volatility that plagued all five competitors across 72 holes marred by 69 triple-bogeys or worse.
 
-## AT-A-GLANCE {#at-a-glance}
+## AT-A-GLANCE {.at-a-glance}
 
 **Trophy Winner:** Gregg Williams (1st Trophy)  
 **Green Jacket Winner:** David Mullin (5th Jacket)  
@@ -16,7 +16,7 @@ The tournament's defining paradox saw Williams dominate the Stableford competiti
 
 ---
 
-## Round 1: Williams' Statement of Intent {#round-1}
+## Round 1: Williams' Statement of Intent {.round-1}
 
 PGA Catalunya's Tour Course provided the stage for Williams' defining performance. His 48-point opening round established the tournament's narrative before the field had barely drawn breath. Two early birdies at the 11th and 14th anchored a back-nine surge worth 28 points, building a commanding nine-point cushion over Baker.
 
@@ -31,7 +31,7 @@ Meller's tournament began ominously. A nine at the par-five seventh, followed by
 
 ---
 
-## Round 2: Williams Holds Firm Amidst Chaos {#round-2}
+## Round 2: Williams Holds Firm Amidst Chaos {.round-2}
 
 Costa Brava's woodland layout offered no respite. Williams' lead survived despite his worst round of the tournament: 36 points and a staggering 32-over-par gross. Consecutive blow-ups at the second, third, seventh, 14th, 15th and 16th holes punctured any momentum, yet his nine-point advantage remained intact.
 
@@ -46,7 +46,7 @@ The first-round narrative held: Williams extending his net dominance whilst haem
 
 ---
 
-## Round 3: Baker Seizes Jacket on Final-Hole Drama {#round-3}
+## Round 3: Baker Seizes Jacket on Final-Hole Drama {.round-3}
 
 El Prat's Rosa Course delivered the tournament's pivotal moment. Baker's par at the 18th elevated him to the Jacket lead as Mullin's nine strokes and zero points sealed a catastrophic finish to his round. The fourth blow-up in six closing holes cost Mullin dearly: from 63-over entering the 13th, he lurched to 92-over by day's end.
 
@@ -61,7 +61,7 @@ Neumann's steady 36 points, the round's best, highlighted his emerging role as t
 
 ---
 
-## Round 4: Twin Collapses Crown Split Champions {#round-4}
+## Round 4: Twin Collapses Crown Split Champions {.round-4}
 
 PGA Catalunya's Stadium Course, Spain's premier layout, witnessed extraordinary drama. Williams' Trophy victory survived a 28-point meltdown that saw him briefly lose the lead at the seventh before reclaiming it three holes later. His 41-over-par final round, studded with blow-ups at the third, fourth, sixth, seventh, ninth, 15th, 16th and 18th, would have buried most challengers. The cushion built by his opening brilliance proved decisive.
 
@@ -76,7 +76,7 @@ The final-round carnage epitomised the week. Neumann's blow-ups at the third and
 
 ---
 
-## Tournament Recap {#recap}
+## Tournament Recap {.recap}
 
 Williams' maiden Trophy arrived via the most commanding wire-to-wire performance in tournament history, leading 69 of 72 holes despite posting the worst gross score of all competitors. His 48-point opening statement at PGA Catalunya built a cushion that survived a calamitous 28-point finale, a 20-point swing that encapsulated both his brilliance and the week's volatility. The three-point margin over Baker flattered the runner-up: Williams never truly looked vulnerable until his final-round implosion reduced the advantage from nine points to three.
 
@@ -102,7 +102,7 @@ Neumann's consistency earned third in both competitions, his standard deviation 
 
 ---
 
-## RECORDS AND PERSONAL BESTS {#records-pbs}
+## RECORDS AND PERSONAL BESTS {.records-pbs}
 
 → **Best Stableford Round (TEG):** 48 points (Gregg Williams, R1) (previous: 45 points)  
 → **Best Stableford Round (Personal):** 48 points, Gregg Williams (previous: 43 points)  
@@ -113,7 +113,7 @@ Neumann's consistency earned third in both competitions, his standard deviation 
 
 ---
 
-## TOURNAMENT STATISTICS {#stats}
+## TOURNAMENT STATISTICS {.stats}
 
 - **Blow-up epidemic:** 69 triple-bogeys or worse across 72 holes (0.96 per hole), including 8 quintuple-bogeys and 1 sextuple-bogey
 - **Birdie drought:** Only 3 birdies recorded all week (Williams 3, Baker 2, Mullin 1), no eagles

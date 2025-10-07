@@ -1,6 +1,6 @@
-# TEG 11: Baker's Sweep as Brother's Dream Crumbles {#report-title}
+# TEG 11: Baker's Sweep as Brother's Dream Crumbles {.report-title}
 
-**Catalonia, Spain • 2018**
+<p class="dateline">Catalonia, Spain • 2018</p>
 
 Jon Baker claimed his third Trophy and first Green Jacket with a wire-to-wire display of dominance across Catalonia's championship courses. Leading for 70 of 72 holes in the Gross competition and 59 in Stableford, Baker swept both competitions for the first time in his career. His six-point margin in the Trophy and three-stroke advantage in the Jacket understated the control he exerted throughout.
 
@@ -10,7 +10,7 @@ David Mullin's Wooden Spoon at +73 came despite finishing runner-up in the Jacke
 
 ---
 
-## Round 1: Early Command {#round-1}
+## Round 1: Early Command {.round-1}
 
 PGA Catalunya's Stadium Course set the tone. Jon Baker seized both leads by the third hole and never truly relinquished control. His 35 points and +18 gross opened a three-point Trophy gap and two-stroke Jacket advantage.
 
@@ -25,7 +25,7 @@ Alex Baker sat second with 32 points despite triple-bogeys at the second, eleven
 
 ---
 
-## Round 2: Course Record Clarity {#round-2}
+## Round 2: Course Record Clarity {.round-2}
 
 Jon Baker equalled the Tour Course record with 84 strokes, 12 over par, extending both leads. His 41 points opened a two-point Trophy gap, whilst 11 strokes clear in the Jacket left little doubt about the Gross competition's direction.
 
@@ -40,7 +40,7 @@ Patterson endured another torrid afternoon. Blow-ups at the fifth and fifteenth,
 
 ---
 
-## Round 3: The El Prat Shift {#round-3}
+## Round 3: The El Prat Shift {.round-3}
 
 El Prat's Azul Course witnessed the tournament's pivotal moments. Alex Baker snatched the Trophy lead at the thirteenth, two points clear after Jon Baker's cold spell through holes twelve to fifteen cost him seven points.
 
@@ -55,7 +55,7 @@ Patterson produced his finest round of the week with 39 points, climbing from fi
 
 ---
 
-## Round 4: The Collapse {#round-4}
+## Round 4: The Collapse {.round-4}
 
 Alex Baker's tournament disintegrated at the sixth hole. Leading by two points, his triple-bogey seven handed control back to his brother. Jon Baker never looked back.
 
@@ -72,7 +72,7 @@ Baker completed the sweep: 143 points and +70 gross, six points clear in the Tro
 
 ---
 
-## Tournament Recap {#recap}
+## Tournament Recap {.recap}
 
 Jon Baker's third Trophy arrived with his first Green Jacket attached. Wire-to-wire dominance in the Gross competition, leading 70 of 72 holes, translated into a three-stroke margin over David Mullin. The Stableford battle proved tighter—a six-point advantage over Alex Baker understating how comprehensively control shifted when it mattered.
 
@@ -86,7 +86,7 @@ Baker's course-record-equalling 84 at the Tour Course in Round 2 established con
 
 ---
 
-## Player-by-Player Summary {#player-summary}
+## Player-by-Player Summary {.player-summary}
 
 **Jon Baker (1st Trophy, 1st Green Jacket):** Swept both competitions with wire-to-wire dominance in Gross, leading 70 of 72 holes and 59 of 72 in Stableford. Equalled the Tour Course record with 84 in Round 2, maintained composure when Alex challenged in Round 3, then sealed victory with 35-point finale. Third Trophy, first Jacket—his most complete TEG performance.
 
@@ -100,15 +100,15 @@ Baker's course-record-equalling 84 at the Tour Course in Round 2 established con
 
 ---
 
-## RECORDS AND PERSONAL BESTS {#records-pbs}
+## RECORDS AND PERSONAL BESTS {.records-pbs}
 
 → **Personal Worst Stableford Round:** Alex Baker 27 points (previous: 28 points, Alex Baker, TEG 9 Round 3)
 
 ---
 
-## TOURNAMENT STATISTICS {#stats}
+## TOURNAMENT STATISTICS {.stats}
 
-**Course Records:**
+<p class="dateline">Course Records:</p>
 - Jon Baker equalled PGA Catalunya Tour Course record: 84 strokes (+12)
 - Previous record holders: Gregg Williams, Jon Baker, David Mullin (all at TEG 6 and TEG 12)
 

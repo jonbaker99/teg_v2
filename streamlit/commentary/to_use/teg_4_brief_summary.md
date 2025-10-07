@@ -1,0 +1,7 @@
+# TEG 4: East Sussex and Surrey (2011)
+
+David Mullin claimed his second Trophy and third Green Jacket with wire-to-wire gross dominance and steady Stableford play across four new English courses. The two-time champion led 64 of 72 holes in the Gross competition, converting his consistency into a 3-point Trophy victory and 12-stroke Jacket margin.
+
+Jon Baker's championship bid collapsed spectacularly on the final back nine. Leading the Trophy by 6 points entering Round 4, Baker's eagle on the 8th hole seemed to seal victory—then came catastrophic meltdowns on 12 (9 strokes, +6) and 15 (11 strokes, +6) that handed Mullin both titles. Baker had led the Trophy for 49 holes but couldn't sustain his challenge, finishing runner-up by 3 points despite never leading in Gross. Henry Meller's tournament mirrored Baker's volatility: co-leader after Round 2 following a strong 36-point round, then undone by opening with a 12-stroke disaster on the 11th in Round 1 and closing with back-to-back 10-stroke blow-ups in Round 4.
+
+Gregg Williams earned his first career Wooden Spoon, finishing 27 points behind in the Trophy and 71 strokes adrift in Gross. His nightmare week bottomed out in Round 3 with three consecutive 8-stroke blow-ups, and concluded with a career-worst 43-stroke Round 4. In a tournament of attrition—just seven birdies across 360 holes, including a 35-hole drought—Williams managed only one birdie all week while recording 28 worse-than-doubles.

@@ -1,10 +1,10 @@
-# TEG 14: Mullin's Wire-to-Wire Sweep Survives Baker's Final Fury {#report-title}
+# TEG 14: Mullin's Wire-to-Wire Sweep Survives Baker's Final Fury {.report-title}
 
-<p id="dateline">Kent, England • 2021</p>
+<p class="dateline">Kent, England • 2021</p>
 
 ---
 
-## At-a-Glance {#at-a-glance}
+## At-a-Glance {.at-a-glance}
 
 **Trophy Winner:** David Mullin (3rd Trophy)  
 **Jacket Winner:** David Mullin (10th Jacket)  
@@ -12,7 +12,7 @@
 
 ---
 
-## Tournament Summary {#recap}
+## Tournament Summary {.recap}
 
 David Mullin claimed his third Trophy and tenth Green Jacket with a commanding wire-to-wire performance across the Kent coastline. Leading after every round in both competitions, Mullin's dominance was nearly complete: 60 of 72 holes in Stableford, 70 of 72 holes in gross. The final margins—two points in the Trophy, seven strokes in the Jacket—told only half the story of his control.
 
@@ -22,7 +22,7 @@ Jon Baker's week embodied golf's cruellest paradox. Second in the Jacket with a 
 
 ---
 
-## Round 1: Opening Salvos at Royal Cinque Ports {#round-1}
+## Round 1: Opening Salvos at Royal Cinque Ports {.round-1}
 
 Royal Cinque Ports provided the formidable opening test, its championship links baring teeth in classic Kent fashion. Multiple lead changes punctuated the early holes before Mullin seized control.
 
@@ -35,7 +35,7 @@ Baker recovered from his disaster to salvage 37 points, sharing second with Will
 
 ---
 
-## Round 2: Mullin Extends at Littlestone {#round-2}
+## Round 2: Mullin Extends at Littlestone {.round-2}
 
 Littlestone's classic links, designed by the architect of Royal St George's, witnessed Mullin extending his advantage to nine points. His 41-point round featured birdies at the seventh and 18th, the par-fives surrendering briefly to his precision.
 
@@ -48,7 +48,7 @@ Mullin's lead had doubled. Plus-29 cumulative gross gave him a 12-stroke Jacket 
 
 ---
 
-## Round 3: Prince's Provides Drama {#round-3}
+## Round 3: Prince's Provides Drama {.round-3}
 
 Prince's Shore-Dunes combination delivered the round's most entertaining chaos. Williams produced the tournament's finest gross round—14-over—to claim top honours in the Jacket standings. His 39 points in Stableford featured no blow-ups over the back nine, steady pars from nine through 11 anchoring the surge.
 
@@ -61,7 +61,7 @@ Jon Baker's volatility continued. A birdie at the second preceded blow-ups at th
 
 ---
 
-## Round 4: Baker's Furious Finale Falls Short {#round-4}
+## Round 4: Baker's Furious Finale Falls Short {.round-4}
 
 Alex Baker unleashed 43 points of fury. The tournament's best Stableford round slashed Mullin's lead from eight to two, four consecutive points from the 13th through 15th providing late momentum. A catastrophic sextuple bogey at the 16th—his second ten of the week on different par-fours—briefly threatened the charge. Too late to derail it entirely.
 
@@ -74,7 +74,7 @@ Mullin's 37-point round secured both titles. A blow-up at the tenth—quadruple 
 
 ---
 
-## Tournament Recap {#recap}
+## Tournament Recap {.recap}
 
 David Mullin's third Trophy and tenth Green Jacket arrived via the most commanding wire-to-wire performance the Kent coast has witnessed. Leading 60 of 72 holes in Stableford, 70 of 72 in gross, his two-point Trophy margin understated the control he exerted. Four birdies across 72 holes—including crucial strikes at the tenth in Round 1 and the 18th in Round 3—anchored his 154-point total.
 
@@ -86,7 +86,7 @@ Gregg Williams' steady third place—137 points, plus-76—featured no eagles, n
 
 ---
 
-## Player-by-Player Summary {#player-summary}
+## Player-by-Player Summary {.player-summary}
 
 **David Mullin (1st Trophy, 1st Jacket):** Wire-to-wire dominance across both competitions, leading after every round. Four birdies and strong finishing ability—particularly evident in Round 1 with a ten-point advantage on the back nine—anchored his 154-point Trophy victory. His tenth Green Jacket, won by seven strokes at plus-68, cements his legacy as the tournament's most decorated gross competitor.
 
@@ -98,7 +98,7 @@ Gregg Williams' steady third place—137 points, plus-76—featured no eagles, n
 
 ---
 
-## RECORDS AND PERSONAL BESTS {#records-pbs}
+## RECORDS AND PERSONAL BESTS {.records-pbs}
 
 → **David Mullin:** 10th Green Jacket win (tournament record, extending his own mark)  
 → **David Mullin:** Led 70 of 72 holes (Gross) - 2nd most in TEG history  
@@ -106,7 +106,7 @@ Gregg Williams' steady third place—137 points, plus-76—featured no eagles, n
 
 ---
 
-## TOURNAMENT STATISTICS {#stats}
+## TOURNAMENT STATISTICS {.stats}
 
 → David Mullin led after every round in both competitions—the tournament's first complete wire-to-wire double sweep  
 → Only two lead changes occurred, both in Round 1's opening holes  

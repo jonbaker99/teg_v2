@@ -1,0 +1,7 @@
+# TEG 7: Meller's Maiden Trophy, Mullin's Sixth Jacket
+
+**Lisbon Coast, Portugal, 2014** — Henry Meller claimed his first Trophy with a wire-to-wire victory across four Portuguese courses, holding off a tight field by 5 points with 175 total. David Mullin secured his sixth Green Jacket by 15 strokes, setting a Praia D'El Rey course record of 83 in the final round despite finishing 5 points behind in Stableford. The split podiums saw Gregg Williams and Stuart Neumann dead-locked for second in the Trophy at 170 points—yet separated by 51 strokes in gross scoring.
+
+Meller never trailed after taking the lead at H14 in Round 1, extending his margin each day (2pts → 10pts → 12pts) before cruising home. His Round 2 explosion of 51 points broke open the Trophy race. Jon Baker's collapse from second to fifth came via catastrophic stretches: back-to-back disasters at H2-3 in Round 3 (quintuple and quadruple bogeys) followed by a sextuple-bogey meltdown at H10 and another quadruple at H11 in Round 4. Mullin's consistency—averaging under par per round—proved decisive in the Jacket chase despite zero podium threat in Stableford.
+
+Alex Baker earned the Wooden Spoon on debut with 152 points, suffering eight blow-ups including three quintuples (H5 Round 1, H6 and H16 Round 4). Stuart Neumann tied five birdies to match Mullin for the week's best, but couldn't crack the Trophy podium. The tournament produced just nine birdies total across 432 holes—a brutal week across Praia D'El Rey, Bom Sucesso, and Royal Óbidos.

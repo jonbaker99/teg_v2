@@ -1,8 +1,8 @@
-# TEG 8: Williams and Mullin Split Championship in Wire-to-Wire Domination {#report-title}
+# TEG 8: Williams and Mullin Split Championship in Wire-to-Wire Domination {.report-title}
 
-<p id="dateline">Portugal, Lisbon Coast • 2015</p>
+<p class="dateline">Portugal, Lisbon Coast • 2015</p>
 
-## At-a-Glance {#at-a-glance}
+## At-a-Glance {.at-a-glance}
 
 **Trophy Winner:** Gregg Williams (2nd Trophy)  
 **Green Jacket Winner:** David Mullin (7th Jacket)  
@@ -18,7 +18,7 @@ Alex Baker climbed to second place in the Trophy with a 39-point final round, ov
 
 ---
 
-## Round 1: Williams Seizes Control at Quinta da Marinha {#round-1}
+## Round 1: Williams Seizes Control at Quinta da Marinha {.round-1}
 
 Quinta da Marinha's pine-forested parkland offered spectacular ocean views and abundant Robert Trent Jones Sr. bunkering. Williams held a slender four-point advantage entering the back nine. Alex Baker led the Trophy through nine holes. Everything changed at the Par 5 tenth.
 
@@ -33,7 +33,7 @@ Williams closed with 38 points and +26 gross, establishing control in both compe
 
 ---
 
-## Round 2: Williams Extends Lead Despite Quintuple Disaster {#round-2}
+## Round 2: Williams Extends Lead Despite Quintuple Disaster {.round-2}
 
 Penha Longa's dramatic mountain terrain and steep elevation changes tested nerve and club selection. Williams opened brilliantly, collecting level-par scores and four-point returns on the fourth, seventh and tenth. Through 11 holes he'd built a commanding lead in both competitions. Then came the 12th.
 
@@ -50,7 +50,7 @@ Williams led the Trophy by 11 points. Mullin commanded the Jacket by 24 strokes�
 
 ---
 
-## Round 3: Baker Claims Jacket Lead as Williams Survives Twin Disasters {#round-3}
+## Round 3: Baker Claims Jacket Lead as Williams Survives Twin Disasters {.round-3}
 
 Quinta da Marinha's return engagement produced carnage across the field. Williams arrived holding substantial leads in both competitions. His dominance in Gross proved illusory. Twin disasters at the tenth and 11th—a nine and a ten yielding one solitary point—cost him any realistic Jacket ambition. He posted 29 points, his grip on the Trophy loosening to five points.
 
@@ -67,7 +67,7 @@ Williams maintained his Trophy lead. Jon Baker claimed the Jacket. Sunday would 
 
 ---
 
-## Round 4: Williams Cruises as Mullin's Course Record Secures Jacket {#round-4}
+## Round 4: Williams Cruises as Mullin's Course Record Secures Jacket {.round-4}
 
 Oitavos Dunes—Portugal's premier links and the nation's top-ranked course—provided a suitably dramatic stage for the final act. Williams required only competent golf to secure the Trophy. Jon Baker needed perfection to retain the Jacket. Neither man would achieve their objective through excellence alone.
 
@@ -86,7 +86,7 @@ Henry Meller's opening six holes produced carnage: blow-ups at the second, third
 
 ---
 
-## Tournament Recap {#recap}
+## Tournament Recap {.recap}
 
 Gregg Williams claimed his second Trophy through the most commanding wire-to-wire performance in recent memory. Leading 63 of 72 holes, his 12-point victory margin understated the control he exerted. Catastrophic blow-ups at Penha Longa's 12th (quintuple bogey) and Quinta da Marinha's tenth and 11th (consecutive disasters yielding one point) provided brief drama but never threatened his supremacy. His +107 gross score—30 strokes behind Mullin—revealed the format's split personality. Williams mastered Stableford whilst finishing third in stroke play.
 
@@ -100,7 +100,7 @@ Williams never trailed. Mullin never surrendered the Jacket. The split champions
 
 ---
 
-## Player-by-Player Summary {#player-summary}
+## Player-by-Player Summary {.player-summary}
 
 **Gregg Williams (1st Trophy, 3rd Jacket):** Wire-to-wire Trophy dominance, leading 63 of 72 holes with four-point, 11-point, five-point and 12-point advantages across four rounds. Survived catastrophic blow-ups at Penha Longa's 12th (quintuple bogey) and Quinta da Marinha's tenth/11th (consecutive disasters) without losing the lead. Posted 149 points despite +107 gross score, finishing 30 strokes behind Mullin in stroke play whilst claiming second Trophy with ruthless Stableford consistency.
 
@@ -116,13 +116,13 @@ Williams never trailed. Mullin never surrendered the Jacket. The split champions
 
 ---
 
-## RECORDS AND PERSONAL BESTS {#records-pbs}
+## RECORDS AND PERSONAL BESTS {.records-pbs}
 
 → **Course Record (Oitavos Dunes - Gross):** 88 strokes (David Mullin, TEG 8 Round 4)  
 → **Worst Single-Hole Score:** 11 strokes at H10 Par 5 (Stuart Neumann, Round 3)  
 → **Most Zero-Point Holes (Tournament):** 23 holes (Stuart Neumann)
 
-<p id="dateline">Personal Worsts:</p>
+<p class="dateline">Personal Worsts:</p>
 → **Alex Baker - Worst Gross Round:** +41 (Round 1)  
 → **Alex Baker - Worst Stableford Round:** 30 points (Round 1)  
 → **Stuart Neumann - Worst Gross Round:** 43 strokes over par (Round 1)  
@@ -131,7 +131,7 @@ Williams never trailed. Mullin never surrendered the Jacket. The split champions
 
 ---
 
-## TOURNAMENT STATISTICS {#stats}
+## TOURNAMENT STATISTICS {.stats}
 
 **Competition Split:**
 - Trophy and Jacket won by different players for first time since TEG 5

@@ -4,14 +4,14 @@ import glob
 import sys
 from collections import OrderedDict
 
-# --- 1. Define ID Mappings and Headings ---
+# --- 1. Define Class Mappings and Headings ---
 
-ID_MAPPING = OrderedDict([
+CLASS_MAPPING = OrderedDict([
     # Headings to handle specific text variations/capitalization
     ("## At-a-Glance", "at-a-glance"),
     ("## AT-A-GLANCE", "at-a-glance"),
 
-    # Headings to group under one ID for consistency
+    # Headings to group under one class for consistency
     ("## Tournament Summary", "recap"),
     ("## Tournament Verdict", "recap"),
     ("## Tournament Recap", "recap"),
@@ -28,9 +28,9 @@ FILE_PATTERN = '*_main_report.md'
 
 # --- 2. Core Logic Function ---
 
-def add_ids_to_markdown(filepath, id_map):
+def add_classes_to_markdown(filepath, class_map):
     """
-    Reads a markdown file, adds stable IDs to headings based on id_map, 
+    Reads a markdown file, adds stable classes to headings based on class_map,
     and saves the modifications.
     """
     
@@ -46,46 +46,46 @@ def add_ids_to_markdown(filepath, id_map):
 
     new_content = []
     title_found = False  # Track if we've seen the title
-    dateline_added = False  # Track if we've already added dateline ID
+    dateline_added = False  # Track if we've already added dateline class
 
     # Split content into lines for processing
     for line in content.splitlines():
         modified_line = line
 
-        # 0. Check if this is a title (with or without ID tag)
+        # 0. Check if this is a title (with or without class tag)
         if line.startswith('# ') and not line.startswith('## '):
-            if '{#report-title}' in line:
+            if '{.report-title}' in line:
                 title_found = True
                 new_content.append(line)
                 continue
 
-        # Skip if ID is already present (for other headings)
-        if re.search(r'(#+)\s+.*\{\#.*?\}$', line):
+        # Skip if class is already present (for other headings)
+        if re.search(r'(#+)\s+.*\{\..*?\}$', line):
             new_content.append(line)
             continue
         
         # 1. Check for standard, exact/grouped matches
         # Sort by length DESC to match longer, more specific headings first
-        for heading_text, id_name in sorted(id_map.items(), key=lambda item: len(item[0]), reverse=True):
+        for heading_text, class_name in sorted(class_map.items(), key=lambda item: len(item[0]), reverse=True):
             if line.startswith(heading_text):
                 # Using line.strip() helps isolate the text for a cleaner match
                 if line.strip().startswith(heading_text.strip()):
-                    modified_line = f"{heading_text} {{#{id_name}}}"
+                    modified_line = f"{heading_text} {{.{class_name}}}"
                     break
         
         # 2. Check for Round Headings (using regex for flexibility)
         # We only check this if no match was found in step 1 AND it looks like a heading
         if modified_line == line and line.startswith('## Round'):
-            # Regex captures: (##\s) (Round [1-4]:.*) (and the digit for the ID)
+            # Regex captures: (##\s) (Round [1-4]:.*) (and the digit for the class)
             match = re.search(r'^(##\s)(Round\s(\d):.*)$', line.strip())
-            
+
             if match:
                 round_num = match.group(3)
                 heading_text = match.group(2)
-                id_name = f"round-{round_num}" # e.g., 'round-1'
-                
-                # Reconstruct the line: ## + Heading Text + {#id}
-                modified_line = f"## {heading_text} {{#{id_name}}}"
+                class_name = f"round-{round_num}" # e.g., 'round-1'
+
+                # Reconstruct the line: ## + Heading Text + {.class}
+                modified_line = f"## {heading_text} {{.{class_name}}}"
         
         # 3. Check for the Primary Title (if no match was found in step 1 or 2)
         if modified_line == line and line.startswith('# '):
@@ -94,18 +94,18 @@ def add_ids_to_markdown(filepath, id_map):
                 match = re.search(r'^(#\s)(.*)$', line.strip())
                 if match:
                     heading_text = match.group(2)
-                    id_name = "report-title"  # Fixed ID for main title
-                    modified_line = f"# {heading_text} {{#{id_name}}}"
+                    class_name = "report-title"  # Fixed class for main title
+                    modified_line = f"# {heading_text} {{.{class_name}}}"
                     title_found = True
 
         # 4. Check for dateline (bold text after title, ignoring blank lines)
         if title_found and not dateline_added:
-            # Match **text** pattern (with or without {#dateline} tag) and convert to HTML
-            dateline_match = re.search(r'^\*\*(.*?)\*\*(?:\s*\{\#dateline\})?$', line.strip())
+            # Match **text** pattern (with or without class tag) and convert to HTML
+            dateline_match = re.search(r'^\*\*(.*?)\*\*(?:\s*\{\.dateline\})?$', line.strip())
             if dateline_match:
                 # Extract just the text content
                 dateline_text = dateline_match.group(1)
-                modified_line = f'<p id="dateline">{dateline_text}</p>'
+                modified_line = f'<p class="dateline">{dateline_text}</p>'
                 dateline_added = True
 
         new_content.append(modified_line)
@@ -117,8 +117,8 @@ def add_ids_to_markdown(filepath, id_map):
         
         with open(filepath, 'w', encoding='utf-8') as f:
             f.write(final_content)
-            
-        print(f"-> Successfully added IDs to {os.path.basename(filepath)}")
+
+        print(f"-> Successfully added classes to {os.path.basename(filepath)}")
     except Exception as e:
         print(f"Error writing to {filepath}: {e}")
 
@@ -150,7 +150,7 @@ if __name__ == "__main__":
         print("-" * 50)
         
         for filename in md_files:
-            add_ids_to_markdown(filename, ID_MAPPING)
+            add_classes_to_markdown(filename, CLASS_MAPPING)
 
         print("-" * 50)
         print("✅ All processing complete.")

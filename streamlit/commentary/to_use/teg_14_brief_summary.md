@@ -1,0 +1,5 @@
+David Mullin claimed his third Trophy and tenth Green Jacket at TEG 14 in Kent, sweeping both competitions wire-to-wire. The 2-point Stableford margin marked the tightest Trophy finish in tournament history, while his 7-stroke Jacket victory proved comfortable.
+
+Alex Baker's tournament-best 43-point finale nearly stole the Trophy, slashing Mullin's lead from 8 points to 2 in a furious final-round charge. Jon Baker earned his first Wooden Spoon, finishing 29 points behind in Stableford despite claiming second place in the Jacket at +75. Mullin led after all four rounds in both competitions, controlling 60 of 72 holes in Stableford and 70 of 72 in gross.
+
+Mullin's tenth Green Jacket cements his dominance in the tournament's gross competition. The field played Royal Cinque Ports, Littlestone, and Prince's Shore/Dunes across four rounds in 2021.

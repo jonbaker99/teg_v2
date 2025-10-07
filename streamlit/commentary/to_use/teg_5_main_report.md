@@ -1,10 +1,10 @@
-# TEG 5: Baker's Final-Round Surge Caps 18-Change Thriller {#report-title}
+# TEG 5: Baker's Final-Round Surge Caps 18-Change Thriller {.report-title}
 
-**Algarve, Portugal • 2012**
+<p class="dateline">Algarve, Portugal • 2012</p>
 
 ---
 
-**At-a-Glance**
+<p class="dateline">At-a-Glance</p>
 
 **Trophy Winner:** Jon Baker (2nd Trophy)  
 **Green Jacket Winner:** David Mullin (4th Jacket)  
@@ -20,7 +20,7 @@ Stuart Neumann's brilliance went unrewarded. His 45-point Round 2 performance ti
 
 ---
 
-## Round 1: Opening Salvos at Boavista {#round-1}
+## Round 1: Opening Salvos at Boavista {.round-1}
 
 The tournament began with three players sharing the lead after the opening hole. Mullin's birdie at the third gave him outright control, a position strengthened by another birdie at the fifth.
 
@@ -33,7 +33,7 @@ Williams suffered his own torment. Triple bogeys bookended the round, his seven 
 
 ---
 
-## Round 2: Neumann's Record-Breaking Brilliance {#round-2}
+## Round 2: Neumann's Record-Breaking Brilliance {.round-2}
 
 Stuart Neumann's 45 points equalled the all-time TEG Stableford record. Three birdies in the opening ten holes, including a rare five-pointer at the eighth, carried him to 25 points at the turn. His plus-11 gross score shared Round 2's record with Mullin.
 
@@ -48,7 +48,7 @@ Williams' 42 points moved him to within one of Mullin's lead. Baker slipped thre
 
 ---
 
-## Round 3: Final-Hole Chaos Reshuffles Trophy Race {#round-3}
+## Round 3: Final-Hole Chaos Reshuffles Trophy Race {.round-3}
 
 Mullin's opening birdie extended his Trophy advantage, but Williams snatched the lead at the third with a four-pointer. The lead changed hands three more times before the finishing holes delivered mayhem.
 
@@ -63,7 +63,7 @@ The Trophy standings compressed dramatically. Just six points separated first fr
 
 ---
 
-## Round 4: Baker's Decisive Takeover at Palmares {#round-4}
+## Round 4: Baker's Decisive Takeover at Palmares {.round-4}
 
 The final round at the new Palmares Lagos/Praia course saw five lead changes before Baker seized permanent control at the 13th. His birdie there, following Williams' blow-up at the sixth and another at the eighth, gave Baker breathing room he wouldn't relinquish.
 
@@ -78,7 +78,7 @@ Mullin's late surge came too late to matter in Stableford terms. Consecutive bir
 
 ---
 
-## Tournament Recap {#recap}
+## Tournament Recap {.recap}
 
 Jon Baker's second Trophy arrived courtesy of the most volatile tournament in recent memory. Eighteen lead changes across four rounds culminated in Baker overtaking Williams in a final-round shootout decided by three points. Baker led just 20 of 72 holes yet gained the Trophy lead five times, including his decisive takeover at Palmares' 13th.
 
@@ -92,7 +92,7 @@ The final round delivered five lead changes before Baker's birdies at the 13th a
 
 ---
 
-## Player-by-Player Summary {#player-summary}
+## Player-by-Player Summary {.player-summary}
 
 **Jon Baker (1st Trophy, 2nd Jacket):** Overcame early disasters—quintuples at the sixth in Round 1 and 18th in Round 3, plus another at the fifth in Round 4—to claim his second Trophy. Five birdies across the tournament, including back-to-back at the 13th and 14th in the final round, proved decisive. Led just 20 of 72 holes but gained the lead five times, demonstrating remarkable resilience. Seven zero-point holes couldn't prevent victory by three points.
 
@@ -106,7 +106,7 @@ The final round delivered five lead changes before Baker's birdies at the 13th a
 
 ---
 
-## RECORDS AND PERSONAL BESTS {#records-pbs}
+## RECORDS AND PERSONAL BESTS {.records-pbs}
 
 → **All-Time Stableford Round Record (Tied):** Stuart Neumann's 45 points in Round 2 (tied existing record)  
 → **All-Time Gross Round Record (Tied):** Stuart Neumann and David Mullin both scored plus-11 in Round 2 (tied existing record)  
@@ -123,7 +123,7 @@ The final round delivered five lead changes before Baker's birdies at the 13th a
 
 ---
 
-## TOURNAMENT STATISTICS {#stats}
+## TOURNAMENT STATISTICS {.stats}
 
 **Lead Changes:** 18 total Trophy lead changes across 72 holes (tournament record for volatility)
 

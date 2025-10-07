@@ -1,6 +1,6 @@
-# TEG 10: Baker's Breakthrough After Wire-to-Wire Mullin Dominance {#report-title}
+# TEG 10: Baker's Breakthrough After Wire-to-Wire Mullin Dominance {.report-title}
 
-<p id="dateline">Algarve, Portugal • 2017</p>
+<p class="dateline">Algarve, Portugal • 2017</p>
 
 Alex Baker seized his first TEG Trophy with a nerveless final-round performance across the Algarve coastline, his 51-point flourish on Boavista's return nine separating him from Gregg Williams by 11 points. David Mullin claimed his ninth Green Jacket, a tournament record, leading all 72 holes in gross scoring despite a spectacular mid-tournament Stableford collapse.
 
@@ -10,7 +10,7 @@ John Patterson's tournament descended into historic chaos, his 22-point collapse
 
 ---
 
-## Round 1: Mullin's Triple-Birdie Masterclass {#round-1}
+## Round 1: Mullin's Triple-Birdie Masterclass {.round-1}
 
 David Mullin established an eight-point Trophy advantage with three birdies in five holes on Boavista's back nine, his 49-point performance anchored by a flawless mid-round stretch. The Jacket race began level, Mullin and Jon Baker both carding 4-over rounds to share the lead.
 
@@ -23,7 +23,7 @@ Alex Baker's round contained contradictions: a blow-up at the Par-3 second and a
 
 ---
 
-## Round 2: Mullin Maintains Control Despite Field's Charge {#round-2}
+## Round 2: Mullin Maintains Control Despite Field's Charge {.round-2}
 
 Mullin's five-point Trophy cushion survived Palmares' Praia/Alvor combination despite Williams posting the tournament's best Stableford round. Jon Baker's birdie at the Par-5 second sparked a Jacket surge that lifted him past Mullin into the gross lead at 14-over total.
 
@@ -38,7 +38,7 @@ Neumann's round collapsed comprehensively across five holes. Consecutive zeros a
 
 ---
 
-## Round 3: Lead Changes and Late Drama Shape Closing Day {#round-3}
+## Round 3: Lead Changes and Late Drama Shape Closing Day {.round-3}
 
 Five lead changes through 18 holes left Alex Baker and Gregg Williams tied atop the Trophy standings, whilst Mullin reclaimed the Jacket lead despite posting the round's worst Stableford total. The Palmares Alvor/Lagos combination exposed vulnerabilities across the field.
 
@@ -53,7 +53,7 @@ Patterson's implosion reached new depths. Quintuples at both the Par-5 eighth an
 
 ---
 
-## Round 4: Baker's 51-Point Surge Seals Maiden Triumph {#round-4}
+## Round 4: Baker's 51-Point Surge Seals Maiden Triumph {.round-4}
 
 Alex Baker's record-equalling 51-point final round at Boavista secured his maiden Trophy by 11 points, whilst Mullin's 13-over-par effort completed his wire-to-wire Jacket dominance. Williams briefly grabbed the Trophy lead with a birdie at the Par-4 fifth before Baker's relentless consistency buried all challengers.
 
@@ -68,7 +68,7 @@ Patterson's tournament reached a fittingly chaotic conclusion. Blow-ups at the P
 
 ---
 
-## Tournament Verdict {#recap}
+## Tournament Verdict {.recap}
 
 Alex Baker's maiden Trophy arrived via a late surge that overwhelmed David Mullin's early dominance. Leading only 33 of 72 holes, Baker averaged 49 points across the final two rounds whilst Mullin's Stableford challenge dissolved from 91 points at halfway to 122 after three rounds. The 11-point final margin belied the drama of Round 3's five lead changes.
 
@@ -82,7 +82,7 @@ Baker's 51-point finale equalled the all-time TEG record, his consistency across
 
 ---
 
-## Player-by-Player Summary {#player-summary}
+## Player-by-Player Summary {.player-summary}
 
 **Alex BAKER (1st Trophy, 4th Jacket):** Transformed a five-point halfway deficit into an 11-point victory through sustained excellence across the final 36 holes. His record-equalling 51-point finale at Boavista, featuring a 21-point six-hole stretch from holes 5 through 10, secured his maiden Trophy. Early blow-ups at Round 1's Par-3 second and Par-5 eighth suggested vulnerability before his consistency took control.
 
@@ -98,7 +98,7 @@ Baker's 51-point finale equalled the all-time TEG record, his consistency across
 
 ---
 
-## RECORDS AND PERSONAL BESTS {#records-pbs}
+## RECORDS AND PERSONAL BESTS {.records-pbs}
 
 → **All-time TEG record (equalled):** 51 points (Stableford), Alex BAKER (previous: 51 points, Henry MELLER, TEG 9)  
 → **Personal Best (Gross):** +4 over 18 holes, David MULLIN (previous: +5, TEG 2)  
@@ -109,9 +109,9 @@ Baker's 51-point finale equalled the all-time TEG record, his consistency across
 
 ---
 
-## TOURNAMENT STATISTICS {#stats}
+## TOURNAMENT STATISTICS {.stats}
 
-<p id="dateline">Scoring Patterns:</p>
+<p class="dateline">Scoring Patterns:</p>
 - Only 12 birdies recorded across 432 holes (2.8% birdie rate)
 - David MULLIN recorded 6 of 12 tournament birdies (50%)
 - Zero-point holes dominated: 47 total disasters across six players

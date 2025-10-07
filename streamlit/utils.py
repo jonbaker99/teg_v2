@@ -3085,6 +3085,10 @@ def load_datawrapper_css():
     """Load datawrapper table CSS from external file"""
     load_css_file('styles/datawrapper.css')
 
+def load_teg_reports_css():
+    """Load TEG reports CSS from external file"""
+    load_css_file('styles/teg_reports.css')
+
 def datawrapper_table(df, left_align=None, css_classes=None, return_html=False):
     """
     Render a pandas DataFrame as HTML with datawrapper styling.

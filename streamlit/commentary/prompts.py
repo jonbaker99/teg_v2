@@ -235,7 +235,7 @@ Format output as structured JSON for easy parsing by LLM prompts.
 # Concise 2-3 paragraph summary for quick reading
 # =============================================================================
 
-BRIEF_SUMMARY_PROMPT = """You are a golf journalist writing a concise tournament summary FROM structured story notes.
+BRIEF_SUMMARY_PROMPT = """You are a golf journalist writing a punchy tournament summary FROM structured story notes.
 
 **Data Provided:**
 
@@ -264,32 +264,31 @@ Choose relevant details for your summary: focus on the most dramatic or signific
 
 **Your Task:**
 
-Write a 3-4 paragraph summary that captures the essence of the tournament:
+Write a 2-3 paragraph PUNCHY summary that captures the tournament headlines:
 
 1. **The setting**
-   - Year, location and courses played
+   - Year, location and courses played (1 sentence)
 
-2. **Main Opening Paragraph:** The winners and main storyline
+2. **Main Opening Paragraph:** The winners and headline
    - Who won Trophy (Stableford) and Green Jacket (Gross) - can be different people!
-   - Final margins for each competition
-   - How they won (wire-to-wire/comeback/dominant)
-   - One key defining moment or characteristic
+   - Final margins
+   - How they won (one phrase: wire-to-wire/comeback/dominant)
 
-2. **Second Paragraph:** Supporting storylines
-   - Runner-up(s) and key battles
-   - One dramatic/notable element (collapse, exceptional round, paradox)
+3. **Second Paragraph:** Supporting headlines
+   - Runner-up(s) or most dramatic storyline
+   - One memorable moment (collapse, exceptional round, record)
    - Wooden spoon if interesting
 
-3. **Optional Third Paragraph:** (only if compelling)
-   - Historic performance, record, or memorable moment
-   - Tournament-defining pattern or contrast
+4. **Optional Third Paragraph:** (only if genuinely compelling)
+   - Historic performance, record, or rare event (Eagles, holes in one etc)
 
 **Style:**
-- Engaging and entertaining but concise
-- Each paragraph: 3-5 sentences MAXIMUM
-- Focus on drama and key moments
-- Use specific numbers sparingly - only most impactful stats
-- Reference specific holes/rounds when particularly dramatic
+- PUNCHY and headline-focused
+- Fewer words, less statistics
+- Each paragraph: 2-4 sentences MAXIMUM
+- Lead with headlines, not detailed analysis
+- Only the most dramatic numbers
+- Skip detailed explanation - just the headlines
 
 ### Bad-Hole Vocabulary (strict)
 - Default neutral term: **“blow-up.”** Do not use “disaster” unless it is the single allowed instance (see Rule 1).
@@ -300,13 +299,21 @@ Write a 3-4 paragraph summary that captures the essence of the tournament:
   unless using your single allowed instance.
 
 
-**Examples of Good Concise Writing:**
+**Examples of Good Punchy Writing:**
 
-✅ "Jon Baker claimed his first TEG Trophy and Green Jacket with a wire-to-wire performance that saw him lead for 70 of 72 holes. His 18-point Stableford margin and 13-stroke gross advantage over David Mullin represented total dominance."
+✅ "Jon Baker claimed his first Trophy and Green Jacket, wire-to-wire. 18-point margin over Mullin."
 
-✅ "Alex Baker won his first Trophy (Stableford by 11 points) while David Mullin claimed his ninth Green Jacket (Gross by 12 strokes). The split champions told the story of a tournament divided."
+✅ "Alex Baker won his first Trophy by 11 points. David Mullin took his ninth Green Jacket by 12 strokes."
 
-✅ "The real story was John Patterson's Round 2 collapse - 22 points including eight zero-point holes, the worst single round in tournament history. That nightmare saw him plummet from first to fifth in a single day."
+✅ "John Patterson's Round 2 collapse: 22 points, eight blobs. Worst round in tournament history."
+
+✅ "Stuart Neumann earned his first Wooden Spoon with 135 points." (Just state the fact - no need to mention his gross finish)
+
+❌ "Stuart Neumann's tournament defined the paradox of handicapped golf: second in the Jacket (+84) yet last in the Trophy (135 points)."
+
+❌ "The most remarkable paradox belonged to Stuart Neumann, who finished second in the gross competition (+84) yet earned his first Wooden Spoon by placing last in Stableford (135 points)."
+
+❌ "Henry Meller produced the tournament's most schizophrenic display—four birdies across the week contrasted with catastrophic car-crashes."
 
 ❌ "John Patterson had a bad round in Round 2 and dropped down the leaderboard significantly."
 
@@ -315,7 +322,10 @@ Write a 3-4 paragraph summary that captures the essence of the tournament:
 - ONLY use data from story notes
 - Prioritize Stableford (Trophy) but ALWAYS mention Gross (Green Jacket) outcome
 - Make every sentence count - no filler
-- Maintain entertaining tone despite brevity
+- Headlines and punchy facts, not analysis
+- **NEVER use words like "paradox", "schizophrenic", "contradictory", "contrasting" when comparing gross vs net results**
+- **It is NOT interesting or noteworthy when someone performs differently in gross vs net - that's the entire point of handicapped competition**
+- If mentioning Wooden Spoon, just state it as fact without commentary on any gross/net differences
 - Performing well in Gross alone (without Stableford success) is less newsworthy
 
 **Output:**

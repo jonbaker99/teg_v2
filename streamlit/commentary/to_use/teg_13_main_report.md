@@ -1,10 +1,10 @@
-# TEG 13: Baker's Wire-to-Wire Dominance Seals Fourth Title {#report-title}
+# TEG 13: Baker's Wire-to-Wire Dominance Seals Fourth Title {.report-title}
 
-**Kent, England • 2020**
+<p class="dateline">Kent, England • 2020</p>
 
 ---
 
-## At-a-Glance {#at-a-glance}
+## At-a-Glance {.at-a-glance}
 
 **Trophy Winner:** Jon Baker (4th Trophy)  
 **Green Jacket Winner:** Jon Baker (3rd Jacket)  
@@ -12,7 +12,7 @@
 
 ---
 
-## Tournament Summary {#recap}
+## Tournament Summary {.recap}
 
 Jon Baker claimed his fourth Trophy with the most commanding performance in tournament history, leading wire-to-wire in both competitions across the Kentish coastline. His six-point victory over Gregg Williams in the Stableford told only half the story. Baker led all 72 holes in the Gross, and 70 of 72 in the Trophy battle, producing the tournament's only sub-par round along the way.
 
@@ -22,7 +22,7 @@ David Mullin's quintuple bogey disaster on the tenth hole of the final round sea
 
 ---
 
-## Round 1: Baker Stakes His Claim {#round-1}
+## Round 1: Baker Stakes His Claim {.round-1}
 
 Royal Cinque Ports, one of the toughest tests on the Kent coast, provided an unforgiving introduction. Baker announced his intentions immediately, matching par on the opening hole before birdieing the third to seize the Trophy lead. He would not relinquish it for the remainder of the tournament.
 
@@ -32,13 +32,13 @@ Alex Baker endured a nightmare start, triple bogey on the opening hole setting t
 
 Baker's front-nine dominance—23 points to Williams' 12—contrasted sharply with Williams' back-nine surge, 21 points reversing the narrative but arriving too late. The opening salvo: Baker 39 points, Williams 33, Murphy and Alex Baker 31, Patterson 28.
 
-**Round 1 Standings:**  
+<p class="dateline">Round 1 Standings:</p>
 **Trophy:** JB 39 | GW 33 | AB 31 | DM 31 | JP 28  
 **Jacket:** JB +13 | GW +22 | DM +22 | AB +30 | JP +36
 
 ---
 
-## Round 2: Countback Drama at Prince's {#round-2}
+## Round 2: Countback Drama at Prince's {.round-2}
 
 The Dunes and Himalayas combination at Prince's Golf Club set the stage for the tournament's defining drama. Baker's second birdie of the week on the sixth extended his advantage, but Williams' steady play through the middle holes kept the gap manageable. Then the back nine turned electric.
 
@@ -54,7 +54,7 @@ Alex Baker's triple bogey on the tenth cost him momentum. David Mullin's quadrup
 
 ---
 
-## Round 3: Patterson's 49-Point Explosion {#round-3}
+## Round 3: Patterson's 49-Point Explosion {.round-3}
 
 Littlestone Golf Club, a classic remote links refined by Braid and MacKenzie, witnessed the tournament's statistical highlight. Patterson produced a 49-point masterclass, the best single-round performance of the week, leaping from fifth to third in the Trophy standings despite his +12 gross score ranking only second for the round.
 
@@ -70,7 +70,7 @@ Mullin's 32-point effort included a triple bogey on the fourteenth, a warning si
 
 ---
 
-## Round 4: The Tenth Hole Catastrophe {#round-4}
+## Round 4: The Tenth Hole Catastrophe {.round-4}
 
 The Shore and Dunes combination at Prince's provided the final act. Patterson opened with the tournament's only eagle, a glorious three on the par-five second. The next hole brought a triple bogey. The man contained multitudes.
 
@@ -86,7 +86,7 @@ Williams closed with 38 points, strong enough to secure second place in both com
 
 ---
 
-## Tournament Recap {#recap}
+## Tournament Recap {.recap}
 
 Jon Baker's fourth Trophy arrived via the most commanding wire-to-wire performance in tournament history. Leading all 72 holes in the Gross and 70 of 72 in the Stableford, his control never truly wavered despite Round 2's countback drama. Five birdies, including the crucial eighteenth-hole reclaim at Prince's, showcased composure under pressure. His Round 3 sub-par gross—the only one across the field all week—underscored the consistency gulf.
 
@@ -100,7 +100,7 @@ Alex Baker's tournament-best 44-point final round matched his brother's Round 3 
 
 ---
 
-## Player-by-Player Summary {#player-summary}
+## Player-by-Player Summary {.player-summary}
 
 **Jon Baker (1st Trophy, 1st Jacket):** Wire-to-wire domination in both competitions, leading all 72 Gross holes and 70 of 72 Stableford. Five birdies, including the pivotal Round 2 eighteenth-hole countback reclaim, showcased composure. His Round 3 sub-par gross—the tournament's only one—cemented his authority. Six-point Trophy margin and eighteen-stroke Gross gap told the story of unassailable control.
 

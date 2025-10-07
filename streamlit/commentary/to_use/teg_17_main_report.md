@@ -1,6 +1,6 @@
-# TEG 17: Baker's Wire-to-Wire Dominance Delivers Historic Double {#report-title}
+# TEG 17: Baker's Wire-to-Wire Dominance Delivers Historic Double {.report-title}
 
-**Portugal, Lisbon Coast • 2024**
+<p class="dateline">Portugal, Lisbon Coast • 2024</p>
 
 Jon Baker secured his fifth TEG Trophy and fourth Green Jacket with the most commanding performance in tournament history. Leading 67 of 72 holes in the Stableford competition and 70 of 72 in the Gross, Baker swept both titles with final margins that flattered his rivals: 18 points over David Mullin in the Trophy, 13 strokes ahead in the Jacket.
 
@@ -10,7 +10,7 @@ Behind Baker's procession, Patterson authored the tournament's defining subplot:
 
 ---
 
-## AT-A-GLANCE {#at-a-glance}
+## AT-A-GLANCE {.at-a-glance}
 
 **Trophy Winner:** Jon BAKER (5th Trophy)  
 **Jacket Winner:** Jon BAKER (4th Jacket)  
@@ -18,7 +18,7 @@ Behind Baker's procession, Patterson authored the tournament's defining subplot:
 
 ---
 
-## Round 1: Patterson's False Dawn {#round-1}
+## Round 1: Patterson's False Dawn {.round-1}
 
 Patterson's opening 39 points suggested a title challenge. Williams and Baker shared the Jacket lead at level par through the first hole before Praia D'El Rey's chaos theory took hold.
 
@@ -31,7 +31,7 @@ Mullin's round encapsulated volatility. Triple bogeys at the 1st and 2nd plunged
 
 ---
 
-## Round 2: Collapse and Redemption {#round-2}
+## Round 2: Collapse and Redemption {.round-2}
 
 Baker required just one hole to reclaim what was rightfully his. Patterson's triple bogey at the opening hole handed over the Trophy lead permanently. What followed ranks amongst tournament history's darkest implosions.
 
@@ -46,7 +46,7 @@ Baker's birdie at the 4th anchored his 44-point round. His only blemish came lat
 
 ---
 
-## Round 3: Baker's Stranglehold {#round-3}
+## Round 3: Baker's Stranglehold {.round-3}
 
 Royal Óbidos witnessed Baker's only wobble—and his swift correction. His triple at the opening hole surrendered the Jacket lead. He regained it at the 2nd, lost it briefly at the 6th to Mullin, then seized it permanently at the 7th. Those four lead changes across six holes constituted the tournament's only genuine contest for either title.
 
@@ -61,7 +61,7 @@ Alex Baker's quintuple at the 14th typified his week. The blow-up followed his b
 
 ---
 
-## Round 4: Coronation {#round-4}
+## Round 4: Coronation {.round-4}
 
 Baker's final-round 40 points merely confirmed inevitability. His birdies at the 4th and 5th anchored the front nine, scoring 11 points across holes 3-5. The 18-point final margin over Mullin flattered his rivals—Baker's dominance went far beyond the final numbers.
 
@@ -76,7 +76,7 @@ Baker completed the wire-to-wire sweep. Five birdies total. Led both competition
 
 ---
 
-## Tournament Recap {#recap}
+## Tournament Recap {.recap}
 
 Baker's fifth Trophy and fourth Jacket arrived via wire-to-wire dominance unprecedented in tournament history. Leading after every round in both competitions, his 18-point Trophy margin over Mullin and 13-stroke Jacket advantage rendered Sunday's action ceremonial. The consistency proved lethal: standard deviation of 3.0 points whilst Patterson's 8.5 volatility encapsulated the chaos beneath.
 
@@ -104,22 +104,21 @@ Baker's dominance extended beyond final margins. He led 137 combined holes acros
 
 ---
 
-## RECORDS AND PERSONAL BESTS {#records-pbs}
+## RECORDS AND PERSONAL BESTS {.records-pbs}
 
 → **Best Tournament Round (Stableford):** 47 points (previous: 44, Henry Meller, TEG 16)  
 → **Worst Tournament Round (Stableford):** 22 points (previous: 26, David Mullin, TEG 9)  
 → **Worst Tournament Round (Gross):** +44 (previous: +42, David Mullin, TEG 9)  
-→ **Most Holes Led (Combined):** 137 holes (previous: 125, Jon Baker, TEG 12)  
 → **Most Holes Led (Stableford):** 67 holes (previous: 65, Gregg Williams, TEG 7)  
 → **Most Holes Led (Gross):** 70 holes (previous: 60, Jon Baker, TEG 12)
 
-**Personal Bests:**  
+**Personal Bests:**
 → **John Patterson - Worst Round (Gross):** +44 (previous: +36, TEG 13)  
 → **David Mullin - Best Round (Stableford):** 47 points (previous: 44, TEG 7)
 
 ---
 
-## TOURNAMENT STATISTICS {#stats}
+## TOURNAMENT STATISTICS {.stats}
 
 **Hole Performance:**
 - Most challenging hole (Stableford): H5/R1 Praia D'El Rey (Par 5) - 3 zero-point holes including Alex Baker's quintuple

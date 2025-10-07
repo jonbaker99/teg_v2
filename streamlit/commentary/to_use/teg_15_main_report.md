@@ -1,8 +1,8 @@
-# TEG 15: Williams Dominates with Record-Breaking Wire-to-Wire Sweep {#report-title}
+# TEG 15: Williams Dominates with Record-Breaking Wire-to-Wire Sweep {.report-title}
 
-**Portugal, Lisbon Coast • 2022**
+<p class="dateline">Portugal, Lisbon Coast • 2022</p>
 
-## At-a-Glance {#at-a-glance}
+## At-a-Glance {.at-a-glance}
 
 **Trophy Winner:** Gregg WILLIAMS (3rd Trophy)  
 **Green Jacket Winner:** Gregg WILLIAMS (1st Jacket)  
@@ -16,7 +16,7 @@ Stuart Neumann delivered a career-best runner-up Trophy finish, posting 136 poin
 
 ---
 
-## Round 1: Early Chaos, Then Williams {#round-1}
+## Round 1: Early Chaos, Then Williams {.round-1}
 
 The Estoril opener began with multiple lead changes. Jon Baker seized control at the first, his level-par four earning three points and both early leads. Williams' opening disaster, an eight at the same hole, suggested vulnerability. By the third, everything had shifted. Williams' birdie took both competitions, and another at the fourth extended his advantage. Baker's collapse arrived at the 11th: a nine costing him the lead he would never reclaim.
 
@@ -29,7 +29,7 @@ Baker's misery continued through the back nine. Blow-ups at 15 and 17 buried any
 
 ---
 
-## Round 2: West Cliffs Wreckage {#round-2}
+## Round 2: West Cliffs Wreckage {.round-2}
 
 Patterson briefly snatched the Trophy lead at West Cliffs' third hole with a five-point birdie. Williams' seven at the same hole suggested cracks. Patterson's joy lasted one hole. By the fourth, Williams had reclaimed control and would never relinquish it. The real story unfolded at the sixth, a Par 5 that produced carnage. Alex Baker's 11 led a procession of disasters: Mullin and Neumann both struck tens, Baker a nine, Patterson an eight. Five simultaneous blow-ups on a single hole.
 
@@ -42,7 +42,7 @@ Williams extended his Trophy lead to nine points over Patterson. His seven-strok
 
 ---
 
-## Round 3: Course Record Coronation {#round-3}
+## Round 3: Course Record Coronation {.round-3}
 
 Williams produced the tournament's defining performance at Penha Longa. His 44-point round established a course record and created an unbridgeable 18-point gap. Three birdies on the back nine sealed it: the eighth, tenth, and 15th all falling under par. The 10-through-15 stretch yielded 18 points, Williams playing level par whilst accumulating maximum returns.
 
@@ -57,7 +57,7 @@ Williams led by 18 points with one round remaining. His 19-stroke Jacket advanta
 
 ---
 
-## Round 4: Oitavos Finale {#round-4}
+## Round 4: Oitavos Finale {.round-4}
 
 Williams cruised through Oitavos Dunes with the title secured. His 34 points extended winning margins that had long since become insurmountable. A blow-up at the 18th, a seven when safety was guaranteed, provided the only blemish. The final hole claimed five victims, including Neumann's defining catastrophe.
 
@@ -72,7 +72,7 @@ Williams' final totals of 157 points and 63 over par represented dominance unsee
 
 ---
 
-## Tournament Recap {#recap}
+## Tournament Recap {.recap}
 
 Williams became the first player to sweep both Trophy and Jacket in the same tournament, doing so with margins that redrew the record books. His 21-point Trophy victory doubled the previous largest gap. Twenty-nine strokes in the gross exceeded all precedent. Leading 69 of 72 Trophy holes meant genuine competition existed for approximately three holes total.
 
@@ -88,7 +88,7 @@ Williams' wire-to-wire sweep, achieved with record margins across both competiti
 
 ---
 
-## Player-by-Player Summary {#player-summary}
+## Player-by-Player Summary {.player-summary}
 
 **Gregg Williams (1st Trophy, 1st Jacket):** Wire-to-wire domination in both competitions, leading 69 of 72 Trophy holes and 64 of 72 Jacket holes. Record-breaking 21-point Trophy margin and 29-stroke Jacket advantage both rewrote tournament history. Round 3 course record of 44 points at Penha Longa, featuring three back-nine birdies, sealed victory that was never seriously contested after Round 1.
 
@@ -104,7 +104,7 @@ Williams' wire-to-wire sweep, achieved with record margins across both competiti
 
 ---
 
-## RECORDS AND PERSONAL BESTS {#records-pbs}
+## RECORDS AND PERSONAL BESTS {.records-pbs}
 
 → **TEG Trophy Largest Victory Margin:** 21 points (previous: unknown, this appears to be new record)  
 → **TEG Jacket Largest Victory Margin:** 29 strokes (previous: unknown, this appears to be new record)  
@@ -117,7 +117,7 @@ Williams' wire-to-wire sweep, achieved with record margins across both competiti
 
 ---
 
-## TOURNAMENT STATISTICS {#stats}
+## TOURNAMENT STATISTICS {.stats}
 
 - **Rarest Achievement:** Only 1 eagle recorded (David Mullin H15 R2), first eagle since TEG [previous tournament with eagle]
 - **Scoring Efficiency:** Only 8 total birdies across 432 holes (1.9% birdie rate)

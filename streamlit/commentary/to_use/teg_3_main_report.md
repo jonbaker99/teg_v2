@@ -1,10 +1,10 @@
-# TEG 3: Baker's Wire-to-Wire Domination Claims First Trophy {#report-title}
+# TEG 3: Baker's Wire-to-Wire Domination Claims First Trophy {.report-title}
 
-**Algarve, Portugal • 2010**
+<p class="dateline">Algarve, Portugal • 2010</p>
 
 ---
 
-## At-a-Glance {#at-a-glance}
+## At-a-Glance {.at-a-glance}
 
 **Trophy Winner:** Jon Baker (1st Trophy)  
 **Jacket Winner:** David Mullin (2nd Jacket)  
@@ -12,7 +12,7 @@
 
 ---
 
-## Tournament Summary {#recap}
+## Tournament Summary {.recap}
 
 Jon Baker claimed his maiden Trophy with the most commanding wire-to-wire performance in tournament history. Leading all 72 Stableford holes across Boavista's parkland layout, Baker extended his advantage after every round, ultimately securing victory by 17 points despite the tournament's wildest round variance.
 
@@ -22,7 +22,7 @@ Stuart Neumann's tournament embodied the format's peculiarity, finishing second 
 
 ---
 
-## Round 1: Baker Seizes Control {#round-1}
+## Round 1: Baker Seizes Control {.round-1}
 
 The Boavista parkland offered varied challenges across its two distinct sections, setting the stage for immediate separations in both competitions.
 
@@ -35,7 +35,7 @@ Meller's round encapsulated his tournament: a birdie four at the par-five 16th s
 
 ---
 
-## Round 2: Mullin Takes Command {#round-2}
+## Round 2: Mullin Takes Command {.round-2}
 
 Baker extended his Trophy advantage to 11 points with a 38-point round, whilst Mullin's 21 gross secured the Jacket lead he would never surrender.
 
@@ -50,7 +50,7 @@ Baker's consistency—38 points following his opening 45—contrasted with Mulli
 
 ---
 
-## Round 3: Baker's Second Surge {#round-3}
+## Round 3: Baker's Second Surge {.round-3}
 
 Baker matched his opening 45 points to push his Trophy lead to 16, whilst Mullin's 14 gross maintained his Jacket dominance.
 
@@ -65,7 +65,7 @@ Baker's nine at the 18th—five over par, zero points—mattered little. His 16-
 
 ---
 
-## Round 4: Coronation and Chaos {#round-4}
+## Round 4: Coronation and Chaos {.round-4}
 
 Baker cruised to his 17-point Trophy victory with 36 points, whilst Mullin's 20 gross sealed his second Jacket by a dozen strokes.
 
@@ -80,7 +80,7 @@ Williams endured four more zero-point disasters, his tally reaching 11 for the t
 
 ---
 
-## Tournament Recap {#recap}
+## Tournament Recap {.recap}
 
 Jon Baker's maiden Trophy arrived via the most emphatic wire-to-wire performance yet witnessed. Leading all 72 Stableford holes, his 17-point margin understated the control he exerted—extending his advantage after every round despite posting the tournament's widest scoring range. His 36-45 point variance revealed volatility, yet he never surrendered the lead established at the opening hole.
 
@@ -92,7 +92,7 @@ Gregg Williams' 11 zero-point disasters painted the week's grimmest picture, his
 
 ---
 
-## Player-by-Player Summary {#player-summary}
+## Player-by-Player Summary {.player-summary}
 
 **Jon Baker (1st - Trophy, 3rd - Jacket):** Claimed maiden Trophy with the most dominant wire-to-wire performance in tournament history, leading all 72 Stableford holes and extending his advantage after every round. His 17-point margin belied volatile scoring (36-45 range), yet never looked threatened. Posted two 45-point rounds—matching the tournament's best—whilst enduring multiple blow-ups including a nine at Round 3's 18th. Finished third in Jacket, 22 strokes behind Mullin, embodying net scoring supremacy without gross dominance.
 
@@ -106,7 +106,7 @@ Gregg Williams' 11 zero-point disasters painted the week's grimmest picture, his
 
 ---
 
-## RECORDS AND PERSONAL BESTS {#records-pbs}
+## RECORDS AND PERSONAL BESTS {.records-pbs}
 
 → **Best Single Round (Gross):** 14 (David Mullin, R3) - TEG record (previous: 17)  
 → **Best Single Round (Stableford):** 45 points (Jon Baker, R1 & R3) - TEG record (previous: 42)  
@@ -122,7 +122,7 @@ Gregg Williams' 11 zero-point disasters painted the week's grimmest picture, his
 
 ---
 
-## TOURNAMENT STATISTICS {#stats}
+## TOURNAMENT STATISTICS {.stats}
 
 - **Margin of Victory (Trophy):** 17 points—largest in tournament history
 - **Margin of Victory (Jacket):** 12 strokes—second-largest Jacket margin

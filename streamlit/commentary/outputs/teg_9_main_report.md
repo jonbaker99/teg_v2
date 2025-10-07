@@ -1,10 +1,10 @@
-# TEG 9: Debut Dominance as Patterson Claims First Trophy {#report-title}
+# TEG 9: Debut Dominance as Patterson Claims First Trophy {.report-title}
 
-<p id="dateline">Portugal, Lisbon Coast • 2016</p>
+<p class="dateline">Portugal, Lisbon Coast • 2016</p>
 
 ---
 
-## At-a-Glance {#at-a-glance}
+## At-a-Glance {.at-a-glance}
 
 **Trophy Winner:** John PATTERSON (1st Trophy)  
 **Green Jacket Winner:** David MULLIN (8th Jacket)  
@@ -20,7 +20,7 @@ Alex Baker's tournament became defined by a cruel final-round sequence. His 44-p
 
 ---
 
-## Round 1: Baker's Brief Ascendancy {#round-1}
+## Round 1: Baker's Brief Ascendancy {.round-1}
 
 Jon Baker opened with 39 points at Royal Óbidos to claim the Trophy lead by a single point. His level par 17-stroke gross round also held the Jacket summit until drama at the final hole.
 
@@ -28,13 +28,13 @@ The 18th delivered the day's defining moment. Baker's quintuple bogey handed the
 
 Alex Baker's opening descent began immediately. Consecutive blow-ups at the 1st and 2nd cost nine points before a catastrophic 11 at the 14th left him 32 points back. Stuart Neumann's 23-point struggle featured three zero-point holes, including disasters at the 11th, 12th and 15th. Gregg Williams posted 31 points but surrendered ground with a quintuple at the opening hole and blow-ups at the 15th and 18th.
 
-<p id="dateline">Round 1 Standings:</p>
+<p class="dateline">Round 1 Standings:</p>
 **Trophy:** JB 39 | DM 38 | JP 38 | AB 32 | GW 31 | SN 23  
 **Jacket:** DM +15 | JB +17 | JP +28 | GW +35 | SN +42 | AB +43
 
 ---
 
-## Round 2: Patterson's 49-Point Detonation {#round-2}
+## Round 2: Patterson's 49-Point Detonation {.round-2}
 
 John Patterson's 49-point explosion at Praia D'El Rey announced his arrival with devastating force. The tournament's finest Stableford round seized both Trophy and Jacket leads, establishing a ten-point cushion in the primary competition.
 
@@ -48,7 +48,7 @@ Mullin's 39-point round couldn't match Patterson's surge but maintained Jacket c
 
 ---
 
-## Round 3: Lead Wobbles but Holds {#round-3}
+## Round 3: Lead Wobbles but Holds {.round-3}
 
 John Patterson's 34-point struggle at Royal Óbidos narrowed his Trophy advantage to three points as Alex Baker surged with the round's best Stableford performance. David Mullin extended his Jacket dominance despite stumbling.
 
@@ -64,7 +64,7 @@ Gregg Williams posted 38 points to climb the rankings whilst Stuart Neumann matc
 
 ---
 
-## Round 4: Patterson Extends, Baker Heartbreak {#round-4}
+## Round 4: Patterson Extends, Baker Heartbreak {.round-4}
 
 John Patterson's 47-point finale at Praia D'El Rey sealed his debut Trophy triumph by six points after Alex Baker's late challenge crumbled spectacularly. David Mullin secured his eighth Jacket with a 38-point round that emphasised his gross scoring mastery.
 
@@ -80,7 +80,7 @@ Gregg Williams endured a catastrophic undecimo at the 7th, the tournament's wors
 
 ---
 
-## Tournament Recap {#recap}
+## Tournament Recap {.recap}
 
 John Patterson's debut Trophy triumph arrived via the most explosive single round in tournament history. His 49-point Round 2 masterclass at Praia D'El Rey created a ten-point cushion that withstood Alex Baker's desperate final-round assault. Leading 53 of 72 holes, Patterson demonstrated remarkable composure for a tournament newcomer, absorbing Round 3's wobble to extend his advantage in the finale.
 
@@ -94,7 +94,7 @@ The bifurcated crown split between Patterson's Stableford brilliance and Mullin'
 
 ---
 
-## Player-by-Player Summary {#player-summary}
+## Player-by-Player Summary {.player-summary}
 
 **John PATTERSON (1st Trophy):** Seized both Trophy and Jacket leads with a 49-point Round 2 explosion, the tournament's finest Stableford round featuring three birdies. Withstood Alex Baker's final-round charge to win his debut by six points, leading 53 of 72 holes.
 
@@ -110,7 +110,7 @@ The bifurcated crown split between Patterson's Stableford brilliance and Mullin'
 
 ---
 
-## RECORDS AND PERSONAL BESTS {#records-pbs}
+## RECORDS AND PERSONAL BESTS {.records-pbs}
 
 **Personal Bests:**
 → **John PATTERSON (Gross):** 14 strokes (previous: 28 strokes, R1)  
@@ -120,7 +120,7 @@ The bifurcated crown split between Patterson's Stableford brilliance and Mullin'
 
 ---
 
-## TOURNAMENT STATISTICS {#stats}
+## TOURNAMENT STATISTICS {.stats}
 
 **Best Rounds:**
 - Best Stableford: John PATTERSON 49 points (Round 2)

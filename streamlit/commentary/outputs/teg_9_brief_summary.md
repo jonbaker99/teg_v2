@@ -1,0 +1,5 @@
+The 2016 TEG Trophy returned to Portugal's Lisbon Coast, playing Royal Óbidos and Praia D'El Rey for consecutive years. John Patterson claimed his first Trophy with 168 points—six ahead of Alex Baker—while David Mullin secured his eighth Green Jacket by 10 strokes at +67, wire-to-wire from hole 18 of Round 1.
+
+Patterson's debut dominance hinged on a spectacular 49-point Round 2, the tournament's best-ever round. Three birdies—including back-to-back on holes 7 and 12—and a 30-point back-nine surge seized both leads. Alex Baker mounted a dramatic late charge with 44 points in Round 4, briefly taking the Trophy lead at hole 14 before consecutive blow-ups (8 on 15, 7 on 16) extinguished his hopes. Mullin's consistency (33-39 points each round) delivered his eighth Jacket in commanding fashion, never trailing after hole 18 of the opening round.
+
+Stuart Neumann earned his third Wooden Spoon, finishing 41 points back despite a birdie on the final-round 13th hole.

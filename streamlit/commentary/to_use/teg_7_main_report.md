@@ -1,10 +1,10 @@
-# TEG 7: Wire-to-Wire Maiden Breakthrough {#report-title}
+# TEG 7: Wire-to-Wire Maiden Breakthrough {.report-title}
 
-**Portugal, Lisbon Coast • 2014**
+<p class="dateline">Portugal, Lisbon Coast • 2014</p>
 
 ---
 
-## At-a-Glance {#at-a-glance}
+## At-a-Glance {.at-a-glance}
 
 **Trophy Winner:** Henry Meller (1st Trophy)  
 **Jacket Winner:** David Mullin (6th Jacket)  
@@ -12,7 +12,7 @@
 
 ---
 
-## Tournament Summary {#recap}
+## Tournament Summary {.recap}
 
 Henry Meller claimed his first Trophy with a wire-to-wire performance across Portugal's Lisbon Coast, holding the lead for 69 of 72 holes. The margin tells only part of the story: five points over a second-place tie between Gregg Williams and David Mullin, who somehow finished level on 170 points despite being separated by 51 strokes in gross scoring.
 
@@ -22,7 +22,7 @@ Jon Baker's challenge imploded spectacularly in Round 3. Two consecutive disaste
 
 ---
 
-## Round 1: Opening Shots at Praia D'El Rey {#round-1}
+## Round 1: Opening Shots at Praia D'El Rey {.round-1}
 
 Praia D'El Rey's links-parkland hybrid provided an eventful opener. Meller and Jon Baker traded leads through the front nine before Baker's quadruple bogey at the 2nd surrendered early control. Meller seized command at the 14th with a solid par, never to relinquish it.
 
@@ -35,7 +35,7 @@ The round's defining stretch came at holes 9-14, where Meller accumulated 18 poi
 
 ---
 
-## Round 2: Meller's Breakaway at Bom Sucesso {#round-2}
+## Round 2: Meller's Breakaway at Bom Sucesso {.round-2}
 
 Meller's 51 points at Bom Sucesso broke the field wide open. Jon Baker briefly retook the Trophy lead at the 2nd, losing it again a hole later. From that point, Meller's dominance became comprehensive, extending his margin to 10 points by day's end.
 
@@ -48,7 +48,7 @@ Mullin's 81 represented the tournament's finest gross round, seizing the Jacket 
 
 ---
 
-## Round 3: Grinding Through Royal Óbidos {#round-3}
+## Round 3: Grinding Through Royal Óbidos {.round-3}
 
 Royal Óbidos produced golf's unique blend of brilliance and brutality. Meller extended his Trophy cushion to 12 points despite consecutive disasters at holes 15 and 17. Mullin's octuple bogey at the 15th temporarily cost him the Jacket lead, though he recovered to finish ahead.
 
@@ -61,7 +61,7 @@ Neumann's quintuple at the 12th, sandwiched between blow-ups at the 11th and 13t
 
 ---
 
-## Round 4: The Coronation at Praia D'El Rey {#round-4}
+## Round 4: The Coronation at Praia D'El Rey {.round-4}
 
 Meller's final-round 38 points secured the Trophy by five points. Williams and Neumann both posted 48 points to leap into contention for second, but Meller's three-round buffer proved insurmountable. Jon Baker's implosion at holes 10-11 sealed his drop from third to fifth.
 
@@ -76,7 +76,7 @@ Alex Baker's week ended with a quintuple at the 16th, his third catastrophic sco
 
 ---
 
-## Tournament Recap {#recap}
+## Tournament Recap {.recap}
 
 Meller's maiden Trophy arrived via the most comprehensive wire-to-wire performance in recent memory. Leading 69 of 72 holes, his five-point margin over the second-place tie understated the control he exerted. His sole deficit came in Round 1 when Jon Baker briefly led at holes 6-7. Williams' one-hole lead at hole 2 of Round 2 provided fleeting drama before Meller snatched it back and never looked threatened again.
 
@@ -90,7 +90,7 @@ Meller's transformation from two-time Wooden Spoon winner to Trophy champion mar
 
 ---
 
-## Player-by-Player Summary {#player-summary}
+## Player-by-Player Summary {.player-summary}
 
 **Henry Meller (1st Trophy):** Wire-to-wire maiden Trophy triumph, leading 69 of 72 holes from the 14th of Round 1 onwards. Extended cushion each round (2pts → 10pts → 12pts), surviving late disasters at Royal Óbidos (holes 15-17) to secure five-point victory. Most consistent performer (StdDev 7.27), reversing two prior Wooden Spoons with commanding control.
 
@@ -106,7 +106,7 @@ Meller's transformation from two-time Wooden Spoon winner to Trophy champion mar
 
 ---
 
-## RECORDS AND PERSONAL BESTS {#records-pbs}
+## RECORDS AND PERSONAL BESTS {.records-pbs}
 
 → **Best Gross Round:** David Mullin's 81 (+9, Round 2 at Bom Sucesso) matched Praia D'El Rey opener by Jon Baker (+11)  
 → **Best Stableford Round:** Henry Meller's 51 points (Round 2)  
@@ -117,9 +117,9 @@ Meller's transformation from two-time Wooden Spoon winner to Trophy champion mar
 
 ---
 
-## TOURNAMENT STATISTICS {#stats}
+## TOURNAMENT STATISTICS {.stats}
 
-**Scoring Patterns:**
+<p class="dateline">Scoring Patterns:</p>
 - Only 9 total birdies across 432 holes (2.08% birdie rate)
 - One 5-point score on a par-5 (eagle-equivalent Stableford)
 - 8 total blow-ups for Alex Baker (most in field), including 3 catastrophic (9+ strokes)

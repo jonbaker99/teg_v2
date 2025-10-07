@@ -1,10 +1,10 @@
-# TEG 4: Mullin's Wire-to-Wire Dominance Survives Baker's Epic Collapse {#report-title}
+# TEG 4: Mullin's Wire-to-Wire Dominance Survives Baker's Epic Collapse {.report-title}
 
-<p id="dateline">East Sussex, England • 2011</p>
+<p class="dateline">East Sussex, England • 2011</p>
 
 ---
 
-## At-a-Glance {#at-a-glance}
+## At-a-Glance {.at-a-glance}
 
 **Trophy Winner:** David Mullin (2nd Trophy)  
 **Jacket Winner:** David Mullin (3rd Jacket)  
@@ -20,7 +20,7 @@ Gregg Williams endured a historic nightmare, claiming his first career Wooden Sp
 
 ---
 
-## Round 1: Opening Salvos on Ashdown's Bunkerless Heath {#round-1}
+## Round 1: Opening Salvos on Ashdown's Bunkerless Heath {.round-1}
 
 The tournament erupted into life on Royal Ashdown Forest's unique bunkerless layout, where Gregg Williams seized both competitions simultaneously at the opening hole. His birdie at the eighth extended the advantage before the heathland exacted its toll. Williams bled points down the stretch, whilst Jon Baker surged past with steady play and a crucial par at the 15th to claim a four-point Trophy lead.
 
@@ -33,7 +33,7 @@ Stuart Neumann's promising start, matching Williams hole-for-hole through the fr
 
 ---
 
-## Round 2: Lingfield's Lone Birdie Amid Collective Struggle {#round-2}
+## Round 2: Lingfield's Lone Birdie Amid Collective Struggle {.round-2}
 
 Jon Baker produced the round's only birdie, a moment of isolated brilliance at the third that stood alone across 18 holes of brutal attrition. It proved insufficient. A late blow-up at the 17th, where Baker carded a 9, cost him the Trophy lead as David Mullin and Henry Meller emerged as co-leaders.
 
@@ -48,7 +48,7 @@ Baker's closing stretch collapse, failing to register a point on the 14th before
 
 ---
 
-## Round 3: Simultaneous Implosions on Crowborough's Heights {#round-3}
+## Round 3: Simultaneous Implosions on Crowborough's Heights {.round-3}
 
 Four players suffered identical blow-ups at the 10th. Henry Meller, Jon Baker, and Stuart Neumann all carded 8s on the par-5, failing to register points as David Mullin's 5 briefly restored his Trophy lead. The carnage repeated at the 15th, where Williams, Meller, Baker, and Neumann again recorded zeros in a surreal display of collective collapse.
 
@@ -63,7 +63,7 @@ Mullin's wire-to-wire Gross authority never wavered, his worst moment a closing 
 
 ---
 
-## Round 4: Eagle High and Catastrophic Lows at Bletchingley {#round-4}
+## Round 4: Eagle High and Catastrophic Lows at Bletchingley {.round-4}
 
 Jon Baker's eagle at the eighth, struck from two strokes on the par-4, represented the tournament's only eagle. His birdie at the second had already extended his Trophy advantage. For eight glorious holes, the title seemed his. Then Bletchingley's undulating terrain exacted brutal revenge.
 
@@ -78,7 +78,7 @@ Gregg Williams saved his worst for last. A career-nadir 23-point, 43-stroke roun
 
 ---
 
-## Tournament Recap {#recap}
+## Tournament Recap {.recap}
 
 David Mullin's fourth TEG title arrived via the most emphatic Gross dominance in recent memory: leading through every checkpoint, challenged substantively just twice across 72 holes, his authority absolute. Converting that into Stableford success required resilience as the Trophy lead changed hands repeatedly. But when Jon Baker imploded on Bletchingley's back nine, Mullin's steady 36-point round proved sufficient for the sweep.
 
@@ -90,7 +90,7 @@ The tournament's brutal arithmetic told its own story: just seven birdies across
 
 ---
 
-## Player-by-Player Summary {#player-summary}
+## Player-by-Player Summary {.player-summary}
 
 **David Mullin (1st Trophy, 1st Jacket):** Claimed his second Trophy and third Green Jacket with wire-to-wire Gross dominance, leading 64 of 72 holes and never trailing once. Converted Stableford leads twice to seal the sweep, his steady 36-point final round sufficient as rivals imploded. Two birdies and 22 pars across the week demonstrated the consistency that underpinned both titles.
 
@@ -104,7 +104,7 @@ The tournament's brutal arithmetic told its own story: just seven birdies across
 
 ---
 
-## RECORDS AND PERSONAL BESTS {#records-pbs}
+## RECORDS AND PERSONAL BESTS {.records-pbs}
 
 → **Worst Gross Round (TEG):** 43 strokes by Gregg Williams, Round 4 (previous: 42, Gregg Williams, TEG 2)  
 → **Worst Gross Round (Personal):** 43 strokes by Gregg Williams, Round 4 (previous: 42, TEG 2)  
@@ -112,9 +112,9 @@ The tournament's brutal arithmetic told its own story: just seven birdies across
 
 ---
 
-## TOURNAMENT STATISTICS {#stats}
+## TOURNAMENT STATISTICS {.stats}
 
-<p id="dateline">Scoring Patterns:</p>
+<p class="dateline">Scoring Patterns:</p>
 - Only 7 birdies/eagles across 360 holes (1.9% success rate)
 - Longest birdie drought: 35 holes (Round 2, H4 to Round 4, H2)
 - Tournament's lone eagle: Jon Baker, Round 4, H8
