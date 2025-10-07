@@ -15,7 +15,7 @@ ROW_CHOICE_FIELDS = ["Course", "Player", "TEGNum", "Round"]
 VALUE_FIELD = "GrossVP"   # average score vs par
 HOLE_FIELD = "Hole"
 
-# --- ALTair setup ---
+# --- Altair setup ---
 alt.data_transformers.disable_max_rows()
 
 # --- Data loader ---
@@ -32,24 +32,22 @@ def load_data() -> pd.DataFrame:
     df = df.copy()
     df[HOLE_FIELD] = pd.to_numeric(df[HOLE_FIELD], errors="coerce").astype("Int64")
 
-    # Keep TEGNum numeric (integer) for sorting
+    # Keep TEGNum numeric for proper ordering
     if "TEGNum" in df.columns:
         df["TEGNum"] = pd.to_numeric(df["TEGNum"], errors="coerce").astype("Int64")
 
-    # Round should be string (for display)
+    # Round as string for display
     if "Round" in df.columns:
         df["Round"] = df["Round"].astype(str)
 
-    # Course / Area / Player as strings
+    # Strings
     for col in ["Course", "Area", "Player"]:
         if col in df.columns:
             df[col] = df[col].astype(str)
 
-    # Ensure numeric value field
+    # Value numeric
     df[VALUE_FIELD] = pd.to_numeric(df[VALUE_FIELD], errors="coerce")
-
     return df
-
 
 # --- UI: Sidebar controls ---
 st.sidebar.header("Filters")
@@ -60,12 +58,14 @@ except Exception as e:
     st.error(str(e))
     st.stop()
 
-# --- Build TEGNum filter options (sorted numerically) ---
+# TEGNum filter options (numeric sort, shown as strings)
 if "TEGNum" in all_data.columns:
-    tegnum_order = sorted([x for x in all_data["TEGNum"].dropna().unique() if pd.notna(x)])
-    tegnum_options = ["All"] + [str(int(x)) for x in tegnum_order]
+    tegnum_order = sorted([int(x) for x in all_data["TEGNum"].dropna().unique().tolist()])
+    tegnum_options = ["All"] + [str(x) for x in tegnum_order]
+else:
+    tegnum_options = ["All"]
 
-# --- Build filter widgets ---
+# Build filter widgets with "All"
 filter_values = {}
 for field in FILTER_FIELDS:
     if field == "TEGNum":
@@ -78,24 +78,25 @@ for field in FILTER_FIELDS:
 
 st.sidebar.markdown("---")
 st.sidebar.header("Rows (group by)")
-row_flags = {}
-for field in ROW_CHOICE_FIELDS:
-    row_flags[field] = st.sidebar.checkbox(field, value=(field == "Player"))  # default: Player on
+row_flags = {f: st.sidebar.checkbox(f, value=(f == "Player")) for f in ROW_CHOICE_FIELDS}
 
 st.sidebar.markdown("---")
 sort_rows = st.sidebar.checkbox("Sort rows by overall difficulty (mean GrossVP)", value=True)
 show_values = st.sidebar.checkbox("Show values on hover", value=True)
+show_col_totals = st.sidebar.checkbox("Show column totals (mean by hole across filtered data)", value=False)
 st.sidebar.caption("Tip: Use the filters above to narrow the dataset, then pick row dimensions to group by.")
 
 # --- Apply filters ---
 df = all_data.copy()
 for field, selections in filter_values.items():
+    # Treat "All" (or empty) as no filter
     if selections and "All" not in selections:
         if field == "TEGNum":
             df = df[df[field].isin([int(s) for s in selections])]
         else:
             df = df[df[field].isin([str(s) for s in selections])]
 
+# If no data, stop early
 if df.empty:
     st.warning("No data after applying filters. Try relaxing the filters.")
     st.stop()
@@ -111,7 +112,7 @@ agg = (
       .rename(columns={VALUE_FIELD: "AvgGrossVP"})
 )
 
-# --- Row label builder ---
+# Row label builder (force integer display for TEGNum)
 def make_row_label(row: pd.Series, dims: list[str]) -> str:
     if not dims:
         return "All"
@@ -119,7 +120,7 @@ def make_row_label(row: pd.Series, dims: list[str]) -> str:
     for d in dims:
         val = row[d]
         if d == "TEGNum" and pd.notna(val):
-            val = str(int(val))  # remove .0
+            val = str(int(val))
         parts.append(f"{d}={val}")
     return " | ".join(parts)
 
@@ -128,46 +129,81 @@ if not row_dims:
 else:
     agg["RowLabel"] = agg.apply(lambda r: make_row_label(r, row_dims), axis=1)
 
-# --- Ensure holes ordered 1–18 ---
+# Ensure holes are ordered 1..18 and keep only valid ones
 valid_holes = list(range(1, 19))
 agg = agg[agg[HOLE_FIELD].isin(valid_holes)]
 agg[HOLE_FIELD] = pd.Categorical(agg[HOLE_FIELD], categories=valid_holes, ordered=True)
 
-# --- Optional row sorting ---
+# Optionally add column totals (average per hole across all filtered rows)
+if show_col_totals and row_dims:
+    col_totals = (
+        df.groupby(HOLE_FIELD, as_index=False)[VALUE_FIELD]
+          .mean()
+          .rename(columns={VALUE_FIELD: "AvgGrossVP"})
+    )
+    col_totals = col_totals[col_totals[HOLE_FIELD].isin(valid_holes)]
+    col_totals["RowLabel"] = "Column Avg"
+    agg = pd.concat([agg, col_totals], ignore_index=True)
+
+# --- Determine row order ---
 if sort_rows:
+    # By difficulty (hardest first)
     order = (
         agg.groupby("RowLabel", as_index=False)["AvgGrossVP"]
            .mean()
            .sort_values("AvgGrossVP", ascending=False)["RowLabel"]
            .tolist()
     )
+    if show_col_totals and row_dims:
+        order = [x for x in order if x != "Column Avg"] + ["Column Avg"]
 else:
-    order = sorted(agg["RowLabel"].unique().tolist(), key=str)
+    # Numeric-aware sort by the *actual row fields* in the order selected
+    if row_dims:
+        labels = agg[row_dims].drop_duplicates().copy()
+        if "TEGNum" in row_dims:
+            labels["TEGNum_num"] = pd.to_numeric(labels["TEGNum"], errors="coerce")
+        if "Round" in row_dims:
+            labels["Round_num"] = pd.to_numeric(labels["Round"], errors="coerce")
+
+        by = []
+        for d in row_dims:
+            if d == "TEGNum":
+                by.append("TEGNum_num")
+            elif d == "Round":
+                by.append("Round_num")
+            else:
+                by.append(d)
+
+        labels["RowLabel"] = labels.apply(lambda r: make_row_label(r, row_dims), axis=1)
+        labels = labels.sort_values(by=by, kind="mergesort")
+        order = labels["RowLabel"].tolist()
+        if show_col_totals and row_dims:
+            order = order + ["Column Avg"]
+    else:
+        order = ["All"]
 
 # --- Title/context ---
 def pretty_sel(field: str, sels: list[str]) -> str:
     if (not sels) or ("All" in sels):
         return None
-    if len(sels) <= 3:
-        return f"{field}: {', '.join(map(str, sels))}"
-    return f"{field}: {len(sels)} selected"
+    return f"{field}: {', '.join(map(str, sels))}" if len(sels) <= 3 else f"{field}: {len(sels)} selected"
 
 title_bits = [pretty_sel(f, s) for f, s in filter_values.items()]
 title_bits = [b for b in title_bits if b]
 title_suffix = " • ".join(title_bits) if title_bits else "All data"
 
-st.title("Hole-by-Hole Difficulty Heatmap")
+st.title("Hole Score Heatmap")
 st.caption(f"Colour shows average {VALUE_FIELD} (score vs par). {title_suffix}")
 
 # --- Heatmap chart ---
 tooltip = [
     alt.Tooltip(HOLE_FIELD, type="ordinal", title="Hole"),
     alt.Tooltip("RowLabel:N", title="Group"),
-    alt.Tooltip("AvgGrossVP:Q", title="Avg GrossVP", format=".2f")
+    alt.Tooltip("AvgGrossVP:Q", title="Avg GrossVP", format=".2f"),
 ] if show_values else None
 
 heatmap = (
-    alt.Chart(agg, height=max(100, 30 * len(order)+60), width=100)
+    alt.Chart(agg, height=max(100, 35 * len(order)), width=100)
     .mark_rect()
     .encode(
         x=alt.X(f"{HOLE_FIELD}:O", title="Hole", sort=valid_holes,
@@ -202,7 +238,9 @@ st.altair_chart(chart, use_container_width=True)
 
 # --- Data preview & download ---
 with st.expander("Show aggregated data"):
-    st.dataframe(agg[[*row_dims, HOLE_FIELD, "AvgGrossVP"]] if row_dims else agg[[HOLE_FIELD, "AvgGrossVP"]])
+    preview_cols = (["RowLabel", *row_dims, HOLE_FIELD, "AvgGrossVP"]
+                    if row_dims else ["RowLabel", HOLE_FIELD, "AvgGrossVP"])
+    st.dataframe(agg[preview_cols])
     csv = agg.to_csv(index=False)
     st.download_button("Download aggregated CSV", data=csv,
                        file_name="hole_difficulty_aggregated.csv", mime="text/csv")
