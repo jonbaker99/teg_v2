@@ -1,4 +1,4 @@
-The 2019 TEG returned to Catalonia, Spain, playing PGA Catalunya's Tour and Stadium courses. Jon Patterson claimed his second Trophy with 172 points, winning by 10 over Gregg Williams. Jon Baker dominated gross scoring wire-to-wire, taking his second Green Jacket by 8 strokes and setting a Stadium course record of 89 in the final round.
+The 2019 TEG returned to Catalonia, Spain, playing PGA Catalunya's Tour and Stadium courses. John Patterson claimed his second Trophy with 172 points, winning by 10 over Gregg Williams. Jon Baker dominated gross scoring wire-to-wire, taking his second Green Jacket by 8 strokes and setting a Stadium course record of 89 in the final round.
 
 Patterson's victory came through extraordinary volatility—32 lead changes across four rounds, surviving disasters including a quintuple on R3 H3 and a 10 on R2 H15. Williams led the Trophy for 33 holes but imploded in Round 3, posting catastrophic numbers on H4 (9 strokes, +5) and H13 (11 strokes, +7). Stuart Neumann produced the tournament's only eagle on R4 H15 en route to third place.
 

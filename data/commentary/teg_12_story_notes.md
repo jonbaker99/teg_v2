@@ -1,7 +1,7 @@
 # TEG 12 Story Notes
 
 ## Key Points
-- Jon PATTERSON's 2nd Trophy - won Stableford by 10 points with commanding second-half surge
+- John PATTERSON's 2nd Trophy - won Stableford by 10 points with commanding second-half surge
 - Jon BAKER's 2nd Green Jacket - won Gross by 8 strokes, led all 72 holes
 - JP's historic volatility: 172 pts from 32 lead changes across 4 rounds
 - GW led Trophy 33/72 holes but collapsed in R3 (H4: 9/+5, H13: 11/+7)
@@ -31,7 +31,7 @@
 - "Tournament's only eagle" (SN R4 H15)
 
 ## Tournament Stats
-- Jon PATTERSON: 172 pts, +96, led 48/72 holes (Trophy) & 1/72 (Gross) - 32 total lead changes
+- John PATTERSON: 172 pts, +96, led 48/72 holes (Trophy) & 1/72 (Gross) - 32 total lead changes
 - Gregg WILLIAMS: 162 pts, +76, led 33/72 holes (Trophy) & 19/72 (Gross) - 16 lead changes
 - Jon BAKER: 145 pts, +63, led 0/72 holes (Trophy) & 58/72 (Gross) - 3 lead changes, set course record 89/+17 (R4)
 - Stuart NEUMANN: 155 pts, +108 - tournament's only eagle (R4 H15)
@@ -55,24 +55,24 @@
 ## Round 1 Notes
 
 ### Key Moments
-- H1 (Par 4): Jon PATTERSON took Trophy and Jacket leads (4 / E), 3 pts
+- H1 (Par 4): John PATTERSON took Trophy and Jacket leads (4 / E), 3 pts
 - H1 (Par 4): Alex BAKER blow-up (7 / +3), 0 pts
 - H1 (Par 4): Jon BAKER blow-up (7 / +3), 0 pts
 - H2 (Par 3): Alex BAKER hit bottom (Spoon) with blow-up (7 / +4), 0 pts
-- H2 (Par 3): Jon PATTERSON lost Trophy and Jacket leads with blow-up (6 / +3), 0 pts
+- H2 (Par 3): John PATTERSON lost Trophy and Jacket leads with blow-up (6 / +3), 0 pts
 - H2 (Par 3): David MULLIN took Trophy and Jacket leads (3 / E), 2 pts
 - H2 (Par 3): Gregg WILLIAMS took Trophy lead (4 / +1), 2 pts
 - H2 (Par 3): Stuart NEUMANN took Trophy lead (3 / E), 3 pts
 - H3 (Par 4): Jon BAKER birdie (3 / -1), 4 pts
-- H3 (Par 4): Jon PATTERSON took Trophy lead with 4 points on H3 (Par 4)
-- H4 (Par 4): Jon PATTERSON massive blow-up (12 / +8), 0 pts - lost Trophy lead
+- H3 (Par 4): John PATTERSON took Trophy lead with 4 points on H3 (Par 4)
+- H4 (Par 4): John PATTERSON massive blow-up (12 / +8), 0 pts - lost Trophy lead
 - H4 (Par 4): David MULLIN blow-up (7 / +3), 0 pts - lost Trophy and Jacket leads
 - H4 (Par 4): Stuart NEUMANN blow-up (7 / +3), 1 pt - lost Trophy lead
 - H4 (Par 4): Gregg WILLIAMS took Jacket lead (5 / +1), 3 pts
 - H5 (Par 5): Stuart NEUMANN blow-up (8 / +3), 0 pts
 - H10 (Par 5): Alex BAKER massive blow-up (10 / +5), 0 pts
 - H11 (Par 3): Alex BAKER left bottom (Spoon) with 4 points on H11 (Par 3)
-- H11 (Par 3): Jon PATTERSON took Trophy lead with 4 points on H11 (Par 3)
+- H11 (Par 3): John PATTERSON took Trophy lead with 4 points on H11 (Par 3)
 - H11 (Par 3): Gregg WILLIAMS lost Trophy lead
 - H12 (Par 4): David MULLIN hit bottom (Spoon)
 - H12 (Par 4): Gregg WILLIAMS took Trophy lead (4 / E), 3 pts
@@ -81,14 +81,14 @@
 - H13 (Par 4): Gregg WILLIAMS lost Trophy lead
 - H14 (Par 3): Jon BAKER birdie (2 / -1), 4 pts - took Jacket lead
 - H14 (Par 3): Gregg WILLIAMS took Trophy lead (3 / E), 3 pts
-- H14 (Par 3): Jon PATTERSON lost Trophy lead
+- H14 (Par 3): John PATTERSON lost Trophy lead
 - H14 (Par 3): Alex BAKER hit bottom (Spoon)
 - H15 (Par 5): Stuart NEUMANN massive blow-up (12 / +7), 0 pts
 - H15 (Par 5): Alex BAKER blow-up (8 / +3), 1 pt
-- H15 (Par 5): Jon PATTERSON took Trophy lead (6 / +1), 3 pts
+- H15 (Par 5): John PATTERSON took Trophy lead (6 / +1), 3 pts
 - H15 (Par 5): Gregg WILLIAMS lost Trophy lead
 - H16 (Par 3): Gregg WILLIAMS took Trophy lead and lost Jacket lead (4 / +1), 2 pts
-- H18 (Par 5): Jon PATTERSON lost Trophy lead
+- H18 (Par 5): John PATTERSON lost Trophy lead
 - H18 (Par 5): Gregg WILLIAMS took Jacket lead and won Trophy (5 / E), 3 pts
 
 ### Lead After Round

@@ -51,33 +51,33 @@
 ## Round 1 Notes
 
 ### Key Moments
-- H1 (Par 4): Jon PATTERSON 4 points on H1 (4 / E), 4 pts
-- H1 (Par 4): Jon PATTERSON took Trophy lead
+- H1 (Par 4): John PATTERSON 4 points on H1 (4 / E), 4 pts
+- H1 (Par 4): John PATTERSON took Trophy lead
 - H1 (Par 4): Gregg WILLIAMS blow-up (7 / +3), 1 pt - hit bottom (Spoon)
-- H2 (Par 4): Jon PATTERSON lost Jacket lead
+- H2 (Par 4): John PATTERSON lost Jacket lead
 - H2 (Par 4): Alex BAKER blow-up (7 / +3), 1 pt
 - H2 (Par 4): Gregg WILLIAMS blow-up (7 / +3), 0 pts
 - H3 (Par 5): Jon BAKER took Jacket lead
 - H3 (Par 5): Jon BAKER took Trophy lead
-- H4 (Par 4): Jon PATTERSON blow-up (9 / +5), 0 pts - quintuple bogey
-- H4 (Par 4): Jon PATTERSON lost Trophy lead
+- H4 (Par 4): John PATTERSON blow-up (9 / +5), 0 pts - quintuple bogey
+- H4 (Par 4): John PATTERSON lost Trophy lead
 - H5 (Par 3): Gregg WILLIAMS blow-up (8 / +5), 0 pts - quintuple bogey
 - H6 (Par 4): Dean MCENTEE took Jacket lead and Trophy lead
-- H7 (Par 5): Jon PATTERSON took Trophy lead
+- H7 (Par 5): John PATTERSON took Trophy lead
 - H7 (Par 5): Dean MCENTEE blow-up (7 / +2), 0 pts
 - H9 (Par 4): Dean MCENTEE lost Jacket lead
-- H9 (Par 4): Jon PATTERSON blow-up (7 / +3), 1 pt
-- H10 (Par 4): Jon PATTERSON blow-up (8 / +4), 0 pts
+- H9 (Par 4): John PATTERSON blow-up (7 / +3), 1 pt
+- H10 (Par 4): John PATTERSON blow-up (8 / +4), 0 pts
 - H11 (Par 3): Alex BAKER blow-up (6 / +3), 0 pts
-- H12 (Par 5): Jon PATTERSON blow-up (8 / +3), 0 pts
+- H12 (Par 5): John PATTERSON blow-up (8 / +3), 0 pts
 - H13 (Par 4): Alex BAKER blow-up (8 / +4), 0 pts
-- H13 (Par 4): Jon PATTERSON blow-up (9 / +5), 0 pts - quintuple bogey
+- H13 (Par 4): John PATTERSON blow-up (9 / +5), 0 pts - quintuple bogey
 - H13 (Par 4): Gregg WILLIAMS left bottom (Spoon)
-- H14 (Par 4): Jon PATTERSON blow-up (7 / +3), 1 pt - hit bottom (Spoon)
+- H14 (Par 4): John PATTERSON blow-up (7 / +3), 1 pt - hit bottom (Spoon)
 - H15 (Par 5): Gregg WILLIAMS birdie (4 / -1), 4 pts
 - H16 (Par 3): Gregg WILLIAMS blow-up (6 / +3), 0 pts
-- H16 (Par 3): Jon PATTERSON blow-up (6 / +3), 0 pts
-- H17 (Par 4): Jon PATTERSON blow-up (8 / +4), 0 pts
+- H16 (Par 3): John PATTERSON blow-up (6 / +3), 0 pts
+- H17 (Par 4): John PATTERSON blow-up (8 / +4), 0 pts
 - H18 (Par 4): Jon BAKER blow-up (7 / +3), 0 pts
 
 ### Lead After Round

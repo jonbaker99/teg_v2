@@ -6,13 +6,13 @@
 
 ## At-a-Glance {.at-a-glance}
 
-**Trophy Winner:** Jon PATTERSON (2nd Trophy)  
+**Trophy Winner:** John PATTERSON (2nd Trophy)  
 **Jacket Winner:** Jon BAKER (2nd Jacket)  
 **Wooden Spoon:** David MULLIN (1st Spoon)
 
 ---
 
-Jon Patterson claimed his second Trophy title through four rounds of spectacular volatility across Catalonia's championship courses. The victory came via a commanding ten-point margin, yet the route contained enough drama for an entire season: thirty-two lead changes, two quintuple bogeys, and the tournament's most erratic scoring patterns in recent memory.
+John Patterson claimed his second Trophy title through four rounds of spectacular volatility across Catalonia's championship courses. The victory came via a commanding ten-point margin, yet the route contained enough drama for an entire season: thirty-two lead changes, two quintuple bogeys, and the tournament's most erratic scoring patterns in recent memory.
 
 Jon Baker swept all four Gross rounds to secure his second Green Jacket by eight strokes. He led from the opening tee through seventy-two holes, never once threatening the Trophy lead but establishing wire-to-wire dominance in the parallel competition. His final-round 89 at Stadium set a new course record.
 
@@ -82,7 +82,7 @@ Patterson's 40-point finale, matched by Alex Baker and Neumann, delivered the Tr
 
 ## Tournament Verdict {.recap}
 
-Jon Patterson's second Trophy arrived through survival rather than mastery. He led forty-eight of seventy-two holes whilst enduring scoring volatility that would sink lesser champions. His quintuple bogey at Round 3's third hole somehow didn't derail him; the ten at Round 2's 15th merely punctuated a performance defined by resilience rather than consistency. Thirty-two lead changes across the week tell the story: Patterson won because he outlasted the chaos he helped create.
+John Patterson's second Trophy arrived through survival rather than mastery. He led forty-eight of seventy-two holes whilst enduring scoring volatility that would sink lesser champions. His quintuple bogey at Round 3's third hole somehow didn't derail him; the ten at Round 2's 15th merely punctuated a performance defined by resilience rather than consistency. Thirty-two lead changes across the week tell the story: Patterson won because he outlasted the chaos he helped create.
 
 Williams' tournament narrative reads like Greek tragedy. Leading thirty-three holes, more than any other player, his title credentials evaporated in Round 3's cataclysmic stretch at holes twelve and thirteen. An eight followed by an eleven, fourteen strokes across two holes without registering a point, transformed comfortable leader into distant runner-up. His ten-point deficit at close flattered him; the margin could have been twenty.
 
@@ -96,7 +96,7 @@ Stuart Neumann's eagle at the 15th in Round 4 stands as the tournament's rarest 
 
 ## Player-by-Player Summary {.player-summary}
 
-**Jon PATTERSON (1st):** Claimed his second Trophy through spectacular chaos, leading 48 of 72 holes whilst surviving two quintuple bogeys and 32 lead changes. His Round 3 surge created an eight-point cushion that absorbed the final-round wobbles, ultimately winning by ten points despite gross scoring that ranked fourth.
+**John PATTERSON (1st):** Claimed his second Trophy through spectacular chaos, leading 48 of 72 holes whilst surviving two quintuple bogeys and 32 lead changes. His Round 3 surge created an eight-point cushion that absorbed the final-round wobbles, ultimately winning by ten points despite gross scoring that ranked fourth.
 
 **Gregg WILLIAMS (2nd):** Led 33 holes, more than anyone, before Round 3's back-to-back disasters at holes 12 and 13 obliterated his title hopes. Those fourteen strokes without registering a point transformed comfortable leader into distant runner-up. His 162 points flattered what became a cautionary tale.
 
