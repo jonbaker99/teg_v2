@@ -72,8 +72,9 @@ for field in FILTER_FIELDS:
         options = tegnum_options
     else:
         unique_vals = sorted(all_data[field].dropna().astype(str).unique().tolist(), key=str)
-        options = ["All"] + unique_vals
-    selected = st.sidebar.multiselect(f"{field} filter", options, default=["All"])
+        # options = ["All"] + unique_vals
+        options = unique_vals
+    selected = st.sidebar.multiselect(f"{field} filter", options)
     filter_values[field] = selected
 
 st.sidebar.markdown("---")
