@@ -44,13 +44,20 @@ if not os.getenv("RAILWAY_ENVIRONMENT"):
     st.stop()
 
 # === CONSTANTS & CONFIG ===
-# Where the Railway volume is mounted. Adjust if you’ve mounted elsewhere.
-VOLUME_DIR = os.getenv("RAILWAY_VOLUME_MOUNT_PATH", "/data")  # e.g., "/data"
-# We compare by filename; GitHub uses "data/<filename>" paths. Volume stores them directly in VOLUME_DIR.
-DATA_PREFIX = "data"
+# Where the Railway volume is mounted. Adjust if you've mounted elsewhere.
+VOLUME_BASE = os.getenv("RAILWAY_VOLUME_MOUNT_PATH", "/mnt/data_repo")  # e.g., "/mnt/data_repo"
+# Base path for data in GitHub
+DATA_BASE = "data"
 API_BASE = "https://api.github.com"
 # For Contents API calls (create/update/list)
 GH_ACCEPT = "application/vnd.github+json"
+
+# Available folders to sync
+AVAILABLE_FOLDERS = [
+    "data",                      # Root data folder
+    "data/commentary",           # Commentary reports (production)
+    "data/commentary/drafts",    # Commentary drafts
+]
 
 # === AUTH ===
 def _get_token() -> Optional[str]:
@@ -80,21 +87,21 @@ def _parse_github_date(s: str) -> datetime:
 
 # === GITHUB LISTING ===
 @st.cache_data(ttl=300)
-def list_github_files() -> pd.DataFrame:
-    """List files under GitHub 'data/' with last commit timestamp and size."""
+def list_github_files(folder_path: str) -> pd.DataFrame:
+    """List files under GitHub folder path with last commit timestamp and size."""
     repo, branch = _get_repo_and_branch()
     token = _get_token()
     if not token:
         raise RuntimeError("Missing GITHUB_TOKEN (set in env or st.secrets).")
 
-    # 1) List directory contents for data/
+    # 1) List directory contents for specified folder
     r = requests.get(
-        f"{API_BASE}/repos/{repo}/contents/{DATA_PREFIX}?ref={branch}",
+        f"{API_BASE}/repos/{repo}/contents/{folder_path}?ref={branch}",
         headers=_headers(),
         timeout=30,
     )
     if r.status_code == 404:
-        # No 'data/' directory found
+        # No directory found
         return pd.DataFrame(columns=["File", "GitHub modified", "GitHub size", "GitHub path"])
     r.raise_for_status()
     entries = r.json()
@@ -137,27 +144,30 @@ def list_github_files() -> pd.DataFrame:
 
 # === VOLUME LISTING ===
 @st.cache_data(ttl=60)
-def list_volume_files() -> pd.DataFrame:
-    """List files on the Railway volume root (VOLUME_DIR)."""
-    p = Path(VOLUME_DIR)
+def list_volume_files(folder_path: str) -> pd.DataFrame:
+    """List files on the Railway volume for specified folder path."""
+    # Convert GitHub path (data/commentary) to volume path (/mnt/data_repo/data/commentary)
+    p = Path(VOLUME_BASE) / folder_path
     if not p.exists():
-        return pd.DataFrame(columns=["File", "Volume modified", "Volume size", "Volume path"])
+        return pd.DataFrame(columns=["File", "Volume modified", "Volume size", "Volume path", "Relative path"])
 
     rows = []
     for child in p.iterdir():
         if child.is_file():
             stat = child.stat()
+            # Store relative path from folder_path for comparison with GitHub
             rows.append(
                 {
                     "File": child.name,
                     "Volume modified": datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc),
                     "Volume size": stat.st_size,
                     "Volume path": str(child),
+                    "Relative path": f"{folder_path}/{child.name}",
                 }
             )
     df = pd.DataFrame(rows)
     if df.empty:
-        df = pd.DataFrame(columns=["File", "Volume modified", "Volume size", "Volume path"])
+        df = pd.DataFrame(columns=["File", "Volume modified", "Volume size", "Volume path", "Relative path"])
     return df
 
 def _status_row(row) -> str:
@@ -195,9 +205,9 @@ def _status_row(row) -> str:
     return "Check required"
 
 @st.cache_data(ttl=60)
-def merged_status() -> pd.DataFrame:
-    gh = list_github_files()
-    vol = list_volume_files()
+def merged_status(folder_path: str) -> pd.DataFrame:
+    gh = list_github_files(folder_path)
+    vol = list_volume_files(folder_path)
 
     merged = pd.merge(
         gh, vol, how="outer", on="File", suffixes=("", "")
@@ -293,24 +303,36 @@ def gh_put_file(gh_path: str, content_bytes: bytes, message: str) -> Tuple[bool,
     return False, f"GitHub API error {r.status_code}: {detail}"
 
 # === FILE OPS (VOLUME) ===
-def vol_write_bytes(filename: str, raw: bytes) -> None:
-    out = Path(VOLUME_DIR) / filename
+def vol_write_bytes(relative_path: str, raw: bytes) -> None:
+    """Write bytes to volume using full relative path (e.g., 'data/commentary/file.md')"""
+    out = Path(VOLUME_BASE) / relative_path
     out.parent.mkdir(parents=True, exist_ok=True)
     with open(out, "wb") as f:
         f.write(raw)
 
-def vol_read_bytes(filename: str) -> bytes:
-    p = Path(VOLUME_DIR) / filename
+def vol_read_bytes(relative_path: str) -> bytes:
+    """Read bytes from volume using full relative path (e.g., 'data/commentary/file.md')"""
+    p = Path(VOLUME_BASE) / relative_path
     if not p.exists():
         raise FileNotFoundError(str(p))
     return p.read_bytes()
+
+# === FOLDER SELECTION ===
+selected_folder = st.selectbox(
+    "Select folder to sync",
+    options=AVAILABLE_FOLDERS,
+    index=0,
+    help="Choose which folder to synchronize between GitHub and Railway volume"
+)
+
+st.divider()
 
 # === SUMMARY / CONTEXT BOX ===
 repo, branch = _get_repo_and_branch()
 info1, info2, info3, info4 = st.columns([2.2, 1.5, 2, 2])
 info1.metric("GitHub repo", repo)
 info2.metric("Branch", branch)
-info3.metric("Volume path", VOLUME_DIR)
+info3.metric("Volume path", f"{VOLUME_BASE}/{selected_folder}")
 info4.metric("Auth", "✅ Token found" if _get_token() else "❌ Missing GITHUB_TOKEN")
 
 st.divider()
@@ -330,9 +352,9 @@ with st.popover("How statuses are decided"):
         """
     )
 
-merged = merged_status()
+merged = merged_status(selected_folder)
 if merged.empty:
-    st.info("No files found on GitHub `data/` or on the Railway volume.")
+    st.info(f"No files found in GitHub `{selected_folder}/` or on the Railway volume.")
 else:
     df_show = merged.copy()
     # Pretty datetime for display (localise to browser later; keep UTC for consistency)
@@ -349,7 +371,7 @@ st.divider()
 
 # === GITHUB -> VOLUME (PULL) ===
 st.subheader("⬇️ GitHub → Volume")
-st.caption("Copy selected files from GitHub `data/` down to the Railway volume.")
+st.caption(f"Copy selected files from GitHub `{selected_folder}/` down to the Railway volume.")
 
 if merged.empty:
     st.info("No files to pull.")
@@ -393,10 +415,12 @@ else:
             ok, fails = 0, []
             with st.spinner("Pulling from GitHub…"):
                 for fname in to_pull:
-                    gh_path = f"{DATA_PREFIX}/{fname}"
+                    # Construct full path: selected_folder/filename
+                    gh_path = f"{selected_folder}/{fname}"
                     try:
                         raw = gh_download_bytes(gh_path)
-                        vol_write_bytes(fname, raw)
+                        # Write to volume with full relative path
+                        vol_write_bytes(gh_path, raw)
                         ok += 1
                     except Exception as e:
                         fails.append(f"{fname}: {e}")
@@ -419,7 +443,7 @@ st.divider()
 
 # === VOLUME -> GITHUB (PUSH) ===
 st.subheader("⬆️ Volume → GitHub")
-st.caption("Copy selected files from the Railway volume up to the GitHub `data/` folder.")
+st.caption(f"Copy selected files from the Railway volume up to GitHub `{selected_folder}/` folder.")
 
 if merged.empty:
     st.info("No files to push.")
@@ -467,9 +491,10 @@ else:
             with st.spinner("Pushing to GitHub…"):
                 for fname in to_push:
                     try:
-                        raw = vol_read_bytes(fname)
-                        gh_path = f"{DATA_PREFIX}/{fname}"
-                        success, msg = gh_put_file(gh_path, raw, commit_message)
+                        # Construct full path: selected_folder/filename
+                        full_path = f"{selected_folder}/{fname}"
+                        raw = vol_read_bytes(full_path)
+                        success, msg = gh_put_file(full_path, raw, commit_message)
                         if success:
                             ok += 1
                         else:
