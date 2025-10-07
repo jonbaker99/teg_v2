@@ -54,7 +54,7 @@ PAGE_DEFINITIONS = {
     # "data_test_temp.py": {"title": "TEMP DATA TESTING", "icon": ":material/check_circle:", "section": "Data"},
     "admin_volume_management.py": {"title": "Data volume management", "icon": ":material/check_circle:", "section": "Data"},
     # "navigation_test.py": {"title": "Navigation Test", "icon": ":material/science:", "section": "Data"},
-    "commentary_runner.py": {"title": "Commentary generation", "icon": ":material/robot:", "section": "Data"},
+    # "commentary_runner.py": {"title": "Commentary generation", "icon": ":material/robot:", "section": "Data"},
 }
 
 # Section display names and conditional logic
