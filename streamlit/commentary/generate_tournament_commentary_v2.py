@@ -195,7 +195,7 @@ def _merge_gross_net_windows(patts: list) -> list:
         if len(items) == 2 and kinds == {"gross", "net"} and hole_sig(items[0]) == hole_sig(items[1]):
             base = {kk: vv for kk, vv in items[0].items()
                     if kk not in {"scoring_type", "type", "points",
-                                  "avg_gross_vs_par", "birdies_in_window", "disasters_in_window"}}
+                                  "avg_gross_vs_par", "birdies_in_window", "blow_ups_in_window"}}
             metrics = {}
             for it in items:
                 metrics[it["scoring_type"]] = {
@@ -203,7 +203,7 @@ def _merge_gross_net_windows(patts: list) -> list:
                     "points": it.get("points"),
                     "avg_gross_vs_par": it.get("avg_gross_vs_par"),
                     "birdies": it.get("birdies_in_window"),
-                    "disasters": it.get("disasters_in_window"),
+                    "blow_ups": it.get("blow_ups_in_window"),
                 }
             base["metrics"] = _drop_null_keys(metrics)
             merged.append(base)
@@ -231,7 +231,7 @@ KEY_MAP_EVENTS = {
     "GrossVP":"gvp","NetVP":"nvp","Stableford":"stb","Par":"par","Sc":"sc"
 }
 KEY_MAP_HOLES = {"Hole":"h","Stableford":"stb","GrossVP":"gvp","NetVP":"nvp","Par":"par","Sc":"sc"}
-KEY_MAP_METRICS = {"type":"t","points":"pts","avg_gross_vs_par":"agvp","birdies":"brd","disasters":"dst"}
+KEY_MAP_METRICS = {"type":"t","points":"pts","avg_gross_vs_par":"agvp","birdies":"brd","blow_ups":"dst"}
 KEY_MAP_MOMENTUM = {"Pl":"pl","Player":"pl","Span":"sp","Delta":"dl","Label":"lb"}
 KEY_MAP_SUMMARY = {
     "Pl":"pl","Player":"pl","Course":"crs",
@@ -272,7 +272,7 @@ def abbreviate_for_prompt(rd: dict) -> tuple[dict, str]:
         "rsa=Rank Stableford After","rga=Rank Gross After","rsb=Rank Stableford Before","rgb=Rank Gross Before",
         "gap=Gap to leader","gb=Gap before","crs=Course","f9=Front 9","b9=Back 9",
         "rrs=Round Rank (Stableford)","rrg=Round Rank (Gross)","t=Type","pts=Points",
-        "agvp=Avg Gross vs Par","brd=Birdies","dst=Disasters","sp=Span","dl=Delta","lb=Label",
+        "agvp=Avg Gross vs Par","brd=Birdies","dst=Blow Ups","sp=Span","dl=Delta","lb=Label",
         "ev=Event","ty=Type","imp=Impact","ol=One-liner"
     }
     legend_text = "Legend: " + ", ".join(sorted(pairs))
@@ -1195,6 +1195,52 @@ def append_factual_sections(story_notes, teg_num, all_processed_data):
 # File assembly
 # ========================
 
+def format_course_info_section(teg_num):
+    """
+    Format course information section from course_info.py (direct addition, no LLM).
+    Returns formatted Course Information section with details about each course played.
+    """
+    from course_info import COURSE_INFO
+
+    # Load course data for this TEG
+    rounds_df = pd.read_csv('data/round_info.csv')
+    current_teg = rounds_df[rounds_df['TEGNum'] == teg_num]
+
+    if len(current_teg) == 0:
+        return ""
+
+    # Get unique courses played in this TEG (maintaining order)
+    courses_played = current_teg[['Round', 'Course']].values.tolist()
+    unique_courses = []
+    seen = set()
+    for _, course in courses_played:
+        if course not in seen:
+            unique_courses.append(course)
+            seen.add(course)
+
+    # Build course information section
+    section = "\n## Course Information\n\n"
+
+    for course in unique_courses:
+        if course in COURSE_INFO:
+            info = COURSE_INFO[course]
+            section += f"**{course}**\n"
+            section += f"- {info['full_name']}\n"
+            section += f"- {info['location']}\n"
+            section += f"- Type: {info['type']}"
+            if info['par']:
+                section += f" | Par: {info['par']}"
+            section += "\n"
+            if info['designer']:
+                section += f"- Designer: {info['designer']}\n"
+            if info['rankings']:
+                section += f"- Rankings: {info['rankings']}\n"
+            section += f"- {info['description']}\n"
+            section += "\n"
+
+    return section
+
+
 def build_story_notes_file(teg_num, round_stories, synthesis, all_processed_data):
     """
     Build complete story notes file with LLM-generated content + factual sections.
@@ -1213,6 +1259,11 @@ def build_story_notes_file(teg_num, round_stories, synthesis, all_processed_data
 
     # Append factual sections (venue, records, PBs)
     content = append_factual_sections(content, teg_num, all_processed_data)
+
+    # Add course information section at the end as manual overlay
+    course_info = format_course_info_section(teg_num)
+    if course_info:
+        content += "\n" + course_info
 
     return content
 

@@ -1,0 +1,40 @@
+[
+  {
+    "TEG": "TEG 3",
+    "TEGNum": 3,
+    "Round": 1,
+    "Hole": 1,
+    "Player": "Jon BAKER",
+    "Pl": "JB",
+    "Par": 4,
+    "Sc": 4.0,
+    "GrossVP": 0.0,
+    "Stableford": 3.0,
+    "Final_Hole_Flag": false,
+    "Event": "Took Lead (Gross)",
+    "Metric": NaN,
+    "Rank_Gross_Before": NaN,
+    "Rank_Gross_After": 1.0,
+    "Rank_Stableford_Before": NaN,
+    "Rank_Stableford_After": 1.0
+  },
+  {
+    "TEG": "TEG 3",
+    "TEGNum": 3,
+    "Round": 1,
+    "Hole": 1,
+    "Player": "Jon BAKER",
+    "Pl": "JB",
+    "Par": 4,
+    "Sc": 4.0,
+    "GrossVP": 0.0,
+    "Stableford": 3.0,
+    "Final_Hole_Flag": false,
+    "Event": "Took Lead (Stableford)",
+    "Metric": NaN,
+    "Rank_Gross_Before": NaN,
+    "Rank_Gross_After": 1.0,
+    "Rank_Stableford_Before": NaN,
+    "Rank_Stableford_After": 1.0
+  }
+]

@@ -1,0 +1,24 @@
+Summary for TEG 3, Round 1
+============================================================
+Top-level keys: ['round', 'lead_timeline', 'lead_changes', 'momentum_patterns', 'nine_patterns', 'pattern_details', 'events', 'summary', 'records_and_pbs', 'course_records']
+
+- round: type=int, len=1, approx_json_size=1 chars
+- lead_timeline: type=list, len=1, approx_json_size=104 chars
+- lead_changes: type=list, len=0, approx_json_size=2 chars
+- momentum_patterns: type=list, len=12, approx_json_size=1,926 chars
+- nine_patterns: type=list, len=2, approx_json_size=232 chars
+- pattern_details: type=list, len=14, approx_json_size=6,292 chars
+- events: type=list, len=45, approx_json_size=14,928 chars
+- summary: type=list, len=5, approx_json_size=9,495 chars
+- records_and_pbs: type=dict, len=4, approx_json_size=578 chars
+- course_records: type=list, len=1, approx_json_size=222 chars
+
+TOTAL approx_json_size: 33,957 chars
+Preview saved: previews/lead_timeline_preview.json (first 2 items)
+Preview saved: previews/lead_changes_preview.json (first 2 items)
+Preview saved: previews/momentum_patterns_preview.json (first 2 items)
+Preview saved: previews/nine_patterns_preview.json (first 2 items)
+Preview saved: previews/pattern_details_preview.json (first 2 items)
+Preview saved: previews/events_preview.json (first 2 items)
+Preview saved: previews/summary_preview.json (first 2 items)
+Preview saved: previews/course_records_preview.json (first 2 items)

@@ -27,7 +27,7 @@ R4: Jon 35, Gregg 37, Stuart38, Henry 34, David 26
 
 ## The Beautiful Absurdity
 - David: 4th consecutive GJ, first WS
-- Same golf = champion AND disaster
+- Same golf = champion AND blow-up
 - Net scoring hated David's high handicap
 - gross scoring loved David's consistency
 - Golf's most absurd outcome

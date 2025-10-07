@@ -557,7 +557,7 @@ def drill_down_patterns(momentum_patterns, nine_patterns, teg_num):
         pattern_details.append({
             **pattern,  # Include original pattern
             'birdies_in_window': birdies,
-            'disasters_in_window': disasters,
+            'blow_ups_in_window': disasters,
             'hole_scores': window_df[['Hole', 'Stableford', 'GrossVP']].to_dict('records')
         })
 

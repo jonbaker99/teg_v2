@@ -46,7 +46,7 @@ Analyze the provided tournament data and create a story blueprint that identifie
 
 5. **Player Arcs** (top 3-5 players only)
    - Tournament trajectory for each key player
-   - Contrast across rounds or within rounds (strong start vs finish, etc.)
+   - Contrasts (consistency vs volatility, strong start vs finish, etc.)
    - Key holes/rounds that defined their tournament
 
 6. **What to Ignore**
@@ -114,14 +114,6 @@ Guidelines for player info usage:
 - Humorous and witty (dry humor, light satire, playful language)
 - Varied and creative (avoid formulaic structures)
 - Accurate (never fabricate numbers or events)
-
-### Bad-Hole Vocabulary (strict)
-- Default neutral term: **“blow-up.”** Do not use “disaster” unless it is the single allowed instance (see Rule 1).
-- Rotate varied euphemisms across the article; never repeat in back-to-back sentences:
-  blow-up, meltdown, bad hole, horror hole, car-crash hole, card-wrecker, calamity, nightmare hole,
-  implosion, collapse, big number, snowman (only for an 8), quadruple/quintuple/sextuple bogey, double-par.
-- When notes contain the word “disaster,” **render it as one of the above** instead of echoing “disaster,”
-  unless using your single allowed instance.
 
 **Narrative Principles:**
 1. **Find the thread** - Center on 1-3 key storylines
@@ -288,15 +280,6 @@ Write a 2-3 paragraph summary that captures the essence of the tournament:
 - Use specific numbers sparingly - only most impactful stats
 - Reference specific holes/rounds when particularly dramatic
 
-### Bad-Hole Vocabulary (strict)
-- Default neutral term: **“blow-up.”** Do not use “disaster” unless it is the single allowed instance (see Rule 1).
-- Rotate varied euphemisms across the article; never repeat in back-to-back sentences:
-  blow-up, meltdown, bad hole, horror hole, car-crash hole, card-wrecker, calamity, nightmare hole,
-  implosion, collapse, big number, snowman (only for an 8), quadruple/quintuple/sextuple bogey, double-par.
-- When notes contain the word “disaster,” **render it as one of the above** instead of echoing “disaster,”
-  unless using your single allowed instance.
-
-
 **Examples of Good Concise Writing:**
 
 ✅ "Jon Baker claimed his first TEG Trophy and Green Jacket with a wire-to-wire performance that saw him lead for 70 of 72 holes. His 18-point Stableford margin and 13-stroke gross advantage over David Mullin represented total dominance."
@@ -366,14 +349,6 @@ For each player, write a 2-4 sentence summary that captures their tournament sto
 - Forcing in personal facts that don't relate to THIS tournament
 - Generic phrases that could apply to anyone
 
-### Bad-Hole Vocabulary (strict)
-- Default neutral term: **“blow-up.”** Do not use “disaster” unless it is the single allowed instance (see Rule 1).
-- Rotate varied euphemisms across the article; never repeat in back-to-back sentences:
-  blow-up, meltdown, bad hole, horror hole, car-crash hole, card-wrecker, calamity, nightmare hole,
-  implosion, collapse, big number, snowman (only for an 8), quadruple/quintuple/sextuple bogey, double-par.
-- When notes contain the word “disaster,” **render it as one of the above** instead of echoing “disaster,”
-  unless using your single allowed instance.
-
 **Critical Rules:**
 - ONLY use data explicitly provided
 - Each player gets their moment - find what made their tournament interesting
@@ -405,7 +380,7 @@ You have rich, multi-layered data for this round:
    - Specific hole ranges for each pattern (e.g., "holes 5-8")
    - Both NET (Stableford points) and GROSS (vs par) scoring patterns
    - Drill-down details: which specific holes drove each pattern
-   - Birdies and blow-ups within each window
+   - Birdies and disasters within each window
    - hole_scores includes: Hole number, PAR, Sc (gross score), Stableford, GrossVP
 
 3. **Front/Back Nine** (nine_patterns):
@@ -414,7 +389,7 @@ You have rich, multi-layered data for this round:
    - Specific scores for each nine
 
 4. **Events** (events):
-   - Eagles, blow-ups, significant moments
+   - Eagles, disasters, significant moments
    - Exact holes for each event (includes hole Par, player Sc (gross score), and GrossVP)
    - Ranking changes
 
@@ -443,7 +418,7 @@ Create structured story notes for Round {round_num} using this EXACT format:
 [List as bullets, include specific holes WITH PAR and what happened]
 - H[hole] (Par [X]): [Player] [what happened] ([gross] / [vs_par]), [stableford] pts
   - ALWAYS include: gross score, vs par, AND stableford points for complete context
-  - Example: H17 (Par 4): Jon BAKER blow-up (9 / +5), 0 pts
+  - Example: H17 (Par 4): Jon BAKER disaster (9 / +5), 0 pts
   - Example: H8 (Par 4): Gregg WILLIAMS birdie (3 / -1), 5 pts
   - For lead changes without specific scores, you can omit the score details
 [Continue with most dramatic/important moments from this round]
@@ -470,11 +445,11 @@ Create structured story notes for Round {round_num} using this EXACT format:
 
 ### Cold Spells (Net)
 [List significant Stableford cold spells as bullets]
-- [Player] holes [X-Y]: [Z] pts [additional detail: blow-ups on holes X, Y if applicable]
+- [Player] holes [X-Y]: [Z] pts [additional detail: disasters on holes X, Y if applicable]
 
 ### Cold Spells (Gross)
 [List significant gross scoring cold spells as bullets]
-- [Player] holes [X-Y]: Avg [+X.XX] vs par [additional detail: specific blow-ups]
+- [Player] holes [X-Y]: Avg [+X.XX] vs par [additional detail: specific disasters]
 
 ### Front/Back 9 Patterns
 [List significant F9/B9 differences as bullets]
@@ -487,7 +462,7 @@ Create structured story notes for Round {round_num} using this EXACT format:
 **Format Rules:**
 - Use bullets, NOT paragraphs
 - Include specific hole numbers WITH PAR whenever available (e.g., H17 (Par 4))
-- For blow-ups and gross events: include gross score and vs par (e.g., 9 / +5)
+- For disasters and gross events: include gross score and vs par (e.g., 9 / +5)
 - For competition references: always specify Trophy (Stableford/net) or Jacket (gross)
   - "Trophy lead" = Stableford/net competition
   - "Jacket lead" = Gross competition
@@ -502,7 +477,7 @@ Create structured story notes for Round {round_num} using this EXACT format:
 - For all key moments: ALWAYS include gross score, vs par, AND stableford points for complete context
   - Extract from events[i]: Par, Sc (gross score), GrossVP (vs par), Stableford (points)
   - Format: "H[hole] (Par [X]): [Player] [event] ([Sc] / [GrossVP]), [Stableford] pts"
-  - Example: H17 (Par 4) with Sc=9, GrossVP=+5, Stableford=0 becomes "H17 (Par 4): blow-ups (9 / +5), 0 pts"
+  - Example: H17 (Par 4) with Sc=9, GrossVP=+5, Stableford=0 becomes "H17 (Par 4): disaster (9 / +5), 0 pts"
   - Example: H8 (Par 4) with Sc=3, GrossVP=-1, Stableford=5 becomes "H8 (Par 4): birdie (3 / -1), 5 pts"
 - For competition references: specify "Trophy" (Stableford/net) or "Jacket" (gross)
 - Never fabricate numbers or events
@@ -670,10 +645,11 @@ Your job: Transform these structured notes into flowing narrative prose.
 
 ## CORE FORMATTING RULES
 
-**Rule 1: “Disaster” MAXIMUM ONCE; prefer “blow-up”**
-- Use “blow-up” as the neutral default.
-- Vary language (see Bad-Hole Vocabulary). Never repeat the same term in consecutive sentences.
-- Prefer specifics where clear: “triple bogey,” “quintuple,” “+6 at the 12th,” “no points on 11–13.”
+**Rule 1: "Disaster" used MAXIMUM ONCE per report**
+- Story notes say "disaster" frequently - you must vary the language
+- Use specific scores instead: "triple bogey," "sextuple," "+6 at the 12th"
+- Rotate synonyms: blow-ups, meltdowns, bad holes, collapse, implosion, capitulation, catastrophe
+- Variety is critical - never repeat the same term in consecutive sentences
 
 **Rule 2: Maximum 3 sentences & 55 words per paragraph**
 - This means ~18 words per sentence maximum
@@ -724,18 +700,15 @@ Your job: Transform these structured notes into flowing narrative prose.
 - Never reference "360 holes" (tournaments are 72 holes total)
 
 **Rule 13: Zero-point terminology**
-- Single hole: the number tells the story; avoid tacking on “zero points” unless contrast needs it.
-- Multiple holes: “failed to register a point on …” or “blobs on …” (British tone).
+- Single high-scoring holes: Avoid "bleeding zero points" or "left him with zero points"
+  - The zero is implied: "quintuple-bogey nine at the 14th" (no need to add "zero points")
+- Multiple scoreless holes: "Failed to register a point on holes X-Y" or "blobs on holes X-Y"
+- Alternative term: "Zeroes" can be called "blobs"
 
-
-### Bad-Hole Vocabulary (strict)
-- Default neutral term: **“blow-up.”** Do not use “disaster” unless it is the single allowed instance (see Rule 1).
-- Rotate varied euphemisms across the article; never repeat in back-to-back sentences:
-  blow-up, meltdown, bad hole, horror hole, car-crash hole, card-wrecker, calamity, nightmare hole,
-  implosion, collapse, big number, snowman (only for an 8), quadruple/quintuple/sextuple bogey, double-par.
-- When notes contain the word “disaster,” **render it as one of the above** instead of echoing “disaster,”
-  unless using your single allowed instance.
-
+**Rule 14: Variety in describing bad holes**
+- Story notes use "disasters" but reports need variety
+- Rotate terms: "blow-ups," "meltdowns," "bad holes," "collapse," "implosion," "capitulation"
+- Use "disaster" maximum ONCE per report (already in Rule 1)
 
 ## NARRATIVE FLOW
 
@@ -868,8 +841,8 @@ After each round narrative, show only the cumulative totals (not per-round score
 
 Use this exact 4-line “blocked text-table” format with vertical bars (|) separating players:
 
-**Trophy Standings:** GW 108 | JB 97 | AB 98 | DM 92 | HM 90 | SN 68  
-**Green Jacket Standings:** DM +60 | JB +58 | GW +85 | HM +94 | AB +115 | SN +113
+**Stableford Standings:** [GW 108 | JB 97 | AB 98 | DM 92 | HM 90 | SN 68]  
+**Gross Standings:** [DM +60 | JB +58 | GW +85 | HM +94 | AB +115 | SN +113]
 
 Do NOT include round scores or parenthetical totals.  
 Do NOT use markdown tables — use single lines separated by vertical bars for compact readability.
@@ -878,7 +851,7 @@ Do NOT use markdown tables — use single lines separated by vertical bars for c
 
 ## Tournament Recap
 
-Write NO MORE THAN 3-4 paragraphs (MAX OF 150-250 words) that:
+Write 2-3 paragraphs (150-250 words) that:
 - **Synthesise the tournament arc:** Pull together the threads from all four rounds
 - **Reflect on the outcome:** How did the winners achieve victory? What defined their performance?
 - **Acknowledge supporting narratives:** Runner-up battles, collapses, Wooden Spoon, notable performances
@@ -892,7 +865,6 @@ Write NO MORE THAN 3-4 paragraphs (MAX OF 150-250 words) that:
 - Connect outcomes to Story Angles from notes
 
 Think of this as wrapping up all loose threads: resolution, reflection, meaning, memorable exit line.
-This is NOT the player-by-player report, that comes later
 
 **Example recap tone:**
 "Jon Baker's fourth Trophy arrived via the most commanding wire-to-wire performance in recent memory. Leading 70 of 72 holes, his six-point margin over Williams understated the control he exerted. Williams' one-hole lead in Round 2 provided brief drama before Baker's birdie snatched it back. Patterson's 49-point Round 3 explosion couldn't overcome his earlier inconsistency..."
@@ -930,12 +902,6 @@ This is NOT the player-by-player report, that comes later
 - Hot/cold spell averages: Convert decimal averages to natural language
   - NEVER: "averaged +2.67 vs par"
   - ALWAYS: "averaged close to 3-over per hole" or "8 over par for the stretch"
-
-### Hard Checks (before you produce the final text)
-- The final text must contain **no em-dashes “—”** or double hyphens “--”.
-- If your draft contains any, replace with a period, comma, colon, or (sparingly) parentheses.
-
-If your final draft contains the word “disaster” more than once or any “—”, rewrite until it does not.
 
 ---
 

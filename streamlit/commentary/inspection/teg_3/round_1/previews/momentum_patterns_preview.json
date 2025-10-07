@@ -1,0 +1,22 @@
+[
+  {
+    "player": "Gregg WILLIAMS",
+    "round": "1",
+    "holes": "4-6",
+    "window_size": 3,
+    "points": null,
+    "avg_gross_vs_par": 2.33,
+    "type": "cold",
+    "scoring_type": "gross"
+  },
+  {
+    "player": "Gregg WILLIAMS",
+    "round": "1",
+    "holes": "6-8",
+    "window_size": 3,
+    "points": null,
+    "avg_gross_vs_par": 2.33,
+    "type": "cold",
+    "scoring_type": "gross"
+  }
+]

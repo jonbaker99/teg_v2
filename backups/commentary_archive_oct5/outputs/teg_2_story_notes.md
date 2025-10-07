@@ -14,7 +14,7 @@ Championship par-71 course near Lagos designed by Howard Swan. Features two dist
 
 ### 🎯 Primary Storyline
 - **David's First Double:** First TEG Trophy + Green Jacket (103 pts, 66 strokes)
-- **The 18th Hole Massacre:** Round 2 - THREE players (David, Gregg, Jon) all triple bogey or worse on same hole. All score zero Stableford points simultaneously. Statistical anomaly. Beautiful disaster.
+- **The 18th Hole Massacre:** Round 2 - THREE players (David, Gregg, Jon) all triple bogey or worse on same hole. All score zero Stableford points simultaneously. Statistical anomaly. Beautiful blow-up.
 - **Jon's Near Miss:** Led after R2 with brilliant 37 pts (24-pt front 9!), then imploded R3 with 28 pts and 6 triple bogeys
 
 ### 🏆 Competition Results
@@ -28,22 +28,22 @@ Championship par-71 course near Lagos designed by Howard Swan. Features two dist
 3. **R3:** David's perfect 38 (19 front, 19 back, zero triples) seals it, Jon's 6-triple meltdown
 
 ### 💎 Key Moments
-- **18th hole R2:** Three simultaneous disasters - "beautiful multi-car pileup"
+- **18th hole R2:** Three simultaneous blow-ups - "beautiful multi-car pileup"
 - **Henry's horror:** 5 consecutive triple bogeys R1
 - **Jon's front 9 R2:** 24 Stableford points - spectacular
-- **David's R3:** Perfect balance, zero disasters, championship response
+- **David's R3:** Perfect balance, zero blow-ups, championship response
 
 ### 🎭 Player Stories
 
 **David:**
 - First titles, established his grinder reputation
-- Survived the 18th hole disaster to win by 5
+- Survived the 18th hole blow-up to win by 5
 - 2 birdies all tournament, won on consistency
 - "Picking up dry cleaning" - zero drama
 
 **Jon:**
 - Round 2 hero (37 pts, esp that 24-pt front 9)
-- Round 3 villain (28 pts, 6 triples, 9-hole disaster streak)
+- Round 3 villain (28 pts, 6 triples, 9-hole blow-up streak)
 - The soufflé - spectacular rise, dramatic collapse
 - 98 pts, haunted by "what if"
 
@@ -76,7 +76,7 @@ Championship par-71 course near Lagos designed by Howard Swan. Features two dist
 - Zero eagles (all tournament)
 - David: 2 birdies, 25 bogeys, 12 doubles
 - Henry: 5 consecutive triples (holes 11-15 R1)
-- Jon: 9-hole disaster streak spanning R2-R3
+- Jon: 9-hole blow-up streak spanning R2-R3
 - The 18th: 3 players, 3 triples, 3 zeros
 
 ### 🔑 Quote-Worthy Lines

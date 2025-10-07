@@ -34,9 +34,10 @@ REVIEW PROMPT AT END AGAIN FOR CLARITY
 
 [x] Add the Area and Course info as another layer of data to the story file
 
-[ ] Create a course description and area description dictionary as an intro
 [ ] add those to the story points without LLM needed (e.g. add after). can they be programatically added?
 [ ] do records and PBs need LLM too or can they be programatically added?
+
+
 
 
 NOTES
@@ -46,6 +47,7 @@ NOTES
 Add double figure gross scores?
 
 [*] CACHE PROMPTS TO SAVE TOKENS...
+[ ] Create a course description and area description dictionary as an intro
 
 ----------------
 
@@ -77,3 +79,18 @@ data_loader.py
 prompts.py
 RECENT_CHANGES.md - Full context on recent work
 Testing: After implementation, test with TEG 17 with INCLUDE_STREAKS=True and INCLUDE_STREAKS=False to verify toggle works correctly.
+
+
+
+TO DO....
+
+Add missing stuff to the story notes (year, rare events)
+
+** don't refer to the +0.00 vs par for the spells. Talk about 'played x holes under par' or 'averaged worse than [/close to] {+3} per hole'
+
+
+---
+
+Rules not being adhered to:
+Way too much on disasters -> replace "disaster" with "blow-up" in story_
+Still have em-dashes

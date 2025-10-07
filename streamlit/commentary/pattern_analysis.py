@@ -300,14 +300,14 @@ def drill_down_patterns(momentum_patterns, nine_patterns, teg_num):
         birdies = window_df[window_df['GrossVP'] == -1]['Hole'].tolist()
         # Track 4-point holes separately (these may be pars with good handicap)
         four_point_holes = window_df[window_df['Stableford'] >= 4]['Hole'].tolist()
-        disasters = window_df[window_df['Stableford'] == 0]['Hole'].tolist()
+        blow_ups = window_df[window_df['Stableford'] == 0]['Hole'].tolist()
 
         pattern_details.append({
             **pattern,  # Include original pattern
             'birdies_in_window': birdies,
             'four_point_holes_in_window': four_point_holes,
-            'disasters_in_window': disasters,
-            'hole_scores': window_df[['Hole', 'Stableford', 'GrossVP']].to_dict('records')
+            'blow_ups_in_window': blow_ups,
+            'hole_scores': window_df[['Hole', 'PAR', 'Sc', 'Stableford', 'GrossVP']].to_dict('records')
         })
 
     # Drill down front/back 9 patterns
@@ -327,14 +327,14 @@ def drill_down_patterns(momentum_patterns, nine_patterns, teg_num):
         # IMPORTANT: Only count GROSS birdies (GrossVP=-1), not just 4-point Stableford scores
         birdies = nine_df[nine_df['GrossVP'] == -1]['Hole'].tolist()
         four_point_holes = nine_df[nine_df['Stableford'] >= 4]['Hole'].tolist()
-        disasters = nine_df[nine_df['Stableford'] == 0]['Hole'].tolist()
+        blow_ups = nine_df[nine_df['Stableford'] == 0]['Hole'].tolist()
 
         pattern_details.append({
             **pattern,
             'birdies': birdies,
             'four_point_holes': four_point_holes,
-            'disasters': disasters,
-            'hole_scores': nine_df[['Hole', 'Stableford', 'GrossVP']].to_dict('records')
+            'blow-ups': blow_ups,
+            'hole_scores': nine_df[['Hole', 'PAR', 'Sc', 'Stableford', 'GrossVP']].to_dict('records')
         })
 
     return pattern_details
@@ -681,8 +681,8 @@ if __name__ == "__main__":
                                reverse=True)[0]
             print(f"\nWorst Gross Spell: {worst_gross['player']} holes {worst_gross['holes']}")
             print(f"  Avg {worst_gross['avg_gross_vs_par']:+.2f} vs par")
-            if worst_gross['disasters_in_window']:
-                print(f"  Disasters on holes: {worst_gross['disasters_in_window']}")
+            if worst_gross['blow_ups_in_window']:
+                print(f"  Blow-ups on holes: {worst_gross['blow_ups_in_window']}")
 
     print("\n" + "=" * 60)
     print("> PIPELINE TEST COMPLETE")
