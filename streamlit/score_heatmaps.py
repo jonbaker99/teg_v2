@@ -204,7 +204,7 @@ tooltip = [
 ] if show_values else None
 
 heatmap = (
-    alt.Chart(agg, height=max(100, 35 * len(order)), width=100)
+    alt.Chart(agg, height=max(100, 28 * len(order)+60), width=100)
     .mark_rect()
     .encode(
         x=alt.X(f"{HOLE_FIELD}:O", title="Hole", sort=valid_holes,
