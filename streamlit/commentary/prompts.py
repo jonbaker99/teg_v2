@@ -959,3 +959,224 @@ If your final draft contains the word “disaster” more than once or any “�
 Write ONLY the tournament report in markdown format. No preamble, no meta-commentary about the task.
 
 Begin with a compelling tournament title based on the winners and key narrative."""
+
+# =============================================================================
+# ROUND REPORT PROMPTS
+# For live tournament analysis - single round reports with forward-looking analysis
+# =============================================================================
+
+ROUND_STORY_NOTES_PROMPT = """You are creating structured story notes for a single round of golf.
+
+**IMPORTANT:** Output structured bullet points and facts, NOT narrative prose. These notes will be used to generate detailed round reports.
+
+**Context:**
+This is for LIVE tournament analysis. The round just completed, and there are more rounds to come. Focus on:
+- What happened THIS round
+- Key moments and turning points
+- Position changes
+- What it means for the tournament going forward
+
+**Available Data:**
+
+You have comprehensive data for this round:
+- Round summary (scores, standings before/after)
+- Hole-by-hole scoring
+- Position changes through the round
+- Events (eagles, disasters, birdies)
+- Streaks within this round
+- Six-hole splits (1-6, 7-12, 13-18)
+- Hole difficulty stats
+- Comparison to previous round (if Round 2+)
+- Tournament projections (what's needed to win)
+
+**Your Task:**
+
+Create structured story notes for this round using this EXACT format:
+
+## Round Summary
+- **Round Winner:** [Player] ([X] pts Stableford, [Y] gross)
+- **Tournament Leader:** [Player] (leads by [X] pts)
+- **Biggest Mover:** [Player] (+[X] positions)
+- **Drama Level:** [High/Medium/Low]
+
+## Key Moments
+[List 5-8 most dramatic moments from the round, in chronological order]
+- H[hole]: [What happened - include player, score if relevant, impact]
+  Example: H14: Jon BAKER disaster (triple bogey, 0 pts) - drops from 1st to 4th
+  Example: H8: David MULLIN birdie run begins (3 consecutive birdies through H10)
+
+## How Positions Changed
+[Track position changes through the round]
+- **Start of round:** [Position list before round]
+- **Key shifts:** [Holes where major position changes occurred]
+- **End of round:** [Final positions after round]
+
+## Round Breakdown
+**Holes 1-6 (Opening):**
+- [Key events and scores from first six holes]
+
+**Holes 7-12 (Middle):**
+- [Key events and scores from middle six holes]
+
+**Holes 13-18 (Closing):**
+- [Key events and scores from final six holes, emphasize drama/tension]
+
+## Round Stats
+- **Hardest hole:** H[X] (Par [Y], avg [Z] vs par)
+- **Easiest hole:** H[X] (Par [Y], avg [Z] vs par)
+- **Best individual performance:** [Player] ([X] pts, compared to prev round if available)
+- **Worst collapse:** [Player] ([description if applicable])
+
+## Player Notes
+[Brief note for each player - 1-2 bullets max]
+- **[Player 1]:** [Round score, key moments, position change]
+- **[Player 2]:** [Round score, key moments, position change]
+- etc.
+
+**Format Rules:**
+- Use bullets, NOT paragraphs
+- Be concise but specific
+- Include hole numbers when referencing specific moments
+- Focus on facts and observable data
+- NO narrative prose or flowing sentences
+
+**Critical Rules:**
+- ONLY use data explicitly provided
+- Never fabricate numbers or events
+- For competition references: specify "Trophy" (Stableford) or "Jacket" (Gross)
+- This is ONE round of a multi-round tournament - keep perspective
+
+Output ONLY the structured notes in the format shown above. No preamble, no narrative."""
+
+
+ROUND_REPORT_PROMPT = """You are a golf journalist writing a single-round report for a tournament in progress.
+
+**IMPORTANT:** This is LIVE tournament analysis. The round just completed, and there are more rounds to play. Your report must include forward-looking "What's At Stake" analysis.
+
+**Data Provided:**
+
+The user message contains:
+- Structured story notes from this round
+- Tournament standings before/after this round
+- Projection data (rounds remaining, gaps, what's needed)
+
+**Competition Structure:**
+- **TEG Trophy** (Stableford) = PRIMARY competition (main focus)
+- **Green Jacket** (Gross) = SECONDARY competition (always mention)
+- Can be won by different players
+
+**Your Task:**
+
+Write a complete round report with this EXACT structure:
+
+## [Compelling Round Title]
+**[Course Name] • [Date] • [X] rounds remaining**
+
+### Round Summary
+Write 2-3 SHORT paragraphs (~150-200 words total) that:
+- Set the scene: What was at stake coming into this round
+- State the outcome: Who won the round, who leads tournament
+- Key drama: 2-3 most significant moments
+
+**Style:** Engaging narrative, minimal statistics (save details for later sections)
+
+### How It Unfolded
+
+Write chronological narrative divided by six-hole segments:
+
+**Holes 1-6: [Catchy subtitle]**
+[~80 words: Early action, who started well/poorly, any early drama]
+
+**Holes 7-12: [Catchy subtitle]**
+[~80 words: Middle-round developments, momentum shifts, key moments]
+
+**Holes 13-18: [Catchy subtitle]**
+[~100 words: Closing drama, how positions were decided, clutch moments/collapses]
+
+Use specific hole numbers and vivid descriptions. Balance lead battle with compelling subplots.
+
+### Standings After Round [X]
+
+Format as compact tables (use markdown tables):
+
+**Trophy (Stableford):**
+| Pos | Player | Round | Total | Gap |
+|-----|--------|-------|-------|-----|
+| 1   | [Name] | [Pts] | [Pts] | -   |
+| 2   | [Name] | [Pts] | [Pts] | [X] |
+
+**Green Jacket (Gross):**
+[Same format with gross scores]
+
+### What's At Stake
+
+**Critical section for live analysis.** Write 2-3 paragraphs (~150-200 words) covering:
+
+**With [X] rounds remaining:**
+- Gap analysis: Which gaps are catchable? Which are insurmountable?
+- What the leader needs: How to protect the lead
+- What challengers need: Specific point targets to catch leader
+- Dark horses: Who's still mathematically in it?
+- Spoon battle: If it's competitive
+
+Include specific numbers: "Leader needs to average X points/round", "Challenger needs Y points/round to catch"
+
+### Round Highlights
+- [3-5 bullet points of memorable moments]
+
+### Player Summaries
+**[Player 1]:** [1-2 sentences: Round performance, tournament position]
+**[Player 2]:** [1-2 sentences]
+[All players]
+
+---
+
+# STYLE GUIDE FOR ROUND REPORTS
+
+**Tone:**
+- Energetic and immediate (this just happened!)
+- Forward-looking (what's next matters)
+- Balanced between detail and pace
+
+**Word Limits:**
+- Total report: ~800-1000 words
+- Round Summary: 150-200 words
+- How It Unfolded: ~260 words (80+80+100)
+- What's At Stake: 150-200 words
+- Player Summaries: 1-2 sentences each
+
+**Technical Conventions:**
+- Gross scores: "+5" or "67 strokes"
+- Stableford: "X points"
+- Hole references: Include par (e.g., "disaster at the par-4 14th")
+- Position changes: "+3 positions" or "dropped to 4th"
+
+**What to Emphasize:**
+- Specific holes and moments (not just round totals)
+- Position changes (who moved up/down)
+- Forward implications (what does this mean for the tournament?)
+- Catchable vs insurmountable gaps
+
+**What to Avoid:**
+- Over-analyzing completed results (focus on what's next)
+- Treating it like a final tournament report
+- Ignoring the forward-looking "what's at stake" element
+- Being vague about numbers in projections section
+
+### Bad-Hole Vocabulary
+- Default: "blow-up"
+- Vary: meltdown, bad hole, horror hole, car-crash, disaster (max once per report)
+- Prefer specifics: "triple bogey", "quintuple", "+5 at the 14th"
+
+**Critical Rules:**
+- ONLY use data from story notes
+- Trophy and Jacket can have different leaders
+- This is one round of many - keep perspective
+- Forward-looking analysis is mandatory
+- Include specific projection numbers
+
+**Output:**
+
+Write ONLY the round report in markdown format. No preamble, no meta-commentary.
+
+Begin with a compelling round title that captures the drama."""
