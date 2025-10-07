@@ -21,11 +21,10 @@ import streamlit as st
 import pandas as pd
 from typing import List, Dict, Any
 import logging
-from pathlib import Path
 import importlib.util
 
 # Import data loading functions from main utils
-from utils import get_teg_rounds, get_round_data, load_all_data, load_datawrapper_css, load_teg_reports_css
+from utils import get_teg_rounds, get_round_data, load_all_data, load_datawrapper_css, load_teg_reports_css, read_text_file
 
 # Import chart creation functions
 from make_charts import create_cumulative_graph, adjusted_grossvp, adjusted_stableford
@@ -51,9 +50,16 @@ PLAYER_COLUMN = 'Player'
 
 # === HELPER FUNCTIONS ===
 @st.cache_data(show_spinner=False)
-def load_markdown(p: Path) -> str:
-    """Load markdown content from file"""
-    return p.read_text(encoding="utf-8")
+def load_markdown(file_path: str) -> str:
+    """Load markdown content from file using centralized read_text_file()
+
+    Args:
+        file_path (str): Relative path to markdown file (e.g., 'data/commentary/teg_17_main_report.md')
+
+    Returns:
+        str: Markdown content
+    """
+    return read_text_file(file_path)
 
 
 def render_report(md_text: str):
@@ -66,24 +72,6 @@ def render_report(md_text: str):
         st.markdown(full_html, unsafe_allow_html=True)
     else:
         st.error("Markdown library not available. Please install with: pip install markdown")
-
-
-def get_commentary_dir() -> Path:
-    """Locate the commentary outputs folder"""
-    here = Path(__file__).resolve()
-    candidates = [
-        here.parent / "commentary" / "to_use",           # .../streamlit/commentary/to_use
-        here.parent.parent / "commentary" / "to_use",    # parent dir
-    ]
-    commentary_dir = next((p for p in candidates if p.exists()), None)
-    if commentary_dir is None:
-        # Fallback to outputs folder if to_use doesn't exist
-        candidates = [
-            here.parent / "commentary" / "outputs",
-            here.parent.parent / "commentary" / "outputs",
-        ]
-        commentary_dir = next((p for p in candidates if p.exists()), None)
-    return commentary_dir
 
 
 # === DATA LOADING ===
@@ -357,26 +345,18 @@ try:
             teg_num = None
 
         if teg_num is not None:
-            # Locate commentary directory
-            commentary_dir = get_commentary_dir()
+            # Construct path to report file (relative path from project root)
+            report_file_path = f"data/commentary/teg_{teg_num}_main_report.md"
 
-            if commentary_dir is None:
-                st.warning("Commentary folder not found. Reports are not available.")
-            else:
-                # Construct path to report file
-                report_filename = f"teg_{teg_num}_main_report.md"
-                report_path = commentary_dir / report_filename
-
-                if report_path.exists():
-                    # Load and render the report
-                    try:
-                        md_text = load_markdown(report_path)
-                        render_report(md_text)
-                    except Exception as report_error:
-                        st.error(f"Error loading report: {str(report_error)}")
-                        logger.error(f"Error loading report for TEG {teg_num}: {str(report_error)}")
-                else:
-                    st.info(f"No report available yet for {chosen_teg}.")
+            # Try to load and render the report
+            try:
+                md_text = load_markdown(report_file_path)
+                render_report(md_text)
+            except FileNotFoundError:
+                st.info(f"No report available yet for {chosen_teg}.")
+            except Exception as report_error:
+                st.error(f"Error loading report: {str(report_error)}")
+                logger.error(f"Error loading report for TEG {teg_num}: {str(report_error)}")
 
 
 except Exception as e:

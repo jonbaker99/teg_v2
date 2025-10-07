@@ -11,7 +11,7 @@ from generate_commentary import load_tournament_data
 
 # Configuration
 DATA_DIR = Path("data")
-OUTPUT_DIR = Path("streamlit/commentary/outputs")
+OUTPUT_DIR = Path("data/commentary/drafts")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # Define file paths

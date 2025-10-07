@@ -96,7 +96,7 @@ def main():
     """
     Find all story_notes files and add course information to them.
     """
-    outputs_dir = Path("streamlit/commentary/outputs")
+    outputs_dir = Path("data/commentary/drafts")
 
     if not outputs_dir.exists():
         print(f"Error: Directory not found: {outputs_dir}")

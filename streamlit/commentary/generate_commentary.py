@@ -442,7 +442,7 @@ if __name__ == "__main__":
         round_summary_path="path/to/round_summary.csv",
         api_key=os.getenv("ANTHROPIC_API_KEY"),
         events_path="path/to/events.csv",
-        output_path="streamlit/commentary/outputs/teg_17.md"
+        output_path="data/commentary/drafts/teg_17.md"
     )
 
     print("\n" + "="*80)

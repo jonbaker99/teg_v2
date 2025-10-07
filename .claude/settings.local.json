@@ -27,7 +27,8 @@
       "Bash(done)",
       "Bash(dir:*)",
       "Bash(del:*)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "Bash(timeout 15 streamlit run:*)"
     ],
     "deny": [],
     "ask": [

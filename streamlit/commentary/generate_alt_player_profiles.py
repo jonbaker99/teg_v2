@@ -59,7 +59,7 @@ Generate the alternate simplified player profiles now."""
     return message.content[0].text
 
 def main():
-    profiles_dir = Path('streamlit/commentary/outputs')
+    profiles_dir = Path('data/commentary/drafts')
 
     # Get all player profile files
     profile_files = sorted([f for f in profiles_dir.glob('teg_*_player_profiles.md')])

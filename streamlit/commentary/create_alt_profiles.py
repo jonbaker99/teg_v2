@@ -98,7 +98,7 @@ def create_alt_profile(teg_num, original_path):
     return output
 
 def main():
-    profiles_dir = Path('streamlit/commentary/outputs')
+    profiles_dir = Path('data/commentary/drafts')
 
     # Get all player profile files (excluding already created alts)
     profile_files = sorted([f for f in profiles_dir.glob('teg_*_player_profiles.md')

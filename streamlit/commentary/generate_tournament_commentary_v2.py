@@ -752,7 +752,7 @@ def generate_main_report(teg_num):
     print(f"{'='*60}\n")
 
     # Read story notes file
-    story_notes_path = f"streamlit/commentary/outputs/teg_{teg_num}_story_notes.md"
+    story_notes_path = f"data/commentary/drafts/teg_{teg_num}_story_notes.md"
     if not os.path.exists(story_notes_path):
         raise FileNotFoundError(f"Story notes not found: {story_notes_path}\nGenerate story notes first using: python generate_tournament_commentary_v2.py {teg_num}")
 
@@ -808,7 +808,7 @@ def generate_main_report(teg_num):
     main_report = message.content[0].text
 
     # Save output
-    output_path = f"streamlit/commentary/outputs/teg_{teg_num}_main_report.md"
+    output_path = f"data/commentary/drafts/teg_{teg_num}_main_report.md"
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write(main_report)
 
@@ -830,7 +830,7 @@ def generate_brief_summary(teg_num):
     print(f"{'='*60}\n")
 
     # Read story notes file
-    story_notes_path = f"streamlit/commentary/outputs/teg_{teg_num}_story_notes.md"
+    story_notes_path = f"data/commentary/drafts/teg_{teg_num}_story_notes.md"
     if not os.path.exists(story_notes_path):
         raise FileNotFoundError(f"Story notes not found: {story_notes_path}\nGenerate story notes first using: python generate_tournament_commentary_v2.py {teg_num}")
 
@@ -886,7 +886,7 @@ def generate_brief_summary(teg_num):
     brief_summary = message.content[0].text
 
     # Save output
-    output_path = f"streamlit/commentary/outputs/teg_{teg_num}_brief_summary.md"
+    output_path = f"data/commentary/drafts/teg_{teg_num}_brief_summary.md"
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write(brief_summary)
 
@@ -1307,7 +1307,7 @@ def generate_complete_story_notes(teg_num):
 
     story_notes = build_story_notes_file(teg_num, round_stories, synthesis, all_data)
 
-    output_path = f"streamlit/commentary/outputs/teg_{teg_num}_story_notes.md"
+    output_path = f"data/commentary/drafts/teg_{teg_num}_story_notes.md"
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write(story_notes)
 
@@ -1352,7 +1352,7 @@ def generate_story_notes_up_to_round(teg_num, completed_rounds):
     for i, round_notes in enumerate(round_stories, 1):
         content += round_notes + "\n\n"
 
-    output_path = f"streamlit/commentary/outputs/teg_{teg_num}_story_notes_partial.md"
+    output_path = f"data/commentary/drafts/teg_{teg_num}_story_notes_partial.md"
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write(content)
 

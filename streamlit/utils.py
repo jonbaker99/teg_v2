@@ -146,6 +146,78 @@ def read_from_github(file_path: str) -> pd.DataFrame or str:
         # For other files, return decoded string
         return base64.b64decode(content.content).decode('utf-8')
 
+
+def read_text_from_github(file_path: str) -> str:
+    """Reads a text file from the GitHub repository.
+
+    This function is optimized for reading text files (e.g., .md, .txt, .json)
+    from the GitHub repository. It returns the content as a decoded string.
+
+    Args:
+        file_path (str): The path to the file in the GitHub repository.
+
+    Returns:
+        str: The decoded content of the file as a string.
+    """
+    from github import Github
+    import base64
+
+    token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
+    g = Github(token)
+    repo = g.get_repo(GITHUB_REPO)
+    content = repo.get_contents(file_path, ref=get_current_branch())
+
+    # Decode and return as string
+    return base64.b64decode(content.content).decode('utf-8')
+
+
+def write_text_to_github(file_path: str, content: str, commit_message: str = "Update text file"):
+    """Writes a text file to the GitHub repository.
+
+    This function writes string content to the specified file path in the GitHub
+    repository. If the file already exists, it will be updated. Otherwise,
+    a new file will be created.
+
+    Args:
+        file_path (str): The path to the file in the GitHub repository.
+        content (str): The text content to write to the file.
+        commit_message (str, optional): The commit message to use for the
+            write operation. Defaults to "Update text file".
+    """
+    from github import Github
+    import base64
+
+    token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
+    g = Github(token)
+    repo = g.get_repo(GITHUB_REPO)
+
+    # Encode string content to bytes then base64
+    content_bytes = content.encode('utf-8')
+    encoded_content = base64.b64encode(content_bytes).decode('utf-8')
+
+    # Try to get existing file (to get SHA for update)
+    try:
+        existing_file = repo.get_contents(file_path, ref=get_current_branch())
+        # Update existing file
+        repo.update_file(
+            file_path,
+            commit_message,
+            encoded_content,
+            existing_file.sha,
+            branch=get_current_branch()
+        )
+        logger.info(f"Updated {file_path} in GitHub")
+    except Exception:
+        # File doesn't exist, create new
+        repo.create_file(
+            file_path,
+            commit_message,
+            encoded_content,
+            branch=get_current_branch()
+        )
+        logger.info(f"Created {file_path} in GitHub")
+
+
 def write_to_github(file_path: str, data: pd.DataFrame or str, commit_message: str = "Update data"):
     """Writes a file to the GitHub repository.
 
@@ -330,9 +402,9 @@ def read_file(file_path: str) -> pd.DataFrame:
     Raises:
         ValueError: If the file type is not supported.
     """
-    if os.getenv('RAILWAY_ENVIRONMENT'):
-        volume_path = f"/mnt/data_repo/{file_path}"
-        
+    if _is_railway():
+        volume_path = _get_volume_path(file_path)
+
         # Simple check: does file exist in volume?
         if os.path.exists(volume_path):
             # Fast path: read from volume (NO API calls)
@@ -347,28 +419,28 @@ def read_file(file_path: str) -> pd.DataFrame:
                 logger.warning(f"Error reading from volume {volume_path}: {e}")
                 # If volume read fails, fall back to GitHub
                 pass
-        
+
         # File not cached or volume read failed: download and cache
         try:
             data = read_from_github(file_path)
-            
+
             # Cache to volume for next time
-            os.makedirs(os.path.dirname(volume_path), exist_ok=True)
-            
+            _ensure_volume_dir(volume_path)
+
             if file_path.endswith('.csv'):
                 data.to_csv(volume_path, index=False)
             elif file_path.endswith('.parquet'):
                 data.to_parquet(volume_path, index=False)
-            
+
             logger.info(f"Cached {file_path} to volume for future reads")
             return data
-            
+
         except Exception as e:
             logger.error(f"Error reading {file_path} from GitHub: {e}")
             raise
     else:
         # Local development unchanged
-        local_path = BASE_DIR / file_path
+        local_path = _get_local_path(file_path)
         if file_path.endswith('.csv'):
             return pd.read_csv(local_path)
         elif file_path.endswith('.parquet'):
@@ -398,12 +470,12 @@ def write_file(file_path: str, data: pd.DataFrame, commit_message: str = "Update
     Raises:
         ValueError: If the file type is not supported.
     """
-    if os.getenv('RAILWAY_ENVIRONMENT'):
+    if _is_railway():
         # Write to volume first (fast local write)
-        volume_path = f"/mnt/data_repo/{file_path}"
+        volume_path = _get_volume_path(file_path)
 
         try:
-            os.makedirs(os.path.dirname(volume_path), exist_ok=True)
+            _ensure_volume_dir(volume_path)
 
             if file_path.endswith('.csv'):
                 data.to_csv(volume_path, index=False)
@@ -433,13 +505,119 @@ def write_file(file_path: str, data: pd.DataFrame, commit_message: str = "Update
 
     else:
         # Local development unchanged
-        local_path = BASE_DIR / file_path
+        local_path = _get_local_path(file_path)
         if file_path.endswith('.csv'):
             data.to_csv(local_path, index=False)
         elif file_path.endswith('.parquet'):
             data.to_parquet(local_path, index=False)
         else:
             raise ValueError(f"Unsupported file type: {file_path}")
+
+    # Clear caches after successful write (only if not deferred)
+    if not defer_github:
+        st.cache_data.clear()
+
+
+def read_text_file(file_path: str) -> str:
+    """Reads a text file from the local filesystem or a mounted volume.
+
+    This function reads text files (e.g., .md, .txt, .json) from a mounted volume
+    if running on Railway, or from the local filesystem if running locally.
+    If the file is not found in the volume on Railway, it fetches from GitHub
+    and caches it to the volume.
+
+    Args:
+        file_path (str): The path to the text file.
+
+    Returns:
+        str: The content of the file as a string.
+    """
+    if _is_railway():
+        volume_path = _get_volume_path(file_path)
+
+        # Simple check: does file exist in volume?
+        if os.path.exists(volume_path):
+            # Fast path: read from volume (NO API calls)
+            try:
+                with open(volume_path, 'r', encoding='utf-8') as f:
+                    return f.read()
+            except Exception as e:
+                logger.warning(f"Error reading from volume {volume_path}: {e}")
+                # If volume read fails, fall back to GitHub
+                pass
+
+        # File not cached or volume read failed: download and cache
+        try:
+            content = read_text_from_github(file_path)
+
+            # Cache to volume for next time
+            _ensure_volume_dir(volume_path)
+            with open(volume_path, 'w', encoding='utf-8') as f:
+                f.write(content)
+
+            logger.info(f"Cached {file_path} to volume for future reads")
+            return content
+
+        except Exception as e:
+            logger.error(f"Error reading {file_path} from GitHub: {e}")
+            raise
+    else:
+        # Local development
+        local_path = _get_local_path(file_path)
+        return local_path.read_text(encoding='utf-8')
+
+
+def write_text_file(file_path: str, content: str, commit_message: str = "Update text file", defer_github: bool = False):
+    """Writes a text file to the local filesystem or a mounted volume.
+
+    This function writes text files to a mounted volume and optionally to GitHub
+    if running on Railway, or to the local filesystem if running locally.
+
+    Args:
+        file_path (str): The path to the text file.
+        content (str): The text content to write.
+        commit_message (str, optional): The commit message for the GitHub
+            commit. Defaults to "Update text file".
+        defer_github (bool, optional): If True, the GitHub push is deferred
+            for a batch commit. Defaults to False.
+
+    Returns:
+        dict or None: A dictionary with file information for batch commits
+        if `defer_github` is True, otherwise None.
+    """
+    if _is_railway():
+        # Write to volume first (fast local write)
+        volume_path = _get_volume_path(file_path)
+
+        try:
+            _ensure_volume_dir(volume_path)
+            with open(volume_path, 'w', encoding='utf-8') as f:
+                f.write(content)
+
+            logger.info(f"Successfully wrote {file_path} to volume")
+
+        except Exception as e:
+            logger.error(f"Error writing to volume {volume_path}: {e}")
+            # Continue to GitHub write even if volume fails
+
+        # Write to GitHub (for cross-environment sync) unless deferred
+        if not defer_github:
+            try:
+                write_text_to_github(file_path, content, commit_message)
+                logger.info(f"Successfully wrote {file_path} to GitHub")
+            except Exception as e:
+                logger.error(f"Error writing to GitHub: {e}")
+                raise  # Re-raise GitHub errors as they're critical
+        else:
+            # Return file info for later batch commit
+            logger.info(f"Deferred GitHub push for {file_path}")
+            return {'file_path': file_path, 'content': content}
+
+    else:
+        # Local development
+        local_path = _get_local_path(file_path)
+        local_path.parent.mkdir(parents=True, exist_ok=True)  # Ensure directory exists
+        local_path.write_text(content, encoding='utf-8')
 
     # Clear caches after successful write (only if not deferred)
     if not defer_github:

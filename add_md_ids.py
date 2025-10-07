@@ -130,7 +130,7 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Error: Missing folder path argument.")
         print(f"Usage: python {sys.argv[0]} <folder_path>")
-        print(f"Example: python {sys.argv[0]} /streamlit/commentary")
+        print(f"Example: python {sys.argv[0]} data/commentary")
         sys.exit(1)
 
     folder_path = sys.argv[1]

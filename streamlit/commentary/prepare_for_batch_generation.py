@@ -12,7 +12,7 @@ from generate_commentary import load_tournament_data
 
 # Configuration
 DATA_DIR = Path("data")
-OUTPUT_DIR = Path("streamlit/commentary/outputs")
+OUTPUT_DIR = Path("data/commentary/drafts")
 
 # File paths
 tournament_summary_path = DATA_DIR / "commentary_tournament_summary.parquet"

@@ -79,7 +79,7 @@ except Exception:
     write_file = None  # keep page functional if utils isn't importable here
 
 # === Constants from your repo behavior ===
-REPO_OUTPUTS = Path("streamlit/commentary/outputs")
+REPO_OUTPUTS = Path("data/commentary/drafts")
 # Module writes here, e.g. teg_17_story_notes.md / _main_report.md / _brief_summary.md
 
 # Railway volume mount convention used by your utils: /mnt/data_repo/<file_path>
@@ -273,7 +273,7 @@ else:
 with st.expander("Where files go / why this path"):
     st.markdown(
         f"""
-- The generator writes **locally** to `streamlit/commentary/outputs/…` (inside the app container).  
+- The generator writes **locally** to `data/commentary/drafts/…` (inside the app container).  
 - This page then copies each `.md` to your **Railway volume** at:
   ```
   {VOLUME_COMMENTARY}/<filename>.md

@@ -19,7 +19,7 @@ from generate_commentary import (
 
 # Configuration
 DATA_DIR = Path("data")
-OUTPUT_DIR = Path("streamlit/commentary/outputs")
+OUTPUT_DIR = Path("data/commentary/drafts")
 
 # Ensure output directory exists
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

@@ -12,12 +12,12 @@ st.title("📰 Tournament Commentary")
 # --- Locate commentary folder ---
 here = Path(__file__).resolve()
 candidates = [
-    here.parent / "commentary" / "to_use",           # .../streamlit/pages/commentary/outputs
-    here.parent.parent / "commentary" / "to_use",    # .../streamlit/commentary/outputs
+    here.parent.parent.parent / "data" / "commentary",    # .../teg_v2/data/commentary (from streamlit folder)
+    here.parent.parent / "data" / "commentary",           # .../data/commentary (from root)
 ]
 commentary_dir = next((p for p in candidates if p.exists()), None)
 if commentary_dir is None:
-    st.error("Couldn't find commentary folder at `streamlit/commentary/outputs`.")
+    st.error("Couldn't find commentary folder at `data/commentary`.")
     st.stop()
 
 # --- Fixed parameters ---
