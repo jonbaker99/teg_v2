@@ -15,8 +15,6 @@ from io import BytesIO, StringIO
 import subprocess
 from datetime import datetime
 
-#print("utils module is being imported")
-
 # Configure Logging
 #logging.basicConfig(level=logging.INFO)
 logging.basicConfig(level=logging.ERROR)
@@ -268,6 +266,53 @@ def batch_commit_to_github(files_data: list, commit_message: str = "Batch update
 
 # Enhanced read_file and write_file functions for utils.py
 # Replace your existing functions with these
+
+# === CENTRALIZED PATH MANAGEMENT ===
+# These helper functions provide a single source of truth for file paths
+# across Railway and local environments. Update these functions to change
+# path logic for all read/write operations.
+
+def _is_railway() -> bool:
+    """Check if running on Railway environment.
+
+    Returns:
+        bool: True if running on Railway, False for local development
+    """
+    return bool(os.getenv('RAILWAY_ENVIRONMENT'))
+
+
+def _get_volume_path(file_path: str) -> str:
+    """Get Railway volume path for file.
+
+    Args:
+        file_path (str): Relative file path (e.g., 'data/file.csv')
+
+    Returns:
+        str: Absolute volume path (e.g., '/mnt/data_repo/data/file.csv')
+    """
+    return f"/mnt/data_repo/{file_path}"
+
+
+def _get_local_path(file_path: str) -> Path:
+    """Get local filesystem path for file.
+
+    Args:
+        file_path (str): Relative file path (e.g., 'data/file.csv')
+
+    Returns:
+        Path: Absolute local path based on BASE_DIR
+    """
+    return BASE_DIR / file_path
+
+
+def _ensure_volume_dir(volume_path: str) -> None:
+    """Ensure parent directory exists for volume path.
+
+    Args:
+        volume_path (str): Full path to file in volume
+    """
+    os.makedirs(os.path.dirname(volume_path), exist_ok=True)
+
 
 def read_file(file_path: str) -> pd.DataFrame:
     """Reads a file from the local filesystem or a mounted volume.
