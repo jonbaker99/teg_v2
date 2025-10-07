@@ -351,6 +351,8 @@ try:
             # Try to load and render the report
             try:
                 md_text = load_markdown(report_file_path)
+                if teg_num < 8: 
+                    st.caption("NB: The TEG Trophy winners before TEG 8 were decided by best net; the report here is written based on Stableford so finishing positions may be inaccurate")
                 render_report(md_text)
             except FileNotFoundError:
                 st.info(f"No report available yet for {chosen_teg}.")
