@@ -12,6 +12,16 @@ Functions are designed to feed LLM story generation.
 import pandas as pd
 
 
+def safe_int(value, default=0):
+    """Safely convert value to int, handling NaN and None."""
+    if pd.isna(value) or value is None:
+        return default
+    try:
+        return int(value)
+    except (ValueError, TypeError):
+        return default
+
+
 def identify_round_momentum_shifts(round_data):
     """
     Identify key momentum shifts and turning points in the round.
@@ -48,7 +58,7 @@ def identify_round_momentum_shifts(round_data):
                     'hole': hole,
                     'from': prev_leader,
                     'to': current_leader,
-                    'new_leader_total': int(hole_positions.iloc[0]['Tournament_Cumulative_Stableford'])
+                    'new_leader_total': safe_int(hole_positions.iloc[0]['Tournament_Cumulative_Stableford'])
                 })
 
             prev_leader = current_leader
@@ -78,7 +88,7 @@ def identify_round_momentum_shifts(round_data):
                 if player in prev_hole_pos.index:
                     change = prev_hole_pos.loc[player, 'Position'] - curr_hole_pos.loc[player, 'Position']
                     if abs(change) >= 2:  # Moved up/down 2+ places
-                        position_changes.append({'player': player, 'change': int(change)})
+                        position_changes.append({'player': player, 'change': safe_int(change)})
 
             if event_count >= 3 or is_lead_change or len(position_changes) >= 2:
                 critical_holes.append({
@@ -158,9 +168,9 @@ def analyze_position_changes(round_data):
 
         position_changes.append({
             'player': player,
-            'starting_position': int(starting_position),
-            'ending_position': int(ending_position),
-            'change': int(change),
+            'starting_position': safe_int(starting_position),
+            'ending_position': safe_int(ending_position),
+            'change': safe_int(change),
             'moved_up': change > 0,
             'moved_down': change < 0,
             'stayed_same': change == 0
@@ -218,9 +228,9 @@ def get_round_storylines(round_data):
         best_stableford = max(round_summary, key=lambda x: x['Round_Score_Stableford'])
         storylines['round_winner'] = {
             'player': best_stableford['Player'],
-            'score': int(best_stableford['Round_Score_Stableford']),
-            'gross': int(best_stableford['Round_Score_Gross']),
-            'rank': int(best_stableford['Player_Round_Rank_Stableford'])
+            'score': safe_int(best_stableford['Round_Score_Stableford']),
+            'gross': safe_int(best_stableford['Round_Score_Gross']),
+            'rank': safe_int(best_stableford['Player_Round_Rank_Stableford'])
         }
 
         # Final leader
@@ -228,7 +238,7 @@ def get_round_storylines(round_data):
         second_place = sorted(round_summary, key=lambda x: x['Cumulative_Tournament_Rank_Stableford'])[1] if len(round_summary) > 1 else None
 
         storylines['lead_battle']['final_leader'] = final_leader['Player']
-        storylines['lead_battle']['final_margin'] = int(abs(second_place['Gap_To_Leader_After_Round_Stableford'])) if second_place else 0
+        storylines['lead_battle']['final_margin'] = safe_int(abs(second_place['Gap_To_Leader_After_Round_Stableford'])) if second_place else 0
 
     return storylines
 
