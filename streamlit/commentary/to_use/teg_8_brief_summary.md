@@ -1,5 +1,0 @@
-**TEG 8 (2015): Lisbon Coast, Portugal**
-
-Gregg Williams claimed his second Trophy with wire-to-wire dominance across four Portuguese courses, leading 63 of 72 holes and winning by 12 points. David Mullin secured his seventh Green Jacket by six strokes despite finishing fourth in the Stableford, sealing victory with a course-record 88 at Oitavos Dunes after trading the lead five times with Jon Baker over the final two rounds.
-
-Williams built an 11-point Trophy cushion after Round 2 and never looked back, surviving blow-ups at H12 (quintuple bogey) and back-to-back implosions on H10-H11 in Round 3. Alex Baker climbed to second place with a 39-point final round, though catastrophic meltdowns at H15 and H18 left him with 13 zero-point holes for the week. Stuart Neumann earned his second Wooden Spoon, finishing 49 points behind with 23 blobs—including nightmare H10s across all four rounds.

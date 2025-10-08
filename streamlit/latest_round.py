@@ -25,7 +25,7 @@ import streamlit as st
 import pandas as pd
 
 # Import data loading functions from main utils
-from utils import get_ranked_round_data, load_all_data, load_datawrapper_css, read_file, STREAKS_PARQUET
+from utils import get_ranked_round_data, load_all_data, load_datawrapper_css, read_file, read_text_file, STREAKS_PARQUET
 from make_charts import create_round_graph
 
 # Import latest round helper functions
@@ -99,7 +99,7 @@ with col2:
     st.session_state.rd_r = rd_r
 
 # === MAIN TAB STRUCTURE ===
-main_tabs = st.tabs(["Scoreboards", "Scorecard", "Scoring", "Streaks", "Records & PBs"])
+main_tabs = st.tabs(["Scoreboards", "Scorecard", "Report", "Scoring", "Streaks", "Records & PBs"])
 
 # === SCOREBOARDS TAB ===
 with main_tabs[0]:
@@ -167,8 +167,27 @@ with main_tabs[1]:
 
     st.markdown(scorecard_html, unsafe_allow_html=True)
 
-# === SCORING TAB ===
+# === REPORT TAB ===
 with main_tabs[2]:
+    st.markdown("#### Round Report")
+
+    # Extract TEGNum from TEG string (e.g., "TEG 17" -> 17)
+    teg_num = int(teg_r.split()[1])
+
+    # Construct file path for round report
+    report_path = f"data/commentary/round_reports/teg_{teg_num}_round_{rd_r}_report.md"
+
+    try:
+        # Load the report using read_text_file for Railway compatibility
+        report_content = read_text_file(report_path)
+        st.markdown(report_content)
+    except FileNotFoundError:
+        st.info(f"No round report available for TEG {teg_num} Round {rd_r}")
+    except Exception as e:
+        st.error(f"Error loading round report: {str(e)}")
+
+# === SCORING TAB ===
+with main_tabs[3]:
     st.markdown("#### Scoring")
 
     # Scoring type toggle
@@ -227,7 +246,7 @@ with main_tabs[2]:
     )
 
 # === STREAKS TAB ===
-with main_tabs[3]:
+with main_tabs[4]:
     st.markdown("#### Streaks")
 
     # Load streak data
@@ -310,7 +329,7 @@ with main_tabs[3]:
         st.info("No streak data available for this round.")
 
 # === RECORDS & PBs TAB ===
-with main_tabs[4]:
+with main_tabs[5]:
     st.markdown("#### Records & Personal Bests")
 
     from helpers.records_identification import (

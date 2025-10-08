@@ -7,140 +7,123 @@
 ## Round Summary
 - **Round Winner:** John PATTERSON (39 pts Stableford, 23 gross)
 - **Tournament Leader:** John PATTERSON (39 pts total)
-- **Biggest Mover:** Multiple players started from scratch (Round 1)
+- **Biggest Mover:** Multiple players tied (all starting Round 1)
 - **Drama Level:** High
 
 ## Key Moments
-- H3: Jon BAKER takes lead from Alex BAKER (lead change #1)
-- H5: John PATTERSON climbs 2 positions with strong scoring
-- H7: Jon BAKER's front nine surge (22 pts) establishes early control
-- H12: Easiest hole on course (Par 5, avg 0.4 over par) - scoring opportunity
-- H16: John PATTERSON seizes lead from Jon BAKER (lead change #2, decisive move)
-- H17: Back nine momentum builds - PATTERSON posts 23 pts on back nine
-- H18: Final position shuffling - Gregg WILLIAMS up 2, Alex BAKER down 2
-- H18: Hardest closing hole (avg 2.4 over par) - drama to finish
+- H3: Jon BAKER takes early lead from Alex BAKER (8 pts total)
+- H5: John PATTERSON surges up 2 positions (hardest hole of the day, avg +2.8 vs par)
+- H9: Strong scoring opportunity for field (easiest of front nine, avg +0.8 vs par)
+- H12: Field capitalizes on easiest hole (Par 5, avg +0.4 vs par, avg 2.8 pts)
+- H16: John PATTERSON seizes lead from Jon BAKER (37 pts total)
+- H18: Final hole drama as 7 scoring events occur, Gregg WILLIAMS jumps 2 positions
+- H18: Alex BAKER drops 2 positions on difficult closer (avg +2.4 vs par)
 
 ## How Positions Changed
-- **Start of round:** All players tied (Round 1 start)
+- **Start of round:** All players tied (Round 1)
 - **Key shifts:** 
-  - H3: Jon BAKER emerges as early leader
+  - H3: Jon BAKER establishes early lead
   - H5: John PATTERSON moves up 2 positions
-  - H16: John PATTERSON takes outright lead
-  - H18: Final positions settle with multiple changes
-- **End of round:** PATTERSON (1st), Jon BAKER (2nd), WILLIAMS/MULLIN tied (3rd), Alex BAKER (5th)
+  - H16: John PATTERSON takes tournament lead
+  - H18: Final shake-up with Gregg WILLIAMS +2, Alex BAKER -2
+- **End of round:** 1st: John PATTERSON (39 pts), 2nd: Jon BAKER (38 pts), T3rd: Gregg WILLIAMS & David MULLIN (33 pts), 5th: Alex BAKER (32 pts)
 
 ## Round Breakdown
 **Holes 1-6 (Opening):**
-- Jon BAKER dominates opening six (15 pts) vs field average (9-10 pts)
-- H5 proves toughest on course (Par 4, avg 2.8 over par)
-- Alex BAKER holds early lead through H2
-- John PATTERSON steady with 9 pts
-- David MULLIN struggles (only 6 pts through first six)
+- Jon BAKER dominates opening stretch (15 pts in first six holes)
+- H5 proves hardest hole of the day (Par 4, avg +2.8 vs par)
+- John PATTERSON steady start (9 pts), positions himself for mid-round charge
+- Alex BAKER struggles early (9 pts first six)
 
 **Holes 7-12 (Middle):**
-- John PATTERSON surges with 16 pts in second six-hole split
-- H12 provides scoring feast (Par 5, avg 0.4 over par, easiest hole)
-- Jon BAKER adds 12 pts but loses momentum from opening
-- David MULLIN recovers (12 pts in middle six)
-- Gregg WILLIAMS consistent (11 pts)
+- John PATTERSON explodes for 16 pts in second six holes
+- H12 provides relief as easiest hole (Par 5, avg +0.4 vs par, 2.8 avg pts)
+- David MULLIN finds form (12 pts in middle stretch after slow 6-pt start)
+- Jon BAKER maintains lead with solid 12 pts
 
 **Holes 13-18 (Closing):**
-- David MULLIN explodes on back nine (23 pts total, 15 pts in final six)
-- John PATTERSON matches with 14 pts in final six (23 pts back nine)
-- Jon BAKER fades slightly (11 pts final six, 16 pts back nine)
+- John PATTERSON sustains pressure with 14 pts on back stretch
 - H16: Critical lead change as PATTERSON overtakes Jon BAKER
-- H18: Brutal closer (avg 2.4 over par) creates final position changes
+- David MULLIN surges with 15 pts over final six holes
+- H18: Dramatic closer with 7 scoring events, avg +2.4 vs par
+- Jon BAKER holds on for 2nd despite 11-pt finish
 
 ## Round Stats
-- **Hardest hole:** H5 (Par 4, avg 2.8 over par)
-- **Easiest hole:** H12 (Par 5, avg 0.4 over par)
-- **Best individual performance:** John PATTERSON (39 pts Stableford, 23 gross)
-- **Strongest nine:** David MULLIN back nine (23 pts) and John PATTERSON back nine (23 pts) - tied
-- **Best six-hole split:** John PATTERSON holes 7-12 (16 pts)
+- **Hardest hole:** H5 (Par 4, avg +2.8 vs par)
+- **Easiest hole:** H12 (Par 5, avg +0.4 vs par)
+- **Best individual performance:** John PATTERSON (39 pts, 23 gross)
+- **Best front nine:** Jon BAKER (22 pts)
+- **Best back nine:** David MULLIN & John PATTERSON (both 23 pts)
 
 ## Player Notes
-- **John PATTERSON:** 39 pts total, leads by 1 - balanced scoring (16 front/23 back), seized lead at H16, closed strong
-- **Jon BAKER:** 38 pts total, 2nd place (-1) - explosive start (22 pts front nine, 15 pts first six), couldn't maintain pace on back nine (16 pts)
-- **Gregg WILLIAMS:** 33 pts total, T3rd (-6) - steady throughout (15 front/18 back), gained 2 positions on H18
-- **David MULLIN:** 33 pts total, T3rd (-6) - struggled early (6 pts first six), massive back nine recovery (23 pts), finished with 15 pts in final six
-- **Alex BAKER:** 32 pts total, 5th (-7) - led early, strong middle six (14 pts), dropped 2 positions on H18, back nine surge (17 pts) not enough
+- **John PATTERSON:** 39 pts (16-23 split) - Massive middle six (16 pts) and strong finish (14 pts) secures Round 1 lead by 1 pt
+- **Jon BAKER:** 38 pts (22-16 split) - Blazing start (15 pts first six) but couldn't maintain pace, leads by 1 pt
+- **Gregg WILLIAMS:** 33 pts (15-18 split) - Consistent throughout, strong H18 moves him up 2 positions to T3rd, 6 pts back
+- **David MULLIN:** 33 pts (10-23 split) - Disastrous start (6 pts first six) but incredible recovery (23 pts back nine) to reach T3rd
+- **Alex BAKER:** 32 pts (15-17 split) - Slow start (9 pts first six) followed by strong middle (14 pts), drops 2 positions at H18 to finish 5th, 7 pts back
+
+---
 
 ---
 
 ## Round Report
 
-## Patterson's Back-Nine Blitz Seizes Opening Lead
-**Praia D'El Rey • 05/10/2024 • 3 rounds remaining**
+## Patterson Surges from Mid-Round to Seize Opening Lead
+**Praia D'El Rey • 05/10/2024 • Round 1 of 4**
 
 ### Round Summary
 
-The opening salvo of TEG 17 at Praia D'El Rey belonged to John Patterson, whose devastating back-nine charge of 23 points propelled him to a narrow one-point lead after a day of relentless lead changes. Patterson's 39-point haul edged Jon Baker (38 points), who blazed through the opening six holes with 15 points but couldn't sustain the pace when it mattered most.
+The TEG Trophy burst into life at Praia D'El Rey as John Patterson produced a commanding 39-point Stableford display to edge Jon Baker by a single point after a dramatic opening round. Baker's blistering start—15 points through six holes—looked to have set the template, but Patterson's explosive middle stretch of 16 points flipped the script. With three rounds still to play, both men have established themselves as early frontrunners, though a tightly bunched chasing pack remains within striking distance.
 
-The decisive blow came at the par-4 16th, where Patterson wrestled the lead from Baker and never looked back. Behind them, David Mullin authored the round's most remarkable comeback story—stumbling to just 6 points through the first six holes before exploding for 23 on the back nine to salvage a share of third place with Gregg Williams at 33 points. Alex Baker's early promise faded to fifth at 32 points after losing two positions on the brutal closing hole.
-
-With three rounds remaining and gaps of just 1-7 points separating the field, this tournament remains wide open. Patterson holds the slimmest of margins, while Baker lurks ominously close and the chasing pack remains well within striking distance.
+The course showed its teeth early, with the par-4 5th proving the day's toughest examination at an average of 2.8-over-par. Yet it also offered rewards for the bold, particularly at the par-5 12th where the field averaged 2.8 Stableford points. Patterson's ability to capitalize on scoring opportunities whilst limiting damage on the brutish holes proved decisive. The final hole provided late drama as seven scoring events unfolded, with Gregg Williams jumping two positions and Alex Baker tumbling two spots to complete a chaotic closer.
 
 ### How It Unfolded
 
-**Holes 1-6: Baker's Blitz Establishes Early Control**
+Jon Baker announced his intentions emphatically over the opening stretch. Fifteen points through six holes—including mastering the treacherous par-4 5th where the field hemorrhaged strokes—gave him an early stranglehold. His front-nine 22 points represented the day's finest opening salvo, and with Patterson posting a modest nine points through the same stretch, Baker appeared poised to pull clear.
 
-Jon Baker emerged from the opening six holes with a commanding statement of intent, posting 15 points while the field averaged just 9-10. Alex Baker briefly held the early lead through the second hole before his namesake surged ahead at the par-5 third. Patterson played the steady accumulator through this stretch with 9 points, while Mullin's tournament got off to a nightmare start with just 6 points. The par-4 fifth—the course's toughest hole at an average of 2.8 over par—proved a brutal examination for everyone, setting the tone for a demanding test ahead.
+But Patterson had other ideas. The middle six holes became his canvas, a 16-point masterclass that swung the momentum decisively. Whilst others struggled to find rhythm, Patterson clicked through the gears, building relentlessly towards the back nine. David Mullin, marooned in the pack after a disastrous six-point start, suddenly found his range with 12 points through the middle section—a hint of the fireworks to come.
 
-**Holes 7-12: Patterson's Surge Changes Everything**
+The turning point arrived at the par-4 16th. Patterson, carrying 37 points and riding the wave of his mid-round surge, seized the outright lead from Baker. The momentum shift was palpable. Baker, who'd accumulated 22 points on the front nine, could only muster 16 on the return—still solid, but insufficient to hold off Patterson's sustained assault.
 
-The middle six holes belonged to Patterson, who detonated for 16 points to completely reshape the leaderboard. The par-5 12th—the course's easiest hole at just 0.4 over par—provided a scoring feast that Patterson exploited ruthlessly. Baker added 12 solid points but felt Patterson's momentum building behind him. Mullin showed signs of recovery with 12 points, while Williams maintained his consistent pace with 11. The foundations of Patterson's eventual victory were being laid hole by hole through this critical stretch.
+The drama crescendoed at the 18th, a brutal closer averaging 2.4-over-par. Seven scoring events in quick succession reshuffled the deck one final time. Gregg Williams, consistent throughout with a 15-18 split, pounced to leap two positions into a tie for third. Alex Baker, who'd battled back from his sluggish nine-point opening with a strong middle stretch, saw his hard work undone as he dropped two spots to fifth. Meanwhile, Mullin—author of the round's most remarkable comeback with 23 back-nine points—surged into a share of third alongside Williams.
 
-**Holes 13-18: Patterson Strikes, Mullin Roars Back**
-
-The closing stretch delivered high drama as Patterson posted 14 points in the final six to complete a magnificent 23-point back nine. The defining moment arrived at the 16th, where Patterson seized the lead from Baker for good. Mullin produced the round's most explosive finish with 15 points in the final six—capping his 23-point back nine that dragged him from disaster to contention. Baker managed 11 points in the closing stretch but his 16-point back nine couldn't match the leaders' intensity. The par-4 18th—averaging a brutal 2.4 over par—created final-hole chaos as Williams climbed two positions and Alex Baker dropped two in the standings. Patterson's nerve held firm when it mattered most.
+Patterson held his nerve, adding 14 points over the final six to post 39 and secure a one-point advantage heading into Saturday's second round.
 
 ### Standings After Round 1
 
-**Trophy (Stableford):**
-| Pos | Player | Round | Total | Gap |
-|-----|----------------|-------|-------|-----|
-| 1 | John PATTERSON | 39 | 39 | - |
-| 2 | Jon BAKER | 38 | 38 | -1 |
-| T3 | Gregg WILLIAMS | 33 | 33 | -6 |
-| T3 | David MULLIN | 33 | 33 | -6 |
-| 5 | Alex BAKER | 32 | 32 | -7 |
+**Round 1 Stableford:** J Patterson 39 | J Baker 38 | G Williams 33 | D Mullin 33 | A Baker 32
+**Round 1 Gross:** J Patterson +23 | A Baker +26 | J Baker +30 | G Williams +30 | D Mullin +37
 
-**Green Jacket (Gross):**
-| Pos | Player | Round | Total | Gap |
-|-----|----------------|-------|-------|-----|
-| 1 | John PATTERSON | 23 | 23 | - |
-| 2 | Jon BAKER | 30 | 30 | +7 |
-| 3 | Alex BAKER | 35 | 35 | +12 |
-| T4 | Gregg WILLIAMS | 36 | 36 | +13 |
-| T4 | David MULLIN | 36 | 36 | +13 |
+**Tournament Stableford:** J Patterson 39 | J Baker 38 | G Williams 33 | D Mullin 33 | A Baker 32
+**Tournament Gross:** J Patterson +23 | A Baker +26 | J Baker +30 | G Williams +30 | D Mullin +37
 
 ### What's At Stake
 
-**With 3 rounds remaining, everything remains in play.** Patterson's one-point cushion offers virtually no margin for error—Jon Baker needs just a two-point swing over the next three rounds to overtake him, requiring an average difference of less than one point per round. That's barely a single hole's difference over 54 holes of golf.
+**With three rounds remaining**, this is anyone's trophy. Patterson's one-point cushion over Baker amounts to a single dropped shot—hardly insurmountable with 54 holes left to play. Baker will rue his 11-point closing stretch but knows he possesses the firepower to reclaim the lead, needing to average just 40 points per round to reach 158 total. Patterson, meanwhile, must average 39.7 points to hit that same 158-point benchmark.
 
-The real intrigue lies in how tight this field remains. Williams and Mullin sit just six points back, needing to average two points per round better than Patterson—entirely achievable given both showed they can produce big numbers when conditions suit them. Even Alex Baker at seven points back needs only 2.3 points per round better than the leader to force his way back into contention.
+The chasing pack remains dangerously close. Williams and Mullin, tied on 33 points, sit just six back—roughly two good holes' worth of separation. Each needs to average 41.7 points over the final three rounds to catch the current pace. Even Alex Baker at 32 points (seven adrift) isn't out of it; three 42-point rounds would vault him right back into contention. With Praia D'El Rey showing both fangs and generosity on Friday, expect the leaderboard to remain fluid.
 
-The Trophy remains genuinely wide open—no one is out of it, and everyone is vulnerable. Patterson must maintain his consistency while withstanding the pressure of defending a lead that barely exists. Baker will take enormous confidence from his explosive front nine, knowing he has another gear if he can unlock it on the back. Meanwhile, Mullin's comeback narrative could fuel a genuine championship charge if he avoids another slow start. At the other end, no one has built enough of a gap to start worrying about the wooden spoon—yet.
+The Green Jacket gross competition mirrors the Stableford battle, with Patterson's 23-over round giving him a three-stroke advantage over Alex Baker. But with scoring unpredictable—the course yielding everything from disastrous blow-ups to bounty at the par-5s—nothing is settled. Saturday's second round will reveal whether Patterson can maintain his authority or whether Baker's explosive scoring ability will tip the balance once more.
 
 ### Round Highlights
 
-- **H16: The Turning Point** – Patterson seizes the lead from Jon Baker with the round's decisive blow
-- **H5: The Toughest Test** – The par-4 fifth averaging 2.8 over par separated the field early
-- **H12: The Scoring Feast** – Par-5 easiest hole (0.4 over par) provided crucial points for the leaders
-- **Mullin's Resurrection** – From 6 points through six holes to 23 on the back nine
-- **H18: Closing Chaos** – The brutal finishing hole (2.4 over par) shuffled positions one final time
+- Jon Baker's blistering 15-point opening stretch through six holes set the early pace
+- John Patterson's 16-point rampage through the middle six holes (H7-12) turned the round
+- The par-5 12th proved the field's best friend—easiest hole of the day at 0.4-over-par
+- David Mullin's stunning 23-point back nine (after just 10 on the front) marked the round's greatest revival
+- Final-hole chaos saw seven scoring events unfold, with Gregg Williams (+2) and Alex Baker (-2) making dramatic late moves
 
 ### Player Summaries
 
-**John PATTERSON:** Balanced brilliance with 16 front/23 back nine points, seized the lead at H16 and held firm through the demanding closer to establish a one-point advantage with rounds to spare.
+**John Patterson:** Methodical brilliance defined Patterson's 39-point opener. A patient nine-point start gave way to a 16-point explosion through the middle six, then he held firm with 14 points over the closing stretch to claim the round and take a slender one-point tournament lead.
 
-**Jon BAKER:** Explosive opening six holes (15 points) established early control, but his 16-point back nine couldn't match Patterson's late surge, leaving him one point adrift after leading through H15.
+**Jon Baker:** Scorched the opening six holes for 15 points and led comfortably at the turn with 22 on the front nine, but couldn't sustain the pace. His 16-point back nine, whilst respectable, allowed Patterson to slip past. Trails by just one point.
 
-**Gregg WILLIAMS:** Steady Eddie personified with 15 front/18 back—climbed two positions on the final hole to share third place, never spectacular but always accumulating.
+**Gregg Williams:** Rock-solid consistency—15 points out, 18 home—kept Williams in the hunt throughout. A smart final-hole score lifted him two spots into a tie for third, six points behind Patterson with everything still to play for.
 
-**David MULLIN:** Author of the round's most dramatic arc, stumbled to 6 points through six holes before exploding for 23 on the back nine (15 points in the final six) to salvage a share of third place.
+**David Mullin:** Authored the round's most dramatic recovery. After a catastrophic six-point opening stretch, Mullin roared back with 23 points on the back nine (joint-best of the day) to salvage a tie for third, just six off the lead.
 
-**Alex BAKER:** Led early and showed strength through the middle six (14 points), but dropped two positions on the brutal 18th as his 17-point back nine couldn't match the leaders' intensity.
+**Alex Baker:** Battled back from a sluggish nine-point start through six holes with a strong 14-point middle section, but the brutal 18th undid his good work. Dropped two positions on the final hole to finish fifth, seven points adrift but still within range.
 
 ---
 

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
 .teg-report {
     max-width: 800px;
     margin: 2rem auto;
@@ -23,7 +25,9 @@
     letter-spacing: 0.5px;
     font-weight: 700;
     padding-bottom: 0px;
+    padding-top:0px;
     /* color: forestgreen; */
+    text-transform: uppercase;
 }
 
 
@@ -36,11 +40,11 @@
     text-align: left;
     color: darkgrey;
     column-span: all;
-    margin: 0 0 14px 0;
+    margin: 6px 0 14px 0;
 }
 
 /* DROP CAPS IN FIRST PARAGRAPH */
-.teg-report .dateline + p::first-letter {
+.teg-report .tournament-overview + p::first-letter {
   float: left;
   font-size: 3.4em;       /* adjust size to taste */
   line-height: 0.9;
@@ -51,8 +55,42 @@
   /* font-family: 'Lato', serif; */
 }
 
+.at-a-glance-title{
+    margin-top: 0px;
+    display: none;
+}
 
-.teg-report h2, .teg-report h3 {
+.at-a-glance-box p{
+    margin-bottom: 0px;
+    /* padding: 6px; */
+}
+
+.at-a-glance-box .trophy-winner{
+    /* color: white; */
+    /* background-color: forestgreen; */
+    font-weight: 600;
+}
+
+
+.teg-report .standings{
+    margin-bottom: 2px;
+    /* color: rgb(101, 101, 101); */
+}
+
+.teg-report .standings-box{
+    border: 1px solid;
+    padding: 6px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+}
+
+
+.teg-report .standings-header{
+    font-weight: bold;
+}
+
+.teg-report h2, .teg-report h3,
+.teg-report .at-a-glance-title {
     column-span: all;
     text-align: left;
     margin-top: 14px;
@@ -60,6 +98,7 @@
     padding: 4px 0;
     font-size: 20px;
     color: forestgreen;
+    font-weight: 600;
 }
 
 .teg-report blockquote {

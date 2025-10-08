@@ -1,5 +1,0 @@
-TEG 17 was contested across four courses on Portugal's Lisbon Coast in 2024, returning to the area for consecutive years.
-
-Jon Baker claimed his fifth Trophy and fourth Green Jacket with wire-to-wire dominance, leading both competitions after every round. He won the Trophy by 18 points over David Mullin and the Jacket by 13 strokes, controlling 67 of 72 holes in Stableford and 70 of 72 in gross scoring—the most dominant performance in tournament history.
-
-The tournament's drama belonged to John Patterson's Round 2 implosion. Leading after Round 1, Patterson posted the worst round in TEG history—22 points with eight blobs—featuring catastrophic blow-ups at H13 (10 strokes) and H15 (11 strokes). Meanwhile, Mullin fired a tournament-record 47 points in Round 2, including back-to-back birdies at H9-H10, but couldn't overcome his Round 1 struggles. Gregg Williams earned his first Wooden Spoon despite leading the Jacket after Round 1.

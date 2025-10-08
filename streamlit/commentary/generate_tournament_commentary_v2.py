@@ -51,6 +51,11 @@ from data_loader import load_round_data, get_round_ending_context
 from prompts import ROUND_STORY_PROMPT, TOURNAMENT_SYNTHESIS_PROMPT, MAIN_REPORT_PROMPT, BRIEF_SUMMARY_PROMPT
 from utils import get_teg_rounds, write_text_file
 import anthropic
+from batch_api import (
+    create_batch_request, save_batch_requests, submit_batch,
+    poll_until_complete, get_batch_results, save_batch_info,
+    find_batch_info_file, load_batch_info, check_batch_status, list_recent_batches
+)
 
 # ========================
 # Utilities & Inspection
@@ -397,7 +402,7 @@ try:
     import streamlit as st
     def get_api_key():
         """Get Anthropic API key from Streamlit secrets or environment variables."""
-        try:
+        try:#
             if hasattr(st, 'secrets') and 'ANTHROPIC_API_KEY' in st.secrets:
                 return st.secrets['ANTHROPIC_API_KEY']
         except Exception:
@@ -626,10 +631,15 @@ def build_career_context(teg_num, players_in_teg):
 
     return career_context
 
-def generate_tournament_synthesis(round_stories, teg_num):
+def generate_tournament_synthesis(round_stories, teg_num, all_processed_data=None):
     """
     Generate tournament-level sections using all round stories.
     Note: Venue context is added directly after LLM generation (not in prompt).
+
+    Args:
+        round_stories: List of round story notes
+        teg_num: Tournament number
+        all_processed_data: Dict with all processed data including victory_context
     """
     print(f"\n  Generating tournament synthesis...")
 
@@ -671,16 +681,27 @@ def generate_tournament_synthesis(round_stories, teg_num):
     players_in_teg = tournament_summary['Player'].tolist()
     career_context = build_career_context(teg_num, players_in_teg)
 
+    # Get victory context if available
+    victory_context = None
+    if all_processed_data and 'victory_context' in all_processed_data:
+        victory_context = all_processed_data['victory_context']
+        victory_context_json = json.dumps(victory_context, indent=2, default=str)
+    else:
+        victory_context_json = "Not available"
+
 # Build prompt (NO venue context - that's added directly)
     # Don't format - keep static for caching
     system_prompt = TOURNAMENT_SYNTHESIS_PROMPT
-    
+
     # Pass variable data in user message
     user_message = f"""Round Summaries:
     {round_summaries_text}
 
     Tournament Data:
     {tournament_data_json}
+
+    Victory Context (use this to craft varied victory descriptions per Victory Classification Framework):
+    {victory_context_json}
 
     Historical Context:
     {historical_context}
@@ -748,17 +769,25 @@ def generate_tournament_synthesis(round_stories, teg_num):
 # LEVEL 3: Report Generation (from story notes)
 # ========================
 
-def generate_main_report(teg_num):
+def generate_main_report(teg_num, use_batch_api=False):
     """
     Generate full narrative tournament report from existing story notes.
     Reads story notes file and transforms structured bullets into prose.
+
+    Args:
+        teg_num: Tournament number
+        use_batch_api: If True, prepare for batch API instead of immediate generation
     """
+    if use_batch_api:
+        # Batch API mode handled separately - this shouldn't be called
+        raise ValueError("Batch API mode should use generate_reports_via_batch_api()")
+
     print(f"\n{'='*60}")
     print(f"GENERATING MAIN REPORT FOR TEG {teg_num}")
     print(f"{'='*60}\n")
 
     # Read story notes file
-    story_notes_path = f"data/commentary/drafts/teg_{teg_num}_story_notes.md"
+    story_notes_path = f"data/commentary/teg_{teg_num}_story_notes.md"
     if not os.path.exists(story_notes_path):
         raise FileNotFoundError(f"Story notes not found: {story_notes_path}\nGenerate story notes first using: python generate_tournament_commentary_v2.py {teg_num}")
 
@@ -830,16 +859,24 @@ def generate_main_report(teg_num):
 
     return main_report
 
-def generate_brief_summary(teg_num):
+def generate_brief_summary(teg_num, use_batch_api=False):
     """
     Generate concise 2-3 paragraph summary from existing story notes.
+
+    Args:
+        teg_num: Tournament number
+        use_batch_api: If True, prepare for batch API instead of immediate generation
     """
+    if use_batch_api:
+        # Batch API mode handled separately - this shouldn't be called
+        raise ValueError("Batch API mode should use generate_reports_via_batch_api()")
+
     print(f"\n{'='*60}")
     print(f"GENERATING BRIEF SUMMARY FOR TEG {teg_num}")
     print(f"{'='*60}\n")
 
     # Read story notes file
-    story_notes_path = f"data/commentary/drafts/teg_{teg_num}_story_notes.md"
+    story_notes_path = f"data/commentary/teg_{teg_num}_story_notes.md"
     if not os.path.exists(story_notes_path):
         raise FileNotFoundError(f"Story notes not found: {story_notes_path}\nGenerate story notes first using: python generate_tournament_commentary_v2.py {teg_num}")
 
@@ -932,6 +969,166 @@ def generate_reports_from_story_notes(teg_num, main_report=True, brief_summary=T
         results['brief_summary'] = generate_brief_summary(teg_num)
 
     return results
+
+
+def generate_reports_via_batch_api(teg_nums, main_report=True, brief_summary=True):
+    """
+    Generate tournament reports using Anthropic Batch API (50% cost reduction).
+
+    Args:
+        teg_nums: List of TEG numbers to process
+        main_report: Generate full narrative reports (default True)
+        brief_summary: Generate brief summaries (default True)
+
+    Returns:
+        Dict with generated reports
+    """
+    print("\n" + "="*60)
+    print("BATCH API MODE FOR TOURNAMENT REPORTS (50% cost reduction)")
+    print("="*60)
+
+    api_key = get_api_key()
+    if not api_key:
+        raise ValueError("ANTHROPIC_API_KEY not found in environment variables or Streamlit secrets")
+
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    batch_dir = "streamlit/commentary/batch_requests"
+    results_dir = "streamlit/commentary/batch_results"
+    os.makedirs(batch_dir, exist_ok=True)
+    os.makedirs(results_dir, exist_ok=True)
+
+    results = {}
+
+    # Phase 1: Main Reports (batched for prompt caching)
+    if main_report:
+        print("\nPHASE 1: Building main report batch requests...")
+        main_report_requests = []
+
+        for teg_num in teg_nums:
+            # Read story notes file
+            story_notes_path = f"data/commentary/teg_{teg_num}_story_notes.md"
+            if not os.path.exists(story_notes_path):
+                print(f"  ✗ Story notes not found for TEG {teg_num}")
+                continue
+
+            with open(story_notes_path, 'r', encoding='utf-8') as f:
+                story_notes = f.read()
+
+            print(f"  Preparing TEG {teg_num}...")
+
+            user_message = f"Story Notes:\n\n{story_notes}"
+
+            request = create_batch_request(
+                custom_id=f"TEG{teg_num}_main_report",
+                model="claude-sonnet-4-5",
+                max_tokens=8000,
+                system_prompt=MAIN_REPORT_PROMPT,
+                user_message=user_message,
+                use_cache=True
+            )
+            main_report_requests.append(request)
+
+        if main_report_requests:
+            # Save and submit main reports batch
+            batch_file = f"{batch_dir}/main_reports_{timestamp}.jsonl"
+            save_batch_requests(main_report_requests, batch_file)
+
+            print("\nSubmitting main reports batch to Anthropic...")
+            batch_info = submit_batch(batch_file, api_key)
+            main_reports_batch_id = batch_info['batch_id']
+            save_batch_info(batch_info, results_dir)
+
+            print("\nPolling for main reports completion...")
+            poll_until_complete(main_reports_batch_id, api_key, check_interval=60)
+
+            print("\nRetrieving main report results...")
+            main_report_results = get_batch_results(main_reports_batch_id, api_key, results_dir)
+
+            # Save main reports to files
+            print("\nSaving main reports to files...")
+            for teg_num in teg_nums:
+                custom_id = f"TEG{teg_num}_main_report"
+                if custom_id in main_report_results and main_report_results[custom_id]:
+                    main_report_text = main_report_results[custom_id]
+                    output_path = f"data/commentary/drafts/teg_{teg_num}_main_report.md"
+                    write_text_file(
+                        output_path,
+                        main_report_text,
+                        commit_message=f"Generate main report for TEG {teg_num} (Batch API)"
+                    )
+                    results.setdefault(teg_num, {})['main_report'] = main_report_text
+                    print(f"  ✓ Saved: {output_path}")
+
+    # Phase 2: Brief Summaries (batched for prompt caching)
+    if brief_summary:
+        print("\nPHASE 2: Building brief summary batch requests...")
+        brief_summary_requests = []
+
+        for teg_num in teg_nums:
+            # Read story notes file
+            story_notes_path = f"data/commentary/teg_{teg_num}_story_notes.md"
+            if not os.path.exists(story_notes_path):
+                print(f"  ✗ Story notes not found for TEG {teg_num}")
+                continue
+
+            with open(story_notes_path, 'r', encoding='utf-8') as f:
+                story_notes = f.read()
+
+            print(f"  Preparing TEG {teg_num}...")
+
+            user_message = f"Story Notes:\n\n{story_notes}"
+
+            request = create_batch_request(
+                custom_id=f"TEG{teg_num}_brief_summary",
+                model="claude-sonnet-4-5",
+                max_tokens=2000,
+                system_prompt=BRIEF_SUMMARY_PROMPT,
+                user_message=user_message,
+                use_cache=True
+            )
+            brief_summary_requests.append(request)
+
+        if brief_summary_requests:
+            # Save and submit brief summaries batch
+            batch_file = f"{batch_dir}/brief_summaries_{timestamp}.jsonl"
+            save_batch_requests(brief_summary_requests, batch_file)
+
+            print("\nSubmitting brief summaries batch to Anthropic...")
+            batch_info = submit_batch(batch_file, api_key)
+            brief_summaries_batch_id = batch_info['batch_id']
+            save_batch_info(batch_info, results_dir)
+
+            print("\nPolling for brief summaries completion...")
+            poll_until_complete(brief_summaries_batch_id, api_key, check_interval=60)
+
+            print("\nRetrieving brief summary results...")
+            brief_summary_results = get_batch_results(brief_summaries_batch_id, api_key, results_dir)
+
+            # Save brief summaries to files
+            print("\nSaving brief summaries to files...")
+            for teg_num in teg_nums:
+                custom_id = f"TEG{teg_num}_brief_summary"
+                if custom_id in brief_summary_results and brief_summary_results[custom_id]:
+                    brief_summary_text = brief_summary_results[custom_id]
+                    output_path = f"data/commentary/drafts/teg_{teg_num}_brief_summary.md"
+                    write_text_file(
+                        output_path,
+                        brief_summary_text,
+                        commit_message=f"Generate brief summary for TEG {teg_num} (Batch API)"
+                    )
+                    results.setdefault(teg_num, {})['brief_summary'] = brief_summary_text
+                    print(f"  ✓ Saved: {output_path}")
+
+    # Summary
+    print("\n" + "="*60)
+    print("BATCH API PROCESSING COMPLETE")
+    print("="*60)
+    print(f"Successfully processed: {len(results)} TEGs")
+    print(f"Cost savings: ~50% compared to standard API")
+    print("="*60 + "\n")
+
+    return results
+
 
 # ========================
 # Factual Section Formatting (Direct Addition)
@@ -1314,13 +1511,13 @@ def generate_complete_story_notes(teg_num):
 
     print(f"\nLEVEL 2: Tournament Synthesis")
     print("-" * 60)
-    synthesis = generate_tournament_synthesis(round_stories, teg_num)
+    synthesis = generate_tournament_synthesis(round_stories, teg_num, all_data)
     print("> Tournament synthesis complete")
 
     story_notes = build_story_notes_file(teg_num, round_stories, synthesis, all_data)
 
     # Save output using Railway-aware function
-    output_path = f"data/commentary/drafts/teg_{teg_num}_story_notes.md"
+    output_path = f"data/commentary/teg_{teg_num}_story_notes.md"
     write_text_file(
         output_path,
         story_notes,
@@ -1369,7 +1566,7 @@ def generate_story_notes_up_to_round(teg_num, completed_rounds):
         content += round_notes + "\n\n"
 
     # Save output using Railway-aware function
-    output_path = f"data/commentary/drafts/teg_{teg_num}_story_notes_partial.md"
+    output_path = f"data/commentary/teg_{teg_num}_story_notes_partial.md"
     write_text_file(
         output_path,
         content,
@@ -1385,6 +1582,330 @@ def generate_story_notes_up_to_round(teg_num, completed_rounds):
     print(f"Total characters: {len(content):,}")
     print(f"\n{'='*60}\n")
     return content
+
+
+def generate_story_notes_via_batch_api(teg_nums, submit_only=False):
+    """
+    Generate story notes for multiple TEGs using Anthropic Batch API (50% cost reduction).
+
+    Args:
+        teg_nums: List of TEG numbers to process
+        submit_only: If True, submit batch and exit (don't wait for results)
+
+    Returns:
+        Dict with story notes for each TEG, or list of batch_ids if submit_only=True
+    """
+    print("\n" + "="*60)
+    print("BATCH API MODE FOR STORY NOTES (50% cost reduction)")
+    if submit_only:
+        print("SUBMIT ONLY - Will exit after submission")
+    print("="*60)
+
+    api_key = get_api_key()
+    if not api_key:
+        raise ValueError("ANTHROPIC_API_KEY not found in environment variables or Streamlit secrets")
+
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    batch_dir = "streamlit/commentary/batch_requests"
+    results_dir = "streamlit/commentary/batch_results"
+    os.makedirs(batch_dir, exist_ok=True)
+    os.makedirs(results_dir, exist_ok=True)
+
+    # PHASE 1: Build requests for all round stories
+    print("\nPHASE 1: Building round story batch requests...")
+    round_story_requests = []
+
+    for teg_num in teg_nums:
+        print(f"  Preparing TEG {teg_num}...")
+
+        # Load data
+        all_data = process_all_data_types(teg_num)
+        num_rounds = get_teg_rounds(teg_num)
+
+        previous_context = None
+        for round_num in range(1, num_rounds + 1):
+            round_data = load_round_data(teg_num, round_num, all_data)
+
+            # Prepare prompt data
+            from round_data_loader import compact_round_data_lossless, abbreviate_for_prompt
+            rd_compact = compact_round_data_lossless(round_data)
+            rd_abbrev, legend_text = abbreviate_for_prompt(rd_compact)
+
+            round_data_json = json.dumps(rd_abbrev, separators=(",", ":"), ensure_ascii=False, default=str)
+            previous_context_json = (
+                json.dumps(previous_context, separators=(",", ":"), ensure_ascii=False, default=str)
+                if previous_context else "First round of the tournament"
+            )
+
+            system_prompt = legend_text + "\n\n" + ROUND_STORY_PROMPT
+            user_message = f"""**Round Number:** {round_num}
+
+**Round Data:**
+{round_data_json}
+
+**Previous Context:**
+{previous_context_json}"""
+
+            request = create_batch_request(
+                custom_id=f"TEG{teg_num}_round_{round_num}",
+                model="claude-sonnet-4-5",
+                max_tokens=4000,
+                system_prompt=system_prompt,
+                user_message=user_message,
+                use_cache=True
+            )
+            round_story_requests.append(request)
+
+            # Update context for next round
+            previous_context = get_round_ending_context(round_data)
+
+    # Submit round stories batch
+    batch_file = f"{batch_dir}/story_notes_rounds_{timestamp}.jsonl"
+    save_batch_requests(round_story_requests, batch_file)
+
+    print("\nSubmitting round stories batch to Anthropic...")
+    batch_info = submit_batch(batch_file, api_key)
+    rounds_batch_id = batch_info['batch_id']
+    save_batch_info(batch_info, results_dir, batch_type="tournament_round_stories")
+
+    if submit_only:
+        print("\n" + "="*60)
+        print("BATCH SUBMITTED - YOU CAN NOW CLOSE THIS WINDOW")
+        print("="*60)
+        print(f"Round stories batch ID: {rounds_batch_id}")
+        print(f"\nTo retrieve results later, run:")
+        print(f"  python generate_tournament_commentary_v2.py --retrieve-batch {rounds_batch_id}")
+        print("\nBatch info saved to:")
+        print(f"  {results_dir}/batch_{rounds_batch_id}_info.json")
+        print("="*60)
+        return [rounds_batch_id]
+
+    # Wait for round stories to complete
+    print("\nPolling for round stories completion...")
+    poll_until_complete(rounds_batch_id, api_key, check_interval=60)
+
+    print("\nRetrieving round story results...")
+    round_story_results = get_batch_results(rounds_batch_id, api_key, results_dir)
+
+    # PHASE 2: Build synthesis requests (need round stories first)
+    print("\nPHASE 2: Building synthesis batch requests...")
+    synthesis_requests = []
+
+    # Group round stories by TEG
+    round_stories_by_teg = {}
+    for custom_id, content in round_story_results.items():
+        if content is None:
+            continue
+        # Parse TEG{num}_round_{num}
+        parts = custom_id.split('_')
+        teg_num = int(parts[0].replace('TEG', ''))
+
+        if teg_num not in round_stories_by_teg:
+            round_stories_by_teg[teg_num] = []
+        round_stories_by_teg[teg_num].append(content)
+
+    for teg_num in teg_nums:
+        if teg_num not in round_stories_by_teg:
+            print(f"  ✗ No round stories for TEG {teg_num}")
+            continue
+
+        print(f"  Preparing synthesis for TEG {teg_num}...")
+
+        # Load data
+        all_data = process_all_data_types(teg_num)
+        round_stories = round_stories_by_teg[teg_num]
+
+        # Build synthesis prompt
+        all_tournament_data = pd.read_parquet('data/commentary_tournament_summary.parquet')
+        tournament_summary = all_tournament_data[all_tournament_data['TEGNum'] == teg_num].copy()
+
+        # Add historical context
+        def calc_wins_before(row):
+            player_history = all_tournament_data[
+                (all_tournament_data['Player'] == row['Player']) &
+                (all_tournament_data['TEGNum'] < row['TEGNum'])
+            ]
+            return pd.Series({
+                'teg_trophy_wins_before': int(player_history['Won_Stableford'].sum()),
+                'green_jacket_wins_before': int(player_history['Won_Gross'].sum()),
+                'wooden_spoons_before': int(player_history['Wooden_Spoon'].sum())
+            })
+
+        historical_counts = tournament_summary.apply(calc_wins_before, axis=1)
+        tournament_summary = pd.concat([tournament_summary, historical_counts], axis=1)
+
+        round_summaries_text = "\n\n".join([f"## Round {i+1}\n{story}" for i, story in enumerate(round_stories)])
+        tournament_data_json = json.dumps(tournament_summary.to_dict('records'), indent=2, default=str)
+
+        # Historical context
+        historical_context = "**Historical wins BEFORE this tournament:**\n"
+        for _, row in tournament_summary.iterrows():
+            player = row['Player']
+            trophies = row['teg_trophy_wins_before']
+            jackets = row['green_jacket_wins_before']
+            spoons = row['wooden_spoons_before']
+            historical_context += f"- {player}: {trophies} Trophy, {jackets} Green Jacket, {spoons} Wooden Spoons\n"
+
+        # Career context
+        players_in_teg = tournament_summary['Player'].tolist()
+        career_context = build_career_context(teg_num, players_in_teg)
+
+        # Victory context
+        victory_context_json = "Not available"
+        if all_data and 'victory_context' in all_data:
+            victory_context_json = json.dumps(all_data['victory_context'], indent=2, default=str)
+
+        system_prompt = TOURNAMENT_SYNTHESIS_PROMPT
+        user_message = f"""Round Summaries:
+{round_summaries_text}
+
+Tournament Data:
+{tournament_data_json}
+
+Victory Context:
+{victory_context_json}
+
+Historical Context:
+{historical_context}
+
+Career Context:
+{career_context}"""
+
+        request = create_batch_request(
+            custom_id=f"TEG{teg_num}_synthesis",
+            model="claude-sonnet-4-5",
+            max_tokens=4000,
+            system_prompt=system_prompt,
+            user_message=user_message,
+            use_cache=True
+        )
+        synthesis_requests.append(request)
+
+    # Submit synthesis batch
+    batch_file = f"{batch_dir}/story_notes_synthesis_{timestamp}.jsonl"
+    save_batch_requests(synthesis_requests, batch_file)
+
+    print("\nSubmitting synthesis batch to Anthropic...")
+    batch_info = submit_batch(batch_file, api_key)
+    synthesis_batch_id = batch_info['batch_id']
+    save_batch_info(batch_info, results_dir, batch_type="tournament_synthesis")
+
+    print("\nPolling for synthesis completion...")
+    poll_until_complete(synthesis_batch_id, api_key, check_interval=60)
+
+    print("\nRetrieving synthesis results...")
+    synthesis_results = get_batch_results(synthesis_batch_id, api_key, results_dir)
+
+    # PHASE 3: Assemble and save story notes
+    print("\nPHASE 3: Assembling and saving story notes...")
+    results = {}
+
+    for teg_num in teg_nums:
+        if teg_num not in round_stories_by_teg:
+            continue
+
+        synthesis_id = f"TEG{teg_num}_synthesis"
+        if synthesis_id not in synthesis_results or synthesis_results[synthesis_id] is None:
+            print(f"  ✗ No synthesis for TEG {teg_num}")
+            continue
+
+        print(f"  Assembling TEG {teg_num}...")
+
+        # Load data for post-processing
+        all_data = process_all_data_types(teg_num)
+        round_stories = round_stories_by_teg[teg_num]
+        synthesis = synthesis_results[synthesis_id]
+
+        # Build complete story notes with post-processing
+        story_notes = build_story_notes_file(teg_num, round_stories, synthesis, all_data)
+
+        # Save
+        output_path = f"data/commentary/teg_{teg_num}_story_notes.md"
+        write_text_file(
+            output_path,
+            story_notes,
+            commit_message=f"Generate story notes for TEG {teg_num} (Batch API)"
+        )
+
+        results[teg_num] = story_notes
+        print(f"  ✓ Saved: {output_path}")
+
+    # Summary
+    print("\n" + "="*60)
+    print("BATCH API PROCESSING COMPLETE")
+    print("="*60)
+    print(f"Successfully processed: {len(results)}/{len(teg_nums)} TEGs")
+    print(f"Cost savings: ~50% compared to standard API")
+    print(f"Round stories batch ID: {rounds_batch_id}")
+    print(f"Synthesis batch ID: {synthesis_batch_id}")
+    print("="*60 + "\n")
+
+    return results
+
+
+def retrieve_story_notes_batch(batch_id):
+    """
+    Retrieve results from a previously submitted story notes batch.
+
+    Args:
+        batch_id: Batch ID to retrieve
+
+    Returns:
+        Results dict or None if batch not complete
+    """
+    print("\n" + "="*60)
+    print(f"RETRIEVING STORY NOTES BATCH: {batch_id}")
+    print("="*60)
+
+    api_key = get_api_key()
+    if not api_key:
+        raise ValueError("ANTHROPIC_API_KEY not found")
+
+    results_dir = "streamlit/commentary/batch_results"
+
+    # Check status
+    print("\nChecking batch status...")
+    status = check_batch_status(batch_id, api_key)
+    print(f"  Status: {status['status']}")
+    print(f"  Request counts: {status['request_counts']}")
+
+    if status['status'] != 'ended':
+        print(f"\n⚠️  Batch not complete yet. Current status: {status['status']}")
+        print(f"Check again later or run:")
+        print(f"  python generate_tournament_commentary_v2.py --retrieve-batch {batch_id}")
+        return None
+
+    # Load batch info to determine type
+    batch_info_file = find_batch_info_file(batch_id, results_dir)
+    if not batch_info_file:
+        print(f"\n⚠️  Warning: Batch info file not found for {batch_id}")
+        batch_type = "unknown"
+    else:
+        batch_info = load_batch_info(batch_info_file)
+        batch_type = batch_info.get('batch_type', 'unknown')
+        print(f"  Batch type: {batch_type}")
+
+    # Retrieve results
+    print("\nRetrieving results...")
+    results = get_batch_results(batch_id, api_key, results_dir)
+
+    if batch_type == "tournament_round_stories":
+        print("\n⚠️  This is a round stories batch.")
+        print("You also need the synthesis batch to complete story notes.")
+        print("Round stories have been saved. Check for synthesis batch ID in batch info.")
+        return results
+
+    elif batch_type == "tournament_synthesis":
+        print("\n⚠️  This is a synthesis batch.")
+        print("You also need the round stories batch to complete story notes.")
+        print("Run this command with the round stories batch ID first.")
+        return results
+
+    else:
+        print(f"  ⚠️  Unknown batch type '{batch_type}'")
+        print("Results saved but may require manual processing.")
+        return results
+
 
 # ========================
 # Batch helper (range of TEGs)
@@ -1512,8 +2033,26 @@ Examples:
                         help='Generate story notes AND reports in one go')
     parser.add_argument('--batch-reports', action='store_true',
                         help='When using --range, batch reports by type for optimal prompt caching (all main reports, then all summaries)')
+    parser.add_argument('--use-batch', action='store_true',
+                        help='Use Anthropic Batch API (50%% cheaper, up to 24hr processing)')
+    parser.add_argument('--submit-only', action='store_true',
+                        help='Submit batch and exit (retrieve results later with --retrieve-batch)')
+    parser.add_argument('--retrieve-batch', type=str, metavar='BATCH_ID',
+                        help='Retrieve results from previously submitted batch')
+    parser.add_argument('--list-batches', action='store_true',
+                        help='List recent batch submissions and their status')
 
     args = parser.parse_args()
+
+    # Handle list-batches command
+    if args.list_batches:
+        list_recent_batches()
+        sys.exit(0)
+
+    # Handle retrieve-batch command
+    if args.retrieve_batch:
+        retrieve_story_notes_batch(args.retrieve_batch)
+        sys.exit(0)
 
     if args.range:
         start, end = args.range
@@ -1523,55 +2062,114 @@ Examples:
             print(f"\n{'='*60}")
             print(f"BATCH MODE: Optimized for prompt caching")
             print(f"{'='*60}\n")
-            
+
             successful_tegs = []
-            
+
             # Phase 1: Generate all story notes (unless skipped)
             if not (args.generate_reports or args.main_report_only or args.brief_summary_only):
                 print("Phase 1: Generating story notes for all TEGs...")
-                for teg in range(start, end + 1):
+
+                # Use Batch API for story notes if requested
+                if args.use_batch:
+                    teg_list = list(range(start, end + 1))
                     try:
-                        if args.partial:
-                            generate_story_notes_up_to_round(teg, args.partial)
-                        else:
-                            generate_complete_story_notes(teg)
-                        successful_tegs.append(teg)
+                        generate_story_notes_via_batch_api(teg_list, submit_only=args.submit_only)
+                        if args.submit_only:
+                            # Exit after submission
+                            sys.exit(0)
+                        successful_tegs = teg_list
                     except Exception as e:
-                        print(f"✗ TEG {teg} story notes failed: {e}")
+                        print(f"✗ Batch story notes failed: {e}")
+                        successful_tegs = []
+                else:
+                    # Standard API
+                    for teg in range(start, end + 1):
+                        try:
+                            if args.partial:
+                                generate_story_notes_up_to_round(teg, args.partial)
+                            else:
+                                generate_complete_story_notes(teg)
+                            successful_tegs.append(teg)
+                        except Exception as e:
+                            print(f"✗ TEG {teg} story notes failed: {e}")
             else:
                 # If only generating reports, assume all TEGs succeeded
                 successful_tegs = list(range(start, end + 1))
-            
-            # Phase 2: Generate main reports (batched)
-            if args.generate_reports or args.main_report_only or args.full_pipeline:
-                print(f"\nPhase 2: Generating main reports (batched for caching)...")
-                for teg in successful_tegs:
-                    try:
-                        generate_main_report(teg)
-                    except Exception as e:
-                        print(f"✗ TEG {teg} main report failed: {e}")
-            
-            # Phase 3: Generate brief summaries (batched)
-            if args.generate_reports or args.brief_summary_only or args.full_pipeline:
-                print(f"\nPhase 3: Generating brief summaries (batched for caching)...")
-                for teg in successful_tegs:
-                    try:
-                        generate_brief_summary(teg)
-                    except Exception as e:
-                        print(f"✗ TEG {teg} brief summary failed: {e}")
-            
+
+            # Phase 2 & 3: Generate reports (if requested)
+            if args.generate_reports or args.main_report_only or args.brief_summary_only or args.full_pipeline:
+                if args.use_batch:
+                    # Use Batch API for both main reports and brief summaries
+                    generate_main = args.generate_reports or args.main_report_only or args.full_pipeline
+                    generate_brief = args.generate_reports or args.brief_summary_only or args.full_pipeline
+                    generate_reports_via_batch_api(successful_tegs, main_report=generate_main, brief_summary=generate_brief)
+                else:
+                    # Phase 2: Generate main reports (batched for caching)
+                    if args.generate_reports or args.main_report_only or args.full_pipeline:
+                        print(f"\nPhase 2: Generating main reports (batched for caching)...")
+                        for teg in successful_tegs:
+                            try:
+                                generate_main_report(teg)
+                            except Exception as e:
+                                print(f"✗ TEG {teg} main report failed: {e}")
+
+                    # Phase 3: Generate brief summaries (batched for caching)
+                    if args.generate_reports or args.brief_summary_only or args.full_pipeline:
+                        print(f"\nPhase 3: Generating brief summaries (batched for caching)...")
+                        for teg in successful_tegs:
+                            try:
+                                generate_brief_summary(teg)
+                            except Exception as e:
+                                print(f"✗ TEG {teg} brief summary failed: {e}")
+
             print(f"\n{'='*60}")
             print(f"BATCH COMPLETE: Processed TEGs {successful_tegs}")
             print(f"{'='*60}\n")
         
         # Normal mode: process each TEG completely before moving to next
+                # Normal mode: process according to report flags (no batch)
         else:
-            generate_story_notes_for_teg_range(
-                start, end,
-                partial=args.partial,
-                stop_on_error=args.stop_on_error,
-                pause_between=args.pause_between,
-            )
+            start, end = args.range
+            teg_list = list(range(start, end + 1))
+
+            # Full pipeline over a range (generate notes then both reports)
+            if args.full_pipeline:
+                for teg in teg_list:
+                    try:
+                        if args.partial:
+                            generate_story_notes_up_to_round(teg, args.partial)
+                        else:
+                            generate_complete_story_notes(teg)
+                        generate_reports_from_story_notes(teg, main_report=True, brief_summary=True)
+                    except Exception as e:
+                        print(f"✗ TEG {teg} full pipeline failed: {e}")
+
+            # Report-only modes over a range (DO NOT generate story notes here)
+            elif args.generate_reports or args.main_report_only or args.brief_summary_only:
+                for teg in teg_list:
+                    # main report only (or both via --generate-reports)
+                    if args.generate_reports or args.main_report_only:
+                        try:
+                            generate_main_report(teg)
+                        except Exception as e:
+                            print(f"✗ TEG {teg} main report failed: {e}")
+
+                    # brief summary only (or both via --generate-reports)
+                    if args.generate_reports or args.brief_summary_only:
+                        try:
+                            generate_brief_summary(teg)
+                        except Exception as e:
+                            print(f"✗ TEG {teg} brief summary failed: {e}")
+
+            # No report flags: default to generating story notes across the range
+            else:
+                generate_story_notes_for_teg_range(
+                    start, end,
+                    partial=args.partial,
+                    stop_on_error=args.stop_on_error,
+                    pause_between=args.pause_between,
+                )
+
     else:
         if args.teg_num is None:
             parser.error("Provide a single TEG number or --range START END")

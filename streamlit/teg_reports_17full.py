@@ -12,8 +12,8 @@ st.title("📰 Tournament Commentary")
 # --- Locate commentary folder ---
 here = Path(__file__).resolve()
 candidates = [
-    here.parent.parent.parent / "data" / "commentary",    # .../teg_v2/data/commentary (from streamlit folder)
-    here.parent.parent / "data" / "commentary",           # .../data/commentary (from root)
+    here.parent.parent.parent / "data" / "commentary" / "drafts",    # .../teg_v2/data/commentary (from streamlit folder)
+    here.parent.parent / "data" / "commentary" / "drafts",           # .../data/commentary (from root)
 ]
 commentary_dir = next((p for p in candidates if p.exists()), None)
 if commentary_dir is None:
@@ -21,7 +21,7 @@ if commentary_dir is None:
     st.stop()
 
 # --- Fixed parameters ---
-teg_num = 17
+teg_num = 10
 report_key = "main_report"   # "main_report" = full report
 filename = f"teg_{teg_num}_{report_key}.md"
 md_path = commentary_dir / filename
@@ -30,7 +30,7 @@ md_path = commentary_dir / filename
 load_teg_reports_css()
 
 # --- Loader ---
-@st.cache_data(show_spinner=False)
+# @st.cache_data(show_spinner=False)
 def load_markdown(p: Path) -> str:
     return p.read_text(encoding="utf-8")
 

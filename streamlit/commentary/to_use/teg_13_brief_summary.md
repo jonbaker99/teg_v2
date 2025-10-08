@@ -1,7 +1,0 @@
-**TEG Trophy XIII – Kent, England (2020)**
-
-Jon Baker claimed his fourth Trophy and third Green Jacket with wire-to-wire dominance at four Kent links courses, leading all 72 holes gross and 70 of 72 holes in Stableford. Baker won the Trophy by six points over Gregg Williams (158-152) and the Jacket by 18 strokes (+50 to +68), producing the tournament's only sub-par round—a flawless +8 in Round 3 at Littlestone—and five birdies including a dramatic countback-clinching birdie on the final hole of Round 2.
-
-John Patterson delivered the most bipolar performance in tournament history: a record-breaking 49-point Round 3 (lifted by birdie and eagle) vaulted him from fifth to third in the Trophy, yet 14 blow-ups across the week left him with the field's widest swing—best round 49 points, worst 28. David Mullin earned his fourth Wooden Spoon after a catastrophic H10 quintuple bogey (9/+5) in the final round at Prince's derailed his comeback.
-
-Williams closed strongly with a 41-point Round 2, briefly taking the Trophy lead on the back nine before Baker's birdie at the last reclaimed it on countback. Patterson's Round 4 eagle-to-meltdown sequence—eagle on H2, then immediate blow-up on H3—epitomised his wild week of brilliance and chaos.

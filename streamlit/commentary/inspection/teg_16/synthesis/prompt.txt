@@ -1,0 +1,731 @@
+You are creating tournament-level structured story notes.
+
+**IMPORTANT:** Output structured bullet points and facts, NOT narrative prose.
+
+**Data Provided:**
+
+The user message contains:
+- Round Summaries: All round notes generated previously
+- Tournament Data: Final standings and tournament totals (JSON format)
+- Historical Context: Win counts before this tournament for each player
+- Career Context (PRE-TOURNAMENT): Recent finishes and position counts for each player
+
+**Note:** Venue context (location, courses, area returns) will be added to the story notes automatically after your output. Focus on tournament narrative and results from the data provided.
+
+**Competition Structure - CRITICAL:**
+- **TEG Trophy** = Stableford winner (PRIMARY competition)
+- **Green Jacket** = Gross winner (SECONDARY competition - ALWAYS mention)
+- These can be won by DIFFERENT players - check the data carefully!
+
+**Player Name Disambiguation:**
+- When Alex BAKER and Jon BAKER are both present, use "A. BAKER" and "J. BAKER" or first names for clarity
+- After first mention, you can use "Alex" and "Jon" throughout
+
+**Victory Classification Framework:**
+
+When describing how the Trophy was won in Key Points, use the victory_context data to craft varied, accurate descriptions. AVOID overusing "wire-to-wire". Combine leadership pattern + battle dynamics + margin context for nuance:
+
+**Leadership Patterns** (based on pct_holes_led):
+- **Wire-to-wire** (90%+ holes led): ONLY use if truly dominant from start
+  - Alternatives: "never trailed", "led from gun to tape", "controlled throughout"
+- **Front-runner** (70-89% holes led): Led most of the way
+  - Alternatives: "commanded from early", "held sway", "established early control"
+- **Second-half surge** (40-69% holes led, took lead R3+):
+  - Alternatives: "seized control late", "surged clear over final rounds"
+- **Come-from-behind** (30-49% holes led, took lead R4):
+  - Alternatives: "dramatic late charge", "final-round heroics", "Sunday comeback"
+- **Narrowest margins** (<30% holes led):
+  - Alternatives: "scraped past", "edged out", "survived the challenge"
+
+**Battle Dynamics** (based on lead_changes.total_r2_onwards):
+- **Runaway/Unchallenged** (0-2 lead changes):
+  - "pulled away early and never looked back", "established an unchallenged lead"
+- **Two-horse race** (3-8 lead changes, 2 players_who_led):
+  - "traded blows with [Name]", "see-sawed with [Name] before prevailing"
+- **Back-and-forth battle** (9-15 lead changes, 2-3 players):
+  - "survived a chaotic lead battle", "emerged from a three-way scrap"
+- **Free-for-all** (16+ lead changes, 3+ players):
+  - "won a wild, multi-player scramble", "navigated mayhem to claim the trophy"
+
+**Margin Context** (based on final_margin):
+- **Comfortable** (8+ points): "comfortably", "with room to spare"
+- **Moderate** (4-7 points): no modifier needed
+- **Tight/Narrow** (1-3 points): "narrowly", "by the slimmest margin", "just held off"
+
+**How to Combine:**
+Mix patterns for variety. Examples:
+✅ "Led from start to finish, pulling away to a comfortable 12-point margin"
+✅ "Commanded from Round 1, trading blows with Williams before prevailing by 6 points"
+✅ "Overtook the lead on Sunday and narrowly held off [Name] by 3 points"
+✅ "Emerged from a three-way battle to seize control in Round 3 and cruise home by 9 points"
+
+**CRITICAL: Never use "wire-to-wire" unless pct_holes_led ≥ 90% AND led from Round 1.**
+
+**Your Task:**
+
+Create tournament-level structured notes using this EXACT format:
+
+## Key Points
+[List 4-6 most important tournament facts as bullets]
+- [Stableford winner]'s [ordinal] Trophy - [description of victory using Victory Classification Framework above]
+- [Gross winner]'s [ordinal] Green Jacket - [description of Gross victory] (if different from Trophy winner; if same person, combine into one bullet)
+- [Margin of victory and key stats]
+- [Most dramatic/notable event or storyline]
+- [Other significant outcomes]
+
+Examples:
+- "Jon BAKER's 1st Trophy - commanded from Round 1, trading blows with Mullin before prevailing by 18 points"
+- "David MULLIN's 9th Green Jacket - led all 72 holes, pulling away to a comfortable 12-stroke margin"
+- "Jon BAKER's 1st Trophy & 1st Green Jacket - swept both competitions with wire-to-wire dominance" (only if same person won both AND pct_holes_led ≥ 90%)
+
+## How It Unfolded
+[Brief one-line summary for each round with player scores by initials]
+- **Round 1:** [Leader initials] [score]pts leads Stableford; [Leader initials] [score relative to par] leads Gross
+- **Round 2:** [What changed - lead changes, notable performances]
+- **Round 3:** [Developments]
+- **Round 4:** [How it finished]
+
+Examples:
+- **Round 1:** JP 39pts leads Stableford by 1; GW/JB tied +20 lead Gross
+- **Round 2:** JB seizes both leads; DM's 47pts (best round); JP's historic 22pt collapse
+
+## Story Angles
+[List 4-6 compelling story angles as bullets]
+- [Main narrative arc - focus on Stableford but weave in Gross outcome]
+- [Dramatic event or collapse]
+- [Exceptional performance]
+- [Interesting contrast or paradox]
+- [Lead battles and margin changes - emphasize these more]
+- [Historical context]
+
+**Important:** The story angles should be leveraged prominently in reports - make them compelling!
+
+## Quote-Worthy Lines
+[List 4-6 short evocative phrases, NOT full sentences]
+- "[Short memorable phrase]"
+- "[Another phrase]"
+
+## Tournament Stats
+[List key statistics as bullets, ending with tournament score summary by player]
+- [Trophy winner]: [X] pts, [Y relative to par], led [Z]/72 holes (Stableford) & [W]/72 (Gross)
+- [Green Jacket winner if different]: [key stats]
+- [Other players with notable stats]
+- [Margin of victory stats]
+- [Rare events or lack thereof]
+
+**End with complete tournament summary (all players by initials):**
+- Final Tournament Scores: [initials]: [pts]/[gross]; [initials]: [pts]/[gross]; etc.
+
+Example: "Final Scores: JB: 166pts/+67; DM: 148pts/+80; JP: 135pts/+124; AB: 135pts/+150; GW: 123pts/+89"
+
+**Format Rules:**
+- Use bullets, NOT paragraphs or prose
+- Keep "How It Unfolded" to ONE LINE per round
+- "Quote-Worthy Lines" should be SHORT PHRASES (3-5 words each)
+- Include hole numbers WITH PAR whenever available (e.g., H17 (Par 4))
+- For disasters and gross events: include gross score and vs par (e.g., 9 / +5)
+- For competition references: always specify Trophy (Stableford/net) or Jacket (gross)
+  - "Trophy lead" = Stableford/net competition
+  - "Jacket lead" = Gross competition
+- Focus on facts and memorable angles
+- Be concise but complete
+- NO narrative storytelling
+- For stretch averages in round notes: use descriptive phrases ("under par", "bogey golf", "close to +3") instead of exact decimals
+
+**Critical Rules:**
+- Trophy and Green Jacket can be won by different people - check tournament_data carefully
+- Use historical_context to determine if this is someone's "1st", "2nd", etc. trophy/jacket
+- ONLY use data from round notes and tournament_data
+- DO NOT repeat hole-by-hole details from round notes
+- Focus on tournament-level patterns across rounds
+- Never fabricate statistics or comparisons
+- Stableford is primary but performing well in Gross without strong Stableford results is less newsworthy
+
+Output ONLY the structured notes in the format shown above. No preamble, no narrative.
+
+Round Summaries:
+    ## Round 1
+## Round 1 Notes
+
+### Key Moments
+- H1 (Par 4): Alex BAKER blow-up (9 / +5), 0 pts
+- H1 (Par 4): Stuart NEUMANN, David MULLIN, Gregg WILLIAMS took Jacket lead at +1
+- H1 (Par 4): Stuart NEUMANN took Trophy lead, 3 pts
+- H4 (Par 4): Gregg WILLIAMS took Trophy lead
+- H5 (Par 4): David MULLIN took Trophy lead
+- H6 (Par 4): Alex BAKER 4 points on H6 (Par 4)
+- H6 (Par 4): David MULLIN took Jacket lead at +1
+- H7 (Par 5): Alex BAKER blow-up (9 / +4), 0 pts
+- H7 (Par 5): Stuart NEUMANN blow-up (8 / +3), 1 pt
+- H8 (Par 5): David MULLIN blow-up (8 / +3), 0 pts
+- H8 (Par 5): Jon BAKER blow-up (8 / +3), 0 pts
+- H10 (Par 4): David MULLIN blow-up (7 / +3), 0 pts
+- H11 (Par 4): Alex BAKER blow-up (9 / +5), 0 pts
+- H13 (Par 5): Alex BAKER 4 points on H13 (Par 5)
+- H14 (Par 3): Alex BAKER blow-up (6 / +3), 1 pt
+- H17 (Par 4): Alex BAKER blow-up (10 / +6), 0 pts
+- H17 (Par 4): Stuart NEUMANN blow-up (7 / +3), 1 pt
+- H18 (Par 4): All players except Gregg WILLIAMS posted blow-ups (7 / +3)
+
+### Lead After Round
+- **Leader:** Stuart NEUMANN
+- **Margin:** 5 points to 2nd place
+- **Status:** Clear lead
+- **Lead change:** N/A - first round
+- **Trophy:** Stuart NEUMANN leads with 39 pts
+- **Jacket:** Gregg WILLIAMS leads at +18 gross
+
+### Hot Spells (Net)
+- No significant Stableford hot spells identified
+
+### Hot Spells (Gross)
+- Jon BAKER holes 14-16: Avg 0.00 vs par (par golf on H14 (Par 3), H15 (Par 3), H16 (Par 5))
+
+### Cold Spells (Net)
+- No significant Stableford cold spells identified (all patterns were gross-based)
+
+### Cold Spells (Gross)
+- Alex BAKER holes 1-3: Avg +3.00 vs par (blow-up on H1 (Par 4))
+- Alex BAKER holes 7-12: Avg +2.33 vs par (blow-ups on H7 (Par 5), H11 (Par 4))
+- Alex BAKER holes 16-18: Avg +3.67 vs par (blow-up on H17 (Par 4))
+- David MULLIN holes 8-10: Avg +2.33 vs par (blow-ups on H8 (Par 5), H10 (Par 4))
+
+### Front/Back 9 Patterns
+- No significant front 9 vs back 9 differences identified
+
+### Round Stats
+- Stuart NEUMANN: 39 pts (Stableford), +26 gross, rank 1 Trophy / rank 4 Jacket
+- Jon BAKER: 34 pts (Stableford), +21 gross, rank 2 Trophy / rank 2 Jacket
+- Gregg WILLIAMS: 34 pts (Stableford), +18 gross, rank 2 Trophy / rank 1 Jacket
+- David MULLIN: 33 pts (Stableford), +23 gross, rank 4 Trophy / rank 3 Jacket
+- Alex BAKER: 29 pts (Stableford), +42 gross, rank 5 Trophy / rank 5 Jacket
+- Alex BAKER struggled severely with 7 blow-ups and 4 zero-point holes
+- Gregg WILLIAMS led entire round for Jacket (gross competition)
+- Stuart NEUMANN led most of round for Trophy (net competition), held lead through finish
+
+## Round 2
+## Round 2 Notes
+
+### Key Moments
+- H10 (Par 4): Alex BAKER birdie (3 / -1), 5 pts
+- H10 (Par 4): Jon BAKER birdie (3 / -1), 4 pts
+- H10 (Par 4): Stuart NEUMANN birdie (3 / -1), 4 pts
+- H11 (Par 3): Jon BAKER took Jacket lead
+- H12 (Par 4): Jon BAKER lost Jacket lead
+- H14 (Par 5): Jon BAKER took Jacket lead
+- H16 (Par 4): Jon BAKER lost Jacket lead
+- H2 (Par 3): Alex BAKER blow-up (6 / +3), 0 pts
+- H4 (Par 3): Alex BAKER blow-up (6 / +3), 0 pts
+- H4 (Par 3): Stuart NEUMANN blow-up (6 / +3), 0 pts
+- H7 (Par 5): Jon BAKER blow-up (8 / +3), 0 pts
+- H8 (Par 4): David MULLIN blow-up (7 / +3), 0 pts
+- H8 (Par 4): Stuart NEUMANN blow-up (7 / +3), 0 pts
+- H13 (Par 4): Alex BAKER blow-up (7 / +3), 0 pts
+- H13 (Par 4): Stuart NEUMANN blow-up (7 / +3), 0 pts
+- H14 (Par 5): Alex BAKER blow-up (8 / +3), 1 pt
+- H15 (Par 4): Alex BAKER blow-up (7 / +3), 1 pt
+- H16 (Par 4): David MULLIN blow-up (7 / +3), 0 pts
+- H16 (Par 4): Stuart NEUMANN blow-up (8 / +4), 0 pts
+- H17 (Par 3): Jon BAKER blow-up (6 / +3), 0 pts
+- H17 (Par 3): Stuart NEUMANN blow-up (6 / +3), 0 pts
+
+### Lead After Round
+- **Leader:** Stuart NEUMANN (Trophy)
+- **Margin:** 7 points to 2nd place
+- **Status:** Commanding lead extended
+- **Lead change:** No - maintained Trophy lead from Round 1
+
+### Hot Spells (Net)
+- Stuart NEUMANN holes 10-12: 11 pts (4 points on H10 (Par 4), 4 points on H12 (Par 4), birdie on H10)
+
+### Hot Spells (Gross)
+- Stuart NEUMANN holes 10-12: Avg -0.33 vs par (birdie on H10)
+- Jon BAKER holes 9-11: Avg 0.0 vs par (birdie on H10)
+
+### Cold Spells (Net)
+- None significant
+
+### Cold Spells (Gross)
+- Alex BAKER holes 2-4: Avg +2.33 vs par (blow-ups on H2 (Par 3), H4 (Par 3))
+- Alex BAKER holes 4-6: Avg +2.33 vs par (blow-up on H4 (Par 3))
+- Alex BAKER holes 11-16: Avg +2.33 vs par (blow-up on H13 (Par 4))
+- Alex BAKER holes 12-17: Avg +2.33 vs par (blow-up on H13 (Par 4))
+- Alex BAKER holes 13-18: Avg +2.33 vs par (blow-up on H13 (Par 4))
+- Stuart NEUMANN holes 14-16: Avg +2.33 vs par (blow-up on H16 (Par 4))
+- Stuart NEUMANN holes 15-17: Avg +2.67 vs par (blow-ups on H16 (Par 4), H17 (Par 3))
+- Stuart NEUMANN holes 16-18: Avg +2.67 vs par (blow-ups on H16 (Par 4), H17 (Par 3))
+- Stuart NEUMANN holes 13-18: Avg +2.33 vs par (blow-ups on H13 (Par 4), H16 (Par 4), H17 (Par 3))
+
+### Front/Back 9 Patterns
+- None significant
+
+### Round Stats
+- Stuart NEUMANN: 35 pts (Stableford), +30 gross, Trophy rank 1, Jacket rank 4
+- David MULLIN: 34 pts (Stableford), +22 gross, Trophy rank 2, Jacket rank 3
+- Alex BAKER: 32 pts (Stableford), +34 gross, Trophy rank 5, Jacket rank 5
+- Jon BAKER: 32 pts (Stableford), +23 gross, Trophy rank 3, Jacket rank 2
+- Gregg WILLIAMS: 30 pts (Stableford), +22 gross, Trophy rank 4, Jacket rank 1
+
+## Round 3
+## Round 3 Notes
+
+### Key Moments
+- H12 (Par 5): Jon BAKER blow-up (10 / +5), 0 pts
+- H12 (Par 5): Alex BAKER blow-up (9 / +4), 0 pts
+- H13 (Par 4): Jon BAKER blow-up (8 / +4), 0 pts
+- H13 (Par 4): Alex BAKER blow-up (7 / +3), 0 pts
+- H5 (Par 3): Gregg WILLIAMS birdie (2 / -1), 4 pts
+- H7 (Par 3): Jon BAKER birdie (2 / -1), 4 pts
+- H6 (Par 5): Stuart NEUMANN birdie (4 / -1), 4 pts
+- H1 (Par 4): Stuart NEUMANN blow-up (8 / +4), 0 pts
+- H14 (Par 4): Stuart NEUMANN blow-up (8 / +4), 0 pts
+- H14 (Par 4): David MULLIN blow-up (7 / +3), 0 pts
+- H16 (Par 4): David MULLIN blow-up (8 / +4), 0 pts
+
+### Lead After Round
+- **Leader:** Stuart NEUMANN (Trophy competition)
+- **Margin:** 12 points to 2nd place
+- **Status:** Breakaway
+- **Lead change:** No - Stuart NEUMANN held Trophy lead from Round 2
+
+### Hot Spells (Net)
+- No significant Stableford hot spells identified in this round
+
+### Hot Spells (Gross)
+- Gregg WILLIAMS holes 11-13: Avg 0.0 vs par (all pars)
+- Gregg WILLIAMS holes 12-14: Avg 0.0 vs par (all pars)
+- Gregg WILLIAMS holes 13-15: Avg 0.0 vs par (all pars)
+- Gregg WILLIAMS holes 10-15: Avg +0.17 vs par
+- Gregg WILLIAMS holes 11-16: Avg +0.17 vs par
+
+### Cold Spells (Net)
+- Alex BAKER holes 12-14: 1 pt (blow-ups on H12, H13)
+- Jon BAKER holes 11-13: 1 pt (blow-ups on H12, H13)
+- Jon BAKER holes 8-13: 6 pts (blow-ups on H12, H13)
+
+### Cold Spells (Gross)
+- Alex BAKER holes 2-4: Avg +2.33 vs par
+- Alex BAKER holes 3-5: Avg +2.33 vs par
+- Alex BAKER holes 4-6: Avg +2.33 vs par
+- Alex BAKER holes 10-12: Avg +2.33 vs par (blow-up on H12)
+- Alex BAKER holes 11-13: Avg +3.0 vs par (blow-ups on H12, H13)
+- Alex BAKER holes 12-14: Avg +3.33 vs par (blow-ups on H12, H13)
+- Alex BAKER holes 8-13: Avg +2.5 vs par (blow-ups on H12, H13)
+- Alex BAKER holes 9-14: Avg +2.5 vs par (blow-ups on H12, H13)
+- Alex BAKER holes 12-17: Avg +2.33 vs par (blow-ups on H12, H13)
+- Jon BAKER holes 10-12: Avg +2.67 vs par (blow-up on H12)
+- Jon BAKER holes 11-13: Avg +3.67 vs par (blow-ups on H12, H13)
+- Jon BAKER holes 12-14: Avg +3.0 vs par (blow-ups on H12, H13)
+- Jon BAKER holes 8-13: Avg +2.5 vs par (blow-ups on H12, H13)
+- Jon BAKER holes 9-14: Avg +2.33 vs par (blow-ups on H12, H13)
+- Jon BAKER holes 11-16: Avg +2.33 vs par (blow-ups on H12, H13)
+- Stuart NEUMANN holes 1-3: Avg +2.33 vs par (blow-up on H1)
+- Stuart NEUMANN holes 12-14: Avg +2.33 vs par (blow-up on H14)
+- Stuart NEUMANN holes 13-15: Avg +2.33 vs par (blow-up on H14)
+- David MULLIN holes 14-16: Avg +2.67 vs par (blow-ups on H14, H16)
+
+### Front/Back 9 Patterns
+- Gregg WILLIAMS: Strong finisher - F9: 15 pts, B9: 22 pts (diff: -7)
+
+### Round Stats
+- Stuart NEUMANN: 39 pts (Stableford), +26 gross, Trophy rank 1, Jacket rank 4
+- Gregg WILLIAMS: 37 pts (Stableford), +15 gross, Trophy rank 2, Jacket rank 1
+- Jon BAKER: 33 pts (Stableford), +25 gross, Trophy rank 3, Jacket rank 2
+- Alex BAKER: 33 pts (Stableford), +34 gross, Trophy rank 3, Jacket rank 5
+- David MULLIN: 30 pts (Stableford), +26 gross, Trophy rank 4, Jacket rank 3
+- Stuart NEUMANN extended Trophy lead to 12 points
+- Gregg WILLIAMS maintains Jacket lead at +55
+
+## Round 4
+## Round 4 Notes
+
+### Key Moments
+- H1 (Par 4): Alex BAKER blow-up (9 / +5), 0 pts
+- H2 (Par 3): Stuart NEUMANN birdie (2 / -1), 5 pts
+- H2 (Par 3): David MULLIN birdie (2 / -1), 4 pts
+- H3 (Par 4): Alex BAKER blow-up (8 / +4), 0 pts
+- H6 (Par 5): Alex BAKER blow-up (9 / +4), 0 pts
+- H7 (Par 4): David MULLIN birdie (3 / -1), 4 pts
+- H8 (Par 4): Stuart NEUMANN blow-up (9 / +5), 0 pts
+- H9 (Par 4): Jon BAKER blow-up (7 / +3), 0 pts
+- H10 (Par 5): Jon BAKER birdie (4 / -1), 4 pts
+- H11 (Par 4): Jon BAKER blow-up (8 / +4), 0 pts
+- H12 (Par 4): Alex BAKER blow-up (11 / +7), 0 pts
+- H14 (Par 4): Gregg WILLIAMS blow-up (8 / +4), 0 pts
+
+### Lead After Round
+- **Leader:** Stuart NEUMANN
+- **Margin:** 13 points to 2nd place (Gregg WILLIAMS)
+- **Status:** Breakaway
+- **Lead change:** No - maintained Trophy lead from Round 3
+
+### Hot Spells (Net)
+- Stuart NEUMANN holes 1-6: 18 pts (birdie on H2)
+
+### Hot Spells (Gross)
+- Gregg WILLIAMS holes 2-4: Avg +0.00 vs par
+- Gregg WILLIAMS holes 6-8: Avg +0.00 vs par
+- Gregg WILLIAMS holes 2-7: Avg +0.17 vs par
+- Gregg WILLIAMS holes 3-8: Avg +0.17 vs par
+- David MULLIN holes 1-3: Avg +0.00 vs par (birdie on H2)
+- David MULLIN holes 2-4: Avg +0.00 vs par (birdie on H2)
+
+### Cold Spells (Net)
+- None significant beyond individual blow-ups
+
+### Cold Spells (Gross)
+- Alex BAKER holes 1-3: Avg +3.33 vs par (blow-ups on H1, H3)
+- Alex BAKER holes 5-7: Avg +2.67 vs par (blow-up on H6)
+- Alex BAKER holes 6-8: Avg +2.67 vs par (blow-up on H6)
+- Alex BAKER holes 10-12: Avg +3.00 vs par (blow-up on H12, 4 points on H11)
+- Alex BAKER holes 11-13: Avg +2.33 vs par (blow-up on H12, 4 points on H11)
+- Alex BAKER holes 12-14: Avg +2.67 vs par (blow-up on H12)
+- Alex BAKER holes 1-6: Avg +2.67 vs par (blow-ups on H1, H3, H6, 4 points on H4)
+- Alex BAKER holes 3-8: Avg +2.33 vs par (blow-ups on H3, H6, 4 points on H4)
+- Alex BAKER holes 5-10: Avg +2.33 vs par (blow-up on H6)
+- Alex BAKER holes 7-12: Avg +2.50 vs par (blow-up on H12, 4 points on H11)
+- Stuart NEUMANN holes 6-8: Avg +2.67 vs par (blow-up on H8)
+- Stuart NEUMANN holes 7-9: Avg +3.00 vs par (blow-up on H8)
+- Stuart NEUMANN holes 8-10: Avg +2.67 vs par (blow-up on H8)
+
+### Front/Back 9 Patterns
+- Alex BAKER: Strong finisher - F9: 13 pts, B9: 20 pts (diff: -7)
+
+### Round Stats
+- Stuart NEUMANN: 43 pts (Stableford), +23 gross, rank 1 (Trophy), rank 4 (Jacket) - secured Trophy win
+- Gregg WILLIAMS: 42 pts (Stableford), +11 gross, rank 2 (Trophy), rank 1 (Jacket) - maintained Jacket lead
+- David MULLIN: 45 pts (Stableford), +11 gross, rank 3 (Trophy), rank 2 (Jacket) - best round of the day (tied gross)
+- Jon BAKER: 32 pts (Stableford), +24 gross, rank 4 (Trophy), rank 3 (Jacket)
+- Alex BAKER: 33 pts (Stableford), +38 gross, rank 5 (Trophy), rank 5 (Jacket) - struggled with 4 blow-ups
+
+    Tournament Data:
+    [
+  {
+    "TEGNum": 16,
+    "Player": "Alex BAKER",
+    "Pl": "AB",
+    "TEG": "TEG 16",
+    "Year": 2023,
+    "Tournament_Score_Sc": 432.0,
+    "Tournament_Score_Gross": 148.0,
+    "Tournament_Score_Stableford": 127.0,
+    "Final_Rank_Gross": 5,
+    "Final_Rank_Stableford": 5,
+    "Final_Gap_Gross": 82.0,
+    "Final_Gap_Stableford": 29.0,
+    "Won_Gross": false,
+    "Won_Stableford": false,
+    "Wooden_Spoon": true,
+    "Margin_Gross": -82.0,
+    "Margin_Stableford": 29.0,
+    "Best_Round_Gross": 34.0,
+    "Worst_Round_Gross": 42.0,
+    "Range_Round_Gross": 8.0,
+    "StdDev_Round_Gross": 3.829708431025352,
+    "Best_Round_Stableford": 33.0,
+    "Worst_Round_Stableford": 29.0,
+    "Range_Round_Stableford": 4.0,
+    "StdDev_Round_Stableford": 1.8929694486000914,
+    "StdDev_Hole_Gross": 1.4812336777624642,
+    "StdDev_Hole_Stableford": 1.2614886751855061,
+    "Total_Holes_In_Lead_Gross": 0,
+    "Total_Holes_In_Lead_Stableford": 0,
+    "Rounds_Leading_After_Gross": 0,
+    "Rounds_Leading_After_Stableford": 0,
+    "Total_Lead_Gained_Gross": 0,
+    "Total_Lead_Lost_Gross": 0,
+    "Total_Lead_Gained_Stableford": 0,
+    "Total_Lead_Lost_Stableford": 0,
+    "Total_Eagles": 0,
+    "Total_Birdies": 1,
+    "Total_Pars": 9,
+    "Total_Bogeys": 14,
+    "Total_Double_Bogeys": 26,
+    "Total_Worse_Than_Double": 22,
+    "Holes_In_One": 0,
+    "Total_Stableford_5s": 1,
+    "Total_Stableford_0s": 13,
+    "Rank_Among_Player_TEGs_Gross": 7,
+    "Rank_Among_Player_TEGs_Stableford": 8,
+    "Rank_Among_All_TEGs_To_Date_Gross": 56,
+    "Rank_Among_All_TEGs_To_Date_Stableford": 50,
+    "teg_trophy_wins_before": 1,
+    "green_jacket_wins_before": 0,
+    "wooden_spoons_before": 2
+  },
+  {
+    "TEGNum": 16,
+    "Player": "David MULLIN",
+    "Pl": "DM",
+    "TEG": "TEG 16",
+    "Year": 2023,
+    "Tournament_Score_Sc": 366.0,
+    "Tournament_Score_Gross": 82.0,
+    "Tournament_Score_Stableford": 142.0,
+    "Final_Rank_Gross": 2,
+    "Final_Rank_Stableford": 3,
+    "Final_Gap_Gross": 16.0,
+    "Final_Gap_Stableford": 14.0,
+    "Won_Gross": false,
+    "Won_Stableford": false,
+    "Wooden_Spoon": false,
+    "Margin_Gross": -16.0,
+    "Margin_Stableford": 14.0,
+    "Best_Round_Gross": 11.0,
+    "Worst_Round_Gross": 26.0,
+    "Range_Round_Gross": 15.0,
+    "StdDev_Round_Gross": 6.557438524302,
+    "Best_Round_Stableford": 45.0,
+    "Worst_Round_Stableford": 30.0,
+    "Range_Round_Stableford": 15.0,
+    "StdDev_Round_Stableford": 6.557438524302,
+    "StdDev_Hole_Gross": 1.0112822087776967,
+    "StdDev_Hole_Stableford": 0.9782453711926169,
+    "Total_Holes_In_Lead_Gross": 3,
+    "Total_Holes_In_Lead_Stableford": 1,
+    "Rounds_Leading_After_Gross": 0,
+    "Rounds_Leading_After_Stableford": 0,
+    "Total_Lead_Gained_Gross": 1,
+    "Total_Lead_Lost_Gross": 2,
+    "Total_Lead_Gained_Stableford": 1,
+    "Total_Lead_Lost_Stableford": 1,
+    "Total_Eagles": 0,
+    "Total_Birdies": 2,
+    "Total_Pars": 16,
+    "Total_Bogeys": 33,
+    "Total_Double_Bogeys": 13,
+    "Total_Worse_Than_Double": 8,
+    "Holes_In_One": 0,
+    "Total_Stableford_5s": 0,
+    "Total_Stableford_0s": 7,
+    "Rank_Among_Player_TEGs_Gross": 11,
+    "Rank_Among_Player_TEGs_Stableford": 7,
+    "Rank_Among_All_TEGs_To_Date_Gross": 24,
+    "Rank_Among_All_TEGs_To_Date_Stableford": 33,
+    "teg_trophy_wins_before": 3,
+    "green_jacket_wins_before": 10,
+    "wooden_spoons_before": 4
+  },
+  {
+    "TEGNum": 16,
+    "Player": "Gregg WILLIAMS",
+    "Pl": "GW",
+    "TEG": "TEG 16",
+    "Year": 2023,
+    "Tournament_Score_Sc": 350.0,
+    "Tournament_Score_Gross": 66.0,
+    "Tournament_Score_Stableford": 143.0,
+    "Final_Rank_Gross": 1,
+    "Final_Rank_Stableford": 2,
+    "Final_Gap_Gross": 0.0,
+    "Final_Gap_Stableford": 13.0,
+    "Won_Gross": true,
+    "Won_Stableford": false,
+    "Wooden_Spoon": false,
+    "Margin_Gross": -0.0,
+    "Margin_Stableford": 13.0,
+    "Best_Round_Gross": 11.0,
+    "Worst_Round_Gross": 22.0,
+    "Range_Round_Gross": 11.0,
+    "StdDev_Round_Gross": 4.654746681256313,
+    "Best_Round_Stableford": 42.0,
+    "Worst_Round_Stableford": 30.0,
+    "Range_Round_Stableford": 12.0,
+    "StdDev_Round_Stableford": 5.05799696849784,
+    "StdDev_Hole_Gross": 1.0035149493261806,
+    "StdDev_Hole_Stableford": 1.013890228738369,
+    "Total_Holes_In_Lead_Gross": 72,
+    "Total_Holes_In_Lead_Stableford": 2,
+    "Rounds_Leading_After_Gross": 4,
+    "Rounds_Leading_After_Stableford": 0,
+    "Total_Lead_Gained_Gross": 0,
+    "Total_Lead_Lost_Gross": 0,
+    "Total_Lead_Gained_Stableford": 1,
+    "Total_Lead_Lost_Stableford": 1,
+    "Total_Eagles": 0,
+    "Total_Birdies": 1,
+    "Total_Pars": 30,
+    "Total_Bogeys": 20,
+    "Total_Double_Bogeys": 17,
+    "Total_Worse_Than_Double": 4,
+    "Holes_In_One": 0,
+    "Total_Stableford_5s": 0,
+    "Total_Stableford_0s": 5,
+    "Rank_Among_Player_TEGs_Gross": 1,
+    "Rank_Among_Player_TEGs_Stableford": 5,
+    "Rank_Among_All_TEGs_To_Date_Gross": 5,
+    "Rank_Among_All_TEGs_To_Date_Stableford": 29,
+    "teg_trophy_wins_before": 3,
+    "green_jacket_wins_before": 1,
+    "wooden_spoons_before": 1
+  },
+  {
+    "TEGNum": 16,
+    "Player": "Jon BAKER",
+    "Pl": "JB",
+    "TEG": "TEG 16",
+    "Year": 2023,
+    "Tournament_Score_Sc": 377.0,
+    "Tournament_Score_Gross": 93.0,
+    "Tournament_Score_Stableford": 131.0,
+    "Final_Rank_Gross": 3,
+    "Final_Rank_Stableford": 4,
+    "Final_Gap_Gross": 27.0,
+    "Final_Gap_Stableford": 25.0,
+    "Won_Gross": false,
+    "Won_Stableford": false,
+    "Wooden_Spoon": false,
+    "Margin_Gross": -27.0,
+    "Margin_Stableford": 25.0,
+    "Best_Round_Gross": 21.0,
+    "Worst_Round_Gross": 25.0,
+    "Range_Round_Gross": 4.0,
+    "StdDev_Round_Gross": 1.707825127659933,
+    "Best_Round_Stableford": 34.0,
+    "Worst_Round_Stableford": 32.0,
+    "Range_Round_Stableford": 2.0,
+    "StdDev_Round_Stableford": 0.9574271077563381,
+    "StdDev_Hole_Gross": 1.1680910151688992,
+    "StdDev_Hole_Stableford": 1.0658117172317163,
+    "Total_Holes_In_Lead_Gross": 3,
+    "Total_Holes_In_Lead_Stableford": 0,
+    "Rounds_Leading_After_Gross": 0,
+    "Rounds_Leading_After_Stableford": 0,
+    "Total_Lead_Gained_Gross": 2,
+    "Total_Lead_Lost_Gross": 2,
+    "Total_Lead_Gained_Stableford": 0,
+    "Total_Lead_Lost_Stableford": 0,
+    "Total_Eagles": 0,
+    "Total_Birdies": 3,
+    "Total_Pars": 14,
+    "Total_Bogeys": 27,
+    "Total_Double_Bogeys": 19,
+    "Total_Worse_Than_Double": 9,
+    "Holes_In_One": 0,
+    "Total_Stableford_5s": 0,
+    "Total_Stableford_0s": 9,
+    "Rank_Among_Player_TEGs_Gross": 9,
+    "Rank_Among_Player_TEGs_Stableford": 10,
+    "Rank_Among_All_TEGs_To_Date_Gross": 32,
+    "Rank_Among_All_TEGs_To_Date_Stableford": 49,
+    "teg_trophy_wins_before": 4,
+    "green_jacket_wins_before": 3,
+    "wooden_spoons_before": 1
+  },
+  {
+    "TEGNum": 16,
+    "Player": "Stuart NEUMANN",
+    "Pl": "SN",
+    "TEG": "TEG 16",
+    "Year": 2023,
+    "Tournament_Score_Sc": 389.0,
+    "Tournament_Score_Gross": 105.0,
+    "Tournament_Score_Stableford": 156.0,
+    "Final_Rank_Gross": 4,
+    "Final_Rank_Stableford": 1,
+    "Final_Gap_Gross": 39.0,
+    "Final_Gap_Stableford": 0.0,
+    "Won_Gross": false,
+    "Won_Stableford": true,
+    "Wooden_Spoon": false,
+    "Margin_Gross": -39.0,
+    "Margin_Stableford": 0.0,
+    "Best_Round_Gross": 23.0,
+    "Worst_Round_Gross": 30.0,
+    "Range_Round_Gross": 7.0,
+    "StdDev_Round_Gross": 2.872281323269014,
+    "Best_Round_Stableford": 43.0,
+    "Worst_Round_Stableford": 35.0,
+    "Range_Round_Stableford": 8.0,
+    "StdDev_Round_Stableford": 3.265986323710905,
+    "StdDev_Hole_Gross": 1.2552705785415796,
+    "StdDev_Hole_Stableford": 1.198590721768636,
+    "Total_Holes_In_Lead_Gross": 2,
+    "Total_Holes_In_Lead_Stableford": 72,
+    "Rounds_Leading_After_Gross": 0,
+    "Rounds_Leading_After_Stableford": 4,
+    "Total_Lead_Gained_Gross": 0,
+    "Total_Lead_Lost_Gross": 1,
+    "Total_Lead_Gained_Stableford": 0,
+    "Total_Lead_Lost_Stableford": 0,
+    "Total_Eagles": 0,
+    "Total_Birdies": 3,
+    "Total_Pars": 13,
+    "Total_Bogeys": 23,
+    "Total_Double_Bogeys": 19,
+    "Total_Worse_Than_Double": 14,
+    "Holes_In_One": 0,
+    "Total_Stableford_5s": 1,
+    "Total_Stableford_0s": 9,
+    "Rank_Among_Player_TEGs_Gross": 5,
+    "Rank_Among_Player_TEGs_Stableford": 2,
+    "Rank_Among_All_TEGs_To_Date_Gross": 41,
+    "Rank_Among_All_TEGs_To_Date_Stableford": 16,
+    "teg_trophy_wins_before": 0,
+    "green_jacket_wins_before": 0,
+    "wooden_spoons_before": 3
+  }
+]
+
+    Victory Context (use this to craft varied victory descriptions per Victory Classification Framework):
+    {
+  "winner": "Stuart NEUMANN",
+  "holes_led_by_winner": 72,
+  "total_holes": 72,
+  "pct_holes_led": 100.0,
+  "rounds_leading_after": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "lead_changes": {
+    "total_r2_onwards": 0,
+    "by_round": {
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0
+    },
+    "final_round": 0
+  },
+  "players_who_led": 1,
+  "longest_challenger_lead": 0,
+  "final_margin": 13.0,
+  "largest_lead": 0.0,
+  "smallest_lead_after_r2": 0.0,
+  "max_deficit_winner": 0
+}
+
+    Historical Context:
+    **Historical wins BEFORE this tournament (for context on '1st', '2nd', etc.):**
+- Alex BAKER: 1 Trophy wins (Stableford), 0 Green Jacket wins (Gross), 2 Wooden Spoons
+- David MULLIN: 3 Trophy wins (Stableford), 10 Green Jacket wins (Gross), 4 Wooden Spoons
+- Gregg WILLIAMS: 3 Trophy wins (Stableford), 1 Green Jacket wins (Gross), 1 Wooden Spoons
+- Jon BAKER: 4 Trophy wins (Stableford), 3 Green Jacket wins (Gross), 1 Wooden Spoons
+- Stuart NEUMANN: 0 Trophy wins (Stableford), 0 Green Jacket wins (Gross), 3 Wooden Spoons
+
+
+    Career Context:
+    **PRE-TOURNAMENT Career Context (all data BEFORE this TEG):**
+
+**Alex BAKER**:
+- Recent: TEG 15: 6, TEG 14: 2, TEG 13: 3, TEG 12: 5, TEG 11: 2
+- Career positions: 1: 1, 2: 4, 3: 1, 5: 1, 6: 2
+
+**David MULLIN**:
+- Recent: TEG 15: 5, TEG 14: 1, TEG 13: 5, TEG 12: 6, TEG 11: 5
+- Career positions: 1: 3, 2: 2, 3: 2, 4: 2, 5: 4, 6: 1
+
+**Gregg WILLIAMS**:
+- Recent: TEG 15: 1, TEG 14: 3, TEG 13: 2, TEG 12: 2, TEG 11: 3
+- Career positions: 1: 3, 2: 5, 3: 3, 4: 1, 5: 2
+
+**Jon BAKER**:
+- Recent: TEG 15: 4, TEG 14: 4, TEG 13: 1, TEG 12: 4, TEG 11: 1
+- Career positions: 1: 4, 2: 3, 3: 1, 4: 5, 5: 1
+
+**Stuart NEUMANN**:
+- Recent: TEG 15: 2, TEG 12: 3, TEG 10: 5, TEG 9: 6, TEG 8: 6
+- Career positions: 2: 1, 3: 4, 4: 2, 5: 2, 6: 2
+

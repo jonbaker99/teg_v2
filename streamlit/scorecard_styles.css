@@ -1,5 +1,6 @@
 /* Golf Scorecard CSS - With Border Shortcuts */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 /* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap'); */
 
 
@@ -179,7 +180,7 @@
   border-collapse: separate;
   border-spacing: 2px;
   margin: 0 auto 20px;
-  font-family: monospace;
+  font-family: 'Roboto Mono', monospace;
   font-size: 14px;
 }
 
@@ -525,7 +526,7 @@
   border-spacing: 1px;
   margin: 0 auto 20px;
   font-size: var(--mobile-font-size);
-  font-family: monospace;
+  font-family: 'Roboto Mono', monospace;
 }
 
 .scorecard-table-mobile tr {

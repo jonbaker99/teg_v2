@@ -1,42 +1,44 @@
 # TEG 13 Story Notes
 
 ## Key Points
-- Jon BAKER's 4th Trophy & 3rd Green Jacket - wire-to-wire sweep, led 70/72 Stableford holes and all 72 Gross holes
-- Won Trophy by 6 pts over G. WILLIAMS (158-152); won Jacket by 18 strokes (+50 vs +68)
-- Only player to break par gross in any round (R3: +8); five birdies including dramatic R2 H18 reclaim
-- John PATTERSON's wild ride - tournament-best 49pts (R3) despite finishing 3rd Trophy/5th Jacket with 14 blow-ups
-- David MULLIN's 4th Wooden Spoon - catastrophic H10 quintuple bogey (9 / +5) in R4 sealed fate
+- Jon BAKER's 4th Trophy & 3rd Green Jacket - swept both competitions with wire-to-wire dominance, leading all 72 holes
+- 6-point Trophy margin over Williams; 18-stroke Jacket margin - controlled from gun to tape
+- Patterson's wild ride: 49pts (best round of tournament, R3) sandwiched between disasters, including 28pt collapse (R1-R2) and eagle-to-triple sequence (R4)
+- Williams challenged early, briefly seizing Trophy lead twice but never sustained - finished runner-up in both competitions
+- Mullin's Wooden Spoon sealed by catastrophic 9 (+5) on R4 H10 - his 4th career Spoon despite 9 Green Jackets
+- Most consistent winner in TEG history: J. BAKER posted lowest gross score (+50) ever recorded
 
 ## How It Unfolded
 - **Round 1:** JB 39pts leads Trophy by 6; JB +13 leads Jacket by 9
-- **Round 2:** GW's 41pts closes gap to 1; JB birdie on H18 reclaims lead on countback after brief losses at H15/H18
-- **Round 3:** JP's 49pts (tournament-best) vaults from 5th to 3rd; JB extends Trophy lead to 5pts, maintains Jacket command
-- **Round 4:** AB's 44pts strong finish; JB's 39pts seals wire-to-wire sweep in both competitions
+- **Round 2:** GW briefly seized Trophy lead at H15, lost it H16; JB reclaimed with H18 birdie to lead by 1pt
+- **Round 3:** JB extended Trophy lead to 5pts with 44pts; JP's 49pts moved him 5th to 3rd
+- **Round 4:** JB secured sweep with 39pts, maintaining 6pt Trophy/18-stroke Jacket margins
 
 ## Story Angles
-- Wire-to-wire domination in both competitions - led Gross all 72 holes, Stableford 70/72
-- Countback thriller in R2 - lead changed hands three times on back nine before JB's H18 birdie reclaim
-- PATTERSON's bipolar performance - tournament-best 49pts with eagle, yet most blow-ups (14) and highest standard deviation
-- MULLIN's tragic H10 collapse - quintuple bogey in final round handed him 4th career Spoon
-- Only sub-par round of tournament - BAKER's R3 +8 gross (44pts) showcased consistency advantage
-- Two BAKER/WILLIAMS battles - both competitions saw same top-2 finishers, different margins
+- Baker's perfect lead control - first wire-to-wire sweep since venue introduction, never trailed a single hole
+- Patterson's tournament of extremes: 49pt masterclass vs 28pt meltdown, eagle vs quintuple bogey, climbed from 5th to tie 3rd despite R1-R2 collapse
+- Williams' near-miss heartbreak - challenged throughout, took Trophy lead twice (R1 H1, R2 H15), finished 2nd in both competitions yet couldn't sustain
+- Mullin's Spoon paradox: 9-time Jacket winner collects 4th Spoon after H10 catastrophe, averaging close to +3 per round
+- Baker brothers' contrast: Jon's dominance vs Alex's roller-coaster (best round 44pts, worst 31pts)
+- Historic margin: J. BAKER's +50 gross breaks tournament record by 18 strokes over Williams
 
 ## Quote-Worthy Lines
-- "Wire-to-wire dominance"
-- "Countback drama redemption"
-- "Eagle to disaster"
-- "Quintuple bogey catastrophe"
-- "Bipolar brilliance and chaos"
-- "Sub-par excellence"
+- "Wire-to-wire perfection"
+- "Patterson's 49-point redemption"
+- "Williams' double runner-up heartbreak"
+- "Mullin's catastrophic H10"
+- "Never trailed once"
+- "Historic 18-stroke Jacket margin"
 
 ## Tournament Stats
-- Jon BAKER: 158pts, +50 gross, led 70/72 (Trophy) & 72/72 (Jacket), 5 birdies, only sub-par round (R3: +8)
-- Gregg WILLIAMS: 152pts, +68 gross, led 5 Stableford holes, 1 birdie, strong finisher (both F9/B9 patterns)
-- Alex BAKER/John PATTERSON: tied 141pts (JP 3rd on countback despite +56 gross vs AB +53)
-- John PATTERSON: widest performance range - best round 49pts, worst 28pts (StdDev: 9.91); 1 eagle, 14 blow-ups
-- David MULLIN: 135pts, +80 gross, R4 H10 quintuple bogey (9 / +5) sealed 4th Spoon
-- Rarity: Only 10 total birdies across field; PATTERSON's R4 eagle only one of tournament
-- Final Tournament Scores: JB: 158pts/+50; GW: 152pts/+68; AB: 141pts/+103; JP: 141pts/+106; DM: 135pts/+80
+- Jon BAKER: 158pts, +50 gross, led 72/72 holes (Trophy) & 72/72 (Jacket) - wire-to-wire sweep
+- Gregg WILLIAMS: 152pts, +68 gross, led 5/72 holes (Trophy), 1/72 (Jacket) - double runner-up
+- John PATTERSON: 141pts, +106 gross - tied 3rd Trophy, 5th Jacket, 1 eagle/2 birdies/14 blow-ups (0pts)
+- Alex BAKER: 141pts, +103 gross - tied 3rd Trophy, 4th Jacket, 0 eagles/0 birdies/7 blow-ups
+- David MULLIN: 135pts, +80 gross - Wooden Spoon, 1 birdie, 7 blow-ups including R4 H10 catastrophe (9 / +5)
+- J. BAKER's consistency: StdDev 3.32pts per round (tightest of field); 5 birdies, only 6 blow-ups
+- Patterson volatility: StdDev 9.91pts per round, range 21pts (28-49), 3 total 5-pointers vs 14 blow-ups
+- Final Tournament Scores: JB: 158pts/+50; GW: 152pts/+68; JP: 141pts/+106; AB: 141pts/+103; DM: 135pts/+80
 
 ## Location & Venue
 - Kent, England (2020)
@@ -50,14 +52,15 @@
 ## Round 1 Notes
 
 ### Key Moments
-- H1 (Par 4): Jon BAKER and Gregg WILLIAMS took joint Trophy lead (4 / E), 3 pts
+- H1 (Par 4): Jon BAKER took Trophy lead (4 / E), 3 pts
+- H1 (Par 4): Gregg WILLIAMS took Trophy lead (4 / E), 3 pts
 - H1 (Par 4): Alex BAKER blow-up (7 / +3), 0 pts
 - H1 (Par 4): John PATTERSON blow-up (8 / +4), 0 pts
-- H2 (Par 4): Gregg WILLIAMS blow-up, lost Trophy lead (7 / +3), 0 pts
+- H2 (Par 4): Gregg WILLIAMS lost Trophy lead, blow-up (7 / +3), 0 pts
 - H3 (Par 5): Jon BAKER birdie (4 / -1), 4 pts
 - H3 (Par 5): Gregg WILLIAMS blow-up (8 / +3), 0 pts
-- H5 (Par 5): John PATTERSON birdie (4 / -1), 5 pts
 - H7 (Par 4): John PATTERSON quintuple bogey (9 / +5), 0 pts
+- H10 (Par 4): John PATTERSON blow-up (8 / +4), 0 pts
 - H11 (Par 4): Alex BAKER blow-up (8 / +4), 0 pts
 - H12 (Par 4): Alex BAKER blow-up (7 / +3), 0 pts
 - H15 (Par 4): Gregg WILLIAMS birdie (3 / -1), 5 pts
@@ -67,150 +70,176 @@
 ### Lead After Round
 - **Leader:** Jon BAKER
 - **Margin:** 6 points to 2nd place
-- **Status:** Comfortable lead
-- **Lead change:** No (first round)
+- **Status:** Solid lead
+- **Lead change:** No - took lead on H1
 
 ### Hot Spells (Net)
-- No significant net hot spells this round
+- Jon BAKER holes 1-6: 17 pts (birdie on H3)
+- Gregg WILLIAMS holes 15-17: 10 pts (birdie on H15)
 
 ### Hot Spells (Gross)
-- Jon BAKER holes 1-6: Avg E vs par, birdie on H3 (Par 5)
-- Jon BAKER holes 2-7: Avg E vs par, birdie on H3 (Par 5)
-- Jon BAKER holes 3-8: Avg +0.17 vs par, birdie on H3 (Par 5)
-- Gregg WILLIAMS holes 15-17: Avg E vs par, birdie on H15 (Par 4)
+- Jon BAKER holes 1-3: Avg -0.33 vs par (birdie on H3)
+- Jon BAKER holes 2-4: Avg -0.33 vs par (birdie on H3)
+- Jon BAKER holes 3-5: Avg -0.33 vs par (birdie on H3)
+- Jon BAKER holes 1-6: Avg E vs par (birdie on H3)
+- Jon BAKER holes 2-7: Avg E vs par (birdie on H3)
+- Jon BAKER holes 16-18: Avg E vs par
+- Gregg WILLIAMS holes 15-17: Avg E vs par (birdie on H15)
 
 ### Cold Spells (Net)
-- Gregg WILLIAMS holes 2-7: 5 pts, blow-ups on H2 (Par 4) and H3 (Par 5)
-- Alex BAKER holes 10-12: 1 pt, blow-ups on H11 (Par 4) and H12 (Par 4)
-- John PATTERSON holes 6-11: 6 pts, blow-ups on H7 (Par 4) and H10 (Par 4)
+- Gregg WILLIAMS holes 2-7: 5 pts (blow-ups on H2, H3)
+- Alex BAKER holes 10-12: 1 pt (blow-ups on H11, H12)
+- John PATTERSON holes 6-11: 6 pts (blow-ups on H7, H10)
 
 ### Cold Spells (Gross)
-- Gregg WILLIAMS holes 2-4: Avg +2.33 vs par, blow-ups on H2 (Par 4) and H3 (Par 5)
-- Alex BAKER holes 10-12: Avg +3.00 vs par, blow-ups on H11 (Par 4) and H12 (Par 4)
-- John PATTERSON holes 6-11: Avg +2.67 vs par, blow-ups on H7 (Par 4) and H10 (Par 4)
-- John PATTERSON holes 7-12: Avg +2.50 vs par, blow-ups on H7 (Par 4) and H10 (Par 4)
+- Gregg WILLIAMS holes 2-4: Avg +2.33 vs par (blow-ups on H2, H3)
+- Alex BAKER holes 4-6: Avg +2.33 vs par
+- Alex BAKER holes 5-7: Avg +2.33 vs par
+- Alex BAKER holes 9-11: Avg +2.33 vs par (blow-up on H11)
+- Alex BAKER holes 10-12: Avg +3.0 vs par (blow-ups on H11, H12)
+- Alex BAKER holes 11-13: Avg +2.67 vs par (blow-ups on H11, H12)
+- John PATTERSON holes 6-8: Avg +2.67 vs par (blow-up on H7)
+- John PATTERSON holes 7-9: Avg +2.67 vs par (blow-up on H7)
+- John PATTERSON holes 8-10: Avg +2.33 vs par (blow-up on H10)
+- John PATTERSON holes 9-11: Avg +2.67 vs par (blow-up on H10)
+- John PATTERSON holes 10-12: Avg +2.33 vs par (blow-up on H10)
+- John PATTERSON holes 14-16: Avg +2.33 vs par (blow-up on H16)
+- John PATTERSON holes 6-11: Avg +2.67 vs par (blow-ups on H7, H10)
+- John PATTERSON holes 7-12: Avg +2.5 vs par (blow-ups on H7, H10)
 
 ### Front/Back 9 Patterns
 - Jon BAKER: Strong starter - F9: 23 pts, B9: 16 pts (diff: 7)
 - Gregg WILLIAMS: Strong finisher - F9: 12 pts, B9: 21 pts (diff: -9)
 
 ### Round Stats
-- Jon BAKER: 39 pts (Stableford), +13 gross, rank 1 (Trophy and Jacket leader)
-- Gregg WILLIAMS: 33 pts (Stableford), +22 gross, rank 2
-- Dave MURPHY: 31 pts (Stableford), +22 gross, rank 2 (Jacket)
-- Alex BAKER: 31 pts (Stableford), +30 gross, rank 4 (Jacket)
-- John PATTERSON: 28 pts (Stableford), +36 gross, rank 5
+- Jon BAKER: 39 pts (Trophy), 85 gross (+13), rank 1 (both Trophy and Jacket)
+- Gregg WILLIAMS: 33 pts (Trophy), 94 gross (+22), rank 2 (both Trophy and Jacket)
+- David MCLAUGHLIN: 31 pts (Trophy), 94 gross (+22), rank 3 (both Trophy and Jacket)
+- Alex BAKER: 31 pts (Trophy), 102 gross (+30), rank 3 (Trophy) / rank 4 (Jacket)
+- John PATTERSON: 28 pts (Trophy), 108 gross (+36), rank 5 (both Trophy and Jacket)
 
 ## Round 2 Notes
 
 ### Key Moments
-- H18 (Par 4): Jon BAKER birdie (3 / -1), 4 pts - reclaimed Trophy lead on final hole
-- H15 (Par 5): Gregg WILLIAMS 4 points (5 / 0), 4 pts - took Trophy lead briefly
 - H6 (Par 5): Jon BAKER birdie (4 / -1), 4 pts
+- H18 (Par 4): Jon BAKER birdie (3 / -1), 4 pts - reclaimed Trophy lead on final hole
+- H15 (Par 5): Gregg WILLIAMS 4 points on H15 (Par 5) (5 / E), 4 pts - briefly took Trophy lead
+- H16 (Par 3): Gregg WILLIAMS lost Trophy lead (3 / E), 3 pts
+- H2 (Par 3): Gregg WILLIAMS blow-up (6 / +3), 0 pts
 - H1 (Par 4): John PATTERSON blow-up (8 / +4), 0 pts
 - H3 (Par 5): John PATTERSON blow-up (8 / +3), 0 pts
-- H10 (Par 4): Alex BAKER blow-up (7 / +3), 0 pts
-- H11 (Par 5): Jon BAKER blow-up (8 / +3), 0 pts
-- H15 (Par 5): Jon BAKER blow-up (8 / +3), 0 pts
-- H2 (Par 3): Gregg WILLIAMS blow-up (6 / +3), 0 pts
-- H9 (Par 4): David MULLIN blow-up (8 / +4), 0 pts
 - H14 (Par 3): John PATTERSON blow-up (6 / +3), 0 pts
 - H17 (Par 4): John PATTERSON blow-up (8 / +4), 0 pts
 - H18 (Par 4): John PATTERSON blow-up (7 / +3), 0 pts
+- H10 (Par 4): Alex BAKER blow-up (7 / +3), 0 pts
+- H11 (Par 5): Jon BAKER blow-up (8 / +3), 0 pts
+- H15 (Par 5): Jon BAKER blow-up (8 / +3), 0 pts
+- H9 (Par 4): David MULLIN blow-up (8 / +4), 0 pts
 
 ### Lead After Round
 - **Leader:** Jon BAKER
-- **Margin:** 1 point to 2nd place
+- **Margin:** 1 point to 2nd place (Gregg WILLIAMS)
 - **Status:** Tight battle
-- **Lead change:** Jon BAKER held Trophy lead throughout (lost briefly at H15, regained at H16, lost at H18 finish, regained on countback)
+- **Lead change:** Drama on final holes - Williams briefly took Trophy lead at H15, lost it at H16, BAKER reclaimed on H18 birdie
 
 ### Hot Spells (Net)
 - Gregg WILLIAMS holes 11-16: 18 pts (4 points on H15 (Par 5))
 
 ### Hot Spells (Gross)
-- Gregg WILLIAMS holes 11-13: Avg 0.00 vs par
+- Gregg WILLIAMS holes 11-13: Avg E vs par
 - Gregg WILLIAMS holes 11-16: Avg +0.17 vs par
 
 ### Cold Spells (Net)
-- John PATTERSON holes 1-3: 1 pt (blow-ups on holes 1, 3)
-- John PATTERSON holes 13-18: 5 pts (blow-ups on holes 14, 17, 18)
+- John PATTERSON holes 1-3: 1 pt (blow-ups on H1 (Par 4), H3 (Par 5))
+- John PATTERSON holes 13-18: 5 pts (blow-ups on H14 (Par 3), H17 (Par 4), H18 (Par 4))
 
 ### Cold Spells (Gross)
-- Alex BAKER holes 10-12: Avg +2.33 vs par (blow-up on hole 10)
-- John PATTERSON holes 1-3: Avg +3.00 vs par (blow-ups on holes 1, 3)
-- John PATTERSON holes 2-4: Avg +2.33 vs par (blow-up on hole 3)
-- John PATTERSON holes 13-15: Avg +2.67 vs par (blow-up on hole 14)
-- John PATTERSON holes 14-16: Avg +2.33 vs par (blow-up on hole 14)
-- John PATTERSON holes 15-17: Avg +2.67 vs par (blow-up on hole 17)
-- John PATTERSON holes 16-18: Avg +2.67 vs par (blow-ups on holes 17, 18)
-- John PATTERSON holes 1-6: Avg +2.33 vs par (blow-ups on holes 1, 3)
-- John PATTERSON holes 13-18: Avg +2.67 vs par (blow-ups on holes 14, 17, 18)
+- John PATTERSON holes 1-3: Avg +3.00 vs par (blow-ups on H1 (Par 4), H3 (Par 5))
+- John PATTERSON holes 2-4: Avg +2.33 vs par (blow-up on H3 (Par 5))
+- John PATTERSON holes 1-6: Avg +2.33 vs par (blow-ups on H1 (Par 4), H3 (Par 5))
+- John PATTERSON holes 13-15: Avg +2.67 vs par (blow-up on H14 (Par 3))
+- John PATTERSON holes 14-16: Avg +2.33 vs par (blow-up on H14 (Par 3))
+- John PATTERSON holes 15-17: Avg +2.67 vs par (blow-up on H17 (Par 4))
+- John PATTERSON holes 16-18: Avg +2.67 vs par (blow-ups on H17 (Par 4), H18 (Par 4))
+- John PATTERSON holes 13-18: Avg +2.67 vs par (blow-ups on H14 (Par 3), H17 (Par 4), H18 (Par 4))
+- Alex BAKER holes 10-12: Avg +2.33 vs par (blow-up on H10 (Par 4))
 
 ### Front/Back 9 Patterns
 - Alex BAKER: Strong starter - F9: 21 pts, B9: 13 pts (diff: 8)
-- David MULLIN: Strong finisher - F9: 16 pts, B9: 21 pts (diff: -5)
 - Gregg WILLIAMS: Strong finisher - F9: 17 pts, B9: 24 pts (diff: -7)
+- David MULLIN: Strong finisher - F9: 16 pts, B9: 21 pts (diff: -5)
 
 ### Round Stats
-- Jon BAKER: 36 pts (Stableford), 88 gross (+16), rank 1 (Trophy), rank 1 (Jacket) - held Trophy lead throughout, 2 birdies
-- Gregg WILLIAMS: 41 pts (Stableford), 86 gross (+14), rank 2 (Trophy), rank 2 (Jacket) - best round, closed gap to 1 pt
-- David MULLIN: 37 pts (Stableford), 89 gross (+17), rank 3 (Trophy), rank 3 (Jacket) - 7 pts behind Trophy lead
-- Alex BAKER: 34 pts (Stableford), 99 gross (+27), rank 4 (Trophy), rank 4 (Jacket) - 10 pts behind Trophy lead
-- John PATTERSON: 28 pts (Stableford), 105 gross (+33), rank 5 (Trophy), rank 5 (Jacket) - difficult round with 6 blow-ups
+- Gregg WILLIAMS: 41 pts (Stableford), +14 gross, rank 1 (round), Trophy rank 2 (1 behind)
+- Jon BAKER: 36 pts (Stableford), +16 gross, rank 3 (round), Trophy rank 1, Jacket rank 1
+- David MULLIN: 37 pts (Stableford), +17 gross, rank 2 (round), Trophy rank 3 (7 behind)
+- Alex BAKER: 34 pts (Stableford), +27 gross, rank 4 (round), Trophy rank 4 (10 behind)
+- John PATTERSON: 28 pts (Stableford), +33 gross, rank 5 (round), Trophy rank 5 (19 behind)
+- Jon BAKER maintained Jacket lead throughout entire round (all 18 holes)
+- Jon BAKER held Trophy lead for 16 of 18 holes, lost briefly at H15-H16
 
 ## Round 3 Notes
 
 ### Key Moments
-- H1 (Par 4): Gregg WILLIAMS took Trophy lead (4 / E), 3 pts
+- H1 (Par 4): Gregg WILLIAMS took Trophy lead (4 / 0), 3 pts
+- H2 (Par 4): John PATTERSON 4 points on H2 (Par 4) (4 / 0), 4 pts
+- H2 (Par 4): Gregg WILLIAMS blow-up, lost Trophy lead (7 / +3), 0 pts
 - H2 (Par 4): Alex BAKER blow-up (8 / +4), 0 pts
-- H2 (Par 4): Gregg WILLIAMS blow-up (7 / +3), 0 pts - lost Trophy lead
-- H2 (Par 4): John PATTERSON 4 points on H2 (Par 4)
 - H4 (Par 4): John PATTERSON birdie (3 / -1), 5 pts
 - H8 (Par 4): Alex BAKER blow-up (7 / +3), 0 pts
 - H9 (Par 3): Jon BAKER birdie (2 / -1), 4 pts
+- H10 (Par 4): John PATTERSON 4 points on H10 (Par 4) (4 / 0), 4 pts
 - H12 (Par 4): Alex BAKER blow-up (7 / +3), 1 pt
 - H14 (Par 3): David MULLIN blow-up (6 / +3), 0 pts
+- H16 (Par 4): John PATTERSON 4 points on H16 (Par 4) (4 / 0), 4 pts
 - H17 (Par 3): John PATTERSON blow-up (7 / +4), 0 pts
 - H18 (Par 5): Alex BAKER blow-up (8 / +3), 0 pts
 
 ### Lead After Round
 - **Leader:** Jon BAKER
 - **Margin:** 5 points to 2nd place
-- **Status:** Consolidating lead
-- **Lead change:** No - held Trophy lead throughout round
+- **Status:** Comfortable lead
+- **Lead change:** No - maintained Trophy lead from Round 2
 
 ### Hot Spells (Net)
-- Jon BAKER holes 6-11: 18 pts - birdie on H9 (Par 3)
-- John PATTERSON holes 2-4: 11 pts - birdie on H4 (Par 4), 4 points on H2 (Par 4)
-- John PATTERSON holes 8-13: 18 pts - 4 points on H10 (Par 4)
+- Jon BAKER holes 6-11: 18 pts (birdie on H9)
+- John PATTERSON holes 2-4: 11 pts (birdie on H4)
+- John PATTERSON holes 8-13: 18 pts (4 points on H10)
 
 ### Hot Spells (Gross)
-- Jon BAKER holes 8-10: Avg -0.33 vs par - birdie on H9 (Par 3)
-- Jon BAKER holes 9-11: Avg -0.33 vs par - birdie on H9 (Par 3)
-- Jon BAKER holes 6-11: Avg E vs par - birdie on H9 (Par 3)
-- Gregg WILLIAMS holes 6-8: Avg E vs par
-- Gregg WILLIAMS holes 7-9: Avg E vs par
-- Gregg WILLIAMS holes 12-14: Avg E vs par
-- John PATTERSON holes 2-4: Avg E vs par - birdie on H4 (Par 4)
+- Gregg WILLIAMS holes 6-8: Avg 0.00 vs par
+- Gregg WILLIAMS holes 7-9: Avg 0.00 vs par
+- Gregg WILLIAMS holes 12-14: Avg 0.00 vs par
+- Jon BAKER holes 7-9: Avg 0.00 vs par (birdie on H9)
+- Jon BAKER holes 8-10: Avg -0.33 vs par (birdie on H9)
+- Jon BAKER holes 9-11: Avg -0.33 vs par (birdie on H9)
+- Jon BAKER holes 4-9: Avg +0.17 vs par (birdie on H9)
+- Jon BAKER holes 5-10: Avg +0.17 vs par (birdie on H9)
+- Jon BAKER holes 6-11: Avg 0.00 vs par (birdie on H9)
+- Jon BAKER holes 7-12: Avg +0.17 vs par (birdie on H9)
+- John PATTERSON holes 2-4: Avg 0.00 vs par (birdie on H4)
 
 ### Cold Spells (Net)
-- No significant net cold spells recorded
+- No significant Stableford cold spells identified
 
 ### Cold Spells (Gross)
-- David MULLIN holes 12-14: Avg +2.33 vs par - blow-up on H14 (Par 3)
-- Alex BAKER holes 1-3: Avg +2.67 vs par - blow-up on H2 (Par 4)
-- Alex BAKER holes 2-4: Avg +2.33 vs par - blow-up on H2 (Par 4)
-- Alex BAKER holes 8-10: Avg +2.33 vs par - blow-up on H8 (Par 4)
+- David MULLIN holes 12-14: Avg +2.33 vs par (blow-up on H14)
+- Alex BAKER holes 1-3: Avg +2.67 vs par (blow-up on H2)
+- Alex BAKER holes 2-4: Avg +2.33 vs par (blow-up on H2)
+- Alex BAKER holes 8-10: Avg +2.33 vs par (blow-up on H8)
 
 ### Front/Back 9 Patterns
-- No significant F9/B9 differences recorded
+- No significant F9/B9 differences identified
 
 ### Round Stats
-- Jon BAKER: 44 pts (Trophy), 79 gross (+8), rank 1 (Trophy), rank 1 (Jacket) - led entire round in both competitions
-- John PATTERSON: 49 pts (Trophy), 83 gross (+12), rank 1 (round Trophy), rank 2 (round Jacket) - jumped from 5th to 3rd in Trophy standings
-- Gregg WILLIAMS: 40 pts (Trophy), 86 gross (+15), rank 3, rank 2 (Trophy) - brief Trophy lead on H1, lost on H2
-- David MULLIN: 32 pts (Trophy), 92 gross (+21), rank 4, rank 3 (Jacket)
-- Alex BAKER: 32 pts (Trophy), 100 gross (+29), rank 5 - 4 blow-ups including triple bogeys or worse
+- Jon BAKER: 44 pts (Stableford), +8 gross, rank 1 (Trophy), rank 1 (Jacket)
+- John PATTERSON: 49 pts (Stableford), +12 gross, rank 1 (round Stableford), rank 3 (Trophy)
+- Gregg WILLIAMS: 40 pts (Stableford), +15 gross, rank 2 (Trophy)
+- David MULLIN: 32 pts (Stableford), +21 gross, rank 4 (Trophy)
+- Alex BAKER: 32 pts (Stableford), +29 gross, rank 5 (Trophy)
+- Jon BAKER extended Trophy lead from 1 pt to 5 pts
+- Jon BAKER extended Jacket lead from 0 to +14 vs Gregg WILLIAMS
+- John PATTERSON moved from 5th to 3rd in Trophy standings (climbed 2 positions)
 
 
 ### Records & Personal Bests
@@ -223,47 +252,48 @@
 
 ### Key Moments
 - H2 (Par 5): John PATTERSON eagle (3 / -2), 5 pts
-- H3 (Par 3): John PATTERSON blow-up (6 / +3), 0 pts - followed immediately after eagle
+- H3 (Par 3): John PATTERSON blow-up (6 / +3), 0 pts
 - H6 (Par 4): Gregg WILLIAMS blow-up (7 / +3), 0 pts
 - H10 (Par 4): David MULLIN catastrophic blow-up (9 / +5), 0 pts - hit bottom (Spoon)
-- H10 (Par 4): Jon BAKER blow-up (7 / +3), 0 pts - same hole as MULLIN disaster
-- H10 (Par 4): Alex BAKER 4 points on H10 (Par 4) - left bottom (Spoon) while others struggled
+- H10 (Par 4): Jon BAKER blow-up (7 / +3), 0 pts
+- H10 (Par 4): Alex BAKER escapes blow-up window with 4 points on H10 (Par 4)
 - H12 (Par 5): John PATTERSON blow-up (8 / +3), 0 pts
-- H15 (Par 5): John PATTERSON blow-up (9 / +4), 0 pts - third zero-point hole
-- H17 (Par 3): Jon BAKER birdie (2 / -1), 4 pts - closed round strong
+- H15 (Par 5): John PATTERSON blow-up (9 / +4), 0 pts
+- H16 (Par 4): Jon BAKER double bogey (6 / +2), 0 pts
+- H17 (Par 3): Jon BAKER birdie (2 / -1), 4 pts
 
 ### Lead After Round
 - **Leader:** Jon BAKER
 - **Margin:** 6 points to 2nd place
 - **Status:** Comfortable lead maintained
-- **Lead change:** No - BAKER held Trophy lead wire-to-wire
+- **Lead change:** No - retained Trophy lead throughout
 
 ### Hot Spells (Net)
-- Alex BAKER holes 1-7: Strong front nine with three 4-point holes (H1, H7, H10)
+- None significant in Round 4
 
 ### Hot Spells (Gross)
-- David MULLIN holes 4-6: Avg 0.00 vs par - solid par stretch
-- Jon BAKER holes 12-14: Avg 0.00 vs par - steady play through middle back nine
+- David MULLIN holes 4-6: Avg 0.00 vs par (even par golf through three holes)
+- Jon BAKER holes 12-14: Avg 0.00 vs par (steady par golf through mid-back nine)
 
 ### Cold Spells (Net)
-- No significant net cold spells identified
+- None significant in Round 4
 
 ### Cold Spells (Gross)
-- David MULLIN holes 8-10: Avg +2.67 vs par - blow-up on H10 (9 / +5)
-- David MULLIN holes 9-11: Avg +2.33 vs par - continued struggles after H10
-- David MULLIN holes 10-12: Avg +2.67 vs par - couldn't recover after disaster hole
-- John PATTERSON holes 14-16: Avg +2.33 vs par - blow-up on H15 (9 / +4)
+- David MULLIN holes 8-10: Avg +2.67 vs par (blow-up on H10)
+- David MULLIN holes 9-11: Avg +2.33 vs par (blow-up on H10)
+- David MULLIN holes 10-12: Avg +2.67 vs par (blow-up on H10)
+- John PATTERSON holes 14-16: Avg +2.33 vs par (blow-up on H15)
 
 ### Front/Back 9 Patterns
 - David MULLIN: Strong starter - F9: 20 pts, B9: 15 pts (diff: 5)
 - Gregg WILLIAMS: Strong finisher - F9: 16 pts, B9: 22 pts (diff: -6)
 
 ### Round Stats
-- Jon BAKER: 39 pts (Stableford), 85 gross (+13), rank 1 (Trophy), rank 1 (Jacket) - maintained both leads
-- Gregg WILLIAMS: 38 pts (Stableford), 89 gross (+17), rank 2 (Trophy), rank 2 (Jacket)
-- Alex BAKER: 44 pts (Stableford), 89 gross (+17), rank 3 (Trophy), rank 4 (Jacket) - tournament-best 44 pts, moved up from 5th
-- John PATTERSON: 36 pts (Stableford), 97 gross (+25), rank 3 (Trophy), rank 5 (Jacket) - wild round with eagle and three blow-ups
-- David MULLIN: 35 pts (Stableford), 92 gross (+20), rank 5 (Trophy), rank 3 (Jacket) - disaster on H10 derailed round
+- Jon BAKER: 39 pts (Stableford), 85 gross (+13), rank 1 - Trophy lead maintained at 6 pts, Jacket lead maintained at 18 strokes
+- Gregg WILLIAMS: 38 pts (Stableford), 89 gross (+17), rank 2 - Trophy 2nd (-6), Jacket 2nd (-18)
+- Alex BAKER: 44 pts (Stableford), 89 gross (+17), rank 3 - Trophy 3rd (-17), Jacket 4th (-53) - best round of tournament
+- John PATTERSON: 36 pts (Stableford), 97 gross (+25), rank 3 (tied Trophy) - wild round with eagle, 3 blow-ups
+- David MULLIN: 35 pts (Stableford), 92 gross (+20), rank 5 - Trophy 5th (-23), Jacket 3rd (-30)
 
 
 

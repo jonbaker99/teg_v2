@@ -528,9 +528,156 @@ def identify_course_records(teg_num, round_num):
     }]
 
 
+def calculate_victory_context(teg_num, round_summary, round_events):
+    """
+    Calculate victory context statistics for varied story descriptions.
+
+    Provides rich context about how the winner won, enabling the LLM to craft
+    more nuanced victory descriptions beyond just "wire-to-wire".
+
+    Args:
+        teg_num: Tournament number
+        round_summary: Round summary DataFrame (filtered to this TEG)
+        round_events: Round events DataFrame (filtered to this TEG)
+
+    Returns:
+        Dict with victory context:
+        - winner: Winner name
+        - holes_led_by_winner: Number of holes winner led (Stableford)
+        - total_holes: Total holes in tournament
+        - pct_holes_led: Percentage of holes led
+        - rounds_leading_after: List of rounds winner was leading after
+        - lead_changes: Dict with lead change counts by round and total
+        - players_who_led: Number of different players who held lead
+        - longest_challenger_lead: Most holes any challenger held lead
+        - final_margin: Final margin in points
+        - largest_lead: Biggest lead winner had at any point
+        - smallest_lead_after_r2: Tightest margin after Round 2
+        - max_deficit_winner: Biggest deficit winner had to overcome
+    """
+    num_rounds = get_teg_rounds(teg_num)
+    total_holes = num_rounds * 18
+
+    # Find winner (final rank 1 in Stableford)
+    final_round = round_summary[round_summary['Round'] == num_rounds]
+    winner_row = final_round[final_round['Cumulative_Tournament_Rank_Stableford'] == 1].iloc[0]
+    winner = winner_row['Player']
+
+    # Find rounds winner was leading after
+    rounds_leading_after = []
+    for round_num in range(1, num_rounds + 1):
+        round_data = round_summary[round_summary['Round'] == round_num]
+        leader = round_data[round_data['Cumulative_Tournament_Rank_Stableford'] == 1].iloc[0]
+        if leader['Player'] == winner:
+            rounds_leading_after.append(round_num)
+
+    # Count lead changes in round_events
+    lead_events = round_events[round_events['Event'] == 'Lead_Change_Stableford'].copy()
+    lead_changes_by_round = {r: 0 for r in range(1, num_rounds + 1)}
+    lead_changes_final_round = 0
+
+    # Track unique leaders (players who held lead at some point)
+    unique_leaders = set()
+
+    for _, event in lead_events.iterrows():
+        r = event['Round']
+        unique_leaders.add(event['Player'])
+        if r >= 2:
+            lead_changes_by_round[r] += 1
+        if r == num_rounds:
+            lead_changes_final_round += 1
+
+    # Add winner to unique leaders
+    unique_leaders.add(winner)
+
+    # Estimate holes led based on rounds leading after
+    # This is rough but gives us a reasonable proxy
+    rounds_led = len(rounds_leading_after)
+    total_lead_changes = sum(lead_changes_by_round.values())
+
+    if rounds_led == num_rounds and total_lead_changes <= 2:
+        # Led after every round with minimal changes - true wire-to-wire
+        estimated_holes_led = total_holes - (total_lead_changes * 2)
+    elif rounds_led == num_rounds:
+        # Led after every round but with more changes - fought wire-to-wire
+        estimated_holes_led = int(total_holes * 0.85)
+    elif rounds_led >= num_rounds * 0.75:
+        # Led most rounds - front-runner
+        estimated_holes_led = int(total_holes * 0.75)
+    elif rounds_led >= num_rounds * 0.5:
+        # Led half the rounds
+        estimated_holes_led = int(total_holes * 0.5)
+    else:
+        # Led few rounds
+        estimated_holes_led = int(total_holes * 0.3)
+
+    holes_led_by_winner = max(0, min(estimated_holes_led, total_holes))
+    pct_holes_led = round(holes_led_by_winner / total_holes * 100, 1) if total_holes > 0 else 0
+
+    # Count of unique leaders
+    players_who_led = len(unique_leaders)
+
+    # Longest challenger lead (estimate based on their best round position)
+    challenger_max_holes = 0
+    for player in unique_leaders:
+        if player != winner:
+            player_rounds_leading = sum(1 for r in range(1, num_rounds + 1)
+                                       if round_summary[(round_summary['Round'] == r) &
+                                                       (round_summary['Cumulative_Tournament_Rank_Stableford'] == 1)]['Player'].values[0] == player)
+            challenger_max_holes = max(challenger_max_holes, player_rounds_leading * 18)
+
+    longest_challenger_lead = challenger_max_holes
+
+    # Margin analysis - winner's gap should be 0, so find runner-up's gap
+    runner_up = final_round[final_round['Cumulative_Tournament_Rank_Stableford'] == 2]
+    if not runner_up.empty:
+        final_margin = abs(runner_up.iloc[0]['Gap_To_Leader_After_Round_Stableford'])
+    else:
+        final_margin = 0
+
+    # Find largest and smallest leads
+    winner_rounds = round_summary[round_summary['Player'] == winner]
+    gaps = winner_rounds['Gap_To_Leader_After_Round_Stableford'].tolist()
+
+    # If winner led, gap is negative (they're ahead by that much)
+    # If winner trailed, gap is positive
+    leads_when_ahead = [abs(g) for g in gaps if g <= 0]
+    deficits_when_behind = [g for g in gaps if g > 0]
+
+    largest_lead = max(leads_when_ahead) if leads_when_ahead else 0
+    max_deficit_winner = max(deficits_when_behind) if deficits_when_behind else 0
+
+    # Smallest lead after R2 (only when winner was leading)
+    gaps_after_r2 = winner_rounds[winner_rounds['Round'] >= 2]['Gap_To_Leader_After_Round_Stableford'].tolist()
+    leads_after_r2 = [abs(g) for g in gaps_after_r2 if g <= 0]
+    smallest_lead_after_r2 = min(leads_after_r2) if leads_after_r2 else None
+
+    # Total lead changes from Round 2 onwards
+    total_lead_changes_r2_onwards = sum(lead_changes_by_round[r] for r in range(2, num_rounds + 1))
+
+    return {
+        'winner': winner,
+        'holes_led_by_winner': holes_led_by_winner,
+        'total_holes': total_holes,
+        'pct_holes_led': pct_holes_led,
+        'rounds_leading_after': rounds_leading_after,
+        'lead_changes': {
+            'total_r2_onwards': total_lead_changes_r2_onwards,
+            'by_round': lead_changes_by_round,
+            'final_round': lead_changes_final_round
+        },
+        'players_who_led': players_who_led,
+        'longest_challenger_lead': longest_challenger_lead,
+        'final_margin': final_margin,
+        'largest_lead': largest_lead,
+        'smallest_lead_after_r2': smallest_lead_after_r2,
+        'max_deficit_winner': max_deficit_winner
+    }
+
+
 def process_all_data_types(teg_num):
     """
-    Master function to run all 7 data type processing passes.
+    Master function to run all 8 data type processing passes.
 
     Executes the complete Level 1 data processing pipeline,
     creating structured data ready for story generation.
@@ -548,6 +695,7 @@ def process_all_data_types(teg_num):
         - round_summary
         - records_by_round: Dict mapping round_num -> records/PBs
         - course_records_by_round: Dict mapping round_num -> course records
+        - victory_context: Victory pattern statistics for varied descriptions
     """
     print(f"Processing data for TEG {teg_num}...")
 
@@ -613,6 +761,11 @@ def process_all_data_types(teg_num):
     print(f"  > Identified {total_records} records/PBs across {num_rounds} rounds")
     print(f"  > Identified {total_course_records} course record checks")
 
+    # Pass 8: Calculate victory context for story variation
+    print("Pass 8: Calculating victory context...")
+    victory_context = calculate_victory_context(teg_num, round_summary, round_events)
+    print(f"  > Victory context calculated for winner")
+
     print(f"\n> All data processing complete for TEG {teg_num}\n")
 
     return {
@@ -623,7 +776,8 @@ def process_all_data_types(teg_num):
         'round_events': round_events.to_dict('records'),
         'round_summary': round_summary.to_dict('records'),
         'records_by_round': records_by_round,
-        'course_records_by_round': course_records_by_round
+        'course_records_by_round': course_records_by_round,
+        'victory_context': victory_context
     }
 
 

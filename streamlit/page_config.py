@@ -39,6 +39,7 @@ PAGE_DEFINITIONS = {
 
     # Current/Latest TEG section
     "leaderboard.py": {"title": "Latest Leaderboard", "icon": ":material/leaderboard:", "section": "Latest"},
+    "teg_reports.py": {"title": "TEG Reports", "icon": ":material/description:", "section": "Latest"},
     "latest_round.py": {"title": "Latest Round in context", "icon": ":material/sports_golf:", "section": "Latest"},
     "latest_teg_context.py": {"title": "Latest TEG in context", "icon": ":material/sports_golf:", "section": "Latest"},
     "500Handicaps.py": {"title": "Handicaps", "icon": ":material/accessible:", "section": "Latest"},
