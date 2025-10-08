@@ -68,6 +68,8 @@ def format_round_data_for_prompt(round_data, storylines):
     """
     import numpy as np
 
+    print("DEBUG: Starting format_round_data_for_prompt")
+
     def clean_value(val):
         """Convert NaN/None to None for JSON serialization."""
         if pd.isna(val) or val is None:
@@ -78,61 +80,115 @@ def format_round_data_for_prompt(round_data, storylines):
             return int(val) if isinstance(val, np.integer) else float(val)
         return val
 
+    print("DEBUG: Building prompt_data structure")
     # Build compact data structure
-    prompt_data = {
-        'round_info': {
-            'teg_num': round_data['teg_num'],
-            'round_num': round_data['round_num'],
-            'course': round_data['metadata']['course'],
-            'date': round_data['metadata']['date'],
-            'par': round_data['metadata']['par']
-        },
-        'round_summary': [
-            {
-                'player': r['Player'],
-                'round_stableford': clean_value(r.get('Round_Score_Stableford')),
-                'round_gross': clean_value(r.get('Round_Score_Gross')),
-                'cumulative_stableford': clean_value(r.get('Cumulative_Tournament_Score_Stableford')),
-                'position_before': clean_value(r.get('Cumulative_Tournament_Rank_Before_Round_Stableford')),
-                'position_after': clean_value(r.get('Cumulative_Tournament_Rank_Stableford')),
-                'gap_to_leader': clean_value(r.get('Gap_To_Leader_After_Round_Stableford')),
-                'front_9': clean_value(r.get('Front_9_Score_Stableford')),
-                'back_9': clean_value(r.get('Back_9_Score_Stableford'))
-            }
-            for r in round_data['round_summary']
-        ],
-        'six_hole_splits': round_data['six_hole_splits'],
-        'hole_difficulty': round_data['hole_difficulty'],
-        'previous_round_scores': round_data['previous_round_scores'],
-        'key_events': [
-            {
-                'hole': clean_value(e.get('Hole')),
-                'player': e.get('Player'),
-                'event': e.get('Event'),
-                'par': clean_value(e.get('Par')),
-                'score': clean_value(e.get('Sc')),
-                'gross_vp': clean_value(e.get('GrossVP')),
-                'stableford': clean_value(e.get('Stableford'))
-            }
-            for e in round_data['events']
-            if e.get('Event') in ['Eagle', 'Zero_Stableford_Points', 'Lead_Change_Stableford']
-        ],
-        'streaks': [
-            {
-                'player': s.get('Player'),
-                'type': s.get('StreakType'),
-                'length': clean_value(s.get('StreakLength')),
-                'start_hole': clean_value(s.get('StartHole')),
-                'end_hole': clean_value(s.get('EndHole'))
-            }
-            for s in round_data['streaks']
-            if s.get('StreakLength', 0) >= 3  # Only significant streaks
-        ],
-        'storylines': storylines,
-        'projections': round_data['projections']
-    }
+    try:
+        prompt_data = {
+            'round_info': {
+                'teg_num': round_data['teg_num'],
+                'round_num': round_data['round_num'],
+                'course': round_data['metadata']['course'],
+                'date': round_data['metadata']['date'],
+                'par': round_data['metadata']['par']
+            },
+            'round_summary': [],
+            'six_hole_splits': {},
+            'hole_difficulty': [],
+            'previous_round_scores': None,
+            'key_events': [],
+            'streaks': [],
+            'storylines': {},
+            'projections': {}
+        }
 
-    return json.dumps(prompt_data, indent=2, default=str)
+        print(f"DEBUG: Processing {len(round_data['round_summary'])} players in round_summary")
+        for i, r in enumerate(round_data['round_summary']):
+            print(f"DEBUG: Processing player {i+1}: {r.get('Player')}")
+            try:
+                player_summary = {
+                    'player': r['Player'],
+                    'round_stableford': clean_value(r.get('Round_Score_Stableford')),
+                    'round_gross': clean_value(r.get('Round_Score_Gross')),
+                    'cumulative_stableford': clean_value(r.get('Cumulative_Tournament_Score_Stableford')),
+                    'position_before': clean_value(r.get('Cumulative_Tournament_Rank_Before_Round_Stableford')),
+                    'position_after': clean_value(r.get('Cumulative_Tournament_Rank_Stableford')),
+                    'gap_to_leader': clean_value(r.get('Gap_To_Leader_After_Round_Stableford')),
+                    'front_9': clean_value(r.get('Front_9_Score_Stableford')),
+                    'back_9': clean_value(r.get('Back_9_Score_Stableford'))
+                }
+                prompt_data['round_summary'].append(player_summary)
+            except Exception as e:
+                print(f"ERROR processing player {r.get('Player')}: {e}")
+                print(f"DEBUG: Player data: {r}")
+                raise
+
+        print("DEBUG: Setting six_hole_splits")
+        prompt_data['six_hole_splits'] = round_data['six_hole_splits']
+
+        print("DEBUG: Setting hole_difficulty")
+        prompt_data['hole_difficulty'] = round_data['hole_difficulty']
+
+        print("DEBUG: Setting previous_round_scores")
+        prompt_data['previous_round_scores'] = round_data['previous_round_scores']
+
+        print(f"DEBUG: Processing {len(round_data['events'])} events")
+        for e in round_data['events']:
+            if e.get('Event') in ['Eagle', 'Zero_Stableford_Points', 'Lead_Change_Stableford']:
+                try:
+                    event_data = {
+                        'hole': clean_value(e.get('Hole')),
+                        'player': e.get('Player'),
+                        'event': e.get('Event'),
+                        'par': clean_value(e.get('Par')),
+                        'score': clean_value(e.get('Sc')),
+                        'gross_vp': clean_value(e.get('GrossVP')),
+                        'stableford': clean_value(e.get('Stableford'))
+                    }
+                    prompt_data['key_events'].append(event_data)
+                except Exception as ex:
+                    print(f"ERROR processing event: {ex}")
+                    print(f"DEBUG: Event data: {e}")
+                    raise
+
+        print(f"DEBUG: Processing {len(round_data['streaks'])} streaks")
+        for s in round_data['streaks']:
+            if s.get('StreakLength', 0) >= 3:
+                try:
+                    streak_data = {
+                        'player': s.get('Player'),
+                        'type': s.get('StreakType'),
+                        'length': clean_value(s.get('StreakLength')),
+                        'start_hole': clean_value(s.get('StartHole')),
+                        'end_hole': clean_value(s.get('EndHole'))
+                    }
+                    prompt_data['streaks'].append(streak_data)
+                except Exception as ex:
+                    print(f"ERROR processing streak: {ex}")
+                    print(f"DEBUG: Streak data: {s}")
+                    raise
+
+        print("DEBUG: Setting storylines")
+        prompt_data['storylines'] = storylines
+
+        print("DEBUG: Setting projections")
+        prompt_data['projections'] = round_data['projections']
+
+    except Exception as e:
+        print(f"ERROR in format_round_data_for_prompt: {e}")
+        import traceback
+        traceback.print_exc()
+        raise
+
+    print("DEBUG: Converting to JSON")
+    try:
+        result = json.dumps(prompt_data, indent=2, default=str)
+        print(f"DEBUG: JSON conversion successful, length: {len(result)}")
+        return result
+    except Exception as e:
+        print(f"ERROR in json.dumps: {e}")
+        import traceback
+        traceback.print_exc()
+        raise
 
 
 def generate_round_story_notes(teg_num, round_num, dry_run=False):
