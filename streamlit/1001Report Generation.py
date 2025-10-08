@@ -239,12 +239,17 @@ else:  # Round Reports
         if st.button("🚀 Generate Round Report", type="primary"):
             with st.spinner(f"Generating round report for TEG {selected_teg}, Round {selected_round}..."):
                 try:
-                    output_path = generate_complete_round_report(selected_teg, selected_round)
+                    # Returns tuple: (story_notes_path, report_path)
+                    story_notes_path, report_path = generate_complete_round_report(selected_teg, selected_round)
 
-                    # Read the generated report
-                    report_content = read_text_file(str(output_path))
+                    # Read both generated reports
+                    story_notes_content = read_text_file(str(story_notes_path))
+                    report_content = read_text_file(str(report_path))
 
                     st.success(f"✅ Round report generated for TEG {selected_teg}, Round {selected_round}")
+
+                    # Save both to session state
+                    save_generated_report(selected_teg, f"round_{selected_round}_story_notes", story_notes_content)
                     save_generated_report(selected_teg, f"round_{selected_round}_report", report_content)
 
                 except Exception as e:
