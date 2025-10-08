@@ -1,4 +1,4 @@
-# TEG 17: Baker Coasts to Crushing Fifth Trophy Victory {.report-title}
+# TEG 17: Baker Coasts to Crushing Fourth Trophy Victory {.report-title}
 
 <p class="dateline">TEG 17 | Lisbon Coast | 2024</p>
 
