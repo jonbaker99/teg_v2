@@ -49,7 +49,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from pattern_analysis import process_all_data_types
 from data_loader import load_round_data, get_round_ending_context
 from prompts import ROUND_STORY_PROMPT, TOURNAMENT_SYNTHESIS_PROMPT, MAIN_REPORT_PROMPT, BRIEF_SUMMARY_PROMPT
-from utils import get_teg_rounds
+from utils import get_teg_rounds, write_text_file
 import anthropic
 
 # ========================
@@ -807,10 +807,13 @@ def generate_main_report(teg_num):
 
     main_report = message.content[0].text
 
-    # Save output
+    # Save output using Railway-aware function
     output_path = f"data/commentary/drafts/teg_{teg_num}_main_report.md"
-    with open(output_path, 'w', encoding='utf-8') as f:
-        f.write(main_report)
+    write_text_file(
+        output_path,
+        main_report,
+        commit_message=f"Generate main report for TEG {teg_num}"
+    )
 
     print(f"\n{'='*60}")
     print(f"MAIN REPORT COMPLETE")
@@ -885,10 +888,13 @@ def generate_brief_summary(teg_num):
 
     brief_summary = message.content[0].text
 
-    # Save output
+    # Save output using Railway-aware function
     output_path = f"data/commentary/drafts/teg_{teg_num}_brief_summary.md"
-    with open(output_path, 'w', encoding='utf-8') as f:
-        f.write(brief_summary)
+    write_text_file(
+        output_path,
+        brief_summary,
+        commit_message=f"Generate brief summary for TEG {teg_num}"
+    )
 
     print(f"\n{'='*60}")
     print(f"BRIEF SUMMARY COMPLETE")
@@ -1307,9 +1313,13 @@ def generate_complete_story_notes(teg_num):
 
     story_notes = build_story_notes_file(teg_num, round_stories, synthesis, all_data)
 
+    # Save output using Railway-aware function
     output_path = f"data/commentary/drafts/teg_{teg_num}_story_notes.md"
-    with open(output_path, 'w', encoding='utf-8') as f:
-        f.write(story_notes)
+    write_text_file(
+        output_path,
+        story_notes,
+        commit_message=f"Generate story notes for TEG {teg_num}"
+    )
 
     print(f"\n{'='*60}")
     print(f"STORY NOTES COMPLETE")
@@ -1352,9 +1362,13 @@ def generate_story_notes_up_to_round(teg_num, completed_rounds):
     for i, round_notes in enumerate(round_stories, 1):
         content += round_notes + "\n\n"
 
+    # Save output using Railway-aware function
     output_path = f"data/commentary/drafts/teg_{teg_num}_story_notes_partial.md"
-    with open(output_path, 'w', encoding='utf-8') as f:
-        f.write(content)
+    write_text_file(
+        output_path,
+        content,
+        commit_message=f"Generate partial story notes for TEG {teg_num} ({completed_rounds} rounds)"
+    )
 
     print(f"\n{'='*60}")
     print(f"PARTIAL STORY NOTES COMPLETE")

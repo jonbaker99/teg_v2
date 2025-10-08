@@ -126,6 +126,43 @@ def save_generated_report(teg_num, report_type, content):
         'timestamp': pd.Timestamp.now()
     }
 
+def get_draft_files():
+    """Get list of draft files from data/commentary/drafts/."""
+    try:
+        import glob
+        import os
+
+        # Check if running on Railway
+        if os.getenv('RAILWAY_ENVIRONMENT'):
+            # On Railway, we need to use read_text_file to check what exists
+            # For now, return empty list - we'll rely on generation creating files
+            return []
+        else:
+            # Local development - can use glob
+            draft_files = glob.glob('data/commentary/drafts/*.md')
+            return [os.path.basename(f) for f in draft_files]
+    except Exception as e:
+        st.error(f"Error listing draft files: {e}")
+        return []
+
+def move_to_production(source_path, dest_path):
+    """Move a file from drafts to production folder."""
+    try:
+        # Read from source
+        content = read_text_file(source_path)
+
+        # Write to destination
+        write_text_file(
+            dest_path,
+            content,
+            commit_message=f"Publish report: {dest_path}"
+        )
+
+        return True
+    except Exception as e:
+        st.error(f"Error moving file: {e}")
+        return False
+
 # ============================================
 # REPORT GENERATION SECTION
 # ============================================
@@ -237,18 +274,26 @@ if st.session_state.generated_reports:
                 )
 
             with col2:
-                # Save to data directory button
-                if st.button(f"💾 Save to data/commentary/", key=f"save_{key}"):
+                # Publish to production button (for drafts from generators)
+                if st.button(f"📤 Publish to Production", key=f"publish_{key}"):
                     try:
-                        file_path = f"data/commentary/teg_{report_data['teg']}_{report_data['type']}.md"
-                        write_text_file(
-                            file_path,
-                            report_data['content'],
-                            commit_message=f"Add {report_data['type']} for TEG {report_data['teg']}"
-                        )
-                        st.success(f"Saved to {file_path}")
+                        # Determine source and destination paths
+                        draft_path = f"data/commentary/drafts/teg_{report_data['teg']}_{report_data['type']}.md"
+                        prod_path = f"data/commentary/teg_{report_data['teg']}_{report_data['type']}.md"
+
+                        # Move file from draft to production
+                        if move_to_production(draft_path, prod_path):
+                            st.success(f"✅ Published to {prod_path}")
+                        else:
+                            # If draft doesn't exist (session-only), save directly to production
+                            write_text_file(
+                                prod_path,
+                                report_data['content'],
+                                commit_message=f"Publish {report_data['type']} for TEG {report_data['teg']}"
+                            )
+                            st.success(f"✅ Saved to {prod_path}")
                     except Exception as e:
-                        st.error(f"Error saving: {e}")
+                        st.error(f"Error publishing: {e}")
 
 # ============================================
 # PROMPT EDITOR SECTION
@@ -298,11 +343,75 @@ if st.session_state.show_prompt_editor:
                 st.rerun()
 
 # ============================================
-# VIEW EXISTING REPORTS
+# BROWSE DRAFTS SECTION
 # ============================================
 
 st.write("---")
-st.write("## View Existing Reports")
+st.write("## Browse Drafts")
+st.write("View and manage reports in the drafts folder before publishing to production.")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    draft_teg = st.selectbox(
+        "Select TEG:",
+        options=available_tegs,
+        key="draft_teg"
+    )
+
+with col2:
+    draft_types = ["story_notes", "main_report", "brief_summary"]
+    draft_type = st.selectbox(
+        "Report type:",
+        options=draft_types,
+        key="draft_type"
+    )
+
+col1, col2 = st.columns(2)
+
+with col1:
+    if st.button("📖 Load Draft", key="load_draft"):
+        try:
+            file_path = f"data/commentary/drafts/teg_{draft_teg}_{draft_type}.md"
+            content = read_text_file(file_path)
+
+            with st.expander(f"TEG {draft_teg} - {draft_type} (DRAFT)", expanded=True):
+                st.markdown(content)
+
+                col1a, col1b = st.columns(2)
+
+                with col1a:
+                    st.download_button(
+                        label="📥 Download Draft",
+                        data=content,
+                        file_name=f"teg_{draft_teg}_{draft_type}_draft.md",
+                        mime="text/markdown",
+                        key="download_draft"
+                    )
+
+                with col1b:
+                    if st.button("📤 Publish Draft to Production", key="publish_draft_btn"):
+                        prod_path = f"data/commentary/teg_{draft_teg}_{draft_type}.md"
+                        if move_to_production(file_path, prod_path):
+                            st.success(f"✅ Published to {prod_path}")
+                        else:
+                            st.error("Failed to publish draft")
+
+        except Exception as e:
+            st.error(f"Could not load draft: {e}")
+            st.info("Draft may not exist yet. Generate a report first.")
+
+with col2:
+    if st.button("🗑️ Delete Draft", key="delete_draft"):
+        st.warning("⚠️ Draft deletion from UI not yet implemented. Use file management tools.")
+
+# ============================================
+# VIEW EXISTING REPORTS (PRODUCTION)
+# ============================================
+
+st.write("---")
+st.write("## View Production Reports")
+st.write("View published reports from the production folder.")
 
 try:
     # List existing reports from data/commentary/

@@ -23,7 +23,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from round_data_loader import load_round_report_data
 from round_pattern_analysis import get_round_storylines
 from prompts import ROUND_STORY_NOTES_PROMPT, ROUND_REPORT_PROMPT
-from utils import get_teg_rounds
+from utils import get_teg_rounds, write_text_file
 
 # LLM setup (reusing tournament report patterns)
 try:
@@ -317,14 +317,14 @@ def generate_complete_round_report(teg_num, round_num, dry_run=False):
     # Step 3: Build complete file
     complete_report = build_round_report_file(teg_num, round_num, story_notes, narrative_report)
 
-    # Step 4: Save to file
-    output_dir = Path("data/commentary/round_reports")
-    output_dir.mkdir(parents=True, exist_ok=True)
+    # Step 4: Save to file using Railway-aware function
+    output_path = f"data/commentary/round_reports/teg_{teg_num}_round_{round_num}_report.md"
 
-    output_path = output_dir / f"teg_{teg_num}_round_{round_num}_report.md"
-
-    with open(output_path, 'w', encoding='utf-8') as f:
-        f.write(complete_report)
+    write_text_file(
+        output_path,
+        complete_report,
+        commit_message=f"Generate round report for TEG {teg_num}, Round {round_num}"
+    )
 
     print("\n" + "="*60)
     print("ROUND REPORT COMPLETE")
