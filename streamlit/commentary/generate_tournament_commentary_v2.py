@@ -396,11 +396,17 @@ def safe_create_message(client, **kwargs):
 try:
     import streamlit as st
     def get_api_key():
-        if hasattr(st, 'secrets') and 'ANTHROPIC_API_KEY' in st.secrets:
-            return st.secrets['ANTHROPIC_API_KEY']
+        """Get Anthropic API key from Streamlit secrets or environment variables."""
+        try:
+            if hasattr(st, 'secrets') and 'ANTHROPIC_API_KEY' in st.secrets:
+                return st.secrets['ANTHROPIC_API_KEY']
+        except Exception:
+            # If secrets.toml doesn't exist or can't be read, fall through to env var
+            pass
         return os.getenv('ANTHROPIC_API_KEY')
 except ImportError:
     def get_api_key():
+        """Get Anthropic API key from environment variables."""
         return os.getenv('ANTHROPIC_API_KEY')
 
 # ========================

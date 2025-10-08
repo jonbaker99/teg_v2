@@ -38,15 +38,21 @@ DRY_RUN = False  # Set to True to test without LLM calls
 DEBUG = True
 
 
-def get_api_key():
-    """Get Anthropic API key from environment or Streamlit secrets."""
-    try:
-        import streamlit as st
-        if hasattr(st, 'secrets') and 'ANTHROPIC_API_KEY' in st.secrets:
-            return st.secrets['ANTHROPIC_API_KEY']
-    except ImportError:
-        pass
-    return os.getenv('ANTHROPIC_API_KEY')
+try:
+    import streamlit as st
+    def get_api_key():
+        """Get Anthropic API key from Streamlit secrets or environment variables."""
+        try:
+            if hasattr(st, 'secrets') and 'ANTHROPIC_API_KEY' in st.secrets:
+                return st.secrets['ANTHROPIC_API_KEY']
+        except Exception:
+            # If secrets.toml doesn't exist or can't be read, fall through to env var
+            pass
+        return os.getenv('ANTHROPIC_API_KEY')
+except ImportError:
+    def get_api_key():
+        """Get Anthropic API key from environment variables."""
+        return os.getenv('ANTHROPIC_API_KEY')
 
 
 def format_round_data_for_prompt(round_data, storylines):
