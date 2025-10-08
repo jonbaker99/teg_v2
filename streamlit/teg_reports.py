@@ -118,7 +118,7 @@ tabs = st.tabs(tab_names)
 # === ROUND REPORT TABS ===
 for i, round_num in enumerate(range(1, num_rounds + 1)):
     with tabs[i]:
-        st.markdown(f"#### TEG {selected_teg_num} - Round {round_num} Report")
+        # st.markdown(f"#### TEG {selected_teg_num} - Round {round_num} Report")
 
         # Construct file path for round report (try both naming formats)
         report_path_new = f"data/commentary/round_reports/TEG{selected_teg_num}_R{round_num}_report.md"
