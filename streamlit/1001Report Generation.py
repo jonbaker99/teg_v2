@@ -413,41 +413,90 @@ st.write("---")
 st.write("## View Production Reports")
 st.write("View published reports from the production folder.")
 
+# Report category selection
+view_category = st.radio(
+    "Select report category:",
+    ["TEG Reports", "Round Reports"],
+    horizontal=True,
+    key="view_category"
+)
+
 try:
-    # List existing reports from data/commentary/
-    col1, col2 = st.columns(2)
+    if view_category == "TEG Reports":
+        # TEG tournament reports
+        col1, col2 = st.columns(2)
 
-    with col1:
-        view_teg = st.selectbox(
-            "Select TEG to view:",
-            options=available_tegs,
-            key="view_teg"
-        )
+        with col1:
+            view_teg = st.selectbox(
+                "Select TEG to view:",
+                options=available_tegs,
+                key="view_teg"
+            )
 
-    with col2:
-        report_types = ["main_report", "brief_summary", "story_notes"]
-        view_type = st.selectbox(
-            "Report type:",
-            options=report_types,
-            key="view_type"
-        )
+        with col2:
+            report_types = ["main_report", "brief_summary", "story_notes"]
+            view_type = st.selectbox(
+                "Report type:",
+                options=report_types,
+                key="view_type"
+            )
 
-    if st.button("📖 Load Report"):
-        try:
-            file_path = f"data/commentary/teg_{view_teg}_{view_type}.md"
-            content = read_text_file(file_path)
+        if st.button("📖 Load TEG Report"):
+            try:
+                file_path = f"data/commentary/teg_{view_teg}_{view_type}.md"
+                content = read_text_file(file_path)
 
-            with st.expander(f"TEG {view_teg} - {view_type}", expanded=True):
-                st.markdown(content)
+                with st.expander(f"TEG {view_teg} - {view_type}", expanded=True):
+                    st.markdown(content)
 
-                st.download_button(
-                    label="📥 Download",
-                    data=content,
-                    file_name=f"teg_{view_teg}_{view_type}.md",
-                    mime="text/markdown"
+                    st.download_button(
+                        label="📥 Download",
+                        data=content,
+                        file_name=f"teg_{view_teg}_{view_type}.md",
+                        mime="text/markdown",
+                        key="download_teg_report"
+                    )
+            except Exception as e:
+                st.error(f"Could not load report: {e}")
+                st.info(f"File may not exist: {file_path}")
+
+    else:  # Round Reports
+        col1, col2 = st.columns(2)
+
+        with col1:
+            round_teg = st.selectbox(
+                "Select TEG:",
+                options=available_tegs,
+                key="round_teg"
+            )
+
+        with col2:
+            if round_teg:
+                num_rounds = get_teg_rounds(round_teg)
+                round_num = st.selectbox(
+                    "Select Round:",
+                    options=list(range(1, num_rounds + 1)),
+                    key="round_num"
                 )
-        except Exception as e:
-            st.error(f"Could not load report: {e}")
+
+        if st.button("📖 Load Round Report"):
+            try:
+                file_path = f"data/commentary/round_reports/teg_{round_teg}_round_{round_num}_report.md"
+                content = read_text_file(file_path)
+
+                with st.expander(f"TEG {round_teg} - Round {round_num} Report", expanded=True):
+                    st.markdown(content)
+
+                    st.download_button(
+                        label="📥 Download",
+                        data=content,
+                        file_name=f"teg_{round_teg}_round_{round_num}_report.md",
+                        mime="text/markdown",
+                        key="download_round_report"
+                    )
+            except Exception as e:
+                st.error(f"Could not load round report: {e}")
+                st.info(f"File may not exist: {file_path}")
 
 except Exception as e:
     st.error(f"Error in view existing reports section: {e}")
