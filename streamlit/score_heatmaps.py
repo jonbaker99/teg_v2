@@ -1,5 +1,5 @@
 # 11_Hole_Difficulty_Heatmap.py
-# Dynamic hole-by-hole difficulty heatmap (Altair) with filters and row grouping
+# Dynamic difficulty heatmap (Altair) with filters, row grouping, and X-axis chooser
 
 import os
 import pandas as pd
@@ -13,7 +13,7 @@ st.set_page_config(page_title="Hole Difficulty Heatmap", layout="centered")
 FILTER_FIELDS = ["Area", "Course", "Player", "TEGNum", "Round"]
 ROW_CHOICE_FIELDS = ["Course", "Player", "TEGNum", "Round"]
 VALUE_FIELD = "GrossVP"   # average score vs par
-HOLE_FIELD = "Hole"
+X_FIELD_CHOICES = ["Hole", "SI", "Par"]  # <— choose among these
 
 # --- Altair setup ---
 alt.data_transformers.disable_max_rows()
@@ -23,14 +23,13 @@ alt.data_transformers.disable_max_rows()
 def load_data() -> pd.DataFrame:
     df = load_all_data()
 
-    # Ensure required fields exist
-    required = set([VALUE_FIELD, HOLE_FIELD]) | set(FILTER_FIELDS)
+    # Ensure required fields exist (don't enforce a specific X field yet)
+    required = set([VALUE_FIELD]) | set(FILTER_FIELDS)
     missing = required - set(df.columns)
     if missing:
         raise ValueError(f"Missing required columns: {sorted(missing)}")
 
     df = df.copy()
-    df[HOLE_FIELD] = pd.to_numeric(df[HOLE_FIELD], errors="coerce").astype("Int64")
 
     # Keep TEGNum numeric for proper ordering
     if "TEGNum" in df.columns:
@@ -47,6 +46,12 @@ def load_data() -> pd.DataFrame:
 
     # Value numeric
     df[VALUE_FIELD] = pd.to_numeric(df[VALUE_FIELD], errors="coerce")
+
+    # Coerce potential X fields if present
+    for xf in X_FIELD_CHOICES:
+        if xf in df.columns:
+            df[xf] = pd.to_numeric(df[xf], errors="coerce")
+
     return df
 
 # --- Load data ---
@@ -84,9 +89,15 @@ with st.expander("🔧 Filters & Options", expanded=True):
 
     st.markdown("---")
     st.subheader("Display Options")
+
+    # --- New: X-axis field chooser ---
+    HOLE_FIELD = st.selectbox("X-axis field", X_FIELD_CHOICES, index=0)
+
     sort_rows = st.checkbox("Sort rows by overall difficulty (mean GrossVP)", value=False)
     show_values = st.checkbox("Show values on hover", value=True)
-    show_col_totals = st.checkbox("Show column totals (mean by hole across filtered data)", value=True)
+    show_col_totals = st.checkbox(
+        f"Show column totals (mean by {HOLE_FIELD} across filtered data)", value=True
+    )
     st.caption("Tip: Use the filters above to narrow the dataset, then pick row dimensions to group by.")
 
 # --- Apply filters ---
@@ -99,6 +110,11 @@ for field, selections in filter_values.items():
         else:
             df = df[df[field].isin([str(s) for s in selections])]
 
+# If the chosen X field is missing, stop
+if HOLE_FIELD not in df.columns:
+    st.error(f"Selected X-axis field '{HOLE_FIELD}' is not in the data.")
+    st.stop()
+
 # If no data, stop early
 if df.empty:
     st.warning("No data after applying filters. Try relaxing the filters.")
@@ -108,7 +124,7 @@ if df.empty:
 row_dims = [f for f, on in row_flags.items() if on]
 group_dims = row_dims + [HOLE_FIELD]
 
-# Aggregate: average GrossVP per selected rows + Hole
+# Aggregate: average GrossVP per selected rows + X field
 agg = (
     df.groupby(group_dims, dropna=False, as_index=False)[VALUE_FIELD]
       .mean()
@@ -126,7 +142,6 @@ def make_row_label(row: pd.Series, dims: list[str]) -> str:
             val = str(int(val))
         else:
             val = str(val)
-        # Strip "PGA Catalunya - " from course names
         if d == "Course" and val.startswith("PGA Catalunya - "):
             val = val.replace("PGA Catalunya - ", "")
         parts.append(val)
@@ -137,35 +152,64 @@ if not row_dims:
 else:
     agg["RowLabel"] = agg.apply(lambda r: make_row_label(r, row_dims), axis=1)
 
-# Ensure holes are ordered 1..18 and keep only valid ones
-valid_holes = list(range(1, 19))
-agg = agg[agg[HOLE_FIELD].isin(valid_holes)]
-agg[HOLE_FIELD] = pd.Categorical(agg[HOLE_FIELD], categories=valid_holes, ordered=True)
+# --- Valid X-axis values & ordering (compute once and reuse) ---
+# We'll keep categories in x_categories and always re-apply categorical dtype after concat.
+if HOLE_FIELD in ["Hole", "SI"]:
+    x_categories = list(range(1, 19))
+    # prune to those present in df to avoid empty columns if your data is sparse
+    present = set(pd.to_numeric(df[HOLE_FIELD], errors="coerce").dropna().astype(int).tolist())
+    x_categories = [v for v in x_categories if v in present] or list(range(1, 19))
+    # Filter and cast
+    agg = agg[agg[HOLE_FIELD].isin(x_categories)]
+    agg[HOLE_FIELD] = pd.Categorical(agg[HOLE_FIELD], categories=x_categories, ordered=True)
+    x_axis_title = HOLE_FIELD
 
-# Optionally add column totals (average per hole across all filtered rows)
+elif HOLE_FIELD == "Par":
+    # Keep order 3 → 4 → 5 (only those present)
+    present = sorted(pd.to_numeric(df[HOLE_FIELD], errors="coerce").dropna().astype(int).unique().tolist())
+    x_categories = [p for p in [3, 4, 5] if p in present]
+    if not x_categories:
+        st.warning("No valid Par values in the filtered data.")
+        st.stop()
+    agg = agg[agg[HOLE_FIELD].isin(x_categories)]
+    agg[HOLE_FIELD] = pd.Categorical(agg[HOLE_FIELD], categories=x_categories, ordered=True)
+    x_axis_title = "Par"
+
+else:
+    # Fallback: ordinal by sorted uniques
+    x_categories = sorted(df[HOLE_FIELD].dropna().unique().tolist())
+    if not x_categories:
+        st.warning(f"No values found for {HOLE_FIELD} in the filtered data.")
+        st.stop()
+    agg = agg[agg[HOLE_FIELD].isin(x_categories)]
+    agg[HOLE_FIELD] = pd.Categorical(agg[HOLE_FIELD], categories=x_categories, ordered=True)
+    x_axis_title = HOLE_FIELD
+
+# --- Optionally add column totals (average per X value across all filtered rows) ---
 if show_col_totals and row_dims:
     col_totals = (
         df.groupby(HOLE_FIELD, as_index=False)[VALUE_FIELD]
           .mean()
           .rename(columns={VALUE_FIELD: "AvgGrossVP"})
     )
-    col_totals = col_totals[col_totals[HOLE_FIELD].isin(valid_holes)]
+    col_totals = col_totals[col_totals[HOLE_FIELD].isin(x_categories)]
     col_totals["RowLabel"] = "TOTAL"
+
+    # Concat can drop categorical dtype → re-apply after concat
     agg = pd.concat([agg, col_totals], ignore_index=True)
+    agg[HOLE_FIELD] = pd.Categorical(agg[HOLE_FIELD], categories=x_categories, ordered=True)
 
 # --- Determine row order ---
 if sort_rows:
-    # By difficulty (hardest first)
     order = (
         agg.groupby("RowLabel", as_index=False)["AvgGrossVP"]
            .mean()
            .sort_values("AvgGrossVP", ascending=False)["RowLabel"]
            .tolist()
     )
-    if show_col_totals and row_dims:
-        order = [x for x in order if x != "Column Avg"] + ["Column Avg"]
+    if "TOTAL" in order:
+        order = [x for x in order if x != "TOTAL"] + ["TOTAL"]
 else:
-    # Numeric-aware sort by the *actual row fields* in the order selected
     if row_dims:
         labels = agg[row_dims].drop_duplicates().copy()
         if "TEGNum" in row_dims:
@@ -175,41 +219,21 @@ else:
 
         by = []
         for d in row_dims:
-            if d == "TEGNum":
-                by.append("TEGNum_num")
-            elif d == "Round":
-                by.append("Round_num")
-            else:
-                by.append(d)
+            by.append({"TEGNum": "TEGNum_num", "Round": "Round_num"}.get(d, d))
 
         labels["RowLabel"] = labels.apply(lambda r: make_row_label(r, row_dims), axis=1)
         labels = labels.sort_values(by=by, kind="mergesort")
         order = labels["RowLabel"].tolist()
-        if show_col_totals and row_dims:
-            order = order + ["Column Avg"]
+        if "TOTAL" in agg["RowLabel"].values:
+            order = order + ["TOTAL"]
     else:
         order = ["All"]
 
-# --- Title/context ---
+# --- Title/context (unchanged) ---
 def pretty_sel(field: str, sels: list[str]) -> str:
     if (not sels) or ("All" in sels):
         return None
     return f"{field}: {', '.join(map(str, sels))}" if len(sels) <= 3 else f"{field}: {len(sels)} selected"
-
-# Function to get just the filter values without field names
-def get_filter_display() -> str:
-    all_selections = []
-    for field, sels in filter_values.items():
-        if sels and "All" not in sels:
-            # Clean up Course names
-            cleaned_sels = []
-            for sel in sels:
-                if field == "Course" and sel.startswith("PGA Catalunya - "):
-                    cleaned_sels.append(sel.replace("PGA Catalunya - ", ""))
-                else:
-                    cleaned_sels.append(sel)
-            all_selections.extend(cleaned_sels)
-    return " | ".join(all_selections) if all_selections else "All data"
 
 title_bits = [pretty_sel(f, s) for f, s in filter_values.items()]
 title_bits = [b for b in title_bits if b]
@@ -220,25 +244,33 @@ st.caption(f"Colour shows average {VALUE_FIELD} (score vs par). {title_suffix}")
 
 # --- Heatmap chart ---
 tooltip = [
-    alt.Tooltip(HOLE_FIELD, type="ordinal", title="Hole"),
+    alt.Tooltip(f"{HOLE_FIELD}:O", title=x_axis_title),
     alt.Tooltip("RowLabel:N", title="Group"),
     alt.Tooltip("AvgGrossVP:Q", title="Avg GrossVP", format=".2f"),
 ] if show_values else None
 
+# Use our saved categories for sorting (avoids .cat accessor entirely)
+x_sort = x_categories
+
 heatmap = (
-    alt.Chart(agg, height=max(100, 28 * len(order)+60), width=100)
+    alt.Chart(agg, height=max(100, 28 * len(order) + 60), width=100)
     .mark_rect()
     .encode(
-        x=alt.X(f"{HOLE_FIELD}:O", title="Hole", sort=valid_holes,
+        x=alt.X(f"{HOLE_FIELD}:O",
+                title=x_axis_title,
+                sort=x_sort,
                 scale=alt.Scale(paddingInner=0.15, paddingOuter=0.05),
-                axis=alt.Axis(labelFont='Open Sans', labelFontSize=10,labelColor='black')),
-        y=alt.Y("RowLabel:N", title=None, sort=order,
+                axis=alt.Axis(labelFont='Open Sans', labelFontSize=10, labelColor='black')),
+        y=alt.Y("RowLabel:N",
+                title=None,
+                sort=order,
                 scale=alt.Scale(paddingInner=0.15, paddingOuter=0.05),
-                axis=alt.Axis(labelLimit=0, labelFont='Open Sans', labelFontSize=10,labelColor='black')),
+                axis=alt.Axis(labelLimit=0, labelFont='Open Sans', labelFontSize=10, labelColor='black')),
         color=alt.Color(
             "AvgGrossVP:Q",
             title="Avg GrossVP",
-            scale=alt.Scale(scheme="redblue", reverse=False, domainMin=0, domainMid=1, domainMax=3),
+            # scale=alt.Scale(scheme="redblue", reverse=False, domainMin=0, domainMid=1, domainMax=3),
+            scale=alt.Scale(scheme="spectralView", reverse=False, domainMin=0, domainMid=1, domainMax=3), 
         ),
         tooltip=tooltip,
     )
@@ -248,9 +280,9 @@ show_cell_text = st.checkbox("Overlay values as text (may be busy)", value=False
 if show_cell_text:
     text = (
         alt.Chart(agg)
-        .mark_text(baseline="middle", align="center", fontSize=10, font = 'Open Sans')
+        .mark_text(baseline="middle", align="center", fontSize=10, font='Open Sans')
         .encode(
-            x=alt.X(f"{HOLE_FIELD}:O", sort=valid_holes),
+            x=alt.X(f"{HOLE_FIELD}:O", sort=x_sort),
             y=alt.Y("RowLabel:N", sort=order),
             text=alt.Text("AvgGrossVP:Q", format=".1f"),
         )

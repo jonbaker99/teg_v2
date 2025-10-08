@@ -31,6 +31,7 @@ PAGE_DEFINITIONS = {
     "score_by_course.py": {"title": "All rounds", "icon": ":material/strategy:", "section": "Scoring"},
     "sc_count.py": {"title": "Scoring distributions", "icon": ":material/strategy:", "section": "Scoring"},
     "biggest_changes.py": {"title": "Changes vs previous round", "icon": ":material/strategy:", "section": "Scoring"},
+    "score_heatmaps.py": {"title": "Heatmap (WIP)", "icon": ":material/strategy:", "section": "Scoring"},
 
     # Bestball/Eclectics section
     "bestball.py": {"title": "Bestball and worstball", "icon": ":material/strategy:", "section": "Bestball"},
