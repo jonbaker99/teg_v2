@@ -66,6 +66,18 @@ def format_round_data_for_prompt(round_data, storylines):
     Returns:
         String with formatted data ready for LLM prompt
     """
+    import numpy as np
+
+    def clean_value(val):
+        """Convert NaN/None to None for JSON serialization."""
+        if pd.isna(val) or val is None:
+            return None
+        if isinstance(val, (np.integer, np.floating)):
+            if np.isnan(val):
+                return None
+            return int(val) if isinstance(val, np.integer) else float(val)
+        return val
+
     # Build compact data structure
     prompt_data = {
         'round_info': {
@@ -78,14 +90,14 @@ def format_round_data_for_prompt(round_data, storylines):
         'round_summary': [
             {
                 'player': r['Player'],
-                'round_stableford': r['Round_Score_Stableford'],
-                'round_gross': r['Round_Score_Gross'],
-                'cumulative_stableford': r['Cumulative_Tournament_Score_Stableford'],
-                'position_before': r['Cumulative_Tournament_Rank_Before_Round_Stableford'],
-                'position_after': r['Cumulative_Tournament_Rank_Stableford'],
-                'gap_to_leader': r['Gap_To_Leader_After_Round_Stableford'],
-                'front_9': r['Front_9_Score_Stableford'],
-                'back_9': r['Back_9_Score_Stableford']
+                'round_stableford': clean_value(r.get('Round_Score_Stableford')),
+                'round_gross': clean_value(r.get('Round_Score_Gross')),
+                'cumulative_stableford': clean_value(r.get('Cumulative_Tournament_Score_Stableford')),
+                'position_before': clean_value(r.get('Cumulative_Tournament_Rank_Before_Round_Stableford')),
+                'position_after': clean_value(r.get('Cumulative_Tournament_Rank_Stableford')),
+                'gap_to_leader': clean_value(r.get('Gap_To_Leader_After_Round_Stableford')),
+                'front_9': clean_value(r.get('Front_9_Score_Stableford')),
+                'back_9': clean_value(r.get('Back_9_Score_Stableford'))
             }
             for r in round_data['round_summary']
         ],
@@ -94,13 +106,13 @@ def format_round_data_for_prompt(round_data, storylines):
         'previous_round_scores': round_data['previous_round_scores'],
         'key_events': [
             {
-                'hole': e.get('Hole'),
+                'hole': clean_value(e.get('Hole')),
                 'player': e.get('Player'),
                 'event': e.get('Event'),
-                'par': e.get('Par'),
-                'score': e.get('Sc'),
-                'gross_vp': e.get('GrossVP'),
-                'stableford': e.get('Stableford')
+                'par': clean_value(e.get('Par')),
+                'score': clean_value(e.get('Sc')),
+                'gross_vp': clean_value(e.get('GrossVP')),
+                'stableford': clean_value(e.get('Stableford'))
             }
             for e in round_data['events']
             if e.get('Event') in ['Eagle', 'Zero_Stableford_Points', 'Lead_Change_Stableford']
@@ -109,9 +121,9 @@ def format_round_data_for_prompt(round_data, storylines):
             {
                 'player': s.get('Player'),
                 'type': s.get('StreakType'),
-                'length': s.get('StreakLength'),
-                'start_hole': s.get('StartHole'),
-                'end_hole': s.get('EndHole')
+                'length': clean_value(s.get('StreakLength')),
+                'start_hole': clean_value(s.get('StartHole')),
+                'end_hole': clean_value(s.get('EndHole'))
             }
             for s in round_data['streaks']
             if s.get('StreakLength', 0) >= 3  # Only significant streaks
