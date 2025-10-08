@@ -14,7 +14,8 @@ from utils import (
     read_file,
     load_all_data,
     get_teg_rounds,
-    load_datawrapper_css
+    load_datawrapper_css,
+    load_teg_reports_css
 )
 
 # === CONFIGURATION ===
@@ -23,6 +24,7 @@ st.markdown("Round reports and tournament summaries")
 
 # Load CSS styling
 load_datawrapper_css()
+load_teg_reports_css()
 
 # === HELPER FUNCTIONS ===
 def render_report(md_text: str):
