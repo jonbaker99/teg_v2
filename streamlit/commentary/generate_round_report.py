@@ -67,6 +67,7 @@ def format_round_data_for_prompt(round_data, storylines):
         String with formatted data ready for LLM prompt
     """
     import numpy as np
+    import pandas as pd
 
     print("DEBUG: Starting format_round_data_for_prompt")
 
