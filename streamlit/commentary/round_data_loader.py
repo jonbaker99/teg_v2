@@ -18,6 +18,17 @@ import os
 # Add parent directory to path to import utils
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from utils import get_teg_rounds, read_file
+import numpy as np
+
+
+def safe_int(value, default=0):
+    """Safely convert value to int, handling NaN and None."""
+    if pd.isna(value) or value is None:
+        return default
+    try:
+        return int(value)
+    except (ValueError, TypeError):
+        return default
 
 
 def calculate_six_hole_splits(round_data_df):
@@ -30,6 +41,7 @@ def calculate_six_hole_splits(round_data_df):
     Returns:
         Dict with player -> {first_six, second_six, third_six} Stableford scores
     """
+    import numpy as np
     splits = {}
 
     for player in round_data_df['Player'].unique():
@@ -40,9 +52,9 @@ def calculate_six_hole_splits(round_data_df):
         third_six = player_data[player_data['Hole'].between(13, 18)]['Stableford'].sum()
 
         splits[player] = {
-            'first_six': int(first_six),
-            'second_six': int(second_six),
-            'third_six': int(third_six)
+            'first_six': safe_int(first_six),
+            'second_six': safe_int(second_six),
+            'third_six': safe_int(third_six)
         }
 
     return splits
@@ -71,7 +83,7 @@ def calculate_hole_difficulty(round_data_df):
 
             hole_stats.append({
                 'hole': hole,
-                'par': int(par),
+                'par': safe_int(par),
                 'avg_score': round(avg_score, 2),
                 'avg_vs_par': round(avg_vs_par, 2),
                 'avg_stableford': round(avg_stableford, 2),
@@ -111,10 +123,10 @@ def get_previous_round_scores(teg_num, round_num):
     prev_scores = {}
     for _, row in prev_round_data.iterrows():
         prev_scores[row['Player']] = {
-            'prev_round_stableford': int(row['Round_Score_Stableford']),
-            'prev_round_gross': int(row['Round_Score_Gross']),
-            'prev_round_rank_stableford': int(row['Player_Round_Rank_Stableford']),
-            'prev_round_rank_gross': int(row['Player_Round_Rank_Gross'])
+            'prev_round_stableford': safe_int(row['Round_Score_Stableford']),
+            'prev_round_gross': safe_int(row['Round_Score_Gross']),
+            'prev_round_rank_stableford': safe_int(row['Player_Round_Rank_Stableford']),
+            'prev_round_rank_gross': safe_int(row['Player_Round_Rank_Gross'])
         }
 
     return prev_scores
@@ -185,9 +197,9 @@ def calculate_hole_by_hole_positions(teg_num, round_num):
             position_data.append({
                 'Player': row['Player'],
                 'Hole': hole,
-                'Round_Cumulative_Stableford': int(row['Round_Cumulative_Stableford']),
-                'Tournament_Cumulative_Stableford': int(row['Tournament_Cumulative_Stableford']),
-                'Position': int(row['Position'])
+                'Round_Cumulative_Stableford': safe_int(row['Round_Cumulative_Stableford']),
+                'Tournament_Cumulative_Stableford': safe_int(row['Tournament_Cumulative_Stableford']),
+                'Position': safe_int(row['Position'])
             })
 
     positions_df = pd.DataFrame(position_data)
@@ -267,10 +279,10 @@ def calculate_tournament_projections(teg_num, round_num):
 
         player_projections.append({
             'player': row['Player'],
-            'current_position': int(row['Cumulative_Tournament_Rank_Stableford']),
-            'current_total': int(player_total),
-            'gap_to_leader': int(gap_to_leader) if gap_to_leader > 0 else 0,
-            'max_possible_total': int(max_possible_final),
+            'current_position': safe_int(row['Cumulative_Tournament_Rank_Stableford']),
+            'current_total': safe_int(player_total),
+            'gap_to_leader': safe_int(gap_to_leader) if gap_to_leader > 0 else 0,
+            'max_possible_total': safe_int(max_possible_final),
             'points_per_round_needed': round(avg_per_round_needed, 1) if avg_per_round_needed else None,
             'mathematically_possible': mathematically_possible,
             'realistically_catchable': realistically_catchable
@@ -282,7 +294,7 @@ def calculate_tournament_projections(teg_num, round_num):
         'total_rounds': total_rounds,
         'round_just_completed': round_num,
         'leader': leader_name,
-        'leader_total': int(leader_total),
+        'leader_total': safe_int(leader_total),
         'player_projections': player_projections
     }
 
