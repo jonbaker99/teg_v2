@@ -250,6 +250,15 @@ else:  # Round Reports
                 except Exception as e:
                     st.error(f"❌ Error generating round report: {e}")
 
+                    # Show detailed error information
+                    import traceback
+                    error_details = traceback.format_exc()
+
+                    with st.expander("🔍 View Full Error Details"):
+                        st.code(error_details)
+
+                    st.warning("💡 The DEBUG output is visible in Railway logs. Check the deployment logs for detailed trace.")
+
 # ============================================
 # DISPLAY GENERATED REPORTS
 # ============================================
