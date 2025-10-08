@@ -13,9 +13,10 @@ st.set_page_config(page_title="Hole Difficulty Heatmap + Trends", layout="center
 FILTER_FIELDS = ["Course", "Player", "TEGNum", "Round"]
 ROW_CHOICE_FIELDS = ["Course", "Player", "TEGNum", "Round"]
 VALUE_FIELD = "GrossVP"   # average score vs par
-X_FIELD_CHOICES = ["Hole", "SI", "Par"]  # <— choose among these
+X_FIELD_CHOICES = ["Hole", "SI", "PAR"]  # <— choose among these
 AXIS_LABELS = alt.Axis(labelFont='Open Sans', labelFontSize=10, labelColor='black')
-
+LEGEND_CONFIG = alt.Legend(labelFont='Open Sans', labelFontSize=10, titleFont='Open Sans', titleFontSize=11)
+chart_width = 400
 
 # --- Altair setup ---
 alt.data_transformers.disable_max_rows()
@@ -64,8 +65,9 @@ except Exception as e:
     st.stop()
 
 # --- UI: Main page controls ---
-with st.expander("🔧 Filters & Options", expanded=True):
-    st.subheader("Filters")
+
+with st.expander("🔧 Filters & Display Options", expanded=True):
+    st.markdown("#### Filters")
 
     # TEGNum filter options (numeric sort, shown as strings)
     if "TEGNum" in all_data.columns:
@@ -74,29 +76,53 @@ with st.expander("🔧 Filters & Options", expanded=True):
     else:
         tegnum_options = ["All"]
 
+    # Filters in 2 columns
     filter_values = {}
-    for field in FILTER_FIELDS:
+    cols = st.columns(2)
+    for idx, field in enumerate(FILTER_FIELDS):
         if field == "TEGNum":
             options = tegnum_options
         else:
             unique_vals = sorted(all_data[field].dropna().astype(str).unique().tolist(), key=str)
             options = unique_vals
-        selected = st.multiselect(f"{field} filter", options)
-        filter_values[field] = selected
+        with cols[idx % 2]:
+            selected = st.multiselect(f"{field} filter", options)
+            filter_values[field] = selected
 
-    st.markdown("---")
-    st.subheader("Rows to show")
-    row_flags = {f: st.checkbox(f, value=(f == "Player")) for f in ROW_CHOICE_FIELDS}
+    st.markdown("#### Rows to show")
+    # Row checkboxes in columns
+    row_cols = st.columns(len(ROW_CHOICE_FIELDS))
+    row_flags = {}
+    for idx, field in enumerate(ROW_CHOICE_FIELDS):
+        with row_cols[idx]:
+            row_flags[field] = st.checkbox(field, value=(field == "Player"))
+    HOLE_FIELD = st.segmented_control("X-axis field", X_FIELD_CHOICES, default=X_FIELD_CHOICES[0])
 
-    st.markdown("---")
-    st.subheader("Display Options")
-    HOLE_FIELD = st.selectbox("X-axis field", X_FIELD_CHOICES, index=0)
-    sort_rows = st.checkbox("Sort rows by overall difficulty (mean GrossVP)", value=False)
-    show_values = st.checkbox("Show values on hover", value=True)
-    show_col_totals = st.checkbox(
-        f"Show column totals (mean by {HOLE_FIELD} across filtered data)", value=True
+    st.markdown("#### Display Options")
+    tick_cols1, tickcols2 = st.columns(2)
+    with tick_cols1: sort_rows = st.checkbox("Sort rows by score", value=True)
+    # show_values = st.checkbox("Show values on hover", value=True)
+    show_values = True
+    with tickcols2: show_col_totals = st.checkbox(
+        f"Show column totals", value=True
     )
-    st.caption("Tip: Use the filters above to narrow the dataset, then pick row dimensions to group by.")
+        # --- Heatmap colour scale controls ---
+    st.markdown("**Heatmap colour scale controls**")
+    diverging_schemes = [
+        "redyellowblue", "redblue", "spectral", "redyellowgreen",
+        "pinkyellowgreen", "purplegreen", "purpleorange", "redgrey", "blueorange"
+    ]
+    colour_col1, colour_col2 = st.columns(2)
+    with colour_col1: cmap_scheme = st.selectbox("Choose colour scheme", diverging_schemes, index=0)
+    with colour_col2: cmap_reverse = st.checkbox("Reverse colours", value=False)
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        cmap_min = st.number_input("Min", value=0.5, step=0.1)
+    with c2:
+        cmap_mid = st.number_input("Mid", value=1.5, step=0.1)
+    with c3:
+        cmap_max = st.number_input("Max", value=2.5, step=0.1)
+
 
 # --- Apply filters ---
 df = all_data.copy()
@@ -225,7 +251,7 @@ title_bits = [pretty_sel(f, s) for f, s in filter_values.items()]
 title_bits = [b for b in title_bits if b]
 title_suffix = " • ".join(title_bits) if title_bits else "All data"
 
-st.markdown("#### Hole Score Heatmap")
+st.markdown(f"#### Heatmap: Average {VALUE_FIELD} by {HOLE_FIELD}")
 st.caption(f"Colour shows average {VALUE_FIELD} (score vs par). {title_suffix}")
 
 # =======================
@@ -253,16 +279,24 @@ heatmap = (
                 sort=order,
                 scale=alt.Scale(paddingInner=0.15, paddingOuter=0.05),
                 axis=AXIS_LABELS),
-        color=alt.Color(
+                color=alt.Color(
             "AvgGrossVP:Q",
             title="Avg GrossVP",
-            scale=alt.Scale(scheme="redblue", reverse=False, domainMin=0, domainMid=1, domainMax=3),
+            scale=alt.Scale(
+                scheme=cmap_scheme,
+                reverse=cmap_reverse,
+                domainMin=cmap_min,
+                domainMid=cmap_mid,
+                domainMax=cmap_max,
+            ),
+            legend=LEGEND_CONFIG,
         ),
+
         tooltip=tooltip,
     )
 )
 
-show_cell_text = st.checkbox("Overlay values as text (may be busy)", value=False)
+show_cell_text = st.checkbox("Show values", value=True)
 if show_cell_text:
     text = (
         alt.Chart(agg)
@@ -282,11 +316,7 @@ st.altair_chart(heatmap_chart, use_container_width=True)
 # =======================
 # Chart B — Scatter/Line using SAME filtered agg
 # =======================
-st.markdown(f"#### Average {VALUE_FIELD} by {HOLE_FIELD}")
-st.caption(
-    "Each coloured line corresponds to a heatmap row. "
-    "If column totals are shown above, a black line shows the TOTAL."
-)
+st.markdown(f"#### Line chart: Average {VALUE_FIELD} by {HOLE_FIELD}")
 
 # Split data for TOTAL vs others
 has_total = "TOTAL" in agg["RowLabel"].unique()
@@ -302,14 +332,14 @@ lines = (
     .encode(
         x=alt.X(f"{HOLE_FIELD}:O", sort=x_sort, title=x_axis_title, axis=AXIS_LABELS),
         y=alt.Y("AvgGrossVP:Q", title="Mean GrossVP", axis=AXIS_LABELS),
-        color=alt.Color("RowLabel:N", title="Group", sort=line_order, scale = alt.Scale(scheme = "set1")),
+        color=alt.Color("RowLabel:N", title="Group", sort=line_order, scale = alt.Scale(scheme = "set1"), legend=LEGEND_CONFIG),
         tooltip=[
             alt.Tooltip("RowLabel:N", title="Group"),
             alt.Tooltip(f"{HOLE_FIELD}:O", title=x_axis_title),
             alt.Tooltip("AvgGrossVP:Q", title="Mean GrossVP", format=".2f"),
         ],
     )
-    .properties(height=280)
+    .properties(height=300, width = chart_width)
 )
 
 # Optional TOTAL in solid black
@@ -318,8 +348,8 @@ if has_total:
         alt.Chart(total_df)
         .mark_line(point=True, strokeWidth=3)
         .encode(
-            x=alt.X(f"{HOLE_FIELD}:O", sort=x_sort, title=x_axis_title),
-            y=alt.Y("AvgGrossVP:Q", title="Mean GrossVP"),
+            x=alt.X(f"{HOLE_FIELD}:O", sort=x_sort, title=x_axis_title, axis=AXIS_LABELS),
+            y=alt.Y("AvgGrossVP:Q", title="Mean GrossVP", axis=AXIS_LABELS),
             color=alt.value("black"),
             tooltip=[
                 alt.Tooltip("RowLabel:N", title="Group"),
@@ -328,7 +358,7 @@ if has_total:
             ],
         )
     )
-    trend_chart = lines + total_line
+    trend_chart = (lines + total_line.properties(width=chart_width))
 else:
     trend_chart = lines
 
