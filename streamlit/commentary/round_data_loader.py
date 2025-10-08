@@ -17,7 +17,7 @@ import os
 
 # Add parent directory to path to import utils
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from utils import get_teg_rounds
+from utils import get_teg_rounds, read_file
 
 
 def calculate_six_hole_splits(round_data_df):
@@ -97,7 +97,7 @@ def get_previous_round_scores(teg_num, round_num):
         return None
 
     # Load round summary data
-    round_summary = pd.read_parquet('data/commentary_round_summary.parquet')
+    round_summary = read_file('data/commentary_round_summary.parquet')
 
     # Filter to previous round
     prev_round_data = round_summary[
@@ -133,14 +133,14 @@ def calculate_hole_by_hole_positions(teg_num, round_num):
         DataFrame with columns: Player, Hole, Cumulative_Stableford, Position, Position_Change
     """
     # Load hole-by-hole data
-    all_data = pd.read_parquet('data/all-scores.parquet')
+    all_data = read_file('data/all-scores.parquet')
     round_data = all_data[
         (all_data['TEGNum'] == teg_num) &
         (all_data['Round'] == round_num)
     ].copy()
 
     # Load round summary for tournament standings before this round
-    round_summary = pd.read_parquet('data/commentary_round_summary.parquet')
+    round_summary = read_file('data/commentary_round_summary.parquet')
     before_round = round_summary[
         (round_summary['TEGNum'] == teg_num) &
         (round_summary['Round'] == round_num)
@@ -220,7 +220,7 @@ def calculate_tournament_projections(teg_num, round_num):
     rounds_remaining = total_rounds - round_num
 
     # Load current standings after this round
-    round_summary = pd.read_parquet('data/commentary_round_summary.parquet')
+    round_summary = read_file('data/commentary_round_summary.parquet')
     current_standings = round_summary[
         (round_summary['TEGNum'] == teg_num) &
         (round_summary['Round'] == round_num)
@@ -312,7 +312,7 @@ def load_round_report_data(teg_num, round_num):
     print(f"Loading round report data for TEG {teg_num}, Round {round_num}...")
 
     # 1. Load round summary data
-    round_summary = pd.read_parquet('data/commentary_round_summary.parquet')
+    round_summary = read_file('data/commentary_round_summary.parquet')
     round_summary_data = round_summary[
         (round_summary['TEGNum'] == teg_num) &
         (round_summary['Round'] == round_num)
@@ -322,21 +322,21 @@ def load_round_report_data(teg_num, round_num):
         raise ValueError(f"No data found for TEG {teg_num}, Round {round_num}")
 
     # 2. Load hole-by-hole data
-    all_scores = pd.read_parquet('data/all-scores.parquet')
+    all_scores = read_file('data/all-scores.parquet')
     round_holes = all_scores[
         (all_scores['TEGNum'] == teg_num) &
         (all_scores['Round'] == round_num)
     ]
 
     # 3. Load events data
-    events = pd.read_parquet('data/commentary_round_events.parquet')
+    events = read_file('data/commentary_round_events.parquet')
     round_events = events[
         (events['TEGNum'] == teg_num) &
         (events['Round'] == round_num)
     ]
 
     # 4. Load streaks (round-level)
-    round_streaks = pd.read_parquet('data/commentary_round_streaks.parquet')
+    round_streaks = read_file('data/commentary_round_streaks.parquet')
     streaks_data = round_streaks[
         (round_streaks['TEGNum'] == teg_num) &
         (round_streaks['Round'] == round_num)
@@ -358,7 +358,7 @@ def load_round_report_data(teg_num, round_num):
     projections = calculate_tournament_projections(teg_num, round_num)
 
     # 10. Get metadata
-    round_info = pd.read_csv('data/round_info.csv')
+    round_info = read_file('data/round_info.csv')
     metadata = round_info[
         (round_info['TEGNum'] == teg_num) &
         (round_info['Round'] == round_num)
