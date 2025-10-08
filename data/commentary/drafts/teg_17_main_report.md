@@ -1,120 +1,131 @@
-# TEG 17: Baker Dominates Wire-to-Wire in Portugal {.report-title}
+# TEG 17: Baker Coasts to Crushing Fifth Trophy Victory {.report-title}
 
-<p class="dateline">Lisbon Coast | 2024</p>
+<p class="dateline">TEG 17 | Lisbon Coast | 2024</p>
 
 ---
 
-## AT-A-GLANCE {.at-a-glance}
-
-**Trophy Winner:** Jon BAKER (5th Trophy)  
-**Jacket Winner:** Jon BAKER (4th Jacket)  
-**Wooden Spoon:** Gregg WILLIAMS (1st Spoon)
+<section class="callout at-a-glance-box">
+  <p class="at-a-glance-title">RESULTS</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon BAKER (4th Trophy)</span></p>
+  <p><strong>Jacket Winner:</strong> Jon BAKER (4th Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Gregg WILLIAMS (2nd Spoon)</p>
+</section>
 
 ---
 
 ## TOURNAMENT OVERVIEW {.tournament-overview}
 
-Jon Baker swept both competitions with ruthless efficiency, claiming his fifth TEG Trophy and fourth Green Jacket across four Lisbon Coast courses. The 18-point Trophy margin and 13-stroke Jacket advantage represented the most comprehensive victory in tournament history. Baker led 67 of 72 holes in the Stableford and 70 of 72 in the Gross, establishing control at West Cliffs on Round 2 and never relinquishing either title.
+Jon Baker claimed his fourth TEG Trophy and fourth Green Jacket with a performance that redefined control. The Lisbon Coast return saw familiar venues but unprecedented command, as Baker seized both leads in Round Two and never looked back across 54 holes. His 18-point Stableford margin and 13-stroke gross victory represented the largest winning gaps in recent TEG memory. David Mullin's tournament showcased remarkable contrasts: a best-round 47 points in Round Two, rendered futile by an opening catastrophe that saw him register nought on the first two holes. John Patterson's campaign told an equally dramatic story, from Round One leader to the worst single-round collapse in recorded TEG history, before clawing back to joint second place.
 
-The tournament hinged on contrasting fortunes. John Patterson opened with 39 points to lead by one, then suffered the worst single-round collapse ever recorded when 22 points in Round 2 dropped him from first to fifth. David Mullin's tournament-best 47-point response at West Cliffs featured back-to-back birdies but couldn't overcome opening struggles. Gregg Williams led the Jacket after Praia D'El Rey's opener yet faded to the Wooden Spoon despite finishing third in stroke play.
-
-Baker's triumph was built on remarkable steadiness rather than fireworks. Five birdies across 72 holes told only part of the story. His consistency proved decisive.
+West Cliffs provided the backdrop for Round Two's decisive shift. Baker never trailed again, leading 67 of 72 holes in the Stableford competition and an extraordinary 70 of 72 in the gross battle. The margins only widened as the tournament progressed through Royal Óbidos and back to Praia D'El Rey, where Baker's coronation became a procession rather than a contest.
 
 ---
 
-## Round 1: Patterson Edges Opener at Praia D'El Rey {.round1 .round}
+## Round 1: Opening Salvos at Praia D'El Rey {.round1 .round}
 
-John Patterson held a precarious one-point Trophy lead over Jon Baker after 18 holes at Praia D'El Rey, with Gregg Williams sharing the Jacket lead at plus-20. The coastal parkland course played tough. Nobody broke par.
+Praia D'El Rey's links and parkland mix set the stage for early fireworks. Patterson held a slender one-point Stableford advantage, while Baker and Gregg Williams shared the gross lead at +20. The opening holes separated contenders from casualties immediately.
 
-Patterson's opening round featured four-point holes at the 9th, 12th, 15th and 16th, including a birdie at the par-five 12th. He seized the Trophy lead at the 16th. Baker led for 15 holes before a double bogey at the same hole cost him the advantage. Alex Baker's round disintegrated spectacularly between the 3rd and 5th, recording three consecutive zeroes including a sextuple bogey at the par-four 5th. He carded nine at the 18th to drop into last place in the Trophy standings.
+Mullin's tournament unravelled before it began. Seven at the first, a triple bogey that yielded nothing. Eight at the second, another par five blown apart. By the time he reached the third tee, Mullin had played 15 strokes for nought and sat fifth in the standings. Alex Baker's start proved equally calamitous, a six at the third marking the beginning of a stretch that would define his week. Holes three through five brought disaster, blow-up, and catastrophe in sequence: a triple at the par three, an eight at the fourth, then ten strokes at the fifth for no return. The damage measured 24 over par across three holes.
 
-David Mullin opened with blow-ups at the 1st and 2nd to fall to the bottom but recovered brilliantly. A birdie at the 13th sparked a six-hole stretch at level par. Williams and Baker shared the Jacket lead at plus-20, three strokes clear.
+Patterson, meanwhile, constructed his lead through steadier golf and a purple patch from holes 11 through 16. Birdies bookended a run that delivered 18 points, culminating in a four-pointer at the 16th that moved him clear. Baker remained in touch despite his own implosion at the 17th, an eight at the par five costing valuable ground. By day's end, Patterson led by the narrowest of margins. Williams claimed a share of the gross lead. The tournament remained wide open.
 
-<p class="standings"><span class="standings-header">**Trophy Standings:**</span> Patterson 39 | J Baker 38 | Mullin 33 | G Williams 33 | A Baker 32</p>
-<p class="standings"><span class="standings-header">**Green Jacket Standings:**</span> G Williams +20 | J Baker +20 | Patterson +23 | Mullin +24 | A Baker +41</p>
+<section class="callout standings-box">
+<p class="standings"><span class="standings-header">Trophy Standings:</span> JP 39 | JB 38 | DM 33 | GW 33 | AB 32</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> JB +20 | GW +20 | JP +23 | DM +24 | AB +41</p>
+</section>
 
 ---
 
-## Round 2: Mullin's Masterclass as Patterson Implodes {.round2 .round}
+## Round 2: Collapse and Brilliance at West Cliffs {.round2 .round}
 
-Jon Baker seized both leads at West Cliffs' opening hole when Patterson's triple bogey handed him control. What followed redrew the entire tournament. David Mullin posted 47 points, the best round in TEG history, while Patterson suffered the worst recorded collapse.
+West Cliffs delivered the tournament's pivotal moments within its opening holes. Baker struck immediately, taking the Trophy lead at the first when Patterson found seven and surrendered zero points. Williams lost the Jacket lead on the same hole. The die was cast.
 
-Mullin's brilliance peaked with back-to-back birdies at the 9th and 10th, part of a six-hole run yielding 18 points. Another birdie followed at the 15th. The round of 47 points and plus-10 gross lifted him from third to the Jacket lead, which he surrendered only on the final hole to Baker. Jon Baker's birdie at the par-four 4th anchored an opening stretch worth 18 points across six holes. He extended his Trophy advantage to two points.
+What followed will live long in TEG lore. Patterson's implosion across the middle holes reached historic proportions. Ten at the 13th, a quintuple bogey. Then 11 at the 15th, a sextuple blow-up. Between holes eight and 15, he averaged close to four over per hole, registering just two points from eight holes. His round total of 22 points marked the worst single performance in recorded TEG history, a collapse that saw him plummet from first to fifth in a single day.
 
-Patterson's nightmare unfolded after the opening triple bogey. Further blow-ups at the 3rd and 6th preceded the real horror. A 10 at the par-five 13th was followed by an 11 at the 15th. Eight zero-point holes across the round produced just 22 points and plus-44 gross. The implosion dropped him from first to fifth.
+Mullin responded to his opening disaster with the tournament's finest round. Back-to-back birdies at the ninth and tenth sparked a run that would reach 47 points, the best 18-hole performance of the week. His birdie at the 15th, the same hole where Patterson found ruin, exemplified the day's contrasts. By the 18th, Mullin had claimed the Jacket lead on gross, though Baker's Stableford position remained secure.
 
-Alex Baker managed 37 points despite blow-ups at the 10th and 11th, his birdie at the par-three 12th offering some compensation. Williams posted 35 points to sit fourth.
+Baker himself crafted a birdie at the fourth and navigated the chaos with 44 points. His two-point Trophy advantage felt more commanding than the number suggested. Alex Baker found a birdie at the 12th amid his own struggles, while Williams posted 35 points to stay within range. The battle lines had been redrawn entirely.
 
-<p class="standings"><span class="standings-header">**Trophy Standings:**</span> J Baker 82 | Mullin 80 | A Baker 69 | G Williams 68 | Patterson 61</p>
-<p class="standings"><span class="standings-header">**Green Jacket Standings:**</span> J Baker +34 | Mullin +36 | G Williams +41 | Patterson +67 | A Baker +82</p>
+<section class="callout standings-box">
+<p class="standings"><span class="standings-header">Trophy Standings:</span> JB 82 | DM 80 | AB 69 | GW 68 | JP 61</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +34 | JB +34 | GW +37 | JP +67 | AB +74</p>
+</section>
 
 ---
 
 ## Round 3: Baker Breaks Clear at Royal Óbidos {.round3 .round}
 
-Jon Baker extended his Trophy lead from two points to 11 at Royal Óbidos, Seve Ballesteros' final design. His 44-point round featured birdies at the par-five 11th and par-three 13th. The Jacket lead changed hands four times across the opening eight holes before Baker established permanent control.
+Seve Ballesteros' final design provided the setting for Baker's statement round. An 11-point Trophy advantage by day's end and an eight-stroke Jacket margin told the story of one man pulling away from the field. The contest for supremacy was effectively over.
 
-The round began poorly for Baker. A triple bogey at the 1st cost him the Jacket lead. He regained it at the 2nd, lost it again at the 6th, then reclaimed it for good at the 7th. An 11-point surge from the 11th through 13th, powered by those two birdies, secured both competitions. David Mullin challenged briefly but finished with 35 points to slip to second, now trailing by 11.
+Baker stumbled early, a triple at the first costing him the Jacket lead briefly. He regained it at the second. Lost it again at the sixth. Reclaimed it at the seventh. These skirmishes proved mere footnotes to his growing dominance. Birdies at the 11th and 13th anchored a back nine stretch that delivered 26 points, his 44-point round matching Round Two's output and extending both leads decisively.
 
-Alex Baker's birdie at the par-three 3rd proved his highlight before a quintuple bogey at the 14th destroyed momentum. His 10 at that hole was followed by a nine at the 18th, finishing with 34 points. Patterson recovered composure with 41 points, including a birdie at the par-three 8th, but blow-ups at the 9th and 11th prevented any real challenge.
+Patterson mounted a recovery of sorts, his 41 points lifting him back to fourth in the Trophy standings. A birdie at the eighth showed quality remained, though a blow-up at the ninth and a nightmare nine at the 11th demonstrated fragility persisted. Williams claimed a birdie at the 11th but suffered through the closing holes, his 26-point round dropping him to Spoon position when Alex Baker's ten at the 14th sent him tumbling back.
 
-Gregg Williams posted the round's lowest score with 26 points and dropped to fifth in the Trophy. His Wooden Spoon position solidified.
+Mullin's 35 points kept him second but now trailed by double figures. Alex Baker's round featured extremes in miniature: a five-point birdie at the third, immediately followed by a card-wrecker at the fourth. His tournament of contradictions continued unabated. Baker led both competitions by margins that spoke to superiority rather than fortune.
 
-<p class="standings"><span class="standings-header">**Trophy Standings:**</span> J Baker 126 | Mullin 115 | A Baker 103 | Patterson 102 | G Williams 94</p>
-<p class="standings"><span class="standings-header">**Green Jacket Standings:**</span> J Baker +48 | Mullin +58 | Patterson +89 | G Williams +68 | A Baker +120</p>
+<section class="callout standings-box">
+<p class="standings"><span class="standings-header">Trophy Standings:</span> JB 126 | DM 115 | AB 103 | JP 102 | GW 94</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> JB +48 | DM +56 | GW +64 | AB +112 | JP +89</p>
+</section>
 
 ---
 
-## Round 4: Baker Cruises Home at Praia D'El Rey {.round4 .round}
+## Round 4: Coronation at Praia D'El Rey {.round4 .round}
 
-Jon Baker returned to Praia D'El Rey with both titles secured, posting 40 points to complete the sweep. Back-to-back birdies at the 4th and 5th underlined his control. The final margins told the story: 18 points in the Trophy, 13 strokes in the Jacket.
+The closing round became a coronation rather than a contest. Baker's 40 points and controlled gross play brought him home with 166 points total, 18 clear of Mullin's 148. The 13-stroke Jacket advantage underlined complete dominance across both formats. Williams, Mullin, and Patterson all found disasters at the opening hole, handing Baker an unassailable position from the outset.
 
-David Mullin's 33-point final round secured second place in both competitions, 18 points and 13 strokes behind. His consistency across the final three rounds couldn't overcome the opening setback. Patterson and Alex Baker both managed 32 points, but Patterson's superior Gross score lifted him to joint-third in the Trophy.
+Baker's birdies at the fourth and fifth provided early punctuation, though blow-ups at the seventh, tenth, and 17th showed even champions endure rough patches. The difference lay in cushion and consistency. His six zero-point holes across 72 holes told a story of steady accumulation that others could not match.
 
-Patterson endured more misery. A birdie at the par-five 2nd offered hope before blow-ups at the par-three 14th and par-four 15th brought nines and a 10. Williams opened with a nine at the 1st and never recovered. Twenty-nine points confirmed the Wooden Spoon. He finished third in the Jacket but fifth in the Trophy.
+Mullin secured sole second place with 33 points, his tournament average betrayed by the opening day catastrophe. Patterson's 33 points lifted him to joint second in the Trophy standings, a remarkable recovery from his Round Two nadir. His birdie at the second and four-pointer at the 16th bookended a round marred by a nine at the 14th and a ten at the 15th, close to five over per hole across that stretch. The volatility that defined his week never fully disappeared.
 
-Baker's fifth Trophy title equalled his Jacket count at four. Wire-to-wire dominance across 72 holes made this his most authoritative triumph.
+Alex Baker's closing 32 points, featuring blow-ups at the seventh, eighth, 11th, 12th, 13th, and 15th, exemplified his tournament of extremes. Williams posted 29 points but could not escape the Spoon position, dropping from joint gross leader after Round One to wooden holder by tournament's end. Baker stood alone at the summit, his fourth Trophy and fourth Jacket secured with rounds to spare.
 
-<p class="standings"><span class="standings-header">**Trophy Standings:**</span> J Baker 166 | Mullin 148 | Patterson 135 | A Baker 135 | G Williams 123</p>
-<p class="standings"><span class="standings-header">**Green Jacket Standings:**</span> J Baker +67 | Mullin +80 | G Williams +89 | Patterson +124 | A Baker +150</p>
+<section class="callout standings-box">
+<p class="standings"><span class="standings-header">Trophy Standings:</span> JB 166 | DM 148 | JP 135 | AB 135 | GW 123</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> JB +67 | DM +80 | GW +89 | JP +124 | AB +150</p>
+</section>
 
 ---
 
 ## TOURNAMENT SUMMARY {.summary}
 
-Jon Baker's wire-to-wire dominance redefined TEG excellence. Leading 67 of 72 Stableford holes and 70 of 72 Gross holes represented the most comprehensive control in tournament history. His fifth Trophy and fourth Jacket arrived through relentless consistency rather than spectacular golf. Five birdies across four rounds told a modest story, but steadiness proved decisive. The 18-point Trophy margin and 13-stroke Jacket advantage dwarfed previous winning margins.
+Jon Baker's fourth Trophy triumph represented dominance of a rare order. Leading 93 per cent of holes after seizing control in Round Two, he constructed victories through accumulation rather than pyrotechnics. Five birdies across 72 holes might seem modest, but his consistency told the real story: just six zero-point holes all week, an average that left rivals scrambling to keep pace. The 18-point Stableford margin and 13-stroke gross advantage marked the largest winning gaps in recent memory, testament to sustained excellence across four demanding layouts.
 
-The tournament's drama centred on John Patterson's spectacular collapse. Leading after Praia D'El Rey's opener with 39 points, his Round 2 implosion produced just 22 points with eight zero-point holes. The 10 at West Cliffs' 13th and 11 at the 15th ranked among the worst holes in TEG history. He recovered partial dignity with 41 points in Round 3 and 33 in Round 4 but finished joint-third, 31 points behind.
+David Mullin's tournament split neatly into catastrophe and brilliance. His 47-point second round, featuring back-to-back birdies and four in total, stood as the week's finest performance. Yet the opening day blow-up, nought on the first two holes, proved too large a deficit to overcome. He finished second in both competitions, a runner-up whose best golf arrived too late to challenge for supremacy.
 
-David Mullin's tournament-best 47-point Round 2, featuring back-to-back birdies at the 9th and 10th, couldn't overcome his opening struggles. Second place in both competitions represented a strong finish. Alex Baker's tournament featured extreme volatility, including a sextuple bogey in Round 1 and quintuple bogey in Round 3.
+John Patterson's week encapsulated volatility. From Round One leader to historic 22-point collapse, then recovery to joint third by the close, his 19-point range between best and worst rounds illustrated wild fluctuations. Eighteen zero-point holes betrayed fragility, yet his ability to rebound demonstrated character. Alex Baker's tied third-place finish, achieved despite 12 blanks across the tournament, spoke to resilience amid chaos. Just two birdies all week highlighted scoring struggles, yet he hung on where others faltered.
 
-Gregg Williams claimed the Wooden Spoon despite leading the Jacket after Round 1. His third-place Gross finish couldn't prevent fifth in the Trophy.
+Gregg Williams' fall from joint gross leader after Round One to Spoon holder by tournament's end completed the narrative arcs. Baker stood alone, his command absolute from West Cliffs onward, a champion who seized control and never relinquished it.
 
 ---
 
 ## PLAYER-BY-PLAYER {.player-by-player}
 
-**Jon BAKER (1st):** Five birdies across 72 holes understated the achievement. Led 67 Stableford holes and 70 Gross holes, establishing control at West Cliffs and never faltering. Fifth Trophy title, fourth Jacket. Most dominant TEG victory on record.
+**Jon BAKER (1st):** Fourth Trophy and fourth Jacket secured with commanding performances across all four rounds. Led both competitions from Round Two onward, his 166 points built on just six zero-point holes all week. Five birdies and consistent scoring established margins too large for rivals to bridge.
 
-**David MULLIN (2nd):** Tournament-best 47 points in Round 2 featured back-to-back birdies and extraordinary consistency. Four birdies total. Second place in both competitions, finishing 18 points and 13 strokes behind after opening-round struggles cost him any realistic title challenge.
+**David MULLIN (2nd):** Runner-up in both competitions despite a Round Two masterpiece of 47 points. Four birdies included back-to-back beauties at the ninth and tenth on West Cliffs. Opening day disaster, nought on the first two holes, proved too costly to overcome despite the week's best single round.
 
-**John PATTERSON (T3):** Led after Round 1 with 39 points before catastrophic Round 2 collapse. Twenty-two points with eight zero-point holes, including a 10 at the 13th and 11 at the 15th, dropped him from first to fifth. Recovered with 41 and 33 points in final rounds but joint-third finish represented disappointment.
+**John PATTERSON (T3):** Historic 22-point Round Two collapse, the worst in recorded TEG history, defined a volatile week. Recovered to joint third with 41 points in Round Three and 33 in Round Four. Round One leader who endured 18 zero-point holes but showed resilience in bouncing back.
 
-**Alex BAKER (T3):** Twelve zero-point holes defined a volatile tournament. Sextuple bogey at Round 1's 5th, quintuple bogey at Round 3's 14th. Birdie at Round 3's par-three 3rd offered brief promise. Joint-third in Trophy, fifth in Jacket.
+**Alex BAKER (T3):** Tied third despite 12 zero-point holes and just two birdies all week. Extreme volatility marked every round, from five-point gains to catastrophic blow-ups. Survived where others fell away, exemplifying stubborn persistence through adversity.
 
-**Gregg WILLIAMS (5th):** Wooden Spoon winner despite leading Jacket after Round 1. Eight zero-point holes. Third place in Jacket couldn't prevent fifth in Trophy. Blow-ups at Round 3's 5th and Round 4's opener undermined any challenge.
+**Gregg WILLIAMS (5th):** Second Spoon claimed after dropping from joint gross lead following Round One. Birdie at the fifth in Round Two and another at the 11th in Round Three provided rare highlights. Twenty-six-point third round sealed his fate in the basement.
 
 ---
 
 ## RECORDS AND PERSONAL BESTS {.records}
 
-**Best Single Round:** David MULLIN 47pts (TEG 17 R2) beats previous 45pts (Jon BAKER, TEG 13 R4)  
-**Course Record (Royal Óbidos):** Jon BAKER 86 (TEG 17 R3), first recorded round  
-**Worst Single Round:** John PATTERSON 22pts (TEG 17 R2) beats previous 25pts (Alex BAKER, TEG 11 R1)  
-**Worst Gross Round:** John PATTERSON +44 (TEG 17 R2) beats previous +43 (Alex BAKER, TEG 11 R1)
+**All-Time TEG Worst:**
+- John PATTERSON: 44 (Gross, Round 2) - worst single round gross score in TEG history
+
+**Personal Worst:**
+- John PATTERSON: 44 (Gross, Round 2)
 
 ---
 
 ## OTHER STATISTICS {.stats}
 
-Jon Baker's consistency proved decisive. His rounds varied by just six points (40-44), the steadiest performance across four rounds in tournament history. John Patterson's 17-point range (22-41) highlighted volatility. Baker led both competitions after every round, the first player to achieve this across all four days. David Mullin's 47-point Round 2 at West Cliffs ranks as the second-highest points total at any Lisbon Coast venue. Alex Baker recorded 12 zero-point holes, the second-highest count in a single tournament. Patterson's 18 zeroes across the event set a new mark.
+- Jon BAKER set the new Royal Óbidos course record with 86 (gross, Round 3), bettering all previous marks at the venue.
+- David MULLIN's 47-point Round Two performance represented the highest single-round Stableford total of the tournament, a standout effort that showcased what might have been.
+- Jon BAKER's 18-point Trophy margin and 13-stroke Jacket victory represented the largest winning gaps recorded across recent TEG history, underlining complete command of both competitions.
+- Alex BAKER's survival to tied third place despite 12 zero-point holes illustrated remarkable staying power, accumulating points through sheer persistence where consistency eluded him.

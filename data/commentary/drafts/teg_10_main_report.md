@@ -7,7 +7,7 @@
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">AT-A-GLANCE</p>
   <p class="trophy-winner"><strong>Trophy Winner:</strong> Alex BAKER (1st Trophy)</p>
-  <p><strong>Jacket Winner:</strong> David MULLIN (9th Jacket)</p>
+  <p><strong>Jacket Winner:</strong> David MULLIN (8th Jacket)</p>
   <p><strong>Wooden Spoon:</strong> John PATTERSON (1st Spoon)</p>
 </section>
 
@@ -15,7 +15,7 @@
 
 ## TOURNAMENT OVERVIEW {.tournament-overview}
 
-Alex Baker claimed his first TEG Trophy with an 11-point victory at Palmares and Boavista, overturning an eight-point deficit to seize control during a chaotic third round and pulling clear with a superlative final round of 51 points. David Mullin secured his ninth Green Jacket by 12 strokes despite a turbulent Stableford campaign that saw him plummet to fifth in the Trophy standings. The tournament returned to the Algarve for the first time in five years, with two new Palmares layouts joining familiar Boavista terrain.
+Alex Baker claimed his first TEG Trophy with an 11-point victory at Palmares and Boavista, overturning an eight-point deficit to seize control during a chaotic third round and pulling clear with a superlative final round of 51 points. David Mullin secured his eighth Green Jacket by 12 strokes despite a turbulent Stableford campaign that saw him plummet to fifth in the Trophy standings. The tournament returned to the Algarve for the first time in five years, with two new Palmares layouts joining familiar Boavista terrain.
 
 Baker's redemption arc could scarcely have been more complete: having previously endured Wooden Spoon ignominy, he delivered the steadiest second-half performance of the week to dismantle rivals who faltered under pressure. Mullin led for 68 of 72 holes in the Jacket race yet registered just 162 Stableford points, the worst-ever gap between competitions for a Green Jacket winner. Gregg Williams fought valiantly for both titles, finishing runner-up in each. John Patterson's catastrophic week, featuring 20 zero-point holes across 72, earned him the Spoon by 32 points and 81 strokes.
 
@@ -70,7 +70,7 @@ Boavista returned for the finale. Baker delivered a stunning 51-point masterpiec
 
 Baker lost the lead briefly at the first when Williams posted a bogey. Williams then birdied the fifth to edge ahead, only to blow up at the sixth. Baker's run from the sixth onwards was merciless: four-point holes at the sixth, seventh and 10th extended his advantage to unassailable proportions. A triple at the 15th barely registered, four more points at the 16th restoring his rhythm. Williams and Jon Baker both carded 40 points but could not threaten, Williams undone by blow-ups at the sixth and 18th.
 
-Mullin's 40 points, anchored by his birdie at the 16th, overtook Williams in the Jacket. He finished 12 strokes clear of Jon Baker, his ninth title secured despite the worst Stableford showing by any Jacket winner. Neumann's 39 points lifted him to fifth overall. Patterson's agony persisted: blow-ups at the seventh, eighth, 10th, 17th and a nine at the 18th gave him six disasters in his final round. His 21 points capped an unprecedented collapse.
+Mullin's 40 points, anchored by his birdie at the 16th, overtook Williams in the Jacket. He finished 12 strokes clear of Jon Baker, his eighth title secured despite the worst Stableford showing by any Jacket winner. Neumann's 39 points lifted him to fifth overall. Patterson's agony persisted: blow-ups at the seventh, eighth, 10th, 17th and a nine at the 18th gave him six disasters in his final round. His 21 points capped an unprecedented collapse.
 
 <section class="callout standings-box"><p class="standings"><span class="standings-header"><strong>Trophy Standings:</strong></span> AB 184 | GW 173 | DM 162 | JB 157 | SN 144 | JP 112</p>
 
@@ -82,7 +82,7 @@ Mullin's 40 points, anchored by his birdie at the 16th, overtook Williams in the
 
 Alex Baker's maiden Trophy triumph was forged in the crucible of Round 3's lead scramble and sealed by a record-breaking finale. Eight points down after Round 1, he clawed level by Round 3's close, then pulled away with a 51-point masterpiece that no rival could match. His victory margin of 11 points, TEG's widest runner-up gap to date, underscored his second-half dominance. Remarkably, he managed just one birdie across 72 holes, his consistency in banking four-point scores proving more potent than fireworks.
 
-Williams fought tenaciously on both fronts, leading or co-leading the Trophy after 54 holes and holding the Jacket lead entering the final round. Two runner-up finishes, 11 points and 25 strokes behind, marked a week of near-misses. Mullin's ninth Jacket crowned a peculiar campaign: he led for 68 of 72 Jacket holes yet finished 22 points behind in the Trophy, the widest-ever disconnect for a Jacket winner. Five blow-ups in Round 3 exposed rare fragility. Jon Baker's 157 points and second Jacket placing represented a solid week overshadowed by others.
+Williams fought tenaciously on both fronts, leading or co-leading the Trophy after 54 holes and holding the Jacket lead entering the final round. Two runner-up finishes, 11 points and 25 strokes behind, marked a week of near-misses. Mullin's eighth Jacket crowned a peculiar campaign: he led for 68 of 72 Jacket holes yet finished 22 points behind in the Trophy, the widest-ever disconnect for a Jacket winner. Five blow-ups in Round 3 exposed rare fragility. Jon Baker's 157 points and second Jacket placing represented a solid week overshadowed by others.
 
 Neumann's 144 points belied a rollercoaster: 11 zero-point holes undermined otherwise steady stretches. Patterson's Wooden Spoon, earned by 32 points and 81 strokes, was built on catastrophic foundations: 20 blow-ups, 22 scores worse than double bogey, zero birdies and an average of 33 over par per round. His implosion set new benchmarks for futility. Baker's redemption arc, from Spoon holder to Trophy champion, provided the tournament's most satisfying narrative. One birdie was all it took.
 
@@ -94,7 +94,7 @@ Neumann's 144 points belied a rollercoaster: 11 zero-point holes undermined othe
 
 **Gregg WILLIAMS (T2 Trophy, 2nd Jacket):** Led or co-led after 54 holes in Trophy, held Jacket lead entering Round 4. Solid week marred by late blow-ups; 11 points and 25 strokes off the pace.
 
-**David MULLIN (3rd Trophy, Winner Jacket):** Secured ninth Jacket with 12-stroke margin despite worst-ever Stableford showing by a Jacket winner. Led 68 of 72 Jacket holes; five Round 3 blow-ups derailed Trophy bid.
+**David MULLIN (3rd Trophy, Winner Jacket):** Secured eighth Jacket with 12-stroke margin despite worst-ever Stableford showing by a Jacket winner. Led 68 of 72 Jacket holes; five Round 3 blow-ups derailed Trophy bid.
 
 **Jon BAKER (4th Trophy, 2nd Jacket):** Consistent if unspectacular; second Jacket placing and 157 Trophy points represented steady contribution. Six blow-ups limited his challenge.
 

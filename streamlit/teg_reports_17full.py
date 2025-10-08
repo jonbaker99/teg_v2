@@ -3,8 +3,6 @@ import streamlit as st
 from pathlib import Path
 import importlib.util
 from utils import load_teg_reports_css
-from streamlit.components.v1 import html as st_html
-
 
 st.set_page_config(page_title="Tournament Commentary", page_icon="📰")
 st.title("📰 Tournament Commentary")
@@ -12,17 +10,22 @@ st.title("📰 Tournament Commentary")
 # --- Locate commentary folder ---
 here = Path(__file__).resolve()
 candidates = [
-    here.parent.parent.parent / "data" / "commentary" / "drafts",    # .../teg_v2/data/commentary (from streamlit folder)
-    here.parent.parent / "data" / "commentary" / "drafts",           # .../data/commentary (from root)
+    here.parent.parent.parent / "data" / "commentary" / "drafts",  # .../teg_v2/data/commentary/drafts (from streamlit folder)
+    here.parent.parent / "data" / "commentary" / "drafts",         # .../data/commentary/drafts (from root)
 ]
 commentary_dir = next((p for p in candidates if p.exists()), None)
 if commentary_dir is None:
-    st.error("Couldn't find commentary folder at `data/commentary`.")
+    st.error("Couldn't find commentary folder at `data/commentary/drafts`.")
     st.stop()
 
-# --- Fixed parameters ---
-teg_num = 10
-report_key = "main_report"   # "main_report" = full report
+# --- UI controls ---
+col1, col2 = st.columns([1, 3])
+with col1:
+    teg_num = st.selectbox("TEG", options=list(range(3, 18)), index=7)  # default 10
+with col2:
+    report_key = "main_report"  # keep fixed for now; change here if you add more variants
+
+# --- Resolve file path ---
 filename = f"teg_{teg_num}_{report_key}.md"
 md_path = commentary_dir / filename
 
@@ -30,8 +33,8 @@ md_path = commentary_dir / filename
 load_teg_reports_css()
 
 # --- Loader ---
-# @st.cache_data(show_spinner=False)
 def load_markdown(p: Path) -> str:
+    # No caching: ensures changes on disk show up immediately upon widget change / page reload
     return p.read_text(encoding="utf-8")
 
 # --- Renderer ---
@@ -44,16 +47,14 @@ def render_report(md_text: str, return_html: bool = False):
         st.markdown(full_html, unsafe_allow_html=True)
         if return_html:
             return full_html
+    else:
+        # Fallback to plain markdown if python-markdown isn't installed
+        st.markdown(md_text)
 
 # --- Load and display the report ---
+st.caption(f"Looking for: `data/commentary/drafts/{filename}`")
 if md_path.exists():
     md_text = load_markdown(md_path)
     render_report(md_text)
-
-    # # show with a copy button
-    # st.write("---")
-    # st.subheader("HTML output")
-    # full_html = render_report(md_text, return_html = True)
-    # st.code(full_html, language="html")  # ← has a copy icon
 else:
     st.error(f"Report not found: `{filename}`")
