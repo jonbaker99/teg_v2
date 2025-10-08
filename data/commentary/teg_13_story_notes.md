@@ -1,7 +1,7 @@
 # TEG 13 Story Notes
 
 ## Key Points
-- Jon BAKER's 4th Trophy & 3rd Green Jacket - swept both competitions with wire-to-wire dominance, leading all 72 holes
+- Jon BAKER's 3rd Trophy & 3rd Green Jacket - swept both competitions with wire-to-wire dominance, leading all 72 holes
 - 6-point Trophy margin over Williams; 18-stroke Jacket margin - controlled from gun to tape
 - Patterson's wild ride: 49pts (best round of tournament, R3) sandwiched between disasters, including 28pt collapse (R1-R2) and eagle-to-triple sequence (R4)
 - Williams challenged early, briefly seizing Trophy lead twice but never sustained - finished runner-up in both competitions

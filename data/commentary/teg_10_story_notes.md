@@ -2,7 +2,7 @@
 
 ## Key Points
 - Alex BAKER's 1st Trophy - seized control in R3 after mid-round battles, holding solo lead over final 36 holes to win by 11 points
-- David MULLIN's 9th Green Jacket - dominated with wire-to-wire control, leading all 72 holes to comfortable 12-stroke margin
+- David MULLIN's 8th Green Jacket - dominated with wire-to-wire control, leading all 72 holes to comfortable 12-stroke margin
 - A. BAKER's 184pts and DM's +51 set new tournament records in first major competition overlap
 - JP's catastrophic 112pts (-72 vs winner) featured historic 22-point swing and 20 zero-scores
 - Lead battles dominated early rounds with 10 total changes before A. BAKER's R3 breakaway

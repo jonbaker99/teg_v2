@@ -1,7 +1,7 @@
 # TEG 17 Story Notes
 
 ## Key Points
-- Jon BAKER's 5th Trophy & 4th Green Jacket - commanded from Round 2, never trailed over final 54 holes, cruised to 18-point margin
+- Jon BAKER's 4th Trophy & 4th Green Jacket - commanded from Round 2, never trailed over final 54 holes, cruised to 18-point margin
 - DM's historic 47pts in R2 (best round) couldn't overcome disastrous R1 start
 - JP's catastrophic 22pt R2 collapse - worst single round ever recorded
 - JB led 67/72 holes (Trophy) and 70/72 holes (Jacket) in dominant wire-to-wire performance

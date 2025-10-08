@@ -1,8 +1,8 @@
 # TEG 8 Story Notes
 
 ## Key Points
-- Gregg WILLIAMS' 2nd Trophy - led all 72 holes from start to finish, pulling away to a comfortable 12-point margin
-- David MULLIN's 7th Green Jacket - seized Gross lead on R4 H2, held off Jon BAKER by 6 strokes
+- Gregg WILLIAMS' 3rd Trophy - led all 72 holes from start to finish, pulling away to a comfortable 12-point margin
+- David MULLIN's 6th Green Jacket - seized Gross lead on R4 H2, held off Jon BAKER by 6 strokes
 - GW's wire-to-wire dominance: never trailed in Stableford, led by 11+ points after R2
 - DM's Gross comeback: trailed JB through R3, overtook with R4's 17 (+5 gross) including 2 birdies
 - Stuart NEUMANN's Wooden Spoon: 23 zero-point holes, 49 points behind winner
@@ -31,7 +31,7 @@
 - "Final-day Jacket heist"
 
 ## Tournament Stats
-- Gregg WILLIAMS: 149pts, +107, led 72/72 holes (Trophy), 0/72 (Gross) - 2nd career Trophy
+- Gregg WILLIAMS: 149pts, +107, led 72/72 holes (Trophy), 0/72 (Gross) - 3rd career Trophy
 - David MULLIN: 126pts, +77, led 63/72 holes (Gross), 0/72 (Trophy) - 7th career Jacket
 - Jon BAKER: 131pts, +83, led 15/72 holes (Gross) - runner-up in both competitions
 - Alex BAKER: 137pts, +148 - 2nd in Trophy despite 13 zero-point holes

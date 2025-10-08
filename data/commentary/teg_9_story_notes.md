@@ -2,7 +2,7 @@
 
 ## Key Points
 - John PATTERSON's 1st Trophy - commanded from Round 2, never relinquishing control to win by 6 points in debut tournament
-- David MULLIN's 8th Green Jacket - wire-to-wire dominance, led all 72 holes to win by 21 strokes
+- David MULLIN's 7th Green Jacket - wire-to-wire dominance, led all 72 holes to win by 21 strokes
 - PATTERSON's R2 explosion: 49pts historic performance seized both leads; sustained through volatile R3/R4
 - A. BAKER's late surge: 44pts in R2 and R4 propelled him to 2nd place (162pts), 6 points clear of MULLIN
 - 38 total blow-ups across 4 rounds; 10 birdies tournament-wide with only PATTERSON (4) recording multiple

@@ -1,5 +1,7 @@
-Jon Baker claimed his first TEG Trophy in Portugal's Algarve in 2010, dominating wire-to-wire across four rounds at Boavista. Baker led all 72 Stableford holes, extending his margin each round (8→11→16→17 points) despite volatile scoring (36-45 points per round). David Mullin secured his second Green Jacket by 12 strokes, finishing runner-up in the Trophy by 17 points.
+# TEG 3: 2010, Algarve
 
-Mullin's consistency—never worse than 21 strokes per round—contrasted with Baker's extremes: two 45-point rounds bracketing his worst (36 points in Round 4). Henry Meller recorded four birdies but suffered twin meltdowns: a 12 on the 17th in Round 1, and a 10 on the par-5 3rd in Round 3.
+Jon Baker claimed his first Trophy with wire-to-wire dominance at Boavista, leading all 72 holes and winning by 17 points over David Mullin. Mullin secured his second Green Jacket with a comfortable 12-stroke margin, leading from the fourth hole onwards.
 
-Stuart Neumann earned his first Wooden Spoon with 135 points, while Gregg Williams accumulated 11 blow-ups for zero across the week.
+Stuart Neumann's tournament collapsed on the 17th hole in Round 4—a quintuple bogey (10 strokes, +6) destroyed his Jacket hopes and dropped him to the Wooden Spoon with 135 points. Henry Meller produced the week's wildest swings: four birdies (tournament-high) but ten blow-ups cost him any chance at the Trophy, finishing fourth.
+
+The tournament saw a birdie famine—just five across 360 holes played. Baker never faced a serious Trophy challenge, extending his lead each round (8→11→16→17 points). Mullin's worst round (+14 in Round 3) still left him in cruise control for the Jacket.

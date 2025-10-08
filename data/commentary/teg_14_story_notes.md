@@ -1,7 +1,7 @@
 # TEG 14 Story Notes
 
 ## Key Points
-- David MULLIN's 3rd Trophy & 10th Green Jacket - swept both competitions, leading all 72 holes despite a narrow 2-point final margin
+- David MULLIN's 3rd Trophy & 9th Green Jacket - swept both competitions, leading all 72 holes despite a narrow 2-point final margin
 - Alex BAKER's late charge fell just short - closed gap from 9 points to 2 with 43-point final round but couldn't catch MULLIN
 - MULLIN's 4 birdies and 23 pars anchored consistent performance (+68 gross) despite 6 blow-ups
 - Jon BAKER's tournament collapse - defending champion plummeted from contention to Wooden Spoon (1st career) with 11 zero-point holes

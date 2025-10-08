@@ -1,5 +1,7 @@
-The 2019 TEG returned to Catalonia, Spain, playing PGA Catalunya's Tour and Stadium courses. John Patterson claimed his second Trophy with 172 points, winning by 10 over Gregg Williams. Jon Baker dominated gross scoring wire-to-wire, taking his second Green Jacket by 8 strokes and setting a Stadium course record of 89 in the final round.
+## TEG 12: Patterson Prevails as Williams Collapses
 
-Patterson's victory came through extraordinary volatility—32 lead changes across four rounds, surviving disasters including a quintuple on R3 H3 and a 10 on R2 H15. Williams led the Trophy for 33 holes but imploded in Round 3, posting catastrophic numbers on H4 (9 strokes, +5) and H13 (11 strokes, +7). Stuart Neumann produced the tournament's only eagle on R4 H15 en route to third place.
+**Catalonia, Spain, 2019.** PGA Catalunya's Tour and Stadium courses hosted a tournament of dramatic contrasts: John Patterson claimed his second Trophy with a record-breaking 172 points, while Jon Baker captured his second Green Jacket with a wire-to-wire +63 gross performance—third-best all-time.
 
-David Mullin earned the Wooden Spoon with 139 points despite finishing runner-up in the Green Jacket at +71—only the second time a Jacket runner-up has taken the Spoon.
+Patterson seized control in Round 3 after Gregg Williams' catastrophic back-nine implosion. Williams had led the Trophy for 33 consecutive holes before a quintuple bogey on H13 (11/+7) ended his title defense. Patterson's consistency machine never wavered: four rounds between 40-45 points, extending to a commanding 10-point victory over Williams.
+
+Baker's Jacket dominance was absolute—leading all 72 holes by 8 strokes over David Mullin. Yet Mullin's tournament epitomized golf's cruelty: he tied the Tour course record (84) in Round 2, finished runner-up in gross (+71), but claimed his third career Wooden Spoon with 139 points. Stuart Neumann provided the week's lone eagle in Round 4 at H15.

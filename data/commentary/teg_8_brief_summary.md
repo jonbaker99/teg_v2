@@ -1,5 +1,7 @@
-**TEG 8 (2015): Lisbon Coast, Portugal**
+**TEG 8: Lisbon Coast, Portugal (2015)**
 
-Gregg Williams claimed his second Trophy with wire-to-wire dominance across four Portuguese courses, leading 63 of 72 holes and winning by 12 points. David Mullin secured his seventh Green Jacket by six strokes despite finishing fourth in the Stableford, sealing victory with a course-record 88 at Oitavos Dunes after trading the lead five times with Jon Baker over the final two rounds.
+Gregg Williams claimed his third Trophy with a wire-to-wire masterclass, leading all 72 holes and cruising to a 12-point victory. David Mullin seized his seventh Green Jacket with a dramatic final-round comeback—trailing Jon Baker through 54 holes before overtaking him on R4 H2 and pulling clear by six strokes.
 
-Williams built an 11-point Trophy cushion after Round 2 and never looked back, surviving blow-ups at H12 (quintuple bogey) and back-to-back implosions on H10-H11 in Round 3. Alex Baker climbed to second place with a 39-point final round, though catastrophic meltdowns at H15 and H18 left him with 13 zero-point holes for the week. Stuart Neumann earned his second Wooden Spoon, finishing 49 points behind with 23 blobs—including nightmare H10s across all four rounds.
+Jon Baker endured heartbreak in both competitions. His stellar Round 3 gross 18 (+2) secured the Jacket lead, only to surrender it when Mullin pounced on the second hole of the final round. Baker finished runner-up in both Trophy and Green Jacket, a double near-miss. Stuart Neumann collected his first Wooden Spoon with 100 points—49 behind Williams—after 23 zero-point holes across four rounds. Alex Baker's roller-coaster week epitomised the tournament's drama: a blistering 20-point front nine in R1 contrasted with a catastrophic 10 (+6) on R3 H8.
+
+Four new courses debuted across Lisbon's coast, with Hole 10 at Quinta da Marinha emerging as the week's villain—four blow-ups in Round 1 alone, including both Bakers. Penha Longa's H12 and H16 continued the carnage in Round 2, claiming seven victims between them.

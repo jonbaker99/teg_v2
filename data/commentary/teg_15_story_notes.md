@@ -1,7 +1,7 @@
 # TEG 15 Story Notes
 
 ## Key Points
-- Gregg WILLIAMS's 3rd Trophy & 1st Green Jacket - swept both competitions with wire-to-wire dominance, never trailed across all 72 holes
+- Gregg WILLIAMS's 4th Trophy & 1st Green Jacket - swept both competitions with wire-to-wire dominance, never trailed across all 72 holes
 - Wire-to-wire breakthrough: WILLIAMS led every hole of the tournament (69/72 Stableford, 64/72 Gross), winning by 21pts (Trophy) and 29 strokes (Jacket)
 - Stuart NEUMANN's runner-up: Rallied from last place (R1) to 2nd in Trophy with Round 3's 43pts, despite H18 quintuple-or-worse disaster in R4
 - Alex BAKER's 2nd Wooden Spoon: Finished last in both competitions, 43pts and 71 strokes behind

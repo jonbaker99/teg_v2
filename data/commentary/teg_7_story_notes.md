@@ -2,7 +2,7 @@
 
 ## Key Points
 - Henry MELLER's 1st Trophy - led all 72 holes wire-to-wire, never challenged, winning by 5 points
-- David MULLIN's 6th Green Jacket - battled for Gross lead throughout before pulling clear in R4 to win by 15 strokes
+- David MULLIN's 5th Green Jacket - battled for Gross lead throughout before pulling clear in R4 to win by 15 strokes
 - MELLER never trailed, holding Trophy lead from H1 R1 through all four rounds; swept to maiden title after two previous Wooden Spoons
 - Two-player Jacket duel: MULLIN and MELLER traded Gross lead 8 times before MULLIN sealed it with late birdies
 - Tie for 2nd Trophy (MULLIN/WILLIAMS at 170pts); AB earned Wooden Spoon with 152pts, 23 points behind 5th

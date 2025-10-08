@@ -1,8 +1,8 @@
 # TEG 6 Story Notes
 
 ## Key Points
-- Gregg WILLIAMS's 1st Trophy - led all 72 holes without a single challenger, pulling away from early chaos to win by 3 points
-- David MULLIN's 5th Green Jacket - dominated Gross competition for 62 holes, winning by 4 strokes despite worst Stableford finish (4th)
+- Gregg WILLIAMS's 2nd Trophy - led all 72 holes without a single challenger, pulling away from early chaos to win by 3 points
+- David MULLIN's 4th Green Jacket - dominated Gross competition for 62 holes, winning by 4 strokes despite worst Stableford finish (4th)
 - Williams never relinquished Trophy lead after taking it on R1 H3, despite posting tournament's worst round (28pts R4)
 - Henry MELLER's Wooden Spoon - 12 blow-ups (+3 or worse) including catastrophic R3 H1 & H8 disasters (10/+5 and 10/+6)
 - 52 total blow-ups across 5 players - average 10.4 per player, with Williams and Meller each recording 7

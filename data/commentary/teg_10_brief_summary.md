@@ -1,7 +1,10 @@
-# TEG 10: Baker Claims Maiden Trophy, Mullin Dominates Gross
+# TEG 10: Portugal 2017
 
-The 2017 edition returned to Portugal's Algarve after a five-year absence, playing Boavista and the new 27-hole Palmares layout across four rounds.
+**TEG Trophy Winner:** Alex Baker (184pts, +11 over Gregg Williams)  
+**Green Jacket Winner:** David Mullin (+51, +12 over Jon Baker)
 
-Alex Baker captured his first Trophy with a wire-to-wire victory from Round 3, winning by 11 points with 184 total. His championship-sealing 51-point final round set an all-time TEG record. David Mullin claimed his ninth Green Jacket—extending his own tournament record—by 12 strokes at +51 gross, leading all 72 holes despite a mid-tournament Stableford collapse that saw him plummet from an 8-point lead to third place. Gregg Williams finished runner-up in both competitions but never threatened either leaderboard.
+Portugal 2017 returned to the Algarve after a five-year gap, playing Boavista (Rounds 1 & 4) and two new Palmares combinations (Rounds 2 & 3).
 
-The drama belonged to John Patterson's historic implosion: 22 points lost from Round 2 to Round 4, recording 20 zero-point disasters across the week to earn the Wooden Spoon. His final-round 21 points at Boavista marked his worst competitive display. Baker's closing surge—averaging 49 points across his final two rounds—proved decisive after trailing by five at halfway.
+Alex Baker claimed his first Trophy with a decisive second-half surge, seizing sole control after Round 3's multi-player scramble and breaking away with a tournament-record 51 points in the finale. David Mullin collected his ninth Green Jacket with wire-to-wire dominance, leading all 72 holes to a 12-stroke margin despite a Round 3 collapse (31 points) that ended his Stableford bid. Both winners set new tournament records—Baker's 184 points and Mullin's +51 gross.
+
+The tournament featured ten lead changes before Baker's R4 breakaway. Gregg Williams led or co-led from Round 2 through Round 3 but fell 11 points short in his maiden Jacket bid. John Patterson endured the tournament's worst-ever finish: 112 points, 20 zero-scores, and a catastrophic 11 on Round 4's eighth hole.

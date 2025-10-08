@@ -1,7 +1,7 @@
-# TEG 11: Jon Baker's Breakthrough Sweep in Catalonia
+# TEG 11 - Catalonia 2018
 
-The eleventh TEG Trophy returned to Catalonia in 2018, revisiting PGA Catalunya's two championship courses from TEG 6 and debuting El Prat's Azul Course. Jon Baker claimed both the Trophy and Green Jacket in wire-to-wire fashion, leading 70 of 72 holes in the gross competition and 59 holes in Stableford.
+Jon Baker swept both Trophy and Green Jacket in Spain, dominating for 70 of 72 holes to win by 6 points and 3 strokes. His consistency trumped the field's chaos across four rounds at PGA Catalunya and El Prat.
 
-Baker's dominance was comprehensive: a six-point Trophy margin over brother Alex, and three strokes in the Jacket over David Mullin. The victory included a Round 2 course record 84 at PGA Catalunya Tour and Jon's first Green Jacket after two prior Trophy wins. Alex Baker held the Trophy lead entering the final round after posting a career-best 42 points in Round 2, only to card a career-worst 27 in Round 4 as Jon surged past at the sixth hole—a 15-point swing that sealed the sweep.
+Alex Baker briefly led after Round 3 but suffered a career-worst collapse in Round 4—27 points with five blow-ups including zeros on holes 6 and 9. David Mullin earned his second Wooden Spoon (125 points, 18 behind) despite finishing second in the Jacket. John Patterson epitomized the tournament's volatility: eight disasters in Round 1 (+40) followed by a redemptive 39-point finale—the week's best round.
 
-Mullin suffered the tournament's cruellest fate: his Wooden Spoon arrived despite finishing runner-up in the Jacket by just three strokes, having briefly held the gross lead twice on the final day. John Patterson's volatile week featured 21 triple-or-worse blow-ups yet included a 39-point Round 3 that lifted him from fifth to fourth.
+The four rounds in Catalonia produced 39 blow-ups and just six birdies across 360 holes played. Jon Baker's wire-to-wire dominance marked his first Green Jacket after two prior Trophy victories.

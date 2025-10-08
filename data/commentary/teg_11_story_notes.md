@@ -1,7 +1,7 @@
 # TEG 11 Story Notes
 
 ## Key Points
-- Jon BAKER's 3rd Trophy & 1st Green Jacket - swept both competitions, commanding from Round 1 and holding sway for 75% of holes to win by 6 points
+- Jon BAKER's 2nd Trophy & 1st Green Jacket - swept both competitions, commanding from Round 1 and holding sway for 75% of holes to win by 6 points
 - A. BAKER held Trophy lead briefly in R3 (H1-H2, H13-H7 R4) but faded badly in final round with career-worst 27pts
 - MULLIN's 2nd Wooden Spoon despite strong gross play - led Jacket 10 holes but couldn't sustain momentum
 - Jon BAKER led both competitions after R1, R2, and R4 - lost Trophy lead briefly in R3 but reclaimed it H6 R4
