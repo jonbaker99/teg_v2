@@ -11,122 +11,117 @@
 - **Drama Level:** Low
 
 ## Key Moments
-- H5: Hardest hole of the round (Par 5, avg 7.8 vs par +2.8, avg 0.6 pts) - carnage across the field
-- H7-12: Jon BAKER surges with 16 pts in second six holes - builds commanding lead
-- H13-18: Jon BAKER's dominant closing stretch (17 pts in final six) - seals round victory
-- H13-18: John PATTERSON's strong finish (17 pts in final six) - moves up to 4th place
-- H3: Easiest hole of the round (Par 3, avg 3.4 vs par +0.4, avg 2.8 pts) - scoring opportunity
-- H1-6: Alex BAKER starts strong (13 pts) but fades badly on back nine (7 pts final six)
+- H5: Hardest hole of the round (avg 2.8 over par, only 0.6 pts avg Stableford)
+- H7-12: Jon BAKER dominates middle six (16 pts) after steady opening (11 pts first six)
+- H13-18: Jon BAKER's closing surge (17 pts in final six) extends lead
+- H13-18: John PATTERSON matches Jon BAKER's late charge (17 pts in final six)
+- H3: Easiest hole of the round (avg 0.4 over par, 2.8 pts avg Stableford)
+- H13-18: Alex BAKER collapse (7 pts in final six after 27 pts through H12)
+- H13-18: David MULLIN steady finish (12 pts in final six) but loses ground to leader
 
 ## How Positions Changed
 - **Start of round:** 1st Jon BAKER, 2nd David MULLIN, 3rd Alex BAKER, 4th Gregg WILLIAMS, 5th John PATTERSON
-- **Key shifts:** Minimal movement - only swap between 4th and 5th positions
+- **Key shifts:** Minimal position changes - only swap between 4th and 5th
 - **End of round:** 1st Jon BAKER, 2nd David MULLIN, 3rd Alex BAKER, 4th John PATTERSON, 5th Gregg WILLIAMS
 
 ## Round Breakdown
 **Holes 1-6 (Opening):**
-- Alex BAKER best start (13 pts)
-- David MULLIN (12 pts) and Jon BAKER (11 pts) steady
-- John PATTERSON (11 pts) matches Jon BAKER
-- Gregg WILLIAMS struggles (9 pts) - poorest opening six
+- Relatively consistent starts across field
+- Jon BAKER steady with 11 pts
+- Alex BAKER leads opening with 13 pts
+- David MULLIN posts 12 pts
+- John PATTERSON and Gregg WILLIAMS struggle (11 and 9 pts respectively)
 
 **Holes 7-12 (Middle):**
-- Jon BAKER dominates (16 pts) - takes control of round
-- Alex BAKER maintains consistency (14 pts)
-- John PATTERSON builds momentum (13 pts)
-- Gregg WILLIAMS improves (12 pts)
-- David MULLIN drops back (11 pts)
+- Jon BAKER surges with 16 pts to take control
+- Alex BAKER maintains pace with 14 pts
+- John PATTERSON improves to 13 pts
+- Gregg WILLIAMS finds form with 12 pts
+- David MULLIN drops to 11 pts
 
 **Holes 13-18 (Closing):**
-- Jon BAKER explodes (17 pts) - seals dominant round win
-- John PATTERSON matches Jon BAKER (17 pts) - strong finish secures position gain
-- David MULLIN steady (12 pts)
-- Alex BAKER collapses (7 pts) - worst closing stretch
-- Gregg WILLIAMS fades (5 pts) - drops to last place
+- Jon BAKER's dominant finish (17 pts) seals round victory
+- John PATTERSON matching surge (17 pts) lifts him to 4th overall
+- David MULLIN steady (12 pts) but insufficient to close gap
+- Alex BAKER disastrous collapse (7 pts) but holds 3rd
+- Gregg WILLIAMS fades (5 pts) drops to last place
 
 ## Round Stats
-- **Hardest hole:** H5 (Par 5, avg 7.8 vs par +2.8)
-- **Easiest hole:** H3 (Par 3, avg 3.4 vs par +0.4)
-- **Best individual performance:** Jon BAKER (44 pts, unchanged from prev round 44 pts)
-- **Worst collapse:** Gregg WILLIAMS (26 pts, down from prev round 35 pts)
+- **Hardest hole:** H5 (Par 5, avg 2.8 over par)
+- **Easiest hole:** H3 (Par 3, avg 0.4 over par)
+- **Best individual performance:** Jon BAKER (44 pts, same as Round 2)
+- **Worst collapse:** Alex BAKER (7 pts in final six after strong start)
 
 ## Player Notes
-- **Jon BAKER:** 44 pts (same as R2), extends lead to 11 pts, 26 pts on back nine dominates field
-- **David MULLIN:** 35 pts (down from R2: 47 pts), maintains 2nd but gap widens, consistent across nine-hole splits (17/18)
-- **Alex BAKER:** 34 pts (down from R2: 37 pts), stays 3rd but 23 pts back, strong front nine (20 pts) before back nine collapse (14 pts)
-- **John PATTERSON:** 41 pts (up from R2: 22 pts), moves to 4th (+1), massive improvement with 24 pts on back nine
-- **Gregg WILLIAMS:** 26 pts (down from R2: 35 pts), drops to 5th (-1), 32 pts behind leader, weak final six (5 pts)
-
----
+- **Jon BAKER:** 44 pts (-3 from Round 2's 47-pt David MULLIN performance), consistent with own Round 2 (44 pts), extends lead to 11 pts with one round remaining
+- **David MULLIN:** 35 pts (-12 from Round 2's 47 pts), drops from round leader to distant second, needs 12+ pts/round improvement to catch Jon
+- **Alex BAKER:** 34 pts (-3 from Round 2's 37 pts), maintains 3rd despite final six collapse, now 23 pts behind leader
+- **John PATTERSON:** 41 pts (+19 from Round 2's 22 pts), massive improvement moves him to 4th, strong late surge (24 pts back nine)
+- **Gregg WILLIAMS:** 26 pts (-9 from Round 2's 35 pts), drops to 5th after poor finish, 32 pts off lead heading to final round
 
 ---
 
 ## Round Report
 
-# Baker Brothers Diverge as Jon Seals Command at Óbidos
-
+## Baker Extends Command as Patterson Surges at Royal Óbidos
 **Royal Óbidos • 07/10/2024 • Round 3 of 4**
 
 ### Round Summary
 
-Jon Baker arrived at Royal Óbidos nursing a slender three-point lead and departed with an iron grip on the TEG Trophy. His masterful 44-point haul—matching his second-round brilliance—built an 11-point cushion that looks increasingly unassailable with just 18 holes remaining. The round belonged entirely to Baker from the seventh hole onwards, where he unleashed 33 points across the final 12 holes to leave his rivals trailing in his wake.
+Jon BAKER entered the third round with a slender lead, but Royal Óbidos would prove the stage for him to transform a tight race into a near-procession. His commanding 44-point performance—matching his own second-round effort—has opened up an 11-point cushion with just one round remaining, leaving his rivals staring at a mathematical mountain.
 
-While Jon Baker surged, his namesake Alex Baker endured contrasting fortunes. After a sparkling 13-point start through six holes suggested he might close the gap, the wheels came off spectacularly over the closing stretch. Just seven points from the final six holes saw him tumble to 23 points adrift, effectively ending his title challenge. David Mullin held second place with steady golf, but his 35-point return couldn't keep pace with the leader's relentless assault. The only position change saw John Patterson's storming 41-point round lift him past Gregg Williams into fourth.
+The round began with the field bunched closely together, but Baker's masterful back-nine surge of 33 points pulled him clear of the chasing pack. While David MULLIN's steady golf kept him in second place, it was John PATTERSON who stole the supporting role, matching Baker's closing six-hole blitz of 17 points to vault into fourth position. Alex BAKER, who looked poised to apply pressure after 27 points through twelve holes, suffered a catastrophic collapse over the final six, managing just 7 points when he could least afford it.
+
+The par-5 5th hole lived up to its reputation as Royal Óbidos's sternest test, averaging 2.8 over par and yielding a miserly 0.6 Stableford points across the field. But it was the closing stretch where the day's true drama unfolded—or rather, where the tournament leader ensured there would be precious little drama left for the final round.
 
 ### How It Unfolded
 
-The opening holes provided little indication of the carnage to come. Alex Baker looked dangerous with 13 points through six, whilst Jon Baker's modest 11-point start suggested he might be vulnerable. The easy par-3 third offered brief respite, but the field collectively held its breath approaching the par-5 fifth—a hole that would prove the day's executioner.
+The opening six holes suggested a competitive day ahead. Alex BAKER edged the early exchanges with 13 points, while Jon BAKER's 11 and David MULLIN's 12 kept them firmly in touch. Behind them, Patterson and Williams struggled to find rhythm, posting 11 and 9 respectively as the field navigated Royal Óbidos's challenging start.
 
-**The Fifth Circle**
+Everything changed through the middle six. Jon BAKER shifted through the gears with a 16-point surge from the 7th through the 12th, seizing control of both the round and the tournament. His brother Alex kept pace with 14 points, while Patterson began his recovery with 13. Mullin, ominously, dropped to just 11 points as the leader pulled away. Even Gregg WILLIAMS found some form with 12 points, but by then Baker was already building what would prove an unassailable advantage.
 
-Disaster struck at the fifth, where scoring averaged a ghastly 7.8 strokes against par. The field limped away averaging just 0.6 points per player from what should have been a birdie opportunity. It was a horror show that reset the round and separated the survivors from the casualties.
+**The Closing Surge**
 
-**Baker Takes Command**
+The final six holes became a tale of two players rising and one collapsing. Jon BAKER delivered a stunning 17-point finish, turning a comfortable lead into a commanding one. Remarkably, John PATTERSON matched him stroke for stroke down the stretch, his own 17-point surge completing a 24-point back nine that catapulted him past Williams into fourth place overall.
 
-Emerging from the wreckage, Jon Baker shifted through the gears. Between the seventh and twelfth holes, he hammered out 16 points—the best middle-six performance of the day. Alex Baker stayed in touch with 14 points across the same stretch, but Patterson (13 points) was quietly building something special, whilst Mullin's 11-point return suggested he was treading water rather than attacking.
+For Alex BAKER, however, the closing holes became a horror show. After accumulating 27 points through twelve holes and looking every inch a challenger, he imploded with just 7 points over the final six—a collapse that, mercifully for him, came too late to cost him third place. Williams, managing only 5 points in the same stretch, tumbled to last place. Even Mullin's steady 12-point finish felt like defeat, as the gap to the leader yawned ever wider.
 
-**The Decisive Closing Stretch**
-
-The final six holes delivered the knockout blow. Jon Baker was simply unstoppable, pouring in 17 points to seal a commanding round victory and extend his tournament lead beyond realistic reach. Patterson matched those 17 points hole-for-hole, his exceptional closing burst securing a position gain that salvaged his tournament. But for Alex Baker, it was agony. Seven points from the final six represented a complete collapse—the worst closing performance of the day saw him fade from contention to also-ran. Gregg Williams managed just five points over those crucial holes, ensuring he'd swap places with the surging Patterson and slip to fifth.
+The par-5 5th had proven the day's most punishing examination, with the field averaging 2.8 over par. But it was Jon Baker's relentless accumulation through the back nine—33 points across the final twelve holes—that truly defined the round.
 
 ### Standings After Round 3
 
 **Round 3 Stableford:** JB 44 | JP 41 | DM 35 | AB 34 | GW 26  
-**Round 3 Gross:** JB +14 | DM +21 | AB +22 | JP +15 | GW +30
+**Round 3 Gross:** JB +14 | AB +23 | DM +24 | JP +28 | GW +32
 
-**Tournament Stableford:** JB 130 | DM 119 | AB 107 | JP 103 | GW 98  
-**Tournament Gross:** DM +72 | JB +78 | AB +93 | JP +106 | GW +125
+**Tournament Stableford:** JB 130 | DM 119 | AB 107 | JP 95 | GW 94  
+**Tournament Gross:** DM +71 | JB +79 | AB +90 | GW +115 | JP +116
 
 ### What's At Stake
 
-**With one round remaining:**
+**With 1 round remaining:**
 
-Jon Baker's 11-point advantage represents nearly 25% of a typical round score. To put it bluntly, David Mullin would need to win the final round by a massive margin whilst Baker implodes—and implosions simply haven't been part of Baker's vocabulary this week. Mullin requires approximately 12-15 more points than Baker just to draw level, meaning he needs a 45+ point round combined with Baker struggling to mid-30s. Possible? Barely. Probable? Not remotely.
+Jon BAKER needs only to show up. His 11-point lead over David MULLIN means even a disastrous 20-point round would leave him champion if Mullin produces another career-best performance. Barring a meltdown of historic proportions, the TEG Trophy is his to lose. In the Green Jacket race, Mullin's 8-stroke advantage gives him similar breathing room, though his cushion is slightly more vulnerable to a Baker surge.
 
-The real tournament now concerns second place and the mathematical spoon battle. Alex Baker sits 12 points clear of fourth-placed Patterson, making third place relatively secure. Patterson's 41-point explosion has given him breathing room over Gregg Williams, who languishes 32 points behind the leader and five behind Patterson. Williams needs his best round of the tournament—and Patterson to falter—just to reclaim fourth.
+For the challengers, the mathematics are brutal. Mullin would need Baker to implode while simultaneously posting another 47-point masterclass—the exact performance that won him Round 2. Even then, he'd only draw level. Alex BAKER, 23 points back, is clinging to mathematical hope but would need his brother to score in the teens while he himself delivers a career round north of 45 points. It's theoretically possible. Practically? The tournament is over.
 
-The Green Jacket battle presents marginally more intrigue. Mullin's six-shot advantage over Baker in gross scoring means he needs only avoid complete disaster to claim that secondary prize. Baker would require an exceptional final round combined with Mullin adding 25+ shots to have any chance of the Jacket double.
+The real battle is now for Green Jacket honors, where Mullin's 8-stroke lead over Jon Baker keeps genuine competition alive, and for third place, where Alex Baker holds a 12-point cushion over Patterson. The Spoon race has collapsed into a two-horse sprint between Williams and Patterson, separated by just a single point. Patterson's stunning 41-point round has transformed that battle from inevitable to intriguing.
 
 ### Round Highlights
-
-- Jon Baker's 26-point back nine demolishes the field and effectively seals the TEG Trophy
-- The par-5 fifth becomes a graveyard, averaging 7.8 strokes as the entire field suffers
-- John Patterson's 24-point back nine represents the tournament's best closing nine and lifts him into fourth
-- Alex Baker's seven-point collapse over the final six holes ends his title challenge
-- The par-3 third provides the day's only relief, averaging just 0.4 over par
+- Jon Baker's 33-point back nine clinches an 11-point lead with one round to play
+- John Patterson's remarkable 41-point performance includes 17-point closing surge matching leader
+- Alex Baker's catastrophic 7-point finish to final six holes after 27 points through twelve
+- The par-5 5th proves Royal Óbidos's toughest test, averaging 2.8 over par
+- Patterson's surge vaults him past Williams into fourth, setting up tense Spoon battle
 
 ### Player Summaries
 
-**Jon Baker:** A complete performance built on relentless back-nine scoring (26 points across holes 7-18). Matched his second-round 44 points and transformed a tenuous lead into a commanding position. Barring catastrophe, the TEG Trophy is his to lose.
+**Jon BAKER:** Flawless 44-point performance featuring 33-point back nine transforms narrow lead into commanding 11-point advantage; now controls both round and Green Jacket destiny heading into final day.
 
-**David Mullin:** Consistency personified with balanced nine-hole splits (17/18), but his 35-point return couldn't match Baker's firepower. Maintains second place and looks secure for the Green Jacket, but the Trophy appears beyond reach.
+**David MULLIN:** Steady 35 points maintains second place but falls 11 back in Trophy race; 8-stroke Green Jacket lead over Jon Baker remains his primary prize with one round remaining.
 
-**Alex Baker:** Started like a train with 13 points through six holes, finished like he'd run out of track. The seven-point final six holes represented a tournament-ending collapse that leaves him 23 points adrift and facing a battle just to hold third.
+**Alex BAKER:** Promising 27 points through twelve holes evaporates in disastrous 7-point finish; holds third place but now 23 points behind leader with mathematical hopes virtually extinguished.
 
-**John Patterson:** Transformed his tournament with a magnificent 41-point round, featuring 17 points over the final six holes that matched the leader stroke-for-stroke. Rises to fourth and brings renewed energy to the closing round.
+**John PATTERSON:** Stunning 41-point recovery anchored by 24-point back nine vaults him into fourth; matches leader's closing surge point-for-point, now just 1 point clear of Williams in Spoon battle.
 
-**Gregg Williams:** A forgettable day yielding just 26 points sees him drop to fifth, 32 points behind Baker. The weak final six (5 points) suggests he's running out of steam at precisely the wrong moment.
+**Gregg WILLIAMS:** Disappointing 26 points including 5-point finish drops him to last place; trails Patterson by single point heading to final round in desperate Spoon avoidance mission.
 
----
-
-*Generated by Round Report System*

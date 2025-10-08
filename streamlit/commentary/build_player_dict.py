@@ -9,14 +9,25 @@ from pathlib import Path
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from utils import load_all_data, get_teg_winners
+from utils import load_all_data, read_file
 from utils_win_tables import summarise_teg_wins
 from player_info_template import PLAYER_INFO
 
 # Load TEG data
 print("Loading TEG data...")
 all_data = load_all_data(exclude_incomplete_tegs=True, exclude_teg_50=True)
-winners = get_teg_winners(all_data).drop(columns=['Year'])
+
+# IMPORTANT: Load winners from CSV (source of truth), not calculated from scores
+# This is because some tournaments awarded trophies on a different basis
+print("Loading TEG winners from data/teg_winners.csv...")
+winners_csv = read_file('data/teg_winners.csv')
+
+# Map CSV columns to expected format
+winners = winners_csv.rename(columns={
+    'TEG Trophy': 'TEG Trophy',
+    'Green Jacket': 'Green Jacket',
+    'HMM Wooden Spoon': 'HMM Wooden Spoon'
+})[['TEG', 'TEG Trophy', 'Green Jacket', 'HMM Wooden Spoon']]
 
 competitions = ['TEG Trophy', 'Green Jacket', 'HMM Wooden Spoon']
 

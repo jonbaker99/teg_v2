@@ -1,0 +1,13 @@
+{
+  "batch_id": "msgbatch_01KeMHnv2aTm5KhZp1abnZxG",
+  "status": "in_progress",
+  "request_counts": {
+    "canceled": 0,
+    "errored": 0,
+    "expired": 0,
+    "processing": 60,
+    "succeeded": 0
+  },
+  "created_at": "2025-10-08T23:18:16.128914",
+  "batch_type": "round_story_notes"
+}

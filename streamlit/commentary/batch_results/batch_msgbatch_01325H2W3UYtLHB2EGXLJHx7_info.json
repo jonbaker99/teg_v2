@@ -1,0 +1,13 @@
+{
+  "batch_id": "msgbatch_01325H2W3UYtLHB2EGXLJHx7",
+  "status": "in_progress",
+  "request_counts": {
+    "canceled": 0,
+    "errored": 0,
+    "expired": 0,
+    "processing": 60,
+    "succeeded": 0
+  },
+  "created_at": "2025-10-08T23:25:32.039472",
+  "batch_type": "round_narrative_reports"
+}

@@ -113,15 +113,20 @@ def submit_batch(batch_file_path: str, api_key: str) -> Dict[str, Any]:
 
     client = anthropic.Anthropic(api_key=api_key)
 
-    # Read batch file content
+    # Read and parse JSONL file into list of request dicts
+    requests_list = []
     with open(batch_file_path, 'r', encoding='utf-8') as f:
-        requests_content = f.read()
+        for line in f:
+            line = line.strip()
+            if line:  # Skip empty lines
+                requests_list.append(json.loads(line))
 
     print(f"Submitting batch from: {batch_file_path}")
+    print(f"Total requests: {len(requests_list)}")
 
     # Create message batch
     batch = client.messages.batches.create(
-        requests=requests_content
+        requests=requests_list
     )
 
     print(f"Batch submitted successfully!")
@@ -238,27 +243,24 @@ def get_batch_results(batch_id: str, api_key: str, output_dir: str) -> Dict[str,
     # Retrieve results
     results_response = client.messages.batches.results(batch_id)
 
-    # Parse results (JSONL format)
+    # Parse results (JSONLDecoder is an iterator)
     results = {}
     os.makedirs(output_dir, exist_ok=True)
 
-    for line in results_response.text.strip().split('\n'):
-        if not line.strip():
-            continue
-
-        result = json.loads(line)
-        custom_id = result['custom_id']
+    # Iterate directly over the JSONLDecoder object
+    for result in results_response:
+        custom_id = result.custom_id
 
         # Check for errors
-        if result['result']['type'] == 'error':
-            error_info = result['result']['error']
-            print(f"  ✗ {custom_id}: ERROR - {error_info['type']}: {error_info['message']}")
+        if result.result.type == 'error':
+            error_info = result.result.error
+            print(f"  ✗ {custom_id}: ERROR - {error_info.type}: {error_info.message}")
             results[custom_id] = None
             continue
 
         # Extract generated text
-        message = result['result']['message']
-        generated_text = message['content'][0]['text']
+        message = result.result.message
+        generated_text = message.content[0].text
 
         results[custom_id] = generated_text
         print(f"  ✓ {custom_id}: {len(generated_text)} chars")
@@ -300,12 +302,21 @@ def save_batch_info(batch_info: Dict[str, Any], output_dir: str, batch_type: str
     """
     os.makedirs(output_dir, exist_ok=True)
 
+    import json
+
+    class EnhancedJSONEncoder(json.JSONEncoder):
+        def default(self, obj):
+            if hasattr(obj, "to_dict"):
+                return obj.to_dict()
+            return super().default(obj)
+
+
     batch_id = batch_info['batch_id']
     batch_info['batch_type'] = batch_type  # Add type for easier identification
     output_path = os.path.join(output_dir, f"batch_{batch_id}_info.json")
 
     with open(output_path, 'w', encoding='utf-8') as f:
-        json.dump(batch_info, f, indent=2)
+        json.dump(batch_info, f, indent=2, cls=EnhancedJSONEncoder)
 
     print(f"Batch info saved to: {output_path}")
     return output_path

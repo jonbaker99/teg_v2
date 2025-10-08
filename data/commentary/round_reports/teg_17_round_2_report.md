@@ -7,121 +7,124 @@
 ## Round Summary
 - **Round Winner:** David MULLIN (47 pts Stableford, 10 gross)
 - **Tournament Leader:** Jon BAKER (leads by 2 pts)
-- **Biggest Mover:** John PATTERSON (-4 positions, 1st to 5th)
+- **Biggest Mover:** John PATTERSON (-4 positions, drops from 1st to 5th)
 - **Drama Level:** Low
 
 ## Key Moments
-- H3: Field struggles on hardest hole (avg 2.4 over par)
-- H5: Easiest hole provides scoring opportunity (avg 0.2 over par)
-- H6: Alex BAKER moves up 2 positions; John PATTERSON drops 2 positions
-- H10: Multiple position changes as field battles through back nine
-- H13: Second hardest hole tests field (Par 5, avg 2.4 over par)
-- Final: Jon BAKER takes tournament lead from John PATTERSON
+- H6: Position shake-up - Alex BAKER climbs 2 positions, John PATTERSON drops 2
+- Holes 7-12: David MULLIN dominates middle six with 18 pts Stableford
+- H13: Group struggles on hardest hole (Par 5, avg 7.4, +2.4 vs par)
+- Opening six: Jon BAKER posts strong 18 pts to set foundation
+- Final six: Jon BAKER maintains steady 14 pts to protect position
+- Round: John PATTERSON collapses with only 22 pts (vs 39 pts Round 1)
 
 ## How Positions Changed
-- **Start of round:** 1st: John PATTERSON (39 pts), 2nd: Jon BAKER (38 pts), T3rd: David MULLIN/Gregg WILLIAMS (33 pts), 5th: Alex BAKER (32 pts)
-- **Key shifts:** Hole 6 saw Alex BAKER rise, John PATTERSON fall; steady deterioration for overnight leader
-- **End of round:** 1st: Jon BAKER (82 pts), 2nd: David MULLIN (80 pts), 3rd: Alex BAKER (69 pts), 4th: Gregg WILLIAMS (68 pts), 5th: John PATTERSON (61 pts)
+- **Start of round:** 1st John PATTERSON (39 pts R1), 2nd Jon BAKER (38 pts), T3rd David MULLIN/Gregg WILLIAMS (33 pts each), 5th Alex BAKER (32 pts)
+- **Key shifts:** Major movement at H6 with Alex BAKER rising and John PATTERSON falling; Jon BAKER overtakes for lead during round
+- **End of round:** 1st Jon BAKER (82 pts total), 2nd David MULLIN (80 pts), 3rd Alex BAKER (69 pts), 4th Gregg WILLIAMS (68 pts), 5th John PATTERSON (61 pts)
 
 ## Round Breakdown
 **Holes 1-6 (Opening):**
-- Jon BAKER strong start (18 pts in six holes)
-- Alex BAKER solid opening (15 pts)
-- David MULLIN steady (14 pts)
-- John PATTERSON struggles early (8 pts)
-- H3 claimed multiple victims as hardest hole
-- H5 provided brief respite as easiest hole
+- Jon BAKER sets early pace with 18 pts
+- David MULLIN posts solid 14 pts
+- H3 emerges as toughest test (Par 4, avg 6.4)
+- H5 provides relief as easiest hole (Par 3, avg 3.2)
+- H6 sees critical position changes
+- John PATTERSON struggles with only 8 pts
 
 **Holes 7-12 (Middle):**
-- David MULLIN dominates middle stretch (18 pts in six holes)
-- Jon BAKER maintains consistency (12 pts)
-- Alex BAKER holds position (12 pts)
-- John PATTERSON continues collapse (5 pts)
-- Gregg WILLIAMS struggles (10 pts)
+- David MULLIN dominates with 18 pts to surge up leaderboard
+- Jon BAKER maintains steady 12 pts
+- Alex BAKER matches with 12 pts
+- John PATTERSON continues collapse with just 5 pts
+- H10 creates challenges across field (avg 5.4 on Par 4)
 
 **Holes 13-18 (Closing):**
-- David MULLIN finishes strong (15 pts)
-- Jon BAKER steady home (14 pts)
-- Gregg WILLIAMS rallies late (14 pts)
-- Alex BAKER fades (10 pts)
-- John PATTERSON unable to recover (9 pts)
-- H13 as co-hardest hole creates final separation
+- David MULLIN sustains pressure with 15 pts
+- Jon BAKER closes with 14 pts to secure lead
+- H13 proves brutal (Par 5, avg 7.4, hardest hole)
+- Alex BAKER fades to 10 pts
+- Gregg WILLIAMS rallies with 14 pts
+- H18 provides scoring opportunity (avg 2.8 pts Stableford)
 
 ## Round Stats
-- **Hardest holes:** H3 (Par 4, avg +2.4 vs par) and H13 (Par 5, avg +2.4 vs par)
-- **Easiest hole:** H5 (Par 3, avg +0.2 vs par)
-- **Best individual performance:** David MULLIN (47 pts, +14 vs Round 1's 33 pts)
-- **Worst collapse:** John PATTERSON (22 pts, -17 vs Round 1's 39 pts; dropped from 1st to 5th)
+- **Hardest hole:** H3 (Par 4, avg 6.4, +2.4 vs par) and H13 (Par 5, avg 7.4, +2.4 vs par)
+- **Easiest hole:** H5 (Par 3, avg 3.2, +0.2 vs par)
+- **Best individual performance:** David MULLIN (47 pts vs 33 pts R1, +14 pt improvement)
+- **Worst collapse:** John PATTERSON (22 pts vs 39 pts R1, -17 pt decline)
 
 ## Player Notes
-- **Jon BAKER:** 44 pts (+6 vs R1's 38 pts), balanced front/back (22/22), moves from 2nd to 1st, leads by 2 pts
-- **David MULLIN:** 47 pts (+14 vs R1's 33 pts), exceptional round winner, back nine dominance (23 pts), moves from T3rd to 2nd
-- **Alex BAKER:** 37 pts (+5 vs R1's 32 pts), strong front nine (23 pts), faded on back (14 pts), moves from 5th to 3rd
-- **Gregg WILLIAMS:** 35 pts (+2 vs R1's 33 pts), struggled early (11 pts first six), rallied late, drops from T3rd to 4th
-- **John PATTERSON:** 22 pts (-17 vs R1's 39 pts), catastrophic collapse from overnight lead, struggles across all splits (12/10), drops to 5th, now 21 pts behind
-
----
+- **Jon BAKER:** 44 pts (14 gross), climbs from 2nd to 1st, consistent scoring across all splits (18-12-14), extends Trophy lead to 2 pts
+- **David MULLIN:** 47 pts (10 gross, round winner), moves 3rd to 2nd, career round with massive middle-six (18 pts), trails by 2 pts
+- **Alex BAKER:** 37 pts (33 gross), rises 5th to 3rd, strong front nine (23 pts) but faded on back nine (14 pts), improved 5 pts from R1
+- **Gregg WILLIAMS:** 35 pts (17 gross), drops T3rd to 4th, steady throughout but lacked standout moments, matched R1 performance (+2 pts)
+- **John PATTERSON:** 22 pts (44 gross), catastrophic drop from 1st to 5th, lost 17 pts from R1, struggled all round (8-5-9 splits), now 21 pts behind
 
 ---
 
 ## Round Report
 
-# Mullin's Monster Round Shakes Up West Cliffs
+## Mullin's Monster Round Shakes Up West Cliffs
 **West Cliffs • 06/10/2024 • Round 2 of 4**
 
 ### Round Summary
 
-The overnight leader has fallen, and the TEG Trophy race has been blown wide open at West Cliffs. John Patterson's catastrophic collapse—a 22-point round that saw him plummet from first to fifth—handed the tournament lead to Jon Baker, who now sits two points clear with two rounds remaining. But it's David Mullin's spectacular 47-point round, the best performance of the tournament so far, that has injected real drama into this competition.
+The TEG Trophy race burst into life at West Cliffs as David Mullin fired a career-best 47 points to claim the round and storm into contention, just two points behind new leader Jon Baker. After opening with 33 points in Round 1, Mullin's 14-point improvement—fueled by a devastating 18-point middle six—vaulted him from tied third to second place overall.
 
-Baker leads the TEG Trophy standings on 82 points, but Mullin's round-winning performance has propelled him to second place, just two points back. Meanwhile, in the Green Jacket gross competition, Mullin extended his commanding lead to seven strokes over Baker, suggesting these two competitions may well be heading for different destinations. With West Cliffs proving a stern test—particularly at the brutal par-4 3rd and par-5 13th, which averaged 2.4 shots over par—the question now is whether anyone can catch Baker's steady accumulation of points, or if Mullin's momentum will carry him to glory.
+Jon Baker seized the tournament lead with a composed 44 points, his steady consistency (18-12-14 across the splits) proving more valuable than fireworks. The 38-year-old extends his overnight second position to lead on 82 points, but Mullin's ominous form means Baker's cushion is paper-thin heading into the weekend.
+
+The day's shock came from overnight leader John Patterson, whose catastrophic 22-point collapse—17 points worse than his opening 39—saw him plummet from first to fifth. Patterson now sits 21 points adrift with two rounds remaining, his title defense hanging by a thread. In the Green Jacket race, Mullin's round-winning 10 gross strengthens his position as the gross scoring specialist.
 
 ### How It Unfolded
 
-The opening holes quickly revealed this would be no ordinary round. While Jon Baker built a solid foundation with 18 points through the first six holes, the real story was unfolding behind him. Patterson, defending his overnight lead, stumbled immediately and managed just eight points in the opening stretch. The par-4 3rd hole, playing as the day's joint-hardest, claimed multiple victims and set the tone for Patterson's dismal day.
+Jon Baker set the early tempo, building an 18-point foundation through the opening six holes while Patterson's defense began to crumble with just 8 points. The par-4 third proved particularly vicious, averaging 6.4 strokes as the field struggled with its technical demands. By the sixth hole, the leaderboard was already reshaping—Alex Baker climbed two positions while Patterson dropped two, the first cracks appearing in what would become a comprehensive collapse.
 
-By the turn, the tournament had been transformed. Alex Baker, quiet overnight in fifth place, had pieced together 15 points on the front nine to move into contention. Mullin, meanwhile, added a steady 14 points to stay in touch. The only brief respite came at the par-3 5th, where the field averaged just 0.2 over par, but it proved a fleeting oasis in an otherwise demanding examination.
+**Mullin Takes Command**
 
-The middle stretch belonged entirely to Mullin. Six consecutive holes from the 7th through 12th yielded an exceptional 18 points, turning what had been a solid round into something special. Baker maintained his consistency with 12 points through the same stretch, but Patterson's freefall continued—just five points as his overnight lead evaporated. By the 10th hole, multiple position changes rippled through the leaderboard as the West Cliffs course exacted its toll.
+The middle six holes belonged entirely to David Mullin. His 18-point blitz through holes 7-12 powered him up the leaderboard as competitors watched helplessly. Jon Baker maintained his steady 12 points through this stretch, refusing to chase and protecting his position with percentage golf. Patterson's nightmare deepened with just 5 points—his tournament hopes evaporating in real-time as the deficit ballooned.
 
-The closing stretch confirmed the new order. Mullin hammered home another 15 points from the 13th through 18th, despite the par-5 13th proving as treacherous as the 3rd had been. Baker's steady 14-point finish—matching exactly his back-nine total—saw him claim the tournament lead as Patterson could muster only nine points on the run home. Gregg Williams rallied with 14 late points, but the damage from his early struggles (just 11 points in the first six holes) had already been done. When the dust settled, Baker stood atop the leaderboard, but with Mullin's 47-point masterclass fresh in everyone's memory.
+The par-4 tenth created havoc across the field, averaging 5.4 strokes, but Mullin navigated the chaos while others foundered. Alex Baker matched Baker's 12-point middle stretch to keep himself in the conversation, though still trailing the leaders.
+
+**Closing Drama at the Brutal 13th**
+
+The closing six began with carnage at the par-5 13th—the round's hardest hole at 7.4 strokes average, a staggering 2.4 over par. The monster hole inflicted damage across the board, but Mullin absorbed the blow and responded with 15 points through the final six to seal his round victory. Jon Baker's 14-point finish was equally impressive, protecting his overnight gains to claim the lead.
+
+Gregg Williams rallied with 14 points on the closing stretch, but his earlier steady play lacked the spark to challenge the front-runners. Patterson limped home with 9 points, completing his miserable day 21 points behind Baker. The par-4 18th provided late relief, averaging 2.8 Stableford points as players finished on a merciful high note.
 
 ### Standings After Round 2
 
 **Round 2 Stableford:** DM 47 | JB 44 | AB 37 | GW 35 | JP 22  
-**Round 2 Gross:** DM +10 | AB +17 | JB +18 | GW +21 | JP +40
+**Round 2 Gross:** DM +10 | JB +14 | GW +17 | AB +33 | JP +44
 
 **Tournament Stableford:** JB 82 | DM 80 | AB 69 | GW 68 | JP 61  
-**Tournament Gross:** DM +43 | JB +50 | AB +66 | GW +72 | JP +97
+**Tournament Gross:** DM +43 | JB +52 | GW +50 | AB +65 | JP +83
 
 ### What's At Stake
 
-**With 2 rounds remaining:**
+**With 2 rounds remaining:** Jon Baker's 2-point advantage is razor-thin, with David Mullin breathing down his neck after today's 47-point explosion. Baker needs to average 36 points per round to reach 154 total—a target Mullin can match by maintaining 37-point rounds. These two are locked in a private battle, with the momentum suddenly shifting toward Mullin.
 
-Jon Baker holds a precarious two-point lead over David Mullin in the TEG Trophy race, but that slender margin means everything remains to play for. Baker needs to average just 41 points per round to reach a typically winning total of 164 points, but with Mullin having just demonstrated he can produce 47-point rounds, the pressure is squarely on the leader. Mullin needs to average 42 points per round to catch Baker—entirely achievable given his Round 2 performance—while Baker simply cannot afford another collapse like Patterson's.
+Alex Baker (13 points back) and Gregg Williams (14 back) remain mathematically alive but need heroics—both require 40+ point rounds while hoping the leaders stumble. For perspective, that's 3-5 points better than their best performances so far. They're outsiders, but West Cliffs has form for chaos.
 
-Behind them, the mathematics grow more challenging. Alex Baker sits third on 69 points, requiring an average of 47.5 points per round to catch the leader—possible but demanding near-perfection over two consecutive rounds. Gregg Williams, one point further back, needs 48 points per round, putting him on the edge of realistic contention. As for Patterson, his tournament has been devastated. Now 21 points adrift in fifth, he would need to average 51.5 points per round while hoping for a Baker collapse—mathematically possible but practically improbable.
+John Patterson's 21-point deficit looks insurmountable. He'd need back-to-back 47-point rounds (matching Mullin's career best) while Baker and Mullin both collapse—possible in theory, but his confidence must be shattered after today's 22-point horror show. The Spoon battle has become his more realistic focus.
 
-The Green Jacket gross competition appears more settled. Mullin's seven-stroke lead over Baker means he can afford to shoot three or four strokes worse per round and still claim the gross title. The real battle there is for second place, with Baker holding a 16-stroke cushion over Alex Baker in third.
+The Green Jacket race tells a different story: Mullin's gross superiority (9 strokes clear of Baker) suggests he's building an unassailable lead in that competition, even if the Trophy slips away.
 
 ### Round Highlights
-- David Mullin's 47-point round winner—18 points through the middle six holes
-- John Patterson's collapse from overnight leader to fifth place (22 points, -17 vs R1)
-- Jon Baker's model of consistency: 22 points on both front and back nine
-- The par-4 3rd and par-5 13th averaging 2.4 over par, proving crucial separation points
-- Alex Baker's 23-point front nine surge moving him up two positions
+- David Mullin's 18-point rampage through the middle six holes demolishes the field
+- Jon Baker's ice-cool 44 points seizes the lead without fanfare
+- John Patterson's 17-point collapse from Round 1—from hero to zero in 18 holes
+- The par-5 13th averaging 7.4 strokes—carnage on the toughest test
+- Alex Baker's front-nine 23 points keeps him in distant mathematical contention
 
 ### Player Summaries
 
-**Jon BAKER:** Steady 44-point round (22/22 split) takes him from second to first in the TEG Trophy, though his two-point lead is razor-thin. Sits second in Green Jacket competition, seven strokes behind Mullin.
+**Jon Baker:** Steady 44 points (18-12-14 splits) claims the tournament lead by 2 points. Never spectacular, always reliable—exactly what's needed halfway through. In the Green Jacket race, his +52 total trails Mullin by 9 strokes.
 
-**David MULLIN:** Exceptional 47-point round winner powers him to second place, just two points off the lead with momentum on his side. Extends Green Jacket gross lead to seven strokes.
+**David Mullin:** Career-best 47 points and round-winning 10 gross vaults him to second overall. His middle-six masterclass (18 points) was the round's defining spell. Just 2 points behind Baker with momentum surging—and leading the Jacket by 9 strokes.
 
-**Alex BAKER:** Solid 37-point effort featuring a strong 23-point front nine, though faded to 14 on the back. Moved from fifth to third but now faces a 13-point gap to the leader.
+**Alex Baker:** Improved to 37 points but the 5-point gain isn't enough. Strong front nine (23 points) faded to 14 on the back. Now third overall, 13 points behind with ground to make up.
 
-**Gregg WILLIAMS:** Steady 35 points despite early struggles (11 points through six holes). Late rally of 14 points on the closing stretch shows fighting spirit but drops one position to fourth.
+**Gregg Williams:** Consistent 35 points matches his Round 1 form, but steady doesn't win tournaments. Dropped to fourth after being unable to capitalize on Patterson's collapse. Needs inspiration, not repetition.
 
-**John PATTERSON:** Catastrophic 22-point collapse from overnight leader to fifth place. The 17-point drop from his opening 39 represents the tournament's biggest swing and leaves him 21 points off the pace.
+**John Patterson:** Catastrophic 22 points—a 17-point nosedive from his opening 39. The overnight leader managed just 8-5-9 across the splits. From first to fifth, his title defense lies in ruins at 21 points behind.
 
----
-
-*Generated by Round Report System*
