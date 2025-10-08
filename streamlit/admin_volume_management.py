@@ -57,6 +57,7 @@ AVAILABLE_FOLDERS = [
     "data",                      # Root data folder
     "data/commentary",           # Commentary reports (production)
     "data/commentary/drafts",    # Commentary drafts
+    "data/commentary/round_reports",    # Round reports
 ]
 
 # === AUTH ===
