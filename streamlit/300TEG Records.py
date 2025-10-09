@@ -52,6 +52,13 @@ frontback_data = get_9_data()
 # === TABBED RECORDS DISPLAY ===
 tab1, tab2, tab3, tab4, tab5 = st.tabs(["TEG Records", "Round Records", "9-Hole Records", "Streaks", "Score Counts"])
 
+def dashed_line():
+    st.markdown(
+        "<hr style='border: none; border-top: 1px dashed #bbb; margin: 1em 0;' />",
+        unsafe_allow_html=True,
+    )
+
+
 with tab1:
     teg_records_table = prepare_records_table(tegs_ranked, 'teg')
     st.write(
@@ -63,7 +70,7 @@ with tab1:
         ),
         unsafe_allow_html=True
     )
-
+    dashed_line()
     teg_worst_table = prepare_worst_records_table(teg_data, 'teg')
     st.write(
         teg_worst_table.to_html(
@@ -86,7 +93,7 @@ with tab2:
         ),
         unsafe_allow_html=True
     )
-
+    dashed_line()
     round_worst_table = prepare_worst_records_table(round_data, 'round')
     st.write(
         round_worst_table.to_html(
@@ -109,7 +116,7 @@ with tab3:
         ),
         unsafe_allow_html=True
     )
-
+    dashed_line()
     nine_worst_table = prepare_worst_records_table(frontback_data, 'frontback')
     st.write(
         nine_worst_table.to_html(
@@ -137,7 +144,7 @@ with tab4:
         ),
         unsafe_allow_html=True
     )
-
+    dashed_line()
     # Worst Streaks table
     worst_streaks_data = prepare_record_worst_streaks_data(all_data)
     worst_streaks_table = prepare_streak_records_table(worst_streaks_data, 'Worst Streaks:')
@@ -150,6 +157,7 @@ with tab4:
         ),
         unsafe_allow_html=True
     )
+    st.caption("\* and counting...")
 
 with tab5:
     # Score Count Records

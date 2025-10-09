@@ -33,7 +33,7 @@ def load_records_page_css():
         }
         
         .stat-section h2 {
-            # font-family: monospace;
+            # font-family: 'Roboto Mono', monospace;
             margin-bottom: 5px;
             font-size: 22px;
             line-height: 1.0;
@@ -51,7 +51,7 @@ def load_records_page_css():
         }
         
         .stat-details {
-            font-family: monospace;
+            font-family: 'Roboto Mono', monospace;;
             font-size: 16px;
             color: #999;
             # color: #666;
