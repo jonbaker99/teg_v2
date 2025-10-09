@@ -612,9 +612,16 @@ with tab_files:
     st.divider()
     st.markdown("**Select files to delete or download (zip)**")
 
+    # --- Build the editor table (batch select / download / delete) ---
     select_all = st.checkbox("Select all in this folder", value=False, key="fm_select_all")
+
     df_for_editor = files_df[["File", "Size", "Modified", "Suffix", "RelPath"]].copy()
     df_for_editor.insert(0, "Select", select_all)
+
+    # Convert to display-friendly strings to avoid dtype clashes
+    df_for_editor["Size"] = df_for_editor["Size"].apply(_human_bytes)  # int -> "12.3 MB"
+    df_for_editor["Modified"] = pd.to_datetime(df_for_editor["Modified"], utc=True)\
+                                .dt.strftime("%Y-%m-%d %H:%M:%S UTC")
 
     edited = st.data_editor(
         df_for_editor,
@@ -629,8 +636,8 @@ with tab_files:
         },
         key="fm_table",
     )
-
     selected_relpaths = edited[edited["Select"] == True]["RelPath"].tolist()
+
 
     c1, c2, c3 = st.columns([2, 2, 3])
     with c1:
