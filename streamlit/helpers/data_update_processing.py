@@ -197,6 +197,23 @@ def execute_data_update(overwrite: bool = False, new_data_only: bool = False):
     existing_df = st.session_state.existing_data_df
     new_data_df = st.session_state.new_data_df
 
+    # Capture changed rounds for optional commentary generation
+    # This doesn't affect the data update flow - errors are logged but don't block
+    try:
+        changed_rounds = new_data_df[['TEGNum', 'Round']].drop_duplicates()
+        changed_rounds_dict = {}
+        for _, row in changed_rounds.iterrows():
+            teg = int(row['TEGNum'])
+            round_num = int(row['Round'])
+            if teg not in changed_rounds_dict:
+                changed_rounds_dict[teg] = []
+            changed_rounds_dict[teg].append(round_num)
+        st.session_state.changed_rounds = changed_rounds_dict
+        logger.info(f"Captured changed rounds: {changed_rounds_dict}")
+    except Exception as e:
+        logger.warning(f"Could not capture changed rounds for commentary: {e}")
+        # Don't fail the data update if this fails
+
     if overwrite:
         # Remove existing data that will be replaced (using hole-level matching now)
         if hasattr(st.session_state, 'duplicate_keys_only') and not st.session_state.duplicate_keys_only.empty:

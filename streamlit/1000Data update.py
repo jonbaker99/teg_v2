@@ -168,6 +168,95 @@ elif st.session_state.page_state == STATE_PROCESSING:
         st.success("✅ Data successfully processed and saved!")
 
 
+# === COMMENTARY GENERATION SECTION ===
+# This section allows users to generate round and tournament commentary reports
+# for the rounds that were just updated. It appears after data is processed.
+
+st.write("---")
+st.write("### 📝 Generate Commentary Reports")
+
+# Check if we have captured changed rounds from the data update
+if hasattr(st.session_state, 'changed_rounds') and st.session_state.changed_rounds:
+    # Display what rounds were changed
+    st.write("**Changed Rounds Detected:**")
+
+    # Create a formatted display of changed rounds
+    changed_summary = []
+    for teg in sorted(st.session_state.changed_rounds.keys()):
+        rounds = st.session_state.changed_rounds[teg]
+        rounds_str = ', '.join(map(str, sorted(rounds)))
+        changed_summary.append(f"• TEG {teg}: Rounds {rounds_str}")
+
+    for line in changed_summary:
+        st.write(line)
+
+    st.write("")  # Add some spacing
+    st.write("Click the button below to generate round reports and tournament reports (for completed TEGs).")
+
+    # Button to trigger commentary generation
+    if st.button("🚀 Generate Reports for Changed Rounds", type="primary", use_container_width=True):
+        with st.status("Generating commentary reports...", expanded=True) as status:
+            try:
+                # Import the commentary generator
+                from helpers.commentary_generator import generate_reports_for_changes
+
+                # Show progress
+                st.write("Starting report generation...")
+
+                # Generate reports for all changed rounds
+                results = generate_reports_for_changes(st.session_state.changed_rounds)
+
+                # Display results
+                st.write("")  # Spacing
+                st.write("**Results:**")
+
+                # Round reports
+                if results['round_reports']:
+                    st.write(f"✅ **Round Reports Generated: {len(results['round_reports'])}**")
+                    for teg, rnd in results['round_reports']:
+                        st.write(f"   • TEG {teg}, Round {rnd}")
+                else:
+                    st.write("ℹ️ No round reports generated")
+
+                # Tournament reports
+                if results['tournament_reports']:
+                    st.write(f"✅ **Tournament Reports Generated: {len(results['tournament_reports'])}**")
+                    for teg in results['tournament_reports']:
+                        st.write(f"   • TEG {teg} (moved to production)")
+                else:
+                    st.write("ℹ️ No tournament reports generated (no completed TEGs)")
+
+                # Errors
+                if results['errors']:
+                    st.write(f"⚠️ **Errors Encountered: {len(results['errors'])}**")
+                    for err in results['errors']:
+                        st.error(f"   {err}")
+
+                # Update status
+                if results['errors']:
+                    status.update(
+                        label=f"Commentary generation completed with {len(results['errors'])} error(s)",
+                        state="error"
+                    )
+                else:
+                    status.update(
+                        label="Commentary generation complete!",
+                        state="complete"
+                    )
+
+            except Exception as e:
+                st.error(f"❌ Commentary generation failed: {str(e)}")
+                logger.error(f"Commentary generation error: {e}", exc_info=True)
+                status.update(label="Commentary generation failed", state="error")
+
+    # Add some helpful info
+    st.info("💡 **Tip**: Round reports are saved to `data/commentary/round_reports/`. "
+            "Tournament reports (for completed TEGs) are moved to `data/commentary/`.")
+
+else:
+    st.info("No changed rounds detected. Upload and process data first, then you can generate commentary reports.")
+
+
 # === DATA INTEGRITY CHECK SECTION ===
 # This section is always available regardless of workflow state
 # Provides independent data validation functionality
