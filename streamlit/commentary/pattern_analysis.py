@@ -13,7 +13,7 @@ import os
 
 # Add parent directory to path to import utils
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from utils import get_teg_rounds
+from utils import get_teg_rounds, read_file
 
 
 def load_all_data_for_teg(teg_num):
@@ -27,7 +27,7 @@ def load_all_data_for_teg(teg_num):
         DataFrame with all hole-by-hole scoring data for the tournament
     """
     # Load the main scoring data
-    df = pd.read_parquet('data/all-scores.parquet')
+    df = read_file('data/all-scores.parquet')
 
     # Filter to this TEG
     df = df[df['TEGNum'] == teg_num].copy()
@@ -175,7 +175,7 @@ def analyze_lead_progression(teg_num):
         - lead_changes: List of lead change events
     """
     # Load round summary data which has cumulative standings
-    round_summary = pd.read_parquet('data/commentary_round_summary.parquet')
+    round_summary = read_file('data/commentary_round_summary.parquet')
     round_summary = round_summary[round_summary['TEGNum'] == teg_num]
 
     # Get number of rounds
@@ -236,7 +236,7 @@ def analyze_front_back_nine(teg_num):
     Returns:
         List of dicts with notable nine-hole performances
     """
-    round_summary = pd.read_parquet('data/commentary_round_summary.parquet')
+    round_summary = read_file('data/commentary_round_summary.parquet')
     round_summary = round_summary[round_summary['TEGNum'] == teg_num]
 
     nine_patterns = []
@@ -361,7 +361,7 @@ def identify_round_records_and_pbs(teg_num, round_num):
         - personal_worsts: List of personal worsts
     """
     # Load round summary data which has pre-calculated rankings
-    round_summary = pd.read_parquet('data/commentary_round_summary.parquet')
+    round_summary = read_file('data/commentary_round_summary.parquet')
 
     # Filter to this specific round
     round_data = round_summary[
@@ -474,7 +474,7 @@ def identify_course_records(teg_num, round_num):
         - record_players_this_round: Players who set/tied record this round
     """
     # Load round summary data
-    round_summary = pd.read_parquet('data/commentary_round_summary.parquet')
+    round_summary = read_file('data/commentary_round_summary.parquet')
 
     # Get course for this round
     this_round_data = round_summary[
@@ -721,10 +721,10 @@ def process_all_data_types(teg_num):
 
     # Pass 5 & 6: Load existing commentary files
     print("Pass 5 & 6: Loading existing commentary data...")
-    round_events = pd.read_parquet('data/commentary_round_events.parquet')
+    round_events = read_file('data/commentary_round_events.parquet')
     round_events = round_events[round_events['TEGNum'] == teg_num]
 
-    round_summary = pd.read_parquet('data/commentary_round_summary.parquet')
+    round_summary = read_file('data/commentary_round_summary.parquet')
     round_summary = round_summary[round_summary['TEGNum'] == teg_num]
 
     print(f"  > Loaded {len(round_events)} round events")

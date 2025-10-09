@@ -49,7 +49,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from pattern_analysis import process_all_data_types
 from data_loader import load_round_data, get_round_ending_context
 from prompts import ROUND_STORY_PROMPT, TOURNAMENT_SYNTHESIS_PROMPT, MAIN_REPORT_PROMPT, BRIEF_SUMMARY_PROMPT
-from utils import get_teg_rounds, write_text_file
+from utils import get_teg_rounds, write_text_file, read_file
 import anthropic
 from batch_api import (
     create_batch_request, save_batch_requests, submit_batch,
@@ -349,14 +349,21 @@ class TokenMinuteLimiter:
 # Global limiter instance
 TOKEN_LIMITER = TokenMinuteLimiter(RATE_BUDGET_INPUT_TOKENS_PER_MIN, RATE_SAFETY, DRY_RUN, DEBUG)
 
-def safe_create_message(client, **kwargs):
+def safe_create_message(client, max_retries=12, **kwargs):
     """
-    Wrapper around client.messages.create with 429-aware backoff.
-    - Honors Retry-After and/or tokens-reset headers if present.
-    - Exponential backoff otherwise (cap 60s).
+    Wrapper around client.messages.create with retry logic for rate limits and overload errors.
+    - Handles 429 (rate limit) with Retry-After headers
+    - Handles 500 (internal server error) with exponential backoff
+    - Handles 529 (overloaded) with exponential backoff
+    - Handles connection errors (IncompleteRead, Connection, Timeout) with exponential backoff
+    - Exponential backoff otherwise (cap 120s)
+
+    Args:
+        client: Anthropic client instance
+        max_retries: Maximum number of retry attempts (default 12, increased from 5)
+        **kwargs: Arguments to pass to client.messages.create()
     """
-    max_retries = 5
-    backoff = 2.0
+    backoff = 3.0  # Start with 3s instead of 2s
     attempt = 0
     while True:
         try:
@@ -382,17 +389,49 @@ def safe_create_message(client, **kwargs):
                     pass
             if sleep_for is None:
                 sleep_for = backoff
-                backoff = min(backoff * 2, 60.0)
-            # Always print backoff errors (even if DEBUG=False) so you know what's happening
-            print(f"    · 429 received. Backing off {sleep_for:.1f}s (attempt {attempt}/{max_retries}).")
+                backoff = min(backoff * 2, 120.0)  # Increased cap to 120s
+            print(f"    · Rate limit (429). Backing off {sleep_for:.1f}s (attempt {attempt}/{max_retries})")
             time.sleep(sleep_for)
         except anthropic.APIStatusError as e:
+            # Handle 500, 529, and other transient errors
             attempt += 1
             if attempt > max_retries:
                 raise
-            print(f"    · Transient API error ({getattr(e, 'status_code', '?')}). Backoff {backoff:.1f}s (attempt {attempt}/{max_retries}).")
+            status_code = getattr(e, 'status_code', None)
+            if status_code == 500:
+                print(f"    · Internal server error (500). Backing off {backoff:.1f}s (attempt {attempt}/{max_retries})")
+            elif status_code == 529:
+                print(f"    · Server overloaded (529). Backing off {backoff:.1f}s (attempt {attempt}/{max_retries})")
+            else:
+                print(f"    · Transient API error ({status_code}). Backing off {backoff:.1f}s (attempt {attempt}/{max_retries})")
             time.sleep(backoff)
-            backoff = min(backoff * 2, 60.0)
+            backoff = min(backoff * 2, 120.0)  # Increased cap to 120s
+        except Exception as e:
+            # Handle connection errors (IncompleteRead, Connection, Timeout, ChunkedEncodingError)
+            attempt += 1
+            if attempt > max_retries:
+                raise
+
+            error_str = str(e)
+            error_type = type(e).__name__
+
+            # Check if this is a known transient connection error
+            is_connection_error = any(x in error_str for x in [
+                'IncompleteRead', 'Connection', 'Timeout', 'ChunkedEncodingError',
+                'ConnectionError', 'ConnectionResetError', 'BrokenPipeError'
+            ]) or any(x in error_type for x in [
+                'IncompleteRead', 'Connection', 'Timeout', 'ChunkedEncoding'
+            ])
+
+            if is_connection_error:
+                sleep_for = backoff
+                print(f"    · Connection error: {error_type}: {error_str[:100]}")
+                print(f"    · Backing off {sleep_for:.1f}s (attempt {attempt}/{max_retries})")
+                time.sleep(sleep_for)
+                backoff = min(backoff * 2, 120.0)  # Increased cap to 120s
+            else:
+                # Not a known transient error - re-raise immediately
+                raise
 
 # ========================
 # API key helper
@@ -589,7 +628,7 @@ def build_career_context(teg_num, players_in_teg):
     Returns:
         Formatted string with career context for each player
     """
-    all_tournament_data = pd.read_parquet('data/commentary_tournament_summary.parquet')
+    all_tournament_data = read_file('data/commentary_tournament_summary.parquet')
 
     # CRITICAL: Only use data BEFORE this TEG
     pre_tournament_data = all_tournament_data[all_tournament_data['TEGNum'] < teg_num].copy()
@@ -644,7 +683,7 @@ def generate_tournament_synthesis(round_stories, teg_num, all_processed_data=Non
     print(f"\n  Generating tournament synthesis...")
 
     # Load tournament summary
-    all_tournament_data = pd.read_parquet('data/commentary_tournament_summary.parquet')
+    all_tournament_data = read_file('data/commentary_tournament_summary.parquet')
     tournament_summary = all_tournament_data[all_tournament_data['TEGNum'] == teg_num].copy()
 
     # Add historical context: count wins BEFORE this TEG for each player
@@ -1716,7 +1755,7 @@ def generate_story_notes_via_batch_api(teg_nums, submit_only=False):
         round_stories = round_stories_by_teg[teg_num]
 
         # Build synthesis prompt
-        all_tournament_data = pd.read_parquet('data/commentary_tournament_summary.parquet')
+        all_tournament_data = read_file('data/commentary_tournament_summary.parquet')
         tournament_summary = all_tournament_data[all_tournament_data['TEGNum'] == teg_num].copy()
 
         # Add historical context

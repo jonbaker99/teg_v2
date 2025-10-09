@@ -1,46 +1,45 @@
-Round 1: 3059 chars
+Round 1: 3083 chars
 ## Round 1 Notes
 
 ### Key Moments
 - H1 (Par 4): Jon BAKER blow-up (7 / +3), 0 pts
-- H2 (Par 3): David MULLIN lost Jacket and Trophy lead
-- H2 (Par 3): Gregg WILLIAMS took Jacket lead
-- H3 (Par 4): Stuart NEUMANN blow-up (7 / +3), 0 pts
-- H3 (Par 4): Gregg WILLIAMS blow-up (7 / +3), 1 pt, lost Jacket
+- H1 (Par 4): David MULLIN took Trophy and Jacket leads
+- H2 (Par 3): David MULLIN lost both Trophy and Jacket leads (5 / +2), 1 pt
+- H2 (Par 3): Gregg WILLIAMS took Jacket lead (3 / E), 3 pts
+- H3 (Par 4): Gregg WILLI
 ...
 
-Round 2: 2750 chars
+Round 2: 2501 chars
 ## Round 2 Notes
 
 ### Key Moments
-- H10 (Par 4): Jon BAKER birdie (3 / -1), 4 pts
-- H17 (Par 3): Gregg WILLIAMS birdie (2 / -1), 4 pts
-- H7 (Par 4): Gregg WILLIAMS blow-up (8 / +4), 0 pts
 - H2 (Par 5): Gregg WILLIAMS blow-up (8 / +3), 1 pt
 - H2 (Par 5): Jon BAKER blow-up (8 / +3), 0 pts
-- H3 (Par 3)
+- H3 (Par 3): Gregg WILLIAMS blow-up (6 / +3), 1 pt
+- H4 (Par 5): Henry MELLER blow-up (8 / +3), 0 pts
+- H7 (Par 4): Gregg WILLIAMS blow-up (8 / +4), 0 pts
+- H10 (Par
 ...
 
-Round 3: 3215 chars
+Round 3: 3789 chars
 ## Round 3 Notes
 
 ### Key Moments
-- H1 (Par 5): Henry MELLER blow-up (10 / +5), 0 pts - hit bottom in Trophy, dropped from 3rd to 4th
+- H1 (Par 5): Henry MELLER blow-up (10 / +5), 0 pts - fell from 4th to 5th in Trophy standings
 - H7 (Par 4): Gregg WILLIAMS blow-up (8 / +4), 0 pts
+- H7 (Par 4): Henry MELLER blow-up (7 / +3), 0 pts
 - H7 (Par 4): Jon BAKER blow-up (7 / +3), 0 pts
-- H8 (Par 4): Henry MELLER blow-up (10 / +6), 0 pts
-- H8 (Par 4):
+- H8 (Par 4): Henry
 ...
 
-Round 4: 5199 chars
+Round 4: 4611 chars
 ## Round 4 Notes
 
 ### Key Moments
-- H1 (Par 4): Stuart NEUMANN 4 points (4 / 0), 4 pts
-- H1 (Par 4): Henry MELLER blow-up (9 / +5), 0 pts
-- H3 (Par 5): Stuart NEUMANN blow-up (10 / +5), 0 pts
-- H3 (Par 5): Gregg WILLIAMS blow-up (9 / +4), 0 pts
-- H3 (Par 5): Henry MELLER blow-up (8 / +3), 0 pts
-- H4
+- H7 (Par 5): Gregg WILLIAMS lost Trophy lead (9 / +4), 0 pts
+- H7 (Par 5): Jon BAKER took Trophy lead (5 / 0), 3 pts
+- H9 (Par 4): Jon BAKER catastrophic blow-up, lost Jacket lead (10 / +6), 0 pts
+- H9 (Par 4): David MULLIN took Jacket lead (4 / 0), 3 pts
+- H10 (Pa
 ...
 

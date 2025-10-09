@@ -191,20 +191,21 @@ if hasattr(st.session_state, 'changed_rounds') and st.session_state.changed_roun
         st.write(line)
 
     st.write("")  # Add some spacing
-    st.write("Click the button below to generate round reports and tournament reports (for completed TEGs).")
 
-    # Button to trigger commentary generation
-    if st.button("🚀 Generate Reports for Changed Rounds", type="primary", use_container_width=True):
+    # ====== OPTION 1: Generate All Reports ======
+    st.write("#### 🚀 Generate All Reports")
+    st.write("Generate all round and tournament reports in one go.")
+
+    if st.button("Generate All Reports", type="primary", use_container_width=True, key="gen_all"):
         with st.status("Generating commentary reports...", expanded=True) as status:
             try:
-                # Import the commentary generator
-                from helpers.commentary_generator import generate_reports_for_changes
+                from helpers.commentary_generator import generate_reports_for_changes, ProgressTracker
 
-                # Show progress
-                st.write("Starting report generation...")
+                # Create progress tracker
+                progress_tracker = ProgressTracker(status)
 
-                # Generate reports for all changed rounds
-                results = generate_reports_for_changes(st.session_state.changed_rounds)
+                # Generate reports with progress tracking
+                results = generate_reports_for_changes(st.session_state.changed_rounds, progress_tracker)
 
                 # Display results
                 st.write("")  # Spacing
@@ -226,21 +227,37 @@ if hasattr(st.session_state, 'changed_rounds') and st.session_state.changed_roun
                 else:
                     st.write("ℹ️ No tournament reports generated (no completed TEGs)")
 
-                # Errors
-                if results['errors']:
-                    st.write(f"⚠️ **Errors Encountered: {len(results['errors'])}**")
+                # Permanent failures (after retry)
+                if results.get('failed_items'):
+                    st.write(f"❌ **Permanent Failures (after retry): {len(results['failed_items'])}**")
+                    st.write("The following reports could not be generated even after retry:")
+                    for item_type, teg, rnd in results['failed_items']:
+                        if item_type == 'round':
+                            st.write(f"   • Round Report: TEG {teg}, Round {rnd}")
+                        else:
+                            st.write(f"   • Tournament Report: TEG {teg}")
+                    st.info("💡 You can try generating these individually using the buttons below")
+
+                # Errors (shown for reference, but retried reports excluded)
+                if results['errors'] and not results.get('failed_items'):
+                    st.write(f"⚠️ **Transient Errors (recovered on retry): {len(results['errors'])}**")
                     for err in results['errors']:
-                        st.error(f"   {err}")
+                        st.warning(f"   {err}")
 
                 # Update status
-                if results['errors']:
+                if results.get('failed_items'):
                     status.update(
-                        label=f"Commentary generation completed with {len(results['errors'])} error(s)",
+                        label=f"Completed with {len(results['failed_items'])} permanent failure(s)",
                         state="error"
+                    )
+                elif results['errors']:
+                    status.update(
+                        label=f"Completed (recovered from {len(results['errors'])} error(s) via retry)",
+                        state="complete"
                     )
                 else:
                     status.update(
-                        label="Commentary generation complete!",
+                        label="All reports generated successfully!",
                         state="complete"
                     )
 
@@ -248,6 +265,84 @@ if hasattr(st.session_state, 'changed_rounds') and st.session_state.changed_roun
                 st.error(f"❌ Commentary generation failed: {str(e)}")
                 logger.error(f"Commentary generation error: {e}", exc_info=True)
                 status.update(label="Commentary generation failed", state="error")
+
+    st.write("---")
+
+    # ====== OPTION 2: Individual Round Reports ======
+    st.write("#### 🔵 Individual Round Reports")
+    with st.expander("Generate individual round reports", expanded=False):
+        for teg in sorted(st.session_state.changed_rounds.keys()):
+            st.write(f"**TEG {teg}:**")
+            rounds = sorted(st.session_state.changed_rounds[teg])
+            cols = st.columns(len(rounds))
+
+            for idx, round_num in enumerate(rounds):
+                with cols[idx]:
+                    if st.button(f"Round {round_num}", key=f"r_{teg}_{round_num}", use_container_width=True):
+                        with st.status(f"Generating TEG {teg} Round {round_num}...", expanded=True) as status:
+                            try:
+                                from helpers.commentary_generator import generate_reports_for_changes, ProgressTracker
+
+                                # Create single round dict
+                                single_round = {teg: [round_num]}
+
+                                # Create progress tracker
+                                tracker = ProgressTracker(status)
+
+                                # Generate single round report
+                                result = generate_reports_for_changes(single_round, tracker)
+
+                                if result['round_reports']:
+                                    st.success(f"✅ Round report generated: TEG {teg}, Round {round_num}")
+                                    status.update(label="Round report complete!", state="complete")
+                                elif result['errors']:
+                                    st.error(f"❌ Error: {result['errors'][0]}")
+                                    status.update(label="Generation failed", state="error")
+
+                            except Exception as e:
+                                st.error(f"❌ Failed: {str(e)}")
+                                status.update(label="Generation failed", state="error")
+
+    st.write("---")
+
+    # ====== OPTION 3: Individual Tournament Reports ======
+    st.write("#### 🏆 Individual Tournament Reports")
+    with st.expander("Generate individual tournament reports", expanded=False):
+        from helpers.commentary_generator import is_tournament_complete
+
+        completed_tegs = [t for t in st.session_state.changed_rounds.keys() if is_tournament_complete(t)]
+
+        if completed_tegs:
+            cols = st.columns(len(completed_tegs))
+            for idx, teg in enumerate(completed_tegs):
+                with cols[idx]:
+                    if st.button(f"TEG {teg}", key=f"t_{teg}", use_container_width=True):
+                        with st.status(f"Generating TEG {teg} Tournament Report...", expanded=True) as status:
+                            try:
+                                from helpers.commentary_generator import generate_reports_for_changes, ProgressTracker
+
+                                # Create single TEG dict (with empty rounds since we only want tournament report)
+                                # We need the rounds for the function, but it will skip them and generate tournament
+                                single_teg = {teg: []}
+
+                                # Create progress tracker
+                                tracker = ProgressTracker(status)
+
+                                # Generate tournament report
+                                result = generate_reports_for_changes(single_teg, tracker)
+
+                                if result['tournament_reports']:
+                                    st.success(f"✅ Tournament report generated and moved to production: TEG {teg}")
+                                    status.update(label="Tournament report complete!", state="complete")
+                                elif result['errors']:
+                                    st.error(f"❌ Error: {result['errors'][0]}")
+                                    status.update(label="Generation failed", state="error")
+
+                            except Exception as e:
+                                st.error(f"❌ Failed: {str(e)}")
+                                status.update(label="Generation failed", state="error")
+        else:
+            st.info("No completed tournaments in changed data")
 
     # Add some helpful info
     st.info("💡 **Tip**: Round reports are saved to `data/commentary/round_reports/`. "

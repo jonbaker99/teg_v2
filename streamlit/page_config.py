@@ -45,9 +45,9 @@ PAGE_DEFINITIONS = {
 
     # Scorecards section
     "scorecard_v2.py": {"title": "Scorecard", "icon": ":material/leaderboard:", "section": "Scorecards", "layout": "wide"},
-    "bestball.py": {"title": "Best/Worstball", "icon": ":material/strategy:", "section": "Scorecards", "layout": "wide"},
+    "bestball.py": {"title": "Best/Worstball", "icon": ":material/strategy:", "section": "Scorecards"},
     "eclectic.py": {"title": "Eclectic Scores", "icon": ":material/golf_course:", "section": "Scorecards", "layout": "wide"},
-    "best_eclectics.py": {"title": "Eclectic Records", "icon": ":material/emoji_events:", "section": "Scorecards", "layout": "wide"},
+    "best_eclectics.py": {"title": "Eclectic Records", "icon": ":material/emoji_events:", "section": "Scorecards"},
     # "scorecard_v2_mobile.py": {"title": "Scorecard (mobile)", "icon": ":material/leaderboard:", "section": "Scorecards"},
 
     # Data management section
@@ -56,7 +56,7 @@ PAGE_DEFINITIONS = {
     "data_edit.py": {"title": "Data edit", "icon": ":material/edit:", "section": "Data"},
     "delete_data.py": {"title": "Delete data", "icon": ":material/skull:", "section": "Data"},
     # "data_test_temp.py": {"title": "TEMP DATA TESTING", "icon": ":material/check_circle:", "section": "Data"},
-    "admin_volume_management.py": {"title": "Data volume management", "icon": ":material/check_circle:", "section": "Data"},
+    "admin_volume_management.py": {"title": "Data volume management", "icon": ":material/check_circle:", "section": "Data", "layout": "wide"},
     # "navigation_test.py": {"title": "Navigation Test", "icon": ":material/science:", "section": "Data"},
     # "commentary_runner.py": {"title": "Commentary generation", "icon": ":material/robot:", "section": "Data"},
 }

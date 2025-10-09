@@ -35,7 +35,10 @@ except Exception:
         st.cache_data.clear()
 
 # === PAGE CONFIG ===
-st.set_page_config(page_title="Data tools: GitHub sync + File management", page_icon="🔁")
+# === PAGE LAYOUT CONFIGURATION ===
+from utils import get_page_layout
+layout = get_page_layout(__file__)
+st.set_page_config(layout=layout, page_title="Data tools: GitHub sync + File management", page_icon="🔁")
 st.title("🔁 Data tools: GitHub sync + File management")
 st.caption("Keep your Railway volume and GitHub `data/` folder in step — and manage files on the volume directly.")
 

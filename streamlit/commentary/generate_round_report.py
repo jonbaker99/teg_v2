@@ -135,20 +135,21 @@ class TokenMinuteLimiter:
 TOKEN_LIMITER = TokenMinuteLimiter(RATE_BUDGET_INPUT_TOKENS_PER_MIN, RATE_SAFETY, DRY_RUN, DEBUG)
 
 
-def safe_create_message(client, max_retries=8, **kwargs):
+def safe_create_message(client, max_retries=12, **kwargs):
     """
     Wrapper around client.messages.create with retry logic for rate limits and overload errors.
     - Handles 429 (rate limit) with Retry-After headers
     - Handles 500 (internal server error) with exponential backoff
     - Handles 529 (overloaded) with exponential backoff
-    - Exponential backoff otherwise (cap 60s)
+    - Handles connection errors (IncompleteRead, Connection, Timeout) with exponential backoff
+    - Exponential backoff otherwise (cap 120s)
 
     Args:
         client: Anthropic client instance
-        max_retries: Maximum number of retry attempts (default 8)
+        max_retries: Maximum number of retry attempts (default 12, increased from 8)
         **kwargs: Arguments to pass to client.messages.create()
     """
-    backoff = 2.0
+    backoff = 3.0  # Start with 3s instead of 2s
     attempt = 0
     while True:
         try:
@@ -174,7 +175,7 @@ def safe_create_message(client, max_retries=8, **kwargs):
                     pass
             if sleep_for is None:
                 sleep_for = backoff
-                backoff = min(backoff * 2, 60.0)
+                backoff = min(backoff * 2, 120.0)  # Increased cap to 120s
             print(f"  · Rate limit (429). Backing off {sleep_for:.1f}s (attempt {attempt}/{max_retries})")
             time.sleep(sleep_for)
         except anthropic.APIStatusError as e:
@@ -190,7 +191,33 @@ def safe_create_message(client, max_retries=8, **kwargs):
             else:
                 print(f"  · Transient API error ({status_code}). Backing off {backoff:.1f}s (attempt {attempt}/{max_retries})")
             time.sleep(backoff)
-            backoff = min(backoff * 2, 60.0)
+            backoff = min(backoff * 2, 120.0)  # Increased cap to 120s
+        except Exception as e:
+            # Handle connection errors (IncompleteRead, Connection, Timeout, ChunkedEncodingError)
+            attempt += 1
+            if attempt > max_retries:
+                raise
+
+            error_str = str(e)
+            error_type = type(e).__name__
+
+            # Check if this is a known transient connection error
+            is_connection_error = any(x in error_str for x in [
+                'IncompleteRead', 'Connection', 'Timeout', 'ChunkedEncodingError',
+                'ConnectionError', 'ConnectionResetError', 'BrokenPipeError'
+            ]) or any(x in error_type for x in [
+                'IncompleteRead', 'Connection', 'Timeout', 'ChunkedEncoding'
+            ])
+
+            if is_connection_error:
+                sleep_for = backoff
+                print(f"  · Connection error: {error_type}: {error_str[:100]}")
+                print(f"  · Backing off {sleep_for:.1f}s (attempt {attempt}/{max_retries})")
+                time.sleep(sleep_for)
+                backoff = min(backoff * 2, 120.0)  # Increased cap to 120s
+            else:
+                # Not a known transient error - re-raise immediately
+                raise
 
 
 try:
