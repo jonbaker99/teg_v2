@@ -19,6 +19,10 @@ from helpers.streak_analysis_processing import (
 
 
 # === CONFIGURATION ===
+# === PAGE LAYOUT CONFIGURATION ===
+from utils import get_page_layout
+layout = get_page_layout(__file__)
+st.set_page_config(layout=layout)
 st.title("Streaks")
 
 # Load CSS styling for consistent table appearance

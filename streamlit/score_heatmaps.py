@@ -7,7 +7,11 @@ import streamlit as st
 import altair as alt
 from utils import load_all_data
 
-st.set_page_config(page_title="Hole Difficulty Heatmap + Trends", layout="centered")
+# === PAGE LAYOUT CONFIGURATION ===
+from utils import get_page_layout
+layout = get_page_layout(__file__)
+st.set_page_config(layout=layout)
+st.title("Hole Difficulty Heatmap + Trends")
 
 # --- CONFIG ---
 FILTER_FIELDS = ["Course", "Player", "TEGNum", "Round"]

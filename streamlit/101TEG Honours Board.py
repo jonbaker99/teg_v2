@@ -40,6 +40,11 @@ from helpers.history_data_processing import (
 #     unsafe_allow_html=True
 # )
 
+# === PAGE LAYOUT CONFIGURATION ===
+from utils import get_page_layout
+layout = get_page_layout(__file__)
+st.set_page_config(layout=layout)
+
 # === CONFIGURATION ===
 st.title("TEG Honours Board")
 

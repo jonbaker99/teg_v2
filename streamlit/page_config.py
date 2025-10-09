@@ -10,11 +10,15 @@ import streamlit as st
 
 # Page definitions with titles, icons, and section groupings
 PAGE_DEFINITIONS = {
+    # Contents section
+    "contents.py": {"title": "Contents", "icon": ":material/list:", "section": "Contents", "layout": "wide"},
+
     # History section
     "101TEG History.py": {"title": "TEG History", "icon": ":material/lists:", "section": "History"},
     "101TEG Honours Board.py": {"title": "TEG Honours Board", "icon": ":material/trophy:", "section": "History"},
     "102TEG Results.py": {"title": "Full Results", "icon": ":material/sports_score:", "section": "History"},
-    "player_history.py": {"title": "Rankings by TEG by Player", "icon": ":material/123:", "section": "History"},
+    "player_history.py": {"title": "Player Rankings", "icon": ":material/123:", "section": "History"},
+    "teg_reports.py": {"title": "TEG Reports", "icon": ":material/description:", "section": "History"},
 
     # Records section
     "300TEG Records.py": {"title": "TEG Records", "icon": ":material/military_tech:", "section": "Records"},
@@ -33,20 +37,17 @@ PAGE_DEFINITIONS = {
     "biggest_changes.py": {"title": "Changes vs previous round", "icon": ":material/strategy:", "section": "Scoring"},
     "score_heatmaps.py": {"title": "Heatmap (WIP)", "icon": ":material/strategy:", "section": "Scoring"},
 
-    # Bestball/Eclectics section
-    "bestball.py": {"title": "Bestball and worstball", "icon": ":material/strategy:", "section": "Bestball"},
-    "eclectic.py": {"title": "Eclectic Scores", "icon": ":material/golf_course:", "section": "Bestball"},
-    "best_eclectics.py": {"title": "Eclectic Records", "icon": ":material/emoji_events:", "section": "Bestball"},
-
     # Current/Latest TEG section
     "leaderboard.py": {"title": "Latest Leaderboard", "icon": ":material/leaderboard:", "section": "Latest"},
-    "teg_reports.py": {"title": "TEG Reports", "icon": ":material/description:", "section": "Latest"},
     "latest_round.py": {"title": "Latest Round in context", "icon": ":material/sports_golf:", "section": "Latest"},
     "latest_teg_context.py": {"title": "Latest TEG in context", "icon": ":material/sports_golf:", "section": "Latest"},
     "500Handicaps.py": {"title": "Handicaps", "icon": ":material/accessible:", "section": "Latest"},
 
     # Scorecards section
-    "scorecard_v2.py": {"title": "Scorecard", "icon": ":material/leaderboard:", "section": "Scorecards"},
+    "scorecard_v2.py": {"title": "Scorecard", "icon": ":material/leaderboard:", "section": "Scorecards", "layout": "wide"},
+    "bestball.py": {"title": "Bestball and worstball", "icon": ":material/strategy:", "section": "Scorecards", "layout": "wide"},
+    "eclectic.py": {"title": "Eclectic Scores", "icon": ":material/golf_course:", "section": "Scorecards", "layout": "wide"},
+    "best_eclectics.py": {"title": "Eclectic Records", "icon": ":material/emoji_events:", "section": "Scorecards", "layout": "wide"},
     # "scorecard_v2_mobile.py": {"title": "Scorecard (mobile)", "icon": ":material/leaderboard:", "section": "Scorecards"},
 
     # Data management section
@@ -62,8 +63,14 @@ PAGE_DEFINITIONS = {
 
 # Section display names and conditional logic
 SECTION_CONFIG = {
+    "Contents": {
+        "display_name": "Contents",
+        "show_when_incomplete": True,
+        "show_when_complete": True,
+        "order": 0
+    },
     "History": {
-        "display_name": "History",
+        "display_name": "TEG History",
         "show_when_incomplete": True,
         "show_when_complete": True,
         "order": 1
@@ -75,8 +82,7 @@ SECTION_CONFIG = {
         "order": 3
     },
     "Latest": {
-        "display_name": "Current TEG",  # when incomplete
-        "display_name_complete": "Latest TEG",  # when complete
+        "display_name": "Latest TEG",
         "show_when_incomplete": True,
         "show_when_complete": True,
         "order": 2  # Always 2nd position
@@ -87,23 +93,17 @@ SECTION_CONFIG = {
         "show_when_complete": True,
         "order": 4
     },
-    "Bestball": {
-        "display_name": "Bestballs / Eclectics",
-        "show_when_incomplete": True,
-        "show_when_complete": True,
-        "order": 5
-    },
     "Scorecards": {
         "display_name": "Scorecards",
         "show_when_incomplete": True,
         "show_when_complete": True,
-        "order": 6
+        "order": 5
     },
     "Data": {
         "display_name": "Data",
         "show_when_incomplete": True,
         "show_when_complete": True,
-        "order": 7
+        "order": 6
     }
 }
 

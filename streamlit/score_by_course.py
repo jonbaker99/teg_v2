@@ -8,6 +8,10 @@ from helpers.course_analysis_processing import (
     filter_data_by_area
 )
 
+# === PAGE LAYOUT CONFIGURATION ===
+from utils import get_page_layout
+layout = get_page_layout(__file__)
+st.set_page_config(layout=layout)
 st.title('Rounds by Course')
 load_datawrapper_css()
 

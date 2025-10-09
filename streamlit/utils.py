@@ -20,6 +20,28 @@ from datetime import datetime
 logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
 
+
+def get_page_layout(page_file: str) -> str:
+    """Get the layout setting for a page from PAGE_DEFINITIONS.
+
+    Args:
+        page_file: The __file__ variable from the calling page
+
+    Returns:
+        str: "wide" or "centered" (defaults to "centered" if not specified)
+    """
+    from page_config import PAGE_DEFINITIONS
+
+    # Extract just the filename from the full path
+    filename = os.path.basename(page_file)
+
+    # Look up the page configuration
+    page_config = PAGE_DEFINITIONS.get(filename, {})
+
+    # Return the layout, defaulting to "centered"
+    return page_config.get("layout", "centered")
+
+
 def clear_all_caches():
     """Clears all Streamlit data caches.
 

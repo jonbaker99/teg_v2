@@ -15,13 +15,18 @@ import pandas as pd
 import numpy as np
 
 from utils import (
-    load_all_data, 
-    datawrapper_table, 
-    load_datawrapper_css
+    load_all_data,
+    datawrapper_table,
+    load_datawrapper_css,
+    get_page_layout
 )
 
 # Import eclectic calculation functions from utils
 from eclectic_utils import calculate_eclectic_by_dimension
+
+# === PAGE CONFIGURATION ===
+layout = get_page_layout(__file__)
+st.set_page_config(layout=layout)
 
 # === CONFIGURATION ===
 st.title("Eclectic Records")

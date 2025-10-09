@@ -35,6 +35,10 @@ from leaderboard_utils import create_leaderboard, generate_table_html, format_va
 # Import scorecard generation functions
 from scorecard_utils import generate_round_comparison_html, load_scorecard_css
 
+# === PAGE LAYOUT CONFIGURATION ===
+from utils import get_page_layout
+layout = get_page_layout(__file__)
+st.set_page_config(layout=layout)
 
 # === CONFIGURATION ===
 # Configure logging for debugging and monitoring

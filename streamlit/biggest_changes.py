@@ -14,6 +14,11 @@ from utils import get_round_data, load_datawrapper_css, datawrapper_table
 import streamlit as st
 
 load_datawrapper_css()
+
+# === PAGE LAYOUT CONFIGURATION ===
+from utils import get_page_layout
+layout = get_page_layout(__file__)
+st.set_page_config(layout=layout)
 st.title('Score swings vs. previous round')
 st.caption("Shows the rounds with the biggest score differences to the player's previous round")
 

@@ -29,6 +29,10 @@ from helpers.history_data_processing import (
     calculate_and_save_missing_winners
 )
 
+# === PAGE LAYOUT CONFIGURATION ===
+from utils import get_page_layout
+layout = get_page_layout(__file__)
+st.set_page_config(layout=layout)
 
 # === CONFIGURATION ===
 st.title("TEG History")

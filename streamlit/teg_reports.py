@@ -18,6 +18,11 @@ from utils import (
     load_teg_reports_css
 )
 
+# === PAGE LAYOUT CONFIGURATION ===
+from utils import get_page_layout
+layout = get_page_layout(__file__)
+st.set_page_config(layout=layout)
+
 # === CONFIGURATION ===
 st.subheader("TEG Reports")
 st.markdown("Round reports and tournament summaries")

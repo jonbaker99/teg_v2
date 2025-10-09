@@ -2,10 +2,12 @@
    TEG APP - SIMPLE NAVIGATION STYLES
    ========================================== */
 
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
 /* Basic navigation link styles */
 a.custom-nav-link {
     /* font-family: inherit; */
-    font-family: monospace, 'open sans';
+    font-family: 'Roboto Mono', monospace, 'open sans';
     font-size: 14px;
     color: black;
     padding: 6px 10px;

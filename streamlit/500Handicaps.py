@@ -20,8 +20,10 @@ from utils import get_base_directory, load_datawrapper_css, HANDICAPS_CSV, get_c
 from utils import read_file, get_hc, get_next_teg_and_check_if_in_progress_fast, get_current_in_progress_teg_fast, write_file, get_player_name, clear_all_caches
 
 
-
-st.set_page_config(page_title="Handicaps")
+# === PAGE LAYOUT CONFIGURATION ===
+from utils import get_page_layout
+layout = get_page_layout(__file__)
+st.set_page_config(page_title="Handicaps",layout=layout)
 load_datawrapper_css()
 
 

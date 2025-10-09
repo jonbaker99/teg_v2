@@ -17,16 +17,21 @@ import pandas as pd
 import numpy as np
 
 from utils import (
-    load_all_data, 
-    datawrapper_table, 
+    load_all_data,
+    datawrapper_table,
     load_datawrapper_css,
-    load_course_info
+    load_course_info,
+    get_page_layout
 )
 
 from eclectic_utils import (
     calculate_eclectic_by_dimension,
     format_eclectic_table
 )
+
+# === PAGE LAYOUT CONFIGURATION ===
+layout = get_page_layout(__file__)
+st.set_page_config(layout=layout)
 
 # === CONFIGURATION ===
 st.title("Eclectic Scores")

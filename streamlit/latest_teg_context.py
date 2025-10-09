@@ -43,6 +43,10 @@ from helpers.streak_analysis_processing import get_player_window_streaks
 
 
 # === CONFIGURATION ===
+# === PAGE LAYOUT CONFIGURATION ===
+from utils import get_page_layout
+layout = get_page_layout(__file__)
+st.set_page_config(layout=layout)
 st.subheader("TEG context")
 st.markdown('Shows how latest or selected TEG compares to other TEGs')
 

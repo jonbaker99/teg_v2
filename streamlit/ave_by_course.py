@@ -29,6 +29,10 @@ from helpers.course_analysis_processing import (
 
 
 # === CONFIGURATION ===
+# === PAGE LAYOUT CONFIGURATION ===
+from utils import get_page_layout
+layout = get_page_layout(__file__)
+st.set_page_config(layout=layout)
 st.title('Course averages and records')
 
 # Load CSS styling for consistent table appearance

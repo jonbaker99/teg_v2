@@ -33,6 +33,12 @@ from scorecard_utils import generate_round_comparison_html, load_scorecard_css
 
 
 # === CONFIGURATION ===
+
+# === PAGE LAYOUT CONFIGURATION ===
+from utils import get_page_layout
+layout = get_page_layout(__file__)
+st.set_page_config(layout=layout)
+
 # Configure logging for debugging and monitoring
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

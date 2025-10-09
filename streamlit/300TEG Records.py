@@ -25,6 +25,11 @@ from helpers.worst_performance_processing import get_filtered_teg_data
 from helpers.streak_analysis_processing import prepare_record_best_streaks_data, prepare_record_worst_streaks_data
 
 
+# === PAGE LAYOUT CONFIGURATION ===
+from utils import get_page_layout
+layout = get_page_layout(__file__)
+st.set_page_config(layout=layout)
+
 # === PAGE CONFIGURATION ===
 st.title("TEG Records")
 

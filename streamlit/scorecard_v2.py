@@ -5,7 +5,7 @@ import numpy as np
 from pathlib import Path
 
 # Import data loading functions from main utils
-from utils import load_all_data, get_scorecard_data, get_teg_metadata, format_date_for_scorecard
+from utils import load_all_data, get_scorecard_data, get_teg_metadata, format_date_for_scorecard, get_page_layout
 
 # Import scorecard generation functions (existing utilities)
 from scorecard_utils import (
@@ -29,6 +29,11 @@ from helpers.scorecard_data_processing import (
     initialize_scorecard_session_state
 )
 
+
+# === PAGE LAYOUT CONFIGURATION ===
+# Must be called before any other Streamlit commands
+layout = get_page_layout(__file__)
+st.set_page_config(layout=layout)
 
 # === CONFIGURATION ===
 st.title('Scorecards')

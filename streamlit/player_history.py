@@ -21,8 +21,13 @@ import re
 # Import data loading functions from main utils
 from utils import get_complete_teg_data, load_datawrapper_css, datawrapper_table, get_net_competition_measure
 
+
+# === PAGE LAYOUT CONFIGURATION ===
+from utils import get_page_layout
+layout = get_page_layout(__file__)
+st.set_page_config(layout=layout)
+
 # === CONFIGURATION ===
-# st.set_page_config(layout="wide")
 st.title("Player Rankings by TEG")
 
 # Load CSS styling for consistent table appearance

@@ -16,13 +16,16 @@ import streamlit as st
 import pandas as pd
 
 # Import data loading and utility functions from main utils
-from utils import read_file, load_datawrapper_css, get_teg_filter_options, filter_data_by_teg, BESTBALL_PARQUET
+from utils import read_file, load_datawrapper_css, get_teg_filter_options, filter_data_by_teg, BESTBALL_PARQUET, get_page_layout
 
 # Import bestball analysis helper functions
 from helpers.bestball_processing import format_team_scores_for_display
 
 
 # === CONFIGURATION ===
+layout = get_page_layout(__file__)
+st.set_page_config(layout=layout)
+
 st.title("Bestballs & Worstballs")
 st.caption("Shows best & worst bestball / worstball across all players in a round")
 
