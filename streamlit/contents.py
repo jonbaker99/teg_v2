@@ -54,7 +54,9 @@ for row_start in range(0, len(section_order), num_cols):
 
     for col_idx, (order, section, display_name) in enumerate(row_sections):
         with cols[col_idx]:
-            st.markdown(f"#### {display_name}")
+            # st.markdown(f"#### {display_name}")
+            st.markdown(f"<section class='nav-section-title'>{display_name}</section>", unsafe_allow_html=True)
+
 
             # Build links for all pages in this section
             links_html = []
@@ -72,3 +74,4 @@ for row_start in range(0, len(section_order), num_cols):
 
             # Display links as vertical list
             st.markdown("<br/>".join(links_html), unsafe_allow_html=True)
+

@@ -46,3 +46,10 @@ a.custom-nav-link:hover {
 .nav-sections a.custom-nav-link {
     color: grey;
 }
+
+.nav-section-title {
+    font-size: 20px;
+    font-weight: 600;
+    padding-bottom: 8px;
+    padding-top: 16px;
+}
