@@ -1,3 +1,5 @@
+## NB Gregg Williams won the Trophy at TEG 5, which was on a net vs par basis. This report is written based on a Stableford net competition.
+
 # TEG 5: Baker holds nerve as Williams implodes {.report-title}
 
 <p class="dateline">TEG 5 | Algarve | 2012</p>
