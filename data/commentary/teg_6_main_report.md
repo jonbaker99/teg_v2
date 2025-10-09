@@ -1,4 +1,4 @@
-# TEG 6: Williams survives final-round carnage to claim first Trophy {.report-title}
+# TEG 6: Williams survives final-round carnage to claim back-to-back Trophies {.report-title}
 
 <p class="dateline">TEG 6 | Catalonia | 2013</p>
 
@@ -15,7 +15,7 @@
 
 ## TOURNAMENT OVERVIEW {.tournament-overview}
 
-Gregg Williams claimed his maiden Trophy with a wire-to-wire triumph, leading all 72 holes before edging Jon Baker by three points. Yet his coronation was anything but serene. Williams posted the tournament's worst round on Sunday, a six-blow-up disaster that left Baker within striking distance until the final holes. David Mullin provided the perfect counterpoint, dominating the Gross competition for 62 holes en route to his fourth Green Jacket but finishing a distant fourth in Stableford.
+Gregg Williams claimed his 2nd Trophy in two years with a wire-to-wire triumph, leading all 72 holes before edging Jon Baker by three points. Yet his coronation was anything but serene. Williams posted the tournament's worst round on Sunday, a six-blow-up disaster that left Baker within striking distance until the final holes. David Mullin provided the perfect counterpoint, dominating the Gross competition for 62 holes en route to his fourth Green Jacket but finishing a distant fourth in Stableford.
 
 The inaugural Catalan expedition exposed every player's frailties. Fifty-two blow-ups across the field painted a picture of sustained struggle on Spain's finest layouts. Henry Meller's nightmare culminated in a Wooden Spoon, his final two rounds yielding 12 combined disasters including a pair of tens. Baker's agonising double runner-up finish typified a week of near misses and dramatic reversals, where competence and chaos traded places with alarming frequency.
 
