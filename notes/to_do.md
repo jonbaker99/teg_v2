@@ -81,16 +81,8 @@ RECENT_CHANGES.md - Full context on recent work
 Testing: After implementation, test with TEG 17 with INCLUDE_STREAKS=True and INCLUDE_STREAKS=False to verify toggle works correctly.
 
 
+=======================
 
-TO DO....
+Fix formatting on teg_reports
 
-Add missing stuff to the story notes (year, rare events)
-
-** don't refer to the +0.00 vs par for the spells. Talk about 'played x holes under par' or 'averaged worse than [/close to] {+3} per hole'
-
-
----
-
-Rules not being adhered to:
-Way too much on disasters -> replace "disaster" with "blow-up" in story_
-Still have em-dashes
+Change the contents generation so I can target the section headers with css

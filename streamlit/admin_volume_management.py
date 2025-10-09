@@ -88,6 +88,7 @@ def _parse_github_date(s: str) -> datetime:
     # e.g. "2025-10-06T09:41:33Z"
     return datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
 
+
 # === GITHUB LISTING ===
 @st.cache_data(ttl=300)
 def list_github_files(folder_path: str) -> pd.DataFrame:
