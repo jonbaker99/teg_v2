@@ -364,7 +364,7 @@ def _human_bytes(n: int) -> str:
         n /= 1024.0
     return f"{n:.1f} PB"
 
-# === TABS ===
+# === TABS ====
 tab_sync, tab_files = st.tabs(["GitHub sync", "File management"])
 
 # --------------------------------------------------------------------------------------
