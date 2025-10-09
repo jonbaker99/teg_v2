@@ -112,19 +112,20 @@ except Exception as e:
 
 # === BUILD TAB STRUCTURE ===
 # Create tabs for each round plus full TEG report (if complete)
-tab_names = []
-for round_num in range(1, num_rounds + 1):
-    tab_names.append(f"Round {round_num}")
+tab_names = [f"Round {r}" for r in range(1, num_rounds + 1)]
 
 if is_complete:
-    tab_names.append("Full TEG Report")
+    # Move "Full TEG Report" to the start of the list
+    tab_names = ["Full TEG Report"] + tab_names
+
+round_tab_offset = 1 if is_complete else 0
 
 # Create tabs
 tabs = st.tabs(tab_names)
 
 # === ROUND REPORT TABS ===
 for i, round_num in enumerate(range(1, num_rounds + 1)):
-    with tabs[i]:
+    with tabs[i+round_tab_offset]:
         # st.markdown(f"#### TEG {selected_teg_num} - Round {round_num} Report")
 
         # Construct file path for round report (try both naming formats)
@@ -147,8 +148,8 @@ for i, round_num in enumerate(range(1, num_rounds + 1)):
 
 # === FULL TEG REPORT TAB ===
 if is_complete:
-    with tabs[-1]:
-        st.markdown(f"#### TEG {selected_teg_num} - Full Tournament Report")
+    with tabs[0]:
+        # st.markdown(f"#### TEG {selected_teg_num} - Full Tournament Report")
 
         # Construct path to full TEG report file
         report_file_path = f"data/commentary/teg_{selected_teg_num}_main_report.md"

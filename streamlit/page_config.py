@@ -45,7 +45,7 @@ PAGE_DEFINITIONS = {
 
     # Scorecards section
     "scorecard_v2.py": {"title": "Scorecard", "icon": ":material/leaderboard:", "section": "Scorecards", "layout": "wide"},
-    "bestball.py": {"title": "Bestball and worstball", "icon": ":material/strategy:", "section": "Scorecards", "layout": "wide"},
+    "bestball.py": {"title": "Best/Worstball", "icon": ":material/strategy:", "section": "Scorecards", "layout": "wide"},
     "eclectic.py": {"title": "Eclectic Scores", "icon": ":material/golf_course:", "section": "Scorecards", "layout": "wide"},
     "best_eclectics.py": {"title": "Eclectic Records", "icon": ":material/emoji_events:", "section": "Scorecards", "layout": "wide"},
     # "scorecard_v2_mobile.py": {"title": "Scorecard (mobile)", "icon": ":material/leaderboard:", "section": "Scorecards"},

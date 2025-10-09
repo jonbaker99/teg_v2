@@ -16,9 +16,9 @@ from utils import (
 layout = get_page_layout(__file__)
 st.set_page_config(layout=layout)
 
-st.title("TEG Contents")
+st.title("The El Golfo")
 
-st.markdown("A complete list of all pages in The El Golfo site.")
+# st.markdown("A complete list of all pages in The El Golfo site.")
 
 # Apply navigation CSS for consistent link styling
 apply_custom_navigation_css()
