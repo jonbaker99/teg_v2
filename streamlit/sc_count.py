@@ -16,7 +16,9 @@ from helpers.score_count_processing import (
     prepare_chart_data_with_special_handling,
     convert_counts_to_percentages,
     create_stacked_bar_chart,
-    format_percentage_for_display
+    format_percentage_for_display,
+    calculate_player_distributions,
+    create_ridgeline_distribution_chart
 )
 
 
@@ -120,6 +122,32 @@ with tab1:
     # create_percentage_distribution_chart() - Creates percentage distribution chart
     chart = create_percentage_distribution_chart(chart_data, teg_desc, par_desc)
     st.plotly_chart(chart)
+
+    # Add ridgeline distribution chart below the bar chart
+    # Only show if there are multiple players to compare
+    if selected_player == 'All players' and len(count_data.columns) > 1:
+        st.markdown("---")
+        st.markdown("### Score distribution by player")
+
+        # Calculate distribution data for each player
+        player_distributions, total_distribution = calculate_player_distributions(
+            filtered_data,
+            selected_field,
+            display_mode
+        )
+
+        # Create and display the ridgeline chart
+        ridgeline_chart = create_ridgeline_distribution_chart(
+            player_distributions,
+            total_distribution,
+            selected_field,
+            display_mode,
+            teg_desc,
+            par_desc
+        )
+        # Set explicit width to make distributions narrower and clearer
+        ridgeline_chart.update_layout(width=400)
+        st.plotly_chart(ridgeline_chart, use_container_width=False)
 
 with tab2:
     # By TEG tab - shows distribution of selected score type across TEGs
