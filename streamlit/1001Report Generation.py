@@ -190,7 +190,7 @@ if report_category == "TEG Reports":
 
     if selected_teg:
         # Check if story notes exist
-        story_notes_path = f"data/commentary/drafts/teg_{selected_teg}_story_notes.md"
+        story_notes_path = f"data/commentary/teg_{selected_teg}_story_notes.md"
         try:
             read_text_file(story_notes_path)
             story_notes_exist = True

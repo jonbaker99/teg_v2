@@ -936,16 +936,6 @@ OUTPUT STRUCTURE & GRAMMAR (IDENTICAL to main report, exact classes required)
 - Dateline exact format with vertical bar. No bullets, no bold.
 
 ---
-
-<section class="callout at-a-glance-box">
-  <p class="at-a-glance-title">RESULTS</p>
-  - Exactly three lines. Satirical framing optional in parentheticals.
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> [Name] ([Nth] Trophy)</span></p>
-  <p><strong>Jacket Winner:</strong> [Name] ([Nth] Jacket)</p>
-  <p><strong>Wooden Spoon:</strong> [Name] ([Nth] Spoon)</p>
-</section>
-
----
 ## TOURNAMENT OVERVIEW {.tournament-overview}
 Length: 120–180 words; 2–3 SHORT paragraphs.
 - Open with absurdist framing or meta-observation about the tournament
@@ -953,6 +943,13 @@ Length: 120–180 words; 2–3 SHORT paragraphs.
 - ONE vivid venue detail, filtered through satirical lens
 - 2–3 major story angles with darkly comic spin
 - Set the tone: intelligent mockery, not cruelty
+
+---
+## PLAYER-BY-PLAYER {.player-by-player}
+- Order: Trophy winner, runner-up(s), others, Spoon
+- Format: **[Name] ([Position]):** two to three sentences with player-specific satirical observations
+- Mock playing styles, decision-making, psychological responses
+- Balance cruelty with affection (S10)
 
 ---
 ## Round 1: [Satirical Round Title] {.round1 .round}
@@ -998,13 +995,6 @@ Length: 150–250 words; 3–4 paragraphs.
 - How victory was achieved (mock-heroic or genuinely impressive filtered through satire)
 - Notable performances with darkly comic framing
 - End with memorable kicker: profound, absurd, or both
-
----
-## PLAYER-BY-PLAYER {.player-by-player}
-- Order: Trophy winner, runner-up(s), others, Spoon
-- Format: **[Name] ([Position]):** two to three sentences with player-specific satirical observations
-- Mock playing styles, decision-making, psychological responses
-- Balance cruelty with affection (S10)
 
 ---
 ## RECORDS AND PERSONAL BESTS {.records}
