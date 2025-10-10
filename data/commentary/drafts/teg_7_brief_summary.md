@@ -1,0 +1,7 @@
+# TEG 7: Meller's Wire-to-Wire Masterclass
+
+**2014, Lisbon Coast, Portugal**—Henry Meller claimed his first Trophy with a wire-to-wire victory across Praia D'El Rey, Bom Sucesso, and Royal Óbidos, leading all 72 holes and winning by 5 points. David Mullin captured his fifth Green Jacket with a historic +53 performance, crushing the field by 15 strokes—the best gross total in tournament history. Meller's 175 points held off a dead-heat battle for second between Mullin and Gregg Williams (both 170 points), marking the tightest runner-up finish on record.
+
+Meller's dominance peaked in Round 2 with a tournament-best 51 points at Bom Sucesso, extending his Trophy lead to 10 points. The same round saw three players post personal bests and Mullin fire a historic +9 gross—the finest single-round gross score in TEG annals. Yet Meller never relinquished control, maintaining a 12-point cushion through 54 holes despite late struggles that included blow-ups at the 9th and 18th holes in the final round.
+
+Alex Baker's debut ended with the Wooden Spoon (152 points), suffering three quintuple bogeys in Round 4 alone—including calamities at the 6th and 16th—to finish 23 points adrift of fifth place. Jon Baker's sextuple bogey (+6) at the par-5 10th in Round 4 epitomized the day's chaos, while Stuart Neumann's tournament-high five birdies propelled him to a career-best fourth (169 points). The par-4 14th proved cursed, claiming victims in three consecutive rounds.

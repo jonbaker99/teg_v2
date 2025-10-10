@@ -48,8 +48,8 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from pattern_analysis import process_all_data_types
 from data_loader import load_round_data, get_round_ending_context
-from prompts import ROUND_STORY_PROMPT, TOURNAMENT_SYNTHESIS_PROMPT, MAIN_REPORT_PROMPT, BRIEF_SUMMARY_PROMPT
-from utils import get_teg_rounds, write_text_file, read_file
+from prompts import ROUND_STORY_PROMPT, TOURNAMENT_SYNTHESIS_PROMPT, MAIN_REPORT_PROMPT, BRIEF_SUMMARY_PROMPT, SATIRICAL_REPORT_PROMPT
+from utils import get_teg_rounds, write_text_file, read_file, read_text_file
 import anthropic
 from batch_api import (
     create_batch_request, save_batch_requests, submit_batch,
@@ -687,18 +687,18 @@ def generate_tournament_synthesis(round_stories, teg_num, all_processed_data=Non
     tournament_summary = all_tournament_data[all_tournament_data['TEGNum'] == teg_num].copy()
 
     # Add historical context: count wins BEFORE this TEG for each player
+    # IMPORTANT: Use TEG_winners.csv (source of truth) instead of calculated wins
+    # because some tournaments used different scoring systems (e.g. TEG 5)
+    winners_df = read_file('data/TEG_winners.csv')
+    winners_df['TEGNum'] = winners_df['TEG'].str.extract(r'(\d+)').astype(int)
+    historical_winners = winners_df[winners_df['TEGNum'] < teg_num]
+
     def calc_wins_before(row):
-        player_history = all_tournament_data[
-            (all_tournament_data['Player'] == row['Player']) &
-            (all_tournament_data['TEGNum'] < row['TEGNum'])
-        ]
-        stableford_wins = int(player_history['Won_Stableford'].sum())  # Trophy = Stableford winner
-        gross_wins = int(player_history['Won_Gross'].sum())  # Green Jacket = Gross winner
-        wooden_spoons = int(player_history['Wooden_Spoon'].sum())
+        player = row['Player']
         return pd.Series({
-            'teg_trophy_wins_before': stableford_wins,
-            'green_jacket_wins_before': gross_wins,
-            'wooden_spoons_before': wooden_spoons
+            'teg_trophy_wins_before': int((historical_winners['TEG Trophy'] == player).sum()),
+            'green_jacket_wins_before': int((historical_winners['Green Jacket'] == player).sum()),
+            'wooden_spoons_before': int((historical_winners['HMM Wooden Spoon'] == player).sum())
         })
 
     historical_counts = tournament_summary.apply(calc_wins_before, axis=1)
@@ -825,13 +825,15 @@ def generate_main_report(teg_num, use_batch_api=False):
     print(f"GENERATING MAIN REPORT FOR TEG {teg_num}")
     print(f"{'='*60}\n")
 
-    # Read story notes file
+    # Read story notes file using Railway-aware helper
     story_notes_path = f"data/commentary/teg_{teg_num}_story_notes.md"
-    if not os.path.exists(story_notes_path):
-        raise FileNotFoundError(f"Story notes not found: {story_notes_path}\nGenerate story notes first using: python generate_tournament_commentary_v2.py {teg_num}")
-
-    with open(story_notes_path, 'r', encoding='utf-8') as f:
-        story_notes = f.read()
+    try:
+        story_notes = read_text_file(story_notes_path)
+    except Exception as e:
+        raise FileNotFoundError(
+            f"Story notes not found: {story_notes_path}\n"
+            f"Generate story notes first using: python generate_tournament_commentary_v2.py {teg_num}"
+        ) from e
 
     print(f"Read story notes from: {story_notes_path}")
     print(f"Story notes length: {len(story_notes):,} characters")
@@ -914,13 +916,15 @@ def generate_brief_summary(teg_num, use_batch_api=False):
     print(f"GENERATING BRIEF SUMMARY FOR TEG {teg_num}")
     print(f"{'='*60}\n")
 
-    # Read story notes file
+    # Read story notes file using Railway-aware helper
     story_notes_path = f"data/commentary/teg_{teg_num}_story_notes.md"
-    if not os.path.exists(story_notes_path):
-        raise FileNotFoundError(f"Story notes not found: {story_notes_path}\nGenerate story notes first using: python generate_tournament_commentary_v2.py {teg_num}")
-
-    with open(story_notes_path, 'r', encoding='utf-8') as f:
-        story_notes = f.read()
+    try:
+        story_notes = read_text_file(story_notes_path)
+    except Exception as e:
+        raise FileNotFoundError(
+            f"Story notes not found: {story_notes_path}\n"
+            f"Generate story notes first using: python generate_tournament_commentary_v2.py {teg_num}"
+        ) from e
 
     print(f"Read story notes from: {story_notes_path}")
     print(f"Story notes length: {len(story_notes):,} characters")
@@ -987,7 +991,99 @@ def generate_brief_summary(teg_num, use_batch_api=False):
 
     return brief_summary
 
-def generate_reports_from_story_notes(teg_num, main_report=True, brief_summary=True):
+def generate_satirical_report(teg_num, use_batch_api=False):
+    """
+    Generate satirical tournament report from existing story notes.
+    Written in the style of Armando Iannucci, Charlie Brooker, Jesse Armstrong, Sam Bain, and Martin Amis.
+
+    Args:
+        teg_num: Tournament number
+        use_batch_api: If True, prepare for batch API instead of immediate generation
+    """
+    if use_batch_api:
+        # Batch API mode handled separately - this shouldn't be called
+        raise ValueError("Batch API mode should use generate_reports_via_batch_api()")
+
+    print(f"\n{'='*60}")
+    print(f"GENERATING SATIRICAL REPORT FOR TEG {teg_num}")
+    print(f"{'='*60}\n")
+
+    # Read story notes file using Railway-aware helper
+    story_notes_path = f"data/commentary/teg_{teg_num}_story_notes.md"
+    try:
+        story_notes = read_text_file(story_notes_path)
+    except Exception as e:
+        raise FileNotFoundError(
+            f"Story notes not found: {story_notes_path}\n"
+            f"Generate story notes first using: python generate_tournament_commentary_v2.py {teg_num}"
+        ) from e
+
+    print(f"Read story notes from: {story_notes_path}")
+    print(f"Story notes length: {len(story_notes):,} characters")
+
+    # Build prompt - don't format, keep static for caching
+    system_prompt = SATIRICAL_REPORT_PROMPT
+    user_message = f"Story Notes:\n\n{story_notes}"
+    full_prompt_for_debug = system_prompt + "\n\n" + user_message
+
+    # Rate limiting
+    est_in_tokens = _est_tokens(full_prompt_for_debug)
+    TOKEN_LIMITER.acquire(est_in_tokens, label=f"SatiricalReport-TEG{teg_num}")
+
+    dprint("    · Satirical Report prompt stats:")
+    dprint("      " + _blob_stats("story_notes", story_notes))
+    dprint("      " + _blob_stats("FULL prompt", full_prompt_for_debug))
+
+    # DRY RUN gate
+    if DRY_RUN:
+        dprint("    ⚙️  DRY RUN: Skipping LLM call")
+        return "DRY_RUN_SATIRICAL_REPORT"
+
+    # Real call
+    api_key = get_api_key()
+    if not api_key:
+        raise ValueError("ANTHROPIC_API_KEY not found in Streamlit secrets or environment variables")
+    client = anthropic.Anthropic(api_key=api_key)
+
+    message = safe_create_message(
+        client,
+        model="claude-sonnet-4-5",
+        max_tokens=8000,
+        system=[
+            {
+                "type": "text",
+                "text": system_prompt,
+                "cache_control": {"type": "ephemeral"}
+            }
+        ],
+        messages=[
+            {
+                "role": "user",
+                "content": user_message
+            }
+        ]
+    )
+
+    satirical_report = message.content[0].text
+
+    # Save output using Railway-aware function
+    output_path = f"data/commentary/drafts/teg_{teg_num}_satire.md"
+    write_text_file(
+        output_path,
+        satirical_report,
+        commit_message=f"Generate satirical report for TEG {teg_num}"
+    )
+
+    print(f"\n{'='*60}")
+    print(f"SATIRICAL REPORT COMPLETE")
+    print(f"{'='*60}")
+    print(f"Saved to: {output_path}")
+    print(f"Report length: {len(satirical_report):,} characters")
+    print(f"{'='*60}\n")
+
+    return satirical_report
+
+def generate_reports_from_story_notes(teg_num, main_report=True, brief_summary=True, satirical=False):
     """
     Generate reports from existing story notes.
 
@@ -995,6 +1091,7 @@ def generate_reports_from_story_notes(teg_num, main_report=True, brief_summary=T
         teg_num: Tournament number
         main_report: Generate full narrative report (default True)
         brief_summary: Generate concise summary (default True)
+        satirical: Generate satirical report (default False)
 
     Returns:
         Dict with generated reports
@@ -1007,10 +1104,13 @@ def generate_reports_from_story_notes(teg_num, main_report=True, brief_summary=T
     if brief_summary:
         results['brief_summary'] = generate_brief_summary(teg_num)
 
+    if satirical:
+        results['satirical'] = generate_satirical_report(teg_num)
+
     return results
 
 
-def generate_reports_via_batch_api(teg_nums, main_report=True, brief_summary=True):
+def generate_reports_via_batch_api(teg_nums, main_report=True, brief_summary=True, satirical=False, submit_only=False):
     """
     Generate tournament reports using Anthropic Batch API (50% cost reduction).
 
@@ -1018,12 +1118,16 @@ def generate_reports_via_batch_api(teg_nums, main_report=True, brief_summary=Tru
         teg_nums: List of TEG numbers to process
         main_report: Generate full narrative reports (default True)
         brief_summary: Generate brief summaries (default True)
+        satirical: Generate satirical reports (default False)
+        submit_only: If True, submit batch and exit (don't wait for results)
 
     Returns:
-        Dict with generated reports
+        Dict with generated reports, or list of batch_ids if submit_only=True
     """
     print("\n" + "="*60)
     print("BATCH API MODE FOR TOURNAMENT REPORTS (50% cost reduction)")
+    if submit_only:
+        print("SUBMIT ONLY - Will exit after submission")
     print("="*60)
 
     api_key = get_api_key()
@@ -1037,21 +1141,22 @@ def generate_reports_via_batch_api(teg_nums, main_report=True, brief_summary=Tru
     os.makedirs(results_dir, exist_ok=True)
 
     results = {}
+    batch_ids = []
 
     # Phase 1: Main Reports (batched for prompt caching)
+    main_reports_batch_id = None
     if main_report:
         print("\nPHASE 1: Building main report batch requests...")
         main_report_requests = []
 
         for teg_num in teg_nums:
-            # Read story notes file
+            # Read story notes file using Railway-aware helper
             story_notes_path = f"data/commentary/teg_{teg_num}_story_notes.md"
-            if not os.path.exists(story_notes_path):
+            try:
+                story_notes = read_text_file(story_notes_path)
+            except Exception:
                 print(f"  ✗ Story notes not found for TEG {teg_num}")
                 continue
-
-            with open(story_notes_path, 'r', encoding='utf-8') as f:
-                story_notes = f.read()
 
             print(f"  Preparing TEG {teg_num}...")
 
@@ -1075,43 +1180,24 @@ def generate_reports_via_batch_api(teg_nums, main_report=True, brief_summary=Tru
             print("\nSubmitting main reports batch to Anthropic...")
             batch_info = submit_batch(batch_file, api_key)
             main_reports_batch_id = batch_info['batch_id']
-            save_batch_info(batch_info, results_dir)
-
-            print("\nPolling for main reports completion...")
-            poll_until_complete(main_reports_batch_id, api_key, check_interval=60)
-
-            print("\nRetrieving main report results...")
-            main_report_results = get_batch_results(main_reports_batch_id, api_key, results_dir)
-
-            # Save main reports to files
-            print("\nSaving main reports to files...")
-            for teg_num in teg_nums:
-                custom_id = f"TEG{teg_num}_main_report"
-                if custom_id in main_report_results and main_report_results[custom_id]:
-                    main_report_text = main_report_results[custom_id]
-                    output_path = f"data/commentary/drafts/teg_{teg_num}_main_report.md"
-                    write_text_file(
-                        output_path,
-                        main_report_text,
-                        commit_message=f"Generate main report for TEG {teg_num} (Batch API)"
-                    )
-                    results.setdefault(teg_num, {})['main_report'] = main_report_text
-                    print(f"  ✓ Saved: {output_path}")
+            save_batch_info(batch_info, results_dir, batch_type="main_reports")
+            batch_ids.append(('main_reports', main_reports_batch_id))
+            print(f"  ✓ Batch ID: {main_reports_batch_id}")
 
     # Phase 2: Brief Summaries (batched for prompt caching)
+    brief_summaries_batch_id = None
     if brief_summary:
         print("\nPHASE 2: Building brief summary batch requests...")
         brief_summary_requests = []
 
         for teg_num in teg_nums:
-            # Read story notes file
+            # Read story notes file using Railway-aware helper
             story_notes_path = f"data/commentary/teg_{teg_num}_story_notes.md"
-            if not os.path.exists(story_notes_path):
+            try:
+                story_notes = read_text_file(story_notes_path)
+            except Exception:
                 print(f"  ✗ Story notes not found for TEG {teg_num}")
                 continue
-
-            with open(story_notes_path, 'r', encoding='utf-8') as f:
-                story_notes = f.read()
 
             print(f"  Preparing TEG {teg_num}...")
 
@@ -1135,28 +1221,131 @@ def generate_reports_via_batch_api(teg_nums, main_report=True, brief_summary=Tru
             print("\nSubmitting brief summaries batch to Anthropic...")
             batch_info = submit_batch(batch_file, api_key)
             brief_summaries_batch_id = batch_info['batch_id']
-            save_batch_info(batch_info, results_dir)
+            save_batch_info(batch_info, results_dir, batch_type="brief_summaries")
+            batch_ids.append(('brief_summaries', brief_summaries_batch_id))
+            print(f"  ✓ Batch ID: {brief_summaries_batch_id}")
 
-            print("\nPolling for brief summaries completion...")
-            poll_until_complete(brief_summaries_batch_id, api_key, check_interval=60)
+    # Phase 3: Satirical Reports (batched for prompt caching)
+    satirical_batch_id = None
+    if satirical:
+        print("\nPHASE 3: Building satirical report batch requests...")
+        satirical_report_requests = []
 
-            print("\nRetrieving brief summary results...")
-            brief_summary_results = get_batch_results(brief_summaries_batch_id, api_key, results_dir)
+        for teg_num in teg_nums:
+            # Read story notes file using Railway-aware helper
+            story_notes_path = f"data/commentary/teg_{teg_num}_story_notes.md"
+            try:
+                story_notes = read_text_file(story_notes_path)
+            except Exception:
+                print(f"  ✗ Story notes not found for TEG {teg_num}")
+                continue
 
-            # Save brief summaries to files
-            print("\nSaving brief summaries to files...")
-            for teg_num in teg_nums:
-                custom_id = f"TEG{teg_num}_brief_summary"
-                if custom_id in brief_summary_results and brief_summary_results[custom_id]:
-                    brief_summary_text = brief_summary_results[custom_id]
-                    output_path = f"data/commentary/drafts/teg_{teg_num}_brief_summary.md"
-                    write_text_file(
-                        output_path,
-                        brief_summary_text,
-                        commit_message=f"Generate brief summary for TEG {teg_num} (Batch API)"
-                    )
-                    results.setdefault(teg_num, {})['brief_summary'] = brief_summary_text
-                    print(f"  ✓ Saved: {output_path}")
+            print(f"  Preparing TEG {teg_num}...")
+
+            user_message = f"Story Notes:\n\n{story_notes}"
+
+            request = create_batch_request(
+                custom_id=f"TEG{teg_num}_satire",
+                model="claude-sonnet-4-5",
+                max_tokens=8000,
+                system_prompt=SATIRICAL_REPORT_PROMPT,
+                user_message=user_message,
+                use_cache=True
+            )
+            satirical_report_requests.append(request)
+
+        if satirical_report_requests:
+            # Save and submit satirical reports batch
+            batch_file = f"{batch_dir}/satirical_reports_{timestamp}.jsonl"
+            save_batch_requests(satirical_report_requests, batch_file)
+
+            print("\nSubmitting satirical reports batch to Anthropic...")
+            batch_info = submit_batch(batch_file, api_key)
+            satirical_batch_id = batch_info['batch_id']
+            save_batch_info(batch_info, results_dir, batch_type="satirical_reports")
+            batch_ids.append(('satirical_reports', satirical_batch_id))
+            print(f"  ✓ Batch ID: {satirical_batch_id}")
+
+    # If submit_only, exit now
+    if submit_only:
+        print("\n" + "="*60)
+        print("BATCHES SUBMITTED - YOU CAN NOW CLOSE THIS WINDOW")
+        print("="*60)
+        for batch_type, batch_id in batch_ids:
+            print(f"  {batch_type}: {batch_id}")
+        print(f"\nTo retrieve results later, check batch_results/ directory")
+        print("="*60)
+        return [batch_id for _, batch_id in batch_ids]
+
+    # Otherwise, poll and retrieve results for each batch
+    # Main Reports
+    if main_reports_batch_id:
+        print("\nPolling for main reports completion...")
+        poll_until_complete(main_reports_batch_id, api_key, check_interval=60)
+
+        print("\nRetrieving main report results...")
+        main_report_results = get_batch_results(main_reports_batch_id, api_key, results_dir)
+
+        # Save main reports to files
+        print("\nSaving main reports to files...")
+        for teg_num in teg_nums:
+            custom_id = f"TEG{teg_num}_main_report"
+            if custom_id in main_report_results and main_report_results[custom_id]:
+                main_report_text = main_report_results[custom_id]
+                output_path = f"data/commentary/drafts/teg_{teg_num}_main_report.md"
+                write_text_file(
+                    output_path,
+                    main_report_text,
+                    commit_message=f"Generate main report for TEG {teg_num} (Batch API)"
+                )
+                results.setdefault(teg_num, {})['main_report'] = main_report_text
+                print(f"  ✓ Saved: {output_path}")
+
+    # Brief Summaries
+    if brief_summaries_batch_id:
+        print("\nPolling for brief summaries completion...")
+        poll_until_complete(brief_summaries_batch_id, api_key, check_interval=60)
+
+        print("\nRetrieving brief summary results...")
+        brief_summary_results = get_batch_results(brief_summaries_batch_id, api_key, results_dir)
+
+        # Save brief summaries to files
+        print("\nSaving brief summaries to files...")
+        for teg_num in teg_nums:
+            custom_id = f"TEG{teg_num}_brief_summary"
+            if custom_id in brief_summary_results and brief_summary_results[custom_id]:
+                brief_summary_text = brief_summary_results[custom_id]
+                output_path = f"data/commentary/drafts/teg_{teg_num}_brief_summary.md"
+                write_text_file(
+                    output_path,
+                    brief_summary_text,
+                    commit_message=f"Generate brief summary for TEG {teg_num} (Batch API)"
+                )
+                results.setdefault(teg_num, {})['brief_summary'] = brief_summary_text
+                print(f"  ✓ Saved: {output_path}")
+
+    # Satirical Reports
+    if satirical_batch_id:
+        print("\nPolling for satirical reports completion...")
+        poll_until_complete(satirical_batch_id, api_key, check_interval=60)
+
+        print("\nRetrieving satirical report results...")
+        satirical_report_results = get_batch_results(satirical_batch_id, api_key, results_dir)
+
+        # Save satirical reports to files
+        print("\nSaving satirical reports to files...")
+        for teg_num in teg_nums:
+            custom_id = f"TEG{teg_num}_satire"
+            if custom_id in satirical_report_results and satirical_report_results[custom_id]:
+                satirical_report_text = satirical_report_results[custom_id]
+                output_path = f"data/commentary/drafts/teg_{teg_num}_satire.md"
+                write_text_file(
+                    output_path,
+                    satirical_report_text,
+                    commit_message=f"Generate satirical report for TEG {teg_num} (Batch API)"
+                )
+                results.setdefault(teg_num, {})['satire'] = satirical_report_text
+                print(f"  ✓ Saved: {output_path}")
 
     # Summary
     print("\n" + "="*60)
@@ -1759,15 +1948,18 @@ def generate_story_notes_via_batch_api(teg_nums, submit_only=False):
         tournament_summary = all_tournament_data[all_tournament_data['TEGNum'] == teg_num].copy()
 
         # Add historical context
+        # IMPORTANT: Use TEG_winners.csv (source of truth) instead of calculated wins
+        # because some tournaments used different scoring systems (e.g. TEG 5)
+        winners_df = read_file('data/TEG_winners.csv')
+        winners_df['TEGNum'] = winners_df['TEG'].str.extract(r'(\d+)').astype(int)
+        historical_winners = winners_df[winners_df['TEGNum'] < teg_num]
+
         def calc_wins_before(row):
-            player_history = all_tournament_data[
-                (all_tournament_data['Player'] == row['Player']) &
-                (all_tournament_data['TEGNum'] < row['TEGNum'])
-            ]
+            player = row['Player']
             return pd.Series({
-                'teg_trophy_wins_before': int(player_history['Won_Stableford'].sum()),
-                'green_jacket_wins_before': int(player_history['Won_Gross'].sum()),
-                'wooden_spoons_before': int(player_history['Wooden_Spoon'].sum())
+                'teg_trophy_wins_before': int((historical_winners['TEG Trophy'] == player).sum()),
+                'green_jacket_wins_before': int((historical_winners['Green Jacket'] == player).sum()),
+                'wooden_spoons_before': int((historical_winners['HMM Wooden Spoon'] == player).sum())
             })
 
         historical_counts = tournament_summary.apply(calc_wins_before, axis=1)
@@ -2047,6 +2239,18 @@ Examples:
   # Generate only brief summary (no main report)
   python %(prog)s 17 --brief-summary-only
 
+  # Generate only satirical report
+  python %(prog)s 17 --satirical-only
+
+  # Generate all reports including satirical
+  python %(prog)s 17 --generate-reports --include-satire
+
+  # Use batch API for reports (50%% cheaper, submit and wait)
+  python %(prog)s --range 3 17 --generate-reports --use-batch
+
+  # Submit batch and exit (retrieve results later)
+  python %(prog)s --range 3 17 --main-report-only --use-batch --submit-only
+
   # Process multiple tournaments
   python %(prog)s --range 10 12
         ''',
@@ -2068,6 +2272,10 @@ Examples:
                         help='Generate only the main report from existing story notes')
     parser.add_argument('--brief-summary-only', action='store_true',
                         help='Generate only the brief summary from existing story notes')
+    parser.add_argument('--satirical-only', action='store_true',
+                        help='Generate only the satirical report from existing story notes')
+    parser.add_argument('--include-satire', action='store_true',
+                        help='Include satirical report in addition to other selected reports')
     parser.add_argument('--full-pipeline', action='store_true',
                         help='Generate story notes AND reports in one go')
     parser.add_argument('--batch-reports', action='store_true',
@@ -2136,12 +2344,19 @@ Examples:
                 successful_tegs = list(range(start, end + 1))
 
             # Phase 2 & 3: Generate reports (if requested)
-            if args.generate_reports or args.main_report_only or args.brief_summary_only or args.full_pipeline:
+            if args.generate_reports or args.main_report_only or args.brief_summary_only or args.satirical_only or args.include_satire or args.full_pipeline:
                 if args.use_batch:
-                    # Use Batch API for both main reports and brief summaries
+                    # Use Batch API for all report types
                     generate_main = args.generate_reports or args.main_report_only or args.full_pipeline
                     generate_brief = args.generate_reports or args.brief_summary_only or args.full_pipeline
-                    generate_reports_via_batch_api(successful_tegs, main_report=generate_main, brief_summary=generate_brief)
+                    generate_satire = args.satirical_only or args.include_satire or args.full_pipeline
+                    generate_reports_via_batch_api(
+                        successful_tegs,
+                        main_report=generate_main,
+                        brief_summary=generate_brief,
+                        satirical=generate_satire,
+                        submit_only=args.submit_only
+                    )
                 else:
                     # Phase 2: Generate main reports (batched for caching)
                     if args.generate_reports or args.main_report_only or args.full_pipeline:
@@ -2161,6 +2376,15 @@ Examples:
                             except Exception as e:
                                 print(f"✗ TEG {teg} brief summary failed: {e}")
 
+                    # Phase 4: Generate satirical reports (batched for caching)
+                    if args.satirical_only or args.include_satire or args.full_pipeline:
+                        print(f"\nPhase 4: Generating satirical reports (batched for caching)...")
+                        for teg in successful_tegs:
+                            try:
+                                generate_satirical_report(teg)
+                            except Exception as e:
+                                print(f"✗ TEG {teg} satirical report failed: {e}")
+
             print(f"\n{'='*60}")
             print(f"BATCH COMPLETE: Processed TEGs {successful_tegs}")
             print(f"{'='*60}\n")
@@ -2171,7 +2395,7 @@ Examples:
             start, end = args.range
             teg_list = list(range(start, end + 1))
 
-            # Full pipeline over a range (generate notes then both reports)
+            # Full pipeline over a range (generate notes then all reports)
             if args.full_pipeline:
                 for teg in teg_list:
                     try:
@@ -2179,12 +2403,17 @@ Examples:
                             generate_story_notes_up_to_round(teg, args.partial)
                         else:
                             generate_complete_story_notes(teg)
-                        generate_reports_from_story_notes(teg, main_report=True, brief_summary=True)
+                        generate_reports_from_story_notes(
+                            teg,
+                            main_report=True,
+                            brief_summary=True,
+                            satirical=args.include_satire
+                        )
                     except Exception as e:
                         print(f"✗ TEG {teg} full pipeline failed: {e}")
 
             # Report-only modes over a range (DO NOT generate story notes here)
-            elif args.generate_reports or args.main_report_only or args.brief_summary_only:
+            elif args.generate_reports or args.main_report_only or args.brief_summary_only or args.satirical_only or args.include_satire:
                 for teg in teg_list:
                     # main report only (or both via --generate-reports)
                     if args.generate_reports or args.main_report_only:
@@ -2199,6 +2428,13 @@ Examples:
                             generate_brief_summary(teg)
                         except Exception as e:
                             print(f"✗ TEG {teg} brief summary failed: {e}")
+
+                    # satirical only (or with --include-satire)
+                    if args.satirical_only or args.include_satire:
+                        try:
+                            generate_satirical_report(teg)
+                        except Exception as e:
+                            print(f"✗ TEG {teg} satirical report failed: {e}")
 
             # No report flags: default to generating story notes across the range
             else:
@@ -2215,11 +2451,18 @@ Examples:
 
         # Handle report generation modes
         if args.generate_reports:
-            generate_reports_from_story_notes(args.teg_num, main_report=True, brief_summary=True)
+            generate_reports_from_story_notes(
+                args.teg_num,
+                main_report=True,
+                brief_summary=True,
+                satirical=args.include_satire
+            )
         elif args.main_report_only:
             generate_main_report(args.teg_num)
         elif args.brief_summary_only:
             generate_brief_summary(args.teg_num)
+        elif args.satirical_only:
+            generate_satirical_report(args.teg_num)
         elif args.full_pipeline:
             # Generate story notes first
             if args.partial:
@@ -2229,7 +2472,12 @@ Examples:
                 generate_complete_story_notes(args.teg_num)
                 # Then generate reports
                 print("\nProceeding to report generation...")
-                generate_reports_from_story_notes(args.teg_num, main_report=True, brief_summary=True)
+                generate_reports_from_story_notes(
+                    args.teg_num,
+                    main_report=True,
+                    brief_summary=True,
+                    satirical=args.include_satire
+                )
         else:
             # Default behavior: story notes only
             if args.partial:

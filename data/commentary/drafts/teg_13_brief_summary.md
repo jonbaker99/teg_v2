@@ -1,0 +1,5 @@
+Jon Baker claimed his third TEG Trophy and third Green Jacket in Kent, sweeping both competitions with unprecedented wire-to-wire dominance. He led every single hole across all 72 holes, winning by 6 points (Trophy) and 18 strokes (Jacket)—the first time in tournament history neither lead changed hands once.
+
+Gregg Williams finished runner-up in both competitions, briefly taking the Trophy lead at Round 2's 15th hole before Baker roared back with a closing birdie. John Patterson's rollercoaster week epitomized volatile brilliance: an eagle on Round 4's 2nd hole immediately followed by a blow-up on the 3rd, and a tournament-best 49-point round in Round 3 after a 28-point horror show in Round 2. He finished joint-third in the Trophy alongside Alex Baker.
+
+Eight-time Green Jacket winner David Mullin crashed to his first Wooden Spoon, sealed by a quintuple-bogey nightmare on Round 4's 10th hole. The tournament marked the TEG's first visit to Kent, playing four new courses including Royal Cinque Ports, Littlestone, and two configurations of Prince's.

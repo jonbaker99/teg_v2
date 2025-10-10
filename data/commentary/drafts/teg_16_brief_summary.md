@@ -1,0 +1,5 @@
+# Stuart Neumann Claims Maiden Trophy in Wire-to-Wire Triumph
+
+Stuart Neumann dominated TEG 16 from start to finish, claiming his first Trophy with a 13-point margin over Gregg Williams across four rounds on Portugal's Lisbon Coast. Williams took his second Green Jacket by 16 strokes—the first time since TEG 12 that different players swept the two competitions. Neumann led all 72 holes in the Stableford race, extending his advantage from five points after Round 1 to a commanding 12-point cushion heading into the finale.
+
+David Mullin's spectacular final-round surge—45 points, the week's best—came too late to challenge Neumann's wire-to-wire control. Round 3's H12 carnage defined the tournament: Jon Baker's quintuple bogey 10 and Alex Baker's quadruple 9 epitomized brutal scoring conditions that produced zero eagles and just 10 birdies across 360 holes. Alex Baker earned his third career Wooden Spoon, finishing 29 points back with a tournament-worst 13 zero-point holes.

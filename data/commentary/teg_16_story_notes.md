@@ -1,44 +1,46 @@
 # TEG 16 Story Notes
 
 ## Key Points
-- Stuart NEUMANN's 1st Trophy - led all 72 holes, never threatened, cruised to 13-point victory
-- Gregg WILLIAMS's 2nd Green Jacket - dominated gross competition wire-to-wire, led all 72 holes, won by 16 strokes
-- NEUMANN's wire-to-wire dominance: no lead changes from Round 2 onwards, commanded every round
-- Alex BAKER claimed 3rd Wooden Spoon with 82 strokes back, endured 13 zero-point holes across four rounds
-- WILLIAMS finished runner-up in Trophy despite Jacket dominance, 13 points behind NEUMANN
+- Stuart NEUMANN's 1st Trophy - led all 72 holes, pulling away to a comfortable 13-point margin in wire-to-wire dominance
+- Gregg WILLIAMS's 2nd Green Jacket - led all 72 holes, winning by 16 strokes with relentless consistency
+- Trophy and Jacket sweep different winners for first time since TEG 12
+- NEUMANN never trailed in Trophy race, extending lead from 5 to 13 points over four rounds
+- A. BAKER's 3rd Wooden Spoon - finished 29 points back with tournament-worst 13 zero-point holes
+- No eagles recorded across 360 holes; only 10 total birdies in entire tournament
 
 ## How It Unfolded
-- **Round 1:** SN 39pts leads Trophy by 5; GW +18 leads Jacket wire-to-wire begins
-- **Round 2:** SN extends Trophy lead to 7pts; GW maintains Jacket lead at +40
-- **Round 3:** SN breaks away with 12-point Trophy advantage; GW still controls Jacket at +55
-- **Round 4:** SN secures 1st Trophy with 43pts; GW claims 2nd Jacket; DM's 45pts best round wasted
+- **Round 1:** SN 39pts leads Trophy by 5; GW/JB tied +18 lead Gross
+- **Round 2:** SN extends Trophy lead to 7 points with 35pts; GW maintains Jacket lead
+- **Round 3:** SN breakaway with 39pts (12-point Trophy lead); GW's 37pts/+15 gross solidifies Jacket control
+- **Round 4:** DM's 45pts best round but NEUMANN's 43pts clinches by 13; GW completes Jacket wire-to-wire
 
 ## Story Angles
-- NEUMANN's maiden Trophy triumph after three Wooden Spoons - led every hole, never challenged
-- WILLIAMS's gross mastery vs Trophy futility - swept all 72 holes for Jacket but finished 13pts back in Trophy
-- Different competitions, different champions - NEUMANN (net) and WILLIAMS (gross) dominated separate battles simultaneously
-- Alex BAKER's nightmare: 148 gross (+82), 13 zero-point disasters, 3rd career Spoon
-- MULLIN's Round 4 brilliance (45pts/+11) came too late, 14 points back at finish
-- Zero drama after Round 1 - both competitions settled early, leads only grew
+- NEUMANN ends maiden Trophy drought with wire-to-wire dominance, never relinquishing Trophy lead
+- Williams's Jacket mastery (2nd title) contrasts with Trophy runner-up finish - gross excellence without Stableford conversion
+- H12 (Par 4) Round 3 carnage: Jon BAKER's quintuple bogey (10/+5), A. BAKER's quadruple (9/+4) - defining moment
+- A. BAKER's nightmare 13 zero-point holes and 22 worse-than-double-bogey scores seal 3rd career Spoon
+- David MULLIN's dramatic R4 surge (45pts/+11) not enough to catch NEUMANN - too little, too late
+- Unprecedented scarcity: zero eagles, only 10 birdies across 360 holes - brutal scoring conditions
 
 ## Quote-Worthy Lines
-- "Led every hole, never threatened"
-- "Wire-to-wire in different worlds"
-- "Maiden Trophy, maiden Jacket"
-- "Thirteen zeros, third Spoon"
-- "Two champions, no suspense"
+- "Wire-to-wire maiden triumph"
+- "Jacket mastery without Trophy"
+- "H12 quintuple bogey disaster"
+- "Thirteen scoreless holes"
+- "Eagle-free brutality"
+- "Two competitions, two rulers"
 
 ## Tournament Stats
-- Stuart NEUMANN: 156pts, +105, led 72/72 holes (Trophy) & 2/72 (Jacket) - 1st Trophy win
-- Gregg WILLIAMS: 143pts, +66, led 2/72 holes (Trophy) & 72/72 (Jacket) - 2nd Green Jacket win
-- NEUMANN led Trophy by 5pts after R1, 7pts after R2, 12pts after R3, won by 13pts
-- WILLIAMS led Jacket from H1 through H72, never trailed, won by 16 strokes
-- Alex BAKER: 13 zero-point holes (4 in R1, 2 in R2, 2 in R3, 4 in R4), including 11 (+7) on H12 (Par 4) in R4
-- MULLIN's 45pts in R4 best single round, but started 12 back - too little, too late
-- Only 4 birdies total: NEUMANN 3, MULLIN 2, Jon BAKER 3, A. BAKER 1, WILLIAMS 1
-- Combined blow-ups (7+ gross): 52 across field, A. BAKER suffered 15 alone
-- No eagles, no aces, no drama after opening round
-- Final Tournament Scores: SN: 156pts/+105; GW: 143pts/+66; DM: 142pts/+82; JB: 131pts/+93; AB: 127pts/+148
+- Stuart NEUMANN: 156pts, +105, led 72/72 holes (Trophy), 0/72 (Gross) - 1st Trophy, 4th Jacket finish
+- Gregg WILLIAMS: 143pts, +66, led 2/72 holes (Trophy), 72/72 (Gross) - 2nd Trophy, 2nd Jacket
+- David MULLIN: 142pts, +82, led 1/72 (Trophy), 3/72 (Gross) - best R4 (45pts/+11) couldn't overcome deficit
+- Jon BAKER: 131pts, +93, led 0/72 (Trophy), 3/72 (Gross)
+- A. BAKER: 127pts, +148, led 0/72 (Trophy), 0/72 (Gross) - 13 zero-point holes, 22 worse-than-double
+- NEUMANN's 13-point Trophy margin vs Williams's 16-stroke Jacket margin
+- Only 10 total birdies, zero eagles across 360 holes
+- Trophy lead never changed hands after H1 Round 1
+- 66 total blow-ups (triple bogey+) recorded across five players
+- Final Scores: SN: 156pts/+105; GW: 143pts/+66; DM: 142pts/+82; JB: 131pts/+93; AB: 127pts/+148
 
 ## Location & Venue
 - Lisbon Coast, Portugal (2023)
@@ -53,59 +55,53 @@
 
 ### Key Moments
 - H1 (Par 4): Alex BAKER blow-up (9 / +5), 0 pts
-- H1 (Par 4): Stuart NEUMANN, David MULLIN, Gregg WILLIAMS took Jacket lead at +1
-- H1 (Par 4): Stuart NEUMANN took Trophy lead, 3 pts
-- H4 (Par 4): Gregg WILLIAMS took Trophy lead
-- H5 (Par 4): David MULLIN took Trophy lead
-- H6 (Par 4): Alex BAKER 4 points on H6 (Par 4)
-- H6 (Par 4): David MULLIN took Jacket lead at +1
+- H1 (Par 4): Stuart NEUMANN, David MULLIN, Gregg WILLIAMS took Jacket lead
+- H1 (Par 4): Stuart NEUMANN took Trophy lead
 - H7 (Par 5): Alex BAKER blow-up (9 / +4), 0 pts
 - H7 (Par 5): Stuart NEUMANN blow-up (8 / +3), 1 pt
 - H8 (Par 5): David MULLIN blow-up (8 / +3), 0 pts
 - H8 (Par 5): Jon BAKER blow-up (8 / +3), 0 pts
 - H10 (Par 4): David MULLIN blow-up (7 / +3), 0 pts
 - H11 (Par 4): Alex BAKER blow-up (9 / +5), 0 pts
-- H13 (Par 5): Alex BAKER 4 points on H13 (Par 5)
-- H14 (Par 3): Alex BAKER blow-up (6 / +3), 1 pt
 - H17 (Par 4): Alex BAKER blow-up (10 / +6), 0 pts
 - H17 (Par 4): Stuart NEUMANN blow-up (7 / +3), 1 pt
-- H18 (Par 4): All players except Gregg WILLIAMS posted blow-ups (7 / +3)
+- H18 (Par 4): Alex BAKER blow-up (7 / +3), 1 pt
+- H18 (Par 4): David MULLIN blow-up (7 / +3), 1 pt
+- H18 (Par 4): Jon BAKER blow-up (7 / +3), 0 pts
+- H18 (Par 4): Stuart NEUMANN blow-up (7 / +3), 1 pt
 
 ### Lead After Round
 - **Leader:** Stuart NEUMANN
 - **Margin:** 5 points to 2nd place
-- **Status:** Clear lead
-- **Lead change:** N/A - first round
-- **Trophy:** Stuart NEUMANN leads with 39 pts
-- **Jacket:** Gregg WILLIAMS leads at +18 gross
+- **Status:** Strong opening round lead
+- **Lead change:** No (first round)
 
 ### Hot Spells (Net)
-- No significant Stableford hot spells identified
+- None identified in this round
 
 ### Hot Spells (Gross)
-- Jon BAKER holes 14-16: Avg 0.00 vs par (par golf on H14 (Par 3), H15 (Par 3), H16 (Par 5))
+- Jon BAKER holes 14-16: Avg 0.00 vs par (three consecutive pars)
 
 ### Cold Spells (Net)
-- No significant Stableford cold spells identified (all patterns were gross-based)
+- None identified in this round
 
 ### Cold Spells (Gross)
 - Alex BAKER holes 1-3: Avg +3.00 vs par (blow-up on H1 (Par 4))
-- Alex BAKER holes 7-12: Avg +2.33 vs par (blow-ups on H7 (Par 5), H11 (Par 4))
+- Alex BAKER holes 7-12: Avg +2.33 vs par (blow-ups on H7 (Par 5) and H11 (Par 4))
 - Alex BAKER holes 16-18: Avg +3.67 vs par (blow-up on H17 (Par 4))
-- David MULLIN holes 8-10: Avg +2.33 vs par (blow-ups on H8 (Par 5), H10 (Par 4))
+- David MULLIN holes 8-10: Avg +2.33 vs par (blow-ups on H8 (Par 5) and H10 (Par 4))
 
 ### Front/Back 9 Patterns
-- No significant front 9 vs back 9 differences identified
+- None with significant differences
 
 ### Round Stats
-- Stuart NEUMANN: 39 pts (Stableford), +26 gross, rank 1 Trophy / rank 4 Jacket
-- Jon BAKER: 34 pts (Stableford), +21 gross, rank 2 Trophy / rank 2 Jacket
-- Gregg WILLIAMS: 34 pts (Stableford), +18 gross, rank 2 Trophy / rank 1 Jacket
-- David MULLIN: 33 pts (Stableford), +23 gross, rank 4 Trophy / rank 3 Jacket
-- Alex BAKER: 29 pts (Stableford), +42 gross, rank 5 Trophy / rank 5 Jacket
-- Alex BAKER struggled severely with 7 blow-ups and 4 zero-point holes
-- Gregg WILLIAMS led entire round for Jacket (gross competition)
-- Stuart NEUMANN led most of round for Trophy (net competition), held lead through finish
+- Stuart NEUMANN: 39 pts (Stableford), +26 gross, rank 1 (Trophy), rank 4 (Jacket)
+- Gregg WILLIAMS: 34 pts (Stableford), +18 gross, rank 2 (Trophy), rank 1 (Jacket)
+- Jon BAKER: 34 pts (Stableford), +21 gross, rank 2 (Trophy), rank 2 (Jacket)
+- David MULLIN: 33 pts (Stableford), +23 gross, rank 4 (Trophy), rank 3 (Jacket)
+- Alex BAKER: 29 pts (Stableford), +42 gross, rank 5 (Trophy), rank 5 (Jacket)
+- 5-point gap between leader NEUMANN and 2nd place in Trophy competition
+- Gregg WILLIAMS leads Jacket competition at +18, 3 shots ahead of Jon BAKER
 
 
 ### Course Records
@@ -129,18 +125,17 @@
 - H8 (Par 4): Stuart NEUMANN blow-up (7 / +3), 0 pts
 - H13 (Par 4): Alex BAKER blow-up (7 / +3), 0 pts
 - H13 (Par 4): Stuart NEUMANN blow-up (7 / +3), 0 pts
-- H14 (Par 5): Alex BAKER blow-up (8 / +3), 1 pt
-- H15 (Par 4): Alex BAKER blow-up (7 / +3), 1 pt
 - H16 (Par 4): David MULLIN blow-up (7 / +3), 0 pts
 - H16 (Par 4): Stuart NEUMANN blow-up (8 / +4), 0 pts
 - H17 (Par 3): Jon BAKER blow-up (6 / +3), 0 pts
 - H17 (Par 3): Stuart NEUMANN blow-up (6 / +3), 0 pts
 
 ### Lead After Round
-- **Leader:** Stuart NEUMANN (Trophy)
-- **Margin:** 7 points to 2nd place
-- **Status:** Commanding lead extended
-- **Lead change:** No - maintained Trophy lead from Round 1
+- **Leader:** Stuart NEUMANN
+- **Margin:** 7 points to 2nd place (Trophy)
+- **Status:** Solid lead, extended from 5 to 7 points
+- **Lead change:** No - Stuart NEUMANN maintained Trophy lead
+- **Jacket leader:** Gregg WILLIAMS maintained lead throughout round
 
 ### Hot Spells (Net)
 - Stuart NEUMANN holes 10-12: 11 pts (4 points on H10 (Par 4), 4 points on H12 (Par 4), birdie on H10)
@@ -150,40 +145,43 @@
 - Jon BAKER holes 9-11: Avg 0.0 vs par (birdie on H10)
 
 ### Cold Spells (Net)
-- None significant
+- No significant net cold spells identified
 
 ### Cold Spells (Gross)
-- Alex BAKER holes 2-4: Avg +2.33 vs par (blow-ups on H2 (Par 3), H4 (Par 3))
-- Alex BAKER holes 4-6: Avg +2.33 vs par (blow-up on H4 (Par 3))
-- Alex BAKER holes 11-16: Avg +2.33 vs par (blow-up on H13 (Par 4))
-- Alex BAKER holes 12-17: Avg +2.33 vs par (blow-up on H13 (Par 4))
-- Alex BAKER holes 13-18: Avg +2.33 vs par (blow-up on H13 (Par 4))
-- Stuart NEUMANN holes 14-16: Avg +2.33 vs par (blow-up on H16 (Par 4))
-- Stuart NEUMANN holes 15-17: Avg +2.67 vs par (blow-ups on H16 (Par 4), H17 (Par 3))
-- Stuart NEUMANN holes 16-18: Avg +2.67 vs par (blow-ups on H16 (Par 4), H17 (Par 3))
-- Stuart NEUMANN holes 13-18: Avg +2.33 vs par (blow-ups on H13 (Par 4), H16 (Par 4), H17 (Par 3))
+- Alex BAKER holes 2-4: Avg +2.33 vs par (blow-ups on H2, H4)
+- Alex BAKER holes 4-6: Avg +2.33 vs par (blow-up on H4)
+- Alex BAKER holes 11-16: Avg +2.33 vs par (blow-up on H13)
+- Alex BAKER holes 12-17: Avg +2.33 vs par (blow-up on H13)
+- Alex BAKER holes 13-18: Avg +2.33 vs par (blow-up on H13)
+- Stuart NEUMANN holes 14-16: Avg +2.33 vs par (blow-up on H16)
+- Stuart NEUMANN holes 15-17: Avg +2.67 vs par (blow-ups on H16, H17)
+- Stuart NEUMANN holes 16-18: Avg +2.67 vs par (blow-ups on H16, H17)
+- Stuart NEUMANN holes 13-18: Avg +2.33 vs par (blow-ups on H13, H16, H17)
 
 ### Front/Back 9 Patterns
-- None significant
+- No significant front 9 vs back 9 differences identified
 
 ### Round Stats
-- Stuart NEUMANN: 35 pts (Stableford), +30 gross, Trophy rank 1, Jacket rank 4
-- David MULLIN: 34 pts (Stableford), +22 gross, Trophy rank 2, Jacket rank 3
-- Alex BAKER: 32 pts (Stableford), +34 gross, Trophy rank 5, Jacket rank 5
-- Jon BAKER: 32 pts (Stableford), +23 gross, Trophy rank 3, Jacket rank 2
-- Gregg WILLIAMS: 30 pts (Stableford), +22 gross, Trophy rank 4, Jacket rank 1
+- Stuart NEUMANN: 35 pts (Trophy), +30 gross, rank 1 (Trophy), rank 4 (Jacket)
+- David MULLIN: 34 pts (Trophy), +22 gross, rank 2 (Trophy), rank 3 (Jacket)
+- Jon BAKER: 32 pts (Trophy), +23 gross, rank 3 (Trophy), rank 2 (Jacket)
+- Alex BAKER: 32 pts (Trophy), +34 gross, rank 3 (Trophy), rank 5 (Jacket)
+- Gregg WILLIAMS: 30 pts (Trophy), +22 gross, rank 5 (Trophy), rank 1 (Jacket)
 
 ## Round 3 Notes
 
 ### Key Moments
-- H12 (Par 5): Jon BAKER blow-up (10 / +5), 0 pts
-- H12 (Par 5): Alex BAKER blow-up (9 / +4), 0 pts
-- H13 (Par 4): Jon BAKER blow-up (8 / +4), 0 pts
-- H13 (Par 4): Alex BAKER blow-up (7 / +3), 0 pts
-- H5 (Par 3): Gregg WILLIAMS birdie (2 / -1), 4 pts
-- H7 (Par 3): Jon BAKER birdie (2 / -1), 4 pts
-- H6 (Par 5): Stuart NEUMANN birdie (4 / -1), 4 pts
 - H1 (Par 4): Stuart NEUMANN blow-up (8 / +4), 0 pts
+- H3 (Par 4): Gregg WILLIAMS blow-up (7 / +3), 0 pts
+- H3 (Par 4): Jon BAKER blow-up (7 / +3), 0 pts
+- H5 (Par 3): Gregg WILLIAMS birdie (2 / -1), 4 pts
+- H6 (Par 5): Stuart NEUMANN birdie (4 / -1), 4 pts
+- H7 (Par 3): Jon BAKER birdie (2 / -1), 4 pts
+- H7 (Par 3): Gregg WILLIAMS blow-up (6 / +3), 0 pts
+- H12 (Par 5): Jon BAKER quintuple bogey (10 / +5), 0 pts
+- H12 (Par 5): Alex BAKER blow-up (9 / +4), 0 pts
+- H13 (Par 4): Alex BAKER blow-up (7 / +3), 0 pts
+- H13 (Par 4): Jon BAKER blow-up (8 / +4), 0 pts
 - H14 (Par 4): Stuart NEUMANN blow-up (8 / +4), 0 pts
 - H14 (Par 4): David MULLIN blow-up (7 / +3), 0 pts
 - H16 (Par 4): David MULLIN blow-up (8 / +4), 0 pts
@@ -192,15 +190,15 @@
 - **Leader:** Stuart NEUMANN (Trophy competition)
 - **Margin:** 12 points to 2nd place
 - **Status:** Breakaway
-- **Lead change:** No - Stuart NEUMANN held Trophy lead from Round 2
+- **Lead change:** No - Stuart NEUMANN maintained Trophy lead from Round 2
 
 ### Hot Spells (Net)
-- No significant Stableford hot spells identified in this round
+- No significant Stableford hot spells detected
 
 ### Hot Spells (Gross)
-- Gregg WILLIAMS holes 11-13: Avg 0.0 vs par (all pars)
-- Gregg WILLIAMS holes 12-14: Avg 0.0 vs par (all pars)
-- Gregg WILLIAMS holes 13-15: Avg 0.0 vs par (all pars)
+- Gregg WILLIAMS holes 11-13: Avg 0.00 vs par
+- Gregg WILLIAMS holes 12-14: Avg 0.00 vs par
+- Gregg WILLIAMS holes 13-15: Avg 0.00 vs par
 - Gregg WILLIAMS holes 10-15: Avg +0.17 vs par
 - Gregg WILLIAMS holes 11-16: Avg +0.17 vs par
 
@@ -214,33 +212,31 @@
 - Alex BAKER holes 3-5: Avg +2.33 vs par
 - Alex BAKER holes 4-6: Avg +2.33 vs par
 - Alex BAKER holes 10-12: Avg +2.33 vs par (blow-up on H12)
-- Alex BAKER holes 11-13: Avg +3.0 vs par (blow-ups on H12, H13)
+- Alex BAKER holes 11-13: Avg +3.00 vs par (blow-ups on H12, H13)
 - Alex BAKER holes 12-14: Avg +3.33 vs par (blow-ups on H12, H13)
-- Alex BAKER holes 8-13: Avg +2.5 vs par (blow-ups on H12, H13)
-- Alex BAKER holes 9-14: Avg +2.5 vs par (blow-ups on H12, H13)
+- Alex BAKER holes 8-13: Avg +2.50 vs par (blow-ups on H12, H13)
+- Alex BAKER holes 9-14: Avg +2.50 vs par (blow-ups on H12, H13)
 - Alex BAKER holes 12-17: Avg +2.33 vs par (blow-ups on H12, H13)
-- Jon BAKER holes 10-12: Avg +2.67 vs par (blow-up on H12)
-- Jon BAKER holes 11-13: Avg +3.67 vs par (blow-ups on H12, H13)
-- Jon BAKER holes 12-14: Avg +3.0 vs par (blow-ups on H12, H13)
-- Jon BAKER holes 8-13: Avg +2.5 vs par (blow-ups on H12, H13)
-- Jon BAKER holes 9-14: Avg +2.33 vs par (blow-ups on H12, H13)
-- Jon BAKER holes 11-16: Avg +2.33 vs par (blow-ups on H12, H13)
+- David MULLIN holes 14-16: Avg +2.67 vs par (blow-ups on H14, H16)
 - Stuart NEUMANN holes 1-3: Avg +2.33 vs par (blow-up on H1)
 - Stuart NEUMANN holes 12-14: Avg +2.33 vs par (blow-up on H14)
 - Stuart NEUMANN holes 13-15: Avg +2.33 vs par (blow-up on H14)
-- David MULLIN holes 14-16: Avg +2.67 vs par (blow-ups on H14, H16)
+- Jon BAKER holes 10-12: Avg +2.67 vs par (blow-up on H12)
+- Jon BAKER holes 11-13: Avg +3.67 vs par (blow-ups on H12, H13)
+- Jon BAKER holes 12-14: Avg +3.00 vs par (blow-ups on H12, H13)
+- Jon BAKER holes 8-13: Avg +2.50 vs par (blow-ups on H12, H13)
+- Jon BAKER holes 9-14: Avg +2.33 vs par (blow-ups on H12, H13)
+- Jon BAKER holes 11-16: Avg +2.33 vs par (blow-ups on H12, H13)
 
 ### Front/Back 9 Patterns
 - Gregg WILLIAMS: Strong finisher - F9: 15 pts, B9: 22 pts (diff: -7)
 
 ### Round Stats
-- Stuart NEUMANN: 39 pts (Stableford), +26 gross, Trophy rank 1, Jacket rank 4
+- Stuart NEUMANN: 39 pts (Stableford), +26 gross, Trophy rank 1
 - Gregg WILLIAMS: 37 pts (Stableford), +15 gross, Trophy rank 2, Jacket rank 1
-- Jon BAKER: 33 pts (Stableford), +25 gross, Trophy rank 3, Jacket rank 2
-- Alex BAKER: 33 pts (Stableford), +34 gross, Trophy rank 3, Jacket rank 5
-- David MULLIN: 30 pts (Stableford), +26 gross, Trophy rank 4, Jacket rank 3
-- Stuart NEUMANN extended Trophy lead to 12 points
-- Gregg WILLIAMS maintains Jacket lead at +55
+- Alex BAKER: 33 pts (Stableford), +34 gross, Trophy rank 5
+- Jon BAKER: 33 pts (Stableford), +25 gross, Trophy rank 3
+- David MULLIN: 30 pts (Stableford), +26 gross, Trophy rank 4
 
 
 ### Course Records
@@ -250,49 +246,51 @@
 
 ### Key Moments
 - H1 (Par 4): Alex BAKER blow-up (9 / +5), 0 pts
-- H2 (Par 3): Stuart NEUMANN birdie (2 / -1), 5 pts
+- H2 (Par 3): Stuart NEUMANN birdie (2 / -1), 5 pts - extended Trophy lead
 - H2 (Par 3): David MULLIN birdie (2 / -1), 4 pts
 - H3 (Par 4): Alex BAKER blow-up (8 / +4), 0 pts
 - H6 (Par 5): Alex BAKER blow-up (9 / +4), 0 pts
 - H7 (Par 4): David MULLIN birdie (3 / -1), 4 pts
-- H8 (Par 4): Stuart NEUMANN blow-up (9 / +5), 0 pts
+- H8 (Par 4): Stuart NEUMANN blow-up (9 / +5), 0 pts - Trophy lead wobble
 - H9 (Par 4): Jon BAKER blow-up (7 / +3), 0 pts
 - H10 (Par 5): Jon BAKER birdie (4 / -1), 4 pts
+- H11 (Par 4): Alex BAKER 4 points (4 / E), 4 pts
 - H11 (Par 4): Jon BAKER blow-up (8 / +4), 0 pts
-- H12 (Par 4): Alex BAKER blow-up (11 / +7), 0 pts
-- H14 (Par 4): Gregg WILLIAMS blow-up (8 / +4), 0 pts
+- H12 (Par 4): Alex BAKER blow-up (11 / +7), 0 pts - worst hole of round
+- H12 (Par 4): Stuart NEUMANN 4 points (4 / E), 4 pts
+- H14 (Par 4): Gregg WILLIAMS blow-up (8 / +4), 0 pts - rare mistake
 
 ### Lead After Round
-- **Leader:** Stuart NEUMANN
-- **Margin:** 13 points to 2nd place (Gregg WILLIAMS)
-- **Status:** Breakaway
-- **Lead change:** No - maintained Trophy lead from Round 3
+- **Leader:** Stuart NEUMANN (Trophy), Gregg WILLIAMS (Jacket)
+- **Margin:** 13 points to 2nd place (Trophy), maintained Jacket lead
+- **Status:** Breakaway (Trophy competition)
+- **Lead change:** No - NEUMANN maintained Trophy lead wire-to-wire
 
 ### Hot Spells (Net)
 - Stuart NEUMANN holes 1-6: 18 pts (birdie on H2)
 
 ### Hot Spells (Gross)
-- Gregg WILLIAMS holes 2-4: Avg +0.00 vs par
-- Gregg WILLIAMS holes 6-8: Avg +0.00 vs par
+- Gregg WILLIAMS holes 2-4: Avg E vs par
+- Gregg WILLIAMS holes 6-8: Avg E vs par
 - Gregg WILLIAMS holes 2-7: Avg +0.17 vs par
 - Gregg WILLIAMS holes 3-8: Avg +0.17 vs par
-- David MULLIN holes 1-3: Avg +0.00 vs par (birdie on H2)
-- David MULLIN holes 2-4: Avg +0.00 vs par (birdie on H2)
+- David MULLIN holes 1-3: Avg E vs par (birdie on H2)
+- David MULLIN holes 2-4: Avg E vs par (birdie on H2)
 
 ### Cold Spells (Net)
-- None significant beyond individual blow-ups
+- No significant net cold spells identified
 
 ### Cold Spells (Gross)
 - Alex BAKER holes 1-3: Avg +3.33 vs par (blow-ups on H1, H3)
 - Alex BAKER holes 5-7: Avg +2.67 vs par (blow-up on H6)
 - Alex BAKER holes 6-8: Avg +2.67 vs par (blow-up on H6)
-- Alex BAKER holes 10-12: Avg +3.00 vs par (blow-up on H12, 4 points on H11)
-- Alex BAKER holes 11-13: Avg +2.33 vs par (blow-up on H12, 4 points on H11)
+- Alex BAKER holes 10-12: Avg +3.00 vs par (blow-up on H12)
+- Alex BAKER holes 11-13: Avg +2.33 vs par (blow-up on H12)
 - Alex BAKER holes 12-14: Avg +2.67 vs par (blow-up on H12)
-- Alex BAKER holes 1-6: Avg +2.67 vs par (blow-ups on H1, H3, H6, 4 points on H4)
-- Alex BAKER holes 3-8: Avg +2.33 vs par (blow-ups on H3, H6, 4 points on H4)
+- Alex BAKER holes 1-6: Avg +2.67 vs par (blow-ups on H1, H3, H6)
+- Alex BAKER holes 3-8: Avg +2.33 vs par (blow-ups on H3, H6)
 - Alex BAKER holes 5-10: Avg +2.33 vs par (blow-up on H6)
-- Alex BAKER holes 7-12: Avg +2.50 vs par (blow-up on H12, 4 points on H11)
+- Alex BAKER holes 7-12: Avg +2.50 vs par (blow-up on H12)
 - Stuart NEUMANN holes 6-8: Avg +2.67 vs par (blow-up on H8)
 - Stuart NEUMANN holes 7-9: Avg +3.00 vs par (blow-up on H8)
 - Stuart NEUMANN holes 8-10: Avg +2.67 vs par (blow-up on H8)
@@ -301,11 +299,11 @@
 - Alex BAKER: Strong finisher - F9: 13 pts, B9: 20 pts (diff: -7)
 
 ### Round Stats
-- Stuart NEUMANN: 43 pts (Stableford), +23 gross, rank 1 (Trophy), rank 4 (Jacket) - secured Trophy win
-- Gregg WILLIAMS: 42 pts (Stableford), +11 gross, rank 2 (Trophy), rank 1 (Jacket) - maintained Jacket lead
-- David MULLIN: 45 pts (Stableford), +11 gross, rank 3 (Trophy), rank 2 (Jacket) - best round of the day (tied gross)
-- Jon BAKER: 32 pts (Stableford), +24 gross, rank 4 (Trophy), rank 3 (Jacket)
-- Alex BAKER: 33 pts (Stableford), +38 gross, rank 5 (Trophy), rank 5 (Jacket) - struggled with 4 blow-ups
+- Stuart NEUMANN: 43 pts (Stableford), +23 gross, rank 2 (Trophy), rank 4 (gross) - clinched Trophy with breakaway
+- David MULLIN: 45 pts (Stableford), +11 gross, rank 1 (both) - best round of the day
+- Gregg WILLIAMS: 42 pts (Stableford), +11 gross, rank 3 (Trophy), rank 1 (gross) - maintained Jacket lead
+- Jon BAKER: 32 pts (Stableford), +24 gross, rank 5 (Trophy), rank 4 (gross)
+- Alex BAKER: 33 pts (Stableford), +38 gross, rank 4 (Trophy), rank 5 (gross) - struggled throughout with 4 blow-ups
 
 
 

@@ -44,28 +44,30 @@ for comp in competitions:
 
         if player not in player_teg_history:
             player_teg_history[player] = {
-                'teg_trophy_wins': 0,
-                'green_jacket_wins': 0,
-                'wooden_spoons': 0,
-                'teg_trophy_tegs': [],
-                'green_jacket_tegs': [],
-                'wooden_spoon_tegs': []
+                'teg_trophy_wins_total': 0,
+                'green_jacket_wins_total': 0,
+                'wooden_spoons_total': 0,
+                'teg_trophy_tegs_total': [],
+                'green_jacket_tegs_total': [],
+                'wooden_spoon_tegs_total': []
             }
 
         if comp == 'TEG Trophy':
-            player_teg_history[player]['teg_trophy_wins'] = wins
-            player_teg_history[player]['teg_trophy_tegs'] = tegs
+            player_teg_history[player]['teg_trophy_wins_total'] = wins
+            player_teg_history[player]['teg_trophy_tegs_total'] = tegs
         elif comp == 'Green Jacket':
-            player_teg_history[player]['green_jacket_wins'] = wins
-            player_teg_history[player]['green_jacket_tegs'] = tegs
+            player_teg_history[player]['green_jacket_wins_total'] = wins
+            player_teg_history[player]['green_jacket_tegs_total'] = tegs
         elif comp == 'HMM Wooden Spoon':
-            player_teg_history[player]['wooden_spoons'] = wins
-            player_teg_history[player]['wooden_spoon_tegs'] = tegs
+            player_teg_history[player]['wooden_spoons_total'] = wins
+            player_teg_history[player]['wooden_spoon_tegs_total'] = tegs
 
 # Calculate tournaments played for each player
 tournaments_played = all_data.groupby('Player')['TEGNum'].nunique().to_dict()
 
 # Combine everything into final dictionary
+# NOTE: These win counts are CAREER TOTALS across all TEGs
+# The commentary generation code uses teg_winners.csv to calculate wins BEFORE each tournament
 COMPLETE_PLAYER_INFO = {}
 
 for player, info in PLAYER_INFO.items():
@@ -73,12 +75,12 @@ for player, info in PLAYER_INFO.items():
         **info,  # Personal info
         'tournaments_played': tournaments_played.get(player, 0),
         **player_teg_history.get(player, {
-            'teg_trophy_wins': 0,
-            'green_jacket_wins': 0,
-            'wooden_spoons': 0,
-            'teg_trophy_tegs': [],
-            'green_jacket_tegs': [],
-            'wooden_spoon_tegs': []
+            'teg_trophy_wins_total': 0,
+            'green_jacket_wins_total': 0,
+            'wooden_spoons_total': 0,
+            'teg_trophy_tegs_total': [],
+            'green_jacket_tegs_total': [],
+            'wooden_spoon_tegs_total': []
         })
     }
 
@@ -90,9 +92,9 @@ for player, data in COMPLETE_PLAYER_INFO.items():
     print(f"  From: {data.get('where_theyre_from', 'Unknown')}")
     print(f"  Lives: {data.get('where_they_live', 'Unknown')}")
     print(f"  Tournaments: {data['tournaments_played']}")
-    print(f"  TEG Trophies: {data['teg_trophy_wins']}")
-    print(f"  Green Jackets: {data['green_jacket_wins']}")
-    print(f"  Wooden Spoons: {data['wooden_spoons']}")
+    print(f"  TEG Trophies (total): {data['teg_trophy_wins_total']}")
+    print(f"  Green Jackets (total): {data['green_jacket_wins_total']}")
+    print(f"  Wooden Spoons (total): {data['wooden_spoons_total']}")
     if data.get('low_level_facts'):
         print(f"  Facts: {', '.join(data['low_level_facts'][:2])}")  # First 2 only
 

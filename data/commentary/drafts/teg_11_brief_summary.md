@@ -1,0 +1,5 @@
+Jon Baker swept both the Trophy and Green Jacket in Catalonia 2018, wire-to-wire across PGA Catalunya and El Prat. The dominant front-runner led 59 of 72 holes in Stableford and 70 of 72 in Gross, sealing his second Trophy and first Jacket with final margins of six points and three strokes.
+
+Alex Baker claimed second place by six points despite a catastrophic final-round meltdown. His career-worst 27 points—featuring five triple-bogeys and nine scoreless holes—squandered the Trophy lead he'd seized briefly in Round 3. Jon Baker's Round 2 performance of 84 (+12) equalled the course record at PGA Catalunya's Tour Course but was never bettered across the week.
+
+David Mullin earned the Wooden Spoon with 125 points despite finishing runner-up in the Jacket at +73, just three strokes behind Baker. John Patterson produced the tournament's wildest swings: a disaster-filled opener (26 points, eight blow-ups) followed by the week's joint-best Stableford round (36 points) in the finale.

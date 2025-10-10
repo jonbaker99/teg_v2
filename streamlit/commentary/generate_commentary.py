@@ -24,6 +24,60 @@ except ImportError:
     PLAYER_DICTIONARY = {}
 
 
+def get_historical_finishing_positions(
+    players: List[str],
+    teg_num: int,
+    tournament_summary_path: str
+) -> Dict[str, Dict]:
+    """
+    Get historical finishing positions for players from previous tournaments.
+
+    Args:
+        players: List of player names in current tournament
+        teg_num: Current tournament number
+        tournament_summary_path: Path to tournament summary parquet/CSV
+
+    Returns:
+        Dict mapping player names to their historical positions:
+        {
+            "Player Name": {
+                "TEG 2": {"trophy_rank": 1, "jacket_rank": 2},
+                "TEG 3": {"trophy_rank": 3, "jacket_rank": 1},
+                ...
+            }
+        }
+    """
+    # Read tournament summary file
+    def read_file(path: str) -> pd.DataFrame:
+        if path.endswith('.parquet'):
+            return pd.read_parquet(path)
+        else:
+            return pd.read_csv(path)
+
+    summary_df = read_file(tournament_summary_path)
+
+    # Filter to tournaments BEFORE this one and only for these players
+    historical = summary_df[
+        (summary_df['TEGNum'] < teg_num) &
+        (summary_df['Player'].isin(players))
+    ]
+
+    # Build historical positions dict
+    positions = {}
+    for player in players:
+        player_history = historical[historical['Player'] == player]
+        positions[player] = {}
+
+        for _, row in player_history.iterrows():
+            teg_name = row['TEG']
+            positions[player][teg_name] = {
+                'trophy_rank': int(row['Final_Rank_Stableford']) if pd.notna(row.get('Final_Rank_Stableford')) else None,
+                'jacket_rank': int(row['Final_Rank_Gross']) if pd.notna(row.get('Final_Rank_Gross')) else None
+            }
+
+    return positions
+
+
 def load_tournament_data(
     teg_num: int,
     tournament_summary_path: str,
@@ -161,7 +215,7 @@ def load_tournament_data(
 
     # Add player info for players in this tournament
     # IMPORTANT: Calculate wins BEFORE this tournament using teg_winners.csv
-    players_in_tournament = set([p['Player'] for p in tourney_data])
+    players_in_tournament = list(set([p['Player'] for p in tourney_data]))
     player_info = {}
 
     # Load winners history if path provided
@@ -169,7 +223,7 @@ def load_tournament_data(
     if winners_csv_path and os.path.exists(winners_csv_path):
         winners_df = pd.read_csv(winners_csv_path)
         # Extract TEG number from "TEG X" format
-        winners_df['TEGNum'] = winners_df['TEG'].str.extract('(\d+)').astype(int)
+        winners_df['TEGNum'] = winners_df['TEG'].str.extract(r'(\d+)').astype(int)
 
         # Filter to tournaments BEFORE this one
         historical_winners = winners_df[winners_df['TEGNum'] < teg_num]
@@ -177,13 +231,37 @@ def load_tournament_data(
         # Count wins for each player in each competition
         for player in players_in_tournament:
             wins_before[player] = {
-                'teg_trophy_wins_before': (historical_winners['TEG Trophy'] == player).sum(),
-                'green_jacket_wins_before': (historical_winners['Green Jacket'] == player).sum(),
-                'wooden_spoons_before': (historical_winners['HMM Wooden Spoon'] == player).sum()
+                'teg_trophy_wins_before': int((historical_winners['TEG Trophy'] == player).sum()),
+                'green_jacket_wins_before': int((historical_winners['Green Jacket'] == player).sum()),
+                'wooden_spoons_before': int((historical_winners['HMM Wooden Spoon'] == player).sum())
             }
 
+    # Get historical finishing positions for all players
+    historical_positions = get_historical_finishing_positions(
+        players_in_tournament,
+        teg_num,
+        tournament_summary_path
+    )
+
     for player in players_in_tournament:
+        # Start with base info from player dictionary
         base_info = PLAYER_DICTIONARY.get(player, {}).copy()
+
+        # Remove confusing career total wins from PLAYER_DICTIONARY
+        # These can be misleading as they include ALL tournaments, not just before this one
+        # Handle both old and new field names for backwards compatibility
+        base_info.pop('teg_trophy_wins', None)
+        base_info.pop('green_jacket_wins', None)
+        base_info.pop('wooden_spoons', None)
+        base_info.pop('teg_trophy_tegs', None)
+        base_info.pop('green_jacket_tegs', None)
+        base_info.pop('wooden_spoon_tegs', None)
+        base_info.pop('teg_trophy_wins_total', None)
+        base_info.pop('green_jacket_wins_total', None)
+        base_info.pop('wooden_spoons_total', None)
+        base_info.pop('teg_trophy_tegs_total', None)
+        base_info.pop('green_jacket_tegs_total', None)
+        base_info.pop('wooden_spoon_tegs_total', None)
 
         # Add historical wins from teg_winners.csv (the source of truth)
         if player in wins_before:
@@ -193,6 +271,9 @@ def load_tournament_data(
             base_info['teg_trophy_wins_before'] = 0
             base_info['green_jacket_wins_before'] = 0
             base_info['wooden_spoons_before'] = 0
+
+        # Add historical finishing positions
+        base_info['previous_finishes'] = historical_positions.get(player, {})
 
         player_info[player] = base_info
 

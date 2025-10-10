@@ -27,6 +27,7 @@ try:
         generate_complete_story_notes,
         generate_main_report,
         generate_brief_summary,
+        generate_satirical_report,
         DRY_RUN as CURRENT_DRY_RUN_STATE
     )
     from commentary.generate_round_report import generate_complete_round_report
@@ -181,40 +182,107 @@ if report_category == "TEG Reports":
 
     # TEG selection
     available_tegs = get_available_tegs()
-    selected_tegs = st.multiselect(
-        "Select TEG(s):",
+    selected_teg = st.selectbox(
+        "Select TEG:",
         options=available_tegs,
-        default=[max(available_tegs)] if available_tegs else []
+        index=len(available_tegs)-1 if available_tegs else 0
     )
 
-    # Report type selection
-    teg_report_type = st.selectbox(
-        "Select report type:",
-        ["Story Notes", "Full Report", "Brief Summary"]
-    )
+    if selected_teg:
+        # Check if story notes exist
+        story_notes_path = f"data/commentary/drafts/teg_{selected_teg}_story_notes.md"
+        try:
+            read_text_file(story_notes_path)
+            story_notes_exist = True
+        except:
+            story_notes_exist = False
 
-    # Generation button
-    if st.button("🚀 Generate Report", type="primary", disabled=not selected_tegs):
-        for teg_num in selected_tegs:
-            with st.spinner(f"Generating {teg_report_type} for TEG {teg_num}..."):
-                try:
-                    if teg_report_type == "Story Notes":
-                        result = generate_complete_story_notes(teg_num)
-                        st.success(f"✅ Story notes generated for TEG {teg_num}")
-                        save_generated_report(teg_num, "story_notes", result)
+        if story_notes_exist:
+            st.info(f"ℹ️ Story notes already exist for TEG {selected_teg}")
+        else:
+            st.warning(f"⚠️ Story notes don't exist for TEG {selected_teg} - they will be generated automatically if needed")
 
-                    elif teg_report_type == "Full Report":
-                        result = generate_main_report(teg_num)
-                        st.success(f"✅ Full report generated for TEG {teg_num}")
-                        save_generated_report(teg_num, "full_report", result)
+        st.write("#### Select Reports to Generate")
 
-                    elif teg_report_type == "Brief Summary":
-                        result = generate_brief_summary(teg_num)
-                        st.success(f"✅ Brief summary generated for TEG {teg_num}")
-                        save_generated_report(teg_num, "brief_summary", result)
+        col1, col2, col3, col4 = st.columns(4)
 
-                except Exception as e:
-                    st.error(f"❌ Error generating report for TEG {teg_num}: {e}")
+        with col1:
+            gen_story_notes = st.checkbox(
+                "Story Notes",
+                value=not story_notes_exist,
+                help="Generate story notes (required for other reports)"
+            )
+
+        with col2:
+            gen_main = st.checkbox(
+                "Main Report",
+                value=True,
+                help="Generate full tournament report"
+            )
+
+        with col3:
+            gen_brief = st.checkbox(
+                "Brief Summary",
+                value=True,
+                help="Generate brief tournament summary"
+            )
+
+        with col4:
+            gen_satire = st.checkbox(
+                "Satirical Report",
+                value=False,
+                help="Generate satirical report (Iannucci/Brooker style)"
+            )
+
+        # Validation
+        if not (gen_story_notes or gen_main or gen_brief or gen_satire):
+            st.error("Please select at least one report type to generate")
+        else:
+            # Generation button
+            if st.button("🚀 Generate Reports", type="primary"):
+                # Auto-generate story notes if missing and needed for other reports
+                if not story_notes_exist and not gen_story_notes and (gen_main or gen_brief or gen_satire):
+                    st.info("Auto-generating story notes (required for main/brief/satirical reports)...")
+                    gen_story_notes = True
+
+                with st.status(f"Generating reports for TEG {selected_teg}...", expanded=True) as status:
+                    try:
+                        # Generate story notes first if needed
+                        if gen_story_notes:
+                            status.write("Generating story notes...")
+                            result = generate_complete_story_notes(selected_teg)
+                            status.write("✅ Story notes generated")
+                            save_generated_report(selected_teg, "story_notes", result)
+
+                        # Generate main report
+                        if gen_main:
+                            status.write("Generating main report...")
+                            result = generate_main_report(selected_teg)
+                            status.write("✅ Main report generated")
+                            save_generated_report(selected_teg, "full_report", result)
+
+                        # Generate brief summary
+                        if gen_brief:
+                            status.write("Generating brief summary...")
+                            result = generate_brief_summary(selected_teg)
+                            status.write("✅ Brief summary generated")
+                            save_generated_report(selected_teg, "brief_summary", result)
+
+                        # Generate satirical report
+                        if gen_satire:
+                            status.write("Generating satirical report...")
+                            result = generate_satirical_report(selected_teg)
+                            status.write("✅ Satirical report generated")
+                            save_generated_report(selected_teg, "satire", result)
+
+                        status.update(label=f"✅ All reports generated for TEG {selected_teg}", state="complete")
+
+                    except Exception as e:
+                        status.update(label=f"❌ Error generating reports", state="error")
+                        st.error(f"Error: {e}")
+                        import traceback
+                        with st.expander("🔍 View Full Error Details"):
+                            st.code(traceback.format_exc())
 
 else:  # Round Reports
     st.write("### Round Report Generation")
@@ -374,14 +442,14 @@ with col1:
     )
 
 with col2:
-    draft_types = ["story_notes", "main_report", "brief_summary"]
+    draft_types = ["story_notes", "main_report", "brief_summary", "satire"]
     draft_type = st.selectbox(
         "Report type:",
         options=draft_types,
         key="draft_type"
     )
 
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 
 with col1:
     if st.button("📖 Load Draft", key="load_draft"):
@@ -392,30 +460,33 @@ with col1:
             with st.expander(f"TEG {draft_teg} - {draft_type} (DRAFT)", expanded=True):
                 st.markdown(content)
 
-                col1a, col1b = st.columns(2)
-
-                with col1a:
-                    st.download_button(
-                        label="📥 Download Draft",
-                        data=content,
-                        file_name=f"teg_{draft_teg}_{draft_type}_draft.md",
-                        mime="text/markdown",
-                        key="download_draft"
-                    )
-
-                with col1b:
-                    if st.button("📤 Publish Draft to Production", key="publish_draft_btn"):
-                        prod_path = f"data/commentary/teg_{draft_teg}_{draft_type}.md"
-                        if move_to_production(file_path, prod_path):
-                            st.success(f"✅ Published to {prod_path}")
-                        else:
-                            st.error("Failed to publish draft")
+                st.download_button(
+                    label="📥 Download Draft",
+                    data=content,
+                    file_name=f"teg_{draft_teg}_{draft_type}_draft.md",
+                    mime="text/markdown",
+                    key="download_draft",
+                    use_container_width=True
+                )
 
         except Exception as e:
             st.error(f"Could not load draft: {e}")
             st.info("Draft may not exist yet. Generate a report first.")
 
 with col2:
+    if st.button("📤 Copy to Production", key="copy_to_prod", type="primary"):
+        try:
+            draft_path = f"data/commentary/drafts/teg_{draft_teg}_{draft_type}.md"
+            prod_path = f"data/commentary/teg_{draft_teg}_{draft_type}.md"
+
+            if move_to_production(draft_path, prod_path):
+                st.success(f"✅ Copied to production:\n`{prod_path}`")
+            else:
+                st.error("Failed to copy to production")
+        except Exception as e:
+            st.error(f"Error: {e}")
+
+with col3:
     if st.button("🗑️ Delete Draft", key="delete_draft"):
         st.warning("⚠️ Draft deletion from UI not yet implemented. Use file management tools.")
 
@@ -448,7 +519,7 @@ try:
             )
 
         with col2:
-            report_types = ["main_report", "brief_summary", "story_notes"]
+            report_types = ["main_report", "brief_summary", "story_notes", "satire"]
             view_type = st.selectbox(
                 "Report type:",
                 options=report_types,
