@@ -940,9 +940,9 @@ OUTPUT STRUCTURE & GRAMMAR (IDENTICAL to main report, exact classes required)
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
   - Exactly three lines. Satirical framing optional in parentheticals.
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> [Name] ([Nth] Trophy [optional: , defying all known laws])</span></p>
-  <p><strong>Jacket Winner:</strong> [Name] ([Nth] Jacket [optional: , somehow])</p>
-  <p><strong>Wooden Spoon:</strong> [Name] ([Nth] Spoon [optional: , inevitably])</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> [Name] ([Nth] Trophy)</span></p>
+  <p><strong>Jacket Winner:</strong> [Name] ([Nth] Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> [Name] ([Nth] Spoon)</p>
 </section>
 
 ---
