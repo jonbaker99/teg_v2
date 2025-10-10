@@ -2208,10 +2208,9 @@ def generate_story_notes_for_teg_range(
     print(f"\n=== Batch complete: {ok} ok, {fail} failed ===")
     return results
 
-# ========================
+# =======================
 # CLI
-# ========================
-
+# =======================
 if __name__ == "__main__":
     import argparse
 
@@ -2224,35 +2223,24 @@ Examples:
   # Generate story notes only
   python %(prog)s 17
 
-  # Generate story notes for partial tournament (first 2 rounds)
-  python %(prog)s 17 --partial 2
-
-  # Generate reports from existing story notes
-  python %(prog)s 17 --generate-reports
-
-  # Generate story notes AND reports in one go
+  # Full pipeline (notes → main + brief), single TEG
   python %(prog)s 17 --full-pipeline
 
-  # Generate only main report (no brief summary)
-  python %(prog)s 17 --main-report-only
+  # Full pipeline, range (per-TEG mode)
+  python %(prog)s --range 3 9 --full-pipeline
 
-  # Generate only brief summary (no main report)
-  python %(prog)s 17 --brief-summary-only
+  # Reports only (main + brief) from existing notes, single TEG
+  python %(prog)s 17 --generate-reports
 
-  # Generate only satirical report
-  python %(prog)s 17 --satirical-only
+  # Satire only, batched
+  python %(prog)s --range 3 9 --satirical-only --use-batch
 
-  # Generate all reports including satirical
-  python %(prog)s 17 --generate-reports --include-satire
-
-  # Use batch API for reports (50%% cheaper, submit and wait)
-  python %(prog)s --range 3 17 --generate-reports --use-batch
-
-  # Submit batch and exit (retrieve results later)
+  # Main only, batched, submit & exit
   python %(prog)s --range 3 17 --main-report-only --use-batch --submit-only
 
-  # Process multiple tournaments
-  python %(prog)s --range 10 12
+  # List / retrieve batches
+  python %(prog)s --list-batches
+  python %(prog)s --retrieve-batch BATCH_ID
         ''',
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
@@ -2278,209 +2266,201 @@ Examples:
                         help='Include satirical report in addition to other selected reports')
     parser.add_argument('--full-pipeline', action='store_true',
                         help='Generate story notes AND reports in one go')
-    parser.add_argument('--batch-reports', action='store_true',
-                        help='When using --range, batch reports by type for optimal prompt caching (all main reports, then all summaries)')
+
+    # Execution mode
     parser.add_argument('--use-batch', action='store_true',
-                        help='Use Anthropic Batch API (50%% cheaper, up to 24hr processing)')
+                        help='Use Anthropic Batch API (50% cheaper, up to 24hr processing)')
+
+    # Deprecated alias (kept for backward-compat)
+    parser.add_argument('--batch-reports', action='store_true', help=argparse.SUPPRESS)
+
+    # Batch helpers
     parser.add_argument('--submit-only', action='store_true',
                         help='Submit batch and exit (retrieve results later with --retrieve-batch)')
     parser.add_argument('--retrieve-batch', type=str, metavar='BATCH_ID',
-                        help='Retrieve results from previously submitted batch')
+                        help='Retrieve results from previously submitted STORY-NOTES batch')
     parser.add_argument('--list-batches', action='store_true',
                         help='List recent batch submissions and their status')
 
     args = parser.parse_args()
 
-    # Handle list-batches command
+    # Back-compat: make --batch-reports an alias for --use-batch
+    if getattr(args, "batch_reports", False):
+        print("[DEPRECATION] --batch-reports is deprecated; use --use-batch instead.")
+        args.use_batch = True
+
+    # Simple utilities
+    def _expand_range(r):
+        if not r:
+            return []
+        a, b = r
+        if a > b:
+            a, b = b, a
+        return list(range(a, b + 1))
+
+    def _report_selection(args):
+        """Return (main, brief, satirical, any_reports_requested, full_pipeline)."""
+        full = bool(args.full_pipeline)
+        # Base selections
+        main = bool(args.generate_reports or args.main_report_only or full)
+        brief = bool(args.generate_reports or args.brief_summary_only or full)
+        # Satirical: explicit only; included with full_pipeline only if include-satire is passed
+        satirical = bool(args.satirical_only or args.include_satire or (full and args.include_satire))
+        any_reports = main or brief or satirical
+        # Satirical-only should NOT implicitly turn on main/brief
+        if args.satirical_only:
+            main = False
+            brief = False
+            satirical = True
+        return main, brief, satirical, any_reports, full
+
+    # Management commands (do not proceed with normal flow)
     if args.list_batches:
         list_recent_batches()
         sys.exit(0)
 
-    # Handle retrieve-batch command
     if args.retrieve_batch:
         retrieve_story_notes_batch(args.retrieve_batch)
         sys.exit(0)
 
+    # Determine targets
     if args.range:
-        start, end = args.range
-        
-        # Batch reports mode: optimize for prompt caching
-        if args.batch_reports:
-            print(f"\n{'='*60}")
-            print(f"BATCH MODE: Optimized for prompt caching")
-            print(f"{'='*60}\n")
-
-            successful_tegs = []
-
-            # Phase 1: Generate all story notes (unless skipped)
-            if not (args.generate_reports or args.main_report_only or args.brief_summary_only):
-                print("Phase 1: Generating story notes for all TEGs...")
-
-                # Use Batch API for story notes if requested
-                if args.use_batch:
-                    teg_list = list(range(start, end + 1))
-                    try:
-                        generate_story_notes_via_batch_api(teg_list, submit_only=args.submit_only)
-                        if args.submit_only:
-                            # Exit after submission
-                            sys.exit(0)
-                        successful_tegs = teg_list
-                    except Exception as e:
-                        print(f"✗ Batch story notes failed: {e}")
-                        successful_tegs = []
-                else:
-                    # Standard API
-                    for teg in range(start, end + 1):
-                        try:
-                            if args.partial:
-                                generate_story_notes_up_to_round(teg, args.partial)
-                            else:
-                                generate_complete_story_notes(teg)
-                            successful_tegs.append(teg)
-                        except Exception as e:
-                            print(f"✗ TEG {teg} story notes failed: {e}")
-            else:
-                # If only generating reports, assume all TEGs succeeded
-                successful_tegs = list(range(start, end + 1))
-
-            # Phase 2 & 3: Generate reports (if requested)
-            if args.generate_reports or args.main_report_only or args.brief_summary_only or args.satirical_only or args.include_satire or args.full_pipeline:
-                if args.use_batch:
-                    # Use Batch API for all report types
-                    generate_main = args.generate_reports or args.main_report_only or args.full_pipeline
-                    generate_brief = args.generate_reports or args.brief_summary_only or args.full_pipeline
-                    generate_satire = args.satirical_only or args.include_satire or args.full_pipeline
-                    generate_reports_via_batch_api(
-                        successful_tegs,
-                        main_report=generate_main,
-                        brief_summary=generate_brief,
-                        satirical=generate_satire,
-                        submit_only=args.submit_only
-                    )
-                else:
-                    # Phase 2: Generate main reports (batched for caching)
-                    if args.generate_reports or args.main_report_only or args.full_pipeline:
-                        print(f"\nPhase 2: Generating main reports (batched for caching)...")
-                        for teg in successful_tegs:
-                            try:
-                                generate_main_report(teg)
-                            except Exception as e:
-                                print(f"✗ TEG {teg} main report failed: {e}")
-
-                    # Phase 3: Generate brief summaries (batched for caching)
-                    if args.generate_reports or args.brief_summary_only or args.full_pipeline:
-                        print(f"\nPhase 3: Generating brief summaries (batched for caching)...")
-                        for teg in successful_tegs:
-                            try:
-                                generate_brief_summary(teg)
-                            except Exception as e:
-                                print(f"✗ TEG {teg} brief summary failed: {e}")
-
-                    # Phase 4: Generate satirical reports (batched for caching)
-                    if args.satirical_only or args.include_satire or args.full_pipeline:
-                        print(f"\nPhase 4: Generating satirical reports (batched for caching)...")
-                        for teg in successful_tegs:
-                            try:
-                                generate_satirical_report(teg)
-                            except Exception as e:
-                                print(f"✗ TEG {teg} satirical report failed: {e}")
-
-            print(f"\n{'='*60}")
-            print(f"BATCH COMPLETE: Processed TEGs {successful_tegs}")
-            print(f"{'='*60}\n")
-        
-        # Normal mode: process each TEG completely before moving to next
-                # Normal mode: process according to report flags (no batch)
-        else:
-            start, end = args.range
-            teg_list = list(range(start, end + 1))
-
-            # Full pipeline over a range (generate notes then all reports)
-            if args.full_pipeline:
-                for teg in teg_list:
-                    try:
-                        if args.partial:
-                            generate_story_notes_up_to_round(teg, args.partial)
-                        else:
-                            generate_complete_story_notes(teg)
-                        generate_reports_from_story_notes(
-                            teg,
-                            main_report=True,
-                            brief_summary=True,
-                            satirical=args.include_satire
-                        )
-                    except Exception as e:
-                        print(f"✗ TEG {teg} full pipeline failed: {e}")
-
-            # Report-only modes over a range (DO NOT generate story notes here)
-            elif args.generate_reports or args.main_report_only or args.brief_summary_only or args.satirical_only or args.include_satire:
-                for teg in teg_list:
-                    # main report only (or both via --generate-reports)
-                    if args.generate_reports or args.main_report_only:
-                        try:
-                            generate_main_report(teg)
-                        except Exception as e:
-                            print(f"✗ TEG {teg} main report failed: {e}")
-
-                    # brief summary only (or both via --generate-reports)
-                    if args.generate_reports or args.brief_summary_only:
-                        try:
-                            generate_brief_summary(teg)
-                        except Exception as e:
-                            print(f"✗ TEG {teg} brief summary failed: {e}")
-
-                    # satirical only (or with --include-satire)
-                    if args.satirical_only or args.include_satire:
-                        try:
-                            generate_satirical_report(teg)
-                        except Exception as e:
-                            print(f"✗ TEG {teg} satirical report failed: {e}")
-
-            # No report flags: default to generating story notes across the range
-            else:
-                generate_story_notes_for_teg_range(
-                    start, end,
-                    partial=args.partial,
-                    stop_on_error=args.stop_on_error,
-                    pause_between=args.pause_between,
-                )
-
+        teg_list = _expand_range(args.range)
+        if not teg_list:
+            raise SystemExit("Empty --range provided.")
     else:
         if args.teg_num is None:
             parser.error("Provide a single TEG number or --range START END")
+        teg_list = [args.teg_num]
 
-        # Handle report generation modes
-        if args.generate_reports:
-            generate_reports_from_story_notes(
-                args.teg_num,
-                main_report=True,
-                brief_summary=True,
-                satirical=args.include_satire
+    main_rep, brief_rep, sat_rep, any_reports, full_pipe = _report_selection(args)
+
+    # Mode banner
+    mode = "BATCH" if args.use_batch else "PER-TEG"
+    print("\n" + "="*60)
+    print(f"MODE: {mode}")
+    print(f"TEGs: {teg_list}")
+    print(f"REQUEST: story_notes_only={not any_reports and not full_pipe}, "
+          f"full_pipeline={full_pipe}, main={main_rep}, brief={brief_rep}, satirical={sat_rep}, "
+          f"submit_only={args.submit_only}")
+    print("="*60 + "\n")
+
+    # -------------------------
+    # BATCH MODE
+    # -------------------------
+    if args.use_batch:
+        # FULL PIPELINE (notes then reports)
+        if full_pipe:
+            # 1) Story notes via batch
+            generate_story_notes_via_batch_api(teg_list, submit_only=args.submit_only)
+            if args.submit_only:
+                sys.exit(0)
+            # 2) Reports via batch (include satire only if explicitly requested)
+            generate_reports_via_batch_api(
+                teg_list,
+                main_report=main_rep,
+                brief_summary=brief_rep,
+                satirical=sat_rep,
+                submit_only=args.submit_only
             )
-        elif args.main_report_only:
-            generate_main_report(args.teg_num)
-        elif args.brief_summary_only:
-            generate_brief_summary(args.teg_num)
-        elif args.satirical_only:
-            generate_satirical_report(args.teg_num)
-        elif args.full_pipeline:
-            # Generate story notes first
-            if args.partial:
-                generate_story_notes_up_to_round(args.teg_num, args.partial)
-                print("\nSkipping report generation for partial tournament (story notes only)")
-            else:
-                generate_complete_story_notes(args.teg_num)
-                # Then generate reports
-                print("\nProceeding to report generation...")
-                generate_reports_from_story_notes(
-                    args.teg_num,
-                    main_report=True,
-                    brief_summary=True,
-                    satirical=args.include_satire
-                )
+            sys.exit(0)
+
+        # REPORTS ONLY (from existing notes)
+        if any_reports:
+            generate_reports_via_batch_api(
+                teg_list,
+                main_report=main_rep,
+                brief_summary=brief_rep,
+                satirical=sat_rep,
+                submit_only=args.submit_only
+            )
+            sys.exit(0)
+
+        # STORY NOTES ONLY
+        generate_story_notes_via_batch_api(teg_list, submit_only=args.submit_only)
+        sys.exit(0)
+
+    # -------------------------
+    # PER-TEG MODE
+    # -------------------------
+    # RANGE
+    if len(teg_list) > 1:
+        if full_pipe:
+            # Notes then reports for each TEG
+            for teg in teg_list:
+                try:
+                    if args.partial:
+                        generate_story_notes_up_to_round(teg, args.partial)
+                    else:
+                        generate_complete_story_notes(teg)
+                    generate_reports_from_story_notes(
+                        teg,
+                        main_report=main_rep,
+                        brief_summary=brief_rep,
+                        satirical=sat_rep
+                    )
+                except Exception as e:
+                    print(f"✗ TEG {teg} full pipeline failed: {e}")
+                    if args.stop_on_error:
+                        raise
+                if args.pause_between:
+                    time.sleep(args.pause_between)
+            sys.exit(0)
+
+        if any_reports:
+            # Reports only (do NOT regenerate notes)
+            for teg in teg_list:
+                try:
+                    if main_rep:
+                        generate_main_report(teg)
+                    if brief_rep:
+                        generate_brief_summary(teg)
+                    if sat_rep:
+                        generate_satirical_report(teg)
+                except Exception as e:
+                    print(f"✗ TEG {teg} report generation failed: {e}")
+                    if args.stop_on_error:
+                        raise
+                if args.pause_between:
+                    time.sleep(args.pause_between)
+            sys.exit(0)
+
+        # Story notes only
+        generate_story_notes_for_teg_range(
+            teg_list[0], teg_list[-1],
+            partial=args.partial,
+            stop_on_error=args.stop_on_error,
+            pause_between=args.pause_between,
+        )
+        sys.exit(0)
+
+    # SINGLE TEG
+    teg = teg_list[0]
+    if full_pipe:
+        if args.partial:
+            generate_story_notes_up_to_round(teg, args.partial)
+            print("\nSkipping report generation for partial tournament (story notes only)")
         else:
-            # Default behavior: story notes only
-            if args.partial:
-                generate_story_notes_up_to_round(args.teg_num, args.partial)
-            else:
-                generate_complete_story_notes(args.teg_num)
+            generate_complete_story_notes(teg)
+            generate_reports_from_story_notes(
+                teg,
+                main_report=main_rep,
+                brief_summary=brief_rep,
+                satirical=sat_rep
+            )
+        sys.exit(0)
+
+    if any_reports:
+        if main_rep:
+            generate_main_report(teg)
+        if brief_rep:
+            generate_brief_summary(teg)
+        if sat_rep:
+            generate_satirical_report(teg)
+        sys.exit(0)
+
+    # Default: story notes only
+    if args.partial:
+        generate_story_notes_up_to_round(teg, args.partial)
+    else:
+        generate_complete_story_notes(teg)

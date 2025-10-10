@@ -1,37 +1,38 @@
-# TEG 3: A Comprehensive Study in the Predetermined Nature of Victory {.report-title}
+# TEG 3: A Comprehensive Study in Optimism Meeting Reality {.report-title}
 
 <p class="dateline">TEG 3 | Algarve | 2010</p>
 
 ---
 
-<section class="callout at-a-glance-box">
-  <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon BAKER (1st Trophy)</span></p>
-  <p><strong>Jacket Winner:</strong> David MULLIN (2nd Jacket)</p>
-  <p><strong>Wooden Spoon:</strong> Stuart NEUMANN (1st Spoon)</p>
-</section>
-
----
-
 ## TOURNAMENT OVERVIEW {.tournament-overview}
 
-Some sporting events unfold like psychological thrillers. Others resembled watching paint dry under laboratory conditions. TEG 3 belonged emphatically to the latter category. Jon Baker seized both leads on the opening hole, relinquished one four holes later, then conducted a 68-hole procession to inevitable coronation. The suspense was roughly equivalent to a general election exit poll reading "Conservative: 437 seats."
+Jon Baker achieved something approaching golfing perfection at Boavista, which is to say he led all 72 holes and won by 17 points. This is the competitive equivalent of turning up to a knife fight with a tank. David Mullin claimed the Green Jacket with similar ruthless efficiency, his 12-stroke margin suggesting less a contest than a polite formality. The birdie famine of epic proportion suggests five men spending four days in a state of collective cognitive meltdown. Only five birdies across 360 holes. The Atlantic Ocean provided stunning views while men committed acts of scorecard violence against themselves with impressive consistency.
 
-David Mullin executed a parallel demonstration of gross-score superiority that nobody particularly challenged. The field produced five birdies across 360 holes, suggesting either Boavista Golf Resort had been redesigned by Satan, or the concept of playing below par remained theoretical. Stuart Neumann's tournament concluded with a quintuple-bogey implosion on hole 17 that functioned as both competitive suicide and metaphor for the broader human condition.
-
-This was golf as Kafka might have imagined it: inevitable, bureaucratic, and ending badly for nearly everyone.
+Stuart Neumann's quintuple bogey on the 17th hole of Round 4 represents the tournament's defining moment: a brief flash of brilliance on the preceding hole followed by complete structural collapse. Henry Meller recorded four birdies yet finished fourth, which tells you everything about the volatility on display.
 
 ---
 
-## Round 1: The Theatre of Predetermined Operations {.round1 .round}
+## PLAYER-BY-PLAYER {.player-by-player}
 
-Boavista's opening hole is a par 4 that has hosted precisely one moment of genuine TEG drama. Baker produced four routine blows with a scoring iron, made par, collected three Stableford points, and assumed dual leadership of competitions he would largely never relinquish. What followed resembled less a sporting contest and more a controlled military operation against an opponent who'd forgotten to show up.
+**Jon Baker (Trophy Winner):** Led from the first hole to the 72nd, extending his advantage each round with the methodical efficiency of a man dismantling furniture. His wire-to-wire dominance never wavered despite losing the Jacket lead early, suggesting a man who knew exactly which competition he was entering. Two blow-ups across 72 holes represents discipline bordering on the sociopathic.
 
-The carnage began at hole six, a par 3 that evidently contained some gravitational anomaly. Williams, Meller, and Baker all suffered simultaneous cognitive collapses, suggesting either coordinated ineptitude or localised temporal distortion. Four players manufactured triple-bogeys or worse. The scoring resembled a casualty list from the Somme.
+**David Mullin (Green Jacket Winner):** Held the gross lead for 69 of 72 holes, his worst score a perfectly respectable +14 in Round 3. The 12-stroke margin of victory suggests he was playing a different sport to the rest of the field. Three blow-ups all tournament, two of them occurring in the same closing stretch of Round 2 when the outcome was already settled.
 
-Meller's round contained both tournament brilliance and psychological atrocity. His birdie at sixteen was immediately followed by a twelve-shot monstrosity at seventeen that violated several laws of probability. Eight over par on a single hole represents not misfortune but active participation in one's own destruction. Williams contributed five blow-ups, establishing volatility records that would stand throughout.
+**Gregg Williams (3rd):** Recorded 11 blow-ups across four rounds, his standard deviation of 1.24 points per hole making him the tournament's most volatile performer. Strong front-nine performances repeatedly undermined by back-nine carnage. Think Icarus, but with multiple opportunities to learn from his mistakes.
 
-Baker closed 45 points clear of a field already displaying symptoms of existential surrender. Mullin held the gross lead despite having briefly misplaced it mid-round, like a man searching for spectacles currently perched on his forehead.
+**Henry Meller (4th):** Four birdies, 10 blow-ups. The man exists in a state of permanent psychological whiplash. Round 3's consecutive birdies on 11 and 12 came immediately after a quintuple bogey on the 3rd, suggesting a relationship with consistency that could generously be described as hostile.
+
+**Stuart Neumann (Wooden Spoon):** One birdie on the 16th hole of Round 4, immediately followed by a quintuple bogey that dropped him from contention to catastrophe. The scorecard for that 17th hole should be framed as a warning to future generations.
+
+---
+
+## Round 1: The Establishment of Natural Order {.round1 .round}
+
+Jon Baker seized both leads on the opening hole with a par, the golfing equivalent of declaring your intentions at a dinner party. The Atlantic breeze carried the scent of optimism. It wouldn't last.
+
+David Mullin briefly claimed the Trophy lead on the 6th, a Par 3 where four of the five competitors recorded blow-ups simultaneously, as if responding to some inaudible signal. Baker reclaimed both leads by the 7th, never to relinquish the Trophy again. Henry Meller's opening nine holes contained genuine promise: a birdie on 16 suggested competence. The 17th hole disagreed. A 12 ensued, eight over par, the sort of number that appears on scorecards and in nightmares. Gregg Williams recorded five blow-ups across 18 holes, his back nine collapsing like a badly constructed soufflé. He bogeyed 17 and made an eight on 18, the finishing straight transformed into a theater of operations where hope went to die.
+
+Baker's 45 points established an eight-point lead. Mullin's +17 gross claimed the Jacket. The field scattered behind them like refugees from a minor conflict.
 
 <section class="callout standings-box">
 <p class="standings"><span class="standings-header">Trophy Standings:</span> JB 45 | DM 37 | HM 33 | SN 32 | GW 31</p>
@@ -40,15 +41,13 @@ Baker closed 45 points clear of a field already displaying symptoms of existenti
 
 ---
 
-## Round 2: The Inevitability Intensifies {.round2 .round}
+## Round 2: The Inexorable Widening {.round2 .round}
 
-Boavista's front nine acquired reputation as Meller's personal theatre of redemption. His six-hole stretch from the fourth produced 18 points, including a proper birdie at five that suggested perhaps golf needn't be entirely catastrophic. This represented the tournament's sole sustained period of competence meeting intention.
+Baker extended his lead to 11 points with another 45-point performance, the sort of scoring that transforms competition into procession. Henry Meller mounted a valiant challenge with 38 points, his best round. A birdie on the 5th sparkled briefly.
 
-Baker extended his Trophy advantage to eleven points through the methodical application of par golf. No fireworks. No drama. Just relentless accumulation of points whilst others volunteered for spectacular failure. His round resembled a corporate earnings call: predictable, slightly tedious, ultimately profitable.
+Meller's hot spell from holes 4 through 9 yielded 18 points, including consecutive four-point holes. This represents the tournament's single sustained period of competence. Naturally, it couldn't last. Williams recorded blow-ups on the 10th and 11th, his middle-round collapse becoming a signature move. His front-nine 21 points suggested promise. His back-nine 14 points suggested reality reasserting itself with prejudicial force.
 
-Williams manufactured blow-ups at ten and eleven with such casual efficiency one suspected he'd scheduled them weeks prior. His back nine collapsed by seven points compared to the front, suggesting either strategic fatigue or active sabotage of his own interests. Mullin closed with consecutive disasters at seventeen and eighteen but retained the Jacket lead because nobody else particularly fancied challenging him.
-
-The standings crystallised into their final configuration. Baker led everything that mattered. Mullin led the thing nobody was seriously contesting. The others occupied positions best described as "present but decorative."
+Mullin's +21 gross included catastrophic blow-ups on 17 and 18, nines and sevens appearing where fours and fives belong. Even in dominance, the course demanded tribute. Baker's 38 points matched Meller's but he maintained the Trophy lead with ruthless efficiency. The Green Jacket remained Mullin's property, though his closing holes suggested vulnerability.
 
 <section class="callout standings-box">
 <p class="standings"><span class="standings-header">Trophy Standings:</span> JB 83 | DM 72 | HM 71 | GW 66 | SN 65</p>
@@ -57,15 +56,13 @@ The standings crystallised into their final configuration. Baker led everything 
 
 ---
 
-## Round 3: The Formalities Continue {.round3 .round}
+## Round 3: The Consolidation of Power {.round3 .round}
 
-Round three opened with Meller apparently attempting performance art. His seven at the first, followed by a quintuple-bogey atrocity at the third, suggested someone testing the outer limits of scorecard infrastructure. Six points through six holes is less a golf round and more a cry for help rendered in numerical form.
+Baker posted another 45-point round, extending his Trophy lead to 16 points. This represents dominance bordering on the tyrannical. Mullin's 40 points and +14 gross solidified the Jacket position, his worst gross score of the tournament still comfortable enough to discourage challenges.
 
-Baker responded to his own blow-ups at two and five by manufacturing 18 points across the next six holes, because apparently even mediocrity contains gradations. His 45-point performance represented not excellence but adequate crisis management. The sixteen-point lead was now insurmountable barring literal kidnapping.
+Meller's round contained the tournament's most schizophrenic stretch: a quintuple bogey on the Par 5 3rd, followed by consecutive birdies on the 11th and 12th. From 10 to back-to-back four-pointers inside four holes. This is what trauma looks like in Stableford format. Baker and Williams both recorded blow-ups on the 2nd, a Par 3 that claimed victims with democratic zeal. Baker suffered a quintuple on the 18th, his first serious blemish across 54 holes, though by then the outcome was academic.
 
-Williams contributed a 41-point round that somehow left him third despite Meller's front-nine implosion. Consistency at this level functions as relative virtue. Mullin's 14-over-par maintained his Jacket stranglehold through the elegant strategy of being less terrible than everyone else.
-
-The birdie drought continued. Five through 54 holes. Boavista was either a masterpiece of course design or an elaborate practical joke at the field's expense. Possibly both.
+Williams recorded 41 points, his best round, yet remained fourth in Trophy standings. The mathematics of futility. Neumann's 36 points kept him fifth, his solid play unremarked and unrewarded.
 
 <section class="callout standings-box">
 <p class="standings"><span class="standings-header">Trophy Standings:</span> JB 128 | DM 112 | GW 107 | HM 104 | SN 101</p>
@@ -74,72 +71,59 @@ The birdie drought continued. Five through 54 holes. Boavista was either a maste
 
 ---
 
-## Round 4: The Catastrophe Arrives, Fashionably Late {.round4 .round}
+## Round 4: The Quintuple Catastrophe {.round4 .round}
 
-Neumann arrived at the sixteenth tee holding second in the Jacket race, one birdie away from respectable tournament completion. He duly manufactured that birdie with professional competence, collecting four points and perhaps permitting himself one fleeting moment of satisfaction.
+Baker cruised home with 36 points, his victory margin of 17 points representing the most comprehensive Trophy performance in series history. The closing round resembled a coronation, albeit one conducted on a Portuguese parkland while men suffered various forms of numerical violence.
 
-The seventeenth hole then reminded him that hope is essentially a malfunction of the imagination. Ten shots. Six over par. Zero points. The scorecard required archaeological excavation to locate precedent. One could pilot a small aircraft through the statistical crater left by that number. Neumann plummeted from Jacket contention to Wooden Spoon recipient in approximately seventeen minutes of psychological demolition.
+Stuart Neumann arrived at the 17th hole having just birdied the 16th. Four glorious points. Then came the 10, a quintuple bogey that represents this tournament's singular moment of pure tragedy. Six over par on a single hole. The Wooden Spoon was claimed not through sustained mediocrity but via one catastrophic act of self-administered trauma. Williams recorded four blow-ups including nines on the 3rd and 7th, his volatility reaching its natural conclusion. Meller and he both made eights on the 7th, synchronized suffering.
 
-Baker cruised home with 36 points, which in this context represented uncontested dominance. His seventeen-point margin was the largest in series history, achieved through the simple expedient of being first after hole one and never relinquishing leadership for 71 subsequent attempts. Mullin's twelve-stroke Jacket victory was equally untroubled, suggesting a man on holiday who occasionally remembered to play golf.
-
-Williams contributed four more blow-ups because consistency demands commitment. Meller produced his usual paradox: moments of brilliance interspersed with acts of competitive self-harm.
+Mullin's 35 points and +20 gross secured the Green Jacket by 12 strokes, never threatened after the opening round. Baker, Mullin, and Williams all recorded opening-hole triple bogeys, as if the course demanded immediate sacrifice. The back nine saw Baker and Williams implode on 11, both recording blow-ups on the Par 3, while Neumann's birdie-then-quintuple sequence on 16-17 provided the tournament's defining narrative arc.
 
 <section class="callout standings-box">
 <p class="standings"><span class="standings-header">Trophy Standings:</span> JB 164 | DM 147 | GW 138 | HM 137 | SN 135</p>
-<p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +72 | JB +94 | SN +84 | HM +96 | GW +127</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +72 | SN +84 | JB +94 | HM +96 | GW +127</p>
 </section>
 
 ---
 
 ## TOURNAMENT SUMMARY {.summary}
 
-Baker's coronation represented golf stripped to its essential bureaucracy: seize advantage, maintain advantage, ignore all subsequent developments. He led 72 of 72 Trophy holes and four gross holes, which mathematically represents perfection tempered by reality. No drama. No comeback narrative. Just methodical accumulation of points whilst others volunteered for spectacular failure.
+Jon Baker's wire-to-wire Trophy victory represents the most complete individual performance in TEG history. He led all 72 holes from the first tee shot to the final putt, extending his advantage each round with mechanical precision. His 164 points finished 17 clear of David Mullin, whose own 147-point total would have won most tournaments but here served merely as supporting evidence of Baker's dominance.
 
-Mullin's Jacket excellence was similarly uncontested, his worst round being 14 over par in a tournament where that qualified as domination. Five birdies across 360 holes suggested either course brutality or collective incompetence. Probably both. The field manufactured 44 triple-bogeys or worse, indicating either strategic ambition meeting physical limitation or mass psychological collapse rendered in statistical form.
+Mullin's Green Jacket triumph proved equally comprehensive, leading 69 of 72 holes gross and winning by 12 strokes. His worst round, +14 in Round 3, would represent many players' best effort. The birdie famine of biblical proportions suggests five men existing in a state of sustained technical crisis: only five birdies across 360 holes, with Meller claiming four of them while still finishing fourth.
 
-Neumann's quintuple-bogey finale functions as tournament epitaph. One hole destroyed 71 holes of solid competence, which is both tragedy and farce performed simultaneously. Meller's four birdies and ten disasters captured the essential TEG paradox: hope and horror occupying identical postcodes.
-
-This was golf as predetermined outcome. The opening hole decided everything; the subsequent 359 merely confirmed it. Kafka would have appreciated the inevitability. Beckett would have recognised the futility. The rest of us simply documented the wreckage.
-
----
-
-## PLAYER-BY-PLAYER {.player-by-player}
-
-**Jon BAKER (Trophy Winner):** Executed the most comprehensively dominant Trophy performance in series history through the radical strategy of being first after hole one and remaining first thereafter. Seventeen-point margin represents not excellence but adequate crisis management against a field volunteering for self-destruction. His 164 points came via methodical accumulation rather than brilliance, which is both criticism and compliment.
-
-**David MULLIN (Jacket Winner, 2nd Trophy):** Conducted a parallel demonstration of gross-score superiority that nobody particularly challenged. Twelve-stroke margin achieved through consistency rather than fireworks. His worst round was 14 over par, which in this theatre of operations qualified as domination. Led 69 of 72 gross holes, suggesting a man on holiday who occasionally remembered to play golf.
-
-**Gregg WILLIAMS (3rd):** Contributed eleven blow-ups across 72 holes, establishing volatility records that may stand indefinitely. Five disasters in round one alone suggested either ambitious target-setting or active participation in one's own competitive demise. Finished 26 points behind Baker, which represents less a gap and more a philosophical chasm.
-
-**Henry MELLER (4th):** Produced the tournament's most vivid paradox: four birdies (tournament-high) paired with ten catastrophic blow-ups. His twelve-shot atrocity at round-one's seventeenth represents not misfortune but mathematical hate crime. The 18-point stretch in round two suggested competence was theoretically possible; the surrounding carnage proved it remained largely theoretical.
-
-**Stuart NEUMANN (Wooden Spoon):** Conducted a solid if unspectacular tournament before hole seventeen's final round delivered a quintuple-bogey that functioned as both competitive suicide and existential commentary. One hole destroyed 71 holes of adequate work. The birdie immediately preceding this disaster makes the tragedy almost operatic. Sometimes golf is Shakespearean; sometimes it's just cruel.
+Stuart Neumann's quintuple bogey on the 17th hole of Round 4 provided the tournament's tragic centerpiece, a single catastrophic moment destroying an otherwise solid performance and earning him the Wooden Spoon. Gregg Williams recorded 11 blow-ups across 72 holes, his standard deviation of 1.24 points per hole making him the most volatile performer in a field not short on volatility. The Atlantic views remained stunning throughout. One assumes the ocean appreciated the irony of men struggling this magnificently while surrounded by such beauty.
 
 ---
 
 ## RECORDS AND PERSONAL BESTS {.records}
 
-**All-Time TEG Records:**
-- Jon Baker: 45 points (Stableford) – Rounds 1 and 3
-- David Mullin: 14 over par (Gross) – Round 3
+**All-Time TEG Records Set:**
+- Jon Baker: 45 points (Stableford, Round 1) - tied Round 3
+- Jon Baker: Most comprehensive Trophy victory (17-point margin, led all 72 holes)
 
 **Personal Bests:**
-- Jon Baker: 45 points (Stableford, rounds 1 and 3); 19 over par (Gross, round 1)
-- David Mullin: 14 over par (Gross, round 3); 40 points (Stableford, round 3)
-- Gregg Williams: 41 points (Stableford, round 3); 26 over par (Gross, round 3)
-- Henry Meller: 38 points (Stableford, round 2); 18 over par (Gross, round 2)
-- Stuart Neumann: 36 points (Stableford, round 3); 18 over par (Gross, round 3)
+- David Mullin: +14 gross (Round 3); 40 points (Round 3)
+- Jon Baker: +19 gross (Round 1); 45 points (Rounds 1 & 3)
+- Gregg Williams: +26 gross (Round 3); 41 points (Round 3)
+- Henry Meller: +18 gross (Round 2); 38 points (Round 2)
+- Stuart Neumann: +18 gross (Round 3); 36 points (Round 3)
+
+**Course Records:**
+No Boavista course records were set. The existing record of 75 (+4) set by David Mullin in TEG 2 Round 1 remained intact, though Mullin's +14 gross in Round 3 represents the tournament's best single-round gross performance. This suggests either the course was playing harder or everyone was playing worse. Probably both.
 
 ---
 
 ## OTHER STATISTICS {.stats}
 
-**The Birdie Famine:** Five birdies across 360 holes represents a conversion rate of 1.39%, suggesting Boavista was designed either by genius or sadist. Meller manufactured four; Neumann contributed one immediately before his quintuple-bogey catastrophe. The course average hovered around double bogey, indicating either brutal design or collective incompetence. Possibly both.
+**Birdie Famine:** Only five birdies recorded across 360 holes (1.39% birdie rate). Henry Meller claimed four of them, his Round 1 birdie on 16 immediately followed by a 12 on 17. Stuart Neumann's lone birdie came on Round 4's 16th hole, one hole before his quintuple-bogey catastrophe. The universe maintains balance through cruelty.
 
-**Blow-Up Epidemic:** Forty-four scores of triple-bogey or worse scattered across four rounds like landmines in a poorly-marked minefield. Williams led with eleven, suggesting either ambition or masochism. Hole seventeen claimed five victims in round one alone, establishing itself as the tournament's primary execution site.
+**Blow-Up Epidemic:** 44 total scores of triple-bogey or worse were recorded, an average of 8.8 per player across 72 holes. Gregg Williams led with 11, followed by Henry Meller's 10. Jon Baker's two blow-ups across four rounds suggests either discipline or luck. Possibly both.
 
-**Front-Nine Dominance:** Mullin and Williams both scored five points higher on front nines than back, suggesting either strategic energy deployment or back-nine psychological collapse. Meller reversed this pattern in rounds three and four with seven-point swings, indicating either tactical adjustment or random variance masquerading as pattern.
+**Lead Changes:** Zero after Hole 7 of Round 1. Baker claimed both leads on the 1st hole, briefly lost them, reclaimed them by the 7th, and never relinquished the Trophy lead again. This represents competitive suspense at its absolute minimum.
 
-**Lead Stability:** Zero lead changes after round one. Baker held Trophy leadership for 72 consecutive holes; Mullin held Jacket for 69 of 72. This represents either dominance or boring inevitability depending on one's tolerance for suspense. The tournament resembled a predetermined outcome with decorative interludes.
+**Front-Nine Dominance:** David Mullin averaged 20.75 points across front nines versus 15 points on back nines, a 5.75-point differential suggesting either morning person tendencies or structural collapse after lunch. Gregg Williams showed similar patterns until they stopped mattering.
 
-**Statistical Carnage:** Williams posted a 1.24 standard deviation per hole, the tournament's most erratic performance. His round scores ranged from 31 to 41 points, suggesting a man experimenting with multiple personality disorder via scorecard. The consistency was consistently inconsistent.
+**The H17 Par 4 Curse:** Round 4's 17th hole: Neumann's quintuple bogey, Williams' blow-up. Round 2's 17th: Mullin and Williams both recorded blow-ups. This hole demanded human sacrifice with disturbing regularity.
+
+**Consistency Paradox:** Henry Meller recorded the tournament's highest birdie count (4) yet finished fourth, suggesting volatility as his defining characteristic. His 10 blow-ups canceled out four moments of brilliance, the golfing equivalent of one step forward, 2.5 steps backward.
