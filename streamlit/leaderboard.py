@@ -31,6 +31,23 @@ from leaderboard_utils import create_leaderboard, generate_table_html, format_va
 # Import scorecard generation functions
 from scorecard_utils import generate_round_comparison_html, load_scorecard_css
 
+#=== HELPER FOR CHARTS =====
+# --- helper: white-filled markers with coloured outlines for Plotly ---
+def _add_series_markers(fig, size=3, border_width=1):
+    for tr in fig.data:
+        if getattr(tr, "type", None) == "scatter":
+            # outline uses the line colour for the trace
+            line_col = getattr(tr, "line", {}).get("color", None) if isinstance(tr.line, dict) else tr.line.color
+            tr.mode = "lines+markers" if (tr.mode is None or "markers" not in tr.mode) else tr.mode
+            tr.marker = dict(
+                symbol="circle",
+                size=size,
+                color="white",                          # fill
+                line=dict(width=border_width, color=line_col)  # outline
+            )
+    return fig
+
+
 
 # === CONFIGURATION ===
 
@@ -148,55 +165,74 @@ try:
             leader_label
         )
 
-        st.markdown('')  # Add spacing between sections
+# ----- BEGIN: Trophy chart section (drop-in) -----
+        st.markdown("")  # spacing
+        st.markdown(f"##### TEG Trophy race: {chosen_teg}")
 
-        # Chart section header
-        cht_label = f'TEG Trophy race: {chosen_teg}'
-        st.markdown(f'##### {cht_label}')
-
-        # Create containers for better layout control
         chart_container = st.container()
         radio_container = st.container()
 
-        # Chart type selection controls
         with radio_container:
-            stableford_chart_type = st.radio(
+            stableford_chart_type = st.segmented_control(
                 "Choose Stableford chart type:",
-                ('Standard', 'Adjusted scale (score vs. net par)'),
-                key='stableford_chart_type',
-                index=1,  # Default to adjusted scale for better visualization
-                horizontal=True
+                options=["Standard", "Adjusted scale (score vs. net par)", "Ranking"],
+                key="stableford_chart_type",
+                default="Adjusted scale (score vs. net par)",
             )
-            st.caption("Adjusted view 'zooms in' by showing performance vs. net par to more clearly show gaps between players")
+            if stableford_chart_type == "Ranking":
+                st.caption("Shows tournament ranking progression (1st, 2nd, 3rd, etc.)")
+            else:
+                st.caption("Adjusted view 'zooms in' by showing performance vs. net par to more clearly show gaps.")
 
-        # Chart generation based on user selection
-        if stableford_chart_type == 'Standard':
-            # create_cumulative_graph() - Generates interactive Plotly chart showing cumulative progress
+        # Build the chosen chart
+        if stableford_chart_type == "Standard":
             fig_stableford = create_cumulative_graph(
-                all_data, chosen_teg, 'Stableford Cum TEG', 
-                f'Trophy race: {chosen_teg}',
-                y_axis_label='Cumulative Stableford Points',
-                chart_type='stableford'
+                all_data, chosen_teg, "Stableford Cum TEG",
+                f"Trophy race: {chosen_teg}",
+                y_axis_label="Cumulative Stableford Points",
+                chart_type="stableford"
             )
-            cht_label = f'Trophy race: {chosen_teg}'
-            label_short = 'Cumulative stableford points'
-        else:
-            # Adjusted scale chart uses different calculation for better visualization
-            fig_stableford = create_cumulative_graph(
-                all_data, chosen_teg, 'Adjusted Stableford', 
-                f'Trophy race (Adjusted scale): {chosen_teg}', 
-                y_calculation=adjusted_stableford,  # Custom calculation function
-                y_axis_label='Cumulative Stableford Points vs. net par',
-                chart_type='stableford'
-            )
-            cht_label = f'Trophy race (Adjusted scale): {chosen_teg}'
-            label_short = 'Cumulative stableford points (adjusted scale)'
+            label_short = "Cumulative stableford points"
 
-        # Display the chart
+        elif stableford_chart_type == "Adjusted scale (score vs. net par)":
+            fig_stableford = create_cumulative_graph(
+                all_data, chosen_teg, "Adjusted Stableford",
+                f"Trophy race (Adjusted scale): {chosen_teg}",
+                y_calculation=adjusted_stableford,
+                y_axis_label="Cumulative Stableford Points vs. net par",
+                chart_type="stableford"
+            )
+            label_short = "Cumulative stableford points (adjusted scale)"
+
+        else:  # Ranking
+            fig_stableford = create_cumulative_graph(
+                all_data, chosen_teg, "Rank_Stableford_TEG",
+                f"Trophy race (Ranking): {chosen_teg}",
+                y_axis_label="Tournament Ranking",
+                chart_type="ranking"
+            )
+            # Integer ticks and reversed axis so 1st is at the top
+            n_players = leaderboard_df["Player"].nunique()
+            fig_stableford.update_yaxes(
+                range=[n_players + 0.5, 0.5],  # reversed
+                tickmode="linear",
+                dtick=1,
+                tick0=1
+            )
+            label_short = "Tournament ranking progression"
+
+        # Common styling for all variants
+        _add_series_markers(fig_stableford, size=3, border_width=1)
+        fig_stableford.update_xaxes(range=[0.5, 72.5])  # padding without adding extra tick
+
         with chart_container:
-            st.caption(f'{label_short} | Higher = better')
-            # st.plotly_chart() - Renders interactive chart with disabled toolbar for cleaner appearance
-            st.plotly_chart(fig_stableford, use_container_width=True, config=dict({'displayModeBar': False}))
+            if stableford_chart_type == "Ranking":
+                st.caption(f"{label_short} | Lower = better")
+            else:
+                st.caption(f"{label_short} | Higher = better")
+            st.plotly_chart(fig_stableford, use_container_width=True, config=dict({"displayModeBar": False}))
+        # ----- END: Trophy chart section -----
+
         
 
     # === GREEN JACKET TAB (GROSS SCORE COMPETITION) ===
@@ -212,55 +248,74 @@ try:
             competition_name="Green Jacket"
         )
 
-        st.markdown('')  # Add spacing between sections
+        # ----- BEGIN: Green Jacket chart section (drop-in) -----
+        st.markdown("")  # spacing
+        st.markdown(f"##### Green Jacket race: {chosen_teg}")
 
-        # Chart section header
-        cht_label = f'Green Jacket race: {chosen_teg}'
-        st.markdown(f'##### {cht_label}')
-
-        # Create containers for better layout control
         chart_container = st.container()
         radio_container = st.container()
 
-        # Chart type selection controls
         with radio_container:
-            grossvp_chart_type = st.radio(
+            grossvp_chart_type = st.segmented_control(
                 "Choose chart type:",
-                ('Standard', 'Adjusted scale (gross score vs. bogey)'),
-                key='grossvp_chart_type',
-                index=1,  # Default to adjusted scale for better visualization
-                horizontal=True
+                options=["Standard", "Adjusted scale (gross score vs. bogey)", "Ranking"],
+                key="grossvp_chart_type",
+                default="Adjusted scale (gross score vs. bogey)",
             )
-            st.caption("Adjusted view 'zooms in' by showing performance vs. bogey golf to more clearly show gaps between players")
-        
-        # Chart generation based on user selection
-        if grossvp_chart_type == 'Standard':
-            # create_cumulative_graph() - Standard cumulative gross vs par chart
-            fig_grossvp = create_cumulative_graph(
-                all_data, chosen_teg, 'GrossVP Cum TEG', 
-                f'Green Jacket race: {chosen_teg}',
-                y_axis_label='Cumulative gross vs par',
-                chart_type='gross'
-            )
-            cht_label = f'Green Jacket race: {chosen_teg}'
-            label_short = 'Cumulative gross score vs. par'
-        else:
-            # Adjusted scale shows performance vs bogey golf for better comparison
-            fig_grossvp = create_cumulative_graph(
-                all_data, chosen_teg, 'Adjusted GrossVP', 
-                f'Green Jacket race (Adjusted scale): {chosen_teg}', 
-                y_calculation=adjusted_grossvp,  # Custom calculation function
-                y_axis_label='Cumulative gross vs. bogey golf (par+1)',
-                chart_type='gross'
-            )
-            cht_label = f'Green Jacket race (Adjusted scale): {chosen_teg}'
-            label_short = 'Cumulative gross score (adjusted scale vs. bogey)'
+            if grossvp_chart_type == "Ranking":
+                st.caption("Shows tournament ranking progression (1st, 2nd, 3rd, etc.)")
+            else:
+                st.caption("Adjusted view 'zooms in' by showing performance vs. bogey golf (par+1).")
 
-        # Display the chart
+        # Build the chosen chart
+        if grossvp_chart_type == "Standard":
+            fig_grossvp = create_cumulative_graph(
+                all_data, chosen_teg, "GrossVP Cum TEG",
+                f"Green Jacket race: {chosen_teg}",
+                y_axis_label="Cumulative gross vs par",
+                chart_type="gross"
+            )
+            label_short = "Cumulative gross score vs. par"
+
+        elif grossvp_chart_type == "Adjusted scale (gross score vs. bogey)":
+            fig_grossvp = create_cumulative_graph(
+                all_data, chosen_teg, "Adjusted GrossVP",
+                f"Green Jacket race (Adjusted scale): {chosen_teg}",
+                y_calculation=adjusted_grossvp,
+                y_axis_label="Cumulative gross vs. bogey golf (par+1)",
+                chart_type="gross"
+            )
+            label_short = "Cumulative gross score (adjusted scale vs. bogey)"
+
+        else:  # Ranking
+            fig_grossvp = create_cumulative_graph(
+                all_data, chosen_teg, "Rank_GrossVP_TEG",
+                f"Green Jacket race (Ranking): {chosen_teg}",
+                y_axis_label="Tournament Ranking",
+                chart_type="ranking"
+            )
+            # Integer ticks and reversed axis so 1st is at the top
+            n_players = leaderboard_df["Player"].nunique()
+            fig_grossvp.update_yaxes(
+                range=[n_players + 0.5, 0.5],  # reversed
+                tickmode="linear",
+                dtick=1,
+                tick0=1
+            )
+            label_short = "Tournament ranking progression"
+
+        # Common styling for all variants
+        _add_series_markers(fig_grossvp, size=3, border_width=1)
+        fig_grossvp.update_xaxes(range=[0.5, 72.5])
+
         with chart_container:
-            st.caption(f'{label_short} | Lower = better')
-            # st.plotly_chart() - Renders interactive chart with disabled toolbar
-            st.plotly_chart(fig_grossvp, use_container_width=True, config=dict({'displayModeBar': False}))
+            if grossvp_chart_type == "Ranking":
+                st.caption(f"{label_short} | Lower = better")
+            else:
+                st.caption(f"{label_short} | Lower = better")
+            st.plotly_chart(fig_grossvp, use_container_width=True, config=dict({"displayModeBar": False}))
+        # ----- END: Green Jacket chart section -----
+
 
     # === SCORECARDS TAB ===
     with tab3:
