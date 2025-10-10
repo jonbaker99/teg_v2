@@ -77,6 +77,23 @@ def render_report(md_text: str):
     else:
         st.error("Markdown library not available. Please install with: pip install markdown")
 
+# --- helper: apply white-filled markers with coloured outlines to a Plotly fig ---
+def _add_series_markers(fig, size=5, border_width=1):
+    for tr in fig.data:
+        if getattr(tr, "type", None) == "scatter":
+            # keep existing line colour for the marker outline
+            line_col = getattr(tr, "line", {}).get("color", None) if isinstance(tr.line, dict) else tr.line.color
+            # ensure markers are shown alongside lines
+            tr.mode = "lines+markers" if tr.mode is None else (tr.mode if "markers" in tr.mode else tr.mode + "+markers")
+            tr.marker = dict(
+                symbol="circle",
+                size=size,
+                color="white",                       # fill
+                line=dict(width=border_width, color=line_col)  # outline matches series colour
+            )
+    return fig
+
+
 
 # === DATA LOADING ===
 # Load CSS styling for consistent table appearance
@@ -191,6 +208,8 @@ try:
                 y_axis_label='Cumulative Stableford Points',
                 chart_type='stableford'
             )
+
+
             cht_label = f'Trophy race: {chosen_teg}'
             label_short = 'Cumulative stableford points'
         elif stableford_chart_type == 'Adjusted scale (score vs. net par)':
@@ -202,6 +221,7 @@ try:
                 y_axis_label='Cumulative Stableford Points vs. net par',
                 chart_type='stableford'
             )
+
             cht_label = f'Trophy race (Adjusted scale): {chosen_teg}'
             label_short = 'Cumulative stableford points (adjusted scale)'
         else:  # Ranking
@@ -212,6 +232,14 @@ try:
                 y_axis_label='Tournament Ranking',
                 chart_type='ranking'
             )
+            n_players = leaderboard_df['Player'].nunique()
+            fig_stableford.update_yaxes(
+                range=[n_players + 0.5, 0.5],  # reversed: 1 at top
+                tickmode="linear",
+                dtick=1,
+                tick0=1
+            )
+            
             cht_label = f'Trophy race (Ranking): {chosen_teg}'
             label_short = 'Tournament ranking progression'
 
@@ -221,6 +249,8 @@ try:
                 st.caption(f'{label_short} | Lower = better')
             else:
                 st.caption(f'{label_short} | Higher = better')
+            _add_series_markers(fig_stableford, size=3, border_width=1)
+            fig_stableford.update_xaxes(range=[0.5, 72.5])
             # st.plotly_chart() - Renders interactive chart with disabled toolbar for cleaner appearance
             st.plotly_chart(fig_stableford, use_container_width=True, config=dict({'displayModeBar': False}))
         
@@ -291,12 +321,21 @@ try:
                 y_axis_label='Tournament Ranking',
                 chart_type='ranking'
             )
+            n_players = leaderboard_df['Player'].nunique()
+            fig_grossvp.update_yaxes(
+                range=[n_players + 0.5, 0.5],  # reversed: 1 at top
+                tickmode="linear",
+                dtick=1,
+                tick0=1
+            )
             cht_label = f'Green Jacket race (Ranking): {chosen_teg}'
             label_short = 'Tournament ranking progression'
 
         # Display the chart
         with chart_container:
             st.caption(f'{label_short} | Lower = better')
+            fig_grossvp.update_xaxes(range=[0.5, 72.5])
+            _add_series_markers(fig_grossvp, size=3, border_width=1)
             # st.plotly_chart() - Renders interactive chart with disabled toolbar
             st.plotly_chart(fig_grossvp, use_container_width=True, config=dict({'displayModeBar': False}))
 

@@ -1,39 +1,42 @@
-# TEG 11: The Trajectory of Inevitability and One Man's Spectacular Unraveling {.report-title}
+# TEG 11: The Baker Brothers, Brotherly Love Meets 27-Point Final Round {.report-title}
 
 <p class="dateline">TEG 11 | Catalonia | 2018</p>
 
 ---
 
-<section class="callout at-a-glance-box">
-  <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon BAKER (2nd Trophy, demonstrating that some people simply refuse to lose)</span></p>
-  <p><strong>Jacket Winner:</strong> Jon BAKER (1st Jacket, completing the full psychological demolition)</p>
-  <p><strong>Wooden Spoon:</strong> David MULLIN (1st Spoon, proof that excellence in one metric means nothing whatsoever)</p>
-</section>
-
----
-
 ## TOURNAMENT OVERVIEW {.tournament-overview}
 
-Jon Baker controlled this tournament with the pitiless efficiency of a man reading terms and conditions he's already agreed to. He led 70 of 72 holes in the Jacket competition and 59 of 72 in the Trophy standings. These are not the numbers of drama. These are the numbers of inevitability.
+The experiment began with promise and ended in data. Over four days in Catalonia, Jon BAKER conducted a masterclass in not collapsing, claiming both Trophy and Green Jacket with the administrative efficiency of a man who'd simply decided winning was less stressful than the alternative. He led for 59 of 72 holes in the Stableford and 70 of 72 in gross scoring, establishing what behavioural psychologists would call "dominance" and what everyone else would call "deeply annoying."
 
-His brother Alex mounted the only credible challenge, briefly seizing the Trophy lead in Round 3 before engineering a final-day capitulation so comprehensive it entered the record books as his career-worst performance across 20 rounds. Twenty-seven points. Five triple-bogeys. Nine zero-point holes. This was not golf. This was performance art titled "Hope Confronting Reality."
+Alex BAKER, having mounted the only serious challenge, saved his best work for Round 4 where he posted a career-worst 27 points featuring five triple-bogeys. This represents the golfing equivalent of writing your resignation letter in crayon. Gregg WILLIAMS lurked perpetually in third, never quite leading but never quite imploding, which in TEG terms counts as heroic restraint. David MULLIN earned the Wooden Spoon despite finishing second in gross scoring, proof that excellence in the wrong metric is just failure with better posture.
 
-David Mullin finished second in gross scoring but dead last in Stableford, earning the Wooden Spoon despite playing objectively excellent golf. The cognitive dissonance required to process this outcome may have caused permanent neurological damage. Jon Baker meanwhile equalled the course record with an 84 in Round 2, then sealed his wire-to-wire double sweep with the calm of a man ticking boxes on a checklist he wrote himself.
+The return to Catalonia after a five-tournament absence posed questions nobody had asked. Would PGA Catalunya's Stadium Course still be punishing? Yes. Would the new venture to El Prat's Azul Course provide respite? Absolutely not. Would anyone shoot under 82 for a single round? No. Did Jon BAKER equal the course record with an 84 in Round 2? He did, though describing 12-over-par as a record suggests our standards have drifted into medical concern territory.
 
 ---
 
-## Round 1: The Establishment of Natural Order {.round1 .round}
+## PLAYER-BY-PLAYER {.player-by-player}
 
-PGA Catalunya's Stadium Course opened proceedings with its usual air of menace. This is Spain's premier championship test, a course designed by the European Tour to hurt feelings. John Patterson began by scoring four points on the opening hole, briefly occupying first place like a man who'd wandered into the wrong meeting.
+**Jon BAKER (Winner, Trophy & Green Jacket):** The wire-to-wire sweep arrived with the emotional affect of a man paying council tax. Two birdies across 72 holes, a Round 2 course-equalling 84, and the psychological warfare of never, ever relinquishing control. His R4 blow-up on the 13th briefly threatened drama before he remembered he was leading by enough to afford recreational catastrophe.
 
-By the fourth hole, Patterson had posted a quintuple-bogey and surrendered the lead he'd held for approximately twelve minutes. Jon Baker seized control and would not relinquish it for the remainder of the tournament. Think about that. Seventy-one holes of golf followed. He led for effectively all of them.
+**Alex BAKER (2nd, Trophy):** Led the Trophy standings on exactly two occasions, H1 and H13 of Round 3, both times for roughly as long as it takes to read this sentence. His Round 4 meltdown featured nine zero-point holes and five triple-bogeys, suggesting his short game underwent spontaneous philosophical collapse. Finished six points back having authored the tournament's most compelling tragedy in Stableford scoring.
 
-Gregg Williams produced the round's only birdie, a fleeting moment of competence on the par-five 15th that was immediately bookended by a triple-bogey on 16. Patterson, meanwhile, embarked upon a statistical journey into the outer darkness. Eight blow-ups. Six zero-point holes. His scorecard read like a ransom note written by someone who'd stopped caring about getting paid.
+**Gregg WILLIAMS (3rd, Trophy):** Two birdies, zero leads, permanent third place. The human embodiment of "steady away" played every round between 30 and 39 points, which in amateur golf circles counts as terrifying consistency. His Round 2 blow-up at the 15th (a 10) and birdie at the 17th within three holes captured the essential TEG experience: chaos bookended by competence.
 
-Williams and Alex Baker also contributed triple-bogeys on the second hole, a par-four that appeared to have been secretly redesigned overnight into a par-seven. The back nine became a theater of mutual destruction. Patterson collapsed completely between holes 12 and 17, posting three points across six holes. This was not a cold spell. This was hypothermia.
+**John PATTERSON (4th, Trophy):** Posted the tournament's best Stableford round (36, R4) immediately after opening with the worst (26, R1). Eight blow-ups in Round 1 alone, including consecutive train wrecks at holes 12, 13, 16, and 17. His scorecard reads like a seismograph during an earthquake, all volatility and no pattern. Led the Trophy for exactly four holes across four rounds, which is four more than most people manage in a lifetime.
 
-Jon Baker closed with his own triple-bogey on 18, a reminder that even dominance requires the occasional bow to chaos. He led by three points. Alex sat second, three points clear of Williams. Patterson occupied fifth, nine points adrift and presumably questioning every life choice that had led to this moment.
+**David MULLIN (5th, Trophy / Wooden Spoon):** Finished second in gross scoring but dead last in Stableford, earning the Spoon via the cruelest mathematical logic. Two birdies, multiple stretches of even-par golf, and a Round 3 where he briefly led the Jacket before reality intervened. His tournament arc resembled a man building an intricate sand sculpture during high tide.
+
+---
+
+## ROUND 1: THE OPTIMISM PURGE {.round1 .round}
+
+PGA Catalunya's Stadium Course opened proceedings with the cheerful aggression of a dental procedure. This is Spain's premier golf course, a World Top 100 layout designed by the European Tour specifically to make professionals feel mortal. For amateurs, it functions as an 18-hole philosophy seminar on accepting human limitation.
+
+John PATTERSON took the Trophy lead at the first hole with four points, which in retrospect represented Peak Ambition. By the fourth, he'd blown up with a nine. By the 13th, he'd added three more catastrophes and sat bottom in the Spoon race, having compiled eight blow-ups before most people have finished breakfast. His front nine produced 17 points. His back nine: nine. The differential suggests someone had swapped his golf clubs for plumbing equipment at the turn.
+
+Gregg WILLIAMS opened with a triple-bogey seven at the first, bottoming out in the Spoon standings before rallying with a birdie at the 15th, then immediately undoing the good work with another triple at the 16th. This is the TEG emotional cycle: hope, achievement, punishment. Alex BAKER blow-ups at the 2nd, 11th, and 13th kept him honest. Jon BAKER, meanwhile, constructed a 35-point round with the quiet brutality of someone who'd done the maths and realised nobody else had.
+
+The round concluded with Jon leading by three points, Dave McDOWELL lurking in the Jacket chase, and John PATTERSON having posted six zero-point holes. The Stadium Course had spoken. Everyone had heard.
 
 <section class="callout standings-box">
 <p class="standings"><span class="standings-header">Trophy Standings:</span> JB 35 | AB 32 | GW 30 | DM 29 | JP 26</p>
@@ -42,17 +45,15 @@ Jon Baker closed with his own triple-bogey on 18, a reminder that even dominance
 
 ---
 
-## Round 2: The Course Record Nobody Will Remember {.round2 .round}
+## ROUND 2: THE RECORD THAT WASN'T {.round2 .round}
 
-The Tour Course at PGA Catalunya presented marginally less terrifying dimensions, though this is like saying a tiger is marginally less dangerous than a lion. Jon Baker opened with a birdie on the par-three second. David Mullin matched it. This felt significant for approximately four minutes.
+The Tour Course at PGA Catalunya represented Round 2's assignment, marginally less sadistic than its Stadium sibling but only in the way being hit by a van is marginally preferable to being hit by a lorry. Jon BAKER tied the course record with an 84, twelve strokes over par, which tells you everything about the tournament's relationship with conventional excellence.
 
-What followed was an 84, equalling the all-time TEG course record. Baker had now tied the best gross round ever recorded in tournament history. He extended his Trophy lead. He maintained his Jacket advantage. He did this while apparently expending the emotional energy of a man ordering lunch.
+Alex BAKER posted the round's best Stableford (42 points) before authoring the afternoon's defining moment at the 12th: a nine, five over par, zero points. This dropped him from second to second, which is mathematically fascinating and emotionally devastating. He'd opened with four-point scores at the 3rd, 8th, and 13th, building momentum before the universe reminded him that hope is structural weakness. Jon BAKER birdied the 2nd alongside David MULLIN, who added another at the 10th in a rare display of Gross scoring competence that would later prove cosmically irrelevant.
 
-Alex Baker posted the round's best Stableford score, 42 points, keeping himself within two of his brother's lead. This was hopeful. This was delusional. The margins were closing but the trajectory remained unchanged. Gregg Williams added a birdie on 17 after posting a quintuple-bogey on 15, a sequence that suggests a man experiencing golf as a series of unrelated events rather than a coherent narrative.
+John PATTERSON contributed five blow-ups including an 11 at the 15th, which represents less a golf hole and more a personal intervention. His scorecard resembled a ransomware note. Gregg WILLIAMS blow-up at the 15th (a 10) preceded a birdie at the 17th, capturing the essential futility of golf: punishment, then redemption, then remembering nobody cares.
 
-Patterson's volatility continued. He blow-ups on holes four, five, seven, ten, fifteen, and eighteen. His scorecard resembled a seismograph during an earthquake. Between the disasters, he managed four points on the par-three 11th, a reminder that competence lurked somewhere beneath the chaos.
-
-Baker's round included a triple-bogey on 17, a blemish on an otherwise flawless performance. He led by two. The Jacket standings showed him thirty strokes clear at the cumulative halfway point. The tournament was effectively over. Nobody appeared to have informed the other participants of this fact.
+Jon BAKER extended his Trophy lead to two points while maintaining the Jacket advantage. His 84 equalled the course record, though describing it as such feels like awarding a participation trophy to mathematics itself.
 
 <section class="callout standings-box">
 <p class="standings"><span class="standings-header">Trophy Standings:</span> JB 76 | AB 74 | GW 69 | DM 65 | JP 60</p>
@@ -61,17 +62,15 @@ Baker's round included a triple-bogey on 17, a blemish on an otherwise flawless 
 
 ---
 
-## Round 3: The Brief Flickering of Alternative Outcomes {.round3 .round}
+## ROUND 3: THE BRIEF COUP {.round3 .round}
 
-El Prat's Azul Course, a Greg Norman design making its TEG debut, introduced the tournament's only genuine drama. Alex Baker took the Trophy lead on the opening hole with a bogey. Jon Baker immediately reclaimed it on the second when Alex posted a triple-bogey. This was leadership tennis played at speeds suggesting both players were sedated.
+El Prat's Azul Course made its TEG debut, a Greg Norman design that introduced itself with the warmth of a parking fine. Alex BAKER seized the Trophy lead at the first hole before losing it at the second via a triple-bogey six at a par three. This 18-hole span of leadership represents what military historians would call "premature commitment."
 
-David Mullin briefly led the Jacket competition between holes three and five. Brief is the operative word. He surrendered it on the sixth with a quadruple-bogey on the par-three, a score that requires genuine creativity to achieve. Jon Baker reclaimed the Jacket lead and retained it for the final 49 holes of the tournament.
+David MULLIN grabbed the Jacket lead at the third, lost it at the sixth following his own par-3 blow-up (a seven). Jon BAKER reclaimed control and refused to release it, like a man who'd learned his lesson about sharing. His birdie at the ninth provided a brief moment of genuine competence before triple-bogeys at the 12th and 13th reminded everyone that gravity remains undefeated.
 
-Baker birdied the par-five ninth, his only moment of genuine excellence in a round otherwise defined by survival. He then posted back-to-back triple-bogeys on 12 and 13, the latter handing the Trophy lead to his brother. This was Round 3, hole 13. For approximately five holes, Alex Baker led the tournament.
+But Alex BAKER's blow-up at the 13th offered Jon the opening. Alex took back the Trophy lead on that same hole with a four-point par, finally seizing the advantage he'd been circling for three rounds. It lasted precisely five holes. John PATTERSON posted the round's best Stableford (39 points) after opening the tournament with 26, which in psychological terms represents either growth or statistical randomness. Gregg WILLIAMS oscillated between blow-ups at the 2nd and 5th (both zero-pointers) and a back-nine 20-point rally that suggested someone had replaced his golf balls with regulation equipment.
 
-Patterson contributed a quintuple-bogey on 16, because at this point why not. He also scored four points on 17, immediately afterward, which suggests either remarkable resilience or complete psychological detachment from his own performance. Mullin collapsed on the back nine, posting eleven points after opening with eighteen on the front. Williams did the opposite, scoring twenty on the back after fifteen on the front, because consistency is for people without imaginations.
-
-Baker entered the final round two points behind his brother. The Jacket lead remained his. The margin was seven strokes. The stage was set for a final-day coronation, or alternatively, for Alex Baker to author one of the great collapses in TEG history. Spoiler: it was the second thing.
+David MULLIN's 29-point Stableford round hid his gross-scoring excellence, the cruel maths already writing his Wooden Spoon destiny. Alex BAKER led by two points heading into the final round. Jon BAKER trailed for the first time all tournament. Drama beckoned.
 
 <section class="callout standings-box">
 <p class="standings"><span class="standings-header">Trophy Standings:</span> AB 110 | JB 108 | GW 104 | JP 99 | DM 94</p>
@@ -80,76 +79,77 @@ Baker entered the final round two points behind his brother. The Jacket lead rem
 
 ---
 
-## Round 4: The Comprehensive Unraveling of Alex Baker {.round4 .round}
+## ROUND 4: THE IMPLOSION PROTOCOLS {.round4 .round}
 
-The Stadium Course returned for the final round like a headmaster who'd heard about misbehavior in his absence. Alex Baker arrived in first place, two points clear. By the sixth hole he'd posted two triple-bogeys and surrendered the lead. He would not regain it.
+Back at PGA Catalunya's Stadium Course for the finale, Alex BAKER arrived holding a two-point Trophy lead and the fragile psychology of a man who'd never won before. By the sixth hole, he'd blown up with a seven, scored zero points, and watched Jon BAKER reclaim the lead. He would not recover.
 
-What transpired across the following twelve holes represents either the finest satire of human ambition ever performed on a golf course, or a genuine mental health crisis played out in public. Five triple-bogeys or worse. Nine zero-point holes. Twenty-seven points total. This was his career-worst Stableford performance across twenty rounds. Not worst of the year. Not worst of the tournament. Worst ever.
+What followed was less golf and more public disintegration. Five triple-bogeys across the round. Nine zero-point holes. A career-worst 27 points from 20 rounds of TEG data. The 9th, 12th, and 17th all delivered blow-ups (eights at par 4s and 5s), each one systematically dismantling his scorecard. This was not choking in the traditional sense. This was voluntary drowning in shallow water.
 
-Jon Baker reclaimed the Trophy lead on six when Alex posted his second triple. He extended it methodically, hole by hole, with the emotional affect of a man conducting inventory. His own triple-bogey on thirteen barely registered as a blip. He finished with 35 points and a gross score of 89, tying Mullin for the round's best gross performance while simultaneously crushing all remaining hope in the Stableford standings.
+Jon BAKER posted 35 points, matching his Round 1 total, and sealed the double victory with the emotional affect of someone who'd simply forgotten to panic. His own blow-up at the 13th (an eight) briefly offered hope before everyone realised he was leading by enough to absorb tactical catastrophe. David MULLIN matched Jon's gross score with a +19 round, his best of the tournament, earning him exactly nothing but the Spoon and philosophical perspective on the difference between playing well and scoring well.
 
-Patterson, in a plot twist nobody requested, posted the round's best Stableford score with 36 points. This included three four-plus point holes and five triple-bogeys, which makes no mathematical sense until you remember that golf is not mathematics. It is psychological warfare conducted with small dimpled spheres.
-
-Williams blow-up with a quintuple-bogey on ten. Mullin started beautifully, even par through three, before collapsing with a triple-bogey on fifteen. His second-place Jacket finish, nineteen strokes better than Baker's winning gross total, earned him the Wooden Spoon. There is no justice in this sport. There is only Stableford.
-
-Baker won by six points. His wire-to-wire dominance was complete. He'd led 59 of 72 holes in the Trophy competition and 70 of 72 in the Jacket. His brother, who'd mounted the only serious challenge, had posted a final round so catastrophic it will be studied by sports psychologists for evidence that hope itself can be weaponized.
+John PATTERSON delivered the round's best Stableford (36 points) with three four-point holes, proving that talent exists mainly to make previous incompetence look intentional. Gregg WILLIAMS blow-up at the 10th (a nine) kept him honest. The final standings revealed Jon BAKER six points clear in the Trophy, three strokes ahead in the Jacket, and in possession of both titles without ever having been seriously threatened except by the ghost of Alex BAKER's self-belief.
 
 <section class="callout standings-box">
 <p class="standings"><span class="standings-header">Trophy Standings:</span> JB 143 | AB 137 | GW 136 | JP 135 | DM 125</p>
-<p class="standings"><span class="standings-header">Green Jacket Standings:</span> JB +70 | DM +73 | AB +106 | GW +99 | JP +123</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> JB +70 | DM +73 | GW +99 | AB +106 | JP +123</p>
 </section>
 
 ---
 
 ## TOURNAMENT SUMMARY {.summary}
 
-Jon Baker's victory was not dramatic. It was gravitational. From the moment he seized the lead in Round 1, the tournament became an exercise in watching other players fail to catch him. Alex Baker came closest, briefly leading in Round 3 before engineering a final-round capitulation so thorough it achieved a kind of terrible beauty.
+Jon BAKER's wire-to-wire double sweep represented the triumph of not losing one's mind, which in amateur golf constitutes elite performance. He led for 59 of 72 holes in Stableford and 70 of 72 in gross scoring, establishing control in Round 1 and releasing it approximately never. Two birdies across four rounds. A course-equalling 84 in Round 2. The psychological fortitude to watch Alex BAKER's Round 4 meltdown and simply continue playing sensible golf. This is what dominance looks like when nobody's particularly dominant.
 
-The course record was equalled but never broken. Six birdies across 72 holes suggests either exceptional course defense or collective incompetence. Probably both. Baker's double sweep represents only the second time in tournament history that one player has claimed both Trophy and Jacket. He did it while leading effectively the entire time.
+Alex BAKER's collapse from Trophy leader to six-point runner-up via a 27-point final round will be studied by sports psychologists for decades, assuming sports psychologists care about amateur golf, which they don't. Five triple-bogeys, nine zero-point holes, a personal worst across 20 rounds of data. He led the Trophy for precisely 13 of 72 holes, all of them in Rounds 3 and 4, which suggests his timing needs recalibration. His tournament arc resembled a man building confidence specifically to ensure the fall hurt more.
 
-David Mullin's Wooden Spoon despite finishing second in gross scoring will be remembered as either tragic irony or cosmic justice, depending on your philosophical orientation. Patterson's volatility achieved performance art status, swinging from 26 points to 39 points across rounds with the consistency of a roulette wheel. Williams contributed two birdies and several quintuple-bogeys, maintaining his reputation as a man for whom golf is a series of unconnected emotional experiences.
+The Wooden Spoon going to David MULLIN despite his second-place Jacket finish captured the essential cruelty of Stableford scoring: playing well in the wrong metric is just losing with better optics. Gregg WILLIAMS finished third in both competitions without ever leading either, a feat of competitive invisibility that deserves its own trophy. John PATTERSON's volatility (26 to 39 points across rounds) suggested someone was playing with randomised equipment.
 
-The margins were never tight. The outcome was never in doubt. This was dominance rendered as procedural inevitability. Golf as managed decline for everyone except the man managing the decline. Seventy-two holes in Catalonia produced one clear winner and four studies in the futility of ambition meeting reality. Welcome to TEG 11, where excellence was rewarded and mediocrity was comprehensively documented for posterity.
-
----
-
-## PLAYER-BY-PLAYER {.player-by-player}
-
-**Jon BAKER (1st - Trophy Winner, Jacket Winner):** Wire-to-wire dominance across both competitions, leading 70 of 72 holes in the Jacket and 59 of 72 in the Trophy. Equalled the course record with an 84 in Round 2, collected two birdies, and dispatched all challengers with the efficiency of a man who'd scheduled this victory eighteen months ago. His final-round 35 points sealed a double sweep that left his brother psychologically demolished and everyone else wondering what second place even means anymore.
-
-**Alex BAKER (2nd):** Briefly led the Trophy competition in Round 3 before authoring a final-round capitulation of such comprehensive devastation it entered the record books as his career-worst performance. Twenty-seven points. Five triple-bogeys. Nine zero-point holes. These numbers suggest a man who stopped believing in golf as a viable concept somewhere around the ninth hole and spent the back nine processing existential questions he hadn't asked since adolescence.
-
-**Gregg WILLIAMS (3rd):** Posted two birdies and multiple quintuple-bogeys, treating the tournament as a series of unconnected events rather than a coherent competitive narrative. Strong back-nine performances in Rounds 2 and 3 kept him relevant without ever threatening actual victory. Finished six points clear of the Wooden Spoon, which represents his greatest achievement of the week.
-
-**John PATTERSON (4th):** Volatility personified. Led the Trophy competition for approximately twelve minutes in Round 1 before posting eight blow-ups and six zero-point holes. Rebounded to win Round 4's Stableford with 36 points, demonstrating either remarkable resilience or complete psychological detachment from his own performance. His 26-to-39-point scoring range suggests golf as experienced through a kaleidoscope during an earthquake.
-
-**David MULLIN (5th - Wooden Spoon Winner):** Finished second in gross scoring, nineteen strokes better than the Jacket winner, and collected the Wooden Spoon for his troubles. This represents either tragic irony or mathematical justice depending on whether you believe Stableford is a legitimate scoring system or an elaborate practical joke. Posted two birdies and briefly led the Jacket before multiple late-tournament blow-ups sentenced him to last place and a lifetime of explaining how he played excellent golf while finishing dead last.
+No eagles across 72 holes. Six total birdies. Ninety-six rounds of golf, most of them conducted in a state of controlled panic. Jon BAKER won because everyone else either imploded or forgot to try. Catalonia had spoken. The message was clear: hope is a pre-existing condition, not a treatment plan.
 
 ---
 
 ## RECORDS AND PERSONAL BESTS {.records}
 
-**Tournament Records Equalled:**
-- Course Record (PGA Catalunya - Tour): Jon BAKER, 84 strokes (+12), Round 2
+**TEG Course Records:**
+- **PGA Catalunya - Tour Course:** Jon BAKER 84 (+12) - equalled in Round 2. Previously set in TEG 11, also matched by Gregg WILLIAMS, Jon BAKER, and David MULLIN in TEG 12.
+- **PGA Catalunya - Stadium Course:** Jon BAKER 89 - prior record from TEG 12, Round 4.
 
 **Personal Worsts:**
-- Lowest Stableford Round: Alex BAKER, 27 points, Round 4 (career-worst across 20 rounds)
+- **Alex BAKER:** 27 points (Stableford) in Round 4 - career low across 20 TEG rounds played. Previous worst: substantially higher, presumably.
+
+The course record at PGA Catalunya's Tour Course remains unbroken at 84, which in professional golf would be called "deeply concerning" but in TEG terms represents aspirational excellence. Alex BAKER's personal worst stands as the tournament's defining statistical monument, a 27-point final round that will live in infamy or at least in spreadsheets.
 
 ---
 
 ## OTHER STATISTICS {.stats}
 
-**Leadership Dominance:**
-Jon Baker led 59 of 72 holes in the Trophy competition and 70 of 72 in the Jacket, establishing the tournament's most comprehensive wire-to-wire performance since records began being kept with obsessive detail.
+**Lead Tenure Analysis:**
+- Jon BAKER led the Trophy standings for 59 of 72 holes (82%), losing control only between H13 of Round 3 and H6 of Round 4 when Alex BAKER briefly remembered ambition.
+- Jon BAKER led the Jacket for 70 of 72 holes (97%), relinquishing control only at H3-4 of Round 3 to David MULLIN and H3-5 of Round 3 to various challengers, which in governance terms represents a landslide.
+- Alex BAKER led the Trophy for 13 holes total, all in the final 23 holes of the tournament, which suggests either late-stage confidence or catastrophically poor timing.
 
-**Scoring Volatility:**
-John Patterson's round scores ranged from 26 to 39 points, a thirteen-point spread suggesting he experienced golf as four separate tournaments happening simultaneously to four different people.
+**Front Nine vs Back Nine Divergence:**
+- John PATTERSON: 17 points (F9) vs 9 points (B9) in Round 1 (8-point differential), suggesting someone replaced his golf bag at the turn.
+- David MULLIN: 18 points (F9) vs 11 points (B9) in Round 3 (7-point differential), proof that starting strong guarantees precisely nothing.
+- Gregg WILLIAMS: 15 points (F9) vs 20 points (B9) in Round 3 (negative 5-point differential), a back-nine rally that kept him perpetually third.
+- Jon BAKER: 20 points (F9) vs 12 points (B9) in Round 3 (8-point differential), nearly squandering the lead before remembering he was Jon BAKER.
 
-**Blow-Up Frequency:**
-Thirty-two triple-bogeys or worse were recorded across the tournament, with Patterson contributing fourteen, Alex Baker eight, and Williams seven. These numbers suggest either exceptional course difficulty or collective panic, likely both.
+**Blow-Up Distribution:**
+- John PATTERSON: 8 triple-bogeys in Round 1 alone, including six zero-point holes, which represents less golf and more performance art.
+- Alex BAKER: 5 triple-bogeys in Round 4, featuring 9 zero-point holes, the statistical signature of competitive self-harm.
+- Tournament-wide: Zero eagles. Six birdies. Approximately 47 triple-bogeys or worse, which in density terms qualifies as an epidemic.
 
-**Front Nine/Back Nine Patterns:**
-Patterson scored seventeen points on Round 1's front nine, then nine on the back. Mullin and Baker both showed strong front-nine tendencies in Round 4, posting nineteen and twenty points respectively before collapsing. Williams repeatedly finished stronger than he started, suggesting he requires nine holes to remember how golf works.
+**Birdie Scarcity Index:**
+- Six birdies across 360 holes played (1.67% birdie rate), suggesting par is an aspirational concept rather than a baseline expectation.
+- Jon BAKER: 2 birdies. Gregg WILLIAMS: 2 birdies. David MULLIN: 2 birdies. Everyone else: busy trying not to make nines.
 
-**Birdie Scarcity:**
-Six total birdies across 72 holes averages to one birdie per twelve holes, which is either a testament to course defense or evidence that everyone involved should consider taking up a different sport entirely.
+**Gross Scoring Futility vs Stableford Success Paradox:**
+- David MULLIN finished 2nd in Jacket (+73 gross) but 5th in Trophy (125 points), earning the Spoon via the cruelest application of mathematics since calculus was invented.
+- This represents the TEG achievement gap: playing objectively better golf while scoring objectively fewer points, which is either profound irony or structural injustice depending on one's philosophical orientation.
+
+**Round Volatility Coefficient:**
+- John PATTERSON's 13-point range (26 to 39 points) across rounds suggests either personal growth or complete randomness.
+- Alex BAKER's 15-point range (27 to 42 points) captured the full human experience: competence, confidence, collapse.
+- Jon BAKER's 9-point range (32 to 41 points) represented the boring tyranny of consistency, which in competitive terms is unbeatable and in narrative terms is intolerable.
+
+The data suggests that amateur golf remains a voluntary experiment in managing expectations downward while simultaneously believing, against all available evidence, that this time will be different. It won't be. It never is. That's why we play.

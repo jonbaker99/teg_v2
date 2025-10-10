@@ -20,9 +20,10 @@ The page uses helper functions to:
 # === IMPORTS ===
 import streamlit as st
 import pandas as pd
+import importlib.util
 
 # Import data loading functions from main utils
-from utils import get_ranked_teg_data, load_datawrapper_css, load_all_data, read_file, STREAKS_PARQUET
+from utils import get_ranked_teg_data, load_datawrapper_css, load_all_data, read_file, STREAKS_PARQUET, read_text_file, load_teg_reports_css
 
 # Import latest round/TEG helper functions (shared helper file)
 from helpers.latest_round_processing import (
@@ -42,6 +43,23 @@ from helpers.score_count_processing import count_scores_by_player
 from helpers.streak_analysis_processing import get_player_window_streaks
 
 
+# === HELPER FUNCTIONS ===
+def render_report(md_text: str):
+    """Render markdown report as HTML with TEG report styling
+
+    Args:
+        md_text (str): Markdown text to render
+    """
+    has_markdown = importlib.util.find_spec("markdown") is not None
+    if has_markdown:
+        import markdown as md
+        html_body = md.markdown(md_text, extensions=["extra", "sane_lists", "smarty", "toc"])
+        full_html = f"<div class='teg-report'>{html_body}</div>"
+        st.markdown(full_html, unsafe_allow_html=True)
+    else:
+        st.error("Markdown library not available. Please install with: pip install markdown")
+
+
 # === CONFIGURATION ===
 # === PAGE LAYOUT CONFIGURATION ===
 from utils import get_page_layout
@@ -52,6 +70,9 @@ st.markdown('Shows how latest or selected TEG compares to other TEGs')
 
 # Load CSS styling for consistent table appearance
 load_datawrapper_css()
+
+# Load TEG reports CSS styling for the report tab
+load_teg_reports_css()
 
 # initialize_teg_selection_state() - Sets up session state for TEG selection
 initialize_teg_selection_state()
@@ -88,7 +109,7 @@ with col2:
     st.button("Latest TEG", on_click=reset_teg_selection)
 
 # === MAIN TAB STRUCTURE ===
-main_tabs = st.tabs(["Aggregate Score", "Scoring", "Streaks", "Records & PBs"])
+main_tabs = st.tabs(["Aggregate Score", "Scoring", "Streaks", "Records & PBs", "Report"])
 
 # === AGGREGATE SCORE TAB ===
 with main_tabs[0]:
@@ -315,6 +336,43 @@ with main_tabs[3]:
 
     # Display records and PBs summary
     display_records_and_pbs_summary(records_dict, page_type='TEG')
+
+# === REPORT TAB ===
+with main_tabs[4]:
+    st.markdown("#### Tournament Report")
+
+    # Extract TEG number from teg_t string (e.g., "TEG 17" -> 17)
+    try:
+        teg_num = int(teg_t.split()[-1])
+    except (ValueError, IndexError):
+        st.error(f"Could not extract TEG number from '{teg_t}'")
+        teg_num = None
+
+    if teg_num is not None:
+        # Determine if tournament is complete
+        try:
+            completed_tegs = read_file('data/completed_tegs.csv')
+            is_complete = not completed_tegs.empty and teg_num in completed_tegs['TEGNum'].values
+        except Exception:
+            # Fallback: assume complete if we have the data
+            is_complete = True
+
+        if is_complete:
+            # Construct path to report file (relative path from project root)
+            report_file_path = f"data/commentary/teg_{teg_num}_main_report.md"
+
+            # Try to load and render the report
+            try:
+                md_text = read_text_file(report_file_path)
+                if teg_num < 8:
+                    st.caption("NB: The TEG Trophy winners before TEG 8 were decided by best net; the report here is written based on Stableford so finishing positions may be inaccurate")
+                render_report(md_text)
+            except FileNotFoundError:
+                st.info(f"No report available yet for {teg_t}.")
+            except Exception as report_error:
+                st.error(f"Error loading report: {str(report_error)}")
+        else:
+            st.info(f"No report available - tournament in progress.")
 
 # === NAVIGATION LINKS ===
 from utils import add_custom_navigation_links

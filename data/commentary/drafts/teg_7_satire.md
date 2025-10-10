@@ -1,4 +1,4 @@
-# TEG 7: A Study in Front-Running Perfection and Quintuple-Bogey Squalor {.report-title}
+# TEG 7: Henry Meller Led Start to Finish, Golf as Administrative Procedure {.report-title}
 
 <p class="dateline">TEG 7 | Lisbon Coast | 2014</p>
 

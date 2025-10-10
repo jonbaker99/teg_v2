@@ -1,4 +1,4 @@
-# TEG 8: A Wire-to-Wire Study in Comfortable Dominance and Hidden Torment {.report-title}
+# TEG 8: Gregg Williams Won Despite Twelve Acts of Self-Sabotage {.report-title}
 
 <p class="dateline">TEG 8 | Lisbon Coast | 2015</p>
 

@@ -1,4 +1,4 @@
-# TEG 6: A Comprehensive Study in Catastrophe Management {.report-title}
+# TEG 6: Gregg Williams's Eight Disasters That Somehow Weren't Enough to Lose {.report-title}
 
 <p class="dateline">TEG 6 | Catalonia | 2013</p>
 

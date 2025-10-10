@@ -1,4 +1,4 @@
-# TEG 4: A Comprehensive Field Study in Optimism Meeting Reality {.report-title}
+# TEG 4: How Jon Baker Threw It Away and David Mullin Picked It Up {.report-title}
 
 <p class="dateline">TEG 4 | East Sussex | 2011</p>
 

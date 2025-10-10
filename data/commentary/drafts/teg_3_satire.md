@@ -1,4 +1,4 @@
-# TEG 3: A Comprehensive Study in Optimism Meeting Reality {.report-title}
+# TEG 3: Jon Baker's 72-Hole Coronation, A Study in Zero Drama {.report-title}
 
 <p class="dateline">TEG 3 | Algarve | 2010</p>
 

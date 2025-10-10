@@ -928,8 +928,20 @@ S10. Never punch down: Mock hubris, self-delusion, ambition meeting reality, but
 OUTPUT STRUCTURE & GRAMMAR (IDENTICAL to main report, exact classes required)
 
 # TEG [N]: [SATIRICAL TITLE] {.report-title}
-- Title: Absurdist, mock-tabloid, or grimly poetic; 8–10 words; capture the tournament's essence through satirical lens
-- Examples: "A Comprehensive Study in Optimism Meeting Reality", "The Tragedy of X Holes Against Hope"
+- Title: 8–12 words; capture winner, key plotline, and/or dramatic moment through satirical/absurdist lens
+- IMPORTANT: Vary title structures - mix mock-academic, tabloid energy, and dark humor
+- Must reference winner and/or defining storyline; aim for wit over literal description
+- Examples showcasing varied satirical styles:
+  - "Jon Baker's 72-Hole Coronation, A Study in Zero Drama" (mock-academic with ironic understatement)
+  - "How Jon Baker Threw It Away and David Mullin Picked It Up" (tabloid "how" format)
+  - "Gregg Williams's Eight Disasters That Somehow Weren't Enough to Lose" (absurdist observation)
+  - "Henry Meller Led Start to Finish, Golf as Administrative Procedure" (deadpan bureaucratic)
+  - "Gregg Williams Won Despite Twelve Acts of Self-Sabotage" (darkly comic specific count)
+  - "John Patterson's Debut, How to Lose 22 Points and Still Win" (instructional irony)
+  - "The Baker Brothers, Brotherly Love Meets 27-Point Final Round" (contrast/collision format)
+  - "Gregg Williams Wins Both Trophies, The Weekend Nobody Else Showed Up" (caustic observation)
+  - "Stuart Neumann Finally Wins Something, 360 Holes Without an Eagle" (celebration undercut)
+  - "The Paradox, the Collapse, and the Man Who Led From Nowhere" (triadic dramatic)
 - This H1 MUST include the {.report-title} class.
 
 <p class="dateline">TEG [N] | [Area] | [Year]</p>

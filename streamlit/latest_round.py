@@ -25,7 +25,7 @@ import streamlit as st
 import pandas as pd
 
 # Import data loading functions from main utils
-from utils import get_ranked_round_data, load_all_data, load_datawrapper_css, read_file, read_text_file, STREAKS_PARQUET
+from utils import get_ranked_round_data, load_all_data, load_datawrapper_css, read_file, read_text_file, STREAKS_PARQUET, load_teg_reports_css
 from make_charts import create_round_graph
 
 # Import latest round helper functions
@@ -58,10 +58,12 @@ from utils import get_page_layout
 layout = get_page_layout(__file__)
 st.set_page_config(layout=layout)
 st.subheader("Chosen Round in context")
-st.markdown('Shows how latest or selected rounds and TEGs compare to other rounds')
+# st.markdown('Shows how latest or selected rounds and TEGs compare to other rounds')
 
 # Load CSS styling for consistent table appearance
 load_datawrapper_css()
+load_teg_reports_css()
+
 
 # Load scorecard CSS for scorecard tab
 load_scorecard_css()
@@ -79,6 +81,7 @@ df_round = df_round.sort_values(by=['TEGNum', 'Round'])
 # Load all data including incomplete TEGs for cumulative charts
 # Purpose: Round analysis benefits from current tournament data for up-to-date context
 all_data = load_all_data(exclude_incomplete_tegs=False)
+round_info = read_file('data/round_info.csv')
 
 # update_session_state_defaults() - Sets session state to latest round if not initialized
 update_session_state_defaults(df_round)
@@ -92,7 +95,7 @@ with col1:
     # get_teg_and_round_options() - Gets available TEG options
     teg_options, _ = get_teg_and_round_options(df_round, st.session_state.teg_r)
     teg_index = teg_options.index(st.session_state.teg_r)
-    teg_r = st.selectbox("Select TEG (Round)", options=teg_options, index=teg_index, key='teg_r_select')
+    teg_r = st.selectbox("Select TEG", options=teg_options, index=teg_index, key='teg_r_select')
     st.session_state.teg_r = teg_r
 
 with col2:
@@ -101,6 +104,17 @@ with col2:
     rd_index = round_options.index(st.session_state.rd_r) if st.session_state.rd_r in round_options else 0
     rd_r = st.selectbox("Select Round", options=round_options, index=rd_index, key='rd_r_select')
     st.session_state.rd_r = rd_r
+
+mask = (round_info["TEG"] == teg_r) & (round_info["Round"] == rd_r)
+if mask.any():
+    course = round_info.loc[mask, "Course"].squeeze()
+    date = round_info.loc[mask, "Date"].squeeze()
+else:
+    course, date = None, None
+
+'---'
+st.markdown(f"#### {teg_r} R{rd_r} | {course} | {date}")  
+
 
 # === MAIN TAB STRUCTURE ===
 main_tabs = st.tabs(["Scoreboards", "Scorecard", "Report", "Scoring", "Streaks", "Records & PBs"])
@@ -147,6 +161,27 @@ with main_tabs[0]:
                 title=friendly_metric,
                 y_axis_label=f'Cumulative {friendly_metric}'
             )
+
+            # Force x-axis to display and add circle markers with a thin white outline
+            fig_rd.update_traces(
+                mode="lines+markers",
+                marker=dict(symbol="circle", size=6, line=dict(width=1, color="white"))
+            )
+
+            fig_rd.update_xaxes(
+                visible=True,            # ensure the x axis is shown
+                showline=True,           # draw the axis line
+                linewidth=1,
+                linecolor="#ccc",
+                ticks="outside",
+                tickmode="linear",
+                tick0=1,
+                dtick=1,                 # rounds usually 1,2,3,...
+                title_text="Hole",
+                range=[0.5, 18.5]
+            )
+
+
             st.plotly_chart(fig_rd, use_container_width=True, config=dict({'displayModeBar': False}))
 
 # === SCORECARD TAB ===
@@ -179,7 +214,7 @@ with main_tabs[2]:
     teg_num = int(teg_r.split()[1])
 
     # Construct file path for round report
-    report_path = f"data/commentary/round_reports/teg_{teg_num}_round_{rd_r}_report.md"
+    report_path = f"data/commentary/round_reports/teg{teg_num}_R{rd_r}_report.md"
 
     try:
         # Load the report using read_text_file for Railway compatibility

@@ -2132,6 +2132,34 @@ def retrieve_story_notes_batch(batch_id):
         print("Run this command with the round stories batch ID first.")
         return results
 
+    elif batch_type == "satirical_reports":
+        print("\n✓ This is a satirical reports batch.")
+        print("\nSaving satirical reports to files...")
+
+        # Extract TEG numbers from custom_ids and save reports
+        saved_count = 0
+        for custom_id, satirical_report_text in results.items():
+            if satirical_report_text is None:
+                continue
+
+            # Extract TEG number from custom_id (format: "TEG{num}_satire")
+            if custom_id.startswith('TEG') and custom_id.endswith('_satire'):
+                teg_num = custom_id.replace('TEG', '').replace('_satire', '')
+                output_path = f"data/commentary/drafts/teg_{teg_num}_satire.md"
+
+                write_text_file(
+                    output_path,
+                    satirical_report_text,
+                    commit_message=f"Generate satirical report for TEG {teg_num} (Batch API)"
+                )
+                print(f"  ✓ Saved TEG {teg_num}: {output_path}")
+                saved_count += 1
+            else:
+                print(f"  ⚠️  Unexpected custom_id format: {custom_id}")
+
+        print(f"\n✓ Saved {saved_count} satirical reports")
+        return results
+
     else:
         print(f"  ⚠️  Unknown batch type '{batch_type}'")
         print("Results saved but may require manual processing.")

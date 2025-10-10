@@ -1,4 +1,4 @@
-# TEG 9: A Comprehensive Study in Psychological Collapse and Recovery {.report-title}
+# TEG 9: John Patterson's Debut, How to Lose 22 Points and Still Win {.report-title}
 
 <p class="dateline">TEG 9 | Lisbon Coast | 2016</p>
 

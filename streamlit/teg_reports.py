@@ -151,8 +151,18 @@ if is_complete:
     with tabs[0]:
         # st.markdown(f"#### TEG {selected_teg_num} - Full Tournament Report")
 
-        # Construct path to full TEG report file
-        report_file_path = f"data/commentary/teg_{selected_teg_num}_main_report.md"
+        # Initialize report type in session state if not present
+        if f"report_type_{selected_teg_num}" not in st.session_state:
+            st.session_state[f"report_type_{selected_teg_num}"] = "Normal"
+
+        # Get current report type from session state
+        report_type = st.session_state[f"report_type_{selected_teg_num}"]
+
+        # Construct path to full TEG report file based on selected type
+        if report_type == "Satire":
+            report_file_path = f"data/commentary/drafts/teg_{selected_teg_num}_satire.md"
+        else:
+            report_file_path = f"data/commentary/teg_{selected_teg_num}_main_report.md"
 
         try:
             # Load and render the report
@@ -163,8 +173,18 @@ if is_complete:
                 st.caption("NB: The TEG Trophy winners before TEG 8 were decided by best net; the report here is written based on Stableford so finishing positions may be inaccurate")
 
             render_report(md_text)
+
+            # Add segmented control after the report for less prominence
+            st.markdown("---")
+            st.segmented_control(
+                "Report type",
+                options=["Normal", "Satire"],
+                default=report_type,
+                key=f"report_type_control_{selected_teg_num}",
+                on_change=lambda: st.session_state.update({f"report_type_{selected_teg_num}": st.session_state[f"report_type_control_{selected_teg_num}"]})
+            )
         except FileNotFoundError:
-            st.info(f"No full tournament report available yet for TEG {selected_teg_num}.")
+            st.info(f"No {report_type.lower()} tournament report available yet for TEG {selected_teg_num}.")
         except Exception as e:
             st.error(f"Error loading tournament report: {str(e)}")
 
