@@ -1,1 +1,66 @@
-IyBURUcgMTggLSBSb3VuZCAxIFN0b3J5IE5vdGVzCgojIyBSb3VuZCBTdW1tYXJ5Ci0gKipSb3VuZCBXaW5uZXI6KiogQWxleCBCQUtFUiAoNDQgcHRzIFN0YWJsZWZvcmQsIDMwIGdyb3NzKQotICoqVG91cm5hbWVudCBMZWFkZXI6KiogQWxleCBCQUtFUiAobGVhZHMgYnkgMTAgcHRzKQotICoqQmlnZ2VzdCBNb3ZlcjoqKiBBbGV4IEJBS0VSICh0YWtlcyBsZWFkIGFmdGVyIHN0YXJ0aW5nIGVxdWFsKQotICoqRHJhbWEgTGV2ZWw6KiogTWVkaXVtCgojIyBLZXkgTW9tZW50cwotIEgyOiBBbGV4IEJBS0VSIHNlaXplcyBsZWFkIGZyb20gRGF2aWQgTVVMTElOICg0IHB0cyBjdW11bGF0aXZlKSAtIG5ldmVyIHJlbGlucXVpc2hlcyBjb250cm9sCi0gSDEtNjogQWxleCBCQUtFUiBleHBsb3NpdmUgc3RhcnQgKDE5IHB0cyBpbiBmaXJzdCBzaXggaG9sZXMpIC0gYnVpbGRzIGNvbW1hbmRpbmcgYWR2YW50YWdlCi0gSDk6IEpvaG4gUEFUVEVSU09OIHN1cmdlcyB1cCAyIHBvc2l0aW9ucyB3aXRoIHN0cm9uZyBtaWRkbGUgc3RyZXRjaAotIEgxMC0xMjogSm9obiBQQVRURVJTT04gcHVycGxlIHBhdGNoICgxNiBwdHMgaW4gc2Vjb25kIHNpeCBob2xlcykgLSBtb3ZlcyBpbnRvIDNyZCBwbGFjZQotIEgxMjogRWFzaWVzdCBob2xlIG9mIHJvdW5kIChQYXIgNCwgYXZnIHNjb3JlIDQuMCkgLSBhbGwgcGxheWVycyBjYXBpdGFsaXplCi0gSDE4OiBUb3VybmFtZW50LWRlZmluaW5nIGRpc2FzdGVyIGhvbGUgKFBhciA1LCBhdmcgOC42KSAtIDMuNiBvdmVyIHBhciBhdmVyYWdlCi0gSDEtNjogSm9uIEJBS0VSIHN0cnVnZ2xlcyBiYWRseSAoNSBwdHMgaW4gZmlyc3Qgc2l4KSAtIGZhbGxzIG9mZiB0aGUgcGFjZSBlYXJseQoKIyMgSG93IFBvc2l0aW9ucyBDaGFuZ2VkCi0gKipTdGFydCBvZiByb3VuZDoqKiBBbGwgcGxheWVycyB0aWVkIChSb3VuZCAxKQotICoqS2V5IHNoaWZ0czoqKiBIMiAtIEFsZXggQkFLRVIgdGFrZXMgbGVhZDsgSDkgLSBKb2huIFBBVFRFUlNPTiBqdW1wcyAyIHNwb3RzCi0gKipFbmQgb2Ygcm91bmQ6KiogMXN0IEFsZXggQkFLRVIgKDQ0KSwgMm5kIERhdmlkIE1VTExJTiAoMzQpLCAzcmQgSm9obiBQQVRURVJTT04gKDMyKSwgNHRoIEdyZWdnIFdJTExJQU1TICgyNCksIDV0aCBKb24gQkFLRVIgKDIyKQoKIyMgUm91bmQgQnJlYWtkb3duCioqSG9sZXMgMS02IChPcGVuaW5nKToqKgotIEFsZXggQkFLRVIgZG9taW5hdGVzIHdpdGggMTkgcHRzIC0gZXN0YWJsaXNoZXMgNy1wb2ludCBsZWFkIG92ZXIgZmllbGQKLSBEYXZpZCBNVUxMSU4gc29saWQgb3BlbmluZyAoMTIgcHRzKSAtIGtlZXBzIHdpdGhpbiBzdHJpa2luZyBkaXN0YW5jZQotIEpvbiBCQUtFUiBzdHJ1Z2dsZXMgYmFkbHkgKDUgcHRzKSAtIHB1dHMgaGltc2VsZiBpbiBkZWVwIGhvbGUKLSBKb2huIFBBVFRFUlNPTiBhbmQgR3JlZ2cgV0lMTElBTVMgaW5jb25zaXN0ZW50ICg4IGFuZCA3IHB0cyByZXNwZWN0aXZlbHkpCgoqKkhvbGVzIDctMTIgKE1pZGRsZSk6KioKLSBBbGV4IEJBS0VSIG1haW50YWlucyBtb21lbnR1bSAoMTYgcHRzKSAtIGV4dGVuZHMgbGVhZCB0byBkb3VibGUgZGlnaXRzCi0gSm9obiBQQVRURVJTT04gY2F0Y2hlcyBmaXJlICgxNiBwdHMpIC0gbWFzc2l2ZSBzdXJnZSBwcm9wZWxzIGhpbSBpbnRvIGNvbnRlbnRpb24KLSBEYXZpZCBNVUxMSU4gc3RlYWR5ICgxMiBwdHMpIC0gaG9sZHMgMm5kIHBvc2l0aW9uCi0gSm9uIEJBS0VSIHNob3dzIHNpZ25zIG9mIGxpZmUgKDExIHB0cykgYnV0IGRhbWFnZSBhbHJlYWR5IGRvbmUKLSBIMTIgcHJvdmlkZXMgcmVsaWVmIGZvciBhbGwgLSBlYXNpZXN0IGhvbGUgeWllbGRzIDMuMiBwdHMgYXZlcmFnZQoKKipIb2xlcyAxMy0xOCAoQ2xvc2luZyk6KioKLSBBbGV4IEJBS0VSIGZhZGVzIHNsaWdodGx5ICg5IHB0cykgYnV0IGxlYWQgbmV2ZXIgdGhyZWF0ZW5lZAotIERhdmlkIE1VTExJTiBjb25zaXN0ZW50IGZpbmlzaCAoMTAgcHRzKSAtIHNlY3VyZXMgMm5kIHBsYWNlCi0gSm9obiBQQVRURVJTT04gY29vbHMgZG93biAoOCBwdHMpIC0gc3RheXMgM3JkCi0gR3JlZ2cgV0lMTElBTVMgYmVzdCBjbG9zaW5nIHN0cmV0Y2ggKDkgcHRzKSAtIG5vdCBlbm91Z2ggdG8gbW92ZSB1cAotIEgxOCBjYXJuYWdlIChhdmcgOC42IHN0cm9rZXMpIC0gc2VwYXJhdGVzIGNvbnRlbmRlcnMgZnJvbSBwcmV0ZW5kZXJzCgojIyBSb3VuZCBTdGF0cwotICoqSGFyZGVzdCBob2xlOioqIEgxOCAoUGFyIDUsIGF2ZyA4LjYgdnMgcGFyICszLjYpCi0gKipFYXNpZXN0IGhvbGU6KiogSDEyIChQYXIgNCwgYXZnIDQuMCB2cyBwYXIgMC4wKQotICoqQmVzdCBpbmRpdmlkdWFsIHBlcmZvcm1hbmNlOioqIEFsZXggQkFLRVIgKDQ0IHB0cywgMzAgZ3Jvc3MpCi0gKipXb3JzdCBjb2xsYXBzZToqKiBKb24gQkFLRVIgKDIyIHB0cyB0b3RhbCwgNSBwdHMgdGhyb3VnaCBmaXJzdCBzaXggaG9sZXMpCgojIyBQbGF5ZXIgTm90ZXMKLSAqKkFsZXggQkFLRVI6KiogNDQgcHRzICgzMCBncm9zcyksIDFzdCBwbGFjZSAtIEZyb250IDkgZG9taW5hbmNlICgzMCBwdHMpIGJ1aWx0IGluc3VybW91bnRhYmxlIGxlYWQsIGZhZGVkIGJhY2sgOSAoMTQgcHRzKSBidXQgbmV2ZXIgY2hhbGxlbmdlZAotICoqRGF2aWQgTVVMTElOOioqIDM0IHB0cyAoMjggZ3Jvc3MpLCAybmQgcGxhY2UgLSBDb25zaXN0ZW5jeSBwZXJzb25pZmllZCB3aXRoIGJhbGFuY2VkIDE3LTE3IHNwbGl0LCB0cmFpbHMgYnkgMTAgaGVhZGluZyBpbnRvIFJvdW5kIDIKLSAqKkpvaG4gUEFUVEVSU09OOioqIDMyIHB0cyAoMzYgZ3Jvc3MpLCAzcmQgcGxhY2UgLSBUYWxlIG9mIHR3byBuaW5lcyAoMTEgZnJvbnQsIDIxIGJhY2spLCBzcGVjdGFjdWxhciBtaWRkbGUgc2l4ICgxNiBwdHMpIHZhdWx0ZWQgaGltIGludG8gY29udGVudGlvbgotICoqR3JlZ2cgV0lMTElBTVM6KiogMjQgcHRzICg0MSBncm9zcyksIDR0aCBwbGFjZSAtIEltcHJvdmVkIGFzIHJvdW5kIHByb2dyZXNzZWQgKDktOC0xNS05IHNwbGl0cyksIGJ1dCBzbG93IHN0YXJ0ICg3IHB0cyBmaXJzdCBzaXgpIHByb3ZlZCBjb3N0bHkKLSAqKkpvbiBCQUtFUjoqKiAyMiBwdHMgKDM4IGdyb3NzKSwgNXRoIHBsYWNlIC0gRGlzYXN0cm91cyBvcGVuaW5nICg1IHB0cyBmaXJzdCBzaXgpIGxlZnQgdG9vIG11Y2ggZ3JvdW5kIHRvIG1ha2UgdXAsIGNvbnNpc3RlbnQgMTEtMTEgc3BsaXQgYnV0IDIyIHB0cyBiYWNrCgo=
+# TEG 18 - Round 1 Story Notes
+
+## Round Summary
+- **Round Winner:** Alex BAKER (46 pts Stableford, 26 gross)
+- **Tournament Leader:** Alex BAKER (leads by 12 pts)
+- **Biggest Mover:** John PATTERSON (incredible back 9 surge - 24 pts)
+- **Drama Level:** High
+
+## Key Moments
+- H2: Gregg WILLIAMS takes lead from Alex BAKER (multiple position changes)
+- H3: Alex BAKER reclaims lead - major position shake-up (9 events, 4 players affected)
+- H4: David MULLIN briefly takes lead in volatile early stretch
+- H5: Alex BAKER seizes lead for good with strong play
+- H7: Course bites back - hardest hole (avg +2.6 vs par) slows entire field
+- H10-H18: John PATTERSON's stunning 24-point back nine climbs him to 2nd place
+- H15: Gregg WILLIAMS gains 3 positions while David MULLIN drops 3 (10 total events)
+
+## How Positions Changed
+- **Start of round:** All tied (Round 1)
+- **Key shifts:** 
+  - H2-H5: Four lead changes in four holes
+  - H3: Massive shake-up with Alex BAKER and David MULLIN both jumping 3 positions
+  - H15: Major position swing between Gregg WILLIAMS and David MULLIN
+- **End of round:** 
+  1. Alex BAKER (46 pts)
+  2. John PATTERSON (34 pts, -12)
+  3. David MULLIN (32 pts, -14)
+  4. Gregg WILLIAMS (31 pts, -15)
+  5. Jon BAKER (30 pts, -16)
+
+## Round Breakdown
+**Holes 1-6 (Opening):**
+- Alex BAKER dominant early with 12 pts in first six holes
+- Four lead changes between holes 2-5 creating early chaos
+- Jon BAKER solid with 11 pts, Gregg WILLIAMS 9 pts
+- John PATTERSON struggles with only 7 pts through first six
+- David MULLIN slowest start with 8 pts
+
+**Holes 7-12 (Middle):**
+- Alex BAKER extends lead with massive 18-point stretch (holes 7-12)
+- H7 (Par 5) proves hardest hole on course (avg +2.6 vs par)
+- H11 (Par 3) provides relief as easiest hole (avg +0.2 vs par)
+- David MULLIN finds form with 12 pts
+- John PATTERSON begins comeback with 11 pts
+
+**Holes 13-18 (Closing):**
+- Alex BAKER cruises home with solid 16 pts
+- John PATTERSON explodes for tournament-high 16-point finish (24 pts on back nine)
+- Multiple critical holes with position changes (H13, H15, H17, H18)
+- H14 (Par 3) joint-easiest with H11 (avg +0.2 vs par)
+- Field struggles on closing stretch with H17 and H18 averaging +2.2 vs par
+
+## Round Stats
+- **Hardest hole:** H7 (Par 5, avg +2.6 vs par, 1.0 avg Stableford)
+- **Easiest holes:** H11 and H14 (both Par 3s, avg +0.2 vs par)
+- **Best individual performance:** Alex BAKER (46 pts, 26 gross - dominant wire-to-wire after H5)
+- **Best nine holes:** John PATTERSON back nine (24 pts - sensational finish)
+- **Best six-hole stretch:** Alex BAKER holes 7-12 (18 pts)
+
+## Player Notes
+- **Alex BAKER:** 46 pts (26 gross), led after H5 and never looked back, exceptional middle six (18 pts), 12-point cushion
+- **John PATTERSON:** 34 pts (30 gross), struggled early (7 pts first six) but stormed back with 24-point back nine to claim 2nd, 12 behind leader
+- **David MULLIN:** 32 pts (28 gross), fought for lead early (led briefly at H4), consistent finish with 12 pts on both back six splits, 14 behind
+- **Gregg WILLIAMS:** 31 pts (27 gross), led briefly at H2, steady throughout with strongest finish (12 pts holes 13-18), 15 behind
+- **Jon BAKER:** 30 pts (24 gross), solid start (11 pts first six) but faded middle and late, two position drops at H9 and H13, 16 behind
+

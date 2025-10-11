@@ -21,6 +21,7 @@ from utils import (
     summarise_existing_rd_data,
     update_teg_status_files,
     clear_all_caches,
+    clear_volume_cache,
     ALL_SCORES_PARQUET,
     HANDICAPS_CSV,
     ALL_DATA_PARQUET,
@@ -298,6 +299,14 @@ def execute_data_update(overwrite: bool = False, new_data_only: bool = False):
                 from utils import batch_commit_to_github
                 batch_commit_to_github(batch_files, f"Data update: {len(processed_rounds)} new records + cache updates")
                 st.success(f"🚀 Pushed {len(batch_files)} files to GitHub in single commit.")
+
+        # Clear Railway volume cache to ensure fresh data is loaded
+        # This is critical for report generation to see newly uploaded rounds
+        if is_railway:
+            with st.spinner("🗑️ Clearing Railway volume cache..."):
+                result = clear_volume_cache()
+                logger.info(f"Volume cache clear result: {result}")
+                st.success("🗑️ Volume cache cleared.")
 
         # Clear all caches to reflect changes
         st.cache_data.clear()
