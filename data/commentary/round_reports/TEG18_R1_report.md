@@ -1,64 +1,65 @@
 # TEG 18 - Round 1 Report
 
-## Baker Seizes Command as Catalunya Serves Up Opening-Round Fireworks
+## Baker Seizes Command as Catalunya Claims Victims
+
 **PGA Catalunya - Tour • 11/10/2025 • Round 1 of 4**
 
 ### Round Summary
 
-The TEG Trophy burst into life at PGA Catalunya with a chaotic opening round that delivered four lead changes in the first five holes before Alex Baker seized control and never looked back. Baker's commanding 46-point performance—built on an exceptional 18-point middle stretch—has handed him a 12-point cushion heading into Round 2, but the drama behind him suggests this tournament has plenty of twists still to come.
+The 18th TEG Trophy burst into life at PGA Catalunya with Alex Baker posting a commanding 46-point opening salvo to establish a 12-point advantage over the field. But the scoreline barely hints at the drama that unfolded across a volatile opening stretch, where the lead changed hands four times in the opening five holes before Baker finally seized control for good.
 
-John Patterson authored the round's most compelling subplot, transforming a dismal front nine (just 7 points through six holes) into a sensational back-nine surge worth 24 points that rocketed him into second place. Meanwhile, David Mullin and Gregg Williams both held the lead briefly in the tournament's volatile opening hour, and while they couldn't maintain that momentum, neither has fallen far enough out of contention to be written off. In the Green Jacket race, Mullin's 28 strokes leads Baker by two as the gross competition takes shape.
+John Patterson emerged from a sluggish start to claim second place on 34 points, his barnstorming back nine hauling him past David Mullin, who drops to third on 32 points after briefly leading at the fourth. Gregg Williams and Jon Baker complete the top five, trailing by 15 and 16 points respectively.
 
-The Catalunya Tour course showed its teeth early, with the par-5 7th proving a nightmare (averaging +2.6 versus par) while the par-3s at 11 and 14 offered brief respite. With three rounds remaining, Baker has established pole position—but has he opened a decisive gap, or merely painted a target on his back?
+The Tour course flexed its muscles throughout the day, particularly at the treacherous par-5 seventh, which averaged 2.6 strokes over par and yielded just one point on average. Baker's middle-six surge of 18 points proved decisive, breaking open a contest that had been fiercely contested through the opening stages.
 
 ### How It Unfolded
 
-The tournament exploded into life immediately. Gregg Williams snatched the early advantage at the par-4 2nd, only for Alex Baker to reclaim it one hole later in a shake-up that affected four players and signalled the volatility to come. David Mullin briefly grabbed the lead at the 4th before Baker seized it for good at the par-3 5th, establishing the authority that would define his round.
+The tournament exploded into action from the very first tee. Gregg Williams struck first, seizing the lead at the second hole in what would become a chaotic opening stretch. The par-3 third hole descended into mayhem—nine position changes in a single hole—with Baker reclaiming top spot amid the carnage. David Mullin briefly wrested control at the fourth, but Baker's response at the fifth would prove definitive. He surged ahead and wouldn't be caught again.
 
-What followed was a masterclass in Stableford accumulation. Baker piled up 12 points through the opening six holes, laying the foundation for what would become an unassailable lead. But it was his middle-six stretch—holes 7 through 12—where he truly broke the field. While the par-5 7th devoured the competition (the hardest hole on course, averaging just 1.0 Stableford point), Baker somehow navigated the carnage and continued building, amassing 18 points across those six holes to open a gap his rivals couldn't bridge.
+The middle stretch of Catalunya's Tour course separated pretenders from contenders. The par-5 seventh emerged as the round's defining hole, a brute that averaged 2.6 over par and left the entire field battered. Yet while others struggled, Baker found another gear. His 18-point haul through holes seven to twelve was devastating—the best six-hole stretch anyone would post all day. The par-3 11th offered brief respite, playing as the easiest hole at just 0.2 over par, but by then Baker had opened a gap that looked insurmountable.
 
-Behind him, John Patterson's round told two contrasting stories. Through six holes, the veteran had managed just 7 points and appeared destined for a forgettable afternoon. Then came the turn. Patterson caught fire on the back nine, compiling 24 points—including a tournament-high 16-point finish from the 13th onwards—to surge past David Mullin and Gregg Williams into second place. His charge injected late drama into what might otherwise have been a Baker procession.
+Patterson, meanwhile, was mounting his own charge from the depths. After limping through the opening six with just seven points, the back nine became his canvas. Eleven points through the middle six steadied the ship, but it was the closing stretch where he truly came alive. Sixteen points over the final six holes—matching Baker's own effort—propelled him past Mullin into second place.
 
-The closing stretch proved treacherous for everyone. While the par-3 14th offered a brief scoring opportunity (joint-easiest with the 11th), the final four holes averaged well over par, with the 17th and 18th particularly punishing at +2.2 versus par. Baker navigated them for a solid 16 points to seal his dominant display. Williams fought hardest over this closing stretch with 12 points, enough to maintain fourth position, while Mullin matched that total to stay within striking distance in third. Jon Baker, meanwhile, faded after a bright start, dropping positions at both the 9th and 13th as his challenge stalled.
+The 15th hole provided the round's final major shake-up. Williams surged three positions to fourth, while Mullin tumbled from second to third in a dramatic position shuffle involving ten changes. Jon Baker, who had posted the day's most consistent splits (11-9-10), couldn't arrest his slide, dropping positions at the third, ninth, and 13th to finish fifth. The difficult 18th—averaging 2.2 over par—offered no redemption, but Alex Baker closed with authority to cement a statement opening round.
 
 ### Standings After Round 1
 
-**Round 1 Stableford:** AB 46 | JP 34 | DM 32 | GW 31 | JnB 30  
-**Round 1 Gross:** JnB +24 | GW +27 | DM +28 | AB +26 | JP +30
+**Round 1 Stableford:** AB 46 | JP 34 | DM 32 | GW 31 | JB 30
 
-**Tournament Stableford:** AB 46 | JP 34 | DM 32 | GW 31 | JnB 30  
-**Tournament Gross:** DM +28 | AB +26 | GW +27 | JnB +24 | JP +30
+**Round 1 Gross:** AB +26 | JP +38 | DM +40 | GW +41 | JB +42
+
+**Tournament Stableford:** AB 46 | JP 34 | DM 32 | GW 31 | JB 30
+
+**Tournament Gross:** AB +26 | JP +38 | DM +40 | GW +41 | JB +42
 
 ### What's At Stake
 
-**With 3 rounds remaining:**
+**With three rounds remaining:**
 
-Alex Baker's 12-point lead looks comfortable but isn't impregnable. In Stableford, where 40+ point rounds are achievable on good days, a gap of this size represents roughly one outstanding round versus one average performance. Baker needs to average around 34-36 points across the next three rounds to maintain control—essentially matching what Patterson just posted while avoiding disaster.
+Alex Baker's 12-point cushion looks substantial, but Catalunya has proven it can humble anyone. His commanding performance sets a high bar—to maintain his lead, he'll need to average roughly 31-32 points per round, well within his capabilities after today's masterclass. The pressure now shifts: can he handle being hunted rather than hunter?
 
-For Patterson, sitting 12 back, the mathematics are straightforward: he needs to average 4 points per round better than Baker just to draw level. That back-nine pyrotechnics showed he has that gear, but can he sustain it? David Mullin (14 behind) and Gregg Williams (15 back) face slightly steeper climbs—needing to average 5 points better than the leader per round—but three rounds provide enough runway if Baker falters. Both remain genuine contenders if they can replicate their best stretches from today (Mullin's 12-point back sixes, Williams' 12-point closer).
+Patterson and Mullin sit within striking distance but need to find consistency. Patterson proved he can match Baker's scoring (both posted 16 points over the final six), but can't afford another seven-point opening stretch. He'll need 34-36 points per round to mount a serious challenge. Mullin's 12-12 closing consistency is encouraging, but at 14 points back, he needs Baker to falter while averaging 35+ points himself—a tall order.
 
-Jon Baker, at 16 adrift, needs everything to break right: he must find 5-6 points per round on the leader while Baker simultaneously struggles. It's still mathematically possible, but requires near-perfection. The real battle may be for podium positions, where just 6 points separate second through fifth—any of these four could surge or slip dramatically.
-
-In the Green Jacket race, Mullin's two-stroke gross advantage over Alex Baker keeps that competition wide open, with Williams just one further back. The gross and Stableford battles could yet diverge significantly.
+Williams and Jon Baker remain mathematically alive at 15-16 points adrift, but they'll need back-to-back rounds in the low-to-mid 40s just to apply pressure. The real battle might be for the Green Jacket, where Baker's +26 gross score opens the door for anyone who can string together clean cards. Patterson (+38) and Mullin (+40) trail by 12 and 14 strokes respectively—gaps that can evaporate quickly over three rounds at Catalunya.
 
 ### Round Highlights
 
-- Four lead changes in five holes as Catalunya delivered immediate chaos
-- Alex Baker's dominant 18-point middle stretch (holes 7-12) broke the field
-- John Patterson's sensational 24-point back nine—the round's most dramatic turnaround
-- Hole 7 proved the course's toughest examination, averaging just 1.0 Stableford point
-- Massive 10-event position swing at the 15th as Williams gained three spots while Mullin dropped three
+- Four lead changes in the opening five holes set a frenetic early pace
+- The par-3 third hole produced nine position changes—the round's most chaotic moment
+- Alex Baker's devastating 18-point middle six (holes 7-12) broke the field
+- John Patterson's remarkable 24-point back nine rescued second place from a disastrous start
+- The par-5 seventh averaged 2.6 over par, emerging as Catalunya's defining challenge
 
 ### Player Summaries
 
-**Alex Baker:** Dominated after seizing the lead at the 5th, posting 46 points on 26 gross strokes with an exceptional 18-point middle six-hole stretch. Holds a 12-point cushion in the TEG Trophy and trails Mullin by two in the Green Jacket.
+**Alex BAKER:** Dominant 46-point round featuring an 18-point middle-six surge; took the lead for good at the fifth hole and never wavered, establishing a commanding 12-point advantage heading into Round 2.
 
-**John Patterson:** Transformed a dismal start (7 points through six) into tournament contention with a stunning 24-point back nine. His 16-point finish was the round's best closing stretch, rocketing him to second place 12 points behind Baker.
+**John PATTERSON:** Stormed from nowhere with 24 back-nine points to claim second; struggled early (7 points in first six) but his 16-point closing stretch matched the leader's best effort.
 
-**David Mullin:** Briefly held the lead at the 4th but couldn't maintain early momentum. Consistent through the middle and back stretches (12 points each) keeps him within striking distance at 14 back in Stableford, while his 28 gross strokes lead the Jacket race.
+**David MULLIN:** Brief stint as leader at the fourth, but consistent 12-point finishes in middle and final sixes couldn't match Baker's firepower; dropped from second to third at the 15th hole.
 
-**Gregg Williams:** Grabbed the early lead at the 2nd before Baker pulled away. Steady throughout with his strongest work coming on the closing six (12 points), sitting 15 back but still in mathematical contention with three rounds to play.
+**Gregg WILLIAMS:** Early pace-setter at the second hole, steady improvement throughout (9-10-12 splits) culminated in a three-position leap to fourth at the crucial 15th.
 
-**Jon Baker:** Bright start with 11 points through six holes promised more, but faded through the middle and back stretches. Position drops at the 9th and 13th left him 16 adrift, needing something special to re-enter contention.
+**Jon BAKER:** Most consistent point splits of the day (11-9-10) but position drops at the third, ninth, and 13th ultimately cost him ground; sits 16 points off the pace in fifth.
 
 
