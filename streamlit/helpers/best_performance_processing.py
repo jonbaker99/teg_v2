@@ -557,32 +557,78 @@ def prepare_pb_round_summary_table(rd_data_ranked: pd.DataFrame) -> pd.DataFrame
         Net v Par, and Stableford.
     """
     from utils import format_vs_par
-    
+
     # Get unique players
     players = sorted(rd_data_ranked['Player'].unique())
-    
+
     summary_data = []
-    
+
     for player in players:
         player_data = rd_data_ranked[rd_data_ranked['Player'] == player]
         row = {'Player': player.replace(' ', '<br>')}
-        
+
         # Score (lowest is best)
         best_score = player_data.loc[player_data['Sc'].idxmin()]
         row['Score'] = f"<span class='pb-score'>{int(best_score['Sc'])}</span><br><span class='pb-when'>{best_score['TEG']}|R{best_score['Round']}</span>"
-        
+
         # Gross vs Par (lowest is best)
         best_gross = player_data.loc[player_data['GrossVP'].idxmin()]
         row['Gross'] = f"<span class='pb-score'>{format_vs_par(best_gross['GrossVP'])}</span><br><span class='pb-when'>{best_gross['TEG']}|R{best_gross['Round']}</span>"
-        
+
         # Net vs Par (lowest is best)
         best_net = player_data.loc[player_data['NetVP'].idxmin()]
         row['Net'] = f"<span class='pb-score'>{format_vs_par(best_net['NetVP'])}</span><br><span class='pb-when'>{best_net['TEG']}|R{best_net['Round']}</span>"
-        
+
         # Stableford (highest is best)
         best_stableford = player_data.loc[player_data['Stableford'].idxmax()]
         row['Stfd'] = f"<span class='pb-score'>{int(best_stableford['Stableford'])}</span><br><span class='pb-when'>{best_stableford['TEG']}|R{best_stableford['Round']}</span>"
-        
+
         summary_data.append(row)
-    
+
+    return pd.DataFrame(summary_data)
+
+
+def prepare_pb_nine_summary_table(nine_data_ranked: pd.DataFrame) -> pd.DataFrame:
+    """Creates a summary table of each player's personal best 9 holes.
+
+    This function generates a summary table showing each player's personal best
+    9-hole performance (Front 9 or Back 9) across all scoring measures.
+
+    Args:
+        nine_data_ranked (pd.DataFrame): DataFrame containing ranked 9-hole
+            (FrontBack) performance data.
+
+    Returns:
+        pd.DataFrame: A summary DataFrame with columns for Score, Gross v Par,
+        Net v Par, and Stableford.
+    """
+    from utils import format_vs_par
+
+    # Get unique players
+    players = sorted(nine_data_ranked['Player'].unique())
+
+    summary_data = []
+
+    for player in players:
+        player_data = nine_data_ranked[nine_data_ranked['Player'] == player]
+        row = {'Player': player.replace(' ', '<br>')}
+
+        # Score (lowest is best)
+        best_score = player_data.loc[player_data['Sc'].idxmin()]
+        row['Score'] = f"<span class='pb-score'>{int(best_score['Sc'])}</span><br><span class='pb-when'>{best_score['TEG']}|R{best_score['Round']} {best_score['FrontBack']}</span>"
+
+        # Gross vs Par (lowest is best)
+        best_gross = player_data.loc[player_data['GrossVP'].idxmin()]
+        row['Gross'] = f"<span class='pb-score'>{format_vs_par(best_gross['GrossVP'])}</span><br><span class='pb-when'>{best_gross['TEG']}|R{best_gross['Round']} {best_gross['FrontBack']}</span>"
+
+        # Net vs Par (lowest is best)
+        best_net = player_data.loc[player_data['NetVP'].idxmin()]
+        row['Net'] = f"<span class='pb-score'>{format_vs_par(best_net['NetVP'])}</span><br><span class='pb-when'>{best_net['TEG']}|R{best_net['Round']} {best_net['FrontBack']}</span>"
+
+        # Stableford (highest is best)
+        best_stableford = player_data.loc[player_data['Stableford'].idxmax()]
+        row['Stfd'] = f"<span class='pb-score'>{int(best_stableford['Stableford'])}</span><br><span class='pb-when'>{best_stableford['TEG']}|R{best_stableford['Round']} {best_stableford['FrontBack']}</span>"
+
+        summary_data.append(row)
+
     return pd.DataFrame(summary_data)

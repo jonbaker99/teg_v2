@@ -33,6 +33,7 @@ PAGE_DEFINITIONS = {
     "ave_by_teg.py": {"title": "Average by TEG", "icon": ":material/strategy:", "section": "Scoring"},
     "ave_by_course.py": {"title": "Course averages and records", "icon": ":material/strategy:", "section": "Scoring"},
     "score_by_course.py": {"title": "All rounds", "icon": ":material/strategy:", "section": "Scoring"},
+    "score_matrix.py": {"title": "Score matrix", "icon": ":material/table_chart:", "section": "Scoring"},
     "sc_count.py": {"title": "Scoring distributions", "icon": ":material/strategy:", "section": "Scoring"},
     "biggest_changes.py": {"title": "Changes vs previous round", "icon": ":material/strategy:", "section": "Scoring"},
     "score_heatmaps.py": {"title": "Heatmap (WIP)", "icon": ":material/strategy:", "section": "Scoring"},

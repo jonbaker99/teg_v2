@@ -16,7 +16,7 @@ import pandas as pd
 import numpy as np
 
 # Import data loading functions from main utils
-from utils import get_ranked_teg_data, get_ranked_round_data, load_datawrapper_css
+from utils import get_ranked_teg_data, get_ranked_round_data, get_ranked_frontback_data, load_datawrapper_css
 
 # Import personal best performance helper functions
 from helpers.best_performance_processing import (
@@ -27,7 +27,8 @@ from helpers.best_performance_processing import (
     prepare_personal_worst_round_table,
     prepare_round_data_with_identifiers,
     prepare_pb_teg_summary_table,
-    prepare_pb_round_summary_table
+    prepare_pb_round_summary_table,
+    prepare_pb_nine_summary_table
 )
 
 
@@ -51,12 +52,17 @@ teg_data_ranked = get_ranked_teg_data()
 # Purpose: Enables finding each player's best individual round performance
 rd_data_ranked = get_ranked_round_data()
 
+# Load ranked 9-hole performance data for personal best 9-hole analysis
+# Purpose: Enables finding each player's best Front 9 or Back 9 performance
+nine_data_ranked = get_ranked_frontback_data()
+
 # prepare_round_data_with_identifiers() - Adds TEG|Round format for cleaner display
 rd_data_formatted = prepare_round_data_with_identifiers(rd_data_ranked)
 
 # Prepare summary tables
 pb_teg_summary = prepare_pb_teg_summary_table(teg_data_ranked)
 pb_round_summary = prepare_pb_round_summary_table(rd_data_ranked)
+pb_nine_summary = prepare_pb_nine_summary_table(nine_data_ranked)
 
 
 # === USER INTERFACE ===
@@ -83,7 +89,7 @@ with tab1:
     # Segmented control for PB Summary view selection
     pb_view = st.segmented_control(
         "View",
-        ["Best Rounds", "Best TEGs"],
+        ["Best Rounds", "Best TEGs", "Best 9s"],
         default="Best Rounds",
         selection_mode="single"
     )
@@ -100,11 +106,23 @@ with tab1:
             ),
             unsafe_allow_html=True
         )
-    else:  # Best TEGs
+    elif pb_view == "Best TEGs":
         st.markdown('#### Personal Best TEGs')
         # st.markdown('Each player\'s best performance across all four measures for complete TEGs.')
         st.write(
             pb_teg_summary.to_html(
+                escape=False,
+                index=False,
+                justify='left',
+                classes='datawrapper-table table-left-align pb-table'
+            ),
+            unsafe_allow_html=True
+        )
+    else:  # Best 9s
+        st.markdown('#### Personal Best 9s')
+        # st.markdown('Each player\'s best performance across all four measures for 9-hole segments (Front 9 or Back 9).')
+        st.write(
+            pb_nine_summary.to_html(
                 escape=False,
                 index=False,
                 justify='left',
