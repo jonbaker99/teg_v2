@@ -213,13 +213,29 @@ with main_tabs[2]:
     # Extract TEGNum from TEG string (e.g., "TEG 17" -> 17)
     teg_num = int(teg_r.split()[1])
 
-    # Construct file path for round report
-    report_path = f"data/commentary/round_reports/teg{teg_num}_R{rd_r}_report.md"
+    # Construct file path for round report (try both naming formats)
+    report_path_new = f"data/commentary/round_reports/TEG{teg_num}_R{rd_r}_report.md"
+    report_path_old = f"data/commentary/round_reports/teg_{teg_num}_round_{rd_r}_report.md"
 
     try:
-        # Load the report using read_text_file for Railway compatibility
-        report_content = read_text_file(report_path)
-        st.markdown(report_content)
+        # Try new format first
+        try:
+            report_content = read_text_file(report_path_new)
+        except FileNotFoundError:
+            # Fall back to old format
+            report_content = read_text_file(report_path_old)
+
+        # Render the report with proper styling (importing from teg_reports pattern)
+        import importlib.util
+        has_markdown = importlib.util.find_spec("markdown") is not None
+        if has_markdown:
+            import markdown as md
+            html_body = md.markdown(report_content, extensions=["extra", "sane_lists", "smarty", "toc"])
+            full_html = f"<div class='teg-report'>{html_body}</div>"
+            st.markdown(full_html, unsafe_allow_html=True)
+        else:
+            # Fallback to standard markdown rendering if library not available
+            st.markdown(report_content)
     except FileNotFoundError:
         st.info(f"No round report available for TEG {teg_num} Round {rd_r}")
     except Exception as e:

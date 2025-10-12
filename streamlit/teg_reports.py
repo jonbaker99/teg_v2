@@ -87,32 +87,56 @@ try:
     try:
         completed_tegs = read_file('data/completed_tegs.csv')
         if not completed_tegs.empty and selected_teg_num in completed_tegs['TEGNum'].values:
-            num_rounds = completed_tegs[completed_tegs['TEGNum'] == selected_teg_num]['Rounds'].iloc[0]
+            expected_rounds = completed_tegs[completed_tegs['TEGNum'] == selected_teg_num]['Rounds'].iloc[0]
             is_complete = True
         else:
             # Check if TEG is in progress
             in_progress_tegs = read_file('data/in_progress_tegs.csv')
             if not in_progress_tegs.empty and selected_teg_num in in_progress_tegs['TEGNum'].values:
-                num_rounds = in_progress_tegs[in_progress_tegs['TEGNum'] == selected_teg_num]['Rounds'].iloc[0]
+                expected_rounds = in_progress_tegs[in_progress_tegs['TEGNum'] == selected_teg_num]['Rounds'].iloc[0]
                 is_complete = False
             else:
                 # Fallback to default method
-                num_rounds = get_teg_rounds(chosen_teg)
+                expected_rounds = get_teg_rounds(chosen_teg)
                 current_rounds = all_data[all_data['TEG'] == chosen_teg]['Round'].nunique()
-                is_complete = current_rounds >= num_rounds
+                is_complete = current_rounds >= expected_rounds
     except Exception:
         # Fallback to default method if status files not available
-        num_rounds = get_teg_rounds(chosen_teg)
+        expected_rounds = get_teg_rounds(chosen_teg)
         current_rounds = all_data[all_data['TEG'] == chosen_teg]['Round'].nunique()
-        is_complete = current_rounds >= num_rounds
+        is_complete = current_rounds >= expected_rounds
+
+    # Detect which round reports actually exist
+    # Check up to the expected number of rounds to see which reports are available
+    available_rounds = []
+    for r in range(1, expected_rounds + 1):
+        report_path_new = f"data/commentary/round_reports/TEG{selected_teg_num}_R{r}_report.md"
+        report_path_old = f"data/commentary/round_reports/teg_{selected_teg_num}_round_{r}_report.md"
+        try:
+            # Try to read the file to see if it exists
+            try:
+                read_text_file(report_path_new)
+                available_rounds.append(r)
+            except FileNotFoundError:
+                # Try old format
+                read_text_file(report_path_old)
+                available_rounds.append(r)
+        except FileNotFoundError:
+            # Report doesn't exist, skip it
+            pass
+
+    # Use available rounds for tab creation
+    num_rounds = len(available_rounds) if available_rounds else expected_rounds
 
 except Exception as e:
     st.error(f"Error loading TEG information: {str(e)}")
     st.stop()
 
 # === BUILD TAB STRUCTURE ===
-# Create tabs for each round plus full TEG report (if complete)
-tab_names = [f"Round {r}" for r in range(1, num_rounds + 1)]
+# Create tabs for each available round plus full TEG report (if complete)
+# Use available_rounds if we detected them, otherwise fall back to sequential range
+rounds_to_show = available_rounds if available_rounds else list(range(1, num_rounds + 1))
+tab_names = [f"Round {r}" for r in rounds_to_show]
 
 if is_complete:
     # Move "Full TEG Report" to the start of the list
@@ -124,7 +148,7 @@ round_tab_offset = 1 if is_complete else 0
 tabs = st.tabs(tab_names)
 
 # === ROUND REPORT TABS ===
-for i, round_num in enumerate(range(1, num_rounds + 1)):
+for i, round_num in enumerate(rounds_to_show):
     with tabs[i+round_tab_offset]:
         # st.markdown(f"#### TEG {selected_teg_num} - Round {round_num} Report")
 
