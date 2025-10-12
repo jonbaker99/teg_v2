@@ -6,127 +6,127 @@
 
 ## Round Summary
 - **Round Winner (Stableford):** Alex BAKER (46 pts Stableford)
-- **Round Winner (Gross):** Jon BAKER (24 gross vs par)
-- **Tournament Leader (Stableford):** Alex BAKER (46 pts total)
-- **Tournament Leader (Gross):** Jon BAKER (24 gross vs par)
-- **Biggest Mover:** John PATTERSON (spectacular back 9 surge - 24 pts in final 9 holes)
+- **Round Winner (Gross):** Jon BAKER (+24 gross vs par)
+- **Tournament Leader (Stableford):** Alex BAKER (leads by 12 pts)
+- **Tournament Leader (Gross):** Jon BAKER (+24 gross vs par)
+- **Biggest Mover:** N/A (first round - no previous positions)
 - **Drama Level:** High
 
 ## Key Moments
-- H2: Lead changes hands - Gregg WILLIAMS overtakes Alex BAKER (4 major position changes on this hole)
-- H3: Chaos on the Par 4 - Alex BAKER retakes lead amid 9 position changes; Jon BAKER drops 3 positions
-- H4: David MULLIN seizes lead from Alex BAKER
-- H5: Alex BAKER regains lead for final time (holds lead through remaining 13 holes)
-- H7: Hardest hole claims victims - Par 5 plays 2.6 over par average (avg 7.6 strokes)
-- H10-11: Short scoring window - easiest stretch (H11 avg 3.2, only 0.2 over par)
-- H13-18: Alex BAKER extends dominance with 16 pt closing six; John PATTERSON storms back with 16 pt finish
+- H2: Gregg WILLIAMS takes lead from Alex BAKER - first lead change of tournament
+- H3: Alex BAKER reclaims lead from Gregg WILLIAMS - 9 total events on this hole including multiple position changes
+- H4: David MULLIN seizes lead from Alex BAKER - third lead change in three holes
+- H5: Alex BAKER takes lead for final time, never relinquishes it
+- H7: Hardest hole claims victims (Par 5, avg +2.6 vs par, 1.0 avg Stableford)
+- H11: Par 3 plays as easiest hole (avg +0.2 vs par, 3.2 avg Stableford)
+- H15: Major position shake-up with 10 events - Gregg WILLIAMS gains 3 positions, David MULLIN drops 3
+- H18: Closing Par 5 proves difficult (avg +2.2 vs par) as Alex BAKER secures victory
 
 ## How Positions Changed
-- **Start of round (Stableford):** All players tied (opening round)
-- **Start of round (Gross):** All players tied (opening round)
+- **Start of round (Stableford):** All tied at 0 pts
+- **Start of round (Gross):** All tied at 0 vs par
 - **Key shifts:** 
-  - H2-5: Lead changed hands 4 times in opening holes
-  - H9: Jon BAKER drops 2 positions
-  - H13: Jon BAKER drops another 2 positions
-  - H15: Major shuffle - Gregg WILLIAMS up 3, David MULLIN down 3
-  - Back 9: John PATTERSON's 24-pt surge lifts him to 2nd place
-- **End of round (Stableford):** Alex BAKER (46 pts) | John PATTERSON (34 pts) | David MULLIN (32 pts) | Gregg WILLIAMS (31 pts) | Jon BAKER (30 pts)
-- **End of round (Gross):** Jon BAKER (+24) | Gregg WILLIAMS (+27) | David MULLIN (+28) | Alex BAKER (+26) | John PATTERSON (+30)
+  - H2-5: Four lead changes in opening holes
+  - H5: Alex BAKER establishes lead and maintains it
+  - H15: Gregg WILLIAMS (+3 positions), David MULLIN (-3 positions)
+- **End of round (Stableford):** Alex BAKER 46 pts | John PATTERSON 34 pts | David MULLIN 32 pts | Gregg WILLIAMS 31 pts | Jon BAKER 30 pts
+- **End of round (Gross):** Jon BAKER +24 | Alex BAKER +26 | Gregg WILLIAMS +27 | David MULLIN +28 | John PATTERSON +30
 
 ## Round Breakdown
 **Holes 1-6 (Opening):**
-- Alex BAKER dominates opening six with 12 pts
-- Four lead changes in holes 2-5 create early volatility
-- Jon BAKER solid start with 11 pts
-- John PATTERSON struggles early - only 7 pts in first six
+- Alex BAKER dominates with 12 Stableford pts
+- Four lead changes in holes 2-5 create early drama
+- Jon BAKER posts solid 11 pts to stay in contention
+- John PATTERSON struggles with only 7 pts
+- H3 most eventful with 9 total occurrences
 
 **Holes 7-12 (Middle):**
-- Alex BAKER extends lead with massive 18 pts in second six
-- H7 (Par 5) proves hardest hole - avg 7.6 strokes, 2.6 over par
-- H11 (Par 3) offers relief - easiest hole, avg 3.2 strokes
-- David MULLIN finds rhythm with 12 pts
-- John PATTERSON begins recovery with 11 pts
+- Alex BAKER extends lead with massive 18 pts (best six-hole split of round)
+- H7 (Par 5) emerges as hardest hole (+2.6 avg vs par)
+- H11 (Par 3) provides relief as easiest hole (+0.2 avg vs par)
+- David MULLIN recovers with 12 pts
+- Jon BAKER fades with only 9 pts
 
 **Holes 13-18 (Closing):**
-- Alex BAKER closes with authority - 16 pts in final six
-- John PATTERSON explodes for 16 pts to vault into 2nd place
-- David MULLIN and Gregg WILLIAMS both post 12 pts
-- H15: Critical position changes as field reshuffles
-- Jon BAKER fades with only 10 pts in closing stretch
+- John PATTERSON surges with 16 pts to claim solo 2nd
+- Alex BAKER posts 16 pts to maintain comfortable lead
+- Jon BAKER drops 2 positions at H13
+- H15 creates major reshuffle (10 events, position changes)
+- H18 (Par 5) proves treacherous finish (+2.2 avg vs par)
 
 ## Round Stats
-- **Hardest hole:** H7 (Par 5, avg 2.6 vs par)
-- **Easiest hole:** H11 (Par 3, avg 0.2 vs par)
-- **Best individual performance:** Alex BAKER (46 pts, 12-point margin of victory)
-- **Best front/back split:** Alex BAKER (19 front, 27 back - gained 8 pts on back nine)
-- **Biggest back 9 surge:** John PATTERSON (10 front, 24 back - 14-pt improvement)
+- **Hardest hole:** H7 (Par 5, avg +2.6 vs par, 1.0 avg Stableford)
+- **Easiest hole:** H11 (Par 3, avg +0.2 vs par, 3.2 avg Stableford)
+- **Best individual performance:** Alex BAKER (46 pts, +26 gross)
+- **Best six-hole split:** Alex BAKER holes 7-12 (18 pts)
+- **Worst six-hole split:** John PATTERSON holes 1-6 (7 pts)
 
 ## Player Notes
-- **Alex BAKER:** 46 pts total (19 front/27 back); dominated second six (18 pts) and closed strong (16 pts); led wire-to-wire from H5 onward; 12-pt cushion over 2nd place
-- **John PATTERSON:** 34 pts total (10 front/24 back); slow start (only 7 pts first six) but explosive back nine; 16 pts in final six to claim 2nd; 12 pts behind leader but catchable
-- **David MULLIN:** 32 pts total (14 front/18 back); early leader at H4; steady middle six (12 pts) but dropped to 3rd after H15 position change; 14 pts off lead
-- **Gregg WILLIAMS:** 31 pts total (13 front/18 back); briefly led at H2; consistent throughout but no standout surge; gained 3 positions at H15; 15 pts behind
-- **Jon BAKER:** 30 pts total (13 front/17 back); strong opener (11 pts first six) but faded badly; dropped positions at H3, H9, and H13; lowest gross score (+24) but struggles in Stableford; 16 pts off lead
+- **Alex BAKER:** 46 Stableford pts, +26 gross; dominant wire-to-wire after H5; massive middle-six (18 pts); leads Trophy by 12 pts, 2nd in Jacket by 2 strokes
+- **John PATTERSON:** 34 Stableford pts, +30 gross; struggled early (7 pts first-six) but surged late (16 pts final-six); 2nd in Trophy, 12 pts back; 5th in Jacket, 6 strokes back
+- **David MULLIN:** 32 Stableford pts, +28 gross; held lead briefly at H4; dropped 3 positions at H15; 3rd in Trophy, 14 pts back; 4th in Jacket, 4 strokes back
+- **Gregg WILLIAMS:** 31 Stableford pts, +27 gross; first leader of tournament at H2; gained 3 positions at H15; 4th in Trophy, 15 pts back; 3rd in Jacket, 3 strokes back
+- **Jon BAKER:** 30 Stableford pts, +24 gross; leads Jacket competition despite 5th in Trophy; dropped positions at H9 and H13; 5th in Trophy, 16 pts back; leads Jacket by 2 strokes
 
 ---
 
 ## Round Report
 
-## Baker Brothers Split Opening Spoils as Tournament Explodes into Life
-
+## Baker Brothers Share Opening Honours as Early Lead Changes Set Tournament Alight
 **PGA Catalunya - Tour • 11/10/2025 • Round 1 of 4**
 
 ### Round Summary
 
-The inaugural round at PGA Catalunya delivered immediate fireworks as the Baker brothers carved up the opening honours between them, though in dramatically different fashion. Alex Baker seized the TEG Trophy lead with a commanding 46-point performance, establishing a 12-point cushion over the field, whilst Jon Baker claimed the Green Jacket advantage with a steady 24-over-par gross score. The lead changed hands four times in a chaotic opening five holes before Alex Baker grabbed control at the par-3 5th and never looked back, ultimately posting the largest winning margin in recent TEG memory.
+The 18th TEG Trophy burst into life with a thrilling opening round that saw four lead changes in the first five holes before Alex Baker finally seized control and never looked back. Baker's commanding 46-point Stableford haul secured the round victory and established a 12-point cushion atop the leaderboard, though his brother Jon claimed the day's gross honours with a controlled +24 performance that gives him the early Green Jacket lead.
 
-Behind the leader's dominance, John Patterson authored the round's most compelling subplot—a spectacular back-nine surge that saw him collect 24 points over the final nine holes to rocket into second place. The transformation was complete: from struggling at seven points through six holes to threatening Baker's supremacy by the close. Meanwhile, the middle order compressed into a tight battle, with just four points separating second through fifth as David Mullin, Gregg Williams, and Jon Baker jockey for position with three rounds still to play.
+The Catalunya Tour course provided a stern examination from the outset, with the par-5 seventh playing as the day's monster (+2.6 average) while the par-3 11th offered rare respite. John Patterson survived an awful start to storm home with 16 points over the closing six holes, vaulting into second place, whilst David Mullin's brief moment atop the leaderboard at the fourth proved fleeting as he surrendered three positions at the 15th.
+
+With three rounds remaining and gaps already forming, the Baker brothers have established themselves as the men to catch across both competitions—though nothing is decided yet on this demanding layout.
 
 ### How It Unfolded
 
-The tournament burst into life immediately, with the lead changing hands four times before players reached the sixth tee. Gregg Williams struck first, overtaking Alex Baker at the par-4 2nd in a hole that produced four major position changes. But the chaos truly erupted at the par-4 3rd, where nine position swings saw Baker reclaim the lead whilst Jon Baker tumbled three spots. David Mullin briefly seized control at the 4th, only for Alex Baker to snatch it back at the par-3 5th—a lead he would jealously guard for the remaining thirteen holes.
+The tournament exploded into action immediately, with Gregg Williams seizing the early advantage at the second hole before Alex Baker reclaimed it at the third in a wild opening that featured nine position-changing events on a single hole. David Mullin briefly grabbed the spotlight with a bold move to the front at the fourth, but it was Alex Baker's response at the fifth that would prove decisive—he retook the lead and would hold it for the remaining 14 holes.
 
-**The Reckoning**
+Baker's dominance truly manifested through the middle section of the round, where he posted a blistering 18-point split from holes seven through twelve. This six-hole stretch proved the difference-maker, turning a contested tournament into a commanding position. The par-5 seventh—which would emerge as the day's toughest examination—claimed victims throughout the field, yet Baker navigated the danger whilst others faltered.
 
-The par-5 7th proved the day's ultimate test, playing a brutal 2.6 strokes over par with an average score of 7.6. The hole extracted its toll across the field, but Baker weathered the storm whilst others faltered. By the turn, his advantage was beginning to tell, and the middle six holes became his coronation—an 18-point masterclass that stretched his lead to double figures. The par-3 11th offered brief respite as the easiest hole of the day, averaging just 0.2 over par, but Baker capitalised whilst Jon Baker stumbled, dropping two positions at the 9th and another two at the 13th.
+The back nine brought its own drama, particularly at the 15th where 10 separate events reshuffled the chasing pack. Williams gained three positions in one swoop whilst Mullin tumbled the opposite direction, effectively ending his challenge before the closing stretch. Meanwhile, Patterson was mounting a remarkable recovery from his disastrous seven-point opening six holes, posting 16 points over the final third to leapfrog into solo second.
 
-**Patterson's Redemption**
-
-The closing stretch delivered the drama the early holes had promised. Alex Baker closed with authority, collecting 16 points over the final six to complete his wire-to-wire victory from the 5th onwards. But Patterson stole the narrative, exploding for 16 points in his closing run to vault into second place. The par-4 15th triggered a massive reshuffling—Williams surging three positions whilst Mullin plummeted three—as the field compressed behind Baker. Jon Baker, who had opened with 11 points through six holes, managed only 10 over the final stretch, his Stableford game faltering even as his gross score remained the day's best.
+Jon Baker played a quieter but more efficient round, his steady +24 gross performance keeping him in touch on the Stableford leaderboard whilst claiming the Green Jacket lead outright. His fades at the ninth and 13th dropped him to fifth in the Trophy standings, but the gross competition tells a different story—he leads his brother by two strokes in that race. The closing par-5 18th proved a treacherous finish, playing 2.2 over par on average, but Alex Baker navigated it safely to secure his comprehensive round victory.
 
 ### Standings After Round 1
 
-**Round 1 Stableford:** AB 46 | JPa 34 | DM 32 | GW 31 | JB 30  
-**Round 1 Gross:** JB +24 | AB +26 | GW +27 | DM +28 | JPa +30
+**Round 1 Stableford:** AB 46 | JP 34 | DM 32 | GW 31 | JB 30  
+**Round 1 Gross:** JB +24 | AB +26 | GW +27 | DM +28 | JP +30  
 
-**Tournament Stableford:** AB 46 | JPa 34 | DM 32 | GW 31 | JB 30  
-**Tournament Gross:** JB +24 | AB +26 | GW +27 | DM +28 | JPa +30
+**Tournament Stableford:** AB 46 | JP 34 | DM 32 | GW 31 | JB 30  
+**Tournament Gross:** JB +24 | AB +26 | GW +27 | DM +28 | JP +30
 
 ### What's At Stake
 
-**With three rounds remaining**, Alex Baker's 12-point advantage in the TEG Trophy race is substantial but far from insurmountable. History suggests that leads of this size can evaporate quickly—Baker needs to average just 30 points per round to stay ahead of a challenger averaging 34 points, Patterson's exact opening mark. The mathematics are straightforward: Patterson must find an extra four points per round to catch Baker, whilst David Mullin requires 4.7 additional points per round to bridge his 14-point deficit. Both gaps are catchable over three rounds, particularly if Baker experiences anything resembling Jon Baker's closing fade.
+**With 3 rounds remaining:**
 
-The Green Jacket battle presents an even tighter prospect. Jon Baker's two-stroke cushion over his brother could vanish on a single hole, whilst Gregg Williams sits just three strokes back and David Mullin trails by only four. With 54 holes remaining, this is essentially a fresh tournament—one poor round from Jon Baker could see four different players wearing green on Sunday.
+Alex Baker's 12-point Trophy cushion looks substantial but far from insurmountable over 54 holes. He needs to average just 30 points per round to reach 136 total—a target that would require his challengers to post something extraordinary. Patterson sits closest at 34 points but faces a daunting task: he'll need to average 34+ points per round whilst hoping Baker fades to around 30. The more realistic battle may be for the podium places, where just four points separate second through fifth.
 
-The compression from second through fifth in the Stableford standings—just four points separating four players—guarantees volatility ahead. Gregg Williams and Jon Baker, both 15-16 points adrift, remain mathematically alive but need Baker to stumble whilst they produce Patterson-esque surges. The spoon battle hasn't yet crystallised, but with everyone bunched and three rounds to play, a single disaster could quickly define the basement.
+The Green Jacket race remains wide open despite Jon Baker's two-stroke advantage. His brother Alex trails by two, Williams by three, and Mullin by four—all eminently catchable margins. Jon needs to average +28 per round (84 total) to reach a likely winning score, whilst Alex could overtake with three solid rounds averaging +26. Williams and Mullin remain very much in the hunt if they can find consistency over the closing 54 holes.
+
+The diverging competitions create fascinating strategy questions: can Alex Baker hold both leads, or will chasing his brother's gross score compromise his Stableford dominance? And can Jon Baker protect his Jacket lead whilst clawing back 16 Trophy points?
 
 ### Round Highlights
-
-- Four lead changes in the opening five holes as the field traded blows
-- The par-5 7th averaging 7.6 strokes—2.6 over par—as the day's ultimate executioner
-- John Patterson's remarkable back-nine resurrection: 24 points over the final nine holes
-- Alex Baker's dominant middle-six masterclass: 18 points to blow the field apart
-- Major position shuffle at the par-4 15th as Williams surged and Mullin tumbled
+- Four lead changes in the opening five holes created immediate drama
+- Alex Baker's dominant 18-point middle-six (holes 7-12) established control
+- Par-5 7th emerged as the round's toughest test at +2.6 average
+- John Patterson's 16-point closing surge rescued a calamitous start
+- Hole 15 reshuffle saw 10 events including Gregg Williams' three-position leap
 
 ### Player Summaries
 
-**Alex Baker:** Seized control at the 5th and never relented, posting 46 points with an eight-point improvement from front nine (19) to back nine (27); his 18-point haul through the middle six holes established the day's commanding margin. Leads TEG Trophy by 12 points, sits second in Green Jacket at +26.
+**Alex Baker:** Dominant 46-point round victory with spectacular middle-six (18 pts); seized lead at H5 and never relinquished it; leads Trophy by 12 points but trails brother by 2 strokes in Jacket race.
 
-**John Patterson:** Authored the round's most compelling turnaround, transforming a seven-point disaster through six holes into a 34-point performance via a spectacular 24-point back nine; his 16-point closing stretch vaulted him to second place, 12 points behind Baker but very much in contention.
+**John Patterson:** Survived disastrous opening six (7 pts) to storm home with 16-point closing stretch; sits 12 points back in Trophy, 6 strokes back in Jacket; momentum shifting his direction.
 
-**David Mullin:** Led briefly at the 4th before fading to third; posted consistent scoring throughout (14 front, 18 back) including a solid 12-point middle stretch, but the position change at the 15th dropped him to third, now 14 points off the lead.
+**David Mullin:** Briefly led at H4 before fading; costly three-position drop at H15 leaves him 14 points back in Trophy, 4 strokes back in Jacket; still mathematically live in both competitions.
 
-**Gregg Williams:** Overtook Baker at the 2nd in the early chaos but couldn't sustain the charge; his 31-point effort included a three-position surge at the 15th, but he sits 15 points behind in the TEG Trophy whilst holding third in the Green Jacket at +27.
+**Gregg Williams:** First leader of tournament at H2; three-position gain at H15 keeps him relevant at 15 points back in Trophy, 3 strokes back in Jacket; best-positioned chaser in gross competition.
 
-**Jon Baker:** Dominated the gross scoring with +24, three strokes clear of his brother, but his Stableford game told a different story—strong start (11 points through six) gave way to a fading finish (10 points over the final stretch) as position drops at the 3rd, 9th, and 13th left him fifth in the Trophy standings, 16 points adrift.
+**Jon Baker:** Steady +24 gross claims Green Jacket lead despite sitting fifth in Trophy standings; 16 points back in Stableford but controls own Jacket destiny; dropped positions at H9 and H13 but held firm.
 

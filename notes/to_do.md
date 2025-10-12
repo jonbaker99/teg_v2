@@ -86,3 +86,43 @@ Testing: After implementation, test with TEG 17 with INCLUDE_STREAKS=True and IN
 Fix formatting on teg_reports
 
 Change the contents generation so I can target the section headers with css
+
+
+======= 
+
+Finalise the remote report functionality. COntinue with what you were working on. 
+
+
+MAJOR PROBLEM FOR REPORT RELIABILITY:
+Previous wins still appear to based on a calculation not on fact. This is critically important. The previous tournament winners can not be calculated just from Stableford and gross results, because we have changed the criteria for winning the competition at various points over the years.
+
+E.g. generated story notes for TEG 6, 
+Says it was Gregg Williams' 1st trophy. It was his 2nd win, as he won TEG 5 (using a different scoring system).
+Says it was David Mullin's 5th Jacket when it was his 4th, as we awarded the Green Jacket on a different basis in TEG 5.
+
+Past winners can be found in multiple places:
+data/TEG_winners.csv -> a list of who won which competition at which TEG
+streamlit/player_history.py -> this should be good for generating a rich history as it has finishing positions for all players for all tournaments
+streamlit/101TegHonoursBoard.py -> calculates number of wins and the tournaments won
+
+Do two things:
+1) Identify why the number of previous tournaments won are not coming into the story point files correctly
+2) Pass previous finishing positions from the player history page functionality to the functions that generate the story points.
+
+WHen that's working, create a page to regenerate a report for any chosen  round or tournament remotely. The user should be able to choose between using preexisting story notes (if they do exist) or regenerating story notes too.
+
+retrieve batches - didn't know what to do with satire
+satire batch now saved in jsonl file -> use that to populate the reports
+
+
+Add a segmented control to the report tab on streamlit/102TEGResults.py and the full tournament report tab on teg_reports.py to choose between 'Normal' report and '"Satire"'. Normal should be the default and load reports as they currently are from the data/commentary folder with file format teg_{n}_main_report.md. Satire should load the reports with file format teg_{n}_satire.md from the data/commentary/drafts folder.
+
+THEN
+
+Replicate the TEG report from streamlit/102TEGResults.py on a new tab in streamlit/latest_teg_context.py IF the tournament is complete (using the existing functionality in the codebase to check if a given tournament is complete)
+
+---
+
+Add choice for mobile scorecard on leaderboard scorecard tabs (same as in latest_round). Controls should go between the first set of tabs and the 2nd set of tabs
+ 
+change subtabs on 'Scoreboards' tab to segmented controls in latest_round
