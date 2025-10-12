@@ -324,14 +324,36 @@ def load_round_report_data(teg_num, round_num):
     print(f"Loading round report data for TEG {teg_num}, Round {round_num}...")
 
     # 1. Load round summary data
-    round_summary = read_file('data/commentary_round_summary.parquet')
+    try:
+        round_summary = read_file('data/commentary_round_summary.parquet')
+    except Exception as e:
+        raise ValueError(
+            f"Failed to load commentary_round_summary.parquet. "
+            f"This file may not have been generated yet. "
+            f"Try running the data update process to regenerate commentary cache files. "
+            f"Error: {e}"
+        )
+
     round_summary_data = round_summary[
         (round_summary['TEGNum'] == teg_num) &
         (round_summary['Round'] == round_num)
     ]
 
     if len(round_summary_data) == 0:
-        raise ValueError(f"No data found for TEG {teg_num}, Round {round_num}")
+        # Check if ANY data exists for this TEG to provide better error message
+        teg_data = round_summary[round_summary['TEGNum'] == teg_num]
+        if len(teg_data) == 0:
+            raise ValueError(
+                f"No data found for TEG {teg_num} in commentary cache. "
+                f"The commentary cache files may need to be regenerated. "
+                f"Try running the data update process."
+            )
+        else:
+            available_rounds = sorted(teg_data['Round'].unique())
+            raise ValueError(
+                f"No data found for TEG {teg_num}, Round {round_num}. "
+                f"Available rounds for TEG {teg_num}: {available_rounds}"
+            )
 
     # 2. Load hole-by-hole data
     all_scores = read_file('data/all-scores.parquet')

@@ -300,13 +300,21 @@ def execute_data_update(overwrite: bool = False, new_data_only: bool = False):
                 batch_commit_to_github(batch_files, f"Data update: {len(processed_rounds)} new records + cache updates")
                 st.success(f"🚀 Pushed {len(batch_files)} files to GitHub in single commit.")
 
-        # Clear Railway volume cache to ensure fresh data is loaded
-        # This is critical for report generation to see newly uploaded rounds
-        if is_railway:
-            with st.spinner("🗑️ Clearing Railway volume cache..."):
-                result = clear_volume_cache()
-                logger.info(f"Volume cache clear result: {result}")
-                st.success("🗑️ Volume cache cleared.")
+        # DON'T clear Railway volume cache after updates!
+        # The freshly written files (streaks, commentary, etc.) need to stay in the volume
+        # so that report generation can read them immediately after the data update.
+        # Previously this was clearing the volume AFTER writing new files, causing
+        # report generation to fail because files were deleted from volume and
+        # GitHub propagation hadn't completed yet.
+        #
+        # The volume cache will naturally refresh when GitHub is updated and files
+        # are re-read on subsequent page loads.
+        #
+        # if is_railway:
+        #     with st.spinner("🗑️ Clearing Railway volume cache..."):
+        #         result = clear_volume_cache()
+        #         logger.info(f"Volume cache clear result: {result}")
+        #         st.success("🗑️ Volume cache cleared.")
 
         # Clear all caches to reflect changes
         st.cache_data.clear()

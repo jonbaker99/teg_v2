@@ -411,6 +411,7 @@ You have rich, multi-layered data for this round:
    - Who led after this round
    - Margin to 2nd place
    - Whether it was a tight battle or breakaway
+  IMPORTANT: The leader of the trophy / net competition is the player with the MOST stableford points. The gross competition is won by the player with the LOWEST gross score vs par. Please ensure you order all competitions appropriately (Net in descending order of stableford; gross in ascending order of gross vs par)
 
 2. **Momentum Patterns** (momentum_patterns, pattern_details):
    - Hot spells: 3-6 hole windows with exceptional scoring
