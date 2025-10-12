@@ -411,7 +411,15 @@ You have rich, multi-layered data for this round:
    - Who led after this round
    - Margin to 2nd place
    - Whether it was a tight battle or breakaway
-  IMPORTANT: The leader of the trophy / net competition is the player with the MOST stableford points. The gross competition is won by the player with the LOWEST gross score vs par. Please ensure you order all competitions appropriately (Net in descending order of stableford; gross in ascending order of gross vs par)
+
+  **CRITICAL - COMPETITION ORDERING:**
+  - **Trophy/Net (Stableford):** Leader has the HIGHEST points → order DESCENDING (most points first)
+  - **Jacket/Gross:** Leader has the LOWEST score vs par → order ASCENDING (lowest/most negative vs par first)
+
+  **Examples of correct ordering:**
+  - Trophy: Player A 45pts | Player B 42pts | Player C 38pts ✓
+  - Gross: Player A -5 | Player B +2 | Player C +8 ✓ (lowest/most negative wins)
+  - Gross: Player A +60 | Player B +67 | Player C +80 ✓ (lower positive number wins)
 
 2. **Momentum Patterns** (momentum_patterns, pattern_details):
    - Hot spells: 3-6 hole windows with exceptional scoring
@@ -519,6 +527,7 @@ Create structured story notes for Round {round_num} using this EXACT format:
   - Example: H17 (Par 4) with Sc=9, GrossVP=+5, Stableford=0 becomes "H17 (Par 4): blow-ups (9 / +5), 0 pts"
   - Example: H8 (Par 4) with Sc=3, GrossVP=-1, Stableford=5 becomes "H8 (Par 4): birdie (3 / -1), 5 pts"
 - For competition references: specify "Trophy" (Stableford/net) or "Jacket" (gross)
+- **VERIFY COMPETITION ORDERING:** Trophy/Net ordered DESCENDING (highest points first); Gross/Jacket ordered ASCENDING (lowest vs par first)
 - Never fabricate numbers or events
 
 Output ONLY the structured notes in the format shown above. No preamble, no narrative."""
@@ -1082,13 +1091,24 @@ You have comprehensive data for this round:
 - Comparison to previous round (if Round 2+)
 - Tournament projections (what's needed to win)
 
+**CRITICAL - COMPETITION ORDERING:**
+- **Trophy/Net (Stableford):** Leader has the HIGHEST points → order DESCENDING (most points first)
+- **Jacket/Gross:** Leader has the LOWEST score vs par → order ASCENDING (lowest/most negative vs par first)
+
+**Examples of correct ordering:**
+- Trophy: Player A 45pts | Player B 42pts | Player C 38pts ✓
+- Gross: Player A -5 | Player B +2 | Player C +8 ✓ (lowest/most negative wins)
+- Gross: Player A +60 | Player B +67 | Player C +80 ✓ (lower positive number wins)
+
 **Your Task:**
 
 Create structured story notes for this round using this EXACT format:
 
 ## Round Summary
-- **Round Winner:** [Player] ([X] pts Stableford, [Y] gross)
-- **Tournament Leader:** [Player] (leads by [X] pts)
+- **Round Winner (Stableford):** [Player] ([X] pts Stableford)
+- **Round Winner (Gross):** [Player] ([Y] gross vs par) - REMEMBER: lowest gross wins
+- **Tournament Leader (Stableford):** [Player] (leads by [X] pts)
+- **Tournament Leader (Gross):** [Player] ([Y] gross vs par) - REMEMBER: lowest vs par leads
 - **Biggest Mover:** [Player] (+[X] positions)
 - **Drama Level:** [High/Medium/Low]
 
@@ -1099,10 +1119,12 @@ Create structured story notes for this round using this EXACT format:
   Example: H8: David MULLIN birdie run begins (3 consecutive birdies through H10)
 
 ## How Positions Changed
-[Track position changes through the round]
-- **Start of round:** [Position list before round]
+[Track position changes through the round - REMEMBER: Stableford highest-to-lowest, Gross lowest-to-highest]
+- **Start of round (Stableford):** [Position list before round, highest points first]
+- **Start of round (Gross):** [Position list before round, lowest vs par first]
 - **Key shifts:** [Holes where major position changes occurred]
-- **End of round:** [Final positions after round]
+- **End of round (Stableford):** [Final positions after round, highest points first]
+- **End of round (Gross):** [Final positions after round, lowest vs par first]
 
 ## Round Breakdown
 **Holes 1-6 (Opening):**
@@ -1137,6 +1159,7 @@ Create structured story notes for this round using this EXACT format:
 - ONLY use data explicitly provided
 - Never fabricate numbers or events
 - For competition references: specify "Trophy" (Stableford) or "Jacket" (Gross)
+- **VERIFY COMPETITION ORDERING:** Trophy/Net ordered DESCENDING (highest points first); Gross/Jacket ordered ASCENDING (lowest vs par first)
 - This is ONE round of a multi-round tournament - keep perspective
 
 Output ONLY the structured notes in the format shown above. No preamble, no narrative."""
