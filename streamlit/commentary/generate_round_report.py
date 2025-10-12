@@ -275,6 +275,10 @@ def format_round_data_for_prompt(round_data, storylines):
                 'par': round_data['metadata']['par']
             },
             'round_summary': [],
+            'tournament_standings': {
+                'stableford': [],
+                'gross': []
+            },
             'six_hole_splits': {},
             'hole_difficulty': [],
             'previous_round_scores': None,
@@ -304,6 +308,34 @@ def format_round_data_for_prompt(round_data, storylines):
                 print(f"ERROR processing player {r.get('Player')}: {e}")
                 print(f"DEBUG: Player data: {r}")
                 raise
+
+        print("DEBUG: Building tournament standings tables")
+        # Create Stableford standings (ordered by cumulative points, descending)
+        stableford_standings = sorted(
+            round_data['round_summary'],
+            key=lambda x: x.get('Cumulative_Tournament_Score_Stableford', 0),
+            reverse=True
+        )
+        for i, player in enumerate(stableford_standings, 1):
+            prompt_data['tournament_standings']['stableford'].append({
+                'position': i,
+                'player': player['Player'],
+                'total': clean_value(player.get('Cumulative_Tournament_Score_Stableford')),
+                'gap_to_leader': clean_value(player.get('Gap_To_Leader_After_Round_Stableford', 0))
+            })
+
+        # Create Gross standings (ordered by cumulative gross vs par, ascending - lower is better)
+        gross_standings = sorted(
+            round_data['round_summary'],
+            key=lambda x: x.get('Cumulative_Tournament_Score_Gross', 999)
+        )
+        for i, player in enumerate(gross_standings, 1):
+            prompt_data['tournament_standings']['gross'].append({
+                'position': i,
+                'player': player['Player'],
+                'total': clean_value(player.get('Cumulative_Tournament_Score_Gross')),
+                'gap_to_leader': clean_value(player.get('Gap_To_Leader_After_Round_Gross', 0))
+            })
 
         print("DEBUG: Setting six_hole_splits")
         prompt_data['six_hole_splits'] = round_data['six_hole_splits']

@@ -425,148 +425,199 @@ with tab_sync:
 
     st.divider()
 
-    # === GITHUB -> VOLUME (PULL) ===
-    st.subheader("⬇️ GitHub → Volume")
-    st.caption(f"Copy selected files from GitHub `{selected_folder}/` down to the Railway volume.")
+   # === GITHUB -> VOLUME (PULL) ===
+st.subheader("⬇️ GitHub → Volume")
+st.caption(f"Copy selected files from GitHub `{selected_folder}/` down to the Railway volume.")
 
-    if merged.empty:
-        st.info("No files to pull.")
-    else:
-        pull_default = merged["Status"].isin(
-            ["Only on GitHub", "Newer on GitHub", "Different size", "Check required"]
-        )
+if merged.empty:
+    st.info("No files to pull.")
+else:
+    pull_default = merged["Status"].isin(
+        ["Only on GitHub", "Newer on GitHub", "Different size", "Check required"]
+    )
 
-        pull_editor = st.data_editor(
-            merged.assign(**{"Pull to Volume": pull_default}),
-            hide_index=True,
-            use_container_width=True,
-            column_config={
-                "GitHub size": st.column_config.NumberColumn(format="%d"),
-                "Volume size": st.column_config.NumberColumn(format="%d"),
-                "Pull to Volume": st.column_config.CheckboxColumn(),
-            },
-            disabled=[
-                "File", "GitHub modified", "Volume modified",
-                "GitHub size", "Volume size", "Status"
-            ],
-            key="pull_table",
-        )
+    # --- DROP-IN: controlled editor with Select all/none ---
+    base_pull_df = merged.assign(**{"Pull to Volume": pull_default}).copy()
 
-        to_pull = pull_editor[pull_editor["Pull to Volume"] == True]["File"].tolist()
+    # Reset the session copy if folder changed or not yet initialised
+    if (
+        "pull_df_folder" not in st.session_state
+        or st.session_state.get("pull_df_folder") != selected_folder
+        or "pull_df" not in st.session_state
+    ):
+        st.session_state.pull_df = base_pull_df
+        st.session_state.pull_df_folder = selected_folder
 
-        col_a, col_b = st.columns([3, 2])
-        with col_a:
-            st.write("Selected to pull:", ", ".join(to_pull) or "—")
-        do_pull = col_b.button(
-            f"Pull selected ({len(to_pull)})",
-            type="primary",
-            use_container_width=True,
-            disabled=(len(to_pull) == 0),
-        )
+    c_sel1, c_sel2, _ = st.columns([1, 1, 4])
+    with c_sel1:
+        if st.button("Select all", key="pull_select_all"):
+            st.session_state.pull_df["Pull to Volume"] = True
+            st.rerun()
+    with c_sel2:
+        if st.button("Select none", key="pull_select_none"):
+            st.session_state.pull_df["Pull to Volume"] = False
+            st.rerun()
 
-        if do_pull:
-            if not _get_token():
-                st.error("Missing GITHUB_TOKEN; cannot pull from GitHub.")
-            else:
-                ok, fails = 0, []
-                with st.spinner("Pulling from GitHub…"):
-                    for fname in to_pull:
-                        gh_path = f"{selected_folder}/{fname}"
-                        try:
-                            raw = gh_download_bytes(gh_path)
-                            vol_write_bytes(gh_path, raw)
-                            ok += 1
-                        except Exception as e:
-                            fails.append(f"{fname}: {e}")
+    pull_editor = st.data_editor(
+        st.session_state.pull_df,
+        hide_index=True,
+        use_container_width=True,
+        column_config={
+            "GitHub size": st.column_config.NumberColumn(format="%d"),
+            "Volume size": st.column_config.NumberColumn(format="%d"),
+            "Pull to Volume": st.column_config.CheckboxColumn(),
+        },
+        disabled=[
+            "File", "GitHub modified", "Volume modified",
+            "GitHub size", "Volume size", "Status"
+        ],
+        key="pull_table",
+    )
 
-                # Clear caches so the status view reflects the updated state
-                list_github_files.clear()
-                list_volume_files.clear()
-                merged_status.clear()
-                clear_all_caches()
+    # Keep the session copy in sync with user edits
+    st.session_state.pull_df = pull_editor
 
-                st.toast(f"Pulled {ok} file(s) to volume")
-                if fails:
-                    with st.expander("Some files failed"):
-                        for msg in fails:
-                            st.error(msg)
-                time.sleep(0.6)
-                st.rerun()
+    to_pull = pull_editor[pull_editor["Pull to Volume"] == True]["File"].tolist()
+
+    col_a, col_b = st.columns([3, 2])
+    with col_a:
+        st.write("Selected to pull:", ", ".join(to_pull) or "—")
+    do_pull = col_b.button(
+        f"Pull selected ({len(to_pull)})",
+        type="primary",
+        use_container_width=True,
+        disabled=(len(to_pull) == 0),
+    )
+
+    if do_pull:
+        if not _get_token():
+            st.error("Missing GITHUB_TOKEN; cannot pull from GitHub.")
+        else:
+            ok, fails = 0, []
+            with st.spinner("Pulling from GitHub…"):
+                for fname in to_pull:
+                    gh_path = f"{selected_folder}/{fname}"
+                    try:
+                        raw = gh_download_bytes(gh_path)
+                        vol_write_bytes(gh_path, raw)
+                        ok += 1
+                    except Exception as e:
+                        fails.append(f"{fname}: {e}")
+
+            # Clear caches so the status view reflects the updated state
+            list_github_files.clear()
+            list_volume_files.clear()
+            merged_status.clear()
+            clear_all_caches()
+
+            st.toast(f"Pulled {ok} file(s) to volume")
+            if fails:
+                with st.expander("Some files failed"):
+                    for msg in fails:
+                        st.error(msg)
+            time.sleep(0.6)
+            st.rerun()
+
 
     st.divider()
 
-    # === VOLUME -> GITHUB (PUSH) ===
-    st.subheader("⬆️ Volume → GitHub")
-    st.caption(f"Copy selected files from the Railway volume up to GitHub `{selected_folder}/` folder.")
+# === VOLUME -> GITHUB (PUSH) ===
+st.subheader("⬆️ Volume → GitHub")
+st.caption(f"Copy selected files from the Railway volume up to GitHub `{selected_folder}/` folder.")
 
-    if merged.empty:
-        st.info("No files to push.")
-    else:
-        push_default = merged["Status"].isin(
-            ["Only on volume", "Newer on volume", "Different size", "Check required"]
-        )
+if merged.empty:
+    st.info("No files to push.")
+else:
+    push_default = merged["Status"].isin(
+        ["Only on volume", "Newer on volume", "Different size", "Check required"]
+    )
 
-        push_editor = st.data_editor(
-            merged.assign(**{"Push to GitHub": push_default}),
-            hide_index=True,
-            use_container_width=True,
-            column_config={
-                "GitHub size": st.column_config.NumberColumn(format="%d"),
-                "Volume size": st.column_config.NumberColumn(format="%d"),
-                "Push to GitHub": st.column_config.CheckboxColumn(),
-            },
-            disabled=[
-                "File", "GitHub modified", "Volume modified",
-                "GitHub size", "Volume size", "Status"
-            ],
-            key="push_table",
-        )
+    # --- DROP-IN: controlled editor with Select all/none ---
+    base_push_df = merged.assign(**{"Push to GitHub": push_default}).copy()
 
-        to_push = push_editor[push_editor["Push to GitHub"] == True]["File"].tolist()
+    if (
+        "push_df_folder" not in st.session_state
+        or st.session_state.get("push_df_folder") != selected_folder
+        or "push_df" not in st.session_state
+    ):
+        st.session_state.push_df = base_push_df
+        st.session_state.push_df_folder = selected_folder
 
-        col_m, col_btn = st.columns([3, 2])
-        commit_message = col_m.text_input(
-            "Commit message",
-            value=f"Sync from Railway volume on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
-            help="Used for all selected files."
-        )
-        do_push = col_btn.button(
-            f"Push selected ({len(to_push)})",
-            type="primary",
-            use_container_width=True,
-            disabled=(len(to_push) == 0),
-        )
+    c2_sel1, c2_sel2, _ = st.columns([1, 1, 4])
+    with c2_sel1:
+        if st.button("Select all", key="push_select_all"):
+            st.session_state.push_df["Push to GitHub"] = True
+            st.rerun()
+    with c2_sel2:
+        if st.button("Select none", key="push_select_none"):
+            st.session_state.push_df["Push to GitHub"] = False
+            st.rerun()
 
-        if do_push:
-            if not _get_token():
-                st.error("Missing GITHUB_TOKEN; cannot push to GitHub.")
-            else:
-                ok, fails = 0, []
-                with st.spinner("Pushing to GitHub…"):
-                    for fname in to_push:
-                        try:
-                            full_path = f"{selected_folder}/{fname}"
-                            raw = vol_read_bytes(full_path)
-                            success, msg = gh_put_file(full_path, raw, commit_message)
-                            if success:
-                                ok += 1
-                            else:
-                                fails.append(f"{fname}: {msg}")
-                        except Exception as e:
-                            fails.append(f"{fname}: {e}")
+    push_editor = st.data_editor(
+        st.session_state.push_df,
+        hide_index=True,
+        use_container_width=True,
+        column_config={
+            "GitHub size": st.column_config.NumberColumn(format="%d"),
+            "Volume size": st.column_config.NumberColumn(format="%d"),
+            "Push to GitHub": st.column_config.CheckboxColumn(),
+        },
+        disabled=[
+            "File", "GitHub modified", "Volume modified",
+            "GitHub size", "Volume size", "Status"
+        ],
+        key="push_table",
+    )
 
-                list_github_files.clear()
-                list_volume_files.clear()
-                merged_status.clear()
-                clear_all_caches()
+    # Keep the session copy in sync with user edits
+    st.session_state.push_df = push_editor
 
-                st.toast(f"Pushed {ok} file(s) to GitHub")
-                if fails:
-                    with st.expander("Some files failed"):
-                        for msg in fails:
-                            st.error(msg)
-                time.sleep(0.6)
-                st.rerun()
+    to_push = push_editor[push_editor["Push to GitHub"] == True]["File"].tolist()
+
+    col_m, col_btn = st.columns([3, 2])
+    commit_message = col_m.text_input(
+        "Commit message",
+        value=f"Sync from Railway volume on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+        help="Used for all selected files."
+    )
+    do_push = col_btn.button(
+        f"Push selected ({len(to_push)})",
+        type="primary",
+        use_container_width=True,
+        disabled=(len(to_push) == 0),
+    )
+
+    if do_push:
+        if not _get_token():
+            st.error("Missing GITHUB_TOKEN; cannot push to GitHub.")
+        else:
+            ok, fails = 0, []
+            with st.spinner("Pushing to GitHub…"):
+                for fname in to_push:
+                    try:
+                        full_path = f"{selected_folder}/{fname}"
+                        raw = vol_read_bytes(full_path)
+                        success, msg = gh_put_file(full_path, raw, commit_message)
+                        if success:
+                            ok += 1
+                        else:
+                            fails.append(f"{fname}: {msg}")
+                    except Exception as e:
+                        fails.append(f"{fname}: {e}")
+
+            list_github_files.clear()
+            list_volume_files.clear()
+            merged_status.clear()
+            clear_all_caches()
+
+            st.toast(f"Pushed {ok} file(s) to GitHub")
+            if fails:
+                with st.expander("Some files failed"):
+                    for msg in fails:
+                        st.error(msg)
+            time.sleep(0.6)
+            st.rerun()
+
 
     with st.expander("Tips & notes"):
         st.markdown(
