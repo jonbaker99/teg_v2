@@ -265,6 +265,16 @@ def execute_data_update(overwrite: bool = False, new_data_only: bool = False):
                 batch_files.extend(update_files)
             st.success("💾 All-data updated and CSV created.")
 
+        # CRITICAL: Clear Streamlit caches BEFORE regenerating dependent caches
+        # This ensures that load_all_data() and other cached functions read the
+        # freshly updated files rather than stale cached versions.
+        # Previously this was at the end of the update process, causing commentary
+        # and streaks caches to be built from old data.
+        logger.info("Clearing Streamlit caches before cache regeneration...")
+        st.cache_data.clear()
+        clear_all_caches()
+        logger.info("Caches cleared - dependent caches will now use fresh data")
+
         # Update TEG status files to reflect completion changes
         with st.spinner("📊 Updating TEG status files..."):
             status_files = update_teg_status_files(defer_github=is_railway)
@@ -343,9 +353,8 @@ def execute_data_update(overwrite: bool = False, new_data_only: bool = False):
         #         logger.info(f"Volume cache clear result: {result}")
         #         st.success("🗑️ Volume cache cleared.")
 
-        # Clear all caches to reflect changes
-        st.cache_data.clear()
-        clear_all_caches()
+        # Note: Streamlit caches were already cleared earlier (after all-data update)
+        # to ensure cache regeneration used fresh data. No need to clear again here.
     else:
         st.warning("⚠️ No new records to append.")
 
