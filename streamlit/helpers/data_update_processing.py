@@ -274,24 +274,51 @@ def execute_data_update(overwrite: bool = False, new_data_only: bool = False):
 
         # Update streaks cache with latest data
         with st.spinner("🏁 Updating streaks cache..."):
-            streaks_file = update_streaks_cache(defer_github=is_railway)
-            if streaks_file:
-                batch_files.append(streaks_file)
-            st.success("🏁 Streaks cache updated.")
+            try:
+                streaks_file = update_streaks_cache(defer_github=is_railway)
+                if streaks_file:
+                    batch_files.append(streaks_file)
+                    st.success("🏁 Streaks cache updated.")
+                else:
+                    st.error("❌ Streaks cache update returned None - check logs for errors")
+                    logger.error("update_streaks_cache returned None - cache may not have been updated")
+            except Exception as e:
+                st.error(f"❌ Failed to update streaks cache: {e}")
+                logger.error(f"Exception in update_streaks_cache: {e}", exc_info=True)
+                # Continue with other updates even if streaks fails
 
         # Update commentary caches with latest data
         with st.spinner("📝 Updating commentary caches..."):
-            commentary_files = update_commentary_caches(defer_github=is_railway)
-            if commentary_files:
-                batch_files.extend(commentary_files)
-            st.success("📝 Commentary caches updated.")
+            try:
+                commentary_files = update_commentary_caches(defer_github=is_railway)
+                if commentary_files:
+                    batch_files.extend(commentary_files)
+                    st.success("📝 Commentary caches updated.")
+                elif commentary_files is None:
+                    st.error("❌ Commentary cache update failed - check logs for errors")
+                    logger.error("update_commentary_caches returned None - caches may not have been updated")
+                else:
+                    # Empty list returned (valid for non-Railway)
+                    st.success("📝 Commentary caches updated.")
+            except Exception as e:
+                st.error(f"❌ Failed to update commentary caches: {e}")
+                logger.error(f"Exception in update_commentary_caches: {e}", exc_info=True)
+                # Continue with other updates even if commentary fails
 
         # Update bestball cache with latest data
         with st.spinner("🏀 Updating bestball cache..."):
-            bestball_file = update_bestball_cache(defer_github=is_railway)
-            if bestball_file:
-                batch_files.append(bestball_file)
-            st.success("🏀 Bestball cache updated.")
+            try:
+                bestball_file = update_bestball_cache(defer_github=is_railway)
+                if bestball_file:
+                    batch_files.append(bestball_file)
+                    st.success("🏀 Bestball cache updated.")
+                else:
+                    st.error("❌ Bestball cache update returned None - check logs for errors")
+                    logger.error("update_bestball_cache returned None - cache may not have been updated")
+            except Exception as e:
+                st.error(f"❌ Failed to update bestball cache: {e}")
+                logger.error(f"Exception in update_bestball_cache: {e}", exc_info=True)
+                # Continue with batch commit even if bestball fails
 
         # Batch commit all files to GitHub in single commit (Railway only)
         if is_railway and batch_files:

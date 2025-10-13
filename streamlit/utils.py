@@ -1088,32 +1088,60 @@ def update_streaks_cache(defer_github: bool = False):
     Called whenever source data changes (data updates, deletions).
     """
     try:
+        logger.info("Updating streaks cache file")
+
         # Import build_streaks function
-        from helpers.streak_analysis_processing import build_streaks
+        try:
+            from helpers.streak_analysis_processing import build_streaks
+        except Exception as e:
+            raise Exception(f"Failed to import build_streaks: {e}")
 
         # Load all data including incomplete TEGs for streak calculations
-        all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
+        try:
+            logger.info("Loading all data for streak calculation...")
+            all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
+            logger.info(f"Loaded {len(all_data)} rows of data")
+        except Exception as e:
+            raise Exception(f"Failed to load all data: {e}")
 
         if all_data.empty:
             logger.warning("No data available for streak calculation")
             return None
 
         # Calculate streaks using the build_streaks function
-        streaks_df = build_streaks(all_data)
+        try:
+            logger.info("Calculating streaks...")
+            streaks_df = build_streaks(all_data)
+            logger.info(f"Calculated {len(streaks_df)} streak records")
+        except Exception as e:
+            raise Exception(f"Failed to calculate streaks: {e}")
 
         # Save to streaks parquet file
-        file_info = write_file(STREAKS_PARQUET, streaks_df, "Update streaks cache", defer_github=defer_github)
-        logger.info(f"Streaks cache updated successfully: {STREAKS_PARQUET}")
+        try:
+            file_info = write_file(STREAKS_PARQUET, streaks_df, "Update streaks cache", defer_github=defer_github)
+            logger.info(f"Streaks cache updated successfully: {STREAKS_PARQUET}")
+        except Exception as e:
+            raise Exception(f"Failed to write streaks cache: {e}")
 
         # Clear streamlit cache to ensure fresh data on next load (only if not deferred)
         if not defer_github:
             clear_all_caches()
 
+        logger.info("Streaks cache update completed successfully")
         return file_info
 
     except Exception as e:
-        logger.error(f"Error updating streaks cache: {e}")
-        st.error(f"Failed to update streaks cache: {e}")
+        logger.error(f"Error updating streaks cache: {e}", exc_info=True)
+        error_msg = f"Failed to update streaks cache: {e}"
+        logger.error(error_msg)
+
+        # Show error in UI
+        try:
+            st.error(error_msg)
+        except:
+            # If streamlit context not available (e.g. running from script)
+            print(f"ERROR: {error_msg}")
+
         return None
 
 
@@ -1197,55 +1225,85 @@ def update_commentary_caches(defer_github: bool = False):
         file_infos = []
 
         # Load all data including incomplete TEGs for commentary
-        all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
+        try:
+            logger.info("Loading all data for commentary generation...")
+            all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
+            logger.info(f"Loaded {len(all_data)} rows of data")
+        except Exception as e:
+            raise Exception(f"Failed to load all data: {e}")
 
         if all_data.empty:
             logger.warning("No data available for commentary generation")
             return None
 
         # Load round info and streaks data
-        round_info = read_file(ROUND_INFO_CSV)
-        streaks_df = read_file(STREAKS_PARQUET)
+        try:
+            logger.info("Loading round info and streaks data...")
+            round_info = read_file(ROUND_INFO_CSV)
+            streaks_df = read_file(STREAKS_PARQUET)
+            logger.info(f"Loaded {len(round_info)} round info records and {len(streaks_df)} streak records")
+        except Exception as e:
+            raise Exception(f"Failed to load round info or streaks data: {e}")
 
         # Generate round events
-        logger.info("Generating round events...")
-        events_df = create_round_events(all_data_df=all_data)
-        file_info = write_file(COMMENTARY_ROUND_EVENTS_PARQUET, events_df, "Update commentary round events cache", defer_github=defer_github)
-        if file_info:
-            file_infos.append(file_info)
-        logger.info(f"Round events cache updated: {COMMENTARY_ROUND_EVENTS_PARQUET}")
+        try:
+            logger.info("Generating round events...")
+            events_df = create_round_events(all_data_df=all_data)
+            logger.info(f"Generated {len(events_df)} round events")
+            file_info = write_file(COMMENTARY_ROUND_EVENTS_PARQUET, events_df, "Update commentary round events cache", defer_github=defer_github)
+            if file_info:
+                file_infos.append(file_info)
+            logger.info(f"Round events cache updated: {COMMENTARY_ROUND_EVENTS_PARQUET}")
+        except Exception as e:
+            raise Exception(f"Failed to generate/write round events: {e}")
 
         # Generate round summary
-        logger.info("Generating round summary...")
-        round_summary_df = create_round_summary(all_data_df=all_data, round_info_df=round_info)
-        file_info = write_file(COMMENTARY_ROUND_SUMMARY_PARQUET, round_summary_df, "Update commentary round summary cache", defer_github=defer_github)
-        if file_info:
-            file_infos.append(file_info)
-        logger.info(f"Round summary cache updated: {COMMENTARY_ROUND_SUMMARY_PARQUET}")
+        try:
+            logger.info("Generating round summary...")
+            round_summary_df = create_round_summary(all_data_df=all_data, round_info_df=round_info)
+            logger.info(f"Generated {len(round_summary_df)} round summary records")
+            file_info = write_file(COMMENTARY_ROUND_SUMMARY_PARQUET, round_summary_df, "Update commentary round summary cache", defer_github=defer_github)
+            if file_info:
+                file_infos.append(file_info)
+            logger.info(f"Round summary cache updated: {COMMENTARY_ROUND_SUMMARY_PARQUET}")
+        except Exception as e:
+            raise Exception(f"Failed to generate/write round summary: {e}")
 
         # Generate tournament summary
-        logger.info("Generating tournament summary...")
-        tournament_summary_df = create_tournament_summary(all_data_df=all_data, round_info_df=round_info)
-        file_info = write_file(COMMENTARY_TOURNAMENT_SUMMARY_PARQUET, tournament_summary_df, "Update commentary tournament summary cache", defer_github=defer_github)
-        if file_info:
-            file_infos.append(file_info)
-        logger.info(f"Tournament summary cache updated: {COMMENTARY_TOURNAMENT_SUMMARY_PARQUET}")
+        try:
+            logger.info("Generating tournament summary...")
+            tournament_summary_df = create_tournament_summary(all_data_df=all_data, round_info_df=round_info)
+            logger.info(f"Generated {len(tournament_summary_df)} tournament summary records")
+            file_info = write_file(COMMENTARY_TOURNAMENT_SUMMARY_PARQUET, tournament_summary_df, "Update commentary tournament summary cache", defer_github=defer_github)
+            if file_info:
+                file_infos.append(file_info)
+            logger.info(f"Tournament summary cache updated: {COMMENTARY_TOURNAMENT_SUMMARY_PARQUET}")
+        except Exception as e:
+            raise Exception(f"Failed to generate/write tournament summary: {e}")
 
         # Generate round streaks summary
-        logger.info("Generating round streaks summary...")
-        round_streaks_df = create_round_streaks_summary(all_data_df=all_data, streaks_df=streaks_df)
-        file_info = write_file(COMMENTARY_ROUND_STREAKS_PARQUET, round_streaks_df, "Update commentary round streaks cache", defer_github=defer_github)
-        if file_info:
-            file_infos.append(file_info)
-        logger.info(f"Round streaks cache updated: {COMMENTARY_ROUND_STREAKS_PARQUET}")
+        try:
+            logger.info("Generating round streaks summary...")
+            round_streaks_df = create_round_streaks_summary(all_data_df=all_data, streaks_df=streaks_df)
+            logger.info(f"Generated {len(round_streaks_df)} round streak records")
+            file_info = write_file(COMMENTARY_ROUND_STREAKS_PARQUET, round_streaks_df, "Update commentary round streaks cache", defer_github=defer_github)
+            if file_info:
+                file_infos.append(file_info)
+            logger.info(f"Round streaks cache updated: {COMMENTARY_ROUND_STREAKS_PARQUET}")
+        except Exception as e:
+            raise Exception(f"Failed to generate/write round streaks: {e}")
 
         # Generate tournament streaks summary
-        logger.info("Generating tournament streaks summary...")
-        tournament_streaks_df = create_tournament_streaks_summary(all_data_df=all_data, streaks_df=streaks_df)
-        file_info = write_file(COMMENTARY_TOURNAMENT_STREAKS_PARQUET, tournament_streaks_df, "Update commentary tournament streaks cache", defer_github=defer_github)
-        if file_info:
-            file_infos.append(file_info)
-        logger.info(f"Tournament streaks cache updated: {COMMENTARY_TOURNAMENT_STREAKS_PARQUET}")
+        try:
+            logger.info("Generating tournament streaks summary...")
+            tournament_streaks_df = create_tournament_streaks_summary(all_data_df=all_data, streaks_df=streaks_df)
+            logger.info(f"Generated {len(tournament_streaks_df)} tournament streak records")
+            file_info = write_file(COMMENTARY_TOURNAMENT_STREAKS_PARQUET, tournament_streaks_df, "Update commentary tournament streaks cache", defer_github=defer_github)
+            if file_info:
+                file_infos.append(file_info)
+            logger.info(f"Tournament streaks cache updated: {COMMENTARY_TOURNAMENT_STREAKS_PARQUET}")
+        except Exception as e:
+            raise Exception(f"Failed to generate/write tournament streaks: {e}")
 
         # Clear streamlit cache to ensure fresh data on next load (only if not deferred)
         if not defer_github:
@@ -1256,8 +1314,17 @@ def update_commentary_caches(defer_github: bool = False):
         return file_infos if defer_github else None
 
     except Exception as e:
-        logger.error(f"Error updating commentary caches: {e}")
-        st.error(f"Failed to update commentary caches: {e}")
+        logger.error(f"Error updating commentary caches: {e}", exc_info=True)
+        error_msg = f"Failed to update commentary caches: {e}"
+        logger.error(error_msg)
+
+        # Show error in UI
+        try:
+            st.error(error_msg)
+        except:
+            # If streamlit context not available (e.g. running from script)
+            print(f"ERROR: {error_msg}")
+
         return None
 
 

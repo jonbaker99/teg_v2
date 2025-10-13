@@ -1,1 +1,130 @@
-IyBURUcgMTggLSBSb3VuZCAyIFJlcG9ydAoKLS0tCgojIyBTdG9yeSBOb3RlcwoKIyMgUm91bmQgU3VtbWFyeQotICoqUm91bmQgV2lubmVyIChTdGFibGVmb3JkKToqKiBHcmVnZyBXSUxMSUFNUyBhbmQgSm9obiBQQVRURVJTT04gKDQyIHB0cyBTdGFibGVmb3JkIGVhY2gpCi0gKipSb3VuZCBXaW5uZXIgKEdyb3NzKToqKiBHcmVnZyBXSUxMSUFNUyAoMTQgZ3Jvc3MgdnMgcGFyKQotICoqVG91cm5hbWVudCBMZWFkZXIgKFN0YWJsZWZvcmQpOioqIEFsZXggQkFLRVIgKGxlYWRzIGJ5IDExIHB0cykKLSAqKlRvdXJuYW1lbnQgTGVhZGVyIChHcm9zcyk6KiogR3JlZ2cgV0lMTElBTVMgKDE0IGdyb3NzIHZzIHBhcikKLSAqKkJpZ2dlc3QgTW92ZXI6KiogRGF2aWQgTVVMTElOICgtMiBwb3NpdGlvbnMsIGRyb3BwZWQgZnJvbSAzcmQgdG8gNXRoKQotICoqRHJhbWEgTGV2ZWw6KiogTG93CgojIyBLZXkgTW9tZW50cwotIEgxLTY6IERhdmlkIE1VTExJTiBzdHJ1Z2dsZXMgZWFybHkgd2l0aCBvbmx5IDggcHRzIGluIGZpcnN0IHNpeCBob2xlcyAod29yc3QgaW4gZmllbGQpCi0gSDctMTI6IERhdmlkIE1VTExJTiByZWJvdW5kcyB3aXRoIHN0cm9uZyAxNiBwdHMgaW4gbWlkZGxlIHNpeCBob2xlcyAoYmVzdCBpbiBmaWVsZCBmb3IgdGhpcyBzdHJldGNoKQotIEgxMy0xODogR3JlZ2cgV0lMTElBTVMgZXhwbG9kZXMgd2l0aCAxOCBwdHMgaW4gZmluYWwgc2l4IGhvbGVzLCB0aWVzIHJvdW5kIHdpbgotIEgxMy0xODogSm9uIEJBS0VSIG1hdGNoZXMgV2lsbGlhbXMgd2l0aCAxOCBwdHMgaW4gZmluYWwgc2l4IGhvbGVzLCBjbGltYnMgdG8gNHRoCi0gSDEzLTE4OiBKb2huIFBBVFRFUlNPTiBwb3N0cyAxNiBwdHMgaW4gZmluYWwgc2l4IHRvIHNlY3VyZSB0aWUgZm9yIHJvdW5kIHdpbgotIEg0OiBDb3Vyc2UncyBoYXJkZXN0IGhvbGUgKGF2ZyAyLjYgb3ZlciBwYXIsIGF2ZyAxLjIgcHRzIFN0YWJsZWZvcmQpCi0gSDE0OiBDb3Vyc2UncyBlYXNpZXN0IGhvbGUgKGF2ZyAwLjIgdW5kZXIgcGFyLCBhdmcgMy40IHB0cyBTdGFibGVmb3JkKQotIEgxLTY6IEFsZXggQkFLRVIgb3BlbnMgd2l0aCAxNCBwdHMsIG1hdGNoaW5nIEdyZWdnIFdJTExJQU1TIGZvciBiZXN0IGZpcnN0LXNpeCBwZXJmb3JtYW5jZQoKIyMgSG93IFBvc2l0aW9ucyBDaGFuZ2VkCi0gKipTdGFydCBvZiByb3VuZCAoU3RhYmxlZm9yZCk6KiogMXN0IEFsZXggQkFLRVIgKDQ2IHB0cykgfCAybmQgSm9obiBQQVRURVJTT04gKDM0IHB0cykgfCAzcmQgRGF2aWQgTVVMTElOICgzMiBwdHMpIHwgNHRoIEdyZWdnIFdJTExJQU1TICgzMSBwdHMpIHwgNXRoIEpvbiBCQUtFUiAoMzAgcHRzKQotICoqU3RhcnQgb2Ygcm91bmQgKEdyb3NzKToqKiAxc3QgSm9uIEJBS0VSICgyNCkgfCAybmQgQWxleCBCQUtFUiAoMjYpIHwgM3JkIEdyZWdnIFdJTExJQU1TICgyNykgfCA0dGggRGF2aWQgTVVMTElOICgyOCkgfCA1dGggSm9obiBQQVRURVJTT04gKDMwKQotICoqS2V5IHNoaWZ0czoqKiBGaW5hbCBzaXggaG9sZXMgcHJvZHVjZWQgc2lnbmlmaWNhbnQgbW92ZW1lbnQgd2l0aCBXaWxsaWFtcyBhbmQgSm9uIEJBS0VSIGJvdGggcG9zdGluZyAxOCBwdHMgdG8gY2xpbWI7IERhdmlkIE1VTExJTidzIHBvb3Igb3BlbmluZyBzaXggKDggcHRzKSBjb3N0IGhpbSB0d28gcG9zaXRpb25zIGRlc3BpdGUgbWlkZGxlLXJvdW5kIHJlY292ZXJ5Ci0gKipFbmQgb2Ygcm91bmQgKFN0YWJsZWZvcmQpOioqIDFzdCBBbGV4IEJBS0VSICg4NyBwdHMpIHwgMm5kIEpvaG4gUEFUVEVSU09OICg3NiBwdHMpIHwgM3JkIEdyZWdnIFdJTExJQU1TICg3MyBwdHMpIHwgNHRoIEpvbiBCQUtFUiAoNjkgcHRzKSB8IDV0aCBEYXZpZCBNVUxMSU4gKDY3IHB0cykKLSAqKkVuZCBvZiByb3VuZCAoR3Jvc3MpOioqIDFzdCBHcmVnZyBXSUxMSUFNUyAoMTQpIHwgMm5kIEpvbiBCQUtFUiAoMTUpIHwgM3JkIEFsZXggQkFLRVIgKDM0KSB8IDR0aCBEYXZpZCBNVUxMSU4gKDIyKSB8IDV0aCBKb2huIFBBVFRFUlNPTiAoMjIpCgojIyBSb3VuZCBCcmVha2Rvd24KKipIb2xlcyAxLTYgKE9wZW5pbmcpOioqCi0gQWxleCBCQUtFUiBsZWFkcyBvcGVuaW5nIHdpdGggMTQgcHRzLCBtYXRjaGVkIGJ5IEdyZWdnIFdJTExJQU1TCi0gRGF2aWQgTVVMTElOIHN0cnVnZ2xlcyBiYWRseSB3aXRoIG9ubHkgOCBwdHMgKHdvcnN0IGluIGZpZWxkKQotIEpvaG4gUEFUVEVSU09OIHBvc3RzIDExIHB0cywgSm9uIEJBS0VSIG1hbmFnZXMgMTAgcHRzCi0gSG9sZSA0IHByb3ZlcyBicnV0YWwgZm9yIGZpZWxkIChhdmcgMi42IG92ZXIgcGFyKQoKKipIb2xlcyA3LTEyIChNaWRkbGUpOioqCi0gRGF2aWQgTVVMTElOIHJlY292ZXJzIHdpdGggc3RlbGxhciAxNiBwdHMgKGJlc3QgaW4gZmllbGQpCi0gQWxleCBCQUtFUiBjb250aW51ZXMgY29uc2lzdGVuY3kgd2l0aCAxNSBwdHMsIEpvbiBCQUtFUiBwb3N0cyAxMSBwdHMKLSBKb2huIFBBVFRFUlNPTiBhZGRzIDE1IHB0cyB0byBzdGF5IGluIGNvbnRlbnRpb24KLSBHcmVnZyBXSUxMSUFNUyBwb3N0cyBtb2Rlc3QgMTAgcHRzIGluIHRoaXMgc3RyZXRjaAotIEhvbGUgMTEgcGxheXMgZWFzaWVyIChhdmcgZXZlbiBwYXIsIDMuNCBwdHMgU3RhYmxlZm9yZCkKCioqSG9sZXMgMTMtMTggKENsb3NpbmcpOioqCi0gR3JlZ2cgV0lMTElBTVMgZXhwbG9kZXMgd2l0aCAxOCBwdHMgdG8gdGllIHJvdW5kIHdpbiBhbmQganVtcCB0byAzcmQKLSBKb24gQkFLRVIgbWF0Y2hlcyB3aXRoIDE4IHB0cywgbW92ZXMgdXAgdG8gNHRoCi0gSm9obiBQQVRURVJTT04gcG9zdHMgc3Ryb25nIDE2IHB0cyB0byBzZWN1cmUgY28tcm91bmQtd2luCi0gQWxleCBCQUtFUidzIDEyIHB0cyBlbm91Z2ggdG8gbWFpbnRhaW4gb3ZlcmFsbCBsZWFkCi0gRGF2aWQgTVVMTElOIGFkZHMgMTEgcHRzIGJ1dCBjYW4ndCByZWNvdmVyIGxvc3QgZ3JvdW5kCi0gSG9sZSAxNCBwcm92ZXMgZWFzaWVzdCBvbiBjb3Vyc2UgKGF2ZyAwLjIgdW5kZXIgcGFyKQoKIyMgUm91bmQgU3RhdHMKLSAqKkhhcmRlc3QgaG9sZToqKiBINCAoUGFyIDQsIGF2ZyAyLjYgdnMgcGFyLCBhdmcgMS4yIHB0cyBTdGFibGVmb3JkKQotICoqRWFzaWVzdCBob2xlOioqIEgxNCAoUGFyIDMsIGF2ZyAtMC4yIHZzIHBhciwgYXZnIDMuNCBwdHMgU3RhYmxlZm9yZCkKLSAqKkJlc3QgaW5kaXZpZHVhbCBwZXJmb3JtYW5jZToqKiBKb2huIFBBVFRFUlNPTiBhbmQgR3JlZ2cgV0lMTElBTVMgKDQyIHB0cyBlYWNoLCB1cCBmcm9tIDM0IGFuZCAzMSByZXNwZWN0aXZlbHkpCi0gKipCaWdnZXN0IGNvbGxhcHNlOioqIERhdmlkIE1VTExJTiAob3BlbmluZyBzaXggaG9sZXMsIG9ubHkgOCBwdHMgY29zdCBoaW0gMiBwb3NpdGlvbnMgb3ZlcmFsbCkKCiMjIFBsYXllciBOb3RlcwotICoqQWxleCBCQUtFUjoqKiA0MSBwdHMgcm91bmQgKGRvd24gZnJvbSA0NiBpbiBSMSksIG1haW50YWlucyB0b3VybmFtZW50IGxlYWQgYXQgODcgcHRzOyBjb25zaXN0ZW50IHNwbGl0cyBvZiAxNC0xNS0xMiBhY3Jvc3Mgc2l4LWhvbGUgc2VnbWVudHMKLSAqKkpvaG4gUEFUVEVSU09OOioqIENvLXJvdW5kIHdpbm5lciB3aXRoIDQyIHB0cyAodXAgZnJvbSAzNCBpbiBSMSksIHN0YXlzIDJuZCBvdmVyYWxsIGF0IDc2IHB0czsgc3Ryb25nIDExLTE1LTE2IHByb2dyZXNzaW9uIHdpdGggcG93ZXJmdWwgYmFjayBuaW5lICgyNSBwdHMpCi0gKipHcmVnZyBXSUxMSUFNUzoqKiBDby1yb3VuZCB3aW5uZXIgd2l0aCA0MiBwdHMgKHVwIGZyb20gMzEgaW4gUjEpLCBqdW1wcyB0byAzcmQgb3ZlcmFsbCBhdCA3MyBwdHM7IGV4cGxvc2l2ZSBmaW5pc2ggd2l0aCAxOCBwdHMgaW4gZmluYWwgc2l4OyBsZWFkcyBHcm9zcyBjb21wZXRpdGlvbiBhdCAxNCB2cyBwYXIKLSAqKkpvbiBCQUtFUjoqKiAzOSBwdHMgcm91bmQgKHVwIGZyb20gMzAgaW4gUjEpLCBjbGltYnMgdG8gNHRoIGF0IDY5IHB0czsgbWlycm9yZWQgV2lsbGlhbXMgd2l0aCAxOCBwdHMgaW4gZmluYWwgc2l4IGhvbGVzOyBzbG93IHN0YXJ0ICgxMCBwdHMgZmlyc3Qgc2l4KSBidXQgc3Ryb25nIGZpbmlzaAotICoqRGF2aWQgTVVMTElOOioqIDM1IHB0cyByb3VuZCAodXAgZnJvbSAzMiBpbiBSMSksIGRyb3BzIHRvIDV0aCBhdCA2NyBwdHM7IHRhbGUgb2YgdHdvIG5pbmVzIHdpdGggZGlzYXN0cm91cyA4IHB0cyBvcGVuaW5nIHNpeCwgZXhjZWxsZW50IDE2IHB0cyBpbiBtaWRkbGUgc2l4LCBidXQgY291bGRuJ3Qgb3ZlcmNvbWUgZWFybHkgZGVmaWNpdAoKLS0tCgojIyBSb3VuZCBSZXBvcnQKCiMjIFdpbGxpYW1zIGFuZCBQYXR0ZXJzb24gU2hhcmUgU3BvaWxzIGFzIEJha2VyIEV4dGVuZHMgTGVhZAoKKipQR0EgQ2F0YWx1bnlhIC0gVG91ciDigKIgMTIvMTAvMjAyNSDigKIgUm91bmQgMiBvZiA0KioKCiMjIyBSb3VuZCBTdW1tYXJ5CgpBbGV4IEJha2VyIGVudGVyZWQgUm91bmQgMiB3aXRoIGEgY29tbWFuZGluZyAxMi1wb2ludCBjdXNoaW9uIGFuZCB0aGUgbHV4dXJ5IG9mIGtub3dpbmcgaGUgY291bGQgYWZmb3JkIGEgc2xpZ2h0bHkgb2ZmIGRheS4gSGUgZ290IGV4YWN0bHkgdGhhdOKAlGEgc29saWQgYnV0IHVuc3BlY3RhY3VsYXIgNDEgcG9pbnRz4oCUeWV0IHN0aWxsIGV4dGVuZGVkIGhpcyBURUcgVHJvcGh5IGxlYWQgdG8gMTEgcG9pbnRzIGFmdGVyIGFuIGFjdGlvbi1wYWNrZWQgc2Vjb25kIHJvdW5kIG9uIHRoZSBUb3VyIGNvdXJzZS4KClRoZSBkYXkgYmVsb25nZWQgdG8gR3JlZ2cgV2lsbGlhbXMgYW5kIEpvaG4gUGF0dGVyc29uLCB3aG8gYm90aCBjYXJkZWQgYnJpbGxpYW50IDQyLXBvaW50IHJvdW5kcyB0byBzaGFyZSByb3VuZCBob25vcnMuIFdpbGxpYW1zIHByb2R1Y2VkIHRoZSByb3VuZCdzIG1vc3QgZXhwbG9zaXZlIHN0cmV0Y2gsIHRvcmNoaW5nIHRoZSBmaW5hbCBzaXggaG9sZXMgZm9yIDE4IHBvaW50cyB0byB2YXVsdCBpbnRvIHRoaXJkIHBsYWNlIG92ZXJhbGwgYW5kIHNlaXplIHRoZSBHcmVlbiBKYWNrZXQgbGVhZCBhdCAxNC1vdmVyLXBhciBncm9zcy4gUGF0dGVyc29uIGJ1aWx0IGhpcyByb3VuZCBtb3JlIG1ldGhvZGljYWxseSwgc3RlYWRpbHkgaW1wcm92aW5nIHRocm91Z2ggZWFjaCBzaXgtaG9sZSBzZWdtZW50IGJlZm9yZSBjbG9zaW5nIHdpdGggMjUgcG9pbnRzIG92ZXIgdGhlIGJhY2sgbmluZS4KClRoZSBiaWdnZXN0IGNhc3VhbHR5IHdhcyBEYXZpZCBNdWxsaW4sIHdob3NlIGRpc2FzdHJvdXMgc3RhcnTigJRqdXN0IDggcG9pbnRzIHRocm91Z2ggc2l4IGhvbGVzLCB3b3JzdCBpbiB0aGUgZmllbGTigJRzYXcgaGltIHBsdW1tZXQgdHdvIHBvc2l0aW9ucyB0byBmaWZ0aCBkZXNwaXRlIGEgc3Bpcml0ZWQgbWlkZGxlLXJvdW5kIHJlY292ZXJ5LiBXaXRoIHR3byByb3VuZHMgcmVtYWluaW5nLCBCYWtlciBsb29rcyBpbmNyZWFzaW5nbHkgc2VjdXJlLCBidXQgV2lsbGlhbXMgaGFzIGFubm91bmNlZCBoaW1zZWxmIGFzIGEgc2VyaW91cyB0aHJlYXQgb24gYm90aCBzY29yZWJvYXJkcy4KCiMjIyBIb3cgSXQgVW5mb2xkZWQKCioqRWFybHkgU3RydWdnbGVzKioKClRoZSBvcGVuaW5nIHNpeCBob2xlcyBzb3J0ZWQgdGhlIGZpZWxkIHF1aWNrbHkuIFdoaWxlIEJha2VyIGFuZCBXaWxsaWFtcyBib3RoIHBvc3RlZCBzb2xpZCAxNC1wb2ludCBzdGFydHMsIE11bGxpbidzIHRvdXJuYW1lbnQgYXNwaXJhdGlvbnMgdG9vayBhIHNldmVyZSBibG93LiBNYW5hZ2luZyBqdXN0IDggcG9pbnRzIHRocm91Z2ggdGhlIGZpcnN0IHNpeOKAlGluY2x1ZGluZyB0aGUgYnJ1dGFsIHBhci00IDR0aCwgd2hpY2ggYXZlcmFnZWQgMi42IHN0cm9rZXMgb3ZlciBwYXIgYWNyb3NzIHRoZSBmaWVsZOKAlE11bGxpbiBmb3VuZCBoaW1zZWxmIGhlbW9ycmhhZ2luZyBwb3NpdGlvbnMgYmVmb3JlIHJlYWNoaW5nIHRoZSA3dGggdGVlLgoKUGF0dGVyc29uIGJlZ2FuIHN0ZWFkaWx5IHdpdGggMTEgcG9pbnRzLCB3aGlsZSBKb24gQmFrZXIgc2NyYXBlZCB0b2dldGhlciAxMCwgYm90aCBrZWVwaW5nIHRoZW1zZWx2ZXMgd2l0aGluIHN0cmlraW5nIGRpc3RhbmNlIGJ1dCBsYWNraW5nIGVhcmx5IGZpcmV3b3Jrcy4KCioqVGhlIE1pZGRsZS1Sb3VuZCBSZXNjdWUqKgoKSG9sZXMgNyB0aHJvdWdoIDEyIHNhdyBNdWxsaW4gc3RhZ2UgYSByZW1hcmthYmxlIHJlY292ZXJ5LCBwb3N0aW5nIHRoZSBkYXkncyBiZXN0IG1pZGRsZS1zaXggdG90YWwgb2YgMTYgcG9pbnRzLiBJdCB3YXMgYSBndXRzeSByZXNwb25zZSB0aGF0IGRlbW9uc3RyYXRlZCBoaXMgY2xhc3MsIGJ1dCB0aGUgZGFtYWdlIGZyb20gaGlzIG9wZW5pbmcgd2FzIGFscmVhZHkgZG9uZS4gQmFrZXIgY29udGludWVkIGhpcyBjb25zaXN0ZW50IHBsYXkgd2l0aCAxNSBwb2ludHMgdG8gbWFpbnRhaW4gY29udHJvbCwgd2hpbGUgUGF0dGVyc29uIG1hdGNoZWQgaGltIHRvIHN0YXkgaW4gdGhlIGh1bnQuCgpKb24gQmFrZXIgYWRkZWQgMTEgcG9pbnRzIHRvIGtlZXAgaGltc2VsZiByZWxldmFudCwgYnV0IFdpbGxpYW1zIG1hbmFnZWQgb25seSAxMCB0aHJvdWdoIHRoaXMgc3RyZXRjaCwgdGVtcG9yYXJpbHkgYXBwZWFyaW5nIG91dCBvZiBjb250ZW50aW9uIGZvciByb3VuZCBob25vcnMuCgoqKkZpcmV3b3JrcyBEb3duIHRoZSBTdHJldGNoKioKClRoZSBmaW5hbCBzaXggaG9sZXMgZGVsaXZlcmVkIHRoZSBkcmFtYS4gV2lsbGlhbXMgZXhwbG9kZWQgd2l0aCBhbiBleHRyYW9yZGluYXJ5IDE4LXBvaW50IGJ1cnN0LCBjYXBpdGFsaXppbmcgb24gdGhlIGdldHRhYmxlIHBhci0zIDE0dGjigJR0aGUgY291cnNlJ3MgZWFzaWVzdCBob2xlIGF0IDAuMiB1bmRlciBwYXLigJRhbmQgbWFpbnRhaW5pbmcgbW9tZW50dW0gdGhyb3VnaCAxOC4gSm9uIEJha2VyIG1hdGNoZWQgaGltIHN0cm9rZSBmb3Igc3Ryb2tlIHdpdGggaGlzIG93biAxOC1wb2ludCBjbG9zZSB0byByb2NrZXQgdXAgdGhlIGxlYWRlcmJvYXJkLgoKUGF0dGVyc29uIHdhc24ndCBmYXIgYmVoaW5kLCBhZGRpbmcgMTYgcG9pbnRzIG92ZXIgdGhlIGZpbmFsIHNpeCB0byBzZWN1cmUgaGlzIHNoYXJlIG9mIHRoZSByb3VuZCB3aW4gd2l0aCA0MiBwb2ludHMgdG90YWwuIEJha2VyJ3MgMTItcG9pbnQgZmluaXNoIHdhcyBzdWZmaWNpZW50IHRvIGtlZXAgZXZlcnlvbmUgYXQgYXJtJ3MgbGVuZ3RoLCB3aGlsZSBNdWxsaW4ncyAxMSBwb2ludHMgY291bGRuJ3QgdW5kbyBoaXMgZWFybHkgbWlzdGFrZXMuCgojIyMgU3RhbmRpbmdzIEFmdGVyIFJvdW5kIDIKCioqUm91bmQgMiBTdGFibGVmb3JkOioqIEdXIDQyIHwgSlAgNDIgfCBBQiA0MSB8IEpCIDM5IHwgRE0gMzUKCioqUm91bmQgMiBHcm9zczoqKiBHVyArMTQgfCBKQiArMTUgfCBKUCArMjIgfCBBQiArMzQgfCBETSArMjIKCioqVG91cm5hbWVudCBTdGFibGVmb3JkOioqIEFCIDg3IHwgSlAgNzYgfCBHVyA3MyB8IEpCIDY5IHwgRE0gNjcKCioqVG91cm5hbWVudCBHcm9zczoqKiBHVyArNDEgfCBKQiArNDUgfCBBQiArNjAgfCBETSArNTAgfCBKUCArNTIKCiMjIyBXaGF0J3MgQXQgU3Rha2UKCioqV2l0aCAyIHJvdW5kcyByZW1haW5pbmc6KioKCkFsZXggQmFrZXIncyAxMS1wb2ludCBsZWFkIGFwcGVhcnMgZm9ybWlkYWJsZSBidXQgZmFyIGZyb20gaW5zdXJtb3VudGFibGUuIElmIGhlIGF2ZXJhZ2VzIGp1c3QgMzYgcG9pbnRzIHBlciByb3VuZOKAlGNvbWZvcnRhYmx5IGJlbG93IGhpcyBjdXJyZW50IHRvdXJuYW1lbnQgYXZlcmFnZSBvZiA0My414oCUaGlzIGNoYWxsZW5nZXJzIGZhY2UgYSBzdGVlcCBjbGltYi4gUGF0dGVyc29uIGluIHNlY29uZCBuZWVkcyB0byBhdmVyYWdlIDQ2IHBvaW50cyB3aGlsZSBob3BpbmcgQmFrZXIgZmFsdGVycywgYSB0YWxsIG9yZGVyIGdpdmVuIEJha2VyJ3MgY29uc2lzdGVuY3kuIFdpbGxpYW1zIHNpdHMgdGhpcmQsIDE0IHBvaW50cyBiYWNrLCByZXF1aXJpbmcgYXBwcm94aW1hdGVseSA0OCBwb2ludHMgcGVyIHJvdW5kIGlmIEJha2VyIG1haW50YWlucyBmb3Jt4oCUcG9zc2libGUgYWZ0ZXIgdG9kYXkncyA0Mi1wb2ludCBleHBsb3Npb24sIGJ1dCBkZW1hbmRpbmcgc3VzdGFpbmVkIGV4Y2VsbGVuY2UuCgpKb24gQmFrZXIgYXQgZm91cnRoICgxOCBwb2ludHMgYmVoaW5kKSBhbmQgTXVsbGluIGF0IGZpZnRoICgyMCBiYWNrKSBmYWNlIG1hdGhlbWF0aWNhbCBwb3NzaWJpbGl0aWVzIGJ1dCBwcmFjdGljYWwgaW1wcm9iYWJpbGl0aWVzLiBCb3RoIHdvdWxkIG5lZWQgY2FyZWVyIHJvdW5kcyB3aGlsZSBob3BpbmcgZm9yIGEgQmFrZXIgY29sbGFwc2UuIFRoZSBiYXR0bGUgZm9yIHRoaXJkIHRocm91Z2ggZmlmdGggY291bGQgcHJvZHVjZSBjb21wZWxsaW5nIHN1YnBsb3RzLCB3aXRoIGp1c3QgNiBwb2ludHMgc2VwYXJhdGluZyBXaWxsaWFtcyBhbmQgTXVsbGluLgoKVGhlIEdyZWVuIEphY2tldCByYWNlIG9mZmVycyBmcmVzaCBpbnRyaWd1ZS4gV2lsbGlhbXMgbGVhZHMgYnkgNCBzdHJva2VzIG92ZXIgSm9uIEJha2VyLCB3aXRoIHRoZSB0b3VybmFtZW50IGJ1bmNoZWQgdGlnaHRseSBiZWhpbmQuIFVubGlrZSB0aGUgU3RhYmxlZm9yZCwgd2hlcmUgQmFrZXIgY29udHJvbHMgaGlzIGRlc3RpbnksIHRoZSBncm9zcyBjb21wZXRpdGlvbiByZW1haW5zIGdlbnVpbmVseSBvcGVuLiBXaWxsaWFtcyBtdXN0IG1haW50YWluIGhpcyBzdGVsbGFyIGJhbGwtc3RyaWtpbmcgd2hpbGUgSm9uIEJha2VyIGx1cmtzIGRhbmdlcm91c2x5IGNsb3NlLiBCYWtlcidzIDYwLW92ZXIgcG9zaXRpb24gc3VnZ2VzdHMgdGhlIEdyZWVuIEphY2tldCB3b24ndCBiZSBhZG9ybmluZyB0aGUgc2FtZSBzaG91bGRlcnMgYXMgdGhlIFRFRyBUcm9waHkuCgojIyMgUm91bmQgSGlnaGxpZ2h0cwoKLSBXaWxsaWFtcycgMTgtcG9pbnQgZXhwbG9zaW9uIG92ZXIgdGhlIGZpbmFsIHNpeCBob2xlcywgaW5jbHVkaW5nIGRvbWluYW50IHBsYXkgYXQgdGhlIHBhci0zIDE0dGgKLSBKb24gQmFrZXIncyBtYXRjaGluZyAxOC1wb2ludCBjbG9zZSB0byBjbGltYiBpbnRvIGZvdXJ0aCBhbmQgc2Vjb25kIGluIHRoZSBKYWNrZXQgcmFjZQotIE11bGxpbidzIGRpc2FzdHJvdXMgOC1wb2ludCBvcGVuaW5nIHNpeOKAlHdvcnN0IGluIGZpZWxk4oCUZm9sbG93ZWQgYnkgYmVzdC1pbi1maWVsZCAxNi1wb2ludCByZWNvdmVyeQotIFBhdHRlcnNvbidzIHN0ZWFkeSBwcm9ncmVzc2lvbiAoMTEtMTUtMTYpIGJ1aWxkaW5nIHRvIGEgc2hhcmUgb2Ygcm91bmQgaG9ub3JzCi0gQmFrZXIncyBjbGluaWNhbCBtYW5hZ2VtZW50IG9mIGhpcyBsZWFkIGRlc3BpdGUgYmVsb3ctcGFyIHBlcmZvcm1hbmNlIGJ5IGhpcyBzdGFuZGFyZHMKCiMjIyBQbGF5ZXIgU3VtbWFyaWVzCgoqKkFsZXggQmFrZXI6KiogUG9zdGVkIDQxIHBvaW50cyB3aXRoIGNvbnNpc3RlbnQgMTQtMTUtMTIgc3BsaXRzIGFjcm9zcyB0aGUgcm91bmQgdG8gZXh0ZW5kIGhpcyB0b3VybmFtZW50IGxlYWQgdG8gMTEgcG9pbnRzOyBzaXRzIGNvbWZvcnRhYmx5IGluIGZpcnN0IGF0IDg3IHBvaW50cyB0b3RhbCBidXQgZHJvcHBlZCB0byB0aGlyZCBpbiBHcmVlbiBKYWNrZXQgc3RhbmRpbmdzIGF0ICs2MCBncm9zcy4KCioqSm9obiBQYXR0ZXJzb246KiogQ28tcm91bmQgd2lubmVyIHdpdGggNDIgcG9pbnRzICh1cCBmcm9tIDM0IGluIFIxKSwgYnVpbGRpbmcgc3RlYWRpbHkgdGhyb3VnaCAxMS0xNS0xNiBwcm9ncmVzc2lvbnM7IHJlbWFpbnMgc2Vjb25kIG92ZXJhbGwgYXQgNzYgcG9pbnRzIHdpdGggYSBwb3dlcmZ1bCAyNS1wb2ludCBiYWNrIG5pbmUgdGhhdCBrZXB0IGhpbSBpbiBzdHJpa2luZyBkaXN0YW5jZS4KCioqR3JlZ2cgV2lsbGlhbXM6KiogU2hhcmVkIHJvdW5kIGhvbm9ycyB3aXRoIGV4cGxvc2l2ZSA0MiBwb2ludHMsIHZhdWx0aW5nIHRvIHRoaXJkIG92ZXJhbGwgYXQgNzMgcG9pbnRzOyBoaXMgMTgtcG9pbnQgYmxpdHogb3ZlciB0aGUgZmluYWwgc2l4IGhvbGVzIGFsc28gc2VjdXJlZCB0aGUgR3JlZW4gSmFja2V0IGxlYWQgYXQgKzQxIGdyb3NzLCBhbm5vdW5jaW5nIGhpbXNlbGYgYXMgYSBkdWFsIHRocmVhdC4KCioqSm9uIEJha2VyOioqIENsaW1iZWQgdG8gZm91cnRoIHdpdGggMzktcG9pbnQgcm91bmQgKHVwIGZyb20gMzAgaW4gUjEpLCBub3cgMTggcG9pbnRzIG9mZiB0aGUgbGVhZDsgbWlycm9yZWQgV2lsbGlhbXMnIGxhdGUgaGVyb2ljcyB3aXRoIDE4IHBvaW50cyBvdmVyIHRoZSBjbG9zaW5nIHNpeCBidXQgc2xvdyAxMC1wb2ludCBzdGFydCBjb3N0IHZhbHVhYmxlIGdyb3VuZC4KCioqRGF2aWQgTXVsbGluOioqIERyb3BwZWQgdG8gZmlmdGggYXQgNjcgcG9pbnRzIGFmdGVyIHRhbGUtb2YtdHdvLXJvdW5kcyBzYXcgZGlzYXN0cm91cyA4LXBvaW50IG9wZW5pbmcgc2l4IGZvbGxvd2VkIGJ5IGV4Y2VsbGVudCAxNi1wb2ludCBtaWRkbGUgc3RyZXRjaDsgaGlzIDM1LXBvaW50IHRvdGFsIGNvdWxkbid0IG92ZXJjb21lIGVhcmx5IGRlZmljaXQgYW5kIGxvc3QgdHdvIHBvc2l0aW9ucy4KCg==
+# TEG 18 - Round 2 Report
+
+---
+
+## Story Notes
+
+## Round Summary
+- **Round Winner (Stableford):** Gregg WILLIAMS (42 pts Stableford) and John PATTERSON (42 pts Stableford)
+- **Round Winner (Gross):** Gregg WILLIAMS (+14 gross vs par)
+- **Tournament Leader (Stableford):** Alex BAKER (leads by 11 pts)
+- **Tournament Leader (Gross):** Jon BAKER (+39 gross vs par)
+- **Biggest Mover:** David MULLIN (-2 positions, dropped from 3rd to 5th)
+- **Drama Level:** Low
+
+## Key Moments
+- H1-6: Alex BAKER sets pace with 14 Stableford points to maintain Tournament Trophy lead
+- H7-12: Gregg WILLIAMS finds form in middle six (10 gross, building momentum)
+- H13-18: Gregg WILLIAMS surges with 18-gross back nine to win Round 2 with 42 pts
+- H13-18: John PATTERSON matches with 16 gross/25 Stableford back nine for co-lead in round
+- H13-18: Jon BAKER also posts 18 gross on back nine, moves up to 4th overall
+- H1-12: David MULLIN struggles early (8 gross first six), drops two positions despite 20-point back nine
+- H14: Easiest hole on course (avg -0.2 vs par), field takes advantage
+- H4: Hardest hole proves costly (avg +2.6 vs par, 1.2 Stableford avg)
+
+## How Positions Changed
+- **Start of round (Stableford):** Alex BAKER (46pts) | John PATTERSON (34pts) | David MULLIN (32pts) | Gregg WILLIAMS (31pts) | Jon BAKER (30pts)
+- **Start of round (Gross):** Jon BAKER (+24) | Alex BAKER (+26) | Gregg WILLIAMS (+27) | David MULLIN (+28) | John PATTERSON (+30)
+- **Key shifts:** Gregg WILLIAMS and Jon BAKER both move up one position; David MULLIN falls two spots
+- **End of round (Stableford):** Alex BAKER (87pts) | John PATTERSON (76pts) | Gregg WILLIAMS (73pts) | Jon BAKER (69pts) | David MULLIN (67pts)
+- **End of round (Gross):** Jon BAKER (+39) | Gregg WILLIAMS (+41) | David MULLIN (+50) | John PATTERSON (+52) | Alex BAKER (+60)
+
+## Round Breakdown
+**Holes 1-6 (Opening):**
+- Alex BAKER leads opening with 14 gross, maintaining Tournament Trophy advantage
+- Gregg WILLIAMS posts solid 14 gross start
+- John PATTERSON steady with 11 gross
+- Jon BAKER 10 gross opening
+- David MULLIN struggles with 8 gross, falls behind early pace
+
+**Holes 7-12 (Middle):**
+- Alex BAKER continues consistency with 15 gross
+- John PATTERSON heats up with 15 gross
+- David MULLIN rebounds strongly with 16 gross middle section
+- H11: Field plays well (avg par, 3.4 Stableford avg)
+- Gregg WILLIAMS efficient with 10 gross through middle holes
+
+**Holes 13-18 (Closing):**
+- Gregg WILLIAMS catches fire with 18 gross closing stretch to claim round victory
+- Jon BAKER matches with 18 gross back nine, climbs into 4th place
+- John PATTERSON posts 16 gross to share round lead with 42 Stableford
+- Alex BAKER steady 12 gross maintains comfortable Tournament Trophy lead
+- David MULLIN's 11 gross not enough to prevent two-position drop
+
+## Round Stats
+- **Hardest hole:** H4 (Par 4, avg +2.6 vs par, 1.2 Stableford avg)
+- **Easiest hole:** H14 (Par 3, avg -0.2 vs par, 3.4 Stableford avg)
+- **Best individual performance:** Gregg WILLIAMS (42 pts, +11 vs Round 1's 31 pts) and John PATTERSON (42 pts, +8 vs Round 1's 34 pts)
+- **Worst collapse:** David MULLIN (drops 2 positions despite 35-point round)
+
+## Player Notes
+- **Alex BAKER:** 41 pts (+34 gross) | Down from R1's 46 pts but extends Trophy lead to 11 points | Consistent throughout (14-15-12 splits) | Maintains command with 2 rounds remaining
+- **John PATTERSON:** 42 pts (+22 gross) | Co-round winner, up from R1's 34 pts | Strong finish (17-25 split F9/B9) | Stays 2nd in Trophy, trails by 11 with 2 rounds left
+- **Gregg WILLIAMS:** 42 pts (+14 gross) | Co-round winner, massive improvement from R1's 31 pts | Dominant back nine (18 gross) | Up to 3rd in Trophy, 2nd in Jacket (trails Jon BAKER by 2 gross)
+- **Jon BAKER:** 39 pts (+15 gross) | Solid round, up from R1's 30 pts | Strong close (18 gross back nine) | Leads Jacket by 2 strokes, 4th in Trophy (18 pts back)
+- **David MULLIN:** 35 pts (+22 gross) | Up from R1's 32 pts but biggest faller | Poor start (8 gross first six) proves costly despite 20-point back nine | Drops to 5th in Trophy, 20 pts back
+
+---
+
+## Round Report
+
+## Williams and Patterson Share Spoils as Baker Extends Trophy Command
+**PGA Catalunya - Tour • 12/10/2025 • Round 2 of 4**
+
+### Round Summary
+
+Alex Baker arrived at PGA Catalunya with an eight-point cushion and a simple mission: protect his TEG Trophy lead through the middle rounds. While Gregg Williams and John Patterson stole the Round 2 headlines with matching 42-point performances, Baker quietly extended his advantage to 11 points with a steady 41-point effort that kept all challengers at arm's length.
+
+Williams produced the day's most complete performance, posting the round's best gross score of +14 with a blistering 18-gross back nine that propelled him to co-winner status and up one position to third overall. Patterson matched Williams' 42 Stableford points with his own back-nine surge (25 points over the final six holes), maintaining second place in the Trophy race. The day's only real drama came from David Mullin's positional collapse—an eight-gross disaster through the opening six holes dropped him two spots to fifth despite a spirited 20-point rally on the back nine.
+
+With the halfway point reached and two rounds remaining, Baker's 11-point cushion looks increasingly comfortable, while the Green Jacket race has tightened considerably, with Jon Baker clinging to a slender two-stroke advantage over the surging Williams.
+
+### How It Unfolded
+
+The opening stretch at PGA Catalunya set the tone for a day of contrasts. Baker stamped his authority early with a composed 14-gross start through the first six holes, maintaining the steady rhythm that has defined his tournament. Williams matched that opening pace, laying the foundation for what would become a spectacular round. Behind them, David Mullin's challenge evaporated almost immediately—a disastrous eight-gross opening put him on the back foot before the seventh tee.
+
+The par-4 4th hole, the course's sternest test, lived up to its billing as the field averaged 2.6 strokes over par. Only the leading players navigated it without significant damage, while the struggling Mullin saw his position deteriorate further.
+
+Williams found another gear through the middle six holes, grinding out 10 strokes of efficient golf that positioned him for his afternoon assault. Patterson began heating up with a 15-gross middle section, matching Baker's consistency. Mullin staged a brief revival with 16 gross through holes 7-12, but the damage was done—he'd already surrendered too much ground to the leaders.
+
+The decisive action came over the closing stretch. Williams exploded with an 18-gross back nine that combined precision and aggression, claiming both the round gross title and a share of the Stableford honors. Jon Baker, who had been lurking throughout, matched Williams' 18-gross finish to strengthen his Green Jacket position, climbing to fourth in the Trophy standings. Patterson closed with 16 gross for 25 Stableford points, enough to share round honors with Williams at 42 points.
+
+Baker, requiring only damage limitation with a comfortable lead, posted a workmanlike 12-gross finish. It was enough. While others fired at flags, the leader played the percentages—41 points extended his advantage and sent a clear message: this Trophy is mine to lose.
+
+### Standings After Round 2
+
+**Round 2 Stableford:** GW 42 | JP 42 | AB 41 | JB 39 | DM 35
+**Round 2 Gross:** GW +14 | JB +15 | DM +22 | JP +22 | AB +34
+
+**Tournament Stableford:** AB 87 | JP 76 | GW 73 | JB 69 | DM 67
+**Tournament Gross:** JB +39 | GW +41 | DM +50 | JP +52 | AB +60
+
+### What's At Stake
+
+**With 2 rounds remaining:**
+
+Baker's 11-point Trophy advantage represents significant but not insurmountable territory. His nearest challenger, Patterson, needs to average 47.5 points per round while Baker averages 36 or fewer—achievable but requiring near-perfection. Williams, now 14 back, would need two exceptional rounds (averaging 49 points) while Baker falters. Both scenarios demand the leader to implode rather than the chasers to catch him through brilliance alone.
+
+The Green Jacket race presents far tighter margins. Jon Baker's two-stroke advantage over Williams could evaporate with a single bad hole. Williams arrives at the weekend with momentum—his +14 round suggests he's found the form to mount a serious challenge. David Mullin, 11 strokes back in the Jacket race, remains mathematically alive but needs Williams and Jon Baker to stumble while he produces two flawless rounds.
+
+The battle for third in the Trophy—Williams currently holding off Jon Baker by four points—could define the weekend's subplot. Both players possess the form to challenge Patterson for second, though catching Baker appears a bridge too far without a monumental collapse from the leader.
+
+### Round Highlights
+- Williams' 18-gross back nine fires him to co-winner status and into Green Jacket contention
+- Patterson's 25-point closing surge (holes 13-18) matches Williams for round honors
+- Baker extends Trophy lead to 11 points with composed 41-point round despite quieter performance
+- Jon Baker's 18-gross finish vaults him to fourth overall while protecting Jacket lead
+- Mullin's eight-gross opening disaster costs two positions despite spirited 20-point back-nine recovery
+
+### Player Summaries
+
+**Alex Baker:** 41 points (+34 gross) maintains comfortable control of TEG Trophy, extending lead to 11 points with consistent 14-15-12 splits across the round; down from opening 46 but job done.
+
+**John Patterson:** 42 points (+22 gross) shares round honors with explosive 25-point back nine; remains second in Trophy, 11 points back with work to do but form trending upward.
+
+**Gregg Williams:** 42 points (+14 gross) produces day's best performance with dominant 18-gross close; climbs to third in Trophy, second in Jacket (two strokes back), arrives at weekend with serious momentum.
+
+**Jon Baker:** 39 points (+15 gross) posts solid round with matching 18-gross back nine; leads Green Jacket by slender two strokes, sits fourth in Trophy race but 18 points adrift.
+
+**David Mullin:** 35 points (+22 gross) suffers biggest positional damage despite improved scoring; catastrophic eight-gross start through first six holes proves terminal, drops to fifth despite spirited 20-point recovery.
+
