@@ -24,6 +24,7 @@ PAGE_DEFINITIONS = {
     "300TEG Records.py": {"title": "TEG Records", "icon": ":material/military_tech:", "section": "Records"},
     "301Best_TEGs_and_Rounds.py": {"title": "Top TEGs and Rounds", "icon": ":material/social_leaderboard:", "section": "Records"},
     "302Personal Best Rounds & TEGs.py": {"title": "Personal Bests", "icon": ":material/golf_course:", "section": "Records"},
+    
 
     # Scoring analysis section
     # "400scoring.py": {"title": "Scoring", "icon": ":material/strategy:", "section": "Scoring"},
@@ -37,6 +38,7 @@ PAGE_DEFINITIONS = {
     "sc_count.py": {"title": "Scoring distributions", "icon": ":material/strategy:", "section": "Scoring"},
     "biggest_changes.py": {"title": "Changes vs previous round", "icon": ":material/strategy:", "section": "Scoring"},
     "score_heatmaps.py": {"title": "Heatmap (WIP)", "icon": ":material/strategy:", "section": "Scoring"},
+    "303Final Round Comebacks.py": {"title": "Final Round Comebacks", "icon": ":material/trending_up:", "section": "Scoring"},
 
     # Current/Latest TEG section
     "leaderboard.py": {"title": "Latest Leaderboard", "icon": ":material/leaderboard:", "section": "Latest"},
