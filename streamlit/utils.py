@@ -4059,8 +4059,8 @@ def convert_filename_to_streamlit_url(page_file):
     import re
 
     # Special case: main page (TEG History) should redirect to root
-    if page_file == "101TEG History.py":
-        return ""
+    # if page_file == "101TEG History.py":
+    #     return ""
 
     # Remove .py extension
     page_name = page_file.replace('.py', '')
