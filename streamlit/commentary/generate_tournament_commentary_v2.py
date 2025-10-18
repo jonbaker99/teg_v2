@@ -47,7 +47,8 @@ def dprint(*args, **kwargs):
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from pattern_analysis import process_all_data_types
-from data_loader import load_round_data, get_round_ending_context
+from unified_round_data_loader import load_unified_round_data
+from data_loader import get_round_ending_context  # Still need this for ending context extraction
 from prompts import ROUND_STORY_PROMPT, TOURNAMENT_SYNTHESIS_PROMPT, MAIN_REPORT_PROMPT, BRIEF_SUMMARY_PROMPT, SATIRICAL_REPORT_PROMPT
 from utils import get_teg_rounds, write_text_file, read_file, read_text_file
 import anthropic
@@ -457,11 +458,41 @@ except ImportError:
 # Main generation functions
 # ========================
 
-def generate_round_story(teg_num, round_num, round_data, previous_context):
+def generate_round_story(teg_num, round_num, round_data, previous_context, force=False):
     """
-    Generate story notes for a single round.
-    Note: Records/PBs/course records are added directly after LLM generation (not in prompt).
+    Generate story notes for a single round and save to individual file.
+
+    Checks if story notes already exist and skips generation unless force=True.
+
+    Args:
+        teg_num: Tournament number
+        round_num: Round number
+        round_data: Unified round data from load_unified_round_data()
+        previous_context: Context from previous round
+        force: If True, regenerate even if story notes exist
+
+    Returns:
+        Tuple of (round_story, ending_context)
     """
+    story_notes_path = f"data/commentary/round_reports/TEG{teg_num}_R{round_num}_story_notes.md"
+
+    # Check if story notes already exist
+    if not force:
+        try:
+            existing_content = read_text_file(story_notes_path)
+            # Extract just the notes (after the header)
+            if existing_content.startswith(f"# TEG {teg_num} - Round {round_num} Story Notes"):
+                existing_story = existing_content.split('\n', 2)[2].strip() if '\n' in existing_content else existing_content
+            else:
+                existing_story = existing_content
+
+            print(f"\n  Round {round_num} story notes already exist, using existing")
+            print(f"    ({len(existing_story)} chars from {story_notes_path})")
+            ending_context = get_round_ending_context(round_data)
+            return existing_story, ending_context
+        except FileNotFoundError:
+            pass  # File doesn't exist, proceed with generation
+
     print(f"\n  Generating Round {round_num} story...")
 
     # LOSSLESS compact + abbreviate for the prompt (raw data untouched for inspection)
@@ -475,7 +506,7 @@ def generate_round_story(teg_num, round_num, round_data, previous_context):
         if previous_context else "First round of the tournament"
     )
 
-# Build prompt (NO records/PBs/course records - those are added directly)
+    # Build prompt (NO records/PBs/course records - those are added directly)
     # Don't format the prompt - keep it static for caching
     system_prompt = legend_text + "\n\n" + ROUND_STORY_PROMPT
 
@@ -544,6 +575,19 @@ def generate_round_story(teg_num, round_num, round_data, previous_context):
     round_story = message.content[0].text
     ending_context = get_round_ending_context(round_data)
     print(f"    > Round {round_num} story complete ({len(round_story)} chars)")
+
+    # Save to individual file
+    story_notes_content = f"""# TEG {teg_num} - Round {round_num} Story Notes
+
+{round_story}
+"""
+    write_text_file(
+        story_notes_path,
+        story_notes_content,
+        commit_message=f"Generate story notes for TEG {teg_num}, Round {round_num}"
+    )
+    print(f"    > Saved to {story_notes_path}")
+
     return round_story, ending_context
 
 def build_venue_context(teg_num):
@@ -1728,7 +1772,7 @@ def generate_complete_story_notes(teg_num):
     previous_context = None
 
     for round_num in range(1, num_rounds + 1):
-        round_data = load_round_data(teg_num, round_num, all_data)
+        round_data = load_unified_round_data(teg_num, round_num, all_data)
         round_story, round_context = generate_round_story(
             teg_num, round_num, round_data, previous_context
         )
@@ -1779,7 +1823,7 @@ def generate_story_notes_up_to_round(teg_num, completed_rounds):
     previous_context = None
 
     for round_num in range(1, completed_rounds + 1):
-        round_data = load_round_data(teg_num, round_num, all_data)
+        round_data = load_unified_round_data(teg_num, round_num, all_data)
         round_story, round_context = generate_round_story(
             teg_num, round_num, round_data, previous_context
         )
@@ -1852,10 +1896,9 @@ def generate_story_notes_via_batch_api(teg_nums, submit_only=False):
 
         previous_context = None
         for round_num in range(1, num_rounds + 1):
-            round_data = load_round_data(teg_num, round_num, all_data)
+            round_data = load_unified_round_data(teg_num, round_num, all_data)
 
             # Prepare prompt data
-            from round_data_loader import compact_round_data_lossless, abbreviate_for_prompt
             rd_compact = compact_round_data_lossless(round_data)
             rd_abbrev, legend_text = abbreviate_for_prompt(rd_compact)
 

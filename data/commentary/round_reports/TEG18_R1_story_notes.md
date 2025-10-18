@@ -2,65 +2,85 @@
 
 ## Round Summary
 - **Round Winner (Stableford):** Alex BAKER (46 pts Stableford)
-- **Round Winner (Gross):** Jon BAKER (+24 gross vs par)
+- **Round Winner (Gross):** Jon BAKER (24 gross vs par)
 - **Tournament Leader (Stableford):** Alex BAKER (leads by 12 pts)
-- **Tournament Leader (Gross):** Jon BAKER (+24 gross vs par)
-- **Biggest Mover:** N/A (first round - no previous positions)
+- **Tournament Leader (Gross):** Jon BAKER (24 gross vs par)
+- **Biggest Mover:** John PATTERSON (dramatic back 9 recovery from 5th to 2nd in Trophy)
 - **Drama Level:** High
 
 ## Key Moments
-- H2: Gregg WILLIAMS takes lead from Alex BAKER - first lead change of tournament
-- H3: Alex BAKER reclaims lead from Gregg WILLIAMS - 9 total events on this hole including multiple position changes
-- H4: David MULLIN seizes lead from Alex BAKER - third lead change in three holes
-- H5: Alex BAKER takes lead for final time, never relinquishes it
-- H7: Hardest hole claims victims (Par 5, avg +2.6 vs par, 1.0 avg Stableford)
-- H11: Par 3 plays as easiest hole (avg +0.2 vs par, 3.2 avg Stableford)
-- H15: Major position shake-up with 10 events - Gregg WILLIAMS gains 3 positions, David MULLIN drops 3
-- H18: Closing Par 5 proves difficult (avg +2.2 vs par) as Alex BAKER secures victory
+- H1: Gregg WILLIAMS takes early Jacket lead with par, David MULLIN hits bottom (triple bogey)
+- H2: Alex BAKER disaster (quadruple bogey on Par 3, 0 pts) - drops from 1st to 4th in Trophy
+- H3: Multiple disasters - Gregg WILLIAMS triple, Jon BAKER triple, John PATTERSON quadruple
+- H4: Another triple for Alex BAKER - tough front 9 continues
+- H5: Jon BAKER takes Jacket lead, Alex BAKER rallies in Trophy
+- H7: Gregg WILLIAMS quadruple bogey - monster Par 5 plays brutal
+- H10: Alex BAKER's hot spell begins with 4 points on H10 (Par 5)
+- H11: Alex BAKER 4 points on H11 (Par 3) - back-to-back strong holes
+- H12: David MULLIN triple - loses Jacket lead
+- H13: John PATTERSON 4 points on H13 (Par 4) - starts epic back 9 comeback
 
 ## How Positions Changed
-- **Start of round (Stableford):** All tied at 0 pts
-- **Start of round (Gross):** All tied at 0 vs par
-- **Key shifts:** 
-  - H2-5: Four lead changes in opening holes
-  - H5: Alex BAKER establishes lead and maintains it
-  - H15: Gregg WILLIAMS (+3 positions), David MULLIN (-3 positions)
-- **End of round (Stableford):** Alex BAKER 46 pts | John PATTERSON 34 pts | David MULLIN 32 pts | Gregg WILLIAMS 31 pts | Jon BAKER 30 pts
+- **Start of round (Stableford):** All tied
+- **Start of round (Gross):** All tied
+- **Key shifts:** H1 (early leaders emerge), H5 (Jon BAKER takes Jacket), H10-11 (Alex BAKER's charge), H13 (John PATTERSON's rally begins)
+- **End of round (Stableford):** Alex BAKER 46pts | John PATTERSON 34pts | David MULLIN 32pts | Gregg WILLIAMS 31pts | Jon BAKER 30pts
 - **End of round (Gross):** Jon BAKER +24 | Alex BAKER +26 | Gregg WILLIAMS +27 | David MULLIN +28 | John PATTERSON +30
 
-## Round Breakdown
-**Holes 1-6 (Opening):**
-- Alex BAKER dominates with 12 Stableford pts
-- Four lead changes in holes 2-5 create early drama
-- Jon BAKER posts solid 11 pts to stay in contention
-- John PATTERSON struggles with only 7 pts
-- H3 most eventful with 9 total occurrences
+## Hot Spells (Net)
+- Alex BAKER holes 9-11: 11 pts (4 points on H10 (Par 5), 4 points on H11 (Par 3))
+- Alex BAKER holes 10-12: 11 pts 
+- Alex BAKER holes 14-16: 13 pts
+- Alex BAKER holes 15-17: 11 pts
+- Alex BAKER holes 7-12: 18 pts
+- Alex BAKER holes 10-15: 21 pts (dominant 6-hole stretch)
+- Alex BAKER holes 11-16: 21 pts
+- John PATTERSON holes 10-15: 18 pts (fueled back 9 comeback)
+- John PATTERSON holes 11-16: 19 pts
 
-**Holes 7-12 (Middle):**
-- Alex BAKER extends lead with massive 18 pts (best six-hole split of round)
-- H7 (Par 5) emerges as hardest hole (+2.6 avg vs par)
-- H11 (Par 3) provides relief as easiest hole (+0.2 avg vs par)
-- David MULLIN recovers with 12 pts
-- Jon BAKER fades with only 9 pts
+## Hot Spells (Gross)
+- Alex BAKER holes 14-16: Avg -0.33 vs par
 
-**Holes 13-18 (Closing):**
-- John PATTERSON surges with 16 pts to claim solo 2nd
-- Alex BAKER posts 16 pts to maintain comfortable lead
-- Jon BAKER drops 2 positions at H13
-- H15 creates major reshuffle (10 events, position changes)
-- H18 (Par 5) proves treacherous finish (+2.2 avg vs par)
+## Cold Spells (Net)
+- Gregg WILLIAMS holes 2-7: 6 pts (multiple disasters)
+- John PATTERSON holes 2-7: 6 pts (brutal front 9)
+- John PATTERSON holes 3-8: 5 pts
+- John PATTERSON holes 4-9: 6 pts
+
+## Cold Spells (Gross)
+- Alex BAKER holes 2-4: Avg +2.67 vs par
+- Alex BAKER holes 2-7: Avg +2.33 vs par (disastrous opening stretch)
+- Jon BAKER holes 7-9: Avg +2.33 vs par
+- Gregg WILLIAMS holes 2-4: Avg +2.33 vs par
+- Gregg WILLIAMS holes 3-5: Avg +2.67 vs par
+- Gregg WILLIAMS holes 5-7: Avg +2.33 vs par
+- Gregg WILLIAMS holes 2-7: Avg +2.33 vs par
+- Gregg WILLIAMS holes 3-8: Avg +2.33 vs par
+- David MULLIN holes 4-6: Avg +2.67 vs par
+- David MULLIN holes 5-7: Avg +2.67 vs par
+- David MULLIN holes 13-15: Avg +2.67 vs par
+- David MULLIN holes 15-17: Avg +2.67 vs par
+- John PATTERSON holes 3-5: Avg +3.0 vs par
+- John PATTERSON holes 7-9: Avg +3.0 vs par (worst stretch)
+- John PATTERSON holes 2-7: Avg +2.5 vs par
+- John PATTERSON holes 3-8: Avg +2.83 vs par
+
+## Front/Back 9 Patterns
+- Alex BAKER: Strong finisher - F9: 19 pts, B9: 27 pts (diff: -8)
+- Gregg WILLIAMS: Strong finisher - F9: 13 pts, B9: 18 pts (diff: -5)
+- John PATTERSON: Strong finisher - F9: 10 pts, B9: 24 pts (diff: -14, most dramatic turnaround)
 
 ## Round Stats
-- **Hardest hole:** H7 (Par 5, avg +2.6 vs par, 1.0 avg Stableford)
-- **Easiest hole:** H11 (Par 3, avg +0.2 vs par, 3.2 avg Stableford)
-- **Best individual performance:** Alex BAKER (46 pts, +26 gross)
-- **Best six-hole split:** Alex BAKER holes 7-12 (18 pts)
-- **Worst six-hole split:** John PATTERSON holes 1-6 (7 pts)
+- **Hardest hole:** H7 (Par 5, avg +2.6 vs par)
+- **Easiest hole:** H11 (Par 3, avg +0.2 vs par)
+- **Best individual performance:** Alex BAKER (46 pts Trophy, 3rd best in his 45-round history)
+- **Worst collapse:** Multiple triple+ bogeys on front 9 (Alex BAKER quad on H2, John PATTERSON quad on H3)
 
 ## Player Notes
-- **Alex BAKER:** 46 Stableford pts, +26 gross; dominant wire-to-wire after H5; massive middle-six (18 pts); leads Trophy by 12 pts, 2nd in Jacket by 2 strokes
-- **John PATTERSON:** 34 Stableford pts, +30 gross; struggled early (7 pts first-six) but surged late (16 pts final-six); 2nd in Trophy, 12 pts back; 5th in Jacket, 6 strokes back
-- **David MULLIN:** 32 Stableford pts, +28 gross; held lead briefly at H4; dropped 3 positions at H15; 3rd in Trophy, 14 pts back; 4th in Jacket, 4 strokes back
-- **Gregg WILLIAMS:** 31 Stableford pts, +27 gross; first leader of tournament at H2; gained 3 positions at H15; 4th in Trophy, 15 pts back; 3rd in Jacket, 3 strokes back
-- **Jon BAKER:** 30 Stableford pts, +24 gross; leads Jacket competition despite 5th in Trophy; dropped positions at H9 and H13; 5th in Trophy, 16 pts back; leads Jacket by 2 strokes
+- **Alex BAKER:** 46 pts Stableford (leads by 12), 26 gross vs par (2nd). Survived disastrous start (quad on H2, triple on H4) with dominant back 9 (27 pts). Led Trophy for 16 holes.
+- **Jon BAKER:** 30 pts Stableford (5th, -16 behind), 24 gross vs par (Jacket leader). Consistent Jacket performance, led for 14 holes gross. Triple on H9 hurt Trophy chances.
+- **Gregg WILLIAMS:** 31 pts Stableford (4th, -15 behind), 27 gross vs par (3rd, +3 behind). Front 9 disasters (triples on H3, H4; quad on H7) derailed promising start.
+- **David MULLIN:** 32 pts Stableford (3rd, -14 behind), 28 gross vs par (4th, +4 behind). Opened with triple on H1, multiple blow-ups throughout (5 zero-point holes). Struggled to find rhythm.
+- **John PATTERSON:** 34 pts Stableford (2nd, -12 behind), 30 gross vs par (5th, +6 behind). Epic front/back split: 10 pts F9, 24 pts B9 (diff: -14). Front 9 disaster (22 gross, 6 blow-ups) erased by brilliant back 9 recovery.
+
 

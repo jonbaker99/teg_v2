@@ -1,0 +1,7 @@
+# TEG 18: Alex Baker's Wire-to-Wire Triumph Survives Final Round Carnage
+
+Alex Baker claimed his second Trophy with a remarkable wire-to-wire victory in Catalonia, leading all 72 holes to finish 8 points clear despite a catastrophic final round. Gregg Williams captured his third Green Jacket, commanding from Round 3 to win by 14 strokes after equalling the course record. Baker's triumph came despite 27 worse-than-double bogeys across the week, including six triples and a quintuple in Sunday's horror show—yet his lead never wavered.
+
+The tournament's defining drama centred on course record warfare and Jon Baker's spectacular collapse. David Mullin set a new PGA Catalunya Stadium mark with 84 (+12) in Round 3, only for Williams to equal it in Round 4. Jon Baker led the Jacket through 36 holes before imploding with a quintuple on H4 in Round 3, ultimately crashing to the Wooden Spoon. John Patterson finished runner-up in the Trophy (161 points) after consistent play throughout, while Williams' redemption arc—erasing R1 disasters including a quad on H7—carried him to his first Jacket victory.
+
+H14 emerged as the tournament's executioner, averaging 3-over par in the final round and producing Baker's quintuple bogey disaster. Yet even that couldn't kill the lead that wouldn't die—Baker extended his advantage every single round, marking golf's first tracked wire-to-wire Trophy victory with the most improbable combination of dominance and devastation in tournament history.

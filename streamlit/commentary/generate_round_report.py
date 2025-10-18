@@ -41,10 +41,10 @@ from collections import deque
 # Add parent directory to path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from round_data_loader import load_round_report_data
-from round_pattern_analysis import get_round_storylines
+from pattern_analysis import process_all_data_types
+from unified_round_data_loader import load_unified_round_data
 from prompts import ROUND_STORY_NOTES_PROMPT, ROUND_REPORT_PROMPT
-from utils import get_teg_rounds, write_text_file
+from utils import get_teg_rounds, write_text_file, read_text_file
 from batch_api import (
     create_batch_request, save_batch_requests, submit_batch,
     poll_until_complete, get_batch_results, save_batch_info,
@@ -237,195 +237,74 @@ except ImportError:
         return os.getenv('ANTHROPIC_API_KEY')
 
 
-def format_round_data_for_prompt(round_data, storylines):
+def format_round_data_for_prompt(round_data):
     """
-    Format round data into a compact JSON structure for LLM consumption.
+    Format unified round data for story notes prompt.
 
     Args:
-        round_data: Output from load_round_report_data()
-        storylines: Output from get_round_storylines()
+        round_data: Dict from load_unified_round_data()
 
     Returns:
-        String with formatted data ready for LLM prompt
+        JSON string of formatted data
     """
-    import numpy as np
-    import pandas as pd
+    import json
 
-    print("DEBUG: Starting format_round_data_for_prompt")
+    # Extract key sections for prompt
+    prompt_data = {
+        'metadata': round_data['metadata'],
+        'round_summary': round_data['round_summary'],
+        'events': round_data['events'][:50],  # Limit to top 50 events
+        'momentum_patterns': round_data['momentum_patterns'],
+        'nine_patterns': round_data['nine_patterns'],
+        'lead_timeline': round_data['lead_timeline'],
+        'lead_changes': round_data['lead_changes'],
+        'hole_difficulty': round_data['hole_difficulty'],
+        'records_and_pbs': round_data['records_and_pbs'],
+        'course_context': round_data['course_context'],
+        'location_context': round_data['location_context']
+    }
 
-    def clean_value(val):
-        """Convert NaN/None to None for JSON serialization."""
-        if pd.isna(val) or val is None:
-            return None
-        if isinstance(val, (np.integer, np.floating)):
-            if np.isnan(val):
-                return None
-            return int(val) if isinstance(val, np.integer) else float(val)
-        return val
-
-    print("DEBUG: Building prompt_data structure")
-    # Build compact data structure
-    try:
-        prompt_data = {
-            'round_info': {
-                'teg_num': round_data['teg_num'],
-                'round_num': round_data['round_num'],
-                'course': round_data['metadata']['course'],
-                'date': round_data['metadata']['date'],
-                'par': round_data['metadata']['par']
-            },
-            'round_summary': [],
-            'tournament_standings': {
-                'stableford': [],
-                'gross': []
-            },
-            'six_hole_splits': {},
-            'hole_difficulty': [],
-            'previous_round_scores': None,
-            'key_events': [],
-            'streaks': [],
-            'storylines': {},
-            'projections': {}
-        }
-
-        print(f"DEBUG: Processing {len(round_data['round_summary'])} players in round_summary")
-        for i, r in enumerate(round_data['round_summary']):
-            print(f"DEBUG: Processing player {i+1}: {r.get('Player')}")
-            try:
-                player_summary = {
-                    'player': r['Player'],
-                    'round_stableford': clean_value(r.get('Round_Score_Stableford')),
-                    'round_gross': clean_value(r.get('Round_Score_Gross')),
-                    'cumulative_stableford': clean_value(r.get('Cumulative_Tournament_Score_Stableford')),
-                    'position_before': clean_value(r.get('Cumulative_Tournament_Rank_Before_Round_Stableford')),
-                    'position_after': clean_value(r.get('Cumulative_Tournament_Rank_Stableford')),
-                    'gap_to_leader': clean_value(r.get('Gap_To_Leader_After_Round_Stableford')),
-                    'front_9': clean_value(r.get('Front_9_Score_Stableford')),
-                    'back_9': clean_value(r.get('Back_9_Score_Stableford'))
-                }
-                prompt_data['round_summary'].append(player_summary)
-            except Exception as e:
-                print(f"ERROR processing player {r.get('Player')}: {e}")
-                print(f"DEBUG: Player data: {r}")
-                raise
-
-        print("DEBUG: Building tournament standings tables")
-        # Create Stableford standings (ordered by cumulative points, descending)
-        stableford_standings = sorted(
-            round_data['round_summary'],
-            key=lambda x: x.get('Cumulative_Tournament_Score_Stableford', 0),
-            reverse=True
-        )
-        for i, player in enumerate(stableford_standings, 1):
-            prompt_data['tournament_standings']['stableford'].append({
-                'position': i,
-                'player': player['Player'],
-                'total': clean_value(player.get('Cumulative_Tournament_Score_Stableford')),
-                'gap_to_leader': clean_value(player.get('Gap_To_Leader_After_Round_Stableford', 0))
-            })
-
-        # Create Gross standings (ordered by cumulative gross vs par, ascending - lower is better)
-        gross_standings = sorted(
-            round_data['round_summary'],
-            key=lambda x: x.get('Cumulative_Tournament_Score_Gross', 999)
-        )
-        for i, player in enumerate(gross_standings, 1):
-            prompt_data['tournament_standings']['gross'].append({
-                'position': i,
-                'player': player['Player'],
-                'total': clean_value(player.get('Cumulative_Tournament_Score_Gross')),
-                'gap_to_leader': clean_value(player.get('Gap_To_Leader_After_Round_Gross', 0))
-            })
-
-        print("DEBUG: Setting six_hole_splits")
-        prompt_data['six_hole_splits'] = round_data['six_hole_splits']
-
-        print("DEBUG: Setting hole_difficulty")
-        prompt_data['hole_difficulty'] = round_data['hole_difficulty']
-
-        print("DEBUG: Setting previous_round_scores")
-        prompt_data['previous_round_scores'] = round_data['previous_round_scores']
-
-        print(f"DEBUG: Processing {len(round_data['events'])} events")
-        for e in round_data['events']:
-            if e.get('Event') in ['Eagle', 'Zero_Stableford_Points', 'Lead_Change_Stableford']:
-                try:
-                    event_data = {
-                        'hole': clean_value(e.get('Hole')),
-                        'player': e.get('Player'),
-                        'event': e.get('Event'),
-                        'par': clean_value(e.get('Par')),
-                        'score': clean_value(e.get('Sc')),
-                        'gross_vp': clean_value(e.get('GrossVP')),
-                        'stableford': clean_value(e.get('Stableford'))
-                    }
-                    prompt_data['key_events'].append(event_data)
-                except Exception as ex:
-                    print(f"ERROR processing event: {ex}")
-                    print(f"DEBUG: Event data: {e}")
-                    raise
-
-        print(f"DEBUG: Processing {len(round_data['streaks'])} streaks")
-        for s in round_data['streaks']:
-            if s.get('StreakLength', 0) >= 3:
-                try:
-                    streak_data = {
-                        'player': s.get('Player'),
-                        'type': s.get('StreakType'),
-                        'length': clean_value(s.get('StreakLength')),
-                        'start_hole': clean_value(s.get('StartHole')),
-                        'end_hole': clean_value(s.get('EndHole'))
-                    }
-                    prompt_data['streaks'].append(streak_data)
-                except Exception as ex:
-                    print(f"ERROR processing streak: {ex}")
-                    print(f"DEBUG: Streak data: {s}")
-                    raise
-
-        print("DEBUG: Setting storylines")
-        prompt_data['storylines'] = storylines
-
-        print("DEBUG: Setting projections")
-        prompt_data['projections'] = round_data['projections']
-
-    except Exception as e:
-        print(f"ERROR in format_round_data_for_prompt: {e}")
-        import traceback
-        traceback.print_exc()
-        raise
-
-    print("DEBUG: Converting to JSON")
-    try:
-        result = json.dumps(prompt_data, indent=2, default=str)
-        print(f"DEBUG: JSON conversion successful, length: {len(result)}")
-        return result
-    except Exception as e:
-        print(f"ERROR in json.dumps: {e}")
-        import traceback
-        traceback.print_exc()
-        raise
+    return json.dumps(prompt_data, indent=2, default=str)
 
 
-def generate_round_story_notes(teg_num, round_num, dry_run=False):
+def generate_round_story_notes(teg_num, round_num, all_data=None, force=False, dry_run=False):
     """
-    Generate structured story notes for a round using LLM.
+    Generate structured story notes for a round using unified data loader.
 
     Args:
         teg_num: Tournament number
         round_num: Round number
+        all_data: Optional pre-processed data from process_all_data_types()
+        force: If True, regenerate even if story notes already exist
         dry_run: If True, skip LLM call and return placeholder
 
     Returns:
         String with structured story notes (markdown bullets)
     """
+    story_notes_path = f"data/commentary/round_reports/TEG{teg_num}_R{round_num}_story_notes.md"
+
+    # Check if story notes already exist
+    if not force:
+        try:
+            existing_notes = read_text_file(story_notes_path)
+            print(f"\n  Story notes already exist for TEG {teg_num}, Round {round_num}")
+            print(f"  Using existing: {story_notes_path}")
+            print(f"  (Use --force to regenerate)")
+            return existing_notes
+        except FileNotFoundError:
+            pass  # File doesn't exist, proceed with generation
+
     print(f"\nGenerating story notes for TEG {teg_num}, Round {round_num}...")
 
-    # Load data
-    round_data = load_round_report_data(teg_num, round_num)
-    storylines = get_round_storylines(round_data)
+    # Load unified data
+    if all_data is None:
+        print("  > Processing all TEG data...")
+        all_data = process_all_data_types(teg_num)
+
+    round_data = load_unified_round_data(teg_num, round_num, all_data)
 
     # Format data for prompt
-    data_json = format_round_data_for_prompt(round_data, storylines)
+    data_json = format_round_data_for_prompt(round_data)
 
     # Build prompt
     system_prompt = ROUND_STORY_NOTES_PROMPT
@@ -433,7 +312,7 @@ def generate_round_story_notes(teg_num, round_num, dry_run=False):
 
 {data_json}
 
-Create structured story notes for this round following the specified format."""
+Create structured story notes for Round {round_num} following the specified format."""
 
     if DEBUG:
         print(f"  Data size: {len(data_json):,} characters")
@@ -463,7 +342,7 @@ Create structured story notes for this round following the specified format."""
     message = safe_create_message(
         client,
         model="claude-sonnet-4-5",
-        max_tokens=3000,
+        max_tokens=4000,
         system=[{
             "type": "text",
             "text": system_prompt,
@@ -496,8 +375,42 @@ def generate_round_narrative_report(teg_num, round_num, story_notes, dry_run=Fal
     """
     print(f"\nGenerating narrative report for TEG {teg_num}, Round {round_num}...")
 
-    # Load data for metadata
-    round_data = load_round_report_data(teg_num, round_num)
+    # Get basic metadata from round_summary
+    from utils import read_file, get_teg_rounds
+    round_summary = read_file('data/commentary_round_summary.parquet')
+    round_summary_data = round_summary[
+        (round_summary['TEGNum'] == teg_num) &
+        (round_summary['Round'] == round_num)
+    ]
+
+    if not round_summary_data.empty:
+        course = round_summary_data['Course'].iloc[0]
+        date = round_summary_data['Date'].iloc[0]
+    else:
+        course = "Unknown"
+        date = "Unknown"
+
+    total_rounds = get_teg_rounds(teg_num)
+    rounds_remaining = total_rounds - round_num
+
+    # Check if this is the final round - if so, load victory context
+    victory_context_section = ""
+    if rounds_remaining == 0:
+        print("  > Final round detected - loading victory context...")
+        try:
+            all_data = process_all_data_types(teg_num)
+            if all_data and 'victory_context' in all_data:
+                import json
+                victory_context = all_data['victory_context']
+                victory_context_json = json.dumps(victory_context, indent=2, default=str)
+                victory_context_section = f"""
+
+Victory Context (for final round synthesis):
+{victory_context_json}
+
+Use the victory context to describe how the tournament was won. Apply the same Victory Classification Framework used in tournament reports to craft varied descriptions combining leadership pattern + battle dynamics + margin context."""
+        except Exception as e:
+            print(f"  > Warning: Could not load victory context: {e}")
 
     # Build prompt
     system_prompt = ROUND_REPORT_PROMPT
@@ -508,9 +421,9 @@ def generate_round_narrative_report(teg_num, round_num, story_notes, dry_run=Fal
 Tournament Context:
 - TEG Number: {teg_num}
 - Round Number: {round_num}
-- Course: {round_data['metadata']['course']}
-- Date: {round_data['metadata']['date']}
-- Rounds Remaining: {round_data['projections']['rounds_remaining']}
+- Course: {course}
+- Date: {date}
+- Rounds Remaining: {rounds_remaining}{victory_context_section}
 
 Generate a complete round report following the specified format."""
 
@@ -592,13 +505,17 @@ def build_round_report_file(teg_num, round_num, story_notes, narrative_report):
     return content
 
 
-def generate_complete_round_report(teg_num, round_num, dry_run=False):
+def generate_complete_round_report(teg_num, round_num, force=False, dry_run=False):
     """
-    Main function: Generate complete round report (story notes + narrative).
+    Main function: Generate complete round report with individual story notes.
+
+    Story notes are saved to individual files and can be generated independently
+    for live tournament coverage.
 
     Args:
         teg_num: Tournament number
         round_num: Round number
+        force: If True, regenerate story notes even if they exist
         dry_run: If True, skip LLM calls
 
     Returns:
@@ -608,27 +525,27 @@ def generate_complete_round_report(teg_num, round_num, dry_run=False):
     print(f"GENERATING ROUND REPORT: TEG {teg_num}, Round {round_num}")
     print("="*60)
 
-    # Step 1: Generate story notes
-    story_notes = generate_round_story_notes(teg_num, round_num, dry_run)
+    # Step 1: Generate or load story notes
+    story_notes = generate_round_story_notes(teg_num, round_num, all_data=None, force=force, dry_run=dry_run)
 
-    # Step 2: Generate narrative report
-    narrative_report = generate_round_narrative_report(teg_num, round_num, story_notes, dry_run)
-
-    # Step 3: Save story notes to separate file
+    # Step 2: Save story notes to individual file
     story_notes_path = f"data/commentary/round_reports/TEG{teg_num}_R{round_num}_story_notes.md"
     story_notes_content = f"""# TEG {teg_num} - Round {round_num} Story Notes
 
 {story_notes}
-
 """
 
-    write_text_file(
-        story_notes_path,
-        story_notes_content,
-        commit_message=f"Generate story notes for TEG {teg_num}, Round {round_num}"
-    )
+    if not dry_run and story_notes != "DRY_RUN_STORY_NOTES":
+        write_text_file(
+            story_notes_path,
+            story_notes_content,
+            commit_message=f"Generate story notes for TEG {teg_num}, Round {round_num}"
+        )
 
-    # Step 4: Save narrative report to separate file
+    # Step 3: Generate narrative report
+    narrative_report = generate_round_narrative_report(teg_num, round_num, story_notes, dry_run)
+
+    # Step 4: Save narrative report
     report_path = f"data/commentary/round_reports/TEG{teg_num}_R{round_num}_report.md"
     report_content = f"""# TEG {teg_num} - Round {round_num} Report
 
@@ -637,21 +554,23 @@ def generate_complete_round_report(teg_num, round_num, dry_run=False):
 
 """
 
-    write_text_file(
-        report_path,
-        report_content,
-        commit_message=f"Generate round report for TEG {teg_num}, Round {round_num}"
-    )
+    if not dry_run:
+        write_text_file(
+            report_path,
+            report_content,
+            commit_message=f"Generate round report for TEG {teg_num}, Round {round_num}"
+        )
 
     # Step 5: Also save combined file for backwards compatibility
     complete_report = build_round_report_file(teg_num, round_num, story_notes, narrative_report)
     combined_path = f"data/commentary/round_reports/teg_{teg_num}_round_{round_num}_report.md"
 
-    write_text_file(
-        combined_path,
-        complete_report,
-        commit_message=f"Generate combined round report for TEG {teg_num}, Round {round_num}"
-    )
+    if not dry_run:
+        write_text_file(
+            combined_path,
+            complete_report,
+            commit_message=f"Generate combined round report for TEG {teg_num}, Round {round_num}"
+        )
 
     print("\n" + "="*60)
     print("ROUND REPORT COMPLETE")
@@ -683,7 +602,7 @@ def parse_range(range_str):
         return [int(range_str)]
 
 
-def generate_batch_reports(teg_nums, round_nums, dry_run=False, story_notes_only=False, reports_only=False, use_batch_api=False, submit_only=False):
+def generate_batch_reports(teg_nums, round_nums, dry_run=False, force=False, story_notes_only=False, reports_only=False, use_batch_api=False, submit_only=False):
     """
     Generate reports for multiple TEGs and rounds in batch mode.
     Optimized for prompt caching by processing all story notes first, then all reports.
@@ -692,6 +611,7 @@ def generate_batch_reports(teg_nums, round_nums, dry_run=False, story_notes_only
         teg_nums: List of TEG numbers to process
         round_nums: List of round numbers to process (applied to each TEG)
         dry_run: If True, skip LLM calls
+        force: If True, force regeneration of story notes even if they already exist
         story_notes_only: If True, only generate story notes (skip reports)
         reports_only: If True, only generate reports (requires existing story notes)
         use_batch_api: If True, use Anthropic Batch API (50% cheaper, up to 24hr processing)
@@ -725,7 +645,7 @@ def generate_batch_reports(teg_nums, round_nums, dry_run=False, story_notes_only
 
     # If using Batch API, delegate to batch processor
     if use_batch_api:
-        return generate_batch_reports_via_api(work_items, story_notes_only, reports_only, submit_only)
+        return generate_batch_reports_via_api(work_items, story_notes_only, reports_only, submit_only, force)
 
 
     # PHASE 1: Generate all story notes (maximizes prompt cache hits)
@@ -738,7 +658,7 @@ def generate_batch_reports(teg_nums, round_nums, dry_run=False, story_notes_only
         for i, (teg_num, round_num) in enumerate(work_items, 1):
             print(f"\n[{i}/{len(work_items)}] Processing TEG {teg_num}, Round {round_num}")
             try:
-                story_notes = generate_round_story_notes(teg_num, round_num, dry_run)
+                story_notes = generate_round_story_notes(teg_num, round_num, all_data=None, force=force, dry_run=dry_run)
                 story_notes_cache[(teg_num, round_num)] = story_notes
 
                 # Save story notes immediately
@@ -782,14 +702,13 @@ def generate_batch_reports(teg_nums, round_nums, dry_run=False, story_notes_only
         for i, (teg_num, round_num) in enumerate(work_items, 1):
             story_notes_path = f"data/commentary/round_reports/TEG{teg_num}_R{round_num}_story_notes.md"
             try:
-                with open(story_notes_path, 'r', encoding='utf-8') as f:
-                    content = f.read()
-                    # Extract just the story notes content (skip header and footer)
-                    lines = content.split('\n')
-                    # Skip first line (header) and last two lines (footer)
-                    story_notes = '\n'.join(lines[2:-3]).strip()
-                    story_notes_cache[(teg_num, round_num)] = story_notes
-                    print(f"[{i}/{len(work_items)}] Loaded story notes for TEG {teg_num}, Round {round_num}")
+                content = read_text_file(story_notes_path)
+                # Extract just the story notes content (skip header and footer)
+                lines = content.split('\n')
+                # Skip first line (header) and last two lines (footer)
+                story_notes = '\n'.join(lines[2:-3]).strip()
+                story_notes_cache[(teg_num, round_num)] = story_notes
+                print(f"[{i}/{len(work_items)}] Loaded story notes for TEG {teg_num}, Round {round_num}")
             except FileNotFoundError:
                 print(f"[{i}/{len(work_items)}] ERROR: Story notes not found for TEG {teg_num}, Round {round_num}")
                 print(f"  Expected: {story_notes_path}")
@@ -814,9 +733,6 @@ def generate_batch_reports(teg_nums, round_nums, dry_run=False, story_notes_only
 
             # Generate narrative report
             narrative_report = generate_round_narrative_report(teg_num, round_num, story_notes, dry_run)
-
-            # Load round data for metadata
-            round_data = load_round_report_data(teg_num, round_num)
 
             # Save narrative report
             report_path = f"data/commentary/round_reports/TEG{teg_num}_R{round_num}_report.md"
@@ -863,7 +779,7 @@ def generate_batch_reports(teg_nums, round_nums, dry_run=False, story_notes_only
     return results
 
 
-def generate_batch_reports_via_api(work_items, story_notes_only=False, reports_only=False, submit_only=False):
+def generate_batch_reports_via_api(work_items, story_notes_only=False, reports_only=False, submit_only=False, force=False):
     """
     Generate reports using Anthropic Batch API (50% cost reduction).
 
@@ -872,6 +788,7 @@ def generate_batch_reports_via_api(work_items, story_notes_only=False, reports_o
         story_notes_only: If True, only generate story notes
         reports_only: If True, only generate reports from existing story notes
         submit_only: If True, submit batch and exit (don't wait for results)
+        force: If True, force regeneration of story notes even if they already exist
 
     Returns:
         List of tuples (teg_num, round_num, story_notes_path, report_path)
@@ -899,30 +816,51 @@ def generate_batch_reports_via_api(work_items, story_notes_only=False, reports_o
         print("\nPHASE 1: Building story notes batch requests...")
         story_notes_requests = []
 
+        # Group work items by TEG to optimize data processing
+        by_teg = {}
         for teg_num, round_num in work_items:
-            print(f"  Preparing TEG {teg_num}, Round {round_num}...")
+            if teg_num not in by_teg:
+                by_teg[teg_num] = []
+            by_teg[teg_num].append(round_num)
 
-            # Load data
-            round_data = load_round_report_data(teg_num, round_num)
-            storylines = get_round_storylines(round_data)
-            data_json = format_round_data_for_prompt(round_data, storylines)
+        # Process each TEG once, then create requests for all its rounds
+        for teg_num, round_nums in by_teg.items():
+            print(f"  Processing TEG {teg_num} data (for {len(round_nums)} rounds)...")
+            all_data = process_all_data_types(teg_num)
 
-            # Build request
-            user_message = f"""Round Data:
+            for round_num in round_nums:
+                # Check if story notes already exist (unless force=True)
+                story_notes_path = f"data/commentary/round_reports/TEG{teg_num}_R{round_num}_story_notes.md"
+                if not force:
+                    try:
+                        read_text_file(story_notes_path)
+                        print(f"    Skipping Round {round_num} (story notes already exist, use --force to regenerate)")
+                        continue
+                    except FileNotFoundError:
+                        pass  # File doesn't exist, proceed with generation
+
+                print(f"    Preparing Round {round_num}...")
+
+                # Load unified round data
+                round_data = load_unified_round_data(teg_num, round_num, all_data)
+                data_json = format_round_data_for_prompt(round_data)
+
+                # Build request
+                user_message = f"""Round Data:
 
 {data_json}
 
-Create structured story notes for this round following the specified format."""
+Create structured story notes for Round {round_num} following the specified format."""
 
-            request = create_batch_request(
-                custom_id=f"TEG{teg_num}_R{round_num}_story_notes",
-                model="claude-sonnet-4-5",
-                max_tokens=3000,
-                system_prompt=ROUND_STORY_NOTES_PROMPT,
-                user_message=user_message,
-                use_cache=True
-            )
-            story_notes_requests.append(request)
+                request = create_batch_request(
+                    custom_id=f"TEG{teg_num}_R{round_num}_story_notes",
+                    model="claude-sonnet-4-5",
+                    max_tokens=3000,
+                    system_prompt=ROUND_STORY_NOTES_PROMPT,
+                    user_message=user_message,
+                    use_cache=True
+                )
+                story_notes_requests.append(request)
 
         # Save and submit story notes batch
         batch_file = f"{batch_dir}/story_notes_{timestamp}.jsonl"
@@ -987,14 +925,28 @@ Create structured story notes for this round following the specified format."""
         # Load existing story notes
         story_notes_path = f"data/commentary/round_reports/TEG{teg_num}_R{round_num}_story_notes.md"
         try:
-            with open(story_notes_path, 'r', encoding='utf-8') as f:
-                content = f.read()
-                # Extract just the story notes content (skip header)
-                lines = content.split('\n')
-                story_notes = '\n'.join(lines[2:-3]).strip()
+            content = read_text_file(story_notes_path)
+            # Extract just the story notes content (skip header)
+            lines = content.split('\n')
+            story_notes = '\n'.join(lines[2:-3]).strip()
 
-            # Load round data for metadata
-            round_data = load_round_report_data(teg_num, round_num)
+            # Get basic metadata from round_summary (matching generate_round_narrative_report pattern)
+            from utils import read_file, get_teg_rounds
+            round_summary = read_file('data/commentary_round_summary.parquet')
+            round_summary_data = round_summary[
+                (round_summary['TEGNum'] == teg_num) &
+                (round_summary['Round'] == round_num)
+            ]
+
+            if not round_summary_data.empty:
+                course = round_summary_data['Course'].iloc[0]
+                date = round_summary_data['Date'].iloc[0]
+            else:
+                course = "Unknown"
+                date = "Unknown"
+
+            total_rounds = get_teg_rounds(teg_num)
+            rounds_remaining = total_rounds - round_num
 
             user_message = f"""Story Notes:
 
@@ -1003,9 +955,9 @@ Create structured story notes for this round following the specified format."""
 Tournament Context:
 - TEG Number: {teg_num}
 - Round Number: {round_num}
-- Course: {round_data['metadata']['course']}
-- Date: {round_data['metadata']['date']}
-- Rounds Remaining: {round_data['projections']['rounds_remaining']}
+- Course: {course}
+- Date: {date}
+- Rounds Remaining: {rounds_remaining}
 
 Generate a complete round report following the specified format."""
 
@@ -1078,9 +1030,8 @@ Generate a complete round report following the specified format."""
 
             # Also save combined file for backwards compatibility
             story_notes_path = f"data/commentary/round_reports/TEG{teg_num}_R{round_num}_story_notes.md"
-            with open(story_notes_path, 'r', encoding='utf-8') as f:
-                story_notes_content = f.read()
-                story_notes = '\n'.join(story_notes_content.split('\n')[2:-3]).strip()
+            story_notes_content = read_text_file(story_notes_path)
+            story_notes = '\n'.join(story_notes_content.split('\n')[2:-3]).strip()
 
             complete_report = build_round_report_file(teg_num, round_num, story_notes, narrative_report)
             combined_path = f"data/commentary/round_reports/teg_{teg_num}_round_{round_num}_report.md"
@@ -1209,10 +1160,9 @@ def retrieve_batch_results_round_reports(batch_id):
 
                 # Also save combined file
                 story_notes_path = f"data/commentary/round_reports/TEG{teg_num}_R{round_num}_story_notes.md"
-                if os.path.exists(story_notes_path):
-                    with open(story_notes_path, 'r', encoding='utf-8') as f:
-                        story_notes_content = f.read()
-                        story_notes = '\n'.join(story_notes_content.split('\n')[2:-3]).strip()
+                try:
+                    story_notes_content = read_text_file(story_notes_path)
+                    story_notes = '\n'.join(story_notes_content.split('\n')[2:-3]).strip()
 
                     complete_report = build_round_report_file(teg_num, round_num, story_notes, content)
                     combined_path = f"data/commentary/round_reports/teg_{teg_num}_round_{round_num}_report.md"
@@ -1221,6 +1171,8 @@ def retrieve_batch_results_round_reports(batch_id):
                         complete_report,
                         commit_message=f"Generate combined round report for TEG {teg_num}, Round {round_num} (Batch API)"
                     )
+                except FileNotFoundError:
+                    print(f"  ⚠️  Story notes not found, skipping combined report for TEG {teg_num}, Round {round_num}")
 
                 print(f"  ✓ Saved: {report_path}")
 
@@ -1308,6 +1260,7 @@ Examples:
     parser.add_argument('--teg', type=str, help='TEG number or range (e.g., "17" or "15-17")')
     parser.add_argument('--round', type=str, help='Round number or range (e.g., "2" or "1-4")')
     parser.add_argument('--dry-run', action='store_true', help='Test without LLM calls')
+    parser.add_argument('--force', action='store_true', help='Force regeneration of story notes even if they already exist')
     parser.add_argument('--story-notes-only', action='store_true', help='Only generate story notes (skip reports)')
     parser.add_argument('--reports-only', action='store_true', help='Only generate reports (requires existing story notes)')
     parser.add_argument('--use-batch', action='store_true', help='Use Anthropic Batch API (50%% cheaper, up to 24hr processing)')
@@ -1364,7 +1317,7 @@ Examples:
 
         # Generate report
         try:
-            output_path = generate_complete_round_report(teg_num, round_num, dry_run=args.dry_run)
+            output_path = generate_complete_round_report(teg_num, round_num, force=args.force, dry_run=args.dry_run)
             print(f"\nSuccess! Report saved to: {output_path}")
         except Exception as e:
             print(f"\nError generating report: {e}")
@@ -1379,6 +1332,7 @@ Examples:
                 teg_nums,
                 round_nums,
                 dry_run=args.dry_run,
+                force=args.force,
                 story_notes_only=args.story_notes_only,
                 reports_only=args.reports_only,
                 use_batch_api=args.use_batch,

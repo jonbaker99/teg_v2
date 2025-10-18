@@ -1,1 +1,130 @@
-IyBURUcgMTggLSBSb3VuZCA0IFJlcG9ydAoKLS0tCgojIyBTdG9yeSBOb3RlcwoKIyMgUm91bmQgU3VtbWFyeQotICoqUm91bmQgV2lubmVyIChTdGFibGVmb3JkKToqKiBHcmVnZyBXSUxMSUFNUyAoNDQgcHRzIFN0YWJsZWZvcmQpCi0gKipSb3VuZCBXaW5uZXIgKEdyb3NzKToqKiBHcmVnZyBXSUxMSUFNUyAoMTIgZ3Jvc3MgdnMgcGFyKQotICoqVG91cm5hbWVudCBXaW5uZXIgKFN0YWJsZWZvcmQpOioqIEFsZXggQkFLRVIgKDE2OSBwdHMgdG90YWwpCi0gKipUb3VybmFtZW50IFdpbm5lciAoR3Jvc3MpOioqIEdyZWdnIFdJTExJQU1TICg2NiBncm9zcyB2cyBwYXIpCi0gKipCaWdnZXN0IE1vdmVyOioqIE5vIHBvc2l0aW9uIGNoYW5nZXMgKGFsbCBwbGF5ZXJzIGhlbGQgcG9zaXRpb24pCi0gKipEcmFtYSBMZXZlbDoqKiBMb3cgKGZpbmFsIHJvdW5kLCBubyBsZWFkIGNoYW5nZXMpCgojIyBLZXkgTW9tZW50cwotIEgxLTY6IEdyZWdnIFdJTExJQU1TIGV4cGxvc2l2ZSBzdGFydCAoMTYgU3RhYmxlZm9yZCBwdHMgaW4gZmlyc3Qgc2l4IGhvbGVzKQotIEgxLTY6IEpvaG4gUEFUVEVSU09OIG1hdGNoZXMgaW50ZW5zaXR5ICgxNyBwdHMgaW4gb3BlbmluZyBzdHJldGNoKQotIEg3LTEyOiBKb24gQkFLRVIgc3RydWdnbGVzIGNvbnRpbnVlIChvbmx5IDcgcHRzIGluIG1pZGRsZSBzaXgsIHRvdXJuYW1lbnQgbG93KQotIEg3LTEyOiBHcmVnZyBXSUxMSUFNUyBtYWludGFpbnMgbW9tZW50dW0gKDE2IHB0cyBpbiBtaWRkbGUgc2l4KQotIEgxNDogVG91cm5hbWVudCdzIGhhcmRlc3QgaG9sZSBzdHJpa2VzIChhdmcgNy4wLCArMy4wIHZzIHBhciwgb25seSAwLjggU3RhYmxlZm9yZCBhdmcpCi0gSDE3LTE4OiBGaW5hbCBzdHJldGNoIHNlZXMgbXVsdGlwbGUgYm9nZXlzIChib3RoIGhvbGVzIGF2ZyArMS4yIHRvICsyLjAgdnMgcGFyKQotIEgxMy0xODogQWxleCBCQUtFUiBmYWRlcyBsYXRlIChvbmx5IDExIHB0cyBpbiBmaW5hbCBzaXggaG9sZXMpCi0gVG91cm5hbWVudCBjb25jbHVzaW9uOiBBbGV4IEJBS0VSIHNlY3VyZXMgVHJvcGh5IGJ5IDggcHRzOyBHcmVnZyBXSUxMSUFNUyB0YWtlcyBKYWNrZXQgYnkgMTQgc3Ryb2tlcwoKIyMgSG93IFBvc2l0aW9ucyBDaGFuZ2VkCi0gKipTdGFydCBvZiByb3VuZCAoU3RhYmxlZm9yZCk6KiogQWxleCBCQUtFUiAxMzEgcHRzIHwgSm9obiBQQVRURVJTT04gMTE5IHB0cyB8IEdyZWdnIFdJTExJQU1TIDExNiBwdHMgfCBEYXZpZCBNVUxMSU4gMTExIHB0cyB8IEpvbiBCQUtFUiA5NyBwdHMKLSAqKlN0YXJ0IG9mIHJvdW5kIChHcm9zcyk6KiogR3JlZ2cgV0lMTElBTVMgKzU0IHwgRGF2aWQgTVVMTElOICs2MiB8IEpvbiBCQUtFUiArNjcgfCBKb2huIFBBVFRFUlNPTiArNzMgfCBBbGV4IEJBS0VSICs4OAotICoqS2V5IHNoaWZ0czoqKiBObyBwb3NpdGlvbiBjaGFuZ2VzIG9jY3VycmVkIGR1cmluZyBmaW5hbCByb3VuZAotICoqRW5kIG9mIHJvdW5kIChTdGFibGVmb3JkKToqKiBBbGV4IEJBS0VSIDE2OSBwdHMgfCBKb2huIFBBVFRFUlNPTiAxNjEgcHRzIHwgR3JlZ2cgV0lMTElBTVMgMTYwIHB0cyB8IERhdmlkIE1VTExJTiAxNDkgcHRzIHwgSm9uIEJBS0VSIDEyNiBwdHMKLSAqKkVuZCBvZiByb3VuZCAoR3Jvc3MpOioqIEdyZWdnIFdJTExJQU1TICs2NiB8IERhdmlkIE1VTExJTiArODAgfCBKb24gQkFLRVIgKzkyIHwgSm9obiBQQVRURVJTT04gKzk1IHwgQWxleCBCQUtFUiArMTI0CgojIyBSb3VuZCBCcmVha2Rvd24KKipIb2xlcyAxLTYgKE9wZW5pbmcpOioqCi0gSm9obiBQQVRURVJTT04gbGVhZHMgb3BlbmluZyBjaGFyZ2UgKDE3IHB0cykKLSBHcmVnZyBXSUxMSUFNUyBjbG9zZSBiZWhpbmQgKDE2IHB0cykKLSBEYXZpZCBNVUxMSU4gc29saWQgc3RhcnQgKDE1IHB0cykKLSBBbGV4IEJBS0VSIG1vZGVyYXRlIG9wZW5pbmcgKDE0IHB0cykKLSBKb24gQkFLRVIgc3RydWdnbGVzIGVhcmx5ICgxMSBwdHMpCi0gSDEgYW5kIEg1IHBsYXkgYXMgam9pbnQtZWFzaWVzdCBob2xlcyAoYXZnIDMuMCBTdGFibGVmb3JkIGVhY2gpCgoqKkhvbGVzIDctMTIgKE1pZGRsZSk6KioKLSBHcmVnZyBXSUxMSUFNUyBkb21pbmF0ZXMgbWlkZGxlIHN0cmV0Y2ggKDE2IHB0cywgbWFpbnRhaW5zIHJvdW5kLWxlYWRpbmcgZm9ybSkKLSBEYXZpZCBNVUxMSU4gY29uc2lzdGVudCAoMTMgcHRzKQotIEFsZXggQkFLRVIgaG9sZHMgc3RlYWR5ICgxMyBwdHMpCi0gSm9obiBQQVRURVJTT04gY29vbHMgb2ZmIHNpZ25pZmljYW50bHkgKDEwIHB0cyBhZnRlciBob3Qgc3RhcnQpCi0gSm9uIEJBS0VSIHdvcnN0IG9mIGZpZWxkICg3IHB0cywgc3RydWdnbGVzIGNvbXBvdW5kKQotIEgxMiBvZmZlcnMgc2NvcmluZyBvcHBvcnR1bml0eSAoUGFyIDUsIGF2ZyAyLjYgU3RhYmxlZm9yZCkKCioqSG9sZXMgMTMtMTggKENsb3NpbmcpOioqCi0gSm9obiBQQVRURVJTT04gc3Ryb25nIGZpbmlzaCAoMTUgcHRzLCBib3VuY2VzIGJhY2sgZnJvbSBtaWRkbGUgc2x1bXApCi0gR3JlZ2cgV0lMTElBTVMgc3RlYWR5IGhvbWUgKDEyIHB0cywgc2VjdXJlcyByb3VuZCB2aWN0b3J5KQotIEFsZXggQkFLRVIgZmFkZXMgKDExIHB0cywgd2Vha2VzdCBzaXgtaG9sZSBzcGxpdCBvZiByb3VuZCkKLSBKb24gQkFLRVIgbWF0Y2hlcyBBbGV4ICgxMSBwdHMsIHRvbyBsaXR0bGUgdG9vIGxhdGUpCi0gRGF2aWQgTVVMTElOIHN0cnVnZ2xlcyBsYXRlICgxMCBwdHMpCi0gSDE0IGRpc2FzdGVyIGhvbGUgZm9yIGZpZWxkIChhdmcgNy4wLCBvbmx5IDAuOCBTdGFibGVmb3JkIGF2ZykKLSBIMTMgcHJvdmlkZXMgbGF0ZSBiaXJkaWUgY2hhbmNlIChhdmcgMy4wIFN0YWJsZWZvcmQpCgojIyBSb3VuZCBTdGF0cwotICoqSGFyZGVzdCBob2xlOioqIEgxNCAoUGFyIDQsIGF2ZyArMy4wIHZzIHBhciwgMC44IFN0YWJsZWZvcmQgYXZnKQotICoqRWFzaWVzdCBob2xlczoqKiBIMSwgSDUsIEgxMyAoYWxsIGF2ZyAzLjAgU3RhYmxlZm9yZCwgKzAuNCB2cyBwYXIpCi0gKipCZXN0IGluZGl2aWR1YWwgcGVyZm9ybWFuY2U6KiogR3JlZ2cgV0lMTElBTVMgKDQ0IHB0cywgdXAgZnJvbSA0MyBpbiBSb3VuZCAzKQotICoqTW9zdCBjb25zaXN0ZW50IG5pbmUtaG9sZSBzcGxpdDoqKiBBbGV4IEJBS0VSICgxOSBwdHMgZnJvbnQsIDE5IHB0cyBiYWNrKQotICoqV29yc3QgaW5kaXZpZHVhbCBwZXJmb3JtYW5jZToqKiBKb24gQkFLRVIgKDI5IHB0cywgdXAgc2xpZ2h0bHkgZnJvbSAyOCBpbiBSb3VuZCAzKQoKIyMgUGxheWVyIE5vdGVzCi0gKipBbGV4IEJBS0VSICgxc3QgVHJvcGh5KToqKiAzOCBwdHMgKGRvd24gZnJvbSA0NCBpbiBSMykgfCBXb24gVHJvcGh5IGJ5IDggcHRzIGRlc3BpdGUgZmFkZSB8IFN0cm9uZyBmcm9udCBuaW5lICgxOSBwdHMpIHwgV2VhayBmaW5pc2ggKDExIHB0cyBmaW5hbCBzaXgpCgotICoqSm9obiBQQVRURVJTT04gKDJuZCBUcm9waHkpOioqIDQyIHB0cyAoZG93biBmcm9tIDQzIGluIFIzKSB8IEZpbmlzaGVkIDggcHRzIGJlaGluZCB3aW5uZXIgfCBFeHBsb3NpdmUgc3RhcnQgKDE3IHB0cyBmaXJzdCBzaXgpIHwgTWlkLXJvdW5kIHNsdW1wICgxMCBwdHMgbWlkZGxlIHNpeCkgfCBTdHJvbmcgcmVjb3ZlcnkgKDE1IHB0cyBmaW5hbCBzaXgpCgotICoqR3JlZ2cgV0lMTElBTVMgKDNyZCBUcm9waHksIDFzdCBKYWNrZXQpOioqIDQ0IHB0cyAoYmVzdCByb3VuZCwgdXAgZnJvbSA0MyBpbiBSMykgfCBXb24gSmFja2V0IGJ5IDE0IHN0cm9rZXMgfCBEb21pbmFudCBvcGVuaW5nIDEyIGhvbGVzICgzMiBwdHMgY29tYmluZWQpIHwgRmluaXNoZWQgOSBwdHMgYmVoaW5kIFRyb3BoeSB3aW5uZXIgfCBNb3N0IGNvbnNpc3RlbnQgcGVyZm9ybWFuY2UKCi0gKipEYXZpZCBNVUxMSU4gKDR0aCBUcm9waHksIDJuZCBKYWNrZXQpOioqIDM4IHB0cyAoZG93biBzaWduaWZpY2FudGx5IGZyb20gNDQgaW4gUjMpIHwgU3RhcnRlZCBzdHJvbmcgKDE1IHB0cyBmaXJzdCBzaXgpIHwgRmFkZWQgYmFkbHkgKDEwIHB0cyBmaW5hbCBzaXgpIHwgRmluaXNoZWQgMjAgcHRzIGJlaGluZCBUcm9waHksIDE0IHN0cm9rZXMgYmVoaW5kIEphY2tldAoKLSAqKkpvbiBCQUtFUiAoNXRoIGJvdGggY29tcGV0aXRpb25zKToqKiAyOSBwdHMgKHVwIG1hcmdpbmFsbHkgZnJvbSAyOCBpbiBSMykgfCBDb25zaXN0ZW50IHN0cnVnZ2xlICgxMS03LTExIHNpeC1ob2xlIHNwbGl0cykgfCBGaW5pc2hlZCA0MyBwdHMgYmVoaW5kIFRyb3BoeSwgMjYgc3Ryb2tlcyBiZWhpbmQgSmFja2V0IHwgTmV2ZXIgdGhyZWF0ZW5lZCBpbiBmaW5hbCByb3VuZAoKLS0tCgojIyBSb3VuZCBSZXBvcnQKCiMjIFdpbGxpYW1zIENsYWltcyBKYWNrZXQgd2l0aCBEb21pbmFudCBEaXNwbGF5IGFzIEJha2VyIFNlY3VyZXMgVHJvcGh5CioqUEdBIENhdGFsdW55YSAtIFN0YWRpdW0g4oCiIDE0LzEwLzIwMjUg4oCiIFJvdW5kIDQgb2YgNCoqCgojIyMgUm91bmQgU3VtbWFyeQoKVGhlIGZpbmFsIHJvdW5kIGF0IFBHQSBDYXRhbHVueWEgZGVsaXZlcmVkIGEgdGFsZSBvZiB0d28gY29tcGV0aXRpb25zIGFzIEdyZWdnIFdpbGxpYW1zIHByb2R1Y2VkIHRoZSB0b3VybmFtZW50J3MgZmluZXN0IHBlcmZvcm1hbmNlIHRvIGNsYWltIHRoZSBHcmVlbiBKYWNrZXQsIHdoaWxzdCBBbGV4IEJha2VyIGhlbGQgaGlzIG5lcnZlIHRvIHNlY3VyZSB0aGUgVEVHIFRyb3BoeSBkZXNwaXRlIGEgbGF0ZSBmYWRlLiBXaWxsaWFtcycgNDQtcG9pbnQgbWFzdGVyY2xhc3PigJRiYWNrZWQgYnkgMTIgc3Ryb2tlcyB1bmRlciBwYXLigJRyZXByZXNlbnRlZCB0aGUgd2VlaydzIHBlYWsgaW5kaXZpZHVhbCByb3VuZCwgYnV0IGhpcyBleHBsb3NpdmUgZmluaXNoIGNhbWUgdG9vIGxhdGUgdG8gb3ZlcmhhdWwgQmFrZXIncyBjb21tYW5kaW5nIFN0YWJsZWZvcmQgYWR2YW50YWdlLgoKQmFrZXIgZW50ZXJlZCB0aGUgZmluYWxlIHdpdGggYSAxMi1wb2ludCBjdXNoaW9uIGFuZCBuZXZlciB0cnVseSBsb29rZWQgdGhyZWF0ZW5lZCwgZGVzcGl0ZSBtYW5hZ2luZyBvbmx5IDM4IHBvaW50cyBpbiBoaXMgcXVpZXRlc3Qgcm91bmQgb2YgdGhlIHdlZWsuIEhpcyBzb2xpZCBmcm9udCBuaW5lIGVzdGFibGlzaGVkIHRoZSBwbGF0Zm9ybSwgYW5kIHdoaWxzdCBoZSBsaW1wZWQgaG9tZSB3aXRoIGp1c3QgMTEgcG9pbnRzIG92ZXIgdGhlIGNsb3Npbmcgc3RyZXRjaCwgSm9obiBQYXR0ZXJzb24ncyBmYWlsdXJlIHRvIG1vdW50IGEgc3VzdGFpbmVkIGNoYXJnZSBtZWFudCB0aGUgVHJvcGh5IHdhcyBuZXZlciBpbiBzZXJpb3VzIGRvdWJ0LiBXaWxsaWFtcywgbWVhbndoaWxlLCBkb21pbmF0ZWQgZnJvbSB0aGUgb3BlbmluZyBob2xlcywgcG9zdGluZyAzMiBwb2ludHMgdGhyb3VnaCB0aGUgZmlyc3QgdHdlbHZlIHRvIHNlY3VyZSBib3RoIHRoZSByb3VuZCBob25vdXJzIGFuZCB0aGUgSmFja2V0IGJ5IGEgY29tZm9ydGFibGUgMTQtc3Ryb2tlIG1hcmdpbi4KClRoZSBjb250cmFzdCBjb3VsZG4ndCBoYXZlIGJlZW4gc3RhcmtlcjogQmFrZXIgbWFuYWdpbmcgdGhlIHNpdHVhdGlvbiB3aXRoIHByYWdtYXRpYyBnb2xmIHdoaWxzdCBwcm90ZWN0aW5nIGhpcyBsZWFkLCBXaWxsaWFtcyB0aHJvd2luZyBldmVyeXRoaW5nIGF0IGEgc2NvcmVib2FyZCB0aGF0IHVsdGltYXRlbHkgd291bGRuJ3QgYnVkZ2UgZW5vdWdoLiBQYXR0ZXJzb24ncyByb2xsZXJjb2FzdGVyIDQyIHBvaW50c+KAlGV4cGxvc2l2ZSBzdGFydCwgbWlkLXJvdW5kIGNvbGxhcHNlLCBzdHJvbmcgcmVjb3ZlcnnigJRzdW1tZWQgdXAgYSBmaW5hbCBkYXkgd2hlcmUgcG9zaXRpb24gY2hhbmdlcyBwcm92ZWQgZWx1c2l2ZSBidXQgaW5kaXZpZHVhbCBiYXR0bGVzIGtlcHQgdGhlIGRyYW1hIGFsaXZlLgoKIyMjIEhvdyBJdCBVbmZvbGRlZAoKVGhlIG9wZW5pbmcgc2Fsdm8gYmVsb25nZWQgdG8gUGF0dGVyc29uIGFuZCBXaWxsaWFtcywgd2hvIGxpdCB1cCB0aGUgZnJvbnQgc2l4IHdpdGggYSBjb21iaW5lZCAzMyBwb2ludHMuIFBhdHRlcnNvbiBzdHJ1Y2sgZmlyc3Qgd2l0aCBhIGJsaXN0ZXJpbmcgMTctcG9pbnQgYnVyc3QgdGhhdCBicmllZmx5IHRocmVhdGVuZWQgQmFrZXIncyBhZHZhbnRhZ2UsIHdoaWxzdCBXaWxsaWFtcycgMTYtcG9pbnQgcmVzcG9uc2UgYW5ub3VuY2VkIGhpcyBpbnRlbnRpb25zIGZvciB0aGUgSmFja2V0IHJhY2UuIEJha2VyLCBtZWFud2hpbGUsIHBsYXllZCB0aGUgcGVyY2VudGFnZSBnYW1lIHdpdGggMTQgcG9pbnRz4oCUdW5zcGVjdGFjdWxhciBidXQgc3VmZmljaWVudCBnaXZlbiBoaXMgY3VzaGlvbi4gVGhlIHBhci00IDFzdCBhbmQgcGFyLTMgNXRoIHBsYXllZCBhcyBqb2ludC1lYXNpZXN0IGhvbGVzLCBhdmVyYWdpbmcgMy4wIFN0YWJsZWZvcmQgcG9pbnRzIGVhY2gsIGFuZCBib3RoIFBhdHRlcnNvbiBhbmQgV2lsbGlhbXMgZmVhc3RlZCBvbiB0aGUgb3Bwb3J0dW5pdGllcy4KClRoZSBtaWRkbGUgc3RyZXRjaCBleHBvc2VkIFBhdHRlcnNvbidzIGNoYWxsZW5nZSBhcyBmYXRpZ3VlIG9yIHByZXNzdXJlIHRvb2sgaG9sZC4gSGlzIHNjb3JpbmcgY29sbGFwc2VkIHRvIGp1c3QgMTAgcG9pbnRzIHRocm91Z2ggaG9sZXMgNy0xMiwgd2hpbHN0IFdpbGxpYW1zIG1haW50YWluZWQgaGlzIHJlbGVudGxlc3MgcGFjZSB3aXRoIGFub3RoZXIgMTYtcG9pbnQgc2Fsdm8uIEJha2VyIHN0YXllZCBzdGVhZHkgd2l0aCAxMyBwb2ludHMsIGFsd2F5cyBpbiBjb250cm9sLCBhbHdheXMgd2F0Y2hpbmcgdGhlIGdhcHMuIERhdmlkIE11bGxpbiBtYXRjaGVkIEJha2VyJ3Mgb3V0cHV0LCBidXQgSm9uIEJha2VyJ3MgdG91cm5hbWVudC13b3JzdCA3IHBvaW50cyB0aHJvdWdoIHRoaXMgc3RyZXRjaCBjb25maXJtZWQgaGlzIHdlZWstbG9uZyBzdHJ1Z2dsZXMgd291bGQgY29udGludWUgdG8gdGhlIGJpdHRlciBlbmQuIFRoZSBwYXItNSAxMnRoIG9mZmVyZWQgc2NvcmluZyBjaGFuY2VzLCBidXQgaXQgd2FzIFdpbGxpYW1zIHdobyB0cnVseSBjYXBpdGFsaXNlZCwgZXh0ZW5kaW5nIGhpcyByb3VuZCBsZWFkIHdoaWxzdCBzaW11bHRhbmVvdXNseSBjbG9zaW5nIHRoZSBKYWNrZXQgZ2FwIHRvIERhdmlkIE11bGxpbi4KClRoZSBjbG9zaW5nIHN0cmV0Y2ggZGVsaXZlcmVkIG9uZSBmaW5hbCB0d2lzdCBhcyB0aGUgbm90b3Jpb3VzIDE0dGggaG9sZeKAlGF2ZXJhZ2luZyA3LjAgc3Ryb2tlcyBhbmQgeWllbGRpbmcganVzdCAwLjggU3RhYmxlZm9yZCBwb2ludHPigJR3cmVha2VkIGhhdm9jIGFjcm9zcyB0aGUgZmllbGQuIEJha2VyJ3MgZmFkZSBpbnRlbnNpZmllZCB3aXRoIG9ubHkgMTEgcG9pbnRzIG92ZXIgdGhlIGZpbmFsIHNpeCwgYnV0IFBhdHRlcnNvbidzIDE1LXBvaW50IHN1cmdlIGNhbWUgdG9vIGxhdGUgdG8gbWF0dGVyLiBXaWxsaWFtcyBjb2FzdGVkIGhvbWUgd2l0aCAxMiBwb2ludHMsIGhpcyBKYWNrZXQgbG9uZyBzZWN1cmVkLCB3aGlsc3QgTXVsbGluJ3MgY29sbGFwc2UgdG8gMTAgcG9pbnRzIG92ZXIgdGhlIHNhbWUgc3RyZXRjaCBjb25maXJtZWQgaGlzIHNsaXAgdG8gZm91cnRoLiBUaGUgcGFyLTMgMTN0aCBwcm92aWRlZCBvbmUgbGFzdCBiaXJkaWUgb3Bwb3J0dW5pdHkgYXQgMy4wIFN0YWJsZWZvcmQgYXZlcmFnZSwgYnV0IGJ5IHRoZW4gQmFrZXIgd2FzIGFscmVhZHkgbWVhc3VyaW5nIHRoZSBUcm9waHksIGFuZCBXaWxsaWFtcyB3YXMgY29udGVtcGxhdGluZyB3aGF0IG1pZ2h0IGhhdmUgYmVlbiBoYWQgaGlzIHBlYWsgZm9ybSBhcnJpdmVkIGEgcm91bmQgZWFybGllci4KCiMjIyBTdGFuZGluZ3MgQWZ0ZXIgUm91bmQgNAoKKipSb3VuZCA0IFN0YWJsZWZvcmQ6KiogR1cgNDQgfCBKUCA0MiB8IEFCIDM4IHwgRE0gMzggfCBKQiAyOSAgCioqUm91bmQgNCBHcm9zczoqKiBHVyArMTIgfCBBQiArMzYgfCBETSArMTggfCBKUCArMjIgfCBKQiArMjUKCioqRmluYWwgU3RhYmxlZm9yZCBTdGFuZGluZ3M6KiogQUIgMTY5IHwgSlAgMTYxIHwgR1cgMTYwIHwgRE0gMTQ5IHwgSkIgMTI2ICAKKipGaW5hbCBHcm9zcyBTdGFuZGluZ3M6KiogR1cgKzY2IHwgRE0gKzgwIHwgSkIgKzkyIHwgSlAgKzk1IHwgQUIgKzEyNAoKIyMjIFRvdXJuYW1lbnQgQ29tcGxldGUKClRoZSAxOHRoIGVkaXRpb24gb2YgdGhlIFRFRyBjb25jbHVkZXMgd2l0aCBkdWFsIGNoYW1waW9ucyBjcm93bmVkIGF0IFBHQSBDYXRhbHVueWEuIEFsZXggQmFrZXIncyB3aXJlLXRvLXdpcmUgY29tbWFuZCBvZiB0aGUgU3RhYmxlZm9yZCBjb21wZXRpdGlvbuKAlGJ1aWx0IG9uIHRocmVlIHN0cm9uZyBvcGVuaW5nIHJvdW5kcyBhbmQgcHJvdGVjdGVkIGJ5IHNtYXJ0IGZpbmFsLWRheSBtYW5hZ2VtZW504oCUZGVsaXZlcnMgdGhlIFRyb3BoeSBieSBhbiBlaWdodC1wb2ludCBtYXJnaW4gb3ZlciBKb2huIFBhdHRlcnNvbi4gSGlzIDE2OS1wb2ludCB0b3RhbCByZXByZXNlbnRlZCB0aGUgY29uc2lzdGVuY3kgYW5kIHNob3QtdmFsdWUgbWF4aW1pc2F0aW9uIHRoYXQgU3RhYmxlZm9yZCByZXdhcmRzLCBldmVuIGFzIGhpcyBncm9zcyBzY29yaW5nIGxhZ2dlZCBiZWhpbmQgdGhlIGZpZWxkIGxlYWRlcnMuCgpHcmVnZyBXaWxsaWFtcycgR3JlZW4gSmFja2V0IHRyaXVtcGggYnkgMTQgc3Ryb2tlcyB2aW5kaWNhdGVkIGhpcyB0b3VybmFtZW50LWxvbmcgZXhjZWxsZW5jZSBpbiBwdXJlIGJhbGwtc3RyaWtpbmcuIEhpcyArNjYgdG90YWzigJRpbmNsdWRpbmcgdG9kYXkncyBzdHVubmluZyArMTIgcGVyZm9ybWFuY2XigJRtYXJrZWQgaGltIGFzIHRoZSB3ZWVrJ3MgZmluZXN0IGdyb3NzIGNvbXBldGl0b3IsIGRlc3BpdGUgZmFsbGluZyBhZ29uaXNpbmdseSBzaG9ydCBpbiB0aGUgcHJpbWFyeSBUcm9waHkgcmFjZS4gVGhlIGNydWVsIGFyaXRobWV0aWMgb2YgZHVhbCBjb21wZXRpdGlvbnMgcGxheWVkIG91dCBwZXJmZWN0bHk6IFdpbGxpYW1zIHdvbiB0aGUgYmF0dGxlIG9mIGJhbGwtc3RyaWtpbmcgYnV0IGxvc3QgdGhlIHdhciBvZiBwb2ludHMgYWNjdW11bGF0aW9uLgoKUGF0dGVyc29uJ3MgcnVubmVyLXVwIGZpbmlzaCBpbiB0aGUgVHJvcGh5IHJhY2UsIGVpZ2h0IHBvaW50cyBhZHJpZnQsIHJlZmxlY3RlZCBhIHRvdXJuYW1lbnQgb2YgbmVhci1taXNzZXMgYW5kIHdoYXQtaWZzLiBIaXMgZXhwbG9zaXZlIDE3LXBvaW50IG9wZW5pbmcgdG9kYXkgc2hvd2VkIHdoYXQgbWlnaHQgaGF2ZSBiZWVuIHBvc3NpYmxlIHdpdGggYmV0dGVyIHRpbWluZy4gRGF2aWQgTXVsbGluIGNsYWltZWQgZm91cnRoIGluIGJvdGggY29tcGV0aXRpb25zLCB3aGlsc3QgSm9uIEJha2VyJ3MgZGlzdGFudCBmaWZ0aC1wbGFjZSBmaW5pc2hlcyBjb25maXJtZWQgYSB3ZWVrIHRvIGZvcmdldCBhdCB0aGUgU3RhZGl1bSBjb3Vyc2UuCgojIyMgUm91bmQgSGlnaGxpZ2h0cwoKLSBHcmVnZyBXaWxsaWFtcycgb3BlbmluZyBzYWx2bzogMzIgcG9pbnRzIHRocm91Z2ggdGhlIGZpcnN0IHR3ZWx2ZSBob2xlcyBlc3RhYmxpc2hlZCBjb21wbGV0ZSByb3VuZCBkb21pbmFuY2UKLSBKb2huIFBhdHRlcnNvbidzIDE3LXBvaW50IGV4cGxvc2lvbiB0aHJvdWdoIGhvbGVzIDEtNiBicmllZmx5IHRocmVhdGVuZWQgdGhlIGVzdGFibGlzaGVkIG9yZGVyCi0gSG9sZSAxNCdzIGNhcm5hZ2U6IFRoZSBwYXItNCBhdmVyYWdlZCA3LjAgc3Ryb2tlcyBhbmQgeWllbGRlZCBqdXN0IDAuOCBTdGFibGVmb3JkIHBvaW50cywgdGhlIHdlZWsncyB0b3VnaGVzdCBleGFtaW5hdGlvbgotIEFsZXggQmFrZXIncyBwcmFnbWF0aWMgZnJvbnQgbmluZTogMTkgcG9pbnRzIGxhaWQgdGhlIGZvdW5kYXRpb24gZm9yIFRyb3BoeSBzZWN1cml0eSBkZXNwaXRlIGxhdGVyIHN0cnVnZ2xlcwotIEpvbiBCYWtlcidzIG1pZGRsZS1zdHJldGNoIGNvbGxhcHNlOiBKdXN0IDcgcG9pbnRzIHRocm91Z2ggaG9sZXMgNy0xMiBlcGl0b21pc2VkIGhpcyB0b3VybmFtZW50LWxvbmcgYmF0dGxlcwoKIyMjIFBsYXllciBTdW1tYXJpZXMKCioqQWxleCBCQUtFUiAoMXN0IFRyb3BoeSwgNXRoIEphY2tldCk6KiogSGlzIDM4LXBvaW50IGZpbmFsZSBsYWNrZWQgdGhlIHNwYXJrbGUgb2YgZWFybGllciByb3VuZHMgYnV0IGRlbGl2ZXJlZCB0aGUgb25seSBzdGF0aXN0aWMgdGhhdCBtYXR0ZXJlZOKAlHRoZSBURUcgVHJvcGh5LiBTdHJvbmcgZnJvbnQgbmluZSAoMTkgcG9pbnRzKSBwcm92aWRlZCB0aGUgaW5zdXJhbmNlIGhpcyB3ZWFrIGNsb3Npbmcgc3RyZXRjaCAoMTEgcG9pbnRzKSBuZWFybHkgc3F1YW5kZXJlZC4KCioqSm9obiBQQVRURVJTT04gKDJuZCBUcm9waHksIDR0aCBKYWNrZXQpOioqIEZpbmlzaGVkIGVpZ2h0IHBvaW50cyBzaHkgZGVzcGl0ZSBhIDQyLXBvaW50IGVmZm9ydCB0aGF0IHNob3djYXNlZCBib3RoIGJyaWxsaWFuY2UgKDE3IHBvaW50cyBvcGVuaW5nIHNpeCkgYW5kIHZ1bG5lcmFiaWxpdHkgKDEwIHBvaW50cyBtaWRkbGUgc3RyZXRjaCkuIEhpcyBzdHJvbmcgMTUtcG9pbnQgcmVjb3Zlcnkgb3ZlciB0aGUgZmluYWwgc2l4IGNhbWUgdG9vIGxhdGUgdG8gbWF0dGVyLgoKKipHcmVnZyBXSUxMSUFNUyAoM3JkIFRyb3BoeSwgMXN0IEphY2tldCk6KiogVGhlIHdlZWsncyBmaW5lc3Qgcm91bmTigJQ0NCBwb2ludHMgYW5kICsxMiBncm9zc+KAlHNlY3VyZWQgdGhlIEdyZWVuIEphY2tldCBieSAxNCBzdHJva2VzIGJ1dCBmaW5pc2hlZCBuaW5lIHBvaW50cyBiZWhpbmQgaW4gdGhlIFRyb3BoeSByYWNlLiBIaXMgMzIgcG9pbnRzIHRocm91Z2ggdGhlIG9wZW5pbmcgdHdlbHZlIGhvbGVzIHJlcHJlc2VudGVkIHBlYWsgcGVyZm9ybWFuY2UgYXJyaXZpbmcgb25lIHJvdW5kIHRvbyBsYXRlLgoKKipEYXZpZCBNVUxMSU4gKDR0aCBUcm9waHksIDJuZCBKYWNrZXQpOioqIEEgZGlzYXBwb2ludGluZyAzOC1wb2ludCBjb25jbHVzaW9uIChkb3duIGZyb20gNDQgaW4gUm91bmQgMykgZmVhdHVyZWQgYSBzdHJvbmcgc3RhcnQgKDE1IHBvaW50cyBvcGVuaW5nIHNpeCkgdW5kZXJtaW5lZCBieSBhIHBvb3IgZmluaXNoICgxMCBwb2ludHMgY2xvc2luZyBzdHJldGNoKS4gRmluaXNoZWQgMjAgcG9pbnRzIGJlaGluZCB0aGUgVHJvcGh5IGFuZCAxNCBzdHJva2VzIGJlaGluZCB0aGUgSmFja2V0LgoKKipKb24gQkFLRVIgKDV0aCBUcm9waHksIDV0aCBKYWNrZXQpOioqIE1hbmFnZWQganVzdCAyOSBwb2ludHMgdG8gY2xvc2UgYSBmb3JnZXR0YWJsZSB3ZWVrLCB3aXRoIGNvbnNpc3RlbnQgbWVkaW9jcml0eSAoMTEtNy0xMSBzaXgtaG9sZSBzcGxpdHMpIGxlYXZpbmcgaGltIDQzIHBvaW50cyBiZWhpbmQgaW4gdGhlIFRyb3BoeSByYWNlIGFuZCAyNiBzdHJva2VzIGFkcmlmdCBpbiB0aGUgSmFja2V0IGNvbXBldGl0aW9uLgoK
+# TEG 18 - Round 4 Report
+
+---
+
+## Story Notes
+
+## Round Summary
+- **Round Winner (Stableford):** Gregg WILLIAMS (44 pts Stableford)
+- **Round Winner (Gross):** Gregg WILLIAMS (+12 gross vs par)
+- **Tournament Leader (Stableford):** Alex BAKER (169 pts total) - WINS TROPHY
+- **Tournament Leader (Gross):** Gregg WILLIAMS (+66 gross vs par) - WINS JACKET
+- **Biggest Mover:** No position changes this round
+- **Drama Level:** High - Final round carnage at H14 & H18, course record equaled
+
+## Key Moments
+- H5: Gregg WILLIAMS birdie (-1 vs par) - building momentum early
+- H12: Alex BAKER 4 points on H12 (Par 5) - briefly steadies the ship
+- H13: Jon BAKER birdie (-1 vs par) - rare bright spot in difficult round
+- H14: Alex BAKER disaster (10 on Par 4, 0 pts) - quintuple bogey devastation but holds Trophy lead
+- H14: John PATTERSON triple bogey on Par 4 - the killer hole strikes again
+- H17: John PATTERSON birdie (5 pts including handicap strokes) - dramatic late rally
+- H18: Final hole carnage - Gregg WILLIAMS, Jon BAKER, John PATTERSON all post triple bogeys
+- H18: Gregg WILLIAMS triple bogey still secures course record (+12 vs par, equals David MULLIN R3)
+
+## How Positions Changed
+- **Start of round (Stableford):** Alex BAKER (131 pts) | John PATTERSON (119 pts) | Gregg WILLIAMS (116 pts) | David MULLIN (111 pts) | Jon BAKER (97 pts)
+- **Start of round (Gross):** Gregg WILLIAMS (+54) | David MULLIN (+62) | Jon BAKER (+67) | John PATTERSON (+73) | Alex BAKER (+88)
+- **Key shifts:** No position changes - all players maintained starting positions throughout
+- **End of round (Stableford):** Alex BAKER (169 pts) | John PATTERSON (161 pts) | Gregg WILLIAMS (160 pts) | David MULLIN (149 pts) | Jon BAKER (126 pts)
+- **End of round (Gross):** Gregg WILLIAMS (+66) | David MULLIN (+80) | Jon BAKER (+92) | John PATTERSON (+95) | Alex BAKER (+124)
+
+## Hot Spells (Net)
+- Gregg WILLIAMS holes 5-10: 18 pts
+- John PATTERSON holes 1-3: 11 pts (4 points on H1)
+
+## Hot Spells (Gross)
+- Gregg WILLIAMS holes 3-8: Avg +0.17 vs par (birdie on H5)
+- Gregg WILLIAMS holes 5-10: Avg +0.17 vs par (sustained excellence)
+- Gregg WILLIAMS holes 4-6: Avg 0.00 vs par
+
+## Cold Spells (Net)
+- Alex BAKER holes 2-4: 5 pts (triple bogeys on H3, H4)
+- Alex BAKER holes 7-9: 5 pts (triple bogeys on H7, H9)
+- Alex BAKER holes 12-14: 7 pts (includes H14 disaster)
+- David MULLIN holes 14-16: 3 pts (0 pts on H15 triple bogey)
+
+## Cold Spells (Gross)
+- Alex BAKER holes 2-4: Avg +2.33 vs par (back-to-back triple bogeys)
+- Alex BAKER holes 7-9: Avg +2.33 vs par (more triple bogeys)
+- Alex BAKER holes 12-14: Avg +2.67 vs par (includes quintuple bogey)
+- Alex BAKER holes 13-15: Avg +3.00 vs par (worst stretch of round)
+- David MULLIN holes 14-16: Avg +2.33 vs par
+
+## Front/Back 9 Patterns
+- John PATTERSON: Strong starter - F9: 23 pts, B9: 19 pts (diff: +4)
+- Gregg WILLIAMS: Strong starter - F9: 24 pts, B9: 20 pts (diff: +4)
+- David MULLIN: Strong starter - F9: 21 pts, B9: 17 pts (diff: +4)
+
+## Round Stats
+- **Hardest hole:** H14 (Par 4, avg +3.0 vs par) - the tournament killer
+- **Easiest hole:** H1, H5, H13 (tied, avg +0.4 vs par)
+- **Best individual performance:** Gregg WILLIAMS (44 pts / +12 gross vs par) - equals course record
+- **Worst collapse:** Alex BAKER (6 triple bogeys + 1 quintuple bogey in round, but survives to win Trophy)
+
+## Player Notes
+- **Alex BAKER:** 38 pts (joint 3rd round), +36 gross vs par (5th) - survived catastrophic round with 6 triple bogeys and quintuple bogey on H14, but 8-point Stableford cushion held for Trophy victory. Led wire-to-wire all 4 rounds.
+- **John PATTERSON:** 42 pts (2nd round), +22 gross vs par (3rd) - strong front 9 (23 pts) and brilliant H17 birdie (5 pts), finished 2nd Trophy (161 pts), 4th Jacket (+95).
+- **Gregg WILLIAMS:** 44 pts (1st round), +12 gross vs par (1st) - dominant performance equals course record despite H18 triple bogey, wins Jacket (+66 total), 3rd Trophy (160 pts). Led Gross competition all 4 rounds.
+- **David MULLIN:** 38 pts (joint 3rd round), +18 gross vs par (2nd) - solid front 9 (21 pts) undone by H15 disaster (0 pts), finished 4th Trophy (149 pts), 2nd Jacket (+80).
+- **Jon BAKER:** 29 pts (5th round), +25 gross vs par (4th) - struggled throughout with only H13 birdie highlight, finished 5th both competitions (126 pts Trophy, +92 Jacket).
+
+---
+
+## Round Report
+
+# Williams Equals Course Record as Baker Survives Final-Round Carnage
+**PGA Catalunya - Stadium • October 14, 2025 • Round 4 of 4**
+
+### Round Summary
+
+Alex Baker arrived at the final round with an eight-point Stableford cushion and proceeded to deliver one of the most catastrophic rounds in TEG history—six triple bogeys and a quintuple bogey disaster at the 14th. Yet his lead proved just large enough, as he held on to claim the TEG Trophy by eight points from John Patterson. Meanwhile, Gregg Williams dominated the Gross competition with a stunning +12 performance that equaled David Mullin's course record from Round 3, securing the Green Jacket by 14 strokes despite a triple bogey at the final hole.
+
+The final round became a test of survival on a course that showed its teeth. The par-4 14th proved the tournament's killer hole, claiming victims across the leaderboard, while the 18th delivered a dramatic finale with three players posting triple bogeys. Through the carnage, Williams played the round of the tournament with exceptional control through the front nine and middle holes, while Alex Baker somehow navigated his personal disaster to win the Trophy he'd led from the opening round.
+
+### How It Unfolded
+
+The final round began with contrasting fortunes on the front nine. John Patterson exploded from the gates with 11 points across the opening three holes, including four points at the 1st, mounting an early charge. Williams steadily built momentum with a birdie at the 5th and sustained excellence through holes 3-8, where he averaged just 0.17 over par. Alex Baker, however, stumbled immediately with back-to-back triple bogeys at the 3rd and 4th, then replicated the horror show at the 7th and 9th—four triple bogeys before reaching the turn.
+
+Patterson's strong start (23 points on the front nine) and Williams' controlled brilliance (24 points) kept pressure on the Trophy leader, but Baker's cushion from previous rounds kept him ahead despite averaging 2.33 over par through those early disaster stretches. Williams continued his exceptional form through the middle holes, posting another stretch averaging 0.17 over par from holes 5-10, building an 18-point haul that would prove decisive for the Jacket.
+
+The back nine brought the tournament's defining moment at the par-4 14th, where the field averaged three over par. Alex Baker suffered a quintuple bogey catastrophe—a 10 on the card and zero Stableford points—that briefly threatened even his comfortable lead. Patterson also found grief with a triple bogey, seemingly ending his Trophy challenge. Yet Baker's earlier cushion held firm, and he steadied with four points at the 12th par-5 to maintain his advantage.
+
+The final holes delivered high drama. Patterson refused to surrender, posting a brilliant five-point birdie at the 17th that included handicap strokes, mounting one last rally. But the 18th became a graveyard—Williams, Jon Baker, and Patterson all posted triple bogeys in a chaotic finish. Even with that stumble, Williams' +12 round equaled the course record and sealed the Jacket by a commanding margin. Alex Baker limped home with his eighth triple bogey of the round but crossed the line with the Trophy he'd never relinquished.
+
+### Standings After Round 4
+
+**Round 4 Stableford:** GW 44 | JP 42 | AB 38 | DM 38 | JB 29  
+**Round 4 Gross:** GW +12 | DM +18 | JP +22 | JB +25 | AB +36
+
+**Tournament Stableford:** AB 169 | JP 161 | GW 160 | DM 149 | JB 126  
+**Tournament Gross:** GW +66 | DM +80 | JB +92 | JP +95 | AB +124
+
+### How The Tournament Was Won
+
+Alex Baker's wire-to-wire victory in the Stableford competition was defined not by flourish but by relentless consistency and a cushion large enough to survive disaster. Leading after every single round and holding the advantage across all 72 holes, Baker never allowed a challenger to taste the lead. His eight-point margin entering the final round proved the difference when his game completely collapsed—six triple bogeys and a quintuple bogey would have destroyed most leads, but the foundation built over three solid rounds held firm.
+
+The battle dynamics shifted as the tournament progressed from competitive to runaway. What began as a tight contest evolved into a comfortable lead by Round 3, with Baker's nearest challenger never closer than eight points after Round 2. Even his final-round implosion couldn't bridge that gap—testament to the dominance he'd established earlier. John Patterson's strong finish (42 points in Round 4) earned second place but never truly threatened the Trophy.
+
+Williams' Green Jacket victory followed a similar wire-to-wire pattern in the Gross competition, leading all four rounds and winning by 14 strokes. His course-record-equaling +12 in the finale—featuring sustained brilliance through the front and middle holes despite the 18th hole disaster—provided the exclamation point. While Baker survived to claim the Trophy, Williams soared to win the Jacket with a performance that combined consistency with a spectacular final round, proving that on this course, two very different paths could lead to victory.
+
+### Round Highlights
+
+- Gregg Williams equals course record with +12 gross despite triple bogey at 18th, wins Green Jacket by 14 strokes
+- Alex Baker posts six triple bogeys and quintuple bogey at 14th but eight-point cushion survives for Trophy victory  
+- The par-4 14th averages +3.0 vs par—the tournament's killer hole claims multiple victims in final round
+- John Patterson rallies late with five-point birdie at 17th but joins final-hole carnage with triple bogey
+- Final-hole disaster sees Williams, Jon Baker, and Patterson all post triple bogeys in chaotic finish
+
+### Player Summaries
+
+**Alex Baker:** Led wire-to-wire across all 72 holes to win the TEG Trophy (169 points) despite catastrophic final round (38 points, +36) featuring six triple bogeys and quintuple bogey at 14th. Eight-point entering cushion proved decisive.
+
+**Gregg Williams:** Dominant performance equals David Mullin's course record (+12) and secures Green Jacket by 14 strokes (+66 total). Led Gross competition all four rounds with exceptional control through front and middle holes despite 18th hole triple bogey.
+
+**John Patterson:** Strong finish (42 points, +22) with brilliant five-point birdie at 17th earns second in Trophy (161 points) but couldn't overcome deficit. Finished fourth in Jacket (+95).
+
+**David Mullin:** Solid front nine (21 points) undone by 15th hole disaster (zero points). Fourth in Trophy (149 points), runner-up in Jacket (+80), 14 strokes behind Williams.
+
+**Jon Baker:** Struggled throughout final round (29 points, +25) with only 13th hole birdie providing relief. Finished fifth in both competitions (126 points Trophy, +92 Jacket).
+

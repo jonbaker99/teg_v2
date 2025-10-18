@@ -5,124 +5,143 @@
 ## Story Notes
 
 ## Round Summary
-- **Round Winner (Stableford):** Alex BAKER and David MULLIN (44 pts Stableford each)
+- **Round Winner (Stableford):** Alex BAKER (44 pts Stableford) and David MULLIN (44 pts Stableford) [tied]
 - **Round Winner (Gross):** David MULLIN (+12 gross vs par)
 - **Tournament Leader (Stableford):** Alex BAKER (leads by 12 pts)
 - **Tournament Leader (Gross):** Gregg WILLIAMS (+54 gross vs par)
-- **Biggest Mover:** David MULLIN (+1 position)
-- **Drama Level:** Low
+- **Biggest Mover:** David MULLIN (+1 position Stableford, +1 position Gross)
+- **Drama Level:** High
 
 ## Key Moments
-- H1-6: David MULLIN's blistering start (17 pts in first six holes) sets up his co-round win
-- H5: Easiest hole of the day (Par 3, avg 3.4) - all players scored well
-- H4: The hardest hole claims victims (Par 4, avg 6.0) - 2.0 over par average
-- H7-12: Alex BAKER builds momentum (14 pts in second six)
-- H13-18: Alex BAKER's dominant closing stretch (18 pts in final six holes) seals round victory
-- H13-18: Jon BAKER struggles down the stretch (only 8 pts in final six) - drops from 4th to 5th
+- H1: David MULLIN 4 points on H1 (Par 4) - strong start
+- H2: Jon BAKER triple bogey (0 pts) - loses Jacket lead to Gregg WILLIAMS after only 1 hole
+- H2: Alex BAKER triple bogey (1 pt) - early stumble but maintains Trophy lead
+- H4: Jon BAKER quintuple bogey (0 pts) - catastrophic meltdown
+- H10: David MULLIN birdie - only gross birdie of the round
+- H11-14: Alex BAKER hot streak (12 pts over 4 holes including 4 points on holes 11, 13, 14)
+- H13: David MULLIN triple bogey (0 pts) - brief setback during back nine
+- H18: Final hole completes round with Gregg WILLIAMS securing Jacket lead
 
 ## How Positions Changed
-- **Start of round (Stableford):** Alex BAKER (1st), John PATTERSON (2nd), Gregg WILLIAMS (3rd), Jon BAKER (4th), David MULLIN (5th)
-- **Start of round (Gross):** Gregg WILLIAMS (1st, +41), David MULLIN (2nd, +50), Jon BAKER (3rd, +52), John PATTERSON (4th, +52), Alex BAKER (5th, +60)
-- **Key shifts:** Minimal position changes - David MULLIN and Jon BAKER swap 4th/5th place
-- **End of round (Stableford):** Alex BAKER (1st), John PATTERSON (2nd), Gregg WILLIAMS (3rd), David MULLIN (4th), Jon BAKER (5th)
-- **End of round (Gross):** Gregg WILLIAMS (1st, +54), David MULLIN (2nd, +62), Jon BAKER (3rd, +67), John PATTERSON (4th, +73), Alex BAKER (5th, +88)
+- **Start of round (Stableford):** Alex BAKER 87 pts | John PATTERSON 76 pts | Gregg WILLIAMS 73 pts | Jon BAKER 69 pts | David MULLIN 67 pts
+- **Start of round (Gross):** Jon BAKER +39 | Gregg WILLIAMS +41 | David MULLIN +50 | John PATTERSON +52 | Alex BAKER +60
+- **Key shifts:** H2 (Jon BAKER loses Jacket lead), H1-3 (Alex BAKER struggles early, maintains Trophy lead throughout)
+- **End of round (Stableford):** Alex BAKER 131 pts | John PATTERSON 119 pts | Gregg WILLIAMS 116 pts | David MULLIN 111 pts | Jon BAKER 97 pts
+- **End of round (Gross):** Gregg WILLIAMS +54 | David MULLIN +62 | Jon BAKER +67 | John PATTERSON +73 | Alex BAKER +88
 
-## Round Breakdown
-**Holes 1-6 (Opening):**
-- David MULLIN dominates opening stretch with 17 pts (best of field)
-- Gregg WILLIAMS strong with 15 pts
-- Alex BAKER struggles early with only 12 pts
-- H5 (Par 3) easiest hole, avg 3.4 strokes
-- H4 (Par 4) proves toughest, avg 6.0 strokes (2.0 over par)
+## Hot Spells (Net)
+- Alex BAKER holes 11-16: 21 pts (4 points on H11 (Par 3), 4 points on H13 (Par 4), 4 points on H14 (Par 4))
+- Alex BAKER holes 11-13: 11 pts
+- Alex BAKER holes 12-14: 11 pts
+- Alex BAKER holes 13-15: 11 pts
+- David MULLIN holes 5-10: 18 pts (birdie on H10)
 
-**Holes 7-12 (Middle):**
-- David MULLIN maintains excellence with 16 pts
-- Alex BAKER and Gregg WILLIAMS each post 14 pts
-- John PATTERSON and Jon BAKER steady with 13 and 10 pts respectively
-- Field averages remain consistent across this stretch
+## Hot Spells (Gross)
+- Gregg WILLIAMS holes 2-4: Avg E vs par
+- Gregg WILLIAMS holes 3-5: Avg E vs par
+- David MULLIN holes 1-3: Avg E vs par
+- David MULLIN holes 8-10: Avg E vs par (birdie on H10)
+- David MULLIN holes 1-6: Avg +0.17 vs par
+- David MULLIN holes 5-10: Avg +0.17 vs par
 
-**Holes 13-18 (Closing):**
-- Alex BAKER produces stellar finish with 18 pts (best closing six of day)
-- John PATTERSON matches with 17 pts
-- David MULLIN fades slightly to 11 pts but holds position
-- Jon BAKER collapses with only 8 pts, allowing David MULLIN to overtake
-- Gregg WILLIAMS steady with 14 pts maintains 3rd
+## Cold Spells (Net)
+- Jon BAKER holes 2-4: significant struggles (0 pts on H2, 0 pts on H4)
+
+## Cold Spells (Gross)
+- Alex BAKER holes 1-3: Avg +2.33 vs par (triple bogey on H2, triple bogey on H3)
+- Alex BAKER holes 2-4: Avg +2.33 vs par
+- Alex BAKER holes 6-8: Avg +2.33 vs par (triple bogey on H6)
+- Alex BAKER holes 8-10: Avg +2.33 vs par (triple bogey on H10)
+- Jon BAKER holes 2-4: Avg +2.67 vs par (triple bogey on H2, quintuple bogey on H4)
+
+## Front/Back 9 Patterns
+- **Alex BAKER:** Strong finisher - F9: 18 pts, B9: 26 pts (diff: -8)
+- **David MULLIN:** Strong starter - F9: 25 pts, B9: 19 pts (diff: +6)
 
 ## Round Stats
-- **Hardest hole:** H4 (Par 4, avg 2.0 vs par)
-- **Easiest hole:** H5 (Par 3, avg 0.4 vs par)
-- **Best individual performance:** Alex BAKER and David MULLIN (44 pts each, Alex improved +3 from R2, David improved +9 from R2)
-- **Worst collapse:** Jon BAKER (28 pts, down 11 from R2's 39 pts)
+- **Hardest hole:** H4 (Par 4, avg +2.0 vs par)
+- **Easiest hole:** H5 (Par 3, avg +0.4 vs par)
+- **Best individual performance:** David MULLIN (84 gross/+12 vs par) - new PGA Catalunya - Stadium course record
+- **Worst collapse:** Jon BAKER (H2-4: triple bogey, quintuple bogey, lost Jacket lead)
 
 ## Player Notes
-- **Alex BAKER:** 44 pts Stableford, +28 gross - Co-round winner, extends Trophy lead to 12 pts with dominant back nine (26 pts); closed with tournament-best 18 pts on final six holes
-- **David MULLIN:** 44 pts Stableford, +12 gross - Co-round winner and best gross score of day; surged from 5th to 4th in Trophy with explosive 17-pt opening six; now 20 pts back in Trophy, sits 2nd in Jacket (8 strokes behind Gregg WILLIAMS)
-- **Gregg WILLIAMS:** 43 pts Stableford, +13 gross - Consistent 43 pts holds 3rd place in Trophy; extends Jacket lead with solid +13 gross; balanced performance (21 front, 22 back)
-- **Jon BAKER:** 28 pts Stableford, +28 gross - Disastrous round drops from 4th to 5th in Trophy; scored only 8 pts on closing six holes; massive 11-pt decline from R2's 39 pts; now 34 pts off Trophy lead
-- **John PATTERSON:** 43 pts Stableford, +21 gross - Solid 43 pts maintains 2nd place in Trophy, 12 pts behind Alex BAKER; strong closing stretch (17 pts on final six) keeps him in contention heading to final round
+- **Alex BAKER:** 44 pts Stableford (tied round win), maintained Trophy lead throughout despite rocky front 9 (18 pts F9, 26 pts B9), finished with commanding 12-point lead
+- **David MULLIN:** 44 pts Stableford (tied round win), 84 gross/+12 vs par (round win, NEW COURSE RECORD), moved up 1 position in both competitions, only player with gross birdie (H10)
+- **Gregg WILLIAMS:** 43 pts Stableford, 85 gross/+13 vs par (2nd best gross), took Jacket lead on H2 after Jon BAKER collapse, steady throughout with no disasters
+- **Jon BAKER:** 28 pts Stableford, 100 gross/+28 vs par, catastrophic round with quintuple bogey on H4, dropped from 1st to 3rd in Jacket after starting as leader
+- **John PATTERSON:** 43 pts Stableford, 93 gross/+21 vs par, solid round with 4 points on H16 and H18, maintained 2nd in Trophy
 
 ---
 
 ## Round Report
 
-## Baker and Mullin Share Spoils as Trophy Leader Extends Advantage
-**PGA Catalunya - Stadium • 13/10/2025 • Round 3 of 4**
+# Alex Baker and Mullin Share Round Honours as Trophy Race Opens Up
 
-### Round Summary
+**PGA Catalunya - Stadium • 13 October 2025 • Round 3 of 4**
 
-Alex Baker arrived at PGA Catalunya's Stadium Course with a slender lead and a simple mission: don't let anyone close the gap. He delivered emphatically, sharing round honours with David Mullin on 44 Stableford points to extend his TEG Trophy advantage to a commanding 12 points with just one round remaining. The co-leaders produced contrasting routes to their shared victory—Mullin exploded out of the blocks with 17 points in the opening six holes, while Baker saved his best for last, posting a tournament-high 18 points over the closing stretch to seal his dominance.
+## Round Summary
 
-In the Green Jacket race, Gregg Williams quietly consolidated his position at the top, posting a steady 43 Stableford points and +13 gross to extend his lead over Mullin to eight strokes. The day's biggest casualty was Jon Baker, whose dismal 28-point collapse saw him tumble from fourth to fifth in the Trophy standings, ceding his position to the resurgent Mullin.
+Alex Baker came into Round 3 with a comfortable 11-point lead in the TEG Trophy, while his older brother Jon held a precarious 2-stroke advantage in the Green Jacket. By day's end, the younger Baker had extended his Trophy cushion to 12 points despite early struggles, while the older Baker's Jacket aspirations lay in tatters after a catastrophic front nine.
 
-With just 18 holes left to play, Baker now stands on the cusp of Trophy glory, while Williams edges closer to Green Jacket honours in what has become a two-horse race for the gross title.
+The round belonged to Alex Baker and David Mullin, who shared top honours with identical 44-point Stableford performances. But it was Mullin who stole the headlines, carding a stunning 84 gross strokes – 12 over par – to claim the round's Gross victory and establish a new PGA Catalunya Stadium course record. The 44-year-old's remarkable display included the round's only birdie, coming at the par-4 10th, and moved him up to fourth in the Trophy standings whilst climbing to second in the Jacket race.
 
-### How It Unfolded
+The day's most dramatic narrative unfolded in the opening holes, where Jon Baker's Jacket lead evaporated in spectacular fashion with a triple bogey at the 2nd followed by a quintuple-bogey disaster at the par-4 4th. Those collapses handed the Jacket lead to Gregg Williams, who played steady golf throughout to post 43 Stableford points and consolidate his position atop the Gross standings.
 
-David Mullin came out firing from the first tee, intent on making up ground after a disappointing second round. His blistering opening six holes yielded 17 Stableford points, the best opening salvo of the day, as he took advantage of benign early conditions and found his rhythm immediately. Gregg Williams matched his intensity with 15 points over the same stretch, maintaining his steady presence near the top of the leaderboard. Meanwhile, Alex Baker appeared unusually tentative, managing just 12 points—solid enough, but not the commanding start expected from the tournament leader.
+## How It Unfolded
 
-The par-4 4th proved the day's toughest examination, playing two full strokes over par on average and claiming victims across the field. Yet it was the par-3 5th that offered respite, playing to just 0.4 over par as all five competitors found scoring opportunities.
+**Front Nine Chaos**
 
-Through the middle six holes, Mullin refused to relent, adding another 16 points to stay firmly in contention. Baker and Williams both posted 14 points apiece, keeping the Trophy race tight, while John Patterson's steady 13 points and Jon Baker's faltering 10 suggested the latter might be heading for trouble.
+The round erupted into drama from the opening holes. Mullin signalled his intentions immediately with 4 points at the 1st, showcasing the form that would carry him through a superb front nine. Meanwhile, disaster struck for both Baker brothers at the 2nd hole – Jon's triple bogey surrendered his overnight Jacket lead to Williams after holding it for just one hole, whilst Alex also stumbled to a triple, briefly threatening his Trophy dominance.
 
-Then came the decisive final stretch. Baker, who had been conserving energy and waiting for his moment, produced the round's defining performance—18 Stableford points over the closing six holes, a masterclass in execution when it mattered most. Patterson matched his intensity with 17 points of his own, ensuring he stayed within striking distance for the final round. But while Baker and Patterson surged, Jon Baker imploded spectacularly, scraping together just eight points over the same stretch. That catastrophic finish allowed Mullin, despite fading slightly to 11 points, to leapfrog him into fourth place. Williams, true to form, ground out 14 more points to maintain his position and extend his Jacket advantage.
+But Jon's struggles were only beginning. At the par-4 4th – the day's hardest hole averaging 2 over par – the older Baker endured a quintuple-bogey meltdown worth zero Stableford points. Combined with his earlier triple, the cold spell over holes 2-4 effectively ended his Jacket challenge. Alex fared little better through this stretch, adding another triple at the 3rd, but his superior handicap cushion kept him atop the Trophy leaderboard despite the rocky start.
 
-### Standings After Round 3
+Mullin dominated the front nine with 25 points, playing consistently around par through the opening six holes. His steady brilliance continued through a hot spell from holes 5-10 where he accumulated 18 points, setting himself up perfectly for the back nine assault.
 
-**Round 3 Stableford:** AB 44 | DM 44 | GW 43 | JP 43 | JB 28
+**Back Nine Brilliance**
 
+If the front nine belonged to survival, the back nine was all about Alex Baker's resurgence. The younger Baker came alive over holes 11-16, producing a blistering 21-point burst that featured 4-point hauls at the par-3 11th and both the par-4 13th and 14th. This hot streak – his best six-hole stretch yielding 21 points – effectively shut the door on any Trophy challengers and demonstrated why he's maintained his lead throughout the tournament.
+
+Mullin's back nine featured both the sublime and the momentary lapse. His birdie at the 10th – the round's only one – highlighted his exceptional ball-striking that underpinned his record-breaking gross score. However, a triple bogey at the 13th briefly threatened to derail his momentum before he steadied to finish with 19 back-nine points and secure his share of the round victory.
+
+Williams played the percentages beautifully, avoiding the disasters that befell others whilst posting a solid 85 gross strokes (13 over par) – the round's second-best gross performance. His consistency proved the perfect antidote to Jon Baker's implosion, and he closed out the round to cement his Jacket lead heading into the final day. John Patterson also posted 43 Stableford points with late 4-point scores at both the 16th and 18th, maintaining his second place in the Trophy race.
+
+## Standings After Round 3
+
+**Round 3 Stableford:** AB 44 | DM 44 | GW 43 | JP 43 | JB 28  
 **Round 3 Gross:** DM +12 | GW +13 | JP +21 | AB +28 | JB +28
 
-**Tournament Stableford:** AB 131 | JP 119 | GW 116 | DM 111 | JB 97
-
+**Tournament Stableford:** AB 131 | JP 119 | GW 116 | DM 111 | JB 97  
 **Tournament Gross:** GW +54 | DM +62 | JB +67 | JP +73 | AB +88
 
-### What's At Stake
+## What's At Stake
 
-**With one round remaining:**
+**With 1 round remaining:**
 
-Alex Baker's 12-point Trophy cushion appears virtually insurmountable. To surrender the lead, he'd need to collapse to 32 points or fewer while John Patterson posts 45+ points—a scenario requiring both a career-worst meltdown and a career-best performance simultaneously. More realistically, Baker simply needs to avoid disaster; even a pedestrian 38-point round should secure the Trophy if Patterson maxes out at 44. The battle for second is far more intriguing, with just three points separating Patterson (119) from Williams (116), and Mullin (111) still mathematically capable of reaching the podium with a stellar final round.
+Alex Baker's 12-point Trophy lead looks commanding but remains far from insurmountable with 18 holes to play. John Patterson, trailing by 12 points in second, needs to win the final round outright whilst hoping Baker falters – a tall order given the younger Baker's ability to post big numbers, as his 26-point back nine today demonstrated. Patterson needs roughly 48-50 points to have any realistic chance if Baker posts an average round.
 
-In the Jacket race, Williams holds an eight-stroke advantage over Mullin heading into the finale. History suggests that's a healthy but not insurmountable margin over 18 holes at PGA Catalunya. Williams needs to keep his ball-striking consistent and avoid the blow-up holes that have plagued others this week. Mullin, meanwhile, must produce something special—likely matching or bettering his excellent +12 from today—while hoping Williams stumbles. Jon Baker sits five strokes further back in third, needing both leaders to falter badly to have any chance.
+Williams sits third, 15 points back, requiring an exceptional final round combined with significant stumbles from both players ahead. More realistically, he's fighting to secure third place whilst defending his Jacket lead. Mullin's surge to fourth (20 points behind) has revived his Trophy hopes mathematically, though he'd need something approaching today's heroics plus considerable fortune.
 
-The mathematics are brutal for Jon Baker in the Trophy race: even a spectacular 44-point final round likely won't rescue fourth place from Mullin, who holds a 14-point advantage. At this stage, Baker's focus might shift entirely to protecting third place in the Jacket standings.
+The Green Jacket race is far more open. Williams leads by 8 strokes over Mullin, with Jon Baker a further 5 back in third after today's implosion. An 8-stroke gap is highly catchable over 18 holes, particularly with Mullin's record-breaking form suggesting he has the game to mount a serious challenge. Williams needs to average around 16-18 over par to stay ahead if Mullin replicates anything close to today's brilliance. Jon Baker remains mathematically alive but faces a 13-stroke deficit and the psychological scars of today's disasters.
 
-### Round Highlights
+The final-round narrative is clear: Can Alex Baker close out the Trophy, or will Patterson produce something special? And in the Jacket race, will Williams's steady consistency withstand Mullin's form surge, or could we see the 44-year-old complete a remarkable tournament comeback with both the course record and the Green Jacket?
 
-- David Mullin's explosive 17-point opening six holes announced his return to form in spectacular fashion
-- Alex Baker's tournament-defining 18-point finish over the closing six holes—the best closing stretch of the week
-- Jon Baker's catastrophic collapse from 4th to 5th after managing just 8 points over the final six holes
-- The par-4 4th playing as a proper monster, averaging 2.0 strokes over par
-- Gregg Williams' quietly impressive consistency—43 Stableford points for the third time this week
+## Round Highlights
 
-### Player Summaries
+- David Mullin's 84 gross strokes (12 over par) establishes new PGA Catalunya Stadium course record
+- Jon Baker's quintuple-bogey disaster at the 4th hole destroys his Green Jacket lead
+- Alex Baker's 21-point surge over holes 11-16 featuring three 4-point scores
+- David Mullin's birdie at the 10th – the round's only one
+- Gregg Williams's steady brilliance claims the Jacket lead without a single disaster
 
-**Alex Baker:** Produced when it mattered most, saving 18 points for a commanding final six holes to co-win the round with 44 Stableford points. Now holds a near-decisive 12-point Trophy advantage heading into the finale, though his +28 gross leaves him well back in the Jacket race.
+## Player Summaries
 
-**David Mullin:** Stormed back into contention with a brilliant co-round win (44 Stableford, +12 gross), featuring a blistering 17-point opening stretch. Climbed to 4th in the Trophy standings and sits second in the Jacket, eight strokes behind Williams with everything to play for.
+**Alex Baker:** Joint round winner with 44 Stableford points despite triple bogeys at the 2nd, 3rd, and 6th; dominated the back nine with 26 points including a hot spell from holes 11-16 (21 points); extends Trophy lead to commanding 12 points heading into final round but slipped to 5th in Jacket race (88 over par).
 
-**Gregg Williams:** The model of consistency with another 43-point performance, maintaining 3rd place in the Trophy while extending his Jacket lead to eight strokes. His balanced 21-22 split demonstrates the steady scoring that has him on the cusp of gross honours.
+**David Mullin:** Joint round winner with 44 Stableford points; claimed solo Gross victory and established new course record with 84 strokes (12 over par); produced the round's only birdie at the 10th during a strong front-nine display (25 points); moved up to 4th in Trophy (20 points back) and 2nd in Jacket (8 strokes behind leader).
 
-**John Patterson:** Posted a strong 43 Stableford points with an excellent 17-point finish, but couldn't close the gap on Baker. Remains 12 points back in the Trophy with one round to play—needs a miracle and a meltdown to claim first place.
+**Gregg Williams:** Posted 43 Stableford points with consistently solid play throughout; claimed best gross score behind Mullin with 85 (13 over par); seized Jacket lead at the 2nd hole when Jon Baker imploded and never relinquished it; sits 3rd in Trophy (15 points back) whilst leading Jacket by 8 strokes.
 
-**Jon Baker:** A disastrous 28-point round, including a horrific eight-point final six, dropped him from 4th to 5th in the Trophy standings. Down 11 points from his second-round performance, he'll need to regroup quickly to salvage something from the final round.
+**Jon Baker:** Catastrophic 28-point round destroyed by triple bogey at the 2nd and quintuple bogey at the 4th; posted 100 gross strokes (28 over par) in his worst round of the tournament; dropped from Jacket leader to 3rd place (13 strokes back) and fell to 5th in Trophy (34 points behind brother Alex).
+
+**John Patterson:** Solid 43-point round with strong 4-point finishes at both the 16th and 18th holes; posted 93 gross strokes (21 over par); maintains 2nd place in Trophy but faces 12-point deficit to Alex Baker heading into final round; sits 4th in Jacket race (19 strokes behind Williams).
 

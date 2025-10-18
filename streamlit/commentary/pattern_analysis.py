@@ -188,7 +188,13 @@ def analyze_lead_progression(teg_num):
         # Leader has rank 1 after this round
         leader_data = round_data[
             round_data['Cumulative_Tournament_Rank_Stableford'] == 1
-        ].iloc[0]
+        ]
+
+        # Skip if no leader found (shouldn't happen, but handle gracefully)
+        if len(leader_data) == 0:
+            continue
+
+        leader_data = leader_data.iloc[0]
 
         # Find 2nd place
         second_data = round_data[
@@ -560,16 +566,38 @@ def calculate_victory_context(teg_num, round_summary, round_events):
 
     # Find winner (final rank 1 in Stableford)
     final_round = round_summary[round_summary['Round'] == num_rounds]
-    winner_row = final_round[final_round['Cumulative_Tournament_Rank_Stableford'] == 1].iloc[0]
+    winner_row = final_round[final_round['Cumulative_Tournament_Rank_Stableford'] == 1]
+
+    # Handle case where no winner found (incomplete tournament)
+    if len(winner_row) == 0:
+        # Return empty/default victory context
+        return {
+            'winner': None,
+            'holes_led_by_winner': 0,
+            'total_holes': total_holes,
+            'pct_holes_led': 0,
+            'rounds_leading_after': [],
+            'lead_changes': {'total_r2_onwards': 0, 'by_round': {}, 'final_round': 0},
+            'players_who_led': 0,
+            'longest_challenger_lead': 0,
+            'final_margin': 0,
+            'largest_lead': 0,
+            'smallest_lead_after_r2': None,
+            'max_deficit_winner': 0
+        }
+
+    winner_row = winner_row.iloc[0]
     winner = winner_row['Player']
 
     # Find rounds winner was leading after
     rounds_leading_after = []
     for round_num in range(1, num_rounds + 1):
         round_data = round_summary[round_summary['Round'] == round_num]
-        leader = round_data[round_data['Cumulative_Tournament_Rank_Stableford'] == 1].iloc[0]
-        if leader['Player'] == winner:
-            rounds_leading_after.append(round_num)
+        leader_data = round_data[round_data['Cumulative_Tournament_Rank_Stableford'] == 1]
+        if len(leader_data) > 0:
+            leader = leader_data.iloc[0]
+            if leader['Player'] == winner:
+                rounds_leading_after.append(round_num)
 
     # Count lead changes in round_events
     lead_events = round_events[round_events['Event'] == 'Lead_Change_Stableford'].copy()

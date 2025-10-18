@@ -124,7 +124,7 @@ def get_round_ending_context(round_data):
     """
     # Get final standings after this round from round_summary
     standings = sorted(
-        round_data['summary'],
+        round_data['round_summary'],  # Changed from 'summary' to 'round_summary' for unified loader compatibility
         key=lambda x: x['Cumulative_Tournament_Rank_Stableford']
     )
 
@@ -152,7 +152,7 @@ def get_round_ending_context(round_data):
     cold_players = list(dict.fromkeys(cold_players))
 
     return {
-        'round': round_data['round'],
+        'round': round_data['metadata']['round_num'],  # Changed from round_data['round'] for unified loader compatibility
         'leader': final_lead['leader'] if final_lead else None,
         'margin': final_lead['margin_to_2nd'] if final_lead else None,
         'standings': [

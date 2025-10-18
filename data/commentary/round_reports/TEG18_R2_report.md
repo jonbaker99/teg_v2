@@ -1,63 +1,66 @@
 # TEG 18 - Round 2 Report
 
-## Williams and Patterson Share Spoils as Baker Extends Trophy Command
-**PGA Catalunya - Tour • 12/10/2025 • Round 2 of 4**
+## Williams Claims Double as Lead Battles Heat Up
+**PGA Catalunya - Tour • October 12, 2025 • Round 2 of 4**
 
 ### Round Summary
 
-Alex Baker arrived at PGA Catalunya with an eight-point cushion and a simple mission: protect his TEG Trophy lead through the middle rounds. While Gregg Williams and John Patterson stole the Round 2 headlines with matching 42-point performances, Baker quietly extended his advantage to 11 points with a steady 41-point effort that kept all challengers at arm's length.
+With the tournament at its midpoint, Gregg Williams produced the day's finest performance to throw both competitions wide open. Williams carded 42 Stableford points and 14 over par to claim victory in both formats, climbing to second place in the Green Jacket race and third in the TEG Trophy standings. Yet the day belonged as much to survival as excellence.
 
-Williams produced the day's most complete performance, posting the round's best gross score of +14 with a blistering 18-gross back nine that propelled him to co-winner status and up one position to third overall. Patterson matched Williams' 42 Stableford points with his own back-nine surge (25 points over the final six holes), maintaining second place in the Trophy race. The day's only real drama came from David Mullin's positional collapse—an eight-gross disaster through the opening six holes dropped him two spots to fifth despite a spirited 20-point rally on the back nine.
+Alex Baker extended his Trophy lead to 11 points despite enduring a quintuple bogey disaster at the par-3 16th, showing remarkable composure to birdie the very next hole. His round of 41 points keeps him firmly in control, though his gross score tumbled from second to fifth. Jon Baker weathered his own front-nine chaos to reclaim the Jacket lead, his back-nine brilliance of 24 points proving decisive. The par-4 4th hole devoured players with two quadruple bogeys, while the gentle par-3 14th offered rare respite with multiple four-point scores.
 
-With the halfway point reached and two rounds remaining, Baker's 11-point cushion looks increasingly comfortable, while the Green Jacket race has tightened considerably, with Jon Baker clinging to a slender two-stroke advantage over the surging Williams.
+John Patterson matched Williams's 42-point haul to share the Trophy round honours, keeping himself firmly in contention at second overall. With two rounds remaining, gaps are emerging but remain catchable—the real drama is only just beginning.
 
 ### How It Unfolded
 
-The opening stretch at PGA Catalunya set the tone for a day of contrasts. Baker stamped his authority early with a composed 14-gross start through the first six holes, maintaining the steady rhythm that has defined his tournament. Williams matched that opening pace, laying the foundation for what would become a spectacular round. Behind them, David Mullin's challenge evaporated almost immediately—a disastrous eight-gross opening put him on the back foot before the seventh tee.
+**Front Nine Chaos**
 
-The par-4 4th hole, the course's sternest test, lived up to its billing as the field averaged 2.6 strokes over par. Only the leading players navigated it without significant damage, while the struggling Mullin saw his position deteriorate further.
+The outward half delivered immediate fireworks at the treacherous par-4 3rd, where Alex Baker posted a triple bogey to tumble from second to fourth in the Jacket standings. The carnage intensified at the 4th, the day's hardest hole, where both David Mullin and John Patterson carded quadruple bogeys. Mullin's disaster sparked a three-hole nightmare stretch where he collected zero points from holes 4 through 6.
 
-Williams found another gear through the middle six holes, grinding out 10 strokes of efficient golf that positioned him for his afternoon assault. Patterson began heating up with a 15-gross middle section, matching Baker's consistency. Mullin staged a brief revival with 16 gross through holes 7-12, but the damage was done—he'd already surrendered too much ground to the leaders.
+The lead battle grew frantic over holes 6 through 9. Williams seized the Jacket lead at the 6th as Jon Baker stumbled to double bogey. At the par-5 7th, the older Baker brother's triple bogey handed the advantage back to Williams. But Jon Baker's par at the 9th—coupled with Williams's own triple-bogey collapse—saw the Jacket lead change hands for a third time in four holes.
 
-The decisive action came over the closing stretch. Williams exploded with an 18-gross back nine that combined precision and aggression, claiming both the round gross title and a share of the Stableford honors. Jon Baker, who had been lurking throughout, matched Williams' 18-gross finish to strengthen his Green Jacket position, climbing to fourth in the Trophy standings. Patterson closed with 16 gross for 25 Stableford points, enough to share round honors with Williams at 42 points.
+**Back Nine Resilience**
 
-Baker, requiring only damage limitation with a comfortable lead, posted a workmanlike 12-gross finish. It was enough. While others fired at flags, the leader played the percentages—41 points extended his advantage and sent a clear message: this Trophy is mine to lose.
+The inward half belonged to the back-nine specialists. Mullin sparked his recovery with a birdie at the par-5 10th, climbing back into third place in the Jacket race. Jon Baker found his rhythm through the closing stretch, playing holes 11-18 at level par with a crucial birdie at the par-3 14th providing the momentum to secure his lead.
+
+Alex Baker appeared destined for a comfortable round until the nightmare par-3 16th, where his quintuple bogey threatened to unravel his tournament. His immediate response—a five-point birdie at the 17th—epitomised the fighting spirit that has kept him atop the Trophy leaderboard. Williams matched the back-nine surge with 24 points of his own, his steady closing stretch of holes 13-18 (averaging just 0.17 over par) sealing both round victories.
 
 ### Standings After Round 2
 
-**Round 2 Stableford:** GW 42 | JP 42 | AB 41 | JB 39 | DM 35
+**Round 2 Stableford:** GW 42 | JP 42 | AB 41 | JB 39 | DM 35  
 **Round 2 Gross:** GW +14 | JB +15 | DM +22 | JP +22 | AB +34
 
-**Tournament Stableford:** AB 87 | JP 76 | GW 73 | JB 69 | DM 67
+**Tournament Stableford:** AB 87 | JP 76 | GW 73 | JB 69 | DM 67  
 **Tournament Gross:** JB +39 | GW +41 | DM +50 | JP +52 | AB +60
 
 ### What's At Stake
 
 **With 2 rounds remaining:**
 
-Baker's 11-point Trophy advantage represents significant but not insurmountable territory. His nearest challenger, Patterson, needs to average 47.5 points per round while Baker averages 36 or fewer—achievable but requiring near-perfection. Williams, now 14 back, would need two exceptional rounds (averaging 49 points) while Baker falters. Both scenarios demand the leader to implode rather than the chasers to catch him through brilliance alone.
+Alex Baker's 11-point Trophy lead appears comfortable but is far from insurmountable. Averaging 36 points per round over the final two days would virtually guarantee him the TEG Trophy, but Patterson needs just 42 points per round to draw level—precisely what he scored today. Williams sits 14 points back but remains mathematically dangerous if he can repeat his round-two heroics.
 
-The Green Jacket race presents far tighter margins. Jon Baker's two-stroke advantage over Williams could evaporate with a single bad hole. Williams arrives at the weekend with momentum—his +14 round suggests he's found the form to mount a serious challenge. David Mullin, 11 strokes back in the Jacket race, remains mathematically alive but needs Williams and Jon Baker to stumble while he produces two flawless rounds.
+The Jacket battle is far tighter. Jon Baker's two-stroke cushion over Williams could evaporate with a single bad hole, as today's wild lead changes demonstrated. Baker needs to average 20 over par across the remaining rounds to protect his advantage, while Williams requires approximately 19 over par to snatch the lead. Mullin (+50) and Patterson (+52) trail by 11 and 13 strokes respectively—still catchable with two rounds of inspired golf, though they'll need the leaders to falter.
 
-The battle for third in the Trophy—Williams currently holding off Jon Baker by four points—could define the weekend's subplot. Both players possess the form to challenge Patterson for second, though catching Baker appears a bridge too far without a monumental collapse from the leader.
+The spoon battle has effectively been decided, with the Trophy leader holding an insurmountable 20-point advantage over the basement. The real intrigue lies in whether anyone can mount a sustained charge over 36 holes, or whether the leaders' composure under pressure will prove decisive.
 
 ### Round Highlights
-- Williams' 18-gross back nine fires him to co-winner status and into Green Jacket contention
-- Patterson's 25-point closing surge (holes 13-18) matches Williams for round honors
-- Baker extends Trophy lead to 11 points with composed 41-point round despite quieter performance
-- Jon Baker's 18-gross finish vaults him to fourth overall while protecting Jacket lead
-- Mullin's eight-gross opening disaster costs two positions despite spirited 20-point back-nine recovery
+
+- **H16 Drama:** Alex Baker's quintuple bogey followed immediately by a birdie at 17—tournament-defining resilience
+- **H4 Carnage:** The par-4 4th claims two quadruple bogeys, averaging 2.6 over par for the field
+- **Lead Carousel:** Jon Baker, Gregg Williams and Jon Baker again—three Jacket lead changes between holes 6-9
+- **H14 Oasis:** The par-3 14th emerges as the day's easiest hole, with Jon Baker's four-point birdie proving crucial
+- **Back Nine Mastery:** Four players score 20+ points on the inward half, with Patterson's 25 leading the charge
 
 ### Player Summaries
 
-**Alex Baker:** 41 points (+34 gross) maintains comfortable control of TEG Trophy, extending lead to 11 points with consistent 14-15-12 splits across the round; down from opening 46 but job done.
+**Alex Baker:** Extended his Trophy lead to 11 points with 41 Stableford despite a quintuple-bogey disaster at 16, showing championship mettle by immediately birdying 17. Dropped from second to fifth in the Jacket (now +60), but his 87 Trophy points leave him in command with two rounds to play.
 
-**John Patterson:** 42 points (+22 gross) shares round honors with explosive 25-point back nine; remains second in Trophy, 11 points back with work to do but form trending upward.
+**Jon Baker:** Reclaimed the Jacket lead (+39 total) with a back-nine masterclass, scoring 24 points after the turn including a pivotal birdie at 14. His 39-point round keeps him in Trophy contention (4th, 69 points), though he trails his brother Alex by 18 points.
 
-**Gregg Williams:** 42 points (+14 gross) produces day's best performance with dominant 18-gross close; climbs to third in Trophy, second in Jacket (two strokes back), arrives at weekend with serious momentum.
+**Gregg Williams:** Claimed both round victories with 42 Stableford points and 14 over par, moving to second in the Jacket (two behind Jon Baker) and third in the Trophy (14 behind Alex Baker). His strong finish through holes 13-18 showcased his championship credentials.
 
-**Jon Baker:** 39 points (+15 gross) posts solid round with matching 18-gross back nine; leads Green Jacket by slender two strokes, sits fourth in Trophy race but 18 points adrift.
+**David Mullin:** Survived a disastrous three-hole stretch (4-6) where he scored zero points to card 35 for the round. A birdie at the par-5 10th sparked a 20-point back nine that salvaged his tournament, leaving him third in the Jacket (+50) but fallen to fifth in the Trophy (67 points).
 
-**David Mullin:** 35 points (+22 gross) suffers biggest positional damage despite improved scoring; catastrophic eight-gross start through first six holes proves terminal, drops to fifth despite spirited 20-point recovery.
+**John Patterson:** Matched Williams's 42-point round win despite a quadruple bogey at the 4th, his powerful 25-point back nine keeping him in second place in the Trophy (76 points, 11 behind). Now fourth in the Jacket (+52), but 13 strokes off the lead with two rounds remaining.
 
 

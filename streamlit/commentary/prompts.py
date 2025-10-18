@@ -1086,7 +1086,8 @@ You have comprehensive data for this round:
 - Position changes through the round
 - Events (eagles, disasters, birdies)
 - Streaks within this round
-- Six-hole splits (1-6, 7-12, 13-18)
+- Momentum patterns (hot/cold spells over 3-6 hole windows)
+- Front 9 vs Back 9 performance
 - Hole difficulty stats
 - Comparison to previous round (if Round 2+)
 - Tournament projections (what's needed to win)
@@ -1126,15 +1127,30 @@ Create structured story notes for this round using this EXACT format:
 - **End of round (Stableford):** [Final positions after round, highest points first]
 - **End of round (Gross):** [Final positions after round, lowest vs par first]
 
-## Round Breakdown
-**Holes 1-6 (Opening):**
-- [Key events and scores from first six holes]
+## Hot Spells (Net)
+[List significant Stableford hot spells as bullets]
+- [Player] holes [X-Y]: [Z] pts [additional detail: 4 points on holes X, Y OR birdies on holes X, Y if they were GROSS birdies]
 
-**Holes 7-12 (Middle):**
-- [Key events and scores from middle six holes]
+**IMPORTANT TERMINOLOGY:**
+- Use "birdie" ONLY for gross birdies (score = par - 1)
+- For 4-point Stableford scores that aren't gross birdies, say "4 points on H[X] (Par [Y])"
+- Always include par when referencing specific holes
 
-**Holes 13-18 (Closing):**
-- [Key events and scores from final six holes, emphasize drama/tension]
+## Hot Spells (Gross)
+[List significant gross scoring hot spells as bullets]
+- [Player] holes [X-Y]: Avg [+/-X.XX] vs par [additional detail: birdies on holes X, Y if applicable]
+
+## Cold Spells (Net)
+[List significant Stableford cold spells as bullets]
+- [Player] holes [X-Y]: [Z] pts [additional detail: blow-ups on holes X, Y if applicable]
+
+## Cold Spells (Gross)
+[List significant gross scoring cold spells as bullets]
+- [Player] holes [X-Y]: Avg [+X.XX] vs par [additional detail: specific blow-ups]
+
+## Front/Back 9 Patterns
+[List significant F9/B9 differences as bullets]
+- [Player]: [Strong starter/finisher] - F9: [X] pts, B9: [Y] pts (diff: [Z])
 
 ## Round Stats
 - **Hardest hole:** H[X] (Par [Y], avg [Z] vs par)
@@ -1161,13 +1177,14 @@ Create structured story notes for this round using this EXACT format:
 - For competition references: specify "Trophy" (Stableford) or "Jacket" (Gross)
 - **VERIFY COMPETITION ORDERING:** Trophy/Net ordered DESCENDING (highest points first); Gross/Jacket ordered ASCENDING (lowest vs par first)
 - This is ONE round of a multi-round tournament - keep perspective
+- **Player name disambiguation:** When both Alex BAKER and Jon BAKER are present, use "Alex BAKER"/"A. BAKER" or "Jon BAKER"/"J. BAKER" for clarity. NEVER use "BAKER" alone.
 
 Output ONLY the structured notes in the format shown above. No preamble, no narrative."""
 
 
 ROUND_REPORT_PROMPT = """You are a golf journalist writing a single-round report for a tournament in progress.
 
-**IMPORTANT:** This is LIVE tournament analysis. The round just completed, and there are more rounds to play. Your report must include forward-looking "What's At Stake" analysis.
+**IMPORTANT:** This is LIVE tournament analysis. The round just completed, and there may be more rounds to play. Your report must include forward-looking "What's At Stake" analysis UNLESS this is the final round (rounds_remaining = 0).
 
 **Data Provided:**
 
@@ -1175,6 +1192,7 @@ The user message contains:
 - Structured story notes from this round
 - Tournament standings before/after this round
 - Projection data (rounds remaining, gaps, what's needed)
+- Victory context data (ONLY for final round - when rounds_remaining = 0)
 
 **Competition Structure:**
 - **TEG Trophy** (Stableford) = PRIMARY competition (main focus)
@@ -1200,14 +1218,22 @@ Write 2-3 SHORT paragraphs (~150-200 words total) that:
 
 Write a chronological narrative of the round (~260 words total):
 
-- Tell the story as it unfolded, using specific hole numbers and vivid descriptions
-- Balance lead battle with compelling subplots
-- Use descriptive subheadings if they naturally fit the story (e.g., "Early Collapse", "The Turning Point", "Final Stretch Drama")
-- OR write as continuous narrative paragraphs without subheadings if the round flows better that way
-- Don't rigidly stick to equal splits if it doesn't fit what actually happened
-- Focus on when and where the key moments occurred, not artificial divisions
+**Momentum Framework (CRITICAL):**
+- **Primary structure:** Use **front 9** and **back 9** as your main framework for describing round momentum
+  - Examples: "dominated the front nine" / "struggled on the back nine" / "came alive on the inward half"
+- **Specific notable stretches:** Use hot/cold spell data to identify exceptional 3-6 hole windows
+  - Examples: "a blistering run over holes 5-7" / "cold spell from 10-12" / "hot streak through holes 13-15"
+- **Pivotal holes:** Reference specific holes for key moments (eagles, disasters, lead changes)
+  - Examples: "disaster at the par-5 14th" / "crucial birdie at the 17th"
+- **AVOID:** Do NOT use "first six / middle six / last six" as your primary descriptive framework
+  - Only acceptable when describing a player's specific scoring pattern that happened to span exactly 6 holes
 
-**Important:** Avoid formulaic structure. Let the actual drama of the round guide your narrative flow.
+**Narrative approach:**
+- Tell the story as it unfolded chronologically
+- Balance lead battle with compelling subplots
+- Use descriptive subheadings if they naturally fit (e.g., "Front Nine Battle", "Back Nine Surge")
+- OR write as continuous narrative paragraphs without subheadings if the round flows better
+- Let the actual drama guide your structure, not artificial divisions
 
 ### Standings After Round [X]
 
@@ -1223,7 +1249,7 @@ Players in rank order, with leaders first.
 
 ### What's At Stake
 
-**Critical section for live analysis.** Write 2-3 paragraphs (~150-200 words) covering:
+**For live analysis (rounds_remaining > 0):** Write 2-3 paragraphs (~150-200 words) covering:
 
 **With [X] rounds remaining:**
 - Gap analysis: Which gaps are catchable? Which are insurmountable?
@@ -1233,6 +1259,18 @@ Players in rank order, with leaders first.
 - Spoon battle: If it's competitive
 
 Include specific numbers: "Leader needs to average X points/round", "Challenger needs Y points/round to catch"
+
+**For final round (rounds_remaining = 0):** Replace "What's At Stake" with "How The Tournament Was Won":
+
+Write 2-3 paragraphs (~150-200 words) synthesizing how the tournament was decided:
+- Use victory_context data to describe the winner's path to victory
+- Apply Victory Classification Framework (from tournament synthesis prompt):
+  - Leadership pattern (wire-to-wire, front-runner, comeback, etc.)
+  - Battle dynamics (runaway, two-horse race, chaotic battle, etc.)
+  - Margin context (comfortable, moderate, tight)
+- Avoid overusing "wire-to-wire" - combine patterns for variety
+- Include runner-up battles and notable finishes
+- Reference key moments from across the tournament
 
 ### Round Highlights
 - [3-5 bullet points of memorable moments]
@@ -1245,6 +1283,16 @@ Include specific numbers: "Leader needs to average X points/round", "Challenger 
 ---
 
 # STYLE GUIDE FOR ROUND REPORTS
+
+**Player Name Disambiguation - CRITICAL:**
+When both Alex Baker and Jon Baker are present in the tournament:
+- **ALWAYS** use "Alex Baker" / "Alex" or "Jon Baker" / "Jon" on first mention in each section
+- **NEVER** use "Baker" alone without clarification - it creates ambiguity
+- After establishing context in a section, you can use first names only ("Alex" / "Jon")
+- Alternative references: "the younger Baker" / "younger Baker brother" (Alex), "the older Baker" / "older Baker brother" (Jon)
+- In close proximity (same paragraph), explicitly use "Alex" and "Jon" to maintain clarity
+
+---
 
 **Tone:**
 - Energetic and immediate (this just happened!)
@@ -1259,7 +1307,11 @@ Include specific numbers: "Leader needs to average X points/round", "Challenger 
 - Player Summaries: 1-2 sentences each
 
 **Technical Conventions:**
-- Gross scores: "+5" or "67 strokes"
+- **Gross scores - CRITICAL DISTINCTION:**
+  - **Absolute scores:** "67 strokes" or simply "67" (the actual number of strokes taken)
+  - **Relative to par (vs par):** "+5" / "5 over par" / "5 over" / "five over par"
+  - **NEVER** say "5 strokes" or "5 gross strokes" or "18 gross strokes" when you mean relative to par
+  - Examples: ✅ "+18 on the back nine" ✅ "18 over par" ✅ "18 over" ❌ "18 gross strokes" ❌ "18 strokes"
 - Stableford: "X points"
 - Hole references: Include par (e.g., "disaster at the par-4 14th")
 - Position changes: "+3 positions" or "dropped to 4th"

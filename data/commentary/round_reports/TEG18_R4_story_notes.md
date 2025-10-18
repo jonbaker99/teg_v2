@@ -1,1 +1,66 @@
-IyBURUcgMTggLSBSb3VuZCA0IFN0b3J5IE5vdGVzCgojIyBSb3VuZCBTdW1tYXJ5Ci0gKipSb3VuZCBXaW5uZXIgKFN0YWJsZWZvcmQpOioqIEdyZWdnIFdJTExJQU1TICg0NCBwdHMgU3RhYmxlZm9yZCkKLSAqKlJvdW5kIFdpbm5lciAoR3Jvc3MpOioqIEdyZWdnIFdJTExJQU1TICgxMiBncm9zcyB2cyBwYXIpCi0gKipUb3VybmFtZW50IFdpbm5lciAoU3RhYmxlZm9yZCk6KiogQWxleCBCQUtFUiAoMTY5IHB0cyB0b3RhbCkKLSAqKlRvdXJuYW1lbnQgV2lubmVyIChHcm9zcyk6KiogR3JlZ2cgV0lMTElBTVMgKDY2IGdyb3NzIHZzIHBhcikKLSAqKkJpZ2dlc3QgTW92ZXI6KiogTm8gcG9zaXRpb24gY2hhbmdlcyAoYWxsIHBsYXllcnMgaGVsZCBwb3NpdGlvbikKLSAqKkRyYW1hIExldmVsOioqIExvdyAoZmluYWwgcm91bmQsIG5vIGxlYWQgY2hhbmdlcykKCiMjIEtleSBNb21lbnRzCi0gSDEtNjogR3JlZ2cgV0lMTElBTVMgZXhwbG9zaXZlIHN0YXJ0ICgxNiBTdGFibGVmb3JkIHB0cyBpbiBmaXJzdCBzaXggaG9sZXMpCi0gSDEtNjogSm9obiBQQVRURVJTT04gbWF0Y2hlcyBpbnRlbnNpdHkgKDE3IHB0cyBpbiBvcGVuaW5nIHN0cmV0Y2gpCi0gSDctMTI6IEpvbiBCQUtFUiBzdHJ1Z2dsZXMgY29udGludWUgKG9ubHkgNyBwdHMgaW4gbWlkZGxlIHNpeCwgdG91cm5hbWVudCBsb3cpCi0gSDctMTI6IEdyZWdnIFdJTExJQU1TIG1haW50YWlucyBtb21lbnR1bSAoMTYgcHRzIGluIG1pZGRsZSBzaXgpCi0gSDE0OiBUb3VybmFtZW50J3MgaGFyZGVzdCBob2xlIHN0cmlrZXMgKGF2ZyA3LjAsICszLjAgdnMgcGFyLCBvbmx5IDAuOCBTdGFibGVmb3JkIGF2ZykKLSBIMTctMTg6IEZpbmFsIHN0cmV0Y2ggc2VlcyBtdWx0aXBsZSBib2dleXMgKGJvdGggaG9sZXMgYXZnICsxLjIgdG8gKzIuMCB2cyBwYXIpCi0gSDEzLTE4OiBBbGV4IEJBS0VSIGZhZGVzIGxhdGUgKG9ubHkgMTEgcHRzIGluIGZpbmFsIHNpeCBob2xlcykKLSBUb3VybmFtZW50IGNvbmNsdXNpb246IEFsZXggQkFLRVIgc2VjdXJlcyBUcm9waHkgYnkgOCBwdHM7IEdyZWdnIFdJTExJQU1TIHRha2VzIEphY2tldCBieSAxNCBzdHJva2VzCgojIyBIb3cgUG9zaXRpb25zIENoYW5nZWQKLSAqKlN0YXJ0IG9mIHJvdW5kIChTdGFibGVmb3JkKToqKiBBbGV4IEJBS0VSIDEzMSBwdHMgfCBKb2huIFBBVFRFUlNPTiAxMTkgcHRzIHwgR3JlZ2cgV0lMTElBTVMgMTE2IHB0cyB8IERhdmlkIE1VTExJTiAxMTEgcHRzIHwgSm9uIEJBS0VSIDk3IHB0cwotICoqU3RhcnQgb2Ygcm91bmQgKEdyb3NzKToqKiBHcmVnZyBXSUxMSUFNUyArNTQgfCBEYXZpZCBNVUxMSU4gKzYyIHwgSm9uIEJBS0VSICs2NyB8IEpvaG4gUEFUVEVSU09OICs3MyB8IEFsZXggQkFLRVIgKzg4Ci0gKipLZXkgc2hpZnRzOioqIE5vIHBvc2l0aW9uIGNoYW5nZXMgb2NjdXJyZWQgZHVyaW5nIGZpbmFsIHJvdW5kCi0gKipFbmQgb2Ygcm91bmQgKFN0YWJsZWZvcmQpOioqIEFsZXggQkFLRVIgMTY5IHB0cyB8IEpvaG4gUEFUVEVSU09OIDE2MSBwdHMgfCBHcmVnZyBXSUxMSUFNUyAxNjAgcHRzIHwgRGF2aWQgTVVMTElOIDE0OSBwdHMgfCBKb24gQkFLRVIgMTI2IHB0cwotICoqRW5kIG9mIHJvdW5kIChHcm9zcyk6KiogR3JlZ2cgV0lMTElBTVMgKzY2IHwgRGF2aWQgTVVMTElOICs4MCB8IEpvbiBCQUtFUiArOTIgfCBKb2huIFBBVFRFUlNPTiArOTUgfCBBbGV4IEJBS0VSICsxMjQKCiMjIFJvdW5kIEJyZWFrZG93bgoqKkhvbGVzIDEtNiAoT3BlbmluZyk6KioKLSBKb2huIFBBVFRFUlNPTiBsZWFkcyBvcGVuaW5nIGNoYXJnZSAoMTcgcHRzKQotIEdyZWdnIFdJTExJQU1TIGNsb3NlIGJlaGluZCAoMTYgcHRzKQotIERhdmlkIE1VTExJTiBzb2xpZCBzdGFydCAoMTUgcHRzKQotIEFsZXggQkFLRVIgbW9kZXJhdGUgb3BlbmluZyAoMTQgcHRzKQotIEpvbiBCQUtFUiBzdHJ1Z2dsZXMgZWFybHkgKDExIHB0cykKLSBIMSBhbmQgSDUgcGxheSBhcyBqb2ludC1lYXNpZXN0IGhvbGVzIChhdmcgMy4wIFN0YWJsZWZvcmQgZWFjaCkKCioqSG9sZXMgNy0xMiAoTWlkZGxlKToqKgotIEdyZWdnIFdJTExJQU1TIGRvbWluYXRlcyBtaWRkbGUgc3RyZXRjaCAoMTYgcHRzLCBtYWludGFpbnMgcm91bmQtbGVhZGluZyBmb3JtKQotIERhdmlkIE1VTExJTiBjb25zaXN0ZW50ICgxMyBwdHMpCi0gQWxleCBCQUtFUiBob2xkcyBzdGVhZHkgKDEzIHB0cykKLSBKb2huIFBBVFRFUlNPTiBjb29scyBvZmYgc2lnbmlmaWNhbnRseSAoMTAgcHRzIGFmdGVyIGhvdCBzdGFydCkKLSBKb24gQkFLRVIgd29yc3Qgb2YgZmllbGQgKDcgcHRzLCBzdHJ1Z2dsZXMgY29tcG91bmQpCi0gSDEyIG9mZmVycyBzY29yaW5nIG9wcG9ydHVuaXR5IChQYXIgNSwgYXZnIDIuNiBTdGFibGVmb3JkKQoKKipIb2xlcyAxMy0xOCAoQ2xvc2luZyk6KioKLSBKb2huIFBBVFRFUlNPTiBzdHJvbmcgZmluaXNoICgxNSBwdHMsIGJvdW5jZXMgYmFjayBmcm9tIG1pZGRsZSBzbHVtcCkKLSBHcmVnZyBXSUxMSUFNUyBzdGVhZHkgaG9tZSAoMTIgcHRzLCBzZWN1cmVzIHJvdW5kIHZpY3RvcnkpCi0gQWxleCBCQUtFUiBmYWRlcyAoMTEgcHRzLCB3ZWFrZXN0IHNpeC1ob2xlIHNwbGl0IG9mIHJvdW5kKQotIEpvbiBCQUtFUiBtYXRjaGVzIEFsZXggKDExIHB0cywgdG9vIGxpdHRsZSB0b28gbGF0ZSkKLSBEYXZpZCBNVUxMSU4gc3RydWdnbGVzIGxhdGUgKDEwIHB0cykKLSBIMTQgZGlzYXN0ZXIgaG9sZSBmb3IgZmllbGQgKGF2ZyA3LjAsIG9ubHkgMC44IFN0YWJsZWZvcmQgYXZnKQotIEgxMyBwcm92aWRlcyBsYXRlIGJpcmRpZSBjaGFuY2UgKGF2ZyAzLjAgU3RhYmxlZm9yZCkKCiMjIFJvdW5kIFN0YXRzCi0gKipIYXJkZXN0IGhvbGU6KiogSDE0IChQYXIgNCwgYXZnICszLjAgdnMgcGFyLCAwLjggU3RhYmxlZm9yZCBhdmcpCi0gKipFYXNpZXN0IGhvbGVzOioqIEgxLCBINSwgSDEzIChhbGwgYXZnIDMuMCBTdGFibGVmb3JkLCArMC40IHZzIHBhcikKLSAqKkJlc3QgaW5kaXZpZHVhbCBwZXJmb3JtYW5jZToqKiBHcmVnZyBXSUxMSUFNUyAoNDQgcHRzLCB1cCBmcm9tIDQzIGluIFJvdW5kIDMpCi0gKipNb3N0IGNvbnNpc3RlbnQgbmluZS1ob2xlIHNwbGl0OioqIEFsZXggQkFLRVIgKDE5IHB0cyBmcm9udCwgMTkgcHRzIGJhY2spCi0gKipXb3JzdCBpbmRpdmlkdWFsIHBlcmZvcm1hbmNlOioqIEpvbiBCQUtFUiAoMjkgcHRzLCB1cCBzbGlnaHRseSBmcm9tIDI4IGluIFJvdW5kIDMpCgojIyBQbGF5ZXIgTm90ZXMKLSAqKkFsZXggQkFLRVIgKDFzdCBUcm9waHkpOioqIDM4IHB0cyAoZG93biBmcm9tIDQ0IGluIFIzKSB8IFdvbiBUcm9waHkgYnkgOCBwdHMgZGVzcGl0ZSBmYWRlIHwgU3Ryb25nIGZyb250IG5pbmUgKDE5IHB0cykgfCBXZWFrIGZpbmlzaCAoMTEgcHRzIGZpbmFsIHNpeCkKCi0gKipKb2huIFBBVFRFUlNPTiAoMm5kIFRyb3BoeSk6KiogNDIgcHRzIChkb3duIGZyb20gNDMgaW4gUjMpIHwgRmluaXNoZWQgOCBwdHMgYmVoaW5kIHdpbm5lciB8IEV4cGxvc2l2ZSBzdGFydCAoMTcgcHRzIGZpcnN0IHNpeCkgfCBNaWQtcm91bmQgc2x1bXAgKDEwIHB0cyBtaWRkbGUgc2l4KSB8IFN0cm9uZyByZWNvdmVyeSAoMTUgcHRzIGZpbmFsIHNpeCkKCi0gKipHcmVnZyBXSUxMSUFNUyAoM3JkIFRyb3BoeSwgMXN0IEphY2tldCk6KiogNDQgcHRzIChiZXN0IHJvdW5kLCB1cCBmcm9tIDQzIGluIFIzKSB8IFdvbiBKYWNrZXQgYnkgMTQgc3Ryb2tlcyB8IERvbWluYW50IG9wZW5pbmcgMTIgaG9sZXMgKDMyIHB0cyBjb21iaW5lZCkgfCBGaW5pc2hlZCA5IHB0cyBiZWhpbmQgVHJvcGh5IHdpbm5lciB8IE1vc3QgY29uc2lzdGVudCBwZXJmb3JtYW5jZQoKLSAqKkRhdmlkIE1VTExJTiAoNHRoIFRyb3BoeSwgMm5kIEphY2tldCk6KiogMzggcHRzIChkb3duIHNpZ25pZmljYW50bHkgZnJvbSA0NCBpbiBSMykgfCBTdGFydGVkIHN0cm9uZyAoMTUgcHRzIGZpcnN0IHNpeCkgfCBGYWRlZCBiYWRseSAoMTAgcHRzIGZpbmFsIHNpeCkgfCBGaW5pc2hlZCAyMCBwdHMgYmVoaW5kIFRyb3BoeSwgMTQgc3Ryb2tlcyBiZWhpbmQgSmFja2V0CgotICoqSm9uIEJBS0VSICg1dGggYm90aCBjb21wZXRpdGlvbnMpOioqIDI5IHB0cyAodXAgbWFyZ2luYWxseSBmcm9tIDI4IGluIFIzKSB8IENvbnNpc3RlbnQgc3RydWdnbGUgKDExLTctMTEgc2l4LWhvbGUgc3BsaXRzKSB8IEZpbmlzaGVkIDQzIHB0cyBiZWhpbmQgVHJvcGh5LCAyNiBzdHJva2VzIGJlaGluZCBKYWNrZXQgfCBOZXZlciB0aHJlYXRlbmVkIGluIGZpbmFsIHJvdW5kCgo=
+# TEG 18 - Round 4 Story Notes
+
+## Round Summary
+- **Round Winner (Stableford):** Gregg WILLIAMS (44 pts Stableford)
+- **Round Winner (Gross):** Gregg WILLIAMS (+12 gross vs par)
+- **Tournament Leader (Stableford):** Alex BAKER (169 pts total) - WINS TROPHY
+- **Tournament Leader (Gross):** Gregg WILLIAMS (+66 gross vs par) - WINS JACKET
+- **Biggest Mover:** No position changes this round
+- **Drama Level:** High - Final round carnage at H14 & H18, course record equaled
+
+## Key Moments
+- H5: Gregg WILLIAMS birdie (-1 vs par) - building momentum early
+- H12: Alex BAKER 4 points on H12 (Par 5) - briefly steadies the ship
+- H13: Jon BAKER birdie (-1 vs par) - rare bright spot in difficult round
+- H14: Alex BAKER disaster (10 on Par 4, 0 pts) - quintuple bogey devastation but holds Trophy lead
+- H14: John PATTERSON triple bogey on Par 4 - the killer hole strikes again
+- H17: John PATTERSON birdie (5 pts including handicap strokes) - dramatic late rally
+- H18: Final hole carnage - Gregg WILLIAMS, Jon BAKER, John PATTERSON all post triple bogeys
+- H18: Gregg WILLIAMS triple bogey still secures course record (+12 vs par, equals David MULLIN R3)
+
+## How Positions Changed
+- **Start of round (Stableford):** Alex BAKER (131 pts) | John PATTERSON (119 pts) | Gregg WILLIAMS (116 pts) | David MULLIN (111 pts) | Jon BAKER (97 pts)
+- **Start of round (Gross):** Gregg WILLIAMS (+54) | David MULLIN (+62) | Jon BAKER (+67) | John PATTERSON (+73) | Alex BAKER (+88)
+- **Key shifts:** No position changes - all players maintained starting positions throughout
+- **End of round (Stableford):** Alex BAKER (169 pts) | John PATTERSON (161 pts) | Gregg WILLIAMS (160 pts) | David MULLIN (149 pts) | Jon BAKER (126 pts)
+- **End of round (Gross):** Gregg WILLIAMS (+66) | David MULLIN (+80) | Jon BAKER (+92) | John PATTERSON (+95) | Alex BAKER (+124)
+
+## Hot Spells (Net)
+- Gregg WILLIAMS holes 5-10: 18 pts
+- John PATTERSON holes 1-3: 11 pts (4 points on H1)
+
+## Hot Spells (Gross)
+- Gregg WILLIAMS holes 3-8: Avg +0.17 vs par (birdie on H5)
+- Gregg WILLIAMS holes 5-10: Avg +0.17 vs par (sustained excellence)
+- Gregg WILLIAMS holes 4-6: Avg 0.00 vs par
+
+## Cold Spells (Net)
+- Alex BAKER holes 2-4: 5 pts (triple bogeys on H3, H4)
+- Alex BAKER holes 7-9: 5 pts (triple bogeys on H7, H9)
+- Alex BAKER holes 12-14: 7 pts (includes H14 disaster)
+- David MULLIN holes 14-16: 3 pts (0 pts on H15 triple bogey)
+
+## Cold Spells (Gross)
+- Alex BAKER holes 2-4: Avg +2.33 vs par (back-to-back triple bogeys)
+- Alex BAKER holes 7-9: Avg +2.33 vs par (more triple bogeys)
+- Alex BAKER holes 12-14: Avg +2.67 vs par (includes quintuple bogey)
+- Alex BAKER holes 13-15: Avg +3.00 vs par (worst stretch of round)
+- David MULLIN holes 14-16: Avg +2.33 vs par
+
+## Front/Back 9 Patterns
+- John PATTERSON: Strong starter - F9: 23 pts, B9: 19 pts (diff: +4)
+- Gregg WILLIAMS: Strong starter - F9: 24 pts, B9: 20 pts (diff: +4)
+- David MULLIN: Strong starter - F9: 21 pts, B9: 17 pts (diff: +4)
+
+## Round Stats
+- **Hardest hole:** H14 (Par 4, avg +3.0 vs par) - the tournament killer
+- **Easiest hole:** H1, H5, H13 (tied, avg +0.4 vs par)
+- **Best individual performance:** Gregg WILLIAMS (44 pts / +12 gross vs par) - equals course record
+- **Worst collapse:** Alex BAKER (6 triple bogeys + 1 quintuple bogey in round, but survives to win Trophy)
+
+## Player Notes
+- **Alex BAKER:** 38 pts (joint 3rd round), +36 gross vs par (5th) - survived catastrophic round with 6 triple bogeys and quintuple bogey on H14, but 8-point Stableford cushion held for Trophy victory. Led wire-to-wire all 4 rounds.
+- **John PATTERSON:** 42 pts (2nd round), +22 gross vs par (3rd) - strong front 9 (23 pts) and brilliant H17 birdie (5 pts), finished 2nd Trophy (161 pts), 4th Jacket (+95).
+- **Gregg WILLIAMS:** 44 pts (1st round), +12 gross vs par (1st) - dominant performance equals course record despite H18 triple bogey, wins Jacket (+66 total), 3rd Trophy (160 pts). Led Gross competition all 4 rounds.
+- **David MULLIN:** 38 pts (joint 3rd round), +18 gross vs par (2nd) - solid front 9 (21 pts) undone by H15 disaster (0 pts), finished 4th Trophy (149 pts), 2nd Jacket (+80).
+- **Jon BAKER:** 29 pts (5th round), +25 gross vs par (4th) - struggled throughout with only H13 birdie highlight, finished 5th both competitions (126 pts Trophy, +92 Jacket).
