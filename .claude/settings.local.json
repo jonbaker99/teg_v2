@@ -31,7 +31,8 @@
       "Bash(timeout 15 streamlit run:*)",
       "Bash(git log:*)",
       "Bash(do head -n 1 \"$file\")",
-      "Bash(git check-ignore:*)"
+      "Bash(git check-ignore:*)",
+      "Bash(wc:*)"
     ],
     "deny": [],
     "ask": [
