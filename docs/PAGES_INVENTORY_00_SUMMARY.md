@@ -10,7 +10,8 @@
 
 - [**Section 1: History Pages**](PAGES_INVENTORY_01_HISTORY.md) - 6 pages (contents, tournament history, results, player rankings, reports)
 - [**Section 2: Records & PBs**](PAGES_INVENTORY_02_RECORDS.md) - 4 pages (all-time records, top performances, personal bests, comebacks)
-- [**Section 3: Scoring Analysis**](PAGES_INVENTORY_03_SCORING.md) - 10 pages (scoring distributions, trends, course analysis, heatmaps)
+- [**Section 3A: Scoring Analysis (Player-Focused)**](PAGES_INVENTORY_03A_SCORING_ANALYSIS.md) - 5 pages (eagles/birdies, streaks, distributions, trends)
+- [**Section 3B: Scoring Analysis (Course-Focused)**](PAGES_INVENTORY_03B_SCORING_COURSES.md) - 5 pages (course records, round database, heatmaps)
 - [**Section 4: Latest TEG**](PAGES_INVENTORY_04_LATEST.md) - 4 pages (current leaderboard, latest round/TEG context, handicaps)
 - [**Section 5: Scorecards**](PAGES_INVENTORY_05_SCORECARDS.md) - 4 pages (individual scorecards, best/worst ball, eclectics)
 - [**Section 6: Data & Admin**](PAGES_INVENTORY_06_DATA_ADMIN.md) - 5 pages (data update, report generation, deletion, volume management)
@@ -350,11 +351,13 @@ data = load_all_data()
 ### By Page Count
 - **Section 1 (History)**: 6 pages
 - **Section 2 (Records)**: 4 pages
-- **Section 3 (Scoring)**: 10 pages
+- **Section 3A (Scoring Analysis - Player)**: 5 pages
+- **Section 3B (Scoring Analysis - Course)**: 5 pages
 - **Section 4 (Latest)**: 4 pages
 - **Section 5 (Scorecards)**: 4 pages
 - **Section 6 (Data/Admin)**: 5 pages
 - **Utility/Config**: Not documented (helpers/, utils.py, etc.)
+- **Total Inventory Files**: 8 detailed section files + 1 summary file
 
 ### By Lines of Code
 - **Smallest**: contents.py (78 lines)

@@ -32,7 +32,9 @@
       "Bash(git log:*)",
       "Bash(do head -n 1 \"$file\")",
       "Bash(git check-ignore:*)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Bash(cd c:UsersjonbaDocumentsProjects - not on onedriveteg_v2)",
+      "Bash(head -20 \"$file\")"
     ],
     "deny": [],
     "ask": [
