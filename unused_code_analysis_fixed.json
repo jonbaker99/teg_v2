@@ -1,0 +1,7984 @@
+{
+  "summary": {
+    "active_files": 94,
+    "total_functions": 505,
+    "used_functions": 773,
+    "unused_functions": 39,
+    "usage_percentage": 153.1,
+    "total_usage_instances": 8805
+  },
+  "unused_functions": [
+    {
+      "name": "get_draft_files",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 130
+    },
+    {
+      "name": "_to_utc",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 85
+    },
+    {
+      "name": "__init__",
+      "file": "streamlit\\commentary\\generate_round_report.py",
+      "line": 80
+    },
+    {
+      "name": "__init__",
+      "file": "streamlit\\commentary\\generate_tournament_commentary_v2.py",
+      "line": 297
+    },
+    {
+      "name": "__init__",
+      "file": "streamlit\\helpers\\commentary_generator.py",
+      "line": 37
+    },
+    {
+      "name": "prepare_records_display",
+      "file": "streamlit\\helpers\\display_helpers.py",
+      "line": 38
+    },
+    {
+      "name": "process_winners_for_charts",
+      "file": "streamlit\\helpers\\history_data_processing.py",
+      "line": 12
+    },
+    {
+      "name": "create_bar_chart",
+      "file": "streamlit\\helpers\\history_data_processing.py",
+      "line": 131
+    },
+    {
+      "name": "prepare_complete_history_table",
+      "file": "streamlit\\helpers\\history_data_processing.py",
+      "line": 283
+    },
+    {
+      "name": "display_completeness_status",
+      "file": "streamlit\\helpers\\history_data_processing.py",
+      "line": 404
+    },
+    {
+      "name": "display_completeness_status",
+      "file": "streamlit\\helpers\\history_data_processing.py",
+      "line": 694
+    },
+    {
+      "name": "load_records_page_css",
+      "file": "streamlit\\helpers\\records_css.py",
+      "line": 10
+    },
+    {
+      "name": "identify_aggregate_records_and_pbs",
+      "file": "streamlit\\helpers\\records_identification.py",
+      "line": 49
+    },
+    {
+      "name": "identify_9hole_records_and_pbs",
+      "file": "streamlit\\helpers\\records_identification.py",
+      "line": 134
+    },
+    {
+      "name": "identify_streak_records",
+      "file": "streamlit\\helpers\\records_identification.py",
+      "line": 209
+    },
+    {
+      "name": "identify_all_time_worsts",
+      "file": "streamlit\\helpers\\records_identification.py",
+      "line": 296
+    },
+    {
+      "name": "identify_score_count_records",
+      "file": "streamlit\\helpers\\records_identification.py",
+      "line": 352
+    },
+    {
+      "name": "display_records_and_pbs_summary",
+      "file": "streamlit\\helpers\\records_identification.py",
+      "line": 495
+    },
+    {
+      "name": "format_percentage_for_display",
+      "file": "streamlit\\helpers\\score_count_processing.py",
+      "line": 230
+    },
+    {
+      "name": "create_stacked_bar_chart",
+      "file": "streamlit\\helpers\\score_count_processing.py",
+      "line": 254
+    },
+    {
+      "name": "create_achievement_tab_labels",
+      "file": "streamlit\\helpers\\scoring_achievements_processing.py",
+      "line": 32
+    },
+    {
+      "name": "prepare_streak_data_for_display",
+      "file": "streamlit\\helpers\\streak_analysis_processing.py",
+      "line": 220
+    },
+    {
+      "name": "prepare_inverse_streak_data_for_display",
+      "file": "streamlit\\helpers\\streak_analysis_processing.py",
+      "line": 243
+    },
+    {
+      "name": "get_performance_measure_titles",
+      "file": "streamlit\\helpers\\worst_performance_processing.py",
+      "line": 11
+    },
+    {
+      "name": "load_worst_performance_custom_css",
+      "file": "streamlit\\helpers\\worst_performance_processing.py",
+      "line": 85
+    },
+    {
+      "name": "create_worst_performance_section",
+      "file": "streamlit\\helpers\\worst_performance_processing.py",
+      "line": 136
+    },
+    {
+      "name": "create_round_graph",
+      "file": "streamlit\\make_charts.py",
+      "line": 127
+    },
+    {
+      "name": "create_position_count_summary",
+      "file": "streamlit\\player_history.py",
+      "line": 84
+    },
+    {
+      "name": "create_average_position_summary",
+      "file": "streamlit\\player_history.py",
+      "line": 155
+    },
+    {
+      "name": "generate_scorecard_html",
+      "file": "streamlit\\scorecard_utils.py",
+      "line": 15
+    },
+    {
+      "name": "theme_for",
+      "file": "streamlit\\styles\\altair_theme.py",
+      "line": 193
+    },
+    {
+      "name": "clear_volume_cache",
+      "file": "streamlit\\utils.py",
+      "line": 650
+    },
+    {
+      "name": "check_hc_strokes_combinations",
+      "file": "streamlit\\utils.py",
+      "line": 953
+    },
+    {
+      "name": "save_to_parquet",
+      "file": "streamlit\\utils.py",
+      "line": 1061
+    },
+    {
+      "name": "get_Pl_data",
+      "file": "streamlit\\utils.py",
+      "line": 2928
+    },
+    {
+      "name": "safe_ordinal",
+      "file": "streamlit\\utils.py",
+      "line": 3095
+    },
+    {
+      "name": "get_last_completed_teg_fast",
+      "file": "streamlit\\utils.py",
+      "line": 3966
+    },
+    {
+      "name": "add_section_navigation_links",
+      "file": "streamlit\\utils.py",
+      "line": 4193
+    },
+    {
+      "name": "create_custom_navigation_section",
+      "file": "streamlit\\utils.py",
+      "line": 4330
+    }
+  ],
+  "used_function_names": [
+    "Anthropic",
+    "ArgumentParser",
+    "Axis",
+    "BytesIO",
+    "Categorical",
+    "CategoricalDtype",
+    "Chart",
+    "CheckboxColumn",
+    "Color",
+    "DataFrame",
+    "EncodingSortField",
+    "Exception",
+    "Figure",
+    "FileNotFoundError",
+    "Github",
+    "ImportError",
+    "InputGitTreeElement",
+    "KeyError",
+    "Legend",
+    "NumberColumn",
+    "Page",
+    "Path",
+    "ProgressTracker",
+    "RuntimeError",
+    "Scale",
+    "Scatter",
+    "Series",
+    "StringIO",
+    "SystemExit",
+    "Text",
+    "TextColumn",
+    "TokenMinuteLimiter",
+    "Tooltip",
+    "TypeError",
+    "ValueError",
+    "X",
+    "XOffset",
+    "Y",
+    "ZipFile",
+    "_add_series_markers",
+    "_blob_stats",
+    "_coerce_record_dict",
+    "_drop_null_keys",
+    "_ensure_volume_dir",
+    "_est_tokens",
+    "_expand_range",
+    "_find_generator",
+    "_generate_round_report",
+    "_generate_tournament_reports",
+    "_get_local_path",
+    "_get_repo_and_branch",
+    "_get_token",
+    "_get_tournament_status_text",
+    "_get_volume_path",
+    "_headers",
+    "_human_bytes",
+    "_is_hidden",
+    "_is_list_of_dicts",
+    "_is_railway",
+    "_json_size",
+    "_link_html",
+    "_merge_gross_net_windows",
+    "_normalise_records_payload",
+    "_now",
+    "_output_path_for",
+    "_parse_github_date",
+    "_prune",
+    "_rename_keys",
+    "_report_selection",
+    "_safe_len",
+    "_section_link_html",
+    "_status_row",
+    "_stringify_holders",
+    "_validate_commentary_cache_files",
+    "abbreviate_for_prompt",
+    "abs",
+    "acquire",
+    "add",
+    "add_annotation",
+    "add_argument",
+    "add_course_info_to_file",
+    "add_cumulative_scores",
+    "add_custom_navigation_links",
+    "add_navigation_links",
+    "add_params",
+    "add_rankings_and_gaps",
+    "add_ranks",
+    "add_round_annotations",
+    "add_round_info",
+    "add_simple_navigation_links",
+    "add_trace",
+    "add_traces",
+    "add_vline",
+    "adjust_opening_streak",
+    "adjusted_grossvp",
+    "adjusted_stableford",
+    "agg",
+    "aggregate_data",
+    "altair_chart",
+    "altair_theme",
+    "analyze_front_back_nine",
+    "analyze_hole_level_differences",
+    "analyze_lead_progression",
+    "analyze_momentum_windows",
+    "analyze_position_changes",
+    "analyze_teg_completion",
+    "any",
+    "append",
+    "append_factual_sections",
+    "apply",
+    "apply_custom_navigation_css",
+    "apply_score_types",
+    "apply_teg_and_par_filters",
+    "applymap",
+    "arange",
+    "as_posix",
+    "assign",
+    "astimezone",
+    "astype",
+    "authorize",
+    "average",
+    "b64decode",
+    "b64encode",
+    "backup_file",
+    "balloons",
+    "bar",
+    "basename",
+    "basicConfig",
+    "batch_commit_to_github",
+    "between",
+    "bool",
+    "build_career_context",
+    "build_course_context",
+    "build_course_records",
+    "build_location_context",
+    "build_round_report_file",
+    "build_story_notes_file",
+    "build_streaks",
+    "build_venue_context",
+    "button",
+    "cache_data",
+    "calc_running_sums",
+    "calc_wins_before",
+    "calculate_and_save_missing_winners",
+    "calculate_bestball_scores",
+    "calculate_biggest_comebacks",
+    "calculate_biggest_leads_lost_after_r3",
+    "calculate_biggest_leads_lost_in_r4",
+    "calculate_combined_eclectic",
+    "calculate_course_round_counts",
+    "calculate_eclectic_by_dimension",
+    "calculate_final_round_differentials",
+    "calculate_hole_by_hole_positions",
+    "calculate_hole_by_hole_positions_dual",
+    "calculate_hole_difficulty",
+    "calculate_inverse_multi_score_running_sum",
+    "calculate_multi_score_running_sum",
+    "calculate_par_performance_matrix",
+    "calculate_player_distributions",
+    "calculate_player_inverse_streaks",
+    "calculate_player_streaks",
+    "calculate_six_hole_splits",
+    "calculate_team_eclectics",
+    "calculate_tournament_projections",
+    "calculate_trophy_jacket_doubles",
+    "calculate_victory_context",
+    "calculate_window_streaks",
+    "calculate_worstball_scores",
+    "callable",
+    "caption",
+    "ceil",
+    "check_batch_status",
+    "check_for_complete_and_duplicate_data",
+    "check_for_duplicate_data",
+    "check_output",
+    "check_winner_completeness",
+    "checkbox",
+    "chosen_rd_context",
+    "chosen_teg_context",
+    "clear",
+    "clear_all_caches",
+    "clip",
+    "code",
+    "columns",
+    "compact_round_data_lossless",
+    "compile",
+    "complete",
+    "compress_ranges",
+    "compute_overall_trend",
+    "concat",
+    "condense_tournament_data",
+    "condition",
+    "configure",
+    "container",
+    "contains",
+    "convert_counts_to_percentages",
+    "convert_filename_to_streamlit_url",
+    "convert_trophy_name",
+    "copy",
+    "count",
+    "count_scores_by_player",
+    "create",
+    "create_alt_profile",
+    "create_batch_request",
+    "create_combined_position_summary",
+    "create_course_performance_table",
+    "create_course_records_summary",
+    "create_course_records_table",
+    "create_course_summary_table",
+    "create_cumulative_graph",
+    "create_data_summary_display",
+    "create_file",
+    "create_generation_queue",
+    "create_git_blob",
+    "create_git_commit",
+    "create_git_tree",
+    "create_leaderboard",
+    "create_net_competition_ranking_table",
+    "create_net_course_records_summary",
+    "create_net_course_records_table",
+    "create_percentage_distribution_chart",
+    "create_ridgeline_distribution_chart",
+    "create_round_events",
+    "create_round_streaks_summary",
+    "create_round_summary",
+    "create_section_title",
+    "create_stat_section",
+    "create_story_blueprint",
+    "create_teg_ranking_table",
+    "create_timestamped_backups",
+    "create_tournament_streaks_summary",
+    "create_tournament_summary",
+    "crosstab",
+    "cumcount",
+    "cumsum",
+    "cwd",
+    "dashed_line",
+    "data_editor",
+    "dataframe",
+    "datawrapper_table",
+    "debug",
+    "decode",
+    "deep_merge",
+    "deepcopy",
+    "default",
+    "defaultdict",
+    "define_score_types",
+    "deque",
+    "determine_control_states",
+    "dict",
+    "diff",
+    "dirname",
+    "disable_max_rows",
+    "display_leaderboard",
+    "display_net_leaderboard",
+    "div",
+    "divider",
+    "download_button",
+    "dprint",
+    "drill_down_patterns",
+    "drop",
+    "drop_duplicates",
+    "dropna",
+    "dump",
+    "dumps",
+    "duplicated",
+    "edit",
+    "encode",
+    "endswith",
+    "ensure_data_symlink",
+    "enumerate",
+    "eq",
+    "equals",
+    "error",
+    "example_workflow",
+    "exclude_incomplete_tegs_function",
+    "exec_module",
+    "execute_data_deletion",
+    "execute_data_update",
+    "exists",
+    "exit",
+    "expander",
+    "experimental_get_query_params",
+    "extend",
+    "extract",
+    "extract_player_info",
+    "extract_satirical_reports",
+    "extract_teg_num",
+    "fillna",
+    "filter",
+    "filter_data_by_area",
+    "filter_data_by_teg",
+    "filter_data_for_eclectic",
+    "find_batch_info_file",
+    "find_spec",
+    "find_streak_location",
+    "first",
+    "float",
+    "fmt",
+    "format",
+    "format_achievement_dataframe_columns",
+    "format_average_value",
+    "format_change",
+    "format_course_info_section",
+    "format_date_for_scorecard",
+    "format_eclectic_display_table",
+    "format_eclectic_table",
+    "format_exc",
+    "format_hole_location",
+    "format_name",
+    "format_par_performance_table",
+    "format_performance_number",
+    "format_performance_value",
+    "format_player_value",
+    "format_record_value",
+    "format_records_and_pbs_section",
+    "format_round_data_for_prompt",
+    "format_scoring_stats_columns",
+    "format_team_scores_for_display",
+    "format_value",
+    "format_venue_section",
+    "format_vs_par",
+    "format_vs_par_value",
+    "from_service_account_info",
+    "fromkeys",
+    "fromtimestamp",
+    "fullmatch",
+    "ge",
+    "generate_all_reports_for_tournament",
+    "generate_all_tournaments",
+    "generate_alt_profile",
+    "generate_batch_reports",
+    "generate_batch_reports_via_api",
+    "generate_brief_summary",
+    "generate_complete_round_report",
+    "generate_complete_story_notes",
+    "generate_main_report",
+    "generate_navigation_structure",
+    "generate_player_profiles",
+    "generate_reports_for_changes",
+    "generate_reports_from_story_notes",
+    "generate_reports_via_batch_api",
+    "generate_round_comparison_html",
+    "generate_round_comparison_html_mobile",
+    "generate_round_narrative_report",
+    "generate_round_story",
+    "generate_round_story_notes",
+    "generate_satirical_report",
+    "generate_single_round_html",
+    "generate_single_round_html_mobile",
+    "generate_story_notes_for_teg_range",
+    "generate_story_notes_up_to_round",
+    "generate_story_notes_via_batch_api",
+    "generate_table_html",
+    "generate_tournament_commentary",
+    "generate_tournament_html",
+    "generate_tournament_html_mobile",
+    "generate_tournament_synthesis",
+    "get",
+    "getLogger",
+    "get_9_data",
+    "get_all_records",
+    "get_all_streak_tables",
+    "get_all_time_score_count_record",
+    "get_api_key",
+    "get_app_base_url",
+    "get_available_tegs",
+    "get_available_tegs_and_rounds",
+    "get_base_directory",
+    "get_batch_results",
+    "get_best",
+    "get_bestball_columns",
+    "get_champions",
+    "get_complete_teg_data",
+    "get_contents",
+    "get_current_branch",
+    "get_current_equals_max_streaks",
+    "get_current_handicaps_formatted",
+    "get_current_in_progress_teg_fast",
+    "get_current_streaks",
+    "get_current_streaks_data",
+    "get_data",
+    "get_eagles_data",
+    "get_filtered_teg_data",
+    "get_filtering_options",
+    "get_friendly_metric_name",
+    "get_future_tegs",
+    "get_git_commit",
+    "get_git_ref",
+    "get_google_sheet",
+    "get_hc",
+    "get_historical_finishing_positions",
+    "get_holes_in_one_data",
+    "get_incomplete_tegs",
+    "get_inverse_score_type_definitions",
+    "get_last_place",
+    "get_max_streaks",
+    "get_measure_name_mappings",
+    "get_net_competition_measure",
+    "get_next_teg_and_check_if_in_progress",
+    "get_next_teg_and_check_if_in_progress_fast",
+    "get_number_of_completed_rounds_by_teg",
+    "get_overall_top_eclectics",
+    "get_page_layout",
+    "get_personal_best_eclectics",
+    "get_player_mapping",
+    "get_player_name",
+    "get_player_window_streaks",
+    "get_previous_round_scores",
+    "get_prompt_info",
+    "get_ranked_frontback_data",
+    "get_ranked_round_data",
+    "get_ranked_teg_data",
+    "get_repo",
+    "get_round_data",
+    "get_round_ending_context",
+    "get_round_options_for_tournament",
+    "get_round_storylines",
+    "get_rounds_for_teg",
+    "get_score_type_definitions",
+    "get_scorecard_data",
+    "get_scorecard_type_mapping",
+    "get_scoring_achievement_fields",
+    "get_section_layouts",
+    "get_selection_options",
+    "get_teg_data_inc_in_progress",
+    "get_teg_filter_options",
+    "get_teg_metadata",
+    "get_teg_rounds",
+    "get_teg_winners",
+    "get_tegnum_rounds",
+    "get_trophy_full_name",
+    "get_worst",
+    "getattr",
+    "getenv",
+    "getvalue",
+    "gh_download_bytes",
+    "gh_get_contents_path",
+    "gh_put_file",
+    "glob",
+    "group",
+    "groupby",
+    "guess_type",
+    "has_incomplete_teg_fast",
+    "hasattr",
+    "head",
+    "hexdigest",
+    "hide",
+    "hole_sig",
+    "identify_course_records",
+    "identify_round_momentum_shifts",
+    "identify_round_records_and_pbs",
+    "idxmax",
+    "idxmin",
+    "image",
+    "index",
+    "info",
+    "initialize_deletion_state",
+    "initialize_scorecard_session_state",
+    "initialize_update_state",
+    "insert",
+    "int",
+    "is_dir",
+    "is_file",
+    "is_integer",
+    "is_numeric_dtype",
+    "is_tournament_complete",
+    "isdigit",
+    "isin",
+    "isinf",
+    "isinstance",
+    "isna",
+    "isnan",
+    "isoformat",
+    "items",
+    "iterdir",
+    "iterrows",
+    "join",
+    "json",
+    "key_of",
+    "keys",
+    "layer",
+    "len",
+    "list",
+    "list_dirs_under",
+    "list_fields_by_aggregation_level",
+    "list_files_in_dir",
+    "list_github_files",
+    "list_pending_batches",
+    "list_recent_batches",
+    "list_volume_files",
+    "list_volume_md_files",
+    "listdir",
+    "load",
+    "load_all_data",
+    "load_all_data_for_teg",
+    "load_and_prepare_handicap_data",
+    "load_batch_info",
+    "load_cached_winners",
+    "load_course_info",
+    "load_css_file",
+    "load_data",
+    "load_datawrapper_css",
+    "load_markdown",
+    "load_round_data",
+    "load_round_report_data",
+    "load_scorecard_css",
+    "load_scores_data",
+    "load_teg_reports_css",
+    "load_tournament_data",
+    "load_unified_round_data",
+    "loads",
+    "local_md_paths",
+    "localtime",
+    "lower",
+    "lstrip",
+    "main",
+    "make_row_label",
+    "make_subplots",
+    "makedirs",
+    "map",
+    "mark_bar",
+    "mark_boxplot",
+    "mark_circle",
+    "mark_line",
+    "mark_point",
+    "mark_rect",
+    "mark_text",
+    "markdown",
+    "match",
+    "max",
+    "max_scoretype_per_round",
+    "max_scoretype_per_teg",
+    "mean",
+    "melt",
+    "merge",
+    "merged_status",
+    "metric",
+    "min",
+    "mkdir",
+    "module_from_spec",
+    "monotonic",
+    "move_to_production",
+    "move_tournament_report_to_production",
+    "multiselect",
+    "nanmean",
+    "navigation",
+    "ne",
+    "next",
+    "next_item",
+    "nlargest",
+    "notna",
+    "notnull",
+    "now",
+    "nsmallest",
+    "number_input",
+    "nunique",
+    "open",
+    "ordinal",
+    "parse_args",
+    "parse_range",
+    "pick",
+    "pivot",
+    "pivot_table",
+    "plan_wait",
+    "plotly_chart",
+    "poll_until_complete",
+    "polyfit",
+    "pop",
+    "popleft",
+    "popover",
+    "post_process_ranking_table",
+    "prepare_achievement_table_data",
+    "prepare_area_filter_options",
+    "prepare_average_scores_by_par",
+    "prepare_bad_streaks_data",
+    "prepare_best_round_table",
+    "prepare_best_teg_table",
+    "prepare_bestball_data",
+    "prepare_chart_data_with_special_handling",
+    "prepare_complete_history_table_fast",
+    "prepare_current_bad_streaks_data",
+    "prepare_current_good_streaks_data",
+    "prepare_good_streaks_data",
+    "prepare_history_table_display",
+    "prepare_pb_nine_summary_table",
+    "prepare_pb_round_summary_table",
+    "prepare_pb_teg_summary_table",
+    "prepare_personal_best_round_table",
+    "prepare_personal_best_teg_table",
+    "prepare_personal_worst_round_table",
+    "prepare_personal_worst_teg_table",
+    "prepare_record_best_streaks_data",
+    "prepare_record_worst_streaks_data",
+    "prepare_records_table",
+    "prepare_round_data_with_identifiers",
+    "prepare_score_count_display",
+    "prepare_score_count_records_table",
+    "prepare_scorecard_selection_options",
+    "prepare_streak_records_table",
+    "prepare_tournament_data",
+    "prepare_tournament_display_data",
+    "prepare_worst_performance_dataframe",
+    "prepare_worst_records_table",
+    "prepare_worst_round_table",
+    "prepare_worst_teg_table",
+    "pretty_sel",
+    "preview_deletion_data",
+    "print",
+    "print_exc",
+    "print_help",
+    "process_all_data_types",
+    "process_google_sheets_data",
+    "process_round_for_all_scores",
+    "properties",
+    "put",
+    "query",
+    "radio",
+    "raise_for_status",
+    "range",
+    "rank",
+    "read",
+    "read_bytes",
+    "read_csv",
+    "read_file",
+    "read_from_github",
+    "read_local",
+    "read_parquet",
+    "read_schema",
+    "read_text",
+    "read_text_file",
+    "read_text_from_github",
+    "reindex",
+    "relative_to",
+    "remove",
+    "rename",
+    "render_report",
+    "replace",
+    "repr",
+    "rerun",
+    "reset_index",
+    "reshape_round_data",
+    "resolve",
+    "resolve_scale",
+    "results",
+    "retrieve",
+    "retrieve_batch_results_round_reports",
+    "retrieve_story_notes_batch",
+    "rglob",
+    "rmtree",
+    "rolling",
+    "round",
+    "run",
+    "run_for_teg",
+    "safe_create_message",
+    "safe_float",
+    "safe_int",
+    "save_batch_info",
+    "save_batch_requests",
+    "save_generated_report",
+    "save_markdown_to_volume",
+    "save_teg_status_file",
+    "score_type_stats",
+    "search",
+    "seek",
+    "segmented_control",
+    "select_dtypes",
+    "selectbox",
+    "selection_point",
+    "set",
+    "set_index",
+    "set_module_switches",
+    "set_page_config",
+    "set_table_attributes",
+    "set_td_classes",
+    "set_total",
+    "setdefault",
+    "sha1",
+    "shift",
+    "simplify_content",
+    "size",
+    "sleep",
+    "slider",
+    "sort",
+    "sort_index",
+    "sort_players_by_average",
+    "sort_values",
+    "sorted",
+    "spec_from_file_location",
+    "spinner",
+    "split",
+    "startswith",
+    "stat",
+    "status",
+    "stop",
+    "str",
+    "strftime",
+    "strip",
+    "strptime",
+    "sub",
+    "subheader",
+    "submit_batch",
+    "success",
+    "sum",
+    "summarise_existing_rd_data",
+    "summarise_teg_wins",
+    "summarize_inverse_multi_score_running_sum",
+    "summarize_multi_score_running_sum",
+    "super",
+    "symlink_to",
+    "tabs",
+    "tail",
+    "teg_sort_key",
+    "text_area",
+    "text_input",
+    "time",
+    "title",
+    "to_csv",
+    "to_datetime",
+    "to_dict",
+    "to_html",
+    "to_int_or_zero",
+    "to_numeric",
+    "to_parquet",
+    "toast",
+    "tolist",
+    "total_seconds",
+    "transform",
+    "transform_cached_bad_streaks",
+    "transform_cached_good_streaks",
+    "transform_calculate",
+    "transform_handicaps_to_csv_format",
+    "tuple",
+    "type",
+    "unique",
+    "unlink",
+    "unstack",
+    "update",
+    "update_all_data",
+    "update_bestball_cache",
+    "update_commentary_caches",
+    "update_file",
+    "update_layout",
+    "update_streaks_cache",
+    "update_teg_status_files",
+    "update_traces",
+    "update_xaxes",
+    "update_yaxes",
+    "upper",
+    "used_last_min",
+    "validate_and_prepare_single_round_data",
+    "validate_deletion_selection",
+    "value",
+    "value_counts",
+    "values",
+    "vol_read_bytes",
+    "vol_write_bytes",
+    "warning",
+    "where",
+    "worksheet",
+    "wrap_player_name",
+    "write",
+    "write_file",
+    "write_round_inspection",
+    "write_synthesis_inspection",
+    "write_text",
+    "write_text_file",
+    "write_text_to_github",
+    "write_to_github",
+    "write_tournament_article",
+    "y_calculation",
+    "zfill",
+    "zip"
+  ],
+  "usage_details": [
+    {
+      "caller": null,
+      "called": "title",
+      "file": "streamlit\\1000Data update.py",
+      "line": 45,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "basicConfig",
+      "file": "streamlit\\1000Data update.py",
+      "line": 48,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "getLogger",
+      "file": "streamlit\\1000Data update.py",
+      "line": 49,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "initialize_update_state",
+      "file": "streamlit\\1000Data update.py",
+      "line": 52,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 65,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1000Data update.py",
+      "line": 67,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "spinner",
+      "file": "streamlit\\1000Data update.py",
+      "line": 68,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_google_sheet",
+      "file": "streamlit\\1000Data update.py",
+      "line": 70,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "process_google_sheets_data",
+      "file": "streamlit\\1000Data update.py",
+      "line": 73,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\1000Data update.py",
+      "line": 76,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "rerun",
+      "file": "streamlit\\1000Data update.py",
+      "line": 81,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 86,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "create_data_summary_display",
+      "file": "streamlit\\1000Data update.py",
+      "line": 89,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "dataframe",
+      "file": "streamlit\\1000Data update.py",
+      "line": 90,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 92,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "columns",
+      "file": "streamlit\\1000Data update.py",
+      "line": 93,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1000Data update.py",
+      "line": 96,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "check_for_duplicate_data",
+      "file": "streamlit\\1000Data update.py",
+      "line": 98,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "rerun",
+      "file": "streamlit\\1000Data update.py",
+      "line": 102,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1000Data update.py",
+      "line": 105,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "initialize_update_state",
+      "file": "streamlit\\1000Data update.py",
+      "line": 107,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "rerun",
+      "file": "streamlit\\1000Data update.py",
+      "line": 108,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1000Data update.py",
+      "line": 111,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "clear_all_caches",
+      "file": "streamlit\\1000Data update.py",
+      "line": 113,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "success",
+      "file": "streamlit\\1000Data update.py",
+      "line": 114,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 119,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 120,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "analyze_hole_level_differences",
+      "file": "streamlit\\1000Data update.py",
+      "line": 123,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 126,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 127,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "dataframe",
+      "file": "streamlit\\1000Data update.py",
+      "line": 128,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 130,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 133,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "summarise_existing_rd_data",
+      "file": "streamlit\\1000Data update.py",
+      "line": 134,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "dataframe",
+      "file": "streamlit\\1000Data update.py",
+      "line": 135,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 137,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "columns",
+      "file": "streamlit\\1000Data update.py",
+      "line": 139,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1000Data update.py",
+      "line": 142,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "execute_data_update",
+      "file": "streamlit\\1000Data update.py",
+      "line": 145,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "initialize_update_state",
+      "file": "streamlit\\1000Data update.py",
+      "line": 146,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1000Data update.py",
+      "line": 149,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "execute_data_update",
+      "file": "streamlit\\1000Data update.py",
+      "line": 152,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "initialize_update_state",
+      "file": "streamlit\\1000Data update.py",
+      "line": 153,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1000Data update.py",
+      "line": 156,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "initialize_update_state",
+      "file": "streamlit\\1000Data update.py",
+      "line": 158,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "rerun",
+      "file": "streamlit\\1000Data update.py",
+      "line": 159,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "spinner",
+      "file": "streamlit\\1000Data update.py",
+      "line": 164,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "execute_data_update",
+      "file": "streamlit\\1000Data update.py",
+      "line": 166,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "initialize_update_state",
+      "file": "streamlit\\1000Data update.py",
+      "line": 167,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "success",
+      "file": "streamlit\\1000Data update.py",
+      "line": 168,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 175,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 176,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "hasattr",
+      "file": "streamlit\\1000Data update.py",
+      "line": 179,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 181,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "sorted",
+      "file": "streamlit\\1000Data update.py",
+      "line": 185,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "keys",
+      "file": "streamlit\\1000Data update.py",
+      "line": 185,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "join",
+      "file": "streamlit\\1000Data update.py",
+      "line": 187,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "map",
+      "file": "streamlit\\1000Data update.py",
+      "line": 187,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "sorted",
+      "file": "streamlit\\1000Data update.py",
+      "line": 187,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "append",
+      "file": "streamlit\\1000Data update.py",
+      "line": 188,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 191,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 193,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 196,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 197,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1000Data update.py",
+      "line": 199,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "status",
+      "file": "streamlit\\1000Data update.py",
+      "line": 200,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "ProgressTracker",
+      "file": "streamlit\\1000Data update.py",
+      "line": 205,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "generate_reports_for_changes",
+      "file": "streamlit\\1000Data update.py",
+      "line": 208,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 211,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 212,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 216,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "len",
+      "file": "streamlit\\1000Data update.py",
+      "line": 216,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 218,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 220,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 224,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "len",
+      "file": "streamlit\\1000Data update.py",
+      "line": 224,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 226,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 228,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get",
+      "file": "streamlit\\1000Data update.py",
+      "line": 231,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 232,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "len",
+      "file": "streamlit\\1000Data update.py",
+      "line": 232,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 233,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 236,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 238,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\1000Data update.py",
+      "line": 239,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get",
+      "file": "streamlit\\1000Data update.py",
+      "line": 242,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 243,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "len",
+      "file": "streamlit\\1000Data update.py",
+      "line": 243,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "warning",
+      "file": "streamlit\\1000Data update.py",
+      "line": 245,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get",
+      "file": "streamlit\\1000Data update.py",
+      "line": 248,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "update",
+      "file": "streamlit\\1000Data update.py",
+      "line": 249,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "len",
+      "file": "streamlit\\1000Data update.py",
+      "line": 250,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "update",
+      "file": "streamlit\\1000Data update.py",
+      "line": 254,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "len",
+      "file": "streamlit\\1000Data update.py",
+      "line": 255,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "update",
+      "file": "streamlit\\1000Data update.py",
+      "line": 259,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\1000Data update.py",
+      "line": 265,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "str",
+      "file": "streamlit\\1000Data update.py",
+      "line": 265,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\1000Data update.py",
+      "line": 266,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "update",
+      "file": "streamlit\\1000Data update.py",
+      "line": 267,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 269,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 272,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "expander",
+      "file": "streamlit\\1000Data update.py",
+      "line": 273,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "sorted",
+      "file": "streamlit\\1000Data update.py",
+      "line": 274,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "keys",
+      "file": "streamlit\\1000Data update.py",
+      "line": 274,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 275,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "sorted",
+      "file": "streamlit\\1000Data update.py",
+      "line": 276,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "columns",
+      "file": "streamlit\\1000Data update.py",
+      "line": 277,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "len",
+      "file": "streamlit\\1000Data update.py",
+      "line": 277,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "enumerate",
+      "file": "streamlit\\1000Data update.py",
+      "line": 279,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1000Data update.py",
+      "line": 281,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "status",
+      "file": "streamlit\\1000Data update.py",
+      "line": 282,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "ProgressTracker",
+      "file": "streamlit\\1000Data update.py",
+      "line": 290,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "generate_reports_for_changes",
+      "file": "streamlit\\1000Data update.py",
+      "line": 293,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "success",
+      "file": "streamlit\\1000Data update.py",
+      "line": 296,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "update",
+      "file": "streamlit\\1000Data update.py",
+      "line": 297,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\1000Data update.py",
+      "line": 299,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "update",
+      "file": "streamlit\\1000Data update.py",
+      "line": 300,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\1000Data update.py",
+      "line": 303,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "str",
+      "file": "streamlit\\1000Data update.py",
+      "line": 303,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "update",
+      "file": "streamlit\\1000Data update.py",
+      "line": 304,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 306,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 309,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "expander",
+      "file": "streamlit\\1000Data update.py",
+      "line": 310,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "keys",
+      "file": "streamlit\\1000Data update.py",
+      "line": 313,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "is_tournament_complete",
+      "file": "streamlit\\1000Data update.py",
+      "line": 313,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "columns",
+      "file": "streamlit\\1000Data update.py",
+      "line": 316,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "len",
+      "file": "streamlit\\1000Data update.py",
+      "line": 316,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "enumerate",
+      "file": "streamlit\\1000Data update.py",
+      "line": 317,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1000Data update.py",
+      "line": 319,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "status",
+      "file": "streamlit\\1000Data update.py",
+      "line": 320,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "ProgressTracker",
+      "file": "streamlit\\1000Data update.py",
+      "line": 329,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "generate_reports_for_changes",
+      "file": "streamlit\\1000Data update.py",
+      "line": 332,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "success",
+      "file": "streamlit\\1000Data update.py",
+      "line": 335,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "update",
+      "file": "streamlit\\1000Data update.py",
+      "line": 336,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\1000Data update.py",
+      "line": 338,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "update",
+      "file": "streamlit\\1000Data update.py",
+      "line": 339,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\1000Data update.py",
+      "line": 342,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "str",
+      "file": "streamlit\\1000Data update.py",
+      "line": 342,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "update",
+      "file": "streamlit\\1000Data update.py",
+      "line": 343,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\1000Data update.py",
+      "line": 345,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\1000Data update.py",
+      "line": 348,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\1000Data update.py",
+      "line": 352,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 359,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 360,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1000Data update.py",
+      "line": 362,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "spinner",
+      "file": "streamlit\\1000Data update.py",
+      "line": 363,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "check_for_complete_and_duplicate_data",
+      "file": "streamlit\\1000Data update.py",
+      "line": 365,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "any",
+      "file": "streamlit\\1000Data update.py",
+      "line": 366,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "values",
+      "file": "streamlit\\1000Data update.py",
+      "line": 366,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\1000Data update.py",
+      "line": 369,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "items",
+      "file": "streamlit\\1000Data update.py",
+      "line": 370,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1000Data update.py",
+      "line": 372,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "title",
+      "file": "streamlit\\1000Data update.py",
+      "line": 372,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "replace",
+      "file": "streamlit\\1000Data update.py",
+      "line": 372,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "dataframe",
+      "file": "streamlit\\1000Data update.py",
+      "line": 373,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "success",
+      "file": "streamlit\\1000Data update.py",
+      "line": 375,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1000Data update.py",
+      "line": 377,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "clear",
+      "file": "streamlit\\1000Data update.py",
+      "line": 378,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "success",
+      "file": "streamlit\\1000Data update.py",
+      "line": 379,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "rerun",
+      "file": "streamlit\\1000Data update.py",
+      "line": 380,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "append",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 17,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "str",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 17,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "Path",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 17,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "append",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 23,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "join",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 23,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "dirname",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 23,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "str",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 46,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "title",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 52,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 55,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 56,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "stop",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 57,
+      "type": "call"
+    },
+    {
+      "caller": "get_available_tegs",
+      "called": "read_file",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 73,
+      "type": "call"
+    },
+    {
+      "caller": "get_available_tegs",
+      "called": "sorted",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 74,
+      "type": "call"
+    },
+    {
+      "caller": "get_available_tegs",
+      "called": "unique",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 74,
+      "type": "call"
+    },
+    {
+      "caller": "get_available_tegs",
+      "called": "error",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 77,
+      "type": "call"
+    },
+    {
+      "caller": "save_generated_report",
+      "called": "now",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 127,
+      "type": "call"
+    },
+    {
+      "caller": "get_draft_files",
+      "called": "getenv",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 137,
+      "type": "call"
+    },
+    {
+      "caller": "get_draft_files",
+      "called": "glob",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 143,
+      "type": "call"
+    },
+    {
+      "caller": "get_draft_files",
+      "called": "basename",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 144,
+      "type": "call"
+    },
+    {
+      "caller": "get_draft_files",
+      "called": "error",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 146,
+      "type": "call"
+    },
+    {
+      "caller": "move_to_production",
+      "called": "read_text_file",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 153,
+      "type": "call"
+    },
+    {
+      "caller": "move_to_production",
+      "called": "write_text_file",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 156,
+      "type": "call"
+    },
+    {
+      "caller": "move_to_production",
+      "called": "error",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 164,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 171,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "radio",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 174,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 181,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_available_tegs",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 184,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "selectbox",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 185,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "len",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 188,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "read_text_file",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 195,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 201,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "warning",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 203,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 205,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "columns",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 207,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "checkbox",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 210,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "checkbox",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 217,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "checkbox",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 224,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "checkbox",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 231,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 239,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 242,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 245,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "status",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 248,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 252,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "generate_complete_story_notes",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 253,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 254,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "save_generated_report",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 255,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 259,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "generate_main_report",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 260,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 261,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "save_generated_report",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 262,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 266,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "generate_brief_summary",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 267,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 268,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "save_generated_report",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 269,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 273,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "generate_satirical_report",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 274,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 275,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "save_generated_report",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 276,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "update",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 278,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "update",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 281,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 282,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "expander",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 284,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "code",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 285,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "format_exc",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 285,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 288,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_available_tegs",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 291,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "selectbox",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 292,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "len",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 295,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_teg_rounds",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 300,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "selectbox",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 301,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "list",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 303,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "range",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 303,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 307,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "spinner",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 308,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "generate_complete_round_report",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 311,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "read_text_file",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 314,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "str",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 314,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "read_text_file",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 315,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "str",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 315,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "success",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 317,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "save_generated_report",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 320,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "save_generated_report",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 321,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 324,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "format_exc",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 328,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "expander",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 330,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "code",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 331,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "warning",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 333,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 340,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 341,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "items",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 343,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "expander",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 344,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "strftime",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 344,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 345,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "columns",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 347,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "download_button",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 351,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 360,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "move_to_production",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 367,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "success",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 368,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write_text_file",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 371,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "success",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 376,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 378,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 384,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 385,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 387,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 391,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 393,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_prompt_info",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 395,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "selectbox",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 397,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "list",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 399,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "keys",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 399,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 405,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 406,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "text_area",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 409,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "columns",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 416,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 419,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "warning",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 420,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 421,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 424,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "rerun",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 425,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 431,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 432,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 433,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "columns",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 435,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "selectbox",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 438,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "selectbox",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 446,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "columns",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 452,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 455,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "read_text_file",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 458,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "expander",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 460,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 461,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "download_button",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 463,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 473,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 474,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 477,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "move_to_production",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 482,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "success",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 483,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 485,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 487,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 490,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "warning",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 491,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 497,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 498,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 499,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "radio",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 502,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "columns",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 512,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "selectbox",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 515,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "selectbox",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 523,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 529,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "read_text_file",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 532,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "expander",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 534,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 535,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "download_button",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 537,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 545,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 546,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "columns",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 549,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "selectbox",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 552,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_teg_rounds",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 560,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "selectbox",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 561,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "list",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 563,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "range",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 563,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 567,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "read_text_file",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 570,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "expander",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 572,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 573,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "download_button",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 575,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 583,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 584,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 587,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 593,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 594,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "columns",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 596,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 599,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "getenv",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 600,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 601,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 602,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 605,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 606,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "clear",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 607,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "success",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 608,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "rerun",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 609,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_page_layout",
+      "file": "streamlit\\101TEG History.py",
+      "line": 34,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "set_page_config",
+      "file": "streamlit\\101TEG History.py",
+      "line": 35,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "title",
+      "file": "streamlit\\101TEG History.py",
+      "line": 38,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "load_datawrapper_css",
+      "file": "streamlit\\101TEG History.py",
+      "line": 41,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\101TEG History.py",
+      "line": 45,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "load_cached_winners",
+      "file": "streamlit\\101TEG History.py",
+      "line": 50,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_complete_history_table_fast",
+      "file": "streamlit\\101TEG History.py",
+      "line": 53,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "copy",
+      "file": "streamlit\\101TEG History.py",
+      "line": 58,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "strip",
+      "file": "streamlit\\101TEG History.py",
+      "line": 59,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "split",
+      "file": "streamlit\\101TEG History.py",
+      "line": 59,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\101TEG History.py",
+      "line": 63,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\101TEG History.py",
+      "line": 64,
+      "type": "call"
+    },
+    {
+      "caller": "wrap_player_name",
+      "called": "isinstance",
+      "file": "streamlit\\101TEG History.py",
+      "line": 71,
+      "type": "call"
+    },
+    {
+      "caller": "wrap_player_name",
+      "called": "strip",
+      "file": "streamlit\\101TEG History.py",
+      "line": 71,
+      "type": "call"
+    },
+    {
+      "caller": "wrap_player_name",
+      "called": "str",
+      "file": "streamlit\\101TEG History.py",
+      "line": 72,
+      "type": "call"
+    },
+    {
+      "caller": "wrap_player_name",
+      "called": "split",
+      "file": "streamlit\\101TEG History.py",
+      "line": 73,
+      "type": "call"
+    },
+    {
+      "caller": "wrap_player_name",
+      "called": "strip",
+      "file": "streamlit\\101TEG History.py",
+      "line": 73,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "applymap",
+      "file": "streamlit\\101TEG History.py",
+      "line": 77,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "wrap_player_name",
+      "file": "streamlit\\101TEG History.py",
+      "line": 77,
+      "type": "arg_reference"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\101TEG History.py",
+      "line": 82,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\101TEG History.py",
+      "line": 83,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "caption",
+      "file": "streamlit\\101TEG History.py",
+      "line": 93,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\101TEG History.py",
+      "line": 97,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\101TEG History.py",
+      "line": 98,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "sorted",
+      "file": "streamlit\\101TEG History.py",
+      "line": 98,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "columns",
+      "file": "streamlit\\101TEG History.py",
+      "line": 100,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\101TEG History.py",
+      "line": 102,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "spinner",
+      "file": "streamlit\\101TEG History.py",
+      "line": 103,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "calculate_and_save_missing_winners",
+      "file": "streamlit\\101TEG History.py",
+      "line": 104,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "success",
+      "file": "streamlit\\101TEG History.py",
+      "line": 105,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "rerun",
+      "file": "streamlit\\101TEG History.py",
+      "line": 106,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "caption",
+      "file": "streamlit\\101TEG History.py",
+      "line": 109,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\101TEG History.py",
+      "line": 113,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "add_custom_navigation_links",
+      "file": "streamlit\\101TEG History.py",
+      "line": 114,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\101TEG History.py",
+      "line": 117,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_page_layout",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 45,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "set_page_config",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 46,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "title",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 49,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "load_datawrapper_css",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 52,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "load_all_data",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 59,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_teg_winners",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 63,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "drop",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 64,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "calculate_trophy_jacket_doubles",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 73,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_trophy_full_name",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 78,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "tabs",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 79,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "enumerate",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 82,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "zip",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 82,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "summarise_teg_wins",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 85,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "replace",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 88,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 90,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "compress_ranges",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 90,
+      "type": "arg_reference"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 93,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 94,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "caption",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 104,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "caption",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 108,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 109,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 110,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_eagles_data",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 120,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 122,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 124,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 125,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_holes_in_one_data",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 135,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 137,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 139,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 140,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 155,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "add_custom_navigation_links",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 156,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\101TEG Honours Board.py",
+      "line": 159,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_page_layout",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 40,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "set_page_config",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 41,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "basicConfig",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 45,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "getLogger",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 46,
+      "type": "call"
+    },
+    {
+      "caller": "load_markdown",
+      "called": "read_text_file",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 66,
+      "type": "call"
+    },
+    {
+      "caller": "load_markdown",
+      "called": "cache_data",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 56,
+      "type": "call"
+    },
+    {
+      "caller": "render_report",
+      "called": "find_spec",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 71,
+      "type": "call"
+    },
+    {
+      "caller": "render_report",
+      "called": "markdown",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 74,
+      "type": "call"
+    },
+    {
+      "caller": "render_report",
+      "called": "markdown",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 76,
+      "type": "call"
+    },
+    {
+      "caller": "render_report",
+      "called": "error",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 78,
+      "type": "call"
+    },
+    {
+      "caller": "_add_series_markers",
+      "called": "getattr",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 83,
+      "type": "call"
+    },
+    {
+      "caller": "_add_series_markers",
+      "called": "isinstance",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 85,
+      "type": "call"
+    },
+    {
+      "caller": "_add_series_markers",
+      "called": "get",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 85,
+      "type": "call"
+    },
+    {
+      "caller": "_add_series_markers",
+      "called": "getattr",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 85,
+      "type": "call"
+    },
+    {
+      "caller": "_add_series_markers",
+      "called": "dict",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 88,
+      "type": "call"
+    },
+    {
+      "caller": "_add_series_markers",
+      "called": "dict",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 92,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "load_datawrapper_css",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 100,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "load_scorecard_css",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 103,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "load_teg_reports_css",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 106,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "spinner",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 114,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_round_data",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 117,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "load_all_data",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 121,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 128,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "join",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 128,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 129,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "join",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 129,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "stop",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 130,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "sort_values",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 133,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "drop_duplicates",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 133,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "tolist",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 134,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "warning",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 137,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "stop",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 138,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "radio",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 144,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "len",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 144,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "warning",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 150,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "stop",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 151,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "nunique",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 155,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_teg_rounds",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 156,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 163,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "tabs",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 167,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "display_net_leaderboard",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 173,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 179,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 183,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "container",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 186,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "container",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 187,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "segmented_control",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 191,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "caption",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 198,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "caption",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 200,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "create_cumulative_graph",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 205,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "create_cumulative_graph",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 217,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "adjusted_stableford",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 217,
+      "type": "kwarg_reference"
+    },
+    {
+      "caller": null,
+      "called": "create_cumulative_graph",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 229,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "nunique",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 235,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "update_yaxes",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 236,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "caption",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 249,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "caption",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 251,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "_add_series_markers",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 252,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "update_xaxes",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 253,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "plotly_chart",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 255,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "dict",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 255,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "display_leaderboard",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 262,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 271,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 275,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "container",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 278,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "container",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 279,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "segmented_control",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 283,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "caption",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 290,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "caption",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 292,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "create_cumulative_graph",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 297,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "create_cumulative_graph",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 307,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "adjusted_grossvp",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 307,
+      "type": "kwarg_reference"
+    },
+    {
+      "caller": null,
+      "called": "create_cumulative_graph",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 318,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "nunique",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 324,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "update_yaxes",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 325,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "caption",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 336,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "update_xaxes",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 337,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "_add_series_markers",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 338,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "plotly_chart",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 340,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "dict",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 340,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 344,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "int",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 349,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "split",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 349,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 351,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "sorted",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 356,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "unique",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 356,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "warning",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 359,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "tabs",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 363,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "enumerate",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 366,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "generate_round_comparison_html",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 370,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 373,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 376,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "str",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 376,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 377,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "str",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 377,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "int",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 385,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "split",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 385,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 387,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "load_markdown",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 396,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "caption",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 398,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "render_report",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 399,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 401,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 403,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "str",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 403,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 404,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "str",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 404,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 409,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "str",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 409,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 410,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "str",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 410,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "add_custom_navigation_links",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 414,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\102TEG Results.py",
+      "line": 417,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_page_layout",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 30,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "set_page_config",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 31,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "title",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 34,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "load_datawrapper_css",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 37,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_ranked_teg_data",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 42,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_ranked_round_data",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 43,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_ranked_frontback_data",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 44,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_filtered_teg_data",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 47,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_round_data",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 48,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_9_data",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 49,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "tabs",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 53,
+      "type": "call"
+    },
+    {
+      "caller": "dashed_line",
+      "called": "markdown",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 56,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_records_table",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 63,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 64,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 65,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "dashed_line",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 73,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_worst_records_table",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 74,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 75,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 76,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_records_table",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 86,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 87,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 88,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "dashed_line",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 96,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_worst_records_table",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 97,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 98,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 99,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_records_table",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 109,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 110,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 111,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "dashed_line",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 119,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_worst_records_table",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 120,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 121,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 122,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "load_all_data",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 133,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_record_best_streaks_data",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 136,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_streak_records_table",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 137,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 138,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 139,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "dashed_line",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 147,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_record_worst_streaks_data",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 149,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_streak_records_table",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 150,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 151,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 152,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "caption",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 160,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_score_count_records_table",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 164,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 168,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 169,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 180,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 181,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "caption",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 191,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "add_custom_navigation_links",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 195,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\300TEG Records.py",
+      "line": 198,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_page_layout",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 36,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "set_page_config",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 37,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "title",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 38,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "load_datawrapper_css",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 41,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_ranked_teg_data",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 50,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_ranked_round_data",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 54,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_round_data_with_identifiers",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 57,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_measure_name_mappings",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 62,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "list",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 63,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "keys",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 63,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "radio",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 66,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 67,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "number_input",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 70,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_best_teg_table",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 79,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_best_round_table",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 82,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_worst_teg_table",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 85,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_worst_round_table",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 88,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "tabs",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 91,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 94,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 95,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 96,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 106,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 107,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 108,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 118,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 119,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 120,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 130,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 131,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 132,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "caption",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 142,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "add_custom_navigation_links",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 146,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\301Best_TEGs_and_Rounds.py",
+      "line": 149,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_page_layout",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 38,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "set_page_config",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 39,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "title",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 40,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "load_datawrapper_css",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 43,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_ranked_teg_data",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 49,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_ranked_round_data",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 53,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_ranked_frontback_data",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 57,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_round_data_with_identifiers",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 60,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_pb_teg_summary_table",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 63,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_pb_round_summary_table",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 64,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_pb_nine_summary_table",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 65,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_measure_name_mappings",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 70,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "list",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 71,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "keys",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 71,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "tabs",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 86,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "segmented_control",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 90,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 98,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 100,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 101,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 110,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 112,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 113,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 122,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 124,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 125,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "segmented_control",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 137,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "rerun",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 148,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 150,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_personal_best_teg_table",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 151,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 153,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 154,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 155,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "segmented_control",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 166,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "rerun",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 177,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 179,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_personal_best_round_table",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 180,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 182,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 183,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 184,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "segmented_control",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 195,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "rerun",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 206,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 208,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_personal_worst_teg_table",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 209,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 211,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 212,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 213,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "segmented_control",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 224,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "rerun",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 235,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 237,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_personal_worst_round_table",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 238,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 240,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 241,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 242,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "caption",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 252,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "add_custom_navigation_links",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 256,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\302Personal Best Rounds & TEGs.py",
+      "line": 259,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_page_layout",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 29,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "set_page_config",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 30,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "title",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 33,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "load_datawrapper_css",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 36,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "spinner",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 39,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "load_all_data",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 41,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "read_file",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 44,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 47,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "radio",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 53,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "number_input",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 65,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 73,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 76,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 77,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "spinner",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 79,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "calculate_final_round_differentials",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 80,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 84,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "copy",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 85,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "head",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 85,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 88,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 88,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 89,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 89,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 90,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 94,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "int",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 95,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "int",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 95,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 97,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "int",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 98,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "int",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 98,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 101,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 102,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 104,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 105,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 115,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "copy",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 116,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "tail",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 116,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 119,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 119,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 120,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 120,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 121,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 125,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "int",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 126,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "int",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 126,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 128,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "int",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 129,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "int",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 129,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 132,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 133,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 135,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 136,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 146,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "caption",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 147,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "copy",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 150,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "sort_values",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 154,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "copy",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 156,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "head",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 156,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 159,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 159,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 160,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 160,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 161,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 165,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "int",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 166,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "int",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 166,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 168,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "int",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 169,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "int",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 169,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 172,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 173,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 175,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 176,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 185,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 188,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 190,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 193,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 194,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "spinner",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 196,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "calculate_biggest_leads_lost_after_r3",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 197,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "copy",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 200,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "head",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 200,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 204,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 208,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 210,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 210,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 212,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 213,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 222,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 224,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 227,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 228,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "spinner",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 230,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "calculate_biggest_leads_lost_in_r4",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 231,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "copy",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 234,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "head",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 234,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 238,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 241,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 245,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 246,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 248,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 248,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 250,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 251,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 260,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 262,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 265,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 266,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "spinner",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 268,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "calculate_biggest_comebacks",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 269,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "copy",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 272,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "head",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 272,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 276,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 279,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 282,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 285,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 289,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 290,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 291,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 292,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 294,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "astype",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 294,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 296,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 297,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 306,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 309,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "caption",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 310,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "add_custom_navigation_links",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 320,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\303Final Round Comebacks.py",
+      "line": 323,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "title",
+      "file": "streamlit\\400scoring.py",
+      "line": 33,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "load_datawrapper_css",
+      "file": "streamlit\\400scoring.py",
+      "line": 36,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\400scoring.py",
+      "line": 40,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\400scoring.py",
+      "line": 41,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\400scoring.py",
+      "line": 42,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\400scoring.py",
+      "line": 43,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\400scoring.py",
+      "line": 44,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\400scoring.py",
+      "line": 45,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\400scoring.py",
+      "line": 46,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "load_all_data",
+      "file": "streamlit\\400scoring.py",
+      "line": 53,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "score_type_stats",
+      "file": "streamlit\\400scoring.py",
+      "line": 57,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "max_scoretype_per_round",
+      "file": "streamlit\\400scoring.py",
+      "line": 61,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "subheader",
+      "file": "streamlit\\400scoring.py",
+      "line": 65,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "prepare_average_scores_by_par",
+      "file": "streamlit\\400scoring.py",
+      "line": 68,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\400scoring.py",
+      "line": 71,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\400scoring.py",
+      "line": 72,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\400scoring.py",
+      "line": 80,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "subheader",
+      "file": "streamlit\\400scoring.py",
+      "line": 84,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "replace",
+      "file": "streamlit\\400scoring.py",
+      "line": 95,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "tabs",
+      "file": "streamlit\\400scoring.py",
+      "line": 96,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "enumerate",
+      "file": "streamlit\\400scoring.py",
+      "line": 99,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "replace",
+      "file": "streamlit\\400scoring.py",
+      "line": 102,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\400scoring.py",
+      "line": 103,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "sort_values",
+      "file": "streamlit\\400scoring.py",
+      "line": 106,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "format_scoring_stats_columns",
+      "file": "streamlit\\400scoring.py",
+      "line": 112,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\400scoring.py",
+      "line": 115,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\400scoring.py",
+      "line": 116,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\400scoring.py",
+      "line": 124,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "subheader",
+      "file": "streamlit\\400scoring.py",
+      "line": 128,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\400scoring.py",
+      "line": 132,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\400scoring.py",
+      "line": 133,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\400scoring.py",
+      "line": 141,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "subheader",
+      "file": "streamlit\\400scoring.py",
+      "line": 145,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "load_all_data",
+      "file": "streamlit\\400scoring.py",
+      "line": 149,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "calculate_multi_score_running_sum",
+      "file": "streamlit\\400scoring.py",
+      "line": 153,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "summarize_multi_score_running_sum",
+      "file": "streamlit\\400scoring.py",
+      "line": 157,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\400scoring.py",
+      "line": 160,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\400scoring.py",
+      "line": 161,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_page_layout",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 25,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "set_page_config",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 26,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "load_datawrapper_css",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 27,
+      "type": "call"
+    },
+    {
+      "caller": "format_change",
+      "called": "str",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 42,
+      "type": "call"
+    },
+    {
+      "caller": "format_value",
+      "called": "isna",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 55,
+      "type": "call"
+    },
+    {
+      "caller": "format_value",
+      "called": "str",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 57,
+      "type": "call"
+    },
+    {
+      "caller": "format_value",
+      "called": "int",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 57,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "title",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 60,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_next_teg_and_check_if_in_progress_fast",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 62,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_current_handicaps_formatted",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 72,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "sort_values",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 74,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "copy",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 77,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 78,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "format_change",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 78,
+      "type": "arg_reference"
+    },
+    {
+      "caller": "format_name",
+      "called": "join",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 85,
+      "type": "call"
+    },
+    {
+      "caller": "format_name",
+      "called": "split",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 85,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 87,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "format_name",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 87,
+      "type": "arg_reference"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 92,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 94,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 95,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "container",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 98,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "columns",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 102,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "zip",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 105,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "iterrows",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 105,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "metric",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 111,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "caption",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 122,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "caption",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 124,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 128,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 130,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 132,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_hc",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 135,
+      "type": "call"
+    },
+    {
+      "caller": "transform_handicaps_to_csv_format",
+      "called": "read_file",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 140,
+      "type": "call"
+    },
+    {
+      "caller": "transform_handicaps_to_csv_format",
+      "called": "iterrows",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 147,
+      "type": "call"
+    },
+    {
+      "caller": "transform_handicaps_to_csv_format",
+      "called": "DataFrame",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 158,
+      "type": "call"
+    },
+    {
+      "caller": "transform_handicaps_to_csv_format",
+      "called": "concat",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 159,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "transform_handicaps_to_csv_format",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 164,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write_file",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 165,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "clear_all_caches",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 168,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "success",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 170,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 171,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "rerun",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 172,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 175,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "str",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 175,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "expander",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 180,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "read_file",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 183,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "apply",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 187,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "format_value",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 187,
+      "type": "arg_reference"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 190,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 190,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 192,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "DataFrame",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 193,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "warning",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 195,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 197,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "str",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 197,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_current_in_progress_teg_fast",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 206,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "expander",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 208,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "reset_index",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 210,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "sort_values",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 210,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_hc",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 210,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "write",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 211,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "to_html",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 211,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "add_custom_navigation_links",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 215,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\500Handicaps.py",
+      "line": 218,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "basicConfig",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 24,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "getLogger",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 25,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "title",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 27,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "markdown",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 28,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "warning",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 29,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 31,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "spinner",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 32,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "clear_all_caches",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 33,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "success",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 34,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "spinner",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 36,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "update_teg_status_files",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 37,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "success",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 38,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "spinner",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 40,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "update_streaks_cache",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 41,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "success",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 42,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "spinner",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 44,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "update_bestball_cache",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 45,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "success",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 46,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "spinner",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 48,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "update_commentary_caches",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 49,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "success",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 50,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "balloons",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 52,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "success",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 53,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "button",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 55,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "spinner",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 56,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "update_bestball_cache",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 57,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "success",
+      "file": "streamlit\\9999_generate_caches.py",
+      "line": 58,
+      "type": "call"
+    },
+    {
+      "caller": "get_current_branch",
+      "called": "getenv",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 32,
+      "type": "call"
+    },
+    {
+      "caller": "get_current_branch",
+      "called": "getenv",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 32,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "getenv",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 33,
+      "type": "call"
+    },
+    {
+      "caller": "clear_all_caches",
+      "called": "clear",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 35,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "get_page_layout",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 40,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "set_page_config",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 41,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "title",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 42,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "caption",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 43,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "getenv",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 46,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "error",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 47,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "info",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 48,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "stop",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 49,
+      "type": "call"
+    },
+    {
+      "caller": null,
+      "called": "getenv",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 53,
+      "type": "call"
+    },
+    {
+      "caller": "_get_token",
+      "called": "getenv",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 70,
+      "type": "call"
+    },
+    {
+      "caller": "_get_token",
+      "called": "get",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 70,
+      "type": "call"
+    },
+    {
+      "caller": "_headers",
+      "called": "_get_token",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 73,
+      "type": "call"
+    },
+    {
+      "caller": "_get_repo_and_branch",
+      "called": "getenv",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 80,
+      "type": "call"
+    },
+    {
+      "caller": "_get_repo_and_branch",
+      "called": "callable",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 81,
+      "type": "call"
+    },
+    {
+      "caller": "_get_repo_and_branch",
+      "called": "get_current_branch",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 81,
+      "type": "arg_reference"
+    },
+    {
+      "caller": "_get_repo_and_branch",
+      "called": "get_current_branch",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 81,
+      "type": "call"
+    },
+    {
+      "caller": "_get_repo_and_branch",
+      "called": "getenv",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 81,
+      "type": "call"
+    },
+    {
+      "caller": "_to_utc",
+      "called": "replace",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 87,
+      "type": "call"
+    },
+    {
+      "caller": "_to_utc",
+      "called": "astimezone",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 88,
+      "type": "call"
+    },
+    {
+      "caller": "_parse_github_date",
+      "called": "replace",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 92,
+      "type": "call"
+    },
+    {
+      "caller": "_parse_github_date",
+      "called": "strptime",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 92,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "_get_repo_and_branch",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 99,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "_get_token",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 100,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "RuntimeError",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 102,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "get",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 104,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "_headers",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 106,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "DataFrame",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 110,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "raise_for_status",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 111,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "json",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 112,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "get",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 116,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "int",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 119,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "get",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 119,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "get",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 122,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "_headers",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 125,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "isinstance",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 128,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "json",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 128,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "json",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 128,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "json",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 129,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "_parse_github_date",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 131,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "append",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 135,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "DataFrame",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 144,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "DataFrame",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 146,
+      "type": "call"
+    },
+    {
+      "caller": "list_github_files",
+      "called": "cache_data",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 96,
+      "type": "call"
+    },
+    {
+      "caller": "list_volume_files",
+      "called": "Path",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 153,
+      "type": "call"
+    },
+    {
+      "caller": "list_volume_files",
+      "called": "exists",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 154,
+      "type": "call"
+    },
+    {
+      "caller": "list_volume_files",
+      "called": "DataFrame",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 155,
+      "type": "call"
+    },
+    {
+      "caller": "list_volume_files",
+      "called": "iterdir",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 158,
+      "type": "call"
+    },
+    {
+      "caller": "list_volume_files",
+      "called": "is_file",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 159,
+      "type": "call"
+    },
+    {
+      "caller": "list_volume_files",
+      "called": "stat",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 160,
+      "type": "call"
+    },
+    {
+      "caller": "list_volume_files",
+      "called": "append",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 161,
+      "type": "call"
+    },
+    {
+      "caller": "list_volume_files",
+      "called": "fromtimestamp",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 164,
+      "type": "call"
+    },
+    {
+      "caller": "list_volume_files",
+      "called": "str",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 166,
+      "type": "call"
+    },
+    {
+      "caller": "list_volume_files",
+      "called": "DataFrame",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 170,
+      "type": "call"
+    },
+    {
+      "caller": "list_volume_files",
+      "called": "DataFrame",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 172,
+      "type": "call"
+    },
+    {
+      "caller": "list_volume_files",
+      "called": "cache_data",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 150,
+      "type": "call"
+    },
+    {
+      "caller": "_status_row",
+      "called": "int",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 177,
+      "type": "call"
+    },
+    {
+      "caller": "_status_row",
+      "called": "get",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 177,
+      "type": "call"
+    },
+    {
+      "caller": "_status_row",
+      "called": "int",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 178,
+      "type": "call"
+    },
+    {
+      "caller": "_status_row",
+      "called": "get",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 178,
+      "type": "call"
+    },
+    {
+      "caller": "_status_row",
+      "called": "get",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 180,
+      "type": "call"
+    },
+    {
+      "caller": "_status_row",
+      "called": "get",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 181,
+      "type": "call"
+    },
+    {
+      "caller": "_status_row",
+      "called": "isna",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 183,
+      "type": "call"
+    },
+    {
+      "caller": "_status_row",
+      "called": "get",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 183,
+      "type": "call"
+    },
+    {
+      "caller": "_status_row",
+      "called": "isna",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 183,
+      "type": "call"
+    },
+    {
+      "caller": "_status_row",
+      "called": "get",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 183,
+      "type": "call"
+    },
+    {
+      "caller": "_status_row",
+      "called": "isna",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 185,
+      "type": "call"
+    },
+    {
+      "caller": "_status_row",
+      "called": "get",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 185,
+      "type": "call"
+    },
+    {
+      "caller": "_status_row",
+      "called": "isna",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 185,
+      "type": "call"
+    },
+    {
+      "caller": "_status_row",
+      "called": "get",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 185,
+      "type": "call"
+    },
+    {
+      "caller": "_status_row",
+      "called": "isna",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 188,
+      "type": "call"
+    },
+    {
+      "caller": "_status_row",
+      "called": "isna",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 188,
+      "type": "call"
+    },
+    {
+      "caller": "_status_row",
+      "called": "total_seconds",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 194,
+      "type": "call"
+    },
+    {
+      "caller": "_status_row",
+      "called": "abs",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 196,
+      "type": "call"
+    },
+    {
+      "caller": "merged_status",
+      "called": "list_github_files",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 208,
+      "type": "call"
+    },
+    {
+      "caller": "merged_status",
+      "called": "list_volume_files",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 209,
+      "type": "call"
+    },
+    {
+      "caller": "merged_status",
+      "called": "merge",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 211,
+      "type": "call"
+    },
+    {
+      "caller": "merged_status",
+      "called": "DataFrame",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 216,
+      "type": "call"
+    },
+    {
+      "caller": "merged_status",
+      "called": "to_datetime",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 225,
+      "type": "call"
+    },
+    {
+      "caller": "merged_status",
+      "called": "astype",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 229,
+      "type": "call"
+    }
+  ]
+}
