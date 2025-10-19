@@ -316,13 +316,38 @@ streamlit/utils_win_tables.py: 1 function
 
 - ✅ Phase 1: Cleanup complete
 - ✅ Phase 2.1-2.6: AST analysis complete (46 candidates identified)
-- ⏳ Phase 2.7: Grep validation in progress
-- ⏳ Phase 2.8-2.11: Final report generation pending
+- ⚠️ Phase 2.7: Grep validation revealed CRITICAL BUG (see below)
+- ❌ Phase 2.8-2.11: Cannot proceed until bug fixed
 
-**Estimated Remaining Work:** 2-3 hours (primarily grep validation and report writing)
+**CRITICAL DISCOVERY:** AST analysis has false positives! Found via grep validation.
+
+### Bug Details
+
+**Function:** `compress_ranges` in `utils_win_tables.py:50`
+- **AST Result:** Flagged as UNUSED
+- **Grep Result:** Actually IS used (3 calls in "101TEG Honours Board.py")
+- **Root Cause:** AST visitor only catches direct calls `foo()`, misses `df.apply(foo)` pattern
+
+**Missing Patterns:**
+- Functions passed as arguments: `df.apply(func)`, `sorted(list, key=func)`
+- Callback functions: `st.button(on_click=func)`
+- Decorators and registry patterns
+- Any function reference without parentheses
+
+**Impact:** Current 46 candidates likely include false positives - CANNOT USE
 
 ---
 
-**Last Updated:** 2025-10-19
-**Next Session:** Continue with grep validation and final report generation
-**Key Principle:** NO SHORTCUTS - Every finding must be verified
+**Estimated Remaining Work:** 3-4 hours (fix AST, re-run, validate ALL)
+
+**Next Session Tasks:**
+1. **Fix AST extractor** to catch function-as-argument patterns
+2. **Re-run analysis** with fixed script
+3. **Grep-validate ALL** candidates (no sampling)
+4. **Generate final report** only after validation
+
+---
+
+**Last Updated:** 2025-10-19 (Critical bug discovered during grep validation)
+**Next Session:** Fix AST analysis before proceeding
+**Key Principle:** NO SHORTCUTS - This discovery validates why grep validation is ESSENTIAL
