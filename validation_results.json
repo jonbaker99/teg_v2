@@ -1,0 +1,328 @@
+{
+  "summary": {
+    "total_candidates": 32,
+    "high_confidence": 20,
+    "medium_confidence": 11,
+    "low_confidence": 1
+  },
+  "results": [
+    {
+      "name": "get_draft_files",
+      "file": "streamlit\\1001Report Generation.py",
+      "line": 130,
+      "confidence": "HIGH",
+      "reason": "No usage found in codebase",
+      "usage_count": 0,
+      "sample_usages": []
+    },
+    {
+      "name": "_to_utc",
+      "file": "streamlit\\admin_volume_management.py",
+      "line": 85,
+      "confidence": "HIGH",
+      "reason": "No usage found in codebase",
+      "usage_count": 0,
+      "sample_usages": []
+    },
+    {
+      "name": "__init__",
+      "file": "streamlit\\commentary\\generate_round_report.py",
+      "line": 80,
+      "confidence": "MEDIUM",
+      "reason": "2 potential usage(s) found - needs review",
+      "usage_count": 2,
+      "sample_usages": [
+        "streamlit\\commentary\\generate_tournament_commentary_v2.py:297:    def __init__(self, budget_per_min: int, safety: float, dry_run: bool, debug: bool):",
+        "streamlit\\helpers\\commentary_generator.py:37:    def __init__(self, status_container=None):"
+      ]
+    },
+    {
+      "name": "__init__",
+      "file": "streamlit\\commentary\\generate_tournament_commentary_v2.py",
+      "line": 297,
+      "confidence": "MEDIUM",
+      "reason": "2 potential usage(s) found - needs review",
+      "usage_count": 2,
+      "sample_usages": [
+        "streamlit\\commentary\\generate_round_report.py:80:    def __init__(self, budget_per_min: int, safety: float, dry_run: bool, debug: bool):",
+        "streamlit\\helpers\\commentary_generator.py:37:    def __init__(self, status_container=None):"
+      ]
+    },
+    {
+      "name": "__init__",
+      "file": "streamlit\\helpers\\commentary_generator.py",
+      "line": 37,
+      "confidence": "MEDIUM",
+      "reason": "2 potential usage(s) found - needs review",
+      "usage_count": 2,
+      "sample_usages": [
+        "streamlit\\commentary\\generate_round_report.py:80:    def __init__(self, budget_per_min: int, safety: float, dry_run: bool, debug: bool):",
+        "streamlit\\commentary\\generate_tournament_commentary_v2.py:297:    def __init__(self, budget_per_min: int, safety: float, dry_run: bool, debug: bool):"
+      ]
+    },
+    {
+      "name": "prepare_records_display",
+      "file": "streamlit\\helpers\\display_helpers.py",
+      "line": 38,
+      "confidence": "HIGH",
+      "reason": "No usage found in codebase",
+      "usage_count": 0,
+      "sample_usages": []
+    },
+    {
+      "name": "process_winners_for_charts",
+      "file": "streamlit\\helpers\\history_data_processing.py",
+      "line": 12,
+      "confidence": "HIGH",
+      "reason": "No usage found in codebase",
+      "usage_count": 0,
+      "sample_usages": []
+    },
+    {
+      "name": "create_bar_chart",
+      "file": "streamlit\\helpers\\history_data_processing.py",
+      "line": 131,
+      "confidence": "HIGH",
+      "reason": "No usage found in codebase",
+      "usage_count": 0,
+      "sample_usages": []
+    },
+    {
+      "name": "prepare_complete_history_table",
+      "file": "streamlit\\helpers\\history_data_processing.py",
+      "line": 283,
+      "confidence": "LOW",
+      "reason": "4 usages found - likely actually used",
+      "usage_count": 4,
+      "sample_usages": [
+        "streamlit\\101TEG History.py:27:    prepare_complete_history_table_fast,",
+        "streamlit\\101TEG History.py:53:history_display_table = prepare_complete_history_table_fast(cached_winners)",
+        "streamlit\\helpers\\history_data_processing.py:571:def prepare_complete_history_table_fast(cached_winners_df: pd.DataFrame = None) -> pd.DataFrame:"
+      ]
+    },
+    {
+      "name": "display_completeness_status",
+      "file": "streamlit\\helpers\\history_data_processing.py",
+      "line": 404,
+      "confidence": "MEDIUM",
+      "reason": "1 potential usage(s) found - needs review",
+      "usage_count": 1,
+      "sample_usages": [
+        "streamlit\\helpers\\history_data_processing.py:694:def display_completeness_status():"
+      ]
+    },
+    {
+      "name": "display_completeness_status",
+      "file": "streamlit\\helpers\\history_data_processing.py",
+      "line": 694,
+      "confidence": "MEDIUM",
+      "reason": "1 potential usage(s) found - needs review",
+      "usage_count": 1,
+      "sample_usages": [
+        "streamlit\\helpers\\history_data_processing.py:404:def display_completeness_status():"
+      ]
+    },
+    {
+      "name": "create_round_selection_reset_function",
+      "file": "streamlit\\helpers\\latest_round_processing.py",
+      "line": 100,
+      "confidence": "HIGH",
+      "reason": "No usage found in codebase",
+      "usage_count": 0,
+      "sample_usages": []
+    },
+    {
+      "name": "load_records_page_css",
+      "file": "streamlit\\helpers\\records_css.py",
+      "line": 10,
+      "confidence": "HIGH",
+      "reason": "No usage found in codebase",
+      "usage_count": 0,
+      "sample_usages": []
+    },
+    {
+      "name": "format_percentage_for_display",
+      "file": "streamlit\\helpers\\score_count_processing.py",
+      "line": 230,
+      "confidence": "MEDIUM",
+      "reason": "1 potential usage(s) found - needs review",
+      "usage_count": 1,
+      "sample_usages": [
+        "streamlit\\sc_count.py:19:    format_percentage_for_display,"
+      ]
+    },
+    {
+      "name": "create_stacked_bar_chart",
+      "file": "streamlit\\helpers\\score_count_processing.py",
+      "line": 254,
+      "confidence": "MEDIUM",
+      "reason": "1 potential usage(s) found - needs review",
+      "usage_count": 1,
+      "sample_usages": [
+        "streamlit\\sc_count.py:18:    create_stacked_bar_chart,"
+      ]
+    },
+    {
+      "name": "create_achievement_tab_labels",
+      "file": "streamlit\\helpers\\scoring_achievements_processing.py",
+      "line": 32,
+      "confidence": "MEDIUM",
+      "reason": "1 potential usage(s) found - needs review",
+      "usage_count": 1,
+      "sample_usages": [
+        "streamlit\\birdies_etc.py:25:    create_achievement_tab_labels,"
+      ]
+    },
+    {
+      "name": "prepare_streak_data_for_display",
+      "file": "streamlit\\helpers\\streak_analysis_processing.py",
+      "line": 220,
+      "confidence": "HIGH",
+      "reason": "No usage found in codebase",
+      "usage_count": 0,
+      "sample_usages": []
+    },
+    {
+      "name": "prepare_inverse_streak_data_for_display",
+      "file": "streamlit\\helpers\\streak_analysis_processing.py",
+      "line": 243,
+      "confidence": "HIGH",
+      "reason": "No usage found in codebase",
+      "usage_count": 0,
+      "sample_usages": []
+    },
+    {
+      "name": "get_performance_measure_titles",
+      "file": "streamlit\\helpers\\worst_performance_processing.py",
+      "line": 11,
+      "confidence": "HIGH",
+      "reason": "No usage found in codebase",
+      "usage_count": 0,
+      "sample_usages": []
+    },
+    {
+      "name": "load_worst_performance_custom_css",
+      "file": "streamlit\\helpers\\worst_performance_processing.py",
+      "line": 85,
+      "confidence": "HIGH",
+      "reason": "No usage found in codebase",
+      "usage_count": 0,
+      "sample_usages": []
+    },
+    {
+      "name": "create_worst_performance_section",
+      "file": "streamlit\\helpers\\worst_performance_processing.py",
+      "line": 136,
+      "confidence": "HIGH",
+      "reason": "No usage found in codebase",
+      "usage_count": 0,
+      "sample_usages": []
+    },
+    {
+      "name": "create_position_count_summary",
+      "file": "streamlit\\player_history.py",
+      "line": 84,
+      "confidence": "HIGH",
+      "reason": "No usage found in codebase",
+      "usage_count": 0,
+      "sample_usages": []
+    },
+    {
+      "name": "create_average_position_summary",
+      "file": "streamlit\\player_history.py",
+      "line": 155,
+      "confidence": "HIGH",
+      "reason": "No usage found in codebase",
+      "usage_count": 0,
+      "sample_usages": []
+    },
+    {
+      "name": "generate_scorecard_html",
+      "file": "streamlit\\scorecard_utils.py",
+      "line": 15,
+      "confidence": "HIGH",
+      "reason": "No usage found in codebase",
+      "usage_count": 0,
+      "sample_usages": []
+    },
+    {
+      "name": "theme_for",
+      "file": "streamlit\\styles\\altair_theme.py",
+      "line": 193,
+      "confidence": "MEDIUM",
+      "reason": "2 potential usage(s) found - needs review",
+      "usage_count": 2,
+      "sample_usages": [
+        "streamlit\\styles\\altair_theme.py:15:from streamlit.styles.altair_theme import BAR_THEME, LINE_THEME, theme_for, PALETTE",
+        "streamlit\\styles\\altair_theme.py:33:      .configure(**theme_for(\"line\", {\"config\": {\"title\": {\"anchor\": \"middle\"}}})[\"config\"])"
+      ]
+    },
+    {
+      "name": "clear_volume_cache",
+      "file": "streamlit\\utils.py",
+      "line": 650,
+      "confidence": "MEDIUM",
+      "reason": "1 potential usage(s) found - needs review",
+      "usage_count": 1,
+      "sample_usages": [
+        "streamlit\\helpers\\data_update_processing.py:24:    clear_volume_cache,"
+      ]
+    },
+    {
+      "name": "check_hc_strokes_combinations",
+      "file": "streamlit\\utils.py",
+      "line": 953,
+      "confidence": "HIGH",
+      "reason": "No usage found in codebase",
+      "usage_count": 0,
+      "sample_usages": []
+    },
+    {
+      "name": "save_to_parquet",
+      "file": "streamlit\\utils.py",
+      "line": 1061,
+      "confidence": "HIGH",
+      "reason": "No usage found in codebase",
+      "usage_count": 0,
+      "sample_usages": []
+    },
+    {
+      "name": "get_Pl_data",
+      "file": "streamlit\\utils.py",
+      "line": 2928,
+      "confidence": "HIGH",
+      "reason": "No usage found in codebase",
+      "usage_count": 0,
+      "sample_usages": []
+    },
+    {
+      "name": "safe_ordinal",
+      "file": "streamlit\\utils.py",
+      "line": 3095,
+      "confidence": "HIGH",
+      "reason": "No usage found in codebase",
+      "usage_count": 0,
+      "sample_usages": []
+    },
+    {
+      "name": "add_section_navigation_links",
+      "file": "streamlit\\utils.py",
+      "line": 4193,
+      "confidence": "MEDIUM",
+      "reason": "1 potential usage(s) found - needs review",
+      "usage_count": 1,
+      "sample_usages": [
+        "streamlit\\101TEG Honours Board.py:22:from utils import add_custom_navigation_links, add_section_navigation_links"
+      ]
+    },
+    {
+      "name": "create_custom_navigation_section",
+      "file": "streamlit\\utils.py",
+      "line": 4330,
+      "confidence": "HIGH",
+      "reason": "No usage found in codebase",
+      "usage_count": 0,
+      "sample_usages": []
+    }
+  ]
+}
