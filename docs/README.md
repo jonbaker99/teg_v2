@@ -26,7 +26,7 @@ A **comprehensive, completed documentation** of the entire TEG golf tournament a
 - **Page Files:** 40 pages documented across 7 section files
 - **Dependencies:** Complete dependency map of all 79 files
 - **Duplicates:** 8 exact duplicate sets, 10 near-duplicates, 38 naming conflicts identified
-- **Unused Code:** Analysis pending (tool ready in docs/)
+- **Unused Code:** ⚠️ Analysis in progress - AST bug discovered, fixing required (see README_ANALYSIS_STATUS.md)
 ---
 
 ## Master Documentation Files

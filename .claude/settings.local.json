@@ -34,7 +34,8 @@
       "Bash(git check-ignore:*)",
       "Bash(wc:*)",
       "Bash(cd c:UsersjonbaDocumentsProjects - not on onedriveteg_v2)",
-      "Bash(head -20 \"$file\")"
+      "Bash(head -20 \"$file\")",
+      "Read(//c/Users/jonba/Documents/**)"
     ],
     "deny": [],
     "ask": [

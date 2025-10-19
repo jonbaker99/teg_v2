@@ -1,0 +1,27 @@
+================================================================================
+                    ⚠️  WARNING: UNRELIABLE ANALYSIS FILES  ⚠️
+================================================================================
+
+DO NOT USE these files - they contain KNOWN BUGS:
+
+  ❌ analyze_unused_code.py
+  ❌ analyze_unused_refined.py
+  ❌ unused_code_analysis.json
+  ❌ unused_code_analysis_refined.json
+
+REASON: AST analysis misses function-as-argument patterns (df.apply, callbacks)
+IMPACT: False positives - flags functions as unused when they're actually used
+
+EXAMPLE: compress_ranges flagged as unused but actually used via df.apply()
+
+================================================================================
+
+READ BEFORE PROCEEDING: README_ANALYSIS_STATUS.md
+
+Current Status: Session 1 complete - Bug discovered during grep validation
+Next Steps: Fix AST extractor, re-run analysis, validate ALL candidates
+
+DO NOT archive any code based on current results.
+
+================================================================================
+Last Updated: 2025-10-19

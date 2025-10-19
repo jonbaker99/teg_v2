@@ -1,5 +1,22 @@
 #!/usr/bin/env python3
 """
+⚠️⚠️⚠️ WARNING: THIS SCRIPT HAS A KNOWN BUG - DO NOT USE RESULTS ⚠️⚠️⚠️
+
+BUG: AST extractor misses function-as-argument patterns
+- Only catches direct calls: foo()
+- Misses: df.apply(foo), sorted(list, key=foo), callbacks, etc.
+- IMPACT: False positives - flags used functions as unused
+
+EXAMPLE: compress_ranges flagged as unused but actually used via df.apply()
+
+STATUS: Results from this script are UNRELIABLE until bug is fixed.
+SEE: docs/VALIDATION_FINDINGS.md for details
+
+DO NOT archive code based on output from this script.
+
+Last Updated: 2025-10-19
+---
+
 REFINED AST-based unused code analysis - ACTIVE CODEBASE ONLY.
 
 Focus exclusively on streamlit/ directory (exclude backups, tests, archives).

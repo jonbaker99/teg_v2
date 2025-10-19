@@ -1,5 +1,18 @@
 #!/usr/bin/env python3
 """
+⚠️⚠️⚠️ WARNING: THIS SCRIPT HAS A KNOWN BUG - DO NOT USE RESULTS ⚠️⚠️⚠️
+
+BUG: AST extractor misses function-as-argument patterns
+- Only catches direct calls: foo()
+- Misses: df.apply(foo), sorted(list, key=foo), callbacks, etc.
+- IMPACT: False positives - flags used functions as unused
+
+STATUS: Results from this script are UNRELIABLE until bug is fixed.
+SEE: docs/VALIDATION_FINDINGS.md for details
+
+Last Updated: 2025-10-19
+---
+
 Rigorous AST-based unused code analysis for TEG codebase.
 
 This script performs exhaustive analysis with NO SHORTCUTS:

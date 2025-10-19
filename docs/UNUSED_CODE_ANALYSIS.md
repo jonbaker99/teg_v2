@@ -1,5 +1,25 @@
 # Unused Code Identification Task
 
+---
+## ⚠️ CRITICAL STATUS UPDATE - 2025-10-19 ⚠️
+
+**CURRENT ANALYSIS RESULTS ARE UNRELIABLE - DO NOT USE**
+
+**Status:** Session 1 complete - Critical bug discovered during grep validation
+**Issue:** AST analysis has false positives (misses function-as-argument patterns)
+**Impact:** Current 46 "unused" candidates cannot be trusted until bug is fixed
+
+**See:**
+- [VALIDATION_FINDINGS.md](VALIDATION_FINDINGS.md) - Bug discovery details
+- [README_ANALYSIS_STATUS.md](../README_ANALYSIS_STATUS.md) - Current status dashboard
+- [UNUSED_CODE_AST_ANALYSIS_SESSION1.md](UNUSED_CODE_AST_ANALYSIS_SESSION1.md) - Session progress
+
+**Next Steps:** Fix AST extractor → Re-run analysis → Validate ALL candidates → Generate reliable report
+
+**DO NOT archive any code** based on current `analyze_unused_refined.py` results.
+
+---
+
 ## Objective
 Identify all functions, classes, and code elements that are NOT traceable back to active Streamlit pages defined in `streamlit/page_config.py`.
 

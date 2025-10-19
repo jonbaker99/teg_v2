@@ -1,0 +1,15 @@
+<unknown>:160: SyntaxWarning: invalid escape sequence '\*'
+<unknown>:106: SyntaxWarning: invalid escape sequence '\d'
+Analyzing dependencies...
+Analysis complete!
+   - Files analyzed: 79
+   - Unique imports tracked: 67
+
+Critical Functions Usage:
+   - utils.load_all_data: 22 files
+   - utils.read_file: 16 files
+   - utils.format_vs_par: 8 files
+   - utils.write_file: 6 files
+   - utils.get_teg_winners: 2 files
+
+Output saved to dependency_graph.json

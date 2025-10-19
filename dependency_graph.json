@@ -13,86 +13,86 @@
   "files": {
     "streamlit/1000Data update.py": {
       "imports": [
-        "utils.get_google_sheet",
-        "helpers.commentary_generator.generate_reports_for_changes",
-        "helpers.data_update_processing.execute_data_update",
-        "helpers.data_update_processing.create_data_summary_display",
-        "helpers.data_update_processing.check_for_duplicate_data",
-        "helpers.data_update_processing.initialize_update_state",
-        "pandas",
-        "helpers.data_update_processing.process_google_sheets_data",
+        "logging",
         "utils.check_for_complete_and_duplicate_data",
-        "helpers.data_update_processing.STATE_OVERWRITE_CONFIRM",
-        "helpers.commentary_generator.ProgressTracker",
-        "utils.ALL_DATA_PARQUET",
-        "utils.ALL_SCORES_PARQUET",
-        "helpers.data_update_processing.STATE_INITIAL",
+        "helpers.data_update_processing.STATE_DATA_LOADED",
+        "helpers.data_update_processing.create_data_summary_display",
         "helpers.data_update_processing.STATE_PROCESSING",
+        "helpers.commentary_generator.ProgressTracker",
+        "pandas",
+        "utils.ALL_DATA_PARQUET",
+        "helpers.data_update_processing.STATE_INITIAL",
+        "utils.get_google_sheet",
+        "helpers.data_update_processing.analyze_hole_level_differences",
+        "helpers.data_update_processing.process_google_sheets_data",
+        "helpers.data_update_processing.check_for_duplicate_data",
         "utils.summarise_existing_rd_data",
         "utils.clear_all_caches",
-        "helpers.data_update_processing.STATE_DATA_LOADED",
-        "streamlit",
-        "helpers.data_update_processing.analyze_hole_level_differences",
+        "helpers.commentary_generator.generate_reports_for_changes",
+        "helpers.data_update_processing.execute_data_update",
+        "utils.ALL_SCORES_PARQUET",
         "helpers.commentary_generator.is_tournament_complete",
-        "logging"
+        "helpers.data_update_processing.STATE_OVERWRITE_CONFIRM",
+        "helpers.data_update_processing.initialize_update_state",
+        "streamlit"
       ],
       "internal_imports": [
-        "utils.get_google_sheet",
-        "helpers.commentary_generator.generate_reports_for_changes",
-        "helpers.data_update_processing.execute_data_update",
-        "helpers.data_update_processing.create_data_summary_display",
-        "helpers.data_update_processing.check_for_duplicate_data",
-        "helpers.data_update_processing.initialize_update_state",
-        "helpers.data_update_processing.process_google_sheets_data",
         "utils.check_for_complete_and_duplicate_data",
-        "helpers.data_update_processing.STATE_OVERWRITE_CONFIRM",
+        "helpers.data_update_processing.STATE_DATA_LOADED",
+        "helpers.data_update_processing.create_data_summary_display",
+        "helpers.data_update_processing.STATE_PROCESSING",
         "helpers.commentary_generator.ProgressTracker",
         "utils.ALL_DATA_PARQUET",
-        "utils.ALL_SCORES_PARQUET",
         "helpers.data_update_processing.STATE_INITIAL",
-        "helpers.data_update_processing.STATE_PROCESSING",
+        "utils.get_google_sheet",
+        "helpers.data_update_processing.analyze_hole_level_differences",
+        "helpers.data_update_processing.process_google_sheets_data",
+        "helpers.data_update_processing.check_for_duplicate_data",
         "utils.summarise_existing_rd_data",
         "utils.clear_all_caches",
-        "helpers.data_update_processing.STATE_DATA_LOADED",
-        "streamlit",
-        "helpers.data_update_processing.analyze_hole_level_differences",
-        "helpers.commentary_generator.is_tournament_complete"
+        "helpers.commentary_generator.generate_reports_for_changes",
+        "helpers.data_update_processing.execute_data_update",
+        "utils.ALL_SCORES_PARQUET",
+        "helpers.commentary_generator.is_tournament_complete",
+        "helpers.data_update_processing.STATE_OVERWRITE_CONFIRM",
+        "helpers.data_update_processing.initialize_update_state",
+        "streamlit"
       ],
       "functions_defined": []
     },
     "streamlit/1001Report Generation.py": {
       "imports": [
-        "utils.get_teg_rounds",
-        "commentary.prompts.PLAYER_PROFILES_PROMPT",
+        "commentary.generate_tournament_commentary_v2.DRY_RUN",
+        "glob",
         "os",
-        "sys",
-        "commentary.prompts.TOURNAMENT_SYNTHESIS_PROMPT",
-        "traceback",
-        "utils.write_text_file",
         "pandas",
+        "sys",
+        "utils.read_text_file",
+        "commentary.prompts.TOURNAMENT_SYNTHESIS_PROMPT",
+        "commentary.generate_round_report.generate_complete_round_report",
+        "commentary.prompts.PLAYER_PROFILES_PROMPT",
+        "traceback",
+        "commentary.prompts.BRIEF_SUMMARY_PROMPT",
         "commentary.prompts.ROUND_REPORT_PROMPT",
         "commentary.generate_tournament_commentary_v2.generate_brief_summary",
-        "commentary.generate_round_report.generate_complete_round_report",
-        "commentary.prompts.BRIEF_SUMMARY_PROMPT",
         "commentary.prompts.ROUND_STORY_NOTES_PROMPT",
-        "commentary.generate_tournament_commentary_v2.generate_main_report",
-        "commentary.prompts.MAIN_REPORT_PROMPT",
-        "glob",
-        "utils.read_text_file",
-        "commentary.prompts.ROUND_STORY_PROMPT",
         "commentary.generate_tournament_commentary_v2.generate_satirical_report",
-        "commentary.generate_tournament_commentary_v2.DRY_RUN",
-        "streamlit",
-        "pathlib.Path",
+        "commentary.prompts.ROUND_STORY_PROMPT",
+        "commentary.generate_tournament_commentary_v2.generate_main_report",
+        "utils.write_text_file",
         "utils.read_file",
-        "commentary.generate_tournament_commentary_v2.generate_complete_story_notes"
+        "commentary.generate_tournament_commentary_v2.generate_complete_story_notes",
+        "pathlib.Path",
+        "streamlit",
+        "utils.get_teg_rounds",
+        "commentary.prompts.MAIN_REPORT_PROMPT"
       ],
       "internal_imports": [
-        "utils.get_teg_rounds",
-        "streamlit",
-        "utils.read_file",
         "utils.read_text_file",
-        "utils.write_text_file"
+        "utils.write_text_file",
+        "streamlit",
+        "utils.get_teg_rounds",
+        "utils.read_file"
       ],
       "functions_defined": [
         "get_available_tegs",
@@ -105,23 +105,23 @@
     "streamlit/101TEG History.py": {
       "imports": [
         "utils.add_custom_navigation_links",
-        "utils.get_page_layout",
-        "re",
         "streamlit",
-        "pandas",
         "helpers.history_data_processing.load_cached_winners",
+        "utils.load_datawrapper_css",
+        "re",
         "helpers.history_data_processing.prepare_complete_history_table_fast",
         "helpers.history_data_processing.calculate_and_save_missing_winners",
-        "utils.load_datawrapper_css"
+        "utils.get_page_layout",
+        "pandas"
       ],
       "internal_imports": [
         "utils.add_custom_navigation_links",
-        "utils.get_page_layout",
-        "streamlit",
         "helpers.history_data_processing.load_cached_winners",
-        "helpers.history_data_processing.prepare_complete_history_table_fast",
+        "streamlit",
+        "utils.load_datawrapper_css",
         "helpers.history_data_processing.calculate_and_save_missing_winners",
-        "utils.load_datawrapper_css"
+        "helpers.history_data_processing.prepare_complete_history_table_fast",
+        "utils.get_page_layout"
       ],
       "functions_defined": [
         "wrap_player_name"
@@ -129,77 +129,77 @@
     },
     "streamlit/101TEG Honours Board.py": {
       "imports": [
+        "utils.get_teg_winners",
+        "utils.get_trophy_full_name",
+        "utils.add_section_navigation_links",
+        "utils_win_tables.compress_ranges",
+        "utils_win_tables.summarise_teg_wins",
         "utils.add_custom_navigation_links",
+        "streamlit",
+        "utils.load_datawrapper_css",
         "helpers.history_data_processing.get_eagles_data",
         "utils.get_page_layout",
-        "utils.load_all_data",
-        "streamlit",
-        "utils.get_teg_winners",
         "pandas",
-        "utils.add_section_navigation_links",
-        "utils_win_tables.summarise_teg_wins",
-        "utils_win_tables.compress_ranges",
         "helpers.history_data_processing.get_holes_in_one_data",
-        "helpers.history_data_processing.calculate_trophy_jacket_doubles",
-        "utils.load_datawrapper_css",
-        "utils.get_trophy_full_name"
+        "utils.load_all_data",
+        "helpers.history_data_processing.calculate_trophy_jacket_doubles"
       ],
       "internal_imports": [
+        "utils.get_teg_winners",
+        "utils.get_trophy_full_name",
         "utils.add_custom_navigation_links",
+        "streamlit",
+        "utils.load_datawrapper_css",
         "helpers.history_data_processing.get_eagles_data",
         "utils.get_page_layout",
-        "utils.load_all_data",
-        "streamlit",
-        "utils.get_teg_winners",
         "utils.add_section_navigation_links",
         "helpers.history_data_processing.get_holes_in_one_data",
-        "helpers.history_data_processing.calculate_trophy_jacket_doubles",
-        "utils.load_datawrapper_css",
-        "utils.get_trophy_full_name"
+        "utils.load_all_data",
+        "helpers.history_data_processing.calculate_trophy_jacket_doubles"
       ],
       "functions_defined": []
     },
     "streamlit/102TEG Results.py": {
       "imports": [
-        "utils.get_teg_rounds",
-        "importlib.util",
-        "leaderboard_utils.format_value",
-        "typing.Any",
-        "utils.load_datawrapper_css",
-        "scorecard_utils.generate_round_comparison_html",
-        "utils.get_round_data",
-        "leaderboard_utils.display_net_leaderboard",
+        "logging",
+        "markdown",
+        "make_charts.create_cumulative_graph",
+        "typing.List",
         "pandas",
-        "leaderboard_utils.get_last_place",
         "leaderboard_utils.display_leaderboard",
-        "typing.Dict",
-        "utils.get_page_layout",
-        "leaderboard_utils.get_champions",
-        "leaderboard_utils.create_leaderboard",
+        "utils.get_round_data",
+        "make_charts.adjusted_grossvp",
         "utils.load_teg_reports_css",
         "utils.read_text_file",
-        "typing.List",
-        "make_charts.create_cumulative_graph",
         "utils.add_custom_navigation_links",
-        "make_charts.adjusted_stableford",
-        "utils.load_all_data",
-        "streamlit",
-        "markdown",
-        "logging",
+        "typing.Dict",
+        "leaderboard_utils.display_net_leaderboard",
+        "utils.get_page_layout",
+        "importlib.util",
         "leaderboard_utils.generate_table_html",
-        "make_charts.adjusted_grossvp",
-        "scorecard_utils.load_scorecard_css"
+        "leaderboard_utils.get_champions",
+        "utils.load_datawrapper_css",
+        "leaderboard_utils.format_value",
+        "leaderboard_utils.get_last_place",
+        "leaderboard_utils.create_leaderboard",
+        "scorecard_utils.load_scorecard_css",
+        "scorecard_utils.generate_round_comparison_html",
+        "streamlit",
+        "typing.Any",
+        "utils.get_teg_rounds",
+        "make_charts.adjusted_stableford",
+        "utils.load_all_data"
       ],
       "internal_imports": [
-        "utils.add_custom_navigation_links",
         "utils.get_round_data",
-        "utils.get_teg_rounds",
-        "utils.get_page_layout",
-        "utils.load_all_data",
-        "streamlit",
         "utils.load_teg_reports_css",
+        "utils.read_text_file",
+        "utils.add_custom_navigation_links",
+        "streamlit",
         "utils.load_datawrapper_css",
-        "utils.read_text_file"
+        "utils.get_page_layout",
+        "utils.get_teg_rounds",
+        "utils.load_all_data"
       ],
       "functions_defined": [
         "load_markdown",
@@ -209,43 +209,43 @@
     },
     "streamlit/300TEG Records.py": {
       "imports": [
-        "utils.add_custom_navigation_links",
         "utils.get_round_data",
-        "helpers.worst_performance_processing.get_filtered_teg_data",
-        "helpers.display_helpers.prepare_records_table",
-        "helpers.display_helpers.prepare_streak_records_table",
-        "utils.load_all_data",
-        "helpers.display_helpers.prepare_score_count_records_table",
         "utils.get_page_layout",
+        "utils.add_custom_navigation_links",
+        "utils.get_ranked_frontback_data",
+        "utils.get_ranked_round_data",
         "streamlit",
-        "pandas",
-        "helpers.streak_analysis_processing.prepare_record_best_streaks_data",
-        "utils.get_9_data",
-        "helpers.streak_analysis_processing.prepare_record_worst_streaks_data",
         "helpers.display_helpers.prepare_worst_records_table",
         "utils.load_datawrapper_css",
-        "utils.get_ranked_round_data",
+        "utils.get_9_data",
+        "helpers.display_helpers.prepare_streak_records_table",
+        "helpers.display_helpers.prepare_score_count_records_table",
+        "helpers.worst_performance_processing.get_filtered_teg_data",
+        "pandas",
+        "helpers.display_helpers.prepare_records_table",
         "utils.get_ranked_teg_data",
-        "utils.get_ranked_frontback_data"
+        "helpers.streak_analysis_processing.prepare_record_best_streaks_data",
+        "helpers.streak_analysis_processing.prepare_record_worst_streaks_data",
+        "utils.load_all_data"
       ],
       "internal_imports": [
-        "utils.add_custom_navigation_links",
         "utils.get_round_data",
-        "helpers.worst_performance_processing.get_filtered_teg_data",
-        "helpers.display_helpers.prepare_records_table",
-        "helpers.display_helpers.prepare_streak_records_table",
-        "utils.load_all_data",
-        "helpers.display_helpers.prepare_score_count_records_table",
-        "utils.get_page_layout",
+        "utils.add_custom_navigation_links",
+        "utils.get_ranked_frontback_data",
+        "utils.get_ranked_round_data",
         "streamlit",
-        "helpers.streak_analysis_processing.prepare_record_best_streaks_data",
-        "utils.get_9_data",
-        "helpers.streak_analysis_processing.prepare_record_worst_streaks_data",
         "helpers.display_helpers.prepare_worst_records_table",
         "utils.load_datawrapper_css",
-        "utils.get_ranked_round_data",
+        "utils.get_9_data",
+        "helpers.display_helpers.prepare_streak_records_table",
+        "helpers.display_helpers.prepare_score_count_records_table",
+        "helpers.worst_performance_processing.get_filtered_teg_data",
         "utils.get_ranked_teg_data",
-        "utils.get_ranked_frontback_data"
+        "helpers.display_helpers.prepare_records_table",
+        "helpers.streak_analysis_processing.prepare_record_worst_streaks_data",
+        "helpers.streak_analysis_processing.prepare_record_best_streaks_data",
+        "utils.get_page_layout",
+        "utils.load_all_data"
       ],
       "functions_defined": [
         "dashed_line"
@@ -255,168 +255,168 @@
       "imports": [
         "helpers.best_performance_processing.prepare_best_teg_table",
         "utils.add_custom_navigation_links",
-        "utils.get_page_layout",
-        "streamlit",
-        "numpy",
-        "helpers.best_performance_processing.get_measure_name_mappings",
-        "pandas",
         "helpers.best_performance_processing.prepare_worst_round_table",
         "helpers.best_performance_processing.prepare_round_data_with_identifiers",
-        "helpers.best_performance_processing.prepare_worst_teg_table",
+        "numpy",
+        "utils.get_ranked_round_data",
+        "streamlit",
         "helpers.best_performance_processing.prepare_best_round_table",
         "utils.load_datawrapper_css",
-        "utils.get_ranked_round_data",
-        "utils.get_ranked_teg_data"
+        "helpers.best_performance_processing.get_measure_name_mappings",
+        "utils.get_page_layout",
+        "pandas",
+        "utils.get_ranked_teg_data",
+        "helpers.best_performance_processing.prepare_worst_teg_table"
       ],
       "internal_imports": [
         "helpers.best_performance_processing.prepare_best_teg_table",
         "utils.add_custom_navigation_links",
-        "utils.get_page_layout",
-        "streamlit",
-        "helpers.best_performance_processing.get_measure_name_mappings",
         "helpers.best_performance_processing.prepare_worst_round_table",
         "helpers.best_performance_processing.prepare_round_data_with_identifiers",
-        "helpers.best_performance_processing.prepare_worst_teg_table",
+        "utils.get_ranked_round_data",
+        "streamlit",
         "helpers.best_performance_processing.prepare_best_round_table",
         "utils.load_datawrapper_css",
-        "utils.get_ranked_round_data",
-        "utils.get_ranked_teg_data"
+        "helpers.best_performance_processing.get_measure_name_mappings",
+        "utils.get_page_layout",
+        "utils.get_ranked_teg_data",
+        "helpers.best_performance_processing.prepare_worst_teg_table"
       ],
       "functions_defined": []
     },
     "streamlit/302Personal Best Rounds & TEGs.py": {
       "imports": [
-        "utils.add_custom_navigation_links",
-        "helpers.best_performance_processing.prepare_personal_worst_teg_table",
-        "utils.get_page_layout",
-        "streamlit",
-        "numpy",
-        "helpers.best_performance_processing.get_measure_name_mappings",
-        "pandas",
         "helpers.best_performance_processing.prepare_personal_worst_round_table",
+        "helpers.best_performance_processing.prepare_personal_worst_teg_table",
+        "utils.add_custom_navigation_links",
         "helpers.best_performance_processing.prepare_round_data_with_identifiers",
-        "helpers.best_performance_processing.prepare_pb_teg_summary_table",
-        "helpers.best_performance_processing.prepare_pb_nine_summary_table",
-        "helpers.best_performance_processing.prepare_personal_best_teg_table",
-        "utils.load_datawrapper_css",
+        "numpy",
         "utils.get_ranked_round_data",
-        "helpers.best_performance_processing.prepare_pb_round_summary_table",
-        "helpers.best_performance_processing.prepare_personal_best_round_table",
+        "utils.get_ranked_frontback_data",
+        "streamlit",
+        "helpers.best_performance_processing.prepare_pb_teg_summary_table",
+        "utils.load_datawrapper_css",
+        "helpers.best_performance_processing.get_measure_name_mappings",
+        "helpers.best_performance_processing.prepare_personal_best_teg_table",
+        "utils.get_page_layout",
+        "helpers.best_performance_processing.prepare_pb_nine_summary_table",
+        "pandas",
         "utils.get_ranked_teg_data",
-        "utils.get_ranked_frontback_data"
+        "helpers.best_performance_processing.prepare_pb_round_summary_table",
+        "helpers.best_performance_processing.prepare_personal_best_round_table"
       ],
       "internal_imports": [
-        "utils.add_custom_navigation_links",
-        "helpers.best_performance_processing.prepare_personal_worst_teg_table",
-        "utils.get_page_layout",
-        "streamlit",
-        "helpers.best_performance_processing.get_measure_name_mappings",
         "helpers.best_performance_processing.prepare_personal_worst_round_table",
+        "helpers.best_performance_processing.prepare_personal_worst_teg_table",
+        "utils.add_custom_navigation_links",
         "helpers.best_performance_processing.prepare_round_data_with_identifiers",
-        "helpers.best_performance_processing.prepare_pb_nine_summary_table",
-        "helpers.best_performance_processing.prepare_pb_teg_summary_table",
-        "helpers.best_performance_processing.prepare_personal_best_teg_table",
-        "utils.load_datawrapper_css",
+        "utils.get_ranked_frontback_data",
         "utils.get_ranked_round_data",
-        "helpers.best_performance_processing.prepare_pb_round_summary_table",
-        "helpers.best_performance_processing.prepare_personal_best_round_table",
+        "streamlit",
+        "utils.load_datawrapper_css",
+        "helpers.best_performance_processing.get_measure_name_mappings",
+        "helpers.best_performance_processing.prepare_personal_best_teg_table",
+        "utils.get_page_layout",
+        "helpers.best_performance_processing.prepare_pb_nine_summary_table",
         "utils.get_ranked_teg_data",
-        "utils.get_ranked_frontback_data"
+        "helpers.best_performance_processing.prepare_pb_teg_summary_table",
+        "helpers.best_performance_processing.prepare_pb_round_summary_table",
+        "helpers.best_performance_processing.prepare_personal_best_round_table"
       ],
       "functions_defined": []
     },
     "streamlit/303Final Round Comebacks.py": {
       "imports": [
-        "utils.add_custom_navigation_links",
         "helpers.comeback_analysis.calculate_biggest_leads_lost_after_r3",
-        "utils.load_all_data",
-        "utils.get_page_layout",
-        "streamlit",
-        "pandas",
-        "helpers.comeback_analysis.calculate_final_round_differentials",
-        "utils.read_file",
-        "helpers.comeback_analysis.calculate_biggest_leads_lost_in_r4",
+        "utils.add_custom_navigation_links",
         "helpers.comeback_analysis.calculate_biggest_comebacks",
-        "utils.load_datawrapper_css"
+        "streamlit",
+        "utils.load_datawrapper_css",
+        "helpers.comeback_analysis.calculate_final_round_differentials",
+        "utils.get_page_layout",
+        "helpers.comeback_analysis.calculate_biggest_leads_lost_in_r4",
+        "pandas",
+        "utils.read_file",
+        "utils.load_all_data"
       ],
       "internal_imports": [
-        "utils.add_custom_navigation_links",
         "helpers.comeback_analysis.calculate_biggest_leads_lost_after_r3",
-        "utils.load_all_data",
-        "utils.get_page_layout",
-        "streamlit",
-        "helpers.comeback_analysis.calculate_final_round_differentials",
-        "utils.read_file",
-        "helpers.comeback_analysis.calculate_biggest_leads_lost_in_r4",
+        "utils.add_custom_navigation_links",
         "helpers.comeback_analysis.calculate_biggest_comebacks",
-        "utils.load_datawrapper_css"
+        "streamlit",
+        "utils.load_datawrapper_css",
+        "helpers.comeback_analysis.calculate_final_round_differentials",
+        "utils.get_page_layout",
+        "helpers.comeback_analysis.calculate_biggest_leads_lost_in_r4",
+        "utils.read_file",
+        "utils.load_all_data"
       ],
       "functions_defined": []
     },
     "streamlit/400scoring.py": {
       "imports": [
-        "utils.score_type_stats",
-        "utils.load_all_data",
-        "streamlit",
-        "numpy",
-        "pandas",
         "helpers.scoring_data_processing.format_vs_par_value",
+        "utils.score_type_stats",
         "helpers.scoring_data_processing.prepare_average_scores_by_par",
-        "utils.load_datawrapper_css",
+        "helpers.scoring_data_processing.summarize_multi_score_running_sum",
+        "numpy",
+        "streamlit",
         "helpers.scoring_data_processing.format_scoring_stats_columns",
-        "utils.max_scoretype_per_round",
+        "utils.load_datawrapper_css",
         "helpers.scoring_data_processing.calculate_multi_score_running_sum",
-        "helpers.scoring_data_processing.summarize_multi_score_running_sum"
+        "utils.max_scoretype_per_round",
+        "pandas",
+        "utils.load_all_data"
       ],
       "internal_imports": [
-        "utils.score_type_stats",
-        "utils.load_all_data",
-        "streamlit",
         "helpers.scoring_data_processing.format_vs_par_value",
+        "utils.score_type_stats",
         "helpers.scoring_data_processing.prepare_average_scores_by_par",
-        "utils.load_datawrapper_css",
+        "helpers.scoring_data_processing.summarize_multi_score_running_sum",
+        "streamlit",
         "helpers.scoring_data_processing.format_scoring_stats_columns",
-        "utils.max_scoretype_per_round",
+        "utils.load_datawrapper_css",
         "helpers.scoring_data_processing.calculate_multi_score_running_sum",
-        "helpers.scoring_data_processing.summarize_multi_score_running_sum"
+        "utils.max_scoretype_per_round",
+        "utils.load_all_data"
       ],
       "functions_defined": []
     },
     "streamlit/500Handicaps.py": {
       "imports": [
-        "utils.get_current_handicaps_formatted",
-        "utils.add_custom_navigation_links",
-        "utils.get_page_layout",
-        "utils.get_hc",
-        "os",
-        "utils.get_current_in_progress_teg_fast",
-        "streamlit",
-        "numpy",
-        "utils.write_file",
-        "pandas",
-        "utils.clear_all_caches",
-        "utils.read_file",
         "utils.HANDICAPS_CSV",
-        "utils.get_next_teg_and_check_if_in_progress_fast",
         "utils.get_player_name",
+        "utils.clear_all_caches",
+        "utils.get_next_teg_and_check_if_in_progress_fast",
+        "utils.get_current_in_progress_teg_fast",
+        "utils.add_custom_navigation_links",
+        "numpy",
+        "os",
+        "streamlit",
+        "utils.get_hc",
         "utils.load_datawrapper_css",
-        "utils.get_base_directory"
+        "utils.get_current_handicaps_formatted",
+        "utils.write_file",
+        "utils.get_page_layout",
+        "pandas",
+        "utils.get_base_directory",
+        "utils.read_file"
       ],
       "internal_imports": [
-        "utils.get_current_handicaps_formatted",
-        "utils.add_custom_navigation_links",
-        "utils.get_page_layout",
-        "utils.get_hc",
-        "utils.get_current_in_progress_teg_fast",
-        "utils.clear_all_caches",
-        "streamlit",
-        "utils.write_file",
-        "utils.read_file",
-        "utils.HANDICAPS_CSV",
-        "utils.get_next_teg_and_check_if_in_progress_fast",
         "utils.get_player_name",
+        "utils.clear_all_caches",
+        "utils.get_next_teg_and_check_if_in_progress_fast",
+        "utils.get_current_in_progress_teg_fast",
+        "utils.add_custom_navigation_links",
+        "streamlit",
+        "utils.get_hc",
         "utils.load_datawrapper_css",
-        "utils.get_base_directory"
+        "utils.get_current_handicaps_formatted",
+        "utils.write_file",
+        "utils.get_page_layout",
+        "utils.HANDICAPS_CSV",
+        "utils.get_base_directory",
+        "utils.read_file"
       ],
       "functions_defined": [
         "format_change",
@@ -427,58 +427,58 @@
     },
     "streamlit/9999_generate_caches.py": {
       "imports": [
-        "utils.update_streaks_cache",
-        "utils.clear_all_caches",
-        "streamlit",
         "utils.update_bestball_cache",
-        "utils.update_teg_status_files",
         "logging",
-        "utils.update_commentary_caches"
+        "utils.clear_all_caches",
+        "utils.update_streaks_cache",
+        "streamlit",
+        "utils.update_commentary_caches",
+        "utils.update_teg_status_files"
       ],
       "internal_imports": [
-        "utils.update_streaks_cache",
-        "utils.clear_all_caches",
-        "streamlit",
         "utils.update_bestball_cache",
-        "utils.update_teg_status_files",
-        "utils.update_commentary_caches"
+        "utils.clear_all_caches",
+        "utils.update_streaks_cache",
+        "streamlit",
+        "utils.update_commentary_caches",
+        "utils.update_teg_status_files"
       ],
       "functions_defined": []
     },
     "streamlit/admin_volume_management.py": {
       "imports": [
-        "mimetypes",
-        "utils.get_current_branch",
         "os",
-        "datetime.timezone",
-        "base64",
-        "pandas",
-        "utils.write_to_github",
-        "time",
-        "pyarrow.parquet",
-        "typing.Dict",
-        "datetime.datetime",
-        "utils.get_page_layout",
         "typing.List",
-        "utils.read_from_github",
-        "utils.clear_all_caches",
         "typing.Tuple",
-        "streamlit",
+        "pandas",
         "requests",
-        "pathlib.Path",
-        "typing.Optional",
-        "io",
         "utils.GITHUB_REPO",
-        "zipfile"
+        "utils.write_to_github",
+        "utils.get_current_branch",
+        "typing.Dict",
+        "pyarrow.parquet",
+        "utils.get_page_layout",
+        "utils.read_from_github",
+        "datetime.datetime",
+        "utils.clear_all_caches",
+        "io",
+        "base64",
+        "mimetypes",
+        "time",
+        "typing.Optional",
+        "pathlib.Path",
+        "zipfile",
+        "streamlit",
+        "datetime.timezone"
       ],
       "internal_imports": [
-        "utils.read_from_github",
-        "utils.get_current_branch",
-        "utils.get_page_layout",
+        "utils.GITHUB_REPO",
         "utils.clear_all_caches",
-        "streamlit",
         "utils.write_to_github",
-        "utils.GITHUB_REPO"
+        "utils.get_current_branch",
+        "streamlit",
+        "utils.get_page_layout",
+        "utils.read_from_github"
       ],
       "functions_defined": [
         "get_current_branch",
@@ -505,35 +505,35 @@
     },
     "streamlit/ave_by_course.py": {
       "imports": [
-        "utils.add_custom_navigation_links",
-        "utils.get_round_data",
-        "utils.get_page_layout",
-        "streamlit",
-        "numpy",
-        "pandas",
-        "helpers.course_analysis_processing.create_course_performance_table",
         "helpers.course_analysis_processing.prepare_area_filter_options",
-        "helpers.course_analysis_processing.calculate_course_round_counts",
-        "utils.load_course_info",
-        "altair",
-        "utils.load_datawrapper_css",
-        "utils.datawrapper_table",
+        "utils.get_round_data",
+        "helpers.course_analysis_processing.create_course_summary_table",
         "helpers.course_analysis_processing.filter_data_by_area",
-        "helpers.course_analysis_processing.create_course_summary_table"
+        "utils.datawrapper_table",
+        "helpers.course_analysis_processing.calculate_course_round_counts",
+        "utils.add_custom_navigation_links",
+        "numpy",
+        "utils.load_course_info",
+        "streamlit",
+        "utils.load_datawrapper_css",
+        "utils.get_page_layout",
+        "helpers.course_analysis_processing.create_course_performance_table",
+        "pandas",
+        "altair"
       ],
       "internal_imports": [
-        "utils.add_custom_navigation_links",
-        "utils.get_round_data",
-        "utils.get_page_layout",
-        "streamlit",
-        "helpers.course_analysis_processing.create_course_performance_table",
         "helpers.course_analysis_processing.prepare_area_filter_options",
-        "helpers.course_analysis_processing.calculate_course_round_counts",
-        "utils.load_course_info",
-        "utils.datawrapper_table",
-        "utils.load_datawrapper_css",
+        "utils.get_round_data",
+        "helpers.course_analysis_processing.create_course_summary_table",
         "helpers.course_analysis_processing.filter_data_by_area",
-        "helpers.course_analysis_processing.create_course_summary_table"
+        "utils.datawrapper_table",
+        "helpers.course_analysis_processing.calculate_course_round_counts",
+        "utils.add_custom_navigation_links",
+        "utils.load_course_info",
+        "streamlit",
+        "utils.load_datawrapper_css",
+        "utils.get_page_layout",
+        "helpers.course_analysis_processing.create_course_performance_table"
       ],
       "functions_defined": [
         "create_course_records_table",
@@ -544,49 +544,49 @@
     },
     "streamlit/ave_by_par.py": {
       "imports": [
-        "utils.add_custom_navigation_links",
-        "helpers.par_analysis_processing.format_par_performance_table",
-        "utils.load_all_data",
-        "utils.get_page_layout",
-        "streamlit",
-        "numpy",
-        "pandas",
-        "utils.filter_data_by_teg",
-        "altair",
-        "utils.load_datawrapper_css",
+        "utils.get_teg_filter_options",
         "helpers.par_analysis_processing.calculate_par_performance_matrix",
-        "utils.get_teg_filter_options"
+        "helpers.par_analysis_processing.format_par_performance_table",
+        "utils.filter_data_by_teg",
+        "utils.add_custom_navigation_links",
+        "numpy",
+        "streamlit",
+        "utils.load_datawrapper_css",
+        "utils.get_page_layout",
+        "pandas",
+        "altair",
+        "utils.load_all_data"
       ],
       "internal_imports": [
-        "utils.add_custom_navigation_links",
-        "helpers.par_analysis_processing.format_par_performance_table",
-        "utils.load_all_data",
-        "utils.get_page_layout",
-        "streamlit",
-        "utils.filter_data_by_teg",
-        "utils.load_datawrapper_css",
+        "utils.get_teg_filter_options",
         "helpers.par_analysis_processing.calculate_par_performance_matrix",
-        "utils.get_teg_filter_options"
+        "helpers.par_analysis_processing.format_par_performance_table",
+        "utils.filter_data_by_teg",
+        "utils.add_custom_navigation_links",
+        "streamlit",
+        "utils.load_datawrapper_css",
+        "utils.get_page_layout",
+        "utils.load_all_data"
       ],
       "functions_defined": []
     },
     "streamlit/ave_by_teg.py": {
       "imports": [
         "utils.add_custom_navigation_links",
-        "utils.get_page_layout",
-        "utils.load_all_data",
-        "streamlit",
         "numpy",
+        "streamlit",
+        "utils.load_datawrapper_css",
+        "utils.get_page_layout",
         "pandas",
         "altair",
-        "utils.load_datawrapper_css"
+        "utils.load_all_data"
       ],
       "internal_imports": [
         "utils.add_custom_navigation_links",
-        "utils.get_page_layout",
-        "utils.load_all_data",
         "streamlit",
-        "utils.load_datawrapper_css"
+        "utils.get_page_layout",
+        "utils.load_datawrapper_css",
+        "utils.load_all_data"
       ],
       "functions_defined": [
         "altair_theme"
@@ -594,49 +594,49 @@
     },
     "streamlit/bestball.py": {
       "imports": [
-        "utils.add_custom_navigation_links",
-        "helpers.bestball_processing.format_team_scores_for_display",
-        "utils.get_page_layout",
-        "streamlit",
-        "pandas",
-        "utils.read_file",
+        "utils.get_teg_filter_options",
         "utils.filter_data_by_teg",
-        "utils.load_datawrapper_css",
+        "utils.add_custom_navigation_links",
         "utils.BESTBALL_PARQUET",
-        "utils.get_teg_filter_options"
+        "helpers.bestball_processing.format_team_scores_for_display",
+        "streamlit",
+        "utils.load_datawrapper_css",
+        "utils.get_page_layout",
+        "pandas",
+        "utils.read_file"
       ],
       "internal_imports": [
-        "utils.add_custom_navigation_links",
-        "helpers.bestball_processing.format_team_scores_for_display",
-        "utils.get_page_layout",
-        "streamlit",
-        "utils.read_file",
+        "utils.get_teg_filter_options",
         "utils.filter_data_by_teg",
-        "utils.load_datawrapper_css",
+        "utils.add_custom_navigation_links",
         "utils.BESTBALL_PARQUET",
-        "utils.get_teg_filter_options"
+        "helpers.bestball_processing.format_team_scores_for_display",
+        "streamlit",
+        "utils.load_datawrapper_css",
+        "utils.get_page_layout",
+        "utils.read_file"
       ],
       "functions_defined": []
     },
     "streamlit/best_eclectics.py": {
       "imports": [
+        "utils.datawrapper_table",
         "utils.add_custom_navigation_links",
-        "utils.get_page_layout",
-        "utils.load_all_data",
-        "streamlit",
         "numpy",
+        "streamlit",
+        "utils.load_datawrapper_css",
+        "utils.get_page_layout",
         "pandas",
         "eclectic_utils.calculate_eclectic_by_dimension",
-        "utils.datawrapper_table",
-        "utils.load_datawrapper_css"
+        "utils.load_all_data"
       ],
       "internal_imports": [
-        "utils.add_custom_navigation_links",
-        "utils.get_page_layout",
-        "utils.load_all_data",
-        "streamlit",
         "utils.datawrapper_table",
-        "utils.load_datawrapper_css"
+        "utils.add_custom_navigation_links",
+        "streamlit",
+        "utils.get_page_layout",
+        "utils.load_datawrapper_css",
+        "utils.load_all_data"
       ],
       "functions_defined": [
         "get_overall_top_eclectics",
@@ -646,64 +646,64 @@
     },
     "streamlit/biggest_changes.py": {
       "imports": [
-        "utils.add_custom_navigation_links",
         "utils.get_round_data",
-        "utils.get_page_layout",
-        "streamlit",
         "utils.datawrapper_table",
+        "utils.add_custom_navigation_links",
+        "streamlit",
+        "utils.get_page_layout",
         "utils.load_datawrapper_css"
       ],
       "internal_imports": [
-        "utils.add_custom_navigation_links",
         "utils.get_round_data",
-        "utils.get_page_layout",
-        "streamlit",
         "utils.datawrapper_table",
+        "utils.add_custom_navigation_links",
+        "streamlit",
+        "utils.get_page_layout",
         "utils.load_datawrapper_css"
       ],
       "functions_defined": []
     },
     "streamlit/birdies_etc.py": {
       "imports": [
-        "helpers.scoring_achievements_processing.create_section_title",
-        "utils.score_type_stats",
-        "utils.add_custom_navigation_links",
-        "utils.get_page_layout",
-        "streamlit",
-        "numpy",
-        "pandas",
-        "helpers.scoring_achievements_processing.create_achievement_tab_labels",
-        "helpers.scoring_achievements_processing.get_scoring_achievement_fields",
         "helpers.scoring_achievements_processing.prepare_achievement_table_data",
-        "altair",
+        "utils.score_type_stats",
+        "helpers.scoring_achievements_processing.create_achievement_tab_labels",
+        "utils.add_custom_navigation_links",
+        "numpy",
+        "helpers.scoring_achievements_processing.create_section_title",
+        "streamlit",
         "utils.load_datawrapper_css",
+        "utils.max_scoretype_per_teg",
+        "helpers.scoring_achievements_processing.get_scoring_achievement_fields",
+        "utils.get_page_layout",
         "utils.max_scoretype_per_round",
-        "utils.max_scoretype_per_teg"
+        "pandas",
+        "altair"
       ],
       "internal_imports": [
-        "helpers.scoring_achievements_processing.create_section_title",
-        "utils.score_type_stats",
-        "utils.add_custom_navigation_links",
-        "utils.get_page_layout",
-        "streamlit",
-        "helpers.scoring_achievements_processing.create_achievement_tab_labels",
-        "helpers.scoring_achievements_processing.get_scoring_achievement_fields",
         "helpers.scoring_achievements_processing.prepare_achievement_table_data",
+        "utils.score_type_stats",
+        "helpers.scoring_achievements_processing.create_achievement_tab_labels",
+        "utils.add_custom_navigation_links",
+        "helpers.scoring_achievements_processing.create_section_title",
+        "streamlit",
         "utils.load_datawrapper_css",
-        "utils.max_scoretype_per_round",
-        "utils.max_scoretype_per_teg"
+        "utils.max_scoretype_per_teg",
+        "helpers.scoring_achievements_processing.get_scoring_achievement_fields",
+        "utils.get_page_layout",
+        "utils.max_scoretype_per_round"
       ],
       "functions_defined": []
     },
     "streamlit/commentary_runner.py": {
       "imports": [
-        "importlib.util",
         "os",
-        "streamlit",
-        "utils.write_file",
         "pathlib.Path",
-        "sys",
-        "time"
+        "streamlit",
+        "importlib.util",
+        "utils.write_file",
+        "time",
+        "sys"
       ],
       "internal_imports": [
         "streamlit",
@@ -722,55 +722,55 @@
     },
     "streamlit/contents.py": {
       "imports": [
-        "utils.get_app_base_url",
-        "utils.get_page_layout",
-        "streamlit",
-        "page_config.PAGE_DEFINITIONS",
-        "pathlib.Path",
-        "sys",
         "utils.apply_custom_navigation_css",
+        "utils.get_app_base_url",
+        "page_config.SECTION_CONFIG",
+        "pathlib.Path",
+        "streamlit",
         "utils.convert_filename_to_streamlit_url",
-        "page_config.SECTION_CONFIG"
+        "utils.get_page_layout",
+        "sys",
+        "page_config.PAGE_DEFINITIONS"
       ],
       "internal_imports": [
-        "utils.get_app_base_url",
-        "utils.get_page_layout",
-        "streamlit",
         "utils.apply_custom_navigation_css",
+        "utils.get_app_base_url",
+        "streamlit",
+        "utils.get_page_layout",
         "utils.convert_filename_to_streamlit_url"
       ],
       "functions_defined": []
     },
     "streamlit/data_edit.py": {
       "imports": [
-        "utils.load_all_data",
+        "logging",
         "utils.clear_all_caches",
         "streamlit",
         "utils.write_file",
         "pandas",
-        "utils.read_file",
         "utils.update_teg_status_files",
-        "logging"
+        "utils.read_file",
+        "utils.load_all_data"
       ],
       "internal_imports": [
-        "utils.load_all_data",
         "utils.clear_all_caches",
         "streamlit",
         "utils.write_file",
+        "utils.update_teg_status_files",
         "utils.read_file",
-        "utils.update_teg_status_files"
+        "utils.load_all_data"
       ],
       "functions_defined": []
     },
     "streamlit/data_test_temp.py": {
       "imports": [
-        "os",
-        "streamlit",
-        "pandas",
-        "pathlib.Path",
         "io",
+        "datetime",
+        "os",
+        "pathlib.Path",
+        "streamlit",
         "time",
-        "datetime"
+        "pandas"
       ],
       "internal_imports": [
         "streamlit"
@@ -785,30 +785,30 @@
     },
     "streamlit/delete_data.py": {
       "imports": [
-        "helpers.data_deletion_processing.STATE_CONFIRMED",
-        "datetime.datetime",
-        "helpers.data_deletion_processing.execute_data_deletion",
-        "helpers.data_deletion_processing.validate_deletion_selection",
-        "helpers.data_deletion_processing.STATE_INITIAL",
-        "streamlit",
-        "helpers.data_deletion_processing.STATE_PREVIEW",
-        "helpers.data_deletion_processing.get_available_tegs_and_rounds",
-        "pandas",
+        "helpers.data_deletion_processing.load_scores_data",
         "helpers.data_deletion_processing.initialize_deletion_state",
+        "helpers.data_deletion_processing.get_available_tegs_and_rounds",
         "helpers.data_deletion_processing.preview_deletion_data",
-        "helpers.data_deletion_processing.load_scores_data"
+        "helpers.data_deletion_processing.execute_data_deletion",
+        "helpers.data_deletion_processing.STATE_INITIAL",
+        "helpers.data_deletion_processing.STATE_PREVIEW",
+        "streamlit",
+        "helpers.data_deletion_processing.validate_deletion_selection",
+        "pandas",
+        "datetime.datetime",
+        "helpers.data_deletion_processing.STATE_CONFIRMED"
       ],
       "internal_imports": [
-        "helpers.data_deletion_processing.STATE_CONFIRMED",
-        "helpers.data_deletion_processing.execute_data_deletion",
-        "helpers.data_deletion_processing.validate_deletion_selection",
-        "helpers.data_deletion_processing.STATE_INITIAL",
-        "streamlit",
-        "helpers.data_deletion_processing.STATE_PREVIEW",
-        "helpers.data_deletion_processing.get_available_tegs_and_rounds",
+        "helpers.data_deletion_processing.load_scores_data",
         "helpers.data_deletion_processing.initialize_deletion_state",
+        "helpers.data_deletion_processing.get_available_tegs_and_rounds",
         "helpers.data_deletion_processing.preview_deletion_data",
-        "helpers.data_deletion_processing.load_scores_data"
+        "helpers.data_deletion_processing.execute_data_deletion",
+        "helpers.data_deletion_processing.STATE_INITIAL",
+        "helpers.data_deletion_processing.STATE_PREVIEW",
+        "streamlit",
+        "helpers.data_deletion_processing.validate_deletion_selection",
+        "helpers.data_deletion_processing.STATE_CONFIRMED"
       ],
       "functions_defined": []
     },
@@ -819,26 +819,26 @@
     },
     "streamlit/eclectic.py": {
       "imports": [
+        "utils.datawrapper_table",
         "utils.add_custom_navigation_links",
-        "utils.get_page_layout",
-        "utils.load_all_data",
-        "streamlit",
         "numpy",
+        "utils.load_course_info",
+        "streamlit",
+        "utils.load_datawrapper_css",
+        "utils.get_page_layout",
         "pandas",
         "eclectic_utils.calculate_eclectic_by_dimension",
-        "utils.load_course_info",
-        "utils.datawrapper_table",
-        "utils.load_datawrapper_css",
-        "eclectic_utils.format_eclectic_table"
+        "eclectic_utils.format_eclectic_table",
+        "utils.load_all_data"
       ],
       "internal_imports": [
-        "utils.add_custom_navigation_links",
-        "utils.get_page_layout",
-        "utils.load_all_data",
-        "streamlit",
-        "utils.load_course_info",
         "utils.datawrapper_table",
-        "utils.load_datawrapper_css"
+        "utils.add_custom_navigation_links",
+        "utils.load_course_info",
+        "streamlit",
+        "utils.load_datawrapper_css",
+        "utils.get_page_layout",
+        "utils.load_all_data"
       ],
       "functions_defined": [
         "get_selection_options",
@@ -847,8 +847,8 @@
     },
     "streamlit/eclectic_utils.py": {
       "imports": [
-        "numpy",
-        "pandas"
+        "pandas",
+        "numpy"
       ],
       "internal_imports": [],
       "functions_defined": [
@@ -860,12 +860,12 @@
     },
     "streamlit/graph_test.py": {
       "imports": [
-        "numpy",
+        "themes.bar_theme",
         "themes.line_theme",
-        "pandas",
+        "numpy",
         "themes.PALETTE",
         "themes.PALETTE_SECONDARY",
-        "themes.bar_theme",
+        "pandas",
         "altair"
       ],
       "internal_imports": [],
@@ -873,9 +873,9 @@
     },
     "streamlit/graph_test_column.py": {
       "imports": [
+        "pandas",
         "streamlit",
         "altair",
-        "pandas",
         "numpy"
       ],
       "internal_imports": [
@@ -887,9 +887,9 @@
     },
     "streamlit/graph_test_line.py": {
       "imports": [
+        "pandas",
         "streamlit",
         "altair",
-        "pandas",
         "numpy"
       ],
       "internal_imports": [
@@ -901,125 +901,125 @@
     },
     "streamlit/latest_round.py": {
       "imports": [
-        "importlib.util",
-        "helpers.latest_round_processing.get_teg_and_round_options",
-        "helpers.score_count_processing.count_scores_by_player",
-        "scorecard_utils.generate_round_comparison_html",
-        "utils.load_datawrapper_css",
-        "helpers.records_identification.identify_aggregate_records_and_pbs",
+        "markdown",
+        "helpers.records_identification.identify_9hole_records_and_pbs",
         "pandas",
-        "helpers.latest_round_processing.initialize_round_selection_state",
-        "helpers.records_identification.display_records_and_pbs_summary",
         "helpers.latest_round_processing.prepare_round_context_display",
-        "helpers.latest_round_processing.get_round_metric_mappings",
-        "helpers.records_identification.identify_streak_records",
-        "helpers.records_identification.identify_score_count_records",
-        "utils.format_vs_par",
+        "helpers.latest_round_processing.get_teg_and_round_options",
         "helpers.records_identification.identify_all_time_worsts",
-        "utils.get_page_layout",
-        "helpers.streak_analysis_processing.get_player_window_streaks",
-        "helpers.latest_round_processing.update_session_state_defaults",
         "utils.load_teg_reports_css",
         "utils.read_text_file",
+        "helpers.records_identification.identify_streak_records",
+        "utils.format_vs_par",
         "utils.add_custom_navigation_links",
         "helpers.latest_round_processing.create_metric_tabs_data",
+        "utils.get_page_layout",
+        "importlib.util",
+        "helpers.records_identification.identify_score_count_records",
+        "helpers.latest_round_processing.update_session_state_defaults",
         "utils.STREAKS_PARQUET",
-        "utils.load_all_data",
-        "helpers.records_identification.identify_9hole_records_and_pbs",
-        "streamlit",
-        "make_charts.create_round_graph",
-        "utils.get_ranked_round_data",
-        "utils.read_file",
-        "markdown",
+        "helpers.records_identification.identify_aggregate_records_and_pbs",
         "scorecard_utils.generate_round_comparison_html_mobile",
-        "scorecard_utils.load_scorecard_css"
+        "helpers.latest_round_processing.get_round_metric_mappings",
+        "helpers.records_identification.display_records_and_pbs_summary",
+        "utils.get_ranked_round_data",
+        "utils.load_datawrapper_css",
+        "utils.read_file",
+        "helpers.streak_analysis_processing.get_player_window_streaks",
+        "helpers.latest_round_processing.initialize_round_selection_state",
+        "helpers.score_count_processing.count_scores_by_player",
+        "make_charts.create_round_graph",
+        "scorecard_utils.generate_round_comparison_html",
+        "streamlit",
+        "scorecard_utils.load_scorecard_css",
+        "utils.load_all_data"
       ],
       "internal_imports": [
-        "helpers.latest_round_processing.get_teg_and_round_options",
-        "helpers.score_count_processing.count_scores_by_player",
-        "helpers.records_identification.identify_aggregate_records_and_pbs",
-        "utils.load_datawrapper_css",
-        "helpers.latest_round_processing.initialize_round_selection_state",
-        "helpers.records_identification.display_records_and_pbs_summary",
+        "helpers.records_identification.identify_9hole_records_and_pbs",
         "helpers.latest_round_processing.prepare_round_context_display",
-        "helpers.latest_round_processing.get_round_metric_mappings",
-        "helpers.records_identification.identify_streak_records",
-        "helpers.records_identification.identify_score_count_records",
-        "utils.format_vs_par",
+        "helpers.latest_round_processing.get_teg_and_round_options",
         "helpers.records_identification.identify_all_time_worsts",
-        "utils.get_page_layout",
-        "helpers.streak_analysis_processing.get_player_window_streaks",
-        "helpers.latest_round_processing.update_session_state_defaults",
         "utils.load_teg_reports_css",
         "utils.read_text_file",
+        "helpers.records_identification.identify_streak_records",
+        "utils.format_vs_par",
         "utils.add_custom_navigation_links",
         "helpers.latest_round_processing.create_metric_tabs_data",
+        "utils.get_page_layout",
+        "helpers.records_identification.identify_score_count_records",
+        "helpers.latest_round_processing.update_session_state_defaults",
         "utils.STREAKS_PARQUET",
-        "utils.load_all_data",
-        "helpers.records_identification.identify_9hole_records_and_pbs",
-        "streamlit",
+        "helpers.records_identification.identify_aggregate_records_and_pbs",
+        "helpers.latest_round_processing.get_round_metric_mappings",
+        "helpers.records_identification.display_records_and_pbs_summary",
+        "utils.get_ranked_round_data",
+        "utils.load_datawrapper_css",
         "utils.read_file",
-        "utils.get_ranked_round_data"
+        "helpers.streak_analysis_processing.get_player_window_streaks",
+        "helpers.latest_round_processing.initialize_round_selection_state",
+        "helpers.score_count_processing.count_scores_by_player",
+        "streamlit",
+        "utils.load_all_data"
       ],
       "functions_defined": []
     },
     "streamlit/latest_teg_context.py": {
       "imports": [
-        "importlib.util",
+        "markdown",
         "helpers.latest_round_processing.initialize_teg_selection_state",
-        "helpers.score_count_processing.count_scores_by_player",
-        "utils.load_datawrapper_css",
-        "helpers.records_identification.identify_aggregate_records_and_pbs",
-        "helpers.latest_round_processing.prepare_teg_context_display",
         "pandas",
-        "helpers.records_identification.display_records_and_pbs_summary",
-        "helpers.latest_round_processing.update_teg_session_state_defaults",
-        "helpers.records_identification.identify_streak_records",
-        "helpers.latest_round_processing.get_round_metric_mappings",
         "helpers.latest_round_processing.create_teg_selection_reset_function",
-        "helpers.records_identification.identify_score_count_records",
-        "utils.format_vs_par",
         "helpers.records_identification.identify_all_time_worsts",
-        "utils.get_page_layout",
-        "helpers.streak_analysis_processing.get_player_window_streaks",
         "utils.load_teg_reports_css",
         "utils.read_text_file",
-        "helpers.latest_round_processing.get_teg_options",
-        "utils.get_ranked_teg_data",
+        "helpers.records_identification.identify_streak_records",
+        "utils.format_vs_par",
         "utils.add_custom_navigation_links",
         "helpers.latest_round_processing.create_metric_tabs_data",
+        "utils.get_page_layout",
+        "importlib.util",
+        "helpers.records_identification.identify_score_count_records",
+        "utils.get_ranked_teg_data",
+        "helpers.latest_round_processing.update_teg_session_state_defaults",
         "utils.STREAKS_PARQUET",
-        "utils.load_all_data",
-        "streamlit",
+        "helpers.records_identification.identify_aggregate_records_and_pbs",
+        "helpers.latest_round_processing.get_round_metric_mappings",
+        "helpers.records_identification.display_records_and_pbs_summary",
+        "helpers.latest_round_processing.prepare_teg_context_display",
+        "utils.load_datawrapper_css",
         "utils.read_file",
-        "markdown"
+        "helpers.streak_analysis_processing.get_player_window_streaks",
+        "helpers.latest_round_processing.get_teg_options",
+        "helpers.score_count_processing.count_scores_by_player",
+        "streamlit",
+        "utils.load_all_data"
       ],
       "internal_imports": [
         "helpers.latest_round_processing.initialize_teg_selection_state",
-        "helpers.score_count_processing.count_scores_by_player",
-        "utils.load_datawrapper_css",
-        "helpers.records_identification.identify_aggregate_records_and_pbs",
-        "helpers.latest_round_processing.prepare_teg_context_display",
-        "helpers.records_identification.display_records_and_pbs_summary",
-        "helpers.latest_round_processing.update_teg_session_state_defaults",
-        "helpers.records_identification.identify_streak_records",
-        "helpers.latest_round_processing.get_round_metric_mappings",
         "helpers.latest_round_processing.create_teg_selection_reset_function",
-        "helpers.records_identification.identify_score_count_records",
-        "utils.format_vs_par",
         "helpers.records_identification.identify_all_time_worsts",
-        "utils.get_page_layout",
-        "helpers.streak_analysis_processing.get_player_window_streaks",
         "utils.load_teg_reports_css",
         "utils.read_text_file",
-        "helpers.latest_round_processing.get_teg_options",
-        "utils.get_ranked_teg_data",
+        "helpers.records_identification.identify_streak_records",
+        "utils.format_vs_par",
         "utils.add_custom_navigation_links",
         "helpers.latest_round_processing.create_metric_tabs_data",
+        "utils.get_page_layout",
+        "helpers.records_identification.identify_score_count_records",
+        "utils.get_ranked_teg_data",
+        "helpers.latest_round_processing.update_teg_session_state_defaults",
         "utils.STREAKS_PARQUET",
-        "utils.load_all_data",
+        "helpers.records_identification.identify_aggregate_records_and_pbs",
+        "helpers.latest_round_processing.get_round_metric_mappings",
+        "helpers.records_identification.display_records_and_pbs_summary",
+        "helpers.latest_round_processing.prepare_teg_context_display",
+        "utils.load_datawrapper_css",
+        "utils.read_file",
+        "helpers.streak_analysis_processing.get_player_window_streaks",
+        "helpers.latest_round_processing.get_teg_options",
+        "helpers.score_count_processing.count_scores_by_player",
         "streamlit",
-        "utils.read_file"
+        "utils.load_all_data"
       ],
       "functions_defined": [
         "render_report"
@@ -1027,41 +1027,41 @@
     },
     "streamlit/leaderboard.py": {
       "imports": [
-        "utils.get_teg_rounds",
-        "leaderboard_utils.format_value",
-        "typing.Any",
-        "utils.load_datawrapper_css",
-        "scorecard_utils.generate_round_comparison_html",
-        "utils.get_round_data",
-        "leaderboard_utils.display_net_leaderboard",
-        "pandas",
-        "leaderboard_utils.get_last_place",
-        "leaderboard_utils.display_leaderboard",
-        "typing.Dict",
-        "utils.get_page_layout",
-        "leaderboard_utils.get_champions",
-        "leaderboard_utils.create_leaderboard",
-        "typing.List",
-        "make_charts.create_cumulative_graph",
-        "utils.add_custom_navigation_links",
-        "make_charts.adjusted_stableford",
-        "utils.load_all_data",
-        "streamlit",
-        "utils.read_file",
         "logging",
-        "leaderboard_utils.generate_table_html",
+        "make_charts.create_cumulative_graph",
+        "typing.List",
+        "pandas",
+        "leaderboard_utils.display_leaderboard",
+        "utils.get_round_data",
         "make_charts.adjusted_grossvp",
-        "scorecard_utils.load_scorecard_css"
+        "utils.add_custom_navigation_links",
+        "typing.Dict",
+        "leaderboard_utils.display_net_leaderboard",
+        "utils.get_page_layout",
+        "leaderboard_utils.generate_table_html",
+        "leaderboard_utils.get_champions",
+        "utils.load_datawrapper_css",
+        "leaderboard_utils.format_value",
+        "utils.read_file",
+        "leaderboard_utils.get_last_place",
+        "leaderboard_utils.create_leaderboard",
+        "scorecard_utils.load_scorecard_css",
+        "scorecard_utils.generate_round_comparison_html",
+        "streamlit",
+        "typing.Any",
+        "utils.get_teg_rounds",
+        "make_charts.adjusted_stableford",
+        "utils.load_all_data"
       ],
       "internal_imports": [
-        "utils.add_custom_navigation_links",
         "utils.get_round_data",
-        "utils.get_teg_rounds",
-        "utils.get_page_layout",
-        "utils.load_all_data",
+        "utils.add_custom_navigation_links",
         "streamlit",
+        "utils.load_datawrapper_css",
+        "utils.get_page_layout",
+        "utils.get_teg_rounds",
         "utils.read_file",
-        "utils.load_datawrapper_css"
+        "utils.load_all_data"
       ],
       "functions_defined": [
         "_add_series_markers"
@@ -1069,19 +1069,19 @@
     },
     "streamlit/leaderboard_utils.py": {
       "imports": [
-        "utils.get_teg_rounds",
-        "streamlit",
-        "pandas",
+        "logging",
         "utils.get_net_competition_measure",
-        "utils.read_file",
+        "streamlit",
         "typing.Any",
-        "logging"
+        "utils.get_teg_rounds",
+        "pandas",
+        "utils.read_file"
       ],
       "internal_imports": [
         "streamlit",
-        "utils.get_teg_rounds",
+        "utils.get_net_competition_measure",
         "utils.read_file",
-        "utils.get_net_competition_measure"
+        "utils.get_teg_rounds"
       ],
       "functions_defined": [
         "create_leaderboard",
@@ -1096,10 +1096,10 @@
     },
     "streamlit/make_charts.py": {
       "imports": [
-        "streamlit",
-        "plotly.express",
         "pandas",
-        "plotly.graph_objects"
+        "streamlit",
+        "plotly.graph_objects",
+        "plotly.express"
       ],
       "internal_imports": [
         "streamlit"
@@ -1116,34 +1116,34 @@
     "streamlit/nav.py": {
       "imports": [
         "os",
-        "streamlit",
         "pathlib.Path",
+        "streamlit",
         "streamlit_extras.stylable_container.stylable_container",
         "utils.has_incomplete_teg_fast",
-        "sys",
-        "page_config.generate_navigation_structure"
+        "page_config.generate_navigation_structure",
+        "sys"
       ],
       "internal_imports": [
+        "utils.has_incomplete_teg_fast",
         "streamlit",
-        "streamlit_extras.stylable_container.stylable_container",
-        "utils.has_incomplete_teg_fast"
+        "streamlit_extras.stylable_container.stylable_container"
       ],
       "functions_defined": []
     },
     "streamlit/navigation_test.py": {
       "imports": [
         "utils.add_custom_navigation_links",
-        "utils.SECTION_LAYOUTS",
-        "streamlit",
         "pathlib.Path",
+        "streamlit",
+        "utils.PAGE_DEFINITIONS",
         "sys",
-        "utils.PAGE_DEFINITIONS"
+        "utils.SECTION_LAYOUTS"
       ],
       "internal_imports": [
         "streamlit",
+        "utils.add_custom_navigation_links",
         "utils.PAGE_DEFINITIONS",
-        "utils.SECTION_LAYOUTS",
-        "utils.add_custom_navigation_links"
+        "utils.SECTION_LAYOUTS"
       ],
       "functions_defined": []
     },
@@ -1161,25 +1161,25 @@
     },
     "streamlit/player_history.py": {
       "imports": [
-        "utils.add_custom_navigation_links",
-        "utils.get_page_layout",
-        "re",
-        "streamlit",
-        "pandas",
-        "utils.get_net_competition_measure",
-        "utils.get_complete_teg_data",
         "logging",
+        "utils.get_net_competition_measure",
         "utils.datawrapper_table",
-        "utils.load_datawrapper_css"
+        "utils.add_custom_navigation_links",
+        "streamlit",
+        "utils.load_datawrapper_css",
+        "re",
+        "utils.get_complete_teg_data",
+        "utils.get_page_layout",
+        "pandas"
       ],
       "internal_imports": [
-        "utils.add_custom_navigation_links",
-        "utils.get_page_layout",
-        "streamlit",
         "utils.get_net_competition_measure",
-        "utils.get_complete_teg_data",
         "utils.datawrapper_table",
-        "utils.load_datawrapper_css"
+        "utils.add_custom_navigation_links",
+        "streamlit",
+        "utils.load_datawrapper_css",
+        "utils.get_page_layout",
+        "utils.get_complete_teg_data"
       ],
       "functions_defined": [
         "post_process_ranking_table",
@@ -1195,20 +1195,20 @@
     },
     "streamlit/scorecard_utils.py": {
       "imports": [
-        "utils.get_teg_metadata",
-        "streamlit",
-        "pandas",
-        "pathlib.Path",
-        "utils.format_date_for_scorecard",
         "utils.format_vs_par",
+        "pathlib.Path",
+        "streamlit",
+        "utils.get_teg_metadata",
+        "utils.format_date_for_scorecard",
+        "pandas",
         "utils.get_scorecard_data"
       ],
       "internal_imports": [
-        "utils.get_teg_metadata",
+        "utils.get_scorecard_data",
+        "utils.format_vs_par",
         "streamlit",
         "utils.format_date_for_scorecard",
-        "utils.format_vs_par",
-        "utils.get_scorecard_data"
+        "utils.get_teg_metadata"
       ],
       "functions_defined": [
         "generate_scorecard_html",
@@ -1223,87 +1223,87 @@
     },
     "streamlit/scorecard_v2.py": {
       "imports": [
-        "numpy",
-        "helpers.scorecard_data_processing.get_round_options_for_tournament",
-        "scorecard_utils.generate_round_comparison_html",
-        "utils.get_scorecard_data",
-        "helpers.scorecard_data_processing.get_scorecard_type_mapping",
-        "utils.get_teg_metadata",
-        "pandas",
         "helpers.scorecard_data_processing.determine_control_states",
-        "helpers.scorecard_data_processing.prepare_tournament_display_data",
-        "utils.get_page_layout",
-        "helpers.scorecard_data_processing.prepare_scorecard_selection_options",
         "scorecard_utils.generate_single_round_html_mobile",
-        "scorecard_utils.generate_tournament_html",
         "helpers.scorecard_data_processing.validate_and_prepare_single_round_data",
-        "scorecard_utils.generate_single_round_html",
+        "helpers.scorecard_data_processing.prepare_tournament_display_data",
+        "pandas",
         "scorecard_utils.generate_tournament_html_mobile",
-        "utils.load_all_data",
-        "streamlit",
-        "pathlib.Path",
+        "helpers.scorecard_data_processing.get_scorecard_type_mapping",
+        "scorecard_utils.generate_single_round_html",
+        "helpers.scorecard_data_processing.get_round_options_for_tournament",
+        "utils.get_page_layout",
         "helpers.scorecard_data_processing.initialize_scorecard_session_state",
-        "utils.format_date_for_scorecard",
         "scorecard_utils.generate_round_comparison_html_mobile",
-        "scorecard_utils.load_scorecard_css"
+        "numpy",
+        "utils.format_date_for_scorecard",
+        "scorecard_utils.generate_tournament_html",
+        "utils.get_scorecard_data",
+        "pathlib.Path",
+        "streamlit",
+        "scorecard_utils.generate_round_comparison_html",
+        "utils.load_all_data",
+        "helpers.scorecard_data_processing.prepare_scorecard_selection_options",
+        "scorecard_utils.load_scorecard_css",
+        "utils.get_teg_metadata"
       ],
       "internal_imports": [
+        "helpers.scorecard_data_processing.determine_control_states",
         "helpers.scorecard_data_processing.get_scorecard_type_mapping",
+        "helpers.scorecard_data_processing.get_round_options_for_tournament",
+        "streamlit",
         "utils.get_teg_metadata",
-        "helpers.scorecard_data_processing.prepare_tournament_display_data",
+        "utils.format_date_for_scorecard",
         "utils.get_page_layout",
         "utils.load_all_data",
-        "streamlit",
-        "helpers.scorecard_data_processing.prepare_scorecard_selection_options",
         "helpers.scorecard_data_processing.validate_and_prepare_single_round_data",
-        "helpers.scorecard_data_processing.get_round_options_for_tournament",
+        "helpers.scorecard_data_processing.prepare_tournament_display_data",
+        "helpers.scorecard_data_processing.prepare_scorecard_selection_options",
         "helpers.scorecard_data_processing.initialize_scorecard_session_state",
-        "utils.format_date_for_scorecard",
-        "helpers.scorecard_data_processing.determine_control_states",
         "utils.get_scorecard_data"
       ],
       "functions_defined": []
     },
     "streamlit/score_by_course.py": {
       "imports": [
-        "utils.add_custom_navigation_links",
-        "utils.get_round_data",
-        "utils.get_page_layout",
-        "utils.load_all_data",
-        "utils.get_best",
-        "streamlit",
-        "numpy",
-        "pandas",
         "helpers.course_analysis_processing.prepare_area_filter_options",
-        "utils.load_course_info",
-        "utils.load_datawrapper_css",
-        "utils.get_ranked_round_data",
+        "utils.get_round_data",
         "helpers.course_analysis_processing.filter_data_by_area",
-        "utils.get_ranked_teg_data"
+        "pandas",
+        "utils.add_custom_navigation_links",
+        "numpy",
+        "utils.get_ranked_round_data",
+        "utils.load_course_info",
+        "streamlit",
+        "utils.load_datawrapper_css",
+        "utils.get_page_layout",
+        "utils.get_ranked_teg_data",
+        "utils.load_all_data",
+        "utils.get_best"
       ],
       "internal_imports": [
-        "utils.add_custom_navigation_links",
-        "utils.get_round_data",
-        "utils.get_page_layout",
-        "utils.load_all_data",
-        "utils.get_best",
-        "streamlit",
         "helpers.course_analysis_processing.prepare_area_filter_options",
-        "utils.load_course_info",
-        "utils.load_datawrapper_css",
-        "utils.get_ranked_round_data",
+        "utils.get_round_data",
         "helpers.course_analysis_processing.filter_data_by_area",
-        "utils.get_ranked_teg_data"
+        "utils.add_custom_navigation_links",
+        "utils.get_ranked_round_data",
+        "utils.load_course_info",
+        "streamlit",
+        "utils.load_datawrapper_css",
+        "utils.get_page_layout",
+        "utils.get_ranked_teg_data",
+        "utils.load_all_data",
+        "utils.get_best"
       ],
       "functions_defined": []
     },
     "streamlit/score_by_si.py": {
       "imports": [
-        "utils.load_all_data",
         "numpy",
         "streamlit",
         "pandas",
-        "altair"
+        "altair",
+        "utils.load_all_data"
       ],
       "internal_imports": [
         "streamlit",
@@ -1316,12 +1316,12 @@
     },
     "streamlit/score_heatmaps.py": {
       "imports": [
-        "utils.get_page_layout",
-        "utils.load_all_data",
         "os",
         "streamlit",
+        "utils.get_page_layout",
         "pandas",
-        "altair"
+        "altair",
+        "utils.load_all_data"
       ],
       "internal_imports": [
         "streamlit",
@@ -1336,17 +1336,17 @@
     },
     "streamlit/score_matrix.py": {
       "imports": [
-        "utils.get_page_layout",
-        "utils.load_all_data",
-        "streamlit",
         "numpy",
-        "pandas",
-        "utils.load_datawrapper_css"
-      ],
-      "internal_imports": [
         "streamlit",
         "utils.load_datawrapper_css",
         "utils.get_page_layout",
+        "pandas",
+        "utils.load_all_data"
+      ],
+      "internal_imports": [
+        "utils.get_page_layout",
+        "streamlit",
+        "utils.load_datawrapper_css",
         "utils.load_all_data"
       ],
       "functions_defined": [
@@ -1356,98 +1356,98 @@
     },
     "streamlit/sc_count.py": {
       "imports": [
-        "helpers.score_count_processing.count_scores_by_player",
-        "helpers.score_count_processing.get_filtering_options",
-        "helpers.score_count_processing.create_percentage_distribution_chart",
-        "utils.load_datawrapper_css",
-        "plotly.express",
-        "pandas",
-        "helpers.score_count_processing.create_ridgeline_distribution_chart",
-        "utils.datawrapper_table",
-        "utils.format_vs_par",
-        "helpers.score_count_processing.format_percentage_for_display",
-        "utils.get_page_layout",
-        "helpers.score_count_processing.convert_counts_to_percentages",
         "helpers.score_count_processing.apply_teg_and_par_filters",
+        "utils.datawrapper_table",
         "helpers.score_count_processing.prepare_chart_data_with_special_handling",
-        "helpers.score_count_processing.prepare_score_count_display",
+        "helpers.score_count_processing.format_percentage_for_display",
+        "pandas",
+        "helpers.score_count_processing.create_percentage_distribution_chart",
+        "helpers.score_count_processing.convert_counts_to_percentages",
+        "helpers.score_count_processing.get_filtering_options",
+        "helpers.score_count_processing.create_stacked_bar_chart",
         "utils.add_custom_navigation_links",
-        "utils.load_all_data",
+        "utils.format_vs_par",
+        "utils.get_page_layout",
+        "plotly.express",
+        "utils.load_datawrapper_css",
+        "helpers.score_count_processing.prepare_score_count_display",
+        "helpers.score_count_processing.count_scores_by_player",
+        "helpers.score_count_processing.create_ridgeline_distribution_chart",
         "streamlit",
         "helpers.score_count_processing.calculate_player_distributions",
-        "helpers.score_count_processing.create_stacked_bar_chart"
+        "utils.load_all_data"
       ],
       "internal_imports": [
-        "utils.add_custom_navigation_links",
-        "utils.get_page_layout",
-        "utils.load_all_data",
-        "helpers.score_count_processing.create_percentage_distribution_chart",
-        "streamlit",
         "helpers.score_count_processing.convert_counts_to_percentages",
-        "helpers.score_count_processing.calculate_player_distributions",
-        "helpers.score_count_processing.create_ridgeline_distribution_chart",
-        "utils.format_vs_par",
+        "helpers.score_count_processing.get_filtering_options",
         "helpers.score_count_processing.apply_teg_and_par_filters",
+        "utils.datawrapper_table",
+        "helpers.score_count_processing.prepare_score_count_display",
+        "helpers.score_count_processing.create_stacked_bar_chart",
+        "utils.add_custom_navigation_links",
         "helpers.score_count_processing.count_scores_by_player",
         "helpers.score_count_processing.prepare_chart_data_with_special_handling",
-        "helpers.score_count_processing.get_filtering_options",
-        "helpers.score_count_processing.prepare_score_count_display",
-        "utils.datawrapper_table",
+        "helpers.score_count_processing.create_ridgeline_distribution_chart",
+        "utils.format_vs_par",
+        "streamlit",
+        "helpers.score_count_processing.calculate_player_distributions",
         "utils.load_datawrapper_css",
+        "utils.get_page_layout",
         "helpers.score_count_processing.format_percentage_for_display",
-        "helpers.score_count_processing.create_stacked_bar_chart"
+        "helpers.score_count_processing.create_percentage_distribution_chart",
+        "utils.load_all_data"
       ],
       "functions_defined": []
     },
     "streamlit/simple_nav_example.py": {
       "imports": [
-        "streamlit",
-        "utils.add_navigation_links",
+        "utils.add_simple_navigation_links",
         "pathlib.Path",
+        "streamlit",
         "sys",
-        "utils.add_simple_navigation_links"
+        "utils.add_navigation_links"
       ],
       "internal_imports": [
         "streamlit",
-        "utils.add_navigation_links",
-        "utils.add_simple_navigation_links"
+        "utils.add_simple_navigation_links",
+        "utils.add_navigation_links"
       ],
       "functions_defined": []
     },
     "streamlit/streaks.py": {
       "imports": [
-        "helpers.streak_analysis_processing.prepare_bad_streaks_data",
-        "utils.add_custom_navigation_links",
+        "helpers.streak_analysis_processing.prepare_record_best_streaks_data",
         "utils.STREAKS_PARQUET",
-        "utils.get_page_layout",
-        "utils.load_all_data",
-        "helpers.streak_analysis_processing.calculate_window_streaks",
-        "streamlit",
-        "numpy",
-        "pandas",
-        "helpers.streak_analysis_processing.prepare_good_streaks_data",
-        "utils.read_file",
-        "helpers.streak_analysis_processing.prepare_record_worst_streaks_data",
-        "helpers.streak_analysis_processing.prepare_current_bad_streaks_data",
-        "utils.load_datawrapper_css",
+        "helpers.streak_analysis_processing.prepare_bad_streaks_data",
         "helpers.streak_analysis_processing.prepare_current_good_streaks_data",
-        "helpers.streak_analysis_processing.prepare_record_best_streaks_data"
+        "helpers.streak_analysis_processing.prepare_current_bad_streaks_data",
+        "utils.add_custom_navigation_links",
+        "numpy",
+        "helpers.streak_analysis_processing.prepare_good_streaks_data",
+        "streamlit",
+        "utils.load_datawrapper_css",
+        "helpers.streak_analysis_processing.prepare_record_worst_streaks_data",
+        "utils.get_page_layout",
+        "helpers.streak_analysis_processing.calculate_window_streaks",
+        "pandas",
+        "utils.read_file",
+        "utils.load_all_data"
       ],
       "internal_imports": [
-        "helpers.streak_analysis_processing.prepare_bad_streaks_data",
-        "utils.add_custom_navigation_links",
+        "helpers.streak_analysis_processing.prepare_record_best_streaks_data",
         "utils.STREAKS_PARQUET",
-        "utils.get_page_layout",
-        "utils.load_all_data",
-        "helpers.streak_analysis_processing.calculate_window_streaks",
-        "streamlit",
-        "helpers.streak_analysis_processing.prepare_good_streaks_data",
-        "utils.read_file",
-        "helpers.streak_analysis_processing.prepare_record_worst_streaks_data",
-        "helpers.streak_analysis_processing.prepare_current_bad_streaks_data",
-        "utils.load_datawrapper_css",
+        "helpers.streak_analysis_processing.prepare_bad_streaks_data",
         "helpers.streak_analysis_processing.prepare_current_good_streaks_data",
-        "helpers.streak_analysis_processing.prepare_record_best_streaks_data"
+        "helpers.streak_analysis_processing.prepare_current_bad_streaks_data",
+        "utils.add_custom_navigation_links",
+        "helpers.streak_analysis_processing.prepare_good_streaks_data",
+        "streamlit",
+        "utils.load_datawrapper_css",
+        "helpers.streak_analysis_processing.prepare_record_worst_streaks_data",
+        "utils.get_page_layout",
+        "helpers.streak_analysis_processing.calculate_window_streaks",
+        "utils.read_file",
+        "utils.load_all_data"
       ],
       "functions_defined": [
         "get_all_streak_tables"
@@ -1455,28 +1455,28 @@
     },
     "streamlit/teg_reports.py": {
       "imports": [
-        "utils.add_custom_navigation_links",
-        "utils.get_teg_rounds",
-        "utils.get_page_layout",
-        "importlib.util",
-        "utils.load_all_data",
-        "streamlit",
-        "utils.read_file",
         "markdown",
         "utils.load_teg_reports_css",
+        "utils.read_text_file",
+        "utils.add_custom_navigation_links",
+        "streamlit",
         "utils.load_datawrapper_css",
-        "utils.read_text_file"
+        "importlib.util",
+        "utils.get_page_layout",
+        "utils.get_teg_rounds",
+        "utils.read_file",
+        "utils.load_all_data"
       ],
       "internal_imports": [
-        "utils.add_custom_navigation_links",
-        "utils.get_teg_rounds",
-        "utils.get_page_layout",
-        "utils.load_all_data",
-        "streamlit",
-        "utils.read_file",
         "utils.load_teg_reports_css",
+        "utils.read_text_file",
+        "utils.add_custom_navigation_links",
+        "streamlit",
         "utils.load_datawrapper_css",
-        "utils.read_text_file"
+        "utils.get_page_layout",
+        "utils.get_teg_rounds",
+        "utils.read_file",
+        "utils.load_all_data"
       ],
       "functions_defined": [
         "render_report"
@@ -1484,17 +1484,17 @@
     },
     "streamlit/teg_reports_17brief.py": {
       "imports": [
-        "importlib.util",
-        "streamlit",
-        "pathlib.Path",
         "markdown",
-        "streamlit.components.v1.html",
-        "utils.load_teg_reports_css"
+        "utils.load_teg_reports_css",
+        "pathlib.Path",
+        "streamlit",
+        "importlib.util",
+        "streamlit.components.v1.html"
       ],
       "internal_imports": [
+        "utils.load_teg_reports_css",
         "streamlit",
-        "streamlit.components.v1.html",
-        "utils.load_teg_reports_css"
+        "streamlit.components.v1.html"
       ],
       "functions_defined": [
         "load_markdown",
@@ -1503,15 +1503,15 @@
     },
     "streamlit/teg_reports_17full.py": {
       "imports": [
-        "importlib.util",
-        "streamlit",
-        "pathlib.Path",
         "markdown",
-        "utils.load_teg_reports_css"
+        "utils.load_teg_reports_css",
+        "pathlib.Path",
+        "streamlit",
+        "importlib.util"
       ],
       "internal_imports": [
-        "streamlit",
-        "utils.load_teg_reports_css"
+        "utils.load_teg_reports_css",
+        "streamlit"
       ],
       "functions_defined": [
         "load_markdown",
@@ -1521,52 +1521,52 @@
     "streamlit/teg_worsts.py": {
       "imports": [
         "utils.get_round_data",
-        "helpers.worst_performance_processing.get_filtered_teg_data",
         "streamlit",
-        "pandas",
-        "utils.get_9_data",
         "helpers.display_helpers.prepare_worst_records_table",
-        "utils.load_datawrapper_css"
+        "utils.get_9_data",
+        "utils.load_datawrapper_css",
+        "helpers.worst_performance_processing.get_filtered_teg_data",
+        "pandas"
       ],
       "internal_imports": [
         "utils.get_round_data",
-        "helpers.worst_performance_processing.get_filtered_teg_data",
         "streamlit",
-        "utils.get_9_data",
         "helpers.display_helpers.prepare_worst_records_table",
-        "utils.load_datawrapper_css"
+        "utils.load_datawrapper_css",
+        "utils.get_9_data",
+        "helpers.worst_performance_processing.get_filtered_teg_data"
       ],
       "functions_defined": []
     },
     "streamlit/test_github_connections.py": {
       "imports": [
+        "utils.ALL_SCORES_FILE",
+        "github.Github",
+        "io.StringIO",
+        "logging",
+        "utils.GITHUB_REPO",
+        "utils.ROUND_INFO_FILE",
+        "github.Auth",
         "base64",
         "os",
-        "utils.ALL_SCORES_FILE",
         "streamlit",
-        "utils.CSV_OUTPUT_FILE",
-        "utils.GITHUB_BRANCH",
-        "pandas",
-        "io.BytesIO",
-        "utils.HANDICAPS_FILE",
         "github.UnknownObjectException",
-        "utils.GITHUB_REPO",
+        "utils.CSV_OUTPUT_FILE",
+        "io.BytesIO",
+        "pandas",
+        "utils.HANDICAPS_FILE",
         "utils.PARQUET_FILE",
-        "github.Auth",
-        "logging",
-        "utils.ROUND_INFO_FILE",
-        "io.StringIO",
-        "github.Github"
+        "utils.GITHUB_BRANCH"
       ],
       "internal_imports": [
-        "utils.CSV_OUTPUT_FILE",
         "utils.ALL_SCORES_FILE",
-        "utils.GITHUB_BRANCH",
-        "streamlit",
-        "utils.HANDICAPS_FILE",
         "utils.GITHUB_REPO",
+        "utils.ROUND_INFO_FILE",
+        "streamlit",
+        "utils.CSV_OUTPUT_FILE",
+        "utils.HANDICAPS_FILE",
         "utils.PARQUET_FILE",
-        "utils.ROUND_INFO_FILE"
+        "utils.GITHUB_BRANCH"
       ],
       "functions_defined": [
         "get_github_token"
@@ -1574,44 +1574,44 @@
     },
     "streamlit/utils.py": {
       "imports": [
-        "helpers.streak_analysis_processing.calculate_window_streaks",
-        "os",
-        "numpy",
-        "shutil",
-        "typing.Any",
+        "logging",
+        "io.StringIO",
         "page_config.SECTION_CONFIG",
-        "subprocess",
-        "base64",
-        "re",
+        "os",
+        "typing.List",
+        "helpers.bestball_processing.calculate_bestball_scores",
         "pandas",
+        "helpers.streak_analysis_processing.calculate_window_streaks",
+        "github.Github",
+        "gspread",
+        "math.floor",
         "typing.Dict",
-        "github.InputGitTreeElement",
-        "google.oauth2.service_account.Credentials",
         "io.BytesIO",
         "datetime.datetime",
-        "helpers.streak_analysis_processing.build_streaks",
-        "page_config.PAGE_DEFINITIONS",
-        "gspread",
-        "io.StringIO",
-        "typing.List",
-        "helpers.bestball_processing.calculate_worstball_scores",
-        "math.floor",
         "helpers.bestball_processing.prepare_bestball_data",
-        "streamlit",
-        "pathlib.Path",
-        "typing.Optional",
+        "github.InputGitTreeElement",
+        "subprocess",
         "page_config.SECTION_LAYOUTS",
-        "logging",
-        "helpers.bestball_processing.calculate_bestball_scores",
-        "github.Github"
+        "base64",
+        "numpy",
+        "helpers.bestball_processing.calculate_worstball_scores",
+        "re",
+        "helpers.streak_analysis_processing.build_streaks",
+        "typing.Optional",
+        "shutil",
+        "pathlib.Path",
+        "typing.Any",
+        "streamlit",
+        "google.oauth2.service_account.Credentials",
+        "page_config.PAGE_DEFINITIONS"
       ],
       "internal_imports": [
-        "helpers.streak_analysis_processing.build_streaks",
-        "helpers.bestball_processing.prepare_bestball_data",
         "helpers.streak_analysis_processing.calculate_window_streaks",
+        "helpers.bestball_processing.calculate_worstball_scores",
         "streamlit",
+        "helpers.streak_analysis_processing.build_streaks",
         "helpers.bestball_processing.calculate_bestball_scores",
-        "helpers.bestball_processing.calculate_worstball_scores"
+        "helpers.bestball_processing.prepare_bestball_data"
       ],
       "functions_defined": [
         "get_page_layout",
@@ -1720,19 +1720,19 @@
     },
     "streamlit/utils_win_tables.py": {
       "imports": [
-        "typing.Sequence",
-        "utils.TROPHY_NAME_LOOKUPS_LONGSHORT",
-        "pandas",
-        "typing.Iterable",
-        "utils.TROPHY_NAME_LOOKUPS_SHORTLONG",
-        "typing.Union",
+        "io.StringIO",
         "utils.convert_trophy_name",
-        "io.StringIO"
+        "typing.Iterable",
+        "utils.TROPHY_NAME_LOOKUPS_LONGSHORT",
+        "utils.TROPHY_NAME_LOOKUPS_SHORTLONG",
+        "typing.Sequence",
+        "typing.Union",
+        "pandas"
       ],
       "internal_imports": [
+        "utils.convert_trophy_name",
         "utils.TROPHY_NAME_LOOKUPS_LONGSHORT",
-        "utils.TROPHY_NAME_LOOKUPS_SHORTLONG",
-        "utils.convert_trophy_name"
+        "utils.TROPHY_NAME_LOOKUPS_SHORTLONG"
       ],
       "functions_defined": [
         "summarise_teg_wins",
@@ -1746,9 +1746,9 @@
     },
     "streamlit/helpers/bestball_processing.py": {
       "imports": [
+        "pandas",
         "streamlit",
-        "utils.format_vs_par",
-        "pandas"
+        "utils.format_vs_par"
       ],
       "internal_imports": [
         "streamlit",
@@ -1764,14 +1764,14 @@
     },
     "streamlit/helpers/best_performance_processing.py": {
       "imports": [
-        "utils.format_vs_par",
         "pandas",
         "utils.get_worst",
+        "utils.format_vs_par",
         "utils.get_best"
       ],
       "internal_imports": [
-        "utils.format_vs_par",
         "utils.get_worst",
+        "utils.format_vs_par",
         "utils.get_best"
       ],
       "functions_defined": [
@@ -1792,9 +1792,9 @@
     },
     "streamlit/helpers/comeback_analysis.py": {
       "imports": [
-        "numpy",
         "pandas",
-        "typing.Tuple"
+        "typing.Tuple",
+        "numpy"
       ],
       "internal_imports": [],
       "functions_defined": [
@@ -1806,23 +1806,23 @@
     },
     "streamlit/helpers/commentary_generator.py": {
       "imports": [
-        "os",
-        "typing.Tuple",
-        "streamlit",
-        "pathlib.Path",
-        "utils.write_text_file",
-        "commentary.generate_tournament_commentary_v2.generate_main_report",
-        "utils.read_file",
-        "sys",
         "logging",
+        "commentary.generate_tournament_commentary_v2.generate_main_report",
         "typing.Dict",
-        "commentary.generate_tournament_commentary_v2.generate_complete_story_notes",
+        "os",
+        "pathlib.Path",
         "typing.List",
-        "commentary.generate_round_report.generate_complete_round_report"
+        "streamlit",
+        "typing.Tuple",
+        "commentary.generate_tournament_commentary_v2.generate_complete_story_notes",
+        "utils.write_text_file",
+        "commentary.generate_round_report.generate_complete_round_report",
+        "utils.read_file",
+        "sys"
       ],
       "internal_imports": [
-        "streamlit",
         "utils.write_text_file",
+        "streamlit",
         "utils.read_file"
       ],
       "functions_defined": [
@@ -1841,8 +1841,8 @@
     },
     "streamlit/helpers/course_analysis_processing.py": {
       "imports": [
-        "numpy",
-        "pandas"
+        "pandas",
+        "numpy"
       ],
       "internal_imports": [],
       "functions_defined": [
@@ -1856,36 +1856,36 @@
     },
     "streamlit/helpers/data_deletion_processing.py": {
       "imports": [
+        "utils.update_bestball_cache",
         "datetime.datetime",
         "utils.clear_all_caches",
         "utils.update_streaks_cache",
-        "streamlit",
-        "utils.write_file",
-        "os",
-        "pandas",
-        "utils.update_commentary_caches",
-        "utils.ALL_DATA_PARQUET",
-        "utils.ALL_SCORES_PARQUET",
-        "utils.read_file",
-        "utils.batch_commit_to_github",
-        "utils.update_teg_status_files",
-        "utils.update_bestball_cache",
         "utils.ALL_DATA_CSV_MIRROR",
+        "streamlit",
+        "os",
+        "utils.batch_commit_to_github",
+        "utils.write_file",
+        "utils.update_commentary_caches",
+        "pandas",
+        "utils.update_teg_status_files",
+        "utils.ALL_DATA_PARQUET",
+        "utils.read_file",
+        "utils.ALL_SCORES_PARQUET",
         "utils.backup_file"
       ],
       "internal_imports": [
+        "utils.update_bestball_cache",
         "utils.clear_all_caches",
         "utils.update_streaks_cache",
+        "utils.ALL_DATA_CSV_MIRROR",
         "streamlit",
+        "utils.batch_commit_to_github",
         "utils.write_file",
         "utils.update_commentary_caches",
-        "utils.ALL_DATA_PARQUET",
-        "utils.ALL_SCORES_PARQUET",
-        "utils.read_file",
-        "utils.batch_commit_to_github",
         "utils.update_teg_status_files",
-        "utils.update_bestball_cache",
-        "utils.ALL_DATA_CSV_MIRROR",
+        "utils.ALL_DATA_PARQUET",
+        "utils.read_file",
+        "utils.ALL_SCORES_PARQUET",
         "utils.backup_file"
       ],
       "functions_defined": [
@@ -1901,49 +1901,49 @@
     },
     "streamlit/helpers/data_update_processing.py": {
       "imports": [
-        "utils.update_all_data",
-        "os",
-        "utils.clear_volume_cache",
-        "utils.update_bestball_cache",
-        "utils.reshape_round_data",
-        "utils.update_commentary_caches",
-        "utils.update_streaks_cache",
-        "utils.write_file",
-        "pandas",
-        "utils.process_round_for_all_scores",
-        "utils.ALL_DATA_PARQUET",
-        "utils.ALL_SCORES_PARQUET",
-        "utils.HANDICAPS_CSV",
-        "utils.ALL_DATA_CSV_MIRROR",
-        "utils.summarise_existing_rd_data",
-        "utils.clear_all_caches",
-        "streamlit",
-        "utils.read_file",
-        "utils.batch_commit_to_github",
-        "utils.update_teg_status_files",
         "logging",
-        "utils.load_and_prepare_handicap_data"
+        "utils.reshape_round_data",
+        "utils.load_and_prepare_handicap_data",
+        "utils.update_streaks_cache",
+        "os",
+        "utils.update_commentary_caches",
+        "pandas",
+        "utils.update_teg_status_files",
+        "utils.ALL_DATA_PARQUET",
+        "utils.update_all_data",
+        "utils.batch_commit_to_github",
+        "utils.write_file",
+        "utils.summarise_existing_rd_data",
+        "utils.update_bestball_cache",
+        "utils.clear_all_caches",
+        "utils.ALL_DATA_CSV_MIRROR",
+        "utils.HANDICAPS_CSV",
+        "utils.read_file",
+        "utils.ALL_SCORES_PARQUET",
+        "utils.process_round_for_all_scores",
+        "streamlit",
+        "utils.clear_volume_cache"
       ],
       "internal_imports": [
-        "utils.update_all_data",
-        "utils.clear_volume_cache",
-        "utils.update_bestball_cache",
         "utils.reshape_round_data",
-        "utils.update_commentary_caches",
+        "utils.load_and_prepare_handicap_data",
         "utils.update_streaks_cache",
-        "utils.write_file",
-        "utils.process_round_for_all_scores",
-        "utils.ALL_DATA_PARQUET",
-        "utils.ALL_SCORES_PARQUET",
-        "utils.HANDICAPS_CSV",
-        "utils.ALL_DATA_CSV_MIRROR",
-        "utils.summarise_existing_rd_data",
-        "utils.clear_all_caches",
-        "streamlit",
-        "utils.read_file",
-        "utils.batch_commit_to_github",
+        "utils.update_commentary_caches",
         "utils.update_teg_status_files",
-        "utils.load_and_prepare_handicap_data"
+        "utils.ALL_DATA_PARQUET",
+        "utils.update_all_data",
+        "utils.batch_commit_to_github",
+        "utils.write_file",
+        "utils.summarise_existing_rd_data",
+        "utils.update_bestball_cache",
+        "utils.clear_all_caches",
+        "utils.ALL_DATA_CSV_MIRROR",
+        "utils.HANDICAPS_CSV",
+        "utils.read_file",
+        "utils.ALL_SCORES_PARQUET",
+        "utils.process_round_for_all_scores",
+        "streamlit",
+        "utils.clear_volume_cache"
       ],
       "functions_defined": [
         "initialize_update_state",
@@ -1956,16 +1956,16 @@
     },
     "streamlit/helpers/display_helpers.py": {
       "imports": [
-        "utils.PLAYER_DICT",
-        "utils.get_best",
-        "pandas",
-        "helpers.score_count_processing.count_scores_by_player",
-        "utils.get_worst"
-      ],
-      "internal_imports": [
         "helpers.score_count_processing.count_scores_by_player",
         "utils.get_worst",
         "utils.PLAYER_DICT",
+        "pandas",
+        "utils.get_best"
+      ],
+      "internal_imports": [
+        "utils.PLAYER_DICT",
+        "utils.get_worst",
+        "helpers.score_count_processing.count_scores_by_player",
         "utils.get_best"
       ],
       "functions_defined": [
@@ -1979,25 +1979,25 @@
     },
     "streamlit/helpers/history_data_processing.py": {
       "imports": [
-        "utils.load_all_data",
-        "re",
-        "streamlit",
-        "utils.write_file",
         "utils.get_teg_winners",
-        "pandas",
-        "utils.ROUND_INFO_CSV",
+        "altair",
         "utils.exclude_incomplete_tegs_function",
+        "streamlit",
+        "utils.ROUND_INFO_CSV",
+        "re",
+        "utils.write_file",
+        "pandas",
         "utils.read_file",
-        "altair"
+        "utils.load_all_data"
       ],
       "internal_imports": [
-        "utils.load_all_data",
-        "streamlit",
-        "utils.write_file",
         "utils.get_teg_winners",
-        "utils.ROUND_INFO_CSV",
         "utils.exclude_incomplete_tegs_function",
-        "utils.read_file"
+        "streamlit",
+        "utils.ROUND_INFO_CSV",
+        "utils.write_file",
+        "utils.read_file",
+        "utils.load_all_data"
       ],
       "functions_defined": [
         "process_winners_for_charts",
@@ -2023,19 +2023,19 @@
     },
     "streamlit/helpers/latest_round_processing.py": {
       "imports": [
-        "utils.get_current_in_progress_teg_fast",
+        "utils.chosen_rd_context",
         "utils.chosen_teg_context",
-        "streamlit",
-        "pandas",
+        "utils.get_current_in_progress_teg_fast",
         "utils.get_last_completed_teg_fast",
-        "utils.chosen_rd_context"
+        "streamlit",
+        "pandas"
       ],
       "internal_imports": [
-        "utils.get_current_in_progress_teg_fast",
+        "utils.chosen_rd_context",
         "utils.chosen_teg_context",
-        "streamlit",
+        "utils.get_current_in_progress_teg_fast",
         "utils.get_last_completed_teg_fast",
-        "utils.chosen_rd_context"
+        "streamlit"
       ],
       "functions_defined": [
         "get_round_metric_mappings",
@@ -2058,8 +2058,8 @@
     },
     "streamlit/helpers/par_analysis_processing.py": {
       "imports": [
-        "numpy",
-        "pandas"
+        "pandas",
+        "numpy"
       ],
       "internal_imports": [],
       "functions_defined": [
@@ -2081,23 +2081,23 @@
     },
     "streamlit/helpers/records_identification.py": {
       "imports": [
-        "collections.defaultdict",
-        "streamlit",
-        "helpers.streak_analysis_processing.get_player_window_streaks",
-        "pandas",
-        "helpers.streak_analysis_processing.prepare_record_best_streaks_data",
-        "helpers.streak_analysis_processing.prepare_record_worst_streaks_data",
-        "helpers.score_count_processing.count_scores_by_player",
-        "utils.format_vs_par",
-        "utils.get_ranked_frontback_data"
-      ],
-      "internal_imports": [
-        "streamlit",
-        "helpers.streak_analysis_processing.get_player_window_streaks",
-        "helpers.streak_analysis_processing.prepare_record_worst_streaks_data",
         "helpers.score_count_processing.count_scores_by_player",
         "utils.format_vs_par",
         "utils.get_ranked_frontback_data",
+        "streamlit",
+        "helpers.streak_analysis_processing.prepare_record_worst_streaks_data",
+        "pandas",
+        "collections.defaultdict",
+        "helpers.streak_analysis_processing.get_player_window_streaks",
+        "helpers.streak_analysis_processing.prepare_record_best_streaks_data"
+      ],
+      "internal_imports": [
+        "helpers.score_count_processing.count_scores_by_player",
+        "utils.format_vs_par",
+        "utils.get_ranked_frontback_data",
+        "streamlit",
+        "helpers.streak_analysis_processing.prepare_record_worst_streaks_data",
+        "helpers.streak_analysis_processing.get_player_window_streaks",
         "helpers.streak_analysis_processing.prepare_record_best_streaks_data"
       ],
       "functions_defined": [
@@ -2114,8 +2114,8 @@
     },
     "streamlit/helpers/scorecard_data_processing.py": {
       "imports": [
-        "streamlit",
-        "pandas"
+        "pandas",
+        "streamlit"
       ],
       "internal_imports": [
         "streamlit"
@@ -2133,13 +2133,13 @@
     },
     "streamlit/helpers/score_count_processing.py": {
       "imports": [
-        "plotly.express",
-        "plotly.subplots.make_subplots",
-        "streamlit",
-        "numpy",
-        "pandas",
         "plotly.graph_objects",
-        "utils.format_vs_par"
+        "plotly.express",
+        "utils.format_vs_par",
+        "numpy",
+        "streamlit",
+        "pandas",
+        "plotly.subplots.make_subplots"
       ],
       "internal_imports": [
         "streamlit",
@@ -2162,8 +2162,8 @@
     },
     "streamlit/helpers/scoring_achievements_processing.py": {
       "imports": [
-        "numpy",
-        "pandas"
+        "pandas",
+        "numpy"
       ],
       "internal_imports": [],
       "functions_defined": [
@@ -2176,8 +2176,8 @@
     },
     "streamlit/helpers/scoring_data_processing.py": {
       "imports": [
-        "numpy",
-        "pandas"
+        "pandas",
+        "numpy"
       ],
       "internal_imports": [],
       "functions_defined": [
@@ -2191,15 +2191,15 @@
     },
     "streamlit/helpers/streak_analysis_processing.py": {
       "imports": [
+        "logging",
         "utils.STREAKS_PARQUET",
         "numpy",
         "pandas",
-        "utils.read_file",
-        "logging"
+        "utils.read_file"
       ],
       "internal_imports": [
-        "utils.read_file",
-        "utils.STREAKS_PARQUET"
+        "utils.STREAKS_PARQUET",
+        "utils.read_file"
       ],
       "functions_defined": [
         "get_score_type_definitions",
@@ -2236,8 +2236,8 @@
     "streamlit/helpers/worst_performance_processing.py": {
       "imports": [
         "utils.create_stat_section",
-        "utils.get_complete_teg_data",
-        "pandas"
+        "pandas",
+        "utils.get_complete_teg_data"
       ],
       "internal_imports": [
         "utils.create_stat_section",
@@ -2259,10 +2259,10 @@
     },
     "streamlit/styles/altair_theme.py": {
       "imports": [
-        "__future__.annotations",
+        "typing.Dict",
         "typing.Optional",
         "copy",
-        "typing.Dict"
+        "__future__.annotations"
       ],
       "internal_imports": [],
       "functions_defined": [
@@ -2272,9 +2272,9 @@
     },
     "streamlit/styles/__init__.py": {
       "imports": [
+        "altair_theme.line_theme",
         "altair_theme.PALETTE",
-        "altair_theme.bar_theme",
-        "altair_theme.line_theme"
+        "altair_theme.bar_theme"
       ],
       "internal_imports": [],
       "functions_defined": []
