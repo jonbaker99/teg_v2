@@ -2,9 +2,10 @@
 
 **Project:** Golf Tournament Analysis App Refactoring
 **Phase:** Complete Codebase Documentation
-**Status:** ✅ COMPLETE - ALL 6 TASKS FINISHED
+**Status:** ✅ COMPLETE - ALL 6 TASKS FINISHED + PRE-REFACTORING PLAN READY
 **Documentation Completed:** 2025-10-18
-**Last Updated:** 2025-10-19 (Task 6: Unused Code Analysis completed)
+**Pre-Refactoring Plan Added:** 2025-10-19
+**Last Updated:** 2025-10-19
 
 ---
 
@@ -12,7 +13,9 @@
 
 This guide provides an overview of the **completed** exhaustive documentation of the TEG codebase. All 6 documentation tasks have been successfully completed, resulting in 52+ documentation files covering 530 functions across 79 Python files.
 
-**This documentation is now ready to guide the refactoring and de-duplication process.**
+**UPDATE (2025-10-19):** A comprehensive pre-refactoring cleanup plan has been added to prepare the codebase for wholesale refactoring. This 4-phase, 28-hour plan addresses critical preparatory work including testing infrastructure, duplicate removal, naming conflicts, and architecture design.
+
+**Status:** Documentation complete. Pre-refactoring cleanup plan ready. Ready to begin cleanup phase.
 
 ---
 
@@ -282,11 +285,67 @@ Documentation quality has been verified:
 
 ---
 
-## What Happens Next: Using the Documentation
+## What Happens Next: Pre-Refactoring Cleanup
 
-**Documentation is 100% complete. Now proceed to refactoring with confidence.**
+**Documentation is 100% complete. NEW: Pre-refactoring cleanup plan created.**
 
-### Phase 1: Review & Strategic Planning (This Week - ~8 hours)
+### 🆕 Phase 0: Pre-Refactoring Cleanup (4 Weeks - ~28 hours)
+
+**Added:** 2025-10-19
+**Purpose:** Clean and prepare codebase before wholesale refactoring
+**Documents:** [PRE_REFACTORING_PLAN.md](PRE_REFACTORING_PLAN.md) | [PRE_REFACTORING_QUICK_START.md](PRE_REFACTORING_QUICK_START.md)
+
+**Why This Phase:**
+Based on the comprehensive documentation analysis, several critical preparatory tasks will significantly improve refactoring success:
+
+1. **Testing Infrastructure (CRITICAL)** - Currently zero tests. Cannot safely refactor without tests.
+2. **Remove Dead Code** - ~600 lines of duplicates/unused code shouldn't be migrated
+3. **Resolve Naming Conflicts** - 38 conflicts will confuse API design
+4. **Consolidate Implementations** - 2 competing data loaders need to become 1
+5. **Fix Performance Issues** - O(n²) algorithms documented but not fixed
+
+**Four Sub-Phases:**
+
+#### Phase 0.1: Quick Wins (Week 1, ~8 hours)
+- **Task 1:** Delete within-file duplicates (370 lines)
+- **Task 2:** Archive 20 unused functions (6% reduction)
+- **Task 3:** Add missing utility functions (consolidate `safe_int`, etc.)
+- **Task 4:** **CRITICAL - Create testing infrastructure** (pytest setup, ≥25 tests)
+
+**Success Criteria:** Test suite running, 600 lines removed, utilities consolidated
+
+#### Phase 0.2: Resolve Naming Conflicts (Week 2, ~6 hours)
+- **Task 1:** Rename 5 `render_report` functions
+- **Task 2:** Rename 4 `format_value` functions
+- **Task 3:** Review 11 MEDIUM-confidence unused functions
+
+**Success Criteria:** Zero naming conflicts, clear function purposes
+
+#### Phase 0.3: Address Technical Debt (Week 3, ~8 hours)
+- **Task 1:** Consolidate data loaders (unified version only)
+- **Task 2:** Document utils.py structure (16 section headers)
+- **Task 3:** Fix O(n²) performance in `create_round_summary()` (10x speedup)
+
+**Success Criteria:** Single data loader, organized utils.py, optimized algorithms
+
+#### Phase 0.4: Create Migration Architecture (Week 4, ~6 hours)
+- **Task 1:** Design `teg_analysis/` package structure
+- **Task 2:** Map all 102 utils.py functions to destinations
+- **Task 3:** Create dependency-ordered migration sequence
+- **Task 4:** Define API surface (20-30 core functions)
+
+**Success Criteria:** Clear refactoring blueprint, all functions mapped, API defined
+
+**Expected ROI:**
+- 50%+ reduction in refactoring time (clear targets, no waste)
+- Dramatically lower risk (test coverage catches regressions)
+- Better architecture (informed by clean, organized code)
+
+**Start Here:** [PRE_REFACTORING_PLAN.md Phase 1, Task 1.4](PRE_REFACTORING_PLAN.md#task-14-create-testing-infrastructure-4-hours)
+
+---
+
+### Phase 1: Review & Strategic Planning (After Phase 0 - ~8 hours)
 
 **Documents to review:**
 1. Read [README.md](README.md) - Get overview
@@ -457,6 +516,10 @@ Documentation quality has been verified:
 
 ## Resources
 
+### Pre-Refactoring Planning (NEW)
+- [PRE_REFACTORING_PLAN.md](PRE_REFACTORING_PLAN.md) - Complete 4-phase cleanup strategy
+- [PRE_REFACTORING_QUICK_START.md](PRE_REFACTORING_QUICK_START.md) - Day-to-day checklist
+
 ### Documentation Files
 - [README.md](README.md) - Start here
 - [CODEBASE_INVENTORY.md](CODEBASE_INVENTORY.md) - Master inventory
@@ -478,19 +541,26 @@ Documentation quality has been verified:
 
 ## Conclusion
 
-**Documentation is 100% complete and ready for use.**
+**Documentation is 100% complete. Pre-refactoring cleanup plan ready.**
 
 This comprehensive documentation provides:
 - Complete visibility into 530 functions across 79 files
 - Clear migration path with 6-phase plan
-- Quick wins identified (~370 lines can be eliminated immediately)
+- Quick wins identified (~600 lines can be eliminated)
 - Dependency map showing what changes impact what
 - No circular dependencies - clean architecture confirmed
+- **NEW:** 4-phase pre-refactoring cleanup plan (28 hours)
 
-**Next steps:** Review [migration_impact.md](migration_impact.md) and begin Phase 1 (Strategic Planning)
+**Critical Finding:** Zero test infrastructure exists. Creating tests is the MOST IMPORTANT pre-refactoring task. Cannot safely refactor without tests.
+
+**Next steps:**
+1. **Start with:** [PRE_REFACTORING_PLAN.md Phase 1](PRE_REFACTORING_PLAN.md#phase-1-quick-wins---eliminate-obvious-waste)
+2. **Priority 1:** Create testing infrastructure (4 hours, non-negotiable)
+3. **Complete:** All 4 phases of pre-refactoring cleanup (28 hours)
+4. **Then begin:** Wholesale refactoring with confidence
 
 ---
 
-**Status:** ✅ DOCUMENTATION COMPLETE
-**Last Updated:** 2025-10-18
-**Ready for:** Refactoring Phase
+**Status:** ✅ DOCUMENTATION COMPLETE + PRE-REFACTORING PLAN READY
+**Last Updated:** 2025-10-19
+**Ready for:** Pre-Refactoring Cleanup Phase (Phase 0)

@@ -2,7 +2,8 @@
 
 **Created:** 2025-10-17
 **Completed:** 2025-10-18
-**Status:** ✅ COMPLETE - READY FOR REFACTORING
+**Updated:** 2025-10-19
+**Status:** ✅ DOCUMENTATION COMPLETE - READY FOR PRE-REFACTORING CLEANUP
 
 ---
 
@@ -180,12 +181,44 @@ These files describe how the documentation was created:
 
 ---
 
-## What Comes Next: Refactoring Phase
+## What Comes Next: Pre-Refactoring Cleanup
 
-Now that documentation is complete, you can proceed with confidence:
+**NEW (2025-10-19):** Before starting wholesale refactoring, complete the pre-refactoring cleanup phase.
+
+### 🚀 Pre-Refactoring Phase (4 Weeks - ~28 hours)
+
+**Documents:**
+- **[PRE_REFACTORING_PLAN.md](PRE_REFACTORING_PLAN.md)** - Complete 4-phase strategy (READ THIS FIRST)
+- **[PRE_REFACTORING_QUICK_START.md](PRE_REFACTORING_QUICK_START.md)** - Day-to-day checklist
+
+**Why Clean Before Refactoring:**
+- Remove ~600 lines of dead/duplicate code (don't migrate waste)
+- Create test infrastructure (cannot safely refactor without tests)
+- Resolve 38 naming conflicts (clarifies API design)
+- Consolidate competing implementations (single source of truth)
+- Fix O(n²) performance issues (don't enshrine slow algorithms)
+
+**Four Phases:**
+1. **Week 1:** Quick Wins - Delete waste, create tests (~8 hours)
+2. **Week 2:** Naming Conflicts - Clarify ambiguous names (~6 hours)
+3. **Week 3:** Technical Debt - Consolidate, optimize (~8 hours)
+4. **Week 4:** Migration Architecture - Design target structure (~6 hours)
+
+**Expected ROI:**
+- 50%+ reduction in refactoring time
+- Dramatically lower risk (test coverage prevents regressions)
+- Cleaner starting point for API extraction
+
+**Start Here:** [PRE_REFACTORING_PLAN.md Phase 1, Task 1.4](PRE_REFACTORING_PLAN.md#task-14-create-testing-infrastructure-4-hours) (Testing Infrastructure - CRITICAL)
+
+---
+
+## Original Refactoring Plan (Execute After Pre-Refactoring)
+
+Now that documentation is complete AND pre-refactoring cleanup is planned:
 
 ### Phase 1: Quick Wins (Week 1 - ~10 hours)
-**Focus:** Within-file duplicate removal
+**Focus:** Within-file duplicate removal (REPLACED BY PRE-REFACTORING PLAN)
 - Fix 9 within-file duplicates (~370 lines eliminated)
 - Add utility functions to utils.py (safe_int, etc.)
 - Test affected pages
@@ -295,9 +328,12 @@ This thorough documentation provides:
 ```
 docs/
 ├── README.md                              ← This file - Start here
-├── DOCUMENTATION_NAVIGATION.md            ← Master navigation (to be created)
+├── DOCUMENTATION_NAVIGATION.md            ← Master navigation
 ├── MASTER_DOCUMENTATION_GUIDE.md          ← Task overview (all complete)
 ├── CODEBASE_INVENTORY.md                  ← Master inventory framework
+│
+├── PRE_REFACTORING_PLAN.md                ← 🆕 Pre-refactoring cleanup strategy
+├── PRE_REFACTORING_QUICK_START.md         ← 🆕 Day-to-day checklist
 │
 ├── TASK_1_UTILS_INVENTORY.md              ← Task 1 approach (reference)
 ├── TASK_2_HELPERS_INVENTORY.md            ← Task 2 approach (reference)
@@ -343,10 +379,10 @@ docs/
 └── function_analysis.json                 ← Raw analysis data (530 functions)
 ```
 
-**Total:** 50+ documentation files, ~200,000+ lines of documentation
+**Total:** 52+ documentation files, ~200,000+ lines of documentation
 
 ---
 
-**Last Updated:** 2025-10-18
-**Status:** ✅ DOCUMENTATION COMPLETE - READY FOR REFACTORING
-**Next Steps:** Begin [migration_impact.md](migration_impact.md) Phase 1 (Quick Wins)
+**Last Updated:** 2025-10-19
+**Status:** ✅ DOCUMENTATION COMPLETE - READY FOR PRE-REFACTORING CLEANUP
+**Next Steps:** Begin [PRE_REFACTORING_PLAN.md Phase 1](PRE_REFACTORING_PLAN.md#phase-1-quick-wins---eliminate-obvious-waste) (Create Testing Infrastructure - CRITICAL)
