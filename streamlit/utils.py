@@ -15,10 +15,34 @@ from io import BytesIO, StringIO
 import subprocess
 from datetime import datetime
 
+# Import I/O layer from teg_analysis package (Phase I migration)
+from teg_analysis.io import (
+    read_file as _read_file_new,
+    write_file as _write_file_new,
+    read_text_file as _read_text_file_new,
+    write_text_file as _write_text_file_new,
+    backup_file as _backup_file_new,
+    read_from_github as _read_from_github_new,
+    read_text_from_github as _read_text_from_github_new,
+    write_text_to_github as _write_text_to_github_new,
+    write_to_github as _write_to_github_new,
+    batch_commit_to_github as _batch_commit_to_github_new,
+)
+
 # Configure Logging
 #logging.basicConfig(level=logging.INFO)
 logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
+
+# Safely define a cache decorator that works in and out of Streamlit context
+try:
+    # In Streamlit context
+    _st_cache_data = st.cache_data
+except AttributeError:
+    # Not in Streamlit context (e.g., unit tests) - use a no-op decorator
+    def _st_cache_data(func):
+        """No-op decorator for non-Streamlit contexts."""
+        return func
 
 # ============================================================================
 # TEG ANALYSIS UTILITIES MODULE - TABLE OF CONTENTS
@@ -36,14 +60,15 @@ logger = logging.getLogger(__name__)
 #    ├── get_base_directory()        - Directory setup
 #    └── get_current_branch()        - Git branch detection
 #
-# 2. GITHUB I/O (Lines 137-368)
+# 2. GITHUB I/O (Lines 137-368) - MIGRATED TO teg_analysis/io/github_operations.py
 #    ├── read_from_github()          - Read files from GitHub
 #    ├── read_text_from_github()     - Read text from GitHub
 #    ├── write_text_to_github()      - Write text to GitHub
 #    ├── write_to_github()           - Write DataFrames to GitHub
 #    └── batch_commit_to_github()    - Atomic multi-file commits
+#    [WRAPPERS DEFINED BELOW]
 #
-# 3. RAILWAY VOLUME MANAGEMENT (Lines 369-768)
+# 3. RAILWAY VOLUME MANAGEMENT (Lines 369-768) - MIGRATED TO teg_analysis/io/
 #    ├── _is_railway()               - Environment detection helper
 #    ├── _get_volume_path()          - Volume path construction
 #    ├── _get_local_path()           - Local path construction
@@ -323,228 +348,48 @@ GITHUB_BRANCH = get_current_branch()
 # ============================================================================
 
 def read_from_github(file_path: str) -> pd.DataFrame or str:
-    """Reads a file from the GitHub repository.
+    """WRAPPER: Reads a file from the GitHub repository.
 
-    This function reads a file from the specified path in the GitHub repository.
-    It handles both CSV and Parquet files, decoding them appropriately.
-
-    Args:
-        file_path (str): The path to the file in the GitHub repository.
-
-    Returns:
-        pd.DataFrame or str: A pandas DataFrame if the file is a CSV or
-        Parquet file, otherwise the decoded content of the file as a string.
+    [MIGRATED TO teg_analysis/io/github_operations.py]
+    This is a cached wrapper that delegates to the new implementation.
     """
-    from github import Github
-    from io import BytesIO, StringIO
-    import base64
-    
-    token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
-    g = Github(token)
-    repo = g.get_repo(GITHUB_REPO)
-    content = repo.get_contents(file_path, ref=get_current_branch())
-    
-    if file_path.endswith('.csv'):
-        # Decode the base64 content first
-        decoded_content = base64.b64decode(content.content).decode('utf-8')
-        return pd.read_csv(StringIO(decoded_content))
-    elif file_path.endswith('.parquet'):
-        # For parquet files, decode to bytes
-        decoded_bytes = base64.b64decode(content.content)
-        return pd.read_parquet(BytesIO(decoded_bytes))
-    else:
-        # For other files, return decoded string
-        return base64.b64decode(content.content).decode('utf-8')
+    return _read_from_github_new(file_path)
 
 
 def read_text_from_github(file_path: str) -> str:
-    """Reads a text file from the GitHub repository.
+    """WRAPPER: Reads a text file from the GitHub repository.
 
-    This function is optimized for reading text files (e.g., .md, .txt, .json)
-    from the GitHub repository. It returns the content as a decoded string.
-
-    Args:
-        file_path (str): The path to the file in the GitHub repository.
-
-    Returns:
-        str: The decoded content of the file as a string.
+    [MIGRATED TO teg_analysis/io/github_operations.py]
+    This wrapper delegates to the new implementation.
     """
-    from github import Github
-    import base64
-
-    token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
-    g = Github(token)
-    repo = g.get_repo(GITHUB_REPO)
-    content = repo.get_contents(file_path, ref=get_current_branch())
-
-    # Decode and return as string
-    return base64.b64decode(content.content).decode('utf-8')
+    return _read_text_from_github_new(file_path)
 
 
 def write_text_to_github(file_path: str, content: str, commit_message: str = "Update text file"):
-    """Writes a text file to the GitHub repository.
+    """WRAPPER: Writes a text file to the GitHub repository.
 
-    This function writes string content to the specified file path in the GitHub
-    repository. If the file already exists, it will be updated. Otherwise,
-    a new file will be created.
-
-    Args:
-        file_path (str): The path to the file in the GitHub repository.
-        content (str): The text content to write to the file.
-        commit_message (str, optional): The commit message to use for the
-            write operation. Defaults to "Update text file".
+    [MIGRATED TO teg_analysis/io/github_operations.py]
+    This wrapper delegates to the new implementation.
     """
-    from github import Github
-    import base64
-
-    token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
-    g = Github(token)
-    repo = g.get_repo(GITHUB_REPO)
-
-    # Encode string content to bytes then base64
-    content_bytes = content.encode('utf-8')
-    encoded_content = base64.b64encode(content_bytes).decode('utf-8')
-
-    # Try to get existing file (to get SHA for update)
-    try:
-        existing_file = repo.get_contents(file_path, ref=get_current_branch())
-        # Update existing file
-        repo.update_file(
-            file_path,
-            commit_message,
-            encoded_content,
-            existing_file.sha,
-            branch=get_current_branch()
-        )
-        logger.info(f"Updated {file_path} in GitHub")
-    except Exception:
-        # File doesn't exist, create new
-        repo.create_file(
-            file_path,
-            commit_message,
-            encoded_content,
-            branch=get_current_branch()
-        )
-        logger.info(f"Created {file_path} in GitHub")
+    return _write_text_to_github_new(file_path, content, commit_message)
 
 
 def write_to_github(file_path: str, data: pd.DataFrame or str, commit_message: str = "Update data"):
-    """Writes a file to the GitHub repository.
+    """WRAPPER: Writes a file to the GitHub repository.
 
-    This function writes data to the specified file path in the GitHub
-    repository. It can handle both pandas DataFrames (CSV or Parquet) and
-    string data. If the file already exists, it will be updated. Otherwise,
-    a new file will be created.
-
-    Args:
-        file_path (str): The path to the file in the GitHub repository.
-        data (pd.DataFrame or str): The data to write to the file.
-        commit_message (str, optional): The commit message to use for the
-            write operation. Defaults to "Update data".
+    [MIGRATED TO teg_analysis/io/github_operations.py]
+    This wrapper delegates to the new implementation.
     """
-    from github import Github
-    from io import BytesIO
-
-    token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
-    g = Github(token)
-    repo = g.get_repo(GITHUB_REPO)
-
-    branch = get_current_branch()
-
-    # Prepare content
-    if isinstance(data, pd.DataFrame):
-        if file_path.endswith('.csv'):
-            content = data.to_csv(index=False)
-        elif file_path.endswith('.parquet'):
-            buffer = BytesIO()
-            data.to_parquet(buffer, index=False)
-            content = buffer.getvalue()
-    else:
-        content = data
-
-    # Try update, fallback to create
-    try:
-        file = repo.get_contents(file_path, ref=branch)
-        repo.update_file(file_path, commit_message, content, file.sha, branch=get_current_branch())
-    except:
-        repo.create_file(file_path, commit_message, content, branch=get_current_branch())
-
-    st.cache_data.clear()
+    return _write_to_github_new(file_path, data, commit_message)
 
 
 def batch_commit_to_github(files_data: list, commit_message: str = "Batch update data"):
-    """Commits multiple files to GitHub in a single commit.
+    """WRAPPER: Commits multiple files to GitHub in a single commit.
 
-    This function optimizes GitHub API usage by creating a single commit with
-    multiple file changes, which is significantly faster for bulk updates than
-    committing each file individually.
-
-    Args:
-        files_data (list): A list of dictionaries, where each dictionary
-            contains the `file_path` and `data` for a file to be committed.
-            Example: `[{'file_path': 'data/file.csv', 'data': df}, ...]`.
-        commit_message (str, optional): The commit message for the batch
-            update. Defaults to "Batch update data".
+    [MIGRATED TO teg_analysis/io/github_operations.py]
+    This wrapper delegates to the new implementation.
     """
-    from github import Github, InputGitTreeElement
-    from io import BytesIO
-    import base64
-
-    token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
-    g = Github(token)
-    repo = g.get_repo(GITHUB_REPO)
-    branch = get_current_branch()
-
-    # Get the current commit SHA
-    ref = repo.get_git_ref(f"heads/{branch}")
-    base_tree = repo.get_git_commit(ref.object.sha).tree
-
-    # Prepare all file contents and create blobs
-    tree_elements = []
-    for file_info in files_data:
-        file_path = file_info['file_path']
-        data = file_info['data']
-
-        # Prepare content based on file type
-        if isinstance(data, pd.DataFrame):
-            if file_path.endswith('.csv'):
-                content = data.to_csv(index=False)
-            elif file_path.endswith('.parquet'):
-                buffer = BytesIO()
-                data.to_parquet(buffer, index=False)
-                content = buffer.getvalue()
-        else:
-            content = data
-
-        # Create blob for this file
-        # PyGithub expects base64-encoded content for binary files
-        if isinstance(content, bytes):
-            blob = repo.create_git_blob(base64.b64encode(content).decode('utf-8'), 'base64')
-        else:
-            blob = repo.create_git_blob(content, 'utf-8')
-
-        # Create tree element referencing the blob
-        tree_elements.append(
-            InputGitTreeElement(
-                path=file_path,
-                mode='100644',
-                type='blob',
-                sha=blob.sha
-            )
-        )
-
-    # Create new tree with all changes
-    new_tree = repo.create_git_tree(tree_elements, base_tree)
-
-    # Create commit
-    parent = repo.get_git_commit(ref.object.sha)
-    new_commit = repo.create_git_commit(commit_message, new_tree, [parent])
-
-    # Update reference
-    ref.edit(new_commit.sha)
-
-    logger.info(f"Batch committed {len(files_data)} files to GitHub in single commit")
-    st.cache_data.clear()
+    return _batch_commit_to_github_new(files_data, commit_message)
 
 # Enhanced read_file and write_file functions for utils.py
 # Replace your existing functions with these
@@ -578,346 +423,99 @@ def batch_commit_to_github(files_data: list, commit_message: str = "Batch update
 # path logic for all read/write operations.
 
 def _is_railway() -> bool:
-    """Check if running on Railway environment.
+    """WRAPPER: Check if running on Railway environment.
 
-    Returns:
-        bool: True if running on Railway, False for local development
+    [MIGRATED TO teg_analysis/io/volume_operations.py]
+    This wrapper delegates to the new implementation.
     """
-    return bool(os.getenv('RAILWAY_ENVIRONMENT'))
+    from teg_analysis.io.volume_operations import _is_railway as _is_railway_new
+    return _is_railway_new()
 
 
 def _get_volume_path(file_path: str) -> str:
-    """Get Railway volume path for file.
+    """WRAPPER: Get Railway volume path for file.
 
-    Args:
-        file_path (str): Relative file path (e.g., 'data/file.csv')
-
-    Returns:
-        str: Absolute volume path (e.g., '/mnt/data_repo/data/file.csv')
+    [MIGRATED TO teg_analysis/io/volume_operations.py]
+    This wrapper delegates to the new implementation.
     """
-    return f"/mnt/data_repo/{file_path}"
+    from teg_analysis.io.volume_operations import _get_volume_path as _get_volume_path_new
+    return _get_volume_path_new(file_path)
 
 
 def _get_local_path(file_path: str) -> Path:
-    """Get local filesystem path for file.
+    """WRAPPER: Get local filesystem path for file.
 
-    Args:
-        file_path (str): Relative file path (e.g., 'data/file.csv')
-
-    Returns:
-        Path: Absolute local path based on BASE_DIR
+    [MIGRATED TO teg_analysis/io/volume_operations.py]
+    This wrapper delegates to the new implementation.
     """
-    return BASE_DIR / file_path
+    from teg_analysis.io.volume_operations import _get_local_path as _get_local_path_new
+    return _get_local_path_new(file_path)
 
 
 def _ensure_volume_dir(volume_path: str) -> None:
-    """Ensure parent directory exists for volume path.
+    """WRAPPER: Ensure parent directory exists for volume path.
 
-    Args:
-        volume_path (str): Full path to file in volume
+    [MIGRATED TO teg_analysis/io/volume_operations.py]
+    This wrapper delegates to the new implementation.
     """
-    os.makedirs(os.path.dirname(volume_path), exist_ok=True)
+    from teg_analysis.io.volume_operations import _ensure_volume_dir as _ensure_volume_dir_new
+    return _ensure_volume_dir_new(volume_path)
 
 
 def read_file(file_path: str) -> pd.DataFrame:
-    """Reads a file from the local filesystem or a mounted volume.
+    """WRAPPER: Reads a file from the local filesystem or a mounted volume.
 
-    This function reads a file from a mounted volume if running on Railway,
-    or from the local filesystem if running locally. If the file is not
-    found in the volume on Railway, it caches it from GitHub.
-
-    Args:
-        file_path (str): The path to the file.
-
-    Returns:
-        pd.DataFrame: The content of the file as a pandas DataFrame.
-
-    Raises:
-        ValueError: If the file type is not supported.
+    [MIGRATED TO teg_analysis/io/file_operations.py]
+    This wrapper delegates to the new implementation.
     """
-    if _is_railway():
-        volume_path = _get_volume_path(file_path)
-
-        # Simple check: does file exist in volume?
-        if os.path.exists(volume_path):
-            # Fast path: read from volume (NO API calls)
-            try:
-                if file_path.endswith('.csv'):
-                    return pd.read_csv(volume_path)
-                elif file_path.endswith('.parquet'):
-                    return pd.read_parquet(volume_path)
-                else:
-                    raise ValueError(f"Unsupported file type: {file_path}")
-            except Exception as e:
-                logger.warning(f"Error reading from volume {volume_path}: {e}")
-                # If volume read fails, fall back to GitHub
-                pass
-
-        # File not cached or volume read failed: download and cache
-        try:
-            data = read_from_github(file_path)
-
-            # Cache to volume for next time
-            _ensure_volume_dir(volume_path)
-
-            if file_path.endswith('.csv'):
-                data.to_csv(volume_path, index=False)
-            elif file_path.endswith('.parquet'):
-                data.to_parquet(volume_path, index=False)
-
-            logger.info(f"Cached {file_path} to volume for future reads")
-            return data
-
-        except Exception as e:
-            logger.error(f"Error reading {file_path} from GitHub: {e}")
-            raise
-    else:
-        # Local development unchanged
-        local_path = _get_local_path(file_path)
-        if file_path.endswith('.csv'):
-            return pd.read_csv(local_path)
-        elif file_path.endswith('.parquet'):
-            return pd.read_parquet(local_path)
-        else:
-            raise ValueError(f"Unsupported file type: {file_path}")
+    return _read_file_new(file_path)
 
 
 def write_file(file_path: str, data: pd.DataFrame, commit_message: str = "Update data", defer_github: bool = False):
-    """Writes a file to the local filesystem or a mounted volume.
+    """WRAPPER: Writes a file to the local filesystem or a mounted volume.
 
-    This function writes a file to a mounted volume and optionally to GitHub
-    if running on Railway, or to the local filesystem if running locally.
-
-    Args:
-        file_path (str): The path to the file.
-        data (pd.DataFrame): The data to write.
-        commit_message (str, optional): The commit message for the GitHub
-            commit. Defaults to "Update data".
-        defer_github (bool, optional): If True, the GitHub push is deferred
-            for a batch commit. Defaults to False.
-
-    Returns:
-        dict or None: A dictionary with file information for batch commits
-        if `defer_github` is True, otherwise None.
-
-    Raises:
-        ValueError: If the file type is not supported.
+    [MIGRATED TO teg_analysis/io/file_operations.py]
+    This wrapper delegates to the new implementation.
     """
-    if _is_railway():
-        # Write to volume first (fast local write)
-        volume_path = _get_volume_path(file_path)
-
-        try:
-            _ensure_volume_dir(volume_path)
-
-            if file_path.endswith('.csv'):
-                data.to_csv(volume_path, index=False)
-            elif file_path.endswith('.parquet'):
-                data.to_parquet(volume_path, index=False)
-            else:
-                raise ValueError(f"Unsupported file type: {file_path}")
-
-            logger.info(f"Successfully wrote {file_path} to volume")
-
-        except Exception as e:
-            logger.error(f"Error writing to volume {volume_path}: {e}")
-            # Continue to GitHub write even if volume fails
-
-        # Write to GitHub (for cross-environment sync) unless deferred
-        if not defer_github:
-            try:
-                write_to_github(file_path, data, commit_message)
-                logger.info(f"Successfully wrote {file_path} to GitHub")
-            except Exception as e:
-                logger.error(f"Error writing to GitHub: {e}")
-                raise  # Re-raise GitHub errors as they're critical
-        else:
-            # Return file info for later batch commit
-            logger.info(f"Deferred GitHub push for {file_path}")
-            return {'file_path': file_path, 'data': data}
-
-    else:
-        # Local development unchanged
-        local_path = _get_local_path(file_path)
-        if file_path.endswith('.csv'):
-            data.to_csv(local_path, index=False)
-        elif file_path.endswith('.parquet'):
-            data.to_parquet(local_path, index=False)
-        else:
-            raise ValueError(f"Unsupported file type: {file_path}")
-
-    # Clear caches after successful write (only if not deferred)
-    if not defer_github:
-        st.cache_data.clear()
+    return _write_file_new(file_path, data, commit_message, defer_github)
 
 
 def read_text_file(file_path: str) -> str:
-    """Reads a text file from the local filesystem or a mounted volume.
+    """WRAPPER: Reads a text file from the local filesystem or a mounted volume.
 
-    This function reads text files (e.g., .md, .txt, .json) from a mounted volume
-    if running on Railway, or from the local filesystem if running locally.
-    If the file is not found in the volume on Railway, it fetches from GitHub
-    and caches it to the volume.
-
-    Args:
-        file_path (str): The path to the text file.
-
-    Returns:
-        str: The content of the file as a string.
+    [MIGRATED TO teg_analysis/io/file_operations.py]
+    This wrapper delegates to the new implementation.
     """
-    if _is_railway():
-        volume_path = _get_volume_path(file_path)
-
-        # Simple check: does file exist in volume?
-        if os.path.exists(volume_path):
-            # Fast path: read from volume (NO API calls)
-            try:
-                with open(volume_path, 'r', encoding='utf-8') as f:
-                    return f.read()
-            except Exception as e:
-                logger.warning(f"Error reading from volume {volume_path}: {e}")
-                # If volume read fails, fall back to GitHub
-                pass
-
-        # File not cached or volume read failed: download and cache
-        try:
-            content = read_text_from_github(file_path)
-
-            # Cache to volume for next time
-            _ensure_volume_dir(volume_path)
-            with open(volume_path, 'w', encoding='utf-8') as f:
-                f.write(content)
-
-            logger.info(f"Cached {file_path} to volume for future reads")
-            return content
-
-        except Exception as e:
-            logger.error(f"Error reading {file_path} from GitHub: {e}")
-            raise
-    else:
-        # Local development
-        local_path = _get_local_path(file_path)
-        return local_path.read_text(encoding='utf-8')
+    return _read_text_file_new(file_path)
 
 
 def write_text_file(file_path: str, content: str, commit_message: str = "Update text file", defer_github: bool = False):
-    """Writes a text file to the local filesystem or a mounted volume.
+    """WRAPPER: Writes a text file to the local filesystem or a mounted volume.
 
-    This function writes text files to a mounted volume and optionally to GitHub
-    if running on Railway, or to the local filesystem if running locally.
-
-    Args:
-        file_path (str): The path to the text file.
-        content (str): The text content to write.
-        commit_message (str, optional): The commit message for the GitHub
-            commit. Defaults to "Update text file".
-        defer_github (bool, optional): If True, the GitHub push is deferred
-            for a batch commit. Defaults to False.
-
-    Returns:
-        dict or None: A dictionary with file information for batch commits
-        if `defer_github` is True, otherwise None.
+    [MIGRATED TO teg_analysis/io/file_operations.py]
+    This wrapper delegates to the new implementation.
     """
-    if _is_railway():
-        # Write to volume first (fast local write)
-        volume_path = _get_volume_path(file_path)
-
-        try:
-            _ensure_volume_dir(volume_path)
-            with open(volume_path, 'w', encoding='utf-8') as f:
-                f.write(content)
-
-            logger.info(f"Successfully wrote {file_path} to volume")
-
-        except Exception as e:
-            logger.error(f"Error writing to volume {volume_path}: {e}")
-            # Continue to GitHub write even if volume fails
-
-        # Write to GitHub (for cross-environment sync) unless deferred
-        if not defer_github:
-            try:
-                write_text_to_github(file_path, content, commit_message)
-                logger.info(f"Successfully wrote {file_path} to GitHub")
-            except Exception as e:
-                logger.error(f"Error writing to GitHub: {e}")
-                raise  # Re-raise GitHub errors as they're critical
-        else:
-            # Return file info for later batch commit
-            logger.info(f"Deferred GitHub push for {file_path}")
-            return {'file_path': file_path, 'content': content}
-
-    else:
-        # Local development
-        local_path = _get_local_path(file_path)
-        local_path.parent.mkdir(parents=True, exist_ok=True)  # Ensure directory exists
-        local_path.write_text(content, encoding='utf-8')
-
-    # Clear caches after successful write (only if not deferred)
-    if not defer_github:
-        st.cache_data.clear()
+    return _write_text_file_new(file_path, content, commit_message, defer_github)
 
 
-# Optional: Add this utility function for manual cache management
 def clear_volume_cache(file_path: str = None) -> str:
-    """Clears the volume cache for a specific file or all files.
+    """WRAPPER: Clears the volume cache for a specific file or all files.
 
-    This function is useful for forcing a refresh from GitHub. It clears the
-    cache on the mounted volume in a Railway environment.
-
-    Args:
-        file_path (str, optional): The path to the file to clear from the
-            cache. If None, the entire volume cache is cleared. Defaults to
-            None.
-
-    Returns:
-        str: A message indicating the result of the operation.
+    [MIGRATED TO teg_analysis/io/volume_operations.py]
+    This wrapper delegates to the new implementation.
     """
-    if not os.getenv('RAILWAY_ENVIRONMENT'):
-        return "Not running on Railway - no volume to clear"
-    
-    try:
-        if file_path:
-            # Clear specific file
-            volume_path = f"/mnt/data_repo/{file_path}"
-            if os.path.exists(volume_path):
-                os.remove(volume_path)
-                return f"Cleared volume cache for {file_path}"
-            else:
-                return f"File {file_path} not found in volume cache"
-        else:
-            # Clear entire volume
-            import shutil
-            volume_base = "/mnt/data_repo"
-            if os.path.exists(volume_base):
-                shutil.rmtree(volume_base)
-                return "Cleared entire volume cache"
-            else:
-                return "Volume cache already empty"
-                
-    except Exception as e:
-        return f"Error clearing volume cache: {e}"
+    from teg_analysis.io.volume_operations import clear_volume_cache as clear_volume_cache_new
+    return clear_volume_cache_new(file_path)
 
 
 
 def backup_file(source_path: str, backup_path: str):
-    """Creates a backup of a file.
+    """WRAPPER: Creates a backup of a file.
 
-    This function creates a backup of a file by copying it to a new location.
-    It handles both Railway and local environments.
-
-    Args:
-        source_path (str): The path to the source file.
-        backup_path (str): The path to the backup file.
+    [MIGRATED TO teg_analysis/io/file_operations.py]
+    This wrapper delegates to the new implementation.
     """
-    if os.getenv('RAILWAY_ENVIRONMENT'):
-        # Read and write with new name (to backups branch)
-        data = read_from_github(source_path)
-        write_to_github(backup_path, data, f"Backup of {source_path}")
-    else:
-        import shutil
-        backup_full_path = BASE_DIR / backup_path
-        backup_full_path.parent.mkdir(parents=True, exist_ok=True)  # 👈 create folders if needed
-        shutil.copy(BASE_DIR / source_path, backup_full_path)
+    return _backup_file_new(source_path, backup_path)
 
 ## Temporary compatibility wrappers (remove after migration)
 ##  THESE CAN BE DELETED IF EVERYTHING IS RUNNING OK
@@ -984,7 +582,7 @@ TEG_OVERRIDES = {
 # This section contains the primary data loading pipeline. load_all_data() is
 # the most called function in the application, serving 40+ pages. These functions
 # perform initial data loading, player name conversion, round processing, and
-# foundational transformations. All major functions use @st.cache_data for
+# foundational transformations. All major functions use @_st_cache_data for
 # performance optimization.
 #
 # KEY FUNCTIONS:
@@ -996,7 +594,7 @@ TEG_OVERRIDES = {
 # - get_player_name()           - Player code to name conversion
 # ============================================================================
 
-@st.cache_data
+@_st_cache_data
 def load_all_data(exclude_teg_50: bool = True, exclude_incomplete_tegs: bool = False) -> pd.DataFrame:
     """Loads all data from the Parquet file and prepares it for use.
 
@@ -1669,7 +1267,7 @@ def reshape_round_data(df: pd.DataFrame, id_vars: List[str]) -> pd.DataFrame:
     return reshaped_df
 
 
-@st.cache_data
+@_st_cache_data
 def load_and_prepare_handicap_data(file_path: str) -> pd.DataFrame:
     """
     Load and prepare handicap data from a CSV file.
@@ -3007,7 +2605,7 @@ def check_for_complete_and_duplicate_data(all_scores_path: str, all_data_path: s
 # of the analysis pages. Includes lookup functions (get_teg_rounds, round count),
 # aggregation engines (aggregate_data, get_complete_teg_data), and formatting
 # utilities (format_vs_par - widely used across 30+ pages). Most functions use
-# @st.cache_data for performance. This is the infrastructure for analysis.
+# @_st_cache_data for performance. This is the infrastructure for analysis.
 #
 # KEY FUNCTIONS:
 # - get_teg_rounds()            - Round count lookup
@@ -3233,31 +2831,31 @@ def aggregate_data(data: pd.DataFrame, aggregation_level: str, measures: List[st
 
     return aggregated_df
 
-@st.cache_data
+@_st_cache_data
 def get_complete_teg_data():
     all_data = load_all_data(exclude_teg_50 = True, exclude_incomplete_tegs= True)
     aggregated_data = aggregate_data(all_data,'TEG')
     return aggregated_data
 
-@st.cache_data
+@_st_cache_data
 def get_teg_data_inc_in_progress():
     all_data = load_all_data(exclude_teg_50 = True, exclude_incomplete_tegs= False)
     aggregated_data = aggregate_data(all_data,'TEG')
     return aggregated_data
 
-@st.cache_data
+@_st_cache_data
 def get_round_data(ex_50 = True, ex_incomplete= False):
     all_data = load_all_data(exclude_teg_50 = ex_50, exclude_incomplete_tegs = ex_incomplete)
     aggregated_data = aggregate_data(all_data,'Round')
     return aggregated_data
 
-@st.cache_data
+@_st_cache_data
 def get_9_data():
     all_data = load_all_data(exclude_teg_50 = True, exclude_incomplete_tegs= False)
     aggregated_data = aggregate_data(all_data,'FrontBack')
     return aggregated_data    
 
-@st.cache_data
+@_st_cache_data
 def get_Pl_data():
     all_data = load_all_data(exclude_teg_50 = True, exclude_incomplete_tegs= False)
     aggregated_data = aggregate_data(all_data,'Player')
@@ -3358,19 +2956,19 @@ def add_ranks(df, fields_to_rank=None, rank_ascending=None):
     
     return df
 
-@st.cache_data
+@_st_cache_data
 def get_ranked_teg_data():
     df = get_complete_teg_data()
     ranked_data = add_ranks(df)
     return ranked_data
 
-@st.cache_data
+@_st_cache_data
 def get_ranked_round_data():
     df = get_round_data()
     ranked_data = add_ranks(df)
     return ranked_data
 
-@st.cache_data
+@_st_cache_data
 def get_ranked_frontback_data():
     df = get_9_data()
     ranked_data = add_ranks(df)
@@ -3459,7 +3057,7 @@ def safe_ordinal(n):
 # ============================================================================
 
 def chosen_rd_context(ranked_rd_df, teg = 'TEG 16',rd = 4, measure = None):
-    #@st.cache_data
+    #@_st_cache_data
     df = ranked_rd_df
     all_cnt = len(df)
     df['Pl_count'] = df.groupby('Pl')['Pl'].transform('count')
@@ -3487,7 +3085,7 @@ def chosen_rd_context(ranked_rd_df, teg = 'TEG 16',rd = 4, measure = None):
     return chosen_rd_context
 
 def chosen_teg_context(ranked_teg_df, teg = 'TEG 15', measure = None):
-    #@st.cache_data
+    #@_st_cache_data
     df = ranked_teg_df
     all_cnt = len(df)
     df['Pl_count'] = df.groupby('Pl')['Pl'].transform('count')
@@ -4000,7 +3598,7 @@ def get_trophy_full_name(trophy: str) -> str:
 
     return trophy_name
 
-@st.cache_data
+@_st_cache_data
 def load_course_info():
     """Load unique course/area combinations from round_info.csv"""
     round_info = read_file(ROUND_INFO_CSV)
@@ -4110,7 +3708,7 @@ def get_hc(TEG_needed: int | None = None) -> pd.DataFrame:
     result['hc'] = result['hc_raw'].round(0).astype(int)
     return result
 
-@st.cache_data
+@_st_cache_data
 def get_next_teg_and_check_if_in_progress():
     """
     DEPRECATED: Use get_next_teg_and_check_if_in_progress_fast() instead.
