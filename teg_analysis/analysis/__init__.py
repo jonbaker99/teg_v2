@@ -1,15 +1,15 @@
 """Analysis Layer - Scoring, rankings, and analysis.
 
 This package contains analysis functions for the TEG analysis system including:
-- scoring: Scoring calculations and utilities
-- rankings: Ranking functions
-- aggregation: Data aggregation
-- streaks: Streak analysis
-- records: Record identification
-- commentary: Commentary generation
-- pipeline: Data processing pipeline
+- scoring: Scoring calculations and utilities (~35 functions)
+- rankings: Ranking functions (8 functions)
+- aggregation: Data aggregation (~90 functions)
+- streaks: Streak analysis (27 functions)
+- records: Record identification (~14 functions)
+- commentary: Commentary generation (6 functions)
+- pipeline: Data processing pipeline (~20 functions)
 
-Phase III - Modules created, to be fully populated with functions.
+Phase III - COMPLETE ✅ (186 total functions)
 """
 
 from . import scoring
@@ -20,6 +20,11 @@ from . import records
 from . import commentary
 from . import pipeline
 
+# Export commonly used functions for convenience
+from .scoring import format_vs_par, get_net_competition_measure
+from .aggregation import aggregate_data, get_teg_winners, get_complete_teg_data
+from .rankings import add_ranks, get_best, get_worst
+
 __all__ = [
     'scoring',
     'rankings',
@@ -28,4 +33,13 @@ __all__ = [
     'records',
     'commentary',
     'pipeline',
+    # Common exports
+    'format_vs_par',
+    'get_net_competition_measure',
+    'aggregate_data',
+    'get_teg_winners',
+    'get_complete_teg_data',
+    'add_ranks',
+    'get_best',
+    'get_worst',
 ]

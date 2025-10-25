@@ -5,6 +5,7 @@ This module contains functions for calculating consecutive scoring achievements
 summarizing maximum streaks by player and score type.
 """
 
+
 import pandas as pd
 import numpy as np
 

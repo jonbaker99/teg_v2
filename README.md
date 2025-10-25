@@ -10,16 +10,46 @@ This repository contains a Streamlit application for analyzing and visualizing g
 *   **Scorecards:** View detailed hole-by-hole scorecards for any player, round, or tournament.
 *   **Data Management:** A secure interface for updating, editing, and deleting tournament data.
 
+## Architecture Refactoring (2025)
+
+The TEG application is undergoing a major architectural refactoring to separate calculation logic from UI presentation, enabling the core analytics to be used with any frontend framework (Streamlit, FastAPI, Flask, etc.).
+
+### The `teg_analysis` Package
+
+A pure Python package containing all golf analytics calculations, completely independent of Streamlit:
+
+*   **`teg_analysis.io`**: Data loading from files and GitHub API
+*   **`teg_analysis.core`**: Core calculations (handicaps, scoring, statistics)
+*   **`teg_analysis.analysis`**: Complex aggregations (records, history, tournaments)
+*   **`teg_analysis.display`**: Data formatting and table preparation (no rendering)
+
+### Refactoring Progress
+
+*   **Phase I (Complete)**: Migrated I/O layer to `teg_analysis.io` - all data loading centralized
+*   **Phase II (Complete)**: Migrated Core layer to `teg_analysis.core` - handicap and scoring calculations
+*   **Phase III (Complete)**: Migrated Display layer to `teg_analysis.display` - formatters and table utilities
+*   **Phase IV (Complete)**: Migrated Analysis layer to `teg_analysis.analysis` - 202 functions migrated from `streamlit/helpers/`
+*   **Phase V (Documented)**: Make `teg_analysis` fully UI-agnostic by removing remaining Streamlit dependencies
+
+For detailed Phase V execution plans, see [docs/PHASE_5_DOCUMENTATION_INDEX.md](docs/PHASE_5_DOCUMENTATION_INDEX.md)
+
 ## Project Structure
 
 The repository is organized as follows:
 
-*   `streamlit/`: Contains the main Streamlit application files.
-    *   `helpers/`: A directory with helper functions for data processing and display.
-    *   `pages/`: While not a conventional pages directory, the numbered files in `streamlit/` act as the different pages of the application.
-*   `data/`: Stores all the data files for the application, including tournament results, handicaps, and cached analysis files.
-*   `dev_notebooks/`: Contains Jupyter notebooks for development and ad-hoc analysis.
-*   `*.py`: Various scripts in the root directory for testing and data management.
+*   **`teg_analysis/`**: Pure Python package for all golf analytics calculations (UI-independent)
+    *   `io/`: Data loading from CSV/Parquet files and GitHub API
+    *   `core/`: Core calculations (handicaps, scoring, Stableford points)
+    *   `analysis/`: Complex aggregations (records, history, tournaments, pipeline)
+    *   `display/`: Data formatting and table preparation utilities
+*   **`streamlit/`**: Streamlit web application (UI layer)
+    *   `helpers/`: Streamlit-specific wrappers and remaining UI utilities (many functions migrated to `teg_analysis/`)
+    *   `*.py`: Numbered page files organized by function (100s=History, 200s=Results, 300s=Records, etc.)
+    *   `nav.py`: Main navigation controller and entry point
+*   **`docs/`**: Project documentation including phase completion summaries and execution plans
+*   **`data/`**: Tournament data files (CSV/Parquet), handicaps, and course information
+*   **`dev_notebooks/`**: Jupyter notebooks for development and ad-hoc analysis
+*   **`*.py`**: Root-level scripts for testing and data management
 
 ## Setup and Installation
 
