@@ -20,6 +20,176 @@ from datetime import datetime
 logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
 
+# ============================================================================
+# TEG ANALYSIS UTILITIES MODULE - TABLE OF CONTENTS
+# ============================================================================
+#
+# This module contains 102 functions organized into 16 logical sections,
+# supporting the complete TEG (annual golf tournament) analysis system.
+#
+# TABLE OF CONTENTS:
+# ==================
+#
+# 1. CONFIGURATION & SETUP (Lines 24-135)
+#    ├── get_page_layout()           - Page layout configuration
+#    ├── clear_all_caches()          - Cache management
+#    ├── get_base_directory()        - Directory setup
+#    └── get_current_branch()        - Git branch detection
+#
+# 2. GITHUB I/O (Lines 137-368)
+#    ├── read_from_github()          - Read files from GitHub
+#    ├── read_text_from_github()     - Read text from GitHub
+#    ├── write_text_to_github()      - Write text to GitHub
+#    ├── write_to_github()           - Write DataFrames to GitHub
+#    └── batch_commit_to_github()    - Atomic multi-file commits
+#
+# 3. RAILWAY VOLUME MANAGEMENT (Lines 369-768)
+#    ├── _is_railway()               - Environment detection helper
+#    ├── _get_volume_path()          - Volume path construction
+#    ├── _get_local_path()           - Local path construction
+#    ├── _ensure_volume_dir()        - Directory creation helper
+#    ├── read_file()                 - PRIMARY file reading API
+#    ├── write_file()                - PRIMARY file writing API
+#    ├── read_text_file()            - Text file reading
+#    ├── write_text_file()           - Text file writing
+#    ├── clear_volume_cache()        - Cache management
+#    └── backup_file()               - File backup operation
+#
+# 4A. DATA LOADING - CORE (Lines 769-952)
+#    ├── load_all_data()             - PRIMARY data loader (40+ pages depend)
+#    ├── get_number_of_completed_rounds_by_teg() - Round counting
+#    ├── get_incomplete_tegs()       - Incomplete tournament detection
+#    ├── exclude_incomplete_tegs_function() - Filtering utility
+#    ├── get_player_name()           - Player code conversion
+#    └── process_round_for_all_scores() - CORE scoring calculations
+#
+# 4B. DATA LOADING - TRANSFORMS (Lines 953-1072)
+#    ├── check_hc_strokes_combinations() - Handicap validation
+#    ├── add_cumulative_scores()     - Cumulative score calculations
+#    ├── add_rankings_and_gaps()     - COMPLEX ranking calculations
+#    ├── save_to_parquet()           - Parquet persistence
+#    ├── reshape_round_data()        - Format conversion (Wide↔Long)
+#    └── load_and_prepare_handicap_data() - Handicap data loading
+#
+# 5. CACHE UPDATES & PIPELINE (Lines 1072-1550)
+#    ├── update_streaks_cache()      - Streak calculations
+#    ├── update_bestball_cache()     - Eclectic calculations
+#    ├── update_commentary_caches()  - Generate 5 summary caches
+#    ├── get_google_sheet()          - Google Sheets integration
+#    ├── summarise_existing_rd_data() - Data summarization
+#    ├── add_round_info()            - Metadata enrichment
+#    └── update_all_data()           - MAIN data update pipeline
+#
+# 6A. COMMENTARY - ROUND SUMMARY (Lines 1550-1874)
+#    └── create_round_summary()      - 324 lines, 50+ metric columns
+#
+# 6B. COMMENTARY - EVENTS & TOURNAMENT (Lines 1874-2416)
+#    ├── create_round_events()       - 258 lines, hole-by-hole analysis
+#    └── create_tournament_summary() - 284 lines, tournament metrics
+#
+# 6C. COMMENTARY - STREAKS & VALIDATION (Lines 2416-2550)
+#    ├── create_round_streaks_summary() - Round-level streak analysis
+#    ├── create_tournament_streaks_summary() - Tournament-level analysis
+#    └── check_for_complete_and_duplicate_data() - Data quality validation
+#
+# 7A. AGGREGATION - CORE (Lines 2550-3100)
+#    ├── get_teg_rounds()            - Round count lookup
+#    ├── get_tegnum_rounds()         - Round lookup by TEG number
+#    ├── format_vs_par()             - WIDELY USED score formatting
+#    ├── get_net_competition_measure() - Scoring rule selection
+#    ├── get_teg_winners()           - Tournament winner calculation
+#    ├── aggregate_data()            - Generalized aggregation engine
+#    ├── get_complete_teg_data()     - Complete TEG aggregation
+#    ├── get_teg_data_inc_in_progress() - In-progress TEG aggregation
+#    ├── get_round_data()            - Round-level aggregation
+#    └── get_9_data()                - 9-hole aggregation
+#
+# 7B. AGGREGATION - RANKING (Lines 3100-3400)
+#    ├── get_Pl_data()               - Utility function
+#    ├── list_fields_by_aggregation_level() - Utility function
+#    ├── add_ranks()                 - CORE ranking algorithm
+#    ├── get_ranked_teg_data()       - Ranked TEG data
+#    ├── get_ranked_round_data()     - Ranked round data
+#    ├── get_ranked_frontback_data() - Ranked 9-hole data
+#    ├── get_best()                  - Performance filtering
+#    ├── get_worst()                 - Performance filtering
+#    ├── ordinal()                   - Number to ordinal conversion
+#    └── safe_ordinal()              - Safe ordinal conversion
+#
+# 8A. HELPERS - FORMATTING & SCORING (Lines 3400-3700)
+#    ├── chosen_rd_context()         - Round context builder
+#    ├── chosen_teg_context()        - TEG context builder
+#    ├── create_stat_section()       - HTML generation
+#    ├── define_score_types()        - Score categorization
+#    ├── apply_score_types()         - Score categorization
+#    ├── score_type_stats()          - Comprehensive statistics
+#    ├── max_scoretype_per_round()   - Maximum calculation
+#    ├── max_scoretype_per_teg()     - Maximum calculation
+#    ├── load_css_file()             - CSS loading utility
+#    ├── load_datawrapper_css()      - Datawrapper CSS loading
+#    ├── load_teg_reports_css()      - TEG reports CSS loading
+#    └── datawrapper_table()         - Table rendering
+#
+# 8B. HELPERS - METADATA & CSS (Lines 3700-3900)
+#    ├── get_teg_metadata()          - TEG information lookup
+#    ├── format_date_for_scorecard() - Flexible date formatting
+#    ├── get_scorecard_data()        - Scorecard data filtering
+#    ├── convert_trophy_name()       - Trophy name conversion
+#    ├── get_trophy_full_name()      - Trophy full name lookup
+#    ├── load_course_info()          - Course reference data
+#    ├── get_teg_filter_options()    - Filter option generation
+#    └── filter_data_by_teg()        - TEG-based filtering
+#
+# 8C. HELPERS - HANDICAP & STATUS (Lines 3900-4200)
+#    ├── get_hc()                    - COMPLEX handicap calculation
+#    ├── get_next_teg_and_check_if_in_progress() - SLOW (deprecated)
+#    ├── get_current_handicaps_formatted() - Formatted display
+#    ├── analyze_teg_completion()    - TEG status analysis
+#    ├── save_teg_status_file()      - Status persistence
+#    ├── update_teg_status_files()   - Status update
+#    ├── get_next_teg_and_check_if_in_progress_fast() - FAST status check
+#    ├── get_last_completed_teg_fast() - Last completed lookup
+#    ├── get_current_in_progress_teg_fast() - In-progress lookup
+#    └── has_incomplete_teg_fast()   - Incomplete check
+#
+# 9A. TEG STATUS & URL (Lines 4200-4350)
+#    └── get_app_base_url()          - Environment-aware URL
+#
+# 9B. NAVIGATION & UI (Lines 4350-4406)
+#    ├── convert_filename_to_streamlit_url() - URL generation
+#    ├── add_custom_navigation_links() - Flexible navigation
+#    ├── add_section_navigation_links() - Cross-section navigation
+#    ├── create_custom_navigation_section() - Navigation layout
+#    └── apply_custom_navigation_css() - CSS application
+#
+# ============================================================================
+# MIGRATION NOTES (For Phase 4+ Refactoring)
+# ============================================================================
+#
+# During future refactoring, functions will migrate to:
+# - teg_analysis/io/         - Sections 2-3 (GitHub I/O, Railway volume)
+# - teg_analysis/core/       - Sections 4-5 (Data loading & transforms)
+# - teg_analysis/analysis/   - Sections 6-7 (Commentary & aggregation)
+# - streamlit/utils.py       - Sections 8-9 (UI & Navigation - stay here)
+#
+# See docs/CONSTANT_MIGRATION_PLAN.md for additional refactoring context.
+#
+# ============================================================================
+# SECTION 1: CONFIGURATION & SETUP (4 functions)
+# ============================================================================
+# Functions for page layout, directory setup, and cache management
+#
+# This section provides foundational configuration and setup utilities used
+# throughout the application. These functions handle page layout configuration,
+# Streamlit cache management, and project directory detection.
+#
+# KEY FUNCTIONS:
+# - get_page_layout()      - Retrieve page layout settings
+# - clear_all_caches()     - Clear all Streamlit data caches
+# - get_base_directory()   - Detect project base directory
+# - get_current_branch()   - Detect current git branch
+# ============================================================================
+
 
 def get_page_layout(page_file: str) -> str:
     """Get the layout setting for a page from PAGE_DEFINITIONS.
@@ -133,6 +303,24 @@ def get_current_branch():
         return 'main'
 
 GITHUB_BRANCH = get_current_branch()
+
+# ============================================================================
+# SECTION 2: GITHUB I/O (5 functions)
+# ============================================================================
+# Functions for reading/writing files via GitHub API
+#
+# This section handles all interactions with the GitHub repository API,
+# including reading data files (CSV/Parquet), writing updates, and performing
+# atomic batch commits. These functions are used for production data persistence
+# in the Railway deployment environment.
+#
+# KEY FUNCTIONS:
+# - read_from_github()          - Read files from GitHub
+# - read_text_from_github()     - Read text files from GitHub
+# - write_text_to_github()      - Write text to GitHub
+# - write_to_github()           - Write DataFrames to GitHub
+# - batch_commit_to_github()    - Atomic multi-file commits
+# ============================================================================
 
 def read_from_github(file_path: str) -> pd.DataFrame or str:
     """Reads a file from the GitHub repository.
@@ -361,6 +549,29 @@ def batch_commit_to_github(files_data: list, commit_message: str = "Batch update
 # Enhanced read_file and write_file functions for utils.py
 # Replace your existing functions with these
 
+# ============================================================================
+# SECTION 3: RAILWAY VOLUME MANAGEMENT (10 functions)
+# ============================================================================
+# Functions for environment-aware file I/O (Railway deployment and local dev)
+#
+# This section provides an abstraction layer for file operations that works
+# seamlessly across both Railway production and local development environments.
+# The read/write functions handle both CSV and Parquet files with intelligent
+# caching for GitHub API optimization. Includes helpers for volume path
+# management, directory creation, and backup operations.
+#
+# KEY FUNCTIONS:
+# - read_file()                 - PRIMARY file reading API
+# - write_file()                - PRIMARY file writing API
+# - read_text_file()            - Text file reading
+# - write_text_file()           - Text file writing
+# - _is_railway()               - Environment detection
+# - _get_volume_path()          - Volume path construction
+# - _get_local_path()           - Local path construction
+# - _ensure_volume_dir()        - Directory creation
+# - clear_volume_cache()        - Cache management
+# - backup_file()               - File backup utility
+#
 # === CENTRALIZED PATH MANAGEMENT ===
 # These helper functions provide a single source of truth for file paths
 # across Railway and local environments. Update these functions to change
@@ -765,6 +976,26 @@ TEG_OVERRIDES = {
     }
 }
 
+# ============================================================================
+# SECTION 4A: DATA LOADING - CORE (6 functions)
+# ============================================================================
+# Core data loading and basic transformations
+#
+# This section contains the primary data loading pipeline. load_all_data() is
+# the most called function in the application, serving 40+ pages. These functions
+# perform initial data loading, player name conversion, round processing, and
+# foundational transformations. All major functions use @st.cache_data for
+# performance optimization.
+#
+# KEY FUNCTIONS:
+# - load_all_data()          - PRIMARY data loader (MOST CALLED)
+# - process_round_for_all_scores() - CORE scoring calculations
+# - get_number_of_completed_rounds_by_teg() - Round counting
+# - get_incomplete_tegs()       - Tournament detection
+# - exclude_incomplete_tegs_function() - Filtering utility
+# - get_player_name()           - Player code to name conversion
+# ============================================================================
+
 @st.cache_data
 def load_all_data(exclude_teg_50: bool = True, exclude_incomplete_tegs: bool = False) -> pd.DataFrame:
     """Loads all data from the Parquet file and prepares it for use.
@@ -949,6 +1180,24 @@ def process_round_for_all_scores(long_df: pd.DataFrame, hc_long: pd.DataFrame) -
     logger.info("Round processing completed.")
     return long_df
 
+# ============================================================================
+# SECTION 4B: DATA LOADING - TRANSFORMS (6 functions)
+# ============================================================================
+# Data transformation and enrichment functions
+#
+# This section performs complex data transformations after initial loading.
+# Includes handicap validation, cumulative and ranking calculations, format
+# conversions, and parquet persistence. These functions typically operate on
+# the full dataset and are part of the data preparation pipeline.
+#
+# KEY FUNCTIONS:
+# - add_cumulative_scores()     - COMPLEX cumulative calculations
+# - add_rankings_and_gaps()     - COMPLEX ranking calculations
+# - check_hc_strokes_combinations() - Handicap validation
+# - load_and_prepare_handicap_data() - Handicap data loading
+# - reshape_round_data()        - Format conversion (Wide↔Long)
+# - save_to_parquet()           - Parquet persistence
+# ============================================================================
 
 def check_hc_strokes_combinations(transformed_df: pd.DataFrame) -> pd.DataFrame:
     """Checks for unique combinations of HC, SI, and HCStrokes.
@@ -1068,6 +1317,26 @@ def save_to_parquet(df: pd.DataFrame, output_file: str):
     write_file(output_file, df, "Save to parquet")
     logger.info(f"Data successfully saved to {output_file}")
 
+# ============================================================================
+# SECTION 5: CACHE UPDATES & PIPELINE (7 functions)
+# ============================================================================
+# Data processing pipeline and cache management
+#
+# This section contains the main data processing pipeline used for updates.
+# Includes cache generation for streaks, bestball (eclectic), and various
+# commentary summaries. These functions perform expensive calculations and
+# support deferred GitHub commits for batching. Also includes Google Sheets
+# integration and metadata enrichment functions.
+#
+# KEY FUNCTIONS:
+# - update_all_data()           - MAIN data update pipeline
+# - update_streaks_cache()      - Streak calculations
+# - update_bestball_cache()     - Eclectic calculations
+# - update_commentary_caches()  - Generate 5 summary caches
+# - add_round_info()            - Metadata enrichment
+# - summarise_existing_rd_data() - Data summarization
+# - get_google_sheet()          - Google Sheets integration
+# ============================================================================
 
 def update_streaks_cache(defer_github: bool = False):
     """
@@ -1528,6 +1797,20 @@ def update_all_data(csv_file: str, parquet_file: str, csv_output_file: str, defe
 
     return file_infos if defer_github else None
 
+# ============================================================================
+# SECTION 6A: COMMENTARY - ROUND SUMMARY (1 HUGE function)
+# ============================================================================
+# Round-level analysis and summary generation
+#
+# This section contains create_round_summary(), a monolithic 324-line function
+# that is one of the most complex in the application. It generates 50+ metric
+# columns for comprehensive round analysis, including historical ranking
+# calculations that operate in O(n²) time. Used for detailed round-by-round
+# reporting and tournament narration. Execution time: 10-30 seconds per update.
+#
+# KEY FUNCTIONS:
+# - create_round_summary()      - 324 lines, 50+ metrics, COMPLEX O(n²)
+# ============================================================================
 
 def create_round_summary(all_data_df=None, round_info_df=None):
     """
@@ -1854,6 +2137,21 @@ def create_round_summary(all_data_df=None, round_info_df=None):
 
     return summary
 
+# ============================================================================
+# SECTION 6B: COMMENTARY - EVENTS & TOURNAMENT (2 HUGE functions)
+# ============================================================================
+# Tournament-level and event-based analysis
+#
+# This section contains two monolithic functions for comprehensive tournament
+# and event analysis. create_round_events() is 258 lines and performs hole-by-hole
+# analysis. create_tournament_summary() is 284 lines and generates tournament-wide
+# metrics. Both are computationally expensive with 5-25 second execution times.
+# Used for detailed narrative generation and tournament-wide reporting.
+#
+# KEY FUNCTIONS:
+# - create_round_events()       - 258 lines, hole-by-hole event log
+# - create_tournament_summary() - 284 lines, tournament metrics
+# ============================================================================
 
 def create_round_events(all_data_df=None):
     """
@@ -2688,6 +2986,29 @@ def check_for_complete_and_duplicate_data(all_scores_path: str, all_data_path: s
 
     return summary
 
+# ============================================================================
+# SECTION 7A: AGGREGATION - CORE (10 functions)
+# ============================================================================
+# Core data aggregation and ranking infrastructure
+#
+# This section provides the foundational aggregation functions that power most
+# of the analysis pages. Includes lookup functions (get_teg_rounds, round count),
+# aggregation engines (aggregate_data, get_complete_teg_data), and formatting
+# utilities (format_vs_par - widely used across 30+ pages). Most functions use
+# @st.cache_data for performance. This is the infrastructure for analysis.
+#
+# KEY FUNCTIONS:
+# - get_teg_rounds()            - Round count lookup
+# - get_tegnum_rounds()         - Round lookup by TEG number
+# - format_vs_par()             - WIDELY USED score formatting
+# - get_net_competition_measure() - Scoring rule selection
+# - aggregate_data()            - Generalized aggregation engine
+# - get_complete_teg_data()     - Complete TEG aggregation
+# - get_teg_data_inc_in_progress() - In-progress TEG aggregation
+# - get_round_data()            - Round-level aggregation
+# - get_9_data()                - 9-hole aggregation
+# - get_teg_winners()           - Tournament winner calculation
+# ============================================================================
 
 def get_teg_rounds(TEG: str) -> int:
     """
@@ -3099,6 +3420,31 @@ def safe_ordinal(n):
         return ordinal(int(n))
     except ValueError:
         return str(n)  # or return a specific string for invalid inputs
+
+# ============================================================================
+# SECTION 8A: HELPERS - FORMATTING & SCORING (11 functions)
+# ============================================================================
+# Data formatting, presentation, and scoring utilities
+#
+# This section contains helper functions for data formatting and display.
+# Includes context builders (chosen_rd_context, chosen_teg_context) for
+# filtering by round/player, HTML generation (create_stat_section), score
+# categorization (define_score_types, apply_score_types), and CSS loading
+# utilities. These functions support the presentation layer for various pages.
+#
+# KEY FUNCTIONS:
+# - chosen_rd_context()         - Round context builder
+# - chosen_teg_context()        - TEG context builder
+# - create_stat_section()       - HTML generation
+# - define_score_types()        - Score categorization
+# - apply_score_types()         - Score type application
+# - score_type_stats()          - Comprehensive statistics
+# - max_scoretype_per_round()   - Maximum calculation
+# - max_scoretype_per_teg()     - Maximum calculation
+# - load_css_file()             - CSS loading utility
+# - load_datawrapper_css()      - Datawrapper CSS loading
+# - datawrapper_table()         - Table rendering
+# ============================================================================
 
 def chosen_rd_context(ranked_rd_df, teg = 'TEG 16',rd = 4, measure = None):
     #@st.cache_data
