@@ -28,12 +28,16 @@ def get_friendly_metric_name(metric: str) -> str:
     return name_mapping.get(metric, metric)
 
 
-def format_value(value: float, metric: str) -> str:
-    """Formats a value based on its metric type.
+def format_record_value(value: float, metric: str) -> str:
+    """Format record/statistic values based on metric type.
+
+    Applies appropriate formatting for different record types:
+    - GrossVP, NetVP: Uses vs-par formatting
+    - Others: Integer formatting
 
     Args:
         value (float): The numeric value to format.
-        metric (str): The metric type (e.g., 'Sc', 'GrossVP').
+        metric (str): The metric type (e.g., 'Sc', 'GrossVP', 'NetVP').
 
     Returns:
         str: The formatted value as a string.
@@ -534,13 +538,13 @@ def display_records_and_pbs_summary(records_dict: dict, page_type: str = 'TEG'):
         # Aggregate score records
         if aggregate_records:
             for record in aggregate_records:
-                value = format_value(record['value'], record['metric'])
+                value = format_record_value(record['value'], record['metric'])
                 st.markdown(f"- **{record['friendly_name']}:** {value} ({record['player']})")
 
         # 9-hole records
         if nine_hole_records:
             for record in nine_hole_records:
-                value = format_value(record['value'], record['metric'])
+                value = format_record_value(record['value'], record['metric'])
                 segment = record['segment']
                 st.markdown(f"- **{segment} 9 - {record['friendly_name']}:** {value} ({record['player']})")
 
@@ -565,7 +569,7 @@ def display_records_and_pbs_summary(records_dict: dict, page_type: str = 'TEG'):
         # Aggregate score worsts
         if all_time_worsts:
             for record in all_time_worsts:
-                value = format_value(record['value'], record['metric'])
+                value = format_record_value(record['value'], record['metric'])
                 st.markdown(f"- **Worst {record['friendly_name']}:** {value} ({record['player']})")
 
         # Score count records (worsts)
@@ -595,7 +599,7 @@ def display_records_and_pbs_summary(records_dict: dict, page_type: str = 'TEG'):
             pb_list = []
 
             for pb in player_pbs:
-                value = format_value(pb['value'], pb['metric'])
+                value = format_record_value(pb['value'], pb['metric'])
                 if 'segment' in pb:
                     pb_list.append(f"{pb['segment']} 9 - {pb['friendly_name']}: {value}")
                 else:
@@ -621,7 +625,7 @@ def display_records_and_pbs_summary(records_dict: dict, page_type: str = 'TEG'):
             worst_list = []
 
             for worst in player_worsts:
-                value = format_value(worst['value'], worst['metric'])
+                value = format_record_value(worst['value'], worst['metric'])
                 worst_list.append(f"{worst['friendly_name']}: {value}")
 
             st.markdown(f"- **{player}:** {', '.join(worst_list)}")

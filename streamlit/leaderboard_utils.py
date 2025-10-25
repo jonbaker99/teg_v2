@@ -69,8 +69,13 @@ def generate_table_html(df: pd.DataFrame) -> str:
     return "".join(html)
 
 
-def format_value(value: Any, value_type: str) -> str:
-    """Formats values based on their type.
+def format_leaderboard_value(value: Any, value_type: str) -> str:
+    """Format leaderboard score values based on type.
+
+    Applies metric-specific formatting for leaderboard display:
+    - GrossVP, NetVP: vs-par format with +/- signs
+    - Stableford: Integer points
+    - Others: String conversion
 
     Args:
         value (Any): The value to format.
@@ -154,7 +159,7 @@ def display_leaderboard(leaderboard_df: pd.DataFrame, value_column: str, title: 
     columns_to_format = [col for col in leaderboard.columns if col not in ['Rank', PLAYER_COLUMN]]
 
     for col in columns_to_format:
-        leaderboard[col] = leaderboard[col].apply(lambda x: format_value(x, value_column))
+        leaderboard[col] = leaderboard[col].apply(lambda x: format_leaderboard_value(x, value_column))
 
     # Create new title format: "{Competition} Final/Latest Leaderboard"
     if competition_name:

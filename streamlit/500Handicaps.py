@@ -43,14 +43,17 @@ def format_change(val: float) -> str:
     else:
         return "-"
 
-def format_value(val: float) -> str:
-    """Formats a numeric value for display, handling NaNs and zeros.
+def format_handicap_value(val: float) -> str:
+    """Format handicap value for display, handling NaNs and zeros.
+
+    Converts numeric handicap values to display-friendly strings.
+    Returns "-" for NaN or zero values.
 
     Args:
-        val (float): The value to format.
+        val (float): The handicap value to format.
 
     Returns:
-        str: The formatted string, or "-" for NaNs and zeros.
+        str: The formatted string (e.g., "12"), or "-" for NaNs and zeros.
     """
     if pd.isna(val) or val == 0:
         return "-"

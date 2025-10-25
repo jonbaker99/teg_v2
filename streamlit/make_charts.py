@@ -10,7 +10,22 @@ def add_round_annotations(fig, max_round):
         fig.add_annotation(x=x_pos + 9, y=0.08, text=f'R{round_num}', 
                            showarrow=False, yref='paper', yshift=-40)
 
-def format_value(value, chart_type):
+def format_chart_value(value, chart_type):
+    """Format values for chart display with appropriate styling.
+
+    Applies chart-type-specific formatting:
+    - stableford: Integer points
+    - gross: vs-par format with +/- signs
+    - ranking: Ordinal format (1st, 2nd, 3rd, etc.)
+    - default: Float with no decimal places
+
+    Args:
+        value: The numeric value to format
+        chart_type (str): The type of chart ('stableford', 'gross', 'ranking', or other)
+
+    Returns:
+        str: The formatted value for display
+    """
     if chart_type == 'stableford':
         return f"{value:.0f}"
     elif chart_type == 'gross':
@@ -69,7 +84,7 @@ def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None,
         # Add end label
         last_x = player_data['x_value'].iloc[-1]
         last_y = y_values.iloc[-1]
-        formatted_value = format_value(last_y, chart_type)
+        formatted_value = format_chart_value(last_y, chart_type)
         fig.add_annotation(
             x=last_x,
             y=last_y,
@@ -159,7 +174,7 @@ def create_round_graph(df, chosen_teg, chosen_round, y_series, title, y_calculat
         # Add end label
         last_x = player_data['x_value'].iloc[-1]
         last_y = y_values.iloc[-1]
-        formatted_value = format_value(last_y, chart_type)
+        formatted_value = format_chart_value(last_y, chart_type)
         fig.add_annotation(
             x=last_x,
             y=last_y,
