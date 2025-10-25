@@ -66,8 +66,15 @@ def load_markdown(file_path: str) -> str:
     return read_text_file(file_path)
 
 
-def render_report(md_text: str):
-    """Render markdown report as HTML with TEG report styling"""
+def render_teg_results_report(md_text: str):
+    """Render historical TEG results report as HTML with TEG report styling.
+
+    Displays tournament results in formatted markdown with TEG-specific styling.
+    Used by the TEG Results page for historical tournament display.
+
+    Args:
+        md_text (str): Markdown content to render
+    """
     has_markdown = importlib.util.find_spec("markdown") is not None
     if has_markdown:
         import markdown as md
@@ -394,9 +401,9 @@ try:
             # Try to load and render the report
             try:
                 md_text = load_markdown(report_file_path)
-                if teg_num < 8: 
+                if teg_num < 8:
                     st.caption("NB: The TEG Trophy winners before TEG 8 were decided by best net; the report here is written based on Stableford so finishing positions may be inaccurate")
-                render_report(md_text)
+                render_teg_results_report(md_text)
             except FileNotFoundError:
                 st.info(f"No report available yet for {chosen_teg}.")
             except Exception as report_error:

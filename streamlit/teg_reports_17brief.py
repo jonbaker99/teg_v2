@@ -35,7 +35,18 @@ def load_markdown(p: Path) -> str:
     return p.read_text(encoding="utf-8")
 
 # --- Renderer ---
-def render_report(md_text: str, return_html: bool = False):
+def render_brief_tournament_report(md_text: str, return_html: bool = False):
+    """Render brief TEG 17 tournament report as HTML.
+
+    Displays a condensed tournament summary with TEG-specific styling.
+
+    Args:
+        md_text (str): Markdown content to render
+        return_html (bool): If True, return HTML string instead of rendering
+
+    Returns:
+        str: HTML string if return_html=True, else None
+    """
     has_markdown = importlib.util.find_spec("markdown") is not None
     if has_markdown:
         import markdown as md
@@ -48,12 +59,12 @@ def render_report(md_text: str, return_html: bool = False):
 # --- Load and display the report ---
 if md_path.exists():
     md_text = load_markdown(md_path)
-    render_report(md_text)
+    render_brief_tournament_report(md_text)
 
     # # show with a copy button
     # st.write("---")
     # st.subheader("HTML output")
-    # full_html = render_report(md_text, return_html = True)
+    # full_html = render_brief_tournament_report(md_text, return_html = True)
     # st.code(full_html, language="html")  # ← has a copy icon
 else:
     st.error(f"Report not found: `{filename}`")

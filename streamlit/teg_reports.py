@@ -32,8 +32,11 @@ load_datawrapper_css()
 load_teg_reports_css()
 
 # === HELPER FUNCTIONS ===
-def render_report(md_text: str):
-    """Render markdown report as HTML with TEG report styling
+def render_tournament_report(md_text: str):
+    """Render generic tournament report as HTML with TEG report styling.
+
+    Displays tournament reports in formatted markdown with TEG-specific styling.
+    Used for both round reports and full tournament summaries.
 
     Args:
         md_text (str): Markdown text to render
@@ -164,7 +167,7 @@ for i, round_num in enumerate(rounds_to_show):
                 # Fall back to old format
                 report_content = read_text_file(report_path_old)
 
-            render_report(report_content)
+            render_tournament_report(report_content)
         except FileNotFoundError:
             st.info(f"No round report available for TEG {selected_teg_num} Round {round_num}")
         except Exception as e:
@@ -196,7 +199,7 @@ if is_complete:
             if selected_teg_num < 8:
                 st.caption("NB: The TEG Trophy winners before TEG 8 were decided by best net; the report here is written based on Stableford so finishing positions may be inaccurate")
 
-            render_report(md_text)
+            render_tournament_report(md_text)
 
             # Add segmented control after the report for less prominence
             st.markdown("---")

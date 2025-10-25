@@ -44,8 +44,11 @@ from helpers.streak_analysis_processing import get_player_window_streaks
 
 
 # === HELPER FUNCTIONS ===
-def render_report(md_text: str):
-    """Render markdown report as HTML with TEG report styling
+def render_latest_teg_report(md_text: str):
+    """Render latest/current TEG report as HTML with TEG report styling.
+
+    Displays the current tournament context report with formatted markdown.
+    Used by the TEG context analysis page.
 
     Args:
         md_text (str): Markdown text to render
@@ -366,7 +369,7 @@ with main_tabs[4]:
                 md_text = read_text_file(report_file_path)
                 if teg_num < 8:
                     st.caption("NB: The TEG Trophy winners before TEG 8 were decided by best net; the report here is written based on Stableford so finishing positions may be inaccurate")
-                render_report(md_text)
+                render_latest_teg_report(md_text)
             except FileNotFoundError:
                 st.info(f"No report available yet for {teg_t}.")
             except Exception as report_error:

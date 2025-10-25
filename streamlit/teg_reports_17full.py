@@ -38,7 +38,18 @@ def load_markdown(p: Path) -> str:
     return p.read_text(encoding="utf-8")
 
 # --- Renderer ---
-def render_report(md_text: str, return_html: bool = False):
+def render_full_tournament_report(md_text: str, return_html: bool = False):
+    """Render full TEG 17 tournament report as HTML.
+
+    Displays the complete tournament summary with TEG-specific styling.
+
+    Args:
+        md_text (str): Markdown content to render
+        return_html (bool): If True, return HTML string instead of rendering
+
+    Returns:
+        str: HTML string if return_html=True, else None
+    """
     has_markdown = importlib.util.find_spec("markdown") is not None
     if has_markdown:
         import markdown as md
@@ -55,6 +66,6 @@ def render_report(md_text: str, return_html: bool = False):
 st.caption(f"Looking for: `data/commentary/drafts/{filename}`")
 if md_path.exists():
     md_text = load_markdown(md_path)
-    render_report(md_text)
+    render_full_tournament_report(md_text)
 else:
     st.error(f"Report not found: `{filename}`")
