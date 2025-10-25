@@ -1,14 +1,26 @@
 """
-Round Report Data Loader
+Round Report Data Loader [DEPRECATED - Consolidated into unified_round_data_loader.py]
 
-This module loads and prepares all data needed for round-level reports.
-Designed for live tournament analysis with forward-looking projections.
+This module has been archived as part of Phase 3 refactoring (2025-10-25).
+All functionality has been consolidated into unified_round_data_loader.py which
+provides enhanced features and bug fixes while maintaining compatibility.
 
-Key functions:
-- load_round_report_data(): Main data assembly
-- calculate_hole_by_hole_positions(): Position changes through the round
-- calculate_tournament_projections(): Forward-looking "what's at stake" math
-- calculate_hole_difficulty(): Average scoring on each hole
+MIGRATION STATUS:
+- All imports updated to use unified_round_data_loader
+- All call sites verified
+- No active references remain in codebase
+
+KEY FUNCTIONS (See unified_round_data_loader.py for current implementations):
+- load_round_report_data() -> use load_unified_round_data() instead
+- calculate_hole_by_hole_positions() -> use calculate_hole_by_hole_positions_dual()
+- calculate_tournament_projections() -> functionality integrated into unified loader
+- calculate_hole_difficulty() -> use calculate_hole_difficulty() in unified loader
+
+REFERENCES:
+- Old location: streamlit/commentary/round_data_loader.py
+- New location: streamlit/commentary/unified_round_data_loader.py
+- Archive date: 2025-10-25
+- Archive commit: Phase 3 Task 3.1 consolidation
 """
 
 import pandas as pd

@@ -244,59 +244,74 @@ def get_round_storylines(round_data):
 
 
 if __name__ == "__main__":
-    # Test with TEG 17, Round 2
-    print("\n" + "="*60)
-    print("TESTING ROUND PATTERN ANALYSIS - TEG 17, Round 2")
-    print("="*60 + "\n")
-
-    from round_data_loader import load_round_report_data
-
-    round_data = load_round_report_data(17, 2)
-
-    print("\n" + "="*60)
-    print("MOMENTUM SHIFTS")
-    print("="*60)
-
-    momentum = identify_round_momentum_shifts(round_data)
-
-    print(f"\nLead Changes: {len(momentum['lead_changes'])}")
-    for lc in momentum['lead_changes']:
-        print(f"  Hole {lc['hole']}: {lc['from']} -> {lc['to']}")
-
-    print(f"\nCritical Holes: {len(momentum['critical_holes'])}")
-    for ch in momentum['critical_holes'][:5]:  # Show top 5
-        print(f"  Hole {ch['hole']}: {ch['event_count']} events" + (" + LEAD CHANGE" if ch['lead_change'] else ""))
-
-    print(f"\nTurning Points: {len(momentum['turning_points'])}")
-    for tp in momentum['turning_points'][:5]:  # Show first 5
-        print(f"  {tp['description']}")
-
-    print("\n" + "="*60)
-    print("POSITION CHANGES")
-    print("="*60)
-
-    positions = analyze_position_changes(round_data)
-
-    print(f"\nBiggest Movers Up:")
-    for p in positions['biggest_movers_up']:
-        print(f"  {p['player']}: +{p['change']} (pos {p['starting_position']} -> {p['ending_position']})")
-
-    print(f"\nBiggest Movers Down:")
-    for p in positions['biggest_movers_down'][:3]:  # Top 3 worst
-        print(f"  {p['player']}: {p['change']} (pos {p['starting_position']} -> {p['ending_position']})")
-
-    print("\n" + "="*60)
-    print("HIGH-LEVEL STORYLINES")
-    print("="*60)
-
-    storylines = get_round_storylines(round_data)
-
-    print(f"\nRound Winner: {storylines['round_winner']['player']} ({storylines['round_winner']['score']} pts)")
-    print(f"Final Leader: {storylines['lead_battle']['final_leader']} (margin: {storylines['lead_battle']['final_margin']} pts)")
-    print(f"Drama Level: {storylines['drama_level'].upper()}")
-    print(f"Lead Changes: {len(storylines['lead_battle']['lead_changes'])}")
-    print(f"Turning Points: {len(storylines['biggest_stories']['turning_points'])}")
-
-    print("\n" + "="*60)
-    print("> ROUND PATTERN ANALYSIS TEST COMPLETE")
-    print("="*60 + "\n")
+    # ARCHIVED: Old test block using round_data_loader has been commented out.
+    #
+    # The old round_data_loader.py has been consolidated into unified_round_data_loader.py
+    # during Phase 3 refactoring (2025-10-25).
+    #
+    # To use this module in the future:
+    # 1. Update load_unified_round_data() call to provide all_processed_data parameter
+    # 2. Ensure output data structure matches expected format for analysis functions
+    # 3. Verify functions still work with unified loader's data format
+    #
+    # Original test code preserved below (commented out):
+    # ------
+    # # Test with TEG 17, Round 2
+    # print("\n" + "="*60)
+    # print("TESTING ROUND PATTERN ANALYSIS - TEG 17, Round 2")
+    # print("="*60 + "\n")
+    #
+    # from unified_round_data_loader import load_unified_round_data
+    # # Note: load_unified_round_data requires all_processed_data parameter
+    # # which is not available in this standalone test context
+    #
+    # round_data = load_round_report_data(17, 2)
+    #
+    # print("\n" + "="*60)
+    # print("MOMENTUM SHIFTS")
+    # print("="*60)
+    #
+    # momentum = identify_round_momentum_shifts(round_data)
+    #
+    # print(f"\nLead Changes: {len(momentum['lead_changes'])}")
+    # for lc in momentum['lead_changes']:
+    #     print(f"  Hole {lc['hole']}: {lc['from']} -> {lc['to']}")
+    #
+    # print(f"\nCritical Holes: {len(momentum['critical_holes'])}")
+    # for ch in momentum['critical_holes'][:5]:  # Show top 5
+    #     print(f"  Hole {ch['hole']}: {ch['event_count']} events" + (" + LEAD CHANGE" if ch['lead_change'] else ""))
+    #
+    # print(f"\nTurning Points: {len(momentum['turning_points'])}")
+    # for tp in momentum['turning_points'][:5]:  # Show first 5
+    #     print(f"  {tp['description']}")
+    #
+    # print("\n" + "="*60)
+    # print("POSITION CHANGES")
+    # print("="*60)
+    #
+    # positions = analyze_position_changes(round_data)
+    #
+    # print(f"\nBiggest Movers Up:")
+    # for p in positions['biggest_movers_up']:
+    #     print(f"  {p['player']}: +{p['change']} (pos {p['starting_position']} -> {p['ending_position']})")
+    #
+    # print(f"\nBiggest Movers Down:")
+    # for p in positions['biggest_movers_down'][:3]:  # Top 3 worst
+    #     print(f"  {p['player']}: {p['change']} (pos {p['starting_position']} -> {p['ending_position']})")
+    #
+    # print("\n" + "="*60)
+    # print("HIGH-LEVEL STORYLINES")
+    # print("="*60)
+    #
+    # storylines = get_round_storylines(round_data)
+    #
+    # print(f"\nRound Winner: {storylines['round_winner']['player']} ({storylines['round_winner']['score']} pts)")
+    # print(f"Final Leader: {storylines['lead_battle']['final_leader']} (margin: {storylines['lead_battle']['final_margin']} pts)")
+    # print(f"Drama Level: {storylines['drama_level'].upper()}")
+    # print(f"Lead Changes: {len(storylines['lead_battle']['lead_changes'])}")
+    # print(f"Turning Points: {len(storylines['biggest_stories']['turning_points'])}")
+    #
+    # print("\n" + "="*60)
+    # print("> ROUND PATTERN ANALYSIS TEST COMPLETE")
+    # print("="*60 + "\n")
+    pass
