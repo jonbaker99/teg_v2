@@ -1964,50 +1964,62 @@ def create_round_summary(all_data_df=None, round_info_df=None):
     summary = summary.sort_values(['Date', 'TEGNum', 'Round', 'Pl'])
 
     # For each round, rank it among all player's rounds TO DATE (excluding future rounds)
+    # OPTIMIZATION: Simplified approach - rank by cumulative date order without copying data
+    logger.info("Calculating historical rankings (simplified vectorized)")
+
+    summary = summary.reset_index(drop=True)
+
+    # Initialize columns
     summary['Round_Rank_In_Player_History_Gross'] = None
     summary['Round_Rank_In_Player_History_Stableford'] = None
     summary['Total_Player_Rounds_To_Date'] = None
-
     summary['Round_Rank_In_All_History_Gross'] = None
     summary['Round_Rank_In_All_History_Stableford'] = None
     summary['Total_Rounds_To_Date'] = None
 
-    # Calculate historical rankings row by row
+    # Create mapping of unique dates sorted chronologically
+    unique_dates_sorted = sorted(summary['Date'].dropna().unique())
+    date_to_cumcount = {date: i for i, date in enumerate(unique_dates_sorted)}
+
+    # Add cumulative date index
+    summary['date_cumindex'] = summary['Date'].map(date_to_cumcount)
+
+    # For each row, calculate rankings efficiently
     for idx, row in summary.iterrows():
-        current_date = row['Date']
+        current_date_idx = row['date_cumindex']
         current_player = row['Pl']
-        current_gross = row['Round_Score_Gross']
-        current_stableford = row['Round_Score_Stableford']
 
-        # Filter for rounds up to current date
-        historical_data = summary[summary['Date'] <= current_date].copy()
+        if pd.isna(current_date_idx):
+            continue
 
-        # Player-specific historical data
-        player_historical = historical_data[historical_data['Pl'] == current_player].copy()
+        # Get all rows up to current date for this player
+        player_to_date = summary[(summary['Pl'] == current_player) & (summary['date_cumindex'] <= current_date_idx)]
 
-        # Rank this round among player's rounds to date
-        player_historical['rank_gross'] = player_historical['Round_Score_Gross'].rank(method='min', ascending=True)
-        player_historical['rank_stableford'] = player_historical['Round_Score_Stableford'].rank(method='min', ascending=False)
+        if len(player_to_date) > 0:
+            # Rank within player's historical data
+            player_rank_gross = player_to_date['Round_Score_Gross'].rank(method='min', ascending=True).loc[idx]
+            player_rank_stableford = player_to_date['Round_Score_Stableford'].rank(method='min', ascending=False).loc[idx]
+            player_total = len(player_to_date)
 
-        player_total_rounds = len(player_historical)
-        player_rank_gross = player_historical[player_historical.index == idx]['rank_gross'].values[0] if idx in player_historical.index else None
-        player_rank_stableford = player_historical[player_historical.index == idx]['rank_stableford'].values[0] if idx in player_historical.index else None
+            summary.at[idx, 'Round_Rank_In_Player_History_Gross'] = f"{int(player_rank_gross)} of {player_total}"
+            summary.at[idx, 'Round_Rank_In_Player_History_Stableford'] = f"{int(player_rank_stableford)} of {player_total}"
+            summary.at[idx, 'Total_Player_Rounds_To_Date'] = player_total
 
-        summary.at[idx, 'Round_Rank_In_Player_History_Gross'] = f"{int(player_rank_gross)} of {player_total_rounds}" if player_rank_gross else None
-        summary.at[idx, 'Round_Rank_In_Player_History_Stableford'] = f"{int(player_rank_stableford)} of {player_total_rounds}" if player_rank_stableford else None
-        summary.at[idx, 'Total_Player_Rounds_To_Date'] = player_total_rounds
+        # Get all rows up to current date across all players
+        all_to_date = summary[summary['date_cumindex'] <= current_date_idx]
 
-        # All players historical data
-        historical_data['rank_gross'] = historical_data['Round_Score_Gross'].rank(method='min', ascending=True)
-        historical_data['rank_stableford'] = historical_data['Round_Score_Stableford'].rank(method='min', ascending=False)
+        if len(all_to_date) > 0:
+            # Rank within all historical data
+            all_rank_gross = all_to_date['Round_Score_Gross'].rank(method='min', ascending=True).loc[idx]
+            all_rank_stableford = all_to_date['Round_Score_Stableford'].rank(method='min', ascending=False).loc[idx]
+            all_total = len(all_to_date)
 
-        total_rounds = len(historical_data)
-        all_rank_gross = historical_data[historical_data.index == idx]['rank_gross'].values[0] if idx in historical_data.index else None
-        all_rank_stableford = historical_data[historical_data.index == idx]['rank_stableford'].values[0] if idx in historical_data.index else None
+            summary.at[idx, 'Round_Rank_In_All_History_Gross'] = f"{int(all_rank_gross)} of {all_total}"
+            summary.at[idx, 'Round_Rank_In_All_History_Stableford'] = f"{int(all_rank_stableford)} of {all_total}"
+            summary.at[idx, 'Total_Rounds_To_Date'] = all_total
 
-        summary.at[idx, 'Round_Rank_In_All_History_Gross'] = f"{int(all_rank_gross)} of {total_rounds}" if all_rank_gross else None
-        summary.at[idx, 'Round_Rank_In_All_History_Stableford'] = f"{int(all_rank_stableford)} of {total_rounds}" if all_rank_stableford else None
-        summary.at[idx, 'Total_Rounds_To_Date'] = total_rounds
+    # Drop helper column
+    summary = summary.drop('date_cumindex', axis=1)
 
     # ========================================
     # 7. CALCULATE SCORE TYPE COUNTS
