@@ -332,8 +332,10 @@ docs/
 ├── MASTER_DOCUMENTATION_GUIDE.md          ← Task overview (all complete)
 ├── CODEBASE_INVENTORY.md                  ← Master inventory framework
 │
-├── PRE_REFACTORING_PLAN.md                ← 🆕 Pre-refactoring cleanup strategy
+├── PRE_REFACTORING_PLAN.md                ← 🆕 Pre-refactoring cleanup strategy (Phase 1.5 added)
 ├── PRE_REFACTORING_QUICK_START.md         ← 🆕 Day-to-day checklist
+├── AGENT_EXECUTION_PROTOCOL.md            ← 🆕 Agent compliance requirements
+├── CONSTANTS_MAPPING_GUIDE.md             ← 🆕 Constants inventory & migration guide
 │
 ├── TASK_1_UTILS_INVENTORY.md              ← Task 1 approach (reference)
 ├── TASK_2_HELPERS_INVENTORY.md            ← Task 2 approach (reference)
@@ -379,10 +381,58 @@ docs/
 └── function_analysis.json                 ← Raw analysis data (530 functions)
 ```
 
-**Total:** 52+ documentation files, ~200,000+ lines of documentation
+**Analysis Scripts:**
+
+```text
+analyze_constants.py                       ← 🆕 Automated constant discovery script
+```
+
+**Total:** 55+ documentation files, ~215,000+ lines of documentation
 
 ---
 
-**Last Updated:** 2025-10-19
-**Status:** ✅ DOCUMENTATION COMPLETE - READY FOR PRE-REFACTORING CLEANUP
-**Next Steps:** Begin [PRE_REFACTORING_PLAN.md Phase 1](PRE_REFACTORING_PLAN.md#phase-1-quick-wins---eliminate-obvious-waste) (Create Testing Infrastructure - CRITICAL)
+## Latest Updates (2025-10-19)
+
+### Enhanced Pre-Refactoring Plan
+
+**Three New Critical Documents:**
+
+1. **[AGENT_EXECUTION_PROTOCOL.md](AGENT_EXECUTION_PROTOCOL.md)** - Mandatory compliance requirements
+   - Pre-execution checklists
+   - TodoWrite requirements
+   - Verification protocols
+   - 7 mandatory checkpoints
+   - Issue flagging rules
+   - Testing requirements
+
+2. **[CONSTANTS_MAPPING_GUIDE.md](CONSTANTS_MAPPING_GUIDE.md)** - Constants inventory & migration
+   - Why constants matter (orphan prevention)
+   - Inventory process
+   - Migration strategies
+   - Duplicate detection
+   - Integration with refactoring
+
+3. **[analyze_constants.py](../analyze_constants.py)** - Automated discovery script
+   - Scans all Python files
+   - Finds module-level constants
+   - Detects duplicates
+   - Categorizes by type
+   - Generates markdown report
+
+**Key Enhancements:**
+
+- **Phase 1.5 Added:** Constants mapping (2 hours) - prevents orphaned variables during refactoring
+- **Testing Details Expanded:** Comprehensive testing strategy with 3 levels (unit, integration, smoke)
+- **Agent Compliance:** Strict execution protocol to prevent shortcuts and ensure quality
+- **Constant Tracking:** Addresses gap in documentation - now tracking 119+ constants across 30 files
+
+---
+
+**Last Updated:** 2025-10-19 (Evening)
+**Status:** ✅ DOCUMENTATION COMPLETE - ENHANCED PRE-REFACTORING PLAN READY
+
+**Next Steps:**
+
+1. Review [AGENT_EXECUTION_PROTOCOL.md](AGENT_EXECUTION_PROTOCOL.md) for compliance requirements
+2. Run `python analyze_constants.py > docs/CONSTANTS_INVENTORY.md` to generate constants report
+3. Begin [PRE_REFACTORING_PLAN.md Phase 1, Task 1.4](PRE_REFACTORING_PLAN.md#task-14-create-testing-infrastructure-4-hours) (Testing Infrastructure - CRITICAL)

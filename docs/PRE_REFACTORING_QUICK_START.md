@@ -8,13 +8,23 @@
 
 ## 🚀 Quick Reference
 
-**Total Time:** 28 hours over 4 weeks
+**Total Time:** 30 hours over 4 weeks (updated with Phase 1.5)
 **Current Phase:** Not Started
 **Priority:** Complete Phase 1 (especially testing) before proceeding
 
+**New Since Plan Created:**
+- Phase 1.5: Constants mapping (2 hours) - prevents orphaned variables
+- Agent compliance protocol - ensures quality execution
+- 7 mandatory checkpoints - requires user approval
+
+**Key Documents:**
+- [AGENT_EXECUTION_PROTOCOL.md](AGENT_EXECUTION_PROTOCOL.md) - HOW to execute safely
+- [CONSTANTS_MAPPING_GUIDE.md](CONSTANTS_MAPPING_GUIDE.md) - Constants inventory strategy
+- [PRE_REFACTORING_PLAN.md](PRE_REFACTORING_PLAN.md) - WHAT to execute
+
 ---
 
-## Week 1: Phase 1 - Quick Wins (~8 hours)
+## Week 1: Phase 1 - Quick Wins (~10 hours, updated)
 
 ### ⚠️ CRITICAL: Testing Infrastructure (4 hours) - DO THIS FIRST
 **Why:** Cannot safely refactor without tests
@@ -74,12 +84,31 @@
 
 ---
 
+### Map Constants & Global Variables (2 hours) - NEW PHASE 1.5
+
+**CRITICAL:** Prevents orphaned constants during refactoring
+
+- [ ] Run constants inventory script: `python analyze_constants.py > docs/CONSTANTS_INVENTORY.md`
+- [ ] Review constants report (119+ constants expected)
+- [ ] For each major constant, document usage with grep
+- [ ] Create CONSTANT_MIGRATION_PLAN.md
+- [ ] Update migration_impact.md with constant moves
+- [ ] Test: Verify constants can be imported
+
+**Why:** Functions use constants. If constants don't move WITH functions → NameError
+
+**Reference:** [CONSTANTS_MAPPING_GUIDE.md](CONSTANTS_MAPPING_GUIDE.md)
+
+---
+
 ### Week 1 Success Criteria
 - [ ] Test suite running (≥25 tests)
 - [ ] 370 lines of duplicates removed
 - [ ] 20 unused functions archived
 - [ ] Utility functions consolidated
+- [ ] Constants inventory complete (Phase 1.5)
 - [ ] All tests passing
+- [ ] **Checkpoint 1 passed** (see Agent Protocol)
 - [ ] Git commit: "Phase 1: Quick wins complete"
 
 ---
@@ -123,6 +152,7 @@
 - [ ] All MEDIUM-confidence unused reviewed
 - [ ] Decisions documented
 - [ ] All tests passing
+- [ ] **Checkpoint 2 passed** (see Agent Protocol)
 - [ ] Git commit: "Phase 2: Naming conflicts resolved"
 
 ---
@@ -173,6 +203,7 @@
 - [ ] utils.py organized with section headers
 - [ ] create_round_summary() optimized (≥10x faster)
 - [ ] All tests passing
+- [ ] **Checkpoint 3 passed** (see Agent Protocol)
 - [ ] Git commit: "Phase 3: Technical debt addressed"
 
 ---
@@ -223,6 +254,7 @@ teg_analysis/
 - [ ] Migration sequence documented
 - [ ] API surface defined
 - [ ] Ready to begin refactoring
+- [ ] **Checkpoint 4 passed** (see Agent Protocol)
 - [ ] Git commit: "Phase 4: Migration architecture complete"
 
 ---
@@ -230,10 +262,21 @@ teg_analysis/
 ## Overall Progress Tracker
 
 ### Phases Complete
-- [ ] Phase 1: Quick Wins (Week 1)
+- [ ] Phase 1: Quick Wins (Week 1) - includes Phase 1.5 (Constants)
 - [ ] Phase 2: Naming Conflicts (Week 2)
 - [ ] Phase 3: Technical Debt (Week 3)
 - [ ] Phase 4: Migration Architecture (Week 4)
+
+### Checkpoints Passed
+- [ ] Checkpoint 1: After Phase 1.1 (Delete duplicates)
+- [ ] Checkpoint 2: After Phase 1.2 (Archive unused)
+- [ ] Checkpoint 3: After Phase 1.3 (Add utilities)
+- [ ] Checkpoint 4: After Phase 1.4 (Testing infrastructure)
+- [ ] Checkpoint 5: After Phase 1.5 (Constants mapping)
+- [ ] Checkpoint 6: After Phase 2 (Naming conflicts)
+- [ ] Checkpoint 7: After Phase 3 (Technical debt)
+
+**Note:** Agent MUST stop at each checkpoint for user approval. See [AGENT_EXECUTION_PROTOCOL.md](AGENT_EXECUTION_PROTOCOL.md)
 
 ### Success Metrics
 - [ ] Test coverage: ___% (target: ≥50%)
@@ -241,16 +284,20 @@ teg_analysis/
 - [ ] Functions archived: _____ (target: 20)
 - [ ] Naming conflicts: _____ (target: 0)
 - [ ] Data loaders: _____ (target: 1)
+- [ ] Constants inventoried: _____ (target: 119+)
 - [ ] utils.py sections: _____ (target: 16)
 - [ ] Performance improvements: _____x (target: ≥10x)
 
 ### Ready for Refactoring?
 Answer YES to all before proceeding:
-- [ ] All 4 phases complete
+- [ ] All 4 phases complete (including Phase 1.5)
+- [ ] All 7 checkpoints passed with user approval
 - [ ] Test suite at 100% passing
 - [ ] Zero import errors
 - [ ] All pages functional
+- [ ] Constants inventory complete
 - [ ] Documentation updated
+- [ ] Agent compliance verified
 - [ ] Team aligned on approach
 
 ---
@@ -260,27 +307,29 @@ Answer YES to all before proceeding:
 ### Must Do (Non-Negotiable)
 1. **Testing Infrastructure** (Phase 1.4) - 4 hours
    - Cannot refactor safely without tests
-2. **Delete Within-File Duplicates** (Phase 1.1) - 1 hour
+2. **Constants Mapping** (Phase 1.5) - 2 hours
+   - Prevents orphaned variables during migration
+3. **Delete Within-File Duplicates** (Phase 1.1) - 1 hour
    - Obvious waste, zero risk
-3. **Design Package Structure** (Phase 4.1) - 3 hours
+4. **Design Package Structure** (Phase 4.1) - 3 hours
    - Need target architecture
 
-**Minimum:** 8 hours → Ready for basic refactoring
+**Minimum:** 10 hours → Ready for basic refactoring
 
 ### Should Do (High Value)
-4. Archive Unused Code (Phase 1.2) - 2 hours
-5. Rename Conflicts (Phase 2.1-2.2) - 3 hours
-6. Consolidate Data Loaders (Phase 3.1) - 4 hours
+5. Archive Unused Code (Phase 1.2) - 2 hours
+6. Rename Conflicts (Phase 2.1-2.2) - 3 hours
+7. Consolidate Data Loaders (Phase 3.1) - 4 hours
 
-**Recommended:** 17 hours → Well-prepared for refactoring
+**Recommended:** 19 hours → Well-prepared for refactoring
 
 ### Nice to Have (Optimization)
-7. Add Utilities (Phase 1.3) - 1 hour
-8. Document utils.py (Phase 3.2) - 2 hours
-9. Fix Performance (Phase 3.3) - 2 hours
-10. Define API (Phase 4.3) - 1 hour
+8. Add Utilities (Phase 1.3) - 1 hour
+9. Document utils.py (Phase 3.2) - 2 hours
+10. Fix Performance (Phase 3.3) - 2 hours
+11. Define API (Phase 4.3) - 1 hour
 
-**Complete:** 28 hours → Optimal refactoring readiness
+**Complete:** 30 hours → Optimal refactoring readiness
 
 ---
 
@@ -290,15 +339,19 @@ Answer YES to all before proceeding:
 - Set up testing infrastructure
 - Create first 10 tests
 - Run test suite
+- **Checkpoint 4** (user approval required)
 
 ### Week 1, Day 2 (2-3 hours)
 - Delete within-file duplicates
 - Archive first batch of unused code
 - Run tests
+- **Checkpoint 1** (user approval required)
 
-### Week 1, Day 3 (2 hours)
+### Week 1, Day 3 (2-3 hours)
 - Archive remaining unused code
 - Add utility functions
+- Run constants inventory script
+- **Checkpoints 2, 3, 5** (user approvals required)
 - Full testing
 
 ### Week 2, Day 1 (3 hours)
@@ -379,12 +432,19 @@ If anything breaks:
 - Check full details: [PRE_REFACTORING_PLAN.md](PRE_REFACTORING_PLAN.md)
 - Review relevant docs: [README.md](README.md), [MASTER_DOCUMENTATION_GUIDE.md](MASTER_DOCUMENTATION_GUIDE.md)
 - Check analysis files: [TASK_5_QUICK_REFERENCE.md](TASK_5_QUICK_REFERENCE.md), [analysis/ANALYSIS_SUMMARY_FINAL.md](analysis/ANALYSIS_SUMMARY_FINAL.md)
+- Review constants guide: [CONSTANTS_MAPPING_GUIDE.md](CONSTANTS_MAPPING_GUIDE.md)
 
 **Tests failing?**
 - Check test output for specific error
 - Verify imports are correct
 - Check if function signatures changed
 - Review git diff for unintended changes
+
+**Agent not following protocol?**
+- Review [AGENT_EXECUTION_PROTOCOL.md](AGENT_EXECUTION_PROTOCOL.md)
+- Demand verification for every claim
+- Stop at checkpoints, require approval
+- Challenge unverified work
 
 **Don't know how to proceed?**
 - Review documentation thoroughly
@@ -394,5 +454,28 @@ If anything breaks:
 
 ---
 
-**Last Updated:** 2025-10-19
-**Status:** Ready to begin Phase 1
+## Important Reminders for Agent Execution
+
+**Before starting ANY task, agent must:**
+1. Read full task description
+2. Create TodoWrite checklist
+3. Show understanding to user
+4. Wait for approval
+
+**After EVERY change, agent must:**
+1. Show verification (grep/test output)
+2. Update TodoWrite progress
+3. Run tests
+
+**At EVERY checkpoint, agent must:**
+1. Stop and summarize work
+2. Show evidence
+3. Wait for user approval
+
+**See:** [AGENT_EXECUTION_PROTOCOL.md](AGENT_EXECUTION_PROTOCOL.md) for complete requirements
+
+---
+
+**Last Updated:** 2025-10-19 (Evening)
+**Status:** Enhanced with Phase 1.5 and checkpoints
+**Ready to Begin:** Phase 1, Task 1.4 (Testing Infrastructure)

@@ -436,13 +436,132 @@ pytest tests/ -v
 - [ ] Data loading tests passing (100%)
 - [ ] Helper module tests created (≥10 tests)
 - [ ] Page smoke tests created (≥7 categories)
+- [ ] Constants inventory complete (Phase 1.5)
 - [ ] Documentation updated with testing instructions
 
 **Deliverables:**
 - Cleaned codebase (−600 lines)
 - Working test suite (≥25 tests)
 - Test coverage report
+- Constants inventory report
 - Updated git commit with changes
+
+---
+
+### Task 1.5: Map Constants and Global Variables (~2 hours)
+
+**CRITICAL:** Identify all constants to prevent orphans during refactoring
+
+**Problem:** Functions use constants. If constants don't migrate WITH functions → NameError
+
+**Example Issue:**
+```python
+# utils.py (BEFORE)
+PLAYER_DICT = {...}
+def get_player_name(code):
+    return PLAYER_DICT.get(code)
+
+# teg_analysis/core/players.py (AFTER - BROKEN)
+def get_player_name(code):
+    return PLAYER_DICT.get(code)  # ❌ NameError!
+```
+
+#### Subtask 1.5.1: Run Constants Inventory Script (30 minutes)
+
+**Action:**
+```bash
+# Run automated constant discovery
+python analyze_constants.py > docs/CONSTANTS_INVENTORY.md
+
+# Review output
+cat docs/CONSTANTS_INVENTORY.md
+```
+
+**Expected Output:**
+
+- Complete list of all constants (119+ expected)
+- Locations (file:line)
+- Duplicate detection
+- Categorization (paths, config, data, other)
+
+**Reference:** [CONSTANTS_MAPPING_GUIDE.md](CONSTANTS_MAPPING_GUIDE.md)
+
+#### Subtask 1.5.2: Document Constant Usage (1 hour)
+
+**For each major constant, determine:**
+
+```bash
+# Example: Find all uses of PLAYER_DICT
+grep -r "PLAYER_DICT" streamlit/**/*.py
+
+# Document:
+# - Defined where: utils.py:737
+# - Imported by: 3 files
+# - Used by: get_player_name(), display functions
+# - Migration target: teg_analysis/config/players.py
+```
+
+**Create:** `docs/CONSTANT_MIGRATION_PLAN.md`
+
+```markdown
+# Constant Migration Plan
+
+## Critical Constants (Must Move First)
+
+### BASE_DIR
+- **Location:** utils.py:86
+- **Type:** Path
+- **Used By:** All I/O functions
+- **Migration:** teg_analysis/config/paths.py
+- **Move With:** Phase 1 (I/O Functions)
+- **Risk:** HIGH (breaks all file operations if orphaned)
+
+### ALL_SCORES_PARQUET
+- **Location:** utils.py:92
+- **Type:** str (path)
+- **Used By:** 16+ files
+- **Migration:** teg_analysis/config/paths.py
+- **Move With:** Phase 1 (I/O Functions)
+- **Risk:** HIGH
+
+[... continue for all critical constants ...]
+```
+
+#### Subtask 1.5.3: Plan Constant Migrations (30 minutes)
+
+**Update migration_impact.md with constant moves:**
+
+```markdown
+## Phase 1: I/O Functions + Constants
+
+**Functions to migrate:**
+- read_file()
+- write_file()
+- ...
+
+**Constants to migrate WITH them:**
+- BASE_DIR (needed by _get_local_path)
+- ALL_SCORES_PARQUET (needed by read_file)
+- GITHUB_REPO (needed by GitHub functions)
+- GITHUB_BRANCH (needed by GitHub functions)
+
+**Migration Steps:**
+1. Create teg_analysis/config/paths.py
+2. Create teg_analysis/config/constants.py
+3. Move constants FIRST
+4. Then move functions (will import from new location)
+5. Add re-exports in utils.py (backward compat)
+```
+
+**Testing:**
+```bash
+# After constants moved:
+python -c "from teg_analysis.config.paths import BASE_DIR; print(BASE_DIR)"
+
+# Should print project directory
+```
+
+**Impact:** Prevents orphaned constants, ensures clean migration
 
 ---
 
