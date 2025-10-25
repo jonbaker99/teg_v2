@@ -1,7 +1,7 @@
-"""Analysis Layer - Scoring, rankings, and analysis (Phase III).
+"""Analysis Layer - Scoring, rankings, and analysis.
 
-This package will contain analysis functions including:
-- scoring: Scoring calculations
+This package contains analysis functions for the TEG analysis system including:
+- scoring: Scoring calculations and utilities
 - rankings: Ranking functions
 - aggregation: Data aggregation
 - streaks: Streak analysis
@@ -9,7 +9,23 @@ This package will contain analysis functions including:
 - commentary: Commentary generation
 - pipeline: Data processing pipeline
 
-To be implemented in Phase III.
+Phase III - Modules created, to be fully populated with functions.
 """
 
-__all__ = []
+from . import scoring
+from . import rankings
+from . import aggregation
+from . import streaks
+from . import records
+from . import commentary
+from . import pipeline
+
+__all__ = [
+    'scoring',
+    'rankings',
+    'aggregation',
+    'streaks',
+    'records',
+    'commentary',
+    'pipeline',
+]

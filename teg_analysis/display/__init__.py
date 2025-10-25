@@ -1,11 +1,19 @@
-"""Display Layer - Formatting and display utilities (Phase IV).
+"""Display Layer - Formatting and display utilities.
 
-This package will contain display and formatting functions:
-- formatters: Value formatting
-- tables: Table generation
+This package contains display and formatting functions for the TEG analysis system:
+- formatters: Value formatting and display utilities
+- tables: Table generation functions
 - charts: Chart generation helpers
 
-To be implemented in Phase IV.
+Phase IV - Modules created, to be fully populated with functions.
 """
 
-__all__ = []
+from . import formatters
+from . import tables
+from . import charts
+
+__all__ = [
+    'formatters',
+    'tables',
+    'charts',
+]
