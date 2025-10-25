@@ -1,12 +1,216 @@
 """Ranking calculations and utilities.
 
-Phase III module stub - to be fully implemented.
-This module provides ranking functions for the TEG analysis system.
+This module provides ranking-related functions for the TEG analysis system,
+including rank calculations, best/worst performance identification, and
+ordinal number formatting.
 """
 
 import logging
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
-# Ranking functions to be migrated from utils.py
-# Including: add_ranks, get_ranked_teg_data, get_ranked_round_data, etc.
+
+def add_ranks(df, fields_to_rank=None, rank_ascending=None):
+    """Adds ranking columns to the DataFrame for optionally specified fields or all scoring fields.
+
+    Adds rankings both within each player's rounds and across all rounds.
+    The ranking can be done in ascending or descending order.
+    Ranking will be applied at lowest level of aggregation present in the data.
+
+    Parameters:
+    -----------
+    df : pandas.DataFrame
+        The input DataFrame containing the data.
+        It must include at least a 'Player' column and
+        the fields to be ranked (e.g., 'Sc', 'GrossVP', 'NetVP', 'Stableford').
+
+    fields_to_rank : list or str, optional
+        The fields to rank. This can be a list of field names (e.g., ['Sc', 'GrossVP']) or a single
+        field name as a string (e.g., 'Sc'). If not provided, the default is ['Sc', 'GrossVP', 'NetVP',
+        'Stableford'].
+
+    rank_ascending : bool, optional
+        The order of ranking. If not provided, the function defaults to:
+        - True for all fields except 'Stableford', where it defaults to False.
+        If provided, this will apply the same order for all fields.
+
+    Returns:
+    --------
+    pandas.DataFrame
+        A DataFrame with additional columns for the ranking of each specified field:
+        - 'Rank_within_player_<field>': The rank of the field within each player's rounds.
+        - 'Rank_within_all_<field>': The rank of the field across all rounds.
+
+    Example:
+    --------
+    >>> add_ranks(df, fields_to_rank=['Sc', 'Stableford'], rank_ascending=True)
+    This will add rank columns for 'Sc' and 'Stableford', ranked in ascending order.
+
+    >>> add_ranks(df)
+    This will add rank columns for the default fields ['Sc', 'GrossVP', 'NetVP', 'Stableford']
+    with default ascending/descending order.
+    """
+
+    input_rank_ascending = rank_ascending
+
+    # If fields_to_rank is not provided, use default list of fields
+    if fields_to_rank is None:
+        fields_to_rank = ['Sc', 'GrossVP', 'NetVP', 'Stableford']
+
+    # Check if fields_to_rank is a string, convert to list if necessary
+    if isinstance(fields_to_rank, str):
+        fields_to_rank = [fields_to_rank]
+
+    for field in fields_to_rank:
+        # Determine default value for rank_ascending for each field
+        if input_rank_ascending is None:
+            rank_ascending = False if 'Stableford' in field else True
+
+        # Rank within each Player's scores
+        df[f'Rank_within_player_{field}'] = df.groupby('Player')[field].rank(method='min', ascending=rank_ascending)
+
+        # Rank across all Players
+        df[f'Rank_within_all_{field}'] = df[field].rank(method='min', ascending=rank_ascending)
+
+    return df
+
+
+def get_ranked_teg_data():
+    """Gets complete TEG-level data with rankings added.
+
+    Returns:
+        pd.DataFrame: TEG-level aggregated data with ranking columns.
+    """
+    # Import here to avoid circular dependency
+    from .aggregation import get_complete_teg_data
+
+    df = get_complete_teg_data()
+    ranked_data = add_ranks(df)
+    return ranked_data
+
+
+def get_ranked_round_data():
+    """Gets round-level data with rankings added.
+
+    Returns:
+        pd.DataFrame: Round-level aggregated data with ranking columns.
+    """
+    # Import here to avoid circular dependency
+    from .aggregation import get_round_data
+
+    df = get_round_data()
+    ranked_data = add_ranks(df)
+    return ranked_data
+
+
+def get_ranked_frontback_data():
+    """Gets front/back 9 data with rankings added.
+
+    Returns:
+        pd.DataFrame: 9-hole aggregated data with ranking columns.
+    """
+    # Import here to avoid circular dependency
+    from .aggregation import get_9_data
+
+    df = get_9_data()
+    ranked_data = add_ranks(df)
+    return ranked_data
+
+
+def get_best(df, measure_to_use, player_level=False, top_n=1):
+    """Gets the best performances based on the specified measure.
+
+    Args:
+        df (pd.DataFrame): DataFrame with performance data.
+        measure_to_use (str): Measure to evaluate ('Sc', 'GrossVP', 'NetVP', 'Stableford').
+        player_level (bool): If True, get best per player. If False, get best overall.
+        top_n (int): Number of top performances to return.
+
+    Returns:
+        pd.DataFrame: Filtered DataFrame with top performances.
+    """
+    valid_measures = ['Sc', 'GrossVP', 'NetVP', 'Stableford']
+    if measure_to_use not in valid_measures:
+        error_message = f"Invalid measure: '{measure_to_use}'. Valid options are: {', '.join(valid_measures)}"
+        raise ValueError(error_message)
+
+    if player_level is None:
+        player_level = False
+
+    if top_n is None:
+        top_n = 1
+
+    measure_fn = 'Rank_within_' + ('player' if player_level else 'all') + f'_{measure_to_use}'
+
+    return df[df[measure_fn] <= top_n]
+
+
+def get_worst(df, measure_to_use, player_level=False, top_n=1):
+    """Gets the worst performances based on the specified measure.
+
+    Args:
+        df (pd.DataFrame): DataFrame with performance data.
+        measure_to_use (str): Measure to evaluate ('Sc', 'GrossVP', 'NetVP', 'Stableford').
+        player_level (bool): If True, get worst per player. If False, get worst overall.
+        top_n (int): Number of worst performances to return.
+
+    Returns:
+        pd.DataFrame: Filtered DataFrame with worst performances.
+    """
+    valid_measures = ['Sc', 'GrossVP', 'NetVP', 'Stableford']
+    if measure_to_use not in valid_measures:
+        error_message = f"Invalid measure: '{measure_to_use}'. Valid options are: {', '.join(valid_measures)}"
+        raise ValueError(error_message)
+
+    if player_level is None:
+        player_level = False
+
+    if top_n is None:
+        top_n = 1
+
+    if player_level == False:
+        if measure_to_use == 'Stableford':
+            df = df.nsmallest(top_n, measure_to_use)
+        else:
+            df = df.nlargest(top_n, measure_to_use)
+    else:
+        if measure_to_use == 'Stableford':
+            df = df.groupby('Player', group_keys=False).apply(lambda x: x.nsmallest(top_n, measure_to_use))
+        else:
+            df = df.groupby('Player', group_keys=False).apply(lambda x: x.nlargest(top_n, measure_to_use))
+
+    return df
+
+
+def ordinal(n):
+    """Converts a number to its ordinal representation.
+
+    Args:
+        n (int): The number to convert.
+
+    Returns:
+        str: The ordinal representation (e.g., 1st, 2nd, 3rd, 4th, etc.).
+    """
+    if 11 <= (n % 100) <= 13:
+        suffix = 'th'
+    else:
+        suffix = ['th', 'st', 'nd', 'rd', 'th'][min(n % 10, 4)]
+    return str(n) + suffix
+
+
+def safe_ordinal(n):
+    """Safely converts a number to its ordinal representation, handling NaN and invalid values.
+
+    Args:
+        n: The number to convert (can be NaN or invalid).
+
+    Returns:
+        str or NaN: The ordinal representation, or NaN/string for invalid inputs.
+    """
+    if pd.isna(n):
+        return n  # or return a specific string like 'N/A'
+    try:
+        return ordinal(int(n))
+    except ValueError:
+        return str(n)  # or return a specific string for invalid inputs
