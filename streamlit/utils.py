@@ -595,8 +595,12 @@ TEG_OVERRIDES = {
 # ============================================================================
 
 @_st_cache_data
+# MIGRATED to teg_analysis.core.data_loader.load_all_data
 def load_all_data(exclude_teg_50: bool = True, exclude_incomplete_tegs: bool = False) -> pd.DataFrame:
     """Loads all data from the Parquet file and prepares it for use.
+
+    DEPRECATED: This function has been migrated to teg_analysis.core.data_loader
+    Kept as wrapper for backward compatibility with Streamlit error handling.
 
     This function loads the main data file, merges it with round information,
     and provides options to exclude certain data.
@@ -611,32 +615,11 @@ def load_all_data(exclude_teg_50: bool = True, exclude_incomplete_tegs: bool = F
         pd.DataFrame: The loaded and prepared data as a pandas DataFrame.
     """
     try:
-        df = read_file(ALL_DATA_PARQUET)
+        from teg_analysis.core.data_loader import load_all_data as _load_all_data
+        return _load_all_data(exclude_teg_50, exclude_incomplete_tegs)
     except Exception as e:
         st.error(f"Error loading data: {e}")
         return pd.DataFrame()
-
-    # Load round info data to get Area information
-    try:
-        round_info = read_file(ROUND_INFO_CSV)
-        # Join to get Area information (select only columns we need to avoid duplicates)
-        round_info_subset = round_info[['TEGNum', 'Round', 'Area']].copy()
-        df = df.merge(round_info_subset, on=['TEGNum', 'Round'], how='left')
-    except Exception as e:
-        st.warning(f"Could not load round info for Area data: {e}")
-
-    # Ensure 'Year' is of integer type
-    df['Year'] = df['Year'].astype('Int64')
-
-    # Exclude TEG 50 if the flag is set
-    if exclude_teg_50:
-        df = df[df['TEGNum'] != 50]
-
-    # Exclude incomplete TEGs if the flag is set
-    if exclude_incomplete_tegs:
-        df = exclude_incomplete_tegs_function(df)
-
-    return df
 
 
 def get_number_of_completed_rounds_by_teg(df: pd.DataFrame) -> pd.DataFrame:
@@ -711,8 +694,12 @@ def exclude_incomplete_tegs_function(df: pd.DataFrame) -> pd.DataFrame:
     return df_filtered
 
 
+# MIGRATED to teg_analysis.core.data_loader.get_player_name
 def get_player_name(initials: str) -> str:
     """Retrieves the full name of a player from their initials.
+
+    DEPRECATED: This function has been migrated to teg_analysis.core.data_loader
+    Kept as wrapper for backward compatibility.
 
     Args:
         initials (str): The initials of the player.
@@ -721,7 +708,8 @@ def get_player_name(initials: str) -> str:
         str: The full name of the player, or 'Unknown Player' if the
         initials are not found.
     """
-    return PLAYER_DICT.get(initials.upper(), 'Unknown Player')
+    from teg_analysis.core.data_loader import get_player_name as _get_player_name
+    return _get_player_name(initials)
 
 
 def process_round_for_all_scores(long_df: pd.DataFrame, hc_long: pd.DataFrame) -> pd.DataFrame:
@@ -1291,9 +1279,13 @@ def load_and_prepare_handicap_data(file_path: str) -> pd.DataFrame:
     return hc_long
 
 
+# MIGRATED to teg_analysis.core.data_transforms.summarise_existing_rd_data
 def summarise_existing_rd_data(existing_rows: pd.DataFrame) -> pd.DataFrame:
     """
     Summarize existing round data.
+
+    DEPRECATED: This function has been migrated to teg_analysis.core.data_transforms
+    Kept as wrapper for backward compatibility.
 
     Parameters:
         existing_rows (pd.DataFrame): DataFrame containing existing rows.
@@ -1301,12 +1293,8 @@ def summarise_existing_rd_data(existing_rows: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: Pivoted summary DataFrame.
     """
-    logger.info("Summarizing existing round data.")
-    existing_summary_df = existing_rows.groupby(['TEGNum', 'Round', 'Pl'])['Sc'].sum().reset_index()
-    existing_summary_pivot = existing_summary_df.pivot(index='Pl', columns=['Round', 'TEGNum'], values='Sc')
-    summary = existing_summary_pivot.fillna('-').astype(str).replace(r'\.0$', '', regex=True)
-    logger.info("Existing round data summarized.")
-    return summary
+    from teg_analysis.core.data_transforms import summarise_existing_rd_data as _summarise_existing_rd_data
+    return _summarise_existing_rd_data(existing_rows)
 
 
 def add_round_info(all_data: pd.DataFrame) -> pd.DataFrame:
@@ -2535,9 +2523,13 @@ def create_tournament_streaks_summary(all_data_df=None, streaks_df=None):
     return final_df
 
 
+# MIGRATED to teg_analysis.core.data_transforms.check_for_complete_and_duplicate_data
 def check_for_complete_and_duplicate_data(all_scores_path: str, all_data_path: str) -> Dict[str, pd.DataFrame]:
     """
     Check for complete and duplicate data in the all-scores (CSV) and all-data (Parquet) files.
+
+    DEPRECATED: This function has been migrated to teg_analysis.core.data_transforms
+    Kept as wrapper for backward compatibility.
 
     Parameters:
         all_scores_path (str): Path to the all-scores CSV file.
@@ -2546,55 +2538,8 @@ def check_for_complete_and_duplicate_data(all_scores_path: str, all_data_path: s
     Returns:
         Dict[str, pd.DataFrame]: Summary of incomplete and duplicate data.
     """
-    logger.info("Checking for complete and duplicate data.")
-
-    # Load the all-scores CSV file and the all-data Parquet file
-    all_scores_df = read_file(all_scores_path)
-    all_data_df = read_file(all_data_path)
-    logger.debug("All-scores and all-data files loaded.")
-
-    # Group by TEG, Round, and Player and count the number of entries
-    all_scores_count = all_scores_df.groupby(['TEGNum', 'Round', 'Pl']).size().reset_index(name='EntryCount')
-    all_data_count = all_data_df.groupby(['TEGNum', 'Round', 'Pl']).size().reset_index(name='EntryCount')
-
-    # Check for incomplete and duplicate data in all-scores.csv
-    incomplete_scores = all_scores_count[all_scores_count['EntryCount'] < TOTAL_HOLES]
-    duplicate_scores = all_scores_count[all_scores_count['EntryCount'] > TOTAL_HOLES]
-
-    # Check for incomplete and duplicate data in all-data.parquet
-    incomplete_data = all_data_count[all_data_count['EntryCount'] < TOTAL_HOLES]
-    duplicate_data = all_data_count[all_data_count['EntryCount'] > TOTAL_HOLES]
-
-    # Summarize the results
-    summary: Dict[str, Any] = {
-        'incomplete_scores': incomplete_scores,
-        'duplicate_scores': duplicate_scores,
-        'incomplete_data': incomplete_data,
-        'duplicate_data': duplicate_data
-    }
-
-    # Log the summary
-    if not incomplete_scores.empty:
-        logger.warning("Incomplete data found in all-scores.csv.")
-    else:
-        logger.info("No incomplete data found in all-scores.csv.")
-
-    if not duplicate_scores.empty:
-        logger.warning("Duplicate data found in all-scores.csv.")
-    else:
-        logger.info("No duplicate data found in all-scores.csv.")
-
-    if not incomplete_data.empty:
-        logger.warning("Incomplete data found in all-data.parquet.")
-    else:
-        logger.info("No incomplete data found in all-data.parquet.")
-
-    if not duplicate_data.empty:
-        logger.warning("Duplicate data found in all-data.parquet.")
-    else:
-        logger.info("No duplicate data found in all-data.parquet.")
-
-    return summary
+    from teg_analysis.core.data_transforms import check_for_complete_and_duplicate_data as _check_for_complete_and_duplicate_data
+    return _check_for_complete_and_duplicate_data(all_scores_path, all_data_path)
 
 # ============================================================================
 # SECTION 7A: AGGREGATION - CORE (10 functions)
@@ -2646,9 +2591,13 @@ def get_tegnum_rounds(TEGNum: int) -> int:
     """
     return TEGNUM_ROUNDS.get(TEGNum, 4)
 
+# MIGRATED to teg_analysis.display.formatters.format_vs_par
 def format_vs_par(value: float) -> str:
     """
     Format the value against par.
+
+    DEPRECATED: This function has been migrated to teg_analysis.display.formatters
+    Kept as wrapper for backward compatibility.
 
     Parameters:
         value (float): The value to format.
@@ -2656,45 +2605,44 @@ def format_vs_par(value: float) -> str:
     Returns:
         str: Formatted string.
     """
-    if pd.isna(value):
-        return ""
-    value = int(value)
-    if value > 0:
-        return f"+{value}"
-    elif value < 0:
-        return f"{value}"
-    else:
-        return "="
+    from teg_analysis.display.formatters import format_vs_par as _format_vs_par
+    return _format_vs_par(value)
 
 
+# MIGRATED to teg_analysis.analysis.scoring.get_net_competition_measure
 def get_net_competition_measure(teg_num: int) -> str:
     """
     Return the scoring measure to use for the net competition based on TEG number.
-    
+
+    DEPRECATED: This function has been migrated to teg_analysis.analysis.scoring
+    Kept as wrapper for backward compatibility.
+
     Up to TEG 7, the net competition was based on total net vs par (NetVP).
     From TEG 8 onwards, the net competition is based on total stableford points.
-    
+
     Parameters:
         teg_num (int): The TEG number
-        
+
     Returns:
         str: 'NetVP' for TEG 1-7, 'Stableford' for TEG 8+
-        
+
     Examples:
         >>> get_net_competition_measure(3)
         'NetVP'
         >>> get_net_competition_measure(8)
         'Stableford'
     """
-    if teg_num <= 7:
-        return 'NetVP'
-    else:
-        return 'Stableford'
+    from teg_analysis.analysis.scoring import get_net_competition_measure as _get_net_competition_measure
+    return _get_net_competition_measure(teg_num)
 
 
+# MIGRATED to teg_analysis.analysis.aggregation.get_teg_winners
 def get_teg_winners(df: pd.DataFrame) -> pd.DataFrame:
     """
     Generate TEG winners, best net, gross, and worst net by TEG.
+
+    DEPRECATED: This function has been migrated to teg_analysis.analysis.aggregation
+    Kept as wrapper for backward compatibility.
 
     Parameters:
         df (pd.DataFrame): DataFrame containing the golf data.
@@ -2702,80 +2650,19 @@ def get_teg_winners(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: DataFrame summarizing TEG winners.
     """
-    logger.info("Calculating TEG winners.")
-
-    # Group by 'TEGNum' and 'Player', and calculate the sum for each player in each TEG
-    grouped = df.groupby(['TEGNum', 'Player']).agg({
-        'GrossVP': 'sum',
-        'NetVP': 'sum',
-        'Stableford': 'sum'
-    }).reset_index()
-
-    results = []
-
-    # Get unique TEG numbers
-    for teg_num in df['TEGNum'].unique():
-        # Filter data for the current TEG
-        teg_data = grouped[grouped['TEGNum'] == teg_num]
-        
-        # Determine which measure to use for net competition based on TEG number
-        net_measure = get_net_competition_measure(teg_num)
-
-        # Identify the best gross, best net, and worst net players
-        best_gross_player = teg_data.loc[teg_data['GrossVP'].idxmin(), 'Player']
-        
-        if net_measure == 'NetVP':
-            # For TEG 1-5: Lower NetVP is better (closer to or under par)
-            best_net_player = teg_data.loc[teg_data['NetVP'].idxmin(), 'Player']
-            worst_net_player = teg_data.loc[teg_data['NetVP'].idxmax(), 'Player']
-        else:
-            # For TEG 6+: Higher Stableford is better
-            best_net_player = teg_data.loc[teg_data['Stableford'].idxmax(), 'Player']
-            worst_net_player = teg_data.loc[teg_data['Stableford'].idxmin(), 'Player']
-
-        # Apply manual overrides if any
-        teg_label = f"TEG {teg_num}"
-        overrides = TEG_OVERRIDES.get(teg_label, {})
-        best_gross_player = overrides.get('Best Gross', best_gross_player)
-        best_net_player = overrides.get('Best Net', best_net_player)
-        worst_net_player = overrides.get('Worst Net', worst_net_player)
-
-        # Append the results
-        results.append({
-            'TEGNum': teg_num,
-            'TEG': teg_label,
-            'Best Gross': best_gross_player,
-            'Best Net': best_net_player,
-            'Worst Net': worst_net_player
-        })
-
-    # Convert results to a DataFrame
-    result_df = pd.DataFrame(results).sort_values(by='TEGNum')
-
-    # Merge with year data from df
-    teg_years = df[['TEGNum', 'Year']].drop_duplicates()
-    result_df = result_df.merge(teg_years, on='TEGNum', how='left')
-
-    # Rename columns
-    result_df.rename(columns={
-        'Best Net': 'TEG Trophy',
-        'Best Gross': 'Green Jacket',
-        'Worst Net': 'HMM Wooden Spoon',
-        'Year': 'Year'
-    }, inplace=True)
-
-    # Select and order columns
-    result_df = result_df[['TEG', 'Year', 'TEG Trophy', 'Green Jacket', 'HMM Wooden Spoon']]
-
-    logger.info("TEG winners calculated.")
-    return result_df
+    from teg_analysis.analysis.aggregation import get_teg_winners as _get_teg_winners
+    return _get_teg_winners(df)
 
 from typing import List
 import pandas as pd
 
+# MIGRATED to teg_analysis.analysis.aggregation.aggregate_data
 def aggregate_data(data: pd.DataFrame, aggregation_level: str, measures: List[str] = None, additional_group_fields: List[str] = None) -> pd.DataFrame:
     """
     Generalized aggregation function with dynamic level of aggregation and additional group fields.
+
+    DEPRECATED: This function has been migrated to teg_analysis.analysis.aggregation
+    Kept as wrapper for backward compatibility.
 
     Parameters:
         data (pd.DataFrame): The DataFrame to aggregate.
@@ -2786,50 +2673,8 @@ def aggregate_data(data: pd.DataFrame, aggregation_level: str, measures: List[st
     Returns:
         pd.DataFrame: Aggregated DataFrame.
     """
-    # Set default measures if none provided
-    if measures is None:
-        measures = ['Sc', 'GrossVP', 'NetVP', 'Stableford']
-
-    # Get the fields related to each aggregation level
-    fields_by_level = list_fields_by_aggregation_level(data)
-
-    # Define the hierarchy of aggregation levels
-    aggregation_hierarchy = ['Player', 'TEG', 'Round', 'FrontBack', 'Hole']
-
-    if aggregation_level not in aggregation_hierarchy:
-        raise ValueError(f"Invalid aggregation level: '{aggregation_level}'. Choose from: {aggregation_hierarchy}")
-
-    # Determine which fields to include based on the selected aggregation level
-    idx = aggregation_hierarchy.index(aggregation_level)
-    group_columns = []
-
-    # Add all fields from the selected aggregation level and higher levels
-    for level in aggregation_hierarchy[:idx + 1]:
-        group_columns.extend(fields_by_level[level])
-
-    # Add additional group fields if provided
-    if additional_group_fields:
-        if isinstance(additional_group_fields, str):
-            additional_group_fields = [additional_group_fields]  # Wrap in a list if it's a string
-        group_columns.extend(additional_group_fields)
-
-    # Ensure group columns are unique
-    group_columns = list(set(group_columns))
-
-    # Debug: Print group columns and check if they exist in the DataFrame
-    #print(f"Group columns: {group_columns}")
-    #print(f"DataFrame columns: {data.columns.tolist()}")
-
-    # Check if all group_columns are present in the DataFrame
-    missing_columns = [col for col in group_columns if col not in data.columns]
-    if missing_columns:
-        raise ValueError(f"Missing columns in the DataFrame: {missing_columns}")
-
-    # Perform aggregation
-    aggregated_df = data.groupby(group_columns, as_index=False)[measures].sum()
-    aggregated_df = aggregated_df.sort_values(by=group_columns)
-
-    return aggregated_df
+    from teg_analysis.analysis.aggregation import aggregate_data as _aggregate_data
+    return _aggregate_data(data, aggregation_level, measures, additional_group_fields)
 
 @_st_cache_data
 def get_complete_teg_data():
@@ -2890,23 +2735,26 @@ def list_fields_by_aggregation_level(df):
 #     print(f"Fields unique at {level} level: {fields}")
 
 
+# MIGRATED to teg_analysis.analysis.rankings.add_ranks
 def add_ranks(df, fields_to_rank=None, rank_ascending=None):
-
     """
-    Adds ranking columns to the DataFrame for optionally specified fields or all scoring fields, both within each player's rounds 
+    Adds ranking columns to the DataFrame for optionally specified fields or all scoring fields, both within each player's rounds
     and across all rounds. The ranking can be done in ascending or descending order.
     Ranking will be applied at lowest level of aggregation present in the data.
+
+    DEPRECATED: This function has been migrated to teg_analysis.analysis.rankings
+    Kept as wrapper for backward compatibility.
 
     Parameters:
     -----------
     df : pandas.DataFrame
-        The input DataFrame containing the data. 
-        It must include at least a 'Player' column and 
+        The input DataFrame containing the data.
+        It must include at least a 'Player' column and
         the fields to be ranked (e.g., 'Sc', 'GrossVP', 'NetVP', 'Stableford').
 
     fields_to_rank : list or str, optional
-        The fields to rank. This can be a list of field names (e.g., ['Sc', 'GrossVP']) or a single 
-        field name as a string (e.g., 'Sc'). If not provided, the default is ['Sc', 'GrossVP', 'NetVP', 
+        The fields to rank. This can be a list of field names (e.g., ['Sc', 'GrossVP']) or a single
+        field name as a string (e.g., 'Sc'). If not provided, the default is ['Sc', 'GrossVP', 'NetVP',
         'Stableford'].
 
     rank_ascending : bool, optional
@@ -2925,36 +2773,13 @@ def add_ranks(df, fields_to_rank=None, rank_ascending=None):
     --------
     >>> add_ranks_for_fields(df, fields_to_rank=['Sc', 'Stableford'], rank_ascending=True)
     This will add rank columns for 'Sc' and 'Stableford', ranked in ascending order.
-    
+
     >>> add_ranks_for_fields(df)
-    This will add rank columns for the default fields ['Sc', 'GrossVP', 'NetVP', 'Stableford'] 
+    This will add rank columns for the default fields ['Sc', 'GrossVP', 'NetVP', 'Stableford']
     with default ascending/descending order.
     """
-
-    input_rank_ascending = rank_ascending
-
-    # If fields_to_rank is not provided, use default list of fields
-    if fields_to_rank is None:
-        fields_to_rank = ['Sc', 'GrossVP', 'NetVP', 'Stableford']
-    
-    # Check if fields_to_rank is a string, convert to list if necessary
-    if isinstance(fields_to_rank, str):
-        fields_to_rank = [fields_to_rank]
-    
-    for field in fields_to_rank:
-        # Determine default value for rank_ascending for each field
-        if input_rank_ascending is None:
-            rank_ascending = False if 'Stableford' in field else True
-        
-        #print(f'===================\nField: {field}\ninput_rank_asc: {input_rank_ascending}\nRank ascending:{rank_ascending}')
-
-        # Rank within each Player's scores
-        df[f'Rank_within_player_{field}'] = df.groupby('Player')[field].rank(method='min', ascending=rank_ascending)
-        
-        # Rank across all Players
-        df[f'Rank_within_all_{field}'] = df[field].rank(method='min', ascending=rank_ascending)
-    
-    return df
+    from teg_analysis.analysis.rankings import add_ranks as _add_ranks
+    return _add_ranks(df, fields_to_rank, rank_ascending)
 
 @_st_cache_data
 def get_ranked_teg_data():
@@ -2974,54 +2799,38 @@ def get_ranked_frontback_data():
     ranked_data = add_ranks(df)
     return ranked_data
 
+# MIGRATED to teg_analysis.analysis.rankings.get_best
 def get_best(df, measure_to_use, player_level = False, top_n = 1):
-    valid_measures = ['Sc', 'GrossVP', 'NetVP', 'Stableford']
-    if measure_to_use not in valid_measures:
-        error_message = f"Invalid measure: '{measure_to_use}'. Valid options are: {', '.join(valid_measures)}"
+    """
+    Get the best records for a given measure.
 
-    if player_level is None:
-        player_level = False
+    DEPRECATED: This function has been migrated to teg_analysis.analysis.rankings
+    Kept as wrapper for backward compatibility.
+    """
+    from teg_analysis.analysis.rankings import get_best as _get_best
+    return _get_best(df, measure_to_use, player_level, top_n)
 
-    if top_n is None:
-        top_n = 1
-    
-    measure_fn = 'Rank_within_' + ('player' if player_level else 'all') + f'_{measure_to_use}' 
-
-    #measure_fn
-    return df[df[measure_fn] <= top_n]
-
+# MIGRATED to teg_analysis.analysis.rankings.get_worst
 def get_worst(df, measure_to_use, player_level = False, top_n = 1):
-    valid_measures = ['Sc', 'GrossVP', 'NetVP', 'Stableford']
-    if measure_to_use not in valid_measures:
-        error_message = f"Invalid measure: '{measure_to_use}'. Valid options are: {', '.join(valid_measures)}"
+    """
+    Get the worst records for a given measure.
 
-    if player_level is None:
-        player_level = False
+    DEPRECATED: This function has been migrated to teg_analysis.analysis.rankings
+    Kept as wrapper for backward compatibility.
+    """
+    from teg_analysis.analysis.rankings import get_worst as _get_worst
+    return _get_worst(df, measure_to_use, player_level, top_n)
 
-    if top_n is None:
-        top_n = 1
-    
-    #measure_fn = 'Rank_within_' + ('player' if player_level else 'all') + f'_{measure_to_use}' 
-
-    if player_level == False:
-        if measure_to_use == 'Stableford':
-            df = df.nsmallest(top_n, measure_to_use)
-        else:
-            df = df.nlargest(top_n, measure_to_use)
-    else:
-        if measure_to_use == 'Stableford':
-            df = df.groupby('Player', group_keys=False).apply(lambda x: x.nsmallest(top_n, measure_to_use))
-        else:
-            df = df.groupby('Player', group_keys=False).apply(lambda x: x.nlargest(top_n, measure_to_use))
-
-    return df
-
+# MIGRATED to teg_analysis.analysis.rankings.ordinal
 def ordinal(n):
-    if 11 <= (n % 100) <= 13:
-        suffix = 'th'
-    else:
-        suffix = ['th', 'st', 'nd', 'rd', 'th'][min(n % 10, 4)]
-    return str(n) + suffix
+    """
+    Convert a number to its ordinal representation (1st, 2nd, 3rd, etc.).
+
+    DEPRECATED: This function has been migrated to teg_analysis.analysis.rankings
+    Kept as wrapper for backward compatibility.
+    """
+    from teg_analysis.analysis.rankings import ordinal as _ordinal
+    return _ordinal(n)
 
 def safe_ordinal(n):
     if pd.isna(n):
@@ -3201,47 +3010,40 @@ def create_stat_section(title, value=None, df=None, divider=None):
 
 import pandas as pd
 
+# MIGRATED to teg_analysis.display.tables.define_score_types
 def define_score_types(gross_vp):
     """
     Define score types based on the GrossVP values.
-    
+
+    DEPRECATED: This function has been migrated to teg_analysis.display.tables
+    Kept as wrapper for backward compatibility.
+
     Args:
     gross_vp (pd.Series): A pandas Series containing GrossVP values.
-    
+
     Returns:
     dict: A dictionary with counts for each score type.
     """
-    return {
-        'Pars_or_Better': (gross_vp <= 0).sum(),
-        'Birdies': (gross_vp == -1).sum(),
-        'Eagles': (gross_vp == -2).sum(),
-        'TBPs': (gross_vp > 2).sum()
-    }
+    from teg_analysis.display.tables import define_score_types as _define_score_types
+    return _define_score_types(gross_vp)
 
+# MIGRATED to teg_analysis.display.tables.apply_score_types
 def apply_score_types(df, groupby_cols=['Player']):
     """
     Apply score type definitions to a DataFrame and return aggregated results.
-    
+
+    DEPRECATED: This function has been migrated to teg_analysis.display.tables
+    Kept as wrapper for backward compatibility.
+
     Args:
     df (pd.DataFrame): The input DataFrame with a 'GrossVP' column.
     groupby_cols (list): Columns to group by before applying score types.
-    
+
     Returns:
     pd.DataFrame: Aggregated results with score type counts.
     """
-    grouped = df.groupby(groupby_cols).agg({
-        'GrossVP': define_score_types
-    }).reset_index()
-    
-    # Expand the dictionary result into separate columns
-    score_columns = ['Pars_or_Better', 'Birdies', 'Eagles', 'TBPs']
-    for col in score_columns:
-        grouped[col] = grouped['GrossVP'].apply(lambda x: x[col])
-    
-    # Drop the original 'GrossVP' column containing the dictionary
-    grouped = grouped.drop(columns=['GrossVP'])
-    
-    return grouped
+    from teg_analysis.display.tables import apply_score_types as _apply_score_types
+    return _apply_score_types(df, groupby_cols)
 
 def score_type_stats(df=None):
 
@@ -3401,35 +3203,23 @@ service_account_info = {
     "universe_domain": os.getenv('GOOGLE_UNIVERSE_DOMAIN'),
 }
 
+# MIGRATED to teg_analysis.core.metadata.get_teg_metadata
 def get_teg_metadata(teg_num, round_num=None):
     """
     Get TEG metadata from round_info.csv
-    
+
+    DEPRECATED: This function has been migrated to teg_analysis.core.metadata
+    Kept as wrapper for backward compatibility.
+
     Args:
         teg_num: TEG number
         round_num: Optional round number for round-specific data
-    
+
     Returns:
         dict: Metadata including area, course, date, year
     """
-    try:
-        round_info = read_file(ROUND_INFO_CSV)
-        
-        if round_num:
-            # Get specific round data
-            round_data = round_info[(round_info['TEGNum'] == teg_num) & 
-                                  (round_info['Round'] == round_num)]
-            if round_data.empty:
-                return {}
-            return round_data.iloc[0].to_dict()
-        else:
-            # Get TEG-level data (from first round)
-            teg_data = round_info[round_info['TEGNum'] == teg_num]
-            if teg_data.empty:
-                return {}
-            return teg_data.iloc[0].to_dict()
-    except Exception:
-        return {}
+    from teg_analysis.core.metadata import get_teg_metadata as _get_teg_metadata
+    return _get_teg_metadata(teg_num, round_num)
 
 def format_date_for_scorecard(date_str, input_format=None, output_format='%d/%m/%y'):
     """
@@ -3495,51 +3285,30 @@ def format_date_for_scorecard(date_str, input_format=None, output_format='%d/%m/
     except Exception:
         return date_str
 
+# MIGRATED to teg_analysis.core.metadata.get_scorecard_data
 def get_scorecard_data(teg_num=None, round_num=None, player_code=None):
     """
     Get golf data for scorecard generation with optional filtering by TEG, Round, and/or Player
-    
+
+    DEPRECATED: This function has been migrated to teg_analysis.core.metadata
+    Kept as wrapper for backward compatibility.
+
     Args:
         teg_num: Optional TEG number filter
-        round_num: Optional round number filter  
+        round_num: Optional round number filter
         player_code: Optional player code filter (e.g., 'JB')
-    
+
     Returns:
         pd.DataFrame: Filtered and sorted data
-        
+
     Examples:
         get_scorecard_data(18, 2, 'JB')     # One player's round
         get_scorecard_data(18, 2)           # All players in round 2 of TEG 18
         get_scorecard_data(18, player_code='JB')  # One player's tournament
         get_scorecard_data(18)              # All data for TEG 18
     """
-    all_data = load_all_data(exclude_incomplete_tegs=False)
-    
-    # Apply filters if provided
-    if teg_num is not None:
-        all_data = all_data[all_data['TEGNum'] == teg_num]
-    
-    if round_num is not None:
-        all_data = all_data[all_data['Round'] == round_num]
-    
-    if player_code is not None:
-        all_data = all_data[all_data['Pl'] == player_code]
-    
-    # Sort appropriately based on what filters were applied
-    if player_code is not None and round_num is not None:
-        # Single player, single round - sort by hole
-        sort_cols = ['Hole']
-    elif round_num is not None:
-        # Single round, multiple players - sort by player then hole
-        sort_cols = ['Pl', 'Hole']
-    else:
-        # Multiple rounds - sort by round then hole
-        sort_cols = ['Round', 'Hole']
-        if player_code is None:
-            # Multiple players too - add player to sort
-            sort_cols = ['Pl'] + sort_cols
-    
-    return all_data.sort_values(sort_cols)
+    from teg_analysis.core.metadata import get_scorecard_data as _get_scorecard_data
+    return _get_scorecard_data(teg_num, round_num, player_code)
 
 ### CONVERT TROPHY NAMES BETWEEN SHORT VERSIONS AND FULL NAMES
 
@@ -3553,9 +3322,13 @@ TROPHY_NAME_LOOKUPS_SHORTLONG = {
 # long -> short (keys normalised to lowercase for case-insensitive input)
 TROPHY_NAME_LOOKUPS_LONGSHORT = {v.lower(): k for k, v in TROPHY_NAME_LOOKUPS_SHORTLONG.items()}
 
+# MIGRATED to teg_analysis.display.navigation.convert_trophy_name
 def convert_trophy_name(name: str) -> str:
     """
     Convert between short and long trophy names.
+
+    DEPRECATED: This function has been migrated to teg_analysis.display.navigation
+    Kept as wrapper for backward compatibility.
 
     Input is case-insensitive.
     Output always uses the canonical form from TROPHY_NAME_LOOKUPS.
@@ -3566,20 +3339,16 @@ def convert_trophy_name(name: str) -> str:
         convert_trophy_name("jacket")       -> "Green Jacket"
         convert_trophy_name("green jacket") -> "jacket"
     """
-    key = name.strip().lower()
+    from teg_analysis.display.navigation import convert_trophy_name as _convert_trophy_name
+    return _convert_trophy_name(name)
 
-    # short -> long
-    if key in TROPHY_NAME_LOOKUPS_SHORTLONG:
-        return TROPHY_NAME_LOOKUPS_SHORTLONG[key]
-    # long -> short
-    if key in TROPHY_NAME_LOOKUPS_LONGSHORT:
-        return TROPHY_NAME_LOOKUPS_LONGSHORT[key]
-
-    raise ValueError(f"Unknown trophy name: {name!r}")
-
+# MIGRATED to teg_analysis.display.navigation.get_trophy_full_name
 def get_trophy_full_name(trophy: str) -> str:
     """
     Get the full name of a trophy given its short name.
+
+    DEPRECATED: This function has been migrated to teg_analysis.display.navigation
+    Kept as wrapper for backward compatibility.
 
     Args:
         trophy (str): The short name of the trophy.
@@ -3587,23 +3356,20 @@ def get_trophy_full_name(trophy: str) -> str:
     Returns:
         str: The full name of the trophy.
     """
-    key = trophy.strip()
-    
-    if key.lower() in TROPHY_NAME_LOOKUPS_LONGSHORT:  
-        # it's already a long name → use as-is
-        trophy_name = key
-    else:
-        # otherwise assume it's a short name → convert
-        trophy_name = convert_trophy_name(key)
+    from teg_analysis.display.navigation import get_trophy_full_name as _get_trophy_full_name
+    return _get_trophy_full_name(trophy)
 
-    return trophy_name
-
+# MIGRATED to teg_analysis.core.metadata.load_course_info
 @_st_cache_data
 def load_course_info():
-    """Load unique course/area combinations from round_info.csv"""
-    round_info = read_file(ROUND_INFO_CSV)
-    course_info = round_info[['Course', 'Area']].drop_duplicates()
-    return course_info
+    """
+    Load unique course/area combinations from round_info.csv
+
+    DEPRECATED: This function has been migrated to teg_analysis.core.metadata
+    Kept as wrapper for backward compatibility with Streamlit caching.
+    """
+    from teg_analysis.core.metadata import load_course_info as _load_course_info
+    return _load_course_info()
 
 
 def get_teg_filter_options(all_data):
@@ -3624,26 +3390,27 @@ def get_teg_filter_options(all_data):
     return tegnum_options
 
 
+# MIGRATED to teg_analysis.analysis.aggregation.filter_data_by_teg
 def filter_data_by_teg(all_data, selected_tegnum):
     """
     Filter data by selected TEG tournament.
-    
+
+    DEPRECATED: This function has been migrated to teg_analysis.analysis.aggregation
+    Kept as wrapper for backward compatibility.
+
     Args:
         all_data (pd.DataFrame): Complete tournament data
         selected_tegnum: Selected TEG number or "All TEGs"
-        
+
     Returns:
         pd.DataFrame: Filtered data for selected tournament or complete data
-        
+
     Purpose:
         Applies consistent TEG filtering logic across different analysis pages
         Returns complete dataset when "All TEGs" is selected
     """
-    if selected_tegnum != 'All TEGs':
-        selected_tegnum_int = int(selected_tegnum)
-        return all_data[all_data['TEGNum'] == selected_tegnum_int]
-    else:
-        return all_data
+    from teg_analysis.analysis.aggregation import filter_data_by_teg as _filter_data_by_teg
+    return _filter_data_by_teg(all_data, selected_tegnum)
 
 
 def get_hc(TEG_needed: int | None = None) -> pd.DataFrame:
@@ -3919,89 +3686,76 @@ def get_next_teg_and_check_if_in_progress_fast():
         return get_next_teg_and_check_if_in_progress()
 
 
+# MIGRATED to teg_analysis.analysis.aggregation.get_last_completed_teg_fast
 def get_last_completed_teg_fast():
     """
     Get the highest TEG number from completed_tegs.csv with round count.
 
+    DEPRECATED: This function has been migrated to teg_analysis.analysis.aggregation
+    Kept as wrapper for backward compatibility.
+
     Returns:
         tuple: (teg_num, rounds) or (None, 0) if no completed TEGs
     """
-    try:
-        completed_tegs = read_file('data/completed_tegs.csv')
-        if completed_tegs.empty:
-            return None, 0
-
-        max_row = completed_tegs.loc[completed_tegs['TEGNum'].idxmax()]
-        return max_row['TEGNum'], max_row['Rounds']
-
-    except Exception as e:
-        logger.warning(f"Error reading completed TEGs status file: {e}")
-        return None, 0
+    from teg_analysis.analysis.aggregation import get_last_completed_teg_fast as _get_last_completed_teg_fast
+    return _get_last_completed_teg_fast()
 
 
+# MIGRATED to teg_analysis.analysis.aggregation.get_current_in_progress_teg_fast
 def get_current_in_progress_teg_fast():
     """
     Get the current in-progress TEG with round count.
 
+    DEPRECATED: This function has been migrated to teg_analysis.analysis.aggregation
+    Kept as wrapper for backward compatibility.
+
     Returns:
         tuple: (teg_num, rounds) or (None, 0) if no TEGs in progress
     """
-    try:
-        in_progress_tegs = read_file('data/in_progress_tegs.csv')
-        if in_progress_tegs.empty:
-            return None, 0
-
-        # Should typically be only one in-progress TEG, get the first one
-        current_row = in_progress_tegs.iloc[0]
-        return current_row['TEGNum'], current_row['Rounds']
-
-    except Exception as e:
-        logger.warning(f"Error reading in-progress TEGs status file: {e}")
-        return None, 0
+    from teg_analysis.analysis.aggregation import get_current_in_progress_teg_fast as _get_current_in_progress_teg_fast
+    return _get_current_in_progress_teg_fast()
 
 
+# MIGRATED to teg_analysis.analysis.aggregation.has_incomplete_teg_fast
 def has_incomplete_teg_fast():
     """
     Fast check if there are any incomplete TEGs using status files.
 
+    DEPRECATED: This function has been migrated to teg_analysis.analysis.aggregation
+    Kept as wrapper for backward compatibility.
+
     Returns:
         bool: True if there are TEGs in progress, False otherwise
     """
-    try:
-        in_progress_tegs = read_file('data/in_progress_tegs.csv')
-        return not in_progress_tegs.empty
-
-    except Exception as e:
-        logger.warning(f"Error checking for incomplete TEGs: {e}")
-        return False
+    from teg_analysis.analysis.aggregation import has_incomplete_teg_fast as _has_incomplete_teg_fast
+    return _has_incomplete_teg_fast()
 
 
 # ============================================
 #  CENTRALIZED NAVIGATION SYSTEM
 # ============================================
 
+# MIGRATED to teg_analysis.display.navigation.get_app_base_url
 def get_app_base_url():
     """
     Dynamically get the base URL for the current Streamlit app.
 
+    DEPRECATED: This function has been migrated to teg_analysis.display.navigation
+    Kept as wrapper for backward compatibility.
+
     Returns:
         str: Base URL for the app (e.g., 'http://localhost:8501' or 'https://app.railway.app')
     """
-    if os.getenv('RAILWAY_ENVIRONMENT'):
-        # Railway deployment - check for public domain
-        railway_domain = os.getenv('RAILWAY_PUBLIC_DOMAIN')
-        if railway_domain:
-            return f"https://{railway_domain}"
-        else:
-            # Fallback - this should be updated with your actual Railway URL
-            return "https://your-railway-app.railway.app"
-    else:
-        # Local development - use default Streamlit port
-        return "http://localhost:8501"
+    from teg_analysis.display.navigation import get_app_base_url as _get_app_base_url
+    return _get_app_base_url()
 
 
+# MIGRATED to teg_analysis.display.navigation.convert_filename_to_streamlit_url
 def convert_filename_to_streamlit_url(page_file):
     """Convert a page filename to Streamlit's URL format.
+
+    DEPRECATED: This function has been migrated to teg_analysis.display.navigation
+    Kept as wrapper for backward compatibility.
 
     Streamlit strips leading numbers from filenames when creating URLs.
     The main page (first page in navigation) is accessible at root URL.
@@ -4012,19 +3766,8 @@ def convert_filename_to_streamlit_url(page_file):
     - "500Handicaps.py" → "Handicaps"
     - "leaderboard.py" → "leaderboard"
     """
-    import re
-
-    # Special case: main page (TEG History) should redirect to root
-    # if page_file == "101TEG History.py":
-    #     return ""
-
-    # Remove .py extension
-    page_name = page_file.replace('.py', '')
-    # Replace spaces with underscores
-    page_name = page_name.replace(' ', '_')
-    # Remove leading digits (Streamlit does this automatically)
-    page_name = re.sub(r'^\d+', '', page_name)
-    return page_name
+    from teg_analysis.display.navigation import convert_filename_to_streamlit_url as _convert_filename_to_streamlit_url
+    return _convert_filename_to_streamlit_url(page_file)
 
 
 # Import page configuration from dedicated config file
