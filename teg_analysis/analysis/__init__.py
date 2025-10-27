@@ -22,7 +22,15 @@ from . import pipeline
 
 # Export commonly used functions for convenience
 from .scoring import format_vs_par, get_net_competition_measure
-from .aggregation import aggregate_data, get_teg_winners, get_complete_teg_data
+from .aggregation import (
+    aggregate_data,
+    get_teg_winners,
+    get_complete_teg_data,
+    get_current_in_progress_teg_fast,
+    get_last_completed_teg_fast,
+    has_incomplete_teg_fast,
+    filter_data_by_teg,
+)
 from .rankings import add_ranks, get_best, get_worst
 
 __all__ = [
@@ -42,4 +50,9 @@ __all__ = [
     'add_ranks',
     'get_best',
     'get_worst',
+    # TEG status functions
+    'get_current_in_progress_teg_fast',
+    'get_last_completed_teg_fast',
+    'has_incomplete_teg_fast',
+    'filter_data_by_teg',
 ]

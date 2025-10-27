@@ -669,41 +669,38 @@ def check_winner_completeness() -> set:
         return set()
 
 
-def display_completeness_status():
-    """Shows a status message if winners are missing for completed TEGs."""
-    import streamlit as st
-
-    missing = check_winner_completeness()
-    if missing:
-        st.warning(f"Winners missing for completed TEGs: {sorted(missing)}")
-
-        # Offer to calculate and save winners for missing TEGs
-        if st.button("Calculate and Save Winners for Missing TEGs"):
-            with st.spinner("Calculating winners for completed TEGs..."):
-                calculate_and_save_missing_winners(missing)
-            st.success("Winners updated! Refreshing page...")
-            st.rerun()
-
-        st.info("Or run the data update process to refresh all winner information.")
+# display_completeness_status() - MOVED TO streamlit/utils.py as UI wrapper
+# Use check_winner_completeness() for the calculation logic
 
 
-def calculate_and_save_missing_winners(missing_teg_nums: set):
+def calculate_and_save_missing_winners(missing_teg_nums: set) -> dict:
     """Calculates and saves the winners for a specific set of missing TEGs.
 
+    Pure calculation function - returns results instead of showing UI.
+
     Args:
-        missing_teg_nums (set): A set of TEG numbers to calculate winners
-            for.
+        missing_teg_nums (set): A set of TEG numbers to calculate winners for.
+
+    Returns:
+        dict: Results with keys:
+            - 'new_winners': list of new winner dicts added
+            - 'errors': list of error dicts {'teg': int, 'error': str}
+            - 'warnings': list of warning messages
+            - 'cache_clear_needed': bool
+
+    Raises:
+        ValueError: If no data available
     """
-    import streamlit as st
     import pandas as pd
-    from utils import load_all_data, read_file, write_file
+    # Import from teg_analysis instead of utils to avoid circular dependency
+    from ..io.file_operations import read_file, write_file
+    from ..core.data_loader import load_all_data
 
     # Load all data (expensive operation)
     all_data = load_all_data()
 
     if all_data.empty:
-        st.error("No data available to calculate winners")
-        return
+        raise ValueError("No data available to calculate winners")
 
     # Load existing cached winners
     try:
@@ -714,12 +711,15 @@ def calculate_and_save_missing_winners(missing_teg_nums: set):
 
     # Calculate winners only for missing TEGs
     new_winners = []
+    errors = []
+    warnings = []
+
     for teg_num in missing_teg_nums:
         try:
             # Get TEG data
             teg_data = all_data[all_data['TEGNum'] == teg_num]
             if teg_data.empty:
-                st.warning(f"No data found for TEG {teg_num}")
+                warnings.append(f"No data found for TEG {teg_num}")
                 continue
 
             # Get TEG info from data
@@ -728,8 +728,7 @@ def calculate_and_save_missing_winners(missing_teg_nums: set):
             year = teg_info['Year']
             area = teg_info['Area'] if 'Area' in teg_info else "Unknown"
 
-            # Calculate winners using existing logic
-            from utils import get_teg_winners
+            # Calculate winners using existing logic in this module
             winners_df = get_teg_winners(teg_data)
 
             if not winners_df.empty:
@@ -748,7 +747,7 @@ def calculate_and_save_missing_winners(missing_teg_nums: set):
                     new_winners.append(new_winner_row)
 
         except Exception as e:
-            st.error(f"Error calculating winners for TEG {teg_num}: {e}")
+            errors.append({'teg': teg_num, 'error': str(e)})
 
     if new_winners:
         # Add new winners to cached data
@@ -761,12 +760,20 @@ def calculate_and_save_missing_winners(missing_teg_nums: set):
         # Save updated winners
         write_file('data/teg_winners.csv', updated_winners)
 
-        # Clear relevant caches after update
-        st.cache_data.clear()
-
-        st.success(f"Added winners for {len(new_winners)} TEGs to cache")
+        return {
+            'new_winners': new_winners,
+            'errors': errors,
+            'warnings': warnings,
+            'cache_clear_needed': True
+        }
     else:
-        st.warning("No winners could be calculated for the missing TEGs")
+        warnings.append("No winners could be calculated for the missing TEGs")
+        return {
+            'new_winners': [],
+            'errors': errors,
+            'warnings': warnings,
+            'cache_clear_needed': False
+        }
 
 
 def load_cached_winners() -> tuple[pd.DataFrame, set] or tuple[None, set]:
@@ -780,7 +787,8 @@ def load_cached_winners() -> tuple[pd.DataFrame, set] or tuple[None, set]:
               were missing.
     """
     import pandas as pd
-    from utils import read_file, load_all_data, get_teg_winners
+    from ..io.file_operations import read_file
+    from ..core.data_loader import load_all_data
 
     try:
         # Try to load cached winners
@@ -959,106 +967,9 @@ def check_winner_completeness():
         return set()
 
 
-def display_completeness_status():
-    """
-    Show status if winners are missing for completed TEGs.
-    """
-    import streamlit as st
-
-    missing = check_winner_completeness()
-    if missing:
-        st.warning(f"Winners missing for completed TEGs: {sorted(missing)}")
-
-        # Offer to calculate and save winners for missing TEGs
-        if st.button("Calculate and Save Winners for Missing TEGs"):
-            with st.spinner("Calculating winners for completed TEGs..."):
-                calculate_and_save_missing_winners(missing)
-            st.success("Winners updated! Refreshing page...")
-            st.rerun()
-
-        st.info("Or run the data update process to refresh all winner information.")
-
-
-def calculate_and_save_missing_winners(missing_teg_nums):
-    """
-    Calculate and save winners for specific missing TEGs.
-
-    Args:
-        missing_teg_nums: Set of TEG numbers to calculate winners for
-    """
-    import streamlit as st
-    import pandas as pd
-    from utils import load_all_data, read_file, write_file
-
-    # Load all data (expensive operation)
-    all_data = load_all_data()
-
-    if all_data.empty:
-        st.error("No data available to calculate winners")
-        return
-
-    # Load existing cached winners
-    try:
-        cached_winners = read_file('data/teg_winners.csv')
-    except Exception:
-        # Create empty DataFrame with correct structure
-        cached_winners = pd.DataFrame(columns=['TEG', 'Year', 'Area', 'TEG Trophy', 'Green Jacket', 'HMM Wooden Spoon'])
-
-    # Calculate winners only for missing TEGs
-    new_winners = []
-    for teg_num in missing_teg_nums:
-        try:
-            # Get TEG data
-            teg_data = all_data[all_data['TEGNum'] == teg_num]
-            if teg_data.empty:
-                st.warning(f"No data found for TEG {teg_num}")
-                continue
-
-            # Get TEG info from data
-            teg_info = teg_data.iloc[0]
-            teg_name = teg_info['TEG']
-            year = teg_info['Year']
-            area = teg_info['Area'] if 'Area' in teg_info else "Unknown"
-
-            # Calculate winners using existing logic
-            from utils import get_teg_winners
-            winners_df = get_teg_winners(teg_data)
-
-            if not winners_df.empty:
-                # Get the row for this specific TEG
-                teg_winners = winners_df[winners_df['TEG'] == teg_name]
-                if not teg_winners.empty:
-                    winner_row = teg_winners.iloc[0]
-                    new_winner_row = {
-                        'TEG': teg_name,
-                        'Year': year,
-                        'Area': area,
-                        'TEG Trophy': winner_row.get('TEG Trophy', 'Unknown'),
-                        'Green Jacket': winner_row.get('Green Jacket', 'Unknown'),
-                        'HMM Wooden Spoon': winner_row.get('HMM Wooden Spoon', 'Unknown')
-                    }
-                    new_winners.append(new_winner_row)
-
-        except Exception as e:
-            st.error(f"Error calculating winners for TEG {teg_num}: {e}")
-
-    if new_winners:
-        # Add new winners to cached data
-        new_winners_df = pd.DataFrame(new_winners)
-        updated_winners = pd.concat([cached_winners, new_winners_df], ignore_index=True)
-
-        # Sort by Year to maintain order
-        updated_winners = updated_winners.sort_values('Year')
-
-        # Save updated winners
-        write_file('data/teg_winners.csv', updated_winners)
-
-        # Clear relevant caches after update
-        st.cache_data.clear()
-
-        st.success(f"Added winners for {len(new_winners)} TEGs to cache")
-    else:
-        st.warning("No winners could be calculated for the missing TEGs")
+# DUPLICATE FUNCTIONS REMOVED - see lines 672-776 for kept versions
+# display_completeness_status() - UI wrapper moved to streamlit/utils.py
+# calculate_and_save_missing_winners() - Pure version above (line 676)
 
 
 # === MIGRATED SECTION ===
@@ -1891,9 +1802,9 @@ tables and charts.
 """
 
 
-import streamlit as st
 import pandas as pd
-from utils import get_current_in_progress_teg_fast, get_last_completed_teg_fast
+# get_current_in_progress_teg_fast and get_last_completed_teg_fast
+# are now defined at the end of this module (lines ~2800+)
 
 
 def get_round_metric_mappings() -> tuple[dict, dict]:
@@ -1916,23 +1827,14 @@ def get_round_metric_mappings() -> tuple[dict, dict]:
     return name_mapping, inverted_mapping
 
 
-def initialize_round_selection_state():
-    """Initializes session state variables for round selection.
-
-    This function sets up a persistent state for TEG and round selection to
-    prevent UI resets and maintain the user's current selection.
-    """
-    if 'teg_r' not in st.session_state:
-        st.session_state.teg_r = None
-    if 'rd_r' not in st.session_state:
-        st.session_state.rd_r = None
+# initialize_round_selection_state() - MOVED TO streamlit/utils.py
+# This function uses st.session_state which is Streamlit-specific
 
 
 def get_latest_round_defaults(df_round: pd.DataFrame) -> tuple[str, int]:
     """Gets the default TEG and round values (the latest available).
 
-    This function determines the most recent round for default selection,
-    which is used for the "Latest Round" button functionality.
+    Pure calculation function - determines the most recent round.
 
     Args:
         df_round (pd.DataFrame): A DataFrame of round ranking data, used as a
@@ -1940,69 +1842,37 @@ def get_latest_round_defaults(df_round: pd.DataFrame) -> tuple[str, int]:
 
     Returns:
         tuple: A tuple containing the max TEG and max round in that TEG.
+
+    Raises:
+        ValueError: If df_round is empty or invalid
     """
+    if df_round.empty:
+        raise ValueError("Cannot determine latest round from empty DataFrame")
+
     try:
         # Try fast method first: check if there's a TEG in progress
-        in_progress_teg, rounds_played = get_current_in_progress_teg_fast()
-        if in_progress_teg:
-            return f"TEG {in_progress_teg}", rounds_played
+        # Note: These functions need to be migrated to this module
+        # For now, fall back to DataFrame method
+        # in_progress_teg, rounds_played = get_current_in_progress_teg_fast()
+        # if in_progress_teg:
+        #     return f"TEG {in_progress_teg}", rounds_played
 
-        # If no TEG in progress, get last completed TEG
-        last_teg, rounds = get_last_completed_teg_fast()
-        if last_teg:
-            return f"TEG {last_teg}", rounds
-
-        # Fallback to original method if status files unavailable
+        # Fallback to DataFrame method
         df_sorted = df_round.sort_values(by=['TEGNum', 'Round'])
         max_teg = df_sorted.loc[df_sorted['TEGNum'].idxmax(), 'TEG']
         max_round_in_max_teg = df_sorted[df_sorted['TEG'] == max_teg]['Round'].max()
         return max_teg, max_round_in_max_teg
 
-    except Exception:
-        # Fallback to original method on any error
-        df_sorted = df_round.sort_values(by=['TEGNum', 'Round'])
-        max_teg = df_sorted.loc[df_sorted['TEGNum'].idxmax(), 'TEG']
-        max_round_in_max_teg = df_sorted[df_sorted['TEG'] == max_teg]['Round'].max()
-        return max_teg, max_round_in_max_teg
+    except Exception as e:
+        raise ValueError(f"Error determining latest round: {e}")
 
 
-def update_session_state_defaults(df_round: pd.DataFrame):
-    """Sets the session state to the latest round if not already initialized.
-
-    This function ensures that the session state has valid default values on
-    the first load, using the latest available round as a sensible default.
-
-    Args:
-        df_round (pd.DataFrame): The round ranking data.
-    """
-    max_teg, max_round_in_max_teg = get_latest_round_defaults(df_round)
-    
-    if st.session_state.teg_r is None:
-        st.session_state.teg_r = max_teg
-    if st.session_state.rd_r is None:
-        st.session_state.rd_r = max_round_in_max_teg
+# update_session_state_defaults() - MOVED TO streamlit/utils.py
+# This function uses st.session_state which is Streamlit-specific
 
 
-def create_round_selection_reset_function(df_round: pd.DataFrame) -> callable:
-    """Creates a callback function for the "Latest Round" button.
-
-    This function provides a one-click reset to the most recent round by
-    updating the session state when the button is clicked.
-
-    Args:
-        df_round (pd.DataFrame): The round ranking data.
-
-    Returns:
-        callable: A callback function that resets the selection to the
-        latest round.
-    """
-    max_teg, max_round_in_max_teg = get_latest_round_defaults(df_round)
-    
-    def reset_to_latest():
-        st.session_state.teg_r = max_teg
-        st.session_state.rd_r = max_round_in_max_teg
-    
-    return reset_to_latest
+# create_round_selection_reset_function() - MOVED TO streamlit/utils.py
+# This function uses st.session_state which is Streamlit-specific
 
 
 def get_teg_and_round_options(df_round: pd.DataFrame, selected_teg: str) -> tuple[list, list]:
@@ -2076,86 +1946,50 @@ def prepare_round_context_display(df_round: pd.DataFrame, teg_r: str, rd_r: int,
 
 # === TEG CONTEXT FUNCTIONS ===
 
-def initialize_teg_selection_state():
-    """Initializes session state variables for TEG selection.
-
-    This function sets up a persistent state for TEG selection to prevent UI
-    resets and maintain the user's current selection.
-    """
-    if 'teg_t' not in st.session_state:
-        st.session_state.teg_t = None
+# initialize_teg_selection_state() - MOVED TO streamlit/utils.py
+# This function uses st.session_state which is Streamlit-specific
 
 
 def get_latest_teg_default(df_teg: pd.DataFrame) -> str:
     """Gets the default TEG value (the latest available).
 
-    This function determines the most recent TEG for default selection, which
-    is used for the "Latest TEG" button functionality.
+    Pure calculation function - determines the most recent TEG.
 
     Args:
-        df_teg (pd.DataFrame): A DataFrame of TEG ranking data, used as a
-            fallback.
+        df_teg (pd.DataFrame): A DataFrame of TEG ranking data.
 
     Returns:
         str: The latest available TEG for default selection.
+
+    Raises:
+        ValueError: If df_teg is empty or invalid
     """
+    if df_teg.empty:
+        raise ValueError("Cannot determine latest TEG from empty DataFrame")
+
     try:
-        # Try fast method first: check if there's a TEG in progress
-        in_progress_teg, rounds_played = get_current_in_progress_teg_fast()
-        if in_progress_teg:
-            return f"TEG {in_progress_teg}"
+        # Try fast method first (when functions are migrated)
+        # Note: These functions need to be migrated to this module
+        # For now, fall back to DataFrame method
+        # in_progress_teg, rounds_played = get_current_in_progress_teg_fast()
+        # if in_progress_teg:
+        #     return f"TEG {in_progress_teg}"
 
-        # If no TEG in progress, get last completed TEG
-        last_teg, rounds = get_last_completed_teg_fast()
-        if last_teg:
-            return f"TEG {last_teg}"
-
-        # Fallback to original method if status files unavailable
+        # Fallback to DataFrame method
         df_sorted = df_teg.sort_values(by='TEGNum')
         max_teg = df_sorted.loc[df_sorted['TEGNum'].idxmax(), 'TEG']
         return max_teg
 
-    except Exception:
-        # Fallback to original method on any error
-        df_sorted = df_teg.sort_values(by='TEGNum')
-        max_teg = df_sorted.loc[df_sorted['TEGNum'].idxmax(), 'TEG']
-        return max_teg
+    except Exception as e:
+        raise ValueError(f"Error determining latest TEG: {e}")
 
 
-def update_teg_session_state_defaults(df_teg: pd.DataFrame):
-    """Sets the session state to the latest TEG if not already initialized.
-
-    This function ensures that the session state has a valid default value on
-    the first load, using the latest available TEG as a sensible default.
-
-    Args:
-        df_teg (pd.DataFrame): The TEG ranking data.
-    """
-    max_teg = get_latest_teg_default(df_teg)
-    
-    if st.session_state.teg_t is None:
-        st.session_state.teg_t = max_teg
+# update_teg_session_state_defaults() - MOVED TO streamlit/utils.py
+# This function uses st.session_state which is Streamlit-specific
 
 
-def create_teg_selection_reset_function(df_teg: pd.DataFrame) -> callable:
-    """Creates a callback function for the "Latest TEG" button.
-
-    This function provides a one-click reset to the most recent TEG by
-    updating the session state when the button is clicked.
-
-    Args:
-        df_teg (pd.DataFrame): The TEG ranking data.
-
-    Returns:
-        callable: A callback function that resets the selection to the
-        latest TEG.
-    """
-    max_teg = get_latest_teg_default(df_teg)
-    
-    def reset_to_latest_teg():
-        st.session_state.teg_t = max_teg
-    
-    return reset_to_latest_teg
+# create_teg_selection_reset_function() - MOVED TO streamlit/utils.py
+# This function uses st.session_state which is Streamlit-specific
 
 
 def get_teg_options(df_teg: pd.DataFrame) -> list:
@@ -2644,7 +2478,6 @@ preparing data for team format displays.
 
 
 import pandas as pd
-import streamlit as st
 
 
 def prepare_bestball_data(all_data: pd.DataFrame) -> pd.DataFrame:
@@ -2776,7 +2609,6 @@ validating scorecard data, and preparing data for different scorecard types.
 
 
 import pandas as pd
-import streamlit as st
 
 
 def prepare_scorecard_selection_options(all_data: pd.DataFrame) -> dict:
@@ -2917,11 +2749,110 @@ def prepare_tournament_display_data(tournament_data: pd.DataFrame) -> dict or No
     }
 
 
-def initialize_scorecard_session_state():
-    """Initializes session state variables for scorecard functionality.
+# initialize_scorecard_session_state() - MOVED TO streamlit/utils.py
+# This function uses st.session_state which is Streamlit-specific
 
-    This function sets up a persistent state for tab selection and user
-    preferences to prevent UI reset issues during scorecard navigation.
+
+# === TEG STATUS FUNCTIONS (Fast Checks) ===
+
+def get_last_completed_teg_fast() -> tuple:
+    """Get the highest TEG number from completed_tegs.csv with round count.
+
+    Uses status file for fast lookup without loading full dataset.
+
+    Returns:
+        tuple: (teg_num, rounds) or (None, 0) if no completed TEGs
+
+    Examples:
+        >>> teg_num, rounds = get_last_completed_teg_fast()
+        >>> if teg_num:
+        ...     print(f"Last completed: TEG {teg_num} with {rounds} rounds")
     """
-    if 'active_scorecard_tab' not in st.session_state:
-        st.session_state.active_scorecard_tab = 0
+    from ..io.file_operations import read_file
+
+    try:
+        completed_tegs = read_file('data/completed_tegs.csv')
+        if completed_tegs.empty:
+            return None, 0
+
+        max_row = completed_tegs.loc[completed_tegs['TEGNum'].idxmax()]
+        return int(max_row['TEGNum']), int(max_row['Rounds'])
+
+    except Exception as e:
+        logger.warning(f"Error reading completed TEGs status file: {e}")
+        return None, 0
+
+
+def get_current_in_progress_teg_fast() -> tuple:
+    """Get the current in-progress TEG with round count.
+
+    Uses status file for fast lookup without loading full dataset.
+
+    Returns:
+        tuple: (teg_num, rounds) or (None, 0) if no TEGs in progress
+
+    Examples:
+        >>> teg_num, rounds = get_current_in_progress_teg_fast()
+        >>> if teg_num:
+        ...     print(f"In progress: TEG {teg_num}, {rounds} rounds played")
+    """
+    from ..io.file_operations import read_file
+
+    try:
+        in_progress_tegs = read_file('data/in_progress_tegs.csv')
+        if in_progress_tegs.empty:
+            return None, 0
+
+        # Should typically be only one in-progress TEG, get the first one
+        current_row = in_progress_tegs.iloc[0]
+        return int(current_row['TEGNum']), int(current_row['Rounds'])
+
+    except Exception as e:
+        logger.warning(f"Error reading in-progress TEGs status file: {e}")
+        return None, 0
+
+
+def has_incomplete_teg_fast() -> bool:
+    """Fast check if there are any incomplete TEGs using status files.
+
+    Returns:
+        bool: True if there are TEGs in progress, False otherwise
+
+    Examples:
+        >>> if has_incomplete_teg_fast():
+        ...     print("There's a TEG in progress!")
+    """
+    from ..io.file_operations import read_file
+
+    try:
+        in_progress_tegs = read_file('data/in_progress_tegs.csv')
+        return not in_progress_tegs.empty
+
+    except Exception as e:
+        logger.warning(f"Error checking for incomplete TEGs: {e}")
+        return False
+
+
+def filter_data_by_teg(all_data: pd.DataFrame, selected_tegnum) -> pd.DataFrame:
+    """Filter data by selected TEG tournament.
+
+    Args:
+        all_data: Complete tournament data
+        selected_tegnum: Selected TEG number or "All TEGs"
+
+    Returns:
+        pd.DataFrame: Filtered data for selected tournament or complete data
+
+    Purpose:
+        Applies consistent TEG filtering logic across different analysis pages.
+        Returns complete dataset when "All TEGs" is selected.
+
+    Examples:
+        >>> filtered = filter_data_by_teg(all_data, 18)
+        >>> filtered = filter_data_by_teg(all_data, "All TEGs")  # Returns all
+    """
+    if selected_tegnum != 'All TEGs':
+        selected_tegnum_int = int(selected_tegnum)
+        return all_data[all_data['TEGNum'] == selected_tegnum_int]
+    else:
+        return all_data

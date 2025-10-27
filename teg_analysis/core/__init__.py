@@ -26,6 +26,14 @@ from .data_transforms import (
     save_to_parquet,
     reshape_round_data,
     load_and_prepare_handicap_data,
+    summarise_existing_rd_data,
+    check_for_complete_and_duplicate_data,
+)
+
+from .metadata import (
+    get_teg_metadata,
+    load_course_info,
+    get_scorecard_data,
 )
 
 __all__ = [
@@ -44,4 +52,10 @@ __all__ = [
     'save_to_parquet',
     'reshape_round_data',
     'load_and_prepare_handicap_data',
+    'summarise_existing_rd_data',
+    'check_for_complete_and_duplicate_data',
+    # metadata
+    'get_teg_metadata',
+    'load_course_info',
+    'get_scorecard_data',
 ]
