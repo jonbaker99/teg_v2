@@ -13,10 +13,17 @@ Key Functions:
 import pandas as pd
 import numpy as np
 import logging
-import streamlit as st
 from typing import Dict, List, Any
 from pathlib import Path
 import os
+
+# Conditional Streamlit import for UI-independent operation
+try:
+    import streamlit as st
+    HAS_STREAMLIT = True
+except ImportError:
+    st = None
+    HAS_STREAMLIT = False
 
 from teg_analysis.io import read_file, write_file
 
@@ -26,33 +33,55 @@ logger = logging.getLogger(__name__)
 # These are defined in utils.py and will be available through the wrapper layer
 def _get_constants():
     """Get constants from utils.py - called at runtime to avoid circular imports"""
-    from streamlit.utils import (
-        ALL_DATA_PARQUET, ROUND_INFO_CSV, PLAYER_DICT, TEGNUM_ROUNDS,
-        STREAKS_PARQUET, BESTBALL_PARQUET, HANDICAPS_CSV,
-        COMMENTARY_ROUND_EVENTS_PARQUET, COMMENTARY_ROUND_SUMMARY_PARQUET,
-        COMMENTARY_TOURNAMENT_SUMMARY_PARQUET, COMMENTARY_ROUND_STREAKS_PARQUET,
-        COMMENTARY_TOURNAMENT_STREAKS_PARQUET, get_tegnum_rounds, clear_all_caches,
-        ALL_DATA_CSV_MIRROR, get_google_sheet, summarise_existing_rd_data
-    )
-    return {
-        'ALL_DATA_PARQUET': ALL_DATA_PARQUET,
-        'ROUND_INFO_CSV': ROUND_INFO_CSV,
-        'PLAYER_DICT': PLAYER_DICT,
-        'TEGNUM_ROUNDS': TEGNUM_ROUNDS,
-        'STREAKS_PARQUET': STREAKS_PARQUET,
-        'BESTBALL_PARQUET': BESTBALL_PARQUET,
-        'HANDICAPS_CSV': HANDICAPS_CSV,
-        'COMMENTARY_ROUND_EVENTS_PARQUET': COMMENTARY_ROUND_EVENTS_PARQUET,
-        'COMMENTARY_ROUND_SUMMARY_PARQUET': COMMENTARY_ROUND_SUMMARY_PARQUET,
-        'COMMENTARY_TOURNAMENT_SUMMARY_PARQUET': COMMENTARY_TOURNAMENT_SUMMARY_PARQUET,
-        'COMMENTARY_ROUND_STREAKS_PARQUET': COMMENTARY_ROUND_STREAKS_PARQUET,
-        'COMMENTARY_TOURNAMENT_STREAKS_PARQUET': COMMENTARY_TOURNAMENT_STREAKS_PARQUET,
-        'ALL_DATA_CSV_MIRROR': ALL_DATA_CSV_MIRROR,
-        'get_tegnum_rounds': get_tegnum_rounds,
-        'clear_all_caches': clear_all_caches,
-        'get_google_sheet': get_google_sheet,
-        'summarise_existing_rd_data': summarise_existing_rd_data,
-    }
+    try:
+        from streamlit.utils import (
+            ALL_DATA_PARQUET, ROUND_INFO_CSV, PLAYER_DICT, TEGNUM_ROUNDS,
+            STREAKS_PARQUET, BESTBALL_PARQUET, HANDICAPS_CSV,
+            COMMENTARY_ROUND_EVENTS_PARQUET, COMMENTARY_ROUND_SUMMARY_PARQUET,
+            COMMENTARY_TOURNAMENT_SUMMARY_PARQUET, COMMENTARY_ROUND_STREAKS_PARQUET,
+            COMMENTARY_TOURNAMENT_STREAKS_PARQUET, get_tegnum_rounds, clear_all_caches,
+            ALL_DATA_CSV_MIRROR, get_google_sheet, summarise_existing_rd_data
+        )
+        return {
+            'ALL_DATA_PARQUET': ALL_DATA_PARQUET,
+            'ROUND_INFO_CSV': ROUND_INFO_CSV,
+            'PLAYER_DICT': PLAYER_DICT,
+            'TEGNUM_ROUNDS': TEGNUM_ROUNDS,
+            'STREAKS_PARQUET': STREAKS_PARQUET,
+            'BESTBALL_PARQUET': BESTBALL_PARQUET,
+            'HANDICAPS_CSV': HANDICAPS_CSV,
+            'COMMENTARY_ROUND_EVENTS_PARQUET': COMMENTARY_ROUND_EVENTS_PARQUET,
+            'COMMENTARY_ROUND_SUMMARY_PARQUET': COMMENTARY_ROUND_SUMMARY_PARQUET,
+            'COMMENTARY_TOURNAMENT_SUMMARY_PARQUET': COMMENTARY_TOURNAMENT_SUMMARY_PARQUET,
+            'COMMENTARY_ROUND_STREAKS_PARQUET': COMMENTARY_ROUND_STREAKS_PARQUET,
+            'COMMENTARY_TOURNAMENT_STREAKS_PARQUET': COMMENTARY_TOURNAMENT_STREAKS_PARQUET,
+            'ALL_DATA_CSV_MIRROR': ALL_DATA_CSV_MIRROR,
+            'get_tegnum_rounds': get_tegnum_rounds,
+            'clear_all_caches': clear_all_caches,
+            'get_google_sheet': get_google_sheet,
+            'summarise_existing_rd_data': summarise_existing_rd_data,
+        }
+    except ImportError:
+        # Return default values if streamlit.utils is not available
+        return {
+            'ALL_DATA_PARQUET': 'data/all-data.parquet',
+            'ROUND_INFO_CSV': 'data/round_info.csv',
+            'PLAYER_DICT': {},
+            'TEGNUM_ROUNDS': {},
+            'STREAKS_PARQUET': 'data/streaks.parquet',
+            'BESTBALL_PARQUET': 'data/bestball.parquet',
+            'HANDICAPS_CSV': 'data/handicaps.csv',
+            'COMMENTARY_ROUND_EVENTS_PARQUET': 'data/commentary_round_events.parquet',
+            'COMMENTARY_ROUND_SUMMARY_PARQUET': 'data/commentary_round_summary.parquet',
+            'COMMENTARY_TOURNAMENT_SUMMARY_PARQUET': 'data/commentary_tournament_summary.parquet',
+            'COMMENTARY_ROUND_STREAKS_PARQUET': 'data/commentary_round_streaks.parquet',
+            'COMMENTARY_TOURNAMENT_STREAKS_PARQUET': 'data/commentary_tournament_streaks.parquet',
+            'ALL_DATA_CSV_MIRROR': 'data/all-data.csv',
+            'get_tegnum_rounds': lambda x: 4,  # Default 4 rounds
+            'clear_all_caches': lambda: None,
+            'get_google_sheet': None,
+            'summarise_existing_rd_data': None,
+        }
 
 
 def load_all_data(exclude_teg_50: bool = True, exclude_incomplete_tegs: bool = False) -> pd.DataFrame:
@@ -77,10 +106,11 @@ def load_all_data(exclude_teg_50: bool = True, exclude_incomplete_tegs: bool = F
     try:
         df = read_file(ALL_DATA_PARQUET)
     except Exception as e:
-        try:
-            st.error(f"Error loading data: {e}")
-        except:
-            print(f"Error loading data: {e}")
+        error_msg = f"Error loading data: {e}"
+        if HAS_STREAMLIT and st is not None:
+            st.error(error_msg)
+        else:
+            logger.error(error_msg)
         return pd.DataFrame()
 
     # Load round info data to get Area information
@@ -90,10 +120,11 @@ def load_all_data(exclude_teg_50: bool = True, exclude_incomplete_tegs: bool = F
         round_info_subset = round_info[['TEGNum', 'Round', 'Area']].copy()
         df = df.merge(round_info_subset, on=['TEGNum', 'Round'], how='left')
     except Exception as e:
-        try:
-            st.warning(f"Could not load round info for Area data: {e}")
-        except:
-            logger.warning(f"Could not load round info for Area data: {e}")
+        warning_msg = f"Could not load round info for Area data: {e}"
+        if HAS_STREAMLIT and st is not None:
+            st.warning(warning_msg)
+        else:
+            logger.warning(warning_msg)
 
     # Ensure 'Year' is of integer type
     df['Year'] = df['Year'].astype('Int64')

@@ -13,11 +13,18 @@ logger = logging.getLogger(__name__)
 
 def _get_constants():
     """Get constants from utils.py to avoid circular imports."""
-    from streamlit.utils import ROUND_INFO_CSV, STREAKS_PARQUET
-    return {
-        "ROUND_INFO_CSV": ROUND_INFO_CSV,
-        "STREAKS_PARQUET": STREAKS_PARQUET,
-    }
+    try:
+        from streamlit.utils import ROUND_INFO_CSV, STREAKS_PARQUET
+        return {
+            "ROUND_INFO_CSV": ROUND_INFO_CSV,
+            "STREAKS_PARQUET": STREAKS_PARQUET,
+        }
+    except ImportError:
+        # Return default values if streamlit.utils is not available
+        return {
+            "ROUND_INFO_CSV": "data/round_info.csv",
+            "STREAKS_PARQUET": "data/streaks.parquet",
+        }
 
 
 def create_round_summary(all_data_df=None, round_info_df=None):

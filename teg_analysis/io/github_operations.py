@@ -11,7 +11,15 @@ from io import BytesIO, StringIO
 from typing import Union
 
 import pandas as pd
-import streamlit as st
+
+# Conditional Streamlit import for UI-independent operation
+try:
+    import streamlit as st
+    HAS_STREAMLIT = True
+except ImportError:
+    st = None
+    HAS_STREAMLIT = False
+
 from github import Github, InputGitTreeElement
 
 logger = logging.getLogger(__name__)
@@ -61,7 +69,7 @@ def read_from_github(file_path: str) -> Union[pd.DataFrame, str]:
         pd.DataFrame or str: A pandas DataFrame if the file is a CSV or
         Parquet file, otherwise the decoded content of the file as a string.
     """
-    token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
+    token = os.getenv('GITHUB_TOKEN') or (st.secrets.get('GITHUB_TOKEN') if HAS_STREAMLIT and st is not None else None)
     g = Github(token)
     repo = g.get_repo(GITHUB_REPO)
     content = repo.get_contents(file_path, ref=_get_github_branch())
@@ -91,7 +99,7 @@ def read_text_from_github(file_path: str) -> str:
     Returns:
         str: The decoded content of the file as a string.
     """
-    token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
+    token = os.getenv('GITHUB_TOKEN') or (st.secrets.get('GITHUB_TOKEN') if HAS_STREAMLIT and st is not None else None)
     g = Github(token)
     repo = g.get_repo(GITHUB_REPO)
     content = repo.get_contents(file_path, ref=_get_github_branch())
@@ -113,7 +121,7 @@ def write_text_to_github(file_path: str, content: str, commit_message: str = "Up
         commit_message (str, optional): The commit message to use for the
             write operation. Defaults to "Update text file".
     """
-    token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
+    token = os.getenv('GITHUB_TOKEN') or (st.secrets.get('GITHUB_TOKEN') if HAS_STREAMLIT and st is not None else None)
     g = Github(token)
     repo = g.get_repo(GITHUB_REPO)
 
@@ -160,7 +168,7 @@ def write_to_github(file_path: str, data: Union[pd.DataFrame, str], commit_messa
         commit_message (str, optional): The commit message to use for the
             write operation. Defaults to "Update data".
     """
-    token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
+    token = os.getenv('GITHUB_TOKEN') or (st.secrets.get('GITHUB_TOKEN') if HAS_STREAMLIT and st is not None else None)
     g = Github(token)
     repo = g.get_repo(GITHUB_REPO)
 
@@ -184,7 +192,8 @@ def write_to_github(file_path: str, data: Union[pd.DataFrame, str], commit_messa
     except Exception:
         repo.create_file(file_path, commit_message, content, branch=branch)
 
-    st.cache_data.clear()
+    if HAS_STREAMLIT and st is not None:
+        st.cache_data.clear()
 
 
 def batch_commit_to_github(files_data: list, commit_message: str = "Batch update data"):
@@ -201,7 +210,7 @@ def batch_commit_to_github(files_data: list, commit_message: str = "Batch update
         commit_message (str, optional): The commit message for the batch
             update. Defaults to "Batch update data".
     """
-    token = os.getenv('GITHUB_TOKEN') or st.secrets.get('GITHUB_TOKEN')
+    token = os.getenv('GITHUB_TOKEN') or (st.secrets.get('GITHUB_TOKEN') if HAS_STREAMLIT and st is not None else None)
     g = Github(token)
     repo = g.get_repo(GITHUB_REPO)
     branch = _get_github_branch()
@@ -255,4 +264,5 @@ def batch_commit_to_github(files_data: list, commit_message: str = "Batch update
     ref.edit(new_commit.sha)
 
     logger.info(f"Batch committed {len(files_data)} files to GitHub in single commit")
-    st.cache_data.clear()
+    if HAS_STREAMLIT and st is not None:
+        st.cache_data.clear()

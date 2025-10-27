@@ -14,12 +14,20 @@ logger = logging.getLogger(__name__)
 
 def _get_constants():
     """Get constants from utils.py to avoid circular imports."""
-    from streamlit.utils import TEG_ROUNDS, TEGNUM_ROUNDS, TEG_OVERRIDES
-    return {
-        'TEG_ROUNDS': TEG_ROUNDS,
-        'TEGNUM_ROUNDS': TEGNUM_ROUNDS,
-        'TEG_OVERRIDES': TEG_OVERRIDES,
-    }
+    try:
+        from streamlit.utils import TEG_ROUNDS, TEGNUM_ROUNDS, TEG_OVERRIDES
+        return {
+            'TEG_ROUNDS': TEG_ROUNDS,
+            'TEGNUM_ROUNDS': TEGNUM_ROUNDS,
+            'TEG_OVERRIDES': TEG_OVERRIDES,
+        }
+    except ImportError:
+        # Return default values if streamlit.utils is not available
+        return {
+            'TEG_ROUNDS': {},  # Empty dict - will default to 4 rounds
+            'TEGNUM_ROUNDS': {},  # Empty dict - will default to 4 rounds
+            'TEG_OVERRIDES': {},  # Empty dict - no overrides
+        }
 
 
 # === LOOKUP FUNCTIONS ===

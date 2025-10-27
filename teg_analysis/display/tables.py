@@ -265,5 +265,8 @@ def datawrapper_table(df, left_align=None, css_classes=None, return_html=False):
         return html
     else:
         # Import here to avoid requiring streamlit in non-UI contexts
-        import streamlit as st
-        st.write(html, unsafe_allow_html=True)
+        try:
+            import streamlit as st
+            st.write(html, unsafe_allow_html=True)
+        except ImportError:
+            logger.warning("Streamlit not available - cannot display table. Use return_html=True to get HTML string instead.")

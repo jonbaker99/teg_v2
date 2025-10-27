@@ -9,7 +9,14 @@ import os
 import logging
 from pathlib import Path
 import pandas as pd
-import streamlit as st
+
+# Conditional Streamlit import for UI-independent operation
+try:
+    import streamlit as st
+    HAS_STREAMLIT = True
+except ImportError:
+    st = None
+    HAS_STREAMLIT = False
 
 from . import volume_operations
 from .github_operations import read_from_github, read_text_from_github, write_text_to_github, write_to_github
@@ -145,7 +152,7 @@ def write_file(file_path: str, data: pd.DataFrame, commit_message: str = "Update
             raise ValueError(f"Unsupported file type: {file_path}")
 
     # Clear caches after successful write (only if not deferred)
-    if not defer_github:
+    if not defer_github and HAS_STREAMLIT and st is not None:
         st.cache_data.clear()
 
 
@@ -251,7 +258,7 @@ def write_text_file(file_path: str, content: str, commit_message: str = "Update 
         local_path.write_text(content, encoding='utf-8')
 
     # Clear caches after successful write (only if not deferred)
-    if not defer_github:
+    if not defer_github and HAS_STREAMLIT and st is not None:
         st.cache_data.clear()
 
 

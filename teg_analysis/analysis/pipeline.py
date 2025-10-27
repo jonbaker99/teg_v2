@@ -30,11 +30,24 @@ logger = logging.getLogger(__name__)
 
 def _get_constants():
     """Get constants from utils.py to avoid circular imports."""
-    from streamlit.utils import (STREAKS_PARQUET, BESTBALL_PARQUET,
-        ROUND_INFO_CSV, COMMENTARY_ROUND_EVENTS_PARQUET,
-        COMMENTARY_ROUND_SUMMARY_PARQUET, COMMENTARY_TOURNAMENT_SUMMARY_PARQUET,
-        COMMENTARY_ROUND_STREAKS_PARQUET, COMMENTARY_TOURNAMENT_STREAKS_PARQUET)
-    return locals()
+    try:
+        from streamlit.utils import (STREAKS_PARQUET, BESTBALL_PARQUET,
+            ROUND_INFO_CSV, COMMENTARY_ROUND_EVENTS_PARQUET,
+            COMMENTARY_ROUND_SUMMARY_PARQUET, COMMENTARY_TOURNAMENT_SUMMARY_PARQUET,
+            COMMENTARY_ROUND_STREAKS_PARQUET, COMMENTARY_TOURNAMENT_STREAKS_PARQUET)
+        return locals()
+    except ImportError:
+        # Return default values if streamlit.utils is not available
+        return {
+            'STREAKS_PARQUET': 'data/streaks.parquet',
+            'BESTBALL_PARQUET': 'data/bestball.parquet',
+            'ROUND_INFO_CSV': 'data/round_info.csv',
+            'COMMENTARY_ROUND_EVENTS_PARQUET': 'data/commentary_round_events.parquet',
+            'COMMENTARY_ROUND_SUMMARY_PARQUET': 'data/commentary_round_summary.parquet',
+            'COMMENTARY_TOURNAMENT_SUMMARY_PARQUET': 'data/commentary_tournament_summary.parquet',
+            'COMMENTARY_ROUND_STREAKS_PARQUET': 'data/commentary_round_streaks.parquet',
+            'COMMENTARY_TOURNAMENT_STREAKS_PARQUET': 'data/commentary_tournament_streaks.parquet',
+        }
 
 
 def _get_deps():
@@ -43,7 +56,13 @@ def _get_deps():
     from teg_analysis.analysis.streaks import build_streaks
     from teg_analysis.analysis.commentary import (create_round_events, create_round_summary,
         create_tournament_summary, create_round_streaks_summary, create_tournament_streaks_summary)
-    from streamlit.utils import clear_all_caches, add_cumulative_scores, add_rankings_and_gaps
+    try:
+        from streamlit.utils import clear_all_caches, add_cumulative_scores, add_rankings_and_gaps
+    except ImportError:
+        # Provide fallback functions if streamlit.utils not available
+        clear_all_caches = lambda: None
+        add_cumulative_scores = None
+        add_rankings_and_gaps = None
     return locals()
 
 
