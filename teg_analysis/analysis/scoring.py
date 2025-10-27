@@ -623,8 +623,16 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-import streamlit as st
 import numpy as np
+
+# NOTE: Some functions may use Streamlit for caching
+# Importing conditionally for flexibility
+try:
+    import streamlit as st
+    HAS_STREAMLIT = True
+except ImportError:
+    st = None
+    HAS_STREAMLIT = False
 
 
 def get_filtering_options(all_data: pd.DataFrame) -> tuple[list, list]:

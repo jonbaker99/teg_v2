@@ -7,8 +7,17 @@ clean summary format.
 
 
 import pandas as pd
-import streamlit as st
 from collections import defaultdict
+
+# NOTE: display_records_summary() function uses Streamlit for display
+# This function should be moved to streamlit/utils.py as a UI wrapper
+# For now, importing streamlit conditionally
+try:
+    import streamlit as st
+    HAS_STREAMLIT = True
+except ImportError:
+    st = None
+    HAS_STREAMLIT = False
 
 
 def get_friendly_metric_name(metric: str) -> str:

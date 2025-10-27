@@ -1,45 +1,24 @@
 {
   "permissions": {
     "allow": [
-      "Read(/C:\\Users\\jonba/**)",
-      "Bash(mkdir:*)",
-      "Bash(find:*)",
+      "Bash(python -m pytest:*)",
       "Bash(python:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(streamlit run:*)",
-      "Bash(timeout 10 streamlit run streamlit/500Handicaps.py --server.headless=true --server.port=8502)",
-      "Bash(timeout 10 streamlit run streamlit/500Handicaps.py --server.headless=true --server.port=8503)",
-      "Bash(timeout 10 streamlit run streamlit/ave_by_course.py --server.headless=true --server.port=8502)",
-      "Bash(sed:*)",
-      "Bash(timeout 10 streamlit run streamlit/nav.py --server.headless=true --server.port=8502)",
-      "mcp__ide__executeCode",
-      "Bash(timeout 10 streamlit run:*)",
-      "Bash(git pull:*)",
-      "Bash(timeout 15 streamlit run \"streamlit/300TEG Records.py\" --server.headless=true --server.port=8502)",
-      "Bash(pip show:*)",
-      "Bash(timeout 15 streamlit run \"streamlit/streaks_prototype.py\" --server.headless=true --server.port=8502)",
-      "Bash(timeout 15 streamlit run \"streamlit/latest_round.py\" --server.headless=true --server.port=8503)",
-      "Bash(timeout 15 streamlit run \"streamlit/latest_teg_context.py\" --server.headless=true --server.port=8502)",
-      "Bash(for:*)",
-      "Bash(do echo \"=== TEG $i ===\")",
-      "Bash(grep:*)",
+      "Bash(for f in streamlit/helpers/display_helpers.py streamlit/helpers/leaderboard_utils.py streamlit/helpers/record_css.py streamlit/helpers/make_charts.py)",
+      "Bash(do if [ -f \"$f\" ])",
+      "Bash(then echo \"=== $f ===\")",
+      "Bash(fi)",
       "Bash(done)",
-      "Bash(dir:*)",
-      "Bash(del:*)",
-      "Bash(findstr:*)",
-      "Bash(timeout 15 streamlit run:*)",
-      "Bash(git log:*)",
-      "Bash(do head -n 1 \"$file\")",
-      "Bash(git check-ignore:*)",
-      "Bash(wc:*)",
-      "Bash(cd c:UsersjonbaDocumentsProjects - not on onedriveteg_v2)",
-      "Bash(head -20 \"$file\")",
-      "Read(//c/Users/jonba/Documents/**)"
+      "Bash(for f in streamlit/helpers/*.py)",
+      "Bash(paste:*)",
+      "Bash(sort:*)",
+      "Bash(find streamlit/helpers -name \"*.py\" -type f ! -name \"__init__.py\" -exec sh -c 'echo \"\"{}:\"\"; grep -c \"\"^def \"\" \"\"{}\"\"' ;)",
+      "Bash(test:*)",
+      "Bash(awk:*)",
+      "Bash(pip install:*)"
     ],
     "deny": [],
-    "ask": [
-      "Bash(git push:*)"
-    ]
+    "ask": []
   }
 }

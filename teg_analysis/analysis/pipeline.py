@@ -567,28 +567,50 @@ ensuring data integrity.
 """
 
 
-import streamlit as st
 import pandas as pd
 import logging
-from utils import (
-    reshape_round_data,
-    read_file,
-    write_file,
-    process_round_for_all_scores,
-    load_and_prepare_handicap_data,
-    update_all_data,
-    update_streaks_cache,
-    update_commentary_caches,
-    update_bestball_cache,
-    summarise_existing_rd_data,
-    update_teg_status_files,
-    clear_all_caches,
-    clear_volume_cache,
-    ALL_SCORES_PARQUET,
-    HANDICAPS_CSV,
-    ALL_DATA_PARQUET,
-    ALL_DATA_CSV_MIRROR
-)
+
+# Import from teg_analysis modules
+from ..io.file_operations import read_file, write_file
+# from ..core.data_transforms import reshape_round_data, process_round_for_all_scores, summarise_existing_rd_data
+# from ..core.data_loader import load_and_prepare_handicap_data
+
+# NOTE: These functions are in pipeline.py or will be migrated:
+# - update_all_data, update_streaks_cache, update_commentary_caches, update_bestball_cache
+# - update_teg_status_files
+
+# NOTE: These are Streamlit-specific and should be called from streamlit/utils.py:
+# - clear_all_caches, clear_volume_cache
+
+# File path constants - TODO: Move to a constants module
+ALL_SCORES_PARQUET = 'data/all-scores.parquet'
+HANDICAPS_CSV = 'data/handicaps.csv'
+ALL_DATA_PARQUET = 'data/all-data.parquet'
+ALL_DATA_CSV_MIRROR = 'data/all-data.csv'
+
+# Temporary: Import functions not yet migrated from streamlit utils
+# These will be removed once functions are properly migrated
+import sys
+from pathlib import Path
+streamlit_path = Path(__file__).parent.parent.parent / 'streamlit'
+if str(streamlit_path) not in sys.path:
+    sys.path.insert(0, str(streamlit_path))
+
+try:
+    from utils import (
+        reshape_round_data,
+        process_round_for_all_scores,
+        load_and_prepare_handicap_data,
+        update_all_data,
+        update_streaks_cache,
+        update_commentary_caches,
+        update_bestball_cache,
+        summarise_existing_rd_data,
+        update_teg_status_files,
+    )
+except ImportError:
+    # Graceful fallback if utils not available
+    logger.warning("Could not import some functions from utils - they may need migration")
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -953,10 +975,26 @@ validation.
 """
 
 
-import streamlit as st
 import pandas as pd
 from datetime import datetime
-from utils import read_file, write_file, backup_file, clear_all_caches, update_teg_status_files, update_streaks_cache, update_commentary_caches, update_bestball_cache
+
+# Import from teg_analysis - reuse imports from earlier in file
+# read_file, write_file already imported above
+# Other functions should be imported from proper teg_analysis modules
+
+# Temporary: Import functions not yet migrated
+# Note: st import is at top of file with try/except
+try:
+    from utils import (
+        backup_file,
+        clear_all_caches,
+        update_teg_status_files,
+        update_streaks_cache,
+        update_commentary_caches,
+        update_bestball_cache
+    )
+except ImportError:
+    logger.warning("Could not import some utility functions - they may need migration")
 
 
 # State constants for deletion workflow
