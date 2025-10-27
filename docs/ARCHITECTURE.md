@@ -67,7 +67,7 @@ teg_analysis/
 
 **Dependencies:** pandas, PyGithub (for production)
 
-**Note:** Currently has direct Streamlit imports for caching - needs refactoring for full UI independence
+**UI Independence:** ✅ Complete - All Streamlit imports wrapped in conditional try/except blocks
 
 ---
 
@@ -88,7 +88,7 @@ teg_analysis/
 
 **Dependencies:** pandas, numpy
 
-**Note:** `data_loader.py` has direct Streamlit import - needs wrapping in try/except
+**UI Independence:** ✅ Complete - All Streamlit imports wrapped in conditional try/except blocks
 
 ---
 
@@ -114,7 +114,7 @@ teg_analysis/
 
 **Dependencies:** pandas, numpy
 
-**Note:** Several modules have direct Streamlit imports from `streamlit.utils` - needs refactoring
+**UI Independence:** ✅ Complete - All Streamlit imports wrapped in conditional try/except blocks
 
 ---
 
@@ -135,7 +135,7 @@ teg_analysis/
 
 **Dependencies:** pandas
 
-**Note:** `tables.py` has direct Streamlit import - needs wrapping
+**UI Independence:** ✅ Complete - All Streamlit imports wrapped in conditional try/except blocks
 
 ---
 
@@ -243,28 +243,11 @@ def load_all_data_cached():
 - Identified 9 remaining Streamlit imports to fix
 - Created comprehensive documentation
 
-### Known Issues (Wave 4 Testing)
-
-The following files have direct Streamlit imports that should be wrapped in try/except:
-
-1. `teg_analysis/core/data_loader.py` - 2 imports
-2. `teg_analysis/analysis/aggregation.py` - 1 import
-3. `teg_analysis/analysis/commentary.py` - 1 import
-4. `teg_analysis/analysis/pipeline.py` - 2 imports
-5. `teg_analysis/display/tables.py` - 1 import
-6. `teg_analysis/io/file_operations.py` - 1 import
-7. `teg_analysis/io/github_operations.py` - 1 import
-
-**Recommendation:** Create a follow-up task to wrap these in conditional imports:
-
-```python
-try:
-    import streamlit as st
-    HAS_STREAMLIT = True
-except ImportError:
-    st = None
-    HAS_STREAMLIT = False
-```
+**Wave 4.5:** Complete UI Independence ✅
+- Fixed all 9 direct Streamlit imports across 7 files
+- Wrapped imports in conditional try/except blocks
+- Provided fallback defaults for all functions
+- Test suite passing: test_independence.py and test_no_streamlit_imports.py
 
 ---
 
@@ -372,7 +355,7 @@ python tests/test_teg_analysis_performance.py
 
 ## Future Improvements
 
-1. **Fix remaining Streamlit imports:** Wrap 9 direct imports in try/except blocks
+1. ~~**Fix remaining Streamlit imports:** Wrap 9 direct imports in try/except blocks~~ ✅ COMPLETE
 2. **Add type hints:** Complete type annotations for all functions
 3. **Create unit tests:** Comprehensive test coverage
 4. **API documentation:** Auto-generate API docs with Sphinx
@@ -383,7 +366,8 @@ python tests/test_teg_analysis_performance.py
 
 ## See Also
 
-- [API_REFERENCE.md](API_REFERENCE.md) - Complete function reference
-- [ALTERNATIVE_UIS.md](ALTERNATIVE_UIS.md) - Framework integration examples
-- [PHASE_5_COMPLETION.md](PHASE_5_COMPLETION.md) - Phase 5 summary
+- [FUNCTION_REFERENCE.md](FUNCTION_REFERENCE.md) - Complete function reference (235+ functions)
+- [USAGE_GUIDE.md](USAGE_GUIDE.md) - Framework integration examples (FastAPI, Dash, Jupyter, CLI)
+- [REFACTOR_HISTORY.md](REFACTOR_HISTORY.md) - Complete refactoring history
+- [archive/PHASE_5_COMPLETE.md](archive/PHASE_5_COMPLETE.md) - Phase 5 detailed summary
 - [examples/example_fastapi.py](../examples/example_fastapi.py) - FastAPI example

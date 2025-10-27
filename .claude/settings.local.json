@@ -16,7 +16,10 @@
       "Bash(find streamlit/helpers -name \"*.py\" -type f ! -name \"__init__.py\" -exec sh -c 'echo \"\"{}:\"\"; grep -c \"\"^def \"\" \"\"{}\"\"' ;)",
       "Bash(test:*)",
       "Bash(awk:*)",
-      "Bash(pip install:*)"
+      "Bash(pip install:*)",
+      "Bash(for file in teg_analysis/*/*.py)",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(git mv:*)"
     ],
     "deny": [],
     "ask": []
