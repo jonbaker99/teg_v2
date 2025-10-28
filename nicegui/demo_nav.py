@@ -184,21 +184,27 @@ def create_nav_header(current_page):
             ui.label('TEG Analysis Demos').classes('text-h6 font-bold')
             ui.space()
 
-            # Navigation buttons
+            # Navigation buttons - use inline styles to override Quasar's button styling
             rankings_btn = ui.button('Player Rankings', icon='bar_chart').props('no-caps unelevated')
             rankings_btn.on_click(lambda: ui.navigate.to('/'))
             if current_page == 'player_rankings':
-                rankings_btn.classes(add='forest-green-button')
+                rankings_btn.style('background-color: #228B22; color: white;')
+            else:
+                rankings_btn.style('background-color: transparent; color: inherit;')
 
             sc_btn = ui.button('Score Distribution', icon='assessment').props('no-caps unelevated')
             sc_btn.on_click(lambda: ui.navigate.to('/sc-count'))
             if current_page == 'sc_count':
-                sc_btn.classes(add='forest-green-button')
+                sc_btn.style('background-color: #228B22; color: white;')
+            else:
+                sc_btn.style('background-color: transparent; color: inherit;')
 
             leaderboard_btn = ui.button('Leaderboard', icon='emoji_events').props('no-caps unelevated')
             leaderboard_btn.on_click(lambda: ui.navigate.to('/leaderboard'))
             if current_page == 'leaderboard':
-                leaderboard_btn.classes(add='forest-green-button')
+                leaderboard_btn.style('background-color: #228B22; color: white;')
+            else:
+                leaderboard_btn.style('background-color: transparent; color: inherit;')
 
 
 # ============================================================================
