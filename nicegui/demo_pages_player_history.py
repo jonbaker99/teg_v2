@@ -59,8 +59,7 @@ def player_rankings_page():
     # RANKINGS TABLE
     # ============================================================================
 
-    ui.label('Rankings by TEG').classes('text-h6 font-semibold mt-6')
-
+    title_box = ui.card().classes('bg-transparent border-0 shadow-none')
     rankings_box = ui.card()
 
     # ============================================================================
@@ -82,6 +81,7 @@ def player_rankings_page():
             competition = competition_options.get(competition_select.value, 'net')
 
             # Clear existing content
+            title_box.clear()
             rankings_box.clear()
             summary_box.clear()
 
@@ -90,8 +90,9 @@ def player_rankings_page():
 
             if competition == 'net':
                 # TEG Trophy (Net) - use dynamic measure based on TEG number
-                ui.label('TEG Trophy Rankings (Net Competition)').classes('text-h6 font-semibold mt-4')
-                ui.label('Note: Uses NetVP for TEGs 1-5, Stableford for TEGs 6+').classes('text-xs text-gray-600')
+                with title_box:
+                    ui.label('TEG Trophy Rankings (Net Competition)').classes('text-h6 font-semibold mt-4')
+                    ui.label('Note: Uses NetVP for TEGs 1-5, Stableford for TEGs 6+').classes('text-xs text-gray-600')
 
                 # Create pivot table with scores, then convert to ranks
                 pivot_data = aggregated_data.pivot_table(
@@ -122,7 +123,8 @@ def player_rankings_page():
 
             else:  # Gross
                 # Green Jacket (Gross)
-                ui.label('Green Jacket Rankings (Gross vs Par)').classes('text-h6 font-semibold mt-4')
+                with title_box:
+                    ui.label('Green Jacket Rankings (Gross vs Par)').classes('text-h6 font-semibold mt-4')
 
                 # Create pivot table with scores, then convert to ranks
                 pivot_data = aggregated_data.pivot_table(
