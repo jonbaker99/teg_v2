@@ -30,7 +30,7 @@ from teg_analysis.analysis.aggregation import (
     get_teg_leaderboard,
     get_current_in_progress_teg_fast
 )
-from teg_analysis.analysis.rankings import convert_pivot_scores_to_ranks
+from teg_analysis.analysis.rankings import convert_pivot_scores_to_ranks, calculate_average_rank_from_ranked_df
 from teg_analysis.analysis.scoring import get_net_competition_measure
 from teg_analysis.display.formatters import format_vs_par
 from teg_analysis.display.html_tables import generate_ranking_table_html
@@ -384,12 +384,10 @@ def player_rankings_page():
                     with rankings_box:
                         ui.label('No data available').classes('text-gray-500')
 
-                # Summary statistics
+                # Summary statistics - based on rankings from the table above
                 with summary_box:
                     ui.label('Average Rank by Player').classes('font-semibold')
-                    summary_stats = aggregated_data.groupby('Player')['NetVP'].agg(['mean', 'count']).round(1)
-                    summary_stats.columns = ['Avg Rank', 'TEGs Played']
-                    summary_stats = summary_stats.sort_values('Avg Rank')
+                    summary_stats = calculate_average_rank_from_ranked_df(ranked_data)
                     html_table = dataframe_to_html_table(summary_stats)
                     ui.html(html_table, sanitize=False)
 
@@ -417,12 +415,10 @@ def player_rankings_page():
                     with rankings_box:
                         ui.label('No data available').classes('text-gray-500')
 
-                # Summary statistics
+                # Summary statistics - based on rankings from the table above
                 with summary_box:
                     ui.label('Average Rank by Player').classes('font-semibold')
-                    summary_stats = aggregated_data.groupby('Player')['GrossVP'].agg(['mean', 'count']).round(1)
-                    summary_stats.columns = ['Avg Rank', 'TEGs Played']
-                    summary_stats = summary_stats.sort_values('Avg Rank')
+                    summary_stats = calculate_average_rank_from_ranked_df(ranked_data)
                     html_table = dataframe_to_html_table(summary_stats)
                     ui.html(html_table, sanitize=False)
 

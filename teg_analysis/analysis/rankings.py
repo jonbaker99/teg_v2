@@ -281,3 +281,78 @@ def convert_pivot_scores_to_ranks(pivot_df, measure):
         ranked_df.loc[ranks.index, col] = ranks
 
     return ranked_df
+
+
+def calculate_average_rank_from_ranked_df(ranked_df: pd.DataFrame, player_col: str = None) -> pd.DataFrame:
+    """Calculate average finishing position from a ranked DataFrame.
+
+    Takes a ranking DataFrame (typically with players as rows and tournaments as columns,
+    with rank values as cells like "1", "2=", "3", etc.) and calculates the average
+    ranking for each player. Tied positions are converted to their numeric value by
+    removing the "=" suffix. NaN values are ignored.
+
+    Args:
+        ranked_df: DataFrame with players as rows, tournaments as columns, ranks as values
+        player_col: Name of the player column (used for detection). If not provided,
+                   uses the index name or defaults to "Player".
+
+    Returns:
+        DataFrame with columns:
+        - Player: Player name
+        - TEGs Played: Number of tournaments played
+        - Average Position: Average finishing position (sorted best to worst)
+    """
+    # Determine player column name
+    if player_col is None:
+        player_col = ranked_df.index.name if ranked_df.index.name else "Player"
+
+    # Ensure index has the player column name for reset_index
+    df_copy = ranked_df.copy()
+    if player_col not in df_copy.columns:
+        df_copy.index.name = player_col
+        df_copy = df_copy.reset_index()
+
+    # Get all rank columns (exclude player column)
+    rank_columns = [col for col in df_copy.columns if col != player_col]
+
+    summary_data = []
+
+    for _, row in df_copy.iterrows():
+        player_name = row[player_col]
+        positions = row[rank_columns]
+
+        # Get numeric positions (exclude NaN and remove '=' from ties)
+        numeric_positions = []
+        for pos in positions.dropna():
+            clean_pos = str(pos).replace('=', '')
+            if clean_pos.isdigit():
+                numeric_positions.append(int(clean_pos))
+
+        # Calculate average if player has played
+        if numeric_positions:
+            avg_position = sum(numeric_positions) / len(numeric_positions)
+            tegs_played = len(numeric_positions)
+        else:
+            avg_position = None
+            tegs_played = 0
+
+        summary_data.append({
+            'Player': player_name,
+            'TEGs Played': tegs_played,
+            'Average Position': avg_position
+        })
+
+    summary_df = pd.DataFrame(summary_data)
+
+    # Sort by average position (best first), with non-players at bottom
+    summary_df = summary_df.sort_values(
+        ['TEGs Played', 'Average Position'],
+        ascending=[False, True],
+        na_position='last'
+    )
+
+    # Format average position to 2 decimal places
+    if 'Average Position' in summary_df.columns:
+        summary_df['Average Position'] = summary_df['Average Position'].round(2)
+
+    return summary_df
