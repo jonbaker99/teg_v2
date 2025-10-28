@@ -184,19 +184,27 @@ def create_nav_header(current_page):
             ui.label('TEG Analysis Demos').classes('text-h6 font-bold')
             ui.space()
 
-            # Navigation buttons - use Quasar's color prop system
-            # When selected: color=green (Quasar green), when not: color=grey-7 (light gray)
-            rankings_props = 'no-caps unelevated color=green' if current_page == 'player_rankings' else 'no-caps unelevated color=grey-7'
-            rankings_btn = ui.button('Player Rankings', icon='bar_chart').props(rankings_props)
+            # Navigation buttons - use forest green for selected, transparent for unselected
+            rankings_btn = ui.button('Player Rankings', icon='bar_chart').props('no-caps unelevated')
             rankings_btn.on_click(lambda: ui.navigate.to('/'))
+            if current_page == 'player_rankings':
+                rankings_btn.style('background-color: #228B22 !important; color: white !important;')
+            else:
+                rankings_btn.style('background-color: transparent !important; color: inherit !important;')
 
-            sc_props = 'no-caps unelevated color=green' if current_page == 'sc_count' else 'no-caps unelevated color=grey-7'
-            sc_btn = ui.button('Score Distribution', icon='assessment').props(sc_props)
+            sc_btn = ui.button('Score Distribution', icon='assessment').props('no-caps unelevated')
             sc_btn.on_click(lambda: ui.navigate.to('/sc-count'))
+            if current_page == 'sc_count':
+                sc_btn.style('background-color: #228B22 !important; color: white !important;')
+            else:
+                sc_btn.style('background-color: transparent !important; color: inherit !important;')
 
-            leaderboard_props = 'no-caps unelevated color=green' if current_page == 'leaderboard' else 'no-caps unelevated color=grey-7'
-            leaderboard_btn = ui.button('Leaderboard', icon='emoji_events').props(leaderboard_props)
+            leaderboard_btn = ui.button('Leaderboard', icon='emoji_events').props('no-caps unelevated')
             leaderboard_btn.on_click(lambda: ui.navigate.to('/leaderboard'))
+            if current_page == 'leaderboard':
+                leaderboard_btn.style('background-color: #228B22 !important; color: white !important;')
+            else:
+                leaderboard_btn.style('background-color: transparent !important; color: inherit !important;')
 
 
 # ============================================================================
@@ -442,14 +450,14 @@ def sc_count_page():
     def show_player():
         player_dist_box.visible = True
         teg_dist_box.visible = False
-        player_btn.classes(add='forest-green-button')
-        teg_btn.classes(remove='forest-green-button')
+        player_btn.style('background-color: #228B22 !important; color: white !important;')
+        teg_btn.style('background-color: transparent !important; color: inherit !important;')
 
     def show_teg():
         player_dist_box.visible = False
         teg_dist_box.visible = True
-        teg_btn.classes(add='forest-green-button')
-        player_btn.classes(remove='forest-green-button')
+        teg_btn.style('background-color: #228B22 !important; color: white !important;')
+        player_btn.style('background-color: transparent !important; color: inherit !important;')
 
     # Assign button handlers
     player_btn.on_click(show_player)
@@ -629,14 +637,14 @@ def leaderboard_page():
     def show_trophy():
         trophy_section.visible = True
         jacket_section.visible = False
-        trophy_btn.classes(add='forest-green-button')
-        jacket_btn.classes(remove='forest-green-button')
+        trophy_btn.style('background-color: #228B22 !important; color: white !important;')
+        jacket_btn.style('background-color: transparent !important; color: inherit !important;')
 
     def show_jacket():
         trophy_section.visible = False
         jacket_section.visible = True
-        jacket_btn.classes(add='forest-green-button')
-        trophy_btn.classes(remove='forest-green-button')
+        jacket_btn.style('background-color: #228B22 !important; color: white !important;')
+        trophy_btn.style('background-color: transparent !important; color: inherit !important;')
 
     # Assign button handlers
     trophy_btn.on_click(show_trophy)
