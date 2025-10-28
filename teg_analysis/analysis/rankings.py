@@ -344,10 +344,11 @@ def calculate_average_rank_from_ranked_df(ranked_df: pd.DataFrame, player_col: s
 
     summary_df = pd.DataFrame(summary_data)
 
-    # Sort by average position (best first), with non-players at bottom
+    # Sort by average position only (best average first = lowest number first)
+    # Non-players (NaN values) go to the bottom
     summary_df = summary_df.sort_values(
-        ['TEGs Played', 'Average Position'],
-        ascending=[False, True],
+        'Average Position',
+        ascending=True,
         na_position='last'
     )
 
