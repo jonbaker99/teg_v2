@@ -246,7 +246,7 @@ score_type_select.on('update:model-value', lambda _: refresh())
 player_select.on('update:model-value', lambda _: refresh())
 teg_select.on('update:model-value', lambda _: refresh())
 par_select.on('update:model-value', lambda _: refresh())
-display_mode.on('click', lambda _: refresh())
+display_mode.on('update:model-value', lambda _: refresh())
 
 # Load data on page start
 refresh()
