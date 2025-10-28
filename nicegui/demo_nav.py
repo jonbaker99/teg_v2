@@ -38,7 +38,8 @@ from teg_analysis.analysis.scoring import get_net_competition_measure
 # CUSTOM STYLING FOR FOREST GREEN BUTTONS
 # ============================================================================
 
-ui.add_css('''
+ui.add_head_html('''
+<style>
     .forest-green-button {
         background-color: #228B22 !important;
         color: white !important;
@@ -46,7 +47,8 @@ ui.add_css('''
     .forest-green-button:hover {
         background-color: #1a6b1a !important;
     }
-''')
+</style>
+''', shared=True)
 
 
 # ============================================================================
