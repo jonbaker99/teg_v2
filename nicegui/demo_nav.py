@@ -33,6 +33,7 @@ from teg_analysis.analysis.aggregation import (
 from teg_analysis.analysis.rankings import convert_pivot_scores_to_ranks
 from teg_analysis.analysis.scoring import get_net_competition_measure
 from teg_analysis.display.formatters import format_vs_par
+from teg_analysis.display.html_tables import generate_ranking_table_html
 
 
 # ============================================================================
@@ -47,6 +48,54 @@ ui.add_head_html('''
     }
     .forest-green-button:hover {
         background-color: #1a6b1a !important;
+    }
+
+    /* === RANKING TABLE STYLING (first-place and last-place cells) === */
+    table td.first-place,
+    table td.last-place {
+        position: relative;
+        text-align: center;
+    }
+
+    table td.first-place::before,
+    table td.last-place::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        width: 20px;
+        height: 20px;
+        border-radius: 15%;
+        z-index: 1;
+    }
+
+    table td.first-place span,
+    table td.last-place span {
+        position: relative;
+        z-index: 2;
+        display: inline-block;
+        width: 20px;
+        line-height: 20px;
+        font-weight: bold;
+    }
+
+    /* First place: green background, white text */
+    table td.first-place::before {
+        background: green;
+    }
+
+    table td.first-place span {
+        color: white;
+    }
+
+    /* Last place: light pink background, dark red text */
+    table td.last-place::before {
+        background: #FAE9E8;
+    }
+
+    table td.last-place span {
+        color: #8b0000;
     }
 </style>
 ''', shared=True)
@@ -329,7 +378,7 @@ def player_rankings_page():
 
                     with rankings_box:
                         ui.label('TEG Trophy Rankings (by finishing position)').classes('font-semibold')
-                        html_table = dataframe_to_html_table(ranked_data)
+                        html_table = generate_ranking_table_html(ranked_data)
                         ui.html(html_table, sanitize=False)
                 else:
                     with rankings_box:
@@ -362,7 +411,7 @@ def player_rankings_page():
 
                     with rankings_box:
                         ui.label('Green Jacket Rankings (by finishing position)').classes('font-semibold')
-                        html_table = dataframe_to_html_table(ranked_data)
+                        html_table = generate_ranking_table_html(ranked_data)
                         ui.html(html_table, sanitize=False)
                 else:
                     with rankings_box:
