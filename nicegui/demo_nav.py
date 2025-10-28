@@ -179,7 +179,7 @@ def create_nav_header(current_page):
     Args:
         current_page: The name of the current page ('player_rankings', 'sc_count', 'leaderboard')
     """
-    with ui.header().classes('bg-blue-100'):
+    with ui.header().classes('header_bg'):
         with ui.row().classes('w-full items-center gap-2'):
             ui.label('TEG Analysis Demos').classes('text-h6 font-bold')
             ui.space()
@@ -525,7 +525,8 @@ def sc_count_page():
                     else:
                         crosstab_player = crosstab_player.astype(int)
 
-                    ui.code(crosstab_player.to_string(), language='text')
+                    html_table = dataframe_to_html_table(crosstab_player)
+                    ui.html(html_table, sanitize=False)
 
             # ====== BY TEG ======
             with teg_dist_box:
@@ -551,7 +552,8 @@ def sc_count_page():
                     else:
                         crosstab_teg = crosstab_teg.astype(int)
 
-                    ui.code(crosstab_teg.to_string(), language='text')
+                    html_table = dataframe_to_html_table(crosstab_teg)
+                    ui.html(html_table, sanitize=False)
 
         except Exception as e:
             ui.notify(f'Error: {str(e)}', type='negative')
