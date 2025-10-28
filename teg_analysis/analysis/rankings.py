@@ -351,8 +351,12 @@ def calculate_average_rank_from_ranked_df(ranked_df: pd.DataFrame, player_col: s
         na_position='last'
     )
 
-    # Format average position to 2 decimal places
+    # Reset index to create a ranking column (1, 2, 3...)
+    summary_df = summary_df.reset_index(drop=True)
+    summary_df.insert(0, 'Rank', range(1, len(summary_df) + 1))
+
+    # Format average position to 1 decimal place
     if 'Average Position' in summary_df.columns:
-        summary_df['Average Position'] = summary_df['Average Position'].round(2)
+        summary_df['Average Position'] = summary_df['Average Position'].round(1)
 
     return summary_df

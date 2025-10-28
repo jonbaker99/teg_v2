@@ -114,13 +114,20 @@ all_data_sc_count = load_all_data(exclude_incomplete_tegs=False)
 # HELPER FUNCTIONS
 # ============================================================================
 
-def dataframe_to_html_table(df):
-    """Convert a pandas DataFrame to an HTML table with borders."""
+def dataframe_to_html_table(df, include_index=True):
+    """Convert a pandas DataFrame to an HTML table with borders.
+
+    Args:
+        df: DataFrame to convert
+        include_index: If True, show the dataframe index as the first column.
+                      If False, only show dataframe columns.
+    """
     html = '<table style="border-collapse: collapse; font-family: monospace; font-size: 14px;">'
 
     # Header row
     html += '<tr style="background-color: #f0f0f0;">'
-    html += f'<th style="border: 1px solid #ddd; padding: 8px; text-align: left;"></th>'  # Corner cell for index
+    if include_index:
+        html += f'<th style="border: 1px solid #ddd; padding: 8px; text-align: left;"></th>'  # Corner cell for index
     for col in df.columns:
         html += f'<th style="border: 1px solid #ddd; padding: 8px; text-align: center;">{col}</th>'
     html += '</tr>'
@@ -128,7 +135,8 @@ def dataframe_to_html_table(df):
     # Data rows
     for idx, row in df.iterrows():
         html += '<tr>'
-        html += f'<td style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">{idx}</td>'
+        if include_index:
+            html += f'<td style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">{idx}</td>'
         for val in row:
             # Convert NaN/None to "-"
             if pd.isna(val):
@@ -388,7 +396,7 @@ def player_rankings_page():
                 with summary_box:
                     ui.label('Average Rank by Player').classes('font-semibold')
                     summary_stats = calculate_average_rank_from_ranked_df(ranked_data)
-                    html_table = dataframe_to_html_table(summary_stats)
+                    html_table = dataframe_to_html_table(summary_stats, include_index=False)
                     ui.html(html_table, sanitize=False)
 
             else:  # Gross
@@ -419,7 +427,7 @@ def player_rankings_page():
                 with summary_box:
                     ui.label('Average Rank by Player').classes('font-semibold')
                     summary_stats = calculate_average_rank_from_ranked_df(ranked_data)
-                    html_table = dataframe_to_html_table(summary_stats)
+                    html_table = dataframe_to_html_table(summary_stats, include_index=False)
                     ui.html(html_table, sanitize=False)
 
         except Exception as e:
