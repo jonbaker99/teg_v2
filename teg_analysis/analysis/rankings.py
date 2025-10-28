@@ -215,3 +215,69 @@ def safe_ordinal(n):
         return ordinal(int(n))
     except ValueError:
         return str(n)  # or return a specific string for invalid inputs
+
+
+def convert_pivot_scores_to_ranks(pivot_df, measure):
+    """Convert a pivot table of scores to tournament ranks for each column independently.
+
+    Takes a pivot table with Players as rows, Events/TEGs as columns, and scores as values,
+    and converts each column from scores to finishing positions (ranks).
+
+    Args:
+        pivot_df (pd.DataFrame): Pivot table with:
+            - Index: Player names
+            - Columns: Event identifiers (TEG numbers, TEG names, etc.)
+            - Values: Scores (numeric)
+        measure (str): Score type determining sort order:
+            - 'Stableford': Higher score is better (ascending=False)
+            - 'GrossVP', 'NetVP', 'Sc': Lower score is better (ascending=True)
+
+    Returns:
+        pd.DataFrame: Same structure as input but with ranks instead of scores
+            - Ranks as strings: "1", "2", "3", etc.
+            - Tied positions marked with "=": "1=", "2=", "3=", etc.
+            - NaN preserved where player didn't participate
+
+    Example:
+        >>> # Create pivot: Players × TEGs with NetVP scores
+        >>> pivot = agg_data.pivot_table(
+        ...     index='Player',
+        ...     columns='TEGNum',
+        ...     values='NetVP',
+        ...     aggfunc='min'
+        ... )
+        >>> # Convert to ranks
+        >>> rankings = convert_pivot_scores_to_ranks(pivot, 'NetVP')
+        >>> # Now shows "1", "2", "3=" instead of -15, -10, -5
+    """
+    ranked_df = pivot_df.copy()
+
+    # Determine sort order based on measure
+    # Stableford: higher is better (descending), others: lower is better (ascending)
+    ascending = measure != 'Stableford'
+
+    # Process each column (TEG/Event) independently
+    for col in pivot_df.columns:
+        col_data = pivot_df[col].dropna()
+
+        if len(col_data) == 0:
+            # No data in this column, skip
+            continue
+
+        # Rank the scores (method='min' for ties: same score gets same rank)
+        ranks = col_data.rank(method='min', ascending=ascending)
+
+        # Convert to integer then to string
+        ranks = ranks.astype(int).astype(str)
+
+        # Find tied values (same score)
+        is_tie = col_data.duplicated(keep=False)
+
+        # Mark ties with '=' suffix (e.g., "1=" instead of "1")
+        if is_tie.any():
+            ranks.loc[is_tie] = ranks.loc[is_tie] + '='
+
+        # Write back to the ranked dataframe
+        ranked_df.loc[ranks.index, col] = ranks
+
+    return ranked_df
