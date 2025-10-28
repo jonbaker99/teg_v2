@@ -32,6 +32,7 @@ from teg_analysis.analysis.aggregation import (
 )
 from teg_analysis.analysis.rankings import convert_pivot_scores_to_ranks
 from teg_analysis.analysis.scoring import get_net_competition_measure
+from teg_analysis.display.formatters import format_vs_par
 
 
 # ============================================================================
@@ -80,11 +81,39 @@ def dataframe_to_html_table(df):
         html += '<tr>'
         html += f'<td style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">{idx}</td>'
         for val in row:
-            html += f'<td style="border: 1px solid #ddd; padding: 8px; text-align: center;">{val}</td>'
+            # Convert NaN/None to "-"
+            if pd.isna(val):
+                display_val = '-'
+            else:
+                display_val = val
+            html += f'<td style="border: 1px solid #ddd; padding: 8px; text-align: center;">{display_val}</td>'
         html += '</tr>'
 
     html += '</table>'
     return html
+
+
+def format_crosstab_columns(crosstab_df, score_type):
+    """Format crosstab column headers based on score type.
+
+    Args:
+        crosstab_df: The crosstab DataFrame with numeric column names
+        score_type: The score type ('Sc', 'GrossVP', 'Stableford')
+
+    Returns:
+        DataFrame with formatted column names
+    """
+    formatted_df = crosstab_df.copy()
+
+    # Format column names based on score type
+    if score_type == 'GrossVP':
+        # Format as vs-par (e.g., -5, E, +3)
+        formatted_df.columns = [format_vs_par(float(col)) for col in formatted_df.columns]
+    else:
+        # For Sc and Stableford, just convert to int string
+        formatted_df.columns = [str(int(col)) for col in formatted_df.columns]
+
+    return formatted_df
 
 
 def create_round_leaderboard_html(teg_data, measure, ascending=False, title="Leaderboard"):
@@ -518,6 +547,9 @@ def sc_count_page():
                         filtered_data[score_type]
                     )
 
+                    # Format column headers based on score type
+                    crosstab_player = format_crosstab_columns(crosstab_player, score_type)
+
                     if mode == 'Percentage':
                         # Convert to percentages
                         crosstab_player = (crosstab_player.div(crosstab_player.sum(axis=1), axis=0) * 100).round(1)
@@ -544,6 +576,9 @@ def sc_count_page():
                         filtered_data[score_type]
                     )
                     crosstab_teg.index = [f'TEG {num}' for num in crosstab_teg.index]
+
+                    # Format column headers based on score type
+                    crosstab_teg = format_crosstab_columns(crosstab_teg, score_type)
 
                     if mode == 'Percentage':
                         # Convert to percentages
