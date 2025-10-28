@@ -185,17 +185,17 @@ def create_nav_header(current_page):
             ui.space()
 
             # Navigation buttons
-            rankings_btn = ui.button('Player Rankings', icon='bar_chart')
+            rankings_btn = ui.button('Player Rankings', icon='bar_chart').props('no-caps unelevated')
             rankings_btn.on_click(lambda: ui.navigate.to('/'))
             if current_page == 'player_rankings':
                 rankings_btn.classes(add='forest-green-button')
 
-            sc_btn = ui.button('Score Distribution', icon='assessment')
+            sc_btn = ui.button('Score Distribution', icon='assessment').props('no-caps unelevated')
             sc_btn.on_click(lambda: ui.navigate.to('/sc-count'))
             if current_page == 'sc_count':
                 sc_btn.classes(add='forest-green-button')
 
-            leaderboard_btn = ui.button('Leaderboard', icon='emoji_events')
+            leaderboard_btn = ui.button('Leaderboard', icon='emoji_events').props('no-caps unelevated')
             leaderboard_btn.on_click(lambda: ui.navigate.to('/leaderboard'))
             if current_page == 'leaderboard':
                 leaderboard_btn.classes(add='forest-green-button')
