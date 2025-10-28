@@ -159,8 +159,9 @@ def player_rankings_page():
 
     ui.label('Rankings by TEG').classes('text-h6 font-semibold mt-6')
 
-    with ui.card().classes('bg-blue-50'):
-        ui.label('Shows each player\'s finishing position in each TEG').classes('text-sm')
+    # with ui.card().classes('bg-blue-50'):
+    #     ui.label('Shows each player\'s finishing position in each TEG').classes('text-sm')
+    # ui.label('Shows each player\'s finishing position in each TEG').classes('text-sm text-gray-600')
 
     rankings_box = ui.card()
 
@@ -170,9 +171,9 @@ def player_rankings_page():
 
     ui.label('Summary Statistics').classes('text-h6 font-semibold mt-6')
 
-    with ui.card().classes('bg-blue-50'):
-        ui.label('Average finishing position and position counts by player').classes('text-sm')
-
+    # with ui.card().classes('bg-blue-50'):
+    #     ui.label('Average finishing position and position counts by player').classes('text-sm')
+    # ui.label('Average finishing position and position counts by player').classes('text-sm')
     summary_box = ui.card()
 
     # ============================================================================
