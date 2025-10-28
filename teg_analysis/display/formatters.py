@@ -51,6 +51,33 @@ def format_vs_par(value: float) -> str:
         return str(value)
 
 
+def format_crosstab_columns(crosstab_df: pd.DataFrame, score_type: str) -> pd.DataFrame:
+    """Format crosstab column headers based on score type.
+
+    Converts numeric column headers to appropriate display format:
+    - GrossVP: Formats as vs-par (e.g., -5, E, +3)
+    - Sc, Stableford, NetVP: Converts to integer strings
+
+    Args:
+        crosstab_df: The crosstab DataFrame with numeric column names
+        score_type: The score type ('Sc', 'GrossVP', 'Stableford', 'NetVP')
+
+    Returns:
+        DataFrame with formatted column names
+    """
+    formatted_df = crosstab_df.copy()
+
+    # Format column names based on score type
+    if score_type == 'GrossVP':
+        # Format as vs-par (e.g., -5, E, +3)
+        formatted_df.columns = [format_vs_par(float(col)) for col in formatted_df.columns]
+    else:
+        # For Sc, Stableford, NetVP, just convert to int string
+        formatted_df.columns = [str(int(col)) for col in formatted_df.columns]
+
+    return formatted_df
+
+
 def format_date_for_scorecard(date_str, input_format=None, output_format='%d/%m/%y'):
     """Formats a date string for scorecard display.
 
