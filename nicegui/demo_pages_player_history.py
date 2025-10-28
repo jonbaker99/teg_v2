@@ -26,6 +26,33 @@ from teg_analysis.analysis.rankings import convert_pivot_scores_to_ranks
 
 
 # ============================================================================
+# HTML TABLE HELPER FUNCTION
+# ============================================================================
+
+def dataframe_to_html_table(df):
+    """Convert a pandas DataFrame to an HTML table with borders."""
+    html = '<table style="border-collapse: collapse; font-family: monospace; font-size: 14px;">'
+
+    # Header row
+    html += '<tr style="background-color: #f0f0f0;">'
+    html += f'<th style="border: 1px solid #ddd; padding: 8px; text-align: left;"></th>'  # Corner cell for index
+    for col in df.columns:
+        html += f'<th style="border: 1px solid #ddd; padding: 8px; text-align: center;">{col}</th>'
+    html += '</tr>'
+
+    # Data rows
+    for idx, row in df.iterrows():
+        html += '<tr>'
+        html += f'<td style="border: 1px solid #ddd; padding: 8px; font-weight: bold;">{idx}</td>'
+        for val in row:
+            html += f'<td style="border: 1px solid #ddd; padding: 8px; text-align: center;">{val}</td>'
+        html += '</tr>'
+
+    html += '</table>'
+    return html
+
+
+# ============================================================================
 # PAGE SETUP AND DATA LOADING
 # ============================================================================
 
@@ -121,18 +148,20 @@ def refresh():
 
                 with rankings_box:
                     ui.label('TEG Trophy Rankings (by finishing position)').classes('font-semibold')
-                    ui.code(ranked_data.to_string(), language='text')
+                    html_table = dataframe_to_html_table(ranked_data)
+                    ui.html(html_table, sanitize=False)
             else:
                 with rankings_box:
                     ui.label('No data available').classes('text-gray-500')
 
             # Summary statistics
             with summary_box:
-                ui.label('Summary: Average score by player').classes('font-semibold')
+                ui.label('Average Rank by Player').classes('font-semibold')
                 summary_stats = aggregated_data.groupby('Player')['NetVP'].agg(['mean', 'count']).round(1)
-                summary_stats.columns = ['Avg NetVP', 'TEGs Played']
-                summary_stats = summary_stats.sort_values('Avg NetVP')
-                ui.code(summary_stats.to_string(), language='text')
+                summary_stats.columns = ['Avg Rank', 'TEGs Played']
+                summary_stats = summary_stats.sort_values('Avg Rank')
+                html_table = dataframe_to_html_table(summary_stats)
+                ui.html(html_table, sanitize=False)
 
         else:  # Gross
             # Green Jacket (Gross)
@@ -152,18 +181,20 @@ def refresh():
 
                 with rankings_box:
                     ui.label('Green Jacket Rankings (by finishing position)').classes('font-semibold')
-                    ui.code(ranked_data.to_string(), language='text')
+                    html_table = dataframe_to_html_table(ranked_data)
+                    ui.html(html_table, sanitize=False)
             else:
                 with rankings_box:
                     ui.label('No data available').classes('text-gray-500')
 
             # Summary statistics
             with summary_box:
-                ui.label('Summary: Average score by player').classes('font-semibold')
+                ui.label('Average Rank by Player').classes('font-semibold')
                 summary_stats = aggregated_data.groupby('Player')['GrossVP'].agg(['mean', 'count']).round(1)
-                summary_stats.columns = ['Avg GrossVP', 'TEGs Played']
-                summary_stats = summary_stats.sort_values('Avg GrossVP')
-                ui.code(summary_stats.to_string(), language='text')
+                summary_stats.columns = ['Avg Rank', 'TEGs Played']
+                summary_stats = summary_stats.sort_values('Avg Rank')
+                html_table = dataframe_to_html_table(summary_stats)
+                ui.html(html_table, sanitize=False)
 
     except Exception as e:
         ui.notify(f'Error: {str(e)}', type='negative')
