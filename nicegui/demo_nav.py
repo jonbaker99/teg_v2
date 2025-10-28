@@ -184,27 +184,19 @@ def create_nav_header(current_page):
             ui.label('TEG Analysis Demos').classes('text-h6 font-bold')
             ui.space()
 
-            # Navigation buttons - use inline styles to override Quasar's button styling
-            rankings_btn = ui.button('Player Rankings', icon='bar_chart').props('no-caps unelevated')
+            # Navigation buttons - use Quasar's color prop system
+            # When selected: color=green (Quasar green), when not: color=grey-7 (light gray)
+            rankings_props = 'no-caps unelevated color=green' if current_page == 'player_rankings' else 'no-caps unelevated color=grey-7'
+            rankings_btn = ui.button('Player Rankings', icon='bar_chart').props(rankings_props)
             rankings_btn.on_click(lambda: ui.navigate.to('/'))
-            if current_page == 'player_rankings':
-                rankings_btn.style('background-color: #228B22; color: white;')
-            else:
-                rankings_btn.style('background-color: transparent; color: inherit;')
 
-            sc_btn = ui.button('Score Distribution', icon='assessment').props('no-caps unelevated')
+            sc_props = 'no-caps unelevated color=green' if current_page == 'sc_count' else 'no-caps unelevated color=grey-7'
+            sc_btn = ui.button('Score Distribution', icon='assessment').props(sc_props)
             sc_btn.on_click(lambda: ui.navigate.to('/sc-count'))
-            if current_page == 'sc_count':
-                sc_btn.style('background-color: #228B22; color: white;')
-            else:
-                sc_btn.style('background-color: transparent; color: inherit;')
 
-            leaderboard_btn = ui.button('Leaderboard', icon='emoji_events').props('no-caps unelevated')
+            leaderboard_props = 'no-caps unelevated color=green' if current_page == 'leaderboard' else 'no-caps unelevated color=grey-7'
+            leaderboard_btn = ui.button('Leaderboard', icon='emoji_events').props(leaderboard_props)
             leaderboard_btn.on_click(lambda: ui.navigate.to('/leaderboard'))
-            if current_page == 'leaderboard':
-                leaderboard_btn.style('background-color: #228B22; color: white;')
-            else:
-                leaderboard_btn.style('background-color: transparent; color: inherit;')
 
 
 # ============================================================================
