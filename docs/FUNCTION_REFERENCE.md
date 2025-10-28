@@ -332,26 +332,29 @@ df['Stableford'] = calculate_stableford_points(df)
 
 ### Analysis Layer
 
-#### aggregation.py (68 functions - top 30 shown)
+#### aggregation.py (72 functions - top 33 shown)
 - `get_teg_rounds(teg_str)` - Get number of rounds for TEG string
 - `get_tegnum_rounds(teg_num)` - Get number of rounds for TEG number
 - `get_teg_winners(df)` - Calculate TEG winners (gross/net/worst)
 - `list_fields_by_aggregation_level(level)` - Get fields for aggregation level
 - `aggregate_data(df, level, fields)` - Aggregate data to specified level
-- `get_complete_teg_data(df, teg_num)` - Get data for completed TEG
-- `get_teg_data_inc_in_progress(df, teg_num)` - Get TEG data including in-progress
-- `get_round_data(df, teg_num, round_num)` - Get specific round data
-- `get_9_data(df, teg_num, round_num, nines)` - Get 9-hole data
+- `get_complete_teg_data()` - Get data for completed TEGs (excludes TEG 50, incomplete)
+- `get_teg_data_inc_in_progress()` - Get TEG data including in-progress tournaments
+- `get_round_data(ex_50=True, ex_incomplete=False)` - Get round-level aggregated data
+- `get_9_data()` - Get 9-hole (front/back) aggregated data
+- `get_Pl_data()` - Get player-level aggregated data
 - `process_winners_for_charts(winners_df)` - Format winners for charts
 - `get_current_in_progress_teg_fast()` - Get current/in-progress TEG number
 - `get_current_in_progress_teg(df)` - Get current TEG from data
+- `get_incomplete_tegs()` - Get list of incomplete TEGs
+- `get_future_tegs()` - Get list of future scheduled TEGs
 - `filter_data_by_teg(df, teg_num)` - Filter data for specific TEG
 - `filter_data_by_player(df, player_code)` - Filter data for specific player
 - `filter_data_by_round(df, teg_num, round_num)` - Filter for specific round
 - `filter_data_by_course(df, course_name)` - Filter for specific course
 - `filter_data_by_date_range(df, start_date, end_date)` - Filter by date range
-- `get_teg_leaderboard(df, teg_num, measure)` - Get TEG leaderboard
-- `get_round_leaderboard(df, teg_num, round_num, measure)` - Get round leaderboard
+- `get_teg_leaderboard(df, measure, teg_num=None)` - Get TEG leaderboard
+- `get_round_leaderboard(df, measure, teg_num=None, round_num=None)` - Get round leaderboard
 - `get_player_teg_history(df, player_code)` - Get player's TEG history
 - `get_player_round_history(df, player_code)` - Get player's round history
 - `get_player_pb(df, player_code, metric)` - Get player's personal best
@@ -363,15 +366,15 @@ df['Stableford'] = calculate_stableford_points(df)
 - `calculate_gross_vs_par(df)` - Calculate gross vs par
 - `calculate_net_vs_par(df)` - Calculate net vs par
 - `calculate_handicap_allowance(df)` - Calculate handicap allowances
-- ... and 38 more functions
+- ... and 39 more functions
 
 #### rankings.py (8 functions)
-- `add_ranks(df, score_col, group_col, ascending)` - Add ranking columns
-- `get_ranked_teg_data(df, teg_num)` - Get ranked data for TEG
-- `get_ranked_round_data(df, teg_num, round_num)` - Get ranked round data
-- `get_ranked_frontback_data(df, teg_num, round_num, nine)` - Get ranked 9-hole data
-- `get_best(df, metric, n, filters)` - Get n best results
-- `get_worst(df, metric, n, filters)` - Get n worst results
+- `add_ranks(df, fields_to_rank=None, rank_ascending=None)` - Add ranking columns
+- `get_ranked_teg_data()` - Get ranked data for TEG
+- `get_ranked_round_data()` - Get ranked round data
+- `get_ranked_frontback_data()` - Get ranked 9-hole data
+- `get_best(df, measure_to_use, player_level=False, top_n=1)` - Get n best results
+- `get_worst(df, measure_to_use, player_level=False, top_n=1)` - Get n worst results
 - `ordinal(n)` - Convert number to ordinal (1st, 2nd, etc.)
 - `safe_ordinal(n)` - Ordinal with null handling
 
@@ -427,14 +430,15 @@ df['Stableford'] = calculate_stableford_points(df)
 - `compare_to_records(value, metric)` - Compare value to records
 - `is_new_record(df, metric, value)` - Check if new record
 
-#### commentary.py (5 functions)
+#### commentary.py (6 functions)
 - `create_round_summary(all_data_df, round_info_df)` - Create round summary table
 - `create_round_events(df)` - Identify notable round events
 - `create_tournament_summary(df)` - Create tournament summary
 - `create_round_streaks_summary(df)` - Summarize round streaks
 - `create_tournament_streaks_summary(df)` - Summarize tournament streaks
+- (Private: `_get_constants()` - Load constants from utils, avoid circular imports)
 
-#### pipeline.py (22 functions - top 12 shown)
+#### pipeline.py (24 functions - top 14 shown)
 - `update_streaks_cache(defer_github)` - Update streaks cache file
 - `update_bestball_cache(defer_github)` - Update bestball cache file
 - `update_commentary_caches(defer_github)` - Update all commentary caches
@@ -445,8 +449,10 @@ df['Stableford'] = calculate_stableford_points(df)
 - `add_round_info(df)` - Add round information
 - `update_all_data(round_data, commit_msg, defer_github)` - Update main dataset
 - `initialize_update_state()` - Initialize data update state
+- `validate_deletion_selection(selected_rounds)` - Validate deletion selections
 - `validate_round_data(round_data)` - Validate round data
 - `prepare_round_for_storage(round_data)` - Prepare round for storage
+- `process_google_sheets_data(raw_df)` - Process and validate Google Sheets data
 - ... and 10 more functions
 
 ---
