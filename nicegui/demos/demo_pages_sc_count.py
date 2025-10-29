@@ -7,8 +7,8 @@ for specific players, TEGs, and hole par values.
 
 import sys
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))  # For teg_analysis imports
-sys.path.insert(0, str(Path(__file__).parent))  # For local nicegui module imports
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))  # For teg_analysis imports
+sys.path.insert(0, str(Path(__file__).parent.parent))  # For nicegui root imports
 
 import pandas as pd
 from nicegui import ui
@@ -18,8 +18,8 @@ from teg_analysis.display.formatters import format_crosstab_columns
 from teg_analysis.display.html_tables import dataframe_to_html_table
 
 # Import shared components
-from ui_helpers import create_nav_header
-from shared_setup import all_data_sc_count
+from helpers.ui_helpers import create_nav_header
+from demos.shared_setup import all_data_sc_count
 
 
 @ui.page('/sc-count')

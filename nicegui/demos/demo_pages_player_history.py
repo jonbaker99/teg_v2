@@ -9,8 +9,8 @@ Includes summary statistics showing average finishing position by player.
 
 import sys
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))  # For teg_analysis imports
-sys.path.insert(0, str(Path(__file__).parent))  # For local nicegui module imports
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))  # For teg_analysis imports
+sys.path.insert(0, str(Path(__file__).parent.parent))  # For nicegui root imports
 
 from nicegui import ui
 
@@ -20,8 +20,8 @@ from teg_analysis.analysis.rankings import convert_pivot_scores_to_ranks, calcul
 from teg_analysis.display.html_tables import generate_ranking_table_html, dataframe_to_html_table
 
 # Import shared components
-from ui_helpers import create_nav_header
-from shared_setup import all_data_player_history
+from helpers.ui_helpers import create_nav_header
+from demos.shared_setup import all_data_player_history
 
 
 @ui.page('/')

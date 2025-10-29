@@ -10,8 +10,8 @@ automatic selection of the most recent TEG and manual TEG selection option.
 
 import sys
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))  # For teg_analysis imports
-sys.path.insert(0, str(Path(__file__).parent))  # For local nicegui module imports
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))  # For teg_analysis imports
+sys.path.insert(0, str(Path(__file__).parent.parent))  # For nicegui root imports
 
 from nicegui import ui
 
@@ -24,8 +24,8 @@ from teg_analysis.analysis.scoring import get_net_competition_measure
 from teg_analysis.display.html_tables import create_round_leaderboard_html
 
 # Import shared components
-from ui_helpers import create_nav_header
-from shared_setup import all_data_leaderboard
+from helpers.ui_helpers import create_nav_header
+from demos.shared_setup import all_data_leaderboard
 
 
 @ui.page('/leaderboard')

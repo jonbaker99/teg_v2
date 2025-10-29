@@ -11,18 +11,18 @@ Run this file with: python demo_main.py
 
 import sys
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))  # For teg_analysis imports
-sys.path.insert(0, str(Path(__file__).parent))  # For local nicegui module imports
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))  # For teg_analysis imports
+sys.path.insert(0, str(Path(__file__).parent.parent))  # For nicegui root imports
 
 from nicegui import ui
 
 # Import shared setup (loads CSS styling and initializes cached data)
-import shared_setup
+from demos import shared_setup
 
 # Import all demo pages (registers @ui.page() decorators)
-import demo_pages_player_history
-import demo_pages_sc_count
-import demo_pages_leaderboard
+from demos import demo_pages_player_history
+from demos import demo_pages_sc_count
+from demos import demo_pages_leaderboard
 
 if __name__ in {"__main__", "__mp_main__"}:
     ui.run(title='TEG Analysis Demos', reload=True)
