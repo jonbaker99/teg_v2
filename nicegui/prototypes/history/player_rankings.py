@@ -204,7 +204,7 @@ def player_rankings_content():
                             else:
                                 # Display main ranking table
                                 ui.label('Player Rankings').classes('text-sm font-semibold')
-                                trophy_html = trophy_rankings.to_html(escape=False)
+                                trophy_html = trophy_rankings.to_html(escape=False, classes='datawrapper-table')
                                 ui.html(trophy_html, sanitize=False)
 
                                 # Calculate and display summary
@@ -213,7 +213,7 @@ def player_rankings_content():
 
                                 summary = calculate_average_rank_from_ranked_df(trophy_rankings)
                                 if not summary.empty:
-                                    summary_html = summary.to_html(escape=False)
+                                    summary_html = summary.to_html(escape=False, classes='datawrapper-table')
                                     ui.html(summary_html, sanitize=False)
 
                         except Exception as e:
@@ -233,7 +233,7 @@ def player_rankings_content():
                             else:
                                 # Display main ranking table
                                 ui.label('Player Rankings').classes('text-sm font-semibold')
-                                jacket_html = jacket_rankings.to_html(escape=False)
+                                jacket_html = jacket_rankings.to_html(escape=False, classes='datawrapper-table')
                                 ui.html(jacket_html, sanitize=False)
 
                                 # Calculate and display summary
@@ -242,7 +242,7 @@ def player_rankings_content():
 
                                 summary = calculate_average_rank_from_ranked_df(jacket_rankings)
                                 if not summary.empty:
-                                    summary_html = summary.to_html(escape=False)
+                                    summary_html = summary.to_html(escape=False, classes='datawrapper-table')
                                     ui.html(summary_html, sanitize=False)
 
                         except Exception as e:

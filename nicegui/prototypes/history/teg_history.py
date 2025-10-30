@@ -55,7 +55,7 @@ def teg_history_content():
                     return
 
                 # Convert DataFrame to HTML and display
-                html_output = history_table.to_html(index=False, escape=False)
+                html_output = history_table.to_html(index=False, escape=False, classes='datawrapper-table')
                 ui.html(html_output, sanitize=False)
 
                 # Add note if winners were missing

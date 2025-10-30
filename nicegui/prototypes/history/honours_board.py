@@ -70,7 +70,7 @@ def honours_board_content():
                                 trophy_summary['TEGs'] = trophy_summary['TEGs'].apply(
                                     lambda x: x
                                 )
-                                trophy_html = trophy_summary.to_html(index=False, escape=False)
+                                trophy_html = trophy_summary.to_html(index=False, escape=False, classes='datawrapper-table')
                                 ui.html(trophy_html, sanitize=False)
                             else:
                                 ui.label('No data available').classes('text-gray-600')
@@ -85,7 +85,7 @@ def honours_board_content():
                                 jacket_summary['TEGs'] = jacket_summary['TEGs'].apply(
                                     lambda x: x
                                 )
-                                jacket_html = jacket_summary.to_html(index=False, escape=False)
+                                jacket_html = jacket_summary.to_html(index=False, escape=False, classes='datawrapper-table')
                                 ui.html(jacket_html, sanitize=False)
                             else:
                                 ui.label('No data available').classes('text-gray-600')
@@ -100,7 +100,7 @@ def honours_board_content():
                                 spoon_summary['TEGs'] = spoon_summary['TEGs'].apply(
                                     lambda x: x
                                 )
-                                spoon_html = spoon_summary.to_html(index=False, escape=False)
+                                spoon_html = spoon_summary.to_html(index=False, escape=False, classes='datawrapper-table')
                                 ui.html(spoon_html, sanitize=False)
                             else:
                                 ui.label('No data available').classes('text-gray-600')
@@ -120,7 +120,7 @@ def honours_board_content():
                             doubles_df, doubles_count = calculate_trophy_jacket_doubles(clean_winners)
                             if not doubles_df.empty:
                                 ui.label(f'Total doubles: {doubles_count}').classes('text-sm font-semibold mb-2')
-                                doubles_html = doubles_df.to_html(index=False, escape=False)
+                                doubles_html = doubles_df.to_html(index=False, escape=False, classes='datawrapper-table')
                                 ui.html(doubles_html, sanitize=False)
                             else:
                                 ui.label('No doubles found').classes('text-gray-600')
@@ -133,7 +133,7 @@ def honours_board_content():
                             eagles_df = get_eagles_data(all_data)
                             if not eagles_df.empty:
                                 ui.label(f'Total eagles: {len(eagles_df)}').classes('text-sm font-semibold mb-2')
-                                eagles_html = eagles_df.to_html(index=False, escape=False)
+                                eagles_html = eagles_df.to_html(index=False, escape=False, classes='datawrapper-table')
                                 ui.html(eagles_html, sanitize=False)
                             else:
                                 ui.label('No eagles found in tournament history').classes('text-gray-600')
@@ -146,7 +146,7 @@ def honours_board_content():
                             aces_df = get_holes_in_one_data(all_data)
                             if not aces_df.empty:
                                 ui.label(f'Total holes in one: {len(aces_df)}').classes('text-sm font-semibold mb-2')
-                                aces_html = aces_df.to_html(index=False, escape=False)
+                                aces_html = aces_df.to_html(index=False, escape=False, classes='datawrapper-table')
                                 ui.html(aces_html, sanitize=False)
                             else:
                                 ui.label('No holes in one found in tournament history').classes('text-gray-600')

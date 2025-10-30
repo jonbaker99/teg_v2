@@ -140,7 +140,7 @@ def teg_results_content():
                                     leaderboard.insert(0, 'Rank', range(1, len(leaderboard) + 1))
 
                                     ui.label('TEG Trophy Leaderboard').classes('text-sm font-semibold')
-                                    leaderboard_html = leaderboard.to_html(index=False, escape=False)
+                                    leaderboard_html = leaderboard.to_html(index=False, escape=False, classes='datawrapper-table')
                                     ui.html(leaderboard_html, sanitize=False)
                                 else:
                                     ui.label(f'Measure {measure} not found in data').classes('text-gray-600')
@@ -161,7 +161,7 @@ def teg_results_content():
                                 leaderboard.insert(0, 'Rank', range(1, len(leaderboard) + 1))
 
                                 ui.label('Green Jacket Leaderboard').classes('text-sm font-semibold')
-                                leaderboard_html = leaderboard.to_html(index=False, escape=False)
+                                leaderboard_html = leaderboard.to_html(index=False, escape=False, classes='datawrapper-table')
                                 ui.html(leaderboard_html, sanitize=False)
                             else:
                                 ui.label('No Gross data available').classes('text-gray-600')
