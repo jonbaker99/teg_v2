@@ -58,62 +58,78 @@ def birdies_etc_content():
             if not state['data_loaded']:
                 return
 
-            # ===== MAIN TABS =====
-            with ui.tabs() as tabs:
-                # ===== TAB 1: CAREER TOTALS =====
-                with ui.tab('Career Totals'):
-                    # Score type selector
-                    score_type_options = {
-                        'Eagles': state['chart_fields_all'][0],
-                        'Birdies': state['chart_fields_all'][1],
-                        'Pars': state['chart_fields_all'][2],
-                        'Triple Bogey+': state['chart_fields_all'][3],
-                    }
+            # ===== SECTION STATE =====
+            section_state = {'current': 'career_totals'}
 
-                    ui.label('Select score type:').classes('font-semibold mb-3')
-                    score_type_toggle = ui.toggle(score_type_options, value='Eagles').classes('gap-2')
+            def set_section(section_id):
+                section_state['current'] = section_id
 
-                    results_area_1 = ui.card().classes('w-full mt-4')
+            # ===== BUTTON BAR =====
+            with ui.row().classes('gap-2 mb-4'):
+                ui.button('Career Totals', on_click=lambda: set_section('career_totals'))
+                ui.button('Most in a Round', on_click=lambda: set_section('most_in_round'))
+                ui.button('Most in a TEG', on_click=lambda: set_section('most_in_teg'))
 
-                    def update_career_totals():
-                        selected_score_type = score_type_toggle.value
-                        selected_chart_fields = score_type_options[selected_score_type]
-                        section_title = create_section_title(selected_chart_fields)
-                        formatted_table = prepare_achievement_table_data(state['scoring_stats'], selected_chart_fields)
+            # ===== SECTION 1: CAREER TOTALS =====
+            card = ui.card().classes('w-full')
+            card.bind_visibility_from(section_state, 'current', lambda v: v == 'career_totals')
+            with card:
+                # Score type selector
+                score_type_options = {
+                    'Eagles': state['chart_fields_all'][0],
+                    'Birdies': state['chart_fields_all'][1],
+                    'Pars': state['chart_fields_all'][2],
+                    'Triple Bogey+': state['chart_fields_all'][3],
+                }
 
-                        results_area_1.clear()
-                        with results_area_1:
-                            ui.label(f'Career {section_title}').classes('text-base font-semibold mb-3')
-                            ui.html(formatted_table.to_html(
-                                index=False,
-                                justify='left',
-                                classes='datawrapper-table'
-                            ), sanitize=False)
+                ui.label('Select score type:').classes('font-semibold mb-3')
+                score_type_toggle = ui.toggle(score_type_options, value='Eagles').classes('gap-2')
 
-                    score_type_toggle.on_value_change(lambda: update_career_totals())
-                    update_career_totals()
+                results_area_1 = ui.card().classes('w-full mt-4')
 
-                # ===== TAB 2: MOST IN A ROUND =====
-                with ui.tab('Most in a Round'):
-                    ui.label('Single-round maximum achievements').classes('text-base font-semibold mb-3')
-                    reordered_table = state['max_by_round'][['Player', 'Eagles', 'Birdies', 'Pars_or_Better', 'TBPs']].copy()
-                    reordered_table = reordered_table.rename(columns={'Pars_or_Better': 'Pars'})
-                    ui.html(reordered_table.to_html(
-                        index=False,
-                        justify='left',
-                        classes='datawrapper-table'
-                    ), sanitize=False)
+                def update_career_totals():
+                    selected_score_type = score_type_toggle.value
+                    selected_chart_fields = score_type_options[selected_score_type]
+                    section_title = create_section_title(selected_chart_fields)
+                    formatted_table = prepare_achievement_table_data(state['scoring_stats'], selected_chart_fields)
 
-                # ===== TAB 3: MOST IN A TEG =====
-                with ui.tab('Most in a TEG'):
-                    ui.label('Single-TEG maximum achievements').classes('text-base font-semibold mb-3')
-                    reordered_table = state['max_by_teg'][['Player', 'Eagles', 'Birdies', 'Pars_or_Better', 'TBPs']].copy()
-                    reordered_table = reordered_table.rename(columns={'Pars_or_Better': 'Pars'})
-                    ui.html(reordered_table.to_html(
-                        index=False,
-                        justify='left',
-                        classes='datawrapper-table'
-                    ), sanitize=False)
+                    results_area_1.clear()
+                    with results_area_1:
+                        ui.label(f'Career {section_title}').classes('text-base font-semibold mb-3')
+                        ui.html(formatted_table.to_html(
+                            index=False,
+                            justify='left',
+                            classes='datawrapper-table'
+                        ), sanitize=False)
+
+                score_type_toggle.on_value_change(lambda: update_career_totals())
+                update_career_totals()
+
+            # ===== SECTION 2: MOST IN A ROUND =====
+            card = ui.card().classes('w-full')
+            card.bind_visibility_from(section_state, 'current', lambda v: v == 'most_in_round')
+            with card:
+                ui.label('Single-round maximum achievements').classes('text-base font-semibold mb-3')
+                reordered_table = state['max_by_round'][['Player', 'Eagles', 'Birdies', 'Pars_or_Better', 'TBPs']].copy()
+                reordered_table = reordered_table.rename(columns={'Pars_or_Better': 'Pars'})
+                ui.html(reordered_table.to_html(
+                    index=False,
+                    justify='left',
+                    classes='datawrapper-table'
+                ), sanitize=False)
+
+            # ===== SECTION 3: MOST IN A TEG =====
+            card = ui.card().classes('w-full')
+            card.bind_visibility_from(section_state, 'current', lambda v: v == 'most_in_teg')
+            with card:
+                ui.label('Single-TEG maximum achievements').classes('text-base font-semibold mb-3')
+                reordered_table = state['max_by_teg'][['Player', 'Eagles', 'Birdies', 'Pars_or_Better', 'TBPs']].copy()
+                reordered_table = reordered_table.rename(columns={'Pars_or_Better': 'Pars'})
+                ui.html(reordered_table.to_html(
+                    index=False,
+                    justify='left',
+                    classes='datawrapper-table'
+                ), sanitize=False)
 
         except Exception as e:
             ui.label(f'Error loading achievements: {str(e)}').classes('text-red-600')
