@@ -191,65 +191,80 @@ def player_rankings_content():
                     ui.label('No data available').classes('text-red-600')
                     return
 
-                # Create tabs for different competitions
-                with ui.tabs() as tabs:
-                    # Tab 1: TEG Trophy (Net competition)
-                    with ui.tab('TEG Trophy (Net)'):
-                        try:
-                            # Create ranking table for Net competition
-                            trophy_rankings = create_teg_ranking_table(teg_data, 'Net')
+                # ===== SECTION SELECTOR =====
+                section_state = {'current': 'trophy'}
 
-                            if trophy_rankings.empty:
-                                ui.label('No TEG Trophy ranking data available').classes('text-gray-600')
-                            else:
-                                # Display main ranking table
-                                ui.label('Player Rankings').classes('text-sm font-semibold')
-                                trophy_html = trophy_rankings.to_html(escape=False, classes='datawrapper-table')
-                                ui.html(trophy_html, sanitize=False)
+                def set_section(section_name):
+                    section_state['current'] = section_name
 
-                                # Calculate and display summary
-                                ui.separator().classes('my-4')
-                                ui.label('Summary Statistics').classes('text-sm font-semibold mt-4')
+                # Button bar to select section
+                with ui.row().classes('gap-2 mb-4'):
+                    ui.button('TEG Trophy (Net)', on_click=lambda: set_section('trophy')).props('flat')
+                    ui.button('Green Jacket (Gross)', on_click=lambda: set_section('jacket')).props('flat')
 
-                                summary = calculate_average_rank_from_ranked_df(trophy_rankings)
-                                if not summary.empty:
-                                    summary_html = summary.to_html(escape=False, classes='datawrapper-table')
-                                    ui.html(summary_html, sanitize=False)
+                # ===== SECTION 1: TEG TROPHY (NET) =====
+                trophy_card = ui.card().classes('w-full')
+                trophy_card.bind_visibility_from(section_state, 'current', lambda v: v == 'trophy')
 
-                        except Exception as e:
-                            ui.label(f'Error loading TEG Trophy rankings: {str(e)}').classes('text-red-600')
-                            print(f'Error: {e}')
-                            import traceback
-                            traceback.print_exc()
+                with trophy_card:
+                    try:
+                        # Create ranking table for Net competition
+                        trophy_rankings = create_teg_ranking_table(teg_data, 'Net')
 
-                    # Tab 2: Green Jacket (Gross competition)
-                    with ui.tab('Green Jacket (Gross)'):
-                        try:
-                            # Create ranking table for Gross competition
-                            jacket_rankings = create_teg_ranking_table(teg_data, 'Gross')
+                        if trophy_rankings.empty:
+                            ui.label('No TEG Trophy ranking data available').classes('text-gray-600')
+                        else:
+                            # Display main ranking table
+                            ui.label('Player Rankings').classes('text-sm font-semibold')
+                            trophy_html = trophy_rankings.to_html(escape=False, classes='datawrapper-table')
+                            ui.html(trophy_html, sanitize=False)
 
-                            if jacket_rankings.empty:
-                                ui.label('No Green Jacket ranking data available').classes('text-gray-600')
-                            else:
-                                # Display main ranking table
-                                ui.label('Player Rankings').classes('text-sm font-semibold')
-                                jacket_html = jacket_rankings.to_html(escape=False, classes='datawrapper-table')
-                                ui.html(jacket_html, sanitize=False)
+                            # Calculate and display summary
+                            ui.separator().classes('my-4')
+                            ui.label('Summary Statistics').classes('text-sm font-semibold mt-4')
 
-                                # Calculate and display summary
-                                ui.separator().classes('my-4')
-                                ui.label('Summary Statistics').classes('text-sm font-semibold mt-4')
+                            summary = calculate_average_rank_from_ranked_df(trophy_rankings)
+                            if not summary.empty:
+                                summary_html = summary.to_html(escape=False, classes='datawrapper-table')
+                                ui.html(summary_html, sanitize=False)
 
-                                summary = calculate_average_rank_from_ranked_df(jacket_rankings)
-                                if not summary.empty:
-                                    summary_html = summary.to_html(escape=False, classes='datawrapper-table')
-                                    ui.html(summary_html, sanitize=False)
+                    except Exception as e:
+                        ui.label(f'Error loading TEG Trophy rankings: {str(e)}').classes('text-red-600')
+                        print(f'Error: {e}')
+                        import traceback
+                        traceback.print_exc()
 
-                        except Exception as e:
-                            ui.label(f'Error loading Green Jacket rankings: {str(e)}').classes('text-red-600')
-                            print(f'Error: {e}')
-                            import traceback
-                            traceback.print_exc()
+                # ===== SECTION 2: GREEN JACKET (GROSS) =====
+                jacket_card = ui.card().classes('w-full')
+                jacket_card.bind_visibility_from(section_state, 'current', lambda v: v == 'jacket')
+
+                with jacket_card:
+                    try:
+                        # Create ranking table for Gross competition
+                        jacket_rankings = create_teg_ranking_table(teg_data, 'Gross')
+
+                        if jacket_rankings.empty:
+                            ui.label('No Green Jacket ranking data available').classes('text-gray-600')
+                        else:
+                            # Display main ranking table
+                            ui.label('Player Rankings').classes('text-sm font-semibold')
+                            jacket_html = jacket_rankings.to_html(escape=False, classes='datawrapper-table')
+                            ui.html(jacket_html, sanitize=False)
+
+                            # Calculate and display summary
+                            ui.separator().classes('my-4')
+                            ui.label('Summary Statistics').classes('text-sm font-semibold mt-4')
+
+                            summary = calculate_average_rank_from_ranked_df(jacket_rankings)
+                            if not summary.empty:
+                                summary_html = summary.to_html(escape=False, classes='datawrapper-table')
+                                ui.html(summary_html, sanitize=False)
+
+                    except Exception as e:
+                        ui.label(f'Error loading Green Jacket rankings: {str(e)}').classes('text-red-600')
+                        print(f'Error: {e}')
+                        import traceback
+                        traceback.print_exc()
 
         except Exception as e:
             content_area.clear()
