@@ -1,12 +1,11 @@
-"""TEG Results - Complete results for a selected TEG with leaderboards and charts.
+"""TEG Results - Complete results for a selected TEG with leaderboards and reports.
 
 This page displays:
 - TEG selector (dropdown with latest as default)
 - TEG Trophy leaderboard (Net competition)
 - Green Jacket leaderboard (Gross competition)
-- Scorecards for each round (sub-tabs)
+- Scorecards for each round (displayed vertically)
 - Full tournament report (markdown)
-- Optional cumulative score charts
 
 Corresponds to Streamlit page: streamlit/102TEG Results.py
 """
@@ -116,91 +115,91 @@ def teg_results_content():
                 except:
                     num_rounds = 4
 
-                # Create main tabs
-                with ui.tabs() as tabs:
-                    # Tab 1: TEG Trophy Leaderboard
-                    with ui.tab(f'TEG Trophy Leaderboard'):
-                        try:
-                            trophy_agg = aggregate_data(teg_data, aggregation_level='Player')
-                            if not trophy_agg.empty:
-                                # Determine competition measure
-                                if teg_num <= 5:
-                                    measure = 'NetVP'
-                                else:
-                                    measure = 'Stableford'
+                # ===== SECTION 1: TEG Trophy Leaderboard =====
+                ui.label('TEG Trophy Leaderboard').classes('text-h6 font-bold mt-6')
+                try:
+                    trophy_agg = aggregate_data(teg_data, aggregation_level='Player')
+                    if not trophy_agg.empty:
+                        # Determine competition measure
+                        if teg_num <= 5:
+                            measure = 'NetVP'
+                        else:
+                            measure = 'Stableford'
 
-                                if measure in trophy_agg.columns:
-                                    # Sort by measure (ascending for NetVP, descending for Stableford)
-                                    if measure == 'Stableford':
-                                        leaderboard = trophy_agg.sort_values(measure, ascending=False)
-                                    else:
-                                        leaderboard = trophy_agg.sort_values(measure, ascending=True)
-
-                                    # Add rank column
-                                    leaderboard.insert(0, 'Rank', range(1, len(leaderboard) + 1))
-
-                                    ui.label('TEG Trophy Leaderboard').classes('text-sm font-semibold')
-                                    leaderboard_html = leaderboard.to_html(index=False, escape=False, classes='datawrapper-table')
-                                    ui.html(leaderboard_html, sanitize=False)
-                                else:
-                                    ui.label(f'Measure {measure} not found in data').classes('text-gray-600')
+                        if measure in trophy_agg.columns:
+                            # Sort by measure (ascending for NetVP, descending for Stableford)
+                            if measure == 'Stableford':
+                                leaderboard = trophy_agg.sort_values(measure, ascending=False)
                             else:
-                                ui.label('No Trophy data available').classes('text-gray-600')
-                        except Exception as e:
-                            ui.label(f'Error loading Trophy leaderboard: {str(e)}').classes('text-red-600')
+                                leaderboard = trophy_agg.sort_values(measure, ascending=True)
 
-                    # Tab 2: Green Jacket Leaderboard
-                    with ui.tab('Green Jacket Leaderboard'):
+                            # Add rank column
+                            leaderboard.insert(0, 'Rank', range(1, len(leaderboard) + 1))
+
+                            leaderboard_html = leaderboard.to_html(index=False, escape=False, classes='datawrapper-table')
+                            ui.html(leaderboard_html, sanitize=False)
+                        else:
+                            ui.label(f'Measure {measure} not found in data').classes('text-gray-600')
+                    else:
+                        ui.label('No Trophy data available').classes('text-gray-600')
+                except Exception as e:
+                    ui.label(f'Error loading Trophy leaderboard: {str(e)}').classes('text-red-600')
+
+                ui.separator()
+
+                # ===== SECTION 2: Green Jacket Leaderboard =====
+                ui.label('Green Jacket Leaderboard').classes('text-h6 font-bold mt-6')
+                try:
+                    jacket_agg = aggregate_data(teg_data, aggregation_level='Player')
+                    if not jacket_agg.empty and 'GrossVP' in jacket_agg.columns:
+                        # Sort by GrossVP
+                        leaderboard = jacket_agg.sort_values('GrossVP', ascending=True)
+
+                        # Add rank column
+                        leaderboard.insert(0, 'Rank', range(1, len(leaderboard) + 1))
+
+                        leaderboard_html = leaderboard.to_html(index=False, escape=False, classes='datawrapper-table')
+                        ui.html(leaderboard_html, sanitize=False)
+                    else:
+                        ui.label('No Gross data available').classes('text-gray-600')
+                except Exception as e:
+                    ui.label(f'Error loading Jacket leaderboard: {str(e)}').classes('text-red-600')
+
+                ui.separator()
+
+                # ===== SECTION 3: Round Scorecards =====
+                ui.label('Round Scorecards').classes('text-h6 font-bold mt-6')
+                try:
+                    for round_num in range(1, num_rounds + 1):
                         try:
-                            jacket_agg = aggregate_data(teg_data, aggregation_level='Player')
-                            if not jacket_agg.empty and 'GrossVP' in jacket_agg.columns:
-                                # Sort by GrossVP
-                                leaderboard = jacket_agg.sort_values('GrossVP', ascending=True)
-
-                                # Add rank column
-                                leaderboard.insert(0, 'Rank', range(1, len(leaderboard) + 1))
-
-                                ui.label('Green Jacket Leaderboard').classes('text-sm font-semibold')
-                                leaderboard_html = leaderboard.to_html(index=False, escape=False, classes='datawrapper-table')
-                                ui.html(leaderboard_html, sanitize=False)
-                            else:
-                                ui.label('No Gross data available').classes('text-gray-600')
-                        except Exception as e:
-                            ui.label(f'Error loading Jacket leaderboard: {str(e)}').classes('text-red-600')
-
-                    # Tab 3: Round Scorecards
-                    with ui.tab('Round Scorecards'):
-                        try:
-                            # Create sub-tabs for each round
-                            with ui.tabs() as round_tabs:
-                                for round_num in range(1, num_rounds + 1):
-                                    with ui.tab(f'Round {round_num}'):
-                                        try:
-                                            # Generate scorecard HTML for this round
-                                            scorecard_html = generate_round_comparison_html(teg_num, round_num)
-                                            ui.html(scorecard_html, sanitize=False)
-
-                                        except Exception as e:
-                                            ui.label(f'Error loading Round {round_num}: {str(e)}').classes('text-red-600')
+                            ui.label(f'Round {round_num}').classes('text-sm font-semibold mt-4')
+                            # Generate scorecard HTML for this round
+                            scorecard_html = generate_round_comparison_html(teg_num, round_num)
+                            ui.html(scorecard_html, sanitize=False)
 
                         except Exception as e:
-                            ui.label(f'Error loading scorecards: {str(e)}').classes('text-red-600')
+                            ui.label(f'Error loading Round {round_num}: {str(e)}').classes('text-red-600')
 
-                    # Tab 4: Tournament Report
-                    with ui.tab('Tournament Report'):
-                        try:
-                            report_path = f'data/commentary/teg_{teg_num}_main_report.md'
-                            try:
-                                report_content = read_text_file(report_path)
-                                html_content = markdown.markdown(report_content)
-                                ui.html(html_content, sanitize=False)
-                            except FileNotFoundError:
-                                ui.label(f'Tournament report not found: {report_path}').classes('text-gray-600')
-                            except Exception as e:
-                                ui.label(f'Error loading report: {str(e)}').classes('text-orange-600')
+                except Exception as e:
+                    ui.label(f'Error loading scorecards: {str(e)}').classes('text-red-600')
 
-                        except Exception as e:
-                            ui.label(f'Error: {str(e)}').classes('text-red-600')
+                ui.separator()
+
+                # ===== SECTION 4: Tournament Report =====
+                ui.label('Tournament Report').classes('text-h6 font-bold mt-6')
+                try:
+                    report_path = f'data/commentary/teg_{teg_num}_main_report.md'
+                    try:
+                        report_content = read_text_file(report_path)
+                        html_content = markdown.markdown(report_content)
+                        ui.html(html_content, sanitize=False)
+                    except FileNotFoundError:
+                        ui.label(f'Tournament report not found: {report_path}').classes('text-gray-600')
+                    except Exception as e:
+                        ui.label(f'Error loading report: {str(e)}').classes('text-orange-600')
+
+                except Exception as e:
+                    ui.label(f'Error: {str(e)}').classes('text-red-600')
 
         except Exception as e:
             content_area.clear()
