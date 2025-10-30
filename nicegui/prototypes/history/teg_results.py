@@ -27,8 +27,7 @@ from teg_analysis.analysis.aggregation import aggregate_data
 import markdown
 
 
-@ui.page('/history/teg-results')
-def teg_results_page():
+def teg_results_content():
     """Display complete results for a selected TEG."""
 
     # ===== PAGE TITLE & DESCRIPTION =====

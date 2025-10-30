@@ -46,8 +46,7 @@ from helpers.records_identification import (
 )
 
 
-@ui.page('/latest/teg-context')
-def latest_teg_context_page():
+def latest_teg_context_content():
     """Display selected TEG in context with comprehensive analysis."""
 
     # ===== PAGE TITLE & DESCRIPTION =====

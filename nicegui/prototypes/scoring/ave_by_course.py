@@ -135,8 +135,7 @@ def create_net_course_records_summary(filtered_data):
     return summary_df
 
 
-@ui.page('/scoring/ave-by-course')
-def ave_by_course_page():
+def ave_by_course_content():
     """Display course performance analysis with area filtering."""
 
     # ===== PAGE TITLE & DESCRIPTION =====

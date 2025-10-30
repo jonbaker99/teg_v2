@@ -100,8 +100,7 @@ def format_eclectic_display_table(df: pd.DataFrame) -> pd.DataFrame:
     return formatted_df
 
 
-@ui.page('/scorecard/eclectic-records')
-def eclectic_records_page():
+def eclectic_records_content():
     """Display eclectic score records by TEG and Course."""
 
     # ===== PAGE TITLE & DESCRIPTION =====

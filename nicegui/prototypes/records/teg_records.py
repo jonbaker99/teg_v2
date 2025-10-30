@@ -38,8 +38,7 @@ from helpers.streak_analysis_processing import (
 )
 
 
-@ui.page('/records/teg-records')
-def teg_records_page():
+def teg_records_content():
     """Display comprehensive TEG records across all categories."""
 
     # ===== PAGE TITLE & DESCRIPTION =====

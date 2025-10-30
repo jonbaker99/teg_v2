@@ -54,8 +54,7 @@ def filter_data_for_eclectic(all_data: pd.DataFrame, selected_player: str,
     return filtered
 
 
-@ui.page('/scorecard/eclectic-scores')
-def eclectic_scores_page():
+def eclectic_scores_content():
     """Display eclectic scores with flexible filtering."""
 
     # ===== PAGE TITLE & DESCRIPTION =====

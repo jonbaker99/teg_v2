@@ -37,8 +37,7 @@ from helpers.scorecard_data_processing import (
 )
 
 
-@ui.page('/scorecard/scorecard')
-def scorecard_page():
+def scorecard_content():
     """Display and compare scorecards in multiple formats."""
 
     # ===== PAGE TITLE & DESCRIPTION =====

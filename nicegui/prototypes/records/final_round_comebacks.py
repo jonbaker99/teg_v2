@@ -28,8 +28,7 @@ from helpers.comeback_analysis import (
 )
 
 
-@ui.page('/records/final-round-comebacks')
-def final_round_comebacks_page():
+def final_round_comebacks_content():
     """Display final round comebacks and collapses analysis."""
 
     # ===== PAGE TITLE & DESCRIPTION =====

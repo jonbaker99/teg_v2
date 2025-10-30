@@ -27,8 +27,7 @@ from helpers.best_performance_processing import (
 )
 
 
-@ui.page('/records/best-tegs-rounds')
-def best_tegs_rounds_page():
+def best_tegs_rounds_content():
     """Display top TEGs and rounds by selected measure."""
 
     # ===== PAGE TITLE & DESCRIPTION =====

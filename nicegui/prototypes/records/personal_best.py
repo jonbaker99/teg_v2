@@ -34,8 +34,7 @@ from helpers.best_performance_processing import (
 )
 
 
-@ui.page('/records/personal-best')
-def personal_best_page():
+def personal_best_content():
     """Display personal bests and worsts for each player."""
 
     # ===== PAGE TITLE & DESCRIPTION =====

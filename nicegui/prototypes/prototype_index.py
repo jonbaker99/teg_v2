@@ -12,8 +12,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))  # nicegui root
 from nicegui import ui
 
 
-@ui.page('/')
-def index_page():
+def index_content():
     """Display home page with navigation to all prototype pages."""
 
     # ===== PAGE HEADER =====

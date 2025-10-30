@@ -24,8 +24,7 @@ from helpers.scoring_achievements_processing import (
 )
 
 
-@ui.page('/scoring/birdies-etc')
-def birdies_etc_page():
+def birdies_etc_content():
     """Display scoring achievements: eagles, birdies, pars, and poor scores."""
 
     # ===== PAGE TITLE & DESCRIPTION =====

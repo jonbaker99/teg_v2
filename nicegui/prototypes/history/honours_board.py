@@ -31,8 +31,7 @@ from helpers.history_data_processing import (
 )
 
 
-@ui.page('/history/honours-board')
-def honours_board_page():
+def honours_board_content():
     """Display player honours boards for various tournament achievements."""
 
     # ===== PAGE TITLE & DESCRIPTION =====

@@ -55,8 +55,7 @@ from helpers.records_identification import (
 )
 
 
-@ui.page('/latest/round-context')
-def latest_round_context_page():
+def latest_round_context_content():
     """Display selected round in context with comprehensive analysis."""
 
     # ===== PAGE TITLE & DESCRIPTION =====

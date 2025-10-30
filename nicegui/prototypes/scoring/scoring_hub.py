@@ -32,8 +32,7 @@ from helpers.scoring_data_processing import (
 )
 
 
-@ui.page('/scoring/scoring-hub')
-def scoring_hub_page():
+def scoring_hub_content():
     """Display comprehensive scoring analysis dashboard."""
 
     # ===== PAGE TITLE & DESCRIPTION =====

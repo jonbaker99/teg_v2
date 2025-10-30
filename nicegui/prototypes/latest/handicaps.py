@@ -48,8 +48,7 @@ def format_handicap_value(val: float) -> str:
     return str(int(val))
 
 
-@ui.page('/latest/handicaps')
-def handicaps_page():
+def handicaps_content():
     """Display and manage player handicaps."""
 
     # ===== PAGE TITLE & DESCRIPTION =====

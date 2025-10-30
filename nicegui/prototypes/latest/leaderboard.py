@@ -24,8 +24,7 @@ from utils import load_all_data, get_teg_rounds, get_round_data
 from scorecard_utils import generate_round_comparison_html
 
 
-@ui.page('/latest/leaderboard')
-def leaderboard_page():
+def leaderboard_content():
     """Display current tournament leaderboard and progress."""
 
     ui.label('Latest Leaderboard').classes('text-h5 font-bold mt-6')

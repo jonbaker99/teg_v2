@@ -30,8 +30,7 @@ from helpers.streak_analysis_processing import (
 )
 
 
-@ui.page('/scoring/streaks')
-def streaks_page():
+def streaks_content():
     """Display comprehensive streak analysis."""
 
     # ===== PAGE TITLE & DESCRIPTION =====

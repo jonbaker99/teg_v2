@@ -51,29 +51,61 @@ ui.html(html_content, sanitize=False)  # Trusted source - our markdown conversio
 
 ---
 
-## 2. Navigation Pattern
+## 2. Single-Page Application with ui.sub_pages
 
-### Page Routes
-All prototype pages use the `@ui.page()` decorator with a specific route:
+### Architecture
+The TEG Analysis Prototypes use NiceGUI's `ui.sub_pages()` to create a true single-page application (SPA) with a persistent navigation bar:
 
 ```python
+# In prototype_main.py
+def root():
+    # Persistent navigation bar (created once, never recreated)
+    with ui.header().classes('bg-blue-600 text-white sticky top-0'):
+        ui.button('Home', icon='home').on_click(lambda: ui.navigate.to('/'))
+        ui.button('History', icon='history').on_click(lambda: ui.navigate.to('/history/teg-history'))
+        # ... more navigation buttons
+
+    # Register all pages as sub-pages
+    ui.sub_pages({
+        '/': index_content,
+        '/history/teg-history': teg_history_content,
+        '/history/honours-board': honours_board_content,
+        # ... all 24 pages registered here
+    })
+
+ui.run(root)  # Run with root function, not ui.run()
+```
+
+### Benefits
+1. **Persistent Navigation** - Nav bar never disappears when switching pages
+2. **No Full Page Reloads** - Only the content area updates, creating a smooth SPA experience
+3. **Centralized Routing** - All routes defined in one place (`prototype_main.py`)
+4. **Shared State** - Navigation state persists across page transitions
+
+### Page Function Changes
+All page functions are **plain functions with no decorators**:
+
+```python
+# OLD PATTERN (before refactor)
 @ui.page('/history/teg-history')
 def teg_history_page():
-    # Page content here
     pass
+
+# NEW PATTERN (with ui.sub_pages)
+def teg_history_content():
+    pass
+    # No decorator!
+    # Function name ends with '_content'
 ```
 
 ### Navigation Between Pages
-Use `ui.navigate.to()` for client-side navigation:
+Use `ui.navigate.to()` for smooth navigation within the SPA:
 
 ```python
-ui.button('Go to TEG History').on_click(
+ui.button('Go to History').on_click(
     lambda: ui.navigate.to('/history/teg-history')
 )
 ```
-
-### Root Page Required
-NiceGUI requires at least one page at the root path `/`. The prototype application uses `prototype_index.py` for this purpose.
 
 ---
 
@@ -107,7 +139,7 @@ teg_data = load_all_data()  # Fresh load each time
 
 ---
 
-## 4. Error Handling Pattern
+## 4. Error Handling Pattern (updated section numbers below)
 
 ### Standard Try-Catch Pattern
 All data loading should be wrapped in try-except:
@@ -319,5 +351,5 @@ Potential enhancements for later phases:
 
 ---
 
-**Last Updated:** 2025-10-29
-**Version:** 1.0
+**Last Updated:** 2025-10-30 (Added ui.sub_pages SPA architecture documentation)
+**Version:** 2.0 (Persistent navigation with single-page application)

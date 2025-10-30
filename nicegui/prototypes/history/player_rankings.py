@@ -167,8 +167,7 @@ def create_teg_ranking_table(teg_data: pd.DataFrame, competition: str, row_dimen
         return pd.DataFrame()
 
 
-@ui.page('/history/player-rankings')
-def player_rankings_page():
+def player_rankings_content():
     """Display player rankings across all TEGs."""
 
     # ===== PAGE TITLE & DESCRIPTION =====

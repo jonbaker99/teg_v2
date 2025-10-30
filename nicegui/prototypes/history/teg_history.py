@@ -22,8 +22,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / 'streamlit')
 from helpers.history_data_processing import load_cached_winners, prepare_complete_history_table_fast
 
 
-@ui.page('/history/teg-history')
-def teg_history_page():
+def teg_history_content():
     """Display complete TEG history table with winners for each competition."""
 
     # ===== PAGE TITLE & DESCRIPTION =====

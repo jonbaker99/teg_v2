@@ -1,14 +1,15 @@
-"""NiceGUI Prototype Application Runner
+"""NiceGUI Prototype Application - Single Page Application with Persistent Navigation
 
-Organizes prototype pages by section, systematically recreating Streamlit
-functionality with minimalist design (simple HTML tables for data verification).
+Uses NiceGUI's ui.sub_pages architecture to create a single-page application with
+a persistent navigation bar that appears on all 24 pages.
 
-Sections (phases):
-- Phase 1: History (5 pages) - TEG winners, results, player rankings
-- Phase 2: Records (3 pages) - Tournament records, personal bests
-- Phase 3: Scoring (11 pages) - Scoring analysis and distributions
-- Phase 4: Latest TEG (4 pages) - Current tournament leaderboard and context
-- Phase 5: Scorecards (4 pages) - Detailed scorecard analysis
+Navigation Sections (6 categories):
+- Home: Index/landing page
+- History (5 pages): TEG winners, results, player rankings, reports
+- Records (4 pages): Tournament records, best/worst performances, personal bests
+- Scoring (6 pages): Scoring analysis, achievements, streaks, course/par breakdowns
+- Latest TEG (4 pages): Current tournament status, handicaps, context analysis
+- Scorecards (4 pages): Scorecard viewers, team formats, eclectic scores
 
 Run with: python prototype_main.py (from project root)
 """
@@ -30,87 +31,117 @@ from prototypes.shared_setup_prototypes import (
 )
 
 # ============================================================================
-# INDEX PAGE (Home/Root)
+# IMPORT CONTENT FUNCTIONS (not @ui.page decorated)
 # ============================================================================
-# Must be imported first to serve as the root page
 
+# Index page
 from prototypes import prototype_index
 
-# ============================================================================
-# PHASE 1: HISTORY (5 pages)
-# ============================================================================
-# Status: All 5 pages implemented and functional
-# - teg_history: Complete TEG history with winners
-# - honours_board: Win summaries, doubles, eagles, aces
-# - teg_results: Individual TEG results with leaderboards
-# - player_rankings: Player ranking positions across all TEGs
-# - teg_reports: Tournament and round reports with markdown
+# Phase 1: History (5 pages)
+from prototypes.history import teg_history, honours_board, teg_results, player_rankings, teg_reports
 
-from prototypes.history import teg_history
-from prototypes.history import honours_board
-from prototypes.history import teg_results
-from prototypes.history import player_rankings
-from prototypes.history import teg_reports
+# Phase 2: Records (4 pages)
+from prototypes.records import teg_records, best_tegs_rounds, final_round_comebacks, personal_best
 
-# ============================================================================
-# PHASE 2: RECORDS (4 pages)
-# ============================================================================
-# Status: All 4 pages implemented and functional
-# - teg_records: Comprehensive all-time records across categories
-# - best_tegs_rounds: Top TEGs and rounds by measure selection
-# - final_round_comebacks: Final round performances, leads lost, comebacks
-# - personal_best: Each player's best/worst performances by category
+# Phase 3: Scoring (6 pages)
+from prototypes.scoring import ave_by_par, birdies_etc, scoring_hub, ave_by_teg, ave_by_course, streaks
 
-from prototypes.records import teg_records
-from prototypes.records import best_tegs_rounds
-from prototypes.records import final_round_comebacks
-from prototypes.records import personal_best
+# Phase 4: Latest TEG (4 pages)
+from prototypes.latest import handicaps, leaderboard, latest_teg_context, latest_round_context
+
+# Phase 5: Scorecards (4 pages)
+from prototypes.scorecard import best_worstball, eclectic_records, eclectic_scores, scorecard
+
 
 # ============================================================================
-# PHASE 3: SCORING (6 pages)
+# ROOT FUNCTION - Persistent Navigation Bar + Sub-Pages
 # ============================================================================
-# Status: All 6 pages implemented and functional
-# - ave_by_par: Average score breakdown by hole par value
-# - birdies_etc: Scoring achievements (eagles, birdies, pars, triple bogeys)
-# - scoring_hub: Comprehensive 4-section scoring analysis hub
-# - ave_by_teg: Interactive line chart showing performance over time
-# - ave_by_course: Course performance analysis with 6 tabs
-# - streaks: Streak analysis with nested tabs and filtering
 
-from prototypes.scoring import ave_by_par
-from prototypes.scoring import birdies_etc
-from prototypes.scoring import scoring_hub
-from prototypes.scoring import ave_by_teg
-from prototypes.scoring import ave_by_course
-from prototypes.scoring import streaks
+def root():
+    """Root application container with persistent navigation and sub-pages.
 
-# ============================================================================
-# PHASE 4: LATEST TEG (4 pages)
-# ============================================================================
-# Status: All 4 pages implemented and functional
-# - handicaps: Current player handicaps with history and draft updates
-# - leaderboard: Current tournament leaderboard with Net/Gross competitions
-# - latest_teg_context: Selected TEG analysis with comparison to other TEGs
-# - latest_round_context: Selected round analysis with metrics and charts
+    The navigation bar persists across all page transitions, creating a true
+    single-page application (SPA) experience with no full page reloads.
+    """
 
-from prototypes.latest import handicaps
-from prototypes.latest import leaderboard
-from prototypes.latest import latest_teg_context
-from prototypes.latest import latest_round_context
+    # ===== PERSISTENT NAVIGATION BAR =====
+    with ui.header().classes('bg-blue-600 text-white sticky top-0 z-50'):
+        with ui.row().classes('w-full items-center justify-between px-6 py-3'):
+            # Application title
+            ui.label('TEG Analysis Prototypes').classes('text-h6 font-bold')
 
-# ============================================================================
-# PHASE 5: SCORECARDS (4 pages)
-# ============================================================================
-# Status: All 4 pages implemented and functional
-# - best_worstball: Best/worst team hole scores across rounds
-# - eclectic_records: Top eclectic scores by TEG and course
-# - eclectic_scores: Interactive eclectic score exploration
-# - scorecard: Detailed scorecard viewing (single/tournament/comparison)
+            # Navigation sections
+            with ui.row().classes('gap-2'):
+                # Home
+                ui.button('Home', icon='home').props('flat color=white').on_click(
+                    lambda: ui.navigate.to('/')
+                )
 
-from prototypes.scorecard import best_worstball
-from prototypes.scorecard import eclectic_records
-from prototypes.scorecard import eclectic_scores
-from prototypes.scorecard import scorecard
+                # History section
+                ui.button('History', icon='history').props('flat color=white').on_click(
+                    lambda: ui.navigate.to('/history/teg-history')
+                )
+
+                # Records section
+                ui.button('Records', icon='trophy').props('flat color=white').on_click(
+                    lambda: ui.navigate.to('/records/teg-records')
+                )
+
+                # Scoring section
+                ui.button('Scoring', icon='analytics').props('flat color=white').on_click(
+                    lambda: ui.navigate.to('/scoring/ave-by-par')
+                )
+
+                # Latest TEG section
+                ui.button('Latest TEG', icon='leaderboard').props('flat color=white').on_click(
+                    lambda: ui.navigate.to('/latest/handicaps')
+                )
+
+                # Scorecards section
+                ui.button('Scorecards', icon='golf_course').props('flat color=white').on_click(
+                    lambda: ui.navigate.to('/scorecard/best-worstball')
+                )
+
+    # ===== SUB-PAGES DEFINITION =====
+    # Register all 24 pages (1 index + 23 prototype pages)
+    ui.sub_pages({
+        # Index/Home
+        '/': prototype_index.index_content,
+
+        # ===== PHASE 1: HISTORY (5 pages) =====
+        '/history/teg-history': teg_history.teg_history_content,
+        '/history/honours-board': honours_board.honours_board_content,
+        '/history/player-rankings': player_rankings.player_rankings_content,
+        '/history/teg-reports': teg_reports.teg_reports_content,
+        '/history/teg-results': teg_results.teg_results_content,
+
+        # ===== PHASE 2: RECORDS (4 pages) =====
+        '/records/teg-records': teg_records.teg_records_content,
+        '/records/best-tegs-rounds': best_tegs_rounds.best_tegs_rounds_content,
+        '/records/final-round-comebacks': final_round_comebacks.final_round_comebacks_content,
+        '/records/personal-best': personal_best.personal_best_content,
+
+        # ===== PHASE 3: SCORING (6 pages) =====
+        '/scoring/ave-by-par': ave_by_par.ave_by_par_content,
+        '/scoring/birdies-etc': birdies_etc.birdies_etc_content,
+        '/scoring/scoring-hub': scoring_hub.scoring_hub_content,
+        '/scoring/ave-by-teg': ave_by_teg.ave_by_teg_content,
+        '/scoring/ave-by-course': ave_by_course.ave_by_course_content,
+        '/scoring/streaks': streaks.streaks_content,
+
+        # ===== PHASE 4: LATEST TEG (4 pages) =====
+        '/latest/handicaps': handicaps.handicaps_content,
+        '/latest/leaderboard': leaderboard.leaderboard_content,
+        '/latest/teg-context': latest_teg_context.latest_teg_context_content,
+        '/latest/round-context': latest_round_context.latest_round_context_content,
+
+        # ===== PHASE 5: SCORECARDS (4 pages) =====
+        '/scorecard/best-worstball': best_worstball.best_worstball_content,
+        '/scorecard/eclectic-records': eclectic_records.eclectic_records_content,
+        '/scorecard/eclectic-scores': eclectic_scores.eclectic_scores_content,
+        '/scorecard/scorecard': scorecard.scorecard_content,
+    })
+
 
 if __name__ in {"__main__", "__mp_main__"}:
-    ui.run(title='TEG Analysis Prototypes - Phases 1-5: Complete Migration', reload=True)
+    ui.run(root, title='TEG Analysis Prototypes - Single Page Application', reload=True)

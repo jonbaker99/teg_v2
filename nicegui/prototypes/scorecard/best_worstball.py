@@ -28,8 +28,7 @@ from utils import (
 from helpers.bestball_processing import format_team_scores_for_display
 
 
-@ui.page('/scorecard/best-worstball')
-def best_worstball_page():
+def best_worstball_content():
     """Display best and worst ball team performances."""
 
     # ===== PAGE TITLE & DESCRIPTION =====

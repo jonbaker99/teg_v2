@@ -33,8 +33,7 @@ def read_teg_report_file(file_path: str) -> str:
         return f"Error reading report: {str(e)}"
 
 
-@ui.page('/history/teg-reports')
-def teg_reports_page():
+def teg_reports_content():
     """Display detailed tournament and round reports."""
 
     # ===== PAGE TITLE & DESCRIPTION =====

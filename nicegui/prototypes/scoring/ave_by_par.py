@@ -24,8 +24,7 @@ from helpers.par_analysis_processing import (
 )
 
 
-@ui.page('/scoring/ave-by-par')
-def ave_by_par_page():
+def ave_by_par_content():
     """Display average score performance broken down by hole par value."""
 
     # ===== PAGE TITLE & DESCRIPTION =====
