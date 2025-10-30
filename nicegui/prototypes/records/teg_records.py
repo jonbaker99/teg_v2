@@ -84,139 +84,162 @@ def teg_records_content():
             content_area.clear()
 
             with content_area:
-                with ui.tabs() as tabs:
-                    # ===== TAB 1: TEG RECORDS =====
-                    with ui.tab('TEG Records'):
-                        # Best TEG records
-                        teg_records_table = prepare_records_table(state['tegs_ranked'], 'teg')
-                        ui.html(teg_records_table.to_html(
+                # ===== SECTION STATE =====
+                section_state = {'current': 'teg_records'}
+
+                def set_section(section_id):
+                    section_state['current'] = section_id
+
+                # ===== BUTTON BAR =====
+                with ui.row().classes('gap-2 mb-4'):
+                    ui.button('TEG Records', on_click=lambda: set_section('teg_records'))
+                    ui.button('Round Records', on_click=lambda: set_section('round_records'))
+                    ui.button('9-Hole Records', on_click=lambda: set_section('nine_hole_records'))
+                    ui.button('Streaks', on_click=lambda: set_section('streaks'))
+                    ui.button('Score Counts', on_click=lambda: set_section('score_counts'))
+
+                # ===== SECTION 1: TEG RECORDS =====
+                card = ui.card().classes('w-full')
+                card.bind_visibility_from(section_state, 'current', lambda v: v == 'teg_records')
+                with card:
+                    # Best TEG records
+                    teg_records_table = prepare_records_table(state['tegs_ranked'], 'teg')
+                    ui.html(teg_records_table.to_html(
+                        escape=False,
+                        index=False,
+                        justify='left',
+                        classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
+                    ), sanitize=False)
+
+                    # Dashed line separator
+                    ui.html(
+                        "<hr style='border: none; border-top: 1px dashed #bbb; margin: 1em 0;' />",
+                        sanitize=False
+                    )
+
+                    # Worst TEG records
+                    teg_worst_table = prepare_worst_records_table(state['teg_data'], 'teg')
+                    ui.html(teg_worst_table.to_html(
+                        escape=False,
+                        index=False,
+                        justify='left',
+                        classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
+                    ), sanitize=False)
+
+                # ===== SECTION 2: ROUND RECORDS =====
+                card = ui.card().classes('w-full')
+                card.bind_visibility_from(section_state, 'current', lambda v: v == 'round_records')
+                with card:
+                    # Best round records
+                    round_records_table = prepare_records_table(state['rounds_ranked'], 'round')
+                    ui.html(round_records_table.to_html(
+                        escape=False,
+                        index=False,
+                        justify='left',
+                        classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
+                    ), sanitize=False)
+
+                    # Dashed line separator
+                    ui.html(
+                        "<hr style='border: none; border-top: 1px dashed #bbb; margin: 1em 0;' />",
+                        sanitize=False
+                    )
+
+                    # Worst round records
+                    round_worst_table = prepare_worst_records_table(state['round_data'], 'round')
+                    ui.html(round_worst_table.to_html(
+                        escape=False,
+                        index=False,
+                        justify='left',
+                        classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
+                    ), sanitize=False)
+
+                # ===== SECTION 3: 9-HOLE RECORDS =====
+                card = ui.card().classes('w-full')
+                card.bind_visibility_from(section_state, 'current', lambda v: v == 'nine_hole_records')
+                with card:
+                    # Best 9-hole records
+                    nine_records_table = prepare_records_table(state['frontback_ranked'], 'frontback')
+                    ui.html(nine_records_table.to_html(
+                        escape=False,
+                        index=False,
+                        justify='left',
+                        classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
+                    ), sanitize=False)
+
+                    # Dashed line separator
+                    ui.html(
+                        "<hr style='border: none; border-top: 1px dashed #bbb; margin: 1em 0;' />",
+                        sanitize=False
+                    )
+
+                    # Worst 9-hole records
+                    nine_worst_table = prepare_worst_records_table(state['frontback_data'], 'frontback')
+                    ui.html(nine_worst_table.to_html(
+                        escape=False,
+                        index=False,
+                        justify='left',
+                        classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
+                    ), sanitize=False)
+
+                # ===== SECTION 4: STREAKS =====
+                card = ui.card().classes('w-full')
+                card.bind_visibility_from(section_state, 'current', lambda v: v == 'streaks')
+                with card:
+                    # Best streaks
+                    best_streaks_data = prepare_record_best_streaks_data(state['all_data'])
+                    best_streaks_table = prepare_streak_records_table(best_streaks_data, 'Best Streaks:')
+                    ui.html(best_streaks_table.to_html(
+                        escape=False,
+                        index=False,
+                        justify='left',
+                        classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
+                    ), sanitize=False)
+
+                    # Dashed line separator
+                    ui.html(
+                        "<hr style='border: none; border-top: 1px dashed #bbb; margin: 1em 0;' />",
+                        sanitize=False
+                    )
+
+                    # Worst streaks
+                    worst_streaks_data = prepare_record_worst_streaks_data(state['all_data'])
+                    worst_streaks_table = prepare_streak_records_table(worst_streaks_data, 'Worst Streaks:')
+                    ui.html(worst_streaks_table.to_html(
+                        escape=False,
+                        index=False,
+                        justify='left',
+                        classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
+                    ), sanitize=False)
+
+                    ui.label('* and counting...').classes('text-sm text-gray-600 mt-2')
+
+                # ===== SECTION 5: SCORE COUNTS =====
+                card = ui.card().classes('w-full')
+                card.bind_visibility_from(section_state, 'current', lambda v: v == 'score_counts')
+                with card:
+                    # Score count records
+                    best_score_counts, worst_score_counts = prepare_score_count_records_table(state['all_data'])
+
+                    # Display best score counts
+                    if not best_score_counts.empty:
+                        ui.html(best_score_counts.to_html(
                             escape=False,
                             index=False,
                             justify='left',
                             classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
                         ), sanitize=False)
 
-                        # Dashed line separator
-                        ui.html(
-                            "<hr style='border: none; border-top: 1px dashed #bbb; margin: 1em 0;' />",
-                            sanitize=False
-                        )
-
-                        # Worst TEG records
-                        teg_worst_table = prepare_worst_records_table(state['teg_data'], 'teg')
-                        ui.html(teg_worst_table.to_html(
+                    # Display worst score counts
+                    if not worst_score_counts.empty:
+                        ui.html(worst_score_counts.to_html(
                             escape=False,
                             index=False,
                             justify='left',
                             classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
                         ), sanitize=False)
 
-                    # ===== TAB 2: ROUND RECORDS =====
-                    with ui.tab('Round Records'):
-                        # Best round records
-                        round_records_table = prepare_records_table(state['rounds_ranked'], 'round')
-                        ui.html(round_records_table.to_html(
-                            escape=False,
-                            index=False,
-                            justify='left',
-                            classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
-                        ), sanitize=False)
-
-                        # Dashed line separator
-                        ui.html(
-                            "<hr style='border: none; border-top: 1px dashed #bbb; margin: 1em 0;' />",
-                            sanitize=False
-                        )
-
-                        # Worst round records
-                        round_worst_table = prepare_worst_records_table(state['round_data'], 'round')
-                        ui.html(round_worst_table.to_html(
-                            escape=False,
-                            index=False,
-                            justify='left',
-                            classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
-                        ), sanitize=False)
-
-                    # ===== TAB 3: 9-HOLE RECORDS =====
-                    with ui.tab('9-Hole Records'):
-                        # Best 9-hole records
-                        nine_records_table = prepare_records_table(state['frontback_ranked'], 'frontback')
-                        ui.html(nine_records_table.to_html(
-                            escape=False,
-                            index=False,
-                            justify='left',
-                            classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
-                        ), sanitize=False)
-
-                        # Dashed line separator
-                        ui.html(
-                            "<hr style='border: none; border-top: 1px dashed #bbb; margin: 1em 0;' />",
-                            sanitize=False
-                        )
-
-                        # Worst 9-hole records
-                        nine_worst_table = prepare_worst_records_table(state['frontback_data'], 'frontback')
-                        ui.html(nine_worst_table.to_html(
-                            escape=False,
-                            index=False,
-                            justify='left',
-                            classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
-                        ), sanitize=False)
-
-                    # ===== TAB 4: STREAKS =====
-                    with ui.tab('Streaks'):
-                        # Best streaks
-                        best_streaks_data = prepare_record_best_streaks_data(state['all_data'])
-                        best_streaks_table = prepare_streak_records_table(best_streaks_data, 'Best Streaks:')
-                        ui.html(best_streaks_table.to_html(
-                            escape=False,
-                            index=False,
-                            justify='left',
-                            classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
-                        ), sanitize=False)
-
-                        # Dashed line separator
-                        ui.html(
-                            "<hr style='border: none; border-top: 1px dashed #bbb; margin: 1em 0;' />",
-                            sanitize=False
-                        )
-
-                        # Worst streaks
-                        worst_streaks_data = prepare_record_worst_streaks_data(state['all_data'])
-                        worst_streaks_table = prepare_streak_records_table(worst_streaks_data, 'Worst Streaks:')
-                        ui.html(worst_streaks_table.to_html(
-                            escape=False,
-                            index=False,
-                            justify='left',
-                            classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
-                        ), sanitize=False)
-
-                        ui.label('* and counting...').classes('text-sm text-gray-600 mt-2')
-
-                    # ===== TAB 5: SCORE COUNTS =====
-                    with ui.tab('Score Counts'):
-                        # Score count records
-                        best_score_counts, worst_score_counts = prepare_score_count_records_table(state['all_data'])
-
-                        # Display best score counts
-                        if not best_score_counts.empty:
-                            ui.html(best_score_counts.to_html(
-                                escape=False,
-                                index=False,
-                                justify='left',
-                                classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
-                            ), sanitize=False)
-
-                        # Display worst score counts
-                        if not worst_score_counts.empty:
-                            ui.html(worst_score_counts.to_html(
-                                escape=False,
-                                index=False,
-                                justify='left',
-                                classes='datawrapper-table bold-2nd left-4th left-3rd full-width records-table'
-                            ), sanitize=False)
-
-                        ui.label('Eagles, Birdies and Pars also include better scores').classes('text-sm text-gray-600 mt-2')
+                    ui.label('Eagles, Birdies and Pars also include better scores').classes('text-sm text-gray-600 mt-2')
 
         except Exception as e:
             content_area.clear()
