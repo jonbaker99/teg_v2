@@ -70,43 +70,43 @@ def root():
     # ===== APPLY GLOBAL STYLESHEET =====
     apply_global_styles()
 
+    # ===== NAV BUTTON HELPER FUNCTION ====
+
+    def nav_button(label: str, route: str, icon: str | None = None):
+        """Create a standard navigation button with consistent styling."""
+        btn = ui.button(label) if icon is None else ui.button(label, icon=icon)
+        return (
+            btn
+            .props('flat color=slate-700 no-caps')
+            .classes('font-normal text-sm')
+            .on_click(lambda: ui.navigate.to(route))
+        )
+
     # ===== PERSISTENT NAVIGATION BAR =====
-    with ui.header().classes('bg-blue-600 text-white sticky top-0 z-50'):
+    # with ui.header().classes('bg-blue-600 text-white sticky top-0 z-50'):
+    with ui.header().classes('bg-white text-slate-700  sticky top-0 z-50'):
         with ui.row().classes('w-full items-center justify-between px-6 py-3'):
             # Application title
-            ui.label('TEG Analysis Prototypes').classes('text-h6 font-bold')
+            # ui.label('The El Golfo').classes('text-h6 font-bold') --> Replaced with a link instead
+            ui.link('The El Golfo', '/').classes('text-h6 font-bold text-slate-700 no-underline cursor-pointer site-header text-2xl font-bold')
+
 
             # Navigation sections
             with ui.row().classes('gap-2'):
-                # Home
-                ui.button('Home', icon='home').props('flat color=white').on_click(
-                    lambda: ui.navigate.to('/')
-                )
+                # Navigation buttons
+                # nav_button('Home', 'home', '/') -> NOT NEEDED AS SITE TITLE IS A LINK TO HOME PAGE
+                # nav_button('History', 'history', '/history/teg-history')
+                # nav_button('Records', 'emoji_events', '/records/teg-records')
+                # nav_button('Scoring', 'analytics', '/scoring/ave-by-par')
+                # nav_button('Latest TEG', 'leaderboard', '/latest/handicaps')
+                # nav_button('Scorecards', 'golf_course', '/scorecard/best-worstball')
 
-                # History section
-                ui.button('History', icon='history').props('flat color=white').on_click(
-                    lambda: ui.navigate.to('/history/teg-history')
-                )
+                nav_button('History', route='/history/teg-history')
+                nav_button('Records', route='/records/teg-records')
+                nav_button('Scoring', route='/scoring/ave-by-par')
+                nav_button('Latest TEG', route='/latest/handicaps')
+                nav_button('Scorecards', route='/scorecard/best-worstball')
 
-                # Records section
-                ui.button('Records', icon='trophy').props('flat color=white').on_click(
-                    lambda: ui.navigate.to('/records/teg-records')
-                )
-
-                # Scoring section
-                ui.button('Scoring', icon='analytics').props('flat color=white').on_click(
-                    lambda: ui.navigate.to('/scoring/ave-by-par')
-                )
-
-                # Latest TEG section
-                ui.button('Latest TEG', icon='leaderboard').props('flat color=white').on_click(
-                    lambda: ui.navigate.to('/latest/handicaps')
-                )
-
-                # Scorecards section
-                ui.button('Scorecards', icon='golf_course').props('flat color=white').on_click(
-                    lambda: ui.navigate.to('/scorecard/best-worstball')
-                )
 
     # ===== SUB-PAGES DEFINITION =====
     # Register all 24 pages (1 index + 23 prototype pages)
