@@ -2864,3 +2864,135 @@ def filter_data_by_teg(all_data: pd.DataFrame, selected_tegnum) -> pd.DataFrame:
         return all_data[all_data['TEGNum'] == selected_tegnum_int]
     else:
         return all_data
+
+
+def get_teg_leaderboard(df: pd.DataFrame, measure: str, teg_num: int = None) -> pd.DataFrame:
+    """Generate a tournament leaderboard table with round-by-round scores and totals.
+
+    Args:
+        df (pd.DataFrame): Tournament data (either full dataset or pre-filtered to a TEG)
+        measure (str): Score column to rank by - 'Stableford', 'GrossVP', 'NetVP', or 'Sc'
+        teg_num (int, optional): TEG number to filter. If None, assumes df is already filtered
+            or contains data for all rounds you want in the leaderboard.
+
+    Returns:
+        pd.DataFrame: Leaderboard with columns: Rank, Player, R1, R2, R3, R4, Total
+                     Players sorted by measure (Stableford descending, others ascending)
+
+    Purpose:
+        Transforms aggregated round-level data into a display-ready leaderboard
+        suitable for any UI framework (Streamlit, NiceGUI, etc).
+
+    Examples:
+        >>> # Method 1: Filter first, then leaderboard
+        >>> teg_18 = filter_data_by_teg(all_data, 18)
+        >>> aggregated = aggregate_data(teg_18, 'Round')
+        >>> leaderboard = get_teg_leaderboard(aggregated, 'Stableford')
+
+        >>> # Method 2: Pass teg_num to function
+        >>> aggregated = aggregate_data(all_data, 'Round')
+        >>> leaderboard = get_teg_leaderboard(aggregated, 'Stableford', teg_num=18)
+    """
+    # Filter by TEG if specified
+    data = df.copy()
+    if teg_num is not None:
+        data = data[data['TEGNum'] == teg_num]
+
+    if data.empty:
+        return pd.DataFrame()
+
+    # Pivot to Player rows × Round columns
+    pivoted = data.pivot_table(
+        index='Player',
+        columns='Round',
+        values=measure,
+        aggfunc='first'
+    )
+
+    # Add total column
+    pivoted['Total'] = pivoted.sum(axis=1)
+
+    # Determine sort order based on measure type
+    # Stableford: higher is better (descending)
+    # GrossVP, NetVP, Sc: lower is better (ascending)
+    ascending = measure != 'Stableford'
+
+    # Sort by Total
+    pivoted = pivoted.sort_values('Total', ascending=ascending)
+
+    # Reset index to make Player a column
+    pivoted = pivoted.reset_index()
+
+    # Rename columns to R1, R2, R3, R4 format
+    pivoted.columns = [
+        f'R{int(col)}' if isinstance(col, (int, float)) else col
+        for col in pivoted.columns
+    ]
+
+    # Add Rank column
+    pivoted['Rank'] = pivoted['Total'].rank(method='min', ascending=ascending).astype(int)
+
+    # Handle tied ranks (show "1=" for ties)
+    duplicated_scores = pivoted['Total'].duplicated(keep=False)
+    pivoted.loc[duplicated_scores, 'Rank'] = pivoted.loc[duplicated_scores, 'Rank'].astype(str) + '='
+
+    # Reorder columns: Rank, Player, R1, R2, ..., Total
+    round_cols = [col for col in pivoted.columns if col.startswith('R') and col != 'Rank']
+    columns = ['Rank', 'Player'] + round_cols + ['Total']
+    leaderboard = pivoted[columns]
+
+    logger.info(f"Leaderboard created for {measure} (teg_num={teg_num}).")
+    return leaderboard
+
+
+def get_round_leaderboard(df: pd.DataFrame, measure: str, teg_num: int = None, round_num: int = None) -> pd.DataFrame:
+    """Generate a single-round leaderboard table.
+
+    Args:
+        df (pd.DataFrame): Tournament data
+        measure (str): Score column to rank by - 'Stableford', 'GrossVP', 'NetVP', or 'Sc'
+        teg_num (int, optional): TEG number to filter
+        round_num (int, optional): Round number to filter
+
+    Returns:
+        pd.DataFrame: Leaderboard with columns: Rank, Player, Measure
+                     Players sorted by measure
+
+    Purpose:
+        Creates a simplified leaderboard for a single round, useful for
+        round-by-round analysis or comparing round results across tournaments.
+
+    Examples:
+        >>> leaderboard = get_round_leaderboard(all_data, 'Stableford', teg_num=18, round_num=1)
+    """
+    # Filter data
+    data = df.copy()
+    if teg_num is not None:
+        data = data[data['TEGNum'] == teg_num]
+    if round_num is not None:
+        data = data[data['Round'] == round_num]
+
+    if data.empty:
+        return pd.DataFrame()
+
+    # Aggregate by player (sum the measure for the round)
+    aggregated = data.groupby('Player', as_index=False)[measure].sum()
+
+    # Determine sort order based on measure type
+    ascending = measure != 'Stableford'
+
+    # Sort by measure
+    aggregated = aggregated.sort_values(measure, ascending=ascending)
+
+    # Add Rank column
+    aggregated['Rank'] = aggregated[measure].rank(method='min', ascending=ascending).astype(int)
+
+    # Handle tied ranks
+    duplicated_scores = aggregated[measure].duplicated(keep=False)
+    aggregated.loc[duplicated_scores, 'Rank'] = aggregated.loc[duplicated_scores, 'Rank'].astype(str) + '='
+
+    # Reorder columns
+    leaderboard = aggregated[['Rank', 'Player', measure]]
+
+    logger.info(f"Round leaderboard created for {measure} (teg_num={teg_num}, round_num={round_num}).")
+    return leaderboard

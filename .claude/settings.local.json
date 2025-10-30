@@ -1,27 +1,48 @@
 {
   "permissions": {
     "allow": [
-      "Bash(python -m pytest:*)",
-      "Bash(python:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(for f in streamlit/helpers/display_helpers.py streamlit/helpers/leaderboard_utils.py streamlit/helpers/record_css.py streamlit/helpers/make_charts.py)",
-      "Bash(do if [ -f \"$f\" ])",
-      "Bash(then echo \"=== $f ===\")",
-      "Bash(fi)",
+      "Bash(cat:*)",
+      "Bash(timeout 5 python:*)",
+      "Bash(perl -i -pe:*)",
+      "Bash(dir:*)",
+      "mcp__chrome-devtools__*",
+      "Bash(for f in nicegui/prototypes/history/*.py nicegui/prototypes/prototype_*.py)",
+      "Bash(for f in nicegui/prototypes/records/*.py)",
+      "Bash(findstr:*)",
+      "Bash(for f in nicegui/prototypes/scoring/*.py)",
+      "Bash(python -m py_compile:*)",
+      "Bash(for:*)",
+      "Bash(do python -m py_compile \"$f\")",
+      "Bash(echo:*)",
       "Bash(done)",
-      "Bash(for f in streamlit/helpers/*.py)",
-      "Bash(paste:*)",
-      "Bash(sort:*)",
-      "Bash(find streamlit/helpers -name \"*.py\" -type f ! -name \"__init__.py\" -exec sh -c 'echo \"\"{}:\"\"; grep -c \"\"^def \"\" \"\"{}\"\"' ;)",
-      "Bash(test:*)",
-      "Bash(awk:*)",
-      "Bash(pip install:*)",
-      "Bash(for file in teg_analysis/*/*.py)",
-      "Bash(do echo \"=== $file ===\")",
-      "Bash(git mv:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -c \"[System.Media.SystemSounds]::Question.Play()\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -c \"[System.Media.SystemSounds]::Beep.Play()\""
+          }
+        ]
+      }
+    ]
   }
 }

@@ -33,6 +33,46 @@ A pure Python package containing all golf analytics calculations, completely ind
 
 For detailed Phase V execution plans, see [docs/PHASE_5_DOCUMENTATION_INDEX.md](docs/PHASE_5_DOCUMENTATION_INDEX.md)
 
+### Future Refactoring: Separate Analysis from I/O
+
+Some functions in `teg_analysis.analysis` currently mix data analysis with file writing operations. This violates the separation of concerns principle and makes functions harder to test and reuse. A future improvement would be to refactor these functions:
+
+**Current Pattern (coupled):**
+```python
+def prepare_best_teg_table(df, teg_num):
+    # Analyze data...
+    result = df[df['TEGNum'] == teg_num]
+    # Write to file
+    result.to_csv('output.csv')
+    return result
+```
+
+**Better Pattern (separated):**
+```python
+def calculate_best_teg_table(df, teg_num):
+    """Pure analysis function - returns data only."""
+    result = df[df['TEGNum'] == teg_num]
+    return result
+
+def save_best_teg_table(df, filepath):
+    """I/O function - handles file operations."""
+    df.to_csv(filepath)
+```
+
+**Benefits:**
+- ✅ Functions become pure (deterministic, testable)
+- ✅ Reusable for different output formats (CSV, JSON, API, web display)
+- ✅ No side effects when used in interactive demos
+- ✅ Easier to mock and unit test
+- ✅ Composable (chain multiple analyses)
+
+**Affected Functions:**
+- `prepare_*()` functions in `aggregation.py` (e.g., `prepare_best_teg_table`, `prepare_worst_teg_table`, etc.)
+- `create_*()` functions that write output
+- Any function combining analysis with file I/O
+
+This refactoring can be tackled incrementally as needed.
+
 ## Project Structure
 
 The repository is organized as follows:
@@ -74,6 +114,8 @@ To set up the development environment, follow these steps:
 
 ## Running the Application
 
+### Streamlit Application (Main)
+
 To run the Streamlit application, execute the following command from the root directory:
 
 ```bash
@@ -81,6 +123,28 @@ streamlit run streamlit/nav.py
 ```
 
 This will start the application on your local machine, and you can access it in your web browser at `http://localhost:8501`.
+
+### NiceGUI Demo Pages (Development/Learning)
+
+Comprehensive function explorer demos are available using NiceGUI:
+
+```bash
+cd nicegui
+python run_all_demos_comprehensive.py
+# Navigate to http://localhost:8080
+```
+
+**Features:**
+- Interactive demos of 80+ `teg_analysis` functions
+- Shows exact function calls with parameters for every function
+- Demonstrates how functions work with real data
+- Educational resource showing NiceGUI multi-page routing
+- 6 demo pages: Aggregation, Rankings, Records, Scoring, Metadata, Streaks
+
+**Available Demos:**
+- `run_all_demos_comprehensive.py` - Full demo of all 80+ functions (recommended)
+- `demo_pages_*.py` - Individual standalone demos (can be run independently)
+- `demo_hub.py` - Navigation hub with routing examples
 
 ## Data Management
 

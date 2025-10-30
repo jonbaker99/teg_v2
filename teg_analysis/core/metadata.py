@@ -106,7 +106,7 @@ def get_scorecard_data(
     # Import here to avoid circular dependency
     from .data_loader import load_all_data
 
-    all_data = load_all_data(exclude_incomplete=False)
+    all_data = load_all_data(exclude_incomplete_tegs=False)
 
     # Apply filters if provided
     if teg_num is not None:

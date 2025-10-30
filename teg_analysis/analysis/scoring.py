@@ -48,7 +48,7 @@ def get_net_competition_measure(teg_num: int) -> str:
     Returns:
         str: Either 'NetVP' (for TEGs 1-5) or 'Stableford' (for TEG 6+).
     """
-    if teg_num <= 5:
+    if teg_num <= 7:
         return 'NetVP'
     else:
         return 'Stableford'
