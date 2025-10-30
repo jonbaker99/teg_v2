@@ -22,6 +22,7 @@ import plotly.graph_objects as go
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / 'streamlit'))
 from utils import load_all_data, get_teg_rounds, get_round_data
 from scorecard_utils import generate_round_comparison_html
+from teg_analysis.display.html_tables import create_round_leaderboard_html
 
 
 def leaderboard_content():
@@ -51,40 +52,32 @@ def leaderboard_content():
         with ui.tabs() as tabs:
             # ===== TAB 1: TEG TROPHY (NET) =====
             with ui.tab('TEG Trophy (Net)'):
-                ui.label('Net Competition Leaderboard').classes('text-base font-semibold mb-3')
-
-                # Aggregate by player
-                from teg_analysis.analysis.aggregation import aggregate_data
-                agg_data = aggregate_data(teg_data, aggregation_level='Player')
-
-                if not agg_data.empty and 'Stableford' in agg_data.columns:
-                    leaderboard = agg_data.sort_values('Stableford', ascending=False)
-                    leaderboard.insert(0, 'Rank', range(1, len(leaderboard) + 1))
-                    ui.html(leaderboard.to_html(
-                        index=False,
-                        escape=False,
-                        classes='datawrapper-table'
-                    ), sanitize=False)
-                else:
-                    ui.label('No leaderboard data available').classes('text-gray-600')
+                try:
+                    # Generate leaderboard with round-by-round breakdown
+                    # For latest TEG (assumed to be >= TEG 6), use Stableford
+                    leaderboard_html = create_round_leaderboard_html(
+                        teg_data,
+                        measure='Stableford',
+                        ascending=False,  # Higher is better for Stableford
+                        title='Net Competition Leaderboard'
+                    )
+                    ui.html(leaderboard_html, sanitize=False)
+                except Exception as e:
+                    ui.label(f'Error loading Net leaderboard: {str(e)}').classes('text-red-600')
 
             # ===== TAB 2: GREEN JACKET (GROSS) =====
             with ui.tab('Green Jacket (Gross)'):
-                ui.label('Gross Competition Leaderboard').classes('text-base font-semibold mb-3')
-
-                from teg_analysis.analysis.aggregation import aggregate_data
-                agg_data = aggregate_data(teg_data, aggregation_level='Player')
-
-                if not agg_data.empty and 'GrossVP' in agg_data.columns:
-                    leaderboard = agg_data.sort_values('GrossVP', ascending=True)
-                    leaderboard.insert(0, 'Rank', range(1, len(leaderboard) + 1))
-                    ui.html(leaderboard.to_html(
-                        index=False,
-                        escape=False,
-                        classes='datawrapper-table'
-                    ), sanitize=False)
-                else:
-                    ui.label('No leaderboard data available').classes('text-gray-600')
+                try:
+                    # Generate leaderboard with round-by-round breakdown
+                    leaderboard_html = create_round_leaderboard_html(
+                        teg_data,
+                        measure='GrossVP',
+                        ascending=True,  # Lower is better for GrossVP
+                        title='Gross Competition Leaderboard'
+                    )
+                    ui.html(leaderboard_html, sanitize=False)
+                except Exception as e:
+                    ui.label(f'Error loading Gross leaderboard: {str(e)}').classes('text-red-600')
 
             # ===== TAB 3: SCORECARDS =====
             with ui.tab('Scorecards'):

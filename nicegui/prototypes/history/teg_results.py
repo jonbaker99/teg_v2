@@ -23,6 +23,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent / 'streamlit')
 from utils import load_all_data, get_round_data, get_teg_rounds, read_text_file, get_net_competition_measure
 from scorecard_utils import generate_round_comparison_html
 from teg_analysis.analysis.aggregation import aggregate_data
+from teg_analysis.display.html_tables import create_round_leaderboard_html
 import markdown
 
 
@@ -118,30 +119,22 @@ def teg_results_content():
                 # ===== SECTION 1: TEG Trophy Leaderboard =====
                 ui.label('TEG Trophy Leaderboard').classes('text-h6 font-bold mt-6')
                 try:
-                    trophy_agg = aggregate_data(teg_data, aggregation_level='Player')
-                    if not trophy_agg.empty:
-                        # Determine competition measure
-                        if teg_num <= 5:
-                            measure = 'NetVP'
-                        else:
-                            measure = 'Stableford'
-
-                        if measure in trophy_agg.columns:
-                            # Sort by measure (ascending for NetVP, descending for Stableford)
-                            if measure == 'Stableford':
-                                leaderboard = trophy_agg.sort_values(measure, ascending=False)
-                            else:
-                                leaderboard = trophy_agg.sort_values(measure, ascending=True)
-
-                            # Add rank column
-                            leaderboard.insert(0, 'Rank', range(1, len(leaderboard) + 1))
-
-                            leaderboard_html = leaderboard.to_html(index=False, escape=False, classes='datawrapper-table')
-                            ui.html(leaderboard_html, sanitize=False)
-                        else:
-                            ui.label(f'Measure {measure} not found in data').classes('text-gray-600')
+                    # Determine competition measure for this TEG
+                    if teg_num <= 5:
+                        measure = 'NetVP'
+                        ascending = True  # Lower is better for NetVP
                     else:
-                        ui.label('No Trophy data available').classes('text-gray-600')
+                        measure = 'Stableford'
+                        ascending = False  # Higher is better for Stableford
+
+                    # Generate leaderboard HTML with round-by-round breakdown
+                    leaderboard_html = create_round_leaderboard_html(
+                        teg_data,
+                        measure=measure,
+                        ascending=ascending,
+                        title='TEG Trophy Leaderboard'
+                    )
+                    ui.html(leaderboard_html, sanitize=False)
                 except Exception as e:
                     ui.label(f'Error loading Trophy leaderboard: {str(e)}').classes('text-red-600')
 
@@ -150,18 +143,14 @@ def teg_results_content():
                 # ===== SECTION 2: Green Jacket Leaderboard =====
                 ui.label('Green Jacket Leaderboard').classes('text-h6 font-bold mt-6')
                 try:
-                    jacket_agg = aggregate_data(teg_data, aggregation_level='Player')
-                    if not jacket_agg.empty and 'GrossVP' in jacket_agg.columns:
-                        # Sort by GrossVP
-                        leaderboard = jacket_agg.sort_values('GrossVP', ascending=True)
-
-                        # Add rank column
-                        leaderboard.insert(0, 'Rank', range(1, len(leaderboard) + 1))
-
-                        leaderboard_html = leaderboard.to_html(index=False, escape=False, classes='datawrapper-table')
-                        ui.html(leaderboard_html, sanitize=False)
-                    else:
-                        ui.label('No Gross data available').classes('text-gray-600')
+                    # Generate leaderboard HTML for Gross competition (GrossVP - lower is better)
+                    leaderboard_html = create_round_leaderboard_html(
+                        teg_data,
+                        measure='GrossVP',
+                        ascending=True,  # Lower is better for GrossVP
+                        title='Green Jacket Leaderboard'
+                    )
+                    ui.html(leaderboard_html, sanitize=False)
                 except Exception as e:
                     ui.label(f'Error loading Jacket leaderboard: {str(e)}').classes('text-red-600')
 
