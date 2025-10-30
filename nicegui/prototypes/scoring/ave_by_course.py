@@ -200,74 +200,100 @@ def ave_by_course_content():
             content_area.clear()
 
             with content_area:
-                with ui.tabs() as tabs:
-                    # ===== TAB 1: COURSE RECORDS (GROSS) =====
-                    with ui.tab('Course Records'):
-                        ui.label('Course Records (Gross)').classes('text-base font-semibold mb-3')
-                        ui.html(course_records.to_html(
-                            index=False,
-                            justify='left',
-                            classes='full-width table-left-align datawrapper-table'
-                        ), sanitize=False)
+                # ===== SECTION STATE =====
+                section_state = {'current': 'course_records'}
 
-                        ui.html("<hr style='border: none; border-top: 1px solid #ccc; margin: 1.5em 0;' />", sanitize=False)
+                def set_section(section_id):
+                    section_state['current'] = section_id
 
-                        ui.label('Summary by Player').classes('text-base font-semibold mb-3')
-                        ui.html(course_records_summary.to_html(
-                            index=False,
-                            justify='left',
-                            classes='datawrapper-table'
-                        ), sanitize=False)
+                # ===== BUTTON BAR =====
+                with ui.row().classes('gap-2 mb-4'):
+                    ui.button('Course Records', on_click=lambda: set_section('course_records'))
+                    ui.button('Net Records', on_click=lambda: set_section('net_records'))
+                    ui.button('Summary by Course', on_click=lambda: set_section('summary_by_course'))
+                    ui.button('Averages', on_click=lambda: set_section('averages'))
+                    ui.button('Bests', on_click=lambda: set_section('bests'))
+                    ui.button('Worsts', on_click=lambda: set_section('worsts'))
 
-                    # ===== TAB 2: NET RECORDS =====
-                    with ui.tab('Net Records'):
-                        ui.label('Course Records (Net)').classes('text-base font-semibold mb-3')
-                        ui.html(net_course_records.to_html(
-                            index=False,
-                            justify='left',
-                            classes='full-width table-left-align datawrapper-table'
-                        ), sanitize=False)
+                # ===== SECTION 1: COURSE RECORDS (GROSS) =====
+                card = ui.card().classes('w-full')
+                card.bind_visibility_from(section_state, 'current', lambda v: v == 'course_records')
+                with card:
+                    ui.label('Course Records (Gross)').classes('text-base font-semibold mb-3')
+                    ui.html(course_records.to_html(
+                        index=False,
+                        justify='left',
+                        classes='full-width table-left-align datawrapper-table'
+                    ), sanitize=False)
 
-                        ui.html("<hr style='border: none; border-top: 1px solid #ccc; margin: 1.5em 0;' />", sanitize=False)
+                    ui.html("<hr style='border: none; border-top: 1px solid #ccc; margin: 1.5em 0;' />", sanitize=False)
 
-                        ui.label('Net Records Summary by Player').classes('text-base font-semibold mb-3')
-                        ui.html(net_course_records_summary.to_html(
-                            index=False,
-                            justify='left',
-                            classes='datawrapper-table'
-                        ), sanitize=False)
+                    ui.label('Summary by Player').classes('text-base font-semibold mb-3')
+                    ui.html(course_records_summary.to_html(
+                        index=False,
+                        justify='left',
+                        classes='datawrapper-table'
+                    ), sanitize=False)
 
-                    # ===== TAB 3: SUMMARY BY COURSE =====
-                    with ui.tab('Summary by Course'):
-                        ui.html(course_summary.to_html(
-                            index=False,
-                            justify='left',
-                            classes='full-width datawrapper-table'
-                        ), sanitize=False)
+                # ===== SECTION 2: NET RECORDS =====
+                card = ui.card().classes('w-full')
+                card.bind_visibility_from(section_state, 'current', lambda v: v == 'net_records')
+                with card:
+                    ui.label('Course Records (Net)').classes('text-base font-semibold mb-3')
+                    ui.html(net_course_records.to_html(
+                        index=False,
+                        justify='left',
+                        classes='full-width table-left-align datawrapper-table'
+                    ), sanitize=False)
 
-                    # ===== TAB 4: AVERAGES =====
-                    with ui.tab('Averages'):
-                        ui.html(mean_course_data.to_html(
-                            index=False,
-                            justify='left',
-                            classes='full-width datawrapper-table'
-                        ), sanitize=False)
+                    ui.html("<hr style='border: none; border-top: 1px solid #ccc; margin: 1.5em 0;' />", sanitize=False)
 
-                    # ===== TAB 5: BESTS =====
-                    with ui.tab('Bests'):
-                        ui.html(min_course_data.to_html(
-                            index=False,
-                            justify='left',
-                            classes='full-width datawrapper-table'
-                        ), sanitize=False)
+                    ui.label('Net Records Summary by Player').classes('text-base font-semibold mb-3')
+                    ui.html(net_course_records_summary.to_html(
+                        index=False,
+                        justify='left',
+                        classes='datawrapper-table'
+                    ), sanitize=False)
 
-                    # ===== TAB 6: WORSTS =====
-                    with ui.tab('Worsts'):
-                        ui.html(max_course_data.to_html(
-                            index=False,
-                            justify='left',
-                            classes='full-width datawrapper-table'
-                        ), sanitize=False)
+                # ===== SECTION 3: SUMMARY BY COURSE =====
+                card = ui.card().classes('w-full')
+                card.bind_visibility_from(section_state, 'current', lambda v: v == 'summary_by_course')
+                with card:
+                    ui.html(course_summary.to_html(
+                        index=False,
+                        justify='left',
+                        classes='full-width datawrapper-table'
+                    ), sanitize=False)
+
+                # ===== SECTION 4: AVERAGES =====
+                card = ui.card().classes('w-full')
+                card.bind_visibility_from(section_state, 'current', lambda v: v == 'averages')
+                with card:
+                    ui.html(mean_course_data.to_html(
+                        index=False,
+                        justify='left',
+                        classes='full-width datawrapper-table'
+                    ), sanitize=False)
+
+                # ===== SECTION 5: BESTS =====
+                card = ui.card().classes('w-full')
+                card.bind_visibility_from(section_state, 'current', lambda v: v == 'bests')
+                with card:
+                    ui.html(min_course_data.to_html(
+                        index=False,
+                        justify='left',
+                        classes='full-width datawrapper-table'
+                    ), sanitize=False)
+
+                # ===== SECTION 6: WORSTS =====
+                card = ui.card().classes('w-full')
+                card.bind_visibility_from(section_state, 'current', lambda v: v == 'worsts')
+                with card:
+                    ui.html(max_course_data.to_html(
+                        index=False,
+                        justify='left',
+                        classes='full-width datawrapper-table'
+                    ), sanitize=False)
 
         except Exception as e:
             content_area.clear()
