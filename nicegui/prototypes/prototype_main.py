@@ -21,6 +21,9 @@ sys.path.insert(0, str(Path(__file__).parent.parent))  # nicegui root
 
 from nicegui import ui
 
+# Import global stylesheet
+from styles import apply_global_styles
+
 # Import shared setup (CSS, cached data)
 from prototypes.shared_setup_prototypes import (
     all_data_history,
@@ -63,6 +66,9 @@ def root():
     The navigation bar persists across all page transitions, creating a true
     single-page application (SPA) experience with no full page reloads.
     """
+
+    # ===== APPLY GLOBAL STYLESHEET =====
+    apply_global_styles()
 
     # ===== PERSISTENT NAVIGATION BAR =====
     with ui.header().classes('bg-blue-600 text-white sticky top-0 z-50'):
