@@ -15,12 +15,12 @@ from nicegui import ui
 def index_content():
     """Display home page with navigation to all prototype pages."""
 
-    # ===== PAGE HEADER =====
-    with ui.header().classes('bg-blue-600 text-white'):
-        ui.label('TEG Analysis - NiceGUI Prototypes').classes('text-h5 font-bold')
-
     # ===== MAIN CONTENT =====
     with ui.column().classes('w-full p-6'):
+        ui.label('TEG Analysis - NiceGUI Prototypes').classes('text-h4 font-bold mb-2')
+        ui.label('Select a section below to explore the prototypes').classes('text-base text-gray-600 mb-6')
+        ui.separator()
+
         ui.label('Phase 1: History Section').classes('text-h6 font-bold mt-6')
         ui.label('Select a page below to view the prototype').classes('text-sm text-gray-600')
         ui.separator()
