@@ -84,71 +84,90 @@ def best_tegs_rounds_content():
             content_area.clear()
 
             with content_area:
-                # ===== TABS FOR BEST/WORST =====
-                with ui.tabs() as tabs:
-                    # Tab 1: Best TEGs
-                    with ui.tab('Best TEGs'):
-                        ui.label(f'Top {n_keep} TEGs: {selected_friendly_name}').classes('text-base font-semibold mb-3')
-                        best_tegs_table = prepare_best_teg_table(
-                            state['teg_data_ranked'],
-                            selected_measure,
-                            selected_friendly_name,
-                            n_keep
-                        )
-                        ui.html(best_tegs_table.to_html(
-                            escape=False,
-                            index=False,
-                            justify='left',
-                            classes='datawrapper-table narrow-first left-second'
-                        ), sanitize=False)
+                # ===== SECTION STATE =====
+                section_state = {'current': 'best_tegs'}
 
-                    # Tab 2: Best Rounds
-                    with ui.tab('Best Rounds'):
-                        ui.label(f'Top {n_keep} Rounds: {selected_friendly_name}').classes('text-base font-semibold mb-3')
-                        best_rounds_table = prepare_best_round_table(
-                            state['rd_data_formatted'],
-                            selected_measure,
-                            selected_friendly_name,
-                            n_keep
-                        )
-                        ui.html(best_rounds_table.to_html(
-                            escape=False,
-                            index=False,
-                            justify='left',
-                            classes='datawrapper-table narrow-first left-second'
-                        ), sanitize=False)
+                def set_section(section_id):
+                    section_state['current'] = section_id
 
-                    # Tab 3: Worst TEGs
-                    with ui.tab('Worst TEGs'):
-                        ui.label(f'Worst {n_keep} TEGs: {selected_friendly_name}').classes('text-base font-semibold mb-3')
-                        worst_tegs_table = prepare_worst_teg_table(
-                            state['teg_data_ranked'],
-                            selected_measure,
-                            selected_friendly_name,
-                            n_keep
-                        )
-                        ui.html(worst_tegs_table.to_html(
-                            escape=False,
-                            index=False,
-                            justify='left',
-                            classes='datawrapper-table narrow-first left-second'
-                        ), sanitize=False)
+                # ===== BUTTON BAR =====
+                with ui.row().classes('gap-2 mb-4'):
+                    ui.button('Best TEGs', on_click=lambda: set_section('best_tegs'))
+                    ui.button('Best Rounds', on_click=lambda: set_section('best_rounds'))
+                    ui.button('Worst TEGs', on_click=lambda: set_section('worst_tegs'))
+                    ui.button('Worst Rounds', on_click=lambda: set_section('worst_rounds'))
 
-                    # Tab 4: Worst Rounds
-                    with ui.tab('Worst Rounds'):
-                        ui.label(f'Worst {n_keep} Rounds: {selected_friendly_name}').classes('text-base font-semibold mb-3')
-                        worst_rounds_table = prepare_worst_round_table(
-                            state['rd_data_formatted'],
-                            selected_measure,
-                            selected_friendly_name,
-                            n_keep
-                        )
-                        ui.html(worst_rounds_table.to_html(
-                            escape=False,
-                            index=False,
-                            justify='left',
-                            classes='datawrapper-table narrow-first left-second'
-                        ), sanitize=False)
+                # ===== SECTION 1: BEST TEGS =====
+                card = ui.card().classes('w-full')
+                card.bind_visibility_from(section_state, 'current', lambda v: v == 'best_tegs')
+                with card:
+                    ui.label(f'Top {n_keep} TEGs: {selected_friendly_name}').classes('text-base font-semibold mb-3')
+                    best_tegs_table = prepare_best_teg_table(
+                        state['teg_data_ranked'],
+                        selected_measure,
+                        selected_friendly_name,
+                        n_keep
+                    )
+                    ui.html(best_tegs_table.to_html(
+                        escape=False,
+                        index=False,
+                        justify='left',
+                        classes='datawrapper-table narrow-first left-second'
+                    ), sanitize=False)
+
+                # ===== SECTION 2: BEST ROUNDS =====
+                card = ui.card().classes('w-full')
+                card.bind_visibility_from(section_state, 'current', lambda v: v == 'best_rounds')
+                with card:
+                    ui.label(f'Top {n_keep} Rounds: {selected_friendly_name}').classes('text-base font-semibold mb-3')
+                    best_rounds_table = prepare_best_round_table(
+                        state['rd_data_formatted'],
+                        selected_measure,
+                        selected_friendly_name,
+                        n_keep
+                    )
+                    ui.html(best_rounds_table.to_html(
+                        escape=False,
+                        index=False,
+                        justify='left',
+                        classes='datawrapper-table narrow-first left-second'
+                    ), sanitize=False)
+
+                # ===== SECTION 3: WORST TEGS =====
+                card = ui.card().classes('w-full')
+                card.bind_visibility_from(section_state, 'current', lambda v: v == 'worst_tegs')
+                with card:
+                    ui.label(f'Worst {n_keep} TEGs: {selected_friendly_name}').classes('text-base font-semibold mb-3')
+                    worst_tegs_table = prepare_worst_teg_table(
+                        state['teg_data_ranked'],
+                        selected_measure,
+                        selected_friendly_name,
+                        n_keep
+                    )
+                    ui.html(worst_tegs_table.to_html(
+                        escape=False,
+                        index=False,
+                        justify='left',
+                        classes='datawrapper-table narrow-first left-second'
+                    ), sanitize=False)
+
+                # ===== SECTION 4: WORST ROUNDS =====
+                card = ui.card().classes('w-full')
+                card.bind_visibility_from(section_state, 'current', lambda v: v == 'worst_rounds')
+                with card:
+                    ui.label(f'Worst {n_keep} Rounds: {selected_friendly_name}').classes('text-base font-semibold mb-3')
+                    worst_rounds_table = prepare_worst_round_table(
+                        state['rd_data_formatted'],
+                        selected_measure,
+                        selected_friendly_name,
+                        n_keep
+                    )
+                    ui.html(worst_rounds_table.to_html(
+                        escape=False,
+                        index=False,
+                        justify='left',
+                        classes='datawrapper-table narrow-first left-second'
+                    ), sanitize=False)
 
                 ui.separator().classes('my-4')
 
