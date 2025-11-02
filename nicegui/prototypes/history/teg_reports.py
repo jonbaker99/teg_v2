@@ -123,75 +123,99 @@ def teg_reports_content():
             content_card.clear()
 
             with content_card:
-                # Create tabs for reports
-                with ui.tabs() as tabs:
-                    # Full TEG Report tab (only for complete TEGs)
+                ui.code('''
+load_all_data(exclude_teg_50=True)
+get_teg_rounds(teg_num)
+read_text_file(report_path)
+markdown.markdown(content)
+''', language='python').classes('mb-4')
+
+                # Get number of rounds
+                try:
+                    num_rounds = get_teg_rounds(teg_num)
+                except Exception:
+                    num_rounds = 4  # Default to 4 rounds
+
+                # ===== SECTION STATE =====
+                section_state = {'current': 'full_report' if state['is_complete'] else f'round_1'}
+
+                def set_section(section_name):
+                    section_state['current'] = section_name
+
+                # ===== BUTTON BAR =====
+                with ui.row().classes('gap-2 mb-4 flex-wrap'):
+                    # Full TEG Report button (only for complete TEGs)
                     if state['is_complete']:
-                        with ui.tab(f'Full TEG Report (TEG {teg_num})'):
-                            with ui.row().classes('w-full gap-4 items-center'):
-                                ui.label('View Type:').classes('font-semibold')
-                                report_type = ui.select(
-                                    ['Normal', 'Satire'],
-                                    label='',
-                                    value='Normal'
-                                ).classes('w-32')
+                        ui.button(f'Full TEG Report', on_click=lambda: set_section('full_report')).props('flat')
 
-                            report_content = ui.card().classes('w-full mt-4')
-
-                            def load_full_report():
-                                """Load full TEG report based on selected type."""
-                                try:
-                                    report_type_val = report_type.value
-                                    if report_type_val == 'Satire':
-                                        file_path = f'data/commentary/drafts/teg_{teg_num}_satire.md'
-                                    else:
-                                        file_path = f'data/commentary/teg_{teg_num}_main_report.md'
-
-                                    content = read_teg_report_file(file_path)
-                                    html_content = markdown.markdown(content)
-
-                                    report_content.clear()
-                                    with report_content:
-                                        ui.html(html_content, sanitize=False)
-
-                                except Exception as e:
-                                    report_content.clear()
-                                    with report_content:
-                                        ui.label(f'Error loading report: {str(e)}').classes('text-red-600')
-
-                            report_type.on_value_change(lambda: load_full_report())
-                            load_full_report()
-
-                    # Round Reports tabs
-                    try:
-                        num_rounds = get_teg_rounds(teg_num)
-                    except Exception:
-                        num_rounds = 4  # Default to 4 rounds
-
+                    # Round buttons
                     for round_num in range(1, num_rounds + 1):
-                        with ui.tab(f'Round {round_num}'):
-                            round_card = ui.card().classes('w-full')
+                        ui.button(f'Round {round_num}', on_click=lambda r=round_num: set_section(f'round_{r}')).props('flat')
 
+                # ===== FULL TEG REPORT SECTION (only for complete TEGs) =====
+                if state['is_complete']:
+                    full_report_card = ui.card().classes('w-full')
+                    full_report_card.bind_visibility_from(section_state, 'current', lambda v: v == 'full_report')
+
+                    with full_report_card:
+                        with ui.row().classes('w-full gap-4 items-center'):
+                            ui.label('View Type:').classes('font-semibold')
+                            report_type = ui.select(
+                                ['Normal', 'Satire'],
+                                label='',
+                                value='Normal'
+                            ).classes('w-32')
+
+                        report_content = ui.card().classes('w-full mt-4')
+
+                        def load_full_report():
+                            """Load full TEG report based on selected type."""
                             try:
-                                # Try new format first, then old format
-                                file_path = f'data/commentary/round_reports/TEG{teg_num}_R{round_num}_report.md'
-                                try:
-                                    content = read_teg_report_file(file_path)
-                                except:
-                                    # Try alternative format
-                                    file_path = f'data/commentary/round_reports/TEG_{teg_num}_Round_{round_num}_report.md'
-                                    content = read_teg_report_file(file_path)
+                                report_type_val = report_type.value
+                                if report_type_val == 'Satire':
+                                    file_path = f'data/commentary/drafts/teg_{teg_num}_satire.md'
+                                else:
+                                    file_path = f'data/commentary/teg_{teg_num}_main_report.md'
 
+                                content = read_teg_report_file(file_path)
                                 html_content = markdown.markdown(content)
 
-                                with round_card:
+                                report_content.clear()
+                                with report_content:
                                     ui.html(html_content, sanitize=False)
 
                             except Exception as e:
-                                with round_card:
-                                    ui.label(f'Error loading Round {round_num} report: {str(e)}').classes('text-red-600')
+                                report_content.clear()
+                                with report_content:
+                                    ui.label(f'Error loading report: {str(e)}').classes('text-red-600')
+
+                        report_type.on_value_change(lambda: load_full_report())
+                        load_full_report()
+
+                # ===== ROUND REPORT SECTIONS =====
+                for round_num in range(1, num_rounds + 1):
+                    round_card = ui.card().classes('w-full')
+                    round_card.bind_visibility_from(section_state, 'current', lambda v, r=round_num: v == f'round_{r}')
+
+                    with round_card:
+                        try:
+                            # Try new format first, then old format
+                            file_path = f'data/commentary/round_reports/TEG{teg_num}_R{round_num}_report.md'
+                            try:
+                                content = read_teg_report_file(file_path)
+                            except:
+                                # Try alternative format
+                                file_path = f'data/commentary/round_reports/TEG_{teg_num}_Round_{round_num}_report.md'
+                                content = read_teg_report_file(file_path)
+
+                            html_content = markdown.markdown(content)
+                            ui.html(html_content, sanitize=False)
+
+                        except Exception as e:
+                            ui.label(f'Error loading Round {round_num} report: {str(e)}').classes('text-red-600')
 
                 # Display completion status
+                ui.separator()
                 if state['is_complete']:
                     ui.label(f'TEG {teg_num} is complete').classes('text-sm text-green-600 mt-4')
                 else:

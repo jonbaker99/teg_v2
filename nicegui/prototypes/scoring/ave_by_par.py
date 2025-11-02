@@ -80,6 +80,11 @@ def ave_by_par_content():
             content_area.clear()
 
             with content_area:
+                ui.code('''
+load_all_data(exclude_teg_50=True)
+prepare_average_scores_by_par(all_data)
+''', language='python').classes('mb-4')
+
                 ui.label('Performance by Hole Par').classes('text-base font-semibold mb-3')
                 ui.html(formatted_par_table.to_html(
                     classes='dataframe, datawrapper-table full-width',

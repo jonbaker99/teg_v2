@@ -58,6 +58,12 @@ def birdies_etc_content():
             if not state['data_loaded']:
                 return
 
+            ui.code('''
+load_all_data(exclude_teg_50=True)
+score_type_stats()
+prepare_score_type_summary(scoring_stats)
+''', language='python').classes('mb-4')
+
             # ===== SECTION STATE =====
             section_state = {'current': 'career_totals'}
 

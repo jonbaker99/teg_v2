@@ -48,6 +48,16 @@ def honours_board_content():
             content_area.clear()
 
             with content_area:
+                # Data loading code
+                ui.code('''
+load_all_data(exclude_incomplete_tegs=True, exclude_teg_50=True)
+get_teg_winners(all_data)
+summarise_teg_wins(winners_df, 'TEG Trophy')
+calculate_trophy_jacket_doubles(clean_winners)
+get_eagles_data(all_data)
+get_holes_in_one_data(all_data)
+                ''', language='python').classes('mb-4')
+
                 # Load data
                 all_data = load_all_data(exclude_incomplete_tegs=True, exclude_teg_50=True)
                 if all_data.empty:

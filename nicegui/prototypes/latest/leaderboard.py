@@ -33,6 +33,14 @@ def leaderboard_content():
     ui.separator()
 
     try:
+        ui.code('''
+load_all_data(exclude_incomplete_tegs=False)
+get_teg_rounds(latest_teg)
+create_round_leaderboard_html(teg_data, measure='Stableford', ascending=False)
+create_round_leaderboard_html(teg_data, measure='GrossVP', ascending=True)
+generate_round_comparison_html(latest_teg, round_num)
+''', language='python').classes('mb-4')
+
         all_data = load_all_data(exclude_incomplete_tegs=False)
 
         if all_data.empty:
@@ -49,46 +57,66 @@ def leaderboard_content():
 
         num_rounds = get_teg_rounds(latest_teg)
 
-        with ui.tabs() as tabs:
-            # ===== TAB 1: TEG TROPHY (NET) =====
-            with ui.tab('TEG Trophy (Net)'):
-                try:
-                    # Generate leaderboard with round-by-round breakdown
-                    # For latest TEG (assumed to be >= TEG 6), use Stableford
-                    leaderboard_html = create_round_leaderboard_html(
-                        teg_data,
-                        measure='Stableford',
-                        ascending=False,  # Higher is better for Stableford
-                        title='Net Competition Leaderboard'
-                    )
-                    ui.html(leaderboard_html, sanitize=False)
-                except Exception as e:
-                    ui.label(f'Error loading Net leaderboard: {str(e)}').classes('text-red-600')
+        # ===== SECTION STATE =====
+        section_state = {'current': 'trophy'}
 
-            # ===== TAB 2: GREEN JACKET (GROSS) =====
-            with ui.tab('Green Jacket (Gross)'):
-                try:
-                    # Generate leaderboard with round-by-round breakdown
-                    leaderboard_html = create_round_leaderboard_html(
-                        teg_data,
-                        measure='GrossVP',
-                        ascending=True,  # Lower is better for GrossVP
-                        title='Gross Competition Leaderboard'
-                    )
-                    ui.html(leaderboard_html, sanitize=False)
-                except Exception as e:
-                    ui.label(f'Error loading Gross leaderboard: {str(e)}').classes('text-red-600')
+        def set_section(section_name):
+            section_state['current'] = section_name
 
-            # ===== TAB 3: SCORECARDS =====
-            with ui.tab('Scorecards'):
-                with ui.tabs() as scorecard_tabs:
-                    for round_num in range(1, num_rounds + 1):
-                        with ui.tab(f'Round {round_num}'):
-                            try:
-                                scorecard_html = generate_round_comparison_html(latest_teg, round_num)
-                                ui.html(scorecard_html, sanitize=False)
-                            except Exception as e:
-                                ui.label(f'Error loading Round {round_num}: {str(e)}').classes('text-red-600')
+        # Button bar for section selection
+        with ui.row().classes('gap-2 mb-4 flex-wrap'):
+            ui.button('TEG Trophy (Net)', on_click=lambda: set_section('trophy')).props('flat')
+            ui.button('Green Jacket (Gross)', on_click=lambda: set_section('jacket')).props('flat')
+            ui.button('Scorecards', on_click=lambda: set_section('scorecards')).props('flat')
+
+        # ===== SECTION 1: TEG TROPHY (NET) =====
+        trophy_card = ui.card().classes('w-full')
+        trophy_card.bind_visibility_from(section_state, 'current', lambda v: v == 'trophy')
+
+        with trophy_card:
+            try:
+                # Generate leaderboard with round-by-round breakdown
+                # For latest TEG (assumed to be >= TEG 6), use Stableford
+                leaderboard_html = create_round_leaderboard_html(
+                    teg_data,
+                    measure='Stableford',
+                    ascending=False,  # Higher is better for Stableford
+                    title='Net Competition Leaderboard'
+                )
+                ui.html(leaderboard_html, sanitize=False)
+            except Exception as e:
+                ui.label(f'Error loading Net leaderboard: {str(e)}').classes('text-red-600')
+
+        # ===== SECTION 2: GREEN JACKET (GROSS) =====
+        jacket_card = ui.card().classes('w-full')
+        jacket_card.bind_visibility_from(section_state, 'current', lambda v: v == 'jacket')
+
+        with jacket_card:
+            try:
+                # Generate leaderboard with round-by-round breakdown
+                leaderboard_html = create_round_leaderboard_html(
+                    teg_data,
+                    measure='GrossVP',
+                    ascending=True,  # Lower is better for GrossVP
+                    title='Gross Competition Leaderboard'
+                )
+                ui.html(leaderboard_html, sanitize=False)
+            except Exception as e:
+                ui.label(f'Error loading Gross leaderboard: {str(e)}').classes('text-red-600')
+
+        # ===== SECTION 3: SCORECARDS =====
+        scorecards_card = ui.card().classes('w-full')
+        scorecards_card.bind_visibility_from(section_state, 'current', lambda v: v == 'scorecards')
+
+        with scorecards_card:
+            with ui.tabs() as scorecard_tabs:
+                for round_num in range(1, num_rounds + 1):
+                    with ui.tab(f'Round {round_num}'):
+                        try:
+                            scorecard_html = generate_round_comparison_html(latest_teg, round_num)
+                            ui.html(scorecard_html, sanitize=False)
+                        except Exception as e:
+                            ui.label(f'Error loading Round {round_num}: {str(e)}').classes('text-red-600')
 
     except Exception as e:
         ui.label(f'Error loading leaderboard: {str(e)}').classes('text-red-600')

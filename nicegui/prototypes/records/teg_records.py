@@ -84,6 +84,15 @@ def teg_records_content():
             content_area.clear()
 
             with content_area:
+                ui.code('''
+load_all_data(exclude_teg_50=True)
+identify_aggregate_records_and_pbs(all_data, aggregation_level='TEG')
+identify_all_time_worsts(all_data)
+identify_streak_records(all_data, streaks_df)
+identify_score_count_records(all_data)
+display_records_and_pbs_summary(records_dict)
+''', language='python').classes('mb-4')
+
                 # ===== SECTION STATE =====
                 section_state = {'current': 'teg_records'}
 

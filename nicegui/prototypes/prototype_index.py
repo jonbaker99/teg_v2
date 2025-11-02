@@ -17,6 +17,13 @@ def index_content():
 
     # ===== MAIN CONTENT =====
     with ui.column().classes('w-full p-6'):
+        ui.code('''
+load_all_data(exclude_incomplete_tegs=True)
+get_latest_teg_data(all_data)
+get_leaderboard_stats(teg_data)
+calculate_teg_summary_stats(all_data)
+''', language='python').classes('mb-4')
+
         ui.label('TEG Analysis - NiceGUI Prototypes').classes('text-h4 font-bold mb-2')
         ui.label('Select a section below to explore the prototypes').classes('text-base text-gray-600 mb-6')
         ui.separator()

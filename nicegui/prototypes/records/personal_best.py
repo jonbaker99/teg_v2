@@ -86,6 +86,14 @@ def personal_best_content():
             content_area.clear()
 
             with content_area:
+                ui.code('''
+load_all_data(exclude_teg_50=True)
+read_file(STREAKS_PARQUET)
+identify_aggregate_records_and_pbs(all_data, aggregation_level='Player')
+identify_all_time_worsts(all_data)
+identify_streak_records(all_data, streaks_df)
+identify_score_count_records(all_data)
+''', language='python').classes('mb-4')
                 # ===== SECTION STATE =====
                 section_state = {'current': 'pb_summary'}
 

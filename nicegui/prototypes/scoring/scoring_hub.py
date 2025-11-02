@@ -78,6 +78,17 @@ def scoring_hub_content():
             if not state['data_loaded']:
                 return
 
+            ui.code('''
+load_all_data(exclude_incomplete_tegs=False)
+load_all_data(exclude_teg_50=True)
+score_type_stats()
+max_scoretype_per_round()
+prepare_average_scores_by_par(all_data_incomplete)
+format_scoring_stats_columns(table_df)
+calculate_multi_score_running_sum(all_data_clean)
+summarize_multi_score_running_sum(streaks_data)
+''', language='python').classes('mb-4')
+
             # ===== SECTION 1: AVERAGE SCORE BY PAR =====
             with ui.card().classes('w-full mb-6'):
                 ui.label('1. Average Score by Par').classes('text-lg font-semibold mb-3')
@@ -99,25 +110,39 @@ def scoring_hub_content():
                     ['TBPs', 'Holes_per_TBP']
                 ]
 
-                with ui.tabs() as tabs:
+                # Section state for category selection
+                category_state = {'current': 'Eagles'}
+
+                def set_category(cat_name):
+                    category_state['current'] = cat_name
+
+                # Button bar for category selection
+                with ui.row().classes('gap-2 mb-4 flex-wrap'):
                     for category in scoring_categories:
-                        with ui.tab(category[0]):
-                            chart_fields = category
-                            section_title = chart_fields[0].replace("_", " ")
+                        ui.button(category[0], on_click=lambda cat=category[0]: set_category(cat)).props('flat')
 
-                            table_df = state['scoring_stats'][['Player'] + chart_fields].sort_values(
-                                by=chart_fields,
-                                ascending=[False, True]
-                            )
+                # Display cards for each category
+                for category in scoring_categories:
+                    chart_fields = category
+                    section_title = chart_fields[0].replace("_", " ")
 
-                            table_df = format_scoring_stats_columns(table_df)
+                    category_card = ui.card().classes('w-full')
+                    category_card.bind_visibility_from(category_state, 'current', lambda v, c=category[0]: v == c)
 
-                            ui.label(f'Career {section_title}').classes('text-base font-semibold mb-3')
-                            ui.html(table_df.to_html(
-                                index=False,
-                                justify='left',
-                                classes='datawrapper-table'
-                            ), sanitize=False)
+                    with category_card:
+                        table_df = state['scoring_stats'][['Player'] + chart_fields].sort_values(
+                            by=chart_fields,
+                            ascending=[False, True]
+                        )
+
+                        table_df = format_scoring_stats_columns(table_df)
+
+                        ui.label(f'Career {section_title}').classes('text-base font-semibold mb-3')
+                        ui.html(table_df.to_html(
+                            index=False,
+                            justify='left',
+                            classes='datawrapper-table'
+                        ), sanitize=False)
 
             # ===== SECTION 3: SINGLE ROUND MAXIMUMS =====
             with ui.card().classes('w-full mb-6'):

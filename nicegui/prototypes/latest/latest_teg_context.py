@@ -99,7 +99,7 @@ def latest_teg_context_content():
     content_area = ui.card().classes('w-full')
 
     def display_teg_analysis():
-        """Display comprehensive TEG analysis in tabs."""
+        """Display comprehensive TEG analysis with button-based sections."""
         try:
             if not state['data_loaded'] or not state['current_teg']:
                 return
@@ -108,218 +108,258 @@ def latest_teg_context_content():
             content_area.clear()
 
             with content_area:
-                with ui.tabs() as main_tabs:
-                    # ===== TAB 1: AGGREGATE SCORE =====
-                    with ui.tab('Aggregate Score'):
-                        metrics = ['Sc', 'Stableford', 'GrossVP', 'NetVP']
-                        metrics, friendly_metrics = create_metric_tabs_data(metrics)
-                        name_mapping, _ = get_round_metric_mappings()
+                ui.code('''
+get_ranked_teg_data()
+load_all_data(exclude_incomplete_tegs=False)
+read_file(STREAKS_PARQUET)
+create_metric_tabs_data(metrics)
+prepare_teg_context_display(df_teg, teg_t, metric, friendly_metric)
+count_scores_by_player(teg_data, field='GrossVP')
+get_player_window_streaks(all_data, streaks_df, teg=teg_t)
+identify_aggregate_records_and_pbs(df_teg, teg_t)
+identify_streak_records(all_data, streaks_df, teg_t)
+''', language='python').classes('mb-4')
 
-                        with ui.tabs() as metric_tabs:
-                            for friendly_metric in friendly_metrics:
-                                with ui.tab(friendly_metric):
-                                    metric = name_mapping.get(friendly_metric, friendly_metric)
-                                    context_display = prepare_teg_context_display(
-                                        state['df_teg'], teg_t, metric, friendly_metric
-                                    )
-                                    ui.html(context_display.to_html(
-                                        index=False,
-                                        justify='left',
-                                        classes='datawrapper-table'
-                                    ), sanitize=False)
+                # ===== SECTION SELECTOR =====
+                section_state = {'current': 'aggregate'}
 
-                    # ===== TAB 2: SCORING =====
-                    with ui.tab('Scoring'):
-                        ui.label('Scoring').classes('text-base font-semibold mb-3')
+                def set_section(section_name):
+                    section_state['current'] = section_name
 
-                        # Scoring type toggle
-                        scoring_state = {'type': 'Gross vs Par'}
+                # Button bar to select section
+                with ui.row().classes('gap-2 mb-4 flex-wrap'):
+                    ui.button('Aggregate Score', on_click=lambda: set_section('aggregate')).props('flat')
+                    ui.button('Scoring', on_click=lambda: set_section('scoring')).props('flat')
+                    ui.button('Streaks', on_click=lambda: set_section('streaks')).props('flat')
+                    ui.button('Records & PBs', on_click=lambda: set_section('records')).props('flat')
+                    ui.button('Report', on_click=lambda: set_section('report')).props('flat')
 
-                        def update_scoring_display():
-                            """Update scoring display based on selected type."""
-                            scoring_area.clear()
-                            with scoring_area:
-                                try:
-                                    teg_num = int(teg_t.split()[1])
-                                    teg_data = state['all_data'][state['all_data']['TEGNum'] == teg_num]
+                # ===== SECTION 1: AGGREGATE SCORE =====
+                aggregate_card = ui.card().classes('w-full')
+                aggregate_card.bind_visibility_from(section_state, 'current', lambda v: v == 'aggregate')
 
-                                    if scoring_state['type'] == 'Gross vs Par':
-                                        score_counts = count_scores_by_player(teg_data, field='GrossVP')
-                                        score_counts = score_counts.reset_index()
-                                        score_counts.columns.name = None
+                with aggregate_card:
+                    metrics = ['Sc', 'Stableford', 'GrossVP', 'NetVP']
+                    metrics, friendly_metrics = create_metric_tabs_data(metrics)
+                    name_mapping, _ = get_round_metric_mappings()
 
-                                        score_counts['GrossVP'] = score_counts['GrossVP'].apply(format_vs_par)
-                                        score_counts = score_counts.rename(columns={'GrossVP': 'vs Par'})
-
-                                        player_cols = [col for col in score_counts.columns if col != 'vs Par']
-                                        for col in player_cols:
-                                            score_counts[col] = score_counts[col].replace(0, '-')
-                                    else:
-                                        score_counts = count_scores_by_player(teg_data, field='Stableford')
-                                        score_counts = score_counts.sort_index(ascending=False)
-                                        score_counts = score_counts.reset_index()
-                                        score_counts.columns.name = None
-
-                                        score_counts['Stableford'] = score_counts['Stableford'].astype(int)
-                                        player_cols = [col for col in score_counts.columns if col != 'Stableford']
-                                        for col in player_cols:
-                                            score_counts[col] = score_counts[col].replace(0, '-')
-
-                                    ui.html(score_counts.to_html(
-                                        index=False,
-                                        justify='left',
-                                        classes='datawrapper-table'
-                                    ), sanitize=False)
-                                except Exception as e:
-                                    ui.label(f'Error loading scoring: {str(e)}').classes('text-red-600')
-
-                        with ui.row().classes('w-full gap-4 items-center'):
-                            ui.label('Scoring type:').classes('font-semibold')
-                            scoring_toggle = ui.toggle(
-                                ['Gross vs Par', 'Stableford'],
-                                value='Gross vs Par'
-                            )
-                            scoring_toggle.on_value_change(
-                                lambda: (
-                                    scoring_state.update({'type': scoring_toggle.value}),
-                                    update_scoring_display()
+                    with ui.tabs() as metric_tabs:
+                        for friendly_metric in friendly_metrics:
+                            with ui.tab(friendly_metric):
+                                metric = name_mapping.get(friendly_metric, friendly_metric)
+                                context_display = prepare_teg_context_display(
+                                    state['df_teg'], teg_t, metric, friendly_metric
                                 )
-                            )
+                                ui.html(context_display.to_html(
+                                    index=False,
+                                    justify='left',
+                                    classes='datawrapper-table'
+                                ), sanitize=False)
 
-                        scoring_area = ui.card().classes('w-full')
-                        update_scoring_display()
+                # ===== SECTION 2: SCORING =====
+                scoring_card = ui.card().classes('w-full')
+                scoring_card.bind_visibility_from(section_state, 'current', lambda v: v == 'scoring')
 
-                    # ===== TAB 3: STREAKS =====
-                    with ui.tab('Streaks'):
-                        ui.label('Streaks').classes('text-base font-semibold mb-3')
-                        try:
-                            teg_num = int(teg_t.split()[1])
-                            teg_rounds = state['all_data'][state['all_data']['TEGNum'] == teg_num]['Round'].unique()
+                with scoring_card:
+                    ui.label('Scoring').classes('text-base font-semibold mb-3')
 
-                            if len(teg_rounds) > 0:
-                                last_round = max(teg_rounds)
+                    # Scoring type toggle
+                    scoring_state = {'type': 'Gross vs Par'}
 
-                                teg_streaks = get_player_window_streaks(
-                                    state['all_data'],
-                                    state['streaks_df'],
-                                    teg=teg_t,
-                                    round_num=last_round
-                                )
-
-                                if len(teg_streaks) > 0:
-                                    streaks_pivot = teg_streaks.pivot(
-                                        index='Streak Type',
-                                        columns='Player',
-                                        values='Max Streak'
-                                    )
-                                    streaks_pivot = streaks_pivot.reset_index()
-                                    streaks_pivot.columns.name = None
-
-                                    streak_mapping = {
-                                        'Eagles': 'Eagles',
-                                        'Birdies': 'Birdies',
-                                        'Pars or Better': 'Pars',
-                                        'No +2s': 'Bogeys',
-                                        'Over Par': 'Over par',
-                                        'TBPs': 'TBPs'
-                                    }
-
-                                    streaks_pivot = streaks_pivot[streaks_pivot['Streak Type'].isin(streak_mapping.keys())].copy()
-                                    streaks_pivot['Streak Type'] = streaks_pivot['Streak Type'].map(streak_mapping)
-
-                                    desired_order = ['Eagles', 'Birdies', 'Pars', 'Bogeys', 'Over par', 'TBPs']
-                                    streaks_pivot['_order'] = streaks_pivot['Streak Type'].map(
-                                        {s: i for i, s in enumerate(desired_order)}
-                                    )
-                                    streaks_pivot = streaks_pivot.sort_values('_order').drop('_order', axis=1)
-
-                                    player_cols = [col for col in streaks_pivot.columns if col != 'Streak Type']
-
-                                    if 'Eagles' in streaks_pivot['Streak Type'].values:
-                                        eagles_max = streaks_pivot[streaks_pivot['Streak Type'] == 'Eagles'][player_cols].max(axis=1).iloc[0]
-                                        if eagles_max == 0:
-                                            streaks_pivot = streaks_pivot[streaks_pivot['Streak Type'] != 'Eagles']
-
-                                    if 'Birdies' in streaks_pivot['Streak Type'].values:
-                                        birdies_max = streaks_pivot[streaks_pivot['Streak Type'] == 'Birdies'][player_cols].max(axis=1).iloc[0]
-                                        if birdies_max == 0:
-                                            streaks_pivot = streaks_pivot[streaks_pivot['Streak Type'] != 'Birdies']
-
-                                    ui.html(streaks_pivot.to_html(
-                                        index=False,
-                                        justify='left',
-                                        classes='datawrapper-table'
-                                    ), sanitize=False)
-                                    ui.label('Eagles / birdies / par / bogeys are all \'or better\'').classes('text-sm text-gray-600 mt-3')
-                                else:
-                                    ui.label('No streak data available for this TEG').classes('text-gray-600')
-                            else:
-                                ui.label('No data available for this TEG').classes('text-gray-600')
-                        except Exception as e:
-                            ui.label(f'Error loading streaks: {str(e)}').classes('text-red-600')
-
-                    # ===== TAB 4: RECORDS & PBs =====
-                    with ui.tab('Records & PBs'):
-                        ui.label('Records & Personal Bests').classes('text-base font-semibold mb-3')
-                        try:
-                            records_dict = {}
-
-                            aggregate_results = identify_aggregate_records_and_pbs(state['df_teg'], teg_t)
-                            records_dict.update({
-                                'aggregate_records': aggregate_results['records'],
-                                'aggregate_pbs': aggregate_results['personal_bests'],
-                                'aggregate_worsts': aggregate_results['personal_worsts']
-                            })
-
-                            all_time_worsts = identify_all_time_worsts(state['df_teg'], teg_t)
-                            records_dict.update({'all_time_worsts': all_time_worsts})
-
-                            streak_results = identify_streak_records(state['all_data'], state['streaks_df'], teg_t)
-                            records_dict.update({'streak_records': streak_results['records']})
-
-                            score_count_results = identify_score_count_records(state['all_data'], teg_t)
-                            records_dict.update({
-                                'best_score_counts': score_count_results['best_score_counts'],
-                                'worst_score_counts': score_count_results['worst_score_counts']
-                            })
-
-                            display_records_and_pbs_summary(records_dict, page_type='TEG')
-                        except Exception as e:
-                            ui.label(f'Error loading records: {str(e)}').classes('text-red-600')
-                            print(f'Error in records: {e}')
-                            import traceback
-                            traceback.print_exc()
-
-                    # ===== TAB 5: REPORT =====
-                    with ui.tab('Report'):
-                        ui.label('Tournament Report').classes('text-base font-semibold mb-3')
-                        try:
-                            teg_num = int(teg_t.split()[-1])
-                            report_file_path = f"data/commentary/teg_{teg_num}_main_report.md"
-
+                    def update_scoring_display():
+                        """Update scoring display based on selected type."""
+                        scoring_area.clear()
+                        with scoring_area:
                             try:
-                                md_text = read_text_file(report_file_path)
+                                teg_num = int(teg_t.split()[1])
+                                teg_data = state['all_data'][state['all_data']['TEGNum'] == teg_num]
 
-                                if teg_num < 8:
-                                    ui.label('NB: The TEG Trophy winners before TEG 8 were decided by best net; the report here is written based on Stableford so finishing positions may be inaccurate').classes('text-sm text-gray-600 mb-3')
+                                if scoring_state['type'] == 'Gross vs Par':
+                                    score_counts = count_scores_by_player(teg_data, field='GrossVP')
+                                    score_counts = score_counts.reset_index()
+                                    score_counts.columns.name = None
 
-                                # Render markdown as HTML
-                                import importlib.util
-                                has_markdown = importlib.util.find_spec("markdown") is not None
-                                if has_markdown:
-                                    import markdown as md
-                                    html_body = md.markdown(md_text, extensions=["extra", "sane_lists", "smarty", "toc"])
-                                    full_html = f"<div class='teg-report'>{html_body}</div>"
-                                    ui.html(full_html, sanitize=False)
+                                    score_counts['GrossVP'] = score_counts['GrossVP'].apply(format_vs_par)
+                                    score_counts = score_counts.rename(columns={'GrossVP': 'vs Par'})
+
+                                    player_cols = [col for col in score_counts.columns if col != 'vs Par']
+                                    for col in player_cols:
+                                        score_counts[col] = score_counts[col].replace(0, '-')
                                 else:
-                                    ui.label(md_text)
-                            except FileNotFoundError:
-                                ui.label(f'No report available yet for {teg_t}').classes('text-gray-600')
-                            except Exception as report_error:
-                                ui.label(f'Error loading report: {str(report_error)}').classes('text-red-600')
+                                    score_counts = count_scores_by_player(teg_data, field='Stableford')
+                                    score_counts = score_counts.sort_index(ascending=False)
+                                    score_counts = score_counts.reset_index()
+                                    score_counts.columns.name = None
 
-                        except Exception as e:
-                            ui.label(f'Error in report tab: {str(e)}').classes('text-red-600')
+                                    score_counts['Stableford'] = score_counts['Stableford'].astype(int)
+                                    player_cols = [col for col in score_counts.columns if col != 'Stableford']
+                                    for col in player_cols:
+                                        score_counts[col] = score_counts[col].replace(0, '-')
+
+                                ui.html(score_counts.to_html(
+                                    index=False,
+                                    justify='left',
+                                    classes='datawrapper-table'
+                                ), sanitize=False)
+                            except Exception as e:
+                                ui.label(f'Error loading scoring: {str(e)}').classes('text-red-600')
+
+                    with ui.row().classes('w-full gap-4 items-center'):
+                        ui.label('Scoring type:').classes('font-semibold')
+                        scoring_toggle = ui.toggle(
+                            ['Gross vs Par', 'Stableford'],
+                            value='Gross vs Par'
+                        )
+                        scoring_toggle.on_value_change(
+                            lambda: (
+                                scoring_state.update({'type': scoring_toggle.value}),
+                                update_scoring_display()
+                            )
+                        )
+
+                    scoring_area = ui.card().classes('w-full')
+                    update_scoring_display()
+
+                # ===== SECTION 3: STREAKS =====
+                streaks_card = ui.card().classes('w-full')
+                streaks_card.bind_visibility_from(section_state, 'current', lambda v: v == 'streaks')
+
+                with streaks_card:
+                    ui.label('Streaks').classes('text-base font-semibold mb-3')
+                    try:
+                        teg_num = int(teg_t.split()[1])
+                        teg_rounds = state['all_data'][state['all_data']['TEGNum'] == teg_num]['Round'].unique()
+
+                        if len(teg_rounds) > 0:
+                            last_round = max(teg_rounds)
+
+                            teg_streaks = get_player_window_streaks(
+                                state['all_data'],
+                                state['streaks_df'],
+                                teg=teg_t,
+                                round_num=last_round
+                            )
+
+                            if len(teg_streaks) > 0:
+                                streaks_pivot = teg_streaks.pivot(
+                                    index='Streak Type',
+                                    columns='Player',
+                                    values='Max Streak'
+                                )
+                                streaks_pivot = streaks_pivot.reset_index()
+                                streaks_pivot.columns.name = None
+
+                                streak_mapping = {
+                                    'Eagles': 'Eagles',
+                                    'Birdies': 'Birdies',
+                                    'Pars or Better': 'Pars',
+                                    'No +2s': 'Bogeys',
+                                    'Over Par': 'Over par',
+                                    'TBPs': 'TBPs'
+                                }
+
+                                streaks_pivot = streaks_pivot[streaks_pivot['Streak Type'].isin(streak_mapping.keys())].copy()
+                                streaks_pivot['Streak Type'] = streaks_pivot['Streak Type'].map(streak_mapping)
+
+                                desired_order = ['Eagles', 'Birdies', 'Pars', 'Bogeys', 'Over par', 'TBPs']
+                                streaks_pivot['_order'] = streaks_pivot['Streak Type'].map(
+                                    {s: i for i, s in enumerate(desired_order)}
+                                )
+                                streaks_pivot = streaks_pivot.sort_values('_order').drop('_order', axis=1)
+
+                                player_cols = [col for col in streaks_pivot.columns if col != 'Streak Type']
+
+                                if 'Eagles' in streaks_pivot['Streak Type'].values:
+                                    eagles_max = streaks_pivot[streaks_pivot['Streak Type'] == 'Eagles'][player_cols].max(axis=1).iloc[0]
+                                    if eagles_max == 0:
+                                        streaks_pivot = streaks_pivot[streaks_pivot['Streak Type'] != 'Eagles']
+
+                                if 'Birdies' in streaks_pivot['Streak Type'].values:
+                                    birdies_max = streaks_pivot[streaks_pivot['Streak Type'] == 'Birdies'][player_cols].max(axis=1).iloc[0]
+                                    if birdies_max == 0:
+                                        streaks_pivot = streaks_pivot[streaks_pivot['Streak Type'] != 'Birdies']
+
+                                ui.html(streaks_pivot.to_html(
+                                    index=False,
+                                    justify='left',
+                                    classes='datawrapper-table'
+                                ), sanitize=False)
+                                ui.label('Eagles / birdies / par / bogeys are all \'or better\'').classes('text-sm text-gray-600 mt-3')
+                            else:
+                                ui.label('No streak data available for this TEG').classes('text-gray-600')
+                        else:
+                            ui.label('No data available for this TEG').classes('text-gray-600')
+                    except Exception as e:
+                        ui.label(f'Error loading streaks: {str(e)}').classes('text-red-600')
+
+                # ===== SECTION 4: RECORDS & PBs =====
+                records_card = ui.card().classes('w-full')
+                records_card.bind_visibility_from(section_state, 'current', lambda v: v == 'records')
+
+                with records_card:
+                    ui.label('Records & Personal Bests').classes('text-base font-semibold mb-3')
+                    try:
+                        records_dict = {}
+
+                        aggregate_results = identify_aggregate_records_and_pbs(state['df_teg'], teg_t)
+                        records_dict.update({
+                            'aggregate_records': aggregate_results['records'],
+                            'aggregate_pbs': aggregate_results['personal_bests'],
+                            'aggregate_worsts': aggregate_results['personal_worsts']
+                        })
+
+                        all_time_worsts = identify_all_time_worsts(state['df_teg'], teg_t)
+                        records_dict.update({'all_time_worsts': all_time_worsts})
+
+                        streak_results = identify_streak_records(state['all_data'], state['streaks_df'], teg_t)
+                        records_dict.update({'streak_records': streak_results['records']})
+
+                        score_count_results = identify_score_count_records(state['all_data'], teg_t)
+                        records_dict.update({
+                            'best_score_counts': score_count_results['best_score_counts'],
+                            'worst_score_counts': score_count_results['worst_score_counts']
+                        })
+
+                        display_records_and_pbs_summary(records_dict, page_type='TEG')
+                    except Exception as e:
+                        ui.label(f'Error loading records: {str(e)}').classes('text-red-600')
+                        print(f'Error in records: {e}')
+                        import traceback
+                        traceback.print_exc()
+
+                # ===== SECTION 5: REPORT =====
+                report_card = ui.card().classes('w-full')
+                report_card.bind_visibility_from(section_state, 'current', lambda v: v == 'report')
+
+                with report_card:
+                    ui.label('Tournament Report').classes('text-base font-semibold mb-3')
+                    try:
+                        teg_num = int(teg_t.split()[-1])
+                        report_file_path = f"data/commentary/teg_{teg_num}_main_report.md"
+
+                        try:
+                            md_text = read_text_file(report_file_path)
+
+                            if teg_num < 8:
+                                ui.label('NB: The TEG Trophy winners before TEG 8 were decided by best net; the report here is written based on Stableford so finishing positions may be inaccurate').classes('text-sm text-gray-600 mb-3')
+
+                            # Render markdown as HTML
+                            import importlib.util
+                            has_markdown = importlib.util.find_spec("markdown") is not None
+                            if has_markdown:
+                                import markdown as md
+                                html_body = md.markdown(md_text, extensions=["extra", "sane_lists", "smarty", "toc"])
+                                full_html = f"<div class='teg-report'>{html_body}</div>"
+                                ui.html(full_html, sanitize=False)
+                            else:
+                                ui.label(md_text)
+                        except FileNotFoundError:
+                            ui.label(f'No report available yet for {teg_t}').classes('text-gray-600')
+                        except Exception as report_error:
+                            ui.label(f'Error loading report: {str(report_error)}').classes('text-red-600')
+
+                    except Exception as e:
+                        ui.label(f'Error in report tab: {str(e)}').classes('text-red-600')
 
         except Exception as e:
             content_area.clear()

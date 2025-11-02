@@ -110,6 +110,13 @@ def teg_results_content():
             content_area.clear()
 
             with content_area:
+                ui.code('''
+load_all_data(exclude_teg_50=True)
+create_round_leaderboard_html(teg_data, measure='Stableford', ascending=False)
+create_round_leaderboard_html(teg_data, measure='GrossVP', ascending=True)
+generate_round_comparison_html(teg_num, round_num)
+''', language='python').classes('mb-4')
+
                 # Get number of rounds
                 try:
                     num_rounds = get_teg_rounds(teg_num)

@@ -84,6 +84,13 @@ def best_tegs_rounds_content():
             content_area.clear()
 
             with content_area:
+                ui.code('''
+load_all_data(exclude_teg_50=True)
+aggregate_data(all_data, aggregation_level='TEG')
+aggregate_data(all_data, aggregation_level='Round')
+sort_by_metric(aggregated_data, metric)
+''', language='python').classes('mb-4')
+
                 # ===== SECTION STATE =====
                 section_state = {'current': 'best_tegs'}
 

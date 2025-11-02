@@ -184,6 +184,11 @@ def player_rankings_content():
             content_area.clear()
 
             with content_area:
+                ui.code('''
+load_all_data(exclude_incomplete_tegs=True, exclude_teg_50=True)
+aggregate_data(all_data, aggregation_level='Player')
+''', language='python').classes('mb-4')
+
                 # Load complete TEG data
                 teg_data = get_complete_teg_data()
 

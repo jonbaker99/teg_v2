@@ -27,11 +27,11 @@ def teg_history_content():
 
     # ===== PAGE TITLE & DESCRIPTION =====
     ui.label('TEG History').classes('text-h5 font-bold mt-6')
-    ui.label('Complete list of all TEGs with competition winners').classes('text-sm text-gray-600')
+    ui.label('Winners and locations by TEG').classes('text-sm text-gray-600')
     ui.separator()
 
     # ===== DATA DISPLAY =====
-    output_card = ui.card().classes('w-full')
+    output_card = ui.card().props('flat').classes('w-full')
 
     # ===== REFRESH/LOAD FUNCTION =====
     def load_and_display():

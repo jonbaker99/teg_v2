@@ -113,6 +113,12 @@ def ave_by_teg_content():
             )
 
             # ===== DISPLAY CHART =====
+            ui.code('''
+load_all_data(exclude_teg_50=True)
+aggregate_data(all_data, aggregation_level='TEG')
+calculate_average_stats(aggregated_data)
+''', language='python').classes('mb-4')
+
             with ui.card().classes('w-full mb-6'):
                 ui.label('Gross vs Par by Player by TEG').classes('text-base font-semibold mb-2')
                 ui.label('Click on player in legend to highlight').classes('text-sm text-gray-600 mb-3')

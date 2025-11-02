@@ -200,6 +200,12 @@ def ave_by_course_content():
             content_area.clear()
 
             with content_area:
+                ui.code('''
+load_all_data(exclude_teg_50=True)
+read_file('data/round_info.csv')
+prepare_course_scores_data(all_data, round_info)
+''', language='python').classes('mb-4')
+
                 # ===== SECTION STATE =====
                 section_state = {'current': 'course_records'}
 
