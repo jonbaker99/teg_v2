@@ -1,0 +1,518 @@
+/*
+ * NiceGUI Styles for TEG Application
+ * Color scheme inspired by NFL.com standings pages
+ * Font hierarchy: Lora (headers/text), Roboto Mono (tables/charts)
+ */
+
+/* ============================================================================
+   FONT IMPORTS
+   ============================================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
+
+/* ============================================================================
+   ROOT VARIABLES - NFL.com Color Scheme
+   ============================================================================ */
+:root {
+    /* Background Colors */
+    --bg-main: #f3f3f3;              /* Grey general background */
+    --bg-content: #ffffff;           /* White content boxes */
+    --bg-header: #ffffff;            /* White header bar */
+    --bg-footer: #f8f8f8;            /* Pale grey footer areas */
+    --bg-hover: #fafafa;             /* Subtle hover state */
+
+    /* Text Colors */
+    --text-primary: #000000;         /* Black - primary headings */
+    --text-secondary: #333333;       /* Dark grey - secondary text */
+    --text-tertiary: #666666;        /* Medium grey - less prominent text */
+    --text-muted: #999999;           /* Light grey - muted text */
+
+    /* Border & Divider Colors */
+    --border-color: #e5e5e5;         /* Light grey borders */
+    --border-color-dark: #d0d0d0;    /* Slightly darker borders */
+
+    /* Accent Colors (from TEG branding) */
+    --accent-primary: #228B22;       /* Forest green */
+    --accent-hover: #1a6b1a;         /* Darker green for hover */
+
+    /* Spacing & Layout */
+    --border-radius: 8px;            /* Rounded corners */
+    --border-radius-sm: 4px;         /* Small rounded corners */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+
+    /* Font Families */
+    --font-header: "Lora", Georgia, "Times New Roman", serif;
+    --font-text: "Lora", Georgia, "Times New Roman", serif;
+    --font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+
+/* ============================================================================
+   GLOBAL STYLES
+   ============================================================================ */
+body {
+    font-family: var(--font-text);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    background-color: var(--bg-main);
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+
+/* ============================================================================
+   TYPOGRAPHY - Headers
+   ============================================================================ */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-header);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-top: 0;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-primary);
+}
+
+h1 {
+    font-size: 32px;
+    letter-spacing: -0.5px;
+}
+
+h2 {
+    font-size: 28px;
+    letter-spacing: -0.3px;
+}
+
+h3 {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+h4 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+h5 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+h6 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+
+/* ============================================================================
+   TYPOGRAPHY - Text Content
+   ============================================================================ */
+p {
+    font-family: var(--font-text);
+    margin-top: 0;
+    margin-bottom: var(--spacing-md);
+}
+
+/* Secondary/muted text variants */
+.text-secondary {
+    color: var(--text-secondary);
+}
+
+.text-tertiary {
+    color: var(--text-tertiary);
+}
+
+.text-muted {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+
+/* ============================================================================
+   HEADER BAR - White with black/grey text
+   ============================================================================ */
+header,
+.header,
+.app-header {
+    background-color: var(--bg-header);
+    border-bottom: 1px solid var(--border-color);
+    padding: var(--spacing-md) var(--spacing-lg);
+}
+
+header h1,
+.header h1,
+.app-header h1 {
+    color: var(--text-primary);
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+}
+
+header .subtitle,
+.header .subtitle,
+.app-header .subtitle {
+    color: var(--text-tertiary);
+    font-size: 14px;
+    font-weight: 400;
+}
+
+
+/* ============================================================================
+   CONTENT BOXES - White with rounded corners
+   ============================================================================ */
+.content-box,
+.card,
+.panel {
+    background-color: var(--bg-content);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Content box header */
+.content-box-header,
+.card-header {
+    margin: calc(var(--spacing-lg) * -1);
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.content-box-header h2,
+.content-box-header h3,
+.card-header h2,
+.card-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* Content box footer - Pale grey background */
+.content-box-footer,
+.card-footer {
+    margin: var(--spacing-lg) calc(var(--spacing-lg) * -1) calc(var(--spacing-lg) * -1);
+    padding: var(--spacing-md) var(--spacing-lg);
+    background-color: var(--bg-footer);
+    border-top: 1px solid var(--border-color);
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+
+/* ============================================================================
+   TABLES - Roboto Mono font
+   ============================================================================ */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    background-color: var(--bg-content);
+}
+
+thead {
+    background-color: var(--bg-footer);
+}
+
+th {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    text-align: left;
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--text-secondary);
+    border-bottom: 2px solid var(--border-color-dark);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+td {
+    font-family: var(--font-mono);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+tr:hover {
+    background-color: var(--bg-hover);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Table within content box */
+.content-box table,
+.card table {
+    margin: calc(var(--spacing-lg) * -1);
+    width: calc(100% + var(--spacing-lg) * 2);
+}
+
+
+/* ============================================================================
+   CHARTS - Use Roboto Mono for all chart text
+   ============================================================================ */
+.chart-container,
+.plotly,
+.altair-chart,
+svg text,
+.chart-label,
+.chart-title,
+.axis-label {
+    font-family: var(--font-mono) !important;
+}
+
+.chart-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-md);
+}
+
+.chart-subtitle {
+    font-size: 14px;
+    color: var(--text-tertiary);
+    margin-bottom: var(--spacing-sm);
+}
+
+
+/* ============================================================================
+   NAVIGATION
+   ============================================================================ */
+nav {
+    background-color: var(--bg-header);
+    border-bottom: 1px solid var(--border-color);
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+nav li {
+    margin: 0;
+}
+
+nav a {
+    display: block;
+    padding: var(--spacing-md) var(--spacing-lg);
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+nav a:hover {
+    background-color: var(--bg-footer);
+    color: var(--text-primary);
+}
+
+nav a.active {
+    color: var(--accent-primary);
+    font-weight: 600;
+}
+
+
+/* ============================================================================
+   BUTTONS
+   ============================================================================ */
+button,
+.button,
+.btn {
+    font-family: var(--font-text);
+    font-size: 14px;
+    font-weight: 600;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-color-dark);
+    background-color: var(--bg-content);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+button:hover,
+.button:hover,
+.btn:hover {
+    background-color: var(--bg-footer);
+    border-color: var(--text-tertiary);
+}
+
+button.primary,
+.button-primary,
+.btn-primary {
+    background-color: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: white;
+}
+
+button.primary:hover,
+.button-primary:hover,
+.btn-primary:hover {
+    background-color: var(--accent-hover);
+    border-color: var(--accent-hover);
+}
+
+
+/* ============================================================================
+   FORMS & INPUTS
+   ============================================================================ */
+input,
+textarea,
+select {
+    font-family: var(--font-text);
+    font-size: 14px;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--border-color-dark);
+    border-radius: var(--border-radius-sm);
+    background-color: var(--bg-content);
+    color: var(--text-secondary);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(34, 139, 34, 0.1);
+}
+
+label {
+    font-family: var(--font-text);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    display: block;
+    margin-bottom: var(--spacing-xs);
+}
+
+
+/* ============================================================================
+   UTILITY CLASSES
+   ============================================================================ */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+}
+
+.section {
+    margin-bottom: var(--spacing-xl);
+}
+
+/* Spacing utilities */
+.mt-0 { margin-top: 0; }
+.mt-sm { margin-top: var(--spacing-sm); }
+.mt-md { margin-top: var(--spacing-md); }
+.mt-lg { margin-top: var(--spacing-lg); }
+.mt-xl { margin-top: var(--spacing-xl); }
+
+.mb-0 { margin-bottom: 0; }
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+.mb-xl { margin-bottom: var(--spacing-xl); }
+
+.p-0 { padding: 0; }
+.p-sm { padding: var(--spacing-sm); }
+.p-md { padding: var(--spacing-md); }
+.p-lg { padding: var(--spacing-lg); }
+.p-xl { padding: var(--spacing-xl); }
+
+/* Text alignment */
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+/* Font weight utilities */
+.font-normal { font-weight: 400; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+
+/* Font family overrides */
+.font-mono {
+    font-family: var(--font-mono) !important;
+}
+
+
+/* ============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================ */
+@media (max-width: 768px) {
+    :root {
+        --spacing-lg: 16px;
+        --spacing-xl: 24px;
+    }
+
+    h1 { font-size: 28px; }
+    h2 { font-size: 24px; }
+    h3 { font-size: 20px; }
+
+    .content-box,
+    .card {
+        padding: var(--spacing-md);
+    }
+
+    table {
+        font-size: 13px;
+    }
+
+    th, td {
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+}
+
+
+/* ============================================================================
+   NICEGUI-SPECIFIC OVERRIDES
+   ============================================================================ */
+
+/* Override NiceGUI default backgrounds */
+.nicegui-content {
+    background-color: var(--bg-main);
+}
+
+/* NiceGUI cards */
+.q-card {
+    background-color: var(--bg-content);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+
+/* NiceGUI tables */
+.q-table {
+    font-family: var(--font-mono);
+}
+
+.q-table thead th {
+    background-color: var(--bg-footer);
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.q-table tbody td {
+    font-family: var(--font-mono);
+    color: var(--text-secondary);
+}
+
+/* NiceGUI headers */
+.q-header {
+    background-color: var(--bg-header);
+    color: var(--text-primary);
+}
