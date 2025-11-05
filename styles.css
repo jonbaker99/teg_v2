@@ -15,22 +15,22 @@
    ROOT VARIABLES - NFL.com Color Scheme
    ============================================================================ */
 :root {
-    /* Background Colors */
-    --bg-main: #f3f3f3;              /* Grey general background */
+    /* Background Colors - Exact NFL.com values */
+    --bg-main: #f0f0f0;              /* Light grey general background */
     --bg-content: #ffffff;           /* White content boxes */
-    --bg-header: #ffffff;            /* White header bar */
-    --bg-footer: #f8f8f8;            /* Pale grey footer areas */
+    --bg-header: #ffffff;            /* Pure white header bar */
+    --bg-footer: #f7f7f7;            /* Very pale grey footer areas */
     --bg-hover: #fafafa;             /* Subtle hover state */
 
-    /* Text Colors */
-    --text-primary: #000000;         /* Black - primary headings */
-    --text-secondary: #333333;       /* Dark grey - secondary text */
-    --text-tertiary: #666666;        /* Medium grey - less prominent text */
-    --text-muted: #999999;           /* Light grey - muted text */
+    /* Text Colors - Exact NFL.com hierarchy */
+    --text-primary: #1e1e1e;         /* Very dark grey - main headings (team names) */
+    --text-secondary: #2d2d2d;       /* Dark grey - prominent text */
+    --text-tertiary: #6b6b6b;        /* Medium grey - secondary info (records, standings) */
+    --text-muted: #999999;           /* Light grey - labels and less important text */
 
     /* Border & Divider Colors */
-    --border-color: #e5e5e5;         /* Light grey borders */
-    --border-color-dark: #d0d0d0;    /* Slightly darker borders */
+    --border-color: #ebebeb;         /* Very light grey borders */
+    --border-color-dark: #d9d9d9;    /* Slightly darker borders */
 
     /* Accent Colors (from TEG branding) */
     --accent-primary: #228B22;       /* Forest green */
@@ -180,6 +180,7 @@ header .subtitle,
     border: 1px solid var(--border-color);
     padding: var(--spacing-lg);
     margin-bottom: var(--spacing-lg);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);  /* Subtle shadow like NFL.com */
 }
 
 /* Content box header */
