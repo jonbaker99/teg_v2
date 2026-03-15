@@ -1,63 +1,59 @@
-# TEG Golf Analytics Dashboard
+# TEG v2
 
-This repository contains a Streamlit application for analyzing and visualizing golf data for the TEG (The El Golfo) society. It provides a comprehensive set of tools for tracking player performance, viewing historical data, and managing tournament information.
+Golf tournament analysis for the TEG (The El Golfo) group. Tracks scores, records, streaks, and standings across 17+ annual tournaments with 7 players.
 
-## Features
+## What's here
 
-*   **Interactive Leaderboards:** View real-time leaderboards for ongoing tournaments, with support for both net and gross scoring.
-*   **Historical Data:** Explore the complete history of TEG winners, including an honours board for major achievements.
-*   **Performance Analysis:** Analyze player performance by course, par, and other metrics.
-*   **Scorecards:** View detailed hole-by-hole scorecards for any player, round, or tournament.
-*   **Data Management:** A secure interface for updating, editing, and deleting tournament data.
+This repo has two things:
 
-## Project Structure
+1. **`streamlit/`** -- A working Streamlit dashboard deployed on Railway (`main` branch). Leaderboards, scorecards, records, historical data, commentary reports.
 
-The repository is organized as follows:
+2. **`teg_analysis/`** -- A standalone Python package that contains the core analysis logic, extracted from the Streamlit app so it can power any frontend (API, CLI, notebook, etc). This is the focus of current development.
 
-*   `streamlit/`: Contains the main Streamlit application files.
-    *   `helpers/`: A directory with helper functions for data processing and display.
-    *   `pages/`: While not a conventional pages directory, the numbered files in `streamlit/` act as the different pages of the application.
-*   `data/`: Stores all the data files for the application, including tournament results, handicaps, and cached analysis files.
-*   `dev_notebooks/`: Contains Jupyter notebooks for development and ad-hoc analysis.
-*   `*.py`: Various scripts in the root directory for testing and data management.
-
-## Setup and Installation
-
-To set up the development environment, follow these steps:
-
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/jonbaker99/teg_v2.git
-    cd teg_v2
-    ```
-
-2.  **Create a virtual environment:**
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
-    ```
-
-3.  **Install the dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-## Running the Application
-
-To run the Streamlit application, execute the following command from the root directory:
+## Quick start
 
 ```bash
+# Install dependencies
+pip install pandas numpy pyarrow plotly PyGithub
+
+# Verify the analysis package works
+python -c "
+from teg_analysis.core.data_loader import load_all_data
+df = load_all_data()
+print(f'{len(df)} rows, {df.TEGNum.nunique()} TEGs, {df.Player.nunique()} players')
+"
+
+# Run the Streamlit app (needs: pip install -r requirements.txt)
 streamlit run streamlit/nav.py
+
+# Run the FastAPI example (needs: pip install fastapi uvicorn)
+python examples/example_fastapi.py
+# Then visit http://localhost:8000/docs
 ```
 
-This will start the application on your local machine, and you can access it in your web browser at `http://localhost:8501`.
+## Project structure
 
-## Data Management
+```
+teg_analysis/        Core analysis package (standalone, no Streamlit dependency)
+  constants.py       File paths, player data, tournament metadata
+  io/                File I/O, GitHub API, Railway volume management
+  core/              Data loading and transformation
+  analysis/          Scoring, rankings, aggregation, streaks, records, commentary
+  display/           Formatting, HTML tables, navigation utilities
+  api/               (Placeholder for REST API endpoints)
 
-The application provides a set of tools for managing the data used in the analysis. These tools are available in the "Data" section of the application and include:
+streamlit/           The existing Streamlit app (deployed on Railway)
+tests/               Test suite for teg_analysis
+examples/            FastAPI proof-of-concept
+data/                Tournament data files (parquet, CSV, commentary reports)
 
-*   **Data Update:** Load new round data from a Google Sheet.
-*   **Data Edit:** Directly edit the CSV data files.
-*   **Delete Data:** Safely delete tournament data with backups.
+CLAUDE.md            Development guidelines
+PROJECT_PLAN.md      Objectives, next steps, resume instructions
+BRANCHES.md          Guide to all branches
+```
 
-All data changes are automatically synced with the GitHub repository to ensure data integrity and version control.
+## Current status
+
+See [PROJECT_PLAN.md](PROJECT_PLAN.md) for the full plan, known issues, and how to resume work.
+
+The Streamlit app on `main` is stable and deployed. The `teg_analysis` package on this branch (`claude/golf-stats-api-cMQ4e`) is the foundation for the API -- validated as working standalone with all 6,390 rows of data.
