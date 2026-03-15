@@ -386,7 +386,7 @@ def prepare_history_table_display(winners_df: pd.DataFrame) -> pd.DataFrame:
     from teg_analysis.io.file_operations import read_file
 
     # Get constants to access ROUND_INFO_CSV
-    from utils import ROUND_INFO_CSV
+    from teg_analysis.constants import ROUND_INFO_CSV
 
     # Create a copy to avoid modifying original
     display_winners = winners_df.copy()
@@ -486,7 +486,9 @@ def get_incomplete_tegs() -> pd.DataFrame:
         pd.DataFrame: A DataFrame of incomplete TEG data with TEG, Year, and
         Area columns.
     """
-    from utils import load_all_data, read_file, ROUND_INFO_CSV, exclude_incomplete_tegs_function
+    from teg_analysis.core.data_loader import load_all_data, exclude_incomplete_tegs_function
+    from teg_analysis.io import read_file
+    from teg_analysis.constants import ROUND_INFO_CSV
     
     # Load all data including incomplete TEGs
     all_data_with_incomplete = load_all_data(exclude_incomplete_tegs=False)
@@ -522,7 +524,7 @@ def get_future_tegs() -> pd.DataFrame:
         pd.DataFrame: A DataFrame of future TEG data with TEG, Year, and Area
         columns.
     """
-    from utils import read_file
+    from teg_analysis.io import read_file
     
     try:
         # Try to load future TEGs from a dedicated file
@@ -627,7 +629,7 @@ def check_winner_completeness() -> set:
         set: A set of TEG numbers that are completed but missing from the
         winners cache.
     """
-    from utils import read_file
+    from teg_analysis.io import read_file
 
     try:
         # Load status files
@@ -678,7 +680,6 @@ def calculate_and_save_missing_winners(missing_teg_nums: set) -> dict:
     Raises:
         ValueError: If no data available
     """
-    import pandas as pd
     # Import from teg_analysis instead of utils to avoid circular dependency
     from ..io.file_operations import read_file, write_file
     from ..core.data_loader import load_all_data
@@ -773,7 +774,6 @@ def load_cached_winners() -> tuple[pd.DataFrame, set] or tuple[None, set]:
             - missing_teg_nums (set): A set of TEG numbers for which winners
               were missing.
     """
-    import pandas as pd
     from ..io.file_operations import read_file
     from ..core.data_loader import load_all_data
 
@@ -853,7 +853,7 @@ def prepare_complete_history_table_fast(cached_winners_df: pd.DataFrame = None) 
     # If no cached data available, fall back to calculation
     if cached_winners_df is None:
         print("No cached winners data available, falling back to calculation...")
-        from utils import load_all_data, get_teg_winners
+        from teg_analysis.core.data_loader import load_all_data
         all_data = load_all_data(exclude_incomplete_tegs=True, exclude_teg_50=True)
         winners_with_year = get_teg_winners(all_data)
         completed_history = prepare_history_table_display(winners_with_year)
@@ -914,52 +914,8 @@ def prepare_complete_history_table_fast(cached_winners_df: pd.DataFrame = None) 
     return complete_history
 
 
-# ============================================
-#  TEG COMPLETENESS CHECKING FUNCTIONS
-# ============================================
 
-def check_winner_completeness():
-    """
-    Check if cached winners match completed TEGs status.
-
-    Returns:
-        set: Set of TEG numbers that are completed but missing from winners cache
-    """
-    from utils import read_file
-
-    try:
-        # Load status files
-        completed_tegs = read_file('data/completed_tegs.csv')
-        cached_winners = read_file('data/teg_winners.csv')
-
-        # Extract TEG numbers from both sources
-        completed_teg_nums = set(completed_tegs['TEGNum']) if not completed_tegs.empty else set()
-
-        # Extract TEG numbers from cached winners (from TEG column like "TEG 18")
-        cached_teg_nums = set()
-        if not cached_winners.empty:
-            import re
-            for teg_str in cached_winners['TEG']:
-                match = re.search(r'TEG (\d+)', str(teg_str))
-                if match:
-                    cached_teg_nums.add(int(match.group(1)))
-
-        # Identify missing winners
-        missing_winners = completed_teg_nums - cached_teg_nums
-
-        return missing_winners
-
-    except Exception as e:
-        print(f"Error checking winner completeness: {e}")
-        return set()
-
-
-# DUPLICATE FUNCTIONS REMOVED - see lines 672-776 for kept versions
-# display_completeness_status() - UI wrapper moved to streamlit/utils.py
-# calculate_and_save_missing_winners() - Pure version above (line 676)
-
-
-# === MIGRATED SECTION ===
+# === BEST/WORST PERFORMANCE TABLES ===
 
 """Data processing functions for best TEGs and rounds analysis.
 
@@ -969,7 +925,6 @@ mappings for the user interface.
 """
 
 
-import pandas as pd
 
 
 def get_measure_name_mappings() -> tuple[dict, dict]:
@@ -1040,7 +995,7 @@ def prepare_best_teg_table(teg_data_ranked: pd.DataFrame, selected_measure: str,
     best_tegs = best_tegs[display_columns]
     
     # Format vs par columns properly and convert other numeric columns to integers
-    from utils import format_vs_par
+    from teg_analysis.analysis.scoring import format_vs_par
     
     if selected_friendly_name in ['Gross', 'Net']:
         # Format vs par values with +/- notation
@@ -1076,7 +1031,7 @@ def prepare_best_round_table(rd_data_ranked: pd.DataFrame, selected_measure: str
     rank_measure = f'Rank_within_all_{selected_measure}'
     
     # Get best performances from utils function
-    from utils import get_best
+    from teg_analysis.analysis.rankings import get_best
     
     best_rounds = (get_best(rd_data_ranked, selected_measure, player_level=False, top_n=n_keep)
                    .sort_values(by=rank_measure, ascending=True)
@@ -1088,7 +1043,7 @@ def prepare_best_round_table(rd_data_ranked: pd.DataFrame, selected_measure: str
     best_rounds = best_rounds[display_columns]
     
     # Format vs par columns properly and convert other numeric columns to integers
-    from utils import format_vs_par
+    from teg_analysis.analysis.scoring import format_vs_par
     
     if selected_friendly_name in ['Gross', 'Net']:
         # Format vs par values with +/- notation
@@ -1166,7 +1121,7 @@ def prepare_personal_best_teg_table(teg_data_ranked: pd.DataFrame, selected_meas
     personal_best_tegs = personal_best_tegs[display_columns]
     
     # Format vs par columns properly and convert other numeric columns to integers
-    from utils import format_vs_par
+    from teg_analysis.analysis.scoring import format_vs_par
     
     if selected_friendly_name in ['Gross', 'Net']:
         # Format vs par values with +/- notation (but not the # column)
@@ -1207,7 +1162,7 @@ def prepare_personal_best_round_table(rd_data_ranked: pd.DataFrame, selected_mea
     rank_all_time = f'Rank_within_all_{selected_measure}'
     
     # Get best performances from utils function (player_level=True gets 1 per player)
-    from utils import get_best
+    from teg_analysis.analysis.rankings import get_best
     
     personal_best_rounds = (get_best(rd_data_ranked, selected_measure, player_level=True, top_n=1)
                            .sort_values(by=rank_all_time, ascending=True)
@@ -1219,7 +1174,7 @@ def prepare_personal_best_round_table(rd_data_ranked: pd.DataFrame, selected_mea
     personal_best_rounds = personal_best_rounds[display_columns]
     
     # Format vs par columns properly and convert other numeric columns to integers
-    from utils import format_vs_par
+    from teg_analysis.analysis.scoring import format_vs_par
     
     if selected_friendly_name in ['Gross', 'Net']:
         # Format vs par values with +/- notation (but not the # column)
@@ -1281,7 +1236,7 @@ def prepare_worst_teg_table(teg_data_ranked: pd.DataFrame, selected_measure: str
     worst_tegs = worst_tegs[display_columns]
     
     # Format vs par columns properly and convert other numeric columns to integers
-    from utils import format_vs_par
+    from teg_analysis.analysis.scoring import format_vs_par
     
     if selected_friendly_name in ['Gross', 'Net']:
         # Format vs par values with +/- notation
@@ -1314,7 +1269,7 @@ def prepare_worst_round_table(rd_data_ranked: pd.DataFrame, selected_measure: st
     name_mapping, inverted_name_mapping = get_measure_name_mappings()
     
     # Get worst performances from utils function
-    from utils import get_worst
+    from teg_analysis.analysis.rankings import get_worst
     
     worst_rounds = (get_worst(rd_data_ranked, selected_measure, player_level=False, top_n=n_keep)
                     .rename(columns=inverted_name_mapping))
@@ -1331,7 +1286,7 @@ def prepare_worst_round_table(rd_data_ranked: pd.DataFrame, selected_measure: st
     worst_rounds = worst_rounds[display_columns]
     
     # Format vs par columns properly and convert other numeric columns to integers
-    from utils import format_vs_par
+    from teg_analysis.analysis.scoring import format_vs_par
     
     if selected_friendly_name in ['Gross', 'Net']:
         # Format vs par values with +/- notation
@@ -1367,7 +1322,7 @@ def prepare_personal_worst_teg_table(teg_data_ranked: pd.DataFrame, selected_mea
     filtered_data = teg_data_ranked[teg_data_ranked['TEGNum'] != 2].copy()
     
     # Get worst performances per player using get_worst function 
-    from utils import get_worst
+    from teg_analysis.analysis.rankings import get_worst
     
     personal_worst_tegs = (get_worst(filtered_data, selected_measure, player_level=True, top_n=1)
                           .rename(columns=inverted_name_mapping))
@@ -1384,7 +1339,7 @@ def prepare_personal_worst_teg_table(teg_data_ranked: pd.DataFrame, selected_mea
     personal_worst_tegs = personal_worst_tegs[display_columns]
     
     # Format vs par columns properly and convert other numeric columns to integers
-    from utils import format_vs_par
+    from teg_analysis.analysis.scoring import format_vs_par
     
     if selected_friendly_name in ['Gross', 'Net']:
         # Format vs par values with +/- notation (but not the # column)
@@ -1422,7 +1377,7 @@ def prepare_personal_worst_round_table(rd_data_ranked: pd.DataFrame, selected_me
     name_mapping, inverted_name_mapping = get_measure_name_mappings()
     
     # Get worst performances per player using get_worst function
-    from utils import get_worst
+    from teg_analysis.analysis.rankings import get_worst
     
     personal_worst_rounds = (get_worst(rd_data_ranked, selected_measure, player_level=True, top_n=1)
                             .rename(columns=inverted_name_mapping))
@@ -1439,7 +1394,7 @@ def prepare_personal_worst_round_table(rd_data_ranked: pd.DataFrame, selected_me
     personal_worst_rounds = personal_worst_rounds[display_columns]
     
     # Format vs par columns properly and convert other numeric columns to integers
-    from utils import format_vs_par
+    from teg_analysis.analysis.scoring import format_vs_par
     
     if selected_friendly_name in ['Gross', 'Net']:
         # Format vs par values with +/- notation (but not the # column)
@@ -1471,7 +1426,7 @@ def prepare_pb_teg_summary_table(teg_data_ranked: pd.DataFrame) -> pd.DataFrame:
         pd.DataFrame: A summary DataFrame with columns for Score, Gross v Par,
         Net v Par, and Stableford.
     """
-    from utils import format_vs_par
+    from teg_analysis.analysis.scoring import format_vs_par
     
     # Filter out TEG 2 (3 rounds vs standard 4)
     filtered_data = teg_data_ranked[teg_data_ranked['TEGNum'] != 2].copy()
@@ -1520,7 +1475,7 @@ def prepare_pb_round_summary_table(rd_data_ranked: pd.DataFrame) -> pd.DataFrame
         pd.DataFrame: A summary DataFrame with columns for Score, Gross v Par,
         Net v Par, and Stableford.
     """
-    from utils import format_vs_par
+    from teg_analysis.analysis.scoring import format_vs_par
 
     # Get unique players
     players = sorted(rd_data_ranked['Player'].unique())
@@ -1566,7 +1521,7 @@ def prepare_pb_nine_summary_table(nine_data_ranked: pd.DataFrame) -> pd.DataFram
         pd.DataFrame: A summary DataFrame with columns for Score, Gross v Par,
         Net v Par, and Stableford.
     """
-    from utils import format_vs_par
+    from teg_analysis.analysis.scoring import format_vs_par
 
     # Get unique players
     players = sorted(nine_data_ranked['Player'].unique())
@@ -1608,7 +1563,6 @@ proper formatting.
 """
 
 
-import pandas as pd
 
 
 def get_performance_measure_titles() -> dict:
@@ -1752,7 +1706,7 @@ def create_worst_performance_section(worst_records: pd.DataFrame, measure: str, 
     Returns:
         str: The HTML for the stat section display.
     """
-    from utils import create_stat_section
+    from teg_analysis.display.tables import create_stat_section
     
     title = measure_titles[measure]
     value = format_performance_value(worst_records[measure].iloc[0], measure)
@@ -1771,7 +1725,7 @@ def get_filtered_teg_data() -> pd.DataFrame:
     Returns:
         pd.DataFrame: The TEG data with TEG 2 excluded.
     """
-    from utils import get_complete_teg_data
+    from teg_analysis.analysis.aggregation import get_complete_teg_data
     
     teg_data = get_complete_teg_data()
     filtered_teg_data = teg_data[teg_data['TEGNum'] != 2]
@@ -1789,7 +1743,6 @@ tables and charts.
 """
 
 
-import pandas as pd
 # get_current_in_progress_teg_fast and get_last_completed_teg_fast
 # are now defined at the end of this module (lines ~2800+)
 
@@ -1813,9 +1766,6 @@ def get_round_metric_mappings() -> tuple[dict, dict]:
     
     return name_mapping, inverted_mapping
 
-
-# initialize_round_selection_state() - MOVED TO streamlit/utils.py
-# This function uses st.session_state which is Streamlit-specific
 
 
 def get_latest_round_defaults(df_round: pd.DataFrame) -> tuple[str, int]:
@@ -1853,13 +1803,6 @@ def get_latest_round_defaults(df_round: pd.DataFrame) -> tuple[str, int]:
     except Exception as e:
         raise ValueError(f"Error determining latest round: {e}")
 
-
-# update_session_state_defaults() - MOVED TO streamlit/utils.py
-# This function uses st.session_state which is Streamlit-specific
-
-
-# create_round_selection_reset_function() - MOVED TO streamlit/utils.py
-# This function uses st.session_state which is Streamlit-specific
 
 
 def get_teg_and_round_options(df_round: pd.DataFrame, selected_teg: str) -> tuple[list, list]:
@@ -1908,7 +1851,7 @@ def prepare_round_context_display(df_round: pd.DataFrame, teg_r: str, rd_r: int,
     """Prepares round context data for display in a specific metric tab.
 
     This function creates a context table showing how the selected round
-    compares to other rounds.
+    compares to other rounds, including player rank and all-time rank.
 
     Args:
         df_round (pd.DataFrame): The round ranking data.
@@ -1920,14 +1863,22 @@ def prepare_round_context_display(df_round: pd.DataFrame, teg_r: str, rd_r: int,
     Returns:
         pd.DataFrame: A context table with renamed columns for display.
     """
-    from utils import chosen_rd_context
-    
-    # Get context data from utils function
-    context_data = chosen_rd_context(df_round, teg_r, rd_r, metric)
-    
+    df = df_round.copy()
+    all_cnt = len(df)
+    df['Pl_count'] = df.groupby('Pl')['Pl'].transform('count')
+    chosen_rd = df[(df['TEG'] == teg_r) & (df['Round'] == rd_r)]
+
+    sort_ascending = metric != 'Stableford'
+    chosen_rd = chosen_rd.sort_values(metric, ascending=sort_ascending)
+    chosen_rd['Pl rank'] = (chosen_rd[f'Rank_within_player_{metric}'].astype(int).astype(str) +
+                            ' / ' + chosen_rd['Pl_count'].astype(str))
+    chosen_rd['All time rank'] = (chosen_rd[f'Rank_within_all_{metric}'].astype(int).astype(str) +
+                                  ' / ' + str(all_cnt))
+    context_data = chosen_rd[['Player', metric, 'Pl rank', 'All time rank']]
+
     # Rename metric column to friendly name for display
     display_data = context_data.rename(columns={metric: friendly_metric})
-    
+
     return display_data
 
 
@@ -1995,7 +1946,7 @@ def prepare_teg_context_display(df_teg: pd.DataFrame, teg_t: str, metric: str, f
     """Prepares TEG context data for display in a specific metric tab.
 
     This function creates a context table showing how the selected TEG
-    compares to other TEGs.
+    compares to other TEGs, including player rank and all-time rank.
 
     Args:
         df_teg (pd.DataFrame): The TEG ranking data.
@@ -2006,14 +1957,22 @@ def prepare_teg_context_display(df_teg: pd.DataFrame, teg_t: str, metric: str, f
     Returns:
         pd.DataFrame: A context table with renamed columns for display.
     """
-    from utils import chosen_teg_context
-    
-    # Get context data from utils function
-    context_data = chosen_teg_context(df_teg, teg_t, metric)
-    
+    df = df_teg.copy()
+    all_cnt = len(df)
+    df['Pl_count'] = df.groupby('Pl')['Pl'].transform('count')
+    chosen_teg = df[df['TEG'] == teg_t]
+
+    sort_ascending = metric != 'Stableford'
+    chosen_teg = chosen_teg.sort_values(metric, ascending=sort_ascending)
+    chosen_teg['Pl rank'] = (chosen_teg[f'Rank_within_player_{metric}'].astype(int).astype(str) +
+                             ' / ' + chosen_teg['Pl_count'].astype(str))
+    chosen_teg['All time rank'] = (chosen_teg[f'Rank_within_all_{metric}'].astype(int).astype(str) +
+                                   ' / ' + str(all_cnt))
+    context_data = chosen_teg[['Player', metric, 'Pl rank', 'All time rank']]
+
     # Rename metric column to friendly name for display
     display_data = context_data.rename(columns={metric: friendly_metric})
-    
+
     return display_data
 
 
@@ -2029,9 +1988,6 @@ This module provides functions to identify and analyze dramatic final round perf
 """
 
 
-import pandas as pd
-import numpy as np
-from typing import Tuple
 
 
 def calculate_final_round_differentials(
@@ -2464,7 +2420,6 @@ preparing data for team format displays.
 """
 
 
-import pandas as pd
 
 
 def prepare_bestball_data(all_data: pd.DataFrame) -> pd.DataFrame:
@@ -2574,7 +2529,7 @@ def format_team_scores_for_display(team_data: pd.DataFrame, sort_by_best: bool =
     Returns:
         pd.DataFrame: A formatted DataFrame ready for display.
     """
-    from utils import format_vs_par
+    from teg_analysis.analysis.scoring import format_vs_par
     
     bestball_cols, value_cols = get_bestball_columns()
     
@@ -2595,7 +2550,6 @@ validating scorecard data, and preparing data for different scorecard types.
 """
 
 
-import pandas as pd
 
 
 def prepare_scorecard_selection_options(all_data: pd.DataFrame) -> dict:

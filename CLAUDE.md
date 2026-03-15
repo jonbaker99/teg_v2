@@ -27,7 +27,21 @@ pip install -r requirements.txt
 
 ## Architecture
 
-### Core Structure
+### Two-Layer Structure
+
+The project has two main layers:
+
+1. **`teg_analysis/`** — Standalone Python package with all core analysis logic, **fully independent of Streamlit** (no streamlit imports at module level):
+   - `constants.py` — Centralised file paths, player data, tournament metadata
+   - `io/` — File I/O (`read_file`/`write_file`), GitHub API (uses `GITHUB_TOKEN` env var), Railway volume management
+   - `core/` — Data loading (`load_all_data`) and transformation
+   - `analysis/` — Scoring, rankings, aggregation, streaks, records, commentary, pipeline
+   - `display/` — Formatting, HTML tables, navigation utilities (returns HTML strings, never calls st.write)
+   - `api/` — Placeholder for REST API endpoints
+
+2. **`streamlit/`** — The production Streamlit app (deployed on Railway), which currently uses its own `utils.py` rather than `teg_analysis/`. Migrating the Streamlit app to use `teg_analysis/` is a future goal.
+
+### Streamlit App Structure
 - **Entry point**: `streamlit/nav.py` - Main navigation controller defining all pages
 - **Data utilities**: `streamlit/utils.py` - Core data loading and GitHub integration functions
 - **Page modules**: Numbered files (100s=History, 200s=Results, 300s=Records, etc.)
@@ -116,7 +130,27 @@ Always use the centralized `read_file()` function from `utils.py` which handles 
 - Test changes thoroughly before expanding scope
 - Document the reasoning behind architectural decisions
 
+## Model Selection
 
+**Claude Code should actively recommend the right model for each task and warn if the current model is suboptimal.**
+
+### Complexity tiers
+
+| Tier | Recommended Model | Task types |
+|------|-------------------|------------|
+| **Complex** | **Opus** | Architecture decisions, multi-file refactors, designing new modules/APIs, rewriting large files, debugging subtle cross-module issues, planning |
+| **Moderate** | **Sonnet** | Single-file edits, adding/modifying functions, fixing known bugs, writing tests, import cleanup, removing dead code from a single file |
+| **Simple** | **Haiku** | Deleting files, renaming variables, removing comments, formatting, updating docs, simple search-and-replace |
+
+### Required behavior
+
+1. **At conversation start**: Assess task complexity. If the current model doesn't match the recommended tier, immediately say:
+   > **Model note:** This is a [simple/moderate/complex] task — [Haiku/Sonnet/Opus] would be more appropriate. Switch with `/model [model]`.
+
+2. **At task transitions**: When the next subtask is a different complexity tier, prompt:
+   > **Model note:** The [complex work] is done. Remaining tasks are [simple/moderate] — consider switching to [model].
+
+3. **Batch by complexity**: Group same-tier tasks together to minimize switches. When presenting a task list, organize by recommended model.
 
 ### general info
 - a 'teg' is a tournament. each teg consistents of a number of rounds (usually 4, with a few exceptions). each round consists of 18 holes. the 18 holes can be categorised as a 'front 9' (holes 1-9)  and 'back 9' (holes 10-18)

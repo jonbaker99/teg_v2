@@ -10,21 +10,6 @@ import pandas as pd
 import os
 from typing import List
 
-try:
-    import streamlit as st
-    # _st_cache_data will be called as a function, not accessed as attribute
-    if hasattr(st, 'cache_data'):
-        _st_cache_data = st.cache_data
-    else:
-        # Fallback for older streamlit versions
-        def _st_cache_data(func):
-            return func
-except ImportError:
-    st = None
-    # Define a no-op decorator if streamlit isn't available
-    def _st_cache_data(func):
-        return func
-
 logger = logging.getLogger(__name__)
 
 
@@ -37,12 +22,12 @@ from teg_analysis.constants import (
 
 
 def clear_all_caches():
-    """Clear Streamlit caches if Streamlit is available, otherwise no-op."""
-    if st is not None:
-        try:
-            st.cache_data.clear()
-        except Exception:
-            pass
+    """No-op placeholder for cache clearing.
+
+    The Streamlit app should call st.cache_data.clear() directly.
+    This exists so pipeline code can call it without knowing the runtime.
+    """
+    pass
 
 
 def _get_deps():
@@ -122,13 +107,6 @@ def update_streaks_cache(defer_github: bool = False):
         error_msg = f"Failed to update streaks cache: {e}"
         logger.error(error_msg)
 
-        # Show error in UI
-        try:
-            st.error(error_msg)
-        except:
-            # If streamlit context not available (e.g. running from script)
-            print(f"ERROR: {error_msg}")
-
         return None
 
 
@@ -154,8 +132,7 @@ def update_bestball_cache(defer_github: bool = False):
         load_all_data = deps['load_all_data']
         write_file = deps['write_file']
 
-        # Import bestball processing functions (keep from helpers for now)
-        from helpers.bestball_processing import prepare_bestball_data, calculate_bestball_scores, calculate_worstball_scores
+        from teg_analysis.analysis.aggregation import prepare_bestball_data, calculate_bestball_scores, calculate_worstball_scores
 
         # Load all data including incomplete TEGs for up-to-date analysis
         all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
@@ -186,7 +163,6 @@ def update_bestball_cache(defer_github: bool = False):
 
     except Exception as e:
         logger.error(f"Error updating bestball cache: {e}")
-        st.error(f"Failed to update bestball cache: {e}")
         return None
 
 def update_commentary_caches(defer_github: bool = False):
@@ -321,13 +297,6 @@ def update_commentary_caches(defer_github: bool = False):
         error_msg = f"Failed to update commentary caches: {e}"
         logger.error(error_msg)
 
-        # Show error in UI
-        try:
-            st.error(error_msg)
-        except:
-            # If streamlit context not available (e.g. running from script)
-            print(f"ERROR: {error_msg}")
-
         return None
 
 
@@ -349,7 +318,7 @@ def get_google_sheet(sheet_name: str, worksheet_name: str) -> pd.DataFrame:
     SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
     try:
-        # Try Railway environment variables first, fallback to st.secrets for local development
+        # Try Railway environment variables
         if os.getenv('GOOGLE_TYPE'):
             # Railway environment variables
             service_account_info = {
@@ -367,9 +336,7 @@ def get_google_sheet(sheet_name: str, worksheet_name: str) -> pd.DataFrame:
             }
             logger.info("Using Railway environment variables for Google credentials")
         else:
-            # Fallback for local development
-            service_account_info = st.secrets["google"]
-            logger.info("Using Streamlit secrets for Google credentials")
+            raise ValueError("Google credentials not found in environment variables. Set GOOGLE_TYPE and related env vars.")
         
         creds = Credentials.from_service_account_info(service_account_info, scopes=SCOPE)
         
@@ -383,7 +350,6 @@ def get_google_sheet(sheet_name: str, worksheet_name: str) -> pd.DataFrame:
         return df
     except Exception as e:
         logger.error(f"Error fetching data from Google Sheets: {e}")
-        st.error(f"Error fetching data: {e}")
         raise
 
 
@@ -411,7 +377,6 @@ def reshape_round_data(df: pd.DataFrame, id_vars: List[str]) -> pd.DataFrame:
     return reshaped_df
 
 
-@_st_cache_data
 def load_and_prepare_handicap_data(file_path: str) -> pd.DataFrame:
     """
     Load and prepare handicap data from a CSV file.
@@ -424,7 +389,7 @@ def load_and_prepare_handicap_data(file_path: str) -> pd.DataFrame:
     """
     logger.info(f"Loading handicap data from {file_path}")
     # Import here to avoid circular dependency
-    from teg_analysis.core.data_loader import read_file
+    from teg_analysis.io import read_file
     try:
         hc_lookup = read_file(file_path)
     except Exception as e:
@@ -546,7 +511,6 @@ def update_all_data(csv_file: str, parquet_file: str, csv_output_file: str, defe
     logger.info(f"Transformed data saved to {csv_output_file}")
 
     if not defer_github:
-        st.cache_data.clear()
-        st.success("✅ Cache cleared")
+        clear_all_caches()
 
     return file_infos if defer_github else None

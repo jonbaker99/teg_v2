@@ -1,6 +1,24 @@
 # Project Plan: TEG Analysis API & Cleanup
 
-*Last updated: 2026-02-06*
+*Last updated: 2026-03-15*
+
+## Big Picture
+
+The TEG project is evolving from a monolithic Streamlit app into a two-layer architecture:
+
+1. **`teg_analysis/`** — A standalone Python package containing all core analysis logic, completely independent of Streamlit. This is the foundation everything else builds on.
+2. **Frontends** — Starting with the existing Streamlit app (deployed, working), with the goal of building a proper REST API and eventually a clean, professional web app.
+
+### Where we are now
+- The Streamlit app is stable and deployed on Railway
+- The `teg_analysis` package has been extracted and merged to `main`
+- **The package is now fully independent of Streamlit** — all streamlit imports, `from utils import`, and `from helpers.` imports have been removed
+- Next: build a proper REST API, prototype alternative frontends
+
+### Where we're heading
+- A REST API powered by `teg_analysis` (FastAPI)
+- A professional web frontend that calls the API
+- Eventually retire or reduce the Streamlit app in favour of the better frontend
 
 ## The Overarching Objective
 
@@ -10,17 +28,17 @@ This is NOT a Streamlit rewrite. The Streamlit app stays on main and keeps worki
 
 ### Why this matters
 
-The current codebase has ~530 functions in ~79 Python files, with business logic tangled into Streamlit page files. This means:
-- You can't use the analysis logic outside Streamlit
-- Functions are duplicated across files (8 exact duplicates, 10 near-duplicates found)
-- Testing is difficult because everything requires a Streamlit runtime
-- Adding new features means adding more to the mess
+The original codebase had ~530 functions in ~79 Python files, with business logic tangled into Streamlit page files. This meant:
+- You couldn't use the analysis logic outside Streamlit
+- Functions were duplicated across files (8 exact duplicates, 10 near-duplicates found)
+- Testing was difficult because everything required a Streamlit runtime
+- Adding new features meant adding more to the mess
 
 The `teg_analysis/` package solves this by giving the analysis logic a clean home.
 
-## What's Been Done (This Branch)
+## What's Been Done
 
-### Branch: `claude/golf-stats-api-cMQ4e` (based on `main`)
+The following work was completed on the `claude/golf-stats-api-cMQ4e` branch and **merged to `main`** via PR #1 on 2026-02-06.
 
 1. **Extracted `teg_analysis/` package** from the `refactor` branch — cherry-picked just the package, not the 80+ doc files, NiceGUI prototype, or throwaway scripts.
 
@@ -31,6 +49,8 @@ The `teg_analysis/` package solves this by giving the analysis logic a clean hom
 4. **Validated the package works standalone** — All modules import cleanly with Streamlit blocked (`sys.modules['streamlit'] = None`). `load_all_data()` successfully loads 6,390 rows across 17 TEGs and 7 players from local data files.
 
 5. **Included tests and FastAPI example** from the refactor branch.
+
+6. **Cleaned up repo root** — Deleted 295 cruft files, rewrote README.
 
 ### Package structure
 ```
@@ -58,11 +78,10 @@ teg_analysis/
         streaks.py            # build_streaks(), streak analysis (~27 functions)
     display/
         __init__.py
-        charts.py             # (stub - to be implemented)
         formatters.py         # Value formatting, display preparation
         html_tables.py        # HTML table generation with styling
         navigation.py         # Trophy names, URL utilities
-        tables.py             # Table generation utilities
+        tables.py             # Table generation utilities (returns HTML, no st.write)
     api/
         __init__.py           # (placeholder for FastAPI endpoints)
 tests/
@@ -75,35 +94,31 @@ examples/
     example_fastapi.py        # Working FastAPI example with ~10 endpoints
 ```
 
-### What this branch does NOT touch
-- The `streamlit/` directory is untouched
-- The `data/` directory is untouched
-- Railway deployment is unaffected
-- `main` branch is untouched
-
 ## Known Issues / Incomplete Items
 
 These are things that still need attention in the `teg_analysis/` package:
 
-1. **Conditional Streamlit imports** — 7 files do `try: import streamlit as st` for optional caching/UI. This is acceptable (graceful degradation) but some functions still call `st.error()` or `st.cache_data.clear()` without checking `HAS_STREAMLIT` first. These should be audited.
+1. **`aggregation.py` is still very large** (~2,900 lines) — Contains bestball, scorecard, comeback, leaderboard, history, and performance table functions that could be split into separate modules. The code works but is hard to navigate.
 
-2. **`pipeline.py` still references `helpers.bestball_processing`** — The `update_bestball_cache()` function imports from `helpers/` which is a Streamlit-side directory. This function won't work standalone until bestball logic is migrated.
+2. **`scoring.py` still has some duplicate patterns** — The file was cleaned up (removed ~200 lines of exact duplicates) but some function pairs (e.g. `format_vs_par_value` defined at module level and also as a local function inside `format_par_performance_table`) could be consolidated further.
 
-3. **`display/charts.py` is a stub** — Empty module, chart functions not yet migrated.
+3. **`api/` is empty** — Just a placeholder `__init__.py`. The FastAPI endpoints in `examples/example_fastapi.py` show the pattern but aren't integrated.
 
-4. **`display/tables.py`** has one function (`datawrapper_table`) that calls `st.html()` directly. Needs a non-Streamlit path.
-
-5. **Tests need updating** — The test files were written for the refactor branch's state. Some may reference code that's been removed (the Streamlit-specific pipeline tail). Need to run them and fix failures.
-
-6. **`api/` is empty** — Just a placeholder `__init__.py`. The FastAPI endpoints in `examples/example_fastapi.py` show the pattern but aren't integrated.
+4. **Some functions in aggregation.py have UI-oriented logic** — Functions like `prepare_scorecard_selection_options` and `determine_control_states` feel more like UI helpers than analysis. Consider whether they belong in the package or the Streamlit app.
 
 ## Next Steps (In Priority Order)
 
-### Phase 1: Stabilise the Package
-- [ ] Run the existing tests, fix any failures
-- [ ] Audit all `st.error()` / `st.success()` calls in the package — replace with `logger.error()` / `logger.info()`
-- [ ] Move bestball processing logic from `helpers/` into `teg_analysis/analysis/`
-- [ ] Populate `display/charts.py` if chart functions are needed
+### Phase 1: Stabilise the Package ✅ DONE
+- [x] Run the existing tests, fix any failures — 60 tests pass
+- [x] Remove all `st.error()` / `st.success()` / `st.cache_data.clear()` calls — replaced with `logger.error()` / `logger.info()`
+- [x] Remove all `from utils import` and `from helpers.` imports — replaced with `teg_analysis` internal imports
+- [x] Remove all conditional `import streamlit` blocks from module level
+- [x] Replace `st.secrets` with `os.environ` in `github_operations.py`
+- [x] Make `datawrapper_table` always return HTML (no `st.write`)
+- [x] Delete `display/charts.py` (empty stub)
+- [x] Delete streamlit-specific test files (`test_helpers.py`, `test_pages_smoke.py`, `test_utils_mock.py`)
+- [x] Remove duplicate code in `scoring.py` (~200 lines) and `aggregation.py` (duplicate `check_winner_completeness`)
+- [x] Fix `pipeline.py` bestball import to use `teg_analysis.analysis.aggregation`
 
 ### Phase 2: Build the API
 - [ ] Move the FastAPI example into `teg_analysis/api/` as proper endpoints
@@ -139,27 +154,25 @@ These are the lessons from the previous refactor attempt. Follow them.
 
 ## How to Resume This Work
 
-```bash
-# 1. Check out this branch
-git checkout claude/golf-stats-api-cMQ4e
+Everything is on `main`. No branch checkout needed.
 
-# 2. Install dependencies
+```bash
+# 1. Install dependencies
 pip install pandas numpy pyarrow plotly PyGithub
 
-# 3. Verify the package works
+# 2. Verify the package works
 python -c "
-import sys; sys.modules['streamlit'] = None
 from teg_analysis.core.data_loader import load_all_data
-df = load_all_data(exclude_teg_50=True)
+df = load_all_data()
 print(f'OK: {len(df)} rows, {df.TEGNum.nunique()} TEGs')
 "
 
-# 4. Run the FastAPI example
+# 3. Run the FastAPI example
 pip install fastapi uvicorn
 python examples/example_fastapi.py
 # Visit http://localhost:8000/docs
 
-# 5. Run existing tests
+# 4. Run existing tests
 pip install pytest
 pytest tests/ -v
 ```
