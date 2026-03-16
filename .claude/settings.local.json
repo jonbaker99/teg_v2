@@ -38,7 +38,9 @@
       "Bash(which python3:*)",
       "Bash(ls:*)",
       "Bash(venv/bin/pip install:*)",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Bash(git checkout:*)",
+      "Bash(git stash:*)"
     ],
     "deny": [],
     "ask": [
