@@ -7,7 +7,6 @@ tracks running streaks across player careers, and summarizes max streaks.
 import logging
 
 import pandas as pd
-import numpy as np
 
 
 # --- Configuration -----------------------------------------------------------

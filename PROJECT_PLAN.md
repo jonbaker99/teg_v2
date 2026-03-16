@@ -13,7 +13,8 @@ The TEG project is evolving from a monolithic Streamlit app into a two-layer arc
 - The Streamlit app is stable and deployed on Railway
 - The `teg_analysis` package has been extracted and merged to `main`
 - **Phases 1–5 DONE**: All cleanup work complete. Code is clean, optimized, dead code removed.
-- **Phase 6 IN PROGRESS**: Documentation update
+- **Phase 6 DONE**: Documentation update
+- **Phase 7 IN PROGRESS**: Opus review
 - Branch: `cleanup-teg-analysis` (pushed to remote)
 
 ### Where we're heading
@@ -63,11 +64,11 @@ All streamlit imports removed from `teg_analysis/`. Committed as `642c67b`.
 - Restored html_tables.py as useful utility for future API/frontend
 - All callers updated and verified
 
-### Phase 6: Documentation — IN PROGRESS
+### Phase 6: Documentation — DONE ✅
 - Update this file
 - Update CLAUDE.md architecture section
 
-### Phase 7: Opus review
+### Phase 7: Opus review — IN PROGRESS
 Read all modified/created files. Check for architectural issues, missed edge cases, broken imports.
 
 ## Package Structure (Target)
@@ -85,11 +86,11 @@ teg_analysis/
         metadata.py
     analysis/
         aggregation.py      # 1,012 lines (core engine only)
-        bestball.py         # 48 lines (NEW)
+        bestball.py         # 48 lines
         commentary.py       # 1,023 lines (trimmed)
-        history.py          # 364 lines (NEW)
-        leaderboards.py     # 10 lines (NEW)
-        performance.py      # 90 lines (NEW, replaces 11 functions)
+        history.py          # 364 lines
+        leaderboards.py     # 10 lines
+        performance.py      # 90 lines (replaces 11 functions)
         pipeline.py         # 516 lines
         rankings.py         # 219 lines
         records.py          # 479 lines (trimmed)
