@@ -164,7 +164,26 @@ Do NOT silently start work at a different tier.
 
 ### Opus review gate
 
-After Haiku or Sonnet complete a batch of work, switch to Opus for review. Opus should read the changes, flag issues, and leave fix notes before the work is considered done.
+After Haiku or Sonnet complete a batch of work, switch to Opus for review.
+
+**Sonnet/Haiku: what to document when done**
+
+Update NEXT_SESSION.md with a "Changes made" section that includes:
+- Files modified/deleted, with before/after line counts
+- Functions added, removed, or renamed (old name → new name)
+- Any backward-compatible aliases added
+- Any callers updated and how
+- Anything you were unsure about or deliberately left for Opus to decide
+
+**Opus: review checklist**
+
+1. Read every modified file end-to-end
+2. Check: do all internal callers (grep for old function names) still work?
+3. Check: are backward-compatible aliases needed that weren't added?
+4. Check: any functions deleted that actually had external callers?
+5. Check: no streamlit imports crept into teg_analysis/
+6. Run tests (`pytest tests/ -v`)
+7. Flag issues in a comment or fix directly, then commit
 
 ### general info
 - a 'teg' is a tournament. each teg consistents of a number of rounds (usually 4, with a few exceptions). each round consists of 18 holes. the 18 holes can be categorised as a 'front 9' (holes 1-9)  and 'back 9' (holes 10-18)
