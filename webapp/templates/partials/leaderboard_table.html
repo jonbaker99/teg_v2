@@ -1,0 +1,27 @@
+{% if error %}
+<div class="bg-red-50 text-red-700 p-4 rounded-md">{{ error }}</div>
+{% else %}
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Net Competition -->
+    <div>
+        <h2 class="text-lg font-semibold text-gray-700 mb-1">{{ net_title }}</h2>
+        {% if net_champion %}
+        <p class="text-sm text-gray-500 mb-3">Champion: <span class="font-semibold">{{ net_champion }}</span>{% if net_wooden_spoon %} | Wooden spoon: <span class="font-semibold">{{ net_wooden_spoon }}</span>{% endif %}</p>
+        {% endif %}
+        <div class="overflow-x-auto">
+            {{ net_table | safe }}
+        </div>
+    </div>
+
+    <!-- Gross Competition -->
+    <div>
+        <h2 class="text-lg font-semibold text-gray-700 mb-1">{{ gross_title }}</h2>
+        {% if gross_champion %}
+        <p class="text-sm text-gray-500 mb-3">Champion: <span class="font-semibold">{{ gross_champion }}</span></p>
+        {% endif %}
+        <div class="overflow-x-auto">
+            {{ gross_table | safe }}
+        </div>
+    </div>
+</div>
+{% endif %}

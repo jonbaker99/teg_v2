@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title_suffix %} — Charts{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">Charts</h1>
+    <div class="flex items-center gap-3">
+        <label for="chart-teg-select" class="text-sm font-medium text-gray-600">TEG:</label>
+        <select id="chart-teg-select" name="teg"
+                hx-get="/charts/figure"
+                hx-target="#chart-container"
+                hx-include="#chart-type-input"
+                hx-indicator="#chart-loading"
+                class="border border-gray-300 rounded-md px-3 py-1.5 text-sm bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500">
+            {% for t in teg_numbers %}
+            <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
+            {% endfor %}
+        </select>
+        <span id="chart-loading" class="htmx-indicator">
+            <svg class="animate-spin h-5 w-5 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+            </svg>
+        </span>
+    </div>
+</div>
+
+<!-- Chart type buttons -->
+<div class="flex flex-wrap gap-2 mb-4">
+    <input type="hidden" id="chart-type-input" name="type" value="{{ selected_type }}">
+    {% for type_id, type_label in chart_types %}
+    <button class="px-3 py-1.5 rounded text-sm font-medium border
+                   {% if type_id == selected_type %}bg-green-700 text-white border-green-700{% else %}bg-white text-gray-700 border-gray-300 hover:bg-green-50{% endif %}"
+            onclick="document.getElementById('chart-type-input').value='{{ type_id }}'"
+            hx-get="/charts/figure"
+            hx-target="#chart-container"
+            hx-include="#chart-teg-select"
+            hx-vals='{"type": "{{ type_id }}"}'
+            hx-indicator="#chart-loading">
+        {{ type_label }}
+    </button>
+    {% endfor %}
+</div>
+
+<div id="chart-container">
+    {% include "partials/chart_container.html" %}
+</div>
+{% endblock %}
