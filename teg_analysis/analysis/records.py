@@ -231,15 +231,14 @@ def identify_streak_records(all_data: pd.DataFrame, streaks_df: pd.DataFrame, se
         dict: A dictionary containing a list of streak records.
     """
     from teg_analysis.analysis.streaks import (
-        prepare_record_best_streaks_data,
-        prepare_record_worst_streaks_data,
+        prepare_record_streaks_data,
         get_player_window_streaks
     )
 
     try:
         # Get record streaks
-        best_streak_records = prepare_record_best_streaks_data(all_data)
-        worst_streak_records = prepare_record_worst_streaks_data(all_data)
+        best_streak_records = prepare_record_streaks_data(all_data, 'good')
+        worst_streak_records = prepare_record_streaks_data(all_data, 'bad')
 
         # Combine into single lookup dataframe
         all_streak_records = pd.concat([best_streak_records, worst_streak_records], ignore_index=True)

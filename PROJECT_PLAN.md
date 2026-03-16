@@ -40,10 +40,14 @@ All streamlit imports removed from `teg_analysis/`. Committed as `642c67b`.
 - Updated `__init__.py` with new module imports and re-exports
 - Updated all internal callers (pipeline.py, examples, tests)
 
-### Phase 3: Refactor streaks.py (Opus)
-- 1,152 lines, 27 functions with good/bad mirror duplication
-- Replace paired functions with single functions that accept a `direction` parameter
-- Target: ~400 lines
+### Phase 3: Refactor streaks.py — DONE ✅
+
+**Committed as `4fae7d8`**: 1,152 → 423 lines (-63%)
+- Merged 8 paired good/bad functions into 4 direction-parameterised functions
+- Deleted 9 legacy calculation functions (replaced by `build_streaks` + `STREAK_CONFIGS` dict)
+- Extracted shared cache loading into `_load_and_transform()` helper
+- Kept backward-compatible aliases for all old function names
+- Updated `records.py` to use new `prepare_record_streaks_data(all_data, direction)` API
 
 ### Phase 4: Clean up remaining files (Sonnet)
 - `scoring.py` (~963 lines): delete remaining duplication → ~500 lines
