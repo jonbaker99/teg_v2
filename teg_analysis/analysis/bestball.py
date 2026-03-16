@@ -22,7 +22,7 @@ def prepare_bestball_data(all_data: pd.DataFrame) -> pd.DataFrame:
 def calculate_bestball_scores(filtered_data: pd.DataFrame) -> pd.DataFrame:
     """Best score per hole, summed to round totals."""
     bestball_holes = filtered_data.groupby('TRH').apply(
-        lambda x: x.nsmallest(1, 'Sc')
+        lambda x: x.nsmallest(1, 'Sc'), include_groups=False
     ).reset_index(drop=True)
     result = bestball_holes.groupby(BESTBALL_COLS)[VALUE_COLS].sum().reset_index()
     result['Sc'] = result['Sc'].astype(int)
@@ -32,7 +32,7 @@ def calculate_bestball_scores(filtered_data: pd.DataFrame) -> pd.DataFrame:
 def calculate_worstball_scores(filtered_data: pd.DataFrame) -> pd.DataFrame:
     """Worst score per hole, summed to round totals."""
     worstball_holes = filtered_data.groupby('TRH').apply(
-        lambda x: x.nlargest(1, 'Sc')
+        lambda x: x.nlargest(1, 'Sc'), include_groups=False
     ).reset_index(drop=True)
     result = worstball_holes.groupby(BESTBALL_COLS)[VALUE_COLS].sum().reset_index()
     result['Sc'] = result['Sc'].astype(int)
