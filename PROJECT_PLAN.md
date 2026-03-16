@@ -1,6 +1,6 @@
-# Project Plan: TEG Analysis API & Cleanup
+# Project Plan: TEG Analysis Cleanup & API
 
-*Last updated: 2026-03-15*
+*Last updated: 2026-03-16*
 
 ## Big Picture
 
@@ -12,180 +12,110 @@ The TEG project is evolving from a monolithic Streamlit app into a two-layer arc
 ### Where we are now
 - The Streamlit app is stable and deployed on Railway
 - The `teg_analysis` package has been extracted and merged to `main`
-- **The package is now fully independent of Streamlit** — all streamlit imports, `from utils import`, and `from helpers.` imports have been removed
-- Next: build a proper REST API, prototype alternative frontends
+- **Phase 1 DONE**: All streamlit imports removed from `teg_analysis/`
+- **Phase 2 IN PROGRESS**: Splitting `aggregation.py` (2,940 → 5 files)
+- Branch: `cleanup-teg-analysis` (pushed to remote)
 
 ### Where we're heading
 - A REST API powered by `teg_analysis` (FastAPI)
 - A professional web frontend that calls the API
-- Eventually retire or reduce the Streamlit app in favour of the better frontend
+- Eventually retire or reduce the Streamlit app
 
-## The Overarching Objective
+## Current Work: teg_analysis Cleanup
 
-**Extract the core golf analysis logic into a clean, standalone Python package (`teg_analysis/`) that can power any frontend — API, web app, CLI, or notebook — and is completely independent of Streamlit.**
+### Phase 1: Cut the Cord — DONE ✅
+All streamlit imports removed from `teg_analysis/`. Committed as `642c67b`.
 
-This is NOT a Streamlit rewrite. The Streamlit app stays on main and keeps working as-is. The goal is to build a clean foundation underneath it, then build new things on top of that foundation.
+### Phase 2: Split aggregation.py — IN PROGRESS 🔧
 
-### Why this matters
+**New files created** (committed as `4e896bd`):
+- `analysis/history.py` — winners, history tables, eagles, completeness checking
+- `analysis/performance.py` — parameterised `prepare_performance_table()` replacing 11 near-duplicate functions + `prepare_pb_summary_table()` replacing 3
+- `analysis/leaderboards.py` — TEG and round leaderboard generation
+- `analysis/bestball.py` — bestball/worstball team format analysis
 
-The original codebase had ~530 functions in ~79 Python files, with business logic tangled into Streamlit page files. This meant:
-- You couldn't use the analysis logic outside Streamlit
-- Functions were duplicated across files (8 exact duplicates, 10 near-duplicates found)
-- Testing was difficult because everything required a Streamlit runtime
-- Adding new features meant adding more to the mess
+**Still TODO for Phase 2** (pick up here):
+1. **Rewrite `aggregation.py`** — Remove all code that's been moved to the new files. Keep only:
+   - Lookup functions (`get_teg_rounds`, `get_tegnum_rounds`)
+   - Core aggregation engine (`list_fields_by_aggregation_level`, `aggregate_data`)
+   - Cached accessors (`get_complete_teg_data`, `get_teg_data_inc_in_progress`, `get_round_data`, `get_9_data`, `get_Pl_data`)
+   - TEG status (`get_last_completed_teg_fast`, `get_current_in_progress_teg_fast`, `has_incomplete_teg_fast`)
+   - Round/TEG selection helpers and comeback analysis (move to a `latest.py` or keep in aggregation — TBD)
+2. **Update `__init__.py`** — Add imports for the new modules, update re-exports
+3. **Update internal callers**:
+   - `pipeline.py` imports bestball from aggregation → change to bestball
+   - `rankings.py` imports from aggregation → stays (uses core accessors)
+   - `html_tables.py` imports aggregate_data → stays
+   - Tests and examples that import `get_teg_winners`, `filter_data_by_teg` → update
+4. **Add backward-compat re-exports** in `aggregation.py` so nothing breaks during transition
+5. **Verify**: `python -c "import sys; sys.modules['streamlit']=None; from teg_analysis.core.data_loader import load_all_data"` still works
 
-The `teg_analysis/` package solves this by giving the analysis logic a clean home.
+### Phase 3: Refactor streaks.py (Opus)
+- 1,152 lines, 27 functions with good/bad mirror duplication
+- Replace paired functions with single functions that accept a `direction` parameter
+- Target: ~400 lines
 
-## What's Been Done
+### Phase 4: Clean up remaining files (Sonnet)
+- `scoring.py` (~963 lines): delete remaining duplication → ~500 lines
+- `records.py` (~655 lines): delete broken-dependency functions → ~400 lines
+- `commentary.py` (1,155 lines): delete uncalled functions → ~600 lines
 
-The following work was completed on the `claude/golf-stats-api-cMQ4e` branch and **merged to `main`** via PR #1 on 2026-02-06.
+### Phase 5: Dead code audit (Sonnet)
+For every function in `teg_analysis/`, grep for callers. Delete functions with zero external callers.
 
-1. **Extracted `teg_analysis/` package** from the `refactor` branch — cherry-picked just the package, not the 80+ doc files, NiceGUI prototype, or throwaway scripts.
+### Phase 6: Documentation (Haiku)
+- Update this file
+- Update CLAUDE.md architecture section
 
-2. **Broke the dependency on `streamlit/utils.py`** — Created `teg_analysis/constants.py` to centralise all constants (file paths, player dict, tournament metadata). Replaced all `_get_constants()` / `from streamlit.utils import` patterns with direct imports from the constants module.
+### Phase 7: Opus review
+Read all modified/created files. Check for architectural issues, missed edge cases, broken imports.
 
-3. **Removed Streamlit-specific code** from the package — Truncated `pipeline.py` to remove the data update workflow UI (session state, `st.spinner`, `st.success`). That code belongs in the Streamlit app, not the analysis package.
+## Package Structure (Target)
 
-4. **Validated the package works standalone** — All modules import cleanly with Streamlit blocked (`sys.modules['streamlit'] = None`). `load_all_data()` successfully loads 6,390 rows across 17 TEGs and 7 players from local data files.
-
-5. **Included tests and FastAPI example** from the refactor branch.
-
-6. **Cleaned up repo root** — Deleted 295 cruft files, rewrote README.
-
-### Package structure
 ```
 teg_analysis/
-    __init__.py
-    constants.py          # <-- NEW: centralised constants
+    constants.py
     io/
-        __init__.py
-        file_operations.py    # read_file(), write_file() (Railway-aware)
-        github_operations.py  # GitHub API read/write
-        volume_operations.py  # Railway volume management
+        file_operations.py
+        github_operations.py
+        volume_operations.py
     core/
-        __init__.py
-        data_loader.py        # load_all_data(), process_round_for_all_scores()
-        data_transforms.py    # add_cumulative_scores(), add_rankings_and_gaps()
-        metadata.py           # get_teg_metadata(), load_course_info()
+        data_loader.py
+        data_transforms.py
+        metadata.py
     analysis/
-        __init__.py
-        aggregation.py        # aggregate_data(), get_teg_winners() (~90 functions)
-        commentary.py         # create_round_summary(), create_tournament_summary()
-        pipeline.py           # update_streaks_cache(), update_all_data()
-        rankings.py           # add_ranks(), ordinal()
-        records.py            # get_all_time_records(), get_personal_bests()
-        scoring.py            # format_vs_par(), scoring calculations (~35 functions)
-        streaks.py            # build_streaks(), streak analysis (~27 functions)
+        aggregation.py      # ~200 lines (core engine only)
+        bestball.py          # ~60 lines (NEW)
+        commentary.py        # ~600 lines (trimmed)
+        history.py           # ~300 lines (NEW)
+        leaderboards.py      # ~90 lines (NEW)
+        performance.py       # ~220 lines (NEW, replaces 11 functions)
+        pipeline.py
+        rankings.py
+        records.py           # ~400 lines (trimmed)
+        scoring.py           # ~500 lines (trimmed)
+        streaks.py           # ~400 lines (refactored)
     display/
-        __init__.py
-        formatters.py         # Value formatting, display preparation
-        html_tables.py        # HTML table generation with styling
-        navigation.py         # Trophy names, URL utilities
-        tables.py             # Table generation utilities (returns HTML, no st.write)
+        formatters.py
+        html_tables.py
+        navigation.py
+        tables.py
     api/
-        __init__.py           # (placeholder for FastAPI endpoints)
-tests/
-    conftest.py
-    test_imports.py
-    test_independence.py
-    test_no_streamlit_imports.py
-    ... (9 test files total)
-examples/
-    example_fastapi.py        # Working FastAPI example with ~10 endpoints
+        __init__.py
 ```
 
-## Known Issues / Incomplete Items
+## Verification
 
-These are things that still need attention in the `teg_analysis/` package:
-
-1. **`aggregation.py` is still very large** (~2,900 lines) — Contains bestball, scorecard, comeback, leaderboard, history, and performance table functions that could be split into separate modules. The code works but is hard to navigate.
-
-2. **`scoring.py` still has some duplicate patterns** — The file was cleaned up (removed ~200 lines of exact duplicates) but some function pairs (e.g. `format_vs_par_value` defined at module level and also as a local function inside `format_par_performance_table`) could be consolidated further.
-
-3. **`api/` is empty** — Just a placeholder `__init__.py`. The FastAPI endpoints in `examples/example_fastapi.py` show the pattern but aren't integrated.
-
-4. **Some functions in aggregation.py have UI-oriented logic** — Functions like `prepare_scorecard_selection_options` and `determine_control_states` feel more like UI helpers than analysis. Consider whether they belong in the package or the Streamlit app.
-
-## Next Steps (In Priority Order)
-
-### Phase 1: Stabilise the Package ✅ DONE
-- [x] Run the existing tests, fix any failures — 60 tests pass
-- [x] Remove all `st.error()` / `st.success()` / `st.cache_data.clear()` calls — replaced with `logger.error()` / `logger.info()`
-- [x] Remove all `from utils import` and `from helpers.` imports — replaced with `teg_analysis` internal imports
-- [x] Remove all conditional `import streamlit` blocks from module level
-- [x] Replace `st.secrets` with `os.environ` in `github_operations.py`
-- [x] Make `datawrapper_table` always return HTML (no `st.write`)
-- [x] Delete `display/charts.py` (empty stub)
-- [x] Delete streamlit-specific test files (`test_helpers.py`, `test_pages_smoke.py`, `test_utils_mock.py`)
-- [x] Remove duplicate code in `scoring.py` (~200 lines) and `aggregation.py` (duplicate `check_winner_completeness`)
-- [x] Fix `pipeline.py` bestball import to use `teg_analysis.analysis.aggregation`
-
-### Phase 2: Build the API
-- [ ] Move the FastAPI example into `teg_analysis/api/` as proper endpoints
-- [ ] Add endpoints for: leaderboard, scorecard, records, personal bests, streaks
-- [ ] Add a simple `main.py` entry point (`uvicorn teg_analysis.api:app`)
-- [ ] Test API endpoints against real data
-
-### Phase 3: Deploy
-- [ ] Add FastAPI + uvicorn to requirements
-- [ ] Set up a second Railway service for the API (or use a Procfile for both)
-- [ ] API reads from same data files (GitHub or volume) as Streamlit app
-
-### Phase 4: (Optional) New Frontend
-- [ ] Build a lightweight frontend that calls the API
-- [ ] Could be static HTML + JavaScript, React, or even a cleaner Streamlit app
-- [ ] Streamlit app on main continues to work as-is throughout
+1. **No streamlit in package:** `grep -r "import streamlit" teg_analysis/ --include="*.py"` → empty
+2. **Package importable without streamlit:** `python -c "import sys; sys.modules['streamlit']=None; from teg_analysis.core.data_loader import load_all_data"`
+3. **Tests pass:** `pytest tests/ -v`
+4. **Streamlit app unaffected:** `streamlit run streamlit/nav.py` still works
 
 ## Rules for Future Work
 
-These are the lessons from the previous refactor attempt. Follow them.
-
-1. **Never break main.** All work happens on feature branches. The Streamlit app on main/Railway must keep working at all times.
-
-2. **Don't boil the ocean.** The previous refactor produced 93 commits, 150K lines of docs, a NiceGUI prototype, AND a package extraction — all on one branch. That's too much. Do one thing at a time.
-
-3. **The package is the product.** `teg_analysis/` is the thing we're building. It should be clean, tested, and well-documented. Everything else (API, frontend, deployment) builds on top of it.
-
-4. **Delete rather than archive.** The previous refactor kept 80+ doc files "for reference." Delete things you don't need. Git history exists for a reason.
-
-5. **Constants live in one place.** `teg_analysis/constants.py` is the single source of truth for file paths, player data, and tournament metadata. Don't re-define them elsewhere.
-
-6. **No `from streamlit.utils import` in the package.** The whole point is independence. If a function needs something from `streamlit/utils.py`, migrate the function or the data it needs into `teg_analysis/`.
-
-## How to Resume This Work
-
-Everything is on `main`. No branch checkout needed.
-
-```bash
-# 1. Install dependencies
-pip install pandas numpy pyarrow plotly PyGithub
-
-# 2. Verify the package works
-python -c "
-from teg_analysis.core.data_loader import load_all_data
-df = load_all_data()
-print(f'OK: {len(df)} rows, {df.TEGNum.nunique()} TEGs')
-"
-
-# 3. Run the FastAPI example
-pip install fastapi uvicorn
-python examples/example_fastapi.py
-# Visit http://localhost:8000/docs
-
-# 4. Run existing tests
-pip install pytest
-pytest tests/ -v
-```
-
-## File Reference
-
-| File | Purpose |
-|------|---------|
-| `BRANCHES.md` | Documents all branches and their status |
-| `PROJECT_PLAN.md` | This file — the plan and resume instructions |
-| `CLAUDE.md` | Existing project instructions (Streamlit-focused) |
-| `teg_analysis/` | The standalone analysis package |
-| `tests/` | Tests for teg_analysis |
-| `examples/example_fastapi.py` | FastAPI proof-of-concept |
-| `streamlit/` | The existing Streamlit app (untouched) |
-| `data/` | Data files (untouched) |
+1. **Never break main.** All work on feature branches. Streamlit app on Railway keeps working.
+2. **Don't boil the ocean.** One thing at a time.
+3. **The package is the product.** `teg_analysis/` should be clean, tested, documented.
+4. **Delete rather than archive.** Git history exists for a reason.
+5. **Constants live in one place.** `teg_analysis/constants.py`.
+6. **No streamlit in the package.** If analysis needs it, migrate it.
