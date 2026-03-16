@@ -14,23 +14,36 @@
   - `commentary.py`: 1155 → 1023 lines — removed section header, extracted shared streak helpers
   - Note: commentary.py target of ~600 was miscalibrated; all 5 public functions are externally called
 
-## What to do now
+## Phase 5 changes (Sonnet) — FOR OPUS REVIEW
 
-### Phase 5: Dead code audit (Sonnet)
-For every function in `teg_analysis/`, grep for callers. Delete functions with zero external callers.
+Commit: `6bea02c` on branch `claude/cleanup-teg-analysis-Ncy3y`
 
-Files to check:
-- `teg_analysis/analysis/aggregation.py` (~1012 lines)
-- `teg_analysis/analysis/pipeline.py`
-- `teg_analysis/analysis/rankings.py`
-- `teg_analysis/analysis/history.py`
-- `teg_analysis/analysis/performance.py`
-- `teg_analysis/analysis/leaderboards.py`
-- `teg_analysis/analysis/bestball.py`
-- `teg_analysis/display/formatters.py`
-- `teg_analysis/display/html_tables.py`
-- `teg_analysis/display/tables.py`
+### Files modified/deleted
 
-## Full plan
+| File | Before | After | Change |
+|---|---|---|---|
+| `teg_analysis/analysis/rankings.py` | 363 lines | 219 lines | -144 |
+| `teg_analysis/analysis/performance.py` | 262 lines | 92 lines | -170 |
+| `teg_analysis/analysis/leaderboards.py` | 80 lines | 13 lines | -67 |
+| `teg_analysis/display/formatters.py` | 547 lines | 522 lines | -25 |
+| `teg_analysis/display/html_tables.py` | 255 lines | DELETED | -255 |
 
-See `PROJECT_PLAN.md` for Phases 5-7.
+### Functions removed
+
+- `rankings.py`: `convert_pivot_scores_to_ranks`, `calculate_average_rank_from_ranked_df`
+- `performance.py`: `prepare_performance_table`, `_select_personal`, `_select_top_n`, `_format_display`, `_SUMMARY_MEASURES`, `prepare_pb_summary_table`, `_format_when`
+- `leaderboards.py`: `get_teg_leaderboard`, `get_round_leaderboard`
+- `formatters.py`: `format_crosstab_columns`
+- `html_tables.py` (entire file): `generate_ranking_table_html`, `dataframe_to_html_table`, `create_round_leaderboard_html`
+
+### What was NOT changed
+`aggregation.py`, `pipeline.py`, `history.py`, `bestball.py`, `tables.py`, `navigation.py` — all have active callers or need separate analysis (see PROJECT_PLAN.md Phase 6+).
+
+### Uncertainties / things for Opus to verify
+- `performance.py` still exports `get_measure_name_mappings`, `prepare_round_data_with_identifiers`, `get_performance_measure_titles`, `format_performance_value`, `prepare_worst_performance_dataframe`, `load_worst_performance_custom_css`, `create_worst_performance_section`, `get_filtered_teg_data` — confirm these all have callers
+- `html_tables.py` imported `aggregate_data` from `aggregation.py`; confirm that import is now gone and nothing depended on `html_tables` being importable
+- Tests pass (`pytest tests/test_independence.py tests/test_core_functions.py -v`) but are lightweight — Opus should do a grep sweep for any remaining references to deleted names
+
+## What to do next
+
+See `PROJECT_PLAN.md` for Phase 6+.
