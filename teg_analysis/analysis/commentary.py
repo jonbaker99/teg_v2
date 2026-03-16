@@ -354,22 +354,6 @@ def create_round_summary(all_data_df=None, round_info_df=None):
 
     return summary
 
-# ============================================================================
-# SECTION 6B: COMMENTARY - EVENTS & TOURNAMENT (2 HUGE functions)
-# ============================================================================
-# Tournament-level and event-based analysis
-#
-# This section contains two monolithic functions for comprehensive tournament
-# and event analysis. create_round_events() is 258 lines and performs hole-by-hole
-# analysis. create_tournament_summary() is 284 lines and generates tournament-wide
-# metrics. Both are computationally expensive with 5-25 second execution times.
-# Used for detailed narrative generation and tournament-wide reporting.
-#
-# KEY FUNCTIONS:
-# - create_round_events()       - 258 lines, hole-by-hole event log
-# - create_tournament_summary() - 284 lines, tournament metrics
-# ============================================================================
-
 def create_round_events(all_data_df=None):
     """
     Create a comprehensive event log capturing key moments during each hole of every round.
@@ -923,6 +907,58 @@ def create_tournament_summary(all_data_df=None, round_info_df=None):
     return summary
 
 
+def _load_and_merge_streaks(all_data_df, streaks_df):
+    """Load streak data and merge with hole-by-hole data. Shared by round/tournament summaries."""
+    from teg_analysis.core.data_loader import load_all_data, read_file
+
+    if all_data_df is None:
+        all_data_df = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
+    if streaks_df is None:
+        streaks_df = read_file(STREAKS_PARQUET)
+
+    df = streaks_df.merge(
+        all_data_df[['HoleID', 'TEG', 'TEGNum', 'Round', 'Pl', 'Player']],
+        on=['HoleID', 'Pl'],
+        how='left'
+    )
+    teg_mapping = all_data_df[['TEGNum', 'TEG']].drop_duplicates().set_index('TEGNum')['TEG'].to_dict()
+    return all_data_df, df, teg_mapping
+
+
+def _build_window_streaks_for_groups(df, group_keys, teg_mapping, warning_label):
+    """Calculate window streaks for each group, combine and rename columns."""
+    from teg_analysis.analysis.streaks import calculate_window_streaks
+
+    all_results = []
+    groups = df[group_keys].drop_duplicates().sort_values(group_keys)
+
+    for _, row in groups.iterrows():
+        mask = pd.Series(True, index=df.index)
+        for key in group_keys:
+            mask &= (df[key] == row[key])
+        group_data = df[mask].copy()
+
+        if len(group_data) == 0:
+            continue
+
+        group_data = group_data.sort_values(['Pl', 'Career Count'])
+        player_mapping = group_data[['Player', 'Pl']].drop_duplicates()
+        group_streaks = calculate_window_streaks(group_data)
+        group_streaks = group_streaks.merge(player_mapping, on='Player', how='left')
+        for key in group_keys:
+            group_streaks[key] = row[key]
+        all_results.append(group_streaks)
+
+    if not all_results:
+        logger.warning(f"No {warning_label} streaks calculated")
+        return pd.DataFrame()
+
+    final_df = pd.concat(all_results, ignore_index=True)
+    final_df['TEG'] = final_df['TEGNum'].map(teg_mapping)
+    final_df = final_df.rename(columns={'Streak Type': 'Streak_Type', 'Max Streak': 'Max_Streak'})
+    return final_df
+
+
 def create_round_streaks_summary(all_data_df=None, streaks_df=None):
     """
     Create a comprehensive streaks summary for each round (unique TEG + Round + Player combination).
@@ -943,100 +979,14 @@ def create_round_streaks_summary(all_data_df=None, streaks_df=None):
         pd.DataFrame: Summary table with columns:
             ['TEG', 'TEGNum', 'Round', 'Player', 'Pl', 'Streak_Type', 'Max_Streak', 'Location']
     """
-
     logger.info("Creating round streaks summary")
-
-    # Import dependencies to avoid circular imports
-    from teg_analysis.core.data_loader import load_all_data, read_file
-    from teg_analysis.analysis.streaks import calculate_window_streaks
-
-
-    # ========================================
-    # 1. LOAD DATA
-    # ========================================
-    if all_data_df is None:
-        all_data_df = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
-
-    if streaks_df is None:
-        streaks_df = read_file(STREAKS_PARQUET)
-
-    # ========================================
-    # 2. MERGE STREAKS WITH ROUND INFO
-    # ========================================
-    logger.info("Merging streaks with round information")
-
-    # Merge to get TEG, Round, Player info
-    df = streaks_df.merge(
-        all_data_df[['HoleID', 'TEG', 'TEGNum', 'Round', 'Pl', 'Player']],
-        on=['HoleID', 'Pl'],
-        how='left'
-    )
-
-    # ========================================
-    # 3. CALCULATE STREAKS FOR EACH ROUND
-    # ========================================
-    logger.info("Calculating streaks for each round")
-
-    all_results = []
-
-    # Get unique TEG + Round combinations
-    rounds = df[['TEGNum', 'Round']].drop_duplicates().sort_values(['TEGNum', 'Round'])
-
-    for _, row in rounds.iterrows():
-        teg_num = row['TEGNum']
-        round_num = row['Round']
-
-        # Filter to this round
-        round_data = df[(df['TEGNum'] == teg_num) & (df['Round'] == round_num)].copy()
-
-        if len(round_data) == 0:
-            continue
-
-        # Sort by Career Count for correct streak calculation
-        round_data = round_data.sort_values(['Pl', 'Career Count'])
-
-        # Keep player mapping for later
-        player_mapping = round_data[['Player', 'Pl']].drop_duplicates()
-
-        # Calculate window streaks for this round
-        round_streaks = calculate_window_streaks(round_data)
-
-        # Merge player codes back
-        round_streaks = round_streaks.merge(player_mapping, on='Player', how='left')
-
-        # Add TEG and Round info
-        round_streaks['TEGNum'] = teg_num
-        round_streaks['Round'] = round_num
-
-        all_results.append(round_streaks)
-
-    # ========================================
-    # 4. COMBINE AND FORMAT
-    # ========================================
-    if len(all_results) == 0:
-        logger.warning("No round streaks calculated")
+    all_data_df, df, teg_mapping = _load_and_merge_streaks(all_data_df, streaks_df)
+    final_df = _build_window_streaks_for_groups(df, ['TEGNum', 'Round'], teg_mapping, 'round')
+    if final_df.empty:
         return pd.DataFrame()
-
-    final_df = pd.concat(all_results, ignore_index=True)
-
-    # Add TEG name
-    teg_mapping = all_data_df[['TEGNum', 'TEG']].drop_duplicates().set_index('TEGNum')['TEG'].to_dict()
-    final_df['TEG'] = final_df['TEGNum'].map(teg_mapping)
-
-    # Rename columns with underscores for consistency
-    final_df = final_df.rename(columns={
-        'Streak Type': 'Streak_Type',
-        'Max Streak': 'Max_Streak'
-    })
-
-    # Reorder columns
     final_df = final_df[['TEG', 'TEGNum', 'Round', 'Player', 'Pl', 'Streak_Type', 'Max_Streak', 'Location']]
-
-    # Sort by TEG, Round, Player, Streak Type
     final_df = final_df.sort_values(['TEGNum', 'Round', 'Player', 'Streak_Type']).reset_index(drop=True)
-
     logger.info(f"Round streaks summary created: {len(final_df)} rows")
-
     return final_df
 
 
@@ -1060,96 +1010,14 @@ def create_tournament_streaks_summary(all_data_df=None, streaks_df=None):
         pd.DataFrame: Summary table with columns:
             ['TEG', 'TEGNum', 'Player', 'Pl', 'Streak_Type', 'Max_Streak', 'Location']
     """
-
     logger.info("Creating tournament streaks summary")
-
-    # Import dependencies to avoid circular imports
-    from teg_analysis.core.data_loader import load_all_data, read_file
-    from teg_analysis.analysis.streaks import calculate_window_streaks
-
-
-    # ========================================
-    # 1. LOAD DATA
-    # ========================================
-    if all_data_df is None:
-        all_data_df = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
-
-    if streaks_df is None:
-        streaks_df = read_file(STREAKS_PARQUET)
-
-    # ========================================
-    # 2. MERGE STREAKS WITH TEG INFO
-    # ========================================
-    logger.info("Merging streaks with TEG information")
-
-    # Merge to get TEG, Player info
-    df = streaks_df.merge(
-        all_data_df[['HoleID', 'TEG', 'TEGNum', 'Round', 'Pl', 'Player']],
-        on=['HoleID', 'Pl'],
-        how='left'
-    )
-
-    # ========================================
-    # 3. CALCULATE STREAKS FOR EACH TEG
-    # ========================================
-    logger.info("Calculating streaks for each tournament")
-
-    all_results = []
-
-    # Get unique TEGs
-    tegs = df['TEGNum'].unique()
-
-    for teg_num in sorted(tegs):
-        # Filter to this TEG
-        teg_data = df[df['TEGNum'] == teg_num].copy()
-
-        if len(teg_data) == 0:
-            continue
-
-        # Sort by Career Count for correct streak calculation
-        teg_data = teg_data.sort_values(['Pl', 'Career Count'])
-
-        # Keep player mapping for later
-        player_mapping = teg_data[['Player', 'Pl']].drop_duplicates()
-
-        # Calculate window streaks for this TEG
-        teg_streaks = calculate_window_streaks(teg_data)
-
-        # Merge player codes back
-        teg_streaks = teg_streaks.merge(player_mapping, on='Player', how='left')
-
-        # Add TEG info
-        teg_streaks['TEGNum'] = teg_num
-
-        all_results.append(teg_streaks)
-
-    # ========================================
-    # 4. COMBINE AND FORMAT
-    # ========================================
-    if len(all_results) == 0:
-        logger.warning("No tournament streaks calculated")
+    all_data_df, df, teg_mapping = _load_and_merge_streaks(all_data_df, streaks_df)
+    final_df = _build_window_streaks_for_groups(df, ['TEGNum'], teg_mapping, 'tournament')
+    if final_df.empty:
         return pd.DataFrame()
-
-    final_df = pd.concat(all_results, ignore_index=True)
-
-    # Add TEG name
-    teg_mapping = all_data_df[['TEGNum', 'TEG']].drop_duplicates().set_index('TEGNum')['TEG'].to_dict()
-    final_df['TEG'] = final_df['TEGNum'].map(teg_mapping)
-
-    # Rename columns with underscores for consistency
-    final_df = final_df.rename(columns={
-        'Streak Type': 'Streak_Type',
-        'Max Streak': 'Max_Streak'
-    })
-
-    # Reorder columns
     final_df = final_df[['TEG', 'TEGNum', 'Player', 'Pl', 'Streak_Type', 'Max_Streak', 'Location']]
-
-    # Sort by TEG, Player, Streak Type
     final_df = final_df.sort_values(['TEGNum', 'Player', 'Streak_Type']).reset_index(drop=True)
-
     logger.info(f"Tournament streaks summary created: {len(final_df)} rows")
-
     return final_df
 
 
