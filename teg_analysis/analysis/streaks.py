@@ -279,7 +279,8 @@ def prepare_good_streaks_data(all_data):
         Creates a focused table showing positive streaks using fast cached data
     """
     try:
-        from utils import read_file, STREAKS_PARQUET
+        from teg_analysis.io import read_file
+        from teg_analysis.constants import STREAKS_PARQUET
 
         # Read cached streak data
         streaks_df = read_file(STREAKS_PARQUET)
@@ -337,7 +338,8 @@ def prepare_bad_streaks_data(all_data):
         Creates a focused table showing negative streaks using fast cached data
     """
     try:
-        from utils import read_file, STREAKS_PARQUET
+        from teg_analysis.io import read_file
+        from teg_analysis.constants import STREAKS_PARQUET
 
         # Read cached streak data
         streaks_df = read_file(STREAKS_PARQUET)
@@ -435,7 +437,8 @@ def prepare_current_good_streaks_data(all_data):
         Shows current positive streaks using fast cached data
     """
     try:
-        from utils import read_file, STREAKS_PARQUET
+        from teg_analysis.io import read_file
+        from teg_analysis.constants import STREAKS_PARQUET
 
         # Read cached streak data
         streaks_df = read_file(STREAKS_PARQUET)
@@ -489,7 +492,8 @@ def prepare_current_bad_streaks_data(all_data):
         Shows current negative streaks using fast cached data
     """
     try:
-        from utils import read_file, STREAKS_PARQUET
+        from teg_analysis.io import read_file
+        from teg_analysis.constants import STREAKS_PARQUET
 
         # Read cached streak data
         streaks_df = read_file(STREAKS_PARQUET)
@@ -1019,7 +1023,8 @@ def prepare_record_best_streaks_data(all_data):
         Identifies all-time record holders for each positive streak type
         Only includes streaks > 1
     """
-    from utils import read_file, STREAKS_PARQUET
+    from teg_analysis.io import read_file
+    from teg_analysis.constants import STREAKS_PARQUET
 
     # Load streak data
     streaks_df = read_file(STREAKS_PARQUET)
@@ -1091,7 +1096,8 @@ def prepare_record_worst_streaks_data(all_data):
         Identifies all-time record holders for each negative streak type
         Only includes streaks > 1
     """
-    from utils import read_file, STREAKS_PARQUET
+    from teg_analysis.io import read_file
+    from teg_analysis.constants import STREAKS_PARQUET
 
     # Load streak data
     streaks_df = read_file(STREAKS_PARQUET)

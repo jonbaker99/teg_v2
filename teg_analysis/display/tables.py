@@ -10,7 +10,7 @@ import pandas as pd
 logger = logging.getLogger(__name__)
 
 
-# === STAT SECTION CREATION (from utils.py) ===
+# === STAT SECTION CREATION ===
 
 def create_stat_section(title, value=None, df=None, divider=None):
     """
@@ -96,7 +96,7 @@ def create_stat_section(title, value=None, df=None, divider=None):
     """
 
 
-# === SCORE TYPE ANALYSIS (from utils.py) ===
+# === SCORE TYPE ANALYSIS ===
 
 def define_score_types(gross_vp):
     """
@@ -231,9 +231,9 @@ def max_scoretype_per_teg(df=None):
     return max_scores
 
 
-# === DATAWRAPPER TABLE RENDERING (from utils.py) ===
+# === DATAWRAPPER TABLE RENDERING ===
 
-def datawrapper_table(df, left_align=None, css_classes=None, return_html=False):
+def datawrapper_table(df, left_align=None, css_classes=None, return_html=True):
     """
     Render a pandas DataFrame as HTML with datawrapper styling.
 
@@ -241,10 +241,10 @@ def datawrapper_table(df, left_align=None, css_classes=None, return_html=False):
         df: DataFrame to render
         left_align: If True, left-align all cells (backward compatibility)
         css_classes: Additional CSS classes as string (e.g., 'history-table narrow-first')
-        return_html: If True, return HTML string instead of writing to Streamlit
+        return_html: Kept for backward compatibility, always returns HTML string.
 
     Returns:
-        str or None: HTML string if return_html is True, otherwise writes to Streamlit
+        str: HTML string of the rendered table.
     """
 
     # Start with base class
@@ -260,13 +260,4 @@ def datawrapper_table(df, left_align=None, css_classes=None, return_html=False):
 
     # Render table
     html = df.to_html(index=False, justify='left', classes=classes)
-
-    if return_html:
-        return html
-    else:
-        # Import here to avoid requiring streamlit in non-UI contexts
-        try:
-            import streamlit as st
-            st.write(html, unsafe_allow_html=True)
-        except ImportError:
-            logger.warning("Streamlit not available - cannot display table. Use return_html=True to get HTML string instead.")
+    return html
