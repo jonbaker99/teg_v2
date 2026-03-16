@@ -40,7 +40,14 @@
       "Bash(venv/bin/pip install:*)",
       "Bash(echo:*)",
       "Bash(git checkout:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(do)",
+      "Read(//Users/jon/projects/teg/teg_v2/**)",
+      "Bash(python3:*)",
+      "Bash(/Users/jon/projects/teg/teg_v2/venv/bin/python -m pytest tests/ -v 2>&1)",
+      "Bash(/Users/jon/projects/teg/teg_v2/venv/bin/python -c \"from teg_analysis.analysis import format_vs_par, aggregate_data, get_teg_winners; print\\('Imports OK'\\)\")",
+      "Bash(.venv/bin/python examples/api_coverage_test.py 2>&1)",
+      "Bash(pkill:*)"
     ],
     "deny": [],
     "ask": [

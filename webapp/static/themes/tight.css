@@ -1,0 +1,92 @@
+/* Tight — Ultra-compact monospace, blue accent */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+    /* Typography */
+    --font-heading: 'Roboto Mono', monospace;
+    --font-body: 'Roboto Mono', monospace;
+
+    /* Page */
+    --bg-page: #ffffff;
+    --bg-card: #ffffff;
+    --text-primary: #1a1a1a;
+    --text-secondary: #444444;
+    --text-muted: #777777;
+
+    /* Nav */
+    --nav-bg: #1a1a1a;
+    --nav-text: #cccccc;
+    --nav-text-muted: #888888;
+    --nav-hover-bg: #333333;
+    --nav-active-bg: #2563eb;
+    --nav-active-text: #ffffff;
+
+    /* Tables — tighter */
+    --table-font-size: 11px;
+    --table-header-bg: #f8f8f8;
+    --table-header-border: #2563eb;
+    --table-cell-border: #e8e8e8;
+    --table-hover-bg: #eff6ff;
+    --table-hover-text: #2563eb;
+    --table-toprank-bg: #eff6ff;
+    --table-toprank-text: inherit;
+
+    /* Accent + Buttons */
+    --accent: #2563eb;
+    --btn-active-bg: #2563eb;
+    --btn-active-text: #ffffff;
+    --btn-inactive-bg: #ffffff;
+    --btn-inactive-text: #444444;
+    --btn-border-radius: 0.125rem;
+    --card-radius: 0.25rem;
+    --card-shadow: 0 1px 2px rgba(0,0,0,0.05);
+
+    /* Select */
+    --select-bg: #ffffff;
+    --select-border: #cccccc;
+    --select-focus-ring: #2563eb;
+
+    /* Footer */
+    --footer-bg: #1a1a1a;
+    --footer-text: #999999;
+
+    /* Stat cards */
+    --stat-card-value-color: #2563eb;
+
+    /* Badges */
+    --badge-bg: #2563eb;
+    --badge-text: #ffffff;
+    --badge-muted-bg: #f0f0f0;
+    --badge-muted-text: #777777;
+
+    --divider-color: #e8e8e8;
+}
+
+/* Tighter spacing overrides */
+.nav-link {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+.nav-brand {
+    font-size: 0.875rem;
+}
+.stat-card {
+    padding: 0.5rem 0.75rem;
+}
+.stat-value {
+    font-size: 1rem;
+}
+.stat-label {
+    font-size: 0.625rem;
+}
+.teg-table thead th,
+.records-table thead th {
+    padding: 0.25rem 0.5rem;
+}
+.teg-table tbody td,
+.records-table tbody td {
+    padding: 0.2rem 0.5rem;
+}
+.card {
+    padding: 0.625rem;
+}

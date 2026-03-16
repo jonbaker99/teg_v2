@@ -118,5 +118,6 @@ async def leaderboard_table(request: Request, teg: int = Query(...)):
     ctx = _leaderboard_context(teg)
     return templates.TemplateResponse("partials/leaderboard_table.html", {
         "request": request,
+        "selected_teg": teg,
         **ctx,
     })

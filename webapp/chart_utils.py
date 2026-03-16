@@ -37,7 +37,7 @@ def format_value(value, chart_type):
         return f"{value:.0f}"
 
 
-def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None, y_axis_label=None, chart_type='default'):
+def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None, y_axis_label=None, chart_type='default', plotly_theme=None):
     teg_data = df[df['TEG'] == chosen_teg].sort_values(['Round', 'Hole'])
     teg_data['x_value'] = (teg_data['Round'] - 1) * 18 + teg_data['Hole']
 
@@ -104,6 +104,10 @@ def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None,
 
     fig.layout.xaxis.fixedrange = True
     fig.layout.yaxis.fixedrange = True
+
+    # Apply theme overrides if provided
+    if plotly_theme:
+        fig.update_layout(**plotly_theme)
 
     return fig
 

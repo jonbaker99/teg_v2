@@ -1,0 +1,66 @@
+/* Claude — Warm cream, terracotta accent, generous whitespace */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    /* Typography */
+    --font-heading: 'Inter', -apple-system, sans-serif;
+    --font-body: 'Inter', -apple-system, sans-serif;
+
+    /* Page */
+    --bg-page: #faf6f1;
+    --bg-card: #ffffff;
+    --text-primary: #2d2118;
+    --text-secondary: #5c4d3c;
+    --text-muted: #9a8b78;
+
+    /* Nav */
+    --nav-bg: #2d2118;
+    --nav-text: #c4ad94;
+    --nav-text-muted: #8c7a64;
+    --nav-hover-bg: #3d3025;
+    --nav-active-bg: #c75b2a;
+    --nav-active-text: #ffffff;
+
+    /* Tables */
+    --table-font-size: 0.875rem;
+    --table-header-bg: #f5efe8;
+    --table-header-border: #c75b2a;
+    --table-cell-border: #ebe4da;
+    --table-hover-bg: #fef5ee;
+    --table-hover-text: #c75b2a;
+    --table-toprank-bg: #fef5ee;
+    --table-toprank-text: inherit;
+
+    /* Accent + Buttons */
+    --accent: #c75b2a;
+    --btn-active-bg: #c75b2a;
+    --btn-active-text: #ffffff;
+    --btn-inactive-bg: #ffffff;
+    --btn-inactive-text: #5c4d3c;
+    --btn-border-radius: 9999px;
+    --card-radius: 0.75rem;
+    --card-shadow: 0 1px 4px rgba(45,33,24,0.08);
+
+    /* Select */
+    --select-bg: #ffffff;
+    --select-border: #d4c8b8;
+    --select-focus-ring: #c75b2a;
+
+    /* Footer */
+    --footer-bg: #2d2118;
+    --footer-text: #c4ad94;
+
+    /* Stat cards */
+    --stat-card-bg: #ffffff;
+    --stat-card-border: #ebe4da;
+    --stat-card-value-color: #c75b2a;
+    --stat-card-label-color: #9a8b78;
+
+    /* Badges */
+    --badge-bg: #c75b2a;
+    --badge-text: #ffffff;
+    --badge-muted-bg: #f5efe8;
+    --badge-muted-text: #9a8b78;
+
+    --divider-color: #ebe4da;
+}

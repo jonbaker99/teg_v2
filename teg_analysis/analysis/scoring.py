@@ -39,14 +39,14 @@ def format_vs_par(value: float) -> str:
 def get_net_competition_measure(teg_num: int) -> str:
     """Gets the net competition measure for a specific TEG.
 
-    For TEGs 1-5, net competition is based on total net vs par.
-    For TEG 6 onwards, net competition is based on stableford points.
+    For TEGs 1-7, net competition is based on total net vs par.
+    From TEG 8 onwards, net competition is based on stableford points.
 
     Args:
         teg_num (int): The TEG number.
 
     Returns:
-        str: Either 'NetVP' (for TEGs 1-5) or 'Stableford' (for TEG 6+).
+        str: Either 'NetVP' (for TEGs 1-7) or 'Stableford' (for TEG 8+).
     """
     if teg_num <= 7:
         return 'NetVP'

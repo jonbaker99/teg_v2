@@ -1,0 +1,66 @@
+/* Warm Terminal — Sepia monospace, cream paper */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+    /* Typography */
+    --font-heading: 'Roboto Mono', monospace;
+    --font-body: 'Roboto Mono', monospace;
+
+    /* Page */
+    --bg-page: #f5f0e8;
+    --bg-card: #faf6f0;
+    --text-primary: #3d3225;
+    --text-secondary: #5c4e3c;
+    --text-muted: #8c7e6a;
+
+    /* Nav */
+    --nav-bg: #4a3c2a;
+    --nav-text: #c8b99a;
+    --nav-text-muted: #9a8c72;
+    --nav-hover-bg: #5c4e3c;
+    --nav-active-bg: #8b6914;
+    --nav-active-text: #ffffff;
+
+    /* Tables */
+    --table-font-size: 13px;
+    --table-header-bg: #ede7db;
+    --table-header-border: #8b6914;
+    --table-cell-border: #ddd5c5;
+    --table-hover-bg: #f0e8d4;
+    --table-hover-text: #8b6914;
+    --table-toprank-bg: #f0e8d4;
+    --table-toprank-text: inherit;
+
+    /* Accent + Buttons */
+    --accent: #8b6914;
+    --btn-active-bg: #8b6914;
+    --btn-active-text: #ffffff;
+    --btn-inactive-bg: #faf6f0;
+    --btn-inactive-text: #5c4e3c;
+    --btn-border-radius: 0.25rem;
+    --card-radius: 0.5rem;
+    --card-shadow: 0 1px 3px rgba(60,40,10,0.1);
+
+    /* Select */
+    --select-bg: #faf6f0;
+    --select-border: #c8b99a;
+    --select-focus-ring: #8b6914;
+
+    /* Footer */
+    --footer-bg: #4a3c2a;
+    --footer-text: #c8b99a;
+
+    /* Stat cards */
+    --stat-card-bg: #faf6f0;
+    --stat-card-border: #ddd5c5;
+    --stat-card-value-color: #8b6914;
+    --stat-card-label-color: #8c7e6a;
+
+    /* Badges */
+    --badge-bg: #8b6914;
+    --badge-text: #ffffff;
+    --badge-muted-bg: #ede7db;
+    --badge-muted-text: #8c7e6a;
+
+    --divider-color: #ddd5c5;
+}

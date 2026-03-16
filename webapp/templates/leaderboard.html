@@ -3,20 +3,20 @@
 
 {% block content %}
 <div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl font-bold text-gray-800">Leaderboard</h1>
+    <h1 class="text-2xl heading">Leaderboard</h1>
     <div class="flex items-center gap-3">
-        <label for="teg-select" class="text-sm font-medium text-gray-600">TEG:</label>
+        <label for="teg-select" class="text-sm font-medium text-secondary">TEG:</label>
         <select id="teg-select" name="teg"
                 hx-get="/leaderboard/table"
                 hx-target="#tables"
                 hx-indicator="#loading"
-                class="border border-gray-300 rounded-md px-3 py-1.5 text-sm bg-white focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                class="teg-select">
             {% for t in teg_numbers %}
             <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
             {% endfor %}
         </select>
         <span id="loading" class="htmx-indicator">
-            <svg class="animate-spin h-5 w-5 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <svg class="animate-spin h-5 w-5 accent-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
             </svg>

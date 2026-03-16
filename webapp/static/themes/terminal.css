@@ -1,0 +1,55 @@
+/* Terminal — Monospace minimalist (matches Streamlit datawrapper style) */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+    /* Typography */
+    --font-heading: 'Roboto Mono', monospace;
+    --font-body: 'Roboto Mono', monospace;
+
+    /* Page */
+    --bg-page: #ffffff;
+    --bg-card: #ffffff;
+    --text-primary: #1a1a1a;
+    --text-secondary: #444444;
+    --text-muted: #777777;
+
+    /* Nav */
+    --nav-bg: #1a1a1a;
+    --nav-text: #cccccc;
+    --nav-text-muted: #888888;
+    --nav-hover-bg: #333333;
+    --nav-active-bg: forestgreen;
+    --nav-active-text: #ffffff;
+
+    /* Tables */
+    --table-font-size: 13px;
+    --table-header-bg: #f8f8f8;
+    --table-header-border: #000000;
+    --table-cell-border: #e0e0e0;
+    --table-hover-bg: #F3F7F3;
+    --table-hover-text: forestgreen;
+    --table-toprank-bg: #F3F7F3;
+    --table-toprank-text: inherit;
+    --table-toprank-border: none;
+
+    /* Accent + Buttons */
+    --accent: forestgreen;
+    --btn-active-bg: forestgreen;
+    --btn-active-text: #ffffff;
+    --btn-inactive-bg: #ffffff;
+    --btn-inactive-text: #444444;
+    --btn-border-radius: 0.25rem;
+    --card-radius: 0.5rem;
+    --card-shadow: 0 1px 3px rgba(0,0,0,0.08);
+
+    /* Plotly */
+    --chart-paper-bg: #ffffff;
+    --chart-plot-bg: #ffffff;
+    --chart-text: #333333;
+    --chart-grid: #e0e0e0;
+
+    /* Select */
+    --select-bg: #ffffff;
+    --select-border: #cccccc;
+    --select-focus-ring: forestgreen;
+}

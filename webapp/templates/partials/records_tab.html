@@ -1,10 +1,15 @@
 {% if error %}
-<div class="bg-red-50 text-red-700 p-4 rounded-md">{{ error }}</div>
+<div class="error-box">{{ error }}</div>
 {% else %}
 <div class="space-y-6">
     {% for section in sections %}
     <div>
-        <h2 class="text-lg font-semibold text-gray-700 mb-2">{{ section.title }}</h2>
+        <h2 class="text-lg subheading mb-2">
+            {{ section.title }}
+            {% if section.record_count is defined and section.record_count %}
+            <span class="badge-muted">{{ section.record_count }}</span>
+            {% endif %}
+        </h2>
         <div class="overflow-x-auto">
             {{ section.table_html | safe }}
         </div>

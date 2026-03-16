@@ -1,0 +1,72 @@
+/* Ink — Dark monospace, Terminal inverted */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+    /* Typography */
+    --font-heading: 'Roboto Mono', monospace;
+    --font-body: 'Roboto Mono', monospace;
+
+    /* Page */
+    --bg-page: #1a1a1a;
+    --bg-card: #242424;
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --text-muted: #777777;
+
+    /* Nav */
+    --nav-bg: #111111;
+    --nav-text: #999999;
+    --nav-text-muted: #666666;
+    --nav-hover-bg: #2a2a2a;
+    --nav-active-bg: forestgreen;
+    --nav-active-text: #ffffff;
+
+    /* Tables */
+    --table-font-size: 13px;
+    --table-header-bg: #2a2a2a;
+    --table-header-border: forestgreen;
+    --table-cell-border: #333333;
+    --table-hover-bg: #2e3a2e;
+    --table-hover-text: #66cc66;
+    --table-toprank-bg: #2e3a2e;
+    --table-toprank-text: inherit;
+
+    /* Accent + Buttons */
+    --accent: forestgreen;
+    --btn-active-bg: forestgreen;
+    --btn-active-text: #ffffff;
+    --btn-inactive-bg: #2a2a2a;
+    --btn-inactive-text: #b0b0b0;
+    --btn-border-radius: 0.25rem;
+    --card-radius: 0.5rem;
+    --card-shadow: 0 1px 3px rgba(0,0,0,0.3);
+
+    /* Select */
+    --select-bg: #2a2a2a;
+    --select-border: #444444;
+    --select-focus-ring: forestgreen;
+
+    /* Footer */
+    --footer-bg: #111111;
+    --footer-text: #777777;
+
+    /* Stat cards */
+    --stat-card-bg: #242424;
+    --stat-card-border: #333333;
+    --stat-card-value-color: #66cc66;
+    --stat-card-label-color: #777777;
+
+    /* Badges */
+    --badge-bg: forestgreen;
+    --badge-text: #ffffff;
+    --badge-muted-bg: #333333;
+    --badge-muted-text: #999999;
+
+    --divider-color: #333333;
+}
+
+/* Error box override for dark */
+.error-box {
+    background-color: #3b1c1c;
+    color: #f87171;
+}

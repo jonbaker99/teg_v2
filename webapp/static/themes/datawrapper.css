@@ -1,0 +1,92 @@
+/* Datawrapper — Clean data journalism style, Sofia Pro-like sans,
+   muted palette, thin borders, emphasis on readability */
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap');
+
+:root {
+    /* Typography */
+    --font-heading: 'Source Sans 3', -apple-system, sans-serif;
+    --font-body: 'Source Sans 3', -apple-system, sans-serif;
+
+    /* Page */
+    --bg-page: #ffffff;
+    --bg-card: #ffffff;
+    --text-primary: #1d1d1d;
+    --text-secondary: #555555;
+    --text-muted: #999999;
+
+    /* Nav — dark charcoal like DW's editor chrome */
+    --nav-bg: #2b2b2b;
+    --nav-text: #bbbbbb;
+    --nav-text-muted: #888888;
+    --nav-hover-bg: #3a3a3a;
+    --nav-active-bg: #1890ff;
+    --nav-active-text: #ffffff;
+
+    /* Tables — Datawrapper's signature look:
+       no header background, bold bottom border on header,
+       very light row separators, zebra-free */
+    --table-font-size: 14px;
+    --table-header-bg: transparent;
+    --table-header-border: #1d1d1d;
+    --table-cell-border: #eeeeee;
+    --table-hover-bg: #f7f7f7;
+    --table-hover-text: #1890ff;
+    --table-toprank-bg: #f0f7ff;
+    --table-toprank-text: inherit;
+
+    /* Accent — Datawrapper's signature blue */
+    --accent: #1890ff;
+    --btn-active-bg: #1890ff;
+    --btn-active-text: #ffffff;
+    --btn-inactive-bg: #ffffff;
+    --btn-inactive-text: #555555;
+    --btn-border-radius: 0.25rem;
+    --card-radius: 0;
+    --card-shadow: none;
+
+    /* Select */
+    --select-bg: #ffffff;
+    --select-border: #cccccc;
+    --select-focus-ring: #1890ff;
+
+    /* Footer */
+    --footer-bg: #2b2b2b;
+    --footer-text: #bbbbbb;
+
+    /* Stat cards — borderless, light separator feel */
+    --stat-card-bg: #ffffff;
+    --stat-card-border: #eeeeee;
+    --stat-card-value-color: #1d1d1d;
+    --stat-card-label-color: #999999;
+
+    /* Badges */
+    --badge-bg: #1890ff;
+    --badge-text: #ffffff;
+    --badge-muted-bg: #f0f0f0;
+    --badge-muted-text: #999999;
+
+    --divider-color: #eeeeee;
+}
+
+/* Datawrapper tables: top border only on header, no bg fill */
+.teg-table thead th,
+.records-table thead th {
+    text-transform: uppercase;
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    color: #999999;
+    font-weight: 600;
+    border-bottom-width: 1px;
+}
+
+/* Cards have no rounding or shadow — pure content blocks */
+.card {
+    border-bottom: 1px solid #eeeeee;
+}
+
+/* Stat cards: larger value, very minimal framing */
+.stat-card {
+    border: none;
+    border-bottom: 2px solid #1890ff;
+    border-radius: 0;
+}

@@ -1,0 +1,71 @@
+/* Claude Dark — Warm dark brown, lighter terracotta */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    /* Typography */
+    --font-heading: 'Inter', -apple-system, sans-serif;
+    --font-body: 'Inter', -apple-system, sans-serif;
+
+    /* Page */
+    --bg-page: #2a2520;
+    --bg-card: #342e28;
+    --text-primary: #e8ddd0;
+    --text-secondary: #c4b49e;
+    --text-muted: #8c7e6c;
+
+    /* Nav */
+    --nav-bg: #1e1a16;
+    --nav-text: #a0937e;
+    --nav-text-muted: #6e6354;
+    --nav-hover-bg: #342e28;
+    --nav-active-bg: #e08850;
+    --nav-active-text: #1e1a16;
+
+    /* Tables */
+    --table-font-size: 0.875rem;
+    --table-header-bg: #3a342e;
+    --table-header-border: #e08850;
+    --table-cell-border: #433c34;
+    --table-hover-bg: #3e3228;
+    --table-hover-text: #e08850;
+    --table-toprank-bg: #3e3228;
+    --table-toprank-text: inherit;
+
+    /* Accent + Buttons */
+    --accent: #e08850;
+    --btn-active-bg: #e08850;
+    --btn-active-text: #1e1a16;
+    --btn-inactive-bg: #342e28;
+    --btn-inactive-text: #c4b49e;
+    --btn-border-radius: 9999px;
+    --card-radius: 0.75rem;
+    --card-shadow: 0 1px 4px rgba(0,0,0,0.2);
+
+    /* Select */
+    --select-bg: #342e28;
+    --select-border: #524a40;
+    --select-focus-ring: #e08850;
+
+    /* Footer */
+    --footer-bg: #1e1a16;
+    --footer-text: #8c7e6c;
+
+    /* Stat cards */
+    --stat-card-bg: #342e28;
+    --stat-card-border: #433c34;
+    --stat-card-value-color: #e08850;
+    --stat-card-label-color: #8c7e6c;
+
+    /* Badges */
+    --badge-bg: #e08850;
+    --badge-text: #1e1a16;
+    --badge-muted-bg: #433c34;
+    --badge-muted-text: #a0937e;
+
+    --divider-color: #433c34;
+}
+
+.error-box {
+    background-color: #3b1c1c;
+    color: #f87171;
+}

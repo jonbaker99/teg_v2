@@ -44,6 +44,15 @@ def _df_to_html(df):
     return df.to_html(escape=False, index=False, classes="records-table")
 
 
+def _section(title: str, df) -> dict:
+    """Build a section dict with title, HTML table and record count."""
+    return {
+        "title": title,
+        "table_html": _df_to_html(df),
+        "record_count": len(df) if df is not None and not df.empty else 0,
+    }
+
+
 def _tab_context(tab_name: str) -> dict:
     """Build context for a records tab."""
     try:
@@ -52,46 +61,46 @@ def _tab_context(tab_name: str) -> dict:
         if tab_name == "teg":
             ranked = cached_ranked_teg_data()
             best = prepare_records_table(ranked, 'teg')
-            sections.append({"title": "Best TEGs", "table_html": _df_to_html(best)})
+            sections.append(_section("Best TEGs", best))
 
             filtered = get_filtered_teg_data()
             worst = prepare_worst_records_table(filtered, 'teg')
-            sections.append({"title": "Worst TEGs", "table_html": _df_to_html(worst)})
+            sections.append(_section("Worst TEGs", worst))
 
         elif tab_name == "round":
             ranked = cached_ranked_round_data()
             best = prepare_records_table(ranked, 'round')
-            sections.append({"title": "Best Rounds", "table_html": _df_to_html(best)})
+            sections.append(_section("Best Rounds", best))
 
             rd_data = cached_round_data()
             worst = prepare_worst_records_table(rd_data, 'round')
-            sections.append({"title": "Worst Rounds", "table_html": _df_to_html(worst)})
+            sections.append(_section("Worst Rounds", worst))
 
         elif tab_name == "9hole":
             ranked = cached_ranked_frontback_data()
             best = prepare_records_table(ranked, 'frontback')
-            sections.append({"title": "Best 9-Hole Scores", "table_html": _df_to_html(best)})
+            sections.append(_section("Best 9-Hole Scores", best))
 
             nine_data = cached_9_data()
             worst = prepare_worst_records_table(nine_data, 'frontback')
-            sections.append({"title": "Worst 9-Hole Scores", "table_html": _df_to_html(worst)})
+            sections.append(_section("Worst 9-Hole Scores", worst))
 
         elif tab_name == "streaks":
             all_data = cached_load_all_data()
 
             best_streaks = prepare_record_best_streaks_data(all_data)
             best_table = prepare_streak_records_table(best_streaks, "Best Streaks:")
-            sections.append({"title": "Best Streaks", "table_html": _df_to_html(best_table)})
+            sections.append(_section("Best Streaks", best_table))
 
             worst_streaks = prepare_record_worst_streaks_data(all_data)
             worst_table = prepare_streak_records_table(worst_streaks, "Worst Streaks:")
-            sections.append({"title": "Worst Streaks", "table_html": _df_to_html(worst_table)})
+            sections.append(_section("Worst Streaks", worst_table))
 
         elif tab_name == "score_counts":
             all_data = cached_load_all_data()
             best_df, worst_df = prepare_score_count_records_table(all_data)
-            sections.append({"title": "Best Score Counts", "table_html": _df_to_html(best_df)})
-            sections.append({"title": "Worst Score Counts", "table_html": _df_to_html(worst_df)})
+            sections.append(_section("Best Score Counts", best_df))
+            sections.append(_section("Worst Score Counts", worst_df))
 
         return {"sections": sections}
 

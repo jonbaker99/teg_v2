@@ -1,0 +1,65 @@
+/* GitHub — Light gray, blue accent, system font stack */
+
+:root {
+    /* Typography */
+    --font-heading: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+
+    /* Page */
+    --bg-page: #f6f8fa;
+    --bg-card: #ffffff;
+    --text-primary: #1f2328;
+    --text-secondary: #59636e;
+    --text-muted: #848d97;
+
+    /* Nav */
+    --nav-bg: #24292f;
+    --nav-text: #c9d1d9;
+    --nav-text-muted: #8b949e;
+    --nav-hover-bg: #32383f;
+    --nav-active-bg: #0969da;
+    --nav-active-text: #ffffff;
+
+    /* Tables */
+    --table-font-size: 0.8125rem;
+    --table-header-bg: #f6f8fa;
+    --table-header-border: #d0d7de;
+    --table-cell-border: #d8dee4;
+    --table-hover-bg: #f0f3f6;
+    --table-hover-text: #0969da;
+    --table-toprank-bg: #ddf4ff;
+    --table-toprank-text: inherit;
+
+    /* Accent + Buttons */
+    --accent: #0969da;
+    --btn-active-bg: #0969da;
+    --btn-active-text: #ffffff;
+    --btn-inactive-bg: #ffffff;
+    --btn-inactive-text: #1f2328;
+    --btn-border-radius: 0.375rem;
+    --card-radius: 0.375rem;
+    --card-shadow: 0 1px 0 rgba(27,31,36,0.04);
+
+    /* Select */
+    --select-bg: #ffffff;
+    --select-border: #d0d7de;
+    --select-focus-ring: #0969da;
+
+    /* Footer */
+    --footer-bg: #24292f;
+    --footer-text: #8b949e;
+
+    /* Stat cards */
+    --stat-card-bg: #ffffff;
+    --stat-card-border: #d0d7de;
+    --stat-card-value-color: #0969da;
+    --stat-card-label-color: #848d97;
+
+    /* Badges */
+    --badge-bg: #0969da;
+    --badge-text: #ffffff;
+    --badge-muted-bg: #ddf4ff;
+    --badge-muted-text: #0969da;
+
+    --divider-color: #d0d7de;
+}

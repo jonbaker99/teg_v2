@@ -1,0 +1,87 @@
+/* Broadcast — TV sports graphics (ESPN/Sky Sports dark scoreboard) */
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap');
+
+:root {
+    /* Typography */
+    --font-heading: 'Oswald', sans-serif;
+    --font-body: 'Source Sans 3', sans-serif;
+
+    /* Page */
+    --bg-page: #111119;
+    --bg-card: #1a1a2e;
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --text-muted: #707080;
+
+    /* Nav */
+    --nav-bg: #0a0a14;
+    --nav-text: #a0a0b0;
+    --nav-text-muted: #606070;
+    --nav-hover-bg: #1a1a2e;
+    --nav-active-bg: #00d4ff;
+    --nav-active-text: #0a0a14;
+
+    /* Tables */
+    --table-font-size: 0.875rem;
+    --table-header-bg: #0d0d20;
+    --table-header-border: #00d4ff;
+    --table-cell-border: #2a2a3e;
+    --table-hover-bg: rgba(255,255,255,0.03);
+    --table-hover-text: #ffffff;
+    --table-toprank-bg: rgba(0,212,255,0.08);
+    --table-toprank-text: #00d4ff;
+    --table-toprank-border: 3px solid #00d4ff;
+
+    /* Accent + Buttons */
+    --accent: #00d4ff;
+    --btn-active-bg: #00d4ff;
+    --btn-active-text: #0a0a14;
+    --btn-inactive-bg: #1a1a2e;
+    --btn-inactive-text: #a0a0b0;
+    --btn-border-radius: 0;
+    --card-radius: 0;
+    --card-shadow: none;
+
+    /* Plotly */
+    --chart-paper-bg: #111119;
+    --chart-plot-bg: rgba(0,0,0,0);
+    --chart-text: #e0e0e0;
+    --chart-grid: #333344;
+
+    /* Select */
+    --select-bg: #1a1a2e;
+    --select-border: #3a3a4e;
+    --select-focus-ring: #00d4ff;
+}
+
+/* Broadcast-specific: uppercase nav */
+.nav-brand, .nav-link {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.btn-active, .btn-inactive {
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+/* Broadcast: card hard top border */
+.card {
+    border-top: 3px solid #00d4ff;
+}
+
+/* Broadcast: alternating row tint */
+.teg-table tbody tr:nth-child(even),
+.records-table tbody tr:nth-child(even) {
+    background-color: rgba(255,255,255,0.03);
+}
+
+/* Broadcast: top-rank left border */
+.teg-table tbody tr.top-rank {
+    border-left: var(--table-toprank-border);
+}
+
+/* Broadcast: dark error box */
+.error-box {
+    background-color: #2e1a1a;
+    color: #ff6b6b;
+}

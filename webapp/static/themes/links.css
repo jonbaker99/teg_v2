@@ -1,0 +1,79 @@
+/* Links — Clean modern SaaS (Linear/Notion-inspired) */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+    /* Typography */
+    --font-heading: 'DM Sans', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+
+    /* Page */
+    --bg-page: #f8fafc;
+    --bg-card: #ffffff;
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+
+    /* Nav */
+    --nav-bg: #ffffff;
+    --nav-text: #475569;
+    --nav-text-muted: #94a3b8;
+    --nav-hover-bg: #f1f5f9;
+    --nav-active-bg: transparent;
+    --nav-active-text: #4f46e5;
+
+    /* Tables */
+    --table-font-size: 0.875rem;
+    --table-header-bg: #f8fafc;
+    --table-header-border: #e2e8f0;
+    --table-cell-border: #e2e8f0;
+    --table-hover-bg: #f1f5f9;
+    --table-hover-text: inherit;
+    --table-toprank-bg: #f8fafc;
+    --table-toprank-text: #4f46e5;
+    --table-toprank-border: none;
+
+    /* Accent + Buttons */
+    --accent: #4f46e5;
+    --btn-active-bg: #4f46e5;
+    --btn-active-text: #ffffff;
+    --btn-inactive-bg: #f1f5f9;
+    --btn-inactive-text: #475569;
+    --btn-border-radius: 9999px;
+    --card-radius: 0.75rem;
+    --card-shadow: 0 1px 3px rgba(0,0,0,0.06);
+
+    /* Plotly */
+    --chart-paper-bg: #ffffff;
+    --chart-plot-bg: #f8fafc;
+    --chart-text: #1e293b;
+    --chart-grid: #e2e8f0;
+
+    /* Select */
+    --select-bg: #ffffff;
+    --select-border: #e2e8f0;
+    --select-focus-ring: #4f46e5;
+}
+
+/* Links-specific: nav bottom border instead of shadow */
+.nav {
+    box-shadow: none;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+/* Links: active nav uses underline style */
+.nav-link.active {
+    background-color: transparent;
+    border-bottom: 2px solid #4f46e5;
+    border-radius: 0;
+}
+
+/* Links: generous card padding */
+.card {
+    padding: 1.25rem;
+}
+
+/* Links: rounded table container */
+.teg-table, .records-table {
+    border-radius: 0.5rem;
+    overflow: hidden;
+}

@@ -1,0 +1,274 @@
+/* Base structural CSS — all colors/fonts via custom properties */
+
+/* ── Typography ── */
+body {
+    font-family: var(--font-body), sans-serif;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading), sans-serif;
+}
+
+/* ── Page ── */
+.page-bg {
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    min-height: 100vh;
+}
+
+/* ── Navigation ── */
+.nav {
+    background-color: var(--nav-bg);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.nav-brand {
+    color: var(--nav-active-text);
+    font-weight: 700;
+    font-size: 1.125rem;
+    text-decoration: none;
+    font-family: var(--font-heading), sans-serif;
+}
+.nav-link {
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--nav-text);
+    text-decoration: none;
+    transition: background-color 0.15s;
+}
+.nav-link:hover {
+    background-color: var(--nav-hover-bg);
+}
+.nav-link.active {
+    background-color: var(--nav-active-bg);
+    color: var(--nav-active-text);
+}
+
+/* ── Headings & Text ── */
+.heading {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+.subheading {
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+.text-secondary {
+    color: var(--text-secondary);
+}
+.text-muted {
+    color: var(--text-muted);
+}
+
+/* ── Cards ── */
+.card {
+    background-color: var(--bg-card);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    padding: 1rem;
+}
+
+/* ── Tables ── */
+.teg-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--table-font-size, 0.875rem);
+    font-family: var(--font-body), sans-serif;
+}
+.teg-table thead th {
+    background-color: var(--table-header-bg);
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid var(--table-header-border);
+    white-space: nowrap;
+}
+.teg-table tbody td {
+    padding: 0.4rem 0.75rem;
+    border-bottom: 1px solid var(--table-cell-border);
+    white-space: nowrap;
+}
+.teg-table tbody tr:hover {
+    background-color: var(--table-hover-bg);
+    color: var(--table-hover-text, inherit);
+}
+.teg-table tbody tr.top-rank {
+    background-color: var(--table-toprank-bg);
+    color: var(--table-toprank-text, inherit);
+    font-weight: 600;
+}
+.teg-table .total {
+    font-weight: 700;
+}
+
+.records-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--table-font-size, 0.875rem);
+    font-family: var(--font-body), sans-serif;
+}
+.records-table thead th {
+    background-color: var(--table-header-bg);
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid var(--table-header-border);
+}
+.records-table tbody td {
+    padding: 0.4rem 0.75rem;
+    border-bottom: 1px solid var(--table-cell-border);
+}
+.records-table tbody tr:hover {
+    background-color: var(--table-hover-bg);
+}
+
+/* ── Buttons / Tabs ── */
+.btn-active {
+    background-color: var(--btn-active-bg);
+    color: var(--btn-active-text);
+    border: 1px solid var(--btn-active-bg);
+    border-radius: var(--btn-border-radius);
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+.btn-inactive {
+    background-color: var(--btn-inactive-bg);
+    color: var(--btn-inactive-text);
+    border: 1px solid var(--select-border);
+    border-radius: var(--btn-border-radius);
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+.btn-inactive:hover {
+    opacity: 0.85;
+}
+
+/* ── Selects ── */
+.teg-select {
+    background-color: var(--select-bg);
+    border: 1px solid var(--select-border);
+    border-radius: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+}
+.teg-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--select-focus-ring);
+}
+
+/* Theme switcher */
+.theme-select {
+    background-color: transparent;
+    border: 1px solid var(--nav-text-muted, var(--nav-text));
+    color: var(--nav-text);
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+.theme-select option {
+    background-color: var(--nav-bg);
+    color: var(--nav-text);
+}
+
+/* ── Error box (always red, all themes) ── */
+.error-box {
+    background-color: #fef2f2;
+    color: #b91c1c;
+    padding: 1rem;
+    border-radius: 0.375rem;
+}
+
+/* ── Spinner ── */
+.accent-spinner {
+    color: var(--accent);
+}
+
+/* ── HTMX indicator ── */
+.htmx-indicator {
+    display: none;
+}
+.htmx-request .htmx-indicator,
+.htmx-request.htmx-indicator {
+    display: inline-block;
+}
+
+/* ── Stat Cards ── */
+.stat-card {
+    background-color: var(--stat-card-bg, var(--bg-card));
+    border: 1px solid var(--stat-card-border, var(--table-cell-border));
+    border-radius: var(--card-radius);
+    padding: 0.75rem 1rem;
+    text-align: center;
+}
+.stat-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--stat-card-value-color, var(--text-primary));
+    line-height: 1.2;
+}
+.stat-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--stat-card-label-color, var(--text-muted));
+    margin-top: 0.125rem;
+}
+
+/* ── Badges ── */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    background-color: var(--badge-bg, var(--accent));
+    color: var(--badge-text, #ffffff);
+    vertical-align: middle;
+    margin-left: 0.375rem;
+}
+.badge-muted {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    background-color: var(--badge-muted-bg, var(--table-header-bg));
+    color: var(--badge-muted-text, var(--text-muted));
+    vertical-align: middle;
+    margin-left: 0.375rem;
+}
+
+/* ── Divider ── */
+.divider {
+    border: none;
+    border-top: 1px solid var(--divider-color, var(--table-cell-border));
+    margin: 1rem 0;
+}
+
+/* ── Page Footer ── */
+.page-footer {
+    background-color: var(--footer-bg, var(--nav-bg));
+    color: var(--footer-text, var(--nav-text));
+    text-align: center;
+    padding: 0.75rem 1rem;
+    font-size: 0.75rem;
+    margin-top: 3rem;
+}
+
+/* ── Chart description ── */
+.chart-description {
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+    margin-top: 0.5rem;
+}

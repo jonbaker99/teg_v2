@@ -1,0 +1,60 @@
+/* Augusta — Premium golf club (Masters-inspired) */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Crimson+Text:wght@400;600;700&display=swap');
+
+:root {
+    /* Typography */
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Crimson Text', serif;
+
+    /* Page */
+    --bg-page: #faf6ed;
+    --bg-card: #fffef8;
+    --text-primary: #2d2a23;
+    --text-secondary: #4a4637;
+    --text-muted: #8a8475;
+
+    /* Nav */
+    --nav-bg: #003d00;
+    --nav-text: #c8a951;
+    --nav-text-muted: #8a7a3a;
+    --nav-hover-bg: #004d00;
+    --nav-active-bg: #002200;
+    --nav-active-text: #c8a951;
+
+    /* Tables */
+    --table-font-size: 0.875rem;
+    --table-header-bg: #f5f0e3;
+    --table-header-border: #c8a951;
+    --table-cell-border: #e8e0d0;
+    --table-hover-bg: #f5f0e3;
+    --table-hover-text: inherit;
+    --table-toprank-bg: #f5f0e3;
+    --table-toprank-text: #2d2a23;
+    --table-toprank-border: 3px solid #c8a951;
+
+    /* Accent + Buttons */
+    --accent: #c8a951;
+    --btn-active-bg: #003d00;
+    --btn-active-text: #c8a951;
+    --btn-inactive-bg: #fffef8;
+    --btn-inactive-text: #4a4637;
+    --btn-border-radius: 0.25rem;
+    --card-radius: 0.5rem;
+    --card-shadow: 0 1px 3px rgba(0,0,0,0.08);
+
+    /* Plotly */
+    --chart-paper-bg: #faf6ed;
+    --chart-plot-bg: #fffef8;
+    --chart-text: #2d2a23;
+    --chart-grid: #e8e0d0;
+
+    /* Select */
+    --select-bg: #fffef8;
+    --select-border: #d4c9a8;
+    --select-focus-ring: #c8a951;
+}
+
+/* Augusta-specific: top-rank left border */
+.teg-table tbody tr.top-rank {
+    border-left: var(--table-toprank-border);
+}

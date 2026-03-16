@@ -1,0 +1,71 @@
+/* Linear — Dark, purple accent, ultra-clean */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    /* Typography */
+    --font-heading: 'Inter', -apple-system, sans-serif;
+    --font-body: 'Inter', -apple-system, sans-serif;
+
+    /* Page */
+    --bg-page: #0a0b14;
+    --bg-card: #12131f;
+    --text-primary: #e2e4ea;
+    --text-secondary: #a0a3b1;
+    --text-muted: #6b6e7d;
+
+    /* Nav */
+    --nav-bg: #080910;
+    --nav-text: #7b7e8e;
+    --nav-text-muted: #4e5060;
+    --nav-hover-bg: #1a1b2e;
+    --nav-active-bg: #5e6ad2;
+    --nav-active-text: #ffffff;
+
+    /* Tables */
+    --table-font-size: 0.8125rem;
+    --table-header-bg: #151624;
+    --table-header-border: #2a2b3d;
+    --table-cell-border: #1e1f30;
+    --table-hover-bg: #1a1b2e;
+    --table-hover-text: #8b95e8;
+    --table-toprank-bg: #1a1b2e;
+    --table-toprank-text: inherit;
+
+    /* Accent + Buttons */
+    --accent: #5e6ad2;
+    --btn-active-bg: #5e6ad2;
+    --btn-active-text: #ffffff;
+    --btn-inactive-bg: #12131f;
+    --btn-inactive-text: #a0a3b1;
+    --btn-border-radius: 0.375rem;
+    --card-radius: 0.5rem;
+    --card-shadow: 0 1px 3px rgba(0,0,0,0.3);
+
+    /* Select */
+    --select-bg: #12131f;
+    --select-border: #2a2b3d;
+    --select-focus-ring: #5e6ad2;
+
+    /* Footer */
+    --footer-bg: #080910;
+    --footer-text: #4e5060;
+
+    /* Stat cards */
+    --stat-card-bg: #12131f;
+    --stat-card-border: #2a2b3d;
+    --stat-card-value-color: #8b95e8;
+    --stat-card-label-color: #6b6e7d;
+
+    /* Badges */
+    --badge-bg: #5e6ad2;
+    --badge-text: #ffffff;
+    --badge-muted-bg: #1e1f30;
+    --badge-muted-text: #7b7e8e;
+
+    --divider-color: #1e1f30;
+}
+
+.error-box {
+    background-color: #2a1020;
+    color: #f87171;
+}
