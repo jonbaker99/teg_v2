@@ -12,8 +12,8 @@ The TEG project is evolving from a monolithic Streamlit app into a two-layer arc
 ### Where we are now
 - The Streamlit app is stable and deployed on Railway
 - The `teg_analysis` package has been extracted and merged to `main`
-- **Phase 1 DONE**: All streamlit imports removed from `teg_analysis/`
-- **Phase 2 IN PROGRESS**: Splitting `aggregation.py` (2,940 → 5 files)
+- **Phases 1–5 DONE**: All cleanup work complete. Code is clean, optimized, dead code removed.
+- **Phase 6 IN PROGRESS**: Documentation update
 - Branch: `cleanup-teg-analysis` (pushed to remote)
 
 ### Where we're heading
@@ -49,15 +49,21 @@ All streamlit imports removed from `teg_analysis/`. Committed as `642c67b`.
 - Kept backward-compatible aliases for all old function names
 - Updated `records.py` to use new `prepare_record_streaks_data(all_data, direction)` API
 
-### Phase 4: Clean up remaining files (Sonnet)
-- `scoring.py` (~963 lines): delete remaining duplication → ~500 lines
-- `records.py` (~655 lines): delete broken-dependency functions → ~400 lines
-- `commentary.py` (1,155 lines): delete uncalled functions → ~600 lines
+### Phase 4: Clean up remaining files — DONE ✅
 
-### Phase 5: Dead code audit (Sonnet)
-For every function in `teg_analysis/`, grep for callers. Delete functions with zero external callers.
+**Committed as `31bb5f3`**: Cleaned up scoring.py, records.py, commentary.py
+- `scoring.py`: 963 → 516 lines (-447 lines, -46%)
+- `records.py`: 655 → 479 lines (-176 lines, -27%)
+- `commentary.py`: 1,155 → 1,023 lines (-132 lines, -11%)
 
-### Phase 6: Documentation (Haiku)
+### Phase 5: Dead code audit — DONE ✅
+
+**Committed as `1e0ce1e`**: Removed all uncalled functions (-667 lines total)
+- Deleted dead code from multiple modules
+- Restored html_tables.py as useful utility for future API/frontend
+- All callers updated and verified
+
+### Phase 6: Documentation — IN PROGRESS
 - Update this file
 - Update CLAUDE.md architecture section
 
@@ -78,17 +84,17 @@ teg_analysis/
         data_transforms.py
         metadata.py
     analysis/
-        aggregation.py      # ~200 lines (core engine only)
-        bestball.py          # ~60 lines (NEW)
-        commentary.py        # ~600 lines (trimmed)
-        history.py           # ~300 lines (NEW)
-        leaderboards.py      # ~90 lines (NEW)
-        performance.py       # ~220 lines (NEW, replaces 11 functions)
-        pipeline.py
-        rankings.py
-        records.py           # ~400 lines (trimmed)
-        scoring.py           # ~500 lines (trimmed)
-        streaks.py           # ~400 lines (refactored)
+        aggregation.py      # 1,012 lines (core engine only)
+        bestball.py         # 48 lines (NEW)
+        commentary.py       # 1,023 lines (trimmed)
+        history.py          # 364 lines (NEW)
+        leaderboards.py     # 10 lines (NEW)
+        performance.py      # 90 lines (NEW, replaces 11 functions)
+        pipeline.py         # 516 lines
+        rankings.py         # 219 lines
+        records.py          # 479 lines (trimmed)
+        scoring.py          # 516 lines (trimmed)
+        streaks.py          # 423 lines (refactored)
     display/
         formatters.py
         html_tables.py

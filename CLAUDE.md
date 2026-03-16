@@ -35,7 +35,7 @@ The project has two main layers:
    - `constants.py` — Centralised file paths, player data, tournament metadata
    - `io/` — File I/O (`read_file`/`write_file`), GitHub API (uses `GITHUB_TOKEN` env var), Railway volume management
    - `core/` — Data loading (`load_all_data`) and transformation
-   - `analysis/` — Scoring, rankings, aggregation, streaks, records, commentary, pipeline
+   - `analysis/` — Scoring, rankings, aggregation, streaks, records, commentary, pipeline, history, performance, leaderboards, bestball
    - `display/` — Formatting, HTML tables, navigation utilities (returns HTML strings, never calls st.write)
    - `api/` — Placeholder for REST API endpoints
 
