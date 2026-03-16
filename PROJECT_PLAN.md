@@ -26,29 +26,19 @@ The TEG project is evolving from a monolithic Streamlit app into a two-layer arc
 ### Phase 1: Cut the Cord — DONE ✅
 All streamlit imports removed from `teg_analysis/`. Committed as `642c67b`.
 
-### Phase 2: Split aggregation.py — IN PROGRESS 🔧
+### Phase 2: Split aggregation.py — DONE ✅
 
 **New files created** (committed as `4e896bd`):
 - `analysis/history.py` — winners, history tables, eagles, completeness checking
 - `analysis/performance.py` — parameterised `prepare_performance_table()` replacing 11 near-duplicate functions + `prepare_pb_summary_table()` replacing 3
-- `analysis/leaderboards.py` — TEG and round leaderboard generation
+- `analysis/leaderboards.py` — TEG and round leaderboard generation + `filter_data_by_teg`
 - `analysis/bestball.py` — bestball/worstball team format analysis
 
-**Still TODO for Phase 2** (pick up here):
-1. **Rewrite `aggregation.py`** — Remove all code that's been moved to the new files. Keep only:
-   - Lookup functions (`get_teg_rounds`, `get_tegnum_rounds`)
-   - Core aggregation engine (`list_fields_by_aggregation_level`, `aggregate_data`)
-   - Cached accessors (`get_complete_teg_data`, `get_teg_data_inc_in_progress`, `get_round_data`, `get_9_data`, `get_Pl_data`)
-   - TEG status (`get_last_completed_teg_fast`, `get_current_in_progress_teg_fast`, `has_incomplete_teg_fast`)
-   - Round/TEG selection helpers and comeback analysis (move to a `latest.py` or keep in aggregation — TBD)
-2. **Update `__init__.py`** — Add imports for the new modules, update re-exports
-3. **Update internal callers**:
-   - `pipeline.py` imports bestball from aggregation → change to bestball
-   - `rankings.py` imports from aggregation → stays (uses core accessors)
-   - `html_tables.py` imports aggregate_data → stays
-   - Tests and examples that import `get_teg_winners`, `filter_data_by_teg` → update
-4. **Add backward-compat re-exports** in `aggregation.py` so nothing breaks during transition
-5. **Verify**: `python -c "import sys; sys.modules['streamlit']=None; from teg_analysis.core.data_loader import load_all_data"` still works
+**Gutted `aggregation.py`** (2,931 → 1,012 lines):
+- Kept: lookup functions, core aggregation engine, cached accessors, TEG status, round/TEG selection helpers, comeback analysis, scorecard helpers
+- Removed: all code moved to history.py, performance.py, leaderboards.py, bestball.py
+- Updated `__init__.py` with new module imports and re-exports
+- Updated all internal callers (pipeline.py, examples, tests)
 
 ### Phase 3: Refactor streaks.py (Opus)
 - 1,152 lines, 27 functions with good/bad mirror duplication

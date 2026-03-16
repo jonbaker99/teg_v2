@@ -25,9 +25,9 @@ from teg_analysis.core.data_loader import load_all_data, get_player_name
 from teg_analysis.analysis.aggregation import (
     get_current_in_progress_teg_fast,
     get_last_completed_teg_fast,
-    filter_data_by_teg,
     aggregate_data,
 )
+from teg_analysis.analysis.leaderboards import filter_data_by_teg
 from teg_analysis.analysis.rankings import ordinal
 from teg_analysis.display.formatters import format_vs_par
 
