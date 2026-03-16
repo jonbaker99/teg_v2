@@ -132,7 +132,7 @@ def update_bestball_cache(defer_github: bool = False):
         load_all_data = deps['load_all_data']
         write_file = deps['write_file']
 
-        from teg_analysis.analysis.aggregation import prepare_bestball_data, calculate_bestball_scores, calculate_worstball_scores
+        from teg_analysis.analysis.bestball import prepare_bestball_data, calculate_bestball_scores, calculate_worstball_scores
 
         # Load all data including incomplete TEGs for up-to-date analysis
         all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
