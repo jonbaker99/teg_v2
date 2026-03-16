@@ -54,7 +54,7 @@ def benchmark_filter_data():
     print("=" * 60)
 
     from teg_analysis.core.data_loader import load_all_data
-    from teg_analysis.analysis.leaderboards import filter_data_by_teg
+    from teg_analysis.analysis.aggregation import filter_data_by_teg
 
     # Load data first
     print("\nLoading data...")

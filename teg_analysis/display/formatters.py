@@ -27,7 +27,7 @@ WORST_MEASURE_TITLES = {
 }
 
 
-# === CORE FORMATTING FUNCTIONS ===
+# === CORE FORMATTING FUNCTIONS (from utils.py) ===
 
 def format_vs_par(value: float) -> str:
     """Formats a value as a vs-par score (e.g., '-5', 'E', '+3').
@@ -102,7 +102,7 @@ def format_date_for_scorecard(date_str, input_format=None, output_format='%d/%m/
         return str(date_str)
 
 
-# === RECORD VALUE FORMATTING ===
+# === RECORD VALUE FORMATTING (from display_helpers.py) ===
 
 def format_record_value(value: float, measure: str) -> str:
     """Formats a record value for display based on the measure type.
@@ -121,7 +121,7 @@ def format_record_value(value: float, measure: str) -> str:
         return str(int(value))    # Shows 85
 
 
-# === RECORDS DISPLAY PREPARATION ===
+# === RECORDS DISPLAY PREPARATION (from display_helpers.py) ===
 
 def prepare_records_display(best_records: pd.DataFrame, record_type: str) -> pd.DataFrame:
     """Prepares record data for display.
@@ -329,7 +329,8 @@ def prepare_streak_records_table(streak_data: pd.DataFrame, table_title: str) ->
     Returns:
         pd.DataFrame: A formatted table for display on the records page.
     """
-    from teg_analysis.constants import PLAYER_DICT
+    # Import here to avoid circular dependency
+    from utils import PLAYER_DICT
 
     # Create reverse lookup: full name to initials
     name_to_initials = {name: initials for initials, name in PLAYER_DICT.items()}
@@ -388,7 +389,8 @@ def prepare_score_count_records_table(all_data: pd.DataFrame) -> Tuple[pd.DataFr
             - worst_records_df (pd.DataFrame): Formatted table of the worst
               score count records.
     """
-    from teg_analysis.analysis.scoring import count_scores_by_player
+    # Import here to avoid circular dependency
+    from helpers.score_count_processing import count_scores_by_player
 
     # Define score categories
     score_categories = {

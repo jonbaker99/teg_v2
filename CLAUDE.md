@@ -27,21 +27,7 @@ pip install -r requirements.txt
 
 ## Architecture
 
-### Two-Layer Structure
-
-The project has two main layers:
-
-1. **`teg_analysis/`** — Standalone Python package with all core analysis logic, **fully independent of Streamlit** (no streamlit imports at module level):
-   - `constants.py` — Centralised file paths, player data, tournament metadata
-   - `io/` — File I/O (`read_file`/`write_file`), GitHub API (uses `GITHUB_TOKEN` env var), Railway volume management
-   - `core/` — Data loading (`load_all_data`) and transformation
-   - `analysis/` — Scoring, rankings, aggregation, streaks, records, commentary, pipeline
-   - `display/` — Formatting, HTML tables, navigation utilities (returns HTML strings, never calls st.write)
-   - `api/` — Placeholder for REST API endpoints
-
-2. **`streamlit/`** — The production Streamlit app (deployed on Railway), which currently uses its own `utils.py` rather than `teg_analysis/`. Migrating the Streamlit app to use `teg_analysis/` is a future goal.
-
-### Streamlit App Structure
+### Core Structure
 - **Entry point**: `streamlit/nav.py` - Main navigation controller defining all pages
 - **Data utilities**: `streamlit/utils.py` - Core data loading and GitHub integration functions
 - **Page modules**: Numbered files (100s=History, 200s=Results, 300s=Records, etc.)
@@ -130,41 +116,7 @@ Always use the centralized `read_file()` function from `utils.py` which handles 
 - Test changes thoroughly before expanding scope
 - Document the reasoning behind architectural decisions
 
-## Model Selection
 
-### MANDATORY — Model check gate
-
-**BEFORE doing ANY work — before reading files, before editing, before planning — you MUST output a model check block as your FIRST response text.** No exceptions. Format:
-
-```
-**Model check:** I am [current model]. This task is [simple/moderate/complex] → recommended model is [Haiku/Sonnet/Opus].
-[If mismatch]: ⚠️ Recommended model is [model] (`/model [model]`). Say "continue" to proceed anyway.
-[If match]: ✅ Proceeding.
-```
-
-If the task is a multi-step plan with mixed complexity tiers, call out which steps match the current model and which don't. Recommend doing same-tier work first, then switching.
-
-### Complexity tiers
-
-| Tier | Model | Task types |
-|------|-------|------------|
-| **Complex** | **Opus** | Architecture decisions, multi-file refactors, designing new modules/APIs, rewriting large files, debugging subtle cross-module issues, planning |
-| **Moderate** | **Sonnet** | Single-file edits, adding/modifying functions, fixing known bugs, writing tests, import cleanup, removing dead code from a single file |
-| **Simple** | **Haiku** | Deleting files, renaming variables, removing comments, formatting, updating docs, simple search-and-replace |
-
-### At task transitions
-
-When the current subtask is done and the next one is a different tier, STOP and output:
-
-```
-**Model note:** [Completed work] is done. Next task ([description]) is [tier] → switch to [model] with `/model [model]`.
-```
-
-Do NOT silently start work at a different tier.
-
-### Opus review gate
-
-After Haiku or Sonnet complete a batch of work, switch to Opus for review. Opus should read the changes, flag issues, and leave fix notes before the work is considered done.
 
 ### general info
 - a 'teg' is a tournament. each teg consistents of a number of rounds (usually 4, with a few exceptions). each round consists of 18 holes. the 18 holes can be categorised as a 'front 9' (holes 1-9)  and 'back 9' (holes 10-18)

@@ -52,21 +52,8 @@ PROJECT_PLAN.md      Objectives, next steps, resume instructions
 BRANCHES.md          Guide to all branches
 ```
 
-## Folder guide
-
-| Directory / File | Purpose |
-|---|---|
-| `teg_analysis/` | Standalone analysis package — io, core, analysis, display, api layers |
-| `streamlit/` | Production Streamlit app, deployed on Railway |
-| `data/` | Tournament data files (parquet, CSV, commentary markdown) |
-| `tests/` | Test suite for `teg_analysis` |
-| `examples/` | FastAPI proof-of-concept (`example_fastapi.py`) |
-| `CLAUDE.md` | Development guidelines for Claude Code |
-| `PROJECT_PLAN.md` | Objectives, known issues, next steps, resume instructions |
-| `BRANCHES.md` | Guide to all branches and their status |
-
 ## Current status
 
 See [PROJECT_PLAN.md](PROJECT_PLAN.md) for the full plan, known issues, and how to resume work.
 
-The Streamlit app is stable and deployed on Railway. The `teg_analysis` package is merged to `main` and validated as working standalone with all 6,390 rows of data. Next steps: stabilise the package and build a proper REST API.
+The Streamlit app on `main` is stable and deployed. The `teg_analysis` package on this branch (`claude/golf-stats-api-cMQ4e`) is the foundation for the API -- validated as working standalone with all 6,390 rows of data.

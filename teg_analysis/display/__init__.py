@@ -1,13 +1,16 @@
 """Display Layer - Formatting and display utilities.
 
 This package contains display and formatting functions for the TEG analysis system:
-- formatters: Value formatting and display utilities
-- tables: Table generation functions
-- navigation: Trophy name and URL utilities
+- formatters: Value formatting and display utilities (9 functions)
+- tables: Table generation functions (7 functions)
+- charts: Chart generation helpers (0 functions)
+
+Phase IV - COMPLETE ✅
 """
 
 from . import formatters
 from . import tables
+from . import charts
 from . import navigation
 
 # Export commonly used functions for convenience
@@ -23,6 +26,7 @@ from .navigation import (
 __all__ = [
     'formatters',
     'tables',
+    'charts',
     'navigation',
     # Common exports
     'format_vs_par',

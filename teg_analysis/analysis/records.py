@@ -7,9 +7,17 @@ clean summary format.
 
 
 import pandas as pd
-import logging
+from collections import defaultdict
 
-logger = logging.getLogger(__name__)
+# NOTE: display_records_summary() function uses Streamlit for display
+# This function should be moved to streamlit/utils.py as a UI wrapper
+# For now, importing streamlit conditionally
+try:
+    import streamlit as st
+    HAS_STREAMLIT = True
+except ImportError:
+    st = None
+    HAS_STREAMLIT = False
 
 
 def get_friendly_metric_name(metric: str) -> str:
@@ -44,7 +52,7 @@ def format_record_value(value: float, metric: str) -> str:
     Returns:
         str: The formatted value as a string.
     """
-    from teg_analysis.analysis.scoring import format_vs_par
+    from utils import format_vs_par
 
     if metric in ['GrossVP', 'NetVP']:
         return format_vs_par(value)
@@ -137,7 +145,7 @@ def identify_aggregate_records_and_pbs(df_teg_or_round: pd.DataFrame, selected_t
     }
 
 
-def identify_9hole_records_and_pbs(selected_teg: str, selected_round: int, df_9hole: pd.DataFrame = None) -> dict:
+def identify_9hole_records_and_pbs(selected_teg: str, selected_round: int) -> dict:
     """Identifies 9-hole records and personal bests for the selected round.
 
     This function checks if the front 9 or back 9 of the selected round set
@@ -146,16 +154,14 @@ def identify_9hole_records_and_pbs(selected_teg: str, selected_round: int, df_9h
     Args:
         selected_teg (str): The selected TEG (e.g., "TEG 17").
         selected_round (int): The selected round number.
-        df_9hole (pd.DataFrame, optional): Pre-ranked 9-hole data. If None,
-            will attempt to generate from loaded data.
 
     Returns:
         dict: A dictionary containing lists of records and personal bests for
         9-hole segments.
     """
-    if df_9hole is None:
-        logger.warning("No 9-hole data provided to identify_9hole_records_and_pbs")
-        return {'records': [], 'personal_bests': []}
+    from utils import get_ranked_frontback_data
+
+    df_9hole = get_ranked_frontback_data()
 
     # Parse TEG number
     teg_num = int(selected_teg.split()[1])
@@ -230,7 +236,7 @@ def identify_streak_records(all_data: pd.DataFrame, streaks_df: pd.DataFrame, se
     Returns:
         dict: A dictionary containing a list of streak records.
     """
-    from teg_analysis.analysis.streaks import (
+    from helpers.streak_analysis_processing import (
         prepare_record_best_streaks_data,
         prepare_record_worst_streaks_data,
         get_player_window_streaks
@@ -373,7 +379,7 @@ def identify_score_count_records(all_data: pd.DataFrame, selected_teg: str, sele
         dict: A dictionary containing lists of the best and worst score count
         records.
     """
-    from teg_analysis.analysis.scoring import count_scores_by_player
+    from helpers.score_count_processing import count_scores_by_player
 
     try:
         # Filter to selected TEG/round
@@ -464,7 +470,7 @@ def get_all_time_score_count_record(all_data: pd.DataFrame, category: str, score
     Returns:
         int: The maximum count for the category across all history.
     """
-    from teg_analysis.analysis.scoring import count_scores_by_player
+    from helpers.score_count_processing import count_scores_by_player
 
     try:
         max_count = 0
@@ -500,7 +506,149 @@ def get_all_time_score_count_record(all_data: pd.DataFrame, category: str, score
         return 0
 
 
-# === COURSE ANALYSIS FUNCTIONS ===
+def display_records_and_pbs_summary(records_dict: dict, page_type: str = 'TEG'):
+    """Displays records and personal bests in an expandable section.
+
+    This function creates a clean, expandable UI to show all records and
+    personal bests for the selected TEG or round, grouping them by player for
+    readability.
+
+    Args:
+        records_dict (dict): A dictionary containing all identified records
+            and personal bests.
+        page_type (str, optional): The type of page ('TEG' or 'Round') for
+            display purposes. Defaults to 'TEG'.
+    """
+    # Count total items
+    total_items = (
+        len(records_dict.get('aggregate_records', [])) +
+        len(records_dict.get('aggregate_pbs', [])) +
+        len(records_dict.get('aggregate_worsts', [])) +
+        len(records_dict.get('all_time_worsts', [])) +
+        len(records_dict.get('9hole_records', [])) +
+        len(records_dict.get('9hole_pbs', [])) +
+        len(records_dict.get('streak_records', [])) +
+        len(records_dict.get('best_score_counts', [])) +
+        len(records_dict.get('worst_score_counts', []))
+    )
+
+    if total_items == 0:
+        st.info(f"No records or personal bests for this {page_type}.")
+        return
+
+    # === ALL-TIME RECORDS (BESTS) ===
+    aggregate_records = records_dict.get('aggregate_records', [])
+    nine_hole_records = records_dict.get('9hole_records', [])
+    streak_records = records_dict.get('streak_records', [])
+    best_score_counts = records_dict.get('best_score_counts', [])
+
+    if aggregate_records or nine_hole_records or streak_records or best_score_counts:
+        st.markdown("**🏆 All-Time Records (Bests):**")
+
+        # Aggregate score records
+        if aggregate_records:
+            for record in aggregate_records:
+                value = format_record_value(record['value'], record['metric'])
+                st.markdown(f"- **{record['friendly_name']}:** {value} ({record['player']})")
+
+        # 9-hole records
+        if nine_hole_records:
+            for record in nine_hole_records:
+                value = format_record_value(record['value'], record['metric'])
+                segment = record['segment']
+                st.markdown(f"- **{segment} 9 - {record['friendly_name']}:** {value} ({record['player']})")
+
+        # Streak records
+        if streak_records:
+            for record in streak_records:
+                st.markdown(f"- **{record['streak_type']} streak:** {record['value']} holes ({record['player']})")
+
+        # Score count records (bests)
+        if best_score_counts:
+            for record in best_score_counts:
+                st.markdown(f"- **Most {record['score_type']}:** {record['count']} ({record['player']})")
+
+    # === ALL-TIME RECORDS (WORSTS) ===
+    all_time_worsts = records_dict.get('all_time_worsts', [])
+    worst_score_counts = records_dict.get('worst_score_counts', [])
+
+    if all_time_worsts or worst_score_counts:
+        st.markdown("")
+        st.markdown("**💀 All-Time Records (Worsts):**")
+
+        # Aggregate score worsts
+        if all_time_worsts:
+            for record in all_time_worsts:
+                value = format_record_value(record['value'], record['metric'])
+                st.markdown(f"- **Worst {record['friendly_name']}:** {value} ({record['player']})")
+
+        # Score count records (worsts)
+        if worst_score_counts:
+            for record in worst_score_counts:
+                st.markdown(f"- **Most {record['score_type']}:** {record['count']} ({record['player']})")
+
+    # === PERSONAL BESTS ===
+    aggregate_pbs = records_dict.get('aggregate_pbs', [])
+    nine_hole_pbs = records_dict.get('9hole_pbs', [])
+
+    if aggregate_pbs or nine_hole_pbs:
+        st.markdown("")
+        st.markdown("**⭐ Personal Bests:**")
+
+        # Group by player
+        pbs_by_player = defaultdict(list)
+
+        for pb in aggregate_pbs:
+            pbs_by_player[pb['player']].append(pb)
+        for pb in nine_hole_pbs:
+            pbs_by_player[pb['player']].append(pb)
+
+        # Display grouped by player
+        for player in sorted(pbs_by_player.keys()):
+            player_pbs = pbs_by_player[player]
+            pb_list = []
+
+            for pb in player_pbs:
+                value = format_record_value(pb['value'], pb['metric'])
+                if 'segment' in pb:
+                    pb_list.append(f"{pb['segment']} 9 - {pb['friendly_name']}: {value}")
+                else:
+                    pb_list.append(f"{pb['friendly_name']}: {value}")
+
+            st.markdown(f"- **{player}:** {', '.join(pb_list)}")
+
+    # === PERSONAL WORSTS ===
+    aggregate_worsts = records_dict.get('aggregate_worsts', [])
+
+    if aggregate_worsts:
+        st.markdown("")
+        st.markdown("**⚠️ Personal Worsts:**")
+
+        # Group by player
+        worsts_by_player = defaultdict(list)
+        for worst in aggregate_worsts:
+            worsts_by_player[worst['player']].append(worst)
+
+        # Display grouped by player
+        for player in sorted(worsts_by_player.keys()):
+            player_worsts = worsts_by_player[player]
+            worst_list = []
+
+            for worst in player_worsts:
+                value = format_record_value(worst['value'], worst['metric'])
+                worst_list.append(f"{worst['friendly_name']}: {value}")
+
+            st.markdown(f"- **{player}:** {', '.join(worst_list)}")
+"""Data processing functions for course analysis and averages.
+
+This module contains functions for processing course-specific performance data,
+creating pivot tables for course averages and records, handling area filtering
+and course grouping, and formatting performance data for display.
+"""
+
+
+import pandas as pd
+import numpy as np
 
 
 def prepare_area_filter_options(course_info: pd.DataFrame) -> tuple[list, str]:

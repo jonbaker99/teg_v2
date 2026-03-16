@@ -17,6 +17,14 @@ from typing import Dict, List, Any
 from pathlib import Path
 import os
 
+# Conditional Streamlit import for UI-independent operation
+try:
+    import streamlit as st
+    HAS_STREAMLIT = True
+except ImportError:
+    st = None
+    HAS_STREAMLIT = False
+
 from teg_analysis.io import read_file, write_file
 from teg_analysis.constants import (
     ALL_DATA_PARQUET, ROUND_INFO_CSV, PLAYER_DICT, TEGNUM_ROUNDS,
@@ -51,7 +59,11 @@ def load_all_data(exclude_teg_50: bool = True, exclude_incomplete_tegs: bool = F
     try:
         df = read_file(ALL_DATA_PARQUET)
     except Exception as e:
-        logger.error(f"Error loading data: {e}")
+        error_msg = f"Error loading data: {e}"
+        if HAS_STREAMLIT and st is not None:
+            st.error(error_msg)
+        else:
+            logger.error(error_msg)
         return pd.DataFrame()
 
     # Load round info data to get Area information
@@ -61,7 +73,11 @@ def load_all_data(exclude_teg_50: bool = True, exclude_incomplete_tegs: bool = F
         round_info_subset = round_info[['TEGNum', 'Round', 'Area']].copy()
         df = df.merge(round_info_subset, on=['TEGNum', 'Round'], how='left')
     except Exception as e:
-        logger.warning(f"Could not load round info for Area data: {e}")
+        warning_msg = f"Could not load round info for Area data: {e}"
+        if HAS_STREAMLIT and st is not None:
+            st.warning(warning_msg)
+        else:
+            logger.warning(warning_msg)
 
     # Ensure 'Year' is of integer type
     df['Year'] = df['Year'].astype('Int64')
