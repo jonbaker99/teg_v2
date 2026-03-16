@@ -41,6 +41,8 @@ The project has two main layers:
 
 2. **`streamlit/`** — The production Streamlit app (deployed on Railway), which currently uses its own `utils.py` rather than `teg_analysis/`. Migrating the Streamlit app to use `teg_analysis/` is a future goal.
 
+3. **`webapp/`** — FastAPI + HTMX + Jinja2 + Tailwind proof-of-concept. Not deployed; used locally to experiment with different UIs and visual styles. Run with `uvicorn webapp.app:app --reload` from the repo root.
+
 ### Streamlit App Structure
 - **Entry point**: `streamlit/nav.py` - Main navigation controller defining all pages
 - **Data utilities**: `streamlit/utils.py` - Core data loading and GitHub integration functions
@@ -187,4 +189,4 @@ Update NEXT_SESSION.md with a "Changes made" section that includes:
 
 ### general info
 - a 'teg' is a tournament. each teg consistents of a number of rounds (usually 4, with a few exceptions). each round consists of 18 holes. the 18 holes can be categorised as a 'front 9' (holes 1-9)  and 'back 9' (holes 10-18)
-- There are two competitions in each TEG, gross and net. Up to TEG 5, the net competition was based on total net vs par; from TEG 6 onwards the net competition was based on total stableford points
+- There are two competitions in each TEG, gross and net. Up to TEG 7, the net competition was based on total net vs par; from TEG 8 onwards the net competition was based on total stableford points

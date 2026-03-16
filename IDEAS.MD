@@ -35,21 +35,3 @@ Build a minimal site or script that exercises the `teg_analysis` package's API t
 ### Framework / platform choice
 Big question: is Streamlit + Railway the right long-term stack, or should we move to something else (NiceGUI, FastAPI + React, etc.)? Defer until the API layer is proven.
 
-### FastAPI + HTMX + Jinja2 + Tailwind PoC — `webapp/`
-A proof-of-concept web app has been built in `webapp/` to test the FastAPI + HTMX + Jinja2 + Tailwind stack and try out different visual styles / UIs.
-
-**Run it:**
-```bash
-# From repo root: /Users/jon/projects/teg/teg_v2
-uvicorn webapp.app:app --reload
-# Then visit http://localhost:8000
-```
-
-**What's included:**
-- `/leaderboard` — Net + Gross leaderboards for any TEG, with HTMX dropdown to switch TEGs without page reload
-- `/charts` — Cumulative Plotly charts (Stableford, Gross, Adjusted versions), switchable by TEG and chart type
-- `/records` — All records pages (TEG, Round, 9-Hole, Streaks, Score Counts) as HTMX tabs
-
-**Stack:** FastAPI routes → Jinja2 templates → Tailwind CSS (CDN) + HTMX (CDN) + Plotly.js (CDN). All data comes from `teg_analysis/` package via `lru_cache` wrappers in `webapp/deps.py`.
-
-**Purpose:** Use this to experiment with different visual styles, layouts, and UI patterns before committing to a full migration away from Streamlit.
