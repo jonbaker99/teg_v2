@@ -1,0 +1,16 @@
+<div>
+    {% for section in sections %}
+    {% if not loop.first %}
+    <hr class="divider--dotted my-6">
+    {% endif %}
+    <div>
+        <h2 class="text-xl heading mb-3">{{ section.title }}</h2>
+        <div class="overflow-x-auto">
+            {{ section.table_html | safe }}
+        </div>
+    </div>
+    {% endfor %}
+    {% if not sections %}
+    <p class="text-muted text-sm">No records data available.</p>
+    {% endif %}
+</div>

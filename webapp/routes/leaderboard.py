@@ -4,7 +4,9 @@ from pathlib import Path
 
 from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
+from markupsafe import escape
 
+from teg_analysis.constants import PLAYER_DICT
 from webapp.deps import (
     cached_round_data,
     create_leaderboard,
@@ -13,6 +15,9 @@ from webapp.deps import (
     get_available_teg_numbers,
     get_net_competition_measure,
 )
+
+# Reverse lookup: full name → player code
+_NAME_TO_CODE = {v: k for k, v in PLAYER_DICT.items()}
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
@@ -46,7 +51,12 @@ def _build_table_html(df):
             if col == 'Rank':
                 rows.append(f"<td class='col-rank'>{row[col]}</td>")
             elif col == 'Player':
-                rows.append(f"<td class='col-player'>{row[col]}</td>")
+                player_name = row[col]
+                code = _NAME_TO_CODE.get(player_name)
+                if code:
+                    rows.append(f"<td class='col-player'><a href='/player/{code}'>{escape(player_name)}</a></td>")
+                else:
+                    rows.append(f"<td class='col-player'>{escape(player_name)}</td>")
             elif col == 'Total':
                 rows.append(f"<td class='col-num total'>{row[col]}</td>")
             else:

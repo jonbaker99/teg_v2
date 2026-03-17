@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title_suffix %} — {{ player_name }}{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="mb-6">
+    <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center gap-3">
+            <h1 class="text-3xl heading">{{ player_name }}</h1>
+            <span class="badge-muted">{{ player_code }}</span>
+        </div>
+        <select class="teg-select"
+                onchange="window.location='/player/'+this.value">
+            {% for code, name in player_list %}
+            <option value="{{ code }}" {% if code == player_code %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <p class="text-sm text-secondary">{{ subtitle }}</p>
+</div>
+
+<!-- Stat Cards -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+    {% for card in stat_cards %}
+    <div class="stat-card">
+        <div class="stat-value">{{ card.value }}</div>
+        <div class="stat-label">{{ card.label }}</div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Trophy Cabinet -->
+{% if trophy_cabinet %}
+<div class="flex flex-wrap gap-2 mb-6">
+    {% for badge in trophy_cabinet %}
+    <span class="{% if badge.style == 'muted' %}badge-muted{% else %}badge{% endif %}"
+          {% if badge.tooltip %}title="{{ badge.tooltip }}"{% endif %}
+          style="cursor: default;">{{ badge.text }}</span>
+    {% endfor %}
+</div>
+{% endif %}
+
+<hr class="divider--dotted mb-6">
+
+<!-- Tab buttons -->
+<div class="flex flex-wrap gap-2 mb-4">
+    {% for tab_id, tab_label in tabs %}
+    <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
+            hx-get="/player/{{ player_code }}/tab/{{ tab_id }}"
+            hx-target="#tab-content"
+            hx-indicator="#player-loading"
+            onclick="document.querySelectorAll('.tab-underline').forEach(b=>b.classList.remove('tab-underline--active')); this.classList.add('tab-underline--active')">
+        {{ tab_label }}
+    </button>
+    {% endfor %}
+    <span id="player-loading" class="htmx-indicator ml-2 self-center">
+        <svg class="animate-spin h-5 w-5 accent-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+        </svg>
+    </span>
+</div>
+
+<div id="tab-content">
+    {% include "partials/player_overview.html" %}
+</div>
+{% endblock %}

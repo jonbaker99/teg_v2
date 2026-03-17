@@ -1,0 +1,26 @@
+<div>
+    {% for section in sections %}
+    {% if not loop.first %}
+    <hr class="divider--dotted my-6">
+    {% endif %}
+    <div>
+        <h2 class="text-xl heading mb-3">{{ section.title }}</h2>
+        {% if section.table_html %}
+        <div class="overflow-x-auto">
+            {{ section.table_html | safe }}
+        </div>
+        {% endif %}
+        {% if section.chart_json %}
+        <div class="card mt-3">
+            <div id="scoring-chart-{{ loop.index }}" style="width:100%; height:350px;"></div>
+            <script>
+                (function() {
+                    var figData = {{ section.chart_json | safe }};
+                    Plotly.newPlot('scoring-chart-{{ loop.index }}', figData.data, figData.layout, {responsive: true, displayModeBar: false});
+                })();
+            </script>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>

@@ -47,7 +47,8 @@
       "Bash(/Users/jon/projects/teg/teg_v2/venv/bin/python -m pytest tests/ -v 2>&1)",
       "Bash(/Users/jon/projects/teg/teg_v2/venv/bin/python -c \"from teg_analysis.analysis import format_vs_par, aggregate_data, get_teg_winners; print\\('Imports OK'\\)\")",
       "Bash(.venv/bin/python examples/api_coverage_test.py 2>&1)",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Bash(kill %1)"
     ],
     "deny": [],
     "ask": [

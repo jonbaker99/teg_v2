@@ -30,8 +30,44 @@ Build a minimal site or script that exercises the `teg_analysis` package's API t
 
 ---
 
+## WEBAPP — NEW PAGES
+
+### Player profiles (`/player/<name>`)
+Career stats, scoring trends, head-to-head records, best/worst rounds for a single player. Natural click-through destination from leaderboard and records pages.
+
+### Round/scorecard detail (`/teg/<n>/round/<r>`)
+Hole-by-hole scorecard for a given round. Detail view people would click through to from the leaderboard.
+
+### Head-to-head comparison (`/compare`)
+Pick two players, see side-by-side career stats — scoring averages, win records against each other, performance by course.
+
+---
+
+## WEBAPP — UI / DESIGN
+
+### Theme refinement / page title design pass
+Page titles at the top of the content area look incongruous across themes. Needs a typography hierarchy pass — spacing, font sizing, and page header treatment to feel cohesive.
+
+### Charts/visualisations on more pages
+The `/charts` page exists but leaderboard and records could benefit from inline sparklines or mini-charts (scoring trends, handicap progression over time).
+
+### Responsive / mobile polish
+Tables and stat cards need work on small screens if the webapp is to be shareable with other TEG participants.
+
+---
+
+## WEBAPP — FEATURES
+
+### Data filters / query controls
+Allow users to filter leaderboard/records by TEG range, player subset, or course — without reloading the page (HTMX swap).
+
+---
+
 ## FUTURE / DEFERRED
 
 ### Framework / platform choice
 Big question: is Streamlit + Railway the right long-term stack, or should we move to something else (NiceGUI, FastAPI + React, etc.)? Defer until the API layer is proven.
+
+### REST API / retire Streamlit
+Expose `teg_analysis/` as a proper REST API so other frontends (mobile, etc.) can consume the data. Once the webapp covers the same feature set, deprecate Streamlit and consolidate on a single frontend.
 
