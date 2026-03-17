@@ -28,7 +28,7 @@ LEADERBOARD_TABS = [
 ]
 
 
-def _build_table_html(df):
+def _build_table_html(df, teg_num: int = None):
     """Convert a leaderboard DataFrame to styled HTML."""
     rows = []
     rows.append("<table class='teg-table'>")
@@ -39,6 +39,9 @@ def _build_table_html(df):
             rows.append("<th class='col-rank'>#</th>")
         elif col == 'Player':
             rows.append("<th class='col-player'>Player</th>")
+        elif teg_num and col.startswith('R') and col[1:].isdigit():
+            round_num = col[1:]
+            rows.append(f"<th class='col-num'><a href='/scorecard?teg={teg_num}&round={round_num}' title='View scorecard'>{col}</a></th>")
         else:
             rows.append(f"<th class='col-num'>{col}</th>")
     rows.append("</tr></thead><tbody>")
@@ -114,12 +117,12 @@ def _leaderboard_context(teg_num: int, tab: str = "net") -> dict:
         # Select which table to show based on tab
         if tab == "gross":
             active_title = "Claret Jug (Gross vs Par)"
-            active_table = _build_table_html(gross_lb)
+            active_table = _build_table_html(gross_lb, teg_num)
             active_champion = gross_champion
             active_spoon = None
         else:
             active_title = net_title_label
-            active_table = _build_table_html(net_lb)
+            active_table = _build_table_html(net_lb, teg_num)
             active_champion = net_champion
             active_spoon = net_wooden_spoon
 

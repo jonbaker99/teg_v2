@@ -1,0 +1,36 @@
+{% if error %}
+<div class="error-box">{{ error }}</div>
+{% else %}
+<div>
+    <!-- Round selector -->
+    <div class="flex items-center gap-3 mb-4">
+        <label for="round-select" class="text-sm font-medium text-secondary">Round:</label>
+        <select id="round-select" name="round"
+                hx-get="/scorecard/content"
+                hx-target="#scorecard-content"
+                hx-include="#teg-select"
+                hx-indicator="#loading"
+                class="teg-select">
+            {% for r in rounds %}
+            <option value="{{ r }}" {% if r == selected_round %}selected{% endif %}>Round {{ r }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    {% if subheader %}
+    <p class="text-secondary mb-4">{{ subheader }}</p>
+    {% endif %}
+
+    <!-- Gross Scores -->
+    <h2 class="text-lg heading mb-2">Gross Scores</h2>
+    <div class="overflow-x-auto mb-8">
+        {{ gross_table | safe }}
+    </div>
+
+    <!-- Stableford Points -->
+    <h2 class="text-lg heading mb-2">Stableford Points</h2>
+    <div class="overflow-x-auto">
+        {{ stableford_table | safe }}
+    </div>
+</div>
+{% endif %}

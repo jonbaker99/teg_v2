@@ -9,6 +9,7 @@
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
     <link rel="stylesheet" href="/static/themes/base-vars.css">
     <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css">
+    {% block extra_head %}{% endblock %}
 </head>
 <body class="page-bg">
     <!-- Navigation -->
@@ -24,6 +25,10 @@
                     <a href="/charts"
                        class="nav-link {% if active_page == 'charts' %}active{% endif %}">
                         Charts
+                    </a>
+                    <a href="/scorecard"
+                       class="nav-link {% if active_page == 'scorecard' %}active{% endif %}">
+                        Scorecard
                     </a>
                     <a href="/records"
                        class="nav-link {% if active_page == 'records' %}active{% endif %}">
@@ -49,7 +54,7 @@
     </nav>
 
     <!-- Main content -->
-    <main class="main-content max-w-3xl mx-auto px-6 py-8 w-full" style="flex-grow: 1;">
+    <main class="main-content {% block main_class %}max-w-3xl{% endblock %} mx-auto px-6 py-8 w-full" style="flex-grow: 1;">
         {% block content %}{% endblock %}
     </main>
 

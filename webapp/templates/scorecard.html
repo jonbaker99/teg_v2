@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title_suffix %} — Scorecard{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="/static/scorecard.css">
+{% endblock %}
+
+{% block main_class %}max-w-6xl{% endblock %}
+
+{% block content %}
+<div class="scorecard-wrapper">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl heading">Scorecard</h1>
+        <div class="flex items-center gap-3">
+            <label for="teg-select" class="text-sm font-medium text-secondary">TEG:</label>
+            <select id="teg-select" name="teg"
+                    hx-get="/scorecard/content"
+                    hx-target="#scorecard-content"
+                    hx-vals='{"round": 1}'
+                    hx-indicator="#loading"
+                    class="teg-select">
+                {% for t in teg_numbers %}
+                <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
+                {% endfor %}
+            </select>
+            <span id="loading" class="htmx-indicator">
+                <svg class="animate-spin h-5 w-5 accent-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+            </span>
+        </div>
+    </div>
+
+    <div id="scorecard-content">
+        {% include "partials/scorecard_content.html" %}
+    </div>
+</div>
+{% endblock %}

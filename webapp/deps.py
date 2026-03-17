@@ -125,6 +125,13 @@ def get_available_teg_numbers() -> list[int]:
     return sorted(df['TEGNum'].unique().tolist())
 
 
+def get_rounds_for_teg(teg_num: int) -> list[int]:
+    """Get sorted list of round numbers for a given TEG."""
+    df = cached_round_data()
+    teg_df = df[df['TEGNum'] == teg_num]
+    return sorted(teg_df['Round'].unique().tolist())
+
+
 def get_filtered_teg_data():
     """Get complete TEG data excluding TEG 2 (only 3 rounds)."""
     df = cached_complete_teg_data()

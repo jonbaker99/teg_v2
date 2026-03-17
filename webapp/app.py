@@ -7,7 +7,7 @@ from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from webapp.routes import leaderboard, charts, records, showcase, player
+from webapp.routes import leaderboard, charts, records, showcase, player, scorecard
 from webapp.theme import get_theme, THEMES
 
 app = FastAPI(title="TEG Stats")
@@ -32,6 +32,7 @@ app.include_router(charts.router)
 app.include_router(records.router)
 app.include_router(showcase.router)
 app.include_router(player.router)
+app.include_router(scorecard.router)
 
 
 @app.get("/")
