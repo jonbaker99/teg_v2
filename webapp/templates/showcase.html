@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+{% block title_suffix %} — Showcase{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl heading mb-6">UI Showcase</h1>
+<p class="text-muted mb-6">Component gallery for evaluating themes. Switch themes using the selector in the nav bar.</p>
+
+<!-- ── Typography ── -->
+<section class="section-gap">
+    <h2 class="text-lg subheading mb-3">Typography</h2>
+    <div class="card">
+        <h1 class="heading text-2xl mb-2">Heading 1</h1>
+        <h2 class="heading text-xl mb-2">Heading 2</h2>
+        <h3 class="heading text-lg mb-2">Heading 3</h3>
+        <h4 class="heading text-base mb-3">Heading 4</h4>
+        <p class="mb-1">Body text — The quick brown fox jumps over the lazy dog.</p>
+        <p class="text-secondary mb-1">Secondary text — supplementary information.</p>
+        <p class="text-muted">Muted text — captions, footnotes, timestamps.</p>
+    </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── Table ── -->
+<section class="section-gap">
+    <h2 class="text-lg subheading mb-3">Table</h2>
+    <div class="overflow-x-auto">
+        <table class="teg-table">
+            <thead>
+                <tr>
+                    <th class="col-rank">#</th>
+                    <th class="col-player">Player</th>
+                    <th class="col-num">R1</th>
+                    <th class="col-num">R2</th>
+                    <th class="col-num">R3</th>
+                    <th class="col-num">R4</th>
+                    <th class="col-num">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="top-rank">
+                    <td class="col-rank">1</td>
+                    <td class="col-player">Baker</td>
+                    <td class="col-num">+3</td>
+                    <td class="col-num">+1</td>
+                    <td class="col-num">+4</td>
+                    <td class="col-num">+2</td>
+                    <td class="col-num total">+10</td>
+                </tr>
+                <tr>
+                    <td class="col-rank">2</td>
+                    <td class="col-player">Smith</td>
+                    <td class="col-num">+5</td>
+                    <td class="col-num">+2</td>
+                    <td class="col-num">+3</td>
+                    <td class="col-num">+4</td>
+                    <td class="col-num total">+14</td>
+                </tr>
+                <tr>
+                    <td class="col-rank">3</td>
+                    <td class="col-player">Jones</td>
+                    <td class="col-num">+6</td>
+                    <td class="col-num">+4</td>
+                    <td class="col-num">+2</td>
+                    <td class="col-num">+5</td>
+                    <td class="col-num total">+17</td>
+                </tr>
+                <tr>
+                    <td class="col-rank">4</td>
+                    <td class="col-player">Williams</td>
+                    <td class="col-num">+7</td>
+                    <td class="col-num">+5</td>
+                    <td class="col-num">+6</td>
+                    <td class="col-num">+3</td>
+                    <td class="col-num total">+21</td>
+                </tr>
+                <tr>
+                    <td class="col-rank">5</td>
+                    <td class="col-player">Brown</td>
+                    <td class="col-num">+8</td>
+                    <td class="col-num">+6</td>
+                    <td class="col-num">+5</td>
+                    <td class="col-num">+7</td>
+                    <td class="col-num total">+26</td>
+                </tr>
+                <tr>
+                    <td class="col-rank">6</td>
+                    <td class="col-player">Taylor</td>
+                    <td class="col-num">+9</td>
+                    <td class="col-num">+7</td>
+                    <td class="col-num">+8</td>
+                    <td class="col-num">+6</td>
+                    <td class="col-num total">+30</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── Buttons ── -->
+<section class="section-gap">
+    <h2 class="text-lg subheading mb-3">Buttons</h2>
+    <div class="mb-4">
+        <h3 class="text-sm font-medium text-secondary mb-2">Pill tabs</h3>
+        <div class="flex flex-wrap gap-2">
+            <button class="tab-btn tab-btn--active">Active</button>
+            <button class="tab-btn">Inactive</button>
+            <button class="tab-btn">Another</button>
+        </div>
+    </div>
+    <div>
+        <h3 class="text-sm font-medium text-secondary mb-2">Underline tabs</h3>
+        <div class="flex flex-wrap gap-2 border-b pb-1" style="border-color: var(--table-cell-border);">
+            <button class="tab-underline tab-underline--active">Active</button>
+            <button class="tab-underline">Inactive</button>
+            <button class="tab-underline">Another</button>
+        </div>
+    </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── Form Controls ── -->
+<section class="section-gap">
+    <h2 class="text-lg subheading mb-3">Form Controls</h2>
+    <div class="flex items-center gap-3">
+        <label for="showcase-select" class="text-sm font-medium text-secondary">Select:</label>
+        <select id="showcase-select" class="teg-select">
+            <option>Option 1</option>
+            <option>Option 2</option>
+            <option>Option 3</option>
+        </select>
+    </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── Stat Cards ── -->
+<section class="section-gap">
+    <h2 class="text-lg subheading mb-3">Stat Cards</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="stat-card">
+            <div class="stat-value">14</div>
+            <div class="stat-label">TEG</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">Baker</div>
+            <div class="stat-label">Net Champion</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">Smith</div>
+            <div class="stat-label">Gross Champion</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">Jones</div>
+            <div class="stat-label">Wooden Spoon</div>
+        </div>
+    </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── Badges ── -->
+<section class="section-gap">
+    <h2 class="text-lg subheading mb-3">Badges</h2>
+    <div class="flex items-center gap-4">
+        <span>Champion <span class="badge">Winner</span></span>
+        <span>Round 3 <span class="badge-muted">In Progress</span></span>
+    </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── Cards ── -->
+<section class="section-gap">
+    <h2 class="text-lg subheading mb-3">Cards</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="card">
+            <h3 class="heading text-base mb-1">Card Title</h3>
+            <p class="text-secondary text-sm">Card content with secondary text. Cards use the theme's background, border-radius, and shadow.</p>
+        </div>
+        <div class="card">
+            <h3 class="heading text-base mb-1">Another Card</h3>
+            <p class="text-muted text-sm">Muted text inside a card to show contrast against the card background.</p>
+        </div>
+    </div>
+</section>
+
+<hr class="divider">
+
+<!-- ── Dividers ── -->
+<section class="section-gap">
+    <h2 class="text-lg subheading mb-3">Dividers</h2>
+    <p class="text-sm text-secondary mb-2">Content above the divider.</p>
+    <hr class="divider">
+    <p class="text-sm text-secondary">Content below the divider.</p>
+</section>
+{% endblock %}

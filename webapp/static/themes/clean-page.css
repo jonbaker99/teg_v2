@@ -1,0 +1,28 @@
+/* Clean Page — Clean theme + warm grey background with white content card */
+@import url('clean.css');
+
+:root {
+    --bg-page: #f5f3f0;
+    --footer-bg: #f5f3f0;
+}
+
+/* Force page background — Tailwind resets can override CSS variables */
+body.page-bg {
+    background-color: #f5f3f0 !important;
+}
+
+/* Thin border separating nav from the grey background */
+.nav {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* Content area as a white card floating on the grey background */
+.main-content {
+    background: #ffffff;
+    border-radius: 0.25rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+}

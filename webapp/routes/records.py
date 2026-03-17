@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+import pandas as pd
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 
@@ -36,19 +37,84 @@ TABS = [
     ("score_counts", "Score Counts"),
 ]
 
+# Columns that should be right-aligned (numeric content)
+_NUMERIC_COLS = {
+    'Score', 'Gross', 'Net', 'Stableford', 'Pts', 'Points', 'Total',
+    'Vs Par', 'GrossVP', 'NetVP', 'Count', 'Rounds', 'TEGs',
+    'Streak', 'Length', 'Best', 'Worst', 'Avg', 'Average',
+}
 
-def _df_to_html(df):
-    """Convert a DataFrame to a styled HTML table."""
+# Columns that should be centered (rank-like)
+_RANK_COLS = {'Rank', '#', ''}
+
+
+def _build_records_html(df: pd.DataFrame) -> str:
+    """Convert a records DataFrame to a styled HTML table with alignment classes."""
     if df is None or df.empty:
-        return "<p class='text-gray-500 text-sm'>No data available.</p>"
-    return df.to_html(escape=False, index=False, classes="records-table")
+        return "<p class='text-muted text-sm'>No data available.</p>"
+
+    cols = list(df.columns)
+    # Determine which column index holds the score value (first numeric-like column)
+    value_col_idx = None
+    for i, col in enumerate(cols):
+        col_str = str(col).strip()
+        if col_str in _NUMERIC_COLS or (col_str in _RANK_COLS and i > 0) or _looks_numeric(df, col):
+            value_col_idx = i
+            break
+
+    rows = []
+    rows.append("<table class='records-table records-table--borderless'>")
+
+    prev_title = None
+    for _, row in df.iterrows():
+        title_val = row[cols[0]]
+        if title_val != prev_title:
+            if prev_title is not None:
+                rows.append("</tbody>")
+            rows.append("<tbody>")
+            prev_title = title_val
+            show_title = True
+        else:
+            show_title = False
+
+        rows.append("<tr>")
+        for i, col in enumerate(cols):
+            val = row[col]
+            if i == 0:
+                if show_title:
+                    rows.append(f"<td class='col-player'>{val}</td>")
+                else:
+                    rows.append("<td class='col-player'></td>")
+            elif i == value_col_idx:
+                rows.append(f"<td class='col-num' style='font-weight:700'>{val}</td>")
+            else:
+                rows.append(f"<td class='col-player'>{val}</td>")
+        rows.append("</tr>")
+
+    rows.append("</tbody></table>")
+    return "".join(rows)
+
+
+def _looks_numeric(df: pd.DataFrame, col: str) -> bool:
+    """Check if a column's non-null values are numeric."""
+    try:
+        sample = df[col].dropna().head(5)
+        if sample.empty:
+            return False
+        if pd.api.types.is_numeric_dtype(sample):
+            return True
+        # Try converting string values
+        pd.to_numeric(sample.astype(str).str.replace('=', '', regex=False), errors='raise')
+        return True
+    except (ValueError, TypeError):
+        return False
 
 
 def _section(title: str, df) -> dict:
     """Build a section dict with title, HTML table and record count."""
     return {
         "title": title,
-        "table_html": _df_to_html(df),
+        "table_html": _build_records_html(df),
         "record_count": len(df) if df is not None and not df.empty else 0,
     }
 

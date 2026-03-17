@@ -52,6 +52,11 @@
     --select-bg: #fffef8;
     --select-border: #d4c9a8;
     --select-focus-ring: #c8a951;
+
+    /* Table stripe/border */
+    --table-stripe-bg: #f7f3e8;
+    --table-cell-border-width: 1px;
+    --table-header-border-width: 2px;
 }
 
 /* Augusta-specific: top-rank left border */

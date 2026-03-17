@@ -29,7 +29,7 @@
 <div class="flex flex-wrap gap-2 mb-4">
     <input type="hidden" id="chart-type-input" name="type" value="{{ selected_type }}">
     {% for type_id, type_label in chart_types %}
-    <button class="{% if type_id == selected_type %}btn-active{% else %}btn-inactive{% endif %}"
+    <button class="tab-underline{% if type_id == selected_type %} tab-underline--active{% endif %}"
             onclick="document.getElementById('chart-type-input').value='{{ type_id }}'"
             hx-get="/charts/figure"
             hx-target="#chart-container"

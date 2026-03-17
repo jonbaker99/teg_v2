@@ -13,9 +13,9 @@
 <body class="page-bg">
     <!-- Navigation -->
     <nav class="nav">
-        <div class="max-w-6xl mx-auto px-4">
+        <div class="px-6">
             <div class="flex items-center justify-between h-14">
-                <a href="/" class="nav-brand">TEG Stats</a>
+                <a href="/" class="nav-brand">The El Golfo</a>
                 <div class="flex items-center space-x-1">
                     <a href="/leaderboard"
                        class="nav-link {% if active_page == 'leaderboard' %}active{% endif %}">
@@ -29,6 +29,10 @@
                        class="nav-link {% if active_page == 'records' %}active{% endif %}">
                         Records
                     </a>
+                    <a href="/showcase"
+                       class="nav-link {% if active_page == 'showcase' %}active{% endif %}">
+                        Showcase
+                    </a>
                     <select class="theme-select ml-3"
                             onchange="document.cookie='theme='+this.value+';path=/;max-age=31536000';location.reload()">
                         {% for tid, tlabel in request.state.themes %}
@@ -41,7 +45,7 @@
     </nav>
 
     <!-- Main content -->
-    <main class="max-w-6xl mx-auto px-4 py-6">
+    <main class="main-content max-w-3xl mx-auto px-6 py-8 w-full" style="flex-grow: 1;">
         {% block content %}{% endblock %}
     </main>
 
@@ -49,5 +53,27 @@
     <footer class="page-footer">
         TEG Stats &mdash; Golf tournament data since TEG 1
     </footer>
+
+    <script>
+    // Sticky nav that slides off screen after scrolling past threshold
+    (function() {
+        var nav = document.querySelector('.nav');
+        var navHeight = nav.offsetHeight;
+        var threshold = 300;
+        nav.style.position = 'sticky';
+        nav.style.top = '0';
+        nav.style.transition = 'none';
+        window.addEventListener('scroll', function() {
+            var y = window.scrollY;
+            if (y <= threshold) {
+                nav.style.top = '0';
+            } else {
+                // Slide nav upward as you scroll past threshold
+                var offset = Math.min(y - threshold, navHeight);
+                nav.style.top = -offset + 'px';
+            }
+        }, { passive: true });
+    })();
+    </script>
 </body>
 </html>

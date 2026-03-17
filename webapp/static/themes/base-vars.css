@@ -13,17 +13,20 @@ h1, h2, h3, h4, h5, h6 {
     background-color: var(--bg-page);
     color: var(--text-primary);
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* ── Navigation ── */
 .nav {
     background-color: var(--nav-bg);
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    z-index: 50;
 }
 .nav-brand {
     color: var(--nav-active-text);
     font-weight: 700;
-    font-size: 1.125rem;
+    font-size: 1.625rem;
     text-decoration: none;
     font-family: var(--font-heading), sans-serif;
 }
@@ -77,16 +80,23 @@ h1, h2, h3, h4, h5, h6 {
 }
 .teg-table thead th {
     background-color: var(--table-header-bg);
-    padding: 0.5rem 0.75rem;
+    padding: 0.75rem;
     text-align: left;
     font-weight: 600;
-    border-bottom: 2px solid var(--table-header-border);
+    border-bottom: var(--table-header-border-width, 2px) solid var(--table-header-border);
     white-space: nowrap;
 }
+.teg-table thead th.col-rank,
+.teg-table thead th.col-num {
+    text-align: center;
+}
 .teg-table tbody td {
-    padding: 0.4rem 0.75rem;
-    border-bottom: 1px solid var(--table-cell-border);
+    padding: 0.75rem;
+    border-bottom: var(--table-cell-border-width, 1px) solid var(--table-cell-border);
     white-space: nowrap;
+}
+.teg-table tbody tr:nth-child(even) {
+    background-color: var(--table-stripe-bg, transparent);
 }
 .teg-table tbody tr:hover {
     background-color: var(--table-hover-bg);
@@ -109,20 +119,116 @@ h1, h2, h3, h4, h5, h6 {
 }
 .records-table thead th {
     background-color: var(--table-header-bg);
-    padding: 0.5rem 0.75rem;
+    padding: 0.75rem;
     text-align: left;
     font-weight: 600;
-    border-bottom: 2px solid var(--table-header-border);
+    border-bottom: var(--table-header-border-width, 2px) solid var(--table-header-border);
 }
 .records-table tbody td {
-    padding: 0.4rem 0.75rem;
-    border-bottom: 1px solid var(--table-cell-border);
+    padding: 0.75rem;
+    border-bottom: var(--table-cell-border-width, 1px) solid var(--table-cell-border);
+}
+
+/* Borderless records variant — editorial style, no grid lines */
+.records-table--borderless {
+    width: auto;
+}
+.records-table--borderless thead th {
+    background-color: transparent;
+    border-bottom: none;
+}
+.records-table--borderless tbody td {
+    border-bottom: none;
+    padding: 0.5rem 0.75rem;
+    white-space: nowrap;
+}
+.records-table--borderless .col-rank {
+    width: auto;
+}
+.records-table tbody tr:nth-child(even) {
+    background-color: var(--table-stripe-bg, transparent);
 }
 .records-table tbody tr:hover {
     background-color: var(--table-hover-bg);
 }
+/* Borderless: no stripes, highlight entire record group on hover */
+.records-table--borderless tbody tr:nth-child(even) {
+    background-color: transparent;
+}
+.records-table--borderless tbody:hover tr {
+    background-color: var(--table-hover-bg, #f5f5f5);
+}
+
+/* ── Column alignment classes ── */
+.col-rank {
+    text-align: center;
+    width: 2rem;
+}
+.col-num {
+    text-align: center;
+    width: 12%;
+    min-width: 3.5rem;
+    max-width: 6rem;
+}
+.col-player {
+    text-align: left;
+}
 
 /* ── Buttons / Tabs ── */
+.tab-btn {
+    background-color: var(--btn-inactive-bg);
+    color: var(--btn-inactive-text);
+    border: 1px solid var(--select-border);
+    border-radius: var(--btn-border-radius);
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+}
+.tab-btn:hover {
+    background-color: var(--table-hover-bg, var(--btn-inactive-bg));
+    color: var(--text-primary);
+}
+.tab-btn:focus-visible {
+    outline: 2px solid var(--select-focus-ring, var(--accent));
+    outline-offset: 2px;
+}
+.tab-btn--active,
+.tab-btn--active:hover {
+    background-color: var(--btn-active-bg);
+    color: var(--btn-active-text);
+    border-color: var(--btn-active-bg);
+}
+
+/* Underline tab variant */
+.tab-underline {
+    background: transparent;
+    color: var(--btn-inactive-text);
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+}
+.tab-underline:hover {
+    color: var(--text-primary);
+    border-bottom-color: var(--text-muted);
+}
+.tab-underline:focus-visible {
+    outline: 2px solid var(--select-focus-ring, var(--accent));
+    outline-offset: 2px;
+}
+.tab-underline--active,
+.tab-underline--active:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+/* Legacy aliases — use .tab-btn / .tab-btn--active instead */
 .btn-active {
     background-color: var(--btn-active-bg);
     color: var(--btn-active-text);
@@ -145,7 +251,8 @@ h1, h2, h3, h4, h5, h6 {
     transition: background-color 0.15s;
 }
 .btn-inactive:hover {
-    opacity: 0.85;
+    background-color: var(--table-hover-bg, var(--btn-inactive-bg));
+    color: var(--text-primary);
 }
 
 /* ── Selects ── */
@@ -155,6 +262,7 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 0.375rem;
     padding: 0.375rem 0.75rem;
     font-size: 0.875rem;
+    color: var(--text-primary);
 }
 .teg-select:focus {
     outline: none;
@@ -170,6 +278,10 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0.25rem 0.5rem;
     font-size: 0.75rem;
     cursor: pointer;
+}
+.theme-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--select-focus-ring, var(--accent));
 }
 .theme-select option {
     background-color: var(--nav-bg);
@@ -255,6 +367,11 @@ h1, h2, h3, h4, h5, h6 {
     border-top: 1px solid var(--divider-color, var(--table-cell-border));
     margin: 1rem 0;
 }
+.divider--dotted {
+    border: none;
+    border-top: 1px dotted var(--divider-color, var(--table-cell-border));
+    margin: 1.5rem 0;
+}
 
 /* ── Page Footer ── */
 .page-footer {
@@ -263,7 +380,15 @@ h1, h2, h3, h4, h5, h6 {
     text-align: center;
     padding: 0.75rem 1rem;
     font-size: 0.75rem;
-    margin-top: 3rem;
+    margin-top: auto;
+}
+
+/* ── Layout utilities ── */
+.section-gap {
+    margin-bottom: 1.5rem;
+}
+.section-gap-sm {
+    margin-bottom: 1rem;
 }
 
 /* ── Chart description ── */

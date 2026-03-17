@@ -60,6 +60,11 @@
     --badge-muted-text: #777777;
 
     --divider-color: #e8e8e8;
+
+    /* Table stripe/border */
+    --table-stripe-bg: #f5f5f5;
+    --table-cell-border-width: 1px;
+    --table-header-border-width: 2px;
 }
 
 /* Tighter spacing overrides */

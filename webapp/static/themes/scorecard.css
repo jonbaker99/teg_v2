@@ -63,6 +63,11 @@
     --badge-muted-text: #7a7a66;
 
     --divider-color: #b8b3a2;
+
+    /* Table stripe/border */
+    --table-stripe-bg: #ece8dc;
+    --table-cell-border-width: 1px;
+    --table-header-border-width: 2px;
 }
 
 /* Heavy borders on every table cell for scorecard feel */

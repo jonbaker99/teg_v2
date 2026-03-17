@@ -17,15 +17,25 @@ from webapp.deps import (
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
+LEADERBOARD_TABS = [
+    ("net", "Net"),
+    ("gross", "Gross"),
+]
+
 
 def _build_table_html(df):
     """Convert a leaderboard DataFrame to styled HTML."""
     rows = []
     rows.append("<table class='teg-table'>")
-    # Header — skip Rank column header but keep the cell
-    rows.append("<thead><tr><th></th>")
-    for col in df.columns[1:]:
-        rows.append(f"<th>{col}</th>")
+    # Header
+    rows.append("<thead><tr>")
+    for col in df.columns:
+        if col == 'Rank':
+            rows.append("<th class='col-rank'>#</th>")
+        elif col == 'Player':
+            rows.append("<th class='col-player'>Player</th>")
+        else:
+            rows.append(f"<th class='col-num'>{col}</th>")
     rows.append("</tr></thead><tbody>")
 
     for _, row in df.iterrows():
@@ -33,8 +43,14 @@ def _build_table_html(df):
         row_class = ' class="top-rank"' if rank_str.replace('=', '') == '1' else ''
         rows.append(f"<tr{row_class}>")
         for col in df.columns:
-            td_class = ' class="total"' if col == 'Total' else ''
-            rows.append(f"<td{td_class}>{row[col]}</td>")
+            if col == 'Rank':
+                rows.append(f"<td class='col-rank'>{row[col]}</td>")
+            elif col == 'Player':
+                rows.append(f"<td class='col-player'>{row[col]}</td>")
+            elif col == 'Total':
+                rows.append(f"<td class='col-num total'>{row[col]}</td>")
+            else:
+                rows.append(f"<td class='col-num'>{row[col]}</td>")
         rows.append("</tr>")
 
     rows.append("</tbody></table>")
@@ -56,8 +72,8 @@ def _get_wooden_spoon(df):
     return ', '.join(losers) if losers else None
 
 
-def _leaderboard_context(teg_num: int) -> dict:
-    """Build template context for a given TEG number."""
+def _leaderboard_context(teg_num: int, tab: str = "net") -> dict:
+    """Build template context for a given TEG number and tab."""
     try:
         rd_data = cached_round_data()
         teg_rd = rd_data[rd_data['TEGNum'] == teg_num]
@@ -73,7 +89,6 @@ def _leaderboard_context(teg_num: int) -> dict:
         net_champion = _get_champion(net_lb)
         net_wooden_spoon = _get_wooden_spoon(net_lb)
 
-        # Format values
         for col in [c for c in net_lb.columns if c not in ['Rank', 'Player']]:
             net_lb[col] = net_lb[col].apply(lambda x: format_value(x, net_measure))
 
@@ -86,14 +101,23 @@ def _leaderboard_context(teg_num: int) -> dict:
         for col in [c for c in gross_lb.columns if c not in ['Rank', 'Player']]:
             gross_lb[col] = gross_lb[col].apply(lambda x: format_value(x, 'GrossVP'))
 
+        # Select which table to show based on tab
+        if tab == "gross":
+            active_title = "Claret Jug (Gross vs Par)"
+            active_table = _build_table_html(gross_lb)
+            active_champion = gross_champion
+            active_spoon = None
+        else:
+            active_title = net_title_label
+            active_table = _build_table_html(net_lb)
+            active_champion = net_champion
+            active_spoon = net_wooden_spoon
+
         return {
-            "net_title": net_title_label,
-            "net_table": _build_table_html(net_lb),
-            "net_champion": net_champion,
-            "net_wooden_spoon": net_wooden_spoon,
-            "gross_title": "Claret Jug (Gross vs Par)",
-            "gross_table": _build_table_html(gross_lb),
-            "gross_champion": gross_champion,
+            "active_title": active_title,
+            "active_table": active_table,
+            "active_champion": active_champion,
+            "active_spoon": active_spoon,
         }
     except Exception as e:
         return {"error": str(e)}
@@ -103,21 +127,25 @@ def _leaderboard_context(teg_num: int) -> dict:
 async def leaderboard_page(request: Request):
     teg_num = get_default_teg_num()
     teg_numbers = get_available_teg_numbers()
-    ctx = _leaderboard_context(teg_num)
+    ctx = _leaderboard_context(teg_num, tab="net")
     return templates.TemplateResponse("leaderboard.html", {
         "request": request,
         "active_page": "leaderboard",
         "teg_numbers": teg_numbers,
         "selected_teg": teg_num,
+        "leaderboard_tabs": LEADERBOARD_TABS,
+        "active_lb_tab": "net",
         **ctx,
     })
 
 
 @router.get("/leaderboard/table")
-async def leaderboard_table(request: Request, teg: int = Query(...)):
-    ctx = _leaderboard_context(teg)
+async def leaderboard_table(request: Request, teg: int = Query(...), tab: str = Query("net")):
+    ctx = _leaderboard_context(teg, tab=tab)
     return templates.TemplateResponse("partials/leaderboard_table.html", {
         "request": request,
         "selected_teg": teg,
+        "active_lb_tab": tab,
+        "leaderboard_tabs": LEADERBOARD_TABS,
         **ctx,
     })

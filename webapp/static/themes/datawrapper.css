@@ -66,6 +66,11 @@
     --badge-muted-text: #999999;
 
     --divider-color: #eeeeee;
+
+    /* Table stripe/border — Datawrapper: no striping */
+    --table-stripe-bg: transparent;
+    --table-cell-border-width: 1px;
+    --table-header-border-width: 1px;
 }
 
 /* Datawrapper tables: top border only on header, no bg fill */

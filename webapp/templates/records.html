@@ -2,12 +2,12 @@
 {% block title_suffix %} — Records{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl heading mb-6">Records</h1>
+<h1 class="text-3xl heading mb-6">Records</h1>
 
 <!-- Tab buttons -->
-<div class="flex flex-wrap gap-1 mb-4 border-b pb-2" style="border-color: var(--table-cell-border);">
+<div class="flex flex-wrap gap-2 mb-4">
     {% for tab_id, tab_label in tabs %}
-    <button class="{% if tab_id == active_tab %}btn-active{% else %}btn-inactive{% endif %}"
+    <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
             hx-get="/records/tab/{{ tab_id }}"
             hx-target="#tab-content"
             hx-indicator="#records-loading">

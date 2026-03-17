@@ -1,15 +1,13 @@
 {% if error %}
 <div class="error-box">{{ error }}</div>
 {% else %}
-<div class="space-y-6">
+<div>
     {% for section in sections %}
+    {% if not loop.first %}
+    <hr class="divider--dotted">
+    {% endif %}
     <div>
-        <h2 class="text-lg subheading mb-2">
-            {{ section.title }}
-            {% if section.record_count is defined and section.record_count %}
-            <span class="badge-muted">{{ section.record_count }}</span>
-            {% endif %}
-        </h2>
+        <h2 class="text-xl heading mb-3">{{ section.title }}</h2>
         <div class="overflow-x-auto">
             {{ section.table_html | safe }}
         </div>

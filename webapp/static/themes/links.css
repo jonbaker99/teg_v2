@@ -52,6 +52,11 @@
     --select-bg: #ffffff;
     --select-border: #e2e8f0;
     --select-focus-ring: #4f46e5;
+
+    /* Table stripe/border */
+    --table-stripe-bg: #f1f5f9;
+    --table-cell-border-width: 1px;
+    --table-header-border-width: 2px;
 }
 
 /* Links-specific: nav bottom border instead of shadow */

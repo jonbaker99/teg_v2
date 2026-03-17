@@ -1,6 +1,8 @@
 """Theme management for TEG webapp."""
 
 THEMES = [
+    ("clean", "Clean"),
+    ("clean-page", "Clean Page"),
     # Minimalist variations
     ("terminal", "Terminal"),
     ("ink", "Ink"),
@@ -21,7 +23,7 @@ THEMES = [
 ]
 
 THEME_IDS = {t[0] for t in THEMES}
-DEFAULT_THEME = "terminal"
+DEFAULT_THEME = "clean"
 
 
 def get_theme(request) -> str:
@@ -43,6 +45,8 @@ _DARK_GRID = dict(gridcolor="#333")
 
 PLOTLY_THEMES = {
     # Minimalist
+    "clean": _LIGHT,
+    "clean-page": _LIGHT,
     "terminal": _LIGHT,
     "ink": {
         "paper_bgcolor": "#242424",

@@ -63,4 +63,9 @@
     --badge-muted-text: #697386;
 
     --divider-color: #e3e8ee;
+
+    /* Table stripe/border */
+    --table-stripe-bg: #f9fbfd;
+    --table-cell-border-width: 1px;
+    --table-header-border-width: 2px;
 }

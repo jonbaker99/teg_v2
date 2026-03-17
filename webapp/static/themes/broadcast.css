@@ -52,6 +52,11 @@
     --select-bg: #1a1a2e;
     --select-border: #3a3a4e;
     --select-focus-ring: #00d4ff;
+
+    /* Table stripe/border — broadcast uses its own nth-child override */
+    --table-stripe-bg: transparent;
+    --table-cell-border-width: 1px;
+    --table-header-border-width: 2px;
 }
 
 /* Broadcast-specific: uppercase nav */
@@ -59,7 +64,7 @@
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
-.btn-active, .btn-inactive {
+.btn-active, .btn-inactive, .tab-btn {
     text-transform: uppercase;
     letter-spacing: 0.03em;
 }
