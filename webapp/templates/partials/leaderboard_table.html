@@ -6,8 +6,10 @@
     {% if active_champion %}
     <p class="mb-3">Champion: <span class="font-bold">{{ active_champion }}</span>{% if active_spoon %} | Wooden spoon: <span class="font-bold">{{ active_spoon }}</span>{% endif %}</p>
     {% endif %}
-    <div class="overflow-x-auto">
+    <div class="data-card"> 
+        <div class="overflow-x-auto">
         {{ active_table | safe }}
+        </div>
     </div>
 </div>
 {% endif %}
