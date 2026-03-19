@@ -615,6 +615,11 @@ body.ts-f5 .page-title-area .page-title {
     margin-bottom: 1rem;
 }
 
+/* ── Data card — styled by layered themes; transparent by default ── */
+.data-card {
+    /* no default styling — themed in clean-layered and future layered themes */
+}
+
 /* ── Chart description ── */
 .chart-description {
     color: var(--text-muted);
