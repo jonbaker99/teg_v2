@@ -505,6 +505,19 @@ body.ts-c3 .page-title-area .page-title {
     margin: 0 auto;
 }
 
+/* Page panel — transparent wrapper; themed in layered themes */
+.page-panel {
+    flex-grow: 1;
+}
+
+/* Content wrapper — width constraints (replaces former .mx-auto inline styles) */
+.content-wrapper {
+    width: fit-content;
+    min-width: min(800px, 90vw);
+    max-width: min(90vw, 1280px);
+    margin: 0 auto;
+}
+
 /* C1/C2/C3 — full viewport width, flush below navbar */
 body.ts-c1 .page-title-outer,
 body.ts-c2 .page-title-outer,
@@ -515,17 +528,21 @@ body.ts-c3 .page-title-outer {
     margin: 0;
 }
 
-/* F1/F2/F3 — band caps the white card (card-top layout) */
+/* F1/F2/F3/F4/F5 — band caps the white card (card-top layout) */
 body.ts-f1 .page-title-area,
 body.ts-f2 .page-title-area,
-body.ts-f3 .page-title-area {
+body.ts-f3 .page-title-area,
+body.ts-f4 .page-title-area,
+body.ts-f5 .page-title-area {
     margin-top: 1.5rem;
     padding: 0.875rem 2.5rem;
     border-radius: 0.25rem 0.25rem 0 0;
 }
 body.ts-f1 .main-content,
 body.ts-f2 .main-content,
-body.ts-f3 .main-content {
+body.ts-f3 .main-content,
+body.ts-f4 .main-content,
+body.ts-f5 .main-content {
     margin-top: 0 !important;
     border-radius: 0 0 0.25rem 0.25rem !important;
 }
@@ -541,6 +558,42 @@ body.ts-f2 .page-title-area .page-title  { color: #228B22; }
 body.ts-f3 .page-title-area { background: #e8e5e0; border-bottom: 1px solid #d0cdc8; }
 body.ts-f3 .page-title-area .page-label { color: #666; }
 body.ts-f3 .page-title-area .page-title  { color: #111; }
+/* F4: grey band, green text, inline layout (title left, category right) */
+body.ts-f4 .page-title-area {
+    background: #e8e5e0;
+    border-bottom: 1px solid #d0cdc8;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+body.ts-f4 .page-title-area .page-label {
+    order: 2;
+    color: #228B22;
+    opacity: 0.8;
+    margin-bottom: 0;
+}
+body.ts-f4 .page-title-area .page-title {
+    order: 1;
+    color: #228B22;
+}
+
+/* F5: green card, white title, light green category (inline layout) */
+body.ts-f5 .page-title-area {
+    background: #228B22;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+body.ts-f5 .page-title-area .page-label {
+    order: 2;
+    color: #7ec87e;
+    margin-bottom: 0;
+}
+body.ts-f5 .page-title-area .page-title {
+    order: 1;
+    color: #ffffff;
+}
+
 
 /* ── Section Title (in-page, Option D style) ── */
 .section-title {

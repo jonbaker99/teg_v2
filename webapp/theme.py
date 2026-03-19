@@ -2,6 +2,7 @@
 
 THEMES = [
     ("clean-page", "Clean Page"),
+    ("clean-layered", "Clean Layered"),
     ("clean", "Clean"),
 ]
 
@@ -28,6 +29,8 @@ TITLE_STYLES = [
     ("f1", "Title: F1 — Card green"),
     ("f2", "Title: F2 — Card green text"),
     ("f3", "Title: F3 — Card grey"),
+    ("f4", "Title: F4 — Card green inline"),
+    ("f5", "Title: F5 — Card green inline white"),
 ]
 
 TITLE_STYLE_IDS = {s[0] for s in TITLE_STYLES}
@@ -51,6 +54,7 @@ _LIGHT = {
 
 PLOTLY_THEMES = {
     "clean-page": _LIGHT,
+    "clean-layered": _LIGHT,
     "clean": _LIGHT,
 }
 

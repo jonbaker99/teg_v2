@@ -177,13 +177,15 @@
     </nav>
 
     <!-- Main content -->
-    <div class="page-title-outer">
-        {% block page_title %}{% endblock %}
-    </div>
-    <div class="mx-auto" style="flex-grow: 1; width: fit-content; min-width: min(800px, 90vw); max-width: min(90vw, 1280px);">
-        <main class="main-content px-6 py-8">
-            {% block content %}{% endblock %}
-        </main>
+    <div class="page-panel">
+        <div class="page-title-outer">
+            {% block page_title %}{% endblock %}
+        </div>
+        <div class="content-wrapper">
+            <main class="main-content px-6 py-8">
+                {% block content %}{% endblock %}
+            </main>
+        </div>
     </div>
 
     <!-- Footer -->

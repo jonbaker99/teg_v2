@@ -1,0 +1,40 @@
+/* Clean Layered — 3-layer depth: background → page panel → content cards */
+@import url('clean-page.css');
+
+/* Layer 1: outer background — warm stone */
+:root {
+    --bg-page: #e0ddd8;
+    --footer-bg: #e0ddd8;
+}
+body.page-bg {
+    background-color: #e0ddd8;
+}
+
+/* Layer 2: page panel — warm taupe "paper" floating on background */
+.page-panel {
+    background: #f5f3f0;
+    border-radius: 0.375rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin: 1.5rem auto;
+    max-width: min(90vw, 1280px);
+    min-width: min(800px, 90vw);
+}
+
+/* Inside the panel, children fill width — panel handles constraints */
+.page-panel .page-title-outer {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    margin: 0;
+}
+.page-panel .content-wrapper {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    margin: 0;
+}
+
+/* Layer 3: content card — white, inset so panel peeks around edges */
+.main-content {
+    margin: 0 1.25rem 1.25rem 1.25rem;
+}
