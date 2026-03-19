@@ -1,0 +1,32 @@
+/* Printed — Clean Page with subtle cotton-paper texture on the content card */
+@import url('clean-page.css');
+
+.main-content {
+    position: relative;
+    background: #fcfbf9;
+}
+
+/* Cottony paper texture using layered radial gradients at randomised positions */
+.main-content::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+        radial-gradient(ellipse 1px 2px at 20% 30%, rgba(180,170,155,0.15), transparent),
+        radial-gradient(ellipse 2px 1px at 70% 15%, rgba(180,170,155,0.12), transparent),
+        radial-gradient(ellipse 1px 3px at 45% 80%, rgba(180,170,155,0.13), transparent),
+        radial-gradient(ellipse 2px 1px at 85% 55%, rgba(180,170,155,0.11), transparent),
+        radial-gradient(ellipse 1px 2px at 10% 65%, rgba(180,170,155,0.14), transparent),
+        radial-gradient(ellipse 3px 1px at 55% 45%, rgba(180,170,155,0.12), transparent),
+        radial-gradient(ellipse 1px 2px at 35% 10%, rgba(180,170,155,0.13), transparent),
+        radial-gradient(ellipse 2px 1px at 90% 85%, rgba(180,170,155,0.11), transparent);
+    background-size: 7px 9px, 11px 7px, 5px 11px, 9px 5px, 8px 10px, 6px 8px, 10px 6px, 7px 11px;
+}
+
+.main-content > * {
+    position: relative;
+    z-index: 1;
+}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="page-title">Course Analysis</h1>
+
+<div class="flex items-center gap-4 mb-4">
+    <select id="sc-area" class="theme-select" name="area"
+            hx-get="/scoring/by-course/tab"
+            hx-target="#sc-content"
+            hx-include="#sc-tab-input"
+            hx-swap="innerHTML">
+        {% for a in areas %}
+        <option value="{{ a }}" {% if a == selected_area %}selected{% endif %}>{{ a }}</option>
+        {% endfor %}
+    </select>
+    <input type="hidden" id="sc-tab-input" name="tab" value="{{ active_tab }}">
+</div>
+
+<div class="tab-bar">
+    {% for tab_id, tab_label in tabs %}
+    <button class="tab-underline {% if tab_id == active_tab %}active{% endif %}"
+            onclick="document.getElementById('sc-tab-input').value='{{ tab_id }}';
+                     document.querySelectorAll('.tab-bar .tab-underline').forEach(b => b.classList.remove('active'));
+                     this.classList.add('active');
+                     htmx.trigger(document.getElementById('sc-area'), 'change')">
+        {{ tab_label }}
+    </button>
+    {% endfor %}
+</div>
+
+<div id="sc-content">
+    {% include "partials/scoring_by_course_tab.html" %}
+</div>
+{% endblock %}

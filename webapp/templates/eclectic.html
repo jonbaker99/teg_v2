@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="page-title">Eclectic Scores</h1>
+
+<div class="tab-bar">
+    {% for tab_id, tab_label in tabs %}
+    <button class="tab-underline {% if tab_id == active_tab %}active{% endif %}"
+            hx-get="/eclectic/tab?dimension={{ tab_id }}"
+            hx-target="#eclectic-content"
+            hx-swap="innerHTML">
+        {{ tab_label }}
+    </button>
+    {% endfor %}
+</div>
+
+<div id="eclectic-content">
+    {% include "partials/eclectic_tab.html" %}
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="page-title">Full Results</h1>
+
+<div class="flex items-center gap-4 mb-4">
+    <select id="results-teg-select" class="theme-select"
+            hx-get="/results/table"
+            hx-target="#results-content"
+            hx-include="#results-tab-input"
+            name="teg">
+        {% for t in teg_numbers %}
+        <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
+        {% endfor %}
+    </select>
+
+    <input type="hidden" id="results-tab-input" name="tab" value="{{ active_tab }}">
+
+    <div class="tab-bar" style="margin-bottom: 0;">
+        {% for tab_id, tab_label in [('net', 'TEG Trophy'), ('gross', 'Green Jacket'), ('scorecards', 'Scorecards'), ('report', 'Report')] %}
+        <button class="tab-underline {% if tab_id == active_tab %}active{% endif %}"
+                onclick="document.getElementById('results-tab-input').value='{{ tab_id }}';
+                         htmx.trigger(document.getElementById('results-teg-select'), 'change')">
+            {{ tab_label }}
+        </button>
+        {% endfor %}
+    </div>
+</div>
+
+<div id="results-content">
+    {% include "partials/results_table.html" %}
+</div>
+{% endblock %}

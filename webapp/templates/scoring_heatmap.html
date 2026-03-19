@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="page-title">Scoring Heatmap</h1>
+
+<div class="flex items-center gap-4 mb-4">
+    <select id="hm-row-by" class="theme-select" name="row_by"
+            hx-get="/scoring/heatmap/content"
+            hx-target="#hm-content"
+            hx-include="#hm-sort, #hm-totals">
+        {% for val, label in row_options %}
+        <option value="{{ val }}" {% if val == row_by %}selected{% endif %}>By {{ label }}</option>
+        {% endfor %}
+    </select>
+
+    <label class="flex items-center gap-1 text-sm">
+        <input type="checkbox" id="hm-sort" name="sort_by_score" value="true"
+               {% if sort_by_score %}checked{% endif %}
+               hx-get="/scoring/heatmap/content"
+               hx-target="#hm-content"
+               hx-include="#hm-row-by, #hm-totals">
+        Sort by score
+    </label>
+
+    <label class="flex items-center gap-1 text-sm">
+        <input type="checkbox" id="hm-totals" name="show_totals" value="true"
+               {% if show_totals %}checked{% endif %}
+               hx-get="/scoring/heatmap/content"
+               hx-target="#hm-content"
+               hx-include="#hm-row-by, #hm-sort">
+        Show totals
+    </label>
+</div>
+
+<div id="hm-content">
+    {% include "partials/scoring_heatmap_content.html" %}
+</div>
+{% endblock %}

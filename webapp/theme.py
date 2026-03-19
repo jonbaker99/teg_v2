@@ -20,6 +20,7 @@ THEMES = [
     ("datawrapper", "Datawrapper"),
     # Provocative
     ("scorecard", "Scorecard"),
+    ("printed", "Printed"),
 ]
 
 THEME_IDS = {t[0] for t in THEMES}
@@ -108,6 +109,11 @@ PLOTLY_THEMES = {
         "paper_bgcolor": "#f7f4ec",
         "plot_bgcolor": "#f7f4ec",
         "font_color": "#2c2c1e",
+    },
+    "printed": {
+        "paper_bgcolor": "#fcfbf9",
+        "plot_bgcolor": "#fcfbf9",
+        "font_color": "#333333",
     },
 }
 

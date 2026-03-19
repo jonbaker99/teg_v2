@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="page-title">Top Performances</h1>
+
+{# --- Tab bar (4 tabs) --- #}
+<div class="tab-bar">
+    {% for tab_id, tab_label in tabs %}
+    <button class="tab-underline {% if tab_id == active_tab %}active{% endif %}"
+            hx-get="/top-performances/tab"
+            hx-target="#tp-content"
+            hx-include="#tp-measure, #tp-n-select"
+            hx-vals='{"tab": "{{ tab_id }}"}'
+            hx-swap="innerHTML"
+            onclick="
+                document.getElementById('tp-tab-input').value='{{ tab_id }}';
+                document.querySelectorAll('.tab-bar button.tab-underline').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            ">
+        {{ tab_label }}
+    </button>
+    {% endfor %}
+</div>
+
+{# --- Measure + N controls --- #}
+<div id="tp-controls" class="flex items-center gap-4 mt-4 mb-4">
+    <div class="flex items-center gap-2">
+        {% for mid, mlabel in measures %}
+        <button class="tab-underline {% if mid == selected_measure %}active{% endif %}"
+                hx-get="/top-performances/tab"
+                hx-target="#tp-content"
+                hx-include="#tp-tab-input, #tp-n-select"
+                hx-vals='{"measure": "{{ mid }}"}'
+                hx-swap="innerHTML"
+                onclick="
+                    document.getElementById('tp-measure').value='{{ mid }}';
+                    this.parentElement.querySelectorAll('.tab-underline').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                ">
+            {{ mlabel }}
+        </button>
+        {% endfor %}
+    </div>
+
+    <select class="theme-select" id="tp-n-select" name="n"
+            hx-get="/top-performances/tab"
+            hx-target="#tp-content"
+            hx-include="#tp-measure, #tp-tab-input"
+            hx-swap="innerHTML">
+        {% for val in [3, 5, 10] %}
+        <option value="{{ val }}" {% if val == n_records %}selected{% endif %}>Top {{ val }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+{# Hidden inputs to track state #}
+<input type="hidden" id="tp-measure" name="measure" value="{{ selected_measure }}">
+<input type="hidden" id="tp-tab-input" name="tab" value="{{ active_tab }}">
+
+{# --- Tab content (HTMX target) --- #}
+<div id="tp-content">
+    {% include "partials/top_performances_tab.html" %}
+</div>
+{% endblock %}

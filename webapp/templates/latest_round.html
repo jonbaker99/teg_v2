@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="page-title">Latest Round in Context</h1>
+
+<div class="flex items-center gap-4 mb-4">
+    <select id="lr-teg-select" class="theme-select"
+            hx-get="/latest-round/tab"
+            hx-target="#lr-content"
+            hx-include="#lr-round-select, #lr-tab-input"
+            name="teg">
+        {% for t in teg_numbers %}
+        <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
+        {% endfor %}
+    </select>
+
+    <select id="lr-round-select" class="theme-select"
+            hx-get="/latest-round/tab"
+            hx-target="#lr-content"
+            hx-include="#lr-teg-select, #lr-tab-input"
+            name="round">
+        {% for r in rounds %}
+        <option value="{{ r }}" {% if r == selected_round %}selected{% endif %}>Round {{ r }}</option>
+        {% endfor %}
+    </select>
+
+    <input type="hidden" id="lr-tab-input" name="tab" value="{{ active_tab }}">
+</div>
+
+<div class="tab-bar">
+    {% for tab_id, tab_label in tabs %}
+    <button class="tab-underline {% if tab_id == active_tab %}active{% endif %}"
+            onclick="document.getElementById('lr-tab-input').value='{{ tab_id }}';
+                     htmx.trigger(document.getElementById('lr-teg-select'), 'change')">
+        {{ tab_label }}
+    </button>
+    {% endfor %}
+</div>
+
+<div id="lr-content">
+    {% include "partials/latest_round_tab.html" %}
+</div>
+{% endblock %}

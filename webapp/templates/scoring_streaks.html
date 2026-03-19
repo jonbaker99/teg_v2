@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="page-title">Streaks</h1>
+
+<div class="tab-bar">
+    {% for tab_id, tab_label in tabs %}
+    <button class="tab-underline {% if tab_id == active_tab %}active{% endif %}"
+            hx-get="/scoring/streaks/tab"
+            hx-target="#st-content"
+            hx-include="#st-direction, #st-mode"
+            hx-vals='{"tab": "{{ tab_id }}"}'
+            hx-swap="innerHTML"
+            onclick="
+                document.getElementById('st-tab-input').value='{{ tab_id }}';
+                document.querySelectorAll('.tab-bar button.st-tab').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                var ctrl = document.getElementById('st-controls');
+                ctrl.style.display = '{{ tab_id }}' === 'player' ? '' : 'none';
+            ">
+        {{ tab_label }}
+    </button>
+    {% endfor %}
+</div>
+
+<div id="st-controls" class="flex items-center gap-4 mt-4 mb-4"
+     {% if active_tab != 'player' %}style="display:none"{% endif %}>
+    <div class="flex items-center gap-2">
+        {% for did, dlabel in [('good', 'Good'), ('bad', 'Bad')] %}
+        <button class="tab-underline st-dir {% if did == direction %}active{% endif %}"
+                hx-get="/scoring/streaks/tab"
+                hx-target="#st-content"
+                hx-include="#st-tab-input, #st-mode"
+                hx-vals='{"direction": "{{ did }}"}'
+                hx-swap="innerHTML"
+                onclick="
+                    document.getElementById('st-direction').value='{{ did }}';
+                    this.parentElement.querySelectorAll('.st-dir').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                ">
+            {{ dlabel }}
+        </button>
+        {% endfor %}
+    </div>
+    <div class="flex items-center gap-2">
+        {% for mid, mlabel in [('max', 'All-time Max'), ('current', 'Current')] %}
+        <button class="tab-underline st-mode {% if mid == mode %}active{% endif %}"
+                hx-get="/scoring/streaks/tab"
+                hx-target="#st-content"
+                hx-include="#st-tab-input, #st-direction"
+                hx-vals='{"mode": "{{ mid }}"}'
+                hx-swap="innerHTML"
+                onclick="
+                    document.getElementById('st-mode').value='{{ mid }}';
+                    this.parentElement.querySelectorAll('.st-mode').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                ">
+            {{ mlabel }}
+        </button>
+        {% endfor %}
+    </div>
+</div>
+
+<input type="hidden" id="st-tab-input" name="tab" value="{{ active_tab }}">
+<input type="hidden" id="st-direction" name="direction" value="{{ direction }}">
+<input type="hidden" id="st-mode" name="mode" value="{{ mode }}">
+
+<div id="st-content">
+    {% include "partials/scoring_streaks_tab.html" %}
+</div>
+{% endblock %}

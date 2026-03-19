@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="page-title">Personal Bests & Worsts</h1>
+
+{# --- Tab bar (5 tabs) --- #}
+<div class="tab-bar">
+    {% for tab_id, tab_label in tabs %}
+    <button class="tab-underline {% if tab_id == active_tab %}active{% endif %}"
+            hx-get="/personal-bests/tab"
+            hx-target="#pb-content"
+            hx-include="#pb-measure, #pb-n-select, #pb-view-select"
+            hx-vals='{"tab": "{{ tab_id }}"}'
+            hx-swap="innerHTML"
+            onclick="
+                document.getElementById('pb-tab-input').value='{{ tab_id }}';
+                document.querySelectorAll('.tab-bar button.tab-underline').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                var ctrl = document.getElementById('pb-controls');
+                var sumCtrl = document.getElementById('pb-summary-controls');
+                if ('{{ tab_id }}' === 'pb_summary') {
+                    ctrl.style.display = 'none';
+                    sumCtrl.style.display = '';
+                } else {
+                    ctrl.style.display = '';
+                    sumCtrl.style.display = 'none';
+                }
+            ">
+        {{ tab_label }}
+    </button>
+    {% endfor %}
+</div>
+
+{# --- Summary controls (shown only on PB Summary tab) --- #}
+<div id="pb-summary-controls" class="flex items-center gap-4 mt-4 mb-4"
+     style="{% if active_tab != 'pb_summary' %}display:none{% endif %}">
+    {% for vid, vlabel in summary_views %}
+    <button class="tab-underline {% if vid == selected_view %}active{% endif %}"
+            hx-get="/personal-bests/tab"
+            hx-target="#pb-content"
+            hx-vals='{"tab": "pb_summary", "view": "{{ vid }}"}'
+            hx-swap="innerHTML"
+            onclick="
+                document.getElementById('pb-view-select').value='{{ vid }}';
+                this.parentElement.querySelectorAll('.tab-underline').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            ">
+        {{ vlabel }}
+    </button>
+    {% endfor %}
+</div>
+
+{# --- Measure + N controls (hidden on PB Summary tab) --- #}
+<div id="pb-controls" class="flex items-center gap-4 mt-4 mb-4"
+     style="{% if active_tab == 'pb_summary' %}display:none{% endif %}">
+    <div class="flex items-center gap-2">
+        {% for mid, mlabel in measures %}
+        <button class="tab-underline {% if mid == selected_measure %}active{% endif %}"
+                hx-get="/personal-bests/tab"
+                hx-target="#pb-content"
+                hx-include="#pb-tab-input, #pb-n-select"
+                hx-vals='{"measure": "{{ mid }}"}'
+                hx-swap="innerHTML"
+                onclick="
+                    document.getElementById('pb-measure').value='{{ mid }}';
+                    this.parentElement.querySelectorAll('.tab-underline').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                ">
+            {{ mlabel }}
+        </button>
+        {% endfor %}
+    </div>
+
+    <select class="theme-select" id="pb-n-select" name="n"
+            hx-get="/personal-bests/tab"
+            hx-target="#pb-content"
+            hx-include="#pb-measure, #pb-tab-input"
+            hx-swap="innerHTML">
+        {% for val in [3, 5, 10] %}
+        <option value="{{ val }}" {% if val == n_records %}selected{% endif %}>Top {{ val }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+{# Hidden inputs to track state #}
+<input type="hidden" id="pb-measure" name="measure" value="{{ selected_measure }}">
+<input type="hidden" id="pb-tab-input" name="tab" value="{{ active_tab }}">
+<input type="hidden" id="pb-view-select" name="view" value="{{ selected_view }}">
+
+{# --- Tab content (HTMX target) --- #}
+<div id="pb-content">
+    {% include "partials/personal_bests_tab.html" %}
+</div>
+
+<p class="text-muted text-sm mt-6">Note: TEG 2 is excluded from TEG-level analysis (only 3 rounds vs standard 4).</p>
+{% endblock %}

@@ -1,0 +1,6 @@
+{% if error %}
+<p class="text-muted">Error: {{ error }}</p>
+{% else %}
+{% if title %}<h2 class="section-title">{{ title }}</h2>{% endif %}
+{{ table_html | safe }}
+{% endif %}

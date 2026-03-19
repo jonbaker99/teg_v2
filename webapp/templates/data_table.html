@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="page-title">{{ title }}</h1>
+{% if subtitle %}<p class="page-subtitle">{{ subtitle }}</p>{% endif %}
+{% if sections %}
+  {% for section in sections %}
+    {% if section.title %}<h2 class="section-title">{{ section.title }}</h2>{% endif %}
+    {% if section.subtitle %}<p class="page-subtitle">{{ section.subtitle }}</p>{% endif %}
+    <div style="overflow-x: auto;">{{ section.table_html | safe }}</div>
+  {% endfor %}
+{% else %}
+  <div style="overflow-x: auto;">{{ table_html | safe }}</div>
+{% endif %}
+{% endblock %}

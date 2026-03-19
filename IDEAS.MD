@@ -2,12 +2,7 @@
 
 ## FIXES
 
-### Net competition scoring cutoff
-The code in `teg_analysis/analysis/scoring.py` correctly implements the cutoff at TEG 8 (TEGs 1–7 use NetVP, TEG 8+ use Stableford), but two places document it incorrectly as TEG 6:
-- `scoring.py` docstring (line 42–43) says "TEGs 1-5" / "TEG 6 onwards"
-- `CLAUDE.md` general info section says "Up to TEG 5 ... from TEG 6 onwards"
 
-**Fix:** Update those two docstrings/docs to match the actual logic (`<= 7` → NetVP, `>= 8` → Stableford).
 
 ---
 
@@ -53,6 +48,13 @@ The `/charts` page exists but leaderboard and records could benefit from inline 
 
 ### Responsive / mobile polish
 Tables and stat cards need work on small screens if the webapp is to be shareable with other TEG participants.
+
+### Navigation and page categorisation
+The current prototype uses the same page groupings as the Streamlit site for now. As the webapp matures, we should review whether this categorisation makes sense for a web context — the Streamlit groupings were designed for sidebar nav, not a top nav bar. Consider: flatter structure, better mobile nav, progressive disclosure for less-visited sections.
+
+### Out-there ideas...
+Try a paper texture version?
+Make it more 'programme' / newspaper like?
 
 ---
 

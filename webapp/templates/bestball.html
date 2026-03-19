@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="page-title">Best / Worstball</h1>
+
+<div class="flex items-center gap-4 mb-4">
+    <div class="tab-bar" style="margin-bottom: 0;">
+        <button class="tab-underline {% if active_mode == 'bestball' %}active{% endif %}"
+                hx-get="/bestball/content?mode=bestball"
+                hx-target="#bb-content"
+                hx-include="#bb-teg, #bb-sort, #bb-n"
+                hx-swap="innerHTML"
+                onclick="document.getElementById('bb-mode').value='bestball';">
+            Bestball
+        </button>
+        <button class="tab-underline {% if active_mode == 'worstball' %}active{% endif %}"
+                hx-get="/bestball/content?mode=worstball"
+                hx-target="#bb-content"
+                hx-include="#bb-teg, #bb-sort, #bb-n"
+                hx-swap="innerHTML"
+                onclick="document.getElementById('bb-mode').value='worstball';">
+            Worstball
+        </button>
+    </div>
+
+    <select id="bb-teg" class="theme-select" name="teg"
+            hx-get="/bestball/content"
+            hx-target="#bb-content"
+            hx-include="#bb-mode, #bb-sort, #bb-n"
+            hx-swap="innerHTML">
+        <option value="0" {% if selected_teg == 0 %}selected{% endif %}>All TEGs</option>
+        {% for t in teg_numbers %}
+        <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
+        {% endfor %}
+    </select>
+
+    <select id="bb-sort" class="theme-select" name="sort_best"
+            hx-get="/bestball/content"
+            hx-target="#bb-content"
+            hx-include="#bb-mode, #bb-teg, #bb-n"
+            hx-swap="innerHTML">
+        <option value="true" {% if sort_best %}selected{% endif %}>Best First</option>
+        <option value="false" {% if not sort_best %}selected{% endif %}>Worst First</option>
+    </select>
+
+    <select id="bb-n" class="theme-select" name="n"
+            hx-get="/bestball/content"
+            hx-target="#bb-content"
+            hx-include="#bb-mode, #bb-teg, #bb-sort"
+            hx-swap="innerHTML">
+        <option value="0" {% if n_rows == 0 %}selected{% endif %}>All</option>
+        <option value="10" {% if n_rows == 10 %}selected{% endif %}>10</option>
+        <option value="25" {% if n_rows == 25 %}selected{% endif %}>25</option>
+        <option value="50" {% if n_rows == 50 %}selected{% endif %}>50</option>
+    </select>
+
+    <input type="hidden" id="bb-mode" name="mode" value="{{ active_mode }}">
+</div>
+
+<div id="bb-content">
+    {% include "partials/bestball_content.html" %}
+</div>
+{% endblock %}

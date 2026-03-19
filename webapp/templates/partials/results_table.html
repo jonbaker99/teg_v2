@@ -1,0 +1,15 @@
+{% if error %}
+<p class="text-muted">Error: {{ error }}</p>
+{% else %}
+{% if result_title %}<h2 class="section-title">{{ result_title }}</h2>{% endif %}
+{% if chart_json %}
+<div id="results-chart" style="width:100%; height:350px; margin-bottom:1.5rem;"></div>
+<script>
+(function() {
+    var data = {{ chart_json | safe }};
+    Plotly.newPlot('results-chart', data.data, data.layout, {displayModeBar: false, responsive: true});
+})();
+</script>
+{% endif %}
+{{ table_html | safe }}
+{% endif %}

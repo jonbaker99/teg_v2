@@ -342,7 +342,7 @@ def load_cached_winners() -> tuple:
 def prepare_complete_history_table_fast(cached_winners_df: pd.DataFrame = None) -> pd.DataFrame:
     """Fast history table using cached winners data."""
     if cached_winners_df is None:
-        cached_winners_df = load_cached_winners()
+        cached_winners_df, _ = load_cached_winners()
 
     if cached_winners_df is None:
         from teg_analysis.core.data_loader import load_all_data

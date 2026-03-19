@@ -1,0 +1,10 @@
+{% if error %}
+<p class="text-muted">Error: {{ error }}</p>
+{% elif sections %}
+  {% for section in sections %}
+    {% if section.title %}<h2 class="section-title">{{ section.title }}</h2>{% endif %}
+    {{ section.table_html | safe }}
+  {% endfor %}
+{% else %}
+<p class="text-muted text-sm">No data available.</p>
+{% endif %}

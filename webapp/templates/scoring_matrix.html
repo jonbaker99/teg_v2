@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="page-title">Score Matrix</h1>
+
+<div class="flex items-center gap-4 mb-4">
+    <select id="sm-level" class="theme-select" name="level"
+            hx-get="/scoring/matrix/content"
+            hx-target="#sm-content"
+            hx-include="#sm-type">
+        {% for lid, llabel in levels %}
+        <option value="{{ lid }}" {% if lid == selected_level %}selected{% endif %}>{{ llabel }}</option>
+        {% endfor %}
+    </select>
+
+    <select id="sm-type" class="theme-select" name="score_type"
+            hx-get="/scoring/matrix/content"
+            hx-target="#sm-content"
+            hx-include="#sm-level">
+        {% for tid, tlabel in score_types %}
+        <option value="{{ tid }}" {% if tid == selected_type %}selected{% endif %}>{{ tlabel }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<div id="sm-content">
+    {% include "partials/scoring_matrix_content.html" %}
+</div>
+{% endblock %}

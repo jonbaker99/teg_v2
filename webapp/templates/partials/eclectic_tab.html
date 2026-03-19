@@ -1,0 +1,5 @@
+{% if error %}
+<p class="text-muted">Error: {{ error }}</p>
+{% else %}
+{{ table_html | safe }}
+{% endif %}

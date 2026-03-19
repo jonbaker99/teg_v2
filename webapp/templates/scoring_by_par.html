@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="page-title">Average by Par</h1>
+<p class="page-subtitle">Average score vs par by hole type</p>
+
+<div class="flex items-center gap-4 mb-4">
+    <select class="theme-select" name="teg"
+            hx-get="/scoring/by-par/content"
+            hx-target="#bp-content">
+        <option value="0" {% if selected_teg == 0 %}selected{% endif %}>All TEGs</option>
+        {% for t in teg_numbers %}
+        <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<div id="bp-content">
+    {% include "partials/scoring_matrix_content.html" %}
+</div>
+{% endblock %}

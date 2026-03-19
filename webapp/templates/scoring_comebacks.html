@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="page-title">Final Round Comebacks</h1>
+
+<div class="flex items-center gap-4 mb-4">
+    <div class="tab-bar" style="margin-bottom: 0;">
+        {% for cid, clabel in [('gross', 'Gross'), ('stableford', 'Stableford')] %}
+        <button class="tab-underline {% if cid == competition %}active{% endif %}"
+                hx-get="/scoring/comebacks/content?competition={{ cid }}&n={{ n_records }}"
+                hx-target="#cb-content"
+                hx-swap="innerHTML">
+            {{ clabel }}
+        </button>
+        {% endfor %}
+    </div>
+    <select class="theme-select" name="n"
+            hx-get="/scoring/comebacks/content"
+            hx-target="#cb-content"
+            hx-include="[name='competition']"
+            hx-swap="innerHTML">
+        {% for val in [3, 5, 10, 20] %}
+        <option value="{{ val }}" {% if val == n_records %}selected{% endif %}>Top {{ val }}</option>
+        {% endfor %}
+    </select>
+    <input type="hidden" name="competition" value="{{ competition }}">
+</div>
+
+<div id="cb-content">
+    {% include "partials/scoring_comebacks_content.html" %}
+</div>
+{% endblock %}

@@ -50,7 +50,13 @@
       "Bash(pkill:*)",
       "Bash(kill %1)",
       "mcp__plugin_playwright_playwright__browser_navigate",
-      "mcp__plugin_playwright_playwright__browser_take_screenshot"
+      "mcp__plugin_playwright_playwright__browser_take_screenshot",
+      "Read(//usr/bin/**)",
+      "Read(//opt/homebrew/bin/**)",
+      "Bash(/usr/bin/curl -s \"http://localhost:8099/latest-round\")",
+      "Bash(lsof -ti:8099)",
+      "Bash(xargs kill:*)",
+      "Bash(lsof -ti:8765)"
     ],
     "deny": [],
     "ask": [

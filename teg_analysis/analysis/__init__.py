@@ -25,6 +25,7 @@ from . import streaks
 from . import records
 from . import commentary
 from . import pipeline
+from . import eclectic
 
 # Export commonly used functions for convenience
 from .scoring import format_vs_par, get_net_competition_measure
@@ -51,6 +52,7 @@ __all__ = [
     'records',
     'commentary',
     'pipeline',
+    'eclectic',
     # Common exports
     'format_vs_par',
     'get_net_competition_measure',
