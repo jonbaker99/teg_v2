@@ -1,6 +1,13 @@
 {% extends "base.html" %}
+
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">{{ section|default('Data') }}</span>
+    <h1 class="page-title">{{ title }}</h1>
+</div>
+{% endblock %}
+
 {% block content %}
-<h1 class="page-title">{{ title }}</h1>
 {% if subtitle %}<p class="page-subtitle">{{ subtitle }}</p>{% endif %}
 {% if sections %}
   {% for section in sections %}

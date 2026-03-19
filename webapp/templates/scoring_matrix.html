@@ -1,6 +1,13 @@
 {% extends "base.html" %}
+
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">Scoring</span>
+    <h1 class="page-title">Score Matrix</h1>
+</div>
+{% endblock %}
+
 {% block content %}
-<h1 class="page-title">Score Matrix</h1>
 
 <div class="flex items-center gap-4 mb-4">
     <select id="sm-level" class="theme-select" name="level"

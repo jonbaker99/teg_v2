@@ -1,12 +1,18 @@
 {% extends "base.html" %}
 {% block title_suffix %} — {{ player_name }}{% endblock %}
 
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">Player Profile</span>
+    <h1 class="page-title">{{ player_name }}</h1>
+</div>
+{% endblock %}
+
 {% block content %}
 <!-- Header -->
 <div class="mb-6">
     <div class="flex items-center justify-between mb-2">
         <div class="flex items-center gap-3">
-            <h1 class="text-3xl heading">{{ player_name }}</h1>
             <span class="badge-muted">{{ player_code }}</span>
         </div>
         <select class="teg-select"

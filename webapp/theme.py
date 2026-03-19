@@ -1,36 +1,43 @@
 """Theme management for TEG webapp."""
 
 THEMES = [
-    ("clean", "Clean"),
     ("clean-page", "Clean Page"),
-    # Minimalist variations
-    ("terminal", "Terminal"),
-    ("ink", "Ink"),
-    ("warm-terminal", "Warm Terminal"),
-    ("tight", "Tight"),
-    # Claude-inspired
-    ("claude", "Claude"),
-    ("claude-dark", "Claude Dark"),
-    # App-inspired
-    ("linear", "Linear"),
-    ("stripe", "Stripe"),
-    ("vercel", "Vercel"),
-    ("github", "GitHub"),
-    # Data journalism
-    ("datawrapper", "Datawrapper"),
-    # Provocative
-    ("scorecard", "Scorecard"),
-    ("printed", "Printed"),
+    ("clean", "Clean"),
 ]
 
 THEME_IDS = {t[0] for t in THEMES}
-DEFAULT_THEME = "clean"
+DEFAULT_THEME = "clean-page"
 
 
 def get_theme(request) -> str:
     """Read theme from cookie, falling back to default."""
     theme = request.cookies.get("theme", DEFAULT_THEME)
     return theme if theme in THEME_IDS else DEFAULT_THEME
+
+
+# Title style options — controls page-title-area CSS via body class ts-X
+TITLE_STYLES = [
+    ("a",  "Title: A — Mono label"),
+    ("b",  "Title: B — All caps"),
+    ("c",  "Title: C — Breadcrumb"),
+    ("d",  "Title: D — Left rule"),
+    ("e",  "Title: E — Underline"),
+    ("c1", "Title: C1 — Green block"),
+    ("c2", "Title: C2 — White/green"),
+    ("c3", "Title: C3 — Grey block"),
+    ("f1", "Title: F1 — Card green"),
+    ("f2", "Title: F2 — Card green text"),
+    ("f3", "Title: F3 — Card grey"),
+]
+
+TITLE_STYLE_IDS = {s[0] for s in TITLE_STYLES}
+DEFAULT_TITLE_STYLE = "a"
+
+
+def get_title_style(request) -> str:
+    """Read title style from cookie, falling back to default."""
+    ts = request.cookies.get("title_style", DEFAULT_TITLE_STYLE)
+    return ts if ts in TITLE_STYLE_IDS else DEFAULT_TITLE_STYLE
 
 
 # Plotly theme overrides keyed by theme id.
@@ -42,79 +49,9 @@ _LIGHT = {
     "font_color": "#333333",
 }
 
-_DARK_GRID = dict(gridcolor="#333")
-
 PLOTLY_THEMES = {
-    # Minimalist
-    "clean": _LIGHT,
     "clean-page": _LIGHT,
-    "terminal": _LIGHT,
-    "ink": {
-        "paper_bgcolor": "#242424",
-        "plot_bgcolor": "#242424",
-        "font_color": "#e0e0e0",
-        "xaxis": _DARK_GRID,
-        "yaxis": _DARK_GRID,
-    },
-    "warm-terminal": {
-        "paper_bgcolor": "#faf6f0",
-        "plot_bgcolor": "#faf6f0",
-        "font_color": "#3d3225",
-    },
-    "tight": _LIGHT,
-    # Claude
-    "claude": {
-        "paper_bgcolor": "#ffffff",
-        "plot_bgcolor": "#ffffff",
-        "font_color": "#2d2118",
-    },
-    "claude-dark": {
-        "paper_bgcolor": "#342e28",
-        "plot_bgcolor": "#342e28",
-        "font_color": "#e8ddd0",
-        "xaxis": dict(gridcolor="#524a40"),
-        "yaxis": dict(gridcolor="#524a40"),
-    },
-    # App-inspired
-    "linear": {
-        "paper_bgcolor": "#12131f",
-        "plot_bgcolor": "#12131f",
-        "font_color": "#e2e4ea",
-        "xaxis": dict(gridcolor="#2a2b3d"),
-        "yaxis": dict(gridcolor="#2a2b3d"),
-    },
-    "stripe": {
-        "paper_bgcolor": "#ffffff",
-        "plot_bgcolor": "#ffffff",
-        "font_color": "#1a1f36",
-    },
-    "vercel": {
-        "paper_bgcolor": "#fafafa",
-        "plot_bgcolor": "#fafafa",
-        "font_color": "#171717",
-    },
-    "github": {
-        "paper_bgcolor": "#ffffff",
-        "plot_bgcolor": "#ffffff",
-        "font_color": "#1f2328",
-    },
-    # Data journalism
-    "datawrapper": {
-        "paper_bgcolor": "#ffffff",
-        "plot_bgcolor": "#ffffff",
-        "font_color": "#1d1d1d",
-    },
-    # Provocative
-    "scorecard": {
-        "paper_bgcolor": "#f7f4ec",
-        "plot_bgcolor": "#f7f4ec",
-        "font_color": "#2c2c1e",
-    },
-    "printed": {
-        "paper_bgcolor": "#fcfbf9",
-        "plot_bgcolor": "#fcfbf9",
-        "font_color": "#333333",
-    },
+    "clean": _LIGHT,
 }
 
 

@@ -56,7 +56,9 @@
       "Bash(/usr/bin/curl -s \"http://localhost:8099/latest-round\")",
       "Bash(lsof -ti:8099)",
       "Bash(xargs kill:*)",
-      "Bash(lsof -ti:8765)"
+      "Bash(lsof -ti:8765)",
+      "mcp__plugin_playwright_playwright__browser_resize",
+      "mcp__plugin_playwright_playwright__browser_evaluate"
     ],
     "deny": [],
     "ask": [

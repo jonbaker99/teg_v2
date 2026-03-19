@@ -1,9 +1,15 @@
 {% extends "base.html" %}
 {% block title_suffix %} — Charts{% endblock %}
 
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">Charts</span>
+    <h1 class="page-title">Charts</h1>
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="flex items-center justify-between mb-6">
-    <h1 class="text-2xl heading">Charts</h1>
     <div class="flex items-center gap-3">
         <label for="chart-teg-select" class="text-sm font-medium text-secondary">TEG:</label>
         <select id="chart-teg-select" name="teg"

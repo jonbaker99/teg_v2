@@ -1,6 +1,13 @@
 {% extends "base.html" %}
+
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">Scoring</span>
+    <h1 class="page-title">Scoring Distributions</h1>
+</div>
+{% endblock %}
+
 {% block content %}
-<h1 class="page-title">Scoring Distributions</h1>
 <p class="page-subtitle">Score count breakdown by player</p>
 
 {% if chart_json %}

@@ -10,9 +10,9 @@ from fastapi.templating import Jinja2Templates
 from webapp.routes import (
     leaderboard, charts, records, showcase, player, scorecard,
     placeholder, history, latest, performance, scoring, scorecards,
-    eclectic,
+    eclectic, width_test, title_preview,
 )
-from webapp.theme import get_theme, THEMES
+from webapp.theme import get_theme, THEMES, get_title_style, TITLE_STYLES
 
 app = FastAPI(title="TEG Stats")
 
@@ -27,6 +27,8 @@ async def theme_middleware(request: Request, call_next):
     """Inject current theme into request.state for all routes."""
     request.state.theme = get_theme(request)
     request.state.themes = THEMES
+    request.state.title_style = get_title_style(request)
+    request.state.title_styles = TITLE_STYLES
     return await call_next(request)
 
 
@@ -44,6 +46,8 @@ app.include_router(latest.router)
 app.include_router(performance.router)
 app.include_router(scoring.router)
 app.include_router(scorecards.router)
+app.include_router(width_test.router)
+app.include_router(title_preview.router)
 
 
 @app.get("/")

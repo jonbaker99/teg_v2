@@ -5,12 +5,16 @@
 <link rel="stylesheet" href="/static/scorecard.css">
 {% endblock %}
 
-{% block main_class %}max-w-6xl{% endblock %}
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">Scorecards</span>
+    <h1 class="page-title">Scorecard</h1>
+</div>
+{% endblock %}
 
 {% block content %}
 <div class="scorecard-wrapper">
     <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl heading">Scorecard</h1>
         <div class="flex items-center gap-3">
             <label for="teg-select" class="text-sm font-medium text-secondary">TEG:</label>
             <select id="teg-select" name="teg"

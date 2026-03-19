@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}Width Test — Dev Tool{% endblock %}
+
+{% block main_class %}{% endblock %}
+
+{% block content %}
+<!-- Sticky control strip -->
+<div id="width-controls" style="
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--color-bg, #fff);
+    border-bottom: 2px solid var(--color-accent, #2563eb);
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    font-family: monospace;
+">
+    <strong style="font-size: 0.9rem; font-family: sans-serif;">Width Test</strong>
+
+    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <button class="wt-btn" data-val="768px">Current (768px)</button>
+        <button class="wt-btn" data-val="80vw">80vw</button>
+        <button class="wt-btn" data-val="90vw">90vw</button>
+        <button class="wt-btn" data-val="95vw">95vw</button>
+        <button class="wt-btn" data-val="calc(100vw - 48px)">Min margin</button>
+        <button class="wt-btn" data-val="none">No limit</button>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 0.5rem; margin-left: auto;">
+        <label for="wt-slider">px:</label>
+        <input type="range" id="wt-slider" min="600" max="1800" value="768" step="10" style="width: 120px;">
+        <input type="text" id="wt-input" value="768px" style="
+            width: 90px;
+            padding: 0.25rem 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.85rem;
+        ">
+        <button onclick="applyWidth(document.getElementById('wt-input').value)" style="
+            padding: 0.25rem 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        ">Apply</button>
+    </div>
+
+    <div id="wt-readout" style="color: #666; font-size: 0.8rem; min-width: 12ch;"></div>
+</div>
+
+<!-- Page content for layout testing -->
+<div style="padding: 2rem 1.5rem;">
+    <h1 style="margin-bottom: 0.25rem;">TEG {{ teg_num }} — Width Test</h1>
+    <p style="color: #666; margin-bottom: 2rem; font-size: 0.9rem;">
+        Dev tool — resize the content area using the controls above. Not in nav.
+    </p>
+
+    <!-- Stat cards row -->
+    <div class="stat-cards" style="margin-bottom: 2rem;">
+        <div class="stat-card">
+            <div class="stat-label">Current preset</div>
+            <div class="stat-value" id="current-preset-display">768px</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Viewport width</div>
+            <div class="stat-value" id="viewport-display">—</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Content width</div>
+            <div class="stat-value" id="content-width-display">—</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">TEG number</div>
+            <div class="stat-value">{{ teg_num }}</div>
+        </div>
+    </div>
+
+    <!-- Net leaderboard table -->
+    <h2 style="margin-bottom: 0.75rem;">Net Leaderboard (TEG Trophy)</h2>
+    <div class="table-wrapper" style="overflow-x: auto; margin-bottom: 2.5rem;">
+        {{ net_table | safe }}
+    </div>
+
+    <!-- Gross leaderboard table -->
+    <h2 style="margin-bottom: 0.75rem;">Gross Leaderboard (Claret Jug)</h2>
+    <div class="table-wrapper" style="overflow-x: auto; margin-bottom: 2.5rem;">
+        {{ gross_table | safe }}
+    </div>
+
+    <!-- Extra wide dummy table to stress-test overflow -->
+    <h2 style="margin-bottom: 0.75rem;">Stress-test: many columns</h2>
+    <div class="table-wrapper" style="overflow-x: auto; margin-bottom: 2.5rem;">
+        <table class="teg-table">
+            <thead><tr>
+                <th class="col-rank">#</th>
+                <th class="col-player">Player</th>
+                {% for i in range(1, 19) %}
+                <th class="col-num">H{{ i }}</th>
+                {% endfor %}
+                <th class="col-num">Total</th>
+                <th class="col-num">Avg</th>
+                <th class="col-num">vs Par</th>
+            </tr></thead>
+            <tbody>
+                {% for n in range(1, 9) %}
+                <tr>
+                    <td class="col-rank">{{ n }}</td>
+                    <td class="col-player">Player {{ n }}</td>
+                    {% for i in range(1, 19) %}
+                    <td class="col-num">{{ (n + i) % 6 + 3 }}</td>
+                    {% endfor %}
+                    <td class="col-num total">{{ 72 + n }}</td>
+                    <td class="col-num">{{ "%.1f"|format(4.1 + n * 0.1) }}</td>
+                    <td class="col-num">+{{ n }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <p style="color: #999; font-size: 0.8rem; text-align: center; margin-top: 3rem;">
+        Width test dev page — delete or keep as-is, it is not linked from nav.
+    </p>
+</div>
+
+<script>
+const mainEl = document.querySelector('main');
+const readout = document.getElementById('wt-readout');
+const slider = document.getElementById('wt-slider');
+const textInput = document.getElementById('wt-input');
+const presetDisplay = document.getElementById('current-preset-display');
+const vpDisplay = document.getElementById('viewport-display');
+const contentDisplay = document.getElementById('content-width-display');
+
+function applyWidth(val) {
+    mainEl.style.maxWidth = val;
+    textInput.value = val;
+    if (presetDisplay) presetDisplay.textContent = val;
+    updateReadout();
+}
+
+function updateReadout() {
+    const vw = window.innerWidth;
+    const cw = mainEl.getBoundingClientRect().width;
+    if (vpDisplay) vpDisplay.textContent = vw + 'px';
+    if (contentDisplay) contentDisplay.textContent = Math.round(cw) + 'px';
+    if (readout) readout.textContent = `${Math.round(cw)}px / ${vw}px`;
+}
+
+// Preset buttons
+document.querySelectorAll('.wt-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const val = btn.dataset.val;
+        applyWidth(val);
+        // Update slider if px value
+        const pxMatch = val.match(/^(\d+)px$/);
+        if (pxMatch) slider.value = pxMatch[1];
+    });
+});
+
+// Slider → live update
+slider.addEventListener('input', () => {
+    const val = slider.value + 'px';
+    applyWidth(val);
+});
+
+// Text input: update on Enter
+textInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') applyWidth(textInput.value);
+});
+
+// Update readout on resize
+window.addEventListener('resize', updateReadout);
+
+// Init
+applyWidth('768px');
+
+// Styling for preset buttons
+const style = document.createElement('style');
+style.textContent = `
+.wt-btn {
+    padding: 0.3rem 0.7rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: monospace;
+    font-size: 0.82rem;
+    background: var(--color-surface, #f9f9f9);
+    transition: background 0.15s, border-color 0.15s;
+}
+.wt-btn:hover {
+    background: var(--color-accent, #2563eb);
+    color: white;
+    border-color: var(--color-accent, #2563eb);
+}
+`;
+document.head.appendChild(style);
+</script>
+{% endblock %}

@@ -7,8 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-    <link rel="stylesheet" href="/static/themes/base-vars.css">
-    <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css">
+    <link rel="stylesheet" href="/static/themes/base-vars.css?v=5">
+    <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=5">
     {% block extra_head %}{% endblock %}
     <style>
         /* Dropdown nav */
@@ -83,7 +83,7 @@
         }
     </style>
 </head>
-<body class="page-bg">
+<body class="page-bg ts-{{ request.state.title_style }}">
     <!-- Navigation -->
     <nav class="nav">
         <div class="px-6">
@@ -164,15 +164,27 @@
                         <option value="{{ tid }}" {% if tid == request.state.theme %}selected{% endif %}>{{ tlabel }}</option>
                         {% endfor %}
                     </select>
+                    <!-- Title style selector -->
+                    <select class="theme-select ml-2"
+                            onchange="document.cookie='title_style='+this.value+';path=/;max-age=31536000';location.reload()">
+                        {% for tsid, tslabel in request.state.title_styles %}
+                        <option value="{{ tsid }}" {% if tsid == request.state.title_style %}selected{% endif %}>{{ tslabel }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
             </div>
         </div>
     </nav>
 
     <!-- Main content -->
-    <main class="main-content {% block main_class %}max-w-3xl{% endblock %} mx-auto px-6 py-8 w-full" style="flex-grow: 1;">
-        {% block content %}{% endblock %}
-    </main>
+    <div class="page-title-outer">
+        {% block page_title %}{% endblock %}
+    </div>
+    <div class="mx-auto" style="flex-grow: 1; width: fit-content; min-width: min(800px, 90vw); max-width: min(90vw, 1280px);">
+        <main class="main-content px-6 py-8">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
 
     <!-- Footer -->
     <footer class="page-footer">

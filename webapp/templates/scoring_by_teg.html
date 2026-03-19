@@ -1,6 +1,13 @@
 {% extends "base.html" %}
+
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">Scoring</span>
+    <h1 class="page-title">Average by TEG</h1>
+</div>
+{% endblock %}
+
 {% block content %}
-<h1 class="page-title">Average by TEG</h1>
 <p class="page-subtitle">Gross vs par by TEG and player</p>
 
 {% if chart_json %}

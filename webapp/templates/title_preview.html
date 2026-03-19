@@ -1,0 +1,434 @@
+{% extends "base.html" %}
+{% block title_suffix %} — Title Preview{% endblock %}
+
+{% block extra_head %}
+<style>
+/* ── Preview scaffold ── */
+.preview-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+    margin-bottom: 0.5rem;
+}
+.preview-section {
+    border: 1px solid #e0ddd8;
+    border-radius: 0.375rem;
+    overflow: hidden;
+}
+.preview-tag {
+    background: #e2dfda;
+    padding: 0.4rem 1rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.preview-tag .tag-note {
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    font-style: italic;
+    color: #888;
+}
+.preview-bg {
+    background: #f5f3f0;
+}
+.preview-content-card {
+    background: #fff;
+    border-radius: 0.25rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    margin: 0 1.5rem 1.5rem 1.5rem;
+    padding: 1.25rem 2rem;
+}
+.sample-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+    font-family: 'Roboto Mono', monospace;
+    color: #333;
+}
+.sample-table th {
+    text-align: left;
+    padding: 0.4rem 0.75rem;
+    font-weight: 600;
+    border-bottom: 2px solid #1a1a1a;
+}
+.sample-table td {
+    padding: 0.4rem 0.75rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* ── Section dividers ── */
+.section-header {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin: 2.25rem 0 0.75rem 0;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #e0ddd8;
+}
+
+/* ══════════════════════════════════════════
+   Shared label/title styles for previews
+   (all use Roboto Mono label + Lora title)
+══════════════════════════════════════════ */
+
+/* Standard title area padding */
+.t-area { padding: 1.25rem 1.5rem 0.75rem 1.5rem; }
+
+/* Base label (Roboto Mono) */
+.t-label {
+    display: block;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #999;
+    margin-bottom: 0.3rem;
+}
+
+/* Base title (Lora) */
+.t-title {
+    font-family: 'Lora', serif;
+    font-size: 1.375rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* ── Option B: all caps ── */
+.opt-b .t-title {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 1.2rem;
+}
+
+/* ── Option C: breadcrumb ── */
+.opt-c .t-area { display: flex; align-items: baseline; gap: 0; }
+.opt-c .t-label {
+    margin-bottom: 0;
+    font-size: 0.875rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: #aaa;
+}
+.opt-c .t-label::after {
+    content: ' ›';
+    font-family: sans-serif;
+    color: #ccc;
+    margin: 0 0.4rem;
+}
+.opt-c .t-title { display: inline; }
+
+/* ── Option D: left border ── */
+.opt-d .t-inner {
+    border-left: 3px solid #228B22;
+    padding-left: 1rem;
+}
+.opt-d .t-label { color: #228B22; }
+
+/* ── Option E: underline rule ── */
+.opt-e .t-title {
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #228B22;
+    display: block;
+}
+
+/* ── Option C1: green block ── */
+.opt-c1-band {
+    background: #228B22;
+    padding: 0.875rem 1.5rem;
+}
+.opt-c1-band .t-label { color: rgba(255,255,255,0.65); }
+.opt-c1-band .t-title { color: #ffffff; }
+
+/* ── Option C2: white block, green text ── */
+.opt-c2-band {
+    background: #ffffff;
+    padding: 0.875rem 1.5rem;
+    border-bottom: 1px solid #e8e8e8;
+}
+.opt-c2-band .t-label { color: #228B22; opacity: 0.8; }
+.opt-c2-band .t-title { color: #228B22; }
+
+/* ── Option C3: grey block ── */
+.opt-c3-band {
+    background: #e2dfda;
+    padding: 0.875rem 1.5rem;
+    border-bottom: 1px solid #d0cdc8;
+}
+.opt-c3-band .t-label { color: #666; }
+.opt-c3-band .t-title { color: #111; }
+
+/* ── Card-top variants: band is INSIDE the white card ── */
+.card-top-wrap {
+    background: #fff;
+    border-radius: 0.25rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    margin: 0 1.5rem 1.5rem 1.5rem;
+    overflow: hidden;
+}
+.card-top-body { padding: 1.25rem 2rem; }
+</style>
+{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">Design</span>
+    <h1 class="page-title">Page Title Options</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<p style="font-size:0.875rem; color:#888; margin-bottom:1.5rem;">
+    Switch between live styles using the <strong>Title:</strong> dropdown in the nav.
+    All options use Roboto Mono for the label and Lora for the title.
+</p>
+
+<!-- ══════════════════════════════════════
+     A — Current live style
+══════════════════════════════════════ -->
+<p class="section-header">A — Mono label, serif title (current)</p>
+<div class="preview-grid">
+    <div class="preview-section">
+        <div class="preview-tag">Option A <span class="tag-note">Roboto Mono label · Lora title · stacked</span></div>
+        <div class="preview-bg">
+            <div class="t-area">
+                <span class="t-label">Records</span>
+                <h1 class="t-title">TEG Records</h1>
+            </div>
+            <div class="preview-content-card">
+                <table class="sample-table"><thead><tr><th>Record</th><th>Player</th><th>Score</th></tr></thead><tbody>
+                <tr><td>Lowest Gross Round</td><td>FW</td><td>72</td></tr>
+                <tr><td>Most Birdies</td><td>JB</td><td>5</td></tr>
+                </tbody></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     B — All caps
+══════════════════════════════════════ -->
+<p class="section-header">B — All caps title</p>
+<div class="preview-grid">
+    <div class="preview-section opt-b">
+        <div class="preview-tag">Option B <span class="tag-note">uppercase tracked title</span></div>
+        <div class="preview-bg">
+            <div class="t-area">
+                <span class="t-label">Records</span>
+                <h1 class="t-title">TEG Records</h1>
+            </div>
+            <div class="preview-content-card">
+                <table class="sample-table"><thead><tr><th>Record</th><th>Player</th><th>Score</th></tr></thead><tbody>
+                <tr><td>Lowest Gross Round</td><td>FW</td><td>72</td></tr>
+                <tr><td>Most Birdies</td><td>JB</td><td>5</td></tr>
+                </tbody></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     C — Breadcrumb
+══════════════════════════════════════ -->
+<p class="section-header">C — Breadcrumb</p>
+<div class="preview-grid">
+    <div class="preview-section opt-c">
+        <div class="preview-tag">Option C <span class="tag-note">History › Results inline</span></div>
+        <div class="preview-bg">
+            <div class="t-area">
+                <span class="t-label">History</span>
+                <h1 class="t-title">Results</h1>
+            </div>
+            <div class="preview-content-card">
+                <table class="sample-table"><thead><tr><th>TEG</th><th>Area</th><th>Winner</th></tr></thead><tbody>
+                <tr><td>TEG 18</td><td>Catalonia</td><td>Alex Baker</td></tr>
+                <tr><td>TEG 17</td><td>Lisbon</td><td>Jon Baker</td></tr>
+                </tbody></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     D — Left border
+══════════════════════════════════════ -->
+<p class="section-header">D — Left border rule</p>
+<div class="preview-grid">
+    <div class="preview-section opt-d">
+        <div class="preview-tag">Option D <span class="tag-note">green left border · label in green</span></div>
+        <div class="preview-bg">
+            <div class="t-area">
+                <div class="t-inner">
+                    <span class="t-label">Records</span>
+                    <h1 class="t-title">TEG Records</h1>
+                </div>
+            </div>
+            <div class="preview-content-card">
+                <table class="sample-table"><thead><tr><th>Record</th><th>Player</th><th>Score</th></tr></thead><tbody>
+                <tr><td>Lowest Gross Round</td><td>FW</td><td>72</td></tr>
+                <tr><td>Most Birdies</td><td>JB</td><td>5</td></tr>
+                </tbody></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     E — Underline rule
+══════════════════════════════════════ -->
+<p class="section-header">E — Underline rule</p>
+<div class="preview-grid">
+    <div class="preview-section opt-e">
+        <div class="preview-tag">Option E <span class="tag-note">green rule beneath title</span></div>
+        <div class="preview-bg">
+            <div class="t-area">
+                <span class="t-label">Records</span>
+                <h1 class="t-title">TEG Records</h1>
+            </div>
+            <div class="preview-content-card">
+                <table class="sample-table"><thead><tr><th>Record</th><th>Player</th><th>Score</th></tr></thead><tbody>
+                <tr><td>Lowest Gross Round</td><td>FW</td><td>72</td></tr>
+                <tr><td>Most Birdies</td><td>JB</td><td>5</td></tr>
+                </tbody></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     C1 / C2 / C3 — Floating band on grey
+══════════════════════════════════════ -->
+<p class="section-header">C1 / C2 / C3 — Coloured band on grey background</p>
+<div class="preview-grid">
+
+    <div class="preview-section">
+        <div class="preview-tag">Option C1 <span class="tag-note">forest green band, white text</span></div>
+        <div class="preview-bg" style="padding-top:0;">
+            <div class="opt-c1-band">
+                <span class="t-label">Records</span>
+                <h1 class="t-title">TEG Records</h1>
+            </div>
+            <div class="preview-content-card">
+                <table class="sample-table"><thead><tr><th>Record</th><th>Player</th><th>Score</th></tr></thead><tbody>
+                <tr><td>Lowest Gross Round</td><td>FW</td><td>72</td></tr>
+                <tr><td>Most Birdies</td><td>JB</td><td>5</td></tr>
+                </tbody></table>
+            </div>
+        </div>
+    </div>
+
+    <div class="preview-section">
+        <div class="preview-tag">Option C2 <span class="tag-note">white band, forest green text</span></div>
+        <div class="preview-bg" style="padding-top:0;">
+            <div class="opt-c2-band">
+                <span class="t-label">Records</span>
+                <h1 class="t-title">TEG Records</h1>
+            </div>
+            <div class="preview-content-card">
+                <table class="sample-table"><thead><tr><th>Record</th><th>Player</th><th>Score</th></tr></thead><tbody>
+                <tr><td>Lowest Gross Round</td><td>FW</td><td>72</td></tr>
+                <tr><td>Most Birdies</td><td>JB</td><td>5</td></tr>
+                </tbody></table>
+            </div>
+        </div>
+    </div>
+
+    <div class="preview-section">
+        <div class="preview-tag">Option C3 <span class="tag-note">grey band, dark text</span></div>
+        <div class="preview-bg" style="padding-top:0;">
+            <div class="opt-c3-band">
+                <span class="t-label">Records</span>
+                <h1 class="t-title">TEG Records</h1>
+            </div>
+            <div class="preview-content-card">
+                <table class="sample-table"><thead><tr><th>Record</th><th>Player</th><th>Score</th></tr></thead><tbody>
+                <tr><td>Lowest Gross Round</td><td>FW</td><td>72</td></tr>
+                <tr><td>Most Birdies</td><td>JB</td><td>5</td></tr>
+                </tbody></table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     Card-top variants — band inside card
+══════════════════════════════════════ -->
+<p class="section-header">C1 / C2 / C3 card-top — band attached to the top of the content card</p>
+<p style="font-size:0.8125rem; color:#aaa; margin-bottom:1.25rem; margin-top:-0.25rem;">
+    The coloured header is the first element of the white card — no separate title area above it.
+</p>
+
+<div class="preview-grid">
+
+    <div class="preview-section">
+        <div class="preview-tag">Card-top C1 <span class="tag-note">green header crowns the white card</span></div>
+        <div class="preview-bg" style="padding:1.25rem 0 0 0;">
+            <div class="card-top-wrap">
+                <div class="opt-c1-band" style="border-radius: 0;">
+                    <span class="t-label">Records</span>
+                    <h1 class="t-title">TEG Records</h1>
+                </div>
+                <div class="card-top-body">
+                    <table class="sample-table"><thead><tr><th>Record</th><th>Player</th><th>Score</th></tr></thead><tbody>
+                    <tr><td>Lowest Gross Round</td><td>FW</td><td>72</td></tr>
+                    <tr><td>Most Birdies</td><td>JB</td><td>5</td></tr>
+                    </tbody></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="preview-section">
+        <div class="preview-tag">Card-top C2 <span class="tag-note">white header with green text + bottom border</span></div>
+        <div class="preview-bg" style="padding:1.25rem 0 0 0;">
+            <div class="card-top-wrap">
+                <div class="opt-c2-band" style="border-radius: 0; margin: 0;">
+                    <span class="t-label">Records</span>
+                    <h1 class="t-title">TEG Records</h1>
+                </div>
+                <div class="card-top-body">
+                    <table class="sample-table"><thead><tr><th>Record</th><th>Player</th><th>Score</th></tr></thead><tbody>
+                    <tr><td>Lowest Gross Round</td><td>FW</td><td>72</td></tr>
+                    <tr><td>Most Birdies</td><td>JB</td><td>5</td></tr>
+                    </tbody></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="preview-section">
+        <div class="preview-tag">Card-top C3 <span class="tag-note">grey header on white card</span></div>
+        <div class="preview-bg" style="padding:1.25rem 0 0 0;">
+            <div class="card-top-wrap">
+                <div class="opt-c3-band" style="border-radius: 0;">
+                    <span class="t-label">Records</span>
+                    <h1 class="t-title">TEG Records</h1>
+                </div>
+                <div class="card-top-body">
+                    <table class="sample-table"><thead><tr><th>Record</th><th>Player</th><th>Score</th></tr></thead><tbody>
+                    <tr><td>Lowest Gross Round</td><td>FW</td><td>72</td></tr>
+                    <tr><td>Most Birdies</td><td>JB</td><td>5</td></tr>
+                    </tbody></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

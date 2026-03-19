@@ -132,6 +132,22 @@ Always use the centralized `read_file()` function from `utils.py` which handles 
 - Test changes thoroughly before expanding scope
 - Document the reasoning behind architectural decisions
 
+## Documentation
+
+### Standing instructions for maintaining documentation
+
+After implementing significant new features or architectural changes, update the relevant docs:
+
+- **CLAUDE.md** — Update when architecture, patterns, or development commands change. Keep the `Architecture` section accurate as the project evolves.
+- **Memory files** — Update `project_webapp_architecture.md` when webapp structure, theming, or component patterns change. Update `project_current_state.md` when major milestones are reached.
+- **MEMORY.md index** — Add a pointer whenever a new memory file is created.
+
+When to update:
+- New page area added to webapp → update `project_webapp_architecture.md`
+- New layer or major module added to `teg_analysis/` → update `CLAUDE.md` Architecture section
+- Streamlit migrated to use `teg_analysis/` → update both CLAUDE.md and `project_current_state.md`
+- New development pattern established → document it in the relevant section
+
 ## Model Selection
 
 ### MANDATORY — Model check gate

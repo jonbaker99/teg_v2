@@ -1,6 +1,13 @@
 {% extends "base.html" %}
+
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">Scoring</span>
+    <h1 class="page-title">Streaks</h1>
+</div>
+{% endblock %}
+
 {% block content %}
-<h1 class="page-title">Streaks</h1>
 
 <div class="tab-bar">
     {% for tab_id, tab_label in tabs %}

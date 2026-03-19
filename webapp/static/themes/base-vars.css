@@ -383,6 +383,177 @@ h1, h2, h3, h4, h5, h6 {
     margin-top: auto;
 }
 
+/* ── Page Title (default = Style A: Roboto Mono label + Lora title) ── */
+.page-title-area {
+    padding: 1.5rem 0 0.75rem 0;
+}
+.page-title-area .page-label {
+    display: block;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+}
+.page-title-area .page-title {
+    font-family: var(--font-heading), serif;
+    font-size: 1.375rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1.2;
+}
+.page-title-area .page-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+/* ── Style B: All caps title ── */
+body.ts-b .page-title-area .page-title {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 1.2rem;
+}
+
+/* ── Style C: Breadcrumb (label inline, › separator) ── */
+body.ts-c .page-title-area {
+    display: flex;
+    align-items: baseline;
+    gap: 0;
+}
+body.ts-c .page-title-area .page-label {
+    margin-bottom: 0;
+    font-size: 0.875rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--text-muted);
+}
+body.ts-c .page-title-area .page-label::after {
+    content: ' ›';
+    font-family: sans-serif;
+    color: #ccc;
+    margin: 0 0.4rem;
+}
+body.ts-c .page-title-area .page-title {
+    display: inline;
+    font-size: 1.375rem;
+}
+
+/* ── Style D: Left border rule ── */
+body.ts-d .page-title-area {
+    border-left: 3px solid var(--accent);
+    padding-left: 1rem;
+}
+body.ts-d .page-title-area .page-label {
+    color: var(--accent);
+}
+
+/* ── Style E: Underline rule below title ── */
+body.ts-e .page-title-area .page-title {
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--accent);
+}
+
+/* ── Style C1: Forest green block, white text ── */
+body.ts-c1 .page-title-area {
+    background: #228B22;
+    padding: 0.875rem 2.5rem;
+}
+body.ts-c1 .page-title-area .page-label {
+    color: rgba(255,255,255,0.65);
+}
+body.ts-c1 .page-title-area .page-title {
+    color: #ffffff;
+}
+
+/* ── Style C2: White block, forest green text ── */
+body.ts-c2 .page-title-area {
+    background: #ffffff;
+    padding: 0.875rem 2.5rem;
+    border-bottom: 1px solid #e8e8e8;
+}
+body.ts-c2 .page-title-area .page-label {
+    color: #228B22;
+    opacity: 0.8;
+}
+body.ts-c2 .page-title-area .page-title {
+    color: #228B22;
+}
+
+/* ── Style C3: Grey block, dark text ── */
+body.ts-c3 .page-title-area {
+    background: #e8e5e0;
+    padding: 0.875rem 2.5rem;
+    border-bottom: 1px solid #d0cdc8;
+}
+body.ts-c3 .page-title-area .page-label {
+    color: #666;
+}
+body.ts-c3 .page-title-area .page-title {
+    color: #111;
+}
+
+/* ── Page Title Outer — constrains title band to match .mx-auto by default ── */
+.page-title-outer {
+    width: fit-content;
+    min-width: min(800px, 90vw);
+    max-width: min(90vw, 1280px);
+    margin: 0 auto;
+}
+
+/* C1/C2/C3 — full viewport width, flush below navbar */
+body.ts-c1 .page-title-outer,
+body.ts-c2 .page-title-outer,
+body.ts-c3 .page-title-outer {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0;
+}
+
+/* F1/F2/F3 — band caps the white card (card-top layout) */
+body.ts-f1 .page-title-area,
+body.ts-f2 .page-title-area,
+body.ts-f3 .page-title-area {
+    margin-top: 1.5rem;
+    padding: 0.875rem 2.5rem;
+    border-radius: 0.25rem 0.25rem 0 0;
+}
+body.ts-f1 .main-content,
+body.ts-f2 .main-content,
+body.ts-f3 .main-content {
+    margin-top: 0 !important;
+    border-radius: 0 0 0.25rem 0.25rem !important;
+}
+/* F1: green band */
+body.ts-f1 .page-title-area { background: #228B22; }
+body.ts-f1 .page-title-area .page-label { color: rgba(255,255,255,0.65); }
+body.ts-f1 .page-title-area .page-title  { color: #ffffff; }
+/* F2: white band, green text */
+body.ts-f2 .page-title-area { background: #ffffff; border-bottom: 1px solid #e8e8e8; }
+body.ts-f2 .page-title-area .page-label { color: #228B22; opacity: 0.8; }
+body.ts-f2 .page-title-area .page-title  { color: #228B22; }
+/* F3: grey band */
+body.ts-f3 .page-title-area { background: #e8e5e0; border-bottom: 1px solid #d0cdc8; }
+body.ts-f3 .page-title-area .page-label { color: #666; }
+body.ts-f3 .page-title-area .page-title  { color: #111; }
+
+/* ── Section Title (in-page, Option D style) ── */
+.section-title {
+    font-family: var(--font-heading), serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 1rem 0;
+    padding-left: 0.75rem;
+    border-left: 3px solid var(--accent);
+    line-height: 1.3;
+}
+
 /* ── Layout utilities ── */
 .section-gap {
     margin-bottom: 1.5rem;
