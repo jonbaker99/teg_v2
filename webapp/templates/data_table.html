@@ -11,8 +11,8 @@
 {% if subtitle %}<p class="page-subtitle">{{ subtitle }}</p>{% endif %}
 {% if sections %}
   {% for section in sections %}
-    {% if section.title %}<h2 class="section-title">{{ section.title }}</h2>{% endif %}
     {% if section.subtitle %}<p class="page-subtitle">{{ section.subtitle }}</p>{% endif %}
+    {% if section.title %}<div class="card-header">{{ section.title }}</div>{% endif %}
     <div class="data-card"><div style="overflow-x: auto;">{{ section.table_html | safe }}</div></div>
   {% endfor %}
 {% else %}

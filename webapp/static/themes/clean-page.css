@@ -26,3 +26,41 @@ body.page-bg {
     padding-left: 2.5rem;
     padding-right: 2.5rem;
 }
+
+/* E2: title visually joins the white content card; shadow on container, not main-content */
+body.ts-e2 .page-container {
+    margin-top: 1.5rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    border-radius: 0.25rem;
+}
+body.ts-e2 .main-content {
+    box-shadow: none;
+}
+body.ts-e2 .page-title-outer {
+    background: #ffffff;
+    border-radius: 0.25rem 0.25rem 0 0;
+}
+body.ts-e2 .page-title-outer .page-title-area {
+    padding: 1.5rem 2.5rem 0.75rem 2.5rem;
+}
+body.ts-e2 .main-content {
+    margin-top: 0;
+    border-radius: 0 0 0.25rem 0.25rem;
+}
+
+/* No data cards on clean-page — CH1/CH3 fall back to CH2 label style */
+body.ch-ch1 .card-header,
+body.ch-ch3 .card-header {
+    display: block;
+    background: none;
+    border-radius: 0;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 0 0 0.4rem 0;
+    border-bottom: 1px solid #e0ddd8;
+    margin-bottom: 0.5rem;
+}

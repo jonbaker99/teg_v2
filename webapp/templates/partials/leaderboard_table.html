@@ -2,11 +2,11 @@
 <div class="error-box">{{ error }}</div>
 {% else %}
 <div>
-    <h2 class="text-xl heading mb-1">{{ active_title }}</h2>
     {% if active_champion %}
     <p class="mb-3">Champion: <span class="font-bold">{{ active_champion }}</span>{% if active_spoon %} | Wooden spoon: <span class="font-bold">{{ active_spoon }}</span>{% endif %}</p>
     {% endif %}
-    <div class="data-card"> 
+    <div class="card-header">{{ active_title }}</div>
+    <div class="data-card">
         <div class="overflow-x-auto">
         {{ active_table | safe }}
         </div>

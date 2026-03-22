@@ -12,7 +12,11 @@ from webapp.routes import (
     placeholder, history, latest, performance, scoring, scorecards,
     eclectic, width_test, title_preview,
 )
-from webapp.theme import get_theme, THEMES, get_title_style, TITLE_STYLES
+from webapp.theme import (
+    get_theme, THEMES,
+    get_title_style, TITLE_STYLES,
+    get_card_header_style, CARD_HEADER_STYLES,
+)
 
 app = FastAPI(title="TEG Stats")
 
@@ -29,6 +33,8 @@ async def theme_middleware(request: Request, call_next):
     request.state.themes = THEMES
     request.state.title_style = get_title_style(request)
     request.state.title_styles = TITLE_STYLES
+    request.state.card_header_style = get_card_header_style(request)
+    request.state.card_header_styles = CARD_HEADER_STYLES
     return await call_next(request)
 
 

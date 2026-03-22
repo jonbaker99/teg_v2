@@ -10,23 +10,34 @@ body.page-bg {
     background-color: #e0ddd8 !important; /* Fix B: beats clean-page.css !important */
 }
 
-/* Layer 2: page panel — warm taupe "paper" floating on background */
-.page-panel {
-    background: #f5f3f0;
-    border-radius: 0.375rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    margin: 1.5rem auto;
+/* Layer 2: page container + panel */
+
+/* Container: handles width/centering for both title-outer and panel */
+.page-container {
     max-width: min(90vw, 1280px);
     min-width: min(800px, 90vw);
+    margin: 1.5rem auto;
 }
 
-/* Inside the panel, children fill width — panel handles constraints */
-.page-panel .page-title-outer {
+/* Title-outer fills container width */
+.page-title-outer {
     width: 100%;
     min-width: 0;
     max-width: none;
     margin: 0;
 }
+
+/* A–E default: panel is its own visual card */
+.page-panel {
+    background: #f5f3f0;
+    border-radius: 0.375rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin: 0;
+    max-width: none;
+    min-width: 0;
+}
+
+/* Inside the panel, children fill width */
 .page-panel .content-wrapper {
     width: 100%;
     min-width: 0;
@@ -34,11 +45,38 @@ body.page-bg {
     margin: 0;
 }
 
-/* Fix A: title bar sits flush at panel top edge; round top corners to match panel */
-/* body prefix raises specificity to (0,2,1) to beat body.ts-fN .page-title-area rules */
-body .page-panel .page-title-area {
-    margin-top: 0;
+/* F/E2: container becomes the visual card; panel and title-outer are plain */
+body[class*=" ts-f"] .page-container,
+body[class^="ts-f"] .page-container,
+body.ts-e2 .page-container {
+    background: #f5f3f0;
+    border-radius: 0.375rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+body[class*=" ts-f"] .page-panel,
+body[class^="ts-f"] .page-panel,
+body.ts-e2 .page-panel {
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+}
+
+/* F-styles: title area gets top rounded corners to match container */
+body[class*=" ts-f"] .page-title-area,
+body[class^="ts-f"] .page-title-area {
     border-radius: 0.375rem 0.375rem 0 0;
+    margin-top: 0;
+}
+
+/* E2: reset clean-page.css overrides; title-outer is plain, title-area blends into container */
+body.ts-e2 .page-title-outer {
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+}
+body.ts-e2 .page-title-area {
+    background: #f5f3f0;
+    padding: 1.5rem 2.5rem 0.75rem 2.5rem;
 }
 
 /* main-content becomes a transparent layout container, not a card */
@@ -54,10 +92,53 @@ body .page-panel .page-title-area {
 .data-card {
     background: #ffffff;
     border-radius: 0.25rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    box-shadow:
+        0 1px 2px rgba(90,70,50,0.08),
+        0 4px 14px rgba(90,70,50,0.13);
     /* padding: 0.5rem 1.25rem; */
-    padding: 0px;
+    padding: 0px 12px;
     /* margin-top: 0.75rem;
     margin-bottom: 1rem; */
-    margin: 1rem 0.5rem;
+    margin: 1rem 0rem;
+}
+
+/* Non-tabular content (charts, text blocks) needs vertical padding — tables self-pad via cells */
+.data-card--padded {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+/* Hide last-row bottom border — clashes with card edge */
+.data-card .teg-table tbody tr:last-child td,
+.data-card .records-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Restore CH1/CH3 card header styles — clean-page.css overrides base-vars via cascade;
+   these rules come last and win back the correct layered-theme appearance */
+body.ch-ch1 .card-header {
+    background: #e2dfda;
+    border-radius: 0.25rem 0.25rem 0 0;
+    padding: 0.4rem 1rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #555;
+    margin-bottom: 0;
+    border-bottom: none;
+}
+body.ch-ch3 .card-header {
+    background: none;
+    border-radius: 0;
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #1a1a1a;
+    text-transform: none;
+    letter-spacing: normal;
+    padding: 0;
+    border-bottom: none;
+    margin-bottom: 0.5rem;
 }

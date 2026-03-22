@@ -458,6 +458,12 @@ body.ts-e .page-title-area .page-title {
     border-bottom: 2px solid var(--accent);
 }
 
+/* ── Style E2: Underline rule below title (on-page variant — positioned on panel/card) ── */
+body.ts-e2 .page-title-area .page-title {
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--accent);
+}
+
 /* ── Style C1: Forest green block, white text ── */
 body.ts-c1 .page-title-area {
     background: #228B22;
@@ -574,7 +580,7 @@ body.ts-f4 .page-title-area .page-label {
 }
 body.ts-f4 .page-title-area .page-title {
     order: 1;
-    color: #228B22;
+    color: #111;
 }
 
 /* F5: green card, white title, light green category (inline layout) */
@@ -619,6 +625,60 @@ body.ts-f5 .page-title-area .page-title {
 .data-card {
     /* no default styling — themed in clean-layered and future layered themes */
 }
+
+/* ── Card header — styled via body class ch-X ── */
+.card-header {
+    display: none; /* hidden by default and when ch-ch0 */
+}
+
+/* CH1 — Grey bar, mono caps (sits visually on top of data-card) */
+body.ch-ch1 .card-header {
+    display: block;
+    background: #e2dfda;
+    padding: 0.4rem 1rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #555;
+    border-radius: 0.25rem 0.25rem 0 0;
+    margin-top: 2rem;
+    margin-bottom: 0;
+}
+body.ch-ch1 .card-header:first-child { margin-top: 0; }
+body.ch-ch1 .card-header + .data-card {
+    border-radius: 0 0 0.25rem 0.25rem;
+    margin-top: 0;
+}
+
+/* CH2 — Mono label above card (on panel surface) */
+body.ch-ch2 .card-header {
+    display: block;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #e0ddd8;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+}
+body.ch-ch2 .card-header:first-child { margin-top: 0; }
+
+/* CH3 — Serif title above card (editorial feel) */
+body.ch-ch3 .card-header {
+    display: block;
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #1a1a1a;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+}
+body.ch-ch3 .card-header:first-child { margin-top: 0; }
 
 /* ── Chart description ── */
 .chart-description {
