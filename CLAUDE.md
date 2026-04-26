@@ -65,6 +65,8 @@ The project has two distinct architectural phases. **The Streamlit app is the or
 
 3. **`webapp/`** — FastAPI + HTMX + Jinja2 + Tailwind proof-of-concept. Not deployed; used locally to experiment with different UIs and visual styles. Run with `uvicorn webapp.app:app --reload` from the repo root.
 
+4. **`ad_hoc_analysis/`** — Jupyter notebooks for exploratory / one-off analysis. Calls `teg_analysis/` directly. Start with `quickstart.ipynb`.
+
 For Streamlit internals (app structure, page organisation, caching, data loading, GitHub integration), see `streamlit/README.md`. For the full data pipeline (storage → I/O → loader → aggregation → webapp), see `DATA_FLOW.md`.
 
 ## Design Philosophy

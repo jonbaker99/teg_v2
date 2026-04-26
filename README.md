@@ -39,6 +39,9 @@ streamlit run streamlit/nav.py
 # Run the webapp (needs: pip install fastapi uvicorn jinja2)
 uvicorn webapp.app:app --reload
 # Then visit http://localhost:8000
+
+# Open the ad-hoc analysis quickstart notebook (needs: pip install jupyter)
+jupyter notebook ad_hoc_analysis/quickstart.ipynb
 ```
 
 ## Project structure
@@ -52,6 +55,7 @@ teg_analysis/        Core analysis package (standalone, no Streamlit dependency)
   display/           Formatting, HTML tables, navigation utilities
   api/               (Placeholder for REST API endpoints)
 
+ad_hoc_analysis/     Jupyter notebooks for exploratory / one-off analysis
 streamlit/           The existing Streamlit app (deployed on Railway)
 tests/               Test suite for teg_analysis
 examples/            FastAPI proof-of-concept
@@ -69,6 +73,7 @@ DATA_FLOW.md         Reference guide for the data pipeline
 | `webapp/` | FastAPI + HTMX frontend (local development only). See `webapp/README.md` |
 | `streamlit/` | Production Streamlit app, deployed on Railway. See `streamlit/README.md` |
 | `data/` | Tournament data files (parquet, CSV, commentary markdown) |
+| `ad_hoc_analysis/` | Jupyter notebooks for exploratory / one-off analysis |
 | `tests/` | Test suite for `teg_analysis` |
 | `examples/` | FastAPI proof-of-concept |
 | `CLAUDE.md` | Development guidelines for Claude Code |

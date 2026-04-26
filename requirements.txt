@@ -12,3 +12,5 @@ anthropic
 fastapi
 uvicorn[standard]
 jinja2
+jupyter
+ipykernel
