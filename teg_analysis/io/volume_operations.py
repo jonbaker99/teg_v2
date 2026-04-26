@@ -8,6 +8,8 @@ environment detection and path construction utilities.
 import os
 from pathlib import Path
 
+_REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+
 
 def _is_railway() -> bool:
     """Check if running on Railway environment.
@@ -37,15 +39,9 @@ def _get_local_path(file_path: str) -> Path:
         file_path (str): Relative file path (e.g., 'data/file.csv')
 
     Returns:
-        Path: Absolute local path based on BASE_DIR
-
-    Note:
-        Requires BASE_DIR to be imported from the calling context.
+        Path: Absolute local path resolved from repo root
     """
-    # Import here to avoid circular imports
-    from pathlib import Path
-    BASE_DIR = Path.cwd().parent if Path.cwd().name == "streamlit" else Path.cwd()
-    return BASE_DIR / file_path
+    return _REPO_ROOT / file_path
 
 
 def _ensure_volume_dir(volume_path: str) -> None:

@@ -119,6 +119,20 @@ def get_ranked_frontback_data():
     return ranked_data
 
 
+def get_ranked_career_data():
+    """Gets career-level (all-time per player) data with rankings added.
+
+    Returns:
+        pd.DataFrame: Career-level aggregated data with ranking columns.
+    """
+    # Import here to avoid circular dependency
+    from .aggregation import get_Pl_data
+
+    df = get_Pl_data()
+    ranked_data = add_ranks(df)
+    return ranked_data
+
+
 def get_best(df, measure_to_use, player_level=False, top_n=1):
     """Gets the best performances based on the specified measure.
 

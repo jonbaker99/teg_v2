@@ -88,7 +88,7 @@ def aggregate_data(data: pd.DataFrame, aggregation_level: str, measures: List[st
 
     Parameters:
         data (pd.DataFrame): The DataFrame to aggregate.
-        aggregation_level (str): The level of aggregation ('Player', 'TEG', 'Round', 'FrontBack', 'Hole').
+        aggregation_level (str): The level of aggregation ('Player', 'TEG', 'Round', 'FrontBack', 'Hole'). Use 'Player' for career/all-time totals.
         measures (List[str], optional): List of measure columns to aggregate. Defaults to standard measures.
         additional_group_fields (List[str], optional): Additional fields to include in the grouping. Defaults to None.
 

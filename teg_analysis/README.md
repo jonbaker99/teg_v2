@@ -65,18 +65,26 @@ teg_analysis/
 All analysis starts with hole-level data and aggregates upward:
 
 ```
-Hole-level (load_all_data)
+Hole-level    load_all_data()              6,390 rows × 53 cols — one row per player/TEG/round/hole
+  ↓ aggregate_data(df, "FrontBack")
+9-hole level  get_9_data()                 one row per player/TEG/round/front-or-back
   ↓ aggregate_data(df, "Round")
-Round-level (score per round)
+Round-level   get_round_data()             one row per player/TEG/round
   ↓ aggregate_data(df, "TEG")
-TEG-level (score per tournament)
+TEG-level     get_complete_teg_data()      one row per player/TEG
+  ↓ aggregate_data(df, "Player")
+Career-level  get_Pl_data()                one row per player — all-time totals
 ```
 
-Each level has a convenience function:
-- `get_hole_data()` — not typically used; load_all_data() gives hole-level
-- `get_round_data()` — aggregated by round
-- `get_complete_teg_data()` — aggregated by TEG (excludes incomplete tournaments)
-- `get_9_data()` — aggregated by 9-hole (Front/Back)
+**Which level for which question:**
+
+| Question | Level | Function |
+|----------|-------|----------|
+| Score on a specific hole | Hole | `load_all_data()` |
+| Front 9 vs Back 9 splits? | 9-hole | `get_9_data()` |
+| How did a player do in one round? | Round | `get_round_data()` |
+| Best/worst TEG a player has had? | TEG | `get_complete_teg_data()` |
+| Career totals / all-time averages? | Career | `get_Pl_data()` |
 
 ### Adding ranks
 
@@ -111,8 +119,12 @@ Cache is in-process (`@lru_cache`). Cleared manually after data updates.
 
 ### Data loading
 - `load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=True)` — Load hole-level data. TEG 50 is a test tournament (created to verify data pipelines) and should never appear in results or statistics — `exclude_teg_50` defaults to `True` and should stay that way.
-- `get_round_data()`, `get_complete_teg_data()`, `get_9_data()` — Convenience aggregation accessors
+- `get_9_data()` — 9-hole (front/back) level aggregation
+- `get_round_data()` — round-level aggregation
+- `get_complete_teg_data()` — TEG-level aggregation (excludes incomplete tournaments)
+- `get_Pl_data()` — career-level aggregation (one row per player, all-time totals)
 - `add_ranks(df)` — Add rank columns to any aggregated data
+- `get_ranked_frontback_data()`, `get_ranked_round_data()`, `get_ranked_teg_data()`, `get_ranked_career_data()` — convenience wrappers: load + aggregate + add ranks in one call
 
 ### Aggregation
 - `aggregate_data(df, level)` — Aggregate to "Round", "TEG", or "FrontBack" level
