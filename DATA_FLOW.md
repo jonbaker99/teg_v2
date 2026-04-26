@@ -2,6 +2,8 @@
 
 Reference guide for how data flows from raw files through the analysis pipeline and into rendered pages.
 
+**Maintenance note:** Update this file whenever data files are added, renamed, or restructured, or when the pipeline layers change.
+
 ---
 
 ## 1. Storage Layer
@@ -19,6 +21,8 @@ data/
   commentary_*.parquet    ← AI-generated commentary (round/tournament summaries, streaks)
 ```
 
+**Unresolved:** `all-data.parquet` and `all-scores.parquet` both contain hole-level data at the same granularity but with different columns (53 vs 17). It is not yet clear whether these should be rationalised into a single source. Investigate before making changes to either file.
+
 ---
 
 ## 2. I/O Layer
@@ -30,7 +34,7 @@ read_file(path)
   ├─ Local dev    →  pd.read_parquet/csv from data/
   └─ Railway      →  check Railway volume → if missing, pull from GitHub API → cache to volume
 
-write_file(path, df)  →  Railway volume  +  GitHub commit  (Streamlit data update pages only)
+write_file(path, df)  →  Railway volume  +  GitHub commit  (triggered by Streamlit data update and delete pages only)
 ```
 
 **Note:** The webapp is **read-only** — no write path.
@@ -229,11 +233,3 @@ GET /player/{code}
                     Browser
 ```
 
----
-
-## Notes
-
-- **Caching strategy:** Aggressive caching on Railway to minimize GitHub API calls. Cache manually cleared after data updates.
-- **Separation of concerns:** `teg_analysis/` has no Streamlit imports and works standalone; webapp uses FastAPI + HTMX.
-- **Read-only webapp:** All data writes happen via Streamlit pages; webapp is purely read-only.
-- **Baseline data:** `all-data.parquet` is the single source of truth — all other aggregations derive from it.

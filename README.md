@@ -1,14 +1,24 @@
 # TEG v2
 
-Golf tournament analysis for the TEG (The El Golfo) group. Tracks scores, records, streaks, and standings across 17+ annual tournaments with 7 players.
+Golf tournament analysis for the TEG (The El Golfo) group. TEG is both the name of the group and each annual tournament event — so "TEG 17" means the 17th tournament. Tracks scores, records, streaks, and standings across 17+ annual tournaments with 7 players.
+
+## Architecture: old vs new
+
+The project has evolved through two phases:
+
+**Phase 1 — Streamlit (original, stable):** All analysis and UI live together in the `streamlit/` folder. This is deployed on Railway and working. It is intentionally self-contained — changes to the rest of the codebase do not affect it, and it will not be migrated.
+
+**Phase 2 — Decoupled (current direction):** Analysis logic has been extracted into `teg_analysis/`, a UI-agnostic Python package. This is the source of truth for all analytical work — it can be called from a webapp, a REST API, a Jupyter notebook, or any other frontend. The new `webapp/` frontend is being built on top of it.
+
+The key principle: **`teg_analysis/` owns the analysis; frontends are interchangeable.**
 
 ## What's here
 
-This repo has two things:
+1. **`streamlit/`** -- The original Streamlit dashboard, deployed on Railway. Self-contained; not changing.
 
-1. **`streamlit/`** -- A working Streamlit dashboard deployed on Railway (`main` branch). Leaderboards, scorecards, records, historical data, commentary reports.
+2. **`teg_analysis/`** -- The UI-agnostic analysis package. The canonical source for all TEG data, scoring, records, and statistics. Use this for any new analytical work.
 
-2. **`teg_analysis/`** -- A standalone Python package that contains the core analysis logic, extracted from the Streamlit app so it can power any frontend (API, CLI, notebook, etc). This is the focus of current development.
+3. **`webapp/`** -- New frontend in progress (FastAPI + HTMX + Jinja2). Calls `teg_analysis/` for all data. Not yet deployed.
 
 ## Quick start
 
@@ -26,9 +36,9 @@ print(f'{len(df)} rows, {df.TEGNum.nunique()} TEGs, {df.Player.nunique()} player
 # Run the Streamlit app (needs: pip install -r requirements.txt)
 streamlit run streamlit/nav.py
 
-# Run the FastAPI example (needs: pip install fastapi uvicorn)
-python examples/example_fastapi.py
-# Then visit http://localhost:8000/docs
+# Run the webapp (needs: pip install fastapi uvicorn jinja2)
+uvicorn webapp.app:app --reload
+# Then visit http://localhost:8000
 ```
 
 ## Project structure
@@ -47,26 +57,25 @@ tests/               Test suite for teg_analysis
 examples/            FastAPI proof-of-concept
 data/                Tournament data files (parquet, CSV, commentary reports)
 
-CLAUDE.md            Development guidelines
-PROJECT_PLAN.md      Objectives, next steps, resume instructions
-BRANCHES.md          Guide to all branches
+CLAUDE.md            Development guidelines for Claude Code
+DATA_FLOW.md         Reference guide for the data pipeline
 ```
 
 ## Folder guide
 
 | Directory / File | Purpose |
 |---|---|
-| `teg_analysis/` | Standalone analysis package — io, core, analysis, display, api layers |
-| `streamlit/` | Production Streamlit app, deployed on Railway |
+| `teg_analysis/` | Standalone analysis package — io, core, analysis, display, api layers. See `teg_analysis/README.md` |
+| `webapp/` | FastAPI + HTMX frontend (local development only). See `webapp/README.md` |
+| `streamlit/` | Production Streamlit app, deployed on Railway. See `streamlit/README.md` |
 | `data/` | Tournament data files (parquet, CSV, commentary markdown) |
 | `tests/` | Test suite for `teg_analysis` |
-| `examples/` | FastAPI proof-of-concept (`example_fastapi.py`) |
+| `examples/` | FastAPI proof-of-concept |
 | `CLAUDE.md` | Development guidelines for Claude Code |
-| `PROJECT_PLAN.md` | Objectives, known issues, next steps, resume instructions |
-| `BRANCHES.md` | Guide to all branches and their status |
+| `DATA_FLOW.md` | Data pipeline reference guide |
 
 ## Current status
 
-See [PROJECT_PLAN.md](PROJECT_PLAN.md) for the full plan, known issues, and how to resume work.
+The Streamlit app is deployed and stable. The `teg_analysis` package is merged to `main` — all cleanup complete, ready to power multiple frontends. The `webapp/` is in active development with 26 endpoints and data parity vs Streamlit.
 
-The Streamlit app is stable and deployed on Railway. The `teg_analysis` package is merged to `main` and validated as working standalone with all 6,390 rows of data. Next steps: stabilise the package and build a proper REST API.
+See [CLAUDE.md](CLAUDE.md) for current work priorities and architecture decisions. See folder-level READMEs (`teg_analysis/README.md`, `webapp/README.md`, `streamlit/README.md`) for each component.

@@ -1,8 +1,24 @@
+This document is for me to capture rough thoughts, ideas, next steps etc. It may at times be outdated and should not be taken as gospel.
 
-=== IN PROGRES ===
+Agents should not make wholesale changes to this file. It's ok to 
+- leave comments on sections and specific lines to mark progress, ask questions etc
+- read to get a rough idea of things we might want to do next
+  
+
+
+
+=== ROUGH THOUGHTS ===
+
+Check documentation - everything needed, clarity, remove redundancu
+Clear folder structure - separate space for ad hoc python analysis and trying new things
+
+'Quick start' for ad-hoc analysis in jupyter -> quick starter code or function to load data etc
+
+
+=== IN PROGRESS ===
 
 Layered page
-- Backhground too dark => try: make 'page' wider (the max width of the content) but make content follow its existing rules? Might look weird for cards.
+- Background too dark => try: make 'page' wider (the max width of the content) but make content follow its existing rules? Might look weird for cards.
 - Or try having a less dark background?
   - A) other colours as is
   - B) background matches current page colour and:

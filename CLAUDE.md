@@ -4,34 +4,51 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Python Streamlit application for analyzing TEG (annual golf tournament) data. The app is deployed on Railway and reads golf tournament data from GitHub via API calls to serve results to multiple users.
+TEG v2 is a golf tournament analysis project. It has two architectural layers: a legacy Streamlit app (deployed on Railway, self-contained, stable) and a newer decoupled architecture — a UI-agnostic `teg_analysis/` Python package plus a `webapp/` FastAPI frontend in progress. All new analytical work belongs in `teg_analysis/`.
+
+## Note on documentation
+
+Do not read or reference `to_do_jon.md` unless the user explicitly asks you to. It is a personal draft notes file, not project documentation.
 
 ## Development Commands
 
-### Running the Application
 ```bash
-# Local development
+# Run the webapp (active development)
+uvicorn webapp.app:app --reload
+
+# Run the Streamlit app (production app — see streamlit/README.md)
 streamlit run streamlit/nav.py
 
-# Production deployment (Railway)
-# Uses: streamlit run streamlit/nav.py --server.port=$PORT --server.address=0.0.0.0
-```
-
-### Dependencies
-```bash
 # Install dependencies
 pip install -r requirements.txt
-
-# Key dependencies: streamlit, pandas, numpy, google-auth, gspread, PyGithub, plotly, altair
 ```
+
+## Current state & next steps
+
+### What's done
+- **teg_analysis package**: Phases 1–7 cleanup complete (all Streamlit imports removed, aggregation/streaks/scoring refactored, dead code removed). Merged to `main`. Ready to be the canonical analysis layer.
+- **Webapp**: 26 endpoints implemented with data parity vs Streamlit. All functional. Ready for visual polish.
+- **Architecture**: Decoupled design documented and validated. `teg_analysis` is fully UI-agnostic.
+
+### Next priorities
+1. **Webapp formatting pass** — visual polish, number formatting, table styling consistency, layout refinement. In progress in local branches.
+2. **REST API** — build proper `/api` layer powered by `teg_analysis`. Goal: expose the analysis layer over HTTP so any client (scripts, mobile, other frontends) can access it without needing Python. Currently a placeholder in `teg_analysis/api/`.
+3. **Retire Streamlit** — long-term goal once REST API + new webapp are production-ready.
+
+### To investigate
+- **Data file rationalisation** — `all-data.parquet` (53 cols, used by `teg_analysis`) and `all-scores.parquet` (17 cols, used by Streamlit) are both hole-level but differ in columns. Unclear if they should be one source. Investigate before making changes to either. See `DATA_FLOW.md`.
+
+For detailed next steps on the webapp, see `webapp/README.md`.
 
 ## Architecture
 
-### Two-Layer Structure
+### Old vs new
 
-The project has two main layers:
+The project has two distinct architectural phases. **The Streamlit app is the original architecture** — self-contained, deployed, not changing. **The decoupled architecture is the current direction**: `teg_analysis/` is a UI-agnostic analysis layer that any frontend can call; `webapp/` is the new frontend being built on top of it. Do not conflate the two — changes to `teg_analysis/` or `webapp/` should never touch `streamlit/`.
 
-1. **`teg_analysis/`** — Standalone Python package with all core analysis logic, **fully independent of Streamlit** (no streamlit imports at module level):
+### Layers
+
+1. **`teg_analysis/`** — The canonical, UI-agnostic analysis package. **All new analytical work goes here.** Fully independent of any frontend (no streamlit imports at module level):
    - `constants.py` — Centralised file paths, player data, tournament metadata
    - `io/` — File I/O (`read_file`/`write_file`), GitHub API (uses `GITHUB_TOKEN` env var), Railway volume management
    - `core/` — Data loading (`load_all_data`) and transformation
@@ -39,83 +56,11 @@ The project has two main layers:
    - `display/` — Formatting, HTML tables, navigation utilities (returns HTML strings, never calls st.write)
    - `api/` — Placeholder for REST API endpoints
 
-2. **`streamlit/`** — The production Streamlit app (deployed on Railway), which currently uses its own `utils.py` rather than `teg_analysis/`. Migrating the Streamlit app to use `teg_analysis/` is a future goal.
+2. **`streamlit/`** — The original production app (deployed on Railway). Uses its own `utils.py` and is intentionally self-contained. It will not be migrated to use `teg_analysis/` — it represents the old architecture and should be left stable.
 
 3. **`webapp/`** — FastAPI + HTMX + Jinja2 + Tailwind proof-of-concept. Not deployed; used locally to experiment with different UIs and visual styles. Run with `uvicorn webapp.app:app --reload` from the repo root.
 
-### Streamlit App Structure
-- **Entry point**: `streamlit/nav.py` - Main navigation controller defining all pages
-- **Data utilities**: `streamlit/utils.py` - Core data loading and GitHub integration functions
-- **Page modules**: Numbered files (100s=History, 200s=Results, 300s=Records, etc.)
-- **Data storage**: CSV/Parquet files in `data/` directory, also stored in GitHub for production
-
-### Data Flow Pattern
-```python
-# Environment-aware data loading
-def read_file(file_path: str) -> pd.DataFrame:
-    if os.getenv('RAILWAY_ENVIRONMENT'):
-        return read_from_github(file_path)  # Production: GitHub API
-    else:
-        return pd.read_csv(local_path)      # Development: Local files
-```
-
-### Key Data Files
-- `all-scores.parquet` - Primary tournament analysis dataset
-- `handicaps.csv` - Player handicap reference data
-- `round_info.csv` - Course and tournament metadata
-
-### Page Organization
-Navigation organized by functional areas:
-- **History**: Tournament history and results (`101TEG History.py`, `102TEG Results.py`)
-- **Records & PBs**: Records, personal bests, and worsts (`300TEG Records.py`, `301Best_TEGs_and_Rounds.py`, etc.)
-- **Scoring**: Detailed scoring analysis (`ave_by_*.py`, `scoring.py`, `streaks.py`, etc.)
-- **Latest TEG**: Current tournament focus (`leaderboard.py`, `scorecard_v2.py`, `latest_*.py`)
-- **Data**: Administrative functions (`1000Data update.py`, `delete_data.py`)
-
-## Caching Strategy
-
-The app uses an aggressive caching strategy optimized for Railway deployment:
-
-### Cache Principles
-- **No TTL on caches** - Data persists until manually cleared
-- **Shared cache** across all users on Railway instance
-- **Manual cache clearing** after data updates/deletions
-- **File read caching** to eliminate GitHub API bottlenecks
-
-### Critical Cache Pattern
-```python
-@st.cache_data  # No TTL - cleared manually after data changes
-def read_file(file_path: str) -> pd.DataFrame:
-    # GitHub API calls are expensive - cache aggressively
-```
-
-### Cache Management
-- Clear all caches after data updates: `st.cache_data.clear()`
-- Cache is cleared in data update (`1000Data update.py`) and deletion (`delete_data.py`) operations
-- Reference data (handicaps, course info) cached until manual clear
-- Tournament data cache invalidated when `all-scores.parquet` is modified
-
-## Development Guidelines
-
-### File Naming Convention
-- Navigation pages use descriptive names with spaces
-- Utility modules use snake_case
-- Pages are numbered by category (100s, 200s, 300s, etc.)
-
-### Data Loading Pattern
-Always use the centralized `read_file()` function from `utils.py` which handles both local development and Railway production environments automatically.
-
-### GitHub Integration
-- Repository: `jonbaker99/teg_v2`
-- Production reads all data files via GitHub API
-- Data updates commit changes back to GitHub
-- Use functions from `utils.py` for GitHub operations
-
-### Performance Considerations
-- First page load is slow (GitHub API + cache population)
-- Subsequent loads are fast (cached data)
-- Cache shared across all users on Railway instance
-- Manual cache clearing ensures data freshness after updates
+For Streamlit internals (app structure, page organisation, caching, data loading, GitHub integration), see `streamlit/README.md`. For the full data pipeline (storage → I/O → loader → aggregation → webapp), see `DATA_FLOW.md`.
 
 ## Design Philosophy
 
@@ -186,11 +131,9 @@ After Haiku or Sonnet complete a batch of work, switch to Opus for review.
 
 **Sonnet/Haiku: what to document when done**
 
-Update NEXT_SESSION.md with a "Changes made" section that includes:
-- Files modified/deleted, with before/after line counts
-- Functions added, removed, or renamed (old name → new name)
-- Any backward-compatible aliases added
-- Any callers updated and how
+Update the "Current state & next steps" section in CLAUDE.md with a brief summary of:
+- What you changed (files modified, functions added/removed/renamed)
+- What's next (highest-priority work)
 - Anything you were unsure about or deliberately left for Opus to decide
 
 **Opus: review checklist**
