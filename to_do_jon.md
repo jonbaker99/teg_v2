@@ -41,6 +41,15 @@ Like NFL (https://www.nfl.com/schedules/2025/by-team/new-york-giants)
 -> cards on page card on background
 
 
+
+IDEAS AND INSPIRATION
+
+    SEPARATE WITH 'SHADED' (//////) AREAS LIKE ON https://kazukinoda.com/
+    TABLES: BASIC ON rgb(224, 222, 209) 
+    https://www.seaharvest.net.au -> PRINTED VIBE
+    Masters website: faint grey background, content in white cards
+
+
 ============
 
 ACTIONED (TO CHECK)
