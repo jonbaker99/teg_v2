@@ -6,6 +6,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 TEG v2 is a golf tournament analysis project. It has two architectural layers: a legacy Streamlit app (deployed on Railway, self-contained, stable) and a newer decoupled architecture — a UI-agnostic `teg_analysis/` Python package plus a `webapp/` FastAPI frontend in progress. All new analytical work belongs in `teg_analysis/`.
 
+## Domain knowledge
+
+- A **TEG** is an annual golf tournament. Each TEG consists of several rounds (usually 4), each of 18 holes split into a front 9 (holes 1–9) and back 9 (holes 10–18).
+- There are two competitions per TEG: **gross** and **net**. Up to TEG 7, net was total net vs par; from TEG 8 onwards it is total Stableford points.
+
 ## Note on documentation
 
 Do not read or reference `to_do_jon.md` unless the user explicitly asks you to. It is a personal draft notes file, not project documentation.
@@ -71,27 +76,45 @@ For Streamlit internals (app structure, page organisation, caching, data loading
 - **Prefer minimal, focused changes over comprehensive rewrites** UNLESS a rewrite will significantly simplify the codebase
 - **Ask "What's the smallest change that solves this?" before implementing** - Think minimalism first
 
-### Development Approach
-- Build incrementally on existing patterns
-- Prioritize code maintainability over clever solutions  
-- Test changes thoroughly before expanding scope
-- Document the reasoning behind architectural decisions
-
 ## Documentation
 
-### Standing instructions for maintaining documentation
+### Rule 1 — Always maintain documentation
 
-After implementing significant new features or architectural changes, update the relevant docs:
+Documentation is part of every code change, not an afterthought. When you add, rename, or remove a data file, function, module, or architectural layer, update the relevant doc in the same session. Never leave docs describing something that no longer exists.
 
-- **CLAUDE.md** — Update when architecture, patterns, or development commands change. Keep the `Architecture` section accurate as the project evolves.
-- **Memory files** — Update `project_webapp_architecture.md` when webapp structure, theming, or component patterns change. Update `project_current_state.md` when major milestones are reached.
-- **MEMORY.md index** — Add a pointer whenever a new memory file is created.
+### Rule 2 — Each file has one role; content lives in exactly one place
 
-When to update:
-- New page area added to webapp → update `project_webapp_architecture.md`
-- New layer or major module added to `teg_analysis/` → update `CLAUDE.md` Architecture section
-- Streamlit migrated to use `teg_analysis/` → update both CLAUDE.md and `project_current_state.md`
-- New development pattern established → document it in the relevant section
+| File | Owns | Does not contain |
+|------|------|-----------------|
+| `README.md` | Public entry point — what it is, how to run, folder map | Deep detail; current state beyond one line |
+| `CLAUDE.md` | Project-wide instructions for Claude — architecture, patterns, model rules, current state | Subfolder-specific detail |
+| `DATA_FLOW.md` | Full data pipeline reference — storage → I/O → analysis → webapp | Per-subfolder data loading patterns |
+| `teg_analysis/README.md` | Package API — functions, data levels, constraints | Pipeline or webapp detail |
+| `streamlit/README.md` | Streamlit internals — structure, caching, page org | Anything outside `streamlit/` |
+| `webapp/README.md` | Webapp stack, themes, design principles, current status | Anything outside `webapp/` |
+
+**Root vs L1:** `README.md` and `CLAUDE.md` cover the whole project. L1 subfolder READMEs cover only that subfolder. If something is relevant to one subfolder only, it belongs in that subfolder's README, not in the root docs.
+
+### Rule 3 — Additional `.md` files
+
+New `.md` files should only be created when:
+- The content is genuinely too large or specialised for the relevant README (e.g. `webapp/design_principles.md`, `DATA_FLOW.md`)
+- It is a temporary working document (plan, spike notes) — in which case it must be deleted or consolidated when the work is done
+
+Do not accumulate `.md` files. Prefer adding a section to an existing file over creating a new one. If a new file is created permanently, add it to the folder guide in `README.md` and reference it from the relevant README.
+
+`.md` files should not grow so large that they become hard to navigate. If a file is getting unwieldy, split it logically — one clear topic per file — rather than letting it sprawl.
+
+### When to update which file
+
+| Change | Update |
+|--------|--------|
+| New module or layer in `teg_analysis/` | `CLAUDE.md` Architecture + `teg_analysis/README.md` |
+| New webapp page area or pattern | `webapp/README.md` |
+| Data file added, renamed, or removed | `DATA_FLOW.md` Storage Layer |
+| New development command | `CLAUDE.md` Development Commands + `README.md` Quick start |
+| Architecture decision | `CLAUDE.md` Architecture |
+| Streamlit structural change (rare) | `streamlit/README.md` |
 
 ## Model Selection
 
@@ -146,6 +169,3 @@ Update the "Current state & next steps" section in CLAUDE.md with a brief summar
 6. Run tests (`pytest tests/ -v`)
 7. Flag issues in a comment or fix directly, then commit
 
-### general info
-- a 'teg' is a tournament. each teg consistents of a number of rounds (usually 4, with a few exceptions). each round consists of 18 holes. the 18 holes can be categorised as a 'front 9' (holes 1-9)  and 'back 9' (holes 10-18)
-- There are two competitions in each TEG, gross and net. Up to TEG 7, the net competition was based on total net vs par; from TEG 8 onwards the net competition was based on total stableford points
