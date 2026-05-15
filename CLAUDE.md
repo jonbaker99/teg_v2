@@ -77,7 +77,13 @@ if duplicated_scores.any():
     pivot_df.loc[duplicated_scores, 'Rank'] = pivot_df.loc[duplicated_scores, 'Rank'] + '='
 ```
 
-**Fixed in:** `streamlit/leaderboard_utils.py:37`  
+**Variant — pivot table columns are `float64` (not `int64`) when NaN is present.** The same error fires when assigning rank strings into a `float64` pivot column. Fix is the same: convert to `object` first.
+```python
+ranked_df[teg_col] = ranked_df[teg_col].astype(object)
+ranked_df.loc[ranks.index, teg_col] = ranks
+```
+
+**Fixed in:** `streamlit/leaderboard_utils.py:37`, `streamlit/player_history.py:419`  
 **Already safe:** `webapp/deps.py:80–86` (uses the string-first pattern)
 
 For detailed next steps on the webapp, see `webapp/README.md`.
