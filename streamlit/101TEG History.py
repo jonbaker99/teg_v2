@@ -74,7 +74,7 @@ def wrap_player_name(name: str) -> str:
     last = rest[0] if rest else ""
     return f"<span class='player-name'><span class='first'>{first}</span> <span class='last'>{last}</span></span>"
 
-h_tab_3[NAME_COLS] = h_tab_3[NAME_COLS].applymap(wrap_player_name)
+h_tab_3[NAME_COLS] = h_tab_3[NAME_COLS].map(wrap_player_name)
 
 cols = ["TEG", "TEG Trophy", "Green Jacket", "HMM Wooden Spoon"]
 
