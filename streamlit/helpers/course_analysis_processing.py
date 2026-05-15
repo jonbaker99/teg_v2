@@ -129,7 +129,7 @@ def create_course_performance_table(df: pd.DataFrame, aggfunc: str = 'mean') -> 
             return f"{x:+.{round_to}f}"
     
     # Apply formatting to all cells
-    course_data = course_data.applymap(format_performance_number)
+    course_data = course_data.map(format_performance_number)
     
     # Merge with round counts and sort by frequency
     course_data = pd.merge(course_data, course_count_df, on='Course').sort_values(by='Count', ascending=False).drop(columns=['Count'])
