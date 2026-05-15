@@ -34,7 +34,7 @@ def create_leaderboard(leaderboard_df: pd.DataFrame, value_column: str, ascendin
 
     pivot_df.columns = [f'R{col}' if isinstance(col, int) else col for col in pivot_df.columns]
     pivot_df = pivot_df.reset_index()
-    pivot_df['Rank'] = pivot_df['Total'].rank(method='min', ascending=ascending).astype(int)
+    pivot_df['Rank'] = pivot_df['Total'].rank(method='min', ascending=ascending).astype(int).astype(object)
 
     duplicated_scores = pivot_df['Total'].duplicated(keep=False)
     pivot_df.loc[duplicated_scores, 'Rank'] = pivot_df.loc[duplicated_scores, 'Rank'].astype(str) + '='

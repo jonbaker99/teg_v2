@@ -43,6 +43,43 @@ pip install -r requirements.txt
 ### To investigate
 - **Data file rationalisation** — `all-data.parquet` (53 cols, used by `teg_analysis`) and `all-scores.parquet` (17 cols, used by Streamlit) are both hole-level but differ in columns. Unclear if they should be one source. Investigate before making changes to either. See `DATA_FLOW.md`.
 
+## Pandas 2.x compatibility
+
+The Railway deployment runs pandas 2.x, which has two breaking changes that have caused production errors. Both are fixed; note the patterns to avoid when adding code.
+
+### 1. `DataFrame.applymap` removed (pandas 2.1+)
+
+`applymap` was renamed to `map`. Use `.map(fn)` on a DataFrame, not `.applymap(fn)`.
+
+**Fixed in:**
+- `streamlit/101TEG History.py:77`
+- `streamlit/helpers/course_analysis_processing.py:132`
+
+**Search for future regressions:** `grep -rn "\.applymap(" .`
+
+### 2. Assigning strings into an `int64` column (pandas 2.x strict dtypes)
+
+Pandas 2.x raises `Invalid value '<ArrowStringArray> [] Length: 0, dtype: str' for dtype 'int64'` when a string array (even an empty one) is assigned into an integer-typed column. This occurs in the leaderboard rank pattern where ranks are integers but tied ranks get a `=` suffix appended.
+
+**Root cause:** Creating `Rank` as `int64` then doing `df.loc[mask, 'Rank'] = df.loc[mask, 'Rank'].astype(str) + '='` fails even when `mask` is all-False (empty selection still produces an ArrowStringArray).
+
+**Safe pattern — convert to `object` before any string assignment:**
+```python
+# Safe: convert to object first so both ints and strings are accepted
+pivot_df['Rank'] = pivot_df['Total'].rank(method='min', ascending=ascending).astype(int).astype(object)
+pivot_df.loc[duplicated_scores, 'Rank'] = pivot_df.loc[duplicated_scores, 'Rank'].astype(str) + '='
+```
+
+**Also safe (webapp pattern) — convert to string immediately, guard with `.any()`:**
+```python
+pivot_df['Rank'] = pivot_df['Total'].rank(method='min', ascending=ascending).astype(int).astype(str)
+if duplicated_scores.any():
+    pivot_df.loc[duplicated_scores, 'Rank'] = pivot_df.loc[duplicated_scores, 'Rank'] + '='
+```
+
+**Fixed in:** `streamlit/leaderboard_utils.py:37`  
+**Already safe:** `webapp/deps.py:80–86` (uses the string-first pattern)
+
 For detailed next steps on the webapp, see `webapp/README.md`.
 
 ## Architecture
