@@ -415,7 +415,8 @@ def create_teg_ranking_table(teg_data: pd.DataFrame,
         if is_tie.any():
             ranks.loc[is_tie] = ranks.loc[is_tie] + '='
 
-        # Write back
+        # Write back (column must be object to hold both NaN and strings)
+        ranked_df[teg_col] = ranked_df[teg_col].astype(object)
         ranked_df.loc[ranks.index, teg_col] = ranks
     
     # Step 4: Clean up the output
