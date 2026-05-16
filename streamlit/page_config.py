@@ -18,7 +18,7 @@ PAGE_DEFINITIONS = {
     "101TEG Honours Board.py": {"title": "TEG Honours Board", "icon": ":material/trophy:", "section": "History"},
     "102TEG Results.py": {"title": "Full Results", "icon": ":material/sports_score:", "section": "History"},
     "player_history.py": {"title": "Player Rankings", "icon": ":material/123:", "section": "History"},
-    "teg_reports.py": {"title": "TEG Reports", "icon": ":material/description:", "section": "History"},
+    # "teg_reports.py": {"title": "TEG Reports", "icon": ":material/description:", "section": "History"},
 
     # Records section
     "300TEG Records.py": {"title": "TEG Records", "icon": ":material/military_tech:", "section": "Records"},
