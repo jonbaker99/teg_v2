@@ -45,7 +45,7 @@ pip install -r requirements.txt
 
 ## Pandas 2.x compatibility
 
-The Railway deployment runs pandas 2.x, which has two breaking changes that have caused production errors. Both are fixed; note the patterns to avoid when adding code.
+The Railway deployment runs pandas 2.x, which has three breaking changes that have caused production errors. All are fixed; note the patterns to avoid when adding code.
 
 ### 1. `DataFrame.applymap` removed (pandas 2.1+)
 
@@ -85,6 +85,30 @@ ranked_df.loc[ranks.index, teg_col] = ranks
 
 **Fixed in:** `streamlit/leaderboard_utils.py:37`, `streamlit/player_history.py:419`  
 **Already safe:** `webapp/deps.py:80–86` (uses the string-first pattern)
+
+### 3. Assigning strings into a typed column via `.iloc` (pandas 2.x strict setitem)
+
+Pandas 2.x enforces the existing column dtype on `.iloc` setitem. Assigning a string Series into a `float64` or `int64` column via `.iloc[:, N] = df.iloc[:, N].apply(lambda ...)` raises `TypeError` even when all rows are being replaced.
+
+**Root cause:** `.iloc[rows, col] =` is a positional setitem that enforces dtype. `.loc[]` has the same restriction (see pattern 2 above).
+
+**Fix — use named-column assignment, which replaces the column wholesale:**
+```python
+# Unsafe: iloc enforces float64 dtype, rejects string assignment
+formatted_df.iloc[:, 2] = formatted_df.iloc[:, 2].apply(
+    lambda x: 'n/a' if np.isinf(x) else f"{x:,.1f}"
+)
+
+# Safe: named-column assignment replaces the column entirely
+col2 = formatted_df.columns[2]
+formatted_df[col2] = formatted_df[col2].apply(
+    lambda x: 'n/a' if np.isinf(x) else f"{x:,.1f}"
+)
+```
+
+**Fixed in:** `streamlit/helpers/scoring_achievements_processing.py:68`, `streamlit/helpers/scoring_data_processing.py:87`, `teg_analysis/analysis/scoring.py:133,341`
+
+**Search for future regressions:** `python scripts/check_pandas_compat.py` (detects `iloc-col-assign` pattern)
 
 For detailed next steps on the webapp, see `webapp/README.md`.
 

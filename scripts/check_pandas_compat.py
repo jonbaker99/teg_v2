@@ -44,6 +44,17 @@ CHECKS = [
         ),
         "pattern": re.compile(r"\.loc\[.+\]\s*=\s*.+(\+\s*['\"]|\.astype\(str\))"),
     },
+    {
+        "id": "iloc-col-assign",
+        "level": "warning",
+        "description": (
+            ".iloc[..., col] = ... positional column assignment. Pandas 2.x enforces "
+            "the existing column dtype on iloc setitem — assigning strings into a "
+            "float64/int64 column raises TypeError. Use named-column assignment "
+            "(df[col_name] = ...) instead."
+        ),
+        "pattern": re.compile(r"\.iloc\[[^\]]*,[^\]]*\]\s*="),
+    },
 ]
 
 LEVEL_ICON = {"error": "✖", "warning": "⚠"}

@@ -127,10 +127,12 @@ def format_scoring_stats_columns(df: pd.DataFrame) -> pd.DataFrame:
     formatted_df = df.copy()
 
     # Format count column as integer
-    formatted_df.iloc[:, 1] = formatted_df.iloc[:, 1].astype(int)
+    col1 = formatted_df.columns[1]
+    formatted_df[col1] = formatted_df[col1].astype(int)
 
     # Format frequency column, handling infinite values
-    formatted_df.iloc[:, 2] = formatted_df.iloc[:, 2].apply(
+    col2 = formatted_df.columns[2]
+    formatted_df[col2] = formatted_df[col2].apply(
         lambda x: 'n/a' if np.isinf(x) else f"{x:,.1f}"
     )
 
@@ -335,16 +337,18 @@ def format_achievement_dataframe_columns(df: pd.DataFrame) -> pd.DataFrame:
     formatted_df = df.copy()
     
     # Format achievement count as integer (column 1)
-    formatted_df.iloc[:, 1] = formatted_df.iloc[:, 1].astype(int)
-    
+    col1 = formatted_df.columns[1]
+    formatted_df[col1] = formatted_df[col1].astype(int)
+
     # Format frequency ratio (column 2) - handle infinity for zero achievements
-    formatted_df.iloc[:, 2] = formatted_df.iloc[:, 2].apply(
+    col2 = formatted_df.columns[2]
+    formatted_df[col2] = formatted_df[col2].apply(
         lambda x: 'n/a' if np.isinf(x) else f"{x:,.1f}"
     )
-    
+
     # Clean column names by removing underscores
     formatted_df.columns = [col.replace('_', ' ') for col in formatted_df.columns]
-    
+
     return formatted_df
 
 

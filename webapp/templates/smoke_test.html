@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title_suffix %} — Smoke Test{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">Dev</span>
+    <h1 class="page-title">Smoke Test</h1>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+.smoke-summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.6rem 1.1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    {% if failed > 0 %}
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    color: #991b1b;
+    {% else %}
+    background: #dcfce7;
+    border: 1px solid #86efac;
+    color: #166534;
+    {% endif %}
+}
+.smoke-badge {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    min-width: 4rem;
+    text-align: center;
+}
+.smoke-badge--pass { background: #dcfce7; color: #166534; }
+.smoke-badge--fail { background: #fee2e2; color: #991b1b; }
+.smoke-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+.smoke-table th {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 2px solid var(--border-color, #e5e7eb);
+    color: var(--text-muted, #6b7280);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+.smoke-table td {
+    padding: 0.35rem 0.75rem;
+    border-bottom: 1px solid var(--border-color, #e5e7eb);
+    vertical-align: top;
+}
+.smoke-table tr:hover td { background: var(--row-hover-bg, #f9fafb); }
+.smoke-table tr.cat-start td { padding-top: 0.75rem; }
+.cat-cell {
+    font-weight: 600;
+    color: var(--text-muted, #6b7280);
+    white-space: nowrap;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    width: 9rem;
+}
+.label-cell { font-family: monospace; font-size: 0.78rem; }
+.time-cell { text-align: right; color: var(--text-muted, #6b7280); white-space: nowrap; width: 5rem; }
+.error-cell {
+    font-family: monospace;
+    font-size: 0.7rem;
+    color: #991b1b;
+    max-width: 28rem;
+    word-break: break-word;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="smoke-summary">
+    <span>{{ total }} tests</span>
+    <span>&#10003; {{ passed }} passed</span>
+    {% if failed > 0 %}<span>&#10007; {{ failed }} failed</span>{% endif %}
+    <span>{{ total_ms }}ms total</span>
+</div>
+
+<table class="smoke-table">
+    <thead>
+        <tr>
+            <th>Category</th>
+            <th>Function</th>
+            <th style="width:5.5rem">Status</th>
+            <th style="width:5rem;text-align:right">ms</th>
+            <th>Error</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% set ns = namespace(prev="") %}
+        {% for r in results %}
+        {% set new_cat = r.category != ns.prev %}
+        {% set ns.prev = r.category %}
+        <tr{% if new_cat %} class="cat-start"{% endif %}>
+            <td class="cat-cell">{% if new_cat %}{{ r.category }}{% endif %}</td>
+            <td class="label-cell">{{ r.label }}</td>
+            <td>
+                {% if r.status == "pass" %}
+                <span class="smoke-badge smoke-badge--pass">&#10003; pass</span>
+                {% else %}
+                <span class="smoke-badge smoke-badge--fail">&#10007; fail</span>
+                {% endif %}
+            </td>
+            <td class="time-cell">{{ r.time_ms }}</td>
+            <td class="error-cell">{% if r.error %}{{ r.error | truncate(200) }}{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
