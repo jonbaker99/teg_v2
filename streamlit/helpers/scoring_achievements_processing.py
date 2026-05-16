@@ -64,7 +64,8 @@ def format_achievement_dataframe_columns(df: pd.DataFrame) -> pd.DataFrame:
     formatted_df.iloc[:, 1] = formatted_df.iloc[:, 1].astype(int)
     
     # Format frequency ratio (column 2) - handle infinity for zero achievements
-    formatted_df.iloc[:, 2] = formatted_df.iloc[:, 2].apply(
+    col2 = formatted_df.columns[2]
+    formatted_df[col2] = formatted_df[col2].apply(
         lambda x: 'n/a' if np.isinf(x) else f"{x:,.1f}"
     )
     
