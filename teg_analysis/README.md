@@ -45,8 +45,20 @@ teg_analysis/
     performance.py   Performance measure tables
     leaderboards.py  Leaderboard generation
     bestball.py      Best-ball / worst-ball competition format
-    commentary.py    Commentary/narrative generation
+    commentary.py    Summary/event/streak tables that feed the reporting pipeline
     pipeline.py      Data pipeline coordinator
+
+  reporting/         LLM tournament-report pipeline (scored beats → story plan → authoring → styled MD)
+    README.md        How it works (architecture, artefacts, end-to-end usage)
+    STATUS.md        Done / deferred ledger — read first when resuming
+    events.py        Stage 2: notable-event detection + 3-axis scoring + competition arcs
+    venue.py         Venue / course scene-setting
+    story_plan.py    Stage 3: structured story plan (LLM)
+    authoring.py     Stage 4: dry draft, entertaining report (around-draft + lint)
+    render.py        Stage 5: CSS-class styling hooks
+    llm.py           Thin Anthropic wrapper (key resolution, prompt caching)
+    scoring.py       3-axis combination + mode weights
+
   
   display/           Formatting and output
     formatters.py    Format data for display (HTML, styled tables)

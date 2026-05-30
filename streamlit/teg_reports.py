@@ -182,15 +182,22 @@ if is_complete:
         # Get current report type from session state
         report_type = st.session_state[f"report_type_{selected_teg_num}"]
 
-        # Construct path to full TEG report file based on selected type
-        if report_type == "Satire":
-            report_file_path = f"data/commentary/drafts/teg_{selected_teg_num}_satire.md"
-        else:
-            report_file_path = f"data/commentary/teg_{selected_teg_num}_main_report.md"
-
+        # Load the TEG report. For Normal, prefer the new Stage-5a styled report
+        # (teg_N_report_styled.md) and fall back to the legacy teg_N_main_report.md.
         try:
-            # Load and render the report
-            md_text = read_text_file(report_file_path)
+            if report_type == "Satire":
+                md_text = read_text_file(
+                    f"data/commentary/drafts/teg_{selected_teg_num}_satire.md"
+                )
+            else:
+                try:
+                    md_text = read_text_file(
+                        f"data/commentary/teg_{selected_teg_num}_report_styled.md"
+                    )
+                except FileNotFoundError:
+                    md_text = read_text_file(
+                        f"data/commentary/teg_{selected_teg_num}_main_report.md"
+                    )
 
             # Add caption for older TEGs with different competition format
             if selected_teg_num < 8:

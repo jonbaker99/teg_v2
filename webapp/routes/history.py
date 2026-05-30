@@ -248,9 +248,26 @@ def _results_context(teg_num: int, tab: str = "net") -> dict:
             return {"result_title": "Scorecards", "table_html": table_html}
 
         if tab == "report":
+            from pathlib import Path
+            import markdown as md_lib
+            path = Path(f"data/commentary/teg_{teg_num}_report_styled.md")
+            if path.is_file():
+                html = md_lib.markdown(
+                    path.read_text(encoding="utf-8"),
+                    extensions=["extra", "sane_lists", "smarty", "toc"],
+                )
+                return {
+                    "result_title": "Report",
+                    "table_html": (
+                        '<link rel="stylesheet" href="/static/teg_reports.css">'
+                        f'<div class="teg-report">{html}</div>'
+                    ),
+                }
             return {
                 "result_title": "Report",
-                "table_html": "<p class='text-muted text-sm'>Reports are not yet available in the webapp.</p>",
+                "table_html": (
+                    f"<p class='text-muted text-sm'>No report available yet for TEG {teg_num}.</p>"
+                ),
             }
 
         rd_data = cached_round_data()

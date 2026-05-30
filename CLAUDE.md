@@ -32,8 +32,9 @@ pip install -r requirements.txt
 
 ### What's done
 - **teg_analysis package**: Phases 1–7 cleanup complete (all Streamlit imports removed, aggregation/streaks/scoring refactored, dead code removed). Merged to `main`. Ready to be the canonical analysis layer.
-- **Webapp**: 26 endpoints implemented with data parity vs Streamlit. All functional. Ready for visual polish.
+- **Webapp**: 26 endpoints implemented with data parity vs Streamlit. All functional. Ready for visual polish. TEG Reports page at `/teg-reports` and the Report tab on `/results` now render the new commentary reports.
 - **Architecture**: Decoupled design documented and validated. `teg_analysis` is fully UI-agnostic.
+- **Commentary / report pipeline** (`teg_analysis/reporting/`): new LLM-powered tournament reports built around a 5-stage pipeline — scored evidence-carrying beats + competition arcs (code) → structured story plan (LLM) → dry draft as QA scaffold + entertaining write-up + repetition lint (LLM) → CSS-class styled markdown. Three production reports validated (TEGs 9, 14, 18); cost ~$0.65 each on Opus 4.7. **How it works**: `teg_analysis/reporting/README.md`. **Done / next**: `teg_analysis/reporting/STATUS.md`.
 
 ### Next priorities
 1. **Webapp formatting pass** — visual polish, number formatting, table styling consistency, layout refinement. In progress in local branches.

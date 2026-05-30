@@ -58,7 +58,11 @@
       "Bash(xargs kill:*)",
       "Bash(lsof -ti:8765)",
       "mcp__plugin_playwright_playwright__browser_resize",
-      "mcp__plugin_playwright_playwright__browser_evaluate"
+      "mcp__plugin_playwright_playwright__browser_evaluate",
+      "Bash(xargs '-I{}' sh -c 'python3 -c \" *)",
+      "Skill(claude-api)",
+      "Bash(awk '/^## Current state/,/^## /{print}' CLAUDE.md)",
+      "Bash(awk '/^## Current state & next steps/,/^## [^C]/' CLAUDE.md)"
     ],
     "deny": [],
     "ask": [

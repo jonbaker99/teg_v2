@@ -1,0 +1,222 @@
+{
+  "title": "The Baker's Dozen Minus Five",
+  "title_candidates": [
+    "The Baker's Dozen Minus Five",
+    "Baker Cooks Catalonia",
+    "Alex in the Afternoon",
+    "A Trophy Walk in Girona"
+  ],
+  "theme": "Alex Baker wins the Trophy from the front so emphatically that the real drama plays out behind him: Gregg Williams quietly builds a Green Jacket procession, while Jon Baker slides into a Spoon he can't shake off.",
+  "tone": "house",
+  "foreshadow": [
+    "Alex Baker's R1 46 builds a 12-point cushion that effectively decides the Trophy by Saturday lunchtime",
+    "Jon Baker leads the Jacket after two rounds but is already flirting with the Spoon — the wrong leaderboard is the one that sticks",
+    "Gregg Williams's gross game is being assembled in the background, Tour Course bogeys giving way to Stadium pars",
+    "The Stadium Course is where everything is decided — and where Alex's blow-ups stop mattering"
+  ],
+  "competitions": [
+    {
+      "name": "Trophy (Stableford)",
+      "winner_or_loser": "Alex Baker",
+      "how": "Alex Baker took outright lead at R1 H5 (b69) and never gave it back. A 46-point opening salvo (b09, b25) opened a 12-point gap that the rest of the field spent three rounds failing to close. Even sextuple bogeys at R2 18 (b03) and R4 14 (b04), a quintuple at R2 16 (b08) and a cold R3 patch (b43) couldn't dent the cushion, because every implosion was buffered by a hot stretch — most notably 21 points in six holes through R3 11-16 (b02). Final margin: 8 points over John Patterson (b01).",
+      "key_beat_ids": [
+        "b69",
+        "b09",
+        "b25",
+        "b02",
+        "b43",
+        "b03",
+        "b04",
+        "b01"
+      ]
+    },
+    {
+      "name": "Green Jacket (Gross)",
+      "winner_or_loser": "Gregg Williams",
+      "how": "A slow-burn coup. Jon Baker held the gross lead after R1 (b71) and R2 (b46, b64), but Williams was already creeping up — drawing level three times in R2 alone (b65, b66, b67) on the back of a tidy 13-point run through 13-16 (b26). On the Stadium Course he simply took over: outright lead at R3 H2 (b12), four straight pars to open (b29), and a R3 round of 13 over par. By R4 the lead was 14 and the Jacket was a coronation (b06), runner-up David Mullin a distant second.",
+      "key_beat_ids": [
+        "b71",
+        "b46",
+        "b65",
+        "b26",
+        "b12",
+        "b29",
+        "b06"
+      ]
+    },
+    {
+      "name": "Wooden Spoon",
+      "winner_or_loser": "Jon Baker",
+      "how": "A four-man game of pass-the-parcel in R1 (b53, b54, b55, b56) that left Jon Baker holding it at the close. He briefly handed it back in R2 with 16 points through 14-18 (b14, b34), but a quintuple at R3 H4 (b10) and the decisive drop at R3 H2 (b27) sealed it. A R4 cold patch through 7-11 (b48) confirmed what the rest of the field already knew. Finished on 126 points (b11) — the Jacket leader through 36 holes, the Spoon holder through 72.",
+      "key_beat_ids": [
+        "b56",
+        "b14",
+        "b27",
+        "b10",
+        "b48",
+        "b11"
+      ]
+    }
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "headline_candidates": [
+        "Baker Opens the Oven at 46",
+        "Alex Bakes a 46, Field Watches",
+        "First Day, Last Word"
+      ],
+      "chosen_headline": "Baker Opens the Oven at 46",
+      "angle": "Alex Baker's 46-point opener on the Tour Course effectively settles the Trophy on day one; behind him, John Patterson and David Mullin discover Catalan rough the hard way.",
+      "beat_ids": [
+        "b69",
+        "b09",
+        "b25",
+        "b07",
+        "b21",
+        "b05",
+        "b20",
+        "b17",
+        "b71",
+        "b56"
+      ]
+    },
+    {
+      "round": 2,
+      "headline_candidates": [
+        "An Eleven on the Eighteenth",
+        "Alex Baker's Spanish Holiday Snap",
+        "Tour Course, Take Two"
+      ],
+      "chosen_headline": "An Eleven on the Eighteenth",
+      "angle": "Alex Baker posts a sextuple on 18 and a quintuple on 16 and still doesn't lose the lead — Jon Baker's brief Jacket reign, meanwhile, is already wobbling.",
+      "beat_ids": [
+        "b03",
+        "b08",
+        "b32",
+        "b14",
+        "b34",
+        "b46",
+        "b26",
+        "b65",
+        "b22",
+        "b23",
+        "b38"
+      ]
+    },
+    {
+      "round": 3,
+      "headline_candidates": [
+        "Stadium Rocks for Williams",
+        "Six Holes, Twenty-One Points",
+        "The Day Two Brothers Diverged"
+      ],
+      "chosen_headline": "Stadium Rocks for Williams",
+      "angle": "The Stadium Course is where the supporting competitions are decided: Williams seizes the Jacket at the 2nd, Jon Baker drops into the Spoon at the same hole, and Alex Baker rams home the Trophy with 21 points in six holes.",
+      "beat_ids": [
+        "b12",
+        "b29",
+        "b42",
+        "b27",
+        "b10",
+        "b02",
+        "b43",
+        "b45",
+        "b61"
+      ]
+    },
+    {
+      "round": 4,
+      "headline_candidates": [
+        "Procession on the Stadium",
+        "Coronations and a Quiet 38",
+        "Catalonia Signs Off"
+      ],
+      "chosen_headline": "Procession on the Stadium",
+      "angle": "With nothing left to decide, the Stadium Course offers a victory lap for Baker and Williams, a Spoon-shaped resignation for Jon Baker, and one last Alex Baker sextuple for old time's sake.",
+      "beat_ids": [
+        "b04",
+        "b19",
+        "b58",
+        "b48",
+        "b35",
+        "b51",
+        "b33",
+        "b57",
+        "b01",
+        "b06",
+        "b11"
+      ]
+    }
+  ],
+  "players": [
+    {
+      "player": "Alex Baker",
+      "arc": "Wins the Trophy from the front despite repeatedly trying to give it away — three blow-ups of seven or worse, offset by hot stretches no one else could match."
+    },
+    {
+      "player": "Gregg Williams",
+      "arc": "Starts the week shipping quadruples on the Tour Course (b17, b18) and ends it cantering home in the Green Jacket by 14, the Stadium Course bringing out a steadier game."
+    },
+    {
+      "player": "Jon Baker",
+      "arc": "Leads the Jacket for 36 holes, then slides into the Spoon at R3 H2 and never recovers — the rare double of leading and losing in the same week."
+    },
+    {
+      "player": "John Patterson",
+      "arc": "Bleeds 22 shots through R1 holes 3-10 (b07) but recovers enough on the back nine to finish runner-up in the Trophy."
+    },
+    {
+      "player": "David Mullin",
+      "arc": "An 11 at R1's 15th sets the tone; brief Spoon flirtations and a steady gross game leave him runner-up for the Jacket."
+    }
+  ],
+  "must_include_beat_ids": [
+    "b01",
+    "b02",
+    "b06",
+    "b07",
+    "b09",
+    "b11",
+    "b12",
+    "b27",
+    "b29",
+    "b46"
+  ],
+  "cuts": [
+    "b15",
+    "b16",
+    "b18",
+    "b24",
+    "b30",
+    "b31",
+    "b36",
+    "b37",
+    "b39",
+    "b40",
+    "b41",
+    "b44",
+    "b47",
+    "b49",
+    "b50",
+    "b52",
+    "b53",
+    "b54",
+    "b55",
+    "b59",
+    "b60",
+    "b62",
+    "b63",
+    "b64",
+    "b66",
+    "b67",
+    "b68",
+    "b70",
+    "b72",
+    "b73",
+    "b74",
+    "b75",
+    "b76"
+  ],
+  "venue_notes": "Frame the week as TEG's 4th visit to Catalonia and a return to PGA Catalunya — two days on the Tour Course (5th and 6th TEG rounds here) before the Stadium Course (6th and 7th TEG rounds) hosts the decisive weekend. Lean on the Stadium's billing as Spain's premier course and a European Tour design: the supporting trophies are settled where the test stiffens, while Alex Baker's Trophy is already secured on the slightly more forgiving sibling."
+}

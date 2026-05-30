@@ -10,7 +10,7 @@ from fastapi.templating import Jinja2Templates
 from webapp.routes import (
     leaderboard, charts, records, showcase, player, scorecard,
     placeholder, history, latest, performance, scoring, scorecards,
-    eclectic, width_test, title_preview, smoke_test,
+    eclectic, width_test, title_preview, smoke_test, reports,
 )
 from webapp.theme import (
     get_theme, THEMES,
@@ -55,6 +55,7 @@ app.include_router(scorecards.router)
 app.include_router(width_test.router)
 app.include_router(title_preview.router)
 app.include_router(smoke_test.router)
+app.include_router(reports.router)
 
 
 @app.get("/")

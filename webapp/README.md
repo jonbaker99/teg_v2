@@ -11,6 +11,11 @@ uvicorn webapp.app:app --reload
 
 Visit `http://localhost:8000` in your browser. Use the theme switcher in the nav bar to compare visual designs.
 
+### Local environment
+
+- Runtime deps (`fastapi`, `uvicorn`, `jinja2`, `starlette`, `httpx`, `markdown`) must all be in the **same** env that launches uvicorn. The project's `venv/` historically held the reporting/analysis deps (pandas, anthropic, markdown) but not the webapp deps; `venv/bin/pip install -r requirements.txt` brings everything into one env.
+- **Known gotcha on Python 3.14:** jinja2 3.1.x + starlette emit `TypeError: cannot use 'tuple' as a dict key (unhashable type: 'dict')` on **every** template render (the template cache key isn't hashable in 3.14). Use Python 3.12 or 3.13 for local dev until starlette/jinja2 ship a fix. Symptom: every templated route 500s with that exact message.
+
 ## Architecture
 
 ### Tech stack
@@ -30,7 +35,7 @@ webapp/
   routes/             # One file per page area (history, records, scoring, etc.)
   templates/
     base.html         # Shell: nav, theme switcher, main content slot
-    pages/            # Full page templates (extend base.html)
+    *.html            # Page templates (extend base.html) — flat at this level, no `pages/` subdir
     partials/         # HTMX partial templates (no <html>/<body> wrapper)
   static/
     themes/           # One CSS file per theme
@@ -96,6 +101,13 @@ async def leaderboard(request: Request, data=Depends(get_data)):
 - Server returns only the content fragment (from `templates/partials/`)
 - HTMX swaps into `#main-content` without full page reload
 
+### Common page patterns
+
+- **Simple selector + full-page reload** (e.g. `/teg-reports`): a vanilla form `GET` with `<select onchange="this.form.submit()">`. Cheap when no partial update is needed.
+- **HTMX tab bar** (e.g. `/results` in `templates/results.html`): a hidden input holds the active tab; each tab button sets that input then triggers `htmx.trigger(…, 'change')` on the TEG `<select>`, which has `hx-get="/route/table"` returning the partial.
+- **`_results_context()`-style HTMX endpoint**: a `{tab}` switch returns `{result_title, table_html}` rendered into `partials/results_table.html` — see `webapp/routes/history.py`.
+- **Placeholder helper** in `webapp/routes/placeholder.py:_placeholder()` for stub pages before they're real.
+
 ### Component classes (in app.css / base-vars.css)
 - **`teg-table`** — styled data table; used for results/rankings
 - **`records-table`** — variant for records pages
@@ -113,10 +125,11 @@ See [page_title_switcher.md](page_title_switcher.md) — page title and card hea
 ## Development
 
 ### Adding a new page
-1. Create route in `routes/my_page.py`
-2. Create template in `templates/pages/my_page.html`
-3. Follow route → deps → template pattern
-4. Import route in `app.py`
+1. Create route in `routes/my_page.py` (define `router = APIRouter()` and your handler).
+2. Create template in `templates/my_page.html` (flat — no `pages/` subdir).
+3. Follow the route → deps → template pattern.
+4. Register the route in `app.py` in **two places**: import it in `from webapp.routes import (…, my_page, …)`, then call `app.include_router(my_page.router)`.
+5. Pass `active_page="my-key"` in the `TemplateResponse` context so the nav highlights correctly. The value must match one of the keys hardcoded in `base.html` (search `active_page in [...]` to find the lists).
 
 ### Adding a new theme
 1. Create `static/themes/my-theme.css`
@@ -129,6 +142,22 @@ See [page_title_switcher.md](page_title_switcher.md) — page title and card hea
 - Extend it: `{% extends "base.html" %}` in page templates
 - Partials: `templates/partials/*.html` (HTMX swap targets, no `<html>` wrapper)
 - Pass context via TemplateResponse: `{"key": value, ...}`
+
+**`base.html` blocks** — the shell exposes four override points:
+- `title_suffix` — appended to the browser tab title
+- `extra_head` — inject per-page `<link>`/`<style>`/`<script>` tags (e.g. `<link rel="stylesheet" href="/static/my.css">` for page-specific CSS not in the global theme)
+- `page_title` — the page header area. Standard shape:
+  ```html
+  {% block page_title %}
+  <div class="page-title-area">
+    <span class="page-label">Section</span>
+    <h1 class="page-title">My Page</h1>
+  </div>
+  {% endblock %}
+  ```
+- `content` — the actual page body
+
+**Nav highlighting** — the `active_page` context value (e.g. `"teg-reports"`, `"history"`, `"results"`) is matched against the lists hardcoded in `base.html`'s nav dropdowns. If yours isn't one of the listed keys, the parent dropdown won't show as active — either reuse an existing key or add yours to the relevant list in `base.html`.
 
 ## Current status
 

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="/static/teg_reports.css">
+{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">History</span>
+    <h1 class="page-title">TEG Reports</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+{% if not available_tegs %}
+<div style="padding: 3rem 0; text-align: center;">
+    <p style="font-size: 1.1rem; opacity: 0.6;">No styled reports available yet.</p>
+    <p style="font-size: 0.85rem; opacity: 0.4; margin-top: 0.5rem;">
+        Generate one via <code>teg_analysis.reporting.style_report(teg)</code>.
+    </p>
+</div>
+{% else %}
+<form method="get" action="/teg-reports" class="flex items-center gap-4 mb-4">
+    <select name="teg" class="theme-select" onchange="this.form.submit()">
+        {% for t in available_tegs %}
+        <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
+        {% endfor %}
+    </select>
+    <noscript><button type="submit">View</button></noscript>
+</form>
+
+{% if html %}
+<div class="teg-report">{{ html|safe }}</div>
+{% else %}
+<p class="text-muted text-sm">No report available yet for TEG {{ selected_teg }}.</p>
+{% endif %}
+{% endif %}
+{% endblock %}

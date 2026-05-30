@@ -1,0 +1,235 @@
+{
+  "title": "Patterson's Portuguese Coronation",
+  "title_candidates": [
+    "Patterson's Portuguese Coronation",
+    "168 and Counting: A New TEG Benchmark",
+    "Seve, Sand and a Stableford Masterclass"
+  ],
+  "theme": "John Patterson turns a sextuple-bogey opening into the highest Stableford total in TEG history, while David Mullin strolls to the Jacket and Stuart Neumann is glued to the bottom from Friday onwards.",
+  "tone": "house",
+  "foreshadow": [
+    "Patterson's R1 ten at the 4th (b04) — a wobble that, in hindsight, looks like the last bad hour of his tournament",
+    "Mullin's quiet, metronomic +15 on R1 (b07 context) — the Jacket race essentially ended on day one",
+    "Neumann's R1 back-nine bleed (b44) — the Spoon was sealed before anyone realised there was a race"
+  ],
+  "competitions": [
+    {
+      "name": "Trophy (Stableford)",
+      "winner_or_loser": "John Patterson",
+      "how": "Patterson opened with 38 pts despite a sextuple bogey at the 4th (b04) and trailed Jon Baker by one. He seized the lead for good at R2 H1 (b58) and detonated the tournament with a 49-pt round at Praia D'El Rey — the second-best round in TEG history (b02) — built on a 17-point burst through 9-13 (b13) and a closing 14 across 15-18 (b26). A solid 34 in the tricky R3 kept him three clear; in R4 Alex Baker briefly drew level at the 14th (b45) before Patterson's 47-pt finish carried him to 168 — a new all-time record (b01).",
+      "key_beat_ids": [
+        "b04",
+        "b58",
+        "b02",
+        "b13",
+        "b45",
+        "b01"
+      ]
+    },
+    {
+      "name": "Green Jacket (Gross)",
+      "winner_or_loser": "David Mullin",
+      "how": "Mullin took outright gross lead at R1 H3 (b81), surrendered it briefly to Jon Baker mid-round (b88), reclaimed level at the 15th (b86) and held outright by the 18th (b83) — the decisive takeover. From there it was a procession: +15, +14, +22, +16, the lead extending from 2 to 7 to 7 to 10. A R3 quintuple at the 10th (b11) and a R4 opening eight (b25) were the only real ripples on a serene runaway to +67, by 10 from Jon Baker (b07).",
+      "key_beat_ids": [
+        "b81",
+        "b83",
+        "b11",
+        "b25",
+        "b07"
+      ]
+    },
+    {
+      "name": "Wooden Spoon",
+      "winner_or_loser": "Stuart Neumann",
+      "how": "Neumann was last after holes 1 and 2 only briefly before Alex Baker's 9 at the 2nd (b61) shuffled the order. He dropped to the bottom at R1 H11 (b62), briefly escaped, then sank for good with a quintuple bogey 8 at the 15th (b63) and a 16-shot bleed across 14-18 (b44). He never climbed off the bottom rung again across all four rounds, finishing on 127 pts (b19) — despite genuinely promising patches like the 16-point burst through 11-15 in R4 (b18).",
+      "key_beat_ids": [
+        "b61",
+        "b62",
+        "b63",
+        "b44",
+        "b18",
+        "b19"
+      ]
+    }
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "headline_candidates": [
+        "Seve's Last Design, and Six Players Lost in It",
+        "Patterson Takes a Ten and Still Sleeps Second",
+        "Mullin Quietly Files the Only Sensible Card"
+      ],
+      "chosen_headline": "Seve's Last Design, and Six Players Lost in It",
+      "angle": "A blowup-strewn opening at Royal Óbidos sets the table: Mullin gets the gross lead, Patterson survives a sextuple, Neumann sinks on the back nine.",
+      "beat_ids": [
+        "b04",
+        "b03",
+        "b08",
+        "b20",
+        "b14",
+        "b16",
+        "b17",
+        "b22",
+        "b27",
+        "b28",
+        "b42",
+        "b44",
+        "b47",
+        "b54",
+        "b62",
+        "b63",
+        "b81",
+        "b82",
+        "b83",
+        "b84"
+      ]
+    },
+    {
+      "round": 2,
+      "headline_candidates": [
+        "Forty-Nine and Out of Sight",
+        "Patterson Builds the Mountain at Praia D'El Rey",
+        "A Round for the Record Books"
+      ],
+      "chosen_headline": "Forty-Nine and Out of Sight",
+      "angle": "Patterson's 49-point round — the second-best in TEG history — turns a one-shot deficit into a ten-shot lead and effectively settles the Trophy.",
+      "beat_ids": [
+        "b02",
+        "b05",
+        "b13",
+        "b26",
+        "b58",
+        "b49",
+        "b48",
+        "b56",
+        "b50",
+        "b29",
+        "b30",
+        "b31",
+        "b09",
+        "b37",
+        "b38",
+        "b78"
+      ]
+    },
+    {
+      "round": 3,
+      "headline_candidates": [
+        "Patterson Wobbles, Lead Survives",
+        "Three Quadruples and a Lead Intact",
+        "Royal Óbidos Bites Back"
+      ],
+      "chosen_headline": "Patterson Wobbles, Lead Survives",
+      "angle": "A messy 34 from the leader — three quadruples on one card — trims the cushion to three, but no one in the chasing pack manages to capitalise.",
+      "beat_ids": [
+        "b23",
+        "b24",
+        "b11",
+        "b15",
+        "b21",
+        "b32",
+        "b46",
+        "b70",
+        "b74",
+        "b75",
+        "b76"
+      ]
+    },
+    {
+      "round": 4,
+      "headline_candidates": [
+        "Alex Baker Draws Level — Briefly",
+        "168: A Number for the Record Book",
+        "Patterson Closes With 47, Mullin Cruises, Neumann Anchored"
+      ],
+      "chosen_headline": "168: A Number for the Record Book",
+      "angle": "Alex Baker draws level on Stableford at the 14th, but Patterson's 47-pt finish takes him to the highest TEG Stableford total ever; Mullin lifts the Jacket by ten, Neumann claims the Spoon.",
+      "beat_ids": [
+        "b01",
+        "b07",
+        "b19",
+        "b45",
+        "b06",
+        "b12",
+        "b25",
+        "b10",
+        "b18",
+        "b51",
+        "b57",
+        "b64",
+        "b68",
+        "b65"
+      ]
+    }
+  ],
+  "players": [
+    {
+      "player": "John Patterson",
+      "arc": "Survives a R1 sextuple, then plays the best stretch of golf of his life — a 49-point Saturday — to set a new all-time TEG record of 168."
+    },
+    {
+      "player": "David Mullin",
+      "arc": "Quietly metronomic from R1 H3 onwards; led the Jacket race wire-to-wire and won by ten without ever needing to break sweat."
+    },
+    {
+      "player": "Alex Baker",
+      "arc": "Two personal-best 44-pt rounds, a brief share of the Trophy lead at R4 H14 — and a sackful of blowups (the 11 at R1 H14 chief among them) that kept him from going closer."
+    },
+    {
+      "player": "Jon Baker",
+      "arc": "The early Trophy leader and eventual gross runner-up; a hot R3 start (16 pts in 5 holes) couldn't undo a R2 H14 quadruple or his R4 17th."
+    },
+    {
+      "player": "Gregg Williams",
+      "arc": "The blowup of the week: sextuples at R1 H15, R2 H9 and R4 H7, plus a 9 on the opening tee — a personal anthology of Iberian disaster."
+    },
+    {
+      "player": "Stuart Neumann",
+      "arc": "Bottom from R1 H15 to the final hole; bright patches (the 16-point R4 burst) couldn't outrun the cold stretches that defined his week."
+    }
+  ],
+  "must_include_beat_ids": [
+    "b01",
+    "b02",
+    "b07",
+    "b13",
+    "b19",
+    "b44",
+    "b45",
+    "b58",
+    "b83",
+    "b04"
+  ],
+  "cuts": [
+    "b66",
+    "b67",
+    "b69",
+    "b71",
+    "b72",
+    "b73",
+    "b77",
+    "b59",
+    "b60",
+    "b52",
+    "b53",
+    "b55",
+    "b85",
+    "b86",
+    "b87",
+    "b88",
+    "b89",
+    "b90",
+    "b79",
+    "b80",
+    "b39",
+    "b40",
+    "b41",
+    "b33",
+    "b34",
+    "b35",
+    "b36",
+    "b43"
+  ],
+  "venue_notes": "Frame as TEG's 3rd visit to the Lisbon Coast (2016), a familiar return alternating Seve Ballesteros' final design at Royal Óbidos (R1 is the 2nd TEG round there; R3 the 3rd) with the parkland-into-dunes drama of Praia D'El Rey (R2 the 3rd visit, R4 the 4th). Lean on Seve's water features for the R1/R3 blowups and the coastal back nine at Praia D'El Rey for R2/R4 colour."
+}

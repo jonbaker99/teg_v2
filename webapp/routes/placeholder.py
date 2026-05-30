@@ -19,12 +19,6 @@ def _placeholder(request: Request, title: str, subtitle: str = None, note: str =
     })
 
 
-# --- TEG History section ---
-@router.get("/teg-reports")
-async def teg_reports(request: Request):
-    return _placeholder(request, "TEG Reports", active_page="teg-reports")
-
-
 # --- Data section ---
 @router.get("/data/update")
 async def data_update(request: Request):
