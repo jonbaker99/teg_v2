@@ -26,7 +26,7 @@ Alex Baker added 41 points. He also made an 8 at the par-3 16th, a quintuple bog
 
 The gross race, by contrast, was alive. Jon Baker took the outright Jacket lead at the 9th and finished the day still two ahead, but Williams was already at the door — drawing level repeatedly through the round before settling into a four-hole pat-a-cake of pars at 13–16 worth 13 points. His gross 14 was the round of the day. The takeover was not yet announced. It was being rehearsed.
 
-Mullin, meanwhile, added further 8s at the 4th and 6th and slid to the foot of the Spoon race, which is where the parcel was being held at the lunchtime whistle. Jon Baker, for his part, finished the round on a high — 16 points through 14–18, opened by a birdie at the par-3 14th. He looked, briefly, like a man about to win something. He was, in fact, about to lose two things at once.
+Mullin, meanwhile, added further 8s at the 4th and 6th and slid to the foot of the Spoon race, which is where the parcel was being held at the lunchtime whistle. Jon Baker, for his part, finished the day on a high — 16 points through 14–18, opened by a birdie at the par-3 14th. He looked, briefly, like a man about to claim something. He was, in fact, about to lose two things at once.
 
 ## Round 3 — Stadium Rocks for Williams
 
@@ -40,17 +40,17 @@ And Alex Baker? Alex Baker, naturally, was busy demonstrating that he too could 
 
 ## Round 4 — Procession on the Stadium
 
-Stadium Course, 14 October. There was, in any meaningful sense, nothing to play for. Which is not the same as saying nothing happened.
+Stadium Course, 14 October. There was, in any meaningful sense, nothing to contend for. Which is not the same as saying nothing happened.
 
-Alex Baker shot 38 and, because old habits die hard, manufactured a **10** at the par-4 14th — another sextuple, just for old times — and a quadruple at the 17th for good measure. He won the Trophy by 8. Williams added a gross 12, including a three-hole run worth 9 points through 8–10, and took the Jacket by 14, the kind of margin that suggests not so much a contest as a handover.
+Alex Baker shot 38 and, because old habits die hard, manufactured a **10** at the par-4 14th — another sextuple, just for old times — and a quadruple at the 17th for good measure. He secured the Trophy by 8. Williams added a gross 12, including a three-hole run worth 9 points through 8–10, and captured the Jacket by 14, the kind of margin that suggests not so much a contest as a handover.
 
 Jon Baker's day was the saddest sort: five consecutive double bogeys through 7–11, ten shots gone, the Spoon already in his bag and now being engraved. He stopped the bleeding with a birdie at the 13th — a flash of the player who had led the gross at halfway — but it was a footnote to a footnote. Patterson signed off with a triple at the 14th, a double at the 15th and a birdie at the 17th, the runner-up's traditional mixed bag.
 
 ## How they were won (and lost)
 
-**The Trophy** was decided by Alex Baker's opening 46 and reinforced by his refusal to stay punished. Three blow-ups of eight or worse, a 12-shot wobble at R3 6–10, and a lead that never once dipped below eight. Final margin: 8 points over Patterson. The Tour Course gave him the cushion; the Stadium Course failed to take it off him.
+**The Trophy** was decided by Alex Baker's opening 46 and reinforced by his refusal to stay punished. Three blow-ups of eight or worse, a 12-shot wobble at R3 6–10, and a lead that never once dipped below eight. Final margin: 8 points over Patterson. The Tour Course gave him the cushion; the Stadium failed to take it off him.
 
-**The Green Jacket** was a slow-burn coup. Jon Baker led after R1 by two and after R2 by two. Williams drew level repeatedly on the Tour Course before pouncing at the Stadium's 2nd, then stretching the lead to 8 after R3 and 14 after R4 with rounds of +13 and +12. The stiffer course brought out the steadier game.
+**The Green Jacket** was a slow-burn coup. Jon Baker led after R1 by two and after R2 by two. Williams drew level repeatedly on the Tour Course before pouncing at the Stadium's 2nd, then stretching the advantage to 8 after R3 and 14 after R4 with rounds of +13 and +12. The stiffer course brought out the steadier game.
 
 **The Wooden Spoon** changed hands ten times. Jon Baker first held it at the close of R1, handed it briefly to Mullin in R2, then took it back for keeps at R3's 2nd — the very hole, as noted, where Williams was claiming the Jacket. R4's five straight doubles confirmed what everyone already knew. 126 points. The Jacket leader through 36 holes; the Spoon holder through 72.
 
@@ -60,4 +60,4 @@ Jon Baker's day was the saddest sort: five consecutive double bogeys through 7�
 - **Gregg Williams** — Shipped a 9 at the Tour Course's 7th in R1 and looked nothing like a Jacket winner. Then produced gross rounds of 14, 13 and 12 — the last two on the Stadium — and cantered home by 14. The week's quietest assassin.
 - **Jon Baker** — Two days at the top of the gross, two days at the bottom of everything else. The Jacket lead vanished at the Stadium's 2nd; the Spoon was confirmed at the same hole. R4's five consecutive double bogeys through 7–11 were the resignation letter.
 - **John Patterson** — Bled 22 shots across R1's 3–10 in a sequence that should have ended his week and somehow didn't. Recovered on the back nine, hung on through three more rounds, and finished Trophy runner-up. Tougher than the scorecard suggests.
-- **David Mullin** — An 8 and an 11 on day one, further 8s at the 4th and 6th in R2, a brief stint at the bottom of the Spoon race. Then a steady gross game that nobody really noticed until it left him second for the Jacket. A runner-up nobody saw coming, including, possibly, himself.
+- **David Mullin** — An 8 and an 11 on day one, further 8s at the 4th and 6th in R2, a brief stint at the bottom of the Spoon race. Then steady gross play that nobody really noticed until it left him second for the Jacket. A runner-up nobody saw coming, including, possibly, himself.

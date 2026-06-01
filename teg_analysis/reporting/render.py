@@ -24,6 +24,82 @@ OUTPUT_DIR = "data/commentary"
 
 
 # ---------------------------------------------------------------------------
+# Per-round standings (deterministic; no LLM)
+# ---------------------------------------------------------------------------
+def _fmt_signed(n: int) -> str:
+    """Signed integer with no sign for zero."""
+    return "0" if n == 0 else f"{n:+d}"
+
+
+def build_round_standings(teg_num: int) -> dict:
+    """Build per-round Trophy + Green Jacket standings markdown blocks for a TEG.
+
+    Returns {round_num: standings_markdown}. Pure data — uses cumulative totals
+    from `create_round_summary`; no LLM, no fabrication risk.
+    """
+    from teg_analysis.analysis.commentary import create_round_summary
+    rs = create_round_summary()
+    rs = rs[rs["TEGNum"] == teg_num].copy()
+
+    out: dict = {}
+    for rnd in sorted(int(r) for r in rs["Round"].unique()):
+        rdf = rs[rs["Round"] == rnd]
+        trophy = rdf.sort_values("Cumulative_Tournament_Score_Stableford", ascending=False)
+        jacket = rdf.sort_values("Cumulative_Tournament_Score_Gross", ascending=True)
+
+        trophy_str = " | ".join(
+            f"{r['Pl']} {int(r['Cumulative_Tournament_Score_Stableford'])}"
+            for _, r in trophy.iterrows()
+        )
+        jacket_str = " | ".join(
+            f"{r['Pl']} {_fmt_signed(int(r['Cumulative_Tournament_Score_Gross']))}"
+            for _, r in jacket.iterrows()
+        )
+        out[rnd] = (
+            f'<p class="standings"><span class="standings-header">Trophy Standings:</span>'
+            f' {trophy_str}</p>\n'
+            f'<p class="standings"><span class="standings-header">Green Jacket Standings:</span>'
+            f' {jacket_str}</p>'
+        )
+    return out
+
+
+def _inject_standings(text: str, standings: dict) -> str:
+    """Insert each round's standings block at the end of its section in document order
+    (immediately before the next `## ` heading, or EOF). Idempotent — skip if already
+    present (detected by `class="standings"` near the injection point)."""
+    if not standings:
+        return text
+    if 'class="standings"' in text:
+        return text  # already injected
+
+    lines = text.splitlines(keepends=True)
+    result = []
+    current_round = None
+    for line in lines:
+        m_round = re.match(r"^## Round (\d+)\b", line)
+        m_h2 = re.match(r"^## ", line)
+        if m_round:
+            # New round heading. If we were inside a round, flush its standings first.
+            if current_round is not None and current_round in standings:
+                result.append("\n" + standings[current_round] + "\n\n")
+            current_round = int(m_round.group(1))
+            result.append(line)
+        elif m_h2 and current_round is not None:
+            # Non-round H2 closes the round section. Inject standings before it.
+            if current_round in standings:
+                result.append("\n" + standings[current_round] + "\n\n")
+            current_round = None
+            result.append(line)
+        else:
+            result.append(line)
+    # Document ended inside a round section
+    if current_round is not None and current_round in standings:
+        result.append("\n" + standings[current_round] + "\n")
+    return "".join(result)
+
+
+# ---------------------------------------------------------------------------
 # Heading classes
 # ---------------------------------------------------------------------------
 def _add_report_title_class(text: str) -> str:
@@ -97,10 +173,11 @@ def _build_at_a_glance(plan_d: dict) -> str:
 # ---------------------------------------------------------------------------
 # Public entry points
 # ---------------------------------------------------------------------------
-def apply_styling(text: str, plan: Union[StoryPlan, dict], venue: dict) -> str:
-    """Apply CSS-class hooks + dateline + at-a-glance callout to a final report.
+def apply_styling(text: str, plan: Union[StoryPlan, dict], venue: dict,
+                  standings: Optional[dict] = None) -> str:
+    """Apply CSS-class hooks + dateline + at-a-glance callout + per-round standings.
 
-    Idempotent: if styling hooks are already present, they're not duplicated.
+    Idempotent: if styling hooks or standings are already present, they're not duplicated.
     """
     plan_d = plan.model_dump() if isinstance(plan, StoryPlan) else plan
 
@@ -118,6 +195,9 @@ def apply_styling(text: str, plan: Union[StoryPlan, dict], venue: dict) -> str:
             lambda m: m.group(1) + block,
             text, count=1, flags=re.MULTILINE,
         )
+
+    if standings:
+        text = _inject_standings(text, standings)
     return text
 
 
@@ -130,7 +210,8 @@ def style_report(teg_num: int) -> str:
         text = f.read()
     plan = load_story_plan(teg_num)           # dict (from saved JSON)
     venue = build_venue_context(teg_num)
-    styled = apply_styling(text, plan, venue)
+    standings = build_round_standings(teg_num)
+    styled = apply_styling(text, plan, venue, standings=standings)
 
     with open(out_path, "w") as f:
         f.write(styled)

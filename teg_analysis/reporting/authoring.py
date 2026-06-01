@@ -20,7 +20,7 @@ from teg_analysis.reporting import llm
 OUTPUT_DIR = "data/commentary"
 
 
-DRY_DRAFT_SYSTEM = """You are producing a DRY STORYLINE DRAFT for a report on a TEG \
+DRY_DRAFT_SYSTEM_DETAILED = """You are producing a DRY STORYLINE DRAFT for a report on a TEG \
 (an amateur golf tournament of several rounds). This is a faithful, plainly-written \
 account with NO colour, NO jokes, NO stylistic flourish. It is a scaffold and a \
 fact-check, not the finished article.
@@ -36,8 +36,8 @@ Write the draft in this structure:
 Jacket (Gross) and the Wooden Spoon (last on Stableford), with final scores and margins.
 2. One section PER ROUND, in order, using the plan's `chosen_headline` as the heading. \
 In plain prose, recount what actually happened that round using the plan's `beat_ids`, \
-and RENDER SPECIFIC HOLES from the beat evidence — e.g. "a double bogey at the par-4 \
-10th and a 10 at the short 17th", never a vague "a back-nine collapse". This hole-level \
+and RENDER SPECIFIC HOLES from the beat evidence — e.g. "a double bogey at the par-4 10th \
+and a 10 at the short 17th", never a vague "a back-nine collapse". This hole-level \
 specificity is the whole point of the draft.
 3. HOW THE COMPETITIONS WERE DECIDED — for the Trophy, then the Green Jacket, then the \
 Wooden Spoon: state how each was won (or, for the Spoon, lost) from its competition arc \
@@ -59,6 +59,56 @@ purple language — that comes in the next pass.
 - Markdown headings. Keep it tight."""
 
 
+DRY_DRAFT_SYSTEM_LIGHT = """You are producing a DRY STORYLINE DRAFT for a report on a TEG \
+(an amateur golf tournament of several rounds). This is a faithful, plainly-written \
+account with NO colour, NO jokes, NO stylistic flourish. It is a scaffold and a \
+fact-check, not the finished article.
+
+You are given: a STORY PLAN (the agreed structure — theme, per-round angles and \
+chosen headlines, the three-competition spine, player arcs, must-include and cut \
+beats); the BEATS (each with an `id` and hole-by-hole `holes` evidence); the VENUE; \
+and the COMPETITION ARCS (leader-by-round, winner/loser trajectory, lead changes, \
+decisive moment).
+
+Write the draft in this structure:
+1. OVERVIEW — 2-3 factual sentences: who won the Trophy (Stableford), the Green \
+Jacket (Gross) and the Wooden Spoon (last on Stableford), with final scores and margins.
+2. Follow the plan's `narrative_structure` for the body — chronological round-by-round \
+by default, but honour `in_medias_res` / `theme_led` / whatever the plan chose. Use the \
+plan's per-round `chosen_headline` as section headings where rounds are the units. \
+In plain prose, recount only the **key story notes** for each round using the plan's \
+`beat_ids` — the must-include beats, the decisive moments, the genuinely notable holes. \
+**Do NOT inventory every blow-up or every round's full sequence**; the entertaining pass \
+can draw further colour from the beat data when the narrative needs it. Include \
+hole-level evidence for the beats that matter — a "10 at the short 17th" is worth \
+rendering, a routine bogey usually isn't.
+3. HOW THE COMPETITIONS WERE DECIDED — for the Trophy, then the Green Jacket, then the \
+Wooden Spoon: state how each was won (or, for the Spoon, lost) from its competition arc \
+— the leader by round, the decisive moment, the final margin.
+4. PLAYERS — one factual line per player, from the player arcs.
+
+RULES:
+- Use ONLY the supplied facts. Never invent holes, scores, players or events.
+- Render hole detail for the beats that matter (must-include + decisive + standout, e.g. \
+eagles/HIO/big blow-ups); you don't need to enumerate every blow-up or routine score.
+- Honour the data precisely: where a rival "drew level" rather than taking the lead \
+outright (see each lead change's `lead_type` / `outright`), say "drew level", not "took the lead".
+- Each round is on a specific course (every beat carries its `course`). The same hole \
+NUMBER in different rounds is a DIFFERENT hole on a (usually different) course — never \
+treat them as "the same hole".
+- Early-round lead changes, when the field is bunched, are routine — state them plainly, \
+do not treat the opening exchanges as drama.
+- Plain, clear, British English. Short declarative sentences. No similes, no jokes, no \
+purple language — that comes in the next pass.
+- Markdown headings. Keep it tight."""
+
+
+# Default — current behaviour (light). Switch per call via `dry_draft_style` on
+# `generate_dry_draft`. The detailed variant restores the pre-Step-2 wording (one
+# section per round, render specific holes wherever the evidence supports it).
+DRY_DRAFT_SYSTEM = DRY_DRAFT_SYSTEM_LIGHT
+
+
 def _plan_to_text(plan: Union[StoryPlan, dict]) -> str:
     data = plan.model_dump() if isinstance(plan, StoryPlan) else plan
     return json.dumps(data, indent=2, ensure_ascii=False)
@@ -78,11 +128,21 @@ def _build_author_input(plan: Union[StoryPlan, dict], bundle: dict) -> str:
 
 def generate_dry_draft(teg_num: int, plan: Union[StoryPlan, dict],
                        mode: str = "balanced", tone: str = "house",
+                       dry_draft_style: str = "detailed",
                        model: Optional[str] = None) -> dict:
-    """4a — produce the faithful, no-colour storyline draft from the plan + evidence."""
+    """4a — produce the faithful, no-colour storyline draft from the plan + evidence.
+
+    `dry_draft_style` picks the prompt: `"detailed"` (default — chronological one-
+    section-per-round with full hole-level rendering; floors voice + specificity in
+    the entertaining pass that follows) or `"light"` (narrative-structure-aware,
+    selective hole detail — leaner read, useful for fast/post-round mode).
+    """
+    if dry_draft_style not in ("light", "detailed"):
+        raise ValueError(f"dry_draft_style must be 'light' or 'detailed', got {dry_draft_style!r}")
+    system = DRY_DRAFT_SYSTEM_DETAILED if dry_draft_style == "detailed" else DRY_DRAFT_SYSTEM_LIGHT
     bundle, _ = assemble_bundle(teg_num, mode=mode, tone=tone)
     user = _build_author_input(plan, bundle)
-    text, usage = llm.generate_text(DRY_DRAFT_SYSTEM, user,
+    text, usage = llm.generate_text(system, user,
                                     model=model or llm.DEFAULT_MODEL, max_tokens=8000)
     out_path = f"{OUTPUT_DIR}/teg_{teg_num}_dry_draft.md"
     with open(out_path, "w") as f:
@@ -104,13 +164,24 @@ VOICE: faithful, entertaining, tongue-in-cheek — in the spirit of Barney Ronay
 point of view; but anchored in the facts and never zany or over the top. British English.
 
 STRUCTURE — follow the STORY PLAN you are given:
-- Open with the title and a punchy overview that lands the theme.
-- A section per round, using the plan's chosen headline; carry the theme through and \
-pay off the foreshadowing hooks.
+- The plan's `narrative_structure` and `opening_hook` set the shape of the report. \
+**Chronology is a scaffold, not a constraint** — you may (and should) reorder, open \
+*in medias res*, flash back, or thread a theme across rounds when the story calls \
+for it. The dry draft is a fact anchor, not a structural template.
+- Open with the title and an overview that lands the theme — drawing on the plan's \
+`opening_hook` if it's set to something other than chronological.
+- Use rounds as natural sections (with the plan's chosen per-round headlines), but \
+follow the plan's `narrative_structure` for the order; not every round needs equal \
+weight, and a procedural round can be a short paragraph rather than a full section. \
+Carry the theme through and pay off the foreshadowing hooks.
 - The report is built around the THREE COMPETITIONS in priority order — the Trophy \
 (Stableford) first, then the Green Jacket (Gross), then the Wooden Spoon — and you must \
 make clear HOW each was won (or, for the Spoon, lost).
 - Weave in the venue/course colour and the player arcs where they earn their place.
+- **The report MUST END with a player-by-player section** — 4–6 short bullets, one \
+or two sentences per principal player, drawing on the plan's `players[]` arcs AND \
+the moments you've narrated. Use a heading like `## The men, in brief` (or similar). \
+This closing is non-negotiable; do not omit it.
 
 CRAFT:
 - Render SPECIFIC holes ("a double at the par-4 10th, a 10 at the short 17th"), not vague \
@@ -208,9 +279,14 @@ def report_critique_revise(teg_num: int, plan: Union[StoryPlan, dict],
             "output_path": _write(teg_num, "C_critique_revise", final)}
 
 
-def repetition_lint(text: str, model: Optional[str] = None) -> Tuple[str, object]:
-    """Narrow final pass: kill repeated/over-used words only. Returns (text, usage)."""
-    return llm.generate_text(LINT_SYSTEM, text, model=model or llm.DEFAULT_MODEL, max_tokens=10000)
+def repetition_lint(text: str, model: str = "claude-haiku-4-5") -> Tuple[str, object]:
+    """Narrow final pass: kill repeated/over-used words only. Returns (text, usage).
+
+    Defaults to Haiku 4.5 — the lint is a mechanical copy-edit (no reasoning), so the
+    cheap model is appropriate. `thinking=False` because Haiku doesn't support
+    adaptive thinking. Pass `model=` to override.
+    """
+    return llm.generate_text(LINT_SYSTEM, text, model=model, max_tokens=10000, thinking=False)
 
 
 def run_authoring_ab(teg_num: int, mode: str = "balanced", tone: str = "house",

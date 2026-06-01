@@ -31,6 +31,8 @@ All three live at `data/commentary/teg_{9,14,18}_report_final.md` (clean MD) and
 - Each `NotableEvent` carries its `course`; prompt guards in `WRITER_SYSTEM` and `DRY_DRAFT_SYSTEM` forbid "same hole" across rounds.
 - Early-round lead changes downweighted; prompts state "opening jockeying is routine, not chaos".
 - Winner margins computed against the runner-up (the legacy `Margin_*` column was 0 for the winner, which produced a factual error in the old report).
+- **Narrative structure freedom (Step 1)**: `StoryPlan` carries `narrative_structure` (`chronological` / `in_medias_res` / `theme_led`) and `opening_hook` fields; `WRITER_SYSTEM` has a STRUCTURE rule granting reorder licence. TEG 14 under Step 1 opens *in medias res* on Mullin's R4 quad and resolves the "same hole / different course" temptation explicitly. Baselines preserved at `teg_14_report_baseline.md` (chronological) and `teg_14_report_step1.md` (Step 1 only).
+- **Dry-draft density A/B (Step 2)**: `DRY_DRAFT_SYSTEM` was lightened to be narrative-structure-aware and selective with hole detail. Tested across TEGs 9, 14, 18 → user verdict: **detailed wins**. Detailed floors the worst case (TEG 14 light was materially drier); light occasionally edges on voice but loses hole-level specificity the insider audience wants. **Default flipped to `dry_draft_style="detailed"`** in `generate_dry_draft`; light remains available as a kwarg (useful for fast/post-round mode). Investigation outputs preserved at `data/commentary/teg_{9,14,18}_report_{detailed,light,pre_detailed_baseline}.md`.
 
 ### A/B decision (TEG-9 prototype)
 - **Chosen**: A — around-draft + repetition lint. Most faithful (bounded by the validated dry draft), still reads well.
@@ -46,13 +48,24 @@ All three live at `data/commentary/teg_{9,14,18}_report_final.md` (clean MD) and
 - API key: `ANTHROPIC_API_KEY` env var, else `.streamlit/secrets.toml` at the repo root.
 - Run with `venv/bin/python` — has anthropic + markdown + (now) fastapi/uvicorn/jinja2/starlette/httpx.
 
-## Deferred / next work
+## Active agenda — pre-backfill (current focus)
+
+Four sequenced phases before bulk backfill:
+
+| Phase | What | Estimated |
+|---|---|---|
+| **A. Easy cost levers** | Lint on Haiku 4.5 (`model="claude-haiku-4-5"` on `repetition_lint`). Bundle trim to top-N beats with `top_n=50` arg on `story_plan.assemble_bundle`, **always preserving `must_include` ids and `competition_arcs`**. | ~30 min dev; saves ~$0.12/report. |
+| **B. Per-round standings + player closing** | (1) New `build_round_standings(teg)` in `render.py` returning per-round Trophy / Green Jacket standings markdown using `create_round_summary`; `apply_styling` injects each block before the next `## ` heading. Deterministic — no LLM. (2) Add non-negotiable closing rule to `WRITER_SYSTEM`'s STRUCTURE block requiring 4–6 player-by-player bullets. | ~45 min dev; zero new LLM calls. |
+| **C. Round-report prototype on TEG 14 R1** | New `round_report.py` with `RoundStoryPlan` schema and round-focused `ROUND_PLAN_SYSTEM` / `ROUND_DRY_DRAFT_SYSTEM` / `ROUND_WRITER_SYSTEM` prompts. Reuse `build_notable_events(teg)` filtered to `round`. Decision: does it need round-level scoring weights? Standalone-readable? | ~1–2 h dev + ~$0.40. |
+| **D. Unified backfill** | `dry_draft_style` switch DONE (default = `"detailed"` after the 9/14/18 A/B). Generate one tournament report per TEG for 11 post-8 TEGs (8–18, refreshing 9/14/18). If (C) clean, also 4 round reports/TEG. | ~$5.50 tournament only; ~$20 with rounds. ~30 min – 2 h run. |
+
+## Deferred (after the active agenda)
 
 | Item | Notes |
 |---|---|
-| **5b — Strict round-by-round variant** | Second renderer/prompt that emits a chronological per-round version from the same story plan (no theme weaving). Uses the existing Stage-5 styling pipeline. |
-| **5c — Modes (fast vs archive)** | `mode='fast'` skips the dry draft and uses single-pass authoring (approach B) — cheaper, faster, for post-round write-ups. `mode='archive'` is the current default (full chain) — pauses to let a human edit the story plan if desired. Add as a `mode=` argument to a top-level orchestrator function. |
-| **5d — Scale to all TEGs** | Use Anthropic's Batch API (50% off, 24h SLA, identical output) for the archive backfill. Pair with bundle trim (send only top-N scored beats to the story-plan call) as the headline cost-saving lever. |
+| **5b — Strict round-by-round tournament variant** | Different from C: a *tournament* report rendered strictly chronologically (no theme weaving) — alternative format from the same story plan. |
+| **5c — Modes (fast vs archive)** | `mode='fast'` skips the dry draft and uses single-pass authoring (approach B) — cheaper for post-round write-ups. `mode='archive'` = current full chain. Add as a `mode=` arg to a top-level orchestrator. |
+| **5d — Batch API wrapper** | Use Anthropic's Batch API (50% off, 24h SLA, identical output) for any future archive runs. Bigger saver than the easy levers but ~1–2 h of staged-batch wrapper code. |
 | **Pre-TEG-8 net-vs-par Trophy metric** | The Trophy was total net-vs-par for TEGs 1–7 (Stableford only from TEG 8). The pipeline currently hardcodes Stableford as the Trophy metric everywhere (`events.py` arcs + scoring). Pre-8 reports would misrepresent the Trophy standings — **must be fixed before any pre-8 backfill.** |
 | **Light faithfulness-check pass** | Optional final guard that programmatically verifies prose claims against the data. Two writer-drift incidents to date — critique-revise fabricated "countback"; around-draft fabricated a "same hole across courses" rhyme on TEG 14 (now blocked by per-beat `course` + a prompt rule, but a verifier would catch the next class of drift). Useful insurance for scale. |
 
@@ -64,5 +77,5 @@ All three live at `data/commentary/teg_{9,14,18}_report_final.md` (clean MD) and
 ## How to pick up in a clean session
 1. Read this file (top to bottom) — five minutes.
 2. Skim [README.md](README.md) for the architecture refresher — five more.
-3. Decide which deferred item to start on. Suggested order: **5b** (round-by-round, easy) → **5c** (modes, easy) → **pre-8 net-vs-par metric** (medium, needed before pre-8 backfill) → **5d** (scale + Batch API).
-4. Sanity-test any change by regenerating **TEG 14** — it's the trickiest validated case (tight finish, multiple courses, the kind of pattern the writer wants to fabricate into a "rhyme") and any regression there will show.
+3. **The active agenda above is the next work** — sequenced A → B → C → D. Start at whatever phase isn't ticked off yet; the table is intentionally linear.
+4. Sanity-test any change by regenerating **TEG 14** — it's the trickiest validated case (tight finish, multiple courses, the kind of pattern the writer wants to fabricate into a "rhyme") and any regression there will show. Baselines preserved at `data/commentary/teg_14_report_baseline.md` and `..._step1.md` for comparison.

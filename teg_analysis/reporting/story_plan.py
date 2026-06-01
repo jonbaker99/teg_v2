@@ -55,6 +55,8 @@ class StoryPlan(BaseModel):
     title_candidates: list[str]
     theme: str                      # the one-line through-line / spine
     tone: str                       # resolved register for this report
+    narrative_structure: str        # "chronological" | "in_medias_res" | "theme_led" | free-form one-liner
+    opening_hook: str               # one-line description of what the report opens with (and why)
     foreshadow: list[str]           # hooks to plant early that pay off later
     competitions: list[Competition] # Trophy, Green Jacket, Wooden Spoon (priority order)
     rounds: list[RoundPlan]
@@ -100,6 +102,14 @@ evidence. ALWAYS refer to beats by their `id`.
 YOUR JOB:
 - Choose the story: one clear `theme` that runs through the whole report, and 2-4 \
 `foreshadow` hooks to plant early that pay off later.
+- Choose a `narrative_structure` and an `opening_hook` for the report. \
+`narrative_structure` is one of `chronological` | `in_medias_res` | `theme_led` \
+(or a one-line free-form description if none fits). `opening_hook` is a one-line \
+description of what the report opens with, and why. **Chronological is a default, \
+not a requirement** — favour non-chronological framing when the climax matters more \
+than the build-up (open with the decisive moment then flash back to how it came \
+about), or when the real story is a theme that cuts across rounds. The writer will \
+follow whatever you choose.
 - Select the 6-10 `must_include_beat_ids` the report cannot omit. Be ruthless — \
 list the rest you would cut in `cuts`.
 - Per round: 3 witty `headline_candidates`, a `chosen_headline`, a one-line `angle`, \
@@ -126,20 +136,28 @@ unsure, leave it out. The players will catch any fabrication.
 # ---------------------------------------------------------------------------
 # Bundle assembly
 # ---------------------------------------------------------------------------
-def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house") -> Tuple[dict, list]:
-    """Build the token-lean input bundle (beats + arcs + venue) for the LLM."""
+def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
+                    top_n: Optional[int] = 50) -> Tuple[dict, list]:
+    """Build the token-lean input bundle (beats + arcs + venue) for the LLM.
+
+    `top_n` (default 50) trims the `beats` array to the highest-scoring N events,
+    saving input tokens on the story-plan and dry-draft calls. `competition_arcs`
+    are always preserved in full regardless — they're extracted by event type
+    (trophy_win / jacket_win / wooden_spoon), so trimming beats never loses them.
+    Pass `top_n=None` to disable trimming.
+    """
     events = build_notable_events(teg_num, mode=mode)
     venue = build_venue_context(teg_num)
 
     arcs: dict = {}
-    beats = []
+    all_beats = []
     for i, e in enumerate(events, 1):
         beat_id = f"b{i:02d}"
         ctx = dict(e.context)
         arc = ctx.pop("arc", None)
         if arc and e.type in _ARC_KEY:
             arcs[_ARC_KEY[e.type]] = arc
-        beats.append({
+        all_beats.append({
             "id": beat_id,
             "total": e.total,
             "scope": e.scope,
@@ -153,6 +171,10 @@ def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house") -
             "holes": e.holes,
             "context": {k: v for k, v in ctx.items() if v is not None},
         })
+
+    # Trim beats to top-N by score; events are already sorted desc by `total`
+    # (see scoring.finalise). Arcs are unaffected — they're extracted above.
+    beats = all_beats[:top_n] if top_n is not None else all_beats
 
     bundle = {
         "teg": teg_num,

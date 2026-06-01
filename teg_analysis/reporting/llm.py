@@ -83,15 +83,21 @@ def generate_structured(system: str, user: str, schema: Type[BaseModel],
 
 
 def generate_text(system: str, user: str, model: str = DEFAULT_MODEL,
-                  max_tokens: int = 8000) -> Tuple[str, object]:
-    """Call Claude for free-form prose; return (text, usage). System prompt cached."""
+                  max_tokens: int = 8000, thinking: bool = True) -> Tuple[str, object]:
+    """Call Claude for free-form prose; return (text, usage). System prompt cached.
+
+    `thinking=False` for models that don't support adaptive thinking (e.g. Haiku 4.5,
+    used by the repetition lint).
+    """
     client = _client()
-    resp = client.messages.create(
-        model=model,
-        max_tokens=max_tokens,
-        thinking={"type": "adaptive"},
-        system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
-        messages=[{"role": "user", "content": user}],
-    )
+    kwargs = {
+        "model": model,
+        "max_tokens": max_tokens,
+        "system": [{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
+        "messages": [{"role": "user", "content": user}],
+    }
+    if thinking:
+        kwargs["thinking"] = {"type": "adaptive"}
+    resp = client.messages.create(**kwargs)
     text = "".join(b.text for b in resp.content if b.type == "text")
     return text, resp.usage
