@@ -232,6 +232,83 @@ def apply_styling(text: str, plan: Union[StoryPlan, dict], venue: dict,
     return text
 
 
+def _append_records(text: str, records_block: str) -> str:
+    """Append a PBs/Records appendix to the end of the report (idempotent)."""
+    if not records_block:
+        return text
+    if 'class="records"' in text:
+        return text
+    sep = "" if text.endswith("\n") else "\n"
+    return text + sep + "\n" + records_block + "\n"
+
+
+def build_records_block(teg_num: int, round_num: Optional[int] = None) -> str:
+    """Deterministic 'PBs and TEG records' appendix block. Empty string if none.
+
+    Categories surfaced (from events.py beats):
+    - **TEG records**: all-time top-3 round (Stableford), all-time best Trophy total.
+    - **Personal bests**: player-PB round, player-PB Trophy total.
+    - **Personal worsts**: player-worst round to date.
+    - **Rare feats**: holes-in-one, eagles.
+
+    Idempotent injection caller can detect by `class="records"`.
+    """
+    from teg_analysis.reporting.events import build_notable_events
+    events = build_notable_events(teg_num)
+    if round_num is not None:
+        events = [e for e in events if e.round == round_num]
+
+    def _with_round(h: str, e) -> str:
+        """Suffix headline with (R{round}) if not already mentioned."""
+        if e.round and f"R{e.round}" not in h:
+            return f"{h} (R{e.round})"
+        return h
+
+    records, pbs, worsts, feats = [], [], [], []
+    for e in events:
+        h = e.headline
+        if e.type in ("hole_in_one", "eagle"):
+            feats.append(_with_round(h, e))
+        elif e.type == "big_blowup" and e.holes and e.holes[0].get("sc", 0) >= 10:
+            feats.append(h)  # big_blowup headlines already carry (R{rnd})
+        elif e.type == "round_player":
+            if "round in TEG history" in h:           # all-time top-3 round
+                records.append(_with_round(h, e))
+            elif "personal-best round" in h:
+                pbs.append(_with_round(h, e))
+            elif "worst round to date" in h:
+                worsts.append(_with_round(h, e))
+        elif e.type == "trophy_win":
+            ctx = e.context or {}
+            ar = ctx.get("all_time_rank")
+            pr = ctx.get("player_rank")
+            winner = e.players[0] if e.players else "Winner"
+            score = ctx.get("score")
+            if ar == 1:
+                records.append(f"{winner}'s {score} pts is the best Trophy total in TEG history")
+            elif ar is not None and ar <= 3:
+                ord_str = {2: "2nd", 3: "3rd"}.get(ar, str(ar))
+                records.append(f"{winner}'s {score} pts is the {ord_str}-best Trophy total in TEG history")
+            elif pr == 1:
+                pbs.append(f"{winner}'s {score} pts is a personal Trophy best")
+
+    chunks = []
+    for label, lines in [
+        ("TEG records", records),
+        ("Personal bests", pbs),
+        ("Personal worsts", worsts),
+        ("Rare feats", feats),
+    ]:
+        if lines:
+            chunks.append(
+                f'<p class="records"><span class="records-header">{label}:</span> '
+                + "; ".join(lines) + ".</p>"
+            )
+    if not chunks:
+        return ""
+    return "## Personal bests and TEG records\n\n" + "\n".join(chunks)
+
+
 def style_report(teg_num: int) -> str:
     """Read final report + saved plan + venue, write `..._report_styled.md`. Returns path."""
     final_path = f"{OUTPUT_DIR}/teg_{teg_num}_report_final.md"
@@ -243,6 +320,7 @@ def style_report(teg_num: int) -> str:
     venue = build_venue_context(teg_num)
     standings = build_round_standings(teg_num)
     styled = apply_styling(text, plan, venue, standings=standings)
+    styled = _append_records(styled, build_records_block(teg_num))
 
     with open(out_path, "w") as f:
         f.write(styled)
@@ -346,6 +424,9 @@ def style_round_report(teg_num: int, round_num: int) -> str:
         if end_standings:
             sep = "" if text.endswith("\n") else "\n"
             text = text + sep + "\n" + end_standings + "\n"
+
+    # Append the PBs / TEG records appendix scoped to this round (if any).
+    text = _append_records(text, build_records_block(teg_num, round_num=round_num))
 
     with open(out_path, "w") as f:
         f.write(text)

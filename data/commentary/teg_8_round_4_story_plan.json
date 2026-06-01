@@ -1,0 +1,81 @@
+{
+  "title": "Dunes, Doom and Coronation: TEG 8 Decided at Oitavos",
+  "title_candidates": [
+    "Dunes, Doom and Coronation: TEG 8 Decided at Oitavos",
+    "Williams Holds, Mullin Pounces: The Atlantic Verdict",
+    "Two Crowns by the Sea",
+    "Mullin's Jacket, Williams's Cup: Oitavos Settles It"
+  ],
+  "theme": "On a new links by the Atlantic, Gregg Williams sees out the Trophy while David Mullin snatches the Green Jacket from Jon Baker as early as the 2nd — and survives a quadruple at the 11th to keep it.",
+  "tone": "house",
+  "narrative_structure": "player_by_player",
+  "opening_hook": "Open on Oitavos Dunes itself — TEG's first visit, second time on the Lisbon Coast — then to the verdict: two trophies handed out, one held, one taken.",
+  "foreshadow": [
+    "Mullin's lead-grab at the 2nd that he then had to defend all afternoon",
+    "Mullin's quadruple at the 11th — the wobble that nearly handed it back to Jon Baker",
+    "Williams's quad at the 5th and the cold stretch through 5-8 that opened a door he later slammed shut on the back nine"
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "Gregg WILLIAMS",
+      "score": 149.0,
+      "gap": 12.0,
+      "note": "WINNER. Williams arrived five clear and left twelve clear — but it wasn't serene. A quadruple at the 5th and an 11-shot bleed through holes 5-8 trimmed the cushion; a four-hole burst of 12 Stableford points across 12-15 (par-bogey-par-par) sealed the Trophy. Jon Baker, runner-up overnight, faded to third behind a rallying Alex Baker."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "David MULLIN",
+      "score": 77.0,
+      "gap": 6.0,
+      "note": "WINNER. Mullin began the round two gross shots behind Jon Baker and took the outright lead with a bogey at the 2nd. A quadruple-bogey 8 at the 11th threatened to undo everything; he answered with a birdie at the 13th and another at the 16th to stop the bleeding twice over, finishing six clear of Baker."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "Stuart NEUMANN",
+      "score": 100.0,
+      "gap": 11.0,
+      "note": "COLLECTED. Neumann began the round 22 clear at the bottom and finished 11 clear — Henry Meller's catastrophic front nine briefly raised hope, but quads at the 5th and 17th confirmed the Spoon's destination."
+    }
+  ],
+  "key_beat_ids": [
+    "r4_b01",
+    "r4_b06",
+    "r4_b14",
+    "r4_b15",
+    "r4_b09",
+    "r4_b16",
+    "r4_b07",
+    "r4_b03",
+    "r4_b02",
+    "r4_b04",
+    "r4_b17"
+  ],
+  "players": [
+    {
+      "player": "Gregg WILLIAMS",
+      "arc": "Survived a quadruple at the 5th and an 11-shot bleed through 5-8, then put the Trophy to bed with 12 Stableford points across holes 12-15 (par-bogey-par-par)."
+    },
+    {
+      "player": "David MULLIN",
+      "arc": "Seized the Green Jacket outright with a bogey at the 2nd, weathered a quadruple-bogey 8 at the 11th, and twice stopped the bleeding with birdies at the 13th and 16th to win the gross title by six."
+    },
+    {
+      "player": "Jon BAKER",
+      "arc": "Overnight Jacket leader who lost the gross lead as early as the 2nd hole and could not reel Mullin back in, slipping to second on Gross and third on Stableford."
+    },
+    {
+      "player": "Alex BAKER",
+      "arc": "Climbed past Jon Baker into Trophy runner-up despite a quadruple at the 15th and a closing quintuple-bogey 9 at the 18th — a final-hole horror that didn't change the colour of his medal."
+    },
+    {
+      "player": "Henry MELLER",
+      "arc": "Endured the round of the week in the worst sense: 22 shots bled across holes 1-6, including a 10 at the 4th and a 9 at the 5th, then another nine-shot haemorrhage at 16-18 to close."
+    },
+    {
+      "player": "Stuart NEUMANN",
+      "arc": "Quadruples at the 5th and 17th made certain of the Wooden Spoon, the 22-shot overnight cushion at the bottom shrinking only because Meller obliged."
+    }
+  ],
+  "venue_notes": "Oitavos Dunes — TEG's first visit, Arthur Hills's Atlantic links at Cascais, and the second time the tour has rolled through the Lisbon Coast. A proper links finale: dunes, exposure, and a scorecard full of big numbers to prove it."
+}

@@ -103,3 +103,9 @@ And at the back, Neumann played his strongest golf of the week. **37 points**, i
 - **Jon Baker** — Trophy leader after Round 1, gross runner-up at +77. A 16-point opening five in R3 was the best stretch of golf nobody quite remembers, undone by quadruples at R2 H14, R3 H11 and R4 H17.
 - **Gregg Williams** — Sextuples at R1 H15, R2 H9 and R4 H7, and a 9 on the opening tee of the tournament. A back catalogue of Iberian misfortune you suspect he will be invited to revisit at the dinner.
 - **Stuart Neumann** — Bottom of the pile from R1 H15 to the 72nd green. The closing five at Royal Óbidos on Friday did it; the bright 16-point R4 burst was a glimpse of what might have been. 127, and the Spoon.
+
+## Personal bests and TEG records
+
+<p class="records"><span class="records-header">TEG records:</span> John Patterson's 168 pts is the best Trophy total in TEG history; John Patterson's 49 pts is the 2nd-best round in TEG history to date (R2).</p>
+<p class="records"><span class="records-header">Personal bests:</span> Alex Baker posts a personal-best round: 44 pts (R2); Alex Baker posts a personal-best round: 44 pts (R4).</p>
+<p class="records"><span class="records-header">Rare feats:</span> Alex Baker runs up a 11 (septuple bogey) at the 14th (R1); John Patterson runs up a 10 (sextuple bogey) at the 4th (R1); Gregg Williams runs up a 10 (sextuple bogey) at the 9th (R2); Gregg Williams runs up a 11 (sextuple bogey) at the 7th (R4).</p>

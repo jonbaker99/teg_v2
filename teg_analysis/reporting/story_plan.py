@@ -111,7 +111,11 @@ than the build-up (open with the decisive moment then flash back to how it came 
 about), or when the real story is a theme that cuts across rounds. The writer will \
 follow whatever you choose.
 - Select the 6-10 `must_include_beat_ids` the report cannot omit. Be ruthless — \
-list the rest you would cut in `cuts`.
+list the rest you would cut in `cuts`. **NON-NEGOTIABLE: every beat marked \
+`"mandatory": true` MUST appear in `must_include_beat_ids` and MUST NOT appear \
+in `cuts`.** Mandatory beats are TEG records, personal bests, rare feats \
+(holes-in-one, eagles), any double-figure gross score, and the three competition \
+spine outcomes. The players will notice any omission of these.
 - Per round: 3 witty `headline_candidates`, a `chosen_headline`, a one-line `angle`, \
 and the `beat_ids` that belong to that round.
 - Give each notable player a one-sentence `arc`. Mid-pack nobodies can be omitted.
@@ -147,7 +151,9 @@ do not exist in TEG.
 # Bundle assembly
 # ---------------------------------------------------------------------------
 def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
-                    top_n: Optional[int] = 50) -> Tuple[dict, list]:
+                    top_n: Optional[int] = 50,
+                    events_cache: Optional[list] = None,
+                    venue_cache: Optional[dict] = None) -> Tuple[dict, list]:
     """Build the token-lean input bundle (beats + arcs + venue) for the LLM.
 
     `top_n` (default 50) trims the `beats` array to the highest-scoring N events,
@@ -155,18 +161,29 @@ def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
     are always preserved in full regardless — they're extracted by event type
     (trophy_win / jacket_win / wooden_spoon), so trimming beats never loses them.
     Pass `top_n=None` to disable trimming.
+
+    `events_cache` / `venue_cache` allow a caller to compute the (expensive)
+    `build_notable_events` + `build_venue_context` once per TEG and reuse them
+    across multiple bundle calls (used by the backfill orchestrator).
     """
-    events = build_notable_events(teg_num, mode=mode)
-    venue = build_venue_context(teg_num)
+    events = events_cache if events_cache is not None else build_notable_events(teg_num, mode=mode)
+    venue = venue_cache if venue_cache is not None else build_venue_context(teg_num)
 
     arcs: dict = {}
     all_beats = []
+    MANDATORY_TYPES = {"hole_in_one", "eagle", "feat_hole_in_one", "feat_eagles",
+                       "trophy_win", "jacket_win", "wooden_spoon"}
     for i, e in enumerate(events, 1):
         beat_id = f"b{i:02d}"
         ctx = dict(e.context)
         arc = ctx.pop("arc", None)
         if arc and e.type in _ARC_KEY:
             arcs[_ARC_KEY[e.type]] = arc
+        # Mandatory = HIO / eagle / spine / rarity-7+ / any double-figure score
+        is_double_figure = bool(e.holes) and (e.holes[0].get("sc", 0) >= 10)
+        mandatory = (e.type in MANDATORY_TYPES
+                     or e.rarity >= 7
+                     or is_double_figure)
         all_beats.append({
             "id": beat_id,
             "total": e.total,
@@ -178,13 +195,23 @@ def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
             "players": e.players,
             "scores": {"importance": e.importance, "rarity": e.rarity,
                        "entertainment": e.entertainment},
+            "mandatory": mandatory,
             "holes": e.holes,
             "context": {k: v for k, v in ctx.items() if v is not None},
         })
 
-    # Trim beats to top-N by score; events are already sorted desc by `total`
-    # (see scoring.finalise). Arcs are unaffected — they're extracted above.
-    beats = all_beats[:top_n] if top_n is not None else all_beats
+    # Trim beats to top-N by score; events are already sorted desc by `total`.
+    # ALWAYS preserve mandatory beats (HIO, eagle, double-figure scores, all-time
+    # top-3 rounds, PBs, spine wins) — they must not be trimmed even if other
+    # beats outscore them on the combined `total`. Arcs are unaffected.
+    if top_n is not None:
+        keep_ids = {b["id"] for b in all_beats[:top_n]}
+        for b in all_beats:
+            if b["mandatory"]:
+                keep_ids.add(b["id"])
+        beats = [b for b in all_beats if b["id"] in keep_ids]
+    else:
+        beats = all_beats
 
     bundle = {
         "teg": teg_num,
@@ -200,13 +227,17 @@ def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
 # Public entry point
 # ---------------------------------------------------------------------------
 def build_story_plan(teg_num: int, mode: str = "balanced", tone: str = "house",
-                     dry_run: bool = False, model: Optional[str] = None) -> dict:
+                     dry_run: bool = False, model: Optional[str] = None,
+                     events_cache: Optional[list] = None,
+                     venue_cache: Optional[dict] = None) -> dict:
     """Produce the story plan for a TEG.
 
     dry_run=True writes the exact prompt + bundle to disk and skips the API call.
     Otherwise calls the LLM, returns the validated StoryPlan, and writes the JSON.
+    `events_cache` / `venue_cache` enable per-TEG reuse (see `assemble_bundle`).
     """
-    bundle, events = assemble_bundle(teg_num, mode=mode, tone=tone)
+    bundle, events = assemble_bundle(teg_num, mode=mode, tone=tone,
+                                     events_cache=events_cache, venue_cache=venue_cache)
     user_message = ("Plan the report for the following TEG. Use ONLY this data.\n\n"
                     + json.dumps(bundle, indent=2, ensure_ascii=False))
 

@@ -151,18 +151,22 @@ def _build_author_input(plan: Union[StoryPlan, dict], bundle: dict) -> str:
 def generate_dry_draft(teg_num: int, plan: Union[StoryPlan, dict],
                        mode: str = "balanced", tone: str = "house",
                        dry_draft_style: str = "detailed",
-                       model: Optional[str] = None) -> dict:
+                       model: Optional[str] = None,
+                       events_cache: Optional[list] = None,
+                       venue_cache: Optional[dict] = None) -> dict:
     """4a — produce the faithful, no-colour storyline draft from the plan + evidence.
 
     `dry_draft_style` picks the prompt: `"detailed"` (default — chronological one-
     section-per-round with full hole-level rendering; floors voice + specificity in
     the entertaining pass that follows) or `"light"` (narrative-structure-aware,
     selective hole detail — leaner read, useful for fast/post-round mode).
+    `events_cache` / `venue_cache` enable per-TEG reuse (see `assemble_bundle`).
     """
     if dry_draft_style not in ("light", "detailed"):
         raise ValueError(f"dry_draft_style must be 'light' or 'detailed', got {dry_draft_style!r}")
     system = DRY_DRAFT_SYSTEM_DETAILED if dry_draft_style == "detailed" else DRY_DRAFT_SYSTEM_LIGHT
-    bundle, _ = assemble_bundle(teg_num, mode=mode, tone=tone)
+    bundle, _ = assemble_bundle(teg_num, mode=mode, tone=tone,
+                                events_cache=events_cache, venue_cache=venue_cache)
     user = _build_author_input(plan, bundle)
     text, usage = llm.generate_text(system, user,
                                     model=model or llm.DEFAULT_MODEL, max_tokens=8000)
@@ -219,6 +223,11 @@ abstractions — the detail is what makes it sing.
 FAITHFULNESS (non-negotiable):
 - Use ONLY the supplied facts. Never invent holes, scores, players or events. If it isn't \
 in the data, leave it out.
+- **Every beat id in the plan's `must_include_beat_ids` MUST be covered in the prose** \
+— not just hinted at. These are the spine + TEG records + personal bests + rare feats \
+(holes-in-one, eagles, all-time top-3 rounds, big blow-ups). Skipping any is the most \
+visible kind of omission. A deterministic "PBs and TEG records" appendix is also \
+auto-appended to the styled output as a safety net.
 - Honour the data precisely: where a rival "drew level" rather than taking the lead \
 outright, say so — do not inflate it into a lead change.
 - Each round is played on a specific course (every beat carries its `course`; see also \

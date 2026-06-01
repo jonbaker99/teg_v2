@@ -104,3 +104,7 @@ And that, mercifully, was Catalonia.
 - **John Patterson** — Trophy runner-up, eight back; second despite a twenty-two-shot bleed across holes 3–10 in R1 and an eleven-shot bleed across 6–10 in R2. A back-nine specialist who quietly out-pointed everyone bar the runaway leader.
 
 - **David Mullin** — Green Jacket runner-up; briefly Trophy leader on R1 hole 4, his one moment in the sun. Week's collateral damage: an 11 at the par-5 15th in R1, an 8 at R1's 6th, more 8s at R2's 4th and 6th, and a three-hole, eleven-shot stretch on the Tour that he never quite shook off.
+
+## Personal bests and TEG records
+
+<p class="records"><span class="records-header">Rare feats:</span> Alex Baker runs up a 11 (sextuple bogey) at the 18th (R2); Alex Baker runs up a 10 (sextuple bogey) at the 14th (R4); David Mullin runs up a 11 (sextuple bogey) at the 15th (R1).</p>

@@ -119,12 +119,19 @@ def _competition_state_at_round(teg_num: int, round_num: int) -> list[dict]:
 # Bundle assembly
 # ---------------------------------------------------------------------------
 def assemble_round_bundle(teg_num: int, round_num: int, mode: str = "balanced",
-                          tone: str = "house") -> Tuple[dict, list]:
-    """Build the LLM input bundle for round-report stages."""
-    all_events = build_notable_events(teg_num, mode=mode)
+                          tone: str = "house",
+                          events_cache: Optional[list] = None,
+                          venue_cache: Optional[dict] = None) -> Tuple[dict, list]:
+    """Build the LLM input bundle for round-report stages.
+
+    `events_cache` / `venue_cache` allow per-TEG reuse — when an orchestrator
+    runs the tournament + 4 round reports for the same TEG, recomputing
+    `build_notable_events` 5 times is wasteful.
+    """
+    all_events = events_cache if events_cache is not None else build_notable_events(teg_num, mode=mode)
     round_events = [e for e in all_events if e.round == round_num]
 
-    venue_full = build_venue_context(teg_num)
+    venue_full = venue_cache if venue_cache is not None else build_venue_context(teg_num)
     round_venue = next(
         (r for r in venue_full.get("rounds", []) if r.get("round") == round_num),
         None,
@@ -133,9 +140,14 @@ def assemble_round_bundle(teg_num: int, round_num: int, mode: str = "balanced",
     is_final_round = (round_num == total_rounds) and total_rounds > 0
 
     beats = []
+    MANDATORY_TYPES = {"hole_in_one", "eagle"}
     for i, e in enumerate(round_events, 1):
         ctx = dict(e.context)
         ctx.pop("arc", None)
+        is_double_figure = bool(e.holes) and (e.holes[0].get("sc", 0) >= 10)
+        mandatory = (e.type in MANDATORY_TYPES
+                     or e.rarity >= 7
+                     or is_double_figure)
         beats.append({
             "id": f"r{round_num}_b{i:02d}",
             "total": e.total,
@@ -146,6 +158,7 @@ def assemble_round_bundle(teg_num: int, round_num: int, mode: str = "balanced",
             "players": e.players,
             "scores": {"importance": e.importance, "rarity": e.rarity,
                        "entertainment": e.entertainment},
+            "mandatory": mandatory,
             "holes": e.holes,
             "context": {k: v for k, v in ctx.items() if v is not None},
         })
@@ -221,7 +234,10 @@ collapse, one moment that defines the day). If you choose either of those, the \
 in_medias_res becomes more defensible (the round often has a natural coronation \
 shape).
 - Set `opening_hook` to a one-line description of what to open with and why.
-- Select 5-8 `key_beat_ids` the report MUST cover.
+- Select 5-8 `key_beat_ids` the report MUST cover. **NON-NEGOTIABLE: every beat \
+marked `"mandatory": true` MUST appear in `key_beat_ids`.** Mandatory beats are \
+TEG records, personal bests, rare feats (holes-in-one, eagles), and any \
+double-figure gross score. The players will notice any omission of these.
 - For each principal player, a one-sentence `arc` FOR THIS ROUND (what they did, \
 what it meant). EVERY notable player must have an entry — the writer needs to \
 cover them all.
@@ -352,6 +368,11 @@ race-was-won paragraph.
 
 RULES:
 - Use ONLY the supplied facts. Never invent holes, scores, players, or events.
+- **Every beat id in the plan's `key_beat_ids` MUST be covered in the prose** \
+— not just hinted at. These include TEG records, personal bests, and rare feats \
+(holes-in-one, eagles, all-time top-3 rounds, big blow-ups). A deterministic \
+"PBs and TEG records" appendix is also auto-appended to the styled output, but \
+the prose must still cover them.
 - Each beat carries a `course`. The same hole NUMBER on different courses is a \
 DIFFERENT hole — never treat them as "the same hole".
 - For non-final rounds: describe race STATE at day's end, NOT tournament winners.
@@ -386,9 +407,12 @@ def _plan_to_text(plan: Union[RoundStoryPlan, dict]) -> str:
 
 def build_round_story_plan(teg_num: int, round_num: int, mode: str = "balanced",
                            tone: str = "house", dry_run: bool = False,
-                           model: Optional[str] = None) -> dict:
+                           model: Optional[str] = None,
+                           events_cache: Optional[list] = None,
+                           venue_cache: Optional[dict] = None) -> dict:
     """Stage 3 for a round: LLM produces a structured RoundStoryPlan."""
-    bundle, _ = assemble_round_bundle(teg_num, round_num, mode=mode, tone=tone)
+    bundle, _ = assemble_round_bundle(teg_num, round_num, mode=mode, tone=tone,
+                                      events_cache=events_cache, venue_cache=venue_cache)
     user = ("Plan the report for the following round. Use ONLY this data.\n\n"
             + json.dumps(bundle, indent=2, ensure_ascii=False))
 
@@ -410,9 +434,12 @@ def build_round_story_plan(teg_num: int, round_num: int, mode: str = "balanced",
 def generate_round_dry_draft(teg_num: int, round_num: int,
                               plan: Union[RoundStoryPlan, dict],
                               mode: str = "balanced", tone: str = "house",
-                              model: Optional[str] = None) -> dict:
+                              model: Optional[str] = None,
+                              events_cache: Optional[list] = None,
+                              venue_cache: Optional[dict] = None) -> dict:
     """Stage 4a for a round — dry storyline draft (chronological, hole-by-hole detail)."""
-    bundle, _ = assemble_round_bundle(teg_num, round_num, mode=mode, tone=tone)
+    bundle, _ = assemble_round_bundle(teg_num, round_num, mode=mode, tone=tone,
+                                      events_cache=events_cache, venue_cache=venue_cache)
     user = (
         "ROUND STORY PLAN:\n" + _plan_to_text(plan)
         + "\n\nBEATS (facts + hole evidence; reference by id):\n"
@@ -451,13 +478,21 @@ add voice, colour, foreshadowing, and reorder for narrative effect):\n"
 
 
 def generate_round_report(teg_num: int, round_num: int, mode: str = "balanced",
-                          tone: str = "house") -> dict:
-    """Full round-report pipeline. Writes final + styled markdown, returns paths."""
+                          tone: str = "house",
+                          events_cache: Optional[list] = None,
+                          venue_cache: Optional[dict] = None) -> dict:
+    """Full round-report pipeline. Writes final + styled markdown, returns paths.
+
+    `events_cache` / `venue_cache` enable per-TEG reuse across tournament + 4
+    round reports (used by the backfill orchestrator).
+    """
     from teg_analysis.reporting.authoring import repetition_lint
     from teg_analysis.reporting.render import style_round_report
-    plan_out = build_round_story_plan(teg_num, round_num, mode=mode, tone=tone)
+    plan_out = build_round_story_plan(teg_num, round_num, mode=mode, tone=tone,
+                                      events_cache=events_cache, venue_cache=venue_cache)
     plan = plan_out["plan"]
-    dry = generate_round_dry_draft(teg_num, round_num, plan, mode=mode, tone=tone)
+    dry = generate_round_dry_draft(teg_num, round_num, plan, mode=mode, tone=tone,
+                                   events_cache=events_cache, venue_cache=venue_cache)
     around = report_round_around_draft(teg_num, round_num, plan, dry["text"])
     linted, _ = repetition_lint(around["text"])
     out_path = f"{OUTPUT_DIR}/teg_{teg_num}_round_{round_num}_report_final.md"

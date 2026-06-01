@@ -25,3 +25,9 @@ The Trophy race did not so much shift this round as somersault. Jon Baker began 
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> JP 87 | DM 77 | AB 76 | JB 76 | GW 67 | SN 53</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +29 | JB +36 | JP +42 | GW +63 | AB +70 | SN +74</p>
+
+## Personal bests and TEG records
+
+<p class="records"><span class="records-header">TEG records:</span> John Patterson's 49 pts is the 2nd-best round in TEG history to date (R2).</p>
+<p class="records"><span class="records-header">Personal bests:</span> Alex Baker posts a personal-best round: 44 pts (R2).</p>
+<p class="records"><span class="records-header">Rare feats:</span> Gregg Williams runs up a 10 (sextuple bogey) at the 9th (R2).</p>

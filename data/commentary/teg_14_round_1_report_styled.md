@@ -25,3 +25,7 @@ The races, then, all moved in the same direction this afternoon and the directio
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> DM 40 | AB 37 | GW 33 | JB 29</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +15 | JB +20 | GW +21 | AB +26</p>
+
+## Personal bests and TEG records
+
+<p class="records"><span class="records-header">Rare feats:</span> Alex Baker runs up a 10 (quintuple bogey) at the 16th (R1).</p>

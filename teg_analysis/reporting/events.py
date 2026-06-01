@@ -343,10 +343,12 @@ def _sequences(teg_df: pd.DataFrame, sw: dict, player_names: dict) -> list:
                                        f"{player} eagles the par-{ev['par']} {_ord(ev['hole'])} (R{rnd})",
                                        imp=scoring.cap(3 + 3 * w), rar=8.0,
                                        ent=scoring.cap(7 + 2 * (1 - w))))
-            elif ev["grossvp"] >= 4:
+            elif ev["grossvp"] >= 4 or ev["sc"] >= 10:
+                # Catch quad+ AND any double-figure gross score (belt-and-braces;
+                # in TEG's par-3/4/5 layouts grossvp >= 4 covers all 10s anyway).
                 out.append(_hole_event(teg_num, rnd, player, ev, "big_blowup",
                                        f"{player} runs up a {ev['sc']} ({ev['result']}) at the {_ord(ev['hole'])} (R{rnd})",
-                                       imp=scoring.cap(1 + 4 * w), rar=scoring.cap(ev["grossvp"]),
+                                       imp=scoring.cap(1 + 4 * w), rar=scoring.cap(max(ev["grossvp"], 4)),
                                        ent=scoring.cap(ev["grossvp"] + 3 - 2 * w)))
     return out
 

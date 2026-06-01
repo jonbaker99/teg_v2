@@ -1,0 +1,78 @@
+{
+  "title": "Mountain Sickness in Sintra",
+  "title_candidates": [
+    "Mountain Sickness in Sintra",
+    "Penha Longa Bites Back",
+    "Carnage on the 16th",
+    "Mullin Keeps His Feet While Others Tumble"
+  ],
+  "theme": "Penha Longa's mountain parkland chewed the field up — quintuple bogeys at the 12th, the 16th and most points in between — while David Mullin quietly posted the round of the day to seize the Green Jacket and Gregg Williams, blow-up and all, somehow stretched his Trophy lead.",
+  "tone": "house",
+  "narrative_structure": "player_by_player",
+  "opening_hook": "Lead with the day's defining image: four players hacking their way to 8s and 9s on the 16th, the par-4 that became a body-count. Then pull back to the standings — and the surprise that, despite the carnage, Williams extended his Trophy lead and Mullin took control of the Jacket.",
+  "foreshadow": [
+    "Gregg Williams begins the back nine warm, then walks off the 12th with a 10 — a single hole that, on most days, would have cost him the lead, but didn't.",
+    "Alex Baker bleeds six shots across 6-8 in a barely-noticed early wobble; by the 18th green it looks like a warning he failed to heed.",
+    "David Mullin avoids every hazard the others find — the round's quietest story until you look at the Jacket table."
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "Gregg WILLIAMS",
+      "score": 79.0,
+      "gap": 11.0,
+      "note": "Lead held and extended from 4 to 11 — counter-intuitively, since Williams ran up a 10 at the 12th and bled shots in two separate stretches. He still posted the round's best Stableford haul, because everyone else was busy posting worse. Jon Baker remains second; Alex Baker and David Mullin tied for third."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "David MULLIN",
+      "score": 34.0,
+      "gap": 6.0,
+      "note": "Lead taken decisively. Mullin held a one-shot lead overnight; he played the cleanest card on the mountain (+14 gross for the round) and now leads Jon Baker by six. Williams a further ten back; Alex Baker plummeted to last after a quad-quad finish."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "Stuart NEUMANN",
+      "score": 48.0,
+      "gap": 8.0,
+      "note": "Still propping up the field despite three separate blow-ups (quad at 10, quad at 12, quint at 16). Closed the gap to Henry Meller from 12 to 8 — not because Neumann found anything, but because Meller found his own quintuple at the 16th."
+    }
+  ],
+  "key_beat_ids": [
+    "r2_b13",
+    "r2_b01",
+    "r2_b09",
+    "r2_b08",
+    "r2_b05",
+    "r2_b02",
+    "r2_b03",
+    "r2_b07"
+  ],
+  "players": [
+    {
+      "player": "Gregg WILLIAMS",
+      "arc": "Posted the round's best Stableford haul AND a 10 at the par-5 12th — bled nine shots across 11-13 and seven more across 15-17, yet walked off Penha Longa with his Trophy lead extended from four to eleven. The leaderboard's least-deserved good day."
+    },
+    {
+      "player": "David MULLIN",
+      "arc": "The round's quiet hero: no blow-ups, no cold stretches, just the cleanest card on a course designed to embarrass people. Turned a one-shot Jacket lead into six and is now the man to catch in the gross competition."
+    },
+    {
+      "player": "Jon BAKER",
+      "arc": "Steady. Didn't appear in a single disaster beat, posted the second-best gross of the day, and sits second in both competitions — the only player keeping pace with the leaders on each board."
+    },
+    {
+      "player": "Alex BAKER",
+      "arc": "The round's catastrophe. Three separate cold stretches (6-8, 11-14, 16-18), a quad at the 16th, another quad at the 18th — ten shots bled over the final three holes alone. Fell from outright third in the Trophy to tied-third, and from fifth to last in the Jacket."
+    },
+    {
+      "player": "Henry MELLER",
+      "arc": "Bled ten shots across 11-14 then capped it with a quintuple at the 16th. Drifts further back in both races but, by virtue of Neumann's worse afternoon, holds onto fifth on Stableford."
+    },
+    {
+      "player": "Stuart NEUMANN",
+      "arc": "Three blow-ups on his card — quad at 10, quad at 12, quintuple at 16 — and still cut into the Spoon gap, purely because Meller was busy imploding too. Remains the laggard, just by less."
+    }
+  ],
+  "venue_notes": "TEG's first visit to Penha Longa (Ritz-Carlton, Atlantic Course) — Robert Trent Jones Jr.'s dramatic mountain parkland in the Sintra hills, regarded as one of Portugal's most punishing layouts. Second TEG visit to the Lisbon Coast. The course's reputation for steep terrain and severe scoring was thoroughly vindicated: four players ran up 8 or worse on the par-4 16th alone."
+}

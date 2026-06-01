@@ -83,3 +83,7 @@ There was honour elsewhere. Jon Baker, prisoner of the Spoon since Thursday lunc
 - **Alex Baker** — Trophy runner-up by 2 and unquestionably the week's best follow. Bursts at Prince's on Sunday (ten points across 1–3, eleven across 13–15) were bracketed by big numbers, including two 10s at two different 16ths: the par-5 at Deal in R1, the par-4 at Prince's in R4. The latter ended the chase.
 - **Jon Baker** — Spoon-holder from Thursday lunchtime to the final green, 125 points all in, and *also* second in the Jacket at +75. Handicapping doing exactly what it says on the tin. Signed off in style with a 39 and a fourteen-point flurry from the par-5 12th on Sunday — the day's quiet good news.
 - **Gregg Williams** — Mid-pack and unobtrusive, the week framed by a quadruple-bogey 9 at the par-5 3rd at Deal and a triple-bogey 8 at the par-5 12th at Prince's on Saturday. Respectable golf in between, of the sort that gets you off the headlines and out of the cellar — which, this week in Kent, was no small thing.
+
+## Personal bests and TEG records
+
+<p class="records"><span class="records-header">Rare feats:</span> Alex Baker runs up a 10 (sextuple bogey) at the 16th (R4); Alex Baker runs up a 10 (quintuple bogey) at the 16th (R1).</p>

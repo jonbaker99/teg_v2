@@ -1,0 +1,79 @@
+{
+  "title": "Carnage on the Estoril Coast",
+  "title_candidates": [
+    "Carnage on the Estoril Coast",
+    "Quinta da Marinha Bares Its Teeth",
+    "Trent Jones Sr. Sends His Regards",
+    "A Pine Forest, A Procession, and a Lot of Nines"
+  ],
+  "theme": "A brutal opening day on a brand-new TEG course: Gregg Williams emerges from the wreckage with a four-shot Trophy lead, while almost everyone else leaves a quintuple bogey somewhere in their card.",
+  "tone": "house",
+  "narrative_structure": "player_by_player",
+  "opening_hook": "Open on the sheer volume of carnage — five of the six players posted a quintuple bogey or worse — before pivoting to the man who navigated it best: Gregg Williams on 38 points.",
+  "foreshadow": [
+    "Alex Baker's dream start — 15 points in the first five holes — sets him up as the round's apparent leader, only for the back nine (and especially holes 15-18) to dismantle him entirely.",
+    "Stuart Neumann's early Wooden Spoon plunge at the 4th is a small warning shot before the 29-shot haemorrhage from the 7th to the 15th.",
+    "Henry Meller's 10 at the par-5 3rd is the round's first sign that Quinta da Marinha is in no mood to be hospitable."
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "Gregg WILLIAMS",
+      "score": 38.0,
+      "gap": 4.0,
+      "note": "Williams takes the outright lead at the 10th (a birdie capping a 14-point burst from holes 8-11) and, despite a quadruple at the 15th, holds it comfortably. Four clear of Jon Baker; the rest of the field already at arm's length."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "David MULLIN",
+      "score": 20.0,
+      "gap": 1.0,
+      "note": "The gross race churns all day — Jon Baker drew level at the 6th, Mullin and Williams traded the lead through the turn, before Mullin's par at the 13th nudged him outright. He ends the day one shot clear of Jon Baker, with Williams just behind."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "Stuart NEUMANN",
+      "score": 17.0,
+      "gap": 12.0,
+      "note": "Briefly held by Henry Meller after his 10 at the 3rd, Neumann inherited the spoon at the 4th and never gave it back. The 29-shot bleed from the 7th to the 15th turned a tight race into a 12-point chasm by sundown."
+    }
+  ],
+  "key_beat_ids": [
+    "r1_b01",
+    "r1_b08",
+    "r1_b10",
+    "r1_b18",
+    "r1_b06",
+    "r1_b22",
+    "r1_b26",
+    "r1_b27",
+    "r1_b28"
+  ],
+  "players": [
+    {
+      "player": "Gregg WILLIAMS",
+      "arc": "The day's most composed card: a four-hole burst of 14 points from the 8th took him to the outright Trophy lead, and even a quadruple at the 15th couldn't stop him posting 38 — four clear of the field."
+    },
+    {
+      "player": "Jon BAKER",
+      "arc": "Quietly the round's second-best player on both counts — 34 points, level for the gross lead at the 6th, a quintuple at the 13th the one real blemish, and a birdie at the 17th to stop the rot."
+    },
+    {
+      "player": "David MULLIN",
+      "arc": "Wins the gross race for the day on 20 (par-plus): a three-hole wobble from the 6th aside, the steadiest scoring of the lot, taking the Green Jacket lead outright with a par at the 13th."
+    },
+    {
+      "player": "Alex BAKER",
+      "arc": "The round's great tease — 15 points in the first five holes had him looking like the leader-in-waiting, before quadruples at the 8th, 10th, 12th and 18th and a quintuple at the 17th turned his card into rubble; finishes on 30, with a 20/10 front-back split."
+    },
+    {
+      "player": "Henry MELLER",
+      "arc": "Set the tone for the day with a 10 at the par-5 3rd, briefly bottom of the spoon race; rallied with a birdie at the 5th, but a three-hole bleed from the 13th left him on 29."
+    },
+    {
+      "player": "Stuart NEUMANN",
+      "arc": "His worst TEG round to date — 17 points, 43 over gross — anchored by a nine-hole horror from the 7th to the 15th that shed 29 shots and included three quintuple bogeys; bottom of the spoon race by a country mile."
+    }
+  ],
+  "venue_notes": "TEG's first visit to Quinta da Marinha — a Robert Trent Jones Sr. parkland on the Estoril Coast, elevated targets and abundant bunkering — and the course bit hard on debut. Also the area's second TEG visit to the Lisbon Coast."
+}
