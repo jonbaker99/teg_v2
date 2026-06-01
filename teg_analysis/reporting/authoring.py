@@ -21,9 +21,11 @@ OUTPUT_DIR = "data/commentary"
 
 
 DRY_DRAFT_SYSTEM_DETAILED = """You are producing a DRY STORYLINE DRAFT for a report on a TEG \
-(an amateur golf tournament of several rounds). This is a faithful, plainly-written \
-account with NO colour, NO jokes, NO stylistic flourish. It is a scaffold and a \
-fact-check, not the finished article.
+(an amateur golf tournament of several rounds). This is a faithful, flat, \
+checklist-style fact dump with NO colour, NO jokes, NO narrative hooks, NO \
+characterisation, NO stylistic flourish. It is a scaffold and a fact-check, not \
+the finished article. If you find yourself reaching for a compelling phrase, that \
+phrase belongs in the writer's next pass — leave it out here.
 
 You are given: a STORY PLAN (the agreed structure — theme, per-round angles and \
 chosen headlines, the three-competition spine, player arcs, must-include and cut \
@@ -54,15 +56,26 @@ NUMBER in different rounds is a DIFFERENT hole on a (usually different) course �
 treat them as "the same hole".
 - Early-round lead changes, when the field is bunched, are routine — state them plainly, \
 do not treat the opening exchanges as drama.
-- Plain, clear, British English. Short declarative sentences. No similes, no jokes, no \
-purple language — that comes in the next pass.
+- **TEG has NO countback, NO tiebreakers, NO playoff.** Lead changes are caused by \
+Stableford / Gross point accumulation, full stop. Never write "countback", "tiebreaker", \
+"on countback math", or any similar mechanism. Tied scores are tied — say "drew level" or "tied".
+- **Arithmetic must be exact.** When you assert an over-par total across a stretch \
+(e.g. "X over par through six"), it must equal the precise sum of per-hole over-par \
+(bogey = +1, double = +2, triple = +3, quad = +4, quint = +5, sext = +6). Compute, \
+do NOT estimate. If the arithmetic is awkward, list the per-hole values and skip the \
+running total.
+- Plain, clear, British English. Short declarative sentences. **No narrative hooks** \
+("The day's defining number was..."), **no characterisation** ("the round of his life"), \
+**no dramatisation** ("the wheels came off") — that's the writer's job, not the draft's.
 - Markdown headings. Keep it tight."""
 
 
 DRY_DRAFT_SYSTEM_LIGHT = """You are producing a DRY STORYLINE DRAFT for a report on a TEG \
-(an amateur golf tournament of several rounds). This is a faithful, plainly-written \
-account with NO colour, NO jokes, NO stylistic flourish. It is a scaffold and a \
-fact-check, not the finished article.
+(an amateur golf tournament of several rounds). This is a faithful, flat, \
+checklist-style fact dump with NO colour, NO jokes, NO narrative hooks, NO \
+characterisation, NO stylistic flourish. It is a scaffold and a fact-check, not \
+the finished article. If you find yourself reaching for a compelling phrase, that \
+phrase belongs in the writer's next pass — leave it out here.
 
 You are given: a STORY PLAN (the agreed structure — theme, per-round angles and \
 chosen headlines, the three-competition spine, player arcs, must-include and cut \
@@ -98,8 +111,17 @@ NUMBER in different rounds is a DIFFERENT hole on a (usually different) course �
 treat them as "the same hole".
 - Early-round lead changes, when the field is bunched, are routine — state them plainly, \
 do not treat the opening exchanges as drama.
-- Plain, clear, British English. Short declarative sentences. No similes, no jokes, no \
-purple language — that comes in the next pass.
+- **TEG has NO countback, NO tiebreakers, NO playoff.** Lead changes are caused by \
+Stableford / Gross point accumulation, full stop. Never write "countback", "tiebreaker", \
+"on countback math", or any similar mechanism. Tied scores are tied — say "drew level" or "tied".
+- **Arithmetic must be exact.** When you assert an over-par total across a stretch \
+(e.g. "X over par through six"), it must equal the precise sum of per-hole over-par \
+(bogey = +1, double = +2, triple = +3, quad = +4, quint = +5, sext = +6). Compute, \
+do NOT estimate. If the arithmetic is awkward, list the per-hole values and skip the \
+running total.
+- Plain, clear, British English. Short declarative sentences. **No narrative hooks** \
+("The day's defining number was..."), **no characterisation** ("the round of his life"), \
+**no dramatisation** ("the wheels came off") — that's the writer's job, not the draft's.
 - Markdown headings. Keep it tight."""
 
 
@@ -214,6 +236,15 @@ frame a player's split between the two competitions as schizophrenic, contradict
 "unique double", impossibly strange, or any kind of head-scratcher — it is the ordinary \
 mechanics of the scoring system. State both facts plainly; the shape can still be \
 interesting (e.g. Jacket runner-up while bottom of the Trophy), but it is not weird.
+- **TEG has NO countback, NO tiebreakers, NO playoff.** All competitions are decided \
+by accumulated points (Stableford / Gross). Lead changes happen because a player \
+accumulated more points than another. Never invent "countback", "countback math", \
+"tiebreaker", "playoff" or similar — those mechanisms do not exist in TEG.
+- **Arithmetic must be exact.** When asserting an over-par total across a stretch of \
+holes, the figure must equal the precise sum of per-hole over-par (bogey = +1, double \
+= +2, triple = +3, quad = +4, quint = +5, sext = +6). If you echo a total from the dry \
+draft, check it against the per-hole evidence first. Wrong arithmetic is the most \
+obvious fabrication the players will catch.
 
 Output GitHub-flavoured markdown. No preamble, no sign-off — just the report."""
 

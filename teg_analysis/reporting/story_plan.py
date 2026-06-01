@@ -136,6 +136,10 @@ other is normal handicapping, NOT paradox. Do not plan a theme or player arc tha
 frames the split as schizophrenic, contradictory, a "unique double", or any kind \
 of head-scratcher. The shape can be interesting (e.g. Jacket runner-up while \
 bottom of the Trophy) but it is not weird.
+- **TEG has NO countback, NO tiebreakers, NO playoff.** Lead changes happen \
+because players accumulate more points (Stableford / Gross). Never plan a theme \
+or note that invokes "countback", "tiebreaker", or "playoff" — those mechanisms \
+do not exist in TEG.
 - Output only the structured plan."""
 
 
