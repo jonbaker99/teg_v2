@@ -129,6 +129,8 @@ def assemble_round_bundle(teg_num: int, round_num: int, mode: str = "balanced",
         (r for r in venue_full.get("rounds", []) if r.get("round") == round_num),
         None,
     )
+    total_rounds = len(venue_full.get("rounds", []))
+    is_final_round = (round_num == total_rounds) and total_rounds > 0
 
     beats = []
     for i, e in enumerate(round_events, 1):
@@ -151,6 +153,8 @@ def assemble_round_bundle(teg_num: int, round_num: int, mode: str = "balanced",
     bundle = {
         "teg": teg_num,
         "round": round_num,
+        "is_final_round": is_final_round,
+        "total_rounds": total_rounds,
         "tone": tone,
         "round_venue": round_venue,
         "area_context": {
@@ -182,14 +186,20 @@ never zany or over the top.
 
 THIS IS A ROUND REPORT, NOT A TOURNAMENT REPORT.
 - The round is ONE day of the tournament: 18 holes, all players.
-- The three competitions (Trophy / Green Jacket / Wooden Spoon) have STATE here, \
-not winners. Use `competition_state_end_of_round` for where each race stands at \
-day's end, and `competition_state_prior` for where it stood going in. Describe \
-what changed in the round.
+- If `is_final_round` is FALSE: the three competitions (Trophy / Green Jacket / \
+Wooden Spoon) have STATE here, not winners. Describe how each race shifted in \
+the round, drawing on `competition_state_prior` vs `competition_state_end_of_round`. \
+Do not declare anyone the tournament champion.
+- If `is_final_round` is TRUE: this round IS the tournament's resolution. The plan \
+should declare Trophy / Green Jacket / Wooden Spoon WINNERS and final margins. \
+Foreshadow hooks become payoff hooks. A single dominant story arc (the winning \
+shot, the decisive collapse) is more defensible here than in a mid-tournament round.
 - The round IS the unit. There is no per-round breakdown — the report covers one \
 round.
 
 INPUT (JSON in the user turn):
+- is_final_round: boolean — whether this round is the tournament's final round
+- total_rounds: the total round count for this TEG
 - competition_state_end_of_round: per-competition leader/laggard, score, gap, \
 plus full standings list
 - competition_state_prior: same shape, for end of previous round (empty if R1)
@@ -202,18 +212,25 @@ YOUR JOB:
 - Choose the round's STORY: a clear one-line `theme`, and 2-3 `foreshadow` hooks \
 (events earlier in the round that pay off later — e.g. "early blow-up at the 4th \
 that came back to haunt him at the 18th").
-- Choose a `narrative_structure` (`chronological` | `in_medias_res` | `theme_led` \
-| free-form one-liner) and an `opening_hook` (one-line description of what to \
-open with and why). Don't default to "front nine then back nine" if the story has \
-a different shape.
+- Choose a `narrative_structure`. **The default for a round report is \
+`chronological` or `player_by_player`** — these two reliably cover every notable \
+player and read cleanly. `in_medias_res` and `theme_led` are reserved for rounds \
+with a SINGLE dominant story arc (one player's record round, one decisive \
+collapse, one moment that defines the day). If you choose either of those, the \
+`opening_hook` must clearly justify the choice. For final rounds, theme-led / \
+in_medias_res becomes more defensible (the round often has a natural coronation \
+shape).
+- Set `opening_hook` to a one-line description of what to open with and why.
 - Select 5-8 `key_beat_ids` the report MUST cover.
 - For each principal player, a one-sentence `arc` FOR THIS ROUND (what they did, \
-what it meant).
+what it meant). EVERY notable player must have an entry — the writer needs to \
+cover them all.
 - Build a `competition_state` array — for Trophy / Green Jacket / Wooden Spoon: \
 the leader_or_laggard, their cumulative score, the gap to the next position, AND \
 a `note` describing what happened to that race in the round (lead taken, lead \
 held, gap widened, lead changes mid-round, etc.). Draw on prior state to describe \
-what changed.
+what changed. For final rounds, the `note` describes how the race was WON (or \
+lost, for the Spoon).
 - `venue_notes`: any course/area context to weave in.
 - `title` + a few `title_candidates`; record the resolved `tone`.
 
@@ -222,11 +239,16 @@ SELECTION PRINCIPLES:
 high-entertainment for colour.
 - Early-round lead changes within a single round, when the field is bunched, are \
 routine; late-round shifts matter more.
+- **Stableford and Gross measure DIFFERENT things** — Stableford is \
+handicap-adjusted, Gross is raw shots. A player leading one and trailing the \
+other is normal handicapping, NOT paradox. Don't plan a theme or player arc that \
+frames the split as schizophrenic, contradictory, a "unique double", or any kind \
+of head-scratcher.
 
 RULES:
 - Use ONLY the supplied data. Never invent.
-- Round reports describe race STATE, not WINNERS. Do not declare anyone the \
-tournament champion.
+- For non-final rounds: describe race STATE, not WINNERS.
+- For final rounds: declare race WINNERS and final margins.
 - Output only the structured plan."""
 
 
@@ -247,19 +269,24 @@ day, key result/movement in the three races.
 unless the plan's `narrative_structure` chose otherwise. RENDER SPECIFIC HOLES \
 from the beat evidence — e.g. "a quadruple-bogey 8 at the par-4 6th and an 11 at \
 the par-5 18th", never a vague "a back-nine collapse". This hole-level \
-specificity is the whole point of the draft.
-3. WHERE THE RACES STAND — for the Trophy, then the Green Jacket, then the Wooden \
-Spoon: leader-or-laggard, cumulative score, gap to next position, what changed \
-this round (drawing on the competition_state data).
-4. PLAYERS — one factual line per player, from the player arcs.
+specificity is the whole point of the draft. **Cover every notable player's round** \
+— each principal must appear substantively in the prose.
+3. RACE SHIFTS (only if material movement happened) — a short factual paragraph \
+on how Trophy / Green Jacket / Wooden Spoon SHIFTED this round (leads taken, \
+gaps halved or stretched, a race effectively settled, a player flipping into the \
+Spoon). The standings BLOCK is appended deterministically later; do NOT restate \
+the leader/score/gap (the block carries that). Skip this section entirely when \
+nothing material happened in any of the three races.
 
 RULES:
 - Use ONLY the supplied facts. Never invent holes, scores, players, or events.
 - Render real hole detail wherever the evidence supports it.
 - Honour the data precisely: where a rival "drew level" rather than taking the \
 lead outright, say "drew level", not "took the lead".
-- Round reports describe race STATE, not WINNERS — do not declare anyone the \
-tournament champion.
+- For non-final rounds: describe race STATE/SHIFTS, not WINNERS.
+- For final rounds (`is_final_round=true`): the race-shifts section becomes the \
+race-results section — declare winners and final margins.
+- No closing "Players" / "men, in brief" bullet list — coverage lives in section 2.
 - Plain, clear, British English. Short declarative sentences. No similes, no \
 jokes, no purple language — that comes in the next pass.
 - Markdown headings. Keep it tight."""
@@ -278,27 +305,44 @@ British English.
 
 STRUCTURE — follow the ROUND STORY PLAN you are given:
 - Open with the title and a paragraph that lands the theme — drawing on the \
-plan's `opening_hook`. The plan's `narrative_structure` sets the shape; you may \
-(and should) open *in medias res*, flash back, or lead with the biggest moment \
-when the story calls for it.
+plan's `opening_hook`.
+- **Default narrative shape: `chronological` or `player_by_player` coverage.** \
+These are the two acceptable defaults — both reliably cover every notable player \
+and read cleanly. `in_medias_res` and `theme_led` are reserved for rounds with a \
+SINGLE dominant story arc; only use one of those structures if the plan's \
+`narrative_structure` calls for it AND the `opening_hook` justifies the choice.
+- **Every notable player's round MUST be covered in the prose itself** — \
+substantively, not as a passing mention. The core of the report is comprehensive \
+player coverage, not editorial flourish. There is no closing player-bullet \
+section (no "men, in brief"); coverage lives in the body.
 - The round IS the unit. Don't break into sub-sections by nines or phases unless \
 the story genuinely calls for it. Carry the theme; pay off the foreshadow hooks.
 - Render specific holes drawn from the dry draft's hole evidence — concrete hole \
 detail (par, score, hole number) is the point.
-- Close with the state of the three races (Trophy / Green Jacket / Wooden Spoon \
-at end of round) — leader/laggard, cumulative score, gap, what changed today. \
-**State, not winners**.
-- **The report MUST END with a player-by-player section** — 3-5 short bullets, \
-one or two sentences per principal player, anchored in this round's moments and \
-the plan's `players[]` arcs. Use a heading like `## The men, in brief` (or \
-similar). Non-negotiable.
+- **End-of-round standings are appended automatically by the renderer** (Trophy \
++ Green Jacket paragraphs). Do NOT write a "Where the races stand" / "State of \
+play" section — it would duplicate the auto-injected block. The deterministic \
+block carries the STATE.
+- **Race-shift commentary (optional, encouraged when warranted).** Immediately \
+before the auto-injected standings block, you SHOULD add a short paragraph on \
+how the three races *shifted* this round when there is meaningful movement to \
+describe — leads changing hands, gaps halving or stretching, a race effectively \
+settled, the Spoon flipping at a specific hole, Jacket lead changed for the \
+first time. This is about shifts, not state. Keep it tight; skip entirely when \
+all three races held station.
+
+FINAL ROUND (when `is_final_round` is true):
+- Declare Trophy / Green Jacket / Wooden Spoon WINNERS explicitly, with final \
+margins. Frame the round as a coronation (or capitulation) — the foreshadow \
+hooks become payoff hooks. The race-shift paragraph (above) becomes a how-the- \
+race-was-won paragraph.
 
 RULES:
 - Use ONLY the supplied facts. Never invent holes, scores, players, or events.
 - Each beat carries a `course`. The same hole NUMBER on different courses is a \
 DIFFERENT hole — never treat them as "the same hole".
-- This is a round report. Describe race STATE at day's end, NOT tournament \
-winners.
+- For non-final rounds: describe race STATE at day's end, NOT tournament winners.
+- For final rounds: declare race WINNERS and final margins.
 - British English. Use proper-cased player names (not all-caps surnames).
 - Honour the data precisely: where a rival "drew level" rather than taking the \
 lead outright, say "drew level".
@@ -387,8 +431,9 @@ add voice, colour, foreshadowing, and reorder for narrative effect):\n"
 
 def generate_round_report(teg_num: int, round_num: int, mode: str = "balanced",
                           tone: str = "house") -> dict:
-    """Full round-report pipeline. Writes the final markdown and returns its path."""
+    """Full round-report pipeline. Writes final + styled markdown, returns paths."""
     from teg_analysis.reporting.authoring import repetition_lint
+    from teg_analysis.reporting.render import style_round_report
     plan_out = build_round_story_plan(teg_num, round_num, mode=mode, tone=tone)
     plan = plan_out["plan"]
     dry = generate_round_dry_draft(teg_num, round_num, plan, mode=mode, tone=tone)
@@ -397,8 +442,10 @@ def generate_round_report(teg_num: int, round_num: int, mode: str = "balanced",
     out_path = f"{OUTPUT_DIR}/teg_{teg_num}_round_{round_num}_report_final.md"
     with open(out_path, "w") as f:
         f.write(linted)
+    styled_path = style_round_report(teg_num, round_num)
     return {"plan_path": plan_out["output_path"],
             "dry_path": dry["output_path"],
             "around_path": around["output_path"],
             "final_path": out_path,
+            "styled_path": styled_path,
             "n_chars": len(linted)}

@@ -2,29 +2,24 @@
 
 ## Overview
 
-David Mullin posted the round of the day with 40 Stableford points to lead both the Trophy and the Green Jacket after one round. Jon Baker's 29 points was the worst card of the day and dropped him to the foot of the Wooden Spoon race. The links bared its teeth: 40 points was enough to win, and the back nine produced three of the day's biggest blow-ups.
+David Mullin posted the round of the day at Deal, 40 Stableford points, to take outright leads in both the Trophy and the Green Jacket. Alex Baker finished second on Stableford with 37, but a pair of big numbers on the back nine left him last on Gross. Jon Baker slipped to the bottom of the Wooden Spoon race as early as the 4th and stayed there.
 
 ## The Round
 
-Royal Cinque Ports staged TEG's second visit to Deal and only its second outing in Kent, a two-time Open venue and one of the sternest links on the coast. The scoring told the story of the course as much as the golfers.
+The wind was up on the Kent coast and the damage began on the front nine. Gregg Williams ran up a 9 at the par-5 3rd — a quadruple bogey that set the tone for his day and from which his round never properly recovered.
 
-The damage started early. At the par-5 3rd, Gregg Williams ran up a quadruple-bogey 9, the tone-setter for his day. Alex Baker then bled six shots across holes 3 to 5 — double-bogey 7 at the par-5 3rd, double-bogey 5 at the par-3 4th, double-bogey 7 at the par-5 5th. On the same hole that began Williams's slide, Jon Baker bogeyed the par-3 4th to drop to the bottom of the Wooden Spoon race, a position he never escaped.
+Alex Baker's troubles began on the same hole. He opened a three-hole slide of double bogey, double bogey, double bogey from the 3rd through the 5th — a 7 at the par-5 3rd, a 5 at the par-3 4th, and a 7 at the par-5 5th — six shots gone in three holes.
 
-Alex Baker briefly steadied. A par at the 6th drew him level with the Green Jacket lead. It did not last. The round turned over the four holes from the 9th. Mullin parred the 9th to draw level for the Jacket, birdied the par-4 10th, parred the 11th to draw level for the Trophy, and parred the 12th — a 13-point burst across holes 9 to 12 that effectively decided both competitions. Mullin's run ended with a double-bogey 6 at the 13th.
+Jon Baker, meanwhile, dropped to the foot of the Spoon race at the par-3 4th with a bogey 4, and would not climb back off the bottom all round.
 
-At the 11th itself, while Mullin was making par, Alex Baker took a quadruple-bogey 8 at the par-4. Jon Baker put together his best stretch alongside, three straight pars at 11, 12 and 13 for nine points. The Trophy lead was settled at the par-5 16th, where Mullin's par-5 took him outright in front while Alex Baker ran up a quintuple-bogey 10.
+The Green Jacket race fluctuated through the middle of the front nine. Alex Baker drew level at the top on Gross with a par at the 6th, before David Mullin drew level himself with a par at the 9th. From there Mullin took over. He strung together his best stretch of the day from the 9th to the 12th — par, birdie (a 3 at the par-4 10th), par, par — 13 Stableford points in four holes. The par at the 11th drew him level on Stableford too.
 
-## Where the Races Stand
+Jon Baker briefly went with him: pars at the 11th, 12th and 13th gave him nine points in three holes, his only sustained run of the day, but not enough to lift him off the bottom of the Spoon.
 
-**Trophy.** David Mullin leads on 40 points, three clear of Alex Baker on 37, with Gregg Williams on 33 and Jon Baker on 29. Mullin drew level at the 11th and took outright command at the 16th.
+Mullin then wobbled at the 13th, a double-bogey 6 at the par 4 ending the steady run. He held firm thereafter, and a par 5 at the 16th moved him into outright lead of the Trophy.
 
-**Green Jacket.** Mullin leads on 15 over par gross, five ahead of Jon Baker on 20, with Gregg Williams on 21 and Alex Baker on 26. Mullin levelled with Alex Baker at the 9th before pulling away as Baker's card came apart on the back nine.
+The same hole settled the Gross race. Alex Baker took 10 at the par-5 16th, a quintuple bogey, having already carded an 8 at the par-4 11th — a quadruple. Those two holes between them accounted for nine shots over par and left him second on Stableford but adrift on Gross.
 
-**Wooden Spoon.** Jon Baker is bottom on 29 points, four adrift of Gregg Williams. He dropped to last at the 4th and stayed there.
+## Race Shifts
 
-## Players
-
-- **David MULLIN** — Built the round on a 13-point burst from the 9th to the 12th, drew level and then went outright in both competitions, and finished R1 leading the Trophy and the Jacket.
-- **Alex BAKER** — Level for the Jacket at the 6th, then unravelled: six shots gone at 3–5, a quadruple-bogey 8 at the 11th, and a 10 at the par-5 16th that handed Mullin the outright Trophy lead.
-- **Gregg WILLIAMS** — A quadruple-bogey 9 at the par-5 3rd set the tone; held third in both competitions but never threatened the front.
-- **Jon BAKER** — Slipped to the bottom of the Spoon at the 4th and stayed there, despite a three-par run at 11–13 that secured Jacket runner-up.
+Mullin holds both leads after one round. He drew level on the Trophy at the 11th and went outright in front at the 16th; on the Green Jacket he closed Alex Baker's early lead by the 9th and pulled clear as Baker's back nine fell apart. Jon Baker is the Wooden Spoon laggard, four points back of Gregg Williams.

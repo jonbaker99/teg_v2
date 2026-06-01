@@ -1,19 +1,18 @@
 {
-  "title": "Mullin Masters the Kent Wind",
+  "title": "Mullin Masters the Wind at Deal",
   "title_candidates": [
-    "Mullin Masters the Kent Wind",
-    "Deal Me In: Mullin's Opening Statement",
-    "The 16th Hole Hands Out Its Verdict",
-    "Holes 9-12: Where the Round Was Won"
+    "Mullin Masters the Wind at Deal",
+    "Deal Me In: Mullin Takes Both Leads",
+    "Sand, Wind and a Ten: Round One at Royal Cinque Ports"
   ],
-  "theme": "On a brutal Open-hosting links, David Mullin's mid-round purple patch separates him from a field punished by Royal Cinque Ports — most of all Alex Baker, whose round unravels in double and quintuple bogeys.",
+  "theme": "David Mullin's mid-round purple patch hands him both leads, while Alex Baker's links nightmare leaves him chasing on Stableford and adrift on Gross",
   "tone": "house",
-  "narrative_structure": "theme_led",
-  "opening_hook": "Open with Royal Cinque Ports as the real protagonist — a two-time Open venue baring its teeth on TEG's second visit — before pivoting to Mullin emerging from the wind with a four-hole stretch (9-12) that effectively decided the day.",
+  "narrative_structure": "chronological",
+  "opening_hook": "Open on a windswept Deal morning — the championship links is supposed to bite, and within an hour it has, with Gregg Williams already 4-over on a single hole",
   "foreshadow": [
-    "Alex Baker's early bleed at 3-5 (b08) as a warning of the chaos to come on the back nine",
-    "Mullin drawing level for the Jacket at the 9th (b11) as the moment that flipped into his decisive 9-12 surge",
-    "Jon Baker's quiet slide to the bottom of the Spoon race at the 4th (b07), an unflashy early move that holds all day"
+    "Gregg Williams's quadruple at the 3rd setting an early tone for what the course was going to extract",
+    "Alex Baker bleeding six shots across holes 3-5, a slow puncture that prefigured the bigger numbers to come at the 11th and 16th",
+    "Jon Baker slipping to the foot of the Spoon race as early as the 4th — a position he never escaped"
   ],
   "competition_state": [
     {
@@ -21,50 +20,50 @@
       "leader_or_laggard": "David MULLIN",
       "score": 40.0,
       "gap": 3.0,
-      "note": "No prior state — this is the opening round. Mullin drew level at the 11th (b12) and took outright command at the 16th (b09), finishing three points clear of Alex Baker."
+      "note": "Mullin drew level on Stableford at the 11th in the middle of his hot run, then took the outright lead at the 16th and never let it go. Holds a three-point cushion over Alex Baker heading into R2."
     },
     {
       "name": "Green Jacket",
       "leader_or_laggard": "David MULLIN",
       "score": 15.0,
       "gap": 5.0,
-      "note": "Mullin levelled with Alex Baker at the 9th (b11) for the gross lead, then pulled away as Baker's card detonated on the back nine — a five-shot cushion over Jon Baker by the close."
+      "note": "A gross-score race that ebbed and flowed early — Alex Baker level at the 6th, Mullin level by the 9th — before Baker's back-nine carnage settled it. Mullin ends the round five gross shots clear of Jon Baker."
     },
     {
       "name": "Wooden Spoon",
       "leader_or_laggard": "Jon BAKER",
       "score": 29.0,
       "gap": 4.0,
-      "note": "Jon Baker dropped to the foot of the Spoon race as early as the 4th (b07) and never climbed out, ending the day four points adrift of Gregg Williams."
+      "note": "Jon Baker dropped to the bottom of the Spoon pile as early as the 4th and stayed there, four points adrift of Gregg Williams after eighteen."
     }
   ],
   "key_beat_ids": [
-    "r1_b04",
-    "r1_b09",
-    "r1_b01",
-    "r1_b02",
-    "r1_b08",
     "r1_b03",
+    "r1_b08",
     "r1_b07",
-    "r1_b06"
+    "r1_b04",
+    "r1_b06",
+    "r1_b02",
+    "r1_b01",
+    "r1_b09"
   ],
   "players": [
     {
       "player": "David MULLIN",
-      "arc": "Built the round on a 13-point burst from the 9th to the 12th (b04), levelled and then took both leads outright, and ended R1 with the Trophy and the Jacket — the only man to truly tame the wind."
+      "arc": "Quietly built the round of the day around a 13-point burst from the 9th to 12th, took both leads in the middle of the round and refused to give them back despite a wobble at the 13th."
     },
     {
       "player": "Alex BAKER",
-      "arc": "Briefly level for the Jacket at the 6th (b13) before his round collapsed in stages: six shots gone across 3-5 (b08), a quad at the 11th (b02), and a brutal 10 at the par-5 16th (b01) that gifted Mullin the outright Trophy lead."
+      "arc": "Started the bleeding early (six shots gone across holes 3-5), then hammered the nails in himself with an 8 at the 11th and a 10 at the 16th — second on Stableford but well off the Gross pace."
     },
     {
       "player": "Gregg WILLIAMS",
-      "arc": "A quad-bogey 9 at the 3rd (b03) set the tone, and although he hung on to third in both competitions, he never recovered enough to threaten the front."
+      "arc": "Set the tone for the day's misery with a 9 at the 3rd and never quite recovered, finishing a distant third on Stableford."
     },
     {
       "player": "Jon BAKER",
-      "arc": "Slipped to the bottom of the Spoon race at the 4th (b07) and stayed there despite a tidy three-par run at 11-13 (b06) — a respectable Jacket runner-up finish masking a long day at the foot of the Stableford."
+      "arc": "Slid to the foot of the Spoon race at the 4th and despite a tidy par-par-par run from 11-13, couldn't claw his way out by the end of the round."
     }
   ],
-  "venue_notes": "Royal Cinque Ports, Deal — TEG's second visit, and only the second time in Kent. A two-time Open host and one of the sternest links on the Kent coast, especially in wind: the scoring (a winning 40 Stableford) tells the story of the course as much as the golfers."
+  "venue_notes": "Royal Cinque Ports — TEG's 2nd visit to this championship Kent links, a former Open venue that punishes loose play when the wind blows. The scorecard suggests the wind blew."
 }

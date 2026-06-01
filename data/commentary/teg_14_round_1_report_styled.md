@@ -1,4 +1,9 @@
-# Mullin Masters the Wind at Deal
+# Mullin Masters the Wind at Deal {.round-report-title}
+
+<p class="dateline">TEG 14 | Round 1 | 04/11/2021 | Royal Cinque Ports</p>
+
+<p class="round-scores"><span class="round-scores-header">Round Stableford:</span> DM 40 | AB 37 | GW 33 | JB 29</p>
+<p class="round-scores"><span class="round-scores-header">Round Gross:</span> DM +15 | JB +20 | GW +21 | AB +26</p>
 
 A grey morning on the Kent coast, a flag standing horizontal in the breeze, and a championship links rubbing its hands. Royal Cinque Ports has hosted Opens in its time, and it does not particularly care whether the men teeing off on it today are major champions or four blokes with mid-handicaps and a tournament to play. It will extract its toll regardless. Within an hour the toll-booth was open for business: Gregg Williams, four-over-par on a single hole, the par-5 3rd swallowing him for a 9 that was less a quadruple bogey than a public service announcement. Deal had introduced itself. The rest of the day would be a question of who listened.
 
@@ -8,7 +13,7 @@ Alex Baker began his afternoon by walking into the same trap. The 3rd took 7 fro
 
 While Baker was bleeding shots and Williams was nursing his 9, Jon Baker was finding a corner of his own. A bogey 4 at the short 4th dropped him to the bottom of the Wooden Spoon pile — a position he reached comfortably before anyone had really noticed, and one he would still be occupying eighteen holes later. There are early-warning signs in golf and there are settled facts; the 4th, today, was the latter.
 
-The Green Jacket race, meanwhile, was doing the polite thing of pretending to be a contest. Alex Baker drew level at the top on Gross with a par at the 6th. Mullin, methodically and without fuss, drew level himself with a par at the 9th. And then — and here is where the round acquires its protagonist — Mullin simply got on with it. Par at the 9th, birdie 3 at the par-4 10th, par at the 11th, par at the 12th: a four-hole stretch worth 13 Stableford points, the round of the day taking shape inside the round of the day. The par at the 11th drew him level on Stableford with Alex Baker too, and from there the gradient only ran one way.
+The Green Jacket race, meanwhile, was doing the polite thing of pretending to be a contest. Alex Baker drew level at the top on Gross with a par at the 6th. Mullin, methodically and without fuss, drew level himself with a par at the 9th. And then — and here is where the round acquires its protagonist — Mullin simply got on with it. Par at the 9th, birdie 3 at the par-4 10th, par at the 11th, par at the 12th: a four-hole stretch worth 13 Stableford points, the round of the day taking shape inside the round of the day. The par at the 11th drew him even on Stableford with Alex Baker too, and from there the gradient only ran one way.
 
 Jon Baker, to his credit, briefly tagged along — pars at the 11th, 12th and 13th, nine points in three holes, his only sustained piece of golf all day. It was just enough to suggest he might escape the cellar, and not nearly enough to actually achieve it.
 
@@ -16,4 +21,7 @@ Mullin's wobble, when it came, was almost reassuring: a double-bogey 6 at the pa
 
 Williams, for his part, never recovered the ground the 3rd had taken from him, and finished a distant third on Stableford. Jon Baker's tidy little 11-12-13 run aside, he never escaped the bottom of the Spoon either.
 
-The races, then, all moved in the same direction this round and the direction was Mullin's. He drew level on the Trophy at the 11th and went outright in front at the 16th; he closed Alex Baker's early Green Jacket lead by the 9th and pulled clear as Baker's back nine fell apart. Jon Baker, four points adrift of Williams in the Spoon, is the man with most to do.
+The races, then, all moved in the same direction this afternoon and the direction was Mullin's. He drew even on the Trophy at the 11th and went outright in front at the 16th; he closed Alex Baker's early Green Jacket lead by the 9th and pulled clear as Baker's back nine fell apart. Jon Baker, four points adrift of Williams in the Spoon, is the man with most to do.
+
+<p class="standings"><span class="standings-header">Trophy Standings:</span> DM 40 | AB 37 | GW 33 | JB 29</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +15 | JB +20 | GW +21 | AB +26</p>

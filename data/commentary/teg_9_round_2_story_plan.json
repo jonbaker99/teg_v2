@@ -1,0 +1,81 @@
+{
+  "title": "Patterson's 49: the day the Trophy race broke open",
+  "title_candidates": [
+    "Patterson's 49: the day the Trophy race broke open",
+    "From triple-triple to Trophy lead: JP's Praia rampage",
+    "The second-best round in TEG history",
+    "Patterson laps the field at Praia D'El Rey"
+  ],
+  "theme": "John Patterson, last seen carding back-to-back triple bogeys at the 5th and 6th, somehow assembles the second-best round in TEG history and turns a one-shot Trophy race into a ten-point procession.",
+  "tone": "house",
+  "narrative_structure": "theme_led",
+  "opening_hook": "Open on the bare fact: 49 Stableford points, the second-best round in TEG history — then immediately rewind to JP at six over through six, because the day's defining number was nowhere in sight until it suddenly was. The single dominant arc justifies theme_led.",
+  "foreshadow": [
+    "JP's opening horror show — bogey-bogey-bogey-double-triple-triple through six (b18) — set up as the round nobody saw coming",
+    "The birdie at the 7th (b12) as the hinge: the moment the bleeding stopped and the rampage began",
+    "Jon Baker's three-par run at 11-13 (b17) framed as the leader holding firm — before the 14th tee"
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "John PATTERSON",
+      "score": 87.0,
+      "gap": 10.0,
+      "note": "Blown wide open. JP began the day tied for 2nd, one behind Jon Baker; 49 points later he leads by ten. DM briefly drew level on H2 (b23), JP retook level on H11 (b24), and from there it was a solo. JB went from leader to T3."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "David MULLIN",
+      "score": 29.0,
+      "gap": 7.0,
+      "note": "Mullin held the Jacket lead but extended it from two to seven. JB stays 2nd; JP's gross 14-over was strong enough to keep him in third but not to threaten DM in the net race."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "Stuart NEUMANN",
+      "score": 53.0,
+      "gap": 14.0,
+      "note": "SN remains rooted to the bottom and the gap to GW widened from 8 to 14. Two quads (5th, 9th) and a nine-shot bleed at 11-13 ensured the Spoon's grip tightened rather than loosened."
+    }
+  ],
+  "key_beat_ids": [
+    "r2_b01",
+    "r2_b18",
+    "r2_b12",
+    "r2_b04",
+    "r2_b05",
+    "r2_b15",
+    "r2_b02",
+    "r2_b03",
+    "r2_b08",
+    "r2_b14",
+    "r2_b22"
+  ],
+  "players": [
+    {
+      "player": "John PATTERSON",
+      "arc": "From six over through six to a 49-point demolition — back-to-back triples at 5-6, a birdie at the 7th to staunch it, then 17 points across 9-13 and 14 more from 15-18; takes the Trophy lead on H1, loses it briefly, reclaims it level on H11, and finishes ten clear."
+    },
+    {
+      "player": "David MULLIN",
+      "arc": "Quietly does his Jacket job: weathers a four-bogey patch broken by a birdie at the 10th, briefly drew level on Trophy at H2, and ends the day with his Green Jacket lead stretched from two to seven."
+    },
+    {
+      "player": "Jon BAKER",
+      "arc": "Started the day as Trophy leader and ended it ten back; a three-par procession at 11-13 suggested he might dig in, before the quad at the par-three 14th — alongside Alex — undid the round, only partly salvaged by a birdie at the 17th."
+    },
+    {
+      "player": "Alex BAKER",
+      "arc": "A personal-best 44 points that, on any other day, would have been the headline — achieved despite two quadruple bogeys (at the 10th and the 14th) and a three-hole bleed of eight shots; the 10-point burst at 7-9 was the engine."
+    },
+    {
+      "player": "Gregg WILLIAMS",
+      "arc": "Largely anonymous bar a 10 at the par-four 9th — a sextuple bogey that becomes the round's most lurid single number even on a day full of competition."
+    },
+    {
+      "player": "Stuart NEUMANN",
+      "arc": "Two quads (5th and 9th) and a triple-triple-triple at 11-13; the Spoon gap to GW doubles from 8 to 14."
+    }
+  ],
+  "venue_notes": "Third TEG visit to Praia D'El Rey (Cabell Robinson, links-and-parkland on the Lisbon Coast); TEG's third trip to the area. The course's dramatic back-nine dunes are the backdrop for JP's 9-13 surge and JB/AB's twin quads at the par-three 14th."
+}

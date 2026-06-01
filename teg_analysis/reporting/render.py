@@ -14,7 +14,7 @@ Idempotent: re-running on already-styled text is a no-op (existing hooks are det
 from __future__ import annotations
 
 import re
-from typing import Union
+from typing import Optional, Union
 
 from teg_analysis.reporting.story_plan import StoryPlan
 from teg_analysis.reporting.venue import build_venue_context
@@ -246,4 +246,107 @@ def style_report(teg_num: int) -> str:
 
     with open(out_path, "w") as f:
         f.write(styled)
+    return out_path
+
+
+# ---------------------------------------------------------------------------
+# Round-report styling (Phase E)
+# ---------------------------------------------------------------------------
+def build_round_scores(teg_num: int, round_num: int) -> str:
+    """Two-paragraph deterministic round-scores block for a single round.
+
+    Stableford line sorted by `Round_Score_Stableford` descending; Gross line
+    sorted by `Round_Score_Gross` ascending (signed format). Uses player codes
+    (`Pl`). Returns empty string if no data.
+    """
+    from teg_analysis.analysis.commentary import create_round_summary
+    rs = create_round_summary()
+    rs = rs[(rs["TEGNum"] == teg_num) & (rs["Round"] == round_num)].copy()
+    if rs.empty:
+        return ""
+
+    stab = rs.sort_values("Round_Score_Stableford", ascending=False)
+    gross = rs.sort_values("Round_Score_Gross", ascending=True)
+    stab_str = " | ".join(
+        f"{r['Pl']} {int(r['Round_Score_Stableford'])}"
+        for _, r in stab.iterrows()
+    )
+    gross_str = " | ".join(
+        f"{r['Pl']} {_fmt_signed(int(r['Round_Score_Gross']))}"
+        for _, r in gross.iterrows()
+    )
+    return (
+        f'<p class="round-scores"><span class="round-scores-header">Round Stableford:</span>'
+        f' {stab_str}</p>\n'
+        f'<p class="round-scores"><span class="round-scores-header">Round Gross:</span>'
+        f' {gross_str}</p>'
+    )
+
+
+def build_round_dateline(teg_num: int, round_num: int) -> str:
+    """Round-report dateline: `TEG N | Round R | Date | Course`."""
+    from teg_analysis.constants import ROUND_INFO_CSV
+    from teg_analysis.io import read_file
+    ri = read_file(ROUND_INFO_CSV)
+    row = ri[(ri["TEGNum"] == teg_num) & (ri["Round"] == round_num)]
+    if row.empty:
+        return ""
+    r = row.iloc[0]
+    return (f'<p class="dateline">TEG {teg_num} | Round {round_num} | '
+            f'{r["Date"]} | {r["Course"]}</p>')
+
+
+def style_round_report(teg_num: int, round_num: int) -> str:
+    """Read `teg_N_round_R_report_final.md`, inject styling hooks, write
+    `..._styled.md`. Returns path.
+
+    Layout:
+        # Title  {.round-report-title}
+        <p class="dateline">…</p>
+        <p class="round-scores">Round Stableford: …</p>
+        <p class="round-scores">Round Gross: …</p>
+
+        …main prose (possibly ending with a one-paragraph race-shift note)…
+
+        <p class="standings">Trophy Standings: …</p>
+        <p class="standings">Green Jacket Standings: …</p>
+
+    Idempotent: re-running on an already-styled file is a no-op.
+    """
+    final_path = f"{OUTPUT_DIR}/teg_{teg_num}_round_{round_num}_report_final.md"
+    out_path = f"{OUTPUT_DIR}/teg_{teg_num}_round_{round_num}_report_styled.md"
+
+    with open(final_path) as f:
+        text = f.read()
+
+    # Tag the H1
+    def repl_h1(m):
+        line = m.group(0)
+        if "{.round-report-title" in line:
+            return line
+        return f"{line.rstrip()} {{.round-report-title}}"
+    text = re.sub(r"^# [^\n]+$", repl_h1, text, count=1, flags=re.MULTILINE)
+
+    # Insert dateline + round-scores after the H1 (once).
+    if 'class="dateline"' not in text and 'class="round-scores"' not in text:
+        dateline = build_round_dateline(teg_num, round_num)
+        scores = build_round_scores(teg_num, round_num)
+        block_parts = [p for p in (dateline, scores) if p]
+        if block_parts:
+            block = "\n\n" + "\n\n".join(block_parts) + "\n"
+            text = re.sub(
+                r"^(# [^\n]+\{\.round-report-title\})\s*$",
+                lambda m: m.group(1) + block,
+                text, count=1, flags=re.MULTILINE,
+            )
+
+    # Append end-of-round standings (Trophy + Green Jacket) at the very end.
+    if 'class="standings"' not in text:
+        end_standings = build_round_standings(teg_num).get(round_num, "")
+        if end_standings:
+            sep = "" if text.endswith("\n") else "\n"
+            text = text + sep + "\n" + end_standings + "\n"
+
+    with open(out_path, "w") as f:
+        f.write(text)
     return out_path
