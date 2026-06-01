@@ -130,6 +130,12 @@ to the outcome. The lead changes that matter are the late, decisive ones.
 RULES:
 - Use ONLY the supplied data. Never invent scores, holes, players, or events. If \
 unsure, leave it out. The players will catch any fabrication.
+- **Stableford and Gross measure DIFFERENT things** — Stableford is \
+handicap-adjusted, Gross is raw shots. A player leading one and trailing the \
+other is normal handicapping, NOT paradox. Do not plan a theme or player arc that \
+frames the split as schizophrenic, contradictory, a "unique double", or any kind \
+of head-scratcher. The shape can be interesting (e.g. Jacket runner-up while \
+bottom of the Trophy) but it is not weird.
 - Output only the structured plan."""
 
 

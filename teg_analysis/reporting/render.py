@@ -65,14 +65,28 @@ def build_round_standings(teg_num: int) -> dict:
 
 
 def _inject_standings(text: str, standings: dict) -> str:
-    """Insert each round's standings block at the end of its section in document order
-    (immediately before the next `## ` heading, or EOF). Idempotent — skip if already
-    present (detected by `class="standings"` near the injection point)."""
+    """Insert per-round standings. Two modes:
+
+    - If the report uses `## Round N` headings: inject each round's standings at
+      the end of its section (immediately before the next `## ` heading, or EOF).
+    - Otherwise (theme-led report with no Round-N markers): insert a single
+      `## Standings by round` appendix listing every round, just before the
+      player-closing section (`## The men …` / `## Players` …) or at EOF.
+
+    Idempotent — skip if `class="standings"` is already present.
+    """
     if not standings:
         return text
     if 'class="standings"' in text:
         return text  # already injected
 
+    has_round_headings = bool(re.search(r"^## Round \d+\b", text, flags=re.MULTILINE))
+    if has_round_headings:
+        return _inject_standings_per_round(text, standings)
+    return _inject_standings_appendix(text, standings)
+
+
+def _inject_standings_per_round(text: str, standings: dict) -> str:
     lines = text.splitlines(keepends=True)
     result = []
     current_round = None
@@ -80,23 +94,40 @@ def _inject_standings(text: str, standings: dict) -> str:
         m_round = re.match(r"^## Round (\d+)\b", line)
         m_h2 = re.match(r"^## ", line)
         if m_round:
-            # New round heading. If we were inside a round, flush its standings first.
             if current_round is not None and current_round in standings:
                 result.append("\n" + standings[current_round] + "\n\n")
             current_round = int(m_round.group(1))
             result.append(line)
         elif m_h2 and current_round is not None:
-            # Non-round H2 closes the round section. Inject standings before it.
             if current_round in standings:
                 result.append("\n" + standings[current_round] + "\n\n")
             current_round = None
             result.append(line)
         else:
             result.append(line)
-    # Document ended inside a round section
     if current_round is not None and current_round in standings:
         result.append("\n" + standings[current_round] + "\n")
     return "".join(result)
+
+
+def _inject_standings_appendix(text: str, standings: dict) -> str:
+    """Build a single `## Standings by round` block listing every round, and
+    insert it before the player-closing section (`## The men …` / `## Players` …)
+    or at EOF if no such section exists."""
+    blocks = []
+    for rnd in sorted(standings):
+        blocks.append(f"**End of Round {rnd}**\n\n{standings[rnd]}")
+    appendix = "## Standings by round\n\n" + "\n\n".join(blocks) + "\n"
+
+    # Find the player-closing section heading (first match of common patterns).
+    pattern = re.compile(r"^## (?:The men|Players?\b|The week in players)", re.MULTILINE)
+    m = pattern.search(text)
+    if m:
+        idx = m.start()
+        return text[:idx] + appendix + "\n" + text[idx:]
+    # No closing section found — append at end.
+    sep = "" if text.endswith("\n") else "\n"
+    return text + sep + "\n" + appendix
 
 
 # ---------------------------------------------------------------------------

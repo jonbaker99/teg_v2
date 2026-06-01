@@ -170,10 +170,14 @@ STRUCTURE — follow the STORY PLAN you are given:
 for it. The dry draft is a fact anchor, not a structural template.
 - Open with the title and an overview that lands the theme — drawing on the plan's \
 `opening_hook` if it's set to something other than chronological.
-- Use rounds as natural sections (with the plan's chosen per-round headlines), but \
-follow the plan's `narrative_structure` for the order; not every round needs equal \
-weight, and a procedural round can be a short paragraph rather than a full section. \
-Carry the theme through and pay off the foreshadowing hooks.
+- Round-by-round and theme-led are BOTH valid structures. If you take the \
+round-by-round route, each round should have its own `## Round N — …` heading \
+(themed titles after the number are fine, e.g. `## Round 1 — 46 and Out of \
+Sight`); the deterministic per-round standings renderer keys off those markers \
+and will inject standings under each. If you take a theme-led route and don't \
+use `## Round N` markers, a consolidated "Standings by round" appendix will be \
+inserted before the player closing — so the data still ships either way. Carry \
+the theme through and pay off the foreshadowing hooks.
 - The report is built around the THREE COMPETITIONS in priority order — the Trophy \
 (Stableford) first, then the Green Jacket (Gross), then the Wooden Spoon — and you must \
 make clear HOW each was won (or, for the Spoon, lost).
@@ -203,6 +207,13 @@ different holes and name the courses.
 - Early-round lead changes, when the field is bunched, are normal — do NOT frame routine \
 opening jockeying as "chaos" or high drama. The lead changes that matter are the late ones.
 - Net scoring is Stableford points; gross is strokes vs par. Don't conflate them.
+- **Stableford and Gross measure DIFFERENT things** — Stableford is handicap-adjusted, \
+Gross is raw shots. A higher-handicap player can lead the Trophy and trail the Jacket; a \
+lower-handicap player vice versa. This is **normal handicapping, not paradox**. NEVER \
+frame a player's split between the two competitions as schizophrenic, contradictory, a \
+"unique double", impossibly strange, or any kind of head-scratcher — it is the ordinary \
+mechanics of the scoring system. State both facts plainly; the shape can still be \
+interesting (e.g. Jacket runner-up while bottom of the Trophy), but it is not weird.
 
 Output GitHub-flavoured markdown. No preamble, no sign-off — just the report."""
 
