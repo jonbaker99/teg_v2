@@ -65,6 +65,14 @@ IDEAS AND INSPIRATION
     https://www.seaharvest.net.au -> PRINTED VIBE
     Masters website: faint grey background, content in white cards
 
+    The copilot website cards styles...
+
+
+FUTURE ACTIVITIES
+
+  A TEG PDF 'digest', including report, scorecards, charts
+
+
 
 ============
 

@@ -52,24 +52,9 @@ Tables and stat cards need work on small screens if the webapp is to be shareabl
 ### Navigation and page categorisation
 The current prototype uses the same page groupings as the Streamlit site for now. As the webapp matures, we should review whether this categorisation makes sense for a web context — the Streamlit groupings were designed for sidebar nav, not a top nav bar. Consider: flatter structure, better mobile nav, progressive disclosure for less-visited sections.
 
-### Out-there ideas...
-Try a paper texture version?
-Make it more 'programme' / newspaper like?
-
 ---
 
 ## WEBAPP — FEATURES
 
 ### Data filters / query controls
 Allow users to filter leaderboard/records by TEG range, player subset, or course — without reloading the page (HTMX swap).
-
----
-
-## FUTURE / DEFERRED
-
-### Framework / platform choice
-Big question: is Streamlit + Railway the right long-term stack, or should we move to something else (NiceGUI, FastAPI + React, etc.)? Defer until the API layer is proven.
-
-### REST API / retire Streamlit
-Expose `teg_analysis/` as a proper REST API so other frontends (mobile, etc.) can consume the data. Once the webapp covers the same feature set, deprecate Streamlit and consolidate on a single frontend.
-

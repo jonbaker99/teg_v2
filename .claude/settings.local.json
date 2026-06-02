@@ -62,7 +62,10 @@
       "Bash(xargs '-I{}' sh -c 'python3 -c \" *)",
       "Skill(claude-api)",
       "Bash(awk '/^## Current state/,/^## /{print}' CLAUDE.md)",
-      "Bash(awk '/^## Current state & next steps/,/^## [^C]/' CLAUDE.md)"
+      "Bash(awk '/^## Current state & next steps/,/^## [^C]/' CLAUDE.md)",
+      "Bash(awk '/^## The men, in brief|^## Players?/,/^$/' data/commentary/teg_14_report_final.md)",
+      "Bash(awk '/^## The men/,/^$/' data/commentary/teg_14_report_final.md)",
+      "Bash(awk '{print $6, $7, $8, $9}')"
     ],
     "deny": [],
     "ask": [
