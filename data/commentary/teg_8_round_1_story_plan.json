@@ -2,18 +2,18 @@
   "title": "Carnage on the Estoril Coast",
   "title_candidates": [
     "Carnage on the Estoril Coast",
-    "Quinta da Marinha Bares Its Teeth",
-    "Trent Jones Sr. Sends His Regards",
-    "A Pine Forest, A Procession, and a Lot of Nines"
+    "Quinta da Marinha Bites Back",
+    "Williams Leads, Everyone Else Bleeds",
+    "A Robert Trent Jones Welcome"
   ],
-  "theme": "A brutal opening day on a brand-new TEG course: Gregg Williams emerges from the wreckage with a four-shot Trophy lead, while almost everyone else leaves a quintuple bogey somewhere in their card.",
+  "theme": "Quinta da Marinha, new to TEG, hands out a collective hiding — Williams survives best to lead the Trophy, Mullin sneaks the Jacket, and Neumann is already 12 clear at the wrong end.",
   "tone": "house",
-  "narrative_structure": "player_by_player",
-  "opening_hook": "Open on the sheer volume of carnage — five of the six players posted a quintuple bogey or worse — before pivoting to the man who navigated it best: Gregg Williams on 38 points.",
+  "narrative_structure": "chronological",
+  "opening_hook": "Open on the carnage scoreboard at sundown — six players, one new Robert Trent Jones layout, and a body count of blow-ups — before rewinding to the first tee.",
   "foreshadow": [
-    "Alex Baker's dream start — 15 points in the first five holes — sets him up as the round's apparent leader, only for the back nine (and especially holes 15-18) to dismantle him entirely.",
-    "Stuart Neumann's early Wooden Spoon plunge at the 4th is a small warning shot before the 29-shot haemorrhage from the 7th to the 15th.",
-    "Henry Meller's 10 at the par-5 3rd is the round's first sign that Quinta da Marinha is in no mood to be hospitable."
+    "Alex Baker's electric opening — 15 points in five holes (r1_b08) — that the back nine would mug him for (r1_b18, r1_b21)",
+    "Henry Meller's 10 at the par-5 3rd (r1_b06), the day's first signature disaster, which dropped him to the foot of the Spoon race (r1_b23) before Neumann took it off him",
+    "Gregg Williams' birdie at the 10th that grabbed the Trophy lead (r1_b10, r1_b26) — a high-water mark he then promptly leaked back through holes 12-15 (r1_b22)"
   ],
   "competition_state": [
     {
@@ -21,59 +21,58 @@
       "leader_or_laggard": "Gregg WILLIAMS",
       "score": 38.0,
       "gap": 4.0,
-      "note": "Williams takes the outright lead at the 10th (a birdie capping a 14-point burst from holes 8-11) and, despite a quadruple at the 15th, holds it comfortably. Four clear of Jon Baker; the rest of the field already at arm's length."
+      "note": "Williams seized the Stableford lead with his birdie at the 10th (r1_b26) and, despite a sloppy 12-15 stretch that bled 10 shots (r1_b22), held off Jon Baker by four. First round, first race — but with the field spread from 38 down to 17, the gaps are already meaningful."
     },
     {
       "name": "Green Jacket",
       "leader_or_laggard": "David MULLIN",
       "score": 20.0,
       "gap": 1.0,
-      "note": "The gross race churns all day — Jon Baker drew level at the 6th, Mullin and Williams traded the lead through the turn, before Mullin's par at the 13th nudged him outright. He ends the day one shot clear of Jon Baker, with Williams just behind."
+      "note": "The Gross lead changed hands repeatedly on the back nine (r1_b30, r1_b31, r1_b32); Mullin moved clear with a par at the 13th (r1_b27) and clung on by a single shot from Jon Baker, with Williams five back."
     },
     {
       "name": "Wooden Spoon",
       "leader_or_laggard": "Stuart NEUMANN",
       "score": 17.0,
       "gap": 12.0,
-      "note": "Briefly held by Henry Meller after his 10 at the 3rd, Neumann inherited the spoon at the 4th and never gave it back. The 29-shot bleed from the 7th to the 15th turned a tight race into a 12-point chasm by sundown."
+      "note": "Meller briefly owned the basement after his 10 at the 3rd (r1_b23), but Neumann took it back at the 4th (r1_b24) and then spent holes 7-15 cementing it, bleeding 29 shots in nine holes (r1_b01) en route to his worst round to date (r1_b07). Twelve points clear of the field, in the wrong direction."
     }
   ],
   "key_beat_ids": [
-    "r1_b01",
-    "r1_b08",
-    "r1_b10",
-    "r1_b18",
     "r1_b06",
-    "r1_b22",
-    "r1_b26",
-    "r1_b27",
+    "r1_b08",
+    "r1_b18",
+    "r1_b10",
+    "r1_b01",
+    "r1_b23",
+    "r1_b07",
     "r1_b28"
   ],
   "players": [
     {
       "player": "Gregg WILLIAMS",
-      "arc": "The day's most composed card: a four-hole burst of 14 points from the 8th took him to the outright Trophy lead, and even a quadruple at the 15th couldn't stop him posting 38 — four clear of the field."
+      "arc": "The day's best survivor — surged through holes 8-11 (r1_b10) and a birdie at the 10th to grab the Trophy lead (r1_b26), then leaked it back through a 10-shot wobble at 12-15 (r1_b22) but still finished four clear on Stableford."
     },
     {
       "player": "Jon BAKER",
-      "arc": "Quietly the round's second-best player on both counts — 34 points, level for the gross lead at the 6th, a quintuple at the 13th the one real blemish, and a birdie at the 17th to stop the rot."
-    },
-    {
-      "player": "David MULLIN",
-      "arc": "Wins the gross race for the day on 20 (par-plus): a three-hole wobble from the 6th aside, the steadiest scoring of the lot, taking the Green Jacket lead outright with a par at the 13th."
+      "arc": "Quietly second in both races despite a 9 of his own at the 13th (r1_b03); steadied himself with a birdie at the 17th (r1_b19) to stay within four of Williams and one of Mullin."
     },
     {
       "player": "Alex BAKER",
-      "arc": "The round's great tease — 15 points in the first five holes had him looking like the leader-in-waiting, before quadruples at the 8th, 10th, 12th and 18th and a quintuple at the 17th turned his card into rubble; finishes on 30, with a 20/10 front-back split."
+      "arc": "The round's tragic arc — 15 points in the first five holes (r1_b08), then unravelled with quadruple bogeys at 8, 10, 12 and 18 (r1_b11, r1_b12, r1_b13, r1_b14) and a 9 at the 17th (r1_b02), the 14-shot back-nine bleed (r1_b18) leaving a 10-point split between his nines (r1_b17)."
+    },
+    {
+      "player": "David MULLIN",
+      "arc": "Took the Green Jacket lead with a par at the 13th (r1_b27) and held it by a shot, despite his own cold patch at 6-8 (r1_b25); tied with Alex Baker in the Stableford on 30."
     },
     {
       "player": "Henry MELLER",
-      "arc": "Set the tone for the day with a 10 at the par-5 3rd, briefly bottom of the spoon race; rallied with a birdie at the 5th, but a three-hole bleed from the 13th left him on 29."
+      "arc": "A 10 at the par-5 3rd (r1_b06) was the day's first disaster, briefly sinking him to the foot of the Spoon (r1_b23) before Neumann relieved him; a birdie at the 5th stopped the bleeding (r1_b20), but another 6-shot bleed at 13-15 (r1_b29) capped a 29-point round."
     },
     {
       "player": "Stuart NEUMANN",
-      "arc": "His worst TEG round to date — 17 points, 43 over gross — anchored by a nine-hole horror from the 7th to the 15th that shed 29 shots and included three quintuple bogeys; bottom of the spoon race by a country mile."
+      "arc": "A grim afternoon — the Wooden Spoon was his by the 4th (r1_b24) and never threatened to leave, with 9s at the 10th, 11th and 12th (r1_b15, r1_b16, r1_b04), an 8 at the 14th (r1_b05) and 29 shots bled across nine holes (r1_b01) sealing his worst TEG round to date (r1_b07)."
     }
   ],
-  "venue_notes": "TEG's first visit to Quinta da Marinha — a Robert Trent Jones Sr. parkland on the Estoril Coast, elevated targets and abundant bunkering — and the course bit hard on debut. Also the area's second TEG visit to the Lisbon Coast."
+  "venue_notes": "Quinta da Marinha — a new course for TEG (visit_n 1), a Robert Trent Jones Sr. parkland on the Estoril Coast with elevated targets and abundant bunkering. TEG's second visit to the Lisbon Coast. Lean into the unfamiliarity: the elevated targets and the bunkering did much of the day's damage."
 }

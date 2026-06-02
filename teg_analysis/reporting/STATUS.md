@@ -48,16 +48,19 @@ All three live at `data/commentary/teg_{9,14,18}_report_final.md` (clean MD) and
 - API key: `ANTHROPIC_API_KEY` env var, else `.streamlit/secrets.toml` at the repo root.
 - Run with `venv/bin/python` — has anthropic + markdown + (now) fastapi/uvicorn/jinja2/starlette/httpx.
 
-## Active agenda — pre-backfill (current focus)
+## Active agenda — phases A–G
 
-Four sequenced phases before bulk backfill:
+Phases A → G build the canonical post-8 pipeline and an era-aware pre-8 path. Phases A–E and G's code are complete; Phase F's backfill is partial; Phase G's backfill is deferred.
 
-| Phase | What | Estimated |
+| Phase | What | Status |
 |---|---|---|
-| **A. Easy cost levers** | Lint on Haiku 4.5 (`model="claude-haiku-4-5"` on `repetition_lint`). Bundle trim to top-N beats with `top_n=50` arg on `story_plan.assemble_bundle`, **always preserving `must_include` ids and `competition_arcs`**. | ~30 min dev; saves ~$0.12/report. |
-| **B. Per-round standings + player closing** | (1) New `build_round_standings(teg)` in `render.py` returning per-round Trophy / Green Jacket standings markdown using `create_round_summary`; `apply_styling` injects each block before the next `## ` heading. Deterministic — no LLM. (2) Add non-negotiable closing rule to `WRITER_SYSTEM`'s STRUCTURE block requiring 4–6 player-by-player bullets. | ~45 min dev; zero new LLM calls. |
-| **C. Round-report prototype on TEG 14 R1** | DONE. `teg_analysis/reporting/round_report.py` ships the pipeline: `RoundStoryPlan` schema, `ROUND_PLAN_SYSTEM` / `ROUND_DRY_DRAFT_SYSTEM` / `ROUND_WRITER_SYSTEM` prompts, `assemble_round_bundle` (filtered beats + per-round venue + before/after competition state from `create_round_summary`), and `generate_round_report` end-to-end. **Decisions:** (i) no round-level scoring weight changes needed — the tournament-level beat ranking surfaces the right R1 moments for TEG 14 (Mullin's 9–12 burst, Baker's 10 at 16th, Williams' 9 at 3rd, Jon Baker dropping at the 4th). (ii) Standalone-readable — opening establishes course/area, no assumed tournament context. (iii) Three-competition framing works as "state at day's end" not "won/lost". Output: `data/commentary/teg_14_round_1_report_final.md`. |
-| **D. Unified backfill** | `dry_draft_style` switch DONE (default = `"detailed"` after the 9/14/18 A/B). Generate one tournament report per TEG for 11 post-8 TEGs (8–18, refreshing 9/14/18). If (C) clean, also 4 round reports/TEG. | ~$5.50 tournament only; ~$20 with rounds. ~30 min – 2 h run. |
+| **A. Easy cost levers** | Haiku 4.5 lint; bundle trim to top-N=50 (preserves mandatory beats). | DONE. |
+| **B. Per-round standings + player closing** | Deterministic `build_round_standings` injection; non-negotiable closing rule for tournament reports. | DONE. |
+| **C. Round-report prototype on TEG 14 R1** | `round_report.py` pipeline (RoundStoryPlan, ROUND_* prompts, single-round bundle). | DONE. |
+| **D. Pre-Phase-F shape fixes** | Folded into Phase E. | DONE. |
+| **E. Round-report shape fixes (E1–E5)** | Round-scores block at top; auto-injected standings + LLM change-commentary; drop men-in-brief from round reports; default chronological/player_by_player; final-round awareness. Plus: anti-countback rule, arithmetic-faithfulness rule, mandatory-beats coverage guarantee, deterministic "PBs and TEG records" appendix. | DONE. |
+| **F. Unified backfill (TEGs 8–18)** | PARTIAL. Force-regen kicked off, stopped after TEGs 8–10 fully complete and TEG 11 tournament + R1 + R2. Remaining for full coverage: TEG 11 R3–R4, then TEGs 12, 13, 15, 16, 17 (tournament + 4 rounds each), then TEGs 14 + 18 (re-refresh under latest prompts). ~16 reports outstanding; ~$8 to finish. **On hold** at user request — experimenting with guidelines/rules/layouts before resuming. | PARTIAL. |
+| **G. Pre-TEG-8 era-aware Trophy + backfill** | CODE COMPLETE (commits `13db3c4`, `5709cc0`). `era.trophy_metric` helper; `commentary.py` extended with NetVP columns + `_add_rank_netvp_teg`; `events.py` era-aware throughout via `_trophy_cols(metric)`; `story_plan.py`, `authoring.py`, `round_report.py`, `render.py` all era-aware. Smoke tests passed on TEG 3 (NetVP framing) and TEG 14 (Stableford unchanged). Pre-8 backfill (TEGs 1–7, ~$15.75, ~30 min) **deferred** — to be run after the layout/rules experiments are settled, so pre-8 inherits them. | CODE DONE; backfill deferred. |
 
 ## Deferred (after the active agenda)
 

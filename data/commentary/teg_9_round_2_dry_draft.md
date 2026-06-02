@@ -1,25 +1,32 @@
 # Round 2 — Praia D'El Rey
 
 ## Overview
-
-John Patterson posted 49 Stableford points, the second-best round in TEG history to date. Stuart Neumann's round was the day's worst, anchored by two quadruple bogeys and a nine-shot bleed across 11-13. The Trophy race flipped completely: Patterson turned a one-point overnight deficit into a ten-point lead, while David Mullin extended his Green Jacket advantage from two to seven and Neumann's Spoon gap grew from eight to fourteen.
+John Patterson posted 49 Stableford points, the second-best round in TEG history to date, to seize the Trophy lead. Stuart Neumann endured the day's grimmest round, with two quadruple bogeys and a three-hole stretch that bled nine shots. The Trophy reshuffled completely — Patterson from third to a ten-point lead — while Mullin extended his Green Jacket margin from two to seven.
 
 ## The Round
 
-Patterson's day began with bogeys at the 1st, 2nd and 3rd. That was enough to take the Trophy lead at the 1st on Stableford, before Mullin's par at the 2nd drew level. From the 4th, Patterson came apart: a double-bogey 6 at the par-4 4th, then triple-bogey 7s at the par-4 5th and par-4 6th — eight shots dropped across three holes. A birdie at the par-5 7th halted the slide.
+Patterson opened with a bogey at the 1st, enough on its own to nudge him into outright Trophy lead — a position he then immediately surrendered when Mullin parred the par-5 2nd to draw level at the top. The front nine then bent Patterson out of shape: after bogeys at the 1st, 2nd and 3rd he ran up a double-bogey 6 at the par-4 4th, a triple-bogey 7 at the par-4 5th and a triple-bogey 7 at the par-4 6th — eight shots dropped across the 4-6 stretch. He stopped the run with a birdie at the par-5 7th.
 
-From the 9th, Patterson ran the table. Holes 9-13 yielded 17 points: bogey at the par-4 9th, pars at the par-5 10th, par-3 11th and par-4 13th, and a birdie at the par-5 12th. The par at the 11th drew him level for the Trophy lead again. Holes 15-18 added 14 more points — par, bogey, par, bogey — to close out the 49.
+Mullin's own front nine then unravelled. From the 6th he reeled off four straight bogeys — a 5 at the 6th, a 6 at the par-5 7th, a 4 at the par-3 8th and a 5 at the 9th — before steadying with a birdie 4 at the par-5 10th.
 
-Mullin's round followed a different shape. After drawing level for the Trophy at the 2nd, he went bogey-bogey-bogey-bogey through holes 6-9 (par-4, par-5, par-3, par-4), then steadied with a birdie at the par-5 10th. He finished with a round that held the Green Jacket lead and extended it.
+Jon Baker, the overnight Trophy leader, also went backwards through the middle of the front nine: a double-bogey 6 at the 5th, a double-bogey 6 at the 6th and a triple-bogey 8 at the par-5 7th cost him seven shots in three holes.
 
-Jon Baker began the day as Trophy leader. He bled seven shots across holes 5-7 (double, double, triple on the par-5 7th), then settled into three straight pars at the par-3 11th, par-5 12th and par-4 13th — nine points across that stretch. The run died at the par-3 14th with a quadruple-bogey 7. He responded with bogeys at 15 and 16 and a birdie at the par-5 17th.
+Alex Baker found the day's first sustained rhythm. From the 7th he went bogey-bogey-par (a 6 at the par-5 7th, a 4 at the par-3 8th, a 4 at the par-4 9th) for ten Stableford points across three holes.
 
-Alex Baker matched Jon Baker's quadruple at the 14th with one of his own (7 on the par-3). He had already taken a quadruple-bogey 9 at the par-5 10th, which opened an eight-shot bleed across 10-12 (quad, double on the par-3 11th, double on the par-5 12th). Against that, he had a 10-point burst across 7-9 — bogey, bogey, par — and totalled 44 points, a personal best.
+The 9th itself was the front nine's wreckage hole. Gregg Williams ran up a sextuple-bogey 10 at the par-4 9th for a blank. Stuart Neumann made a quadruple-bogey 8 there, his second of the round after a quadruple-bogey 8 at the par-4 5th.
 
-Gregg Williams's round centred on a sextuple-bogey 10 at the par-4 9th.
+The back nine belonged to Patterson. From the 9th he played bogey-par-par-birdie-par (5 at the 9th, 5 at the par-5 10th, 3 at the par-3 11th, 4 at the par-5 12th, 4 at the 13th) for 17 points across five holes. The par at the 11th drew him level for the Trophy lead. He then added 14 more points across the closing four — par at the 15th, bogey 5 at the 16th, par 5 at the par-5 17th, bogey 5 at the 18th — to finish on 49 points for a gross 14-over round.
 
-Neumann took a quadruple-bogey 8 at the par-4 5th and another quadruple-bogey 8 at the par-4 9th. Across holes 11-13 he went triple, triple, triple — six on the par-3 11th, eight on the par-5 12th, seven on the par-4 13th — for nine shots dropped.
+Alex Baker's back nine swung the other way at the turn. A quadruple-bogey 9 at the par-5 10th, a double-bogey 5 at the par-3 11th and a double-bogey 7 at the par-5 12th meant eight shots dropped through 10-12. He then added a second quadruple bogey, a 7 at the par-3 14th, but still came in for 44 points — a personal-best round.
 
-## Race Shifts
+Jon Baker assembled the back nine's tidiest passage with par-par-par at the 11th, 12th and 13th (3-5-4) for nine points, only to undo it with a quadruple-bogey 7 at the par-3 14th. He recovered with a birdie 4 at the par-5 17th.
 
-The Trophy race inverted. Jon Baker began the day one clear; Patterson ended it ten clear, with Mullin, Alex Baker and Jon Baker bunched behind. In the Green Jacket, Mullin's lead over Jon Baker stretched from two to seven on the back of Baker's quadruple at the 14th. In the Spoon race, Neumann's deficit to the next player up doubled from eight to fourteen.
+Neumann's back nine compounded his front. From the 11th he went triple-triple-triple (6 at the par-3 11th, 8 at the par-5 12th, 7 at the 13th) — nine shots gone in three holes.
+
+## Race shifts
+
+**Trophy.** A wholesale reshuffle. Mullin briefly drew level at the 2nd, Patterson drew level at the 11th, and the back-nine surge from Patterson then pulled him clear. Overnight leader Jon Baker drops to joint third with Alex Baker.
+
+**Green Jacket.** Mullin's gross lead, just two after Round 1, stretches out. Patterson's 14-over contribution lifts him into third on gross; Jon Baker's quad at the 14th cost him ground in the chase.
+
+**Wooden Spoon.** Neumann's deficit widens from eight to fourteen. Williams's 10 at the 9th was not enough to drag him closer.

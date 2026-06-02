@@ -1,0 +1,80 @@
+{
+  "title": "Palmares Punishes the Patient",
+  "title_candidates": [
+    "Palmares Punishes the Patient",
+    "Personal Bests and Personal Disasters",
+    "Mullin Holds On as the Chasers Bare Their Teeth",
+    "Two 10s, Two PBs, One Leader"
+  ],
+  "theme": "A new course rewards the brave with personal bests for Williams and Alex Baker, even as Mullin's steady leadership survives a closing surge from the chasers — while Neumann and Patterson cough up double figures at opposite ends of the loop.",
+  "tone": "house",
+  "narrative_structure": "chronological",
+  "opening_hook": "Open at the 1st tee at Palmares — a new TEG course — where John Patterson immediately runs up a 10. That single hole sets the day's pattern: this links-and-parkland hybrid is going to extract a price from someone on every nine.",
+  "foreshadow": [
+    "Patterson's 10 at the 1st as the opening warning shot — by sundown he's still rooted to the Spoon",
+    "Mullin's serene par-par-par-par-par run from the 4th — the calm before a double bogey at the 9th that hints the lead is not as comfortable as it looks",
+    "Williams quietly grinding through the front nine before exploding for 18 points across holes 8–12 and a tournament personal best"
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "David MULLIN",
+      "score": 91.0,
+      "gap": 5.0,
+      "note": "Mullin still leads, but the cushion has shrunk from 8 to 5. He added 42 points to his total; Alex Baker added 45 and Gregg Williams a round-leading 48. Jon Baker, fourth overnight, has also closed up. The leader held — but the field has just announced itself."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "David MULLIN",
+      "score": 15.0,
+      "gap": 13.0,
+      "note": "Mullin's gross lead is barely dented — 13 ahead of Jon Baker, down only one from 14. With everyone else 39 or worse over par, this race is rapidly becoming Mullin's to lose."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "John PATTERSON",
+      "score": 64.0,
+      "gap": 5.0,
+      "note": "Patterson's 10 at the 1st set the tone and he remains the laggard, but Stuart Neumann's catastrophic back nine (two 10s and a 9 inside six holes) means the gap has actually widened from 3 to 5 — Neumann did his best to take the Spoon off him and somehow failed."
+    }
+  ],
+  "key_beat_ids": [
+    "r2_b03",
+    "r2_b15",
+    "r2_b09",
+    "r2_b06",
+    "r2_b02",
+    "r2_b01",
+    "r2_b17",
+    "r2_b07",
+    "r2_b04",
+    "r2_b19"
+  ],
+  "players": [
+    {
+      "player": "David Mullin",
+      "arc": "Held the Trophy lead and extended the Jacket lead with a model of restraint — five straight pars from the 4th — before a double bogey at the 9th reminded everyone he is mortal. Did enough; the chasers are closer."
+    },
+    {
+      "player": "Alex Baker",
+      "arc": "Posted a personal-best 45 points, opening with 9 points in three holes and adding another 10 across the 5th–7th, before a wobble at 12–14 cost him sole second. Closed the Trophy gap to 5."
+    },
+    {
+      "player": "Gregg Williams",
+      "arc": "Round of the day and a personal best: 48 points, anchored by 18 across holes 8–12 and a tidy finish of 12 more from the 15th. Up from fourth to joint-second in the Trophy."
+    },
+    {
+      "player": "Jon Baker",
+      "arc": "A flying start (10 points in three) and a serene par-laden middle (18 points across 5–10) was punctured by a double at the 4th; still, he climbs to fourth in the Trophy and stays clear second in the Jacket."
+    },
+    {
+      "player": "Stuart Neumann",
+      "arc": "The day's pantomime villain: a 10 at the 13th, a 9 at the 14th, a 10 at the 18th — 13 shots bled across holes 13–15 alone. Briefly threatened to overhaul Patterson for the Spoon and somehow didn't."
+    },
+    {
+      "player": "John Patterson",
+      "arc": "Opened with a 10 at the 1st and never recovered the narrative; remains anchored to the bottom of the Trophy and firmly in possession of the Spoon."
+    }
+  ],
+  "venue_notes": "Palmares — a new course for TEG, Robert Trent Jones Jr.'s 27-hole layout near Lagos, with the parkland Alvor nine paired with the dramatic seaside links of Praia. TEG's fourth visit to the Algarve. The contrast between the day's personal bests and double-figure holes suggests a course with teeth as well as views."
+}

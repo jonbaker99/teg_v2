@@ -1,19 +1,19 @@
 {
-  "title": "Dunes, Doom and Coronation: TEG 8 Decided at Oitavos",
+  "title": "Coronations on the Dunes",
   "title_candidates": [
-    "Dunes, Doom and Coronation: TEG 8 Decided at Oitavos",
-    "Williams Holds, Mullin Pounces: The Atlantic Verdict",
-    "Two Crowns by the Sea",
-    "Mullin's Jacket, Williams's Cup: Oitavos Settles It"
+    "Coronations on the Dunes",
+    "Williams Lifts the Trophy, Mullin Slips on the Jacket",
+    "A Links Too Far for Meller",
+    "Oitavos Settles It"
   ],
-  "theme": "On a new links by the Atlantic, Gregg Williams sees out the Trophy while David Mullin snatches the Green Jacket from Jon Baker as early as the 2nd — and survives a quadruple at the 11th to keep it.",
+  "theme": "On a wild, wind-blown links debut, Gregg Williams turns a five-point overnight lead into a twelve-point Trophy procession while David Mullin overhauls Jon Baker to claim the Green Jacket — all played out against Henry Meller's calamitous front nine and a Wooden Spoon that Stuart Neumann never threatens to relinquish.",
   "tone": "house",
-  "narrative_structure": "player_by_player",
-  "opening_hook": "Open on Oitavos Dunes itself — TEG's first visit, second time on the Lisbon Coast — then to the verdict: two trophies handed out, one held, one taken.",
+  "narrative_structure": "chronological",
+  "opening_hook": "Open on the early-hole carnage at Oitavos — Meller's front-six implosion (22 shots leaked, capped by a 10 at the 4th) setting the tone of a links that bit everyone, before zooming out to the two coronations it ultimately produced.",
   "foreshadow": [
-    "Mullin's lead-grab at the 2nd that he then had to defend all afternoon",
-    "Mullin's quadruple at the 11th — the wobble that nearly handed it back to Jon Baker",
-    "Williams's quad at the 5th and the cold stretch through 5-8 that opened a door he later slammed shut on the back nine"
+    "Mullin's bogey at the 2nd that quietly nudges him into the Green Jacket lead — a position he never relinquishes.",
+    "Meller's six-hole bloodbath to open the round, which all but seals the Spoon picture before the turn.",
+    "Williams's wobble at the 5th (a quad) and cold stretch 5-8 — a warning that ultimately proves a blip, not a collapse."
   ],
   "competition_state": [
     {
@@ -21,61 +21,60 @@
       "leader_or_laggard": "Gregg WILLIAMS",
       "score": 149.0,
       "gap": 12.0,
-      "note": "WINNER. Williams arrived five clear and left twelve clear — but it wasn't serene. A quadruple at the 5th and an 11-shot bleed through holes 5-8 trimmed the cushion; a four-hole burst of 12 Stableford points across 12-15 (par-bogey-par-par) sealed the Trophy. Jon Baker, runner-up overnight, faded to third behind a rallying Alex Baker."
+      "note": "WON by Williams. A five-point overnight lead over Jon Baker becomes a twelve-point margin over Alex Baker — Williams survives a quadruple bogey at the 5th and a cold 5-8 stretch, then rams home a 12-point purple patch from 12-15 (par, bogey, par, par) to put the title to bed. Jon Baker fades to third; Alex Baker climbs to runner-up despite a closing 9."
     },
     {
       "name": "Green Jacket",
       "leader_or_laggard": "David MULLIN",
       "score": 77.0,
       "gap": 6.0,
-      "note": "WINNER. Mullin began the round two gross shots behind Jon Baker and took the outright lead with a bogey at the 2nd. A quadruple-bogey 8 at the 11th threatened to undo everything; he answered with a birdie at the 13th and another at the 16th to stop the bleeding twice over, finishing six clear of Baker."
+      "note": "WON by Mullin. Trailing Jon Baker by 2 at the start, Mullin nudged into the gross lead with a bogey at the 2nd and never gave it back — even a quadruple bogey at the 11th was absorbed, with birdies at the 13th and 16th stopping the rot. Final margin: six shots over Jon Baker."
     },
     {
       "name": "Wooden Spoon",
       "leader_or_laggard": "Stuart NEUMANN",
       "score": 100.0,
       "gap": 11.0,
-      "note": "COLLECTED. Neumann began the round 22 clear at the bottom and finished 11 clear — Henry Meller's catastrophic front nine briefly raised hope, but quads at the 5th and 17th confirmed the Spoon's destination."
+      "note": "CLAIMED by Neumann. Started the day 22 points adrift on Stableford and, despite quads at the 5th and 17th, the gap to Meller closed to 11 — never close enough to matter. Spoon sealed."
     }
   ],
   "key_beat_ids": [
+    "r4_b02",
+    "r4_b03",
     "r4_b01",
+    "r4_b09",
+    "r4_b16",
     "r4_b06",
     "r4_b14",
     "r4_b15",
-    "r4_b09",
-    "r4_b16",
-    "r4_b07",
-    "r4_b03",
-    "r4_b02",
     "r4_b04",
     "r4_b17"
   ],
   "players": [
     {
       "player": "Gregg WILLIAMS",
-      "arc": "Survived a quadruple at the 5th and an 11-shot bleed through 5-8, then put the Trophy to bed with 12 Stableford points across holes 12-15 (par-bogey-par-par)."
+      "arc": "Wobbles through a quad at the 5th and a cold 5-8 stretch (11 shots leaked), then steadies and delivers a 12-point flourish through holes 12-15 to convert a five-point overnight lead into a twelve-point Trophy."
     },
     {
       "player": "David MULLIN",
-      "arc": "Seized the Green Jacket outright with a bogey at the 2nd, weathered a quadruple-bogey 8 at the 11th, and twice stopped the bleeding with birdies at the 13th and 16th to win the gross title by six."
+      "arc": "Edges into the Green Jacket lead with a bogey at the 2nd, weathers a quadruple bogey at the 11th, and uses birdies at the 13th and 16th to stop the bleeding — finishes six clear on gross for the Jacket."
     },
     {
       "player": "Jon BAKER",
-      "arc": "Overnight Jacket leader who lost the gross lead as early as the 2nd hole and could not reel Mullin back in, slipping to second on Gross and third on Stableford."
+      "arc": "Starts the day leading the Jacket by two and second in the Trophy by five; ends the round overhauled in both, slipping to third on Stableford and second on gross."
     },
     {
       "player": "Alex BAKER",
-      "arc": "Climbed past Jon Baker into Trophy runner-up despite a quadruple at the 15th and a closing quintuple-bogey 9 at the 18th — a final-hole horror that didn't change the colour of his medal."
+      "arc": "Climbs to Trophy runner-up despite a quadruple bogey at the 15th and a closing quintuple-bogey 9 at the 18th — propelled more by others' troubles than his own scoring."
     },
     {
       "player": "Henry MELLER",
-      "arc": "Endured the round of the week in the worst sense: 22 shots bled across holes 1-6, including a 10 at the 4th and a 9 at the 5th, then another nine-shot haemorrhage at 16-18 to close."
+      "arc": "Authors the round's signature catastrophe: 22 shots leaked over the opening six holes including a 10 at the 4th, a quintuple at the 5th and a quad at the 2nd, plus a closing 9-shot bleed from 16-18 — finishes fifth in the Trophy."
     },
     {
       "player": "Stuart NEUMANN",
-      "arc": "Quadruples at the 5th and 17th made certain of the Wooden Spoon, the 22-shot overnight cushion at the bottom shrinking only because Meller obliged."
+      "arc": "Quads at the 5th and 17th confirm the Wooden Spoon, though he does at least close the gap to Meller from 22 points to 11 over the day."
     }
   ],
-  "venue_notes": "Oitavos Dunes — TEG's first visit, Arthur Hills's Atlantic links at Cascais, and the second time the tour has rolled through the Lisbon Coast. A proper links finale: dunes, exposure, and a scorecard full of big numbers to prove it."
+  "venue_notes": "Oitavos Dunes — a debut for TEG, and the tour's second visit to the Lisbon Coast (2015). Arthur Hills's Atlantic links delivered exactly the sort of card-wrecking exposure its reputation promised: blowups across the field, scoring spread wide, and the early holes especially punishing."
 }

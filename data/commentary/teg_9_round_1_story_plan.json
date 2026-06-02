@@ -1,0 +1,78 @@
+{
+  "title": "Seve's Last Laugh",
+  "title_candidates": [
+    "Seve's Last Laugh",
+    "Carnage on the Lisbon Coast",
+    "A Day for Damage Limitation",
+    "Mullin Steady, Field Unsteady"
+  ],
+  "theme": "Royal Óbidos — Seve's final design — bares its teeth on day one: the field absorbs a barrage of blow-ups, and the players who simply survived sit on top.",
+  "tone": "house",
+  "narrative_structure": "player_by_player",
+  "opening_hook": "Open on the carnage in aggregate — six players, multiple double-figure and near-double-figure holes between them — then frame the leaderboard as a survival contest, with Jon Baker (39) edging Mullin and Patterson (38 each) not by brilliance but by attrition. Player-by-player chosen because every competitor produced a meaningful story this round.",
+  "foreshadow": [
+    "John Patterson's 10 at the 4th — a sextuple bogey that should have buried him, yet he still walks off tied for second on Stableford.",
+    "Stuart Neumann's quintuple at the 4th — the first crack in what would become a round-defining back-nine collapse.",
+    "David Mullin's serene par-par-par run through 13-14-15 — the calm that preceded the double at the 16th and a Trophy lead surrendered."
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "Jon BAKER",
+      "score": 39.0,
+      "gap": 1.0,
+      "note": "The Trophy lead changed hands repeatedly across the front nine — Patterson (b21), Mullin (b24), Gregg Williams (b29) and Jon Baker (b26, b28) all touching the top before Baker's 39 held by a single point from Mullin (38) and Patterson (38). With three rounds to play and the gap at one, this is a phoney war: nobody ran away, three are within touching distance, and Baker's quad at the last (b10) means even he doesn't feel comfortable."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "David MULLIN",
+      "score": 15.0,
+      "gap": 2.0,
+      "note": "Mullin took the Gross lead at the 3rd (b20), Baker drew level at the 6th (b27), and Mullin nudged back in front by the 18th (b22) — finishing +15 to Baker's +17. A two-shot cushion at this stage means very little; Patterson sits +28, well back but in the conversation."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "Stuart NEUMANN",
+      "score": 23.0,
+      "gap": 8.0,
+      "note": "The Spoon position passed around like a hot potato on the front nine — Alex Baker dropped to the bottom at the 2nd (b16), then Neumann took it at the 11th (b17) and again, decisively, at the 15th (b18). Neumann's back-nine bleed of 16 shots over the closing five holes (b13) leaves him eight points adrift of the field — a substantial early hole to climb out of."
+    }
+  ],
+  "key_beat_ids": [
+    "r1_b01",
+    "r1_b02",
+    "r1_b03",
+    "r1_b13",
+    "r1_b15",
+    "r1_b10",
+    "r1_b23",
+    "r1_b14"
+  ],
+  "players": [
+    {
+      "player": "Jon Baker",
+      "arc": "Leads the Trophy on 39 despite a quadruple bogey at the 18th (b10) — a round of accumulation rather than fireworks, helped by everyone else's larger calamities; also sits two off the Jacket pace."
+    },
+    {
+      "player": "David Mullin",
+      "arc": "The day's most composed scorecard: leads the Green Jacket on +15 (b20, b22) and tied for second on Stableford, his only stumble a double bogey at the 16th (b15) that broke a par-par-par run and may have cost him outright Trophy lead."
+    },
+    {
+      "player": "John Patterson",
+      "arc": "Authored the round's most improbable scoreline — a 10 at the 4th (b02) plus a quad at the 15th (b08) — and still walked off tied for second on 38 Stableford points, evidence of serious scoring everywhere else."
+    },
+    {
+      "player": "Alex Baker",
+      "arc": "Two ruinous holes defined his day — a 9 at the 2nd (b09), a 9 at the 12th (b04) and the round's worst score, an 11 at the 14th (b01) — leaving him 32 points on Stableford and propping up the Gross standings on +43."
+    },
+    {
+      "player": "Gregg Williams",
+      "arc": "Bookended by disaster — a quintuple at the 1st (b07), a sextuple at the 15th (b03) and a quadruple at the 18th (b12) — yet briefly drew level for the Trophy lead at the 4th (b29) before the wheels came off; 31 points and fifth."
+    },
+    {
+      "player": "Stuart Neumann",
+      "arc": "Front-nine respectability gave way to back-nine carnage — 16 shots leaked over holes 14-18 (b13), a 10-shot bleed through 10-12 (b19), and a front/back split of 11 Stableford points (b14); finishes bottom of all three boards on 23 points, eight adrift in the Spoon race."
+    }
+  ],
+  "venue_notes": "Royal Óbidos — Seve Ballesteros's final course design and TEG's second visit (third trip to the Lisbon Coast). A championship parkland layout with dramatic water that has hosted European Challenge Tour events; the par-3 15th and the par-4s at 4 and 12 did particular damage today. The Seve provenance is worth a nod — his last design giving the TEG field a thorough working over feels apt."
+}

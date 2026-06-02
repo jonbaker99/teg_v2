@@ -1,55 +1,56 @@
 {
-  "title": "Cascais Closed Shop",
+  "title": "The Estoril Procession",
   "title_candidates": [
-    "Cascais Closed Shop",
-    "An Iberian Procession",
-    "Williams on the Estoril Coast",
-    "Lisbon, Locked Down"
+    "The Estoril Procession",
+    "Williams Walks the Lisbon Coast",
+    "A Stroll Along the Atlantic",
+    "Gregg's Iberian Cakewalk"
   ],
-  "theme": "A tournament with the result baked in early: Gregg Williams led the Trophy from the front nine of Round 1 and never looked back, while the only genuine wobble — David Mullin briefly ceding the Jacket to Jon Baker at the returning Quinta — was corrected almost as soon as Oitavos hove into view. Around the edges, Stuart Neumann's four-round residency in last place provides the dark counter-melody.",
+  "theme": "A Trophy race that ended at lunchtime on day one: Gregg Williams seized the lead on the back nine of round one and was never headed, even while spraying double-figure scores around the Lisbon Coast. The only live contest was for the Green Jacket, where Mullin and Jon Baker traded haymakers; the only certainty was Stuart Neumann at the bottom of everything.",
   "tone": "house",
   "narrative_structure": "theme_led",
-  "opening_hook": "Open on Oitavos Dunes, Round 4, with Gregg Williams calmly stitching together pars at 12-15 (b42) to put the Trophy beyond reach — then rewind to the moment in Round 1 (b33) when he first took outright control and explain how the lead, once taken, was never genuinely threatened.",
+  "opening_hook": "Open with the absurdity of the final margin — Williams +12 on the Trophy while carding a 10 at Penha Longa, a 10 at Quinta and an 8 at Oitavos — then flash back to round one, where the race was effectively decided.",
   "foreshadow": [
-    "Plant in R1 that Gregg's surge from the 8th (b33) is the moment the Trophy effectively ends — pay off at Oitavos.",
-    "Plant Mullin's narrow Jacket lead in R1/R2 as fragile — pay off with the R3 wobble (b21) and Jon Baker's brief takeover.",
-    "Plant Neumann's H7-15 meltdown (b01) as the template for his whole week — pay off with the Spoon (b20).",
-    "Hint at Oitavos as the course that breaks people — pay off with Meller's opening six (b08)."
+    "Williams takes outright Trophy lead at R1 H10 and the field never gets within touching distance again",
+    "Mullin's narrow R1 Jacket lead foreshadows a four-round duel with Jon Baker",
+    "Neumann drops to last on R1 H4 and stays there for 68 holes",
+    "Quinta da Marinha's back nine eats everyone — set up the carnage that will return in R3"
   ],
   "competitions": [
     {
       "name": "Trophy (Stableford)",
       "winner_or_loser": "Gregg Williams",
-      "how": "Wire-to-wire. Gregg took outright lead at Quinta's 10th in R1 during a 14-point burst across holes 8-11 (b33), stretched it to 11 by the end of Penha Longa (despite a 10 at the 12th, b09), survived his own worst round on the return to Quinta — 29 points, his lead trimmed to 5 (b29, b30) — and then put it away at Oitavos with 41 points and a serene par-par-par-par stretch from the 12th (b42). Final margin: 12 over Alex Baker (b02).",
+      "how": "Wire-to-wire. Williams went outright on R1 H10 (the only lead change of the tournament), stretched the gap to 11 after Penha Longa on the back of a 41-point round, survived a wobbly 29 at Quinta in R3 (lead briefly down to 5) and then closed with another 41 at Oitavos for a 12-shot win on 149. Remarkably, he won doing this while making a quintuple-bogey 10 in R2, another 10 in R3, and three further quadruple bogeys.",
       "key_beat_ids": [
+        "b02",
         "b33",
         "b09",
-        "b29",
-        "b42",
-        "b02"
+        "b10",
+        "b42"
       ]
     },
     {
       "name": "Green Jacket (Gross)",
       "winner_or_loser": "David Mullin",
-      "how": "The only competition with a genuine pulse. Mullin established control in R1 (+20) and stretched the lead to 6 at Penha Longa. The return to Quinta nearly undid him: a +26 round including a quadruple at the 12th (b21, b28) let Jon Baker leapfrog him by two. Order was restored almost immediately at Oitavos — Mullin retook outright lead at the 2nd (b03) and rode a +17 closing round home to win by 6 at +77 (b06).",
+      "how": "The only real contest. Mullin led after R1 by one and after R2 by six, then collapsed to a 26 in R3 at Quinta — his worst round to date — letting Jon Baker take the lead by two. At Oitavos he reclaimed outright leadership at the 2nd hole and rebuilt the cushion to win by six on +77.",
       "key_beat_ids": [
-        "b21",
-        "b28",
+        "b06",
         "b03",
-        "b06"
+        "b21",
+        "b28"
       ]
     },
     {
       "name": "Wooden Spoon",
       "winner_or_loser": "Stuart Neumann",
-      "how": "Never not last. Neumann sat 6th after every single round. The die was cast in R1 with a 17-point disaster anchored by the now-infamous H7-15 stretch in which he bled 29 shots (b01, b25). Round 3's opening five holes leaked another 17 (b49), capped by an 11 at the 10th (b05). A closing 32 at Oitavos wasn't enough to escape. Final tally: 100 points (b20).",
+      "how": "Never not last. Neumann was bottom from the first hole, ceded the slot to Meller for a single hole when Henry made a 10 at the Quinta 3rd, then reclaimed it at the 4th and stayed there for the remaining 68 holes. Defining moments: a 29-shots-dropped meltdown across holes 7-15 of R1, an 11 at the Quinta 10th in R3, and a stretch of five quintuple bogeys across the week. Final tally: 100 points.",
       "key_beat_ids": [
-        "b25",
+        "b20",
+        "b67",
         "b01",
-        "b49",
         "b05",
-        "b20"
+        "b17",
+        "b49"
       ]
     }
   ],
@@ -58,140 +59,146 @@
       "round": 1,
       "headline_candidates": [
         "Williams Plants the Flag at Quinta",
-        "Gregg Goes, Neumann Goes Backwards",
-        "An Opening Day in Two Tempos"
+        "Neumann Bleeds 29 on the Back Nine",
+        "Eighteen Holes, Tournament Over"
       ],
       "chosen_headline": "Williams Plants the Flag at Quinta",
-      "angle": "Robert Trent Jones Sr.'s new-to-TEG parkland sets the tournament's tone in a single afternoon: Gregg's birdie at the 10th (b33) gives him an outright Trophy lead he will not lose, while Neumann's H7-15 collapse (b01) establishes the basement he will not leave.",
+      "angle": "On a brand new Trent Jones Sr. layout, Williams's birdie-laced surge through holes 8-11 puts him outright on the Trophy at H10 — the only lead change he'll ever need. Behind him, Neumann posts a 17 and Meller briefly dips to last before Stuart reclaims the basement.",
       "beat_ids": [
         "b33",
         "b26",
         "b01",
         "b25",
-        "b27",
-        "b12"
+        "b22",
+        "b67",
+        "b14",
+        "b15",
+        "b27"
       ]
     },
     {
       "round": 2,
       "headline_candidates": [
-        "Up the Sintra Hills, Down the Leaderboard",
-        "Penha Longa, Lead Longer",
-        "An Eleven-Point Cushion in the Clouds"
+        "Sintra's Slope, Williams's Cushion",
+        "Penha Longa Can't Touch Him",
+        "A 10 and Still Eleven Clear"
       ],
-      "chosen_headline": "Penha Longa, Lead Longer",
-      "angle": "On Trent Jones Jr.'s dramatic mountain layout, Gregg stretches the Trophy lead to 11 despite a 10 at the par-5 12th (b09); Mullin extends the Jacket lead to 6; Neumann finds two more quadruples (b45, b46) to stay anchored.",
+      "chosen_headline": "A 10 and Still Eleven Clear",
+      "angle": "On the dramatic Penha Longa mountain layout, Williams cards a quintuple-bogey 10 at the 12th and somehow extends his Trophy lead to 11. Mullin, meanwhile, opens daylight on the Jacket with a 14.",
       "beat_ids": [
-        "b09",
-        "b45",
-        "b46",
-        "b16",
-        "b23",
-        "b38"
+        "b09"
       ]
     },
     {
       "round": 3,
       "headline_candidates": [
-        "Return to Quinta, Return of the Wobble",
-        "Jon Baker's One-Round Jacket",
-        "Everyone Has a Bad Day — Gregg Still Wins It"
+        "Quinta's Revenge",
+        "The Day Everyone Lost Their Ball",
+        "Jon Baker's Cameo at the Top"
       ],
-      "chosen_headline": "Return to Quinta, Return of the Wobble",
-      "angle": "The week's only genuine drama: on TEG's second pass at Quinta da Marinha, Mullin's worst round to date (26 pts, b21) hands the Jacket lead to Jon Baker; Gregg posts his own 29-point grumble (b29, b30) yet still leads the Trophy by 5; Neumann opens with a 17-shot bleed (b49) including an 11.",
+      "chosen_headline": "Quinta's Revenge",
+      "angle": "The return to Quinta da Marinha turns into a collective car-crash: Williams's worst round of the week (29) still preserves a 5-shot Trophy lead, Mullin's career-worst 26 hands Jon Baker a two-shot Jacket lead, Alex Baker takes a 10 at the 8th, Neumann makes an 11 at the 10th plus three more quintuples, and the round bleeds shots from every card.",
       "beat_ids": [
-        "b21",
-        "b28",
         "b04",
+        "b05",
+        "b10",
+        "b17",
+        "b49",
+        "b21",
         "b29",
         "b30",
-        "b49",
-        "b05"
+        "b28"
       ]
     },
     {
       "round": 4,
       "headline_candidates": [
-        "Oitavos, and the Procession Resumes",
-        "Mullin Reclaims at the 2nd, Williams Seals at the 12th",
-        "Links Therapy for the Leaders"
+        "Oitavos Settles It",
+        "Mullin Reclaims the Jacket at the 2nd",
+        "Meller's Six-Hole Nightmare by the Sea"
       ],
-      "chosen_headline": "Mullin Reclaims at the 2nd, Williams Seals at the 12th",
-      "angle": "On Arthur Hills's Atlantic links the natural order reasserts itself: Mullin takes back outright Jacket lead at the 2nd (b03) and never looks back; Gregg's pars from the 12th (b42) make the Trophy a formality; Henry Meller's opening six holes (b08) supply the day's wreckage.",
+      "chosen_headline": "Mullin Reclaims the Jacket at the 2nd",
+      "angle": "On Portugal's premier links, Mullin retakes the Gross lead outright at the 2nd hole and never loses it, winning by six. Williams seals the Trophy by 12 with a closing 41. Meller bleeds 22 shots in the opening six holes including a 10 at the 4th. Neumann completes a wire-to-wire Spoon.",
       "beat_ids": [
         "b03",
-        "b42",
-        "b08",
         "b07",
+        "b08",
         "b06",
         "b02",
-        "b20"
+        "b20",
+        "b42",
+        "b32",
+        "b31"
       ]
     }
   ],
   "players": [
     {
       "player": "Gregg Williams",
-      "arc": "Took the Trophy lead at Quinta's 10th in R1 and held it through a Penha Longa 10, a 29-point Sunday and his own quadruples — wire-to-wire winner by 12."
+      "arc": "Took the Trophy lead at R1 H10 and never let go; won by 12 despite shipping a quintuple bogey in three different rounds — the dominant champion who scored big in spite of himself."
     },
     {
       "player": "David Mullin",
-      "arc": "Led the Jacket from R1, briefly surrendered it to Jon Baker after a +26 wobble on the Quinta return, retook it at Oitavos's 2nd and closed out by 6."
+      "arc": "Led the Jacket from R1, lost it briefly after a career-worst 26 at Quinta in R3, reclaimed it on the 2nd at Oitavos and ran out a six-shot winner."
     },
     {
       "player": "Jon Baker",
-      "arc": "Stalked Mullin all week, grabbed the Jacket lead for one round at Quinta, then watched it slip away at Oitavos; finishes runner-up in Gross."
+      "arc": "The only man to interrupt the leaderboards — took the Jacket lead through R3 before Mullin reeled him back in at Oitavos; settled for runner-up by six."
     },
     {
       "player": "Alex Baker",
-      "arc": "A blow-up reel that nonetheless ended in Trophy runner-up — quadruples and quintuples in all four rounds, 12 points adrift but clear in second."
-    },
-    {
-      "player": "Stuart Neumann",
-      "arc": "Bottom of the Stableford after every round; the H7-15 carnage at Quinta on day one set a tone he never escaped. Spoon on 100 points."
+      "arc": "Trophy runner-up at 12 back — a quietly consistent week pockmarked by a sextuple-bogey 10 at the Quinta 8th and a steady drip of quadruple bogeys."
     },
     {
       "player": "Henry Meller",
-      "arc": "Specialised in horror openings — a 10 at Quinta's 3rd, a 22-shot leak through Oitavos's first six holes — supplying much of the week's colour without troubling the top of any column."
+      "arc": "Briefly last on R1 H3 after a 10 at the par-5, recovered, then suffered an Oitavos opener for the ages: 22 shots dropped in six holes, including another 10."
+    },
+    {
+      "player": "Stuart Neumann",
+      "arc": "Last from R1 H4 to the final putt: 17-point opener, an 11 at Quinta in R3, five quintuple bogeys for the week and a 100-point Spoon by some distance."
     }
   ],
   "must_include_beat_ids": [
     "b02",
     "b06",
     "b20",
-    "b33",
     "b03",
-    "b01",
-    "b21",
+    "b04",
+    "b05",
+    "b07",
     "b09",
-    "b42",
-    "b08"
+    "b10",
+    "b17",
+    "b22",
+    "b67",
+    "b01",
+    "b49",
+    "b33"
   ],
   "cuts": [
-    "b10",
     "b11",
+    "b12",
     "b13",
-    "b14",
-    "b15",
-    "b17",
+    "b16",
     "b18",
     "b19",
-    "b22",
+    "b23",
     "b24",
-    "b31",
-    "b32",
     "b34",
     "b35",
     "b36",
     "b37",
+    "b38",
     "b39",
     "b40",
     "b41",
     "b43",
     "b44",
+    "b45",
+    "b46",
     "b47",
     "b48",
     "b50"
   ],
-  "venue_notes": "TEG's second visit to the Lisbon Coast (2015). Three of the four courses — Quinta da Marinha, Penha Longa and Oitavos Dunes — are new to TEG; only the R3 return to Quinta da Marinha is repeat ground (the 2nd TEG round at that venue). Use the architectural trio as scaffolding: Trent Jones Sr.'s parkland to set the tournament up, Trent Jones Jr.'s mountain layout in the Sintra hills for the midweek altitude, the Cascais parkland again for the wobble round, and Arthur Hills's Atlantic links at Oitavos — Portugal's premier course — as the closing stage. Ocean views and pine forests can be invoked sparingly for colour; don't overdo the travel-brochure register."
+  "venue_notes": "TEG's second visit to the Lisbon Coast (after a previous trip), but three of the four courses are new to TEG: Quinta da Marinha (Trent Jones Sr., parkland, hosting twice — R1 and R3), Penha Longa (Trent Jones Jr., dramatic Sintra mountain parkland) and Oitavos Dunes (Arthur Hills, Atlantic links — Portugal's premier course). Use the Trent Jones father-and-son axis as colour; lean on Quinta's elevated targets and bunkering when describing the R1/R3 carnage, the Sintra hills for R2, and the rugged Atlantic links for the R4 finale."
 }

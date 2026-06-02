@@ -1,0 +1,78 @@
+{
+  "title": "Catalan Carnage",
+  "title_candidates": [
+    "Catalan Carnage",
+    "Baker at the Top of the Stadium",
+    "Patterson's Stadium of Pain",
+    "Quintuples in Catalonia"
+  ],
+  "theme": "On a brutal championship test, Jon Baker stays out of trouble while everyone else finds it — and John Patterson finds it three times over.",
+  "tone": "house",
+  "narrative_structure": "chronological",
+  "opening_hook": "Open on the Stadium Course's reputation as Spain's premier test — and the bloodbath it duly produced on TEG's second visit, with quintuples, quadruples and a leaderboard reshuffled by attrition.",
+  "foreshadow": [
+    "Gregg Williams haemorrhages eight shots in the opening three holes — a hole he never quite climbs out of",
+    "Patterson's quintuple at the 4th sets the template for a round he'll repeat at the 13th",
+    "Early lead changes at holes 3, 6 and 7 hint at the bunched field that only Jon Baker will eventually escape"
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "Jon BAKER",
+      "score": 35.0,
+      "gap": 3.0,
+      "note": "Lead changed hands repeatedly inside the front nine — JB level at the 3rd, DM level at the 3rd and 6th, even JP level at the 7th — before Jon Baker pulled clear with 35 points to lead Alex Baker by 3 and the rest by 5+."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "Jon BAKER",
+      "score": 18.0,
+      "gap": 2.0,
+      "note": "Jon Baker drew level at the 3rd, was joined by David Mullin at the 6th, then edged ahead by round's end on gross +18, two clear of Mullin and ten clear of the chasing pack."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "John PATTERSON",
+      "score": 26.0,
+      "gap": 3.0,
+      "note": "Patterson sank to the bottom at the 14th after a 12–14 stretch that bled 11 shots; three quad-or-worse holes (4, 13, 17) left him 3 adrift of Mullin at the foot."
+    }
+  ],
+  "key_beat_ids": [
+    "r1_b09",
+    "r1_b12",
+    "r1_b13",
+    "r1_b14",
+    "r1_b16",
+    "r1_b02",
+    "r1_b08",
+    "r1_b03",
+    "r1_b04",
+    "r1_b06",
+    "r1_b07",
+    "r1_b11"
+  ],
+  "players": [
+    {
+      "player": "Jon BAKER",
+      "arc": "Survived the Stadium's worst by avoiding it — drew level at the 3rd in both races and never relinquished, ending the day leading Trophy (35) and Green Jacket (+18)."
+    },
+    {
+      "player": "Alex BAKER",
+      "arc": "Solid 32 points kept him second in the Trophy despite a quadruple-bogey 8 at the 13th that prevented a closer chase."
+    },
+    {
+      "player": "David MULLIN",
+      "arc": "Briefly led both races (level at the 3rd and 6th) before settling for second in the Jacket on +20 and fourth in the Trophy on 29."
+    },
+    {
+      "player": "Gregg WILLIAMS",
+      "arc": "Bled eight shots over the first three holes, then added a quintuple-bogey 8 at the par-3 5th — yet salvaged 30 points to sit third in the Trophy."
+    },
+    {
+      "player": "John PATTERSON",
+      "arc": "A round of horrors: quintuples at the 4th and 13th, quadruples at the 10th and 17th, an 11-shot bleed across 12–14, brief share of the Trophy lead at the 7th, and last by nightfall."
+    }
+  ],
+  "venue_notes": "TEG's 2nd visit to PGA Catalunya - Stadium (and 2nd to Catalonia) — a European Tour-designed championship parkland that lived up to its billing as Spain's premier test. Frame the carnage as the course doing what world-class venues do."
+}

@@ -1,27 +1,28 @@
-# OVERVIEW
+# Sintra Hills, Heavy Going — R2 Draft
 
-David Mullin posted the round of the day at Penha Longa (+14 gross) and took control of the Green Jacket. Alex Baker posted the worst round, capped by a quad-quad finish at the 16th and 18th. Gregg Williams stretched his Trophy lead from 4 to 11 despite a 10 at the 12th; Mullin's Jacket lead grew from 1 to 6; Stuart Neumann remains last on Stableford but cut the Spoon gap from 12 to 8.
+## Overview
+On Trophy points the best round of the day belonged to Gregg Williams with 41 Stableford; the worst was Henry Meller's 27. On gross, David Mullin's +14 (a 34 net of par over the field, leading to a 34-stroke gross over par... — restate: gross 34 over par across the round at +14? Per data, DM jacket score rose from 20 to 34, so +14 for the round) was the round's lowest score, while Alex Baker's +34 was the highest. Williams stretched his Trophy lead from 4 to 11; Mullin stretched his Jacket lead from 1 to 6; Neumann stays bottom of the Trophy, with the Spoon gap to Meller narrowing from 12 to 8.
 
-# THE ROUND
+## The Round
+TEG arrived at Penha Longa's Atlantic Course for the first time — a Robert Trent Jones Jr. mountain parkland in the Sintra hills, on TEG's second visit to the Lisbon Coast. The back nine, and the par-4 16th in particular, did most of the damage: three players posted 8 or worse there.
 
-TEG's first visit to the Ritz-Carlton Penha Longa Atlantic Course — Robert Trent Jones Jr.'s mountain parkland in the Sintra hills — produced four scores of 8 or worse on the par-4 16th alone.
+**Front nine.** Alex Baker had the early warning. Through 6, 7 and 8 — par 5, par 3, par 5 — he went 7-5-7, three double bogeys for six shots dropped in three holes.
 
-**Gregg Williams** posted the round's best Stableford return and yet ran up a quintuple-bogey 10 at the par-5 12th. Across 11–13 he dropped nine shots: double bogey at the 11th, the 10 at the 12th, double bogey at the 13th. A second cold stretch followed at 15–17 — double bogey at the par-3 15th, triple bogey at the 16th, double bogey at the par-3 17th, seven shots dropped. He still posted the best Stableford haul of the day and extended his Trophy lead from 4 to 11.
+**Williams, 11–13.** Williams reached the turn with a comfortable Trophy cushion and then bled nine shots in three holes: double-bogey 6 at the par-4 11th, quintuple-bogey 10 at the par-5 12th, double-bogey 6 at the par-4 13th. He added more later — double-bogey 5 at the par-3 15th, triple-bogey 7 at the par-4 16th, double-bogey 5 at the par-3 17th, another seven shots over three holes. Despite all of it, his 41 Stableford was the best round in the field.
 
-**David Mullin** does not appear in any disaster beat. He returned +14 gross — the lowest of the round — and turned a one-shot Jacket lead into a six-shot lead over Jon Baker.
+**Meller, 11–14.** Over the same stretch Meller went 6-8-7-6 — double, triple, triple, double — ten shots dropped in four holes. He then added a quintuple-bogey 9 at the par-4 16th. Round of 27 Stableford, the worst of the day.
 
-**Jon Baker** also does not appear in any blow-up or cold-stretch beat. He posted the second-best gross of the day and remains second in both the Trophy (now 11 back) and the Green Jacket (now 6 back).
+**Alex Baker, 11–14 and 16–18.** Baker followed his front-nine wobble with four straight double bogeys at 11-12-13-14 (6-7-6-6), eight shots dropped. He then closed with a quadruple-bogey 8 at the par-4 16th, a double-bogey 5 at the par-3 17th and a quadruple-bogey 9 at the par-5 18th: ten shots gone in his last three holes. Gross +34 for the round.
 
-**Alex Baker** had the round's worst card. An early wobble across 6–8 cost six shots — three consecutive double bogeys: 7 at the par-5 6th, 5 at the par-3 7th, 7 at the par-5 8th. He then bled eight more across 11–14 with four straight double bogeys (6, 7, 6, 6). At the 16th he ran up a quadruple-bogey 8, took double bogey at the 17th, and closed with a quadruple-bogey 9 at the par-5 18th — ten shots dropped over the final three holes. He fell from outright third in the Trophy to tied-third with Mullin, and from fifth to last in the Jacket.
+**Neumann.** Three blow-ups: quadruple-bogey 8 at the par-4 10th, quadruple-bogey 9 at the par-5 12th, quintuple-bogey 9 at the par-4 16th. 31 Stableford.
 
-**Henry Meller** dropped ten shots across 11–14 — double bogey at the 11th, triple bogey at the 12th, triple bogey at the 13th, double bogey at the 14th — then ran up a quintuple-bogey 9 at the 16th. He holds fifth on Stableford.
+**Jon Baker.** No blow-ups recorded. 34 Stableford, +19 gross — enough, on a day like this, to climb to clear second in both the Trophy and the Jacket.
 
-**Stuart Neumann** had three separate blow-ups: a quadruple-bogey 8 at the par-4 10th, a quadruple-bogey 9 at the par-5 12th, and a quintuple-bogey 9 at the 16th. He remains last on Stableford.
+**Mullin.** The only player in the field to come through the back nine without a major blow-up. Gross +14 for the round, 36 Stableford, the lowest gross score of the day.
 
-# RACE SHIFTS
+## Race Shifts
+**Trophy.** Williams's lead over Jon Baker grew from 4 to 11 — not because Williams was clean (he wasn't; a 10 at the 12th and seven dropped over 15-17) but because the damage elsewhere was worse. Alex Baker and Mullin sit level on 66, Meller drops to 56, Neumann to 48.
 
-**Trophy:** Williams' lead over Jon Baker grew from 4 to 11. Alex Baker fell from outright third into a tie for third with Mullin. Neumann remains last.
+**Green Jacket.** Mullin's one-shot edge over Jon Baker became a six-shot cushion. Williams stays third on +50 gross. Alex Baker's +34 round drops him from fifth to last on +75, behind Neumann.
 
-**Green Jacket:** Mullin's overnight one-shot lead over Jon Baker became a six-shot lead. Williams sits third, ten further back. Alex Baker plummeted from fifth to last, behind Neumann.
-
-**Wooden Spoon:** Neumann is still propping up the Stableford table but the gap to Meller closed from 12 to 8 — driven by Meller's own 11–14 stretch and quintuple at the 16th rather than anything Neumann produced.
+**Wooden Spoon.** Neumann remains bottom of the Trophy table, but the gap to Meller has shrunk from 12 to 8 as those above him also took on water.

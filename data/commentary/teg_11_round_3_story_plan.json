@@ -1,0 +1,74 @@
+{
+  "title": "Brother, Can You Spare a Lead?",
+  "title_candidates": [
+    "Brother, Can You Spare a Lead?",
+    "The Azul Handover",
+    "Alex Crosses the Baker Line",
+    "Three Holes in Catalonia"
+  ],
+  "theme": "Jon Baker built a cushion, then handed the Trophy to brother Alex over a brutal three-hole stretch on the back nine, while David Mullin's day-long misadventure dragged him to the bottom of the Spoon pile.",
+  "tone": "house",
+  "narrative_structure": "chronological",
+  "opening_hook": "Open at the 1st green, where Alex Baker's opening bogey was somehow good enough to draw level with his brother — a quiet hint that the Trophy lead was already loose in its moorings before anyone had warmed up.",
+  "foreshadow": [
+    "Alex drawing level at the 1st (r3_b09) is the soft setup — the lead is already share-able before Catalonia has finished its coffee.",
+    "Jon Baker's 10-point burst through 7-9 (r3_b07) looks like a coronation in real time, which makes the 11-13 collapse all the crueller.",
+    "David Mullin's quadruple at the 6th (r3_b04) is the first crack in a round that will eventually deposit him at the bottom of the Spoon table by the 12th."
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "Alex BAKER",
+      "score": 110.0,
+      "gap": 2.0,
+      "note": "Lead changed hands. Jon Baker arrived in Barcelona two clear; Alex drew level at the 1st (r3_b09), Jon then surged ahead with a 10-point flurry at 7-9, but bled seven shots at 11-13 (r3_b12) and Alex took outright command at the 13th (r3_b03). Same 2-shot gap, opposite direction."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "Jon BAKER",
+      "score": 51.0,
+      "gap": 3.0,
+      "note": "Lead held — but not without a wobble. Mullin briefly drew level at the 3rd (r3_b10) before his own card unravelled; Jon's bogey at the 6th (r3_b01) reconfirmed his outright lead, and the 3-shot margin over Mullin is unchanged from the start of the day."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "David MULLIN",
+      "score": 94.0,
+      "gap": 5.0,
+      "note": "New occupant. Patterson held the Spoon overnight; Mullin's quadruple at the 6th and bogey at the 12th (r3_b06) completed the swap, and he now trails the field by the same 5 that Patterson did 24 hours earlier."
+    }
+  ],
+  "key_beat_ids": [
+    "r3_b09",
+    "r3_b01",
+    "r3_b04",
+    "r3_b07",
+    "r3_b12",
+    "r3_b03",
+    "r3_b06",
+    "r3_b02"
+  ],
+  "players": [
+    {
+      "player": "Alex Baker",
+      "arc": "Drew level at the 1st, sat patiently as his brother galloped clear, then capitalised on the 11-13 wobble with three straight pars of his own (r3_b08) to take the Trophy lead outright at the 13th."
+    },
+    {
+      "player": "Jon Baker",
+      "arc": "Authored both halves of the day's main story: 10 points in three holes through 7-9, then seven shots leaked at 11-13 — kept the Jacket lead, lost the Trophy lead, all in the same round."
+    },
+    {
+      "player": "David Mullin",
+      "arc": "Quadrupled the 6th, briefly drew level for the Jacket at the 3rd, and by the 12th had slid past Patterson to occupy the Spoon position on his own."
+    },
+    {
+      "player": "Gregg Williams",
+      "arc": "A quiet round in the standings sense, save for an 8 at the 5th (r3_b05) that quietly killed any momentum he might have taken into the back nine."
+    },
+    {
+      "player": "John Patterson",
+      "arc": "Climbed off the bottom of the Spoon table almost by accident — a nine-point burst at 8-10 (r3_b11) doing the lifting, before a 9 at the 16th (r3_b02) reminded everyone he hadn't gone far."
+    }
+  ],
+  "venue_notes": "El Prat's Azul routing — a Greg Norman parkland on TEG's second-ever visit to Catalonia and the course's debut on the schedule. Worth a line that nobody had local knowledge to lean on; the quad bogeys at the 5th and 6th suggest the opening stretch had teeth."
+}

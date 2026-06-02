@@ -1,19 +1,19 @@
 {
-  "title": "Carnage on the Estoril Coast",
+  "title": "Carnage on the Coast",
   "title_candidates": [
-    "Carnage on the Estoril Coast",
-    "Quinta da Marinha Eats the Field",
-    "The Day Everyone Bled",
-    "Williams Wobbles, Baker Closes"
+    "Carnage on the Coast",
+    "Quinta da Massacre",
+    "Everybody Bleeds",
+    "The Day the Lead Shrank"
   ],
-  "theme": "A bloodbath at Quinta da Marinha: Williams' double-digit lead shrinks to five as the entire field takes turns posting eights, nines, tens and an eleven",
+  "theme": "A day of mass blow-ups at Quinta da Marinha: every player drops a card-killer, Williams hangs onto the Trophy lead despite a quintuple, Jon Baker prises the Green Jacket from Mullin, and Neumann's Spoon position becomes a fortress.",
   "tone": "house",
-  "narrative_structure": "player_by_player",
-  "opening_hook": "Open with the scoreboard arithmetic — a Trophy lead of 11 sliced to 5, a Green Jacket lead changing hands, a Wooden Spoon gap blown out to 22 — and pin it to the fact that Quinta da Marinha turned six grown men into demolition contractors",
+  "narrative_structure": "chronological",
+  "opening_hook": "Open with the sheer volume of damage — five players carded at least one quadruple-bogey-or-worse, Neumann racked up four of them — then funnel into how, somehow, the leaderboards still rearranged themselves meaningfully.",
   "foreshadow": [
-    "Williams arrives at the turn with a comfortable Trophy cushion — set up the 8-11 stretch where 14 shots vanish",
-    "Mullin starts the day as Green Jacket leader — flag the 12th where the lead slips",
-    "Neumann opens with a 10 at the 1st — foreshadow the front-nine haemorrhage that buries his Spoon hopes for good"
+    "Neumann's opening-five collapse (17 shots bled, holes 1-5) sets the tone for a day where everyone takes a turn in the bunker — and locks in his Spoon position before lunch.",
+    "Williams arrives with an 11-shot Trophy cushion; flag the cushion early so his back-nine implosion (14 shots bled across 8-11, including a 10 at the 11th) lands as the day's hinge.",
+    "Mullin starts the day with the Green Jacket lead; mention it in passing so his worst-round-to-date (26 pts) and 8 at the 12th register as the moment Jon Baker takes the coat off him."
   ],
   "competition_state": [
     {
@@ -21,60 +21,59 @@
       "leader_or_laggard": "Gregg WILLIAMS",
       "score": 108.0,
       "gap": 5.0,
-      "note": "Williams still leads but the 11-shot cushion he carried into the round is down to five after a back-nine collapse (8-11) that bled 14 shots; Jon Baker closes hard and the race is suddenly live going into the final round"
+      "note": "Lead held but more than halved: Williams arrived 11 clear, leaves only 5 ahead of Jon Baker after a back-nine in which he posted a 10 and a 9 in the space of four holes. Baker is now within striking distance with a round to play."
     },
     {
       "name": "Green Jacket",
       "leader_or_laggard": "Jon BAKER",
       "score": 58.0,
       "gap": 2.0,
-      "note": "Lead change: Mullin began the day six clear on Gross but posted his worst round to date (26 pts) with a quad at the 12th; Baker drew level at the 12th, Mullin briefly drew level back at the 15th, and Baker emerged two ahead by the close"
+      "note": "Lead changed hands. Mullin began the day six clear on gross; his worst round to date (26 pts, including an 8 at the 12th) handed the jacket to Jon Baker, who drew level at the 12th and pulled 2 ahead by the close."
     },
     {
       "name": "Wooden Spoon",
       "leader_or_laggard": "Stuart NEUMANN",
       "score": 68.0,
       "gap": 22.0,
-      "note": "Neumann was eight adrift overnight; an opening 10, a 9 at the 4th, an 8 at the 9th and an 11 at the 10th blew the gap out to 22. Barring something miraculous in R4, the Spoon is engraved"
+      "note": "The Spoon hardened into concrete. Neumann's gap to the field ballooned from 8 to 22 after a round containing four quintuple-bogeys-or-worse and a 17-shot bleed across the opening five holes."
     }
   ],
   "key_beat_ids": [
-    "r3_b22",
-    "r3_b15",
-    "r3_b03",
-    "r3_b07",
-    "r3_b20",
-    "r3_b19",
     "r3_b12",
     "r3_b04",
+    "r3_b02",
+    "r3_b15",
+    "r3_b03",
     "r3_b01",
-    "r3_b14"
+    "r3_b07",
+    "r3_b20",
+    "r3_b22"
   ],
   "players": [
     {
       "player": "Gregg WILLIAMS",
-      "arc": "Holds the Trophy lead but bleeds it from 11 to 5 — a triple-bogey/double-bogey/quad/quintuple stretch from the 8th to the 11th (14 shots gone) plus another quad at the 13th turns a procession into a contest"
+      "arc": "Survived his own back nine: bled 14 shots across holes 8-11 (including a quintuple 10 at the 11th and a quadruple 9 at the 10th) and watched his 11-shot Trophy cushion shrink to 5 — but, crucially, kept the lead."
     },
     {
       "player": "Jon BAKER",
-      "arc": "The quiet beneficiary — no headline disasters, draws level for the Green Jacket lead at the 12th and ends the day two clear of Mullin and five behind Williams with everything to play for"
+      "arc": "The day's quiet winner — no headline disaster, drew level for the Green Jacket at the 12th and walked off it 2 clear of Mullin, while also halving Williams's Trophy lead."
     },
     {
       "player": "David MULLIN",
-      "arc": "Started the round as Green Jacket leader; posts his worst TEG round to date (26 pts), with a quad at the 12th the moment the jacket changes hands — drew level briefly at the 15th but couldn't hold on"
+      "arc": "Worst round to date (26 pts), capped by a quadruple 8 at the 12th — exactly the moment Jon Baker drew level on gross. Hands over the Green Jacket lead and slips to 2nd."
     },
     {
       "player": "Alex BAKER",
-      "arc": "A grim middle stretch — 9 shots dropped over holes 3-5, a 10 at the 8th and a quad at the 12th — eventually stops the bleeding with a birdie at the 17th, the only oasis in a desert"
+      "arc": "A round of cold streaks bookended by carnage: nine shots bled across holes 3-5, then a sextuple-bogey 10 at the 8th inside a 13-shot 7-10 stretch, before a birdie at the 17th finally stopped the bleeding."
     },
     {
       "player": "Henry MELLER",
-      "arc": "Quietly endures, but bookends his card with quads at the 13th and 18th; stays well out of the Trophy and Jacket conversations"
+      "arc": "Quietly chipped in to the day's blow-up tally with quadruple-bogey 8s at the 13th and the 18th, but did enough to stay clear of the Spoon battle."
     },
     {
       "player": "Stuart NEUMANN",
-      "arc": "A round of near-total collapse: 17 shots bled over the opening five holes (10 at the 1st, 9 at the 4th), then an 8 at the 9th and an 11 at the 10th — the Wooden Spoon gap balloons from 8 to 22"
+      "arc": "A round to file under 'do not retain': four quintuple-bogeys or worse (10 at the 1st, 9 at the 4th, 8 at the 9th, 11 at the 10th), a 17-shot bleed across holes 1-5, and a Spoon position now 22 clear of the field."
     }
   ],
-  "venue_notes": "TEG's 2nd visit to Quinta da Marinha (Robert Trent Jones Sr., parkland, elevated targets and abundant bunkering above the Estoril coast) — the elevated greens and bunkering did precisely what they're designed to do; second visit to the Lisbon Coast for TEG"
+  "venue_notes": "TEG's 2nd visit to Quinta da Marinha (Cascais), a Robert Trent Jones Sr. parkland of elevated targets and abundant bunkering — both of which exacted a heavy toll across the field today. 2nd TEG visit to the Lisbon Coast."
 }
