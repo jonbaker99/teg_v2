@@ -31,10 +31,64 @@ from teg_analysis.analysis.commentary import (
     create_tournament_summary,
 )
 from teg_analysis.reporting import scoring
+from teg_analysis.reporting.era import trophy_metric
 
 # Competition labels used in text
-TROPHY = "Trophy (Stableford)"
+TROPHY_STABLEFORD = "Trophy (Stableford)"
+TROPHY_NETVP = "Trophy (Net VP)"
+TROPHY = TROPHY_STABLEFORD  # default; era-aware TROPHY chosen in build_notable_events
 JACKET = "Green Jacket (Gross)"
+
+
+def _trophy_label(metric: str) -> str:
+    return TROPHY_NETVP if metric == "net_vs_par" else TROPHY_STABLEFORD
+
+
+def _trophy_cols(metric: str) -> dict:
+    """Era-appropriate Trophy column names used across events.py."""
+    if metric == "net_vs_par":
+        return {
+            "round_score": "Round_Score_NetVP",
+            "cum_score": "Cumulative_Tournament_Score_NetVP",
+            "cum_rank": "Cumulative_Tournament_Rank_NetVP",
+            "gap_after": "Gap_To_Leader_After_Round_NetVP",
+            "tournament_score": "Tournament_Score_NetVP",
+            "final_rank": "Final_Rank_NetVP",
+            "won": "Won_NetVP",
+            "rank_player_tegs": "Rank_Among_Player_TEGs_NetVP",
+            "rank_all_tegs": "Rank_Among_All_TEGs_To_Date_NetVP",
+            "rank_before": "Rank_NetVP_Before",
+            "rank_after": "Rank_NetVP_After",
+            "rank_hole": "Rank_NetVP_TEG",
+            "hist_player": "Round_Rank_In_Player_History_NetVP",
+            "hist_all": "Round_Rank_In_All_History_NetVP",
+            "front_back": "Front_9_vs_Back_9_NetVP",
+            "took_lead_event": "Took Lead (NetVP)",
+            "spoon_hit_event": "Hit Bottom (Spoon NetVP)",
+            # Sort direction: lower-is-better for NetVP
+            "score_ascending": True,
+        }
+    return {
+        "round_score": "Round_Score_Stableford",
+        "cum_score": "Cumulative_Tournament_Score_Stableford",
+        "cum_rank": "Cumulative_Tournament_Rank_Stableford",
+        "gap_after": "Gap_To_Leader_After_Round_Stableford",
+        "tournament_score": "Tournament_Score_Stableford",
+        "final_rank": "Final_Rank_Stableford",
+        "won": "Won_Stableford",
+        "rank_player_tegs": "Rank_Among_Player_TEGs_Stableford",
+        "rank_all_tegs": "Rank_Among_All_TEGs_To_Date_Stableford",
+        "rank_before": "Rank_Stableford_Before",
+        "rank_after": "Rank_Stableford_After",
+        "rank_hole": "Rank_Stableford_TEG",
+        "hist_player": "Round_Rank_In_Player_History_Stableford",
+        "hist_all": "Round_Rank_In_All_History_Stableford",
+        "front_back": "Front_9_vs_Back_9_Stableford",
+        "took_lead_event": "Took Lead (Stableford)",
+        "spoon_hit_event": "Hit Bottom (Spoon)",
+        # Higher-is-better for Stableford
+        "score_ascending": False,
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -130,14 +184,21 @@ def _parse_rank(s) -> tuple:
 # ---------------------------------------------------------------------------
 # Standing weights (how central each player is to the result)
 # ---------------------------------------------------------------------------
-def _standing_weights(tsum: pd.DataFrame) -> dict:
-    """Map Pl -> weight in [0,1] reflecting centrality to the result (top & bottom)."""
+def _standing_weights(tsum: pd.DataFrame, metric: str = "stableford") -> dict:
+    """Map Pl -> weight in [0,1] reflecting centrality to the result (top & bottom).
+
+    Era-aware: the Trophy is Stableford for TEG 8+ and net-vs-par for TEGs 1-7,
+    so the 'main winner' column shifts accordingly.
+    """
+    cols = _trophy_cols(metric)
+    trophy_rank_col = cols["final_rank"]
+    trophy_won_col = cols["won"]
     weights = {}
     for _, r in tsum.iterrows():
         w = 0.4
-        rt = r["Final_Rank_Stableford"]
+        rt = r[trophy_rank_col]
         rj = r["Final_Rank_Gross"]
-        if r["Won_Stableford"] or r["Won_Gross"]:
+        if r[trophy_won_col] or r["Won_Gross"]:
             w = 1.0
         elif rt == 2 or rj == 2:
             w = 0.85
@@ -174,19 +235,25 @@ def _rank1_counts(teg_df: pd.DataFrame, rank_col: str) -> dict:
     return {(int(r), int(h)): int(n) for (r, h), n in counts.items()}
 
 
-def _turning_points(events_log: pd.DataFrame, teg_df: pd.DataFrame, sw: dict) -> list:
-    """Lead changes (top) and spoon changes (bottom) as discrete turning-point beats."""
+def _turning_points(events_log: pd.DataFrame, teg_df: pd.DataFrame, sw: dict,
+                    metric: str = "stableford") -> list:
+    """Lead changes (top) and spoon changes (bottom) as discrete turning-point beats.
+
+    Era-aware: pre-8 TEGs use NetVP-based Trophy + Spoon events; post-8 use Stableford.
+    """
+    cols = _trophy_cols(metric)
+    trophy_label = _trophy_label(metric)
     out = []
     lookup = {
         (int(r.Round), r.Pl, int(r.Hole)): r
         for r in teg_df.itertuples(index=False)
     }
-    st_counts = _rank1_counts(teg_df, "Rank_Stableford_TEG")
+    trophy_counts = _rank1_counts(teg_df, cols["rank_hole"])
     gr_counts = _rank1_counts(teg_df, "Rank_GrossVP_TEG")
     wanted = {
-        "Took Lead (Stableford)": (TROPHY, "lead_change"),
+        cols["took_lead_event"]: (trophy_label, "lead_change"),
         "Took Lead (Gross)": (JACKET, "lead_change"),
-        "Hit Bottom (Spoon)": ("Wooden Spoon", "spoon_change"),
+        cols["spoon_hit_event"]: ("Wooden Spoon", "spoon_change"),
     }
     for _, e in events_log.iterrows():
         if e["Event"] not in wanted:
@@ -202,7 +269,7 @@ def _turning_points(events_log: pd.DataFrame, teg_df: pd.DataFrame, sw: dict) ->
         w = sw.get(pl, 0.4)
         lead_type = None
         if etype == "lead_change":
-            counts = st_counts if comp == TROPHY else gr_counts
+            counts = trophy_counts if comp == trophy_label else gr_counts
             outright = counts.get((rnd, hole), 1) <= 1
             lead_type = "outright" if outright else "level"
             # Importance scales hard with how late/decisive the change is: opening-round
@@ -225,9 +292,10 @@ def _turning_points(events_log: pd.DataFrame, teg_df: pd.DataFrame, sw: dict) ->
             ent = scoring.cap(5 + 0.8 * (rnd - 1))
             rar = 2.0
             head = f"{player} drops to the bottom of the {comp} race (R{rnd} H{hole})"
+        # Use the era-appropriate rank columns from the events_log
         ctx = {"competition": comp,
-               "rank_before": _safe_int(e.get("Rank_Stableford_Before")),
-               "rank_after": _safe_int(e.get("Rank_Stableford_After"))}
+               "rank_before": _safe_int(e.get(cols["rank_before"])),
+               "rank_after": _safe_int(e.get(cols["rank_after"]))}
         if lead_type:
             ctx["lead_type"] = lead_type
         out.append(NotableEvent(
@@ -360,18 +428,29 @@ def _hole_event(teg_num, rnd, player, ev, etype, head, imp, rar, ent) -> Notable
     )
 
 
-def _round_beats(round_summary: pd.DataFrame, sw: dict) -> list:
-    """One leadership beat per round, plus per-player round beats only when notable."""
+def _round_beats(round_summary: pd.DataFrame, sw: dict, metric: str = "stableford") -> list:
+    """One leadership beat per round, plus per-player round beats only when notable.
+
+    Era-aware: for pre-8 TEGs the Trophy is net-vs-par (lower wins, signed format);
+    for post-8 it's Stableford (higher wins, raw points).
+    """
+    cols = _trophy_cols(metric)
+    is_netvp = metric == "net_vs_par"
+    score_unit = "net VP" if is_netvp else "Stableford"
+
+    def _fmt_score(x) -> str:
+        return f"{int(x):+d}" if is_netvp else f"{int(x)} pts"
+
     out = []
     teg_num = int(round_summary["TEGNum"].iloc[0])
     last_round = int(round_summary["Round"].max())
 
     for rnd, g in round_summary.groupby("Round"):
         rnd = int(rnd)
-        trophy_leader = g.loc[g["Cumulative_Tournament_Rank_Stableford"].idxmin()]
+        trophy_leader = g.loc[g[cols["cum_rank"]].idxmin()]
         jacket_leader = g.loc[g["Cumulative_Tournament_Rank_Gross"].idxmin()]
         head = (f"After R{rnd}: {trophy_leader['Player']} leads the Trophy "
-                f"(gap {abs(int(trophy_leader['Gap_To_Leader_After_Round_Stableford']))} on Stableford); "
+                f"(gap {abs(int(trophy_leader[cols['gap_after']]))} on {score_unit}); "
                 f"{jacket_leader['Player']} leads the Jacket")
         out.append(NotableEvent(
             teg_num=teg_num, scope="round", type="round_leadership", round=rnd,
@@ -385,36 +464,43 @@ def _round_beats(round_summary: pd.DataFrame, sw: dict) -> list:
         for _, r in g.iterrows():
             pl, player = r["Pl"], r["Player"]
             w = sw.get(pl, 0.4)
-            px, pn = _parse_rank(r.get("Round_Rank_In_Player_History_Stableford"))
-            ax, an = _parse_rank(r.get("Round_Rank_In_All_History_Stableford"))
-            fb = r.get("Front_9_vs_Back_9_Stableford")
+            px, pn = _parse_rank(r.get(cols["hist_player"]))
+            ax, an = _parse_rank(r.get(cols["hist_all"]))
+            fb = r.get(cols["front_back"])
             note, rar, ent, imp = None, 1.0, 2.0, scoring.cap(2 + 3 * w)
 
             # Guard PB/worst against trivial early-career flags (a debut player's
             # every round is a "PB"). Require a meaningful history first.
             has_history = pn is not None and pn >= 8
+            round_score_str = _fmt_score(r[cols["round_score"]])
             if ax is not None and ax <= 3:
                 label = {1: "the best", 2: "the 2nd-best", 3: "the 3rd-best"}[ax]
-                note = f"{player}'s {int(r['Round_Score_Stableford'])} pts is {label} round in TEG history to date"
+                note = f"{player}'s {round_score_str} is {label} round in TEG history to date"
                 rar, ent = {1: 9.0, 2: 8.0, 3: 7.0}[ax], scoring.cap(7 + 2 * (1 - w))
             elif px == 1 and has_history:
-                note = f"{player} posts a personal-best round: {int(r['Round_Score_Stableford'])} pts"
+                note = f"{player} posts a personal-best round: {round_score_str}"
                 rar, ent = 7.0, scoring.cap(6 + 2 * (1 - w))
             elif has_history and px == pn and pn > 3:
-                note = f"{player}'s worst round to date: {int(r['Round_Score_Stableford'])} pts"
+                note = f"{player}'s worst round to date: {round_score_str}"
                 rar, ent = 5.0, scoring.cap(5 + 2 * (1 - w))
             elif fb is not None and abs(fb) >= 10:
                 side = "front nine" if fb > 0 else "back nine"
-                note = f"{player} far stronger on the {side} in R{rnd} ({int(abs(fb))}-pt split)"
+                unit = "shot" if is_netvp else "pt"
+                note = f"{player} far stronger on the {side} in R{rnd} ({int(abs(fb))}-{unit} split)"
                 rar, ent = 3.0, 5.0
 
             if note:
+                ctx = {"round_score": int(r[cols["round_score"]]),
+                       "round_gross_vp": int(r["Round_Score_Gross"]),
+                       "trophy_metric": metric}
+                # Keep legacy key for any downstream consumer that read 'round_stableford';
+                # for pre-8 reports it carries the net-vs-par value (still a Trophy score).
+                ctx["round_stableford"] = int(r[cols["round_score"]])
                 out.append(NotableEvent(
                     teg_num=teg_num, scope="round", type="round_player", round=rnd,
                     headline=note, players=[player],
                     importance=imp, rarity=rar, entertainment=ent,
-                    context={"round_stableford": int(r["Round_Score_Stableford"]),
-                             "round_gross_vp": int(r["Round_Score_Gross"])},
+                    context=ctx,
                 ))
     return out
 
@@ -480,54 +566,81 @@ def _arc_bottom(rs, rank_col, score_col, events_log, event_name, label) -> dict:
 
 
 def _competition_arcs(round_summary: pd.DataFrame, events_log: pd.DataFrame,
-                      teg_df: pd.DataFrame) -> dict:
-    """How each competition was won/lost: leader-by-round, winner trajectory, swings."""
+                      teg_df: pd.DataFrame, metric: str = "stableford") -> dict:
+    """How each competition was won/lost: leader-by-round, winner trajectory, swings.
+
+    Era-aware: pre-8 TEGs use NetVP for the Trophy and Spoon; post-8 use Stableford.
+    """
+    cols = _trophy_cols(metric)
+    trophy_label = _trophy_label(metric)
     rs = round_summary
-    st_counts = _rank1_counts(teg_df, "Rank_Stableford_TEG")
+    trophy_counts = _rank1_counts(teg_df, cols["rank_hole"])
     gr_counts = _rank1_counts(teg_df, "Rank_GrossVP_TEG")
     return {
-        "trophy": _arc_top(rs, "Cumulative_Tournament_Rank_Stableford",
-                           "Gap_To_Leader_After_Round_Stableford", "Round_Score_Stableford",
-                           events_log, "Took Lead (Stableford)", TROPHY, st_counts),
+        "trophy": _arc_top(rs, cols["cum_rank"],
+                           cols["gap_after"], cols["round_score"],
+                           events_log, cols["took_lead_event"], trophy_label, trophy_counts),
         "jacket": _arc_top(rs, "Cumulative_Tournament_Rank_Gross",
                            "Gap_To_Leader_After_Round_Gross", "Round_Score_Gross",
                            events_log, "Took Lead (Gross)", JACKET, gr_counts),
-        "spoon": _arc_bottom(rs, "Cumulative_Tournament_Rank_Stableford",
-                             "Round_Score_Stableford",
-                             events_log, "Hit Bottom (Spoon)", "Wooden Spoon"),
+        "spoon": _arc_bottom(rs, cols["cum_rank"],
+                             cols["round_score"],
+                             events_log, cols["spoon_hit_event"], "Wooden Spoon"),
     }
 
 
-def _tournament_beats(tsum: pd.DataFrame, arcs: dict) -> list:
+def _tournament_beats(tsum: pd.DataFrame, arcs: dict, metric: str = "stableford") -> list:
     """Winners, margins, spoon, and tournament-level records/PBs.
 
     The three competition beats carry their full arc (how won/lost) in context; they
     are the report's spine, in priority order Trophy > Green Jacket > Wooden Spoon.
+
+    Era-aware: pre-8 TEGs report the Trophy in net-vs-par (signed, lower wins);
+    post-8 in Stableford (raw points, higher wins).
     """
+    cols = _trophy_cols(metric)
+    is_netvp = metric == "net_vs_par"
+    score_col = cols["tournament_score"]
     out = []
     teg_num = int(tsum["TEGNum"].iloc[0])
 
     # Winner margins are the gap to the runner-up (the per-row Margin_* is gap-to-winner,
     # which is 0 for the winner themselves).
-    by_trophy = tsum.sort_values("Tournament_Score_Stableford", ascending=False).reset_index(drop=True)
+    by_trophy = tsum.sort_values(score_col, ascending=cols["score_ascending"]).reset_index(drop=True)
     by_jacket = tsum.sort_values("Tournament_Score_Gross", ascending=True).reset_index(drop=True)
     trophy = by_trophy.iloc[0]
     jacket = by_jacket.iloc[0]
     spoon = tsum[tsum["Wooden_Spoon"]].iloc[0]
-    trophy_margin = int(trophy["Tournament_Score_Stableford"] - by_trophy.iloc[1]["Tournament_Score_Stableford"])
+    # For NetVP (lower wins): margin = runner_up - winner; for Stableford: winner - runner_up
+    if is_netvp:
+        trophy_margin = int(by_trophy.iloc[1][score_col] - trophy[score_col])
+        trophy_score = int(trophy[score_col])
+        trophy_headline = (f"{trophy['Player']} wins the Trophy at "
+                           f"{trophy_score:+d}, by {trophy_margin}")
+        spoon_score = int(spoon[score_col])
+        spoon_headline = (f"{spoon['Player']} collects the Wooden Spoon "
+                          f"({spoon_score:+d} net VP)")
+    else:
+        trophy_margin = int(trophy[score_col] - by_trophy.iloc[1][score_col])
+        trophy_score = int(trophy[score_col])
+        trophy_headline = (f"{trophy['Player']} wins the Trophy on "
+                           f"{trophy_score} pts, by {trophy_margin}")
+        spoon_score = int(spoon[score_col])
+        spoon_headline = (f"{spoon['Player']} collects the Wooden Spoon "
+                          f"({spoon_score} pts)")
     jacket_margin = int(by_jacket.iloc[1]["Tournament_Score_Gross"] - jacket["Tournament_Score_Gross"])
 
     out.append(NotableEvent(
         teg_num=teg_num, scope="tournament", type="trophy_win",
-        headline=(f"{trophy['Player']} wins the Trophy on {int(trophy['Tournament_Score_Stableford'])} pts, "
-                  f"by {trophy_margin}"),
+        headline=trophy_headline,
         players=[trophy["Player"]], importance=10.0,
-        rarity=_tournament_rarity(trophy), entertainment=5.0,
-        context={"score": int(trophy["Tournament_Score_Stableford"]),
+        rarity=_tournament_rarity(trophy, metric), entertainment=5.0,
+        context={"score": trophy_score,
                  "margin": trophy_margin,
+                 "trophy_metric": metric,
                  "runner_up": by_trophy.iloc[1]["Player"],
-                 "all_time_rank": _safe_int(trophy.get("Rank_Among_All_TEGs_To_Date_Stableford")),
-                 "player_rank": _safe_int(trophy.get("Rank_Among_Player_TEGs_Stableford")),
+                 "all_time_rank": _safe_int(trophy.get(cols["rank_all_tegs"])),
+                 "player_rank": _safe_int(trophy.get(cols["rank_player_tegs"])),
                  "arc": arcs["trophy"]},
     ))
     out.append(NotableEvent(
@@ -542,9 +655,10 @@ def _tournament_beats(tsum: pd.DataFrame, arcs: dict) -> list:
     ))
     out.append(NotableEvent(
         teg_num=teg_num, scope="tournament", type="wooden_spoon",
-        headline=f"{spoon['Player']} collects the Wooden Spoon ({int(spoon['Tournament_Score_Stableford'])} pts)",
+        headline=spoon_headline,
         players=[spoon["Player"]], importance=5.0, rarity=3.0, entertainment=7.0,
-        context={"score": int(spoon["Tournament_Score_Stableford"]),
+        context={"score": spoon_score,
+                 "trophy_metric": metric,
                  "arc": arcs["spoon"]},
     ))
 
@@ -566,9 +680,10 @@ def _tournament_beats(tsum: pd.DataFrame, arcs: dict) -> list:
     return out
 
 
-def _tournament_rarity(row) -> float:
-    all_rank = _safe_int(row.get("Rank_Among_All_TEGs_To_Date_Stableford"))
-    player_rank = _safe_int(row.get("Rank_Among_Player_TEGs_Stableford"))
+def _tournament_rarity(row, metric: str = "stableford") -> float:
+    cols = _trophy_cols(metric)
+    all_rank = _safe_int(row.get(cols["rank_all_tegs"]))
+    player_rank = _safe_int(row.get(cols["rank_player_tegs"]))
     if all_rank == 1:
         return 10.0
     if player_rank == 1:
@@ -584,6 +699,8 @@ def _tournament_rarity(row) -> float:
 def build_notable_events(teg_num: int, all_data: Optional[pd.DataFrame] = None,
                          mode: str = "balanced") -> list:
     """Build the ranked list of NotableEvent objects for a TEG."""
+    metric = trophy_metric(teg_num)
+
     if all_data is None:
         all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
 
@@ -607,14 +724,19 @@ def build_notable_events(teg_num: int, all_data: Optional[pd.DataFrame] = None,
     tsum = create_tournament_summary(all_data_df=all_data)
     tsum = tsum[tsum["TEGNum"] == teg_num]
 
-    sw = _standing_weights(tsum)
-    arcs = _competition_arcs(round_summary, events_log, teg_df)
+    # The teg_df we pass downstream needs the per-hole NetVP rank for
+    # `_competition_arcs._rank1_counts(teg_df, "Rank_NetVP_TEG")` to work.
+    from teg_analysis.analysis.commentary import _add_rank_netvp_teg
+    teg_df = _add_rank_netvp_teg(teg_df)
+
+    sw = _standing_weights(tsum, metric)
+    arcs = _competition_arcs(round_summary, events_log, teg_df, metric)
 
     events = []
-    events += _tournament_beats(tsum, arcs)
-    events += _turning_points(events_log, teg_df, sw)
+    events += _tournament_beats(tsum, arcs, metric)
+    events += _turning_points(events_log, teg_df, sw, metric)
     events += _sequences(teg_df, sw, player_names)
-    events += _round_beats(round_summary, sw)
+    events += _round_beats(round_summary, sw, metric)
 
     # Tag each round-scoped beat with the course it was played on, so the same hole
     # NUMBER in different rounds is never mistaken for "the same hole" (it is almost

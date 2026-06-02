@@ -6,11 +6,34 @@ for round summaries, tournament summaries, and event tracking.
 
 
 import logging
+import numpy as np
 import pandas as pd
 
 from teg_analysis.constants import ROUND_INFO_CSV, STREAKS_PARQUET
 
 logger = logging.getLogger(__name__)
+
+# Era threshold: TEG 1-7 used total net-vs-par for the Trophy (lower wins);
+# TEG 8 onwards uses total Stableford (higher wins). Canonical helper lives in
+# teg_analysis/reporting/era.py; this constant is duplicated here so the
+# analysis layer can be era-aware without depending on the reporting layer.
+STABLEFORD_FROM_TEG = 8
+
+
+def _add_rank_netvp_teg(df: pd.DataFrame) -> pd.DataFrame:
+    """Compute per-hole Rank_NetVP_TEG if missing.
+
+    The source parquet ships pre-computed Rank_GrossVP_TEG and Rank_Stableford_TEG
+    (per-hole tournament rank), but no NetVP equivalent. Derive it from
+    'NetVP Cum TEG' so the rest of the pipeline can lean on it the same way
+    it leans on the Stableford/Gross rank columns.
+    """
+    if 'Rank_NetVP_TEG' in df.columns:
+        return df
+    df = df.copy()
+    df['Rank_NetVP_TEG'] = df.groupby(['TEGNum', 'Round', 'Hole'])[
+        'NetVP Cum TEG'].rank(method='min', ascending=True)
+    return df
 
 
 def create_round_summary(all_data_df=None, round_info_df=None):
@@ -56,6 +79,9 @@ def create_round_summary(all_data_df=None, round_info_df=None):
     round_info_df = round_info_df.sort_values(['TEGNum', 'Round'])
     all_data_df = all_data_df.sort_values(['TEGNum', 'Round', 'Hole', 'Pl'])
 
+    # Make sure the per-hole NetVP rank exists (parquet only ships Stableford/Gross).
+    all_data_df = _add_rank_netvp_teg(all_data_df)
+
     # ========================================
     # 2. CALCULATE ROUND-LEVEL SCORES
     # ========================================
@@ -69,25 +95,28 @@ def create_round_summary(all_data_df=None, round_info_df=None):
     round_scores = all_data_df.groupby(['TEGNum', 'Round', 'Pl', 'Player']).agg({
         'Sc': 'sum',
         'GrossVP': 'sum',
+        'NetVP': 'sum',
         'Stableford': 'sum'
     }).reset_index()
-    round_scores.columns = ['TEGNum', 'Round', 'Pl', 'Player', 'Round_Score_Sc', 'Round_Score_Gross', 'Round_Score_Stableford']
+    round_scores.columns = ['TEGNum', 'Round', 'Pl', 'Player', 'Round_Score_Sc', 'Round_Score_Gross', 'Round_Score_NetVP', 'Round_Score_Stableford']
 
     # Front 9 scores
     front_9_scores = front_9.groupby(['TEGNum', 'Round', 'Pl']).agg({
         'Sc': 'sum',
         'GrossVP': 'sum',
+        'NetVP': 'sum',
         'Stableford': 'sum'
     }).reset_index()
-    front_9_scores.columns = ['TEGNum', 'Round', 'Pl', 'Front_9_Score_Sc', 'Front_9_Score_Gross', 'Front_9_Score_Stableford']
+    front_9_scores.columns = ['TEGNum', 'Round', 'Pl', 'Front_9_Score_Sc', 'Front_9_Score_Gross', 'Front_9_Score_NetVP', 'Front_9_Score_Stableford']
 
     # Back 9 scores
     back_9_scores = back_9.groupby(['TEGNum', 'Round', 'Pl']).agg({
         'Sc': 'sum',
         'GrossVP': 'sum',
+        'NetVP': 'sum',
         'Stableford': 'sum'
     }).reset_index()
-    back_9_scores.columns = ['TEGNum', 'Round', 'Pl', 'Back_9_Score_Sc', 'Back_9_Score_Gross', 'Back_9_Score_Stableford']
+    back_9_scores.columns = ['TEGNum', 'Round', 'Pl', 'Back_9_Score_Sc', 'Back_9_Score_Gross', 'Back_9_Score_NetVP', 'Back_9_Score_Stableford']
 
     # Merge all score components
     summary = round_scores.merge(front_9_scores, on=['TEGNum', 'Round', 'Pl'], how='left')
@@ -96,6 +125,7 @@ def create_round_summary(all_data_df=None, round_info_df=None):
     # Calculate Front 9 vs Back 9 difference
     summary['Front_9_vs_Back_9_Sc'] = summary['Front_9_Score_Sc'] - summary['Back_9_Score_Sc']
     summary['Front_9_vs_Back_9_Gross'] = summary['Front_9_Score_Gross'] - summary['Back_9_Score_Gross']
+    summary['Front_9_vs_Back_9_NetVP'] = summary['Front_9_Score_NetVP'] - summary['Back_9_Score_NetVP']
     summary['Front_9_vs_Back_9_Stableford'] = summary['Front_9_Score_Stableford'] - summary['Back_9_Score_Stableford']
 
     # ========================================
@@ -107,14 +137,24 @@ def create_round_summary(all_data_df=None, round_info_df=None):
     end_of_round = all_data_df[all_data_df['Hole'] == 18].copy()
 
     cumulative_scores = end_of_round[['TEGNum', 'Round', 'Pl', 'GrossVP Cum TEG', 'Stableford Cum TEG',
+                                       'NetVP Cum TEG',
                                        'Rank_GrossVP_TEG', 'Rank_Stableford_TEG',
                                        'Gap_GrossVP_TEG', 'Gap_Stableford_TEG']].copy()
     cumulative_scores.columns = ['TEGNum', 'Round', 'Pl',
                                    'Cumulative_Tournament_Score_Gross', 'Cumulative_Tournament_Score_Stableford',
+                                   'Cumulative_Tournament_Score_NetVP',
                                    'Cumulative_Tournament_Rank_Gross', 'Cumulative_Tournament_Rank_Stableford',
                                    'Gap_To_Leader_After_Round_Gross', 'Gap_To_Leader_After_Round_Stableford']
 
     summary = summary.merge(cumulative_scores, on=['TEGNum', 'Round', 'Pl'], how='left')
+
+    # Derive NetVP rank + gap-to-leader at end of round (the source data carries
+    # per-hole ranks only for Gross + Stableford, so we compute NetVP from the
+    # cumulative score). Lower NetVP wins, so ascending=True.
+    summary['Cumulative_Tournament_Rank_NetVP'] = summary.groupby(['TEGNum', 'Round'])[
+        'Cumulative_Tournament_Score_NetVP'].rank(method='min', ascending=True)
+    leader_score = summary.groupby(['TEGNum', 'Round'])['Cumulative_Tournament_Score_NetVP'].transform('min')
+    summary['Gap_To_Leader_After_Round_NetVP'] = summary['Cumulative_Tournament_Score_NetVP'] - leader_score
 
     # ========================================
     # 4. CALCULATE RANKINGS
@@ -124,16 +164,19 @@ def create_round_summary(all_data_df=None, round_info_df=None):
     # Round-level rankings (based on this round's score only)
     summary['Player_Round_Rank_Gross'] = summary.groupby(['TEGNum', 'Round'])['Round_Score_Gross'].rank(method='min', ascending=True)
     summary['Player_Round_Rank_Stableford'] = summary.groupby(['TEGNum', 'Round'])['Round_Score_Stableford'].rank(method='min', ascending=False)
+    summary['Player_Round_Rank_NetVP'] = summary.groupby(['TEGNum', 'Round'])['Round_Score_NetVP'].rank(method='min', ascending=True)
 
     # Cumulative tournament rank BEFORE round (from previous round's hole 18)
     # Shift rankings forward by one round within each TEG and player
     summary = summary.sort_values(['TEGNum', 'Pl', 'Round'])
     summary['Cumulative_Tournament_Rank_Before_Round_Gross'] = summary.groupby(['TEGNum', 'Pl'])['Cumulative_Tournament_Rank_Gross'].shift(1)
     summary['Cumulative_Tournament_Rank_Before_Round_Stableford'] = summary.groupby(['TEGNum', 'Pl'])['Cumulative_Tournament_Rank_Stableford'].shift(1)
+    summary['Cumulative_Tournament_Rank_Before_Round_NetVP'] = summary.groupby(['TEGNum', 'Pl'])['Cumulative_Tournament_Rank_NetVP'].shift(1)
 
     # Gap to leader BEFORE round (from previous round's hole 18)
     summary['Gap_To_Leader_Before_Round_Gross'] = summary.groupby(['TEGNum', 'Pl'])['Gap_To_Leader_After_Round_Gross'].shift(1)
     summary['Gap_To_Leader_Before_Round_Stableford'] = summary.groupby(['TEGNum', 'Pl'])['Gap_To_Leader_After_Round_Stableford'].shift(1)
+    summary['Gap_To_Leader_Before_Round_NetVP'] = summary.groupby(['TEGNum', 'Pl'])['Gap_To_Leader_After_Round_NetVP'].shift(1)
 
     # ========================================
     # 5. CALCULATE LEAD TRACKING
@@ -144,7 +187,8 @@ def create_round_summary(all_data_df=None, round_info_df=None):
     holes_in_lead = all_data_df.groupby(['TEGNum', 'Round', 'Pl'], as_index=False).apply(
         lambda x: pd.Series({
             'Holes_In_Lead_Gross': (x['Rank_GrossVP_TEG'] == 1).sum(),
-            'Holes_In_Lead_Stableford': (x['Rank_Stableford_TEG'] == 1).sum()
+            'Holes_In_Lead_Stableford': (x['Rank_Stableford_TEG'] == 1).sum(),
+            'Holes_In_Lead_NetVP': (x['Rank_NetVP_TEG'] == 1).sum()
         }), include_groups=False
     ).reset_index()
 
@@ -153,8 +197,10 @@ def create_round_summary(all_data_df=None, round_info_df=None):
     # Leading at start/end of round flags
     summary['Leading_At_Start_Of_Round_Gross'] = (summary['Cumulative_Tournament_Rank_Before_Round_Gross'] == 1).astype(int)
     summary['Leading_At_Start_Of_Round_Stableford'] = (summary['Cumulative_Tournament_Rank_Before_Round_Stableford'] == 1).astype(int)
+    summary['Leading_At_Start_Of_Round_NetVP'] = (summary['Cumulative_Tournament_Rank_Before_Round_NetVP'] == 1).astype(int)
     summary['Leading_At_End_Of_Round_Gross'] = (summary['Cumulative_Tournament_Rank_Gross'] == 1).astype(int)
     summary['Leading_At_End_Of_Round_Stableford'] = (summary['Cumulative_Tournament_Rank_Stableford'] == 1).astype(int)
+    summary['Leading_At_End_Of_Round_NetVP'] = (summary['Cumulative_Tournament_Rank_NetVP'] == 1).astype(int)
 
     # ========================================
     # 6. CALCULATE HISTORICAL RANKINGS (CHRONOLOGICAL)
@@ -177,9 +223,11 @@ def create_round_summary(all_data_df=None, round_info_df=None):
     # Initialize columns
     summary['Round_Rank_In_Player_History_Gross'] = None
     summary['Round_Rank_In_Player_History_Stableford'] = None
+    summary['Round_Rank_In_Player_History_NetVP'] = None
     summary['Total_Player_Rounds_To_Date'] = None
     summary['Round_Rank_In_All_History_Gross'] = None
     summary['Round_Rank_In_All_History_Stableford'] = None
+    summary['Round_Rank_In_All_History_NetVP'] = None
     summary['Total_Rounds_To_Date'] = None
 
     # Create mapping of unique dates sorted chronologically
@@ -204,10 +252,12 @@ def create_round_summary(all_data_df=None, round_info_df=None):
             # Rank within player's historical data
             player_rank_gross = player_to_date['Round_Score_Gross'].rank(method='min', ascending=True).loc[idx]
             player_rank_stableford = player_to_date['Round_Score_Stableford'].rank(method='min', ascending=False).loc[idx]
+            player_rank_netvp = player_to_date['Round_Score_NetVP'].rank(method='min', ascending=True).loc[idx]
             player_total = len(player_to_date)
 
             summary.at[idx, 'Round_Rank_In_Player_History_Gross'] = f"{int(player_rank_gross)} of {player_total}"
             summary.at[idx, 'Round_Rank_In_Player_History_Stableford'] = f"{int(player_rank_stableford)} of {player_total}"
+            summary.at[idx, 'Round_Rank_In_Player_History_NetVP'] = f"{int(player_rank_netvp)} of {player_total}"
             summary.at[idx, 'Total_Player_Rounds_To_Date'] = player_total
 
         # Get all rows up to current date across all players
@@ -217,10 +267,12 @@ def create_round_summary(all_data_df=None, round_info_df=None):
             # Rank within all historical data
             all_rank_gross = all_to_date['Round_Score_Gross'].rank(method='min', ascending=True).loc[idx]
             all_rank_stableford = all_to_date['Round_Score_Stableford'].rank(method='min', ascending=False).loc[idx]
+            all_rank_netvp = all_to_date['Round_Score_NetVP'].rank(method='min', ascending=True).loc[idx]
             all_total = len(all_to_date)
 
             summary.at[idx, 'Round_Rank_In_All_History_Gross'] = f"{int(all_rank_gross)} of {all_total}"
             summary.at[idx, 'Round_Rank_In_All_History_Stableford'] = f"{int(all_rank_stableford)} of {all_total}"
+            summary.at[idx, 'Round_Rank_In_All_History_NetVP'] = f"{int(all_rank_netvp)} of {all_total}"
             summary.at[idx, 'Total_Rounds_To_Date'] = all_total
 
     # Drop helper column
@@ -284,17 +336,30 @@ def create_round_summary(all_data_df=None, round_info_df=None):
         ['TEGNum', 'Round', 'Pl']
     ).size().reset_index(name='Lead_Lost_Count_Stableford')
 
+    # Count lead gains and losses by round for NetVP
+    lead_gained_netvp = lead_changes[lead_changes['Event'] == 'Took Lead (NetVP)'].groupby(
+        ['TEGNum', 'Round', 'Pl']
+    ).size().reset_index(name='Lead_Gained_Count_NetVP')
+
+    lead_lost_netvp = lead_changes[lead_changes['Event'] == 'Lost Lead (NetVP)'].groupby(
+        ['TEGNum', 'Round', 'Pl']
+    ).size().reset_index(name='Lead_Lost_Count_NetVP')
+
     # Merge lead change counts into summary
     summary = summary.merge(lead_gained_gross, on=['TEGNum', 'Round', 'Pl'], how='left')
     summary = summary.merge(lead_lost_gross, on=['TEGNum', 'Round', 'Pl'], how='left')
     summary = summary.merge(lead_gained_stableford, on=['TEGNum', 'Round', 'Pl'], how='left')
     summary = summary.merge(lead_lost_stableford, on=['TEGNum', 'Round', 'Pl'], how='left')
+    summary = summary.merge(lead_gained_netvp, on=['TEGNum', 'Round', 'Pl'], how='left')
+    summary = summary.merge(lead_lost_netvp, on=['TEGNum', 'Round', 'Pl'], how='left')
 
     # Fill NaN with 0 (no lead changes)
     summary['Lead_Gained_Count_Gross'] = summary['Lead_Gained_Count_Gross'].fillna(0).astype(int)
     summary['Lead_Lost_Count_Gross'] = summary['Lead_Lost_Count_Gross'].fillna(0).astype(int)
     summary['Lead_Gained_Count_Stableford'] = summary['Lead_Gained_Count_Stableford'].fillna(0).astype(int)
     summary['Lead_Lost_Count_Stableford'] = summary['Lead_Lost_Count_Stableford'].fillna(0).astype(int)
+    summary['Lead_Gained_Count_NetVP'] = summary['Lead_Gained_Count_NetVP'].fillna(0).astype(int)
+    summary['Lead_Lost_Count_NetVP'] = summary['Lead_Lost_Count_NetVP'].fillna(0).astype(int)
 
     # ========================================
     # 9. ADD ROUND METADATA
@@ -317,27 +382,36 @@ def create_round_summary(all_data_df=None, round_info_df=None):
         'Round_Score_Sc', 'Front_9_Score_Sc', 'Back_9_Score_Sc', 'Front_9_vs_Back_9_Sc',
         # Round Scores - Gross
         'Round_Score_Gross', 'Front_9_Score_Gross', 'Back_9_Score_Gross', 'Front_9_vs_Back_9_Gross',
+        # Round Scores - NetVP
+        'Round_Score_NetVP', 'Front_9_Score_NetVP', 'Back_9_Score_NetVP', 'Front_9_vs_Back_9_NetVP',
         # Round Scores - Stableford
         'Round_Score_Stableford', 'Front_9_Score_Stableford', 'Back_9_Score_Stableford', 'Front_9_vs_Back_9_Stableford',
         # Cumulative Scores
-        'Cumulative_Tournament_Score_Gross', 'Cumulative_Tournament_Score_Stableford',
+        'Cumulative_Tournament_Score_Gross', 'Cumulative_Tournament_Score_NetVP', 'Cumulative_Tournament_Score_Stableford',
         # Rankings - Gross
         'Player_Round_Rank_Gross', 'Cumulative_Tournament_Rank_Before_Round_Gross', 'Cumulative_Tournament_Rank_Gross',
+        # Rankings - NetVP
+        'Player_Round_Rank_NetVP', 'Cumulative_Tournament_Rank_Before_Round_NetVP', 'Cumulative_Tournament_Rank_NetVP',
         # Rankings - Stableford
         'Player_Round_Rank_Stableford', 'Cumulative_Tournament_Rank_Before_Round_Stableford', 'Cumulative_Tournament_Rank_Stableford',
         # Gaps - Gross
         'Gap_To_Leader_Before_Round_Gross', 'Gap_To_Leader_After_Round_Gross',
+        # Gaps - NetVP
+        'Gap_To_Leader_Before_Round_NetVP', 'Gap_To_Leader_After_Round_NetVP',
         # Gaps - Stableford
         'Gap_To_Leader_Before_Round_Stableford', 'Gap_To_Leader_After_Round_Stableford',
         # Lead Tracking - Gross
         'Holes_In_Lead_Gross', 'Leading_At_Start_Of_Round_Gross', 'Leading_At_End_Of_Round_Gross',
         'Lead_Gained_Count_Gross', 'Lead_Lost_Count_Gross',
+        # Lead Tracking - NetVP
+        'Holes_In_Lead_NetVP', 'Leading_At_Start_Of_Round_NetVP', 'Leading_At_End_Of_Round_NetVP',
+        'Lead_Gained_Count_NetVP', 'Lead_Lost_Count_NetVP',
         # Lead Tracking - Stableford
         'Holes_In_Lead_Stableford', 'Leading_At_Start_Of_Round_Stableford', 'Leading_At_End_Of_Round_Stableford',
         'Lead_Gained_Count_Stableford', 'Lead_Lost_Count_Stableford',
         # Historical Rankings
-        'Round_Rank_In_Player_History_Gross', 'Round_Rank_In_Player_History_Stableford',
-        'Round_Rank_In_All_History_Gross', 'Round_Rank_In_All_History_Stableford',
+        'Round_Rank_In_Player_History_Gross', 'Round_Rank_In_Player_History_NetVP', 'Round_Rank_In_Player_History_Stableford',
+        'Round_Rank_In_All_History_Gross', 'Round_Rank_In_All_History_NetVP', 'Round_Rank_In_All_History_Stableford',
         # Score Type Counts
         'Eagles_Count', 'Birdies_Count', 'Pars_Or_Better_Count', 'Triple_Bogeys_Or_Worse_Count',
         'Zero_Stableford_Points_Count', 'Four_Plus_Stableford_Points_Count', 'Five_Plus_Stableford_Points_Count',
@@ -400,8 +474,8 @@ def create_round_events(all_data_df=None):
 
     REQUIRED_COLS = [
         'TEGNum', 'TEG', 'Round', 'Hole', 'Pl', 'Player',
-        'Sc', 'PAR', 'GrossVP', 'Stableford',
-        'Rank_Stableford_TEG', 'Rank_GrossVP_TEG'
+        'Sc', 'PAR', 'GrossVP', 'NetVP', 'Stableford',
+        'Rank_Stableford_TEG', 'Rank_GrossVP_TEG', 'NetVP Cum TEG'
     ]
 
     if all_data_df is None:
@@ -413,7 +487,7 @@ def create_round_events(all_data_df=None):
     if missing:
         raise ValueError(f"Missing required columns: {missing}")
 
-    df = all_data_df.copy()
+    df = _add_rank_netvp_teg(all_data_df).copy()
 
     # ========================================
     # 2. CALCULATE DERIVED FIELDS
@@ -449,6 +523,9 @@ def create_round_events(all_data_df=None):
     df['Rank_Stableford_After'] = df['Rank_Stableford_TEG']
     df['Rank_Stableford_Before'] = df.groupby(['TEGNum', 'Pl'])['Rank_Stableford_TEG'].shift(1)
 
+    df['Rank_NetVP_After'] = df['Rank_NetVP_TEG']
+    df['Rank_NetVP_Before'] = df.groupby(['TEGNum', 'Pl'])['Rank_NetVP_TEG'].shift(1)
+
     df['Rank_Spoon_After'] = df['Rank_Spoon_TEG']
     df['Rank_Spoon_Before'] = df.groupby(['TEGNum', 'Pl'])['Rank_Spoon_TEG'].shift(1)
 
@@ -471,7 +548,7 @@ def create_round_events(all_data_df=None):
             (df['Rank_Gross_After'] > 1)
         ),
 
-        # Stableford competition (Trophy)
+        # Stableford competition (Trophy for TEG 8+)
         'Took Lead (Stableford)': (
             (df['Rank_Stableford_After'] == 1) &
             ((df['Rank_Stableford_Before'] > 1) | df['Rank_Stableford_Before'].isna())
@@ -481,7 +558,17 @@ def create_round_events(all_data_df=None):
             (df['Rank_Stableford_After'] > 1)
         ),
 
-        # Wooden Spoon competition (Stableford-based, last place)
+        # NetVP competition (Trophy for TEGs 1-7)
+        'Took Lead (NetVP)': (
+            (df['Rank_NetVP_After'] == 1) &
+            ((df['Rank_NetVP_Before'] > 1) | df['Rank_NetVP_Before'].isna())
+        ),
+        'Lost Lead (NetVP)': (
+            (df['Rank_NetVP_Before'] == 1) &
+            (df['Rank_NetVP_After'] > 1)
+        ),
+
+        # Wooden Spoon competition (Stableford-based, last place) — Trophy metric for TEG 8+
         'Hit Bottom (Spoon)': (
             (df['Rank_Stableford_After'] == df['NPlayers']) &
             ((df['Rank_Stableford_Before'] < df['NPlayers']) | df['Rank_Stableford_Before'].isna())
@@ -490,14 +577,26 @@ def create_round_events(all_data_df=None):
             (df['Rank_Stableford_Before'] == df['NPlayers']) &
             (df['Rank_Stableford_After'] < df['NPlayers'])
         ),
+
+        # Wooden Spoon competition (NetVP-based, last place) — Trophy metric for TEGs 1-7
+        'Hit Bottom (Spoon NetVP)': (
+            (df['Rank_NetVP_After'] == df['NPlayers']) &
+            ((df['Rank_NetVP_Before'] < df['NPlayers']) | df['Rank_NetVP_Before'].isna())
+        ),
+        'Left Bottom (Spoon NetVP)': (
+            (df['Rank_NetVP_Before'] == df['NPlayers']) &
+            (df['Rank_NetVP_After'] < df['NPlayers'])
+        ),
     }
 
     # Create wide DataFrame with all position event flags
     position_flags = pd.DataFrame(position_event_specs)
 
     # Base columns to include in output
-    base_cols = ['TEGNum', 'TEG', 'Round', 'Hole', 'Pl', 'Player', 'Sc', 'PAR', 'GrossVP', 'Stableford',
-                 'Rank_Gross_Before', 'Rank_Gross_After', 'Rank_Stableford_Before', 'Rank_Stableford_After', 'NPlayers']
+    base_cols = ['TEGNum', 'TEG', 'Round', 'Hole', 'Pl', 'Player', 'Sc', 'PAR', 'GrossVP', 'NetVP', 'Stableford',
+                 'Rank_Gross_Before', 'Rank_Gross_After',
+                 'Rank_Stableford_Before', 'Rank_Stableford_After',
+                 'Rank_NetVP_Before', 'Rank_NetVP_After', 'NPlayers']
 
     # Reshape to tidy format: one row per event occurrence
     position_events = (
@@ -531,16 +630,17 @@ def create_round_events(all_data_df=None):
     outcome_flags = pd.DataFrame(outcome_event_specs)
 
     # Reshape to tidy format
+    _outcome_id_vars = ['TEGNum', 'TEG', 'Round', 'Hole', 'Pl', 'Player', 'Sc', 'PAR', 'GrossVP', 'NetVP', 'Stableford',
+                        'Rank_Gross_Before', 'Rank_Gross_After',
+                        'Rank_Stableford_Before', 'Rank_Stableford_After',
+                        'Rank_NetVP_Before', 'Rank_NetVP_After', 'NPlayers']
     outcome_events = (
         pd.concat([
-            df_outcomes[['TEGNum', 'TEG', 'Round', 'Hole', 'Pl', 'Player', 'Sc', 'PAR', 'GrossVP', 'Stableford',
-                        'Rank_Gross_Before', 'Rank_Gross_After', 'Rank_Stableford_Before', 'Rank_Stableford_After',
-                        'NPlayers']].reset_index(drop=True),
+            df_outcomes[_outcome_id_vars].reset_index(drop=True),
             outcome_flags.reset_index(drop=True)
         ], axis=1)
         .melt(
-            id_vars=['TEGNum', 'TEG', 'Round', 'Hole', 'Pl', 'Player', 'Sc', 'PAR', 'GrossVP', 'Stableford',
-                    'Rank_Gross_Before', 'Rank_Gross_After', 'Rank_Stableford_Before', 'Rank_Stableford_After', 'NPlayers'],
+            id_vars=_outcome_id_vars,
             var_name='Event', value_name='Flag'
         )
         .query('Flag == True')
@@ -567,8 +667,12 @@ def create_round_events(all_data_df=None):
         'Lost Lead (Gross)': None,
         'Took Lead (Stableford)': None,
         'Lost Lead (Stableford)': None,
+        'Took Lead (NetVP)': None,
+        'Lost Lead (NetVP)': None,
         'Hit Bottom (Spoon)': None,
         'Left Bottom (Spoon)': None,
+        'Hit Bottom (Spoon NetVP)': None,
+        'Left Bottom (Spoon NetVP)': None,
     }
 
     # Combine position and outcome events
@@ -595,10 +699,11 @@ def create_round_events(all_data_df=None):
     # Define final column order
     output_cols = [
         'TEG', 'TEGNum', 'Round', 'Hole', 'Player', 'Pl',
-        'Par', 'Sc', 'GrossVP', 'Stableford',
+        'Par', 'Sc', 'GrossVP', 'NetVP', 'Stableford',
         'Final_Hole_Flag', 'Event', 'Metric',
         'Rank_Gross_Before', 'Rank_Gross_After',
-        'Rank_Stableford_Before', 'Rank_Stableford_After'
+        'Rank_Stableford_Before', 'Rank_Stableford_After',
+        'Rank_NetVP_Before', 'Rank_NetVP_After'
     ]
 
     # Rename PAR to Par for consistency
@@ -677,39 +782,55 @@ def create_tournament_summary(all_data_df=None, round_info_df=None):
     tournament_scores = round_summary_df.groupby(['TEGNum', 'Pl']).agg({
         'Round_Score_Sc': 'sum',
         'Round_Score_Gross': 'sum',
+        'Round_Score_NetVP': 'sum',
         'Round_Score_Stableford': 'sum'
     }).reset_index()
 
     tournament_scores.rename(columns={
         'Round_Score_Sc': 'Tournament_Score_Sc',
         'Round_Score_Gross': 'Tournament_Score_Gross',
+        'Round_Score_NetVP': 'Tournament_Score_NetVP',
         'Round_Score_Stableford': 'Tournament_Score_Stableford'
     }, inplace=True)
 
     # Calculate final rankings within each TEG
     tournament_scores['Final_Rank_Gross'] = tournament_scores.groupby('TEGNum')['Tournament_Score_Gross'].rank(method='min').astype(int)
     tournament_scores['Final_Rank_Stableford'] = tournament_scores.groupby('TEGNum')['Tournament_Score_Stableford'].rank(method='min', ascending=False).astype(int)
+    tournament_scores['Final_Rank_NetVP'] = tournament_scores.groupby('TEGNum')['Tournament_Score_NetVP'].rank(method='min', ascending=True).astype(int)
 
     # Calculate gaps to winner
     tournament_scores['Winner_Score_Gross'] = tournament_scores.groupby('TEGNum')['Tournament_Score_Gross'].transform('min')
     tournament_scores['Winner_Score_Stableford'] = tournament_scores.groupby('TEGNum')['Tournament_Score_Stableford'].transform('max')
+    tournament_scores['Winner_Score_NetVP'] = tournament_scores.groupby('TEGNum')['Tournament_Score_NetVP'].transform('min')
     tournament_scores['Final_Gap_Gross'] = tournament_scores['Tournament_Score_Gross'] - tournament_scores['Winner_Score_Gross']
     tournament_scores['Final_Gap_Stableford'] = tournament_scores['Winner_Score_Stableford'] - tournament_scores['Tournament_Score_Stableford']
+    tournament_scores['Final_Gap_NetVP'] = tournament_scores['Tournament_Score_NetVP'] - tournament_scores['Winner_Score_NetVP']
 
     # Tournament outcome flags
     tournament_scores['Won_Gross'] = tournament_scores['Final_Rank_Gross'] == 1
     tournament_scores['Won_Stableford'] = tournament_scores['Final_Rank_Stableford'] == 1
+    tournament_scores['Won_NetVP'] = tournament_scores['Final_Rank_NetVP'] == 1
 
-    # Wooden Spoon: last place in Stableford
-    tournament_scores['Max_Rank_Stableford'] = tournament_scores.groupby('TEGNum')['Final_Rank_Stableford'].transform('max')
-    tournament_scores['Wooden_Spoon'] = tournament_scores['Final_Rank_Stableford'] == tournament_scores['Max_Rank_Stableford']
+    # Wooden Spoon: last place on the Trophy metric (era-aware).
+    # TEG 8+: Trophy is Stableford → Spoon = last on Final_Rank_Stableford.
+    # TEG 1-7: Trophy is net-vs-par → Spoon = last on Final_Rank_NetVP.
+    trophy_rank = np.where(
+        tournament_scores['TEGNum'] >= STABLEFORD_FROM_TEG,
+        tournament_scores['Final_Rank_Stableford'],
+        tournament_scores['Final_Rank_NetVP']
+    )
+    tournament_scores['_Trophy_Rank'] = trophy_rank
+    tournament_scores['_Max_Trophy_Rank'] = tournament_scores.groupby('TEGNum')['_Trophy_Rank'].transform('max')
+    tournament_scores['Wooden_Spoon'] = tournament_scores['_Trophy_Rank'] == tournament_scores['_Max_Trophy_Rank']
 
     # Margin of victory/defeat (positive if won, negative if lost)
     tournament_scores['Margin_Gross'] = -tournament_scores['Final_Gap_Gross']  # Invert so winner has positive margin
     tournament_scores['Margin_Stableford'] = tournament_scores['Final_Gap_Stableford']  # Already correct direction
+    tournament_scores['Margin_NetVP'] = -tournament_scores['Final_Gap_NetVP']  # Invert so winner has positive margin
 
     # Drop intermediate columns
-    tournament_scores.drop(columns=['Winner_Score_Gross', 'Winner_Score_Stableford', 'Max_Rank_Stableford'], inplace=True)
+    tournament_scores.drop(columns=['Winner_Score_Gross', 'Winner_Score_Stableford',
+                                     'Winner_Score_NetVP', '_Trophy_Rank', '_Max_Trophy_Rank'], inplace=True)
 
     # ========================================
     # 4. PERFORMANCE CONSISTENCY
@@ -719,35 +840,42 @@ def create_tournament_summary(all_data_df=None, round_info_df=None):
     # Best/worst rounds
     consistency = round_summary_df.groupby(['TEGNum', 'Pl']).agg({
         'Round_Score_Gross': ['min', 'max'],
+        'Round_Score_NetVP': ['min', 'max'],
         'Round_Score_Stableford': ['min', 'max']
     }).reset_index()
 
     consistency.columns = ['TEGNum', 'Pl',
                           'Best_Round_Gross', 'Worst_Round_Gross',
+                          'Best_Round_NetVP', 'Worst_Round_NetVP',
                           'Worst_Round_Stableford', 'Best_Round_Stableford']
 
-    # Range (best - worst)
+    # Range (best - worst); for lower-is-better metrics it's worst - best, for higher-is-better it's best - worst
     consistency['Range_Round_Gross'] = consistency['Worst_Round_Gross'] - consistency['Best_Round_Gross']
+    consistency['Range_Round_NetVP'] = consistency['Worst_Round_NetVP'] - consistency['Best_Round_NetVP']
     consistency['Range_Round_Stableford'] = consistency['Best_Round_Stableford'] - consistency['Worst_Round_Stableford']
 
     # Calculate standard deviation by round and by hole across tournament
     round_std = round_summary_df.groupby(['TEGNum', 'Pl']).agg({
         'Round_Score_Gross': 'std',
+        'Round_Score_NetVP': 'std',
         'Round_Score_Stableford': 'std'
     }).reset_index()
 
     round_std.rename(columns={
         'Round_Score_Gross': 'StdDev_Round_Gross',
+        'Round_Score_NetVP': 'StdDev_Round_NetVP',
         'Round_Score_Stableford': 'StdDev_Round_Stableford'
     }, inplace=True)
 
     hole_std = all_data_df.groupby(['TEGNum', 'Pl']).agg({
         'GrossVP': 'std',
+        'NetVP': 'std',
         'Stableford': 'std'
     }).reset_index()
 
     hole_std.rename(columns={
         'GrossVP': 'StdDev_Hole_Gross',
+        'NetVP': 'StdDev_Hole_NetVP',
         'Stableford': 'StdDev_Hole_Stableford'
     }, inplace=True)
 
@@ -763,23 +891,31 @@ def create_tournament_summary(all_data_df=None, round_info_df=None):
     lead_tracking = round_summary_df.groupby(['TEGNum', 'Pl']).agg({
         'Holes_In_Lead_Gross': 'sum',
         'Holes_In_Lead_Stableford': 'sum',
+        'Holes_In_Lead_NetVP': 'sum',
         'Leading_At_End_Of_Round_Gross': 'sum',
         'Leading_At_End_Of_Round_Stableford': 'sum',
+        'Leading_At_End_Of_Round_NetVP': 'sum',
         'Lead_Gained_Count_Gross': 'sum',
         'Lead_Lost_Count_Gross': 'sum',
         'Lead_Gained_Count_Stableford': 'sum',
-        'Lead_Lost_Count_Stableford': 'sum'
+        'Lead_Lost_Count_Stableford': 'sum',
+        'Lead_Gained_Count_NetVP': 'sum',
+        'Lead_Lost_Count_NetVP': 'sum'
     }).reset_index()
 
     lead_tracking.rename(columns={
         'Holes_In_Lead_Gross': 'Total_Holes_In_Lead_Gross',
         'Holes_In_Lead_Stableford': 'Total_Holes_In_Lead_Stableford',
+        'Holes_In_Lead_NetVP': 'Total_Holes_In_Lead_NetVP',
         'Leading_At_End_Of_Round_Gross': 'Rounds_Leading_After_Gross',
         'Leading_At_End_Of_Round_Stableford': 'Rounds_Leading_After_Stableford',
+        'Leading_At_End_Of_Round_NetVP': 'Rounds_Leading_After_NetVP',
         'Lead_Gained_Count_Gross': 'Total_Lead_Gained_Gross',
         'Lead_Lost_Count_Gross': 'Total_Lead_Lost_Gross',
         'Lead_Gained_Count_Stableford': 'Total_Lead_Gained_Stableford',
-        'Lead_Lost_Count_Stableford': 'Total_Lead_Lost_Stableford'
+        'Lead_Lost_Count_Stableford': 'Total_Lead_Lost_Stableford',
+        'Lead_Gained_Count_NetVP': 'Total_Lead_Gained_NetVP',
+        'Lead_Lost_Count_NetVP': 'Total_Lead_Lost_NetVP'
     }, inplace=True)
 
     # ========================================
@@ -822,6 +958,7 @@ def create_tournament_summary(all_data_df=None, round_info_df=None):
         teg_date = row['TEG_Date']
         gross_score = row['Tournament_Score_Gross']
         stableford_score = row['Tournament_Score_Stableford']
+        netvp_score = row['Tournament_Score_NetVP']
 
         # Get all TEGs for this player up to and including this date
         player_history = tournament_with_dates[
@@ -829,9 +966,10 @@ def create_tournament_summary(all_data_df=None, round_info_df=None):
             (tournament_with_dates['TEG_Date'] <= teg_date)
         ].copy()
 
-        # Rank among player's TEGs
+        # Rank among player's TEGs (lower-is-better for Gross/NetVP, higher-is-better for Stableford)
         rank_player_gross = (player_history['Tournament_Score_Gross'] < gross_score).sum() + 1
         rank_player_stableford = (player_history['Tournament_Score_Stableford'] > stableford_score).sum() + 1
+        rank_player_netvp = (player_history['Tournament_Score_NetVP'] < netvp_score).sum() + 1
 
         # Get all TEGs up to this date
         all_history = tournament_with_dates[tournament_with_dates['TEG_Date'] <= teg_date].copy()
@@ -839,14 +977,17 @@ def create_tournament_summary(all_data_df=None, round_info_df=None):
         # Rank among all TEGs to date
         rank_all_gross = (all_history['Tournament_Score_Gross'] < gross_score).sum() + 1
         rank_all_stableford = (all_history['Tournament_Score_Stableford'] > stableford_score).sum() + 1
+        rank_all_netvp = (all_history['Tournament_Score_NetVP'] < netvp_score).sum() + 1
 
         historical_rankings.append({
             'TEGNum': teg_num,
             'Pl': player,
             'Rank_Among_Player_TEGs_Gross': rank_player_gross,
             'Rank_Among_Player_TEGs_Stableford': rank_player_stableford,
+            'Rank_Among_Player_TEGs_NetVP': rank_player_netvp,
             'Rank_Among_All_TEGs_To_Date_Gross': rank_all_gross,
-            'Rank_Among_All_TEGs_To_Date_Stableford': rank_all_stableford
+            'Rank_Among_All_TEGs_To_Date_Stableford': rank_all_stableford,
+            'Rank_Among_All_TEGs_To_Date_NetVP': rank_all_netvp
         })
 
     historical_df = pd.DataFrame(historical_rankings)
@@ -873,21 +1014,23 @@ def create_tournament_summary(all_data_df=None, round_info_df=None):
         'TEGNum', 'Player', 'Pl', 'TEG', 'Year',
 
         # Tournament Scores & Rankings
-        'Tournament_Score_Sc', 'Tournament_Score_Gross', 'Tournament_Score_Stableford',
-        'Final_Rank_Gross', 'Final_Rank_Stableford',
-        'Final_Gap_Gross', 'Final_Gap_Stableford',
-        'Won_Gross', 'Won_Stableford', 'Wooden_Spoon',
-        'Margin_Gross', 'Margin_Stableford',
+        'Tournament_Score_Sc', 'Tournament_Score_Gross', 'Tournament_Score_NetVP', 'Tournament_Score_Stableford',
+        'Final_Rank_Gross', 'Final_Rank_NetVP', 'Final_Rank_Stableford',
+        'Final_Gap_Gross', 'Final_Gap_NetVP', 'Final_Gap_Stableford',
+        'Won_Gross', 'Won_NetVP', 'Won_Stableford', 'Wooden_Spoon',
+        'Margin_Gross', 'Margin_NetVP', 'Margin_Stableford',
 
         # Performance Consistency
         'Best_Round_Gross', 'Worst_Round_Gross', 'Range_Round_Gross', 'StdDev_Round_Gross',
+        'Best_Round_NetVP', 'Worst_Round_NetVP', 'Range_Round_NetVP', 'StdDev_Round_NetVP',
         'Best_Round_Stableford', 'Worst_Round_Stableford', 'Range_Round_Stableford', 'StdDev_Round_Stableford',
-        'StdDev_Hole_Gross', 'StdDev_Hole_Stableford',
+        'StdDev_Hole_Gross', 'StdDev_Hole_NetVP', 'StdDev_Hole_Stableford',
 
         # Lead Tracking
-        'Total_Holes_In_Lead_Gross', 'Total_Holes_In_Lead_Stableford',
-        'Rounds_Leading_After_Gross', 'Rounds_Leading_After_Stableford',
+        'Total_Holes_In_Lead_Gross', 'Total_Holes_In_Lead_NetVP', 'Total_Holes_In_Lead_Stableford',
+        'Rounds_Leading_After_Gross', 'Rounds_Leading_After_NetVP', 'Rounds_Leading_After_Stableford',
         'Total_Lead_Gained_Gross', 'Total_Lead_Lost_Gross',
+        'Total_Lead_Gained_NetVP', 'Total_Lead_Lost_NetVP',
         'Total_Lead_Gained_Stableford', 'Total_Lead_Lost_Stableford',
 
         # Scoring Achievements
@@ -896,8 +1039,8 @@ def create_tournament_summary(all_data_df=None, round_info_df=None):
         'Holes_In_One', 'Total_Stableford_5s', 'Total_Stableford_0s',
 
         # Historical Context
-        'Rank_Among_Player_TEGs_Gross', 'Rank_Among_Player_TEGs_Stableford',
-        'Rank_Among_All_TEGs_To_Date_Gross', 'Rank_Among_All_TEGs_To_Date_Stableford'
+        'Rank_Among_Player_TEGs_Gross', 'Rank_Among_Player_TEGs_NetVP', 'Rank_Among_Player_TEGs_Stableford',
+        'Rank_Among_All_TEGs_To_Date_Gross', 'Rank_Among_All_TEGs_To_Date_NetVP', 'Rank_Among_All_TEGs_To_Date_Stableford'
     ]
 
     summary = summary[column_order]
