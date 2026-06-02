@@ -316,8 +316,19 @@ def _safe_int(x):
         return None
 
 
-def _sequences(teg_df: pd.DataFrame, sw: dict, player_names: dict) -> list:
-    """Per player-round: cold/hot stretches, recoveries, collapses, standout holes."""
+def _sequences(teg_df: pd.DataFrame, sw: dict, player_names: dict,
+               player_par_max: Optional[dict] = None,
+               par_max: Optional[dict] = None) -> list:
+    """Per player-round: cold/hot stretches, recoveries, collapses, standout holes.
+
+    `player_par_max[(player, par)]` and `par_max[par]` carry lifetime worst-gross
+    lookups so big-blowup beats can be annotated as a player career-worst on this
+    par class and/or an all-time TEG-record worst on this par class. The flags
+    only steer appendix inclusion (see `render.build_records_block`); they do not
+    change the beat's rarity / importance / mandatory status.
+    """
+    player_par_max = player_par_max or {}
+    par_max = par_max or {}
     out = []
     teg_num = int(teg_df["TEGNum"].iloc[0])
     last_round = int(teg_df["Round"].max())
@@ -414,10 +425,18 @@ def _sequences(teg_df: pd.DataFrame, sw: dict, player_names: dict) -> list:
             elif ev["grossvp"] >= 4 or ev["sc"] >= 10:
                 # Catch quad+ AND any double-figure gross score (belt-and-braces;
                 # in TEG's par-3/4/5 layouts grossvp >= 4 covers all 10s anyway).
-                out.append(_hole_event(teg_num, rnd, player, ev, "big_blowup",
-                                       f"{player} runs up a {ev['sc']} ({ev['result']}) at the {_ord(ev['hole'])} (R{rnd})",
-                                       imp=scoring.cap(1 + 4 * w), rar=scoring.cap(max(ev["grossvp"], 4)),
-                                       ent=scoring.cap(ev["grossvp"] + 3 - 2 * w)))
+                par = ev["par"]
+                ppm = player_par_max.get((player, par))
+                pm = par_max.get(par)
+                e = _hole_event(teg_num, rnd, player, ev, "big_blowup",
+                                f"{player} runs up a {ev['sc']} ({ev['result']}) at the {_ord(ev['hole'])} (R{rnd})",
+                                imp=scoring.cap(1 + 4 * w), rar=scoring.cap(max(ev["grossvp"], 4)),
+                                ent=scoring.cap(ev["grossvp"] + 3 - 2 * w))
+                e.context = {
+                    "is_player_par_worst": ppm is not None and ev["sc"] >= ppm,
+                    "is_teg_par_worst": pm is not None and ev["sc"] >= pm,
+                }
+                out.append(e)
     return out
 
 
@@ -501,6 +520,35 @@ def _round_beats(round_summary: pd.DataFrame, sw: dict, metric: str = "stablefor
                     headline=note, players=[player],
                     importance=imp, rarity=rar, entertainment=ent,
                     context=ctx,
+                ))
+
+            # --- Gross-side round beat (independent of Trophy metric) ---
+            # The Green Jacket is its own competition; a round can be a Trophy PB
+            # AND a Gross PB simultaneously, or one without the other. Emit a
+            # separate `round_player_gross` beat using the gross history columns.
+            gx, gn = _parse_rank(r.get("Round_Rank_In_Player_History_Gross"))
+            gax, _gan = _parse_rank(r.get("Round_Rank_In_All_History_Gross"))
+            g_has_history = gn is not None and gn >= 8
+            g_note, g_rar, g_ent, g_imp = None, 1.0, 2.0, scoring.cap(2 + 3 * w)
+            gross_score = int(r["Round_Score_Gross"])
+            gross_score_str = f"{gross_score:+d}"
+            if gax is not None and gax <= 3:
+                label = {1: "the best", 2: "the 2nd-best", 3: "the 3rd-best"}[gax]
+                g_note = f"{player}'s {gross_score_str} (gross) is {label} Gross round in TEG history to date"
+                g_rar, g_ent = {1: 9.0, 2: 8.0, 3: 7.0}[gax], scoring.cap(7 + 2 * (1 - w))
+            elif gx == 1 and g_has_history:
+                g_note = f"{player} posts a personal-best Gross round: {gross_score_str}"
+                g_rar, g_ent = 7.0, scoring.cap(6 + 2 * (1 - w))
+            elif g_has_history and gx == gn and gn > 3:
+                g_note = f"{player}'s worst Gross round to date: {gross_score_str}"
+                g_rar, g_ent = 5.0, scoring.cap(5 + 2 * (1 - w))
+
+            if g_note:
+                out.append(NotableEvent(
+                    teg_num=teg_num, scope="round", type="round_player_gross", round=rnd,
+                    headline=g_note, players=[player],
+                    importance=g_imp, rarity=g_rar, entertainment=g_ent,
+                    context={"round_score_gross": gross_score, "metric": "gross"},
                 ))
     return out
 
@@ -643,16 +691,39 @@ def _tournament_beats(tsum: pd.DataFrame, arcs: dict, metric: str = "stableford"
                  "player_rank": _safe_int(trophy.get(cols["rank_player_tegs"])),
                  "arc": arcs["trophy"]},
     ))
+    jacket_all_rank = _safe_int(jacket.get("Rank_Among_All_TEGs_To_Date_Gross"))
+    jacket_player_rank = _safe_int(jacket.get("Rank_Among_Player_TEGs_Gross"))
     out.append(NotableEvent(
         teg_num=teg_num, scope="tournament", type="jacket_win",
         headline=(f"{jacket['Player']} wins the Green Jacket at {int(jacket['Tournament_Score_Gross']):+d}, "
                   f"by {jacket_margin}"),
-        players=[jacket["Player"]], importance=9.0, rarity=4.0, entertainment=4.0,
+        players=[jacket["Player"]], importance=9.0,
+        rarity=_jacket_rarity(jacket), entertainment=4.0,
         context={"score": int(jacket["Tournament_Score_Gross"]),
                  "margin": jacket_margin,
                  "runner_up": by_jacket.iloc[1]["Player"],
+                 "all_time_rank": jacket_all_rank,
+                 "player_rank": jacket_player_rank,
+                 "metric": "gross",
                  "arc": arcs["jacket"]},
     ))
+
+    # Player-best gross tournament total for any non-winner (the Jacket winner is
+    # already covered above with the same context fields). Same rarity tier as
+    # Trophy PBs so the LLM-bundle's `rarity >= 7` rule auto-marks these mandatory.
+    for _, prow in tsum.iterrows():
+        if prow["Player"] == jacket["Player"]:
+            continue
+        p_rank = _safe_int(prow.get("Rank_Among_Player_TEGs_Gross"))
+        if p_rank != 1:
+            continue
+        p_score = int(prow["Tournament_Score_Gross"])
+        out.append(NotableEvent(
+            teg_num=teg_num, scope="tournament", type="jacket_pb",
+            headline=f"{prow['Player']} posts a personal-best Gross total: {p_score:+d}",
+            players=[prow["Player"]], importance=5.0, rarity=7.0, entertainment=4.0,
+            context={"score": p_score, "player_rank": 1, "metric": "gross"},
+        ))
     out.append(NotableEvent(
         teg_num=teg_num, scope="tournament", type="wooden_spoon",
         headline=spoon_headline,
@@ -684,6 +755,21 @@ def _tournament_rarity(row, metric: str = "stableford") -> float:
     cols = _trophy_cols(metric)
     all_rank = _safe_int(row.get(cols["rank_all_tegs"]))
     player_rank = _safe_int(row.get(cols["rank_player_tegs"]))
+    if all_rank == 1:
+        return 10.0
+    if player_rank == 1:
+        return 7.0
+    if all_rank is not None and all_rank <= 3:
+        return 6.0
+    return 4.0
+
+
+def _jacket_rarity(row) -> float:
+    """Gross-side equivalent of `_tournament_rarity`. Reads gross rank columns;
+    drives auto-mandatory body coverage via the `rarity >= 7` rule in
+    story_plan / round_report bundle assembly."""
+    all_rank = _safe_int(row.get("Rank_Among_All_TEGs_To_Date_Gross"))
+    player_rank = _safe_int(row.get("Rank_Among_Player_TEGs_Gross"))
     if all_rank == 1:
         return 10.0
     if player_rank == 1:
@@ -732,10 +818,19 @@ def build_notable_events(teg_num: int, all_data: Optional[pd.DataFrame] = None,
     sw = _standing_weights(tsum, metric)
     arcs = _competition_arcs(round_summary, events_log, teg_df, metric)
 
+    # Lifetime hole-level worst-gross lookups (across ALL TEGs / all players),
+    # used by _sequences to flag big_blowup events that match a player's career
+    # worst on this par class or the TEG-wide worst-ever on this par class. Ties
+    # count (any score equal to the lifetime max satisfies the flag). The
+    # current TEG is included, so a score that SETS a new record also passes.
+    player_par_max = all_data.groupby(["Player", "PAR"])["Sc"].max().to_dict()
+    par_max = all_data.groupby("PAR")["Sc"].max().to_dict()
+
     events = []
     events += _tournament_beats(tsum, arcs, metric)
     events += _turning_points(events_log, teg_df, sw, metric)
-    events += _sequences(teg_df, sw, player_names)
+    events += _sequences(teg_df, sw, player_names,
+                         player_par_max=player_par_max, par_max=par_max)
     events += _round_beats(round_summary, sw, metric)
 
     # Tag each round-scoped beat with the course it was played on, so the same hole

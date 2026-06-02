@@ -283,14 +283,36 @@ def build_records_block(teg_num: int, round_num: Optional[int] = None) -> str:
         h = e.headline
         if e.type in ("hole_in_one", "eagle"):
             feats.append(_with_round(h, e))
-        elif e.type == "big_blowup" and e.holes and e.holes[0].get("sc", 0) >= 10:
-            feats.append(h)  # big_blowup headlines already carry (R{rnd})
+        elif e.type == "big_blowup":
+            # Suppress routine quad+/double-figure blow-ups; only surface those
+            # that tie/set the player's career worst on this par class or the
+            # TEG-wide all-time worst on this par class. Annotate with which.
+            ctx = e.context or {}
+            is_pw = ctx.get("is_player_par_worst", False)
+            is_rw = ctx.get("is_teg_par_worst", False)
+            if is_pw or is_rw:
+                par = e.holes[0].get("par") if e.holes else None
+                tags = []
+                if is_rw:
+                    tags.append(f"a new TEG-record worst on a par-{par}")
+                if is_pw:
+                    tags.append(f"his career-worst on a par-{par}")
+                feats.append(f"{h} — " + "; ".join(tags))
         elif e.type == "round_player":
             if "round in TEG history" in h:           # all-time top-3 round
                 records.append(_with_round(h, e))
             elif "personal-best round" in h:
                 pbs.append(_with_round(h, e))
             elif "worst round to date" in h:
+                worsts.append(_with_round(h, e))
+        elif e.type == "round_player_gross":
+            # Gross-side equivalents (the headline carries the "Gross" word so
+            # readers don't confuse it with the Stableford/NetVP rounds above).
+            if "Gross round in TEG history" in h:
+                records.append(_with_round(h, e))
+            elif "personal-best Gross round" in h:
+                pbs.append(_with_round(h, e))
+            elif "worst Gross round" in h:
                 worsts.append(_with_round(h, e))
         elif e.type == "trophy_win":
             ctx = e.context or {}
@@ -311,6 +333,20 @@ def build_records_block(teg_num: int, round_num: Optional[int] = None) -> str:
                 records.append(f"{winner}'s {score_label} is the {ord_str}-best Trophy total in TEG history")
             elif pr == 1:
                 pbs.append(f"{winner}'s {score_label} is a personal Trophy best")
+        elif e.type in ("jacket_win", "jacket_pb"):
+            ctx = e.context or {}
+            ar = ctx.get("all_time_rank")
+            pr = ctx.get("player_rank")
+            winner = e.players[0] if e.players else "Winner"
+            score = ctx.get("score")
+            score_label = f"{score:+d}" if isinstance(score, int) else str(score)
+            if ar == 1:
+                records.append(f"{winner}'s {score_label} is the best Gross total in TEG history")
+            elif ar is not None and ar <= 3:
+                ord_str = {2: "2nd", 3: "3rd"}.get(ar, str(ar))
+                records.append(f"{winner}'s {score_label} is the {ord_str}-best Gross total in TEG history")
+            elif pr == 1:
+                pbs.append(f"{winner}'s {score_label} is a personal Gross best")
 
     chunks = []
     for label, lines in [
