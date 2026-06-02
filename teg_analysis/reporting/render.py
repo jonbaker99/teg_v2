@@ -38,17 +38,28 @@ def build_round_standings(teg_num: int) -> dict:
     from `create_round_summary`; no LLM, no fabrication risk.
     """
     from teg_analysis.analysis.commentary import create_round_summary
+    from teg_analysis.reporting.era import trophy_metric
     rs = create_round_summary()
     rs = rs[rs["TEGNum"] == teg_num].copy()
+
+    metric = trophy_metric(teg_num)
+    if metric == "net_vs_par":
+        trophy_col = "Cumulative_Tournament_Score_NetVP"
+        trophy_ascending = True
+        trophy_fmt = lambda x: _fmt_signed(int(x))
+    else:
+        trophy_col = "Cumulative_Tournament_Score_Stableford"
+        trophy_ascending = False
+        trophy_fmt = lambda x: str(int(x))
 
     out: dict = {}
     for rnd in sorted(int(r) for r in rs["Round"].unique()):
         rdf = rs[rs["Round"] == rnd]
-        trophy = rdf.sort_values("Cumulative_Tournament_Score_Stableford", ascending=False)
+        trophy = rdf.sort_values(trophy_col, ascending=trophy_ascending)
         jacket = rdf.sort_values("Cumulative_Tournament_Score_Gross", ascending=True)
 
         trophy_str = " | ".join(
-            f"{r['Pl']} {int(r['Cumulative_Tournament_Score_Stableford'])}"
+            f"{r['Pl']} {trophy_fmt(r[trophy_col])}"
             for _, r in trophy.iterrows()
         )
         jacket_str = " | ".join(
@@ -246,17 +257,20 @@ def build_records_block(teg_num: int, round_num: Optional[int] = None) -> str:
     """Deterministic 'PBs and TEG records' appendix block. Empty string if none.
 
     Categories surfaced (from events.py beats):
-    - **TEG records**: all-time top-3 round (Stableford), all-time best Trophy total.
+    - **TEG records**: all-time top-3 round, all-time best Trophy total.
     - **Personal bests**: player-PB round, player-PB Trophy total.
     - **Personal worsts**: player-worst round to date.
     - **Rare feats**: holes-in-one, eagles.
 
-    Idempotent injection caller can detect by `class="records"`.
+    Trophy records use era-appropriate language: Stableford for TEG 8+, net-vs-par
+    for TEGs 1–7. Idempotent injection caller can detect by `class="records"`.
     """
     from teg_analysis.reporting.events import build_notable_events
+    from teg_analysis.reporting.era import trophy_metric
     events = build_notable_events(teg_num)
     if round_num is not None:
         events = [e for e in events if e.round == round_num]
+    metric = trophy_metric(teg_num)
 
     def _with_round(h: str, e) -> str:
         """Suffix headline with (R{round}) if not already mentioned."""
@@ -284,13 +298,19 @@ def build_records_block(teg_num: int, round_num: Optional[int] = None) -> str:
             pr = ctx.get("player_rank")
             winner = e.players[0] if e.players else "Winner"
             score = ctx.get("score")
+            if metric == "net_vs_par":
+                score_str = f"{score:+d}" if isinstance(score, int) else str(score)
+                score_label = f"{score_str} net-vs-par"
+            else:
+                score_str = f"{score} pts"
+                score_label = score_str
             if ar == 1:
-                records.append(f"{winner}'s {score} pts is the best Trophy total in TEG history")
+                records.append(f"{winner}'s {score_label} is the best Trophy total in TEG history")
             elif ar is not None and ar <= 3:
                 ord_str = {2: "2nd", 3: "3rd"}.get(ar, str(ar))
-                records.append(f"{winner}'s {score} pts is the {ord_str}-best Trophy total in TEG history")
+                records.append(f"{winner}'s {score_label} is the {ord_str}-best Trophy total in TEG history")
             elif pr == 1:
-                pbs.append(f"{winner}'s {score} pts is a personal Trophy best")
+                pbs.append(f"{winner}'s {score_label} is a personal Trophy best")
 
     chunks = []
     for label, lines in [
@@ -333,32 +353,50 @@ def style_report(teg_num: int) -> str:
 def build_round_scores(teg_num: int, round_num: int) -> str:
     """Two-paragraph deterministic round-scores block for a single round.
 
-    Stableford line sorted by `Round_Score_Stableford` descending; Gross line
-    sorted by `Round_Score_Gross` ascending (signed format). Uses player codes
-    (`Pl`). Returns empty string if no data.
+    For Stableford-era TEGs (8+): Trophy line sorted by `Round_Score_Stableford`
+    descending, header "Round Stableford". For net-vs-par-era TEGs (1–7): Trophy
+    line sorted by `Round_Score_NetVP` ascending (signed format), header "Round
+    Net VP". Gross line always present, sorted by `Round_Score_Gross` ascending.
+    Uses player codes (`Pl`). Returns empty string if no data.
     """
     from teg_analysis.analysis.commentary import create_round_summary
+    from teg_analysis.reporting.era import trophy_metric
     rs = create_round_summary()
     rs = rs[(rs["TEGNum"] == teg_num) & (rs["Round"] == round_num)].copy()
     if rs.empty:
         return ""
 
-    stab = rs.sort_values("Round_Score_Stableford", ascending=False)
+    metric = trophy_metric(teg_num)
     gross = rs.sort_values("Round_Score_Gross", ascending=True)
-    stab_str = " | ".join(
-        f"{r['Pl']} {int(r['Round_Score_Stableford'])}"
-        for _, r in stab.iterrows()
-    )
     gross_str = " | ".join(
         f"{r['Pl']} {_fmt_signed(int(r['Round_Score_Gross']))}"
         for _, r in gross.iterrows()
     )
-    return (
-        f'<p class="round-scores"><span class="round-scores-header">Round Stableford:</span>'
-        f' {stab_str}</p>\n'
-        f'<p class="round-scores"><span class="round-scores-header">Round Gross:</span>'
-        f' {gross_str}</p>'
-    )
+
+    if metric == "net_vs_par":
+        trophy_line = rs.sort_values("Round_Score_NetVP", ascending=True)
+        trophy_str = " | ".join(
+            f"{r['Pl']} {_fmt_signed(int(r['Round_Score_NetVP']))}"
+            for _, r in trophy_line.iterrows()
+        )
+        return (
+            f'<p class="round-scores"><span class="round-scores-header">Round Net VP:</span>'
+            f' {trophy_str}</p>\n'
+            f'<p class="round-scores"><span class="round-scores-header">Round Gross:</span>'
+            f' {gross_str}</p>'
+        )
+    else:
+        stab = rs.sort_values("Round_Score_Stableford", ascending=False)
+        stab_str = " | ".join(
+            f"{r['Pl']} {int(r['Round_Score_Stableford'])}"
+            for _, r in stab.iterrows()
+        )
+        return (
+            f'<p class="round-scores"><span class="round-scores-header">Round Stableford:</span>'
+            f' {stab_str}</p>\n'
+            f'<p class="round-scores"><span class="round-scores-header">Round Gross:</span>'
+            f' {gross_str}</p>'
+        )
 
 
 def build_round_dateline(teg_num: int, round_num: int) -> str:

@@ -21,6 +21,7 @@ from typing import Optional, Tuple, Union
 
 from pydantic import BaseModel
 
+from teg_analysis.reporting.era import trophy_metric
 from teg_analysis.reporting.events import build_notable_events
 from teg_analysis.reporting.venue import build_venue_context
 from teg_analysis.reporting import llm
@@ -75,7 +76,15 @@ def _competition_state_at_round(teg_num: int, round_num: int) -> list[dict]:
     if rs.empty:
         return []
 
-    trophy = rs.sort_values("Cumulative_Tournament_Score_Stableford", ascending=False)
+    metric = trophy_metric(teg_num)
+    if metric == "net_vs_par":
+        trophy_col = "Cumulative_Tournament_Score_NetVP"
+        trophy_ascending = True
+    else:
+        trophy_col = "Cumulative_Tournament_Score_Stableford"
+        trophy_ascending = False
+
+    trophy = rs.sort_values(trophy_col, ascending=trophy_ascending)
     jacket = rs.sort_values("Cumulative_Tournament_Score_Gross", ascending=True)
     t_rows = trophy.to_dict("records")
     j_rows = jacket.to_dict("records")
@@ -83,16 +92,24 @@ def _competition_state_at_round(teg_num: int, round_num: int) -> list[dict]:
     def _standings(rows, col):
         return [{"pl": r["Pl"], "player": r["Player"], "score": int(r[col])} for r in rows]
 
+    if metric == "net_vs_par":
+        # lower is better: leader is t_rows[0] (lowest score); gap = runner_up - leader
+        trophy_gap = int(t_rows[1][trophy_col] - t_rows[0][trophy_col])
+        spoon_gap = int(t_rows[-1][trophy_col] - t_rows[-2][trophy_col])
+    else:
+        # higher is better: leader is t_rows[0] (highest score); gap = leader - runner_up
+        trophy_gap = int(t_rows[0][trophy_col] - t_rows[1][trophy_col])
+        spoon_gap = int(t_rows[-2][trophy_col] - t_rows[-1][trophy_col])
+
     return [
         {
             "name": "Trophy",
             "leader": t_rows[0]["Player"],
             "leader_pl": t_rows[0]["Pl"],
-            "leader_score": int(t_rows[0]["Cumulative_Tournament_Score_Stableford"]),
+            "leader_score": int(t_rows[0][trophy_col]),
             "runner_up": t_rows[1]["Player"],
-            "gap": int(t_rows[0]["Cumulative_Tournament_Score_Stableford"]
-                       - t_rows[1]["Cumulative_Tournament_Score_Stableford"]),
-            "standings": _standings(t_rows, "Cumulative_Tournament_Score_Stableford"),
+            "gap": trophy_gap,
+            "standings": _standings(t_rows, trophy_col),
         },
         {
             "name": "Green Jacket",
@@ -108,9 +125,8 @@ def _competition_state_at_round(teg_num: int, round_num: int) -> list[dict]:
             "name": "Wooden Spoon",
             "laggard": t_rows[-1]["Player"],
             "laggard_pl": t_rows[-1]["Pl"],
-            "laggard_score": int(t_rows[-1]["Cumulative_Tournament_Score_Stableford"]),
-            "gap_to_next": int(t_rows[-2]["Cumulative_Tournament_Score_Stableford"]
-                               - t_rows[-1]["Cumulative_Tournament_Score_Stableford"]),
+            "laggard_score": int(t_rows[-1][trophy_col]),
+            "gap_to_next": spoon_gap,
         },
     ]
 
@@ -169,6 +185,7 @@ def assemble_round_bundle(teg_num: int, round_num: int, mode: str = "balanced",
         "is_final_round": is_final_round,
         "total_rounds": total_rounds,
         "tone": tone,
+        "trophy_metric": trophy_metric(teg_num),
         "round_venue": round_venue,
         "area_context": {
             "area": venue_full.get("area"),
@@ -260,14 +277,17 @@ handicap-adjusted, Gross is raw shots. A player leading one and trailing the \
 other is normal handicapping, NOT paradox. Don't plan a theme or player arc that \
 frames the split as schizophrenic, contradictory, a "unique double", or any kind \
 of head-scratcher.
+- The Trophy metric is `trophy_metric` in the bundle: Stableford (higher is better) \
+for TEG 8+; net-vs-par (lower is better, signed like +47) for TEGs 1–7.
 
 RULES:
 - Use ONLY the supplied data. Never invent.
 - For non-final rounds: describe race STATE, not WINNERS.
 - For final rounds: declare race WINNERS and final margins.
 - **TEG has NO countback, NO tiebreakers, NO playoff.** Lead changes are caused \
-by accumulated points (Stableford / Gross). Never plan a theme or note that \
-invokes "countback", "tiebreaker", or "playoff" — those mechanisms do not exist.
+by accumulated points (Stableford/net-vs-par for the Trophy, Gross for the Jacket). \
+Never plan a theme or note that invokes "countback", "tiebreaker", or "playoff" \
+— those mechanisms do not exist.
 - Output only the structured plan."""
 
 
@@ -309,8 +329,10 @@ lead outright, say "drew level", not "took the lead".
 race-results section — declare winners and final margins.
 - No closing "Players" / "men, in brief" bullet list — coverage lives in section 2.
 - **TEG has NO countback, NO tiebreakers, NO playoff.** Lead changes are caused by \
-Stableford / Gross point accumulation. Never write "countback", "tiebreaker", "on \
-countback math" — those mechanisms do not exist. Tied scores: say "drew level" / "tied".
+point accumulation: Stableford (TEG 8+) or net-vs-par (TEGs 1–7) for the Trophy; \
+Gross for the Jacket. The bundle's `trophy_metric` identifies which era. Never \
+write "countback", "tiebreaker", "on countback math" — those mechanisms do not \
+exist. Tied scores: say "drew level" / "tied".
 - **Arithmetic must be exact.** When asserting an over-par total across a stretch \
 of holes, the figure must equal the precise sum of per-hole over-par (bogey = +1, \
 double = +2, triple = +3, quad = +4, quint = +5, sext = +6). Compute, do NOT \
@@ -386,9 +408,12 @@ Trophy and trail the Jacket; a lower-handicap player vice versa. This is \
 **normal handicapping, not paradox**. NEVER frame a player's split between the \
 two competitions as schizophrenic, contradictory, a "unique double", impossibly \
 strange, or any kind of head-scratcher. State both facts plainly.
+- The Trophy metric is `trophy_metric` in the bundle: Stableford (higher is better) \
+for TEG 8+; net-vs-par (lower is better, signed like +47) for TEGs 1–7.
 - **TEG has NO countback, NO tiebreakers, NO playoff.** Lead changes are caused \
-by accumulated points (Stableford / Gross). Never invent "countback", "countback \
-math", "tiebreaker", "playoff" — those mechanisms do not exist in TEG.
+by accumulated points (Stableford/net-vs-par for the Trophy, Gross for the Jacket). \
+Never invent "countback", "countback math", "tiebreaker", "playoff" — those \
+mechanisms do not exist in TEG.
 - **Arithmetic must be exact.** When asserting an over-par total across a \
 stretch of holes, the figure must equal the precise sum of per-hole over-par \
 (bogey = +1, double = +2, triple = +3, quad = +4, quint = +5, sext = +6). If \

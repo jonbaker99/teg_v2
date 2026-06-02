@@ -18,6 +18,7 @@ from typing import Optional, Tuple
 
 from pydantic import BaseModel
 
+from teg_analysis.reporting.era import trophy_metric
 from teg_analysis.reporting.events import build_notable_events
 from teg_analysis.reporting.venue import build_venue_context
 from teg_analysis.reporting import llm
@@ -83,9 +84,13 @@ political sketches). Witty and characterful, but always anchored in the facts; \
 never zany or over the top.
 
 THE SPINE — the report is built around the three competitions, in this priority order:
-1. The Trophy (Stableford) — the main event.
+1. The Trophy — the main event. The scoring metric varies by era: **Stableford** \
+(higher is better) from TEG 8 onwards; **total net-vs-par** (lower is better, \
+signed format like +47) for TEGs 1–7. Use the `trophy_metric` field in the bundle \
+(`"stableford"` or `"net_vs_par"`) to choose the right framing and language.
 2. The Green Jacket (Gross).
-3. The Wooden Spoon (last place on Stableford).
+3. The Wooden Spoon (last place on the Trophy metric — Stableford for TEG 8+, \
+net-vs-par for TEGs 1–7).
 For each you MUST explain HOW it was won (or, for the Spoon, lost): the decisive \
 moments, lead changes, and trajectory. Draw on the competition_arcs provided.
 
@@ -216,6 +221,7 @@ def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
     bundle = {
         "teg": teg_num,
         "tone": tone,
+        "trophy_metric": trophy_metric(teg_num),
         "venue": venue,
         "competition_arcs": arcs,
         "beats": beats,

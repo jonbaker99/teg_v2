@@ -34,8 +34,10 @@ and the COMPETITION ARCS (leader-by-round, winner/loser trajectory, lead changes
 decisive moment).
 
 Write the draft in this structure:
-1. OVERVIEW — 2-3 factual sentences: who won the Trophy (Stableford), the Green \
-Jacket (Gross) and the Wooden Spoon (last on Stableford), with final scores and margins.
+1. OVERVIEW — 2-3 factual sentences: who won the Trophy (Stableford for TEG 8+; \
+net-vs-par for TEGs 1–7 — lower is better, signed like +47; see `trophy_metric` \
+in the bundle), the Green Jacket (Gross) and the Wooden Spoon (last on the Trophy \
+metric), with final scores and margins.
 2. One section PER ROUND, in order, using the plan's `chosen_headline` as the heading. \
 In plain prose, recount what actually happened that round using the plan's `beat_ids`, \
 and RENDER SPECIFIC HOLES from the beat evidence — e.g. "a double bogey at the par-4 10th \
@@ -84,8 +86,10 @@ and the COMPETITION ARCS (leader-by-round, winner/loser trajectory, lead changes
 decisive moment).
 
 Write the draft in this structure:
-1. OVERVIEW — 2-3 factual sentences: who won the Trophy (Stableford), the Green \
-Jacket (Gross) and the Wooden Spoon (last on Stableford), with final scores and margins.
+1. OVERVIEW — 2-3 factual sentences: who won the Trophy (Stableford for TEG 8+; \
+net-vs-par for TEGs 1–7 — lower is better, signed like +47; see `trophy_metric` \
+in the bundle), the Green Jacket (Gross) and the Wooden Spoon (last on the Trophy \
+metric), with final scores and margins.
 2. Follow the plan's `narrative_structure` for the body — chronological round-by-round \
 by default, but honour `in_medias_res` / `theme_led` / whatever the plan chose. Use the \
 plan's per-round `chosen_headline` as section headings where rounds are the units. \
@@ -205,8 +209,9 @@ use `## Round N` markers, a consolidated "Standings by round" appendix will be \
 inserted before the player closing — so the data still ships either way. Carry \
 the theme through and pay off the foreshadowing hooks.
 - The report is built around the THREE COMPETITIONS in priority order — the Trophy \
-(Stableford) first, then the Green Jacket (Gross), then the Wooden Spoon — and you must \
-make clear HOW each was won (or, for the Spoon, lost).
+(Stableford for TEG 8+; net-vs-par for TEGs 1–7 — lower is better, signed like +47; \
+see `trophy_metric` in the bundle) first, then the Green Jacket (Gross), then the \
+Wooden Spoon — and you must make clear HOW each was won (or, for the Spoon, lost).
 - Weave in the venue/course colour and the player arcs where they earn their place.
 - **The report MUST END with a player-by-player section** — 4–6 short bullets, one \
 or two sentences per principal player, drawing on the plan's `players[]` arcs AND \
@@ -237,7 +242,9 @@ rhyme/parallel. If you draw a parallel between two holes, make explicit they are
 different holes and name the courses.
 - Early-round lead changes, when the field is bunched, are normal — do NOT frame routine \
 opening jockeying as "chaos" or high drama. The lead changes that matter are the late ones.
-- Net scoring is Stableford points; gross is strokes vs par. Don't conflate them.
+- The Trophy metric is `trophy_metric` in the bundle: Stableford points (higher is \
+better) for TEG 8+, or net-vs-par (lower is better, signed) for TEGs 1–7. Gross is \
+raw strokes vs par. Don't conflate them.
 - **Stableford and Gross measure DIFFERENT things** — Stableford is handicap-adjusted, \
 Gross is raw shots. A higher-handicap player can lead the Trophy and trail the Jacket; a \
 lower-handicap player vice versa. This is **normal handicapping, not paradox**. NEVER \
