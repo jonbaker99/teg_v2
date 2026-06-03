@@ -94,4 +94,4 @@ A Baker double, a Mullin Jacket-and-Spoon parlay, and a venue — the Stadium �
 ## Personal bests and TEG records
 
 <p class="records"><span class="records-header">Personal worsts:</span> Alex Baker's worst round to date: 27 pts (R4).</p>
-<p class="records"><span class="records-header">Rare feats:</span> John Patterson runs up a 11 (sextuple bogey) at the 15th (R2); Gregg Williams runs up a 10 (quintuple bogey) at the 15th (R2).</p>
+<p class="records"><span class="records-header">Rare feats:</span> John Patterson runs up a 11 (sextuple bogey) at the 15th (R2) — his career-worst on a par-5.</p>

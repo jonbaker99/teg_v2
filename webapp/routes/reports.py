@@ -18,20 +18,26 @@ router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
 DATA_DIR = Path("data/commentary")
-_STYLED_RE = re.compile(r"^teg_(\d+)_report_styled\.md$")
+_TOURNEY_RE = re.compile(r"^teg_(\d+)_report_styled\.md$")
+_ROUND_RE = re.compile(r"^teg_(\d+)_round_(\d+)_report_styled\.md$")
 _MD_EXTS = ["extra", "sane_lists", "smarty", "toc"]
 
 
-def _available_tegs() -> List[int]:
-    """TEGs that have a styled report on disk, most recent first."""
+def _available_reports(report_type: str):
     if not DATA_DIR.is_dir():
         return []
-    tegs = []
+    reports = []
     for p in DATA_DIR.iterdir():
-        m = _STYLED_RE.match(p.name)
-        if m:
-            tegs.append(int(m.group(1)))
-    return sorted(tegs, reverse=True)
+        if report_type == "tournament":
+            m = _TOURNEY_RE.match(p.name)
+            if m:
+                reports.append({"value": m.group(1), "label": f"TEG {m.group(1)}"})
+        elif report_type == "round":
+            m = _ROUND_RE.match(p.name)
+            if m:
+                reports.append({"value": f"{m.group(1)}_round_{m.group(2)}", "label": f"TEG {m.group(1)} - Round {m.group(2)}"})
+    
+    return sorted(reports, key=lambda x: x["value"], reverse=True)
 
 
 def _render_report_html(teg: int) -> Optional[str]:
@@ -43,20 +49,28 @@ def _render_report_html(teg: int) -> Optional[str]:
 
 
 @router.get("/teg-reports", response_class=HTMLResponse)
-async def teg_reports(request: Request, teg: Optional[int] = None):
-    available = _available_tegs()
-    if teg is None and available:
-        teg = available[0]
+async def teg_reports(request: Request, report_type: str = "tournament", report_id: Optional[str] = None):
+    available = _available_reports(report_type)
+    
+    # Auto-select the first available report if none selected or if type switched
+    if report_id is None or not any(r["value"] == report_id for r in available):
+        report_id = available[0]["value"] if available else None
 
-    html = _render_report_html(teg) if teg is not None else None
+    html = None
+    if report_id:
+        filename = f"teg_{report_id}_report_styled.md" if report_type == "tournament" else f"teg_{report_id}_report_styled.md"
+        path = DATA_DIR / filename
+        if path.is_file():
+            html = md_lib.markdown(path.read_text(encoding="utf-8"), extensions=_MD_EXTS)
 
     return templates.TemplateResponse(
         "teg_reports.html",
         {
             "request": request,
             "active_page": "teg-reports",
-            "available_tegs": available,
-            "selected_teg": teg,
+            "report_type": report_type,
+            "available_reports": available,
+            "selected_report": report_id,
             "html": html,
         },
     )

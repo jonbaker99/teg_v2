@@ -90,5 +90,5 @@ And Neumann shot 32, finished last on the Spoon for the fourth straight round, a
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">Personal worsts:</span> David Mullin's worst round to date: 26 pts (R3); Stuart Neumann's worst round to date: 17 pts (R1).</p>
-<p class="records"><span class="records-header">Rare feats:</span> Alex Baker runs up a 10 (sextuple bogey) at the 8th (R3); Stuart Neumann runs up a 11 (sextuple bogey) at the 10th (R3); Henry Meller runs up a 10 (sextuple bogey) at the 4th (R4); Gregg Williams runs up a 10 (quintuple bogey) at the 12th (R2); Gregg Williams runs up a 10 (quintuple bogey) at the 11th (R3); Stuart Neumann runs up a 10 (quintuple bogey) at the 1st (R3); Henry Meller runs up a 10 (quintuple bogey) at the 3rd (R1).</p>
+<p class="records"><span class="records-header">Personal worsts:</span> David Mullin's worst round to date: 26 pts (R3); Stuart Neumann's worst round to date: 17 pts (R1); Stuart Neumann's worst Gross round to date: +43 (R1).</p>
+<p class="records"><span class="records-header">Rare feats:</span> Stuart Neumann runs up a 8 (quintuple bogey) at the 14th (R1) — his career-worst on a par-3; Stuart Neumann runs up a 8 (quintuple bogey) at the 9th (R3) — his career-worst on a par-3; Henry Meller runs up a 10 (quintuple bogey) at the 3rd (R1) — his career-worst on a par-5.</p>

@@ -86,4 +86,4 @@ There was honour elsewhere. Jon Baker, prisoner of the Spoon since Thursday lunc
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">Rare feats:</span> Alex Baker runs up a 10 (sextuple bogey) at the 16th (R4); Alex Baker runs up a 10 (quintuple bogey) at the 16th (R1).</p>
+<p class="records"><span class="records-header">Personal bests:</span> Gregg Williams's +76 is a personal Gross best.</p>

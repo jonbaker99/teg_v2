@@ -59,7 +59,7 @@ Phases A → G build the canonical post-8 pipeline and an era-aware pre-8 path. 
 | **C. Round-report prototype on TEG 14 R1** | `round_report.py` pipeline (RoundStoryPlan, ROUND_* prompts, single-round bundle). | DONE. |
 | **D. Pre-Phase-F shape fixes** | Folded into Phase E. | DONE. |
 | **E. Round-report shape fixes (E1–E5)** | Round-scores block at top; auto-injected standings + LLM change-commentary; drop men-in-brief from round reports; default chronological/player_by_player; final-round awareness. Plus: anti-countback rule, arithmetic-faithfulness rule, mandatory-beats coverage guarantee, deterministic "PBs and TEG records" appendix. | DONE. |
-| **F. Unified backfill (TEGs 8–18)** | PARTIAL. Force-regen kicked off, stopped after TEGs 8–10 fully complete and TEG 11 tournament + R1 + R2. Remaining for full coverage: TEG 11 R3–R4, then TEGs 12, 13, 15, 16, 17 (tournament + 4 rounds each), then TEGs 14 + 18 (re-refresh under latest prompts). ~16 reports outstanding; ~$8 to finish. **On hold** at user request — experimenting with guidelines/rules/layouts before resuming. | PARTIAL. |
+| **F. Unified backfill (TEGs 8–18)** | PARTIAL. Force-regen kicked off, stopped after TEGs 8–10 fully complete and TEG 11 tournament + R1 + R2. Remaining for full coverage: TEG 11 R3–R4, then TEGs 12, 13, 15, 16, 17 (tournament + 4 rounds each), then TEGs 14 + 18 (re-refresh under latest prompts). ~16 reports outstanding; ~$8 to finish. **On hold** at user request — experimenting with guidelines/rules/layouts before resuming. Partial outputs verified (see notes below). | PARTIAL. |
 | **G. Pre-TEG-8 era-aware Trophy + backfill** | CODE COMPLETE (commits `13db3c4`, `5709cc0`). `era.trophy_metric` helper; `commentary.py` extended with NetVP columns + `_add_rank_netvp_teg`; `events.py` era-aware throughout via `_trophy_cols(metric)`; `story_plan.py`, `authoring.py`, `round_report.py`, `render.py` all era-aware. Smoke tests passed on TEG 3 (NetVP framing) and TEG 14 (Stableford unchanged). Pre-8 backfill (TEGs 1–7, ~$15.75, ~30 min) **deferred** — to be run after the layout/rules experiments are settled, so pre-8 inherits them. | CODE DONE; backfill deferred. |
 
 ## Deferred (after the active agenda)
@@ -72,8 +72,29 @@ Phases A → G build the canonical post-8 pipeline and an era-aware pre-8 path. 
 | **Pre-TEG-8 net-vs-par Trophy metric** | The Trophy was total net-vs-par for TEGs 1–7 (Stableford only from TEG 8). The pipeline currently hardcodes Stableford as the Trophy metric everywhere (`events.py` arcs + scoring). Pre-8 reports would misrepresent the Trophy standings — **must be fixed before any pre-8 backfill.** |
 | **Light faithfulness-check pass** | Optional final guard that programmatically verifies prose claims against the data. Two writer-drift incidents to date — critique-revise fabricated "countback"; around-draft fabricated a "same hole across courses" rhyme on TEG 14 (now blocked by per-beat `course` + a prompt rule, but a verifier would catch the next class of drift). Useful insurance for scale. |
 
+## Phase F partial verification (2026-06-02)
+
+Reports verified: TEGs 8, 9, 10 (tournament + all rounds), TEG 11 (tournament + R1 + R2). Older anchors TEG 14 (tournament + R1 + R4) and TEG 18 (tournament + R3) also checked.
+
+**Sanity-grep pass** — no hits in any `_final` report for: `schizophrenic`, `unique double`, `countback`, `tiebreak`, `playoff`. All "same hole" references are within-round comparisons (not cross-course fabrications). ✅
+
+**Spot-reads:**
+- TEG 8 tournament — faithful, dry, correct arithmetic throughout. ✅
+- TEG 9 tournament — anchor holds. PB/record claims consistent with prior validation. ✅
+- TEG 10 tournament — faithful. Baker's TEG-record 51 and 184 aggregate framed correctly. ✅
+- TEG 11 tournament — faithful, good in_medias_res structure. Mullin Jacket-and-Spoon parlay correctly handled. ✅
+- TEG 14 R4 — final-round coronation framing is correct. ✅
+- TEG 18 tournament — anchor holds. ✅
+
+**One arithmetic error found:** `teg_10_round_3_report_final.md` — opening para claims "a fourteen-point swing" (Mullin: 5 clear → 11 adrift). Correct figure is sixteen (5 + 11 = 16). The dry draft has the correct raw numbers; the writer miscalculated the summary. Not re-generated — the error is noted here; it can be fixed when/if TEG 10 R3 is re-generated as part of the experiment phase.
+
+**Structure checks:**
+- All round styled reports: round-scores block ✅, end-of-round standings ✅, records block ✅.
+- All tournament styled reports: final standings ✅, records block ✅ (uses `class="records"`, not `pbs-and-records`).
+
 ## Known issues / gotchas
 - **Pre-TEG-8 Trophy is on the wrong metric** until net-vs-par handling is added. The "Done" reports above (TEGs 9, 14, 18) are all post-8 so this doesn't affect them.
+- **TEG 10 R3 arithmetic error**: "fourteen-point swing" should be "sixteen". Will fix on re-gen.
 - **The isolated `venv/` (Python 3.14) hits a jinja2/starlette template-cache bug** (`TypeError: cannot use 'tuple' as a dict key`) on every templated route. Visual webapp verification needs Python 3.12/3.13, or wait for a fixed jinja2/starlette release.
 - **MCP/CSS coupling between streamlit and webapp**: `teg_reports.css` is duplicated in `streamlit/styles/` and `webapp/static/`. Edits must be kept in sync (or, later, consolidated into a shared location). Streamlit is deferred but still wired.
 
