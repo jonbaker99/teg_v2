@@ -1,73 +1,71 @@
-# Catalan Catastrophes: How Alex Baker Won a Trophy by Eight While Setting Fire to the Scorecard
+# Catalonia Carnage: Alex Bakes It, Gregg Takes It
 
-There is a particular kind of golfer who can walk off the 18th green having just signed for an eleven and still be the calmest man on the property. On the Tuesday evening at Camiral's Tour course, with the Catalan light going pink behind the clubhouse, that man was Alex Baker. He had not, strictly speaking, played the 18th well. A sextuple bogey rarely flatters anyone. But he was still leading the Trophy by eleven points, and the rest of us were already doing the arithmetic and arriving at the same conclusion: it was over. It had, in truth, been over for about thirty-six hours.
+## The second hole on Monday morning
 
-This is the story of how a man can post an eleven, a ten, an eight, and three further quadruples across a single week of golf and walk away with the trophy by a margin of eight. It is also the story of how the other two competitions — Green Jacket and Wooden Spoon — were quietly settled on the opening two holes of the Stadium course on Monday morning, while Baker was busy elsewhere setting fire to his own scorecard for entertainment purposes.
+The par-four 2nd at PGA Catalunya's Stadium course is not, on the face of it, a hole on which destinies are sealed. It is a perfectly respectable two-shotter, of the kind one might play without thinking very much about it. On the Monday morning of TEG 18, two men walked onto its tee with their tournaments still meaningfully alive, and walked off it with their tournaments effectively decided.
 
-TEG's fourth visit to Catalonia, and the format had a natural pivot built in: two rounds on the Tour, the forgiving sibling, then the handover to the Stadium, Spain's premier course, European-Tour-designed and showing its teeth from the second tee box. The Trophy was decided in the gentle place. Everything else was decided when the difficulty was turned up.
+Gregg Williams made par. With that par he took outright lead of the Green Jacket — the tenth gross lead change of the week, and the last one that mattered. He would not be headed again.
 
-## Round 1 — 46 and Gone
+Jon Baker made a triple-bogey 7. He had begun the morning leading the Gross. He dropped, in those four extra shots, to the bottom of the Wooden Spoon race, where he settled in and remained until the final green.
 
-Alex Baker's opening 46 was the knockout punch, delivered before most of the field had finished tying their shoelaces. The blueprint of the round was odd, even by his standards: a quadruple-bogey 7 at the short 2nd, a quadruple-bogey 9 at the closing par five, and in between, somewhere around the turn, a five-hole stretch from the 8th to the 12th — bogey, bogey, par, par, bogey — that yielded seventeen Stableford points and effectively ended the tournament as a contest. David Mullin had, briefly, held outright lead at the 4th. By the 5th, Baker had taken it, and that was the last time the Trophy leaderboard contained any drama whatsoever.
+One hole, two competitions, two men, two opposite trapdoors. It took perhaps fifteen minutes. To understand how the week arrived at that piece of fairway, we have to go back to Saturday — and to the other course, the gentler-looking one across the resort, which turned out to be the one that did all the actual damage.
 
-Elsewhere on the same course, John Patterson was undergoing a slower and more public unravelling. From the 3rd to the 10th he bled twenty-two shots: it began with a quadruple-bogey 8 at the par-4 3rd, and continued in remorseless instalments — triple, double, double, triple, triple, triple, double — a card that reads like a man methodically locking each door in a burning house. He would later be the Trophy runner-up, which tells you something about the field.
+## Round 1 — 46 Points and a 9 at the Last: The Alex Baker Method Arrives
 
-Mullin's day had its own monument: a sextuple-bogey 11 at the par-5 15th, which dropped him to the foot of the Spoon table. He did not stay there. Jon Baker did, by close of play, having quietly accumulated the kind of round that gets you the worst possible kind of overnight lead.
+Camiral's Tour course is routinely described, by people who have not played it for shots that matter, as the forgiving sibling of the Stadium. TEG 18 will go down as the week that idea was retired.
 
-Gregg Williams, third in the Gross by sundown, had posted quadruples at the par-5 7th and the par-4 17th and was being widely regarded as having had a rough one. He had, in fact, just begun his Green Jacket campaign. We just didn't know it yet.
+Alex Baker took outright Trophy lead at the 3rd, briefly handed it to David Mullin at the 4th, and reclaimed it at the 5th. From that moment — Saturday, mid-morning, hole five of seventy-two — he led the Trophy at every subsequent measurement. Forty-six points to lead by twelve at the close. A statement.
 
-Alex Baker led the Trophy by twelve.
+The remarkable thing was the manner of the statement. Alex's card was not a clean piece of work; it was a clean piece of work being machine-gunned at intervals by its owner. A quadruple-bogey 7 at the par-3 2nd. A 9 at the last, also a quadruple. In between, a five-hole burst from the 8th of seventeen Stableford points, and another thirteen across the 14th, 15th and 16th, including a birdie at the par-5 15th. The Baker method, in its first clear expression: detonate, recover, accumulate, repeat. The floor was higher than anyone else's ceiling, even when the floor occasionally fell through.
 
-## Round 2 — The Eleven That Didn't Matter
+Elsewhere, the Tour was eating its way through the field. David Mullin made a sextuple-bogey 11 at the par-5 15th — the kind of number that, in a less generous tournament, would be the headline. Here it was a footnote. John Patterson bled twenty-two shots over par across holes 3 to 10: quad, triple, double, double, triple, triple, triple, double. Eight holes, the bones of a round, gone. He kept playing. Gregg Williams, the man whose week this would eventually become, was at this point miles from the conversation: a quadruple-bogey 9 at the par-5 7th, a quadruple-bogey 8 at the par-4 17th, a single birdie at the 15th breaking a long run of bogey-or-worse. He posted twenty-seven over.
 
-The 18th at the Tour course is a par five. Alex Baker took eleven shots to play it. A sextuple bogey, a number so large it seems almost editorial. Two holes earlier he had taken eight at the par-3 16th — a quintuple — and between them, with the perversity of a man who knows the lead is unassailable, he had made birdie at the 17th. Birdie sandwiched by catastrophe. He signed for 41 points. The lead came in at eleven, down a single point, which felt less like erosion than a small, fond gesture toward the rest of the field.
+Jon Baker, meanwhile, closed steadily enough to take outright lead of the Green Jacket by two. The most boring sentence in the round report, and the one that mattered most for what came next.
 
-Jon Baker, meanwhile, was producing the closing five holes of the week — birdie, par, par, par, par from the 14th, sixteen Stableford points harvested at exactly the moment they were of no further structural use. By that point he had already dropped to the bottom of the Spoon at the 3rd, climbed off it, dropped to it again at the 7th, and was only relieved of the position at the very last hole when David Mullin took it back at the 18th. The choreography was elaborate. The destination, in retrospect, was not in doubt.
+## Round 2 — Alex Makes 11 at the Last and Still Leads by Eleven
 
-Gregg Williams, you may have noticed, has not been mentioned much. This was the point. Four straight pars from the 13th to the 16th yielded thirteen points, a stretch of golf so undramatic it barely registers in the contemporaneous record. He posted a gross of +14 for the round. Jon Baker still led the Jacket, by two. Williams was lurking.
+A second straight afternoon on the Tour, and a second helping of the same dish.
 
-John Patterson, having bled twenty-two on Sunday, contrived to bleed a further eleven across holes 6 to 10 — triple, double, double, double, double — before recovering himself with a sixteen-point burst from the 11th. He was building a reputation as the field's most reliable producer of two-act tragedies.
+Alex Baker's card on Sunday contained a sextuple-bogey 11 at the par-5 18th and a quintuple-bogey 8 at the par-3 16th, separated by a birdie at the par-4 17th. Read that sentence again at your leisure. Forty-one points. Lead extended to eleven. The Trophy was now a procession, conducted by a man periodically setting fire to his own carriage.
 
-Alex Baker led the Trophy by eleven. Jon Baker led the Gross by two. David Mullin was, technically, last.
+Jon Baker, in the quiet adjacent narrative, was doing the opposite — playing himself into the Jacket lead with the dullest, most valuable golf of the week. A par at the par-4 9th moved him to outright top of the Gross. A closing five of par-par-par-par-par from the 14th (the first of those a birdie at the par-3 14th) brought him sixteen points across the inward stretch and the Jacket lead by two at the end of day two. Nothing fancy. Nothing on fire. The man looked, briefly, like a winner.
 
-## Round 3 — Stadium Day: Williams Pounces, Jon Baker Slips
+The Spoon, by contrast, was a hot potato. It changed hands four times in eighteen holes. Williams took it at the 2nd; Jon Baker at the 3rd; Jon Baker again at the 7th; and finally Mullin at the 18th, a double-bogey 7 at the par-5 closer that included, earlier in the round, his own contribution of eleven shots dropped across holes 4 to 6 (quad, triple, quad). Patterson's parallel offering was eleven shots across the 6th to the 10th — a triple followed by four consecutive doubles. The Tour course was not, it turned out, anyone's friend.
 
-The Stadium course did in two holes what the Tour course had failed to do in thirty-six.
+## Round 3 — One Hole, Two Trophies
 
-At the par-4 2nd, Gregg Williams made par and took outright lead of the Green Jacket. On the same hole — different player, identical patch of turf — Jon Baker made a triple-bogey 7 and dropped to the bottom of the Spoon. Two competitions, two settlements, one green. Neither man would relinquish his new position for the rest of the week.
+The Stadium, and the pivot point.
 
-Williams then assembled the kind of stretch that wins golf tournaments without ever drawing attention to itself: par, par, par, par from the 2nd through the 5th — twelve points harvested across four holes at a par-4, par-5, par-4 and par-3 — before a double at the 6th finally broke the run. He came in at thirteen over for the round, which on the Stadium was conspicuous restraint.
+We have already been to the second hole. Gregg's par, Jon's 7, the simultaneous opening of two trapdoors. What is worth saying now is what happened next.
 
-Jon Baker, having taken his triple at the 2nd, then ran up a quintuple-bogey 9 at the par-4 4th. He posted 28 Stableford points, the lowest round of his week, and the Spoon was now welded to him. The rest of his TEG 18 would be a question of dignity, not standings.
+Gregg, having taken the Jacket lead, did not behave like a man who had taken it. He played holes 2 to 5 in par-par-par-par — a par-4, a par-5, a par-4, a par-3 — for twelve Stableford points, before a double-bogey 6 at the par-4 6th finally acknowledged that this was, after all, the same Gregg Williams who had carded a 9 and an 8 two days earlier. He posted thirteen over for the round. On the Stadium. The course rated, with reason, as Spain's most demanding. By Sunday night he led the Jacket by eight.
 
-Alex Baker — and this is the round's central oddity — bled twelve shots in five holes. Triple at the par-4 6th, double at the 7th, double at the 8th, double at the 9th, triple at the par-4 10th. A 22-shot front-loaded haemorrhage that on any other card would constitute a round-ending event. Baker, evidently bored, then went par-bogey-par-par-bogey-bogey from the 11th to the 16th — twenty-one points in six holes — and signed for 44.
+Jon Baker, having shed the Jacket and acquired the Spoon at the 2nd, then made a quintuple-bogey 9 at the par-4 4th, in case anyone had been minded to argue with the verdict.
 
-The lead remained twelve. The lead had been twelve since Sunday evening. The lead was, by this point, less a statistic than a fact of nature.
+And Alex Baker did his Alex Baker thing on a grander scale than before. Holes 6 to 10 cost him twelve shots over par — triple, double, double, double, triple. The Trophy, briefly, looked vulnerable. Then he played the 11th through the 16th in par-bogey-par-par-bogey-bogey, picked up twenty-one points across six holes, and extended his Trophy lead to twelve. David Mullin, the man bottom of the Spoon at sundown the night before, quietly assembled ten points across the 8th to 10th (par, bogey, birdie at the par-4 10th) and began the climb that would end with a green jacket runner-up finish. Strange week. Stranger man.
 
-## Round 4 — Coronation at Camiral
+## Round 4 — Gregg Closes Out the Stadium; Alex Closes Out the Trophy
 
-The final round was processional, in the sense that processions can also feature small fires.
+Monday brought the denouement, on the Stadium again, and produced the round of the tournament from a player whose week had started with two quadruples on the Tour. Gregg Williams went round in twelve over par. Twelve. On the Stadium. He added nine points across the 8th to 10th — par at the par-3 8th, bogey at the par-4 9th, par at the par-4 10th — and rode the rest of it home. He won the Green Jacket by fourteen. The Tour had beaten him up; the Stadium, for reasons known only to him and the resort's groundstaff, did not.
 
-Gregg Williams shot twelve over par for the day, including a tidy three-hole stretch of par-bogey-par from the 8th to the 10th, and that was that — Green Jacket secured by fourteen, gross splits of 27-14-13-12 telling the story of a man who got worse at exactly the moments it mattered least. He never led the Jacket until the second hole of the third round; he never trailed in it again.
+Alex Baker, with the Trophy in his pocket but the habit difficult to break, carded a sextuple-bogey 10 at the par-4 14th and a quadruple-bogey 8 at the par-4 17th, posted thirty-eight points, and won the Trophy by eight. The final tally — 46-41-44-38, 169 points — is the highest possible compliment to a man with that scoring record. The card contained, across the four rounds, an 11, a 10, two 9s and two 8s. None of it mattered. None of it ever quite mattered.
 
-Alex Baker, presented with the open road and a Trophy already engraved, decided to mark the occasion with a sextuple-bogey 10 at the par-4 14th and a quadruple-bogey 8 at the par-4 17th. He signed for 38 points. The final margin in the Trophy was eight: 169 plays 161. The sceptic will note that without the 10 and the 8 it might have been more. The realist will note that without the 11 and the quad-quad opener and the five-hole Stadium bleed it might have been twenty. The Baker scoring philosophy contains, evidently, its own internal balance.
+Jon Baker bled ten shots across holes 7 to 11 — five straight double-bogeys, the sort of run that no longer surprises anyone by the time it is happening — broke it with a birdie at the par-4 13th, and finished bottom of the round on twenty-nine points. The Spoon, settled at the Stadium's 2nd on Sunday, was confirmed at the Stadium's 18th on Monday. Round scores 30-39-28-29 for 126.
 
-Jon Baker spent the front nine producing five consecutive double bogeys from the 7th to the 11th, dropping ten shots in a stretch that had the quiet inevitability of a tide coming in. He then broke an eleven-hole bogey-or-worse streak with a birdie at the par-4 13th — a moment of pure, useless beauty — and posted 29. Round scores 30-39-28-29 totalled 126 points. The Spoon was his by a country mile.
+John Patterson, the week's quietly assembled story, picked up nine points across the 4th to 6th and a birdie at the 17th to finish, somehow, Trophy runner-up. A man who shed twenty-two shots in eight holes on Saturday and another eleven in five on Sunday is not the man one usually finds on the podium. He found himself there anyway.
 
-John Patterson, in a small piece of late symmetry, also broke a bogey-or-worse streak with a birdie at the 17th. Trophy runner-up. The reward for not being Alex Baker.
+## How the three things were won and lost
 
-## How it was won, and lost
+**The Trophy** was Alex Baker's from the 5th hole of the week. Outright lead at every measurement thereafter; final margin eight over Patterson. The most pyrotechnic procession in TEG memory.
 
-**The Trophy** was decided at the 5th hole on Sunday and confirmed in instalments thereafter: leads of 12, 11, 12, 8. Alex Baker's 46-point opener was the move; everything else was housekeeping conducted with a flamethrower.
+**The Green Jacket** was decided at R3 H2, the tenth and final gross lead change. Williams led by eight at Sunday night, by fourteen on Monday evening, at +66 gross. The Tour course gave him twenty-seven over; the Stadium gave him back twenty-five. Mullin second.
 
-**The Green Jacket** was decided at the 2nd hole on Monday morning. Gregg Williams's gross card across the four rounds — 27, 14, 13, 12 — describes a man who began the week badly, then refused to do so again. Final margin: fourteen.
-
-**The Spoon** was decided at the same 2nd hole on Monday morning, at the same moment, by the same green. Jon Baker's triple bogey there cost him a Green Jacket lead and gifted him a Wooden Spoon, an unusual piece of two-for-one transactional golf which he could not subsequently undo.
+**The Wooden Spoon** passed through Mullin, Patterson, Williams, Mullin and Jon Baker in R1, then Williams, Jon Baker (twice) and Mullin in R2, before Jon Baker took final possession at the same hole that handed Williams the Jacket. He never moved.
 
 ## The men, in brief
 
-- **Alex Baker** — Wire-to-wire Trophy champion by eight, on rounds of 46-41-44-38. Made the tournament decision on the first afternoon and then spent three days alternating between Stableford masterclass and gross-card pyrotechnics: a quad 7 and a quad 9 in R1, a quint 8 and the famous 11 in R2, a triple-double-double-double-triple sequence in R3, and a farewell sext 10 plus quad 8 in R4. Never once trailed. Never once, you suspect, particularly worried.
-- **Gregg Williams** — Green Jacket winner at +66, by fourteen. Began the week as the man with quadruples at the 7th and the 17th; ended it as the man whose gross splits read 27-14-13-12. Took outright Jacket lead with a par at the Stadium 2nd in R3 and was never seriously inconvenienced thereafter. The week's quietest dominant performance.
-- **Jon Baker** — Wooden Spoon on 126, with rounds of 30-39-28-29. Led the Gross after both R1 and R2 — a genuine Green Jacket contender on Tuesday night — before the Stadium 2nd cost him everything in a single swing. The closing five of R2 and the R4 birdie at the 13th were the moments of grace within a week that otherwise refused him any.
-- **John Patterson** — Trophy runner-up on 161, by the straightforward method of not being Alex Baker. Bled 22 shots across eight holes in R1 and a further 11 in five holes in R2, and still finished second; one suspects there is a thesis in there about the value of recovery rallies and a 16-point burst at the right moment.
-- **David Mullin** — Green Jacket runner-up, despite an 11 at the Tour 15th in R1 and three further quadruples scattered across the Tour course at the 6th in R1 and the 4th and 6th in R2. Handicapping in action, and a salutary lesson that the Gross competition rewards being mostly competent more than it punishes occasionally exploding.
+- **Alex Baker** — Trophy champion, wire-to-wire from R1 H5, on a card that contained an 11, a 10, two 9s and two 8s. The least serene dominant winner anyone can remember. The method, if it is a method, is to score so heavily when not on fire that the fires themselves become tolerable.
+- **Gregg Williams** — Began the week with a 9 at the par-5 7th and an 8 at the par-4 17th on the Tour. Finished it with rounds of 13 and 12 over on the Stadium, the Green Jacket, and a fourteen-shot winning margin. No explanation has been offered. None is required.
+- **Jon Baker** — Led the Green Jacket after R1 and R2 with the sort of unshowy, point-collecting golf that wins these things. Then, on a single par-four on Monday morning, dropped from the top of one competition to the bottom of another, and never came back up. The week's cruellest arc.
+- **David Mullin** — Briefly led the Trophy at R1 H4, then made an 11 at the par-5 15th the same afternoon. Spent the end of R2 at the bottom of the Spoon. Then climbed, quietly, all the way to Jacket runner-up. A genuinely strange week, even by the standards of a tournament in which everyone had one.
+- **John Patterson** — Lost twenty-two shots over eight holes on Saturday and another eleven over five on Sunday, and still finished Trophy runner-up. The mathematics of Stableford forgiveness, made flesh.

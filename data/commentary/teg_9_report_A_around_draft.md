@@ -1,63 +1,64 @@
-# Forty-Nine Reasons
-## TEG 9 — Lisbon Coast, 2016
+# Patterson's Portuguese Coronation
 
-Picture John Patterson, late Saturday afternoon at Praia D'El Rey, signing his card with the small, careful flourish of a man who already knows. Forty-nine points. The second-best round in TEG history. A 17-point detonation across holes 9 to 13, fourteen more banked over the closing four, and the kind of cushion — ten clear on the Trophy — that turns a Sunday into an exercise in not falling out of an aeroplane.
+There is a photograph that does not exist of John Patterson standing on the 10th tee at Praia D'El Rey on the second afternoon, somewhere on the wrong side of mid-round, with the look of a man who has been told he is no longer himself. He had begun the day one point behind Jon Baker. He would end it ten clear. In between he assembled, hole by hole, the second-best round in TEG history.
 
-Patterson had not, until then, looked anything like a man about to do that. Twenty-four hours earlier he had been writing a sextuple-bogey 10 on his scorecard at the par-4 4th of Royal Óbidos, two off the lead and apparently engaged in a private one-man re-enactment of the rest of the field's misery. The Trophy that would eventually carry his name was won, in the end, not in spite of the wreckage but on top of it. Seve Ballesteros's final design extracted blood from all twelve fingers offered to it; Patterson simply found, on the Saturday, the only round of the week with no blood in it at all.
+The strangest part is that twenty-four hours earlier, on the par-4 4th at Royal Óbidos, the same man had written a 10 on his card. Not a recoverable wobble, not a stumble — a sextuple bogey, the kind of number that usually shadows a player for the rest of the week like a parking ticket. It did not shadow Patterson. It did not even slow him down. The 49 points that followed — the par-bogey-par-birdie-par spine through holes 9 to 13 worth 17 points alone, the metronomic par-bogey-par-bogey close across 15 to 18 worth another 14 — were less a round of golf than a structural rebuke of his own opening day.
 
-This is the story of how he built that cushion, defended it through a final-day wobble, and ended up with the highest Stableford total in TEG history. It is also, simultaneously, the story of David Mullin conducting one of the quietest Green Jackets ever filed, and of Stuart Neumann's name attaching itself to the Wooden Spoon at three o'clock on Friday afternoon and never coming off.
+By Sunday evening he had 168 Stableford points, six clear of Alex Baker, and a new line in the TEG record book. David Mullin had the Green Jacket on +67, also a record, also by ten. Stuart Neumann had the Wooden Spoon. The Lisbon Coast, on its third TEG outing, had produced a week of unusual extremes and two players who refused, despite considerable evidence to the contrary, to fall over.
 
-## Round 1 — Seve's Last Joke
+## Round 1 — Seve's Last Design Bares Its Teeth
 
-Royal Óbidos, for its second TEG visit, did what Royal Óbidos was apparently designed to do: it identified the soft spots of six grown men and pressed on them until something gave. This was Ballesteros's final design, and you do wonder whether, somewhere in the routing, he tucked a parting wink for the amateur visitor. The water is dramatic. The teeth are championship. The appetite for double-digit scores is, this week, near-bottomless.
+Royal Óbidos, Seve Ballesteros' final design, was hosting TEG for the second time and behaved like a man auditioning for a third. The opening holes were the usual jostling: Jon Baker level at the 2nd, Mullin level at the 3rd, Gregg Williams briefly level at the 4th, Patterson outright at the 5th, Jon Baker level again at the 6th. None of this mattered very much. What mattered was happening underneath.
 
-The early holes were the usual bunched jostle — Jon Baker, Mullin, Williams and Patterson all spent a hole or two in front or sharing it between the 2nd and the 5th — before Jon Baker eased back into outright control at the 6th and stayed there. He would sign for 39 and a one-point Trophy lead at the close, which sounds tidy until you note that his round included a quadruple-bogey 9 at the par-5 18th. That was the *good* card.
+Patterson's 4th was the round's first proper crater — a 10 on the par-4, a sextuple bogey absorbed without visible flinching. He signed for 38, one behind Jon Baker's 39 at the top of the Trophy, and on any other week that would have been the headline.
 
-Elsewhere: Patterson's 10 at the 4th, an act of cheerful self-immolation he would spend the rest of the week atoning for. Alex Baker's septuple-bogey 11 at the par-4 14th, an exotic number even by the standards of an exotic week. Gregg Williams opening his weekly account of triple-figure indiscretions with a sextuple-bogey 9 at the par-3 15th — the first of three sextuples he would file in three different rounds, a 9, a 10 and an 11, like a man working through a difficult scale.
+Alex Baker had other ideas. At the 14th he produced an 11 — seven over par on a single hole — and a Gross +43 that was his worst TEG round to date. He did not yet know it would also turn out to be the worst round of his finest week.
 
-And Stuart Neumann. Sitting on 23 points and a perfectly respectable front nine after fourteen holes, Neumann then bled sixteen shots over the closing five: triple-bogey 7 at the 14th, quintuple-bogey 8 at the par-3 15th, triple at the 16th, double at the 17th, triple-bogey 8 at the par-5 18th. He sank to last on the Trophy table at that 15th green and, with admirable consistency, never visited any other position at any subsequent round-end. The Spoon was effectively reserved at 4pm on Friday.
+At the foot of the field, Stuart Neumann was already arranging the furniture. A quintuple-bogey 9 at the 4th, a quintuple-bogey 8 at the short 15th, last on the Trophy from the 11th and confirmed there at the 15th. He would not move from that position for 57 more holes.
 
-Underneath the noise, the Gross procession was already beginning. Mullin grabbed the outright Jacket lead at the 3rd, surrendered a share to Jon Baker around the turn, took it back as a share at the 15th and reclaimed it outright at the 18th. From the moment he walked off that green, he would not be headed.
+And quietly, on the 18th green, David Mullin tapped in for outright Gross lead. He had been level with Jon Baker as recently as the 6th, level again at the 15th. The +15 he signed for gave him a two-shot Jacket lead. He would not surrender it for the rest of the week.
 
-## Round 2 — Patterson's 49 Lands a Haymaker
+## Round 2 — Patterson, 49, and Goodnight
 
-Praia D'El Rey — parkland out, links-in-the-dunes back — had been waiting its turn, and on its third TEG appearance it proved, by some distance, the more generous of the two hosts. Whether the wind was the same wind Alex Baker found his personal best in, the same wind Patterson found history in, is a question for golf's meteorologists. The cards say yes.
+Praia D'El Rey opens in parkland and finishes in Atlantic dunes, and on Friday it split cleanly down the middle into Patterson's day and everyone else's.
 
-Patterson took the outright Trophy lead at the very first hole and never gave it back. Which is a clean, lapidary sentence that conceals an early shambles: bogey-bogey-bogey-double-triple-triple to open the round, a sequence which on most days is the obituary rather than the prologue. A birdie at the par-5 7th stopped the bleeding. And then, from the 9th tee onwards, Patterson played the golf of his life.
+He took outright Trophy lead at the 1st. Mullin drew level at the 2nd — a final, polite gesture from the field. From the 11th onwards Patterson was alone and the tournament was, in the only sense that matters, over. The card, when you lay it on the table, does not so much describe a round as itemise an inevitability. Forty-nine points. The second-best Stableford round in TEG history. Gross +14. A ten-point Trophy lead by sundown.
 
-Seventeen points across holes 9 to 13: bogey at the 9th, par at the par-5 10th, par at the par-3 11th, birdie at the par-5 12th, par at the 13th. The lead, already nominal, became real. He closed with fourteen more over the last four — par, bogey, par at the par-5 17th, bogey at the 18th — for 49 points, the second-best round in TEG history, and a gross of +14 that was incidentally also the best of the day.
+What makes it sing is the lack of fireworks. One birdie, at the par-5 12th. Everything else was pars and the right kind of bogeys, hole after hole, the closing four at 15–18 going par-bogey-par-bogey for 14 points as if the man were filling in a form.
 
-It was not, however, an unaccompanied solo. In the same conditions Alex Baker quietly stitched together a personal-best 44, which would have been the headline round of almost any other weekend and which featured, for flavour, a quadruple-bogey 9 at the par-5 10th and a quadruple-bogey 7 at the par-3 14th. Gregg Williams added the second item to his sextuple collection: a 10 at the par-4 9th.
+Alex Baker, on the same course, on the same day, posted a personal-best 44 points and a personal-best Gross +27 — and did so while carding a quadruple-bogey 9 at the par-5 10th and a quadruple-bogey 7 at the short 14th. The mathematics of Stableford have rarely been so flattering. Gregg Williams went round in a personal-adjacent way too, although his card was disfigured by a sextuple-bogey 10 at the 9th. And Mullin signed for +14 and extended the Jacket lead to seven, the Gross competition now entering a phase best described as ceremonial.
 
-Mullin's response was Mullin's response. A round of +14, a brief share of the Gross lead conceded to Patterson at the 2nd before being firmly reclaimed, and a Jacket margin out to seven. Patterson, meanwhile, walked off the 18th with the Trophy lead at ten. From a one-point deficit to a ten-point lead in eighteen holes. The tournament, in any meaningful sense, had been decided. We just didn't quite know it yet.
+## Round 3 — Back to Royal Óbidos, Back to the Grind
 
-## Round 3 — Back to Óbidos, Back to Earth
+Seve's course, on second viewing, was no kinder. Patterson's 34 was his worst of the week. The Trophy lead, ten in the morning, was three by the evening. A real tournament would have begun here.
 
-Back across to Seve's farewell layout for its third TEG outing, and Óbidos remembered Patterson. A round of 34 points, which is the kind of score that would have been welcomed gratefully on Friday and felt, on Sunday morning, like a slowly deflating tyre. The damage came in two familiar places: a quadruple-bogey 8 at the par-4 12th, and a quadruple-bogey 9 at the par-5 18th. The cushion compressed from ten to three.
+It did not begin here. Mullin, on his way to a +22, ran up a quintuple-bogey 9 at the 10th — the kind of hole that on Tuesday would have been a thunderclap and on Saturday was barely a footnote. The Jacket lead, somehow, stayed exactly where it had been: seven. Such is the protection afforded by a field that is also losing shots, steadily, in sympathy.
 
-Jon Baker, sensing an opening, had a proper go at it. He played the front nine ten points better than his back — a hot opening five holes in particular — and finished on 34. A quadruple-bogey 9 at the par-5 11th was the moment the charge cooled.
+Neumann improved to 30, then 37 — the gradient was right but the altitude was wrong. He remained sixth. The Spoon, decided on the 15th of Round 1, was being slowly engraved.
 
-For Mullin, this was the only round all week in which Óbidos showed him any teeth. A quintuple-bogey 9 at the par-4 10th was an authentic scare, and a gross of +22 was comfortably his worst of the four; but the Jacket lead held, immovably, at seven. As elsewhere, the headline beneath the headlines was that the procession continued.
+## Round 4 — Patterson Signs for the Record
 
-## Round 4 — Alex Baker Draws Level — Briefly
+The final round at Praia D'El Rey was about ratification. Mullin opened with a quadruple-bogey 8 at the 1st — a final attempt by the golf course to introduce uncertainty into proceedings — and proceeded to sign for +16 anyway. His four-round Gross of +67 is now the lowest in TEG history. The Jacket margin: ten over Jon Baker, whose own +77 was a personal best and would in most years be the story.
 
-Back to Praia D'El Rey for the closing round, the fourth in TEG's history at the dune course, and the only one of the four days on which Patterson looked even vaguely human under examination.
+Patterson's 47, en route to 168, included a quintuple-bogey 9 at the par-4 5th. He noticed it the way one notices a fly at a coronation. His Gross +88 was a personal best. The Stableford total is a TEG record and is likely to stand for some time.
 
-Alex Baker, posting his second personal-best 44 of the week — a feat that deserves to be said twice: two PBs in four days — drew level with Patterson on the Trophy at the par-3 14th with a double-bogey 5. Not in front. Level. But level was a remarkable place to be, given where he had started the day, and for one hole at least the back nine had a pulse.
+Alex Baker, in a feat of card-management bordering on the magical, matched his Round 2 numbers exactly — 44 points, Gross +27 — while taking a quadruple-bogey 8 at the par-4 6th and another quadruple-bogey 8 at the par-4 15th. He drew level with Jon Baker in the Trophy chase at the 14th before settling into runner-up. His tournament Gross of +127 was a personal best, which is the sort of sentence that requires a second read.
 
-Patterson's response was the response of a man who had spent Saturday building a runway precisely so he could land on it now. He played the closing holes for the closing holes and signed for 47. The gap reopened to six. Final tally: 168 to 162.
+Gregg Williams completed his week by completing his collection: an 11 at the par-5 7th, his third sextuple bogey of the tournament in three different rounds (9, 10, 11, ascending), and yet his tournament Gross of +115 was a personal best. Jon Baker took a quadruple-bogey 9 at the 17th. Neumann, last for the duration, produced perhaps the round's purest passage of golf — holes 11 to 15 worth 16 points, including a birdie at the par-4 13th — and remained, immovably, sixth.
 
-There was time, in among all of this, for Alex Baker to file quadruple-bogey 8s at both the par-4 6th and the par-4 15th, an oddly symmetrical pair of indiscretions for a man simultaneously matching his career best. Time, too, for Gregg Williams to complete his trilogy: a sextuple-bogey 11 at the par-5 7th, the third such number in three rounds — 9, 10, 11 — a small private exhibition that ought really to be hung somewhere. Jon Baker added a quadruple-bogey 9 at the par-5 17th.
+## How the three were won
 
-Mullin, asked finally to close out the Jacket, opened with a quadruple-bogey 8 at the par-4 1st — the second of the week's two genuine scares — and then simply went back to playing, finishing at +16 to push the final Jacket margin from seven to ten. Wire-to-wire from the 18th green of Round 1; a winner without a single round-end in second place.
+The **Trophy** was decided on the 1st hole of Round 2, when Patterson took outright lead and the field declined to take it back. He led by 10, then 3, then 6. The arithmetic at the end — 168 to 162 — flatters the closeness because it includes Round 3, when everyone struggled together.
 
-And Neumann, to his very great credit, produced his best stretch of the week here: sixteen points across holes 11 to 15, including a birdie at the par-4 13th and pars on either side. The round still came in at 37; the total at 127; the Spoon, long since engraved, was simply handed over.
+The **Green Jacket** was decided on the 18th green of Round 1, when Mullin moved one ahead of Jon Baker and stayed there for the remaining 54 holes. The lead by round read 2, 7, 7, 10 — a graph not of a contest but of an accumulation.
+
+The **Wooden Spoon** was decided on the 15th of Round 1, when Neumann's second quintuple bogey of the day confirmed him at the foot of the Trophy. He was sixth in every round thereafter, improving each time and never close to escaping.
 
 ## The men, in brief
 
-- **John Patterson** — Trophy winner on 168, a TEG Stableford record, and a man whose week reads like a redemption arc with a midweek apotheosis. Sextuple 10 at Óbidos's 4th on Friday; 49 at Praia on Saturday; held his nerve through Alex Baker's Sunday level-up to win his first Trophy by six.
-- **David Mullin** — Green Jacket winner at +67, ten clear. Took the outright Gross lead at the 3rd hole of Round 1, was tied at the 18th green that evening, and led outright at every subsequent round-end. Rounds of +15, +14, +22, +16. A procession with a quintuple at Óbidos's 10th and a quadruple at Praia's 1st for cosmetic interest.
-- **Alex Baker** — Trophy runner-up on 162 with twin personal-best 44s in the Praia wind. Level with Patterson at the par-3 14th on Sunday and gone again by the close. Also, for the avoidance of doubt, the man who wrote 11 on the card at Óbidos's 14th in Round 1.
-- **Jon Baker** — Led the Trophy after Round 1 on 39 and finished Jacket runner-up to Mullin. A hot front-nine cameo in Round 3 nearly stirred the pot. Quadruples at Óbidos's 18th and 11th, and at Praia's 14th and 17th, in the order they were collected.
-- **Gregg Williams** — Filed sextuple bogeys in three of the four rounds: a 9 at Óbidos's par-3 15th, a 10 at Praia's par-4 9th, an 11 at Praia's par-5 7th. A highlight reel that walks itself out the door.
-- **Stuart Neumann** — Wooden Spoon on 127. Bottom of the table from the 15th of Round 1 onwards, owing chiefly to the closing five-hole, sixteen-shot leak that finished Friday. The 16-point burst from the 11th to the 15th on Sunday was a flicker of what might have been on a kinder week.
+- **John Patterson** — Survived a sextuple-bogey 10 at the 4th on Thursday and went on to play the two finest rounds of his TEG life on either side of the worst. 168 points is an all-time TEG record. The personal-best Gross +88 is the kind of detail you'd lead with in any other week.
+- **David Mullin** — Took the Gross lead on the 18th green of Round 1 and turned the next three days into administration. Rounds of +15, +14, +22, +16, untroubled by his own quintuple bogey at the 10th in Round 3 or his quadruple bogey at the 1st in Round 4. Final +67, an all-time TEG record, by ten.
+- **Alex Baker** — Trophy runner-up on 162 with two personal-best rounds of 44 points and matching personal-best Gross +27s. An 11, two 9s and a small portfolio of quadruple bogeys somehow processed into a personal-best tournament Gross of +127. The scorecard makes sense only if you don't look at it directly.
+- **Jon Baker** — Led the Trophy after Round 1 on 39, finished Jacket runner-up on a personal-best +77, and was almost completely obscured by the records above him. A quietly excellent week absorbed into the masonry of someone else's.
+- **Gregg Williams** — Sextuple bogeys of 9, 10 and 11 in three different rounds, on three different holes, on two different golf courses — and a personal-best tournament Gross of +115 to show for it. The scorecard will be asked to account for this for some years.
+- **Stuart Neumann** — Last on the Trophy from the 15th of Round 1 to the last putt of Round 4. Rounds of 23, 30, 37, 37 — improvement in every column except the one that mattered. His five-hole 16-point stretch at 11–15 on Sunday was the round of his week and an island in a sea already decided.

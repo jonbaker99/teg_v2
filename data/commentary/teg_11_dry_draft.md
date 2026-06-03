@@ -1,53 +1,51 @@
-# DRY DRAFT — TEG 11, Catalonia 2018
+# OVERVIEW
 
-## OVERVIEW
-Jon Baker won the Trophy on 143 Stableford points, by 6 from Alex Baker. Jon also won the Green Jacket at +70 gross, by 3 from David Mullin. Mullin took the Wooden Spoon on 125 Stableford points.
+Jon Baker won the Trophy on 143 Stableford points, by 6 from Alex Baker. Jon also took the Green Jacket at +70 gross, by 3 from David Mullin. Mullin collected the Wooden Spoon on 125 points.
 
-## Stadium of Pain: Jon Sets the Tone, Patterson Sets Fire to His Card
-Round 1 was played at PGA Catalunya — Stadium (the 2nd TEG round at the venue). Jon Baker shot 35 Stableford points and +18 gross to lead both competitions at the end of the day.
+# ROUND 1 — Jon Baker Strides Out at Spain's Showpiece
 
-Gregg Williams opened with a triple-triple-double across holes 1-3 (par-4, par-4, par-5), dropping 8 shots in three holes, and added a quintuple-bogey 8 at the par-3 5th.
+The tournament opened at the PGA Catalunya Stadium Course, its 2nd TEG appearance. Jon Baker posted 35 points for a 3-point Trophy lead and a 2-shot Jacket lead.
 
-John Patterson ran up a quintuple-bogey 9 at the par-4 4th, and on the back nine ran up an 8 at the par-4 10th, a quintuple-bogey 9 at the par-4 13th, a triple-bogey 7 at the par-4 14th, and an 8 at the par-4 17th. At the 14th, Patterson dropped to the bottom of the Wooden Spoon standings.
+John Patterson sank to the bottom of the Spoon race. He bled 9 shots across holes 2-4 (double bogey 6 at the par-4 2nd, double bogey 7 at the par-5 3rd, quintuple bogey 9 at the par-4 4th), then ran up a second quintuple-bogey 9 at the par-4 13th. The 12-14 stretch cost him 11 shots: triple bogey 8 at the par-5 12th, quintuple 9 at the 13th, triple bogey 7 at the par-4 14th. The triple at the 14th formally dropped him to last in the Spoon standings.
 
-## Tour de Farce: An 11, a 10, and Jon Baker Sails On
-Round 2 was played at PGA Catalunya — Tour. Jon Baker's 41 points was his best round of the week, and he ended R2 still leading both the Trophy and the Jacket.
+# ROUND 2 — Jon Baker Goes 41; Patterson Goes 11
 
-The par-5 15th produced two of the week's biggest numbers: Patterson made an 11 (sextuple bogey), and Williams made a 10 (quintuple bogey). Alex Baker made a quintuple-bogey 9 at the par-4 12th.
+At the PGA Catalunya Tour Course, Jon Baker scored 41 points to stretch the Jacket lead to 3 and stay 2 clear on the Trophy.
 
-## Brotherly Shove: Alex Snatches the Trophy at El Prat
-Round 3 was at El Prat — Azul (Greg Norman; new course for TEG). Jon shot 32 points, his weakest round of the week.
+The par-5 15th produced the round's headline numbers: Patterson made an 11 (sextuple bogey, +6), and Gregg Williams made a 10 (quintuple bogey, +5) on the same hole. Alex Baker chipped in with a 9 (quintuple bogey, +5) at the par-4 12th. David Mullin had the round's hot stretch — 10 points across holes 8-10 (par, par, birdie at the par-5 10th).
 
-Alex Baker drew level with Jon on Stableford with a bogey at the 1st. Jon then bled 7 shots across holes 11-13 — double bogey at the par-4 11th, double bogey at the par-3 12th, triple bogey at the par-4 13th. Alex took outright Trophy lead at the 13th with a par.
+# ROUND 3 — El Prat, El Plot Twist
 
-In the Gross, Mullin drew level with Jon at the par-4 3rd (par). Jon retook outright Jacket lead at the par-3 6th with a bogey, and held it the rest of the way.
+TEG's first visit to El Prat's Azul routing, a Greg Norman design. Jon Baker scored 32; Alex Baker overhauled him.
 
-David Mullin made a quadruple-bogey 7 at the par-3 6th. At the par-3 12th, Mullin dropped to the bottom of the Wooden Spoon standings.
+Alex drew level on the Trophy with a bogey 5 at the par-4 1st, then went outright ahead at the par-4 13th after a clinical 12-14 stretch worth 9 points (par 3, par 4, par 4). Jon gave it up across holes 11-13, bleeding 7 shots: double bogey 6 at the par-4 11th, double bogey 5 at the par-3 12th, triple bogey 7 at the par-4 13th.
 
-At the end of R3: Alex led the Trophy by 2; Jon led the Jacket by 3.
+In the Jacket race Mullin drew level with Jon at the par-4 3rd (par 4), but Jon went back ahead outright at the par-3 6th with a bogey 4 and held that margin to the close.
 
-## Jon's Catalan Coronation
-Round 4 returned to PGA Catalunya — Stadium (3rd TEG round at the venue). Jon shot 35 points; Alex shot 27, his worst round to date.
+The Spoon race shifted: Mullin made a quadruple-bogey 7 at the par-3 6th, then a bogey 4 at the par-3 12th dropped him to last.
 
-In the Gross, Mullin drew level with Jon again at the par-5 3rd (par). In the Trophy, Jon drew level with Alex at the par-4 6th with a double bogey, and was never headed thereafter.
+# ROUND 4 — The Wrong Baker Blinks
 
-Alex Baker's round contained three separate bleed stretches: holes 4-6 (double, double, triple bogey for 7 shots dropped), holes 12-14 (triple, triple, double for 8 shots dropped), and holes 16-18 (double, quadruple, double for 8 shots dropped). Jon ran up a quadruple-bogey 8 at the par-4 13th.
+Back at the Stadium Course. Jon Baker scored 35; Alex Baker scored 27, his worst TEG round to date.
 
-David Mullin bled 7 shots over holes 15-17 — triple bogey at the par-5 15th, double bogey at the par-3 16th, double bogey at the par-4 17th — and closed on 31 points.
+Mullin drew level with Jon on the Jacket at the par-5 3rd (par 5) after a 9-point opening stretch (par, par, par at holes 1-3), but did not go past.
 
-Williams made a quintuple-bogey 9 at the par-4 10th.
+Jon drew level with Alex on the Trophy at the par-4 6th with a double bogey 6. Alex's collapse came in three stretches. Holes 4-6 cost him 7 shots: double bogey 6 at the par-4 4th, double bogey 5 at the par-3 5th, triple bogey 7 at the par-4 6th. Holes 12-14 cost him 8 shots: triple bogey 8 at the par-5 12th, triple bogey 7 at the par-4 13th, double bogey 6 at the par-4 14th. Holes 16-18 cost him another 8: double bogey 5 at the par-3 16th, quadruple bogey 8 at the par-4 17th, double bogey 6 at the par-4 18th.
 
-## HOW THE COMPETITIONS WERE DECIDED
+Jon's only big number was a quadruple-bogey 8 at the par-4 13th. Gregg Williams bled 11 shots across holes 8-11: double bogey 5 at the par-3 8th, double bogey 6 at the par-4 9th, quintuple bogey 9 at the par-4 10th, double bogey 5 at the par-3 11th. Mullin sealed the Spoon by bleeding 7 shots across holes 15-17: triple bogey 8 at the par-5 15th, double bogey 5 at the par-3 16th, double bogey 6 at the par-4 17th.
 
-**Trophy (Stableford).** Jon Baker led after R1 (35, +3) and R2 (41, +2). At El Prat in R3 (32 pts), he was overtaken: Alex Baker drew level at the 1st and took outright lead at the 13th, ending R3 +2 ahead. In R4 at the Stadium, Jon drew level with Alex at the par-4 6th and never relinquished. Final: Jon 143, won by 6.
+# HOW THE COMPETITIONS WERE DECIDED
 
-**Green Jacket (Gross).** Jon Baker led after R1 (+18, +2), R2 (+12 round / +3 overall), R3 (+21 round / +3 overall) and R4 (+19 round / +3 overall). Mullin drew level twice — R3 H3 and R4 H3 — but Jon retook outright lead at R3 H6 and held it the rest of the way. Final: Jon +70, won by 3.
+**Trophy (Stableford).** Jon Baker led after R1 (35) and R2 (41). A 32 at El Prat dropped him to 2 behind Alex Baker after R3, with Alex drawing level at the par-4 1st and going outright ahead at the par-4 13th. The decisive moment came at R4 H6 on the Stadium Course, where Jon's double bogey 6 drew him level with Alex. Alex's 27 then opened the gap. Jon won by 6 on 143 points.
 
-**Wooden Spoon.** Patterson held the bottom from R1 H14 through R2. At R3 H12, Mullin dropped to the bottom and stayed there, his quadruple-bogey 7 at the El Prat 6th and his closing 15-17 stretch in R4 confirming it. Final: Mullin 125.
+**Green Jacket (Gross).** Jon Baker led the gross after every round. Mullin twice drew level — at the par-4 3rd in R3 and at the par-5 3rd in R4 — without ever leading outright. The decisive takeover was Jon going back ahead outright at El Prat's par-3 6th in R3, after which he held a 3-shot lead through R3 and R4. Final margin: 3, at +70. Jon's third-best Jacket finish.
 
-## PLAYERS
-- **Jon Baker** — Led the Gross from R1 H3 and was never headed by round's end. Briefly trailed Alex in the Trophy after R3. Won both Trophy (143 pts, by 6) and Jacket (+70, by 3).
-- **Alex Baker** — Took outright Trophy lead at R3 H13, led after R3 by 2. Three separate bleed stretches in R4 (holes 4-6, 12-14, 16-18) produced a 27-point round, his worst to date. Trophy runner-up.
-- **David Mullin** — Drew level on Gross twice (R3 H3, R4 H3) but never led outright. Quadruple-bogey 7 at El Prat's par-3 6th and a 7-shot bleed across R4 holes 15-17. Jacket runner-up (+73) and Wooden Spoon (125 pts).
-- **John Patterson** — Quintuple bogeys at R1's 4th and 13th, R2's 15th (11, sextuple), and R3's 16th. Held the Spoon bottom from R1 H14 to R3 H12. Finished above Mullin.
-- **Gregg Williams** — Triple-triple-double opening at R1, quintuple-bogey 8 at R1's par-3 5th, quintuple-bogey 10 at R2's par-5 15th, quintuple-bogey 9 at R4's par-4 10th, and an 11-shot bleed across R4 holes 8-11. Finished above Mullin.
+**Wooden Spoon.** Patterson held the bottom spot after R1 and R2. The decisive drop came at R3 H12, where Mullin's bogey 4 at the par-3 12th put him last. Mullin's R3 quadruple bogey 7 at the par-3 6th and his R4 15-17 bleed (7 shots) confirmed it. Final tally: 125 points.
+
+# PLAYERS
+
+- **Jon Baker.** Led the Jacket from R1 to finish; led the Trophy after R1 and R2, fell 2 behind at El Prat after a 7-shot bleed across holes 11-13, drew level at the Stadium 6th on Sunday and won by 6 / by 3.
+- **Alex Baker.** Took the outright Trophy lead at El Prat's 13th after a 9-point run through holes 12-14; posted a career-worst 27 at the Stadium on Sunday with three cold stretches of 7, 8 and 8 shots.
+- **David Mullin.** Jacket runner-up who twice drew level with Jon (R3 H3, R4 H3) without ever going past; dropped to last in the Spoon at R3 H12 and stayed there after a 7-shot bleed across R4 holes 15-17. Finished on 125.
+- **John Patterson.** Bottom of the Spoon race after R1 and R2 on the back of an 11 at the Tour 15th and quintuple-bogey 9s at the Stadium 4th, the Stadium 13th and the El Prat 16th; escaped the Spoon when Mullin slipped past him at El Prat.
+- **Gregg Williams.** Made a quintuple bogey in three of the four rounds: 8 at the Stadium par-3 5th in R1, 10 at the Tour par-5 15th in R2, and 9 at the Stadium par-4 10th in R4, the latter anchoring an 11-shot bleed across holes 8-11.

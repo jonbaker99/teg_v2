@@ -1,0 +1,195 @@
+{
+  "title": "The Mullin Paradox",
+  "title_candidates": [
+    "The Mullin Paradox",
+    "Gregg Stings, Mullin Sinks",
+    "Boavista's Book of Records",
+    "The Algarve Reshuffle"
+  ],
+  "theme": "David Mullin smashes the TEG gross record book and runs away with the Green Jacket, yet his handicap-adjusted golf slips so badly in the second half that Gregg Williams strolls past him to the Trophy and Mullin himself ends up holding the Spoon.",
+  "tone": "house",
+  "narrative_structure": "in_medias_res",
+  "opening_hook": "Open on Boavista's 3rd green in Round 3, the moment Gregg Williams' name moves to the top of the Trophy board for the first time — then rewind to two days earlier, when David Mullin was rewriting the TEG gross record book.",
+  "foreshadow": [
+    "Mullin's two scarcely-believable gross rounds at Boavista carry a quiet asterisk: his net numbers are merely good, not great.",
+    "Williams' R2 personal-best -6 net, posted alongside a +27 gross blow-out, is the handicap engine humming in the background.",
+    "Neumann's record -9 in R2 reminds everyone the leaderboard is decided on net, not on the scorecard you'd frame.",
+    "R4 lands at unfamiliar Palmares — a links twist after three days of Boavista parkland."
+  ],
+  "competitions": [
+    {
+      "name": "Trophy (Net VP)",
+      "winner_or_loser": "Gregg Williams (-6, by 2 from Jon Baker)",
+      "how": "Mullin led after R1 (+1) and stretched it to three after R2, but his net game cracked on the third day at Boavista. Williams, who had quietly posted a personal-best -6 in R2 to close the gap, seized outright lead on R3 hole 3 (b21) and never let it go. Mullin's +12 net in R3 (b20) handed Williams a five-shot cushion overnight; despite a wobble at Palmares (b46, b13) Williams held on by two.",
+      "key_beat_ids": [
+        "b21",
+        "b20",
+        "b07",
+        "b05",
+        "b46"
+      ]
+    },
+    {
+      "name": "Green Jacket (Gross)",
+      "winner_or_loser": "David Mullin (+72, by 12 from Jon Baker)",
+      "how": "Effectively a procession. Mullin went outright on R1 hole 3 and was never headed. Back-to-back TEG gross records at Boavista — +12 (b01) then +11 (b02) — built an eight- and then fourteen-shot lead by halfway. R3's +27 gross and a +22 at Palmares were comfortably enough; the only drama was whether anyone else would break 90 (Neumann did, tying the gross record at +11, b04).",
+      "key_beat_ids": [
+        "b01",
+        "b02",
+        "b04",
+        "b11"
+      ]
+    },
+    {
+      "name": "Wooden Spoon",
+      "winner_or_loser": "David Mullin (+12 net VP)",
+      "how": "A genuine round-by-round descent. Net leader through 36 holes, Mullin posted +12 in R3 (b20) to drop to 4th, then a quadruple bogey at Palmares' 6th (b22, b30) shoved him to the bottom. Meller's R4 double bogey at 15 (b23) briefly handed it back, but Mullin's par at the 17th (b24) sealed the wrong end of the leaderboard — the same man wearing the Jacket carrying the Spoon home.",
+      "key_beat_ids": [
+        "b19",
+        "b22",
+        "b24",
+        "b30",
+        "b20"
+      ]
+    }
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "headline_candidates": [
+        "Mullin Rewrites the Gross Book on Day One",
+        "+12, and the Record Falls",
+        "Boavista Bows to Mullin"
+      ],
+      "chosen_headline": "Mullin Rewrites the Gross Book on Day One",
+      "angle": "Mullin's +12 gross is the best round in TEG history; he takes the Jacket lead at hole 3 and the Trophy lead at the last. A bunched net field hides what's coming.",
+      "beat_ids": [
+        "b01"
+      ]
+    },
+    {
+      "round": 2,
+      "headline_candidates": [
+        "Boavista's Day of Records",
+        "Neumann -9, Mullin +11, and a Quiet -6",
+        "Three Personal Bests Before Lunch"
+      ],
+      "chosen_headline": "Boavista's Day of Records",
+      "angle": "The most extraordinary day of the week: Mullin equals his own 24-hour-old gross record at +11 (b02) and personal-bests at -4 net (b06); Neumann posts -9, the best TEG round ever, while equalling Mullin's gross record at +11 (b03, b04); and Williams quietly personal-bests at -6 net (b07) despite a +27 gross — the handicap that will win him the Trophy. Meller takes a 10 at the 16th (b25).",
+      "beat_ids": [
+        "b02",
+        "b03",
+        "b04",
+        "b06",
+        "b07",
+        "b25"
+      ]
+    },
+    {
+      "round": 3,
+      "headline_candidates": [
+        "Williams Walks Through the Door",
+        "Mullin's +12 and the Lead Changes Hands",
+        "Hole 3, and Everything Tilts"
+      ],
+      "chosen_headline": "Williams Walks Through the Door",
+      "angle": "The decisive day. Mullin's net game implodes to +12 (b20), his worst TEG round; Williams takes outright Trophy lead at R3 hole 3 (b21) and finishes five clear. The Jacket race remains a private Mullin exhibition.",
+      "beat_ids": [
+        "b21",
+        "b20"
+      ]
+    },
+    {
+      "round": 4,
+      "headline_candidates": [
+        "Palmares Holds, Williams Wins, Mullin Spoons",
+        "Links Day, Last Day, Last Place",
+        "Two Trophies, a Spoon, and a New Course"
+      ],
+      "chosen_headline": "Palmares Holds, Williams Wins, Mullin Spoons",
+      "angle": "At a new venue for TEG, Williams wobbles (b46) but holds on for the Trophy by two (b05); Mullin completes the Jacket by twelve (b11) and slips to the bottom of the net pile (b22, b24, b19). Personal bests for Baker (b08) and Meller (b09, b10) round off the week.",
+      "beat_ids": [
+        "b05",
+        "b11",
+        "b19",
+        "b08",
+        "b09",
+        "b10",
+        "b22",
+        "b24"
+      ]
+    }
+  ],
+  "players": [
+    {
+      "player": "Gregg Williams",
+      "arc": "Quietly assembles a maiden Trophy: a R2 personal-best net -6 closes the gap, hole 3 of R3 swings the lead his way, and despite a 9 at Palmares' 16th and a bleed through 10–13 he gets the job done by two."
+    },
+    {
+      "player": "David Mullin",
+      "arc": "Two of the greatest gross rounds in TEG history and a runaway Green Jacket — wrapped around a R3 net collapse that ships the Trophy to Williams and a Palmares finish that delivers him the Spoon."
+    },
+    {
+      "player": "Jon Baker",
+      "arc": "Bridesmaid twice — runner-up in both Trophy and Jacket — and the quietly-relentless owner of four separate quintuple-bogey blow-ups across the week."
+    },
+    {
+      "player": "Stuart Neumann",
+      "arc": "Posts -9 in R2, the best round in TEG history to date, and ties Mullin's gross record at +11 on the same afternoon — without ever seriously threatening the lead."
+    },
+    {
+      "player": "Henry Meller",
+      "arc": "Spends large parts of the week propping up the Spoon table, takes a 10 at Boavista's 16th, but signs off with a Palmares personal best at -3 net."
+    }
+  ],
+  "must_include_beat_ids": [
+    "b01",
+    "b02",
+    "b03",
+    "b04",
+    "b05",
+    "b06",
+    "b07",
+    "b08",
+    "b09",
+    "b10",
+    "b11",
+    "b19",
+    "b25",
+    "b20",
+    "b21"
+  ],
+  "cuts": [
+    "b12",
+    "b13",
+    "b14",
+    "b15",
+    "b16",
+    "b17",
+    "b18",
+    "b27",
+    "b28",
+    "b29",
+    "b32",
+    "b33",
+    "b34",
+    "b35",
+    "b36",
+    "b37",
+    "b38",
+    "b39",
+    "b40",
+    "b41",
+    "b42",
+    "b43",
+    "b44",
+    "b45",
+    "b47",
+    "b48",
+    "b49",
+    "b50",
+    "b26",
+    "b31"
+  ],
+  "venue_notes": "TEG's 3rd visit to the Algarve (June 2012). Rounds 1–3 at Boavista Golf & Spa Resort (Howard Swan parkland with Atlantic views) — the 8th, 9th and 10th TEG rounds at the venue, by now familiar ground, which makes the records all the more striking. Round 4 moves to Palmares (Robert Trent Jones Jr., 27 holes blending parkland and seaside links) — a new course for TEG, and the change of surface matters: it's where Williams wobbles, Baker and Meller post gross personal bests, and Mullin completes his net descent."
+}

@@ -1,60 +1,59 @@
 {
-  "title": "Baker's Dozen-and-Then-Some: Alex Goes Record-Hunting in the Algarve",
+  "title": "Two Records, One Algarve",
   "title_candidates": [
-    "Baker's Dozen-and-Then-Some: Alex Goes Record-Hunting in the Algarve",
-    "The Algarve Ascent: How Alex Baker Took TEG 10 to a New High",
-    "Forty-Nine, Fifty-One: Mullin Sets the Bar, Baker Vaults It"
+    "Two Records, One Algarve",
+    "The Baker and the Bombing Run",
+    "Alex Ascendant, Mullin Untouchable",
+    "51 and Counting"
   ],
-  "theme": "Alex Baker chases down David Mullin's early onslaught with three successive personal bests, climaxing in a 51-point Boavista demolition that sets a new TEG single-round record — while Mullin, unbothered, strolls off with the Green Jacket and Patterson collects the Spoon he never looked like dropping.",
-  "tone": "house",
+  "theme": "A TEG that rewrote the record book at both ends: Alex Baker takes the Trophy with the highest Stableford total in TEG history, while David Mullin's gross golf — opened with a TEG-record +4 at Boavista — delivers a Green Jacket by twelve. Two coronations on different metrics, one week on the Algarve.",
+  "tone": "house — faithful, tongue-in-cheek, Ronay/Peck-flavoured; warm to the players but quick to needle them",
   "narrative_structure": "in_medias_res",
-  "opening_hook": "Open on Boavista, Sunday, the 5th tee: Alex Baker about to embark on the six-hole stretch (b04) that will rewrite the TEG record book — then rewind to Saturday morning, when David Mullin still had this thing under control.",
+  "opening_hook": "Open on the 18th at Boavista on the final afternoon as Alex Baker signs for 51 points — the best Stableford round in TEG history — then rewind to Mullin's +4 opener and the four-day double coronation that followed.",
   "foreshadow": [
-    "Mullin's opening 49 (b03) is flagged as the new benchmark — only for Baker to topple it three days later (b02).",
-    "Alex Baker's quiet runner-up position after R1, eight back, planted as the seed of the comeback.",
-    "Patterson's R1 H4 slide to the bottom of the Spoon table foreshadowed as a position he will never relinquish.",
-    "Two Stuart Neumann sextuple bogeys at the 18th in successive rounds set up Boavista's closing hole as the week's house of horrors."
+    "Mullin's gross +4 at Boavista in R1 — a number that sets the Green Jacket race up as a procession before it's even begun",
+    "Alex Baker shadowing the leader from day one (41, then 45) — the chasing pack of one",
+    "R3 at Palmares as the swing day: the moment Mullin's eight-shot Trophy cushion finally vanishes",
+    "John Patterson, sixth after the first hole he didn't lead, and sixth at every checkpoint thereafter"
   ],
   "competitions": [
     {
-      "name": "The Trophy (Stableford)",
+      "name": "Trophy (Stableford)",
       "winner_or_loser": "Alex Baker",
-      "how": "Baker started R1 eight adrift of a rampant Mullin (49 pts, b03), trimmed the gap to five with a personal-best 45 at Palmares Praia/Alvor (b05), then overhauled Mullin outright at R3 H6 (b22) en route to another PB of 47 (b06). Gregg Williams briefly snatched the lead back at R3 H13 (b26) and drew level again at R4 H5 (b43), but Baker's record-breaking 51 at Boavista (b02) — built on a 21-point burst across holes 5-10 (b04) — buried the field by 11. Final: 184 pts, the highest in TEG history (b01).",
+      "how": "Mullin led the Trophy after R1 by eight and after R2 by five, with Alex Baker the patient runner-up on 41 and 45. R3 at Palmares Alvor/Lagos was the pivot: Alex posted a personal-best 47, briefly ceded the outright lead to Gregg Williams at the 13th after a quintuple-bogey 10, then retook it by the 15th and slept on it. The coronation came at Boavista on Sunday, where his record 51-pt round stretched the margin to eleven and lifted his total to a TEG-record 184. Gregg Williams second, Mullin third on the Stableford ladder.",
       "key_beat_ids": [
-        "b03",
+        "b01",
         "b05",
-        "b22",
-        "b06",
-        "b26",
-        "b43",
-        "b04",
-        "b02",
-        "b01"
-      ]
-    },
-    {
-      "name": "The Green Jacket (Gross)",
-      "winner_or_loser": "David Mullin",
-      "how": "Mullin led the Gross from R1 H6 onwards and was never headed: rounds of +4, +11, +23, +13 (despite a quad at R3's 18th, b31) for +51 total, a 12-shot canter over runner-up Jon Baker. Even on a week when his Stableford crown slipped, his ball-striking didn't.",
-      "key_beat_ids": [
-        "b03",
-        "b27",
-        "b48",
-        "b49",
-        "b31",
-        "b10"
-      ]
-    },
-    {
-      "name": "The Wooden Spoon",
-      "winner_or_loser": "John Patterson",
-      "how": "Bottom of the Stableford table from R1 H4 to the final putt. Quintuple at the 8th in R1 (b17), a 10 at the 1st in R2 (b08), another quint at R3's 8th (b18), a 19-shot bleed across R3 holes 11-15 (b28), an 11 at R4's 8th (b09), and a closing 21-point round (b25 — his worst to date) sealed a 112-point Spoon (b21).",
-      "key_beat_ids": [
-        "b17",
         "b08",
-        "b18",
-        "b09",
-        "b21"
+        "b10",
+        "b24",
+        "b31",
+        "b36",
+        "b04",
+        "b06"
+      ]
+    },
+    {
+      "name": "Green Jacket (Gross)",
+      "winner_or_loser": "David Mullin",
+      "how": "This was over by Saturday lunchtime. Mullin opened with a gross +4 at Boavista — the best gross round in TEG history — and was never headed, leading by 14, 13, 10 and finally 12. Only Jon Baker (a TEG-3rd-best gross +10 in R2) ever looked like making a fight of it. Mullin's final +51 is also a TEG record for gross total; Jon Baker took the runner-up spot at +63, a personal best.",
+      "key_beat_ids": [
+        "b02",
+        "b03",
+        "b07",
+        "b23"
+      ]
+    },
+    {
+      "name": "Wooden Spoon",
+      "winner_or_loser": "John Patterson",
+      "how": "Wire-to-wire. Patterson was last after four holes of R1 and stayed last for the remaining 68. The route there was paved with disasters: a 10 at Boavista's 8th in R1, a 10 at Palmares's 1st in R2, another 10 at the 8th in R3, and the coup de grâce — an 11 at Boavista's 8th in R4 — finishing with his worst-ever round of 21 points. Total: 112 points, comfortably (uncomfortably) clear at the bottom.",
+      "key_beat_ids": [
+        "b30",
+        "b15",
+        "b16",
+        "b26",
+        "b27"
       ]
     }
   ],
@@ -62,96 +61,99 @@
     {
       "round": 1,
       "headline_candidates": [
-        "Mullin Goes Bang: 49 Points and an Eight-Shot Lead at Boavista",
-        "Atlantic Views, Atlantic-Sized Lead",
-        "The Day David Built His Cushion"
+        "Mullin's +4 Rewrites the Boavista Tablets",
+        "Four Over and Five Clear: a Statement Opener",
+        "The Day Boavista Became a Putting Green (for One Man)"
       ],
-      "chosen_headline": "Mullin Goes Bang: 49 Points and an Eight-Shot Lead at Boavista",
-      "angle": "Mullin's opener (b03) — the 2nd-best round in TEG history at that point — torches Boavista and sets the chase. Patterson immediately settles into last (b17), Neumann's closing sextuple (b11) signals the week to come.",
+      "chosen_headline": "Mullin's +4 Rewrites the Boavista Tablets",
+      "angle": "Mullin's TEG-record gross +4 / 49-pt round opens both competitions in the same stroke; Alex shadows on 41, Patterson is last by the 4th, Neumann finds a 10 at the 18th.",
       "beat_ids": [
         "b03",
+        "b05",
         "b17",
-        "b11"
+        "b26"
       ]
     },
     {
       "round": 2,
       "headline_candidates": [
-        "Palmares Debuts and the PBs Pile Up",
-        "Praia/Alvor: Three Career-Bests in One Afternoon",
-        "The Chase Begins: Baker and Williams Trim the Gap"
+        "Palmares Debuts, Personal Bests Follow",
+        "A New Course, Three PBs and a Sextuple",
+        "Patterson's First-Tee 10 Sets the Tone"
       ],
-      "chosen_headline": "Palmares Debuts and the PBs Pile Up",
-      "angle": "On a new TEG course, three personal-best rounds in the same field: Gregg Williams' 48 (b07), Alex Baker's 45 (b05), while Patterson opens with a 10 (b08) and Neumann turns the back nine into demolition (b12, b23, b67).",
+      "chosen_headline": "Palmares Debuts, Personal Bests Follow",
+      "angle": "TEG's first look at Palmares yields personal bests for Alex (45/+23), Gregg (48/+14) and Jon Baker (gross +10, TEG's 3rd-best ever), while Patterson opens with a 10 and Neumann bleeds 13 shots in three holes.",
       "beat_ids": [
-        "b05",
         "b07",
         "b08",
-        "b12",
-        "b23",
-        "b67"
+        "b09",
+        "b13",
+        "b14",
+        "b15",
+        "b18",
+        "b32",
+        "b77"
       ]
     },
     {
       "round": 3,
       "headline_candidates": [
-        "Baker Takes the Wheel at Palmares",
-        "Lead Changes Hands — Twice — and Then for Good",
-        "The 47 That Tipped It"
+        "The Day Mullin's Cushion Vanished",
+        "Alex Baker, by way of a 10",
+        "Three Trophy Leaders in Nine Holes"
       ],
-      "chosen_headline": "Baker Takes the Wheel at Palmares",
-      "angle": "Alex's third personal best in three rounds (b06, 47 pts) finally puts him in front; despite a 10 of his own at the 13th (b15) and a brief Williams takeover (b26), he closes R3 sharing the top. Patterson's grim afternoon (b18, b28) keeps the Spoon firmly his.",
+      "chosen_headline": "The Day Mullin's Cushion Vanished",
+      "angle": "The swing round: Alex's PB 47 takes the Trophy lead at the 6th, surrenders it to Gregg at the 13th after a quintuple-bogey 10, then reclaims it by the 15th — and Mullin's eight-shot opening cushion is gone for good.",
       "beat_ids": [
-        "b06",
-        "b15",
-        "b26",
-        "b18",
-        "b28"
+        "b10",
+        "b11",
+        "b24",
+        "b27",
+        "b31",
+        "b36"
       ]
     },
     {
       "round": 4,
       "headline_candidates": [
-        "Fifty-One. Read That Again.",
-        "Baker Burns Boavista: A New TEG Record",
-        "The Sunday That Rewrote the Book"
+        "51 — A Number for the Record Book",
+        "Alex Baker Crowns It; Patterson Buries It",
+        "Two Trophies, One Boavista Sunday"
       ],
-      "chosen_headline": "Fifty-One. Read That Again.",
-      "angle": "Alex Baker's 51 (b02) — fuelled by 21 points in six holes (b04) — is the highest round in TEG history, settles the Trophy by 11 (b01), Mullin closes out the Jacket (b10), Patterson posts his worst-ever round (b25) including an 11 at the 8th (b09) to confirm the Spoon (b21).",
+      "chosen_headline": "51 — A Number for the Record Book",
+      "angle": "Alex closes with the best Stableford round in TEG history (51 pts / gross +17 PB), with 21 points in a six-hole burst from the 5th. Mullin signs for the Jacket; Patterson signs for an 11 and his worst-ever 21.",
       "beat_ids": [
-        "b02",
         "b04",
-        "b09",
-        "b01",
-        "b10",
-        "b21"
+        "b06",
+        "b12",
+        "b16"
       ]
     }
   ],
   "players": [
     {
       "player": "Alex Baker",
-      "arc": "Eight back, then five, then level, then gone: three consecutive personal bests culminating in the highest round in TEG history and the largest Trophy total ever recorded."
+      "arc": "Patient runner-up turned record-breaker: 41, 45, PB 47, then a TEG-record 51 — four rounds, three personal bests, one Trophy at 184, and a gross PB of +90 to boot."
     },
     {
       "player": "David Mullin",
-      "arc": "Set the bar with a 49 in R1, kept the Gross under lock and key all week, but watched the Trophy walk away from him on Sunday at Boavista."
+      "arc": "Opens with the best gross round in TEG history (+4) and a 49-pt Stableford to match; leads the Jacket wire-to-wire and wins it by twelve at a record +51, even as the Trophy slips from his grasp at Palmares."
     },
     {
       "player": "Gregg Williams",
-      "arc": "A personal-best 48 at Palmares and two cameo turns at the top of the leaderboard, but late blow-ups at Boavista (b32, b33) ended the challenge — a fine runner-up nonetheless."
+      "arc": "Posts a PB 48 / gross +14 at Palmares, briefly holds the outright Trophy lead in R3, and ends a clear second on Stableford with a gross PB of +76."
     },
     {
       "player": "Jon Baker",
-      "arc": "Briefly led both competitions on R1 H9, posted a tidy six-hole par run at Palmares (b14), and settled for Green Jacket runner-up."
+      "arc": "The quiet gross specialist — a TEG-3rd-best +10 at Palmares anchors a personal-best Jacket campaign of +63, runner-up to Mullin."
     },
     {
       "player": "John Patterson",
-      "arc": "Wire-to-wire Spoon: four blow-ups of quintuple or worse, a personal-worst 21 to close, 112 points in the book."
+      "arc": "Last after four holes of R1 and last at every checkpoint thereafter — a 10, a 10, a 10, an 11, and a closing worst-ever 21 deliver the Spoon on 112."
     },
     {
       "player": "Stuart Neumann",
-      "arc": "A one-man big-number generator — two sextuples at Boavista's 18th in R1, another at Palmares' 18th in R2, and a quintuple double-act at Praia/Alvor's 13th and 14th."
+      "arc": "Found Boavista's 18th twice for 10s and contributed a 13-shot collapse over three holes at Palmares; collateral damage in the records race."
     }
   ],
   "must_include_beat_ids": [
@@ -160,41 +162,44 @@
     "b03",
     "b04",
     "b05",
-    "b06",
     "b07",
     "b08",
     "b09",
     "b10",
     "b11",
     "b12",
+    "b13",
+    "b14",
     "b15",
+    "b16",
     "b17",
     "b18",
     "b21",
+    "b22",
     "b23",
-    "b67"
+    "b24",
+    "b26",
+    "b27",
+    "b30",
+    "b32",
+    "b77"
   ],
   "cuts": [
-    "b13",
-    "b14",
-    "b16",
     "b19",
     "b20",
-    "b24",
+    "b25",
+    "b28",
     "b29",
-    "b30",
-    "b31",
-    "b32",
     "b33",
     "b34",
     "b35",
-    "b36",
     "b37",
     "b38",
     "b39",
     "b40",
     "b41",
     "b42",
+    "b43",
     "b44",
     "b45",
     "b46",
@@ -203,5 +208,5 @@
     "b49",
     "b50"
   ],
-  "venue_notes": "TEG's 4th visit to the Algarve (2017). Bookend the report at Boavista (the 11th and 12th TEG rounds at that venue) — the same parkland-with-Atlantic-views that Mullin tamed on Wednesday and Baker dismantled on Sunday. Middle two rounds are first-time TEG visits to Palmares (Robert Trent Jones Jr.): R2 the Praia/Alvor links-meets-parkland combo where the PBs flowed, R3 the more tree-lined Alvor/Lagos where Baker grabbed the Trophy. Use the new-course novelty to frame R2's PB outbreak."
+  "venue_notes": "TEG's 4th visit to the Algarve (2017), bookended by Boavista (R1 = 11th TEG round here; R4 = 12th — a known quantity, which makes Mullin's +4 and Alex's 51 all the more striking) and two brand-new Palmares combinations in the middle (Praia/Alvor and Alvor/Lagos, both Robert Trent Jones Jr.). Lean on the Atlantic views at Boavista as the backdrop to the bookend records; play Palmares's debut as the moment the tournament cracked open."
 }
