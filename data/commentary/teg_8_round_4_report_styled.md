@@ -21,7 +21,3 @@ So the races settled, in the only way they could on a day Oitavos was determined
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> GW 149 | AB 137 | JB 131 | DM 126 | HM 111 | SN 100</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +77 | JB +83 | GW +107 | HM +123 | SN +137 | AB +148</p>
-
-## Personal bests and TEG records
-
-<p class="records"><span class="records-header">Rare feats:</span> Henry Meller runs up a 10 (sextuple bogey) at the 4th (R4).</p>

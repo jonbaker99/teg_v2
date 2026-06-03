@@ -1,0 +1,83 @@
+{
+  "title": "Patterson's 49: A Praia D'El Rey Masterclass",
+  "title_candidates": [
+    "Patterson's 49: A Praia D'El Rey Masterclass",
+    "From the Wreckage: Patterson Rises on the Lisbon Coast",
+    "Forty-Nine Reasons: JP Rewrites Round Two",
+    "The Comeback and the Coast: Patterson Seizes the Trophy"
+  ],
+  "theme": "John Patterson drags himself out of an early grave to post 49 points — the second-best round in TEG history — and turns a one-point Trophy deficit into a ten-point lead",
+  "tone": "house",
+  "narrative_structure": "chronological",
+  "opening_hook": "Open with Patterson at the turn: bleeding shots, the Trophy lead vanishing, no hint of what's coming. Then the back nine arrives and everything changes. Chronological serves the day because the round has two distinct acts for nearly every player — wreckage on the front, redemption (or further wreckage) on the back.",
+  "foreshadow": [
+    "Patterson's catastrophic 4-5-6 stretch (triples at the 5th and 6th) that set him up as the morning's most likely casualty before he detonated the back nine",
+    "Mullin briefly drawing level for the Trophy lead at the 2nd — the high-water mark before his own front-nine bogey parade",
+    "Alex Baker's hot 7-9 stretch suggesting a career round was on — which it was, even if the back nine tried very hard to derail it"
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "John PATTERSON",
+      "score": 87.0,
+      "gap": 10.0,
+      "note": "Total reshuffle. Patterson began the day one behind Jon Baker and bled shots from the 4th to the 6th; by the 11th he had only drawn level, and only on the back nine did he tear away. The 49-point round vaults him from third to a commanding ten-point lead over Mullin, with Jon Baker — overnight leader — now eleven adrift."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "David MULLIN",
+      "score": 29.0,
+      "gap": 7.0,
+      "note": "Mullin holds the gross lead he took in R1, but the margin has stretched: two ahead of Jon Baker overnight, now seven. Patterson's gross 14-over contribution moved him up to third on gross too, while Jon Baker's quad at the 14th cost him ground in the chase."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "Stuart NEUMANN",
+      "score": 53.0,
+      "gap": -14.0,
+      "note": "Neumann's grip on the Spoon tightens alarmingly. He was eight off the field after R1; quads at the 5th and 9th and a three-hole bleed of nine shots through 11-13 widen the gap to fourteen. Williams is the nearest escapee, and even his 10 at the 9th wasn't enough to drag him back into Spoon range."
+    }
+  ],
+  "key_beat_ids": [
+    "r2_b01",
+    "r2_b02",
+    "r2_b03",
+    "r2_b18",
+    "r2_b04",
+    "r2_b05",
+    "r2_b15",
+    "r2_b22",
+    "r2_b06",
+    "r2_b07",
+    "r2_b08",
+    "r2_b09",
+    "r2_b10"
+  ],
+  "players": [
+    {
+      "player": "John Patterson",
+      "arc": "Bled eight shots through holes 4-6 and looked finished, then posted the second-best round in TEG history — 49 points, 17 of them in a five-hole burst from the 9th — to seize the Trophy lead by ten."
+    },
+    {
+      "player": "David Mullin",
+      "arc": "Briefly drew level for the Trophy lead at the 2nd, then suffered a four-bogey slog from the 6th before steadying with a birdie at the 10th; retains the Green Jacket lead and stretches it to seven."
+    },
+    {
+      "player": "Jon Baker",
+      "arc": "Overnight Trophy leader undone by a 5-6-7 cold run and a quadruple bogey at the 14th that ended a tidy par-par-par stretch; rallied with a birdie at the 17th but slips to joint third in the Trophy race."
+    },
+    {
+      "player": "Alex Baker",
+      "arc": "Career-best 44 points despite two quadruple bogeys (10th and 14th), built on a hot 7-9 stretch worth ten points — a round of remarkable Stableford resilience on a brutal day."
+    },
+    {
+      "player": "Gregg Williams",
+      "arc": "Posted a forgettable round defined by a sextuple-bogey 10 at the 9th; loses ground in every direction without quite dragging himself into Spoon territory."
+    },
+    {
+      "player": "Stuart Neumann",
+      "arc": "A grim day at the office: quads at the 5th and 9th, a three-hole haemorrhage of nine shots from the 11th, and the Wooden Spoon gap widening from eight to fourteen."
+    }
+  ],
+  "venue_notes": "TEG's third visit to Praia D'El Rey (Obidos, Lisbon Coast — also a third visit to the area), Cabell Robinson's parkland-meets-links design with the coastal dunes biting hardest on the back nine. Worth noting how many of the day's blow-ups clustered around the 9th, 10th and 14th — the course's character on full display."
+}

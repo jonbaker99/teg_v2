@@ -1,0 +1,78 @@
+{
+  "title": "Palmares Personal Bests, But Mullin Still in Front",
+  "title_candidates": [
+    "Palmares Personal Bests, But Mullin Still in Front",
+    "The Chasers Find Their Range",
+    "Mullin Holds, Williams and Baker Strike Back",
+    "Praia/Alvor: A Day of Career Rounds and One Long Walk Home"
+  ],
+  "theme": "The chase pack post career rounds at a new Palmares layout, yet David Mullin's steady par-merchant performance keeps him clear in both races while Stuart Neumann and John Patterson sink deeper.",
+  "tone": "house",
+  "narrative_structure": "player_by_player",
+  "opening_hook": "Open on the paradox of the day: two personal bests posted behind him, and David Mullin still walks off the 18th in front of both competitions — a Round 2 in which the chasers played the golf of their lives and barely dented the lead.",
+  "foreshadow": [
+    "John Patterson's 10 at the very first hole — six shots gone before the round had really begun, a deficit that defined his afternoon and widened the Spoon gap to five.",
+    "Stuart Neumann's pleasant amble through the front nine (14 points across holes 9-12) sets up the brutal contrast of holes 13-15, where 13 shots leak away in three holes.",
+    "Gregg Williams' mid-round surge (18 points across holes 8-12) hints at the 48-point personal best to come."
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "David MULLIN",
+      "score": 91.0,
+      "gap": 5.0,
+      "note": "Mullin still leads on Stableford, but the gap to Alex Baker has narrowed from 8 to 5 despite Mullin posting a solid 42-point round. Gregg Williams' 48-point personal best vaults him alongside Baker on 86, with Jon Baker (45 in the round) close behind on 82. The race is meaningfully tighter than it was 18 holes ago."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "David MULLIN",
+      "score": 15.0,
+      "gap": 13.0,
+      "note": "Mullin retains the Jacket lead and the margin is essentially unchanged — 14 became 13 — but the round's best gross belonged to Jon Baker (+10), who confirms his place as the only credible threat. Williams (+14) closed too; Alex Baker's +23 means he gained on Stableford but lost ground on gross."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "John PATTERSON",
+      "score": 64.0,
+      "gap": 5.0,
+      "note": "Patterson remains anchored to the bottom and the gap to Neumann has stretched from 3 to 5, despite Neumann's two double-figure holes — Patterson's opening 10 and a 35-point round were enough to keep him propping up the table."
+    }
+  ],
+  "key_beat_ids": [
+    "r2_b02",
+    "r2_b01",
+    "r2_b06",
+    "r2_b09",
+    "r2_b03",
+    "r2_b17",
+    "r2_b04",
+    "r2_b19"
+  ],
+  "players": [
+    {
+      "player": "David Mullin",
+      "arc": "Wins the round on points without winning anyone's heart — a metronomic five-par stretch (holes 4-8) underpins a 42-point round that holds both leads, even as the field comes at him."
+    },
+    {
+      "player": "Alex Baker",
+      "arc": "Posts a personal-best 45 points to cut the Trophy deficit from 8 to 5, a career round that nonetheless still leaves him chasing."
+    },
+    {
+      "player": "Gregg Williams",
+      "arc": "The round's headline act: a 48-point personal best, driven by an 18-point burst from holes 8-12 and a tidy four-hole finish, hauls him level with Alex Baker on 86."
+    },
+    {
+      "player": "Jon Baker",
+      "arc": "Quietly plays the round's best gross golf (+10) with six straight pars from the 5th, recovering from an early double bogey at the 4th to post 45 points and stay in Jacket contention."
+    },
+    {
+      "player": "Stuart Neumann",
+      "arc": "A tale of two nines: 14 points in four holes around the turn, then 13 shots bled across 13-15 and a closing 10 at the 18th — still scored 37 but the wheels came off spectacularly."
+    },
+    {
+      "player": "John Patterson",
+      "arc": "Opens with a 10 at the 1st and never recovers the ground; a 35-point round leaves him bottom of the pile with the Spoon gap now five and growing."
+    }
+  ],
+  "venue_notes": "TEG's first visit to Palmares, a Robert Trent Jones Jr. layout near Lagos combining the parkland Alvor nine with the seaside links of Praia. The Algarve for the fourth time. Worth noting the contrast between the gentle scoring on the front (multiple long par streaks) and the carnage that broke out on the back nine for Neumann."
+}

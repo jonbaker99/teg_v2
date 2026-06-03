@@ -25,3 +25,9 @@ The races, then, shifted but did not break. Patterson's Trophy lead has gone fro
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> JP 121 | AB 118 | DM 110 | JB 110 | GW 105 | SN 90</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +51 | JB +58 | JP +71 | GW +88 | AB +100 | SN +100</p>
+
+## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>David Mullin runs up a 9 (quintuple bogey) at the 10th (R3) — his career-worst on a par-4</li>
+</ul></div>

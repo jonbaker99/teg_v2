@@ -79,6 +79,18 @@ The **Wooden Spoon** had three previous tenants — Patterson after Rounds 1 and
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">TEG records:</span> Jon Baker's +50 is the best Gross total in TEG history; Jon Baker's +8 (gross) is the 2nd-best Gross round in TEG history to date (R3); John Patterson's 49 pts is the 3rd-best round in TEG history to date (R3).</p>
-<p class="records"><span class="records-header">Personal bests:</span> John Patterson posts a personal-best Gross round: +12 (R3); Alex Baker posts a personal-best Gross round: +17 (R4).</p>
-<p class="records"><span class="records-header">Rare feats:</span> John Patterson eagles the par-5 2nd (R4); David Mullin runs up a 9 (quintuple bogey) at the 10th (R4) — his career-worst on a par-4.</p>
+<div class="records"><p class="records-header">TEG records:</p><ul>
+  <li>Jon Baker's +50 is the best Gross total in TEG history</li>
+  <li>Jon Baker's +8 (gross) is the 2nd-best Gross round in TEG history to date (R3)</li>
+  <li>John Patterson's 49 pts is the 3rd-best round in TEG history to date (R3)</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>John Patterson posts a personal-best Gross round: +12 (R3)</li>
+  <li>Alex Baker posts a personal-best Gross round: +17 (R4)</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>John Patterson eagles the par-5 2nd (R4)</li>
+  <li>David Mullin runs up a 9 (quintuple bogey) at the 10th (R4) — his career-worst on a par-4</li>
+</ul></div>

@@ -26,4 +26,6 @@ The shape of all three races changed today without the leader actually changing.
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">Rare feats:</span> John Patterson runs up a 11 (sextuple bogey) at the 15th (R2); Gregg Williams runs up a 10 (quintuple bogey) at the 15th (R2).</p>
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>John Patterson runs up a 11 (sextuple bogey) at the 15th (R2) — his career-worst on a par-5</li>
+</ul></div>

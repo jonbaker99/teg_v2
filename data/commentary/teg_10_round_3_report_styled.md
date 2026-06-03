@@ -36,5 +36,7 @@ The Trophy lead changed hands or was levelled at least five times across the rou
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">Personal bests:</span> Alex Baker posts a personal-best round: 47 pts (R3).</p>
-<p class="records"><span class="records-header">Rare feats:</span> Alex Baker runs up a 10 (quintuple bogey) at the 13th (R3); John Patterson runs up a 10 (quintuple bogey) at the 8th (R3).</p>
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>Alex Baker posts a personal-best round: 47 pts</li>
+  <li>Alex Baker posts a personal-best Gross round: +22</li>
+</ul></div>

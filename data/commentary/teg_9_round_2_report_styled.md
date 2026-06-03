@@ -26,6 +26,14 @@ The races, then, shifted hard. The Trophy was not so much rearranged as detonate
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">TEG records:</span> John Patterson's 49 pts is the 2nd-best round in TEG history to date (R2).</p>
-<p class="records"><span class="records-header">Personal bests:</span> Alex Baker posts a personal-best round: 44 pts (R2).</p>
-<p class="records"><span class="records-header">Rare feats:</span> Gregg Williams runs up a 10 (sextuple bogey) at the 9th (R2).</p>
+<div class="records"><p class="records-header">TEG records:</p><ul>
+  <li>John Patterson's 49 pts is the 2nd-best round in TEG history to date</li>
+  <li>John PATTERSON — 30 Stableford on the Back nine (R2) is the best Back nine Stableford in TEG history</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>Alex Baker posts a personal-best round: 44 pts</li>
+  <li>Alex Baker posts a personal-best Gross round: +27</li>
+  <li>John PATTERSON — 30 Stableford on the Back nine (R2) is a personal-best Back nine Stableford</li>
+  <li>John PATTERSON — +2 Gross on the Back nine (R2) is a personal-best Back nine Gross</li>
+</ul></div>

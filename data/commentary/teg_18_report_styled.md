@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Alex Baker</span></p>
-  <p><strong>Green Jacket:</strong> Gregg Williams</p>
-  <p><strong>Wooden Spoon:</strong> Jon Baker</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Alex Baker (2nd Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> Gregg Williams (3rd Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Jon Baker (2nd Spoon)</p>
 </section>
 
 ## The second hole on Monday morning
@@ -97,5 +97,12 @@ John Patterson, the week's quietly assembled story, picked up nine points across
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">Personal bests:</span> Gregg Williams's +66 is a personal Gross best.</p>
-<p class="records"><span class="records-header">Rare feats:</span> Alex Baker runs up a 11 (sextuple bogey) at the 18th (R2) — his career-worst on a par-5; David Mullin runs up a 11 (sextuple bogey) at the 15th (R1) — his career-worst on a par-5; Alex Baker runs up a 8 (quintuple bogey) at the 16th (R2) — his career-worst on a par-3.</p>
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>Gregg Williams's +66 is a personal Gross best</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>Alex Baker runs up a 11 (sextuple bogey) at the 18th (R2) — his career-worst on a par-5</li>
+  <li>David Mullin runs up a 11 (sextuple bogey) at the 15th (R1) — his career-worst on a par-5</li>
+  <li>Alex Baker runs up a 8 (quintuple bogey) at the 16th (R2) — his career-worst on a par-3</li>
+</ul></div>

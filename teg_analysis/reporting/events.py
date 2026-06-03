@@ -161,7 +161,7 @@ def hole_evidence(row) -> dict:
     par = int(row["PAR"])
     sc = int(row["Sc"])
     gvp = int(row["GrossVP"])
-    return {
+    d = {
         "hole": int(row["Hole"]),
         "par": par,
         "sc": sc,
@@ -169,6 +169,13 @@ def hole_evidence(row) -> dict:
         "stableford": int(row["Stableford"]),
         "result": result_label(gvp, sc, par),
     }
+    si_val = row.get("SI") if hasattr(row, "get") else getattr(row, "SI", None)
+    if si_val is not None:
+        try:
+            d["si"] = int(si_val)
+        except (TypeError, ValueError):
+            pass
+    return d
 
 
 def _parse_rank(s) -> tuple:

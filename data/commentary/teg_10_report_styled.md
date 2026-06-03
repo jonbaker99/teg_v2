@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Alex Baker</span></p>
-  <p><strong>Green Jacket:</strong> David Mullin</p>
-  <p><strong>Wooden Spoon:</strong> John Patterson</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Alex Baker (1st Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> David Mullin (8th Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> John Patterson (1st Spoon)</p>
 </section>
 
 ## The 18th at Boavista, Sunday afternoon
@@ -88,7 +88,42 @@ At the bottom of the page, Patterson signed for 21 points — his worst-ever rou
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">TEG records:</span> Alex Baker's 184 pts is the best Trophy total in TEG history; David Mullin's +51 is the best Gross total in TEG history; David Mullin's +4 (gross) is the best Gross round in TEG history to date (R1); Alex Baker's 51 pts is the best round in TEG history to date (R4); David Mullin's 49 pts is the 2nd-best round in TEG history to date (R1); Jon Baker's +10 (gross) is the 3rd-best Gross round in TEG history to date (R2).</p>
-<p class="records"><span class="records-header">Personal bests:</span> Alex Baker posts a personal-best round: 45 pts (R2); Alex Baker posts a personal-best Gross round: +23 (R2); Alex Baker posts a personal-best round: 47 pts (R3); Alex Baker posts a personal-best Gross round: +22 (R3); Alex Baker posts a personal-best Gross round: +17 (R4); Gregg Williams posts a personal-best round: 48 pts (R2); Gregg Williams posts a personal-best Gross round: +14 (R2); Alex Baker's +90 is a personal Gross best; Gregg Williams's +76 is a personal Gross best; Jon Baker's +63 is a personal Gross best.</p>
-<p class="records"><span class="records-header">Personal worsts:</span> John Patterson's worst round to date: 21 pts (R4); John Patterson's worst Gross round to date: +40 (R4).</p>
-<p class="records"><span class="records-header">Rare feats:</span> John Patterson runs up a 11 (sextuple bogey) at the 8th (R4) — his career-worst on a par-5; Stuart Neumann runs up a 10 (sextuple bogey) at the 18th (R1) — his career-worst on a par-4; Stuart Neumann runs up a 10 (sextuple bogey) at the 18th (R2) — his career-worst on a par-4.</p>
+<div class="records"><p class="records-header">TEG records:</p><ul>
+  <li>Alex Baker's 184 pts is the best Trophy total in TEG history</li>
+  <li>David Mullin's +51 is the best Gross total in TEG history</li>
+  <li>David Mullin's +4 (gross) is the best Gross round in TEG history to date (R1)</li>
+  <li>Alex Baker's 51 pts is the best round in TEG history to date (R4)</li>
+  <li>David Mullin's 49 pts is the 2nd-best round in TEG history to date (R1)</li>
+  <li>Jon Baker's +10 (gross) is the 3rd-best Gross round in TEG history to date (R2)</li>
+  <li>David MULLIN — -1 Gross on the Back nine (R1) is the best Back nine Gross in TEG history</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>Alex Baker posts a personal-best round: 45 pts (R2)</li>
+  <li>Alex Baker posts a personal-best Gross round: +23 (R2)</li>
+  <li>Alex Baker posts a personal-best round: 47 pts (R3)</li>
+  <li>Alex Baker posts a personal-best Gross round: +22 (R3)</li>
+  <li>Alex Baker posts a personal-best Gross round: +17 (R4)</li>
+  <li>Gregg Williams posts a personal-best round: 48 pts (R2)</li>
+  <li>Gregg Williams posts a personal-best Gross round: +14 (R2)</li>
+  <li>Alex Baker's +90 is a personal Gross best</li>
+  <li>Gregg Williams's +76 is a personal Gross best</li>
+  <li>Jon Baker's +63 is a personal Gross best</li>
+  <li>David MULLIN — 28 Stableford on the Back nine (R1) is a personal-best Back nine Stableford</li>
+  <li>Jon BAKER — 27 Stableford on the Front nine (R2) is a personal-best Front nine Stableford</li>
+  <li>Alex BAKER — 28 Stableford on the Front nine (R2) is a personal-best Front nine Stableford</li>
+  <li>David MULLIN — -1 Gross on the Back nine (R1) is a personal-best Back nine Gross</li>
+  <li>Jon BAKER — +1 Gross on the Front nine (R2) is a personal-best Front nine Gross</li>
+  <li>Alex BAKER — +6 Gross on the Front nine (R2) is a personal-best Front nine Gross</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal worsts:</p><ul>
+  <li>John Patterson's worst round to date: 21 pts (R4)</li>
+  <li>John Patterson's worst Gross round to date: +40 (R4)</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>John Patterson runs up a 11 (sextuple bogey) at the 8th (R4) — his career-worst on a par-5</li>
+  <li>Stuart Neumann runs up a 10 (sextuple bogey) at the 18th (R1) — his career-worst on a par-4</li>
+  <li>Stuart Neumann runs up a 10 (sextuple bogey) at the 18th (R2) — his career-worst on a par-4</li>
+</ul></div>

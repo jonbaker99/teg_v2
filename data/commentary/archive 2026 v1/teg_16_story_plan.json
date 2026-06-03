@@ -1,0 +1,196 @@
+{
+  "title": "Three Processions on the Lisbon Coast",
+  "title_candidates": [
+    "Three Processions on the Lisbon Coast",
+    "Wire to Wire, Three Times Over",
+    "No Lead Changes, Just Sunshine and Septuples",
+    "Cascais, Carnage and a Coronation"
+  ],
+  "theme": "Three competitions, three wire-to-wire winners (or losers): Stuart Neumann never let go of the Trophy, Gregg Williams never let go of the Jacket, and Alex Baker never let go of the Wooden Spoon. The drama was not at the top or the bottom of the table but in the middle of the scorecards, where the wheels routinely came off.",
+  "tone": "house — Ronay/Peck: faithful, characterful, gently mocking, anchored in facts",
+  "narrative_structure": "theme_led",
+  "opening_hook": "Open on the three leaderboards after R1 and after R4 side by side: identical names at the top of the Trophy, top of the Jacket and the very bottom. Then ask how four rounds across four very different Portuguese courses managed to change absolutely nothing at the extremities — and quite a lot in between.",
+  "foreshadow": [
+    "Stuart Neumann's opening 39-point salvo at Oitavos — including a 9-point burst over holes 1-3 (b40) — set a tone the field never answered",
+    "Gregg Williams was three clear on gross after one round and the gap only ever grew",
+    "Alex Baker's quintuple at the very first hole of the week (b06) was, in retrospect, the entire Wooden Spoon race"
+  ],
+  "competitions": [
+    {
+      "name": "The Trophy (Stableford)",
+      "winner_or_loser": "Stuart Neumann",
+      "how": "A front-runner's masterclass. Stuart led after every round (39-35-39-43) and the margin only grew: +5, +7, +12, +13. The lone wobbles — a quad at Troia's 16th (b11), the R2 H13 triple that ended a four-hole purple patch (b33), two 8s at Penha Longa (b12, b13) and a quintuple at Estoril's 8th inside a 9-shot bleed (b39, b05) — were absorbed because the good stuff was better: the R2 H10-12 surge (b25, 11 points in three holes), the R1 opener (b40), the R4 H4-6 run (b31). Final margin: 13 points over Gregg Williams.",
+      "key_beat_ids": [
+        "b03",
+        "b40",
+        "b25",
+        "b39",
+        "b31"
+      ]
+    },
+    {
+      "name": "The Green Jacket (Gross)",
+      "winner_or_loser": "Gregg Williams",
+      "how": "Even more emphatic than the Trophy. Gregg led on gross from hole 1 to hole 72 — the only 'lead changes' were brief tied-leader moments (Mullin R1 H6; Jon Baker twice in R2) that never became outright. The gap grew round by round: 3, 4, 14, 16. Penha Longa was where he buried it, helped by hot stretches (b41, b24), and Estoril sealed it with a round of 11 (gross vs par) built around the H2-4 and H6-8 par parades (b29, b30), despite a quad at the 14th (b14) and a wobble at the 9th (b34). Won by 16 at +66 — fifth-best gross in TEG history.",
+      "key_beat_ids": [
+        "b01",
+        "b29",
+        "b30",
+        "b41",
+        "b14"
+      ]
+    },
+    {
+      "name": "The Wooden Spoon",
+      "winner_or_loser": "Alex Baker",
+      "how": "Lost in the manner of a man auditioning for the role. Alex was bottom after a quintuple at the very first hole of the week (b06), briefly traded the position with David Mullin during R1's back nine (b43-b46), then locked it down for good with a triple at Troia's 13th (b32). From there it was a tour of disaster: a 10 at Oitavos's 17th (b04), a 9 at Penha Longa's 12th (b17) inside a 12-shot bleed (b42), and on the final day a 14-shot haemorrhage across holes 5-10 at Estoril (b22) capped by an 11 at the 12th (b02). Final tally: 127 points, alone at the foot.",
+      "key_beat_ids": [
+        "b10",
+        "b06",
+        "b32",
+        "b22",
+        "b02",
+        "b04"
+      ]
+    }
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "headline_candidates": [
+        "Oitavos Sets the Template",
+        "Neumann Out of the Blocks, Baker Into the Dunes",
+        "Three Leaders, Already",
+        "A Links Welcome, A Sextuple Farewell"
+      ],
+      "chosen_headline": "Oitavos Sets the Template",
+      "angle": "Within eighteen holes of Arthur Hills's Atlantic links, all three competitions had their eventual winner (and loser) in pole position. Stuart's fast start (b40), Gregg three clear on gross, and Alex's day-long flirtation with the basement that culminated in the 10 at the 17th inside an 11-shot closing bleed.",
+      "beat_ids": [
+        "b40",
+        "b04",
+        "b47",
+        "b06",
+        "b07",
+        "b35"
+      ]
+    },
+    {
+      "round": 2,
+      "headline_candidates": [
+        "Troia, Briefly Interesting",
+        "Neumann Bends, Does Not Break",
+        "The Spoon Race Ends in the Middle of Round Two",
+        "RTJ Sr. Asks Questions; Mostly Gets Bogeys"
+      ],
+      "chosen_headline": "Neumann Bends, Does Not Break",
+      "angle": "On the only new course of the week, Stuart wobbled — a quad at the 16th (b11), a triple-bogey end to a four-hole purple patch (b33) — but answered with the H10-12 surge (b25) and stretched his Trophy lead to 7. Meanwhile Alex Baker dropped to the bottom of the Spoon race for the final time at the 13th (b32) inside two separate 13-shot bleeds.",
+      "beat_ids": [
+        "b25",
+        "b33",
+        "b32",
+        "b38",
+        "b27",
+        "b11"
+      ]
+    },
+    {
+      "round": 3,
+      "headline_candidates": [
+        "Penha Longa Breaks the Field",
+        "Gregg Goes for the Throat",
+        "A Mountain Course, Several Mountainous Numbers",
+        "The Day the Margins Doubled"
+      ],
+      "chosen_headline": "Penha Longa Breaks the Field",
+      "angle": "The decisive round in both top competitions: Gregg's lead jumped from 4 to 14, Stuart's from 7 to 12. RTJ Jr's mountain layout extracted a 10 from Jon Baker at the par-5 12th (b08), an 8 from Mullin at the 16th (b15), two 8s from Stuart (b12, b13) and a 12-shot bleed from Alex (b42). Gregg's H13-15 par run (b41) and his recovery birdie at the 5th (b24) were the day's grown-up golf.",
+      "beat_ids": [
+        "b08",
+        "b41",
+        "b42",
+        "b49",
+        "b24",
+        "b15"
+      ]
+    },
+    {
+      "round": 4,
+      "headline_candidates": [
+        "Estoril: A Coronation and an 11",
+        "Neumann's 43, Williams's 11, Baker's 14",
+        "The Procession Reaches the Parkland",
+        "All That Was Left Was the Walking"
+      ],
+      "chosen_headline": "Estoril: A Coronation and an 11",
+      "angle": "With every race effectively decided, Estoril offered the trophies and the colour. Stuart's best round of the week (43 pts) included another 9 at the 8th (b05) inside a 9-shot bleed (b39); Gregg's round of 11 was built on the H2-4 and H6-8 par parades (b29, b30); and Alex signed off the Spoon with the week's defining number — 11 at the 12th (b02), the centrepiece of a six-hole, 14-shot collapse (b22).",
+      "beat_ids": [
+        "b02",
+        "b22",
+        "b29",
+        "b30",
+        "b05",
+        "b39",
+        "b14",
+        "b50"
+      ]
+    }
+  ],
+  "players": [
+    {
+      "player": "Stuart Neumann",
+      "arc": "Wire-to-wire Trophy winner: out of the blocks at Oitavos (b40), absorbed wobbles at Troia (b11, b33) and Penha Longa (b12, b13), and signed off with his best round of the week at Estoril despite a quintuple at the 8th (b05, b39). 156 points, won by 13."
+    },
+    {
+      "player": "Gregg Williams",
+      "arc": "Wire-to-wire Green Jacket: never headed on gross, broke the field at Penha Longa (b41), and cruised home at Estoril on a diet of pars (b29, b30) — one quad at the 14th (b14) the only blemish. +66, won by 16; runner-up in the Trophy."
+    },
+    {
+      "player": "Alex Baker",
+      "arc": "Wooden Spoonist from hole 1 (b06) to hole 72 (b02), via the 10 at Oitavos's 17th (b04), the seal-it triple at Troia's 13th (b32), a 12-shot Penha Longa bleed (b42) and a 14-shot Estoril implosion (b22). 127 points, alone at the bottom."
+    },
+    {
+      "player": "Jon Baker",
+      "arc": "Briefly threatened Gregg's Jacket lead at Troia (twice tied at H11 and H14) but undone by Penha Longa — a 10 at the 12th (b08) inside an 11-shot three-hole bleed (b49) — and an 8 at Estoril's 11th (b21)."
+    },
+    {
+      "player": "David Mullin",
+      "arc": "Trophy runner-up to Gregg in name, Jacket runner-up in fact; flirted with the Spoon in R1 (b43, b45) before steadying, posted an 8 at Penha Longa's 16th (b15) and a tidy H11-13 burst at Estoril (b36)."
+    }
+  ],
+  "must_include_beat_ids": [
+    "b01",
+    "b03",
+    "b10",
+    "b02",
+    "b04",
+    "b08",
+    "b22",
+    "b32",
+    "b40",
+    "b29"
+  ],
+  "cuts": [
+    "b07",
+    "b09",
+    "b16",
+    "b19",
+    "b20",
+    "b21",
+    "b23",
+    "b26",
+    "b28",
+    "b34",
+    "b36",
+    "b37",
+    "b43",
+    "b44",
+    "b45",
+    "b46",
+    "b48",
+    "b50",
+    "b13",
+    "b17",
+    "b18",
+    "b31"
+  ],
+  "venue_notes": "TEG's 5th visit to the Lisbon Coast (2023): R1 Oitavos Dunes (3rd TEG round there) — Arthur Hills Atlantic links, frame as the familiar opener that already decided the shape; R2 Troia (new course for TEG) — RTJ Sr. championship layout, the one chance for a fresh narrative, duly squandered; R3 Penha Longa Atlantic (3rd TEG round there) — RTJ Jr. mountain parkland in the Sintra hills, the round where the gaps doubled and the big numbers piled up; R4 Estoril (2nd TEG round there) — Mackenzie Ross parkland, Portugal's oldest club, fittingly the venue for a procession to the trophies."
+}

@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> John Patterson</span></p>
-  <p><strong>Green Jacket:</strong> Jon Baker</p>
-  <p><strong>Wooden Spoon:</strong> David Mullin</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> John Patterson (2nd Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> Jon Baker (2nd Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> David Mullin (3rd Spoon)</p>
 </section>
 
 Saturday lunchtime at PGA Catalunya, the 4th green of the Stadium course. Gregg Williams is signing for a nine. John Patterson, who has just made a serviceable bogey, is signing for the outright lead of a tournament he will not surrender for the remaining 32 holes. Neither man says very much. There is nothing, really, to say. The Trophy has just changed hands, the Green Jacket has just changed hands at the same green a group earlier, and the only person at Camiral who does not yet know the week is decided is the man still tallying his card.
@@ -87,6 +87,20 @@ Stuart Neumann eagled the par-5 15th — the tournament's only eagle — having 
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">TEG records:</span> Jon Baker's +63 is the 3rd-best Gross total in TEG history.</p>
-<p class="records"><span class="records-header">Personal bests:</span> John Patterson's 172 pts is a personal Trophy best; Gregg Williams posts a personal-best Gross round: +12 (R1); Gregg Williams's +76 is a personal Gross best.</p>
-<p class="records"><span class="records-header">Rare feats:</span> John Patterson runs up a 12 (+8 (blow-up)) at the 4th (R1) — a new TEG-record worst on a par-4; his career-worst on a par-4; Stuart Neumann eagles the par-5 15th (R4); Gregg Williams runs up a 11 (septuple bogey) at the 13th (R3) — his career-worst on a par-4; Stuart Neumann runs up a 12 (septuple bogey) at the 15th (R1) — a new TEG-record worst on a par-5; his career-worst on a par-5; Stuart Neumann runs up a 10 (sextuple bogey) at the 13th (R1) — his career-worst on a par-4.</p>
+<div class="records"><p class="records-header">TEG records:</p><ul>
+  <li>Jon Baker's +63 is the 3rd-best Gross total in TEG history</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>John Patterson's 172 pts is a personal Trophy best</li>
+  <li>Gregg Williams posts a personal-best Gross round: +12 (R1)</li>
+  <li>Gregg Williams's +76 is a personal Gross best</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>John Patterson runs up a 12 (+8 (blow-up)) at the 4th (R1) — a new TEG-record worst on a par-4; his career-worst on a par-4</li>
+  <li>Stuart Neumann eagles the par-5 15th (R4)</li>
+  <li>Gregg Williams runs up a 11 (septuple bogey) at the 13th (R3) — his career-worst on a par-4</li>
+  <li>Stuart Neumann runs up a 12 (septuple bogey) at the 15th (R1) — a new TEG-record worst on a par-5; his career-worst on a par-5</li>
+  <li>Stuart Neumann runs up a 10 (sextuple bogey) at the 13th (R1) — his career-worst on a par-4</li>
+</ul></div>

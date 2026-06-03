@@ -21,5 +21,21 @@ The Trophy gap closed but did not break: Mullin's 42 was beaten by both Alex Bak
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">Personal bests:</span> Alex Baker posts a personal-best round: 45 pts (R2); Gregg Williams posts a personal-best round: 48 pts (R2).</p>
-<p class="records"><span class="records-header">Rare feats:</span> John Patterson runs up a 10 (sextuple bogey) at the 1st (R2); Stuart Neumann runs up a 10 (sextuple bogey) at the 18th (R2); Stuart Neumann runs up a 10 (quintuple bogey) at the 13th (R2).</p>
+<div class="records"><p class="records-header">TEG records:</p><ul>
+  <li>Jon Baker's +10 (gross) is the 3rd-best Gross round in TEG history to date</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>Alex Baker posts a personal-best round: 45 pts</li>
+  <li>Alex Baker posts a personal-best Gross round: +23</li>
+  <li>Gregg Williams posts a personal-best round: 48 pts</li>
+  <li>Gregg Williams posts a personal-best Gross round: +14</li>
+  <li>Jon BAKER — 27 Stableford on the Front nine (R2) is a personal-best Front nine Stableford</li>
+  <li>Alex BAKER — 28 Stableford on the Front nine (R2) is a personal-best Front nine Stableford</li>
+  <li>Jon BAKER — +1 Gross on the Front nine (R2) is a personal-best Front nine Gross</li>
+  <li>Alex BAKER — +6 Gross on the Front nine (R2) is a personal-best Front nine Gross</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>Stuart Neumann runs up a 10 (sextuple bogey) at the 18th (R2) — his career-worst on a par-4</li>
+</ul></div>

@@ -134,6 +134,42 @@ def _competition_state_at_round(teg_num: int, round_num: int) -> list[dict]:
 # ---------------------------------------------------------------------------
 # Bundle assembly
 # ---------------------------------------------------------------------------
+def _prior_rounds_context(teg_num: int, round_num: int, all_events: list) -> list[dict]:
+    """For rounds R≥2, summarise each completed prior round.
+
+    Returns a list of dicts, one per prior round (oldest first):
+        {round, standings_end_of_round, top_beats: [{id, headline, type, players}]}
+
+    The top beats are the 6 highest-scored events from that round (no hole detail —
+    just enough for the planner and writer to reference by player and event type).
+    """
+    if round_num <= 1:
+        return []
+    prior = []
+    for r in range(1, round_num):
+        r_events = sorted(
+            [e for e in all_events if e.round == r],
+            key=lambda e: e.total, reverse=True,
+        )
+        top_beats = [
+            {
+                "id": f"r{r}_prior_{i+1:02d}",
+                "headline": e.headline,
+                "type": e.type,
+                "players": e.players,
+                "scores": {"importance": e.importance, "rarity": e.rarity,
+                           "entertainment": e.entertainment},
+            }
+            for i, e in enumerate(r_events[:6])
+        ]
+        prior.append({
+            "round": r,
+            "standings_end_of_round": _competition_state_at_round(teg_num, r),
+            "top_beats": top_beats,
+        })
+    return prior
+
+
 def assemble_round_bundle(teg_num: int, round_num: int, mode: str = "balanced",
                           tone: str = "house",
                           events_cache: Optional[list] = None,
@@ -194,6 +230,7 @@ def assemble_round_bundle(teg_num: int, round_num: int, mode: str = "balanced",
         },
         "competition_state_end_of_round": _competition_state_at_round(teg_num, round_num),
         "competition_state_prior": _competition_state_at_round(teg_num, round_num - 1),
+        "prior_rounds": _prior_rounds_context(teg_num, round_num, all_events),
         "beats": beats,
     }
     return bundle, round_events
@@ -233,6 +270,8 @@ INPUT (JSON in the user turn):
 - competition_state_end_of_round: per-competition leader/laggard, score, gap, \
 plus full standings list
 - competition_state_prior: same shape, for end of previous round (empty if R1)
+- prior_rounds (R≥2 only): for each completed prior round — end-of-round standings \
+and the top 6 beats from that round. Use this for callbacks and trajectory colour.
 - beats: ranked notable events FROM THIS ROUND ONLY. ALWAYS refer by `id`.
 - round_venue: course, date, visit count
 - area_context: location and area visit count
@@ -266,6 +305,10 @@ what changed. For final rounds, the `note` describes how the race was WON (or \
 lost, for the Spoon).
 - `venue_notes`: any course/area context to weave in.
 - `title` + a few `title_candidates`; record the resolved `tone`.
+- Use `prior_rounds` (when present) to set foreshadow hooks and player arcs in \
+context: e.g. "Baker recovering from a disastrous R1", "Mullin extending his \
+overnight lead". Only reference prior events when they add genuine trajectory \
+or contrast — don't pad.
 
 SELECTION PRINCIPLES:
 - Favour high-importance beats for the spine; high-rarity for one-line callouts; \
@@ -328,6 +371,12 @@ lead outright, say "drew level", not "took the lead".
 - For final rounds (`is_final_round=true`): the race-shifts section becomes the \
 race-results section — declare winners and final margins.
 - No closing "Players" / "men, in brief" bullet list — coverage lives in section 2.
+- **Prior rounds (R≥2).** Use `prior_rounds` for factual callbacks only: one-line \
+references like "recovering from yesterday's 9-over R2" or "he held the overnight \
+lead". No extended retelling of prior rounds.
+- **Stroke index (SI).** If hole evidence includes `si`, note it factually where \
+interesting: SI 1 = hardest hole on the course; SI 18 = easiest; SI 2–3 = one of \
+the hardest; SI 16–17 = one of the easiest. SI 4–15: omit. One-word note only.
 - **TEG has NO countback, NO tiebreakers, NO playoff.** Lead changes are caused by \
 point accumulation: Stableford (TEG 8+) or net-vs-par (TEGs 1–7) for the Trophy; \
 Gross for the Jacket. The bundle's `trophy_metric` identifies which era. Never \
@@ -447,6 +496,14 @@ stretch of holes, the figure must equal the precise sum of per-hole over-par \
 (bogey = +1, double = +2, triple = +3, quad = +4, quint = +5, sext = +6). If \
 echoing a total from the dry draft, check it against the per-hole evidence — \
 wrong arithmetic is the most obvious fabrication players will catch.
+- **Stroke index (SI) for hole colour.** Beat hole evidence may include an `si` \
+field. Use sparingly: SI 1 = "the hardest hole on the course"; SI 18 = "the \
+easiest"; SI 2–3 = "one of the hardest"; SI 16–17 = "one of the easiest". \
+SI 4–15: not noteworthy — ignore. Don't force it on every hole.
+- **Prior-round callbacks (R≥2).** The dry draft and `prior_rounds` data allow \
+brief colour references to earlier rounds — "recovering from a disastrous R1", \
+"extending his overnight lead", "a player transformed since R2's struggles". \
+Keep callbacks brief and earned; this is still a round report, not a tournament recap.
 - Markdown only; the renderer applies styling."""
 
 

@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> John Patterson</span></p>
-  <p><strong>Green Jacket:</strong> David Mullin</p>
-  <p><strong>Wooden Spoon:</strong> Stuart Neumann</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> John Patterson (1st Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> David Mullin (7th Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Stuart Neumann (2nd Spoon)</p>
 </section>
 
 There is a photograph that does not exist of John Patterson standing on the 10th tee at Praia D'El Rey on the second afternoon, somewhere on the wrong side of mid-round, with the look of a man who has been told he is no longer himself. He had begun the day one point behind Jon Baker. He would end it ten clear. In between he assembled, hole by hole, the second-best round in TEG history.
@@ -90,7 +90,32 @@ The **Wooden Spoon** was decided on the 15th of Round 1, when Neumann's second q
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">TEG records:</span> John Patterson's 168 pts is the best Trophy total in TEG history; David Mullin's +67 is the best Gross total in TEG history; John Patterson's 49 pts is the 2nd-best round in TEG history to date (R2).</p>
-<p class="records"><span class="records-header">Personal bests:</span> Alex Baker posts a personal-best round: 44 pts (R2); Alex Baker posts a personal-best Gross round: +27 (R2); Alex Baker posts a personal-best round: 44 pts (R4); Alex Baker posts a personal-best Gross round: +27 (R4); Alex Baker's +127 is a personal Gross best; Gregg Williams's +115 is a personal Gross best; Jon Baker's +77 is a personal Gross best; John Patterson's +88 is a personal Gross best.</p>
-<p class="records"><span class="records-header">Personal worsts:</span> Alex Baker's worst Gross round to date: +43 (R1).</p>
-<p class="records"><span class="records-header">Rare feats:</span> Alex Baker runs up a 11 (septuple bogey) at the 14th (R1) — his career-worst on a par-4; Gregg Williams runs up a 9 (sextuple bogey) at the 15th (R1) — his career-worst on a par-3; Gregg Williams runs up a 11 (sextuple bogey) at the 7th (R4) — his career-worst on a par-5; David Mullin runs up a 9 (quintuple bogey) at the 10th (R3) — his career-worst on a par-4; Stuart Neumann runs up a 8 (quintuple bogey) at the 15th (R1) — his career-worst on a par-3.</p>
+<div class="records"><p class="records-header">TEG records:</p><ul>
+  <li>John Patterson's 168 pts is the best Trophy total in TEG history</li>
+  <li>David Mullin's +67 is the best Gross total in TEG history</li>
+  <li>John Patterson's 49 pts is the 2nd-best round in TEG history to date (R2)</li>
+  <li>John PATTERSON — 30 Stableford on the Back nine (R2) is the best Back nine Stableford in TEG history</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>Alex Baker posts a personal-best round: 44 pts (R2, R4)</li>
+  <li>Alex Baker posts a personal-best Gross round: +27 (R2, R4)</li>
+  <li>Alex Baker's +127 is a personal Gross best</li>
+  <li>Gregg Williams's +115 is a personal Gross best</li>
+  <li>Jon Baker's +77 is a personal Gross best</li>
+  <li>John Patterson's +88 is a personal Gross best</li>
+  <li>John PATTERSON — 30 Stableford on the Back nine (R2) is a personal-best Back nine Stableford</li>
+  <li>John PATTERSON — +2 Gross on the Back nine (R2) is a personal-best Back nine Gross</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal worsts:</p><ul>
+  <li>Alex Baker's worst Gross round to date: +43 (R1)</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>Alex Baker runs up a 11 (septuple bogey) at the 14th (R1) — his career-worst on a par-4</li>
+  <li>Gregg Williams runs up a 9 (sextuple bogey) at the 15th (R1) — his career-worst on a par-3</li>
+  <li>Gregg Williams runs up a 11 (sextuple bogey) at the 7th (R4) — his career-worst on a par-5</li>
+  <li>David Mullin runs up a 9 (quintuple bogey) at the 10th (R3) — his career-worst on a par-4</li>
+  <li>Stuart Neumann runs up a 8 (quintuple bogey) at the 15th (R1) — his career-worst on a par-3</li>
+</ul></div>

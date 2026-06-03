@@ -97,7 +97,26 @@ The closing day's other business was tidier. Baker posted a personal-best +18 gr
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">TEG records:</span> David Mullin's +12 (gross) is the best Gross round in TEG history to date (R1); David Mullin's +11 (gross) is the best Gross round in TEG history to date (R2); Stuart Neumann's -9 is the best round in TEG history to date (R2); Stuart Neumann's +11 (gross) is the best Gross round in TEG history to date (R2).</p>
-<p class="records"><span class="records-header">Personal bests:</span> David Mullin posts a personal-best round: -4 (R2); Gregg Williams posts a personal-best round: -6 (R2); Jon Baker posts a personal-best Gross round: +18 (R4); Henry Meller posts a personal-best round: -3 (R4); Henry Meller posts a personal-best Gross round: +17 (R4).</p>
-<p class="records"><span class="records-header">Personal worsts:</span> David Mullin's worst round to date: +12 (R3).</p>
-<p class="records"><span class="records-header">Rare feats:</span> Henry Meller runs up a 10 (quintuple bogey) at the 16th (R2) — his career-worst on a par-5.</p>
+<div class="records"><p class="records-header">TEG records:</p><ul>
+  <li>David Mullin's +12 (gross) is the best Gross round in TEG history to date (R1)</li>
+  <li>David Mullin's +11 (gross) is the best Gross round in TEG history to date (R2)</li>
+  <li>Stuart Neumann's -9 is the best round in TEG history to date (R2)</li>
+  <li>Stuart Neumann's +11 (gross) is the best Gross round in TEG history to date (R2)</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>David Mullin posts a personal-best round: -4 (R2)</li>
+  <li>Gregg Williams posts a personal-best round: -6 (R2)</li>
+  <li>Jon Baker posts a personal-best Gross round: +18 (R4)</li>
+  <li>Henry Meller posts a personal-best round: -3 (R4)</li>
+  <li>Henry Meller posts a personal-best Gross round: +17 (R4)</li>
+  <li>Stuart NEUMANN — +3 Gross on the Front nine (R2) is a personal-best Front nine Gross</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal worsts:</p><ul>
+  <li>David Mullin's worst round to date: +12 (R3)</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>Henry Meller runs up a 10 (quintuple bogey) at the 16th (R2) — his career-worst on a par-5</li>
+</ul></div>

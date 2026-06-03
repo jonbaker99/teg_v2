@@ -1,0 +1,197 @@
+{
+  "title": "Baker's Coast",
+  "title_candidates": [
+    "Baker's Coast",
+    "Kent State",
+    "The Long Sands of Jon",
+    "A Baker's Dozen, Held in Kent"
+  ],
+  "theme": "Jon Baker as wire-to-wire metronome on Kent's links — the only flicker of doubt arrived briefly in Round 2 and was snuffed out at Littlestone with one of the great rounds in TEG history.",
+  "tone": "house — Ronay/Peck, faithful and tongue-in-cheek, written for insiders who were there.",
+  "narrative_structure": "in_medias_res",
+  "opening_hook": "Open on Littlestone, Round 3: Gregg Williams has just drawn level on the first green and the Trophy is suddenly alive — then Jon Baker proceeds to shoot +8 gross, the second-best Gross round in TEG history, and the tournament effectively ends in the Romney Marshes. Then flash back to Deal.",
+  "foreshadow": [
+    "TEG's first foray into Kent — four new links, no local knowledge, plenty of wind",
+    "Jon's 9-shot Gross lead after R1 looked decisive; the Trophy race did not agree",
+    "John Patterson, a man capable of an eagle and a nine in the same week — sometimes the same round",
+    "David Mullin, comfortably mid-pack for three days, with one hole still to come"
+  ],
+  "competitions": [
+    {
+      "name": "The Trophy (Stableford)",
+      "winner_or_loser": "Jon Baker (158 pts, by 6 from Gregg Williams)",
+      "how": "Jon led from R1 (39 pts, +6) but the cushion shrank to a single point after R2 as Gregg closed; the decisive sequence is Gregg drawing level on the 1st at Littlestone (b48), and Jon's response — a 44-point round built on a historic +8 gross (b03, b24) — which restretched the lead to 5 and effectively put the trophy out of reach. R4 was administration: 39 pts, lead out to 6.",
+      "key_beat_ids": [
+        "b04",
+        "b35",
+        "b48",
+        "b03",
+        "b24"
+      ]
+    },
+    {
+      "name": "The Green Jacket (Gross)",
+      "winner_or_loser": "Jon Baker (+50, by 18 from Gregg Williams)",
+      "how": "Never not leading. +9 after R1, +7 after R2, +14 after R3 thanks to the +8 round at Littlestone (b03), and out to +18 by the end at Prince's. Zero lead changes across the four days — a procession.",
+      "key_beat_ids": [
+        "b01",
+        "b03"
+      ]
+    },
+    {
+      "name": "The Wooden Spoon",
+      "winner_or_loser": "David Mullin (135 pts)",
+      "how": "For three rounds the Spoon belonged to John Patterson (R1, R2) and briefly Alex Baker (R3) — Mullin sat a comfortable mid-pack 3rd-3rd-4th. Then on the 10th at Prince's Shore/Dunes in R4 he made a nine (b10), which dropped him to the bottom of the race (b12) and there he stayed. A late, slow-motion trapdoor.",
+      "key_beat_ids": [
+        "b11",
+        "b10",
+        "b12"
+      ]
+    }
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "headline_candidates": [
+        "Deal Or No Deal: Baker Pockets Nine at Royal Cinque Ports",
+        "Patterson's Long Walk on a Short Coast",
+        "The Wind, the Wedge and the Wooden Spoon Carousel"
+      ],
+      "chosen_headline": "Deal Or No Deal: Baker Pockets Nine at Royal Cinque Ports",
+      "angle": "Jon opens with 39 pts and a 9-shot Gross cushion on a course that hosted two Opens; John Patterson racks up three quadruple bogeys and the Spoon is already passing hands like a hot potato.",
+      "beat_ids": [
+        "b15",
+        "b09",
+        "b16",
+        "b17"
+      ]
+    },
+    {
+      "round": 2,
+      "headline_candidates": [
+        "The Lead Gets Squeezed at Sandwich",
+        "Baker Wobbles, Then Birdies the 18th",
+        "Dunes, Himalayas and a One-Point Margin"
+      ],
+      "chosen_headline": "Baker Wobbles, Then Birdies the 18th",
+      "angle": "Gregg Williams closes within one and briefly nudges level; Jon answers with a birdie at the last (b35) to restore outright lead heading to Littlestone. Patterson and Mullin contribute the day's blow-ups.",
+      "beat_ids": [
+        "b35",
+        "b19",
+        "b20",
+        "b18"
+      ]
+    },
+    {
+      "round": 3,
+      "headline_candidates": [
+        "Littlestone, Large Statement",
+        "Baker's +8 Buries the Field",
+        "Patterson Posts 49 — And Still Isn't Close"
+      ],
+      "chosen_headline": "Baker's +8 Buries the Field",
+      "angle": "The pivotal day. Gregg draws level on the 1st (b48); Jon then shoots the second-best Gross round in TEG history (+8, b03) en route to 44 pts. John Patterson, of all people, posts a personal-best gross +12 and 49 Stableford points — the third-best round in TEG history — and gains barely anything on the leader.",
+      "beat_ids": [
+        "b48",
+        "b03",
+        "b05",
+        "b06",
+        "b24"
+      ]
+    },
+    {
+      "round": 4,
+      "headline_candidates": [
+        "Mullin's Ninth Circle at Prince's",
+        "Coronation on the Shore",
+        "Patterson Eagles a Par-5, Then Remembers He's Patterson"
+      ],
+      "chosen_headline": "Mullin's Ninth Circle at Prince's",
+      "angle": "Jon closes it out with 39 pts (lead out to 6 on the Trophy, 18 on the Jacket). The day's drama is Mullin's nine at the 10th (b10) which delivers him the Spoon (b12); Alex Baker posts a personal-best gross +17 (b07); Patterson eagles the 2nd (b02) on the way to yet another quadruple bogey.",
+      "beat_ids": [
+        "b02",
+        "b07",
+        "b10",
+        "b12",
+        "b23"
+      ]
+    }
+  ],
+  "players": [
+    {
+      "player": "Jon Baker",
+      "arc": "Wire-to-wire in both Trophy and Jacket; the Littlestone +8 (b03) is the round of the tournament and arguably the round of his TEG career."
+    },
+    {
+      "player": "Gregg Williams",
+      "arc": "The only man to lay a glove on Jon — closed to one after R2, drew level on the 1st at Littlestone, then watched the leader disappear into the Romney Marshes. Runner-up in both Trophy and Jacket."
+    },
+    {
+      "player": "John Patterson",
+      "arc": "A walking weather system: four quadruple bogeys, a quintuple, an eagle on the 2nd in R4, AND the third-best Stableford round in TEG history (49 pts) with a personal-best gross +12 at Littlestone. Everything, all at once."
+    },
+    {
+      "player": "Alex Baker",
+      "arc": "Quietly grafted to a personal-best gross +17 in the final round (b07); briefly held the Spoon in R3 before Mullin obliged."
+    },
+    {
+      "player": "David Mullin",
+      "arc": "Mid-pack for three rounds, then a nine at the 10th at Prince's Shore/Dunes (b10) and the Spoon was his."
+    }
+  ],
+  "must_include_beat_ids": [
+    "b01",
+    "b04",
+    "b11",
+    "b03",
+    "b05",
+    "b06",
+    "b02",
+    "b07",
+    "b08",
+    "b10",
+    "b48"
+  ],
+  "cuts": [
+    "b09",
+    "b13",
+    "b14",
+    "b15",
+    "b16",
+    "b17",
+    "b18",
+    "b19",
+    "b20",
+    "b21",
+    "b22",
+    "b23",
+    "b25",
+    "b26",
+    "b27",
+    "b28",
+    "b29",
+    "b30",
+    "b31",
+    "b32",
+    "b33",
+    "b34",
+    "b36",
+    "b37",
+    "b38",
+    "b39",
+    "b40",
+    "b41",
+    "b42",
+    "b43",
+    "b44",
+    "b45",
+    "b46",
+    "b47",
+    "b49",
+    "b50",
+    "b12",
+    "b24",
+    "b35"
+  ],
+  "venue_notes": "TEG's first visit to Kent — every course a debut. Frame the report as a tour of the south-east links: Royal Cinque Ports (two-time Open host, exposed at Deal) for R1; Prince's Dunes/Himalayas at Sandwich for R2 (27-hole site, future 2030 Walker Cup); Littlestone on the Romney Marshes for R3 (Laidlaw Purves of Royal St George's, refined by Braid and MacKenzie — fittingly the stage for the tournament's defining round); Prince's Shore/Dunes for R4 (the strongest routing, and where the Spoon was settled). Use Kent and the wind as connective tissue, not decoration."
+}

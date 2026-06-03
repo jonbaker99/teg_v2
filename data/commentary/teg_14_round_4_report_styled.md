@@ -23,7 +23,3 @@ The shape of the day, then: the Trophy gap closed from eight to two and only bec
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> DM 154 | AB 152 | GW 137 | JB 125</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +68 | JB +75 | GW +76 | AB +102</p>
-
-## Personal bests and TEG records
-
-<p class="records"><span class="records-header">Rare feats:</span> Alex Baker runs up a 10 (sextuple bogey) at the 16th (R4).</p>

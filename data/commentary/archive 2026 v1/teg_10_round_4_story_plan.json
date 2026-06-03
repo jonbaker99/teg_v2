@@ -1,0 +1,78 @@
+{
+  "title": "Baker's Boavista Masterclass",
+  "title_candidates": [
+    "Baker's Boavista Masterclass",
+    "Fifty-One and Done",
+    "The Best Round Ever Played",
+    "Alex Baker Rewrites the Record Book"
+  ],
+  "theme": "Alex Baker's record-breaking 51-point final round turns a dead heat into an 11-point coronation",
+  "tone": "house",
+  "narrative_structure": "theme_led",
+  "opening_hook": "Open on the scoreboard at the start of the day — Alex Baker and Gregg Williams locked together on 133 — then pivot to the number that broke the tournament and the record book: 51. A final round of this scale demands the dominant arc.",
+  "foreshadow": [
+    "Williams birdies the 5th to draw level for the Trophy — the last moment of the day the race had a pulse",
+    "Baker's six-hole 21-point surge from the 5th to the 10th is the passage that turned a tie into a procession",
+    "Patterson's 11 at the 8th and Williams' quadruple at the 6th — twin signals that Boavista was punishing anyone not named Baker"
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "Alex BAKER",
+      "score": 184.0,
+      "gap": 11.0,
+      "note": "WON by Alex Baker. Started the round tied with Gregg Williams on 133; Williams briefly drew level for the lead at the 5th (r4_b10) before Baker's historic 51-point round blew the race apart. Final margin 11 points over Williams."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "David MULLIN",
+      "score": 51.0,
+      "gap": 12.0,
+      "note": "WON by David Mullin on gross. Led by 10 entering the round and extended to 12 over Jon Baker — a quietly emphatic gross victory while the Stableford headlines played out elsewhere."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "John PATTERSON",
+      "score": 112.0,
+      "gap": 32.0,
+      "note": "CLAIMED by John Patterson. Already 14 adrift, his 21-point round — featuring an 11 at the 8th, an 8 at the 10th and a 9 at the 18th — turned a deficit into a 32-point chasm."
+    }
+  ],
+  "key_beat_ids": [
+    "r4_b01",
+    "r4_b02",
+    "r4_b10",
+    "r4_b03",
+    "r4_b14",
+    "r4_b07",
+    "r4_b11",
+    "r4_b05"
+  ],
+  "players": [
+    {
+      "player": "Alex Baker",
+      "arc": "Walks in tied for the Trophy and walks out with 51 points — the best round in TEG history — sealing the Trophy by 11."
+    },
+    {
+      "player": "Gregg Williams",
+      "arc": "Briefly drew level at the 5th and even mounted a back-nine flurry of his own, but blow-ups at the 6th and 18th and a three-hole bleed mid-round left him no answer to Baker."
+    },
+    {
+      "player": "David Mullin",
+      "arc": "Quietly went about his business and converted a 10-shot Jacket lead into a 12-shot Jacket win — gross golf's understated champion."
+    },
+    {
+      "player": "Jon Baker",
+      "arc": "A tidy 9-point burst at 15-17 secured second in the Jacket race, finishing 12 back of Mullin."
+    },
+    {
+      "player": "Stuart Neumann",
+      "arc": "Bled eight shots in the opening three holes, including a quadruple at the 2nd, and never recovered."
+    },
+    {
+      "player": "John PATTERSON",
+      "arc": "A career-worst 21-point round — sextuple at the 8th, quadruple at the 10th, quintuple at the 18th — confirms the Wooden Spoon by a yawning 32 points."
+    }
+  ],
+  "venue_notes": "Boavista (Howard Swan parkland, Lagos) on TEG's 4th visit to the Algarve and the 12th TEG round at the venue — a course of Atlantic vistas and two-faced terrain that produced both the highest round in TEG history and some of its uglier numbers on the same afternoon."
+}

@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon Baker</span></p>
-  <p><strong>Green Jacket:</strong> Jon Baker</p>
-  <p><strong>Wooden Spoon:</strong> Gregg Williams</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon Baker (4th Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> Jon Baker (4th Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Gregg Williams (2nd Spoon)</p>
 </section>
 
 There is a moment in every TEG when the thing stops being a contest and becomes a procession, and at TEG 17 the moment was precisely identifiable: Royal Óbidos, the back nine of Round 3, somewhere around the 13th green. Jon Baker had just rolled in a birdie at a par 3. He had birdied the 11th, too, a par 5, with a bogey at the 12th between them. He would par the 14th, the 15th, the 16th. Across those six holes he gathered twenty Stableford points, a quantity of competence so out of keeping with the prevailing weather of TEG golf that everyone else might reasonably have gone to find the bar.
@@ -95,6 +95,15 @@ Gregg Williams posted 29 to confirm the Spoon at 123 points.
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">Personal bests:</span> Jon Baker's 166 pts is a personal Trophy best.</p>
-<p class="records"><span class="records-header">Personal worsts:</span> John Patterson's worst Gross round to date: +44 (R2).</p>
-<p class="records"><span class="records-header">Rare feats:</span> John Patterson runs up a 11 (sextuple bogey) at the 15th (R2) — his career-worst on a par-5; John Patterson runs up a 9 (sextuple bogey) at the 14th (R4) — his career-worst on a par-3.</p>
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>Jon Baker's 166 pts is a personal Trophy best</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal worsts:</p><ul>
+  <li>John Patterson's worst Gross round to date: +44 (R2)</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>John Patterson runs up a 11 (sextuple bogey) at the 15th (R2) — his career-worst on a par-5</li>
+  <li>John Patterson runs up a 9 (sextuple bogey) at the 14th (R4) — his career-worst on a par-3</li>
+</ul></div>

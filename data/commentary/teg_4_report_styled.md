@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> David Mullin</span></p>
-  <p><strong>Green Jacket:</strong> David Mullin</p>
-  <p><strong>Wooden Spoon:</strong> Gregg Williams</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> David Mullin (2nd Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> David Mullin (3rd Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Gregg Williams (1st Spoon)</p>
 </section>
 
 The 8th green at Bletchingley, mid-afternoon on the final day. Jon Baker, who had spent three and a half rounds doing impressionist work as the second-best player in the field, holes out from somewhere off the dance floor for an eagle two on the par-4. He has, in that moment, the Trophy lead. For the first time since Lingfield he is the man to beat. The standings, briefly, are upended.
@@ -83,7 +83,30 @@ Down at the other end, the Spoon was changing hands in a sort of mournful relay.
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">TEG records:</span> David Mullin's +9 net-vs-par is the best Trophy total in TEG history; David Mullin's +81 is the best Gross total in TEG history; David Mullin's +17 (gross) is the 2nd-best Gross round in TEG history to date (R3).</p>
-<p class="records"><span class="records-header">Personal bests:</span> Gregg Williams's +152 is a personal Gross best; Henry Meller's +107 is a personal Gross best; Jon Baker's +113 is a personal Gross best; Stuart Neumann's +100 is a personal Gross best.</p>
-<p class="records"><span class="records-header">Personal worsts:</span> Jon Baker's worst round to date: +9 (R2); Gregg Williams's worst round to date: +15 (R4); Gregg Williams's worst Gross round to date: +43 (R4).</p>
-<p class="records"><span class="records-header">Rare feats:</span> Henry Meller runs up a 12 (+9 (blow-up)) at the 11th (R1) — a new TEG-record worst on a par-3; his career-worst on a par-3; Jon Baker eagles the par-4 8th (R4); Jon Baker runs up a 9 (sextuple bogey) at the 12th (R4) — his career-worst on a par-3; Jon Baker runs up a 11 (sextuple bogey) at the 15th (R4) — his career-worst on a par-5; Henry Meller runs up a 10 (quintuple bogey) at the 11th (R4) — his career-worst on a par-5; Henry Meller runs up a 10 (quintuple bogey) at the 15th (R4) — his career-worst on a par-5.</p>
+<div class="records"><p class="records-header">TEG records:</p><ul>
+  <li>David Mullin's +9 net-vs-par is the best Trophy total in TEG history</li>
+  <li>David Mullin's +81 is the best Gross total in TEG history</li>
+  <li>David Mullin's +17 (gross) is the 2nd-best Gross round in TEG history to date (R3)</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>Gregg Williams's +152 is a personal Gross best</li>
+  <li>Henry Meller's +107 is a personal Gross best</li>
+  <li>Jon Baker's +113 is a personal Gross best</li>
+  <li>Stuart Neumann's +100 is a personal Gross best</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal worsts:</p><ul>
+  <li>Jon Baker's worst round to date: +9 (R2)</li>
+  <li>Gregg Williams's worst round to date: +15 (R4)</li>
+  <li>Gregg Williams's worst Gross round to date: +43 (R4)</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>Henry Meller runs up a 12 (+9 (blow-up)) at the 11th (R1) — a new TEG-record worst on a par-3; his career-worst on a par-3</li>
+  <li>Jon Baker eagles the par-4 8th (R4)</li>
+  <li>Jon Baker runs up a 9 (sextuple bogey) at the 12th (R4) — his career-worst on a par-3</li>
+  <li>Jon Baker runs up a 11 (sextuple bogey) at the 15th (R4) — his career-worst on a par-5</li>
+  <li>Henry Meller runs up a 10 (quintuple bogey) at the 11th (R4) — his career-worst on a par-5</li>
+  <li>Henry Meller runs up a 10 (quintuple bogey) at the 15th (R4) — his career-worst on a par-5</li>
+</ul></div>

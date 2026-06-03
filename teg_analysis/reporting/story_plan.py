@@ -103,6 +103,13 @@ entertainment = colour independent of the result), and hole-by-hole `holes` \
 evidence. ALWAYS refer to beats by their `id`.
 - venue: course one-liners and whether TEG has played here before.
 - tone: a requested register; default to the house voice unless this overrides it.
+- player_history: per-player cross-TEG history (win counts, last-4 finishing \
+positions, `notable_milestones`). Use the `notable_milestones` strings verbatim \
+in player arcs and foreshadow hooks when they add genuine colour — e.g. "back-to- \
+back Spoons going into this TEG" or "3 prior Trophy wins". Do NOT invent history \
+not present in this field. Win counts here cover TEGs BEFORE the current one; the \
+current winner's updated total appears in the at-a-glance box automatically, so \
+you do not need to compute it — just use the milestone strings as written.
 
 YOUR JOB:
 - Choose the story: one clear `theme` that runs through the whole report, and 2-4 \
@@ -149,6 +156,11 @@ bottom of the Trophy) but it is not weird.
 because players accumulate more points (Stableford / Gross). Never plan a theme \
 or note that invokes "countback", "tiebreaker", or "playoff" — those mechanisms \
 do not exist in TEG.
+- **Stroke index (SI) as optional colour.** Beat `holes` evidence may include an \
+`si` field. Use it sparingly when planning player arcs or foreshadow hooks: \
+SI 1 = the hardest hole on the course; SI 18 = the easiest; SI 2–3 = one of the \
+hardest; SI 16–17 = one of the easiest. SI 4–15: not noteworthy — ignore. Never \
+force SI commentary; only note it when it genuinely adds to the drama or irony.
 - Output only the structured plan."""
 
 
@@ -218,12 +230,16 @@ def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
     else:
         beats = all_beats
 
+    from teg_analysis.reporting.history_context import build_player_cross_teg_history
+    player_history = build_player_cross_teg_history(teg_num)
+
     bundle = {
         "teg": teg_num,
         "tone": tone,
         "trophy_metric": trophy_metric(teg_num),
         "venue": venue,
         "competition_arcs": arcs,
+        "player_history": player_history,
         "beats": beats,
     }
     return bundle, events

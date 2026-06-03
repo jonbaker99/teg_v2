@@ -32,5 +32,11 @@ So how the three races were won. The Trophy was — for one hole, on the 14th gr
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">Personal bests:</span> Alex Baker posts a personal-best round: 44 pts (R4).</p>
-<p class="records"><span class="records-header">Rare feats:</span> Gregg Williams runs up a 11 (sextuple bogey) at the 7th (R4).</p>
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>Alex Baker posts a personal-best round: 44 pts</li>
+  <li>Alex Baker posts a personal-best Gross round: +27</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>Gregg Williams runs up a 11 (sextuple bogey) at the 7th (R4) — his career-worst on a par-5</li>
+</ul></div>

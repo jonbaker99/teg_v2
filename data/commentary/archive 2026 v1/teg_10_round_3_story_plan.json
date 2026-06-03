@@ -1,0 +1,78 @@
+{
+  "title": "Two Leaders, One Tie, and a 10 on the Card",
+  "title_candidates": [
+    "Two Leaders, One Tie, and a 10 on the Card",
+    "Palmares Levels the Field",
+    "Mullin's 18th, Baker's 13th, Williams' Patience",
+    "A Tie at the Top After a Day of Self-Inflicted Wounds"
+  ],
+  "theme": "Palmares hands out leads and immediately yanks them back: Mullin's overnight Trophy advantage is detonated on the 18th, Alex Baker matches a personal best despite a 10 at the 13th, and Gregg Williams steadies into a share of the lead.",
+  "tone": "house",
+  "narrative_structure": "chronological",
+  "opening_hook": "Open with the scoreboard arithmetic of the day — David Mullin began R3 five clear in the Trophy and finished it eleven adrift in third — then rewind to walk the round in order, because the lead changed hands (or was levelled) at least five times before the 18th green decided anything.",
+  "foreshadow": [
+    "Alex Baker's blistering opening run (10 points across holes 2-4) sets him up for a personal-best 47 — but the 13th is still waiting with a 10 on it.",
+    "David Mullin's birdie-par-birdie at 15-17 looks like a coronation in waiting; the 18th has other ideas.",
+    "John Patterson's tidy 9 points across holes 1-3 flatters to deceive before a five-hole stretch that bleeds 19 shots."
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "Alex BAKER (tied with Gregg WILLIAMS)",
+      "score": 133.0,
+      "gap": 0.0,
+      "note": "Mullin took a five-point overnight lead into the round and lost it entirely: AB and GW are level at 133, DM third on 122. The lead was traded or levelled repeatedly through the round (AB level at H4, GW level at H4, AB outright at H6, DM level at H7, GW outright at H13, AB level at H15) before settling as a straight tie at the top going into the final round."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "David MULLIN",
+      "score": 38.0,
+      "gap": 10.0,
+      "note": "Mullin still leads the gross race but the cushion has shrunk from 13 to 10 over Jon Baker, courtesy of that quadruple-bogey 8 at the 18th. Jon Baker's par-par-par at 15-17 quietly chipped into the margin; the Jacket is still Mullin's to lose, but it is no longer a procession."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "John PATTERSON",
+      "score": 91.0,
+      "gap": 14.0,
+      "note": "Patterson opened with 9 points in three holes and looked, briefly, like a man escaping the bottom. Then came the 10 at the 8th, and a five-hole stretch (11-15) that haemorrhaged 19 shots. The gap to Neumann has ballooned from 5 to 14 — the Spoon is now his to avoid rather than his to share."
+    }
+  ],
+  "key_beat_ids": [
+    "r3_b01",
+    "r3_b02",
+    "r3_b03",
+    "r3_b07",
+    "r3_b06",
+    "r3_b12",
+    "r3_b14",
+    "r3_b26"
+  ],
+  "players": [
+    {
+      "player": "Alex BAKER",
+      "arc": "Posts a personal-best 47 points and seizes a share of the Trophy lead — and does it despite carding a 10 at the 13th, which is some kind of testament to the rest of the round."
+    },
+    {
+      "player": "Gregg WILLIAMS",
+      "arc": "The quietest route to the top of the leaderboard: a bogey-flecked but disciplined card, a three-hole burst of 9 points around the turn into the back nine, a birdie at 17 to stop a five-hole slide, and a share of the Trophy lead at the close."
+    },
+    {
+      "player": "David MULLIN",
+      "arc": "Begins the day five clear in the Trophy and 13 clear in the Jacket; loses the Trophy lead entirely and trims the Jacket cushion to 10 after birdie-par-birdie at 15-17 is undone by a quadruple-bogey 8 at the last."
+    },
+    {
+      "player": "Jon BAKER",
+      "arc": "A steady, unflashy round — par-par-par at 15-17 nudges him to within 10 of Mullin in the Jacket and keeps him fourth in the Trophy, still in touch."
+    },
+    {
+      "player": "Stuart NEUMANN",
+      "arc": "A round of two unmistakable halves: 14 shots dropped across holes 6-11, then 12 points reclaimed across 13-16; net result, he stays fifth but pulls the Spoon gap out to 14 in his favour."
+    },
+    {
+      "player": "John PATTERSON",
+      "arc": "A bright start (9 points in three holes) gives way to a 10 at the 8th, a quintuple-bogey 8 at the 12th and a five-hole haemorrhage of 19 shots — the Wooden Spoon position is now firmly his, with a 14-shot moat."
+    }
+  ],
+  "venue_notes": "Palmares (Alvor / Lagos combination) is new to TEG — Robert Trent Jones Jr. parkland in Lagos, the Algarve, on TEG's 4th visit to the region. Tree-lined fairways and strategic water; the par-5 13th and the par-4 18th have plainly been paying attention to the leaderboard."
+}

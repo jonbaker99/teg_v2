@@ -1,0 +1,78 @@
+{
+  "title": "Sintra Hills, Heavy Going",
+  "title_candidates": [
+    "Sintra Hills, Heavy Going",
+    "The 16th Bites Back",
+    "Williams Leads, Mullin Strikes",
+    "Carnage on the Mountain"
+  ],
+  "theme": "A brutal new mountain course chews up the field — Williams stretches his Trophy lead despite a 10, Mullin tightens his grip on the Jacket, and the back nine becomes a graveyard.",
+  "tone": "house",
+  "narrative_structure": "chronological",
+  "opening_hook": "Open on the back nine carnage at Penha Longa — specifically the 16th, where three players posted 8 or worse — then rewind to set the scene of a new TEG course in the Sintra hills and walk through the round in order.",
+  "foreshadow": [
+    "Williams arrives at the 11th with a comfortable Trophy cushion — flag the calm before his 11-13 implosion",
+    "Alex Baker's mid-round wobble at 6-8 as the early hint that the mountain was going to hurt him later",
+    "The 16th flagged early as the hole that will define the round's body count"
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "Gregg WILLIAMS",
+      "score": 79.0,
+      "gap": 11.0,
+      "note": "Lead held and extended from 4 to 11 over Jon Baker, despite Williams himself coughing up a 10 at the 12th and bleeding shots through the back nine. The damage elsewhere was simply worse — Mullin and Alex Baker stayed level on 66, Meller and Neumann lost ground."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "David MULLIN",
+      "score": 34.0,
+      "gap": 6.0,
+      "note": "Mullin's 1-shot edge over Jon Baker became a 6-shot cushion — the only player in the field to come through the back nine without a blow-up. Williams stays third on gross at 50, with Alex Baker now last on 75 after twin disasters at 16 and 18."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "Stuart NEUMANN",
+      "score": 48.0,
+      "gap": 8.0,
+      "note": "Neumann remains anchored to the bottom of the Trophy table, though the gap to Meller has shrunk from 12 to 8 after a round that included a quad at the 10th, another quad at the 12th and a quintuple at the 16th."
+    }
+  ],
+  "key_beat_ids": [
+    "r2_b01",
+    "r2_b13",
+    "r2_b02",
+    "r2_b03",
+    "r2_b04",
+    "r2_b05",
+    "r2_b08",
+    "r2_b09"
+  ],
+  "players": [
+    {
+      "player": "Gregg Williams",
+      "arc": "Survives a horror 11-13 stretch capped by a quintuple-bogey 10 at the 12th, yet still walks off with the Trophy lead extended to 11 — proof that on a course this brutal, hanging on counts as winning."
+    },
+    {
+      "player": "David Mullin",
+      "arc": "The round's quiet winner: the only man to keep the back nine in check, turning a one-shot Jacket lead into a six-shot one."
+    },
+    {
+      "player": "Jon Baker",
+      "arc": "Solid enough to climb to clear second in both the Trophy and the Jacket without doing anything spectacular — the beneficiary of others' carnage."
+    },
+    {
+      "player": "Alex Baker",
+      "arc": "Mid-round warning at 6-8, then properly undone on the back nine — a quad at 16, double at 17, quad at 18 — 10 shots bled in three holes drops him to the bottom of the Jacket standings."
+    },
+    {
+      "player": "Henry Meller",
+      "arc": "Comes apart over 11-14, bleeding 10 shots, and adds a quintuple-bogey 9 at the 16th for good measure; slips further off the Trophy pace."
+    },
+    {
+      "player": "Stuart Neumann",
+      "arc": "Three blow-ups (quad at 10, quad at 12, quintuple at 16) keep him rooted to the foot of the Trophy table, though the Spoon gap actually narrows as those above him also suffer."
+    }
+  ],
+  "venue_notes": "Penha Longa's Atlantic Course — a new venue for TEG, Robert Trent Jones Jr.'s dramatic Sintra hillside layout, on TEG's second visit to the Lisbon Coast. The steep mountain terrain is the unspoken protagonist; lean on the back-nine difficulty, especially the 16th, where three players posted 8 or worse on a par 4."
+}

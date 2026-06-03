@@ -1,0 +1,78 @@
+{
+  "title": "Carnage on Seve's Last Stand",
+  "title_candidates": [
+    "Carnage on Seve's Last Stand",
+    "Patterson's Ten-Shot Cushion Becomes Three",
+    "The Royal Óbidos Demolition Derby",
+    "Lead Intact, Just About"
+  ],
+  "theme": "A day of widespread wreckage at Seve's final design: blow-ups for every player, Patterson's commanding Trophy lead shredded from ten to three, and Alex Baker quietly posting the round of the day to leap into second.",
+  "tone": "house",
+  "narrative_structure": "player_by_player",
+  "opening_hook": "Open on the scoreboard reality: Patterson still leads the Trophy, but a ten-shot cushion has been hacked down to three after a round in which all six players posted at least one quadruple bogey or worse. Frame Royal Óbidos — Ballesteros' final design — as the venue that bit everyone.",
+  "foreshadow": [
+    "Jon Baker bolts out of the gate with 16 points through five — pin that as the high-water mark before the wheels come off at 10–12",
+    "Patterson bleeds eight shots across holes 2–4 — early warning of the carnage that returns at the 12th and 18th",
+    "Alex Baker keeps his head down on the front while others detonate — setting up his round-of-the-day 42 points despite a 9 at the 14th"
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "John PATTERSON",
+      "score": 121.0,
+      "gap": 3.0,
+      "note": "Lead held but badly dented: a ten-shot cushion shrunk to three. Patterson's 34-point round was undone by twin blow-ups (8 at the 12th, 9 at the 18th), while Alex Baker's 42-point round vaulted him from joint third into clear second. Mullin slipped from 2nd to 3rd; Jon Baker stayed level with him on 110."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "David MULLIN",
+      "score": 51.0,
+      "gap": 7.0,
+      "note": "Lead preserved at exactly the same 7-shot margin over Jon Baker — but only because Mullin's quintuple-bogey 9 at the 10th was matched, shot for shot, by Baker's own implosion at the 11th. Patterson remains 3rd at +20; Williams 4th. Alex Baker and Stuart Neumann are now tied at the back on 100."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "Stuart NEUMANN",
+      "score": 90.0,
+      "gap": 15.0,
+      "note": "Neumann remains rooted to the foot of the Trophy table and the gap to Williams above him has actually widened from 14 to 15, despite a respectable 37-point return that included a tidy 12-point burst through 10–13. Two quadruple-bogey 8s (at the 4th and the 16th) and a closing 8-6-7 finish kept him pinned."
+    }
+  ],
+  "key_beat_ids": [
+    "r3_b17",
+    "r3_b03",
+    "r3_b15",
+    "r3_b01",
+    "r3_b04",
+    "r3_b05",
+    "r3_b02",
+    "r3_b16"
+  ],
+  "players": [
+    {
+      "player": "John PATTERSON",
+      "arc": "Still the Trophy leader — but only just. Bled eight shots through 2–4, then served up a quadruple-bogey 8 at the 12th and a quadruple-bogey 9 at the 18th to see a 10-shot lead chopped to 3. A round of damage limitation that didn't quite limit the damage."
+    },
+    {
+      "player": "Alex BAKER",
+      "arc": "The day's quiet winner: 42 Stableford points, the best round of the day, including absorbing a quintuple-bogey 9 at the 14th without derailing. Climbed from joint third into clear second and is now the genuine Trophy threat with one round to play."
+    },
+    {
+      "player": "David MULLIN",
+      "arc": "Holds the Green Jacket lead at exactly 7, but a quintuple-bogey 9 at the 10th and a modest 33-point Stableford return cost him second place in the Trophy race — slipping behind Alex Baker into third."
+    },
+    {
+      "player": "Jon BAKER",
+      "arc": "A round of two halves writ large: 16 points in the opening five holes, then a catastrophic 6-9-6 through 10–12 (his own quadruple bogey at the 11th) wiped out the cushion. Still second in the Jacket; still tied with Mullin in the Trophy."
+    },
+    {
+      "player": "Gregg WILLIAMS",
+      "arc": "Quietly accumulated 38 Stableford points — second-best of the day — despite a quadruple-bogey 7 at the par-3 15th. Gained ground on the field but remains 4th in both races."
+    },
+    {
+      "player": "Stuart NEUMANN",
+      "arc": "37 points and flashes of life — 12 points through 10–13, 9 through 6–8 — but bookended by quadruple-bogey 8s at the 4th and 16th, and an 8-6-7 close. Still last, and the gap to Williams above him has actually grown."
+    }
+  ],
+  "venue_notes": "Royal Óbidos — TEG's 3rd visit, Ballesteros' final course design, a Challenge Tour venue with dramatic water features. The carnage across all six cards (a 9, a 9, a 9, an 8, an 8, an 8, an 8, a 7…) speaks to the course's championship teeth. Worth a nod to Seve's fingerprints and the Lisbon Coast (TEG's third trip)."
+}

@@ -186,28 +186,58 @@ def _competition_kind(name: str) -> str:
     return ""
 
 
-def _build_at_a_glance(plan_d: dict) -> str:
-    """Build the at-a-glance callout from `plan.competitions[]`. Winners only;
-    margins and (Nth) suffixes are deferred (need win-count history)."""
+def _nth_suffix(n: int) -> str:
+    """'1st', '2nd', '3rd', '4th', … for win-count annotations."""
+    if 10 <= n % 100 <= 20:
+        suf = "th"
+    else:
+        suf = {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+    return f"{n}{suf}"
+
+
+def _build_at_a_glance(plan_d: dict, win_counts: Optional[dict] = None) -> str:
+    """Build the at-a-glance callout from `plan.competitions[]`.
+
+    `win_counts` is a dict {player_name: {"trophy_wins": N, "jacket_wins": N,
+    "spoon_count": N}} covering all TEGs through the current one.  When supplied,
+    the winner's running total is appended in parentheses, e.g. "(2nd Trophy)".
+    """
     winners = {"trophy": None, "jacket": None, "spoon": None}
     for c in plan_d.get("competitions", []) or []:
         kind = _competition_kind(c.get("name", ""))
         if kind and not winners[kind]:
             winners[kind] = c.get("winner_or_loser", "")
 
+    # Build a case-insensitive lookup — plan names are proper-cased, win_counts
+    # keys use the raw all-caps-surname format from the data ("John PATTERSON").
+    _wc_lower: dict = {k.lower(): v for k, v in (win_counts or {}).items()}
+
+    def _suffix(player: Optional[str], key: str) -> str:
+        if not win_counts or not player:
+            return ""
+        counts = _wc_lower.get(player.lower(), {})
+        n = counts.get(key, 0)
+        if n == 0:
+            return ""
+        label = {"trophy_wins": "Trophy", "jacket_wins": "Jacket", "spoon_count": "Spoon"}[key]
+        return f" ({_nth_suffix(n)} {label})"
+
     lines = [
         '<section class="callout at-a-glance-box">',
         '  <p class="at-a-glance-title">RESULTS</p>',
     ]
     if winners["trophy"]:
+        suffix = _suffix(winners["trophy"], "trophy_wins")
         lines.append(
             f'  <p><strong>Trophy Winner:</strong>'
-            f'<span class="trophy-winner"> {winners["trophy"]}</span></p>'
+            f'<span class="trophy-winner"> {winners["trophy"]}{suffix}</span></p>'
         )
     if winners["jacket"]:
-        lines.append(f'  <p><strong>Green Jacket:</strong> {winners["jacket"]}</p>')
+        suffix = _suffix(winners["jacket"], "jacket_wins")
+        lines.append(f'  <p><strong>Green Jacket:</strong> {winners["jacket"]}{suffix}</p>')
     if winners["spoon"]:
-        lines.append(f'  <p><strong>Wooden Spoon:</strong> {winners["spoon"]}</p>')
+        suffix = _suffix(winners["spoon"], "spoon_count")
+        lines.append(f'  <p><strong>Wooden Spoon:</strong> {winners["spoon"]}{suffix}</p>')
     lines.append("</section>")
     return "\n".join(lines)
 
@@ -216,10 +246,12 @@ def _build_at_a_glance(plan_d: dict) -> str:
 # Public entry points
 # ---------------------------------------------------------------------------
 def apply_styling(text: str, plan: Union[StoryPlan, dict], venue: dict,
-                  standings: Optional[dict] = None) -> str:
+                  standings: Optional[dict] = None,
+                  win_counts: Optional[dict] = None) -> str:
     """Apply CSS-class hooks + dateline + at-a-glance callout + per-round standings.
 
-    Idempotent: if styling hooks or standings are already present, they're not duplicated.
+    `win_counts` is passed to `_build_at_a_glance` to annotate wins with ordinal
+    suffixes, e.g. "(2nd Jacket)".  Idempotent: existing hooks are not duplicated.
     """
     plan_d = plan.model_dump() if isinstance(plan, StoryPlan) else plan
 
@@ -229,7 +261,7 @@ def apply_styling(text: str, plan: Union[StoryPlan, dict], venue: dict,
     # Insert dateline + callout right after the styled H1 (once).
     if 'class="dateline"' not in text and 'class="at-a-glance-box"' not in text:
         dateline = _build_dateline(venue)
-        callout = _build_at_a_glance(plan_d)
+        callout = _build_at_a_glance(plan_d, win_counts=win_counts)
         block = f"\n\n{dateline}\n\n{callout}\n"
         # The H1 has just been tagged with {.report-title}; anchor on that.
         text = re.sub(
@@ -253,17 +285,161 @@ def _append_records(text: str, records_block: str) -> str:
     return text + sep + "\n" + records_block + "\n"
 
 
+_ROUND_SUFFIX_RE = re.compile(r"\s*\(R(\d+)\)\s*$")
+
+
+def _dedup_entries(entries: list[str]) -> list[str]:
+    """Deduplicate entries, combining round suffixes when the base text is the same.
+
+    E.g. "Baker posts a personal-best round: 44 pts (R2)" and the same for (R4)
+    become "Baker posts a personal-best round: 44 pts (R2, R4)".
+    """
+    # Group by base text (with round suffix stripped), preserving insertion order.
+    seen: dict[str, list[str]] = {}   # base_lower -> [round_strs] or []
+    order: list[str] = []             # insertion order of base keys
+    for e in entries:
+        e = e.strip()
+        m = _ROUND_SUFFIX_RE.search(e)
+        if m:
+            base = e[: m.start()]
+            rnd = f"R{m.group(1)}"
+        else:
+            base = e
+            rnd = None
+        key = base.lower()
+        if key not in seen:
+            seen[key] = []
+            order.append(key)
+        if rnd and rnd not in seen[key]:
+            seen[key].append(rnd)
+
+    out = []
+    for key in order:
+        # Recover original-cased base from the first entry stored under this key
+        original_base = next(
+            (e if not _ROUND_SUFFIX_RE.search(e) else e[: _ROUND_SUFFIX_RE.search(e).start()]
+             for e in entries if e.strip().lower().startswith(key) and
+             e.strip().lower().rstrip(")0123456789r(, ").rstrip() == key or
+             _ROUND_SUFFIX_RE.sub("", e.strip()).strip().lower() == key),
+            key,
+        )
+        # Simpler: find first entry whose base matches
+        for e in entries:
+            m = _ROUND_SUFFIX_RE.search(e.strip())
+            base_cased = e.strip()[: m.start()] if m else e.strip()
+            if base_cased.strip().lower() == key:
+                original_base = base_cased.strip()
+                break
+        rounds = seen[key]
+        if rounds:
+            out.append(f"{original_base} ({', '.join(rounds)})")
+        else:
+            out.append(original_base)
+    return out
+
+
+def _nine_hole_records(teg_num: int, round_num: Optional[int] = None) -> tuple[list, list]:
+    """Return (records, pbs) strings for 9-hole Stableford and Gross records.
+
+    Loads the full ranked 9-hole data, filters to the TEG (and optionally one
+    round), checks `Rank_within_all_*` and `Rank_within_player_*` for rank == 1,
+    and returns plain-English strings.  Only surfaces Stableford and GrossVP —
+    Sc / NetVP are noisier and less meaningful to the audience.
+    """
+    try:
+        from teg_analysis.analysis.aggregation import get_9_data
+        from teg_analysis.analysis.rankings import add_ranks
+        from teg_analysis.reporting.era import trophy_metric
+
+        df9 = get_9_data()          # loads data internally
+        df9 = add_ranks(df9)
+
+        mask = df9["TEGNum"] == teg_num
+        if round_num is not None:
+            mask &= df9["Round"] == round_num
+        filtered = df9[mask]
+        if filtered.empty:
+            return [], []
+
+        metric = trophy_metric(teg_num)
+        # Show Stableford for TEG 8+, NetVP for TEGs 1-7 (as the Trophy metric)
+        trophy_col = "Stableford" if metric != "net_vs_par" else "NetVP"
+        active_metrics = [trophy_col, "GrossVP"]
+
+        friendly = {
+            "Stableford": "Stableford",
+            "NetVP": "net-vs-par",
+            "GrossVP": "Gross",
+        }
+        direction = {
+            "Stableford": "high",   # higher is better → rank 1 = highest
+            "NetVP": "low",          # lower is better → rank 1 = lowest
+            "GrossVP": "low",
+        }
+
+        records, pbs = [], []
+        seen_rec = set()
+        seen_pb = set()
+
+        for col in active_metrics:
+            rank_all = f"Rank_within_all_{col}"
+            rank_pl = f"Rank_within_player_{col}"
+            if rank_all not in filtered.columns or rank_pl not in filtered.columns:
+                continue
+
+            for _, row in filtered.iterrows():
+                player = row["Player"]
+                segment = row.get("FrontBack", "nine")
+                val = row[col]
+                r_str = f"{round_num}" if round_num else f"R{int(row['Round'])}"
+                seg_label = f"{segment} nine" if segment in ("Front", "Back") else "nine"
+                fname = friendly.get(col, col)
+
+                if direction[col] == "high":
+                    val_str = str(int(val))
+                else:
+                    val_str = f"{int(val):+d}"
+
+                # TEG record (all-time best)
+                if row[rank_all] == 1:
+                    key = (player, col, segment, "rec")
+                    if key not in seen_rec:
+                        seen_rec.add(key)
+                        records.append(
+                            f"{player} — {val_str} {fname} on the {seg_label} (R{int(row['Round'])}) "
+                            f"is the best {seg_label} {fname} in TEG history"
+                        )
+
+                # Personal best
+                if row[rank_pl] == 1:
+                    key = (player, col, segment, "pb")
+                    if key not in seen_pb:
+                        seen_pb.add(key)
+                        pbs.append(
+                            f"{player} — {val_str} {fname} on the {seg_label} (R{int(row['Round'])}) "
+                            f"is a personal-best {seg_label} {fname}"
+                        )
+
+        return records, pbs
+
+    except Exception:
+        return [], []
+
+
 def build_records_block(teg_num: int, round_num: Optional[int] = None) -> str:
     """Deterministic 'PBs and TEG records' appendix block. Empty string if none.
 
-    Categories surfaced (from events.py beats):
-    - **TEG records**: all-time top-3 round, all-time best Trophy total.
-    - **Personal bests**: player-PB round, player-PB Trophy total.
+    Categories surfaced:
+    - **TEG records**: all-time top-3 round, all-time best Trophy/Gross total,
+      all-time best 9-hole score.
+    - **Personal bests**: player-PB round, player-PB Trophy/Gross total,
+      player-PB 9-hole score.
     - **Personal worsts**: player-worst round to date.
-    - **Rare feats**: holes-in-one, eagles.
+    - **Rare feats**: holes-in-one, eagles, career/TEG-worst blow-ups.
 
-    Trophy records use era-appropriate language: Stableford for TEG 8+, net-vs-par
-    for TEGs 1–7. Idempotent injection caller can detect by `class="records"`.
+    Each entry is its own bullet. Duplicate entries (same player, same feat)
+    are collapsed into one.  Trophy records use era-appropriate language:
+    Stableford for TEG 8+, net-vs-par for TEGs 1–7.
     """
     from teg_analysis.reporting.events import build_notable_events
     from teg_analysis.reporting.era import trophy_metric
@@ -273,8 +449,8 @@ def build_records_block(teg_num: int, round_num: Optional[int] = None) -> str:
     metric = trophy_metric(teg_num)
 
     def _with_round(h: str, e) -> str:
-        """Suffix headline with (R{round}) if not already mentioned."""
-        if e.round and f"R{e.round}" not in h:
+        """Suffix headline with (R{round}) for tournament reports."""
+        if round_num is None and e.round and f"R{e.round}" not in h:
             return f"{h} (R{e.round})"
         return h
 
@@ -284,9 +460,6 @@ def build_records_block(teg_num: int, round_num: Optional[int] = None) -> str:
         if e.type in ("hole_in_one", "eagle"):
             feats.append(_with_round(h, e))
         elif e.type == "big_blowup":
-            # Suppress routine quad+/double-figure blow-ups; only surface those
-            # that tie/set the player's career worst on this par class or the
-            # TEG-wide all-time worst on this par class. Annotate with which.
             ctx = e.context or {}
             is_pw = ctx.get("is_player_par_worst", False)
             is_rw = ctx.get("is_teg_par_worst", False)
@@ -297,17 +470,15 @@ def build_records_block(teg_num: int, round_num: Optional[int] = None) -> str:
                     tags.append(f"a new TEG-record worst on a par-{par}")
                 if is_pw:
                     tags.append(f"his career-worst on a par-{par}")
-                feats.append(f"{h} — " + "; ".join(tags))
+                feats.append(f"{_with_round(h, e)} — " + "; ".join(tags))
         elif e.type == "round_player":
-            if "round in TEG history" in h:           # all-time top-3 round
+            if "round in TEG history" in h:
                 records.append(_with_round(h, e))
             elif "personal-best round" in h:
                 pbs.append(_with_round(h, e))
             elif "worst round to date" in h:
                 worsts.append(_with_round(h, e))
         elif e.type == "round_player_gross":
-            # Gross-side equivalents (the headline carries the "Gross" word so
-            # readers don't confuse it with the Stableford/NetVP rounds above).
             if "Gross round in TEG history" in h:
                 records.append(_with_round(h, e))
             elif "personal-best Gross round" in h:
@@ -348,25 +519,49 @@ def build_records_block(teg_num: int, round_num: Optional[int] = None) -> str:
             elif pr == 1:
                 pbs.append(f"{winner}'s {score_label} is a personal Gross best")
 
+    # Add 9-hole records (tournament and round reports both get them)
+    nine_recs, nine_pbs = _nine_hole_records(teg_num, round_num)
+    records.extend(nine_recs)
+    pbs.extend(nine_pbs)
+
+    # Deduplicate within each category
+    records = _dedup_entries(records)
+    pbs = _dedup_entries(pbs)
+    worsts = _dedup_entries(worsts)
+    feats = _dedup_entries(feats)
+
     chunks = []
-    for label, lines in [
-        ("TEG records", records),
-        ("Personal bests", pbs),
-        ("Personal worsts", worsts),
-        ("Rare feats", feats),
+    for label, css_class, lines in [
+        ("TEG records", "records", records),
+        ("Personal bests", "records", pbs),
+        ("Personal worsts", "records", worsts),
+        ("Rare feats", "records", feats),
     ]:
         if lines:
+            bullet_items = "\n".join(f'  <li>{line}</li>' for line in lines)
             chunks.append(
-                f'<p class="records"><span class="records-header">{label}:</span> '
-                + "; ".join(lines) + ".</p>"
+                f'<div class="{css_class}">'
+                f'<p class="records-header">{label}:</p>'
+                f'<ul>\n{bullet_items}\n</ul></div>'
             )
     if not chunks:
         return ""
-    return "## Personal bests and TEG records\n\n" + "\n".join(chunks)
+    return "## Personal bests and TEG records\n\n" + "\n\n".join(chunks)
+
+
+def _strip_at_a_glance(text: str) -> str:
+    """Remove any existing at-a-glance block so it can be re-injected with updated content."""
+    return re.sub(
+        r'\n*<section class="callout at-a-glance-box">.*?</section>\n?',
+        "",
+        text,
+        flags=re.DOTALL,
+    )
 
 
 def style_report(teg_num: int) -> str:
     """Read final report + saved plan + venue, write `..._report_styled.md`. Returns path."""
+    from teg_analysis.reporting.history_context import build_win_counts
     final_path = f"{OUTPUT_DIR}/teg_{teg_num}_report_final.md"
     out_path = f"{OUTPUT_DIR}/teg_{teg_num}_report_styled.md"
 
@@ -375,7 +570,12 @@ def style_report(teg_num: int) -> str:
     plan = load_story_plan(teg_num)           # dict (from saved JSON)
     venue = build_venue_context(teg_num)
     standings = build_round_standings(teg_num)
-    styled = apply_styling(text, plan, venue, standings=standings)
+    win_counts = build_win_counts(teg_num)
+    # Strip old at-a-glance so we can re-inject it with win-count annotations.
+    text = _strip_at_a_glance(text)
+    styled = apply_styling(text, plan, venue, standings=standings, win_counts=win_counts)
+    # Strip old records block so we can re-inject the updated version.
+    styled = re.sub(r'\n*## Personal bests and TEG records\n[\s\S]*$', '', styled)
     styled = _append_records(styled, build_records_block(teg_num))
 
     with open(out_path, "w") as f:

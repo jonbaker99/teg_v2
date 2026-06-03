@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Henry Meller</span></p>
-  <p><strong>Green Jacket:</strong> David Mullin</p>
-  <p><strong>Wooden Spoon:</strong> Alex Baker</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Henry Meller (1st Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> David Mullin (5th Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Alex Baker (1st Spoon)</p>
 </section>
 
 By Sunday evening, in the soft light over Bom Sucesso's lagoon-fringed back nine, Henry Meller stood on the 18th green and signed for a fifteen-under-par round of golf. It was the best score ever recorded at a TEG. The previous best had been posted by Henry Meller, on Thursday, at a different course, twenty miles up the same coast.
@@ -94,6 +94,34 @@ For Jon Baker the day held a sextuple-bogey 11 at the par-5 10th — his worst p
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">TEG records:</span> Henry Meller's -31 net-vs-par is the 2nd-best Trophy total in TEG history; Henry Meller's -13 is the best round in TEG history to date (R1); David Mullin's +9 (gross) is the best Gross round in TEG history to date (R2); Henry Meller's -15 is the best round in TEG history to date (R2); Jon Baker's +11 (gross) is the best Gross round in TEG history to date (R1); Henry Meller's +10 (gross) is the 2nd-best Gross round in TEG history to date (R2); David Mullin's +10 (gross) is the 2nd-best Gross round in TEG history to date (R4); Stuart Neumann's -13 is the 2nd-best round in TEG history to date (R2); Stuart Neumann's +10 (gross) is the 2nd-best Gross round in TEG history to date (R2); David Mullin's +53 is the 2nd-best Gross total in TEG history; Jon Baker's -10 is the 3rd-best round in TEG history to date (R1).</p>
-<p class="records"><span class="records-header">Personal bests:</span> Henry Meller posts a personal-best Gross round: +12 (R1); David Mullin posts a personal-best round: -10 (R2); Gregg Williams posts a personal-best round: -12 (R4); Gregg Williams posts a personal-best Gross round: +20 (R4); Henry Meller's +69 is a personal Gross best; Stuart Neumann's +68 is a personal Gross best.</p>
-<p class="records"><span class="records-header">Rare feats:</span> Jon Baker runs up a 11 (sextuple bogey) at the 10th (R4) — his career-worst on a par-5; David Mullin runs up a 8 (quintuple bogey) at the 15th (R3) — his career-worst on a par-3; Alex Baker runs up a 8 (quintuple bogey) at the 5th (R1) — his career-worst on a par-3.</p>
+<div class="records"><p class="records-header">TEG records:</p><ul>
+  <li>Henry Meller's -31 net-vs-par is the 2nd-best Trophy total in TEG history</li>
+  <li>Henry Meller's -13 is the best round in TEG history to date (R1)</li>
+  <li>David Mullin's +9 (gross) is the best Gross round in TEG history to date (R2)</li>
+  <li>Henry Meller's -15 is the best round in TEG history to date (R2)</li>
+  <li>Jon Baker's +11 (gross) is the best Gross round in TEG history to date (R1)</li>
+  <li>Henry Meller's +10 (gross) is the 2nd-best Gross round in TEG history to date (R2)</li>
+  <li>David Mullin's +10 (gross) is the 2nd-best Gross round in TEG history to date (R4)</li>
+  <li>Stuart Neumann's -13 is the 2nd-best round in TEG history to date (R2)</li>
+  <li>Stuart Neumann's +10 (gross) is the 2nd-best Gross round in TEG history to date (R2)</li>
+  <li>David Mullin's +53 is the 2nd-best Gross total in TEG history</li>
+  <li>Jon Baker's -10 is the 3rd-best round in TEG history to date (R1)</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>Henry Meller posts a personal-best Gross round: +12 (R1)</li>
+  <li>David Mullin posts a personal-best round: -10 (R2)</li>
+  <li>Gregg Williams posts a personal-best round: -12 (R4)</li>
+  <li>Gregg Williams posts a personal-best Gross round: +20 (R4)</li>
+  <li>Henry Meller's +69 is a personal Gross best</li>
+  <li>Stuart Neumann's +68 is a personal Gross best</li>
+  <li>Henry MELLER — -10 net-vs-par on the Back nine (R1) is a personal-best Back nine net-vs-par</li>
+  <li>Stuart NEUMANN — -8 net-vs-par on the Front nine (R2) is a personal-best Front nine net-vs-par</li>
+  <li>Henry MELLER — +2 Gross on the Back nine (R1) is a personal-best Back nine Gross</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>Jon Baker runs up a 11 (sextuple bogey) at the 10th (R4) — his career-worst on a par-5</li>
+  <li>David Mullin runs up a 8 (quintuple bogey) at the 15th (R3) — his career-worst on a par-3</li>
+  <li>Alex Baker runs up a 8 (quintuple bogey) at the 5th (R1) — his career-worst on a par-3</li>
+</ul></div>

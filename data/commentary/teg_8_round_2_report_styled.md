@@ -27,7 +27,3 @@ The Trophy race didn't change hands — Williams still leads — but the texture
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> GW 79 | JB 68 | AB 66 | DM 66 | HM 56 | SN 48</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +34 | JB +40 | GW +50 | HM +59 | SN +70 | AB +75</p>
-
-## Personal bests and TEG records
-
-<p class="records"><span class="records-header">Rare feats:</span> Gregg Williams runs up a 10 (quintuple bogey) at the 12th (R2).</p>

@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> David Mullin</span></p>
-  <p><strong>Green Jacket:</strong> David Mullin</p>
-  <p><strong>Wooden Spoon:</strong> Jon Baker</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> David Mullin (3rd Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> David Mullin (9th Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Jon Baker (1st Spoon)</p>
 </section>
 
 David Mullin won the Trophy on 154 Stableford points, two clear of Alex Baker. He also took the Green Jacket at +68 gross, seven ahead of Jon Baker, who in turn collected the Wooden Spoon on 125. A wire-to-wire double, in other words, and the kind of week that looks, in retrospect, like a procession. It did not always feel like one.
@@ -94,4 +94,6 @@ Mullin home by two on Stableford, by seven on Gross.
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">Personal bests:</span> Gregg Williams's +76 is a personal Gross best.</p>
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>Gregg Williams's +76 is a personal Gross best</li>
+</ul></div>

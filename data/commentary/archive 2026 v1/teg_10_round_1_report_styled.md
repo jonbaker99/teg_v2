@@ -1,0 +1,32 @@
+# Mullin 49, and the 18th eats the rest {.round-report-title}
+
+<p class="dateline">TEG 10 | Round 1 | 30/09/2017 | Boavista</p>
+
+<p class="round-scores"><span class="round-scores-header">Round Stableford:</span> DM 49 | AB 41 | GW 38 | JB 37 | SN 32 | JP 29</p>
+<p class="round-scores"><span class="round-scores-header">Round Gross:</span> DM +4 | JB +18 | GW +25 | AB +28 | JP +31 | SN +36</p>
+
+There are rounds you remember for the winner, and rounds you remember for the wreckage, and just occasionally — once a decade, it turns out — you get both in the same afternoon. Boavista, on TEG's eleventh visit to Howard Swan's tidy Algarve parkland, served up a round whose two halves refused to speak to each other. On one side of the conversation: David Mullin, gliding round in 49 Stableford points, the second-best score in TEG history. On the other: the par-4 18th, which over the course of a long afternoon ate Stuart Neumann, Gregg Williams and John Patterson in turn and spat out the bones. Mullin parred it. Of course he did.
+
+The 49 is the organising fact, so we start there. Mullin's round was the kind of thing that doesn't really announce itself: a par at the par-3 6th to draw level for both the Trophy and the Jacket leads, then a serene par-par-par walk from the 6th through the 8th worth nine quiet points — the sort of stretch that, in retrospect, was a man telegraphing what was coming. He drew level for the Trophy lead again at the 10th, and then, between the 12th and the 14th, the round detonated upwards: par at the par-4 12th, birdie at the par-5 13th, birdie at the par-3 14th, eleven points in three holes and the leaderboard recalibrated. Another ten points came from 16 to 18 — birdie at the par-5 16th, par, par — and he walked off the home green having shot a gross +4 on a day when the gross +4 may as well have been a 62 at Augusta. Both leads, his.
+
+Alex Baker, in second on 41, will look back on this one as the round that got away in two specific places. A quadruple-bogey 7 at the par-3 2nd was an early dent that wanted answering, and to his credit he answered it: three bogeys at the 4th, 5th and 6th brought a tidy nine points and steadied the ship. A par at the par-3 11th even drew him level with Mullin atop the Trophy table — outright joint lead, ten holes from home, the round still open. Then came Mullin's birdies at 13 and 14, and the conversation ended. A second quadruple, a 9 at the par-5 8th, was the other anchor he could have done without. Eight back, but second, and the only player still meaningfully within sight.
+
+Jon Baker's 37 is the round most likely to be forgotten by morning, which would be a slight injustice. His par at the par-4 9th briefly put him outright atop the Trophy and level with Mullin for the Gross lead — the high-water mark of the chasing pack and, for about ten minutes, the story of the day. He didn't go backwards so much as get left behind: fourth on Stableford, but a respectable second in the Jacket race at +18.
+
+Gregg Williams quietly accumulated 38 points to sit third in the Trophy, and in any other round that would be the headline of his afternoon. Unfortunately the 18th had other ideas: a quintuple-bogey 9 at the par-4 home hole, a contribution to the day's closing carnage that he will doubtless want to airbrush out of the official record.
+
+Which brings us to the demolition. Stuart Neumann had already carded a quadruple-bogey 9 at the par-5 3rd — bad, but survivable — when something gave way over the final four holes. A quadruple-bogey 8 at the par-4 15th. A double-bogey 7 at the par-5 16th. A quadruple-bogey 8 at the par-4 17th. And then, because Boavista's 18th was clearly in the mood, a sextuple-bogey 10 at the last. Sixteen shots dropped in four holes. That isn't a finish; it's a controlled demolition.
+
+And then John Patterson, who managed to make Neumann's afternoon look quite serene. Patterson dropped to the foot of the Wooden Spoon at the 4th with a bogey and never resurfaced. A quadruple-bogey 7 at the par-3 6th and a quintuple-bogey 10 at the par-5 8th gutted the front nine; the back nine then asked whether he'd like to bleed more slowly or more quickly, and the scorecard answered "both": double-bogey 6, double-bogey 7, triple-bogey 7, quadruple-bogey 8 from the 15th in — eleven shots gone over the closing stretch. A 29 to round off the day.
+
+For context on Mullin's number: 49 Stableford points is the second-best round in TEG history. That is not a sentence one gets to write often, and it lands here on day one of the tournament, which is either a flag in the ground or a hostage to fortune, depending on which side of breakfast tomorrow you wake up.
+
+The races, then. The Trophy changed hands four times on the front nine — Mullin level at the 6th, Jon Baker outright at the 9th, Mullin level at the 10th, Alex Baker level at the 11th — before the birdies at 13 and 14 put Mullin eight clear and ended negotiations. The Jacket saw Mullin drawn level at the 6th and matched by Jon Baker at the 9th, then a fourteen-shot gap opened by the time the cards were signed. And Patterson, having dropped to last in the Spoon at the 4th, stayed precisely there: three behind Neumann, and not for want of company.
+
+<p class="standings"><span class="standings-header">Trophy Standings:</span> DM 49 | AB 41 | GW 38 | JB 37 | SN 32 | JP 29</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +4 | JB +18 | GW +25 | AB +28 | JP +31 | SN +36</p>
+
+## Personal bests and TEG records
+
+<p class="records"><span class="records-header">TEG records:</span> David Mullin's 49 pts is the 2nd-best round in TEG history to date (R1).</p>
+<p class="records"><span class="records-header">Rare feats:</span> Stuart Neumann runs up a 10 (sextuple bogey) at the 18th (R1); John Patterson runs up a 10 (quintuple bogey) at the 8th (R1).</p>

@@ -28,5 +28,10 @@ The Trophy lead held but more than halved — 11 became 5, and Jon Baker is now 
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">Personal worsts:</span> David Mullin's worst round to date: 26 pts (R3).</p>
-<p class="records"><span class="records-header">Rare feats:</span> Alex Baker runs up a 10 (sextuple bogey) at the 8th (R3); Stuart Neumann runs up a 11 (sextuple bogey) at the 10th (R3); Gregg Williams runs up a 10 (quintuple bogey) at the 11th (R3); Stuart Neumann runs up a 10 (quintuple bogey) at the 1st (R3).</p>
+<div class="records"><p class="records-header">Personal worsts:</p><ul>
+  <li>David Mullin's worst round to date: 26 pts</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>Stuart Neumann runs up a 8 (quintuple bogey) at the 9th (R3) — his career-worst on a par-3</li>
+</ul></div>

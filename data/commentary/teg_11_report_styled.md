@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon Baker</span></p>
-  <p><strong>Green Jacket:</strong> Jon Baker</p>
-  <p><strong>Wooden Spoon:</strong> David Mullin</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon Baker (2nd Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> Jon Baker (1st Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> David Mullin (2nd Spoon)</p>
 </section>
 
 There is a moment, on the par-4 6th at the PGA Catalunya Stadium Course on a warm Sunday afternoon, when the entire tournament tilts on its axis. Alex Baker, who has spent the previous twenty-four hours carrying a two-shot Trophy lead like a man transporting a soufflé, makes a triple-bogey 7. Jon Baker, walking beside him, makes a double-bogey 6. On any other day, on any other course, two brothers haemorrhaging five shots between them on a single hole would be filed under "regrettable". On this day, it is the hinge of the week. The scores are level. They will not be level again.
@@ -83,5 +83,10 @@ Around them, the other narratives finished tidying themselves up. Gregg Williams
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">Personal worsts:</span> Alex Baker's worst round to date: 27 pts (R4).</p>
-<p class="records"><span class="records-header">Rare feats:</span> John Patterson runs up a 11 (sextuple bogey) at the 15th (R2) — his career-worst on a par-5.</p>
+<div class="records"><p class="records-header">Personal worsts:</p><ul>
+  <li>Alex Baker's worst round to date: 27 pts (R4)</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>John Patterson runs up a 11 (sextuple bogey) at the 15th (R2) — his career-worst on a par-5</li>
+</ul></div>

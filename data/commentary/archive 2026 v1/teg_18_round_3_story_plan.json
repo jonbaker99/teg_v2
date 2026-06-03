@@ -1,0 +1,74 @@
+{
+  "title": "Catalonia Reshuffle: Williams Seizes the Jacket as Jon Baker Slides to the Spoon",
+  "title_candidates": [
+    "Catalonia Reshuffle: Williams Seizes the Jacket as Jon Baker Slides to the Spoon",
+    "Stadium Course Sorts the Field",
+    "The Day the Jacket Changed Shoulders",
+    "Alex Baker's Rollercoaster, Gregg's Coronation"
+  ],
+  "theme": "A reshuffling third round at PGA Catalunya: Gregg Williams calmly annexes the Green Jacket lead, Jon Baker tumbles from Jacket leader to Spoon laggard, and Alex Baker survives a brutal middle to extend his Trophy lead.",
+  "tone": "house",
+  "narrative_structure": "player_by_player",
+  "opening_hook": "Open on the Stadium Course doing what championship parklands do — sorting a bunched field into its component parts in a single afternoon. Three races, three different stories, one venue (6th TEG visit) doing the heavy lifting.",
+  "foreshadow": [
+    "Jon Baker's triple-bogey 7 at the 2nd — the moment the Jacket lead began slipping and he dropped to last in the Spoon race, paying off later in a closing 8-shot bleed from 15-18.",
+    "Gregg Williams's serene par-par-par-par opening from holes 2-5 (12 points in four holes) setting the platform for an 8-shot Jacket lead by the close.",
+    "Alex Baker's quiet front, hinting at a round that would later veer wildly between disaster (6-10) and brilliance (11-16)."
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "Alex BAKER",
+      "score": 131.0,
+      "gap": 12.0,
+      "note": "Lead held and nudged out by one: 11 ahead at the start, 12 ahead at the close. Alex bled 12 shots through holes 6-10 but answered with 21 points across 11-16, so the gap to Patterson grew despite the chaos in between. Williams's strong round moved him up to third but Patterson clings on at runner-up."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "Gregg WILLIAMS",
+      "score": 54.0,
+      "gap": 8.0,
+      "note": "Lead change. Jon Baker began the day with a 2-shot Gross lead; Williams took it outright at the 2nd hole and never gave it back, riding a serene opening stretch to an 8-shot cushion over Mullin by sunset. Jon Baker plummeted from leader to third."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "Jon BAKER",
+      "score": 97.0,
+      "gap": 14.0,
+      "note": "New occupant. Mullin entered the round propping up the field by 2; a triple-bogey 7 at the 2nd shoved Jon Baker into the basement, and a closing four-hole bleed of double-double-double-double sealed it. He's now 14 points adrift of safety."
+    }
+  ],
+  "key_beat_ids": [
+    "r3_b03",
+    "r3_b04",
+    "r3_b02",
+    "r3_b05",
+    "r3_b07",
+    "r3_b01",
+    "r3_b10",
+    "r3_b11"
+  ],
+  "players": [
+    {
+      "player": "Alex BAKER",
+      "arc": "A round of two extremes that somehow extended his Trophy lead: serene early, catastrophic through 6-10 (12 shots bled), then a startling 21-point surge across 11-16 to steady the ship. Still 12 clear."
+    },
+    {
+      "player": "Gregg WILLIAMS",
+      "arc": "The day's quiet winner. Four straight pars from the 2nd took the Green Jacket lead outright, and despite a double at the 6th breaking the streak, he closed eight points clear of Mullin in the Gross race."
+    },
+    {
+      "player": "Jon BAKER",
+      "arc": "The round's vertical drop. Started as Green Jacket leader, ran up a 9 at the 4th, lost the lead, slid to last in the Spoon race at the 2nd, and bled eight shots over the closing four holes. From top to bottom in eighteen holes."
+    },
+    {
+      "player": "David MULLIN",
+      "arc": "Quietly the most consistent man on the course: 9 points in the opening three, 10 more across 8-10, and the reward is escape from the Spoon and a clean runner-up berth in the Jacket race."
+    },
+    {
+      "player": "John PATTERSON",
+      "arc": "A flat, faceless round — no notable beats — but it's enough to keep him second in the Trophy as others around him swing wildly. Holding station while the field rearranges itself."
+    }
+  ],
+  "venue_notes": "PGA Catalunya Stadium, 6th TEG visit, the Gallardo/Coles championship test in Girona — Spain's premier course and one of Europe's elite. Catalonia's 4th TEG visit. The course's reputation as a proper championship examination should anchor the framing: this is where bunched fields get separated."
+}

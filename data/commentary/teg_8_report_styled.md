@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Gregg Williams</span></p>
-  <p><strong>Green Jacket:</strong> David Mullin</p>
-  <p><strong>Wooden Spoon:</strong> Stuart Neumann</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Gregg Williams (3rd Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> David Mullin (6th Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Stuart Neumann (1st Spoon)</p>
 </section>
 
 There are tournaments that breathe — that swell and contract, that reward the patient counter-puncher in round four, that turn on a six-footer at dusk. TEG's second pilgrimage to the Lisbon Coast was not one of them. All three competitions were effectively in the books before anyone had taken off their first jumper.
@@ -86,5 +86,14 @@ Neumann, on cue, finished sixth. He had finished sixth in rounds one, two, three
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">Personal worsts:</span> David Mullin's worst round to date: 26 pts (R3); Stuart Neumann's worst round to date: 17 pts (R1); Stuart Neumann's worst Gross round to date: +43 (R1).</p>
-<p class="records"><span class="records-header">Rare feats:</span> Stuart Neumann runs up a 8 (quintuple bogey) at the 14th (R1) — his career-worst on a par-3; Stuart Neumann runs up a 8 (quintuple bogey) at the 9th (R3) — his career-worst on a par-3; Henry Meller runs up a 10 (quintuple bogey) at the 3rd (R1) — his career-worst on a par-5.</p>
+<div class="records"><p class="records-header">Personal worsts:</p><ul>
+  <li>David Mullin's worst round to date: 26 pts (R3)</li>
+  <li>Stuart Neumann's worst round to date: 17 pts (R1)</li>
+  <li>Stuart Neumann's worst Gross round to date: +43 (R1)</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>Stuart Neumann runs up a 8 (quintuple bogey) at the 14th (R1) — his career-worst on a par-3</li>
+  <li>Stuart Neumann runs up a 8 (quintuple bogey) at the 9th (R3) — his career-worst on a par-3</li>
+  <li>Henry Meller runs up a 10 (quintuple bogey) at the 3rd (R1) — his career-worst on a par-5</li>
+</ul></div>

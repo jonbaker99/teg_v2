@@ -1,0 +1,23 @@
+# Catalan Carnage {.round-report-title}
+
+<p class="dateline">TEG 11 | Round 1 | 04/10/2018 | PGA Catalunya - Stadium</p>
+
+<p class="round-scores"><span class="round-scores-header">Round Stableford:</span> JB 35 | AB 32 | GW 30 | DM 29 | JP 26</p>
+<p class="round-scores"><span class="round-scores-header">Round Gross:</span> JB +18 | DM +20 | AB +28 | GW +29 | JP +40</p>
+
+The Stadium Course at PGA Catalunya does not exist to flatter you. Designed for the European Tour by Angel Gallardo and Neil Coles, routinely talked up as Spain's premier championship test, it is the sort of venue that takes one look at a five-man amateur tournament and licks its lips. TEG's second visit, then, was always going to be less a round of golf than a controlled demolition — and the venue duly obliged, handing out quintuples and quadruples like Catalan tapas, reshuffling the leaderboard by sheer attrition, and leaving exactly one man standing upright at the end of it. Jon Baker survived the Stadium's worst, in the time-honoured manner, by simply declining to participate in it.
+
+The carnage began before anyone had really settled. Gregg Williams opened with triple-bogey 7 at the par-4 1st, followed it with a matching 7 at the par-4 2nd, and added a double-bogey 7 at the par-5 3rd: eight shots haemorrhaged before the round had properly started, a hole he would spend the rest of the day failing to climb out of. Patterson, never one to let a man suffer alone, was alongside him in the wreckage — double-bogeys at the 2nd and 3rd, and then, at the par-4 4th, a quintuple-bogey 9. Nine shots dropped in three holes. The template for his afternoon was set.
+
+Amid all this the front nine staged a frantic little leaderboard dance. At the par-5 3rd, Jon Baker's par drew him level in both Trophy and Green Jacket — a rare moment of competence in a sea of misadventure. Mullin's bogey at the same hole drew him level in the Trophy; his par at the par-4 6th levelled him in both races. And then, at the par-5 7th, in surely the most improbable sub-plot of the day, Patterson's bogey momentarily put *him* level for the Trophy lead. A man currently being mugged by a Spanish parkland was, very briefly, top of the pile. Williams marked the occasion by carding a quintuple-bogey 8 at the par-3 5th, just to remind everyone where the centre of gravity really lay.
+
+If the front nine was where Patterson teased us, the back nine was where he committed properly to the bit. A quadruple-bogey 8 at the par-4 10th was merely the warm-up. The 12–14 stretch was the main event: triple-bogey 8 at the par-5 12th, quintuple-bogey 9 at the par-4 13th, triple-bogey 7 at the par-4 14th — eleven shots dropped across three consecutive holes, and at the 14th he slipped to the bottom of the Wooden Spoon race, where he would remain. A quadruple-bogey 8 at the par-4 17th was the encore: three quad-or-worse holes in a single card, and a round whose damage report reads like a maritime inquiry.
+
+Alex Baker, to his credit, looked like the steadiest of the chasers for long stretches — until the par-4 13th took eight from him too, a quadruple-bogey that turned what might have been a proper run at his brother into a respectable 32. Mullin, twice the man leading inside the first six holes, faded gracefully to 29 points and gross +20, settling for the runner-up berth in the Jacket. Williams, remarkably, having bled eight shots in three holes and added a quintuple at the 5th, gathered himself and ground out 30 points — third in the Trophy, and a reminder that on a course like this, hanging around is half the battle.
+
+And Jon Baker? He just kept his ball in play. While everyone around him was discovering new and inventive ways to make eight, he assembled 35 Stableford points and a gross +18 — the day's finest card in both currencies, achieved less by heroics than by the dignified refusal to do anything stupid. On the Stadium, that is heroism.
+
+The Trophy lead changed hands four times inside the first seven holes before Jon Baker pulled clear to a three-point cushion over Alex, with the rest of the field five or more adrift. The Jacket saw him drawn level at the 3rd, joined by Mullin at the 6th, and then edge ahead alone by sundown. And the Spoon, after a great deal of competitive bleeding from multiple candidates, was firmly clamped onto Patterson at the 14th — three clear of Mullin at the foot, and looking like a man who would need a very different sort of round tomorrow.
+
+<p class="standings"><span class="standings-header">Trophy Standings:</span> JB 35 | AB 32 | GW 30 | DM 29 | JP 26</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> JB +18 | DM +20 | AB +28 | GW +29 | JP +40</p>

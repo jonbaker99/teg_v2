@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Stuart Neumann</span></p>
-  <p><strong>Green Jacket:</strong> Gregg Williams</p>
-  <p><strong>Wooden Spoon:</strong> Alex Baker</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Stuart Neumann (1st Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> Gregg Williams (2nd Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Alex Baker (3rd Spoon)</p>
 </section>
 
 There are tournaments that turn on a single putt, and there are tournaments which, by lunchtime on the opening day, have quietly written their own endings and asked only that everyone keep walking for the next seventy-odd holes. TEG 16 — the fifth visit to the Lisbon Coast, four rounds across four very different courses — was emphatically the second sort.
@@ -85,5 +85,10 @@ After Round 4, Stuart Neumann led the Trophy. Gregg Williams led the Jacket. The
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">Personal bests:</span> Gregg Williams's +66 is a personal Gross best.</p>
-<p class="records"><span class="records-header">Rare feats:</span> Alex Baker runs up a 11 (septuple bogey) at the 12th (R4) — his career-worst on a par-4.</p>
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>Gregg Williams's +66 is a personal Gross best</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>Alex Baker runs up a 11 (septuple bogey) at the 12th (R4) — his career-worst on a par-4</li>
+</ul></div>

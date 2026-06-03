@@ -30,6 +30,19 @@ The three races, then, all moved in the same direction but at very different spe
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">TEG records:</span> Alex Baker's 51 pts is the best round in TEG history to date (R4).</p>
-<p class="records"><span class="records-header">Personal worsts:</span> John Patterson's worst round to date: 21 pts (R4).</p>
-<p class="records"><span class="records-header">Rare feats:</span> John Patterson runs up a 11 (sextuple bogey) at the 8th (R4).</p>
+<div class="records"><p class="records-header">TEG records:</p><ul>
+  <li>Alex Baker's 51 pts is the best round in TEG history to date</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>Alex Baker posts a personal-best Gross round: +17</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal worsts:</p><ul>
+  <li>John Patterson's worst round to date: 21 pts</li>
+  <li>John Patterson's worst Gross round to date: +40</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>John Patterson runs up a 11 (sextuple bogey) at the 8th (R4) — his career-worst on a par-5</li>
+</ul></div>

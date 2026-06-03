@@ -1,0 +1,204 @@
+{
+  "title": "Meller on the Cabo",
+  "title_candidates": [
+    "Meller on the Cabo",
+    "The Lisbon Heist",
+    "Two Days in Portugal",
+    "Henry's Record, David's Jacket"
+  ],
+  "theme": "Henry Meller wins TEG 7 in two days: two record-shattering rounds at Praia D'El Rey and Bom Sucesso build a 15-shot Trophy lead so vast that the weekend becomes a procession, while David Mullin quietly assembles a Green Jacket cushion of his own and Alex Baker takes up permanent residence at the foot of the table.",
+  "tone": "house — faithful, witty, tongue-in-cheek, Ronay/Peck-flavoured",
+  "narrative_structure": "in_medias_res",
+  "opening_hook": "Open on Sunday evening at Bom Sucesso: Meller signs for -15, the best round in TEG history — three days after his -13 at Praia D'El Rey, which was also the best round in TEG history. Fifteen shots clear. The tournament, in effect, has already been won. Then flash back to how we got here.",
+  "foreshadow": [
+    "Meller's R1 -13 is tabled as a record — only to last 24 hours",
+    "Mullin's +9 gross at Bom Sucesso hints at the Jacket campaign assembling beneath the Meller fireworks",
+    "Alex Baker's R1 octuple at the 5th sets a tone he never escapes",
+    "Gregg Williams' habit of one ruinous hole per round sets up a final-day redemption"
+  ],
+  "competitions": [
+    {
+      "name": "The Trophy (Net VP)",
+      "winner_or_loser": "Henry Meller",
+      "how": "Meller takes outright lead at Praia D'El Rey's 10th in R1 and never relinquishes it. A back-nine blitz (28 points, holes 10-18) anchors a -13 — the best round in TEG history. At Bom Sucesso the next day he goes one better with -15 (a new record, his own), opening a 15-shot lead through 36. R3 (-1) and R4 (-2) are a controlled glide; he wins by 7 from Gregg Williams at -31, the second-best Trophy total in TEG history.",
+      "key_beat_ids": [
+        "b02",
+        "b03",
+        "b05",
+        "b01"
+      ]
+    },
+    {
+      "name": "The Green Jacket (Gross)",
+      "winner_or_loser": "David Mullin",
+      "how": "Mullin sits 3rd after R1 (gross +16) while Baker and Meller trade the lead. At Bom Sucesso he posts +9 gross — a TEG record — to move within 3. He takes the outright lead at Royal Óbidos' 16th in R3 despite a quintuple at the 15th, then crushes R4 at Praia D'El Rey with +10 (joint-2nd best gross ever) to win by 15 from Stuart Neumann at +53. Ten lead changes in total, settled only on the back nine of R3.",
+      "key_beat_ids": [
+        "b04",
+        "b08",
+        "b12",
+        "b21"
+      ]
+    },
+    {
+      "name": "The Wooden Spoon",
+      "winner_or_loser": "Alex Baker",
+      "how": "Sixth after R1, sixth after R2, sixth after R3, sixth after R4. Baker takes outright last at Praia D'El Rey's 14th in R1 (his second octuple of the day) and never gives anyone else a sniff. Six quintuple-or-worse blow-ups across four rounds keep the gap from ever closing.",
+      "key_beat_ids": [
+        "b30",
+        "b26",
+        "b27",
+        "b28"
+      ]
+    }
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "headline_candidates": [
+        "Meller Rewrites the Book at Praia D'El Rey",
+        "-13, and the Record Lasts 24 Hours",
+        "A Back Nine for the Ages"
+      ],
+      "chosen_headline": "Meller Rewrites the Book at Praia D'El Rey",
+      "angle": "Cabell Robinson's coastal links-parkland hybrid yields TEG's best-ever round — Meller's -13, built on a 28-point back nine — while Jon Baker (-10, +11 gross, both records of their own at the time) leads the Jacket and Alex Baker plants the Spoon flag at the 14th.",
+      "beat_ids": [
+        "b03",
+        "b02",
+        "b13",
+        "b06",
+        "b14",
+        "b26",
+        "b34"
+      ]
+    },
+    {
+      "round": 2,
+      "headline_candidates": [
+        "The Record Falls Again — to the Same Man",
+        "Bom Sucesso, Better Sucesso",
+        "Mullin's Gross Masterpiece, Buried on Page Three"
+      ],
+      "chosen_headline": "The Record Falls Again — to the Same Man",
+      "angle": "At Donald Steel's Bom Sucesso, three of the four best rounds in TEG history happen on the same afternoon: Meller's -15, Neumann's -13, Mullin's -10 (with +9 gross — a Gross record). Meller's lead balloons to 11; the Trophy is, functionally, decided.",
+      "beat_ids": [
+        "b05",
+        "b04",
+        "b09",
+        "b10",
+        "b07",
+        "b15",
+        "b11"
+      ]
+    },
+    {
+      "round": 3,
+      "headline_candidates": [
+        "Seve's Last Course, Meller's Easiest Day",
+        "The Procession Begins at Royal Óbidos",
+        "Mullin Takes the Gross, the Hard Way"
+      ],
+      "chosen_headline": "Mullin Takes the Gross, the Hard Way",
+      "angle": "On Ballesteros' final design, Meller coasts to -1 and extends to 15 clear; the day's real contest is the Jacket, which Mullin seizes outright at the 16th despite a quintuple at the par-3 15th. Jon Baker's 10 at the 2nd ends his Gross challenge.",
+      "beat_ids": [
+        "b31",
+        "b21"
+      ]
+    },
+    {
+      "round": 4,
+      "headline_candidates": [
+        "The Coronation, with a 11 at the 10th",
+        "Williams' Personal Best, Baker's Personal Worst",
+        "Mullin Seals It, Meller Strolls Home"
+      ],
+      "chosen_headline": "The Coronation, with a 11 at the 10th",
+      "angle": "Back at Praia D'El Rey, Meller's lead halves to 7 but the trophy is never in doubt. Mullin closes with +10 gross to win the Jacket by 15. Williams posts a personal-best -12 (+20 gross — also a PB). Jon Baker rings up an 11 at the par-5 10th. Alex Baker contributes two more quintuples for good measure.",
+      "beat_ids": [
+        "b08",
+        "b16",
+        "b17",
+        "b18",
+        "b27",
+        "b28"
+      ]
+    }
+  ],
+  "players": [
+    {
+      "player": "Henry Meller",
+      "arc": "Wins the Trophy at a canter on the back of two consecutive TEG-record rounds; sets a personal-best Gross total (+69) almost as an afterthought."
+    },
+    {
+      "player": "David Mullin",
+      "arc": "Quietly stitches together the Green Jacket while everyone watches Meller — a Gross record at Bom Sucesso, the decisive takeover at Royal Óbidos' 16th, and a +10 close-out at Praia D'El Rey."
+    },
+    {
+      "player": "Stuart Neumann",
+      "arc": "Personal-best Gross total (+68) and the second-best round in TEG history (-13 at Bom Sucesso) — Jacket runner-up by 15."
+    },
+    {
+      "player": "Gregg Williams",
+      "arc": "Quietly second on the Trophy thanks to a personal-best -12 in R4, but only after a quadruple or quintuple every round."
+    },
+    {
+      "player": "Jon Baker",
+      "arc": "Leads the Jacket after R1 with a then-record +11 gross, then unravels via a 10 at Royal Óbidos and an 11 at Praia D'El Rey's 10th."
+    },
+    {
+      "player": "Alex Baker",
+      "arc": "Sixth after every round; six blow-ups of quintuple or worse; the Wooden Spoon arrives without ever changing hands."
+    }
+  ],
+  "must_include_beat_ids": [
+    "b01",
+    "b02",
+    "b03",
+    "b04",
+    "b05",
+    "b06",
+    "b07",
+    "b08",
+    "b09",
+    "b10",
+    "b12",
+    "b13",
+    "b14",
+    "b15",
+    "b16",
+    "b17",
+    "b18",
+    "b19",
+    "b20",
+    "b30",
+    "b31",
+    "b21"
+  ],
+  "cuts": [
+    "b22",
+    "b23",
+    "b24",
+    "b25",
+    "b29",
+    "b32",
+    "b33",
+    "b34",
+    "b35",
+    "b36",
+    "b37",
+    "b38",
+    "b39",
+    "b40",
+    "b41",
+    "b42",
+    "b43",
+    "b44",
+    "b45",
+    "b46",
+    "b47",
+    "b48",
+    "b49",
+    "b50",
+    "b11"
+  ],
+  "venue_notes": "This is TEG's first visit to the Lisbon Coast — three brand-new courses plus a return leg to Praia D'El Rey. Use Robinson's links-and-dunes back nine to frame Meller's R1 takeover (his decisive surge starts at the 10th). Bom Sucesso (Donald Steel/Martin Ebert, lagoon views on the hillier back) is the scene of the record onslaught — three of the four best rounds ever, all in one day. Royal Óbidos as 'Seve's final design' gives R3 its sombre, championship-tour edge (and a fitting venue for Mullin's blow-up-then-recover Jacket takeover). The R4 return to Praia D'El Rey closes the loop — same dunes, different mood: coronation, not contest."
+}

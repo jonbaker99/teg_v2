@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> David Mullin</span></p>
-  <p><strong>Green Jacket:</strong> David Mullin</p>
-  <p><strong>Wooden Spoon:</strong> Henry Meller</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> David Mullin (1st Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> David Mullin (1st Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Henry Meller (1st Spoon)</p>
 </section>
 
 There is a particular silence that descends when a man is doing something nobody in the room has ever seen done. On the back nine of the third round at Boavista, with the Atlantic glinting somewhere off to the west and three other competitors trudging through their own private weather systems, David Mullin signed for a net round of -2. Twenty over the card in gross terms, and the finest round ever struck in the brief, scarred history of TEG.
@@ -85,5 +85,23 @@ The **Wooden Spoon** went to Meller at +39 net. He dropped to the bottom at the 
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">TEG records:</span> David Mullin's +0 is the best round in TEG history to date (R1); David Mullin's +20 (gross) is the best Gross round in TEG history to date (R1); David Mullin's -2 is the best round in TEG history to date (R3); David Mullin's +18 (gross) is the best Gross round in TEG history to date (R3); Jon Baker's +4 is the 2nd-best round in TEG history to date (R1); Stuart Neumann's +29 (gross) is the 2nd-best Gross round in TEG history to date (R1); Jon Baker's +1 is the 2nd-best round in TEG history to date (R2); Stuart Neumann's +27 (gross) is the 2nd-best Gross round in TEG history to date (R2); Henry Meller's +20 (gross) is the 2nd-best Gross round in TEG history to date (R3); David Mullin's +28 (gross) is the 3rd-best Gross round in TEG history to date (R2); Jon Baker's +32 (gross) is the 3rd-best Gross round in TEG history to date (R1); Stuart Neumann's +11 is the 3rd-best round in TEG history to date (R1).</p>
-<p class="records"><span class="records-header">Rare feats:</span> Gregg Williams runs up a 9 (sextuple bogey) at the 14th (R1) — his career-worst on a par-3; Stuart Neumann runs up a 8 (quintuple bogey) at the 14th (R1) — his career-worst on a par-3; Stuart Neumann runs up a 8 (quintuple bogey) at the 14th (R2) — his career-worst on a par-3.</p>
+<div class="records"><p class="records-header">TEG records:</p><ul>
+  <li>David Mullin's +0 is the best round in TEG history to date (R1)</li>
+  <li>David Mullin's +20 (gross) is the best Gross round in TEG history to date (R1)</li>
+  <li>David Mullin's -2 is the best round in TEG history to date (R3)</li>
+  <li>David Mullin's +18 (gross) is the best Gross round in TEG history to date (R3)</li>
+  <li>Jon Baker's +4 is the 2nd-best round in TEG history to date (R1)</li>
+  <li>Stuart Neumann's +29 (gross) is the 2nd-best Gross round in TEG history to date (R1)</li>
+  <li>Jon Baker's +1 is the 2nd-best round in TEG history to date (R2)</li>
+  <li>Stuart Neumann's +27 (gross) is the 2nd-best Gross round in TEG history to date (R2)</li>
+  <li>Henry Meller's +20 (gross) is the 2nd-best Gross round in TEG history to date (R3)</li>
+  <li>David Mullin's +28 (gross) is the 3rd-best Gross round in TEG history to date (R2)</li>
+  <li>Jon Baker's +32 (gross) is the 3rd-best Gross round in TEG history to date (R1)</li>
+  <li>Stuart Neumann's +11 is the 3rd-best round in TEG history to date (R1)</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>Gregg Williams runs up a 9 (sextuple bogey) at the 14th (R1) — his career-worst on a par-3</li>
+  <li>Stuart Neumann runs up a 8 (quintuple bogey) at the 14th (R1) — his career-worst on a par-3</li>
+  <li>Stuart Neumann runs up a 8 (quintuple bogey) at the 14th (R2) — his career-worst on a par-3</li>
+</ul></div>

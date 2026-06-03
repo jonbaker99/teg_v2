@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Gregg Williams</span></p>
-  <p><strong>Green Jacket:</strong> Gregg Williams</p>
-  <p><strong>Wooden Spoon:</strong> Alex Baker</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Gregg Williams (4th Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> Gregg Williams (1st Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Alex Baker (2nd Spoon)</p>
 </section>
 
 There is a precise moment at which a four-day golf tournament can be said to be over, and in TEG's fourth pilgrimage to the Lisbon Coast it arrived at roughly half past eleven on the first morning. Estoril, 11th green. Gregg Williams holes out, glances at the board, and finds himself alone at the top of the Gross column. He would remain there for the following 61 holes — through a links, a mountain and a dune-scape; through his own quintuple-bogey 10 and the field's serial double-figure unravellings; through three further rounds that functioned, structurally, as escort duties.
@@ -88,6 +88,20 @@ Williams shot 34 for +20 — his loosest round of the week, and entirely suffici
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">Personal bests:</span> Gregg Williams's +63 is a personal Gross best; Gregg Williams posts a personal-best Gross round: +10 (R3).</p>
-<p class="records"><span class="records-header">Personal worsts:</span> David Mullin's worst round to date: 22 pts (R4); David Mullin's worst Gross round to date: +33 (R4).</p>
-<p class="records"><span class="records-header">Rare feats:</span> David Mullin eagles the par-5 15th (R2); Jon Baker runs up a 11 (septuple bogey) at the 17th (R2) — his career-worst on a par-4; Stuart Neumann runs up a 10 (sextuple bogey) at the 15th (R1) — his career-worst on a par-4; Alex Baker runs up a 11 (sextuple bogey) at the 6th (R2) — his career-worst on a par-5.</p>
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>Gregg Williams's +63 is a personal Gross best</li>
+  <li>Gregg Williams posts a personal-best Gross round: +10 (R3)</li>
+  <li>Gregg WILLIAMS — +2 Gross on the Back nine (R3) is a personal-best Back nine Gross</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal worsts:</p><ul>
+  <li>David Mullin's worst round to date: 22 pts (R4)</li>
+  <li>David Mullin's worst Gross round to date: +33 (R4)</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>David Mullin eagles the par-5 15th (R2)</li>
+  <li>Jon Baker runs up a 11 (septuple bogey) at the 17th (R2) — his career-worst on a par-4</li>
+  <li>Stuart Neumann runs up a 10 (sextuple bogey) at the 15th (R1) — his career-worst on a par-4</li>
+  <li>Alex Baker runs up a 11 (sextuple bogey) at the 6th (R2) — his career-worst on a par-5</li>
+</ul></div>

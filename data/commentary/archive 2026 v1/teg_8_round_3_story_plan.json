@@ -1,0 +1,79 @@
+{
+  "title": "Carnage on the Coast",
+  "title_candidates": [
+    "Carnage on the Coast",
+    "Quinta da Massacre",
+    "Everybody Bleeds",
+    "The Day the Lead Shrank"
+  ],
+  "theme": "A day of mass blow-ups at Quinta da Marinha: every player drops a card-killer, Williams hangs onto the Trophy lead despite a quintuple, Jon Baker prises the Green Jacket from Mullin, and Neumann's Spoon position becomes a fortress.",
+  "tone": "house",
+  "narrative_structure": "chronological",
+  "opening_hook": "Open with the sheer volume of damage — five players carded at least one quadruple-bogey-or-worse, Neumann racked up four of them — then funnel into how, somehow, the leaderboards still rearranged themselves meaningfully.",
+  "foreshadow": [
+    "Neumann's opening-five collapse (17 shots bled, holes 1-5) sets the tone for a day where everyone takes a turn in the bunker — and locks in his Spoon position before lunch.",
+    "Williams arrives with an 11-shot Trophy cushion; flag the cushion early so his back-nine implosion (14 shots bled across 8-11, including a 10 at the 11th) lands as the day's hinge.",
+    "Mullin starts the day with the Green Jacket lead; mention it in passing so his worst-round-to-date (26 pts) and 8 at the 12th register as the moment Jon Baker takes the coat off him."
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "Gregg WILLIAMS",
+      "score": 108.0,
+      "gap": 5.0,
+      "note": "Lead held but more than halved: Williams arrived 11 clear, leaves only 5 ahead of Jon Baker after a back-nine in which he posted a 10 and a 9 in the space of four holes. Baker is now within striking distance with a round to play."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "Jon BAKER",
+      "score": 58.0,
+      "gap": 2.0,
+      "note": "Lead changed hands. Mullin began the day six clear on gross; his worst round to date (26 pts, including an 8 at the 12th) handed the jacket to Jon Baker, who drew level at the 12th and pulled 2 ahead by the close."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "Stuart NEUMANN",
+      "score": 68.0,
+      "gap": 22.0,
+      "note": "The Spoon hardened into concrete. Neumann's gap to the field ballooned from 8 to 22 after a round containing four quintuple-bogeys-or-worse and a 17-shot bleed across the opening five holes."
+    }
+  ],
+  "key_beat_ids": [
+    "r3_b12",
+    "r3_b04",
+    "r3_b02",
+    "r3_b15",
+    "r3_b03",
+    "r3_b01",
+    "r3_b07",
+    "r3_b20",
+    "r3_b22"
+  ],
+  "players": [
+    {
+      "player": "Gregg WILLIAMS",
+      "arc": "Survived his own back nine: bled 14 shots across holes 8-11 (including a quintuple 10 at the 11th and a quadruple 9 at the 10th) and watched his 11-shot Trophy cushion shrink to 5 — but, crucially, kept the lead."
+    },
+    {
+      "player": "Jon BAKER",
+      "arc": "The day's quiet winner — no headline disaster, drew level for the Green Jacket at the 12th and walked off it 2 clear of Mullin, while also halving Williams's Trophy lead."
+    },
+    {
+      "player": "David MULLIN",
+      "arc": "Worst round to date (26 pts), capped by a quadruple 8 at the 12th — exactly the moment Jon Baker drew level on gross. Hands over the Green Jacket lead and slips to 2nd."
+    },
+    {
+      "player": "Alex BAKER",
+      "arc": "A round of cold streaks bookended by carnage: nine shots bled across holes 3-5, then a sextuple-bogey 10 at the 8th inside a 13-shot 7-10 stretch, before a birdie at the 17th finally stopped the bleeding."
+    },
+    {
+      "player": "Henry MELLER",
+      "arc": "Quietly chipped in to the day's blow-up tally with quadruple-bogey 8s at the 13th and the 18th, but did enough to stay clear of the Spoon battle."
+    },
+    {
+      "player": "Stuart NEUMANN",
+      "arc": "A round to file under 'do not retain': four quintuple-bogeys or worse (10 at the 1st, 9 at the 4th, 8 at the 9th, 11 at the 10th), a 17-shot bleed across holes 1-5, and a Spoon position now 22 clear of the field."
+    }
+  ],
+  "venue_notes": "TEG's 2nd visit to Quinta da Marinha (Cascais), a Robert Trent Jones Sr. parkland of elevated targets and abundant bunkering — both of which exacted a heavy toll across the field today. 2nd TEG visit to the Lisbon Coast."
+}

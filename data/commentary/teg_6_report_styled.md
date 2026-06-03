@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Gregg Williams</span></p>
-  <p><strong>Green Jacket:</strong> David Mullin</p>
-  <p><strong>Wooden Spoon:</strong> Henry Meller</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Gregg Williams (2nd Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> David Mullin (4th Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Henry Meller (3rd Spoon)</p>
 </section>
 
 TEG, for the first time in its history, packed a passport. Four courses, all new, all Catalan: the PGA Catalunya Tour as the gentle hors d'oeuvre, Costa Brava's woodland-then-prairie oddity in the middle, El Prat's Norman-designed Rosa lying in wait, and the Stadium — Spain's most ranked layout, a European Tour regular — as the final examiner. What followed was four days of golf that arranged itself, retrospectively, around a single par four on a Sunday afternoon. Everything else was prologue or epilogue.
@@ -103,7 +103,23 @@ At the back of the field, Neumann produced a sympathetic echo of the main events
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">TEG records:</span> Gregg Williams's -12 is the best round in TEG history to date (R1).</p>
-<p class="records"><span class="records-header">Personal bests:</span> Gregg Williams posts a personal-best Gross round: +20 (R1); Jon Baker posts a personal-best Gross round: +18 (R1); Henry Meller posts a personal-best round: -5 (R2); Henry Meller posts a personal-best Gross round: +17 (R2).</p>
-<p class="records"><span class="records-header">Personal worsts:</span> David Mullin's worst Gross round to date: +29 (R3).</p>
-<p class="records"><span class="records-header">Rare feats:</span> David Mullin runs up a 9 (quintuple bogey) at the 15th (R3) — his career-worst on a par-4; Henry Meller runs up a 10 (quintuple bogey) at the 1st (R3) — his career-worst on a par-5.</p>
+<div class="records"><p class="records-header">TEG records:</p><ul>
+  <li>Gregg Williams's -12 is the best round in TEG history to date (R1)</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>Gregg Williams posts a personal-best Gross round: +20 (R1)</li>
+  <li>Jon Baker posts a personal-best Gross round: +18 (R1)</li>
+  <li>Henry Meller posts a personal-best round: -5 (R2)</li>
+  <li>Henry Meller posts a personal-best Gross round: +17 (R2)</li>
+  <li>Gregg WILLIAMS — -10 net-vs-par on the Back nine (R1) is a personal-best Back nine net-vs-par</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal worsts:</p><ul>
+  <li>David Mullin's worst Gross round to date: +29 (R3)</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>David Mullin runs up a 9 (quintuple bogey) at the 15th (R3) — his career-worst on a par-4</li>
+  <li>Henry Meller runs up a 10 (quintuple bogey) at the 1st (R3) — his career-worst on a par-5</li>
+</ul></div>

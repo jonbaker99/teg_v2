@@ -1,0 +1,70 @@
+{
+  "title": "Sandwich, Signed and Sealed: Mullin Survives the Sextuple",
+  "title_candidates": [
+    "Sandwich, Signed and Sealed: Mullin Survives the Sextuple",
+    "Ten at the 16th: Alex Baker's Trophy Vanishes in the Dunes",
+    "Mullin Wobbles, Mullin Wins",
+    "The 16th Hole That Decided TEG 14"
+  ],
+  "theme": "David Mullin wins TEG 14 not by sealing it himself but by being the one still standing after Alex Baker's late charge imploded on the 16th.",
+  "tone": "house",
+  "narrative_structure": "theme_led",
+  "opening_hook": "Open on the 16th green at Prince's, where Alex Baker — three behind, charging, the Trophy genuinely in reach — wrote down a 10. Justify the theme-led structure because this single hole is the round's, and the tournament's, decisive moment; everything else either led to it or reacted to it.",
+  "foreshadow": [
+    "Mullin's quadruple bogey 8 at the 10th — the leader briefly looked breakable, and the Trophy gap began to shrink from eight",
+    "Alex Baker's blistering 10-point opening at 1-3 and another 11-point burst through 13-15 — the charge that made the 16th matter",
+    "Jon Baker's tear through 12-15 (+14 points) that briefly threatened to drag him out of Wooden Spoon range, before the 16th and 18th had their say"
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "David MULLIN",
+      "score": 154.0,
+      "gap": 2.0,
+      "note": "Mullin wins the TEG 14 Trophy by 2 from Alex Baker. He started the day eight clear; a quad-bogey 8 at the 10th and a roaring Baker charge through the front nine and again at 13-15 cut the lead to the bone, but Baker's 10 at the 16th ended the contest in a single hole. Mullin won it by surviving it."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "David MULLIN",
+      "score": 68.0,
+      "gap": 7.0,
+      "note": "Mullin completes the double, taking the Green Jacket by 7 over Jon Baker. The prior gap of 12 over Gregg Williams narrowed and the runner-up slot changed hands — Jon Baker's gross scoring (despite the 8 at the last) was strong enough to leapfrog Williams into second on the Jacket — but Mullin's lead was never seriously threatened on the gross card."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "Jon BAKER",
+      "score": 125.0,
+      "gap": 12.0,
+      "note": "Jon Baker takes the Wooden Spoon by 12 from Gregg Williams. He arrived 13 adrift and briefly threatened to make a race of it with +14 points across 12-15, but a double at the 16th and a quadruple-bogey 8 at the 18th ensured the cutlery drawer claimed him."
+    }
+  ],
+  "key_beat_ids": [
+    "r4_b10",
+    "r4_b06",
+    "r4_b03",
+    "r4_b05",
+    "r4_b01",
+    "r4_b02",
+    "r4_b04",
+    "r4_b08"
+  ],
+  "players": [
+    {
+      "player": "David MULLIN",
+      "arc": "The champion who wobbled at exactly the wrong time — a quadruple-bogey 8 at the 10th opened a door he never quite slammed shut — but held on to claim both Trophy and Green Jacket, the latter by a comfortable seven."
+    },
+    {
+      "player": "Alex BAKER",
+      "arc": "The nearly-man of TEG 14: 10 points in the first three holes, another 11 across 13-15, and the Trophy genuinely live — until a sextuple-bogey 10 at the 16th detonated everything and handed Mullin a two-shot win."
+    },
+    {
+      "player": "Jon BAKER",
+      "arc": "A round of two halves: a glorious +14 across 12-15 (two birdies, two pars) suggested an escape from the Spoon, before a double at 16 and a quad at the last confirmed his fate — though strong enough overall to climb to second on the Green Jacket."
+    },
+    {
+      "player": "Gregg WILLIAMS",
+      "arc": "Quietly overtaken on all fronts — slips from second to third on both Trophy and Green Jacket, and finishes just 12 clear of the Wooden Spoon he had looked safe from."
+    }
+  ],
+  "venue_notes": "Third TEG visit to Prince's Shore/Dunes, the strongest routing at Sandwich — a proper links finish to a proper TEG, with the closing stretch (10, 16, 18 all featuring in the carnage) doing exactly what closing links holes are supposed to do. TEG's second visit to Kent."
+}

@@ -4,9 +4,9 @@
 
 <section class="callout at-a-glance-box">
   <p class="at-a-glance-title">RESULTS</p>
-  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon Baker</span></p>
-  <p><strong>Green Jacket:</strong> David Mullin</p>
-  <p><strong>Wooden Spoon:</strong> Henry Meller</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon Baker (1st Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> David Mullin (2nd Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Henry Meller (2nd Spoon)</p>
 </section>
 
 The 17th at Boavista is a par four. On the afternoon of 5 October 2010, Henry Meller, with the unhurried commitment of a man genuinely persuaded that the next shot would be the redemptive one, made it a par twelve. Eight over. The worst score relative to par recorded on any hole in TEG history.
@@ -93,6 +93,28 @@ Meller signed for +16 net vs par and collected the Wooden Spoon.
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">TEG records:</span> David Mullin's +17 (gross) is the best Gross round in TEG history to date (R1); Jon Baker's -9 is the best round in TEG history to date (R1); David Mullin's +14 (gross) is the best Gross round in TEG history to date (R3); Jon Baker's -2 is the 2nd-best round in TEG history to date (R2); Jon Baker's -7 is the 2nd-best round in TEG history to date (R3); Henry Meller's -2 is the 2nd-best round in TEG history to date (R2); Henry Meller's +18 (gross) is the 2nd-best Gross round in TEG history to date (R2); David Mullin's -1 is the 3rd-best round in TEG history to date (R1); Jon Baker's +19 (gross) is the 3rd-best Gross round in TEG history to date (R1); David Mullin's -4 is the 3rd-best round in TEG history to date (R3); Stuart Neumann's +18 (gross) is the 3rd-best Gross round in TEG history to date (R3); Gregg Williams's -4 is the 3rd-best round in TEG history to date (R3).</p>
-<p class="records"><span class="records-header">Personal bests:</span> Jon Baker's -18 net-vs-par is a personal Trophy best.</p>
-<p class="records"><span class="records-header">Rare feats:</span> Henry Meller runs up a 12 (+8 (blow-up)) at the 17th (R1) — a new TEG-record worst on a par-4; his career-worst on a par-4; Stuart Neumann runs up a 10 (sextuple bogey) at the 17th (R4) — his career-worst on a par-4; David Mullin runs up a 9 (quintuple bogey) at the 17th (R2) — his career-worst on a par-4; Henry Meller runs up a 10 (quintuple bogey) at the 3rd (R3) — his career-worst on a par-5.</p>
+<div class="records"><p class="records-header">TEG records:</p><ul>
+  <li>David Mullin's +17 (gross) is the best Gross round in TEG history to date (R1)</li>
+  <li>Jon Baker's -9 is the best round in TEG history to date (R1)</li>
+  <li>David Mullin's +14 (gross) is the best Gross round in TEG history to date (R3)</li>
+  <li>Jon Baker's -2 is the 2nd-best round in TEG history to date (R2)</li>
+  <li>Jon Baker's -7 is the 2nd-best round in TEG history to date (R3)</li>
+  <li>Henry Meller's -2 is the 2nd-best round in TEG history to date (R2)</li>
+  <li>Henry Meller's +18 (gross) is the 2nd-best Gross round in TEG history to date (R2)</li>
+  <li>David Mullin's -1 is the 3rd-best round in TEG history to date (R1)</li>
+  <li>Jon Baker's +19 (gross) is the 3rd-best Gross round in TEG history to date (R1)</li>
+  <li>David Mullin's -4 is the 3rd-best round in TEG history to date (R3)</li>
+  <li>Stuart Neumann's +18 (gross) is the 3rd-best Gross round in TEG history to date (R3)</li>
+  <li>Gregg Williams's -4 is the 3rd-best round in TEG history to date (R3)</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>Jon Baker's -18 net-vs-par is a personal Trophy best</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>Henry Meller runs up a 12 (+8 (blow-up)) at the 17th (R1) — a new TEG-record worst on a par-4; his career-worst on a par-4</li>
+  <li>Stuart Neumann runs up a 10 (sextuple bogey) at the 17th (R4) — his career-worst on a par-4</li>
+  <li>David Mullin runs up a 9 (quintuple bogey) at the 17th (R2) — his career-worst on a par-4</li>
+  <li>Henry Meller runs up a 10 (quintuple bogey) at the 3rd (R3) — his career-worst on a par-5</li>
+</ul></div>

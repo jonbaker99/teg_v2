@@ -26,4 +26,12 @@ The Trophy lead bounced through four sets of hands on the front nine — Patters
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">Rare feats:</span> Alex Baker runs up a 11 (septuple bogey) at the 14th (R1); John Patterson runs up a 10 (sextuple bogey) at the 4th (R1).</p>
+<div class="records"><p class="records-header">Personal worsts:</p><ul>
+  <li>Alex Baker's worst Gross round to date: +43</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>Alex Baker runs up a 11 (septuple bogey) at the 14th (R1) — his career-worst on a par-4</li>
+  <li>Gregg Williams runs up a 9 (sextuple bogey) at the 15th (R1) — his career-worst on a par-3</li>
+  <li>Stuart Neumann runs up a 8 (quintuple bogey) at the 15th (R1) — his career-worst on a par-3</li>
+</ul></div>

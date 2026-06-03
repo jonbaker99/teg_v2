@@ -66,6 +66,10 @@ Stableford / Gross point accumulation, full stop. Never write "countback", "tieb
 (bogey = +1, double = +2, triple = +3, quad = +4, quint = +5, sext = +6). Compute, \
 do NOT estimate. If the arithmetic is awkward, list the per-hole values and skip the \
 running total.
+- **Stroke index (SI).** If a hole's evidence includes `si`, you may note it factually \
+when it's genuinely interesting: SI 1 = the hardest hole on the course; SI 18 = the \
+easiest; SI 2–3 = one of the hardest; SI 16–17 = one of the easiest. SI 4–15: omit. \
+One-word note only — "the easiest hole" — no dramatisation.
 - Plain, clear, British English. Short declarative sentences. **No narrative hooks** \
 ("The day's defining number was..."), **no characterisation** ("the round of his life"), \
 **no dramatisation** ("the wheels came off") — that's the writer's job, not the draft's.
@@ -253,6 +257,16 @@ abstractions — the detail is what makes it sing.
 - VARY your language. Never lean on the same dramatic word twice — do not repeat \
 "disaster", "meltdown", "catastrophe" and the like; reach for fresh, precise phrasing.
 - Vary sentence rhythm; let a short sentence land a point.
+- **Stroke index (SI) for hole colour.** Beat hole evidence may include an `si` field. \
+Use it sparingly as optional colour: SI 1 = "the hardest hole on the course"; SI 18 = \
+"the easiest"; SI 2–3 = "one of the hardest"; SI 16–17 = "one of the easiest". \
+SI 4–15: not noteworthy — ignore. Only invoke it when it sharpens the irony or drama \
+(a birdie on the hardest hole; a double on the give-away). Don't mention SI on every hole.
+- **Cross-TEG history for colour.** The story plan's `players[]` arcs may include \
+milestone strings drawn from the `player_history` field (e.g. "2nd Jacket", \
+"back-to-back Spoons", "Trophy runner-up for the 3rd time"). Use these verbatim in \
+the prose when they add genuine texture — they are pre-verified facts, not flair. \
+Do NOT invent any win counts, streaks, or historical claims not present in the plan.
 
 FAITHFULNESS (non-negotiable):
 - Use ONLY the supplied facts. Never invent holes, scores, players or events. If it isn't \

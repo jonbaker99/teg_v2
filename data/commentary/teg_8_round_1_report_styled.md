@@ -34,5 +34,12 @@ The Trophy lead was Williams' the moment his putt dropped at the 10th, and four 
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">Personal worsts:</span> Stuart Neumann's worst round to date: 17 pts (R1).</p>
-<p class="records"><span class="records-header">Rare feats:</span> Henry Meller runs up a 10 (quintuple bogey) at the 3rd (R1).</p>
+<div class="records"><p class="records-header">Personal worsts:</p><ul>
+  <li>Stuart Neumann's worst round to date: 17 pts</li>
+  <li>Stuart Neumann's worst Gross round to date: +43</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>Stuart Neumann runs up a 8 (quintuple bogey) at the 14th (R1) — his career-worst on a par-3</li>
+  <li>Henry Meller runs up a 10 (quintuple bogey) at the 3rd (R1) — his career-worst on a par-5</li>
+</ul></div>

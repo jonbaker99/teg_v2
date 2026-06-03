@@ -1,0 +1,27 @@
+# Coronations on the Dunes {.round-report-title}
+
+<p class="dateline">TEG 8 | Round 4 | 28/11/2015 | Oitavos Dunes</p>
+
+<p class="round-scores"><span class="round-scores-header">Round Stableford:</span> GW 41 | AB 39 | DM 34 | SN 32 | JB 28 | HM 21</p>
+<p class="round-scores"><span class="round-scores-header">Round Gross:</span> DM +17 | GW +22 | SN +24 | JB +25 | AB +33 | HM +40</p>
+
+There are debuts and there are debuts. Oitavos Dunes — Arthur Hills's exposed Atlantic links, the second of TEG's two outings on the Lisbon Coast — introduced itself to the tour on Round 4 by doing precisely what its reputation promised: opening up early, blowing the soft stuff sideways, and inviting six golfers to deposit their dignity in the marram grass. Henry Meller, gallant as ever, was first to RSVP. By the time he had walked off the 6th green he had bled 22 shots to par, the centrepiece of which was a sextuple-bogey 10 at the par-4 4th — the sort of number that doesn't so much appear on a card as colonise it. Around this opening carnage, two coronations took shape: Gregg Williams converting an overnight lead into a Trophy procession, and David Mullin quietly relieving Jon Baker of the Green Jacket. The dunes did the rest.
+
+Mullin's day pivoted on the second hole. He had begun the round two gross shots behind Jon Baker; a bogey 5 at the par-4 2nd nudged him into the outright Jacket lead, and — though nobody could have known it at the time, including possibly Mullin — that was that. He never surrendered it. The rest of his round was a study in absorbing punishment: bogey-bogey-bogey through 8, 9 and 10, then a thumping quadruple-bogey 8 at the par-4 11th that, on a different links and against a different field, might have unravelled the whole thing. Instead Mullin stopped the bleed in the most satisfying way available, picking off a birdie 4 at the par-5 13th. Two further bogeys at 14 and 15 tested his resolve, before a second recovery birdie at the par-5 16th sealed both the bleeding and, in effect, the Jacket.
+
+Williams, meanwhile, was producing a Trophy round that flattered itself only in the margin. The 5th — a par-4, in theory — yielded a quadruple-bogey 8, and from there to the 8th the wheels were not so much falling off as being unscrewed and posted home individually: double, double, triple, for eleven shots leaked across four holes. With a five-point overnight cushion over Jon Baker this was the moment for the chasing pack to make hay, and there was, briefly, hay. It did not last. Williams steadied through the turn and then produced the sequence that won him the Trophy: par-bogey-par-par at 12-15, a stretch of par-3, par-5, par-3, par-3, worth a tidy twelve Stableford points and quite enough to put the rest of the field beyond a reasonable salvage operation.
+
+Jon Baker, going into the round leading the Jacket by two and second in the Trophy by five, must have fancied at least one of the two. He ended with neither. Overhauled on gross by Mullin, overtaken on Stableford by both Williams (pulling away) and his own brother (drifting up the leaderboard from below), he finished second in the Jacket and third in the Trophy — a round in which the damage was less spectacular than others' but somehow more decisive.
+
+Alex Baker's elevation to Trophy runner-up was, in truth, a triumph of relative virtue. His own scorecard carried a quadruple-bogey 7 at the par-3 15th and a closing quintuple-bogey 9 at the 18th — numbers that, on a calmer afternoon, would have been the story. Here they were merely supporting cast, the climbing done largely by Jon descending rather than Alex ascending. He'll take it.
+
+Meller's afternoon, having begun in apocalypse, returned to form on the closing stretch in case anyone had forgotten. Doubles at 11, 12 and 13 cost six more shots, and the home stretch — double, triple, quad at 16, 17 and 18 — leaked another nine. He finished fifth in the Trophy, which, given the front six, counts as a kind of moral recovery. Stuart Neumann's Spoon, meanwhile, was confirmed in the manner of most Neumann Spoons: not by collapse but by gravity. Quadruple-bogey 8s at the par-4 5th and the par-4 17th underlined the inevitable. To his credit, the gap to Meller closed from 22 Stableford points overnight to 11 by close of play — closer, but never within touching distance of an actual flip.
+
+So the races settled, in the only way they could on a day Oitavos was determined to author. Williams's overnight five-point Trophy lead over Jon Baker grew into a twelve-point winning margin over Alex Baker — Jon slipping to third, Mullin holding fourth. Mullin's Green Jacket arrived via that quiet bogey at the 2nd: a two-shot deficit at dawn became a six-shot winning margin by dusk. And the Wooden Spoon, never seriously in doubt at any point on this tour, found its permanent home with Neumann.
+
+<p class="standings"><span class="standings-header">Trophy Standings:</span> GW 149 | AB 137 | JB 131 | DM 126 | HM 111 | SN 100</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +77 | JB +83 | GW +107 | HM +123 | SN +137 | AB +148</p>
+
+## Personal bests and TEG records
+
+<p class="records"><span class="records-header">Rare feats:</span> Henry Meller runs up a 10 (sextuple bogey) at the 4th (R4).</p>

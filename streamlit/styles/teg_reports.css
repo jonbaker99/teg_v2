@@ -122,6 +122,31 @@
   column-span: initial;
 }
 
+/* PERSONAL BESTS / TEG RECORDS APPENDIX */
+.teg-report .records {
+    column-span: all;
+    margin-bottom: 6px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    color: #444;
+}
+
+.teg-report .records-header {
+    font-weight: 600;
+    margin-bottom: 2px;
+    color: #333;
+}
+
+.teg-report .records ul {
+    margin: 2px 0 8px 0;
+    padding-left: 1.4em;
+}
+
+.teg-report .records ul li {
+    margin-bottom: 2px;
+    line-height: 1.5;
+}
+
 @media (max-width: 900px) {
     .teg-report { column-count: 1; padding: 1rem; }
 }

@@ -1,0 +1,174 @@
+{
+  "title": "Mullin's March and the Curse of the 16th",
+  "title_candidates": [
+    "Mullin's March and the Curse of the 16th",
+    "Sweet and Sour Sixteen",
+    "Wire to Wire, Wobble to Wobble",
+    "The Kentish Procession"
+  ],
+  "theme": "David Mullin leads from the first afternoon at Deal to the last green at Prince's, never headed in either competition — but the lead shrinks from nine after R2 to two at the death as Alex Baker mounts a charge that is repeatedly torpedoed by his own catastrophes, most notably twin 10s at the same 16th hole.",
+  "tone": "house",
+  "narrative_structure": "in_medias_res",
+  "opening_hook": "Open on Prince's, R4, the 16th: Alex Baker — Mullin's lone pursuer — standing on the tee within touching distance, and walking off with a 10. Then rewind to Deal four days earlier.",
+  "foreshadow": [
+    "A first-afternoon takeover at Deal that nobody quite registers as the takeover for the whole week",
+    "The 16th at Royal Cinque Ports — where Alex Baker's first 10 is filed under 'links golf, these things happen'",
+    "A nine-point cushion after Littlestone that looks like a procession but is actually the high-water mark",
+    "Mullin's own scorecard sprouting big numbers at Prince's, hinting the lead is more fragile than it looks"
+  ],
+  "competitions": [
+    {
+      "name": "Trophy (Stableford)",
+      "winner_or_loser": "David Mullin",
+      "how": "Wire-to-wire on 154 points, by 2 from Alex Baker. Mullin drew level on R1 H11 and took outright control on R1 H16 — and was never headed again across the next 56 holes. Rounds of 40 and 41 at Deal and Littlestone built a nine-point cushion; 36 at Prince's kept it at eight. The wobble came in R4, where quad-bogey blowups (notably the 10th) bled the lead down to two — but Alex Baker's own R4 16th (a 10 of his own) snuffed out the only credible challenge.",
+      "key_beat_ids": [
+        "b39",
+        "b17",
+        "b18",
+        "b09",
+        "b02",
+        "b01"
+      ]
+    },
+    {
+      "name": "Green Jacket (Gross)",
+      "winner_or_loser": "David Mullin",
+      "how": "A second wire-to-wire, won by 7 at +68 over Jon Baker. Alex Baker briefly drew level at R1 H6 before Mullin pulled even again at the 9th and never looked back; gross rounds of 15 and 14 at Deal and Littlestone effectively settled it, the 12-shot R2 lead never seriously threatened despite scruffier 20 and 19 at Prince's. A personal-best gross total (+76) from Gregg Williams was the sub-plot.",
+      "key_beat_ids": [
+        "b03",
+        "b04"
+      ]
+    },
+    {
+      "name": "Wooden Spoon",
+      "winner_or_loser": "Jon Baker",
+      "how": "Owned outright from R1 H4 and never relinquished — last in all four rounds on the Stableford count, finishing on 125. The cruel twist: Baker actually produced the best closing round of the four (39 points at Prince's R4), including a 14-point flurry across holes 12–15, but it came far too late, and an 8 at the 18th was a fitting kiss-off. He was, however, runner-up in the Jacket — a perfectly normal split of handicapped and raw scoring, not a riddle.",
+      "key_beat_ids": [
+        "b32",
+        "b06",
+        "b07",
+        "b15"
+      ]
+    }
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "headline_candidates": [
+        "Deal Me In: Mullin Takes Charge at the Coast",
+        "Alex Baker and the 16th, Part One",
+        "Wire One: Mullin in Front by Tea-Time"
+      ],
+      "chosen_headline": "Deal Me In: Mullin Takes Charge at the Coast",
+      "angle": "At a returning Royal Cinque Ports, the tournament's whole shape is set in an afternoon: Mullin level by the 11th, outright by the 16th, with a 40-point card and a five-shot gross cushion. Alex Baker's 10 at the 16th and quad at the 11th hint at the pattern to come; Jon Baker drops to last as early as the 4th and stays there.",
+      "beat_ids": [
+        "b39",
+        "b17",
+        "b05",
+        "b10",
+        "b16",
+        "b32",
+        "b40"
+      ]
+    },
+    {
+      "round": 2,
+      "headline_candidates": [
+        "Romney Marsh, Roman Conquest",
+        "41 and Counting: Mullin Pulls Clear at Littlestone",
+        "Alex Baker Bleeds; Mullin Builds"
+      ],
+      "chosen_headline": "41 and Counting: Mullin Pulls Clear at Littlestone",
+      "angle": "The high-water mark. Mullin's 41 stretches the Trophy lead to nine and the Jacket lead to twelve. Alex Baker hands back the chase with a brutal 2–5 stretch (12 shots dropped) and twin quads at the 5th and 8th. Mullin himself shows he can stop the bleeding when he has to.",
+      "beat_ids": [
+        "b11",
+        "b12",
+        "b30",
+        "b21",
+        "b36"
+      ]
+    },
+    {
+      "round": 3,
+      "headline_candidates": [
+        "Prince's I: Mullin Wobbles, Mullin Wins",
+        "Back-Nine Mullin",
+        "The Cushion Holds (Just)"
+      ],
+      "chosen_headline": "Prince's I: Mullin Wobbles, Mullin Wins",
+      "angle": "First crack of light for the chasers — Mullin makes a 9 at the 8th — but he answers with a closing four-hole 13-point flourish and a sharply better back nine. Alex Baker quads the 10th, Jon Baker the 13th, Williams's tidy run ends at the 12th. Lead trimmed to eight, but only just.",
+      "beat_ids": [
+        "b08",
+        "b18",
+        "b19",
+        "b13",
+        "b14",
+        "b29",
+        "b35"
+      ]
+    },
+    {
+      "round": 4,
+      "headline_candidates": [
+        "Sweet and Sour Sixteen",
+        "Two-Point Procession",
+        "Alex Baker's 16th, Again"
+      ],
+      "chosen_headline": "Sweet and Sour Sixteen",
+      "angle": "The day the procession nearly turned into a race. Mullin makes an 8 at the 10th, the lead is genuinely shrinking, and Alex Baker is two pars away from real pressure when he walks off the 16th with a 10 — at the same hole number that had him in R1. Jon Baker, free of the spoon arithmetic, posts the best round of the day (39) with a 14-point burst at 12–15 before an 8 at the last. Mullin home by two and seven.",
+      "beat_ids": [
+        "b09",
+        "b23",
+        "b20",
+        "b07",
+        "b02",
+        "b27",
+        "b28",
+        "b15",
+        "b33"
+      ]
+    }
+  ],
+  "players": [
+    {
+      "player": "David Mullin",
+      "arc": "Champion in both books from the first afternoon — wire-to-wire on Stableford and Gross, a 40-41 start that effectively decided it, and enough resilience to absorb his own 9 and 8 down the stretch at Prince's."
+    },
+    {
+      "player": "Alex Baker",
+      "arc": "Trophy runner-up and the week's tragicomic figure: capable of stretches like 11 points in three holes, but undone by an outsized collection of blowups — quads at Deal's 11th, Littlestone's 5th and 8th, Prince's 10th, and the two 10s at the 16th that bookended his tournament."
+    },
+    {
+      "player": "Jon Baker",
+      "arc": "Last on Stableford from the 4th hole of R1 to the 72nd, yet runner-up for the Jacket and author of the best round of the week — a 39 at Prince's including a 14-point flurry, spoiled only by a closing 8."
+    },
+    {
+      "player": "Gregg Williams",
+      "arc": "Quiet personal-best week on the gross card (+76), with a tidy R3 hot stretch the highlight before his customary stumble (a triple at the 12th) and an early Deal quad."
+    }
+  ],
+  "must_include_beat_ids": [
+    "b01",
+    "b02",
+    "b03",
+    "b04",
+    "b05",
+    "b06",
+    "b07",
+    "b09"
+  ],
+  "cuts": [
+    "b41",
+    "b42",
+    "b43",
+    "b31",
+    "b34",
+    "b22",
+    "b24",
+    "b25",
+    "b26",
+    "b37",
+    "b38"
+  ],
+  "venue_notes": "TEG's second visit to Kent (after the original Kent tour). Open with Royal Cinque Ports as 'a formidable championship links' returning to the schedule — the 2nd TEG round at Deal. Littlestone framed as the Purves/Braid/MacKenzie pedigree course on the Romney Marshes (2nd visit). Prince's Shore/Dunes did the double duty as Rounds 3 and 4 — 2nd and 3rd TEG rounds at the venue — and the 16th of that routing is, by the end of the week, Alex Baker's personal nemesis."
+}

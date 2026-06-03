@@ -28,5 +28,17 @@ The races, then. The Trophy changed hands four times on the front nine — Mulli
 
 ## Personal bests and TEG records
 
-<p class="records"><span class="records-header">TEG records:</span> David Mullin's 49 pts is the 2nd-best round in TEG history to date (R1).</p>
-<p class="records"><span class="records-header">Rare feats:</span> Stuart Neumann runs up a 10 (sextuple bogey) at the 18th (R1); John Patterson runs up a 10 (quintuple bogey) at the 8th (R1).</p>
+<div class="records"><p class="records-header">TEG records:</p><ul>
+  <li>David Mullin's +4 (gross) is the best Gross round in TEG history to date</li>
+  <li>David Mullin's 49 pts is the 2nd-best round in TEG history to date</li>
+  <li>David MULLIN — -1 Gross on the Back nine (R1) is the best Back nine Gross in TEG history</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>David MULLIN — 28 Stableford on the Back nine (R1) is a personal-best Back nine Stableford</li>
+  <li>David MULLIN — -1 Gross on the Back nine (R1) is a personal-best Back nine Gross</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>Stuart Neumann runs up a 10 (sextuple bogey) at the 18th (R1) — his career-worst on a par-4</li>
+</ul></div>
