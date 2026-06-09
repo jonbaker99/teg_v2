@@ -32,14 +32,16 @@ pip install -r requirements.txt
 
 ### What's done
 - **teg_analysis package**: Phases 1–7 cleanup complete (all Streamlit imports removed, aggregation/streaks/scoring refactored, dead code removed). Merged to `main`. Ready to be the canonical analysis layer.
-- **Webapp**: 26 endpoints implemented with data parity vs Streamlit. All functional. Ready for visual polish. TEG Reports page at `/teg-reports` and the Report tab on `/results` now render the new commentary reports.
+- **Webapp**: Full Streamlit page set replicated (excluding Data-admin: update/edit/delete, report generation, volume management — out of scope). Nav mirrors Streamlit's sections/titles/ordering via a single source of truth, `webapp/nav.py` (`NAV_SECTIONS`), injected into templates and looped in `base.html`; `/` lands on the new **Contents** site map. Newly added: **Contents** (`/contents`) and **Eclectic Records** (`/eclectic-records`, backed by new helpers in `teg_analysis/analysis/eclectic.py`). All functional. TEG Reports page at `/teg-reports` and the Report tab on `/results` render the new commentary reports.
+  - **Open: feature-parity audit.** Page *existence* parity is done, but some existing pages are only partial replications of their Streamlit equivalents (e.g. Player Rankings shows gross only; Streamlit has a gross/net toggle). A systematic page-by-page audit is the documented next step — see the "webapp ↔ Streamlit feature-parity audit" TODO in `webapp/README.md`.
 - **Architecture**: Decoupled design documented and validated. `teg_analysis` is fully UI-agnostic.
 - **Commentary / report pipeline** (`teg_analysis/reporting/`): new LLM-powered tournament reports built around a 5-stage pipeline — scored evidence-carrying beats + competition arcs (code) → structured story plan (LLM) → dry draft as QA scaffold + entertaining write-up + repetition lint (LLM) → CSS-class styled markdown. Three production reports validated (TEGs 9, 14, 18); cost ~$0.65 each on Opus 4.7. **How it works**: `teg_analysis/reporting/README.md`. **Done / next**: `teg_analysis/reporting/STATUS.md`.
 
 ### Next priorities
-1. **Webapp formatting pass** — visual polish, number formatting, table styling consistency, layout refinement. In progress in local branches.
-2. **REST API** — build proper `/api` layer powered by `teg_analysis`. Goal: expose the analysis layer over HTTP so any client (scripts, mobile, other frontends) can access it without needing Python. Currently a placeholder in `teg_analysis/api/`.
-3. **Retire Streamlit** — long-term goal once REST API + new webapp are production-ready.
+1. **Webapp ↔ Streamlit feature-parity audit** — page existence parity is done; now audit each existing webapp page against its Streamlit source and close missing controls/views/toggles (e.g. Player Rankings gross/net). Full method + known gaps in `webapp/README.md`.
+2. **Webapp formatting pass** — visual polish, number formatting, table styling consistency, layout refinement. In progress in local branches.
+3. **REST API** — build proper `/api` layer powered by `teg_analysis`. Goal: expose the analysis layer over HTTP so any client (scripts, mobile, other frontends) can access it without needing Python. Currently a placeholder in `teg_analysis/api/`.
+4. **Retire Streamlit** — long-term goal once REST API + new webapp are production-ready.
 
 ### To investigate
 - **Data file rationalisation** — `all-data.parquet` (53 cols, used by `teg_analysis`) and `all-scores.parquet` (17 cols, used by Streamlit) are both hole-level but differ in columns. Unclear if they should be one source. Investigate before making changes to either. See `DATA_FLOW.md`.

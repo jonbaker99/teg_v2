@@ -146,6 +146,114 @@ def calculate_combined_eclectic(data: pd.DataFrame) -> tuple[pd.DataFrame, str]:
     return result_df, 'Combined'
 
 
+def get_overall_top_eclectics(data: pd.DataFrame, dimension: str, top_n: int = 3) -> pd.DataFrame:
+    """Gets the overall top N eclectics across all players, including ties.
+
+    For each player, computes their per-dimension eclectics (e.g. one row per
+    TEG or per Course), then returns the best ``top_n`` rows across all
+    players. Ties for the Nth-best score are all included.
+
+    Args:
+        data: Hole-by-hole score data.
+        dimension: Dimension to group eclectics by ('TEGNum' or 'Course').
+        top_n: Number of top records to return (ties included). Defaults to 3.
+
+    Returns:
+        DataFrame of the top eclectic scores with a 'Player' column added.
+    """
+    all_results = []
+    players = sorted(data['Player'].unique())
+
+    for player in players:
+        player_data = data[data['Player'] == player]
+        if player_data.empty:
+            continue
+
+        eclectics, _actual_dimension = calculate_eclectic_by_dimension(player_data, dimension)
+        if eclectics.empty:
+            continue
+
+        eclectics['Player'] = player
+        all_results.append(eclectics)
+
+    if not all_results:
+        return pd.DataFrame()
+
+    combined_results = pd.concat(all_results, ignore_index=True)
+    combined_results = combined_results.sort_values('Total')
+
+    # Include all rows tied with the Nth-best score
+    if len(combined_results) >= top_n:
+        nth_score = combined_results.iloc[top_n - 1]['Total']
+        return combined_results[combined_results['Total'] <= nth_score]
+    return combined_results
+
+
+def get_personal_best_eclectics(data: pd.DataFrame, dimension: str) -> pd.DataFrame:
+    """Gets each player's best eclectic score(s) for a dimension, including ties.
+
+    Args:
+        data: Hole-by-hole score data.
+        dimension: Dimension to group eclectics by ('TEGNum' or 'Course').
+
+    Returns:
+        DataFrame of each player's best eclectic(s) with a 'Player' column,
+        sorted by Total then Player.
+    """
+    all_results = []
+    players = sorted(data['Player'].unique())
+
+    for player in players:
+        player_data = data[data['Player'] == player]
+        if player_data.empty:
+            continue
+
+        eclectics, _actual_dimension = calculate_eclectic_by_dimension(player_data, dimension)
+        if eclectics.empty:
+            continue
+
+        best_score = eclectics['Total'].min()
+        best_eclectics = eclectics[eclectics['Total'] == best_score].copy()
+        best_eclectics['Player'] = player
+        all_results.append(best_eclectics)
+
+    if not all_results:
+        return pd.DataFrame()
+
+    return pd.concat(all_results, ignore_index=True).sort_values(['Total', 'Player'])
+
+
+def format_eclectic_records_table(df: pd.DataFrame) -> pd.DataFrame:
+    """Formats an eclectic-records table for display (summary columns only).
+
+    Keeps Player, the dimension column (TEG/Course), Total and Rounds — no
+    hole-by-hole detail — and coerces Total/Rounds to ints.
+
+    Args:
+        df: Eclectic scores DataFrame (output of the records helpers above).
+
+    Returns:
+        A formatted DataFrame ready for display.
+    """
+    if df.empty:
+        return pd.DataFrame()
+
+    # The dimension column is the only non-int column that isn't Player/Total/Rounds
+    dimension_col = [
+        col for col in df.columns
+        if col not in ['Player', 'Total', 'Rounds'] and not isinstance(col, int)
+    ][0]
+
+    display_cols = ['Player', dimension_col, 'Total', 'Rounds']
+    formatted_df = df[display_cols].copy()
+
+    for col in ['Total', 'Rounds']:
+        if col in formatted_df.columns:
+            formatted_df[col] = formatted_df[col].apply(lambda x: int(x) if pd.notna(x) else '-')
+
+    return formatted_df
+
+
 def format_eclectic_table(eclectic_df: pd.DataFrame, dimension: str) -> pd.DataFrame:
     """Formats the eclectic table for display.
 

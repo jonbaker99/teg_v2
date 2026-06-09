@@ -9,6 +9,9 @@ from fastapi.templating import Jinja2Templates
 from teg_analysis.analysis.eclectic import (
     calculate_eclectic_by_dimension,
     format_eclectic_table,
+    get_overall_top_eclectics,
+    get_personal_best_eclectics,
+    format_eclectic_records_table,
 )
 from webapp.deps import cached_load_all_data
 
@@ -69,6 +72,60 @@ async def eclectic_page(request: Request):
 async def eclectic_tab(request: Request, dimension: str = Query("Player")):
     ctx = _eclectic_tab_context(dimension)
     return templates.TemplateResponse("partials/eclectic_tab.html", {
+        "request": request,
+        **ctx,
+    })
+
+
+# --- Eclectic Records ---------------------------------------------------------
+
+ECLECTIC_RECORDS_TABS = [
+    ("TEGNum", "TEGs"),
+    ("Course", "Courses"),
+]
+
+
+def _eclectic_records_context(dimension: str) -> dict:
+    """Build context for an eclectic-records tab (Top 3 + Personal Best tables)."""
+    try:
+        all_data = cached_load_all_data()
+        dim_label = "TEG" if dimension == "TEGNum" else dimension
+
+        top = get_overall_top_eclectics(all_data, dimension, top_n=3)
+        pb = get_personal_best_eclectics(all_data, dimension)
+
+        sections = [
+            {
+                "title": f"Top 3 {dim_label} Eclectics",
+                "table_html": _df_to_html(format_eclectic_records_table(top)),
+            },
+            {
+                "title": f"Personal Best {dim_label} Eclectics",
+                "table_html": _df_to_html(format_eclectic_records_table(pb)),
+            },
+        ]
+        return {"sections": sections}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@router.get("/eclectic-records")
+async def eclectic_records_page(request: Request):
+    default_tab = "TEGNum"
+    ctx = _eclectic_records_context(default_tab)
+    return templates.TemplateResponse("eclectic_records.html", {
+        "request": request,
+        "active_page": "scorecards",
+        "tabs": ECLECTIC_RECORDS_TABS,
+        "active_tab": default_tab,
+        **ctx,
+    })
+
+
+@router.get("/eclectic-records/tab")
+async def eclectic_records_tab(request: Request, dimension: str = Query("TEGNum")):
+    ctx = _eclectic_records_context(dimension)
+    return templates.TemplateResponse("partials/eclectic_records_tab.html", {
         "request": request,
         **ctx,
     })

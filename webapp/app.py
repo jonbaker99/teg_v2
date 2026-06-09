@@ -10,8 +10,9 @@ from fastapi.templating import Jinja2Templates
 from webapp.routes import (
     leaderboard, charts, records, showcase, player, scorecard,
     placeholder, history, latest, performance, scoring, scorecards,
-    eclectic, width_test, title_preview, smoke_test, reports,
+    eclectic, width_test, title_preview, smoke_test, reports, contents,
 )
+from webapp.nav import NAV_SECTIONS
 from webapp.theme import (
     get_theme, THEMES,
     get_title_style, TITLE_STYLES,
@@ -35,6 +36,7 @@ async def theme_middleware(request: Request, call_next):
     request.state.title_styles = TITLE_STYLES
     request.state.card_header_style = get_card_header_style(request)
     request.state.card_header_styles = CARD_HEADER_STYLES
+    request.state.nav_sections = NAV_SECTIONS
     return await call_next(request)
 
 
@@ -56,8 +58,9 @@ app.include_router(width_test.router)
 app.include_router(title_preview.router)
 app.include_router(smoke_test.router)
 app.include_router(reports.router)
+app.include_router(contents.router)
 
 
 @app.get("/")
 async def root():
-    return RedirectResponse(url="/leaderboard")
+    return RedirectResponse(url="/contents")
