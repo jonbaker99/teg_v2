@@ -26,7 +26,7 @@ Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 - [ ] Full trophy names in tab labels (e.g. "TEG Trophy (Stableford)") — cosmetic
 
 ### Full Results (`/results`)
-- [ ] Chart-type switcher (Standard / Adjusted scale / Ranking) on net & gross race charts
+- [x] Chart-type switcher (Standard / Adjusted; Ranking = TODO) on net & gross race charts
 - [x] Wooden-spoon callout on net leaderboard
 - [x] Inline per-round scorecards
 - [x] Report tab: pre-TEG-8 scoring caption

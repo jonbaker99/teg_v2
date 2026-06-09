@@ -210,21 +210,30 @@ async def honours_tab(request: Request, tab_name: str):
 
 # --- /results -----------------------------------------------------------------
 
-def _results_chart(teg_num: int, tab: str) -> str | None:
-    """Build a cumulative race chart for net/gross results tabs. Returns JSON or None."""
+RESULTS_CHART_TYPES = [("standard", "Standard"), ("adjusted", "Adjusted scale")]
+
+
+def _results_chart(teg_num: int, tab: str, chart_variant: str = "standard") -> str | None:
+    """Build a cumulative race chart for net/gross results tabs. Returns JSON or None.
+
+    chart_variant: "standard" or "adjusted" (score vs net/bogey par).
+    """
     try:
         import json
         import plotly.utils
-        from webapp.chart_utils import create_cumulative_graph
+        from webapp.chart_utils import create_cumulative_graph, adjusted_stableford, adjusted_grossvp
 
         all_data = cached_load_all_data()
         teg_name = f"TEG {teg_num}"
+        adjusted = chart_variant == "adjusted"
 
         if tab == "gross":
             fig = create_cumulative_graph(
                 all_data, teg_name,
                 y_series='GrossVP Cum TEG',
                 title='Cumulative Gross vs Par',
+                y_calculation=adjusted_grossvp if adjusted else None,
+                y_axis_label='Cumulative gross score vs. bogey' if adjusted else None,
                 chart_type='gross',
             )
         else:
@@ -234,6 +243,8 @@ def _results_chart(teg_num: int, tab: str) -> str | None:
                     all_data, teg_name,
                     y_series='Stableford Cum TEG',
                     title='Cumulative Stableford',
+                    y_calculation=adjusted_stableford if adjusted else None,
+                    y_axis_label='Cumulative Stableford vs. net par' if adjusted else None,
                     chart_type='stableford',
                 )
             else:
@@ -241,6 +252,8 @@ def _results_chart(teg_num: int, tab: str) -> str | None:
                     all_data, teg_name,
                     y_series='NetVP Cum TEG',
                     title='Cumulative Net vs Par',
+                    y_calculation=adjusted_grossvp if adjusted else None,
+                    y_axis_label='Cumulative net score vs. par' if adjusted else None,
                     chart_type='gross',
                 )
 
@@ -249,7 +262,7 @@ def _results_chart(teg_num: int, tab: str) -> str | None:
         return None
 
 
-def _results_context(teg_num: int, tab: str = "net") -> dict:
+def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "standard") -> dict:
     """Build context for full results page."""
     try:
         if tab == "scorecards":
@@ -337,8 +350,9 @@ def _results_context(teg_num: int, tab: str = "net") -> dict:
                            f"&nbsp;|&nbsp; <strong>Wooden spoon:</strong> {spoon}</p>")
 
         table_html = callout + _df_to_html(lb, link_players=True)
-        chart_json = _results_chart(teg_num, tab)
-        return {"result_title": title, "table_html": table_html, "chart_json": chart_json}
+        chart_json = _results_chart(teg_num, tab, chart_variant)
+        return {"result_title": title, "table_html": table_html, "chart_json": chart_json,
+                "chart_types": RESULTS_CHART_TYPES, "active_chart_variant": chart_variant}
     except Exception as e:
         return {"error": str(e)}
 
@@ -359,8 +373,9 @@ async def results_page(request: Request):
 
 
 @router.get("/results/table")
-async def results_table(request: Request, teg: int = Query(...), tab: str = Query("net")):
-    ctx = _results_context(teg, tab)
+async def results_table(request: Request, teg: int = Query(...), tab: str = Query("net"),
+                        chart_variant: str = Query("standard")):
+    ctx = _results_context(teg, tab, chart_variant)
     return templates.TemplateResponse("partials/results_table.html", {
         "request": request,
         "selected_teg": teg,

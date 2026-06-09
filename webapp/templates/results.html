@@ -13,7 +13,7 @@
     <select id="results-teg-select" class="theme-select"
             hx-get="/results/table"
             hx-target="#results-content"
-            hx-include="#results-tab-input"
+            hx-include="#results-tab-input, #results-chart-variant"
             name="teg">
         {% for t in teg_numbers %}
         <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
