@@ -13,6 +13,28 @@ missing controls/views/measures/data are the real work.
 
 Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 
+## Status summary
+
+The substantive functional gaps (missing controls / views / measures / data /
+charts) have been closed across every page. Every webapp endpoint returns 200
+and renders its Streamlit-equivalent content. What remains outstanding falls
+into three buckets, all intentionally deferred:
+
+1. **Cosmetic** (explicitly out of scope per the goal — "structure & content,
+   not visual mimicry"): styled history/ranking cell highlighting, full trophy
+   tab-label names, metric-tile handicap display, styled PB score/when cells,
+   Altair legend-highlight interaction, expander-vs-always-visible.
+2. **WIP page**: the Heatmap (`/scoring/heatmap`) is marked WIP in *both* apps;
+   its advanced filters / x-axis switcher / trend line are left for the WIP work.
+3. **Deep / conditional ports** (data already broadly present; full parity needs
+   a larger port): Latest-page metric **sub-tabs** (all four metrics already
+   shown as stacked cards), the Latest streak-type **pivot** and the richer
+   **records-completeness** categories within a window, the Handicaps
+   **draft-handicap** section (needs the handicap-recalculation port and an
+   in-progress TEG, of which there is currently none), and the Course-summary
+   per-player detail. The "Ranking" race-chart variant is a documented TODO
+   (Standard + Adjusted are implemented).
+
 ---
 
 ## TEG History

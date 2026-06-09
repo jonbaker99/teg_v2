@@ -195,14 +195,16 @@ Best-Worstball / Eclectic Scores / Eclectic Records.
 
 ### Webapp ↔ Streamlit feature-parity audit
 
-Page *existence* parity with Streamlit is done, but several existing pages are
-only **partial** replications: the route exists and shows correct data, but is
-missing controls/views that the Streamlit page offers. The full per-page gap
-list and progress are tracked in **[PARITY_AUDIT.md](PARITY_AUDIT.md)** — work
-through it page by page, ticking items as they're closed.
+The functional parity pass is **substantially complete** — the missing
+controls/views/measures/charts have been closed across every page, and all
+endpoints render their Streamlit-equivalent content. Per-page detail and the
+remaining (cosmetic / WIP-heatmap / deep-port) items are tracked in
+**[PARITY_AUDIT.md](PARITY_AUDIT.md)**.
 
-Done so far: **Player Rankings** now has both competitions (TEG Trophy / net
-and Green Jacket / gross), tie markers and position-summary tables.
+Analysis logic added during the audit (kept UI-agnostic in `teg_analysis/`):
+`analysis/player_rankings.py` (ranking tables + position summaries),
+`analysis/eclectic.py` records helpers, and `display/scorecards.py` (scorecard
+HTML builders).
 
 **Not yet built:**
 - REST API — planned; will expose `teg_analysis` over HTTP so any client (scripts, mobile, other frontends) can access the analysis layer without needing Python
