@@ -112,10 +112,10 @@ Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 - [ ] Date column on records tables — verify data source
 
 ### All rounds (`/scoring/all-rounds`)
-- [ ] Area / Course / Player filters
-- [ ] Measure switcher (Score / Gross / Stableford / Net)
-- [ ] "Number of rounds to show" input
-- [ ] PB Rank column (e.g. "3/15")
+- [x] Area / Course / Player filters
+- [x] Measure switcher (Score / Gross / Stableford / Net)
+- [x] "Number of rounds to show" input
+- [x] PB Rank column (e.g. "3/15")
 
 ### Score matrix (`/scoring/matrix`)
 - [x] +/- sign formatting on GrossVP / NetVP columns

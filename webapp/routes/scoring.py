@@ -34,6 +34,7 @@ from teg_analysis.display.tables import score_type_stats, max_scoretype_per_roun
 from webapp.deps import (
     cached_load_all_data,
     cached_round_data,
+    cached_ranked_round_data,
     get_available_teg_numbers,
     get_default_teg_num,
     get_rounds_for_teg,
@@ -491,24 +492,90 @@ async def scoring_by_course_tab(request: Request, tab: str = Query("gross_record
 
 # --- /scoring/all-rounds ------------------------------------------------------
 
-@router.get("/scoring/all-rounds")
-async def scoring_all_rounds_page(request: Request):
-    try:
-        rd_data = cached_round_data()
-        display_cols = [c for c in ['TEGNum', 'Round', 'Player', 'Course', 'GrossVP', 'Stableford'] if c in rd_data.columns]
-        display = rd_data[display_cols].sort_values(['TEGNum', 'Round', 'GrossVP'], ascending=[False, True, True])
-        display = display.rename(columns={'TEGNum': 'TEG', 'GrossVP': 'Gross vs Par'})
-        table_html = _df_to_html(display)
-    except Exception as e:
-        table_html = f"<p class='text-muted'>Error: {e}</p>"
+ALL_ROUNDS_MEASURES = [
+    ("Sc", "Score"),
+    ("GrossVP", "Gross vs Par"),
+    ("Stableford", "Stableford"),
+    ("NetVP", "Net vs Par"),
+]
 
-    return templates.TemplateResponse("data_table.html", {
+
+def _all_rounds_context(area: str, course: str, player: str, measure: str, n: int) -> dict:
+    try:
+        rd = cached_ranked_round_data().copy()
+        rd['Pl_count'] = rd.groupby('Pl')['Pl'].transform('count')
+
+        rd = _filter_by_area(rd, area)
+        courses = ["All courses"] + sorted(rd['Course'].dropna().unique().tolist())
+        if course != "All courses":
+            rd = rd[rd['Course'] == course]
+        players = ["All players"] + sorted(rd['Player'].dropna().unique().tolist())
+        if player != "All players":
+            rd = rd[rd['Player'] == player]
+
+        if measure not in rd.columns:
+            measure = "GrossVP"
+        friendly = dict(ALL_ROUNDS_MEASURES).get(measure, measure)
+        ascending = measure != "Stableford"
+        rd = rd.sort_values(by=measure, ascending=ascending)
+
+        pl_rank_col = f"Rank_within_player_{measure}"
+        out = rd[['Player', 'Course', measure, 'TEG-Round', 'Year', pl_rank_col, 'Pl_count']].copy()
+        out = out.rename(columns={measure: friendly, pl_rank_col: 'PB Rank'})
+        out['PB Rank'] = out['PB Rank'].astype(int).astype(str) + '/' + out['Pl_count'].astype(int).astype(str)
+        out = out.drop(columns='Pl_count')
+        out[friendly] = out[friendly].astype(int)
+        out['Year'] = out['Year'].astype(int)
+        out = out.head(n)
+
+        title = f"All rounds for {player} at {course}"
+        return {
+            "table_html": _df_to_html(out),
+            "result_title": title,
+            "areas": _get_course_areas(),
+            "measures": ALL_ROUNDS_MEASURES,
+            "courses": courses,
+            "players": players,
+            "selected_area": area,
+            "selected_course": course,
+            "selected_player": player,
+            "selected_measure": measure,
+            "n_records": n,
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@router.get("/scoring/all-rounds")
+async def scoring_all_rounds_page(
+    request: Request,
+    area: str = Query("All Areas"),
+    course: str = Query("All courses"),
+    player: str = Query("All players"),
+    measure: str = Query("GrossVP"),
+    n: int = Query(10),
+):
+    ctx = _all_rounds_context(area, course, player, measure, n)
+    return templates.TemplateResponse("scoring_all_rounds.html", {
         "request": request,
         "active_page": "scoring",
-        "title": "All Rounds",
-        "subtitle": "Complete round-level scoring data",
-        "table_html": table_html,
-        "sections": None,
+        **ctx,
+    })
+
+
+@router.get("/scoring/all-rounds/content")
+async def scoring_all_rounds_content(
+    request: Request,
+    area: str = Query("All Areas"),
+    course: str = Query("All courses"),
+    player: str = Query("All players"),
+    measure: str = Query("GrossVP"),
+    n: int = Query(10),
+):
+    ctx = _all_rounds_context(area, course, player, measure, n)
+    return templates.TemplateResponse("partials/scoring_all_rounds_content.html", {
+        "request": request,
+        **ctx,
     })
 
 
