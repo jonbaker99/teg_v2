@@ -13,6 +13,49 @@ missing controls/views/measures/data are the real work.
 
 Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 
+## Page-by-page mapping (every Streamlit page → webapp route)
+
+Source of truth: `streamlit/page_config.py` `PAGE_DEFINITIONS`. The Data-admin
+section is excluded by design (per the goal). Every active non-Data Streamlit
+page has a webapp route, and all 28 return HTTP 200 (verified via TestClient).
+Two `PAGE_DEFINITIONS` entries — `400scoring.py` ("Scoring") and
+`scorecard_v2_mobile.py` ("Scorecard (mobile)") — are **commented out** in
+`page_config.py` and are therefore not live Streamlit pages.
+
+| Section | Streamlit page (title) | Webapp route |
+|---|---|---|
+| Contents | Contents | `/contents` |
+| TEG History | TEG History | `/history` |
+| TEG History | TEG Honours Board | `/honours` |
+| TEG History | Full Results | `/results` |
+| TEG History | Player Rankings | `/player-rankings` |
+| TEG History | TEG Reports | `/teg-reports` |
+| Records & PBs | TEG Records | `/records` |
+| Records & PBs | Top TEGs and Rounds | `/top-performances` |
+| Records & PBs | Personal Bests | `/personal-bests` |
+| Latest TEG | Latest Leaderboard | `/leaderboard` |
+| Latest TEG | Latest Round in context | `/latest-round` |
+| Latest TEG | Latest TEG in context | `/latest-teg` |
+| Latest TEG | Handicaps | `/handicaps` |
+| Scoring analysis | Eagles / Birdies / Pars | `/scoring/birdies` |
+| Scoring analysis | Streaks | `/scoring/streaks` |
+| Scoring analysis | Average by par | `/scoring/by-par` |
+| Scoring analysis | Average by TEG | `/scoring/by-teg` |
+| Scoring analysis | Course averages and records | `/scoring/by-course` |
+| Scoring analysis | All rounds | `/scoring/all-rounds` |
+| Scoring analysis | Score matrix | `/scoring/matrix` |
+| Scoring analysis | Scoring distributions | `/scoring/distributions` |
+| Scoring analysis | Changes vs previous round | `/scoring/changes` |
+| Scoring analysis | Heatmap (WIP) | `/scoring/heatmap` |
+| Scoring analysis | Final Round Comebacks | `/scoring/comebacks` |
+| Scorecards | Scorecard | `/scorecard` |
+| Scorecards | Best/Worstball | `/bestball` |
+| Scorecards | Eclectic Scores | `/eclectic` |
+| Scorecards | Eclectic Records | `/eclectic-records` |
+
+Excluded (Data-admin, per the goal): Data update, Report generation, Data edit,
+Delete data, Data volume management.
+
 ## Status summary
 
 The substantive functional gaps (missing controls / views / measures / data /
