@@ -73,10 +73,15 @@ def build_venue_context(teg_num: int, round_info: Optional[pd.DataFrame] = None,
         visit_str = ("a new course for TEG" if visit_n <= 1
                      else f"the {_ord(visit_n)} TEG round at this venue")
         info = course_info.get(course, {})
+        # Verified weekday so the writer doesn't have to derive it from the date string.
+        # The writer prompt restricts weekday mentions to round openers; anywhere else
+        # (callbacks, lookforwards) must use round numbers.
+        weekday = d.strftime("%A") if pd.notna(d) else None
         rounds.append({
             "round": int(r["Round"]),
             "course": course,
             "date": r["Date"],
+            "weekday": weekday,
             "visit_n": visit_n,
             "visit_str": visit_str,
             "full_name": info.get("full_name"),
@@ -92,6 +97,7 @@ def build_venue_context(teg_num: int, round_info: Optional[pd.DataFrame] = None,
         "year": year,
         "area_visit": area_visit,
         "area_visit_n": area_visit_n,
+        "n_rounds": len(rounds),
         "rounds": rounds,
     }
 

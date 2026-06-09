@@ -1,0 +1,78 @@
+{
+  "title": "Mullin 49, and the 18th eats the rest",
+  "title_candidates": [
+    "Mullin 49, and the 18th eats the rest",
+    "A masterclass in the Algarve, a massacre at the last",
+    "Boavista bares its teeth — except at David Mullin",
+    "49 reasons it's Mullin's tournament to lose"
+  ],
+  "theme": "David Mullin opens TEG 10 with a near-historic 49-point round while Boavista's closing stretch — and the 18th in particular — devours almost everyone else.",
+  "tone": "house",
+  "narrative_structure": "theme_led",
+  "opening_hook": "Open on Mullin's 49 points — the second-best round in TEG history — as the organising fact of the day, with the 18th green as its sardonic counterpoint: where Mullin pars for a tidy finish, three others wrote double-figure horror stories.",
+  "foreshadow": [
+    "Mullin's serene par-par-par run from holes 6–8 (b16) flagged a player operating on a different frequency before the birdies on 13, 14 and 16 confirmed it.",
+    "Patterson's quintuple-bogey 10 at the 8th (b04) was the early sign that this would be a long afternoon — and it duly ended with him propping up the Wooden Spoon.",
+    "The 18th hovered all day as the round's punchline-in-waiting: Neumann, Williams and Patterson all arrived there and all left scarred."
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "David MULLIN",
+      "score": 49.0,
+      "gap": 8.0,
+      "note": "With no prior state to defend, Mullin simply seized the Trophy lead and stretched it: Jon Baker briefly held outright top spot at the 9th (b19) and Alex Baker drew level at the 11th (b25), but Mullin's birdie surge through 13–14 (b13) settled matters and left him eight clear of Alex Baker at the close."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "David MULLIN",
+      "score": 4.0,
+      "gap": 14.0,
+      "note": "Mullin drew level for the Gross lead at the 6th (b21) and Jon Baker matched him at the 9th (b26), but Mullin's level-par finish of +4 is a yawning 14 shots clear of Jon Baker — a chasm after just one round."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "John PATTERSON",
+      "score": 29.0,
+      "gap": 3.0,
+      "note": "Patterson dropped to the foot of the Spoon table at the 4th (b17) and never climbed out; the quintuple-bogey 10 at the 8th and an 11-shot bleed over 15–18 (b18) leave him three adrift of Neumann at the wrong end."
+    }
+  ],
+  "key_beat_ids": [
+    "r1_b01",
+    "r1_b02",
+    "r1_b03",
+    "r1_b04",
+    "r1_b13",
+    "r1_b12",
+    "r1_b18",
+    "r1_b19"
+  ],
+  "players": [
+    {
+      "player": "David MULLIN",
+      "arc": "Posted 49 Stableford points — the second-best round in TEG history to date — anchored by birdies on 13 and 14 and a calm par-par-par walk home, leading both Trophy and Green Jacket outright."
+    },
+    {
+      "player": "Alex BAKER",
+      "arc": "Briefly drew level for the Trophy lead at the 11th and put together a tidy 9-point run from 4–6, but a quadruple-bogey 7 at the 2nd and another quad at the 8th capped him at 41 — second, and eight behind Mullin."
+    },
+    {
+      "player": "Jon BAKER",
+      "arc": "Took outright Trophy lead at the 9th and matched Mullin for the Gross lead, only to fade as the leader pulled clear; sits 4th on Stableford but a respectable 2nd in the Jacket race at +18."
+    },
+    {
+      "player": "Gregg WILLIAMS",
+      "arc": "Quietly compiled 38 points to sit third in the Trophy, but a quintuple-bogey 9 at the 18th ensured he too contributed to the round's closing carnage."
+    },
+    {
+      "player": "Stuart NEUMANN",
+      "arc": "Bled 16 shots over the final four holes — quad, double, quad, then a sextuple-bogey 10 at the 18th — a finish that turned a difficult day into a wreckage and dropped him second-bottom in the Spoon."
+    },
+    {
+      "player": "John PATTERSON",
+      "arc": "A round defined by detonations: quadruple-bogey at the 6th, quintuple-bogey 10 at the 8th, and a closing 11-shot bleed from the 15th, leaving him bottom of the Spoon by three."
+    }
+  ],
+  "venue_notes": "TEG's 11th visit to Boavista (Howard Swan parkland in Lagos), and the Algarve's fourth turn hosting — a familiar parkland layout whose two distinct halves duly served up serenity for one player and shipwreck for the rest, with the par-4 18th the day's recurring villain."
+}

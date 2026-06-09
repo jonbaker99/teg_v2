@@ -1,0 +1,187 @@
+{
+  "title": "Mullin Takes the Algarve",
+  "title_candidates": [
+    "Mullin Takes the Algarve",
+    "The Boavista Benchmark",
+    "First Blood in Portugal: Mullin Sets the Standard"
+  ],
+  "theme": "David Mullin sets a new standard for TEG: a coronation on a new continent, bookended by the two best rounds ever played, with Jon Baker the only man who briefly looked like he could live with him.",
+  "tone": "house",
+  "narrative_structure": "in_medias_res",
+  "opening_hook": "Open on Mullin's closing -2 in R3 — the best round in TEG history — then flash back to how Boavista was conquered, because the headline is the record-shattering, not the build-up.",
+  "foreshadow": [
+    "Boavista's back nine — and the 14th in particular — as a serial wrecker of cards",
+    "Jon Baker as the one man capable of pressing Mullin, and the fragility that would betray him",
+    "Henry Meller's slide to the bottom of the Spoon race as early as R1 H3"
+  ],
+  "competitions": [
+    {
+      "name": "Trophy (Net VP)",
+      "winner_or_loser": "David Mullin",
+      "how": "Mullin led from R1 on the back of a record +0, was overhauled by Jon Baker after R2 when a closing 16-18 collapse (b48) cost him 10 shots, then reclaimed the lead for good at R3 H3 (b16) and pulled away with the greatest round in TEG history (b03) to win by 7 at +6.",
+      "key_beat_ids": [
+        "b01",
+        "b43",
+        "b45",
+        "b48",
+        "b16",
+        "b03",
+        "b10"
+      ]
+    },
+    {
+      "name": "Green Jacket (Gross)",
+      "winner_or_loser": "David Mullin",
+      "how": "Never headed after a record-setting R1 +20 (b02), Mullin extended through R2 and closed with another record gross round of +18 (b04) to win by 11 at +66 over Stuart Neumann (b14). A procession.",
+      "key_beat_ids": [
+        "b02",
+        "b11",
+        "b04",
+        "b14"
+      ]
+    },
+    {
+      "name": "Wooden Spoon",
+      "winner_or_loser": "Henry Meller",
+      "how": "Meller fell to the bottom as early as R1 H3 (b49) and never climbed out, his card shredded by a brutal back nine (b21, b20) and a R2 13-16 bleed (b50). He did, in fairness, post the 2nd-best gross round in TEG history in R3 (b09) — too late to matter.",
+      "key_beat_ids": [
+        "b49",
+        "b21",
+        "b50",
+        "b09",
+        "b22"
+      ]
+    }
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "headline_candidates": [
+        "Mullin Sets a Marker, Boavista Sets a Trap",
+        "+0 and the 14th from Hell",
+        "A New Course, A New Benchmark"
+      ],
+      "chosen_headline": "Mullin Sets a Marker, Boavista Sets a Trap",
+      "angle": "Mullin's record-breaking +0 / +20 gross opens TEG2 on a new course, while the back nine — and the par-3 14th in particular — devours the rest of the field.",
+      "beat_ids": [
+        "b01",
+        "b02",
+        "b05",
+        "b12",
+        "b13",
+        "b06",
+        "b49",
+        "b21",
+        "b20",
+        "b19",
+        "b15"
+      ]
+    },
+    {
+      "round": 2,
+      "headline_candidates": [
+        "Baker's Day, Mullin's Stumble",
+        "Three Holes from Glory",
+        "The 16-18 That Wasn't Quite Fatal"
+      ],
+      "chosen_headline": "Baker's Day, Mullin's Stumble",
+      "angle": "Jon Baker briefly seizes the Trophy lead with a +1 — the day's best net round — as Mullin haemorrhages 10 shots over 16-18; but the Jacket lead never moves.",
+      "beat_ids": [
+        "b07",
+        "b08",
+        "b11",
+        "b45",
+        "b43",
+        "b46",
+        "b48",
+        "b42",
+        "b50"
+      ]
+    },
+    {
+      "round": 3,
+      "headline_candidates": [
+        "Mullin's Masterpiece",
+        "The Best Round Ever Played in TEG",
+        "H3, and That Was That"
+      ],
+      "chosen_headline": "Mullin's Masterpiece",
+      "angle": "Baker bleeds 12 shots out of the gate, Mullin retakes the lead at H3 and never looks back, closing with a -2 that is both the best net and best gross round in TEG history.",
+      "beat_ids": [
+        "b03",
+        "b04",
+        "b16",
+        "b40",
+        "b09",
+        "b41",
+        "b10",
+        "b14",
+        "b22"
+      ]
+    }
+  ],
+  "players": [
+    {
+      "player": "David Mullin",
+      "arc": "Untouchable: a record +0 to open, the only wobble at the end of R2, then a record-breaking -2 to close and the Trophy/Jacket double by daylight."
+    },
+    {
+      "player": "Jon Baker",
+      "arc": "The only credible challenger — two top-class rounds and a brief R2 lead — undone by a R3 opening five-hole bleed and a habit of finding 8s."
+    },
+    {
+      "player": "Stuart Neumann",
+      "arc": "Quietly excellent in gross terms (Jacket runner-up, two top-three gross rounds), but the 14th and a R1 13-17 wobble stopped the net challenge."
+    },
+    {
+      "player": "Henry Meller",
+      "arc": "Bottom from R1 H3 to the final putt; salvaged pride with the 2nd-best gross round in TEG history in R3 — far too late."
+    },
+    {
+      "player": "Gregg Williams",
+      "arc": "A serial blow-up artist: a 9 at the 14th, a 9 at the 17th, a 9 at R3's 12th, and a 22-shot R1 back-nine collapse to set the tone."
+    }
+  ],
+  "must_include_beat_ids": [
+    "b01",
+    "b02",
+    "b03",
+    "b04",
+    "b05",
+    "b06",
+    "b07",
+    "b08",
+    "b09",
+    "b10",
+    "b11",
+    "b12",
+    "b13",
+    "b14",
+    "b22",
+    "b16"
+  ],
+  "cuts": [
+    "b17",
+    "b18",
+    "b23",
+    "b24",
+    "b25",
+    "b26",
+    "b27",
+    "b28",
+    "b29",
+    "b30",
+    "b31",
+    "b32",
+    "b33",
+    "b34",
+    "b35",
+    "b36",
+    "b37",
+    "b38",
+    "b39",
+    "b44",
+    "b47"
+  ],
+  "venue_notes": "TEG's first visit to the Algarve and a brand-new course in Boavista (Howard Swan parkland, Atlantic views, Lagos), played three times in three days — so frame it as a course the field had to learn in real time, with the back nine (especially the par-3 14th) emerging as the defining stretch."
+}

@@ -1,5 +1,7 @@
 # Reporting Pipeline
 
+**Starting a new chat session?** Read [ONBOARDING.md](ONBOARDING.md) first — it bootstraps context in one read.
+
 LLM-generated, newspaper-style tournament reports for TEGs. UI-agnostic — lives in `teg_analysis/reporting/` and is consumed by both the FastAPI webapp (primary) and the legacy streamlit page.
 
 Replaces the old `streamlit/commentary/` system. The old pipeline buried key events under rolling-window noise, lost hole-level colour in plumbing, had no editorial layer, and the prose model was reaching for the same dramatic words ("disaster", "meltdown", "catastrophe") report after report. The new pipeline foregrounds what mattered, retains specific hole detail, and has an explicit editorial stage between data and prose.

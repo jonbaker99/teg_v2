@@ -1,26 +1,32 @@
 {
-  "title": "Baker's Coast",
+  "title": "Coronation in Kent",
   "title_candidates": [
-    "Baker's Coast",
-    "Kent State",
-    "The Long Sands of Jon",
-    "A Baker's Dozen, Held in Kent"
+    "Coronation in Kent",
+    "By Eighteen, By Six",
+    "The Lowest Number",
+    "Plus Fifty",
+    "Wire to Wire on the Channel"
   ],
-  "theme": "Jon Baker as wire-to-wire metronome on Kent's links — the only flicker of doubt arrived briefly in Round 2 and was snuffed out at Littlestone with one of the great rounds in TEG history.",
-  "tone": "house — Ronay/Peck, faithful and tongue-in-cheek, written for insiders who were there.",
-  "narrative_structure": "in_medias_res",
-  "opening_hook": "Open on Littlestone, Round 3: Gregg Williams has just drawn level on the first green and the Trophy is suddenly alive — then Jon Baker proceeds to shoot +8 gross, the second-best Gross round in TEG history, and the tournament effectively ends in the Romney Marshes. Then flash back to Deal.",
+  "theme": "Jon Baker's wire-to-wire coronation: a record-low Gross, a Trophy never relinquished, and a Kent debut that became a procession — set against Williams's bridesmaid week, Patterson's split personality, and Mullin's third Spoon in three TEGs.",
+  "tone": "house",
+  "narrative_structure": "chronological",
+  "opening_hook": "Open on the final scoreboard at Prince's: Jon Baker +50 gross, winning the Jacket by 18 — the lowest Gross total in TEG history — and the Trophy by 6. State the headline result up front, then walk it back to Royal Cinque Ports and the 9-shot cushion that was there by tea on Day 1.",
+  "narrative_vehicles": [
+    "hero_arc",
+    "inevitability",
+    "catalogue"
+  ],
   "foreshadow": [
-    "TEG's first foray into Kent — four new links, no local knowledge, plenty of wind",
-    "Jon's 9-shot Gross lead after R1 looked decisive; the Trophy race did not agree",
-    "John Patterson, a man capable of an eagle and a nine in the same week — sometimes the same round",
-    "David Mullin, comfortably mid-pack for three days, with one hole still to come"
+    "Jon Baker arrived on back-to-back Jacket wins, hunting a three-peat",
+    "David Mullin arrived as reigning Spoon holder with back-to-back Spoons already on the card",
+    "Defending Trophy champion John Patterson opened on Royal Cinque Ports with an 8 at the 1st",
+    "Gregg Williams came in with three prior Trophy wins but second in two of the last three TEGs — the bridesmaid label needed shaking"
   ],
   "competitions": [
     {
-      "name": "The Trophy (Stableford)",
-      "winner_or_loser": "Jon Baker (158 pts, by 6 from Gregg Williams)",
-      "how": "Jon led from R1 (39 pts, +6) but the cushion shrank to a single point after R2 as Gregg closed; the decisive sequence is Gregg drawing level on the 1st at Littlestone (b48), and Jon's response — a 44-point round built on a historic +8 gross (b03, b24) — which restretched the lead to 5 and effectively put the trophy out of reach. R4 was administration: 39 pts, lead out to 6.",
+      "name": "Trophy (Stableford)",
+      "winner_or_loser": "Jon Baker",
+      "how": "Led from R1 H1 to R4 H18. Williams drew level at R2 H15; Jon birdied the 18th the same afternoon (b35) to reclaim outright and was never headed in stroke terms again. Williams drew level once more at R3 H1 (b48), but Jon's +8 gross / 44-pt R3 at Littlestone (b03) reopened a 5-shot cushion that grew to 6 by the close. Final: 158 pts, by 6.",
       "key_beat_ids": [
         "b04",
         "b35",
@@ -30,22 +36,24 @@
       ]
     },
     {
-      "name": "The Green Jacket (Gross)",
-      "winner_or_loser": "Jon Baker (+50, by 18 from Gregg Williams)",
-      "how": "Never not leading. +9 after R1, +7 after R2, +14 after R3 thanks to the +8 round at Littlestone (b03), and out to +18 by the end at Prince's. Zero lead changes across the four days — a procession.",
+      "name": "Green Jacket (Gross)",
+      "winner_or_loser": "Jon Baker",
+      "how": "A procession. Nine clear after R1 (+13 at Royal Cinque Ports), seven after R2, fourteen after a +8 R3 at Littlestone — the 2nd-best Gross round in TEG history to date — and eighteen at the finish. Final: +50 gross, the lowest total in TEG history and Jon's third Jacket.",
       "key_beat_ids": [
         "b01",
-        "b03"
+        "b03",
+        "b32"
       ]
     },
     {
-      "name": "The Wooden Spoon",
-      "winner_or_loser": "David Mullin (135 pts)",
-      "how": "For three rounds the Spoon belonged to John Patterson (R1, R2) and briefly Alex Baker (R3) — Mullin sat a comfortable mid-pack 3rd-3rd-4th. Then on the 10th at Prince's Shore/Dunes in R4 he made a nine (b10), which dropped him to the bottom of the race (b12) and there he stayed. A late, slow-motion trapdoor.",
+      "name": "Wooden Spoon",
+      "winner_or_loser": "David Mullin",
+      "how": "Six bottom-place changes on Day 1 alone before settling; Patterson and Alex Baker held the basement at various points through R3. Mullin sat 3rd or 4th most of the week, then ran a 9 at the 10th in R4 — par 4, Stroke Index 3 — and dropped to last on the spot (b10, b12). Final: 135 pts, his third Wooden Spoon and third in three TEGs.",
       "key_beat_ids": [
         "b11",
         "b10",
-        "b12"
+        "b12",
+        "b18"
       ]
     }
   ],
@@ -53,66 +61,91 @@
     {
       "round": 1,
       "headline_candidates": [
-        "Deal Or No Deal: Baker Pockets Nine at Royal Cinque Ports",
-        "Patterson's Long Walk on a Short Coast",
-        "The Wind, the Wedge and the Wooden Spoon Carousel"
+        "Royal Cinque Ports, Royal Procession",
+        "Day One on the Kent Coast: Jon +13, Everyone Else +Lots",
+        "The Nine-Shot Statement"
       ],
-      "chosen_headline": "Deal Or No Deal: Baker Pockets Nine at Royal Cinque Ports",
-      "angle": "Jon opens with 39 pts and a 9-shot Gross cushion on a course that hosted two Opens; John Patterson racks up three quadruple bogeys and the Spoon is already passing hands like a hot potato.",
+      "chosen_headline": "Royal Cinque Ports, Royal Procession",
+      "angle": "Jon Baker opens with 39 pts and +13 gross, nine clear on the Jacket and six on the Trophy after a single round — while Patterson stacks four quadruple-or-worse holes and the basement of the Spoon race changes hands six times.",
       "beat_ids": [
+        "b34",
         "b15",
         "b09",
         "b16",
-        "b17"
+        "b17",
+        "b14",
+        "b31",
+        "b38",
+        "b40",
+        "b42",
+        "b43"
       ]
     },
     {
       "round": 2,
       "headline_candidates": [
-        "The Lead Gets Squeezed at Sandwich",
-        "Baker Wobbles, Then Birdies the 18th",
-        "Dunes, Himalayas and a One-Point Margin"
+        "Williams Level, Jon Birdies 18",
+        "Sandwich: The Brief Equality",
+        "Princes, Briefly Shared"
       ],
-      "chosen_headline": "Baker Wobbles, Then Birdies the 18th",
-      "angle": "Gregg Williams closes within one and briefly nudges level; Jon answers with a birdie at the last (b35) to restore outright lead heading to Littlestone. Patterson and Mullin contribute the day's blow-ups.",
+      "chosen_headline": "Williams Level, Jon Birdies 18",
+      "angle": "At Prince's Dunes/Himalayas, Williams claws level on the Trophy at H15 — the only sustained challenge of the week — before Jon birdies the last (b35) to reclaim outright. Patterson bleeds 11 in the first four holes; Mullin posts an 8 at the 9th.",
       "beat_ids": [
         "b35",
+        "b44",
         "b19",
         "b20",
-        "b18"
+        "b18",
+        "b28",
+        "b46",
+        "b49",
+        "b47"
       ]
     },
     {
       "round": 3,
       "headline_candidates": [
-        "Littlestone, Large Statement",
-        "Baker's +8 Buries the Field",
-        "Patterson Posts 49 — And Still Isn't Close"
+        "Littlestone: Two Records in One Afternoon",
+        "Jon +8, Patterson 49 — On the Same Card",
+        "The Day Everything Happened"
       ],
-      "chosen_headline": "Baker's +8 Buries the Field",
-      "angle": "The pivotal day. Gregg draws level on the 1st (b48); Jon then shoots the second-best Gross round in TEG history (+8, b03) en route to 44 pts. John Patterson, of all people, posts a personal-best gross +12 and 49 Stableford points — the third-best round in TEG history — and gains barely anything on the leader.",
+      "chosen_headline": "Littlestone: Two Records in One Afternoon",
+      "angle": "The week's magic round. Jon Baker shoots +8 gross — the 2nd-best Gross round in TEG history (b03). Defending Trophy champion John Patterson — author of multiple quadruples already — posts 49 pts and a personal-best +12 gross (b05, b06), the 3rd-best Stableford round ever. Williams draws level for an hour at H1, then watches the door shut.",
       "beat_ids": [
-        "b48",
         "b03",
         "b05",
         "b06",
-        "b24"
+        "b48",
+        "b24",
+        "b27",
+        "b13",
+        "b37",
+        "b33",
+        "b21",
+        "b22",
+        "b25",
+        "b26"
       ]
     },
     {
       "round": 4,
       "headline_candidates": [
-        "Mullin's Ninth Circle at Prince's",
-        "Coronation on the Shore",
-        "Patterson Eagles a Par-5, Then Remembers He's Patterson"
+        "Coronation at Prince's",
+        "Mullin's 9 on SI 3, and the Spoon Is Sealed",
+        "By Eighteen, By Six"
       ],
-      "chosen_headline": "Mullin's Ninth Circle at Prince's",
-      "angle": "Jon closes it out with 39 pts (lead out to 6 on the Trophy, 18 on the Jacket). The day's drama is Mullin's nine at the 10th (b10) which delivers him the Spoon (b12); Alex Baker posts a personal-best gross +17 (b07); Patterson eagles the 2nd (b02) on the way to yet another quadruple bogey.",
+      "chosen_headline": "Coronation at Prince's",
+      "angle": "Jon closes out both competitions on the Shore/Dunes; Patterson eagles the par-5 2nd (b02) for the field's only eagle of the week; Alex Baker posts a PB +17 gross even as he finishes the week tied to the floor of the field; Mullin's quintuple-bogey 9 at the 10th — par 4, SI 3 — confirms a third consecutive Spoon.",
       "beat_ids": [
+        "b01",
+        "b04",
+        "b11",
         "b02",
-        "b07",
         "b10",
         "b12",
+        "b07",
+        "b32",
+        "b29",
         "b23"
       ]
     }
@@ -120,66 +153,47 @@
   "players": [
     {
       "player": "Jon Baker",
-      "arc": "Wire-to-wire in both Trophy and Jacket; the Littlestone +8 (b03) is the round of the tournament and arguably the round of his TEG career."
+      "arc": "Coronation. Led both competitions wire-to-wire across four rounds, set the lowest Gross total in TEG history (+50, by 18), claimed a third Trophy and a third Jacket in succession — the kind of week the others will need a year to stop talking about."
     },
     {
       "player": "Gregg Williams",
-      "arc": "The only man to lay a glove on Jon — closed to one after R2, drew level on the 1st at Littlestone, then watched the leader disappear into the Romney Marshes. Runner-up in both Trophy and Jacket."
+      "arc": "The bridesmaid week extended. Drew level for the Trophy twice (R2 H15, R3 H1) and led neither outright for a single hole, finishing 2nd in both Trophy and Jacket — a fourth runner-up finish in five TEGs."
     },
     {
       "player": "John Patterson",
-      "arc": "A walking weather system: four quadruple bogeys, a quintuple, an eagle on the 2nd in R4, AND the third-best Stableford round in TEG history (49 pts) with a personal-best gross +12 at Littlestone. Everything, all at once."
-    },
-    {
-      "player": "Alex Baker",
-      "arc": "Quietly grafted to a personal-best gross +17 in the final round (b07); briefly held the Spoon in R3 before Mullin obliged."
+      "arc": "Jekyll and Hyde from the defending Trophy champion: an 8 at the 1st of Royal Cinque Ports, four quadruples in R1 alone, another two on Day 2 — and then at Littlestone, the eagle's-shadow 49 pts and a personal-best gross. The eagle itself came at Prince's the next day. Finished mid-pack despite the catalogue of disasters."
     },
     {
       "player": "David Mullin",
-      "arc": "Mid-pack for three rounds, then a nine at the 10th at Prince's Shore/Dunes (b10) and the Spoon was his."
+      "arc": "Reigning Spoon holder collects another. Three Wooden Spoons in three TEGs, four overall — the R4 H10 quintuple bogey on the third-hardest hole on the course was the moment it was sealed. The eight Jackets feel a long way away."
+    },
+    {
+      "player": "Alex Baker",
+      "arc": "A tough week that ended with a personal-best Gross round (+17 at Prince's Shore/Dunes) and a tour of the Spoon basement before Mullin took it off him. Quadruples at R1 H11 and R3 H2 the lowlights."
     }
   ],
   "must_include_beat_ids": [
     "b01",
-    "b04",
-    "b11",
+    "b02",
     "b03",
+    "b04",
     "b05",
     "b06",
-    "b02",
     "b07",
     "b08",
     "b10",
+    "b11",
+    "b12",
+    "b35",
     "b48"
   ],
   "cuts": [
-    "b09",
-    "b13",
-    "b14",
-    "b15",
-    "b16",
-    "b17",
-    "b18",
-    "b19",
-    "b20",
-    "b21",
-    "b22",
-    "b23",
-    "b25",
-    "b26",
-    "b27",
-    "b28",
-    "b29",
     "b30",
     "b31",
-    "b32",
     "b33",
-    "b34",
     "b36",
-    "b37",
     "b38",
     "b39",
-    "b40",
     "b41",
     "b42",
     "b43",
@@ -188,10 +202,40 @@
     "b46",
     "b47",
     "b49",
-    "b50",
-    "b12",
-    "b24",
-    "b35"
+    "b50"
   ],
-  "venue_notes": "TEG's first visit to Kent — every course a debut. Frame the report as a tour of the south-east links: Royal Cinque Ports (two-time Open host, exposed at Deal) for R1; Prince's Dunes/Himalayas at Sandwich for R2 (27-hole site, future 2030 Walker Cup); Littlestone on the Romney Marshes for R3 (Laidlaw Purves of Royal St George's, refined by Braid and MacKenzie — fittingly the stage for the tournament's defining round); Prince's Shore/Dunes for R4 (the strongest routing, and where the Spoon was settled). Use Kent and the wind as connective tissue, not decoration."
+  "venue_notes": "TEG's first visit to Kent — and a first visit to all four courses. Frame the week as a links pilgrimage on the Channel coast: Royal Cinque Ports (Deal, Open venue) as the brutal opening test; Prince's (Sandwich, Open venue, 2030 Walker Cup host) hosting both Day 2 and the closing day in different routings; Littlestone on the Romney Marshes (Purves, refined by Braid and MacKenzie) as the unlikely stage for the week's two record-class rounds. No prior course history exists — every shot is a debut shot — so lean on the architecture and the wind rather than ghosts of TEGs past.",
+  "competition_storyline_bullets": {},
+  "player_storyline_bullets": {},
+  "course_history_notes": [
+    "All four Kent courses were new to TEG; every player's scorecard at every venue is a personal debut, so no course PBs are 'broken' here — the records that matter are TEG-wide (b01, b03, b05)."
+  ],
+  "decisive_moments": [
+    "Trophy: R2 H18 at Prince's — Jon Baker's birdie reclaiming the outright lead from a level-pegged Williams, the last time anyone got within touching distance.",
+    "Green Jacket: R1 at Royal Cinque Ports — the +13 / 9-shot cushion that turned the Jacket race into a four-day procession before it had really begun.",
+    "Wooden Spoon: R4 H10 at Prince's Shore/Dunes — David Mullin's quintuple-bogey 9 on SI 3 dropping him to the bottom of the field with eight holes to play, and no time to climb back."
+  ],
+  "prominent_vehicle": "records",
+  "payoffs": [
+    {
+      "seed": "Jon Baker's back-to-back Jackets going in",
+      "resolves_in": "Round 4 / closing summary",
+      "payoff": "Three in a row, and not just three — the lowest Gross total in TEG history (+50), by 18 shots."
+    },
+    {
+      "seed": "Mullin's back-to-back Spoons going in",
+      "resolves_in": "Round 4",
+      "payoff": "Make it three. The R4 H10 9 on SI 3 confirmed it; 135 pts, last."
+    },
+    {
+      "seed": "Patterson, defending Trophy champion, opens with an 8 at the 1st",
+      "resolves_in": "Round 3",
+      "payoff": "The opening-hole disaster set the tone for the catalogue (five quadruples or worse across R1–R4) — and yet at Littlestone the same player posts 49 pts and a personal-best gross, the 3rd-best Stableford round in TEG history."
+    },
+    {
+      "seed": "Williams's bridesmaid label coming in",
+      "resolves_in": "How the three were decided / closing summary",
+      "payoff": "Drew level twice on the Trophy, led outright for zero holes, finished 2nd in both competitions. The label stays on."
+    }
+  ]
 }

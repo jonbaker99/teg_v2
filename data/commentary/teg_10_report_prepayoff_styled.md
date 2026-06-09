@@ -1,4 +1,13 @@
-# Two Records, One Algarve
+# Two Records, One Algarve {.report-title}
+
+<p class="dateline">TEG 10 | Algarve, Portugal | 2017</p>
+
+<section class="callout at-a-glance-box">
+  <p class="at-a-glance-title">RESULTS</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Alex Baker (1st Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> David Mullin (8th Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> John Patterson (1st Spoon)</p>
+</section>
 
 ## The 18th at Boavista, Sunday afternoon
 
@@ -8,7 +17,7 @@ That this was somehow only the second-most-talked-about gross scorecard of the w
 
 Rewind, then, to a Boavista tee box four days earlier, and a competition that had a Green Jacket winner before most of the field had located their second sleeve of balls.
 
-## Round 1 — Mullin's +4 Rewrites the Boavista Tablets
+## Round 1 — Mullin's +4 Rewrites the Boavista Tablets {.round1 .round}
 
 TEG had been to Boavista ten times before. The course was known; the par was familiar; the wind off the Atlantic was the wind off the Atlantic. Into this thoroughly mapped environment Mullin walked and produced a gross +4 — the lowest gross round ever played at this tournament — worth 49 Stableford points, the second-best Stableford round in the history books at the moment it was completed. A man cannot, in a single afternoon, both rewrite the Gross ledger and come within touching distance of the Stableford one. Mullin did, and by sundown held an eight-shot Trophy lead and a fourteen-shot advantage in the Jacket. The latter race, in any meaningful sense, was over.
 
@@ -16,7 +25,11 @@ Alex Baker, with 41 points, was the only other competitor on the leaderboard who
 
 At the bottom, John Patterson achieved the curious distinction of being last by the fourth hole and remaining last for the subsequent sixty-eight. His afternoon included a quintuple-bogey 10 at the par-5 8th, a hole and a number that would acquire a haunting recurrence as the week progressed. Stuart Neumann signed off with a sextuple-bogey 10 at the 18th — the kind of finishing flourish that suggests a man who has decided the round is already over and is simply seeing it out.
 
-## Round 2 — Palmares Debuts, Personal Bests Follow
+
+<p class="standings"><span class="standings-header">Trophy Standings:</span> DM 49 | AB 41 | GW 38 | JB 37 | SN 32 | JP 29</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +4 | JB +18 | GW +25 | AB +28 | JP +31 | SN +36</p>
+
+## Round 2 — Palmares Debuts, Personal Bests Follow {.round2 .round}
 
 To Palmares (Praia / Alvor), a Robert Trent Jones Jr. layout new to the tournament, and a course that responded to its TEG debut by handing out personal bests like welcome packs. Alex Baker took home a PB 45 / gross +23. Gregg Williams produced a PB 48 / gross +14, the round of a man finally locating his own ceiling and finding a stepladder. Jon Baker, less demonstratively, posted gross +10 — the third-best Gross round ever recorded at this tournament, a personal best inside a personal-best campaign, and the sole round all week that briefly suggested Mullin's Jacket procession might require him to look over his shoulder.
 
@@ -24,7 +37,11 @@ The Trophy lead came down to five. The Jacket advantage to thirteen. The headlin
 
 Beneath the personal bests, the day's bookkeeping was uglier. Patterson opened with a sextuple-bogey 10 at the par-4 1st, a way of beginning a round of golf that does not so much set a tone as set fire to it. Neumann, meanwhile, embarked on the most concentrated three-hole episode of the week: a quintuple-bogey 10 at the par-5 13th, a quintuple-bogey 9 at the par-4 14th, a triple-bogey 7 at the par-4 15th — thirteen shots dropped to par across three holes — and then, for symmetry with his Round 1 finish, another sextuple-bogey 10 at the 18th. Two tournaments, two 18th holes, two 10s. A man who enjoys a motif.
 
-## Round 3 — The Day Mullin's Cushion Vanished
+
+<p class="standings"><span class="standings-header">Trophy Standings:</span> DM 91 | AB 86 | GW 86 | JB 82 | SN 69 | JP 64</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +15 | JB +28 | GW +39 | AB +51 | JP +56 | SN +69</p>
+
+## Round 3 — The Day Mullin's Cushion Vanished {.round3 .round}
 
 If you wanted the swing day, the afternoon on which a tournament's spine was rearranged, you wanted Saturday at Palmares (Alvor / Lagos).
 
@@ -34,7 +51,11 @@ For a stretch of holes that probably felt longer than it was, the Trophy belonge
 
 Patterson made another quintuple-bogey 10, this time at the par-5 8th. The hole numbers were beginning to look less like coincidences and more like an itinerary.
 
-## Round 4 — 51
+
+<p class="standings"><span class="standings-header">Trophy Standings:</span> AB 133 | GW 133 | DM 122 | JB 117 | SN 105 | JP 91</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +38 | JB +48 | GW +54 | AB +73 | JP +92 | SN +98</p>
+
+## Round 4 — 51 {.round4 .round}
 
 To the closing round, then, and the scorecard with which this report opened.
 
@@ -43,6 +64,10 @@ Back at Boavista for the twelfth time in TEG history, Alex Baker produced gross 
 Mullin signed for gross +13, the Jacket secured by twelve at a tournament-record +51. Jon Baker's quiet, accumulating campaign closed at +63 — a personal best — and the runner-up spot in the Jacket. The two competitions had crowned themselves on the same afternoon, on the same course, by two different men, on two different metrics.
 
 At the bottom of the page, Patterson signed for 21 points — his worst-ever round — including a sextuple-bogey 11 at the par-5 8th. The 8th at Boavista in Round 1: 10. The 1st at Palmares in Round 2: 10. The 8th at Palmares in Round 3: 10. The 8th at Boavista in Round 4: 11. There is no neat phrase for the pattern. There doesn't need to be.
+
+
+<p class="standings"><span class="standings-header">Trophy Standings:</span> AB 184 | GW 173 | DM 162 | JB 157 | SN 144 | JP 112</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +51 | JB +63 | GW +76 | AB +90 | SN +125 | JP +132</p>
 
 ## How the three were decided
 
@@ -60,3 +85,45 @@ At the bottom of the page, Patterson signed for 21 points — his worst-ever rou
 - **Jon Baker.** The quiet gross specialist of the field. His Round 2 +10 was the third-best Gross round in the tournament's history and the only round all week that briefly suggested Mullin might be made to work for the Jacket. A personal-best +63 and the runner-up sash.
 - **John Patterson.** Last from the fourth hole of the first round to the eighteenth of the fourth. Three 10s, an 11, and a closing 21 that is his worst round on record. 112 points, the Spoon, and a small accidental tour of the Algarve's par-5 8ths.
 - **Stuart Neumann.** Two 10s at consecutive 18ths — Boavista in Round 1, Palmares in Round 2 — and thirteen shots dropped across three holes from the 13th at Palmares. Collateral damage in a week that was busy making history at the other end of the page.
+
+## Personal bests and TEG records
+
+<div class="records"><p class="records-header">TEG records:</p><ul>
+  <li>Alex Baker's 184 pts is the best Trophy total in TEG history</li>
+  <li>David Mullin's +51 is the best Gross total in TEG history</li>
+  <li>David Mullin's +4 (gross) is the best Gross round in TEG history to date (R1)</li>
+  <li>Alex Baker's 51 pts is the best round in TEG history to date (R4)</li>
+  <li>David Mullin's 49 pts is the 2nd-best round in TEG history to date (R1)</li>
+  <li>Jon Baker's +10 (gross) is the 3rd-best Gross round in TEG history to date (R2)</li>
+  <li>David MULLIN — -1 Gross on the Back nine (R1) is the best Back nine Gross in TEG history</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>Alex Baker posts a personal-best round: 45 pts (R2)</li>
+  <li>Alex Baker posts a personal-best Gross round: +23 (R2)</li>
+  <li>Alex Baker posts a personal-best round: 47 pts (R3)</li>
+  <li>Alex Baker posts a personal-best Gross round: +22 (R3)</li>
+  <li>Alex Baker posts a personal-best Gross round: +17 (R4)</li>
+  <li>Gregg Williams posts a personal-best round: 48 pts (R2)</li>
+  <li>Gregg Williams posts a personal-best Gross round: +14 (R2)</li>
+  <li>Alex Baker's +90 is a personal Gross best</li>
+  <li>Gregg Williams's +76 is a personal Gross best</li>
+  <li>Jon Baker's +63 is a personal Gross best</li>
+  <li>David MULLIN — 28 Stableford on the Back nine (R1) is a personal-best Back nine Stableford</li>
+  <li>Jon BAKER — 27 Stableford on the Front nine (R2) is a personal-best Front nine Stableford</li>
+  <li>Alex BAKER — 28 Stableford on the Front nine (R2) is a personal-best Front nine Stableford</li>
+  <li>David MULLIN — -1 Gross on the Back nine (R1) is a personal-best Back nine Gross</li>
+  <li>Jon BAKER — +1 Gross on the Front nine (R2) is a personal-best Front nine Gross</li>
+  <li>Alex BAKER — +6 Gross on the Front nine (R2) is a personal-best Front nine Gross</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal worsts:</p><ul>
+  <li>John Patterson's worst round to date: 21 pts (R4)</li>
+  <li>John Patterson's worst Gross round to date: +40 (R4)</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>John Patterson runs up a 11 (sextuple bogey) at the 8th (R4) — his career-worst on a par-5</li>
+  <li>Stuart Neumann runs up a 10 (sextuple bogey) at the 18th (R1) — his career-worst on a par-4</li>
+  <li>Stuart Neumann runs up a 10 (sextuple bogey) at the 18th (R2) — his career-worst on a par-4</li>
+</ul></div>

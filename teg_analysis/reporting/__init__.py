@@ -19,7 +19,7 @@ from . import render
 from .events import build_notable_events, render_events_markdown
 from .venue import build_venue_context, render_venue_markdown
 from .story_plan import build_story_plan, StoryPlan
-from .authoring import generate_dry_draft
+from .authoring import generate_dry_draft, tighten_prose
 from .render import apply_styling, style_report
 
 __all__ = [
@@ -27,6 +27,6 @@ __all__ = [
     "build_notable_events", "render_events_markdown",
     "build_venue_context", "render_venue_markdown",
     "build_story_plan", "StoryPlan",
-    "generate_dry_draft",
+    "generate_dry_draft", "tighten_prose",
     "apply_styling", "style_report",
 ]

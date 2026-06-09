@@ -1,0 +1,42 @@
+# Two Leaders, One Tie, and a 10 on the Card {.round-report-title}
+
+<p class="dateline">TEG 10 | Round 3 | 02/10/2017 | Palmares - Alvor / Lagos</p>
+
+<p class="round-scores"><span class="round-scores-header">Round Stableford:</span> AB 47 | GW 47 | SN 36 | JB 35 | DM 31 | JP 27</p>
+<p class="round-scores"><span class="round-scores-header">Round Gross:</span> GW +15 | JB +20 | AB +22 | DM +23 | SN +29 | JP +36</p>
+
+The arithmetic, before we go anywhere near a fairway: David Mullin began Round 3 five points clear in the Trophy and finished it eleven adrift in third. That is a fourteen-point swing on a day when nobody actually went round Palmares in anything resembling a procession. The Robert Trent Jones Jr. parkland in Lagos — TEG's first visit, fourth time in the Algarve — turned out to be the kind of course that hands you the lead with one hand and removes it with the other, sometimes on the same hole. The Trophy lead changed hands, or was levelled, at least five times before the 18th green was reached. Then that finishing hole decided the rest.
+
+Walk it in order, because the sequence is most of the story.
+
+**Alex Baker** got out of the blocks like a man who had read the forecast. Bogey-3 at the par-3 2nd, bogey-5 at the 3rd, par-5 at the 4th: ten points in three holes, and the par at the 4th was enough to draw him level with Mullin at the top of the Trophy. **Gregg Williams**, who would spend the day being the quietest man on the leaderboard while also being on top of it, matched the par-5 at the 4th and drew level too. The overnight gap, briefly, simply ceased to exist.
+
+Baker pressed on. A par at the par-4 6th nudged him outright in front for the first time, and **Stuart Neumann** — whose card was about to do something very strange — picked precisely that moment to begin haemorrhaging. From the 6th to the 11th he leaked 14 shots: triple-bogey 7 at the 6th, triple-bogey 6 at the par-3 7th, then four straight double-bogeys at 8, 9, 10 and 11. Mullin, meanwhile, steadied things with a par at the par-3 7th to draw level once again. We are now four holes into being level, in front, level again — and we have not yet reached the back nine.
+
+**John Patterson's** card flatters early and brutally. Bogey-par-par at 1, 2 and 3 yielded 9 points and a brief sense, perhaps, that the Spoon conversation might be revisited. Then came the 10 at the par-5 8th. We will return to Patterson presently; the rest of his round demands its own paragraph and several wide margins.
+
+Baker kept the points coming with three straight bogeys at 9, 10 and 11 — nine more points, the unflashy kind. Williams, refusing to let Baker out of sight, posted 9 points of his own across 11–13 with a bogey-par-bogey sequence.
+
+Then the 13th. The par-5 13th at Palmares, which the leaderboard will remember for some time. Williams' bogey-6 was enough to take him into the outright Trophy lead. Mullin made triple-bogey 8. **Alex Baker, in the middle of what would be a personal-best round of 47 Stableford points, carded a 10** — quintuple bogey, zero points, the kind of hole that ought to ruin a card and somehow didn't. Patterson made triple-bogey 8 of his own. One hole, four scorecards, one fully re-set leaderboard.
+
+Baker drew level again with a bogey-6 at the par-5 15th — which is when **Mullin** produced what looked, for a glorious three-hole window, like a coronation. Birdie-par-birdie at 15, 16 and 17, the card reading 4-3-4, eleven points in the bag and the Jacket apparently being polished in the clubhouse. Williams, who had endured a five-hole bogey run, finally stopped it with a birdie of his own at the par-5 17th. **Jon Baker** was meanwhile doing what Jon Baker does — par-par-par at 15, 16 and 17, no fuss, 9 points, the kind of three-hole stretch that makes nobody's highlight reel and quietly trims Mullin's Jacket cushion from 13 to 10.
+
+And then, the 18th. The par-4 finishing hole, which on this evidence has been reading the leaderboard with some attention. Mullin's 8 — quadruple bogey, zero points — took the Trophy lead off him entirely. He signed for 122 and dropped to third. Alex Baker and Gregg Williams sit tied at the top on 133 apiece.
+
+The Baker 47 deserves its own line on its own. **A personal best, despite the 10 at the 13th**, which on the face of it is mathematically improbable and on closer inspection is the consequence of squeezing points out of practically every other hole on the card. Williams' route to the top was different — bogey-flecked, disciplined, a three-hole burst of 9 points around the turn, the steadying birdie at 17 — but the destination is the same. Two men, level, going into the final round.
+
+**Jon Baker's** afternoon was the unshowy one: solid through the back nine, fourth in the Trophy on 117, still in touch, and now ten back of Mullin in the Jacket rather than thirteen. **Neumann**, having dropped his 14 shots across 6–11, then produced 12 points across 13–16 (bogey-par-bogey-par) — a card cleanly split into a disaster and a recovery — and stayed fifth.
+
+Which brings us, regrettably, to **Patterson**. After the bright 9-point start and the 10 at the 8th, the round did not so much unravel as detonate. The five-hole stretch from 11 to 15 went: triple-bogey 7, quintuple-bogey 8 at the par-3 12th, triple-bogey 8 at the par-5 13th, quadruple-bogey 7 at the par-3 14th, quadruple-bogey 9 at the par-5 15th. That is 3+5+3+4+4 = **nineteen shots dropped in five holes**. The Spoon, which began the day a shareable five points away from Neumann, is now Patterson's own personal moat at fourteen.
+
+The Trophy lead changed hands or was levelled at least five times across the round — Baker level at the 4th, Williams level at the 4th, Baker outright at the 6th, Mullin level at the 7th, Williams outright at the 13th, Baker level at the 15th — before the 18th green produced the only number that matters at sundown: 133, 133. The Jacket, meanwhile, is still Mullin's to lose, but the cushion is no longer the duvet it was: ten shots, not thirteen, and Jon Baker is the man within range. The Spoon, by contrast, has effectively chosen its occupant — barring something extraordinary in the final round, Patterson is fitted for it.
+
+<p class="standings"><span class="standings-header">Trophy Standings:</span> AB 133 | GW 133 | DM 122 | JB 117 | SN 105 | JP 91</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +38 | JB +48 | GW +54 | AB +73 | JP +92 | SN +98</p>
+
+## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>Alex Baker posts a personal-best round: 47 pts</li>
+  <li>Alex Baker posts a personal-best Gross round: +22</li>
+</ul></div>

@@ -1,31 +1,35 @@
 {
-  "title": "Mullin's March and the Curse of the 16th",
+  "title": "From Spoon to Spoils",
   "title_candidates": [
-    "Mullin's March and the Curse of the 16th",
-    "Sweet and Sour Sixteen",
-    "Wire to Wire, Wobble to Wobble",
-    "The Kentish Procession"
+    "From Spoon to Spoils",
+    "The Reigning Spoon's Revenge",
+    "Mullin's Restoration",
+    "Sixteen, Twice Over"
   ],
-  "theme": "David Mullin leads from the first afternoon at Deal to the last green at Prince's, never headed in either competition — but the lead shrinks from nine after R2 to two at the death as Alex Baker mounts a charge that is repeatedly torpedoed by his own catastrophes, most notably twin 10s at the same 16th hole.",
+  "theme": "The reigning Wooden Spoon holder takes both pots, the defending Trophy champion takes the Spoon, and the man who should have closed the gap finds the 16th hole twice in the worst possible way.",
   "tone": "house",
-  "narrative_structure": "in_medias_res",
-  "opening_hook": "Open on Prince's, R4, the 16th: Alex Baker — Mullin's lone pursuer — standing on the tee within touching distance, and walking off with a 10. Then rewind to Deal four days earlier.",
+  "narrative_structure": "in_medias_res — open at Prince's R4 16th green, where Alex Baker has just signed for a 10 and the Trophy has effectively gone with it, then loop back to how the previously-Spooned David Mullin had built and rebuilt the cushion",
+  "opening_hook": "R4, Prince's, the 16th — Alex Baker's second 10 of the week at the same hole number, a two-shot Trophy gap turning back into a four-shot lead — then rewind to a man who came into this TEG holding the Wooden Spoon",
+  "narrative_vehicles": [
+    "counterfactual",
+    "inversion",
+    "motif"
+  ],
   "foreshadow": [
-    "A first-afternoon takeover at Deal that nobody quite registers as the takeover for the whole week",
-    "The 16th at Royal Cinque Ports — where Alex Baker's first 10 is filed under 'links golf, these things happen'",
-    "A nine-point cushion after Littlestone that looks like a procession but is actually the high-water mark",
-    "Mullin's own scorecard sprouting big numbers at Prince's, hinting the lead is more fragile than it looks"
+    "A reigning Wooden Spoon holder arriving in Kent having finished bottom in three of the last three TEGs",
+    "Alex Baker's blowups at par-5s and on the harder Cinque Ports stretch, hinting that the closer would find ways to give shots back",
+    "Jon Baker arriving as defending Trophy champion and back-to-back Jacket winner — and the only way that ends interestingly",
+    "The 16th hole as a recurring address on Alex Baker's scorecard"
   ],
   "competitions": [
     {
       "name": "Trophy (Stableford)",
       "winner_or_loser": "David Mullin",
-      "how": "Wire-to-wire on 154 points, by 2 from Alex Baker. Mullin drew level on R1 H11 and took outright control on R1 H16 — and was never headed again across the next 56 holes. Rounds of 40 and 41 at Deal and Littlestone built a nine-point cushion; 36 at Prince's kept it at eight. The wobble came in R4, where quad-bogey blowups (notably the 10th) bled the lead down to two — but Alex Baker's own R4 16th (a 10 of his own) snuffed out the only credible challenge.",
+      "how": "Mullin took an outright lead at R1 H16 and was never headed across the next 56 holes. The cushion swelled to 9 after R2, held at 8 through R3, then was squeezed to 2 in R4 as Alex Baker piled up points around the turn-for-home — until Baker ran up a 10 at the 16th and handed the margin back. Mullin 154, Baker 152.",
       "key_beat_ids": [
         "b39",
         "b17",
-        "b18",
-        "b09",
+        "b20",
         "b02",
         "b01"
       ]
@@ -33,21 +37,21 @@
     {
       "name": "Green Jacket (Gross)",
       "winner_or_loser": "David Mullin",
-      "how": "A second wire-to-wire, won by 7 at +68 over Jon Baker. Alex Baker briefly drew level at R1 H6 before Mullin pulled even again at the 9th and never looked back; gross rounds of 15 and 14 at Deal and Littlestone effectively settled it, the 12-shot R2 lead never seriously threatened despite scruffier 20 and 19 at Prince's. A personal-best gross total (+76) from Gregg Williams was the sub-plot.",
+      "how": "Mullin drew level on R1 H9, was outright leader by the close of R1, and stretched the Gross lead to 12 after R2 on the back of a new personal best at Littlestone (85). A quad at the 8th in R3 and an 8 at the 10th in R4 trimmed it, but the cushion was unrecoverable. +68, by 7 over Jon Baker — Mullin's 9th Jacket.",
       "key_beat_ids": [
+        "b41",
         "b03",
-        "b04"
+        "b09"
       ]
     },
     {
       "name": "Wooden Spoon",
       "winner_or_loser": "Jon Baker",
-      "how": "Owned outright from R1 H4 and never relinquished — last in all four rounds on the Stableford count, finishing on 125. The cruel twist: Baker actually produced the best closing round of the four (39 points at Prince's R4), including a 14-point flurry across holes 12–15, but it came far too late, and an 8 at the 18th was a fitting kiss-off. He was, however, runner-up in the Jacket — a perfectly normal split of handicapped and raw scoring, not a riddle.",
+      "how": "Jon dropped to last on R1 H4 and stayed there for all 68 remaining holes — bottom in every round. The defending Trophy champion's 92-92-91-83 told its own story: the R4 was a Prince's course record, but it arrived a day too late and 29 points behind the man above him. 125 points, his first Wooden Spoon.",
       "key_beat_ids": [
         "b32",
         "b06",
-        "b07",
-        "b15"
+        "cr01"
       ]
     }
   ],
@@ -55,13 +59,14 @@
     {
       "round": 1,
       "headline_candidates": [
-        "Deal Me In: Mullin Takes Charge at the Coast",
-        "Alex Baker and the 16th, Part One",
-        "Wire One: Mullin in Front by Tea-Time"
+        "The Spoon Holder Sets His Stall",
+        "Cinque Ports, First Tens",
+        "Mullin Plants the Flag at the 16th"
       ],
-      "chosen_headline": "Deal Me In: Mullin Takes Charge at the Coast",
-      "angle": "At a returning Royal Cinque Ports, the tournament's whole shape is set in an afternoon: Mullin level by the 11th, outright by the 16th, with a 40-point card and a five-shot gross cushion. Alex Baker's 10 at the 16th and quad at the 11th hint at the pattern to come; Jon Baker drops to last as early as the 4th and stays there.",
+      "chosen_headline": "The Spoon Holder Sets His Stall",
+      "angle": "Mullin shoots a new PB 87 at Royal Cinque Ports for 40 pts, draws level on the Jacket at H9, takes the Trophy outright at H16. Alex Baker bleeds early, runs up the first of two 10s at the par-5 16th. Jon Baker drops to last on H4 and stays there.",
       "beat_ids": [
+        "b41",
         "b39",
         "b17",
         "b05",
@@ -74,57 +79,59 @@
     {
       "round": 2,
       "headline_candidates": [
-        "Romney Marsh, Roman Conquest",
-        "41 and Counting: Mullin Pulls Clear at Littlestone",
-        "Alex Baker Bleeds; Mullin Builds"
+        "Marsh-Bound, Cushion Made",
+        "Littlestone Tightens Mullin's Grip",
+        "Alex Baker Bleeds on the Front"
       ],
-      "chosen_headline": "41 and Counting: Mullin Pulls Clear at Littlestone",
-      "angle": "The high-water mark. Mullin's 41 stretches the Trophy lead to nine and the Jacket lead to twelve. Alex Baker hands back the chase with a brutal 2–5 stretch (12 shots dropped) and twin quads at the 5th and 8th. Mullin himself shows he can stop the bleeding when he has to.",
+      "chosen_headline": "Marsh-Bound, Cushion Made",
+      "angle": "Mullin posts another personal best — 85 gross at Littlestone, 41 pts — to balloon the Trophy lead to 9 and the Jacket lead to 12. Alex Baker drops 12 shots across holes 2-5 and adds two more quads. The race, briefly, looks done.",
       "beat_ids": [
+        "b30",
         "b11",
         "b12",
-        "b30",
         "b21",
+        "b22",
         "b36"
       ]
     },
     {
       "round": 3,
       "headline_candidates": [
-        "Prince's I: Mullin Wobbles, Mullin Wins",
-        "Back-Nine Mullin",
-        "The Cushion Holds (Just)"
+        "Prince's, First Visit",
+        "The Champ Wobbles, The Field Doesn't Pounce",
+        "A Quad at the Eighth, A Cushion Intact"
       ],
-      "chosen_headline": "Prince's I: Mullin Wobbles, Mullin Wins",
-      "angle": "First crack of light for the chasers — Mullin makes a 9 at the 8th — but he answers with a closing four-hole 13-point flourish and a sharply better back nine. Alex Baker quads the 10th, Jon Baker the 13th, Williams's tidy run ends at the 12th. Lead trimmed to eight, but only just.",
+      "chosen_headline": "The Champ Wobbles, The Field Doesn't Pounce",
+      "angle": "Mullin's first wobble — a 9 at the 8th — pares the Trophy lead from 9 to 8, no more. Williams posts a new Prince's PB (86) en route to what will become a Gross-total PB. Jon Baker still last.",
       "beat_ids": [
         "b08",
-        "b18",
-        "b19",
         "b13",
         "b14",
         "b29",
+        "b18",
+        "b19",
         "b35"
       ]
     },
     {
       "round": 4,
       "headline_candidates": [
-        "Sweet and Sour Sixteen",
-        "Two-Point Procession",
-        "Alex Baker's 16th, Again"
+        "Sixteen, Again",
+        "The Two-Shot Window That Closed Itself",
+        "Coronation by Way of a 10"
       ],
-      "chosen_headline": "Sweet and Sour Sixteen",
-      "angle": "The day the procession nearly turned into a race. Mullin makes an 8 at the 10th, the lead is genuinely shrinking, and Alex Baker is two pars away from real pressure when he walks off the 16th with a 10 — at the same hole number that had him in R1. Jon Baker, free of the spoon arithmetic, posts the best round of the day (39) with a 14-point burst at 12–15 before an 8 at the last. Mullin home by two and seven.",
+      "chosen_headline": "Sixteen, Again",
+      "angle": "The squeeze: Alex Baker piles up 10 pts across H1-3, another 11 across H13-15, and the Trophy gap is briefly 2. Then a 10 at the 16th — same hole he found a 10 on in R1 — and the Trophy is Mullin's. Meanwhile Jon Baker shoots 83 to set a Prince's course record, his only round above 30 pts, and still finishes bottom.",
       "beat_ids": [
-        "b09",
         "b23",
+        "b26",
         "b20",
-        "b07",
-        "b02",
         "b27",
-        "b28",
+        "b02",
+        "b09",
         "b15",
+        "b07",
+        "cr01",
         "b33"
       ]
     }
@@ -132,19 +139,19 @@
   "players": [
     {
       "player": "David Mullin",
-      "arc": "Champion in both books from the first afternoon — wire-to-wire on Stableford and Gross, a 40-41 start that effectively decided it, and enough resilience to absorb his own 9 and 8 down the stretch at Prince's."
+      "arc": "Arrives as reigning Wooden Spoon holder with the bottom finish in three of the last three TEGs; leaves with the Trophy and a 9th Green Jacket. Outright leader from R1 H16 to the final green, even through two blow-up holes."
     },
     {
       "player": "Alex Baker",
-      "arc": "Trophy runner-up and the week's tragicomic figure: capable of stretches like 11 points in three holes, but undone by an outsized collection of blowups — quads at Deal's 11th, Littlestone's 5th and 8th, Prince's 10th, and the two 10s at the 16th that bookended his tournament."
+      "arc": "The closer who almost was: trimmed a 9-point Trophy deficit to 2 by the back nine of R4, then handed it back with a 10 at the 16th — the second time he'd written that number on that hole this week."
     },
     {
       "player": "Jon Baker",
-      "arc": "Last on Stableford from the 4th hole of R1 to the 72nd, yet runner-up for the Jacket and author of the best round of the week — a 39 at Prince's including a 14-point flurry, spoiled only by a closing 8."
+      "arc": "Defending Trophy champion and back-to-back Jacket winner, bottom of the pile from R1 H4 onwards — and yet authored the week's most extraordinary individual round: an 83 at Prince's in R4, the lowest gross score that course has ever seen, four shots clear of his own previous Prince's best."
     },
     {
       "player": "Gregg Williams",
-      "arc": "Quiet personal-best week on the gross card (+76), with a tidy R3 hot stretch the highlight before his customary stumble (a triple at the 12th) and an early Deal quad."
+      "arc": "A career-best Gross total (+76) and new PBs at Royal Cinque Ports and Prince's — and yet, beaten on every metric that mattered. The man with three prior Trophies couldn't get into the conversation."
     }
   ],
   "must_include_beat_ids": [
@@ -154,21 +161,57 @@
     "b04",
     "b05",
     "b06",
-    "b07",
-    "b09"
+    "cr01",
+    "b39",
+    "b09",
+    "b20"
   ],
   "cuts": [
-    "b41",
-    "b42",
-    "b43",
     "b31",
     "b34",
-    "b22",
+    "b37",
+    "b38",
+    "b42",
+    "b43",
     "b24",
     "b25",
-    "b26",
-    "b37",
-    "b38"
+    "b28"
   ],
-  "venue_notes": "TEG's second visit to Kent (after the original Kent tour). Open with Royal Cinque Ports as 'a formidable championship links' returning to the schedule — the 2nd TEG round at Deal. Littlestone framed as the Purves/Braid/MacKenzie pedigree course on the Romney Marshes (2nd visit). Prince's Shore/Dunes did the double duty as Rounds 3 and 4 — 2nd and 3rd TEG rounds at the venue — and the 16th of that routing is, by the end of the week, Alex Baker's personal nemesis."
+  "venue_notes": "Second TEG visit to Kent (the first was TEG 13, last year, on the same four courses). Three classic links — Royal Cinque Ports, Littlestone, Prince's — and a 4th round revisit at Prince's. The whole field has played these layouts exactly once before, which makes the round-on-round deltas (Mullin -7 at Cinque Ports, -7 at Littlestone; Jon Baker +13 at Littlestone, +7 at Cinque Ports, then a course record at Prince's) directly comparable and unusually revealing.",
+  "competition_storyline_bullets": {},
+  "player_storyline_bullets": {},
+  "course_history_notes": [
+    "Mullin set personal bests on all three courses he revisited — RCP 87 (-7), Littlestone 85 (-7), Prince's 91 (-1) — the foundation of the double",
+    "Jon Baker was 13 shots worse than his TEG 13 visit at Littlestone and 7 shots worse at Cinque Ports — and then beat the entire course's record at Prince's by 2 in R4",
+    "Alex Baker's only personal best of the week was a 4-shot improvement at Royal Cinque Ports (98); he was 5 worse at Prince's vs last year",
+    "Williams's Gross-total PB (+76) was built on small improvements at every venue revisited — RCP -1, Prince's -3 — undone by an 11-shot regression at Littlestone"
+  ],
+  "decisive_moments": [
+    "R1 H16, Royal Cinque Ports — Mullin's par for outright Trophy lead; never headed across the remaining 56 holes",
+    "R1 H9, Royal Cinque Ports — Mullin draws level on the Gross and from there the Jacket gap only grows",
+    "R1 H4, Royal Cinque Ports — Jon Baker drops to last in the Spoon race on hole 4 of 72 and never climbs out"
+  ],
+  "prominent_vehicle": "decisive_moment",
+  "payoffs": [
+    {
+      "seed": "reigning Spoon holder, bottom in 3 of last 3",
+      "resolves_in": "Trophy + Jacket result, and the 'how the three were decided' section",
+      "payoff": "The same man takes the Trophy and the Jacket — the most complete reversal in a player's TEG career to date"
+    },
+    {
+      "seed": "Alex Baker's appetite for ruinous par-5s",
+      "resolves_in": "Round 4",
+      "payoff": "Two 10s at the par-5/par-4 16th — once in R1, again in R4 — the second one with the Trophy genuinely in reach"
+    },
+    {
+      "seed": "Jon Baker as defending Trophy and reigning Jacket holder",
+      "resolves_in": "Wooden Spoon section, and the R4 round write-up",
+      "payoff": "First-ever Wooden Spoon, despite a final-round 83 that is the lowest gross score ever recorded at Prince's"
+    },
+    {
+      "seed": "the 16th hole as Alex Baker's recurring address",
+      "resolves_in": "R4 'Sixteen, Again' headline",
+      "payoff": "The second 10 at the 16th — same hole number, same scorecard — that ends the Trophy race"
+    }
+  ]
 }

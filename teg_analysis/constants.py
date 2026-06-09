@@ -44,6 +44,19 @@ PLAYER_DICT = {
     'GP': 'Graham PATTERSON',
 }
 
+# Verified player relationships. Used by the reporting layer to prevent the
+# writer from inventing ties between players (observed: TEG 11 report
+# described the Baker brothers as cousins). Only relationships listed here
+# are facts; everything else is unknown and must NOT be inferred from
+# shared surnames or any other signal.
+#
+# Format: list of {"players": [name, name], "relationship": str} entries.
+# Names are in proper case to match the bundle.
+PLAYER_RELATIONSHIPS = [
+    {"players": ["Alex Baker", "Jon Baker"], "relationship": "brothers"},
+    {"players": ["John Patterson", "Graham Patterson"], "relationship": "brothers"},
+]
+
 # ---------------------------------------------------------------------------
 # Tournament structure
 # ---------------------------------------------------------------------------

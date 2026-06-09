@@ -1,0 +1,78 @@
+{
+  "title": "Baker's Best, Patterson's Prize",
+  "title_candidates": [
+    "Level at the 14th, Levelled by the 17th",
+    "Baker's Best, Patterson's Prize",
+    "A Personal Best That Wasn't Quite Enough",
+    "Praia D'El Rey: The Trophy Slips Through Baker's Fingers"
+  ],
+  "theme": "Alex Baker plays the round of his life and briefly draws level for the Trophy — only to bleed eleven shots over four holes and hand John Patterson the title; David Mullin closes out the Green Jacket, Stuart Neumann the Spoon.",
+  "tone": "house",
+  "narrative_structure": "in_medias_res",
+  "opening_hook": "Open at the 14th green, where Alex Baker's double bogey is — improbably — good enough to draw level with John Patterson for the Trophy. Then rewind, and follow how a personal-best 44 still wasn't enough.",
+  "foreshadow": [
+    "Baker's quadruple at the 6th, weathered with a stop-the-bleeding birdie at the 8th, prefigures the collapse he can't recover from at 14-17",
+    "Patterson's own 9 at the 5th looks ruinous in the moment but turns out to be a wound he can absorb because of the cushion he brought into the round",
+    "Mullin's quadruple at the 1st briefly suggests a Jacket wobble, before three steady pars at 7-9 settle the matter"
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "John PATTERSON",
+      "score": 168.0,
+      "gap": 6.0,
+      "note": "Patterson took a 3-point cushion into the round and somehow extended it to 6, despite a quintuple-bogey 9 at the 5th. Baker drew level at the 14th — the closest anyone got to JP all tournament — but immediately bled 11 shots across 14-17 (including a quad at the 15th), and the title was decided. JP wins TEG 9."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "David MULLIN",
+      "score": 67.0,
+      "gap": 10.0,
+      "note": "Mullin opened with a quadruple-bogey 8 at the 1st and briefly invited the Jacket race back to life, but a three-par stretch at 7-9 steadied him and he stretched his lead from 7 to 10 over Jon Baker (who carded his own quad-bogey 9 at the 17th). Mullin wins the Jacket."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "Stuart NEUMANN",
+      "score": 127.0,
+      "gap": 16.0,
+      "note": "Never realistically in play for an escape: Neumann bled 9 shots across 2-5, briefly came alive with 16 points in the 11-15 stretch (birdie at 13), then collapsed again with 8 dropped over 16-18. The Spoon was his by a thumping 16."
+    }
+  ],
+  "key_beat_ids": [
+    "r4_b01",
+    "r4_b02",
+    "r4_b10",
+    "r4_b14",
+    "r4_b03",
+    "r4_b05",
+    "r4_b12",
+    "r4_b16"
+  ],
+  "players": [
+    {
+      "player": "Alex Baker",
+      "arc": "Plays the round of his life — a personal-best 44 points — and for one giddy moment at the 14th is level with Patterson for the Trophy, before a calamitous 14-17 stretch (including a quadruple-bogey 8 at the 15th) hands the title back."
+    },
+    {
+      "player": "John Patterson",
+      "arc": "Survives his own quintuple-bogey 9 at the 5th, holds his nerve while Baker reels him in and falls away, and converts a 3-point overnight lead into a 6-point Trophy win."
+    },
+    {
+      "player": "David Mullin",
+      "arc": "Opens with a quadruple-bogey 8 at the 1st, then rights himself with three straight pars at 7-9 and cruises home to seal the Green Jacket by 10 shots."
+    },
+    {
+      "player": "Jon Baker",
+      "arc": "Quietly steady until a quadruple-bogey 9 at the 17th puts paid to any lingering Jacket hopes; finishes a clear second on gross."
+    },
+    {
+      "player": "Gregg Williams",
+      "arc": "The day's most spectacular blow-up — an eleven at the par-5 7th — defines an otherwise anonymous round; finishes fifth in the Trophy."
+    },
+    {
+      "player": "Stuart Neumann",
+      "arc": "Bookends a brief flash of life (16 points across 11-15, with a birdie at the 13th) with two heavy cold stretches and locks up the Wooden Spoon by 16."
+    }
+  ],
+  "venue_notes": "Praia D'El Rey on the Lisbon Coast — a Cabell Robinson design mixing parkland and dramatic coastal-dune links on the back nine — hosting TEG for the 4th time and the area's 3rd visit. The course's character shows in the scorecard: the inward stretch through the dunes is where Alex Baker's Trophy challenge unravelled (14-17), and where Neumann's day finally went under (16-18)."
+}

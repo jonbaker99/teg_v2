@@ -1,4 +1,4 @@
-# Mullin's March and the Curse of the 16th {.report-title}
+# TEG 14 — From Spoon to Spoils {.report-title}
 
 <p class="dateline">TEG 14 | Kent, England | 2021</p>
 
@@ -9,88 +9,98 @@
   <p><strong>Wooden Spoon:</strong> Jon Baker (1st Spoon)</p>
 </section>
 
-David Mullin won the Trophy on 154 Stableford points, two clear of Alex Baker. He also took the Green Jacket at +68 gross, seven ahead of Jon Baker, who in turn collected the Wooden Spoon on 125. A wire-to-wire double, in other words, and the kind of week that looks, in retrospect, like a procession. It did not always feel like one.
+## The 16th, Again
 
-## The 16th at Prince's, Sunday afternoon
+The number on Alex Baker's card at the par-4 16th at Prince's, on a Sunday afternoon with the Trophy in genuine reach, was a 10. Sextuple bogey. The easiest hole on the course, SI 17, and ten shots to negotiate it. A four-shot Trophy lead, painstakingly carved down to two over the back nine, swung back the other way in the time it took to write the digits.
 
-Begin at the end, or near enough. Alex Baker is standing on the 16th tee at Prince's with the tournament, suddenly and improbably, alive. Eleven points across the previous three holes have brought him within range of a man who has not been headed in either competition for fifty-something holes. Two pars from here and David Mullin, who has been making his own large numbers all afternoon, will have something genuine to think about on the closing stretch.
+It was the second 10 he had signed for at a 16th hole this tournament. The first, on the par-5 16th at Royal Cinque Ports four days earlier, had been a quintuple bogey filed away as a Thursday horror. This one had stakes. This one was the moment.
 
-Baker walks off the 16th with a 10.
+So before we arrive at the man who lost the Trophy at the 16th, attend to the man who won it — the competitor who landed in Kent holding the Wooden Spoon, having finished bottom in three of the last three TEGs, and who departed with both pots and a ninth Green Jacket. David Mullin's restoration is the spine of the week. Everything else hangs off it.
 
-A sextuple bogey. At, of all places, the 16th — the hole number at which, four days earlier on a different course, he had also walked off with a 10. Whatever the opposite of a signature hole is, Baker now has one. Mullin, having absorbed the news with the relief of a man who had not asked for it, played the closing two holes as a champion-elect should, and won by two.
+## Round 1 — The Spoon Holder Sets His Stall {.round1 .round}
 
-To understand how the procession nearly became a race, rewind to Deal.
+Royal Cinque Ports, Thursday. Mullin opened with a personal best of 87 for 40 Stableford points, and inside that round did two things that ended up shaping the next three days. At the 9th he holed out for par and drew level on the Gross. At the par-5 16th he holed out for par and took outright lead of the Trophy.
 
-## Round 1 — Deal Me In {.round1 .round}
+He was never headed again. Not over the next 56 holes.
 
-Royal Cinque Ports returned to the schedule for its second TEG round, and a formidable championship links did what formidable championship links do: it sorted the field by tea. The Trophy lead changed hands twice during the afternoon — early-round jockeying that, at the time, no one had any reason to mark down as the takeover for the whole week. Mullin drew level with a par at the 11th, then took outright control with another par at the par-5 16th. He would not be headed again across the next 56 holes.
+That phrase deserves a moment, because the convention in these reports is to talk about lead changes as if they were always live. They were not. The race for the Trophy had its outright leader by the 16th hole of the first round and kept him there, through everything that came after, including two of his own blow-up holes still to come.
 
-The engine of his 40-point card was a 13-point flurry across 9 to 12 — par, birdie, par, par — the kind of unflashy stretch that wins golf tournaments without anyone particularly noticing. In the Gross, meanwhile, Alex Baker had briefly drawn level at the 6th before Mullin pulled ahead again at the 9th, and the +15 he posted gave him a five-shot Jacket cushion before anyone had even unlaced their shoes.
+The engine of Mullin's 40 points was a four-hole stretch from the 9th — par, birdie, par, par — worth 13 points across holes 9 to 12. The birdie at the 11th, SI 3, was the one that drew him level on the Trophy; the par at the 16th was the one that put him ahead.
 
-Baker's card, by contrast, carried two of the day's louder numbers: a quadruple-bogey 8 at the 11th, and the first of the two 10s at the 16th. A quintuple bogey, this one. Links golf; these things happen; file and move on.
+Around him, the field was assembling its own opening positions. Alex Baker had briefly drawn level on the Gross at the 6th, then bled it back: a quadruple bogey at the 11th, and at the same par-5 16th where Mullin was quietly making his par, a 10. Gregg Williams took a quad 9 at the par-5 3rd, the early shot in what would become a season of minor setbacks.
 
-Gregg Williams's contribution to the loud-numbers ledger was a 9 at the par-5 3rd. And Jon Baker, with a bogey at the par-3 4th, slipped to the bottom of the Stableford table. He would remain there, with grim consistency, for the next 68 holes.
+And on the par-3 4th — SI 18, the easiest hole on the golf course — Jon Baker, the defending Trophy champion and back-to-back Jacket holder, took a bogey and dropped to last. For the remaining 68 holes of the tournament, he did not leave that position.
+
+The defence of two pots ended on hole 4 of 72.
 
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> DM 40 | AB 37 | GW 33 | JB 29</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +15 | JB +20 | GW +21 | AB +26</p>
 
-## Round 2 — 41 and Counting at Littlestone {.round2 .round}
+## Round 2 — Marsh-Bound, Cushion Made {.round2 .round}
 
-To Littlestone next — Purves, Braid, MacKenzie on the Romney Marshes, also a second TEG visit — where Mullin posted 41 points and +14 gross, and where the tournament was, if not actually decided, then certainly stamped, addressed and put on the mantelpiece.
+Littlestone, Friday. Mullin shot 85 for 41 points. A second personal best in as many days. Where the Cinque Ports round had been built around a single charged stretch, this one was constructed around survival of a difficult passage.
 
-The Trophy lead went from 3 to 9. The Jacket lead went from 5 to 12. This was the high-water mark, although nobody knew it yet.
+He went triple, double, bogey across the 4th, 5th and 6th — six over par in three holes — and instead of folding, birdied the par-5 7th. He closed bogey, bogey, double, birdie down the stretch from 15 to 18, the birdie at the last a fitting punctuation on a round whose character was the refusal to compound. By the close he led the Trophy by 9 and the Jacket by 12.
 
-What is striking, looking back, is that Mullin's 41 contained its own small horror — a triple-bogey 7 at the 4th, a double-bogey 7 at the par-5 5th, a dropped stroke at the 6th — before he stopped the bleeding with a birdie at the par-5 7th. The capacity to staunch bleeding when it matters is, it turns out, the difference between a leader and a contender.
+Twelve. After 36 holes of a 72-hole tournament.
 
-Alex Baker did not stop the rot. Across 2 to 5 he dropped twelve strokes: triple, double, triple, quadruple — the last a 9 at the par-5 5th — and then added a second quadruple of the round, an 8 at the 8th. To witness one of these is a misfortune; to watch four in succession from the same man is an education.
+Alex Baker, who would later be the only man with a credible claim on closing those margins, spent his Friday morning making the gap larger. Holes 2 through 5 went triple, double, triple, quad: twelve shots dropped in four holes. Hole 8 was a further quad. Whatever case the closer wanted to make, this was not the round in which to make it.
 
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> DM 81 | AB 72 | GW 60 | JB 58</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +29 | JB +41 | GW +47 | AB +55</p>
 
-## Round 3 — Prince's Wobbles, Mullin Wins {.round3 .round}
+## Round 3 — The Champ Wobbles, The Field Doesn't Pounce {.round3 .round}
 
-At Prince's (Shore and Dunes), making the first of two appearances, the chasers finally got a flicker of encouragement. Mullin ran up a quadruple-bogey 9 at the par-5 8th — a number that, in the context of the week so far, had the quality of an unauthorised biography appearing on the shelves.
+Prince's, Saturday, first time round on a course the field had visited exactly once before, on TEG 13. The day Mullin slipped, and nothing happened.
 
-He answered it with a closing four-hole 13-point burst — par, par, par, birdie at the 18th — and the front nine, which had been ugly, was thoroughly disowned by a back nine that was not. 36 points, +20 gross, and the Trophy lead shaved by a single point to 8. The Jacket lead, stubbornly, held at 12.
+At the par-5 8th he took a quad 9. A round earlier he had survived a worse stretch by birdieing the next par-5; here, the damage was contained but real. His Trophy lead came down from 9 to 8. The Jacket margin held at 12. Across the rest of the round he played a back nine far stronger than the front (36 points, +20 gross), closing par, par, par, birdie from 15 to 18 for 13 points — the same closing arithmetic, give or take a stroke, that had carried him at Littlestone.
 
-Alex Baker contributed an 8 at the par-4 10th. Jon Baker contributed an 8 at the par-4 13th. Gregg Williams, quietly putting together the personal-best week his gross card was building towards, stitched a 9-point stretch across 9 to 11 — three pars in a row — before the customary stumble, a triple-bogey 8 at the par-5 12th, brought the brief flowering to a close.
+The field, this being its appointed moment to pounce, did not. Alex Baker took a quad at the par-4 10th, SI 3. Jon Baker took a quad at the par-4 13th, SI 1, the hardest hole on the course. Gregg Williams went par, par, par across 9 to 11 for 9 points and then ran up a triple bogey 8 at the par-5 12th, a small parable about momentum.
+
+By the close, Williams had a new Prince's personal best of 86. By the close, Mullin still led the Trophy by 8 and the Jacket by 12. The wobble had been registered, absorbed, and forgotten.
 
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> DM 117 | AB 109 | GW 99 | JB 86</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +49 | GW +61 | JB +64 | AB +80</p>
 
-## Round 4 — Sweet and Sour Sixteen {.round4 .round}
+## Round 4 — Sixteen, Again {.round4 .round}
 
-And so to the final day, which began as a procession and, for a stretch in the middle, was not.
+The squeeze began at the 1st tee at Prince's on Sunday morning, and for a long time it looked like it might just work.
 
-Mullin made an 8 at the par-4 10th. The lead, eight overnight, started to shrink in a way that a man with 154 points on his mind would have preferred it not to. Alex Baker, meanwhile, had opened with 10 points across the first three holes — four pars, three of them at par-4, par-5 and par-3 respectively — before a double-bogey 6 at the 4th. Then, on 13 to 15: par, par, par. Eleven points in three holes. Two pars away, by the most generous reading, from genuine, applied pressure.
+Alex Baker opened par, par, par for 10 points across the 1st, 2nd and 3rd. A double at the 4th interrupted things, but he then went par, par, par across 13 to 15 — the 13th the hardest hole on the course — for 11 points. The Trophy gap, having been 9 after Friday and 8 after Saturday, was suddenly 2.
 
-What happened at the 16th has been covered. Ten. Sextuple bogey. The hole number that had cost him a quintuple at Deal — a different layout, on a different course, but the same digits on the scorecard — now cost him a sextuple, and with it the tournament.
+Two shots, three holes left.
 
-The day's best round, in a small mercy, belonged to Jon Baker, who had spent the week at the bottom of the Stableford pile and was now, with the spoon arithmetic essentially settled, free to play golf without the weight of it. 39 points, including a 14-point burst across 12 to 15 — birdie at the par-5 12th, birdie at the 13th, par, par — before a double-bogey at the 16th (the hole was having a busy afternoon) and, eventually, a quadruple-bogey 8 at the 18th to close the card. A fitting kiss-off, if one were minded to be cruel, and we are.
+The 16th at Prince's in the fourth round is a par-4, stroke index 17, the easiest hole on the course. It is, in design and reputation, a hole on which one is meant to make par. Alex Baker took 10 shots to complete it. Sextuple bogey. The Trophy, which had spent forty minutes looking briefly alive, returned to its rightful owner.
 
-Mullin home by two on Stableford, by seven on Gross.
+Same number, same scorecard, same hole on the card — different course, different par, the only thing constant being the 16th and the digits. But for that 10 the margin would have been narrower than the page is wide. The figures: Mullin 154, Baker 152, by two.
+
+Mullin had his own bumpy ride home. A quad 8 at the par-4 10th, SI 3, trimmed the Jacket lead from 12 to 7, but the cushion built at Littlestone had been constructed precisely for this kind of attrition. Final Gross: +68, by 7 from Jon Baker. His ninth Green Jacket. The first half of a double that, given where he had arrived in Kent on Wednesday evening, very few would have written down.
+
+And then, at the bottom of the page, Jon Baker. The defending Trophy champion, last in every round of his title defence, had until this point recorded scores of 29, 29 and 28. On Sunday at Prince's he shot 83 for 39 points — a Prince's course record, beating the previous mark of 85 set across five prior visits, and four shots clear of his own previous best on the course. Inside it: birdie, birdie, par, par across 12 to 15, fourteen points in four holes. A quad 8 at the 18th to finish, because nothing here resolves cleanly.
+
+It was the lowest gross score Prince's has ever yielded in TEG history, and it landed him bottom of the Wooden Spoon by 29 points.
 
 
 <p class="standings"><span class="standings-header">Trophy Standings:</span> DM 154 | AB 152 | GW 137 | JB 125</p>
 <p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +68 | JB +75 | GW +76 | AB +102</p>
 
-## How the three competitions were settled
+## How They Were Decided
 
-**The Trophy** went to Mullin wire-to-wire — level at R1 H11, outright at R1 H16, never headed thereafter. The Trophy lead by round read 3, 9, 8, 2: a graph that flatters the closeness of the finish and undersells the comfort of the middle. The decisive moment, in the cold light of the spreadsheet, was that par at the R1 16th. The protective moment was Alex Baker's 10 at the R4 16th, which extinguished the only credible charge of the week.
+**The Trophy.** Mullin drew level at the 11th of Round 1, took outright lead at the 16th of Round 1, and held it for the remaining 56 holes of the tournament. The lead went 3, 9, 8, 2. The decisive moment, in the technical sense, was that par on the par-5 16th at Royal Cinque Ports on day one. The decisive moment, in the dramatic sense, was Alex Baker's 10 at a different 16th on day four.
 
-**The Green Jacket** also went to Mullin wire-to-wire, at +68. Alex Baker drew level briefly at the R1 6th, Mullin drew level again at the 9th, and that was the last time anyone else was at the top of the gross sheet. Rounds of 15 and 14 at Deal and Littlestone effectively closed the door; the scruffier 20 and 19 at Prince's never came close to opening it. The sub-plot was Gregg Williams's +76 — a personal-best gross total, accumulated with the studied quietness of a man who would rather not be the story.
+**The Green Jacket.** Mullin drew level on the Gross at the 9th of Round 1, took outright lead by the end of Round 1, and ran the margin to 12 after Littlestone. Even with a quad at the 8th in Round 3 and another at the 10th in Round 4, the cushion was unrecoverable. Final: +68, by 7 from Jon Baker. Mullin's ninth.
 
-**The Wooden Spoon** was Jon Baker's from the bogey at Deal's 4th to the bogey-laden close at Prince's: last in all four rounds — 29, 29, 28, 39 — finishing on 125. That the 39 was the best round of the day produced by anyone is the kind of cosmic joke TEG specialises in. He was, separately and without contradiction, runner-up for the Jacket — the perfectly ordinary mechanics of handicapping doing what handicapping does.
+**The Wooden Spoon.** Jon Baker's bogey at the par-3 4th in Round 1 — SI 18 of Royal Cinque Ports, the easiest hole on the course — dropped him to last on hole 4 of 72. He stayed there for the other 68. The 83 at Prince's on Sunday was, taken in isolation, the round of the tournament. Taken in context, it was a day too late and 29 points short. First Wooden Spoon.
 
 ## The men, in brief
 
-- **David Mullin** — Champion in both books from the first afternoon at Deal. 40, 41, 36, 37 on Stableford; 15, 14, 20, 19 on Gross. Absorbed a 9 at the R3 8th and an 8 at the R4 10th with the air of a man who had budgeted for them. Never headed across the final 56 holes.
-- **Alex Baker** — Trophy runner-up by two, and the week's tragicomic figure. Quadruples at the R1 11th, the R2 5th and 8th and the R3 10th, the quintuple 10 at the R1 16th, and the sextuple 10 at the R4 16th. Also capable, between times, of 11 points in three holes and 10 points in three holes. The arithmetic of his week is the arithmetic of his career.
-- **Jon Baker** — Last on Stableford from the 4th hole of the tournament to the 72nd, finishing on 125. Runner-up for the Jacket at +75, in the perfectly normal way these things split. Author of the best round of the week — 39 at Prince's, including the 14-point burst across 12 to 15 — spoiled, with characteristic timing, only by the 8 at the last.
-- **Gregg Williams** — A quiet personal-best week on the gross card at +76. The 9 at the R1 3rd was the loud number; the three-par run from R3 9 to 11 the soft, satisfying one; the triple at the R3 12th the customary full stop.
+- **David Mullin** — Arrived holding the Spoon, having finished bottom in three of the last three TEGs. Departed with the Trophy and a ninth Green Jacket. Personal bests at all three revisited courses: 87 at Royal Cinque Ports, 85 at Littlestone, 91 at Prince's. Outright Trophy leader from the 16th hole of the tournament onwards, through two quad-bogey blow-ups of his own. The most complete reversal of personal fortune the competition has seen.
+- **Alex Baker** — The closer who almost was. Trimmed a 9-point Trophy deficit to 2 across the front of Sunday, with stretches of 10 points across the first three and 11 points across 13 to 15. Then a 10 at the 16th, his second 10 at a 16th in four days, the first having come at the par-5 16th at Royal Cinque Ports. Runner-up by two. A personal best 98 at Cinque Ports for company.
+- **Jon Baker** — Defending Trophy champion, back-to-back Jacket winner, first-time Spoon. Bottom from hole 4 of Round 1 onwards. Round scores 29, 29, 28, 39. The closing 83 at Prince's was a course record by two, beating his own previous best on the course by four, and is the lowest gross score Prince's has ever yielded in TEG. It arrived in the round when the Wooden Spoon was already mathematically his.
+- **Gregg Williams** — Career-best Gross total of +76, built on a stroke at Cinque Ports, three at Prince's, and undone by an 11-shot regression at Littlestone. New personal bests at Cinque Ports and at Prince's. The man with three previous Trophies to his name, ranked on every metric that mattered, beaten on every metric that mattered.
 
 ## Personal bests and TEG records
 

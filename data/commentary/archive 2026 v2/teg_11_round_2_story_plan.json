@@ -1,0 +1,74 @@
+{
+  "title": "Catalan Carnage on the Back Nine",
+  "title_candidates": [
+    "Catalan Carnage on the Back Nine",
+    "The 15th Hole Eats Its Young",
+    "Jon Baker Tightens His Grip",
+    "A Day of Numbers Best Forgotten"
+  ],
+  "theme": "Jon Baker turns a slim overnight lead into a commanding one as the rest of the field self-destructs on Catalunya's back nine — most spectacularly at the par-5 15th.",
+  "tone": "house",
+  "narrative_structure": "chronological",
+  "opening_hook": "Open with the 15th green at PGA Catalunya Tour as the scene of the round's twin disasters — an 11 and a 10 logged within the same group of scorecards — then rewind to set the day up.",
+  "foreshadow": [
+    "Patterson's early bleed at holes 3-5 (eight shots gone before the turn) sets up the inevitability of the 11 at the 15th",
+    "Jon Baker's quietly metronomic par-par-par run at 9-11 looks dull in the moment, but becomes the spine of the day's leadership",
+    "Mullin's 10-point burst at 8-10 hints he is the one player capable of catching Jon — and yet by sundown the gap has only grown"
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "Jon BAKER",
+      "score": 76.0,
+      "gap": 2.0,
+      "note": "Jon held the lead from start to finish but the shape of the race changed: Alex Baker, despite a quintuple-bogey 9 at the 12th, overtook Gregg Williams and Mullin to become the nearest challenger. The gap to second narrowed from 3 to 2, but the gap to 4th (Mullin) ballooned from 6 to 11 — Jon's lead over the chasing pack as a whole widened."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "Jon BAKER",
+      "score": 30.0,
+      "gap": 3.0,
+      "note": "Jon extended his gross lead over Mullin from 2 to 3, with Alex and Gregg dropping back sharply after their blow-ups at the 12th and 15th. Patterson's 11 sent his gross deficit spiralling to 41 behind."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "John PATTERSON",
+      "score": 60.0,
+      "gap": 5.0,
+      "note": "Patterson was already last after R1 with a 3-point cushion; the 11 at the 15th and the earlier triple-triple at 4-5 stretched that cushion to 5. The Spoon race is, for now, a one-man procession."
+    }
+  ],
+  "key_beat_ids": [
+    "r2_b01",
+    "r2_b03",
+    "r2_b02",
+    "r2_b06",
+    "r2_b05",
+    "r2_b04",
+    "r2_b08",
+    "r2_b07"
+  ],
+  "players": [
+    {
+      "player": "Jon Baker",
+      "arc": "Quietly ruthless: a par-par-par run at 9-11 anchored a steady round that turned a 3-point Trophy lead into a 2-point lead with the chasing pack splintered, and pushed his Jacket advantage to 3."
+    },
+    {
+      "player": "Alex Baker",
+      "arc": "Stayed within touching distance of Jon despite a quintuple-bogey 9 at the par-4 12th — by virtue of others imploding worse, he climbed to outright second in the Trophy."
+    },
+    {
+      "player": "David Mullin",
+      "arc": "Briefly threatened with a 10-point burst across holes 8-10, but couldn't sustain it; slipped from 4th to 4th in the Trophy but remains the closest challenger for the Green Jacket."
+    },
+    {
+      "player": "Gregg Williams",
+      "arc": "His round was wrecked by a 10 at the 15th; to his credit, he stopped the bleeding immediately with a birdie at the 17th, but the damage had dragged him from 3rd to 3rd in the Trophy and adrift in the Jacket."
+    },
+    {
+      "player": "John Patterson",
+      "arc": "A miserable day: eight shots leaked across holes 3-5, then a sextuple-bogey 11 at the 15th — the Spoon cushion duly grew from 3 to 5."
+    }
+  ],
+  "venue_notes": "TEG's second visit to PGA Catalunya Tour and second visit overall to Catalonia. The Gallardo/Coles design is billed as the gentler sibling to the Stadium — a billing the back nine, and the 15th in particular, comprehensively rebutted."
+}

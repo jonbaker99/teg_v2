@@ -1,0 +1,31 @@
+# Catalan Carnage on the Back Nine {.round-report-title}
+
+<p class="dateline">TEG 11 | Round 2 | 05/10/2018 | PGA Catalunya - Tour</p>
+
+<p class="round-scores"><span class="round-scores-header">Round Stableford:</span> AB 42 | JB 41 | GW 39 | DM 36 | JP 34</p>
+<p class="round-scores"><span class="round-scores-header">Round Gross:</span> JB +12 | DM +13 | AB +20 | GW +20 | JP +31</p>
+
+The 15th green at PGA Catalunya Tour, late afternoon. Two scorecards arrive bearing numbers that have no business sitting next to a par-5: an **11** from John Patterson and, a couple of groups along, a **10** from Gregg Williams. Eleven plus ten equals twenty-one shots on a hole that is supposed to yield, if you squint, the occasional birdie. The Gallardo/Coles routing had been sold to us as the gentler of Catalunya's two siblings — the well-behaved one, the Tour course rather than the Stadium. The back nine, and that 15th in particular, would like a word with the marketing department.
+
+The day, then, was not a day for everyone. It was very much a day for one man.
+
+Patterson's troubles, in fairness, had not waited for the 15th to introduce themselves. They moved in early and made themselves comfortable on the front nine, where holes 3, 4 and 5 were dispatched in a procession of double-triple-triple: a 6 at the par-4 3rd, a 7 at the par-4 4th, an 8 at the par-5 5th. Eight shots gone in three holes, before the round had really had a chance to find its rhythm. With that sort of opening, the 11 at the 15th felt less like a freak accident than the inevitable second act. The Wooden Spoon cushion, already a comfortable three at the close of Round 1, stretched out to five and got itself a blanket. As one-man processions go, it is currently very orderly.
+
+While Patterson was haemorrhaging on the front, **David Mullin** was producing the round's most exciting passage of play: ten Stableford points across holes 8, 9 and 10. Par at the par-3 8th, par at the par-4 9th, and then a birdie 4 at the par-5 10th — the kind of three-hole burst that, on another day, might have been the seed of a charge at the lead. For about twenty minutes, Mullin looked like the one man capable of stopping the Jon Baker tide. He could not quite sustain it. He finished the round fourth in the Trophy and a long way back, though — and this is the bit that matters going forward — he remains the closest challenger to Jon in the Green Jacket race.
+
+In the same window, **Jon Baker** was doing something far less exciting and rather more important. Holes 9, 10 and 11: par, par, par. A 4 at the par-4 9th, a 5 at the par-5 10th, a 3 at the par-3 11th. Nine Stableford points, no fireworks, no anecdote. It is the sort of stretch you skim past on a scorecard and yet, looked at later, it is the spine of the whole day. While the rest of the field was finding new and creative numbers to write in small boxes, Jon was writing the same numeral three times in a row and signing for **41 points** — the best round of the day, the best round by some distance, and the one that turned a slim Trophy lead into a properly commanding one.
+
+Behind him, **Alex Baker** was having the strangest sort of good round. His card includes — and there is no polite way to put this — a **9 at the par-4 12th**. A quintuple bogey, +5 on a single hole, the kind of entry that ordinarily ends a player's day. Alex's response was to carry on and, by virtue of everyone else having a worse moment somewhere on their own back nine, climb to outright second in the Trophy. The gap to Jon has narrowed from three to two, which sounds like progress; the gap from Jon to fourth has ballooned from six to eleven, which is the more telling figure.
+
+Which brings us, properly, to the 15th. **Gregg Williams** arrived there on a reasonable round and left it on a different one. His closing stretch reads bogey-quintuple-double-birdie: a 4 at the par-3 14th, the 10 at the 15th, a 5 at the par-3 16th and — credit where it is due — a birdie 3 at the par-4 17th to stop the bleeding and salvage some dignity from the wreckage. The birdie was a fine response. The 10 was, all the same, a 10.
+
+The shape of all three races changed today without the leader actually changing. Jon's Trophy lead is slimmer than it was over second — two rather than three — but the chasing pack has splintered into pieces: Alex up to second, Gregg dropped to third, Mullin slipped to fourth and now eleven adrift. The Green Jacket gap over Mullin has stretched from two to three, with Alex and Gregg drifting backwards after their respective adventures at the 12th and 15th, and Patterson now an extraordinary 41 shots back on gross. And the Spoon, as noted, has become a one-man procession.
+
+<p class="standings"><span class="standings-header">Trophy Standings:</span> JB 76 | AB 74 | GW 69 | DM 65 | JP 60</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> JB +30 | DM +33 | AB +48 | GW +49 | JP +71</p>
+
+## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>John Patterson runs up a 11 (sextuple bogey) at the 15th (R2) — his career-worst on a par-5</li>
+</ul></div>

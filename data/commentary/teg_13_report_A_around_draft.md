@@ -1,53 +1,69 @@
-# Baker's Coast
+# Coronation in Kent
 
-There is a moment, on the first green at Littlestone, when the TEG is briefly a contest. Gregg Williams has just rolled in a par on the opening hole on the Romney Marshes. Jon Baker has matched him. After thirty-seven holes of stalking, Gregg is level for the Trophy lead, the kind of level that, in a less generous sport, you might call momentum. Two men, one point apart on the scorecard, nothing apart on the board, three rounds played and one shared green between them and a tournament.
+The final scoreboard at Prince's read like a misprint. Jon Baker, +50 gross, Green Jacket by eighteen — the lowest Gross total in the history of TEG. Trophy by six. Two competitions, one man, four days, no lead changes on the Jacket from the first tee at Deal to the last green by the Channel. To make a procession of this kind, you usually need a parade route and a velvet rope. Jon improvised with a links pilgrimage and a tailwind of his own making.
 
-What happens next is that Jon Baker shoots eight over par. Not for the front nine. For the round. Forty-four Stableford points. The second-best Gross round in the history of TEG. By teatime the Trophy lead is back out to five, the Jacket lead has lurched from seven to fourteen, and the only competition left in Kent is whether anybody can be bothered to chase down a man playing a different game on a different course.
+Reverse the tape, then, back through Sunday at Prince's Shore/Dunes, back through the record-class Saturday at Littlestone, back through Friday's brief and only flicker of competition at Prince's Dunes/Himalayas, all the way back to Royal Cinque Ports on Thursday afternoon — where, by tea on Day 1, the Jacket race already had nine shots between first and second, and the rest of the week had effectively been booked into the diary.
 
-They could not. So let us go back to the beginning, on the coast, where this was always going to end.
+This was TEG's first visit to Kent and its first visit to all four courses. Royal Cinque Ports, Prince's twice in different routings, and Littlestone on the Romney Marshes: no ghosts, no PBs to be broken on familiar turf, every shot a debut shot. The records that fell were the ones that count — the TEG-wide ones.
 
-## Round 1 — Deal Or No Deal: Baker Pockets Nine at Royal Cinque Ports
+## Round 1 — Royal Cinque Ports, Royal Procession
 
-TEG's first ball struck in Kent landed at Royal Cinque Ports, a course that has hosted two Opens and the kind of wind that reminds a man he chose his clubs from a catalogue. Jon Baker, untroubled, signed for thirteen over and 39 Stableford points: a six-point Trophy lead and, more eye-catchingly, a nine-shot cushion in the Jacket after a single round. A lead which, the rest of the field would discover, was the smallest he would hold all week.
+Deal is the kind of opening test that asks polite, intelligent questions and then, when you fluff the answer, hits you with a four-iron. Jon Baker, on Thursday morning, answered the first three: par, par, birdie at the 3rd, ten points off the bat. By close of play he had 39 points and +13 gross. Six clear on the Trophy. Nine clear on the Jacket. After one round.
 
-The day's other story was the early audition for the Wooden Spoon, a role contested with such enthusiasm in the opening round that the bottom position changed hands six times. Patterson, Williams, Mullin, Williams again, Alex Baker, then Patterson — a sort of Kentish hot-potato that ended, as these things tend to, with John Patterson holding the potato. He had earned it. Three quadruple bogeys: an 8 at the 1st, an 8 at the 10th, a 9 at the par-5 16th. And, for variety, a quintuple-bogey 9 at the par-4 7th. A scorecard with the structural integrity of a sandcastle.
+The man asked most of the questions, and got the fewest right, was John Patterson — the defending Trophy champion, no less. He opened with a quadruple-bogey 8 at the 1st, added another quad at the 10th, a quintuple 9 at the 7th, and a quadruple 9 at the par-5 16th. Four holes, sixteen over par on those holes alone. It is a particular kind of round, the one where you keep making the same mistake in slightly different ways, and Patterson was writing the textbook.
 
-## Round 2 — Baker Wobbles, Then Birdies the 18th
+Alex Baker contributed a quadruple-bogey 8 at the 11th, one of the harder holes on the course. David Mullin opened triple, bogey, bogey, double, before a birdie at the par-5 5th briefly suggested he had remembered which sport he was playing.
 
-Sandwich, on Prince's Dunes and Himalayas — a 27-hole site rehearsing for the 2030 Walker Cup, and a venue at which Jon Baker, briefly, looked human. Sixteen over, 36 points, and a Trophy lead being eaten alive by Gregg Williams from the chasing seat.
+The basement of the Spoon race, meanwhile, was conducting its own pantomime. It changed hands six times before lunch was digested: Patterson at the 2nd, Williams at the 3rd, Mullin at the 4th, Williams again at the 5th, Alex Baker at the 12th, Patterson once more at the 16th. He finished the day at the foot, which felt, given the morning he'd had, almost restful.
 
-At the 15th, Gregg drew level. Not ahead — level — but level was the most anyone had been to Jon all week, and on a links in a stiffening breeze, level is enough to start having ideas. Jon had three holes to find an answer. He found it on the 72nd of the trip, the par-4 18th, with a birdie that did precisely what a birdie at the 72nd of the trip is supposed to do: restored outright lead, ended the conversation, sent everyone to bed thinking about Littlestone.
+## Round 2 — Williams Level, Jon Birdies 18
 
-Patterson, meanwhile, was Patterson. Quadruple bogey at the 1st. Quadruple bogey at the 17th. The Spoon table noted his continued tenancy. David Mullin, who at this stage is a peripheral character in his own undoing, made an 8 at the par-4 9th and otherwise blended quietly into the mid-pack. Remember him. He has one hole still to play that matters.
+Friday at Prince's, Dunes into Himalayas, produced the only sustained challenge of the week, and it lasted, by a generous accounting, about ninety minutes.
 
-## Round 3 — Baker's +8 Buries the Field
+Patterson, evidently a man who likes to start as he means to go on, opened with another quadruple-bogey 8 at the 1st. He then went double, triple, double across the next three. Eleven over par after four holes. He recovered with par, bogey, par through 10–12 — nine points, which on his card looked like a missing-persons appeal — before posting a fifth quadruple of the tournament at the 17th. Mullin found a quad of his own at the 9th.
 
-Littlestone. Laidlaw Purves of Royal St George's laid it out, Braid and MacKenzie refined it, and on the third day of TEG's first Kent tour, Jon Baker did the rest.
+Jon, of all people, was wobbling: a bogey at the 4th, a double at the 5th, the kind of two-hole sequence that, on the right (wrong) day, lets a tournament loose from its moorings. He stopped the run with a birdie at the par-5 6th. Then up ahead, or behind, or wherever the relevant scorer's pencil was hovering, Gregg Williams drew level on the Trophy at the 15th.
 
-We have already done the bones of it: Gregg drawing level on the 1st green, then Jon authoring the second-best Gross round in TEG history. What the scoreboard does not show is the four-hole stretch from the 8th to the 11th, where Jon went par, birdie, par, par — the birdie a deuce at the par-3 9th — and harvested thirteen Stableford points in the time it takes to lose a glove. By the time the field looked up he had a Trophy lead of five and a Jacket lead of fourteen, and the road to Prince's was already paved.
+For three holes, the tournament had a pulse.
 
-The cruellest detail of the day, however, belonged to John Patterson. On the same wind, in the same conditions, on the same course where Jon was rewriting the Gross record book, Patterson posted the round of his life — a personal-best twelve over for 49 Stableford points, the third-best round in TEG history. It gained him almost nothing on the leader. A man finally finds his ceiling and discovers somebody else has built a roof terrace on top of it.
+Jon birdied the 18th. Outright lead reclaimed. Trophy back by one. The Jacket margin had narrowed from nine to seven, which, on any other week, would have constituted a comeback; on this one it constituted a small piece of throat-clearing.
 
-## Round 4 — Mullin's Ninth Circle at Prince's
+## Round 3 — Littlestone: Two Records in One Afternoon
 
-Prince's Shore and Dunes, the strongest of the Sandwich routings, for the administration. Jon closed with another 39 points and thirteen over, lead out to six in the Trophy, eighteen in the Jacket: a Green Jacket procession that began on the first tee at Deal and never once allowed anybody else into the building.
+Saturday on the Romney Marshes was the round of the tournament, and possibly the round of several tournaments. Littlestone, a Purves design refined by Braid and MacKenzie, set the stage. Two TEG records walked onto it.
 
-What was left was the Spoon, which had been quietly waiting for a victim. John Patterson, for three rounds the man holding the unwanted parcel, declined the role with an eagle 3 at the par-5 2nd — a hole he played, briefly, like a tour professional, before later running up a quadruple-bogey 9 at the par-5 15th to remind everyone present which Patterson had turned up. Alex Baker, briefly the Spoon incumbent at the end of Round 3, ground out a personal-best seventeen over and quietly excused himself from the conversation.
+Jon Baker shot +8 gross for the round. That is the second-best Gross round in TEG history. Forty-four Stableford points to go with it. Inside the round he played par, birdie, par, par across 8–11 for thirteen points — the 10th the hardest hole on the course, dispatched in regulation as if it were a tap-in. Trophy lead reopened to five. Jacket lead, by the close, fourteen.
 
-Which left David Mullin, third, third, fourth on the Trophy table and to all appearances safe. Then, at the par-4 10th, he made a 9. One hole. One number. Down from fourth to fifth on the Spoon ladder, and there he remained for the remaining eight holes of the tournament — a trapdoor opening, as the best trapdoors do, exactly when nobody was looking at the floor. He signed for 135.
+And then, on the same card, in the same afternoon, John Patterson — the man who had spent two days collecting quadruples like holiday brochures — posted 49 Stableford points and +12 gross. A personal best. The third-best Stableford round in TEG history. He played par, bogey, par, par across 8–11 for thirteen points himself, mirroring Jon almost stroke for stroke through the middle. He still found time for a quadruple-bogey 7 at the par-3 17th, because of course he did. The catalogue does not edit itself.
 
-## How it was won, and lost
+Williams, for his part, drew level on the Trophy at the 1st — the easiest hole on the course, fittingly — and then went par, par, par, par, bogey across 6–10, the 10th, again, the hardest. Fifteen points in five holes. It was beautifully played. It was not enough. A double at the 15th after three straight pars told the story: the door, briefly ajar, had closed.
 
-The **Trophy** was Jon's from the first evening and never not Jon's, though it became level on two occasions. Both times it was Gregg Williams; both times Jon answered — the birdie at Prince's 18th in Round 2, the 44-point demolition at Littlestone in Round 3. Final margin: six points. Three lead changes in total, none of them in the final round, none of them in favour of anyone called Williams for very long.
+Alex Baker contributed a quadruple-bogey 8 at the 2nd and slipped to the bottom of the Spoon race at the 9th. Patterson had occupied the basement himself at the 5th, briefly, before posting half a personal best.
 
-The **Green Jacket** is more easily summarised. Jon Baker led by nine after one, by seven after two, by fourteen after three, by eighteen after four. Zero lead changes. A wire-to-wire fifty-over that, on this evidence, was never going to be anything else.
+Jon went into the final round five clear on the Trophy and fourteen clear on the Jacket. The Sunday papers, had any been delivered, would have known how to write the headline.
 
-The **Wooden Spoon** had three previous tenants — Patterson after Rounds 1 and 2, Alex Baker after Round 3 — before Mullin's quintuple bogey at Prince's 10th delivered him the title with the inevitability of a tide. He had been mid-pack for fifty-four holes. The fifty-fifth did for him.
+## Round 4 — Coronation at Prince's
+
+Sunday on the Shore/Dunes routing. Jon shot +13 gross, 39 points, and closed both competitions out with the air of a man ticking items off a list. Par-par-par at 12, 13 and 14 — the 13th the hardest hole on the course — bogey at the 15th, double at the 16th, birdie at the par-3 17th. He finished on 158 points and +50 gross. Six clear in the Trophy, eighteen in the Jacket. The lowest Gross total in TEG history. Third Trophy in a row. Third Jacket in a row. The hat-trick of hat-tricks.
+
+Patterson, his catalogue not quite complete, eagled the par-5 2nd — the only eagle of the tournament — and then, several holes later, ran up a quadruple-bogey 9 at the par-5 15th, as if to confirm the eagle had not been a clerical error in his name. Five quadruples or worse across the week, plus the quintuple at Royal Cinque Ports' 7th. And, in among them, the third-best Stableford round ever played.
+
+Alex Baker, who had spent stretches of the trip in the basement of the Spoon race, closed with +17 gross — a personal-best Gross round.
+
+Which left the Spoon. David Mullin, the reigning holder, had sat 3rd, 3rd, 4th through R1 to R3. Then, on Sunday, at the 10th — par 4, the third-hardest hole on the course — he ran up a quintuple-bogey 9. From 4th to 5th in one swing, with eight holes to play and no time and no realistic mechanism to climb back. He stayed there. 135 points. His third Wooden Spoon in three TEGs. His fourth overall.
+
+## How the three were decided
+
+**The Trophy** was led by Jon Baker from R1 H1 to R4 H18. Williams drew level at R2 H15 and again at R3 H1, and never led outright for a single hole all week. The decisive moment was Jon's birdie at the 18th on Friday afternoon — the last time anyone got within touching distance. The bridesmaid label survives, with three prior Trophy wins on the books and now a fourth runner-up finish in five TEGs.
+
+**The Green Jacket** was a procession from the first tee. Nine clear after R1, seven after R2, fourteen after Littlestone, eighteen at the close. No lead changes. The race was effectively over by tea on Day 1; the rest was Jon doing the paperwork.
+
+**The Wooden Spoon** went to Mullin at the moment of the 9 at the 10th. Patterson and Alex Baker had taken turns in the basement through R1, R2 and the end of R3; Mullin, biding his time at 3rd and 4th, picked Sunday to step up. The eight Jackets on his career card feel a long way away.
 
 ## The men, in brief
 
-- **Jon Baker.** Wire-to-wire in both competitions, four rounds in the 36-to-44 range, and a Littlestone +8 that is the second-best Gross round in TEG history and probably the round of his TEG career. There is no other angle. He led every step of the way.
-- **Gregg Williams.** The only man who laid a glove on him — twice drew level for the Trophy lead, once at Prince's 15th and once on the first green at Littlestone — and was twice answered. Runner-up in both Trophy and Jacket, by six and by eighteen respectively. A noble runner-up; runner-up nonetheless.
-- **John Patterson.** A man containing multitudes: six quadruple bogeys across the week, a quintuple, an eagle at Prince's 2nd, and the third-best Stableford round in TEG history at Littlestone. Personal-best twelve over on the day Jon shot eight. Everything, simultaneously, to no aggregate effect.
-- **Alex Baker.** Briefly bottom of the Spoon table after Round 3, then quietly extracted himself with a personal-best seventeen over on the closing day at Prince's Shore/Dunes — the kind of round that doesn't win you anything but stops you losing things.
-- **David Mullin.** Third, third, fourth on the Trophy ladder for three rounds, comfortably ignored. Then a 9 at the par-4 10th in the final round, the trapdoor, and 135 points to take home. A slow-motion Spoon, delivered late and from underneath.
+- **Jon Baker** — Coronation. Trophy and Jacket led wire-to-wire, the lowest Gross total in TEG history (+50, by 18), a third Trophy and a third Jacket in a row. The kind of week the rest of the field will need a year to stop talking about, and may well take longer.
+- **Gregg Williams** — Level twice on the Trophy, ahead never. 2nd in both competitions, four runner-up finishes in five TEGs now. The bridesmaid label is becoming a uniform.
+- **John Patterson** — Defending Trophy champion, author of five quadruples-or-worse and a quintuple, basement of the Spoon race at the end of R1 and R2, and somewhere in the middle of all that the third-best Stableford round in TEG history, a personal-best gross, and the only eagle of the week. Finished mid-pack. Statistically the most interesting man in Kent.
+- **David Mullin** — Wooden Spoon. Third in three TEGs, fourth overall. The 9 at the 10th on Sunday afternoon was the seal. He has now collected more Spoons in three TEGs than most players manage in a career, which, on the current trajectory, looks less and less like an accident.
+- **Alex Baker** — Quadruples at R1 H11 and R3 H2, a tour of the Spoon basement at R1 H12 and the end of R3, and then, on Sunday, a personal-best +17 gross. A hard week with the cleanest possible finish.

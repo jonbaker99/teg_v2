@@ -2,7 +2,7 @@
 
 There is a moment, on the par-4 6th at the PGA Catalunya Stadium Course on a warm Sunday afternoon, when the entire tournament tilts on its axis. Alex Baker, who has spent the previous twenty-four hours carrying a two-shot Trophy lead like a man transporting a soufflé, makes a triple-bogey 7. Jon Baker, walking beside him, makes a double-bogey 6. On any other day, on any other course, two brothers haemorrhaging five shots between them on a single hole would be filed under "regrettable". On this day, it is the hinge of the week. The scores are level. They will not be level again.
 
-What follows on the next twelve holes — Alex's 27, his worst round in TEG colours, assembled from three separate cold snaps of 7, 8 and 8 shots — is less a collapse than a controlled demolition, watched in real time by a brother who declines to look away. By the time the par-4 18th is in the books, Jon Baker has won the Trophy by six. He has also, almost as an afterthought, won the Green Jacket by three. He has been leading that one since Thursday morning.
+What follows on the next twelve holes — Alex's 27, his worst round in TEG colours, assembled from three separate cold snaps of 7, 8 and 8 shots — is less a collapse than a controlled demolition, watched in real time by a brother who declines to look away. By the time the par-4 18th is in the books, Jon Baker has won the Trophy by six — his second, the first having been collected at TEG 3, eight tournaments and a small geological epoch ago. He has also, almost as an afterthought, won the Green Jacket by three. He has been leading that one since Thursday morning.
 
 To understand how the wrong Baker came to be on the wrong end of all this, we rewind to Thursday.
 
