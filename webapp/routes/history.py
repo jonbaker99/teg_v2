@@ -363,55 +363,64 @@ PLAYER_RANKINGS_TABS = [
 ]
 
 
-def _format_ranking_for_display(ranking: pd.DataFrame) -> pd.DataFrame:
+PR_ROW_DIMS = [("Player", "Full Name"), ("Pl", "Initials")]
+PR_COL_DIMS = [("TEGNum", "TEG Number"), ("TEG", "TEG Name")]
+
+
+def _format_ranking_for_display(ranking: pd.DataFrame, player_col: str) -> pd.DataFrame:
     """Rename TEGNum columns to 'TEG N' and show '-' for non-participation."""
     df = ranking.copy()
     rename = {}
     for col in df.columns:
-        if col == "Player":
+        if col == player_col:
             continue
         try:
             rename[col] = f"TEG {int(col)}"
         except (ValueError, TypeError):
             rename[col] = col
     df = df.rename(columns=rename)
-    for col in [c for c in df.columns if c != "Player"]:
+    for col in [c for c in df.columns if c != player_col]:
         df[col] = df[col].apply(lambda x: "-" if pd.isna(x) else str(x))
     return df
 
 
-def _player_rankings_context(tab: str) -> dict:
+def _player_rankings_context(tab: str, row_dim: str = "Player", col_dim: str = "TEGNum") -> dict:
     try:
+        if row_dim not in ("Player", "Pl"):
+            row_dim = "Player"
+        if col_dim not in ("TEGNum", "TEG"):
+            col_dim = "TEGNum"
         teg_data = cached_complete_teg_data()
         if tab == "trophy":
-            ranking = create_net_competition_ranking_table(teg_data)
+            ranking = create_net_competition_ranking_table(teg_data, row_dim, col_dim)
             rank_title = "TEG Trophy Rankings by TEG (Net Competition)"
             caption = "Uses Net vs Par for TEGs 2-7, Stableford Points for TEG 8+."
             summary_title = "TEG Trophy rankings summary"
         else:
-            ranking = create_teg_ranking_table(teg_data, "GrossVP")
+            ranking = create_teg_ranking_table(teg_data, "GrossVP", row_dim, col_dim)
             rank_title = "Green Jacket Rankings by TEG (Gross vs Par)"
             caption = "Lower scores are better. Ties marked '='; '-' = did not participate."
             summary_title = "Green Jacket rankings summary"
 
-        summary = create_combined_position_summary(ranking, "Player")
-        display = _format_ranking_for_display(ranking)
+        summary = create_combined_position_summary(ranking, row_dim)
+        display = _format_ranking_for_display(ranking, row_dim)
 
         sections = [
             {"title": rank_title, "caption": caption,
-             "table_html": _df_to_html(display, link_players=True)},
+             "table_html": _df_to_html(display, link_players=(row_dim == "Player"))},
             {"title": summary_title, "caption": None,
              "table_html": _df_to_html(summary, table_class="teg-table")},
         ]
-        return {"sections": sections}
+        return {"sections": sections, "row_dims": PR_ROW_DIMS, "col_dims": PR_COL_DIMS,
+                "selected_row_dim": row_dim, "selected_col_dim": col_dim}
     except Exception as e:
         return {"error": str(e)}
 
 
 @router.get("/player-rankings")
-async def player_rankings_page(request: Request):
+async def player_rankings_page(request: Request, row_dim: str = Query("Player"), col_dim: str = Query("TEGNum")):
     default_tab = "trophy"
-    ctx = _player_rankings_context(default_tab)
+    ctx = _player_rankings_context(default_tab, row_dim, col_dim)
     return templates.TemplateResponse("player_rankings.html", {
         "request": request,
         "active_page": "player-rankings",
@@ -422,9 +431,11 @@ async def player_rankings_page(request: Request):
 
 
 @router.get("/player-rankings/tab")
-async def player_rankings_tab(request: Request, tab: str = "trophy"):
-    ctx = _player_rankings_context(tab)
+async def player_rankings_tab(request: Request, tab: str = "trophy",
+                              row_dim: str = Query("Player"), col_dim: str = Query("TEGNum")):
+    ctx = _player_rankings_context(tab, row_dim, col_dim)
     return templates.TemplateResponse("partials/player_rankings_tab.html", {
         "request": request,
+        "active_tab": tab,
         **ctx,
     })

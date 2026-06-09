@@ -37,7 +37,7 @@ Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 - [x] Green Jacket (gross) ranking tab
 - [x] Tie `=` markers and `-` for non-participation
 - [x] Combined position summary tables (Ave, TEGs, 1st–6th) for both competitions
-- [ ] Advanced Options: Full Name/Initials + TEG Name/Number dimension selectors
+- [x] Advanced Options: Full Name/Initials + TEG Name/Number dimension selectors
 - [ ] First/last-place cell highlighting — cosmetic
 
 ### TEG Reports (`/teg-reports`)
@@ -60,7 +60,7 @@ Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 
 ### Personal Bests (`/personal-bests`)
 - [x] PB Summary: "Best 9s" sub-view (front/back 9 via ranked frontback data)
-- [ ] Free-entry N for detail tabs
+- [x] Free-entry N for detail tabs
 - [ ] Styled score/when cells in PB summary — cosmetic
 
 ## Latest TEG

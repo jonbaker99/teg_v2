@@ -9,13 +9,17 @@
 
 {% block content %}
 
+<input type="hidden" id="pr-tab" name="tab" value="{{ active_tab }}">
 <div class="tab-bar">
     {% for tab_id, tab_label in tabs %}
     <button class="tab-underline {% if tab_id == active_tab %}active{% endif %}"
-            hx-get="/player-rankings/tab?tab={{ tab_id }}"
+            hx-get="/player-rankings/tab"
             hx-target="#player-rankings-content"
+            hx-include="#pr-row-dim, #pr-col-dim"
+            hx-vals='{"tab": "{{ tab_id }}"}'
             hx-swap="innerHTML"
             onclick="
+                document.getElementById('pr-tab').value='{{ tab_id }}';
                 document.querySelectorAll('.tab-bar button.tab-underline').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
             ">
@@ -23,6 +27,26 @@
     </button>
     {% endfor %}
 </div>
+
+<details class="mt-3 mb-2">
+    <summary class="text-sm text-muted cursor-pointer">Advanced options</summary>
+    <div class="flex flex-wrap items-end gap-4 mt-2">
+        <label class="flex flex-col text-sm gap-1"><span class="text-muted">Rows (Players)</span>
+            <select class="theme-select" id="pr-row-dim" name="row_dim"
+                    hx-get="/player-rankings/tab" hx-target="#player-rankings-content"
+                    hx-include="#pr-tab, #pr-col-dim" hx-swap="innerHTML">
+                {% for rid, rlabel in row_dims %}<option value="{{ rid }}" {% if rid == selected_row_dim %}selected{% endif %}>{{ rlabel }}</option>{% endfor %}
+            </select>
+        </label>
+        <label class="flex flex-col text-sm gap-1"><span class="text-muted">Columns (TEGs)</span>
+            <select class="theme-select" id="pr-col-dim" name="col_dim"
+                    hx-get="/player-rankings/tab" hx-target="#player-rankings-content"
+                    hx-include="#pr-tab, #pr-row-dim" hx-swap="innerHTML">
+                {% for cid, clabel in col_dims %}<option value="{{ cid }}" {% if cid == selected_col_dim %}selected{% endif %}>{{ clabel }}</option>{% endfor %}
+            </select>
+        </label>
+    </div>
+</details>
 
 <div id="player-rankings-content">
     {% include "partials/player_rankings_tab.html" %}
