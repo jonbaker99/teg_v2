@@ -128,11 +128,11 @@ Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 - [ ] Ridgeline distribution chart — lower priority
 
 ### Changes vs previous round (`/scoring/changes`)
-- [ ] TEG filter
-- [ ] "Include changes across TEGs?" toggle
-- [ ] "Rounds to show" (All / Top N)
-- [ ] Improvements / Worsenings tabs
-- [ ] Columns: raw Score, Previous Round, Course, Year; change on raw Sc
+- [x] TEG filter
+- [x] "Include changes across TEGs?" toggle
+- [x] "Rounds to show" (All / Top N)
+- [x] Improvements / Worsenings tabs
+- [x] Columns: raw Score, Previous Round, Course, Year; change on raw Sc
 
 ### Heatmap WIP (`/scoring/heatmap`)
 - [ ] Course/Player/TEG/Round multiselect filters

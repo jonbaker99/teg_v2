@@ -721,45 +721,78 @@ async def scoring_distributions_page(request: Request):
 
 # --- /scoring/changes ---------------------------------------------------------
 
-@router.get("/scoring/changes")
-async def scoring_changes_page(request: Request):
+CHANGES_TABS = [("improvements", "Biggest improvements"), ("worsenings", "Biggest worsenings")]
+_CHANGES_TOP_N = 10
+
+
+def _changes_context(teg: str = "All TEGs", across: str = "within",
+                     rows: str = "top", tab: str = "improvements") -> dict:
     try:
-        rd_data = cached_round_data()
-        # Calculate round-over-round changes per player per TEG
-        changes_list = []
-        for teg_num in sorted(rd_data['TEGNum'].unique()):
-            teg_rd = rd_data[rd_data['TEGNum'] == teg_num].sort_values(['Player', 'Round'])
-            for player in teg_rd['Player'].unique():
-                player_rounds = teg_rd[teg_rd['Player'] == player].sort_values('Round')
-                prev = None
-                for _, row in player_rounds.iterrows():
-                    if prev is not None:
-                        diff = row['GrossVP'] - prev
-                        changes_list.append({
-                            'TEG': teg_num,
-                            'Round': row['Round'],
-                            'Player': player,
-                            'Gross vs Par': row['GrossVP'],
-                            'Change': f"{diff:+.0f}" if diff != 0 else "=",
-                        })
-                    prev = row['GrossVP']
+        rd = cached_round_data().copy()
+        rd['TR'] = rd['TEGNum'] * 100 + rd['Round']
 
-        if changes_list:
-            df = pd.DataFrame(changes_list)
-            df = df.sort_values(['TEG', 'Round', 'Player'], ascending=[False, True, True])
-            table_html = _df_to_html(df)
+        teg_options = ["All TEGs"] + [str(t) for t in sorted(rd['TEGNum'].unique().tolist(), reverse=True)]
+        if teg != "All TEGs":
+            rd = rd[rd['TEGNum'] == int(teg)]
+
+        grouper = ['Pl'] if across == "across" else ['Pl', 'TEG']
+        rd = rd.sort_values(['Pl', 'TR'])
+        rd['Change'] = rd.groupby(grouper)['Sc'].diff()
+        rd['Previous Rd'] = rd.groupby(grouper)['Sc'].shift()
+        rd = rd.dropna(subset=['Change'])
+
+        if rd.empty:
+            return {"table_html": "<p class='text-muted text-sm'>No data available.</p>",
+                    "teg_options": teg_options, "selected_teg": teg, "across": across,
+                    "rows": rows, "tabs": CHANGES_TABS, "active_tab": tab, "top_n": _CHANGES_TOP_N}
+
+        rd[['Sc', 'Previous Rd', 'Change']] = rd[['Sc', 'Previous Rd', 'Change']].astype(int)
+        out = rd[['Pl', 'TEG', 'Round', 'Course', 'Year', 'Sc', 'Previous Rd', 'Change']].copy()
+        out['Year'] = out['Year'].astype(int)
+
+        if tab == "worsenings":
+            out = out.sort_values('Change', ascending=False)
+            if rows != "all":
+                out = out.nlargest(_CHANGES_TOP_N, 'Change', keep='all')
         else:
-            table_html = "<p class='text-muted'>No round data available.</p>"
-    except Exception as e:
-        table_html = f"<p class='text-muted'>Error: {e}</p>"
+            out = out.sort_values('Change', ascending=True)
+            if rows != "all":
+                out = out.nsmallest(_CHANGES_TOP_N, 'Change', keep='all')
 
-    return templates.TemplateResponse("data_table.html", {
+        return {
+            "table_html": _df_to_html(out),
+            "teg_options": teg_options,
+            "selected_teg": teg,
+            "across": across,
+            "rows": rows,
+            "tabs": CHANGES_TABS,
+            "active_tab": tab,
+            "top_n": _CHANGES_TOP_N,
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@router.get("/scoring/changes")
+async def scoring_changes_page(request: Request, teg: str = Query("All TEGs"),
+                               across: str = Query("within"), rows: str = Query("top"),
+                               tab: str = Query("improvements")):
+    ctx = _changes_context(teg, across, rows, tab)
+    return templates.TemplateResponse("scoring_changes.html", {
         "request": request,
         "active_page": "scoring",
-        "title": "Changes vs Previous Round",
-        "subtitle": "How each player's score changed from the previous round",
-        "table_html": table_html,
-        "sections": None,
+        **ctx,
+    })
+
+
+@router.get("/scoring/changes/content")
+async def scoring_changes_content(request: Request, teg: str = Query("All TEGs"),
+                                  across: str = Query("within"), rows: str = Query("top"),
+                                  tab: str = Query("improvements")):
+    ctx = _changes_context(teg, across, rows, tab)
+    return templates.TemplateResponse("partials/scoring_changes_content.html", {
+        "request": request,
+        **ctx,
     })
 
 
