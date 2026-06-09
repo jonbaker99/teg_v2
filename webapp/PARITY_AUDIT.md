@@ -49,14 +49,14 @@ Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 ## Records & PBs
 
 ### TEG Records (`/records`)
-- [ ] Streaks tab: "* and counting..." caption
-- [ ] Score Counts tab: "Eagles, Birdies and Pars also include better scores" caption
+- [x] Streaks tab: "* and counting..." caption
+- [x] Score Counts tab: "Eagles, Birdies and Pars also include better scores" caption
 
 ### Top TEGs and Rounds (`/top-performances`)
-- [ ] Measure labels/order match Streamlit (Gross / Score / Net / Stableford)
-- [ ] Free-entry N (1–100) instead of fixed 3/5/10 dropdown
-- [ ] Section heading embeds the Top-N count (e.g. "Top 5 TEGs: Gross")
-- [ ] TEG 2 exclusion note caption
+- [x] Measure labels/order match Streamlit (Gross / Score / Net / Stableford)
+- [x] Free-entry N (1–100) instead of fixed 3/5/10 dropdown
+- [x] Section heading embeds the Top-N count (e.g. "Top 5 TEGs: Gross")
+- [x] TEG 2 exclusion note caption
 
 ### Personal Bests (`/personal-bests`)
 - [ ] PB Summary: "Best 9s" sub-view (front/back 9 via ranked frontback data)
@@ -94,7 +94,7 @@ Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 ## Scoring analysis
 
 ### Eagles / Birdies / Pars (`/scoring/birdies`)
-- [ ] BUG: "Max per TEG" tab uses `score_type_stats` instead of `max_scoretype_per_teg`
+- [x] BUG: "Max per TEG" tab uses `score_type_stats` instead of `max_scoretype_per_teg`
 
 ### Streaks (`/scoring/streaks`)
 - [ ] "Streak detail" tab (TEG/Round/Player filters + hole-level window streaks)

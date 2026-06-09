@@ -2,8 +2,8 @@
 
 {% block page_title %}
 <div class="page-title-area">
-    <span class="page-label">Records</span>
-    <h1 class="page-title">Top Performances</h1>
+    <span class="page-label">Records &amp; PBs</span>
+    <h1 class="page-title">Top TEGs and Rounds</h1>
 </div>
 {% endblock %}
 
@@ -48,15 +48,17 @@
         {% endfor %}
     </div>
 
-    <select class="theme-select" id="tp-n-select" name="n"
-            hx-get="/top-performances/tab"
-            hx-target="#tp-content"
-            hx-include="#tp-measure, #tp-tab-input"
-            hx-swap="innerHTML">
-        {% for val in [3, 5, 10] %}
-        <option value="{{ val }}" {% if val == n_records %}selected{% endif %}>Top {{ val }}</option>
-        {% endfor %}
-    </select>
+    <label class="flex items-center gap-2 text-sm">
+        <span class="text-muted">Show top</span>
+        <input class="theme-select" type="number" min="1" max="100" step="1"
+               id="tp-n-select" name="n" value="{{ n_records }}"
+               style="width: 5rem;"
+               hx-get="/top-performances/tab"
+               hx-target="#tp-content"
+               hx-include="#tp-measure, #tp-tab-input"
+               hx-trigger="change, keyup changed delay:500ms"
+               hx-swap="innerHTML">
+    </label>
 </div>
 
 {# Hidden inputs to track state #}

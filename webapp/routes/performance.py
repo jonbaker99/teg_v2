@@ -47,10 +47,10 @@ TOP_TABS = [
 ]
 
 TOP_MEASURES = [
-    ("GrossVP", "Gross vs Par"),
-    ("Stableford", "Stableford"),
+    ("GrossVP", "Gross"),
     ("Sc", "Score"),
-    ("NetVP", "Net vs Par"),
+    ("NetVP", "Net"),
+    ("Stableford", "Stableford"),
 ]
 
 
@@ -103,9 +103,13 @@ def _top_tab_context(tab: str, measure: str = "GrossVP", n: int = 3) -> dict:
         # Format measure values
         display = _format_measure_col(display, measure, measure_friendly)
 
-        label = f"{'Worst' if is_worst else 'Best'} {'TEGs' if is_teg else 'Rounds'} — {measure_friendly}"
+        prefix = "Bottom" if is_worst else "Top"
+        noun = "TEGs" if is_teg else "Rounds"
+        label = f"{prefix} {n} {noun}: {measure_friendly}"
+        caption = ("Note: TEG 2 is excluded from all TEG-level analysis as it only had "
+                   "3 rounds compared to the standard 4 rounds.") if is_teg else None
         sections = [{"title": label, "table_html": _df_to_html(display)}]
-        return {"sections": sections}
+        return {"sections": sections, "caption": caption}
     except Exception as e:
         return {"error": str(e)}
 

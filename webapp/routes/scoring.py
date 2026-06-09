@@ -29,7 +29,7 @@ from teg_analysis.analysis.aggregation import (
 )
 from teg_analysis.io.file_operations import read_file
 from teg_analysis.constants import ROUND_INFO_CSV
-from teg_analysis.display.tables import score_type_stats, max_scoretype_per_round
+from teg_analysis.display.tables import score_type_stats, max_scoretype_per_round, max_scoretype_per_teg
 from webapp.deps import (
     cached_load_all_data,
     cached_round_data,
@@ -108,8 +108,8 @@ def _birdies_tab_context(tab: str, score_type: str = "Birdies") -> dict:
             sections.append({"title": f"Max {score_type} per Round", "table_html": _df_to_html(table)})
 
         elif tab == "per_teg":
-            stats = score_type_stats(all_data)
-            sections.append({"title": f"{score_type} Stats by Player", "table_html": _df_to_html(stats)})
+            table = max_scoretype_per_teg(all_data)
+            sections.append({"title": f"Max {score_type} per TEG", "table_html": _df_to_html(table)})
 
         return {"sections": sections}
     except Exception as e:
