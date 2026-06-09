@@ -18,19 +18,19 @@ Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 ## TEG History
 
 ### TEG History (`/history`)
-- [ ] TEG 5 Green Jacket footnote caption
+- [x] TEG 5 Green Jacket footnote caption
 - [ ] Styled history table (teg/area compound cell, player-name spans) — cosmetic
 
 ### Honours Board (`/honours`)
-- [ ] Green Jacket tab: TEG 5 footnote caption
+- [x] Green Jacket tab: TEG 5 footnote caption
 - [ ] Full trophy names in tab labels (e.g. "TEG Trophy (Stableford)") — cosmetic
 
 ### Full Results (`/results`)
 - [ ] Chart-type switcher (Standard / Adjusted scale / Ranking) on net & gross race charts
-- [ ] Wooden-spoon callout on net leaderboard
+- [x] Wooden-spoon callout on net leaderboard
 - [ ] Inline per-round scorecards (currently links out to /scorecard)
-- [ ] Report tab: pre-TEG-8 scoring caption
-- [ ] Report tab: fallback from `_report_styled.md` to `_main_report.md`
+- [x] Report tab: pre-TEG-8 scoring caption
+- [x] Report tab: fallback from `_report_styled.md` to `_main_report.md`
 
 ### Player Rankings (`/player-rankings`)
 - [x] TEG Trophy (net) ranking tab — NetVP for older TEGs, Stableford for TEG 8+

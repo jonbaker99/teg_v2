@@ -74,6 +74,8 @@ async def history_page(request: Request):
     try:
         df = prepare_complete_history_table_fast()
         table_html = _df_to_html(df)
+        table_html += ("<p class='text-muted text-sm mt-3'>*Green Jacket awarded in TEG 5 for "
+                       "best stableford round; DM had best gross score.</p>")
     except Exception as e:
         table_html = f"<p class='text-muted'>Error: {e}</p>"
 
@@ -151,7 +153,10 @@ def _honours_tab_context(tab: str) -> dict:
             sections.append({"title": "TEG Trophy", "table_html": _summarise_wins(winners_df, "TEG Trophy")})
 
         elif tab == "jacket":
-            sections.append({"title": "Green Jacket", "table_html": _summarise_wins(winners_df, "Green Jacket")})
+            jacket_html = _summarise_wins(winners_df, "Green Jacket")
+            jacket_html += ("<p class='text-muted text-sm mt-3'>*Green Jacket awarded in TEG 5 for "
+                            "best stableford round; DM had best gross score.</p>")
+            sections.append({"title": "Green Jacket", "table_html": jacket_html})
 
         elif tab == "spoon":
             sections.append({"title": "Wooden Spoon", "table_html": _summarise_wins(winners_df, "HMM Wooden Spoon")})
@@ -256,17 +261,27 @@ def _results_context(teg_num: int, tab: str = "net") -> dict:
         if tab == "report":
             from pathlib import Path
             import markdown as md_lib
-            path = Path(f"data/commentary/teg_{teg_num}_report_styled.md")
-            if path.is_file():
+            # Prefer the styled report; fall back to the plain main report draft.
+            candidates = [
+                Path(f"data/commentary/teg_{teg_num}_report_styled.md"),
+                Path(f"data/commentary/drafts/teg_{teg_num}_main_report.md"),
+                Path(f"data/commentary/teg_{teg_num}_main_report.md"),
+            ]
+            path = next((p for p in candidates if p.is_file()), None)
+            if path is not None:
                 html = md_lib.markdown(
                     path.read_text(encoding="utf-8"),
                     extensions=["extra", "sane_lists", "smarty", "toc"],
                 )
+                caption = ""
+                if int(teg_num) < 8:
+                    caption = ("<p class='text-muted text-sm'>NB: Before TEG 8 the TEG Trophy was "
+                               "decided by best net score (total net vs par), not Stableford points.</p>")
                 return {
                     "result_title": "Report",
                     "table_html": (
                         '<link rel="stylesheet" href="/static/teg_reports.css">'
-                        f'<div class="teg-report">{html}</div>'
+                        f'{caption}<div class="teg-report">{html}</div>'
                     ),
                 }
             return {
@@ -296,7 +311,18 @@ def _results_context(teg_num: int, tab: str = "net") -> dict:
                 lb[col] = lb[col].apply(lambda x: format_value(x, net_measure))
             title = "Stableford" if net_measure == 'Stableford' else "Net vs Par"
 
-        table_html = _df_to_html(lb, link_players=True)
+        # Champion (top row) — plus wooden spoon (bottom row) on the net competition
+        callout = ""
+        if not lb.empty and 'Player' in lb.columns:
+            champion = lb.iloc[0]['Player']
+            if tab == "gross":
+                callout = f"<p class='result-callout'><strong>Champion:</strong> {champion}</p>"
+            else:
+                spoon = lb.iloc[-1]['Player']
+                callout = (f"<p class='result-callout'><strong>Champion:</strong> {champion} "
+                           f"&nbsp;|&nbsp; <strong>Wooden spoon:</strong> {spoon}</p>")
+
+        table_html = callout + _df_to_html(lb, link_players=True)
         chart_json = _results_chart(teg_num, tab)
         return {"result_title": title, "table_html": table_html, "chart_json": chart_json}
     except Exception as e:
