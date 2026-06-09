@@ -66,10 +66,10 @@ Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 ## Latest TEG
 
 ### Latest Leaderboard (`/leaderboard`)
-- [ ] Cumulative Stableford race chart (Standard / Adjusted / Ranking) — net tab
-- [ ] Cumulative GrossVP race chart (Standard / Adjusted / Ranking) — gross tab
-- [ ] Scorecards tab (per-round inline scorecards)
-- [ ] Wooden-spoon callout already present on net? verify gross has champion only
+- [x] Cumulative Stableford race chart (Standard / Adjusted; Ranking = TODO) — net tab
+- [x] Cumulative GrossVP race chart (Standard / Adjusted; Ranking = TODO) — gross tab
+- [x] Scorecards tab (per-round inline scorecards)
+- [x] Wooden-spoon callout already present on net? verify gross has champion only
 
 ### Latest Round in context (`/latest-round`)
 - [x] Report tab (round report markdown)
@@ -150,10 +150,10 @@ Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 ## Scorecards
 
 ### Scorecard (`/scorecard`)
-- [ ] Scorecard-type selector (1 Round/1 Player, 1 Player/All Rounds, 1 Round/All Players)
-- [ ] Player selector
+- [x] Scorecard-type selector (1 Round/1 Player, 1 Player/All Rounds, 1 Round/All Players)
+- [x] Player selector
 - [ ] Desktop/Mobile layout toggle — cosmetic
-- [ ] Missing views: single-player/single-round, single-player/all-rounds
+- [x] Missing views: single-player/single-round, single-player/all-rounds
 
 ### Best/Worstball (`/bestball`)
 - [x] Free-entry N (default 3) instead of fixed All/10/25/50

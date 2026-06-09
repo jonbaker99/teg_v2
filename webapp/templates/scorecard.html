@@ -14,26 +14,38 @@
 
 {% block content %}
 <div class="scorecard-wrapper">
-    <div class="flex items-center justify-between mb-6">
-        <div class="flex items-center gap-3">
-            <label for="teg-select" class="text-sm font-medium text-secondary">TEG:</label>
-            <select id="teg-select" name="teg"
-                    hx-get="/scorecard/content"
-                    hx-target="#scorecard-content"
-                    hx-vals='{"round": 1}'
-                    hx-indicator="#loading"
-                    class="teg-select">
-                {% for t in teg_numbers %}
-                <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
-                {% endfor %}
+    {% set inc = "#sc-type, #sc-teg, #sc-round, #sc-player" %}
+    <div class="flex flex-wrap items-end gap-4 mb-6">
+        <label class="flex flex-col text-sm gap-1"><span class="text-secondary font-medium">View</span>
+            <select id="sc-type" name="type" class="teg-select"
+                    hx-get="/scorecard/content" hx-target="#scorecard-content" hx-include="{{ inc }}" hx-indicator="#loading">
+                {% for tid, tlabel in all_types %}<option value="{{ tid }}" {% if tid == selected_type %}selected{% endif %}>{{ tlabel }}</option>{% endfor %}
             </select>
-            <span id="loading" class="htmx-indicator">
-                <svg class="animate-spin h-5 w-5 accent-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-                </svg>
-            </span>
-        </div>
+        </label>
+        <label class="flex flex-col text-sm gap-1"><span class="text-secondary font-medium">TEG</span>
+            <select id="sc-teg" name="teg" class="teg-select"
+                    hx-get="/scorecard/content" hx-target="#scorecard-content" hx-include="{{ inc }}" hx-indicator="#loading">
+                {% for t in teg_numbers %}<option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>{% endfor %}
+            </select>
+        </label>
+        <label class="flex flex-col text-sm gap-1"><span class="text-secondary font-medium">Round</span>
+            <select id="sc-round" name="round" class="teg-select"
+                    hx-get="/scorecard/content" hx-target="#scorecard-content" hx-include="{{ inc }}" hx-indicator="#loading">
+                {% for r in rounds %}<option value="{{ r }}" {% if r == selected_round %}selected{% endif %}>Round {{ r }}</option>{% endfor %}
+            </select>
+        </label>
+        <label class="flex flex-col text-sm gap-1"><span class="text-secondary font-medium">Player</span>
+            <select id="sc-player" name="player" class="teg-select"
+                    hx-get="/scorecard/content" hx-target="#scorecard-content" hx-include="{{ inc }}" hx-indicator="#loading">
+                {% for code, name in player_list %}<option value="{{ code }}" {% if code == selected_player %}selected{% endif %}>{{ name }}</option>{% endfor %}
+            </select>
+        </label>
+        <span id="loading" class="htmx-indicator">
+            <svg class="animate-spin h-5 w-5 accent-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+            </svg>
+        </span>
     </div>
 
     <div id="scorecard-content">
