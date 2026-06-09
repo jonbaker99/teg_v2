@@ -193,21 +193,16 @@ Best-Worstball / Eclectic Scores / Eclectic Records.
 - Layout refinement for multi-content pages
 - Card header styling (4 options: grey bar, mono label, serif label, hidden)
 
-### TODO — webapp ↔ Streamlit feature-parity audit
+### Webapp ↔ Streamlit feature-parity audit
 
 Page *existence* parity with Streamlit is done, but several existing pages are
 only **partial** replications: the route exists and shows correct data, but is
-missing controls/views that the Streamlit page offers. These were built before
-a full feature audit, so each page needs checking against its Streamlit source
-and upgrading to match.
+missing controls/views that the Streamlit page offers. The full per-page gap
+list and progress are tracked in **[PARITY_AUDIT.md](PARITY_AUDIT.md)** — work
+through it page by page, ticking items as they're closed.
 
-Known gaps (non-exhaustive — the audit should produce the full list):
-- **Player Rankings** (`/player-rankings`): webapp shows gross ranking history
-  only; Streamlit lets the user toggle between **gross and net**.
-
-Do a systematic page-by-page pass: open each Streamlit page (`streamlit/`),
-list every selector/measure/view/toggle it exposes, and confirm the webapp
-equivalent matches. Log and close gaps per page.
+Done so far: **Player Rankings** now has both competitions (TEG Trophy / net
+and Green Jacket / gross), tie markers and position-summary tables.
 
 **Not yet built:**
 - REST API — planned; will expose `teg_analysis` over HTTP so any client (scripts, mobile, other frontends) can access the analysis layer without needing Python

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">TEG History</span>
+    <h1 class="page-title">Player Rankings</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class="tab-bar">
+    {% for tab_id, tab_label in tabs %}
+    <button class="tab-underline {% if tab_id == active_tab %}active{% endif %}"
+            hx-get="/player-rankings/tab?tab={{ tab_id }}"
+            hx-target="#player-rankings-content"
+            hx-swap="innerHTML"
+            onclick="
+                document.querySelectorAll('.tab-bar button.tab-underline').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            ">
+        {{ tab_label }}
+    </button>
+    {% endfor %}
+</div>
+
+<div id="player-rankings-content">
+    {% include "partials/player_rankings_tab.html" %}
+</div>
+{% endblock %}

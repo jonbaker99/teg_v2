@@ -15,9 +15,15 @@ from teg_analysis.analysis.history import (
     get_eagles_data,
     get_holes_in_one_data,
 )
+from teg_analysis.analysis.player_rankings import (
+    create_teg_ranking_table,
+    create_net_competition_ranking_table,
+    create_combined_position_summary,
+)
 from webapp.deps import (
     cached_load_all_data,
     cached_round_data,
+    cached_complete_teg_data,
     cached_ranked_teg_data,
     create_leaderboard,
     format_value,
@@ -325,32 +331,74 @@ async def results_table(request: Request, teg: int = Query(...), tab: str = Quer
 
 # --- /player-rankings ---------------------------------------------------------
 
+PLAYER_RANKINGS_TABS = [
+    ("trophy", "TEG Trophy"),
+    ("jacket", "Green Jacket"),
+]
+
+
+def _format_ranking_for_display(ranking: pd.DataFrame) -> pd.DataFrame:
+    """Rename TEGNum columns to 'TEG N' and show '-' for non-participation."""
+    df = ranking.copy()
+    rename = {}
+    for col in df.columns:
+        if col == "Player":
+            continue
+        try:
+            rename[col] = f"TEG {int(col)}"
+        except (ValueError, TypeError):
+            rename[col] = col
+    df = df.rename(columns=rename)
+    for col in [c for c in df.columns if c != "Player"]:
+        df[col] = df[col].apply(lambda x: "-" if pd.isna(x) else str(x))
+    return df
+
+
+def _player_rankings_context(tab: str) -> dict:
+    try:
+        teg_data = cached_complete_teg_data()
+        if tab == "trophy":
+            ranking = create_net_competition_ranking_table(teg_data)
+            rank_title = "TEG Trophy Rankings by TEG (Net Competition)"
+            caption = "Uses Net vs Par for TEGs 2-7, Stableford Points for TEG 8+."
+            summary_title = "TEG Trophy rankings summary"
+        else:
+            ranking = create_teg_ranking_table(teg_data, "GrossVP")
+            rank_title = "Green Jacket Rankings by TEG (Gross vs Par)"
+            caption = "Lower scores are better. Ties marked '='; '-' = did not participate."
+            summary_title = "Green Jacket rankings summary"
+
+        summary = create_combined_position_summary(ranking, "Player")
+        display = _format_ranking_for_display(ranking)
+
+        sections = [
+            {"title": rank_title, "caption": caption,
+             "table_html": _df_to_html(display, link_players=True)},
+            {"title": summary_title, "caption": None,
+             "table_html": _df_to_html(summary, table_class="teg-table")},
+        ]
+        return {"sections": sections}
+    except Exception as e:
+        return {"error": str(e)}
+
+
 @router.get("/player-rankings")
 async def player_rankings_page(request: Request):
-    try:
-        ranked = cached_ranked_teg_data()
-        # Compute rank within each TEG (1st, 2nd, 3rd, etc.)
-        ranked = ranked.copy()
-        ranked['GrossVP_TegRank'] = ranked.groupby('TEGNum')['GrossVP'].rank(method='min', ascending=True).astype(int)
-        # Pivot: player rows, TEG columns, gross rank values
-        pivot = ranked.pivot_table(
-            index='Player', columns='TEGNum', values='GrossVP_TegRank',
-            aggfunc='first',
-        )
-        pivot.columns = [f'TEG {int(c)}' for c in pivot.columns]
-        pivot = pivot.reset_index()
-        teg_cols = [c for c in pivot.columns if c != 'Player']
-        for col in teg_cols:
-            pivot[col] = pivot[col].apply(lambda x: '—' if pd.isna(x) else str(int(x)))
-        table_html = _df_to_html(pivot, link_players=True)
-    except Exception as e:
-        table_html = f"<p class='text-muted'>Error: {e}</p>"
-
-    return templates.TemplateResponse("data_table.html", {
+    default_tab = "trophy"
+    ctx = _player_rankings_context(default_tab)
+    return templates.TemplateResponse("player_rankings.html", {
         "request": request,
         "active_page": "player-rankings",
-        "title": "Player Rankings",
-        "subtitle": "Gross ranking by TEG",
-        "table_html": table_html,
-        "sections": None,
+        "tabs": PLAYER_RANKINGS_TABS,
+        "active_tab": default_tab,
+        **ctx,
+    })
+
+
+@router.get("/player-rankings/tab")
+async def player_rankings_tab(request: Request, tab: str = "trophy"):
+    ctx = _player_rankings_context(tab)
+    return templates.TemplateResponse("partials/player_rankings_tab.html", {
+        "request": request,
+        **ctx,
     })
