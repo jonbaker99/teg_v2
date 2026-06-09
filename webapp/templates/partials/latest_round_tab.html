@@ -1,6 +1,23 @@
 {% if error %}
 <p class="text-muted">Error: {{ error }}</p>
+{% elif report_html is defined %}
+  {% if report_html %}
+  <div class="report-body">{{ report_html | safe }}</div>
+  {% else %}
+  <p class="text-muted text-sm">{{ report_message }}</p>
+  {% endif %}
 {% elif sections %}
+  {% if scoring_fields %}
+  <div class="flex items-center gap-2 mb-3">
+    {% for fid, flabel in scoring_fields %}
+    <button class="tab-underline {% if fid == score_type %}active{% endif %}"
+            hx-get="/latest-round/tab" hx-target="#lr-content" hx-swap="innerHTML"
+            hx-vals='{"teg": "{{ teg }}", "round": "{{ round }}", "tab": "scoring", "score_type": "{{ fid }}"}'>
+      {{ flabel }}
+    </button>
+    {% endfor %}
+  </div>
+  {% endif %}
   {% for section in sections %}
     {% if section.title %}<div class="card-header">{{ section.title }}</div>{% endif %}
     <div class="data-card"><div style="overflow-x: auto;">{{ section.table_html | safe }}</div></div>

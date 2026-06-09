@@ -43,34 +43,94 @@ def _df_to_html(df: pd.DataFrame, table_class: str = "teg-table") -> str:
     return "".join(rows)
 
 
-def _eclectic_tab_context(dimension: str) -> dict:
+def _get_eclectic_filter_options(all_data: pd.DataFrame) -> dict:
+    """Return sorted lists of players, TEG numbers, and courses for filter dropdowns."""
+    players = sorted(all_data['Player'].unique().tolist())
+    tegs = sorted(all_data['TEGNum'].unique().tolist(), reverse=True)
+    courses = sorted(all_data['Course'].unique().tolist())
+    return {"players": players, "tegs": tegs, "courses": courses}
+
+
+def _apply_eclectic_filters(
+    all_data: pd.DataFrame,
+    player: str = "",
+    teg: int = 0,
+    course: str = "",
+) -> pd.DataFrame:
+    """Filter all_data by the given player/teg/course selections."""
+    filtered = all_data
+    if player:
+        filtered = filtered[filtered['Player'] == player]
+    if teg > 0:
+        filtered = filtered[filtered['TEGNum'] == teg]
+    if course:
+        filtered = filtered[filtered['Course'] == course]
+    return filtered
+
+
+def _eclectic_tab_context(
+    dimension: str,
+    player: str = "",
+    teg: int = 0,
+    course: str = "",
+) -> dict:
     """Build context for an eclectic tab."""
     try:
         all_data = cached_load_all_data()
-        eclectic_df, display_dim = calculate_eclectic_by_dimension(all_data, dimension)
+        filtered = _apply_eclectic_filters(all_data, player, teg, course)
+
+        if filtered.empty:
+            return {
+                "table_html": "<p class='text-muted text-sm'>No data matches your selections.</p>",
+                "total_rounds": 0,
+            }
+
+        eclectic_df, display_dim = calculate_eclectic_by_dimension(filtered, dimension)
         if eclectic_df.empty:
-            return {"table_html": "<p class='text-muted text-sm'>No data available.</p>"}
+            return {
+                "table_html": "<p class='text-muted text-sm'>No data available.</p>",
+                "total_rounds": 0,
+            }
+
         formatted = format_eclectic_table(eclectic_df, display_dim)
-        return {"table_html": _df_to_html(formatted)}
+        total_rounds = len(filtered.groupby(['Player', 'TEGNum', 'Round']))
+        return {"table_html": _df_to_html(formatted), "total_rounds": total_rounds}
     except Exception as e:
         return {"error": str(e)}
 
 
 @router.get("/eclectic")
-async def eclectic_page(request: Request):
-    ctx = _eclectic_tab_context("Player")
+async def eclectic_page(
+    request: Request,
+    player: str = Query(""),
+    teg: int = Query(0),
+    course: str = Query(""),
+):
+    all_data = cached_load_all_data()
+    filter_opts = _get_eclectic_filter_options(all_data)
+    ctx = _eclectic_tab_context("Player", player=player, teg=teg, course=course)
     return templates.TemplateResponse("eclectic.html", {
         "request": request,
         "active_page": "scorecards",
         "tabs": ECLECTIC_TABS,
         "active_tab": "Player",
+        "selected_player": player,
+        "selected_teg": teg,
+        "selected_course": course,
+        **filter_opts,
         **ctx,
     })
 
 
 @router.get("/eclectic/tab")
-async def eclectic_tab(request: Request, dimension: str = Query("Player")):
-    ctx = _eclectic_tab_context(dimension)
+async def eclectic_tab(
+    request: Request,
+    dimension: str = Query("Player"),
+    player: str = Query(""),
+    teg: int = Query(0),
+    course: str = Query(""),
+):
+    ctx = _eclectic_tab_context(dimension, player=player, teg=teg, course=course)
     return templates.TemplateResponse("partials/eclectic_tab.html", {
         "request": request,
         **ctx,

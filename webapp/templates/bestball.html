@@ -49,16 +49,15 @@
         <option value="false" {% if not sort_best %}selected{% endif %}>Worst First</option>
     </select>
 
-    <select id="bb-n" class="theme-select" name="n"
-            hx-get="/bestball/content"
-            hx-target="#bb-content"
-            hx-include="#bb-mode, #bb-teg, #bb-sort"
-            hx-swap="innerHTML">
-        <option value="0" {% if n_rows == 0 %}selected{% endif %}>All</option>
-        <option value="10" {% if n_rows == 10 %}selected{% endif %}>10</option>
-        <option value="25" {% if n_rows == 25 %}selected{% endif %}>25</option>
-        <option value="50" {% if n_rows == 50 %}selected{% endif %}>50</option>
-    </select>
+    <input type="number" id="bb-n" class="theme-select" name="n"
+           min="1" max="100" step="1" value="{{ n_rows if n_rows > 0 else 3 }}"
+           style="width:5rem;"
+           hx-get="/bestball/content"
+           hx-target="#bb-content"
+           hx-include="#bb-mode, #bb-teg, #bb-sort"
+           hx-swap="innerHTML"
+           hx-trigger="change, keyup changed delay:500ms"
+           title="Rows to show (1–100)">
 
     <input type="hidden" id="bb-mode" name="mode" value="{{ active_mode }}">
 </div>

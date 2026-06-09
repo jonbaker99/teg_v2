@@ -3,6 +3,7 @@
 from pathlib import Path
 
 import pandas as pd
+import markdown as md_lib
 from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
 
@@ -51,18 +52,35 @@ def _df_to_html(df: pd.DataFrame, table_class: str = "teg-table") -> str:
     return "".join(rows)
 
 
+_COMMENTARY_DIR = Path("data/commentary")
+_MD_EXTS = ["extra", "sane_lists", "smarty"]
+
+
+def _render_report(candidates: list[str]) -> str | None:
+    """Render the first existing markdown file (relative to data/commentary) to HTML."""
+    for name in candidates:
+        path = _COMMENTARY_DIR / name
+        if path.is_file():
+            return md_lib.markdown(path.read_text(encoding="utf-8"), extensions=_MD_EXTS)
+    return None
+
+
 # --- /latest-round ------------------------------------------------------------
 
 LATEST_ROUND_TABS = [
     ("scoreboard", "Scoreboards"),
     ("scorecard", "Scorecard"),
+    ("report", "Report"),
     ("scoring", "Scoring"),
     ("streaks", "Streaks"),
     ("records", "Records & PBs"),
 ]
 
+# Scoring-tab score-type toggle (Gross vs Par / Stableford)
+SCORING_FIELDS = [("GrossVP", "Gross vs Par"), ("Stableford", "Stableford")]
 
-def _latest_round_tab_context(teg_num: int, round_num: int, tab: str) -> dict:
+
+def _latest_round_tab_context(teg_num: int, round_num: int, tab: str, score_type: str = "GrossVP") -> dict:
     try:
         rd_data = cached_round_data()
         teg_rd = rd_data[(rd_data['TEGNum'] == teg_num) & (rd_data['Round'] == round_num)]
@@ -118,16 +136,29 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str) -> dict:
             except Exception as e:
                 sections.append({"title": "Records & PBs", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
+        elif tab == "report":
+            html = _render_report([
+                f"teg_{teg_num}_round_{round_num}_report_styled.md",
+                f"round_reports/TEG{teg_num}_R{round_num}_report.md",
+                f"round_reports/teg_{teg_num}_round_{round_num}_report.md",
+            ])
+            if html:
+                return {"report_html": html}
+            return {"report_html": None,
+                    "report_message": f"No report available for TEG {teg_num} Round {round_num}."}
+
         elif tab == "scoring":
+            field = score_type if score_type in ("GrossVP", "Stableford") else "GrossVP"
+            friendly = dict(SCORING_FIELDS).get(field, field)
             all_data = cached_load_all_data()
             round_data = all_data[(all_data['TEGNum'] == teg_num) & (all_data['Round'] == round_num)]
             if not round_data.empty:
-                counts = count_scores_by_player(round_data)
-                # Reset index so the GrossVP values become a column for display
+                counts = count_scores_by_player(round_data, field)
                 counts_display = counts.reset_index()
-                sections.append({"title": "Score Counts (Gross vs Par)", "table_html": _df_to_html(counts_display)})
+                sections.append({"title": f"Score Counts ({friendly})", "table_html": _df_to_html(counts_display)})
             else:
                 sections.append({"title": "Scoring", "table_html": "<p class='text-muted text-sm'>No scoring data.</p>"})
+            return {"sections": sections, "scoring_fields": SCORING_FIELDS, "score_type": field}
 
         elif tab == "streaks":
             try:
@@ -170,10 +201,13 @@ async def latest_round_page(request: Request):
 
 
 @router.get("/latest-round/tab")
-async def latest_round_tab(request: Request, teg: int = Query(...), round: int = Query(...), tab: str = Query("scoreboard")):
-    ctx = _latest_round_tab_context(teg, round, tab)
+async def latest_round_tab(request: Request, teg: int = Query(...), round: int = Query(...),
+                           tab: str = Query("scoreboard"), score_type: str = Query("GrossVP")):
+    ctx = _latest_round_tab_context(teg, round, tab, score_type)
     return templates.TemplateResponse("partials/latest_round_tab.html", {
         "request": request,
+        "teg": teg,
+        "round": round,
         **ctx,
     })
 
@@ -185,10 +219,11 @@ LATEST_TEG_TABS = [
     ("scoring", "Scoring"),
     ("streaks", "Streaks"),
     ("records", "Records & PBs"),
+    ("report", "Report"),
 ]
 
 
-def _latest_teg_tab_context(teg_num: int, tab: str) -> dict:
+def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP") -> dict:
     """Build template context for a latest-teg tab."""
     try:
         sections = []
@@ -208,14 +243,32 @@ def _latest_teg_tab_context(teg_num: int, tab: str) -> dict:
                 sections.append({"title": "Aggregate Score", "table_html": "<p class='text-muted text-sm'>No aggregate data available.</p>"})
 
         elif tab == "scoring":
+            field = score_type if score_type in ("GrossVP", "Stableford") else "GrossVP"
+            friendly = dict(SCORING_FIELDS).get(field, field)
             all_data = cached_load_all_data()
             teg_data = all_data[all_data['TEGNum'] == teg_num]
             if not teg_data.empty:
-                counts = count_scores_by_player(teg_data)
+                counts = count_scores_by_player(teg_data, field)
                 counts_display = counts.reset_index()
-                sections.append({"title": "Score Counts (Gross vs Par)", "table_html": _df_to_html(counts_display)})
+                sections.append({"title": f"Score Counts ({friendly})", "table_html": _df_to_html(counts_display)})
             else:
                 sections.append({"title": "Scoring", "table_html": "<p class='text-muted text-sm'>No scoring data.</p>"})
+            return {"sections": sections, "scoring_fields": SCORING_FIELDS, "score_type": field}
+
+        elif tab == "report":
+            html = _render_report([
+                f"teg_{teg_num}_report_styled.md",
+                f"teg_{teg_num}_main_report.md",
+            ])
+            teg_num_int = int(teg_num)
+            caption = None
+            if teg_num_int < 8:
+                caption = ("NB: Before TEG 8 the TEG Trophy was decided by best net score "
+                           "(total net vs par), not Stableford points.")
+            if html:
+                return {"report_html": html, "report_caption": caption}
+            return {"report_html": None,
+                    "report_message": f"No report available for TEG {teg_num}."}
 
         elif tab == "streaks":
             try:
@@ -266,10 +319,12 @@ async def latest_teg_page(request: Request):
 
 
 @router.get("/latest-teg/tab")
-async def latest_teg_tab(request: Request, teg: int = Query(...), tab: str = Query("aggregate")):
-    ctx = _latest_teg_tab_context(teg, tab)
+async def latest_teg_tab(request: Request, teg: int = Query(...), tab: str = Query("aggregate"),
+                         score_type: str = Query("GrossVP")):
+    ctx = _latest_teg_tab_context(teg, tab, score_type)
     return templates.TemplateResponse("partials/latest_teg_tab.html", {
         "request": request,
+        "teg": teg,
         **ctx,
     })
 

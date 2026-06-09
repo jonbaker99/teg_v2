@@ -9,16 +9,55 @@
 
 {% block content %}
 
+<div class="flex flex-wrap items-center gap-4 mb-4">
+    <select id="eclectic-player" class="theme-select" name="player"
+            hx-get="/eclectic/tab"
+            hx-target="#eclectic-content"
+            hx-include="#eclectic-dimension, #eclectic-teg, #eclectic-course"
+            hx-swap="innerHTML">
+        <option value="" {% if not selected_player %}selected{% endif %}>All Players</option>
+        {% for p in players %}
+        <option value="{{ p }}" {% if p == selected_player %}selected{% endif %}>{{ p }}</option>
+        {% endfor %}
+    </select>
+
+    <select id="eclectic-teg" class="theme-select" name="teg"
+            hx-get="/eclectic/tab"
+            hx-target="#eclectic-content"
+            hx-include="#eclectic-dimension, #eclectic-player, #eclectic-course"
+            hx-swap="innerHTML">
+        <option value="0" {% if selected_teg == 0 %}selected{% endif %}>All TEGs</option>
+        {% for t in tegs %}
+        <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
+        {% endfor %}
+    </select>
+
+    <select id="eclectic-course" class="theme-select" name="course"
+            hx-get="/eclectic/tab"
+            hx-target="#eclectic-content"
+            hx-include="#eclectic-dimension, #eclectic-player, #eclectic-teg"
+            hx-swap="innerHTML">
+        <option value="" {% if not selected_course %}selected{% endif %}>All Courses</option>
+        {% for c in courses %}
+        <option value="{{ c }}" {% if c == selected_course %}selected{% endif %}>{{ c }}</option>
+        {% endfor %}
+    </select>
+</div>
+
 <div class="tab-bar">
     {% for tab_id, tab_label in tabs %}
     <button class="tab-underline {% if tab_id == active_tab %}active{% endif %}"
             hx-get="/eclectic/tab?dimension={{ tab_id }}"
             hx-target="#eclectic-content"
-            hx-swap="innerHTML">
+            hx-include="#eclectic-player, #eclectic-teg, #eclectic-course"
+            hx-swap="innerHTML"
+            onclick="document.getElementById('eclectic-dimension').value='{{ tab_id }}';">
         {{ tab_label }}
     </button>
     {% endfor %}
 </div>
+
+<input type="hidden" id="eclectic-dimension" name="dimension" value="{{ active_tab }}">
 
 <div id="eclectic-content">
     {% include "partials/eclectic_tab.html" %}

@@ -34,7 +34,7 @@ def _df_to_html(df: pd.DataFrame, table_class: str = "teg-table") -> str:
     return "".join(rows)
 
 
-def _bestball_context(mode: str = "bestball", teg: int = 0, sort_best: bool = True, n: int = 0) -> dict:
+def _bestball_context(mode: str = "bestball", teg: int = 0, sort_best: bool = True, n: int = 3) -> dict:
     try:
         all_data = cached_load_all_data()
         if teg > 0:
@@ -43,10 +43,18 @@ def _bestball_context(mode: str = "bestball", teg: int = 0, sort_best: bool = Tr
 
         if mode == "worstball":
             scores = calculate_worstball_scores(bb_data)
-            title = "Worstball Scores"
+            format_label = "Worstball"
         else:
             scores = calculate_bestball_scores(bb_data)
-            title = "Bestball Scores"
+            format_label = "Bestball"
+
+        # Dynamic heading: sort_best=True means ascending GrossVP (lowest/best first)
+        # bestball + sort_best=True  → Best Bestball
+        # bestball + sort_best=False → Worst Bestball
+        # worstball + sort_best=True  → Best Worstball
+        # worstball + sort_best=False → Worst Worstball
+        best_or_worst = "Best" if sort_best else "Worst"
+        title = f"{best_or_worst} {format_label}"
 
         display = format_team_scores_for_display(scores, sort_by_best=sort_best)
         if n > 0:
@@ -58,7 +66,7 @@ def _bestball_context(mode: str = "bestball", teg: int = 0, sort_best: bool = Tr
 
 
 @router.get("/bestball")
-async def bestball_page(request: Request, teg: int = 0, sort_best: bool = True, n: int = 0):
+async def bestball_page(request: Request, teg: int = 0, sort_best: bool = True, n: int = 3):
     ctx = _bestball_context("bestball", teg, sort_best, n)
     teg_numbers = get_available_teg_numbers()
     return templates.TemplateResponse("bestball.html", {
@@ -74,7 +82,7 @@ async def bestball_page(request: Request, teg: int = 0, sort_best: bool = True, 
 
 
 @router.get("/bestball/content")
-async def bestball_content(request: Request, mode: str = "bestball", teg: int = 0, sort_best: bool = True, n: int = 0):
+async def bestball_content(request: Request, mode: str = "bestball", teg: int = 0, sort_best: bool = True, n: int = 3):
     ctx = _bestball_context(mode, teg, sort_best, n)
     return templates.TemplateResponse("partials/bestball_content.html", {
         "request": request,

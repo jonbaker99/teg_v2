@@ -41,10 +41,10 @@ Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 - [ ] First/last-place cell highlighting — cosmetic
 
 ### TEG Reports (`/teg-reports`)
-- [ ] Normal / Satire report-type toggle
-- [ ] Round-report filename fallbacks (new `TEG{N}_R{r}_report.md` + non-styled)
-- [ ] Tournament-report `_main_report.md` fallback
-- [ ] Pre-TEG-8 caption
+- [x] Normal / Satire report-type toggle
+- [x] Round-report filename fallbacks (new `TEG{N}_R{r}_report.md` + non-styled)
+- [x] Tournament-report `_main_report.md` fallback
+- [x] Pre-TEG-8 caption
 
 ## Records & PBs
 
@@ -59,7 +59,7 @@ Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 - [x] TEG 2 exclusion note caption
 
 ### Personal Bests (`/personal-bests`)
-- [ ] PB Summary: "Best 9s" sub-view (front/back 9 via ranked frontback data)
+- [x] PB Summary: "Best 9s" sub-view (front/back 9 via ranked frontback data)
 - [ ] Free-entry N for detail tabs
 - [ ] Styled score/when cells in PB summary — cosmetic
 
@@ -72,18 +72,18 @@ Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 - [ ] Wooden-spoon callout already present on net? verify gross has champion only
 
 ### Latest Round in context (`/latest-round`)
-- [ ] Report tab (round report markdown)
+- [x] Report tab (round report markdown)
 - [ ] Scoreboards: metric sub-tabs + per-metric cumulative chart
 - [ ] Scorecard tab: inline scorecard + Desktop/Mobile toggle
-- [ ] Scoring tab: Stableford toggle (currently Gross only)
+- [x] Scoring tab: Stableford toggle (currently Gross only)
 - [ ] Streaks tab: pivoted streak table + caption
 - [ ] Records & PBs tab: all-time worsts, 9-hole, streak records, score-count records
 - [ ] Course + date context header
 
 ### Latest TEG in context (`/latest-teg`)
-- [ ] Report tab (TEG report markdown)
+- [x] Report tab (TEG report markdown)
 - [ ] Aggregate Score: metric sub-tabs
-- [ ] Scoring tab: Stableford toggle
+- [x] Scoring tab: Stableford toggle
 - [ ] Streaks tab: pivoted streak table + caption
 - [ ] Records & PBs tab: all-time worsts, streak records, score-count records
 
@@ -156,12 +156,12 @@ Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 - [ ] Missing views: single-player/single-round, single-player/all-rounds
 
 ### Best/Worstball (`/bestball`)
-- [ ] Free-entry N (default 3) instead of fixed All/10/25/50
-- [ ] Dynamic "Best/Worst Bestball/Worstball" heading
+- [x] Free-entry N (default 3) instead of fixed All/10/25/50
+- [x] Dynamic "Best/Worst Bestball/Worstball" heading
 
 ### Eclectic Scores (`/eclectic`)
-- [ ] Player / TEG / Course filters
-- [ ] "Based on N rounds" caption
+- [x] Player / TEG / Course filters
+- [x] "Based on N rounds" caption
 
 ### Eclectic Records (`/eclectic-records`)
 - [x] Built (Top 3 + Personal Best, TEGs/Courses tabs)
