@@ -20,6 +20,11 @@ from teg_analysis.analysis.player_rankings import (
     create_net_competition_ranking_table,
     create_combined_position_summary,
 )
+from teg_analysis.core.metadata import get_scorecard_data
+from teg_analysis.display.scorecards import (
+    build_round_comparison_gross_table,
+    build_round_comparison_stableford_table,
+)
 from webapp.deps import (
     cached_load_all_data,
     cached_round_data,
@@ -249,13 +254,22 @@ def _results_context(teg_num: int, tab: str = "net") -> dict:
     try:
         if tab == "scorecards":
             rounds = get_rounds_for_teg(teg_num)
-            links = []
+            parts = ['<link rel="stylesheet" href="/static/scorecard.css">']
             for r in rounds:
-                links.append(
-                    f'<p><a href="/scorecard?teg={teg_num}&round={r}" class="text-link">'
-                    f'Round {r} Scorecard</a></p>'
-                )
-            table_html = "".join(links) if links else "<p class='text-muted'>No rounds found.</p>"
+                try:
+                    rd = get_scorecard_data(teg_num, r)
+                    if rd is None or rd.empty:
+                        continue
+                    gross = build_round_comparison_gross_table(rd)
+                    stableford = build_round_comparison_stableford_table(rd)
+                    parts.append(f"<h2 class='section-title'>Round {r}</h2>")
+                    parts.append("<div class='mb-2'><strong>Gross</strong></div>")
+                    parts.append(gross)
+                    parts.append("<div class='mt-3 mb-2'><strong>Stableford</strong></div>")
+                    parts.append(stableford)
+                except Exception:
+                    continue
+            table_html = "".join(parts) if len(parts) > 1 else "<p class='text-muted'>No rounds found.</p>"
             return {"result_title": "Scorecards", "table_html": table_html}
 
         if tab == "report":

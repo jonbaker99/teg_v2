@@ -20,6 +20,11 @@ from teg_analysis.analysis.aggregation import (
 from teg_analysis.analysis.records import identify_aggregate_records_and_pbs
 from teg_analysis.analysis.streaks import get_player_window_streaks, build_streaks
 from teg_analysis.analysis.scoring import count_scores_by_player
+from teg_analysis.core.metadata import get_scorecard_data, get_teg_metadata
+from teg_analysis.display.scorecards import (
+    build_round_comparison_gross_table,
+    build_round_comparison_stableford_table,
+)
 from webapp.deps import (
     cached_load_all_data,
     cached_round_data,
@@ -116,11 +121,18 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str, score_type
                 sections.append({"title": "Round Scoreboard", "table_html": _df_to_html(display)})
 
         elif tab == "scorecard":
-            link = f"/scorecard?teg={teg_num}&round={round_num}"
-            sections.append({
-                "title": "Scorecard",
-                "table_html": f'<p><a href="{link}" class="text-link">View Scorecard for TEG {teg_num} Round {round_num}</a></p>',
-            })
+            try:
+                round_data = get_scorecard_data(teg_num, round_num)
+                if round_data is None or round_data.empty:
+                    sections.append({"title": "Scorecard", "table_html": "<p class='text-muted text-sm'>No scorecard data.</p>"})
+                else:
+                    gross = build_round_comparison_gross_table(round_data)
+                    stableford = build_round_comparison_stableford_table(round_data)
+                    sections.append({"title": "Gross", "table_html": gross})
+                    sections.append({"title": "Stableford", "table_html": stableford})
+                return {"sections": sections, "scorecard_css": True}
+            except Exception as e:
+                sections.append({"title": "Scorecard", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
         elif tab == "records":
             try:
@@ -186,6 +198,11 @@ async def latest_round_page(request: Request):
     teg_num = int(teg_str.replace('TEG ', '')) if isinstance(teg_str, str) else int(teg_str)
     teg_numbers = get_available_teg_numbers()
     rounds = get_rounds_for_teg(teg_num)
+    try:
+        meta = get_teg_metadata(teg_num, int(round_num))
+        context_header = " | ".join(p for p in [meta.get('Course', ''), meta.get('Date', '')] if p)
+    except Exception:
+        context_header = ""
     ctx = _latest_round_tab_context(teg_num, int(round_num), "scoreboard")
     return templates.TemplateResponse("latest_round.html", {
         "request": request,
@@ -196,6 +213,7 @@ async def latest_round_page(request: Request):
         "selected_round": round_num,
         "tabs": LATEST_ROUND_TABS,
         "active_tab": "scoreboard",
+        "context_header": context_header,
         **ctx,
     })
 

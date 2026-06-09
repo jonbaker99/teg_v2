@@ -28,7 +28,7 @@ Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 ### Full Results (`/results`)
 - [ ] Chart-type switcher (Standard / Adjusted scale / Ranking) on net & gross race charts
 - [x] Wooden-spoon callout on net leaderboard
-- [ ] Inline per-round scorecards (currently links out to /scorecard)
+- [x] Inline per-round scorecards
 - [x] Report tab: pre-TEG-8 scoring caption
 - [x] Report tab: fallback from `_report_styled.md` to `_main_report.md`
 
@@ -74,11 +74,11 @@ Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 ### Latest Round in context (`/latest-round`)
 - [x] Report tab (round report markdown)
 - [ ] Scoreboards: metric sub-tabs + per-metric cumulative chart
-- [ ] Scorecard tab: inline scorecard + Desktop/Mobile toggle
+- [x] Scorecard tab: inline scorecard (Desktop/Mobile toggle = cosmetic, skipped)
 - [x] Scoring tab: Stableford toggle (currently Gross only)
 - [ ] Streaks tab: pivoted streak table + caption
 - [ ] Records & PBs tab: all-time worsts, 9-hole, streak records, score-count records
-- [ ] Course + date context header
+- [x] Course + date context header
 
 ### Latest TEG in context (`/latest-teg`)
 - [x] Report tab (TEG report markdown)
