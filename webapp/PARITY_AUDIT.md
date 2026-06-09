@@ -16,24 +16,21 @@ Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 ## Status summary
 
 The substantive functional gaps (missing controls / views / measures / data /
-charts) have been closed across every page. Every webapp endpoint returns 200
-and renders its Streamlit-equivalent content. What remains outstanding falls
-into three buckets, all intentionally deferred:
+charts) have been closed across every page, **including the deep/conditional
+ports**: Latest-page metric sub-tabs (+ per-metric round chart), the Latest
+streak-type pivot + caption, the full records-completeness categories (all-time
+worsts / 9-hole / streak / score-count records), the Handicaps draft-handicap
+section (handicap recalc ported to `teg_analysis/analysis/handicaps.py`; the
+draft banner + "Draft handicaps for TEG N+1" section appear when a TEG is in
+progress), and the "Ranking" race-chart variant on Leaderboard & Results.
 
-1. **Cosmetic** (explicitly out of scope per the goal — "structure & content,
-   not visual mimicry"): styled history/ranking cell highlighting, full trophy
-   tab-label names, metric-tile handicap display, styled PB score/when cells,
-   Altair legend-highlight interaction, expander-vs-always-visible.
-2. **WIP page**: the Heatmap (`/scoring/heatmap`) is marked WIP in *both* apps;
-   its advanced filters / x-axis switcher / trend line are left for the WIP work.
-3. **Deep / conditional ports** (data already broadly present; full parity needs
-   a larger port): Latest-page metric **sub-tabs** (all four metrics already
-   shown as stacked cards), the Latest streak-type **pivot** and the richer
-   **records-completeness** categories within a window, the Handicaps
-   **draft-handicap** section (needs the handicap-recalculation port and an
-   in-progress TEG, of which there is currently none), and the Course-summary
-   per-player detail. The "Ranking" race-chart variant is a documented TODO
-   (Standard + Adjusted are implemented).
+Every webapp endpoint returns 200 and renders its Streamlit-equivalent content.
+What remains outstanding is **cosmetic only** (out of scope per the goal —
+"structure & content, not visual mimicry"; e.g. cell highlighting, full trophy
+tab-label names, handicap metric-tiles, styled PB cells, Altair legend-highlight
+interaction) plus the **Heatmap** advanced controls (the page is marked WIP in
+*both* apps) and the Course-summary per-player detail (the webapp already shows
+a broadly-equivalent course summary).
 
 ---
 
@@ -48,7 +45,7 @@ into three buckets, all intentionally deferred:
 - [ ] Full trophy names in tab labels (e.g. "TEG Trophy (Stableford)") — cosmetic
 
 ### Full Results (`/results`)
-- [x] Chart-type switcher (Standard / Adjusted; Ranking = TODO) on net & gross race charts
+- [x] Chart-type switcher (Standard / Adjusted / Ranking) on net & gross race charts
 - [x] Wooden-spoon callout on net leaderboard
 - [x] Inline per-round scorecards
 - [x] Report tab: pre-TEG-8 scoring caption
@@ -88,30 +85,30 @@ into three buckets, all intentionally deferred:
 ## Latest TEG
 
 ### Latest Leaderboard (`/leaderboard`)
-- [x] Cumulative Stableford race chart (Standard / Adjusted; Ranking = TODO) — net tab
-- [x] Cumulative GrossVP race chart (Standard / Adjusted; Ranking = TODO) — gross tab
+- [x] Cumulative Stableford race chart (Standard / Adjusted / Ranking) — net tab
+- [x] Cumulative GrossVP race chart (Standard / Adjusted / Ranking) — gross tab
 - [x] Scorecards tab (per-round inline scorecards)
 - [x] Wooden-spoon callout already present on net? verify gross has champion only
 
 ### Latest Round in context (`/latest-round`)
 - [x] Report tab (round report markdown)
-- [ ] Scoreboards: metric sub-tabs + per-metric cumulative chart
+- [x] Scoreboards: metric sub-tabs + per-metric cumulative chart
 - [x] Scorecard tab: inline scorecard (Desktop/Mobile toggle = cosmetic, skipped)
 - [x] Scoring tab: Stableford toggle (currently Gross only)
-- [ ] Streaks tab: pivoted streak table + caption
-- [ ] Records & PBs tab: all-time worsts, 9-hole, streak records, score-count records
+- [x] Streaks tab: pivoted streak table + caption
+- [x] Records & PBs tab: all-time worsts, 9-hole, streak records, score-count records
 - [x] Course + date context header
 
 ### Latest TEG in context (`/latest-teg`)
 - [x] Report tab (TEG report markdown)
-- [ ] Aggregate Score: metric sub-tabs
+- [x] Aggregate Score: metric sub-tabs
 - [x] Scoring tab: Stableford toggle
-- [ ] Streaks tab: pivoted streak table + caption
-- [ ] Records & PBs tab: all-time worsts, streak records, score-count records
+- [x] Streaks tab: pivoted streak table + caption
+- [x] Records & PBs tab: all-time worsts, streak records, score-count records
 
 ### Handicaps (`/handicaps`)
 - [ ] Metric tiles with delta indicators — cosmetic
-- [ ] Draft/in-progress detection + "Draft handicaps for TEG N+1" section
+- [x] Draft/in-progress detection + "Draft handicaps for TEG N+1" section
 
 ## Scoring analysis
 

@@ -19,10 +19,22 @@
     {% endfor %}
   </div>
   {% endif %}
+  {% if metric_tabs %}
+  <div class="flex flex-wrap items-center gap-2 mb-3">
+    {% for mid, mlabel in metric_tabs %}
+    <button class="tab-underline {% if mid == active_metric %}active{% endif %}"
+            hx-get="/latest-teg/tab" hx-target="#lt-content" hx-swap="innerHTML"
+            hx-vals='{"teg": "{{ teg }}", "tab": "aggregate", "metric": "{{ mid }}"}'>
+      {{ mlabel }}
+    </button>
+    {% endfor %}
+  </div>
+  {% endif %}
   {% for section in sections %}
     {% if section.title %}<h2 class="section-title">{{ section.title }}</h2>{% endif %}
     {{ section.table_html | safe }}
   {% endfor %}
+  {% if caption %}<p class="text-muted text-sm mt-3">{{ caption }}</p>{% endif %}
 {% else %}
 <p class="text-muted text-sm">No data available.</p>
 {% endif %}

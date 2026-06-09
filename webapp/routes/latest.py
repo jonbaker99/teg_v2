@@ -7,7 +7,7 @@ import markdown as md_lib
 from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
 
-from teg_analysis.constants import PLAYER_DICT, HANDICAPS_CSV
+from teg_analysis.constants import PLAYER_DICT, HANDICAPS_CSV, STREAKS_PARQUET
 from teg_analysis.io.file_operations import read_file
 from teg_analysis.analysis.aggregation import (
     get_round_data,
@@ -17,8 +17,21 @@ from teg_analysis.analysis.aggregation import (
     prepare_teg_context_display,
     get_round_metric_mappings,
 )
-from teg_analysis.analysis.records import identify_aggregate_records_and_pbs
-from teg_analysis.analysis.streaks import get_player_window_streaks, build_streaks
+from teg_analysis.analysis.records import (
+    identify_aggregate_records_and_pbs,
+    identify_all_time_worsts,
+    identify_9hole_records_and_pbs,
+    identify_streak_records,
+    identify_score_count_records,
+)
+from teg_analysis.analysis.scoring import format_vs_par
+from teg_analysis.analysis.handicaps import (
+    get_hc,
+    get_current_handicaps_formatted,
+    get_next_teg_and_check_if_in_progress_fast,
+)
+from teg_analysis.analysis.aggregation import get_current_in_progress_teg_fast
+from teg_analysis.analysis.streaks import get_player_window_streaks, build_streaks, pivot_window_streaks
 from teg_analysis.analysis.scoring import count_scores_by_player
 from teg_analysis.core.metadata import get_scorecard_data, get_teg_metadata
 from teg_analysis.display.scorecards import (
@@ -70,6 +83,76 @@ def _render_report(candidates: list[str]) -> str | None:
     return None
 
 
+def _fmt_record_value(value, metric: str) -> str:
+    """Format a record value: vs-par notation for GrossVP/NetVP, else integer."""
+    if metric in ('GrossVP', 'NetVP'):
+        return format_vs_par(value)
+    return str(int(value))
+
+
+def _render_records_summary(rd: dict, page_type: str = 'TEG') -> str:
+    """Render the records/PBs dict as grouped HTML (mirrors the Streamlit summary)."""
+    from collections import defaultdict
+
+    total = sum(len(rd.get(k, [])) for k in (
+        'aggregate_records', 'aggregate_pbs', 'aggregate_worsts', 'all_time_worsts',
+        '9hole_records', '9hole_pbs', 'streak_records', 'best_score_counts', 'worst_score_counts'))
+    if total == 0:
+        return f"<p class='text-muted text-sm'>No records or personal bests for this {page_type.lower()}.</p>"
+
+    out = []
+
+    # --- All-time records (bests) ---
+    bests = []
+    for r in rd.get('aggregate_records', []):
+        bests.append(f"<strong>{r['friendly_name']}:</strong> {_fmt_record_value(r['value'], r['metric'])} ({r['player']})")
+    for r in rd.get('9hole_records', []):
+        bests.append(f"<strong>{r['segment']} 9 - {r['friendly_name']}:</strong> {_fmt_record_value(r['value'], r['metric'])} ({r['player']})")
+    for r in rd.get('streak_records', []):
+        bests.append(f"<strong>{r['streak_type']} streak:</strong> {r['value']} holes ({r['player']})")
+    for r in rd.get('best_score_counts', []):
+        bests.append(f"<strong>Most {r['score_type']}:</strong> {r['count']} ({r['player']})")
+    if bests:
+        out.append("<h2 class='section-title'>🏆 All-Time Records (Bests)</h2><ul class='records-list'>")
+        out += [f"<li>{b}</li>" for b in bests]
+        out.append("</ul>")
+
+    # --- All-time records (worsts) ---
+    worsts = []
+    for r in rd.get('all_time_worsts', []):
+        worsts.append(f"<strong>Worst {r['friendly_name']}:</strong> {_fmt_record_value(r['value'], r['metric'])} ({r['player']})")
+    for r in rd.get('worst_score_counts', []):
+        worsts.append(f"<strong>Most {r['score_type']}:</strong> {r['count']} ({r['player']})")
+    if worsts:
+        out.append("<h2 class='section-title'>💀 All-Time Records (Worsts)</h2><ul class='records-list'>")
+        out += [f"<li>{w}</li>" for w in worsts]
+        out.append("</ul>")
+
+    # --- Personal bests (grouped by player) ---
+    pbs_by_player = defaultdict(list)
+    for pb in rd.get('aggregate_pbs', []):
+        pbs_by_player[pb['player']].append(f"{pb['friendly_name']}: {_fmt_record_value(pb['value'], pb['metric'])}")
+    for pb in rd.get('9hole_pbs', []):
+        pbs_by_player[pb['player']].append(f"{pb['segment']} 9 - {pb['friendly_name']}: {_fmt_record_value(pb['value'], pb['metric'])}")
+    if pbs_by_player:
+        out.append("<h2 class='section-title'>⭐ Personal Bests</h2><ul class='records-list'>")
+        for player in sorted(pbs_by_player):
+            out.append(f"<li><strong>{player}:</strong> {', '.join(pbs_by_player[player])}</li>")
+        out.append("</ul>")
+
+    # --- Personal worsts (grouped by player) ---
+    worsts_by_player = defaultdict(list)
+    for w in rd.get('aggregate_worsts', []):
+        worsts_by_player[w['player']].append(f"{w['friendly_name']}: {_fmt_record_value(w['value'], w['metric'])}")
+    if worsts_by_player:
+        out.append("<h2 class='section-title'>⚠️ Personal Worsts</h2><ul class='records-list'>")
+        for player in sorted(worsts_by_player):
+            out.append(f"<li><strong>{player}:</strong> {', '.join(worsts_by_player[player])}</li>")
+        out.append("</ul>")
+
+    return "".join(out)
+
+
 # --- /latest-round ------------------------------------------------------------
 
 LATEST_ROUND_TABS = [
@@ -84,8 +167,12 @@ LATEST_ROUND_TABS = [
 # Scoring-tab score-type toggle (Gross vs Par / Stableford)
 SCORING_FIELDS = [("GrossVP", "Gross vs Par"), ("Stableford", "Stableford")]
 
+# Metric sub-tabs for the Scoreboards (round) / Aggregate (TEG) tabs
+METRIC_TABS = [("Sc", "Score"), ("Stableford", "Stableford"), ("GrossVP", "Gross vs Par"), ("NetVP", "Net vs Par")]
 
-def _latest_round_tab_context(teg_num: int, round_num: int, tab: str, score_type: str = "GrossVP") -> dict:
+
+def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
+                              score_type: str = "GrossVP", metric: str = "Sc") -> dict:
     try:
         rd_data = cached_round_data()
         teg_rd = rd_data[(rd_data['TEGNum'] == teg_num) & (rd_data['Round'] == round_num)]
@@ -96,29 +183,30 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str, score_type
         sections = []
 
         if tab == "scoreboard":
+            metric = metric if metric in dict(METRIC_TABS) else "Sc"
+            friendly = dict(METRIC_TABS)[metric]
+            teg_str = f"TEG {teg_num}"
             try:
                 ranked = cached_ranked_round_data()
-                teg_str = f"TEG {teg_num}"
-                _, inv_mapping = get_round_metric_mappings()
-                # Show 4 metric sub-tables: Sc, Stableford, GrossVP, NetVP
-                for metric in ['Sc', 'Stableford', 'GrossVP', 'NetVP']:
-                    friendly = inv_mapping.get(metric, metric)
-                    try:
-                        ctx_df = prepare_round_context_display(ranked, teg_str, round_num, metric, friendly)
-                        sections.append({"title": friendly, "table_html": _df_to_html(ctx_df)})
-                    except Exception:
-                        pass
-                if not sections:
-                    # Fallback to simple table
-                    display_cols = ['Player', 'GrossVP', 'Stableford']
-                    available = [c for c in display_cols if c in teg_rd.columns]
-                    display = teg_rd[available].sort_values('GrossVP', ascending=True) if 'GrossVP' in available else teg_rd[available]
-                    sections.append({"title": "Round Scoreboard", "table_html": _df_to_html(display)})
+                ctx_df = prepare_round_context_display(ranked, teg_str, round_num, metric, friendly)
+                table_html = _df_to_html(ctx_df)
             except Exception:
-                display_cols = ['Player', 'GrossVP', 'Stableford']
-                available = [c for c in display_cols if c in teg_rd.columns]
-                display = teg_rd[available].sort_values('GrossVP', ascending=True) if 'GrossVP' in available else teg_rd[available]
-                sections.append({"title": "Round Scoreboard", "table_html": _df_to_html(display)})
+                table_html = "<p class='text-muted text-sm'>No data.</p>"
+            # Per-metric cumulative-through-round chart
+            chart_json = None
+            try:
+                import json
+                import plotly.utils
+                from webapp.chart_utils import create_round_graph
+                all_data = cached_load_all_data()
+                fig = create_round_graph(all_data, teg_str, round_num, f'{metric} Cum Round',
+                                         friendly, y_axis_label=f'Cumulative {friendly}')
+                chart_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+            except Exception:
+                chart_json = None
+            return {"sections": [{"title": friendly, "table_html": table_html}],
+                    "metric_tabs": METRIC_TABS, "active_metric": metric,
+                    "chart_json": chart_json, "chart_title": f"Cumulative {friendly} through round"}
 
         elif tab == "scorecard":
             try:
@@ -137,14 +225,27 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str, score_type
         elif tab == "records":
             try:
                 ranked = cached_ranked_round_data()
-                results = identify_aggregate_records_and_pbs(ranked, str(teg_num), round_num)
-                for key in ['records', 'personal_bests', 'personal_worsts']:
-                    items = results.get(key, [])
-                    if items:
-                        df = pd.DataFrame(items)
-                        sections.append({"title": key.replace('_', ' ').title(), "table_html": _df_to_html(df)})
-                if not sections:
-                    sections.append({"title": "Records & PBs", "table_html": "<p class='text-muted text-sm'>No records or PBs in this round.</p>"})
+                all_data = cached_load_all_data()
+                streaks_df = read_file(STREAKS_PARQUET)
+                teg_str = f"TEG {teg_num}"
+
+                from webapp.deps import cached_ranked_frontback_data
+                agg = identify_aggregate_records_and_pbs(ranked, teg_str, round_num)
+                nine = identify_9hole_records_and_pbs(teg_str, round_num, cached_ranked_frontback_data())
+                streak = identify_streak_records(all_data, streaks_df, teg_str, round_num)
+                counts = identify_score_count_records(all_data, teg_str, round_num)
+                rd_dict = {
+                    'aggregate_records': agg['records'],
+                    'aggregate_pbs': agg['personal_bests'],
+                    'aggregate_worsts': agg['personal_worsts'],
+                    'all_time_worsts': identify_all_time_worsts(ranked, teg_str, round_num),
+                    '9hole_records': nine['records'],
+                    '9hole_pbs': nine['personal_bests'],
+                    'streak_records': streak['records'],
+                    'best_score_counts': counts['best_score_counts'],
+                    'worst_score_counts': counts['worst_score_counts'],
+                }
+                sections.append({"title": None, "table_html": _render_records_summary(rd_dict, 'Round')})
             except Exception as e:
                 sections.append({"title": "Records & PBs", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
@@ -175,13 +276,14 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str, score_type
         elif tab == "streaks":
             try:
                 all_data = cached_load_all_data()
-                streaks_df = build_streaks(all_data)
+                streaks_df = read_file(STREAKS_PARQUET)
                 teg_str = f"TEG {teg_num}"
-                streak_result = get_player_window_streaks(all_data, streaks_df, teg=teg_str, round_num=round_num)
-                if streak_result is not None and not streak_result.empty:
-                    sections.append({"title": "Streaks", "table_html": _df_to_html(streak_result)})
-                else:
-                    sections.append({"title": "Streaks", "table_html": "<p class='text-muted text-sm'>No streak data for this round.</p>"})
+                window = get_player_window_streaks(all_data, streaks_df, teg=teg_str, round_num=round_num)
+                pivot = pivot_window_streaks(window)
+                if not pivot.empty:
+                    sections.append({"title": "Streaks", "table_html": _df_to_html(pivot)})
+                    return {"sections": sections, "caption": "Eagles / birdies / par / bogeys are all 'or better'"}
+                sections.append({"title": "Streaks", "table_html": "<p class='text-muted text-sm'>No streak data for this round.</p>"})
             except Exception as e:
                 sections.append({"title": "Streaks", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
@@ -220,8 +322,9 @@ async def latest_round_page(request: Request):
 
 @router.get("/latest-round/tab")
 async def latest_round_tab(request: Request, teg: int = Query(...), round: int = Query(...),
-                           tab: str = Query("scoreboard"), score_type: str = Query("GrossVP")):
-    ctx = _latest_round_tab_context(teg, round, tab, score_type)
+                           tab: str = Query("scoreboard"), score_type: str = Query("GrossVP"),
+                           metric: str = Query("Sc")):
+    ctx = _latest_round_tab_context(teg, round, tab, score_type, metric)
     return templates.TemplateResponse("partials/latest_round_tab.html", {
         "request": request,
         "teg": teg,
@@ -241,24 +344,23 @@ LATEST_TEG_TABS = [
 ]
 
 
-def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP") -> dict:
+def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP", metric: str = "Sc") -> dict:
     """Build template context for a latest-teg tab."""
     try:
         sections = []
 
         if tab == "aggregate":
-            ranked = cached_ranked_teg_data()
+            metric = metric if metric in dict(METRIC_TABS) else "Sc"
+            friendly = dict(METRIC_TABS)[metric]
             teg_str = f"TEG {teg_num}"
-            _, inv_mapping = get_round_metric_mappings()
-            for metric in ['Sc', 'Stableford', 'GrossVP', 'NetVP']:
-                friendly = inv_mapping.get(metric, metric)
-                try:
-                    ctx_df = prepare_teg_context_display(ranked, teg_str, metric, friendly)
-                    sections.append({"title": friendly, "table_html": _df_to_html(ctx_df)})
-                except Exception:
-                    pass
-            if not sections:
-                sections.append({"title": "Aggregate Score", "table_html": "<p class='text-muted text-sm'>No aggregate data available.</p>"})
+            try:
+                ranked = cached_ranked_teg_data()
+                ctx_df = prepare_teg_context_display(ranked, teg_str, metric, friendly)
+                table_html = _df_to_html(ctx_df)
+            except Exception:
+                table_html = "<p class='text-muted text-sm'>No aggregate data available.</p>"
+            return {"sections": [{"title": friendly, "table_html": table_html}],
+                    "metric_tabs": METRIC_TABS, "active_metric": metric}
 
         elif tab == "scoring":
             field = score_type if score_type in ("GrossVP", "Stableford") else "GrossVP"
@@ -291,27 +393,41 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP")
         elif tab == "streaks":
             try:
                 all_data = cached_load_all_data()
-                streaks_df = build_streaks(all_data)
+                streaks_df = read_file(STREAKS_PARQUET)
                 teg_str = f"TEG {teg_num}"
-                streak_result = get_player_window_streaks(all_data, streaks_df, teg=teg_str)
-                if streak_result is not None and not streak_result.empty:
-                    sections.append({"title": "Streaks", "table_html": _df_to_html(streak_result)})
-                else:
-                    sections.append({"title": "Streaks", "table_html": "<p class='text-muted text-sm'>No streak data for this TEG.</p>"})
+                teg_rounds = all_data[all_data['TEGNum'] == teg_num]['Round'].unique()
+                window = pd.DataFrame()
+                if len(teg_rounds) > 0:
+                    last_round = int(max(teg_rounds))
+                    window = get_player_window_streaks(all_data, streaks_df, teg=teg_str, round_num=last_round)
+                pivot = pivot_window_streaks(window)
+                if not pivot.empty:
+                    sections.append({"title": "Streaks", "table_html": _df_to_html(pivot)})
+                    return {"sections": sections, "caption": "Eagles / birdies / par / bogeys are all 'or better'"}
+                sections.append({"title": "Streaks", "table_html": "<p class='text-muted text-sm'>No streak data for this TEG.</p>"})
             except Exception as e:
                 sections.append({"title": "Streaks", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
         elif tab == "records":
             try:
                 ranked = cached_ranked_teg_data()
-                results = identify_aggregate_records_and_pbs(ranked, str(teg_num))
-                for key in ['records', 'personal_bests', 'personal_worsts']:
-                    items = results.get(key, [])
-                    if items:
-                        df = pd.DataFrame(items)
-                        sections.append({"title": key.replace('_', ' ').title(), "table_html": _df_to_html(df)})
-                if not sections:
-                    sections.append({"title": "Records & PBs", "table_html": "<p class='text-muted text-sm'>No records or PBs in this TEG.</p>"})
+                all_data = cached_load_all_data()
+                streaks_df = read_file(STREAKS_PARQUET)
+                teg_str = f"TEG {teg_num}"
+
+                agg = identify_aggregate_records_and_pbs(ranked, teg_str)
+                streak = identify_streak_records(all_data, streaks_df, teg_str)
+                counts = identify_score_count_records(all_data, teg_str)
+                rd_dict = {
+                    'aggregate_records': agg['records'],
+                    'aggregate_pbs': agg['personal_bests'],
+                    'aggregate_worsts': agg['personal_worsts'],
+                    'all_time_worsts': identify_all_time_worsts(ranked, teg_str),
+                    'streak_records': streak['records'],
+                    'best_score_counts': counts['best_score_counts'],
+                    'worst_score_counts': counts['worst_score_counts'],
+                }
+                sections.append({"title": None, "table_html": _render_records_summary(rd_dict, 'TEG')})
             except Exception as e:
                 sections.append({"title": "Records & PBs", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
@@ -338,8 +454,8 @@ async def latest_teg_page(request: Request):
 
 @router.get("/latest-teg/tab")
 async def latest_teg_tab(request: Request, teg: int = Query(...), tab: str = Query("aggregate"),
-                         score_type: str = Query("GrossVP")):
-    ctx = _latest_teg_tab_context(teg, tab, score_type)
+                         score_type: str = Query("GrossVP"), metric: str = Query("Sc")):
+    ctx = _latest_teg_tab_context(teg, tab, score_type, metric)
     return templates.TemplateResponse("partials/latest_teg_tab.html", {
         "request": request,
         "teg": teg,
@@ -349,59 +465,57 @@ async def latest_teg_tab(request: Request, teg: int = Query(...), tab: str = Que
 
 # --- /handicaps ---------------------------------------------------------------
 
+def _fmt_hc_change(val) -> str:
+    if pd.isna(val):
+        return "-"
+    val = int(val)
+    if val > 0:
+        return f"+{val}"
+    if val < 0:
+        return str(val)
+    return "-"
+
+
 @router.get("/handicaps")
 async def handicaps_page(request: Request):
     try:
-        hc_df = read_file(HANDICAPS_CSV)
+        last_completed, next_tegnum, in_progress = get_next_teg_and_check_if_in_progress_fast()
+        next_teg_str = f"TEG {next_tegnum}"
+        current_hc, were_calculated = get_current_handicaps_formatted(next_tegnum - 1, next_tegnum)
+        current_hc = current_hc.sort_values(by=next_teg_str, ascending=True).reset_index(drop=True)
 
         sections = []
 
-        # --- Current handicaps with change from previous TEG ---
-        last_row = hc_df.iloc[-1]
-        prev_row = hc_df.iloc[-2] if len(hc_df) > 1 else None
-
-        current_rows = []
-        for col in hc_df.columns:
-            if col == 'TEG':
-                continue
-            hc = last_row[col]
-            if hc == 0:
-                continue
-            name = PLAYER_DICT.get(col, col)
-            row_dict = {'Player': name, 'Handicap': hc}
-            if prev_row is not None and prev_row[col] != 0:
-                delta = hc - prev_row[col]
-                if delta > 0:
-                    row_dict['Change'] = f"+{delta:.0f}" if float(delta) == int(delta) else f"+{delta}"
-                elif delta < 0:
-                    row_dict['Change'] = f"{delta:.0f}" if float(delta) == int(delta) else f"{delta}"
-                else:
-                    row_dict['Change'] = "="
-            else:
-                row_dict['Change'] = "new"
-            current_rows.append(row_dict)
-
-        if current_rows:
-            current_df = pd.DataFrame(current_rows).sort_values('Handicap')
-            sections.append({"title": f"Current Handicaps ({last_row['TEG']})", "table_html": _df_to_html(current_df)})
+        # --- Current (or draft) handicaps for the next TEG ---
+        disp = current_hc.rename(columns={next_teg_str: "Handicap"}).copy()
+        disp["Change"] = disp["Change"].apply(_fmt_hc_change)
+        title = f"{next_teg_str} Handicaps" + (" (Draft)" if were_calculated else "")
+        banner = ("<p class='text-muted text-sm mb-2'>ℹ️ Draft handicaps subject to final review</p>"
+                  if were_calculated else "")
+        note = "<p class='text-muted text-sm mt-2'>Change shows difference in HC vs previous TEG</p>"
+        sections.append({"title": title, "table_html": banner + _df_to_html(disp) + note})
 
         # --- Full history table ---
+        hc_df = read_file(HANDICAPS_CSV)
+        hc_df = hc_df[hc_df['TEG'] != 'TEG 50']
         display = hc_df.copy()
         for col in display.columns:
             if col != 'TEG':
                 display[col] = display[col].apply(lambda x: '-' if x == 0 else x)
-
-        # Map initials to full names
-        rename_map = {}
-        for col in display.columns:
-            if col != 'TEG' and col in PLAYER_DICT:
-                rename_map[col] = PLAYER_DICT[col]
-        display = display.rename(columns=rename_map)
-
-        # Most recent TEG first
-        display = display.iloc[::-1].reset_index(drop=True)
-
+        rename_map = {col: PLAYER_DICT[col] for col in display.columns if col != 'TEG' and col in PLAYER_DICT}
+        display = display.rename(columns=rename_map).iloc[::-1].reset_index(drop=True)
         sections.append({"title": "Handicap History", "table_html": _df_to_html(display)})
+
+        # --- Draft handicaps for the TEG after next (only when a TEG is in progress) ---
+        if in_progress:
+            try:
+                in_progress_teg, rounds_played = get_current_in_progress_teg_fast()
+                next_next = next_tegnum + 1
+                draft = get_hc(next_next).sort_values("hc_raw", ascending=True, na_position="last").reset_index(drop=True)
+                draft_title = f"Draft handicaps for TEG {next_next} (after {rounds_played} rounds of TEG {in_progress_teg})"
+                sections.append({"title": draft_title, "table_html": _df_to_html(draft)})
+            except Exception as e:
+                sections.append({"title": "Draft handicaps", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
     except Exception as e:
         sections = [{"title": "Error", "table_html": f"<p class='text-muted'>{e}</p>"}]

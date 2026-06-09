@@ -41,7 +41,7 @@ LEADERBOARD_TABS = [
 CHART_TYPES = [
     ("standard", "Standard"),
     ("adjusted", "Adjusted scale"),
-    # TODO: implement "ranking" chart type (needs reversed y-axis + integer ticks in template)
+    ("ranking", "Ranking"),
 ]
 
 
@@ -111,6 +111,16 @@ def _build_chart_json(teg_num: int, tab: str, chart_variant: str = "standard") -
     try:
         all_data = cached_load_all_data()
         teg_name = f"TEG {teg_num}"
+
+        if chart_variant == "ranking":
+            # Tournament-ranking progression (1st, 2nd, ...) via precomputed rank columns
+            rank_series = 'Rank_GrossVP_TEG' if tab == "gross" else 'Rank_Stableford_TEG'
+            title = ('Green Jacket race (Ranking)' if tab == "gross" else 'Trophy race (Ranking)') + f': {teg_name}'
+            fig = create_cumulative_graph(
+                all_data, teg_name, y_series=rank_series, title=title,
+                y_axis_label='Tournament Ranking', chart_type='ranking',
+            )
+            return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
         if tab == "gross":
             if chart_variant == "adjusted":

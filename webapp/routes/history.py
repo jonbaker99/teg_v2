@@ -210,13 +210,13 @@ async def honours_tab(request: Request, tab_name: str):
 
 # --- /results -----------------------------------------------------------------
 
-RESULTS_CHART_TYPES = [("standard", "Standard"), ("adjusted", "Adjusted scale")]
+RESULTS_CHART_TYPES = [("standard", "Standard"), ("adjusted", "Adjusted scale"), ("ranking", "Ranking")]
 
 
 def _results_chart(teg_num: int, tab: str, chart_variant: str = "standard") -> str | None:
     """Build a cumulative race chart for net/gross results tabs. Returns JSON or None.
 
-    chart_variant: "standard" or "adjusted" (score vs net/bogey par).
+    chart_variant: "standard", "adjusted" (score vs net/bogey par) or "ranking".
     """
     try:
         import json
@@ -226,6 +226,15 @@ def _results_chart(teg_num: int, tab: str, chart_variant: str = "standard") -> s
         all_data = cached_load_all_data()
         teg_name = f"TEG {teg_num}"
         adjusted = chart_variant == "adjusted"
+
+        if chart_variant == "ranking":
+            rank_series = 'Rank_GrossVP_TEG' if tab == "gross" else 'Rank_Stableford_TEG'
+            fig = create_cumulative_graph(
+                all_data, teg_name, y_series=rank_series,
+                title=f'Ranking: {teg_name}', y_axis_label='Tournament Ranking',
+                chart_type='ranking',
+            )
+            return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
         if tab == "gross":
             fig = create_cumulative_graph(

@@ -112,6 +112,58 @@ def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None,
     return fig
 
 
+def create_round_graph(df, chosen_teg, chosen_round, y_series, title,
+                       y_calculation=None, y_axis_label=None, chart_type='default', plotly_theme=None):
+    """Cumulative chart through the holes of a single round (x = hole 1..18)."""
+    rd_data = df[(df['TEG'] == chosen_teg) & (df['Round'] == chosen_round)].sort_values(['Hole'])
+    rd_data = rd_data.copy()
+    rd_data['x_value'] = rd_data['Hole']
+    x_axis_max = 18
+
+    fig = go.Figure()
+    colors = px.colors.qualitative.Plotly[:len(rd_data['Pl'].unique())]
+    color_map = dict(zip(rd_data['Pl'].unique(), colors))
+
+    traces = []
+    for player in rd_data['Pl'].unique():
+        player_data = rd_data[rd_data['Pl'] == player]
+        y_values = y_calculation(player_data) if y_calculation else player_data[y_series]
+
+        traces.append(go.Scatter(
+            x=player_data['x_value'], y=y_values, mode='lines+markers', name=player,
+            line=dict(width=2),
+            marker=dict(symbol="circle", size=6, line=dict(width=1, color="white")),
+        ))
+
+        last_x = player_data['x_value'].iloc[-1]
+        last_y = y_values.iloc[-1]
+        fig.add_annotation(
+            x=last_x, y=last_y, text=f"{player}: {format_value(last_y, chart_type)}",
+            showarrow=False, xanchor='left', yanchor='middle', xshift=5,
+            font=dict(size=10, color=color_map[player]),
+        )
+
+    fig.add_traces(traces)
+    fig.update_layout(
+        yaxis_title=y_axis_label if y_axis_label else f'Cumulative {y_series}',
+        hovermode='x unified',
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0, traceorder='normal', itemsizing='constant'),
+        margin=dict(r=100, t=0, b=10, l=0),
+        font=dict(family="monospace"),
+    )
+    fig.update_xaxes(visible=True, showline=True, linewidth=1, linecolor="#ccc",
+                     ticks="outside", tickmode="linear", tick0=1, dtick=1,
+                     title_text="Hole", range=[0.5, 18.5])
+    if chart_type == 'ranking':
+        fig.update_yaxes(autorange='reversed')
+    for trace in fig.data:
+        fig.update_traces(selector=dict(name=trace.name), line=dict(color=color_map[trace.name]))
+    fig.layout.yaxis.fixedrange = True
+    if plotly_theme:
+        fig.update_layout(**plotly_theme)
+    return fig
+
+
 def adjusted_stableford(data):
     return data['Stableford Cum TEG'] - (2 * data['TEG Count'])
 
