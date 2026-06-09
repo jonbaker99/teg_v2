@@ -699,23 +699,107 @@ def _distributions_chart(display: pd.DataFrame) -> str | None:
         return None
 
 
-@router.get("/scoring/distributions")
-async def scoring_distributions_page(request: Request):
-    chart_json = None
+DIST_FIELDS = [("Sc", "Scores"), ("GrossVP", "Scores vs Par"), ("Stableford", "Stableford Points")]
+_DIST_DISPLAY_NAME = {"Sc": "Score", "GrossVP": "vs Par", "Stableford": "Stableford"}
+DIST_TABS = [("player", "By Player"), ("teg", "By TEG")]
+
+
+def _distributions_context(field="Stableford", player="All players", teg="All TEGs",
+                           par="All pars", mode="Percentage", tab="player") -> dict:
     try:
         all_data = cached_load_all_data()
-        counts = count_scores_by_player(all_data)
-        display = prepare_score_count_display(counts, 'GrossVP', 'Gross vs Par')
-        table_html = _df_to_html(display)
-        chart_json = _distributions_chart(display)
-    except Exception as e:
-        table_html = f"<p class='text-muted'>Error: {e}</p>"
+        if field not in ("Sc", "GrossVP", "Stableford"):
+            field = "Stableford"
+        display_name = _DIST_DISPLAY_NAME[field]
+        is_pct = mode == "Percentage"
 
+        player_options = ["All players"] + sorted(all_data["Pl"].unique().tolist())
+        teg_options = ["All TEGs"] + [str(t) for t in sorted(all_data["TEGNum"].unique().tolist(), reverse=True)]
+        par_options = ["All pars", "Par 3", "Par 4", "Par 5"]
+
+        # Apply TEG + par filters
+        filtered = all_data
+        if teg != "All TEGs":
+            filtered = filtered[filtered["TEGNum"] == int(teg)]
+        if par != "All pars":
+            filtered = filtered[filtered["PAR"] == int(par.replace("Par ", ""))]
+        player_filtered = filtered if player == "All players" else filtered[filtered["Pl"] == player]
+
+        chart_json = None
+        if tab == "player":
+            count_data = count_scores_by_player(player_filtered, field)
+            if is_pct:
+                totals = count_data.sum(axis=0).replace(0, pd.NA)
+                display_data = (count_data.div(totals, axis=1) * 100).round(1)
+            else:
+                display_data = count_data
+            table = prepare_score_count_display(display_data, field, display_name, is_pct)
+            table_html = _df_to_html(table)
+            chart_table = prepare_score_count_display(count_data, field, display_name, False)
+            chart_json = _distributions_chart(chart_table)
+        else:
+            # By TEG crosstab (respects par + player filters, not TEG)
+            teg_filtered = all_data
+            if par != "All pars":
+                teg_filtered = teg_filtered[teg_filtered["PAR"] == int(par.replace("Par ", ""))]
+            if player != "All players":
+                teg_filtered = teg_filtered[teg_filtered["Pl"] == player]
+            if is_pct:
+                crosstab = pd.crosstab(teg_filtered["TEGNum"], teg_filtered[field], normalize="index") * 100
+                crosstab = crosstab.round(1)
+            else:
+                crosstab = pd.crosstab(teg_filtered["TEGNum"], teg_filtered[field])
+            ct = crosstab.reset_index()
+            ct.columns.name = None
+            if field == "GrossVP":
+                ct = ct.rename(columns={c: (format_vs_par(c) if c != "TEGNum" else c) for c in ct.columns})
+            for col in ct.columns:
+                if col == "TEGNum":
+                    continue
+                if is_pct:
+                    ct[col] = ct[col].apply(lambda x: f"{x:.1f}%" if pd.notna(x) else "0.0%")
+                else:
+                    ct[col] = ct[col].apply(lambda x: int(x) if pd.notna(x) else 0)
+            ct = ct.rename(columns={"TEGNum": "TEG"})
+            table_html = _df_to_html(ct)
+
+        return {
+            "table_html": table_html,
+            "chart_json": chart_json,
+            "fields": DIST_FIELDS,
+            "player_options": player_options,
+            "teg_options": teg_options,
+            "par_options": par_options,
+            "tabs": DIST_TABS,
+            "selected_field": field,
+            "selected_player": player,
+            "selected_teg": teg,
+            "selected_par": par,
+            "mode": mode,
+            "active_tab": tab,
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@router.get("/scoring/distributions")
+async def scoring_distributions_page(request: Request, field="Stableford", player="All players",
+                                     teg="All TEGs", par="All pars", mode="Percentage", tab="player"):
+    ctx = _distributions_context(field, player, teg, par, mode, tab)
     return templates.TemplateResponse("scoring_distributions.html", {
         "request": request,
         "active_page": "scoring",
-        "table_html": table_html,
-        "chart_json": chart_json,
+        **ctx,
+    })
+
+
+@router.get("/scoring/distributions/content")
+async def scoring_distributions_content(request: Request, field="Stableford", player="All players",
+                                        teg="All TEGs", par="All pars", mode="Percentage", tab="player"):
+    ctx = _distributions_context(field, player, teg, par, mode, tab)
+    return templates.TemplateResponse("partials/scoring_distributions_content.html", {
+        "request": request,
+        **ctx,
     })
 
 

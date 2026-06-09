@@ -121,10 +121,10 @@ Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 - [x] +/- sign formatting on GrossVP / NetVP columns
 
 ### Scoring distributions (`/scoring/distributions`)
-- [ ] Score-type switcher (Scores / vs Par / Stableford)
-- [ ] Player / TEG / Par filters
-- [ ] Count / Percentage mode toggle
-- [ ] "By TEG" tab (crosstab)
+- [x] Score-type switcher (Scores / vs Par / Stableford)
+- [x] Player / TEG / Par filters
+- [x] Count / Percentage mode toggle
+- [x] "By TEG" tab (crosstab)
 - [ ] Ridgeline distribution chart — lower priority
 
 ### Changes vs previous round (`/scoring/changes`)
