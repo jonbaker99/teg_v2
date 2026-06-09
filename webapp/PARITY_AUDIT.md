@@ -118,7 +118,7 @@ Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 - [ ] PB Rank column (e.g. "3/15")
 
 ### Score matrix (`/scoring/matrix`)
-- [ ] +/- sign formatting on GrossVP / NetVP columns
+- [x] +/- sign formatting on GrossVP / NetVP columns
 
 ### Scoring distributions (`/scoring/distributions`)
 - [ ] Score-type switcher (Scores / vs Par / Stableford)
@@ -143,9 +143,9 @@ Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 - (note: page is marked WIP in both apps)
 
 ### Final Round Comebacks (`/scoring/comebacks`)
-- [ ] "Worst Final Round Performances by Leaders" sub-section
-- [ ] +/- / int score formatting in tables
-- [ ] Notes/caption at bottom
+- [x] "Worst Final Round Performances by Leaders" sub-section
+- [x] +/- / int score formatting in tables
+- [x] Notes/caption at bottom
 
 ## Scorecards
 

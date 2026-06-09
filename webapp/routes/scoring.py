@@ -13,6 +13,7 @@ from teg_analysis.analysis.scoring import (
     prepare_score_count_display,
     prepare_achievement_table_data,
     get_scoring_achievement_fields,
+    format_vs_par,
 )
 from teg_analysis.analysis.streaks import (
     prepare_good_streaks_data, prepare_bad_streaks_data,
@@ -539,10 +540,26 @@ def _matrix_context(level: str = "teg", score_type: str = "GrossVP") -> dict:
 
         pivot = data.pivot_table(index=idx_cols, columns=player_col, values=score_type, aggfunc='first')
 
-        # Add Average column
-        pivot['Average'] = pivot.mean(axis=1).round(1)
+        # Add Average column (numeric, before formatting)
+        avg = pivot.mean(axis=1)
 
-        pivot = pivot.round(1).reset_index()
+        is_vp = score_type in ('GrossVP', 'NetVP')
+        player_cols = list(pivot.columns)
+
+        pivot = pivot.reset_index()
+        pivot['Average'] = avg.values
+
+        if is_vp:
+            # vs-par columns get signed integers; Average signed to 1 dp
+            for c in player_cols:
+                pivot[c] = pivot[c].apply(lambda v: format_vs_par(round(v)) if pd.notna(v) else '')
+            pivot['Average'] = pivot['Average'].apply(lambda v: f"{v:+.1f}" if pd.notna(v) else '')
+        else:
+            # Score / Stableford: integer player values, 1 dp Average
+            for c in player_cols:
+                pivot[c] = pivot[c].apply(lambda v: f"{int(round(v))}" if pd.notna(v) else '')
+            pivot['Average'] = pivot['Average'].apply(lambda v: f"{v:.1f}" if pd.notna(v) else '')
+
         if 'TEGNum' in pivot.columns:
             pivot = pivot.rename(columns={'TEGNum': 'TEG'})
         table_html = _df_to_html(pivot)
@@ -681,6 +698,26 @@ async def scoring_changes_page(request: Request):
 
 # --- /scoring/comebacks -------------------------------------------------------
 
+_COMEBACK_SCORE_COLS = {
+    "Final Round Score", "Total Score", "Gap Closed", "Lead Lost",
+    "Lead", "Max Lead", "Comeback", "Differential", "Final Round Differential",
+}
+
+
+def _fmt_comebacks(df: pd.DataFrame, measure: str) -> pd.DataFrame:
+    """Format float columns: signed vs-par for gross score columns, ints elsewhere."""
+    if df is None or df.empty:
+        return df
+    out = df.copy()
+    for c in out.columns:
+        if out[c].dtype.kind == "f":
+            if measure == "GrossVP" and c in _COMEBACK_SCORE_COLS:
+                out[c] = out[c].apply(lambda v: format_vs_par(int(round(v))) if pd.notna(v) else "")
+            else:
+                out[c] = out[c].apply(lambda v: str(int(round(v))) if pd.notna(v) else "")
+    return out
+
+
 def _comebacks_context(competition: str = "gross", n: int = 5) -> dict:
     """Build sections for the comebacks page."""
     try:
@@ -688,39 +725,54 @@ def _comebacks_context(competition: str = "gross", n: int = 5) -> dict:
         round_info = read_file(ROUND_INFO_CSV)
         measure = "GrossVP" if competition == "gross" else "Stableford"
 
+        def fmt(df):
+            return _fmt_comebacks(df, measure)
+
         sections = []
 
         # 1. Best & Worst Final Rounds
         differentials = calculate_final_round_differentials(all_data, round_info, measure)
         if differentials is not None and not differentials.empty:
-            sections.append({"title": "Best Final Round Performances", "table_html": _df_to_html(differentials.head(n))})
+            sections.append({"title": "Best Final Round Performances", "table_html": _df_to_html(fmt(differentials.head(n)))})
             worst = differentials.tail(n).iloc[::-1]
-            sections.append({"title": "Worst Final Round Performances", "table_html": _df_to_html(worst)})
+            sections.append({"title": "Worst Final Round Performances", "table_html": _df_to_html(fmt(worst))})
+
+            # Worst performances by leaders going into the final round (Rank After R3 == 1)
+            leaders = differentials[differentials["Rank After R3"] == 1.0].copy()
+            if not leaders.empty:
+                leaders = leaders.sort_values("Final Round Score", ascending=(measure != "GrossVP"))
+                sections.append({
+                    "title": "Worst Final Round Performances by Leaders",
+                    "caption": "Leaders going into the final round (Rank After R3 = 1)",
+                    "table_html": _df_to_html(fmt(leaders.head(n))),
+                })
         else:
             sections.append({"title": "Best & Worst Final Rounds", "table_html": "<p class='text-muted text-sm'>No data available.</p>"})
 
         # 2. Biggest Leads Lost After R3
         leads_r3 = calculate_biggest_leads_lost_after_r3(all_data, round_info, measure)
         if leads_r3 is not None and not leads_r3.empty:
-            sections.append({"title": "Biggest Leads Lost Going Into Final Round", "table_html": _df_to_html(leads_r3.head(n))})
+            sections.append({"title": "Biggest Leads Lost Going Into Final Round", "table_html": _df_to_html(fmt(leads_r3.head(n)))})
         else:
             sections.append({"title": "Biggest Leads Lost Going Into Final Round", "table_html": "<p class='text-muted text-sm'>No data available.</p>"})
 
         # 3. Biggest Leads Lost During R4
         leads_r4 = calculate_biggest_leads_lost_in_r4(all_data, round_info, measure)
         if leads_r4 is not None and not leads_r4.empty:
-            sections.append({"title": "Biggest Leads Lost During Final Round", "table_html": _df_to_html(leads_r4.head(n))})
+            sections.append({"title": "Biggest Leads Lost During Final Round", "table_html": _df_to_html(fmt(leads_r4.head(n)))})
         else:
             sections.append({"title": "Biggest Leads Lost During Final Round", "table_html": "<p class='text-muted text-sm'>No data available.</p>"})
 
         # 4. Biggest Comebacks
         comebacks = calculate_biggest_comebacks(all_data, round_info, measure)
         if comebacks is not None and not comebacks.empty:
-            sections.append({"title": "Biggest Comebacks in Final Round", "table_html": _df_to_html(comebacks.head(n))})
+            sections.append({"title": "Biggest Comebacks in Final Round", "table_html": _df_to_html(fmt(comebacks.head(n)))})
         else:
             sections.append({"title": "Biggest Comebacks in Final Round", "table_html": "<p class='text-muted text-sm'>No data available.</p>"})
 
-        return {"sections": sections}
+        caption = ("Analysis covers completed TEGs from TEG 2 onwards. "
+                   "'Gap Closed' measures ground made up on the leader during the final round.")
+        return {"sections": sections, "caption": caption}
     except Exception as e:
         return {"error": str(e)}
 
