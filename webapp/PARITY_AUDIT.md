@@ -97,8 +97,8 @@ Status key: `[x]` done · `[ ]` outstanding · `[~]` partial/in progress
 - [x] BUG: "Max per TEG" tab uses `score_type_stats` instead of `max_scoretype_per_teg`
 
 ### Streaks (`/scoring/streaks`)
-- [ ] "Streak detail" tab (TEG/Round/Player filters + hole-level window streaks)
-- [ ] Record streaks asterisk footnotes
+- [x] "Streak detail" tab (TEG/Round/Player filters + hole-level window streaks)
+- [x] Record streaks asterisk footnotes
 
 ### Average by par (`/scoring/by-par`)
 - [x] (no functional gap)

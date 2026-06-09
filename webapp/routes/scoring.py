@@ -19,6 +19,7 @@ from teg_analysis.analysis.streaks import (
     prepare_good_streaks_data, prepare_bad_streaks_data,
     prepare_current_good_streaks_data, prepare_current_bad_streaks_data,
     prepare_record_best_streaks_data, prepare_record_worst_streaks_data,
+    calculate_window_streaks,
 )
 from teg_analysis.analysis.aggregation import (
     aggregate_data,
@@ -29,7 +30,7 @@ from teg_analysis.analysis.aggregation import (
     calculate_biggest_comebacks,
 )
 from teg_analysis.io.file_operations import read_file
-from teg_analysis.constants import ROUND_INFO_CSV
+from teg_analysis.constants import ROUND_INFO_CSV, STREAKS_PARQUET
 from teg_analysis.display.tables import score_type_stats, max_scoretype_per_round, max_scoretype_per_teg
 from webapp.deps import (
     cached_load_all_data,
@@ -146,14 +147,61 @@ async def scoring_birdies_tab(request: Request, tab: str = Query("career"), scor
 STREAK_TABS = [
     ("player", "Streaks by Player"),
     ("records", "Record Streaks"),
+    ("detail", "Streak detail"),
 ]
 
 
-def _streak_tab_context(tab: str, direction: str = "good", mode: str = "max") -> dict:
+def _streak_detail_context(d_teg: str = "All", d_round: str = "All", d_player: str = "All") -> dict:
+    """Build the 'Streak detail' tab: filtered window-streak analysis."""
+    all_data = cached_load_all_data()
+    streaks_df = read_file(STREAKS_PARQUET)
+    df = streaks_df.merge(
+        all_data[['HoleID', 'TEG', 'TEGNum', 'Round', 'Pl', 'Player']],
+        on=['HoleID', 'Pl'],
+    ).sort_values(['Pl', 'TEGNum', 'Round', 'Career Count'])
+
+    teg_options = ['All'] + sorted(df['TEG'].unique(), key=lambda x: int(str(x).split()[1]))
+    round_options = ['All'] + sorted(df['Round'].unique().tolist())
+    player_options = ['All'] + sorted(df['Pl'].unique().tolist())
+
+    filtered = df.copy()
+    if d_teg != 'All':
+        filtered = filtered[filtered['TEG'] == d_teg]
+    if d_round != 'All':
+        filtered = filtered[filtered['Round'] == int(d_round)]
+    if d_player != 'All':
+        filtered = filtered[filtered['Pl'] == d_player]
+
+    if filtered.empty:
+        table_html = "<p class='text-muted text-sm'>No data matches the selected filters.</p>"
+    else:
+        results = calculate_window_streaks(filtered)
+        table_html = _df_to_html(results) if results is not None and not results.empty \
+            else "<p class='text-muted text-sm'>No streak data available for the selected filters.</p>"
+
+    return {
+        "detail": True,
+        "table_html": table_html,
+        "teg_options": teg_options,
+        "round_options": round_options,
+        "player_options": player_options,
+        "d_teg": d_teg,
+        "d_round": d_round,
+        "d_player": d_player,
+        "hole_count": int(len(filtered)),
+    }
+
+
+def _streak_tab_context(tab: str, direction: str = "good", mode: str = "max",
+                        d_teg: str = "All", d_round: str = "All", d_player: str = "All") -> dict:
     """Build sections list for a given streaks tab."""
     try:
+        if tab == "detail":
+            return _streak_detail_context(d_teg, d_round, d_player)
+
         all_data = cached_load_all_data()
         sections = []
+        caption = None
 
         if tab == "player":
             if mode == "max" and direction == "good":
@@ -175,8 +223,9 @@ def _streak_tab_context(tab: str, direction: str = "good", mode: str = "max") ->
             worst = prepare_record_worst_streaks_data(all_data)
             sections.append({"title": "Record Best Streaks", "table_html": _df_to_html(best)})
             sections.append({"title": "Record Worst Streaks", "table_html": _df_to_html(worst)})
+            caption = "*: current streak is record streak"
 
-        return {"sections": sections}
+        return {"sections": sections, "caption": caption}
     except Exception as e:
         return {"error": str(e)}
 
@@ -204,8 +253,11 @@ async def scoring_streaks_tab(
     tab: str = Query("player"),
     direction: str = Query("good"),
     mode: str = Query("max"),
+    d_teg: str = Query("All"),
+    d_round: str = Query("All"),
+    d_player: str = Query("All"),
 ):
-    ctx = _streak_tab_context(tab, direction, mode)
+    ctx = _streak_tab_context(tab, direction, mode, d_teg, d_round, d_player)
     return templates.TemplateResponse("partials/scoring_streaks_tab.html", {
         "request": request,
         "tab": tab,
