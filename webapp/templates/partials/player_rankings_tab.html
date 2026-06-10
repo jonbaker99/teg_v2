@@ -4,7 +4,7 @@
   {% for section in sections %}
     {% if section.title %}<h2 class="section-title">{{ section.title }}</h2>{% endif %}
     {% if section.caption %}<p class="text-muted text-sm">{{ section.caption }}</p>{% endif %}
-    {{ section.table_html | safe }}
+    <div class="data-card"><div style="overflow-x: auto;">{{ section.table_html | safe }}</div></div>
   {% endfor %}
 {% else %}
 <p class="text-muted text-sm">No data available.</p>

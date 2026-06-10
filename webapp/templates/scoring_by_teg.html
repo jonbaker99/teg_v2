@@ -11,7 +11,9 @@
 <p class="page-subtitle">Gross vs par by TEG and player</p>
 
 {% if chart_json %}
-<div id="by-teg-chart" style="width:100%; height:350px; margin-bottom:1.5rem;"></div>
+<div class="data-card data-card--padded" style="margin-bottom:1.5rem;">
+    <div id="by-teg-chart" class="chart-container" style="height:350px;"></div>
+</div>
 <script>
 (function() {
     var data = {{ chart_json | safe }};
@@ -20,5 +22,5 @@
 </script>
 {% endif %}
 
-{{ table_html | safe }}
+<div class="data-card"><div style="overflow-x: auto;">{{ table_html | safe }}</div></div>
 {% endblock %}

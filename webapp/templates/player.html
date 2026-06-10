@@ -49,7 +49,7 @@
 <hr class="divider--dotted mb-6">
 
 <!-- Tab buttons -->
-<div class="flex flex-wrap gap-2 mb-4">
+<div class="section-nav flex flex-wrap gap-2 mb-4">
     {% for tab_id, tab_label in tabs %}
     <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
             hx-get="/player/{{ player_code }}/tab/{{ tab_id }}"
@@ -67,7 +67,7 @@
     </span>
 </div>
 
-<div id="tab-content">
+<div id="tab-content" class="section-panel">
     {% include "partials/player_overview.html" %}
 </div>
 {% endblock %}

@@ -2,7 +2,7 @@
 <p class="text-muted">Error: {{ error }}</p>
 {% else %}
 {% set inc = "#di-field, #di-player, #di-teg, #di-par, #di-mode, #di-tab" %}
-<div class="flex flex-wrap items-end gap-4 mb-4">
+<div class="section-controls flex flex-wrap items-end gap-4 mb-4">
     <label class="flex flex-col text-sm gap-1"><span class="text-muted">Score type</span>
         <select class="theme-select" id="di-field" name="field"
                 hx-get="/scoring/distributions/content" hx-target="#distributions" hx-include="{{ inc }}" hx-swap="innerHTML">
@@ -37,9 +37,9 @@
 </div>
 
 <input type="hidden" id="di-tab" name="tab" value="{{ active_tab }}">
-<div class="tab-bar">
+<div class="section-nav">
     {% for tab_id, tab_label in tabs %}
-    <button class="tab-underline {% if tab_id == active_tab %}active{% endif %}"
+    <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
             hx-get="/scoring/distributions/content" hx-target="#distributions" hx-swap="innerHTML"
             hx-include="#di-field, #di-player, #di-teg, #di-par, #di-mode"
             hx-vals='{"tab": "{{ tab_id }}"}'>
@@ -49,7 +49,9 @@
 </div>
 
 {% if chart_json %}
-<div id="dist-chart" style="width:100%; height:350px; margin-bottom:1.5rem;"></div>
+<div class="data-card data-card--padded" style="margin-bottom:1.5rem;">
+    <div id="dist-chart" class="chart-container" style="height:350px;"></div>
+</div>
 <script>
 (function() {
     var data = {{ chart_json | safe }};
@@ -58,5 +60,5 @@
 </script>
 {% endif %}
 
-{{ table_html | safe }}
+<div class="data-card"><div style="overflow-x: auto;">{{ table_html | safe }}</div></div>
 {% endif %}

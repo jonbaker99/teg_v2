@@ -1,14 +1,14 @@
 <div>
     <h2 class="text-xl heading mb-3">TEG Results</h2>
-    <div class="overflow-x-auto">
+    <div class="data-card"><div class="overflow-x-auto">
         {{ teg_table_html | safe }}
-    </div>
+    </div></div>
 
     {% if chart_json %}
     <hr class="divider--dotted my-6">
     <h2 class="text-xl heading mb-3">Career Trend — Gross vs Par</h2>
     <div class="card">
-        <div id="player-overview-chart" style="width:100%; height:400px;"></div>
+        <div id="player-overview-chart" class="chart-container" style="height:400px;"></div>
         <script>
             (function() {
                 var figData = {{ chart_json | safe }};

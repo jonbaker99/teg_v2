@@ -113,8 +113,70 @@ async def leaderboard(request: Request, data=Depends(get_data)):
 - **`records-table`** — variant for records pages
 - **`data-card`** — white card for data output (Clean Layered theme); no-op in other themes
 - **`stat-card`** — headline statistics
-- **`tab-btn`** / **`tab-btn-active`** — tab navigation
+- **`tab-underline`** / **`tab-underline--active`** — in-page tab & toggle buttons (underline style; `--active` is the single canonical active class)
 - **`badge`** — small inline labels
+
+### Structural class hierarchy
+
+Every page is wrapped in a consistent **Page → Section/Tab → Data-display**
+hierarchy so visual formatting can be applied once per level. The structural
+wrapper classes are **no-op / layout-neutral by default** (defined in
+`base-vars.css`, mirroring `.data-card`) — they exist as forward-compatible
+hooks and add **alongside** the Tailwind utilities that do the actual layout,
+so adding them changes nothing visually.
+
+| Level | Class | Wraps |
+|---|---|---|
+| **Page** | `.page-container` → `.page-title-outer` / `.page-panel` → `.content-wrapper` → `.main-content` | The shell in `base.html` (already consistent — don't hand-edit) |
+| **Section** | `.section-nav` | The in-page primary tab bar (a row of `.tab-underline` buttons) |
+| | `.section-controls` | Selector / filter rows (dropdowns, number inputs) |
+| | `.toggle-group` | Sub-toggle rows inside a panel (score-type, metric, chart-variant, direction/mode) |
+| | `.section-panel` | Every HTMX swap-target / content container (the `id="…"` div that `hx-target` points at) |
+| **Data display** | `.card-header` | The single canonical section label (driven by the `ch-X` body class) |
+| | `.data-card` | Every table/chart wrapper — **all** tables and charts sit in one |
+| | `.chart-container` | Plotly target `<div>`s — carries `width:100%`; per-chart `height` stays inline |
+
+**Navigation:** site nav uses `.nav*` (`.nav-link.active` for the active site
+section — unchanged); in-page tabs are `.section-nav > .tab-underline` with the
+single active class `.tab-underline--active`; sub-toggles are
+`.toggle-group > .tab-underline`; inline data links use `.text-link`.
+
+**Rules when adding a page/partial:**
+- Primary in-page tab bar → `.section-nav`; selector rows → `.section-controls`;
+  secondary toggles → `.toggle-group`; the HTMX swap target → `.section-panel`.
+- Active tab/toggle state → `.tab-underline--active` (never bare `.active`; a
+  `.tab-underline.active` CSS alias exists only as a safety net). If JS toggles
+  the active state, it must add/remove `.tab-underline--active` too.
+- Wrap every table and chart in `.data-card`; give Plotly divs `.chart-container`
+  and keep only `height` inline.
+
+**Known residuals (cosmetic, deferred):** a few chart wrappers still use the
+older `.card` component instead of `.data-card` (`partials/chart_container.html`,
+`partials/player_overview.html`, `partials/player_scoring.html`) — converting
+them is a visible change in the Clean theme, so it's out of scope for this
+structure-only pass. Dev/demo templates (`smoke_test`, `width_test`,
+`title_preview`, `showcase`, `placeholder`) are not part of the page hierarchy
+and are intentionally left unwrapped.
+
+#### Debug overlay (verifying class coverage)
+
+A dev-only overlay colour-codes every structural wrapper so you can flick
+through pages and confirm each element is classed at the right level. It is
+**off by default and completely inert** — all rules live in
+`static/themes/debug-structure.css`, scoped under `body.debug-structure`.
+
+- **Toggle:** `Ctrl/Cmd + Shift + D` (state persists across pages via
+  `localStorage`), or run `toggleStructureDebug()` in the browser console.
+- **What you see:** concentric outlines via `outline-offset`, each level
+  further out than the box it contains, with a class-name label top-left —
+  black `PAGE .main-content` → blue `.section-nav` / orange `.section-controls`
+  / green `.section-panel` → purple `.toggle-group` → red `.data-card` → cyan
+  `.chart-container`; amber `.card-header`, pink `.text-link`, and an inset bar
+  on `.tab-underline--active`.
+- **Reading gaps:** a table/chart with no red box, or a tab bar with no blue
+  box, is unclassed. (Expected non-gaps: the three charts still on `.card`
+  show cyan but no red; `.card-header` only renders under a `ch1/2/3` card-header
+  style.)
 
 ## Design principles
 

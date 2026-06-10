@@ -10,9 +10,9 @@
 {% block content %}
 
 <!-- Tab bar -->
-<div class="tab-bar">
+<div class="section-nav">
     {% for tab_id, tab_label in tabs %}
-    <button class="tab-underline {% if tab_id == active_tab %}active{% endif %}"
+    <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
             hx-get="/honours/tab/{{ tab_id }}"
             hx-target="#honours-content"
             hx-swap="innerHTML">
@@ -21,7 +21,7 @@
     {% endfor %}
 </div>
 
-<div id="honours-content">
+<div id="honours-content" class="section-panel">
     {% include "partials/honours_tab.html" %}
 </div>
 {% endblock %}

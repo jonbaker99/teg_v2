@@ -9,7 +9,7 @@
 
 {% block content %}
 
-<div class="flex flex-wrap items-center gap-4 mb-4">
+<div class="section-controls flex flex-wrap items-center gap-4 mb-4">
     <select id="eclectic-player" class="theme-select" name="player"
             hx-get="/eclectic/tab"
             hx-target="#eclectic-content"
@@ -44,9 +44,9 @@
     </select>
 </div>
 
-<div class="tab-bar">
+<div class="section-nav">
     {% for tab_id, tab_label in tabs %}
-    <button class="tab-underline {% if tab_id == active_tab %}active{% endif %}"
+    <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
             hx-get="/eclectic/tab?dimension={{ tab_id }}"
             hx-target="#eclectic-content"
             hx-include="#eclectic-player, #eclectic-teg, #eclectic-course"
@@ -59,7 +59,7 @@
 
 <input type="hidden" id="eclectic-dimension" name="dimension" value="{{ active_tab }}">
 
-<div id="eclectic-content">
+<div id="eclectic-content" class="section-panel">
     {% include "partials/eclectic_tab.html" %}
 </div>
 {% endblock %}

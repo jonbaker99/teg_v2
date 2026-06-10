@@ -46,6 +46,17 @@ The `.data-card` class is a **no-op in Layout 1**. Templates that wrap data outp
 
 Only use `!important` when the logic genuinely requires it — not to brute-force a style outcome. The reasoning must be clear, and each use must be commented so it's traceable when debugging. Current known exceptions are noted in the relevant CSS files.
 
+## Structural class hierarchy
+
+`.data-card` is the **data-display level** of a wider, consistent
+**Page → Section/Tab → Data-display** wrapper hierarchy applied across every
+template (`.section-nav`, `.section-controls`, `.toggle-group`,
+`.section-panel`, `.data-card`, `.chart-container`, plus `.tab-underline--active`
+for in-page tabs and `.text-link` for inline links). Like `.data-card`, all of
+these are **no-op / layout-neutral by default** and exist so formatting can be
+applied once per level. The canonical table and per-class rules live in
+[README.md → Structural class hierarchy](README.md#structural-class-hierarchy).
+
 ## Data-card pattern (Clean Layered)
 
 The Clean Layered theme uses three visual layers:

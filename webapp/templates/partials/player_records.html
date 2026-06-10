@@ -5,9 +5,9 @@
     {% endif %}
     <div>
         <h2 class="text-xl heading mb-3">{{ section.title }}</h2>
-        <div class="overflow-x-auto">
+        <div class="data-card"><div class="overflow-x-auto">
             {{ section.table_html | safe }}
-        </div>
+        </div></div>
     </div>
     {% endfor %}
     {% if not sections %}

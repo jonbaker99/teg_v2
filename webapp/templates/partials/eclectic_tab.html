@@ -4,5 +4,5 @@
 {% if total_rounds is defined and total_rounds is not none %}
 <p class="text-muted text-sm mb-2">Based on {{ total_rounds }} rounds from your selections</p>
 {% endif %}
-{{ table_html | safe }}
+<div class="data-card"><div style="overflow-x: auto;">{{ table_html | safe }}</div></div>
 {% endif %}

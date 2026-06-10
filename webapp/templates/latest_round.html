@@ -15,7 +15,7 @@
 
 {% if context_header %}<p class="text-muted text-sm mb-3">{{ context_header }}</p>{% endif %}
 
-<div class="flex items-center gap-4 mb-4">
+<div class="section-controls flex items-center gap-4 mb-4">
     <select id="lr-teg-select" class="theme-select"
             hx-get="/latest-round/tab"
             hx-target="#lr-content"
@@ -39,9 +39,9 @@
     <input type="hidden" id="lr-tab-input" name="tab" value="{{ active_tab }}">
 </div>
 
-<div class="tab-bar">
+<div class="section-nav">
     {% for tab_id, tab_label in tabs %}
-    <button class="tab-underline {% if tab_id == active_tab %}active{% endif %}"
+    <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
             onclick="document.getElementById('lr-tab-input').value='{{ tab_id }}';
                      htmx.trigger(document.getElementById('lr-teg-select'), 'change')">
         {{ tab_label }}
@@ -49,7 +49,7 @@
     {% endfor %}
 </div>
 
-<div id="lr-content">
+<div id="lr-content" class="section-panel">
     {% include "partials/latest_round_tab.html" %}
 </div>
 {% endblock %}

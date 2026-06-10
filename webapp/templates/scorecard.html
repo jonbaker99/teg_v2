@@ -15,7 +15,7 @@
 {% block content %}
 <div class="scorecard-wrapper">
     {% set inc = "#sc-type, #sc-teg, #sc-round, #sc-player" %}
-    <div class="flex flex-wrap items-end gap-4 mb-6">
+    <div class="section-controls flex flex-wrap items-end gap-4 mb-6">
         <label class="flex flex-col text-sm gap-1"><span class="text-secondary font-medium">View</span>
             <select id="sc-type" name="type" class="teg-select"
                     hx-get="/scorecard/content" hx-target="#scorecard-content" hx-include="{{ inc }}" hx-indicator="#loading">
@@ -48,7 +48,7 @@
         </span>
     </div>
 
-    <div id="scorecard-content">
+    <div id="scorecard-content" class="section-panel">
         {% include "partials/scorecard_content.html" %}
     </div>
 </div>

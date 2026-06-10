@@ -22,7 +22,7 @@
 {% else %}
 
 {# ---- Selectors ---- #}
-<form method="get" action="/teg-reports" class="flex flex-wrap items-center gap-4 mb-4">
+<form method="get" action="/teg-reports" class="section-controls flex flex-wrap items-center gap-4 mb-4">
 
     {# Report type #}
     <select name="report_type" class="theme-select" onchange="this.form.submit()">
@@ -53,7 +53,7 @@
 
     {# Normal / Satire toggle — only for tournament reports #}
     {% if report_type == 'tournament' %}
-    <div class="flex items-center gap-2">
+    <div class="toggle-group flex items-center gap-2">
         <label class="flex items-center gap-1 cursor-pointer">
             <input type="radio" name="variant" value="normal"
                    {% if variant == 'normal' %}checked{% endif %}

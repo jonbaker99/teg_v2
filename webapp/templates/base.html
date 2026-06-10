@@ -9,6 +9,8 @@
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
     <link rel="stylesheet" href="/static/themes/base-vars.css?v=5">
     <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=5">
+    <!-- Structural hierarchy debug overlay (dev tool; inert unless body.debug-structure) -->
+    <link rel="stylesheet" href="/static/themes/debug-structure.css?v=3">
     {% block extra_head %}{% endblock %}
     <style>
         /* Dropdown nav */
@@ -170,6 +172,24 @@
                 nav.style.top = -offset + 'px';
             }
         }, { passive: true });
+    })();
+    // Structural hierarchy debug overlay — toggle with Ctrl/Cmd+Shift+D,
+    // or call toggleStructureDebug() from the console. State persists in localStorage.
+    (function() {
+        if (localStorage.getItem('debugStructure') === '1') {
+            document.body.classList.add('debug-structure');
+        }
+        window.toggleStructureDebug = function() {
+            var on = document.body.classList.toggle('debug-structure');
+            localStorage.setItem('debugStructure', on ? '1' : '0');
+            return on;
+        };
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'D' || e.key === 'd')) {
+                e.preventDefault();
+                window.toggleStructureDebug();
+            }
+        });
     })();
     // Mobile dropdown toggle
     document.querySelectorAll('.nav-dropdown-btn').forEach(function(btn) {
