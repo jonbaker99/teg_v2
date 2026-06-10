@@ -26,8 +26,9 @@
     --table-header-bg: transparent;
     --table-header-border: #1a1a1a;
     --table-cell-border: #e0e0e0;
-    --table-hover-bg: #f5f5f5;
-    --table-hover-text: inherit;
+    /* Match the Streamlit datawrapper hover: green tint + forestgreen text */
+    --table-hover-bg: #F3F7F3;
+    --table-hover-text: forestgreen;
     --table-toprank-bg: #F3F7F3;
     --table-toprank-text: inherit;
 

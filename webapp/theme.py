@@ -7,7 +7,8 @@ THEMES = [
 ]
 
 THEME_IDS = {t[0] for t in THEMES}
-DEFAULT_THEME = "clean-page"
+# Default to the flat-white "clean" theme — matches the Streamlit site (Phase 1a).
+DEFAULT_THEME = "clean"
 
 
 def get_theme(request) -> str:
@@ -49,7 +50,8 @@ CARD_HEADER_STYLES = [
     ("ch3", "Card hdr: CH3 — Serif above"),
 ]
 CARD_HEADER_IDS = {s[0] for s in CARD_HEADER_STYLES}
-DEFAULT_CARD_HEADER = "ch1"
+# Serif section headers (ch3) read like the Streamlit site's Lora headings (Phase 1a).
+DEFAULT_CARD_HEADER = "ch3"
 
 
 def get_card_header_style(request) -> str:

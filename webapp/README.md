@@ -14,7 +14,15 @@ Visit `http://localhost:8000` in your browser. Use the theme switcher in the nav
 ### Local environment
 
 - Runtime deps (`fastapi`, `uvicorn`, `jinja2`, `starlette`, `httpx`, `markdown`) must all be in the **same** env that launches uvicorn. The project's `venv/` historically held the reporting/analysis deps (pandas, anthropic, markdown) but not the webapp deps; `venv/bin/pip install -r requirements.txt` brings everything into one env.
-- **Known gotcha on Python 3.14:** jinja2 3.1.x + starlette emit `TypeError: cannot use 'tuple' as a dict key (unhashable type: 'dict')` on **every** template render (the template cache key isn't hashable in 3.14). Use Python 3.12 or 3.13 for local dev until starlette/jinja2 ship a fix. Symptom: every templated route 500s with that exact message.
+- **Known gotcha — pin starlette `<0.38`:** the routes use the older
+  `TemplateResponse(name, context)` positional form. Starlette **≥0.41 removed**
+  it, so with a newer starlette **every** templated route 500s with
+  `TypeError: unhashable type: 'dict'` (the context dict gets read as the
+  template name). `requirements.txt` pins `starlette>=0.37,<0.38` +
+  `fastapi>=0.110,<0.112` to avoid this. Proper fix (future): migrate all
+  `TemplateResponse` calls to the modern `TemplateResponse(request, name, context)`
+  signature, then drop the pins. (A related variant of this error also appears on
+  Python 3.14 with jinja2 3.1.x — use Python 3.12/3.13 there.)
 
 ## Architecture
 
@@ -59,13 +67,19 @@ All data comes from `teg_analysis/`. The webapp never calculates anything — it
 
 ## Theme system
 
-Three themes, registered in `theme.py`. Each overrides CSS custom properties defined in `base-vars.css`. Default: **Clean Page**.
+Three themes, registered in `theme.py`. Each overrides CSS custom properties defined in `base-vars.css`. Default: **Clean** (flat white, matching the Streamlit site — Phase 1a).
 
 | Theme | Description |
 |---|---|
-| **Clean Page** (default) | Flat single-surface design |
+| **Clean** (default) | Minimal flat white, editorial feel — mirrors the Streamlit app |
+| **Clean Page** | Flat single white content card on a warm grey background |
 | **Clean Layered** | 3-layer hierarchy: stone background → taupe panel → white data cards |
-| **Clean** | Minimal white, editorial feel |
+
+The page-title (`ts-*`) and card-header (`ch-*`) **style switchers were removed
+from the nav** for Phase 1a (the nav now carries only the theme switcher). The
+cookie/CSS infrastructure stays live (`theme.py` defaults + `base-vars.css`), so
+the experiments can be re-enabled for the Phase 2 design review. Current locked
+defaults: title style `a` (mono label + serif title), card header `ch3` (serif).
 
 **How it works:**
 1. User clicks theme in nav dropdown
@@ -243,12 +257,62 @@ Best-Worstball / Eclectic Scores / Eclectic Records.
 
 `/` now lands on **Contents** (the site map), matching Streamlit.
 
-**Formatting pass in progress:**
-- Table styling consistency
-- Number formatting (vs-par notation, decimal places, alignment)
-- Column widths and cell padding
-- Layout refinement for multi-content pages
-- Card header styling (4 options: grey bar, mono label, serif label, hidden)
+### Look-and-feel roadmap
+
+Look-and-feel work is sequenced in two phases. The guiding aesthetic target
+(editorial / printed-programme) is in [design_principles.md](design_principles.md);
+this roadmap is the **plan to get there**.
+
+**Phase 1 — make the webapp production-ready (replace Streamlit on Railway).**
+The bar is the existing Streamlit app: lo-fi but clear to read, consistently
+laid out, nothing jarring. The endpoint of Phase 1 is "the webapp can take over
+as the live site."
+
+- **1a — Match the Streamlit app in the Clean theme.** Make the `clean` theme
+  look like the Streamlit site: consistent layout from the menu bar through to
+  individual pages, no wonkiness. Fix anything obviously broken in the UI as we
+  go. *Grounding fact:* the palette/typography already match Streamlit — both
+  use Lora (headings + body) + Roboto Mono (data) + forestgreen accent, and the
+  same top-rank tint `#F3F7F3` (see `.streamlit/config.toml`). So 1a is mostly
+  **layout and spacing consistency**, not recolouring. The structural hooks
+  added in PRs #8/#9 (`.section-nav`, `.section-controls`, `.toggle-group`,
+  `.section-panel`, `.data-card`, `.chart-container`) are the levers — they are
+  still empty no-ops; spacing currently lives in ad-hoc per-template Tailwind
+  utilities, which is the main source of inconsistency.
+
+  *Decisions for 1a:*
+  - **Match the feel, not the layout.** Reproduce Streamlit's cleanliness,
+    consistency and readability — keep the webapp's own top-nav-dropdown
+    paradigm and structure (no sidebar). Live reference for comparison:
+    [theelgolfo.com](https://theelgolfo.com).
+  - **Shell first, then systematic audit.** Fix the shared shell (nav bar,
+    page-title band, table + section-spacing defaults via the structural hooks)
+    where the wins are obvious; then run the app, screenshot every page, and
+    work through a per-page wonkiness inventory.
+  - **One clean default, kept themable.** Settle on a single Streamlit-style
+    page-title and card-header treatment for Clean, driven entirely by
+    CSS/theme variables (not per-template) so it stays swappable. The `ts-*` /
+    `ch-*` switcher experiments are not removed — they're deferred to the
+    Phase 2 review.
+- **1b — Consistent, clean charts (and tables if needed).** Set the right
+  app-wide defaults so charts look clean, uncluttered, and professional — as if
+  *printed on the page*, but retaining mouseover where it adds value. Driven from
+  `chart_utils.py` / `get_plotly_theme`.
+
+**Phase 2 — better UI (beyond parity).** Only after Phase 1 lands.
+
+- **2a — Improve the Clean / default theme** using design best practice.
+- **2b — A new, more layered / interesting theme**, built from current best
+  practice rather than the existing experiments.
+
+For Phase 2, the existing theme-chooser experiments (page-title `ts-*` variants,
+card-header `ch-*` variants, archived themes in `static/themes/archive/`) are a
+**starting point, not a destination** — we draw inspiration from general best
+practice, current trends, and real-world sites / dashboards / data-viz as we go,
+rather than defaulting to what's already there.
+
+**Working invariant:** primary target is the **Clean** theme; after any change,
+verify Clean Layered still works (both layouts — see design_principles.md).
 
 ### Webapp ↔ Streamlit feature-parity audit
 
