@@ -1,12 +1,12 @@
 <div>
-    <h2 class="text-xl heading mb-3">TEG Results</h2>
+    <h2 class="section-title">TEG Results</h2>
     <div class="data-card"><div class="overflow-x-auto">
         {{ teg_table_html | safe }}
     </div></div>
 
     {% if chart_json %}
     <hr class="divider--dotted my-6">
-    <h2 class="text-xl heading mb-3">Career Trend — Gross vs Par</h2>
+    <h2 class="section-title">Career Trend — Gross vs Par</h2>
     <div class="data-card data-card--padded">
         <div id="player-overview-chart" class="chart-container" style="height:400px;"></div>
         <script>
