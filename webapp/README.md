@@ -243,12 +243,61 @@ Best-Worstball / Eclectic Scores / Eclectic Records.
 
 `/` now lands on **Contents** (the site map), matching Streamlit.
 
-**Formatting pass in progress:**
-- Table styling consistency
-- Number formatting (vs-par notation, decimal places, alignment)
-- Column widths and cell padding
-- Layout refinement for multi-content pages
-- Card header styling (4 options: grey bar, mono label, serif label, hidden)
+### Look-and-feel roadmap
+
+Look-and-feel work is sequenced in two phases. The guiding aesthetic target
+(editorial / printed-programme) is in [design_principles.md](design_principles.md);
+this roadmap is the **plan to get there**.
+
+**Phase 1 — make the webapp production-ready (replace Streamlit on Railway).**
+The bar is the existing Streamlit app: lo-fi but clear to read, consistently
+laid out, nothing jarring. The endpoint of Phase 1 is "the webapp can take over
+as the live site."
+
+- **1a — Match the Streamlit app in the Clean theme.** Make the `clean` theme
+  look like the Streamlit site: consistent layout from the menu bar through to
+  individual pages, no wonkiness. Fix anything obviously broken in the UI as we
+  go. *Grounding fact:* the palette/typography already match Streamlit — both
+  use Lora (headings + body) + Roboto Mono (data) + forestgreen accent, and the
+  same top-rank tint `#F3F7F3` (see `.streamlit/config.toml`). So 1a is mostly
+  **layout and spacing consistency**, not recolouring. The structural hooks
+  added in PRs #8/#9 (`.section-nav`, `.section-controls`, `.toggle-group`,
+  `.section-panel`, `.data-card`, `.chart-container`) are the levers — they are
+  still empty no-ops; spacing currently lives in ad-hoc per-template Tailwind
+  utilities, which is the main source of inconsistency.
+
+  *Decisions for 1a:*
+  - **Match the feel, not the layout.** Reproduce Streamlit's cleanliness,
+    consistency and readability — keep the webapp's own top-nav-dropdown
+    paradigm and structure (no sidebar).
+  - **Shell first, then systematic audit.** Fix the shared shell (nav bar,
+    page-title band, table + section-spacing defaults via the structural hooks)
+    where the wins are obvious; then run the app, screenshot every page, and
+    work through a per-page wonkiness inventory.
+  - **One clean default, kept themable.** Settle on a single Streamlit-style
+    page-title and card-header treatment for Clean, driven entirely by
+    CSS/theme variables (not per-template) so it stays swappable. The `ts-*` /
+    `ch-*` switcher experiments are not removed — they're deferred to the
+    Phase 2 review.
+- **1b — Consistent, clean charts (and tables if needed).** Set the right
+  app-wide defaults so charts look clean, uncluttered, and professional — as if
+  *printed on the page*, but retaining mouseover where it adds value. Driven from
+  `chart_utils.py` / `get_plotly_theme`.
+
+**Phase 2 — better UI (beyond parity).** Only after Phase 1 lands.
+
+- **2a — Improve the Clean / default theme** using design best practice.
+- **2b — A new, more layered / interesting theme**, built from current best
+  practice rather than the existing experiments.
+
+For Phase 2, the existing theme-chooser experiments (page-title `ts-*` variants,
+card-header `ch-*` variants, archived themes in `static/themes/archive/`) are a
+**starting point, not a destination** — we draw inspiration from general best
+practice, current trends, and real-world sites / dashboards / data-viz as we go,
+rather than defaulting to what's already there.
+
+**Working invariant:** primary target is the **Clean** theme; after any change,
+verify Clean Layered still works (both layouts — see design_principles.md).
 
 ### Webapp ↔ Streamlit feature-parity audit
 
