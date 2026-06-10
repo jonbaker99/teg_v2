@@ -216,6 +216,12 @@ a broadly-equivalent course summary).
 - [x] Player selector
 - [ ] Desktop/Mobile layout toggle — cosmetic
 - [x] Missing views: single-player/single-round, single-player/all-rounds
+- [x] 1 Round/1 Player rendered as a single combined card (gross "Score" row +
+      "Stableford" row), matching Streamlit's `generate_single_round_html`
+- [x] Formatted scorecards (shape/colour cells) applied consistently on
+      Latest Round and Full Results too — the scorecard CSS variables are now
+      declared on `.scorecard-table` as well as `.scorecard-wrapper`, so tables
+      render styled even when not inside the Scorecard page's wrapper
 
 ### Best/Worstball (`/bestball`)
 - [x] Free-entry N (default 3) instead of fixed All/10/25/50

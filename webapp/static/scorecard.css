@@ -1,8 +1,13 @@
 /* Golf Scorecard CSS — scoped for webapp (ported from streamlit/scorecard_styles.css) */
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 
-/* ===== CSS VARIABLES (scoped to .scorecard-wrapper) ===== */
-.scorecard-wrapper {
+/* ===== CSS VARIABLES =====
+   Declared on both the page wrapper and the table itself so scorecards render
+   styled wherever a .scorecard-table appears — inside a .scorecard-wrapper (the
+   Scorecard page) or standalone (Latest Round, Full Results). Custom properties
+   inherit to descendant cells (.score-cell, .totals, etc.). */
+.scorecard-wrapper,
+.scorecard-table {
 
   /* UI colors */
   --color-border: #e0e0e0;
@@ -401,7 +406,8 @@
 
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
-  .scorecard-wrapper {
+  .scorecard-wrapper,
+  .scorecard-table {
     --font-size-base: 12px;
     --font-size-small: 11px;
     --spacing-cell: 4px;

@@ -9,8 +9,7 @@ from fastapi.templating import Jinja2Templates
 from teg_analysis.core.metadata import get_scorecard_data, get_teg_metadata
 from teg_analysis.constants import PLAYER_DICT
 from teg_analysis.display.scorecards import (
-    build_single_round_gross_table,
-    build_single_round_stableford_table,
+    build_single_round_combined_table,
     build_tournament_gross_table,
     build_tournament_stableford_table,
     build_round_comparison_gross_table,
@@ -74,14 +73,13 @@ def _scorecard_context_one_round_one_player(teg_num: int, round_num: int, player
         player_name = df['Player'].iloc[0]
         title = f"{player_name} | TEG {teg_num}, Round {round_num}"
 
-        gross_table = build_single_round_gross_table(df)
-        stableford_table = build_single_round_stableford_table(df)
+        # Single combined card: one gross "Score" row + one "Stableford" row.
+        combined_table = build_single_round_combined_table(df)
 
         return {
             "title": title,
             "subheader": subheader,
-            "gross_table": gross_table,
-            "stableford_table": stableford_table,
+            "combined_table": combined_table,
         }
     except Exception as e:
         return {"error": str(e)}
