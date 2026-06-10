@@ -420,3 +420,51 @@ def prepare_record_best_streaks_data(all_data):
 
 def prepare_record_worst_streaks_data(all_data):
     return prepare_record_streaks_data(all_data, 'bad')
+
+
+# Streak-type display order and rename map for the window-streak pivot
+_STREAK_PIVOT_MAP = {
+    'Eagles': 'Eagles',
+    'Birdies': 'Birdies',
+    'Pars or Better': 'Pars',
+    'No +2s': 'Bogeys',
+    'Over Par': 'Over par',
+    'TBPs': 'TBPs',
+}
+_STREAK_PIVOT_ORDER = ['Eagles', 'Birdies', 'Pars', 'Bogeys', 'Over par', 'TBPs']
+
+
+def pivot_window_streaks(window_streaks):
+    """Pivot long-format window streaks into a Streak-Type x Player table.
+
+    Takes the output of ``get_player_window_streaks`` (columns Streak Type,
+    Player, Max Streak, Location) and returns a wide table with one row per
+    streak type (renamed/ordered Eagles, Birdies, Pars, Bogeys, Over par, TBPs)
+    and one column per player holding the max streak. The Eagles/Birdies rows
+    are dropped when no player achieved one.
+
+    Returns an empty DataFrame if there is no input data.
+    """
+    import pandas as pd
+
+    if window_streaks is None or len(window_streaks) == 0:
+        return pd.DataFrame()
+
+    pivot = window_streaks.pivot(index='Streak Type', columns='Player', values='Max Streak')
+    pivot = pivot.reset_index()
+    pivot.columns.name = None
+
+    pivot = pivot[pivot['Streak Type'].isin(_STREAK_PIVOT_MAP.keys())].copy()
+    pivot['Streak Type'] = pivot['Streak Type'].map(_STREAK_PIVOT_MAP)
+
+    pivot['_order'] = pivot['Streak Type'].map({s: i for i, s in enumerate(_STREAK_PIVOT_ORDER)})
+    pivot = pivot.sort_values('_order').drop(columns='_order')
+
+    player_cols = [c for c in pivot.columns if c != 'Streak Type']
+    for label in ('Eagles', 'Birdies'):
+        if label in pivot['Streak Type'].values:
+            row_max = pivot.loc[pivot['Streak Type'] == label, player_cols].max(axis=1).iloc[0]
+            if row_max == 0:
+                pivot = pivot[pivot['Streak Type'] != label]
+
+    return pivot.reset_index(drop=True)

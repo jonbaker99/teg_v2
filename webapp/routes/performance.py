@@ -12,6 +12,7 @@ from teg_analysis.display.formatters import prepare_records_table
 from webapp.deps import (
     cached_ranked_teg_data,
     cached_ranked_round_data,
+    cached_ranked_frontback_data,
     cached_complete_teg_data,
     cached_round_data,
     get_filtered_teg_data,
@@ -47,10 +48,10 @@ TOP_TABS = [
 ]
 
 TOP_MEASURES = [
-    ("GrossVP", "Gross vs Par"),
-    ("Stableford", "Stableford"),
+    ("GrossVP", "Gross"),
     ("Sc", "Score"),
-    ("NetVP", "Net vs Par"),
+    ("NetVP", "Net"),
+    ("Stableford", "Stableford"),
 ]
 
 
@@ -103,9 +104,13 @@ def _top_tab_context(tab: str, measure: str = "GrossVP", n: int = 3) -> dict:
         # Format measure values
         display = _format_measure_col(display, measure, measure_friendly)
 
-        label = f"{'Worst' if is_worst else 'Best'} {'TEGs' if is_teg else 'Rounds'} — {measure_friendly}"
+        prefix = "Bottom" if is_worst else "Top"
+        noun = "TEGs" if is_teg else "Rounds"
+        label = f"{prefix} {n} {noun}: {measure_friendly}"
+        caption = ("Note: TEG 2 is excluded from all TEG-level analysis as it only had "
+                   "3 rounds compared to the standard 4 rounds.") if is_teg else None
         sections = [{"title": label, "table_html": _df_to_html(display)}]
-        return {"sections": sections}
+        return {"sections": sections, "caption": caption}
     except Exception as e:
         return {"error": str(e)}
 
@@ -158,6 +163,7 @@ PB_MEASURES = [
 PB_SUMMARY_VIEWS = [
     ("rounds", "Best Rounds"),
     ("tegs", "Best TEGs"),
+    ("nines", "Best 9s"),
 ]
 
 
@@ -187,6 +193,9 @@ def _pb_summary_context(view: str = "rounds") -> dict:
         if view == "tegs":
             data = get_filtered_teg_data()
             level = "teg"
+        elif view == "nines":
+            data = cached_ranked_frontback_data()
+            level = "nines"
         else:
             data = cached_ranked_round_data()
             level = "round"
@@ -198,42 +207,49 @@ def _pb_summary_context(view: str = "rounds") -> dict:
             pdata = data[data['Player'] == player]
             row = {'Player': player}
 
+            if level == "teg":
+                def _when_teg(r):
+                    return f"TEG {int(r['TEGNum'])}"
+            elif level == "nines":
+                def _when_nines(r):
+                    return f"TEG {int(r['TEGNum'])}|R{int(r['Round'])}|{r['FrontBack']}"
+            else:
+                def _when_round(r):
+                    return f"TEG {int(r['TEGNum'])}|R{int(r['Round'])}"
+
+            def _when(r):
+                if level == "teg":
+                    return _when_teg(r)
+                elif level == "nines":
+                    return _when_nines(r)
+                else:
+                    return _when_round(r)
+
             # Score (lowest is best)
             best_sc = pdata.loc[pdata['Sc'].idxmin()]
-            if level == "teg":
-                when_sc = f"TEG {int(best_sc['TEGNum'])}"
-            else:
-                when_sc = f"TEG {int(best_sc['TEGNum'])}|R{int(best_sc['Round'])}"
-            row['Score'] = f"{int(best_sc['Sc'])} ({when_sc})"
+            row['Score'] = f"{int(best_sc['Sc'])} ({_when(best_sc)})"
 
             # Gross vs Par (lowest is best)
             best_g = pdata.loc[pdata['GrossVP'].idxmin()]
-            if level == "teg":
-                when_g = f"TEG {int(best_g['TEGNum'])}"
-            else:
-                when_g = f"TEG {int(best_g['TEGNum'])}|R{int(best_g['Round'])}"
-            row['Gross'] = f"{_format_vs_par(best_g['GrossVP'])} ({when_g})"
+            row['Gross'] = f"{_format_vs_par(best_g['GrossVP'])} ({_when(best_g)})"
 
             # Net vs Par (lowest is best)
             best_n = pdata.loc[pdata['NetVP'].idxmin()]
-            if level == "teg":
-                when_n = f"TEG {int(best_n['TEGNum'])}"
-            else:
-                when_n = f"TEG {int(best_n['TEGNum'])}|R{int(best_n['Round'])}"
-            row['Net'] = f"{_format_vs_par(best_n['NetVP'])} ({when_n})"
+            row['Net'] = f"{_format_vs_par(best_n['NetVP'])} ({_when(best_n)})"
 
             # Stableford (highest is best)
             best_s = pdata.loc[pdata['Stableford'].idxmax()]
-            if level == "teg":
-                when_s = f"TEG {int(best_s['TEGNum'])}"
-            else:
-                when_s = f"TEG {int(best_s['TEGNum'])}|R{int(best_s['Round'])}"
-            row['Stfd'] = f"{int(best_s['Stableford'])} ({when_s})"
+            row['Stfd'] = f"{int(best_s['Stableford'])} ({_when(best_s)})"
 
             summary_rows.append(row)
 
         display = pd.DataFrame(summary_rows)
-        title = f"Personal Best {'TEGs' if view == 'tegs' else 'Rounds'}"
+        if view == "tegs":
+            title = "Personal Best TEGs"
+        elif view == "nines":
+            title = "Personal Best 9s"
+        else:
+            title = "Personal Best Rounds"
         sections = [{"title": title, "table_html": _df_to_html(display)}]
         return {"sections": sections}
     except Exception as e:

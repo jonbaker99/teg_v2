@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">The El Golfo</span>
+    <h1 class="page-title">Contents</h1>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+    .contents-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+        gap: 1.5rem;
+    }
+    .contents-section-title {
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.35rem;
+        border-bottom: 1px solid var(--border-color, #e5e7eb);
+        color: var(--color-primary, #333);
+    }
+    .contents-links a {
+        display: block;
+        padding: 0.3rem 0;
+        font-size: 0.9rem;
+        color: var(--nav-text, #374151);
+        text-decoration: none;
+    }
+    .contents-links a:hover {
+        color: var(--nav-active-text, #111827);
+        text-decoration: underline;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="contents-grid">
+    {% for section in sections %}
+    <div class="data-card">
+        <div class="contents-section-title">{{ section.label }}</div>
+        <div class="contents-links">
+            {% for title, url, key in section.pages %}
+            <a href="{{ url }}">{{ title }}</a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -32,14 +32,16 @@ pip install -r requirements.txt
 
 ### What's done
 - **teg_analysis package**: Phases 1–7 cleanup complete (all Streamlit imports removed, aggregation/streaks/scoring refactored, dead code removed). Merged to `main`. Ready to be the canonical analysis layer.
-- **Webapp**: 26 endpoints implemented with data parity vs Streamlit. All functional. Ready for visual polish. TEG Reports page at `/teg-reports` and the Report tab on `/results` now render the new commentary reports.
+- **Webapp**: Full Streamlit page set replicated (excluding Data-admin: update/edit/delete, report generation, volume management — out of scope). Nav mirrors Streamlit's sections/titles/ordering via a single source of truth, `webapp/nav.py` (`NAV_SECTIONS`), injected into templates and looped in `base.html`; `/` lands on the new **Contents** site map. Newly added: **Contents** (`/contents`) and **Eclectic Records** (`/eclectic-records`, backed by new helpers in `teg_analysis/analysis/eclectic.py`). All functional. TEG Reports page at `/teg-reports` and the Report tab on `/results` render the new commentary reports.
+  - **Feature-parity audit complete.** All functional gaps (controls/views/measures/charts) have been closed across every page, including the deep/conditional ports; all webapp endpoints render their Streamlit-equivalent content. New analysis modules: `teg_analysis/analysis/player_rankings.py` (ranking tables + summaries), `teg_analysis/analysis/handicaps.py` (handicap recalc + in-progress status), `teg_analysis/display/scorecards.py` (scorecard HTML builders), plus `pivot_window_streaks` in `analysis/streaks.py`. Highlights: Player Rankings (both competitions + dimension selectors), Scorecard (3 views), Leaderboard & Results race charts (Standard/Adjusted/Ranking) + inline scorecards, full Scoring-section controls, Latest pages (metric sub-tabs + per-metric chart, streak-type pivot, full records-completeness, report tabs, Stableford toggles, inline scorecards), Handicaps draft section, Eclectic filters, TEG Reports satire/fallbacks. Remaining items are **cosmetic only** plus the WIP heatmap — tracked in `webapp/PARITY_AUDIT.md`.
 - **Architecture**: Decoupled design documented and validated. `teg_analysis` is fully UI-agnostic.
 - **Commentary / report pipeline** (`teg_analysis/reporting/`): new LLM-powered tournament reports built around a 5-stage pipeline — scored evidence-carrying beats + competition arcs (code) → structured story plan (LLM) → dry draft as QA scaffold + entertaining write-up + repetition lint (LLM) → CSS-class styled markdown. Three production reports validated (TEGs 9, 14, 18); cost ~$0.65 each on Opus 4.7. **How it works**: `teg_analysis/reporting/README.md`. **Done / next**: `teg_analysis/reporting/STATUS.md`.
 
 ### Next priorities
-1. **Webapp formatting pass** — visual polish, number formatting, table styling consistency, layout refinement. In progress in local branches.
-2. **REST API** — build proper `/api` layer powered by `teg_analysis`. Goal: expose the analysis layer over HTTP so any client (scripts, mobile, other frontends) can access it without needing Python. Currently a placeholder in `teg_analysis/api/`.
-3. **Retire Streamlit** — long-term goal once REST API + new webapp are production-ready.
+1. **Webapp ↔ Streamlit feature-parity audit** — page existence parity is done; now closing missing controls/views/toggles on existing pages so each matches its Streamlit source. Per-page checklist + progress in `webapp/PARITY_AUDIT.md`.
+2. **Webapp formatting pass** — visual polish, number formatting, table styling consistency, layout refinement. In progress in local branches.
+3. **REST API** — build proper `/api` layer powered by `teg_analysis`. Goal: expose the analysis layer over HTTP so any client (scripts, mobile, other frontends) can access it without needing Python. Currently a placeholder in `teg_analysis/api/`.
+4. **Retire Streamlit** — long-term goal once REST API + new webapp are production-ready.
 
 ### To investigate
 - **Data file rationalisation** — `all-data.parquet` (53 cols, used by `teg_analysis`) and `all-scores.parquet` (17 cols, used by Streamlit) are both hole-level but differ in columns. Unclear if they should be one source. Investigate before making changes to either. See `DATA_FLOW.md`.
@@ -125,8 +127,8 @@ The project has two distinct architectural phases. **The Streamlit app is the or
    - `constants.py` — Centralised file paths, player data, tournament metadata
    - `io/` — File I/O (`read_file`/`write_file`), GitHub API (uses `GITHUB_TOKEN` env var), Railway volume management
    - `core/` — Data loading (`load_all_data`) and transformation
-   - `analysis/` — Scoring, rankings, aggregation, streaks, records, commentary, pipeline, history, performance, leaderboards, bestball
-   - `display/` — Formatting, HTML tables, navigation utilities (returns HTML strings, never calls st.write)
+   - `analysis/` — Scoring, rankings, player_rankings, aggregation, streaks, records, eclectic, handicaps, commentary, pipeline, history, performance, leaderboards, bestball
+   - `display/` — Formatting, HTML tables, scorecards, navigation utilities (returns HTML strings, never calls st.write)
    - `api/` — Placeholder for REST API endpoints
 
 2. **`streamlit/`** — The original production app (deployed on Railway). Uses its own `utils.py` and is intentionally self-contained. It will not be migrated to use `teg_analysis/` — it represents the old architecture and should be left stable.

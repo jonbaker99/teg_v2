@@ -13,5 +13,8 @@
         </div>
     </div>
     {% endfor %}
+    {% if caption %}
+    <p class="text-muted text-sm mt-3">{{ caption }}</p>
+    {% endif %}
 </div>
 {% endif %}

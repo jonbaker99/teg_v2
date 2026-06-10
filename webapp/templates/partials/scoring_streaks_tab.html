@@ -1,10 +1,38 @@
 {% if error %}
 <p class="text-muted">Error: {{ error }}</p>
+{% elif detail %}
+<p class="text-muted text-sm mb-3">Select filters to analyse streaks within a specific window (TEG, Round, Player). Leave as "All" to see career-level data.</p>
+<div class="flex flex-wrap items-end gap-4 mb-4">
+    <label class="flex flex-col text-sm gap-1"><span class="text-muted">TEG</span>
+        <select class="theme-select" name="d_teg"
+                hx-get="/scoring/streaks/tab" hx-target="#st-content" hx-swap="innerHTML"
+                hx-include="[name='d_round'], [name='d_player']" hx-vals='{"tab": "detail"}'>
+            {% for t in teg_options %}<option value="{{ t }}" {% if t == d_teg %}selected{% endif %}>{{ t }}</option>{% endfor %}
+        </select>
+    </label>
+    <label class="flex flex-col text-sm gap-1"><span class="text-muted">Round</span>
+        <select class="theme-select" name="d_round"
+                hx-get="/scoring/streaks/tab" hx-target="#st-content" hx-swap="innerHTML"
+                hx-include="[name='d_teg'], [name='d_player']" hx-vals='{"tab": "detail"}'>
+            {% for r in round_options %}<option value="{{ r }}" {% if r|string == d_round %}selected{% endif %}>{{ r }}</option>{% endfor %}
+        </select>
+    </label>
+    <label class="flex flex-col text-sm gap-1"><span class="text-muted">Player</span>
+        <select class="theme-select" name="d_player"
+                hx-get="/scoring/streaks/tab" hx-target="#st-content" hx-swap="innerHTML"
+                hx-include="[name='d_teg'], [name='d_round']" hx-vals='{"tab": "detail"}'>
+            {% for p in player_options %}<option value="{{ p }}" {% if p == d_player %}selected{% endif %}>{{ p }}</option>{% endfor %}
+        </select>
+    </label>
+</div>
+<p class="text-muted text-sm"><em>Analysing {{ hole_count }} holes</em></p>
+{{ table_html | safe }}
 {% elif sections %}
   {% for section in sections %}
     {% if section.title %}<h2 class="section-title">{{ section.title }}</h2>{% endif %}
     {{ section.table_html | safe }}
   {% endfor %}
+  {% if caption %}<p class="text-muted text-sm mt-3">{{ caption }}</p>{% endif %}
 {% else %}
 <p class="text-muted text-sm">No data available.</p>
 {% endif %}

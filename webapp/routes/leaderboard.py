@@ -1,19 +1,28 @@
 """Leaderboard routes."""
 
+import json
 from pathlib import Path
 
+import plotly.utils
 from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
 from markupsafe import escape
 
 from teg_analysis.constants import PLAYER_DICT
 from webapp.deps import (
+    cached_load_all_data,
     cached_round_data,
     create_leaderboard,
     format_value,
     get_default_teg_num,
     get_available_teg_numbers,
     get_net_competition_measure,
+    get_rounds_for_teg,
+)
+from webapp.chart_utils import (
+    create_cumulative_graph,
+    adjusted_stableford,
+    adjusted_grossvp,
 )
 
 # Reverse lookup: full name → player code
@@ -25,6 +34,14 @@ templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templa
 LEADERBOARD_TABS = [
     ("net", "Net"),
     ("gross", "Gross"),
+    ("scorecards", "Scorecards"),
+]
+
+# Chart type options: value → label
+CHART_TYPES = [
+    ("standard", "Standard"),
+    ("adjusted", "Adjusted scale"),
+    ("ranking", "Ranking"),
 ]
 
 
@@ -85,9 +102,95 @@ def _get_wooden_spoon(df):
     return ', '.join(losers) if losers else None
 
 
-def _leaderboard_context(teg_num: int, tab: str = "net") -> dict:
+def _build_chart_json(teg_num: int, tab: str, chart_variant: str = "standard") -> str | None:
+    """Build cumulative race chart JSON for net/gross tabs.
+
+    chart_variant: "standard" or "adjusted"
+    Returns PlotlyJSON string, or None on error.
+    """
+    try:
+        all_data = cached_load_all_data()
+        teg_name = f"TEG {teg_num}"
+
+        if chart_variant == "ranking":
+            # Tournament-ranking progression (1st, 2nd, ...) via precomputed rank columns
+            rank_series = 'Rank_GrossVP_TEG' if tab == "gross" else 'Rank_Stableford_TEG'
+            title = ('Green Jacket race (Ranking)' if tab == "gross" else 'Trophy race (Ranking)') + f': {teg_name}'
+            fig = create_cumulative_graph(
+                all_data, teg_name, y_series=rank_series, title=title,
+                y_axis_label='Tournament Ranking', chart_type='ranking',
+            )
+            return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+
+        if tab == "gross":
+            if chart_variant == "adjusted":
+                fig = create_cumulative_graph(
+                    all_data, teg_name,
+                    y_series='GrossVP Cum TEG',
+                    title=f'Green Jacket race (Adjusted scale): {teg_name}',
+                    y_calculation=adjusted_grossvp,
+                    y_axis_label='Cumulative gross vs. bogey golf (par+1)',
+                    chart_type='gross',
+                )
+            else:
+                fig = create_cumulative_graph(
+                    all_data, teg_name,
+                    y_series='GrossVP Cum TEG',
+                    title=f'Green Jacket race: {teg_name}',
+                    y_axis_label='Cumulative gross vs par',
+                    chart_type='gross',
+                )
+        else:
+            # Net tab — measure depends on TEG era
+            net_measure = get_net_competition_measure(teg_num)
+            if net_measure == 'Stableford':
+                if chart_variant == "adjusted":
+                    fig = create_cumulative_graph(
+                        all_data, teg_name,
+                        y_series='Stableford Cum TEG',
+                        title=f'Trophy race (Adjusted scale): {teg_name}',
+                        y_calculation=adjusted_stableford,
+                        y_axis_label='Cumulative Stableford Points vs. net par',
+                        chart_type='stableford',
+                    )
+                else:
+                    fig = create_cumulative_graph(
+                        all_data, teg_name,
+                        y_series='Stableford Cum TEG',
+                        title=f'Trophy race: {teg_name}',
+                        y_axis_label='Cumulative Stableford Points',
+                        chart_type='stableford',
+                    )
+            else:
+                # Pre-TEG 8: NetVP (no adjusted variant meaningful, use same series)
+                fig = create_cumulative_graph(
+                    all_data, teg_name,
+                    y_series='NetVP Cum TEG',
+                    title=f'Trophy race: {teg_name}',
+                    y_axis_label='Cumulative Net vs Par',
+                    chart_type='gross',
+                )
+
+        return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    except Exception:
+        return None
+
+
+def _leaderboard_context(teg_num: int, tab: str = "net", chart_variant: str = "standard") -> dict:
     """Build template context for a given TEG number and tab."""
     try:
+        # Scorecards tab — just return round links
+        if tab == "scorecards":
+            rounds = get_rounds_for_teg(teg_num)
+            return {
+                "active_title": "Scorecards",
+                "active_table": None,
+                "active_champion": None,
+                "active_spoon": None,
+                "chart_json": None,
+                "scorecard_rounds": rounds,
+            }
+
         rd_data = cached_round_data()
         teg_rd = rd_data[rd_data['TEGNum'] == teg_num]
 
@@ -126,11 +229,15 @@ def _leaderboard_context(teg_num: int, tab: str = "net") -> dict:
             active_champion = net_champion
             active_spoon = net_wooden_spoon
 
+        chart_json = _build_chart_json(teg_num, tab, chart_variant)
+
         return {
             "active_title": active_title,
             "active_table": active_table,
             "active_champion": active_champion,
             "active_spoon": active_spoon,
+            "chart_json": chart_json,
+            "scorecard_rounds": None,
         }
     except Exception as e:
         return {"error": str(e)}
@@ -140,7 +247,7 @@ def _leaderboard_context(teg_num: int, tab: str = "net") -> dict:
 async def leaderboard_page(request: Request):
     teg_num = get_default_teg_num()
     teg_numbers = get_available_teg_numbers()
-    ctx = _leaderboard_context(teg_num, tab="net")
+    ctx = _leaderboard_context(teg_num, tab="net", chart_variant="standard")
     return templates.TemplateResponse("leaderboard.html", {
         "request": request,
         "active_page": "leaderboard",
@@ -148,17 +255,26 @@ async def leaderboard_page(request: Request):
         "selected_teg": teg_num,
         "leaderboard_tabs": LEADERBOARD_TABS,
         "active_lb_tab": "net",
+        "active_chart_variant": "standard",
+        "chart_types": CHART_TYPES,
         **ctx,
     })
 
 
 @router.get("/leaderboard/table")
-async def leaderboard_table(request: Request, teg: int = Query(...), tab: str = Query("net")):
-    ctx = _leaderboard_context(teg, tab=tab)
+async def leaderboard_table(
+    request: Request,
+    teg: int = Query(...),
+    tab: str = Query("net"),
+    chart_variant: str = Query("standard"),
+):
+    ctx = _leaderboard_context(teg, tab=tab, chart_variant=chart_variant)
     return templates.TemplateResponse("partials/leaderboard_table.html", {
         "request": request,
         "selected_teg": teg,
         "active_lb_tab": tab,
         "leaderboard_tabs": LEADERBOARD_TABS,
+        "active_chart_variant": chart_variant,
+        "chart_types": CHART_TYPES,
         **ctx,
     })

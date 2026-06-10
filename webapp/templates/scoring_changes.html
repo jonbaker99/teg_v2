@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">Scoring analysis</span>
+    <h1 class="page-title">Changes vs Previous Round</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<p class="text-muted text-sm mb-4">Rounds with the biggest score swings vs the player's previous round (raw score).</p>
+<div id="changes">
+    {% include "partials/scoring_changes_content.html" %}
+</div>
+{% endblock %}

@@ -91,72 +91,22 @@
                 <a href="/" class="nav-brand">The El Golfo</a>
                 <span class="nav-hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</span>
                 <div class="nav-links">
-                    <!-- TEG History -->
-                    <div class="nav-dropdown">
-                        <span class="nav-link nav-dropdown-btn {% if active_page in ['history','honours','results','player-rankings','teg-reports'] %}active{% endif %}">History</span>
-                        <div class="nav-dropdown-menu">
-                            <a href="/history">TEG History</a>
-                            <a href="/honours">Honours Board</a>
-                            <a href="/results">Full Results</a>
-                            <a href="/player-rankings">Player Rankings</a>
-                            <a href="/teg-reports">TEG Reports</a>
-                        </div>
-                    </div>
-                    <!-- Latest TEG -->
-                    <div class="nav-dropdown">
-                        <span class="nav-link nav-dropdown-btn {% if active_page in ['leaderboard','latest-round','latest-teg','handicaps'] %}active{% endif %}">Latest</span>
-                        <div class="nav-dropdown-menu">
-                            <a href="/leaderboard">Leaderboard</a>
-                            <a href="/latest-round">Latest Round</a>
-                            <a href="/latest-teg">Latest TEG</a>
-                            <a href="/handicaps">Handicaps</a>
-                        </div>
-                    </div>
-                    <!-- Records & PBs -->
-                    <div class="nav-dropdown">
-                        <span class="nav-link nav-dropdown-btn {% if active_page in ['records','top-performances','personal-bests'] %}active{% endif %}">Records</span>
-                        <div class="nav-dropdown-menu">
-                            <a href="/records">TEG Records</a>
-                            <a href="/top-performances">Top Performances</a>
-                            <a href="/personal-bests">Personal Bests</a>
-                        </div>
-                    </div>
-                    <!-- Scoring -->
-                    <div class="nav-dropdown">
-                        <span class="nav-link nav-dropdown-btn {% if active_page == 'scoring' %}active{% endif %}">Scoring</span>
-                        <div class="nav-dropdown-menu">
-                            <a href="/scoring/birdies">Eagles / Birdies / Pars</a>
-                            <a href="/scoring/streaks">Streaks</a>
-                            <a href="/scoring/by-par">Average by Par</a>
-                            <a href="/scoring/by-teg">Average by TEG</a>
-                            <a href="/scoring/by-course">Course Averages</a>
-                            <a href="/scoring/all-rounds">All Rounds</a>
-                            <a href="/scoring/matrix">Score Matrix</a>
-                            <a href="/scoring/distributions">Distributions</a>
-                            <a href="/scoring/changes">Changes vs Previous</a>
-                            <a href="/scoring/comebacks">Final Round Comebacks</a>
-                            <a href="/scoring/heatmap">Heatmap</a>
-                        </div>
-                    </div>
-                    <!-- Scorecards -->
-                    <div class="nav-dropdown">
-                        <span class="nav-link nav-dropdown-btn {% if active_page == 'scorecards' %}active{% endif %}">Scorecards</span>
-                        <div class="nav-dropdown-menu">
-                            <a href="/scorecard">Scorecard</a>
-                            <a href="/bestball">Best / Worstball</a>
-                            <a href="/eclectic">Eclectic</a>
-                            <a href="/eclectic-records">Eclectic Records</a>
-                        </div>
-                    </div>
-                    <!-- Standalone pages -->
-                    <a href="/charts"
-                       class="nav-link {% if active_page == 'charts' %}active{% endif %}">
-                        Charts
+                    <!-- Contents -->
+                    <a href="/contents"
+                       class="nav-link {% if active_page == 'contents' %}active{% endif %}">
+                        Contents
                     </a>
-                    <a href="/player/JB"
-                       class="nav-link {% if active_page == 'player' %}active{% endif %}">
-                        Players
-                    </a>
+                    <!-- Sections (mirror Streamlit page_config order/labels) -->
+                    {% for section in request.state.nav_sections %}
+                    <div class="nav-dropdown">
+                        <span class="nav-link nav-dropdown-btn {% if active_page in section.active %}active{% endif %}">{{ section.label }}</span>
+                        <div class="nav-dropdown-menu">
+                            {% for title, url, key in section.pages %}
+                            <a href="{{ url }}">{{ title }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
                     <!-- Theme selector -->
                     <select class="theme-select ml-3"
                             onchange="document.cookie='theme='+this.value+';path=/;max-age=31536000';location.reload()">

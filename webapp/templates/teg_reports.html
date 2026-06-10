@@ -12,33 +12,80 @@
 {% endblock %}
 
 {% block content %}
-{% if not available_reports %}
+{% if not teg_numbers %}
 <div style="padding: 3rem 0; text-align: center;">
-    <p style="font-size: 1.1rem; opacity: 0.6;">No styled reports available yet.</p>
+    <p style="font-size: 1.1rem; opacity: 0.6;">No reports available yet.</p>
     <p style="font-size: 0.85rem; opacity: 0.4; margin-top: 0.5rem;">
         Generate one via <code>teg_analysis.reporting.style_report(teg)</code>.
     </p>
 </div>
 {% else %}
-<form method="get" action="/teg-reports" class="flex items-center gap-4 mb-4">
-    <!-- Dropdown 1: Select Type -->
+
+{# ---- Selectors ---- #}
+<form method="get" action="/teg-reports" class="flex flex-wrap items-center gap-4 mb-4">
+
+    {# Report type #}
     <select name="report_type" class="theme-select" onchange="this.form.submit()">
         <option value="tournament" {% if report_type == 'tournament' %}selected{% endif %}>Tournament Reports</option>
         <option value="round" {% if report_type == 'round' %}selected{% endif %}>Round Reports</option>
     </select>
 
-    <!-- Dropdown 2: Select Specific Report (Auto-populates via the backend refresh) -->
-    <select name="report_id" class="theme-select" onchange="this.form.submit()">
-        {% for r in available_reports %}
-        <option value="{{ r.value }}" {% if r.value == selected_report %}selected{% endif %}>{{ r.label }}</option>
+    {# TEG selector #}
+    <select name="teg" class="theme-select" onchange="this.form.submit()">
+        {% for n in teg_numbers %}
+        <option value="{{ n }}" {% if n == selected_teg %}selected{% endif %}>TEG {{ n }}</option>
         {% endfor %}
     </select>
+
+    {# Round selector — only for round reports #}
+    {% if report_type == 'round' and available_rounds %}
+    <select name="round" class="theme-select" onchange="this.form.submit()">
+        {% for r in available_rounds %}
+        <option value="{{ r }}" {% if r == selected_round %}selected{% endif %}>Round {{ r }}</option>
+        {% endfor %}
+    </select>
+    {% endif %}
+
+    {# Carry current variant through round-report form submissions #}
+    {% if report_type == 'round' %}
+    <input type="hidden" name="variant" value="{{ variant }}">
+    {% endif %}
+
+    {# Normal / Satire toggle — only for tournament reports #}
+    {% if report_type == 'tournament' %}
+    <div class="flex items-center gap-2">
+        <label class="flex items-center gap-1 cursor-pointer">
+            <input type="radio" name="variant" value="normal"
+                   {% if variant == 'normal' %}checked{% endif %}
+                   onchange="this.form.submit()">
+            <span class="text-sm">Normal</span>
+        </label>
+        <label class="flex items-center gap-1 cursor-pointer">
+            <input type="radio" name="variant" value="satire"
+                   {% if variant == 'satire' %}checked{% endif %}
+                   onchange="this.form.submit()">
+            <span class="text-sm">Satire</span>
+        </label>
+    </div>
+    {# Carry round through tournament form submissions (unused but harmless) #}
+    {% if selected_round %}
+    <input type="hidden" name="round" value="{{ selected_round }}">
+    {% endif %}
+    {% endif %}
+
 </form>
 
-{% if html %}
-<div class="teg-report">{{ html|safe }}</div>
-{% else %}
-<p class="text-muted text-sm">No report available yet for TEG {{ selected_teg }}.</p>
+{# ---- Pre-TEG-8 caption ---- #}
+{% if caption %}
+<p class="text-sm opacity-60 mb-4 italic">{{ caption }}</p>
 {% endif %}
+
+{# ---- Report content ---- #}
+{% if no_report_message %}
+<p class="text-muted text-sm">{{ no_report_message }}</p>
+{% elif html %}
+<div class="teg-report">{{ html|safe }}</div>
+{% endif %}
+
 {% endif %}
 {% endblock %}

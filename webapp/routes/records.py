@@ -123,6 +123,7 @@ def _tab_context(tab_name: str) -> dict:
     """Build context for a records tab."""
     try:
         sections = []
+        caption = None
 
         if tab_name == "teg":
             ranked = cached_ranked_teg_data()
@@ -161,14 +162,16 @@ def _tab_context(tab_name: str) -> dict:
             worst_streaks = prepare_record_worst_streaks_data(all_data)
             worst_table = prepare_streak_records_table(worst_streaks, "Worst Streaks:")
             sections.append(_section("Worst Streaks", worst_table))
+            caption = "* and counting..."
 
         elif tab_name == "score_counts":
             all_data = cached_load_all_data()
             best_df, worst_df = prepare_score_count_records_table(all_data)
             sections.append(_section("Best Score Counts", best_df))
             sections.append(_section("Worst Score Counts", worst_df))
+            caption = "Eagles, Birdies and Pars also include better scores"
 
-        return {"sections": sections}
+        return {"sections": sections, "caption": caption}
 
     except Exception as e:
         return {"error": str(e)}

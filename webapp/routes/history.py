@@ -15,9 +15,20 @@ from teg_analysis.analysis.history import (
     get_eagles_data,
     get_holes_in_one_data,
 )
+from teg_analysis.analysis.player_rankings import (
+    create_teg_ranking_table,
+    create_net_competition_ranking_table,
+    create_combined_position_summary,
+)
+from teg_analysis.core.metadata import get_scorecard_data
+from teg_analysis.display.scorecards import (
+    build_round_comparison_gross_table,
+    build_round_comparison_stableford_table,
+)
 from webapp.deps import (
     cached_load_all_data,
     cached_round_data,
+    cached_complete_teg_data,
     cached_ranked_teg_data,
     create_leaderboard,
     format_value,
@@ -68,6 +79,8 @@ async def history_page(request: Request):
     try:
         df = prepare_complete_history_table_fast()
         table_html = _df_to_html(df)
+        table_html += ("<p class='text-muted text-sm mt-3'>*Green Jacket awarded in TEG 5 for "
+                       "best stableford round; DM had best gross score.</p>")
     except Exception as e:
         table_html = f"<p class='text-muted'>Error: {e}</p>"
 
@@ -145,7 +158,10 @@ def _honours_tab_context(tab: str) -> dict:
             sections.append({"title": "TEG Trophy", "table_html": _summarise_wins(winners_df, "TEG Trophy")})
 
         elif tab == "jacket":
-            sections.append({"title": "Green Jacket", "table_html": _summarise_wins(winners_df, "Green Jacket")})
+            jacket_html = _summarise_wins(winners_df, "Green Jacket")
+            jacket_html += ("<p class='text-muted text-sm mt-3'>*Green Jacket awarded in TEG 5 for "
+                            "best stableford round; DM had best gross score.</p>")
+            sections.append({"title": "Green Jacket", "table_html": jacket_html})
 
         elif tab == "spoon":
             sections.append({"title": "Wooden Spoon", "table_html": _summarise_wins(winners_df, "HMM Wooden Spoon")})
@@ -194,21 +210,39 @@ async def honours_tab(request: Request, tab_name: str):
 
 # --- /results -----------------------------------------------------------------
 
-def _results_chart(teg_num: int, tab: str) -> str | None:
-    """Build a cumulative race chart for net/gross results tabs. Returns JSON or None."""
+RESULTS_CHART_TYPES = [("standard", "Standard"), ("adjusted", "Adjusted scale"), ("ranking", "Ranking")]
+
+
+def _results_chart(teg_num: int, tab: str, chart_variant: str = "standard") -> str | None:
+    """Build a cumulative race chart for net/gross results tabs. Returns JSON or None.
+
+    chart_variant: "standard", "adjusted" (score vs net/bogey par) or "ranking".
+    """
     try:
         import json
         import plotly.utils
-        from webapp.chart_utils import create_cumulative_graph
+        from webapp.chart_utils import create_cumulative_graph, adjusted_stableford, adjusted_grossvp
 
         all_data = cached_load_all_data()
         teg_name = f"TEG {teg_num}"
+        adjusted = chart_variant == "adjusted"
+
+        if chart_variant == "ranking":
+            rank_series = 'Rank_GrossVP_TEG' if tab == "gross" else 'Rank_Stableford_TEG'
+            fig = create_cumulative_graph(
+                all_data, teg_name, y_series=rank_series,
+                title=f'Ranking: {teg_name}', y_axis_label='Tournament Ranking',
+                chart_type='ranking',
+            )
+            return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
         if tab == "gross":
             fig = create_cumulative_graph(
                 all_data, teg_name,
                 y_series='GrossVP Cum TEG',
                 title='Cumulative Gross vs Par',
+                y_calculation=adjusted_grossvp if adjusted else None,
+                y_axis_label='Cumulative gross score vs. bogey' if adjusted else None,
                 chart_type='gross',
             )
         else:
@@ -218,6 +252,8 @@ def _results_chart(teg_num: int, tab: str) -> str | None:
                     all_data, teg_name,
                     y_series='Stableford Cum TEG',
                     title='Cumulative Stableford',
+                    y_calculation=adjusted_stableford if adjusted else None,
+                    y_axis_label='Cumulative Stableford vs. net par' if adjusted else None,
                     chart_type='stableford',
                 )
             else:
@@ -225,6 +261,8 @@ def _results_chart(teg_num: int, tab: str) -> str | None:
                     all_data, teg_name,
                     y_series='NetVP Cum TEG',
                     title='Cumulative Net vs Par',
+                    y_calculation=adjusted_grossvp if adjusted else None,
+                    y_axis_label='Cumulative net score vs. par' if adjusted else None,
                     chart_type='gross',
                 )
 
@@ -233,34 +271,53 @@ def _results_chart(teg_num: int, tab: str) -> str | None:
         return None
 
 
-def _results_context(teg_num: int, tab: str = "net") -> dict:
+def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "standard") -> dict:
     """Build context for full results page."""
     try:
         if tab == "scorecards":
             rounds = get_rounds_for_teg(teg_num)
-            links = []
+            parts = ['<link rel="stylesheet" href="/static/scorecard.css">']
             for r in rounds:
-                links.append(
-                    f'<p><a href="/scorecard?teg={teg_num}&round={r}" class="text-link">'
-                    f'Round {r} Scorecard</a></p>'
-                )
-            table_html = "".join(links) if links else "<p class='text-muted'>No rounds found.</p>"
+                try:
+                    rd = get_scorecard_data(teg_num, r)
+                    if rd is None or rd.empty:
+                        continue
+                    gross = build_round_comparison_gross_table(rd)
+                    stableford = build_round_comparison_stableford_table(rd)
+                    parts.append(f"<h2 class='section-title'>Round {r}</h2>")
+                    parts.append("<div class='mb-2'><strong>Gross</strong></div>")
+                    parts.append(gross)
+                    parts.append("<div class='mt-3 mb-2'><strong>Stableford</strong></div>")
+                    parts.append(stableford)
+                except Exception:
+                    continue
+            table_html = "".join(parts) if len(parts) > 1 else "<p class='text-muted'>No rounds found.</p>"
             return {"result_title": "Scorecards", "table_html": table_html}
 
         if tab == "report":
             from pathlib import Path
             import markdown as md_lib
-            path = Path(f"data/commentary/teg_{teg_num}_report_styled.md")
-            if path.is_file():
+            # Prefer the styled report; fall back to the plain main report draft.
+            candidates = [
+                Path(f"data/commentary/teg_{teg_num}_report_styled.md"),
+                Path(f"data/commentary/drafts/teg_{teg_num}_main_report.md"),
+                Path(f"data/commentary/teg_{teg_num}_main_report.md"),
+            ]
+            path = next((p for p in candidates if p.is_file()), None)
+            if path is not None:
                 html = md_lib.markdown(
                     path.read_text(encoding="utf-8"),
                     extensions=["extra", "sane_lists", "smarty", "toc"],
                 )
+                caption = ""
+                if int(teg_num) < 8:
+                    caption = ("<p class='text-muted text-sm'>NB: Before TEG 8 the TEG Trophy was "
+                               "decided by best net score (total net vs par), not Stableford points.</p>")
                 return {
                     "result_title": "Report",
                     "table_html": (
                         '<link rel="stylesheet" href="/static/teg_reports.css">'
-                        f'<div class="teg-report">{html}</div>'
+                        f'{caption}<div class="teg-report">{html}</div>'
                     ),
                 }
             return {
@@ -290,9 +347,21 @@ def _results_context(teg_num: int, tab: str = "net") -> dict:
                 lb[col] = lb[col].apply(lambda x: format_value(x, net_measure))
             title = "Stableford" if net_measure == 'Stableford' else "Net vs Par"
 
-        table_html = _df_to_html(lb, link_players=True)
-        chart_json = _results_chart(teg_num, tab)
-        return {"result_title": title, "table_html": table_html, "chart_json": chart_json}
+        # Champion (top row) — plus wooden spoon (bottom row) on the net competition
+        callout = ""
+        if not lb.empty and 'Player' in lb.columns:
+            champion = lb.iloc[0]['Player']
+            if tab == "gross":
+                callout = f"<p class='result-callout'><strong>Champion:</strong> {champion}</p>"
+            else:
+                spoon = lb.iloc[-1]['Player']
+                callout = (f"<p class='result-callout'><strong>Champion:</strong> {champion} "
+                           f"&nbsp;|&nbsp; <strong>Wooden spoon:</strong> {spoon}</p>")
+
+        table_html = callout + _df_to_html(lb, link_players=True)
+        chart_json = _results_chart(teg_num, tab, chart_variant)
+        return {"result_title": title, "table_html": table_html, "chart_json": chart_json,
+                "chart_types": RESULTS_CHART_TYPES, "active_chart_variant": chart_variant}
     except Exception as e:
         return {"error": str(e)}
 
@@ -313,8 +382,9 @@ async def results_page(request: Request):
 
 
 @router.get("/results/table")
-async def results_table(request: Request, teg: int = Query(...), tab: str = Query("net")):
-    ctx = _results_context(teg, tab)
+async def results_table(request: Request, teg: int = Query(...), tab: str = Query("net"),
+                        chart_variant: str = Query("standard")):
+    ctx = _results_context(teg, tab, chart_variant)
     return templates.TemplateResponse("partials/results_table.html", {
         "request": request,
         "selected_teg": teg,
@@ -325,32 +395,85 @@ async def results_table(request: Request, teg: int = Query(...), tab: str = Quer
 
 # --- /player-rankings ---------------------------------------------------------
 
-@router.get("/player-rankings")
-async def player_rankings_page(request: Request):
-    try:
-        ranked = cached_ranked_teg_data()
-        # Compute rank within each TEG (1st, 2nd, 3rd, etc.)
-        ranked = ranked.copy()
-        ranked['GrossVP_TegRank'] = ranked.groupby('TEGNum')['GrossVP'].rank(method='min', ascending=True).astype(int)
-        # Pivot: player rows, TEG columns, gross rank values
-        pivot = ranked.pivot_table(
-            index='Player', columns='TEGNum', values='GrossVP_TegRank',
-            aggfunc='first',
-        )
-        pivot.columns = [f'TEG {int(c)}' for c in pivot.columns]
-        pivot = pivot.reset_index()
-        teg_cols = [c for c in pivot.columns if c != 'Player']
-        for col in teg_cols:
-            pivot[col] = pivot[col].apply(lambda x: '—' if pd.isna(x) else str(int(x)))
-        table_html = _df_to_html(pivot, link_players=True)
-    except Exception as e:
-        table_html = f"<p class='text-muted'>Error: {e}</p>"
+PLAYER_RANKINGS_TABS = [
+    ("trophy", "TEG Trophy"),
+    ("jacket", "Green Jacket"),
+]
 
-    return templates.TemplateResponse("data_table.html", {
+
+PR_ROW_DIMS = [("Player", "Full Name"), ("Pl", "Initials")]
+PR_COL_DIMS = [("TEGNum", "TEG Number"), ("TEG", "TEG Name")]
+
+
+def _format_ranking_for_display(ranking: pd.DataFrame, player_col: str) -> pd.DataFrame:
+    """Rename TEGNum columns to 'TEG N' and show '-' for non-participation."""
+    df = ranking.copy()
+    rename = {}
+    for col in df.columns:
+        if col == player_col:
+            continue
+        try:
+            rename[col] = f"TEG {int(col)}"
+        except (ValueError, TypeError):
+            rename[col] = col
+    df = df.rename(columns=rename)
+    for col in [c for c in df.columns if c != player_col]:
+        df[col] = df[col].apply(lambda x: "-" if pd.isna(x) else str(x))
+    return df
+
+
+def _player_rankings_context(tab: str, row_dim: str = "Player", col_dim: str = "TEGNum") -> dict:
+    try:
+        if row_dim not in ("Player", "Pl"):
+            row_dim = "Player"
+        if col_dim not in ("TEGNum", "TEG"):
+            col_dim = "TEGNum"
+        teg_data = cached_complete_teg_data()
+        if tab == "trophy":
+            ranking = create_net_competition_ranking_table(teg_data, row_dim, col_dim)
+            rank_title = "TEG Trophy Rankings by TEG (Net Competition)"
+            caption = "Uses Net vs Par for TEGs 2-7, Stableford Points for TEG 8+."
+            summary_title = "TEG Trophy rankings summary"
+        else:
+            ranking = create_teg_ranking_table(teg_data, "GrossVP", row_dim, col_dim)
+            rank_title = "Green Jacket Rankings by TEG (Gross vs Par)"
+            caption = "Lower scores are better. Ties marked '='; '-' = did not participate."
+            summary_title = "Green Jacket rankings summary"
+
+        summary = create_combined_position_summary(ranking, row_dim)
+        display = _format_ranking_for_display(ranking, row_dim)
+
+        sections = [
+            {"title": rank_title, "caption": caption,
+             "table_html": _df_to_html(display, link_players=(row_dim == "Player"))},
+            {"title": summary_title, "caption": None,
+             "table_html": _df_to_html(summary, table_class="teg-table")},
+        ]
+        return {"sections": sections, "row_dims": PR_ROW_DIMS, "col_dims": PR_COL_DIMS,
+                "selected_row_dim": row_dim, "selected_col_dim": col_dim}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@router.get("/player-rankings")
+async def player_rankings_page(request: Request, row_dim: str = Query("Player"), col_dim: str = Query("TEGNum")):
+    default_tab = "trophy"
+    ctx = _player_rankings_context(default_tab, row_dim, col_dim)
+    return templates.TemplateResponse("player_rankings.html", {
         "request": request,
         "active_page": "player-rankings",
-        "title": "Player Rankings",
-        "subtitle": "Gross ranking by TEG",
-        "table_html": table_html,
-        "sections": None,
+        "tabs": PLAYER_RANKINGS_TABS,
+        "active_tab": default_tab,
+        **ctx,
+    })
+
+
+@router.get("/player-rankings/tab")
+async def player_rankings_tab(request: Request, tab: str = "trophy",
+                              row_dim: str = Query("Player"), col_dim: str = Query("TEGNum")):
+    ctx = _player_rankings_context(tab, row_dim, col_dim)
+    return templates.TemplateResponse("partials/player_rankings_tab.html", {
+        "request": request,
+        "active_tab": tab,
+        **ctx,
     })

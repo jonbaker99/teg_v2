@@ -2,8 +2,22 @@
 <p class="text-muted">Error: {{ error }}</p>
 {% else %}
 {% if chart_json %}
+<input type="hidden" id="results-chart-variant" name="chart_variant" value="{{ active_chart_variant }}">
 {% if result_title %}<div class="card-header">{{ result_title }}</div>{% endif %}
 <div class="data-card data-card--padded">
+    {% if chart_types %}
+    <div class="flex items-center gap-2 mb-2">
+        {% for cid, clabel in chart_types %}
+        <button class="tab-underline {% if cid == active_chart_variant %}active{% endif %}"
+                onclick="document.getElementById('results-chart-variant').value='{{ cid }}'"
+                hx-get="/results/table" hx-target="#results-content"
+                hx-include="#results-teg-select, #results-tab-input"
+                hx-vals='{"chart_variant": "{{ cid }}"}'>
+            {{ clabel }}
+        </button>
+        {% endfor %}
+    </div>
+    {% endif %}
     <div id="results-chart" style="width:100%; height:350px;"></div>
     <script>
     (function() {

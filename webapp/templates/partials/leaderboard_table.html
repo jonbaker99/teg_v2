@@ -1,5 +1,12 @@
 {% if error %}
 <div class="error-box">{{ error }}</div>
+{% elif scorecard_rounds %}
+<div class="card-header">{{ active_title }}</div>
+<div class="data-card">
+    {% for r in scorecard_rounds %}
+    <p><a href="/scorecard?type=one_round_all_players&teg={{ selected_teg }}&round={{ r }}" class="text-link">Round {{ r }} scorecard</a></p>
+    {% endfor %}
+</div>
 {% else %}
 <div>
     {% if active_champion %}
@@ -11,5 +18,26 @@
         {{ active_table | safe }}
         </div>
     </div>
+
+    {% if chart_json %}
+    <div class="flex items-center gap-2 mt-5 mb-2">
+        {% for cid, clabel in chart_types %}
+        <button class="tab-underline {% if cid == active_chart_variant %}active{% endif %}"
+                onclick="document.getElementById('lb-chart-variant-input').value='{{ cid }}'"
+                hx-get="/leaderboard/table" hx-target="#tables"
+                hx-include="#teg-select, #lb-tab-input"
+                hx-vals='{"chart_variant": "{{ cid }}"}'>
+            {{ clabel }}
+        </button>
+        {% endfor %}
+    </div>
+    <div id="lb-chart" style="width:100%; height:420px;"></div>
+    <script>
+    (function() {
+        var data = {{ chart_json | safe }};
+        Plotly.newPlot('lb-chart', data.data, data.layout, {displayModeBar: false, responsive: true});
+    })();
+    </script>
+    {% endif %}
 </div>
 {% endif %}

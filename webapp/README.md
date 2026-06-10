@@ -124,12 +124,26 @@ See [page_title_switcher.md](page_title_switcher.md) — page title and card hea
 
 ## Development
 
+### Navigation (single source of truth)
+
+The top nav and the **Contents** site map are both driven by `webapp/nav.py`
+(`NAV_SECTIONS`). This mirrors the Streamlit app's section grouping, page
+titles and ordering (see `streamlit/page_config.py`), excluding the Data-admin
+section. `NAV_SECTIONS` is injected into every template via
+`request.state.nav_sections` (set in `app.py`'s `theme_middleware`), and
+`base.html` renders the nav dropdowns by looping over it. To add/rename/reorder
+a nav entry, edit `NAV_SECTIONS` only — do not hand-edit the nav markup in
+`base.html`.
+
+Each section entry has `label`, `active` (set of `active_page` values that
+highlight the section) and `pages` (list of `(title, url, active_key)`).
+
 ### Adding a new page
 1. Create route in `routes/my_page.py` (define `router = APIRouter()` and your handler).
 2. Create template in `templates/my_page.html` (flat — no `pages/` subdir).
 3. Follow the route → deps → template pattern.
 4. Register the route in `app.py` in **two places**: import it in `from webapp.routes import (…, my_page, …)`, then call `app.include_router(my_page.router)`.
-5. Pass `active_page="my-key"` in the `TemplateResponse` context so the nav highlights correctly. The value must match one of the keys hardcoded in `base.html` (search `active_page in [...]` to find the lists).
+5. Pass `active_page="my-key"` in the `TemplateResponse` context so the nav highlights correctly. Add the page (and, if needed, its `active_page` key) to the relevant section in `webapp/nav.py`.
 
 ### Adding a new theme
 1. Create `static/themes/my-theme.css`
@@ -161,8 +175,16 @@ See [page_title_switcher.md](page_title_switcher.md) — page title and card hea
 
 ## Current status
 
-26 endpoints implemented with data parity vs Streamlit:
-- History, results, records, scoring (multiple views), honours, personal bests, comebacks, handicaps, bestball
+**Full Streamlit page set replicated** (excluding the Data-admin section — data
+update/edit/delete, report generation, volume management — which is
+intentionally out of scope). The nav mirrors Streamlit's structure exactly
+(sections, page titles, ordering) via `webapp/nav.py`. Pages: Contents,
+TEG History / Honours / Full Results / Player Rankings / TEG Reports, TEG
+Records / Top TEGs and Rounds / Personal Bests, Latest Leaderboard / Latest
+Round / Latest TEG / Handicaps, the 11 Scoring-analysis views, and Scorecard /
+Best-Worstball / Eclectic Scores / Eclectic Records.
+
+`/` now lands on **Contents** (the site map), matching Streamlit.
 
 **Formatting pass in progress:**
 - Table styling consistency
@@ -170,6 +192,19 @@ See [page_title_switcher.md](page_title_switcher.md) — page title and card hea
 - Column widths and cell padding
 - Layout refinement for multi-content pages
 - Card header styling (4 options: grey bar, mono label, serif label, hidden)
+
+### Webapp ↔ Streamlit feature-parity audit
+
+The functional parity pass is **substantially complete** — the missing
+controls/views/measures/charts have been closed across every page, and all
+endpoints render their Streamlit-equivalent content. Per-page detail and the
+remaining (cosmetic / WIP-heatmap / deep-port) items are tracked in
+**[PARITY_AUDIT.md](PARITY_AUDIT.md)**.
+
+Analysis logic added during the audit (kept UI-agnostic in `teg_analysis/`):
+`analysis/player_rankings.py` (ranking tables + position summaries),
+`analysis/eclectic.py` records helpers, and `display/scorecards.py` (scorecard
+HTML builders).
 
 **Not yet built:**
 - REST API — planned; will expose `teg_analysis` over HTTP so any client (scripts, mobile, other frontends) can access the analysis layer without needing Python

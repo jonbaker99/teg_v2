@@ -13,11 +13,13 @@ from teg_analysis.analysis.scoring import (
     prepare_score_count_display,
     prepare_achievement_table_data,
     get_scoring_achievement_fields,
+    format_vs_par,
 )
 from teg_analysis.analysis.streaks import (
     prepare_good_streaks_data, prepare_bad_streaks_data,
     prepare_current_good_streaks_data, prepare_current_bad_streaks_data,
     prepare_record_best_streaks_data, prepare_record_worst_streaks_data,
+    calculate_window_streaks,
 )
 from teg_analysis.analysis.aggregation import (
     aggregate_data,
@@ -28,11 +30,12 @@ from teg_analysis.analysis.aggregation import (
     calculate_biggest_comebacks,
 )
 from teg_analysis.io.file_operations import read_file
-from teg_analysis.constants import ROUND_INFO_CSV
-from teg_analysis.display.tables import score_type_stats, max_scoretype_per_round
+from teg_analysis.constants import ROUND_INFO_CSV, STREAKS_PARQUET
+from teg_analysis.display.tables import score_type_stats, max_scoretype_per_round, max_scoretype_per_teg
 from webapp.deps import (
     cached_load_all_data,
     cached_round_data,
+    cached_ranked_round_data,
     get_available_teg_numbers,
     get_default_teg_num,
     get_rounds_for_teg,
@@ -108,8 +111,8 @@ def _birdies_tab_context(tab: str, score_type: str = "Birdies") -> dict:
             sections.append({"title": f"Max {score_type} per Round", "table_html": _df_to_html(table)})
 
         elif tab == "per_teg":
-            stats = score_type_stats(all_data)
-            sections.append({"title": f"{score_type} Stats by Player", "table_html": _df_to_html(stats)})
+            table = max_scoretype_per_teg(all_data)
+            sections.append({"title": f"Max {score_type} per TEG", "table_html": _df_to_html(table)})
 
         return {"sections": sections}
     except Exception as e:
@@ -144,14 +147,61 @@ async def scoring_birdies_tab(request: Request, tab: str = Query("career"), scor
 STREAK_TABS = [
     ("player", "Streaks by Player"),
     ("records", "Record Streaks"),
+    ("detail", "Streak detail"),
 ]
 
 
-def _streak_tab_context(tab: str, direction: str = "good", mode: str = "max") -> dict:
+def _streak_detail_context(d_teg: str = "All", d_round: str = "All", d_player: str = "All") -> dict:
+    """Build the 'Streak detail' tab: filtered window-streak analysis."""
+    all_data = cached_load_all_data()
+    streaks_df = read_file(STREAKS_PARQUET)
+    df = streaks_df.merge(
+        all_data[['HoleID', 'TEG', 'TEGNum', 'Round', 'Pl', 'Player']],
+        on=['HoleID', 'Pl'],
+    ).sort_values(['Pl', 'TEGNum', 'Round', 'Career Count'])
+
+    teg_options = ['All'] + sorted(df['TEG'].unique(), key=lambda x: int(str(x).split()[1]))
+    round_options = ['All'] + sorted(df['Round'].unique().tolist())
+    player_options = ['All'] + sorted(df['Pl'].unique().tolist())
+
+    filtered = df.copy()
+    if d_teg != 'All':
+        filtered = filtered[filtered['TEG'] == d_teg]
+    if d_round != 'All':
+        filtered = filtered[filtered['Round'] == int(d_round)]
+    if d_player != 'All':
+        filtered = filtered[filtered['Pl'] == d_player]
+
+    if filtered.empty:
+        table_html = "<p class='text-muted text-sm'>No data matches the selected filters.</p>"
+    else:
+        results = calculate_window_streaks(filtered)
+        table_html = _df_to_html(results) if results is not None and not results.empty \
+            else "<p class='text-muted text-sm'>No streak data available for the selected filters.</p>"
+
+    return {
+        "detail": True,
+        "table_html": table_html,
+        "teg_options": teg_options,
+        "round_options": round_options,
+        "player_options": player_options,
+        "d_teg": d_teg,
+        "d_round": d_round,
+        "d_player": d_player,
+        "hole_count": int(len(filtered)),
+    }
+
+
+def _streak_tab_context(tab: str, direction: str = "good", mode: str = "max",
+                        d_teg: str = "All", d_round: str = "All", d_player: str = "All") -> dict:
     """Build sections list for a given streaks tab."""
     try:
+        if tab == "detail":
+            return _streak_detail_context(d_teg, d_round, d_player)
+
         all_data = cached_load_all_data()
         sections = []
+        caption = None
 
         if tab == "player":
             if mode == "max" and direction == "good":
@@ -173,8 +223,9 @@ def _streak_tab_context(tab: str, direction: str = "good", mode: str = "max") ->
             worst = prepare_record_worst_streaks_data(all_data)
             sections.append({"title": "Record Best Streaks", "table_html": _df_to_html(best)})
             sections.append({"title": "Record Worst Streaks", "table_html": _df_to_html(worst)})
+            caption = "*: current streak is record streak"
 
-        return {"sections": sections}
+        return {"sections": sections, "caption": caption}
     except Exception as e:
         return {"error": str(e)}
 
@@ -202,8 +253,11 @@ async def scoring_streaks_tab(
     tab: str = Query("player"),
     direction: str = Query("good"),
     mode: str = Query("max"),
+    d_teg: str = Query("All"),
+    d_round: str = Query("All"),
+    d_player: str = Query("All"),
 ):
-    ctx = _streak_tab_context(tab, direction, mode)
+    ctx = _streak_tab_context(tab, direction, mode, d_teg, d_round, d_player)
     return templates.TemplateResponse("partials/scoring_streaks_tab.html", {
         "request": request,
         "tab": tab,
@@ -490,24 +544,90 @@ async def scoring_by_course_tab(request: Request, tab: str = Query("gross_record
 
 # --- /scoring/all-rounds ------------------------------------------------------
 
-@router.get("/scoring/all-rounds")
-async def scoring_all_rounds_page(request: Request):
-    try:
-        rd_data = cached_round_data()
-        display_cols = [c for c in ['TEGNum', 'Round', 'Player', 'Course', 'GrossVP', 'Stableford'] if c in rd_data.columns]
-        display = rd_data[display_cols].sort_values(['TEGNum', 'Round', 'GrossVP'], ascending=[False, True, True])
-        display = display.rename(columns={'TEGNum': 'TEG', 'GrossVP': 'Gross vs Par'})
-        table_html = _df_to_html(display)
-    except Exception as e:
-        table_html = f"<p class='text-muted'>Error: {e}</p>"
+ALL_ROUNDS_MEASURES = [
+    ("Sc", "Score"),
+    ("GrossVP", "Gross vs Par"),
+    ("Stableford", "Stableford"),
+    ("NetVP", "Net vs Par"),
+]
 
-    return templates.TemplateResponse("data_table.html", {
+
+def _all_rounds_context(area: str, course: str, player: str, measure: str, n: int) -> dict:
+    try:
+        rd = cached_ranked_round_data().copy()
+        rd['Pl_count'] = rd.groupby('Pl')['Pl'].transform('count')
+
+        rd = _filter_by_area(rd, area)
+        courses = ["All courses"] + sorted(rd['Course'].dropna().unique().tolist())
+        if course != "All courses":
+            rd = rd[rd['Course'] == course]
+        players = ["All players"] + sorted(rd['Player'].dropna().unique().tolist())
+        if player != "All players":
+            rd = rd[rd['Player'] == player]
+
+        if measure not in rd.columns:
+            measure = "GrossVP"
+        friendly = dict(ALL_ROUNDS_MEASURES).get(measure, measure)
+        ascending = measure != "Stableford"
+        rd = rd.sort_values(by=measure, ascending=ascending)
+
+        pl_rank_col = f"Rank_within_player_{measure}"
+        out = rd[['Player', 'Course', measure, 'TEG-Round', 'Year', pl_rank_col, 'Pl_count']].copy()
+        out = out.rename(columns={measure: friendly, pl_rank_col: 'PB Rank'})
+        out['PB Rank'] = out['PB Rank'].astype(int).astype(str) + '/' + out['Pl_count'].astype(int).astype(str)
+        out = out.drop(columns='Pl_count')
+        out[friendly] = out[friendly].astype(int)
+        out['Year'] = out['Year'].astype(int)
+        out = out.head(n)
+
+        title = f"All rounds for {player} at {course}"
+        return {
+            "table_html": _df_to_html(out),
+            "result_title": title,
+            "areas": _get_course_areas(),
+            "measures": ALL_ROUNDS_MEASURES,
+            "courses": courses,
+            "players": players,
+            "selected_area": area,
+            "selected_course": course,
+            "selected_player": player,
+            "selected_measure": measure,
+            "n_records": n,
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@router.get("/scoring/all-rounds")
+async def scoring_all_rounds_page(
+    request: Request,
+    area: str = Query("All Areas"),
+    course: str = Query("All courses"),
+    player: str = Query("All players"),
+    measure: str = Query("GrossVP"),
+    n: int = Query(10),
+):
+    ctx = _all_rounds_context(area, course, player, measure, n)
+    return templates.TemplateResponse("scoring_all_rounds.html", {
         "request": request,
         "active_page": "scoring",
-        "title": "All Rounds",
-        "subtitle": "Complete round-level scoring data",
-        "table_html": table_html,
-        "sections": None,
+        **ctx,
+    })
+
+
+@router.get("/scoring/all-rounds/content")
+async def scoring_all_rounds_content(
+    request: Request,
+    area: str = Query("All Areas"),
+    course: str = Query("All courses"),
+    player: str = Query("All players"),
+    measure: str = Query("GrossVP"),
+    n: int = Query(10),
+):
+    ctx = _all_rounds_context(area, course, player, measure, n)
+    return templates.TemplateResponse("partials/scoring_all_rounds_content.html", {
+        "request": request,
+        **ctx,
     })
 
 
@@ -539,10 +659,26 @@ def _matrix_context(level: str = "teg", score_type: str = "GrossVP") -> dict:
 
         pivot = data.pivot_table(index=idx_cols, columns=player_col, values=score_type, aggfunc='first')
 
-        # Add Average column
-        pivot['Average'] = pivot.mean(axis=1).round(1)
+        # Add Average column (numeric, before formatting)
+        avg = pivot.mean(axis=1)
 
-        pivot = pivot.round(1).reset_index()
+        is_vp = score_type in ('GrossVP', 'NetVP')
+        player_cols = list(pivot.columns)
+
+        pivot = pivot.reset_index()
+        pivot['Average'] = avg.values
+
+        if is_vp:
+            # vs-par columns get signed integers; Average signed to 1 dp
+            for c in player_cols:
+                pivot[c] = pivot[c].apply(lambda v: format_vs_par(round(v)) if pd.notna(v) else '')
+            pivot['Average'] = pivot['Average'].apply(lambda v: f"{v:+.1f}" if pd.notna(v) else '')
+        else:
+            # Score / Stableford: integer player values, 1 dp Average
+            for c in player_cols:
+                pivot[c] = pivot[c].apply(lambda v: f"{int(round(v))}" if pd.notna(v) else '')
+            pivot['Average'] = pivot['Average'].apply(lambda v: f"{v:.1f}" if pd.notna(v) else '')
+
         if 'TEGNum' in pivot.columns:
             pivot = pivot.rename(columns={'TEGNum': 'TEG'})
         table_html = _df_to_html(pivot)
@@ -615,71 +751,208 @@ def _distributions_chart(display: pd.DataFrame) -> str | None:
         return None
 
 
-@router.get("/scoring/distributions")
-async def scoring_distributions_page(request: Request):
-    chart_json = None
+DIST_FIELDS = [("Sc", "Scores"), ("GrossVP", "Scores vs Par"), ("Stableford", "Stableford Points")]
+_DIST_DISPLAY_NAME = {"Sc": "Score", "GrossVP": "vs Par", "Stableford": "Stableford"}
+DIST_TABS = [("player", "By Player"), ("teg", "By TEG")]
+
+
+def _distributions_context(field="Stableford", player="All players", teg="All TEGs",
+                           par="All pars", mode="Percentage", tab="player") -> dict:
     try:
         all_data = cached_load_all_data()
-        counts = count_scores_by_player(all_data)
-        display = prepare_score_count_display(counts, 'GrossVP', 'Gross vs Par')
-        table_html = _df_to_html(display)
-        chart_json = _distributions_chart(display)
-    except Exception as e:
-        table_html = f"<p class='text-muted'>Error: {e}</p>"
+        if field not in ("Sc", "GrossVP", "Stableford"):
+            field = "Stableford"
+        display_name = _DIST_DISPLAY_NAME[field]
+        is_pct = mode == "Percentage"
 
+        player_options = ["All players"] + sorted(all_data["Pl"].unique().tolist())
+        teg_options = ["All TEGs"] + [str(t) for t in sorted(all_data["TEGNum"].unique().tolist(), reverse=True)]
+        par_options = ["All pars", "Par 3", "Par 4", "Par 5"]
+
+        # Apply TEG + par filters
+        filtered = all_data
+        if teg != "All TEGs":
+            filtered = filtered[filtered["TEGNum"] == int(teg)]
+        if par != "All pars":
+            filtered = filtered[filtered["PAR"] == int(par.replace("Par ", ""))]
+        player_filtered = filtered if player == "All players" else filtered[filtered["Pl"] == player]
+
+        chart_json = None
+        if tab == "player":
+            count_data = count_scores_by_player(player_filtered, field)
+            if is_pct:
+                totals = count_data.sum(axis=0).replace(0, pd.NA)
+                display_data = (count_data.div(totals, axis=1) * 100).round(1)
+            else:
+                display_data = count_data
+            table = prepare_score_count_display(display_data, field, display_name, is_pct)
+            table_html = _df_to_html(table)
+            chart_table = prepare_score_count_display(count_data, field, display_name, False)
+            chart_json = _distributions_chart(chart_table)
+        else:
+            # By TEG crosstab (respects par + player filters, not TEG)
+            teg_filtered = all_data
+            if par != "All pars":
+                teg_filtered = teg_filtered[teg_filtered["PAR"] == int(par.replace("Par ", ""))]
+            if player != "All players":
+                teg_filtered = teg_filtered[teg_filtered["Pl"] == player]
+            if is_pct:
+                crosstab = pd.crosstab(teg_filtered["TEGNum"], teg_filtered[field], normalize="index") * 100
+                crosstab = crosstab.round(1)
+            else:
+                crosstab = pd.crosstab(teg_filtered["TEGNum"], teg_filtered[field])
+            ct = crosstab.reset_index()
+            ct.columns.name = None
+            if field == "GrossVP":
+                ct = ct.rename(columns={c: (format_vs_par(c) if c != "TEGNum" else c) for c in ct.columns})
+            for col in ct.columns:
+                if col == "TEGNum":
+                    continue
+                if is_pct:
+                    ct[col] = ct[col].apply(lambda x: f"{x:.1f}%" if pd.notna(x) else "0.0%")
+                else:
+                    ct[col] = ct[col].apply(lambda x: int(x) if pd.notna(x) else 0)
+            ct = ct.rename(columns={"TEGNum": "TEG"})
+            table_html = _df_to_html(ct)
+
+        return {
+            "table_html": table_html,
+            "chart_json": chart_json,
+            "fields": DIST_FIELDS,
+            "player_options": player_options,
+            "teg_options": teg_options,
+            "par_options": par_options,
+            "tabs": DIST_TABS,
+            "selected_field": field,
+            "selected_player": player,
+            "selected_teg": teg,
+            "selected_par": par,
+            "mode": mode,
+            "active_tab": tab,
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@router.get("/scoring/distributions")
+async def scoring_distributions_page(request: Request, field="Stableford", player="All players",
+                                     teg="All TEGs", par="All pars", mode="Percentage", tab="player"):
+    ctx = _distributions_context(field, player, teg, par, mode, tab)
     return templates.TemplateResponse("scoring_distributions.html", {
         "request": request,
         "active_page": "scoring",
-        "table_html": table_html,
-        "chart_json": chart_json,
+        **ctx,
+    })
+
+
+@router.get("/scoring/distributions/content")
+async def scoring_distributions_content(request: Request, field="Stableford", player="All players",
+                                        teg="All TEGs", par="All pars", mode="Percentage", tab="player"):
+    ctx = _distributions_context(field, player, teg, par, mode, tab)
+    return templates.TemplateResponse("partials/scoring_distributions_content.html", {
+        "request": request,
+        **ctx,
     })
 
 
 # --- /scoring/changes ---------------------------------------------------------
 
-@router.get("/scoring/changes")
-async def scoring_changes_page(request: Request):
+CHANGES_TABS = [("improvements", "Biggest improvements"), ("worsenings", "Biggest worsenings")]
+_CHANGES_TOP_N = 10
+
+
+def _changes_context(teg: str = "All TEGs", across: str = "within",
+                     rows: str = "top", tab: str = "improvements") -> dict:
     try:
-        rd_data = cached_round_data()
-        # Calculate round-over-round changes per player per TEG
-        changes_list = []
-        for teg_num in sorted(rd_data['TEGNum'].unique()):
-            teg_rd = rd_data[rd_data['TEGNum'] == teg_num].sort_values(['Player', 'Round'])
-            for player in teg_rd['Player'].unique():
-                player_rounds = teg_rd[teg_rd['Player'] == player].sort_values('Round')
-                prev = None
-                for _, row in player_rounds.iterrows():
-                    if prev is not None:
-                        diff = row['GrossVP'] - prev
-                        changes_list.append({
-                            'TEG': teg_num,
-                            'Round': row['Round'],
-                            'Player': player,
-                            'Gross vs Par': row['GrossVP'],
-                            'Change': f"{diff:+.0f}" if diff != 0 else "=",
-                        })
-                    prev = row['GrossVP']
+        rd = cached_round_data().copy()
+        rd['TR'] = rd['TEGNum'] * 100 + rd['Round']
 
-        if changes_list:
-            df = pd.DataFrame(changes_list)
-            df = df.sort_values(['TEG', 'Round', 'Player'], ascending=[False, True, True])
-            table_html = _df_to_html(df)
+        teg_options = ["All TEGs"] + [str(t) for t in sorted(rd['TEGNum'].unique().tolist(), reverse=True)]
+        if teg != "All TEGs":
+            rd = rd[rd['TEGNum'] == int(teg)]
+
+        grouper = ['Pl'] if across == "across" else ['Pl', 'TEG']
+        rd = rd.sort_values(['Pl', 'TR'])
+        rd['Change'] = rd.groupby(grouper)['Sc'].diff()
+        rd['Previous Rd'] = rd.groupby(grouper)['Sc'].shift()
+        rd = rd.dropna(subset=['Change'])
+
+        if rd.empty:
+            return {"table_html": "<p class='text-muted text-sm'>No data available.</p>",
+                    "teg_options": teg_options, "selected_teg": teg, "across": across,
+                    "rows": rows, "tabs": CHANGES_TABS, "active_tab": tab, "top_n": _CHANGES_TOP_N}
+
+        rd[['Sc', 'Previous Rd', 'Change']] = rd[['Sc', 'Previous Rd', 'Change']].astype(int)
+        out = rd[['Pl', 'TEG', 'Round', 'Course', 'Year', 'Sc', 'Previous Rd', 'Change']].copy()
+        out['Year'] = out['Year'].astype(int)
+
+        if tab == "worsenings":
+            out = out.sort_values('Change', ascending=False)
+            if rows != "all":
+                out = out.nlargest(_CHANGES_TOP_N, 'Change', keep='all')
         else:
-            table_html = "<p class='text-muted'>No round data available.</p>"
-    except Exception as e:
-        table_html = f"<p class='text-muted'>Error: {e}</p>"
+            out = out.sort_values('Change', ascending=True)
+            if rows != "all":
+                out = out.nsmallest(_CHANGES_TOP_N, 'Change', keep='all')
 
-    return templates.TemplateResponse("data_table.html", {
+        return {
+            "table_html": _df_to_html(out),
+            "teg_options": teg_options,
+            "selected_teg": teg,
+            "across": across,
+            "rows": rows,
+            "tabs": CHANGES_TABS,
+            "active_tab": tab,
+            "top_n": _CHANGES_TOP_N,
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@router.get("/scoring/changes")
+async def scoring_changes_page(request: Request, teg: str = Query("All TEGs"),
+                               across: str = Query("within"), rows: str = Query("top"),
+                               tab: str = Query("improvements")):
+    ctx = _changes_context(teg, across, rows, tab)
+    return templates.TemplateResponse("scoring_changes.html", {
         "request": request,
         "active_page": "scoring",
-        "title": "Changes vs Previous Round",
-        "subtitle": "How each player's score changed from the previous round",
-        "table_html": table_html,
-        "sections": None,
+        **ctx,
+    })
+
+
+@router.get("/scoring/changes/content")
+async def scoring_changes_content(request: Request, teg: str = Query("All TEGs"),
+                                  across: str = Query("within"), rows: str = Query("top"),
+                                  tab: str = Query("improvements")):
+    ctx = _changes_context(teg, across, rows, tab)
+    return templates.TemplateResponse("partials/scoring_changes_content.html", {
+        "request": request,
+        **ctx,
     })
 
 
 # --- /scoring/comebacks -------------------------------------------------------
+
+_COMEBACK_SCORE_COLS = {
+    "Final Round Score", "Total Score", "Gap Closed", "Lead Lost",
+    "Lead", "Max Lead", "Comeback", "Differential", "Final Round Differential",
+}
+
+
+def _fmt_comebacks(df: pd.DataFrame, measure: str) -> pd.DataFrame:
+    """Format float columns: signed vs-par for gross score columns, ints elsewhere."""
+    if df is None or df.empty:
+        return df
+    out = df.copy()
+    for c in out.columns:
+        if out[c].dtype.kind == "f":
+            if measure == "GrossVP" and c in _COMEBACK_SCORE_COLS:
+                out[c] = out[c].apply(lambda v: format_vs_par(int(round(v))) if pd.notna(v) else "")
+            else:
+                out[c] = out[c].apply(lambda v: str(int(round(v))) if pd.notna(v) else "")
+    return out
+
 
 def _comebacks_context(competition: str = "gross", n: int = 5) -> dict:
     """Build sections for the comebacks page."""
@@ -688,39 +961,54 @@ def _comebacks_context(competition: str = "gross", n: int = 5) -> dict:
         round_info = read_file(ROUND_INFO_CSV)
         measure = "GrossVP" if competition == "gross" else "Stableford"
 
+        def fmt(df):
+            return _fmt_comebacks(df, measure)
+
         sections = []
 
         # 1. Best & Worst Final Rounds
         differentials = calculate_final_round_differentials(all_data, round_info, measure)
         if differentials is not None and not differentials.empty:
-            sections.append({"title": "Best Final Round Performances", "table_html": _df_to_html(differentials.head(n))})
+            sections.append({"title": "Best Final Round Performances", "table_html": _df_to_html(fmt(differentials.head(n)))})
             worst = differentials.tail(n).iloc[::-1]
-            sections.append({"title": "Worst Final Round Performances", "table_html": _df_to_html(worst)})
+            sections.append({"title": "Worst Final Round Performances", "table_html": _df_to_html(fmt(worst))})
+
+            # Worst performances by leaders going into the final round (Rank After R3 == 1)
+            leaders = differentials[differentials["Rank After R3"] == 1.0].copy()
+            if not leaders.empty:
+                leaders = leaders.sort_values("Final Round Score", ascending=(measure != "GrossVP"))
+                sections.append({
+                    "title": "Worst Final Round Performances by Leaders",
+                    "caption": "Leaders going into the final round (Rank After R3 = 1)",
+                    "table_html": _df_to_html(fmt(leaders.head(n))),
+                })
         else:
             sections.append({"title": "Best & Worst Final Rounds", "table_html": "<p class='text-muted text-sm'>No data available.</p>"})
 
         # 2. Biggest Leads Lost After R3
         leads_r3 = calculate_biggest_leads_lost_after_r3(all_data, round_info, measure)
         if leads_r3 is not None and not leads_r3.empty:
-            sections.append({"title": "Biggest Leads Lost Going Into Final Round", "table_html": _df_to_html(leads_r3.head(n))})
+            sections.append({"title": "Biggest Leads Lost Going Into Final Round", "table_html": _df_to_html(fmt(leads_r3.head(n)))})
         else:
             sections.append({"title": "Biggest Leads Lost Going Into Final Round", "table_html": "<p class='text-muted text-sm'>No data available.</p>"})
 
         # 3. Biggest Leads Lost During R4
         leads_r4 = calculate_biggest_leads_lost_in_r4(all_data, round_info, measure)
         if leads_r4 is not None and not leads_r4.empty:
-            sections.append({"title": "Biggest Leads Lost During Final Round", "table_html": _df_to_html(leads_r4.head(n))})
+            sections.append({"title": "Biggest Leads Lost During Final Round", "table_html": _df_to_html(fmt(leads_r4.head(n)))})
         else:
             sections.append({"title": "Biggest Leads Lost During Final Round", "table_html": "<p class='text-muted text-sm'>No data available.</p>"})
 
         # 4. Biggest Comebacks
         comebacks = calculate_biggest_comebacks(all_data, round_info, measure)
         if comebacks is not None and not comebacks.empty:
-            sections.append({"title": "Biggest Comebacks in Final Round", "table_html": _df_to_html(comebacks.head(n))})
+            sections.append({"title": "Biggest Comebacks in Final Round", "table_html": _df_to_html(fmt(comebacks.head(n)))})
         else:
             sections.append({"title": "Biggest Comebacks in Final Round", "table_html": "<p class='text-muted text-sm'>No data available.</p>"})
 
-        return {"sections": sections}
+        caption = ("Analysis covers completed TEGs from TEG 2 onwards. "
+                   "'Gap Closed' measures ground made up on the leader during the final round.")
+        return {"sections": sections, "caption": caption}
     except Exception as e:
         return {"error": str(e)}
 

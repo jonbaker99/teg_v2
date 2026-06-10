@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="/static/scorecard.css">
+{% endblock %}
+
 {% block page_title %}
 <div class="page-title-area">
     <span class="page-label">Latest TEG</span>
@@ -8,6 +12,8 @@
 {% endblock %}
 
 {% block content %}
+
+{% if context_header %}<p class="text-muted text-sm mb-3">{{ context_header }}</p>{% endif %}
 
 <div class="flex items-center gap-4 mb-4">
     <select id="lr-teg-select" class="theme-select"

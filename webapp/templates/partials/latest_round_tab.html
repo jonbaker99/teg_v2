@@ -1,10 +1,49 @@
 {% if error %}
 <p class="text-muted">Error: {{ error }}</p>
+{% elif report_html is defined %}
+  {% if report_html %}
+  <div class="report-body">{{ report_html | safe }}</div>
+  {% else %}
+  <p class="text-muted text-sm">{{ report_message }}</p>
+  {% endif %}
 {% elif sections %}
+  {% if scoring_fields %}
+  <div class="flex items-center gap-2 mb-3">
+    {% for fid, flabel in scoring_fields %}
+    <button class="tab-underline {% if fid == score_type %}active{% endif %}"
+            hx-get="/latest-round/tab" hx-target="#lr-content" hx-swap="innerHTML"
+            hx-vals='{"teg": "{{ teg }}", "round": "{{ round }}", "tab": "scoring", "score_type": "{{ fid }}"}'>
+      {{ flabel }}
+    </button>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% if metric_tabs %}
+  <div class="flex flex-wrap items-center gap-2 mb-3">
+    {% for mid, mlabel in metric_tabs %}
+    <button class="tab-underline {% if mid == active_metric %}active{% endif %}"
+            hx-get="/latest-round/tab" hx-target="#lr-content" hx-swap="innerHTML"
+            hx-vals='{"teg": "{{ teg }}", "round": "{{ round }}", "tab": "scoreboard", "metric": "{{ mid }}"}'>
+      {{ mlabel }}
+    </button>
+    {% endfor %}
+  </div>
+  {% endif %}
   {% for section in sections %}
     {% if section.title %}<div class="card-header">{{ section.title }}</div>{% endif %}
     <div class="data-card"><div style="overflow-x: auto;">{{ section.table_html | safe }}</div></div>
   {% endfor %}
+  {% if chart_json %}
+  {% if chart_title %}<div class="card-header mt-4">{{ chart_title }}</div>{% endif %}
+  <div id="lr-metric-chart" style="width:100%; height:340px;"></div>
+  <script>
+  (function() {
+    var data = {{ chart_json | safe }};
+    Plotly.newPlot('lr-metric-chart', data.data, data.layout, {displayModeBar: false, responsive: true});
+  })();
+  </script>
+  {% endif %}
+  {% if caption %}<p class="text-muted text-sm mt-3">{{ caption }}</p>{% endif %}
 {% else %}
 <p class="text-muted text-sm">No data available.</p>
 {% endif %}

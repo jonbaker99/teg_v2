@@ -77,15 +77,16 @@
         {% endfor %}
     </div>
 
-    <select class="theme-select" id="pb-n-select" name="n"
-            hx-get="/personal-bests/tab"
-            hx-target="#pb-content"
-            hx-include="#pb-measure, #pb-tab-input"
-            hx-swap="innerHTML">
-        {% for val in [3, 5, 10] %}
-        <option value="{{ val }}" {% if val == n_records %}selected{% endif %}>Top {{ val }}</option>
-        {% endfor %}
-    </select>
+    <label class="flex items-center gap-2 text-sm">
+        <span class="text-muted">Show top</span>
+        <input class="theme-select" type="number" min="1" max="100" step="1"
+               id="pb-n-select" name="n" value="{{ n_records }}" style="width: 5rem;"
+               hx-get="/personal-bests/tab"
+               hx-target="#pb-content"
+               hx-include="#pb-measure, #pb-tab-input"
+               hx-trigger="change, keyup changed delay:500ms"
+               hx-swap="innerHTML">
+    </label>
 </div>
 
 {# Hidden inputs to track state #}
