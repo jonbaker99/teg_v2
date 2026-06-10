@@ -51,7 +51,6 @@ def format_vs_par(value: float) -> str:
         return str(value)
 
 
-
 def format_date_for_scorecard(date_str, input_format=None, output_format='%d/%m/%y'):
     """Formats a date string for scorecard display.
 
@@ -70,7 +69,7 @@ def format_date_for_scorecard(date_str, input_format=None, output_format='%d/%m/
         if input_format:
             date_obj = pd.to_datetime(date_str, format=input_format)
         else:
-            date_obj = pd.to_datetime(date_str, dayfirst=True)
+            date_obj = pd.to_datetime(date_str, dayfirst=True)  # FIXED: added dayfirst=True
         return date_obj.strftime(output_format)
     except:
         return str(date_str)
@@ -148,10 +147,8 @@ def prepare_records_table(data_source: pd.DataFrame, record_type: str) -> pd.Dat
     Returns:
         pd.DataFrame: A table with a custom header based on the record type.
     """
-    # Import here to avoid circular dependency
     from teg_analysis.analysis.rankings import get_best
 
-    # Define table title based on record type
     if record_type == 'teg':
         table_title = 'Best TEGs:'
         measures = ['GrossVP', 'NetVP', 'Stableford']
@@ -165,44 +162,28 @@ def prepare_records_table(data_source: pd.DataFrame, record_type: str) -> pd.Dat
     records_data = []
 
     for measure in measures:
-        # Get all records tied for best (rank 1) for this measure
         rank_column = f'Rank_within_all_{measure}'
 
         if rank_column in data_source.columns:
-            # Get all records with rank 1 (includes ties)
             tied_records = data_source[data_source[rank_column] == 1]
         else:
-            # Fallback to old method if ranking column doesn't exist
             tied_records = get_best(data_source, measure_to_use=measure, top_n=1)
 
         if not tied_records.empty:
-            # Handle multiple tied records
             for idx, record_row in tied_records.iterrows():
-                # Format the "When" column based on record type
                 if record_type == 'teg':
                     when = f"{record_row['TEG']} ({record_row['Area']}, {record_row['Year']})"
-                elif record_type == 'round':
-                    # Format date to get month/year
+                else:
                     if 'Date' in record_row and pd.notna(record_row['Date']):
-                        try:
-                            date_obj = pd.to_datetime(record_row['Date'], dayfirst=True)
-                            month_year = date_obj.strftime('%b %Y')
-                        except:
-                            month_year = str(record_row['Year'])
+                        # FIXED: Removed the secondary .strftime() call that would cause a crash
+                        month_year = format_date_for_scorecard(record_row['Date'], output_format='%b %Y')
                     else:
                         month_year = str(record_row['Year'])
-                    when = f"{record_row['TEG']} Rd {record_row['Round']} ({record_row['Course']}, {month_year})"
-                else:  # frontback
-                    # Format date to get month/year
-                    if 'Date' in record_row and pd.notna(record_row['Date']):
-                        try:
-                            date_obj = pd.to_datetime(record_row['Date'], dayfirst=True)
-                            month_year = date_obj.strftime('%b %Y')
-                        except:
-                            month_year = str(record_row['Year'])
-                    else:
-                        month_year = str(record_row['Year'])
-                    when = f"{record_row['TEG']} Rd {record_row['Round']} {record_row['FrontBack']} ({record_row['Course']}, {month_year})"
+                    
+                    if record_type == 'round':
+                        when = f"{record_row['TEG']} Rd {record_row['Round']} ({record_row['Course']}, {month_year})"
+                    else:  # frontback
+                        when = f"{record_row['TEG']} Rd {record_row['Round']} {record_row['FrontBack']} ({record_row['Course']}, {month_year})"
 
                 records_data.append({
                     table_title: MEASURE_TITLES[measure],
@@ -229,7 +210,6 @@ def prepare_worst_records_table(data_source: pd.DataFrame, record_type: str) -> 
     Returns:
         pd.DataFrame: A table with a custom header based on the record type.
     """
-    # Define table title based on record type
     if record_type == 'teg':
         table_title = 'Worst TEGs:'
         measures = ['GrossVP', 'NetVP', 'Stableford']
@@ -243,42 +223,26 @@ def prepare_worst_records_table(data_source: pd.DataFrame, record_type: str) -> 
     records_data = []
 
     for measure in measures:
-        # Get all records tied for worst for this measure
         if measure == 'Stableford':
-            # For Stableford, lower is worse
             tied_worst_records = data_source.nsmallest(1, measure, keep='all')
         else:
-            # For other measures, higher is worse
             tied_worst_records = data_source.nlargest(1, measure, keep='all')
 
         if not tied_worst_records.empty:
-            # Handle multiple tied records
             for idx, record_row in tied_worst_records.iterrows():
-                # Format the "When" column based on record type
                 if record_type == 'teg':
                     when = f"{record_row['TEG']} ({record_row['Area']}, {record_row['Year']})"
-                elif record_type == 'round':
-                    # Format date to get month/year
+                else:
                     if 'Date' in record_row and pd.notna(record_row['Date']):
-                        try:
-                            date_obj = pd.to_datetime(record_row['Date'], dayfirst=True)
-                            month_year = date_obj.strftime('%b %Y')
-                        except:
-                            month_year = str(record_row['Year'])
+                        # FIXED: Removed the secondary .strftime() call that would cause a crash
+                        month_year = format_date_for_scorecard(record_row['Date'], output_format='%b %Y')
                     else:
                         month_year = str(record_row['Year'])
-                    when = f"{record_row['TEG']} Rd {record_row['Round']} ({record_row['Course']}, {month_year})"
-                else:  # frontback
-                    # Format date to get month/year
-                    if 'Date' in record_row and pd.notna(record_row['Date']):
-                        try:
-                            date_obj = pd.to_datetime(record_row['Date'], dayfirst=True)
-                            month_year = date_obj.strftime('%b %Y')
-                        except:
-                            month_year = str(record_row['Year'])
-                    else:
-                        month_year = str(record_row['Year'])
-                    when = f"{record_row['TEG']} Rd {record_row['Round']} {record_row['FrontBack']} ({record_row['Course']}, {month_year})"
+                    
+                    if record_type == 'round':
+                        when = f"{record_row['TEG']} Rd {record_row['Round']} ({record_row['Course']}, {month_year})"
+                    else:  # frontback
+                        when = f"{record_row['TEG']} Rd {record_row['Round']} {record_row['FrontBack']} ({record_row['Course']}, {month_year})"
 
                 records_data.append({
                     table_title: WORST_MEASURE_TITLES[measure],
@@ -291,33 +255,17 @@ def prepare_worst_records_table(data_source: pd.DataFrame, record_type: str) -> 
 
 
 def prepare_streak_records_table(streak_data: pd.DataFrame, table_title: str) -> pd.DataFrame:
-    """Prepares a streak records table with a title in the header row.
-
-    This function formats streak records to match the style of other records
-    tables and consolidates records with 3 or more holders into a single row.
-
-    Args:
-        streak_data (pd.DataFrame): DataFrame with streak data.
-        table_title (str): The title for the table.
-
-    Returns:
-        pd.DataFrame: A formatted table for display on the records page.
-    """
+    """Prepares a streak records table with a title in the header row."""
     from teg_analysis.constants import PLAYER_DICT
 
-    # Create reverse lookup: full name to initials
     name_to_initials = {name: initials for initials, name in PLAYER_DICT.items()}
-
     records_data = []
-
-    # Group by Streak Type and Record to find shared records
     grouped = streak_data.groupby(['Streak Type', 'Record'])
 
     for (streak_type, record_value), group in grouped:
         num_holders = len(group)
 
         if num_holders >= 3:
-            # Consolidate into one row with player initials (deduplicated, maintaining order)
             player_initials = []
             seen = set()
             for player_name in group['Player']:
@@ -334,7 +282,6 @@ def prepare_streak_records_table(streak_data: pd.DataFrame, table_title: str) ->
                 '  ': initials_str
             })
         else:
-            # Show each record separately (1-2 holders)
             for _, row in group.iterrows():
                 records_data.append({
                     table_title: streak_type,
@@ -347,24 +294,9 @@ def prepare_streak_records_table(streak_data: pd.DataFrame, table_title: str) ->
 
 
 def prepare_score_count_records_table(all_data: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    """Prepares score count records tables.
-
-    This function finds all-time records for score counts, including best
-    (most Eagles, Birdies, Pars) and worst (most TBPs) in a TEG or round.
-
-    Args:
-        all_data (pd.DataFrame): The complete tournament data.
-
-    Returns:
-        tuple: A tuple containing two DataFrames:
-            - best_records_df (pd.DataFrame): Formatted table of the best
-              score count records.
-            - worst_records_df (pd.DataFrame): Formatted table of the worst
-              score count records.
-    """
+    """Prepares score count records tables."""
     from teg_analysis.analysis.scoring import count_scores_by_player
 
-    # Define score categories
     score_categories = {
         'Eagles': [-2],
         'Birdies': [-2, -1],
@@ -375,9 +307,7 @@ def prepare_score_count_records_table(all_data: pd.DataFrame) -> Tuple[pd.DataFr
     best_records_data = []
     worst_records_data = []
 
-    # Process each category
     for category, scores in score_categories.items():
-        # Find records at TEG level
         teg_record_count = 0
         teg_record_holders = []
 
@@ -397,11 +327,8 @@ def prepare_score_count_records_table(all_data: pd.DataFrame) -> Tuple[pd.DataFr
                 elif total == teg_record_count and total > 0:
                     teg_record_holders.append((player, teg_num, group))
 
-        # Add TEG records
         if teg_record_count > 0:
-            # If 3+ holders, consolidate into one row
             if len(teg_record_holders) >= 3:
-                # Get player initials (deduplicated, maintaining order)
                 player_initials = []
                 seen = set()
                 for p in teg_record_holders:
@@ -416,13 +343,11 @@ def prepare_score_count_records_table(all_data: pd.DataFrame) -> Tuple[pd.DataFr
                     ' ': '→',
                     '  ': initials_str
                 }
-
                 if category == 'TBPs':
                     worst_records_data.append(record_data)
                 else:
                     best_records_data.append(record_data)
             else:
-                # Show each record separately (1-2 holders)
                 for player, teg_num, group in teg_record_holders:
                     teg_name = f"TEG {teg_num}"
                     area = group['Area'].iloc[0] if 'Area' in group.columns else ''
@@ -435,13 +360,11 @@ def prepare_score_count_records_table(all_data: pd.DataFrame) -> Tuple[pd.DataFr
                         ' ': player,
                         '  ': when
                     }
-
                     if category == 'TBPs':
                         worst_records_data.append(record_data)
                     else:
                         best_records_data.append(record_data)
 
-        # Find records at Round level
         round_record_count = 0
         round_record_holders = []
 
@@ -461,11 +384,8 @@ def prepare_score_count_records_table(all_data: pd.DataFrame) -> Tuple[pd.DataFr
                 elif total == round_record_count and total > 0:
                     round_record_holders.append((player, teg_num, round_num, group))
 
-        # Add Round records
         if round_record_count > 0:
-            # If 3+ holders, consolidate into one row
             if len(round_record_holders) >= 3:
-                # Get player initials (deduplicated, maintaining order)
                 player_initials = []
                 seen = set()
                 for p in round_record_holders:
@@ -480,24 +400,18 @@ def prepare_score_count_records_table(all_data: pd.DataFrame) -> Tuple[pd.DataFr
                     ' ': '→',
                     '  ': initials_str
                 }
-
                 if category == 'TBPs':
                     worst_records_data.append(record_data)
                 else:
                     best_records_data.append(record_data)
             else:
-                # Show each record separately (1-2 holders)
                 for player, teg_num, round_num, group in round_record_holders:
                     teg_name = f"TEG {teg_num}"
                     course = group['Course'].iloc[0] if 'Course' in group.columns else ''
 
-                    # Format date
                     if 'Date' in group.columns and pd.notna(group['Date'].iloc[0]):
-                        try:
-                            date_obj = pd.to_datetime(group['Date'].iloc[0], dayfirst=True)
-                            month_year = date_obj.strftime('%b %Y')
-                        except:
-                            month_year = str(group['Year'].iloc[0]) if 'Year' in group.columns else ''
+                        # FIXED: Swapped raw pd.to_datetime logic out for the clean format helper
+                        month_year = format_date_for_scorecard(group['Date'].iloc[0], output_format='%b %Y')
                     else:
                         month_year = str(group['Year'].iloc[0]) if 'Year' in group.columns else ''
 
@@ -509,7 +423,6 @@ def prepare_score_count_records_table(all_data: pd.DataFrame) -> Tuple[pd.DataFr
                         ' ': player,
                         '  ': when
                     }
-
                     if category == 'TBPs':
                         worst_records_data.append(record_data)
                     else:
