@@ -54,77 +54,57 @@ def _build_par_row(df_par: pd.DataFrame, label_class: str) -> str:
     return ''.join(parts)
 
 
-def build_single_round_gross_table(df: pd.DataFrame) -> str:
-    """Build gross scores table for a single player, single round.
+def build_single_round_combined_table(df: pd.DataFrame) -> str:
+    """Build a single combined scorecard for one player, single round.
+
+    One table with the hole/PAR header followed by a gross ``Score`` row and a
+    ``Stableford`` row — mirrors the Streamlit single-round card.
 
     Args:
-        df: 18-row DataFrame for one player/round with Hole, PAR, Sc, GrossVP cols.
+        df: 18-row DataFrame for one player/round with Hole, PAR, Sc, GrossVP,
+            Stableford cols.
 
     Returns:
-        HTML string for the gross scores table.
+        HTML string for the combined scorecard table.
     """
     df = df.sort_values('Hole')
     front_9 = df[df['Hole'] <= 9]
     back_9 = df[df['Hole'] > 9]
-    front_sc = int(front_9['Sc'].sum())
-    back_sc = int(back_9['Sc'].sum())
-    total_sc = int(df['Sc'].sum())
+    front_sc, back_sc, total_sc = int(front_9['Sc'].sum()), int(back_9['Sc'].sum()), int(df['Sc'].sum())
+    front_sf, back_sf, total_sf = int(front_9['Stableford'].sum()), int(back_9['Stableford'].sum()), int(df['Stableford'].sum())
 
     parts = ['<table class="scorecard-table"><thead>']
     parts.append(_build_hole_header_row('label-column', 'Hole'))
     parts.append(_build_par_row(df, 'label-column'))
-    parts.append('</thead><tbody><tr><td class="label-column">Score</td>')
+    parts.append('</thead><tbody>')
 
+    # Gross score row
+    parts.append('<tr><td class="label-column">Score</td>')
     for hole in range(1, 10):
         row = df[df['Hole'] == hole].iloc[0]
-        vs_par = int(row['GrossVP'])
-        score = int(row['Sc'])
-        parts.append(f'<td class="score-cell" data-vs-par="{vs_par}"><span>{score}</span></td>')
+        parts.append(f'<td class="score-cell" data-vs-par="{int(row["GrossVP"])}"><span>{int(row["Sc"])}</span></td>')
     parts.append(f'<td class="totals front-back-divider">{front_sc}</td>')
     for hole in range(10, 19):
         row = df[df['Hole'] == hole].iloc[0]
-        vs_par = int(row['GrossVP'])
-        score = int(row['Sc'])
-        parts.append(f'<td class="score-cell" data-vs-par="{vs_par}"><span>{score}</span></td>')
+        parts.append(f'<td class="score-cell" data-vs-par="{int(row["GrossVP"])}"><span>{int(row["Sc"])}</span></td>')
     parts.append(f'<td class="totals">{back_sc}</td>')
     parts.append(f'<td class="totals">{total_sc}</td>')
-    parts.append('</tr></tbody></table>')
-    return ''.join(parts)
+    parts.append('</tr>')
 
-
-def build_single_round_stableford_table(df: pd.DataFrame) -> str:
-    """Build stableford points table for a single player, single round.
-
-    Args:
-        df: 18-row DataFrame for one player/round with Hole, PAR, Stableford cols.
-
-    Returns:
-        HTML string for the stableford points table.
-    """
-    df = df.sort_values('Hole')
-    front_9 = df[df['Hole'] <= 9]
-    back_9 = df[df['Hole'] > 9]
-    front_sf = int(front_9['Stableford'].sum())
-    back_sf = int(back_9['Stableford'].sum())
-    total_sf = int(df['Stableford'].sum())
-
-    parts = ['<table class="scorecard-table"><thead>']
-    parts.append(_build_hole_header_row('label-column', 'Hole'))
-    parts.append(_build_par_row(df, 'label-column'))
-    parts.append('</thead><tbody><tr><td class="label-column">Stableford</td>')
-
+    # Stableford row
+    parts.append('<tr><td class="label-column">Stableford</td>')
     for hole in range(1, 10):
         row = df[df['Hole'] == hole].iloc[0]
-        sf = int(row['Stableford'])
-        parts.append(f'<td class="score-cell" data-stableford="{sf}"><span>{sf}</span></td>')
+        parts.append(f'<td class="score-cell" data-stableford="{int(row["Stableford"])}"><span>{int(row["Stableford"])}</span></td>')
     parts.append(f'<td class="totals front-back-divider">{front_sf}</td>')
     for hole in range(10, 19):
         row = df[df['Hole'] == hole].iloc[0]
-        sf = int(row['Stableford'])
-        parts.append(f'<td class="score-cell" data-stableford="{sf}"><span>{sf}</span></td>')
+        parts.append(f'<td class="score-cell" data-stableford="{int(row["Stableford"])}"><span>{int(row["Stableford"])}</span></td>')
     parts.append(f'<td class="totals">{back_sf}</td>')
     parts.append(f'<td class="totals">{total_sf}</td>')
-    parts.append('</tr></tbody></table>')
+    parts.append('</tr>')
+
+    parts.append('</tbody></table>')
     return ''.join(parts)
 
 

@@ -21,6 +21,12 @@
     <p class="text-secondary mb-4">{{ subheader }}</p>
     {% endif %}
 
+    {% if combined_table %}
+    <!-- Single combined card: gross Score row + Stableford row -->
+    <div class="overflow-x-auto">
+        {{ combined_table | safe }}
+    </div>
+    {% else %}
     <!-- Gross Scores -->
     <h2 class="text-lg heading mb-2">Gross Scores</h2>
     <div class="overflow-x-auto mb-8">
@@ -32,5 +38,6 @@
     <div class="overflow-x-auto">
         {{ stableford_table | safe }}
     </div>
+    {% endif %}
 </div>
 {% endif %}
