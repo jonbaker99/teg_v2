@@ -269,7 +269,8 @@ as the live site."
   *Decisions for 1a:*
   - **Match the feel, not the layout.** Reproduce Streamlit's cleanliness,
     consistency and readability — keep the webapp's own top-nav-dropdown
-    paradigm and structure (no sidebar).
+    paradigm and structure (no sidebar). Live reference for comparison:
+    [theelgolfo.com](https://theelgolfo.com).
   - **Shell first, then systematic audit.** Fix the shared shell (nav bar,
     page-title band, table + section-spacing defaults via the structural hooks)
     where the wins are obvious; then run the app, screenshot every page, and
