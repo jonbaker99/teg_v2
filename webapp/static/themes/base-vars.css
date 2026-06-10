@@ -677,6 +677,12 @@ body.ts-f5 .page-title-area .page-title {
     margin: 0 0 1rem 0;
     line-height: 1.3;
 }
+/* Breathing room above any section title that follows other content, so
+   stacked sections within a panel get a consistent gap without per-template
+   margins. (First section in a panel has no preceding sibling → no gap.) */
+* + .section-title {
+    margin-top: 1.75rem;
+}
 
 /* ── Layout utilities ── */
 .section-gap {
@@ -687,21 +693,38 @@ body.ts-f5 .page-title-area .page-title {
 }
 
 /* ── Structural hierarchy hooks ──
-   No-op / layout-neutral wrapper classes that make the
-   Page → Section/Tab → Data-display hierarchy explicit. Like .data-card,
-   they carry no styling by default and exist so formatting can later be
-   applied once per level. Semantic classes sit alongside the Tailwind
-   utilities that currently do the layout, so rendering is unchanged. */
+   These semantic wrappers OWN the page's spacing rhythm so individual
+   templates don't hand-roll margins. Layout intent that legitimately varies
+   per row (justify-between, items-center vs items-end, gap overrides) is still
+   expressed with Tailwind utilities on the element, which override the
+   defaults below. Do NOT add margin utilities (mb-*/mt-*) to these wrappers —
+   the spacing is centralised here. */
 
 /* Section level */
 .section-nav {
     /* in-page primary tab bar (row of .tab-underline) */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
 }
 .section-controls {
     /* selector / filter rows (dropdowns, inputs) */
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+/* A controls row sitting directly under the tab bar shouldn't double the gap. */
+.section-nav + .section-controls {
+    margin-top: -0.5rem;
 }
 .toggle-group {
     /* sub-toggle rows inside a panel (score-type, metric, variant, etc.) */
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 .section-panel {
     /* HTMX swap-target / content container */
@@ -722,6 +745,16 @@ body.ts-f5 .page-title-area .page-title {
 /* ── Data card — styled by layered themes; transparent by default ── */
 .data-card {
     /* no default styling — themed in clean-layered and future layered themes */
+}
+/* Consistent gap between stacked data blocks (chart card + table card, etc.)
+   without per-template margins. */
+.data-card + .data-card {
+    margin-top: 1.5rem;
+}
+/* A chart/title heading that follows a data block gets breathing room too. */
+.data-card + .subheading,
+.data-card + .chart-description {
+    margin-top: 1.5rem;
 }
 
 /* ── Card header — styled via body class ch-X ── */

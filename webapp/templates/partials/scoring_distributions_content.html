@@ -2,7 +2,7 @@
 <p class="text-muted">Error: {{ error }}</p>
 {% else %}
 {% set inc = "#di-field, #di-player, #di-teg, #di-par, #di-mode, #di-tab" %}
-<div class="section-controls flex flex-wrap items-end gap-4 mb-4">
+<div class="section-controls flex flex-wrap items-end gap-4">
     <label class="flex flex-col text-sm gap-1"><span class="text-muted">Score type</span>
         <select class="theme-select" id="di-field" name="field"
                 hx-get="/scoring/distributions/content" hx-target="#distributions" hx-include="{{ inc }}" hx-swap="innerHTML">

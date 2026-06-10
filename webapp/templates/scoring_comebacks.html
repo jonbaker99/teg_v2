@@ -9,7 +9,7 @@
 
 {% block content %}
 
-<div class="section-controls flex items-center gap-4 mb-4">
+<div class="section-controls flex items-center gap-4">
     <div class="section-nav" style="margin-bottom: 0;">
         {% for cid, clabel in [('gross', 'Gross'), ('stableford', 'Stableford')] %}
         <button class="tab-underline{% if cid == competition %} tab-underline--active{% endif %}"

@@ -52,10 +52,29 @@ Only use `!important` when the logic genuinely requires it — not to brute-forc
 **Page → Section/Tab → Data-display** wrapper hierarchy applied across every
 template (`.section-nav`, `.section-controls`, `.toggle-group`,
 `.section-panel`, `.data-card`, `.chart-container`, plus `.tab-underline--active`
-for in-page tabs and `.text-link` for inline links). Like `.data-card`, all of
-these are **no-op / layout-neutral by default** and exist so formatting can be
-applied once per level. The canonical table and per-class rules live in
+for in-page tabs and `.text-link` for inline links). The canonical table and
+per-class rules live in
 [README.md → Structural class hierarchy](README.md#structural-class-hierarchy).
+
+### Spacing is centralised on the section wrappers
+
+The section wrappers **own the page's vertical spacing rhythm** in
+`base-vars.css` — they are no longer layout-neutral:
+
+- `.section-controls` and `.section-nav` carry `margin-bottom: 1.5rem` and their
+  own flex/gap defaults, so the gap below a filter row or tab bar is identical
+  on every page.
+- `* + .section-title` and `.data-card + .data-card` add a `1.5–1.75rem` gap
+  between stacked sections/cards automatically.
+- Layout intent that legitimately varies per row (`justify-between`,
+  `items-center` vs `items-end`, `gap-*` overrides) is still expressed with
+  Tailwind utilities on the element and overrides the central defaults.
+
+**Do NOT add vertical-margin utilities (`mb-*` / `mt-*` / `my-*`) to
+`.section-controls` or `.section-nav`** — the spacing is owned centrally. Adding
+them reintroduces the per-page drift this convention exists to prevent. (To
+suppress a gap in a nested/edge case, use an inline `style="margin-bottom:0"`,
+as in `results.html` / `bestball.html`.)
 
 ## Data-card pattern (Clean Layered)
 

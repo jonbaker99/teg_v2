@@ -29,7 +29,7 @@
     {% endfor %}
 </div>
 
-<div id="st-controls" class="section-controls flex items-center gap-4 mt-4 mb-4"
+<div id="st-controls" class="section-controls flex items-center gap-4"
      {% if active_tab != 'player' %}style="display:none"{% endif %}>
     <div class="toggle-group flex items-center gap-2">
         {% for did, dlabel in [('good', 'Good'), ('bad', 'Bad')] %}

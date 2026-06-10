@@ -3,7 +3,7 @@
 {% else %}
 {% set common = {"hx-get": "/scoring/all-rounds/content", "hx-target": "#all-rounds",
                  "hx-include": "#ar-area, #ar-course, #ar-player, #ar-measure, #ar-n", "hx-swap": "innerHTML"} %}
-<div class="section-controls flex flex-wrap items-end gap-4 mb-4">
+<div class="section-controls flex flex-wrap items-end gap-4">
     <label class="flex flex-col text-sm gap-1">
         <span class="text-muted">Area</span>
         <select class="theme-select" id="ar-area" name="area"
