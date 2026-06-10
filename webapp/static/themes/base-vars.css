@@ -73,7 +73,9 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Tables ── */
 .teg-table {
-    width: 100%;
+    /* Content-sized like the Streamlit datawrapper tables (not stretched to 100%) */
+    width: auto;
+    max-width: 100%;
     border-collapse: collapse;
     font-size: var(--table-font-size, 0.875rem);
     font-family: var(--font-body), sans-serif;
@@ -112,7 +114,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .records-table {
-    width: 100%;
+    /* Content-sized like the Streamlit datawrapper tables (not stretched to 100%) */
+    width: auto;
+    max-width: 100%;
     border-collapse: collapse;
     font-size: var(--table-font-size, 0.875rem);
     font-family: var(--font-body), sans-serif;
@@ -136,6 +140,11 @@ h1, h2, h3, h4, h5, h6 {
 .records-table--borderless thead th {
     background-color: transparent;
     border-bottom: none;
+    /* Serif headers like the Streamlit records tables (Lora 16px/600), even though
+       the data cells stay mono — editorial records look. */
+    font-family: var(--font-heading), serif;
+    font-weight: 600;
+    font-size: 1rem;
 }
 .records-table--borderless tbody td {
     border-bottom: none;
@@ -165,10 +174,10 @@ h1, h2, h3, h4, h5, h6 {
     width: 2rem;
 }
 .col-num {
+    /* Content-sized numeric column (table is width:auto). min-width keeps numbers
+       from jittering between datasets; no % width now the table isn't 100%-wide. */
     text-align: center;
-    width: 12%;
     min-width: 3.5rem;
-    max-width: 6rem;
 }
 .col-player {
     text-align: left;
@@ -407,7 +416,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 .page-title-area .page-title {
     font-family: var(--font-heading), serif;
-    font-size: 1.375rem;
+    /* Prominent serif title like the Streamlit st.title heading */
+    font-size: 1.75rem;
     font-weight: 600;
     color: var(--text-primary);
     margin: 0;

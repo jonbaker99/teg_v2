@@ -14,7 +14,15 @@ Visit `http://localhost:8000` in your browser. Use the theme switcher in the nav
 ### Local environment
 
 - Runtime deps (`fastapi`, `uvicorn`, `jinja2`, `starlette`, `httpx`, `markdown`) must all be in the **same** env that launches uvicorn. The project's `venv/` historically held the reporting/analysis deps (pandas, anthropic, markdown) but not the webapp deps; `venv/bin/pip install -r requirements.txt` brings everything into one env.
-- **Known gotcha on Python 3.14:** jinja2 3.1.x + starlette emit `TypeError: cannot use 'tuple' as a dict key (unhashable type: 'dict')` on **every** template render (the template cache key isn't hashable in 3.14). Use Python 3.12 or 3.13 for local dev until starlette/jinja2 ship a fix. Symptom: every templated route 500s with that exact message.
+- **Known gotcha — pin starlette `<0.38`:** the routes use the older
+  `TemplateResponse(name, context)` positional form. Starlette **≥0.41 removed**
+  it, so with a newer starlette **every** templated route 500s with
+  `TypeError: unhashable type: 'dict'` (the context dict gets read as the
+  template name). `requirements.txt` pins `starlette>=0.37,<0.38` +
+  `fastapi>=0.110,<0.112` to avoid this. Proper fix (future): migrate all
+  `TemplateResponse` calls to the modern `TemplateResponse(request, name, context)`
+  signature, then drop the pins. (A related variant of this error also appears on
+  Python 3.14 with jinja2 3.1.x — use Python 3.12/3.13 there.)
 
 ## Architecture
 
@@ -59,13 +67,19 @@ All data comes from `teg_analysis/`. The webapp never calculates anything — it
 
 ## Theme system
 
-Three themes, registered in `theme.py`. Each overrides CSS custom properties defined in `base-vars.css`. Default: **Clean Page**.
+Three themes, registered in `theme.py`. Each overrides CSS custom properties defined in `base-vars.css`. Default: **Clean** (flat white, matching the Streamlit site — Phase 1a).
 
 | Theme | Description |
 |---|---|
-| **Clean Page** (default) | Flat single-surface design |
+| **Clean** (default) | Minimal flat white, editorial feel — mirrors the Streamlit app |
+| **Clean Page** | Flat single white content card on a warm grey background |
 | **Clean Layered** | 3-layer hierarchy: stone background → taupe panel → white data cards |
-| **Clean** | Minimal white, editorial feel |
+
+The page-title (`ts-*`) and card-header (`ch-*`) **style switchers were removed
+from the nav** for Phase 1a (the nav now carries only the theme switcher). The
+cookie/CSS infrastructure stays live (`theme.py` defaults + `base-vars.css`), so
+the experiments can be re-enabled for the Phase 2 design review. Current locked
+defaults: title style `a` (mono label + serif title), card header `ch3` (serif).
 
 **How it works:**
 1. User clicks theme in nav dropdown

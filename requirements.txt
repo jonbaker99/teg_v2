@@ -9,8 +9,13 @@ plotly
 altair
 markdown>=3.4
 anthropic
-fastapi
+# Webapp (FastAPI) — pinned: starlette >=0.41 removed the positional
+# TemplateResponse(name, context) form the routes use, which 500s every page
+# with "unhashable type: 'dict'". Keep on the pre-removal line until the routes
+# are migrated to TemplateResponse(request, name, context).
+fastapi>=0.110.0,<0.112.0
+starlette>=0.37.0,<0.38.0
 uvicorn[standard]
-jinja2
+jinja2>=3.1.0,<3.2.0
 jupyter
 ipykernel
