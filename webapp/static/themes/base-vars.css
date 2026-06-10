@@ -228,6 +228,14 @@ h1, h2, h3, h4, h5, h6 {
     border-bottom-color: var(--accent);
 }
 
+/* Alias — canonical active class is .tab-underline--active; .active kept as a
+   safety net for any stray markup. Templates use the canonical class. */
+.tab-underline.active,
+.tab-underline.active:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
 /* Legacy aliases — use .tab-btn / .tab-btn--active instead */
 .btn-active {
     background-color: var(--btn-active-bg);
@@ -619,6 +627,39 @@ body.ts-f5 .page-title-area .page-title {
 }
 .section-gap-sm {
     margin-bottom: 1rem;
+}
+
+/* ── Structural hierarchy hooks ──
+   No-op / layout-neutral wrapper classes that make the
+   Page → Section/Tab → Data-display hierarchy explicit. Like .data-card,
+   they carry no styling by default and exist so formatting can later be
+   applied once per level. Semantic classes sit alongside the Tailwind
+   utilities that currently do the layout, so rendering is unchanged. */
+
+/* Section level */
+.section-nav {
+    /* in-page primary tab bar (row of .tab-underline) */
+}
+.section-controls {
+    /* selector / filter rows (dropdowns, inputs) */
+}
+.toggle-group {
+    /* sub-toggle rows inside a panel (score-type, metric, variant, etc.) */
+}
+.section-panel {
+    /* HTMX swap-target / content container */
+}
+
+/* Data-display level */
+.chart-container {
+    /* Plotly target div — consolidates the universal inline width.
+       Height stays inline because it legitimately varies per chart. */
+    width: 100%;
+}
+
+/* Inline data links */
+.text-link {
+    /* forward-compat hook for inline links within data output */
 }
 
 /* ── Data card — styled by layered themes; transparent by default ── */
