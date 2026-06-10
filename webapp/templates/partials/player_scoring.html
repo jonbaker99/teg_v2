@@ -4,7 +4,7 @@
     <hr class="divider--dotted my-6">
     {% endif %}
     <div>
-        <h2 class="text-xl heading mb-3">{{ section.title }}</h2>
+        <h2 class="section-title">{{ section.title }}</h2>
         {% if section.table_html %}
         <div class="data-card"><div class="overflow-x-auto">
             {{ section.table_html | safe }}

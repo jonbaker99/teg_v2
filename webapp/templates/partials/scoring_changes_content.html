@@ -2,7 +2,7 @@
 <p class="text-muted">Error: {{ error }}</p>
 {% else %}
 {% set inc = "#ch-teg, #ch-across, #ch-rows, #ch-tab" %}
-<div class="section-controls flex flex-wrap items-end gap-4 mb-4">
+<div class="section-controls flex flex-wrap items-end gap-4">
     <label class="flex flex-col text-sm gap-1">
         <span class="text-muted">TEG</span>
         <select class="theme-select" id="ch-teg" name="teg"
@@ -45,5 +45,5 @@
     {% endfor %}
 </div>
 
-<div class="data-card"><div style="overflow-x: auto;">{{ table_html | safe }}</div></div>
+<div class="data-card"><div class="table-wrapper">{{ table_html | safe }}</div></div>
 {% endif %}

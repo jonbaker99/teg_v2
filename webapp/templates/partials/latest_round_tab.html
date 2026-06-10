@@ -31,7 +31,7 @@
   {% endif %}
   {% for section in sections %}
     {% if section.title %}<div class="card-header">{{ section.title }}</div>{% endif %}
-    <div class="data-card"><div style="overflow-x: auto;">{{ section.table_html | safe }}</div></div>
+    <div class="data-card"><div class="table-wrapper">{{ section.table_html | safe }}</div></div>
   {% endfor %}
   {% if chart_json %}
   {% if chart_title %}<div class="card-header mt-4">{{ chart_title }}</div>{% endif %}

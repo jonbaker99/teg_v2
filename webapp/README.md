@@ -133,22 +133,26 @@ async def leaderboard(request: Request, data=Depends(get_data)):
 ### Structural class hierarchy
 
 Every page is wrapped in a consistent **Page → Section/Tab → Data-display**
-hierarchy so visual formatting can be applied once per level. The structural
-wrapper classes are **no-op / layout-neutral by default** (defined in
-`base-vars.css`, mirroring `.data-card`) — they exist as forward-compatible
-hooks and add **alongside** the Tailwind utilities that do the actual layout,
-so adding them changes nothing visually.
+hierarchy so visual formatting can be applied once per level. The section
+wrappers **own the page's vertical spacing rhythm** (defined in `base-vars.css`)
+— they are no longer layout-neutral. Layout intent that legitimately varies per
+row (`justify-between`, `items-center` vs `items-end`, `gap-*` overrides) is
+still expressed with Tailwind utilities on the element and overrides the central
+defaults. See [design_principles.md → Spacing is centralised on the section
+wrappers](design_principles.md#spacing-is-centralised-on-the-section-wrappers).
 
-| Level | Class | Wraps |
+| Level | Class | Wraps / role |
 |---|---|---|
 | **Page** | `.page-container` → `.page-title-outer` / `.page-panel` → `.content-wrapper` → `.main-content` | The shell in `base.html` (already consistent — don't hand-edit) |
-| **Section** | `.section-nav` | The in-page primary tab bar (a row of `.tab-underline` buttons) |
-| | `.section-controls` | Selector / filter rows (dropdowns, number inputs) |
+| **Section** | `.section-nav` | The in-page primary tab bar (a row of `.tab-underline` buttons). Owns `margin-bottom` + flex/gap |
+| | `.section-controls` | Selector / filter rows (dropdowns, number inputs). Owns `margin-bottom` + flex/gap |
 | | `.toggle-group` | Sub-toggle rows inside a panel (score-type, metric, chart-variant, direction/mode) |
 | | `.section-panel` | Every HTMX swap-target / content container (the `id="…"` div that `hx-target` points at) |
 | **Data display** | `.card-header` | The single canonical section label (driven by the `ch-X` body class) |
 | | `.data-card` | Every table/chart wrapper — **all** tables and charts sit in one |
+| | `.table-wrapper` | Horizontal-scroll wrapper inside a `.data-card` for wide tables (`overflow-x:auto`) |
 | | `.chart-container` | Plotly target `<div>`s — carries `width:100%`; per-chart `height` stays inline |
+| | `.input-numeric` | Compact numeric input (`width:5rem`) for "top N" selectors |
 
 **Navigation:** site nav uses `.nav*` (`.nav-link.active` for the active site
 section — unchanged); in-page tabs are `.section-nav > .tab-underline` with the
@@ -161,8 +165,12 @@ single active class `.tab-underline--active`; sub-toggles are
 - Active tab/toggle state → `.tab-underline--active` (never bare `.active`; a
   `.tab-underline.active` CSS alias exists only as a safety net). If JS toggles
   the active state, it must add/remove `.tab-underline--active` too.
-- Wrap every table and chart in `.data-card`; give Plotly divs `.chart-container`
-  and keep only `height` inline.
+- Wrap every table and chart in `.data-card`; wrap wide tables in
+  `.table-wrapper`; give Plotly divs `.chart-container` and keep only `height`
+  inline. Use `.input-numeric` for compact number inputs.
+- **Do not add vertical-margin utilities (`mb-*`/`mt-*`/`my-*`) to
+  `.section-controls` or `.section-nav`** — their spacing is owned centrally.
+  For a nested/edge override, use inline `style="margin-bottom:0"`.
 
 **Scope note:** dev/demo templates (`smoke_test`, `width_test`,
 `title_preview`, `showcase`, `placeholder`) are not part of the page hierarchy

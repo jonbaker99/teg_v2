@@ -9,7 +9,7 @@
 
 {% block content %}
 
-<div class="section-controls flex items-center gap-4 mb-4">
+<div class="section-controls flex items-center gap-4">
     <div class="section-nav" style="margin-bottom: 0;">
         <button class="tab-underline{% if active_mode == 'bestball' %} tab-underline--active{% endif %}"
                 hx-get="/bestball/content?mode=bestball"
@@ -49,9 +49,8 @@
         <option value="false" {% if not sort_best %}selected{% endif %}>Worst First</option>
     </select>
 
-    <input type="number" id="bb-n" class="theme-select" name="n"
+    <input type="number" id="bb-n" class="theme-select input-numeric" name="n"
            min="1" max="100" step="1" value="{{ n_rows if n_rows > 0 else 3 }}"
-           style="width:5rem;"
            hx-get="/bestball/content"
            hx-target="#bb-content"
            hx-include="#bb-mode, #bb-teg, #bb-sort"

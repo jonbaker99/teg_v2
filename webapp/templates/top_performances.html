@@ -29,7 +29,7 @@
 </div>
 
 {# --- Measure + N controls --- #}
-<div id="tp-controls" class="section-controls flex items-center gap-4 mt-4 mb-4">
+<div id="tp-controls" class="section-controls flex items-center gap-4">
     <div class="toggle-group flex items-center gap-2">
         {% for mid, mlabel in measures %}
         <button class="tab-underline{% if mid == selected_measure %} tab-underline--active{% endif %}"
@@ -50,9 +50,8 @@
 
     <label class="flex items-center gap-2 text-sm">
         <span class="text-muted">Show top</span>
-        <input class="theme-select" type="number" min="1" max="100" step="1"
+        <input class="theme-select input-numeric" type="number" min="1" max="100" step="1"
                id="tp-n-select" name="n" value="{{ n_records }}"
-               style="width: 5rem;"
                hx-get="/top-performances/tab"
                hx-target="#tp-content"
                hx-include="#tp-measure, #tp-tab-input"

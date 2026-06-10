@@ -3,7 +3,7 @@
 {% else %}
 {% set common = {"hx-get": "/scoring/all-rounds/content", "hx-target": "#all-rounds",
                  "hx-include": "#ar-area, #ar-course, #ar-player, #ar-measure, #ar-n", "hx-swap": "innerHTML"} %}
-<div class="section-controls flex flex-wrap items-end gap-4 mb-4">
+<div class="section-controls flex flex-wrap items-end gap-4">
     <label class="flex flex-col text-sm gap-1">
         <span class="text-muted">Area</span>
         <select class="theme-select" id="ar-area" name="area"
@@ -38,7 +38,7 @@
     </label>
     <label class="flex flex-col text-sm gap-1">
         <span class="text-muted">Rounds to show</span>
-        <input class="theme-select" type="number" min="1" max="100" step="1" style="width: 5rem;"
+        <input class="theme-select input-numeric" type="number" min="1" max="100" step="1"
                id="ar-n" name="n" value="{{ n_records }}"
                hx-get="/scoring/all-rounds/content" hx-target="#all-rounds"
                hx-include="#ar-area, #ar-course, #ar-player, #ar-measure"
@@ -47,5 +47,5 @@
 </div>
 
 <h2 class="section-title">{{ result_title }}</h2>
-<div class="data-card"><div style="overflow-x: auto;">{{ table_html | safe }}</div></div>
+<div class="data-card"><div class="table-wrapper">{{ table_html | safe }}</div></div>
 {% endif %}
