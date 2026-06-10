@@ -113,6 +113,55 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
 }
 
+/* ── Player ranking table (conditional formatting) ──
+   Compact, centred columns that fit within the page width. Rank 1 gets a green
+   pill (white text); the worst rank a pale-red pill (dark red text). Mirrors the
+   Streamlit datawrapper player-ranking-table. */
+.player-ranking-table td,
+.player-ranking-table th {
+    text-align: center;
+    padding: 0.4rem 0.3rem;
+    width: 36px;
+    min-width: 20px;
+    max-width: 44px;
+    white-space: nowrap;
+}
+.player-ranking-table td:first-child,
+.player-ranking-table th:first-child {
+    text-align: left;
+    width: auto;
+    max-width: none;
+}
+.player-ranking-table td.first-place,
+.player-ranking-table td.last-place {
+    position: relative;
+}
+.player-ranking-table td.first-place::before,
+.player-ranking-table td.last-place::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 22px;
+    height: 22px;
+    border-radius: 15%;
+    z-index: 1;
+}
+.player-ranking-table td.first-place span,
+.player-ranking-table td.last-place span {
+    position: relative;
+    z-index: 2;
+    display: inline-block;
+    width: 22px;
+    line-height: 22px;
+    font-weight: 700;
+}
+.player-ranking-table td.first-place::before { background: green; }
+.player-ranking-table td.first-place span { color: #ffffff; }
+.player-ranking-table td.last-place::before { background: #FAE9E8; }
+.player-ranking-table td.last-place span { color: #8b0000; }
+
 .records-table {
     /* Content-sized like the Streamlit datawrapper tables (not stretched to 100%) */
     width: auto;
@@ -623,11 +672,9 @@ body.ts-f5 .page-title-area .page-title {
 .section-title {
     font-family: var(--font-heading), serif;
     font-size: 1.25rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-primary);
     margin: 0 0 1rem 0;
-    padding-left: 0.75rem;
-    border-left: 3px solid var(--accent);
     line-height: 1.3;
 }
 

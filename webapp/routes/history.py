@@ -1,5 +1,6 @@
 """History section routes: /history, /honours, /results, /player-rankings."""
 
+import re
 from pathlib import Path
 
 import pandas as pd
@@ -67,6 +68,62 @@ def _df_to_html(df: pd.DataFrame, table_class: str = "teg-table", link_players: 
                     rows.append(f"<td>{escape(str(val))}</td>")
             else:
                 rows.append(f"<td>{val}</td>")
+        rows.append("</tr>")
+    rows.append("</tbody></table>")
+    return "".join(rows)
+
+
+_RANK_PAT = re.compile(r"^\d+=?$")
+
+
+def _ranking_table_html(df: pd.DataFrame, player_col: str = "Player",
+                        link_players: bool = False) -> str:
+    """Render a player-ranking table with first/last-place conditional formatting.
+
+    Mirrors the Streamlit ``post_process_ranking_table``: per column, the rank 1
+    cell gets a green fill (white text) and the worst rank a pale-red fill (dark
+    red text). Rank values are wrapped in ``<span>`` so the pill shape can sit
+    behind the number. Non-rank cells (e.g. "-") are left plain.
+    """
+    if df is None or df.empty:
+        return "<p class='text-muted text-sm'>No data available.</p>"
+
+    cols = list(df.columns)
+    if player_col not in cols:
+        player_col = cols[0]
+    rank_cols = [c for c in cols if c != player_col]
+
+    # Worst (max) real rank per column, ignoring "-" and other non-rank values.
+    col_max_rank = {}
+    for c in rank_cols:
+        nums = [int(str(v).replace("=", "")) for v in df[c] if _RANK_PAT.match(str(v))]
+        col_max_rank[c] = max(nums) if nums else None
+
+    rows = ["<table class='teg-table player-ranking-table'>", "<thead><tr>"]
+    for col in cols:
+        rows.append(f"<th>{escape(str(col))}</th>")
+    rows.append("</tr></thead><tbody>")
+
+    for _, row in df.iterrows():
+        rows.append("<tr>")
+        for col in cols:
+            s = str(row[col])
+            if col == player_col:
+                code = _NAME_TO_CODE.get(s) if link_players else None
+                if code:
+                    rows.append(f"<td><a href='/player/{code}'>{escape(s)}</a></td>")
+                else:
+                    rows.append(f"<td>{escape(s)}</td>")
+            elif _RANK_PAT.match(s):
+                rank_num = int(s.replace("=", ""))
+                cls = ""
+                if rank_num == 1:
+                    cls = " class='first-place'"
+                elif col_max_rank[col] is not None and rank_num == col_max_rank[col]:
+                    cls = " class='last-place'"
+                rows.append(f"<td{cls}><span>{escape(s)}</span></td>")
+            else:
+                rows.append(f"<td>{escape(s)}</td>")
         rows.append("</tr>")
     rows.append("</tbody></table>")
     return "".join(rows)
@@ -445,7 +502,8 @@ def _player_rankings_context(tab: str, row_dim: str = "Player", col_dim: str = "
 
         sections = [
             {"title": rank_title, "caption": caption,
-             "table_html": _df_to_html(display, link_players=(row_dim == "Player"))},
+             "table_html": _ranking_table_html(display, player_col=row_dim,
+                                                link_players=(row_dim == "Player"))},
             {"title": summary_title, "caption": None,
              "table_html": _df_to_html(summary, table_class="teg-table")},
         ]
