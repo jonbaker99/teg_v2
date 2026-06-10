@@ -185,7 +185,7 @@ def prepare_records_table(data_source: pd.DataFrame, record_type: str) -> pd.Dat
                     # Format date to get month/year
                     if 'Date' in record_row and pd.notna(record_row['Date']):
                         try:
-                            date_obj = pd.to_datetime(record_row['Date'])
+                            date_obj = pd.to_datetime(record_row['Date'], dayfirst=True)
                             month_year = date_obj.strftime('%b %Y')
                         except:
                             month_year = str(record_row['Year'])
@@ -196,7 +196,7 @@ def prepare_records_table(data_source: pd.DataFrame, record_type: str) -> pd.Dat
                     # Format date to get month/year
                     if 'Date' in record_row and pd.notna(record_row['Date']):
                         try:
-                            date_obj = pd.to_datetime(record_row['Date'])
+                            date_obj = pd.to_datetime(record_row['Date'], dayfirst=True)
                             month_year = date_obj.strftime('%b %Y')
                         except:
                             month_year = str(record_row['Year'])
@@ -261,7 +261,7 @@ def prepare_worst_records_table(data_source: pd.DataFrame, record_type: str) -> 
                     # Format date to get month/year
                     if 'Date' in record_row and pd.notna(record_row['Date']):
                         try:
-                            date_obj = pd.to_datetime(record_row['Date'])
+                            date_obj = pd.to_datetime(record_row['Date'], dayfirst=True)
                             month_year = date_obj.strftime('%b %Y')
                         except:
                             month_year = str(record_row['Year'])
@@ -272,7 +272,7 @@ def prepare_worst_records_table(data_source: pd.DataFrame, record_type: str) -> 
                     # Format date to get month/year
                     if 'Date' in record_row and pd.notna(record_row['Date']):
                         try:
-                            date_obj = pd.to_datetime(record_row['Date'])
+                            date_obj = pd.to_datetime(record_row['Date'], dayfirst=True)
                             month_year = date_obj.strftime('%b %Y')
                         except:
                             month_year = str(record_row['Year'])
