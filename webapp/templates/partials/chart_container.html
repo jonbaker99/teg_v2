@@ -1,8 +1,8 @@
 {% if error %}
 <div class="error-box">{{ error }}</div>
 {% else %}
-<div class="card">
-    <h2 class="text-lg subheading mb-2">{{ chart_title }}</h2>
+<h2 class="text-lg subheading mb-2">{{ chart_title }}</h2>
+<div class="data-card data-card--padded">
     <div id="plotly-chart" class="chart-container" style="height:500px;"></div>
     <script>
         (function() {
@@ -10,8 +10,8 @@
             Plotly.newPlot('plotly-chart', figData.data, figData.layout, {responsive: true, displayModeBar: false});
         })();
     </script>
-    {% if chart_description %}
-    <p class="chart-description">{{ chart_description }}</p>
-    {% endif %}
 </div>
+{% if chart_description %}
+<p class="chart-description">{{ chart_description }}</p>
+{% endif %}
 {% endif %}

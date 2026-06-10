@@ -150,11 +150,7 @@ single active class `.tab-underline--active`; sub-toggles are
 - Wrap every table and chart in `.data-card`; give Plotly divs `.chart-container`
   and keep only `height` inline.
 
-**Known residuals (cosmetic, deferred):** a few chart wrappers still use the
-older `.card` component instead of `.data-card` (`partials/chart_container.html`,
-`partials/player_overview.html`, `partials/player_scoring.html`) — converting
-them is a visible change in the Clean theme, so it's out of scope for this
-structure-only pass. Dev/demo templates (`smoke_test`, `width_test`,
+**Scope note:** dev/demo templates (`smoke_test`, `width_test`,
 `title_preview`, `showcase`, `placeholder`) are not part of the page hierarchy
 and are intentionally left unwrapped.
 
@@ -174,9 +170,8 @@ through pages and confirm each element is classed at the right level. It is
   `.chart-container`; amber `.card-header`, pink `.text-link`, and an inset bar
   on `.tab-underline--active`.
 - **Reading gaps:** a table/chart with no red box, or a tab bar with no blue
-  box, is unclassed. (Expected non-gaps: the three charts still on `.card`
-  show cyan but no red; `.card-header` only renders under a `ch1/2/3` card-header
-  style.)
+  box, is unclassed. (Expected non-gap: `.card-header` only renders under a
+  `ch1/2/3` card-header style, so it shows no amber box on `ch0`.)
 
 ## Design principles
 
