@@ -1,12 +1,17 @@
 /* ============================================================
-   TEMPORARY — structural hierarchy debug overlay
+   Structural hierarchy debug overlay (DEV TOOL — off by default)
+
    Colour-codes each structural wrapper so you can flick through
    pages and confirm everything is classed correctly.
-   REMOVE THIS FILE + its <link> in base.html when done.
+
+   Toggle on/off with  Ctrl/Cmd + Shift + D  (persists across pages),
+   or run  toggleStructureDebug()  in the browser console.
+   All rules are scoped under  body.debug-structure  so this file is
+   completely inert unless the overlay is switched on.
 
    Nesting is shown with outline-offset: outer levels sit further
-   OUTSIDE their box, inner levels sit inside — so concentric
-   boxes separate visually even when widths are identical.
+   OUTSIDE their box, inner levels sit inside — so concentric boxes
+   separate visually even when widths are identical.
        page      → +12px (outermost)
        section   → +5px
        toggle    → +2px
@@ -15,27 +20,27 @@
    Outlines don't affect layout.
    ============================================================ */
 
-.main-content,
-.section-nav,
-.section-controls,
-.toggle-group,
-.section-panel,
-.data-card,
-.chart-container,
-.card-header,
-.text-link {
+body.debug-structure .main-content,
+body.debug-structure .section-nav,
+body.debug-structure .section-controls,
+body.debug-structure .toggle-group,
+body.debug-structure .section-panel,
+body.debug-structure .data-card,
+body.debug-structure .chart-container,
+body.debug-structure .card-header,
+body.debug-structure .text-link {
     position: relative;
 }
 
 /* tiny class-name label, top-left of each wrapper */
-.main-content::before,
-.section-nav::before,
-.section-controls::before,
-.toggle-group::before,
-.section-panel::before,
-.data-card::before,
-.chart-container::before,
-.card-header::before {
+body.debug-structure .main-content::before,
+body.debug-structure .section-nav::before,
+body.debug-structure .section-controls::before,
+body.debug-structure .toggle-group::before,
+body.debug-structure .section-panel::before,
+body.debug-structure .data-card::before,
+body.debug-structure .chart-container::before,
+body.debug-structure .card-header::before {
     position: absolute;
     top: 0;
     left: 0;
@@ -51,38 +56,38 @@
 }
 
 /* ── PAGE level (the base.html content shell) ── */
-.main-content {
+body.debug-structure .main-content {
     outline: 3px solid #111111;
     outline-offset: 12px;
 }
-.main-content::before { content: "PAGE .main-content"; background: #111111; top: -13px; }
+body.debug-structure .main-content::before { content: "PAGE .main-content"; background: #111111; top: -13px; }
 
 /* ── SECTION level ── */
-.section-nav      { outline: 2px solid #2563eb; background: rgba(37,99,235,0.07); outline-offset: 5px; }   /* blue */
-.section-nav::before      { content: ".section-nav"; background: #2563eb; }
+body.debug-structure .section-nav      { outline: 2px solid #2563eb; background: rgba(37,99,235,0.07); outline-offset: 5px; }   /* blue */
+body.debug-structure .section-nav::before      { content: ".section-nav"; background: #2563eb; }
 
-.section-controls { outline: 2px solid #ea580c; background: rgba(234,88,12,0.07); outline-offset: 5px; }   /* orange */
-.section-controls::before { content: ".section-controls"; background: #ea580c; }
+body.debug-structure .section-controls { outline: 2px solid #ea580c; background: rgba(234,88,12,0.07); outline-offset: 5px; }   /* orange */
+body.debug-structure .section-controls::before { content: ".section-controls"; background: #ea580c; }
 
-.section-panel    { outline: 2px solid #16a34a; outline-offset: 5px; }                                     /* green */
-.section-panel::before    { content: ".section-panel"; background: #16a34a; }
+body.debug-structure .section-panel    { outline: 2px solid #16a34a; outline-offset: 5px; }                                     /* green */
+body.debug-structure .section-panel::before    { content: ".section-panel"; background: #16a34a; }
 
 /* ── SUB-TOGGLE (nested inside a section) ── */
-.toggle-group     { outline: 2px dashed #9333ea; background: rgba(147,51,234,0.07); outline-offset: 2px; } /* purple */
-.toggle-group::before     { content: ".toggle-group"; background: #9333ea; }
+body.debug-structure .toggle-group     { outline: 2px dashed #9333ea; background: rgba(147,51,234,0.07); outline-offset: 2px; } /* purple */
+body.debug-structure .toggle-group::before     { content: ".toggle-group"; background: #9333ea; }
 
 /* ── DATA-DISPLAY level ── */
-.data-card        { outline: 2px solid #dc2626; background: rgba(220,38,38,0.05); outline-offset: 0; }     /* red */
-.data-card::before        { content: ".data-card"; background: #dc2626; }
+body.debug-structure .data-card        { outline: 2px solid #dc2626; background: rgba(220,38,38,0.05); outline-offset: 0; }     /* red */
+body.debug-structure .data-card::before        { content: ".data-card"; background: #dc2626; }
 
-.chart-container  { outline: 2px dashed #0891b2; background: rgba(8,145,178,0.07); outline-offset: -3px; } /* cyan */
-.chart-container::before  { content: ".chart-container"; background: #0891b2; }
+body.debug-structure .chart-container  { outline: 2px dashed #0891b2; background: rgba(8,145,178,0.07); outline-offset: -3px; } /* cyan */
+body.debug-structure .chart-container::before  { content: ".chart-container"; background: #0891b2; }
 
-.card-header      { outline: 2px solid #ca8a04; outline-offset: 0; }                                       /* amber */
-.card-header::before      { content: ".card-header"; background: #ca8a04; }
+body.debug-structure .card-header      { outline: 2px solid #ca8a04; outline-offset: 0; }                                       /* amber */
+body.debug-structure .card-header::before      { content: ".card-header"; background: #ca8a04; }
 
 /* ── Inline links ── */
-.text-link        { outline: 1px solid #db2777; background: rgba(219,39,119,0.12); }                       /* pink */
+body.debug-structure .text-link        { outline: 1px solid #db2777; background: rgba(219,39,119,0.12); }                       /* pink */
 
 /* ── Active in-page tab/toggle ── */
-.tab-underline--active { box-shadow: inset 0 -3px 0 #111; }
+body.debug-structure .tab-underline--active { box-shadow: inset 0 -3px 0 #111; }

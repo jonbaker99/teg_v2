@@ -158,6 +158,26 @@ structure-only pass. Dev/demo templates (`smoke_test`, `width_test`,
 `title_preview`, `showcase`, `placeholder`) are not part of the page hierarchy
 and are intentionally left unwrapped.
 
+#### Debug overlay (verifying class coverage)
+
+A dev-only overlay colour-codes every structural wrapper so you can flick
+through pages and confirm each element is classed at the right level. It is
+**off by default and completely inert** — all rules live in
+`static/themes/debug-structure.css`, scoped under `body.debug-structure`.
+
+- **Toggle:** `Ctrl/Cmd + Shift + D` (state persists across pages via
+  `localStorage`), or run `toggleStructureDebug()` in the browser console.
+- **What you see:** concentric outlines via `outline-offset`, each level
+  further out than the box it contains, with a class-name label top-left —
+  black `PAGE .main-content` → blue `.section-nav` / orange `.section-controls`
+  / green `.section-panel` → purple `.toggle-group` → red `.data-card` → cyan
+  `.chart-container`; amber `.card-header`, pink `.text-link`, and an inset bar
+  on `.tab-underline--active`.
+- **Reading gaps:** a table/chart with no red box, or a tab bar with no blue
+  box, is unclassed. (Expected non-gaps: the three charts still on `.card`
+  show cyan but no red; `.card-header` only renders under a `ch1/2/3` card-header
+  style.)
+
 ## Design principles
 
 See [design_principles.md](design_principles.md) — typography, layout, table conventions, component rules, theme/layout invariants, and the data-card pattern.
