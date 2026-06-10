@@ -9,7 +9,7 @@
 
 {% block content %}
 
-<div class="flex items-center gap-4 mb-4">
+<div class="section-controls flex items-center gap-4 mb-4">
     <select id="hm-row-by" class="theme-select" name="row_by"
             hx-get="/scoring/heatmap/content"
             hx-target="#hm-content"
@@ -38,7 +38,7 @@
     </label>
 </div>
 
-<div id="hm-content">
+<div id="hm-content" class="section-panel">
     {% include "partials/scoring_heatmap_content.html" %}
 </div>
 {% endblock %}

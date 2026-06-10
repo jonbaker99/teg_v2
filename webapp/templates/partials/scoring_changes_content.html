@@ -2,7 +2,7 @@
 <p class="text-muted">Error: {{ error }}</p>
 {% else %}
 {% set inc = "#ch-teg, #ch-across, #ch-rows, #ch-tab" %}
-<div class="flex flex-wrap items-end gap-4 mb-4">
+<div class="section-controls flex flex-wrap items-end gap-4 mb-4">
     <label class="flex flex-col text-sm gap-1">
         <span class="text-muted">TEG</span>
         <select class="theme-select" id="ch-teg" name="teg"
@@ -34,9 +34,9 @@
 </div>
 
 <input type="hidden" id="ch-tab" name="tab" value="{{ active_tab }}">
-<div class="tab-bar">
+<div class="section-nav">
     {% for tab_id, tab_label in tabs %}
-    <button class="tab-underline {% if tab_id == active_tab %}active{% endif %}"
+    <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
             hx-get="/scoring/changes/content" hx-target="#changes" hx-swap="innerHTML"
             hx-include="#ch-teg, #ch-across, #ch-rows"
             hx-vals='{"tab": "{{ tab_id }}"}'>
@@ -45,5 +45,5 @@
     {% endfor %}
 </div>
 
-{{ table_html | safe }}
+<div class="data-card"><div style="overflow-x: auto;">{{ table_html | safe }}</div></div>
 {% endif %}

@@ -9,10 +9,10 @@
 
 {% block content %}
 
-<div class="flex items-center gap-4 mb-4">
-    <div class="tab-bar" style="margin-bottom: 0;">
+<div class="section-controls flex items-center gap-4 mb-4">
+    <div class="section-nav" style="margin-bottom: 0;">
         {% for cid, clabel in [('gross', 'Gross'), ('stableford', 'Stableford')] %}
-        <button class="tab-underline {% if cid == competition %}active{% endif %}"
+        <button class="tab-underline{% if cid == competition %} tab-underline--active{% endif %}"
                 hx-get="/scoring/comebacks/content?competition={{ cid }}&n={{ n_records }}"
                 hx-target="#cb-content"
                 hx-swap="innerHTML">
@@ -32,7 +32,7 @@
     <input type="hidden" name="competition" value="{{ competition }}">
 </div>
 
-<div id="cb-content">
+<div id="cb-content" class="section-panel">
     {% include "partials/scoring_comebacks_content.html" %}
 </div>
 {% endblock %}

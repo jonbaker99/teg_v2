@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex items-center justify-between mb-6">
+<div class="section-controls flex items-center justify-between mb-6">
     <div class="flex items-center gap-3">
         <label for="teg-select" class="text-sm font-medium text-secondary">TEG:</label>
         <select id="teg-select" name="teg"
@@ -32,7 +32,7 @@
 </div>
 
 <!-- Tab buttons -->
-<div class="flex flex-wrap gap-2 mb-4">
+<div class="section-nav flex flex-wrap gap-2 mb-4">
     <input type="hidden" id="lb-tab-input" name="tab" value="{{ active_lb_tab }}">
     <input type="hidden" id="lb-chart-variant-input" name="chart_variant" value="{{ active_chart_variant }}">
     {% for tab_id, tab_label in leaderboard_tabs %}
@@ -48,7 +48,7 @@
     {% endfor %}
 </div>
 
-<div id="tables">
+<div id="tables" class="section-panel">
     {% include "partials/leaderboard_table.html" %}
 </div>
 {% endblock %}

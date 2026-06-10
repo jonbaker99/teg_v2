@@ -9,7 +9,7 @@
 
 {% block content %}
 
-<div class="flex items-center gap-4 mb-4">
+<div class="section-controls flex items-center gap-4 mb-4">
     <select id="results-teg-select" class="theme-select"
             hx-get="/results/table"
             hx-target="#results-content"
@@ -22,9 +22,9 @@
 
     <input type="hidden" id="results-tab-input" name="tab" value="{{ active_tab }}">
 
-    <div class="tab-bar" style="margin-bottom: 0;">
+    <div class="section-nav" style="margin-bottom: 0;">
         {% for tab_id, tab_label in [('net', 'TEG Trophy'), ('gross', 'Green Jacket'), ('scorecards', 'Scorecards'), ('report', 'Report')] %}
-        <button class="tab-underline {% if tab_id == active_tab %}active{% endif %}"
+        <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
                 onclick="document.getElementById('results-tab-input').value='{{ tab_id }}';
                          htmx.trigger(document.getElementById('results-teg-select'), 'change')">
             {{ tab_label }}
@@ -33,7 +33,7 @@
     </div>
 </div>
 
-<div id="results-content">
+<div id="results-content" class="section-panel">
     {% include "partials/results_table.html" %}
 </div>
 {% endblock %}

@@ -9,9 +9,9 @@
 
 {% block content %}
 
-<div class="tab-bar">
+<div class="section-nav">
     {% for tab_id, tab_label in tabs %}
-    <button class="tab-underline {% if tab_id == active_tab %}active{% endif %}"
+    <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
             hx-get="/scoring/streaks/tab"
             hx-target="#st-content"
             hx-include="#st-direction, #st-mode"
@@ -19,8 +19,8 @@
             hx-swap="innerHTML"
             onclick="
                 document.getElementById('st-tab-input').value='{{ tab_id }}';
-                document.querySelectorAll('.tab-bar button.st-tab').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
+                document.querySelectorAll('.section-nav button.st-tab').forEach(b => b.classList.remove('tab-underline--active'));
+                this.classList.add('tab-underline--active');
                 var ctrl = document.getElementById('st-controls');
                 ctrl.style.display = '{{ tab_id }}' === 'player' ? '' : 'none';
             ">
@@ -29,11 +29,11 @@
     {% endfor %}
 </div>
 
-<div id="st-controls" class="flex items-center gap-4 mt-4 mb-4"
+<div id="st-controls" class="section-controls flex items-center gap-4 mt-4 mb-4"
      {% if active_tab != 'player' %}style="display:none"{% endif %}>
-    <div class="flex items-center gap-2">
+    <div class="toggle-group flex items-center gap-2">
         {% for did, dlabel in [('good', 'Good'), ('bad', 'Bad')] %}
-        <button class="tab-underline st-dir {% if did == direction %}active{% endif %}"
+        <button class="tab-underline st-dir{% if did == direction %} tab-underline--active{% endif %}"
                 hx-get="/scoring/streaks/tab"
                 hx-target="#st-content"
                 hx-include="#st-tab-input, #st-mode"
@@ -41,16 +41,16 @@
                 hx-swap="innerHTML"
                 onclick="
                     document.getElementById('st-direction').value='{{ did }}';
-                    this.parentElement.querySelectorAll('.st-dir').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
+                    this.parentElement.querySelectorAll('.st-dir').forEach(b => b.classList.remove('tab-underline--active'));
+                    this.classList.add('tab-underline--active');
                 ">
             {{ dlabel }}
         </button>
         {% endfor %}
     </div>
-    <div class="flex items-center gap-2">
+    <div class="toggle-group flex items-center gap-2">
         {% for mid, mlabel in [('max', 'All-time Max'), ('current', 'Current')] %}
-        <button class="tab-underline st-mode {% if mid == mode %}active{% endif %}"
+        <button class="tab-underline st-mode{% if mid == mode %} tab-underline--active{% endif %}"
                 hx-get="/scoring/streaks/tab"
                 hx-target="#st-content"
                 hx-include="#st-tab-input, #st-direction"
@@ -58,8 +58,8 @@
                 hx-swap="innerHTML"
                 onclick="
                     document.getElementById('st-mode').value='{{ mid }}';
-                    this.parentElement.querySelectorAll('.st-mode').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
+                    this.parentElement.querySelectorAll('.st-mode').forEach(b => b.classList.remove('tab-underline--active'));
+                    this.classList.add('tab-underline--active');
                 ">
             {{ mlabel }}
         </button>
@@ -71,7 +71,7 @@
 <input type="hidden" id="st-direction" name="direction" value="{{ direction }}">
 <input type="hidden" id="st-mode" name="mode" value="{{ mode }}">
 
-<div id="st-content">
+<div id="st-content" class="section-panel">
     {% include "partials/scoring_streaks_tab.html" %}
 </div>
 {% endblock %}

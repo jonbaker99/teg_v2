@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex items-center justify-between mb-6">
+<div class="section-controls flex items-center justify-between mb-6">
     <div class="flex items-center gap-3">
         <label for="chart-teg-select" class="text-sm font-medium text-secondary">TEG:</label>
         <select id="chart-teg-select" name="teg"
@@ -32,7 +32,7 @@
 </div>
 
 <!-- Chart type buttons -->
-<div class="flex flex-wrap gap-2 mb-4">
+<div class="section-nav flex flex-wrap gap-2 mb-4">
     <input type="hidden" id="chart-type-input" name="type" value="{{ selected_type }}">
     {% for type_id, type_label in chart_types %}
     <button class="tab-underline{% if type_id == selected_type %} tab-underline--active{% endif %}"
@@ -47,7 +47,7 @@
     {% endfor %}
 </div>
 
-<div id="chart-container">
+<div id="chart-container" class="section-panel">
     {% include "partials/chart_container.html" %}
 </div>
 {% endblock %}
