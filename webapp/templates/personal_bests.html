@@ -79,8 +79,8 @@
 
     <label class="flex items-center gap-2 text-sm">
         <span class="text-muted">Show top</span>
-        <input class="theme-select" type="number" min="1" max="100" step="1"
-               id="pb-n-select" name="n" value="{{ n_records }}" style="width: 5rem;"
+        <input class="theme-select input-numeric" type="number" min="1" max="100" step="1"
+               id="pb-n-select" name="n" value="{{ n_records }}"
                hx-get="/personal-bests/tab"
                hx-target="#pb-content"
                hx-include="#pb-measure, #pb-tab-input"

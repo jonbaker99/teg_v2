@@ -27,12 +27,12 @@
     </script>
 </div>
 <div class="data-card">
-    <div style="overflow-x: auto;">{{ table_html | safe }}</div>
+    <div class="table-wrapper">{{ table_html | safe }}</div>
 </div>
 {% else %}
 {% if result_title %}<div class="card-header">{{ result_title }}</div>{% endif %}
 <div class="data-card">
-    <div style="overflow-x: auto;">{{ table_html | safe }}</div>
+    <div class="table-wrapper">{{ table_html | safe }}</div>
 </div>
 {% endif %}
 {% endif %}

@@ -736,6 +736,15 @@ body.ts-f5 .page-title-area .page-title {
        Height stays inline because it legitimately varies per chart. */
     width: 100%;
 }
+/* Horizontal-scroll wrapper for wide tables — keeps them from overflowing the
+   page. Replaces the repeated inline style="overflow-x: auto;". */
+.table-wrapper {
+    overflow-x: auto;
+}
+/* Compact numeric input (e.g. "top N" selectors). Replaces inline width:5rem. */
+.input-numeric {
+    width: 5rem;
+}
 
 /* Inline data links */
 .text-link {

@@ -32,7 +32,7 @@
   {% endif %}
   {% for section in sections %}
     {% if section.title %}<h2 class="section-title">{{ section.title }}</h2>{% endif %}
-    <div class="data-card"><div style="overflow-x: auto;">{{ section.table_html | safe }}</div></div>
+    <div class="data-card"><div class="table-wrapper">{{ section.table_html | safe }}</div></div>
   {% endfor %}
   {% if caption %}<p class="text-muted text-sm mt-3">{{ caption }}</p>{% endif %}
 {% else %}
