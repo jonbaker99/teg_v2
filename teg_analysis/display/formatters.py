@@ -70,7 +70,7 @@ def format_date_for_scorecard(date_str, input_format=None, output_format='%d/%m/
         if input_format:
             date_obj = pd.to_datetime(date_str, format=input_format)
         else:
-            date_obj = pd.to_datetime(date_str)
+            date_obj = pd.to_datetime(date_str, dayfirst=True)
         return date_obj.strftime(output_format)
     except:
         return str(date_str)
@@ -494,7 +494,7 @@ def prepare_score_count_records_table(all_data: pd.DataFrame) -> Tuple[pd.DataFr
                     # Format date
                     if 'Date' in group.columns and pd.notna(group['Date'].iloc[0]):
                         try:
-                            date_obj = pd.to_datetime(group['Date'].iloc[0])
+                            date_obj = pd.to_datetime(group['Date'].iloc[0], dayfirst=True)
                             month_year = date_obj.strftime('%b %Y')
                         except:
                             month_year = str(group['Year'].iloc[0]) if 'Year' in group.columns else ''
