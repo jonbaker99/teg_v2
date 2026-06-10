@@ -65,7 +65,8 @@
       "Bash(awk '/^## Current state & next steps/,/^## [^C]/' CLAUDE.md)",
       "Bash(awk '/^## The men, in brief|^## Players?/,/^$/' data/commentary/teg_14_report_final.md)",
       "Bash(awk '/^## The men/,/^$/' data/commentary/teg_14_report_final.md)",
-      "Bash(awk '{print $6, $7, $8, $9}')"
+      "Bash(awk '{print $6, $7, $8, $9}')",
+      "Bash(python -c \"from jinja2 import Environment, FileSystemLoader; Environment\\(loader=FileSystemLoader\\('webapp/templates'\\)\\).get_template\\('base.html'\\); print\\('base.html OK'\\)\")"
     ],
     "deny": [],
     "ask": [
