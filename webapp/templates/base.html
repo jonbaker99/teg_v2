@@ -8,19 +8,26 @@
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
     <script>
-        // Render a Plotly chart safely inside HTMX-swapped content. Drawing
-        // mid-swap reads a wrong container size, which misplaces the gridlines,
-        // legend and end-of-line labels — they spill down the page below the
-        // plot and stay there until a full reload. Purge any prior chart on the
-        // node, defer the draw until the browser has laid the container out,
-        // then size to fit.
+        // Render a Plotly chart safely inside HTMX-swapped content.
+        //
+        // Mid-swap the chart div hasn't been laid out yet, so its offsetHeight
+        // is unreliable. With no explicit height in the layout, Plotly falls
+        // back to that measurement, draws the plot at one height, then a later
+        // resize moves the plot/axes but NOT the margin items (y-axis title,
+        // end-of-line labels) — which strand themselves below the plot until a
+        // full reload. Fix: pin the height from the div's inline style so the
+        // draw never depends on measuring the element. Purge first to clear any
+        // prior chart; rAF lets the (stable) width settle for responsive.
         window.drawPlot = function(id, fig) {
             var gd = document.getElementById(id);
             if (!gd || typeof Plotly === 'undefined' || !fig) return;
             Plotly.purge(gd);
+            fig.layout = fig.layout || {};
+            // Pin height only; leave width unset so responsive still fills it.
+            var h = parseInt(gd.style.height, 10);
+            if (h) { fig.layout.height = h; }
             requestAnimationFrame(function() {
-                Plotly.newPlot(gd, fig.data, fig.layout, {displayModeBar: false, responsive: true})
-                    .then(function() { Plotly.Plots.resize(gd); });
+                Plotly.newPlot(gd, fig.data, fig.layout, {displayModeBar: false, responsive: true});
             });
         };
     </script>
