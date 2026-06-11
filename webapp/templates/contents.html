@@ -1,17 +1,16 @@
 {% extends "base.html" %}
 
-{% block page_title %}
-<div class="page-title-area">
-    <span class="page-label">The El Golfo</span>
-    <h1 class="page-title">Contents</h1>
-</div>
-{% endblock %}
+{% block page_title %}{% endblock %}
 
 {% block extra_head %}
 <style>
+    /* No page title / breadcrumb on Contents — just the site map. */
+    .page-title-outer {
+        display: none;
+    }
+
     /* Contents is a wide-layout page (matches Streamlit's layout="wide"):
-       widen the shared containers for this page only. */
-    .page-title-outer,
+       widen the shared container for this page only. */
     .content-wrapper {
         max-width: min(95vw, 1600px);
     }
