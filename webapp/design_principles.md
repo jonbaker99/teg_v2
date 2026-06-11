@@ -61,9 +61,15 @@ per-class rules live in
 The section wrappers **own the page's vertical spacing rhythm** in
 `base-vars.css` — they are no longer layout-neutral:
 
-- `.section-controls` and `.section-nav` carry `margin-bottom: 1.5rem` and their
-  own flex/gap defaults, so the gap below a filter row or tab bar is identical
-  on every page.
+- `.section-controls` carries `margin-bottom: 1.5rem` and `.section-nav`
+  carries `margin-bottom: 2rem` (a tab bar reads as a stronger divider, so its
+  panel/heading needs more separation), plus their own flex/gap defaults — so
+  the gap below a filter row or tab bar is identical on every page.
+- `.toggle-group` owns `margin-bottom: 1rem` (the gap before the data it
+  controls), and `.data-card + .toggle-group` adds `1.5rem` above a toggle row
+  that follows a data block (e.g. a chart-variant toggle between a table and its
+  chart). Templates must NOT hand-roll `mb-*`/`mt-*` on toggle rows — to kill the
+  gap in a one-off, use inline `style="margin-bottom:0"` (see `scoring_birdies`).
 - `* + .section-title` and `.data-card + .data-card` add a `1.5–1.75rem` gap
   between stacked sections/cards automatically.
 - Layout intent that legitimately varies per row (`justify-between`,
@@ -71,8 +77,9 @@ The section wrappers **own the page's vertical spacing rhythm** in
   Tailwind utilities on the element and overrides the central defaults.
 
 **Do NOT add vertical-margin utilities (`mb-*` / `mt-*` / `my-*`) to
-`.section-controls` or `.section-nav`** — the spacing is owned centrally. Adding
-them reintroduces the per-page drift this convention exists to prevent. (To
+`.section-controls`, `.section-nav` or `.toggle-group`** — the spacing is owned
+centrally. Adding them reintroduces the per-page drift this convention exists to
+prevent. (To
 suppress a gap in a nested/edge case, use an inline `style="margin-bottom:0"`,
 as in `results.html` / `bestball.html`.)
 

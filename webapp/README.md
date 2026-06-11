@@ -146,7 +146,7 @@ wrappers](design_principles.md#spacing-is-centralised-on-the-section-wrappers).
 | **Page** | `.page-container` → `.page-title-outer` / `.page-panel` → `.content-wrapper` → `.main-content` | The shell in `base.html` (already consistent — don't hand-edit) |
 | **Section** | `.section-nav` | The in-page primary tab bar (a row of `.tab-underline` buttons). Owns `margin-bottom` + flex/gap |
 | | `.section-controls` | Selector / filter rows (dropdowns, number inputs). Owns `margin-bottom` + flex/gap |
-| | `.toggle-group` | Sub-toggle rows inside a panel (score-type, metric, chart-variant, direction/mode) |
+| | `.toggle-group` | Sub-toggle rows inside a panel (score-type, metric, chart-variant, direction/mode). Owns `margin-bottom`; `.data-card + .toggle-group` adds the gap above when it follows a data block |
 | | `.section-panel` | Every HTMX swap-target / content container (the `id="…"` div that `hx-target` points at) |
 | **Data display** | `.card-header` | The single canonical section label (driven by the `ch-X` body class) |
 | | `.data-card` | Every table/chart wrapper — **all** tables and charts sit in one |
@@ -169,7 +169,9 @@ single active class `.tab-underline--active`; sub-toggles are
   `.table-wrapper`; give Plotly divs `.chart-container` and keep only `height`
   inline. Use `.input-numeric` for compact number inputs.
 - **Do not add vertical-margin utilities (`mb-*`/`mt-*`/`my-*`) to
-  `.section-controls` or `.section-nav`** — their spacing is owned centrally.
+  `.section-controls`, `.section-nav` or `.toggle-group`** — their spacing is
+  owned centrally (`.section-nav` `2rem`, `.section-controls` `1.5rem`,
+  `.toggle-group` `1rem` below + `1.5rem` above when it follows a `.data-card`).
   For a nested/edge override, use inline `style="margin-bottom:0"`.
 
 **Scope note:** dev/demo templates (`smoke_test`, `width_test`,
