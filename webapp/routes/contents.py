@@ -17,8 +17,18 @@ templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templa
 
 @router.get("/contents")
 async def contents_page(request: Request):
+    # Contents-specific column arrangement (does not reorder NAV_SECTIONS, which
+    # drives the nav bar). Columns fill top-to-bottom:
+    #   1: TEG History / Records & PBs   2: Latest TEG / Scorecards   3: Scoring
+    by_label = {s["label"]: s for s in NAV_SECTIONS}
+    layout = [
+        ("TEG History", "Records & PBs"),
+        ("Latest TEG", "Scorecards"),
+        ("Scoring analysis",),
+    ]
+    columns = [[by_label[label] for label in col if label in by_label] for col in layout]
     return templates.TemplateResponse("contents.html", {
         "request": request,
         "active_page": "contents",
-        "sections": NAV_SECTIONS,
+        "columns": columns,
     })
