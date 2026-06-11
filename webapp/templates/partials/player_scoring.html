@@ -16,7 +16,7 @@
             <script>
                 (function() {
                     var figData = {{ section.chart_json | safe }};
-                    drawPlot('scoring-chart-{{ loop.index }}', figData);
+                    Plotly.newPlot('scoring-chart-{{ loop.index }}', figData.data, figData.layout, {responsive: true, displayModeBar: false});
                 })();
             </script>
         </div>

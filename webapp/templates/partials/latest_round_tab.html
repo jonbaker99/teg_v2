@@ -41,7 +41,7 @@
   <script>
   (function() {
     var data = {{ chart_json | safe }};
-    drawPlot('lr-metric-chart', data);
+    Plotly.newPlot('lr-metric-chart', data.data, data.layout, {displayModeBar: false, responsive: true});
   })();
   </script>
   {% endif %}

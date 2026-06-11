@@ -309,6 +309,43 @@ as the live site."
   *printed on the page*, but retaining mouseover where it adds value. Driven from
   `chart_utils.py` / `get_plotly_theme`.
 
+  > **⚠️ Known issue — charts to be redone, parked for later.** Goal: make the
+  > webapp charts look and behave like the **Streamlit** ones, which render
+  > correctly. Two problems on the webapp side:
+  > 1. **Appearance** — the current charts look poor next to Streamlit's.
+  > 2. **Broken on HTMX tab-swap** — on `/results` (and any chart inside an
+  >    HTMX-swapped fragment), after clicking a chart/tab the legend, gridlines
+  >    and end-of-line labels render stranded/duplicated below the plot, and stay
+  >    until a full page reload.
+  >
+  > **Diagnosis so far (don't re-chase the wrong lead):** it is **not** a sizing
+  > or timing problem. A live console check after reproducing showed the
+  > container and SVG dimensions are all correct (`container_h:420`,
+  > `svg_h:420`, `svg_w:752`, `plotbg_h:374`) but **`svg_count:3`** — multiple
+  > Plotly `svg.main-svg` layers stacked in one chart div. So the real cause is
+  > **duplicate Plotly renders not being cleared when the fragment is
+  > re-swapped** (each swap leaves prior render layers behind). Several attempts
+  > to fix it as a sizing/resize problem (rAF, height-pin, explicit size,
+  > ResizeObserver) did **not** work and have been reverted — the templates are
+  > back to the simple inline `Plotly.newPlot(..., {responsive:true})` baseline.
+  >
+  > **Where the chart code lives:**
+  > - Figure construction: `webapp/chart_utils.py` (`create_cumulative_graph`,
+  >   `create_round_graph`) — ported from `streamlit/make_charts.py` (the
+  >   reference to match).
+  > - Figures built per page in the routes: `routes/history.py` (`_results_chart`),
+  >   `routes/leaderboard.py`, `routes/latest.py`, `routes/scoring.py`
+  >   (by-teg, distributions), `routes/player.py`.
+  > - Rendered by inline `<script>` blocks in the partials (`results_table.html`,
+  >   `leaderboard_table.html`, `latest_round_tab.html`,
+  >   `scoring_distributions_content.html`, `scoring_by_teg.html`,
+  >   `chart_container.html`, `player_scoring.html`, `player_overview.html`).
+  >
+  > **Likely fix directions when revisited:** call `Plotly.purge(gd)` before
+  > drawing, and/or render charts from a single global `htmx:afterSettle` handler
+  > rather than inline-per-fragment scripts (so re-swaps can't stack renders) —
+  > i.e. mirror how Streamlit mounts a single chart component.
+
 **Phase 2 — better UI (beyond parity).** Only after Phase 1 lands.
 
 - **2a — Improve the Clean / default theme** using design best practice.

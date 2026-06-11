@@ -7,34 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-    <script>
-        // Render Plotly charts that live inside HTMX-swapped fragments.
-        //
-        // The inline <script> in a swapped fragment runs BEFORE the browser has
-        // laid the chart container out, so measuring it then (or on rAF) gives a
-        // wrong size; Plotly draws to that, and the legend / gridlines /
-        // end-of-line labels end up stranded below the plot until a full reload.
-        // A ResizeObserver fixes the timing: it fires with the container's REAL
-        // width once layout settles (and again on window/zoom resize). We draw
-        // at that explicit width + the div's fixed height via a full re-render
-        // each time — never Plotly's autosize/resize path, which moves the plot
-        // but not those margin layers.
-        window.drawPlot = function(id, fig) {
-            var gd = document.getElementById(id);
-            if (!gd || typeof Plotly === 'undefined' || !fig) return;
-            Plotly.purge(gd);
-            fig.layout = fig.layout || {};
-            fig.layout.height = parseInt(gd.style.height, 10) || 400;
-            var last = -1;
-            new ResizeObserver(function(entries) {
-                var w = Math.round(entries[0].contentRect.width);
-                if (w < 1 || w === last) return;  // wait for a real width; ignore no-op fires
-                last = w;
-                fig.layout.width = w;
-                Plotly.react(gd, fig.data, fig.layout, {displayModeBar: false, responsive: false});
-            }).observe(gd);
-        };
-    </script>
     <link rel="stylesheet" href="/static/themes/base-vars.css?v=13">
     <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=13">
     <!-- Structural hierarchy debug overlay (dev tool; inert unless body.debug-structure) -->
