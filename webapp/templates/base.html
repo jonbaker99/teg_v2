@@ -8,48 +8,32 @@
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
     <script>
-        // Render Plotly charts inside HTMX-swapped content without the
-        // margin-strand bug.
+        // Render Plotly charts that live inside HTMX-swapped fragments.
         //
-        // Plotly's `responsive:true` uses an autosize path: it measures the
-        // element and, on any later resize, repositions the plot/axes but NOT
-        // the margin layers (y-axis title, end-of-line labels). Mid-swap the
-        // element isn't laid out yet, so the first measurement is wrong and the
-        // follow-up resize strands those labels below the plot until a full
-        // reload. We avoid that path entirely: draw once at an EXPLICIT width
-        // and height (responsive:false → no autosize, no resize), and handle
-        // window resizes ourselves with a clean full re-render that lays the
-        // whole figure (margins included) out again.
-        (function() {
-            var charts = {};  // id -> figure json
-
-            function render(id) {
-                var gd = document.getElementById(id);
-                var fig = charts[id];
-                if (!gd || !fig || typeof Plotly === 'undefined') return;
-                fig.layout = fig.layout || {};
-                fig.layout.width = gd.clientWidth;
-                fig.layout.height = parseInt(gd.style.height, 10) || gd.clientHeight || 400;
-                fig.layout.autosize = false;
+        // The inline <script> in a swapped fragment runs BEFORE the browser has
+        // laid the chart container out, so measuring it then (or on rAF) gives a
+        // wrong size; Plotly draws to that, and the legend / gridlines /
+        // end-of-line labels end up stranded below the plot until a full reload.
+        // A ResizeObserver fixes the timing: it fires with the container's REAL
+        // width once layout settles (and again on window/zoom resize). We draw
+        // at that explicit width + the div's fixed height via a full re-render
+        // each time — never Plotly's autosize/resize path, which moves the plot
+        // but not those margin layers.
+        window.drawPlot = function(id, fig) {
+            var gd = document.getElementById(id);
+            if (!gd || typeof Plotly === 'undefined' || !fig) return;
+            Plotly.purge(gd);
+            fig.layout = fig.layout || {};
+            fig.layout.height = parseInt(gd.style.height, 10) || 400;
+            var last = -1;
+            new ResizeObserver(function(entries) {
+                var w = Math.round(entries[0].contentRect.width);
+                if (w < 1 || w === last) return;  // wait for a real width; ignore no-op fires
+                last = w;
+                fig.layout.width = w;
                 Plotly.react(gd, fig.data, fig.layout, {displayModeBar: false, responsive: false});
-            }
-
-            window.drawPlot = function(id, fig) {
-                if (typeof Plotly === 'undefined' || !fig) return;
-                var gd = document.getElementById(id);
-                if (!gd) return;
-                charts[id] = fig;
-                Plotly.purge(gd);
-                // Wait for layout so clientWidth is correct, then draw once.
-                requestAnimationFrame(function() { render(id); });
-            };
-
-            var t;
-            window.addEventListener('resize', function() {
-                clearTimeout(t);
-                t = setTimeout(function() { Object.keys(charts).forEach(render); }, 150);
-            });
-        })();
+            }).observe(gd);
+        };
     </script>
     <link rel="stylesheet" href="/static/themes/base-vars.css?v=13">
     <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=13">
