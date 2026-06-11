@@ -76,12 +76,26 @@ The section wrappers **own the page's vertical spacing rhythm** in
   `items-center` vs `items-end`, `gap-*` overrides) is still expressed with
   Tailwind utilities on the element and overrides the central defaults.
 
-**Do NOT add vertical-margin utilities (`mb-*` / `mt-*` / `my-*`) to
-`.section-controls`, `.section-nav` or `.toggle-group`** — the spacing is owned
-centrally. Adding them reintroduces the per-page drift this convention exists to
-prevent. (To
-suppress a gap in a nested/edge case, use an inline `style="margin-bottom:0"`,
-as in `results.html` / `bestball.html`.)
+**Do NOT add vertical-margin utilities (`mb-*` / `mt-*` / `my-*`) to any of the
+six rhythm-owning classes** — `.section-nav`, `.section-controls`,
+`.toggle-group`, `.section-title`, `.data-card`, `.card-header`. Their vertical
+spacing is owned centrally in `base-vars.css`; a utility on the element silently
+overrides it (see below), reintroducing the per-page drift this convention
+exists to prevent. To suppress a gap in a nested/edge case, use an inline
+`style="margin-bottom:0"` (as in `results.html` / `bestball.html`).
+
+> **Why a leftover utility wins.** The webapp loads Tailwind via the Play CDN
+> (`cdn.tailwindcss.com`), which injects its generated utilities as a `<style>`
+> block at the **end of `<head>`** — after `base-vars.css`. A utility (`.mb-3`)
+> and a rhythm class (`.toggle-group`) have equal specificity, so the later
+> source order wins: the Tailwind block always does. That's why a single stray
+> `mb-*` makes a global spacing change appear to "not take effect" on that
+> element. Keep the six classes free of margin utilities and the central rule is
+> authoritative everywhere.
+
+Content-level spacing on **non-rhythm** elements (prose `<p>`, dividers `my-6`,
+page-intro text) is legitimate and stays inline — it was never part of the
+centralised wrapper rhythm.
 
 ## Data-card pattern (Clean Layered)
 
