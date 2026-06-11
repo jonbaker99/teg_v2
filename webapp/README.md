@@ -390,7 +390,10 @@ HTML builders).
 
 **Not yet built:**
 - REST API — planned; will expose `teg_analysis` over HTTP so any client (scripts, mobile, other frontends) can access the analysis layer without needing Python
-- Mobile responsive design
+- Mobile responsive design + dark mode — **plan drafted** in
+  [MOBILE_PLAN.md](MOBILE_PLAN.md); look-and-feel mockups (app vs editorial,
+  light + dark) live in `mobile_mockups/` and are served at `/mockups/` when the
+  webapp runs. Awaiting a direction decision before implementation.
 - Search / filtering UI (some routes have it, not everywhere)
 - **"Related links" section** — replicate the cross-page related-links block the
   Streamlit app shows (links from each page to related pages). One day.

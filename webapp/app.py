@@ -23,6 +23,13 @@ app = FastAPI(title="TEG Stats")
 
 # Serve static files (CSS themes etc.)
 app.mount("/static", StaticFiles(directory=str(Path(__file__).parent / "static")), name="static")
+# Mobile design-review mockups (static, self-contained dummy pages — not part of
+# the app's page hierarchy). Served at /mockups/ so they can be browsed locally.
+app.mount(
+    "/mockups",
+    StaticFiles(directory=str(Path(__file__).parent / "mobile_mockups"), html=True),
+    name="mockups",
+)
 
 templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
 

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Mockup B — Editorial · Chart page</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+<style>
+/* ============================================================
+   MOCKUP B (chart) — "Polished mobile-editorial"
+   A chart page in the printed-programme style: chart drawn as if
+   printed on the page — thin axes, restrained palette, direct
+   end-of-line labels instead of a floating legend.
+   Static dummy SVG chart. Not wired to real data.
+   ============================================================ */
+:root {
+  --font-body: 'Lora', Georgia, serif;
+  --font-data: 'Roboto Mono', monospace;
+  --bg:#ffffff; --text:#1a1a1a; --text-2:#555; --text-muted:#999; --line:#e0e0e0;
+  --rule:#1a1a1a; --accent:forestgreen; --bar:#ffffff;
+  --grid:#eee; --axis:#cfcfcf;
+  --c1:forestgreen; --c2:#444; --c3:#b08400; --cmuted:#c9c9c9;
+}
+[data-theme="dark"] {
+  --bg:#16150f; --text:#ecebe4; --text-2:#b6b4aa; --text-muted:#807e72; --line:#2c2b22;
+  --rule:#d8d6cb; --accent:#6cc77f; --bar:#16150f;
+  --grid:#262519; --axis:#3a382c;
+  --c1:#6cc77f; --c2:#c9c7bc; --c3:#d6ad4e; --cmuted:#54534a;
+}
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body { margin:0; }
+body { font-family:var(--font-body); background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; }
+.material-symbols-outlined { font-variation-settings:'opsz' 24,'wght' 400; line-height:1; vertical-align:middle; }
+
+.topbar { position:sticky; top:0; z-index:30; background:var(--bar); border-bottom:1px solid var(--line);
+  display:flex; align-items:center; justify-content:space-between; padding:calc(11px + env(safe-area-inset-top,0)) 18px 11px; }
+.brand { font-weight:700; font-size:20px; color:var(--text); text-decoration:none; }
+.topbar .material-symbols-outlined { font-size:26px; color:var(--text-2); }
+
+.wrap { max-width:680px; margin:0 auto; padding:0 18px 56px; }
+.titleband { padding:22px 0 6px; }
+.kicker { font-family:var(--font-data); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-muted); display:block; margin-bottom:7px; }
+.h1 { font-weight:600; font-size:30px; line-height:1.1; margin:0; }
+.subtitle { font-family:var(--font-data); font-size:12px; color:var(--text-muted); margin-top:8px; }
+
+.tabs { display:flex; gap:22px; border-bottom:1px solid var(--line); margin:18px 0 0; }
+.tabs button { background:none; border:none; cursor:pointer; padding:0 0 11px; margin-bottom:-1px;
+  font-family:var(--font-body); font-size:16px; font-weight:600; color:var(--text-muted); border-bottom:2px solid transparent; }
+.tabs button[aria-selected="true"] { color:var(--text); border-bottom-color:var(--accent); }
+
+.lede { font-size:15px; line-height:1.6; color:var(--text-2); margin:18px 0 6px; }
+
+/* chart "printed on the page" — no card border, just a hairline rule above */
+.chart-block { margin-top:14px; }
+.chart-title { font-family:var(--font-data); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px; }
+svg.chart { width:100%; height:auto; display:block; }
+.chart text { font-family:'Roboto Mono', monospace; }
+.cap { font-family:var(--font-data); font-size:11px; color:var(--text-muted); margin-top:10px; line-height:1.5; }
+
+/* supporting stat strip */
+.stats { display:flex; gap:0; margin-top:26px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.stat { flex:1; padding:14px 6px; text-align:center; border-right:1px solid var(--line); }
+.stat:last-child { border-right:none; }
+.stat .v { font-family:var(--font-data); font-size:20px; font-weight:700; }
+.stat .l { font-family:var(--font-data); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-muted); margin-top:5px; }
+.stat .v.green { color:var(--accent); }
+
+.demobar { position:fixed; bottom:16px; right:16px; z-index:60; }
+.demobar button { background:var(--bg); color:var(--text-2); border:1px solid var(--line); border-radius:999px;
+  padding:8px 13px; font-family:var(--font-data); font-size:11px; cursor:pointer; box-shadow:0 2px 10px rgba(0,0,0,.12);
+  display:inline-flex; align-items:center; gap:6px; }
+.demobar .material-symbols-outlined { font-size:17px; }
+</style>
+</head>
+<body>
+<div class="demobar"><button id="themeBtn" onclick="toggleTheme()"><span class="material-symbols-outlined">dark_mode</span><span id="themeLbl">Dark</span></button></div>
+
+<header class="topbar">
+  <a href="#" class="brand">The El Golfo</a>
+  <span class="material-symbols-outlined">menu</span>
+</header>
+
+<div class="wrap">
+  <div class="titleband">
+    <span class="kicker">Latest TEG</span>
+    <h1 class="h1">In context</h1>
+    <div class="subtitle">TEG 18 · cumulative score vs par</div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true">Race to the title</button>
+    <button role="tab" aria-selected="false">By round</button>
+  </div>
+
+  <p class="lede">David Mullin led from the front, never headed after Round 2. Graham Patterson’s back nine on the final day settled the wooden spoon.</p>
+
+  <div class="chart-block">
+    <div class="chart-title">Cumulative vs par — lower is better</div>
+    <svg class="chart" viewBox="0 0 360 248" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Cumulative score vs par by round">
+      <!-- horizontal gridlines + y labels (0,+20,+40,+60,+80) -->
+      <g>
+        <line x1="38" y1="24"  x2="290" y2="24"  stroke="var(--grid)"/>
+        <line x1="38" y1="68"  x2="290" y2="68"  stroke="var(--grid)"/>
+        <line x1="38" y1="112" x2="290" y2="112" stroke="var(--grid)"/>
+        <line x1="38" y1="156" x2="290" y2="156" stroke="var(--grid)"/>
+        <line x1="38" y1="200" x2="290" y2="200" stroke="var(--axis)"/>
+        <text x="32" y="27"  text-anchor="end" font-size="9" fill="var(--text-muted)">0</text>
+        <text x="32" y="71"  text-anchor="end" font-size="9" fill="var(--text-muted)">+20</text>
+        <text x="32" y="115" text-anchor="end" font-size="9" fill="var(--text-muted)">+40</text>
+        <text x="32" y="159" text-anchor="end" font-size="9" fill="var(--text-muted)">+60</text>
+        <text x="32" y="203" text-anchor="end" font-size="9" fill="var(--text-muted)">+80</text>
+      </g>
+      <!-- x labels -->
+      <g font-size="9" fill="var(--text-muted)" text-anchor="middle">
+        <text x="38"  y="222">Start</text>
+        <text x="101" y="222">R1</text>
+        <text x="164" y="222">R2</text>
+        <text x="227" y="222">R3</text>
+        <text x="290" y="222">R4</text>
+      </g>
+      <!-- muted lines -->
+      <polyline fill="none" stroke="var(--cmuted)" stroke-width="1.4" points="38,24 101,65.8 164,109.8 227,151.6 290,195.6"/>
+      <polyline fill="none" stroke="var(--cmuted)" stroke-width="1.4" points="38,24 101,54.8 164,83.4 227,116.4 290,145"/>
+      <!-- emphasised lines -->
+      <polyline fill="none" stroke="var(--c3)" stroke-width="1.8" points="38,24 101,52.6 164,79 227,109.8 290,136.2"/>
+      <polyline fill="none" stroke="var(--c2)" stroke-width="1.8" points="38,24 101,46 164,72.4 227,96.6 290,120.8"/>
+      <polyline fill="none" stroke="var(--c1)" stroke-width="2.6" points="38,24 101,41.6 164,61.4 227,85.6 290,107.6"/>
+      <!-- end-point dots -->
+      <circle cx="290" cy="107.6" r="3" fill="var(--c1)"/>
+      <circle cx="290" cy="120.8" r="2.5" fill="var(--c2)"/>
+      <circle cx="290" cy="136.2" r="2.5" fill="var(--c3)"/>
+      <!-- direct end-of-line labels (editorial: no floating legend) -->
+      <g font-size="9.5">
+        <text x="296" y="110.6" fill="var(--c1)" font-weight="700">Mullin +38</text>
+        <text x="296" y="123.8" fill="var(--c2)">Baker +44</text>
+        <text x="296" y="139.2" fill="var(--c3)">Neumann +51</text>
+        <text x="296" y="148" fill="var(--text-muted)">Meller +55</text>
+        <text x="296" y="198.6" fill="var(--text-muted)">Patterson +78</text>
+      </g>
+    </svg>
+    <div class="cap">Each line is a player’s running total against par across the four rounds. Tap a name to isolate a line.</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="v green">+38</div><div class="l">Winning score</div></div>
+    <div class="stat"><div class="v">6</div><div class="l">Shots clear</div></div>
+    <div class="stat"><div class="v">+59</div><div class="l">Field average</div></div>
+  </div>
+</div>
+
+<script>
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('themeLbl').textContent = t==='dark'?'Light':'Dark';
+  document.querySelector('#themeBtn .material-symbols-outlined').textContent = t==='dark'?'light_mode':'dark_mode';
+}
+function toggleTheme(){ applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark'); }
+(function(){ var p=new URLSearchParams(location.search).get('theme');
+  if(!p) p=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'; applyTheme(p); })();
+</script>
+</body>
+</html>

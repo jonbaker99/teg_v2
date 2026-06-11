@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Mockup A — App · Chart page</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+<style>
+/* ============================================================
+   MOCKUP A (chart) — "Full native-app feel"
+   Chart page with sticky app bar, segmented control, chart in a
+   rounded card with a chip legend + scrubber, bottom tab bar.
+   Static dummy SVG chart. Not wired to real data.
+   ============================================================ */
+:root {
+  --font-body:'Lora', Georgia, serif; --font-data:'Roboto Mono', monospace;
+  --bg:#f4f3ef; --surface:#ffffff; --surface-2:#faf9f6; --text:#1a1a1a; --text-2:#555;
+  --text-muted:#8c8c86; --line:#e7e5e0; --accent:forestgreen; --accent-soft:#F3F7F3; --accent-text:forestgreen;
+  --bar:#ffffff; --bar-line:#e7e5e0; --shadow:0 1px 2px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.04);
+  --grid:#efeee9; --axis:#d8d6cf;
+  --c1:forestgreen; --c2:#444; --c3:#b08400; --cmuted:#cdcbc3;
+}
+[data-theme="dark"] {
+  --bg:#131311; --surface:#1d1d1a; --surface-2:#242420; --text:#ececea; --text-2:#b7b6b0;
+  --text-muted:#86857e; --line:#2e2e29; --accent:#57c773; --accent-soft:#1b2a1d; --accent-text:#7ad492;
+  --bar:#191916; --bar-line:#2a2a25; --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+  --grid:#26261f; --axis:#3a392f;
+  --c1:#57c773; --c2:#c9c7bc; --c3:#d6ad4e; --cmuted:#4f4e45;
+}
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body { margin:0; }
+body { font-family:var(--font-body); background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; padding-bottom:76px; }
+.material-symbols-outlined { font-variation-settings:'opsz' 24,'wght' 400; line-height:1; vertical-align:middle; }
+
+.appbar { position:sticky; top:0; z-index:30; background:var(--bar); border-bottom:1px solid var(--bar-line);
+  padding:calc(10px + env(safe-area-inset-top,0)) 14px 10px; display:flex; align-items:center; gap:10px; }
+.appbar .back { font-size:22px; color:var(--text-2); }
+.appbar .titles { flex:1; min-width:0; }
+.appbar .kicker { font-family:var(--font-data); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-muted); display:block; line-height:1.4; }
+.appbar .title { font-weight:600; font-size:17px; line-height:1.15; }
+.appbar .teg-pill { font-family:var(--font-data); font-size:12px; font-weight:600; color:var(--accent-text);
+  background:var(--accent-soft); border:1px solid var(--line); border-radius:999px; padding:5px 11px; display:inline-flex; align-items:center; gap:4px; }
+.appbar .teg-pill .material-symbols-outlined { font-size:16px; }
+
+.seg { margin:14px 14px 4px; padding:3px; background:var(--surface-2); border:1px solid var(--line); border-radius:11px; display:flex; gap:3px; }
+.seg button { flex:1; border:none; background:transparent; cursor:pointer; font-family:var(--font-body); font-size:14px; font-weight:600; color:var(--text-2); padding:9px 0; border-radius:8px; }
+.seg button[aria-selected="true"] { background:var(--surface); color:var(--accent-text); box-shadow:0 1px 2px rgba(0,0,0,.08); }
+[data-theme="dark"] .seg button[aria-selected="true"] { box-shadow:0 1px 3px rgba(0,0,0,.5); }
+
+/* chart card */
+.card { margin:12px 12px 0; background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:14px 12px 10px; box-shadow:var(--shadow); }
+.card .ct { font-size:13px; font-weight:600; color:var(--text-2); padding:0 4px; margin-bottom:4px; }
+.card .cs { font-family:var(--font-data); font-size:10.5px; color:var(--text-muted); padding:0 4px; margin-bottom:10px; }
+svg.chart { width:100%; height:auto; display:block; }
+.chart text { font-family:'Roboto Mono', monospace; }
+
+/* chip legend (interactive-looking) */
+.chips { display:flex; flex-wrap:wrap; gap:7px; padding:12px 4px 2px; }
+.chip { display:inline-flex; align-items:center; gap:6px; font-family:var(--font-data); font-size:11px; font-weight:600;
+  background:var(--surface-2); border:1px solid var(--line); border-radius:999px; padding:5px 10px; color:var(--text-2); }
+.chip .dot { width:9px; height:9px; border-radius:50%; }
+.chip.off { opacity:.4; }
+
+/* scrubber / round selector */
+.scrub { display:flex; align-items:center; gap:10px; margin:14px 16px 0; }
+.scrub .lab { font-family:var(--font-data); font-size:11px; color:var(--text-muted); }
+.track { flex:1; height:4px; border-radius:4px; background:var(--line); position:relative; }
+.track .knob { position:absolute; top:50%; left:78%; width:16px; height:16px; border-radius:50%; background:var(--accent); transform:translate(-50%,-50%); box-shadow:var(--shadow); }
+
+.tabbar { position:fixed; left:0; right:0; bottom:0; z-index:40; background:var(--bar); border-top:1px solid var(--bar-line);
+  display:grid; grid-template-columns:repeat(5,1fr); padding:6px 4px calc(6px + env(safe-area-inset-bottom,0)); }
+.tab { background:none; border:none; cursor:pointer; padding:6px 0 4px; display:flex; flex-direction:column; align-items:center; gap:2px;
+  color:var(--text-muted); font-family:var(--font-body); font-size:10px; font-weight:600; }
+.tab .material-symbols-outlined { font-size:23px; }
+.tab[aria-current="page"] { color:var(--accent-text); }
+
+.demobar { position:fixed; top:calc(8px + env(safe-area-inset-top,0)); right:10px; z-index:60; }
+.demobar button { background:var(--surface); color:var(--text-2); border:1px solid var(--line); border-radius:999px;
+  padding:6px 10px; font-family:var(--font-data); font-size:11px; cursor:pointer; box-shadow:var(--shadow); display:inline-flex; align-items:center; gap:5px; }
+.demobar .material-symbols-outlined { font-size:16px; }
+</style>
+</head>
+<body>
+<div class="demobar"><button id="themeBtn" onclick="toggleTheme()"><span class="material-symbols-outlined">dark_mode</span><span id="themeLbl">Dark</span></button></div>
+
+<header class="appbar">
+  <span class="material-symbols-outlined back">arrow_back_ios_new</span>
+  <div class="titles"><span class="kicker">Latest TEG</span><div class="title">In context</div></div>
+  <span class="teg-pill"><span class="material-symbols-outlined">expand_more</span>TEG&nbsp;18</span>
+</header>
+
+<div class="seg" role="tablist">
+  <button role="tab" aria-selected="true">Race to title</button>
+  <button role="tab" aria-selected="false">By round</button>
+</div>
+
+<div class="card">
+  <div class="ct">Cumulative score vs par</div>
+  <div class="cs">lower is better · after Round 4</div>
+  <svg class="chart" viewBox="0 0 360 234" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Cumulative score vs par by round">
+    <g>
+      <line x1="38" y1="24"  x2="296" y2="24"  stroke="var(--grid)"/>
+      <line x1="38" y1="68"  x2="296" y2="68"  stroke="var(--grid)"/>
+      <line x1="38" y1="112" x2="296" y2="112" stroke="var(--grid)"/>
+      <line x1="38" y1="156" x2="296" y2="156" stroke="var(--grid)"/>
+      <line x1="38" y1="200" x2="296" y2="200" stroke="var(--axis)"/>
+      <text x="32" y="27"  text-anchor="end" font-size="9" fill="var(--text-muted)">0</text>
+      <text x="32" y="71"  text-anchor="end" font-size="9" fill="var(--text-muted)">+20</text>
+      <text x="32" y="115" text-anchor="end" font-size="9" fill="var(--text-muted)">+40</text>
+      <text x="32" y="159" text-anchor="end" font-size="9" fill="var(--text-muted)">+60</text>
+      <text x="32" y="203" text-anchor="end" font-size="9" fill="var(--text-muted)">+80</text>
+    </g>
+    <g font-size="9" fill="var(--text-muted)" text-anchor="middle">
+      <text x="38"  y="222">Start</text>
+      <text x="103" y="222">R1</text>
+      <text x="167" y="222">R2</text>
+      <text x="231" y="222">R3</text>
+      <text x="296" y="222">R4</text>
+    </g>
+    <polyline fill="none" stroke="var(--cmuted)" stroke-width="1.4" points="38,24 103,65.8 167,109.8 231,151.6 296,195.6"/>
+    <polyline fill="none" stroke="var(--cmuted)" stroke-width="1.4" points="38,24 103,54.8 167,83.4 231,116.4 296,145"/>
+    <polyline fill="none" stroke="var(--c3)" stroke-width="1.8" points="38,24 103,52.6 167,79 231,109.8 296,136.2"/>
+    <polyline fill="none" stroke="var(--c2)" stroke-width="1.8" points="38,24 103,46 167,72.4 231,96.6 296,120.8"/>
+    <polyline fill="none" stroke="var(--c1)" stroke-width="2.8" points="38,24 103,41.6 167,61.4 231,85.6 296,107.6"/>
+    <circle cx="296" cy="107.6" r="3.4" fill="var(--c1)"/>
+    <circle cx="296" cy="120.8" r="2.6" fill="var(--c2)"/>
+    <circle cx="296" cy="136.2" r="2.6" fill="var(--c3)"/>
+  </svg>
+
+  <!-- chip legend (tap to toggle a line, app-style) -->
+  <div class="chips">
+    <span class="chip"><span class="dot" style="background:var(--c1)"></span>Mullin +38</span>
+    <span class="chip"><span class="dot" style="background:var(--c2)"></span>Baker +44</span>
+    <span class="chip"><span class="dot" style="background:var(--c3)"></span>Neumann +51</span>
+    <span class="chip off"><span class="dot" style="background:var(--cmuted)"></span>Meller +55</span>
+    <span class="chip off"><span class="dot" style="background:var(--cmuted)"></span>Patterson +78</span>
+  </div>
+</div>
+
+<!-- scrubber: drag through the tournament -->
+<div class="scrub">
+  <span class="lab">Start</span>
+  <div class="track"><div class="knob"></div></div>
+  <span class="lab">R4</span>
+</div>
+
+<nav class="tabbar">
+  <button class="tab" aria-current="page"><span class="material-symbols-outlined">leaderboard</span>Latest</button>
+  <button class="tab"><span class="material-symbols-outlined">lists</span>History</button>
+  <button class="tab"><span class="material-symbols-outlined">military_tech</span>Records</button>
+  <button class="tab"><span class="material-symbols-outlined">strategy</span>Scoring</button>
+  <button class="tab"><span class="material-symbols-outlined">menu</span>More</button>
+</nav>
+
+<script>
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('themeLbl').textContent = t==='dark'?'Light':'Dark';
+  document.querySelector('#themeBtn .material-symbols-outlined').textContent = t==='dark'?'light_mode':'dark_mode';
+}
+function toggleTheme(){ applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark'); }
+(function(){ var p=new URLSearchParams(location.search).get('theme');
+  if(!p) p=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'; applyTheme(p); })();
+</script>
+</body>
+</html>
