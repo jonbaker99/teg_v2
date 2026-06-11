@@ -12,7 +12,13 @@
     .contents-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-        gap: 1.5rem;
+        gap: 1.5rem 2.5rem;
+        align-items: start; /* size columns to content, tops aligned */
+    }
+    /* The columns are .data-card siblings; cancel the global
+       .data-card + .data-card stacking margin so grid columns top-align. */
+    .contents-grid .data-card {
+        margin-top: 0;
     }
     .contents-section-title {
         font-weight: 600;
@@ -26,6 +32,8 @@
         display: block;
         padding: 0.3rem 0;
         font-size: 0.9rem;
+        /* Mono menu items, matching the Streamlit app's data/nav typography. */
+        font-family: 'Roboto Mono', monospace;
         color: var(--nav-text, #374151);
         text-decoration: none;
     }

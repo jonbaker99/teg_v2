@@ -681,7 +681,7 @@ body.ts-f5 .page-title-area .page-title {
    stacked sections within a panel get a consistent gap without per-template
    margins. (First section in a panel has no preceding sibling → no gap.) */
 * + .section-title {
-    margin-top: 2.25rem;
+    margin-top: 1.75rem;
 }
 
 /* ── Layout utilities ── */
@@ -708,7 +708,7 @@ body.ts-f5 .page-title-area .page-title {
     gap: 0.5rem;
     /* A tab bar reads as a strong horizontal rule (active underline), so the
        panel/heading below needs clear separation — more than a controls row. */
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
 }
 .section-controls {
     /* selector / filter rows (dropdowns, inputs) */
@@ -716,7 +716,7 @@ body.ts-f5 .page-title-area .page-title {
     flex-wrap: wrap;
     align-items: flex-end;
     gap: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 /* A controls row sitting directly under the tab bar shouldn't double the gap. */
 .section-nav + .section-controls {
@@ -730,12 +730,12 @@ body.ts-f5 .page-title-area .page-title {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
 }
 /* A toggle row that follows a data block (e.g. the chart-variant toggle sitting
    between a results table and its chart) gets breathing room above too. */
 .data-card + .toggle-group {
-    margin-top: 1.75rem;
+    margin-top: 1.5rem;
 }
 .section-panel {
     /* HTMX swap-target / content container */
