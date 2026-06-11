@@ -93,6 +93,7 @@ a broadly-equivalent course summary).
 - [x] Inline per-round scorecards
 - [x] Report tab: pre-TEG-8 scoring caption
 - [x] Report tab: fallback from `_report_styled.md` to `_main_report.md`
+- [ ] Vertical-line issue (stray rule near chart/table) — refinement-stage fix, cosmetic
 
 ### Player Rankings (`/player-rankings`)
 - [x] TEG Trophy (net) ranking tab — NetVP for older TEGs, Stableford for TEG 8+

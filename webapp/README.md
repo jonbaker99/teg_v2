@@ -341,4 +341,6 @@ HTML builders).
 - REST API — planned; will expose `teg_analysis` over HTTP so any client (scripts, mobile, other frontends) can access the analysis layer without needing Python
 - Mobile responsive design
 - Search / filtering UI (some routes have it, not everywhere)
+- **"Related links" section** — replicate the cross-page related-links block the
+  Streamlit app shows (links from each page to related pages). One day.
 

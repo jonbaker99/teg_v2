@@ -50,8 +50,8 @@
     <div class="data-card">
         <div class="contents-section-title">{{ section.label }}</div>
         <div class="contents-links">
-            {% for title, url, key in section.pages %}
-            <a href="{{ url }}">{{ title }}</a>
+            {% for title, url, key, icon in section.pages %}
+            <a href="{{ url }}"><span class="menu-icon material-symbols-outlined">{{ icon }}</span>{{ title }}</a>
             {% endfor %}
         </div>
     </div>
