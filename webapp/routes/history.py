@@ -560,16 +560,20 @@ PR_COL_DIMS = [("TEGNum", "TEG Number"), ("TEG", "TEG Name")]
 
 
 def _format_ranking_for_display(ranking: pd.DataFrame, player_col: str) -> pd.DataFrame:
-    """Rename TEGNum columns to 'TEG N' and show '-' for non-participation."""
+    """Stringify TEG column headers and show '-' for non-participation.
+
+    Keeps the header as the value of the selected column dimension: a bare
+    number when columns are TEG numbers (e.g. ``2``), or the full TEG name when
+    columns are TEG names (e.g. ``TEG 2``)."""
     df = ranking.copy()
     rename = {}
     for col in df.columns:
         if col == player_col:
             continue
         try:
-            rename[col] = f"TEG {int(col)}"
+            rename[col] = str(int(col))
         except (ValueError, TypeError):
-            rename[col] = col
+            rename[col] = str(col)
     df = df.rename(columns=rename)
     for col in [c for c in df.columns if c != player_col]:
         df[col] = df[col].apply(lambda x: "-" if pd.isna(x) else str(x))
@@ -602,7 +606,7 @@ def _player_rankings_context(tab: str, row_dim: str = "Player", col_dim: str = "
              "table_html": _ranking_table_html(display, player_col=row_dim,
                                                 link_players=(row_dim == "Player"))},
             {"title": summary_title, "caption": None,
-             "table_html": _df_to_html(summary, table_class="teg-table")},
+             "table_html": _df_to_html(summary, table_class="teg-table position-table")},
         ]
         return {"sections": sections, "row_dims": PR_ROW_DIMS, "col_dims": PR_COL_DIMS,
                 "selected_row_dim": row_dim, "selected_col_dim": col_dim}

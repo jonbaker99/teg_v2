@@ -120,11 +120,14 @@ h1, h2, h3, h4, h5, h6 {
 .player-ranking-table td,
 .player-ranking-table th {
     text-align: center;
-    padding: 0.4rem 0.3rem;
-    width: 36px;
+    /* Compact, slightly larger type than the default table; rows kept a touch
+       shorter than the leaderboards so the eye can scan down a column. */
+    padding: 0.3rem 0.2rem;
+    width: 32px;
     min-width: 20px;
-    max-width: 44px;
+    max-width: 38px;
     white-space: nowrap;
+    font-size: 0.875rem;
 }
 .player-ranking-table td:first-child,
 .player-ranking-table th:first-child {
@@ -143,8 +146,8 @@ h1, h2, h3, h4, h5, h6 {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     border-radius: 15%;
     z-index: 1;
 }
@@ -153,14 +156,31 @@ h1, h2, h3, h4, h5, h6 {
     position: relative;
     z-index: 2;
     display: inline-block;
-    width: 22px;
-    line-height: 22px;
+    width: 20px;
+    line-height: 20px;
     font-weight: 700;
 }
 .player-ranking-table td.first-place::before { background: green; }
 .player-ranking-table td.first-place span { color: #ffffff; }
 .player-ranking-table td.last-place::before { background: #FAE9E8; }
 .player-ranking-table td.last-place span { color: #8b0000; }
+
+/* ── Position / rankings summary table ──
+   The summary beneath the ranking grid (Ave, TEGs, 1st–6th). Wider, airier
+   columns than the dense ranking grid above it, centred numerics with a
+   left-aligned player column. */
+.position-table td,
+.position-table th {
+    text-align: center;
+    padding: 0.4rem 0.7rem;
+    min-width: 2.75rem;
+    font-size: 0.875rem;
+}
+.position-table td:first-child,
+.position-table th:first-child {
+    text-align: left;
+    min-width: 3rem;
+}
 
 /* ── History table (TEG History page) ──
    Mirrors the Streamlit hist2 layout: a compound first cell with the TEG label
