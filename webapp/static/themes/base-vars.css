@@ -211,6 +211,28 @@ h1, h2, h3, h4, h5, h6 {
     .history-table .player-name .last { display: block; }
 }
 
+/* ── Multi-round scorecards (Full Results → Scorecards tab) ──
+   Each round is a .sc-round section holding a Gross block then a Stableford
+   block. Lives here (always-loaded, cache-busted) rather than scorecard.css
+   (HTMX-injected) so the layout reliably applies. The scorecard tables carry
+   their own 20px bottom margin, so the gaps below are tuned to clearly exceed
+   it. */
+.sc-label {
+    font-weight: 600;
+    font-size: 0.8125rem;
+    margin-bottom: 0.5rem;
+}
+/* Clear extra space between the Gross and Stableford scorecards in a round. */
+.sc-block--stableford {
+    margin-top: 2rem;
+}
+/* Generous space + a subtle rule between consecutive rounds. */
+.sc-round + .sc-round {
+    margin-top: 3rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--table-cell-border, #e0e0e0);
+}
+
 .records-table {
     /* Content-sized like the Streamlit datawrapper tables (not stretched to 100%) */
     width: auto;
