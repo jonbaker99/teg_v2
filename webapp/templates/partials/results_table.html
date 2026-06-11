@@ -22,7 +22,7 @@
     <script>
     (function() {
         var data = {{ chart_json | safe }};
-        Plotly.newPlot('results-chart', data.data, data.layout, {displayModeBar: false, responsive: true});
+        drawPlot('results-chart', data);
     })();
     </script>
 </div>

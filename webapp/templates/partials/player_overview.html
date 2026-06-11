@@ -12,7 +12,7 @@
         <script>
             (function() {
                 var figData = {{ chart_json | safe }};
-                Plotly.newPlot('player-overview-chart', figData.data, figData.layout, {responsive: true, displayModeBar: false});
+                drawPlot('player-overview-chart', figData);
             })();
         </script>
     </div>

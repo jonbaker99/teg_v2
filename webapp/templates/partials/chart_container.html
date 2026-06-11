@@ -7,7 +7,7 @@
     <script>
         (function() {
             var figData = {{ figure_json | safe }};
-            Plotly.newPlot('plotly-chart', figData.data, figData.layout, {responsive: true, displayModeBar: false});
+            drawPlot('plotly-chart', figData);
         })();
     </script>
 </div>

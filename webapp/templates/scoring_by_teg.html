@@ -17,7 +17,7 @@
 <script>
 (function() {
     var data = {{ chart_json | safe }};
-    Plotly.newPlot('by-teg-chart', data.data, data.layout, {displayModeBar: false, responsive: true});
+    drawPlot('by-teg-chart', data);
 })();
 </script>
 {% endif %}

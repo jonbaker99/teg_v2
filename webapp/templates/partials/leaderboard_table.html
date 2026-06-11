@@ -37,7 +37,7 @@
     <script>
     (function() {
         var data = {{ chart_json | safe }};
-        Plotly.newPlot('lb-chart', data.data, data.layout, {displayModeBar: false, responsive: true});
+        drawPlot('lb-chart', data);
     })();
     </script>
     {% endif %}

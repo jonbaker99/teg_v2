@@ -55,7 +55,7 @@
 <script>
 (function() {
     var data = {{ chart_json | safe }};
-    Plotly.newPlot('dist-chart', data.data, data.layout, {displayModeBar: false, responsive: true});
+    drawPlot('dist-chart', data);
 })();
 </script>
 {% endif %}

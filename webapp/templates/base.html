@@ -7,6 +7,23 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <script>
+        // Render a Plotly chart safely inside HTMX-swapped content. Drawing
+        // mid-swap reads a wrong container size, which misplaces the gridlines,
+        // legend and end-of-line labels — they spill down the page below the
+        // plot and stay there until a full reload. Purge any prior chart on the
+        // node, defer the draw until the browser has laid the container out,
+        // then size to fit.
+        window.drawPlot = function(id, fig) {
+            var gd = document.getElementById(id);
+            if (!gd || typeof Plotly === 'undefined' || !fig) return;
+            Plotly.purge(gd);
+            requestAnimationFrame(function() {
+                Plotly.newPlot(gd, fig.data, fig.layout, {displayModeBar: false, responsive: true})
+                    .then(function() { Plotly.Plots.resize(gd); });
+            });
+        };
+    </script>
     <link rel="stylesheet" href="/static/themes/base-vars.css?v=13">
     <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=13">
     <!-- Structural hierarchy debug overlay (dev tool; inert unless body.debug-structure) -->
