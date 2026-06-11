@@ -318,16 +318,30 @@ as the live site."
   >    and end-of-line labels render stranded/duplicated below the plot, and stay
   >    until a full page reload.
   >
-  > **Diagnosis so far (don't re-chase the wrong lead):** it is **not** a sizing
-  > or timing problem. A live console check after reproducing showed the
-  > container and SVG dimensions are all correct (`container_h:420`,
-  > `svg_h:420`, `svg_w:752`, `plotbg_h:374`) but **`svg_count:3`** — multiple
-  > Plotly `svg.main-svg` layers stacked in one chart div. So the real cause is
-  > **duplicate Plotly renders not being cleared when the fragment is
-  > re-swapped** (each swap leaves prior render layers behind). Several attempts
-  > to fix it as a sizing/resize problem (rAF, height-pin, explicit size,
-  > ResizeObserver) did **not** work and have been reverted — the templates are
-  > back to the simple inline `Plotly.newPlot(..., {responsive:true})` baseline.
+  > **Diagnosis so far (don't re-chase the wrong leads):**
+  > - It is **not** a sizing/timing problem. A live console check after
+  >   reproducing showed all dimensions correct (`container_h:420`, `svg_h:420`,
+  >   `svg_w:752`, `plotbg_h:374`).
+  > - It is **not** a dimension-recalc problem either: manually resizing the
+  >   browser window (which fires Plotly's own resize) does **not** fix it. So
+  >   the common "force `Plotly.Plots.resize` on tab-show / `htmx:afterSettle`"
+  >   advice does not apply here — confirmed, don't bother.
+  > - The stranded elements — legend, end-of-line labels (annotations) and the
+  >   round-divider vertical lines (shapes) — are exactly the things Plotly draws
+  >   on its **separate top/info SVG layer**, not the main plot SVG. So the top
+  >   layer is persistently mis-placed relative to the main plot, and a redraw or
+  >   resize doesn't re-sync it. (`svg_count:3` may just be Plotly's normal
+  >   main + top + hover layers — could not confirm duplication; jsdom can't
+  >   render Plotly and no browser is installable in the web sandbox.)
+  > - It only happens **after an HTMX swap** and persists until a full reload, so
+  >   suspect the inline `<script>` running mid-swap and/or an ancestor's CSS
+  >   throwing off Plotly's top-layer positioning — note `.content-wrapper` is
+  >   `width: fit-content` and the nav is JS-`position: sticky`.
+  >
+  > Several attempts to fix this as a sizing/resize problem (rAF, height-pin,
+  > explicit size, ResizeObserver) did **not** work and have been reverted — the
+  > templates are back to the simple inline `Plotly.newPlot(..., {responsive:true})`
+  > baseline.
   >
   > **Where the chart code lives:**
   > - Figure construction: `webapp/chart_utils.py` (`create_cumulative_graph`,
