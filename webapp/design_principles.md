@@ -46,6 +46,20 @@ The `.data-card` class is a **no-op in Layout 1**. Templates that wrap data outp
 
 Only use `!important` when the logic genuinely requires it — not to brute-force a style outcome. The reasoning must be clear, and each use must be commented so it's traceable when debugging. Current known exceptions are noted in the relevant CSS files.
 
+### CSS: comments must not contain `*/`
+
+A `/* … */` comment whose **text** contains the sequence `*/` (e.g. writing
+`(mb-*/mt-*)` in prose) closes the comment **early** — the browser then parses
+the leftover prose as a bad selector and its error-recovery silently **drops the
+next rule**. This once disabled the entire `.section-nav` rule with no visible
+error (`tinycss2` and most linters don't catch it). When a comment needs to
+mention utility globs, reword to avoid `*/` — e.g. `mb-*/mt-*` → `mb-, mt-`.
+
+A guard enforces this: `python scripts/check_css_comments.py` scans the theme
+CSS as a state machine and fails on any orphan `*/` (a comment that closed
+early). It runs automatically on session start via the `SessionStart` hook in
+`.claude/settings.json`.
+
 ## Structural class hierarchy
 
 `.data-card` is the **data-display level** of a wider, consistent
