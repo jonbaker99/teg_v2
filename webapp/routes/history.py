@@ -250,35 +250,42 @@ def _honours_tab_context(tab: str) -> dict:
         all_data = cached_load_all_data()
         winners_df = get_teg_winners(all_data)
 
+        # The selected tab already names the section, so no per-section heading
+        # is rendered (see partials/honours_tab.html). Tabs that carry extra
+        # context (the Doubles count) surface it as a caption instead.
         sections = []
 
         if tab == "trophy":
-            sections.append({"title": "TEG Trophy", "table_html": _summarise_wins(winners_df, "TEG Trophy")})
+            sections.append({"table_html": _summarise_wins(winners_df, "TEG Trophy")})
 
         elif tab == "jacket":
             jacket_html = _summarise_wins(winners_df, "Green Jacket")
             jacket_html += ("<p class='text-muted text-sm mt-3'>*Green Jacket awarded in TEG 5 for "
                             "best stableford round; DM had best gross score.</p>")
-            sections.append({"title": "Green Jacket", "table_html": jacket_html})
+            sections.append({"table_html": jacket_html})
 
         elif tab == "spoon":
-            sections.append({"title": "Wooden Spoon", "table_html": _summarise_wins(winners_df, "HMM Wooden Spoon")})
+            sections.append({"table_html": _summarise_wins(winners_df, "HMM Wooden Spoon")})
 
         elif tab == "doubles":
             doubles_df, count = calculate_trophy_jacket_doubles(winners_df)
-            html = _df_to_html(doubles_df) if doubles_df is not None and not doubles_df.empty else "<p class='text-muted text-sm'>No doubles recorded.</p>"
-            sections.append({"title": f"Trophy & Jacket Doubles ({count})", "table_html": html})
+            if doubles_df is not None and not doubles_df.empty:
+                html = (f"<p class='text-muted text-sm mb-2'>There have been {count} "
+                        f"trophy / jacket doubles.</p>") + _df_to_html(doubles_df)
+            else:
+                html = "<p class='text-muted text-sm'>No doubles recorded.</p>"
+            sections.append({"table_html": html})
 
         elif tab == "eagles":
             eagles = get_eagles_data(all_data)
-            sections.append({"title": "Eagles", "table_html": _df_to_html(eagles, link_players=True)})
+            sections.append({"table_html": _df_to_html(eagles, link_players=True)})
 
         elif tab == "hio":
             hio = get_holes_in_one_data(all_data)
             if hio is not None and not hio.empty:
-                sections.append({"title": "Holes in One", "table_html": _df_to_html(hio, link_players=True)})
+                sections.append({"table_html": _df_to_html(hio, link_players=True)})
             else:
-                sections.append({"title": "Holes in One", "table_html": "<p class='text-muted text-sm'>No holes in one recorded.</p>"})
+                sections.append({"table_html": "<p class='text-muted text-sm'>No holes in one recorded.</p>"})
 
         return {"sections": sections}
     except Exception as e:
