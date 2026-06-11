@@ -55,16 +55,21 @@ templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templa
 
 
 def _df_to_html(df: pd.DataFrame, table_class: str = "teg-table") -> str:
+    """Render a DataFrame as a teg-table: first column left-aligned (player /
+    label), remaining columns centred — consistent with the /results tables."""
     if df is None or df.empty:
         return "<p class='text-muted text-sm'>No data available.</p>"
+    cols = list(df.columns)
     rows = [f"<table class='{table_class}'><thead><tr>"]
-    for col in df.columns:
-        rows.append(f"<th>{col}</th>")
+    for i, col in enumerate(cols):
+        cls = "col-player" if i == 0 else "col-num"
+        rows.append(f"<th class='{cls}'>{col}</th>")
     rows.append("</tr></thead><tbody>")
     for _, row in df.iterrows():
         rows.append("<tr>")
-        for col in df.columns:
-            rows.append(f"<td>{row[col]}</td>")
+        for i, col in enumerate(cols):
+            cls = "col-player" if i == 0 else "col-num"
+            rows.append(f"<td class='{cls}'>{row[col]}</td>")
         rows.append("</tr>")
     rows.append("</tbody></table>")
     return "".join(rows)
@@ -192,21 +197,14 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                 table_html = _df_to_html(ctx_df)
             except Exception:
                 table_html = "<p class='text-muted text-sm'>No data.</p>"
-            # Per-metric cumulative-through-round chart
-            chart_json = None
-            try:
-                import json
-                import plotly.utils
-                from webapp.chart_utils import create_round_graph
-                all_data = cached_load_all_data()
-                fig = create_round_graph(all_data, teg_str, round_num, f'{metric} Cum Round',
-                                         friendly, y_axis_label=f'Cumulative {friendly}')
-                chart_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-            except Exception:
-                chart_json = None
+            # Per-metric cumulative-through-round chart — placeholder pending the
+            # chart rebuild (see webapp/README look-and-feel roadmap, item 1b).
             return {"sections": [{"title": friendly, "table_html": table_html}],
                     "metric_tabs": METRIC_TABS, "active_metric": metric,
-                    "chart_json": chart_json, "chart_title": f"Cumulative {friendly} through round"}
+                    "chart_placeholder": True,
+                    "chart_title": f"Cumulative {friendly} through round",
+                    "chart_series": f"{metric} Cum Round",
+                    "chart_teg": teg_str, "chart_round": round_num}
 
         elif tab == "scorecard":
             try:

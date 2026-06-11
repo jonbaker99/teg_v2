@@ -8,42 +8,45 @@
   {% endif %}
 {% elif sections %}
   {% if scoring_fields %}
-  <div class="toggle-group flex items-center gap-2">
-    {% for fid, flabel in scoring_fields %}
-    <button class="tab-underline{% if fid == score_type %} tab-underline--active{% endif %}"
-            hx-get="/latest-round/tab" hx-target="#lr-content" hx-swap="innerHTML"
-            hx-vals='{"teg": "{{ teg }}", "round": "{{ round }}", "tab": "scoring", "score_type": "{{ fid }}"}'>
-      {{ flabel }}
-    </button>
-    {% endfor %}
+  <div class="section-controls">
+    <div class="pill-group" role="group" aria-label="Score type">
+      {% for fid, flabel in scoring_fields %}
+      <button class="pill{% if fid == score_type %} pill--active{% endif %}"
+              hx-get="/latest-round/tab" hx-target="#lr-content" hx-swap="innerHTML"
+              hx-vals='{"teg": "{{ teg }}", "round": "{{ round }}", "tab": "scoring", "score_type": "{{ fid }}"}'>
+        {{ flabel }}
+      </button>
+      {% endfor %}
+    </div>
   </div>
   {% endif %}
   {% if metric_tabs %}
-  <div class="toggle-group flex flex-wrap items-center gap-2">
-    {% for mid, mlabel in metric_tabs %}
-    <button class="tab-underline{% if mid == active_metric %} tab-underline--active{% endif %}"
-            hx-get="/latest-round/tab" hx-target="#lr-content" hx-swap="innerHTML"
-            hx-vals='{"teg": "{{ teg }}", "round": "{{ round }}", "tab": "scoreboard", "metric": "{{ mid }}"}'>
-      {{ mlabel }}
-    </button>
-    {% endfor %}
+  <div class="section-controls">
+    <div class="pill-group" role="group" aria-label="Metric">
+      {% for mid, mlabel in metric_tabs %}
+      <button class="pill{% if mid == active_metric %} pill--active{% endif %}"
+              hx-get="/latest-round/tab" hx-target="#lr-content" hx-swap="innerHTML"
+              hx-vals='{"teg": "{{ teg }}", "round": "{{ round }}", "tab": "scoreboard", "metric": "{{ mid }}"}'>
+        {{ mlabel }}
+      </button>
+      {% endfor %}
+    </div>
   </div>
   {% endif %}
   {% for section in sections %}
     {% if section.title %}<div class="card-header">{{ section.title }}</div>{% endif %}
     <div class="data-card"><div class="table-wrapper">{{ section.table_html | safe }}</div></div>
   {% endfor %}
-  {% if chart_json %}
-  {% if chart_title %}<div class="card-header">{{ chart_title }}</div>{% endif %}
+  {% if chart_placeholder %}
+  <h3 class="chart-title">{{ chart_title }}</h3>
   <div class="data-card data-card--padded">
-    <div id="lr-metric-chart" class="chart-container" style="height:340px;"></div>
+    <div class="chart-placeholder">
+      <span class="ph-title">Round chart — placeholder</span>
+      <span>The cumulative round chart is being rebuilt (see look-and-feel roadmap 1b).</span>
+      <span>Data source: <code>create_round_graph(all_data, '{{ chart_teg }}',
+        {{ chart_round }}, y_series='{{ chart_series }}')</code> in <code>webapp/chart_utils.py</code></span>
+    </div>
   </div>
-  <script>
-  (function() {
-    var data = {{ chart_json | safe }};
-    Plotly.newPlot('lr-metric-chart', data.data, data.layout, {displayModeBar: false, responsive: true});
-  })();
-  </script>
   {% endif %}
   {% if caption %}<p class="text-muted text-sm mt-3">{{ caption }}</p>{% endif %}
 {% else %}
