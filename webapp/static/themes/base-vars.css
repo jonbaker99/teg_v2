@@ -771,6 +771,13 @@ body.ts-f5 .page-title-area .page-title {
 .data-card + .data-card {
     margin-top: 1.5rem;
 }
+/* A padded chart card needs a clearer break before the block beneath it
+   (e.g. the /results race chart sitting above its champion + table) — the
+   plot's baseline labels sit low in the card, so 1.5rem reads as cramped.
+   More specific than the rule above; must follow it to win on source order. */
+.data-card--padded + .data-card {
+    margin-top: 2.5rem;
+}
 /* A chart/title heading that follows a data block gets breathing room too. */
 .data-card + .subheading,
 .data-card + .chart-description {
