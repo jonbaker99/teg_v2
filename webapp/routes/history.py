@@ -285,7 +285,7 @@ def _honours_tab_context(tab: str) -> dict:
             if hio is not None and not hio.empty:
                 sections.append({"table_html": _df_to_html(hio, link_players=True)})
             else:
-                sections.append({"table_html": "<p class='text-muted text-sm'>No holes in one recorded.</p>"})
+                sections.append({"table_html": "<p class='text-muted text-sm'>No holes in one have yet been scored on a TEG</p>"})
 
         return {"sections": sections}
     except Exception as e:
