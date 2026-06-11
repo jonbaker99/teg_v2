@@ -9,46 +9,34 @@
 {% endblock %}
 
 {% block content %}
-<div class="section-controls flex items-center justify-between">
-    <div class="flex items-center gap-3">
-        <label for="teg-select" class="text-sm font-medium text-secondary">TEG:</label>
-        <select id="teg-select" name="teg"
-                hx-get="/leaderboard/table"
-                hx-target="#tables"
-                hx-include="#lb-tab-input, #lb-chart-variant-input"
-                hx-indicator="#loading"
-                class="teg-select">
-            {% for t in teg_numbers %}
-            <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
-            {% endfor %}
-        </select>
-        <span id="loading" class="htmx-indicator">
-            <svg class="animate-spin h-5 w-5 accent-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-            </svg>
-        </span>
+
+<div class="section-controls flex items-center gap-4">
+    <select id="lb-teg-select" class="theme-select"
+            hx-get="/leaderboard/table"
+            hx-target="#lb-content"
+            hx-include="#lb-tab-input, #lb-chart-variant"
+            name="teg">
+        {% for t in teg_numbers %}
+        <option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>
+        {% endfor %}
+    </select>
+
+    <input type="hidden" id="lb-tab-input" name="tab" value="{{ active_lb_tab }}">
+
+    <div class="section-nav" style="margin-bottom: 0;">
+        {% for tab_id, tab_label in leaderboard_tabs %}
+        <button class="tab-underline{% if tab_id == active_lb_tab %} tab-underline--active{% endif %}"
+                onclick="document.getElementById('lb-tab-input').value='{{ tab_id }}';
+                         document.querySelectorAll('.section-nav button.tab-underline').forEach(b => b.classList.remove('tab-underline--active'));
+                         this.classList.add('tab-underline--active');
+                         htmx.trigger(document.getElementById('lb-teg-select'), 'change')">
+            {{ tab_label }}
+        </button>
+        {% endfor %}
     </div>
 </div>
 
-<!-- Tab buttons -->
-<div class="section-nav flex flex-wrap gap-2">
-    <input type="hidden" id="lb-tab-input" name="tab" value="{{ active_lb_tab }}">
-    <input type="hidden" id="lb-chart-variant-input" name="chart_variant" value="{{ active_chart_variant }}">
-    {% for tab_id, tab_label in leaderboard_tabs %}
-    <button class="tab-underline{% if tab_id == active_lb_tab %} tab-underline--active{% endif %}"
-            onclick="document.getElementById('lb-tab-input').value='{{ tab_id }}'"
-            hx-get="/leaderboard/table"
-            hx-target="#tables"
-            hx-include="#teg-select, #lb-chart-variant-input"
-            hx-vals='{"tab": "{{ tab_id }}"}'
-            hx-indicator="#loading">
-        {{ tab_label }}
-    </button>
-    {% endfor %}
-</div>
-
-<div id="tables" class="section-panel">
+<div id="lb-content" class="section-panel">
     {% include "partials/leaderboard_table.html" %}
 </div>
 {% endblock %}
