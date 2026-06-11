@@ -8,7 +8,7 @@
   {% endif %}
 {% elif sections %}
   {% if scoring_fields %}
-  <div class="toggle-group flex items-center gap-2 mb-3">
+  <div class="toggle-group flex items-center gap-2">
     {% for fid, flabel in scoring_fields %}
     <button class="tab-underline{% if fid == score_type %} tab-underline--active{% endif %}"
             hx-get="/latest-round/tab" hx-target="#lr-content" hx-swap="innerHTML"
@@ -19,7 +19,7 @@
   </div>
   {% endif %}
   {% if metric_tabs %}
-  <div class="toggle-group flex flex-wrap items-center gap-2 mb-3">
+  <div class="toggle-group flex flex-wrap items-center gap-2">
     {% for mid, mlabel in metric_tabs %}
     <button class="tab-underline{% if mid == active_metric %} tab-underline--active{% endif %}"
             hx-get="/latest-round/tab" hx-target="#lr-content" hx-swap="innerHTML"
@@ -34,7 +34,7 @@
     <div class="data-card"><div class="table-wrapper">{{ section.table_html | safe }}</div></div>
   {% endfor %}
   {% if chart_json %}
-  {% if chart_title %}<div class="card-header mt-4">{{ chart_title }}</div>{% endif %}
+  {% if chart_title %}<div class="card-header">{{ chart_title }}</div>{% endif %}
   <div class="data-card data-card--padded">
     <div id="lr-metric-chart" class="chart-container" style="height:340px;"></div>
   </div>

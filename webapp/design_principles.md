@@ -46,6 +46,20 @@ The `.data-card` class is a **no-op in Layout 1**. Templates that wrap data outp
 
 Only use `!important` when the logic genuinely requires it — not to brute-force a style outcome. The reasoning must be clear, and each use must be commented so it's traceable when debugging. Current known exceptions are noted in the relevant CSS files.
 
+### CSS: comments must not contain `*/`
+
+A `/* … */` comment whose **text** contains the sequence `*/` (e.g. writing
+`(mb-*/mt-*)` in prose) closes the comment **early** — the browser then parses
+the leftover prose as a bad selector and its error-recovery silently **drops the
+next rule**. This once disabled the entire `.section-nav` rule with no visible
+error (`tinycss2` and most linters don't catch it). When a comment needs to
+mention utility globs, reword to avoid `*/` — e.g. `mb-*/mt-*` → `mb-, mt-`.
+
+A guard enforces this: `python scripts/check_css_comments.py` scans the theme
+CSS as a state machine and fails on any orphan `*/` (a comment that closed
+early). It runs automatically on session start via the `SessionStart` hook in
+`.claude/settings.json`.
+
 ## Structural class hierarchy
 
 `.data-card` is the **data-display level** of a wider, consistent
@@ -61,20 +75,41 @@ per-class rules live in
 The section wrappers **own the page's vertical spacing rhythm** in
 `base-vars.css` — they are no longer layout-neutral:
 
-- `.section-controls` and `.section-nav` carry `margin-bottom: 1.5rem` and their
-  own flex/gap defaults, so the gap below a filter row or tab bar is identical
-  on every page.
+- `.section-controls` carries `margin-bottom: 1.5rem` and `.section-nav`
+  carries `margin-bottom: 2rem` (a tab bar reads as a stronger divider, so its
+  panel/heading needs more separation), plus their own flex/gap defaults — so
+  the gap below a filter row or tab bar is identical on every page.
+- `.toggle-group` owns `margin-bottom: 1rem` (the gap before the data it
+  controls), and `.data-card + .toggle-group` adds `1.5rem` above a toggle row
+  that follows a data block (e.g. a chart-variant toggle between a table and its
+  chart). Templates must NOT hand-roll `mb-*`/`mt-*` on toggle rows — to kill the
+  gap in a one-off, use inline `style="margin-bottom:0"` (see `scoring_birdies`).
 - `* + .section-title` and `.data-card + .data-card` add a `1.5–1.75rem` gap
   between stacked sections/cards automatically.
 - Layout intent that legitimately varies per row (`justify-between`,
   `items-center` vs `items-end`, `gap-*` overrides) is still expressed with
   Tailwind utilities on the element and overrides the central defaults.
 
-**Do NOT add vertical-margin utilities (`mb-*` / `mt-*` / `my-*`) to
-`.section-controls` or `.section-nav`** — the spacing is owned centrally. Adding
-them reintroduces the per-page drift this convention exists to prevent. (To
-suppress a gap in a nested/edge case, use an inline `style="margin-bottom:0"`,
-as in `results.html` / `bestball.html`.)
+**Do NOT add vertical-margin utilities (`mb-*` / `mt-*` / `my-*`) to any of the
+six rhythm-owning classes** — `.section-nav`, `.section-controls`,
+`.toggle-group`, `.section-title`, `.data-card`, `.card-header`. Their vertical
+spacing is owned centrally in `base-vars.css`; a utility on the element silently
+overrides it (see below), reintroducing the per-page drift this convention
+exists to prevent. To suppress a gap in a nested/edge case, use an inline
+`style="margin-bottom:0"` (as in `results.html` / `bestball.html`).
+
+> **Why a leftover utility wins.** The webapp loads Tailwind via the Play CDN
+> (`cdn.tailwindcss.com`), which injects its generated utilities as a `<style>`
+> block at the **end of `<head>`** — after `base-vars.css`. A utility (`.mb-3`)
+> and a rhythm class (`.toggle-group`) have equal specificity, so the later
+> source order wins: the Tailwind block always does. That's why a single stray
+> `mb-*` makes a global spacing change appear to "not take effect" on that
+> element. Keep the six classes free of margin utilities and the central rule is
+> authoritative everywhere.
+
+Content-level spacing on **non-rhythm** elements (prose `<p>`, dividers `my-6`,
+page-intro text) is legitimate and stays inline — it was never part of the
+centralised wrapper rhythm.
 
 ## Data-card pattern (Clean Layered)
 

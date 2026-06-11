@@ -20,7 +20,7 @@
     </div>
 
     {% if chart_json %}
-    <div class="toggle-group flex items-center gap-2 mt-5 mb-2">
+    <div class="toggle-group flex items-center gap-2">
         {% for cid, clabel in chart_types %}
         <button class="tab-underline{% if cid == active_chart_variant %} tab-underline--active{% endif %}"
                 onclick="document.getElementById('lb-chart-variant-input').value='{{ cid }}'"

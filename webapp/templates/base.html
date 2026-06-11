@@ -7,12 +7,35 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-    <link rel="stylesheet" href="/static/themes/base-vars.css?v=7">
-    <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=7">
+    <link rel="stylesheet" href="/static/themes/base-vars.css?v=12">
+    <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=12">
     <!-- Structural hierarchy debug overlay (dev tool; inert unless body.debug-structure) -->
     <link rel="stylesheet" href="/static/themes/debug-structure.css?v=3">
+    <!-- Material Symbols — nav/contents icons (names defined once in webapp/nav.py) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0">
     {% block extra_head %}{% endblock %}
     <style>
+        /* Material Symbols base (Google's css2 endpoint ships only @font-face). */
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+        /* Icon sat beside a nav/menu page link. */
+        .menu-icon {
+            font-size: 1.05rem;
+            vertical-align: -0.18em;
+            margin-right: 0.45rem;
+            opacity: 0.75;
+        }
         /* Dropdown nav */
         .nav-dropdown { position: relative; }
         .nav-dropdown-btn {
@@ -103,8 +126,8 @@
                     <div class="nav-dropdown">
                         <span class="nav-link nav-dropdown-btn {% if active_page in section.active %}active{% endif %}">{{ section.label }}</span>
                         <div class="nav-dropdown-menu">
-                            {% for title, url, key in section.pages %}
-                            <a href="{{ url }}">{{ title }}</a>
+                            {% for title, url, key, icon in section.pages %}
+                            <a href="{{ url }}"><span class="menu-icon material-symbols-outlined">{{ icon }}</span>{{ title }}</a>
                             {% endfor %}
                         </div>
                     </div>
@@ -137,11 +160,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Footer -->
-    <footer class="page-footer">
-        TEG Stats &mdash; Golf tournament data since TEG 1
-    </footer>
 
     <script>
     // Sticky nav that slides off screen after scrolling past threshold

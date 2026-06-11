@@ -697,7 +697,7 @@ body.ts-f5 .page-title-area .page-title {
    templates don't hand-roll margins. Layout intent that legitimately varies
    per row (justify-between, items-center vs items-end, gap overrides) is still
    expressed with Tailwind utilities on the element, which override the
-   defaults below. Do NOT add margin utilities (mb-*/mt-*) to these wrappers —
+   defaults below. Do NOT add margin utilities (mb-, mt-, my-) to these wrappers —
    the spacing is centralised here. */
 
 /* Section level */
@@ -706,7 +706,9 @@ body.ts-f5 .page-title-area .page-title {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    margin-bottom: 1.5rem;
+    /* A tab bar reads as a strong horizontal rule (active underline), so the
+       panel/heading below needs clear separation — more than a controls row. */
+    margin-bottom: 2rem;
 }
 .section-controls {
     /* selector / filter rows (dropdowns, inputs) */
@@ -721,10 +723,19 @@ body.ts-f5 .page-title-area .page-title {
     margin-top: -0.5rem;
 }
 .toggle-group {
-    /* sub-toggle rows inside a panel (score-type, metric, variant, etc.) */
+    /* sub-toggle rows inside a panel (score-type, metric, variant, etc.).
+       Owns the gap below it (before the data it controls) so templates don't
+       hand-roll mb-* utilities. For a one-off, kill it with inline
+       style="margin-bottom:0" (see scoring_birdies). */
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+/* A toggle row that follows a data block (e.g. the chart-variant toggle sitting
+   between a results table and its chart) gets breathing room above too. */
+.data-card + .toggle-group {
+    margin-top: 1.5rem;
 }
 .section-panel {
     /* HTMX swap-target / content container */

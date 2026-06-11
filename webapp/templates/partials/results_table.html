@@ -6,7 +6,7 @@
 {% if result_title %}<div class="card-header">{{ result_title }}</div>{% endif %}
 <div class="data-card data-card--padded">
     {% if chart_types %}
-    <div class="toggle-group flex items-center gap-2 mb-2">
+    <div class="toggle-group flex items-center gap-2">
         {% for cid, clabel in chart_types %}
         <button class="tab-underline{% if cid == active_chart_variant %} tab-underline--active{% endif %}"
                 onclick="document.getElementById('results-chart-variant').value='{{ cid }}'"
@@ -18,7 +18,7 @@
         {% endfor %}
     </div>
     {% endif %}
-    <div id="results-chart" class="chart-container" style="height:350px;"></div>
+    <div id="results-chart" class="chart-container" style="height:420px;"></div>
     <script>
     (function() {
         var data = {{ chart_json | safe }};
