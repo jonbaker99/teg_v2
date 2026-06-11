@@ -1,59 +1,80 @@
 {% extends "base.html" %}
 
-{% block page_title %}
-<div class="page-title-area">
-    <span class="page-label">The El Golfo</span>
-    <h1 class="page-title">Contents</h1>
-</div>
-{% endblock %}
+{% block page_title %}{% endblock %}
 
 {% block extra_head %}
 <style>
+    /* No page title / breadcrumb on Contents — just the site map. */
+    .page-title-outer {
+        display: none;
+    }
+
+    /* Contents is a wide-layout page (matches Streamlit's layout="wide"):
+       widen the shared container for this page only. */
+    .content-wrapper {
+        max-width: min(95vw, 1600px);
+    }
+
+    /* Three fixed columns; each fills top-to-bottom. */
     .contents-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-        gap: 1.5rem 2.5rem;
-        align-items: start; /* size columns to content, tops aligned */
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 3rem;
+        align-items: start;
     }
-    /* The columns are .data-card siblings; cancel the global
-       .data-card + .data-card stacking margin so grid columns top-align. */
-    .contents-grid .data-card {
-        margin-top: 0;
+    .contents-col {
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem; /* vertical gap between stacked groups in a column */
     }
+    @media (max-width: 820px) {
+        .contents-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    }
+
+    /* Group heading — matches Streamlit .nav-section-title (20px / 600, no rule). */
     .contents-section-title {
+        font-size: 1.25rem;
         font-weight: 600;
-        font-size: 0.95rem;
-        margin-bottom: 0.5rem;
-        padding-bottom: 0.35rem;
-        border-bottom: 1px solid var(--table-cell-border, #e0e0e0);
         color: var(--text-primary, #1a1a1a);
+        padding-bottom: 0.5rem;
+        margin-bottom: 0.25rem;
     }
+
+    /* Page links — mono, dark (Streamlit .custom-nav-link: black, hover green+bold). */
     .contents-links a {
         display: block;
-        padding: 0.3rem 0;
-        font-size: 0.9rem;
-        /* Mono menu items, matching the Streamlit app's data/nav typography. */
+        padding: 0.35rem 0;
         font-family: 'Roboto Mono', monospace;
-        color: var(--nav-text, #374151);
+        font-size: 0.875rem;
+        color: var(--text-primary, #1a1a1a);
         text-decoration: none;
     }
     .contents-links a:hover {
-        color: var(--nav-active-text, #111827);
-        text-decoration: underline;
+        color: forestgreen;
+        font-weight: 700;
+        text-decoration: none;
+    }
+    /* Icons read as dark as the link text here (not the muted nav-dropdown grey). */
+    .contents-links .menu-icon {
+        opacity: 1;
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="contents-grid">
-    {% for section in sections %}
-    <div class="data-card">
-        <div class="contents-section-title">{{ section.label }}</div>
-        <div class="contents-links">
-            {% for title, url, key, icon in section.pages %}
-            <a href="{{ url }}"><span class="menu-icon material-symbols-outlined">{{ icon }}</span>{{ title }}</a>
-            {% endfor %}
+    {% for column in columns %}
+    <div class="contents-col">
+        {% for section in column %}
+        <div class="contents-section">
+            <div class="contents-section-title">{{ section.label }}</div>
+            <div class="contents-links">
+                {% for title, url, key, icon in section.pages %}
+                <a href="{{ url }}"><span class="menu-icon material-symbols-outlined">{{ icon }}</span>{{ title }}</a>
+                {% endfor %}
+            </div>
         </div>
+        {% endfor %}
     </div>
     {% endfor %}
 </div>
