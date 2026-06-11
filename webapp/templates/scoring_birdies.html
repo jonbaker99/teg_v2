@@ -37,11 +37,7 @@
             hx-include="#sb-score-type"
             hx-vals='{"tab": "{{ tab_id }}"}'
             hx-swap="innerHTML"
-            onclick="
-                document.getElementById('sb-tab-input').value='{{ tab_id }}';
-                document.querySelectorAll('.section-nav .sb-tab').forEach(b => b.classList.remove('tab-underline--active'));
-                this.classList.add('tab-underline--active');
-            ">
+            onclick="document.getElementById('sb-tab-input').value='{{ tab_id }}';">
         {{ tab_label }}
     </button>
     {% endfor %}

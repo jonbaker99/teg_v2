@@ -26,8 +26,6 @@
     {% for tab_id, tab_label in tabs %}
     <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
             onclick="document.getElementById('sc-tab-input').value='{{ tab_id }}';
-                     document.querySelectorAll('.section-nav .tab-underline').forEach(b => b.classList.remove('tab-underline--active'));
-                     this.classList.add('tab-underline--active');
                      htmx.trigger(document.getElementById('sc-area'), 'change')">
         {{ tab_label }}
     </button>

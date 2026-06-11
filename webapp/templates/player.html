@@ -54,8 +54,7 @@
     <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
             hx-get="/player/{{ player_code }}/tab/{{ tab_id }}"
             hx-target="#tab-content"
-            hx-indicator="#player-loading"
-            onclick="document.querySelectorAll('.tab-underline').forEach(b=>b.classList.remove('tab-underline--active')); this.classList.add('tab-underline--active')">
+            hx-indicator="#player-loading">
         {{ tab_label }}
     </button>
     {% endfor %}

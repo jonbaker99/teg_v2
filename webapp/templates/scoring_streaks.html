@@ -19,8 +19,6 @@
             hx-swap="innerHTML"
             onclick="
                 document.getElementById('st-tab-input').value='{{ tab_id }}';
-                document.querySelectorAll('.section-nav button.st-tab').forEach(b => b.classList.remove('tab-underline--active'));
-                this.classList.add('tab-underline--active');
                 var ctrl = document.getElementById('st-controls');
                 ctrl.style.display = '{{ tab_id }}' === 'player' ? '' : 'none';
             ">

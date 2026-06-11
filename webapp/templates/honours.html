@@ -15,11 +15,7 @@
     <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
             hx-get="/honours/tab/{{ tab_id }}"
             hx-target="#honours-content"
-            hx-swap="innerHTML"
-            onclick="
-                document.querySelectorAll('.section-nav button.tab-underline').forEach(b => b.classList.remove('tab-underline--active'));
-                this.classList.add('tab-underline--active');
-            ">
+            hx-swap="innerHTML">
         {{ tab_label }}
     </button>
     {% endfor %}

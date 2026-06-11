@@ -20,8 +20,6 @@
             hx-swap="innerHTML"
             onclick="
                 document.getElementById('pb-tab-input').value='{{ tab_id }}';
-                document.querySelectorAll('.section-nav button.tab-underline').forEach(b => b.classList.remove('tab-underline--active'));
-                this.classList.add('tab-underline--active');
                 var ctrl = document.getElementById('pb-controls');
                 var sumCtrl = document.getElementById('pb-summary-controls');
                 if ('{{ tab_id }}' === 'pb_summary') {

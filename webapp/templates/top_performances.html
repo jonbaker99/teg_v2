@@ -18,11 +18,7 @@
             hx-include="#tp-measure, #tp-n-select"
             hx-vals='{"tab": "{{ tab_id }}"}'
             hx-swap="innerHTML"
-            onclick="
-                document.getElementById('tp-tab-input').value='{{ tab_id }}';
-                document.querySelectorAll('.section-nav button.tab-underline').forEach(b => b.classList.remove('tab-underline--active'));
-                this.classList.add('tab-underline--active');
-            ">
+            onclick="document.getElementById('tp-tab-input').value='{{ tab_id }}';">
         {{ tab_label }}
     </button>
     {% endfor %}
