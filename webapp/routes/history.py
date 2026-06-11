@@ -422,11 +422,15 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "stand
                         continue
                     gross = build_round_comparison_gross_table(rd)
                     stableford = build_round_comparison_stableford_table(rd)
+                    parts.append("<section class='sc-round'>")
                     parts.append(f"<h2 class='section-title'>Round {r}</h2>")
-                    parts.append("<div class='mb-2'><strong>Gross</strong></div>")
+                    parts.append("<div class='sc-block'><div class='sc-label'>Gross</div>")
                     parts.append(gross)
-                    parts.append("<div class='mt-3 mb-2'><strong>Stableford</strong></div>")
+                    parts.append("</div>")
+                    parts.append("<div class='sc-block sc-block--stableford'><div class='sc-label'>Stableford</div>")
                     parts.append(stableford)
+                    parts.append("</div>")
+                    parts.append("</section>")
                 except Exception:
                     continue
             table_html = "".join(parts) if len(parts) > 1 else "<p class='text-muted'>No rounds found.</p>"

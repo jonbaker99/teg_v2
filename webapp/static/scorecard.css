@@ -434,3 +434,22 @@
     color: var(--color-text-stableford-0);
     font-weight: 400;
 }
+
+/* ===== MULTI-ROUND LAYOUT (Full Results → Scorecards tab) =====
+   Each round is a .sc-round section holding a Gross block and a Stableford
+   block. Adds breathing room between the two scorecards and a subtle rule +
+   generous space between consecutive rounds. */
+.sc-round + .sc-round {
+    margin-top: 2.75rem;
+    padding-top: 2.75rem;
+    border-top: 1px solid var(--color-border, #e0e0e0);
+}
+.sc-label {
+    font-weight: 600;
+    font-size: 0.8125rem;
+    margin-bottom: 0.5rem;
+}
+/* Extra gap between the Gross and Stableford scorecards within a round. */
+.sc-block--stableford {
+    margin-top: 1.75rem;
+}
