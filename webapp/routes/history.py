@@ -318,62 +318,95 @@ async def honours_tab(request: Request, tab_name: str):
 RESULTS_CHART_TYPES = [("standard", "Standard"), ("adjusted", "Adjusted scale"), ("ranking", "Ranking")]
 
 
-def _results_chart(teg_num: int, tab: str, chart_variant: str = "standard") -> str | None:
-    """Build a cumulative race chart for net/gross results tabs. Returns JSON or None.
-
-    chart_variant: "standard", "adjusted" (score vs net/bogey par) or "ranking".
-    """
+def _teg_is_complete(teg_num: int) -> bool:
+    """True if the TEG appears in the completed-TEGs status file (mirrors the
+    Streamlit 'final results' check)."""
     try:
-        import json
-        import plotly.utils
-        from webapp.chart_utils import create_cumulative_graph, adjusted_stableford, adjusted_grossvp
-
-        all_data = cached_load_all_data()
-        teg_name = f"TEG {teg_num}"
-        adjusted = chart_variant == "adjusted"
-
-        if chart_variant == "ranking":
-            rank_series = 'Rank_GrossVP_TEG' if tab == "gross" else 'Rank_Stableford_TEG'
-            fig = create_cumulative_graph(
-                all_data, teg_name, y_series=rank_series,
-                title=f'Ranking: {teg_name}', y_axis_label='Tournament Ranking',
-                chart_type='ranking',
-            )
-            return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-
-        if tab == "gross":
-            fig = create_cumulative_graph(
-                all_data, teg_name,
-                y_series='GrossVP Cum TEG',
-                title='Cumulative Gross vs Par',
-                y_calculation=adjusted_grossvp if adjusted else None,
-                y_axis_label='Cumulative gross score vs. bogey' if adjusted else None,
-                chart_type='gross',
-            )
-        else:
-            net_measure = get_net_competition_measure(teg_num)
-            if net_measure == 'Stableford':
-                fig = create_cumulative_graph(
-                    all_data, teg_name,
-                    y_series='Stableford Cum TEG',
-                    title='Cumulative Stableford',
-                    y_calculation=adjusted_stableford if adjusted else None,
-                    y_axis_label='Cumulative Stableford vs. net par' if adjusted else None,
-                    chart_type='stableford',
-                )
-            else:
-                fig = create_cumulative_graph(
-                    all_data, teg_name,
-                    y_series='NetVP Cum TEG',
-                    title='Cumulative Net vs Par',
-                    y_calculation=adjusted_grossvp if adjusted else None,
-                    y_axis_label='Cumulative net score vs. par' if adjusted else None,
-                    chart_type='gross',
-                )
-
-        return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+        from teg_analysis.io.file_operations import read_file
+        completed = read_file('data/completed_tegs.csv')
+        return (not completed.empty) and int(teg_num) in completed['TEGNum'].astype(int).values
     except Exception:
-        return None
+        return False
+
+
+def _leaderboard_table_html(df: pd.DataFrame) -> str:
+    """Render a results leaderboard: full-width, rank/score columns centred,
+    player linked, and the leading row(s) tinted (rank starting with '1')."""
+    if df is None or df.empty:
+        return "<p class='text-muted text-sm'>No data available.</p>"
+
+    rows = ["<table class='teg-table leaderboard-table'>", "<thead><tr>"]
+    for col in df.columns:
+        cls = "col-rank" if col == "Rank" else ("col-player" if col == "Player" else "col-num")
+        rows.append(f"<th class='{cls}'>{escape(str(col))}</th>")
+    rows.append("</tr></thead><tbody>")
+
+    for _, row in df.iterrows():
+        tr_cls = " class='top-rank'" if str(row["Rank"]).startswith("1") else ""
+        rows.append(f"<tr{tr_cls}>")
+        for col in df.columns:
+            val = row[col]
+            if col == "Player":
+                code = _NAME_TO_CODE.get(str(val))
+                cell = (f"<a href='/player/{code}'>{escape(str(val))}</a>" if code
+                        else escape(str(val)))
+                rows.append(f"<td class='col-player'>{cell}</td>")
+            elif col == "Rank":
+                rows.append(f"<td class='col-rank'>{escape(str(val))}</td>")
+            elif col == "Total":
+                rows.append(f"<td class='col-num total'>{escape(str(val))}</td>")
+            else:
+                rows.append(f"<td class='col-num'>{escape(str(val))}</td>")
+        rows.append("</tr>")
+    rows.append("</tbody></table>")
+    return "".join(rows)
+
+
+def _results_chart_meta(tab: str, variant: str, net_measure: str, teg_name: str) -> dict:
+    """Title / subtitle / note / data-source for the race chart.
+
+    The chart itself is a placeholder pending the chart rebuild (see
+    webapp/README look-and-feel roadmap, item 1b); ``series`` records where the
+    underlying data comes from so the placeholder can point at it.
+    """
+    if tab == "gross":
+        competition = "Green Jacket"
+        if variant == "ranking":
+            short, direction, series = "Tournament ranking progression", "Lower = better", "Rank_GrossVP_TEG"
+        elif variant == "adjusted":
+            short, direction, series = "Cumulative gross score (adjusted scale vs. bogey)", "Lower = better", "GrossVP Cum TEG via adjusted_grossvp"
+        else:
+            short, direction, series = "Cumulative gross score vs. par", "Lower = better", "GrossVP Cum TEG"
+    else:
+        competition = "TEG Trophy"
+        stableford = net_measure == "Stableford"
+        if variant == "ranking":
+            short, direction, series = "Tournament ranking progression", "Lower = better", "Rank_Stableford_TEG"
+        elif variant == "adjusted":
+            if stableford:
+                short, direction, series = "Cumulative stableford points (adjusted scale)", "Higher = better", "Stableford Cum TEG via adjusted_stableford"
+            else:
+                short, direction, series = "Cumulative net score (adjusted scale vs. par)", "Lower = better", "NetVP Cum TEG via adjusted_grossvp"
+        else:
+            if stableford:
+                short, direction, series = "Cumulative stableford points", "Higher = better", "Stableford Cum TEG"
+            else:
+                short, direction, series = "Cumulative net score vs. par", "Lower = better", "NetVP Cum TEG"
+
+    if variant == "ranking":
+        note = "Shows tournament ranking progression (1st, 2nd, 3rd, etc.)."
+    elif variant == "adjusted":
+        note = ("Adjusted view 'zooms in' by showing performance vs. par to more "
+                "clearly show gaps between players.")
+    else:
+        note = ""
+
+    return {
+        "chart_title": f"{competition} race: {teg_name}",
+        "chart_subtitle": f"{short} | {direction}",
+        "chart_note": note,
+        "chart_series": series,
+    }
 
 
 def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "standard") -> dict:
@@ -438,35 +471,47 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "stand
         if teg_rd.empty:
             return {"error": f"No data found for TEG {teg_num}"}
 
+        teg_name = f"TEG {teg_num}"
+        complete = _teg_is_complete(teg_num)
+        leader_label = "Champion" if complete else "Leader"
+        status_word = "Final" if complete else "Latest"
         net_measure = get_net_competition_measure(teg_num)
         net_ascending = net_measure == 'NetVP'
 
         if tab == "gross":
-            lb = create_leaderboard(teg_rd, 'GrossVP', ascending=True)
-            for col in [c for c in lb.columns if c not in ['Rank', 'Player']]:
-                lb[col] = lb[col].apply(lambda x: format_value(x, 'GrossVP'))
-            title = "Gross vs Par"
+            competition = "Green Jacket"
+            value_col = 'GrossVP'
+            lb = create_leaderboard(teg_rd, value_col, ascending=True)
         else:
-            lb = create_leaderboard(teg_rd, net_measure, ascending=net_ascending)
-            for col in [c for c in lb.columns if c not in ['Rank', 'Player']]:
-                lb[col] = lb[col].apply(lambda x: format_value(x, net_measure))
-            title = "Stableford" if net_measure == 'Stableford' else "Net vs Par"
+            competition = "TEG Trophy"
+            value_col = net_measure
+            lb = create_leaderboard(teg_rd, value_col, ascending=net_ascending)
 
-        # Champion (top row) — plus wooden spoon (bottom row) on the net competition
-        callout = ""
-        if not lb.empty and 'Player' in lb.columns:
-            champion = lb.iloc[0]['Player']
-            if tab == "gross":
-                callout = f"<p class='result-callout'><strong>Champion:</strong> {champion}</p>"
-            else:
-                spoon = lb.iloc[-1]['Player']
-                callout = (f"<p class='result-callout'><strong>Champion:</strong> {champion} "
-                           f"&nbsp;|&nbsp; <strong>Wooden spoon:</strong> {spoon}</p>")
+        # Champion / wooden spoon from the (unformatted) leaderboard order.
+        champion = str(lb.iloc[0]['Player']) if not lb.empty else ""
+        spoon = str(lb.iloc[-1]['Player']) if not lb.empty else ""
+        if tab == "gross":
+            callout = f"{leader_label}: <strong>{escape(champion)}</strong>"
+        else:
+            callout = (f"{leader_label}: <strong>{escape(champion)}</strong> &nbsp;|&nbsp; "
+                       f"Wooden spoon: <strong>{escape(spoon)}</strong>")
 
-        table_html = callout + _df_to_html(lb, link_players=True)
-        chart_json = _results_chart(teg_num, tab, chart_variant)
-        return {"result_title": title, "table_html": table_html, "chart_json": chart_json,
-                "chart_types": RESULTS_CHART_TYPES, "active_chart_variant": chart_variant}
+        # Format score columns (+/- signs etc.) then build the full-width table.
+        for col in [c for c in lb.columns if c not in ['Rank', 'Player']]:
+            lb[col] = lb[col].apply(lambda x: format_value(x, value_col))
+        table_html = _leaderboard_table_html(lb)
+
+        chart_meta = _results_chart_meta(tab, chart_variant, net_measure, teg_name)
+        return {
+            "is_leaderboard": True,
+            "section_title": f"{competition} {status_word} Leaderboard",
+            "callout": callout,
+            "table_html": table_html,
+            "teg_name": teg_name,
+            "chart_types": RESULTS_CHART_TYPES,
+            "active_chart_variant": chart_variant,
+            **chart_meta,
+        }
     except Exception as e:
         return {"error": str(e)}
 

@@ -873,3 +873,100 @@ body.ch-ch3 .card-header:first-child { margin-top: 0; }
     font-size: 0.8125rem;
     margin-top: 0.5rem;
 }
+
+/* ── Results page (leaderboard + race chart) ── */
+
+/* The results leaderboard stretches to the panel width (like the Streamlit
+   full-width table), unlike the content-sized default tables. */
+.leaderboard-table {
+    width: 100%;
+}
+
+/* Champion / wooden-spoon line under the leaderboard title: light label,
+   emphasised names. */
+.result-callout {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    margin: 0.1rem 0 1rem 0;
+}
+.result-callout strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+/* Chart block heading — a notch smaller than a .section-title. */
+.chart-title {
+    font-family: var(--font-heading), serif;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1.3;
+}
+* + .chart-title {
+    margin-top: 1.75rem;
+}
+
+/* Placeholder shown where the race chart will be rebuilt (roadmap 1b). */
+.chart-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 280px;
+    padding: 1.5rem;
+    text-align: center;
+    border: 1px dashed var(--select-border);
+    border-radius: 0.375rem;
+    background: var(--nav-hover-bg, #f7f7f7);
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+}
+.chart-placeholder .ph-title {
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+.chart-placeholder code {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* Pill / segmented control — for the chart-type selector (Standard / Adjusted /
+   Ranking). Reads as connected choices rather than another tab bar. */
+.chart-controls-label {
+    margin-top: 1.5rem;
+    margin-bottom: 0.4rem;
+}
+.pill-group {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+.pill {
+    background: var(--btn-inactive-bg);
+    border: 1px solid var(--select-border);
+    border-radius: 9999px;
+    padding: 0.3rem 0.85rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+.pill:hover {
+    border-color: var(--accent);
+    color: var(--text-primary);
+}
+.pill--active,
+.pill--active:hover {
+    background: var(--table-toprank-bg);
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 600;
+}
+.chart-note {
+    margin-top: 0.5rem;
+}

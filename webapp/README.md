@@ -309,6 +309,18 @@ as the live site."
   *printed on the page*, but retaining mouseover where it adds value. Driven from
   `chart_utils.py` / `get_plotly_theme`.
 
+  > **TODO — restore the `/results` race chart.** As part of the `/results`
+  > polish, the net/gross race charts there were **replaced with a placeholder**
+  > (`.chart-placeholder` in `partials/results_table.html`) pending this chart
+  > rebuild. The placeholder names its data source —
+  > `create_cumulative_graph(all_data, 'TEG N', y_series=…)` in
+  > `webapp/chart_utils.py`; the per-variant series/title/subtitle are computed by
+  > `_results_chart_meta()` in `routes/history.py` (which replaced the old
+  > `_results_chart` figure-builder — see git history for that implementation).
+  > When charts are rebuilt, re-wire the placeholder block back to a real figure.
+  > Other pages (leaderboard, latest, scoring, player) still use the old inline
+  > chart and are unchanged.
+
   > **⚠️ Known issue — charts to be redone, parked for later.** Goal: make the
   > webapp charts look and behave like the **Streamlit** ones, which render
   > correctly. Two problems on the webapp side:
