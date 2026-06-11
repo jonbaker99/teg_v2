@@ -708,7 +708,8 @@ body.ts-f5 .page-title-area .page-title {
     gap: 0.5rem;
     /* A tab bar reads as a strong horizontal rule (active underline), so the
        panel/heading below needs clear separation — more than a controls row. */
-    margin-bottom: 2.5rem;
+    margin-bottom: 4rem; /* TEMP DIAGNOSTIC — revert to 2.5rem */
+    background: #ffe600; /* TEMP DIAGNOSTIC — remove */
 }
 .section-controls {
     /* selector / filter rows (dropdowns, inputs) */
