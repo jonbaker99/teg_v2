@@ -162,6 +162,35 @@ h1, h2, h3, h4, h5, h6 {
 .player-ranking-table td.last-place::before { background: #FAE9E8; }
 .player-ranking-table td.last-place span { color: #8b0000; }
 
+/* ── History table (TEG History page) ──
+   Mirrors the Streamlit hist2 layout: a compound first cell with the TEG label
+   on top and the area as smaller secondary text beneath, an emphasised TEG
+   Trophy winner (2nd column), and player names that can break first/last on
+   narrow screens. */
+.history-table .teg-label {
+    display: block;
+    font-weight: 500;
+}
+.history-table .area-label {
+    display: block;
+    margin-top: -0.15rem;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+}
+/* Emphasise the main trophy winner (first name column) */
+.history-table tbody td:nth-child(2) {
+    font-weight: 700;
+}
+/* First+last inline on wide screens; stacked on narrow ones */
+.history-table .player-name .first {
+    display: inline;
+}
+@media (max-width: 650px) {
+    .history-table .player-name { display: inline-block; }
+    .history-table .player-name .first,
+    .history-table .player-name .last { display: block; }
+}
+
 .records-table {
     /* Content-sized like the Streamlit datawrapper tables (not stretched to 100%) */
     width: auto;

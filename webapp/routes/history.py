@@ -73,6 +73,47 @@ def _df_to_html(df: pd.DataFrame, table_class: str = "teg-table", link_players: 
     return "".join(rows)
 
 
+def _wrap_player_name(name) -> str:
+    """Split "David MULLIN" into first/last spans so narrow screens can break
+    the line between them (mirrors the Streamlit history table)."""
+    if not isinstance(name, str) or not name.strip():
+        return "" if name is None else escape(str(name))
+    first, *rest = re.split(r"\s+", name.strip(), maxsplit=1)
+    last = rest[0] if rest else ""
+    return (f"<span class='player-name'><span class='first'>{escape(first)}</span> "
+            f"<span class='last'>{escape(last)}</span></span>")
+
+
+def _history_table_html(df: pd.DataFrame) -> str:
+    """Render the TEG History table the way the Streamlit page does: a compound
+    TEG/area cell (area as smaller secondary text beneath the TEG label), the
+    standalone Area column dropped, the TEG Trophy winner emphasised, and player
+    names wrapped in first/last spans."""
+    if df is None or df.empty:
+        return "<p class='text-muted text-sm'>No data available.</p>"
+
+    name_cols = ["TEG Trophy", "Green Jacket", "HMM Wooden Spoon"]
+    headers = ["TEG"] + name_cols
+
+    rows = ["<table class='teg-table history-table'>", "<thead><tr>"]
+    for col in headers:
+        rows.append(f"<th>{escape(col)}</th>")
+    rows.append("</tr></thead><tbody>")
+
+    for _, row in df.iterrows():
+        teg = escape(str(row.get("TEG", "")))
+        area = str(row.get("Area", "")).split(",")[0].strip()
+        teg_cell = (f"<span class='teg-label'>{teg}</span>"
+                    f"<span class='area-label'>{escape(area)}</span>")
+        rows.append("<tr>")
+        rows.append(f"<td>{teg_cell}</td>")
+        for col in name_cols:
+            rows.append(f"<td>{_wrap_player_name(row.get(col))}</td>")
+        rows.append("</tr>")
+    rows.append("</tbody></table>")
+    return "".join(rows)
+
+
 _RANK_PAT = re.compile(r"^\d+=?$")
 
 
@@ -135,7 +176,7 @@ def _ranking_table_html(df: pd.DataFrame, player_col: str = "Player",
 async def history_page(request: Request):
     try:
         df = prepare_complete_history_table_fast()
-        table_html = _df_to_html(df)
+        table_html = _history_table_html(df)
         table_html += ("<p class='text-muted text-sm mt-3'>*Green Jacket awarded in TEG 5 for "
                        "best stableford round; DM had best gross score.</p>")
     except Exception as e:
@@ -145,7 +186,7 @@ async def history_page(request: Request):
         "request": request,
         "active_page": "history",
         "title": "TEG History",
-        "subtitle": "Complete history of all TEG tournaments",
+        "subtitle": "TEG locations and winners by year",
         "table_html": table_html,
         "sections": None,
     })
