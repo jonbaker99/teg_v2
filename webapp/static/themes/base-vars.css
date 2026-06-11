@@ -135,35 +135,24 @@ h1, h2, h3, h4, h5, h6 {
     width: auto;
     max-width: none;
 }
-.player-ranking-table td.first-place,
-.player-ranking-table td.last-place {
-    position: relative;
-}
-.player-ranking-table td.first-place::before,
-.player-ranking-table td.last-place::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+/* The shaded rank "pill" is the span itself — a fixed-size inline-flex box,
+   centred horizontally by the cell's text-align:center and with the number
+   flex-centred inside it. Keeping the box and number as one element guarantees
+   they stay centred together (both horizontally and vertically), matching the
+   plain numbers in the same column. */
+.player-ranking-table td.first-place span,
+.player-ranking-table td.last-place span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 20px;
     height: 20px;
     border-radius: 15%;
-    z-index: 1;
-}
-.player-ranking-table td.first-place span,
-.player-ranking-table td.last-place span {
-    position: relative;
-    z-index: 2;
-    display: inline-block;
-    width: 20px;
-    line-height: 20px;
     font-weight: 700;
+    vertical-align: middle;
 }
-.player-ranking-table td.first-place::before { background: green; }
-.player-ranking-table td.first-place span { color: #ffffff; }
-.player-ranking-table td.last-place::before { background: #FAE9E8; }
-.player-ranking-table td.last-place span { color: #8b0000; }
+.player-ranking-table td.first-place span { background: green; color: #ffffff; }
+.player-ranking-table td.last-place span { background: #FAE9E8; color: #8b0000; }
 
 /* ── Position / rankings summary table ──
    The summary beneath the ranking grid (Ave, TEGs, 1st–6th). Wider, airier

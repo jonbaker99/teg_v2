@@ -7,8 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-    <link rel="stylesheet" href="/static/themes/base-vars.css?v=14">
-    <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=14">
+    <link rel="stylesheet" href="/static/themes/base-vars.css?v=15">
+    <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=15">
     <!-- Structural hierarchy debug overlay (dev tool; inert unless body.debug-structure) -->
     <link rel="stylesheet" href="/static/themes/debug-structure.css?v=3">
     <!-- Material Symbols — nav/contents icons (names defined once in webapp/nav.py) -->
@@ -205,6 +205,19 @@
                 btn.parentElement.classList.toggle('open');
             }
         });
+    });
+    // Global in-page tab active state: clicking a primary tab (a .tab-underline
+    // inside a .section-nav) moves the active underline to it. Scoped to the
+    // nearest .section-nav so multiple tab bars on a page don't interfere, and
+    // so sub-toggles (.toggle-group) keep their own per-page handlers.
+    document.addEventListener('click', function(e) {
+        var btn = e.target.closest('.section-nav .tab-underline');
+        if (!btn) return;
+        var nav = btn.closest('.section-nav');
+        nav.querySelectorAll('.tab-underline').forEach(function(b) {
+            b.classList.remove('tab-underline--active');
+        });
+        btn.classList.add('tab-underline--active');
     });
     </script>
 </body>
