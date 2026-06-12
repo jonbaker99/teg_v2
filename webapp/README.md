@@ -407,3 +407,10 @@ HTML builders).
 - **"Related links" section** — replicate the cross-page related-links block the
   Streamlit app shows (links from each page to related pages). One day.
 
+**Pre-publish checks (TODO before the site goes live):**
+- **Verify the "Records & PBs" content** on `/latest-round` and `/latest-teg`.
+  The records/PBs computed there have not been confirmed correct; a draft
+  warning is shown on those tabs in the meantime. Check the figures against a
+  known-good source before publishing, then remove the warning
+  (`_RECORDS_DRAFT_NOTE` in `webapp/routes/latest.py`).
+

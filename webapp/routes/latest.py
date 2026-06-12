@@ -95,6 +95,22 @@ def _fmt_record_value(value, metric: str) -> str:
     return str(int(value))
 
 
+def _intify_numeric(df: pd.DataFrame) -> pd.DataFrame:
+    """Cast every numeric column to int so counts/scores show as whole numbers
+    (not '0.0') in both the cells and the row-header column."""
+    out = df.copy()
+    for col in out.columns:
+        if pd.api.types.is_numeric_dtype(out[col]):
+            out[col] = out[col].astype('int64')
+    return out
+
+
+_RECORDS_DRAFT_NOTE = (
+    "<p class='text-muted text-sm mb-2'>⚠️ Draft — the records and PBs below "
+    "need to be verified before the site is published.</p>"
+)
+
+
 def _render_records_summary(rd: dict, page_type: str = 'TEG') -> str:
     """Render the records/PBs dict as grouped HTML (mirrors the Streamlit summary)."""
     from collections import defaultdict
@@ -194,6 +210,8 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
             try:
                 ranked = cached_ranked_round_data()
                 ctx_df = prepare_round_context_display(ranked, teg_str, round_num, metric, friendly)
+                if friendly in ctx_df.columns:
+                    ctx_df[friendly] = ctx_df[friendly].apply(lambda v: _fmt_record_value(v, metric))
                 table_html = _df_to_html(ctx_df)
             except Exception:
                 table_html = "<p class='text-muted text-sm'>No data.</p>"
@@ -243,7 +261,7 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                     'best_score_counts': counts['best_score_counts'],
                     'worst_score_counts': counts['worst_score_counts'],
                 }
-                sections.append({"title": None, "table_html": _render_records_summary(rd_dict, 'Round')})
+                sections.append({"title": None, "table_html": _RECORDS_DRAFT_NOTE + _render_records_summary(rd_dict, 'Round')})
             except Exception as e:
                 sections.append({"title": "Records & PBs", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
@@ -265,7 +283,7 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
             round_data = all_data[(all_data['TEGNum'] == teg_num) & (all_data['Round'] == round_num)]
             if not round_data.empty:
                 counts = count_scores_by_player(round_data, field)
-                counts_display = counts.reset_index()
+                counts_display = _intify_numeric(counts.reset_index())
                 sections.append({"title": f"Score Counts ({friendly})", "table_html": _df_to_html(counts_display)})
             else:
                 sections.append({"title": "Scoring", "table_html": "<p class='text-muted text-sm'>No scoring data.</p>"})
@@ -311,6 +329,9 @@ async def latest_round_page(request: Request):
         "selected_teg": teg_num,
         "rounds": rounds,
         "selected_round": round_num,
+        # teg/round also feed the in-partial pill hx-vals on first render.
+        "teg": teg_num,
+        "round": int(round_num),
         "tabs": LATEST_ROUND_TABS,
         "active_tab": "scoreboard",
         "context_header": context_header,
@@ -354,6 +375,8 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
             try:
                 ranked = cached_ranked_teg_data()
                 ctx_df = prepare_teg_context_display(ranked, teg_str, metric, friendly)
+                if friendly in ctx_df.columns:
+                    ctx_df[friendly] = ctx_df[friendly].apply(lambda v: _fmt_record_value(v, metric))
                 table_html = _df_to_html(ctx_df)
             except Exception:
                 table_html = "<p class='text-muted text-sm'>No aggregate data available.</p>"
@@ -367,7 +390,7 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
             teg_data = all_data[all_data['TEGNum'] == teg_num]
             if not teg_data.empty:
                 counts = count_scores_by_player(teg_data, field)
-                counts_display = counts.reset_index()
+                counts_display = _intify_numeric(counts.reset_index())
                 sections.append({"title": f"Score Counts ({friendly})", "table_html": _df_to_html(counts_display)})
             else:
                 sections.append({"title": "Scoring", "table_html": "<p class='text-muted text-sm'>No scoring data.</p>"})
@@ -425,7 +448,7 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
                     'best_score_counts': counts['best_score_counts'],
                     'worst_score_counts': counts['worst_score_counts'],
                 }
-                sections.append({"title": None, "table_html": _render_records_summary(rd_dict, 'TEG')})
+                sections.append({"title": None, "table_html": _RECORDS_DRAFT_NOTE + _render_records_summary(rd_dict, 'TEG')})
             except Exception as e:
                 sections.append({"title": "Records & PBs", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
@@ -444,6 +467,8 @@ async def latest_teg_page(request: Request):
         "active_page": "latest-teg",
         "teg_numbers": teg_numbers,
         "selected_teg": teg_num,
+        # teg also feeds the in-partial pill hx-vals on first render.
+        "teg": teg_num,
         "tabs": LATEST_TEG_TABS,
         "active_tab": "aggregate",
         **ctx,
