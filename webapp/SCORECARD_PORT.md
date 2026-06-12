@@ -52,16 +52,20 @@ already use `Sc`/`GrossVP`/`Stableford`.)
 
 ## 4. Steps (each independently testable)
 
-**Step 1 — Portrait single-round builder** in `teg_analysis/display/scorecards.py`.
-`build_single_round_portrait(df) -> str`: header `Hole · PAR · Gross · Stableford`,
-one row per hole, `OUT/IN/TOTAL` rows. Reuse the **same** `score-cell` +
-`data-vs-par`/`data-stableford` contract. Unit-test: every cell value equals the
-landscape builder's for the same TEG/round (it's a transpose).
+**Step 1 — Portrait single-round builder** ✅ **DONE.**
+`build_single_round_combined_portrait(df) -> str` in
+`teg_analysis/display/scorecards.py`: header `Hole · PAR · Gross · Stableford`,
+one row per hole, `OUT/IN/TOTAL` rows, reusing the **same** `score-cell` +
+`data-vs-par`/`data-stableford` contract.
 
-**Step 2 — Portrait tournament + field builders.**
-`build_tournament_portrait(...)` (holes × rounds) and
-`build_round_comparison_portrait(...)` (holes × players), each emitting a Gross
-table and a Stableford table. Same data, transposed; same cell contract.
+**Step 2 — Portrait tournament + field builders** ✅ **DONE.**
+`build_tournament_gross_portrait` / `…_stableford_portrait` (holes × rounds) and
+`build_round_comparison_gross_portrait` / `…_stableford_portrait` (holes ×
+players, columns ordered by gross total). Same data, transposed; same cell
+contract. Tests in `tests/test_scorecards_portrait.py` assert **parity** with the
+landscape builders (identical per-hole cells) plus correct subtotals and column
+ordering. *(Note: full `pytest` run needs the project venv — pandas + streamlit +
+PyGithub; the new builders were verified against these assertions in isolation.)*
 
 **Step 3 — Portrait CSS** in `webapp/static/scorecard.css` (new `@media (max-width:640px)`
 section per the MOBILE_PLAN breakpoint — desktop/iPad untouched). Holes-as-rows
