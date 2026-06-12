@@ -30,12 +30,16 @@
 </div>
 <p class="text-muted text-sm mt-2">Change shows difference in HC vs previous TEG</p>
 
-<div class="card-header">Handicap history</div>
-<div class="data-card"><div class="table-wrapper">{{ history_html | safe }}</div></div>
+<details class="collapsible">
+    <summary>Handicap history</summary>
+    <div class="data-card"><div class="table-wrapper">{{ history_html | safe }}</div></div>
+</details>
 
 {% if draft_html %}
-<div class="card-header">{{ draft_title }}</div>
-<div class="data-card"><div class="table-wrapper">{{ draft_html | safe }}</div></div>
+<details class="collapsible">
+    <summary>{{ draft_title }}</summary>
+    <div class="data-card"><div class="table-wrapper">{{ draft_html | safe }}</div></div>
+</details>
 {% endif %}
 
 {% endif %}

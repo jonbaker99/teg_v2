@@ -922,15 +922,15 @@ body.ch-ch3 .card-header:first-child { margin-top: 0; }
 .hc-tile {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    align-items: center;
+    text-align: center;
+    gap: 0.3rem;
 }
 .hc-tile-name span {
     display: block;
-    font-size: 0.75rem;
-    font-weight: 600;
+    font-size: 0.875rem;
+    font-weight: 400;
     line-height: 1.25;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
     color: var(--text-secondary);
 }
 .hc-tile-value {
@@ -940,14 +940,46 @@ body.ch-ch3 .card-header:first-child { margin-top: 0; }
     line-height: 1.1;
     color: var(--text-primary);
 }
+/* Change pill — inverse colour: a drop in handicap is good (green), a rise bad (red). */
 .hc-tile-delta {
     font-family: 'Roboto Mono', monospace;
     font-size: 0.8125rem;
     font-weight: 600;
+    padding: 0.1rem 0.55rem;
+    border-radius: 9999px;
 }
-.hc-delta--down { color: var(--accent); }
-.hc-delta--up { color: #b91c1c; }
-.hc-delta--none { color: var(--text-muted); }
+.hc-delta--down { color: #137333; background: #e6f4ea; }
+.hc-delta--up { color: #b91c1c; background: #fce8e6; }
+.hc-delta--none { color: var(--text-muted); background: var(--nav-hover-bg, #f0f0f0); }
+
+/* ── Collapsible section (native <details>) — handicap history etc. ── */
+.collapsible {
+    margin-top: 2rem;
+}
+.collapsible > summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-heading), serif;
+    font-size: 1rem;
+    color: var(--text-primary);
+    padding: 0.3rem 0;
+}
+.collapsible > summary::-webkit-details-marker { display: none; }
+.collapsible > summary::before {
+    content: "▸";
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    transition: transform 0.15s ease;
+}
+.collapsible[open] > summary::before {
+    transform: rotate(90deg);
+}
+.collapsible > summary + * {
+    margin-top: 0.75rem;
+}
 
 /* ── Results page (leaderboard + race chart) ── */
 

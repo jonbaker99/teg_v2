@@ -507,8 +507,11 @@ async def handicaps_page(request: Request):
                 delta_dir, arrow = "up", "↑"
             else:
                 delta_dir, arrow = "none", ""
+            # First name proper case, surname(s) in caps.
+            parts = str(row["Handicap"]).split(" ")
+            name_parts = [parts[0]] + [p.upper() for p in parts[1:]] if parts else parts
             tiles.append({
-                "name_parts": str(row["Handicap"]).split(" "),
+                "name_parts": name_parts,
                 "value": int(row[next_teg_str]),
                 "delta_dir": delta_dir,
                 "delta_arrow": arrow,
