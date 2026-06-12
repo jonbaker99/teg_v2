@@ -17,6 +17,20 @@ def get_theme(request) -> str:
     return theme if theme in THEME_IDS else DEFAULT_THEME
 
 
+# Light/dark mode — orthogonal to the named theme. A theme picks the palette
+# family; the mode flips it light↔dark by overriding the CSS variables (see
+# static/themes/dark.css, scoped under html[data-mode="dark"]).
+# Default is LIGHT so existing/desktop users see no change unless they opt in.
+MODES = {"light", "dark"}
+DEFAULT_MODE = "light"
+
+
+def get_mode(request) -> str:
+    """Read light/dark mode from cookie, falling back to light."""
+    mode = request.cookies.get("mode", DEFAULT_MODE)
+    return mode if mode in MODES else DEFAULT_MODE
+
+
 # Title style options — controls page-title-area CSS via body class ts-X
 TITLE_STYLES = [
     ("a",  "Title: A — Mono label"),
@@ -69,6 +83,12 @@ _LIGHT = {
     "font_color": "#333333",
 }
 
+_DARK = {
+    "paper_bgcolor": "#16150f",
+    "plot_bgcolor": "#16150f",
+    "font_color": "#ececea",
+}
+
 PLOTLY_THEMES = {
     "clean-page": _LIGHT,
     "clean-layered": _LIGHT,
@@ -76,6 +96,12 @@ PLOTLY_THEMES = {
 }
 
 
-def get_plotly_theme(theme: str) -> dict:
-    """Return Plotly layout overrides for the given theme."""
+def get_plotly_theme(theme: str, mode: str = "light") -> dict:
+    """Return Plotly layout overrides for the given theme + mode.
+
+    Mode is light by default so existing chart callers are unaffected; pass
+    ``mode="dark"`` (from ``request.state.mode``) to get the dark surface.
+    """
+    if mode == "dark":
+        return _DARK
     return PLOTLY_THEMES.get(theme, PLOTLY_THEMES[DEFAULT_THEME])

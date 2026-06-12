@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-mode="{{ request.state.mode }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +12,10 @@
     <!-- Report styling (.teg-report) — loaded globally so reports render the same
          wherever they appear (TEG Reports, Results/Latest report tabs). -->
     <link rel="stylesheet" href="/static/teg_reports.css?v=20">
+    <link rel="stylesheet" href="/static/themes/base-vars.css?v=13">
+    <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=13">
+    <!-- Dark mode — inert until <html data-mode="dark">; default is light. -->
+    <link rel="stylesheet" href="/static/themes/dark.css?v=1">
     <!-- Structural hierarchy debug overlay (dev tool; inert unless body.debug-structure) -->
     <link rel="stylesheet" href="/static/themes/debug-structure.css?v=3">
     <!-- Material Symbols — nav/contents icons (names defined once in webapp/nav.py) -->
@@ -81,6 +85,20 @@
             background: var(--nav-active-bg, #f3f4f6);
             color: var(--nav-active-text, #111827);
         }
+        /* Light/dark mode toggle (matches the theme-select chrome) */
+        .mode-toggle {
+            background: transparent;
+            border: 1px solid var(--nav-text-muted, var(--nav-text));
+            color: var(--nav-text);
+            border-radius: 0.25rem;
+            padding: 0.2rem 0.4rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            line-height: 1;
+        }
+        .mode-toggle .material-symbols-outlined { font-size: 1.05rem; }
+        .mode-toggle:focus { outline: none; box-shadow: 0 0 0 2px var(--select-focus-ring, var(--accent)); }
         /* Mobile hamburger */
         .nav-hamburger { display: none; cursor: pointer; font-size: 1.3rem; padding: 0.25rem; }
         .nav-links { display: flex; align-items: center; gap: 0.15rem; flex-wrap: nowrap; }
@@ -142,6 +160,11 @@
                         <option value="{{ tid }}" {% if tid == request.state.theme %}selected{% endif %}>{{ tlabel }}</option>
                         {% endfor %}
                     </select>
+                    <!-- Light/dark toggle (orthogonal to theme; default light) -->
+                    <button type="button" class="mode-toggle ml-2" title="Toggle light / dark" aria-label="Toggle light or dark mode"
+                            onclick="var m=document.documentElement.getAttribute('data-mode')==='dark'?'light':'dark';document.cookie='mode='+m+';path=/;max-age=31536000';location.reload()">
+                        <span class="material-symbols-outlined">contrast</span>
+                    </button>
                     {#- Title-style and card-header selectors are Phase-2 experiments;
                         the cookie/CSS infra stays live (theme.py + base-vars.css), but the
                         pickers are kept out of the production nav. Re-add for design review. -#}

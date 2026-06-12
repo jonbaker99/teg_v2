@@ -15,6 +15,7 @@ from webapp.routes import (
 from webapp.nav import NAV_SECTIONS
 from webapp.theme import (
     get_theme, THEMES,
+    get_mode,
     get_title_style, TITLE_STYLES,
     get_card_header_style, CARD_HEADER_STYLES,
 )
@@ -23,6 +24,13 @@ app = FastAPI(title="TEG Stats")
 
 # Serve static files (CSS themes etc.)
 app.mount("/static", StaticFiles(directory=str(Path(__file__).parent / "static")), name="static")
+# Mobile design-review mockups (static, self-contained dummy pages — not part of
+# the app's page hierarchy). Served at /mockups/ so they can be browsed locally.
+app.mount(
+    "/mockups",
+    StaticFiles(directory=str(Path(__file__).parent / "mobile_mockups"), html=True),
+    name="mockups",
+)
 
 templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
 
@@ -32,6 +40,7 @@ async def theme_middleware(request: Request, call_next):
     """Inject current theme into request.state for all routes."""
     request.state.theme = get_theme(request)
     request.state.themes = THEMES
+    request.state.mode = get_mode(request)
     request.state.title_style = get_title_style(request)
     request.state.title_styles = TITLE_STYLES
     request.state.card_header_style = get_card_header_style(request)

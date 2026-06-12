@@ -1,0 +1,110 @@
+/* Dark mode — orthogonal to the named theme.
+   Loaded on every page but scoped entirely under html[data-mode="dark"], so it
+   is completely inert until the user opts in (default is light). It re-points
+   the CSS custom properties the themes define; because every component reads
+   those via var(), flipping the variables flips the whole site.
+
+   html[data-mode="dark"] has higher specificity than the :root rules in the
+   theme files, so these win regardless of stylesheet order. Warm near-black
+   palette + brightened forestgreen accent, matching the mobile mockups and the
+   scorecard dark tokens. */
+
+html[data-mode="dark"] {
+  color-scheme: dark;
+}
+
+html[data-mode="dark"] {
+  /* Page + text */
+  --bg-page: #16150f;
+  --bg-card: #1d1d1a;
+  --text-primary: #ececea;
+  --text-secondary: #b6b4aa;
+  --text-muted: #86857e;
+
+  /* Nav */
+  --nav-bg: #16150f;
+  --nav-text: #b6b4aa;
+  --nav-text-muted: #86857e;
+  --nav-hover-bg: #222019;
+  --nav-active-bg: transparent;
+  --nav-active-text: #ececea;
+
+  /* Tables */
+  --table-header-bg: transparent;
+  --table-header-border: #6a695b;
+  --table-cell-border: #2e2e29;
+  --table-hover-bg: #1b2a1d;
+  --table-hover-text: #7ad492;
+  --table-toprank-bg: #1b2a1d;
+  --table-toprank-text: inherit;
+  --table-stripe-bg: transparent;
+
+  /* Accent + buttons */
+  --accent: #6cc77f;
+  --btn-active-bg: #ececea;
+  --btn-active-text: #16150f;
+  --btn-inactive-bg: #1d1d1a;
+  --btn-inactive-text: #b6b4aa;
+
+  /* Selects */
+  --select-bg: #1d1d1a;
+  --select-border: #2e2e29;
+  --select-focus-ring: #6cc77f;
+
+  /* Footer */
+  --footer-bg: #16150f;
+  --footer-text: #86857e;
+
+  /* Stat cards */
+  --stat-card-bg: #1d1d1a;
+  --stat-card-border: #2e2e29;
+  --stat-card-value-color: #ececea;
+  --stat-card-label-color: #86857e;
+
+  /* Badges */
+  --badge-bg: #6cc77f;
+  --badge-text: #0e140e;
+  --badge-muted-bg: #222019;
+  --badge-muted-text: #86857e;
+
+  --divider-color: #2e2e29;
+}
+
+/* Clean Layered theme hard-codes its three surfaces (stone / taupe / white) on
+   the wrappers rather than via vars, so re-point those wrappers for dark. These
+   selectors only have a visible effect under the layered theme; under the flat
+   Clean theme the panels are already transparent over the dark page, so setting
+   them to the same near-black is a no-op. */
+html[data-mode="dark"] .page-panel,
+html[data-mode="dark"] .main-content {
+  background: #16150f;
+}
+html[data-mode="dark"] .data-card {
+  background: #1d1d1a;
+  border-color: #2e2e29;
+}
+
+/* A few rules in the theme files hard-code a colour rather than using a var.
+   Override just the ones visible with the default title (ts-a) + card header
+   (ch3) styles so the default look reads correctly in dark. */
+html[data-mode="dark"] .nav-link.active {
+  border-bottom-color: var(--nav-active-text);
+}
+html[data-mode="dark"] body.ch-ch3 .card-header {
+  color: var(--text-primary);
+}
+html[data-mode="dark"] body.ch-ch1 .card-header {
+  background: #2a2922;
+  color: #c8c6bb;
+}
+html[data-mode="dark"] .nav {
+  box-shadow: none;
+  border-bottom: 1px solid #2a2a24;
+}
+
+/* Dropdown menu surface (base.html inline styles fall back to #fff). */
+html[data-mode="dark"] .nav-dropdown-menu {
+  background: #1d1d1a;
+  border-color: #2e2e29;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
