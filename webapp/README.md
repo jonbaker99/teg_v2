@@ -413,4 +413,11 @@ HTML builders).
   warning is shown on those tabs in the meantime. Check the figures against a
   known-good source before publishing, then remove the warning
   (`_RECORDS_DRAFT_NOTE` in `webapp/routes/latest.py`).
+- **Fix the `/latest-teg` Streaks tab — it only reflects the final round, not
+  the whole TEG.** e.g. it reports Jon BAKER's best par-or-better streak in
+  TEG 18 as 1, missing the run of 4–5 in round 2. Likely cause: the streaks
+  branch in `_latest_teg_tab_context` (`webapp/routes/latest.py`) calls
+  `get_player_window_streaks(..., round_num=last_round)`, so it only windows
+  the last round. A TEG-level view should aggregate streaks across all rounds
+  of the TEG (and handle streaks that span a round boundary, if intended).
 
