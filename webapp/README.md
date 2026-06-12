@@ -430,4 +430,7 @@ HTML builders).
   score-count matrix on `/scoring/matrix` and to the **Scoring tab on
   `/latest-teg`** — a `.pill-group` toggle that switches the table between raw
   counts and column percentages.
+- **Show bestball/worstball positions on `/latest-round`** — add the round's
+  best bestball / best worstball / worst bestball / worst worstball positions
+  to the Latest Round in context page.
 
