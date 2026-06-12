@@ -488,66 +488,64 @@ async def latest_teg_tab(request: Request, teg: int = Query(...), tab: str = Que
 
 # --- /handicaps ---------------------------------------------------------------
 
-def _fmt_hc_change(val) -> str:
-    if pd.isna(val):
-        return "-"
-    val = int(val)
-    if val > 0:
-        return f"+{val}"
-    if val < 0:
-        return str(val)
-    return "-"
-
-
 @router.get("/handicaps")
 async def handicaps_page(request: Request):
     try:
         last_completed, next_tegnum, in_progress = get_next_teg_and_check_if_in_progress_fast()
         next_teg_str = f"TEG {next_tegnum}"
+        # current_hc columns: 'Handicap' (player name), '<next_teg_str>' (value), 'Change'.
         current_hc, were_calculated = get_current_handicaps_formatted(next_tegnum - 1, next_tegnum)
         current_hc = current_hc.sort_values(by=next_teg_str, ascending=True).reset_index(drop=True)
 
-        sections = []
+        # --- Metric tiles: name / handicap / change (down = good → green). ---
+        tiles = []
+        for _, row in current_hc.iterrows():
+            change = int(row["Change"])
+            if change < 0:
+                delta_dir, arrow = "down", "↓"
+            elif change > 0:
+                delta_dir, arrow = "up", "↑"
+            else:
+                delta_dir, arrow = "none", ""
+            tiles.append({
+                "name_parts": str(row["Handicap"]).split(" "),
+                "value": int(row[next_teg_str]),
+                "delta_dir": delta_dir,
+                "delta_arrow": arrow,
+                "delta_text": str(change) if change != 0 else "–",
+            })
 
-        # --- Current (or draft) handicaps for the next TEG ---
-        disp = current_hc.rename(columns={next_teg_str: "Handicap"}).copy()
-        disp["Change"] = disp["Change"].apply(_fmt_hc_change)
-        title = f"{next_teg_str} Handicaps" + (" (Draft)" if were_calculated else "")
-        banner = ("<p class='text-muted text-sm mb-2'>ℹ️ Draft handicaps subject to final review</p>"
-                  if were_calculated else "")
-        note = "<p class='text-muted text-sm mt-2'>Change shows difference in HC vs previous TEG</p>"
-        sections.append({"title": title, "table_html": banner + _df_to_html(disp) + note})
+        ctx = {
+            "is_draft": were_calculated,
+            "next_teg_label": f"{next_teg_str} Handicaps" + (" (Draft)" if were_calculated else ""),
+            "tiles": tiles,
+            "draft_html": None,
+        }
 
-        # --- Full history table ---
+        # --- Handicap history (initials, oldest-first, '-' for 0/blank). ---
         hc_df = read_file(HANDICAPS_CSV)
-        hc_df = hc_df[hc_df['TEG'] != 'TEG 50']
-        display = hc_df.copy()
-        for col in display.columns:
-            if col != 'TEG':
-                display[col] = display[col].apply(lambda x: '-' if x == 0 else x)
-        rename_map = {col: PLAYER_DICT[col] for col in display.columns if col != 'TEG' and col in PLAYER_DICT}
-        display = display.rename(columns=rename_map).iloc[::-1].reset_index(drop=True)
-        sections.append({"title": "Handicap History", "table_html": _df_to_html(display)})
+        hc_df = hc_df[hc_df["TEG"] != "TEG 50"].copy()
+        for col in hc_df.columns:
+            if col != "TEG":
+                hc_df[col] = hc_df[col].apply(lambda x: "-" if pd.isna(x) or x == 0 else str(int(x)))
+        ctx["history_html"] = _df_to_html(hc_df, table_class="teg-table table--full")
 
-        # --- Draft handicaps for the TEG after next (only when a TEG is in progress) ---
+        # --- Draft handicaps for the TEG after next (only when one is in progress). ---
         if in_progress:
             try:
                 in_progress_teg, rounds_played = get_current_in_progress_teg_fast()
                 next_next = next_tegnum + 1
                 draft = get_hc(next_next).sort_values("hc_raw", ascending=True, na_position="last").reset_index(drop=True)
-                draft_title = f"Draft handicaps for TEG {next_next} (after {rounds_played} rounds of TEG {in_progress_teg})"
-                sections.append({"title": draft_title, "table_html": _df_to_html(draft)})
+                ctx["draft_title"] = f"Draft handicaps for TEG {next_next} (after {rounds_played} rounds of TEG {in_progress_teg})"
+                ctx["draft_html"] = _df_to_html(draft)
             except Exception as e:
-                sections.append({"title": "Draft handicaps", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
+                ctx["draft_title"] = "Draft handicaps"
+                ctx["draft_html"] = f"<p class='text-muted text-sm'>Error: {e}</p>"
 
+        return templates.TemplateResponse("handicaps.html", {
+            "request": request, "active_page": "handicaps", **ctx,
+        })
     except Exception as e:
-        sections = [{"title": "Error", "table_html": f"<p class='text-muted'>{e}</p>"}]
-
-    return templates.TemplateResponse("data_table.html", {
-        "request": request,
-        "active_page": "handicaps",
-        "title": "Handicaps",
-        "subtitle": "Player handicaps by TEG",
-        "table_html": "",
-        "sections": sections,
-    })
+        return templates.TemplateResponse("handicaps.html", {
+            "request": request, "active_page": "handicaps", "error": str(e),
+        })

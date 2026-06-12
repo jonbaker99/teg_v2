@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">Latest TEG</span>
+    <h1 class="page-title">Handicaps</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+{% if error %}
+<div class="error-box">{{ error }}</div>
+{% else %}
+
+<h2 class="section-title">{{ next_teg_label }}</h2>
+{% if is_draft %}
+<p class="text-muted text-sm mb-2">ℹ️ Draft handicaps subject to final review</p>
+{% endif %}
+
+<div class="data-card data-card--padded">
+    <div class="hc-tiles">
+        {% for t in tiles %}
+        <div class="hc-tile">
+            <div class="hc-tile-name">{% for part in t.name_parts %}<span>{{ part }}</span>{% endfor %}</div>
+            <div class="hc-tile-value">{{ t.value }}</div>
+            <div class="hc-tile-delta hc-delta--{{ t.delta_dir }}">{{ t.delta_arrow }} {{ t.delta_text }}</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<p class="text-muted text-sm mt-2">Change shows difference in HC vs previous TEG</p>
+
+<div class="card-header">Handicap history</div>
+<div class="data-card"><div class="table-wrapper">{{ history_html | safe }}</div></div>
+
+{% if draft_html %}
+<div class="card-header">{{ draft_title }}</div>
+<div class="data-card"><div class="table-wrapper">{{ draft_html | safe }}</div></div>
+{% endif %}
+
+{% endif %}
+{% endblock %}
