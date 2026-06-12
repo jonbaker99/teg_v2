@@ -37,15 +37,17 @@
 </div>
 
 <input type="hidden" id="di-tab" name="tab" value="{{ active_tab }}">
-<div class="section-nav">
-    {% for tab_id, tab_label in tabs %}
-    <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
-            hx-get="/scoring/distributions/content" hx-target="#distributions" hx-swap="innerHTML"
-            hx-include="#di-field, #di-player, #di-teg, #di-par, #di-mode"
-            hx-vals='{"tab": "{{ tab_id }}"}'>
-        {{ tab_label }}
-    </button>
-    {% endfor %}
+<div class="section-controls">
+    <div class="pill-group" role="group" aria-label="Group by">
+        {% for tab_id, tab_label in tabs %}
+        <button class="pill{% if tab_id == active_tab %} pill--active{% endif %}"
+                hx-get="/scoring/distributions/content" hx-target="#distributions" hx-swap="innerHTML"
+                hx-include="#di-field, #di-player, #di-teg, #di-par, #di-mode"
+                hx-vals='{"tab": "{{ tab_id }}"}'>
+            {{ tab_label }}
+        </button>
+        {% endfor %}
+    </div>
 </div>
 
 {% if chart_json %}

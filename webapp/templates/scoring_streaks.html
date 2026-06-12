@@ -27,41 +27,35 @@
     {% endfor %}
 </div>
 
-<div id="st-controls" class="section-controls flex items-center gap-4"
+<div id="st-controls" class="section-controls flex flex-wrap items-start gap-6"
      {% if active_tab != 'player' %}style="display:none"{% endif %}>
-    <div class="toggle-group flex items-center gap-2">
-        {% for did, dlabel in [('good', 'Good'), ('bad', 'Bad')] %}
-        <button class="tab-underline st-dir{% if did == direction %} tab-underline--active{% endif %}"
-                hx-get="/scoring/streaks/tab"
-                hx-target="#st-content"
-                hx-include="#st-tab-input, #st-mode"
-                hx-vals='{"direction": "{{ did }}"}'
-                hx-swap="innerHTML"
-                onclick="
-                    document.getElementById('st-direction').value='{{ did }}';
-                    this.parentElement.querySelectorAll('.st-dir').forEach(b => b.classList.remove('tab-underline--active'));
-                    this.classList.add('tab-underline--active');
-                ">
-            {{ dlabel }}
-        </button>
-        {% endfor %}
+    <div class="pill-field">
+        <span class="pill-field-label">Direction</span>
+        <div class="pill-group" role="group" aria-label="Direction">
+            {% for did, dlabel in [('good', 'Good'), ('bad', 'Bad')] %}
+            <button class="pill{% if did == direction %} pill--active{% endif %}"
+                    hx-get="/scoring/streaks/tab" hx-target="#st-content"
+                    hx-include="#st-tab-input, #st-mode"
+                    hx-vals='{"direction": "{{ did }}"}' hx-swap="innerHTML"
+                    onclick="document.getElementById('st-direction').value='{{ did }}';">
+                {{ dlabel }}
+            </button>
+            {% endfor %}
+        </div>
     </div>
-    <div class="toggle-group flex items-center gap-2">
-        {% for mid, mlabel in [('max', 'All-time Max'), ('current', 'Current')] %}
-        <button class="tab-underline st-mode{% if mid == mode %} tab-underline--active{% endif %}"
-                hx-get="/scoring/streaks/tab"
-                hx-target="#st-content"
-                hx-include="#st-tab-input, #st-direction"
-                hx-vals='{"mode": "{{ mid }}"}'
-                hx-swap="innerHTML"
-                onclick="
-                    document.getElementById('st-mode').value='{{ mid }}';
-                    this.parentElement.querySelectorAll('.st-mode').forEach(b => b.classList.remove('tab-underline--active'));
-                    this.classList.add('tab-underline--active');
-                ">
-            {{ mlabel }}
-        </button>
-        {% endfor %}
+    <div class="pill-field">
+        <span class="pill-field-label">Streak type</span>
+        <div class="pill-group" role="group" aria-label="Streak type">
+            {% for mid, mlabel in [('max', 'All-time Max'), ('current', 'Current')] %}
+            <button class="pill{% if mid == mode %} pill--active{% endif %}"
+                    hx-get="/scoring/streaks/tab" hx-target="#st-content"
+                    hx-include="#st-tab-input, #st-direction"
+                    hx-vals='{"mode": "{{ mid }}"}' hx-swap="innerHTML"
+                    onclick="document.getElementById('st-mode').value='{{ mid }}';">
+                {{ mlabel }}
+            </button>
+            {% endfor %}
+        </div>
     </div>
 </div>
 

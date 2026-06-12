@@ -1052,6 +1052,20 @@ body.ch-ch3 .card-header:first-child { margin-top: 0; }
     flex-wrap: wrap;
     gap: 0.4rem;
 }
+/* A labelled pill group — used where two pill groups sit side by side and need
+   a clear caption to tell them apart (e.g. /scoring/streaks direction vs type). */
+.pill-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+.pill-field-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}
 .pill {
     background: var(--btn-inactive-bg);
     border: 1px solid var(--select-border);

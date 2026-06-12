@@ -10,19 +10,15 @@
 {% block content %}
 
 <div class="section-controls flex items-center gap-4">
-    <div class="toggle-group flex items-center gap-2" style="margin-bottom: 0;">
+    <div class="pill-group" role="group" aria-label="Score type">
         {% for st in score_types %}
-        <button class="tab-underline sb-score{% if st == score_type %} tab-underline--active{% endif %}"
+        <button class="pill{% if st == score_type %} pill--active{% endif %}"
                 hx-get="/scoring/birdies/tab"
                 hx-target="#sb-content"
                 hx-include="#sb-tab-input"
                 hx-vals='{"score_type": "{{ st }}"}'
                 hx-swap="innerHTML"
-                onclick="
-                    document.getElementById('sb-score-type').value='{{ st }}';
-                    this.parentElement.querySelectorAll('.sb-score').forEach(b => b.classList.remove('tab-underline--active'));
-                    this.classList.add('tab-underline--active');
-                ">
+                onclick="document.getElementById('sb-score-type').value='{{ st }}';">
             {{ st }}
         </button>
         {% endfor %}
