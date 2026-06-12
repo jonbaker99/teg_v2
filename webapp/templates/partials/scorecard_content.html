@@ -23,21 +23,42 @@
 
     {% if combined_table %}
     <!-- Single combined card: gross Score row + Stableford row -->
-    <div class="data-card"><div class="overflow-x-auto">
+    <!-- Landscape (desktop / iPad) -->
+    <div class="sc-landscape data-card"><div class="overflow-x-auto">
         {{ combined_table | safe }}
     </div></div>
+    <!-- Portrait (phone ≤640px) -->
+    <div class="sc-portrait data-card"><div class="sc-scroll">
+        {{ combined_portrait | safe }}
+    </div></div>
     {% else %}
-    <!-- Gross Scores -->
-    <h2 class="section-title">Gross Scores</h2>
-    <div class="data-card"><div class="overflow-x-auto">
-        {{ gross_table | safe }}
-    </div></div>
+    <!-- Landscape (desktop / iPad): Gross then Stableford, stacked -->
+    <div class="sc-landscape">
+        <h2 class="section-title">Gross Scores</h2>
+        <div class="data-card"><div class="overflow-x-auto">
+            {{ gross_table | safe }}
+        </div></div>
 
-    <!-- Stableford Points -->
-    <h2 class="section-title">Stableford Points</h2>
-    <div class="data-card"><div class="overflow-x-auto">
-        {{ stableford_table | safe }}
-    </div></div>
+        <h2 class="section-title">Stableford Points</h2>
+        <div class="data-card"><div class="overflow-x-auto">
+            {{ stableford_table | safe }}
+        </div></div>
+    </div>
+    <!-- Portrait (phone ≤640px): Gross/Stableford toggle (pure CSS) -->
+    <div class="sc-portrait sc-metric-toggle">
+        <input type="radio" name="sc-metric" id="scm-gross" checked>
+        <input type="radio" name="sc-metric" id="scm-pts">
+        <div class="sc-mseg">
+            <label for="scm-gross">Gross</label>
+            <label for="scm-pts">Stableford</label>
+        </div>
+        <div class="sc-pane sc-pane-gross data-card"><div class="sc-scroll">
+            {{ gross_portrait | safe }}
+        </div></div>
+        <div class="sc-pane sc-pane-pts data-card"><div class="sc-scroll">
+            {{ stableford_portrait | safe }}
+        </div></div>
+    </div>
     {% endif %}
 </div>
 {% endif %}

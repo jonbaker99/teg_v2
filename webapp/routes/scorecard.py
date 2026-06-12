@@ -10,10 +10,15 @@ from teg_analysis.core.metadata import get_scorecard_data, get_teg_metadata
 from teg_analysis.constants import PLAYER_DICT
 from teg_analysis.display.scorecards import (
     build_single_round_combined_table,
+    build_single_round_combined_portrait,
     build_tournament_gross_table,
     build_tournament_stableford_table,
+    build_tournament_gross_portrait,
+    build_tournament_stableford_portrait,
     build_round_comparison_gross_table,
     build_round_comparison_stableford_table,
+    build_round_comparison_gross_portrait,
+    build_round_comparison_stableford_portrait,
 )
 from webapp.deps import (
     get_default_teg_num,
@@ -74,12 +79,15 @@ def _scorecard_context_one_round_one_player(teg_num: int, round_num: int, player
         title = f"{player_name} | TEG {teg_num}, Round {round_num}"
 
         # Single combined card: one gross "Score" row + one "Stableford" row.
+        # Landscape (holes as columns) + portrait (holes as rows, mobile).
         combined_table = build_single_round_combined_table(df)
+        combined_portrait = build_single_round_combined_portrait(df)
 
         return {
             "title": title,
             "subheader": subheader,
             "combined_table": combined_table,
+            "combined_portrait": combined_portrait,
         }
     except Exception as e:
         return {"error": str(e)}
@@ -103,12 +111,16 @@ def _scorecard_context_one_player_all_rounds(teg_num: int, player_code: str) -> 
 
         gross_table = build_tournament_gross_table(player_data)
         stableford_table = build_tournament_stableford_table(player_data)
+        gross_portrait = build_tournament_gross_portrait(player_data)
+        stableford_portrait = build_tournament_stableford_portrait(player_data)
 
         return {
             "title": title,
             "subheader": subheader,
             "gross_table": gross_table,
             "stableford_table": stableford_table,
+            "gross_portrait": gross_portrait,
+            "stableford_portrait": stableford_portrait,
         }
     except Exception as e:
         return {"error": str(e)}
@@ -132,12 +144,16 @@ def _scorecard_context_one_round_all_players(teg_num: int, round_num: int) -> di
 
         gross_table = build_round_comparison_gross_table(round_data)
         stableford_table = build_round_comparison_stableford_table(round_data)
+        gross_portrait = build_round_comparison_gross_portrait(round_data)
+        stableford_portrait = build_round_comparison_stableford_portrait(round_data)
 
         return {
             "title": title,
             "subheader": subheader,
             "gross_table": gross_table,
             "stableford_table": stableford_table,
+            "gross_portrait": gross_portrait,
+            "stableford_portrait": stableford_portrait,
         }
     except Exception as e:
         return {"error": str(e)}

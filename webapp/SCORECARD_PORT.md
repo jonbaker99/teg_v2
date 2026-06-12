@@ -90,13 +90,31 @@ breakpoint. Two options:
   *Recommendation:* (b) for the field view (8 players × 2 tables is heavy),
   (a) is fine for single-round. Confirm before building.
 
-**Step 6 — Tests, parity, a11y.** pytest for the three portrait builders
-(values match landscape + match the Streamlit mobile reference numbers); dark
-contrast check (AA); keyboard/scroll behaviour for the field table.
+**Step 3 — Portrait CSS** ✅ **DONE.** Added to `webapp/static/scorecard.css`,
+scoped under `@media (max-width: 640px)` (desktop/iPad untouched): holes-as-rows
+layout for `.scorecard-table-portrait`, pinned `Hole`+`PAR` columns + horizontal
+scroll for the wide views, and the pure-CSS **Gross/Stableford metric toggle**
+(`.sc-metric-toggle`). Reuses the existing `.score-cell` shape tokens.
 
-**Step 7 — Docs.** Update `teg_analysis/README.md` (new display functions),
-`webapp/README.md` (portrait view), and cross-link this file from MOBILE_PLAN §6.
-Leave `streamlit/` untouched.
+**Step 4 — Dark-mode tokens** ✅ **DONE (inert).** A `html[data-mode="dark"]`
+override block re-points the scorecard colour variables for dark. It has **no
+effect until** the app-wide dark-mode foundation sets `data-mode="dark"` on
+`<html>` (a separate piece — MOBILE_PLAN §4.2), so the current light render is
+byte-identical on every device. Stableford stays on the **amber** scale (see §6).
+
+**Step 5 — Webapp wiring** ✅ **DONE (needs in-browser verification).**
+`routes/scorecard.py` builds the portrait HTML alongside landscape for all three
+views; `partials/scorecard_content.html` renders both, wrapped in `.sc-landscape`
+/ `.sc-portrait`, and the CSS shows the right one by breakpoint. *Static checks
+pass (py_compile, Jinja parse, CSS-comment guard); not yet rendered in a browser
+— no app deps/browser in this container.*
+
+**Step 6 — Tests, parity, a11y.** Builder parity tests ✅ done
+(`tests/test_scorecards_portrait.py`). Still to do: dark contrast check (AA) once
+dark mode is activatable; keyboard/scroll behaviour for the field table.
+
+**Step 7 — Docs.** ✅ `teg_analysis/README.md`, `webapp/README.md`, and the
+MOBILE_PLAN §6 cross-link updated. `streamlit/` untouched.
 
 ## 5. Merge-to-`main` strategy
 
@@ -112,14 +130,21 @@ Keeping PR 1 free of webapp-shell coupling is the whole point: the reusable
 asset (builders + visual contract) lands on `main` regardless of where the
 A-vs-B look-and-feel conversation ends up.
 
-## 6. Decisions to confirm before coding
+## 6. Decisions (resolved — best-practice defaults)
 
-1. **Builder return type:** HTML string (matches the existing landscape builders
-   — fastest, consistent) vs structured rows (cleaner for the REST API).
-   *Default:* HTML now; revisit when the API is built.
-2. **Orientation switch:** CSS-only show/hide vs server-picked param (Step 5).
-3. **Stableford palette:** amber (current) vs green (mockup).
-4. **Default on mobile:** is portrait the *default* under 640px, or an opt-in view?
+1. **Builder return type:** **HTML string** — matches the existing landscape
+   builders. Revisit only when the REST API needs structured data.
+2. **Orientation switch:** **CSS-only** — render both, toggle at `≤640px`. No JS,
+   and desktop/iPad cannot be affected (they only ever see landscape).
+3. **Stableford palette:** **keep amber** — changing it would alter desktop
+   scorecards too (breaks "don't impact laptop"); consistency over accent-tie-in.
+4. **Default on mobile:** **portrait is the default** under 640px, landscape
+   above it.
+
+> **Still outstanding (separate piece):** dark mode only *activates* once the
+> app-wide dark-mode foundation adds the `data-mode` toggle on `<html>`
+> (MOBILE_PLAN §4.2). The scorecard's dark tokens are already in place and inert
+> until then. And the wired webapp views need a real in-browser pass.
 
 ## 7. Model-tier guide (per CLAUDE.md)
 

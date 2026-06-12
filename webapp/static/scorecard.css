@@ -7,7 +7,8 @@
    Scorecard page) or standalone (Latest Round, Full Results). Custom properties
    inherit to descendant cells (.score-cell, .totals, etc.). */
 .scorecard-wrapper,
-.scorecard-table {
+.scorecard-table,
+.scorecard-table-portrait {
 
   /* UI colors */
   --color-border: #e0e0e0;
@@ -418,6 +419,160 @@
 
   .label-column { min-width: 60px; }
 }
+
+/* ===== PORTRAIT (holes as rows) — mobile orientation =====
+   The landscape table is the only thing desktop/iPad ever render: portrait is
+   display:none until the phone breakpoint, so the desktop view is untouched.
+   Both orientations reuse the same .score-cell shape contract above. */
+.sc-portrait { display: none; }
+
+@media (max-width: 640px) {
+  .sc-landscape { display: none; }
+  .sc-portrait { display: block; }
+}
+
+/* The .sc-landscape wrapper makes the first section title a first-child, which
+   would lose the global "* + .section-title" top margin — restore it so the
+   desktop layout is byte-for-byte unchanged. */
+.sc-landscape > .section-title:first-child { margin-top: 1.75rem; }
+
+.scorecard-table-portrait {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  font-family: 'Roboto Mono', monospace;
+  font-size: var(--font-size-base);
+}
+.scorecard-table-portrait th,
+.scorecard-table-portrait td {
+  padding: var(--spacing-cell);
+  text-align: center;
+  height: var(--cell-height);
+  vertical-align: middle;
+  position: relative;
+  background-color: white;
+}
+.scorecard-table-portrait thead th {
+  background-color: var(--color-background);
+  font-weight: bold;
+  font-size: var(--font-size-small);
+  border-bottom: 2px solid var(--color-border-strong);
+}
+/* Hole + PAR columns: left-aligned, narrow, pinned while wide tables scroll */
+.scorecard-table-portrait .hole-header,
+.scorecard-table-portrait .hole-label {
+  text-align: left;
+  padding-left: 10px;
+  width: 44px;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background-color: white;
+}
+.scorecard-table-portrait thead .hole-header { background-color: var(--color-background); }
+.scorecard-table-portrait .par-header,
+.scorecard-table-portrait .par-cell {
+  width: 40px;
+  color: var(--color-text-secondary);
+  font-weight: normal;
+  position: sticky;
+  left: 44px;
+  z-index: 2;
+  background-color: white;
+}
+.scorecard-table-portrait thead .par-header { background-color: var(--color-background); }
+.scorecard-table-portrait .hole-label { font-weight: bold; color: var(--color-text); }
+/* Subtotal rows (OUT / IN / TOTAL) */
+.scorecard-table-portrait .totals-row td,
+.scorecard-table-portrait .totals { background-color: var(--color-background); font-weight: bold; }
+.scorecard-table-portrait .totals-row.front-back-divider td { border-bottom: 1px solid var(--color-border); }
+.scorecard-table-portrait .grand-total td { border-top: 2px solid var(--color-border-strong); }
+
+/* Horizontal-scroll wrapper for the wide (whole-TEG / field) portrait tables */
+.sc-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* Gross / Stableford metric toggle (portrait multi-table views) — pure CSS */
+.sc-metric-toggle > input { display: none; }
+.sc-mseg {
+  display: flex;
+  gap: 4px;
+  margin: 0 0 12px;
+  padding: 3px;
+  background: var(--color-background);
+  border-radius: 8px;
+}
+.sc-mseg label {
+  flex: 1;
+  text-align: center;
+  padding: 8px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  -webkit-user-select: none;
+  user-select: none;
+}
+#scm-gross:checked ~ .sc-mseg label[for="scm-gross"],
+#scm-pts:checked ~ .sc-mseg label[for="scm-pts"] {
+  background: white;
+  color: var(--color-text);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+.sc-pane-pts { display: none; }
+#scm-pts:checked ~ .sc-pane-gross { display: none; }
+#scm-pts:checked ~ .sc-pane-pts { display: block; }
+
+/* ===== DARK-MODE TOKENS =====
+   Inert until html[data-mode="dark"] is set by the (separate) app-wide
+   dark-mode foundation. No effect on the current light render on any device. */
+html[data-mode="dark"] .scorecard-wrapper,
+html[data-mode="dark"] .scorecard-table,
+html[data-mode="dark"] .scorecard-table-portrait {
+  --color-border: #2e2e29;
+  --color-border-strong: #6a695b;
+  --color-background: #222019;
+  --color-hover: #26261f;
+  --color-text: #ececea;
+  --color-text-secondary: #9a9a90;
+  --color-text-inverse: #0e0e0c;
+  --color-eagle: #e23a40;
+  --color-birdie: #3a201f;
+  --color-par: #1d1d1a;
+  --color-bogey: #33322b;
+  --color-double-bogey: #55554a;
+  --color-triple-bogey: #d8d6cb;
+  --color-text-eagle: #ffffff;
+  --color-text-birdie: #f08a8d;
+  --color-text-par: #ececea;
+  --color-text-bogey: #ececea;
+  --color-text-double-bogey: #ececea;
+  --color-text-triple-bogey: #15140f;
+  --boxshadow-eagle: 0 0 0 1px #1d1d1a, 0 0 0 2px var(--color-eagle);
+  --color-stableford-0: #1d1d1a;
+  --color-stableford-1: #1d1d1a;
+  --color-stableford-2: #3a2f1c;
+  --color-stableford-3: #6b5320;
+  --color-stableford-4: #b9831f;
+  --color-stableford-5: #d98c1f;
+  --color-text-stableford-0: #6a695b;
+  --color-text-stableford-1: #ececea;
+  --color-text-stableford-2: #ececea;
+  --color-text-stableford-3: #15140f;
+  --color-text-stableford-4: #15140f;
+  --color-text-stableford-5: #15140f;
+}
+/* Cell/shape backgrounds follow the dark surface */
+html[data-mode="dark"] .scorecard-table tbody td,
+html[data-mode="dark"] .scorecard-table-portrait td,
+html[data-mode="dark"] .scorecard-table-portrait .hole-label,
+html[data-mode="dark"] .scorecard-table-portrait .par-cell,
+html[data-mode="dark"] .score-cell { background-color: #1d1d1a; }
+html[data-mode="dark"] .scorecard-table tbody td { outline-color: #1d1d1a; }
+html[data-mode="dark"] .sc-mseg label[for="scm-gross"],
+html[data-mode="dark"] .sc-mseg label[for="scm-pts"] { color: var(--color-text-secondary); }
+html[data-mode="dark"] #scm-gross:checked ~ .sc-mseg label[for="scm-gross"],
+html[data-mode="dark"] #scm-pts:checked ~ .sc-mseg label[for="scm-pts"] { background: #1d1d1a; color: var(--color-text); }
 
 /* ===== STABLEFORD ZERO AS 'X' ===== */
 .score-cell[data-stableford="0"] span {

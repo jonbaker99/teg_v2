@@ -393,7 +393,12 @@ HTML builders).
 - Mobile responsive design + dark mode — **plan drafted** in
   [MOBILE_PLAN.md](MOBILE_PLAN.md); look-and-feel mockups (app vs editorial,
   light + dark) live in `mobile_mockups/` and are served at `/mockups/` when the
-  webapp runs. Awaiting a direction decision before implementation.
+  webapp runs. Awaiting a direction decision before the broad implementation.
+  - **First slice shipped:** the **Scorecard** page now renders a portrait
+    (holes-as-rows) layout on phones (`≤640px`) for all three views, with a
+    Gross/Stableford toggle and dark-ready (inert) colour tokens. Desktop/iPad
+    are unchanged. See [SCORECARD_PORT.md](SCORECARD_PORT.md). *(Dark mode
+    activates once the app-wide `data-mode` toggle is built.)*
 - Search / filtering UI (some routes have it, not everywhere)
 - **"Related links" section** — replicate the cross-page related-links block the
   Streamlit app shows (links from each page to related pages). One day.
