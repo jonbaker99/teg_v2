@@ -3,12 +3,31 @@
 How we make the webapp feel brilliant — and a bit more "app-like" — on a phone,
 in light **and** dark mode, **without changing how it looks on laptop or iPad.**
 
-This is a *plan to follow later*, not work that's been done. The only thing built
-so far is the set of **dummy mockups** in `webapp/mobile_mockups/` (see
-[§7](#7-the-mockups)). Everything else below is the proposed approach.
+## Status — read this first
 
-> Status: **proposal / awaiting look-and-feel decision.** Nothing in the live
-> app has changed yet apart from the mockups + a static mount to serve them.
+**Direction chosen: A — full native-app feel** (bottom tab bar, sticky app bar,
+segmented controls, card/reflowed data), in light **and dark**. We build it via
+the hybrid *strategy* in [§3](#3-the-look-and-feel-decision-decided): app shell
+everywhere, card-reflow the hero tables, sticky-column scroll for the long tail.
+Hard rule throughout: **desktop/iPad stay byte-identical** (all mobile rules sit
+behind a `≤640px` breakpoint or an opt-in `data-mode`).
+
+**Done so far** (PR #16, branch `claude/mobile-ui-dev`):
+- ✅ **Dark-mode foundation** — `data-mode` cookie/toggle + `static/themes/dark.css`,
+  opt-in, default light. See [§4.2](#42-dark-mode--foundation-built).
+- ✅ **Portrait scorecard** — the first real vertical slice of the app pattern
+  (holes-as-rows, pinned columns, pure-CSS Gross/Stableford toggle). Builders in
+  `teg_analysis`, wired into the webapp. See [SCORECARD_PORT.md](SCORECARD_PORT.md).
+- ✅ **Mockups** for Direction A in `webapp/mobile_mockups/` (served at `/mockups/`):
+  leaderboard, chart, and the three scorecard views — each light + dark.
+
+**▶ Pick up here (the full UI work):** **Phase M1 — the app shell.** Add the
+bottom tab bar + sticky app bar to `base.html`, gated `≤640px` and inert above it
+(M0 step 3), then roll the mobile table/control treatments across pages. The
+open steps are M0.1, M0.3 and M1–M3 in [§5](#5-phased-implementation); the
+mockups are the visual spec; §4 is the how.
+
+Everything below §Status is the approach and remains the working reference.
 
 ---
 
@@ -49,10 +68,16 @@ so far is the set of **dummy mockups** in `webapp/mobile_mockups/` (see
 
 ---
 
-## 3. The look-and-feel decision (this is the bit for Jon)
+## 3. The look-and-feel decision (DECIDED)
 
-The mockups present **two ends of a spectrum**. The real build will most likely
-be a **blend**, but seeing the extremes makes the choice concrete.
+> **Decided (Jon): Direction A — full native-app feel.** Built via the hybrid
+> *strategy* in this section (app shell everywhere; card-reflow hero tables;
+> sticky-column scroll for the long tail). Direction B (editorial) is superseded
+> — keep its mockup only as a reference. The rest of this section is the
+> reasoning behind that call.
+
+The mockups present **two ends of a spectrum**. The real build is a **blend**,
+but seeing the extremes made the choice concrete.
 
 | | **A — Full native-app** | **B — Polished mobile-editorial** |
 |---|---|---|
@@ -75,8 +100,7 @@ be a **blend**, but seeing the extremes makes the choice concrete.
   inside an app-style card.
 
 This gets ~80% of the app feel for ~30% of the effort, and degrades gracefully
-on the long tail of dense stat tables. **Decision needed from Jon:** pick A, B,
-or the hybrid (or mix per-element).
+on the long tail of dense stat tables. This is the agreed build strategy.
 
 ---
 
@@ -173,6 +197,11 @@ Three tiers, cheapest first:
    laptop/iPad unchanged.
 3. Add the bottom-nav + app-bar markup to `base.html`, `display:none` >640px.
 
+> ✅ **Vertical slice already done:** the **portrait scorecard** implements the
+> M1 table + control patterns (segmented Gross/Stableford toggle, pinned-column
+> horizontal scroll, `≤640px` orientation switch) for one page — a working
+> reference for steps 5–6 below. See [SCORECARD_PORT.md](SCORECARD_PORT.md).
+
 **Phase M1 — The app shell on phones.**
 4. Style the bottom tab bar + sticky app bar (≤640px only).
 5. Convert primary in-page controls (Gross/Net, metric tabs) to segmented /
@@ -184,8 +213,9 @@ Three tiers, cheapest first:
 8. Mobile chart preset + direct-label race chart.
 9. Per-page pass: spacing, tap targets, empty states, safe-area insets.
 
-**Phase M3 — Decide + refine.**
-10. Pick the final look from the mockups; delete the unused direction.
+**Phase M3 — Refine.**
+10. ✅ Direction picked (A). Delete the superseded editorial mockups once the app
+    shell lands.
 11. Accessibility + real-device QA (iOS Safari, Android Chrome), dark-mode
     contrast check, and a regression sweep confirming **desktop/iPad are
     pixel-unchanged**.
