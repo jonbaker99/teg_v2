@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Mockup A — App · Scorecard (whole TEG)</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0">
+<style>
+:root {
+  --font-body:'Lora', Georgia, serif; --font-data:'Roboto Mono', monospace;
+  --bg:#f4f3ef; --surface:#ffffff; --surface-2:#faf9f6; --text:#1a1a1a; --text-2:#555;
+  --text-muted:#8c8c86; --line:#e7e5e0; --accent:forestgreen; --accent-soft:#F3F7F3; --accent-text:forestgreen;
+  --bar:#ffffff; --bar-line:#e7e5e0; --shadow:0 1px 2px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.04);
+  --eagle:#dc1a21; --eagle-tx:#fff; --birdie:#fcdfe0; --birdie-ring:#dc1a21; --birdie-tx:#1a1a1a;
+  --bogey:#e7e5e2; --dbogey:#bdbcb6; --tbogey:#3a3a34; --tbogey-tx:#fff;
+  --pts1:#eef4ee; --pts2:#cfe6cf; --pts3:#94c79a; --pts4:#4d9a57; --pts5:#2f7d3a; --pts-hi-tx:#fff;
+  --rowline:#edece7; --subtot:#f1efe9;
+}
+[data-theme="dark"], :root:has(#mode:checked) {
+  --bg:#131311; --surface:#1d1d1a; --surface-2:#242420; --text:#ececea; --text-2:#b7b6b0;
+  --text-muted:#86857e; --line:#2e2e29; --accent:#57c773; --accent-soft:#1b2a1d; --accent-text:#7ad492;
+  --bar:#191916; --bar-line:#2a2a25; --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+  --eagle:#e23a40; --eagle-tx:#fff; --birdie:rgba(226,58,64,.20); --birdie-ring:#e23a40; --birdie-tx:#ececea;
+  --bogey:#33322b; --dbogey:#48473d; --tbogey:#6a695b; --tbogey-tx:#fff;
+  --pts1:#1b241b; --pts2:#26402a; --pts3:#356b3d; --pts4:#4c9a5a; --pts5:#62b56e; --pts-hi-tx:#0e140e;
+  --rowline:#262620; --subtot:#222019;
+}
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body { margin:0; }
+body { font-family:var(--font-body); background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; padding-bottom:76px; }
+.material-symbols-outlined { font-variation-settings:'opsz' 24,'wght' 400; line-height:1; vertical-align:middle; }
+.appbar { position:sticky; top:0; z-index:30; background:var(--bar); border-bottom:1px solid var(--bar-line);
+  padding:calc(10px + env(safe-area-inset-top,0)) 14px 10px; display:flex; align-items:center; gap:10px; }
+.appbar .back { font-size:22px; color:var(--text-2); }
+.appbar .titles { flex:1; min-width:0; }
+.appbar .kicker { font-family:var(--font-data); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-muted); display:block; line-height:1.4; }
+.appbar .title { font-weight:600; font-size:17px; line-height:1.15; }
+.appbar .teg-pill { font-family:var(--font-data); font-size:12px; font-weight:600; color:var(--accent-text);
+  background:var(--accent-soft); border:1px solid var(--line); border-radius:999px; padding:5px 11px; display:inline-flex; align-items:center; gap:4px; }
+.appbar .teg-pill .material-symbols-outlined { font-size:16px; }
+.selrow { display:flex; gap:8px; padding:12px 14px 2px; }
+.selpill { flex:1; display:flex; align-items:center; justify-content:space-between; gap:6px;
+  background:var(--surface); border:1px solid var(--line); border-radius:11px; padding:9px 12px; box-shadow:var(--shadow); }
+.selpill.static { background:var(--surface-2); box-shadow:none; }
+.selpill .lab { font-family:var(--font-data); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); display:block; }
+.selpill .val { font-size:14px; font-weight:600; }
+.selpill .material-symbols-outlined { font-size:19px; color:var(--text-muted); }
+.seg { margin:12px 14px 4px; padding:3px; background:var(--surface-2); border:1px solid var(--line); border-radius:11px; display:flex; gap:3px; }
+.seg button { flex:1; border:none; background:transparent; cursor:pointer; font-family:var(--font-body); font-size:13.5px; font-weight:600; color:var(--text-2); padding:9px 0; border-radius:8px; }
+.seg button[aria-selected="true"] { background:var(--surface); color:var(--accent-text); box-shadow:0 1px 2px rgba(0,0,0,.08); }
+[data-theme="dark"] .seg button[aria-selected="true"] { box-shadow:0 1px 3px rgba(0,0,0,.5); }
+.summary { margin:12px 14px 4px; background:var(--surface); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); overflow:hidden; }
+.summary .who { padding:13px 15px 10px; }
+.summary .nm { font-size:17px; font-weight:600; line-height:1.15; }
+.summary .meta { font-family:var(--font-data); font-size:11px; color:var(--text-muted); margin-top:3px; }
+.summary .strip { display:flex; border-top:1px solid var(--line); }
+.summary .st { flex:1; padding:11px 6px; text-align:center; border-right:1px solid var(--line); }
+.summary .st:last-child { border-right:none; }
+.summary .st .v { font-family:var(--font-data); font-size:19px; font-weight:700; line-height:1; }
+.summary .st .v small { font-size:12px; font-weight:600; color:var(--text-muted); }
+.summary .st .v.green { color:var(--accent-text); }
+.summary .st .l { font-family:var(--font-data); font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-muted); margin-top:5px; }
+/* metric toggle (Gross / Stableford) — pure CSS via radios */
+.metricwrap input { display:none; }
+.mseg { margin:14px 14px 0; padding:3px; background:var(--surface-2); border:1px solid var(--line); border-radius:11px; display:flex; gap:3px; }
+.mseg label { flex:1; text-align:center; cursor:pointer; font-family:var(--font-body); font-size:13.5px; font-weight:600; color:var(--text-2); padding:9px 0; border-radius:8px; -webkit-user-select:none; user-select:none; }
+#m-gross:checked ~ .mseg label[for="m-gross"], #m-pts:checked ~ .mseg label[for="m-pts"] { background:var(--surface); color:var(--accent-text); box-shadow:0 1px 2px rgba(0,0,0,.08); }
+.pane { margin:10px 14px 0; }
+.pane.pts { display:none; }
+#m-pts:checked ~ .pane.gross { display:none; }
+#m-pts:checked ~ .pane.pts { display:block; }
+.card { background:var(--surface); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow); overflow:hidden; }
+.hscroll { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+table.scard { width:100%; border-collapse:collapse; font-family:var(--font-data); }
+.scard thead th { font-size:10px; letter-spacing:.04em; text-transform:uppercase; color:var(--text-muted); font-weight:600;
+  padding:11px 3px 9px; border-bottom:1px solid var(--line); white-space:nowrap; background:var(--surface); }
+.scard td { height:38px; border-bottom:1px solid var(--rowline); text-align:center; }
+.scard th.k, .scard td.c-hole { width:42px; min-width:42px; }
+.scard th.p, .scard td.c-par { width:38px; min-width:38px; }
+.scard td.c-hole { font-size:12px; font-weight:600; color:var(--text-2); }
+.scard td.c-par { font-size:12px; color:var(--text-muted); }
+.scard th.d, .scard td.cell { min-width:40px; }
+.cell { position:relative; }
+.cell .v { position:relative; z-index:1; font-size:13px; font-weight:600; }
+.cell::before { content:""; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:26px; height:26px; z-index:0; border-radius:7px; background:transparent; }
+.c-sc[data-vp="-2"]::before { background:var(--eagle); border-radius:50%; box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--eagle); }
+.c-sc[data-vp="-2"] .v { color:var(--eagle-tx); }
+.c-sc[data-vp="-1"]::before { background:var(--birdie); border-radius:50%; box-shadow:0 0 0 1.5px var(--birdie-ring); }
+.c-sc[data-vp="-1"] .v { color:var(--birdie-tx); }
+.c-sc[data-vp="0"]::before { background:transparent; }
+.c-sc[data-vp="1"]::before { background:var(--bogey); }
+.c-sc[data-vp="2"]::before { background:var(--dbogey); }
+.c-sc[data-vp="3"]::before { background:var(--tbogey); }
+.c-sc[data-vp="3"] .v { color:var(--tbogey-tx); }
+.c-pt[data-pts="0"] .v { color:var(--text-muted); }
+.c-pt[data-pts="1"]::before { background:var(--pts1); }
+.c-pt[data-pts="2"]::before { background:var(--pts2); }
+.c-pt[data-pts="3"]::before { background:var(--pts3); }
+.c-pt[data-pts="4"]::before { background:var(--pts4); }
+.c-pt[data-pts="4"] .v { color:var(--pts-hi-tx); }
+.c-pt[data-pts="5"]::before { background:var(--pts5); }
+.c-pt[data-pts="5"] .v { color:var(--pts-hi-tx); }
+.scard tr.sub td { background:var(--subtot); font-weight:700; height:32px; }
+.scard tr.sub td.c-hole { color:var(--text); font-size:10.5px; letter-spacing:.04em; }
+.scard tr.total td { background:var(--accent-soft); }
+.scard tr.total td.c-hole { color:var(--accent-text); }
+/* sticky hole+par columns for wide (field) tables */
+.field .scard th.k, .field .scard td.c-hole { position:sticky; left:0; background:var(--surface); z-index:2; }
+.field .scard th.p, .field .scard td.c-par { position:sticky; left:42px; background:var(--surface); z-index:2; }
+.field .scard tr.sub td.c-hole, .field .scard tr.sub td.c-par { background:var(--subtot); }
+.field .scard tr.total td.c-hole, .field .scard tr.total td.c-par { background:var(--accent-soft); }
+.hint { font-family:var(--font-data); font-size:10px; color:var(--text-muted); letter-spacing:.05em; text-transform:uppercase; text-align:right; margin:7px 16px 0; }
+.legend { display:flex; flex-wrap:wrap; gap:12px; margin:14px 16px 0; }
+.legend .lg { display:inline-flex; align-items:center; gap:6px; font-family:var(--font-data); font-size:10.5px; color:var(--text-2); }
+.legend .sw { width:15px; height:15px; display:inline-block; }
+.legend .sw.circ { border-radius:50%; background:var(--birdie); box-shadow:0 0 0 1.5px var(--birdie-ring); }
+.legend .sw.sq { border-radius:4px; background:var(--dbogey); }
+.legend .sw.pt { border-radius:4px; background:var(--pts4); }
+.tabbar { position:fixed; left:0; right:0; bottom:0; z-index:40; background:var(--bar); border-top:1px solid var(--bar-line);
+  display:grid; grid-template-columns:repeat(5,1fr); padding:6px 4px calc(6px + env(safe-area-inset-bottom,0)); }
+.tab { background:none; border:none; cursor:pointer; padding:6px 0 4px; display:flex; flex-direction:column; align-items:center; gap:2px;
+  color:var(--text-muted); font-family:var(--font-body); font-size:10px; font-weight:600; }
+.tab .material-symbols-outlined { font-size:23px; }
+.tab[aria-current="page"] { color:var(--accent-text); }
+.demobar { position:fixed; top:calc(8px + env(safe-area-inset-top,0)); right:10px; z-index:60; }
+.demobar label { background:var(--surface); color:var(--text-2); border:1px solid var(--line); border-radius:999px;
+  padding:6px 10px; font-family:var(--font-data); font-size:11px; cursor:pointer; box-shadow:var(--shadow); display:inline-flex; align-items:center; gap:5px; -webkit-user-select:none; user-select:none; }
+.demobar .material-symbols-outlined { font-size:16px; }
+</style>
+</head>
+<body class="scbody">
+<div class="demobar"><label><input type="checkbox" id="mode" hidden><span class="material-symbols-outlined">contrast</span>Light / Dark</label></div>
+<header class="appbar">
+  <span class="material-symbols-outlined back">arrow_back_ios_new</span>
+  <div class="titles"><span class="kicker">Scorecards</span><div class="title">Scorecard</div></div>
+  <span class="teg-pill"><span class="material-symbols-outlined">expand_more</span>TEG&nbsp;18</span>
+</header>
+<div class="selrow">
+  <div class="selpill"><span><span class="lab">Player</span><span class="val">David Mullin</span></span><span class="material-symbols-outlined">expand_more</span></div>
+  <div class="selpill static"><span><span class="lab">Scope</span><span class="val">All 4 rounds</span></span></div>
+</div>
+<div class="seg" role="tablist"><button role="tab" aria-selected="false">This round</button><button role="tab" aria-selected="true">Whole TEG</button><button role="tab" aria-selected="false">vs Field</button></div>
+<div class="summary">
+  <div class="who"><div class="nm">David Mullin</div><div class="meta">TEG 18 · whole tournament · 4 rounds</div></div>
+  <div class="strip">
+    <div class="st"><div class="v">340 <small>(+52)</small></div><div class="l">Gross</div></div>
+    <div class="st"><div class="v green">119</div><div class="l">Stableford</div></div>
+    <div class="st"><div class="v">1<small>st</small></div><div class="l">TEG pos</div></div>
+  </div>
+</div>
+<section class="metricwrap">
+  <input type="radio" name="metric" id="m-gross" checked>
+  <input type="radio" name="metric" id="m-pts">
+  <div class="mseg"><label for="m-gross">Gross</label><label for="m-pts">Stableford</label></div>
+  <div class="pane gross"><div class="card"><div class="hscroll"><table class="scard"><thead><tr><th class="k">Hole</th><th class="p">Par</th><th class="d">R1</th><th class="d">R2</th><th class="d">R3</th><th class="d">R4</th></tr></thead><tbody><tr><td class="c-hole">1</td><td class="c-par">4</td><td class="cell c-sc" data-vp="0"><span class="v">4</span></td><td class="cell c-sc" data-vp="1"><span class="v">5</span></td><td class="cell c-sc" data-vp="1"><span class="v">5</span></td><td class="cell c-sc" data-vp="1"><span class="v">5</span></td></tr><tr><td class="c-hole">2</td><td class="c-par">5</td><td class="cell c-sc" data-vp="0"><span class="v">5</span></td><td class="cell c-sc" data-vp="1"><span class="v">6</span></td><td class="cell c-sc" data-vp="0"><span class="v">5</span></td><td class="cell c-sc" data-vp="2"><span class="v">7</span></td></tr><tr><td class="c-hole">3</td><td class="c-par">4</td><td class="cell c-sc" data-vp="0"><span class="v">4</span></td><td class="cell c-sc" data-vp="1"><span class="v">5</span></td><td class="cell c-sc" data-vp="1"><span class="v">5</span></td><td class="cell c-sc" data-vp="0"><span class="v">4</span></td></tr><tr><td class="c-hole">4</td><td class="c-par">3</td><td class="cell c-sc" data-vp="-1"><span class="v">2</span></td><td class="cell c-sc" data-vp="1"><span class="v">4</span></td><td class="cell c-sc" data-vp="1"><span class="v">4</span></td><td class="cell c-sc" data-vp="2"><span class="v">5</span></td></tr><tr><td class="c-hole">5</td><td class="c-par">4</td><td class="cell c-sc" data-vp="1"><span class="v">5</span></td><td class="cell c-sc" data-vp="0"><span class="v">4</span></td><td class="cell c-sc" data-vp="1"><span class="v">5</span></td><td class="cell c-sc" data-vp="1"><span class="v">5</span></td></tr><tr><td class="c-hole">6</td><td class="c-par">4</td><td class="cell c-sc" data-vp="0"><span class="v">4</span></td><td class="cell c-sc" data-vp="1"><span class="v">5</span></td><td class="cell c-sc" data-vp="0"><span class="v">4</span></td><td class="cell c-sc" data-vp="0"><span class="v">4</span></td></tr><tr><td class="c-hole">7</td><td class="c-par">5</td><td class="cell c-sc" data-vp="2"><span class="v">7</span></td><td class="cell c-sc" data-vp="1"><span class="v">6</span></td><td class="cell c-sc" data-vp="0"><span class="v">5</span></td><td class="cell c-sc" data-vp="1"><span class="v">6</span></td></tr><tr><td class="c-hole">8</td><td class="c-par">3</td><td class="cell c-sc" data-vp="0"><span class="v">3</span></td><td class="cell c-sc" data-vp="1"><span class="v">4</span></td><td class="cell c-sc" data-vp="2"><span class="v">5</span></td><td class="cell c-sc" data-vp="0"><span class="v">3</span></td></tr><tr><td class="c-hole">9</td><td class="c-par">4</td><td class="cell c-sc" data-vp="0"><span class="v">4</span></td><td class="cell c-sc" data-vp="1"><span class="v">5</span></td><td class="cell c-sc" data-vp="-1"><span class="v">3</span></td><td class="cell c-sc" data-vp="1"><span class="v">5</span></td></tr><tr class="sub "><td class="c-hole">OUT</td><td class="c-par">36</td><td><span class="v">38</span></td><td><span class="v">44</span></td><td><span class="v">41</span></td><td><span class="v">44</span></td></tr><tr><td class="c-hole">10</td><td class="c-par">4</td><td class="cell c-sc" data-vp="2"><span class="v">6</span></td><td class="cell c-sc" data-vp="0"><span class="v">4</span></td><td class="cell c-sc" data-vp="0"><span class="v">4</span></td><td class="cell c-sc" data-vp="0"><span class="v">4</span></td></tr><tr><td class="c-hole">11</td><td class="c-par">4</td><td class="cell c-sc" data-vp="-1"><span class="v">3</span></td><td class="cell c-sc" data-vp="0"><span class="v">4</span></td><td class="cell c-sc" data-vp="2"><span class="v">6</span></td><td class="cell c-sc" data-vp="0"><span class="v">4</span></td></tr><tr><td class="c-hole">12</td><td class="c-par">3</td><td class="cell c-sc" data-vp="3"><span class="v">6</span></td><td class="cell c-sc" data-vp="0"><span class="v">3</span></td><td class="cell c-sc" data-vp="0"><span class="v">3</span></td><td class="cell c-sc" data-vp="1"><span class="v">4</span></td></tr><tr><td class="c-hole">13</td><td class="c-par">5</td><td class="cell c-sc" data-vp="0"><span class="v">5</span></td><td class="cell c-sc" data-vp="-1"><span class="v">4</span></td><td class="cell c-sc" data-vp="1"><span class="v">6</span></td><td class="cell c-sc" data-vp="0"><span class="v">5</span></td></tr><tr><td class="c-hole">14</td><td class="c-par">4</td><td class="cell c-sc" data-vp="1"><span class="v">5</span></td><td class="cell c-sc" data-vp="1"><span class="v">5</span></td><td class="cell c-sc" data-vp="3"><span class="v">7</span></td><td class="cell c-sc" data-vp="1"><span class="v">5</span></td></tr><tr><td class="c-hole">15</td><td class="c-par">4</td><td class="cell c-sc" data-vp="2"><span class="v">6</span></td><td class="cell c-sc" data-vp="1"><span class="v">5</span></td><td class="cell c-sc" data-vp="-1"><span class="v">3</span></td><td class="cell c-sc" data-vp="2"><span class="v">6</span></td></tr><tr><td class="c-hole">16</td><td class="c-par">3</td><td class="cell c-sc" data-vp="1"><span class="v">4</span></td><td class="cell c-sc" data-vp="-1"><span class="v">2</span></td><td class="cell c-sc" data-vp="0"><span class="v">3</span></td><td class="cell c-sc" data-vp="0"><span class="v">3</span></td></tr><tr><td class="c-hole">17</td><td class="c-par">5</td><td class="cell c-sc" data-vp="1"><span class="v">6</span></td><td class="cell c-sc" data-vp="3"><span class="v">8</span></td><td class="cell c-sc" data-vp="2"><span class="v">7</span></td><td class="cell c-sc" data-vp="0"><span class="v">5</span></td></tr><tr><td class="c-hole">18</td><td class="c-par">4</td><td class="cell c-sc" data-vp="2"><span class="v">6</span></td><td class="cell c-sc" data-vp="3"><span class="v">7</span></td><td class="cell c-sc" data-vp="1"><span class="v">5</span></td><td class="cell c-sc" data-vp="0"><span class="v">4</span></td></tr><tr class="sub "><td class="c-hole">IN</td><td class="c-par">36</td><td><span class="v">47</span></td><td><span class="v">42</span></td><td><span class="v">44</span></td><td><span class="v">40</span></td></tr><tr class="sub total"><td class="c-hole">TOTAL</td><td class="c-par">72</td><td><span class="v">85</span></td><td><span class="v">86</span></td><td><span class="v">85</span></td><td><span class="v">84</span></td></tr></tbody></table></div></div></div>
+  <div class="pane pts"><div class="card"><div class="hscroll"><table class="scard"><thead><tr><th class="k">Hole</th><th class="p">Par</th><th class="d">R1</th><th class="d">R2</th><th class="d">R3</th><th class="d">R4</th></tr></thead><tbody><tr><td class="c-hole">1</td><td class="c-par">4</td><td class="cell c-pt" data-pts="3"><span class="v">3</span></td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td></tr><tr><td class="c-hole">2</td><td class="c-par">5</td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td><td class="cell c-pt" data-pts="1"><span class="v">1</span></td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td><td class="cell c-pt" data-pts="0"><span class="v">x</span></td></tr><tr><td class="c-hole">3</td><td class="c-par">4</td><td class="cell c-pt" data-pts="3"><span class="v">3</span></td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td><td class="cell c-pt" data-pts="3"><span class="v">3</span></td></tr><tr><td class="c-hole">4</td><td class="c-par">3</td><td class="cell c-pt" data-pts="3"><span class="v">3</span></td><td class="cell c-pt" data-pts="1"><span class="v">1</span></td><td class="cell c-pt" data-pts="1"><span class="v">1</span></td><td class="cell c-pt" data-pts="0"><span class="v">x</span></td></tr><tr><td class="c-hole">5</td><td class="c-par">4</td><td class="cell c-pt" data-pts="1"><span class="v">1</span></td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td><td class="cell c-pt" data-pts="1"><span class="v">1</span></td><td class="cell c-pt" data-pts="1"><span class="v">1</span></td></tr><tr><td class="c-hole">6</td><td class="c-par">4</td><td class="cell c-pt" data-pts="3"><span class="v">3</span></td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td><td class="cell c-pt" data-pts="3"><span class="v">3</span></td><td class="cell c-pt" data-pts="3"><span class="v">3</span></td></tr><tr><td class="c-hole">7</td><td class="c-par">5</td><td class="cell c-pt" data-pts="0"><span class="v">x</span></td><td class="cell c-pt" data-pts="1"><span class="v">1</span></td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td><td class="cell c-pt" data-pts="1"><span class="v">1</span></td></tr><tr><td class="c-hole">8</td><td class="c-par">3</td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td><td class="cell c-pt" data-pts="1"><span class="v">1</span></td><td class="cell c-pt" data-pts="0"><span class="v">x</span></td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td></tr><tr><td class="c-hole">9</td><td class="c-par">4</td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td><td class="cell c-pt" data-pts="1"><span class="v">1</span></td><td class="cell c-pt" data-pts="3"><span class="v">3</span></td><td class="cell c-pt" data-pts="1"><span class="v">1</span></td></tr><tr class="sub "><td class="c-hole">OUT</td><td class="c-par">36</td><td><span class="v">19</span></td><td><span class="v">13</span></td><td><span class="v">16</span></td><td><span class="v">13</span></td></tr><tr><td class="c-hole">10</td><td class="c-par">4</td><td class="cell c-pt" data-pts="1"><span class="v">1</span></td><td class="cell c-pt" data-pts="3"><span class="v">3</span></td><td class="cell c-pt" data-pts="3"><span class="v">3</span></td><td class="cell c-pt" data-pts="3"><span class="v">3</span></td></tr><tr><td class="c-hole">11</td><td class="c-par">4</td><td class="cell c-pt" data-pts="3"><span class="v">3</span></td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td><td class="cell c-pt" data-pts="0"><span class="v">x</span></td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td></tr><tr><td class="c-hole">12</td><td class="c-par">3</td><td class="cell c-pt" data-pts="0"><span class="v">x</span></td><td class="cell c-pt" data-pts="3"><span class="v">3</span></td><td class="cell c-pt" data-pts="3"><span class="v">3</span></td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td></tr><tr><td class="c-hole">13</td><td class="c-par">5</td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td><td class="cell c-pt" data-pts="3"><span class="v">3</span></td><td class="cell c-pt" data-pts="1"><span class="v">1</span></td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td></tr><tr><td class="c-hole">14</td><td class="c-par">4</td><td class="cell c-pt" data-pts="1"><span class="v">1</span></td><td class="cell c-pt" data-pts="1"><span class="v">1</span></td><td class="cell c-pt" data-pts="0"><span class="v">x</span></td><td class="cell c-pt" data-pts="1"><span class="v">1</span></td></tr><tr><td class="c-hole">15</td><td class="c-par">4</td><td class="cell c-pt" data-pts="1"><span class="v">1</span></td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td><td class="cell c-pt" data-pts="4"><span class="v">4</span></td><td class="cell c-pt" data-pts="1"><span class="v">1</span></td></tr><tr><td class="c-hole">16</td><td class="c-par">3</td><td class="cell c-pt" data-pts="1"><span class="v">1</span></td><td class="cell c-pt" data-pts="3"><span class="v">3</span></td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td></tr><tr><td class="c-hole">17</td><td class="c-par">5</td><td class="cell c-pt" data-pts="1"><span class="v">1</span></td><td class="cell c-pt" data-pts="0"><span class="v">x</span></td><td class="cell c-pt" data-pts="0"><span class="v">x</span></td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td></tr><tr><td class="c-hole">18</td><td class="c-par">4</td><td class="cell c-pt" data-pts="0"><span class="v">x</span></td><td class="cell c-pt" data-pts="0"><span class="v">x</span></td><td class="cell c-pt" data-pts="1"><span class="v">1</span></td><td class="cell c-pt" data-pts="2"><span class="v">2</span></td></tr><tr class="sub "><td class="c-hole">IN</td><td class="c-par">36</td><td><span class="v">10</span></td><td><span class="v">17</span></td><td><span class="v">14</span></td><td><span class="v">17</span></td></tr><tr class="sub total"><td class="c-hole">TOTAL</td><td class="c-par">72</td><td><span class="v">29</span></td><td><span class="v">30</span></td><td><span class="v">30</span></td><td><span class="v">30</span></td></tr></tbody></table></div></div></div>
+</section>
+<div class="legend">
+  <span class="lg"><span class="sw circ"></span>Birdie / eagle</span>
+  <span class="lg"><span class="sw sq"></span>Bogey or worse</span>
+  <span class="lg"><span class="sw pt"></span>Stableford points</span>
+</div>
+<nav class="tabbar">
+  <button class="tab"><span class="material-symbols-outlined">leaderboard</span>Latest</button>
+  <button class="tab"><span class="material-symbols-outlined">lists</span>History</button>
+  <button class="tab"><span class="material-symbols-outlined">military_tech</span>Records</button>
+  <button class="tab"><span class="material-symbols-outlined">strategy</span>Scoring</button>
+  <button class="tab" aria-current="page"><span class="material-symbols-outlined">sports_golf</span>Cards</button>
+</nav>
+</body>
+</html>

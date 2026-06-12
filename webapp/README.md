@@ -75,6 +75,16 @@ Three themes, registered in `theme.py`. Each overrides CSS custom properties def
 | **Clean Page** | Flat single white content card on a warm grey background |
 | **Clean Layered** | 3-layer hierarchy: stone background → taupe panel → white data cards |
 
+**Dark mode (orthogonal to theme).** A light/dark **mode** is independent of the
+named theme: a `mode` cookie (`theme.py: get_mode`, injected as
+`request.state.mode`) sets `data-mode="light|dark"` on `<html>`, and
+`static/themes/dark.css` overrides the colour variables under
+`html[data-mode="dark"]`. It's loaded on every page but inert until dark is
+selected (default **light**, so nothing changes unless the user toggles the ◑
+button in the nav). Any theme can be shown light or dark. `get_plotly_theme()`
+takes a `mode` arg for a dark chart surface (chart routes not yet passing it —
+parked with the chart work).
+
 The page-title (`ts-*`) and card-header (`ch-*`) **style switchers were removed
 from the nav** for Phase 1a (the nav now carries only the theme switcher). The
 cookie/CSS infrastructure stays live (`theme.py` defaults + `base-vars.css`), so
@@ -390,7 +400,15 @@ HTML builders).
 
 **Not yet built:**
 - REST API — planned; will expose `teg_analysis` over HTTP so any client (scripts, mobile, other frontends) can access the analysis layer without needing Python
-- Mobile responsive design
+- Mobile responsive design + dark mode — **plan drafted** in
+  [MOBILE_PLAN.md](MOBILE_PLAN.md); look-and-feel mockups (app vs editorial,
+  light + dark) live in `mobile_mockups/` and are served at `/mockups/` when the
+  webapp runs. Awaiting a direction decision before the broad implementation.
+  - **First slice shipped:** the **Scorecard** page now renders a portrait
+    (holes-as-rows) layout on phones (`≤640px`) for all three views, with a
+    Gross/Stableford toggle and dark-ready (inert) colour tokens. Desktop/iPad
+    are unchanged. See [SCORECARD_PORT.md](SCORECARD_PORT.md). *(Dark mode
+    activates once the app-wide `data-mode` toggle is built.)*
 - Search / filtering UI (some routes have it, not everywhere)
 - **"Related links" section** — replicate the cross-page related-links block the
   Streamlit app shows (links from each page to related pages). One day.

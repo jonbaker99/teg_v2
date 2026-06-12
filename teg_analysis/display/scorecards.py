@@ -288,3 +288,218 @@ def build_round_comparison_stableford_table(round_data: pd.DataFrame) -> str:
 
     parts.append('</tbody></table>')
     return ''.join(parts)
+
+
+# ---------------------------------------------------------------------------
+# Portrait (holes-as-rows) scorecards — mobile orientation
+#
+# Same data inputs and the same score-cell shape contract as the landscape
+# builders above (``score-cell`` + ``data-vs-par`` / ``data-stableford``), but
+# transposed: holes run down the rows and the dimension (rounds, players, or the
+# gross/stableford pair) runs across the columns. Wrapped in
+# ``scorecard-table-portrait`` so the portrait layout CSS is scoped to the
+# mobile view while the shape styling is inherited from the shared rules.
+# ---------------------------------------------------------------------------
+
+_FRONT = range(1, 10)
+_BACK = range(10, 19)
+_ALL = range(1, 19)
+
+
+def _portrait_value_cell(metric: str, value: int, vs_par: Optional[int]) -> str:
+    """One score cell for a portrait row. ``metric`` is 'gross' or 'stableford'."""
+    if metric == 'gross':
+        return f'<td class="score-cell" data-vs-par="{vs_par}"><span>{value}</span></td>'
+    return f'<td class="score-cell" data-stableford="{value}"><span>{value}</span></td>'
+
+
+def _portrait_header(col_labels: list) -> str:
+    """Header row: Hole | PAR | one column per dimension value."""
+    parts = ['<thead><tr><th class="hole-header">Hole</th><th class="par-header">PAR</th>']
+    for lab in col_labels:
+        parts.append(f'<th class="col-header">{lab}</th>')
+    parts.append('</tr></thead>')
+    return ''.join(parts)
+
+
+def _build_portrait_single_metric(
+    col_keys: list,
+    col_labels: list,
+    par_by_hole: dict,
+    value_by_col_hole: dict,
+    vsp_by_col_hole: Optional[dict],
+    metric: str,
+) -> str:
+    """Render a single-metric portrait table (rounds- or players-as-columns).
+
+    Args:
+        col_keys: ordered column identifiers (e.g. round numbers, player codes).
+        col_labels: display labels for each column, aligned with ``col_keys``.
+        par_by_hole: {hole: par}.
+        value_by_col_hole: {col_key: {hole: value}}.
+        vsp_by_col_hole: {col_key: {hole: vs_par}} for gross; ``None`` for stableford.
+        metric: 'gross' or 'stableford'.
+    """
+    parts = ['<table class="scorecard-table-portrait">', _portrait_header(col_labels), '<tbody>']
+
+    def data_rows(holes):
+        for hole in holes:
+            cells = [f'<tr><td class="hole-label">{hole}</td>',
+                     f'<td class="par-cell">{par_by_hole[hole]}</td>']
+            for ck in col_keys:
+                vsp = vsp_by_col_hole[ck][hole] if vsp_by_col_hole else None
+                cells.append(_portrait_value_cell(metric, value_by_col_hole[ck][hole], vsp))
+            cells.append('</tr>')
+            parts.append(''.join(cells))
+
+    def totals_row(label, holes, extra_cls=''):
+        cls = f'totals-row {extra_cls}'.strip()
+        par_tot = sum(par_by_hole[h] for h in holes)
+        cells = [f'<tr class="{cls}"><td class="hole-label">{label}</td>',
+                 f'<td class="par-cell totals">{par_tot}</td>']
+        for ck in col_keys:
+            cells.append(f'<td class="totals">{sum(value_by_col_hole[ck][h] for h in holes)}</td>')
+        cells.append('</tr>')
+        parts.append(''.join(cells))
+
+    data_rows(_FRONT)
+    totals_row('OUT', list(_FRONT), 'front-back-divider')
+    data_rows(_BACK)
+    totals_row('IN', list(_BACK))
+    totals_row('TOTAL', list(_ALL), 'grand-total')
+    parts.append('</tbody></table>')
+    return ''.join(parts)
+
+
+def build_single_round_combined_portrait(df: pd.DataFrame) -> str:
+    """Portrait single-round card: holes as rows, Gross + Stableford as columns.
+
+    Args:
+        df: 18-row DataFrame for one player/round with Hole, PAR, Sc, GrossVP,
+            Stableford cols.
+
+    Returns:
+        HTML string for the portrait combined scorecard table.
+    """
+    df = df.sort_values('Hole')
+    par_by_hole = {int(r['Hole']): int(r['PAR']) for _, r in df.iterrows()}
+    gross = {int(r['Hole']): int(r['Sc']) for _, r in df.iterrows()}
+    vsp = {int(r['Hole']): int(r['GrossVP']) for _, r in df.iterrows()}
+    sf = {int(r['Hole']): int(r['Stableford']) for _, r in df.iterrows()}
+
+    parts = ['<table class="scorecard-table-portrait">',
+             _portrait_header(['Gross', 'Stableford']), '<tbody>']
+
+    def data_rows(holes):
+        for hole in holes:
+            parts.append(
+                f'<tr><td class="hole-label">{hole}</td>'
+                f'<td class="par-cell">{par_by_hole[hole]}</td>'
+                + _portrait_value_cell('gross', gross[hole], vsp[hole])
+                + _portrait_value_cell('stableford', sf[hole], None)
+                + '</tr>'
+            )
+
+    def totals_row(label, holes, extra_cls=''):
+        cls = f'totals-row {extra_cls}'.strip()
+        parts.append(
+            f'<tr class="{cls}"><td class="hole-label">{label}</td>'
+            f'<td class="par-cell totals">{sum(par_by_hole[h] for h in holes)}</td>'
+            f'<td class="totals">{sum(gross[h] for h in holes)}</td>'
+            f'<td class="totals">{sum(sf[h] for h in holes)}</td></tr>'
+        )
+
+    data_rows(_FRONT)
+    totals_row('OUT', list(_FRONT), 'front-back-divider')
+    data_rows(_BACK)
+    totals_row('IN', list(_BACK))
+    totals_row('TOTAL', list(_ALL), 'grand-total')
+    parts.append('</tbody></table>')
+    return ''.join(parts)
+
+
+def _tournament_portrait(player_data: pd.DataFrame, metric: str) -> str:
+    """Shared builder for the portrait tournament view (rounds as columns)."""
+    value_field = 'Sc' if metric == 'gross' else 'Stableford'
+    rounds = sorted(player_data['Round'].unique())
+    par_src = player_data[player_data['Round'] == rounds[0]].sort_values('Hole')
+    par_by_hole = {int(r['Hole']): int(r['PAR']) for _, r in par_src.iterrows()}
+
+    value_by_col_hole, vsp_by_col_hole = {}, {}
+    for rnd in rounds:
+        rd = player_data[player_data['Round'] == rnd]
+        value_by_col_hole[rnd] = {int(r['Hole']): int(r[value_field]) for _, r in rd.iterrows()}
+        if metric == 'gross':
+            vsp_by_col_hole[rnd] = {int(r['Hole']): int(r['GrossVP']) for _, r in rd.iterrows()}
+
+    return _build_portrait_single_metric(
+        col_keys=rounds,
+        col_labels=[f'R{r}' for r in rounds],
+        par_by_hole=par_by_hole,
+        value_by_col_hole=value_by_col_hole,
+        vsp_by_col_hole=vsp_by_col_hole if metric == 'gross' else None,
+        metric=metric,
+    )
+
+
+def build_tournament_gross_portrait(player_data: pd.DataFrame) -> str:
+    """Portrait gross table for one player across all rounds (rounds as columns).
+
+    Args:
+        player_data: DataFrame for one player with Round, Hole, Sc, GrossVP, PAR cols.
+    """
+    return _tournament_portrait(player_data, 'gross')
+
+
+def build_tournament_stableford_portrait(player_data: pd.DataFrame) -> str:
+    """Portrait stableford table for one player across all rounds (rounds as columns).
+
+    Args:
+        player_data: DataFrame for one player with Round, Hole, Stableford, PAR cols.
+    """
+    return _tournament_portrait(player_data, 'stableford')
+
+
+def _round_comparison_portrait(round_data: pd.DataFrame, metric: str) -> str:
+    """Shared builder for the portrait field view (players as columns)."""
+    value_field = 'Sc' if metric == 'gross' else 'Stableford'
+    sorted_players = _get_sorted_players(round_data)  # [(code, name), …] by gross asc
+    par_src = round_data[round_data['Pl'] == round_data['Pl'].iloc[0]].sort_values('Hole')
+    par_by_hole = {int(r['Hole']): int(r['PAR']) for _, r in par_src.iterrows()}
+
+    col_keys = [code for code, _ in sorted_players]
+    value_by_col_hole, vsp_by_col_hole = {}, {}
+    for code, _ in sorted_players:
+        pdata = round_data[round_data['Pl'] == code]
+        value_by_col_hole[code] = {int(r['Hole']): int(r[value_field]) for _, r in pdata.iterrows()}
+        if metric == 'gross':
+            vsp_by_col_hole[code] = {int(r['Hole']): int(r['GrossVP']) for _, r in pdata.iterrows()}
+
+    return _build_portrait_single_metric(
+        col_keys=col_keys,
+        col_labels=col_keys,
+        par_by_hole=par_by_hole,
+        value_by_col_hole=value_by_col_hole,
+        vsp_by_col_hole=vsp_by_col_hole if metric == 'gross' else None,
+        metric=metric,
+    )
+
+
+def build_round_comparison_gross_portrait(round_data: pd.DataFrame) -> str:
+    """Portrait gross table comparing all players in one round (players as columns).
+
+    Args:
+        round_data: DataFrame for all players in a round, with Pl, Player, Hole,
+                    PAR, Sc, GrossVP cols. Columns are ordered by gross total asc.
+    """
+    return _round_comparison_portrait(round_data, 'gross')
+
+
+def build_round_comparison_stableford_portrait(round_data: pd.DataFrame) -> str:
+    """Portrait stableford table comparing all players in one round (players as columns).
+
+    Args:
+        round_data: DataFrame for all players in a round, with Pl, Player, Hole,
+                    PAR, Stableford cols. Columns are ordered by gross total asc.
+    """
+    return _round_comparison_portrait(round_data, 'stableford')

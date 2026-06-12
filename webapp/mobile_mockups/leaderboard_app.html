@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Mockup A — App · Latest Leaderboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+<style>
+/* ============================================================
+   MOCKUP A — "Full native-app feel"
+   Bottom tab bar · sticky header · segmented control ·
+   tables reflowed into tap-friendly list rows.
+   Self-contained dummy page. Not wired to real data.
+   ============================================================ */
+
+:root {
+  --font-body: 'Lora', Georgia, serif;
+  --font-data: 'Roboto Mono', monospace;
+
+  /* Light */
+  --bg:            #f4f3ef;   /* warm app background behind cards */
+  --surface:       #ffffff;
+  --surface-2:     #faf9f6;
+  --text:          #1a1a1a;
+  --text-2:        #555555;
+  --text-muted:    #8c8c86;
+  --line:          #e7e5e0;
+  --accent:        forestgreen;
+  --accent-soft:   #F3F7F3;   /* top-rank tint (matches site) */
+  --accent-text:   forestgreen;
+  --bar:           #ffffff;
+  --bar-line:      #e7e5e0;
+  --shadow:        0 1px 2px rgba(0,0,0,.05), 0 4px 16px rgba(0,0,0,.04);
+  --spoon:         #b08400;
+}
+[data-theme="dark"], :root:has(#mode:checked) {
+  --bg:            #131311;
+  --surface:       #1d1d1a;
+  --surface-2:     #242420;
+  --text:          #ececea;
+  --text-2:        #b7b6b0;
+  --text-muted:    #86857e;
+  --line:          #2e2e29;
+  --accent:        #57c773;   /* brightened green for dark contrast */
+  --accent-soft:   #1b2a1d;   /* dark green top-rank tint */
+  --accent-text:   #7ad492;
+  --bar:           #191916;
+  --bar-line:      #2a2a25;
+  --shadow:        0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.35);
+  --spoon:         #d6ad4e;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  padding-bottom: 76px; /* room for bottom tab bar */
+}
+.material-symbols-outlined { font-variation-settings: 'opsz' 24, 'wght' 400; line-height: 1; vertical-align: middle; }
+
+/* ── Sticky top app bar ── */
+.appbar {
+  position: sticky; top: 0; z-index: 30;
+  background: var(--bar);
+  border-bottom: 1px solid var(--bar-line);
+  padding: 10px 14px calc(10px + env(safe-area-inset-top, 0));
+  padding-top: calc(10px + env(safe-area-inset-top, 0));
+  display: flex; align-items: center; gap: 10px;
+}
+.appbar .back { font-size: 22px; color: var(--text-2); }
+.appbar .titles { flex: 1; min-width: 0; }
+.appbar .kicker {
+  font-family: var(--font-data); font-size: 10px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--text-muted); display: block; line-height: 1.4;
+}
+.appbar .title {
+  font-weight: 600; font-size: 17px; line-height: 1.15; color: var(--text);
+}
+.appbar .teg-pill {
+  font-family: var(--font-data); font-size: 12px; font-weight: 600;
+  color: var(--accent-text); background: var(--accent-soft);
+  border: 1px solid var(--line); border-radius: 999px; padding: 5px 11px;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.appbar .teg-pill .material-symbols-outlined { font-size: 16px; }
+.iconbtn { background: none; border: none; color: var(--text-2); padding: 6px; cursor: pointer; border-radius: 8px; }
+.iconbtn:active { background: var(--surface-2); }
+
+/* ── Segmented control (Gross / Net) ── */
+.seg {
+  margin: 14px 14px 4px; padding: 3px; background: var(--surface-2);
+  border: 1px solid var(--line); border-radius: 11px; display: flex; gap: 3px;
+}
+.seg button {
+  flex: 1; border: none; background: transparent; cursor: pointer;
+  font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--text-2);
+  padding: 9px 0; border-radius: 8px; transition: all .15s;
+}
+.seg button[aria-selected="true"] {
+  background: var(--surface); color: var(--accent-text);
+  box-shadow: 0 1px 2px rgba(0,0,0,.08);
+}
+[data-theme="dark"] .seg button[aria-selected="true"] { box-shadow: 0 1px 3px rgba(0,0,0,.5); }
+
+/* ── Champion / spoon hero strip ── */
+.hero { margin: 12px 14px 6px; display: flex; gap: 10px; }
+.hero .pod {
+  flex: 1; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 13px; padding: 12px 13px; box-shadow: var(--shadow);
+}
+.hero .lab {
+  font-family: var(--font-data); font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--text-muted); display: flex; align-items: center; gap: 5px; margin-bottom: 5px;
+}
+.hero .pod.champ .lab { color: var(--accent-text); }
+.hero .pod.spoon .lab { color: var(--spoon); }
+.hero .who { font-size: 16px; font-weight: 600; line-height: 1.15; }
+.hero .sub { font-family: var(--font-data); font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.hero .material-symbols-outlined { font-size: 15px; }
+
+/* ── Leaderboard list (reflowed table → tappable rows) ── */
+.list { margin: 8px 12px 0; }
+.list-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 8px 4px 6px;
+}
+.list-head .h { font-size: 13px; font-weight: 600; color: var(--text-2); }
+.list-head .legend { font-family: var(--font-data); font-size: 10px; color: var(--text-muted); letter-spacing: .04em; }
+
+.row {
+  display: grid; grid-template-columns: 30px 1fr auto; align-items: center; gap: 12px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 13px;
+  padding: 12px 14px; margin-bottom: 8px; box-shadow: var(--shadow);
+  cursor: pointer; transition: transform .08s;
+}
+.row:active { transform: scale(.985); }
+.row.lead { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 28%, var(--line)); }
+.rank {
+  font-family: var(--font-data); font-size: 14px; font-weight: 700; color: var(--text-2);
+  text-align: center;
+}
+.row.lead .rank { color: var(--accent-text); }
+.who-wrap { min-width: 0; }
+.name { font-size: 16px; font-weight: 600; line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rounds {
+  font-family: var(--font-data); font-size: 11px; color: var(--text-muted);
+  margin-top: 3px; letter-spacing: .02em;
+}
+.rounds b { color: var(--text-2); font-weight: 500; }
+.total { text-align: right; }
+.total .v { font-family: var(--font-data); font-size: 20px; font-weight: 700; line-height: 1; }
+.row.lead .total .v { color: var(--accent-text); }
+.total .u { font-family: var(--font-data); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); display: block; margin-top: 3px; }
+
+/* ── Race-chart teaser card ── */
+.chartcard {
+  margin: 14px 12px 4px; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 13px; padding: 14px; box-shadow: var(--shadow);
+}
+.chartcard .ct { font-size: 13px; font-weight: 600; color: var(--text-2); margin-bottom: 10px; }
+.spark { width: 100%; height: 92px; display: block; }
+
+/* ── Bottom tab bar ── */
+.tabbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  background: var(--bar); border-top: 1px solid var(--bar-line);
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0));
+}
+.tab {
+  background: none; border: none; cursor: pointer; padding: 6px 0 4px;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  color: var(--text-muted); font-family: var(--font-body); font-size: 10px; font-weight: 600;
+}
+.tab .material-symbols-outlined { font-size: 23px; }
+.tab[aria-current="page"] { color: var(--accent-text); }
+
+/* ── Demo theme toggle (mockup only; not a product feature) ── */
+.demobar {
+  position: fixed; top: calc(8px + env(safe-area-inset-top,0)); right: 10px; z-index: 60;
+}
+.demobar label {
+  background: var(--surface); color: var(--text-2); border: 1px solid var(--line);
+  border-radius: 999px; padding: 6px 10px; font-family: var(--font-data); font-size: 11px;
+  cursor: pointer; box-shadow: var(--shadow); display: inline-flex; align-items: center; gap: 5px;
+  -webkit-user-select: none; user-select: none;
+}
+.demobar .material-symbols-outlined { font-size: 16px; }
+</style>
+</head>
+<body>
+
+<!-- demo-only light/dark toggle — pure CSS (:has), no JavaScript required -->
+<div class="demobar"><label><input type="checkbox" id="mode" hidden><span class="material-symbols-outlined">contrast</span>Light / Dark</label></div>
+
+<header class="appbar">
+  <span class="material-symbols-outlined back">arrow_back_ios_new</span>
+  <div class="titles">
+    <span class="kicker">Latest TEG</span>
+    <div class="title">Leaderboard</div>
+  </div>
+  <span class="teg-pill"><span class="material-symbols-outlined">expand_more</span>TEG&nbsp;18</span>
+</header>
+
+<!-- Gross / Net -->
+<div class="seg" role="tablist">
+  <button role="tab" aria-selected="true">Gross</button>
+  <button role="tab" aria-selected="false">Net (Stableford)</button>
+</div>
+
+<!-- Champion / spoon -->
+<div class="hero">
+  <div class="pod champ">
+    <div class="lab"><span class="material-symbols-outlined">trophy</span>Champion</div>
+    <div class="who">David Mullin</div>
+    <div class="sub">+38 · gross</div>
+  </div>
+  <div class="pod spoon">
+    <div class="lab"><span class="material-symbols-outlined">restaurant</span>Wooden spoon</div>
+    <div class="who">Graham Patterson</div>
+    <div class="sub">+78 · gross</div>
+  </div>
+</div>
+
+<!-- Leaderboard rows -->
+<div class="list">
+  <div class="list-head">
+    <span class="h">Standings · after Round 4</span>
+    <span class="legend">vs par</span>
+  </div>
+
+  <div class="row lead">
+    <div class="rank">1</div>
+    <div class="who-wrap"><div class="name">David Mullin</div>
+      <div class="rounds">R1 <b>+8</b> · R2 <b>+9</b> · R3 <b>+11</b> · R4 <b>+10</b></div></div>
+    <div class="total"><span class="v">+38</span><span class="u">total</span></div>
+  </div>
+
+  <div class="row">
+    <div class="rank">2</div>
+    <div class="who-wrap"><div class="name">Jon Baker</div>
+      <div class="rounds">R1 <b>+10</b> · R2 <b>+12</b> · R3 <b>+11</b> · R4 <b>+11</b></div></div>
+    <div class="total"><span class="v">+44</span><span class="u">total</span></div>
+  </div>
+
+  <div class="row">
+    <div class="rank">3</div>
+    <div class="who-wrap"><div class="name">Stuart Neumann</div>
+      <div class="rounds">R1 <b>+13</b> · R2 <b>+12</b> · R3 <b>+14</b> · R4 <b>+12</b></div></div>
+    <div class="total"><span class="v">+51</span><span class="u">total</span></div>
+  </div>
+
+  <div class="row">
+    <div class="rank">4</div>
+    <div class="who-wrap"><div class="name">Henry Meller</div>
+      <div class="rounds">R1 <b>+14</b> · R2 <b>+13</b> · R3 <b>+15</b> · R4 <b>+13</b></div></div>
+    <div class="total"><span class="v">+55</span><span class="u">total</span></div>
+  </div>
+
+  <div class="row">
+    <div class="rank">5</div>
+    <div class="who-wrap"><div class="name">Gregg Williams</div>
+      <div class="rounds">R1 <b>+15</b> · R2 <b>+14</b> · R3 <b>+15</b> · R4 <b>+14</b></div></div>
+    <div class="total"><span class="v">+58</span><span class="u">total</span></div>
+  </div>
+
+  <div class="row">
+    <div class="rank">6</div>
+    <div class="who-wrap"><div class="name">Alex Baker</div>
+      <div class="rounds">R1 <b>+16</b> · R2 <b>+15</b> · R3 <b>+16</b> · R4 <b>+15</b></div></div>
+    <div class="total"><span class="v">+62</span><span class="u">total</span></div>
+  </div>
+
+  <div class="row">
+    <div class="rank">7</div>
+    <div class="who-wrap"><div class="name">John Patterson</div>
+      <div class="rounds">R1 <b>+17</b> · R2 <b>+18</b> · R3 <b>+17</b> · R4 <b>+18</b></div></div>
+    <div class="total"><span class="v">+70</span><span class="u">total</span></div>
+  </div>
+
+  <div class="row">
+    <div class="rank">8</div>
+    <div class="who-wrap"><div class="name">Graham Patterson</div>
+      <div class="rounds">R1 <b>+19</b> · R2 <b>+20</b> · R3 <b>+19</b> · R4 <b>+20</b></div></div>
+    <div class="total"><span class="v">+78</span><span class="u">total</span></div>
+  </div>
+</div>
+
+<!-- Race chart teaser -->
+<div class="chartcard">
+  <div class="ct">Race to the title — cumulative vs par</div>
+  <svg class="spark" viewBox="0 0 320 92" preserveAspectRatio="none" aria-hidden="true">
+    <polyline points="0,18 80,30 160,44 240,52 320,60" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+    <polyline points="0,28 80,46 160,52 240,66 320,72" fill="none" stroke="var(--text-muted)" stroke-width="1.5" opacity=".7"/>
+    <polyline points="0,40 80,54 160,64 240,76 320,84" fill="none" stroke="var(--text-muted)" stroke-width="1.5" opacity=".45"/>
+  </svg>
+</div>
+
+<!-- Bottom tab bar -->
+<nav class="tabbar">
+  <button class="tab" aria-current="page"><span class="material-symbols-outlined">leaderboard</span>Latest</button>
+  <button class="tab"><span class="material-symbols-outlined">lists</span>History</button>
+  <button class="tab"><span class="material-symbols-outlined">military_tech</span>Records</button>
+  <button class="tab"><span class="material-symbols-outlined">strategy</span>Scoring</button>
+  <button class="tab"><span class="material-symbols-outlined">menu</span>More</button>
+</nav>
+
+</body>
+</html>

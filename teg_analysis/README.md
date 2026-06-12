@@ -65,6 +65,9 @@ teg_analysis/
     html_tables.py   Generate styled HTML tables
     navigation.py    Navigation utilities
     tables.py        Table building helpers
+    scorecards.py    Scorecard HTML — landscape (holes as columns) + portrait
+                     (holes as rows, mobile) builders for the 3 views
+                     (single round / whole TEG / vs field)
   
   api/               REST API endpoints (placeholder)
     __init__.py

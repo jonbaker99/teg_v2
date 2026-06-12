@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mobile mockups — choose a direction</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+<style>
+/* Chooser / index. No JavaScript — light/dark is a pure-CSS :has() toggle, and
+   the mockups are opened directly (no iframes), so this works even in a phone's
+   in-app file preview where scripts are sandboxed. */
+:root { --bg:#faf9f6; --panel:#ffffff; --text:#1a1a1a; --text-2:#555; --muted:#8c8b84; --line:#e3e0d9; --accent:forestgreen; }
+:root:has(#mode:checked) { --bg:#0e0e0c; --panel:#191915; --text:#ececea; --text-2:#b6b5ad; --muted:#7d7c74; --line:#2a2a24; --accent:#6cc77f; }
+* { box-sizing:border-box; }
+body { margin:0; font-family:'Lora',Georgia,serif; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; }
+.material-symbols-outlined { font-variation-settings:'opsz' 24,'wght' 400; vertical-align:middle; line-height:1; }
+
+.bar { position:sticky; top:0; background:var(--bg); border-bottom:1px solid var(--line); padding:14px 20px;
+  display:flex; align-items:center; justify-content:space-between; z-index:5; }
+.bar .t { font-family:'Roboto Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+.toggle { display:inline-flex; align-items:center; gap:6px; cursor:pointer; -webkit-user-select:none; user-select:none;
+  background:var(--panel); border:1px solid var(--line); border-radius:999px; padding:7px 12px;
+  font-family:'Roboto Mono',monospace; font-size:11px; color:var(--text-2); }
+.toggle .material-symbols-outlined { font-size:16px; }
+
+.wrap { max-width:760px; margin:0 auto; padding:26px 20px 60px; }
+h1 { font-size:30px; font-weight:600; margin:6px 0; }
+.intro { color:var(--text-2); font-size:15px; line-height:1.65; }
+.note { margin:18px 0 6px; padding:12px 14px; background:var(--panel); border:1px solid var(--line); border-radius:12px;
+  font-size:13.5px; color:var(--text-2); line-height:1.6; }
+.note b { color:var(--text); }
+
+.col { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:18px 18px 20px; margin-top:20px; }
+.col .tag { font-family:'Roboto Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); font-weight:600; }
+.col h2 { font-size:20px; margin:4px 0 2px; }
+.col p { color:var(--text-2); font-size:13.5px; line-height:1.6; margin:8px 0 16px; }
+.links { display:flex; flex-direction:column; gap:10px; }
+.links a { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text);
+  border:1px solid var(--line); border-radius:11px; padding:13px 15px; font-size:15px; }
+.links a .material-symbols-outlined { font-size:21px; color:var(--accent); }
+.links a .go { margin-left:auto; color:var(--muted); font-size:19px; }
+.links a:active { background:var(--bg); }
+</style>
+</head>
+<body>
+<div class="bar">
+  <span class="t">Webapp · mobile review</span>
+  <label class="toggle"><input type="checkbox" id="mode" hidden><span class="material-symbols-outlined">contrast</span>Light / Dark</label>
+</div>
+
+<div class="wrap">
+  <h1>Two directions for mobile</h1>
+  <p class="intro">The same page (Latest Leaderboard) and the same chart, built two ways. <b>App</b> leans into a native feel — bottom tab bar, segmented controls, tables reflowed into tappable rows. <b>Editorial</b> keeps the printed-programme look and just makes it sing on a phone. Each page has its own <b>Light / Dark</b> pill in the corner.</p>
+
+  <div class="note">
+    📱 <b>Best viewed in your browser.</b> If a page looks frozen in a preview, tap the share icon → <b>Open in Safari / Chrome</b>. The light/dark toggle is now pure CSS (no JavaScript), so it works in any real browser.
+  </div>
+
+  <section class="col">
+    <span class="tag">Direction A</span>
+    <h2>Full native-app feel</h2>
+    <p>Bottom tab bar, sticky app bar, segmented Gross/Net, leaderboard as cards, chart in a rounded card with chip legend + scrubber. Most “modern app”, furthest from the current desktop look.</p>
+    <div class="links">
+      <a href="leaderboard_app.html"><span class="material-symbols-outlined">leaderboard</span>Leaderboard<span class="material-symbols-outlined go">chevron_right</span></a>
+      <a href="chart_app.html"><span class="material-symbols-outlined">show_chart</span>Chart page<span class="material-symbols-outlined go">chevron_right</span></a>
+      <a href="scorecard_app.html"><span class="material-symbols-outlined">sports_golf</span>Scorecard — single round<span class="material-symbols-outlined go">chevron_right</span></a>
+      <a href="scorecard_teg_app.html"><span class="material-symbols-outlined">sports_golf</span>Scorecard — whole TEG<span class="material-symbols-outlined go">chevron_right</span></a>
+      <a href="scorecard_field_app.html"><span class="material-symbols-outlined">sports_golf</span>Scorecard — vs Field<span class="material-symbols-outlined go">chevron_right</span></a>
+    </div>
+  </section>
+
+  <section class="col">
+    <span class="tag">Direction B</span>
+    <h2>Polished mobile-editorial</h2>
+    <p>Serif title band, light top bar (no dark chrome), underline tabs. The table stays a real table with a sticky name column; the chart is “printed on the page” with direct end-of-line labels. Closest to the current site.</p>
+    <div class="links">
+      <a href="leaderboard_editorial.html"><span class="material-symbols-outlined">leaderboard</span>Leaderboard<span class="material-symbols-outlined go">chevron_right</span></a>
+      <a href="chart_editorial.html"><span class="material-symbols-outlined">show_chart</span>Chart page<span class="material-symbols-outlined go">chevron_right</span></a>
+    </div>
+  </section>
+</div>
+</body>
+</html>
