@@ -8,6 +8,9 @@ Each section has:
   - label:   dropdown / heading text (matches Streamlit's section display name)
   - active:  set of ``active_page`` values that should highlight this section
   - pages:   list of (title, url, active_key, icon) tuples in display order
+  - tab:     {label, icon, url} for the mobile bottom tab bar (short label +
+             icon + the section's primary page). Rendered only at ≤640px in
+             base.html; one tab per section, in this same order.
 
 ``icon`` is a Google Material Symbols name (the bare ligature, e.g. "trophy"),
 matching the ``:material/<name>:`` icons defined in Streamlit's page_config.py.
@@ -18,6 +21,7 @@ Symbols web font. Keep it in sync with page_config.py when icons change there.
 NAV_SECTIONS = [
     {
         "label": "TEG History",
+        "tab": {"label": "History", "icon": "lists", "url": "/history"},
         "active": {"history", "honours", "results", "player-rankings", "teg-reports"},
         "pages": [
             ("TEG History", "/history", "history", "lists"),
@@ -29,6 +33,7 @@ NAV_SECTIONS = [
     },
     {
         "label": "Latest TEG",
+        "tab": {"label": "Latest", "icon": "leaderboard", "url": "/leaderboard"},
         "active": {"leaderboard", "latest-round", "latest-teg", "handicaps"},
         "pages": [
             ("Latest Leaderboard", "/leaderboard", "leaderboard", "leaderboard"),
@@ -39,6 +44,7 @@ NAV_SECTIONS = [
     },
     {
         "label": "Records & PBs",
+        "tab": {"label": "Records", "icon": "military_tech", "url": "/records"},
         "active": {"records", "top-performances", "personal-bests"},
         "pages": [
             ("TEG Records", "/records", "records", "military_tech"),
@@ -48,6 +54,7 @@ NAV_SECTIONS = [
     },
     {
         "label": "Scoring analysis",
+        "tab": {"label": "Scoring", "icon": "strategy", "url": "/scoring/birdies"},
         "active": {"scoring"},
         "pages": [
             ("Eagles / Birdies / Pars", "/scoring/birdies", "scoring", "strategy"),
@@ -65,6 +72,7 @@ NAV_SECTIONS = [
     },
     {
         "label": "Scorecards",
+        "tab": {"label": "Cards", "icon": "sports_golf", "url": "/scorecard"},
         "active": {"scorecards", "scorecard"},
         "pages": [
             ("Scorecard", "/scorecard", "scorecard", "leaderboard"),

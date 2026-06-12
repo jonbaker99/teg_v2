@@ -12,20 +12,26 @@ everywhere, card-reflow the hero tables, sticky-column scroll for the long tail.
 Hard rule throughout: **desktop/iPad stay byte-identical** (all mobile rules sit
 behind a `≤640px` breakpoint or an opt-in `data-mode`).
 
-**Done so far** (PR #16, branch `claude/mobile-ui-dev`):
-- ✅ **Dark-mode foundation** — `data-mode` cookie/toggle + `static/themes/dark.css`,
-  opt-in, default light. See [§4.2](#42-dark-mode--foundation-built).
-- ✅ **Portrait scorecard** — the first real vertical slice of the app pattern
-  (holes-as-rows, pinned columns, pure-CSS Gross/Stableford toggle). Builders in
-  `teg_analysis`, wired into the webapp. See [SCORECARD_PORT.md](SCORECARD_PORT.md).
-- ✅ **Mockups** for Direction A in `webapp/mobile_mockups/` (served at `/mockups/`):
-  leaderboard, chart, and the three scorecard views — each light + dark.
+**Done so far** (branch `claude/mobile-ui-dev`):
+- ✅ **Dark-mode foundation** (in `main`) — `data-mode` cookie/toggle +
+  `static/themes/dark.css`, opt-in, default light. See [§4.2](#42-dark-mode--foundation-built).
+- ✅ **Portrait scorecard** (in `main`) — the first real vertical slice of the app
+  pattern (holes-as-rows, pinned columns, pure-CSS Gross/Stableford toggle).
+  Builders in `teg_analysis`, wired into the webapp. See [SCORECARD_PORT.md](SCORECARD_PORT.md).
+- ✅ **App shell — bottom tab bar** (PR 1) — `static/mobile.css` scaffold + a
+  fixed bottom tab bar in `base.html` (one tab per nav section, driven by
+  `nav.py`'s new `tab` key), shown only `≤640px`, plus a compacted top bar.
+  Preview: `mobile_mockups/mobile_shell_preview.html`.
+- ✅ **Mockups** for Direction A in `webapp/mobile_mockups/` (served at `/mockups/`).
 
-**▶ Pick up here (the full UI work):** **Phase M1 — the app shell.** Add the
-bottom tab bar + sticky app bar to `base.html`, gated `≤640px` and inert above it
-(M0 step 3), then roll the mobile table/control treatments across pages. The
-open steps are M0.1, M0.3 and M1–M3 in [§5](#5-phased-implementation); the
-mockups are the visual spec; §4 is the how.
+**▶ Pick up here (the full UI work):** with the shell in place, the next steps
+roll the per-page mobile treatments out across the site (Direction-A mockups are
+the spec):
+- **Leaderboard hero** (M2.7) — segmented Gross/Net + card-reflowed rows.
+- **Tables + controls sweep** (M1.5–M1.6) — segmented toggles and sticky-column
+  scroll on the remaining pages (the scorecard is the working reference).
+- **Charts** (M2.8) — mobile preset (still behind the parked HTMX chart bug).
+- **Top app-bar polish** (M1.4 remainder) — a sticky, more app-like header.
 
 Everything below §Status is the approach and remains the working reference.
 
@@ -191,11 +197,12 @@ Three tiers, cheapest first:
 ## 5. Phased implementation
 
 **Phase M0 — Foundations (no visible change on desktop).**
-1. Add `static/mobile.css` (empty shell + the `≤640px` media query scaffold).
+1. ✅ **Done** — `static/mobile.css` scaffold (all rules inside `@media (max-width:640px)`).
 2. ✅ **Done** — dark-mode variable layer (`static/themes/dark.css`) +
    `data-mode` cookie/toggle + dark Plotly theme helper. Default light, so
    laptop/iPad unchanged.
-3. Add the bottom-nav + app-bar markup to `base.html`, `display:none` >640px.
+3. ✅ **Done** — bottom-tab-bar markup in `base.html` (driven by `nav.py` `tab`
+   keys), `display:none` >640px.
 
 > ✅ **Vertical slice already done:** the **portrait scorecard** implements the
 > M1 table + control patterns (segmented Gross/Stableford toggle, pinned-column
@@ -203,7 +210,8 @@ Three tiers, cheapest first:
 > reference for steps 5–6 below. See [SCORECARD_PORT.md](SCORECARD_PORT.md).
 
 **Phase M1 — The app shell on phones.**
-4. Style the bottom tab bar + sticky app bar (≤640px only).
+4. ✅ Bottom tab bar styled + top bar compacted (≤640px only). *Remaining:* a
+   more app-like sticky header (the existing JS sticky still applies).
 5. Convert primary in-page controls (Gross/Net, metric tabs) to segmented /
    thumb-friendly variants *within the media query*.
 6. Apply the **sticky-column scroll** table treatment globally (§4.4 tier 1).

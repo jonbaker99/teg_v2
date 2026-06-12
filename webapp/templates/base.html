@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=13">
     <!-- Dark mode — inert until <html data-mode="dark">; default is light. -->
     <link rel="stylesheet" href="/static/themes/dark.css?v=1">
+    <!-- Mobile app shell — all rules gated to ≤640px; inert on desktop/iPad. -->
+    <link rel="stylesheet" href="/static/mobile.css?v=1">
     <!-- Structural hierarchy debug overlay (dev tool; inert unless body.debug-structure) -->
     <link rel="stylesheet" href="/static/themes/debug-structure.css?v=3">
     <!-- Material Symbols — nav/contents icons (names defined once in webapp/nav.py) -->
@@ -181,6 +183,20 @@
             </div>
         </div>
     </div>
+
+    <!-- Mobile bottom tab bar (Phase M1) — visible only ≤640px, inert above it.
+         One tab per nav section; single source of truth is webapp/nav.py. -->
+    <nav class="mobile-tabbar" aria-label="Primary sections">
+        {% for section in request.state.nav_sections %}
+        {% if section.tab %}
+        <a href="{{ section.tab.url }}"
+           class="mtab {% if active_page in section.active %}mtab--active{% endif %}">
+            <span class="material-symbols-outlined">{{ section.tab.icon }}</span>
+            <span class="mtab-label">{{ section.tab.label }}</span>
+        </a>
+        {% endif %}
+        {% endfor %}
+    </nav>
 
     <script>
     // Sticky nav that slides off screen after scrolling past threshold
