@@ -202,6 +202,11 @@ Each phase is independently shippable and reversible.
   font-size and dark-mode body colours. Cheapest page to make excellent.
 - **Contents** — already responsive (`max-width:820px` → single column); becomes
   the natural "More" sheet target.
+- **Scorecard** — portrait (holes-as-rows) view, all three modes (single round /
+  whole TEG / vs field). Mockups built (`scorecard_app.html`,
+  `scorecard_teg_app.html`, `scorecard_field_app.html`). Separable, mergeable
+  work-package — full step-by-step + merge-to-`main` strategy in
+  **[SCORECARD_PORT.md](SCORECARD_PORT.md)**.
 
 ---
 
@@ -221,7 +226,9 @@ palette/fonts). View options:
 | `leaderboard_editorial.html` | B — Editorial | Latest Leaderboard (sticky-column table) |
 | `chart_app.html` | A — App | Race chart (card, chip legend, scrubber) |
 | `chart_editorial.html` | B — Editorial | Race chart (printed, direct labels) |
-| `scorecard_app.html` | A — App | Portrait scorecard (holes as rows, score-shape cells) |
+| `scorecard_app.html` | A — App | Scorecard — single round (holes as rows, score-shape cells) |
+| `scorecard_teg_app.html` | A — App | Scorecard — whole TEG (holes × rounds, Gross/Stableford toggle) |
+| `scorecard_field_app.html` | A — App | Scorecard — vs Field (holes × players, sticky cols, scroll) |
 
 These are **throwaway design artifacts** — not part of the app's page hierarchy,
 intentionally unwrapped (like `smoke_test`/`width_test`). Delete once the
