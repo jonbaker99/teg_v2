@@ -118,16 +118,18 @@ h1, h2, h3, h4, h5, h6 {
    pill (white text); the worst rank a pale-red pill (dark red text). Mirrors the
    Streamlit datawrapper player-ranking-table. */
 .player-ranking-table td,
-.player-ranking-table th {
+.player-ranking-table th,
+.teg-table.player-ranking-table td,
+.teg-table.player-ranking-table th  {
     text-align: center;
     /* Compact, slightly larger type than the default table; rows kept a touch
        shorter than the leaderboards so the eye can scan down a column. */
-    padding: 0.3rem 0.2rem;
+    padding: 0.5rem 0.2rem;
     width: 32px;
     min-width: 20px;
     max-width: 38px;
     white-space: nowrap;
-    font-size: 0.875rem;
+    font-size: 0.825rem;
 }
 .player-ranking-table td:first-child,
 .player-ranking-table th:first-child {
@@ -159,9 +161,11 @@ h1, h2, h3, h4, h5, h6 {
    columns than the dense ranking grid above it, centred numerics with a
    left-aligned player column. */
 .position-table td,
-.position-table th {
+.position-table th,
+.teg-table.position-table td,
+.teg-table.position-table th {
     text-align: center;
-    padding: 0.4rem 0.7rem;
+    padding: 0.5rem 0.5rem;
     min-width: 2.75rem;
     font-size: 0.875rem;
 }
