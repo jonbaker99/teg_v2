@@ -221,6 +221,7 @@ palette/fonts). View options:
 | `leaderboard_editorial.html` | B — Editorial | Latest Leaderboard (sticky-column table) |
 | `chart_app.html` | A — App | Race chart (card, chip legend, scrubber) |
 | `chart_editorial.html` | B — Editorial | Race chart (printed, direct labels) |
+| `scorecard_app.html` | A — App | Portrait scorecard (holes as rows, score-shape cells) |
 
 These are **throwaway design artifacts** — not part of the app's page hierarchy,
 intentionally unwrapped (like `smoke_test`/`width_test`). Delete once the
