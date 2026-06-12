@@ -75,6 +75,16 @@ Three themes, registered in `theme.py`. Each overrides CSS custom properties def
 | **Clean Page** | Flat single white content card on a warm grey background |
 | **Clean Layered** | 3-layer hierarchy: stone background → taupe panel → white data cards |
 
+**Dark mode (orthogonal to theme).** A light/dark **mode** is independent of the
+named theme: a `mode` cookie (`theme.py: get_mode`, injected as
+`request.state.mode`) sets `data-mode="light|dark"` on `<html>`, and
+`static/themes/dark.css` overrides the colour variables under
+`html[data-mode="dark"]`. It's loaded on every page but inert until dark is
+selected (default **light**, so nothing changes unless the user toggles the ◑
+button in the nav). Any theme can be shown light or dark. `get_plotly_theme()`
+takes a `mode` arg for a dark chart surface (chart routes not yet passing it —
+parked with the chart work).
+
 The page-title (`ts-*`) and card-header (`ch-*`) **style switchers were removed
 from the nav** for Phase 1a (the nav now carries only the theme switcher). The
 cookie/CSS infrastructure stays live (`theme.py` defaults + `base-vars.css`), so

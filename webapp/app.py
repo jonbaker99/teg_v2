@@ -15,6 +15,7 @@ from webapp.routes import (
 from webapp.nav import NAV_SECTIONS
 from webapp.theme import (
     get_theme, THEMES,
+    get_mode,
     get_title_style, TITLE_STYLES,
     get_card_header_style, CARD_HEADER_STYLES,
 )
@@ -39,6 +40,7 @@ async def theme_middleware(request: Request, call_next):
     """Inject current theme into request.state for all routes."""
     request.state.theme = get_theme(request)
     request.state.themes = THEMES
+    request.state.mode = get_mode(request)
     request.state.title_style = get_title_style(request)
     request.state.title_styles = TITLE_STYLES
     request.state.card_header_style = get_card_header_style(request)

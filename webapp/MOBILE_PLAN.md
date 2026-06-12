@@ -96,25 +96,30 @@ or the hybrid (or mix per-element).
 - A new structural hook in `base.html` (bottom-nav markup) is rendered always
   but **`display:none` above 640px** — invisible and inert on laptop/iPad.
 
-### 4.2 Dark mode
+### 4.2 Dark mode — ✅ FOUNDATION BUILT
 
 The app is already 100% CSS-variable driven, so dark mode is a **variable
-override set**, not a re-skin.
+override set**, not a re-skin. Built as:
 
-- Add `static/themes/dark-vars.css` (or a `[data-mode="dark"]` block in each
-  theme) overriding `--bg-*`, `--text-*`, `--line`, `--accent`, `--accent-soft`,
-  table tints, etc. The mockups contain a validated dark palette to copy:
-  warm near-black `#16150f` / `#131311`, text `#ecebe4`, brightened green
-  `#6cc77f`, dark top-rank tint `#1b2a1d`.
-- **Switching:** a `data-mode="light|dark"` attribute on `<html>`, set from a
-  cookie (mirrors the existing `theme` cookie pattern in `theme.py`), with an
-  optional "Auto" that follows `prefers-color-scheme`.
-- **Protecting laptop (constraint #1):** default = **light**. Dark is opt-in via
-  the toggle, so a laptop user sees no change unless they choose it. *(Decision
-  for Jon: should dark also auto-follow the OS on mobile only? My default: yes on
-  mobile, manual elsewhere.)*
-- Charts: extend `get_plotly_theme()` / `chart_utils.py` with a dark variant so
-  Plotly figures match (paper/plot bg, font, gridline colours).
+- **`static/themes/dark.css`** — overrides the colour custom properties under
+  `html[data-mode="dark"]` (warm near-black `#16150f`, text `#ececea`,
+  brightened green `#6cc77f`, dark top-rank tint `#1b2a1d`). Higher specificity
+  than the themes' `:root`, so it wins regardless of load order. Loaded on every
+  page but **completely inert until `data-mode="dark"` is set** → light render
+  byte-identical on every device.
+- **Switching:** `data-mode="light|dark"` on `<html>` from a `mode` cookie
+  (`theme.py: get_mode`, injected via `request.state.mode` in `app.py`), set by a
+  **◑ toggle** in the nav (mirrors the theme-select cookie+reload pattern).
+  Default **light** → constraint #1 satisfied (opt-in; OS dark setting is *not*
+  auto-applied, so a dark-OS laptop is unaffected).
+- **Charts:** `get_plotly_theme(theme, mode)` gains a dark surface. *Still to
+  wire:* chart routes pass `request.state.mode` (deferred with the parked chart
+  work — see §1b in README).
+- **Scorecard:** its dark tokens (already in `scorecard.css`) now activate under
+  the same `data-mode` hook.
+- **Follow-ups:** Clean Layered's hard-coded mid-panels get a first dark pass
+  here but warrant a dedicated polish; full per-page dark QA pending an
+  in-browser sweep.
 
 ### 4.3 Navigation (the app shell)
 
@@ -163,8 +168,9 @@ Three tiers, cheapest first:
 
 **Phase M0 — Foundations (no visible change on desktop).**
 1. Add `static/mobile.css` (empty shell + the `≤640px` media query scaffold).
-2. Add the dark-mode variable layer + `data-mode` toggle + cookie; wire a dark
-   Plotly theme. Default light, so laptop/iPad unchanged.
+2. ✅ **Done** — dark-mode variable layer (`static/themes/dark.css`) +
+   `data-mode` cookie/toggle + dark Plotly theme helper. Default light, so
+   laptop/iPad unchanged.
 3. Add the bottom-nav + app-bar markup to `base.html`, `display:none` >640px.
 
 **Phase M1 — The app shell on phones.**
