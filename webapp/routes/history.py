@@ -457,10 +457,7 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "stand
                                "decided by best net score (total net vs par), not Stableford points.</p>")
                 return {
                     "result_title": "Report",
-                    "table_html": (
-                        '<link rel="stylesheet" href="/static/teg_reports.css">'
-                        f'{caption}<div class="teg-report">{html}</div>'
-                    ),
+                    "table_html": f'{caption}<div class="teg-report">{html}</div>',
                 }
             return {
                 "result_title": "Report",

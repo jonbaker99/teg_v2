@@ -2,7 +2,7 @@
 <p class="text-muted">Error: {{ error }}</p>
 {% elif report_html is defined %}
   {% if report_html %}
-  <div class="report-body">{{ report_html | safe }}</div>
+  <div class="teg-report">{{ report_html | safe }}</div>
   {% else %}
   <p class="text-muted text-sm">{{ report_message }}</p>
   {% endif %}

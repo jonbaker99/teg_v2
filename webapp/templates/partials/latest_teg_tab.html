@@ -3,7 +3,7 @@
 {% elif report_html is defined %}
   {% if report_html %}
   {% if report_caption %}<p class="text-muted text-sm mb-2">{{ report_caption }}</p>{% endif %}
-  <div class="report-body">{{ report_html | safe }}</div>
+  <div class="teg-report">{{ report_html | safe }}</div>
   {% else %}
   <p class="text-muted text-sm">{{ report_message }}</p>
   {% endif %}
