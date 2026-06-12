@@ -1075,6 +1075,7 @@ body.ch-ch3 .card-header:first-child { margin-top: 0; }
     font-weight: 500;
     color: var(--text-secondary);
     cursor: pointer;
+    text-decoration: none;
     transition: background-color 0.15s, color 0.15s, border-color 0.15s;
 }
 .pill:hover {

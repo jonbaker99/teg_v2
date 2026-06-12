@@ -18,58 +18,41 @@
 {% else %}
 
 {# ---- Selectors ---- #}
-<form method="get" action="/teg-reports" class="section-controls flex flex-wrap items-center gap-4">
+<div class="section-controls flex flex-wrap items-center gap-4">
 
-    {# Report type #}
-    <select name="report_type" class="theme-select" onchange="this.form.submit()">
-        <option value="tournament" {% if report_type == 'tournament' %}selected{% endif %}>Tournament Reports</option>
-        <option value="round" {% if report_type == 'round' %}selected{% endif %}>Round Reports</option>
-    </select>
+    {# TEG dropdown — lists every TEG with any report. Changing it resets to
+       that TEG's default piece (tournament if it exists, else round 1). #}
+    <form method="get" action="/teg-reports">
+        <select name="teg" class="theme-select" onchange="this.form.submit()">
+            {% for n in teg_numbers %}
+            <option value="{{ n }}" {% if n == selected_teg %}selected{% endif %}>TEG {{ n }}</option>
+            {% endfor %}
+        </select>
+    </form>
 
-    {# TEG selector #}
-    <select name="teg" class="theme-select" onchange="this.form.submit()">
-        {% for n in teg_numbers %}
-        <option value="{{ n }}" {% if n == selected_teg %}selected{% endif %}>TEG {{ n }}</option>
-        {% endfor %}
-    </select>
-
-    {# Round selector — only for round reports #}
-    {% if report_type == 'round' and available_rounds %}
-    <select name="round" class="theme-select" onchange="this.form.submit()">
+    {# Report-piece pills: one per available round + Tournament (if it exists). #}
+    <div class="pill-group" role="group" aria-label="Report">
         {% for r in available_rounds %}
-        <option value="{{ r }}" {% if r == selected_round %}selected{% endif %}>Round {{ r }}</option>
+        <a class="pill{% if report_type == 'round' and r == selected_round %} pill--active{% endif %}"
+           href="/teg-reports?teg={{ selected_teg }}&report_type=round&round={{ r }}">Round {{ r }}</a>
         {% endfor %}
-    </select>
-    {% endif %}
-
-    {# Carry current variant through round-report form submissions #}
-    {% if report_type == 'round' %}
-    <input type="hidden" name="variant" value="{{ variant }}">
-    {% endif %}
-
-    {# Normal / Satire toggle — only for tournament reports #}
-    {% if report_type == 'tournament' %}
-    <div class="toggle-group flex items-center gap-2">
-        <label class="flex items-center gap-1 cursor-pointer">
-            <input type="radio" name="variant" value="normal"
-                   {% if variant == 'normal' %}checked{% endif %}
-                   onchange="this.form.submit()">
-            <span class="text-sm">Normal</span>
-        </label>
-        <label class="flex items-center gap-1 cursor-pointer">
-            <input type="radio" name="variant" value="satire"
-                   {% if variant == 'satire' %}checked{% endif %}
-                   onchange="this.form.submit()">
-            <span class="text-sm">Satire</span>
-        </label>
+        {% if has_tournament %}
+        <a class="pill{% if report_type == 'tournament' %} pill--active{% endif %}"
+           href="/teg-reports?teg={{ selected_teg }}&report_type=tournament">Tournament</a>
+        {% endif %}
     </div>
-    {# Carry round through tournament form submissions (unused but harmless) #}
-    {% if selected_round %}
-    <input type="hidden" name="round" value="{{ selected_round }}">
-    {% endif %}
+
+    {# Normal / Satire — tournament reports that have a satire draft. #}
+    {% if report_type == 'tournament' and satire_available %}
+    <div class="pill-group" role="group" aria-label="Variant">
+        <a class="pill{% if variant == 'normal' %} pill--active{% endif %}"
+           href="/teg-reports?teg={{ selected_teg }}&report_type=tournament&variant=normal">Normal</a>
+        <a class="pill{% if variant == 'satire' %} pill--active{% endif %}"
+           href="/teg-reports?teg={{ selected_teg }}&report_type=tournament&variant=satire">Satire</a>
+    </div>
     {% endif %}
 
-</form>
+</div>
 
 {# ---- Pre-TEG-8 caption ---- #}
 {% if caption %}

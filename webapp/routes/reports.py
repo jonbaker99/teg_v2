@@ -174,7 +174,7 @@ def _load_round_report(teg_num: int, round_num: int) -> tuple[Optional[str], boo
 @router.get("/teg-reports", response_class=HTMLResponse)
 async def teg_reports(
     request: Request,
-    report_type: str = "tournament",
+    report_type: Optional[str] = None,
     teg: Optional[int] = None,
     round: Optional[int] = None,
     variant: str = "normal",
@@ -182,30 +182,32 @@ async def teg_reports(
     """Render the TEG Reports page.
 
     Query params:
-      report_type  "tournament" or "round" (default: "tournament")
-      teg          TEG number (int); defaults to highest available
-      round        Round number (int, only relevant when report_type="round")
-      variant      "normal" or "satire" (only relevant when report_type="tournament")
-    """
-    # Collect available TEG numbers for the chosen type
-    if report_type == "round":
-        teg_numbers = _round_teg_numbers()
-    else:
-        report_type = "tournament"  # normalise any unknown value
-        teg_numbers = _tournament_teg_numbers()
+      teg          TEG number (int); defaults to the highest available
+      report_type  which report "piece" to show: "round" or "tournament".
+                   Defaults to the tournament report when one exists, else the
+                   first round.
+      round        round number (when report_type="round")
+      variant      "normal" or "satire" (tournament reports only)
 
-    # Default TEG to the highest available
+    The TEG dropdown lists every TEG that has any report; the round/tournament
+    choice is presented as pills (one per available round + Tournament).
+    """
+    tournament_tegs = set(_tournament_teg_numbers())
+    round_tegs = set(_round_teg_numbers())
+    teg_numbers = sorted(tournament_tegs | round_tegs, reverse=True)
+
     if not teg_numbers:
         return templates.TemplateResponse(
             "teg_reports.html",
             {
                 "request": request,
                 "active_page": "teg-reports",
-                "report_type": report_type,
+                "report_type": "tournament",
                 "teg_numbers": [],
                 "selected_teg": None,
                 "available_rounds": [],
                 "selected_round": None,
+                "has_tournament": False,
                 "variant": variant,
                 "html": None,
                 "caption": None,
@@ -217,48 +219,44 @@ async def teg_reports(
     if teg is None or teg not in teg_numbers:
         teg = teg_numbers[0]
 
-    # Round reports: pick round
-    available_rounds = []
-    selected_round = None
-    if report_type == "round":
-        available_rounds = _available_rounds_for_teg(teg)
-        if available_rounds:
-            if round is None or round not in available_rounds:
-                selected_round = available_rounds[0]
-            else:
-                selected_round = round
+    available_rounds = _available_rounds_for_teg(teg)
+    has_tournament = teg in tournament_tegs
 
-    # Load content
+    # Resolve which piece to show for this TEG, with sensible fallbacks.
+    if report_type not in ("tournament", "round"):
+        report_type = "tournament" if has_tournament else "round"
+    if report_type == "tournament" and not has_tournament and available_rounds:
+        report_type = "round"
+    if report_type == "round" and not available_rounds and has_tournament:
+        report_type = "tournament"
+
+    selected_round = None
+    if report_type == "round" and available_rounds:
+        selected_round = round if (round in available_rounds) else available_rounds[0]
+
     html = None
     caption = None
     satire_available = False
     no_report_message = None
 
     if report_type == "tournament":
-        # Check satire availability for the toggle
         satire_available = (DRAFTS_DIR / f"teg_{teg}_satire.md").is_file()
-
-        # Normalise variant
         if variant not in ("normal", "satire"):
             variant = "normal"
-
         html, found = _load_tournament_report(teg, variant)
         if not found:
-            if variant == "satire":
-                no_report_message = f"No satire draft available for TEG {teg}."
-            else:
-                no_report_message = f"No tournament report available yet for TEG {teg}."
-
-        # Pre-TEG-8 caption for normal reports
+            no_report_message = (
+                f"No satire draft available for TEG {teg}." if variant == "satire"
+                else f"No tournament report available yet for TEG {teg}."
+            )
         if found and variant == "normal" and teg < 8:
             caption = _PRE_TEG8_CAPTION
-
     else:  # round
         if selected_round is not None:
             html, found = _load_round_report(teg, selected_round)
             if not found:
                 no_report_message = f"No round report available for TEG {teg} Round {selected_round}."
-        elif not available_rounds:
+        else:
             no_report_message = f"No round reports available for TEG {teg}."
 
     return templates.TemplateResponse(
@@ -271,6 +269,7 @@ async def teg_reports(
             "selected_teg": teg,
             "available_rounds": available_rounds,
             "selected_round": selected_round,
+            "has_tournament": has_tournament,
             "variant": variant,
             "html": html,
             "caption": caption,
