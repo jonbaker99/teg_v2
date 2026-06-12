@@ -15,6 +15,12 @@
     /* column-gap: 2.5rem; */
 }
 
+/* Paragraph spacing — Tailwind's preflight zeroes <p> margins, so set our own
+   so consecutive paragraphs read as distinct blocks. */
+.teg-report p {
+    margin: 0 0 1.1em 0;
+}
+
 /* HEADLINE */
 /* .teg-report h1:first-of-type { */
 .teg-report .report-title {
