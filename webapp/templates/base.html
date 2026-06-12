@@ -219,6 +219,18 @@
         });
         btn.classList.add('tab-underline--active');
     });
+    // Global pill active state: clicking a .pill moves --active within its
+    // nearest .pill-group. Works whether the pills are re-rendered by an HTMX
+    // swap or sit outside the swap target (e.g. /top-performances measure pills).
+    document.addEventListener('click', function(e) {
+        var pill = e.target.closest('.pill-group .pill');
+        if (!pill) return;
+        var group = pill.closest('.pill-group');
+        group.querySelectorAll('.pill').forEach(function(p) {
+            p.classList.remove('pill--active');
+        });
+        pill.classList.add('pill--active');
+    });
     </script>
 </body>
 </html>
