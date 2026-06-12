@@ -23,7 +23,7 @@
   --grid:#efeee9; --axis:#d8d6cf;
   --c1:forestgreen; --c2:#444; --c3:#b08400; --cmuted:#cdcbc3;
 }
-[data-theme="dark"] {
+[data-theme="dark"], :root:has(#mode:checked) {
   --bg:#131311; --surface:#1d1d1a; --surface-2:#242420; --text:#ececea; --text-2:#b7b6b0;
   --text-muted:#86857e; --line:#2e2e29; --accent:#57c773; --accent-soft:#1b2a1d; --accent-text:#7ad492;
   --bar:#191916; --bar-line:#2a2a25; --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
@@ -78,13 +78,14 @@ svg.chart { width:100%; height:auto; display:block; }
 .tab[aria-current="page"] { color:var(--accent-text); }
 
 .demobar { position:fixed; top:calc(8px + env(safe-area-inset-top,0)); right:10px; z-index:60; }
-.demobar button { background:var(--surface); color:var(--text-2); border:1px solid var(--line); border-radius:999px;
-  padding:6px 10px; font-family:var(--font-data); font-size:11px; cursor:pointer; box-shadow:var(--shadow); display:inline-flex; align-items:center; gap:5px; }
+.demobar label { background:var(--surface); color:var(--text-2); border:1px solid var(--line); border-radius:999px;
+  padding:6px 10px; font-family:var(--font-data); font-size:11px; cursor:pointer; box-shadow:var(--shadow); display:inline-flex; align-items:center; gap:5px; -webkit-user-select:none; user-select:none; }
 .demobar .material-symbols-outlined { font-size:16px; }
 </style>
 </head>
 <body>
-<div class="demobar"><button id="themeBtn" onclick="toggleTheme()"><span class="material-symbols-outlined">dark_mode</span><span id="themeLbl">Dark</span></button></div>
+<!-- light/dark toggle — pure CSS (:has), no JavaScript required -->
+<div class="demobar"><label><input type="checkbox" id="mode" hidden><span class="material-symbols-outlined">contrast</span>Light / Dark</label></div>
 
 <header class="appbar">
   <span class="material-symbols-outlined back">arrow_back_ios_new</span>
@@ -155,15 +156,5 @@ svg.chart { width:100%; height:auto; display:block; }
   <button class="tab"><span class="material-symbols-outlined">menu</span>More</button>
 </nav>
 
-<script>
-function applyTheme(t){
-  document.documentElement.setAttribute('data-theme', t);
-  document.getElementById('themeLbl').textContent = t==='dark'?'Light':'Dark';
-  document.querySelector('#themeBtn .material-symbols-outlined').textContent = t==='dark'?'light_mode':'dark_mode';
-}
-function toggleTheme(){ applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark'); }
-(function(){ var p=new URLSearchParams(location.search).get('theme');
-  if(!p) p=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'; applyTheme(p); })();
-</script>
 </body>
 </html>

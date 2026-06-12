@@ -24,7 +24,7 @@
   --grid:#eee; --axis:#cfcfcf;
   --c1:forestgreen; --c2:#444; --c3:#b08400; --cmuted:#c9c9c9;
 }
-[data-theme="dark"] {
+[data-theme="dark"], :root:has(#mode:checked) {
   --bg:#16150f; --text:#ecebe4; --text-2:#b6b4aa; --text-muted:#807e72; --line:#2c2b22;
   --rule:#d8d6cb; --accent:#6cc77f; --bar:#16150f;
   --grid:#262519; --axis:#3a382c;
@@ -69,14 +69,15 @@ svg.chart { width:100%; height:auto; display:block; }
 .stat .v.green { color:var(--accent); }
 
 .demobar { position:fixed; bottom:16px; right:16px; z-index:60; }
-.demobar button { background:var(--bg); color:var(--text-2); border:1px solid var(--line); border-radius:999px;
+.demobar label { background:var(--bg); color:var(--text-2); border:1px solid var(--line); border-radius:999px;
   padding:8px 13px; font-family:var(--font-data); font-size:11px; cursor:pointer; box-shadow:0 2px 10px rgba(0,0,0,.12);
-  display:inline-flex; align-items:center; gap:6px; }
+  display:inline-flex; align-items:center; gap:6px; -webkit-user-select:none; user-select:none; }
 .demobar .material-symbols-outlined { font-size:17px; }
 </style>
 </head>
 <body>
-<div class="demobar"><button id="themeBtn" onclick="toggleTheme()"><span class="material-symbols-outlined">dark_mode</span><span id="themeLbl">Dark</span></button></div>
+<!-- light/dark toggle — pure CSS (:has), no JavaScript required -->
+<div class="demobar"><label><input type="checkbox" id="mode" hidden><span class="material-symbols-outlined">contrast</span>Light / Dark</label></div>
 
 <header class="topbar">
   <a href="#" class="brand">The El Golfo</a>
@@ -151,15 +152,5 @@ svg.chart { width:100%; height:auto; display:block; }
   </div>
 </div>
 
-<script>
-function applyTheme(t){
-  document.documentElement.setAttribute('data-theme', t);
-  document.getElementById('themeLbl').textContent = t==='dark'?'Light':'Dark';
-  document.querySelector('#themeBtn .material-symbols-outlined').textContent = t==='dark'?'light_mode':'dark_mode';
-}
-function toggleTheme(){ applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark'); }
-(function(){ var p=new URLSearchParams(location.search).get('theme');
-  if(!p) p=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'; applyTheme(p); })();
-</script>
 </body>
 </html>

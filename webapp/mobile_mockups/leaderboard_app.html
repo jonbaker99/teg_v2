@@ -36,7 +36,7 @@
   --shadow:        0 1px 2px rgba(0,0,0,.05), 0 4px 16px rgba(0,0,0,.04);
   --spoon:         #b08400;
 }
-[data-theme="dark"] {
+[data-theme="dark"], :root:has(#mode:checked) {
   --bg:            #131311;
   --surface:       #1d1d1a;
   --surface-2:     #242420;
@@ -185,18 +185,19 @@ body {
 .demobar {
   position: fixed; top: calc(8px + env(safe-area-inset-top,0)); right: 10px; z-index: 60;
 }
-.demobar button {
+.demobar label {
   background: var(--surface); color: var(--text-2); border: 1px solid var(--line);
   border-radius: 999px; padding: 6px 10px; font-family: var(--font-data); font-size: 11px;
   cursor: pointer; box-shadow: var(--shadow); display: inline-flex; align-items: center; gap: 5px;
+  -webkit-user-select: none; user-select: none;
 }
 .demobar .material-symbols-outlined { font-size: 16px; }
 </style>
 </head>
 <body>
 
-<!-- demo-only light/dark toggle -->
-<div class="demobar"><button id="themeBtn" onclick="toggleTheme()"><span class="material-symbols-outlined">dark_mode</span><span id="themeLbl">Dark</span></button></div>
+<!-- demo-only light/dark toggle — pure CSS (:has), no JavaScript required -->
+<div class="demobar"><label><input type="checkbox" id="mode" hidden><span class="material-symbols-outlined">contrast</span>Light / Dark</label></div>
 
 <header class="appbar">
   <span class="material-symbols-outlined back">arrow_back_ios_new</span>
@@ -310,22 +311,5 @@ body {
   <button class="tab"><span class="material-symbols-outlined">menu</span>More</button>
 </nav>
 
-<script>
-function applyTheme(t){
-  document.documentElement.setAttribute('data-theme', t);
-  document.getElementById('themeLbl').textContent = t === 'dark' ? 'Light' : 'Dark';
-  document.querySelector('#themeBtn .material-symbols-outlined').textContent = t === 'dark' ? 'light_mode' : 'dark_mode';
-}
-function toggleTheme(){
-  var cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  applyTheme(cur);
-}
-// initial theme: ?theme=dark, else system preference
-(function(){
-  var p = new URLSearchParams(location.search).get('theme');
-  if(!p) p = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  applyTheme(p);
-})();
-</script>
 </body>
 </html>

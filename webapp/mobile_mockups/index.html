@@ -7,116 +7,75 @@
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
 <style>
-/* Gallery / chooser. Shows the four mockups in phone frames so the two
-   directions (App vs Editorial) can be compared in light and dark.
-   Best viewed over a local server (file:// iframes are blocked in some
-   browsers) — if a frame is blank, open the individual links instead. */
-:root {
-  --bg:#ece9e3; --panel:#ffffff; --text:#1a1a1a; --text-2:#555; --muted:#8c8b84;
-  --line:#dcd9d2; --accent:forestgreen;
-}
-[data-theme="dark"] { --bg:#0e0e0c; --panel:#191915; --text:#ececea; --text-2:#b6b5ad; --muted:#7d7c74; --line:#2a2a24; --accent:#6cc77f; }
+/* Chooser / index. No JavaScript — light/dark is a pure-CSS :has() toggle, and
+   the mockups are opened directly (no iframes), so this works even in a phone's
+   in-app file preview where scripts are sandboxed. */
+:root { --bg:#faf9f6; --panel:#ffffff; --text:#1a1a1a; --text-2:#555; --muted:#8c8b84; --line:#e3e0d9; --accent:forestgreen; }
+:root:has(#mode:checked) { --bg:#0e0e0c; --panel:#191915; --text:#ececea; --text-2:#b6b5ad; --muted:#7d7c74; --line:#2a2a24; --accent:#6cc77f; }
 * { box-sizing:border-box; }
 body { margin:0; font-family:'Lora',Georgia,serif; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; }
 .material-symbols-outlined { font-variation-settings:'opsz' 24,'wght' 400; vertical-align:middle; line-height:1; }
 
-header { max-width:1180px; margin:0 auto; padding:34px 24px 8px; }
-.kick { font-family:'Roboto Mono',monospace; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
-h1 { font-size:32px; font-weight:600; margin:10px 0 6px; }
-.intro { color:var(--text-2); font-size:15px; line-height:1.6; max-width:640px; }
+.bar { position:sticky; top:0; background:var(--bg); border-bottom:1px solid var(--line); padding:14px 20px;
+  display:flex; align-items:center; justify-content:space-between; z-index:5; }
+.bar .t { font-family:'Roboto Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+.toggle { display:inline-flex; align-items:center; gap:6px; cursor:pointer; -webkit-user-select:none; user-select:none;
+  background:var(--panel); border:1px solid var(--line); border-radius:999px; padding:7px 12px;
+  font-family:'Roboto Mono',monospace; font-size:11px; color:var(--text-2); }
+.toggle .material-symbols-outlined { font-size:16px; }
 
-.controls { max-width:1180px; margin:18px auto 0; padding:0 24px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-.controls .seg { display:inline-flex; background:var(--panel); border:1px solid var(--line); border-radius:999px; padding:3px; }
-.controls .seg button { border:none; background:none; cursor:pointer; font-family:'Roboto Mono',monospace; font-size:12px; font-weight:600;
-  color:var(--text-2); padding:7px 14px; border-radius:999px; display:inline-flex; align-items:center; gap:6px; }
-.controls .seg button[aria-pressed="true"] { background:var(--accent); color:#fff; }
-[data-theme="dark"] .controls .seg button[aria-pressed="true"] { color:#0e0e0c; }
-.controls .hint { font-family:'Roboto Mono',monospace; font-size:11px; color:var(--muted); }
+.wrap { max-width:760px; margin:0 auto; padding:26px 20px 60px; }
+h1 { font-size:30px; font-weight:600; margin:6px 0; }
+.intro { color:var(--text-2); font-size:15px; line-height:1.65; }
+.note { margin:18px 0 6px; padding:12px 14px; background:var(--panel); border:1px solid var(--line); border-radius:12px;
+  font-size:13.5px; color:var(--text-2); line-height:1.6; }
+.note b { color:var(--text); }
 
-.grid { max-width:1180px; margin:8px auto 60px; padding:18px 24px; display:grid; grid-template-columns:repeat(2,1fr); gap:30px; }
-@media (max-width:780px) { .grid { grid-template-columns:1fr; } }
-
-.col { background:var(--panel); border:1px solid var(--line); border-radius:18px; padding:18px 18px 22px; }
-.col h2 { font-size:18px; margin:0 0 2px; }
+.col { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:18px 18px 20px; margin-top:20px; }
 .col .tag { font-family:'Roboto Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); font-weight:600; }
-.col p { color:var(--text-2); font-size:13.5px; line-height:1.55; margin:8px 0 14px; }
-.col .links { display:flex; gap:14px; margin:0 0 16px; }
-.col .links a { font-family:'Roboto Mono',monospace; font-size:11.5px; color:var(--accent); text-decoration:none; display:inline-flex; align-items:center; gap:4px; }
-.col .links a .material-symbols-outlined { font-size:15px; }
-
-/* phone frame */
-.phones { display:flex; gap:18px; justify-content:center; flex-wrap:wrap; }
-.phone { width:300px; max-width:100%; }
-.phone .label { text-align:center; font-family:'Roboto Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
-.frame {
-  position:relative; width:300px; height:600px; max-width:100%;
-  border:10px solid #1c1c1c; border-radius:34px; overflow:hidden; background:#000;
-  box-shadow:0 10px 30px rgba(0,0,0,.22);
-}
-[data-theme="dark"] .frame { border-color:#000; }
-.frame iframe { width:100%; height:100%; border:0; display:block; background:#fff; }
+.col h2 { font-size:20px; margin:4px 0 2px; }
+.col p { color:var(--text-2); font-size:13.5px; line-height:1.6; margin:8px 0 16px; }
+.links { display:flex; flex-direction:column; gap:10px; }
+.links a { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text);
+  border:1px solid var(--line); border-radius:11px; padding:13px 15px; font-size:15px; }
+.links a .material-symbols-outlined { font-size:21px; color:var(--accent); }
+.links a .go { margin-left:auto; color:var(--muted); font-size:19px; }
+.links a:active { background:var(--bg); }
 </style>
 </head>
 <body>
-<header>
-  <div class="kick">Webapp · mobile design review</div>
-  <h1>Two directions for mobile</h1>
-  <p class="intro">Same page (Latest Leaderboard) and the same chart, built two ways. <b>App</b> leans into a native feel — bottom tab bar, segmented controls, tables reflowed into tappable rows. <b>Editorial</b> keeps the printed-programme look and just makes it sing on a phone. Flip light/dark below. Open any frame full-screen on your phone via the links.</p>
-</header>
-
-<div class="controls">
-  <div class="seg" role="group" aria-label="Theme">
-    <button id="lightBtn" aria-pressed="true" onclick="setTheme('light')"><span class="material-symbols-outlined">light_mode</span>Light</button>
-    <button id="darkBtn" aria-pressed="false" onclick="setTheme('dark')"><span class="material-symbols-outlined">dark_mode</span>Dark</button>
-  </div>
-  <span class="hint">tip: if a frame is blank, run a local server or open the links — file:// blocks iframes in some browsers</span>
+<div class="bar">
+  <span class="t">Webapp · mobile review</span>
+  <label class="toggle"><input type="checkbox" id="mode" hidden><span class="material-symbols-outlined">contrast</span>Light / Dark</label>
 </div>
 
-<div class="grid">
+<div class="wrap">
+  <h1>Two directions for mobile</h1>
+  <p class="intro">The same page (Latest Leaderboard) and the same chart, built two ways. <b>App</b> leans into a native feel — bottom tab bar, segmented controls, tables reflowed into tappable rows. <b>Editorial</b> keeps the printed-programme look and just makes it sing on a phone. Each page has its own <b>Light / Dark</b> pill in the corner.</p>
+
+  <div class="note">
+    📱 <b>Best viewed in your browser.</b> If a page looks frozen in a preview, tap the share icon → <b>Open in Safari / Chrome</b>. The light/dark toggle is now pure CSS (no JavaScript), so it works in any real browser.
+  </div>
+
   <section class="col">
     <span class="tag">Direction A</span>
     <h2>Full native-app feel</h2>
-    <p>Bottom tab bar, sticky app bar, segmented Gross/Net, leaderboard reflowed into cards, chart in a rounded card with chip legend + scrubber. Most “modern app”, furthest from the current desktop look.</p>
+    <p>Bottom tab bar, sticky app bar, segmented Gross/Net, leaderboard as cards, chart in a rounded card with chip legend + scrubber. Most “modern app”, furthest from the current desktop look.</p>
     <div class="links">
-      <a href="leaderboard_app.html" target="_blank"><span class="material-symbols-outlined">open_in_new</span>Leaderboard</a>
-      <a href="chart_app.html" target="_blank"><span class="material-symbols-outlined">open_in_new</span>Chart page</a>
-    </div>
-    <div class="phones">
-      <div class="phone"><div class="label">Leaderboard</div><div class="frame"><iframe data-src="leaderboard_app.html" title="App leaderboard"></iframe></div></div>
-      <div class="phone"><div class="label">Chart</div><div class="frame"><iframe data-src="chart_app.html" title="App chart"></iframe></div></div>
+      <a href="leaderboard_app.html"><span class="material-symbols-outlined">leaderboard</span>Leaderboard<span class="material-symbols-outlined go">chevron_right</span></a>
+      <a href="chart_app.html"><span class="material-symbols-outlined">show_chart</span>Chart page<span class="material-symbols-outlined go">chevron_right</span></a>
     </div>
   </section>
 
   <section class="col">
     <span class="tag">Direction B</span>
     <h2>Polished mobile-editorial</h2>
-    <p>Keeps the serif title band, light top bar (no dark chrome) and underline tabs. The table stays a real table with a sticky name column; the chart is “printed on the page” with direct end-of-line labels. Closest to the current site.</p>
+    <p>Serif title band, light top bar (no dark chrome), underline tabs. The table stays a real table with a sticky name column; the chart is “printed on the page” with direct end-of-line labels. Closest to the current site.</p>
     <div class="links">
-      <a href="leaderboard_editorial.html" target="_blank"><span class="material-symbols-outlined">open_in_new</span>Leaderboard</a>
-      <a href="chart_editorial.html" target="_blank"><span class="material-symbols-outlined">open_in_new</span>Chart page</a>
-    </div>
-    <div class="phones">
-      <div class="phone"><div class="label">Leaderboard</div><div class="frame"><iframe data-src="leaderboard_editorial.html" title="Editorial leaderboard"></iframe></div></div>
-      <div class="phone"><div class="label">Chart</div><div class="frame"><iframe data-src="chart_editorial.html" title="Editorial chart"></iframe></div></div>
+      <a href="leaderboard_editorial.html"><span class="material-symbols-outlined">leaderboard</span>Leaderboard<span class="material-symbols-outlined go">chevron_right</span></a>
+      <a href="chart_editorial.html"><span class="material-symbols-outlined">show_chart</span>Chart page<span class="material-symbols-outlined go">chevron_right</span></a>
     </div>
   </section>
 </div>
-
-<script>
-var theme = 'light';
-function setTheme(t){
-  theme = t;
-  document.documentElement.setAttribute('data-theme', t);
-  document.getElementById('lightBtn').setAttribute('aria-pressed', t==='light');
-  document.getElementById('darkBtn').setAttribute('aria-pressed', t==='dark');
-  document.querySelectorAll('iframe').forEach(function(f){
-    f.src = f.getAttribute('data-src') + '?theme=' + t;
-  });
-}
-(function(){
-  var sys = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  setTheme(sys);
-})();
-</script>
 </body>
 </html>
