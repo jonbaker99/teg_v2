@@ -18,11 +18,7 @@
             hx-include="#tp-measure, #tp-n-select"
             hx-vals='{"tab": "{{ tab_id }}"}'
             hx-swap="innerHTML"
-            onclick="
-                document.getElementById('tp-tab-input').value='{{ tab_id }}';
-                document.querySelectorAll('.section-nav button.tab-underline').forEach(b => b.classList.remove('tab-underline--active'));
-                this.classList.add('tab-underline--active');
-            ">
+            onclick="document.getElementById('tp-tab-input').value='{{ tab_id }}';">
         {{ tab_label }}
     </button>
     {% endfor %}
@@ -30,19 +26,15 @@
 
 {# --- Measure + N controls --- #}
 <div id="tp-controls" class="section-controls flex items-center gap-4">
-    <div class="toggle-group flex items-center gap-2">
+    <div class="pill-group" role="group" aria-label="Measure">
         {% for mid, mlabel in measures %}
-        <button class="tab-underline{% if mid == selected_measure %} tab-underline--active{% endif %}"
+        <button class="pill{% if mid == selected_measure %} pill--active{% endif %}"
                 hx-get="/top-performances/tab"
                 hx-target="#tp-content"
                 hx-include="#tp-tab-input, #tp-n-select"
                 hx-vals='{"measure": "{{ mid }}"}'
                 hx-swap="innerHTML"
-                onclick="
-                    document.getElementById('tp-measure').value='{{ mid }}';
-                    this.parentElement.querySelectorAll('.tab-underline').forEach(b => b.classList.remove('tab-underline--active'));
-                    this.classList.add('tab-underline--active');
-                ">
+                onclick="document.getElementById('tp-measure').value='{{ mid }}';">
             {{ mlabel }}
         </button>
         {% endfor %}

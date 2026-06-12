@@ -7,6 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <link rel="stylesheet" href="/static/themes/base-vars.css?v=19">
+    <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=19">
+    <!-- Report styling (.teg-report) — loaded globally so reports render the same
+         wherever they appear (TEG Reports, Results/Latest report tabs). -->
+    <link rel="stylesheet" href="/static/teg_reports.css?v=20">
     <link rel="stylesheet" href="/static/themes/base-vars.css?v=13">
     <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=13">
     <!-- Dark mode — inert until <html data-mode="dark">; default is light. -->
@@ -226,6 +231,31 @@
                 btn.parentElement.classList.toggle('open');
             }
         });
+    });
+    // Global in-page tab active state: clicking a primary tab (a .tab-underline
+    // inside a .section-nav) moves the active underline to it. Scoped to the
+    // nearest .section-nav so multiple tab bars on a page don't interfere, and
+    // so sub-toggles (.toggle-group) keep their own per-page handlers.
+    document.addEventListener('click', function(e) {
+        var btn = e.target.closest('.section-nav .tab-underline');
+        if (!btn) return;
+        var nav = btn.closest('.section-nav');
+        nav.querySelectorAll('.tab-underline').forEach(function(b) {
+            b.classList.remove('tab-underline--active');
+        });
+        btn.classList.add('tab-underline--active');
+    });
+    // Global pill active state: clicking a .pill moves --active within its
+    // nearest .pill-group. Works whether the pills are re-rendered by an HTMX
+    // swap or sit outside the swap target (e.g. /top-performances measure pills).
+    document.addEventListener('click', function(e) {
+        var pill = e.target.closest('.pill-group .pill');
+        if (!pill) return;
+        var group = pill.closest('.pill-group');
+        group.querySelectorAll('.pill').forEach(function(p) {
+            p.classList.remove('pill--active');
+        });
+        pill.classList.add('pill--active');
     });
     </script>
 </body>

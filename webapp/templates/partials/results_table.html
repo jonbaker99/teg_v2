@@ -1,38 +1,41 @@
 {% if error %}
 <p class="text-muted">Error: {{ error }}</p>
-{% else %}
-{% if chart_json %}
-<input type="hidden" id="results-chart-variant" name="chart_variant" value="{{ active_chart_variant }}">
-{% if result_title %}<div class="card-header">{{ result_title }}</div>{% endif %}
+{% elif is_leaderboard %}
+<h2 class="section-title">{{ section_title }}</h2>
+{% if callout %}<p class="result-callout">{{ callout | safe }}</p>{% endif %}
+<div class="data-card">
+    <div class="table-wrapper">{{ table_html | safe }}</div>
+</div>
+
+<h3 class="chart-title">{{ chart_title }}</h3>
+<p class="chart-description">{{ chart_subtitle }}</p>
 <div class="data-card data-card--padded">
-    {% if chart_types %}
-    <div class="toggle-group flex items-center gap-2">
-        {% for cid, clabel in chart_types %}
-        <button class="tab-underline{% if cid == active_chart_variant %} tab-underline--active{% endif %}"
-                onclick="document.getElementById('results-chart-variant').value='{{ cid }}'"
-                hx-get="/results/table" hx-target="#results-content"
-                hx-include="#results-teg-select, #results-tab-input"
-                hx-vals='{"chart_variant": "{{ cid }}"}'>
-            {{ clabel }}
-        </button>
-        {% endfor %}
+    <div class="chart-placeholder">
+        <span class="ph-title">Race chart — placeholder</span>
+        <span>The interactive race chart is being rebuilt (see look-and-feel roadmap 1b).</span>
+        <span>Data source: <code>create_cumulative_graph(all_data, '{{ teg_name }}',
+            y_series='{{ chart_series }}')</code> in <code>webapp/chart_utils.py</code></span>
     </div>
-    {% endif %}
-    <div id="results-chart" class="chart-container" style="height:420px;"></div>
-    <script>
-    (function() {
-        var data = {{ chart_json | safe }};
-        Plotly.newPlot('results-chart', data.data, data.layout, {displayModeBar: false, responsive: true});
-    })();
-    </script>
 </div>
-<div class="data-card">
-    <div class="table-wrapper">{{ table_html | safe }}</div>
+
+<input type="hidden" id="results-chart-variant" name="chart_variant" value="{{ active_chart_variant }}">
+<p class="chart-controls-label">Choose chart type:</p>
+<div class="pill-group" role="group" aria-label="Chart type">
+    {% for cid, clabel in chart_types %}
+    <button class="pill{% if cid == active_chart_variant %} pill--active{% endif %}"
+            onclick="document.getElementById('results-chart-variant').value='{{ cid }}'"
+            hx-get="/results/table" hx-target="#results-content"
+            hx-include="#results-teg-select, #results-tab-input"
+            hx-vals='{"chart_variant": "{{ cid }}"}'>
+        {{ clabel }}
+    </button>
+    {% endfor %}
 </div>
+{% if chart_note %}<p class="chart-note text-muted text-sm">{{ chart_note }}</p>{% endif %}
+
 {% else %}
 {% if result_title %}<div class="card-header">{{ result_title }}</div>{% endif %}
 <div class="data-card">
     <div class="table-wrapper">{{ table_html | safe }}</div>
 </div>
-{% endif %}
 {% endif %}

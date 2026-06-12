@@ -2,7 +2,6 @@
 <p class="text-muted">Error: {{ error }}</p>
 {% elif sections %}
   {% for section in sections %}
-    {% if section.title %}<h2 class="section-title">{{ section.title }}</h2>{% endif %}
     <div class="data-card"><div class="table-wrapper">{{ section.table_html | safe }}</div></div>
   {% endfor %}
 {% else %}

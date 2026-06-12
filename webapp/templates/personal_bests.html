@@ -20,8 +20,6 @@
             hx-swap="innerHTML"
             onclick="
                 document.getElementById('pb-tab-input').value='{{ tab_id }}';
-                document.querySelectorAll('.section-nav button.tab-underline').forEach(b => b.classList.remove('tab-underline--active'));
-                this.classList.add('tab-underline--active');
                 var ctrl = document.getElementById('pb-controls');
                 var sumCtrl = document.getElementById('pb-summary-controls');
                 if ('{{ tab_id }}' === 'pb_summary') {
@@ -38,19 +36,15 @@
 </div>
 
 {# --- Summary controls (shown only on PB Summary tab) --- #}
-<div id="pb-summary-controls" class="toggle-group flex items-center gap-4"
+<div id="pb-summary-controls" class="pill-group" role="group" aria-label="View"
      style="{% if active_tab != 'pb_summary' %}display:none{% endif %}">
     {% for vid, vlabel in summary_views %}
-    <button class="tab-underline{% if vid == selected_view %} tab-underline--active{% endif %}"
+    <button class="pill{% if vid == selected_view %} pill--active{% endif %}"
             hx-get="/personal-bests/tab"
             hx-target="#pb-content"
             hx-vals='{"tab": "pb_summary", "view": "{{ vid }}"}'
             hx-swap="innerHTML"
-            onclick="
-                document.getElementById('pb-view-select').value='{{ vid }}';
-                this.parentElement.querySelectorAll('.tab-underline').forEach(b => b.classList.remove('tab-underline--active'));
-                this.classList.add('tab-underline--active');
-            ">
+            onclick="document.getElementById('pb-view-select').value='{{ vid }}';">
         {{ vlabel }}
     </button>
     {% endfor %}
@@ -59,19 +53,15 @@
 {# --- Measure + N controls (hidden on PB Summary tab) --- #}
 <div id="pb-controls" class="section-controls flex items-center gap-4"
      style="{% if active_tab == 'pb_summary' %}display:none{% endif %}">
-    <div class="toggle-group flex items-center gap-2">
+    <div class="pill-group" role="group" aria-label="Measure">
         {% for mid, mlabel in measures %}
-        <button class="tab-underline{% if mid == selected_measure %} tab-underline--active{% endif %}"
+        <button class="pill{% if mid == selected_measure %} pill--active{% endif %}"
                 hx-get="/personal-bests/tab"
                 hx-target="#pb-content"
                 hx-include="#pb-tab-input, #pb-n-select"
                 hx-vals='{"measure": "{{ mid }}"}'
                 hx-swap="innerHTML"
-                onclick="
-                    document.getElementById('pb-measure').value='{{ mid }}';
-                    this.parentElement.querySelectorAll('.tab-underline').forEach(b => b.classList.remove('tab-underline--active'));
-                    this.classList.add('tab-underline--active');
-                ">
+                onclick="document.getElementById('pb-measure').value='{{ mid }}';">
             {{ mlabel }}
         </button>
         {% endfor %}

@@ -55,16 +55,21 @@ templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templa
 
 
 def _df_to_html(df: pd.DataFrame, table_class: str = "teg-table") -> str:
+    """Render a DataFrame as a teg-table: first column left-aligned (player /
+    label), remaining columns centred — consistent with the /results tables."""
     if df is None or df.empty:
         return "<p class='text-muted text-sm'>No data available.</p>"
+    cols = list(df.columns)
     rows = [f"<table class='{table_class}'><thead><tr>"]
-    for col in df.columns:
-        rows.append(f"<th>{col}</th>")
+    for i, col in enumerate(cols):
+        cls = "col-player" if i == 0 else "col-num"
+        rows.append(f"<th class='{cls}'>{col}</th>")
     rows.append("</tr></thead><tbody>")
     for _, row in df.iterrows():
         rows.append("<tr>")
-        for col in df.columns:
-            rows.append(f"<td>{row[col]}</td>")
+        for i, col in enumerate(cols):
+            cls = "col-player" if i == 0 else "col-num"
+            rows.append(f"<td class='{cls}'>{row[col]}</td>")
         rows.append("</tr>")
     rows.append("</tbody></table>")
     return "".join(rows)
@@ -88,6 +93,22 @@ def _fmt_record_value(value, metric: str) -> str:
     if metric in ('GrossVP', 'NetVP'):
         return format_vs_par(value)
     return str(int(value))
+
+
+def _intify_numeric(df: pd.DataFrame) -> pd.DataFrame:
+    """Cast every numeric column to int so counts/scores show as whole numbers
+    (not '0.0') in both the cells and the row-header column."""
+    out = df.copy()
+    for col in out.columns:
+        if pd.api.types.is_numeric_dtype(out[col]):
+            out[col] = out[col].astype('int64')
+    return out
+
+
+_RECORDS_DRAFT_NOTE = (
+    "<p class='text-muted text-sm mb-2'>⚠️ Draft — the records and PBs below "
+    "need to be verified before the site is published.</p>"
+)
 
 
 def _render_records_summary(rd: dict, page_type: str = 'TEG') -> str:
@@ -189,24 +210,19 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
             try:
                 ranked = cached_ranked_round_data()
                 ctx_df = prepare_round_context_display(ranked, teg_str, round_num, metric, friendly)
+                if friendly in ctx_df.columns:
+                    ctx_df[friendly] = ctx_df[friendly].apply(lambda v: _fmt_record_value(v, metric))
                 table_html = _df_to_html(ctx_df)
             except Exception:
                 table_html = "<p class='text-muted text-sm'>No data.</p>"
-            # Per-metric cumulative-through-round chart
-            chart_json = None
-            try:
-                import json
-                import plotly.utils
-                from webapp.chart_utils import create_round_graph
-                all_data = cached_load_all_data()
-                fig = create_round_graph(all_data, teg_str, round_num, f'{metric} Cum Round',
-                                         friendly, y_axis_label=f'Cumulative {friendly}')
-                chart_json = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-            except Exception:
-                chart_json = None
+            # Per-metric cumulative-through-round chart — placeholder pending the
+            # chart rebuild (see webapp/README look-and-feel roadmap, item 1b).
             return {"sections": [{"title": friendly, "table_html": table_html}],
                     "metric_tabs": METRIC_TABS, "active_metric": metric,
-                    "chart_json": chart_json, "chart_title": f"Cumulative {friendly} through round"}
+                    "chart_placeholder": True,
+                    "chart_title": f"Cumulative {friendly} through round",
+                    "chart_series": f"{metric} Cum Round",
+                    "chart_teg": teg_str, "chart_round": round_num}
 
         elif tab == "scorecard":
             try:
@@ -245,7 +261,7 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                     'best_score_counts': counts['best_score_counts'],
                     'worst_score_counts': counts['worst_score_counts'],
                 }
-                sections.append({"title": None, "table_html": _render_records_summary(rd_dict, 'Round')})
+                sections.append({"title": None, "table_html": _RECORDS_DRAFT_NOTE + _render_records_summary(rd_dict, 'Round')})
             except Exception as e:
                 sections.append({"title": "Records & PBs", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
@@ -267,7 +283,7 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
             round_data = all_data[(all_data['TEGNum'] == teg_num) & (all_data['Round'] == round_num)]
             if not round_data.empty:
                 counts = count_scores_by_player(round_data, field)
-                counts_display = counts.reset_index()
+                counts_display = _intify_numeric(counts.reset_index())
                 sections.append({"title": f"Score Counts ({friendly})", "table_html": _df_to_html(counts_display)})
             else:
                 sections.append({"title": "Scoring", "table_html": "<p class='text-muted text-sm'>No scoring data.</p>"})
@@ -313,6 +329,9 @@ async def latest_round_page(request: Request):
         "selected_teg": teg_num,
         "rounds": rounds,
         "selected_round": round_num,
+        # teg/round also feed the in-partial pill hx-vals on first render.
+        "teg": teg_num,
+        "round": int(round_num),
         "tabs": LATEST_ROUND_TABS,
         "active_tab": "scoreboard",
         "context_header": context_header,
@@ -356,6 +375,8 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
             try:
                 ranked = cached_ranked_teg_data()
                 ctx_df = prepare_teg_context_display(ranked, teg_str, metric, friendly)
+                if friendly in ctx_df.columns:
+                    ctx_df[friendly] = ctx_df[friendly].apply(lambda v: _fmt_record_value(v, metric))
                 table_html = _df_to_html(ctx_df)
             except Exception:
                 table_html = "<p class='text-muted text-sm'>No aggregate data available.</p>"
@@ -369,7 +390,7 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
             teg_data = all_data[all_data['TEGNum'] == teg_num]
             if not teg_data.empty:
                 counts = count_scores_by_player(teg_data, field)
-                counts_display = counts.reset_index()
+                counts_display = _intify_numeric(counts.reset_index())
                 sections.append({"title": f"Score Counts ({friendly})", "table_html": _df_to_html(counts_display)})
             else:
                 sections.append({"title": "Scoring", "table_html": "<p class='text-muted text-sm'>No scoring data.</p>"})
@@ -427,7 +448,7 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
                     'best_score_counts': counts['best_score_counts'],
                     'worst_score_counts': counts['worst_score_counts'],
                 }
-                sections.append({"title": None, "table_html": _render_records_summary(rd_dict, 'TEG')})
+                sections.append({"title": None, "table_html": _RECORDS_DRAFT_NOTE + _render_records_summary(rd_dict, 'TEG')})
             except Exception as e:
                 sections.append({"title": "Records & PBs", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
@@ -446,6 +467,8 @@ async def latest_teg_page(request: Request):
         "active_page": "latest-teg",
         "teg_numbers": teg_numbers,
         "selected_teg": teg_num,
+        # teg also feeds the in-partial pill hx-vals on first render.
+        "teg": teg_num,
         "tabs": LATEST_TEG_TABS,
         "active_tab": "aggregate",
         **ctx,
@@ -465,66 +488,67 @@ async def latest_teg_tab(request: Request, teg: int = Query(...), tab: str = Que
 
 # --- /handicaps ---------------------------------------------------------------
 
-def _fmt_hc_change(val) -> str:
-    if pd.isna(val):
-        return "-"
-    val = int(val)
-    if val > 0:
-        return f"+{val}"
-    if val < 0:
-        return str(val)
-    return "-"
-
-
 @router.get("/handicaps")
 async def handicaps_page(request: Request):
     try:
         last_completed, next_tegnum, in_progress = get_next_teg_and_check_if_in_progress_fast()
         next_teg_str = f"TEG {next_tegnum}"
+        # current_hc columns: 'Handicap' (player name), '<next_teg_str>' (value), 'Change'.
         current_hc, were_calculated = get_current_handicaps_formatted(next_tegnum - 1, next_tegnum)
         current_hc = current_hc.sort_values(by=next_teg_str, ascending=True).reset_index(drop=True)
 
-        sections = []
+        # --- Metric tiles: name / handicap / change (down = good → green). ---
+        tiles = []
+        for _, row in current_hc.iterrows():
+            change = int(row["Change"])
+            if change < 0:
+                delta_dir, arrow = "down", "↓"
+            elif change > 0:
+                delta_dir, arrow = "up", "↑"
+            else:
+                delta_dir, arrow = "none", ""
+            # First name proper case, surname(s) in caps.
+            parts = str(row["Handicap"]).split(" ")
+            name_parts = [parts[0]] + [p.upper() for p in parts[1:]] if parts else parts
+            tiles.append({
+                "name_parts": name_parts,
+                "value": int(row[next_teg_str]),
+                "delta_dir": delta_dir,
+                "delta_arrow": arrow,
+                "delta_text": str(change) if change != 0 else "–",
+            })
 
-        # --- Current (or draft) handicaps for the next TEG ---
-        disp = current_hc.rename(columns={next_teg_str: "Handicap"}).copy()
-        disp["Change"] = disp["Change"].apply(_fmt_hc_change)
-        title = f"{next_teg_str} Handicaps" + (" (Draft)" if were_calculated else "")
-        banner = ("<p class='text-muted text-sm mb-2'>ℹ️ Draft handicaps subject to final review</p>"
-                  if were_calculated else "")
-        note = "<p class='text-muted text-sm mt-2'>Change shows difference in HC vs previous TEG</p>"
-        sections.append({"title": title, "table_html": banner + _df_to_html(disp) + note})
+        ctx = {
+            "is_draft": were_calculated,
+            "next_teg_label": f"{next_teg_str} Handicaps" + (" (Draft)" if were_calculated else ""),
+            "tiles": tiles,
+            "draft_html": None,
+        }
 
-        # --- Full history table ---
+        # --- Handicap history (initials, oldest-first, '-' for 0/blank). ---
         hc_df = read_file(HANDICAPS_CSV)
-        hc_df = hc_df[hc_df['TEG'] != 'TEG 50']
-        display = hc_df.copy()
-        for col in display.columns:
-            if col != 'TEG':
-                display[col] = display[col].apply(lambda x: '-' if x == 0 else x)
-        rename_map = {col: PLAYER_DICT[col] for col in display.columns if col != 'TEG' and col in PLAYER_DICT}
-        display = display.rename(columns=rename_map).iloc[::-1].reset_index(drop=True)
-        sections.append({"title": "Handicap History", "table_html": _df_to_html(display)})
+        hc_df = hc_df[hc_df["TEG"] != "TEG 50"].copy()
+        for col in hc_df.columns:
+            if col != "TEG":
+                hc_df[col] = hc_df[col].apply(lambda x: "-" if pd.isna(x) or x == 0 else str(int(x)))
+        ctx["history_html"] = _df_to_html(hc_df, table_class="teg-table table--full")
 
-        # --- Draft handicaps for the TEG after next (only when a TEG is in progress) ---
+        # --- Draft handicaps for the TEG after next (only when one is in progress). ---
         if in_progress:
             try:
                 in_progress_teg, rounds_played = get_current_in_progress_teg_fast()
                 next_next = next_tegnum + 1
                 draft = get_hc(next_next).sort_values("hc_raw", ascending=True, na_position="last").reset_index(drop=True)
-                draft_title = f"Draft handicaps for TEG {next_next} (after {rounds_played} rounds of TEG {in_progress_teg})"
-                sections.append({"title": draft_title, "table_html": _df_to_html(draft)})
+                ctx["draft_title"] = f"Draft handicaps for TEG {next_next} (after {rounds_played} rounds of TEG {in_progress_teg})"
+                ctx["draft_html"] = _df_to_html(draft)
             except Exception as e:
-                sections.append({"title": "Draft handicaps", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
+                ctx["draft_title"] = "Draft handicaps"
+                ctx["draft_html"] = f"<p class='text-muted text-sm'>Error: {e}</p>"
 
+        return templates.TemplateResponse("handicaps.html", {
+            "request": request, "active_page": "handicaps", **ctx,
+        })
     except Exception as e:
-        sections = [{"title": "Error", "table_html": f"<p class='text-muted'>{e}</p>"}]
-
-    return templates.TemplateResponse("data_table.html", {
-        "request": request,
-        "active_page": "handicaps",
-        "title": "Handicaps",
-        "subtitle": "Player handicaps by TEG",
-        "table_html": "",
-        "sections": sections,
-    })
+        return templates.TemplateResponse("handicaps.html", {
+            "request": request, "active_page": "handicaps", "error": str(e),
+        })

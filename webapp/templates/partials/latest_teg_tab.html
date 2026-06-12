@@ -3,35 +3,39 @@
 {% elif report_html is defined %}
   {% if report_html %}
   {% if report_caption %}<p class="text-muted text-sm mb-2">{{ report_caption }}</p>{% endif %}
-  <div class="report-body">{{ report_html | safe }}</div>
+  <div class="teg-report">{{ report_html | safe }}</div>
   {% else %}
   <p class="text-muted text-sm">{{ report_message }}</p>
   {% endif %}
 {% elif sections %}
   {% if scoring_fields %}
-  <div class="toggle-group flex items-center gap-2">
-    {% for fid, flabel in scoring_fields %}
-    <button class="tab-underline{% if fid == score_type %} tab-underline--active{% endif %}"
-            hx-get="/latest-teg/tab" hx-target="#lt-content" hx-swap="innerHTML"
-            hx-vals='{"teg": "{{ teg }}", "tab": "scoring", "score_type": "{{ fid }}"}'>
-      {{ flabel }}
-    </button>
-    {% endfor %}
+  <div class="section-controls">
+    <div class="pill-group" role="group" aria-label="Score type">
+      {% for fid, flabel in scoring_fields %}
+      <button class="pill{% if fid == score_type %} pill--active{% endif %}"
+              hx-get="/latest-teg/tab" hx-target="#lt-content" hx-swap="innerHTML"
+              hx-vals='{"teg": "{{ teg }}", "tab": "scoring", "score_type": "{{ fid }}"}'>
+        {{ flabel }}
+      </button>
+      {% endfor %}
+    </div>
   </div>
   {% endif %}
   {% if metric_tabs %}
-  <div class="toggle-group flex flex-wrap items-center gap-2">
-    {% for mid, mlabel in metric_tabs %}
-    <button class="tab-underline{% if mid == active_metric %} tab-underline--active{% endif %}"
-            hx-get="/latest-teg/tab" hx-target="#lt-content" hx-swap="innerHTML"
-            hx-vals='{"teg": "{{ teg }}", "tab": "aggregate", "metric": "{{ mid }}"}'>
-      {{ mlabel }}
-    </button>
-    {% endfor %}
+  <div class="section-controls">
+    <div class="pill-group" role="group" aria-label="Metric">
+      {% for mid, mlabel in metric_tabs %}
+      <button class="pill{% if mid == active_metric %} pill--active{% endif %}"
+              hx-get="/latest-teg/tab" hx-target="#lt-content" hx-swap="innerHTML"
+              hx-vals='{"teg": "{{ teg }}", "tab": "aggregate", "metric": "{{ mid }}"}'>
+        {{ mlabel }}
+      </button>
+      {% endfor %}
+    </div>
   </div>
   {% endif %}
   {% for section in sections %}
-    {% if section.title %}<h2 class="section-title">{{ section.title }}</h2>{% endif %}
+    {% if section.title %}<div class="card-header">{{ section.title }}</div>{% endif %}
     <div class="data-card"><div class="table-wrapper">{{ section.table_html | safe }}</div></div>
   {% endfor %}
   {% if caption %}<p class="text-muted text-sm mt-3">{{ caption }}</p>{% endif %}
