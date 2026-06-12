@@ -425,3 +425,9 @@ HTML builders).
   the last round. A TEG-level view should aggregate streaks across all rounds
   of the TEG (and handle streaks that span a round boundary, if intended).
 
+**Planned enhancements (TODO):**
+- **Add an absolute / % pill** (percentage = share of each column) to the
+  score-count matrix on `/scoring/matrix` and to the **Scoring tab on
+  `/latest-teg`** — a `.pill-group` toggle that switches the table between raw
+  counts and column percentages.
+
