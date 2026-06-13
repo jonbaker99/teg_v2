@@ -13,11 +13,17 @@
     <p class="mb-3">Champion: <span class="font-bold">{{ active_champion }}</span>{% if active_spoon %} | Wooden spoon: <span class="font-bold">{{ active_spoon }}</span>{% endif %}</p>
     {% endif %}
     <div class="card-header">{{ active_title }}</div>
-    <div class="data-card">
+    <!-- Desktop / iPad: the table. Phone (≤640px): the reflowed card list. -->
+    <div class="lb-table-wrap data-card">
         <div class="overflow-x-auto">
         {{ active_table | safe }}
         </div>
     </div>
+    {% if active_cards %}
+    <div class="lb-cards-wrap">
+        {{ active_cards | safe }}
+    </div>
+    {% endif %}
 
     {% if chart_json %}
     <div class="toggle-group flex items-center gap-2">

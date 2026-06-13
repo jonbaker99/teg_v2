@@ -87,6 +87,38 @@ def _build_table_html(df, teg_num: int = None):
     return "".join(rows)
 
 
+def _build_card_list_html(df, teg_num: int = None):
+    """Render the leaderboard DataFrame as a mobile card list (Phase M1).
+
+    One tappable card per player — rank, name, a per-round summary line and a
+    prominent total. Shown only ≤640px (CSS); the table is the desktop view.
+    Same data as ``_build_table_html``, just reflowed.
+    """
+    round_cols = [c for c in df.columns if c.startswith('R') and c[1:].isdigit()]
+    has_total = 'Total' in df.columns
+    out = ["<div class='lb-cards'>"]
+    for _, row in df.iterrows():
+        rank_str = str(row['Rank'])
+        lead = ' lb-card--lead' if rank_str.replace('=', '') == '1' else ''
+        name = row['Player']
+        code = _NAME_TO_CODE.get(name)
+        name_html = f"<a href='/player/{code}'>{escape(name)}</a>" if code else escape(name)
+        rounds_html = " · ".join(f"{c} <b>{row[c]}</b>" for c in round_cols)
+        total_html = (
+            f"<div class='lb-card-total'><span class='v'>{row['Total']}</span>"
+            f"<span class='u'>Total</span></div>" if has_total else ""
+        )
+        out.append(
+            f"<div class='lb-card{lead}'>"
+            f"<div class='lb-card-rank'>{rank_str}</div>"
+            f"<div class='lb-card-main'><div class='lb-card-name'>{name_html}</div>"
+            f"<div class='lb-card-rounds'>{rounds_html}</div></div>"
+            f"{total_html}</div>"
+        )
+    out.append("</div>")
+    return "".join(out)
+
+
 def _get_champion(df):
     """Get champion name(s) from leaderboard."""
     champs = df[df['Rank'].isin(['1', '1='])]['Player'].tolist()
@@ -185,6 +217,7 @@ def _leaderboard_context(teg_num: int, tab: str = "net", chart_variant: str = "s
             return {
                 "active_title": "Scorecards",
                 "active_table": None,
+                "active_cards": None,
                 "active_champion": None,
                 "active_spoon": None,
                 "chart_json": None,
@@ -221,11 +254,13 @@ def _leaderboard_context(teg_num: int, tab: str = "net", chart_variant: str = "s
         if tab == "gross":
             active_title = "Claret Jug (Gross vs Par)"
             active_table = _build_table_html(gross_lb, teg_num)
+            active_cards = _build_card_list_html(gross_lb, teg_num)
             active_champion = gross_champion
             active_spoon = None
         else:
             active_title = net_title_label
             active_table = _build_table_html(net_lb, teg_num)
+            active_cards = _build_card_list_html(net_lb, teg_num)
             active_champion = net_champion
             active_spoon = net_wooden_spoon
 
@@ -234,6 +269,7 @@ def _leaderboard_context(teg_num: int, tab: str = "net", chart_variant: str = "s
         return {
             "active_title": active_title,
             "active_table": active_table,
+            "active_cards": active_cards,
             "active_champion": active_champion,
             "active_spoon": active_spoon,
             "chart_json": chart_json,
