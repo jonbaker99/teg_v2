@@ -26,7 +26,7 @@
 }
 
 /* ── Data cells — compact, square ──────────────────────────────────────────
-   All non-label cells: fixed width, small font, centred. */
+   All non-label cells: fixed width, small monospace font, centred. */
 .heatmap-table thead th:not(.hm-row-label-header),
 .heatmap-table tbody td:not(.row-label) {
   width: 2.1rem;
@@ -34,6 +34,7 @@
   max-width: 2.1rem;
   text-align: center;
   font-size: 0.65rem;
+  font-family: var(--font-mono, 'Roboto Mono', monospace);
   padding: 0;           /* padding via row height; inline bg needs 0 pad to fill */
   border-radius: 2px;
   vertical-align: middle;
@@ -127,4 +128,107 @@
   color: var(--text-muted, #999);
   font-size: 0.7rem;
   white-space: nowrap;
+}
+
+/* ── Collapsible controls panel ─────────────────────────────────────────── */
+.hm-controls-panel {
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--table-cell-border, #e0e0e0);
+  border-radius: 6px;
+  overflow: visible;
+}
+.hm-controls-panel > summary {
+  padding: 0.45rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary, #555);
+  user-select: none;
+  list-style: none;   /* hide browser default triangle */
+}
+.hm-controls-panel > summary::-webkit-details-marker { display: none; }
+.hm-controls-panel > summary::before {
+  content: "▶\00a0";
+  font-size: 0.6rem;
+  vertical-align: middle;
+}
+.hm-controls-panel[open] > summary::before { content: "▼\00a0"; }
+
+.hm-controls-body {
+  padding: 0.6rem 1rem 0.8rem;
+  border-top: 1px solid var(--table-cell-border, #e0e0e0);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.hm-control-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.hm-control-label {
+  width: 3.8rem;
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary, #555);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── Pill groups ────────────────────────────────────────────────────────── */
+.pill-group {
+  display: inline-flex;
+  border: 1px solid var(--table-cell-border, #d0d0d0);
+  border-radius: 999px;
+  overflow: hidden;
+  flex-wrap: wrap;
+}
+.pill-group input[type="radio"],
+.pill-group input[type="checkbox"] {
+  /* Keep in DOM for events but invisible */
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.pill-group label {
+  padding: 0.22rem 0.7rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  border-right: 1px solid var(--table-cell-border, #d0d0d0);
+  background: var(--bg-card, #fff);
+  color: var(--text-secondary, #555);
+  white-space: nowrap;
+  transition: background 0.1s, color 0.1s;
+  line-height: 1.6;
+}
+.pill-group label:last-child { border-right: none; }
+.pill-group label:hover { background: var(--nav-hover-bg, #f5f5f5); }
+
+.pill-group input[type="radio"]:checked + label,
+.pill-group input[type="checkbox"]:checked + label {
+  background: var(--text-primary, #1a1a1a);
+  color: var(--bg-card, #fff);
+}
+.pill-group input[type="radio"]:checked + label:hover,
+.pill-group input[type="checkbox"]:checked + label:hover {
+  background: var(--text-primary, #1a1a1a);
+}
+
+/* Dark mode adjustments */
+html[data-mode="dark"] .hm-controls-panel {
+  border-color: var(--table-cell-border, #2e2e29);
+}
+html[data-mode="dark"] .pill-group {
+  border-color: var(--table-cell-border, #3a3a35);
+}
+html[data-mode="dark"] .pill-group label {
+  border-right-color: var(--table-cell-border, #3a3a35);
+}
+html[data-mode="dark"] .pill-group input:checked + label {
+  background: var(--text-primary, #ececea);
+  color: var(--bg-page, #16150f);
 }

@@ -1162,7 +1162,8 @@ def _heatmap_context(
     row_by: str = "Player",
     col_by: str = "Hole",
     sort_by_score: bool = True,
-    show_totals: bool = True,
+    show_col_totals: bool = False,
+    show_row_avg: bool = False,
     palette: str = "redyellowblue",
     reverse: bool = False,
     domain_min: float | None = None,
@@ -1187,7 +1188,7 @@ def _heatmap_context(
         else:
             col_vals = sorted(col_vals, key=lambda x: str(x))
 
-        # Overall row averages (true mean) — sorting + Avg column
+        # Overall row averages (true mean) — sorting + optional Avg column
         row_avgs = all_data.groupby(row_by)['GrossVP'].mean()
         if sort_by_score:
             row_labels = row_avgs.sort_values(ascending=False).index.tolist()
@@ -1223,7 +1224,9 @@ def _heatmap_context(
         html.append("<thead><tr><th class='hm-row-label-header'></th>")
         for c in col_vals:
             html.append(f"<th{th_cls}><span>{_hm_col_label(col_by, c)}</span></th>")
-        html.append("<th class='hm-avg-header'><span>Avg</span></th></tr></thead><tbody>")
+        if show_row_avg:
+            html.append("<th class='hm-avg-header'><span>Avg</span></th>")
+        html.append("</tr></thead><tbody>")
 
         for label in row_labels:
             row_avg = row_avgs.get(label, float('nan'))
@@ -1234,12 +1237,13 @@ def _heatmap_context(
                 sty = _hm_cell_style(v, colors, dm_min, dm_mid, dm_max)
                 txt = f"{v:+.1f}" if not pd.isna(v) else ""
                 html.append(f"<td style='{sty}'>{txt}</td>")
-            sty = _hm_cell_style(row_avg, colors, dm_min, dm_mid, dm_max)
-            ra = f"{row_avg:+.1f}" if not pd.isna(row_avg) else ""
-            html.append(f"<td style='{sty}' class='hm-avg-cell'>{ra}</td>")
+            if show_row_avg:
+                sty = _hm_cell_style(row_avg, colors, dm_min, dm_mid, dm_max)
+                ra = f"{row_avg:+.1f}" if not pd.isna(row_avg) else ""
+                html.append(f"<td style='{sty}' class='hm-avg-cell'>{ra}</td>")
             html.append("</tr>")
 
-        if show_totals:
+        if show_col_totals:
             col_tot = all_data.groupby(col_by)['GrossVP'].mean()
             total_avg = all_data['GrossVP'].mean()
             html.append("<tr class='hm-total-row'><td class='row-label hm-total-label'>TOTAL</td>")
@@ -1248,8 +1252,9 @@ def _heatmap_context(
                 sty = _hm_cell_style(v, colors, dm_min, dm_mid, dm_max)
                 txt = f"{v:+.1f}" if not pd.isna(v) else ""
                 html.append(f"<td style='{sty}' class='hm-total-cell'>{txt}</td>")
-            sty = _hm_cell_style(total_avg, colors, dm_min, dm_mid, dm_max)
-            html.append(f"<td style='{sty}' class='hm-avg-cell hm-total-cell'>{total_avg:+.1f}</td>")
+            if show_row_avg:
+                sty = _hm_cell_style(total_avg, colors, dm_min, dm_mid, dm_max)
+                html.append(f"<td style='{sty}' class='hm-avg-cell hm-total-cell'>{total_avg:+.1f}</td>")
             html.append("</tr>")
 
         html.append("</tbody></table>")
@@ -1276,7 +1281,8 @@ async def scoring_heatmap_page(
     row_by: str = Query("Player"),
     col_by: str = Query("Hole"),
     sort_by_score: str = Query("true"),
-    show_totals: str = Query("true"),
+    show_col_totals: str | None = Query(None),
+    show_row_avg: str | None = Query(None),
     palette: str = Query("redyellowblue"),
     reverse: str | None = Query(None),
     domain_min: float | None = Query(None),
@@ -1284,9 +1290,10 @@ async def scoring_heatmap_page(
     domain_max: float | None = Query(None),
 ):
     sbs = _parse_checkbox(sort_by_score)
-    st = _parse_checkbox(show_totals)
+    sct = _parse_checkbox(show_col_totals)
+    sra = _parse_checkbox(show_row_avg)
     rev = _parse_checkbox(reverse)
-    ctx = _heatmap_context(row_by, col_by, sbs, st, palette, rev, domain_min, domain_mid, domain_max)
+    ctx = _heatmap_context(row_by, col_by, sbs, sct, sra, palette, rev, domain_min, domain_mid, domain_max)
     return templates.TemplateResponse("scoring_heatmap.html", {
         "request": request,
         "active_page": "scoring",
@@ -1296,7 +1303,8 @@ async def scoring_heatmap_page(
         "row_by": row_by,
         "col_by": col_by,
         "sort_by_score": sbs,
-        "show_totals": st,
+        "show_col_totals": sct,
+        "show_row_avg": sra,
         "palette": palette,
         "reverse": rev,
         **ctx,
@@ -1309,7 +1317,8 @@ async def scoring_heatmap_content(
     row_by: str = Query("Player"),
     col_by: str = Query("Hole"),
     sort_by_score: str | None = Query(None),
-    show_totals: str | None = Query(None),
+    show_col_totals: str | None = Query(None),
+    show_row_avg: str | None = Query(None),
     palette: str = Query("redyellowblue"),
     reverse: str | None = Query(None),
     domain_min: float | None = Query(None),
@@ -1317,9 +1326,10 @@ async def scoring_heatmap_content(
     domain_max: float | None = Query(None),
 ):
     sbs = _parse_checkbox(sort_by_score)
-    st = _parse_checkbox(show_totals)
+    sct = _parse_checkbox(show_col_totals)
+    sra = _parse_checkbox(show_row_avg)
     rev = _parse_checkbox(reverse)
-    ctx = _heatmap_context(row_by, col_by, sbs, st, palette, rev, domain_min, domain_mid, domain_max)
+    ctx = _heatmap_context(row_by, col_by, sbs, sct, sra, palette, rev, domain_min, domain_mid, domain_max)
     return templates.TemplateResponse("partials/scoring_heatmap_content.html", {
         "request": request,
         **ctx,
