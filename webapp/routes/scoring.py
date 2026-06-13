@@ -1067,19 +1067,18 @@ def _hm_col_label(col_by: str, val) -> str:
     return str(val)
 
 
-def _heatmap_class(val: float, center: float) -> str:
+def _heatmap_class(val: float, center: float, scale: float) -> str:
     """Return a CSS class for a diverging blue→white→orange heatmap cell.
 
-    Colour is relative to `center` (the table mean), so the palette spans the
-    actual spread of the data rather than being anchored to par.
+    `center` is the table mean; `scale` is 1 std-dev of cell values so the
+    palette always fills the full 7-step range regardless of data spread.
     """
     if pd.isna(val):
         return "hm-na"
     dev = val - center
-    # Clamp at ±2 strokes from centre for full saturation
-    clamped = max(-2.0, min(2.0, dev))
-    # Map to 7 buckets: n3 (best/blue) .. z0 (neutral) .. p3 (worst/orange)
-    bucket = round(clamped / 2.0 * 3)  # -3 .. +3
+    # Normalise by scale so ±1σ maps to ±3 buckets, then clamp
+    normalised = dev / scale if scale > 0 else 0.0
+    bucket = max(-3, min(3, round(normalised * 3)))
     if bucket < 0:
         return f"hm-n{abs(bucket)}"
     elif bucket > 0:
@@ -1116,10 +1115,13 @@ def _heatmap_context(row_by: str = "Player", col_by: str = "Hole",
             row_labels = sorted(row_avgs.index.tolist(),
                                 key=lambda x: (int(x) if str(x).isdigit() else 0, str(x)))
 
-        # Centre the diverging palette on the overall table mean so colours
-        # reflect relative performance, not absolute score vs par.
+        # Centre the diverging palette on the table mean; scale by std-dev so
+        # the full 7-step range is always used regardless of data spread.
         all_cell_vals = [v for v in cell.values() if not pd.isna(v)]
-        center = float(pd.Series(all_cell_vals).mean()) if all_cell_vals else 0.0
+        s = pd.Series(all_cell_vals) if all_cell_vals else pd.Series([0.0])
+        center = float(s.mean())
+        scale = float(s.std()) if len(s) > 1 else 1.0
+        scale = max(scale, 0.05)  # guard against near-zero spread
 
         # Rotate string-type column headers for compact equal-width columns
         rotate_headers = col_by not in _HM_NUMERIC_COLS
@@ -1138,11 +1140,11 @@ def _heatmap_context(row_by: str = "Player", col_by: str = "Hole",
             html.append(f"<tr><td class='row-label'>{display_label}</td>")
             for c in col_vals:
                 v = cell.get((label, c), float('nan'))
-                cls = _heatmap_class(v, center)
+                cls = _heatmap_class(v, center, scale)
                 txt = f"{v:+.1f}" if not pd.isna(v) else ""
                 html.append(f"<td class='{cls}'>{txt}</td>")
             # Row average — colour relative to same centre
-            cls = _heatmap_class(row_avg, center)
+            cls = _heatmap_class(row_avg, center, scale)
             ra = f"{row_avg:+.1f}" if not pd.isna(row_avg) else ""
             html.append(f"<td class='{cls} hm-avg-cell'>{ra}</td>")
             html.append("</tr>")
@@ -1154,10 +1156,10 @@ def _heatmap_context(row_by: str = "Player", col_by: str = "Hole",
             html.append("<tr class='total-row'><td class='row-label hm-total-label'>TOTAL</td>")
             for c in col_vals:
                 v = col_tot.get(c, float('nan'))
-                cls = _heatmap_class(v, center)
+                cls = _heatmap_class(v, center, scale)
                 txt = f"{v:+.1f}" if not pd.isna(v) else ""
                 html.append(f"<td class='{cls} hm-total-cell'>{txt}</td>")
-            cls = _heatmap_class(total_avg, center)
+            cls = _heatmap_class(total_avg, center, scale)
             html.append(f"<td class='{cls} hm-avg-cell hm-total-cell'>{total_avg:+.1f}</td>")
             html.append("</tr>")
 
