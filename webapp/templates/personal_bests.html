@@ -36,7 +36,7 @@
 </div>
 
 {# --- Summary controls (shown only on PB Summary tab) --- #}
-<div id="pb-summary-controls" class="pill-group" role="group" aria-label="View"
+<div id="pb-summary-controls" class="pill-group mb-6" role="group" aria-label="View"
      style="{% if active_tab != 'pb_summary' %}display:none{% endif %}">
     {% for vid, vlabel in summary_views %}
     <button class="pill{% if vid == selected_view %} pill--active{% endif %}"

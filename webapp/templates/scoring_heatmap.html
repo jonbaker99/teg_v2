@@ -13,9 +13,18 @@
     <select id="hm-row-by" class="theme-select" name="row_by"
             hx-get="/scoring/heatmap/content"
             hx-target="#hm-content"
-            hx-include="#hm-sort, #hm-totals">
+            hx-include="#hm-col-by, #hm-sort, #hm-totals">
         {% for val, label in row_options %}
-        <option value="{{ val }}" {% if val == row_by %}selected{% endif %}>By {{ label }}</option>
+        <option value="{{ val }}" {% if val == row_by %}selected{% endif %}>Rows: {{ label }}</option>
+        {% endfor %}
+    </select>
+
+    <select id="hm-col-by" class="theme-select" name="col_by"
+            hx-get="/scoring/heatmap/content"
+            hx-target="#hm-content"
+            hx-include="#hm-row-by, #hm-sort, #hm-totals">
+        {% for val, label in col_options %}
+        <option value="{{ val }}" {% if val == col_by %}selected{% endif %}>Columns: {{ label }}</option>
         {% endfor %}
     </select>
 
@@ -24,7 +33,7 @@
                {% if sort_by_score %}checked{% endif %}
                hx-get="/scoring/heatmap/content"
                hx-target="#hm-content"
-               hx-include="#hm-row-by, #hm-totals">
+               hx-include="#hm-row-by, #hm-col-by, #hm-totals">
         Sort by score
     </label>
 
@@ -33,7 +42,7 @@
                {% if show_totals %}checked{% endif %}
                hx-get="/scoring/heatmap/content"
                hx-target="#hm-content"
-               hx-include="#hm-row-by, #hm-sort">
+               hx-include="#hm-row-by, #hm-col-by, #hm-sort">
         Show totals
     </label>
 </div>

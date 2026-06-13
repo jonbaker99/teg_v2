@@ -112,6 +112,14 @@ h1, h2, h3, h4, h5, h6 {
 .teg-table .total {
     font-weight: 700;
 }
+/* Record-holder cell (Personal Bests summary) — the overall best in a measure
+   column: pale-green background, forest-green bold text. td-level background sits
+   above any row stripe/hover, so it stays visible. */
+.teg-table tbody td.pb-record {
+    background-color: #e6f4ea;
+    color: #1b5e20;
+    font-weight: 600;
+}
 
 /* ── Player ranking table (conditional formatting) ──
    Compact, centred columns that fit within the page width. Rank 1 gets a green

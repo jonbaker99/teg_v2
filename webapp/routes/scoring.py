@@ -1046,6 +1046,26 @@ async def scoring_comebacks_content(
 
 HEATMAP_ROWS = [("Player", "Player"), ("Course", "Course"), ("TEGNum", "TEG")]
 
+# Dimensions the columns can be grouped by. Value = data column, label = display.
+HEATMAP_COLS = [
+    ("Hole", "Hole"),
+    ("SI", "Stroke Index"),
+    ("PAR", "Par"),
+    ("TEGNum", "TEG"),
+    ("Course", "Course"),
+    ("Area", "Region"),
+]
+
+# Column dimensions whose values are numeric (sorted/labelled as numbers).
+_HM_NUMERIC_COLS = {"Hole", "SI", "PAR", "TEGNum"}
+
+
+def _hm_col_label(col_by: str, val) -> str:
+    """Header label for a heatmap column value."""
+    if col_by in _HM_NUMERIC_COLS:
+        return str(int(val))
+    return str(val)
+
 
 def _heatmap_color(val: float) -> str:
     """Map avg GrossVP to a CSS background colour. Green=under par, red=over par."""
@@ -1065,73 +1085,72 @@ def _heatmap_color(val: float) -> str:
     return f"background-color: hsl({hue}, 50%, {lightness:.0f}%)"
 
 
-def _heatmap_context(row_by: str = "Player", sort_by_score: bool = True, show_totals: bool = True) -> dict:
-    """Build heatmap table HTML."""
+def _heatmap_context(row_by: str = "Player", col_by: str = "Hole",
+                     sort_by_score: bool = True, show_totals: bool = True) -> dict:
+    """Build heatmap table HTML: mean GrossVP per (row_by, col_by) cell."""
     try:
+        if row_by == col_by:
+            return {"error": "Rows and columns can't use the same dimension — pick a different columns option."}
+
         all_data = cached_load_all_data()
-        holes = list(range(1, 19))
 
-        # Group by (row_by, Hole), calc mean GrossVP
-        agg = all_data.groupby([row_by, 'Hole'], as_index=False)['GrossVP'].mean()
-        agg.rename(columns={'GrossVP': 'AvgGrossVP'}, inplace=True)
+        # Cell values: mean GrossVP per (row, col)
+        agg = all_data.groupby([row_by, col_by], as_index=False)['GrossVP'].mean()
+        cell = {(r[row_by], r[col_by]): r['GrossVP'] for _, r in agg.iterrows()}
 
-        # Get unique row labels
-        row_labels = agg[row_by].unique().tolist()
-
-        # Sort rows
-        if sort_by_score:
-            row_avgs = agg.groupby(row_by)['AvgGrossVP'].mean().sort_values(ascending=False)
-            row_labels = row_avgs.index.tolist()
+        # Column order
+        col_vals = all_data[col_by].dropna().unique().tolist()
+        if col_by in _HM_NUMERIC_COLS:
+            col_vals = sorted(col_vals, key=lambda x: int(x))
         else:
-            row_labels = sorted(row_labels, key=lambda x: (int(x) if str(x).isdigit() else 0, str(x)))
+            col_vals = sorted(col_vals, key=lambda x: str(x))
 
-        # Optional TOTAL row
-        if show_totals:
-            totals = all_data.groupby('Hole', as_index=False)['GrossVP'].mean()
-            totals.rename(columns={'GrossVP': 'AvgGrossVP'}, inplace=True)
+        # Overall row averages (true mean, not mean-of-cells) — drive sorting + Avg col
+        row_avgs = all_data.groupby(row_by)['GrossVP'].mean()
+        if sort_by_score:
+            row_labels = row_avgs.sort_values(ascending=False).index.tolist()
+        else:
+            row_labels = sorted(row_avgs.index.tolist(),
+                                key=lambda x: (int(x) if str(x).isdigit() else 0, str(x)))
 
         # Build HTML table
         html = ["<div class='table-responsive'><table class='teg-table heatmap-table'>"]
         html.append("<thead><tr><th></th>")
-        for h in holes:
-            html.append(f"<th>{h}</th>")
+        for c in col_vals:
+            html.append(f"<th>{_hm_col_label(col_by, c)}</th>")
         html.append("<th>Avg</th></tr></thead><tbody>")
 
         for label in row_labels:
-            row_data = agg[agg[row_by] == label]
-            vals = {int(r['Hole']): r['AvgGrossVP'] for _, r in row_data.iterrows()}
-            row_avg = row_data['AvgGrossVP'].mean()
-
+            row_avg = row_avgs.get(label, float('nan'))
             display_label = f"TEG {label}" if row_by == "TEGNum" else str(label)
             html.append(f"<tr><td class='row-label'>{display_label}</td>")
-            for h in holes:
-                v = vals.get(h, float('nan'))
+            for c in col_vals:
+                v = cell.get((label, c), float('nan'))
                 color = _heatmap_color(v)
-                cell = f"{v:+.1f}" if not pd.isna(v) else ""
-                html.append(f"<td style='{color}; text-align:center; font-size:0.8rem;'>{cell}</td>")
+                txt = f"{v:+.1f}" if not pd.isna(v) else ""
+                html.append(f"<td style='{color}; text-align:center; font-size:0.8rem;'>{txt}</td>")
             # Row average
             color = _heatmap_color(row_avg)
-            html.append(f"<td style='{color}; text-align:center; font-weight:600; font-size:0.8rem;'>{row_avg:+.1f}</td>")
+            ra = f"{row_avg:+.1f}" if not pd.isna(row_avg) else ""
+            html.append(f"<td style='{color}; text-align:center; font-weight:600; font-size:0.8rem;'>{ra}</td>")
             html.append("</tr>")
 
         # TOTAL row
         if show_totals:
-            total_vals = {int(r['Hole']): r['AvgGrossVP'] for _, r in totals.iterrows()}
-            total_avg = totals['AvgGrossVP'].mean()
+            col_tot = all_data.groupby(col_by)['GrossVP'].mean()
+            total_avg = all_data['GrossVP'].mean()
             html.append("<tr class='total-row'><td class='row-label' style='font-weight:700;'>TOTAL</td>")
-            for h in holes:
-                v = total_vals.get(h, float('nan'))
+            for c in col_vals:
+                v = col_tot.get(c, float('nan'))
                 color = _heatmap_color(v)
-                cell = f"{v:+.1f}" if not pd.isna(v) else ""
-                html.append(f"<td style='{color}; text-align:center; font-weight:600; font-size:0.8rem;'>{cell}</td>")
+                txt = f"{v:+.1f}" if not pd.isna(v) else ""
+                html.append(f"<td style='{color}; text-align:center; font-weight:600; font-size:0.8rem;'>{txt}</td>")
             color = _heatmap_color(total_avg)
             html.append(f"<td style='{color}; text-align:center; font-weight:700; font-size:0.8rem;'>{total_avg:+.1f}</td>")
             html.append("</tr>")
 
         html.append("</tbody></table></div>")
-        table_html = "".join(html)
-
-        return {"table_html": table_html}
+        return {"table_html": "".join(html)}
     except Exception as e:
         return {"error": str(e)}
 
@@ -1145,17 +1164,20 @@ def _parse_checkbox(val: str | None) -> bool:
 async def scoring_heatmap_page(
     request: Request,
     row_by: str = Query("Player"),
+    col_by: str = Query("Hole"),
     sort_by_score: str = Query("true"),
     show_totals: str = Query("true"),
 ):
     sbs = _parse_checkbox(sort_by_score)
     st = _parse_checkbox(show_totals)
-    ctx = _heatmap_context(row_by, sbs, st)
+    ctx = _heatmap_context(row_by, col_by, sbs, st)
     return templates.TemplateResponse("scoring_heatmap.html", {
         "request": request,
         "active_page": "scoring",
         "row_options": HEATMAP_ROWS,
+        "col_options": HEATMAP_COLS,
         "row_by": row_by,
+        "col_by": col_by,
         "sort_by_score": sbs,
         "show_totals": st,
         **ctx,
@@ -1166,12 +1188,13 @@ async def scoring_heatmap_page(
 async def scoring_heatmap_content(
     request: Request,
     row_by: str = Query("Player"),
+    col_by: str = Query("Hole"),
     sort_by_score: str | None = Query(None),
     show_totals: str | None = Query(None),
 ):
     sbs = _parse_checkbox(sort_by_score)
     st = _parse_checkbox(show_totals)
-    ctx = _heatmap_context(row_by, sbs, st)
+    ctx = _heatmap_context(row_by, col_by, sbs, st)
     return templates.TemplateResponse("partials/scoring_heatmap_content.html", {
         "request": request,
         **ctx,
