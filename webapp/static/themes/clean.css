@@ -79,8 +79,7 @@
 
 /* Roboto Mono for all table/data content */
 .teg-table,
-.records-table,
-.heatmap-table {
+.records-table {
     font-family: 'Roboto Mono', monospace;
 }
 

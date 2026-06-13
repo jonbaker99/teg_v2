@@ -1130,13 +1130,50 @@ def _hm_bucket(val: float, domain_min: float, domain_mid: float, domain_max: flo
     return max(3, min(6, 3 + round(t * 3)))
 
 
+def _hex_to_rgb(h: str) -> tuple[int, int, int]:
+    h = h.lstrip('#')
+    return int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+
+
 def _hm_cell_style(val: float, colors: list, domain_min: float, domain_mid: float,
                    domain_max: float) -> str:
-    """Return an inline style string for a heatmap cell."""
+    """Return an inline style string using continuous colour interpolation.
+
+    The 7-stop palette is treated as a smooth gradient; the value's position
+    in the [min→mid→max] domain maps to a continuous [0..1] and the colour
+    is interpolated between adjacent stops rather than bucketed.
+    """
     if pd.isna(val):
         return "background:#e8e8e5;color:#aaa"
-    bg, fg = colors[_hm_bucket(val, domain_min, domain_mid, domain_max)]
-    return f"background:{bg};color:{fg}"
+
+    # Continuous position in [0..1] across the piecewise-linear domain
+    if val <= domain_min:
+        t = 0.0
+    elif val >= domain_max:
+        t = 1.0
+    elif val <= domain_mid:
+        t = 0.5 * (val - domain_min) / (domain_mid - domain_min)
+    else:
+        t = 0.5 + 0.5 * (val - domain_mid) / (domain_max - domain_mid)
+
+    # Interpolate between adjacent palette stops
+    n = len(colors) - 1  # 6 segments for 7 stops
+    pos = t * n
+    lo = min(int(pos), n - 1)
+    hi = lo + 1
+    frac = pos - lo
+
+    bg_lo, _ = colors[lo]
+    bg_hi, _ = colors[hi]
+    r1, g1, b1 = _hex_to_rgb(bg_lo)
+    r2, g2, b2 = _hex_to_rgb(bg_hi)
+    r = round(r1 + (r2 - r1) * frac)
+    g = round(g1 + (g2 - g1) * frac)
+    b = round(b1 + (b2 - b1) * frac)
+
+    # Text colour: nearest stop (avoids interpolating two text colours)
+    _, fg = colors[round(t * n)]
+    return f"background:rgb({r},{g},{b});color:{fg}"
 
 
 def _hm_legend_html(colors: list, domain_min: float, domain_mid: float,
@@ -1219,8 +1256,9 @@ def _heatmap_context(
         rotate_headers = col_by not in _HM_NUMERIC_COLS
         th_cls = " class='rotated-header'" if rotate_headers else ""
 
-        # Build HTML table — no teg-table class; heatmap.css owns all rules
-        html = ["<table class='heatmap-table'>"]
+        # teg-table gives Roboto Mono + base styling; heatmap-table overrides
+        # spacing/padding via higher-specificity double-class selectors in heatmap.css
+        html = ["<table class='teg-table heatmap-table'>"]
         html.append("<thead><tr><th class='hm-row-label-header'></th>")
         for c in col_vals:
             html.append(f"<th{th_cls}><span>{_hm_col_label(col_by, c)}</span></th>")

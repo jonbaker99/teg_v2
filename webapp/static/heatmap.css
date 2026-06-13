@@ -1,33 +1,24 @@
-/* Heatmap table — layout, legend, controls panel.
+/* Heatmap table — overrides on top of .teg-table defaults.
    Loaded only on /scoring/heatmap via extra_head.
 
-   Cell colours: inline styles from Python (palette is runtime-dynamic).
-   Font: handled globally — clean.css applies Roboto Mono to .heatmap-table.
-   Pills: use global .pill / .pill--active / .pill-group from base-vars.css. */
+   The table element carries both .teg-table and .heatmap-table so it inherits
+   font (Roboto Mono from clean.css) and base styles from .teg-table. All
+   overrides here use the double-class selector .teg-table.heatmap-table which
+   has higher specificity (0,2,X) than .teg-table (0,1,X), so no !important needed.
 
-/* ── Base table ─────────────────────────────────────────────────────────────
-   Does NOT set font-family — that comes from clean.css (Roboto Mono) or the
-   active theme's table rule. Does NOT carry .teg-table to avoid conflicts. */
-.heatmap-table {
-  width: auto;
+   Cell colours: inline styles from Python (continuous gradient interpolation).
+   Pills: global .pill / .pill--active / .pill-group from base-vars.css. */
+
+/* ── Table layout overrides ─────────────────────────────────────────────── */
+.teg-table.heatmap-table {
   border-collapse: separate;
   border-spacing: 2px;
 }
 
-/* Header row */
-.heatmap-table thead tr {
-  border-bottom: 2px solid var(--table-header-border, #1a1a1a);
-}
-.heatmap-table thead th {
-  background: var(--table-header-bg, transparent);
-  font-weight: 600;
-  white-space: nowrap;
-}
-
 /* ── Data cells — compact, square ──────────────────────────────────────────
-   All non-label cells: fixed width, small, centred. */
-.heatmap-table thead th:not(.hm-row-label-header),
-.heatmap-table tbody td:not(.row-label) {
+   Overrides .teg-table tbody td { padding: 0.75rem } via higher specificity. */
+.teg-table.heatmap-table thead th:not(.hm-row-label-header),
+.teg-table.heatmap-table tbody td:not(.row-label) {
   width: 2.1rem;
   min-width: 2.1rem;
   max-width: 2.1rem;
@@ -36,50 +27,59 @@
   padding: 0;
   border-radius: 2px;
   vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* Header cells also need the tighter padding */
+.teg-table.heatmap-table thead th {
+  padding: 0.25rem 0.1rem;
 }
 
 /* Row height = cell width → square cells */
-.heatmap-table tbody tr {
+.teg-table.heatmap-table tbody tr {
   height: 2.1rem;
 }
-.heatmap-table tbody td {
+.teg-table.heatmap-table tbody td {
   vertical-align: middle;
 }
 
 /* First column — row labels */
-.heatmap-table td.row-label {
+.teg-table.heatmap-table td.row-label {
   white-space: nowrap;
   padding: 0 1rem 0 0.25rem;
   font-size: 0.82rem;
   vertical-align: middle;
 }
 
+/* Suppress .teg-table row striping and hover on heatmap — cells have their own colours */
+.teg-table.heatmap-table tbody tr:nth-child(even) { background: transparent; }
+.teg-table.heatmap-table tbody tr:hover { background: transparent; color: inherit; }
+
 /* ── Avg column separator ───────────────────────────────────────────────── */
-.heatmap-table td.hm-avg-cell {
+.teg-table.heatmap-table td.hm-avg-cell {
   font-weight: 600;
   border-left: 2px solid var(--table-cell-border, #e0e0e0);
 }
-.heatmap-table .hm-avg-header {
+.teg-table.heatmap-table .hm-avg-header {
   border-left: 2px solid var(--table-cell-border, #e0e0e0);
 }
 
 /* ── Total row ──────────────────────────────────────────────────────────── */
-.heatmap-table .hm-total-row {
+.teg-table.heatmap-table .hm-total-row {
   border-top: 2px solid var(--table-cell-border, #e0e0e0);
 }
-.heatmap-table td.hm-total-cell  { font-weight: 600; }
-.heatmap-table .hm-total-label   { font-weight: 700; }
+.teg-table.heatmap-table td.hm-total-cell  { font-weight: 600; }
+.teg-table.heatmap-table .hm-total-label   { font-weight: 700; }
 
-/* ── Rotated column headers ─────────────────────────────────────────────────
-   For string-type dimensions (Course, Region, Player). */
-.heatmap-table thead th.rotated-header {
+/* ── Rotated column headers ─────────────────────────────────────────────── */
+.teg-table.heatmap-table thead th.rotated-header {
   height: 9rem;
   vertical-align: bottom;
   padding: 0 2px 4px;
   position: relative;
   overflow: visible;
 }
-.heatmap-table thead th.rotated-header span {
+.teg-table.heatmap-table thead th.rotated-header span {
   display: block;
   writing-mode: vertical-lr;
   transform: rotate(180deg);
@@ -88,7 +88,7 @@
   line-height: 1;
   padding-bottom: 2px;
 }
-.heatmap-table .hm-avg-header span {
+.teg-table.heatmap-table .hm-avg-header span {
   writing-mode: horizontal-tb !important;
   transform: none !important;
   font-size: 0.72rem;
@@ -105,14 +105,15 @@
 }
 .hm-legend-bar {
   display: flex;
-  gap: 2px;
+  gap: 0;   /* no gap — continuous gradient illusion */
 }
 .hm-swatch {
   display: inline-block;
   width: 1.5rem;
   height: 0.9rem;
-  border-radius: 2px;
 }
+.hm-swatch:first-child { border-radius: 2px 0 0 2px; }
+.hm-swatch:last-child  { border-radius: 0 2px 2px 0; }
 .hm-legend-end {
   font-weight: 600;
   font-size: 0.72rem;
