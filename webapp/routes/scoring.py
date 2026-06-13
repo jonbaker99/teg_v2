@@ -1067,22 +1067,25 @@ def _hm_col_label(col_by: str, val) -> str:
     return str(val)
 
 
-def _heatmap_color(val: float) -> str:
-    """Map avg GrossVP to a CSS background colour. Green=under par, red=over par."""
+def _heatmap_class(val: float, center: float) -> str:
+    """Return a CSS class for a diverging blue→white→orange heatmap cell.
+
+    Colour is relative to `center` (the table mean), so the palette spans the
+    actual spread of the data rather than being anchored to par.
+    """
     if pd.isna(val):
-        return "background-color: #f5f5f5"
-    # Clamp magnitude at 3 for full saturation
-    clamped = max(-3.0, min(3.0, val))
-    t = abs(clamped) / 3.0  # 0..1
-    # Lightness: 97% at par (white-ish), 40% at full saturation
-    lightness = 97 - (57 * t)
-    if val < 0:
-        hue = 120  # green
-    elif val > 0:
-        hue = 0    # red
+        return "hm-na"
+    dev = val - center
+    # Clamp at ±2 strokes from centre for full saturation
+    clamped = max(-2.0, min(2.0, dev))
+    # Map to 7 buckets: n3 (best/blue) .. z0 (neutral) .. p3 (worst/orange)
+    bucket = round(clamped / 2.0 * 3)  # -3 .. +3
+    if bucket < 0:
+        return f"hm-n{abs(bucket)}"
+    elif bucket > 0:
+        return f"hm-p{bucket}"
     else:
-        return "background-color: hsl(0, 0%, 97%)"
-    return f"background-color: hsl({hue}, 50%, {lightness:.0f}%)"
+        return "hm-z0"
 
 
 def _heatmap_context(row_by: str = "Player", col_by: str = "Hole",
@@ -1113,12 +1116,21 @@ def _heatmap_context(row_by: str = "Player", col_by: str = "Hole",
             row_labels = sorted(row_avgs.index.tolist(),
                                 key=lambda x: (int(x) if str(x).isdigit() else 0, str(x)))
 
+        # Centre the diverging palette on the overall table mean so colours
+        # reflect relative performance, not absolute score vs par.
+        all_cell_vals = [v for v in cell.values() if not pd.isna(v)]
+        center = float(pd.Series(all_cell_vals).mean()) if all_cell_vals else 0.0
+
+        # Rotate string-type column headers for compact equal-width columns
+        rotate_headers = col_by not in _HM_NUMERIC_COLS
+        th_class = " class='rotated-header'" if rotate_headers else ""
+
         # Build HTML table
-        html = ["<div class='table-responsive'><table class='teg-table heatmap-table'>"]
-        html.append("<thead><tr><th></th>")
+        html = ["<table class='teg-table heatmap-table'>"]
+        html.append("<thead><tr><th class='hm-row-label-header'></th>")
         for c in col_vals:
-            html.append(f"<th>{_hm_col_label(col_by, c)}</th>")
-        html.append("<th>Avg</th></tr></thead><tbody>")
+            html.append(f"<th{th_class}><span>{_hm_col_label(col_by, c)}</span></th>")
+        html.append("<th class='hm-avg-header'><span>Avg</span></th></tr></thead><tbody>")
 
         for label in row_labels:
             row_avg = row_avgs.get(label, float('nan'))
@@ -1126,30 +1138,30 @@ def _heatmap_context(row_by: str = "Player", col_by: str = "Hole",
             html.append(f"<tr><td class='row-label'>{display_label}</td>")
             for c in col_vals:
                 v = cell.get((label, c), float('nan'))
-                color = _heatmap_color(v)
+                cls = _heatmap_class(v, center)
                 txt = f"{v:+.1f}" if not pd.isna(v) else ""
-                html.append(f"<td style='{color}; text-align:center; font-size:0.8rem;'>{txt}</td>")
-            # Row average
-            color = _heatmap_color(row_avg)
+                html.append(f"<td class='{cls}'>{txt}</td>")
+            # Row average — colour relative to same centre
+            cls = _heatmap_class(row_avg, center)
             ra = f"{row_avg:+.1f}" if not pd.isna(row_avg) else ""
-            html.append(f"<td style='{color}; text-align:center; font-weight:600; font-size:0.8rem;'>{ra}</td>")
+            html.append(f"<td class='{cls} hm-avg-cell'>{ra}</td>")
             html.append("</tr>")
 
         # TOTAL row
         if show_totals:
             col_tot = all_data.groupby(col_by)['GrossVP'].mean()
             total_avg = all_data['GrossVP'].mean()
-            html.append("<tr class='total-row'><td class='row-label' style='font-weight:700;'>TOTAL</td>")
+            html.append("<tr class='total-row'><td class='row-label hm-total-label'>TOTAL</td>")
             for c in col_vals:
                 v = col_tot.get(c, float('nan'))
-                color = _heatmap_color(v)
+                cls = _heatmap_class(v, center)
                 txt = f"{v:+.1f}" if not pd.isna(v) else ""
-                html.append(f"<td style='{color}; text-align:center; font-weight:600; font-size:0.8rem;'>{txt}</td>")
-            color = _heatmap_color(total_avg)
-            html.append(f"<td style='{color}; text-align:center; font-weight:700; font-size:0.8rem;'>{total_avg:+.1f}</td>")
+                html.append(f"<td class='{cls} hm-total-cell'>{txt}</td>")
+            cls = _heatmap_class(total_avg, center)
+            html.append(f"<td class='{cls} hm-avg-cell hm-total-cell'>{total_avg:+.1f}</td>")
             html.append("</tr>")
 
-        html.append("</tbody></table></div>")
+        html.append("</tbody></table>")
         return {"table_html": "".join(html)}
     except Exception as e:
         return {"error": str(e)}
