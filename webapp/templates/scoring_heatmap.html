@@ -13,11 +13,14 @@
 
 {% block content %}
 
+{# All controls in a single form so hx-include="#hm-form" picks them all up #}
+<form id="hm-form">
+
 <div class="section-controls flex items-center gap-4">
     <select id="hm-row-by" class="theme-select" name="row_by"
             hx-get="/scoring/heatmap/content"
             hx-target="#hm-content"
-            hx-include="#hm-col-by, #hm-sort, #hm-totals">
+            hx-include="#hm-form">
         {% for val, label in row_options %}
         <option value="{{ val }}" {% if val == row_by %}selected{% endif %}>Rows: {{ label }}</option>
         {% endfor %}
@@ -26,7 +29,7 @@
     <select id="hm-col-by" class="theme-select" name="col_by"
             hx-get="/scoring/heatmap/content"
             hx-target="#hm-content"
-            hx-include="#hm-row-by, #hm-sort, #hm-totals">
+            hx-include="#hm-form">
         {% for val, label in col_options %}
         <option value="{{ val }}" {% if val == col_by %}selected{% endif %}>Columns: {{ label }}</option>
         {% endfor %}
@@ -37,7 +40,7 @@
                {% if sort_by_score %}checked{% endif %}
                hx-get="/scoring/heatmap/content"
                hx-target="#hm-content"
-               hx-include="#hm-row-by, #hm-col-by, #hm-totals">
+               hx-include="#hm-form">
         Sort by score
     </label>
 
@@ -46,10 +49,62 @@
                {% if show_totals %}checked{% endif %}
                hx-get="/scoring/heatmap/content"
                hx-target="#hm-content"
-               hx-include="#hm-row-by, #hm-col-by, #hm-sort">
+               hx-include="#hm-form">
         Show totals
     </label>
 </div>
+
+<div class="toggle-group flex items-center gap-4">
+    <select class="theme-select" name="palette"
+            hx-get="/scoring/heatmap/content"
+            hx-target="#hm-content"
+            hx-include="#hm-form">
+        {% for val, label in palette_options %}
+        <option value="{{ val }}" {% if val == palette %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+
+    <label class="flex items-center gap-1 text-sm">
+        <input type="checkbox" name="reverse" value="true"
+               {% if reverse %}checked{% endif %}
+               hx-get="/scoring/heatmap/content"
+               hx-target="#hm-content"
+               hx-include="#hm-form">
+        Reverse
+    </label>
+
+    <span class="text-sm flex items-center gap-2" style="margin-left:0.5rem">
+        <label class="flex items-center gap-1">Min
+            <input type="number" name="domain_min" step="0.1"
+                   value="{{ '%.1f' % domain_min }}"
+                   class="input-numeric"
+                   hx-trigger="change"
+                   hx-get="/scoring/heatmap/content"
+                   hx-target="#hm-content"
+                   hx-include="#hm-form">
+        </label>
+        <label class="flex items-center gap-1">Mid
+            <input type="number" name="domain_mid" step="0.1"
+                   value="{{ '%.1f' % domain_mid }}"
+                   class="input-numeric"
+                   hx-trigger="change"
+                   hx-get="/scoring/heatmap/content"
+                   hx-target="#hm-content"
+                   hx-include="#hm-form">
+        </label>
+        <label class="flex items-center gap-1">Max
+            <input type="number" name="domain_max" step="0.1"
+                   value="{{ '%.1f' % domain_max }}"
+                   class="input-numeric"
+                   hx-trigger="change"
+                   hx-get="/scoring/heatmap/content"
+                   hx-target="#hm-content"
+                   hx-include="#hm-form">
+        </label>
+    </span>
+</div>
+
+</form>
 
 <div id="hm-content" class="section-panel">
     {% include "partials/scoring_heatmap_content.html" %}

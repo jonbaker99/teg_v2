@@ -1,49 +1,32 @@
-/* Heatmap table — diverging green→white→red palette + rotated headers.
-   Loaded only on /scoring/heatmap via extra_head. */
+/* Heatmap table — standalone styles (does NOT rely on .teg-table).
+   Loaded only on /scoring/heatmap via extra_head.
 
-/* ── Palette tokens (light mode) ──────────────────────────────────────────── */
-:root {
-  /* Diverging: green (good/low) → off-white (neutral) → red (bad/high) */
-  --hm-neg3-bg: #1a7340; --hm-neg3-text: #fff;
-  --hm-neg2-bg: #52a96e; --hm-neg2-text: #fff;
-  --hm-neg1-bg: #b8dfc7; --hm-neg1-text: #1a1a1a;
-  --hm-zero-bg: #f5f5f0; --hm-zero-text: #888;
-  --hm-pos1-bg: #fcd5a8; --hm-pos1-text: #1a1a1a;
-  --hm-pos2-bg: #ef8040; --hm-pos2-text: #fff;
-  --hm-pos3-bg: #b92d1e; --hm-pos3-text: #fff;
-  --hm-na-bg:   #ededea; --hm-na-text:   #bbb;
-}
+   Cell colours are applied as inline styles from Python so the palette can
+   change at runtime. This file owns everything else: layout, spacing, headers,
+   legend, and the specificity fix (no .teg-table conflict). */
 
-/* Dark mode overrides */
-html[data-mode="dark"] {
-  --hm-neg3-bg: #0d4726; --hm-neg3-text: #7dd4a0;
-  --hm-neg2-bg: #1a5c38; --hm-neg2-text: #9ecfb4;
-  --hm-neg1-bg: #1a3529; --hm-neg1-text: #7dba9a;
-  --hm-zero-bg: #2a2a27; --hm-zero-text: #86857e;
-  --hm-pos1-bg: #4a2e12; --hm-pos1-text: #e8b97a;
-  --hm-pos2-bg: #5e2808; --hm-pos2-text: #f09050;
-  --hm-pos3-bg: #5c1510; --hm-pos3-text: #f07060;
-  --hm-na-bg:   #222220; --hm-na-text:   #555;
-}
-
-/* ── Apply palette to cells ────────────────────────────────────────────────── */
-.heatmap-table td.hm-n3 { background: var(--hm-neg3-bg); color: var(--hm-neg3-text); }
-.heatmap-table td.hm-n2 { background: var(--hm-neg2-bg); color: var(--hm-neg2-text); }
-.heatmap-table td.hm-n1 { background: var(--hm-neg1-bg); color: var(--hm-neg1-text); }
-.heatmap-table td.hm-z0 { background: var(--hm-zero-bg); color: var(--hm-zero-text); }
-.heatmap-table td.hm-p1 { background: var(--hm-pos1-bg); color: var(--hm-pos1-text); }
-.heatmap-table td.hm-p2 { background: var(--hm-pos2-bg); color: var(--hm-pos2-text); }
-.heatmap-table td.hm-p3 { background: var(--hm-pos3-bg); color: var(--hm-pos3-text); }
-.heatmap-table td.hm-na { background: var(--hm-na-bg);   color: var(--hm-na-text); }
-
-/* ── Table layout ──────────────────────────────────────────────────────────── */
+/* ── Base table ─────────────────────────────────────────────────────────────
+   Mirrors the essential .teg-table defaults without inheriting its padding. */
 .heatmap-table {
+  width: auto;
   border-collapse: separate;
   border-spacing: 2px;
-  table-layout: auto;
+  font-family: var(--font-body), sans-serif;
+  font-size: var(--table-font-size, 14px);
 }
 
-/* Data cells — ~20% smaller than before (2.6rem → 2.1rem wide, 4px → 3px pad) */
+/* Header row */
+.heatmap-table thead tr {
+  border-bottom: 2px solid var(--table-header-border, #1a1a1a);
+}
+.heatmap-table thead th {
+  background: var(--table-header-bg, transparent);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ── Data cells — compact, square ──────────────────────────────────────────
+   All non-label cells: fixed width, small font, centred. */
 .heatmap-table thead th:not(.hm-row-label-header),
 .heatmap-table tbody td:not(.row-label) {
   width: 2.1rem;
@@ -51,12 +34,12 @@ html[data-mode="dark"] {
   max-width: 2.1rem;
   text-align: center;
   font-size: 0.65rem;
-  padding: 3px 1px;
+  padding: 0;           /* padding via row height; inline bg needs 0 pad to fill */
   border-radius: 2px;
-  line-height: 1.4;
+  vertical-align: middle;
 }
 
-/* Row height — pin to match cell width for square cells */
+/* Row height = cell width → square cells */
 .heatmap-table tbody tr {
   height: 2.1rem;
 }
@@ -64,24 +47,33 @@ html[data-mode="dark"] {
   vertical-align: middle;
 }
 
-/* Avg column — bolder + left separator */
+/* First column — row labels */
+.heatmap-table td.row-label {
+  white-space: nowrap;
+  padding: 0 1rem 0 0.25rem;
+  font-size: 0.82rem;
+  vertical-align: middle;
+}
+
+/* ── Avg column separator ───────────────────────────────────────────────── */
 .heatmap-table td.hm-avg-cell {
   font-weight: 600;
   border-left: 2px solid var(--table-cell-border, #e0e0e0);
 }
-
-/* Total row */
-.heatmap-table td.hm-total-cell { font-weight: 600; }
-.heatmap-table .hm-total-label  { font-weight: 700; }
-
-/* First column (row labels) */
-.heatmap-table td.row-label {
-  white-space: nowrap;
-  padding-right: 1rem;
-  font-size: 0.82rem;
+.heatmap-table .hm-avg-header {
+  border-left: 2px solid var(--table-cell-border, #e0e0e0);
 }
 
-/* ── Rotated column headers ──────────────────────────────────────────────── */
+/* ── Total row ──────────────────────────────────────────────────────────── */
+.heatmap-table .hm-total-row {
+  border-top: 2px solid var(--table-cell-border, #e0e0e0);
+}
+.heatmap-table td.hm-total-cell  { font-weight: 600; }
+.heatmap-table .hm-total-label   { font-weight: 700; }
+
+/* ── Rotated column headers ─────────────────────────────────────────────────
+   For string-type dimensions (Course, Region, Player) so long labels don't
+   force wide columns. The <th> provides the fixed-width box; the <span> rotates. */
 .heatmap-table thead th.rotated-header {
   height: 9rem;
   vertical-align: bottom;
@@ -89,7 +81,6 @@ html[data-mode="dark"] {
   position: relative;
   overflow: visible;
 }
-
 .heatmap-table thead th.rotated-header span {
   display: block;
   writing-mode: vertical-lr;
@@ -100,12 +91,40 @@ html[data-mode="dark"] {
   padding-bottom: 2px;
 }
 
-/* Avg header — always upright */
-.heatmap-table .hm-avg-header {
-  border-left: 2px solid var(--table-cell-border, #e0e0e0);
-}
+/* Avg header — always upright even when siblings are rotated */
 .heatmap-table .hm-avg-header span {
   writing-mode: horizontal-tb !important;
   transform: none !important;
   font-size: 0.72rem;
+}
+
+/* ── Legend ─────────────────────────────────────────────────────────────────
+   7-swatch colour bar with Better/Worse labels and min·mid·max annotation. */
+.hm-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary, #555);
+}
+.hm-legend-bar {
+  display: flex;
+  gap: 2px;
+}
+.hm-swatch {
+  display: inline-block;
+  width: 1.5rem;
+  height: 0.9rem;
+  border-radius: 2px;
+}
+.hm-legend-end {
+  font-weight: 600;
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+.hm-legend-range {
+  color: var(--text-muted, #999);
+  font-size: 0.7rem;
+  white-space: nowrap;
 }
