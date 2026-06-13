@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!-- App-shell preview (Phase M1). Uses the REAL stylesheets (base-vars + clean +
+     dark + mobile) via relative paths, so it reflects the actual bottom tab bar.
+     View on a phone (or a narrow window) to trigger the ≤640px rules; the ◑
+     button flips dark mode. -->
+<html lang="en" data-mode="light" class="ts-a ch-ch3">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Mobile app shell — real CSS preview</title>
+<link rel="stylesheet" href="../static/themes/base-vars.css">
+<link rel="stylesheet" href="../static/themes/clean.css">
+<link rel="stylesheet" href="../static/themes/dark.css">
+<link rel="stylesheet" href="../static/mobile.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0">
+<style>
+  .material-symbols-outlined { font-variation-settings:'opsz' 20,'wght' 400; vertical-align:middle; }
+  .nav { box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  .nav-inner { display:flex; align-items:center; justify-content:space-between; height:3.25rem; padding:0 1rem; }
+  .nav-right { display:flex; align-items:center; gap:.5rem; }
+  .icon-btn { background:transparent; border:1px solid var(--nav-text-muted,var(--nav-text)); color:var(--nav-text);
+    border-radius:.25rem; padding:.2rem .45rem; cursor:pointer; display:inline-flex; align-items:center; }
+  .note { font-family:'Roboto Mono',monospace; font-size:11px; color:var(--text-muted); margin:0 0 1rem; }
+</style>
+</head>
+<body class="page-bg ts-a ch-ch3">
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-brand">The El Golfo</a>
+      <div class="nav-right">
+        <button class="icon-btn" title="Toggle light / dark"
+                onclick="var h=document.documentElement;h.setAttribute('data-mode',h.getAttribute('data-mode')==='dark'?'light':'dark')">
+          <span class="material-symbols-outlined">contrast</span>
+        </button>
+        <span class="material-symbols-outlined" style="font-size:1.4rem;color:var(--nav-text);">menu</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-container">
+    <div class="page-title-outer">
+      <div class="page-title-area">
+        <span class="page-label">Latest TEG</span>
+        <h1 class="page-title">Leaderboard</h1>
+        <p class="page-subtitle">TEG 18 · after Round 4 of 4</p>
+      </div>
+    </div>
+    <div class="page-panel"><div class="content-wrapper"><main class="main-content px-6 py-8">
+      <p class="note">View narrow (or on a phone) → the bottom tab bar appears and the top bar compacts. Wide ≥ 641px → it disappears and you get the normal desktop view. Tap ◑ for dark.</p>
+      <table class="teg-table">
+        <thead><tr>
+          <th class="col-rank">#</th><th class="col-player">Player</th>
+          <th class="col-num">R1</th><th class="col-num">R2</th><th class="col-num">R3</th><th class="col-num">R4</th><th class="col-num">Total</th>
+        </tr></thead>
+        <tbody>
+          <tr class="top-rank"><td class="col-rank">1</td><td class="col-player">David Mullin</td><td class="col-num">+8</td><td class="col-num">+9</td><td class="col-num">+11</td><td class="col-num">+10</td><td class="col-num total">+38</td></tr>
+          <tr><td class="col-rank">2</td><td class="col-player">Jon Baker</td><td class="col-num">+10</td><td class="col-num">+12</td><td class="col-num">+11</td><td class="col-num">+11</td><td class="col-num total">+44</td></tr>
+          <tr><td class="col-rank">3</td><td class="col-player">Stuart Neumann</td><td class="col-num">+13</td><td class="col-num">+12</td><td class="col-num">+14</td><td class="col-num">+12</td><td class="col-num total">+51</td></tr>
+          <tr><td class="col-rank">4</td><td class="col-player">Gregg Williams</td><td class="col-num">+15</td><td class="col-num">+14</td><td class="col-num">+15</td><td class="col-num">+14</td><td class="col-num total">+58</td></tr>
+          <tr><td class="col-rank">5</td><td class="col-player">Henry Meller</td><td class="col-num">+14</td><td class="col-num">+13</td><td class="col-num">+15</td><td class="col-num">+13</td><td class="col-num total">+55</td></tr>
+        </tbody>
+      </table>
+    </main></div></div>
+  </div>
+
+  <!-- Bottom tab bar (matches base.html / nav.py; Latest active) -->
+  <nav class="mobile-tabbar" aria-label="Primary sections">
+    <a href="#" class="mtab"><span class="material-symbols-outlined">lists</span><span class="mtab-label">History</span></a>
+    <a href="#" class="mtab mtab--active"><span class="material-symbols-outlined">leaderboard</span><span class="mtab-label">Latest</span></a>
+    <a href="#" class="mtab"><span class="material-symbols-outlined">military_tech</span><span class="mtab-label">Records</span></a>
+    <a href="#" class="mtab"><span class="material-symbols-outlined">strategy</span><span class="mtab-label">Scoring</span></a>
+    <a href="#" class="mtab"><span class="material-symbols-outlined">sports_golf</span><span class="mtab-label">Cards</span></a>
+  </nav>
+</body>
+</html>
