@@ -11,6 +11,10 @@ TEG v2 is a golf tournament analysis project. It has two architectural layers: a
 - A **TEG** is an annual golf tournament. Each TEG consists of several rounds (usually 4), each of 18 holes split into a front 9 (holes 1–9) and back 9 (holes 10–18).
 - There are two competitions per TEG: **gross** and **net**. Up to TEG 7, net was total net vs par; from TEG 8 onwards it is total Stableford points.
 
+## To-dos
+
+**[TODOS.md](TODOS.md)** is the central to-do index. Each area (`webapp/`, `streamlit/`, `teg_analysis/`) has its own `TODOS.md`; the root file links to all of them and holds cross-cutting items (data updates). When a to-do surfaces mid-conversation, add it to the right area's `TODOS.md` before ending the session.
+
 ## Note on documentation
 
 Do not read or reference `to_do_jon.md` unless the user explicitly asks you to. It is a personal draft notes file, not project documentation.
