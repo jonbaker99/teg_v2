@@ -200,7 +200,7 @@ a broadly-equivalent course summary).
 ### Heatmap WIP (`/scoring/heatmap`)
 - [ ] Course/Player/TEG/Round multiselect filters
 - [ ] Multi-dimension row selection
-- [ ] X-axis switcher (Hole / SI / PAR)
+- [x] Column (X-axis) switcher — Hole / Stroke Index / Par / TEG / Course / Region
 - [ ] Colour scheme / reverse / min-mid-max controls — cosmetic
 - [ ] Line/trend chart (avg by hole + TOTAL)
 - (note: page is marked WIP in both apps)

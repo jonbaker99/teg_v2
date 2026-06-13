@@ -22,17 +22,19 @@ router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
 
-def _df_to_html(df: pd.DataFrame, table_class: str = "teg-table") -> str:
+def _df_to_html(df: pd.DataFrame, table_class: str = "teg-table", cell_classes=None) -> str:
     if df is None or df.empty:
         return "<p class='text-muted text-sm'>No data available.</p>"
     rows = [f"<table class='{table_class}'><thead><tr>"]
     for col in df.columns:
         rows.append(f"<th>{col}</th>")
     rows.append("</tr></thead><tbody>")
-    for _, row in df.iterrows():
+    for i, (_, row) in enumerate(df.iterrows()):
         rows.append("<tr>")
         for col in df.columns:
-            rows.append(f"<td>{row[col]}</td>")
+            cls = cell_classes.get((i, col)) if cell_classes else None
+            cls_attr = f" class='{cls}'" if cls else ""
+            rows.append(f"<td{cls_attr}>{row[col]}</td>")
         rows.append("</tr>")
     rows.append("</tbody></table>")
     return "".join(rows)
@@ -202,6 +204,7 @@ def _pb_summary_context(view: str = "rounds") -> dict:
 
         players = sorted(data['Player'].unique())
         summary_rows = []
+        best_numeric = {}  # player -> {measure_col: numeric best} for record detection
 
         for player in players:
             pdata = data[data['Player'] == player]
@@ -241,16 +244,38 @@ def _pb_summary_context(view: str = "rounds") -> dict:
             best_s = pdata.loc[pdata['Stableford'].idxmax()]
             row['Stfd'] = f"{int(best_s['Stableford'])} ({_when(best_s)})"
 
+            best_numeric[player] = {
+                'Score': int(best_sc['Sc']),
+                'Gross': best_g['GrossVP'],
+                'Net': best_n['NetVP'],
+                'Stfd': int(best_s['Stableford']),
+            }
+
             summary_rows.append(row)
 
         display = pd.DataFrame(summary_rows)
+
+        # Identify the overall record-holder cell(s) per measure column so the
+        # template can highlight them (lowest Score/Gross/Net, highest Stfd).
+        records = {
+            'Score': min(v['Score'] for v in best_numeric.values()),
+            'Gross': min(v['Gross'] for v in best_numeric.values()),
+            'Net': min(v['Net'] for v in best_numeric.values()),
+            'Stfd': max(v['Stfd'] for v in best_numeric.values()),
+        }
+        cell_classes = {}
+        for i, player in enumerate(players):
+            for col, rec in records.items():
+                if best_numeric[player][col] == rec:
+                    cell_classes[(i, col)] = 'pb-record'
+
         if view == "tegs":
             title = "Personal Best TEGs"
         elif view == "nines":
             title = "Personal Best 9s"
         else:
             title = "Personal Best Rounds"
-        sections = [{"title": title, "table_html": _df_to_html(display)}]
+        sections = [{"title": title, "table_html": _df_to_html(display, cell_classes=cell_classes)}]
         return {"sections": sections}
     except Exception as e:
         return {"error": str(e)}
@@ -306,14 +331,15 @@ def _pb_tab_context(tab: str, measure: str = "GrossVP", n: int = 3) -> dict:
         # Rename measure column to friendly name
         result = result.rename(columns={measure: measure_friendly})
         if 'Round_Label' in result.columns:
+            # Drop the numeric Round so the 'TEG x|Ry' label can take the name
+            # without producing a duplicate 'Round' column.
+            if 'Round' in result.columns:
+                result = result.drop(columns=['Round'])
             result = result.rename(columns={'Round_Label': 'Round'})
+            id_cols = ['Round' if c == 'Round_Label' else c for c in id_cols]
 
         display_cols = ['Player', measure_friendly] + id_cols
         display = result[display_cols].copy()
-
-        # Add rank column per player
-        display = display.copy()
-        display.insert(0, '#', display.groupby('Player').cumcount() + 1)
 
         # Format measure values
         display = _format_measure_col(display, measure, measure_friendly)
@@ -329,7 +355,7 @@ def _pb_tab_context(tab: str, measure: str = "GrossVP", n: int = 3) -> dict:
 async def personal_bests_page(request: Request):
     default_tab = "pb_summary"
     default_measure = "GrossVP"
-    default_n = 3
+    default_n = 1
     default_view = "rounds"
 
     if default_tab == "pb_summary":
@@ -356,7 +382,7 @@ async def personal_bests_tab(
     request: Request,
     tab: str = "pb_summary",
     measure: str = "GrossVP",
-    n: int = 3,
+    n: int = 1,
     view: str = "rounds",
 ):
     if tab == "pb_summary":
