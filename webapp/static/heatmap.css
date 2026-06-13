@@ -1,28 +1,28 @@
-/* Heatmap table — diverging blue→white→orange palette + rotated headers.
+/* Heatmap table — diverging green→white→red palette + rotated headers.
    Loaded only on /scoring/heatmap via extra_head. */
 
 /* ── Palette tokens (light mode) ──────────────────────────────────────────── */
 :root {
-  /* Diverging: blue (good/low) → off-white (neutral) → orange-red (bad/high) */
-  --hm-neg3-bg: #2c7bb6; --hm-neg3-text: #fff;
-  --hm-neg2-bg: #74b9d5; --hm-neg2-text: #1a1a1a;
-  --hm-neg1-bg: #c6e2ef; --hm-neg1-text: #1a1a1a;
-  --hm-zero-bg: #f5f5f0; --hm-zero-text: #555;
-  --hm-pos1-bg: #fddcb5; --hm-pos1-text: #1a1a1a;
-  --hm-pos2-bg: #f4a55a; --hm-pos2-text: #1a1a1a;
-  --hm-pos3-bg: #c94b2b; --hm-pos3-text: #fff;
+  /* Diverging: green (good/low) → off-white (neutral) → red (bad/high) */
+  --hm-neg3-bg: #1a7340; --hm-neg3-text: #fff;
+  --hm-neg2-bg: #52a96e; --hm-neg2-text: #fff;
+  --hm-neg1-bg: #b8dfc7; --hm-neg1-text: #1a1a1a;
+  --hm-zero-bg: #f5f5f0; --hm-zero-text: #888;
+  --hm-pos1-bg: #fcd5a8; --hm-pos1-text: #1a1a1a;
+  --hm-pos2-bg: #ef8040; --hm-pos2-text: #fff;
+  --hm-pos3-bg: #b92d1e; --hm-pos3-text: #fff;
   --hm-na-bg:   #ededea; --hm-na-text:   #bbb;
 }
 
 /* Dark mode overrides */
 html[data-mode="dark"] {
-  --hm-neg3-bg: #1a4f78; --hm-neg3-text: #a8d4eb;
-  --hm-neg2-bg: #1c5e7a; --hm-neg2-text: #9dcce0;
-  --hm-neg1-bg: #1e3d4e; --hm-neg1-text: #8bbfd4;
+  --hm-neg3-bg: #0d4726; --hm-neg3-text: #7dd4a0;
+  --hm-neg2-bg: #1a5c38; --hm-neg2-text: #9ecfb4;
+  --hm-neg1-bg: #1a3529; --hm-neg1-text: #7dba9a;
   --hm-zero-bg: #2a2a27; --hm-zero-text: #86857e;
-  --hm-pos1-bg: #4a3018; --hm-pos1-text: #e8b97a;
-  --hm-pos2-bg: #5e320e; --hm-pos2-text: #f0a055;
-  --hm-pos3-bg: #5e1e0d; --hm-pos3-text: #f07050;
+  --hm-pos1-bg: #4a2e12; --hm-pos1-text: #e8b97a;
+  --hm-pos2-bg: #5e2808; --hm-pos2-text: #f09050;
+  --hm-pos3-bg: #5c1510; --hm-pos3-text: #f07060;
   --hm-na-bg:   #222220; --hm-na-text:   #555;
 }
 
@@ -39,47 +39,49 @@ html[data-mode="dark"] {
 /* ── Table layout ──────────────────────────────────────────────────────────── */
 .heatmap-table {
   border-collapse: separate;
-  border-spacing: 2px;          /* white gap between cells */
+  border-spacing: 2px;
   table-layout: auto;
 }
 
-/* All data cells + headers (not the first label column) */
+/* Data cells — ~20% smaller than before (2.6rem → 2.1rem wide, 4px → 3px pad) */
 .heatmap-table thead th:not(.hm-row-label-header),
 .heatmap-table tbody td:not(.row-label) {
-  width: 2.6rem;
-  min-width: 2.6rem;
-  max-width: 2.6rem;
+  width: 2.1rem;
+  min-width: 2.1rem;
+  max-width: 2.1rem;
   text-align: center;
-  font-size: 0.72rem;
-  padding: 4px 2px;
+  font-size: 0.65rem;
+  padding: 3px 1px;
   border-radius: 2px;
+  line-height: 1.4;
 }
 
-/* Avg column — slightly bolder */
+/* Row height — pin to match cell width for square cells */
+.heatmap-table tbody tr {
+  height: 2.1rem;
+}
+.heatmap-table tbody td {
+  vertical-align: middle;
+}
+
+/* Avg column — bolder + left separator */
 .heatmap-table td.hm-avg-cell {
   font-weight: 600;
   border-left: 2px solid var(--table-cell-border, #e0e0e0);
 }
 
 /* Total row */
-.heatmap-table td.hm-total-cell {
-  font-weight: 600;
-}
-.heatmap-table .hm-total-label {
-  font-weight: 700;
-}
+.heatmap-table td.hm-total-cell { font-weight: 600; }
+.heatmap-table .hm-total-label  { font-weight: 700; }
 
 /* First column (row labels) */
 .heatmap-table td.row-label {
   white-space: nowrap;
   padding-right: 1rem;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
 }
 
-/* ── Rotated column headers ─────────────────────────────────────────────────
-   Used when col_by is a string dimension (Course, Region, Player, etc.)
-   so that long labels don't blow out column widths. The <span> inside
-   the <th> is what gets rotated; the <th> provides the fixed-width cell. */
+/* ── Rotated column headers ──────────────────────────────────────────────── */
 .heatmap-table thead th.rotated-header {
   height: 9rem;
   vertical-align: bottom;
@@ -93,7 +95,7 @@ html[data-mode="dark"] {
   writing-mode: vertical-lr;
   transform: rotate(180deg);
   white-space: nowrap;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   line-height: 1;
   padding-bottom: 2px;
 }
@@ -105,5 +107,5 @@ html[data-mode="dark"] {
 .heatmap-table .hm-avg-header span {
   writing-mode: horizontal-tb !important;
   transform: none !important;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
 }

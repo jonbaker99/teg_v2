@@ -1120,7 +1120,7 @@ def _heatmap_context(row_by: str = "Player", col_by: str = "Hole",
         all_cell_vals = [v for v in cell.values() if not pd.isna(v)]
         s = pd.Series(all_cell_vals) if all_cell_vals else pd.Series([0.0])
         center = float(s.mean())
-        scale = float(s.std()) if len(s) > 1 else 1.0
+        scale = float(s.std()) * 1.5 if len(s) > 1 else 1.0
         scale = max(scale, 0.05)  # guard against near-zero spread
 
         # Rotate string-type column headers for compact equal-width columns
