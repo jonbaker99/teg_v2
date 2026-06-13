@@ -22,16 +22,20 @@ behind a `≤640px` breakpoint or an opt-in `data-mode`).
   fixed bottom tab bar in `base.html` (one tab per nav section, driven by
   `nav.py`'s new `tab` key), shown only `≤640px`, plus a compacted top bar.
   Preview: `mobile_mockups/mobile_shell_preview.html`.
+- ✅ **Leaderboard hero** (PR 2) — segmented Gross/Net tabs + card-reflowed rows
+  on phones (server-rendered card list beside the table, swapped at `≤640px`).
+  Preview: `mobile_mockups/leaderboard_mobile_preview.html`.
 - ✅ **Mockups** for Direction A in `webapp/mobile_mockups/` (served at `/mockups/`).
 
-**▶ Pick up here (the full UI work):** with the shell in place, the next steps
-roll the per-page mobile treatments out across the site (Direction-A mockups are
-the spec):
-- **Leaderboard hero** (M2.7) — segmented Gross/Net + card-reflowed rows.
-- **Tables + controls sweep** (M1.5–M1.6) — segmented toggles and sticky-column
-  scroll on the remaining pages (the scorecard is the working reference).
+**▶ Pick up here (the full UI work):** shell + leaderboard hero are done; the
+next steps roll the per-page mobile treatments across the rest of the site
+(Direction-A mockups are the spec):
+- **Tables + controls sweep** (M1.5–M1.6) — segmented toggles
+  (`.section-nav--segmented`, see the leaderboard) and sticky-column scroll on
+  the remaining pages (the scorecard + leaderboard are the working references).
 - **Charts** (M2.8) — mobile preset (still behind the parked HTMX chart bug).
 - **Top app-bar polish** (M1.4 remainder) — a sticky, more app-like header.
+- **Optional hero polish** — champion/spoon pods; reflow Latest Round / Records.
 
 Everything below §Status is the approach and remains the working reference.
 
@@ -217,7 +221,10 @@ Three tiers, cheapest first:
 6. Apply the **sticky-column scroll** table treatment globally (§4.4 tier 1).
 
 **Phase M2 — Hero polish.**
-7. Card-reflow the **Latest Leaderboard** (and maybe Latest Round / Records).
+7. ✅ **Latest Leaderboard** card-reflowed on phones (segmented Gross/Net tabs +
+   tappable rows; server-rendered card list beside the table, swapped by the
+   `≤640px` breakpoint). *Still optional:* champion/spoon hero pods; Latest Round
+   / Records reflow.
 8. Mobile chart preset + direct-label race chart.
 9. Per-page pass: spacing, tap targets, empty states, safe-area insets.
 
