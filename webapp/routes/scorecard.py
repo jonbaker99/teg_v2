@@ -214,7 +214,7 @@ async def scorecard_content(
     type: str = Query(TYPE_ONE_ROUND_ALL_PLAYERS),
 ):
     rounds = get_rounds_for_teg(teg)
-    round_num = round if round is not None else (rounds[-1] if rounds else 1)
+    round_num = round if (round is not None and round in rounds) else (rounds[-1] if rounds else 1)
     player_code = player or _default_player_code()
 
     ctx = _build_scorecard_context(type, teg, round_num, player_code)

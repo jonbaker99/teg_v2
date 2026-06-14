@@ -52,3 +52,18 @@
 {% else %}
 <p class="text-muted text-sm">No data available.</p>
 {% endif %}
+{% if rounds is defined %}
+<input id="lr-round-select" name="round" type="hidden" value="{{ round }}" hx-swap-oob="true">
+<div id="lr-round-pills" hx-swap-oob="true">
+    {% for r in rounds %}
+    <button class="pill{% if r == round %} pill--active{% endif %}"
+            hx-get="/latest-round/tab"
+            hx-target="#lr-content"
+            hx-include="#lr-teg-select, #lr-tab-input"
+            hx-vals='{"round": {{ r }}}'
+            onclick="document.getElementById('lr-round-select').value='{{ r }}'">
+        Round {{ r }}
+    </button>
+    {% endfor %}
+</div>
+{% endif %}

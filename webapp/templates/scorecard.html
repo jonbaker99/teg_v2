@@ -3,6 +3,23 @@
 
 {% block extra_head %}
 <link rel="stylesheet" href="/static/scorecard.css?v=14">
+<script>
+function updateScorecardControls() {
+    var view = (document.getElementById('sc-type') || {}).value;
+    if (!view) return;
+    var roundField  = document.getElementById('sc-round-field');
+    var playerField = document.getElementById('sc-player-field');
+    // 'one_player_all_rounds' needs no round selection
+    roundField.style.display  = (view === 'one_player_all_rounds') ? 'none' : '';
+    // 'one_round_all_players' needs no player selection
+    playerField.style.display = (view === 'one_round_all_players') ? 'none' : '';
+}
+document.addEventListener('DOMContentLoaded', updateScorecardControls);
+// Re-apply after OOB swaps restore the round pills
+document.addEventListener('htmx:afterSettle', function() {
+    if (document.getElementById('sc-type')) updateScorecardControls();
+});
+</script>
 {% endblock %}
 
 {% block page_title %}
@@ -18,7 +35,8 @@
     <div class="section-controls flex flex-wrap items-end gap-4">
         <label class="flex flex-col text-sm gap-1"><span class="text-secondary font-medium">View</span>
             <select id="sc-type" name="type" class="teg-select"
-                    hx-get="/scorecard/content" hx-target="#scorecard-content" hx-include="{{ inc }}" hx-indicator="#loading">
+                    hx-get="/scorecard/content" hx-target="#scorecard-content" hx-include="{{ inc }}" hx-indicator="#loading"
+                    onchange="updateScorecardControls()">
                 {% for tid, tlabel in all_types %}<option value="{{ tid }}" {% if tid == selected_type %}selected{% endif %}>{{ tlabel }}</option>{% endfor %}
             </select>
         </label>
@@ -28,13 +46,23 @@
                 {% for t in teg_numbers %}<option value="{{ t }}" {% if t == selected_teg %}selected{% endif %}>TEG {{ t }}</option>{% endfor %}
             </select>
         </label>
-        <label class="flex flex-col text-sm gap-1"><span class="text-secondary font-medium">Round</span>
-            <select id="sc-round" name="round" class="teg-select"
-                    hx-get="/scorecard/content" hx-target="#scorecard-content" hx-include="{{ inc }}" hx-indicator="#loading">
-                {% for r in rounds %}<option value="{{ r }}" {% if r == selected_round %}selected{% endif %}>Round {{ r }}</option>{% endfor %}
-            </select>
-        </label>
-        <label class="flex flex-col text-sm gap-1"><span class="text-secondary font-medium">Player</span>
+        <div id="sc-round-field" class="flex flex-col text-sm gap-1">
+            <span class="text-secondary font-medium">Round</span>
+            <div id="sc-round-pills" class="pill-group">
+                {% for r in rounds %}
+                <button class="pill{% if r == selected_round %} pill--active{% endif %}"
+                        hx-get="/scorecard/content" hx-target="#scorecard-content"
+                        hx-include="#sc-type, #sc-teg, #sc-player"
+                        hx-vals='{"round": {{ r }}}'
+                        hx-indicator="#loading"
+                        onclick="document.getElementById('sc-round').value='{{ r }}'">
+                    Round {{ r }}
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+        <input type="hidden" id="sc-round" name="round" value="{{ selected_round }}">
+        <label id="sc-player-field" class="flex flex-col text-sm gap-1"><span class="text-secondary font-medium">Player</span>
             <select id="sc-player" name="player" class="teg-select"
                     hx-get="/scorecard/content" hx-target="#scorecard-content" hx-include="{{ inc }}" hx-indicator="#loading">
                 {% for code, name in player_list %}<option value="{{ code }}" {% if code == selected_player %}selected{% endif %}>{{ name }}</option>{% endfor %}

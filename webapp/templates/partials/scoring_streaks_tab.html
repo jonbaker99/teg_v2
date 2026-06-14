@@ -6,21 +6,27 @@
     <label class="flex flex-col text-sm gap-1"><span class="text-muted">TEG</span>
         <select class="theme-select" name="d_teg"
                 hx-get="/scoring/streaks/tab" hx-target="#st-content" hx-swap="innerHTML"
-                hx-include="[name='d_round'], [name='d_player']" hx-vals='{"tab": "detail"}'>
+                hx-include="[name='d_player']" hx-vals='{"tab": "detail"}'>
             {% for t in teg_options %}<option value="{{ t }}" {% if t == d_teg %}selected{% endif %}>{{ t }}</option>{% endfor %}
         </select>
     </label>
-    <label class="flex flex-col text-sm gap-1"><span class="text-muted">Round</span>
-        <select class="theme-select" name="d_round"
-                hx-get="/scoring/streaks/tab" hx-target="#st-content" hx-swap="innerHTML"
-                hx-include="[name='d_teg'], [name='d_player']" hx-vals='{"tab": "detail"}'>
-            {% for r in round_options %}<option value="{{ r }}" {% if r|string == d_round %}selected{% endif %}>{{ r }}</option>{% endfor %}
-        </select>
-    </label>
+    <div class="flex flex-col text-sm gap-1">
+        <span class="text-muted">Round</span>
+        <div class="pill-group">
+            {% for r in round_options %}
+            <button class="pill{% if r|string == d_round %} pill--active{% endif %}"
+                    hx-get="/scoring/streaks/tab" hx-target="#st-content" hx-swap="innerHTML"
+                    hx-include="[name='d_teg'], [name='d_player']"
+                    hx-vals='{"tab": "detail", "d_round": "{{ r }}"}'>
+                {% if r == 'All' %}All{% else %}Round {{ r }}{% endif %}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
     <label class="flex flex-col text-sm gap-1"><span class="text-muted">Player</span>
         <select class="theme-select" name="d_player"
                 hx-get="/scoring/streaks/tab" hx-target="#st-content" hx-swap="innerHTML"
-                hx-include="[name='d_teg'], [name='d_round']" hx-vals='{"tab": "detail"}'>
+                hx-include="[name='d_teg']" hx-vals='{"tab": "detail"}'>
             {% for p in player_options %}<option value="{{ p }}" {% if p == d_player %}selected{% endif %}>{{ p }}</option>{% endfor %}
         </select>
     </label>
