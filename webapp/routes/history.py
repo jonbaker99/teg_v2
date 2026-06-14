@@ -651,7 +651,6 @@ async def player_rankings_page(request: Request, row_dim: str = Query("Player"),
     return templates.TemplateResponse("player_rankings.html", {
         "request": request,
         "active_page": "player-rankings",
-        "wide": True,
         "tabs": PLAYER_RANKINGS_TABS,
         "active_tab": default_tab,
         **ctx,

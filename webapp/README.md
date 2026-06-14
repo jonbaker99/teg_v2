@@ -200,7 +200,7 @@ return templates.TemplateResponse("my_page.html", {
 })
 ```
 
-Currently wide: `/player-rankings`, `/scoring/matrix`, `/scoring/heatmap`.
+Currently wide: `/scoring/matrix`, `/scoring/heatmap`.
 Partials (HTMX responses) never need `wide` — only the full-page handler does.
 
 **Scope note:** dev/demo templates (`smoke_test`, `width_test`,
