@@ -5,7 +5,6 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 ---
 
 ## IN PROGRESS
-- [ ] **PILL FORMATS**
 - [ ] **CHARTS**
 
 ## NEXT UP
@@ -14,9 +13,6 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 ## Bugs — fix before publish
 
 ## UI Changes
-
-- [ ] **Pill format** define a standard global 'pill' format that will automatically get used when pills are deployed as UI elements. The pill should look like those on `personal-bests` ('best rounds' etc.).
-- [ ] **Pills to choose rounds** - Pages with dropdowns for TEG and Round should use dropdown for TEG and then a pill for the round selection. Only rounds that exist should have a pill. For example, TEG 2 should only have rounds 1-3 as options. An in-progress TEG should only have the number of rounds that exist in the data.
 
 - [ ] **History table** - Consistent column widths for final 3 columns. Use full width of page. Consistent line break between first names and surnames in final 3 columns - either all or none.
 - [ ] **Table font** - make a touch smaller to match streamlit
