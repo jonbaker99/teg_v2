@@ -170,7 +170,7 @@ def get_chart_style(name: str) -> dict:
 def add_round_annotations(fig, max_round):
     for round_num in range(1, max_round + 1):
         x_pos = (round_num - 1) * 18
-        fig.add_vline(x=x_pos, line=dict(color='lightgrey', width=1))
+        fig.add_vline(x=x_pos, line=dict(color='rgba(0,0,0,0.08)', width=1))
         fig.add_annotation(x=x_pos + 9, y=0.08, text=f'R{round_num}',
                            showarrow=False, yref='paper', yshift=-40)
 
@@ -276,7 +276,7 @@ def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None,
 
     # Small padding each side so lines/markers don't sit flush against the axes
     # (matches Streamlit's leaderboard, which sets range=[0.5, 72.5]).
-    fig.update_xaxes(tickvals=[], range=[0.5, x_axis_max + 0.5])
+    fig.update_xaxes(tickvals=[], range=[0.5, x_axis_max + 0.5], showspikes=False)
 
     if chart_type == 'ranking':
         fig.update_yaxes(autorange='reversed')
