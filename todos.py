@@ -51,7 +51,9 @@ def main(show_done: bool = False):
         if not visible:
             continue
         print(f"\n{'═' * 60}")
-        print(f"  {label}")
+        # Added a clickable terminal link using the file:// protocol
+        file_url = path.resolve().as_uri()
+        print(f"  {label} -> \033]8;;{file_url}\033\\{path.relative_to(ROOT)}\033]8;;\033\\")
         print(f"{'═' * 60}")
         current_section = None
         for section, status, text in visible:

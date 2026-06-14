@@ -6,7 +6,6 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## Bugs — fix before publish
 
-- [ ] **`/personal-bests` round tabs error** — `"['Round_Label'] not in index"` in `routes/performance.py`. Summary and TEG tabs fine; round-detail view gets wrong data shape.
 - [ ] **`/latest-teg` Streaks tab only shows final round** — `get_player_window_streaks(..., round_num=last_round)` in `routes/latest.py` should aggregate across all TEG rounds (and handle cross-round streaks).
 - [ ] **Records & PBs on `/latest-round` and `/latest-teg`** — not verified correct; draft warning shown (`_RECORDS_DRAFT_NOTE` in `routes/latest.py`). Verify figures against known-good source then remove warning.
 
