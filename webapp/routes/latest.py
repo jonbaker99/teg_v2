@@ -35,8 +35,7 @@ from teg_analysis.analysis.streaks import get_player_window_streaks, build_strea
 from teg_analysis.analysis.scoring import count_scores_by_player
 from teg_analysis.core.metadata import get_scorecard_data, get_teg_metadata
 from teg_analysis.display.scorecards import (
-    build_round_comparison_gross_table,
-    build_round_comparison_stableford_table,
+    build_round_comparison_responsive,
 )
 from webapp.deps import (
     cached_load_all_data,
@@ -241,10 +240,9 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                 if round_data is None or round_data.empty:
                     sections.append({"title": "Scorecard", "table_html": "<p class='text-muted text-sm'>No scorecard data.</p>"})
                 else:
-                    gross = build_round_comparison_gross_table(round_data)
-                    stableford = build_round_comparison_stableford_table(round_data)
-                    sections.append({"title": "Gross", "table_html": gross})
-                    sections.append({"title": "Stableford", "table_html": stableford})
+                    # Responsive block: landscape on desktop/iPad, portrait on phone.
+                    block = build_round_comparison_responsive(round_data, uid=f"lr{teg_num}r{round_num}")
+                    sections.append({"title": None, "table_html": block, "raw": True})
                 return {"sections": sections, "scorecard_css": True}
             except Exception as e:
                 sections.append({"title": "Scorecard", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})

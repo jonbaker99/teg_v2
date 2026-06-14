@@ -421,6 +421,24 @@ HTML builders).
     Gross/Stableford toggle and dark-ready (inert) colour tokens. Desktop/iPad
     are unchanged. See [SCORECARD_PORT.md](SCORECARD_PORT.md). *(Dark mode
     activates once the app-wide `data-mode` toggle is built.)*
+    - **Portrait now applies everywhere a scorecard is shown.** The field
+      scorecards on **Latest Round** and **Full Results** use
+      `build_round_comparison_responsive(round_data, uid)`
+      (`teg_analysis/display/scorecards.py`), which emits the landscape
+      gross+stableford block plus a portrait Gross/Stableford toggle in one
+      go. The toggle's CSS is now **class-based** (`.scm-gross`/`.scm-pts` +
+      `.lbl-gross`/`.lbl-pts`), so multiple cards can coexist on a page (one
+      per round on Full Results); `uid` keeps each radio group unique.
+    - **Scorecard cells have hover tooltips** (native `title`:
+      Hole/SI/Par/Score/Net/Stableford) on every page — built in the
+      `teg_analysis` builders so they apply wherever a scorecard renders.
+    - **Eclectic Scores** (`/eclectic`) now renders with the **gross scorecard
+      shapes** via `build_eclectic_scorecard_table` (to-par per hole, coloured
+      like a real card) instead of a plain table.
+    - **Consistent page width:** `.content-wrapper` / `.page-title-outer` use
+      `width:100%` (capped at `min(90vw,1280px)`) instead of `fit-content`, so
+      the page no longer resizes to its content — all pages and all scorecard
+      views share one width.
 - Search / filtering UI (some routes have it, not everywhere)
 - **"Related links" section** — replicate the cross-page related-links block the
   Streamlit app shows (links from each page to related pages). One day.

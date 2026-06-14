@@ -23,8 +23,7 @@ from teg_analysis.analysis.player_rankings import (
 )
 from teg_analysis.core.metadata import get_scorecard_data
 from teg_analysis.display.scorecards import (
-    build_round_comparison_gross_table,
-    build_round_comparison_stableford_table,
+    build_round_comparison_responsive,
 )
 from webapp.deps import (
     cached_load_all_data,
@@ -451,27 +450,22 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "stand
     try:
         if tab == "scorecards":
             rounds = get_rounds_for_teg(teg_num)
-            parts = ['<link rel="stylesheet" href="/static/scorecard.css?v=14">']
+            parts = ['<link rel="stylesheet" href="/static/scorecard.css?v=17">']
             for r in rounds:
                 try:
                     rd = get_scorecard_data(teg_num, r)
                     if rd is None or rd.empty:
                         continue
-                    gross = build_round_comparison_gross_table(rd)
-                    stableford = build_round_comparison_stableford_table(rd)
+                    # Responsive block: landscape on desktop/iPad, portrait on phone.
+                    block = build_round_comparison_responsive(rd, uid=f"res{teg_num}r{r}")
                     parts.append("<section class='sc-round'>")
                     parts.append(f"<h2 class='section-title'>Round {r}</h2>")
-                    parts.append("<div class='sc-block'><div class='sc-label'>Gross</div>")
-                    parts.append(gross)
-                    parts.append("</div>")
-                    parts.append("<div class='sc-block sc-block--stableford'><div class='sc-label'>Stableford</div>")
-                    parts.append(stableford)
-                    parts.append("</div>")
+                    parts.append(block)
                     parts.append("</section>")
                 except Exception:
                     continue
             table_html = "".join(parts) if len(parts) > 1 else "<p class='text-muted'>No rounds found.</p>"
-            return {"result_title": "Scorecards", "table_html": table_html}
+            return {"result_title": "Scorecards", "table_html": table_html, "raw_table": True}
 
         if tab == "report":
             from pathlib import Path

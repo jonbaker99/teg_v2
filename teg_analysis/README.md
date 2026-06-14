@@ -67,7 +67,12 @@ teg_analysis/
     tables.py        Table building helpers
     scorecards.py    Scorecard HTML — landscape (holes as columns) + portrait
                      (holes as rows, mobile) builders for the 3 views
-                     (single round / whole TEG / vs field)
+                     (single round / whole TEG / vs field); per-cell hover
+                     tooltips (Hole/SI/Par/Score/Net/Stableford); a responsive
+                     field builder (build_round_comparison_responsive) that
+                     emits landscape+portrait in one block; and an eclectic
+                     scorecard builder (build_eclectic_scorecard_table) that
+                     renders an eclectic pivot with the gross score shapes
   
   api/               REST API endpoints (placeholder)
     __init__.py

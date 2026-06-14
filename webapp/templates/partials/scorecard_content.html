@@ -31,11 +31,11 @@
     </div>
     <!-- Portrait (phone ≤640px): Gross/Stableford toggle (pure CSS) -->
     <div class="sc-portrait sc-metric-toggle">
-        <input type="radio" name="sc-metric" id="scm-gross" checked>
-        <input type="radio" name="sc-metric" id="scm-pts">
+        <input type="radio" class="scm-gross" name="sc-metric" id="scm-gross" checked>
+        <input type="radio" class="scm-pts" name="sc-metric" id="scm-pts">
         <div class="sc-mseg">
-            <label for="scm-gross">Gross</label>
-            <label for="scm-pts">Stableford</label>
+            <label class="lbl-gross" for="scm-gross">Gross</label>
+            <label class="lbl-pts" for="scm-pts">Stableford</label>
         </div>
         <div class="sc-pane sc-pane-gross data-card"><div class="sc-scroll">
             {{ gross_portrait | safe }}
@@ -47,6 +47,10 @@
     {% endif %}
 </div>
 {% endif %}
+{# OOB block — only for HTMX partial responses (oob=True). On the initial
+   full-page render the controls already hold #sc-round / #sc-round-pills, so
+   rendering this inline would duplicate the round pills at the foot of the page. #}
+{% if oob %}
 <input id="sc-round" name="round" type="hidden" value="{{ selected_round }}" hx-swap-oob="true">
 <div id="sc-round-pills" hx-swap-oob="true">
     {% for r in rounds %}
@@ -60,3 +64,4 @@
     </button>
     {% endfor %}
 </div>
+{% endif %}

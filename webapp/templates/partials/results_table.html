@@ -30,6 +30,9 @@
 </div>
 {% if chart_note %}<p class="chart-note text-muted text-sm">{{ chart_note }}</p>{% endif %}
 
+{% elif raw_table %}
+{% if result_title %}<div class="card-header">{{ result_title }}</div>{% endif %}
+{{ table_html | safe }}
 {% else %}
 {% if result_title %}<div class="card-header">{{ result_title }}</div>{% endif %}
 <div class="data-card">
