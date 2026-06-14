@@ -9,21 +9,13 @@
 {% endblock %}
 
 {% block content %}
-<!-- Header -->
-<div class="mb-6">
-    <div class="flex items-center justify-between mb-2">
-        <div class="flex items-center gap-3">
-            <span class="badge-muted">{{ player_code }}</span>
-        </div>
-        <select class="teg-select"
-                onchange="window.location='/player/'+this.value">
-            {% for code, name in player_list %}
-            <option value="{{ code }}" {% if code == player_code %}selected{% endif %}>{{ name }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <p class="text-sm text-secondary">{{ subtitle }}</p>
-</div>
+<!-- Player selector pills -->
+{% with active_code = player_code %}
+{% include "partials/player_pills.html" %}
+{% endwith %}
+
+<!-- Subtitle -->
+<p class="text-sm text-secondary mb-6">{{ subtitle }}</p>
 
 <!-- Stat Cards -->
 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">

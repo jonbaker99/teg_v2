@@ -1,0 +1,10 @@
+{# Player-selector pill bar. Expects: player_list (list of (code, name));
+   active_code (str or None — the currently selected player). #}
+<div class="section-controls">
+    <div class="pill-group">
+        <a href="/player" class="pill{% if not active_code %} pill--active{% endif %}">All Players</a>
+        {% for code, name in player_list %}
+        <a href="/player/{{ code }}" class="pill{% if code == active_code %} pill--active{% endif %}">{{ name }}</a>
+        {% endfor %}
+    </div>
+</div>

@@ -683,16 +683,72 @@ def _build_h2h_context(player_code: str) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Roster (landing page cards)
+# ---------------------------------------------------------------------------
+
+def _build_roster() -> list[dict]:
+    """Build roster card data for every player, ordered by honours then name.
+
+    Each card carries identity (code/name/initials), a one-line career summary
+    and three headline stats, plus trophy/jacket/spoon badges.
+    """
+    all_data = cached_load_all_data()
+    rd_data = cached_round_data()
+    winners = _get_winners_data()
+
+    cards = []
+    for code, name in PLAYER_DICT.items():
+        player_data = all_data[all_data['Player'] == name]
+        if player_data.empty:
+            continue
+
+        teg_info = player_data[['TEGNum', 'Year']].drop_duplicates().sort_values('TEGNum')
+        n_tegs = len(teg_info)
+        since_year = int(teg_info.iloc[0]['Year'])
+
+        player_rds = rd_data[rd_data['Player'] == name]
+        avg_gvp = player_rds['GrossVP'].mean() if not player_rds.empty else None
+        avg_stab = player_rds['Stableford'].mean() if not player_rds.empty else None
+
+        trophy_count = int((winners['TEG Trophy'] == name).sum())
+        jacket_count = int((winners['Green Jacket'] == name).sum())
+        spoon_count = int((winners['HMM Wooden Spoon'] == name).sum())
+        total_trophies = trophy_count + jacket_count
+
+        badges = []
+        if trophy_count:
+            badges.append({"text": f"Trophy ×{trophy_count}", "style": "accent"})
+        if jacket_count:
+            badges.append({"text": f"Jacket ×{jacket_count}", "style": "accent"})
+        if spoon_count:
+            badges.append({"text": f"Spoon ×{spoon_count}", "style": "muted"})
+
+        cards.append({
+            "code": code,
+            "name": name,
+            "n_tegs": n_tegs,
+            "since_year": since_year,
+            "avg_gvp": f"{avg_gvp:+.1f}" if avg_gvp is not None else "–",
+            "avg_stab": f"{avg_stab:.1f}" if avg_stab is not None else "–",
+            "total_trophies": total_trophies,
+            "badges": badges,
+        })
+
+    cards.sort(key=lambda c: (-c["total_trophies"], -c["n_tegs"], c["name"]))
+    return cards
+
+
+# ---------------------------------------------------------------------------
 # Routes
 # ---------------------------------------------------------------------------
 
 @router.get("/player")
 async def player_index(request: Request):
-    players = _get_player_list()
     return templates.TemplateResponse("player_index.html", {
         "request": request,
         "active_page": "player",
-        "players": players,
+        "player_list": _get_player_list(),
+        "roster": _build_roster(),
     })
 
 
