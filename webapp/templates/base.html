@@ -272,5 +272,21 @@
         pill.classList.add('pill--active');
     });
     </script>
+    <!-- Centralised Plotly renderer. Charts use data-figure attribute instead of inline
+         scripts — this handler purges and re-renders on DOMContentLoaded and after every
+         HTMX swap, fixing the stranded top-SVG-layer bug on tab switches. -->
+    <script>
+    (function() {
+        function renderCharts(root) {
+            root.querySelectorAll('.chart-container[data-figure]').forEach(function(el) {
+                Plotly.purge(el);
+                var fig = JSON.parse(el.dataset.figure);
+                Plotly.newPlot(el, fig.data, fig.layout, {responsive: true, displayModeBar: false});
+            });
+        }
+        document.addEventListener('DOMContentLoaded', function() { renderCharts(document); });
+        document.addEventListener('htmx:afterSettle', function(e) { renderCharts(e.detail.elt); });
+    })();
+    </script>
 </body>
 </html>

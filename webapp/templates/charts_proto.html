@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title_suffix %} — Chart Style Prototype{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">Dev</span>
+    <h1 class="page-title">Chart Style Prototype</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<p class="page-subtitle">
+    Same data ({{ teg_name }} cumulative gross vs par) rendered in each named style.
+    Use this page to compare and pick the app standard.
+</p>
+
+{% for chart in charts %}
+<div style="margin-bottom: 2.5rem;">
+    <div style="display:flex; align-items:baseline; gap:1rem; margin-bottom:0.5rem;">
+        <h2 class="section-title" style="margin:0;">{{ chart.label }}</h2>
+        <span style="font-size:0.8rem; color:var(--color-muted); font-family:monospace;">{{ chart.style_key }}</span>
+    </div>
+    <p style="font-size:0.85rem; color:var(--color-muted); margin:0 0 0.75rem;">{{ chart.description }}</p>
+    {% if chart.figure_json %}
+    <div class="data-card data-card--padded">
+        <div class="chart-container" data-figure="{{ chart.figure_json }}" style="height:380px;"></div>
+    </div>
+    {% else %}
+    <div class="data-card" style="padding:1rem; color:var(--color-muted);">Chart unavailable</div>
+    {% endif %}
+</div>
+{% endfor %}
+{% endblock %}

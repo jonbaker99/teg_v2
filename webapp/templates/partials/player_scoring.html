@@ -12,13 +12,7 @@
         {% endif %}
         {% if section.chart_json %}
         <div class="data-card data-card--padded">
-            <div id="scoring-chart-{{ loop.index }}" class="chart-container" style="height:350px;"></div>
-            <script>
-                (function() {
-                    var figData = {{ section.chart_json | safe }};
-                    Plotly.newPlot('scoring-chart-{{ loop.index }}', figData.data, figData.layout, {responsive: true, displayModeBar: false});
-                })();
-            </script>
+            <div class="chart-container" data-figure="{{ section.chart_json }}" style="height:350px;"></div>
         </div>
         {% endif %}
     </div>

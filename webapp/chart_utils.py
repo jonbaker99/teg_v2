@@ -5,6 +5,150 @@ import plotly.graph_objects as go
 import plotly.express as px
 
 
+# Named chart styles. Each is a dict of Plotly layout overrides passed to
+# fig.update_layout(**style). Nested keys (xaxis, yaxis, legend, margin) are
+# merged with existing layout settings, not replaced.
+CHART_STYLES = {
+    # Baseline — no overrides. Matches current webapp/Streamlit appearance.
+    "streamlit": {},
+
+    # Minimal white, faint horizontal grid only. Editorial / printed-programme feel.
+    "editorial-a": {
+        "paper_bgcolor": "#ffffff",
+        "plot_bgcolor": "#ffffff",
+        "font": {"family": "'Lora', Georgia, 'Times New Roman', serif", "color": "#222222", "size": 11},
+        "xaxis": {
+            "showgrid": False,
+            "zeroline": False,
+            "showline": True,
+            "linecolor": "#d8d0c8",
+            "linewidth": 1,
+            "ticks": "outside",
+            "tickcolor": "#d8d0c8",
+        },
+        "yaxis": {
+            "showgrid": True,
+            "gridcolor": "#eeece8",
+            "gridwidth": 1,
+            "zeroline": True,
+            "zerolinecolor": "#c8c0b8",
+            "zerolinewidth": 1.5,
+            "showline": False,
+        },
+        "legend": {
+            "orientation": "h", "yanchor": "bottom", "y": 1.02, "xanchor": "left", "x": 0,
+            "bgcolor": "rgba(0,0,0,0)", "borderwidth": 0,
+        },
+        "margin": {"r": 120, "t": 16, "b": 24, "l": 4},
+    },
+
+    # Warm cream background, no grid — clean "printed on paper" look.
+    "editorial-b": {
+        "paper_bgcolor": "#faf7f2",
+        "plot_bgcolor": "#faf7f2",
+        "font": {"family": "'Lora', Georgia, 'Times New Roman', serif", "color": "#2d2926", "size": 11},
+        "xaxis": {
+            "showgrid": False,
+            "zeroline": False,
+            "showline": True,
+            "linecolor": "#c4b8a8",
+            "linewidth": 1,
+            "ticks": "outside",
+            "tickcolor": "#c4b8a8",
+        },
+        "yaxis": {
+            "showgrid": False,
+            "zeroline": True,
+            "zerolinecolor": "#c4b8a8",
+            "zerolinewidth": 1.5,
+            "showline": False,
+            "ticks": "outside",
+            "tickcolor": "#c4b8a8",
+        },
+        "legend": {
+            "orientation": "h", "yanchor": "bottom", "y": 1.02, "xanchor": "left", "x": 0,
+            "bgcolor": "rgba(0,0,0,0)", "borderwidth": 0,
+        },
+        "margin": {"r": 120, "t": 16, "b": 24, "l": 4},
+    },
+
+    # Dark background — sports analytics / broadcast dashboard look.
+    "dashboard-a": {
+        "paper_bgcolor": "#0f1117",
+        "plot_bgcolor": "#0f1117",
+        "font": {"family": "'Roboto Mono', 'Courier New', monospace", "color": "#e2e8f0", "size": 11},
+        "xaxis": {
+            "showgrid": True,
+            "gridcolor": "#1e2533",
+            "gridwidth": 1,
+            "zeroline": False,
+            "showline": True,
+            "linecolor": "#2d3748",
+            "linewidth": 1,
+            "tickcolor": "#4a5568",
+        },
+        "yaxis": {
+            "showgrid": True,
+            "gridcolor": "#1e2533",
+            "gridwidth": 1,
+            "zeroline": True,
+            "zerolinecolor": "#4a5568",
+            "zerolinewidth": 1,
+            "showline": False,
+            "tickcolor": "#4a5568",
+        },
+        "legend": {
+            "orientation": "h", "yanchor": "bottom", "y": 1.02, "xanchor": "left", "x": 0,
+            "bgcolor": "rgba(0,0,0,0)", "borderwidth": 0,
+            "font": {"color": "#e2e8f0"},
+        },
+        "margin": {"r": 120, "t": 16, "b": 24, "l": 4},
+    },
+
+    # Light grey surround, white plot area, strong zero line — clean modern data-viz.
+    "dashboard-b": {
+        "paper_bgcolor": "#f0f4f8",
+        "plot_bgcolor": "#ffffff",
+        "font": {"family": "'Inter', 'Roboto', 'Helvetica Neue', sans-serif", "color": "#1a202c", "size": 11},
+        "xaxis": {
+            "showgrid": False,
+            "zeroline": False,
+            "showline": True,
+            "linecolor": "#cbd5e0",
+            "linewidth": 1,
+        },
+        "yaxis": {
+            "showgrid": True,
+            "gridcolor": "#edf2f7",
+            "gridwidth": 1,
+            "zeroline": True,
+            "zerolinecolor": "#718096",
+            "zerolinewidth": 2,
+            "showline": False,
+        },
+        "legend": {
+            "orientation": "h", "yanchor": "bottom", "y": 1.02, "xanchor": "left", "x": 0,
+            "bgcolor": "rgba(255,255,255,0.85)", "borderwidth": 1, "bordercolor": "#e2e8f0",
+        },
+        "margin": {"r": 120, "t": 16, "b": 24, "l": 4},
+    },
+}
+
+# Human-readable label + description for each style (used on the prototype page).
+CHART_STYLE_META = {
+    "streamlit":   ("Streamlit Match",    "Current appearance — matches the deployed Streamlit app."),
+    "editorial-a": ("Editorial A",        "White background, faint horizontal grid, serif font. Printed-programme feel."),
+    "editorial-b": ("Editorial B",        "Warm cream background, no grid, clean tick marks. Ink-on-paper look."),
+    "dashboard-a": ("Dashboard A (Dark)", "Dark background, subtle grid, monospace — broadcast/analytics dashboard."),
+    "dashboard-b": ("Dashboard B",        "Light grey surround, white plot area, strong zero line — modern data-viz."),
+}
+
+
+def get_chart_style(name: str) -> dict:
+    """Return a Plotly layout-override dict for the named style."""
+    return CHART_STYLES.get(name, CHART_STYLES["streamlit"])
+
+
 def add_round_annotations(fig, max_round):
     for round_num in range(1, max_round + 1):
         x_pos = (round_num - 1) * 18
