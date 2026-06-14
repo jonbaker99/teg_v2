@@ -38,7 +38,7 @@ from webapp.deps import (
     cached_ranked_round_data,
     format_value,
 )
-from webapp.theme import get_plotly_theme
+from webapp.chart_utils import get_chart_style
 
 logger = logging.getLogger(__name__)
 
@@ -385,10 +385,7 @@ def _build_overview_context(player_code: str, theme: str) -> dict:
         fig.layout.xaxis.fixedrange = True
         fig.layout.yaxis.fixedrange = True
 
-        plotly_theme = get_plotly_theme(theme)
-        if plotly_theme:
-            fig.update_layout(**plotly_theme)
-
+        fig.update_layout(**get_chart_style('streamlit'))
         chart_json = fig.to_json()
 
     return {
@@ -500,10 +497,7 @@ def _build_scoring_context(player_code: str, theme: str) -> dict:
         fig.layout.xaxis.fixedrange = True
         fig.layout.yaxis.fixedrange = True
 
-        plotly_theme = get_plotly_theme(theme)
-        if plotly_theme:
-            fig.update_layout(**plotly_theme)
-
+        fig.update_layout(**get_chart_style('streamlit'))
         sections.append({
             "title": "Score Distribution Chart",
             "chart_json": fig.to_json(),

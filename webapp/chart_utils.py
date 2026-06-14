@@ -292,9 +292,7 @@ def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None,
     fig.layout.xaxis.fixedrange = True
     fig.layout.yaxis.fixedrange = True
 
-    # Apply theme overrides if provided
-    if plotly_theme:
-        fig.update_layout(**plotly_theme)
+    fig.update_layout(**(plotly_theme if plotly_theme is not None else get_chart_style('streamlit')))
 
     return fig
 
@@ -346,8 +344,7 @@ def create_round_graph(df, chosen_teg, chosen_round, y_series, title,
     for trace in fig.data:
         fig.update_traces(selector=dict(name=trace.name), line=dict(color=color_map[trace.name]))
     fig.layout.yaxis.fixedrange = True
-    if plotly_theme:
-        fig.update_layout(**plotly_theme)
+    fig.update_layout(**(plotly_theme if plotly_theme is not None else get_chart_style('streamlit')))
     return fig
 
 

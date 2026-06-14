@@ -40,6 +40,7 @@ from webapp.deps import (
     get_default_teg_num,
     get_rounds_for_teg,
 )
+from webapp.chart_utils import get_chart_style
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
@@ -327,6 +328,7 @@ def _by_teg_chart(agg: pd.DataFrame) -> str:
     )
     fig.layout.xaxis.fixedrange = True
     fig.layout.yaxis.fixedrange = True
+    fig.update_layout(**get_chart_style('streamlit'))
 
     return json.dumps(fig, cls=go.utils.PlotlyJSONEncoder)
 
@@ -745,6 +747,7 @@ def _distributions_chart(display: pd.DataFrame) -> str | None:
         )
         fig.layout.xaxis.fixedrange = True
         fig.layout.yaxis.fixedrange = True
+        fig.update_layout(**get_chart_style('streamlit'))
 
         return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
     except Exception:

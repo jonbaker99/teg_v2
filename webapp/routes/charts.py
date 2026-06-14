@@ -10,8 +10,8 @@ from webapp.chart_utils import (
     create_cumulative_graph,
     adjusted_stableford,
     adjusted_grossvp,
+    get_chart_style,
 )
-from webapp.theme import get_plotly_theme
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
@@ -74,7 +74,7 @@ def _chart_context(teg_num: int, chart_type: str, theme: str = "terminal") -> di
             y_calculation=config["y_calculation"],
             y_axis_label=config["y_axis_label"],
             chart_type=config["chart_type"],
-            plotly_theme=get_plotly_theme(theme),
+            plotly_theme=get_chart_style('streamlit'),
         )
 
         return {
