@@ -8,11 +8,11 @@ from fastapi.templating import Jinja2Templates
 
 from teg_analysis.analysis.eclectic import (
     calculate_eclectic_by_dimension,
-    format_eclectic_table,
     get_overall_top_eclectics,
     get_personal_best_eclectics,
     format_eclectic_records_table,
 )
+from teg_analysis.display.scorecards import build_eclectic_scorecard_table
 from webapp.deps import cached_load_all_data
 
 router = APIRouter()
@@ -92,9 +92,9 @@ def _eclectic_tab_context(
                 "total_rounds": 0,
             }
 
-        formatted = format_eclectic_table(eclectic_df, display_dim)
+        table_html = build_eclectic_scorecard_table(eclectic_df, display_dim)
         total_rounds = len(filtered.groupby(['Player', 'TEGNum', 'Round']))
-        return {"table_html": _df_to_html(formatted), "total_rounds": total_rounds}
+        return {"table_html": table_html, "total_rounds": total_rounds}
     except Exception as e:
         return {"error": str(e)}
 

@@ -218,20 +218,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ── Multi-round scorecards (Full Results → Scorecards tab) ──
-   Each round is a .sc-round section holding a Gross block then a Stableford
-   block. Lives here (always-loaded, cache-busted) rather than scorecard.css
-   (HTMX-injected) so the layout reliably applies. The scorecard tables carry
-   their own 20px bottom margin, so the gaps below are tuned to clearly exceed
-   it. */
-.sc-label {
-    font-weight: 600;
-    font-size: 0.8125rem;
-    margin-bottom: 0.5rem;
-}
-/* Clear extra space between the Gross and Stableford scorecards in a round. */
-.sc-block--stableford {
-    margin-top: 2rem;
-}
+   Each round is a .sc-round section holding a responsive scorecard block
+   (landscape gross + stableford on desktop, portrait toggle on phone). Lives
+   here (always-loaded) rather than scorecard.css (HTMX-injected) so the
+   between-round spacing reliably applies. */
 /* Generous space + a subtle rule between consecutive rounds. */
 .sc-round + .sc-round {
     margin-top: 3rem;
@@ -648,9 +638,10 @@ body.ts-c3 .page-title-area .page-title {
 }
 
 /* ── Page Title Outer — constrains title band to match .mx-auto by default ── */
+/* width:100% (not fit-content) so the page width is consistent across pages and
+   across views within a page — it no longer shrinks/grows to the content. */
 .page-title-outer {
-    width: fit-content;
-    min-width: min(800px, 90vw);
+    width: 100%;
     max-width: min(90vw, 1280px);
     margin: 0 auto;
 }
@@ -660,10 +651,11 @@ body.ts-c3 .page-title-area .page-title {
     flex-grow: 1;
 }
 
-/* Content wrapper — width constraints (replaces former .mx-auto inline styles) */
+/* Content wrapper — width constraints (replaces former .mx-auto inline styles).
+   width:100% (not fit-content) keeps the page a consistent width across pages
+   and across views within a page, instead of resizing to fit the content. */
 .content-wrapper {
-    width: fit-content;
-    min-width: min(800px, 90vw);
+    width: 100%;
     max-width: min(90vw, 1280px);
     margin: 0 auto;
 }

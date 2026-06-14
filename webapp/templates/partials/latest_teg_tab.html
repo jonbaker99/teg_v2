@@ -36,7 +36,8 @@
   {% endif %}
   {% for section in sections %}
     {% if section.title %}<div class="card-header">{{ section.title }}</div>{% endif %}
-    <div class="data-card"><div class="table-wrapper">{{ section.table_html | safe }}</div></div>
+    {% if section.raw %}{{ section.table_html | safe }}
+    {% else %}<div class="data-card"><div class="table-wrapper">{{ section.table_html | safe }}</div></div>{% endif %}
   {% endfor %}
   {% if caption %}<p class="text-muted text-sm mt-3">{{ caption }}</p>{% endif %}
 {% else %}
