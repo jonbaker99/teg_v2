@@ -1,4 +1,17 @@
 <div>
+    {% if highlights %}
+    <h2 class="section-title">Career Highlights</h2>
+    <div class="highlight-grid mb-6">
+        {% for h in highlights %}
+        <div class="highlight-card">
+            <span class="highlight-label">{{ h.label }}</span>
+            <span class="highlight-value">{{ h.value }}</span>
+            {% if h.detail %}<span class="highlight-detail">{{ h.detail }}</span>{% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <h2 class="section-title">TEG Results</h2>
     <div class="data-card"><div class="overflow-x-auto">
         {{ teg_table_html | safe }}

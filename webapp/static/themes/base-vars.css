@@ -475,6 +475,25 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--stat-card-label-color, var(--text-muted));
     margin-top: 0.125rem;
 }
+.stat-rank {
+    margin-top: 0.35rem;
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+}
+.stat-rank strong {
+    color: var(--accent);
+    font-weight: 700;
+}
+/* Headline metric grid — denser than the generic 4-col grid so 11 cards tile
+   neatly (auto-fit keeps them readable on every width incl. mobile). */
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 0.6rem;
+}
 
 /* ── Badges ── */
 .badge {
@@ -503,6 +522,56 @@ h1, h2, h3, h4, h5, h6 {
     vertical-align: middle;
     margin-left: 0.375rem;
 }
+
+/* ── Career highlights (Player overview colour points) ── */
+.highlight-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+}
+.highlight-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    background-color: var(--bg-card);
+    border: 1px solid var(--table-cell-border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--card-radius);
+    padding: 0.65rem 0.85rem;
+}
+.highlight-label {
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}
+.highlight-value {
+    font-family: var(--font-heading), serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+.highlight-detail {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* ── Player TEG-results table — win/loss colour pills ──
+   Mirrors the .player-ranking-table first/last-place pills, but the result
+   labels (Trophy/Jacket/Double) are wider than a rank number, so the pill is
+   padded auto-width rather than a fixed square. */
+.player-results-table td.result-win span,
+.player-results-table td.result-loss span {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+.player-results-table td.result-win span { background: green; color: #ffffff; }
+.player-results-table td.result-loss span { background: #FAE9E8; color: #8b0000; }
 
 /* ── Player roster (Player Profiles landing) ── */
 .player-roster {

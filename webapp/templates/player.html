@@ -17,26 +17,16 @@
 <!-- Subtitle -->
 <p class="text-sm text-secondary mb-6">{{ subtitle }}</p>
 
-<!-- Stat Cards -->
-<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-    {% for card in stat_cards %}
+<!-- Headline metrics (with cross-player rank) -->
+<div class="metric-grid mb-6">
+    {% for card in metrics %}
     <div class="stat-card">
         <div class="stat-value">{{ card.value }}</div>
         <div class="stat-label">{{ card.label }}</div>
+        <div class="stat-rank">Rank <strong>{{ card.rank }}</strong></div>
     </div>
     {% endfor %}
 </div>
-
-<!-- Trophy Cabinet -->
-{% if trophy_cabinet %}
-<div class="flex flex-wrap gap-2 mb-6">
-    {% for badge in trophy_cabinet %}
-    <span class="{% if badge.style == 'muted' %}badge-muted{% else %}badge{% endif %}"
-          {% if badge.tooltip %}title="{{ badge.tooltip }}"{% endif %}
-          style="cursor: default;">{{ badge.text }}</span>
-    {% endfor %}
-</div>
-{% endif %}
 
 <hr class="divider--dotted mb-6">
 
