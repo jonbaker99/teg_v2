@@ -343,11 +343,14 @@ async def latest_round_page(request: Request):
 async def latest_round_tab(request: Request, teg: int = Query(...), round: int = Query(...),
                            tab: str = Query("scoreboard"), score_type: str = Query("GrossVP"),
                            metric: str = Query("Sc")):
-    ctx = _latest_round_tab_context(teg, round, tab, score_type, metric)
+    rounds = get_rounds_for_teg(teg)
+    round_num = round if round in rounds else (rounds[-1] if rounds else 1)
+    ctx = _latest_round_tab_context(teg, round_num, tab, score_type, metric)
     return templates.TemplateResponse("partials/latest_round_tab.html", {
         "request": request,
         "teg": teg,
-        "round": round,
+        "round": round_num,
+        "rounds": rounds,
         **ctx,
     })
 

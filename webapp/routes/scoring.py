@@ -161,8 +161,12 @@ def _streak_detail_context(d_teg: str = "All", d_round: str = "All", d_player: s
     ).sort_values(['Pl', 'TEGNum', 'Round', 'Career Count'])
 
     teg_options = ['All'] + sorted(df['TEG'].unique(), key=lambda x: int(str(x).split()[1]))
-    round_options = ['All'] + sorted(df['Round'].unique().tolist())
     player_options = ['All'] + sorted(df['Pl'].unique().tolist())
+
+    round_df = df if d_teg == 'All' else df[df['TEG'] == d_teg]
+    round_options = ['All'] + sorted(round_df['Round'].unique().tolist())
+    if d_round != 'All' and (round_df.empty or int(d_round) not in round_df['Round'].unique()):
+        d_round = 'All'
 
     filtered = df.copy()
     if d_teg != 'All':
