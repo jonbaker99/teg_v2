@@ -405,6 +405,55 @@
   text-align: center;
 }
 
+/* ===== TITLE / TABLE JOINT CENTERING =====
+   For .sc-landscape blocks that contain {section-title + table} pairs, make the
+   whole block fit-content so the title's left edge aligns with the table's left
+   edge (both centred together as a unit). The combined single-round card uses
+   .sc-landscape.data-card, which is excluded so it stays full-width. */
+.sc-landscape:not(.data-card) {
+  width: fit-content;
+  margin: 0 auto;
+}
+
+/* ===== ECLECTIC SCORECARD — background-shaded to-par cells =====
+   Uses data-evp (eclectic vs par) so the colouring is independent of the
+   regular score-cell shape system (data-vs-par / data-stableford). */
+.eclectic-scorecard .eclectic-cell {
+  text-align: center;
+  min-width: var(--cell-min-width);
+  height: var(--cell-height);
+  padding: var(--spacing-cell);
+  vertical-align: middle;
+  background-color: white;
+}
+.eclectic-scorecard .eclectic-cell span {
+  font-size: 12px;
+  font-family: 'Roboto Mono', monospace;
+}
+
+/* Eagle (-2): dark red bg, white text */
+.eclectic-scorecard .eclectic-cell[data-evp="-2"] { background-color: var(--color-eagle); }
+.eclectic-scorecard .eclectic-cell[data-evp="-2"] span { color: #fff; }
+
+/* Birdie (-1): pale red bg, dark red text */
+.eclectic-scorecard .eclectic-cell[data-evp="-1"] { background-color: var(--color-birdie); }
+.eclectic-scorecard .eclectic-cell[data-evp="-1"] span { color: var(--color-text-birdie); }
+
+/* Par (0 = E): light grey bg, black text */
+.eclectic-scorecard .eclectic-cell[data-evp="0"] { background-color: var(--color-bogey); }
+.eclectic-scorecard .eclectic-cell[data-evp="0"] span { color: var(--color-text-bogey); }
+
+/* Bogey+ (1 and above): white, default text */
+
+/* Dark-mode overrides */
+html[data-mode="dark"] .eclectic-scorecard .eclectic-cell { background-color: #1d1d1a; }
+html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="-2"] { background-color: var(--color-eagle); }
+html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="-2"] span { color: var(--color-text-eagle); }
+html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="-1"] { background-color: var(--color-birdie); }
+html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="-1"] span { color: var(--color-text-birdie); }
+html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] { background-color: var(--color-bogey); }
+html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] span { color: var(--color-text-bogey); }
+
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
   .scorecard-wrapper,
