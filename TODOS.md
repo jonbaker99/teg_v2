@@ -19,7 +19,7 @@ Analysis package. REST API placeholder, any outstanding analytical work.
 
 ## Specific areas
 
-### Commentary (reporting pipeline) — [`teg_analysis/reporting/STATUS.md`](teg_analysis/reporting/STATUS.md)
+### Commentary (reporting pipeline) — [`teg_analysis/reporting/STATUS.md`](teg_analysis/reporting/STATUS.md) - and [`teg_analysis/reporting/reporting-to-do.md`](teg_analysis/reporting/reporting-to-do.md)
 LLM-powered tournament and round reports. Active agenda (Phases F–G backfill) and deferred items tracked in STATUS.md — that file *is* the to-do list for this area.
 
 ### Data updates — [below](#data-updates)
@@ -29,8 +29,7 @@ Tracked here (no sub-folder needed).
 
 ## Data updates
 
-- [ ] Complete Phase F backfill: TEG 11 R3–R4, then TEGs 12, 13, 15, 16, 17 (tournament + 4 rounds each), TEGs 14 + 18 re-refresh. ~16 reports outstanding, ~$8. On hold pending layout/rules experiments settling.
-- [ ] Pre-TEG-8 backfill (TEGs 1–7, ~$15.75): run after Phase F settled and pre-8 era-aware code verified.
+
 
 ---
 

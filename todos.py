@@ -11,6 +11,7 @@ TODO_FILES = [
     ("webapp", ROOT / "webapp" / "TODOS.md"),
     ("streamlit", ROOT / "streamlit" / "TODOS.md"),
     ("teg_analysis", ROOT / "teg_analysis" / "TODOS.md"),
+    ("reporting", ROOT / "teg_analysis" / "reporting" / "reporting-to-do.md"),
 ]
 
 # Reporting STATUS.md uses a different format (phase table), just flag it
