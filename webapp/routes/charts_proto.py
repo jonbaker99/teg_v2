@@ -53,5 +53,9 @@ async def charts_proto(request: Request):
         "request": request,
         "active_page": "charts-proto",
         "teg_name": teg_name,
+        # Realistic title/subtitle so each card reads like the live Streamlit page
+        # (the data shown is the gross-vs-par "Green Jacket race").
+        "chart_title": f"Green Jacket race: {teg_name}",
+        "chart_subtitle": "Cumulative gross score vs. par | Lower = better",
         "charts": charts,
     })

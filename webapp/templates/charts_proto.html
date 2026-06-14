@@ -16,18 +16,22 @@
 </p>
 
 {% for chart in charts %}
-<div style="margin-bottom: 2.5rem;">
-    <div style="display:flex; align-items:baseline; gap:1rem; margin-bottom:0.5rem;">
-        <h2 class="section-title" style="margin:0;">{{ chart.label }}</h2>
-        <span style="font-size:0.8rem; color:var(--color-muted); font-family:monospace;">{{ chart.style_key }}</span>
+<div style="margin-bottom: 2.75rem;">
+    <!-- Dev label: which style this card uses (kept subtle, off the chart itself). -->
+    <div style="display:flex; align-items:baseline; gap:0.75rem; margin-bottom:0.5rem;">
+        <span class="badge">{{ chart.label }}</span>
+        <span style="font-size:0.75rem; color:var(--text-muted); font-family:monospace;">{{ chart.style_key }}</span>
+        <span style="font-size:0.8rem; color:var(--text-muted);">{{ chart.description }}</span>
     </div>
-    <p style="font-size:0.85rem; color:var(--color-muted); margin:0 0 0.75rem;">{{ chart.description }}</p>
     {% if chart.figure_json %}
     <div class="data-card data-card--padded">
-        <div class="chart-container" data-figure="{{ chart.figure_json }}" style="height:380px;"></div>
+        <!-- Realistic page-style title + caption (mirrors Streamlit's markdown + caption). -->
+        <h3 class="chart-title" style="margin-top:0;">{{ chart_title }}</h3>
+        <p class="chart-description" style="margin-top:0.15rem;">{{ chart_subtitle }}</p>
+        <div class="chart-container" data-figure="{{ chart.figure_json }}" style="height:450px; margin-top:0.5rem;"></div>
     </div>
     {% else %}
-    <div class="data-card" style="padding:1rem; color:var(--color-muted);">Chart unavailable</div>
+    <div class="data-card" style="padding:1rem; color:var(--text-muted);">Chart unavailable</div>
     {% endif %}
 </div>
 {% endfor %}

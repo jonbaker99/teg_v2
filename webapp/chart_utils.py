@@ -9,8 +9,26 @@ import plotly.express as px
 # fig.update_layout(**style). Nested keys (xaxis, yaxis, legend, margin) are
 # merged with existing layout settings, not replaced.
 CHART_STYLES = {
-    # Baseline — no overrides. Matches current webapp/Streamlit appearance.
-    "streamlit": {},
+    # Replicates what Streamlit's Plotly theme does to the figure: transparent
+    # backgrounds (inherit the white card), a single very-faint horizontal grid,
+    # and no axis/zero lines. The raw Plotly default would instead give the
+    # lavender plot background + heavy grid we're trying to get rid of.
+    "streamlit": {
+        "paper_bgcolor": "rgba(0,0,0,0)",
+        "plot_bgcolor": "rgba(0,0,0,0)",
+        "xaxis": {
+            "showgrid": False,
+            "zeroline": False,
+            "showline": False,
+        },
+        "yaxis": {
+            "showgrid": True,
+            "gridcolor": "rgba(0,0,0,0.06)",
+            "gridwidth": 1,
+            "zeroline": False,
+            "showline": False,
+        },
+    },
 
     # Minimal white, faint horizontal grid only. Editorial / printed-programme feel.
     "editorial-a": {
@@ -157,6 +175,26 @@ def add_round_annotations(fig, max_round):
                            showarrow=False, yref='paper', yshift=-40)
 
 
+def add_series_markers(fig, size=3, border_width=1):
+    """Add white-filled circle markers with a coloured outline to every scatter
+    trace — mirrors Streamlit's `_add_series_markers` (streamlit/leaderboard.py).
+    Must run after line colours have been assigned so the marker outline can
+    inherit each trace's line colour."""
+    for tr in fig.data:
+        if getattr(tr, "type", None) != "scatter":
+            continue
+        line_col = tr.line.color if tr.line is not None else None
+        if tr.mode is None or "markers" not in tr.mode:
+            tr.mode = "lines+markers"
+        tr.marker = dict(
+            symbol="circle",
+            size=size,
+            color="white",                                  # fill
+            line=dict(width=border_width, color=line_col),  # outline
+        )
+    return fig
+
+
 def format_value(value, chart_type):
     if chart_type == 'stableford':
         return f"{value:.0f}"
@@ -236,7 +274,9 @@ def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None,
 
     add_round_annotations(fig, max_round)
 
-    fig.update_xaxes(tickvals=[], range=[0, x_axis_max])
+    # Small padding each side so lines/markers don't sit flush against the axes
+    # (matches Streamlit's leaderboard, which sets range=[0.5, 72.5]).
+    fig.update_xaxes(tickvals=[], range=[0.5, x_axis_max + 0.5])
 
     if chart_type == 'ranking':
         fig.update_yaxes(autorange='reversed')
@@ -245,6 +285,9 @@ def create_cumulative_graph(df, chosen_teg, y_series, title, y_calculation=None,
         player = trace.name
         color = color_map[player]
         fig.update_traces(selector=dict(name=player), line=dict(color=color))
+
+    # Markers (and their legend symbols) — added after colours are assigned.
+    add_series_markers(fig)
 
     fig.layout.xaxis.fixedrange = True
     fig.layout.yaxis.fixedrange = True
