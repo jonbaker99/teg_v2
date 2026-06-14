@@ -189,17 +189,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ── History table (TEG History page) ──
-   Capped width, fixed layout for equal winner columns. Names are inline by
+   Capped width, fixed layout for four equal columns. Names are inline by
    default; JS detects if any name wraps and adds .names-break to force all
    names to stack — so the layout is always consistent. */
 .history-table {
     width: 100%;
-    max-width: 700px;
     table-layout: fixed;
-}
-/* TEG column: compact; three winner columns share the remaining width equally */
-.history-table thead th:first-child {
-    width: 16%;
 }
 .history-table .teg-label {
     display: block;
@@ -215,8 +210,8 @@ h1, h2, h3, h4, h5, h6 {
 .history-table tbody td:nth-child(2) {
     font-weight: 700;
 }
-/* Winner columns allow wrapping */
-.history-table tbody td:nth-child(n+2) {
+/* All cells allow wrapping (TEG col can break between label and year) */
+.history-table tbody td {
     white-space: normal;
 }
 /* Default: inline-block container (measurable height) with inline first/last */
@@ -652,12 +647,10 @@ body.ts-c3 .page-title-area .page-title {
     color: #111;
 }
 
-/* ── Page Title Outer — constrains title band to match .mx-auto by default ── */
-/* width:100% (not fit-content) so the page width is consistent across pages and
-   across views within a page — it no longer shrinks/grows to the content. */
+/* ── Page Title Outer — matches content-wrapper width ── */
 .page-title-outer {
     width: 100%;
-    max-width: min(90vw, 1280px);
+    max-width: 960px;
     margin: 0 auto;
 }
 
@@ -666,13 +659,19 @@ body.ts-c3 .page-title-area .page-title {
     flex-grow: 1;
 }
 
-/* Content wrapper — width constraints (replaces former .mx-auto inline styles).
-   width:100% (not fit-content) keeps the page a consistent width across pages
-   and across views within a page, instead of resizing to fit the content. */
+/* Content wrapper — default "best practice" content width.
+   Use body.layout-wide (pass wide=True from the route) for pages that
+   genuinely need more horizontal space (ranking grids, heatmaps, etc.). */
 .content-wrapper {
     width: 100%;
-    max-width: min(90vw, 1280px);
+    max-width: 960px;
     margin: 0 auto;
+}
+
+/* Wide layout override */
+body.layout-wide .page-title-outer,
+body.layout-wide .content-wrapper {
+    max-width: 1280px;
 }
 
 /* C1/C2/C3 — full viewport width, flush below navbar */
@@ -681,7 +680,6 @@ body.ts-c2 .page-title-outer,
 body.ts-c3 .page-title-outer {
     width: 100%;
     max-width: 100%;
-    min-width: 0;
     margin: 0;
 }
 

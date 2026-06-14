@@ -698,6 +698,7 @@ async def scoring_matrix_page(request: Request):
     return templates.TemplateResponse("scoring_matrix.html", {
         "request": request,
         "active_page": "scoring",
+        "wide": True,
         "levels": MATRIX_LEVELS,
         "score_types": MATRIX_TYPES,
         "selected_level": "teg",
@@ -1339,6 +1340,7 @@ async def scoring_heatmap_page(
     return templates.TemplateResponse("scoring_heatmap.html", {
         "request": request,
         "active_page": "scoring",
+        "wide": True,
         "row_options": HEATMAP_ROWS,
         "col_options": HEATMAP_COLS,
         "palette_options": _HM_PALETTE_OPTIONS,
