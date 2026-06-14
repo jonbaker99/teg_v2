@@ -189,14 +189,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ── History table (TEG History page) ──
-   Full-width, fixed layout: compact TEG column + three equal winner columns.
-   Names always stack first/last so the layout is consistent regardless of
-   viewport width — if any name needs two lines, they all get two lines. */
+   Capped width, fixed layout for equal winner columns. Names are inline by
+   default; JS detects if any name wraps and adds .names-break to force all
+   names to stack — so the layout is always consistent. */
 .history-table {
     width: 100%;
+    max-width: 700px;
     table-layout: fixed;
 }
-/* TEG column: compact fixed width; winner columns share the remainder equally */
+/* TEG column: compact; three winner columns share the remaining width equally */
 .history-table thead th:first-child {
     width: 16%;
 }
@@ -214,16 +215,20 @@ h1, h2, h3, h4, h5, h6 {
 .history-table tbody td:nth-child(2) {
     font-weight: 700;
 }
-/* Winner columns: allow wrapping so stacked names display correctly */
+/* Winner columns allow wrapping */
 .history-table tbody td:nth-child(n+2) {
     white-space: normal;
 }
-/* Names always stacked first-line / last-line */
+/* Default: inline-block container (measurable height) with inline first/last */
 .history-table .player-name {
     display: inline-block;
 }
-.history-table .player-name .first,
-.history-table .player-name .last {
+.history-table .player-name .first {
+    display: inline;
+}
+/* JS adds .names-break when any name wraps; all names then stack */
+.history-table.names-break .player-name .first,
+.history-table.names-break .player-name .last {
     display: block;
 }
 
