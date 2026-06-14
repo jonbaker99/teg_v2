@@ -28,6 +28,10 @@ Currently out of scope — Streamlit handles this via three pages (`1000Data upd
 - [ ] **Edit scores** — tabular editor to correct existing scores
 - [ ] **Delete scores** — delete a round or individual entries
 
+## Scorecard improvements
+
+- [ ] **Mouseover tooltips on scorecard cells** — on hover show: Hole, Par, SI, Score, Net, Stableford
+
 ## Planned enhancements
 
 - [ ] **Score-count matrix % pill** — absolute / % toggle on `/scoring/matrix` and Scoring tab on `/latest-teg`. Use `.pill-group` component.
