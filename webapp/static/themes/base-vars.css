@@ -71,7 +71,12 @@ h1, h2, h3, h4, h5, h6 {
     padding: 1rem;
 }
 
-/* ── Tables ── */
+/* ── Tables ──
+   .teg-table is the DEFAULT table style. Tables that need a significantly
+   different layout (e.g. heatmap-table, scorecard) should NOT carry this
+   class — own their rules in a dedicated stylesheet so there is no
+   specificity battle. Applying both .teg-table and a custom class risks
+   the custom rules losing to .teg-table's element-level selectors. */
 .teg-table {
     /* Content-sized like the Streamlit datawrapper tables (not stretched to 100%) */
     width: auto;

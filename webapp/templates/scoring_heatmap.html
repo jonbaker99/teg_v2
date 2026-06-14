@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="/static/heatmap.css">
+{% endblock %}
+
 {% block page_title %}
 <div class="page-title-area">
     <span class="page-label">Scoring</span>
@@ -9,43 +13,142 @@
 
 {% block content %}
 
-<div class="section-controls flex items-center gap-4">
-    <select id="hm-row-by" class="theme-select" name="row_by"
-            hx-get="/scoring/heatmap/content"
-            hx-target="#hm-content"
-            hx-include="#hm-col-by, #hm-sort, #hm-totals">
-        {% for val, label in row_options %}
-        <option value="{{ val }}" {% if val == row_by %}selected{% endif %}>Rows: {{ label }}</option>
-        {% endfor %}
-    </select>
+{#
+  State management: hidden inputs hold current row_by / col_by / palette so
+  that when a checkbox fires it can include them via hx-include="#hm-form".
+  Pill buttons use hx-vals to pass their value + onclick to update the hidden
+  input so subsequent checkbox requests pick up the latest selection.
+#}
+<form id="hm-form">
+<input type="hidden" id="hm-row-input" name="row_by"  value="{{ row_by }}">
+<input type="hidden" id="hm-col-input" name="col_by"  value="{{ col_by }}">
+<input type="hidden" id="hm-pal-input" name="palette" value="{{ palette }}">
+</form>
 
-    <select id="hm-col-by" class="theme-select" name="col_by"
-            hx-get="/scoring/heatmap/content"
-            hx-target="#hm-content"
-            hx-include="#hm-row-by, #hm-sort, #hm-totals">
-        {% for val, label in col_options %}
-        <option value="{{ val }}" {% if val == col_by %}selected{% endif %}>Columns: {{ label }}</option>
-        {% endfor %}
-    </select>
+{# ── Main controls (always visible) ── #}
+<div class="section-controls flex items-end gap-5 flex-wrap">
 
-    <label class="flex items-center gap-1 text-sm">
-        <input type="checkbox" id="hm-sort" name="sort_by_score" value="true"
-               {% if sort_by_score %}checked{% endif %}
-               hx-get="/scoring/heatmap/content"
-               hx-target="#hm-content"
-               hx-include="#hm-row-by, #hm-col-by, #hm-totals">
-        Sort by score
-    </label>
+    {# Rows #}
+    <div class="pill-field">
+        <span class="pill-field-label">Choose rows</span>
+        <div class="pill-group" role="group" aria-label="Rows">
+            {% for val, label in row_options %}
+            <button type="button"
+                    class="pill{% if val == row_by %} pill--active{% endif %}"
+                    hx-get="/scoring/heatmap/content"
+                    hx-target="#hm-content"
+                    hx-include="#hm-form"
+                    hx-vals='{"row_by": "{{ val }}"}'
+                    onclick="this.closest('.pill-group').querySelectorAll('.pill').forEach(b=>b.classList.remove('pill--active')); this.classList.add('pill--active'); document.getElementById('hm-row-input').value='{{ val }}';">
+                {{ label }}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
 
-    <label class="flex items-center gap-1 text-sm">
-        <input type="checkbox" id="hm-totals" name="show_totals" value="true"
-               {% if show_totals %}checked{% endif %}
-               hx-get="/scoring/heatmap/content"
-               hx-target="#hm-content"
-               hx-include="#hm-row-by, #hm-col-by, #hm-sort">
-        Show totals
-    </label>
+    {# Columns #}
+    <div class="pill-field">
+        <span class="pill-field-label">Choose columns</span>
+        <div class="pill-group" role="group" aria-label="Columns">
+            {% for val, label in col_options %}
+            <button type="button"
+                    class="pill{% if val == col_by %} pill--active{% endif %}"
+                    hx-get="/scoring/heatmap/content"
+                    hx-target="#hm-content"
+                    hx-include="#hm-form"
+                    hx-vals='{"col_by": "{{ val }}"}'
+                    onclick="this.closest('.pill-group').querySelectorAll('.pill').forEach(b=>b.classList.remove('pill--active')); this.classList.add('pill--active'); document.getElementById('hm-col-input').value='{{ val }}';">
+                {{ label }}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+
+    {# Options — plain checkboxes with a matching label #}
+    <div class="pill-field">
+        <span class="pill-field-label">Further options</span>
+        <div class="flex items-center gap-3">
+            <label class="flex items-center gap-1 text-sm">
+                <input type="checkbox" name="sort_by_score" value="true"
+                       {% if sort_by_score %}checked{% endif %}
+                       hx-get="/scoring/heatmap/content" hx-target="#hm-content"
+                       hx-include="#hm-form" hx-trigger="change">
+                Sort by score
+            </label>
+            <label class="flex items-center gap-1 text-sm">
+                <input type="checkbox" name="show_row_avg" value="true"
+                       {% if show_row_avg %}checked{% endif %}
+                       hx-get="/scoring/heatmap/content" hx-target="#hm-content"
+                       hx-include="#hm-form" hx-trigger="change">
+                Row totals
+            </label>
+            <label class="flex items-center gap-1 text-sm">
+                <input type="checkbox" name="show_col_totals" value="true"
+                       {% if show_col_totals %}checked{% endif %}
+                       hx-get="/scoring/heatmap/content" hx-target="#hm-content"
+                       hx-include="#hm-form" hx-trigger="change">
+                Column totals
+            </label>
+        </div>
+    </div>
+
 </div>
+
+{# ── Colour options (collapsible) ── #}
+<details class="hm-controls-panel">
+    <summary>Colour options</summary>
+    <div class="hm-controls-body">
+
+        <div class="hm-control-row">
+            <span class="hm-control-label">Palette</span>
+            <div class="pill-group" role="group" aria-label="Colour palette">
+                {% for val, label in palette_options %}
+                <button type="button"
+                        class="pill{% if val == palette %} pill--active{% endif %}"
+                        hx-get="/scoring/heatmap/content"
+                        hx-target="#hm-content"
+                        hx-include="#hm-form"
+                        hx-vals='{"palette": "{{ val }}"}'
+                        onclick="this.closest('.pill-group').querySelectorAll('.pill').forEach(b=>b.classList.remove('pill--active')); this.classList.add('pill--active'); document.getElementById('hm-pal-input').value='{{ val }}';">
+                    {{ label }}
+                </button>
+                {% endfor %}
+            </div>
+            <label class="flex items-center gap-1 text-sm" style="margin-left:0.25rem">
+                <input type="checkbox" name="reverse" value="true"
+                       {% if reverse %}checked{% endif %}
+                       hx-get="/scoring/heatmap/content" hx-target="#hm-content"
+                       hx-include="#hm-form" hx-trigger="change">
+                Reverse
+            </label>
+        </div>
+
+        <div class="hm-control-row">
+            <span class="hm-control-label">Range</span>
+            <span class="flex items-center gap-3 text-sm">
+                <label class="flex items-center gap-1">Min
+                    <input type="number" name="domain_min" step="0.1"
+                           value="{{ '%.1f' % domain_min }}" class="input-numeric"
+                           hx-trigger="change" hx-get="/scoring/heatmap/content"
+                           hx-target="#hm-content" hx-include="#hm-form">
+                </label>
+                <label class="flex items-center gap-1">Mid
+                    <input type="number" name="domain_mid" step="0.1"
+                           value="{{ '%.1f' % domain_mid }}" class="input-numeric"
+                           hx-trigger="change" hx-get="/scoring/heatmap/content"
+                           hx-target="#hm-content" hx-include="#hm-form">
+                </label>
+                <label class="flex items-center gap-1">Max
+                    <input type="number" name="domain_max" step="0.1"
+                           value="{{ '%.1f' % domain_max }}" class="input-numeric"
+                           hx-trigger="change" hx-get="/scoring/heatmap/content"
+                           hx-target="#hm-content" hx-include="#hm-form">
+                </label>
+            </span>
+        </div>
+
+    </div>
+</details>
 
 <div id="hm-content" class="section-panel">
     {% include "partials/scoring_heatmap_content.html" %}

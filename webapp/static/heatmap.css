@@ -1,0 +1,168 @@
+/* Heatmap table — overrides on top of .teg-table defaults.
+   Loaded only on /scoring/heatmap via extra_head.
+
+   The table element carries both .teg-table and .heatmap-table so it inherits
+   font (Roboto Mono from clean.css) and base styles from .teg-table. All
+   overrides here use the double-class selector .teg-table.heatmap-table which
+   has higher specificity (0,2,X) than .teg-table (0,1,X), so no !important needed.
+
+   Cell colours: inline styles from Python (continuous gradient interpolation).
+   Pills: global .pill / .pill--active / .pill-group from base-vars.css. */
+
+/* ── Table layout overrides ─────────────────────────────────────────────── */
+.teg-table.heatmap-table {
+  border-collapse: separate;
+  border-spacing: 2px;
+}
+
+/* ── Data cells — compact, square ──────────────────────────────────────────
+   Overrides .teg-table tbody td { padding: 0.75rem } via higher specificity. */
+.teg-table.heatmap-table thead th:not(.hm-row-label-header),
+.teg-table.heatmap-table tbody td:not(.row-label) {
+  width: 2.1rem;
+  min-width: 2.1rem;
+  max-width: 2.1rem;
+  text-align: center;
+  font-size: 0.65rem;
+  padding: 0;
+  border-radius: 2px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* Header cells also need the tighter padding */
+.teg-table.heatmap-table thead th {
+  padding: 0.25rem 0.1rem;
+}
+
+/* Row height = cell width → square cells */
+.teg-table.heatmap-table tbody tr {
+  height: 2.1rem;
+}
+.teg-table.heatmap-table tbody td {
+  vertical-align: middle;
+}
+
+/* First column — row labels */
+.teg-table.heatmap-table td.row-label {
+  white-space: nowrap;
+  padding: 0 1rem 0 0.25rem;
+  font-size: 0.82rem;
+  vertical-align: middle;
+}
+
+/* Suppress .teg-table row striping and hover on heatmap — cells have their own colours */
+.teg-table.heatmap-table tbody tr:nth-child(even) { background: transparent; }
+.teg-table.heatmap-table tbody tr:hover { background: transparent; color: inherit; }
+
+/* ── Avg column separator ───────────────────────────────────────────────── */
+.teg-table.heatmap-table td.hm-avg-cell {
+  font-weight: 600;
+  border-left: 2px solid var(--table-cell-border, #e0e0e0);
+}
+.teg-table.heatmap-table .hm-avg-header {
+  border-left: 2px solid var(--table-cell-border, #e0e0e0);
+}
+
+/* ── Total row ──────────────────────────────────────────────────────────── */
+.teg-table.heatmap-table .hm-total-row {
+  border-top: 2px solid var(--table-cell-border, #e0e0e0);
+}
+.teg-table.heatmap-table td.hm-total-cell  { font-weight: 600; }
+.teg-table.heatmap-table .hm-total-label   { font-weight: 700; }
+
+/* ── Rotated column headers ─────────────────────────────────────────────── */
+.teg-table.heatmap-table thead th.rotated-header {
+  height: 9rem;
+  vertical-align: bottom;
+  padding: 0 2px 4px;
+  position: relative;
+  overflow: visible;
+}
+.teg-table.heatmap-table thead th.rotated-header span {
+  display: block;
+  writing-mode: vertical-lr;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  font-size: 0.75rem;
+  line-height: 1;
+  padding-bottom: 2px;
+}
+.teg-table.heatmap-table .hm-avg-header span {
+  writing-mode: horizontal-tb !important;
+  transform: none !important;
+  font-size: 0.72rem;
+}
+
+/* ── Legend ─────────────────────────────────────────────────────────────── */
+.hm-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary, #555);
+}
+.hm-legend-bar {
+  display: flex;
+  gap: 0;   /* no gap — continuous gradient illusion */
+}
+.hm-swatch {
+  display: inline-block;
+  width: 1.5rem;
+  height: 0.9rem;
+}
+.hm-swatch:first-child { border-radius: 2px 0 0 2px; }
+.hm-swatch:last-child  { border-radius: 0 2px 2px 0; }
+.hm-legend-end {
+  font-weight: 600;
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+.hm-legend-range {
+  color: var(--text-muted, #999);
+  font-size: 0.7rem;
+  white-space: nowrap;
+}
+
+/* ── Collapsible colour-options panel ───────────────────────────────────── */
+.hm-controls-panel {
+  margin-bottom: 1rem;
+  border: 1px solid var(--table-cell-border, #e0e0e0);
+  border-radius: 6px;
+}
+.hm-controls-panel > summary {
+  padding: 0.4rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary, #555);
+  user-select: none;
+  list-style: none;
+}
+.hm-controls-panel > summary::-webkit-details-marker { display: none; }
+.hm-controls-panel > summary::before { content: "▶\00a0"; font-size: 0.6rem; vertical-align: middle; }
+.hm-controls-panel[open] > summary::before { content: "▼\00a0"; }
+
+.hm-controls-body {
+  padding: 0.6rem 1rem 0.75rem;
+  border-top: 1px solid var(--table-cell-border, #e0e0e0);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.hm-control-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.hm-control-label {
+  width: 3.5rem;
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-secondary, #555);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}

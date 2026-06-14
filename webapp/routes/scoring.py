@@ -1059,6 +1059,55 @@ HEATMAP_COLS = [
 # Column dimensions whose values are numeric (sorted/labelled as numbers).
 _HM_NUMERIC_COLS = {"Hole", "SI", "PAR", "TEGNum"}
 
+# Diverging palettes: 7 steps, index 0 = best/low, 6 = worst/high.
+# Each entry is (background_hex, text_hex).
+_HM_PALETTE_OPTIONS = [
+    ("redyellowblue",    "Red-Yellow-Blue"),
+    ("redblue",          "Red-Blue"),
+    ("spectral",         "Spectral"),
+    ("pinkyellowgreen",  "Pink-Yellow-Green"),
+    ("purpleorange",     "Purple-Orange"),
+    ("redgrey",          "Red-Grey"),
+    ("blueorange",       "Blue-Orange"),
+]
+_HM_PALETTES: dict[str, list[tuple[str, str]]] = {
+    "redyellowblue": [
+        ("#4575b4", "#fff"),   ("#74add1", "#1a1a1a"), ("#abd9e9", "#1a1a1a"),
+        ("#ffffbf", "#555"),
+        ("#fdae61", "#1a1a1a"), ("#f46d43", "#fff"),   ("#d73027", "#fff"),
+    ],
+    "redblue": [
+        ("#2166ac", "#fff"),   ("#4393c3", "#fff"),    ("#92c5de", "#1a1a1a"),
+        ("#f7f7f7", "#888"),
+        ("#f4a582", "#1a1a1a"), ("#d6604d", "#fff"),   ("#b2182b", "#fff"),
+    ],
+    "spectral": [
+        ("#2b83ba", "#fff"),   ("#76b9d0", "#1a1a1a"), ("#b7dbe7", "#1a1a1a"),
+        ("#ffffbf", "#555"),
+        ("#fdcc8a", "#1a1a1a"), ("#f4883f", "#fff"),   ("#d7191c", "#fff"),
+    ],
+    "pinkyellowgreen": [
+        ("#1a7837", "#fff"),   ("#4dac26", "#fff"),    ("#b8e186", "#1a1a1a"),
+        ("#f7f7f7", "#888"),
+        ("#e9a3c9", "#1a1a1a"), ("#c51b7d", "#fff"),   ("#8e0152", "#fff"),
+    ],
+    "purpleorange": [
+        ("#542788", "#fff"),   ("#8073ac", "#fff"),    ("#b2abd2", "#1a1a1a"),
+        ("#f7f7f7", "#888"),
+        ("#fee0b6", "#1a1a1a"), ("#e08214", "#fff"),   ("#b35806", "#fff"),
+    ],
+    "redgrey": [
+        ("#4d4d4d", "#fff"),   ("#878787", "#fff"),    ("#bababa", "#1a1a1a"),
+        ("#f7f7f7", "#888"),
+        ("#fddbc7", "#1a1a1a"), ("#ef8a62", "#1a1a1a"), ("#b2182b", "#fff"),
+    ],
+    "blueorange": [
+        ("#2166ac", "#fff"),   ("#4393c3", "#fff"),    ("#92c5de", "#1a1a1a"),
+        ("#f7f7f7", "#888"),
+        ("#fdb863", "#1a1a1a"), ("#e08214", "#fff"),   ("#b35806", "#fff"),
+    ],
+}
+
 
 def _hm_col_label(col_by: str, val) -> str:
     """Header label for a heatmap column value."""
@@ -1067,27 +1116,98 @@ def _hm_col_label(col_by: str, val) -> str:
     return str(val)
 
 
-def _heatmap_color(val: float) -> str:
-    """Map avg GrossVP to a CSS background colour. Green=under par, red=over par."""
+def _hm_bucket(val: float, domain_min: float, domain_mid: float, domain_max: float) -> int:
+    """Map val to a palette index 0 (best/low) .. 6 (worst/high) using a
+    piecewise-linear diverging scale anchored at min, mid, and max."""
+    if val <= domain_min:
+        return 0
+    if val >= domain_max:
+        return 6
+    if val <= domain_mid:
+        t = (val - domain_min) / (domain_mid - domain_min)
+        return max(0, min(3, round(t * 3)))
+    t = (val - domain_mid) / (domain_max - domain_mid)
+    return max(3, min(6, 3 + round(t * 3)))
+
+
+def _hex_to_rgb(h: str) -> tuple[int, int, int]:
+    h = h.lstrip('#')
+    return int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+
+
+def _hm_cell_style(val: float, colors: list, domain_min: float, domain_mid: float,
+                   domain_max: float) -> str:
+    """Return an inline style string using continuous colour interpolation.
+
+    The 7-stop palette is treated as a smooth gradient; the value's position
+    in the [min→mid→max] domain maps to a continuous [0..1] and the colour
+    is interpolated between adjacent stops rather than bucketed.
+    """
     if pd.isna(val):
-        return "background-color: #f5f5f5"
-    # Clamp magnitude at 3 for full saturation
-    clamped = max(-3.0, min(3.0, val))
-    t = abs(clamped) / 3.0  # 0..1
-    # Lightness: 97% at par (white-ish), 40% at full saturation
-    lightness = 97 - (57 * t)
-    if val < 0:
-        hue = 120  # green
-    elif val > 0:
-        hue = 0    # red
+        return "background:#e8e8e5;color:#aaa"
+
+    # Continuous position in [0..1] across the piecewise-linear domain
+    if val <= domain_min:
+        t = 0.0
+    elif val >= domain_max:
+        t = 1.0
+    elif val <= domain_mid:
+        t = 0.5 * (val - domain_min) / (domain_mid - domain_min)
     else:
-        return "background-color: hsl(0, 0%, 97%)"
-    return f"background-color: hsl({hue}, 50%, {lightness:.0f}%)"
+        t = 0.5 + 0.5 * (val - domain_mid) / (domain_max - domain_mid)
+
+    # Interpolate between adjacent palette stops
+    n = len(colors) - 1  # 6 segments for 7 stops
+    pos = t * n
+    lo = min(int(pos), n - 1)
+    hi = lo + 1
+    frac = pos - lo
+
+    bg_lo, _ = colors[lo]
+    bg_hi, _ = colors[hi]
+    r1, g1, b1 = _hex_to_rgb(bg_lo)
+    r2, g2, b2 = _hex_to_rgb(bg_hi)
+    r = round(r1 + (r2 - r1) * frac)
+    g = round(g1 + (g2 - g1) * frac)
+    b = round(b1 + (b2 - b1) * frac)
+
+    # Text colour: nearest stop (avoids interpolating two text colours)
+    _, fg = colors[round(t * n)]
+    return f"background:rgb({r},{g},{b});color:{fg}"
 
 
-def _heatmap_context(row_by: str = "Player", col_by: str = "Hole",
-                     sort_by_score: bool = True, show_totals: bool = True) -> dict:
-    """Build heatmap table HTML: mean GrossVP per (row_by, col_by) cell."""
+def _hm_legend_html(colors: list, domain_min: float, domain_mid: float,
+                    domain_max: float) -> str:
+    """Build a 7-swatch colour-bar legend with min/mid/max labels."""
+    swatches = "".join(
+        f"<span class='hm-swatch' style='background:{bg}'></span>"
+        for bg, _ in colors
+    )
+    return (
+        f"<div class='hm-legend'>"
+        f"<span class='hm-legend-end'>Better</span>"
+        f"<div class='hm-legend-bar'>{swatches}</div>"
+        f"<span class='hm-legend-end'>Worse</span>"
+        f"<span class='hm-legend-range'>"
+        f"min&nbsp;{domain_min:.1f} &middot; mid&nbsp;{domain_mid:.1f} &middot; max&nbsp;{domain_max:.1f}"
+        f"</span>"
+        f"</div>"
+    )
+
+
+def _heatmap_context(
+    row_by: str = "Player",
+    col_by: str = "Hole",
+    sort_by_score: bool = True,
+    show_col_totals: bool = False,
+    show_row_avg: bool = False,
+    palette: str = "redyellowblue",
+    reverse: bool = False,
+    domain_min: float | None = None,
+    domain_mid: float | None = None,
+    domain_max: float | None = None,
+) -> dict:
+    """Build heatmap table HTML + legend for mean GrossVP per (row_by, col_by)."""
     try:
         if row_by == col_by:
             return {"error": "Rows and columns can't use the same dimension — pick a different columns option."}
@@ -1105,7 +1225,7 @@ def _heatmap_context(row_by: str = "Player", col_by: str = "Hole",
         else:
             col_vals = sorted(col_vals, key=lambda x: str(x))
 
-        # Overall row averages (true mean, not mean-of-cells) — drive sorting + Avg col
+        # Overall row averages (true mean) — sorting + optional Avg column
         row_avgs = all_data.groupby(row_by)['GrossVP'].mean()
         if sort_by_score:
             row_labels = row_avgs.sort_values(ascending=False).index.tolist()
@@ -1113,12 +1233,38 @@ def _heatmap_context(row_by: str = "Player", col_by: str = "Hole",
             row_labels = sorted(row_avgs.index.tolist(),
                                 key=lambda x: (int(x) if str(x).isdigit() else 0, str(x)))
 
-        # Build HTML table
-        html = ["<div class='table-responsive'><table class='teg-table heatmap-table'>"]
-        html.append("<thead><tr><th></th>")
+        # Auto-compute sensible domain defaults from cell-value distribution
+        all_cell_vals = [v for v in cell.values() if not pd.isna(v)]
+        s = pd.Series(all_cell_vals) if all_cell_vals else pd.Series([0.0])
+        auto_mid = round(float(s.mean()), 2)
+        auto_std = max(float(s.std()) if len(s) > 1 else 0.3, 0.05)
+        auto_min = round(auto_mid - 1.5 * auto_std, 2)
+        auto_max = round(auto_mid + 1.5 * auto_std, 2)
+
+        dm_min = domain_min if domain_min is not None else auto_min
+        dm_mid = domain_mid if domain_mid is not None else auto_mid
+        dm_max = domain_max if domain_max is not None else auto_max
+        # Guard: ensure min < mid < max
+        if not (dm_min < dm_mid < dm_max):
+            dm_min, dm_mid, dm_max = auto_min, auto_mid, auto_max
+
+        colors = list(_HM_PALETTES.get(palette, _HM_PALETTES["redyellowblue"]))
+        if reverse:
+            colors = list(reversed(colors))
+
+        # Rotate string-type column headers for compact equal-width columns
+        rotate_headers = col_by not in _HM_NUMERIC_COLS
+        th_cls = " class='rotated-header'" if rotate_headers else ""
+
+        # teg-table gives Roboto Mono + base styling; heatmap-table overrides
+        # spacing/padding via higher-specificity double-class selectors in heatmap.css
+        html = ["<table class='teg-table heatmap-table'>"]
+        html.append("<thead><tr><th class='hm-row-label-header'></th>")
         for c in col_vals:
-            html.append(f"<th>{_hm_col_label(col_by, c)}</th>")
-        html.append("<th>Avg</th></tr></thead><tbody>")
+            html.append(f"<th{th_cls}><span>{_hm_col_label(col_by, c)}</span></th>")
+        if show_row_avg:
+            html.append("<th class='hm-avg-header'><span>Avg</span></th>")
+        html.append("</tr></thead><tbody>")
 
         for label in row_labels:
             row_avg = row_avgs.get(label, float('nan'))
@@ -1126,31 +1272,38 @@ def _heatmap_context(row_by: str = "Player", col_by: str = "Hole",
             html.append(f"<tr><td class='row-label'>{display_label}</td>")
             for c in col_vals:
                 v = cell.get((label, c), float('nan'))
-                color = _heatmap_color(v)
+                sty = _hm_cell_style(v, colors, dm_min, dm_mid, dm_max)
                 txt = f"{v:+.1f}" if not pd.isna(v) else ""
-                html.append(f"<td style='{color}; text-align:center; font-size:0.8rem;'>{txt}</td>")
-            # Row average
-            color = _heatmap_color(row_avg)
-            ra = f"{row_avg:+.1f}" if not pd.isna(row_avg) else ""
-            html.append(f"<td style='{color}; text-align:center; font-weight:600; font-size:0.8rem;'>{ra}</td>")
+                html.append(f"<td style='{sty}'>{txt}</td>")
+            if show_row_avg:
+                sty = _hm_cell_style(row_avg, colors, dm_min, dm_mid, dm_max)
+                ra = f"{row_avg:+.1f}" if not pd.isna(row_avg) else ""
+                html.append(f"<td style='{sty}' class='hm-avg-cell'>{ra}</td>")
             html.append("</tr>")
 
-        # TOTAL row
-        if show_totals:
+        if show_col_totals:
             col_tot = all_data.groupby(col_by)['GrossVP'].mean()
             total_avg = all_data['GrossVP'].mean()
-            html.append("<tr class='total-row'><td class='row-label' style='font-weight:700;'>TOTAL</td>")
+            html.append("<tr class='hm-total-row'><td class='row-label hm-total-label'>TOTAL</td>")
             for c in col_vals:
                 v = col_tot.get(c, float('nan'))
-                color = _heatmap_color(v)
+                sty = _hm_cell_style(v, colors, dm_min, dm_mid, dm_max)
                 txt = f"{v:+.1f}" if not pd.isna(v) else ""
-                html.append(f"<td style='{color}; text-align:center; font-weight:600; font-size:0.8rem;'>{txt}</td>")
-            color = _heatmap_color(total_avg)
-            html.append(f"<td style='{color}; text-align:center; font-weight:700; font-size:0.8rem;'>{total_avg:+.1f}</td>")
+                html.append(f"<td style='{sty}' class='hm-total-cell'>{txt}</td>")
+            if show_row_avg:
+                sty = _hm_cell_style(total_avg, colors, dm_min, dm_mid, dm_max)
+                html.append(f"<td style='{sty}' class='hm-avg-cell hm-total-cell'>{total_avg:+.1f}</td>")
             html.append("</tr>")
 
-        html.append("</tbody></table></div>")
-        return {"table_html": "".join(html)}
+        html.append("</tbody></table>")
+
+        return {
+            "table_html": "".join(html),
+            "legend_html": _hm_legend_html(colors, dm_min, dm_mid, dm_max),
+            "domain_min": dm_min,
+            "domain_mid": dm_mid,
+            "domain_max": dm_max,
+        }
     except Exception as e:
         return {"error": str(e)}
 
@@ -1166,20 +1319,32 @@ async def scoring_heatmap_page(
     row_by: str = Query("Player"),
     col_by: str = Query("Hole"),
     sort_by_score: str = Query("true"),
-    show_totals: str = Query("true"),
+    show_col_totals: str | None = Query(None),
+    show_row_avg: str | None = Query(None),
+    palette: str = Query("redyellowblue"),
+    reverse: str | None = Query(None),
+    domain_min: float | None = Query(None),
+    domain_mid: float | None = Query(None),
+    domain_max: float | None = Query(None),
 ):
     sbs = _parse_checkbox(sort_by_score)
-    st = _parse_checkbox(show_totals)
-    ctx = _heatmap_context(row_by, col_by, sbs, st)
+    sct = _parse_checkbox(show_col_totals)
+    sra = _parse_checkbox(show_row_avg)
+    rev = _parse_checkbox(reverse)
+    ctx = _heatmap_context(row_by, col_by, sbs, sct, sra, palette, rev, domain_min, domain_mid, domain_max)
     return templates.TemplateResponse("scoring_heatmap.html", {
         "request": request,
         "active_page": "scoring",
         "row_options": HEATMAP_ROWS,
         "col_options": HEATMAP_COLS,
+        "palette_options": _HM_PALETTE_OPTIONS,
         "row_by": row_by,
         "col_by": col_by,
         "sort_by_score": sbs,
-        "show_totals": st,
+        "show_col_totals": sct,
+        "show_row_avg": sra,
+        "palette": palette,
+        "reverse": rev,
         **ctx,
     })
 
@@ -1190,11 +1355,19 @@ async def scoring_heatmap_content(
     row_by: str = Query("Player"),
     col_by: str = Query("Hole"),
     sort_by_score: str | None = Query(None),
-    show_totals: str | None = Query(None),
+    show_col_totals: str | None = Query(None),
+    show_row_avg: str | None = Query(None),
+    palette: str = Query("redyellowblue"),
+    reverse: str | None = Query(None),
+    domain_min: float | None = Query(None),
+    domain_mid: float | None = Query(None),
+    domain_max: float | None = Query(None),
 ):
     sbs = _parse_checkbox(sort_by_score)
-    st = _parse_checkbox(show_totals)
-    ctx = _heatmap_context(row_by, col_by, sbs, st)
+    sct = _parse_checkbox(show_col_totals)
+    sra = _parse_checkbox(show_row_avg)
+    rev = _parse_checkbox(reverse)
+    ctx = _heatmap_context(row_by, col_by, sbs, sct, sra, palette, rev, domain_min, domain_mid, domain_max)
     return templates.TemplateResponse("partials/scoring_heatmap_content.html", {
         "request": request,
         **ctx,
