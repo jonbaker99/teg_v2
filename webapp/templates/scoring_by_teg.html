@@ -12,14 +12,8 @@
 
 {% if chart_json %}
 <div class="data-card data-card--padded section-gap">
-    <div id="by-teg-chart" class="chart-container" style="height:350px;"></div>
+    <div class="chart-container" data-figure="{{ chart_json }}" style="height:350px;"></div>
 </div>
-<script>
-(function() {
-    var data = {{ chart_json | safe }};
-    Plotly.newPlot('by-teg-chart', data.data, data.layout, {displayModeBar: false, responsive: true});
-})();
-</script>
 {% endif %}
 
 <div class="data-card"><div class="table-wrapper">{{ table_html | safe }}</div></div>

@@ -3,13 +3,7 @@
 {% else %}
 <h2 class="section-title">{{ chart_title }}</h2>
 <div class="data-card data-card--padded">
-    <div id="plotly-chart" class="chart-container" style="height:500px;"></div>
-    <script>
-        (function() {
-            var figData = {{ figure_json | safe }};
-            Plotly.newPlot('plotly-chart', figData.data, figData.layout, {responsive: true, displayModeBar: false});
-        })();
-    </script>
+    <div class="chart-container" data-figure="{{ figure_json }}" style="height:500px;"></div>
 </div>
 {% if chart_description %}
 <p class="chart-description">{{ chart_description }}</p>

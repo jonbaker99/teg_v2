@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title_suffix %} — Chart Style Prototype{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">Dev</span>
+    <h1 class="page-title">Chart Style Prototype</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<p class="page-subtitle">
+    Same data ({{ teg_name }} cumulative gross vs par) rendered in each named style.
+    Use this page to compare and pick the app standard.
+</p>
+
+{% for chart in charts %}
+<div style="margin-bottom: 2.75rem;">
+    <!-- Dev label: which style this card uses (kept subtle, off the chart itself). -->
+    <div style="display:flex; align-items:baseline; gap:0.75rem; margin-bottom:0.5rem;">
+        <span class="badge">{{ chart.label }}</span>
+        <span style="font-size:0.75rem; color:var(--text-muted); font-family:monospace;">{{ chart.style_key }}</span>
+        <span style="font-size:0.8rem; color:var(--text-muted);">{{ chart.description }}</span>
+    </div>
+    {% if chart.figure_json %}
+    <div class="data-card data-card--padded">
+        <!-- Realistic page-style title + caption (mirrors Streamlit's markdown + caption). -->
+        <h3 class="chart-title" style="margin-top:0;">{{ chart_title }}</h3>
+        <p class="chart-description" style="margin-top:0.15rem;">{{ chart_subtitle }}</p>
+        <div class="chart-container" data-figure="{{ chart.figure_json }}" style="height:450px; margin-top:0.5rem;"></div>
+    </div>
+    {% else %}
+    <div class="data-card" style="padding:1rem; color:var(--text-muted);">Chart unavailable</div>
+    {% endif %}
+</div>
+{% endfor %}
+{% endblock %}

@@ -47,6 +47,7 @@ from webapp.deps import (
     get_default_teg_num,
     get_rounds_for_teg,
 )
+from webapp.chart_utils import create_round_graph
 
 _NAME_TO_CODE = {v: k for k, v in PLAYER_DICT.items()}
 
@@ -215,14 +216,24 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                 table_html = _df_to_html(ctx_df)
             except Exception:
                 table_html = "<p class='text-muted text-sm'>No data.</p>"
-            # Per-metric cumulative-through-round chart — placeholder pending the
-            # chart rebuild (see webapp/README look-and-feel roadmap, item 1b).
+            chart_title = f"Cumulative {friendly} through round"
+            y_series = f"{metric} Cum Round"
+            metric_chart_type = {"Sc": "default", "GrossVP": "gross", "NetVP": "gross", "Stableford": "stableford"}
+            chart_type = metric_chart_type.get(metric, "default")
+            figure_json = None
+            try:
+                all_data = cached_load_all_data()
+                fig = create_round_graph(
+                    all_data, teg_str, round_num, y_series, title=chart_title,
+                    y_axis_label=f"Cumulative {friendly}", chart_type=chart_type,
+                )
+                figure_json = fig.to_json()
+            except Exception:
+                pass
             return {"sections": [{"title": friendly, "table_html": table_html}],
                     "metric_tabs": METRIC_TABS, "active_metric": metric,
-                    "chart_placeholder": True,
-                    "chart_title": f"Cumulative {friendly} through round",
-                    "chart_series": f"{metric} Cum Round",
-                    "chart_teg": teg_str, "chart_round": round_num}
+                    "chart_title": chart_title,
+                    "figure_json": figure_json}
 
         elif tab == "scorecard":
             try:
