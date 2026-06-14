@@ -4,11 +4,26 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ---
 
+## IN PROGRESS
+- [ ] **PILL FORMATS**
+- [ ] **CHARTS**
+
+## NEXT UP
+
+
 ## Bugs — fix before publish
 
-- [ ] **`/personal-bests` round tabs error** — `"['Round_Label'] not in index"` in `routes/performance.py`. Summary and TEG tabs fine; round-detail view gets wrong data shape.
-- [x] **`/latest-teg` Streaks tab only shows final round** — fixed: removed `round_num=last_round` filter so `get_player_window_streaks` windows the whole TEG.
-- [ ] **Records & PBs on `/latest-round` and `/latest-teg`** — not verified correct; draft warning shown (`_RECORDS_DRAFT_NOTE` in `routes/latest.py`). Verify figures against known-good source then remove warning.
+## UI Changes
+
+- [ ] **Pill format** define a standard global 'pill' format that will automatically get used when pills are deployed as UI elements. The pill should look like those on `personal-bests` ('best rounds' etc.).
+- [ ] **Pills to choose rounds** - Pages with dropdowns for TEG and Round should use dropdown for TEG and then a pill for the round selection. Only rounds that exist should have a pill. For example, TEG 2 should only have rounds 1-3 as options. An in-progress TEG should only have the number of rounds that exist in the data.
+
+- [ ] **History table** - Consistent column widths for final 3 columns. Use full width of page. Consistent line break between first names and surnames in final 3 columns - either all or none.
+- [ ] **Table font** - make a touch smaller to match streamlit
+- [ ] **General tables** - consistent column widths where possible for similar type of columns
+
+- [ ] **Eclectics** - use scorecard gross formatting
+
 
 ## Charts — known issues, parked
 
@@ -43,10 +58,6 @@ Currently out of scope — Streamlit handles this via three pages (`1000Data upd
 
 Low priority — functional parity is complete; these are visual refinements.
 
-- [ ] Styled history table (teg/area compound cell, player-name spans)
-- [ ] Full trophy names in tab labels
-- [ ] Vertical-line issue near chart/table on results page
-- [ ] First/last-place cell highlighting on leaderboard
 - [ ] Styled score/when cells in PB summary
 - [ ] Metric tiles with delta indicators on latest pages
 - [ ] Legend click-to-highlight (Altair behaviour)

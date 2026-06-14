@@ -261,7 +261,7 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                     'best_score_counts': counts['best_score_counts'],
                     'worst_score_counts': counts['worst_score_counts'],
                 }
-                sections.append({"title": None, "table_html": _RECORDS_DRAFT_NOTE + _render_records_summary(rd_dict, 'Round')})
+                sections.append({"title": None, "table_html": _render_records_summary(rd_dict, 'Round')})
             except Exception as e:
                 sections.append({"title": "Records & PBs", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
@@ -444,7 +444,7 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
                     'best_score_counts': counts['best_score_counts'],
                     'worst_score_counts': counts['worst_score_counts'],
                 }
-                sections.append({"title": None, "table_html": _RECORDS_DRAFT_NOTE + _render_records_summary(rd_dict, 'TEG')})
+                sections.append({"title": None, "table_html": _render_records_summary(rd_dict, 'TEG')})
             except Exception as e:
                 sections.append({"title": "Records & PBs", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
