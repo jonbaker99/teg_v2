@@ -5,7 +5,6 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 ---
 
 ## IN PROGRESS
-- [ ] **CHARTS**
 - [ ] **SCORECARDS**
 
 ## NEXT UP
@@ -20,18 +19,13 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 - [ ] **General tables** - consistent column widths where possible for similar type of columns
 
 
-- [ ] **SCORECARDS**:
-  - [ ] **Eclectics** - use scorecard gross formatting
-  - [ ] on mouseover on the scorecard, I'd like to show information about that score on that hole. 'Hole', 'Stroke Index' [SI], 'Par', 'Score', 'Net', 'Stableford'. this should apply across all pages where a scorecard is shown.
-  - [ ] the scorecard page width appears to change when different 'views' are chosen. It's a bit jarring. Can we make the page width consistent? Let's tackle this globally instead of incrementally on the scorecard page (i.e. apply to all pages to start with
-  - [ ] the eclectic scorecards on `/eclectic` should be formatted using the scorecard gross formats
-  - [ ] Mobile view automatically on all scorecard pages. this has been built as part of mobile UI work but may not yet be in the core functionality. please check.
-
-## Charts — known issues, parked
-
-- [x] **HTMX chart bug** — fixed via `data-figure` attribute + global `htmx:afterSettle` renderer with `Plotly.purge()` in `base.html`.
-- [x] **Restore `/results` race chart** — done; `_build_race_figure_json()` in `routes/history.py` drives all (tab, variant) combinations.
-- [x] **Chart appearance** — matched Streamlit style via `get_chart_style('streamlit')` in `chart_utils.py`; applied across all chart-producing routes.
+## **SCORECARDS**:
+- [ ] **Eclectics** - use scorecard gross formatting
+- [ ] on mouseover on the scorecard, I'd like to show information about that score on that hole. 'Hole', 'Stroke Index' [SI], 'Par', 'Score', 'Net', 'Stableford'. this should apply across all pages where a scorecard is shown.
+- [ ] the scorecard page width appears to change when different 'views' are chosen. It's a bit jarring. Can we make the page width consistent? Let's tackle this globally instead of incrementally on the scorecard page (i.e. apply to all pages to start with
+- [ ] the eclectic scorecards on `/eclectic` should be formatted using the scorecard gross formats  
+- [ ] Mobile view automatically on all scorecard pages. this has been built as part of mobile UI work but may not yet be in the core functionality. please check.
+- [ ] **Mouseover tooltips on scorecard cells** — on hover show: Hole, Par, SI, Score, Net, Stableford
 
 ## Mobile & dark mode
 
@@ -45,9 +39,6 @@ Currently out of scope — Streamlit handles this via three pages (`1000Data upd
 - [ ] **Edit scores** — tabular editor to correct existing scores
 - [ ] **Delete scores** — delete a round or individual entries
 
-## Scorecard improvements
-
-- [ ] **Mouseover tooltips on scorecard cells** — on hover show: Hole, Par, SI, Score, Net, Stableford
 
 ## Planned enhancements
 
