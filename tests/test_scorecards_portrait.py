@@ -38,12 +38,13 @@ def _single_round_df(scores, pars=PARS):
 
 def _gross_cells(html):
     """Multiset of (vs_par, score) gross cells, order-independent per 9.
-    The span may carry a title attribute, so we skip over it with [^>]*."""
-    return sorted(re.findall(r'data-vs-par="(-?\d+)"><span[^>]*>(\d+)</span>', html))
+    The cell may carry extra attrs (data-tip) before '>' and the span may too,
+    so we skip over them with [^>]*."""
+    return sorted(re.findall(r'data-vs-par="(-?\d+)"[^>]*><span[^>]*>(\d+)</span>', html))
 
 
 def _stableford_cells(html):
-    return sorted(re.findall(r'data-stableford="(-?\d+)"><span[^>]*>(\d+)</span>', html))
+    return sorted(re.findall(r'data-stableford="(-?\d+)"[^>]*><span[^>]*>(\d+)</span>', html))
 
 
 def _grand_total_cells(portrait_html):

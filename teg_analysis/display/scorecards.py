@@ -23,9 +23,10 @@ def _format_date(date_str: str) -> str:
 def _cell_title(row) -> str:
     """Build the hover-tooltip text for one hole's score cell.
 
-    Shown via the native ``title`` attribute so it floats above any
-    scroll/overflow wrapper on every page a scorecard appears on. Only the
-    fields present in ``row`` are included, so builders work with partial data.
+    Emitted as a ``data-tip`` attribute on the cell; a small global script
+    (webapp ``base.html``) renders it as a floating tooltip that is never
+    clipped by the scorecard's scroll/overflow wrappers. Only the fields
+    present in ``row`` are included, so builders work with partial data.
     """
     fields = [
         ('Hole', 'Hole'), ('SI', 'SI'), ('PAR', 'Par'),
@@ -101,11 +102,11 @@ def build_single_round_combined_table(df: pd.DataFrame) -> str:
     parts.append('<tr><td class="label-column">Score</td>')
     for hole in range(1, 10):
         row = df[df['Hole'] == hole].iloc[0]
-        parts.append(f'<td class="score-cell" data-vs-par="{int(row["GrossVP"])}"><span title="{_cell_title(row)}">{int(row["Sc"])}</span></td>')
+        parts.append(f'<td class="score-cell" data-vs-par="{int(row["GrossVP"])}" data-tip="{_cell_title(row)}"><span>{int(row["Sc"])}</span></td>')
     parts.append(f'<td class="totals front-back-divider">{front_sc}</td>')
     for hole in range(10, 19):
         row = df[df['Hole'] == hole].iloc[0]
-        parts.append(f'<td class="score-cell" data-vs-par="{int(row["GrossVP"])}"><span title="{_cell_title(row)}">{int(row["Sc"])}</span></td>')
+        parts.append(f'<td class="score-cell" data-vs-par="{int(row["GrossVP"])}" data-tip="{_cell_title(row)}"><span>{int(row["Sc"])}</span></td>')
     parts.append(f'<td class="totals">{back_sc}</td>')
     parts.append(f'<td class="totals">{total_sc}</td>')
     parts.append('</tr>')
@@ -114,11 +115,11 @@ def build_single_round_combined_table(df: pd.DataFrame) -> str:
     parts.append('<tr><td class="label-column">Stableford</td>')
     for hole in range(1, 10):
         row = df[df['Hole'] == hole].iloc[0]
-        parts.append(f'<td class="score-cell" data-stableford="{int(row["Stableford"])}"><span title="{_cell_title(row)}">{int(row["Stableford"])}</span></td>')
+        parts.append(f'<td class="score-cell" data-stableford="{int(row["Stableford"])}" data-tip="{_cell_title(row)}"><span>{int(row["Stableford"])}</span></td>')
     parts.append(f'<td class="totals front-back-divider">{front_sf}</td>')
     for hole in range(10, 19):
         row = df[df['Hole'] == hole].iloc[0]
-        parts.append(f'<td class="score-cell" data-stableford="{int(row["Stableford"])}"><span title="{_cell_title(row)}">{int(row["Stableford"])}</span></td>')
+        parts.append(f'<td class="score-cell" data-stableford="{int(row["Stableford"])}" data-tip="{_cell_title(row)}"><span>{int(row["Stableford"])}</span></td>')
     parts.append(f'<td class="totals">{back_sf}</td>')
     parts.append(f'<td class="totals">{total_sf}</td>')
     parts.append('</tr>')
@@ -155,13 +156,13 @@ def build_tournament_gross_table(player_data: pd.DataFrame) -> str:
             row = rd[rd['Hole'] == hole].iloc[0]
             vs_par = int(row['GrossVP'])
             score = int(row['Sc'])
-            parts.append(f'<td class="score-cell" data-vs-par="{vs_par}"><span title="{_cell_title(row)}">{score}</span></td>')
+            parts.append(f'<td class="score-cell" data-vs-par="{vs_par}" data-tip="{_cell_title(row)}"><span>{score}</span></td>')
         parts.append(f'<td class="totals front-back-divider">{front_sc}</td>')
         for hole in range(10, 19):
             row = rd[rd['Hole'] == hole].iloc[0]
             vs_par = int(row['GrossVP'])
             score = int(row['Sc'])
-            parts.append(f'<td class="score-cell" data-vs-par="{vs_par}"><span title="{_cell_title(row)}">{score}</span></td>')
+            parts.append(f'<td class="score-cell" data-vs-par="{vs_par}" data-tip="{_cell_title(row)}"><span>{score}</span></td>')
         parts.append(f'<td class="totals">{back_sc}</td>')
         parts.append(f'<td class="totals">{total_sc}</td>')
         parts.append('</tr>')
@@ -197,12 +198,12 @@ def build_tournament_stableford_table(player_data: pd.DataFrame) -> str:
         for hole in range(1, 10):
             row = rd[rd['Hole'] == hole].iloc[0]
             sf = int(row['Stableford'])
-            parts.append(f'<td class="score-cell" data-stableford="{sf}"><span title="{_cell_title(row)}">{sf}</span></td>')
+            parts.append(f'<td class="score-cell" data-stableford="{sf}" data-tip="{_cell_title(row)}"><span>{sf}</span></td>')
         parts.append(f'<td class="totals front-back-divider">{front_sf}</td>')
         for hole in range(10, 19):
             row = rd[rd['Hole'] == hole].iloc[0]
             sf = int(row['Stableford'])
-            parts.append(f'<td class="score-cell" data-stableford="{sf}"><span title="{_cell_title(row)}">{sf}</span></td>')
+            parts.append(f'<td class="score-cell" data-stableford="{sf}" data-tip="{_cell_title(row)}"><span>{sf}</span></td>')
         parts.append(f'<td class="totals">{back_sf}</td>')
         parts.append(f'<td class="totals">{total_sf}</td>')
         parts.append('</tr>')
@@ -252,13 +253,13 @@ def build_round_comparison_gross_table(round_data: pd.DataFrame) -> str:
             row = pdata[pdata['Hole'] == hole].iloc[0]
             vs_par = int(row['GrossVP'])
             score = int(row['Sc'])
-            parts.append(f'<td class="score-cell" data-vs-par="{vs_par}"><span title="{_cell_title(row)}">{score}</span></td>')
+            parts.append(f'<td class="score-cell" data-vs-par="{vs_par}" data-tip="{_cell_title(row)}"><span>{score}</span></td>')
         parts.append(f'<td class="totals front-back-divider">{front_sc}</td>')
         for hole in range(10, 19):
             row = pdata[pdata['Hole'] == hole].iloc[0]
             vs_par = int(row['GrossVP'])
             score = int(row['Sc'])
-            parts.append(f'<td class="score-cell" data-vs-par="{vs_par}"><span title="{_cell_title(row)}">{score}</span></td>')
+            parts.append(f'<td class="score-cell" data-vs-par="{vs_par}" data-tip="{_cell_title(row)}"><span>{score}</span></td>')
         parts.append(f'<td class="totals">{back_sc}</td>')
         parts.append(f'<td class="totals">{total_sc}</td>')
         parts.append('</tr>')
@@ -295,12 +296,12 @@ def build_round_comparison_stableford_table(round_data: pd.DataFrame) -> str:
         for hole in range(1, 10):
             row = pdata[pdata['Hole'] == hole].iloc[0]
             sf = int(row['Stableford'])
-            parts.append(f'<td class="score-cell" data-stableford="{sf}"><span title="{_cell_title(row)}">{sf}</span></td>')
+            parts.append(f'<td class="score-cell" data-stableford="{sf}" data-tip="{_cell_title(row)}"><span>{sf}</span></td>')
         parts.append(f'<td class="totals front-back-divider">{front_sf}</td>')
         for hole in range(10, 19):
             row = pdata[pdata['Hole'] == hole].iloc[0]
             sf = int(row['Stableford'])
-            parts.append(f'<td class="score-cell" data-stableford="{sf}"><span title="{_cell_title(row)}">{sf}</span></td>')
+            parts.append(f'<td class="score-cell" data-stableford="{sf}" data-tip="{_cell_title(row)}"><span>{sf}</span></td>')
         parts.append(f'<td class="totals">{back_sf}</td>')
         parts.append(f'<td class="totals">{total_sf}</td>')
         parts.append('</tr>')
@@ -327,10 +328,10 @@ _ALL = range(1, 19)
 
 def _portrait_value_cell(metric: str, value: int, vs_par: Optional[int], title: str = '') -> str:
     """One score cell for a portrait row. ``metric`` is 'gross' or 'stableford'."""
-    t = f' title="{title}"' if title else ''
+    t = f' data-tip="{title}"' if title else ''
     if metric == 'gross':
-        return f'<td class="score-cell" data-vs-par="{vs_par}"><span{t}>{value}</span></td>'
-    return f'<td class="score-cell" data-stableford="{value}"><span{t}>{value}</span></td>'
+        return f'<td class="score-cell" data-vs-par="{vs_par}"{t}><span>{value}</span></td>'
+    return f'<td class="score-cell" data-stableford="{value}"{t}><span>{value}</span></td>'
 
 
 def _portrait_header(col_labels: list) -> str:
@@ -605,8 +606,7 @@ def _eclectic_vp_cell(value) -> str:
         return '<td class="eclectic-cell"><span>-</span></td>'
     v = int(value)
     lbl = _vp_label(v)
-    title = f"{lbl} vs par (best)"
-    return f'<td class="eclectic-cell" data-evp="{v}" title="{title}"><span>{lbl}</span></td>'
+    return f'<td class="eclectic-cell" data-evp="{v}" data-tip="{lbl} vs par (best)"><span>{lbl}</span></td>'
 
 
 def build_eclectic_scorecard_table(eclectic_df: pd.DataFrame, dimension_col: str) -> str:

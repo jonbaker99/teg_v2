@@ -226,5 +226,6 @@ async def scorecard_content(
         "selected_player": player_code,
         "selected_type": type,
         "rounds": rounds,
+        "oob": True,  # render the OOB round-pill swap (HTMX response only)
         **ctx,
     })
