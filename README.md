@@ -44,7 +44,15 @@ uvicorn webapp.app:app --reload
 jupyter notebook ad_hoc_analysis/quickstart.ipynb
 ```
 
-## Project structure
+## Development reference
+
+```bash
+# View outstanding to-dos across the project
+python todos.py          # outstanding items only
+python todos.py --all    # include completed items too
+```
+
+See [TODOS.md](TODOS.md) for the central to-do index. Each area (`webapp/`, `streamlit/`, `teg_analysis/`) has its own `TODOS.md` file for working details.
 
 ```
 teg_analysis/        Core analysis package (standalone, no Streamlit dependency)

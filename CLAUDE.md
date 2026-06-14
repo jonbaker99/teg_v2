@@ -22,6 +22,10 @@ Do not read or reference `to_do_jon.md` unless the user explicitly asks you to. 
 ## Development Commands
 
 ```bash
+# View outstanding to-dos across the project
+python todos.py          # outstanding items only
+python todos.py --all    # include completed items
+
 # Run the webapp (active development)
 uvicorn webapp.app:app --reload
 
