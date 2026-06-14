@@ -146,11 +146,21 @@ def _metric_specs(all_data, rd_data, winners):
     ]
 
 
-# Metric cards arranged into themed rows: scoring, honours, scoring feats.
+# Headline metric cards: scoring on top, scoring feats below. Trophies are
+# pulled out into their own dedicated cabinet section (see _build_trophy_section).
 _METRIC_ROWS = [
     ["TEGs Played", "Avg Gross vs Par", "Avg Stableford"],
-    ["Total Trophies", "TEG Trophies", "Green Jackets", "Wooden Spoons", "Doubles"],
     ["Holes in One", "Eagles", "Birdies"],
+]
+
+# Trophy cabinet: label → emoji icon. "Spoon" is a wooden-spoon (last place) honour
+# and is styled as a lowlight rather than a win.
+_TROPHY_META = [
+    ("Total Trophies", "🏆", False),
+    ("TEG Trophies", "🥇", False),
+    ("Green Jackets", "🧥", False),
+    ("Doubles", "👑", False),
+    ("Wooden Spoons", "🥄", True),
 ]
 
 
@@ -191,48 +201,103 @@ def _build_overview_metrics(player_code: str) -> list[list[dict]]:
     return [[by_label[lbl] for lbl in row] for row in _METRIC_ROWS]
 
 
+def _build_trophy_section(player_code: str) -> list[dict]:
+    """Build the trophy-cabinet cards: name, count, cross-player rank and icon.
+
+    Rank is suppressed when the player has none of that honour (an empty cabinet
+    shouldn't claim a ranking). The wooden spoon carries ``lowlight=True`` so the
+    template can style it as a dubious distinction rather than a win.
+    """
+    name = PLAYER_DICT[player_code]
+    all_data = cached_load_all_data()
+    rd_data = cached_round_data()
+    winners = _get_winners_data()
+
+    specs = {label: (series, ascending) for label, series, ascending, _f, _z
+             in _metric_specs(all_data, rd_data, winners)}
+
+    cards = []
+    for label, icon, lowlight in _TROPHY_META:
+        series, ascending = specs[label]
+        count = int(series[name]) if name in series.index and pd.notna(series[name]) else 0
+        rank = _rank_str(series, name, ascending) if count > 0 else ""
+        cards.append({
+            "name": label,
+            "count": count,
+            "rank": rank,
+            "icon": icon,
+            "lowlight": lowlight,
+        })
+    return cards
+
+
 # ---------------------------------------------------------------------------
 # Career highlights / colour points
 # ---------------------------------------------------------------------------
 
-def _records_held(name: str) -> list[str]:
-    """Return the all-time TEG records this player holds (shared records flagged)."""
+def _records_held(name: str) -> list[dict]:
+    """Return the all-time TEG records this player holds, with value and context.
+
+    Each record is a dict: ``label`` (record name), ``value`` (the record figure),
+    ``detail`` (where/when it was set — TEG, year, area or course), and ``shared``
+    (True when the record is jointly held). Count records (trophies, eagles) have
+    no single location, so ``detail`` is empty for them.
+    """
     all_data = cached_load_all_data()
     rd_data = cached_round_data()
     teg_data = cached_ranked_teg_data()
     winners = _get_winners_data().replace(r"\*", "", regex=True)
 
-    def holders_min(df, col):
-        m = df[col].min()
-        return set(df[df[col] == m]["Player"])
+    records: list[dict] = []
 
-    def holders_max(df, col):
-        m = df[col].max()
-        return set(df[df[col] == m]["Player"])
+    def teg_detail(row):
+        return f"TEG {int(row['TEGNum'])} · {int(row['Year'])} · {row['Area']}"
 
-    def top_count(vc):
-        if vc.empty:
-            return set()
-        return set(vc[vc == vc.max()].index)
+    def round_detail(row):
+        return f"TEG {int(row['TEGNum'])} R{int(row['Round'])} · {int(row['Year'])} · {row['Course']}"
+
+    def extremum(df, col, kind, label, fmt_key, detail_fn):
+        """Add a min/max record if held by ``name``; pick the player's own holding row."""
+        target = df[col].min() if kind == "min" else df[col].max()
+        holders = set(df[df[col] == target]["Player"])
+        if name not in holders:
+            return
+        row = df[(df["Player"] == name) & (df[col] == target)].iloc[0]
+        records.append({
+            "label": label,
+            "value": format_value(target, fmt_key),
+            "detail": detail_fn(row),
+            "shared": len(holders) > 1,
+        })
+
+    extremum(teg_data, "GrossVP", "min", "Lowest TEG (gross)", "GrossVP", teg_detail)
+    extremum(teg_data, "Stableford", "max", "Highest TEG (Stableford)", "Stableford", teg_detail)
+    extremum(rd_data, "GrossVP", "min", "Lowest round (gross)", "GrossVP", round_detail)
+    extremum(rd_data, "Stableford", "max", "Highest round (Stableford)", "Stableford", round_detail)
 
     eagles = get_eagles_data(all_data)
     eagles_ct = eagles["Player"].value_counts() if not eagles.empty else pd.Series(dtype=int)
 
-    checks = [
-        ("Lowest TEG (gross)", holders_min(teg_data, "GrossVP")),
-        ("Highest TEG (Stableford)", holders_max(teg_data, "Stableford")),
-        ("Lowest round (gross)", holders_min(rd_data, "GrossVP")),
-        ("Highest round (Stableford)", holders_max(rd_data, "Stableford")),
-        ("Most TEG Trophies", top_count(winners["TEG Trophy"].value_counts())),
-        ("Most Green Jackets", top_count(winners["Green Jacket"].value_counts())),
-        ("Most Eagles", top_count(eagles_ct)),
-    ]
+    def count_record(vc, label, unit):
+        if vc.empty:
+            return
+        top = vc.max()
+        holders = set(vc[vc == top].index)
+        if name not in holders:
+            return
+        n = int(top)
+        records.append({
+            "label": label,
+            "value": f"{n} {unit}{'' if n == 1 else 's'}",
+            "detail": "",
+            "shared": len(holders) > 1,
+        })
 
-    held = []
-    for label, hs in checks:
-        if name in hs:
-            held.append(label + (" (shared)" if len(hs) > 1 else ""))
-    return held
+    count_record(winners["TEG Trophy"].value_counts(), "Most TEG Trophies", "title")
+    count_record(winners["Green Jacket"].value_counts(), "Most Green Jackets", "jacket")
+    count_record(eagles_ct, "Most Eagles", "eagle")
+
+    return records
 
 
 def _build_highlights(player_code: str) -> list[dict]:
@@ -875,6 +940,7 @@ async def player_page(request: Request, player_code: str):
     theme = request.state.theme
 
     metrics = _build_overview_metrics(pc)
+    trophy_section = _build_trophy_section(pc)
     subtitle = _build_subtitle(pc)
     overview_ctx = _build_overview_context(pc, theme)
 
@@ -886,6 +952,7 @@ async def player_page(request: Request, player_code: str):
         "player_list": _get_player_list(),
         "subtitle": subtitle,
         "metrics": metrics,
+        "trophy_section": trophy_section,
         "tabs": PLAYER_TABS,
         "active_tab": "overview",
         **overview_ctx,

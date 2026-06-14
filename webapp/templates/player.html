@@ -17,7 +17,7 @@
 <!-- Subtitle -->
 <p class="text-sm text-secondary mb-6">{{ subtitle }}</p>
 
-<!-- Headline metrics — themed rows, each card shows value + cross-player rank -->
+<!-- Headline metrics — title on top, big value with a de-emphasised rank beside it -->
 <div class="metric-stack mb-6">
     {% for row in metrics %}
     <div class="metric-grid">
@@ -25,13 +25,30 @@
         <div class="metric-card{% if card.tooltip %} metric-card--info{% endif %}"
              {% if card.tooltip %}title="{{ card.tooltip }}"{% endif %}>
             <span class="metric-label">{{ card.label }}</span>
-            <span class="metric-value">{{ card.value }}</span>
-            <span class="metric-rank">{% if card.rank != '–' %}Rank <strong>{{ card.rank }}</strong>{% endif %}</span>
+            <span class="metric-figure">
+                <span class="metric-value">{{ card.value }}</span>
+                {% if card.rank != '–' %}<span class="metric-rank">{{ card.rank }}</span>{% endif %}
+            </span>
         </div>
         {% endfor %}
     </div>
     {% endfor %}
 </div>
+
+<!-- Trophy cabinet -->
+{% if trophy_section %}
+<h2 class="section-title">Trophy Cabinet</h2>
+<div class="trophy-cabinet mb-6">
+    {% for t in trophy_section %}
+    <div class="trophy-card{% if t.lowlight %} trophy-card--lowlight{% endif %}{% if t.count == 0 %} trophy-card--empty{% endif %}">
+        <span class="trophy-icon">{{ t.icon }}</span>
+        <span class="trophy-count">{{ t.count }}</span>
+        <span class="trophy-name">{{ t.name }}</span>
+        {% if t.rank %}<span class="trophy-rank">Rank {{ t.rank }}</span>{% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
 
 <hr class="divider--dotted mb-6">
 

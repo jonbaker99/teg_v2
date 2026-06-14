@@ -16,7 +16,13 @@
     {% if records_held %}
     <div class="records-grid mb-6">
         {% for r in records_held %}
-        <div class="record-card">{{ r }}</div>
+        <div class="record-card">
+            <span class="record-name">{{ r.label }}{% if r.shared %} <span class="record-shared">shared</span>{% endif %}</span>
+            <span class="record-figure">
+                <span class="record-value">{{ r.value }}</span>
+                {% if r.detail %}<span class="record-detail">{{ r.detail }}</span>{% endif %}
+            </span>
+        </div>
         {% endfor %}
     </div>
     {% else %}
