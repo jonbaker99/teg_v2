@@ -189,10 +189,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ── History table (TEG History page) ──
-   Mirrors the Streamlit hist2 layout: a compound first cell with the TEG label
-   on top and the area as smaller secondary text beneath, an emphasised TEG
-   Trophy winner (2nd column), and player names that can break first/last on
-   narrow screens. */
+   Capped width, fixed layout for four equal columns. Names are inline by
+   default; JS detects if any name wraps and adds .names-break to force all
+   names to stack — so the layout is always consistent. */
+.history-table {
+    width: 100%;
+    table-layout: fixed;
+}
 .history-table .teg-label {
     display: block;
     font-weight: 400;
@@ -207,14 +210,21 @@ h1, h2, h3, h4, h5, h6 {
 .history-table tbody td:nth-child(2) {
     font-weight: 700;
 }
-/* First+last inline on wide screens; stacked on narrow ones */
+/* All cells allow wrapping (TEG col can break between label and year) */
+.history-table tbody td {
+    white-space: normal;
+}
+/* Default: inline-block container (measurable height) with inline first/last */
+.history-table .player-name {
+    display: inline-block;
+}
 .history-table .player-name .first {
     display: inline;
 }
-@media (max-width: 650px) {
-    .history-table .player-name { display: inline-block; }
-    .history-table .player-name .first,
-    .history-table .player-name .last { display: block; }
+/* JS adds .names-break when any name wraps; all names then stack */
+.history-table.names-break .player-name .first,
+.history-table.names-break .player-name .last {
+    display: block;
 }
 
 /* ── Multi-round scorecards (Full Results → Scorecards tab) ──
@@ -637,12 +647,10 @@ body.ts-c3 .page-title-area .page-title {
     color: #111;
 }
 
-/* ── Page Title Outer — constrains title band to match .mx-auto by default ── */
-/* width:100% (not fit-content) so the page width is consistent across pages and
-   across views within a page — it no longer shrinks/grows to the content. */
+/* ── Page Title Outer — matches content-wrapper width ── */
 .page-title-outer {
     width: 100%;
-    max-width: min(90vw, 1280px);
+    max-width: 960px;
     margin: 0 auto;
 }
 
@@ -651,13 +659,19 @@ body.ts-c3 .page-title-area .page-title {
     flex-grow: 1;
 }
 
-/* Content wrapper — width constraints (replaces former .mx-auto inline styles).
-   width:100% (not fit-content) keeps the page a consistent width across pages
-   and across views within a page, instead of resizing to fit the content. */
+/* Content wrapper — default "best practice" content width.
+   Use body.layout-wide (pass wide=True from the route) for pages that
+   genuinely need more horizontal space (ranking grids, heatmaps, etc.). */
 .content-wrapper {
     width: 100%;
-    max-width: min(90vw, 1280px);
+    max-width: 960px;
     margin: 0 auto;
+}
+
+/* Wide layout override */
+body.layout-wide .page-title-outer,
+body.layout-wide .content-wrapper {
+    max-width: 1280px;
 }
 
 /* C1/C2/C3 — full viewport width, flush below navbar */
@@ -666,7 +680,6 @@ body.ts-c2 .page-title-outer,
 body.ts-c3 .page-title-outer {
     width: 100%;
     max-width: 100%;
-    min-width: 0;
     margin: 0;
 }
 

@@ -184,6 +184,25 @@ single active class `.tab-underline--active`; sub-toggles are
   `.toggle-group` `1rem` below + `1.5rem` above when it follows a `.data-card`).
   For a nested/edge override, use inline `style="margin-bottom:0"`.
 
+**Page width:**
+The default content width is **960px** (`max-width` on `.content-wrapper` and
+`.page-title-outer` in `base-vars.css`). This is the standard for all pages.
+
+For pages with genuinely wide content (multi-TEG ranking grids, 18-hole heatmaps,
+etc.) pass `"wide": True` in the route's `TemplateResponse` context — `base.html`
+adds `body.layout-wide`, which CSS overrides to `max-width: 1280px`:
+
+```python
+return templates.TemplateResponse("my_page.html", {
+    "request": request,
+    "wide": True,   # ← opt into 1280px layout
+    ...
+})
+```
+
+Currently wide: `/scoring/matrix`, `/scoring/heatmap`.
+Partials (HTMX responses) never need `wide` — only the full-page handler does.
+
 **Scope note:** dev/demo templates (`smoke_test`, `width_test`,
 `title_preview`, `showcase`, `placeholder`) are not part of the page hierarchy
 and are intentionally left unwrapped.
@@ -235,6 +254,7 @@ highlight the section) and `pages` (list of `(title, url, active_key)`).
 3. Follow the route → deps → template pattern.
 4. Register the route in `app.py` in **two places**: import it in `from webapp.routes import (…, my_page, …)`, then call `app.include_router(my_page.router)`.
 5. Pass `active_page="my-key"` in the `TemplateResponse` context so the nav highlights correctly. Add the page (and, if needed, its `active_page` key) to the relevant section in `webapp/nav.py`.
+6. If the page has wide content (ranking grids, heatmaps), pass `"wide": True` in the context to opt into the 1280px layout. Default is 960px — see **Page width** above.
 
 ### Adding a new theme
 1. Create `static/themes/my-theme.css`

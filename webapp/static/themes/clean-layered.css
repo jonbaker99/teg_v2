@@ -14,9 +14,12 @@ body.page-bg {
 
 /* Container: handles width/centering for both title-outer and panel */
 .page-container {
-    max-width: min(90vw, 1280px);
-    min-width: min(800px, 90vw);
+    width: 100%;
+    max-width: 960px;
     margin: 1.5rem auto;
+}
+body.layout-wide .page-container {
+    max-width: 1280px;
 }
 
 /* Title-outer fills container width */

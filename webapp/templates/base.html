@@ -129,7 +129,7 @@
         }
     </style>
 </head>
-<body class="page-bg ts-{{ request.state.title_style }} ch-{{ request.state.card_header_style }}">
+<body class="page-bg ts-{{ request.state.title_style }} ch-{{ request.state.card_header_style }}{% if wide %} layout-wide{% endif %}">
     <!-- Navigation -->
     <nav class="nav">
         <div class="px-6">

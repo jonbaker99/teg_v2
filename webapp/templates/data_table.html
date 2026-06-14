@@ -1,5 +1,29 @@
 {% extends "base.html" %}
 
+{% block extra_head %}
+<script>
+(function () {
+    function checkHistoryNameBreaks() {
+        var table = document.querySelector('.history-table');
+        if (!table) return;
+        table.classList.remove('names-break');
+        var names = table.querySelectorAll('.player-name');
+        if (!names.length) return;
+        var lineH = parseFloat(getComputedStyle(names[0]).lineHeight);
+        if (!lineH || isNaN(lineH)) lineH = 21;
+        for (var i = 0; i < names.length; i++) {
+            if (names[i].offsetHeight > lineH * 1.2) {
+                table.classList.add('names-break');
+                break;
+            }
+        }
+    }
+    document.addEventListener('DOMContentLoaded', checkHistoryNameBreaks);
+    window.addEventListener('resize', checkHistoryNameBreaks);
+})();
+</script>
+{% endblock %}
+
 {% block page_title %}
 <div class="page-title-area">
     <span class="page-label">{{ section|default('Data') }}</span>
