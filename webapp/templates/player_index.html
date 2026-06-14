@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title_suffix %} — Player Profiles{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+    <span class="page-label">TEG History</span>
+    <h1 class="page-title">Player Profiles</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<p class="page-subtitle">Select a player to view their career statistics and charts.</p>
+<div class="data-card">
+    <ul class="player-index-list">
+        {% for code, name in players %}
+        <li><a href="/player/{{ code }}" class="text-link">{{ name }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

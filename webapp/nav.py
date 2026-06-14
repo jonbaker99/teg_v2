@@ -22,13 +22,14 @@ NAV_SECTIONS = [
     {
         "label": "TEG History",
         "tab": {"label": "History", "icon": "lists", "url": "/history"},
-        "active": {"history", "honours", "results", "player-rankings", "teg-reports"},
+        "active": {"history", "honours", "results", "player-rankings", "teg-reports", "player"},
         "pages": [
             ("TEG History", "/history", "history", "lists"),
             ("TEG Honours Board", "/honours", "honours", "trophy"),
             ("Full Results", "/results", "results", "sports_score"),
             ("Player Rankings", "/player-rankings", "player-rankings", "123"),
             ("TEG Reports", "/teg-reports", "teg-reports", "description"),
+            ("Player Profiles", "/player", "player", "person"),
         ],
     },
     {

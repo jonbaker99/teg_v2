@@ -38,6 +38,7 @@ from webapp.deps import (
     get_net_competition_measure,
     get_rounds_for_teg,
 )
+from webapp.chart_utils import create_cumulative_graph, adjusted_stableford, adjusted_grossvp
 
 _NAME_TO_CODE = {v: k for k, v in PLAYER_DICT.items()}
 
@@ -409,6 +410,42 @@ def _results_chart_meta(tab: str, variant: str, net_measure: str, teg_name: str)
     }
 
 
+def _build_race_figure_json(tab: str, variant: str, net_measure: str, teg_name: str) -> str | None:
+    """Build race chart JSON for the given (tab, variant, net_measure) combination."""
+    try:
+        df = cached_load_all_data()
+        stableford = net_measure == "Stableford"
+
+        if tab == "gross":
+            if variant == "ranking":
+                y_series, y_calc, chart_type, ylabel = "Rank_GrossVP_TEG", None, "ranking", "Tournament Ranking"
+            elif variant == "adjusted":
+                y_series, y_calc, chart_type, ylabel = "GrossVP Cum TEG", adjusted_grossvp, "gross", "Gross vs bogey"
+            else:
+                y_series, y_calc, chart_type, ylabel = "GrossVP Cum TEG", None, "gross", "Cumulative gross vs par"
+        else:
+            if variant == "ranking":
+                y_series, y_calc, chart_type, ylabel = "Rank_Stableford_TEG", None, "ranking", "Tournament Ranking"
+            elif variant == "adjusted":
+                if stableford:
+                    y_series, y_calc, chart_type, ylabel = "Stableford Cum TEG", adjusted_stableford, "stableford", "Stableford (adjusted)"
+                else:
+                    y_series, y_calc, chart_type, ylabel = "NetVP Cum TEG", adjusted_grossvp, "gross", "Net vs par (adjusted)"
+            else:
+                if stableford:
+                    y_series, y_calc, chart_type, ylabel = "Stableford Cum TEG", None, "stableford", "Cumulative Stableford"
+                else:
+                    y_series, y_calc, chart_type, ylabel = "NetVP Cum TEG", None, "gross", "Cumulative net vs par"
+
+        fig = create_cumulative_graph(
+            df, teg_name, y_series, title="",
+            y_calculation=y_calc, y_axis_label=ylabel, chart_type=chart_type,
+        )
+        return fig.to_json()
+    except Exception:
+        return None
+
+
 def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "standard") -> dict:
     """Build context for full results page."""
     try:
@@ -503,6 +540,7 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "stand
         table_html = _leaderboard_table_html(lb)
 
         chart_meta = _results_chart_meta(tab, chart_variant, net_measure, teg_name)
+        figure_json = _build_race_figure_json(tab, chart_variant, net_measure, teg_name)
         return {
             "is_leaderboard": True,
             "section_title": f"{competition} {status_word} Leaderboard",
@@ -511,6 +549,7 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "stand
             "teg_name": teg_name,
             "chart_types": RESULTS_CHART_TYPES,
             "active_chart_variant": chart_variant,
+            "figure_json": figure_json,
             **chart_meta,
         }
     except Exception as e:

@@ -9,14 +9,11 @@
 
 <h3 class="chart-title">{{ chart_title }}</h3>
 <p class="chart-description">{{ chart_subtitle }}</p>
+{% if figure_json %}
 <div class="data-card data-card--padded">
-    <div class="chart-placeholder">
-        <span class="ph-title">Race chart — placeholder</span>
-        <span>The interactive race chart is being rebuilt (see look-and-feel roadmap 1b).</span>
-        <span>Data source: <code>create_cumulative_graph(all_data, '{{ teg_name }}',
-            y_series='{{ chart_series }}')</code> in <code>webapp/chart_utils.py</code></span>
-    </div>
+    <div class="chart-container" data-figure="{{ figure_json }}" style="height:450px;"></div>
 </div>
+{% endif %}
 
 <input type="hidden" id="lb-chart-variant" name="chart_variant" value="{{ active_chart_variant }}">
 <p class="chart-controls-label">Choose chart type:</p>

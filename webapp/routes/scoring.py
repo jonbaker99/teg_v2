@@ -308,7 +308,6 @@ async def scoring_by_par_content(request: Request, teg: int = Query(0)):
 def _by_teg_chart(agg: pd.DataFrame) -> str:
     """Build a Plotly line chart of GrossVP by TEG per player, return JSON."""
     import plotly.graph_objects as go
-    import json
 
     fig = go.Figure()
     for player in sorted(agg['Player'].unique()):
@@ -330,7 +329,7 @@ def _by_teg_chart(agg: pd.DataFrame) -> str:
     fig.layout.yaxis.fixedrange = True
     fig.update_layout(**get_chart_style('streamlit'))
 
-    return json.dumps(fig, cls=go.utils.PlotlyJSONEncoder)
+    return fig.to_json()
 
 
 @router.get("/scoring/by-teg")
@@ -718,8 +717,6 @@ def _distributions_chart(display: pd.DataFrame) -> str | None:
     """Build a grouped bar chart of score distributions by player, return JSON."""
     try:
         import plotly.graph_objects as go
-        import plotly.utils
-        import json
 
         if display is None or display.empty:
             return None
@@ -749,7 +746,7 @@ def _distributions_chart(display: pd.DataFrame) -> str | None:
         fig.layout.yaxis.fixedrange = True
         fig.update_layout(**get_chart_style('streamlit'))
 
-        return json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+        return fig.to_json()
     except Exception:
         return None
 

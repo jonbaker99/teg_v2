@@ -12,9 +12,9 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## Charts — known issues, parked
 
-- [ ] **HTMX chart bug** — after a tab-swap, Plotly's top SVG layer (legend, annotations, shapes) mis-positions and stays broken until full page reload. Affects `/results` and any chart in an HTMX fragment. Root cause: top-layer CSS offset, not a sizing/resize issue (confirmed — don't retry resize/rAF approaches).
-- [ ] **Restore `/results` race chart** — replaced with `.chart-placeholder` pending chart rebuild. Re-wire to `create_cumulative_graph` in `chart_utils.py`; per-variant meta in `_results_chart_meta()` in `routes/history.py`.
-- [ ] **Chart appearance** — webapp charts look poor vs Streamlit. Goal: match Streamlit's clean rendered style via `chart_utils.py` / `get_plotly_theme`.
+- [x] **HTMX chart bug** — fixed via `data-figure` attribute + global `htmx:afterSettle` renderer with `Plotly.purge()` in `base.html`.
+- [x] **Restore `/results` race chart** — done; `_build_race_figure_json()` in `routes/history.py` drives all (tab, variant) combinations.
+- [x] **Chart appearance** — matched Streamlit style via `get_chart_style('streamlit')` in `chart_utils.py`; applied across all chart-producing routes.
 
 ## Mobile & dark mode
 
@@ -34,6 +34,7 @@ Currently out of scope — Streamlit handles this via three pages (`1000Data upd
 
 ## Planned enhancements
 
+- [ ] **Review and refine player profile page** — `/player/{code}` has charts and tables but needs a design pass: layout, section ordering, chart sizing, mobile view. Player index page (`/player`) is also very minimal.
 - [ ] **Score-count matrix % pill** — absolute / % toggle on `/scoring/matrix` and Scoring tab on `/latest-teg`. Use `.pill-group` component.
 - [ ] **Bestball/worstball on `/latest-round`** — show best/worst bestball and worstball positions in the round-in-context page.
 - [ ] **Related links section** — cross-page related-links block (low priority).

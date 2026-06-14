@@ -37,15 +37,10 @@
     {% if section.title %}<div class="card-header">{{ section.title }}</div>{% endif %}
     <div class="data-card"><div class="table-wrapper">{{ section.table_html | safe }}</div></div>
   {% endfor %}
-  {% if chart_placeholder %}
+  {% if figure_json %}
   <h3 class="chart-title">{{ chart_title }}</h3>
   <div class="data-card data-card--padded">
-    <div class="chart-placeholder">
-      <span class="ph-title">Round chart — placeholder</span>
-      <span>The cumulative round chart is being rebuilt (see look-and-feel roadmap 1b).</span>
-      <span>Data source: <code>create_round_graph(all_data, '{{ chart_teg }}',
-        {{ chart_round }}, y_series='{{ chart_series }}')</code> in <code>webapp/chart_utils.py</code></span>
-    </div>
+    <div class="chart-container" data-figure="{{ figure_json }}" style="height:380px;"></div>
   </div>
   {% endif %}
   {% if caption %}<p class="text-muted text-sm mt-3">{{ caption }}</p>{% endif %}

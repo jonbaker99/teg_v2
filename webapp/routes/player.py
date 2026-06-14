@@ -686,6 +686,16 @@ def _build_h2h_context(player_code: str) -> dict:
 # Routes
 # ---------------------------------------------------------------------------
 
+@router.get("/player")
+async def player_index(request: Request):
+    players = _get_player_list()
+    return templates.TemplateResponse("player_index.html", {
+        "request": request,
+        "active_page": "player",
+        "players": players,
+    })
+
+
 @router.get("/player/{player_code}")
 async def player_page(request: Request, player_code: str):
     pc = _validate_player(player_code)
