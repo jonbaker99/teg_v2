@@ -475,24 +475,74 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--stat-card-label-color, var(--text-muted));
     margin-top: 0.125rem;
 }
-.stat-rank {
-    margin-top: 0.35rem;
+/* ── Headline metric cards ──
+   Arranged in themed rows (.metric-stack > .metric-grid). A fixed 5-column
+   grid keeps every card the same width across rows; short rows simply leave
+   trailing columns empty. Each card is an internal 3-row grid (label / value /
+   rank) with a fixed label band and a min-height, so the value and rank line up
+   across every card regardless of how many lines the label wraps to. */
+.metric-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.6rem;
+}
+.metric-card {
+    display: grid;
+    grid-template-rows: 2.3em 1fr auto;
+    min-height: 6.25rem;
+    gap: 0.1rem;
+    background-color: var(--stat-card-bg, var(--bg-card));
+    border: 1px solid var(--stat-card-border, var(--table-cell-border));
+    border-radius: var(--card-radius);
+    padding: 0.6rem 0.6rem 0.55rem;
+    text-align: center;
+}
+.metric-label {
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.15;
+    color: var(--stat-card-label-color, var(--text-muted));
+}
+.metric-value {
+    align-self: center;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--stat-card-value-color, var(--text-primary));
+}
+.metric-rank {
+    min-height: 0.95em;
     font-size: 0.625rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     color: var(--text-muted);
 }
-.stat-rank strong {
+.metric-rank strong {
     color: var(--accent);
     font-weight: 700;
 }
-/* Headline metric grid — denser than the generic 4-col grid so 11 cards tile
-   neatly (auto-fit keeps them readable on every width incl. mobile). */
-.metric-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-    gap: 0.6rem;
+/* Cards with hover detail (Eagles / Holes in One locations). */
+.metric-card--info {
+    cursor: help;
+}
+.metric-card--info .metric-label {
+    text-decoration: underline dotted;
+    text-underline-offset: 2px;
+    text-decoration-color: var(--text-muted);
+}
+@media (max-width: 880px) {
+    .metric-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 540px) {
+    .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 /* ── Badges ── */
@@ -556,6 +606,23 @@ h1, h2, h3, h4, h5, h6 {
 .highlight-detail {
     font-size: 0.75rem;
     color: var(--text-secondary);
+}
+
+/* TEG records held — wider boxes than the highlight cards, one per record. */
+.records-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.6rem;
+}
+.record-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--table-cell-border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--card-radius);
+    padding: 0.65rem 0.85rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
 }
 
 /* ── Player TEG-results table — win/loss colour pills ──

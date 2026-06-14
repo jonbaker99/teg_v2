@@ -17,13 +17,18 @@
 <!-- Subtitle -->
 <p class="text-sm text-secondary mb-6">{{ subtitle }}</p>
 
-<!-- Headline metrics (with cross-player rank) -->
-<div class="metric-grid mb-6">
-    {% for card in metrics %}
-    <div class="stat-card">
-        <div class="stat-value">{{ card.value }}</div>
-        <div class="stat-label">{{ card.label }}</div>
-        <div class="stat-rank">Rank <strong>{{ card.rank }}</strong></div>
+<!-- Headline metrics — themed rows, each card shows value + cross-player rank -->
+<div class="metric-stack mb-6">
+    {% for row in metrics %}
+    <div class="metric-grid">
+        {% for card in row %}
+        <div class="metric-card{% if card.tooltip %} metric-card--info{% endif %}"
+             {% if card.tooltip %}title="{{ card.tooltip }}"{% endif %}>
+            <span class="metric-label">{{ card.label }}</span>
+            <span class="metric-value">{{ card.value }}</span>
+            <span class="metric-rank">{% if card.rank != '–' %}Rank <strong>{{ card.rank }}</strong>{% endif %}</span>
+        </div>
+        {% endfor %}
     </div>
     {% endfor %}
 </div>

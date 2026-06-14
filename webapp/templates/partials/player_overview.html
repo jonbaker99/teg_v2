@@ -12,6 +12,17 @@
     </div>
     {% endif %}
 
+    <h2 class="section-title">TEG Records Held</h2>
+    {% if records_held %}
+    <div class="records-grid mb-6">
+        {% for r in records_held %}
+        <div class="record-card">{{ r }}</div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-muted text-sm mb-6">No outright TEG records held.</p>
+    {% endif %}
+
     <h2 class="section-title">TEG Results</h2>
     <div class="data-card"><div class="overflow-x-auto">
         {{ teg_table_html | safe }}

@@ -146,26 +146,49 @@ def _metric_specs(all_data, rd_data, winners):
     ]
 
 
-def _build_overview_metrics(player_code: str) -> list[dict]:
-    """Build the 11 headline metric cards (value + cross-player rank) for a player."""
+# Metric cards arranged into themed rows: scoring, honours, scoring feats.
+_METRIC_ROWS = [
+    ["TEGs Played", "Avg Gross vs Par", "Avg Stableford"],
+    ["Total Trophies", "TEG Trophies", "Green Jackets", "Wooden Spoons", "Doubles"],
+    ["Holes in One", "Eagles", "Birdies"],
+]
+
+
+def _build_overview_metrics(player_code: str) -> list[list[dict]]:
+    """Build the headline metric cards, grouped into themed rows.
+
+    Each card has value, label and cross-player rank. The Eagles and Holes in One
+    cards also carry a ``tooltip`` listing where they were scored.
+    """
     name = PLAYER_DICT[player_code]
     all_data = cached_load_all_data()
     rd_data = cached_round_data()
     winners = _get_winners_data()
 
-    cards = []
+    by_label = {}
     for label, series, ascending, fmt, unranked_if_zero in _metric_specs(all_data, rd_data, winners):
         if name in series.index and pd.notna(series[name]):
             raw = series[name]
             value = fmt(raw)
-            if unranked_if_zero and raw == 0:
-                rank = "–"
-            else:
-                rank = _rank_str(series, name, ascending)
+            rank = "–" if (unranked_if_zero and raw == 0) else _rank_str(series, name, ascending)
         else:
             value, rank = "–", "–"
-        cards.append({"value": value, "label": label, "rank": rank})
-    return cards
+        by_label[label] = {"value": value, "label": label, "rank": rank}
+
+    # Eagle / hole-in-one locations as hover detail on their metric cards.
+    eagles = get_eagles_data(all_data)
+    pe = eagles[eagles["Player"] == name] if not eagles.empty else eagles
+    by_label["Eagles"]["tooltip"] = (
+        "; ".join(f"{r['Course']} ({r['Hole']})" for _, r in pe.iterrows())
+        if len(pe) else "No eagles yet")
+
+    hio = get_holes_in_one_data(all_data)
+    ph = hio[hio["Player"] == name] if not hio.empty else hio
+    by_label["Holes in One"]["tooltip"] = (
+        "; ".join(f"{r['Course']} ({r['Hole']})" for _, r in ph.iterrows())
+        if len(ph) else "No holes in one yet")
+
+    return [[by_label[lbl] for lbl in row] for row in _METRIC_ROWS]
 
 
 # ---------------------------------------------------------------------------
@@ -247,25 +270,6 @@ def _build_highlights(player_code: str) -> list[dict]:
         items.append({"label": "Best TEG", "value": format_value(bt["GrossVP"], "GrossVP"),
                       "detail": f"TEG {int(bt['TEGNum'])}"})
 
-    # All-time TEG records held
-    held = _records_held(name)
-    items.append({"label": "TEG Records Held", "value": str(len(held)),
-                  "detail": "; ".join(held) if held else "—"})
-
-    # Eagle locations (colour)
-    eagles = get_eagles_data(all_data)
-    pe = eagles[eagles["Player"] == name] if not eagles.empty else eagles
-    if len(pe):
-        items.append({"label": "Eagles", "value": str(len(pe)),
-                      "detail": "; ".join(f"{r['Course']} ({r['Hole']})" for _, r in pe.iterrows())})
-
-    # Hole-in-one locations (colour)
-    hio = get_holes_in_one_data(all_data)
-    ph = hio[hio["Player"] == name] if not hio.empty else hio
-    if len(ph):
-        items.append({"label": "Holes in One", "value": str(len(ph)),
-                      "detail": "; ".join(f"{r['Course']} ({r['Hole']})" for _, r in ph.iterrows())})
-
     return items
 
 
@@ -274,7 +278,7 @@ def _build_highlights(player_code: str) -> list[dict]:
 # ---------------------------------------------------------------------------
 
 def _build_subtitle(player_code: str) -> str:
-    """Build subtitle like 'X TEGs played · First: TEG N (YYYY) · Latest: TEG N (YYYY)'."""
+    """Build subtitle like 'First: TEG N (YYYY) · Latest: TEG N (YYYY)'."""
     name = PLAYER_DICT[player_code]
     all_data = cached_load_all_data()
     player_data = all_data[all_data['Player'] == name]
@@ -283,12 +287,10 @@ def _build_subtitle(player_code: str) -> str:
         return "No TEG data"
 
     teg_info = player_data[['TEGNum', 'Year']].drop_duplicates().sort_values('TEGNum')
-    n_tegs = len(teg_info)
     first = teg_info.iloc[0]
     latest = teg_info.iloc[-1]
 
     return (
-        f"{n_tegs} TEGs played · "
         f"First: TEG {int(first['TEGNum'])} ({int(first['Year'])}) · "
         f"Latest: TEG {int(latest['TEGNum'])} ({int(latest['Year'])})"
     )
@@ -509,6 +511,7 @@ def _build_overview_context(player_code: str, theme: str) -> dict:
         "teg_table_html": teg_table_html,
         "chart_json": chart_json,
         "highlights": _build_highlights(player_code),
+        "records_held": _records_held(PLAYER_DICT[player_code]),
     }
 
 
