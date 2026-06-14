@@ -416,11 +416,7 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
                 all_data = cached_load_all_data()
                 streaks_df = read_file(STREAKS_PARQUET)
                 teg_str = f"TEG {teg_num}"
-                teg_rounds = all_data[all_data['TEGNum'] == teg_num]['Round'].unique()
-                window = pd.DataFrame()
-                if len(teg_rounds) > 0:
-                    last_round = int(max(teg_rounds))
-                    window = get_player_window_streaks(all_data, streaks_df, teg=teg_str, round_num=last_round)
+                window = get_player_window_streaks(all_data, streaks_df, teg=teg_str)
                 pivot = pivot_window_streaks(window)
                 if not pivot.empty:
                     sections.append({"title": "Streaks", "table_html": _df_to_html(pivot)})

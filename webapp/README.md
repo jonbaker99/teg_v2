@@ -435,13 +435,7 @@ HTML builders).
   they error with `"['Round_Label'] not in index"` (from `routes/performance.py`).
   The summary and TEG tabs are fine. A column the round-detail view expects
   (`Round_Label`) isn't present in the data it's given.
-- **Fix the `/latest-teg` Streaks tab — it only reflects the final round, not
-  the whole TEG.** e.g. it reports Jon BAKER's best par-or-better streak in
-  TEG 18 as 1, missing the run of 4–5 in round 2. Likely cause: the streaks
-  branch in `_latest_teg_tab_context` (`webapp/routes/latest.py`) calls
-  `get_player_window_streaks(..., round_num=last_round)`, so it only windows
-  the last round. A TEG-level view should aggregate streaks across all rounds
-  of the TEG (and handle streaks that span a round boundary, if intended).
+- ~~**Fix the `/latest-teg` Streaks tab — it only reflects the final round.**~~ Fixed: removed `round_num` filter so the whole TEG is windowed.
 
 **Planned enhancements (TODO):**
 - **Add an absolute / % pill** (percentage = share of each column) to the
