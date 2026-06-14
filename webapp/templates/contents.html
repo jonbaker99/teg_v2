@@ -15,20 +15,34 @@
         max-width: min(95vw, 1600px);
     }
 
+    /* Each column is its own "page" card, so dissolve the single outer card the
+       theme draws on .main-content — the cards float on the grey background. */
+    .main-content {
+        background: transparent !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+
     /* Three fixed columns; each fills top-to-bottom. */
     .contents-grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 3rem;
-        align-items: start;
+        gap: 1.5rem;
+        align-items: stretch;
     }
+    /* Each column rendered as its own white card (mirrors clean-page's
+       .main-content card: white bg, rounded corners, soft shadow). */
     .contents-col {
         display: flex;
         flex-direction: column;
         gap: 2.5rem; /* vertical gap between stacked groups in a column */
+        background: #ffffff;
+        border-radius: 0.25rem;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        padding: 2rem 2rem 2.25rem;
     }
     @media (max-width: 820px) {
-        .contents-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+        .contents-grid { grid-template-columns: 1fr; gap: 1.5rem; }
     }
 
     /* Group heading — matches Streamlit .nav-section-title (20px / 600, no rule). */
