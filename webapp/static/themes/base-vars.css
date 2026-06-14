@@ -189,10 +189,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ── History table (TEG History page) ──
-   Mirrors the Streamlit hist2 layout: a compound first cell with the TEG label
-   on top and the area as smaller secondary text beneath, an emphasised TEG
-   Trophy winner (2nd column), and player names that can break first/last on
-   narrow screens. */
+   Full-width, fixed layout: compact TEG column + three equal winner columns.
+   Names always stack first/last so the layout is consistent regardless of
+   viewport width — if any name needs two lines, they all get two lines. */
+.history-table {
+    width: 100%;
+    table-layout: fixed;
+}
+/* TEG column: compact fixed width; winner columns share the remainder equally */
+.history-table thead th:first-child {
+    width: 16%;
+}
 .history-table .teg-label {
     display: block;
     font-weight: 400;
@@ -207,14 +214,17 @@ h1, h2, h3, h4, h5, h6 {
 .history-table tbody td:nth-child(2) {
     font-weight: 700;
 }
-/* First+last inline on wide screens; stacked on narrow ones */
-.history-table .player-name .first {
-    display: inline;
+/* Winner columns: allow wrapping so stacked names display correctly */
+.history-table tbody td:nth-child(n+2) {
+    white-space: normal;
 }
-@media (max-width: 650px) {
-    .history-table .player-name { display: inline-block; }
-    .history-table .player-name .first,
-    .history-table .player-name .last { display: block; }
+/* Names always stacked first-line / last-line */
+.history-table .player-name {
+    display: inline-block;
+}
+.history-table .player-name .first,
+.history-table .player-name .last {
+    display: block;
 }
 
 /* ── Multi-round scorecards (Full Results → Scorecards tab) ──
