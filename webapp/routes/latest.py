@@ -44,6 +44,7 @@ from teg_analysis.display.scorecards import (
     build_round_comparison_responsive,
     build_eclectic_scorecard_table,
     build_bestball_worstball_scorecard,
+    build_teg_eclectic_scorecard,
 )
 from webapp.deps import (
     cached_load_all_data,
@@ -125,13 +126,13 @@ def _bestball_rank_summary(bb_all: pd.DataFrame, wb_all: pd.DataFrame,
             return ''
         vp = int(row['GrossVP'].iloc[0])
         rank = int(row['__r'].iloc[0])
-        return (f'<strong>{label}</strong>: {format_vs_par(vp)} · '
-                f'ranks <strong>{rank} / {len(d)}</strong> all-time')
+        return (f'<strong>{label}</strong>: <span class="bw-rank-num">{format_vs_par(vp)}</span> · '
+                f'ranks <span class="bw-rank-num">{rank} / {len(d)}</span> all-time')
 
     parts = [p for p in (_one(bb_all, 'Bestball'), _one(wb_all, 'Worstball')) if p]
     if not parts:
         return ''
-    return '<p class="text-muted text-sm mt-3">' + '<br>'.join(parts) + '</p>'
+    return '<p class="bw-rank-summary">' + '<br>'.join(parts) + '</p>'
 
 
 _RECORDS_DRAFT_NOTE = (
@@ -285,16 +286,17 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                 if round_data.empty:
                     sections.append({"title": "Bestball / Worstball", "table_html": "<p class='text-muted text-sm'>No data.</p>"})
                     return {"sections": sections}
-                card_html = build_bestball_worstball_scorecard(round_data)
-                sections.append({"title": "Bestball / Worstball by hole (vs par)", "table_html": card_html})
 
-                # All-time ranks of this round's bestball / worstball totals.
+                # All-time ranks first — shown at the top.
                 bb_prepared = prepare_bestball_data(all_data)
                 bb_all = calculate_bestball_scores(bb_prepared)
                 wb_all = calculate_worstball_scores(bb_prepared)
                 rank_html = _bestball_rank_summary(bb_all, wb_all, teg_num, round_num)
                 if rank_html:
                     sections.append({"title": None, "table_html": rank_html, "raw": True})
+
+                card_html = build_bestball_worstball_scorecard(round_data)
+                sections.append({"title": None, "table_html": card_html})
                 return {"sections": sections, "scorecard_css": True}
             except Exception as e:
                 sections.append({"title": "Bestball / Worstball", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
@@ -493,14 +495,18 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
                 rank = int(this_row['__r'].iloc[0])
                 total_val = int(this_row['Total'].iloc[0])
                 total_tegs = len(ranked)
-                single = this_row.drop(columns='__r')
-                table_html = build_eclectic_scorecard_table(single, display_dim)
-                sections.append({"title": f"Best Eclectic — {teg_label}", "table_html": table_html})
-                rank_html = (f'<p class="text-muted text-sm mt-3">Eclectic total '
-                             f'<strong>{format_vs_par(total_val)}</strong> · ranks '
-                             f'<strong>{rank} / {total_tegs}</strong> of all TEGs</p>')
+
+                # Rank summary at the top.
+                rank_html = (f'<p class="bw-rank-summary">Best eclectic total '
+                             f'<span class="bw-rank-num">{format_vs_par(total_val)}</span> · ranks '
+                             f'<span class="bw-rank-num">{rank} / {total_tegs}</span> of all TEGs</p>')
                 sections.append({"title": None, "table_html": rank_html, "raw": True})
-                return {"sections": sections}
+
+                # Per-player eclectic scorecard with best eclectic row at the top.
+                teg_data = all_data[all_data['TEGNum'] == teg_num]
+                card_html = build_teg_eclectic_scorecard(teg_data)
+                sections.append({"title": None, "table_html": card_html})
+                return {"sections": sections, "scorecard_css": True}
             except Exception as e:
                 sections.append({"title": "Eclectic", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 

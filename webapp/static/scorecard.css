@@ -454,10 +454,11 @@ html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="-1"] span { 
 html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] { background-color: var(--color-bogey); }
 html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] span { color: var(--color-text-bogey); }
 
-/* ===== BESTBALL / WORSTBALL FIELD CARD =====
-   Player rows show gross-vs-par with the field best highlighted green and the
-   worst black; the Bestball/Worstball rows reuse the eclectic to-par shading
-   (.eclectic-cell / data-evp). */
+/* ===== BESTBALL / WORSTBALL FIELD CARD + TEG ECLECTIC CARD =====
+   Team rows (Bestball/Worstball/Best Eclectic) sit at the top and use the
+   standard score-cell shapes (data-vs-par). A thin gap row separates them from
+   the player rows below. Player rows use font-only colour to show who had the
+   field best (green) or worst (red) on each hole — no background fills. */
 .bw-scorecard .bw-cell {
   text-align: center;
   min-width: var(--cell-min-width);
@@ -470,18 +471,28 @@ html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] span { c
   font-size: 12px;
   font-family: 'Roboto Mono', monospace;
 }
-.bw-scorecard .bw-cell.bw-best { background-color: #cdebcd; }
-.bw-scorecard .bw-cell.bw-best span { color: #14661a; font-weight: 600; }
-.bw-scorecard .bw-cell.bw-worst { background-color: #111; }
-.bw-scorecard .bw-cell.bw-worst span { color: #fff; font-weight: 600; }
+/* Font-only player highlights — no background */
+.bw-scorecard .bw-cell.bw-player-best span { color: #14661a; font-weight: 700; }
+.bw-scorecard .bw-cell.bw-player-worst span { color: #9b1515; font-weight: 700; }
+/* Team row label bold */
 .bw-scorecard .bw-team-row .player-label { font-weight: 700; }
+/* Gap row between team rows and player rows */
+.bw-scorecard .bw-gap-row td { height: 10px; background-color: transparent; border: none; }
+
+/* Rank summary — prominent, mono numbers */
+.bw-rank-summary {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+.bw-rank-num {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 700;
+}
 
 /* Dark mode */
 html[data-mode="dark"] .bw-scorecard .bw-cell { background-color: #1d1d1a; }
-html[data-mode="dark"] .bw-scorecard .bw-cell.bw-best { background-color: #1e3d22; }
-html[data-mode="dark"] .bw-scorecard .bw-cell.bw-best span { color: #7fd487; }
-html[data-mode="dark"] .bw-scorecard .bw-cell.bw-worst { background-color: #000; }
-html[data-mode="dark"] .bw-scorecard .bw-cell.bw-worst span { color: #fff; }
+html[data-mode="dark"] .bw-scorecard .bw-cell.bw-player-best span { color: #7fd487; }
+html[data-mode="dark"] .bw-scorecard .bw-cell.bw-player-worst span { color: #f87171; }
 
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
