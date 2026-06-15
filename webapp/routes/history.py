@@ -41,6 +41,25 @@ from webapp.chart_utils import create_cumulative_graph, adjusted_stableford, adj
 
 _NAME_TO_CODE = {v: k for k, v in PLAYER_DICT.items()}
 
+_COUNTRY_FLAG_CODES = {
+    "england": "gb-eng",
+    "portugal": "pt",
+    "spain": "es",
+}
+
+
+def _area_flag_html(area_str: str) -> str:
+    """Return a flag-icons <span> for the country in an 'Region, Country' area string."""
+    parts = str(area_str).split(",")
+    if len(parts) < 2:
+        return ""
+    country = parts[-1].strip().lower()
+    code = _COUNTRY_FLAG_CODES.get(country, "")
+    if not code:
+        return ""
+    return f"<span class='fi fi-{code} teg-flag'></span>"
+
+
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
@@ -102,9 +121,18 @@ def _history_table_html(df: pd.DataFrame) -> str:
 
     for _, row in df.iterrows():
         teg = escape(str(row.get("TEG", "")))
-        area = str(row.get("Area", "")).split(",")[0].strip()
-        teg_cell = (f"<span class='teg-label'>{teg}</span>"
-                    f"<span class='area-label'>{escape(area)}</span>")
+        area_raw = str(row.get("Area", ""))
+        area = area_raw.split(",")[0].strip()
+        flag_html = _area_flag_html(area_raw)
+        teg_cell = (
+            f"<div class='teg-cell'>"
+            f"{flag_html}"
+            f"<span class='teg-text'>"
+            f"<span class='teg-label'>{teg}</span>"
+            f"<span class='area-label'>{escape(area)}</span>"
+            f"</span>"
+            f"</div>"
+        )
         rows.append("<tr>")
         rows.append(f"<td>{teg_cell}</td>")
         for col in name_cols:

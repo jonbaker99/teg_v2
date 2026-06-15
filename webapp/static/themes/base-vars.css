@@ -206,6 +206,20 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 0.8125rem;
     color: var(--text-muted);
 }
+.history-table .teg-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.55em;
+}
+.history-table .teg-cell .teg-flag.fi {
+    flex-shrink: 0;
+    align-self: stretch;
+    width: 1.3em;
+    border-radius: 2px;
+}
+.history-table .teg-text {
+    min-width: 0;
+}
 /* Emphasise the main trophy winner (first name column) */
 .history-table tbody td:nth-child(2) {
     font-weight: 700;
@@ -475,6 +489,153 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--stat-card-label-color, var(--text-muted));
     margin-top: 0.125rem;
 }
+/* ── Headline metric cards ──
+   Two lines per card: the metric title on top, then the value with a small,
+   de-emphasised rank sitting on the same baseline beside it. A 3-column grid
+   keeps every card the same width; both metric rows hold exactly three cards. */
+.metric-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.6rem;
+}
+@media (max-width: 720px) {
+    .metric-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.metric-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    min-height: 5rem;
+    background-color: var(--stat-card-bg, var(--bg-card));
+    border: 1px solid var(--stat-card-border, var(--table-cell-border));
+    border-radius: var(--card-radius);
+    padding: 0.7rem 0.6rem;
+    text-align: center;
+}
+.metric-label {
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.15;
+    color: var(--stat-card-label-color, var(--text-muted));
+}
+.metric-figure {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+}
+.metric-value {
+    font-size: 1.7rem;
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--stat-card-value-color, var(--text-primary));
+}
+.metric-rank {
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: var(--text-muted);
+}
+/* Cards with hover detail (Eagles / Holes in One locations). */
+.metric-card--info {
+    cursor: help;
+}
+.metric-card--info .metric-label {
+    text-decoration: underline dotted;
+    text-underline-offset: 2px;
+    text-decoration-color: var(--text-muted);
+}
+@media (max-width: 540px) {
+    .metric-grid  { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .metric-value { font-size: 1.35rem; }
+    .metric-rank  { font-size: 1rem; }
+}
+
+/* ── Trophy stars (font characters, not emoji) ──
+   Gold ★ per TEG Trophy, green ★ per Green Jacket. Used both after the player
+   name in the page heading (large) and inside each honour box (small). */
+.trophy-star {
+    display: inline-block;
+    line-height: 1;
+}
+.trophy-star--gold  { color: #f5b301; }
+.trophy-star--green { color: var(--accent); }
+.title-stars {
+    margin-left: 0.55rem;
+    white-space: nowrap;
+}
+.title-stars .trophy-star {
+    /* font-size: 1.35rem; */
+    vertical-align: 0.05em;
+}
+.title-stars-gap {
+    display: inline-block;
+    width: 0.5rem;
+}
+
+/* ── Trophy Cabinet ──
+   A single panel, not separate cards. A three-column honour row, each box
+   ordered name → wins → stars. The wooden-spoon rank uses muted colour so it
+   reads as a dubious distinction rather than a win. */
+.trophy-cabinet {
+    background-color: var(--bg-card);
+    border: 1px solid var(--table-cell-border);
+    border-radius: var(--card-radius);
+    padding: 1rem 1.25rem 0.85rem;
+}
+.trophy-honours {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem 1.5rem;
+}
+.trophy-honour {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+.trophy-honour-label {
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}
+.trophy-honour-count {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--text-primary);
+}
+.trophy-honour-rank {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--text-muted);
+}
+.trophy-honour-stars {
+    min-height: 0.95rem;
+    line-height: 1;
+}
+.trophy-honour-stars .trophy-star {
+    /* font-size: 0.8rem; */
+    margin-right: 0.02rem;
+}
+.trophy-doubles {
+    margin-top: 0.75rem;
+    padding-top: 0.65rem;
+    border-top: 1px dotted var(--table-cell-border);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
 
 /* ── Badges ── */
 .badge {
@@ -502,6 +663,214 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--badge-muted-text, var(--text-muted));
     vertical-align: middle;
     margin-left: 0.375rem;
+}
+
+/* ── Detail cards — Career Highlights and TEG Records (unified style) ──
+   Both sections show: an eyebrow label, a main heading value, and an optional
+   sub-line. They are semantically identical so they share one class family.
+   The 'shared' tag is a small pill appended to the eyebrow for jointly-held
+   records. */
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.65rem;
+}
+/* Fixed two-up grid (Career Highlights) — gives long course names room to sit
+   on one line rather than wrapping in a narrow four-across cell. */
+.detail-grid--halves {
+    grid-template-columns: repeat(2, 1fr);
+}
+@media (max-width: 540px) {
+    .detail-grid--halves { grid-template-columns: 1fr; }
+}
+.detail-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    background-color: var(--bg-card);
+    border: 1px solid var(--table-cell-border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--card-radius);
+    padding: 0.65rem 0.85rem;
+}
+.detail-card--bad {
+    border-left-color: #cc2b2b;
+}
+.detail-eyebrow {
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}
+.detail-heading {
+    font-family: var(--font-heading), serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+.detail-sub {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+.detail-shared {
+    display: inline-block;
+    margin-left: 0.3rem;
+    padding: 0.02rem 0.35rem;
+    border-radius: 9999px;
+    background-color: var(--table-header-bg);
+    color: var(--text-muted);
+    font-size: 0.5rem;
+    letter-spacing: 0.04em;
+    vertical-align: middle;
+}
+
+/* ── Player profile in-page heading ──
+   The player name sits on the page itself (after the pills) rather than in the
+   shared page-title-outer banner, giving profile pages a distinct identity feel. */
+.player-profile-heading {
+    margin: 1rem 0 1.25rem;
+}
+.player-profile-name {
+    font-family: var(--font-heading), serif;
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.15;
+}
+
+/* ── Player TEG-results table — win/loss colour pills ──
+   Mirrors the .player-ranking-table first/last-place pills, but the result
+   labels (Trophy/Jacket/Double) are wider than a rank number, so the pill is
+   padded auto-width rather than a fixed square. */
+.player-results-table td.result-win span,
+.player-results-table td.result-loss span {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+.player-results-table td.result-win span { background: green; color: #ffffff; }
+.player-results-table td.result-loss span { background: #FAE9E8; color: #8b0000; }
+
+/* ── Player roster (Player Profiles landing) ── */
+.player-roster {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+}
+.player-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    background-color: var(--bg-card);
+    border: 1px solid var(--table-cell-border);
+    border-radius: var(--card-radius);
+    padding: 1rem 1.1rem 1.1rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+.player-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+}
+.player-card-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.player-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 9999px;
+    background-color: var(--table-toprank-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+.player-card-id {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+}
+.player-card-name {
+    font-family: var(--font-heading), serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.player-card-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+.player-card-stars {
+    display: block;
+    line-height: 1;
+    margin: 0.1rem 0 0;
+}
+.player-card-stars .trophy-star {
+    font-size: 0.9rem;
+    margin-right: 0.01rem;
+}
+.player-card-stars-gap {
+    display: inline-block;
+    width: 0.25rem;
+}
+.player-card-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    padding: 0.65rem 0;
+    border-top: 1px dotted var(--table-cell-border);
+    border-bottom: 1px dotted var(--table-cell-border);
+}
+.pc-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+.pc-stat-val {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.pc-stat-lbl {
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-top: 0.1rem;
+}
+.player-card-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+/* Badges sit inline in flowing text elsewhere (hence their left margin); inside
+   a card's own badge row that margin is unwanted. */
+.player-card-badges .badge,
+.player-card-badges .badge-muted {
+    margin-left: 0;
+}
+.player-card-cta {
+    margin-top: auto;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent);
 }
 
 /* ── Divider ── */
@@ -1061,6 +1430,12 @@ body.ch-ch3 .card-header:first-child { margin-top: 0; }
     font-family: 'Roboto Mono', monospace;
     font-size: 0.75rem;
     color: var(--text-secondary);
+}
+
+/* Chart pill switcher (e.g. player Career Trend: Gross vs Par / Stableford).
+   Only one .chart-panel is visible at a time; the rest carry .hidden. */
+.chart-panel.hidden {
+    display: none;
 }
 
 /* Pill / segmented control — for the chart-type selector (Standard / Adjusted /

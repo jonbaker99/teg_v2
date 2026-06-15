@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="/static/themes/debug-structure.css?v=3">
     <!-- Material Symbols — nav/contents icons (names defined once in webapp/nav.py) -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0">
+    <!-- Flag icons — CSS SVG flags via .fi.fi-{code} -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css">
     {% block extra_head %}{% endblock %}
     <style>
         /* Material Symbols base (Google's css2 endpoint ships only @font-face). */
@@ -325,6 +327,27 @@
         }
         document.addEventListener('DOMContentLoaded', function() { renderCharts(document); });
         document.addEventListener('htmx:afterSettle', function(e) { renderCharts(e.detail.elt); });
+    })();
+    </script>
+    <!-- Chart pill switcher: toggles sibling .chart-panel visibility within a
+         .chart-switch and resizes the now-visible Plotly chart (Plotly renders
+         hidden containers at zero width, so a resize on show is required). -->
+    <script>
+    (function() {
+        document.addEventListener('click', function(e) {
+            var pill = e.target.closest('.chart-pill');
+            if (!pill) return;
+            var wrap = pill.closest('.chart-switch');
+            if (!wrap) return;
+            wrap.querySelectorAll('.chart-pill').forEach(function(p) { p.classList.remove('pill--active'); });
+            pill.classList.add('pill--active');
+            wrap.querySelectorAll('.chart-panel').forEach(function(panel) { panel.classList.add('hidden'); });
+            var target = wrap.querySelector(pill.dataset.chartTarget);
+            if (!target) return;
+            target.classList.remove('hidden');
+            var chart = target.querySelector('.chart-container[data-figure]');
+            if (chart && window.Plotly) Plotly.Plots.resize(chart);
+        });
     })();
     </script>
 </body>

@@ -29,6 +29,13 @@ from teg_analysis.analysis.streaks import (
     get_max_streaks,
     get_current_streaks,
     STREAK_CONFIGS,
+    prepare_record_best_streaks_data,
+    prepare_record_worst_streaks_data,
+)
+from teg_analysis.display.formatters import (
+    prepare_records_table,
+    prepare_worst_records_table,
+    prepare_score_count_records_table,
 )
 from webapp.deps import (
     cached_load_all_data,
@@ -36,6 +43,7 @@ from webapp.deps import (
     cached_complete_teg_data,
     cached_ranked_teg_data,
     cached_ranked_round_data,
+    cached_ranked_frontback_data,
     format_value,
 )
 from webapp.chart_utils import get_chart_style
@@ -50,7 +58,6 @@ PLAYER_TABS = [
     ("rounds", "Rounds"),
     ("scoring", "Scoring"),
     ("records", "Records & Streaks"),
-    ("h2h", "Head to Head"),
 ]
 
 # Reverse lookup: full name → player code
@@ -85,111 +92,382 @@ def _ordinal(n: int) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Stat cards
+# Overview metrics (with cross-player rankings)
 # ---------------------------------------------------------------------------
 
-def _build_stat_cards(player_code: str) -> list[dict]:
-    """Build stat card data for a player."""
-    name = PLAYER_DICT[player_code]
-    cards = []
-
-    # TEGs played
-    teg_data = cached_complete_teg_data()
-    player_tegs = teg_data[teg_data['Player'] == name]
-    cards.append({"value": str(len(player_tegs)), "label": "TEGs Played"})
-
-    # Avg Gross vs Par (per round)
-    rd_data = cached_round_data()
-    player_rds = rd_data[rd_data['Player'] == name]
-    if not player_rds.empty:
-        avg_gvp = player_rds['GrossVP'].mean()
-        cards.append({"value": f"{avg_gvp:+.1f}", "label": "Avg Gross vs Par"})
-    else:
-        cards.append({"value": "–", "label": "Avg Gross vs Par"})
-
-    # Avg Stableford (per round)
-    if not player_rds.empty:
-        avg_stab = player_rds['Stableford'].mean()
-        cards.append({"value": f"{avg_stab:.1f}", "label": "Avg Stableford"})
-    else:
-        cards.append({"value": "–", "label": "Avg Stableford"})
-
-    # Trophies
-    winners = _get_winners_data()
-    trophy_count = (winners['TEG Trophy'] == name).sum()
-    jacket_count = (winners['Green Jacket'] == name).sum()
-    total_wins = trophy_count + jacket_count
-    cards.append({"value": str(total_wins), "label": "Trophies"})
-
-    return cards
+def _rank_str(series: pd.Series, name: str, ascending: bool) -> str:
+    """Rank ``name`` within a per-player Series; joint ranks get an '=' suffix."""
+    s = series.dropna()
+    if name not in s.index:
+        return "–"
+    ranks = s.rank(method="min", ascending=ascending)
+    r = int(ranks[name])
+    tied = int((ranks == r).sum()) > 1
+    return f"{r}=" if tied else str(r)
 
 
-# ---------------------------------------------------------------------------
-# Trophy cabinet
-# ---------------------------------------------------------------------------
+def _ordinal_rank(rank_str: str) -> str:
+    """Convert a raw rank string to ordinal form: '1=' → '1st =', '3' → '3rd'."""
+    if rank_str in ("–", ""):
+        return rank_str
+    tied = rank_str.endswith("=")
+    n = int(rank_str.rstrip("="))
+    return _ordinal(n) + (" =" if tied else "")
 
-def _build_trophy_cabinet(player_code: str) -> list[dict]:
-    """Build trophy cabinet badges with tooltip details for a player."""
-    name = PLAYER_DICT[player_code]
-    badges = []
 
-    winners = _get_winners_data()
+def _metric_specs(all_data, rd_data, winners):
+    """Per-player Series for every overview metric.
 
-    # Trophy wins with TEG details
-    trophy_tegs = winners[winners['TEG Trophy'] == name]['TEG'].tolist()
-    if trophy_tegs:
-        tooltip = ', '.join(trophy_tegs)
-        badges.append({"text": f"TEG Trophy ×{len(trophy_tegs)}", "style": "accent", "tooltip": tooltip})
+    Returns a list of (label, series, ascending, formatter, unranked_if_zero).
+    ``ascending`` controls rank direction; ``unranked_if_zero`` suppresses the
+    rank for honour/count metrics where the player has a zero tally.
+    """
+    players = [n for n in PLAYER_DICT.values() if (all_data["Player"] == n).any()]
+    clean = winners.replace(r"\*", "", regex=True)
 
-    # Green Jacket wins with TEG details
-    jacket_tegs = winners[winners['Green Jacket'] == name]['TEG'].tolist()
-    if jacket_tegs:
-        tooltip = ', '.join(jacket_tegs)
-        badges.append({"text": f"Green Jacket ×{len(jacket_tegs)}", "style": "accent", "tooltip": tooltip})
+    tegs_played = all_data.groupby("Player")["TEGNum"].nunique()
+    avg_gvp = rd_data.groupby("Player")["GrossVP"].mean()
+    avg_stab = rd_data.groupby("Player")["Stableford"].mean()
 
-    # Wooden Spoon with TEG details
-    spoon_tegs = winners[winners['HMM Wooden Spoon'] == name]['TEG'].tolist()
-    if spoon_tegs:
-        tooltip = ', '.join(spoon_tegs)
-        badges.append({"text": f"Wooden Spoon ×{len(spoon_tegs)}", "style": "muted", "tooltip": tooltip})
+    trophy = clean["TEG Trophy"].value_counts()
+    jacket = clean["Green Jacket"].value_counts()
+    spoon = clean["HMM Wooden Spoon"].value_counts()
+    total_trophies = trophy.add(jacket, fill_value=0)
 
-    # Eagles with details
-    all_data = cached_load_all_data()
-    eagles = get_eagles_data(all_data)
-    player_eagles = eagles[eagles['Player'] == name] if not eagles.empty else eagles
-    if len(player_eagles) > 0:
-        eagle_details = '; '.join(
-            f"{r['Course']} {r['Hole']}" for _, r in player_eagles.iterrows()
-        )
-        badges.append({"text": f"Eagles: {len(player_eagles)}", "style": "accent", "tooltip": eagle_details})
-
-    # Holes in one with details
-    hio = get_holes_in_one_data(all_data)
-    player_hio = hio[hio['Player'] == name] if not hio.empty else hio
-    if len(player_hio) > 0:
-        hio_details = '; '.join(
-            f"{r['Course']} {r['Hole']}" for _, r in player_hio.iterrows()
-        )
-        badges.append({"text": f"Holes in One: {len(player_hio)}", "style": "accent", "tooltip": hio_details})
-
-    # Double winner (trophy + jacket in same TEG)
     doubles_df, _ = calculate_trophy_jacket_doubles(winners)
-    if not doubles_df.empty:
-        player_doubles = doubles_df[doubles_df['Player'] == name]
-        if not player_doubles.empty and player_doubles.iloc[0]['Doubles'] > 0:
-            # Find which TEGs were doubles
-            clean = winners.replace(r'\*', '', regex=True)
-            double_tegs = clean[
-                (clean['TEG Trophy'] == name) & (clean['Green Jacket'] == name)
-            ]['TEG'].tolist()
-            tooltip = ', '.join(double_tegs)
-            badges.append({
-                "text": f"Double Winner ×{player_doubles.iloc[0]['Doubles']}",
-                "style": "accent",
-                "tooltip": tooltip,
+    doubles = (doubles_df.set_index("Player")["Doubles"]
+               if not doubles_df.empty else pd.Series(dtype=float))
+
+    eagles = get_eagles_data(all_data)
+    eagles_ct = eagles["Player"].value_counts() if not eagles.empty else pd.Series(dtype=int)
+    hio = get_holes_in_one_data(all_data)
+    hio_ct = hio["Player"].value_counts() if not hio.empty else pd.Series(dtype=int)
+    birdies_ct = all_data[all_data["GrossVP"] == -1]["Player"].value_counts()
+
+    def fill(s):
+        return s.reindex(players).fillna(0)
+
+    int_fmt = lambda v: str(int(round(v)))
+    return [
+        ("TEGs Played",      fill(tegs_played),       False, int_fmt,                 False),
+        ("Avg Gross vs Par", avg_gvp.reindex(players), True,  lambda v: f"{v:+.1f}",  False),
+        ("Avg Stableford",   avg_stab.reindex(players), False, lambda v: f"{v:.1f}",  False),
+        ("Total Trophies",   fill(total_trophies),    False, int_fmt,                 True),
+        ("TEG Trophies",     fill(trophy),            False, int_fmt,                 True),
+        ("Green Jackets",    fill(jacket),            False, int_fmt,                 True),
+        ("Wooden Spoons",    fill(spoon),             False, int_fmt,                 True),
+        ("Doubles",          fill(doubles),           False, int_fmt,                 True),
+        ("Holes in One",     fill(hio_ct),            False, int_fmt,                 True),
+        ("Eagles",           fill(eagles_ct),         False, int_fmt,                 True),
+        ("Birdies",          fill(birdies_ct),        False, int_fmt,                 True),
+    ]
+
+
+# Headline metric cards. Row 1: career overview (4 cards). Row 2: scoring feats.
+# Trophies are broken down in the dedicated Trophy Cabinet section below.
+_METRIC_ROWS = [
+    ["TEGs Played", "Total Trophies", "Avg Gross vs Par", "Avg Stableford"],
+    ["Holes in One", "Eagles", "Birdies"],
+]
+
+
+def _build_overview_metrics(player_code: str) -> list[list[dict]]:
+    """Build the headline metric cards, grouped into themed rows.
+
+    Each card has value, label and cross-player rank. The Eagles and Holes in One
+    cards also carry a ``tooltip`` listing where they were scored.
+    """
+    name = PLAYER_DICT[player_code]
+    all_data = cached_load_all_data()
+    rd_data = cached_round_data()
+    winners = _get_winners_data()
+
+    by_label = {}
+    for label, series, ascending, fmt, unranked_if_zero in _metric_specs(all_data, rd_data, winners):
+        if name in series.index and pd.notna(series[name]):
+            raw = series[name]
+            value = fmt(raw)
+            rank = "–" if (unranked_if_zero and raw == 0) else _ordinal_rank(_rank_str(series, name, ascending))
+        else:
+            value, rank = "–", "–"
+        by_label[label] = {"value": value, "label": label, "rank": rank}
+
+    # Eagle / hole-in-one locations as hover detail on their metric cards.
+    eagles = get_eagles_data(all_data)
+    pe = eagles[eagles["Player"] == name] if not eagles.empty else eagles
+    by_label["Eagles"]["tooltip"] = (
+        "; ".join(f"{r['Course']} ({r['Hole']})" for _, r in pe.iterrows())
+        if len(pe) else "No eagles yet")
+
+    hio = get_holes_in_one_data(all_data)
+    ph = hio[hio["Player"] == name] if not hio.empty else hio
+    by_label["Holes in One"]["tooltip"] = (
+        "; ".join(f"{r['Course']} ({r['Hole']})" for _, r in ph.iterrows())
+        if len(ph) else "No holes in one yet")
+
+    return [[by_label[lbl] for lbl in row] for row in _METRIC_ROWS]
+
+
+def _build_trophy_section(player_code: str) -> dict:
+    """Build trophy-cabinet data: counts and cross-player ranks for each honour.
+
+    Rank is suppressed when the player has none of that honour. Doubles are
+    reported separately as a footnote rather than as a standalone count.
+    """
+    name = PLAYER_DICT[player_code]
+    all_data = cached_load_all_data()
+    rd_data = cached_round_data()
+    winners = _get_winners_data()
+
+    specs = {label: (series, ascending) for label, series, ascending, _f, _z
+             in _metric_specs(all_data, rd_data, winners)}
+
+    def get(label):
+        series, ascending = specs[label]
+        count = int(series[name]) if name in series.index and pd.notna(series[name]) else 0
+        rank = _ordinal_rank(_rank_str(series, name, ascending)) if count > 0 else ""
+        return count, rank
+
+    trophies, trophy_rank = get("TEG Trophies")
+    jackets, jacket_rank = get("Green Jackets")
+    spoons, spoon_rank = get("Wooden Spoons")
+    doubles, doubles_rank = get("Doubles")
+
+    return {
+        "trophies": trophies,
+        "jackets": jackets,
+        "spoons": spoons,
+        "doubles": doubles,
+        "trophy_rank": trophy_rank,
+        "jacket_rank": jacket_rank,
+        "spoon_rank": spoon_rank,
+        "doubles_rank": doubles_rank,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Career highlights / colour points
+# ---------------------------------------------------------------------------
+
+def _records_held(name: str) -> list[dict]:
+    """All-time TEG records (bests) this player holds.
+
+    Delegates to the same formatters that power the /records page:
+    prepare_records_table (Gross/Net/Stableford at TEG/round/9-hole),
+    prepare_record_best_streaks_data (Birdies, Pars or Better streaks),
+    prepare_score_count_records_table (Most Birdies in a Round).
+    """
+    all_data = cached_load_all_data()
+    pl_code = _NAME_TO_CODE.get(name, "")
+    records: list[dict] = []
+
+    # Performance records — TEG / round / 9-hole
+    _LEVEL_SHORT = {"TEG": "TEG", "round": "round", "9 holes": "9"}
+    _MEASURE_LOWER = {"Gross": "gross", "Net": "net", "Stableford": "Stableford"}
+
+    def perf_label(formatter_label: str, level: str) -> str:
+        parts = formatter_label.split()
+        if len(parts) == 2:
+            action, measure = parts
+            return f"{action} {_MEASURE_LOWER.get(measure, measure.lower())} {_LEVEL_SHORT[level]}"
+        return f"{formatter_label} {_LEVEL_SHORT[level]}"
+
+    seen: set[str] = set()
+    for df, level in [
+        (prepare_records_table(cached_ranked_teg_data(), 'teg'), 'TEG'),
+        (prepare_records_table(cached_ranked_round_data(), 'round'), 'round'),
+        (prepare_records_table(cached_ranked_frontback_data(), 'frontback'), '9 holes'),
+    ]:
+        for _, row in df.iterrows():
+            raw_label = str(row.iloc[0])
+            if 'Score' in raw_label:
+                continue
+            if str(row.iloc[2]).strip() != name:
+                continue
+            key = perf_label(raw_label, level)
+            if key in seen:
+                continue
+            seen.add(key)
+            shared = (df.iloc[:, 0] == raw_label).sum() > 1
+            records.append({
+                "label": key,
+                "value": str(row.iloc[1]),
+                "detail": str(row.iloc[3]),
+                "shared": shared,
             })
 
-    return badges
+    # Best streaks — Birdies and Pars or Better only
+    BEST_STREAK_LABELS = {
+        "Birdies": "Longest birdies streak",
+        "Pars or Better": "Longest pars or better streak",
+    }
+    best_streaks = prepare_record_best_streaks_data(all_data)
+    for _, row in best_streaks.iterrows():
+        streak_type = str(row['Streak Type'])
+        if streak_type not in BEST_STREAK_LABELS:
+            continue
+        if str(row['Player']) != name:
+            continue
+        shared = (best_streaks['Streak Type'] == streak_type).sum() > 1
+        records.append({
+            "label": BEST_STREAK_LABELS[streak_type],
+            "value": f"{row['Record']} holes",
+            "detail": str(row['When']),
+            "shared": shared,
+        })
+
+    # Most birdies in a round
+    best_sc, _ = prepare_score_count_records_table(all_data)
+    for _, row in best_sc.iterrows():
+        if str(row.iloc[0]) != 'Most Birdies in a Round':
+            continue
+        player_col = str(row.iloc[2]).strip()
+        detail_col = str(row.iloc[3]).strip()
+        if player_col == pl_code:
+            records.append({"label": "Most birdies in a round", "value": str(row.iloc[1]),
+                            "detail": detail_col, "shared": False})
+            break
+        if player_col == '→' and pl_code in [c.strip() for c in detail_col.split('/')]:
+            records.append({"label": "Most birdies in a round", "value": str(row.iloc[1]),
+                            "detail": "", "shared": True})
+            break
+
+    return records
+
+
+def _worsts_held(name: str) -> list[dict]:
+    """All-time TEG worst records this player holds.
+
+    Delegates to the same formatters that power the /records page:
+    prepare_worst_records_table (Gross/Net/Stableford at TEG/round/9-hole),
+    prepare_record_worst_streaks_data (No Birdies, Over Par, TBPs streaks),
+    prepare_score_count_records_table (Most TBPs in a Round).
+    """
+    all_data = cached_load_all_data()
+    pl_code = _NAME_TO_CODE.get(name, "")
+    worsts: list[dict] = []
+
+    # Performance worsts — TEG / round / 9-hole
+    _LEVEL_SHORT = {"TEG": "TEG", "round": "round", "9 holes": "9"}
+    _MEASURE_LOWER = {"Gross": "gross", "Net": "net", "Stableford": "Stableford"}
+
+    def perf_label(formatter_label: str, level: str) -> str:
+        parts = formatter_label.split()
+        if len(parts) == 2:
+            action, measure = parts
+            return f"{action} {_MEASURE_LOWER.get(measure, measure.lower())} {_LEVEL_SHORT[level]}"
+        return f"{formatter_label} {_LEVEL_SHORT[level]}"
+
+    seen: set[str] = set()
+    for df, level in [
+        (prepare_worst_records_table(cached_ranked_teg_data(), 'teg'), 'TEG'),
+        (prepare_worst_records_table(cached_ranked_round_data(), 'round'), 'round'),
+        (prepare_worst_records_table(cached_ranked_frontback_data(), 'frontback'), '9 holes'),
+    ]:
+        for _, row in df.iterrows():
+            raw_label = str(row.iloc[0])
+            if 'Score' in raw_label:
+                continue
+            if str(row.iloc[2]).strip() != name:
+                continue
+            key = perf_label(raw_label, level)
+            if key in seen:
+                continue
+            seen.add(key)
+            shared = (df.iloc[:, 0] == raw_label).sum() > 1
+            worsts.append({
+                "label": key,
+                "value": str(row.iloc[1]),
+                "detail": str(row.iloc[3]),
+                "shared": shared,
+            })
+
+    # Worst streaks — No Birdies, Over Par and TBPs only
+    WORST_STREAK_LABELS = {
+        "No Birdies": "Longest no-birdies streak",
+        "Over Par": "Longest over par streak",
+        "TBPs": "Longest TBPs streak",
+    }
+    worst_streaks = prepare_record_worst_streaks_data(all_data)
+    for _, row in worst_streaks.iterrows():
+        streak_type = str(row['Streak Type'])
+        if streak_type not in WORST_STREAK_LABELS:
+            continue
+        if str(row['Player']) != name:
+            continue
+        shared = (worst_streaks['Streak Type'] == streak_type).sum() > 1
+        worsts.append({
+            "label": WORST_STREAK_LABELS[streak_type],
+            "value": f"{row['Record']} holes",
+            "detail": str(row['When']),
+            "shared": shared,
+        })
+
+    # Most TBPs in a round
+    _, worst_sc = prepare_score_count_records_table(all_data)
+    for _, row in worst_sc.iterrows():
+        if str(row.iloc[0]) != 'Most TBPs in a Round':
+            continue
+        player_col = str(row.iloc[2]).strip()
+        detail_col = str(row.iloc[3]).strip()
+        if player_col == pl_code:
+            worsts.append({
+                "label": "Most TBPs in a round",
+                "value": str(row.iloc[1]),
+                "detail": detail_col,
+                "shared": False,
+            })
+            break
+        if player_col == '→' and pl_code in [c.strip() for c in detail_col.split('/')]:
+            worsts.append({
+                "label": "Most TBPs in a round",
+                "value": str(row.iloc[1]),
+                "detail": "",
+                "shared": True,
+            })
+            break
+
+    return worsts
+
+
+
+def _build_highlights(player_code: str) -> list[dict]:
+    """Build 'colour' points: best/worst course, best round/TEG, records, eagles."""
+    name = PLAYER_DICT[player_code]
+    all_data = cached_load_all_data()
+    rd_data = cached_round_data()
+    ranked_teg = cached_ranked_teg_data()
+    items = []
+
+    # Best / worst course by average gross vs par (min 2 rounds for stability)
+    player_rd = rd_data[rd_data["Player"] == name]
+    if not player_rd.empty:
+        by_course = player_rd.groupby("Course")["GrossVP"].agg(["mean", "count"])
+        by_course = by_course[by_course["count"] >= 2]
+        if not by_course.empty:
+            best_c = by_course["mean"].idxmin()
+            worst_c = by_course["mean"].idxmax()
+            items.append({"label": "Best Course", "value": best_c,
+                          "detail": f"avg {by_course.loc[best_c, 'mean']:+.1f} over "
+                                    f"{int(by_course.loc[best_c, 'count'])} rounds"})
+            items.append({"label": "Worst Course", "value": worst_c,
+                          "detail": f"avg {by_course.loc[worst_c, 'mean']:+.1f} over "
+                                    f"{int(by_course.loc[worst_c, 'count'])} rounds",
+                          "bad": True})
+
+        # Best round
+        br = player_rd.loc[player_rd["GrossVP"].idxmin()]
+        items.append({"label": "Best Round", "value": format_value(br["GrossVP"], "GrossVP"),
+                      "detail": f"TEG {int(br['TEGNum'])} R{int(br['Round'])} · {br['Course']}"})
+
+    # Best TEG
+    player_teg = ranked_teg[ranked_teg["Player"] == name]
+    if not player_teg.empty:
+        bt = player_teg.loc[player_teg["GrossVP"].idxmin()]
+        items.append({"label": "Best TEG", "value": format_value(bt["GrossVP"], "GrossVP"),
+                      "detail": f"TEG {int(bt['TEGNum'])}"})
+
+    return items
 
 
 # ---------------------------------------------------------------------------
@@ -197,7 +475,7 @@ def _build_trophy_cabinet(player_code: str) -> list[dict]:
 # ---------------------------------------------------------------------------
 
 def _build_subtitle(player_code: str) -> str:
-    """Build subtitle like 'X TEGs played · First: TEG N (YYYY) · Latest: TEG N (YYYY)'."""
+    """Build subtitle like 'First: TEG N (YYYY) · Latest: TEG N (YYYY)'."""
     name = PLAYER_DICT[player_code]
     all_data = cached_load_all_data()
     player_data = all_data[all_data['Player'] == name]
@@ -206,12 +484,10 @@ def _build_subtitle(player_code: str) -> str:
         return "No TEG data"
 
     teg_info = player_data[['TEGNum', 'Year']].drop_duplicates().sort_values('TEGNum')
-    n_tegs = len(teg_info)
     first = teg_info.iloc[0]
     latest = teg_info.iloc[-1]
 
     return (
-        f"{n_tegs} TEGs played · "
         f"First: TEG {int(first['TEGNum'])} ({int(first['Year'])}) · "
         f"Latest: TEG {int(latest['TEGNum'])} ({int(latest['Year'])})"
     )
@@ -224,10 +500,10 @@ def _build_subtitle(player_code: str) -> str:
 _NUMERIC_COLS = {
     'Score', 'Gross', 'GrossVP', 'Gross VP', 'NetVP', 'Net VP', 'Stableford',
     'Pts', 'Points', 'Total', 'Avg', 'Average', 'Count',
-    'Gross Rank', 'Net Rank', 'Round Rank', 'Wins', 'Losses', 'Draws',
+    'Gross Rank', 'Net Rank', 'Trophy Rank', 'Round Rank', 'Wins', 'Losses', 'Draws',
     'Avg Diff', 'Streak', 'Value', '%', 'Career Best', 'Current',
 }
-_RANK_COLS = {'#', 'Rank', 'Gross Rank', 'Net Rank', 'Round Rank'}
+_RANK_COLS = {'#', 'Rank', 'Gross Rank', 'Net Rank', 'Trophy Rank', 'Round Rank'}
 
 
 def _build_simple_table_html(df, highlight_col=None, highlight_val=None):
@@ -252,6 +528,50 @@ def _build_simple_table_html(df, highlight_col=None, highlight_val=None):
             rows.append(f"<td class='{cls}'>{val}</td>")
         rows.append("</tr>")
 
+    rows.append("</tbody></table>")
+    return "".join(rows)
+
+
+_WIN_RESULTS = {"Trophy", "Jacket", "Double"}
+
+
+def _build_teg_results_table_html(df):
+    """Render the per-TEG results table with win/loss colour in the rank/result cells.
+
+    Green pill: a competition win (Result = Trophy/Jacket/Double, or a 1st-place
+    Gross/Trophy rank). Red pill: the Wooden Spoon (Result = Spoon), which also
+    tints the Trophy Rank cell red since the spoon is the net competition's last.
+    """
+    if df is None or df.empty:
+        return "<p class='text-muted text-sm'>No TEG data.</p>"
+
+    cols = list(df.columns)
+
+    def col_cls(col):
+        return 'col-rank' if col in _RANK_COLS else ('col-num' if col in _NUMERIC_COLS else 'col-player')
+
+    rows = ["<table class='teg-table player-results-table'>", "<thead><tr>"]
+    for col in cols:
+        rows.append(f"<th class='{col_cls(col)}'>{escape(str(col))}</th>")
+    rows.append("</tr></thead><tbody>")
+
+    for _, row in df.iterrows():
+        is_spoon = str(row.get('Result', '')) == 'Spoon'
+        rows.append("<tr>")
+        for col in cols:
+            val = str(row[col])
+            extra = ""
+            if col == 'Result' and val in _WIN_RESULTS:
+                extra = " result-win"
+            elif col == 'Result' and val == 'Spoon':
+                extra = " result-loss"
+            elif col == 'Trophy Rank' and is_spoon:
+                extra = " result-loss"
+            elif col in ('Gross Rank', 'Trophy Rank') and val == '1st':
+                extra = " result-win"
+            cell = f"<span>{escape(val)}</span>" if extra else escape(val)
+            rows.append(f"<td class='{col_cls(col)}{extra}'>{cell}</td>")
+        rows.append("</tr>")
     rows.append("</tbody></table>")
     return "".join(rows)
 
@@ -296,16 +616,100 @@ def _compute_teg_ranks(teg_num: int, rd_data: pd.DataFrame) -> dict[str, dict]:
 # Tab: Overview
 # ---------------------------------------------------------------------------
 
+# Domain note (verified against the data): the **TEG Trophy** is won on the NET
+# competition (Stableford from TEG 8, NetVP before) and the **Green Jacket** on
+# the GROSS competition. So the net finishing position is the "Trophy Rank" and
+# the gross position is effectively the jacket rank.
+
+def _teg_result_flags(winners: pd.DataFrame, name: str, teg_num: int) -> dict:
+    """Return {trophy, jacket, spoon} booleans for ``name`` in a given TEG."""
+    tw = winners[winners['TEG'] == f"TEG {teg_num}"]
+    if tw.empty:
+        return {"trophy": False, "jacket": False, "spoon": False}
+    w = tw.iloc[0]
+    return {
+        "trophy": w['TEG Trophy'] == name,
+        "jacket": w['Green Jacket'] == name,
+        "spoon": w['HMM Wooden Spoon'] == name,
+    }
+
+
+def _result_label(flags: dict) -> str:
+    """Collapse win flags to a single result label for the results table."""
+    if flags["spoon"]:
+        return "Spoon"
+    if flags["trophy"] and flags["jacket"]:
+        return "Double"
+    if flags["trophy"]:
+        return "Trophy"
+    if flags["jacket"]:
+        return "Jacket"
+    return ""
+
+
+def _trend_fig(x, y, yaxis_title, avg_fmt, bar_color, bar_labels=None) -> str:
+    """Build a career-trend bar chart (one bar per TEG).
+
+    ``x`` should already be formatted strings (e.g. 'TEG 9').
+    ``bar_labels`` annotates each bar at its base with a finishing rank.
+    ``bar_color`` sets a uniform bar colour."""
+    fig = go.Figure()
+    if y:
+        avg = sum(y) / len(y)
+        fig.add_trace(go.Bar(
+            x=x, y=y, name=yaxis_title,
+            marker=dict(color=bar_color, line=dict(width=0)),
+            showlegend=False,
+            hovertemplate="%{x}<br>" + yaxis_title + ": %{y:.1f}<extra></extra>",
+        ))
+        fig.add_hline(
+            y=avg, line_dash="dash", line_color="gray",
+            annotation_text="Avg: " + avg_fmt.format(avg),
+            annotation_position="top left",
+        )
+    if bar_labels:
+        for xi, label in zip(x, bar_labels):
+            if label and label != "–":
+                fig.add_annotation(
+                    x=xi, y=0,
+                    text=str(label),
+                    showarrow=False,
+                    yshift=-4,
+                    xanchor='center',
+                    yanchor='top',
+                    font=dict(size=8, color='gray'),
+                )
+    fig.update_layout(
+        yaxis_title=yaxis_title,
+        margin=dict(r=20, t=10, b=52 if bar_labels else 40, l=50),
+        font=dict(family="monospace"), hovermode='x unified',
+        bargap=0.25,
+        showlegend=False,
+    )
+    fig.layout.xaxis.fixedrange = True
+    fig.layout.yaxis.fixedrange = True
+    fig.update_layout(**get_chart_style('streamlit'))
+    return fig.to_json()
+
+
 def _build_overview_context(player_code: str, theme: str) -> dict:
     """Build context for the overview tab."""
     name = PLAYER_DICT[player_code]
 
-    # TEG results table
     ranked_teg = cached_ranked_teg_data()
     player_teg = ranked_teg[ranked_teg['Player'] == name].copy()
-
     winners = _get_winners_data()
     rd_data = cached_round_data()
+
+    # Pre-compute per-TEG finishing ranks once; used for both table and chart labels.
+    teg_rank_map: dict[int, dict] = {}
+    if not player_teg.empty:
+        for teg_num in player_teg['TEGNum'].astype(int):
+            r = _compute_teg_ranks(teg_num, rd_data).get(name, {})
+            teg_rank_map[teg_num] = {
+                "gross": r.get("gross_rank", "–"),
+                "net": r.get("net_rank", "–"),
+            }
 
     if not player_teg.empty:
         rows = []
@@ -322,75 +726,66 @@ def _build_overview_context(player_code: str, theme: str) -> dict:
                 net_val = format_value(r['NetVP'], 'NetVP')
                 net_label = net_val
 
-            # Per-TEG finishing positions
-            teg_ranks = _compute_teg_ranks(teg_num, rd_data)
-            player_ranks = teg_ranks.get(name, {})
-            gross_rank = player_ranks.get("gross_rank", "–")
-            net_rank = player_ranks.get("net_rank", "–")
-
-            # Result markers
-            teg_label = f"TEG {teg_num}"
-            teg_winners = winners[winners['TEG'] == teg_label]
-            result = ""
-            if not teg_winners.empty:
-                w = teg_winners.iloc[0]
-                if w['TEG Trophy'] == name:
-                    result = "Trophy"
-                if w['Green Jacket'] == name:
-                    result = "Jacket" if not result else "Double"
-                if w['HMM Wooden Spoon'] == name:
-                    result = "Spoon"
+            gross_rank = teg_rank_map.get(teg_num, {}).get("gross", "–")
+            net_rank = teg_rank_map.get(teg_num, {}).get("net", "–")
+            result = _result_label(_teg_result_flags(winners, name, teg_num))
 
             rows.append({
                 'TEG': teg_num,
                 'Year': year,
                 'Gross VP': gross_vp,
                 'Net/Stab': net_label,
+                'Trophy Rank': net_rank,
                 'Gross Rank': gross_rank,
-                'Net Rank': net_rank,
                 'Result': result,
             })
 
         teg_table_df = pd.DataFrame(rows)
-        teg_table_html = _build_simple_table_html(teg_table_df)
+        teg_table_html = _build_teg_results_table_html(teg_table_df)
     else:
         teg_table_html = "<p class='text-muted text-sm'>No TEG data.</p>"
 
-    # Career trend chart (gross vs par per TEG)
-    chart_json = None
+    # Career trend charts — bar per TEG, averaged per round. Bars colour-coded by
+    # performance direction; event markers flag jacket/trophy/spoon TEGs; rank
+    # labels sit at bar base showing how the player finished that year.
+    chart_gross_json = None
+    chart_stab_json = None
     if not player_teg.empty:
-        chart_data = player_teg.sort_values('TEGNum')
-        avg_gvp = chart_data['GrossVP'].mean()
+        trend = player_teg.sort_values('TEGNum').copy()
+        rounds_per_teg = rd_data[rd_data['Player'] == name].groupby('TEGNum').size()
+        trend['nrd'] = trend['TEGNum'].map(rounds_per_teg).fillna(1)
+        trend['gross_avg'] = trend['GrossVP'] / trend['nrd']
+        trend['stab_avg'] = trend['Stableford'] / trend['nrd']
 
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(
-            x=chart_data['TEGNum'],
-            y=chart_data['GrossVP'],
-            mode='lines+markers',
-            name='Gross vs Par',
-            line=dict(width=2),
-        ))
-        fig.add_hline(
-            y=avg_gvp, line_dash="dash", line_color="gray",
-            annotation_text=f"Avg: {avg_gvp:+.1f}",
-            annotation_position="top left",
-        )
-        fig.update_layout(
-            xaxis_title="TEG",
-            yaxis_title="Gross vs Par (total)",
-            margin=dict(r=20, t=10, b=40, l=50),
-            font=dict(family="monospace"),
-            hovermode='x unified',
-        )
-        fig.layout.xaxis.fixedrange = True
-        fig.layout.yaxis.fixedrange = True
+        tegs = trend['TEGNum'].astype(int).tolist()
+        teg_labels = [f"TEG {t}" for t in tegs]
 
-        fig.update_layout(**get_chart_style('streamlit'))
-        chart_json = fig.to_json()
+        gross_labels = [teg_rank_map.get(t, {}).get("gross", "–") for t in tegs]
+        net_labels = [teg_rank_map.get(t, {}).get("net", "–") for t in tegs]
+
+        chart_gross_json = _trend_fig(
+            teg_labels, trend['gross_avg'].tolist(),
+            "Gross vs Par (avg per round)", "{:+.1f}",
+            bar_color="#6b9ec9",
+            bar_labels=gross_labels,
+        )
+
+        chart_stab_json = _trend_fig(
+            teg_labels, trend['stab_avg'].tolist(),
+            "Stableford (avg per round)", "{:.1f}",
+            bar_color="#6bab6e",
+            bar_labels=net_labels,
+        )
 
     return {
         "teg_table_html": teg_table_html,
-        "chart_json": chart_json,
+        "chart_gross_json": chart_gross_json,
+        "chart_stab_json": chart_stab_json,
+        "highlights": _build_highlights(player_code),
+        "records_held": _records_held(PLAYER_DICT[player_code]),
+        "worsts_held": _worsts_held(PLAYER_DICT[player_code]),
+        "metrics": _build_overview_metrics(player_code),
+        "trophy": _build_trophy_section(player_code),
     }
 
 
@@ -398,15 +793,71 @@ def _build_overview_context(player_code: str, theme: str) -> dict:
 # Tab: Rounds
 # ---------------------------------------------------------------------------
 
+def _build_rounds_chart(player_code: str) -> str | None:
+    """Bar chart of gross vs par for every round, coloured by score and grouped
+    by TEG (a small gap separates TEGs; rounds within a TEG sit flush)."""
+    name = PLAYER_DICT[player_code]
+    rd_data = cached_round_data()
+    player_rd = rd_data[rd_data['Player'] == name].sort_values(['TEGNum', 'Round'])
+    if player_rd.empty:
+        return None
+
+    xs, ys, customdata, teg_groups = [], [], [], []
+    pos = 0
+    prev_teg = None
+    group_start = 0
+    for _, r in player_rd.iterrows():
+        teg = int(r['TEGNum'])
+        if prev_teg is not None and teg != prev_teg:
+            teg_groups.append(((group_start + pos - 1) / 2, prev_teg))
+            pos += 1  # blank slot → visual gap between TEGs
+            group_start = pos
+        xs.append(pos)
+        ys.append(float(r['GrossVP']))
+        customdata.append([f"TEG {teg}", int(r['Round']), str(r.get('Course', ''))])
+        prev_teg = teg
+        pos += 1
+    if prev_teg is not None:
+        teg_groups.append(((group_start + pos - 1) / 2, prev_teg))
+
+    fig = go.Figure(go.Bar(
+        x=xs, y=ys, customdata=customdata,
+        marker=dict(color=ys, colorscale='RdYlGn', reversescale=True, cmid=0,
+                    line=dict(width=0)),
+        hovertemplate=("%{customdata[0]} · R%{customdata[1]}<br>"
+                       "%{customdata[2]}<br>Gross vs Par: %{y:+}<extra></extra>"),
+    ))
+    for cx, teg in teg_groups:
+        fig.add_annotation(x=cx, y=0, yref='paper', yshift=-18,
+                           text=str(teg), showarrow=False,
+                           font=dict(size=9, color='gray'))
+    fig.update_layout(
+        yaxis_title="Gross vs Par",
+        margin=dict(r=20, t=10, b=46, l=50),
+        font=dict(family="monospace"),
+        showlegend=False, bargap=0.0,
+    )
+    fig.add_annotation(x=0, y=0, yref='paper', xref='paper', yshift=-32,
+                       text="TEG", showarrow=False, xanchor='right',
+                       font=dict(size=9, color='gray'))
+    fig.update_xaxes(showticklabels=False, fixedrange=True)
+    fig.update_yaxes(fixedrange=True)
+    fig.update_layout(**get_chart_style('streamlit'))
+    return fig.to_json()
+
+
 def _build_rounds_context(player_code: str) -> dict:
     """Build context for the rounds tab."""
     name = PLAYER_DICT[player_code]
+
+    chart_json = _build_rounds_chart(player_code)
 
     ranked_rd = cached_ranked_round_data()
     player_rd = ranked_rd[ranked_rd['Player'] == name].copy()
 
     if player_rd.empty:
-        return {"rounds_table_html": "<p class='text-muted text-sm'>No round data.</p>"}
+        return {"rounds_table_html": "<p class='text-muted text-sm'>No round data.</p>",
+                "rounds_chart_json": chart_json}
 
     # Find PB values for highlighting
     best_gross = player_rd['GrossVP'].min()
@@ -431,7 +882,8 @@ def _build_rounds_context(player_code: str) -> dict:
         })
 
     rd_df = pd.DataFrame(rows)
-    return {"rounds_table_html": _build_simple_table_html(rd_df)}
+    return {"rounds_table_html": _build_simple_table_html(rd_df),
+            "rounds_chart_json": chart_json}
 
 
 # ---------------------------------------------------------------------------
@@ -621,65 +1073,61 @@ def _build_records_context(player_code: str) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Tab: Head to Head
+# Roster (landing page cards)
 # ---------------------------------------------------------------------------
 
-def _build_h2h_context(player_code: str) -> dict:
-    """Build context for the head-to-head tab."""
-    name = PLAYER_DICT[player_code]
+def _build_roster() -> list[dict]:
+    """Build roster card data for every player, ordered by honours then name.
 
-    ranked_teg = cached_ranked_teg_data()
-    player_teg = ranked_teg[ranked_teg['Player'] == name]
+    Each card carries identity (code/name/initials), a one-line career summary
+    and three headline stats, plus trophy/jacket/spoon badges.
+    """
+    all_data = cached_load_all_data()
+    rd_data = cached_round_data()
+    winners = _get_winners_data()
 
-    if player_teg.empty:
-        return {"h2h_table_html": "<p class='text-muted text-sm'>No data.</p>"}
-
-    player_tegs = set(player_teg['TEGNum'].unique())
-
-    h2h_rows = []
-    for opp_code, opp_name in sorted(PLAYER_DICT.items(), key=lambda x: x[1]):
-        if opp_code == player_code:
+    cards = []
+    for code, name in PLAYER_DICT.items():
+        player_data = all_data[all_data['Player'] == name]
+        if player_data.empty:
             continue
 
-        opp_teg = ranked_teg[ranked_teg['Player'] == opp_name]
-        opp_tegs = set(opp_teg['TEGNum'].unique())
-        shared_tegs = player_tegs & opp_tegs
+        teg_info = player_data[['TEGNum', 'Year']].drop_duplicates().sort_values('TEGNum')
+        n_tegs = len(teg_info)
+        since_year = int(teg_info.iloc[0]['Year'])
 
-        if not shared_tegs:
-            continue
+        player_rds = rd_data[rd_data['Player'] == name]
+        avg_gvp = player_rds['GrossVP'].mean() if not player_rds.empty else None
+        avg_stab = player_rds['Stableford'].mean() if not player_rds.empty else None
 
-        wins = 0
-        losses = 0
-        draws = 0
-        total_diff = 0
+        trophy_count = int((winners['TEG Trophy'] == name).sum())
+        jacket_count = int((winners['Green Jacket'] == name).sum())
+        spoon_count = int((winners['HMM Wooden Spoon'] == name).sum())
+        total_trophies = trophy_count + jacket_count
 
-        for teg_num in shared_tegs:
-            p_gross = player_teg[player_teg['TEGNum'] == teg_num]['GrossVP'].iloc[0]
-            o_gross = opp_teg[opp_teg['TEGNum'] == teg_num]['GrossVP'].iloc[0]
-            diff = p_gross - o_gross
-            total_diff += diff
+        badges = []
+        if trophy_count:
+            badges.append({"text": f"Trophy ×{trophy_count}", "style": "accent"})
+        if jacket_count:
+            badges.append({"text": f"Jacket ×{jacket_count}", "style": "accent"})
+        if spoon_count:
+            badges.append({"text": f"Spoon ×{spoon_count}", "style": "muted"})
 
-            if diff < 0:
-                wins += 1
-            elif diff > 0:
-                losses += 1
-            else:
-                draws += 1
-
-        n = len(shared_tegs)
-        avg_diff = total_diff / n if n > 0 else 0
-
-        h2h_rows.append({
-            'Opponent': opp_name,
-            'TEGs': n,
-            'Wins': wins,
-            'Losses': losses,
-            'Draws': draws,
-            'Avg Diff': f"{avg_diff:+.1f}",
+        cards.append({
+            "code": code,
+            "name": name,
+            "n_tegs": n_tegs,
+            "since_year": since_year,
+            "avg_gvp": f"{avg_gvp:+.1f}" if avg_gvp is not None else "–",
+            "avg_stab": f"{avg_stab:.1f}" if avg_stab is not None else "–",
+            "total_trophies": total_trophies,
+            "trophy_count": trophy_count,
+            "jacket_count": jacket_count,
+            "badges": badges,
         })
 
-    h2h_df = pd.DataFrame(h2h_rows)
-    return {"h2h_table_html": _build_simple_table_html(h2h_df)}
+    cards.sort(key=lambda c: (-c["total_trophies"], -c["n_tegs"], c["name"]))
+    return cards
 
 
 # ---------------------------------------------------------------------------
@@ -688,11 +1136,11 @@ def _build_h2h_context(player_code: str) -> dict:
 
 @router.get("/player")
 async def player_index(request: Request):
-    players = _get_player_list()
     return templates.TemplateResponse("player_index.html", {
         "request": request,
         "active_page": "player",
-        "players": players,
+        "player_list": _get_player_list(),
+        "roster": _build_roster(),
     })
 
 
@@ -702,8 +1150,6 @@ async def player_page(request: Request, player_code: str):
     name = PLAYER_DICT[pc]
     theme = request.state.theme
 
-    stat_cards = _build_stat_cards(pc)
-    trophy_cabinet = _build_trophy_cabinet(pc)
     subtitle = _build_subtitle(pc)
     overview_ctx = _build_overview_context(pc, theme)
 
@@ -714,8 +1160,6 @@ async def player_page(request: Request, player_code: str):
         "player_name": name,
         "player_list": _get_player_list(),
         "subtitle": subtitle,
-        "stat_cards": stat_cards,
-        "trophy_cabinet": trophy_cabinet,
         "tabs": PLAYER_TABS,
         "active_tab": "overview",
         **overview_ctx,
@@ -739,9 +1183,6 @@ async def player_tab(request: Request, player_code: str, tab_name: str):
     elif tab_name == "records":
         ctx = _build_records_context(pc)
         template = "partials/player_records.html"
-    elif tab_name == "h2h":
-        ctx = _build_h2h_context(pc)
-        template = "partials/player_h2h.html"
     else:
         raise HTTPException(status_code=404, detail=f"Unknown tab: {tab_name}")
 
