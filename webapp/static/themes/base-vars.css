@@ -206,9 +206,13 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 0.8125rem;
     color: var(--text-muted);
 }
-.history-table .area-flag {
-    font-style: normal;
-    color: initial;
+.history-table .area-label .area-flag.fi {
+    width: 1.5em;
+    height: 1.5em;
+    vertical-align: -0.35em;
+    margin-right: 0.35em;
+    border-radius: 2px;
+    flex-shrink: 0;
 }
 /* Emphasise the main trophy winner (first name column) */
 .history-table tbody td:nth-child(2) {

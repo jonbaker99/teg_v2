@@ -41,20 +41,23 @@ from webapp.chart_utils import create_cumulative_graph, adjusted_stableford, adj
 
 _NAME_TO_CODE = {v: k for k, v in PLAYER_DICT.items()}
 
-_COUNTRY_FLAGS = {
-    "england": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-    "portugal": "🇵🇹",
-    "spain": "🇪🇸",
+_COUNTRY_FLAG_CODES = {
+    "england": "gb-eng",
+    "portugal": "pt",
+    "spain": "es",
 }
 
 
-def _area_flag(area_str: str) -> str:
-    """Return the flag emoji for the country in an 'Region, Country' area string."""
+def _area_flag_html(area_str: str) -> str:
+    """Return a flag-icons <span> for the country in an 'Region, Country' area string."""
     parts = str(area_str).split(",")
     if len(parts) < 2:
         return ""
     country = parts[-1].strip().lower()
-    return _COUNTRY_FLAGS.get(country, "")
+    code = _COUNTRY_FLAG_CODES.get(country, "")
+    if not code:
+        return ""
+    return f"<span class='fi fi-{code} fis area-flag'></span>"
 
 
 router = APIRouter()
@@ -120,10 +123,9 @@ def _history_table_html(df: pd.DataFrame) -> str:
         teg = escape(str(row.get("TEG", "")))
         area_raw = str(row.get("Area", ""))
         area = area_raw.split(",")[0].strip()
-        flag = _area_flag(area_raw)
-        flag_html = f" <span class='area-flag'>{flag}</span>" if flag else ""
+        flag_html = _area_flag_html(area_raw)
         teg_cell = (f"<span class='teg-label'>{teg}</span>"
-                    f"<span class='area-label'>{escape(area)}{flag_html}</span>")
+                    f"<span class='area-label'>{flag_html}{escape(area)}</span>")
         rows.append("<tr>")
         rows.append(f"<td>{teg_cell}</td>")
         for col in name_cols:
