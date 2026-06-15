@@ -15,7 +15,7 @@
 
 <!-- Player name as in-page heading (not in the top banner) -->
 <div class="player-profile-heading">
-    <h1 class="player-profile-name">{{ player_name }}</h1>
+    <h1 class="player-profile-name">{{ player_name }}{% if trophy and (trophy.trophies or trophy.jackets) %}<span class="title-stars">{% for i in range(trophy.trophies) %}<span class="trophy-star trophy-star--gold">&#9733;</span>{% endfor %}{% if trophy.trophies and trophy.jackets %}<span class="title-stars-gap"></span>{% endif %}{% for i in range(trophy.jackets) %}<span class="trophy-star trophy-star--green">&#9733;</span>{% endfor %}</span>{% endif %}</h1>
     <p class="text-sm text-secondary">{{ subtitle }}</p>
 </div>
 

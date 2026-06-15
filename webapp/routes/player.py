@@ -374,10 +374,10 @@ def _build_subtitle(player_code: str) -> str:
 _NUMERIC_COLS = {
     'Score', 'Gross', 'GrossVP', 'Gross VP', 'NetVP', 'Net VP', 'Stableford',
     'Pts', 'Points', 'Total', 'Avg', 'Average', 'Count',
-    'Gross Rank', 'Net Rank', 'Round Rank', 'Wins', 'Losses', 'Draws',
+    'Gross Rank', 'Net Rank', 'Trophy Rank', 'Round Rank', 'Wins', 'Losses', 'Draws',
     'Avg Diff', 'Streak', 'Value', '%', 'Career Best', 'Current',
 }
-_RANK_COLS = {'#', 'Rank', 'Gross Rank', 'Net Rank', 'Round Rank'}
+_RANK_COLS = {'#', 'Rank', 'Gross Rank', 'Net Rank', 'Trophy Rank', 'Round Rank'}
 
 
 def _build_simple_table_html(df, highlight_col=None, highlight_val=None):
@@ -413,7 +413,8 @@ def _build_teg_results_table_html(df):
     """Render the per-TEG results table with win/loss colour in the rank/result cells.
 
     Green pill: a competition win (Result = Trophy/Jacket/Double, or a 1st-place
-    Gross/Net rank). Red pill: the Wooden Spoon (Result = Spoon).
+    Gross/Trophy rank). Red pill: the Wooden Spoon (Result = Spoon), which also
+    tints the Trophy Rank cell red since the spoon is the net competition's last.
     """
     if df is None or df.empty:
         return "<p class='text-muted text-sm'>No TEG data.</p>"
@@ -429,6 +430,7 @@ def _build_teg_results_table_html(df):
     rows.append("</tr></thead><tbody>")
 
     for _, row in df.iterrows():
+        is_spoon = str(row.get('Result', '')) == 'Spoon'
         rows.append("<tr>")
         for col in cols:
             val = str(row[col])
@@ -437,7 +439,9 @@ def _build_teg_results_table_html(df):
                 extra = " result-win"
             elif col == 'Result' and val == 'Spoon':
                 extra = " result-loss"
-            elif col in ('Gross Rank', 'Net Rank') and val == '1st':
+            elif col == 'Trophy Rank' and is_spoon:
+                extra = " result-loss"
+            elif col in ('Gross Rank', 'Trophy Rank') and val == '1st':
                 extra = " result-win"
             cell = f"<span>{escape(val)}</span>" if extra else escape(val)
             rows.append(f"<td class='{col_cls(col)}{extra}'>{cell}</td>")
@@ -486,6 +490,80 @@ def _compute_teg_ranks(teg_num: int, rd_data: pd.DataFrame) -> dict[str, dict]:
 # Tab: Overview
 # ---------------------------------------------------------------------------
 
+# Domain note (verified against the data): the **TEG Trophy** is won on the NET
+# competition (Stableford from TEG 8, NetVP before) and the **Green Jacket** on
+# the GROSS competition. So the net finishing position is the "Trophy Rank" and
+# the gross position is effectively the jacket rank.
+
+def _teg_result_flags(winners: pd.DataFrame, name: str, teg_num: int) -> dict:
+    """Return {trophy, jacket, spoon} booleans for ``name`` in a given TEG."""
+    tw = winners[winners['TEG'] == f"TEG {teg_num}"]
+    if tw.empty:
+        return {"trophy": False, "jacket": False, "spoon": False}
+    w = tw.iloc[0]
+    return {
+        "trophy": w['TEG Trophy'] == name,
+        "jacket": w['Green Jacket'] == name,
+        "spoon": w['HMM Wooden Spoon'] == name,
+    }
+
+
+def _result_label(flags: dict) -> str:
+    """Collapse win flags to a single result label for the results table."""
+    if flags["spoon"]:
+        return "Spoon"
+    if flags["trophy"] and flags["jacket"]:
+        return "Double"
+    if flags["trophy"]:
+        return "Trophy"
+    if flags["jacket"]:
+        return "Jacket"
+    return ""
+
+
+def _trend_fig(x, y, yaxis_title, avg_fmt, overlays) -> str:
+    """Build a career-trend line chart (one point per TEG) with optional event
+    markers overlaid. ``overlays`` is a list of dicts with x, y, name, symbol,
+    color — used to flag trophy/jacket/spoon TEGs with distinctive markers."""
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        x=x, y=y, mode='lines+markers', name=yaxis_title,
+        line=dict(width=2), marker=dict(size=7), showlegend=False,
+        hovertemplate="TEG %{x}<br>" + yaxis_title + ": %{y:.1f}<extra></extra>",
+    ))
+    if y:
+        avg = sum(y) / len(y)
+        fig.add_hline(
+            y=avg, line_dash="dash", line_color="gray",
+            annotation_text="Avg: " + avg_fmt.format(avg),
+            annotation_position="top left",
+        )
+    for ov in overlays:
+        if not ov["x"]:
+            continue
+        fig.add_trace(go.Scatter(
+            x=ov["x"], y=ov["y"], mode='markers', name=ov["name"],
+            marker=dict(symbol=ov["symbol"], color=ov["color"], size=16,
+                        line=dict(width=1, color="white")),
+            hovertemplate="TEG %{x} — " + ov["name"] + "<extra></extra>",
+        ))
+    fig.update_layout(
+        xaxis_title="TEG", yaxis_title=yaxis_title,
+        margin=dict(r=20, t=10, b=40, l=50),
+        font=dict(family="monospace"), hovermode='x unified',
+    )
+    fig.layout.xaxis.fixedrange = True
+    fig.layout.yaxis.fixedrange = True
+    fig.update_layout(**get_chart_style('streamlit'))
+    # Legend (after the style so it isn't overridden) explains the event markers.
+    fig.update_layout(
+        showlegend=any(ov["x"] for ov in overlays),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02,
+                    xanchor="left", x=0, bgcolor="rgba(0,0,0,0)"),
+    )
+    return fig.to_json()
+
+
 def _build_overview_context(player_code: str, theme: str) -> dict:
     """Build context for the overview tab."""
     name = PLAYER_DICT[player_code]
@@ -518,26 +596,16 @@ def _build_overview_context(player_code: str, theme: str) -> dict:
             gross_rank = player_ranks.get("gross_rank", "–")
             net_rank = player_ranks.get("net_rank", "–")
 
-            # Result markers
-            teg_label = f"TEG {teg_num}"
-            teg_winners = winners[winners['TEG'] == teg_label]
-            result = ""
-            if not teg_winners.empty:
-                w = teg_winners.iloc[0]
-                if w['TEG Trophy'] == name:
-                    result = "Trophy"
-                if w['Green Jacket'] == name:
-                    result = "Jacket" if not result else "Double"
-                if w['HMM Wooden Spoon'] == name:
-                    result = "Spoon"
+            result = _result_label(_teg_result_flags(winners, name, teg_num))
 
+            # Net finishing position is the Trophy Rank; shown before Gross Rank.
             rows.append({
                 'TEG': teg_num,
                 'Year': year,
                 'Gross VP': gross_vp,
                 'Net/Stab': net_label,
+                'Trophy Rank': net_rank,
                 'Gross Rank': gross_rank,
-                'Net Rank': net_rank,
                 'Result': result,
             })
 
@@ -546,41 +614,47 @@ def _build_overview_context(player_code: str, theme: str) -> dict:
     else:
         teg_table_html = "<p class='text-muted text-sm'>No TEG data.</p>"
 
-    # Career trend chart (gross vs par per TEG)
-    chart_json = None
+    # Career trend charts — average per round, one point per TEG. Event markers:
+    # gross chart flags Green Jacket (gross) wins; stableford chart flags TEG
+    # Trophy (net) wins and Wooden Spoons.
+    chart_gross_json = None
+    chart_stab_json = None
     if not player_teg.empty:
-        chart_data = player_teg.sort_values('TEGNum')
-        avg_gvp = chart_data['GrossVP'].mean()
+        trend = player_teg.sort_values('TEGNum').copy()
+        rounds_per_teg = rd_data[rd_data['Player'] == name].groupby('TEGNum').size()
+        trend['nrd'] = trend['TEGNum'].map(rounds_per_teg).fillna(1)
+        trend['gross_avg'] = trend['GrossVP'] / trend['nrd']
+        trend['stab_avg'] = trend['Stableford'] / trend['nrd']
 
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(
-            x=chart_data['TEGNum'],
-            y=chart_data['GrossVP'],
-            mode='lines+markers',
-            name='Gross vs Par',
-            line=dict(width=2),
-        ))
-        fig.add_hline(
-            y=avg_gvp, line_dash="dash", line_color="gray",
-            annotation_text=f"Avg: {avg_gvp:+.1f}",
-            annotation_position="top left",
-        )
-        fig.update_layout(
-            xaxis_title="TEG",
-            yaxis_title="Gross vs Par (total)",
-            margin=dict(r=20, t=10, b=40, l=50),
-            font=dict(family="monospace"),
-            hovermode='x unified',
-        )
-        fig.layout.xaxis.fixedrange = True
-        fig.layout.yaxis.fixedrange = True
+        tegs = trend['TEGNum'].astype(int).tolist()
+        flags = {t: _teg_result_flags(winners, name, t) for t in tegs}
+        gmap = dict(zip(tegs, trend['gross_avg']))
+        smap = dict(zip(tegs, trend['stab_avg']))
 
-        fig.update_layout(**get_chart_style('streamlit'))
-        chart_json = fig.to_json()
+        def subset(value_map, key):
+            xs = [t for t in tegs if flags[t][key]]
+            return {"x": xs, "y": [value_map[t] for t in xs]}
+
+        jacket = subset(gmap, "jacket")
+        chart_gross_json = _trend_fig(
+            tegs, trend['gross_avg'].tolist(),
+            "Gross vs Par (avg per round)", "{:+.1f}",
+            [{**jacket, "name": "Green Jacket", "symbol": "star", "color": "#2e9e3f"}],
+        )
+
+        trophy = subset(smap, "trophy")
+        spoon = subset(smap, "spoon")
+        chart_stab_json = _trend_fig(
+            tegs, trend['stab_avg'].tolist(),
+            "Stableford (avg per round)", "{:.1f}",
+            [{**trophy, "name": "TEG Trophy", "symbol": "star", "color": "#f5b301"},
+             {**spoon, "name": "Wooden Spoon", "symbol": "x", "color": "#cc2b2b"}],
+        )
 
     return {
         "teg_table_html": teg_table_html,
-        "chart_json": chart_json,
+        "chart_gross_json": chart_gross_json,
+        "chart_stab_json": chart_stab_json,
         "highlights": _build_highlights(player_code),
         "records_held": _records_held(PLAYER_DICT[player_code]),
         "metrics": _build_overview_metrics(player_code),
