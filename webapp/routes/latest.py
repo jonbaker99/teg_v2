@@ -117,14 +117,10 @@ def _intify_numeric(df: pd.DataFrame) -> pd.DataFrame:
 def _bestball_rank_summary(bb_all: pd.DataFrame, wb_all: pd.DataFrame,
                            teg_num: int, round_num: int) -> str:
     """Build the 'ranks N / M all-time' summary for this round's bestball and
-    worstball totals.
-
-    Bestball: rank 1 = best (lowest GrossVP). Worstball: rank 1 = worst
-    (highest GrossVP — the most painful worstball round ever).
-    """
-    def _one(df: pd.DataFrame, label: str, ascending: bool) -> str:
+    worstball totals. Both rank ascending: rank 1 = lowest GrossVP."""
+    def _one(df: pd.DataFrame, label: str) -> str:
         d = df.copy()
-        d['__r'] = d['GrossVP'].rank(method='min', ascending=ascending).astype(int)
+        d['__r'] = d['GrossVP'].rank(method='min', ascending=True).astype(int)
         row = d[(d['TEGNum'] == teg_num) & (d['Round'] == round_num)]
         if row.empty:
             return ''
@@ -133,10 +129,7 @@ def _bestball_rank_summary(bb_all: pd.DataFrame, wb_all: pd.DataFrame,
         return (f'<strong>{label}</strong>: <span class="bw-rank-num">{format_vs_par(vp)}</span> · '
                 f'ranks <span class="bw-rank-num">{rank} / {len(d)}</span> all-time')
 
-    parts = [p for p in (
-        _one(bb_all, 'Bestball', ascending=True),
-        _one(wb_all, 'Worstball', ascending=False),
-    ) if p]
+    parts = [p for p in (_one(bb_all, 'Bestball'), _one(wb_all, 'Worstball')) if p]
     if not parts:
         return ''
     return '<p class="bw-rank-summary">' + '<br>'.join(parts) + '</p>'
