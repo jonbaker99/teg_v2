@@ -214,7 +214,7 @@ h1, h2, h3, h4, h5, h6 {
 .history-table .teg-cell .teg-flag.fi {
     flex-shrink: 0;
     align-self: stretch;
-    width: 2.4em;
+    width: 1.3em;
     border-radius: 2px;
 }
 .history-table .teg-text {
