@@ -558,7 +558,7 @@ h1, h2, h3, h4, h5, h6 {
     white-space: nowrap;
 }
 .title-stars .trophy-star {
-    font-size: 1.35rem;
+    /* font-size: 1.35rem; */
     vertical-align: 0.05em;
 }
 .title-stars-gap {
@@ -612,7 +612,7 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 1;
 }
 .trophy-honour-stars .trophy-star {
-    font-size: 0.8rem;
+    /* font-size: 0.8rem; */
     margin-right: 0.02rem;
 }
 .trophy-doubles {
@@ -806,8 +806,8 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0.1rem 0 0;
 }
 .player-card-stars .trophy-star {
-    font-size: 0.7rem;
-    margin-right: 0.05rem;
+    font-size: 0.9rem;
+    margin-right: 0.01rem;
 }
 .player-card-stars-gap {
     display: inline-block;
