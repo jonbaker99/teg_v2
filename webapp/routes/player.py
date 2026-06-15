@@ -262,6 +262,16 @@ def _records_held(name: str) -> list[dict]:
     records: list[dict] = []
 
     # Performance records — TEG / round / 9-hole
+    _LEVEL_SHORT = {"TEG": "TEG", "round": "round", "9 holes": "9"}
+    _MEASURE_LOWER = {"Gross": "gross", "Net": "net", "Stableford": "Stableford"}
+
+    def perf_label(formatter_label: str, level: str) -> str:
+        parts = formatter_label.split()
+        if len(parts) == 2:
+            action, measure = parts
+            return f"{action} {_MEASURE_LOWER.get(measure, measure.lower())} {_LEVEL_SHORT[level]}"
+        return f"{formatter_label} {_LEVEL_SHORT[level]}"
+
     seen: set[str] = set()
     for df, level in [
         (prepare_records_table(cached_ranked_teg_data(), 'teg'), 'TEG'),
@@ -269,16 +279,16 @@ def _records_held(name: str) -> list[dict]:
         (prepare_records_table(cached_ranked_frontback_data(), 'frontback'), '9 holes'),
     ]:
         for _, row in df.iterrows():
-            label = str(row.iloc[0])
-            if 'Score' in label:
-                continue  # skip raw gross score; user asked for Gross vs par only
+            raw_label = str(row.iloc[0])
+            if 'Score' in raw_label:
+                continue
             if str(row.iloc[2]).strip() != name:
                 continue
-            key = f"{label} ({level})"
+            key = perf_label(raw_label, level)
             if key in seen:
-                continue  # same record achieved in multiple rounds — show once
+                continue
             seen.add(key)
-            shared = (df.iloc[:, 0] == label).sum() > 1
+            shared = (df.iloc[:, 0] == raw_label).sum() > 1
             records.append({
                 "label": key,
                 "value": str(row.iloc[1]),
@@ -287,45 +297,39 @@ def _records_held(name: str) -> list[dict]:
             })
 
     # Best streaks — Birdies and Pars or Better only
-    BEST_STREAK_TYPES = {'Birdies', 'Pars or Better'}
+    BEST_STREAK_LABELS = {
+        "Birdies": "Longest birdies streak",
+        "Pars or Better": "Longest pars or better streak",
+    }
     best_streaks = prepare_record_best_streaks_data(all_data)
     for _, row in best_streaks.iterrows():
-        if str(row['Streak Type']) not in BEST_STREAK_TYPES:
+        streak_type = str(row['Streak Type'])
+        if streak_type not in BEST_STREAK_LABELS:
             continue
         if str(row['Player']) != name:
             continue
-        streak_type = str(row['Streak Type'])
         shared = (best_streaks['Streak Type'] == streak_type).sum() > 1
         records.append({
-            "label": f"{streak_type} streak",
+            "label": BEST_STREAK_LABELS[streak_type],
             "value": f"{row['Record']} holes",
             "detail": str(row['When']),
             "shared": shared,
         })
 
-    # Most Birdies in a Round
-    TARGET = 'Most Birdies in a Round'
+    # Most birdies in a round
     best_sc, _ = prepare_score_count_records_table(all_data)
     for _, row in best_sc.iterrows():
-        if str(row.iloc[0]) != TARGET:
+        if str(row.iloc[0]) != 'Most Birdies in a Round':
             continue
         player_col = str(row.iloc[2]).strip()
         detail_col = str(row.iloc[3]).strip()
         if player_col == pl_code:
-            records.append({
-                "label": TARGET,
-                "value": str(row.iloc[1]),
-                "detail": detail_col,
-                "shared": False,
-            })
+            records.append({"label": "Most birdies in a round", "value": str(row.iloc[1]),
+                            "detail": detail_col, "shared": False})
             break
         if player_col == '→' and pl_code in [c.strip() for c in detail_col.split('/')]:
-            records.append({
-                "label": TARGET,
-                "value": str(row.iloc[1]),
-                "detail": "",
-                "shared": True,
-            })
+            records.append({"label": "Most birdies in a round", "value": str(row.iloc[1]),
+                            "detail": "", "shared": True})
             break
 
     return records
@@ -344,6 +348,16 @@ def _worsts_held(name: str) -> list[dict]:
     worsts: list[dict] = []
 
     # Performance worsts — TEG / round / 9-hole
+    _LEVEL_SHORT = {"TEG": "TEG", "round": "round", "9 holes": "9"}
+    _MEASURE_LOWER = {"Gross": "gross", "Net": "net", "Stableford": "Stableford"}
+
+    def perf_label(formatter_label: str, level: str) -> str:
+        parts = formatter_label.split()
+        if len(parts) == 2:
+            action, measure = parts
+            return f"{action} {_MEASURE_LOWER.get(measure, measure.lower())} {_LEVEL_SHORT[level]}"
+        return f"{formatter_label} {_LEVEL_SHORT[level]}"
+
     seen: set[str] = set()
     for df, level in [
         (prepare_worst_records_table(cached_ranked_teg_data(), 'teg'), 'TEG'),
@@ -351,16 +365,16 @@ def _worsts_held(name: str) -> list[dict]:
         (prepare_worst_records_table(cached_ranked_frontback_data(), 'frontback'), '9 holes'),
     ]:
         for _, row in df.iterrows():
-            label = str(row.iloc[0])
-            if 'Score' in label:
+            raw_label = str(row.iloc[0])
+            if 'Score' in raw_label:
                 continue
             if str(row.iloc[2]).strip() != name:
                 continue
-            key = f"{label} ({level})"
+            key = perf_label(raw_label, level)
             if key in seen:
                 continue
             seen.add(key)
-            shared = (df.iloc[:, 0] == label).sum() > 1
+            shared = (df.iloc[:, 0] == raw_label).sum() > 1
             worsts.append({
                 "label": key,
                 "value": str(row.iloc[1]),
@@ -369,33 +383,36 @@ def _worsts_held(name: str) -> list[dict]:
             })
 
     # Worst streaks — No Birdies, Over Par and TBPs only
-    WORST_STREAK_TYPES = {'No Birdies', 'Over Par', 'TBPs'}
+    WORST_STREAK_LABELS = {
+        "No Birdies": "Longest no-birdies streak",
+        "Over Par": "Longest over par streak",
+        "TBPs": "Longest TBPs streak",
+    }
     worst_streaks = prepare_record_worst_streaks_data(all_data)
     for _, row in worst_streaks.iterrows():
-        if str(row['Streak Type']) not in WORST_STREAK_TYPES:
+        streak_type = str(row['Streak Type'])
+        if streak_type not in WORST_STREAK_LABELS:
             continue
         if str(row['Player']) != name:
             continue
-        streak_type = str(row['Streak Type'])
         shared = (worst_streaks['Streak Type'] == streak_type).sum() > 1
         worsts.append({
-            "label": f"{streak_type} streak",
+            "label": WORST_STREAK_LABELS[streak_type],
             "value": f"{row['Record']} holes",
             "detail": str(row['When']),
             "shared": shared,
         })
 
-    # Most TBPs in a Round
-    TARGET = 'Most TBPs in a Round'
+    # Most TBPs in a round
     _, worst_sc = prepare_score_count_records_table(all_data)
     for _, row in worst_sc.iterrows():
-        if str(row.iloc[0]) != TARGET:
+        if str(row.iloc[0]) != 'Most TBPs in a Round':
             continue
         player_col = str(row.iloc[2]).strip()
         detail_col = str(row.iloc[3]).strip()
         if player_col == pl_code:
             worsts.append({
-                "label": TARGET,
+                "label": "Most TBPs in a round",
                 "value": str(row.iloc[1]),
                 "detail": detail_col,
                 "shared": False,
@@ -403,7 +420,7 @@ def _worsts_held(name: str) -> list[dict]:
             break
         if player_col == '→' and pl_code in [c.strip() for c in detail_col.split('/')]:
             worsts.append({
-                "label": TARGET,
+                "label": "Most TBPs in a round",
                 "value": str(row.iloc[1]),
                 "detail": "",
                 "shared": True,
@@ -630,42 +647,26 @@ def _result_label(flags: dict) -> str:
     return ""
 
 
-def _trend_fig(x, y, yaxis_title, avg_fmt, overlays, bar_labels=None, lower_is_better=True) -> str:
-    """Build a career-trend bar chart (one bar per TEG) with optional event
-    markers overlaid. ``overlays`` is a list of dicts with x, y, name, symbol,
-    color. ``bar_labels`` annotates each bar at its base with a finishing rank.
-    ``lower_is_better`` controls colour direction: True for gross (negative=green),
-    False for Stableford (high=green)."""
+def _trend_fig(x, y, yaxis_title, avg_fmt, bar_color, bar_labels=None) -> str:
+    """Build a career-trend bar chart (one bar per TEG).
+
+    ``x`` should already be formatted strings (e.g. 'TEG 9').
+    ``bar_labels`` annotates each bar at its base with a finishing rank.
+    ``bar_color`` sets a uniform bar colour."""
     fig = go.Figure()
     if y:
         avg = sum(y) / len(y)
-        cmid = 0 if lower_is_better else avg
         fig.add_trace(go.Bar(
             x=x, y=y, name=yaxis_title,
-            marker=dict(
-                color=y,
-                colorscale='RdYlGn',
-                reversescale=lower_is_better,
-                cmid=cmid,
-                line=dict(width=0),
-            ),
+            marker=dict(color=bar_color, line=dict(width=0)),
             showlegend=False,
-            hovertemplate="TEG %{x}<br>" + yaxis_title + ": %{y:.1f}<extra></extra>",
+            hovertemplate="%{x}<br>" + yaxis_title + ": %{y:.1f}<extra></extra>",
         ))
         fig.add_hline(
             y=avg, line_dash="dash", line_color="gray",
             annotation_text="Avg: " + avg_fmt.format(avg),
             annotation_position="top left",
         )
-    for ov in overlays:
-        if not ov["x"]:
-            continue
-        fig.add_trace(go.Scatter(
-            x=ov["x"], y=ov["y"], mode='markers', name=ov["name"],
-            marker=dict(symbol=ov["symbol"], color=ov["color"], size=16,
-                        line=dict(width=1, color="white")),
-            hovertemplate="TEG %{x} — " + ov["name"] + "<extra></extra>",
-        ))
     if bar_labels:
         for xi, label in zip(x, bar_labels):
             if label and label != "–":
@@ -679,19 +680,15 @@ def _trend_fig(x, y, yaxis_title, avg_fmt, overlays, bar_labels=None, lower_is_b
                     font=dict(size=8, color='gray'),
                 )
     fig.update_layout(
-        xaxis_title="TEG", yaxis_title=yaxis_title,
+        yaxis_title=yaxis_title,
         margin=dict(r=20, t=10, b=52 if bar_labels else 40, l=50),
         font=dict(family="monospace"), hovermode='x unified',
         bargap=0.25,
+        showlegend=False,
     )
     fig.layout.xaxis.fixedrange = True
     fig.layout.yaxis.fixedrange = True
     fig.update_layout(**get_chart_style('streamlit'))
-    fig.update_layout(
-        showlegend=any(ov["x"] for ov in overlays),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02,
-                    xanchor="left", x=0, bgcolor="rgba(0,0,0,0)"),
-    )
     return fig.to_json()
 
 
@@ -761,35 +758,23 @@ def _build_overview_context(player_code: str, theme: str) -> dict:
         trend['stab_avg'] = trend['Stableford'] / trend['nrd']
 
         tegs = trend['TEGNum'].astype(int).tolist()
-        flags = {t: _teg_result_flags(winners, name, t) for t in tegs}
-        gmap = dict(zip(tegs, trend['gross_avg']))
-        smap = dict(zip(tegs, trend['stab_avg']))
+        teg_labels = [f"TEG {t}" for t in tegs]
 
         gross_labels = [teg_rank_map.get(t, {}).get("gross", "–") for t in tegs]
         net_labels = [teg_rank_map.get(t, {}).get("net", "–") for t in tegs]
 
-        def subset(value_map, key):
-            xs = [t for t in tegs if flags[t][key]]
-            return {"x": xs, "y": [value_map[t] for t in xs]}
-
-        jacket = subset(gmap, "jacket")
         chart_gross_json = _trend_fig(
-            tegs, trend['gross_avg'].tolist(),
+            teg_labels, trend['gross_avg'].tolist(),
             "Gross vs Par (avg per round)", "{:+.1f}",
-            [{**jacket, "name": "Green Jacket", "symbol": "star", "color": "#2e9e3f"}],
+            bar_color="#6b9ec9",
             bar_labels=gross_labels,
-            lower_is_better=True,
         )
 
-        trophy = subset(smap, "trophy")
-        spoon = subset(smap, "spoon")
         chart_stab_json = _trend_fig(
-            tegs, trend['stab_avg'].tolist(),
+            teg_labels, trend['stab_avg'].tolist(),
             "Stableford (avg per round)", "{:.1f}",
-            [{**trophy, "name": "TEG Trophy", "symbol": "star", "color": "#f5b301"},
-             {**spoon, "name": "Wooden Spoon", "symbol": "x", "color": "#cc2b2b"}],
+            bar_color="#6bab6e",
             bar_labels=net_labels,
-            lower_is_better=False,
         )
 
     return {

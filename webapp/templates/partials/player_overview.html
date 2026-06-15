@@ -63,7 +63,7 @@
     <!-- TEG Records and Worsts Held -->
     <h2 class="section-title">TEG Records and Worsts Held</h2>
     {% if records_held %}
-    <div class="detail-grid mb-3">
+    <div class="detail-grid detail-grid--halves mb-3">
         {% for r in records_held %}
         <div class="detail-card">
             <span class="detail-eyebrow">{{ r.label }}{% if r.shared %}<span class="detail-shared">shared</span>{% endif %}</span>
@@ -76,7 +76,7 @@
     <p class="text-muted text-sm mb-3">No outright TEG records held.</p>
     {% endif %}
     {% if worsts_held %}
-    <div class="detail-grid mb-6">
+    <div class="detail-grid detail-grid--halves mb-6">
         {% for r in worsts_held %}
         <div class="detail-card detail-card--bad">
             <span class="detail-eyebrow">{{ r.label }}{% if r.shared %}<span class="detail-shared">shared</span>{% endif %}</span>
