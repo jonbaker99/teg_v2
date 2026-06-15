@@ -57,7 +57,7 @@ def _area_flag_html(area_str: str) -> str:
     code = _COUNTRY_FLAG_CODES.get(country, "")
     if not code:
         return ""
-    return f"<span class='fi fi-{code} area-flag'></span>"
+    return f"<span class='fi fi-{code} teg-flag'></span>"
 
 
 router = APIRouter()
@@ -124,8 +124,15 @@ def _history_table_html(df: pd.DataFrame) -> str:
         area_raw = str(row.get("Area", ""))
         area = area_raw.split(",")[0].strip()
         flag_html = _area_flag_html(area_raw)
-        teg_cell = (f"<span class='teg-label'>{teg}</span>"
-                    f"<span class='area-label'>{flag_html}{escape(area)}</span>")
+        teg_cell = (
+            f"<div class='teg-cell'>"
+            f"{flag_html}"
+            f"<span class='teg-text'>"
+            f"<span class='teg-label'>{teg}</span>"
+            f"<span class='area-label'>{escape(area)}</span>"
+            f"</span>"
+            f"</div>"
+        )
         rows.append("<tr>")
         rows.append(f"<td>{teg_cell}</td>")
         for col in name_cols:
