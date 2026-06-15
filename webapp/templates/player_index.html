@@ -20,14 +20,15 @@
             <span class="player-avatar">{{ p.code }}</span>
             <div class="player-card-id">
                 <span class="player-card-name">{{ p.name }}</span>
+                {% if p.trophy_count or p.jacket_count %}
+                <span class="player-card-stars">
+                    {% for i in range(p.trophy_count) %}<span class="trophy-star trophy-star--gold">&#9733;</span>{% endfor %}{% if p.trophy_count and p.jacket_count %}<span class="player-card-stars-gap"></span>{% endif %}{% for i in range(p.jacket_count) %}<span class="trophy-star trophy-star--green">&#9733;</span>{% endfor %}
+                </span>
+                {% endif %}
                 <span class="player-card-meta">{{ p.n_tegs }} TEGs · since {{ p.since_year }}</span>
             </div>
         </div>
         <div class="player-card-stats">
-            <div class="pc-stat">
-                <span class="pc-stat-val">{{ p.total_trophies }}</span>
-                <span class="pc-stat-lbl">Trophies</span>
-            </div>
             <div class="pc-stat">
                 <span class="pc-stat-val">{{ p.avg_gvp }}</span>
                 <span class="pc-stat-lbl">Avg Gross</span>
@@ -37,13 +38,6 @@
                 <span class="pc-stat-lbl">Avg Stab</span>
             </div>
         </div>
-        {% if p.badges %}
-        <div class="player-card-badges">
-            {% for b in p.badges %}
-            <span class="{% if b.style == 'muted' %}badge-muted{% else %}badge{% endif %}">{{ b.text }}</span>
-            {% endfor %}
-        </div>
-        {% endif %}
         <span class="player-card-cta">View profile →</span>
     </a>
     {% endfor %}

@@ -306,6 +306,59 @@ def _records_held(name: str) -> list[dict]:
     return records
 
 
+def _worsts_held(name: str) -> list[dict]:
+    """Return the all-time TEG worst records this player holds.
+
+    Mirrors ``_records_held`` but checks highest gross / lowest Stableford and
+    the most Wooden Spoons. Each entry has the same structure: label, value,
+    detail, shared.
+    """
+    rd_data = cached_round_data()
+    teg_data = cached_ranked_teg_data()
+    winners = _get_winners_data().replace(r"\*", "", regex=True)
+
+    worsts: list[dict] = []
+
+    def teg_detail(row):
+        return f"TEG {int(row['TEGNum'])} · {int(row['Year'])} · {row['Area']}"
+
+    def round_detail(row):
+        return f"TEG {int(row['TEGNum'])} R{int(row['Round'])} · {int(row['Year'])} · {row['Course']}"
+
+    def extremum(df, col, kind, label, fmt_key, detail_fn):
+        target = df[col].max() if kind == "max" else df[col].min()
+        holders = set(df[df[col] == target]["Player"])
+        if name not in holders:
+            return
+        row = df[(df["Player"] == name) & (df[col] == target)].iloc[0]
+        worsts.append({
+            "label": label,
+            "value": format_value(target, fmt_key),
+            "detail": detail_fn(row),
+            "shared": len(holders) > 1,
+        })
+
+    extremum(teg_data, "GrossVP", "max", "Highest TEG (gross)", "GrossVP", teg_detail)
+    extremum(teg_data, "Stableford", "min", "Lowest TEG (Stableford)", "Stableford", teg_detail)
+    extremum(rd_data, "GrossVP", "max", "Highest round (gross)", "GrossVP", round_detail)
+    extremum(rd_data, "Stableford", "min", "Lowest round (Stableford)", "Stableford", round_detail)
+
+    spoon_vc = winners["HMM Wooden Spoon"].value_counts()
+    if not spoon_vc.empty:
+        top = spoon_vc.max()
+        holders = set(spoon_vc[spoon_vc == top].index)
+        if name in holders:
+            n = int(top)
+            worsts.append({
+                "label": "Most Wooden Spoons",
+                "value": f"{n} spoon{'' if n == 1 else 's'}",
+                "detail": "",
+                "shared": len(holders) > 1,
+            })
+
+    return worsts
+
+
 def _build_highlights(player_code: str) -> list[dict]:
     """Build 'colour' points: best/worst course, best round/TEG, records, eagles."""
     name = PLAYER_DICT[player_code]
@@ -327,7 +380,8 @@ def _build_highlights(player_code: str) -> list[dict]:
                                     f"{int(by_course.loc[best_c, 'count'])} rounds"})
             items.append({"label": "Worst Course", "value": worst_c,
                           "detail": f"avg {by_course.loc[worst_c, 'mean']:+.1f} over "
-                                    f"{int(by_course.loc[worst_c, 'count'])} rounds"})
+                                    f"{int(by_course.loc[worst_c, 'count'])} rounds",
+                          "bad": True})
 
         # Best round
         br = player_rd.loc[player_rd["GrossVP"].idxmin()]
@@ -521,18 +575,28 @@ def _result_label(flags: dict) -> str:
     return ""
 
 
-def _trend_fig(x, y, yaxis_title, avg_fmt, overlays) -> str:
-    """Build a career-trend line chart (one point per TEG) with optional event
+def _trend_fig(x, y, yaxis_title, avg_fmt, overlays, bar_labels=None, lower_is_better=True) -> str:
+    """Build a career-trend bar chart (one bar per TEG) with optional event
     markers overlaid. ``overlays`` is a list of dicts with x, y, name, symbol,
-    color — used to flag trophy/jacket/spoon TEGs with distinctive markers."""
+    color. ``bar_labels`` annotates each bar at its base with a finishing rank.
+    ``lower_is_better`` controls colour direction: True for gross (negative=green),
+    False for Stableford (high=green)."""
     fig = go.Figure()
-    fig.add_trace(go.Scatter(
-        x=x, y=y, mode='lines+markers', name=yaxis_title,
-        line=dict(width=2), marker=dict(size=7), showlegend=False,
-        hovertemplate="TEG %{x}<br>" + yaxis_title + ": %{y:.1f}<extra></extra>",
-    ))
     if y:
         avg = sum(y) / len(y)
+        cmid = 0 if lower_is_better else avg
+        fig.add_trace(go.Bar(
+            x=x, y=y, name=yaxis_title,
+            marker=dict(
+                color=y,
+                colorscale='RdYlGn',
+                reversescale=lower_is_better,
+                cmid=cmid,
+                line=dict(width=0),
+            ),
+            showlegend=False,
+            hovertemplate="TEG %{x}<br>" + yaxis_title + ": %{y:.1f}<extra></extra>",
+        ))
         fig.add_hline(
             y=avg, line_dash="dash", line_color="gray",
             annotation_text="Avg: " + avg_fmt.format(avg),
@@ -547,15 +611,27 @@ def _trend_fig(x, y, yaxis_title, avg_fmt, overlays) -> str:
                         line=dict(width=1, color="white")),
             hovertemplate="TEG %{x} — " + ov["name"] + "<extra></extra>",
         ))
+    if bar_labels:
+        for xi, label in zip(x, bar_labels):
+            if label and label != "–":
+                fig.add_annotation(
+                    x=xi, y=0,
+                    text=str(label),
+                    showarrow=False,
+                    yshift=-4,
+                    xanchor='center',
+                    yanchor='top',
+                    font=dict(size=8, color='gray'),
+                )
     fig.update_layout(
         xaxis_title="TEG", yaxis_title=yaxis_title,
-        margin=dict(r=20, t=10, b=40, l=50),
+        margin=dict(r=20, t=10, b=52 if bar_labels else 40, l=50),
         font=dict(family="monospace"), hovermode='x unified',
+        bargap=0.25,
     )
     fig.layout.xaxis.fixedrange = True
     fig.layout.yaxis.fixedrange = True
     fig.update_layout(**get_chart_style('streamlit'))
-    # Legend (after the style so it isn't overridden) explains the event markers.
     fig.update_layout(
         showlegend=any(ov["x"] for ov in overlays),
         legend=dict(orientation="h", yanchor="bottom", y=1.02,
@@ -568,12 +644,20 @@ def _build_overview_context(player_code: str, theme: str) -> dict:
     """Build context for the overview tab."""
     name = PLAYER_DICT[player_code]
 
-    # TEG results table
     ranked_teg = cached_ranked_teg_data()
     player_teg = ranked_teg[ranked_teg['Player'] == name].copy()
-
     winners = _get_winners_data()
     rd_data = cached_round_data()
+
+    # Pre-compute per-TEG finishing ranks once; used for both table and chart labels.
+    teg_rank_map: dict[int, dict] = {}
+    if not player_teg.empty:
+        for teg_num in player_teg['TEGNum'].astype(int):
+            r = _compute_teg_ranks(teg_num, rd_data).get(name, {})
+            teg_rank_map[teg_num] = {
+                "gross": r.get("gross_rank", "–"),
+                "net": r.get("net_rank", "–"),
+            }
 
     if not player_teg.empty:
         rows = []
@@ -590,15 +674,10 @@ def _build_overview_context(player_code: str, theme: str) -> dict:
                 net_val = format_value(r['NetVP'], 'NetVP')
                 net_label = net_val
 
-            # Per-TEG finishing positions
-            teg_ranks = _compute_teg_ranks(teg_num, rd_data)
-            player_ranks = teg_ranks.get(name, {})
-            gross_rank = player_ranks.get("gross_rank", "–")
-            net_rank = player_ranks.get("net_rank", "–")
-
+            gross_rank = teg_rank_map.get(teg_num, {}).get("gross", "–")
+            net_rank = teg_rank_map.get(teg_num, {}).get("net", "–")
             result = _result_label(_teg_result_flags(winners, name, teg_num))
 
-            # Net finishing position is the Trophy Rank; shown before Gross Rank.
             rows.append({
                 'TEG': teg_num,
                 'Year': year,
@@ -614,9 +693,9 @@ def _build_overview_context(player_code: str, theme: str) -> dict:
     else:
         teg_table_html = "<p class='text-muted text-sm'>No TEG data.</p>"
 
-    # Career trend charts — average per round, one point per TEG. Event markers:
-    # gross chart flags Green Jacket (gross) wins; stableford chart flags TEG
-    # Trophy (net) wins and Wooden Spoons.
+    # Career trend charts — bar per TEG, averaged per round. Bars colour-coded by
+    # performance direction; event markers flag jacket/trophy/spoon TEGs; rank
+    # labels sit at bar base showing how the player finished that year.
     chart_gross_json = None
     chart_stab_json = None
     if not player_teg.empty:
@@ -631,6 +710,9 @@ def _build_overview_context(player_code: str, theme: str) -> dict:
         gmap = dict(zip(tegs, trend['gross_avg']))
         smap = dict(zip(tegs, trend['stab_avg']))
 
+        gross_labels = [teg_rank_map.get(t, {}).get("gross", "–") for t in tegs]
+        net_labels = [teg_rank_map.get(t, {}).get("net", "–") for t in tegs]
+
         def subset(value_map, key):
             xs = [t for t in tegs if flags[t][key]]
             return {"x": xs, "y": [value_map[t] for t in xs]}
@@ -640,6 +722,8 @@ def _build_overview_context(player_code: str, theme: str) -> dict:
             tegs, trend['gross_avg'].tolist(),
             "Gross vs Par (avg per round)", "{:+.1f}",
             [{**jacket, "name": "Green Jacket", "symbol": "star", "color": "#2e9e3f"}],
+            bar_labels=gross_labels,
+            lower_is_better=True,
         )
 
         trophy = subset(smap, "trophy")
@@ -649,6 +733,8 @@ def _build_overview_context(player_code: str, theme: str) -> dict:
             "Stableford (avg per round)", "{:.1f}",
             [{**trophy, "name": "TEG Trophy", "symbol": "star", "color": "#f5b301"},
              {**spoon, "name": "Wooden Spoon", "symbol": "x", "color": "#cc2b2b"}],
+            bar_labels=net_labels,
+            lower_is_better=False,
         )
 
     return {
@@ -657,6 +743,7 @@ def _build_overview_context(player_code: str, theme: str) -> dict:
         "chart_stab_json": chart_stab_json,
         "highlights": _build_highlights(player_code),
         "records_held": _records_held(PLAYER_DICT[player_code]),
+        "worsts_held": _worsts_held(PLAYER_DICT[player_code]),
         "metrics": _build_overview_metrics(player_code),
         "trophy": _build_trophy_section(player_code),
     }
@@ -994,6 +1081,8 @@ def _build_roster() -> list[dict]:
             "avg_gvp": f"{avg_gvp:+.1f}" if avg_gvp is not None else "–",
             "avg_stab": f"{avg_stab:.1f}" if avg_stab is not None else "–",
             "total_trophies": total_trophies,
+            "trophy_count": trophy_count,
+            "jacket_count": jacket_count,
             "badges": badges,
         })
 

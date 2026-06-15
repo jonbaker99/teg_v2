@@ -605,9 +605,6 @@ h1, h2, h3, h4, h5, h6 {
 .trophy-honour-rank {
     font-size: 0.8rem;
     font-weight: 400;
-    color: var(--accent);
-}
-.trophy-honour--lowlight .trophy-honour-rank {
     color: var(--text-muted);
 }
 .trophy-honour-stars {
@@ -681,6 +678,9 @@ h1, h2, h3, h4, h5, h6 {
     border-left: 3px solid var(--accent);
     border-radius: var(--card-radius);
     padding: 0.65rem 0.85rem;
+}
+.detail-card--bad {
+    border-left-color: #cc2b2b;
 }
 .detail-eyebrow {
     font-size: 0.625rem;
@@ -800,9 +800,22 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 0.75rem;
     color: var(--text-muted);
 }
+.player-card-stars {
+    display: block;
+    line-height: 1;
+    margin: 0.1rem 0 0;
+}
+.player-card-stars .trophy-star {
+    font-size: 0.7rem;
+    margin-right: 0.05rem;
+}
+.player-card-stars-gap {
+    display: inline-block;
+    width: 0.25rem;
+}
 .player-card-stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem;
     padding: 0.65rem 0;
     border-top: 1px dotted var(--table-cell-border);
