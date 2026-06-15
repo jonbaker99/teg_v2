@@ -114,6 +114,37 @@ def _intify_numeric(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+def _format_scoring_display(counts: pd.DataFrame, field: str, mode: str) -> tuple:
+    """Format a score-count pivot for display. Returns (display_df, title).
+
+    First column (the score index) is formatted as vs-par labels for GrossVP
+    or plain integers for Stableford. Data columns show raw integer counts or
+    '<n>%' strings depending on mode.
+    """
+    friendly = dict(SCORING_FIELDS).get(field, field)
+    if mode == "pct":
+        col_sums = counts.sum(axis=0).replace(0, 1)
+        display_df = counts.div(col_sums, axis=1).mul(100).round(0).astype(int)
+        title = f"Score Distribution — % of holes ({friendly})"
+    else:
+        display_df = _intify_numeric(counts)
+        title = f"Score Counts ({friendly})"
+
+    display_df = display_df.reset_index()
+    idx_col = display_df.columns[0]
+
+    if field == 'GrossVP':
+        display_df[idx_col] = display_df[idx_col].apply(lambda v: format_vs_par(int(v)))
+    else:
+        display_df[idx_col] = display_df[idx_col].apply(lambda v: str(int(v)))
+
+    if mode == "pct":
+        for col in display_df.columns[1:]:
+            display_df[col] = display_df[col].apply(lambda v: f"{int(v)}%")
+
+    return display_df, title
+
+
 def _bestball_rank_summary(bb_all: pd.DataFrame, wb_all: pd.DataFrame,
                            teg_num: int, round_num: int) -> str:
     """Build the 'ranks N / M all-time' summary for this round's bestball and
@@ -341,20 +372,13 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
 
         elif tab == "scoring":
             field = score_type if score_type in ("GrossVP", "Stableford") else "GrossVP"
-            friendly = dict(SCORING_FIELDS).get(field, field)
             mode = display_mode if display_mode in ("count", "pct") else "count"
             all_data = cached_load_all_data()
             round_data = all_data[(all_data['TEGNum'] == teg_num) & (all_data['Round'] == round_num)]
             if not round_data.empty:
                 counts = count_scores_by_player(round_data, field)
-                if mode == "pct":
-                    col_sums = counts.sum(axis=0).replace(0, 1)
-                    display_df = counts.div(col_sums, axis=1).mul(100).round(0).astype(int)
-                    title = f"Score Distribution — % of holes ({friendly})"
-                else:
-                    display_df = _intify_numeric(counts)
-                    title = f"Score Counts ({friendly})"
-                sections.append({"title": title, "table_html": _df_to_html(display_df.reset_index())})
+                display_df, title = _format_scoring_display(counts, field, mode)
+                sections.append({"title": title, "table_html": _df_to_html(display_df)})
             else:
                 sections.append({"title": "Scoring", "table_html": "<p class='text-muted text-sm'>No scoring data.</p>"})
             return {"sections": sections, "scoring_fields": SCORING_FIELDS, "score_type": field, "display_mode": mode}
@@ -460,20 +484,13 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
 
         elif tab == "scoring":
             field = score_type if score_type in ("GrossVP", "Stableford") else "GrossVP"
-            friendly = dict(SCORING_FIELDS).get(field, field)
             mode = display_mode if display_mode in ("count", "pct") else "count"
             all_data = cached_load_all_data()
             teg_data = all_data[all_data['TEGNum'] == teg_num]
             if not teg_data.empty:
                 counts = count_scores_by_player(teg_data, field)
-                if mode == "pct":
-                    col_sums = counts.sum(axis=0).replace(0, 1)
-                    display_df = counts.div(col_sums, axis=1).mul(100).round(0).astype(int)
-                    title = f"Score Distribution — % of holes ({friendly})"
-                else:
-                    display_df = _intify_numeric(counts)
-                    title = f"Score Counts ({friendly})"
-                sections.append({"title": title, "table_html": _df_to_html(display_df.reset_index())})
+                display_df, title = _format_scoring_display(counts, field, mode)
+                sections.append({"title": title, "table_html": _df_to_html(display_df)})
             else:
                 sections.append({"title": "Scoring", "table_html": "<p class='text-muted text-sm'>No scoring data.</p>"})
             return {"sections": sections, "scoring_fields": SCORING_FIELDS, "score_type": field, "display_mode": mode}
