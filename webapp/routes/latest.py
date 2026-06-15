@@ -33,9 +33,17 @@ from teg_analysis.analysis.handicaps import (
 from teg_analysis.analysis.aggregation import get_current_in_progress_teg_fast
 from teg_analysis.analysis.streaks import get_player_window_streaks, build_streaks, pivot_window_streaks
 from teg_analysis.analysis.scoring import count_scores_by_player
+from teg_analysis.analysis.eclectic import calculate_eclectic_by_dimension
+from teg_analysis.analysis.bestball import (
+    prepare_bestball_data,
+    calculate_bestball_scores,
+    calculate_worstball_scores,
+)
 from teg_analysis.core.metadata import get_scorecard_data, get_teg_metadata
 from teg_analysis.display.scorecards import (
     build_round_comparison_responsive,
+    build_eclectic_scorecard_table,
+    build_bestball_worstball_scorecard,
 )
 from webapp.deps import (
     cached_load_all_data,
@@ -103,6 +111,27 @@ def _intify_numeric(df: pd.DataFrame) -> pd.DataFrame:
         if pd.api.types.is_numeric_dtype(out[col]):
             out[col] = out[col].astype('int64')
     return out
+
+
+def _bestball_rank_summary(bb_all: pd.DataFrame, wb_all: pd.DataFrame,
+                           teg_num: int, round_num: int) -> str:
+    """Build the 'ranks N / M all-time' summary for this round's bestball and
+    worstball totals. Lower GrossVP ranks first (rank 1 = best)."""
+    def _one(df: pd.DataFrame, label: str) -> str:
+        d = df.copy()
+        d['__r'] = d['GrossVP'].rank(method='min', ascending=True).astype(int)
+        row = d[(d['TEGNum'] == teg_num) & (d['Round'] == round_num)]
+        if row.empty:
+            return ''
+        vp = int(row['GrossVP'].iloc[0])
+        rank = int(row['__r'].iloc[0])
+        return (f'<strong>{label}</strong>: {format_vs_par(vp)} · '
+                f'ranks <strong>{rank} / {len(d)}</strong> all-time')
+
+    parts = [p for p in (_one(bb_all, 'Bestball'), _one(wb_all, 'Worstball')) if p]
+    if not parts:
+        return ''
+    return '<p class="text-muted text-sm mt-3">' + '<br>'.join(parts) + '</p>'
 
 
 _RECORDS_DRAFT_NOTE = (
@@ -179,6 +208,7 @@ def _render_records_summary(rd: dict, page_type: str = 'TEG') -> str:
 LATEST_ROUND_TABS = [
     ("scoreboard", "Scoreboards"),
     ("scorecard", "Scorecard"),
+    ("bestball", "Bestball / Worstball"),
     ("report", "Report"),
     ("scoring", "Scoring"),
     ("streaks", "Streaks"),
@@ -247,6 +277,27 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                 return {"sections": sections, "scorecard_css": True}
             except Exception as e:
                 sections.append({"title": "Scorecard", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
+
+        elif tab == "bestball":
+            try:
+                all_data = cached_load_all_data()
+                round_data = all_data[(all_data['TEGNum'] == teg_num) & (all_data['Round'] == round_num)]
+                if round_data.empty:
+                    sections.append({"title": "Bestball / Worstball", "table_html": "<p class='text-muted text-sm'>No data.</p>"})
+                    return {"sections": sections}
+                card_html = build_bestball_worstball_scorecard(round_data)
+                sections.append({"title": "Bestball / Worstball by hole (vs par)", "table_html": card_html})
+
+                # All-time ranks of this round's bestball / worstball totals.
+                bb_prepared = prepare_bestball_data(all_data)
+                bb_all = calculate_bestball_scores(bb_prepared)
+                wb_all = calculate_worstball_scores(bb_prepared)
+                rank_html = _bestball_rank_summary(bb_all, wb_all, teg_num, round_num)
+                if rank_html:
+                    sections.append({"title": None, "table_html": rank_html, "raw": True})
+                return {"sections": sections, "scorecard_css": True}
+            except Exception as e:
+                sections.append({"title": "Bestball / Worstball", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
         elif tab == "records":
             try:
@@ -377,6 +428,7 @@ async def latest_round_tab(request: Request, teg: int = Query(...), round: int =
 LATEST_TEG_TABS = [
     ("aggregate", "Aggregate Score"),
     ("scoring", "Scoring"),
+    ("eclectic", "Eclectic"),
     ("streaks", "Streaks"),
     ("records", "Records & PBs"),
     ("report", "Report"),
@@ -423,6 +475,34 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
             else:
                 sections.append({"title": "Scoring", "table_html": "<p class='text-muted text-sm'>No scoring data.</p>"})
             return {"sections": sections, "scoring_fields": SCORING_FIELDS, "score_type": field, "display_mode": mode}
+
+        elif tab == "eclectic":
+            try:
+                all_data = cached_load_all_data()
+                eclectic_df, display_dim = calculate_eclectic_by_dimension(all_data, "TEGNum")
+                if eclectic_df.empty:
+                    sections.append({"title": "Eclectic", "table_html": "<p class='text-muted text-sm'>No data.</p>"})
+                    return {"sections": sections}
+                teg_label = f"TEG {teg_num}"
+                ranked = eclectic_df.copy()
+                ranked['__r'] = ranked['Total'].rank(method='min', ascending=True).astype(int)
+                this_row = ranked[ranked[display_dim] == teg_label]
+                if this_row.empty:
+                    sections.append({"title": "Eclectic", "table_html": "<p class='text-muted text-sm'>No eclectic data for this TEG.</p>"})
+                    return {"sections": sections}
+                rank = int(this_row['__r'].iloc[0])
+                total_val = int(this_row['Total'].iloc[0])
+                total_tegs = len(ranked)
+                single = this_row.drop(columns='__r')
+                table_html = build_eclectic_scorecard_table(single, display_dim)
+                sections.append({"title": f"Best Eclectic — {teg_label}", "table_html": table_html})
+                rank_html = (f'<p class="text-muted text-sm mt-3">Eclectic total '
+                             f'<strong>{format_vs_par(total_val)}</strong> · ranks '
+                             f'<strong>{rank} / {total_tegs}</strong> of all TEGs</p>')
+                sections.append({"title": None, "table_html": rank_html, "raw": True})
+                return {"sections": sections}
+            except Exception as e:
+                sections.append({"title": "Eclectic", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
         elif tab == "report":
             html = _render_report([

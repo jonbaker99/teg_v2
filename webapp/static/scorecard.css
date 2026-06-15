@@ -454,6 +454,35 @@ html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="-1"] span { 
 html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] { background-color: var(--color-bogey); }
 html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] span { color: var(--color-text-bogey); }
 
+/* ===== BESTBALL / WORSTBALL FIELD CARD =====
+   Player rows show gross-vs-par with the field best highlighted green and the
+   worst black; the Bestball/Worstball rows reuse the eclectic to-par shading
+   (.eclectic-cell / data-evp). */
+.bw-scorecard .bw-cell {
+  text-align: center;
+  min-width: var(--cell-min-width);
+  height: var(--cell-height);
+  padding: var(--spacing-cell);
+  vertical-align: middle;
+  background-color: white;
+}
+.bw-scorecard .bw-cell span {
+  font-size: 12px;
+  font-family: 'Roboto Mono', monospace;
+}
+.bw-scorecard .bw-cell.bw-best { background-color: #cdebcd; }
+.bw-scorecard .bw-cell.bw-best span { color: #14661a; font-weight: 600; }
+.bw-scorecard .bw-cell.bw-worst { background-color: #111; }
+.bw-scorecard .bw-cell.bw-worst span { color: #fff; font-weight: 600; }
+.bw-scorecard .bw-team-row .player-label { font-weight: 700; }
+
+/* Dark mode */
+html[data-mode="dark"] .bw-scorecard .bw-cell { background-color: #1d1d1a; }
+html[data-mode="dark"] .bw-scorecard .bw-cell.bw-best { background-color: #1e3d22; }
+html[data-mode="dark"] .bw-scorecard .bw-cell.bw-best span { color: #7fd487; }
+html[data-mode="dark"] .bw-scorecard .bw-cell.bw-worst { background-color: #000; }
+html[data-mode="dark"] .bw-scorecard .bw-cell.bw-worst span { color: #fff; }
+
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
   .scorecard-wrapper,
