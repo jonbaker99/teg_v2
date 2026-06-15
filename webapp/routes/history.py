@@ -57,7 +57,7 @@ def _area_flag_html(area_str: str) -> str:
     code = _COUNTRY_FLAG_CODES.get(country, "")
     if not code:
         return ""
-    return f"<span class='fi fi-{code} fis area-flag'></span>"
+    return f"<span class='fi fi-{code} area-flag'></span>"
 
 
 router = APIRouter()
