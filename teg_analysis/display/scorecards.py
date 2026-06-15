@@ -683,11 +683,11 @@ def _bw_player_cell(value, hole_min, hole_max=None, title: str = '') -> str:
 
 def _bw_team_cell(vp_value) -> str:
     """One team row cell (Bestball/Worstball or Best Eclectic) using scorecard
-    shapes (score-cell + data-vs-par)."""
+    shapes (score-cell on the td + data-vs-par)."""
     if vp_value is None:
-        return '<td><span class="score-cell">-</span></td>'
+        return '<td class="score-cell"><span>-</span></td>'
     v = int(vp_value)
-    return f'<td><span class="score-cell" data-vs-par="{v}">{_vp_label(v)}</span></td>'
+    return f'<td class="score-cell" data-vs-par="{v}"><span>{_vp_label(v)}</span></td>'
 
 
 def build_bestball_worstball_scorecard(round_data: pd.DataFrame) -> str:

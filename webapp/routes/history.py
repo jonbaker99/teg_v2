@@ -450,7 +450,7 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "stand
     try:
         if tab == "scorecards":
             rounds = get_rounds_for_teg(teg_num)
-            parts = ['<link rel="stylesheet" href="/static/scorecard.css?v=19">']
+            parts = ['<link rel="stylesheet" href="/static/scorecard.css?v=20">']
             for r in rounds:
                 try:
                     rd = get_scorecard_data(teg_num, r)

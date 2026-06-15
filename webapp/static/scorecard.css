@@ -470,6 +470,7 @@ html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] span { c
 .bw-scorecard .bw-cell span {
   font-size: 12px;
   font-family: 'Roboto Mono', monospace;
+  color: #aaa; /* neutral holes de-emphasised */
 }
 /* Font-only player highlights — no background */
 .bw-scorecard .bw-cell.bw-player-best span { color: #14661a; font-weight: 700; }
@@ -491,6 +492,7 @@ html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] span { c
 
 /* Dark mode */
 html[data-mode="dark"] .bw-scorecard .bw-cell { background-color: #1d1d1a; }
+html[data-mode="dark"] .bw-scorecard .bw-cell span { color: #555; }
 html[data-mode="dark"] .bw-scorecard .bw-cell.bw-player-best span { color: #7fd487; }
 html[data-mode="dark"] .bw-scorecard .bw-cell.bw-player-worst span { color: #f87171; }
 
