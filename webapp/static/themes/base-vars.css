@@ -206,6 +206,10 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 0.8125rem;
     color: var(--text-muted);
 }
+.history-table .area-flag {
+    font-style: normal;
+    color: initial;
+}
 /* Emphasise the main trophy winner (first name column) */
 .history-table tbody td:nth-child(2) {
     font-weight: 700;
