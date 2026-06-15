@@ -64,7 +64,7 @@ NAV_SECTIONS = [
             ("Average by TEG", "/scoring/by-teg", "scoring", "strategy"),
             ("Course averages and records", "/scoring/by-course", "scoring", "strategy"),
             ("All rounds", "/scoring/all-rounds", "scoring", "strategy"),
-            ("Score matrix", "/scoring/matrix", "scoring", "table_chart"),
+            ("Score history", "/scoring/matrix", "scoring", "table_chart"),
             ("Scoring distributions", "/scoring/distributions", "scoring", "strategy"),
             ("Changes vs previous round", "/scoring/changes", "scoring", "strategy"),
             ("Heatmap (WIP)", "/scoring/heatmap", "scoring", "strategy"),

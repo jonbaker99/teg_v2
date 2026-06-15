@@ -5,7 +5,14 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 ---
 
 ## IN PROGRESS
-- [ ] **SCORECARDS**
+
+- [X] **Default look** - use 'clean page' and remove the dropdown unless I specifically ask to go into UI development mode
+- [X] **Score-count matrix % pill** — absolute / % toggle on Scoring tab on `/latest-teg`. Use `.pill-group` component.
+
+- [ ] **Bestball/worstball on `/latest-round`** — show best/worst bestball and worstball positions in the round-in-context page.
+- [X] **Score matrix** - rename to score history
+- [ ] **`/scoring/matrix`** - score type as pills; TEG / Round / 9 as tabs
+
 
 ## NEXT UP
 
@@ -14,18 +21,10 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## UI Changes
 
-- [ ] **History table** - Consistent column widths for final 3 columns. Use full width of page. Consistent line break between first names and surnames in final 3 columns - either all or none.
-- [ ] **Table font** - make a touch smaller to match streamlit
-- [ ] **General tables** - consistent column widths where possible for similar type of columns
 
-
-## **SCORECARDS**:
-- [ ] **Eclectics** - use scorecard gross formatting
-- [ ] on mouseover on the scorecard, I'd like to show information about that score on that hole. 'Hole', 'Stroke Index' [SI], 'Par', 'Score', 'Net', 'Stableford'. this should apply across all pages where a scorecard is shown.
-- [ ] the scorecard page width appears to change when different 'views' are chosen. It's a bit jarring. Can we make the page width consistent? Let's tackle this globally instead of incrementally on the scorecard page (i.e. apply to all pages to start with
-- [ ] the eclectic scorecards on `/eclectic` should be formatted using the scorecard gross formats  
-- [ ] Mobile view automatically on all scorecard pages. this has been built as part of mobile UI work but may not yet be in the core functionality. please check.
-- [ ] **Mouseover tooltips on scorecard cells** — on hover show: Hole, Par, SI, Score, Net, Stableford
+## PLAYER PROFILES
+- [ ] Revisit again to make UI cleaner and less cluttered
+- [ ] UI design pass** — `/player/{code}` and the `/player` roster have been significantly reworked (metric cards, career highlights, records/worsts, bar charts, roster cards with stars). Functionality is complete. Revisit with fresh eyes for: layout rhythm and section ordering, chart sizing and padding, card density, label clarity, mobile view. See `webapp/routes/player.py` and `webapp/templates/partials/player_overview.html`.
 
 ## Mobile & dark mode
 
@@ -42,7 +41,6 @@ Currently out of scope — Streamlit handles this via three pages (`1000Data upd
 
 ## Planned enhancements
 
-- [ ] **Player profile page — UI design pass** — `/player/{code}` and the `/player` roster have been significantly reworked (metric cards, career highlights, records/worsts, bar charts, roster cards with stars). Functionality is complete. Revisit with fresh eyes for: layout rhythm and section ordering, chart sizing and padding, card density, label clarity, mobile view. See `webapp/routes/player.py` and `webapp/templates/partials/player_overview.html`.
 - [ ] **Score-count matrix % pill** — absolute / % toggle on `/scoring/matrix` and Scoring tab on `/latest-teg`. Use `.pill-group` component.
 - [ ] **Bestball/worstball on `/latest-round`** — show best/worst bestball and worstball positions in the round-in-context page.
 - [ ] **Related links section** — cross-page related-links block (low priority).
