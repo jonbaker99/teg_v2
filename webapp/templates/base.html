@@ -148,13 +148,9 @@
                         </div>
                     </div>
                     {% endfor %}
-                    <!-- Theme selector -->
-                    <select class="theme-select ml-3"
-                            onchange="document.cookie='theme='+this.value+';path=/;max-age=31536000';location.reload()">
-                        {% for tid, tlabel in request.state.themes %}
-                        <option value="{{ tid }}" {% if tid == request.state.theme %}selected{% endif %}>{{ tlabel }}</option>
-                        {% endfor %}
-                    </select>
+                    {#- Theme selector hidden — Clean Page is the default.
+                        Re-add for UI development: a <select> cycling request.state.themes,
+                        setting cookie 'theme' and reloading. -#}
                     <!-- Light/dark toggle (orthogonal to theme; default light) -->
                     <button type="button" class="mode-toggle ml-2" title="Toggle light / dark" aria-label="Toggle light or dark mode"
                             onclick="var m=document.documentElement.getAttribute('data-mode')==='dark'?'light':'dark';document.cookie='mode='+m+';path=/;max-age=31536000';location.reload()">

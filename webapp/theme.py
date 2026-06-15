@@ -7,8 +7,7 @@ THEMES = [
 ]
 
 THEME_IDS = {t[0] for t in THEMES}
-# Default to the flat-white "clean" theme — matches the Streamlit site (Phase 1a).
-DEFAULT_THEME = "clean"
+DEFAULT_THEME = "clean-page"
 
 
 def get_theme(request) -> str:

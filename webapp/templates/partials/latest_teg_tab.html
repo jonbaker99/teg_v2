@@ -14,10 +14,22 @@
       {% for fid, flabel in scoring_fields %}
       <button class="pill{% if fid == score_type %} pill--active{% endif %}"
               hx-get="/latest-teg/tab" hx-target="#lt-content" hx-swap="innerHTML"
-              hx-vals='{"teg": "{{ teg }}", "tab": "scoring", "score_type": "{{ fid }}"}'>
+              hx-vals='{"teg": "{{ teg }}", "tab": "scoring", "score_type": "{{ fid }}", "display_mode": "{{ display_mode }}"}'>
         {{ flabel }}
       </button>
       {% endfor %}
+    </div>
+    <div class="pill-group" role="group" aria-label="Display mode" style="margin-left:1rem">
+      <button class="pill{% if display_mode != 'pct' %} pill--active{% endif %}"
+              hx-get="/latest-teg/tab" hx-target="#lt-content" hx-swap="innerHTML"
+              hx-vals='{"teg": "{{ teg }}", "tab": "scoring", "score_type": "{{ score_type }}", "display_mode": "count"}'>
+        Count
+      </button>
+      <button class="pill{% if display_mode == 'pct' %} pill--active{% endif %}"
+              hx-get="/latest-teg/tab" hx-target="#lt-content" hx-swap="innerHTML"
+              hx-vals='{"teg": "{{ teg }}", "tab": "scoring", "score_type": "{{ score_type }}", "display_mode": "pct"}'>
+        %
+      </button>
     </div>
   </div>
   {% endif %}
@@ -43,3 +55,4 @@
 {% else %}
 <p class="text-muted text-sm">No data available.</p>
 {% endif %}
+<p id="lt-context-header" hx-swap-oob="true" class="text-muted text-sm mb-3">{{ context_header }}</p>

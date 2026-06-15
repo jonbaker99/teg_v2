@@ -475,12 +475,17 @@ HTML builders).
   (`Round_Label`) isn't present in the data it's given.
 - ~~**Fix the `/latest-teg` Streaks tab — it only reflects the final round.**~~ Fixed: removed `round_num` filter so the whole TEG is windowed.
 
-**Planned enhancements (TODO):**
-- **Add an absolute / % pill** (percentage = share of each column) to the
-  score-count matrix on `/scoring/matrix` and to the **Scoring tab on
-  `/latest-teg`** — a `.pill-group` toggle that switches the table between raw
-  counts and column percentages.
-- **Show bestball/worstball positions on `/latest-round`** — add the round's
-  best bestball / best worstball / worst bestball / worst worstball positions
-  to the Latest Round in context page.
+**Planned enhancements:**
+- ~~**Add an absolute / % pill** to the Scoring tabs on `/latest-teg` and
+  `/latest-round`.~~ Done: a Count / % `.pill-group` toggle switches the
+  score-count table between raw counts and column percentages (rounded to the
+  nearest %). *(Still TODO on the `/scoring/matrix` score-count matrix.)*
+- ~~**Show bestball/worstball positions on `/latest-round`.**~~ Done: a
+  **Bestball / Worstball** tab renders a field card (one row per player's
+  gross-vs-par per hole, field best highlighted green / worst black, plus
+  Bestball and Worstball to-par rows in the eclectic shading), with each
+  round's bestball and worstball totals ranked against all rounds all-time.
+- ~~**Show the best eclectic for the latest TEG.**~~ Done: an **Eclectic** tab
+  on `/latest-teg` shows the TEG's best eclectic (by hole + total) in the
+  eclectic scorecard format, ranked against all TEGs.
 
