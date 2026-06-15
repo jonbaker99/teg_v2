@@ -193,7 +193,8 @@ METRIC_TABS = [("Sc", "Score"), ("Stableford", "Stableford"), ("GrossVP", "Gross
 
 
 def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
-                              score_type: str = "GrossVP", metric: str = "Sc") -> dict:
+                              score_type: str = "GrossVP", metric: str = "Sc",
+                              display_mode: str = "count") -> dict:
     try:
         rd_data = cached_round_data()
         teg_rd = rd_data[(rd_data['TEGNum'] == teg_num) & (rd_data['Round'] == round_num)]
@@ -288,15 +289,22 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
         elif tab == "scoring":
             field = score_type if score_type in ("GrossVP", "Stableford") else "GrossVP"
             friendly = dict(SCORING_FIELDS).get(field, field)
+            mode = display_mode if display_mode in ("count", "pct") else "count"
             all_data = cached_load_all_data()
             round_data = all_data[(all_data['TEGNum'] == teg_num) & (all_data['Round'] == round_num)]
             if not round_data.empty:
                 counts = count_scores_by_player(round_data, field)
-                counts_display = _intify_numeric(counts.reset_index())
-                sections.append({"title": f"Score Counts ({friendly})", "table_html": _df_to_html(counts_display)})
+                if mode == "pct":
+                    col_sums = counts.sum(axis=0).replace(0, 1)
+                    display_df = counts.div(col_sums, axis=1).mul(100).round(0).astype(int)
+                    title = f"Score Distribution — % of holes ({friendly})"
+                else:
+                    display_df = _intify_numeric(counts)
+                    title = f"Score Counts ({friendly})"
+                sections.append({"title": title, "table_html": _df_to_html(display_df.reset_index())})
             else:
                 sections.append({"title": "Scoring", "table_html": "<p class='text-muted text-sm'>No scoring data.</p>"})
-            return {"sections": sections, "scoring_fields": SCORING_FIELDS, "score_type": field}
+            return {"sections": sections, "scoring_fields": SCORING_FIELDS, "score_type": field, "display_mode": mode}
 
         elif tab == "streaks":
             try:
@@ -351,10 +359,10 @@ async def latest_round_page(request: Request):
 @router.get("/latest-round/tab")
 async def latest_round_tab(request: Request, teg: int = Query(...), round: int = Query(...),
                            tab: str = Query("scoreboard"), score_type: str = Query("GrossVP"),
-                           metric: str = Query("Sc")):
+                           metric: str = Query("Sc"), display_mode: str = Query("count")):
     rounds = get_rounds_for_teg(teg)
     round_num = round if round in rounds else (rounds[-1] if rounds else 1)
-    ctx = _latest_round_tab_context(teg, round_num, tab, score_type, metric)
+    ctx = _latest_round_tab_context(teg, round_num, tab, score_type, metric, display_mode)
     return templates.TemplateResponse("partials/latest_round_tab.html", {
         "request": request,
         "teg": teg,
@@ -375,7 +383,8 @@ LATEST_TEG_TABS = [
 ]
 
 
-def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP", metric: str = "Sc") -> dict:
+def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP", metric: str = "Sc",
+                            display_mode: str = "count") -> dict:
     """Build template context for a latest-teg tab."""
     try:
         sections = []
@@ -398,15 +407,22 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
         elif tab == "scoring":
             field = score_type if score_type in ("GrossVP", "Stableford") else "GrossVP"
             friendly = dict(SCORING_FIELDS).get(field, field)
+            mode = display_mode if display_mode in ("count", "pct") else "count"
             all_data = cached_load_all_data()
             teg_data = all_data[all_data['TEGNum'] == teg_num]
             if not teg_data.empty:
                 counts = count_scores_by_player(teg_data, field)
-                counts_display = _intify_numeric(counts.reset_index())
-                sections.append({"title": f"Score Counts ({friendly})", "table_html": _df_to_html(counts_display)})
+                if mode == "pct":
+                    col_sums = counts.sum(axis=0).replace(0, 1)
+                    display_df = counts.div(col_sums, axis=1).mul(100).round(0).astype(int)
+                    title = f"Score Distribution — % of holes ({friendly})"
+                else:
+                    display_df = _intify_numeric(counts)
+                    title = f"Score Counts ({friendly})"
+                sections.append({"title": title, "table_html": _df_to_html(display_df.reset_index())})
             else:
                 sections.append({"title": "Scoring", "table_html": "<p class='text-muted text-sm'>No scoring data.</p>"})
-            return {"sections": sections, "scoring_fields": SCORING_FIELDS, "score_type": field}
+            return {"sections": sections, "scoring_fields": SCORING_FIELDS, "score_type": field, "display_mode": mode}
 
         elif tab == "report":
             html = _render_report([
@@ -485,8 +501,9 @@ async def latest_teg_page(request: Request):
 
 @router.get("/latest-teg/tab")
 async def latest_teg_tab(request: Request, teg: int = Query(...), tab: str = Query("aggregate"),
-                         score_type: str = Query("GrossVP"), metric: str = Query("Sc")):
-    ctx = _latest_teg_tab_context(teg, tab, score_type, metric)
+                         score_type: str = Query("GrossVP"), metric: str = Query("Sc"),
+                         display_mode: str = Query("count")):
+    ctx = _latest_teg_tab_context(teg, tab, score_type, metric, display_mode)
     return templates.TemplateResponse("partials/latest_teg_tab.html", {
         "request": request,
         "teg": teg,
