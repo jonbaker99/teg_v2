@@ -29,6 +29,13 @@ from teg_analysis.analysis.streaks import (
     get_max_streaks,
     get_current_streaks,
     STREAK_CONFIGS,
+    prepare_record_best_streaks_data,
+    prepare_record_worst_streaks_data,
+)
+from teg_analysis.display.formatters import (
+    prepare_records_table,
+    prepare_worst_records_table,
+    prepare_score_count_records_table,
 )
 from webapp.deps import (
     cached_load_all_data,
@@ -36,6 +43,7 @@ from webapp.deps import (
     cached_complete_teg_data,
     cached_ranked_teg_data,
     cached_ranked_round_data,
+    cached_ranked_frontback_data,
     format_value,
 )
 from webapp.chart_utils import get_chart_style
@@ -241,166 +249,84 @@ def _build_trophy_section(player_code: str) -> dict:
 # Career highlights / colour points
 # ---------------------------------------------------------------------------
 
-@lru_cache(maxsize=1)
-def _get_nine_hole_data() -> pd.DataFrame:
-    """Aggregate hole-level data to front/back 9 per player/TEG/round."""
-    all_data = cached_load_all_data()
-    return (
-        all_data.groupby(['Player', 'TEGNum', 'Round', 'FrontBack'])
-        .agg(
-            GrossVP=('GrossVP', 'sum'),
-            Stableford=('Stableford', 'sum'),
-            NetVP=('NetVP', 'sum'),
-            Year=('Year', 'first'),
-            Course=('Course', 'first'),
-            Area=('Area', 'first'),
-        )
-        .reset_index()
-    )
-
-
-@lru_cache(maxsize=1)
-def _get_streak_maxes() -> dict:
-    """Career-max streak for every player code: {code: pd.Series of streak cols}."""
-    all_data = cached_load_all_data()
-    streaks_df = build_streaks(all_data)
-    result = {}
-    for pl in streaks_df['Pl'].unique():
-        ps = streaks_df[streaks_df['Pl'] == pl]
-        mx = get_max_streaks(ps)
-        if not mx.empty:
-            result[str(pl)] = mx.iloc[0]
-    return result
-
-
 def _records_held(name: str) -> list[dict]:
-    """All-time TEG records this player holds (bests across all players).
+    """All-time TEG records (bests) this player holds.
 
-    Covers Gross / Stableford / Net at TEG, round and 9-hole level; count
-    records (trophies, jackets, eagles, most birdies in a round); and best
-    consecutive-hole streaks (birdies, pars or better).
+    Delegates to the same formatters that power the /records page:
+    prepare_records_table (Gross/Net/Stableford at TEG/round/9-hole),
+    prepare_record_best_streaks_data (Birdies, Pars or Better streaks),
+    prepare_score_count_records_table (Most Birdies in a Round).
     """
     all_data = cached_load_all_data()
-    rd_data = cached_round_data()
-    teg_data = cached_ranked_teg_data()
-    nine_data = _get_nine_hole_data()
-    winners = _get_winners_data().replace(r"\*", "", regex=True)
-
+    pl_code = _NAME_TO_CODE.get(name, "")
     records: list[dict] = []
 
-    def teg_detail(row):
-        return f"TEG {int(row['TEGNum'])} · {int(row['Year'])} · {row['Area']}"
-
-    def round_detail(row):
-        return f"TEG {int(row['TEGNum'])} R{int(row['Round'])} · {int(row['Year'])} · {row['Course']}"
-
-    def nine_detail(row):
-        return (f"TEG {int(row['TEGNum'])} R{int(row['Round'])} "
-                f"{row['FrontBack']} 9 · {int(row['Year'])} · {row['Course']}")
-
-    def extremum(df, col, kind, label, fmt_key, detail_fn):
-        target = df[col].min() if kind == "min" else df[col].max()
-        holders = set(df[df[col] == target]["Player"])
-        if name not in holders:
-            return
-        row = df[(df["Player"] == name) & (df[col] == target)].iloc[0]
-        records.append({
-            "label": label,
-            "value": format_value(target, fmt_key),
-            "detail": detail_fn(row),
-            "shared": len(holders) > 1,
-        })
-
-    # Gross (lower is better)
-    extremum(teg_data, "GrossVP", "min", "Lowest TEG (gross)", "GrossVP", teg_detail)
-    extremum(rd_data,  "GrossVP", "min", "Lowest round (gross)", "GrossVP", round_detail)
-    extremum(nine_data, "GrossVP", "min", "Lowest 9 (gross)", "GrossVP", nine_detail)
-
-    # Stableford (higher is better)
-    extremum(teg_data, "Stableford", "max", "Highest TEG (Stableford)", "Stableford", teg_detail)
-    extremum(rd_data,  "Stableford", "max", "Highest round (Stableford)", "Stableford", round_detail)
-    extremum(nine_data, "Stableford", "max", "Highest 9 (Stableford)", "Stableford", nine_detail)
-
-    # Net vs par (lower is better)
-    extremum(teg_data, "NetVP", "min", "Lowest TEG (net)", "NetVP", teg_detail)
-    extremum(rd_data,  "NetVP", "min", "Lowest round (net)", "NetVP", round_detail)
-    extremum(nine_data, "NetVP", "min", "Lowest 9 (net)", "NetVP", nine_detail)
-
-    # Count records
-    eagles = get_eagles_data(all_data)
-    eagles_ct = eagles["Player"].value_counts() if not eagles.empty else pd.Series(dtype=int)
-
-    def count_record(vc, label, unit):
-        if vc.empty:
-            return
-        top = vc.max()
-        holders = set(vc[vc == top].index)
-        if name not in holders:
-            return
-        n = int(top)
-        records.append({
-            "label": label,
-            "value": f"{n} {unit}{'' if n == 1 else 's'}",
-            "detail": "",
-            "shared": len(holders) > 1,
-        })
-
-    count_record(winners["TEG Trophy"].value_counts(), "Most TEG Trophies", "title")
-    count_record(winners["Green Jacket"].value_counts(), "Most Green Jackets", "jacket")
-    count_record(eagles_ct, "Most Eagles", "eagle")
-
-    # Most birdies in a round
-    birdies_rnd = (
-        all_data[all_data['GrossVP'] == -1]
-        .groupby(['Player', 'TEGNum', 'Round'])
-        .size()
-        .reset_index(name='count')
-    )
-    if not birdies_rnd.empty:
-        top = birdies_rnd['count'].max()
-        top_rows = birdies_rnd[birdies_rnd['count'] == top]
-        holders = set(top_rows['Player'])
-        if name in holders:
-            r = top_rows[top_rows['Player'] == name].iloc[0]
-            rd_row = rd_data[
-                (rd_data['Player'] == name) &
-                (rd_data['TEGNum'] == r['TEGNum']) &
-                (rd_data['Round'] == r['Round'])
-            ]
-            detail = f"TEG {int(r['TEGNum'])} R{int(r['Round'])}"
-            if not rd_row.empty:
-                detail += f" · {int(rd_row.iloc[0]['Year'])} · {rd_row.iloc[0]['Course']}"
+    # Performance records — TEG / round / 9-hole
+    seen: set[str] = set()
+    for df, level in [
+        (prepare_records_table(cached_ranked_teg_data(), 'teg'), 'TEG'),
+        (prepare_records_table(cached_ranked_round_data(), 'round'), 'round'),
+        (prepare_records_table(cached_ranked_frontback_data(), 'frontback'), '9 holes'),
+    ]:
+        for _, row in df.iterrows():
+            label = str(row.iloc[0])
+            if 'Score' in label:
+                continue  # skip raw gross score; user asked for Gross vs par only
+            if str(row.iloc[2]).strip() != name:
+                continue
+            key = f"{label} ({level})"
+            if key in seen:
+                continue  # same record achieved in multiple rounds — show once
+            seen.add(key)
+            shared = (df.iloc[:, 0] == label).sum() > 1
             records.append({
-                "label": "Most birdies in a round",
-                "value": f"{int(top)} birdies",
-                "detail": detail,
-                "shared": len(holders) > 1,
+                "label": key,
+                "value": str(row.iloc[1]),
+                "detail": str(row.iloc[3]),
+                "shared": shared,
             })
 
-    # Streak records (bests)
-    streak_maxes = _get_streak_maxes()
-    pl_code = _NAME_TO_CODE.get(name)
-    if pl_code and pl_code in streak_maxes:
-        player_mx = streak_maxes[pl_code]
-        for label, col in [("Birdies streak", "birdie_true_streak"),
-                           ("Pars or better streak", "par_better_true_streak")]:
-            if col not in player_mx.index:
-                continue
-            player_val = int(player_mx[col])
-            all_vals = {pl: int(streak_maxes[pl][col])
-                        for pl in streak_maxes if col in streak_maxes[pl].index}
-            if not all_vals:
-                continue
-            top = max(all_vals.values())
-            if player_val != top:
-                continue
-            holders = [pl for pl, v in all_vals.items() if v == top]
+    # Best streaks — Birdies and Pars or Better only
+    BEST_STREAK_TYPES = {'Birdies', 'Pars or Better'}
+    best_streaks = prepare_record_best_streaks_data(all_data)
+    for _, row in best_streaks.iterrows():
+        if str(row['Streak Type']) not in BEST_STREAK_TYPES:
+            continue
+        if str(row['Player']) != name:
+            continue
+        streak_type = str(row['Streak Type'])
+        shared = (best_streaks['Streak Type'] == streak_type).sum() > 1
+        records.append({
+            "label": f"{streak_type} streak",
+            "value": f"{row['Record']} holes",
+            "detail": str(row['When']),
+            "shared": shared,
+        })
+
+    # Most Birdies in a Round
+    TARGET = 'Most Birdies in a Round'
+    best_sc, _ = prepare_score_count_records_table(all_data)
+    for _, row in best_sc.iterrows():
+        if str(row.iloc[0]) != TARGET:
+            continue
+        player_col = str(row.iloc[2]).strip()
+        detail_col = str(row.iloc[3]).strip()
+        if player_col == pl_code:
             records.append({
-                "label": label,
-                "value": f"{top} holes",
+                "label": TARGET,
+                "value": str(row.iloc[1]),
+                "detail": detail_col,
+                "shared": False,
+            })
+            break
+        if player_col == '→' and pl_code in [c.strip() for c in detail_col.split('/')]:
+            records.append({
+                "label": TARGET,
+                "value": str(row.iloc[1]),
                 "detail": "",
-                "shared": len(holders) > 1,
+                "shared": True,
             })
+            break
 
     return records
 
@@ -408,125 +334,84 @@ def _records_held(name: str) -> list[dict]:
 def _worsts_held(name: str) -> list[dict]:
     """All-time TEG worst records this player holds.
 
-    Covers Gross / Stableford / Net at TEG, round and 9-hole level; count
-    records (wooden spoons, most TBPs in a round); and worst consecutive-hole
-    streaks (no birdies, over par, TBPs).
+    Delegates to the same formatters that power the /records page:
+    prepare_worst_records_table (Gross/Net/Stableford at TEG/round/9-hole),
+    prepare_record_worst_streaks_data (No Birdies, Over Par, TBPs streaks),
+    prepare_score_count_records_table (Most TBPs in a Round).
     """
     all_data = cached_load_all_data()
-    rd_data = cached_round_data()
-    teg_data = cached_ranked_teg_data()
-    nine_data = _get_nine_hole_data()
-    winners = _get_winners_data().replace(r"\*", "", regex=True)
-
+    pl_code = _NAME_TO_CODE.get(name, "")
     worsts: list[dict] = []
 
-    def teg_detail(row):
-        return f"TEG {int(row['TEGNum'])} · {int(row['Year'])} · {row['Area']}"
+    # Performance worsts — TEG / round / 9-hole
+    seen: set[str] = set()
+    for df, level in [
+        (prepare_worst_records_table(cached_ranked_teg_data(), 'teg'), 'TEG'),
+        (prepare_worst_records_table(cached_ranked_round_data(), 'round'), 'round'),
+        (prepare_worst_records_table(cached_ranked_frontback_data(), 'frontback'), '9 holes'),
+    ]:
+        for _, row in df.iterrows():
+            label = str(row.iloc[0])
+            if 'Score' in label:
+                continue
+            if str(row.iloc[2]).strip() != name:
+                continue
+            key = f"{label} ({level})"
+            if key in seen:
+                continue
+            seen.add(key)
+            shared = (df.iloc[:, 0] == label).sum() > 1
+            worsts.append({
+                "label": key,
+                "value": str(row.iloc[1]),
+                "detail": str(row.iloc[3]),
+                "shared": shared,
+            })
 
-    def round_detail(row):
-        return f"TEG {int(row['TEGNum'])} R{int(row['Round'])} · {int(row['Year'])} · {row['Course']}"
-
-    def nine_detail(row):
-        return (f"TEG {int(row['TEGNum'])} R{int(row['Round'])} "
-                f"{row['FrontBack']} 9 · {int(row['Year'])} · {row['Course']}")
-
-    def extremum(df, col, kind, label, fmt_key, detail_fn):
-        target = df[col].max() if kind == "max" else df[col].min()
-        holders = set(df[df[col] == target]["Player"])
-        if name not in holders:
-            return
-        row = df[(df["Player"] == name) & (df[col] == target)].iloc[0]
+    # Worst streaks — No Birdies, Over Par and TBPs only
+    WORST_STREAK_TYPES = {'No Birdies', 'Over Par', 'TBPs'}
+    worst_streaks = prepare_record_worst_streaks_data(all_data)
+    for _, row in worst_streaks.iterrows():
+        if str(row['Streak Type']) not in WORST_STREAK_TYPES:
+            continue
+        if str(row['Player']) != name:
+            continue
+        streak_type = str(row['Streak Type'])
+        shared = (worst_streaks['Streak Type'] == streak_type).sum() > 1
         worsts.append({
-            "label": label,
-            "value": format_value(target, fmt_key),
-            "detail": detail_fn(row),
-            "shared": len(holders) > 1,
+            "label": f"{streak_type} streak",
+            "value": f"{row['Record']} holes",
+            "detail": str(row['When']),
+            "shared": shared,
         })
 
-    # Gross (higher is worst)
-    extremum(teg_data, "GrossVP", "max", "Highest TEG (gross)", "GrossVP", teg_detail)
-    extremum(rd_data,  "GrossVP", "max", "Highest round (gross)", "GrossVP", round_detail)
-    extremum(nine_data, "GrossVP", "max", "Highest 9 (gross)", "GrossVP", nine_detail)
-
-    # Stableford (lower is worst)
-    extremum(teg_data, "Stableford", "min", "Lowest TEG (Stableford)", "Stableford", teg_detail)
-    extremum(rd_data,  "Stableford", "min", "Lowest round (Stableford)", "Stableford", round_detail)
-    extremum(nine_data, "Stableford", "min", "Lowest 9 (Stableford)", "Stableford", nine_detail)
-
-    # Net vs par (higher is worst)
-    extremum(teg_data, "NetVP", "max", "Highest TEG (net)", "NetVP", teg_detail)
-    extremum(rd_data,  "NetVP", "max", "Highest round (net)", "NetVP", round_detail)
-    extremum(nine_data, "NetVP", "max", "Highest 9 (net)", "NetVP", nine_detail)
-
-    # Wooden Spoons
-    spoon_vc = winners["HMM Wooden Spoon"].value_counts()
-    if not spoon_vc.empty:
-        top = spoon_vc.max()
-        holders = set(spoon_vc[spoon_vc == top].index)
-        if name in holders:
-            n = int(top)
+    # Most TBPs in a Round
+    TARGET = 'Most TBPs in a Round'
+    _, worst_sc = prepare_score_count_records_table(all_data)
+    for _, row in worst_sc.iterrows():
+        if str(row.iloc[0]) != TARGET:
+            continue
+        player_col = str(row.iloc[2]).strip()
+        detail_col = str(row.iloc[3]).strip()
+        if player_col == pl_code:
             worsts.append({
-                "label": "Most Wooden Spoons",
-                "value": f"{n} spoon{'' if n == 1 else 's'}",
+                "label": TARGET,
+                "value": str(row.iloc[1]),
+                "detail": detail_col,
+                "shared": False,
+            })
+            break
+        if player_col == '→' and pl_code in [c.strip() for c in detail_col.split('/')]:
+            worsts.append({
+                "label": TARGET,
+                "value": str(row.iloc[1]),
                 "detail": "",
-                "shared": len(holders) > 1,
+                "shared": True,
             })
-
-    # Most TBPs in a round (GrossVP >= 3)
-    tbps_rnd = (
-        all_data[all_data['GrossVP'] >= 3]
-        .groupby(['Player', 'TEGNum', 'Round'])
-        .size()
-        .reset_index(name='count')
-    )
-    if not tbps_rnd.empty:
-        top = tbps_rnd['count'].max()
-        top_rows = tbps_rnd[tbps_rnd['count'] == top]
-        holders = set(top_rows['Player'])
-        if name in holders:
-            r = top_rows[top_rows['Player'] == name].iloc[0]
-            rd_row = rd_data[
-                (rd_data['Player'] == name) &
-                (rd_data['TEGNum'] == r['TEGNum']) &
-                (rd_data['Round'] == r['Round'])
-            ]
-            detail = f"TEG {int(r['TEGNum'])} R{int(r['Round'])}"
-            if not rd_row.empty:
-                detail += f" · {int(rd_row.iloc[0]['Year'])} · {rd_row.iloc[0]['Course']}"
-            worsts.append({
-                "label": "Most TBPs in a round",
-                "value": f"{int(top)} TBPs",
-                "detail": detail,
-                "shared": len(holders) > 1,
-            })
-
-    # Streak records (worsts)
-    streak_maxes = _get_streak_maxes()
-    pl_code = _NAME_TO_CODE.get(name)
-    if pl_code and pl_code in streak_maxes:
-        player_mx = streak_maxes[pl_code]
-        for label, col in [("No birdies streak", "birdie_false_streak"),
-                           ("Over par streak", "par_better_false_streak"),
-                           ("TBPs streak", "TBP_true_streak")]:
-            if col not in player_mx.index:
-                continue
-            player_val = int(player_mx[col])
-            all_vals = {pl: int(streak_maxes[pl][col])
-                        for pl in streak_maxes if col in streak_maxes[pl].index}
-            if not all_vals:
-                continue
-            top = max(all_vals.values())
-            if player_val != top:
-                continue
-            holders = [pl for pl, v in all_vals.items() if v == top]
-            worsts.append({
-                "label": label,
-                "value": f"{top} holes",
-                "detail": "",
-                "shared": len(holders) > 1,
-            })
+            break
 
     return worsts
+
 
 
 def _build_highlights(player_code: str) -> list[dict]:
