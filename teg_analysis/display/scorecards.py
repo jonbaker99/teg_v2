@@ -654,3 +654,186 @@ def build_eclectic_scorecard_table(eclectic_df: pd.DataFrame, dimension_col: str
 
     parts.append('</tbody></table>')
     return ''.join(parts)
+
+
+# ---------------------------------------------------------------------------
+# Bestball / Worstball field card — player rows + Bestball/Worstball totals
+#
+# Player rows show each player's gross-vs-par per hole, with the field's best
+# score(s) on a hole highlighted green and the worst score(s) black (a hole can
+# have several players tied, all highlighted). The Bestball row is the best
+# (lowest) vs-par per hole across the field; the Worstball row is the worst
+# (highest). Both team rows reuse the eclectic to-par cell shading (data-evp).
+# ---------------------------------------------------------------------------
+
+def _bw_player_cell(value, hole_min, hole_max=None, title: str = '') -> str:
+    """One player cell: vs-par label, dark green text if field-best, red text if
+    field-worst. hole_max defaults to None (skip worst highlight — used by eclectic)."""
+    if value is None or pd.isna(value):
+        return '<td class="bw-cell"><span>-</span></td>'
+    v = int(value)
+    cls = 'bw-cell'
+    if hole_min is not None and v == hole_min:
+        cls += ' bw-player-best'
+    elif hole_max is not None and v == hole_max:
+        cls += ' bw-player-worst'
+    t = f' data-tip="{title}"' if title else ''
+    return f'<td class="{cls}"{t}><span>{_vp_label(v)}</span></td>'
+
+
+def _bw_team_cell(vp_value) -> str:
+    """One team row cell (Bestball/Worstball or Best Eclectic) using scorecard
+    shapes (score-cell on the td + data-vs-par)."""
+    if vp_value is None:
+        return '<td class="score-cell"><span>-</span></td>'
+    v = int(vp_value)
+    return f'<td class="score-cell" data-vs-par="{v}"><span>{_vp_label(v)}</span></td>'
+
+
+def build_bestball_worstball_scorecard(round_data: pd.DataFrame) -> str:
+    """Build a field scorecard (vs par) with Bestball/Worstball rows at the top
+    (scorecard eagle/birdie/par/bogey shapes) then per-player rows below.
+
+    Args:
+        round_data: all players in one round, with Pl, Player, Hole, PAR, Sc,
+            GrossVP cols.
+
+    Returns:
+        HTML string for the combined table.
+    """
+    if round_data is None or round_data.empty:
+        return "<p class='text-muted text-sm'>No data available.</p>"
+
+    sorted_players = _get_sorted_players(round_data)
+
+    # Per-hole field best (min) and worst (max) gross-vs-par.
+    hole_min, hole_max = {}, {}
+    for hole in range(1, 19):
+        vals = round_data[round_data['Hole'] == hole]['GrossVP']
+        if not vals.empty:
+            hole_min[hole] = int(vals.min())
+            hole_max[hole] = int(vals.max())
+
+    def team_row(label: str, by_hole: dict) -> str:
+        front_tot = sum(by_hole[h] for h in range(1, 10) if h in by_hole)
+        back_tot = sum(by_hole[h] for h in range(10, 19) if h in by_hole)
+        cells = [f'<tr class="bw-team-row"><td class="player-label">{label}</td>']
+        for hole in range(1, 10):
+            cells.append(_bw_team_cell(by_hole.get(hole)))
+        cells.append(f'<td class="totals front-back-divider">{_vp_label(front_tot)}</td>')
+        for hole in range(10, 19):
+            cells.append(_bw_team_cell(by_hole.get(hole)))
+        cells.append(f'<td class="totals">{_vp_label(back_tot)}</td>')
+        cells.append(f'<td class="totals">{_vp_label(front_tot + back_tot)}</td>')
+        cells.append('</tr>')
+        return ''.join(cells)
+
+    parts = ['<table class="scorecard-table eclectic-scorecard bw-scorecard"><thead>']
+    parts.append(_build_hole_header_row('player-label', 'Player'))
+    parts.append('</thead><tbody>')
+
+    # Bestball and Worstball rows at the top with scorecard shapes.
+    parts.append(team_row('Bestball', hole_min))
+    parts.append(team_row('Worstball', hole_max))
+
+    # Gap row separating team rows from player rows.
+    parts.append('<tr class="bw-gap-row"><td colspan="21"></td></tr>')
+
+    # Player rows — vs-par labels with font-only highlights.
+    for code, name in sorted_players:
+        pdata = round_data[round_data['Pl'] == code].sort_values('Hole')
+        vp = {int(r['Hole']): int(r['GrossVP']) for _, r in pdata.iterrows()}
+        title = {int(r['Hole']): _cell_title(r) for _, r in pdata.iterrows()}
+        front_tot = sum(vp[h] for h in range(1, 10) if h in vp)
+        back_tot = sum(vp[h] for h in range(10, 19) if h in vp)
+
+        parts.append(f'<tr><td class="player-label">{name}</td>')
+        for hole in range(1, 10):
+            parts.append(_bw_player_cell(vp.get(hole), hole_min.get(hole), hole_max.get(hole), title.get(hole, '')))
+        parts.append(f'<td class="totals front-back-divider">{_vp_label(front_tot)}</td>')
+        for hole in range(10, 19):
+            parts.append(_bw_player_cell(vp.get(hole), hole_min.get(hole), hole_max.get(hole), title.get(hole, '')))
+        parts.append(f'<td class="totals">{_vp_label(back_tot)}</td>')
+        parts.append(f'<td class="totals">{_vp_label(front_tot + back_tot)}</td>')
+        parts.append('</tr>')
+
+    parts.append('</tbody></table>')
+    return ''.join(parts)
+
+
+def build_teg_eclectic_scorecard(teg_data: pd.DataFrame) -> str:
+    """Build a TEG eclectic scorecard: best eclectic row at the top (scorecard
+    shapes) then per-player eclectic rows highlighting who contributed each hole.
+
+    The "best eclectic" is the minimum GrossVP per hole across all players and
+    rounds. Player rows show each player's personal eclectic (their lowest
+    GrossVP per hole within this TEG); a hole is highlighted in dark green when
+    the player contributed to the team eclectic on that hole.
+
+    Args:
+        teg_data: all hole-level data for one TEG (already filtered by TEGNum).
+
+    Returns:
+        HTML string for the combined table.
+    """
+    if teg_data is None or teg_data.empty:
+        return "<p class='text-muted text-sm'>No data available.</p>"
+
+    sorted_players = _get_sorted_players(teg_data)
+
+    # Team eclectic: minimum GrossVP per hole across all players/rounds.
+    hole_min: dict[int, int] = {}
+    for hole in range(1, 19):
+        vals = teg_data[teg_data['Hole'] == hole]['GrossVP']
+        if not vals.empty:
+            hole_min[hole] = int(vals.min())
+
+    # Per-player eclectic: minimum GrossVP per player per hole.
+    player_eclectics: dict[str, dict[int, int]] = {}
+    for code, _ in sorted_players:
+        pdata = teg_data[teg_data['Pl'] == code]
+        by_hole: dict[int, int] = {}
+        for hole in range(1, 19):
+            vals = pdata[pdata['Hole'] == hole]['GrossVP']
+            if not vals.empty:
+                by_hole[hole] = int(vals.min())
+        player_eclectics[code] = by_hole
+
+    parts = ['<table class="scorecard-table eclectic-scorecard bw-scorecard"><thead>']
+    parts.append(_build_hole_header_row('player-label', 'Player'))
+    parts.append('</thead><tbody>')
+
+    # Team best eclectic row at the top with scorecard shapes.
+    front_tot = sum(hole_min.get(h, 0) for h in range(1, 10))
+    back_tot = sum(hole_min.get(h, 0) for h in range(10, 19))
+    parts.append('<tr class="bw-team-row"><td class="player-label">Best Eclectic</td>')
+    for hole in range(1, 10):
+        parts.append(_bw_team_cell(hole_min.get(hole)))
+    parts.append(f'<td class="totals front-back-divider">{_vp_label(front_tot)}</td>')
+    for hole in range(10, 19):
+        parts.append(_bw_team_cell(hole_min.get(hole)))
+    parts.append(f'<td class="totals">{_vp_label(back_tot)}</td>')
+    parts.append(f'<td class="totals">{_vp_label(front_tot + back_tot)}</td>')
+    parts.append('</tr>')
+
+    # Gap row.
+    parts.append('<tr class="bw-gap-row"><td colspan="21"></td></tr>')
+
+    # Per-player eclectic rows — highlight in dark green where player contributed.
+    for code, name in sorted_players:
+        by_hole = player_eclectics.get(code, {})
+        p_front = sum(by_hole.get(h, 0) for h in range(1, 10))
+        p_back = sum(by_hole.get(h, 0) for h in range(10, 19))
+        parts.append(f'<tr><td class="player-label">{name}</td>')
+        for hole in range(1, 10):
+            parts.append(_bw_player_cell(by_hole.get(hole), hole_min.get(hole)))
+        parts.append(f'<td class="totals front-back-divider">{_vp_label(p_front)}</td>')
+        for hole in range(10, 19):
+            parts.append(_bw_player_cell(by_hole.get(hole), hole_min.get(hole)))
+        parts.append(f'<td class="totals">{_vp_label(p_back)}</td>')
+        parts.append(f'<td class="totals">{_vp_label(p_front + p_back)}</td>')
+        parts.append('</tr>')
+
+    parts.append('</tbody></table>')
+    return ''.join(parts)
+

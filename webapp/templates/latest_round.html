@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="/static/scorecard.css?v=17">
+<link rel="stylesheet" href="/static/scorecard.css?v=20">
 {% endblock %}
 
 {% block page_title %}
@@ -13,7 +13,7 @@
 
 {% block content %}
 
-{% if context_header %}<p class="text-muted text-sm mb-3">{{ context_header }}</p>{% endif %}
+<p id="lr-context-header" class="text-muted text-sm mb-3">{{ context_header }}</p>
 
 <div class="section-controls flex flex-wrap items-center gap-4">
     <select id="lr-teg-select" class="theme-select"

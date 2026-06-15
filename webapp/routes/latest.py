@@ -33,9 +33,18 @@ from teg_analysis.analysis.handicaps import (
 from teg_analysis.analysis.aggregation import get_current_in_progress_teg_fast
 from teg_analysis.analysis.streaks import get_player_window_streaks, build_streaks, pivot_window_streaks
 from teg_analysis.analysis.scoring import count_scores_by_player
+from teg_analysis.analysis.eclectic import calculate_eclectic_by_dimension
+from teg_analysis.analysis.bestball import (
+    prepare_bestball_data,
+    calculate_bestball_scores,
+    calculate_worstball_scores,
+)
 from teg_analysis.core.metadata import get_scorecard_data, get_teg_metadata
 from teg_analysis.display.scorecards import (
     build_round_comparison_responsive,
+    build_eclectic_scorecard_table,
+    build_bestball_worstball_scorecard,
+    build_teg_eclectic_scorecard,
 )
 from webapp.deps import (
     cached_load_all_data,
@@ -79,6 +88,27 @@ _COMMENTARY_DIR = Path("data/commentary")
 _MD_EXTS = ["extra", "sane_lists", "smarty"]
 
 
+def _round_context_header(teg_num: int, round_num: int) -> str:
+    """Build 'Course | Date' display string for a specific round."""
+    try:
+        meta = get_teg_metadata(teg_num, round_num)
+        return " | ".join(p for p in [meta.get('Course', ''), meta.get('Date', '')] if p)
+    except Exception:
+        return ""
+
+
+def _teg_context_header(teg_num: int) -> str:
+    """Build 'Area | Year' display string for a TEG."""
+    try:
+        meta = get_teg_metadata(teg_num)
+        area = meta.get('Area', '') or ''
+        year = meta.get('Year', '')
+        year_str = str(int(year)) if year and str(year).strip() else ''
+        return " | ".join(p for p in [area, year_str] if p)
+    except Exception:
+        return ""
+
+
 def _render_report(candidates: list[str]) -> str | None:
     """Render the first existing markdown file (relative to data/commentary) to HTML."""
     for name in candidates:
@@ -103,6 +133,58 @@ def _intify_numeric(df: pd.DataFrame) -> pd.DataFrame:
         if pd.api.types.is_numeric_dtype(out[col]):
             out[col] = out[col].astype('int64')
     return out
+
+
+def _format_scoring_display(counts: pd.DataFrame, field: str, mode: str) -> tuple:
+    """Format a score-count pivot for display. Returns (display_df, title).
+
+    First column (the score index) is formatted as vs-par labels for GrossVP
+    or plain integers for Stableford. Data columns show raw integer counts or
+    '<n>%' strings depending on mode.
+    """
+    friendly = dict(SCORING_FIELDS).get(field, field)
+    if mode == "pct":
+        col_sums = counts.sum(axis=0).replace(0, 1)
+        display_df = counts.div(col_sums, axis=1).mul(100).round(0).astype(int)
+        title = f"Score Distribution — % of holes ({friendly})"
+    else:
+        display_df = _intify_numeric(counts)
+        title = f"Score Counts ({friendly})"
+
+    display_df = display_df.reset_index()
+    idx_col = display_df.columns[0]
+
+    if field == 'GrossVP':
+        display_df[idx_col] = display_df[idx_col].apply(lambda v: format_vs_par(int(v)))
+    else:
+        display_df[idx_col] = display_df[idx_col].apply(lambda v: str(int(v)))
+
+    if mode == "pct":
+        for col in display_df.columns[1:]:
+            display_df[col] = display_df[col].apply(lambda v: f"{int(v)}%")
+
+    return display_df, title
+
+
+def _bestball_rank_summary(bb_all: pd.DataFrame, wb_all: pd.DataFrame,
+                           teg_num: int, round_num: int) -> str:
+    """Build the 'ranks N / M all-time' summary for this round's bestball and
+    worstball totals. Both rank ascending: rank 1 = lowest GrossVP."""
+    def _one(df: pd.DataFrame, label: str) -> str:
+        d = df.copy()
+        d['__r'] = d['GrossVP'].rank(method='min', ascending=True).astype(int)
+        row = d[(d['TEGNum'] == teg_num) & (d['Round'] == round_num)]
+        if row.empty:
+            return ''
+        vp = int(row['GrossVP'].iloc[0])
+        rank = int(row['__r'].iloc[0])
+        return (f'<strong>{label}</strong>: <span class="bw-rank-num">{format_vs_par(vp)}</span> · '
+                f'ranks <span class="bw-rank-num">{rank} / {len(d)}</span> all-time')
+
+    parts = [p for p in (_one(bb_all, 'Bestball'), _one(wb_all, 'Worstball')) if p]
+    if not parts:
+        return ''
+    return '<p class="bw-rank-summary">' + '<br>'.join(parts) + '</p>'
 
 
 _RECORDS_DRAFT_NOTE = (
@@ -179,6 +261,7 @@ def _render_records_summary(rd: dict, page_type: str = 'TEG') -> str:
 LATEST_ROUND_TABS = [
     ("scoreboard", "Scoreboards"),
     ("scorecard", "Scorecard"),
+    ("bestball", "Bestball / Worstball"),
     ("report", "Report"),
     ("scoring", "Scoring"),
     ("streaks", "Streaks"),
@@ -193,7 +276,8 @@ METRIC_TABS = [("Sc", "Score"), ("Stableford", "Stableford"), ("GrossVP", "Gross
 
 
 def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
-                              score_type: str = "GrossVP", metric: str = "Sc") -> dict:
+                              score_type: str = "GrossVP", metric: str = "Sc",
+                              display_mode: str = "count") -> dict:
     try:
         rd_data = cached_round_data()
         teg_rd = rd_data[(rd_data['TEGNum'] == teg_num) & (rd_data['Round'] == round_num)]
@@ -247,6 +331,28 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
             except Exception as e:
                 sections.append({"title": "Scorecard", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
+        elif tab == "bestball":
+            try:
+                all_data = cached_load_all_data()
+                round_data = all_data[(all_data['TEGNum'] == teg_num) & (all_data['Round'] == round_num)]
+                if round_data.empty:
+                    sections.append({"title": "Bestball / Worstball", "table_html": "<p class='text-muted text-sm'>No data.</p>"})
+                    return {"sections": sections}
+
+                # All-time ranks first — shown at the top.
+                bb_prepared = prepare_bestball_data(all_data)
+                bb_all = calculate_bestball_scores(bb_prepared)
+                wb_all = calculate_worstball_scores(bb_prepared)
+                rank_html = _bestball_rank_summary(bb_all, wb_all, teg_num, round_num)
+                if rank_html:
+                    sections.append({"title": None, "table_html": rank_html, "raw": True})
+
+                card_html = build_bestball_worstball_scorecard(round_data)
+                sections.append({"title": None, "table_html": card_html})
+                return {"sections": sections, "scorecard_css": True}
+            except Exception as e:
+                sections.append({"title": "Bestball / Worstball", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
+
         elif tab == "records":
             try:
                 ranked = cached_ranked_round_data()
@@ -287,16 +393,16 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
 
         elif tab == "scoring":
             field = score_type if score_type in ("GrossVP", "Stableford") else "GrossVP"
-            friendly = dict(SCORING_FIELDS).get(field, field)
+            mode = display_mode if display_mode in ("count", "pct") else "count"
             all_data = cached_load_all_data()
             round_data = all_data[(all_data['TEGNum'] == teg_num) & (all_data['Round'] == round_num)]
             if not round_data.empty:
                 counts = count_scores_by_player(round_data, field)
-                counts_display = _intify_numeric(counts.reset_index())
-                sections.append({"title": f"Score Counts ({friendly})", "table_html": _df_to_html(counts_display)})
+                display_df, title = _format_scoring_display(counts, field, mode)
+                sections.append({"title": title, "table_html": _df_to_html(display_df)})
             else:
                 sections.append({"title": "Scoring", "table_html": "<p class='text-muted text-sm'>No scoring data.</p>"})
-            return {"sections": sections, "scoring_fields": SCORING_FIELDS, "score_type": field}
+            return {"sections": sections, "scoring_fields": SCORING_FIELDS, "score_type": field, "display_mode": mode}
 
         elif tab == "streaks":
             try:
@@ -325,11 +431,7 @@ async def latest_round_page(request: Request):
     teg_num = int(teg_str.replace('TEG ', '')) if isinstance(teg_str, str) else int(teg_str)
     teg_numbers = get_available_teg_numbers()
     rounds = get_rounds_for_teg(teg_num)
-    try:
-        meta = get_teg_metadata(teg_num, int(round_num))
-        context_header = " | ".join(p for p in [meta.get('Course', ''), meta.get('Date', '')] if p)
-    except Exception:
-        context_header = ""
+    context_header = _round_context_header(teg_num, int(round_num))
     ctx = _latest_round_tab_context(teg_num, int(round_num), "scoreboard")
     return templates.TemplateResponse("latest_round.html", {
         "request": request,
@@ -351,15 +453,16 @@ async def latest_round_page(request: Request):
 @router.get("/latest-round/tab")
 async def latest_round_tab(request: Request, teg: int = Query(...), round: int = Query(...),
                            tab: str = Query("scoreboard"), score_type: str = Query("GrossVP"),
-                           metric: str = Query("Sc")):
+                           metric: str = Query("Sc"), display_mode: str = Query("count")):
     rounds = get_rounds_for_teg(teg)
     round_num = round if round in rounds else (rounds[-1] if rounds else 1)
-    ctx = _latest_round_tab_context(teg, round_num, tab, score_type, metric)
+    ctx = _latest_round_tab_context(teg, round_num, tab, score_type, metric, display_mode)
     return templates.TemplateResponse("partials/latest_round_tab.html", {
         "request": request,
         "teg": teg,
         "round": round_num,
         "rounds": rounds,
+        "context_header": _round_context_header(teg, round_num),
         **ctx,
     })
 
@@ -369,13 +472,15 @@ async def latest_round_tab(request: Request, teg: int = Query(...), round: int =
 LATEST_TEG_TABS = [
     ("aggregate", "Aggregate Score"),
     ("scoring", "Scoring"),
+    ("eclectic", "Eclectic"),
     ("streaks", "Streaks"),
     ("records", "Records & PBs"),
     ("report", "Report"),
 ]
 
 
-def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP", metric: str = "Sc") -> dict:
+def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP", metric: str = "Sc",
+                            display_mode: str = "count") -> dict:
     """Build template context for a latest-teg tab."""
     try:
         sections = []
@@ -397,16 +502,48 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
 
         elif tab == "scoring":
             field = score_type if score_type in ("GrossVP", "Stableford") else "GrossVP"
-            friendly = dict(SCORING_FIELDS).get(field, field)
+            mode = display_mode if display_mode in ("count", "pct") else "count"
             all_data = cached_load_all_data()
             teg_data = all_data[all_data['TEGNum'] == teg_num]
             if not teg_data.empty:
                 counts = count_scores_by_player(teg_data, field)
-                counts_display = _intify_numeric(counts.reset_index())
-                sections.append({"title": f"Score Counts ({friendly})", "table_html": _df_to_html(counts_display)})
+                display_df, title = _format_scoring_display(counts, field, mode)
+                sections.append({"title": title, "table_html": _df_to_html(display_df)})
             else:
                 sections.append({"title": "Scoring", "table_html": "<p class='text-muted text-sm'>No scoring data.</p>"})
-            return {"sections": sections, "scoring_fields": SCORING_FIELDS, "score_type": field}
+            return {"sections": sections, "scoring_fields": SCORING_FIELDS, "score_type": field, "display_mode": mode}
+
+        elif tab == "eclectic":
+            try:
+                all_data = cached_load_all_data()
+                eclectic_df, display_dim = calculate_eclectic_by_dimension(all_data, "TEGNum")
+                if eclectic_df.empty:
+                    sections.append({"title": "Eclectic", "table_html": "<p class='text-muted text-sm'>No data.</p>"})
+                    return {"sections": sections}
+                teg_label = f"TEG {teg_num}"
+                ranked = eclectic_df.copy()
+                ranked['__r'] = ranked['Total'].rank(method='min', ascending=True).astype(int)
+                this_row = ranked[ranked[display_dim] == teg_label]
+                if this_row.empty:
+                    sections.append({"title": "Eclectic", "table_html": "<p class='text-muted text-sm'>No eclectic data for this TEG.</p>"})
+                    return {"sections": sections}
+                rank = int(this_row['__r'].iloc[0])
+                total_val = int(this_row['Total'].iloc[0])
+                total_tegs = len(ranked)
+
+                # Rank summary at the top.
+                rank_html = (f'<p class="bw-rank-summary">Best eclectic total '
+                             f'<span class="bw-rank-num">{format_vs_par(total_val)}</span> · ranks '
+                             f'<span class="bw-rank-num">{rank} / {total_tegs}</span> of all TEGs</p>')
+                sections.append({"title": None, "table_html": rank_html, "raw": True})
+
+                # Per-player eclectic scorecard with best eclectic row at the top.
+                teg_data = all_data[all_data['TEGNum'] == teg_num]
+                card_html = build_teg_eclectic_scorecard(teg_data)
+                sections.append({"title": None, "table_html": card_html})
+                return {"sections": sections, "scorecard_css": True}
+            except Exception as e:
+                sections.append({"title": "Eclectic", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
         elif tab == "report":
             html = _render_report([
@@ -475,21 +612,23 @@ async def latest_teg_page(request: Request):
         "active_page": "latest-teg",
         "teg_numbers": teg_numbers,
         "selected_teg": teg_num,
-        # teg also feeds the in-partial pill hx-vals on first render.
         "teg": teg_num,
         "tabs": LATEST_TEG_TABS,
         "active_tab": "aggregate",
+        "context_header": _teg_context_header(teg_num),
         **ctx,
     })
 
 
 @router.get("/latest-teg/tab")
 async def latest_teg_tab(request: Request, teg: int = Query(...), tab: str = Query("aggregate"),
-                         score_type: str = Query("GrossVP"), metric: str = Query("Sc")):
-    ctx = _latest_teg_tab_context(teg, tab, score_type, metric)
+                         score_type: str = Query("GrossVP"), metric: str = Query("Sc"),
+                         display_mode: str = Query("count")):
+    ctx = _latest_teg_tab_context(teg, tab, score_type, metric, display_mode)
     return templates.TemplateResponse("partials/latest_teg_tab.html", {
         "request": request,
         "teg": teg,
+        "context_header": _teg_context_header(teg),
         **ctx,
     })
 

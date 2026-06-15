@@ -3,31 +3,44 @@
 {% block page_title %}
 <div class="page-title-area">
     <span class="page-label">Scoring</span>
-    <h1 class="page-title">Score Matrix</h1>
+    <h1 class="page-title">Score History</h1>
 </div>
 {% endblock %}
 
 {% block content %}
 
-<div class="section-controls flex items-center gap-4">
-    <select id="sm-level" class="theme-select" name="level"
+<div class="section-nav">
+    {% for lid, llabel in levels %}
+    <button class="tab-underline sm-level-tab{% if lid == selected_level %} tab-underline--active{% endif %}"
             hx-get="/scoring/matrix/content"
             hx-target="#sm-content"
-            hx-include="#sm-type">
-        {% for lid, llabel in levels %}
-        <option value="{{ lid }}" {% if lid == selected_level %}selected{% endif %}>{{ llabel }}</option>
-        {% endfor %}
-    </select>
-
-    <select id="sm-type" class="theme-select" name="score_type"
-            hx-get="/scoring/matrix/content"
-            hx-target="#sm-content"
-            hx-include="#sm-level">
-        {% for tid, tlabel in score_types %}
-        <option value="{{ tid }}" {% if tid == selected_type %}selected{% endif %}>{{ tlabel }}</option>
-        {% endfor %}
-    </select>
+            hx-include="#sm-type-hidden"
+            hx-vals='{"level": "{{ lid }}"}'
+            hx-swap="innerHTML"
+            onclick="document.getElementById('sm-level-hidden').value='{{ lid }}'; document.querySelectorAll('.sm-level-tab').forEach(b => b.classList.remove('tab-underline--active')); this.classList.add('tab-underline--active');">
+        {{ llabel }}
+    </button>
+    {% endfor %}
 </div>
+
+<div class="section-controls">
+    <div class="pill-group" role="group" aria-label="Score type">
+        {% for tid, tlabel in score_types %}
+        <button class="pill sm-type-pill{% if tid == selected_type %} pill--active{% endif %}"
+                hx-get="/scoring/matrix/content"
+                hx-target="#sm-content"
+                hx-include="#sm-level-hidden"
+                hx-vals='{"score_type": "{{ tid }}"}'
+                hx-swap="innerHTML"
+                onclick="document.getElementById('sm-type-hidden').value='{{ tid }}'; document.querySelectorAll('.sm-type-pill').forEach(b => b.classList.remove('pill--active')); this.classList.add('pill--active');">
+            {{ tlabel }}
+        </button>
+        {% endfor %}
+    </div>
+</div>
+
+<input type="hidden" id="sm-level-hidden" name="level" value="{{ selected_level }}">
+<input type="hidden" id="sm-type-hidden" name="score_type" value="{{ selected_type }}">
 
 <div id="sm-content" class="section-panel">
     {% include "partials/scoring_matrix_content.html" %}

@@ -70,9 +70,13 @@ teg_analysis/
                      (single round / whole TEG / vs field); per-cell hover
                      tooltips (Hole/SI/Par/Score/Net/Stableford); a responsive
                      field builder (build_round_comparison_responsive) that
-                     emits landscape+portrait in one block; and an eclectic
+                     emits landscape+portrait in one block; an eclectic
                      scorecard builder (build_eclectic_scorecard_table) that
-                     renders an eclectic pivot with the gross score shapes
+                     renders an eclectic pivot with the gross score shapes;
+                     and a bestball/worstball field card
+                     (build_bestball_worstball_scorecard) — per-player
+                     gross-vs-par rows with the field best/worst highlighted,
+                     plus Bestball and Worstball to-par total rows
   
   api/               REST API endpoints (placeholder)
     __init__.py
