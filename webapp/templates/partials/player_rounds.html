@@ -1,4 +1,12 @@
 <div>
+    {% if rounds_chart_json %}
+    <h2 class="section-title">Gross vs Par by Round</h2>
+    <p class="text-sm text-secondary mb-3">Each bar is one round, coloured by score (green = better) and grouped by TEG.</p>
+    <div class="data-card data-card--padded mb-6">
+        <div class="chart-container" data-figure="{{ rounds_chart_json }}" style="height:320px;"></div>
+    </div>
+    {% endif %}
+
     <h2 class="section-title">All Rounds</h2>
     <p class="text-sm text-secondary mb-3">* = personal best</p>
     <div class="data-card"><div class="overflow-x-auto">

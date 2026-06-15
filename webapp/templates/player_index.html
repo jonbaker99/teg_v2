@@ -9,12 +9,37 @@
 {% endblock %}
 
 {% block content %}
-<p class="page-subtitle">Select a player to view their career statistics and charts.</p>
-<div class="data-card">
-    <ul class="player-index-list">
-        {% for code, name in players %}
-        <li><a href="/player/{{ code }}" class="text-link">{{ name }}</a></li>
-        {% endfor %}
-    </ul>
+<p class="page-subtitle">Pick a player to dive into their career — records, rounds, scoring and head-to-heads. Cards are ordered by silverware.</p>
+
+{% include "partials/player_pills.html" %}
+
+<div class="player-roster">
+    {% for p in roster %}
+    <a href="/player/{{ p.code }}" class="player-card">
+        <div class="player-card-head">
+            <span class="player-avatar">{{ p.code }}</span>
+            <div class="player-card-id">
+                <span class="player-card-name">{{ p.name }}</span>
+                {% if p.trophy_count or p.jacket_count %}
+                <span class="player-card-stars">
+                    {% for i in range(p.trophy_count) %}<span class="trophy-star trophy-star--gold">&#9733;</span>{% endfor %}{% if p.trophy_count and p.jacket_count %}<span class="player-card-stars-gap"></span>{% endif %}{% for i in range(p.jacket_count) %}<span class="trophy-star trophy-star--green">&#9733;</span>{% endfor %}
+                </span>
+                {% endif %}
+                <span class="player-card-meta">{{ p.n_tegs }} TEGs · since {{ p.since_year }}</span>
+            </div>
+        </div>
+        <div class="player-card-stats">
+            <div class="pc-stat">
+                <span class="pc-stat-val">{{ p.avg_gvp }}</span>
+                <span class="pc-stat-lbl">Avg Gross</span>
+            </div>
+            <div class="pc-stat">
+                <span class="pc-stat-val">{{ p.avg_stab }}</span>
+                <span class="pc-stat-lbl">Avg Stab</span>
+            </div>
+        </div>
+        <span class="player-card-cta">View profile →</span>
+    </a>
+    {% endfor %}
 </div>
 {% endblock %}

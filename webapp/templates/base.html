@@ -327,5 +327,26 @@
         document.addEventListener('htmx:afterSettle', function(e) { renderCharts(e.detail.elt); });
     })();
     </script>
+    <!-- Chart pill switcher: toggles sibling .chart-panel visibility within a
+         .chart-switch and resizes the now-visible Plotly chart (Plotly renders
+         hidden containers at zero width, so a resize on show is required). -->
+    <script>
+    (function() {
+        document.addEventListener('click', function(e) {
+            var pill = e.target.closest('.chart-pill');
+            if (!pill) return;
+            var wrap = pill.closest('.chart-switch');
+            if (!wrap) return;
+            wrap.querySelectorAll('.chart-pill').forEach(function(p) { p.classList.remove('pill--active'); });
+            pill.classList.add('pill--active');
+            wrap.querySelectorAll('.chart-panel').forEach(function(panel) { panel.classList.add('hidden'); });
+            var target = wrap.querySelector(pill.dataset.chartTarget);
+            if (!target) return;
+            target.classList.remove('hidden');
+            var chart = target.querySelector('.chart-container[data-figure]');
+            if (chart && window.Plotly) Plotly.Plots.resize(chart);
+        });
+    })();
+    </script>
 </body>
 </html>

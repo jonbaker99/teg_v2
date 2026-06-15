@@ -42,7 +42,7 @@ Currently out of scope — Streamlit handles this via three pages (`1000Data upd
 
 ## Planned enhancements
 
-- [ ] **Review and refine player profile page** — `/player/{code}` has charts and tables but needs a design pass: layout, section ordering, chart sizing, mobile view. Player index page (`/player`) is also very minimal.
+- [ ] **Player profile page — UI design pass** — `/player/{code}` and the `/player` roster have been significantly reworked (metric cards, career highlights, records/worsts, bar charts, roster cards with stars). Functionality is complete. Revisit with fresh eyes for: layout rhythm and section ordering, chart sizing and padding, card density, label clarity, mobile view. See `webapp/routes/player.py` and `webapp/templates/partials/player_overview.html`.
 - [ ] **Score-count matrix % pill** — absolute / % toggle on `/scoring/matrix` and Scoring tab on `/latest-teg`. Use `.pill-group` component.
 - [ ] **Bestball/worstball on `/latest-round`** — show best/worst bestball and worstball positions in the round-in-context page.
 - [ ] **Related links section** — cross-page related-links block (low priority).
