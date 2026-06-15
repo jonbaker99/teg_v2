@@ -88,6 +88,27 @@ _COMMENTARY_DIR = Path("data/commentary")
 _MD_EXTS = ["extra", "sane_lists", "smarty"]
 
 
+def _round_context_header(teg_num: int, round_num: int) -> str:
+    """Build 'Course | Date' display string for a specific round."""
+    try:
+        meta = get_teg_metadata(teg_num, round_num)
+        return " | ".join(p for p in [meta.get('Course', ''), meta.get('Date', '')] if p)
+    except Exception:
+        return ""
+
+
+def _teg_context_header(teg_num: int) -> str:
+    """Build 'Area | Year' display string for a TEG."""
+    try:
+        meta = get_teg_metadata(teg_num)
+        area = meta.get('Area', '') or ''
+        year = meta.get('Year', '')
+        year_str = str(int(year)) if year and str(year).strip() else ''
+        return " | ".join(p for p in [area, year_str] if p)
+    except Exception:
+        return ""
+
+
 def _render_report(candidates: list[str]) -> str | None:
     """Render the first existing markdown file (relative to data/commentary) to HTML."""
     for name in candidates:
@@ -410,11 +431,7 @@ async def latest_round_page(request: Request):
     teg_num = int(teg_str.replace('TEG ', '')) if isinstance(teg_str, str) else int(teg_str)
     teg_numbers = get_available_teg_numbers()
     rounds = get_rounds_for_teg(teg_num)
-    try:
-        meta = get_teg_metadata(teg_num, int(round_num))
-        context_header = " | ".join(p for p in [meta.get('Course', ''), meta.get('Date', '')] if p)
-    except Exception:
-        context_header = ""
+    context_header = _round_context_header(teg_num, int(round_num))
     ctx = _latest_round_tab_context(teg_num, int(round_num), "scoreboard")
     return templates.TemplateResponse("latest_round.html", {
         "request": request,
@@ -445,6 +462,7 @@ async def latest_round_tab(request: Request, teg: int = Query(...), round: int =
         "teg": teg,
         "round": round_num,
         "rounds": rounds,
+        "context_header": _round_context_header(teg, round_num),
         **ctx,
     })
 
@@ -594,10 +612,10 @@ async def latest_teg_page(request: Request):
         "active_page": "latest-teg",
         "teg_numbers": teg_numbers,
         "selected_teg": teg_num,
-        # teg also feeds the in-partial pill hx-vals on first render.
         "teg": teg_num,
         "tabs": LATEST_TEG_TABS,
         "active_tab": "aggregate",
+        "context_header": _teg_context_header(teg_num),
         **ctx,
     })
 
@@ -610,6 +628,7 @@ async def latest_teg_tab(request: Request, teg: int = Query(...), tab: str = Que
     return templates.TemplateResponse("partials/latest_teg_tab.html", {
         "request": request,
         "teg": teg,
+        "context_header": _teg_context_header(teg),
         **ctx,
     })
 

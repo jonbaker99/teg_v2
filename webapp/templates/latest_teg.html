@@ -13,6 +13,8 @@
 
 {% block content %}
 
+<p id="lt-context-header" class="text-muted text-sm mb-3">{{ context_header }}</p>
+
 <div class="section-controls flex items-center gap-4">
     <select id="lt-teg-select" class="theme-select"
             hx-get="/latest-teg/tab"
