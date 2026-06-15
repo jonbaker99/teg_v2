@@ -486,7 +486,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 .metric-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
     gap: 0.6rem;
 }
 .metric-card {
@@ -522,7 +522,7 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--stat-card-value-color, var(--text-primary));
 }
 .metric-rank {
-    font-size: 0.8rem;
+    font-size: 1.25rem;
     font-weight: 600;
     color: var(--text-muted);
 }
@@ -536,70 +536,77 @@ h1, h2, h3, h4, h5, h6 {
     text-decoration-color: var(--text-muted);
 }
 @media (max-width: 540px) {
-    .metric-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.4rem; }
     .metric-value { font-size: 1.35rem; }
+    .metric-rank  { font-size: 1rem; }
 }
 
-/* ── Trophy cabinet ──
-   A row of honour cards: a big emoji crest, the count, the honour name and the
-   player's cross-player rank. Empty cabinets are dimmed; the wooden spoon is a
-   lowlight (tinted) so it reads as a dubious distinction rather than a win. */
+/* ── Trophy Cabinet ──
+   A single panel, not separate cards. Stars at the top (gold ★ for trophies,
+   green ★ for jackets — font characters, not emoji), then a three-column stat
+   row for the exact counts. A footnote notes doubles if any. The wooden spoon
+   rank uses muted colour to read as a dubious distinction rather than a win. */
 .trophy-cabinet {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 0.6rem;
-}
-.trophy-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.15rem;
-    background-color: var(--stat-card-bg, var(--bg-card));
-    border: 1px solid var(--stat-card-border, var(--table-cell-border));
-    border-top: 3px solid var(--accent);
+    background-color: var(--bg-card);
+    border: 1px solid var(--table-cell-border);
     border-radius: var(--card-radius);
-    padding: 0.85rem 0.6rem 0.7rem;
-    text-align: center;
+    padding: 1rem 1.25rem 0.85rem;
 }
-.trophy-icon {
-    font-size: 1.5rem;
+.trophy-stars {
+    margin-bottom: 0.8rem;
+    min-height: 2rem;
     line-height: 1;
 }
-.trophy-count {
-    font-size: 1.7rem;
+.trophy-star {
+    font-size: 1.8rem;
+    display: inline-block;
+    margin-right: 0.04rem;
+}
+.trophy-star--gold  { color: #c9942a; }
+.trophy-star--green { color: var(--accent); }
+.trophy-stars-empty {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+.trophy-honours {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem 1.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px dotted var(--table-cell-border);
+}
+.trophy-honour {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+.trophy-honour-count {
+    font-size: 1.6rem;
     font-weight: 700;
-    line-height: 1.05;
+    line-height: 1;
     color: var(--text-primary);
 }
-.trophy-name {
+.trophy-honour-label {
     font-size: 0.625rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--text-muted);
 }
-.trophy-rank {
-    font-size: 0.7rem;
+.trophy-honour-rank {
+    font-size: 0.8rem;
     font-weight: 600;
     color: var(--accent);
 }
-.trophy-card--lowlight {
-    border-top-color: var(--text-muted);
-}
-.trophy-card--lowlight .trophy-rank {
+.trophy-honour--lowlight .trophy-honour-rank {
     color: var(--text-muted);
 }
-.trophy-card--empty {
-    opacity: 0.5;
-}
-.trophy-card--empty .trophy-count {
-    color: var(--text-muted);
-}
-@media (max-width: 720px) {
-    .trophy-cabinet { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-@media (max-width: 420px) {
-    .trophy-cabinet { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.trophy-doubles {
+    margin-top: 0.65rem;
+    padding-top: 0.65rem;
+    border-top: 1px dotted var(--table-cell-border);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
 }
 
 /* ── Badges ── */
@@ -630,13 +637,17 @@ h1, h2, h3, h4, h5, h6 {
     margin-left: 0.375rem;
 }
 
-/* ── Career highlights (Player overview colour points) ── */
-.highlight-grid {
+/* ── Detail cards — Career Highlights and TEG Records (unified style) ──
+   Both sections show: an eyebrow label, a main heading value, and an optional
+   sub-line. They are semantically identical so they share one class family.
+   The 'shared' tag is a small pill appended to the eyebrow for jointly-held
+   records. */
+.detail-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 0.75rem;
+    gap: 0.65rem;
 }
-.highlight-card {
+.detail-card {
     display: flex;
     flex-direction: column;
     gap: 0.15rem;
@@ -646,53 +657,27 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: var(--card-radius);
     padding: 0.65rem 0.85rem;
 }
-.highlight-label {
+.detail-eyebrow {
     font-size: 0.625rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--text-muted);
 }
-.highlight-value {
+.detail-heading {
     font-family: var(--font-heading), serif;
     font-size: 1.05rem;
     font-weight: 600;
     color: var(--text-primary);
     line-height: 1.2;
 }
-.highlight-detail {
+.detail-sub {
     font-size: 0.75rem;
     color: var(--text-secondary);
 }
-
-/* TEG records held — wider boxes than the highlight cards, one per record.
-   Each shows the record name, then the record value with the where/when it was
-   set sitting beside it. */
-.records-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 0.6rem;
-}
-.record-card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    background-color: var(--bg-card);
-    border: 1px solid var(--table-cell-border);
-    border-left: 3px solid var(--accent);
-    border-radius: var(--card-radius);
-    padding: 0.65rem 0.85rem;
-}
-.record-name {
-    font-size: 0.625rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-}
-.record-shared {
+.detail-shared {
     display: inline-block;
-    margin-left: 0.25rem;
+    margin-left: 0.3rem;
     padding: 0.02rem 0.35rem;
     border-radius: 9999px;
     background-color: var(--table-header-bg);
@@ -701,22 +686,19 @@ h1, h2, h3, h4, h5, h6 {
     letter-spacing: 0.04em;
     vertical-align: middle;
 }
-.record-figure {
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+
+/* ── Player profile in-page heading ──
+   The player name sits on the page itself (after the pills) rather than in the
+   shared page-title-outer banner, giving profile pages a distinct identity feel. */
+.player-profile-heading {
+    margin: 1rem 0 1.25rem;
 }
-.record-value {
+.player-profile-name {
     font-family: var(--font-heading), serif;
-    font-size: 1.2rem;
+    font-size: 1.85rem;
     font-weight: 700;
     color: var(--text-primary);
-    line-height: 1.1;
-}
-.record-detail {
-    font-size: 0.75rem;
-    color: var(--text-secondary);
+    line-height: 1.15;
 }
 
 /* ── Player TEG-results table — win/loss colour pills ──

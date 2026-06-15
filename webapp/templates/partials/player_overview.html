@@ -1,27 +1,79 @@
 <div>
-    {% if highlights %}
-    <h2 class="section-title">Career Highlights</h2>
-    <div class="highlight-grid mb-6">
-        {% for h in highlights %}
-        <div class="highlight-card">
-            <span class="highlight-label">{{ h.label }}</span>
-            <span class="highlight-value">{{ h.value }}</span>
-            {% if h.detail %}<span class="highlight-detail">{{ h.detail }}</span>{% endif %}
+    <!-- Headline metrics -->
+    {% if metrics %}
+    <div class="metric-stack mb-6">
+        {% for row in metrics %}
+        <div class="metric-grid">
+            {% for card in row %}
+            <div class="metric-card{% if card.tooltip %} metric-card--info{% endif %}"
+                 {% if card.tooltip %}title="{{ card.tooltip }}"{% endif %}>
+                <span class="metric-label">{{ card.label }}</span>
+                <span class="metric-figure">
+                    <span class="metric-value">{{ card.value }}</span>
+                    {% if card.rank != '–' %}<span class="metric-rank">{{ card.rank }}</span>{% endif %}
+                </span>
+            </div>
+            {% endfor %}
         </div>
         {% endfor %}
     </div>
     {% endif %}
 
+    <!-- Trophy Cabinet -->
+    {% if trophy %}
+    <h2 class="section-title">Trophy Cabinet</h2>
+    <div class="trophy-cabinet mb-6">
+        <div class="trophy-stars">
+            {% for i in range(trophy.trophies) %}<span class="trophy-star trophy-star--gold">&#9733;</span>{% endfor %}
+            {% for i in range(trophy.jackets) %}<span class="trophy-star trophy-star--green">&#9733;</span>{% endfor %}
+            {% if trophy.trophies == 0 and trophy.jackets == 0 %}<span class="trophy-stars-empty">No trophies won yet</span>{% endif %}
+        </div>
+        <div class="trophy-honours">
+            <div class="trophy-honour">
+                <span class="trophy-honour-count">{{ trophy.trophies }}</span>
+                <span class="trophy-honour-label">TEG Trophies</span>
+                {% if trophy.trophy_rank %}<span class="trophy-honour-rank">{{ trophy.trophy_rank }}</span>{% endif %}
+            </div>
+            <div class="trophy-honour">
+                <span class="trophy-honour-count">{{ trophy.jackets }}</span>
+                <span class="trophy-honour-label">Green Jackets</span>
+                {% if trophy.jacket_rank %}<span class="trophy-honour-rank">{{ trophy.jacket_rank }}</span>{% endif %}
+            </div>
+            <div class="trophy-honour trophy-honour--lowlight">
+                <span class="trophy-honour-count">{{ trophy.spoons }}</span>
+                <span class="trophy-honour-label">Wooden Spoons</span>
+                {% if trophy.spoon_rank %}<span class="trophy-honour-rank">{{ trophy.spoon_rank }}</span>{% endif %}
+            </div>
+        </div>
+        {% if trophy.doubles %}
+        <p class="trophy-doubles">Including {{ trophy.doubles }} double{{ 's' if trophy.doubles != 1 else '' }}{% if trophy.doubles_rank %} ({{ trophy.doubles_rank }}){% endif %}</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Career Highlights -->
+    {% if highlights %}
+    <h2 class="section-title">Career Highlights</h2>
+    <div class="detail-grid mb-6">
+        {% for h in highlights %}
+        <div class="detail-card">
+            <span class="detail-eyebrow">{{ h.label }}</span>
+            <span class="detail-heading">{{ h.value }}</span>
+            {% if h.detail %}<span class="detail-sub">{{ h.detail }}</span>{% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- TEG Records Held -->
     <h2 class="section-title">TEG Records Held</h2>
     {% if records_held %}
-    <div class="records-grid mb-6">
+    <div class="detail-grid mb-6">
         {% for r in records_held %}
-        <div class="record-card">
-            <span class="record-name">{{ r.label }}{% if r.shared %} <span class="record-shared">shared</span>{% endif %}</span>
-            <span class="record-figure">
-                <span class="record-value">{{ r.value }}</span>
-                {% if r.detail %}<span class="record-detail">{{ r.detail }}</span>{% endif %}
-            </span>
+        <div class="detail-card">
+            <span class="detail-eyebrow">{{ r.label }}{% if r.shared %}<span class="detail-shared">shared</span>{% endif %}</span>
+            <span class="detail-heading">{{ r.value }}</span>
+            {% if r.detail %}<span class="detail-sub">{{ r.detail }}</span>{% endif %}
         </div>
         {% endfor %}
     </div>
@@ -29,11 +81,13 @@
     <p class="text-muted text-sm mb-6">No outright TEG records held.</p>
     {% endif %}
 
+    <!-- TEG Results table -->
     <h2 class="section-title">TEG Results</h2>
-    <div class="data-card"><div class="overflow-x-auto">
+    <div class="data-card mb-6"><div class="overflow-x-auto">
         {{ teg_table_html | safe }}
     </div></div>
 
+    <!-- Career trend chart -->
     {% if chart_json %}
     <hr class="divider--dotted my-6">
     <h2 class="section-title">Career Trend — Gross vs Par</h2>

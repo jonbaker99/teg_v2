@@ -98,6 +98,15 @@ def _rank_str(series: pd.Series, name: str, ascending: bool) -> str:
     return f"{r}=" if tied else str(r)
 
 
+def _ordinal_rank(rank_str: str) -> str:
+    """Convert a raw rank string to ordinal form: '1=' → '1st =', '3' → '3rd'."""
+    if rank_str in ("–", ""):
+        return rank_str
+    tied = rank_str.endswith("=")
+    n = int(rank_str.rstrip("="))
+    return _ordinal(n) + (" =" if tied else "")
+
+
 def _metric_specs(all_data, rd_data, winners):
     """Per-player Series for every overview metric.
 
@@ -146,21 +155,11 @@ def _metric_specs(all_data, rd_data, winners):
     ]
 
 
-# Headline metric cards: scoring on top, scoring feats below. Trophies are
-# pulled out into their own dedicated cabinet section (see _build_trophy_section).
+# Headline metric cards. Row 1: career overview (4 cards). Row 2: scoring feats.
+# Trophies are broken down in the dedicated Trophy Cabinet section below.
 _METRIC_ROWS = [
-    ["TEGs Played", "Avg Gross vs Par", "Avg Stableford"],
+    ["TEGs Played", "Total Trophies", "Avg Gross vs Par", "Avg Stableford"],
     ["Holes in One", "Eagles", "Birdies"],
-]
-
-# Trophy cabinet: label → emoji icon. "Spoon" is a wooden-spoon (last place) honour
-# and is styled as a lowlight rather than a win.
-_TROPHY_META = [
-    ("Total Trophies", "🏆", False),
-    ("TEG Trophies", "🥇", False),
-    ("Green Jackets", "🧥", False),
-    ("Doubles", "👑", False),
-    ("Wooden Spoons", "🥄", True),
 ]
 
 
@@ -180,7 +179,7 @@ def _build_overview_metrics(player_code: str) -> list[list[dict]]:
         if name in series.index and pd.notna(series[name]):
             raw = series[name]
             value = fmt(raw)
-            rank = "–" if (unranked_if_zero and raw == 0) else _rank_str(series, name, ascending)
+            rank = "–" if (unranked_if_zero and raw == 0) else _ordinal_rank(_rank_str(series, name, ascending))
         else:
             value, rank = "–", "–"
         by_label[label] = {"value": value, "label": label, "rank": rank}
@@ -201,12 +200,11 @@ def _build_overview_metrics(player_code: str) -> list[list[dict]]:
     return [[by_label[lbl] for lbl in row] for row in _METRIC_ROWS]
 
 
-def _build_trophy_section(player_code: str) -> list[dict]:
-    """Build the trophy-cabinet cards: name, count, cross-player rank and icon.
+def _build_trophy_section(player_code: str) -> dict:
+    """Build trophy-cabinet data: counts and cross-player ranks for each honour.
 
-    Rank is suppressed when the player has none of that honour (an empty cabinet
-    shouldn't claim a ranking). The wooden spoon carries ``lowlight=True`` so the
-    template can style it as a dubious distinction rather than a win.
+    Rank is suppressed when the player has none of that honour. Doubles are
+    reported separately as a footnote rather than as a standalone count.
     """
     name = PLAYER_DICT[player_code]
     all_data = cached_load_all_data()
@@ -216,19 +214,27 @@ def _build_trophy_section(player_code: str) -> list[dict]:
     specs = {label: (series, ascending) for label, series, ascending, _f, _z
              in _metric_specs(all_data, rd_data, winners)}
 
-    cards = []
-    for label, icon, lowlight in _TROPHY_META:
+    def get(label):
         series, ascending = specs[label]
         count = int(series[name]) if name in series.index and pd.notna(series[name]) else 0
-        rank = _rank_str(series, name, ascending) if count > 0 else ""
-        cards.append({
-            "name": label,
-            "count": count,
-            "rank": rank,
-            "icon": icon,
-            "lowlight": lowlight,
-        })
-    return cards
+        rank = _ordinal_rank(_rank_str(series, name, ascending)) if count > 0 else ""
+        return count, rank
+
+    trophies, trophy_rank = get("TEG Trophies")
+    jackets, jacket_rank = get("Green Jackets")
+    spoons, spoon_rank = get("Wooden Spoons")
+    doubles, doubles_rank = get("Doubles")
+
+    return {
+        "trophies": trophies,
+        "jackets": jackets,
+        "spoons": spoons,
+        "doubles": doubles,
+        "trophy_rank": trophy_rank,
+        "jacket_rank": jacket_rank,
+        "spoon_rank": spoon_rank,
+        "doubles_rank": doubles_rank,
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -577,6 +583,8 @@ def _build_overview_context(player_code: str, theme: str) -> dict:
         "chart_json": chart_json,
         "highlights": _build_highlights(player_code),
         "records_held": _records_held(PLAYER_DICT[player_code]),
+        "metrics": _build_overview_metrics(player_code),
+        "trophy": _build_trophy_section(player_code),
     }
 
 
@@ -939,8 +947,6 @@ async def player_page(request: Request, player_code: str):
     name = PLAYER_DICT[pc]
     theme = request.state.theme
 
-    metrics = _build_overview_metrics(pc)
-    trophy_section = _build_trophy_section(pc)
     subtitle = _build_subtitle(pc)
     overview_ctx = _build_overview_context(pc, theme)
 
@@ -951,8 +957,6 @@ async def player_page(request: Request, player_code: str):
         "player_name": name,
         "player_list": _get_player_list(),
         "subtitle": subtitle,
-        "metrics": metrics,
-        "trophy_section": trophy_section,
         "tabs": PLAYER_TABS,
         "active_tab": "overview",
         **overview_ctx,
