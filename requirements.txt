@@ -15,6 +15,9 @@ pyarrow  # parquet engine required by pd.read_parquet (not pulled in by any othe
 plotly
 markdown>=3.4
 
+# Local dev
+python-dotenv
+
 # External services
 PyGithub
 google-auth
