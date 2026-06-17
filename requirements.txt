@@ -10,6 +10,7 @@ jinja2>=3.1.0,<3.2.0
 # Data analysis
 pandas
 numpy
+pyarrow  # parquet engine required by pd.read_parquet (not pulled in by any other dep here)
 plotly
 markdown>=3.4
 
