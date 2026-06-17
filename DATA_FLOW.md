@@ -34,10 +34,17 @@ read_file(path)
   ├─ Local dev    →  pd.read_parquet/csv from data/
   └─ Railway      →  check Railway volume → if missing, pull from GitHub API → cache to volume
 
-write_file(path, df)  →  Railway volume  +  GitHub commit  (triggered by Streamlit data update and delete pages only)
+write_file(path, df)  →  Railway volume  +  GitHub commit
 ```
 
-**Note:** The webapp is **read-only** — no write path.
+**Write pipeline (UI-agnostic):** `teg_analysis/analysis/data_update.py` provides a
+headless update flow — `process_google_sheets_data` → `find_duplicate_keys` →
+`execute_data_update`, which writes `all-scores`/`all-data`, regenerates the
+streaks / commentary / bestball / TEG-status caches, and batch-commits to GitHub.
+On Railway it writes to the volume first then makes a single GitHub batch commit;
+locally it writes straight to `data/`. The legacy Streamlit data-admin pages and
+any new webapp/script frontend drive this same pipeline (so it is no longer
+Streamlit-only).
 
 ---
 
@@ -199,7 +206,7 @@ GET /player/{code}
 ## 9. Full End-to-End
 
 ```
-[GitHub repo]  ←──────────────────────────── write_file() (Streamlit update pages only)
+[GitHub repo]  ←──────────────────────────── write_file() / execute_data_update()
      │
      │  read_from_github() (Railway first-boot or cache miss)
      ▼

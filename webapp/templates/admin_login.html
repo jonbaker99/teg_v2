@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title_suffix %} — Admin login{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+  <span class="page-label">Admin</span>
+  <h1 class="page-title">Log in</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="section-panel" style="max-width:24rem;">
+  {% if error %}<p class="error" style="color:#b00020;margin-bottom:1rem;">{{ error }}</p>{% endif %}
+  <form method="post" action="/admin/login" class="data-card">
+    <label for="password" style="display:block;margin-bottom:.5rem;">Password</label>
+    <input type="password" id="password" name="password" autocomplete="current-password"
+           style="width:100%;padding:.6rem;font-size:1rem;margin-bottom:1rem;" autofocus>
+    <button type="submit" class="tab-underline tab-underline--active" style="padding:.6rem 1.2rem;">
+      Log in
+    </button>
+  </form>
+</div>
+{% endblock %}

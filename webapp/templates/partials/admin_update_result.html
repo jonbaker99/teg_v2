@@ -1,0 +1,26 @@
+{% if error %}
+  <p class="error" style="color:#b00020;">{{ error }}</p>
+{% elif result and result.records_added > 0 %}
+<div class="data-card">
+  <h2 class="card-header">✅ Update complete</h2>
+  <ul style="margin:.5rem 0 0 1rem;">
+    <li><strong>{{ result.records_added }}</strong> hole scores saved</li>
+    <li>Rounds updated:
+      {% for teg, rounds in result.changed_rounds.items() %}
+        TEG {{ teg }} (R{{ rounds | join(', R') }}){% if not loop.last %}; {% endif %}
+      {% endfor %}
+    </li>
+    {% if result.committed %}
+      <li>{{ result.files_committed }} file(s) committed to GitHub</li>
+    {% else %}
+      <li>Written locally (no GitHub commit — not running on Railway)</li>
+    {% endif %}
+  </ul>
+  <p style="margin-top:1rem;">The site now reflects the new data. <a href="/leaderboard" class="text-link">View leaderboard →</a></p>
+</div>
+{% else %}
+  <div class="data-card">
+    <h2 class="card-header">Nothing to add</h2>
+    <p>No new records were written (the sheet may have only duplicates of existing data).</p>
+  </div>
+{% endif %}

@@ -63,6 +63,24 @@ def cached_ranked_frontback_data():
     return get_ranked_frontback_data()
 
 
+def clear_all_data_caches() -> None:
+    """Clear every in-process data cache.
+
+    Call after a data update so the site re-reads the freshly written files
+    (teg_analysis has no internal caching, so these wrappers are the only ones).
+    """
+    for fn in (
+        cached_load_all_data,
+        cached_round_data,
+        cached_complete_teg_data,
+        cached_9_data,
+        cached_ranked_teg_data,
+        cached_ranked_round_data,
+        cached_ranked_frontback_data,
+    ):
+        fn.cache_clear()
+
+
 # --- Leaderboard logic (from streamlit/leaderboard_utils.py) ------------------
 
 def create_leaderboard(leaderboard_df: pd.DataFrame, value_column: str, ascending: bool = True) -> pd.DataFrame:

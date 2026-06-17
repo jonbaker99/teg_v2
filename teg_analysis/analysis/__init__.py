@@ -12,6 +12,7 @@ This package contains analysis functions for the TEG analysis system including:
 - records: Record identification
 - commentary: Commentary generation
 - pipeline: Data processing pipeline
+- data_update: Headless data-update pipeline (add/process rounds, regenerate caches)
 """
 
 from . import scoring
@@ -26,6 +27,7 @@ from . import records
 from . import commentary
 from . import pipeline
 from . import eclectic
+from . import data_update
 
 # Export commonly used functions for convenience
 from .scoring import format_vs_par, get_net_competition_measure
@@ -39,6 +41,7 @@ from .aggregation import (
 from .history import get_teg_winners
 from .leaderboards import filter_data_by_teg
 from .rankings import add_ranks, get_best, get_worst
+from .data_update import execute_data_update, process_google_sheets_data
 
 __all__ = [
     'scoring',
@@ -53,6 +56,7 @@ __all__ = [
     'commentary',
     'pipeline',
     'eclectic',
+    'data_update',
     # Common exports
     'format_vs_par',
     'get_net_competition_measure',
@@ -67,4 +71,7 @@ __all__ = [
     'get_last_completed_teg_fast',
     'has_incomplete_teg_fast',
     'filter_data_by_teg',
+    # Data-update pipeline
+    'execute_data_update',
+    'process_google_sheets_data',
 ]

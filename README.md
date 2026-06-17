@@ -18,7 +18,7 @@ The key principle: **`teg_analysis/` owns the analysis; frontends are interchang
 
 2. **`teg_analysis/`** -- The UI-agnostic analysis package. The canonical source for all TEG data, scoring, records, and statistics. Use this for any new analytical work.
 
-3. **`webapp/`** -- New frontend in progress (FastAPI + HTMX + Jinja2). Calls `teg_analysis/` for all data. Not yet deployed.
+3. **`webapp/`** -- New frontend (FastAPI + HTMX + Jinja2). Calls `teg_analysis/` for all data. **Now deployed on Railway from `main`** (replacing the Streamlit app), with `railway.toml` running `uvicorn webapp.app:app`.
 
 ## Quick start
 
@@ -89,6 +89,6 @@ DATA_FLOW.md         Reference guide for the data pipeline
 
 ## Current status
 
-The Streamlit app is deployed and stable. The `teg_analysis` package is merged to `main` — all cleanup complete, ready to power multiple frontends. The `webapp/` is in active development with 26 endpoints and data parity vs Streamlit.
+The `webapp/` (FastAPI) is **deployed on Railway from `main`** and has replaced the Streamlit app as the live site; `railway.toml` runs `uvicorn webapp.app:app` and `requirements.txt` is webapp-only (with `pyarrow` for the parquet reads). The Streamlit app remains in `streamlit/` as the stable legacy reference but is no longer the deployed site. The `teg_analysis` package powers the webapp and is gaining a headless data-update pipeline (`teg_analysis/analysis/data_update.py`) so data management is no longer Streamlit-only.
 
 See [CLAUDE.md](CLAUDE.md) for current work priorities and architecture decisions. See folder-level READMEs (`teg_analysis/README.md`, `webapp/README.md`, `streamlit/README.md`) for each component.
