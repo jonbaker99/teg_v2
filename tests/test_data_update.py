@@ -16,6 +16,10 @@ from teg_analysis.analysis.data_update import (
     find_duplicate_keys,
     analyze_hole_level_differences,
     summarise_round_scores,
+    get_available_tegs_and_rounds,
+    validate_deletion_selection,
+    preview_deletion_data,
+    EDITABLE_DATA_FILES,
 )
 from teg_analysis.constants import PLAYER_DICT
 
@@ -147,6 +151,62 @@ def test_summarise_round_scores_totals():
     # 18 holes: AB total 72, JB total 90.
     assert summary.loc['AB'].iloc[0] == 72
     assert summary.loc['JB'].iloc[0] == 90
+
+
+# ---------------------------------------------------------------------------
+# Delete-flow pure functions
+# ---------------------------------------------------------------------------
+
+def _scores_frame() -> pd.DataFrame:
+    """Synthetic all-scores frame spanning two TEGs / multiple rounds."""
+    rows = []
+    for teg in (10, 11):
+        for rnd in (1, 2):
+            for pl in ('AB', 'JB'):
+                rows.append({'TEGNum': teg, 'Round': rnd, 'Hole': 1, 'Pl': pl, 'Sc': 4})
+    return pd.DataFrame(rows)
+
+
+def test_get_available_tegs_and_rounds_orders_newest_first():
+    mapping = get_available_tegs_and_rounds(_scores_frame())
+    assert list(mapping.keys()) == [11, 10]      # reverse-chronological
+    assert mapping[10] == [1, 2]
+    assert mapping[11] == [1, 2]
+
+
+def test_get_available_tegs_and_rounds_empty():
+    assert get_available_tegs_and_rounds(pd.DataFrame()) == {}
+
+
+def test_validate_deletion_selection():
+    assert validate_deletion_selection([1]) is True
+    assert validate_deletion_selection([]) is False
+
+
+def test_preview_deletion_data_filters_selection():
+    scores = _scores_frame()
+    preview = preview_deletion_data(scores, 10, [1])
+    # Only TEG 10, Round 1 -> two players.
+    assert len(preview) == 2
+    assert set(preview['TEGNum'].unique()) == {10}
+    assert set(preview['Round'].unique()) == {1}
+
+
+def test_preview_deletion_data_handles_string_inputs():
+    """Selections coming from form posts arrive as strings — still match."""
+    scores = _scores_frame()
+    preview = preview_deletion_data(scores, '11', ['2'])
+    assert len(preview) == 2
+    assert set(preview['TEGNum'].unique()) == {11}
+
+
+def test_editable_files_registry_shape():
+    """Every registry entry exposes the fields the routes rely on."""
+    assert 'round_info' in EDITABLE_DATA_FILES
+    for slug, meta in EDITABLE_DATA_FILES.items():
+        assert meta['path'].startswith('data/') and meta['path'].endswith('.csv')
+        assert meta['label'] and meta['description']
+        assert meta['kind'] in {'metadata', 'status'}
 
 
 if __name__ == '__main__':

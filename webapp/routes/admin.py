@@ -185,3 +185,234 @@ async def admin_data_update_execute(
 
     ctx["result"] = result
     return templates.TemplateResponse("partials/admin_update_result.html", ctx)
+
+
+# --- Edit metadata CSVs -------------------------------------------------------
+
+@router.get("/admin/edit-data")
+async def admin_edit_data(request: Request, file: str = "round_info"):
+    if not is_authed(request):
+        return _redirect("/admin/login")
+
+    from teg_analysis.analysis.data_update import EDITABLE_DATA_FILES
+    from teg_analysis.io import read_file
+
+    # "processed" is a special read-only view of the fully processed dataset.
+    is_processed = file == "processed"
+    if not is_processed and file not in EDITABLE_DATA_FILES:
+        file = "round_info"
+
+    ctx = {
+        "request": request,
+        "active_page": None,
+        "files": EDITABLE_DATA_FILES,
+        "selected": file,
+        "is_processed": is_processed,
+    }
+
+    if is_processed:
+        ctx["meta"] = {
+            "label": "Processed Tournament Data",
+            "description": "Read-only view of fully processed data (all-data.parquet).",
+            "kind": "readonly",
+        }
+        try:
+            from teg_analysis.core.data_loader import load_all_data
+            all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
+            ctx["row_count"] = int(len(all_data))
+            ctx["table_html"] = all_data.head(500).to_html(
+                index=False, classes=_TABLE_CLASSES, border=0
+            )
+        except Exception as e:  # noqa: BLE001
+            logger.error(f"Processed-data view failed: {e}", exc_info=True)
+            ctx["error"] = f"Could not load processed data: {e}"
+        return templates.TemplateResponse("admin_edit_data.html", ctx)
+
+    meta = EDITABLE_DATA_FILES[file]
+    ctx["meta"] = meta
+    try:
+        df = read_file(meta["path"])
+        ctx["columns"] = list(df.columns)
+        # Stringify cells for the editable grid (NaN -> empty).
+        ctx["rows"] = df.astype(object).where(df.notna(), "").values.tolist()
+        ctx["missing"] = False
+    except FileNotFoundError:
+        ctx["missing"] = True
+        ctx["columns"] = []
+        ctx["rows"] = []
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Edit-data load failed for {meta['path']}: {e}", exc_info=True)
+        ctx["error"] = f"Could not load {meta['path']}: {e}"
+        ctx["missing"] = False
+        ctx["columns"] = []
+        ctx["rows"] = []
+
+    return templates.TemplateResponse("admin_edit_data.html", ctx)
+
+
+@router.post("/admin/edit-data/save", response_class=HTMLResponse)
+async def admin_edit_data_save(request: Request):
+    if not is_authed(request):
+        return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
+
+    import json
+    import re
+    from collections import defaultdict
+
+    import pandas as pd
+
+    from teg_analysis.analysis.data_update import EDITABLE_DATA_FILES, save_data_file
+
+    form = await request.form()
+    slug = form.get("file", "")
+    ctx = {"request": request, "selected": slug}
+
+    if slug not in EDITABLE_DATA_FILES:
+        ctx["error"] = "Unknown file."
+        return templates.TemplateResponse("partials/admin_edit_result.html", ctx)
+
+    meta = EDITABLE_DATA_FILES[slug]
+    try:
+        columns = json.loads(form.get("columns", "[]"))
+    except json.JSONDecodeError:
+        columns = []
+
+    # Rebuild rows from cell__{rid}__{cidx} fields (robust to added/deleted rows).
+    grouped: dict[int, dict[int, str]] = defaultdict(dict)
+    for key, val in form.multi_items():
+        m = re.match(r"cell__(\d+)__(\d+)$", key)
+        if m:
+            grouped[int(m.group(1))][int(m.group(2))] = val
+
+    records = []
+    for rid in sorted(grouped):
+        row = grouped[rid]
+        # Skip fully-blank rows so a stray added row doesn't write empties.
+        values = [row.get(cidx, "") for cidx in range(len(columns))]
+        if any(str(v).strip() for v in values):
+            records.append(values)
+
+    try:
+        df = pd.DataFrame(records, columns=columns)
+        # Light type coercion: numeric columns become numeric in the CSV.
+        for col in df.columns:
+            coerced = pd.to_numeric(df[col], errors="coerce")
+            if coerced.notna().all() and len(df) > 0:
+                df[col] = coerced
+        save_data_file(meta["path"], df, commit_message=f"Edit {meta['label']} via admin")
+        deps.clear_all_data_caches()
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Edit-data save failed for {meta['path']}: {e}", exc_info=True)
+        ctx["error"] = f"Save failed: {e}"
+        return templates.TemplateResponse("partials/admin_edit_result.html", ctx)
+
+    ctx["result"] = {"path": meta["path"], "label": meta["label"], "rows": len(df)}
+    return templates.TemplateResponse("partials/admin_edit_result.html", ctx)
+
+
+@router.post("/admin/edit-data/regenerate-status", response_class=HTMLResponse)
+async def admin_edit_regenerate_status(request: Request):
+    if not is_authed(request):
+        return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
+
+    from teg_analysis.analysis.data_update import regenerate_status_files
+
+    ctx = {"request": request, "selected": ""}
+    try:
+        result = regenerate_status_files()
+        deps.clear_all_data_caches()
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Status regeneration failed: {e}", exc_info=True)
+        ctx["error"] = f"Regeneration failed: {e}"
+        return templates.TemplateResponse("partials/admin_edit_result.html", ctx)
+
+    ctx["result"] = {"regenerated": True, **result}
+    return templates.TemplateResponse("partials/admin_edit_result.html", ctx)
+
+
+# --- Delete rounds ------------------------------------------------------------
+
+@router.get("/admin/delete-data")
+async def admin_delete_data(request: Request):
+    if not is_authed(request):
+        return _redirect("/admin/login")
+
+    from teg_analysis.analysis.data_update import get_available_tegs_and_rounds
+    from teg_analysis.io import read_file
+    from teg_analysis.constants import ALL_SCORES_PARQUET
+
+    ctx = {"request": request, "active_page": None}
+    try:
+        scores = read_file(ALL_SCORES_PARQUET)
+        ctx["tegs"] = get_available_tegs_and_rounds(scores)
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Delete-data load failed: {e}", exc_info=True)
+        ctx["tegs"] = {}
+        ctx["error"] = f"Could not load scores: {e}"
+    return templates.TemplateResponse("admin_delete_data.html", ctx)
+
+
+@router.post("/admin/delete-data/preview", response_class=HTMLResponse)
+async def admin_delete_data_preview(request: Request):
+    if not is_authed(request):
+        return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
+
+    from teg_analysis.analysis.data_update import (
+        preview_deletion_data, validate_deletion_selection,
+    )
+    from teg_analysis.io import read_file
+    from teg_analysis.constants import ALL_SCORES_PARQUET
+
+    form = await request.form()
+    teg = form.get("teg", "")
+    rounds = form.getlist("rounds")
+    ctx = {"request": request, "teg": teg, "rounds": rounds}
+
+    if not teg or not validate_deletion_selection(rounds):
+        ctx["error"] = "Select a TEG and at least one round to delete."
+        return templates.TemplateResponse("partials/admin_delete_preview.html", ctx)
+
+    try:
+        scores = read_file(ALL_SCORES_PARQUET)
+        to_delete = preview_deletion_data(scores, teg, rounds)
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Delete preview failed: {e}", exc_info=True)
+        ctx["error"] = f"Could not build preview: {e}"
+        return templates.TemplateResponse("partials/admin_delete_preview.html", ctx)
+
+    ctx["row_count"] = int(len(to_delete))
+    ctx["preview_html"] = to_delete.head(200).to_html(
+        index=False, classes=_TABLE_CLASSES, border=0
+    )
+    return templates.TemplateResponse("partials/admin_delete_preview.html", ctx)
+
+
+@router.post("/admin/delete-data/execute", response_class=HTMLResponse)
+async def admin_delete_data_execute(request: Request):
+    if not is_authed(request):
+        return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
+
+    from teg_analysis.analysis.data_update import (
+        execute_data_deletion, validate_deletion_selection,
+    )
+
+    form = await request.form()
+    teg = form.get("teg", "")
+    rounds = form.getlist("rounds")
+    ctx = {"request": request}
+
+    if not teg or not validate_deletion_selection(rounds):
+        ctx["error"] = "Select a TEG and at least one round to delete."
+        return templates.TemplateResponse("partials/admin_delete_result.html", ctx)
+
+    try:
+        # Re-fetch happens inside execute_data_deletion (reads the live files).
+        result = execute_data_deletion(int(teg), [int(r) for r in rounds])
+        deps.clear_all_data_caches()
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Deletion failed: {e}", exc_info=True)
+        ctx["error"] = f"Deletion failed: {e}"
+        return templates.TemplateResponse("partials/admin_delete_result.html", ctx)
+
+    ctx["result"] = result
+    return templates.TemplateResponse("partials/admin_delete_result.html", ctx)

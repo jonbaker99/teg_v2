@@ -37,14 +37,23 @@ read_file(path)
 write_file(path, df)  →  Railway volume  +  GitHub commit
 ```
 
-**Write pipeline (UI-agnostic):** `teg_analysis/analysis/data_update.py` provides a
-headless update flow — `process_google_sheets_data` → `find_duplicate_keys` →
-`execute_data_update`, which writes `all-scores`/`all-data`, regenerates the
-streaks / commentary / bestball / TEG-status caches, and batch-commits to GitHub.
-On Railway it writes to the volume first then makes a single GitHub batch commit;
-locally it writes straight to `data/`. The legacy Streamlit data-admin pages and
-any new webapp/script frontend drive this same pipeline (so it is no longer
-Streamlit-only).
+**Write pipeline (UI-agnostic):** `teg_analysis/analysis/data_update.py` provides the
+headless add / edit / delete flows:
+- **Add:** `process_google_sheets_data` → `find_duplicate_keys` → `execute_data_update`,
+  which writes `all-scores`/`all-data`, regenerates the streaks / commentary /
+  bestball / TEG-status caches, and batch-commits to GitHub.
+- **Delete:** `preview_deletion_data` → `execute_data_deletion`, which takes a
+  **timestamped backup** of `all-scores`/`all-data` under `data/backups/`, removes
+  the selected TEG/rounds from `all-scores`/`all-data` (+ CSV mirror), and rebuilds
+  the same derived caches.
+- **Edit:** `EDITABLE_DATA_FILES` registry + `save_data_file` (single-file commit of
+  an edited metadata CSV) and `regenerate_status_files` (rebuild completed/in-progress
+  status from raw data).
+
+On Railway each flow writes to the volume first then makes a single GitHub batch
+commit; locally it writes straight to `data/`. The legacy Streamlit data-admin pages
+and the webapp admin pages (`webapp/routes/admin.py`) drive this same pipeline (so it
+is no longer Streamlit-only).
 
 ---
 

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title_suffix %} — Delete rounds{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+  <span class="page-label">Admin</span>
+  <h1 class="page-title">Delete rounds</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+{% set admin_active = 'delete' %}
+{% include "partials/admin_nav.html" %}
+
+<div class="section-panel">
+  <p style="margin-bottom:1rem;">
+    Permanently delete a TEG's rounds. A timestamped backup is taken first, then
+    the rows are removed from all-scores and all-data and every derived cache
+    (status, streaks, commentary, bestball) is rebuilt.
+  </p>
+
+  {% if error %}
+    <p class="error" style="color:#b00020;">{{ error }}</p>
+  {% elif not tegs %}
+    <p>No tournament data found.</p>
+  {% else %}
+  <form hx-post="/admin/delete-data/preview" hx-target="#delete-preview" hx-swap="innerHTML">
+    <label style="display:flex;flex-direction:column;gap:.25rem;max-width:16rem;">
+      <span class="page-label">TEG</span>
+      <select name="teg" id="delete-teg" style="padding:.5rem;" onchange="tegShowRounds()">
+        {% for teg in tegs.keys() %}
+          <option value="{{ teg }}">TEG {{ teg }}</option>
+        {% endfor %}
+      </select>
+    </label>
+
+    <div style="margin-top:1rem;">
+      <span class="page-label">Rounds to delete</span>
+      {% for teg, rounds in tegs.items() %}
+        <div class="delete-rounds" data-teg="{{ teg }}" style="display:none;gap:1rem;flex-wrap:wrap;margin-top:.5rem;">
+          {% for r in rounds %}
+            <label style="display:inline-flex;gap:.35rem;align-items:center;">
+              <input type="checkbox" name="rounds" value="{{ r }}"> Round {{ r }}
+            </label>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <button type="submit" class="tab-underline tab-underline--active" style="padding:.6rem 1.2rem;margin-top:1rem;">
+      Preview deletion
+    </button>
+  </form>
+
+  <div id="delete-preview" style="margin-top:1.5rem;"></div>
+
+  <script>
+  function tegShowRounds() {
+    var teg = document.getElementById('delete-teg').value;
+    document.querySelectorAll('.delete-rounds').forEach(function (g) {
+      var match = g.dataset.teg === teg;
+      g.style.display = match ? 'flex' : 'none';
+      if (!match) g.querySelectorAll('input').forEach(function (c) { c.checked = false; });
+    });
+  }
+  tegShowRounds();
+  </script>
+  {% endif %}
+</div>
+{% endblock %}

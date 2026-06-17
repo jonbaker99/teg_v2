@@ -2,16 +2,15 @@
 {% block title_suffix %} — Data update{% endblock %}
 
 {% block page_title %}
-<div class="page-title-area" style="display:flex;justify-content:space-between;align-items:flex-end;">
-  <div>
-    <span class="page-label">Admin</span>
-    <h1 class="page-title">Add a round</h1>
-  </div>
-  <a href="/admin/logout" class="text-link">Log out</a>
+<div class="page-title-area">
+  <span class="page-label">Admin</span>
+  <h1 class="page-title">Add a round</h1>
 </div>
 {% endblock %}
 
 {% block content %}
+{% set admin_active = 'add' %}
+{% include "partials/admin_nav.html" %}
 <div class="section-panel">
   <p style="margin-bottom:1rem;">
     Loads the latest scores from the Google Sheet, shows you the round totals and any

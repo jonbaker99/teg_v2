@@ -47,7 +47,9 @@ teg_analysis/
     bestball.py      Best-ball / worst-ball competition format
     commentary.py    Summary/event/streak tables that feed the reporting pipeline
     pipeline.py      Data pipeline coordinator (update_all_data, cache regenerators)
-    data_update.py   Headless data-update pipeline (process/validate rounds, dedupe, execute_data_update)
+    data_update.py   Headless data-management pipeline — add (process/validate/dedupe/execute_data_update),
+                     delete (preview_deletion_data/execute_data_deletion + timestamped backup) and
+                     edit metadata CSVs (EDITABLE_DATA_FILES/save_data_file/regenerate_status_files)
 
   reporting/         LLM tournament-report pipeline (scored beats → story plan → authoring → styled MD)
     README.md        How it works (architecture, artefacts, end-to-end usage)

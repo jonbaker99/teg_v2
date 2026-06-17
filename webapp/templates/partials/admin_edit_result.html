@@ -1,0 +1,24 @@
+{% if error %}
+  <p class="error" style="color:#b00020;">{{ error }}</p>
+{% elif result and result.regenerated %}
+<div class="data-card">
+  <h2 class="card-header">✅ Status files regenerated</h2>
+  <ul style="margin:.5rem 0 0 1rem;">
+    {% if result.committed %}
+      <li>{{ result.files_committed }} file(s) committed to GitHub</li>
+    {% else %}
+      <li>Written locally (no GitHub commit — not running on Railway)</li>
+    {% endif %}
+  </ul>
+</div>
+{% elif result %}
+<div class="data-card">
+  <h2 class="card-header">✅ Saved</h2>
+  <p style="margin-top:.5rem;"><strong>{{ result.label }}</strong> saved with {{ result.rows }} row(s).</p>
+  <p style="margin-top:.5rem;">The site now reflects the change.</p>
+</div>
+{% else %}
+<div class="data-card">
+  <h2 class="card-header">Nothing saved</h2>
+</div>
+{% endif %}
