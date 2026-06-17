@@ -11,6 +11,7 @@ from webapp.routes import (
     leaderboard, charts, charts_proto, records, showcase, player, scorecard,
     placeholder, history, latest, performance, scoring, scorecards,
     eclectic, width_test, title_preview, smoke_test, reports, contents,
+    admin,
 )
 from webapp.nav import NAV_SECTIONS
 from webapp.theme import (
@@ -69,6 +70,7 @@ app.include_router(title_preview.router)
 app.include_router(smoke_test.router)
 app.include_router(reports.router)
 app.include_router(contents.router)
+app.include_router(admin.router)
 
 
 @app.get("/")

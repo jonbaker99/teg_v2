@@ -1,0 +1,44 @@
+{% if error %}
+  <p class="error" style="color:#b00020;">{{ error }}</p>
+{% else %}
+<div class="data-card">
+  <h2 class="card-header">Round totals to load ({{ row_count }} hole scores)</h2>
+  <div class="table-wrapper">{{ summary_html | safe }}</div>
+</div>
+
+{% if has_duplicates %}
+  <div class="data-card" style="margin-top:1rem;">
+    <h2 class="card-header">⚠️ {{ duplicate_count }} hole(s) already exist</h2>
+    {% if diff_html %}
+      <p style="margin:.5rem 0;">These holes are already in the data with <em>different</em> scores:</p>
+      <div class="table-wrapper">{{ diff_html | safe }}</div>
+    {% else %}
+      <p style="margin:.5rem 0;">These holes already exist with the same scores.</p>
+    {% endif %}
+  </div>
+
+  <div class="toggle-group" style="margin-top:1rem;display:flex;gap:.75rem;flex-wrap:wrap;">
+    <button class="tab-underline tab-underline--active" style="padding:.6rem 1.2rem;"
+            hx-post="/admin/data-update/execute" hx-target="#preview" hx-swap="innerHTML"
+            hx-vals='{"sheet": "{{ sheet }}", "worksheet": "{{ worksheet }}", "mode": "overwrite"}'
+            hx-confirm="Overwrite the existing scores with the sheet's values?">
+      Overwrite existing
+    </button>
+    <button class="tab-underline" style="padding:.6rem 1.2rem;"
+            hx-post="/admin/data-update/execute" hx-target="#preview" hx-swap="innerHTML"
+            hx-vals='{"sheet": "{{ sheet }}", "worksheet": "{{ worksheet }}", "mode": "new_only"}'
+            hx-confirm="Add only the holes that aren't already present?">
+      Add new only
+    </button>
+  </div>
+{% else %}
+  <div class="toggle-group" style="margin-top:1rem;">
+    <button class="tab-underline tab-underline--active" style="padding:.6rem 1.2rem;"
+            hx-post="/admin/data-update/execute" hx-target="#preview" hx-swap="innerHTML"
+            hx-vals='{"sheet": "{{ sheet }}", "worksheet": "{{ worksheet }}", "mode": "append"}'
+            hx-confirm="Save this round and commit to GitHub?">
+      Confirm &amp; save
+    </button>
+  </div>
+{% endif %}
+{% endif %}

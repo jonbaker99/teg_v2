@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title_suffix %} — Data update{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area" style="display:flex;justify-content:space-between;align-items:flex-end;">
+  <div>
+    <span class="page-label">Admin</span>
+    <h1 class="page-title">Add a round</h1>
+  </div>
+  <a href="/admin/logout" class="text-link">Log out</a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="section-panel">
+  <p style="margin-bottom:1rem;">
+    Loads the latest scores from the Google Sheet, shows you the round totals and any
+    clashes with existing data, then lets you confirm before it's saved and committed.
+  </p>
+
+  <form id="load-form" class="section-controls"
+        hx-post="/admin/data-update/preview"
+        hx-target="#preview" hx-swap="innerHTML"
+        hx-indicator="#load-spinner">
+    <label style="display:flex;flex-direction:column;gap:.25rem;">
+      <span class="page-label">Google Sheet</span>
+      <input name="sheet" value="{{ sheet }}" style="padding:.5rem;min-width:14rem;">
+    </label>
+    <label style="display:flex;flex-direction:column;gap:.25rem;">
+      <span class="page-label">Worksheet</span>
+      <input name="worksheet" value="{{ worksheet }}" style="padding:.5rem;min-width:10rem;">
+    </label>
+    <button type="submit" class="tab-underline tab-underline--active" style="padding:.6rem 1.2rem;align-self:flex-end;">
+      Load &amp; preview
+    </button>
+    <span id="load-spinner" class="htmx-indicator" style="align-self:flex-end;">Loading…</span>
+  </form>
+
+  <div id="preview" class="section-panel" style="margin-top:1.5rem;"></div>
+</div>
+{% endblock %}

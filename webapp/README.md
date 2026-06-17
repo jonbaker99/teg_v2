@@ -24,6 +24,31 @@ Visit `http://localhost:8000` in your browser. Use the theme switcher in the nav
   signature, then drop the pins. (A related variant of this error also appears on
   Python 3.14 with jinja2 3.1.x — use Python 3.12/3.13 there.)
 
+## Admin / data update
+
+The webapp includes a password-gated admin page for **adding a round of scores**
+remotely (e.g. from the course straight after a round) — `webapp/routes/admin.py`
++ `webapp/admin_auth.py`, templates `admin_login.html`, `admin_data_update.html`,
+`partials/admin_update_*.html`.
+
+- **Routes:** `/admin/login`, `/admin/data-update` (load + preview),
+  `/admin/data-update/preview` and `/admin/data-update/execute` (HTMX).
+- **Flow:** load the "TEG Round Input" Google Sheet → preview round totals +
+  hole-level duplicate check → confirm (append / overwrite / add-new-only) →
+  `teg_analysis.analysis.data_update.execute_data_update` writes `all-scores` /
+  `all-data`, regenerates the streaks/commentary/bestball/status caches and
+  batch-commits to GitHub → `deps.clear_all_data_caches()` so the site shows the
+  new data immediately.
+- **Auth:** one shared password from `WEBAPP_ADMIN_PASSWORD` (defaults to `teg`
+  if unset), held in a cookie. This is **not** real security — it only stops a
+  crawler accidentally triggering a write/commit/LLM run. `admin_auth.py`.
+- **Env vars needed on Railway:** `WEBAPP_ADMIN_PASSWORD`, the `GOOGLE_*`
+  service-account vars (sheet access) and `GITHUB_TOKEN` (commit). Form POSTs
+  need `python-multipart` (in `requirements.txt`).
+
+Not yet ported: data **edit** (metadata CSVs) and **delete** — still
+Streamlit-only for now.
+
 ## Architecture
 
 ### Tech stack
