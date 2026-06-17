@@ -1,2 +1,4 @@
 [deploy]
-startCommand = "streamlit run streamlit/nav.py --server.port=$PORT --server.address=0.0.0.0"
+# Deploys the FastAPI webapp. The Streamlit app deploys from its own branch with
+# its own config and is unaffected by this.
+startCommand = "uvicorn webapp.app:app --host 0.0.0.0 --port $PORT"
