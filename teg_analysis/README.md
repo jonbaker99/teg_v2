@@ -46,7 +46,8 @@ teg_analysis/
     leaderboards.py  Leaderboard generation
     bestball.py      Best-ball / worst-ball competition format
     commentary.py    Summary/event/streak tables that feed the reporting pipeline
-    pipeline.py      Data pipeline coordinator
+    pipeline.py      Data pipeline coordinator (update_all_data, cache regenerators)
+    data_update.py   Headless data-update pipeline (process/validate rounds, dedupe, execute_data_update)
 
   reporting/         LLM tournament-report pipeline (scored beats → story plan → authoring → styled MD)
     README.md        How it works (architecture, artefacts, end-to-end usage)

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-TEG v2 is a golf tournament analysis project. It has two architectural layers: a legacy Streamlit app (deployed on Railway, self-contained, stable) and a newer decoupled architecture — a UI-agnostic `teg_analysis/` Python package plus a `webapp/` FastAPI frontend in progress. All new analytical work belongs in `teg_analysis/`.
+TEG v2 is a golf tournament analysis project. It has two architectural layers: a legacy, self-contained Streamlit app (kept as a stable reference) and a newer decoupled architecture — a UI-agnostic `teg_analysis/` Python package plus a `webapp/` FastAPI frontend, which is **now the site deployed on Railway from `main`** (it replaced the Streamlit app). All new analytical work belongs in `teg_analysis/`.
 
 ## Domain knowledge
 
@@ -137,13 +137,13 @@ The project has two distinct architectural phases. **The Streamlit app is the or
    - `constants.py` — Centralised file paths, player data, tournament metadata
    - `io/` — File I/O (`read_file`/`write_file`), GitHub API (uses `GITHUB_TOKEN` env var), Railway volume management
    - `core/` — Data loading (`load_all_data`) and transformation
-   - `analysis/` — Scoring, rankings, player_rankings, aggregation, streaks, records, eclectic, handicaps, commentary, pipeline, history, performance, leaderboards, bestball
+   - `analysis/` — Scoring, rankings, player_rankings, aggregation, streaks, records, eclectic, handicaps, commentary, pipeline, data_update, history, performance, leaderboards, bestball
    - `display/` — Formatting, HTML tables, scorecards, navigation utilities (returns HTML strings, never calls st.write)
    - `api/` — Placeholder for REST API endpoints
 
-2. **`streamlit/`** — The original production app (deployed on Railway). Uses its own `utils.py` and is intentionally self-contained. It will not be migrated to use `teg_analysis/` — it represents the old architecture and should be left stable.
+2. **`streamlit/`** — The original app. Uses its own `utils.py` and is intentionally self-contained. **No longer the deployed site** (the webapp replaced it on Railway), but kept as the stable legacy reference; it will not be migrated to use `teg_analysis/`.
 
-3. **`webapp/`** — FastAPI + HTMX + Jinja2 + Tailwind proof-of-concept. Not deployed; used locally to experiment with different UIs and visual styles. Run with `uvicorn webapp.app:app --reload` from the repo root.
+3. **`webapp/`** — FastAPI + HTMX + Jinja2 + Tailwind frontend. **Deployed on Railway from `main`** (replaced the Streamlit app) via `railway.toml` → `uvicorn webapp.app:app`; `requirements.txt` is webapp-only (includes `pyarrow` for parquet reads). Also run locally with `uvicorn webapp.app:app --reload`. Needs `GITHUB_TOKEN` + a volume mounted at `/mnt/data_repo`; `ANTHROPIC_API_KEY` for reports and `GOOGLE_*` vars for data-update ingestion.
 
 4. **`ad_hoc_analysis/`** — Jupyter notebooks for exploratory / one-off analysis. Calls `teg_analysis/` directly. Start with `quickstart.ipynb`.
 

@@ -1,6 +1,6 @@
 # Webapp
 
-A FastAPI + HTMX + Jinja2 + Tailwind frontend for TEG analysis. Local development only (not deployed). This is the "new architecture" frontend — data comes entirely from `teg_analysis/`, making this a pure presentation layer.
+A FastAPI + HTMX + Jinja2 + Tailwind frontend for TEG analysis. **Deployed on Railway from `main`** (replacing the legacy Streamlit app) via `railway.toml` → `uvicorn webapp.app:app`; also run locally for development. This is the "new architecture" frontend — data comes entirely from `teg_analysis/`, making this a pure presentation layer. Required Railway env vars: `GITHUB_TOKEN` (data reads from GitHub), `ANTHROPIC_API_KEY` (TEG Reports), and the `GOOGLE_*` service-account vars (for data-update ingestion); a persistent volume is mounted at `/mnt/data_repo` as the read/write cache.
 
 ## Quick start
 
