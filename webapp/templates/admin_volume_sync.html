@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title_suffix %} — GitHub sync{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+  <span class="page-label">Admin</span>
+  <h1 class="page-title">GitHub ↔ store sync</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+{% set admin_active = 'sync' %}
+{% include "partials/admin_nav.html" %}
+
+<div class="section-panel">
+  <p style="margin-bottom:1rem;">
+    Selectively move files between GitHub and the app's data store
+    (<code>{{ store_label }}</code>). <strong>Pull</strong> copies GitHub → store;
+    <strong>Push</strong> copies store → GitHub. Use this when you change reference
+    CSVs for new TEGs and want to sync just those files.
+  </p>
+
+  {# Folder picker — navigates (GET) so the table reloads for the chosen folder. #}
+  <div class="section-controls" style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;">
+    {% for f in folders %}
+      <a href="/admin/volume-sync?folder={{ f }}"
+         class="tab-underline{% if folder == f %} tab-underline--active{% endif %}"
+         style="padding:.4rem .8rem;">{{ f }}</a>
+    {% endfor %}
+  </div>
+
+  <div id="sync-body">
+    {% include "partials/admin_sync_body.html" %}
+  </div>
+</div>
+{% endblock %}

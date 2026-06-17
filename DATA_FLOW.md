@@ -55,6 +55,14 @@ commit; locally it writes straight to `data/`. The legacy Streamlit data-admin p
 and the webapp admin pages (`webapp/routes/admin.py`) drive this same pipeline (so it
 is no longer Streamlit-only).
 
+**Selective sync (UI-agnostic):** `teg_analysis/io/sync.py` moves individual files
+between GitHub and the app's store (the Railway volume in production, the local working
+tree in dev) at byte level. `build_sync_status(folder)` compares a folder across both
+sides (presence + size); `pull_files` copies GitHub → store; `push_files` copies
+store → GitHub in a single batch commit. This is how reference CSVs for a new TEG can
+be synced individually without a full data update. Driven by the webapp
+`/admin/volume-sync` page.
+
 ---
 
 ## 3. Core Data Loader

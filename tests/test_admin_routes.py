@@ -27,11 +27,35 @@ def _login(client):
     assert resp.status_code == 303
 
 
-@pytest.mark.parametrize("path", ["/admin/edit-data", "/admin/delete-data"])
+@pytest.mark.parametrize("path", ["/admin/edit-data", "/admin/delete-data", "/admin/volume-sync"])
 def test_routes_require_auth(client, path):
     resp = client.get(path)
     assert resp.status_code == 303
     assert resp.headers["location"] == "/admin/login"
+
+
+def test_volume_sync_page_renders_when_authed(client, monkeypatch):
+    # Avoid any GitHub call: stub the status builder. The route resolves the name
+    # from the teg_analysis.io package namespace, so patch it there.
+    import teg_analysis.io as tio
+    monkeypatch.setattr(tio, "build_sync_status", lambda folder: [
+        {"name": "round_info.csv", "gh_size": 10, "store_size": 10,
+         "on_github": True, "on_store": True, "status": "Same size"},
+    ])
+    _login(client)
+    resp = client.get("/admin/volume-sync?folder=data")
+    assert resp.status_code == 200
+    assert "GitHub" in resp.text
+    assert "round_info.csv" in resp.text
+
+
+def test_volume_sync_pull_empty_selection(client, monkeypatch):
+    import teg_analysis.io as tio
+    monkeypatch.setattr(tio, "build_sync_status", lambda folder: [])
+    _login(client)
+    resp = client.post("/admin/volume-sync/pull", data={"folder": "data"})
+    assert resp.status_code == 200
+    assert "no files selected" in resp.text.lower()
 
 
 def test_edit_page_renders_when_authed(client):

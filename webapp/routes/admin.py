@@ -416,3 +416,91 @@ async def admin_delete_data_execute(request: Request):
 
     ctx["result"] = result
     return templates.TemplateResponse("partials/admin_delete_result.html", ctx)
+
+
+# --- GitHub <-> store sync ----------------------------------------------------
+
+def _sync_body_ctx(request: Request, folder: str, result: dict = None) -> dict:
+    """Build the context for the sync body partial (status table + forms)."""
+    from teg_analysis.io import build_sync_status, store_label, SYNC_FOLDERS
+
+    if folder not in SYNC_FOLDERS:
+        folder = SYNC_FOLDERS[0]
+
+    ctx = {
+        "request": request,
+        "folders": SYNC_FOLDERS,
+        "folder": folder,
+        "store_label": store_label(),
+        "result": result,
+    }
+    try:
+        ctx["rows"] = build_sync_status(folder)
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Sync status failed for {folder}: {e}", exc_info=True)
+        ctx["rows"] = []
+        ctx["error"] = f"Could not list files: {e}"
+    return ctx
+
+
+@router.get("/admin/volume-sync")
+async def admin_volume_sync(request: Request, folder: str = "data"):
+    if not is_authed(request):
+        return _redirect("/admin/login")
+    ctx = _sync_body_ctx(request, folder)
+    ctx["active_page"] = None
+    return templates.TemplateResponse("admin_volume_sync.html", ctx)
+
+
+@router.post("/admin/volume-sync/pull", response_class=HTMLResponse)
+async def admin_volume_sync_pull(request: Request):
+    if not is_authed(request):
+        return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
+
+    from teg_analysis.io import pull_files
+
+    form = await request.form()
+    folder = form.get("folder", "data")
+    names = form.getlist("files")
+
+    if not names:
+        ctx = _sync_body_ctx(request, folder, result={"action": "pull", "empty": True})
+        return templates.TemplateResponse("partials/admin_sync_body.html", ctx)
+
+    try:
+        outcome = pull_files(folder, names)
+        deps.clear_all_data_caches()  # store changed — drop in-process caches
+        result = {"action": "pull", **outcome}
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Pull failed: {e}", exc_info=True)
+        result = {"action": "pull", "error": str(e)}
+
+    ctx = _sync_body_ctx(request, folder, result=result)
+    return templates.TemplateResponse("partials/admin_sync_body.html", ctx)
+
+
+@router.post("/admin/volume-sync/push", response_class=HTMLResponse)
+async def admin_volume_sync_push(request: Request):
+    if not is_authed(request):
+        return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
+
+    from teg_analysis.io import push_files
+
+    form = await request.form()
+    folder = form.get("folder", "data")
+    names = form.getlist("files")
+    message = form.get("commit_message", "").strip() or None
+
+    if not names:
+        ctx = _sync_body_ctx(request, folder, result={"action": "push", "empty": True})
+        return templates.TemplateResponse("partials/admin_sync_body.html", ctx)
+
+    try:
+        outcome = push_files(folder, names, commit_message=message)
+        result = {"action": "push", **outcome}
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Push failed: {e}", exc_info=True)
+        result = {"action": "push", "error": str(e)}
+
+    ctx = _sync_body_ctx(request, folder, result=result)
+    return templates.TemplateResponse("partials/admin_sync_body.html", ctx)

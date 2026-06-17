@@ -32,6 +32,14 @@ from .github_operations import (
     batch_commit_to_github,
 )
 
+from .sync import (
+    SYNC_FOLDERS,
+    store_label,
+    build_sync_status,
+    pull_files,
+    push_files,
+)
+
 # Define public API
 __all__ = [
     # Volume operations
@@ -53,4 +61,10 @@ __all__ = [
     'write_text_to_github',
     'write_to_github',
     'batch_commit_to_github',
+    # GitHub <-> store sync
+    'SYNC_FOLDERS',
+    'store_label',
+    'build_sync_status',
+    'pull_files',
+    'push_files',
 ]

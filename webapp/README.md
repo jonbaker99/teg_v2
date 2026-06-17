@@ -56,13 +56,25 @@ shows fresh data immediately. All three drive headless logic in
   read-only `?file=processed` view shows `all-data.parquet`.
 
 **Delete rounds** — templates `admin_delete_data.html`,
-`partials/admin_delete_{preview,result}.html`.
+`partials/admin_delete_{preview,result}.html`. **This is the primary data-admin flow.**
 - **Routes:** `/admin/delete-data` (select TEG + rounds),
   `/admin/delete-data/preview`, `/admin/delete-data/execute` (HTMX).
-- **Flow:** pick a TEG/rounds → preview the exact rows → confirm →
-  `execute_data_deletion` takes a **timestamped backup** first, removes the rows
-  from `all-scores`/`all-data` (+ CSV mirror) and rebuilds every derived cache
-  (status, streaks, commentary, bestball), batch-committing on Railway.
+- **Flow:** pick a TEG and rounds — or tick **Whole TEG (all rounds)** to delete an
+  entire tournament — → preview the exact rows → confirm → `execute_data_deletion`
+  takes a **timestamped backup** first, removes the rows from `all-scores`/`all-data`
+  (+ CSV mirror) and rebuilds every derived cache (status, streaks, commentary,
+  bestball), batch-committing on Railway.
+
+**GitHub ↔ store sync** — templates `admin_volume_sync.html`,
+`partials/admin_sync_body.html`, backed by `teg_analysis/io/sync.py`.
+- **Routes:** `/admin/volume-sync?folder=<folder>` (status table),
+  `/admin/volume-sync/pull` and `/admin/volume-sync/push` (HTMX).
+- **Flow:** pick a folder (`data`, `data/commentary`, …) → see a per-file status
+  table comparing GitHub vs the store (Only on GitHub / Only in store / Different
+  size / Same size) → tick files → **Pull** (`pull_files`: GitHub → store) or
+  **Push** (`push_files`: store → GitHub in one batch commit). The "store" is the
+  Railway volume in production and the local working tree in dev. Use this to move
+  just the reference CSVs you changed for a new TEG without a full redeploy.
 
 - **Auth:** one shared password from `WEBAPP_ADMIN_PASSWORD` (defaults to `teg`
   if unset), held in a cookie. This is **not** real security — it only stops a
