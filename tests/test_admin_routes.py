@@ -58,6 +58,40 @@ def test_volume_sync_pull_empty_selection(client, monkeypatch):
     assert "no files selected" in resp.text.lower()
 
 
+def test_volume_sync_pull_warns_on_newer(client, monkeypatch):
+    """Selecting a store file that's newer than GitHub shows the confirm screen."""
+    import teg_analysis.io as tio
+    from datetime import datetime, timezone
+    monkeypatch.setattr(tio, "detect_pull_conflicts", lambda folder, names: [
+        {"name": "round_info.csv",
+         "store_time": datetime(2026, 6, 1, tzinfo=timezone.utc),
+         "gh_time": datetime(2026, 1, 1, tzinfo=timezone.utc)},
+    ])
+
+    def _boom(*a, **k):
+        raise AssertionError("pull must not run before confirmation")
+    monkeypatch.setattr(tio, "pull_files", _boom)
+
+    _login(client)
+    resp = client.post("/admin/volume-sync/pull",
+                       data={"folder": "data", "files": "round_info.csv"})
+    assert resp.status_code == 200
+    assert "would be overwritten" in resp.text.lower()
+    assert "pull anyway" in resp.text.lower()
+
+
+def test_volume_sync_restore(client, monkeypatch):
+    import teg_analysis.io as tio
+    monkeypatch.setattr(tio, "restore_backup", lambda backup_rel: "data/round_info.csv")
+    monkeypatch.setattr(tio, "build_sync_status", lambda folder: [])
+    monkeypatch.setattr(tio, "list_sync_backups", lambda: [])
+    _login(client)
+    resp = client.post("/admin/volume-sync/restore",
+                       data={"folder": "data", "backup_rel": "data/backups/sync/x/data/round_info.csv"})
+    assert resp.status_code == 200
+    assert "restored" in resp.text.lower()
+
+
 def test_edit_page_renders_when_authed(client):
     _login(client)
     resp = client.get("/admin/edit-data?file=round_info")

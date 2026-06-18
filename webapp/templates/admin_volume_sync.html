@@ -20,6 +20,29 @@
     CSVs for new TEGs and want to sync just those files.
   </p>
 
+  {# Environment banner — the "store" means very different things on Railway vs local. #}
+  {% if is_railway %}
+  <div class="data-card" style="border-left:4px solid #2e7d32;margin-bottom:1rem;">
+    <strong>🟢 Live (Railway).</strong> The store is the persistent <em>volume</em> the
+    live site reads from.
+    <div style="font-size:.8rem;opacity:.8;margin-top:.4rem;line-height:1.4;">
+      Pull refreshes the volume from GitHub and the site updates immediately (no redeploy); it does not commit.
+      Push commits the volume's copy to GitHub. Pulls back up the volume file first (restore below).
+    </div>
+  </div>
+  {% else %}
+  <div class="data-card" style="border-left:4px solid #b00020;margin-bottom:1rem;">
+    <strong>⚠️ Local dev — the store is your git working tree, not a volume.</strong>
+    <div style="font-size:.8rem;opacity:.8;margin-top:.4rem;line-height:1.4;">
+      <strong>Pull</strong> overwrites your working-tree <code>data/*</code> files with GitHub's versions
+      (shows up in <code>git status</code>; a backup is taken first — see Restore below).
+      <strong>Push</strong> makes an out-of-band API commit to your current branch, so your local clone
+      ends up behind <code>origin</code> until you <code>git fetch</code>. Use here for testing the flow;
+      prefer normal git for real data work.
+    </div>
+  </div>
+  {% endif %}
+
   {# Folder picker — navigates (GET) so the table reloads for the chosen folder. #}
   <div class="section-controls" style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;">
     {% for f in folders %}

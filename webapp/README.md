@@ -75,6 +75,17 @@ shows fresh data immediately. All three drive headless logic in
   **Push** (`push_files`: store → GitHub in one batch commit). The "store" is the
   Railway volume in production and the local working tree in dev. Use this to move
   just the reference CSVs you changed for a new TEG without a full redeploy.
+- **Environment banner:** the page shows whether the store is the Railway volume
+  (live) or your local working tree (dev), with a small-print summary of the
+  implications (pull overwrites working-tree files / push makes an out-of-band API
+  commit when run locally).
+- **Safety:** each pull backs up the existing store file to
+  `data/backups/sync/<timestamp>/…` *before* overwriting (`backup_store_file`); a
+  **Backups / restore** panel lists them and restores on demand (`restore_backup`,
+  store-only — Push afterwards to send back to GitHub). Pushes rely on GitHub's own
+  history. Before either action, `detect_pull_conflicts` / `detect_push_conflicts`
+  compare store mtime vs GitHub last-commit time and, if the destination copy is
+  **newer**, show an overwrite-confirm screen ("…anyway") instead of proceeding.
 
 - **Auth:** one shared password from `WEBAPP_ADMIN_PASSWORD` (defaults to `teg`
   if unset), held in a cookie. This is **not** real security — it only stops a

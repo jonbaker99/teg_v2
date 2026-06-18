@@ -61,7 +61,10 @@ tree in dev) at byte level. `build_sync_status(folder)` compares a folder across
 sides (presence + size); `pull_files` copies GitHub → store; `push_files` copies
 store → GitHub in a single batch commit. This is how reference CSVs for a new TEG can
 be synced individually without a full data update. Driven by the webapp
-`/admin/volume-sync` page.
+`/admin/volume-sync` page. Each pull backs up the existing store file to
+`data/backups/sync/<timestamp>/` before overwriting (`backup_store_file` /
+`restore_backup`), and `detect_pull_conflicts` / `detect_push_conflicts` warn before
+overwriting a destination copy that is newer than the source.
 
 ---
 

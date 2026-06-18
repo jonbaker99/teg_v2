@@ -23,6 +23,13 @@
         <ul style="margin:.25rem 0 0 1rem;">{% for n, err in result.failed %}<li>{{ n }}: {{ err }}</li>{% endfor %}</ul>
       {% endif %}
     </div>
+  {% elif result.action == 'restore' %}
+    <div class="data-card" style="margin-bottom:1rem;">
+      <h2 class="card-header">✅ Restored <code>{{ result.original }}</code> into the store</h2>
+      <p style="font-size:.8rem;opacity:.8;margin-top:.4rem;">
+        Restored to the store only — Push it if you also want the restored version on GitHub.
+      </p>
+    </div>
   {% endif %}
 {% endif %}
 
@@ -82,4 +89,38 @@ function tegSyncToggleAll(master) {
   });
 }
 </script>
+{% endif %}
+
+{# --- Backups / restore (store backups taken before each pull overwrite) --- #}
+{% if backups %}
+<details class="data-card" style="margin-top:1.5rem;">
+  <summary style="cursor:pointer;font-weight:600;">🗄️ Store backups ({{ backups | length }}) — restore from before a pull</summary>
+  <p style="font-size:.8rem;opacity:.8;margin:.5rem 0;">
+    Each pull copies the store file here before overwriting it. Restoring rewrites the
+    store copy only (Push afterwards to send it back to GitHub). GitHub itself keeps full
+    history, so pushes don't need a backup.
+  </p>
+  <div class="table-wrapper">
+    <table class="teg-table">
+      <thead><tr><th>When</th><th>File</th><th>Size</th><th></th></tr></thead>
+      <tbody>
+        {% for b in backups %}
+          <tr>
+            <td>{{ b.timestamp }}</td>
+            <td>{{ b.original }}</td>
+            <td>{{ "{:,}".format(b.size) }}</td>
+            <td>
+              <button type="button" class="text-link" style="background:none;border:none;cursor:pointer;"
+                      hx-post="/admin/volume-sync/restore" hx-target="#sync-body" hx-swap="innerHTML"
+                      hx-vals='{"folder": "{{ folder }}", "backup_rel": "{{ b.backup_rel }}"}'
+                      hx-confirm="Restore {{ b.original }} from {{ b.timestamp }}? This overwrites the current store copy.">
+                Restore
+              </button>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</details>
 {% endif %}

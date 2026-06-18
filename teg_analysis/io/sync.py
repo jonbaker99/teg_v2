@@ -18,6 +18,7 @@ the listing stays a single GitHub API call per folder and is responsive.
 import base64
 import logging
 import os
+from datetime import datetime, timezone
 from pathlib import Path
 
 from .github_operations import GITHUB_REPO, _get_github_branch, batch_commit_to_github
@@ -32,6 +33,14 @@ SYNC_FOLDERS = [
     "data/commentary/drafts",
     "data/commentary/round_reports",
 ]
+
+# Where pre-overwrite backups of store files are kept (one dated dir per pull).
+SYNC_BACKUP_ROOT = "data/backups/sync"
+
+
+def is_railway() -> bool:
+    """True when running on Railway (store is the volume, not the working tree)."""
+    return bool(volume_operations._is_railway())
 
 
 def _repo():
@@ -152,20 +161,158 @@ def github_download_bytes(path: str) -> bytes:
 
 
 # ---------------------------------------------------------------------------
+# Timestamps + overwrite-conflict detection
+# ---------------------------------------------------------------------------
+
+def _store_mtime(rel_path: str):
+    """Last-modified time of a store file (UTC), or None if absent."""
+    p = _store_path(rel_path)
+    if not p.exists():
+        return None
+    return datetime.fromtimestamp(p.stat().st_mtime, tz=timezone.utc)
+
+
+def github_commit_time(path: str):
+    """Last-commit time for a path on GitHub (UTC), or None if unknown."""
+    try:
+        repo, branch = _repo()
+        commits = repo.get_commits(path=path, sha=branch)
+        dt = commits[0].commit.committer.date
+    except Exception:  # noqa: BLE001 - treat any lookup failure as "unknown"
+        return None
+    if dt is None:
+        return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone.utc)
+
+
+def detect_pull_conflicts(folder: str, names: list[str]) -> list[dict]:
+    """Files where pulling would overwrite a *newer* store copy with GitHub's.
+
+    Returns ``[{name, store_time, gh_time}, ...]`` (only when both times are known
+    and the store copy is newer than GitHub).
+    """
+    conflicts = []
+    for name in names:
+        rel = f"{folder}/{name}"
+        st = _store_mtime(rel)
+        gh = github_commit_time(rel)
+        if st and gh and st > gh:
+            conflicts.append({"name": name, "store_time": st, "gh_time": gh})
+    return conflicts
+
+
+def detect_push_conflicts(folder: str, names: list[str]) -> list[dict]:
+    """Files where pushing would overwrite a *newer* GitHub copy with the store's."""
+    conflicts = []
+    for name in names:
+        rel = f"{folder}/{name}"
+        st = _store_mtime(rel)
+        gh = github_commit_time(rel)
+        if st and gh and gh > st:
+            conflicts.append({"name": name, "store_time": st, "gh_time": gh})
+    return conflicts
+
+
+# ---------------------------------------------------------------------------
+# Store backups + restore
+# ---------------------------------------------------------------------------
+
+def backup_store_file(rel_path: str, timestamp: str) -> str | None:
+    """Copy a store file into the dated sync-backup dir before it's overwritten.
+
+    Args:
+        rel_path: File to back up, e.g. ``'data/round_info.csv'``.
+        timestamp: Shared per-operation stamp (groups one pull's backups).
+
+    Returns:
+        The backup's relative path, or None if the source doesn't exist.
+    """
+    src = _store_path(rel_path)
+    if not src.exists():
+        return None
+    backup_rel = f"{SYNC_BACKUP_ROOT}/{timestamp}/{rel_path}"
+    dest = _store_path(backup_rel)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_bytes(src.read_bytes())
+    return backup_rel
+
+
+def list_sync_backups() -> list[dict]:
+    """List store backups, newest first.
+
+    Returns ``[{timestamp, original, backup_rel, size}, ...]`` where ``original``
+    is the path the backup would restore to.
+    """
+    base = _store_path(SYNC_BACKUP_ROOT)
+    if not base.exists():
+        return []
+
+    rows = []
+    for ts_dir in sorted((d for d in base.iterdir() if d.is_dir()),
+                         key=lambda d: d.name, reverse=True):
+        for f in sorted(ts_dir.rglob("*")):
+            if f.is_file():
+                original = f.relative_to(ts_dir).as_posix()
+                rows.append({
+                    "timestamp": ts_dir.name,
+                    "original": original,
+                    "backup_rel": f"{SYNC_BACKUP_ROOT}/{ts_dir.name}/{original}",
+                    "size": f.stat().st_size,
+                })
+    return rows
+
+
+def restore_backup(backup_rel: str) -> str:
+    """Restore a backup file back to its original location in the store.
+
+    Does **not** push to GitHub — it only rewrites the store copy (use Push
+    afterwards if you want the restored version on GitHub).
+
+    Returns the original path that was restored.
+    """
+    if not backup_rel.startswith(f"{SYNC_BACKUP_ROOT}/"):
+        raise ValueError(f"Not a sync backup path: {backup_rel}")
+
+    src = _store_path(backup_rel)
+    if not src.exists():
+        raise FileNotFoundError(backup_rel)
+
+    # Strip "data/backups/sync/<timestamp>/" to recover the original rel path.
+    rest = backup_rel[len(f"{SYNC_BACKUP_ROOT}/"):]
+    original_rel = rest.split("/", 1)[1]
+
+    dest = _store_path(original_rel)
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_bytes(src.read_bytes())
+    return original_rel
+
+
+# ---------------------------------------------------------------------------
 # Pull / push orchestrators
 # ---------------------------------------------------------------------------
 
 def pull_files(folder: str, names: list[str]) -> dict:
     """Copy ``names`` from GitHub ``folder`` down to the store.
 
-    Returns ``{pulled: int, failed: [(name, error), ...]}``.
+    Each existing store file is backed up (under a single dated dir) *before* it
+    is overwritten, so a pull is always reversible via :func:`restore_backup`.
+
+    Returns ``{pulled: int, failed: [(name, error), ...], backups: [rel, ...]}``.
     """
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     pulled = 0
     failed: list[tuple[str, str]] = []
+    backups: list[str] = []
     for name in names:
         path = f"{folder}/{name}"
         try:
             raw = github_download_bytes(path)
+            # Back up the current store copy before clobbering it.
+            backup_rel = backup_store_file(path, timestamp)
+            if backup_rel:
+                backups.append(backup_rel)
             dest = _store_path(path)
             dest.parent.mkdir(parents=True, exist_ok=True)
             dest.write_bytes(raw)
@@ -173,7 +320,7 @@ def pull_files(folder: str, names: list[str]) -> dict:
         except Exception as e:  # noqa: BLE001
             logger.error(f"Pull failed for {path}: {e}", exc_info=True)
             failed.append((name, str(e)))
-    return {"pulled": pulled, "failed": failed}
+    return {"pulled": pulled, "failed": failed, "backups": backups}
 
 
 def push_files(folder: str, names: list[str], commit_message: str = None) -> dict:

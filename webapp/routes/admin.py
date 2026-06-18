@@ -422,7 +422,9 @@ async def admin_delete_data_execute(request: Request):
 
 def _sync_body_ctx(request: Request, folder: str, result: dict = None) -> dict:
     """Build the context for the sync body partial (status table + forms)."""
-    from teg_analysis.io import build_sync_status, store_label, SYNC_FOLDERS
+    from teg_analysis.io import (
+        build_sync_status, store_label, SYNC_FOLDERS, is_railway, list_sync_backups,
+    )
 
     if folder not in SYNC_FOLDERS:
         folder = SYNC_FOLDERS[0]
@@ -432,6 +434,7 @@ def _sync_body_ctx(request: Request, folder: str, result: dict = None) -> dict:
         "folders": SYNC_FOLDERS,
         "folder": folder,
         "store_label": store_label(),
+        "is_railway": is_railway(),
         "result": result,
     }
     try:
@@ -440,6 +443,11 @@ def _sync_body_ctx(request: Request, folder: str, result: dict = None) -> dict:
         logger.error(f"Sync status failed for {folder}: {e}", exc_info=True)
         ctx["rows"] = []
         ctx["error"] = f"Could not list files: {e}"
+    try:
+        ctx["backups"] = list_sync_backups()
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Listing sync backups failed: {e}", exc_info=True)
+        ctx["backups"] = []
     return ctx
 
 
@@ -452,20 +460,44 @@ async def admin_volume_sync(request: Request, folder: str = "data"):
     return templates.TemplateResponse("admin_volume_sync.html", ctx)
 
 
+def _sync_conflict_response(request: Request, *, action: str, folder: str,
+                            names: list[str], conflicts: list[dict]):
+    """Render the overwrite-confirm screen when newer files would be clobbered."""
+    ctx = {
+        "request": request,
+        "action": action,
+        "folder": folder,
+        "names": names,
+        "conflicts": conflicts,
+    }
+    return templates.TemplateResponse("partials/admin_sync_conflict.html", ctx)
+
+
 @router.post("/admin/volume-sync/pull", response_class=HTMLResponse)
 async def admin_volume_sync_pull(request: Request):
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 
-    from teg_analysis.io import pull_files
+    from teg_analysis.io import pull_files, detect_pull_conflicts
 
     form = await request.form()
     folder = form.get("folder", "data")
     names = form.getlist("files")
+    confirmed = form.get("confirm", "") == "1"
 
     if not names:
         ctx = _sync_body_ctx(request, folder, result={"action": "pull", "empty": True})
         return templates.TemplateResponse("partials/admin_sync_body.html", ctx)
+
+    # Warn before overwriting a store copy that's newer than GitHub's.
+    if not confirmed:
+        try:
+            conflicts = detect_pull_conflicts(folder, names)
+        except Exception:  # noqa: BLE001 - never block the action on a check failure
+            conflicts = []
+        if conflicts:
+            return _sync_conflict_response(
+                request, action="pull", folder=folder, names=names, conflicts=conflicts)
 
     try:
         outcome = pull_files(folder, names)
@@ -484,16 +516,27 @@ async def admin_volume_sync_push(request: Request):
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 
-    from teg_analysis.io import push_files
+    from teg_analysis.io import push_files, detect_push_conflicts
 
     form = await request.form()
     folder = form.get("folder", "data")
     names = form.getlist("files")
     message = form.get("commit_message", "").strip() or None
+    confirmed = form.get("confirm", "") == "1"
 
     if not names:
         ctx = _sync_body_ctx(request, folder, result={"action": "push", "empty": True})
         return templates.TemplateResponse("partials/admin_sync_body.html", ctx)
+
+    # Warn before overwriting a GitHub copy that's newer than the store's.
+    if not confirmed:
+        try:
+            conflicts = detect_push_conflicts(folder, names)
+        except Exception:  # noqa: BLE001
+            conflicts = []
+        if conflicts:
+            return _sync_conflict_response(
+                request, action="push", folder=folder, names=names, conflicts=conflicts)
 
     try:
         outcome = push_files(folder, names, commit_message=message)
@@ -501,6 +544,29 @@ async def admin_volume_sync_push(request: Request):
     except Exception as e:  # noqa: BLE001
         logger.error(f"Push failed: {e}", exc_info=True)
         result = {"action": "push", "error": str(e)}
+
+    ctx = _sync_body_ctx(request, folder, result=result)
+    return templates.TemplateResponse("partials/admin_sync_body.html", ctx)
+
+
+@router.post("/admin/volume-sync/restore", response_class=HTMLResponse)
+async def admin_volume_sync_restore(request: Request):
+    if not is_authed(request):
+        return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
+
+    from teg_analysis.io import restore_backup
+
+    form = await request.form()
+    folder = form.get("folder", "data")
+    backup_rel = form.get("backup_rel", "")
+
+    try:
+        original = restore_backup(backup_rel)
+        deps.clear_all_data_caches()
+        result = {"action": "restore", "original": original}
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Restore failed for {backup_rel}: {e}", exc_info=True)
+        result = {"action": "restore", "error": str(e)}
 
     ctx = _sync_body_ctx(request, folder, result=result)
     return templates.TemplateResponse("partials/admin_sync_body.html", ctx)

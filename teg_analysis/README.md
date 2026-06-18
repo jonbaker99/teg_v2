@@ -29,7 +29,9 @@ teg_analysis/
     file_operations.py  Read/write parquet and CSV (local or GitHub)
     github_operations.py GitHub API integration
     volume_operations.py Railway volume management
-    sync.py          Selective GitHub <-> store sync (build_sync_status/pull_files/push_files)
+    sync.py          Selective GitHub <-> store sync — build_sync_status/pull_files/push_files,
+                     pre-overwrite store backups + restore_backup/list_sync_backups,
+                     newer-than overwrite checks (detect_pull_conflicts/detect_push_conflicts)
   
   core/              Data loading and transformation
     data_loader.py   load_all_data() — loads hole-level tournament data

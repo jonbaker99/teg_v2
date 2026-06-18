@@ -84,5 +84,87 @@ def test_push_files_missing_file(monkeypatch, tmp_path):
     assert out["failed"][0][0] == "missing.csv"
 
 
+# ---------------------------------------------------------------------------
+# Backups + restore
+# ---------------------------------------------------------------------------
+
+def test_pull_backs_up_existing_then_overwrites(monkeypatch, tmp_path):
+    monkeypatch.setattr(sync, "_store_path", lambda rel: tmp_path / rel)
+    # Seed an existing store file that pulling will overwrite.
+    (tmp_path / "data").mkdir(parents=True)
+    (tmp_path / "data/round_info.csv").write_bytes(b"OLD")
+    monkeypatch.setattr(sync, "github_download_bytes", lambda path: b"NEW")
+
+    out = sync.pull_files("data", ["round_info.csv"])
+
+    assert out["pulled"] == 1
+    assert len(out["backups"]) == 1                      # existing file was backed up
+    assert (tmp_path / "data/round_info.csv").read_bytes() == b"NEW"
+    # The backup holds the pre-overwrite bytes.
+    assert (tmp_path / out["backups"][0]).read_bytes() == b"OLD"
+
+
+def test_backup_returns_none_when_absent(monkeypatch, tmp_path):
+    monkeypatch.setattr(sync, "_store_path", lambda rel: tmp_path / rel)
+    assert sync.backup_store_file("data/nope.csv", "20260101_000000") is None
+
+
+def test_list_and_restore_backup(monkeypatch, tmp_path):
+    monkeypatch.setattr(sync, "_store_path", lambda rel: tmp_path / rel)
+    (tmp_path / "data").mkdir(parents=True)
+    (tmp_path / "data/round_info.csv").write_bytes(b"ORIGINAL")
+
+    backup_rel = sync.backup_store_file("data/round_info.csv", "20260101_000000")
+    assert backup_rel == "data/backups/sync/20260101_000000/data/round_info.csv"
+
+    listed = sync.list_sync_backups()
+    assert len(listed) == 1
+    assert listed[0]["original"] == "data/round_info.csv"
+    assert listed[0]["backup_rel"] == backup_rel
+
+    # Mutate the live file, then restore should bring back the original bytes.
+    (tmp_path / "data/round_info.csv").write_bytes(b"CHANGED")
+    restored = sync.restore_backup(backup_rel)
+    assert restored == "data/round_info.csv"
+    assert (tmp_path / "data/round_info.csv").read_bytes() == b"ORIGINAL"
+
+
+def test_restore_rejects_non_backup_path(monkeypatch, tmp_path):
+    monkeypatch.setattr(sync, "_store_path", lambda rel: tmp_path / rel)
+    with pytest.raises(ValueError):
+        sync.restore_backup("data/round_info.csv")
+
+
+# ---------------------------------------------------------------------------
+# Overwrite-conflict detection
+# ---------------------------------------------------------------------------
+
+def test_detect_pull_conflicts(monkeypatch):
+    from datetime import datetime, timezone
+    newer = datetime(2026, 6, 1, tzinfo=timezone.utc)
+    older = datetime(2026, 1, 1, tzinfo=timezone.utc)
+    # store newer than github -> pull would clobber a newer store file
+    monkeypatch.setattr(sync, "_store_mtime", lambda rel: newer)
+    monkeypatch.setattr(sync, "github_commit_time", lambda path: older)
+    assert [c["name"] for c in sync.detect_pull_conflicts("data", ["a.csv"])] == ["a.csv"]
+    # vice versa -> no pull conflict
+    monkeypatch.setattr(sync, "_store_mtime", lambda rel: older)
+    monkeypatch.setattr(sync, "github_commit_time", lambda path: newer)
+    assert sync.detect_pull_conflicts("data", ["a.csv"]) == []
+
+
+def test_detect_push_conflicts_and_unknown_times(monkeypatch):
+    from datetime import datetime, timezone
+    newer = datetime(2026, 6, 1, tzinfo=timezone.utc)
+    older = datetime(2026, 1, 1, tzinfo=timezone.utc)
+    # github newer than store -> push would clobber a newer github file
+    monkeypatch.setattr(sync, "_store_mtime", lambda rel: older)
+    monkeypatch.setattr(sync, "github_commit_time", lambda path: newer)
+    assert [c["name"] for c in sync.detect_push_conflicts("data", ["a.csv"])] == ["a.csv"]
+    # unknown github time -> never flagged (no false positives)
+    monkeypatch.setattr(sync, "github_commit_time", lambda path: None)
+    assert sync.detect_push_conflicts("data", ["a.csv"]) == []
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

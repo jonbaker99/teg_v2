@@ -34,10 +34,15 @@ from .github_operations import (
 
 from .sync import (
     SYNC_FOLDERS,
+    is_railway,
     store_label,
     build_sync_status,
     pull_files,
     push_files,
+    detect_pull_conflicts,
+    detect_push_conflicts,
+    list_sync_backups,
+    restore_backup,
 )
 
 # Define public API
@@ -63,8 +68,13 @@ __all__ = [
     'batch_commit_to_github',
     # GitHub <-> store sync
     'SYNC_FOLDERS',
+    'is_railway',
     'store_label',
     'build_sync_status',
     'pull_files',
     'push_files',
+    'detect_pull_conflicts',
+    'detect_push_conflicts',
+    'list_sync_backups',
+    'restore_backup',
 ]
