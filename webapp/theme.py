@@ -3,7 +3,6 @@
 THEMES = [
     ("clean-page", "Clean Page"),
     ("clean-layered", "Clean Layered"),
-    ("clean", "Clean"),
 ]
 
 THEME_IDS = {t[0] for t in THEMES}
@@ -91,7 +90,6 @@ _DARK = {
 PLOTLY_THEMES = {
     "clean-page": _LIGHT,
     "clean-layered": _LIGHT,
-    "clean": _LIGHT,
 }
 
 
