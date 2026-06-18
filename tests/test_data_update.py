@@ -16,6 +16,12 @@ from teg_analysis.analysis.data_update import (
     find_duplicate_keys,
     analyze_hole_level_differences,
     summarise_round_scores,
+    get_available_tegs_and_rounds,
+    validate_deletion_selection,
+    preview_deletion_data,
+    find_tegs_missing_round_info,
+    analyze_teg_completion,
+    EDITABLE_DATA_FILES,
 )
 from teg_analysis.constants import PLAYER_DICT
 
@@ -147,6 +153,97 @@ def test_summarise_round_scores_totals():
     # 18 holes: AB total 72, JB total 90.
     assert summary.loc['AB'].iloc[0] == 72
     assert summary.loc['JB'].iloc[0] == 90
+
+
+# ---------------------------------------------------------------------------
+# Delete-flow pure functions
+# ---------------------------------------------------------------------------
+
+def _scores_frame() -> pd.DataFrame:
+    """Synthetic all-scores frame spanning two TEGs / multiple rounds."""
+    rows = []
+    for teg in (10, 11):
+        for rnd in (1, 2):
+            for pl in ('AB', 'JB'):
+                rows.append({'TEGNum': teg, 'Round': rnd, 'Hole': 1, 'Pl': pl, 'Sc': 4})
+    return pd.DataFrame(rows)
+
+
+def test_get_available_tegs_and_rounds_orders_newest_first():
+    mapping = get_available_tegs_and_rounds(_scores_frame())
+    assert list(mapping.keys()) == [11, 10]      # reverse-chronological
+    assert mapping[10] == [1, 2]
+    assert mapping[11] == [1, 2]
+
+
+def test_get_available_tegs_and_rounds_empty():
+    assert get_available_tegs_and_rounds(pd.DataFrame()) == {}
+
+
+def test_validate_deletion_selection():
+    assert validate_deletion_selection([1]) is True
+    assert validate_deletion_selection([]) is False
+
+
+def test_preview_deletion_data_filters_selection():
+    scores = _scores_frame()
+    preview = preview_deletion_data(scores, 10, [1])
+    # Only TEG 10, Round 1 -> two players.
+    assert len(preview) == 2
+    assert set(preview['TEGNum'].unique()) == {10}
+    assert set(preview['Round'].unique()) == {1}
+
+
+def test_preview_deletion_data_handles_string_inputs():
+    """Selections coming from form posts arrive as strings — still match."""
+    scores = _scores_frame()
+    preview = preview_deletion_data(scores, '11', ['2'])
+    assert len(preview) == 2
+    assert set(preview['TEGNum'].unique()) == {11}
+
+
+def test_editable_files_registry_shape():
+    """Every registry entry exposes the fields the routes rely on."""
+    assert 'round_info' in EDITABLE_DATA_FILES
+    for slug, meta in EDITABLE_DATA_FILES.items():
+        assert meta['path'].startswith('data/') and meta['path'].endswith('.csv')
+        assert meta['label'] and meta['description']
+        assert meta['kind'] in {'metadata', 'status'}
+
+
+# ---------------------------------------------------------------------------
+# round_info validation / completion robustness
+# ---------------------------------------------------------------------------
+
+def test_find_tegs_missing_round_info(monkeypatch):
+    """TEGs in the new data but absent from round_info are reported."""
+    round_info = pd.DataFrame({'TEGNum': [10, 11], 'TEG': ['TEG 10', 'TEG 11'], 'Year': [2020, 2021]})
+    # find_tegs_missing_round_info does `from teg_analysis.io import read_file` lazily.
+    import teg_analysis.io as tio
+    monkeypatch.setattr(tio, 'read_file', lambda path: round_info)
+
+    new = pd.DataFrame({'TEGNum': [11, 12], 'Round': [1, 1], 'Hole': [1, 1], 'Pl': ['AB', 'AB']})
+    assert find_tegs_missing_round_info(new) == [12]
+
+    new_ok = pd.DataFrame({'TEGNum': [10, 11], 'Round': [1, 1], 'Hole': [1, 1], 'Pl': ['AB', 'AB']})
+    assert find_tegs_missing_round_info(new_ok) == []
+
+
+def test_analyze_teg_completion_tolerates_missing_round_info(monkeypatch):
+    """A TEG missing from round_info falls back instead of raising IndexError."""
+    import teg_analysis.io as tio
+    import teg_analysis.core.data_loader as dl
+    round_info = pd.DataFrame({'TEGNum': [10], 'TEG': ['TEG 10'], 'Year': [2020]})
+    monkeypatch.setattr(tio, 'read_file', lambda path: round_info)
+    monkeypatch.setattr(dl, 'get_incomplete_tegs', lambda all_data: [])
+
+    all_data = pd.DataFrame({
+        'TEGNum': [10, 12], 'Round': [1, 1], 'Hole': [1, 1], 'Pl': ['AB', 'AB'],
+    })
+    out = analyze_teg_completion(all_data).set_index('TEGNum')
+    assert out.loc[10, 'TEG'] == 'TEG 10'
+    assert out.loc[12, 'TEG'] == 'TEG 12'      # fallback label
+    assert pd.isna(out.loc[12, 'Year'])         # fallback year
 
 
 if __name__ == '__main__':

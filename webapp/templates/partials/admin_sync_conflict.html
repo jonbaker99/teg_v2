@@ -1,0 +1,43 @@
+{# Overwrite-conflict confirm screen. Shown when the chosen files would clobber a
+   newer copy on the destination. Re-submits the same action with confirm=1. #}
+<div class="data-card" style="border-left:4px solid #b00020;">
+  <h2 class="card-header">⚠️ Newer files would be overwritten</h2>
+
+  {% if action == 'pull' %}
+    <p style="margin:.5rem 0;">
+      These store files are <strong>newer</strong> than the GitHub versions you're about to
+      pull. Pulling will overwrite them (a backup is taken first):
+    </p>
+  {% else %}
+    <p style="margin:.5rem 0;">
+      The GitHub versions of these files are <strong>newer</strong> than the store copies
+      you're about to push. Pushing will overwrite them on GitHub:
+    </p>
+  {% endif %}
+
+  <div class="table-wrapper">
+    <table class="teg-table">
+      <thead><tr><th>File</th><th>Store modified</th><th>GitHub modified</th></tr></thead>
+      <tbody>
+        {% for c in conflicts %}
+          <tr>
+            <td>{{ c.name }}</td>
+            <td>{{ c.store_time.strftime('%Y-%m-%d %H:%M UTC') }}</td>
+            <td>{{ c.gh_time.strftime('%Y-%m-%d %H:%M UTC') }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <form style="margin-top:1rem;display:flex;gap:.75rem;flex-wrap:wrap;">
+    <input type="hidden" name="folder" value="{{ folder }}">
+    <input type="hidden" name="confirm" value="1">
+    {% for n in names %}<input type="hidden" name="files" value="{{ n }}">{% endfor %}
+    <button type="button" class="tab-underline tab-underline--active" style="padding:.6rem 1.2rem;"
+            hx-post="/admin/volume-sync/{{ action }}" hx-target="#sync-body" hx-swap="innerHTML">
+      {% if action == 'pull' %}⬇️ Pull anyway (overwrite newer){% else %}⬆️ Push anyway (overwrite newer){% endif %}
+    </button>
+    <a href="/admin/volume-sync?folder={{ folder }}" class="text-link" style="align-self:center;">Cancel</a>
+  </form>
+</div>

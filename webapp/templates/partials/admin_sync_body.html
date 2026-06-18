@@ -1,0 +1,126 @@
+{# Status table + pull/push controls. Re-rendered after every action so the table
+   reflects the new state. Expects: folder, rows, store_label, result (optional). #}
+
+{% if result %}
+  {% if result.error %}
+    <p class="error" style="color:#b00020;">{{ result.action | capitalize }} failed: {{ result.error }}</p>
+  {% elif result.empty %}
+    <p class="error" style="color:#b00020;">No files selected to {{ result.action }}.</p>
+  {% elif result.action == 'pull' %}
+    <div class="data-card" style="margin-bottom:1rem;">
+      <h2 class="card-header">✅ Pulled {{ result.pulled }} file(s) GitHub → store</h2>
+      {% if result.failed %}
+        <p style="margin-top:.5rem;color:#b00020;">Failed:</p>
+        <ul style="margin:.25rem 0 0 1rem;">{% for n, err in result.failed %}<li>{{ n }}: {{ err }}</li>{% endfor %}</ul>
+      {% endif %}
+    </div>
+  {% elif result.action == 'push' %}
+    <div class="data-card" style="margin-bottom:1rem;">
+      <h2 class="card-header">✅ Pushed {{ result.pushed }} file(s) store → GitHub</h2>
+      {% if result.committed %}<p style="margin-top:.5rem;">Committed in a single commit.</p>{% endif %}
+      {% if result.failed %}
+        <p style="margin-top:.5rem;color:#b00020;">Failed:</p>
+        <ul style="margin:.25rem 0 0 1rem;">{% for n, err in result.failed %}<li>{{ n }}: {{ err }}</li>{% endfor %}</ul>
+      {% endif %}
+    </div>
+  {% elif result.action == 'restore' %}
+    <div class="data-card" style="margin-bottom:1rem;">
+      <h2 class="card-header">✅ Restored <code>{{ result.original }}</code> into the store</h2>
+      <p style="font-size:.8rem;opacity:.8;margin-top:.4rem;">
+        Restored to the store only — Push it if you also want the restored version on GitHub.
+      </p>
+    </div>
+  {% endif %}
+{% endif %}
+
+{% if error %}
+  <p class="error" style="color:#b00020;">{{ error }}</p>
+{% elif not rows %}
+  <p>No files found in <code>{{ folder }}/</code> on GitHub or in the store.</p>
+{% else %}
+<form>
+  <input type="hidden" name="folder" value="{{ folder }}">
+
+  <div class="table-wrapper">
+    <table class="teg-table">
+      <thead>
+        <tr>
+          <th><input type="checkbox" onclick="tegSyncToggleAll(this)" title="Select all"></th>
+          <th>File</th><th>Status</th><th>GitHub size</th><th>Store size</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+          <tr>
+            <td><input type="checkbox" name="files" value="{{ row.name }}"></td>
+            <td>{{ row.name }}</td>
+            <td>{{ row.status }}</td>
+            <td>{{ "{:,}".format(row.gh_size) if row.gh_size is not none else "—" }}</td>
+            <td>{{ "{:,}".format(row.store_size) if row.store_size is not none else "—" }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <label style="display:flex;flex-direction:column;gap:.25rem;margin-top:1rem;max-width:32rem;">
+    <span class="page-label">Commit message (push only)</span>
+    <input name="commit_message" placeholder="Sync files from store to GitHub" style="padding:.5rem;">
+  </label>
+
+  <div style="margin-top:1rem;display:flex;gap:.75rem;flex-wrap:wrap;">
+    <button type="button" class="tab-underline tab-underline--active" style="padding:.6rem 1.2rem;"
+            hx-post="/admin/volume-sync/pull" hx-target="#sync-body" hx-swap="innerHTML"
+            hx-confirm="Pull the selected files from GitHub, overwriting them in the store?">
+      ⬇️ Pull selected (GitHub → store)
+    </button>
+    <button type="button" class="tab-underline" style="padding:.6rem 1.2rem;"
+            hx-post="/admin/volume-sync/push" hx-target="#sync-body" hx-swap="innerHTML"
+            hx-confirm="Push the selected files from the store to GitHub?">
+      ⬆️ Push selected (store → GitHub)
+    </button>
+  </div>
+</form>
+
+<script>
+function tegSyncToggleAll(master) {
+  master.closest('table').querySelectorAll('input[name="files"]').forEach(function (c) {
+    c.checked = master.checked;
+  });
+}
+</script>
+{% endif %}
+
+{# --- Backups / restore (store backups taken before each pull overwrite) --- #}
+{% if backups %}
+<details class="data-card" style="margin-top:1.5rem;">
+  <summary style="cursor:pointer;font-weight:600;">🗄️ Store backups ({{ backups | length }}) — restore from before a pull</summary>
+  <p style="font-size:.8rem;opacity:.8;margin:.5rem 0;">
+    Each pull copies the store file here before overwriting it. Restoring rewrites the
+    store copy only (Push afterwards to send it back to GitHub). GitHub itself keeps full
+    history, so pushes don't need a backup.
+  </p>
+  <div class="table-wrapper">
+    <table class="teg-table">
+      <thead><tr><th>When</th><th>File</th><th>Size</th><th></th></tr></thead>
+      <tbody>
+        {% for b in backups %}
+          <tr>
+            <td>{{ b.timestamp }}</td>
+            <td>{{ b.original }}</td>
+            <td>{{ "{:,}".format(b.size) }}</td>
+            <td>
+              <button type="button" class="text-link" style="background:none;border:none;cursor:pointer;"
+                      hx-post="/admin/volume-sync/restore" hx-target="#sync-body" hx-swap="innerHTML"
+                      hx-vals='{"folder": "{{ folder }}", "backup_rel": "{{ b.backup_rel }}"}'
+                      hx-confirm="Restore {{ b.original }} from {{ b.timestamp }}? This overwrites the current store copy.">
+                Restore
+              </button>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</details>
+{% endif %}

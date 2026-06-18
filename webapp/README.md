@@ -24,30 +24,80 @@ Visit `http://localhost:8000` in your browser. Use the theme switcher in the nav
   signature, then drop the pins. (A related variant of this error also appears on
   Python 3.14 with jinja2 3.1.x — use Python 3.12/3.13 there.)
 
-## Admin / data update
+## Admin / data management
 
-The webapp includes a password-gated admin page for **adding a round of scores**
-remotely (e.g. from the course straight after a round) — `webapp/routes/admin.py`
-+ `webapp/admin_auth.py`, templates `admin_login.html`, `admin_data_update.html`,
-`partials/admin_update_*.html`.
+The webapp includes a password-gated admin area for the three data-management
+flows — **add a round**, **edit metadata CSVs** and **delete rounds** — all in
+`webapp/routes/admin.py` + `webapp/admin_auth.py`. A shared sub-nav
+(`partials/admin_nav.html`) links the three pages. Every page is behind the same
+cookie auth and each write calls `deps.clear_all_data_caches()` so the site
+shows fresh data immediately. All three drive headless logic in
+`teg_analysis.analysis.data_update` (no Streamlit, no FastAPI).
 
-- **Routes:** `/admin/login`, `/admin/data-update` (load + preview),
-  `/admin/data-update/preview` and `/admin/data-update/execute` (HTMX).
+**Add a round** — templates `admin_data_update.html`, `partials/admin_update_*.html`.
+- **Routes:** `/admin/data-update` (load + preview), `/admin/data-update/preview`,
+  `/admin/data-update/execute` (HTMX).
 - **Flow:** load the "TEG Round Input" Google Sheet → preview round totals +
   hole-level duplicate check → confirm (append / overwrite / add-new-only) →
-  `teg_analysis.analysis.data_update.execute_data_update` writes `all-scores` /
-  `all-data`, regenerates the streaks/commentary/bestball/status caches and
-  batch-commits to GitHub → `deps.clear_all_data_caches()` so the site shows the
-  new data immediately.
+  `execute_data_update` writes `all-scores` / `all-data`, regenerates the
+  streaks/commentary/bestball/status caches and batch-commits to GitHub.
+- **round_info guard:** `find_tegs_missing_round_info` checks the new round's TEG
+  exists in `round_info.csv`; if not, preview and execute both refuse (no partial
+  write) and link to **Edit data → Round Info** to add the metadata first. (As a
+  backstop, `analyze_teg_completion` also falls back to a `TEG N` label instead of
+  crashing, so delete/regenerate flows can't half-apply either.)
+
+**Edit metadata CSVs** — templates `admin_edit_data.html`,
+`partials/admin_edit_grid.html`, `partials/admin_edit_result.html`.
+- **Routes:** `/admin/edit-data?file=<slug>` (pick a CSV → editable grid),
+  `/admin/edit-data/save`, `/admin/edit-data/regenerate-status` (HTMX).
+- **Flow:** the file picker is driven by
+  `data_update.EDITABLE_DATA_FILES` (round_info, future_tegs, handicaps,
+  teg_winners, completed_tegs, in_progress_tegs). An inline grid of `<input>`
+  cells (vanilla-JS add/delete-row) posts back; the route rebuilds the frame
+  from `cell__{rid}__{cidx}` fields, light-coerces numeric columns and calls
+  `data_update.save_data_file` (single-file commit). Auto-generated status files
+  offer a **Regenerate** button → `data_update.regenerate_status_files`. A
+  read-only `?file=processed` view shows `all-data.parquet`.
+
+**Delete rounds** — templates `admin_delete_data.html`,
+`partials/admin_delete_{preview,result}.html`. **This is the primary data-admin flow.**
+- **Routes:** `/admin/delete-data` (select TEG + rounds),
+  `/admin/delete-data/preview`, `/admin/delete-data/execute` (HTMX).
+- **Flow:** pick a TEG and rounds — or tick **Whole TEG (all rounds)** to delete an
+  entire tournament — → preview the exact rows → confirm → `execute_data_deletion`
+  takes a **timestamped backup** first, removes the rows from `all-scores`/`all-data`
+  (+ CSV mirror) and rebuilds every derived cache (status, streaks, commentary,
+  bestball), batch-committing on Railway.
+
+**GitHub ↔ store sync** — templates `admin_volume_sync.html`,
+`partials/admin_sync_body.html`, backed by `teg_analysis/io/sync.py`.
+- **Routes:** `/admin/volume-sync?folder=<folder>` (status table),
+  `/admin/volume-sync/pull` and `/admin/volume-sync/push` (HTMX).
+- **Flow:** pick a folder (`data`, `data/commentary`, …) → see a per-file status
+  table comparing GitHub vs the store (Only on GitHub / Only in store / Different
+  size / Same size) → tick files → **Pull** (`pull_files`: GitHub → store) or
+  **Push** (`push_files`: store → GitHub in one batch commit). The "store" is the
+  Railway volume in production and the local working tree in dev. Use this to move
+  just the reference CSVs you changed for a new TEG without a full redeploy.
+- **Environment banner:** the page shows whether the store is the Railway volume
+  (live) or your local working tree (dev), with a small-print summary of the
+  implications (pull overwrites working-tree files / push makes an out-of-band API
+  commit when run locally).
+- **Safety:** each pull backs up the existing store file to
+  `data/backups/sync/<timestamp>/…` *before* overwriting (`backup_store_file`); a
+  **Backups / restore** panel lists them and restores on demand (`restore_backup`,
+  store-only — Push afterwards to send back to GitHub). Pushes rely on GitHub's own
+  history. Before either action, `detect_pull_conflicts` / `detect_push_conflicts`
+  compare store mtime vs GitHub last-commit time and, if the destination copy is
+  **newer**, show an overwrite-confirm screen ("…anyway") instead of proceeding.
+
 - **Auth:** one shared password from `WEBAPP_ADMIN_PASSWORD` (defaults to `teg`
   if unset), held in a cookie. This is **not** real security — it only stops a
   crawler accidentally triggering a write/commit/LLM run. `admin_auth.py`.
 - **Env vars needed on Railway:** `WEBAPP_ADMIN_PASSWORD`, the `GOOGLE_*`
-  service-account vars (sheet access) and `GITHUB_TOKEN` (commit). Form POSTs
-  need `python-multipart` (in `requirements.txt`).
-
-Not yet ported: data **edit** (metadata CSVs) and **delete** — still
-Streamlit-only for now.
+  service-account vars (sheet access, add-a-round only) and `GITHUB_TOKEN`
+  (commit). Form POSTs need `python-multipart` (in `requirements.txt`).
 
 ## Architecture
 

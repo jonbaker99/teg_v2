@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title_suffix %} — Edit data{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+  <span class="page-label">Admin</span>
+  <h1 class="page-title">Edit data</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+{% set admin_active = 'edit' %}
+{% include "partials/admin_nav.html" %}
+
+<div class="section-panel">
+  <p style="margin-bottom:1rem;">
+    Edit the metadata CSVs directly. Changes are written to the data volume and
+    committed to GitHub. Edit values inline, add or remove rows, then save.
+  </p>
+
+  {# File picker #}
+  <div class="section-controls" style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem;">
+    {% for slug, meta in files.items() %}
+      <a href="/admin/edit-data?file={{ slug }}"
+         class="tab-underline{% if selected == slug %} tab-underline--active{% endif %}"
+         style="padding:.4rem .8rem;">{{ meta.label }}</a>
+    {% endfor %}
+    <a href="/admin/edit-data?file=processed"
+       class="tab-underline{% if selected == 'processed' %} tab-underline--active{% endif %}"
+       style="padding:.4rem .8rem;">View Processed Data</a>
+  </div>
+
+  <div class="data-card">
+    <h2 class="card-header">{{ meta.label }}</h2>
+    <p style="margin:.25rem 0 1rem;">{{ meta.description }}</p>
+
+    {% if error %}
+      <p class="error" style="color:#b00020;">{{ error }}</p>
+
+    {% elif is_processed %}
+      <p style="margin-bottom:.5rem;"><strong>{{ "{:,}".format(row_count) }}</strong> records (showing first 500). This view is read-only.</p>
+      <div class="table-wrapper">{{ table_html | safe }}</div>
+
+    {% elif meta.kind == 'status' %}
+      <p style="margin-bottom:1rem;">
+        ⚠️ Auto-generated status file. Manual edits are possible but are overwritten
+        on data updates/deletions. Use <em>Regenerate</em> to rebuild from raw data.
+      </p>
+      <div style="margin-bottom:1rem;">
+        <button class="tab-underline tab-underline--active" style="padding:.6rem 1.2rem;"
+                hx-post="/admin/edit-data/regenerate-status"
+                hx-target="#edit-result" hx-swap="innerHTML"
+                hx-confirm="Rebuild the status files from current tournament data?">
+          🔄 Regenerate from raw data
+        </button>
+      </div>
+      {% if missing %}
+        <p>This file does not exist yet — regenerate to create it.</p>
+      {% else %}
+        {% include "partials/admin_edit_grid.html" %}
+      {% endif %}
+
+    {% elif missing %}
+      <p>This file does not exist yet.</p>
+
+    {% else %}
+      {% include "partials/admin_edit_grid.html" %}
+    {% endif %}
+  </div>
+
+  <div id="edit-result" style="margin-top:1.5rem;"></div>
+</div>
+{% endblock %}

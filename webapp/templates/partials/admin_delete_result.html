@@ -1,0 +1,23 @@
+{% if error %}
+  <p class="error" style="color:#b00020;">{{ error }}</p>
+{% elif result %}
+<div class="data-card">
+  <h2 class="card-header">✅ Deletion complete</h2>
+  <ul style="margin:.5rem 0 0 1rem;">
+    <li><strong>{{ result.rows_deleted }}</strong> hole score(s) deleted from TEG {{ result.teg }} (Round {{ result.rounds | join(', ') }})</li>
+    <li>Backups created:
+      <ul style="margin:.25rem 0 0 1rem;">
+        {% for b in result.backups %}<li><code>{{ b }}</code></li>{% endfor %}
+      </ul>
+    </li>
+    {% if result.committed %}
+      <li>{{ result.files_committed }} file(s) committed to GitHub</li>
+    {% else %}
+      <li>Written locally (no GitHub commit — not running on Railway)</li>
+    {% endif %}
+  </ul>
+  <p style="margin-top:1rem;">All derived caches were rebuilt. <a href="/leaderboard" class="text-link">View leaderboard →</a></p>
+</div>
+{% else %}
+<div class="data-card"><h2 class="card-header">Nothing deleted</h2></div>
+{% endif %}

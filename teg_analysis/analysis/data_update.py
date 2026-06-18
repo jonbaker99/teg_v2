@@ -1,7 +1,8 @@
-"""Headless data-update pipeline.
+"""Headless data-management pipeline (add / edit / delete).
 
-UI-agnostic port of the Streamlit data-update flow (previously split across
-``streamlit/utils.py`` and ``streamlit/helpers/data_update_processing.py``).
+UI-agnostic port of the Streamlit data-management flows (previously split across
+``streamlit/utils.py``, ``streamlit/helpers/data_update_processing.py``,
+``streamlit/data_edit.py`` and ``streamlit/helpers/data_deletion_processing.py``).
 Nothing here touches Streamlit, FastAPI, or any session state — every function
 takes and returns plain DataFrames / dicts, so the same pipeline can be driven
 from a script, a CLI, or a webapp route.
@@ -14,11 +15,23 @@ The end-to-end "add a round" flow:
         -> (caller decides: overwrite / new-only / abort)
         -> execute_data_update()               process, write, regenerate caches, commit
 
-``execute_data_update`` reuses the existing building blocks in
-``teg_analysis.analysis.pipeline`` (``update_all_data``, ``update_streaks_cache``,
-``update_commentary_caches``, ``update_bestball_cache``,
+The "delete rounds" flow:
+
+    get_available_tegs_and_rounds()             list TEGs / rounds to pick from
+        -> preview_deletion_data()              show exactly which rows go
+        -> execute_data_deletion()              backup, delete, regenerate caches, commit
+
+The "edit metadata CSV" flow:
+
+    EDITABLE_DATA_FILES registry                pick a CSV
+        -> save_data_file()                     write the edited frame + commit
+        -> regenerate_status_files()            (status files only) rebuild from raw data
+
+``execute_data_update`` / ``execute_data_deletion`` reuse the existing building
+blocks in ``teg_analysis.analysis.pipeline`` (``update_all_data``,
+``update_streaks_cache``, ``update_commentary_caches``, ``update_bestball_cache``,
 ``load_and_prepare_handicap_data``) and ``teg_analysis.io`` (``read_file``,
-``write_file``, ``batch_commit_to_github``).
+``write_file``, ``backup_file``, ``batch_commit_to_github``).
 """
 
 import logging
@@ -242,16 +255,54 @@ def analyze_teg_completion(all_data: pd.DataFrame) -> pd.DataFrame:
     for teg_num in all_data['TEGNum'].unique():
         teg_data = all_data[all_data['TEGNum'] == teg_num]
         status = "in_progress" if teg_num in incomplete_teg_nums else "complete"
-        teg_info = round_info[round_info['TEGNum'] == teg_num].iloc[0]
+        matches = round_info[round_info['TEGNum'] == teg_num]
+        if matches.empty:
+            # No metadata row for this TEG — fall back rather than crash, so a
+            # missing round_info entry can't half-apply an update or break delete.
+            logger.warning(
+                f"TEG {teg_num} is in the data but missing from round_info.csv; "
+                "using fallback label/year for status files."
+            )
+            teg_label, year = f"TEG {teg_num}", pd.NA
+        else:
+            teg_info = matches.iloc[0]
+            teg_label, year = teg_info['TEG'], teg_info['Year']
         rows.append({
             'TEGNum': teg_num,
-            'TEG': teg_info['TEG'],
-            'Year': teg_info['Year'],
+            'TEG': teg_label,
+            'Year': year,
             'Status': status,
             'Rounds': teg_data['Round'].max(),
         })
 
     return pd.DataFrame(rows)
+
+
+def find_tegs_missing_round_info(new_long_df: pd.DataFrame) -> list[int]:
+    """TEGNums present in the new data but absent from round_info.csv.
+
+    Adding a round for a TEG that has no ``round_info`` metadata leaves the
+    pipeline unable to build status files cleanly, so callers should surface this
+    (and let the user add the metadata) *before* writing anything.
+
+    Args:
+        new_long_df: Incoming long-format data (with a 'TEGNum' column).
+
+    Returns:
+        Sorted list of TEGNums missing from round_info (empty if all present).
+    """
+    from teg_analysis.io import read_file
+
+    present = {int(t) for t in new_long_df['TEGNum'].unique()}
+    try:
+        round_info = read_file(ROUND_INFO_CSV)
+    except FileNotFoundError:
+        return sorted(present)
+
+    known = set(
+        pd.to_numeric(round_info['TEGNum'], errors='coerce').dropna().astype(int)
+    )
+    return sorted(present - known)
 
 
 def save_teg_status_file(status_data: pd.DataFrame, filename: str, defer_github: bool = False):
@@ -453,3 +504,269 @@ def execute_data_update(
         'committed': committed,
         'files_committed': len(batch_files),
     }
+
+
+# ---------------------------------------------------------------------------
+# Delete rounds
+# ---------------------------------------------------------------------------
+
+def get_available_tegs_and_rounds(scores_df: pd.DataFrame) -> dict[int, list[int]]:
+    """Map each TEG to its available round numbers (for delete selection).
+
+    Args:
+        scores_df: The current ``all-scores`` data (hole level).
+
+    Returns:
+        ``{teg_num: [round, ...]}`` with TEGs in reverse-chronological order
+        (newest first) and rounds ascending. Empty dict if there's no data.
+    """
+    if scores_df is None or scores_df.empty:
+        return {}
+
+    result: dict[int, list[int]] = {}
+    for teg_num in sorted(scores_df['TEGNum'].unique(), reverse=True):
+        rounds = sorted(scores_df[scores_df['TEGNum'] == teg_num]['Round'].unique())
+        result[int(teg_num)] = [int(r) for r in rounds]
+    return result
+
+
+def validate_deletion_selection(selected_rounds: list) -> bool:
+    """True if at least one round is selected for deletion."""
+    return bool(selected_rounds) and len(selected_rounds) > 0
+
+
+def preview_deletion_data(
+    scores_df: pd.DataFrame, selected_teg: int, selected_rounds: list
+) -> pd.DataFrame:
+    """Return the rows that a deletion would remove (for a confirmation preview).
+
+    Args:
+        scores_df: The current ``all-scores`` data.
+        selected_teg: TEG number to delete from.
+        selected_rounds: Round numbers to delete.
+
+    Returns:
+        The subset of ``scores_df`` that matches the selection.
+    """
+    deletion_filter = (
+        (scores_df['TEGNum'] == int(selected_teg))
+        & (scores_df['Round'].isin([int(r) for r in selected_rounds]))
+    )
+    return scores_df[deletion_filter]
+
+
+def create_timestamped_backups() -> tuple[str, str]:
+    """Back up all-scores and all-data parquet files before a deletion.
+
+    Returns:
+        ``(scores_backup_path, data_backup_path)``.
+    """
+    from datetime import datetime
+    from teg_analysis.io import backup_file
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    scores_backup_path = f"data/backups/all_scores_backup_{timestamp}.parquet"
+    backup_file(ALL_SCORES_PARQUET, scores_backup_path)
+
+    data_backup_path = f"data/backups/all_data_backup_{timestamp}.parquet"
+    backup_file(ALL_DATA_PARQUET, data_backup_path)
+
+    return scores_backup_path, data_backup_path
+
+
+def execute_data_deletion(
+    selected_teg: int,
+    selected_rounds: list,
+    *,
+    defer_github: bool = None,
+) -> dict:
+    """Delete the selected TEG/rounds end-to-end.
+
+    Creates timestamped backups, removes the matching rows from ``all-scores``
+    and ``all-data`` (plus the CSV mirror), regenerates every derived dataset
+    (TEG status, streaks, commentary, bestball) and, on Railway, commits the
+    lot in a single batch.
+
+    Args:
+        selected_teg: TEG number to delete from.
+        selected_rounds: Round numbers to delete.
+        defer_github: Override the commit strategy. Defaults to ``True`` on
+            Railway (volume write now, single GitHub batch commit at the end)
+            and ``False`` locally.
+
+    Returns:
+        Summary dict: ``rows_deleted``, ``teg``, ``rounds``, ``backups``
+        (list of paths), ``committed`` (bool), ``files_committed`` (int).
+    """
+    from teg_analysis.io import read_file, write_file, batch_commit_to_github, _is_railway
+    from teg_analysis.analysis.pipeline import (
+        update_streaks_cache,
+        update_commentary_caches,
+        update_bestball_cache,
+    )
+
+    if defer_github is None:
+        defer_github = bool(_is_railway())
+
+    selected_teg = int(selected_teg)
+    selected_rounds = [int(r) for r in selected_rounds]
+
+    # Safety backups first (no point continuing if these fail).
+    backups = create_timestamped_backups()
+    logger.info(f"Backups created: {backups}")
+
+    scores_df = read_file(ALL_SCORES_PARQUET)
+    data_df = read_file(ALL_DATA_PARQUET)
+
+    scores_filter = (
+        (scores_df['TEGNum'] == selected_teg) & (scores_df['Round'].isin(selected_rounds))
+    )
+    data_filter = (
+        (data_df['TEGNum'] == selected_teg) & (data_df['Round'].isin(selected_rounds))
+    )
+    rows_deleted = int(scores_filter.sum())
+
+    filtered_scores_df = scores_df[~scores_filter]
+    filtered_data_df = data_df[~data_filter]
+
+    deletion_message = f"Deleted TEG {selected_teg}, Rounds {selected_rounds}"
+
+    batch_files = []
+    for path, frame, msg in (
+        (ALL_SCORES_PARQUET, filtered_scores_df, deletion_message),
+        (ALL_DATA_PARQUET, filtered_data_df, deletion_message),
+        (ALL_DATA_CSV_MIRROR, filtered_data_df, "Recreated CSV mirror after deletion"),
+    ):
+        file_info = write_file(path, frame, msg, defer_github=defer_github)
+        if file_info:
+            batch_files.append(file_info)
+
+    # Regenerate every derived file so the site never shows stale data.
+    status_files = update_teg_status_files(defer_github=defer_github)
+    if status_files:
+        batch_files.extend(status_files)
+
+    streaks_file = update_streaks_cache(defer_github=defer_github)
+    if streaks_file:
+        batch_files.append(streaks_file)
+
+    commentary_files = update_commentary_caches(defer_github=defer_github)
+    if commentary_files:
+        batch_files.extend(commentary_files)
+
+    bestball_file = update_bestball_cache(defer_github=defer_github)
+    if bestball_file:
+        batch_files.append(bestball_file)
+
+    committed = False
+    if defer_github and batch_files:
+        batch_commit_to_github(batch_files, deletion_message)
+        committed = True
+
+    logger.info(
+        f"Deletion complete: {rows_deleted} rows, {len(batch_files)} files, committed={committed}"
+    )
+    return {
+        'rows_deleted': rows_deleted,
+        'teg': selected_teg,
+        'rounds': selected_rounds,
+        'backups': list(backups),
+        'committed': committed,
+        'files_committed': len(batch_files),
+    }
+
+
+# ---------------------------------------------------------------------------
+# Edit metadata CSVs
+# ---------------------------------------------------------------------------
+
+# Canonical registry of the metadata CSVs that the edit flow may modify. Keyed
+# by a short slug used in URLs/forms. ``status`` files are auto-generated and can
+# also be rebuilt from raw data via :func:`regenerate_status_files`.
+EDITABLE_DATA_FILES: dict[str, dict] = {
+    'round_info': {
+        'path': ROUND_INFO_CSV,
+        'label': 'Round Info',
+        'description': 'Tournament metadata: courses, dates, TEG information.',
+        'kind': 'metadata',
+    },
+    'future_tegs': {
+        'path': 'data/future_tegs.csv',
+        'label': 'Future TEGs',
+        'description': 'Planned future tournaments for history display.',
+        'kind': 'metadata',
+    },
+    'handicaps': {
+        'path': HANDICAPS_CSV,
+        'label': 'Handicaps',
+        'description': 'Player handicap data for net scoring calculations.',
+        'kind': 'metadata',
+    },
+    'teg_winners': {
+        'path': 'data/teg_winners.csv',
+        'label': 'TEG Winners',
+        'description': 'Cached winners data for fast history page loading.',
+        'kind': 'metadata',
+    },
+    'completed_tegs': {
+        'path': 'data/completed_tegs.csv',
+        'label': 'Completed TEGs',
+        'description': 'Status tracking: TEGs with 4 completed rounds (auto-generated).',
+        'kind': 'status',
+    },
+    'in_progress_tegs': {
+        'path': 'data/in_progress_tegs.csv',
+        'label': 'In-Progress TEGs',
+        'description': 'Status tracking: TEGs with 1-3 completed rounds (auto-generated).',
+        'kind': 'status',
+    },
+}
+
+
+def save_data_file(
+    file_path: str,
+    edited_df: pd.DataFrame,
+    *,
+    commit_message: str = None,
+    defer_github: bool = False,
+) -> None:
+    """Write an edited metadata CSV back to storage (volume + GitHub).
+
+    A single-file edit is committed directly (``defer_github=False``): on Railway
+    ``write_file`` lands it on the volume then pushes to GitHub in one commit.
+
+    Args:
+        file_path: Bare path, e.g. ``'data/handicaps.csv'``.
+        edited_df: The new contents of the file.
+        commit_message: Optional commit message; a sensible default is used.
+        defer_github: If True, defer the GitHub push (returns file info for a
+            batch commit). Defaults to False (commit directly).
+    """
+    from teg_analysis.io import write_file
+
+    if commit_message is None:
+        commit_message = f"Edit {file_path} via admin data-edit page"
+    return write_file(file_path, edited_df, commit_message, defer_github=defer_github)
+
+
+def regenerate_status_files() -> dict:
+    """Rebuild completed_tegs.csv / in_progress_tegs.csv from raw data and commit.
+
+    Mirrors the legacy "Regenerate Status Files" button. On Railway the two files
+    are written to the volume and committed in a single batch.
+
+    Returns:
+        Summary dict: ``committed`` (bool), ``files_committed`` (int).
+    """
+    from teg_analysis.io import batch_commit_to_github, _is_railway
+
+    defer_github = bool(_is_railway())
+    status_files = update_teg_status_files(defer_github=defer_github) or []
+
+    committed = False
+    if defer_github and status_files:
+        batch_commit_to_github(status_files, "Regenerated TEG status files")
+        committed = True
+
+    return {'committed': committed, 'files_committed': len(status_files)}

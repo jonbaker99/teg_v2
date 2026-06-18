@@ -1,0 +1,72 @@
+{# Editable grid for a metadata CSV. Expects: selected (slug), columns (list),
+   rows (list of lists, stringified cells). Rows are addressed by a stable
+   numeric id so adding/deleting rows stays alignment-safe on the server. #}
+<form hx-post="/admin/edit-data/save" hx-target="#edit-result" hx-swap="innerHTML"
+      hx-confirm="Save changes to this file and commit to GitHub?">
+  <input type="hidden" name="file" value="{{ selected }}">
+  <input type="hidden" name="columns" value='{{ columns | tojson }}'>
+
+  <div class="table-wrapper">
+    <table class="teg-table" id="edit-grid" data-ncols="{{ columns | length }}" data-nextid="{{ rows | length }}">
+      <thead>
+        <tr>
+          {% for col in columns %}<th>{{ col }}</th>{% endfor %}
+          <th></th>
+        </tr>
+      </thead>
+      {# Body is populated by the script below from the JSON payload, so each row
+         gets a stable id for alignment-safe add/delete. #}
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script type="application/json" id="edit-grid-data">{{ rows | tojson }}</script>
+
+  <div style="margin-top:1rem;display:flex;gap:.75rem;flex-wrap:wrap;">
+    <button type="button" class="tab-underline" style="padding:.6rem 1.2rem;" onclick="tegAddRow()">+ Add row</button>
+    <button type="submit" class="tab-underline tab-underline--active" style="padding:.6rem 1.2rem;">💾 Save changes</button>
+  </div>
+</form>
+
+<script>
+(function () {
+  var table = document.getElementById('edit-grid');
+  if (!table) return;
+  var ncols = parseInt(table.dataset.ncols, 10);
+  var tbody = table.querySelector('tbody');
+  var data = JSON.parse(document.getElementById('edit-grid-data').textContent);
+
+  function makeRow(rid, values) {
+    var tr = document.createElement('tr');
+    for (var c = 0; c < ncols; c++) {
+      var td = document.createElement('td');
+      var input = document.createElement('input');
+      input.name = 'cell__' + rid + '__' + c;
+      input.value = (values && values[c] != null) ? values[c] : '';
+      input.style.minWidth = '6rem';
+      td.appendChild(input);
+      tr.appendChild(td);
+    }
+    var tdDel = document.createElement('td');
+    var del = document.createElement('button');
+    del.type = 'button';
+    del.textContent = '✕';
+    del.title = 'Delete row';
+    del.style.cssText = 'border:none;background:none;cursor:pointer;color:#b00020;';
+    del.onclick = function () { tr.remove(); };
+    tdDel.appendChild(del);
+    tr.appendChild(tdDel);
+    return tr;
+  }
+
+  // Replace the placeholder body with real, id-stamped rows.
+  tbody.innerHTML = '';
+  data.forEach(function (values, rid) { tbody.appendChild(makeRow(rid, values)); });
+
+  window.tegAddRow = function () {
+    var rid = parseInt(table.dataset.nextid, 10);
+    table.dataset.nextid = rid + 1;
+    tbody.appendChild(makeRow(rid, []));
+  };
+})();
+</script>

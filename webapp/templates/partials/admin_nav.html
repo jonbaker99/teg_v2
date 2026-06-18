@@ -1,0 +1,8 @@
+{# Shared admin sub-nav. `admin_active` names the current page. #}
+<nav class="section-controls" style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
+  <a href="/admin/data-update" class="tab-underline{% if admin_active == 'add' %} tab-underline--active{% endif %}">Add a round</a>
+  <a href="/admin/edit-data" class="tab-underline{% if admin_active == 'edit' %} tab-underline--active{% endif %}">Edit data</a>
+  <a href="/admin/delete-data" class="tab-underline{% if admin_active == 'delete' %} tab-underline--active{% endif %}">Delete rounds</a>
+  <a href="/admin/volume-sync" class="tab-underline{% if admin_active == 'sync' %} tab-underline--active{% endif %}">GitHub sync</a>
+  <a href="/admin/logout" class="text-link" style="margin-left:auto;">Log out</a>
+</nav>

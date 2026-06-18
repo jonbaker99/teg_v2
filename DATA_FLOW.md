@@ -37,14 +37,34 @@ read_file(path)
 write_file(path, df)  →  Railway volume  +  GitHub commit
 ```
 
-**Write pipeline (UI-agnostic):** `teg_analysis/analysis/data_update.py` provides a
-headless update flow — `process_google_sheets_data` → `find_duplicate_keys` →
-`execute_data_update`, which writes `all-scores`/`all-data`, regenerates the
-streaks / commentary / bestball / TEG-status caches, and batch-commits to GitHub.
-On Railway it writes to the volume first then makes a single GitHub batch commit;
-locally it writes straight to `data/`. The legacy Streamlit data-admin pages and
-any new webapp/script frontend drive this same pipeline (so it is no longer
-Streamlit-only).
+**Write pipeline (UI-agnostic):** `teg_analysis/analysis/data_update.py` provides the
+headless add / edit / delete flows:
+- **Add:** `process_google_sheets_data` → `find_duplicate_keys` → `execute_data_update`,
+  which writes `all-scores`/`all-data`, regenerates the streaks / commentary /
+  bestball / TEG-status caches, and batch-commits to GitHub.
+- **Delete:** `preview_deletion_data` → `execute_data_deletion`, which takes a
+  **timestamped backup** of `all-scores`/`all-data` under `data/backups/`, removes
+  the selected TEG/rounds from `all-scores`/`all-data` (+ CSV mirror), and rebuilds
+  the same derived caches.
+- **Edit:** `EDITABLE_DATA_FILES` registry + `save_data_file` (single-file commit of
+  an edited metadata CSV) and `regenerate_status_files` (rebuild completed/in-progress
+  status from raw data).
+
+On Railway each flow writes to the volume first then makes a single GitHub batch
+commit; locally it writes straight to `data/`. The legacy Streamlit data-admin pages
+and the webapp admin pages (`webapp/routes/admin.py`) drive this same pipeline (so it
+is no longer Streamlit-only).
+
+**Selective sync (UI-agnostic):** `teg_analysis/io/sync.py` moves individual files
+between GitHub and the app's store (the Railway volume in production, the local working
+tree in dev) at byte level. `build_sync_status(folder)` compares a folder across both
+sides (presence + size); `pull_files` copies GitHub → store; `push_files` copies
+store → GitHub in a single batch commit. This is how reference CSVs for a new TEG can
+be synced individually without a full data update. Driven by the webapp
+`/admin/volume-sync` page. Each pull backs up the existing store file to
+`data/backups/sync/<timestamp>/` before overwriting (`backup_store_file` /
+`restore_backup`), and `detect_pull_conflicts` / `detect_push_conflicts` warn before
+overwriting a destination copy that is newer than the source.
 
 ---
 
