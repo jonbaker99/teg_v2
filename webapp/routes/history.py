@@ -41,10 +41,40 @@ from webapp.chart_utils import create_cumulative_graph, adjusted_stableford, adj
 
 _NAME_TO_CODE = {v: k for k, v in PLAYER_DICT.items()}
 
+# Country (or UK nation) name -> flag-icons code. Keys are lower-cased and matched
+# against the last comma-separated part of an Area string ("Region, Country").
+# Add aliases (e.g. "usa"/"united states") so the CSV can be written naturally.
 _COUNTRY_FLAG_CODES = {
+    # Already used by existing TEGs
     "england": "gb-eng",
     "portugal": "pt",
     "spain": "es",
+    # Other UK nations
+    "scotland": "gb-sct",
+    "wales": "gb-wls",
+    "northern ireland": "gb-nir",
+    "ireland": "ie",
+    # Likely future destinations
+    "france": "fr",
+    "italy": "it",
+    "usa": "us",
+    "united states": "us",
+    "united states of america": "us",
+    "america": "us",
+    "germany": "de",
+    "netherlands": "nl",
+    "belgium": "be",
+    "switzerland": "ch",
+    "austria": "at",
+    "sweden": "se",
+    "morocco": "ma",
+    "turkey": "tr",
+    "united arab emirates": "ae",
+    "uae": "ae",
+    "south africa": "za",
+    "mauritius": "mu",
+    "thailand": "th",
+    "mexico": "mx",
 }
 
 
