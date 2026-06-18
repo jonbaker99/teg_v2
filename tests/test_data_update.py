@@ -19,6 +19,8 @@ from teg_analysis.analysis.data_update import (
     get_available_tegs_and_rounds,
     validate_deletion_selection,
     preview_deletion_data,
+    find_tegs_missing_round_info,
+    analyze_teg_completion,
     EDITABLE_DATA_FILES,
 )
 from teg_analysis.constants import PLAYER_DICT
@@ -207,6 +209,41 @@ def test_editable_files_registry_shape():
         assert meta['path'].startswith('data/') and meta['path'].endswith('.csv')
         assert meta['label'] and meta['description']
         assert meta['kind'] in {'metadata', 'status'}
+
+
+# ---------------------------------------------------------------------------
+# round_info validation / completion robustness
+# ---------------------------------------------------------------------------
+
+def test_find_tegs_missing_round_info(monkeypatch):
+    """TEGs in the new data but absent from round_info are reported."""
+    round_info = pd.DataFrame({'TEGNum': [10, 11], 'TEG': ['TEG 10', 'TEG 11'], 'Year': [2020, 2021]})
+    # find_tegs_missing_round_info does `from teg_analysis.io import read_file` lazily.
+    import teg_analysis.io as tio
+    monkeypatch.setattr(tio, 'read_file', lambda path: round_info)
+
+    new = pd.DataFrame({'TEGNum': [11, 12], 'Round': [1, 1], 'Hole': [1, 1], 'Pl': ['AB', 'AB']})
+    assert find_tegs_missing_round_info(new) == [12]
+
+    new_ok = pd.DataFrame({'TEGNum': [10, 11], 'Round': [1, 1], 'Hole': [1, 1], 'Pl': ['AB', 'AB']})
+    assert find_tegs_missing_round_info(new_ok) == []
+
+
+def test_analyze_teg_completion_tolerates_missing_round_info(monkeypatch):
+    """A TEG missing from round_info falls back instead of raising IndexError."""
+    import teg_analysis.io as tio
+    import teg_analysis.core.data_loader as dl
+    round_info = pd.DataFrame({'TEGNum': [10], 'TEG': ['TEG 10'], 'Year': [2020]})
+    monkeypatch.setattr(tio, 'read_file', lambda path: round_info)
+    monkeypatch.setattr(dl, 'get_incomplete_tegs', lambda all_data: [])
+
+    all_data = pd.DataFrame({
+        'TEGNum': [10, 12], 'Round': [1, 1], 'Hole': [1, 1], 'Pl': ['AB', 'AB'],
+    })
+    out = analyze_teg_completion(all_data).set_index('TEGNum')
+    assert out.loc[10, 'TEG'] == 'TEG 10'
+    assert out.loc[12, 'TEG'] == 'TEG 12'      # fallback label
+    assert pd.isna(out.loc[12, 'Year'])         # fallback year
 
 
 if __name__ == '__main__':

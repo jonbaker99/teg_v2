@@ -255,16 +255,54 @@ def analyze_teg_completion(all_data: pd.DataFrame) -> pd.DataFrame:
     for teg_num in all_data['TEGNum'].unique():
         teg_data = all_data[all_data['TEGNum'] == teg_num]
         status = "in_progress" if teg_num in incomplete_teg_nums else "complete"
-        teg_info = round_info[round_info['TEGNum'] == teg_num].iloc[0]
+        matches = round_info[round_info['TEGNum'] == teg_num]
+        if matches.empty:
+            # No metadata row for this TEG — fall back rather than crash, so a
+            # missing round_info entry can't half-apply an update or break delete.
+            logger.warning(
+                f"TEG {teg_num} is in the data but missing from round_info.csv; "
+                "using fallback label/year for status files."
+            )
+            teg_label, year = f"TEG {teg_num}", pd.NA
+        else:
+            teg_info = matches.iloc[0]
+            teg_label, year = teg_info['TEG'], teg_info['Year']
         rows.append({
             'TEGNum': teg_num,
-            'TEG': teg_info['TEG'],
-            'Year': teg_info['Year'],
+            'TEG': teg_label,
+            'Year': year,
             'Status': status,
             'Rounds': teg_data['Round'].max(),
         })
 
     return pd.DataFrame(rows)
+
+
+def find_tegs_missing_round_info(new_long_df: pd.DataFrame) -> list[int]:
+    """TEGNums present in the new data but absent from round_info.csv.
+
+    Adding a round for a TEG that has no ``round_info`` metadata leaves the
+    pipeline unable to build status files cleanly, so callers should surface this
+    (and let the user add the metadata) *before* writing anything.
+
+    Args:
+        new_long_df: Incoming long-format data (with a 'TEGNum' column).
+
+    Returns:
+        Sorted list of TEGNums missing from round_info (empty if all present).
+    """
+    from teg_analysis.io import read_file
+
+    present = {int(t) for t in new_long_df['TEGNum'].unique()}
+    try:
+        round_info = read_file(ROUND_INFO_CSV)
+    except FileNotFoundError:
+        return sorted(present)
+
+    known = set(
+        pd.to_numeric(round_info['TEGNum'], errors='coerce').dropna().astype(int)
+    )
+    return sorted(present - known)
 
 
 def save_teg_status_file(status_data: pd.DataFrame, filename: str, defer_github: bool = False):

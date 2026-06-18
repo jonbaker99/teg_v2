@@ -133,6 +133,29 @@ def test_unauthed_post_is_blocked(client):
     assert resp.status_code == 401
 
 
+def test_data_update_execute_blocks_missing_round_info(client, monkeypatch):
+    """A round whose TEG isn't in round_info is refused before any write."""
+    import pandas as pd
+    import teg_analysis.analysis.pipeline as pipeline
+    import teg_analysis.analysis.data_update as du
+
+    monkeypatch.setattr(pipeline, "get_google_sheet", lambda s, w: pd.DataFrame())
+    monkeypatch.setattr(du, "process_google_sheets_data",
+                        lambda raw: pd.DataFrame({"TEGNum": [12], "Round": [1]}))
+    monkeypatch.setattr(du, "find_tegs_missing_round_info", lambda df: [12])
+
+    def _must_not_run(*a, **k):
+        raise AssertionError("execute_data_update must not run when round_info is missing")
+    monkeypatch.setattr(du, "execute_data_update", _must_not_run)
+
+    _login(client)
+    resp = client.post("/admin/data-update/execute",
+                       data={"sheet": "S", "worksheet": "W", "mode": "append"})
+    assert resp.status_code == 200
+    assert "missing tournament metadata" in resp.text.lower()
+    assert "/admin/edit-data?file=round_info" in resp.text
+
+
 def test_edit_save_reconstructs_rows(client, monkeypatch):
     """The grid POST is rebuilt into the right frame and saved (no disk write)."""
     import teg_analysis.analysis.data_update as du

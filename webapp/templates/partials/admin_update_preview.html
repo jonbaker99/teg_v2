@@ -6,7 +6,23 @@
   <div class="table-wrapper">{{ summary_html | safe }}</div>
 </div>
 
-{% if has_duplicates %}
+{% if missing_round_info %}
+  <div class="data-card" style="margin-top:1rem;border-left:4px solid #b00020;">
+    <h2 class="card-header">⚠️ Missing tournament metadata</h2>
+    <p style="margin:.5rem 0;">
+      TEG {{ missing_round_info | join(', TEG ') }}
+      {{ 'is' if missing_round_info | length == 1 else 'are' }} not in
+      <code>round_info.csv</code>. The round can't be saved until the metadata exists
+      (otherwise status-file generation fails).
+    </p>
+    <p style="margin:.5rem 0;">
+      Add a row for
+      {{ 'this TEG' if missing_round_info | length == 1 else 'these TEGs' }} on the
+      <a href="/admin/edit-data?file=round_info" class="text-link">Edit data → Round Info</a>
+      page (you can do this here on your phone), then re-run this preview.
+    </p>
+  </div>
+{% elif has_duplicates %}
   <div class="data-card" style="margin-top:1rem;">
     <h2 class="card-header">⚠️ {{ duplicate_count }} hole(s) already exist</h2>
     {% if diff_html %}

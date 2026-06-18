@@ -41,6 +41,11 @@ shows fresh data immediately. All three drive headless logic in
   hole-level duplicate check → confirm (append / overwrite / add-new-only) →
   `execute_data_update` writes `all-scores` / `all-data`, regenerates the
   streaks/commentary/bestball/status caches and batch-commits to GitHub.
+- **round_info guard:** `find_tegs_missing_round_info` checks the new round's TEG
+  exists in `round_info.csv`; if not, preview and execute both refuse (no partial
+  write) and link to **Edit data → Round Info** to add the metadata first. (As a
+  backstop, `analyze_teg_completion` also falls back to a `TEG N` label instead of
+  crashing, so delete/regenerate flows can't half-apply either.)
 
 **Edit metadata CSVs** — templates `admin_edit_data.html`,
 `partials/admin_edit_grid.html`, `partials/admin_edit_result.html`.

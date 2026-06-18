@@ -105,6 +105,7 @@ async def admin_data_update_preview(
     from teg_analysis.analysis.data_update import (
         process_google_sheets_data, summarise_round_scores,
         find_duplicate_keys, analyze_hole_level_differences,
+        find_tegs_missing_round_info,
     )
     from teg_analysis.io import read_file
     from teg_analysis.constants import ALL_SCORES_PARQUET
@@ -145,6 +146,8 @@ async def admin_data_update_preview(
         "duplicate_count": int(len(dup_keys)),
         "diff_html": diff_html,
         "row_count": int(len(new_df)),
+        # Block the round until its TEG exists in round_info.csv.
+        "missing_round_info": find_tegs_missing_round_info(new_df),
     })
     return templates.TemplateResponse("partials/admin_update_preview.html", ctx)
 
@@ -160,7 +163,9 @@ async def admin_data_update_execute(
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 
     from teg_analysis.analysis.pipeline import get_google_sheet
-    from teg_analysis.analysis.data_update import process_google_sheets_data, execute_data_update
+    from teg_analysis.analysis.data_update import (
+        process_google_sheets_data, execute_data_update, find_tegs_missing_round_info,
+    )
 
     ctx = {"request": request}
 
@@ -169,6 +174,13 @@ async def admin_data_update_execute(
         new_df = process_google_sheets_data(raw)
         if new_df.empty:
             ctx["error"] = "No complete 18-hole rounds found in the sheet."
+            return templates.TemplateResponse("partials/admin_update_result.html", ctx)
+
+        # Guard: refuse (before any write) if the TEG isn't in round_info.csv,
+        # otherwise status-file generation crashes mid-update.
+        missing = find_tegs_missing_round_info(new_df)
+        if missing:
+            ctx["missing_round_info"] = missing
             return templates.TemplateResponse("partials/admin_update_result.html", ctx)
 
         result = execute_data_update(

@@ -1,5 +1,16 @@
 {% if error %}
   <p class="error" style="color:#b00020;">{{ error }}</p>
+{% elif missing_round_info %}
+<div class="data-card" style="border-left:4px solid #b00020;">
+  <h2 class="card-header">⚠️ Not saved — missing tournament metadata</h2>
+  <p style="margin:.5rem 0;">
+    TEG {{ missing_round_info | join(', TEG ') }}
+    {{ 'is' if missing_round_info | length == 1 else 'are' }} not in
+    <code>round_info.csv</code>, so nothing was written. Add the metadata on the
+    <a href="/admin/edit-data?file=round_info" class="text-link">Edit data → Round Info</a>
+    page, then try again.
+  </p>
+</div>
 {% elif result and result.records_added > 0 %}
 <div class="data-card">
   <h2 class="card-header">✅ Update complete</h2>
