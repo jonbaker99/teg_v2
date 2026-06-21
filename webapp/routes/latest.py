@@ -178,13 +178,18 @@ def _bestball_rank_summary(bb_all: pd.DataFrame, wb_all: pd.DataFrame,
             return ''
         vp = int(row['GrossVP'].iloc[0])
         rank = int(row['__r'].iloc[0])
-        return (f'<strong>{label}</strong>: <span class="bw-rank-num">{format_vs_par(vp)}</span> · '
-                f'ranks <span class="bw-rank-num">{rank} / {len(d)}</span> all-time')
+        return ('<div class="bw-rank-row">'
+                f'<span class="bw-rank-label">{label}</span>'
+                f'<span class="bw-rank-num">{format_vs_par(vp)}</span>'
+                '<span class="bw-rank-sep">ranks</span>'
+                f'<span class="bw-rank-num">{rank} / {len(d)}</span>'
+                '<span class="bw-rank-sep">all-time</span>'
+                '</div>')
 
     parts = [p for p in (_one(bb_all, 'Bestball'), _one(wb_all, 'Worstball')) if p]
     if not parts:
         return ''
-    return '<p class="bw-rank-summary">' + '<br>'.join(parts) + '</p>'
+    return '<div class="bw-rank-summary">' + ''.join(parts) + '</div>'
 
 
 _RECORDS_DRAFT_NOTE = (

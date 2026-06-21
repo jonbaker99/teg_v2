@@ -479,7 +479,7 @@ html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] span { c
   color: var(--color-text-secondary);
   letter-spacing: 0.02em;
 }
-.bw-scorecard .totals { font-weight: 600; }
+.bw-scorecard td.totals { font-weight: 600; background-color: #f0f0f0; }
 .bw-scorecard td.player-label { font-weight: 400; }
 .bw-scorecard .bw-team-row .player-label { font-weight: 600; }
 
@@ -518,14 +518,30 @@ html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] span { c
 /* Gap row between team rows and player rows */
 .bw-scorecard .bw-gap-row td { height: 10px; background-color: transparent; border: none; }
 
-/* Rank summary — prominent, mono numbers */
+/* Rank summary — small tabular block: aligned labels + metric chips */
 .bw-rank-summary {
-  font-size: 1rem;
-  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 1.25rem;
+  font-size: 0.9rem;
 }
+.bw-rank-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.bw-rank-label {
+  font-weight: 700;
+  min-width: 5.5rem;
+}
+.bw-rank-sep { color: var(--color-text-secondary); }
 .bw-rank-num {
   font-family: 'Roboto Mono', monospace;
-  font-weight: 700;
+  font-weight: 600;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  padding: 1px 7px;
 }
 
 /* Dark mode */
@@ -537,6 +553,8 @@ html[data-mode="dark"] .bw-scorecard .bw-cell.bw-player-best span {
 html[data-mode="dark"] .bw-scorecard .bw-cell.bw-player-worst span {
   background-color: #3a3a3a; border-color: #555; color: #d8d8d8;
 }
+html[data-mode="dark"] .bw-scorecard td.totals { background-color: #26261f; }
+html[data-mode="dark"] .bw-rank-num { background-color: #2a2a26; }
 
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
