@@ -8,6 +8,10 @@
 </div>
 {% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="/static/admin.css">
+{% endblock %}
+
 {% block content %}
 {% set admin_active = 'edit' %}
 {% include "partials/admin_nav.html" %}
@@ -39,7 +43,7 @@
 
     {% elif is_processed %}
       <p style="margin-bottom:.5rem;"><strong>{{ "{:,}".format(row_count) }}</strong> records (showing first 500). This view is read-only.</p>
-      <div class="table-wrapper">{{ table_html | safe }}</div>
+      <div class="admin-table-scroll">{{ table_html | safe }}</div>
 
     {% elif meta.kind == 'status' %}
       <p style="margin-bottom:1rem;">
@@ -47,7 +51,7 @@
         on data updates/deletions. Use <em>Regenerate</em> to rebuild from raw data.
       </p>
       <div style="margin-bottom:1rem;">
-        <button class="tab-underline tab-underline--active" style="padding:.6rem 1.2rem;"
+        <button class="btn-action"
                 hx-post="/admin/edit-data/regenerate-status"
                 hx-target="#edit-result" hx-swap="innerHTML"
                 hx-confirm="Rebuild the status files from current tournament data?">

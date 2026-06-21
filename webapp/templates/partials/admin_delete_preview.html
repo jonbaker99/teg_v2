@@ -7,14 +7,14 @@
     TEG <strong>{{ teg }}</strong>, Round(s) <strong>{{ rounds | join(', ') }}</strong>
     — <strong>{{ row_count }}</strong> hole score(s) will be deleted from all-scores.
   </p>
-  <div class="table-wrapper">{{ preview_html | safe }}</div>
+  <div class="admin-table-scroll">{{ preview_html | safe }}</div>
 
   <form hx-post="/admin/delete-data/execute" hx-target="#delete-preview" hx-swap="innerHTML"
         hx-confirm="Permanently delete these rows? A backup is taken first."
         style="margin-top:1rem;">
     <input type="hidden" name="teg" value="{{ teg }}">
     {% for r in rounds %}<input type="hidden" name="rounds" value="{{ r }}">{% endfor %}
-    <button type="submit" class="tab-underline tab-underline--active" style="padding:.6rem 1.2rem;">
+    <button type="submit" class="btn-action">
       ✅ Confirm deletion
     </button>
   </form>

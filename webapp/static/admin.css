@@ -1,0 +1,213 @@
+/* Admin pages — form and button styles */
+
+/* ── Field labels ──
+   .page-label is defined in base-vars.css only within .page-title-area.
+   Admin pages use it as a form field label throughout the page content,
+   so give it the same mono-caps treatment here, scoped to .main-content. */
+.main-content .page-label {
+    display: block;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted, #999);
+    margin-bottom: 0.3rem;
+}
+
+/* ── Form inputs and selects ──
+   Tailwind's preflight strips browser-default borders from form elements,
+   making unstyled inputs invisible against the page background.
+   Restore a clear bordered appearance for all non-checkbox/radio inputs
+   on admin pages. #edit-grid td input overrides this with seamless cells. */
+.main-content input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+.main-content select {
+    border: 1px solid var(--select-border, #d0d0d0);
+    border-radius: 0.25rem;
+    padding: 0.45rem 0.6rem;
+    background: var(--bg-page, #fff);
+    font-size: 0.875rem;
+    color: var(--text-primary, #1a1a1a);
+    font-family: inherit;
+    box-sizing: border-box;
+}
+.main-content input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):focus,
+.main-content select:focus {
+    outline: none;
+    border-color: var(--accent, forestgreen);
+    box-shadow: 0 0 0 2px rgba(34, 139, 34, 0.12);
+}
+
+/* ── Settings table ──
+   A compact two-column table (label | input) for admin config fields
+   such as the Google Sheet source on the data-update page.
+   Makes the label–value relationship explicit and keeps inputs aligned. */
+.admin-settings-table {
+    border-collapse: collapse;
+    margin-bottom: 1.25rem;
+}
+.admin-settings-table th {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted, #999);
+    text-align: left;
+    padding: 0.45rem 1.25rem 0.45rem 0;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.admin-settings-table td {
+    padding: 0.25rem 0;
+    vertical-align: middle;
+}
+.admin-settings-table td input {
+    min-width: 14rem;
+}
+
+/* ── Solid action button — primary CTA ── */
+.btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background-color: var(--btn-active-bg, #1a1a1a);
+    color: var(--btn-active-text, #ffffff);
+    border: 1px solid var(--btn-active-bg, #1a1a1a);
+    border-radius: 0.375rem;
+    padding: 0.5rem 1.1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.btn-action:hover {
+    opacity: 0.85;
+    color: var(--btn-active-text, #ffffff);
+}
+.btn-action:focus-visible {
+    outline: 2px solid var(--select-focus-ring, forestgreen);
+    outline-offset: 2px;
+}
+
+/* ── Secondary button — outlined ── */
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background-color: transparent;
+    color: var(--text-primary, #1a1a1a);
+    border: 1px solid var(--select-border, #d0d0d0);
+    border-radius: 0.375rem;
+    padding: 0.5rem 1.1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.btn-secondary:hover {
+    background-color: var(--nav-hover-bg, #f5f5f5);
+    border-color: var(--text-muted, #999);
+    color: var(--text-primary, #1a1a1a);
+}
+.btn-secondary:focus-visible {
+    outline: 2px solid var(--select-focus-ring, forestgreen);
+    outline-offset: 2px;
+}
+
+/* ── Scrollable admin table container ──
+   Caps table height at 60% of the viewport and scrolls vertically.
+   Headers stick to the top of the scroll container. */
+.admin-table-scroll {
+    max-height: 60vh;
+    overflow-y: auto;
+    overflow-x: auto;
+    border: 1px solid var(--table-cell-border, #e0e0e0);
+    border-radius: 0.375rem;
+}
+.admin-table-scroll .teg-table {
+    min-width: 100%;
+    border-radius: 0;
+}
+.admin-table-scroll .teg-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--bg-page, #fff);
+    border-bottom: none;
+    box-shadow: 0 2px 0 var(--table-header-border, #1a1a1a);
+}
+
+/* ── Admin callout banners ──
+   Environment / warning notices. Slightly narrower than the full content
+   column so they visually "step in" from the surrounding text.
+   Two colour variants: warning (red) and live (green). */
+.admin-callout {
+    border-left: 4px solid;
+    border-radius: 0 0.375rem 0.375rem 0;
+    padding: 0.85rem 1.1rem;
+    margin-bottom: 1.25rem;
+    max-width: 600px;
+    font-size: 0.875rem;
+    line-height: 1.55;
+}
+.admin-callout--warning {
+    border-color: #b00020;
+    background: #fef7f7;
+}
+.admin-callout--live {
+    border-color: #2e7d32;
+    background: #f3f9f3;
+}
+.admin-callout-title {
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+}
+.admin-callout-detail {
+    font-size: 0.8125rem;
+    color: var(--text-secondary, #555);
+    line-height: 1.55;
+}
+.admin-callout-detail code {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.8em;
+}
+
+/* ── Edit grid — inputs styled as seamless editable cells ──
+   Higher specificity than the .main-content input rule above, so these
+   override the bordered appearance with the seamless cell look. */
+#edit-grid td {
+    padding: 0;
+}
+#edit-grid td input {
+    display: block;
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    padding: 0.65rem 0.75rem;
+    font-size: 0.875rem;
+    color: inherit;
+    outline: none;
+    min-width: 5rem;
+    box-sizing: border-box;
+    transition: border-color 0.1s, background-color 0.1s;
+    box-shadow: none;
+}
+#edit-grid td input:focus {
+    border-bottom-color: var(--accent, forestgreen);
+    background: var(--table-toprank-bg, #F3F7F3);
+    box-shadow: none;
+}
+#edit-grid td:last-child {
+    padding: 0.5rem 0.75rem;
+    vertical-align: middle;
+}

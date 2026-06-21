@@ -8,6 +8,10 @@
 </div>
 {% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="/static/admin.css">
+{% endblock %}
+
 {% block content %}
 {% set admin_active = 'delete' %}
 {% include "partials/admin_nav.html" %}
@@ -25,17 +29,23 @@
     <p>No tournament data found.</p>
   {% else %}
   <form hx-post="/admin/delete-data/preview" hx-target="#delete-preview" hx-swap="innerHTML">
-    <label style="display:flex;flex-direction:column;gap:.25rem;max-width:16rem;">
-      <span class="page-label">TEG</span>
-      <select name="teg" id="delete-teg" style="padding:.5rem;" onchange="tegShowRounds()">
-        {% for teg in tegs.keys() %}
-          <option value="{{ teg }}">TEG {{ teg }}</option>
-        {% endfor %}
-      </select>
-    </label>
+    <table class="admin-settings-table">
+      <tbody>
+        <tr>
+          <th>TEG</th>
+          <td>
+            <select name="teg" id="delete-teg" onchange="tegShowRounds()">
+              {% for teg in tegs.keys() %}
+                <option value="{{ teg }}">TEG {{ teg }}</option>
+              {% endfor %}
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-    <div style="margin-top:1rem;">
-      <div style="display:flex;align-items:baseline;gap:1rem;">
+    <div style="margin-bottom:1rem;">
+      <div style="display:flex;align-items:baseline;gap:1rem;margin-bottom:.4rem;">
         <span class="page-label">Rounds to delete</span>
         <label style="display:inline-flex;gap:.35rem;align-items:center;font-weight:600;">
           <input type="checkbox" id="delete-whole-teg" onclick="tegToggleAllRounds(this)">
@@ -53,7 +63,7 @@
       {% endfor %}
     </div>
 
-    <button type="submit" class="tab-underline tab-underline--active" style="padding:.6rem 1.2rem;margin-top:1rem;">
+    <button type="submit" class="btn-action" style="margin-top:1rem;">
       Preview deletion
     </button>
   </form>

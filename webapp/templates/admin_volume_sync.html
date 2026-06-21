@@ -8,32 +8,36 @@
 </div>
 {% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="/static/admin.css">
+{% endblock %}
+
 {% block content %}
 {% set admin_active = 'sync' %}
 {% include "partials/admin_nav.html" %}
 
 <div class="section-panel">
-  <p style="margin-bottom:1rem;">
-    Selectively move files between GitHub and the app's data store
-    (<code>{{ store_label }}</code>). <strong>Pull</strong> copies GitHub → store;
-    <strong>Push</strong> copies store → GitHub. Use this when you change reference
-    CSVs for new TEGs and want to sync just those files.
+  <p style="margin-bottom:1.25rem;font-size:0.875rem;">
+    Selectively move files between GitHub and the app's data store (<code>{{ store_label }}</code>).<br>
+    <strong>Pull</strong> copies GitHub → store<br>
+    <strong>Push</strong> copies store → GitHub<br>
+    Use this when you want to selectively sync files between local store and GitHub.
   </p>
 
   {# Environment banner — the "store" means very different things on Railway vs local. #}
   {% if is_railway %}
-  <div class="data-card" style="border-left:4px solid #2e7d32;margin-bottom:1rem;">
-    <strong>🟢 Live (Railway).</strong> The store is the persistent <em>volume</em> the
-    live site reads from.
-    <div style="font-size:.8rem;opacity:.8;margin-top:.4rem;line-height:1.4;">
+  <div class="admin-callout admin-callout--live">
+    <div class="admin-callout-title">🟢 Live (Railway)</div>
+    <div class="admin-callout-detail">
+      The store is the persistent <em>volume</em> the live site reads from.
       Pull refreshes the volume from GitHub and the site updates immediately (no redeploy); it does not commit.
       Push commits the volume's copy to GitHub. Pulls back up the volume file first (restore below).
     </div>
   </div>
   {% else %}
-  <div class="data-card" style="border-left:4px solid #b00020;margin-bottom:1rem;">
-    <strong>⚠️ Local dev — the store is your git working tree, not a volume.</strong>
-    <div style="font-size:.8rem;opacity:.8;margin-top:.4rem;line-height:1.4;">
+  <div class="admin-callout admin-callout--warning">
+    <div class="admin-callout-title">⚠️ Local dev — the store is your git working tree, not a volume.</div>
+    <div class="admin-callout-detail">
       <strong>Pull</strong> overwrites your working-tree <code>data/*</code> files with GitHub's versions
       (shows up in <code>git status</code>; a backup is taken first — see Restore below).
       <strong>Push</strong> makes an out-of-band API commit to your current branch, so your local clone

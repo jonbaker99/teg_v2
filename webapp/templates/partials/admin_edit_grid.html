@@ -6,7 +6,7 @@
   <input type="hidden" name="file" value="{{ selected }}">
   <input type="hidden" name="columns" value='{{ columns | tojson }}'>
 
-  <div class="table-wrapper">
+  <div class="admin-table-scroll">
     <table class="teg-table" id="edit-grid" data-ncols="{{ columns | length }}" data-nextid="{{ rows | length }}">
       <thead>
         <tr>
@@ -23,8 +23,8 @@
   <script type="application/json" id="edit-grid-data">{{ rows | tojson }}</script>
 
   <div style="margin-top:1rem;display:flex;gap:.75rem;flex-wrap:wrap;">
-    <button type="button" class="tab-underline" style="padding:.6rem 1.2rem;" onclick="tegAddRow()">+ Add row</button>
-    <button type="submit" class="tab-underline tab-underline--active" style="padding:.6rem 1.2rem;">💾 Save changes</button>
+    <button type="button" class="btn-secondary" onclick="tegAddRow()">+ Add row</button>
+    <button type="submit" class="btn-action">💾 Save changes</button>
   </div>
 </form>
 
