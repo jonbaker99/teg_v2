@@ -17,7 +17,7 @@ data/
   round_info.csv          ← course / date / area metadata per TEG+Round
   handicaps.csv           ← player handicaps per TEG
   streaks.parquet         ← pre-computed streak counters per hole per player
-  bestball.parquet        ← best-ball competition data
+  bestball.parquet        ← pre-computed per-round bestball/worstball totals (read by the webapp for all-time ranking; rebuilt on every add/delete)
   commentary_*.parquet    ← AI-generated commentary (round/tournament summaries, streaks)
 ```
 
