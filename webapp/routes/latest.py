@@ -25,6 +25,7 @@ from teg_analysis.analysis.records import (
     identify_score_count_records,
 )
 from teg_analysis.analysis.scoring import format_vs_par
+from teg_analysis.analysis.rankings import ordinal
 from teg_analysis.analysis.handicaps import (
     get_hc,
     get_current_handicaps_formatted,
@@ -180,10 +181,10 @@ def _bestball_rank_summary(bb_all: pd.DataFrame, wb_all: pd.DataFrame,
         rank = int(row['__r'].iloc[0])
         return ('<div class="bw-rank-row">'
                 f'<span class="bw-rank-label">{label}</span>'
-                f'<span class="bw-rank-num">{format_vs_par(vp)}</span>'
-                '<span class="bw-rank-sep">ranks</span>'
-                f'<span class="bw-rank-num">{rank} / {len(d)}</span>'
-                '<span class="bw-rank-sep">all-time</span>'
+                '<span class="bw-rank-num">'
+                f'<strong>{format_vs_par(vp)}</strong>'
+                f'<span class="bw-rank-detail">({ordinal(rank)} best of {len(d)} rounds)</span>'
+                '</span>'
                 '</div>')
 
     parts = [p for p in (_one(bb_all, 'Bestball'), _one(wb_all, 'Worstball')) if p]
@@ -537,9 +538,12 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
                 total_tegs = len(ranked)
 
                 # Rank summary at the top.
-                rank_html = (f'<p class="bw-rank-summary">Best eclectic total '
-                             f'<span class="bw-rank-num">{format_vs_par(total_val)}</span> · ranks '
-                             f'<span class="bw-rank-num">{rank} / {total_tegs}</span> of all TEGs</p>')
+                rank_html = ('<div class="bw-rank-summary"><div class="bw-rank-row">'
+                             '<span class="bw-rank-label">Best eclectic</span>'
+                             '<span class="bw-rank-num">'
+                             f'<strong>{format_vs_par(total_val)}</strong>'
+                             f'<span class="bw-rank-detail">({ordinal(rank)} best of {total_tegs} TEGs)</span>'
+                             '</span></div></div>')
                 sections.append({"title": None, "table_html": rank_html, "raw": True})
 
                 # Per-player eclectic scorecard with best eclectic row at the top.

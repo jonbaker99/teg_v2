@@ -466,10 +466,10 @@ html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] span { c
    keep the default 14px treatment. */
 
 /* Lighter, tighter type scale for the dense field card */
-.bw-scorecard { font-size: 12px; }
+.bw-scorecard { font-size: 12px; width: 100%; --shape-size: 20px; }
 .bw-scorecard th,
 .bw-scorecard td {
-  min-width: 28px;
+  min-width: 32px;
   height: 30px;
   padding: 3px 4px;
 }
@@ -479,6 +479,12 @@ html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] span { c
   color: var(--color-text-secondary);
   letter-spacing: 0.02em;
 }
+/* Team rows (Bestball/Worstball/Best Eclectic): match the player rows' text
+   size so they don't read as a different, heavier scale. */
+.bw-scorecard .bw-team-row .score-cell span { font-size: 11px; }
+/* Totals columns — even width + a grounded grey fill so they read as a
+   grouped summary band rather than floating between the boxed player cells. */
+.bw-scorecard .totals { min-width: 3.25rem; }
 .bw-scorecard td.totals { font-weight: 600; background-color: #f0f0f0; }
 .bw-scorecard td.player-label { font-weight: 400; }
 .bw-scorecard .bw-team-row .player-label { font-weight: 600; }
@@ -518,30 +524,37 @@ html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] span { c
 /* Gap row between team rows and player rows */
 .bw-scorecard .bw-gap-row td { height: 10px; background-color: transparent; border: none; }
 
-/* Rank summary — small tabular block: aligned labels + metric chips */
+/* Rank summary — small tabular block: aligned label + one metric chip per
+   competition, with the score in bold mono and the rank detail lighter. */
 .bw-rank-summary {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
   margin-bottom: 1.25rem;
   font-size: 0.9rem;
 }
 .bw-rank-row {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  align-items: baseline;
+  gap: 10px;
 }
 .bw-rank-label {
   font-weight: 700;
-  min-width: 5.5rem;
+  min-width: 6rem;
 }
-.bw-rank-sep { color: var(--color-text-secondary); }
 .bw-rank-num {
-  font-family: 'Roboto Mono', monospace;
-  font-weight: 600;
   background-color: #f0f0f0;
   border-radius: 4px;
-  padding: 1px 7px;
+  padding: 3px 10px;
+}
+.bw-rank-num strong {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 700;
+}
+.bw-rank-detail {
+  margin-left: 6px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
 }
 
 /* Dark mode */
