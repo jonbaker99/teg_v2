@@ -25,7 +25,6 @@ from teg_analysis.analysis.records import (
     identify_score_count_records,
 )
 from teg_analysis.analysis.scoring import format_vs_par
-from teg_analysis.analysis.rankings import ordinal
 from teg_analysis.analysis.handicaps import (
     get_hc,
     get_current_handicaps_formatted,
@@ -183,7 +182,7 @@ def _bestball_rank_summary(bb_all: pd.DataFrame, wb_all: pd.DataFrame,
                 f'<span class="bw-rank-label">{label}</span>'
                 '<span class="bw-rank-num">'
                 f'<strong>{format_vs_par(vp)}</strong>'
-                f'<span class="bw-rank-detail">({ordinal(rank)} best of {len(d)} rounds)</span>'
+                f'<span class="bw-rank-detail">({rank} / {len(d)})</span>'
                 '</span>'
                 '</div>')
 
@@ -542,7 +541,7 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
                              '<span class="bw-rank-label">Best eclectic</span>'
                              '<span class="bw-rank-num">'
                              f'<strong>{format_vs_par(total_val)}</strong>'
-                             f'<span class="bw-rank-detail">({ordinal(rank)} best of {total_tegs} TEGs)</span>'
+                             f'<span class="bw-rank-detail">({rank} / {total_tegs})</span>'
                              '</span></div></div>')
                 sections.append({"title": None, "table_html": rank_html, "raw": True})
 

@@ -553,7 +553,9 @@ html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] span { c
 }
 .bw-rank-detail {
   margin-left: 6px;
+  font-family: 'Roboto Mono', monospace;
   font-weight: 400;
+  font-size: 0.8em;
   color: var(--color-text-secondary);
 }
 
