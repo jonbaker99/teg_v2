@@ -64,11 +64,13 @@ def calculate_player_contributions(round_data: pd.DataFrame) -> pd.DataFrame:
                 (the cells highlighted on the field scorecard); ties count for
                 every matching player.
       - solo:   of those, the holes where the player was the *only* contributor.
-      - impact: how much the bestball/worstball total would change if this
-                player's round were removed, recomputing the per-hole min/max
-                without them. Bestball impact is >= 0 (the total worsens without
-                the player); worstball impact is <= 0 (the total improves). The
-                total only moves on the player's solo holes.
+      - impact: the player's signed contribution to the bestball/worstball
+                total — recomputed as the team total *with* the player minus the
+                total *without* them (the per-hole min/max recomputed without
+                their round). Bestball impact is <= 0 (the player lowers/helps
+                the team's best score); worstball impact is >= 0 (the player
+                raises/worsens it). The total only moves on the player's solo
+                holes.
 
     Args:
         round_data: all players in one round, with Pl, Player, Hole, GrossVP.
@@ -108,11 +110,12 @@ def calculate_player_contributions(round_data: pd.DataFrame) -> pd.DataFrame:
                 wb_holes += 1
                 if (vals == hmax).sum() == 1:
                     wb_solo += 1
-            # Recompute the hole's best/worst without this player. Unchanged on
-            # tied or non-contributing holes, so this sums only the solo holes.
+            # Signed contribution = (total with player) - (total without). On
+            # tied or non-contributing holes the min/max is unchanged, so this
+            # sums only the player's solo holes.
             if len(others) > 0:
-                bb_impact += int(others.min()) - hmin   # >= 0 (worse without them)
-                wb_impact += int(others.max()) - hmax   # <= 0 (better without them)
+                bb_impact += hmin - int(others.min())   # <= 0 (player helps bestball)
+                wb_impact += hmax - int(others.max())   # >= 0 (player worsens worstball)
         rows.append({
             'Pl': pl, 'Player': name,
             'bb_holes': bb_holes, 'bb_solo': bb_solo, 'bb_impact': bb_impact,

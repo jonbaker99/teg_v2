@@ -639,6 +639,35 @@ html[data-mode="dark"] .bw-contrib-table .bw-c-impact--best { background-color: 
 html[data-mode="dark"] .bw-contrib-table .bw-c-impact--worst { background-color: #3a3a3a; border-color: #555; color: #d8d8d8; }
 html[data-mode="dark"] .bw-contrib-table .bw-c-impact--zero { color: #6a6a6a; }
 
+/* ===== BESTBALL / WORSTBALL CONTRIBUTION CHARTS =====
+   Two rows (Bestball / Worstball), each a pair of small horizontal-bar panels:
+   a Holes+Solo overlap chart and a signed-contribution chart. Charts inherit
+   the card background (transparent paper); only the labels need theming. */
+.bw-charts { margin-top: 0.25rem; }
+.bw-chart-row { margin-bottom: 1.5rem; }
+.bw-chart-row:last-child { margin-bottom: 0; }
+.bw-chart-fmt {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin: 0 0 0.4rem;
+}
+.bw-chart-fmt--best { color: #1f7a2a; }
+.bw-chart-fmt--worst { color: #555; }
+.bw-chart-pair {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.bw-chart-panel { flex: 1 1 320px; min-width: 280px; }
+.bw-chart-cap {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.02em;
+  margin-bottom: 0.25rem;
+}
+html[data-mode="dark"] .bw-chart-fmt--best { color: #8fdc97; }
+html[data-mode="dark"] .bw-chart-fmt--worst { color: #c9c9c9; }
+
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
   .scorecard-wrapper,

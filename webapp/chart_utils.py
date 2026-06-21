@@ -1,5 +1,7 @@
 """Chart utilities for the webapp — copied from streamlit/make_charts.py with st import removed."""
 
+import html as _html
+
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
@@ -354,3 +356,130 @@ def adjusted_stableford(data):
 
 def adjusted_grossvp(data):
     return data['GrossVP Cum TEG'] - data['TEG Count']
+
+
+# ---------------------------------------------------------------------------
+# Bestball / Worstball contribution charts (per-round, /latest-round)
+# ---------------------------------------------------------------------------
+
+def _fmt_signed(v: int) -> str:
+    v = int(v)
+    if v > 0:
+        return f'+{v}'
+    if v < 0:
+        return str(v)
+    return '0'
+
+
+def _contrib_base_layout(fig, show_legend: bool):
+    """Shared layout for the small horizontal contribution charts: transparent
+    background (inherits the card), faint vertical grid, player order top-down,
+    locked axes."""
+    fig.update_layout(
+        bargap=0.4,
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        font=dict(family="'Roboto Mono', monospace", size=11),
+        showlegend=show_legend,
+        legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='left', x=0,
+                    bgcolor='rgba(0,0,0,0)', borderwidth=0),
+        margin=dict(l=4, r=28, t=28 if show_legend else 10, b=24),
+    )
+    fig.update_yaxes(autorange='reversed', showgrid=False, zeroline=False,
+                     fixedrange=True)
+    fig.update_xaxes(fixedrange=True)
+    return fig
+
+
+def create_holes_overlap_chart(players, holes, solo, pale_color, solid_color):
+    """Horizontal overlapped bars per player: a pale full-length 'Holes' bar with
+    the solid 'Solo' subset overlaid from the same baseline."""
+    fig = go.Figure()
+    fig.add_bar(y=players, x=holes, orientation='h', name='Holes',
+                marker=dict(color=pale_color),
+                text=[str(int(h)) for h in holes], textposition='outside',
+                textfont=dict(color=solid_color), cliponaxis=False,
+                hovertemplate='%{y}: %{x} holes<extra></extra>')
+    fig.add_bar(y=players, x=solo, orientation='h', name='Solo',
+                marker=dict(color=solid_color),
+                hovertemplate='%{y}: %{x} solo<extra></extra>')
+    fig.update_layout(barmode='overlay')
+    fig.update_xaxes(showgrid=True, gridcolor='rgba(0,0,0,0.06)', zeroline=False,
+                     dtick=1, rangemode='tozero')
+    return _contrib_base_layout(fig, show_legend=True)
+
+
+def create_contribution_bar_chart(players, values, color):
+    """Horizontal bars per player of the signed contribution to the team total."""
+    fig = go.Figure()
+    fig.add_bar(y=players, x=values, orientation='h',
+                marker=dict(color=color),
+                text=[_fmt_signed(v) for v in values], textposition='outside',
+                textfont=dict(color=color), cliponaxis=False,
+                hovertemplate='%{y}: %{text}<extra></extra>')
+    fig.update_xaxes(showgrid=True, gridcolor='rgba(0,0,0,0.06)',
+                     zeroline=True, zerolinecolor='rgba(0,0,0,0.25)', zerolinewidth=1)
+    return _contrib_base_layout(fig, show_legend=False)
+
+
+# Colours mirror the contribution table chips (green = bestball, grey = worstball).
+_BB_PALE, _BB_SOLID = '#cfe6d3', '#2e8b40'
+_WB_PALE, _WB_SOLID = '#dadada', '#6b6b6b'
+
+
+def build_contribution_charts_html(round_data) -> str:
+    """Build the per-player bestball/worstball contribution charts as raw HTML.
+
+    Two rows (Bestball, Worstball), each with two panels: a holes/solo overlap
+    chart and a signed-contribution bar chart. Players are ordered to match the
+    field scorecard (by gross total). Each chart is emitted as a
+    ``.chart-container[data-figure]`` div that the page's Plotly renderer picks
+    up after the HTMX swap.
+    """
+    from teg_analysis.analysis.bestball import calculate_player_contributions
+
+    contrib = calculate_player_contributions(round_data)
+    if contrib is None or contrib.empty:
+        return ""
+
+    # Scorecard order: ascending total gross score.
+    order = round_data.groupby('Pl')['Sc'].sum().sort_values().index.tolist()
+    by_pl = {row['Pl']: row for _, row in contrib.iterrows()}
+    rows = [by_pl[p] for p in order if p in by_pl]
+    if not rows:
+        return ""
+
+    players = [r['Player'] for r in rows]
+    bb_holes = [int(r['bb_holes']) for r in rows]
+    bb_solo = [int(r['bb_solo']) for r in rows]
+    bb_contr = [int(r['bb_impact']) for r in rows]
+    wb_holes = [int(r['wb_holes']) for r in rows]
+    wb_solo = [int(r['wb_solo']) for r in rows]
+    wb_contr = [int(r['wb_impact']) for r in rows]
+
+    def panel(fig, cap: str) -> str:
+        j = _html.escape(fig.to_json(), quote=True)
+        return (f'<div class="bw-chart-panel"><div class="bw-chart-cap">{cap}</div>'
+                f'<div class="chart-container" data-figure="{j}" style="height:280px"></div></div>')
+
+    bb_holes_fig = create_holes_overlap_chart(players, bb_holes, bb_solo, _BB_PALE, _BB_SOLID)
+    bb_contr_fig = create_contribution_bar_chart(players, bb_contr, _BB_SOLID)
+    wb_holes_fig = create_holes_overlap_chart(players, wb_holes, wb_solo, _WB_PALE, _WB_SOLID)
+    wb_contr_fig = create_contribution_bar_chart(players, wb_contr, _WB_SOLID)
+
+    return (
+        '<div class="data-card data-card--padded"><div class="bw-charts">'
+        '<div class="bw-chart-row">'
+        '<div class="bw-chart-fmt bw-chart-fmt--best">Bestball</div>'
+        '<div class="bw-chart-pair">'
+        + panel(bb_holes_fig, 'Holes &amp; solo holes')
+        + panel(bb_contr_fig, 'Contribution to score')
+        + '</div></div>'
+        '<div class="bw-chart-row">'
+        '<div class="bw-chart-fmt bw-chart-fmt--worst">Worstball</div>'
+        '<div class="bw-chart-pair">'
+        + panel(wb_holes_fig, 'Holes &amp; solo holes')
+        + panel(wb_contr_fig, 'Contribution to score')
+        + '</div></div>'
+        '</div></div>'
+    )
