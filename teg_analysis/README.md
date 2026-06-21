@@ -82,9 +82,8 @@ teg_analysis/
                      and a bestball/worstball field card
                      (build_bestball_worstball_scorecard) — per-player
                      gross-vs-par rows with the field best/worst highlighted,
-                     plus Bestball and Worstball to-par total rows; and
-                     contribution views — a numeric table
-                     (build_bestball_contributions_table) and a CSS-bar table
+                     plus Bestball and Worstball to-par total rows; and a
+                     CSS-bar contribution table
                      (build_bestball_contribution_bars) summarising each
                      player's holes/solo-holes/shot-impact on the bestball and
                      worstball totals

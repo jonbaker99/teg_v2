@@ -40,7 +40,6 @@ from teg_analysis.display.scorecards import (
     build_round_comparison_responsive,
     build_eclectic_scorecard_table,
     build_bestball_worstball_scorecard,
-    build_bestball_contributions_table,
     build_bestball_contribution_bars,
     build_teg_eclectic_scorecard,
 )
@@ -355,25 +354,20 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                 card_html = build_bestball_worstball_scorecard(round_data)
                 sections.append({"title": None, "table_html": card_html})
 
-                # Per-player contribution breakdown below the scorecard.
-                contrib_html = build_bestball_contributions_table(round_data)
-                sections.append({"title": "Player contributions", "table_html": contrib_html})
+                # Per-player contribution breakdown (CSS bar charts) below the card.
+                bars_html = build_bestball_contribution_bars(round_data)
+                sections.append({"title": "Player contributions", "table_html": bars_html})
                 sections.append({
                     "title": None, "raw": True,
                     "table_html": (
                         "<p class='text-muted text-sm mt-2'>"
-                        "<strong>Holes</strong>: holes where the player matched the field "
-                        "best (bestball) or worst (worstball) — ties counted for each. "
-                        "<strong>Solo</strong>: of those, holes where they were the only one. "
-                        "<strong>Impact</strong>: the player's net effect on the team total, "
-                        "counting only their solo holes — bestball negative (shots they saved), "
-                        "worstball positive (shots they added).</p>"
+                        "<strong>Holes &amp; solo</strong>: holes where the player matched the "
+                        "field best (bestball) or worst (worstball), and how many of those they "
+                        "drove alone. <strong>Impact</strong>: the player's net effect on the "
+                        "team total, counting only their solo holes — bestball negative (shots "
+                        "they saved), worstball positive (shots they added).</p>"
                     ),
                 })
-
-                # Same data as bar charts below, for visual comparison.
-                bars_html = build_bestball_contribution_bars(round_data)
-                sections.append({"title": "Contribution charts", "table_html": bars_html})
                 return {"sections": sections, "scorecard_css": True}
             except Exception as e:
                 sections.append({"title": "Bestball / Worstball", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})

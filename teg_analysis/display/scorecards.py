@@ -762,66 +762,6 @@ def build_bestball_worstball_scorecard(round_data: pd.DataFrame) -> str:
     return ''.join(parts)
 
 
-def build_bestball_contributions_table(round_data: pd.DataFrame) -> str:
-    """Build the per-player contribution table for a round's bestball/worstball.
-
-    One row per player (ordered to match the field scorecard, by gross total),
-    grouped into Bestball and Worstball columns: holes contributed, of which
-    solo, and the shot impact of removing the player's round. Styled to echo the
-    field card — green for bestball, grey for worstball, mono metric chips.
-    """
-    if round_data is None or round_data.empty:
-        return "<p class='text-muted text-sm'>No data available.</p>"
-
-    from teg_analysis.analysis.bestball import calculate_player_contributions
-    contrib = calculate_player_contributions(round_data)
-    if contrib.empty:
-        return "<p class='text-muted text-sm'>No data available.</p>"
-
-    by_pl = {row['Pl']: row for _, row in contrib.iterrows()}
-    sorted_players = _get_sorted_players(round_data)
-
-    def _num(value: int) -> str:
-        return f'<span class="bw-c-num">{int(value)}</span>'
-
-    def _impact(value: int, kind: str) -> str:
-        v = int(value)
-        if v == 0:
-            return '<span class="bw-c-impact bw-c-impact--zero">–</span>'
-        return f'<span class="bw-c-impact bw-c-impact--{kind}">{_vp_label(v)}</span>'
-
-    parts = ['<table class="bw-contrib-table"><thead>']
-    parts.append(
-        '<tr class="bw-c-grouphead">'
-        '<th class="player-label" rowspan="2">Player</th>'
-        '<th class="bw-c-best" colspan="3">Bestball</th>'
-        '<th class="bw-c-worst" colspan="3">Worstball</th>'
-        '</tr>')
-    parts.append(
-        '<tr class="bw-c-subhead">'
-        '<th class="bw-c-best">Holes</th><th class="bw-c-best">Solo</th><th class="bw-c-best">Impact</th>'
-        '<th class="bw-c-worst">Holes</th><th class="bw-c-worst">Solo</th><th class="bw-c-worst">Impact</th>'
-        '</tr>')
-    parts.append('</thead><tbody>')
-
-    for code, name in sorted_players:
-        row = by_pl.get(code)
-        if row is None:
-            continue
-        parts.append('<tr>')
-        parts.append(f'<td class="player-label">{name}</td>')
-        parts.append(f'<td>{_num(row["bb_holes"])}</td>')
-        parts.append(f'<td>{_num(row["bb_solo"])}</td>')
-        parts.append(f'<td>{_impact(row["bb_impact"], "best")}</td>')
-        parts.append(f'<td>{_num(row["wb_holes"])}</td>')
-        parts.append(f'<td>{_num(row["wb_solo"])}</td>')
-        parts.append(f'<td>{_impact(row["wb_impact"], "worst")}</td>')
-        parts.append('</tr>')
-
-    parts.append('</tbody></table>')
-    return ''.join(parts)
-
-
 def build_bestball_contribution_bars(round_data: pd.DataFrame) -> str:
     """Build a player x metric table of CSS bar charts for the round's bestball /
     worstball contributions.

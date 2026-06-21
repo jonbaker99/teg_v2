@@ -579,66 +579,6 @@ html[data-mode="dark"] .bw-scorecard th:nth-child(11),
 html[data-mode="dark"] .bw-scorecard td:nth-child(11) { border-left-color: #3a3a3a; }
 html[data-mode="dark"] .bw-rank-num { background-color: #2a2a26; }
 
-/* ===== BESTBALL / WORSTBALL PLAYER CONTRIBUTIONS TABLE =====
-   Sits below the field card. Shows, per player, how many holes they drove the
-   bestball/worstball, how many of those were solo, and the shot impact of
-   removing their round. Bestball columns/chips echo the card's faint-green
-   contributor box; worstball columns/chips echo its grey box. Metrics are mono
-   chips so they read as deliberate data points. */
-.bw-contrib-table {
-  border-collapse: separate;
-  border-spacing: 0;
-  width: 100%;
-  font-size: 12px;
-}
-.bw-contrib-table th,
-.bw-contrib-table td {
-  padding: 6px 10px;
-  text-align: center;
-  white-space: nowrap;
-}
-.bw-contrib-table thead th {
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.02em;
-  color: var(--color-text-secondary);
-}
-.bw-contrib-table .bw-c-grouphead th { font-size: 12px; font-weight: 700; }
-.bw-contrib-table th.player-label,
-.bw-contrib-table td.player-label {
-  text-align: left;
-  font-weight: 600;
-}
-/* Group tints echo the scorecard contributor chips */
-.bw-contrib-table th.bw-c-best { background-color: #eaf4ec; color: #1f7a2a; }
-.bw-contrib-table th.bw-c-worst { background-color: #ededed; color: #555; }
-.bw-contrib-table .bw-c-subhead th { font-weight: 600; }
-.bw-contrib-table tbody tr + tr td { border-top: 1px solid var(--color-border, #ededed); }
-.bw-contrib-table .bw-c-num {
-  font-family: 'Roboto Mono', monospace;
-}
-/* Impact chips — faint shaded box + thin border, matching the field card */
-.bw-contrib-table .bw-c-impact {
-  display: inline-block;
-  min-width: 26px;
-  padding: 2px 8px;
-  border-radius: 4px;
-  border: 1px solid transparent;
-  font-family: 'Roboto Mono', monospace;
-  font-weight: 700;
-}
-.bw-contrib-table .bw-c-impact--best { background-color: #eaf4ec; border-color: #bcdcc1; color: #1f7a2a; }
-.bw-contrib-table .bw-c-impact--worst { background-color: #ededed; border-color: #c2c2c2; color: #444; }
-.bw-contrib-table .bw-c-impact--zero { color: #b3b3b3; font-weight: 400; }
-
-/* Dark mode */
-html[data-mode="dark"] .bw-contrib-table th.bw-c-best { background-color: #1f3a22; color: #8fdc97; }
-html[data-mode="dark"] .bw-contrib-table th.bw-c-worst { background-color: #3a3a3a; color: #d8d8d8; }
-html[data-mode="dark"] .bw-contrib-table tbody tr + tr td { border-top-color: #3a3a3a; }
-html[data-mode="dark"] .bw-contrib-table .bw-c-impact--best { background-color: #1f3a22; border-color: #2f5a35; color: #8fdc97; }
-html[data-mode="dark"] .bw-contrib-table .bw-c-impact--worst { background-color: #3a3a3a; border-color: #555; color: #d8d8d8; }
-html[data-mode="dark"] .bw-contrib-table .bw-c-impact--zero { color: #6a6a6a; }
-
 /* ===== BESTBALL / WORSTBALL CONTRIBUTION BAR TABLE =====
    Player rows x four CSS-bar columns. Format lives in two-line column titles
    (Bestball / Worstball + metric) rather than a group row. Fixed layout keeps
@@ -662,8 +602,8 @@ html[data-mode="dark"] .bw-contrib-table .bw-c-impact--zero { color: #6a6a6a; }
 }
 .bw-bars-table .bw-h-fmt { display: block; font-weight: 700; font-size: 12px; }
 .bw-bars-table .bw-h-metric { display: block; font-weight: 600; font-size: 11px; }
-.bw-bars-table th.bw-c-best { background-color: #eaf4ec; color: #1f7a2a; }
-.bw-bars-table th.bw-c-worst { background-color: #ededed; color: #555; }
+.bw-bars-table th.bw-c-best { color: #1f7a2a; }
+.bw-bars-table th.bw-c-worst { color: #555; }
 .bw-bars-table th.player-label,
 .bw-bars-table td.player-label { text-align: left; font-weight: 600; }
 .bw-bars-table th.player-label {
@@ -710,8 +650,8 @@ html[data-mode="dark"] .bw-contrib-table .bw-c-impact--zero { color: #6a6a6a; }
 .bw-bar-val.bw-bar-zero { color: #b3b3b3; font-weight: 400; }
 
 /* Dark mode */
-html[data-mode="dark"] .bw-bars-table th.bw-c-best { background-color: #1f3a22; color: #8fdc97; }
-html[data-mode="dark"] .bw-bars-table th.bw-c-worst { background-color: #3a3a3a; color: #d8d8d8; }
+html[data-mode="dark"] .bw-bars-table th.bw-c-best { color: #8fdc97; }
+html[data-mode="dark"] .bw-bars-table th.bw-c-worst { color: #d8d8d8; }
 html[data-mode="dark"] .bw-bars-table tbody tr + tr td { border-top-color: #3a3a3a; }
 html[data-mode="dark"] .bw-bar-track { background-color: #26261f; }
 html[data-mode="dark"] .bw-bar--best .bw-bar-fill--pale { background-color: #274d2c; }
