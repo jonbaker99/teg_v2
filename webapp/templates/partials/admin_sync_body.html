@@ -69,12 +69,12 @@
   </label>
 
   <div style="margin-top:1rem;display:flex;gap:.75rem;flex-wrap:wrap;">
-    <button type="button" class="tab-underline tab-underline--active" style="padding:.6rem 1.2rem;"
+    <button type="button" class="btn-action"
             hx-post="/admin/volume-sync/pull" hx-target="#sync-body" hx-swap="innerHTML"
             hx-confirm="Pull the selected files from GitHub, overwriting them in the store?">
       ⬇️ Pull selected (GitHub → store)
     </button>
-    <button type="button" class="tab-underline" style="padding:.6rem 1.2rem;"
+    <button type="button" class="btn-secondary"
             hx-post="/admin/volume-sync/push" hx-target="#sync-body" hx-swap="innerHTML"
             hx-confirm="Push the selected files from the store to GitHub?">
       ⬆️ Push selected (store → GitHub)

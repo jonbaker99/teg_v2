@@ -34,7 +34,7 @@
     <input type="hidden" name="folder" value="{{ folder }}">
     <input type="hidden" name="confirm" value="1">
     {% for n in names %}<input type="hidden" name="files" value="{{ n }}">{% endfor %}
-    <button type="button" class="tab-underline tab-underline--active" style="padding:.6rem 1.2rem;"
+    <button type="button" class="btn-action"
             hx-post="/admin/volume-sync/{{ action }}" hx-target="#sync-body" hx-swap="innerHTML">
       {% if action == 'pull' %}⬇️ Pull anyway (overwrite newer){% else %}⬆️ Push anyway (overwrite newer){% endif %}
     </button>

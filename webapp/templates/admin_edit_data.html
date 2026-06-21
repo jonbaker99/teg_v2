@@ -8,6 +8,10 @@
 </div>
 {% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="/static/admin.css">
+{% endblock %}
+
 {% block content %}
 {% set admin_active = 'edit' %}
 {% include "partials/admin_nav.html" %}
@@ -47,7 +51,7 @@
         on data updates/deletions. Use <em>Regenerate</em> to rebuild from raw data.
       </p>
       <div style="margin-bottom:1rem;">
-        <button class="tab-underline tab-underline--active" style="padding:.6rem 1.2rem;"
+        <button class="btn-action"
                 hx-post="/admin/edit-data/regenerate-status"
                 hx-target="#edit-result" hx-swap="innerHTML"
                 hx-confirm="Rebuild the status files from current tournament data?">

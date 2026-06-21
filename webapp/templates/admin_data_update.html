@@ -8,6 +8,10 @@
 </div>
 {% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="/static/admin.css">
+{% endblock %}
+
 {% block content %}
 {% set admin_active = 'add' %}
 {% include "partials/admin_nav.html" %}
@@ -29,7 +33,7 @@
       <span class="page-label">Worksheet</span>
       <input name="worksheet" value="{{ worksheet }}" style="padding:.5rem;min-width:10rem;">
     </label>
-    <button type="submit" class="tab-underline tab-underline--active" style="padding:.6rem 1.2rem;align-self:flex-end;">
+    <button type="submit" class="btn-action" style="align-self:flex-end;">
       Load &amp; preview
     </button>
     <span id="load-spinner" class="htmx-indicator" style="align-self:flex-end;">Loading…</span>

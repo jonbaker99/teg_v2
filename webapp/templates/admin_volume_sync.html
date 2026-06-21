@@ -8,6 +8,10 @@
 </div>
 {% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="/static/admin.css">
+{% endblock %}
+
 {% block content %}
 {% set admin_active = 'sync' %}
 {% include "partials/admin_nav.html" %}

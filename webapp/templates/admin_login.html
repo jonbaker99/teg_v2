@@ -8,6 +8,10 @@
 </div>
 {% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="/static/admin.css">
+{% endblock %}
+
 {% block content %}
 <div class="section-panel" style="max-width:24rem;">
   {% if error %}<p class="error" style="color:#b00020;margin-bottom:1rem;">{{ error }}</p>{% endif %}
@@ -15,7 +19,7 @@
     <label for="password" style="display:block;margin-bottom:.5rem;">Password</label>
     <input type="password" id="password" name="password" autocomplete="current-password"
            style="width:100%;padding:.6rem;font-size:1rem;margin-bottom:1rem;" autofocus>
-    <button type="submit" class="tab-underline tab-underline--active" style="padding:.6rem 1.2rem;">
+    <button type="submit" class="btn-action">
       Log in
     </button>
   </form>

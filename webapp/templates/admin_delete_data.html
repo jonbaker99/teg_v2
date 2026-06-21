@@ -8,6 +8,10 @@
 </div>
 {% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="/static/admin.css">
+{% endblock %}
+
 {% block content %}
 {% set admin_active = 'delete' %}
 {% include "partials/admin_nav.html" %}
@@ -53,7 +57,7 @@
       {% endfor %}
     </div>
 
-    <button type="submit" class="tab-underline tab-underline--active" style="padding:.6rem 1.2rem;margin-top:1rem;">
+    <button type="submit" class="btn-action" style="margin-top:1rem;">
       Preview deletion
     </button>
   </form>
