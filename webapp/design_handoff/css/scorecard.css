@@ -1,0 +1,684 @@
+/* Golf Scorecard CSS — scoped for webapp (ported from streamlit/scorecard_styles.css) */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
+/* ===== CSS VARIABLES =====
+   Declared on both the page wrapper and the table itself so scorecards render
+   styled wherever a .scorecard-table appears — inside a .scorecard-wrapper (the
+   Scorecard page) or standalone (Latest Round, Full Results). Custom properties
+   inherit to descendant cells (.score-cell, .totals, etc.). */
+.scorecard-wrapper,
+.scorecard-table,
+.scorecard-table-portrait {
+
+  /* UI colors */
+  --color-border: #e0e0e0;
+  --color-border-strong: #000;
+  --color-background: #f8f9fa;
+  --color-hover: #f5f5f5;
+  --color-text: #000;
+  --color-text-secondary: #666;
+  --color-text-inverse: #fff;
+
+  /* Spacing */
+  --spacing-cell: 6px;
+  --spacing-cell-large: 12px 8px;
+
+  /* Sizes */
+  --cell-min-width: 32px;
+  --cell-height: 32px;
+  --shape-size: 24px;
+  --font-size-base: 13px;
+  --font-size-small: 12px;
+  --font-size-large: 14px;
+  --font-size-header: 14px;
+
+  /* shapes */
+  --stableford-radius: 0px;
+
+  /* Base Colors */
+  --color-eagle: #dc1a21;
+  --color-birdie: #FCEEEF;
+  --color-par: #fff;
+  --color-bogey: #e6e5e5;
+  --color-double-bogey: #999;
+  --color-triple-bogey: #000;
+
+  /* Stableford colors */
+  --color-stableford-0: #ffffff;
+  --color-stableford-1: #ffffff;
+  --color-stableford-2: #FFF3E0;
+  --color-stableford-3: #FFD872;
+  --color-stableford-4: #F39439;
+  --color-stableford-5: #E75000;
+
+  /* Shape Sizes */
+  --shape-size-eagle: var(--shape-size);
+  --shape-size-birdie: var(--shape-size);
+  --shape-size-par: var(--shape-size);
+  --shape-size-bogey: var(--shape-size);
+  --shape-size-double-bogey: var(--shape-size);
+  --shape-size-triple-bogey: var(--shape-size);
+  --shape-size-stableford-0: var(--shape-size);
+  --shape-size-stableford-1: var(--shape-size);
+  --shape-size-stableford-2: var(--shape-size);
+  --shape-size-stableford-3: var(--shape-size);
+  --shape-size-stableford-4: var(--shape-size);
+  --shape-size-stableford-5: var(--shape-size);
+
+  /* Gross Score Types - Font Colors */
+  --color-text-eagle: #fff;
+  --color-text-birdie: #dc1a21;
+  --color-text-par: #000;
+  --color-text-bogey: #000;
+  --color-text-double-bogey: #fff;
+  --color-text-triple-bogey: #fff;
+
+  /* Gross Score Types - Border Shortcuts */
+  --border-eagle: none;
+  --border-birdie: 1px solid var(--color-text-birdie);
+  --border-par: none;
+  --border-bogey: none;
+  --border-double-bogey: none;
+  --border-triple-bogey: none;
+
+  --boxshadow-eagle: 0 0 0 1px white, 0 0 0 2px var(--color-eagle);
+
+  /* Stableford Score Types - Font Colors */
+  --color-text-stableford-0: #bcbcbc;
+  --color-text-stableford-1: #000;
+  --color-text-stableford-2: #000;
+  --color-text-stableford-3: #000;
+  --color-text-stableford-4: #fff;
+  --color-text-stableford-5: #fff;
+
+  /* Stableford Score Types - Border Shortcuts */
+  --border-stableford-0: none;
+  --border-stableford-1: none;
+  --border-stableford-2: none;
+  --border-stableford-3: none;
+  --border-stableford-4: none;
+  --border-stableford-5: none;
+}
+
+/* ===== BASE STYLES ===== */
+.scorecard-container {
+  margin: 0 auto 30px;
+  width: 100%;
+}
+
+.scorecard-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.scorecard-header p {
+  margin: 0;
+}
+
+.scorecard-title {
+  font-size: var(--font-size-header);
+  font-weight: bold;
+}
+
+.scorecard-subheader {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  margin-top: 5px;
+}
+
+/* ===== TABLE STRUCTURE ===== */
+.scorecard-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 0 auto 20px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+}
+
+.scorecard-table tr {
+    border-top: none;
+}
+
+.scorecard-table th,
+.scorecard-table td {
+  padding: var(--spacing-cell);
+  text-align: center;
+  min-width: var(--cell-min-width);
+  height: var(--cell-height);
+  vertical-align: middle;
+  border: none;
+  position: relative;
+}
+
+.scorecard-table th:first-child,
+.scorecard-table td:first-child {
+  text-align: left;
+  padding-left: 8px;
+}
+
+.scorecard-table th {
+  font-weight: bold;
+  background-color: var(--color-background);
+}
+
+.scorecard-table tbody td {
+  background-color: white;
+  /* Recreate the 2px gaps between body cells only (not header) */
+  outline: 1px solid white;
+}
+
+.scorecard-table th {
+  border-bottom: none;
+}
+
+.scorecard-table th.par-header {
+  border-bottom: 2px solid var(--color-border-strong);
+  font-weight: normal;
+  font-size: var(--font-size-small);
+}
+
+.scorecard-table tr:hover {
+  background-color: var(--color-hover);
+}
+
+/* ===== SCORE CELLS WITH SHAPES ===== */
+.score-cell {
+  position: relative;
+  background-color: white;
+}
+
+.score-cell::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+.score-cell span {
+  position: relative;
+  z-index: 2;
+}
+
+/* === GROSS SCORE STYLING === */
+
+/* Eagle (-2) */
+.score-cell[data-vs-par="-2"]::before {
+  background-color: var(--color-eagle);
+  border-radius: 50%;
+  width: var(--shape-size-eagle);
+  height: var(--shape-size-eagle);
+  border: var(--border-eagle);
+  box-shadow: var(--boxshadow-eagle);
+}
+
+.score-cell[data-vs-par="-2"] span {
+  color: var(--color-text-eagle);
+}
+
+/* Birdie (-1) */
+.score-cell[data-vs-par="-1"]::before {
+  background-color: var(--color-birdie);
+  border-radius: 50%;
+  width: var(--shape-size-birdie);
+  height: var(--shape-size-birdie);
+  border: var(--border-birdie);
+}
+
+.score-cell[data-vs-par="-1"] span {
+  color: var(--color-text-birdie);
+}
+
+/* Par (0) */
+.score-cell[data-vs-par="0"]::before {
+  background-color: var(--color-par);
+  border-radius: 0;
+  width: var(--shape-size-par);
+  height: var(--shape-size-par);
+  border: var(--border-par);
+}
+
+.score-cell[data-vs-par="0"] span {
+  color: var(--color-text-par);
+}
+
+/* Bogey (+1) */
+.score-cell[data-vs-par="1"]::before {
+  background-color: var(--color-bogey);
+  border-radius: 0;
+  width: var(--shape-size-bogey);
+  height: var(--shape-size-bogey);
+  border: var(--border-bogey);
+}
+
+.score-cell[data-vs-par="1"] span {
+  color: var(--color-text-bogey);
+}
+
+/* Double bogey (+2) */
+.score-cell[data-vs-par="2"]::before {
+  background-color: var(--color-double-bogey);
+  border-radius: 0;
+  width: var(--shape-size-double-bogey);
+  height: var(--shape-size-double-bogey);
+  border: var(--border-double-bogey);
+}
+
+.score-cell[data-vs-par="2"] span {
+  color: var(--color-text-double-bogey);
+}
+
+/* Triple bogey+ (+3 and above) */
+.score-cell[data-vs-par="3"]::before,
+.score-cell[data-vs-par="4"]::before,
+.score-cell[data-vs-par="5"]::before,
+.score-cell[data-vs-par="6"]::before,
+.score-cell[data-vs-par="7"]::before,
+.score-cell[data-vs-par="8"]::before,
+.score-cell[data-vs-par="9"]::before,
+.score-cell[data-vs-par="10"]::before {
+  background-color: var(--color-triple-bogey);
+  border-radius: 0;
+  width: var(--shape-size-triple-bogey);
+  height: var(--shape-size-triple-bogey);
+  border: var(--border-triple-bogey);
+}
+
+.score-cell[data-vs-par="3"] span,
+.score-cell[data-vs-par="4"] span,
+.score-cell[data-vs-par="5"] span,
+.score-cell[data-vs-par="6"] span,
+.score-cell[data-vs-par="7"] span,
+.score-cell[data-vs-par="8"] span,
+.score-cell[data-vs-par="9"] span,
+.score-cell[data-vs-par="10"] span {
+  color: var(--color-text-triple-bogey);
+}
+
+/* === STABLEFORD STYLING === */
+
+.score-cell[data-stableford="0"]::before {
+  background-color: var(--color-stableford-0);
+  border-radius: var(--stableford-radius);
+  width: var(--shape-size-stableford-0);
+  height: var(--shape-size-stableford-0);
+  border: var(--border-stableford-0);
+}
+
+.score-cell[data-stableford="0"] span {
+  color: var(--color-text-stableford-0);
+}
+
+.score-cell[data-stableford="1"]::before {
+  background-color: var(--color-stableford-1);
+  border-radius: var(--stableford-radius);
+  width: var(--shape-size-stableford-1);
+  height: var(--shape-size-stableford-1);
+  border: var(--border-stableford-1);
+}
+
+.score-cell[data-stableford="1"] span {
+  color: var(--color-text-stableford-1);
+}
+
+.score-cell[data-stableford="2"]::before {
+  background-color: var(--color-stableford-2);
+  border-radius: var(--stableford-radius);
+  width: var(--shape-size-stableford-2);
+  height: var(--shape-size-stableford-2);
+  border: var(--border-stableford-2);
+}
+
+.score-cell[data-stableford="2"] span {
+  color: var(--color-text-stableford-2);
+}
+
+.score-cell[data-stableford="3"]::before {
+  background-color: var(--color-stableford-3);
+  border-radius: var(--stableford-radius);
+  width: var(--shape-size-stableford-3);
+  height: var(--shape-size-stableford-3);
+  border: var(--border-stableford-3);
+}
+
+.score-cell[data-stableford="3"] span {
+  color: var(--color-text-stableford-3);
+}
+
+.score-cell[data-stableford="4"]::before {
+  background-color: var(--color-stableford-4);
+  border-radius: var(--stableford-radius);
+  width: var(--shape-size-stableford-4);
+  height: var(--shape-size-stableford-4);
+  border: var(--border-stableford-4);
+}
+
+.score-cell[data-stableford="4"] span {
+  color: var(--color-text-stableford-4);
+}
+
+.score-cell[data-stableford="5"]::before,
+.score-cell[data-stableford="6"]::before,
+.score-cell[data-stableford="7"]::before,
+.score-cell[data-stableford="8"]::before {
+  background-color: var(--color-stableford-5);
+  border-radius: var(--stableford-radius);
+  width: var(--shape-size-stableford-5);
+  height: var(--shape-size-stableford-5);
+  border: var(--border-stableford-5);
+}
+
+.score-cell[data-stableford="5"] span,
+.score-cell[data-stableford="6"] span,
+.score-cell[data-stableford="7"] span,
+.score-cell[data-stableford="8"] span {
+  color: var(--color-text-stableford-5);
+}
+
+/* ===== SPECIAL COLUMNS ===== */
+.scorecard-table td.label-column,
+.scorecard-table td.round-label,
+.scorecard-table td.player-label {
+  text-align: left;
+  padding-left: 8px;
+  padding-right: 16px;
+  font-weight: 400;
+  white-space: nowrap;
+  max-width: 150px;
+}
+
+.totals {
+  font-weight: bold;
+  background-color: var(--color-background);
+}
+
+.front-back-divider {
+  border-right: 0;
+}
+
+/* ===== SECTION HEADERS ===== */
+.section-header {
+  font-weight: bold;
+  font-size: var(--font-size-large);
+  padding: 10px;
+  text-align: center;
+}
+
+/* ===== TITLE / TABLE JOINT CENTERING =====
+   For .sc-landscape blocks that contain {section-title + table} pairs, make the
+   whole block fit-content so the title's left edge aligns with the table's left
+   edge (both centred together as a unit). The combined single-round card uses
+   .sc-landscape.data-card, which is excluded so it stays full-width. */
+.sc-landscape:not(.data-card) {
+  width: fit-content;
+  margin: 0 auto;
+}
+
+/* ===== ECLECTIC SCORECARD — background-shaded to-par cells =====
+   Uses data-evp (eclectic vs par) so the colouring is independent of the
+   regular score-cell shape system (data-vs-par / data-stableford). */
+.eclectic-scorecard .eclectic-cell {
+  text-align: center;
+  min-width: var(--cell-min-width);
+  height: var(--cell-height);
+  padding: var(--spacing-cell);
+  vertical-align: middle;
+  background-color: white;
+}
+.eclectic-scorecard .eclectic-cell span {
+  font-size: 12px;
+  font-family: 'Roboto Mono', monospace;
+}
+
+/* Eagle (-2): dark red bg, white text */
+.eclectic-scorecard .eclectic-cell[data-evp="-2"] { background-color: var(--color-eagle); }
+.eclectic-scorecard .eclectic-cell[data-evp="-2"] span { color: #fff; }
+
+/* Birdie (-1): pale red bg, dark red text */
+.eclectic-scorecard .eclectic-cell[data-evp="-1"] { background-color: var(--color-birdie); }
+.eclectic-scorecard .eclectic-cell[data-evp="-1"] span { color: var(--color-text-birdie); }
+
+/* Par (0 = E): light grey bg, black text */
+.eclectic-scorecard .eclectic-cell[data-evp="0"] { background-color: var(--color-bogey); }
+.eclectic-scorecard .eclectic-cell[data-evp="0"] span { color: var(--color-text-bogey); }
+
+/* Bogey+ (1 and above): white, default text */
+
+/* Dark-mode overrides */
+html[data-mode="dark"] .eclectic-scorecard .eclectic-cell { background-color: #1d1d1a; }
+html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="-2"] { background-color: var(--color-eagle); }
+html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="-2"] span { color: var(--color-text-eagle); }
+html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="-1"] { background-color: var(--color-birdie); }
+html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="-1"] span { color: var(--color-text-birdie); }
+html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] { background-color: var(--color-bogey); }
+html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] span { color: var(--color-text-bogey); }
+
+/* ===== BESTBALL / WORSTBALL FIELD CARD + TEG ECLECTIC CARD =====
+   Team rows (Bestball/Worstball/Best Eclectic) sit at the top and use the
+   standard score-cell shapes (data-vs-par). A thin gap row separates them from
+   the player rows below. Player rows use font-only colour to show who had the
+   field best (green) or worst (red) on each hole — no background fills. */
+.bw-scorecard .bw-cell {
+  text-align: center;
+  min-width: var(--cell-min-width);
+  height: var(--cell-height);
+  padding: var(--spacing-cell);
+  vertical-align: middle;
+  background-color: white;
+}
+.bw-scorecard .bw-cell span {
+  font-size: 12px;
+  font-family: 'Roboto Mono', monospace;
+  color: #aaa; /* neutral holes de-emphasised */
+}
+/* Font-only player highlights — no background */
+.bw-scorecard .bw-cell.bw-player-best span { color: #14661a; font-weight: 700; }
+.bw-scorecard .bw-cell.bw-player-worst span { color: #9b1515; font-weight: 700; }
+/* Team row label bold */
+.bw-scorecard .bw-team-row .player-label { font-weight: 700; }
+/* Gap row between team rows and player rows */
+.bw-scorecard .bw-gap-row td { height: 10px; background-color: transparent; border: none; }
+
+/* Rank summary — prominent, mono numbers */
+.bw-rank-summary {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+.bw-rank-num {
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 700;
+}
+
+/* Dark mode */
+html[data-mode="dark"] .bw-scorecard .bw-cell { background-color: #1d1d1a; }
+html[data-mode="dark"] .bw-scorecard .bw-cell span { color: #555; }
+html[data-mode="dark"] .bw-scorecard .bw-cell.bw-player-best span { color: #7fd487; }
+html[data-mode="dark"] .bw-scorecard .bw-cell.bw-player-worst span { color: #f87171; }
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .scorecard-wrapper,
+  .scorecard-table {
+    --font-size-base: 12px;
+    --font-size-small: 11px;
+    --spacing-cell: 4px;
+    --cell-min-width: 24px;
+    --cell-height: 24px;
+    --shape-size: 24px;
+  }
+
+  .label-column { min-width: 60px; }
+}
+
+/* ===== PORTRAIT (holes as rows) — mobile orientation =====
+   The landscape table is the only thing desktop/iPad ever render: portrait is
+   display:none until the phone breakpoint, so the desktop view is untouched.
+   Both orientations reuse the same .score-cell shape contract above. */
+.sc-portrait { display: none; }
+
+@media (max-width: 640px) {
+  .sc-landscape { display: none; }
+  .sc-portrait { display: block; }
+}
+
+/* The .sc-landscape wrapper makes the first section title a first-child, which
+   would lose the global "* + .section-title" top margin — restore it so the
+   desktop layout is byte-for-byte unchanged. */
+.sc-landscape > .section-title:first-child { margin-top: 1.75rem; }
+
+.scorecard-table-portrait {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  font-family: 'Roboto Mono', monospace;
+  font-size: var(--font-size-base);
+}
+.scorecard-table-portrait th,
+.scorecard-table-portrait td {
+  padding: var(--spacing-cell);
+  text-align: center;
+  height: var(--cell-height);
+  vertical-align: middle;
+  position: relative;
+  background-color: white;
+}
+.scorecard-table-portrait thead th {
+  background-color: var(--color-background);
+  font-weight: bold;
+  font-size: var(--font-size-small);
+  border-bottom: 2px solid var(--color-border-strong);
+}
+/* Hole + PAR columns: left-aligned, narrow, pinned while wide tables scroll */
+.scorecard-table-portrait .hole-header,
+.scorecard-table-portrait .hole-label {
+  text-align: left;
+  padding-left: 10px;
+  width: 44px;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background-color: white;
+}
+.scorecard-table-portrait thead .hole-header { background-color: var(--color-background); }
+.scorecard-table-portrait .par-header,
+.scorecard-table-portrait .par-cell {
+  width: 40px;
+  color: var(--color-text-secondary);
+  font-weight: normal;
+  position: sticky;
+  left: 44px;
+  z-index: 2;
+  background-color: white;
+}
+.scorecard-table-portrait thead .par-header { background-color: var(--color-background); }
+.scorecard-table-portrait .hole-label { font-weight: bold; color: var(--color-text); }
+/* Subtotal rows (OUT / IN / TOTAL) */
+.scorecard-table-portrait .totals-row td,
+.scorecard-table-portrait .totals { background-color: var(--color-background); font-weight: bold; }
+.scorecard-table-portrait .totals-row.front-back-divider td { border-bottom: 1px solid var(--color-border); }
+.scorecard-table-portrait .grand-total td { border-top: 2px solid var(--color-border-strong); }
+
+/* Horizontal-scroll wrapper for the wide (whole-TEG / field) portrait tables */
+.sc-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+/* Gross / Stableford metric toggle (portrait multi-table views) — pure CSS */
+.sc-metric-toggle > input { display: none; }
+.sc-mseg {
+  display: flex;
+  gap: 4px;
+  margin: 0 0 12px;
+  padding: 3px;
+  background: var(--color-background);
+  border-radius: 8px;
+}
+.sc-mseg label {
+  flex: 1;
+  text-align: center;
+  padding: 8px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  -webkit-user-select: none;
+  user-select: none;
+}
+/* Class-based selectors (not #ids) so multiple toggles can coexist on a page —
+   e.g. one card per round on Full Results. */
+.sc-metric-toggle > input.scm-gross:checked ~ .sc-mseg label.lbl-gross,
+.sc-metric-toggle > input.scm-pts:checked ~ .sc-mseg label.lbl-pts {
+  background: white;
+  color: var(--color-text);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+.sc-pane-pts { display: none; }
+.sc-metric-toggle > input.scm-pts:checked ~ .sc-pane-gross { display: none; }
+.sc-metric-toggle > input.scm-pts:checked ~ .sc-pane-pts { display: block; }
+
+/* ===== DARK-MODE TOKENS =====
+   Inert until html[data-mode="dark"] is set by the (separate) app-wide
+   dark-mode foundation. No effect on the current light render on any device. */
+html[data-mode="dark"] .scorecard-wrapper,
+html[data-mode="dark"] .scorecard-table,
+html[data-mode="dark"] .scorecard-table-portrait {
+  --color-border: #2e2e29;
+  --color-border-strong: #6a695b;
+  --color-background: #222019;
+  --color-hover: #26261f;
+  --color-text: #ececea;
+  --color-text-secondary: #9a9a90;
+  --color-text-inverse: #0e0e0c;
+  --color-eagle: #e23a40;
+  --color-birdie: #3a201f;
+  --color-par: #1d1d1a;
+  --color-bogey: #33322b;
+  --color-double-bogey: #55554a;
+  --color-triple-bogey: #d8d6cb;
+  --color-text-eagle: #ffffff;
+  --color-text-birdie: #f08a8d;
+  --color-text-par: #ececea;
+  --color-text-bogey: #ececea;
+  --color-text-double-bogey: #ececea;
+  --color-text-triple-bogey: #15140f;
+  --boxshadow-eagle: 0 0 0 1px #1d1d1a, 0 0 0 2px var(--color-eagle);
+  --color-stableford-0: #1d1d1a;
+  --color-stableford-1: #1d1d1a;
+  --color-stableford-2: #3a2f1c;
+  --color-stableford-3: #6b5320;
+  --color-stableford-4: #b9831f;
+  --color-stableford-5: #d98c1f;
+  --color-text-stableford-0: #6a695b;
+  --color-text-stableford-1: #ececea;
+  --color-text-stableford-2: #ececea;
+  --color-text-stableford-3: #15140f;
+  --color-text-stableford-4: #15140f;
+  --color-text-stableford-5: #15140f;
+}
+/* Cell/shape backgrounds follow the dark surface */
+html[data-mode="dark"] .scorecard-table tbody td,
+html[data-mode="dark"] .scorecard-table-portrait td,
+html[data-mode="dark"] .scorecard-table-portrait .hole-label,
+html[data-mode="dark"] .scorecard-table-portrait .par-cell,
+html[data-mode="dark"] .score-cell { background-color: #1d1d1a; }
+html[data-mode="dark"] .scorecard-table tbody td { outline-color: #1d1d1a; }
+html[data-mode="dark"] .sc-mseg label.lbl-gross,
+html[data-mode="dark"] .sc-mseg label.lbl-pts { color: var(--color-text-secondary); }
+html[data-mode="dark"] .sc-metric-toggle > input.scm-gross:checked ~ .sc-mseg label.lbl-gross,
+html[data-mode="dark"] .sc-metric-toggle > input.scm-pts:checked ~ .sc-mseg label.lbl-pts { background: #1d1d1a; color: var(--color-text); }
+
+/* ===== STABLEFORD ZERO AS 'X' ===== */
+.score-cell[data-stableford="0"] span {
+    visibility: hidden;
+}
+
+.score-cell[data-stableford="0"] span::after {
+    content: "x";
+    visibility: visible;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--color-text-stableford-0);
+    font-weight: 400;
+}

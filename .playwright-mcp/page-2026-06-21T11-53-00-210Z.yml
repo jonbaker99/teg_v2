@@ -1,0 +1,463 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e4]:
+      - link "The El Golfo" [ref=e5] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e6]:
+        - generic [ref=e8] [cursor=pointer]: TEG History ▾
+        - generic [ref=e10] [cursor=pointer]: Latest TEG ▾
+        - generic [ref=e12] [cursor=pointer]: Records & PBs ▾
+        - generic [ref=e14] [cursor=pointer]: Scoring analysis ▾
+        - generic [ref=e16] [cursor=pointer]: Scorecards ▾
+        - button "Toggle light or dark mode" [ref=e17] [cursor=pointer]:
+          - generic [ref=e18]: contrast
+  - generic [ref=e19]:
+    - generic [ref=e22]: Player Profile
+    - main [ref=e25]:
+      - generic [ref=e27]:
+        - link "All Players" [ref=e28] [cursor=pointer]:
+          - /url: /player
+        - link "Alex BAKER" [ref=e29] [cursor=pointer]:
+          - /url: /player/AB
+        - link "David MULLIN" [ref=e30] [cursor=pointer]:
+          - /url: /player/DM
+        - link "Graham PATTERSON" [ref=e31] [cursor=pointer]:
+          - /url: /player/GP
+        - link "Gregg WILLIAMS" [ref=e32] [cursor=pointer]:
+          - /url: /player/GW
+        - link "Henry MELLER" [ref=e33] [cursor=pointer]:
+          - /url: /player/HM
+        - link "John PATTERSON" [ref=e34] [cursor=pointer]:
+          - /url: /player/JP
+        - link "Jon BAKER" [ref=e35] [cursor=pointer]:
+          - /url: /player/JB
+        - link "Stuart NEUMANN" [ref=e36] [cursor=pointer]:
+          - /url: /player/SN
+      - generic [ref=e37]:
+        - heading "Jon BAKER ★ ★ ★ ★ ★ ★ ★ ★" [level=1] [ref=e38]:
+          - text: Jon BAKER
+          - generic [ref=e39]:
+            - generic [ref=e40]: ★
+            - generic [ref=e41]: ★
+            - generic [ref=e42]: ★
+            - generic [ref=e43]: ★
+            - generic [ref=e44]: ★
+            - generic [ref=e45]: ★
+            - generic [ref=e46]: ★
+            - generic [ref=e47]: ★
+        - paragraph [ref=e48]: "First: TEG 2 (2009) · Latest: TEG 18 (2025)"
+      - generic [ref=e49]:
+        - button "Overview" [ref=e50] [cursor=pointer]
+        - button "Rounds" [ref=e51] [cursor=pointer]
+        - button "Scoring" [ref=e52] [cursor=pointer]
+        - button "Records & Streaks" [ref=e53] [cursor=pointer]
+      - generic [ref=e55]:
+        - generic [ref=e56]:
+          - generic [ref=e57]:
+            - generic [ref=e58]:
+              - generic [ref=e59]: TEGs Played
+              - generic [ref=e60]:
+                - generic [ref=e61]: "17"
+                - generic [ref=e62]: 1st =
+            - generic [ref=e63]:
+              - generic [ref=e64]: Total Trophies
+              - generic [ref=e65]:
+                - generic [ref=e66]: "8"
+                - generic [ref=e67]: 2nd
+            - generic [ref=e68]:
+              - generic [ref=e69]: Avg Gross vs Par
+              - generic [ref=e70]:
+                - generic [ref=e71]: "+20.5"
+                - generic [ref=e72]: 2nd
+            - generic [ref=e73]:
+              - generic [ref=e74]: Avg Stableford
+              - generic [ref=e75]:
+                - generic [ref=e76]: "36.1"
+                - generic [ref=e77]: 4th
+          - generic [ref=e78]:
+            - generic "No holes in one yet" [ref=e79]:
+              - generic [ref=e80]: Holes in One
+              - generic [ref=e82]: "0"
+            - generic "Bletchingley (TEG 4 | Rd 4 | Hole 8)" [ref=e83]:
+              - generic [ref=e84]: Eagles
+              - generic [ref=e85]:
+                - generic [ref=e86]: "1"
+                - generic [ref=e87]: 1st =
+            - generic [ref=e88]:
+              - generic [ref=e89]: Birdies
+              - generic [ref=e90]:
+                - generic [ref=e91]: "45"
+                - generic [ref=e92]: 2nd
+        - heading "Trophy Cabinet" [level=2] [ref=e93]
+        - generic [ref=e94]:
+          - generic [ref=e95]:
+            - generic [ref=e96]:
+              - generic [ref=e97]: TEG Trophies
+              - generic [ref=e98]:
+                - text: "4"
+                - generic [ref=e99]: 1st =
+              - generic [ref=e100]:
+                - generic [ref=e101]: ★
+                - generic [ref=e102]: ★
+                - generic [ref=e103]: ★
+                - generic [ref=e104]: ★
+            - generic [ref=e105]:
+              - generic [ref=e106]: Green Jackets
+              - generic [ref=e107]:
+                - text: "4"
+                - generic [ref=e108]: 2nd
+              - generic [ref=e109]:
+                - generic [ref=e110]: ★
+                - generic [ref=e111]: ★
+                - generic [ref=e112]: ★
+                - generic [ref=e113]: ★
+            - generic [ref=e114]:
+              - generic [ref=e115]: Wooden Spoons
+              - generic [ref=e116]:
+                - text: "2"
+                - generic [ref=e117]: 4th =
+          - paragraph [ref=e119]: Including 3 Trophy / Jacket doubles (1st =)
+        - heading "Career Highlights" [level=2] [ref=e120]
+        - generic [ref=e121]:
+          - generic [ref=e122]:
+            - generic [ref=e123]: Best Course
+            - generic [ref=e124]: Littlestone
+            - generic [ref=e125]: avg +14.5 over 2 rounds
+          - generic [ref=e126]:
+            - generic [ref=e127]: Worst Course
+            - generic [ref=e128]: Estoril
+            - generic [ref=e129]: avg +25.5 over 2 rounds
+          - generic [ref=e130]:
+            - generic [ref=e131]: Best Round
+            - generic [ref=e132]: "+8"
+            - generic [ref=e133]: TEG 13 R3 · Littlestone
+          - generic [ref=e134]:
+            - generic [ref=e135]: Best TEG
+            - generic [ref=e136]: "+50"
+            - generic [ref=e137]: TEG 13
+        - heading "TEG Records and Worsts Held" [level=2] [ref=e138]
+        - generic [ref=e139]:
+          - generic [ref=e140]:
+            - generic [ref=e141]: Best gross TEG
+            - generic [ref=e142]: "+50"
+            - generic [ref=e143]: TEG 13 (Kent, England, 2020)
+          - generic [ref=e144]:
+            - generic [ref=e145]:
+              - text: Longest birdies streak
+              - generic [ref=e146]: shared
+            - generic [ref=e147]: 2 holes
+            - generic [ref=e148]: T17 R4 H4 to T17 R4 H5
+          - generic [ref=e149]:
+            - generic [ref=e150]: Longest pars or better streak
+            - generic [ref=e151]: 6 holes
+            - generic [ref=e152]: T10 R2 H5 to T10 R2 H10
+          - generic [ref=e153]:
+            - generic [ref=e154]: Most birdies in a round
+            - generic [ref=e155]: "4"
+            - generic [ref=e156]: TEG 14 Rd 4 (Prince's - Shore / Dunes, Nov 2021)
+        - paragraph [ref=e157]: No outright TEG worsts held.
+        - heading "TEG Results" [level=2] [ref=e158]
+        - table [ref=e161]:
+          - rowgroup [ref=e162]:
+            - row "TEG Year Gross VP Net/Stab Trophy Rank Gross Rank Result" [ref=e163]:
+              - columnheader "TEG" [ref=e164]
+              - columnheader "Year" [ref=e165]
+              - columnheader "Gross VP" [ref=e166]
+              - columnheader "Net/Stab" [ref=e167]
+              - columnheader "Trophy Rank" [ref=e168]
+              - columnheader "Gross Rank" [ref=e169]
+              - columnheader "Result" [ref=e170]
+          - rowgroup [ref=e171]:
+            - row "18 2025 +92 126 pts 5th 3rd Spoon" [ref=e172]:
+              - cell "18" [ref=e173]
+              - cell "2025" [ref=e174]
+              - cell "+92" [ref=e175]
+              - cell "126 pts" [ref=e176]
+              - cell "5th" [ref=e177]:
+                - generic [ref=e178]: 5th
+              - cell "3rd" [ref=e179]
+              - cell "Spoon" [ref=e180]:
+                - generic [ref=e181]: Spoon
+            - row "17 2024 +67 166 pts 1st 1st Double" [ref=e182]:
+              - cell "17" [ref=e183]
+              - cell "2024" [ref=e184]
+              - cell "+67" [ref=e185]
+              - cell "166 pts" [ref=e186]
+              - cell "1st" [ref=e187]:
+                - generic [ref=e188]: 1st
+              - cell "1st" [ref=e189]:
+                - generic [ref=e190]: 1st
+              - cell "Double" [ref=e191]:
+                - generic [ref=e192]: Double
+            - row "16 2023 +93 131 pts 4th 3rd" [ref=e193]:
+              - cell "16" [ref=e194]
+              - cell "2023" [ref=e195]
+              - cell "+93" [ref=e196]
+              - cell "131 pts" [ref=e197]
+              - cell "4th" [ref=e198]
+              - cell "3rd" [ref=e199]
+              - cell [ref=e200]
+            - row "15 2022 +92 131 pts 4th 2nd" [ref=e201]:
+              - cell "15" [ref=e202]
+              - cell "2022" [ref=e203]
+              - cell "+92" [ref=e204]
+              - cell "131 pts" [ref=e205]
+              - cell "4th" [ref=e206]
+              - cell "2nd" [ref=e207]
+              - cell [ref=e208]
+            - row "14 2021 +75 125 pts 4th 2nd Spoon" [ref=e209]:
+              - cell "14" [ref=e210]
+              - cell "2021" [ref=e211]
+              - cell "+75" [ref=e212]
+              - cell "125 pts" [ref=e213]
+              - cell "4th" [ref=e214]:
+                - generic [ref=e215]: 4th
+              - cell "2nd" [ref=e216]
+              - cell "Spoon" [ref=e217]:
+                - generic [ref=e218]: Spoon
+            - row "13 2020 +50 158 pts 1st 1st Double" [ref=e219]:
+              - cell "13" [ref=e220]
+              - cell "2020" [ref=e221]
+              - cell "+50" [ref=e222]
+              - cell "158 pts" [ref=e223]
+              - cell "1st" [ref=e224]:
+                - generic [ref=e225]: 1st
+              - cell "1st" [ref=e226]:
+                - generic [ref=e227]: 1st
+              - cell "Double" [ref=e228]:
+                - generic [ref=e229]: Double
+            - row "12 2019 +63 145 pts 4th 1st Jacket" [ref=e230]:
+              - cell "12" [ref=e231]
+              - cell "2019" [ref=e232]
+              - cell "+63" [ref=e233]
+              - cell "145 pts" [ref=e234]
+              - cell "4th" [ref=e235]
+              - cell "1st" [ref=e236]:
+                - generic [ref=e237]: 1st
+              - cell "Jacket" [ref=e238]:
+                - generic [ref=e239]: Jacket
+            - row "11 2018 +70 143 pts 1st 1st Double" [ref=e240]:
+              - cell "11" [ref=e241]
+              - cell "2018" [ref=e242]
+              - cell "+70" [ref=e243]
+              - cell "143 pts" [ref=e244]
+              - cell "1st" [ref=e245]:
+                - generic [ref=e246]: 1st
+              - cell "1st" [ref=e247]:
+                - generic [ref=e248]: 1st
+              - cell "Double" [ref=e249]:
+                - generic [ref=e250]: Double
+            - row "10 2017 +63 157 pts 4th 2nd" [ref=e251]:
+              - cell "10" [ref=e252]
+              - cell "2017" [ref=e253]
+              - cell "+63" [ref=e254]
+              - cell "157 pts" [ref=e255]
+              - cell "4th" [ref=e256]
+              - cell "2nd" [ref=e257]
+              - cell [ref=e258]
+            - row "9 2016 +77 146 pts 4th 2nd" [ref=e259]:
+              - cell "9" [ref=e260]
+              - cell "2016" [ref=e261]
+              - cell "+77" [ref=e262]
+              - cell "146 pts" [ref=e263]
+              - cell "4th" [ref=e264]
+              - cell "2nd" [ref=e265]
+              - cell [ref=e266]
+            - row "8 2015 +83 131 pts 3rd 2nd" [ref=e267]:
+              - cell "8" [ref=e268]
+              - cell "2015" [ref=e269]
+              - cell "+83" [ref=e270]
+              - cell "131 pts" [ref=e271]
+              - cell "3rd" [ref=e272]
+              - cell "2nd" [ref=e273]
+              - cell [ref=e274]
+            - row "7 2014 +71 -13 5th 4th" [ref=e275]:
+              - cell "7" [ref=e276]
+              - cell "2014" [ref=e277]
+              - cell "+71" [ref=e278]
+              - cell "-13" [ref=e279]
+              - cell "5th" [ref=e280]
+              - cell "4th" [ref=e281]
+              - cell [ref=e282]
+            - row "6 2013 +89 +5 2nd 2nd" [ref=e283]:
+              - cell "6" [ref=e284]
+              - cell "2013" [ref=e285]
+              - cell "+89" [ref=e286]
+              - cell "+5" [ref=e287]
+              - cell "2nd" [ref=e288]
+              - cell "2nd" [ref=e289]
+              - cell [ref=e290]
+            - row "5 2012 +84 -4 2nd 2nd" [ref=e291]:
+              - cell "5" [ref=e292]
+              - cell "2012" [ref=e293]
+              - cell "+84" [ref=e294]
+              - cell "-4" [ref=e295]
+              - cell "2nd" [ref=e296]
+              - cell "2nd" [ref=e297]
+              - cell [ref=e298]
+            - row "4 2011 +113 +17 2nd 4th" [ref=e299]:
+              - cell "4" [ref=e300]
+              - cell "2011" [ref=e301]
+              - cell "+113" [ref=e302]
+              - cell "+17" [ref=e303]
+              - cell "2nd" [ref=e304]
+              - cell "4th" [ref=e305]
+              - cell [ref=e306]
+            - row "3 2010 +94 -18 1st 3rd Trophy" [ref=e307]:
+              - cell "3" [ref=e308]
+              - cell "2010" [ref=e309]
+              - cell "+94" [ref=e310]
+              - cell "-18" [ref=e311]
+              - cell "1st" [ref=e312]:
+                - generic [ref=e313]: 1st
+              - cell "3rd" [ref=e314]
+              - cell "Trophy" [ref=e315]:
+                - generic [ref=e316]: Trophy
+            - row "2 2009 +97 +13 2nd 4th" [ref=e317]:
+              - cell "2" [ref=e318]
+              - cell "2009" [ref=e319]
+              - cell "+97" [ref=e320]
+              - cell "+13" [ref=e321]
+              - cell "2nd" [ref=e322]
+              - cell "4th" [ref=e323]
+              - cell [ref=e324]
+        - separator [ref=e325]
+        - heading "Career Trend" [level=2] [ref=e326]
+        - generic [ref=e327]:
+          - generic [ref=e328]:
+            - button "Gross vs Par" [ref=e329] [cursor=pointer]
+            - button "Stableford" [ref=e330] [cursor=pointer]
+          - generic [ref=e333]:
+            - generic:
+              - generic:
+                - img:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: TEG 2
+                        - generic:
+                          - generic: TEG 3
+                        - generic:
+                          - generic: TEG 4
+                        - generic:
+                          - generic: TEG 5
+                        - generic:
+                          - generic: TEG 6
+                        - generic:
+                          - generic: TEG 7
+                        - generic:
+                          - generic: TEG 8
+                        - generic:
+                          - generic: TEG 9
+                        - generic:
+                          - generic: TEG 10
+                        - generic:
+                          - generic: TEG 11
+                        - generic:
+                          - generic: TEG 12
+                        - generic:
+                          - generic: TEG 13
+                        - generic:
+                          - generic: TEG 14
+                        - generic:
+                          - generic: TEG 15
+                        - generic:
+                          - generic: TEG 16
+                        - generic:
+                          - generic: TEG 17
+                        - generic:
+                          - generic: TEG 18
+                      - generic:
+                        - generic:
+                          - generic: "0"
+                        - generic:
+                          - generic: "5"
+                        - generic:
+                          - generic: "10"
+                        - generic:
+                          - generic: "15"
+                        - generic:
+                          - generic: "20"
+                        - generic:
+                          - generic: "25"
+                        - generic:
+                          - generic: "30"
+                - img:
+                  - generic:
+                    - generic:
+                      - generic: Gross vs Par (avg per round)
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: "Avg: +20.7"
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: 4th
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: 3rd
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: 4th
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: 2nd
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: 2nd
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: 4th
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: 2nd
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: 2nd
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: 2nd
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: 1st
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: 1st
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: 1st
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: 2nd
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: 2nd
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: 3rd
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: 1st
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic: 3rd
+                - img
+  - img [ref=e337]

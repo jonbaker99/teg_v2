@@ -1,0 +1,190 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e4]:
+      - link "The El Golfo" [ref=e5] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e6]:
+        - generic [ref=e8] [cursor=pointer]: TEG History ▾
+        - generic [ref=e10] [cursor=pointer]: Latest TEG ▾
+        - generic [ref=e12] [cursor=pointer]: Records & PBs ▾
+        - generic [ref=e14] [cursor=pointer]: Scoring analysis ▾
+        - generic [ref=e16] [cursor=pointer]: Scorecards ▾
+        - button "Toggle light or dark mode" [ref=e17] [cursor=pointer]:
+          - generic [ref=e18]: contrast
+  - generic [ref=e19]:
+    - generic [ref=e21]:
+      - generic [ref=e22]: History
+      - heading "Full Results" [level=1] [ref=e23]
+    - main [ref=e26]:
+      - generic [ref=e27]:
+        - combobox [ref=e28] [cursor=pointer]:
+          - option "TEG 2"
+          - option "TEG 3"
+          - option "TEG 4"
+          - option "TEG 5"
+          - option "TEG 6"
+          - option "TEG 7"
+          - option "TEG 8"
+          - option "TEG 9"
+          - option "TEG 10"
+          - option "TEG 11"
+          - option "TEG 12"
+          - option "TEG 13"
+          - option "TEG 14"
+          - option "TEG 15"
+          - option "TEG 16"
+          - option "TEG 17"
+          - option "TEG 18" [selected]
+        - generic [ref=e29]:
+          - button "TEG Trophy" [ref=e30] [cursor=pointer]
+          - button "Green Jacket" [ref=e31] [cursor=pointer]
+          - button "Scorecards" [ref=e32] [cursor=pointer]
+          - button "Report" [ref=e33] [cursor=pointer]
+      - generic [ref=e34]:
+        - heading "TEG Trophy Final Leaderboard" [level=2] [ref=e35]
+        - paragraph [ref=e36]:
+          - text: "Champion:"
+          - strong [ref=e37]: Alex BAKER
+          - text: "| Wooden spoon:"
+          - strong [ref=e38]: Jon BAKER
+        - table [ref=e41]:
+          - rowgroup [ref=e42]:
+            - row "Rank Player R1 R2 R3 R4 Total" [ref=e43]:
+              - columnheader "Rank" [ref=e44]
+              - columnheader "Player" [ref=e45]
+              - columnheader "R1" [ref=e46]
+              - columnheader "R2" [ref=e47]
+              - columnheader "R3" [ref=e48]
+              - columnheader "R4" [ref=e49]
+              - columnheader "Total" [ref=e50]
+          - rowgroup [ref=e51]:
+            - row "1 Alex BAKER 46 41 44 38 169" [ref=e52]:
+              - cell "1" [ref=e53]
+              - cell "Alex BAKER" [ref=e54]:
+                - link "Alex BAKER" [ref=e55] [cursor=pointer]:
+                  - /url: /player/AB
+              - cell "46" [ref=e56]
+              - cell "41" [ref=e57]
+              - cell "44" [ref=e58]
+              - cell "38" [ref=e59]
+              - cell "169" [ref=e60]
+            - row "2 John PATTERSON 34 42 43 42 161" [ref=e61]:
+              - cell "2" [ref=e62]
+              - cell "John PATTERSON" [ref=e63]:
+                - link "John PATTERSON" [ref=e64] [cursor=pointer]:
+                  - /url: /player/JP
+              - cell "34" [ref=e65]
+              - cell "42" [ref=e66]
+              - cell "43" [ref=e67]
+              - cell "42" [ref=e68]
+              - cell "161" [ref=e69]
+            - row "3 Gregg WILLIAMS 31 42 43 44 160" [ref=e70]:
+              - cell "3" [ref=e71]
+              - cell "Gregg WILLIAMS" [ref=e72]:
+                - link "Gregg WILLIAMS" [ref=e73] [cursor=pointer]:
+                  - /url: /player/GW
+              - cell "31" [ref=e74]
+              - cell "42" [ref=e75]
+              - cell "43" [ref=e76]
+              - cell "44" [ref=e77]
+              - cell "160" [ref=e78]
+            - row "4 David MULLIN 32 35 44 38 149" [ref=e79]:
+              - cell "4" [ref=e80]
+              - cell "David MULLIN" [ref=e81]:
+                - link "David MULLIN" [ref=e82] [cursor=pointer]:
+                  - /url: /player/DM
+              - cell "32" [ref=e83]
+              - cell "35" [ref=e84]
+              - cell "44" [ref=e85]
+              - cell "38" [ref=e86]
+              - cell "149" [ref=e87]
+            - row "5 Jon BAKER 30 39 28 29 126" [ref=e88]:
+              - cell "5" [ref=e89]
+              - cell "Jon BAKER" [ref=e90]:
+                - link "Jon BAKER" [ref=e91] [cursor=pointer]:
+                  - /url: /player/JB
+              - cell "30" [ref=e92]
+              - cell "39" [ref=e93]
+              - cell "28" [ref=e94]
+              - cell "29" [ref=e95]
+              - cell "126" [ref=e96]
+        - 'heading "TEG Trophy race: TEG 18" [level=3] [ref=e97]'
+        - paragraph [ref=e98]: Cumulative stableford points | Higher = better
+        - generic [ref=e100]:
+          - generic:
+            - generic:
+              - img:
+                - generic:
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: "0"
+                      - generic:
+                        - generic: "20"
+                      - generic:
+                        - generic: "40"
+                      - generic:
+                        - generic: "60"
+                      - generic:
+                        - generic: "80"
+                      - generic:
+                        - generic: "100"
+                      - generic:
+                        - generic: "120"
+                      - generic:
+                        - generic: "140"
+                      - generic:
+                        - generic: "160"
+              - img:
+                - generic:
+                  - generic [ref=e107]:
+                    - generic [ref=e109]: AB
+                    - generic [ref=e116]: DM
+                    - generic [ref=e123]: GW
+                    - generic [ref=e130]: JB
+                    - generic [ref=e137]: JP
+                  - generic:
+                    - generic: Cumulative Stableford
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: "AB: 169"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: "DM: 149"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: "GW: 160"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: "JB: 126"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: "JP: 161"
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: R1
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: R2
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: R3
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic: R4
+              - img
+        - paragraph [ref=e143]: "Choose chart type:"
+        - group "Chart type" [ref=e144]:
+          - button "Standard" [ref=e145] [cursor=pointer]
+          - button "Adjusted scale" [ref=e146] [cursor=pointer]
+          - button "Ranking" [ref=e147] [cursor=pointer]
+  - img [ref=e148]

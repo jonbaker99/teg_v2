@@ -1,0 +1,1491 @@
+/* Base structural CSS — all colors/fonts via custom properties */
+
+/* ── Typography ── */
+body {
+    font-family: var(--font-body), sans-serif;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading), sans-serif;
+}
+
+/* ── Page ── */
+.page-bg {
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Navigation ── */
+.nav {
+    background-color: var(--nav-bg);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    z-index: 50;
+}
+.nav-brand {
+    color: var(--nav-active-text);
+    font-weight: 700;
+    font-size: 1.625rem;
+    text-decoration: none;
+    font-family: var(--font-heading), sans-serif;
+}
+.nav-link {
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--nav-text);
+    text-decoration: none;
+    transition: background-color 0.15s;
+}
+.nav-link:hover {
+    background-color: var(--nav-hover-bg);
+}
+.nav-link.active {
+    background-color: var(--nav-active-bg);
+    color: var(--nav-active-text);
+}
+
+/* ── Headings & Text ── */
+.heading {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+.subheading {
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+.text-secondary {
+    color: var(--text-secondary);
+}
+.text-muted {
+    color: var(--text-muted);
+}
+
+/* ── Cards ── */
+.card {
+    background-color: var(--bg-card);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    padding: 1rem;
+}
+
+/* ── Tables ──
+   .teg-table is the DEFAULT table style. Tables that need a significantly
+   different layout (e.g. heatmap-table, scorecard) should NOT carry this
+   class — own their rules in a dedicated stylesheet so there is no
+   specificity battle. Applying both .teg-table and a custom class risks
+   the custom rules losing to .teg-table's element-level selectors. */
+.teg-table {
+    /* Content-sized like the Streamlit datawrapper tables (not stretched to 100%) */
+    width: auto;
+    max-width: 100%;
+    border-collapse: collapse;
+    font-size: var(--table-font-size, 0.875rem);
+    font-family: var(--font-body), sans-serif;
+}
+.teg-table thead th {
+    background-color: var(--table-header-bg);
+    padding: 0.75rem;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: var(--table-header-border-width, 2px) solid var(--table-header-border);
+    white-space: nowrap;
+}
+.teg-table thead th.col-rank,
+.teg-table thead th.col-num {
+    text-align: center;
+}
+.teg-table tbody td {
+    padding: 0.75rem;
+    border-bottom: var(--table-cell-border-width, 1px) solid var(--table-cell-border);
+    white-space: nowrap;
+}
+.teg-table tbody tr:nth-child(even) {
+    background-color: var(--table-stripe-bg, transparent);
+}
+.teg-table tbody tr:hover {
+    background-color: var(--table-hover-bg);
+    color: var(--table-hover-text, inherit);
+}
+.teg-table tbody tr.top-rank {
+    background-color: var(--table-toprank-bg);
+    color: var(--table-toprank-text, inherit);
+    font-weight: 600;
+}
+.teg-table .total {
+    font-weight: 700;
+}
+/* Record-holder cell (Personal Bests summary) — the overall best in a measure
+   column: pale-green background, forest-green bold text. td-level background sits
+   above any row stripe/hover, so it stays visible. */
+.teg-table tbody td.pb-record {
+    background-color: #e6f4ea;
+    color: #1b5e20;
+    font-weight: 600;
+}
+
+/* ── Player ranking table (conditional formatting) ──
+   Compact, centred columns that fit within the page width. Rank 1 gets a green
+   pill (white text); the worst rank a pale-red pill (dark red text). Mirrors the
+   Streamlit datawrapper player-ranking-table. */
+.player-ranking-table td,
+.player-ranking-table th,
+.teg-table.player-ranking-table td,
+.teg-table.player-ranking-table th  {
+    text-align: center;
+    /* Compact, slightly larger type than the default table; rows kept a touch
+       shorter than the leaderboards so the eye can scan down a column. */
+    padding: 0.5rem 0.2rem;
+    width: 32px;
+    min-width: 20px;
+    max-width: 38px;
+    white-space: nowrap;
+    font-size: 0.825rem;
+}
+.player-ranking-table td:first-child,
+.player-ranking-table th:first-child {
+    text-align: left;
+    width: auto;
+    max-width: none;
+}
+/* The shaded rank "pill" is the span itself — a fixed-size inline-flex box,
+   centred horizontally by the cell's text-align:center and with the number
+   flex-centred inside it. Keeping the box and number as one element guarantees
+   they stay centred together (both horizontally and vertically), matching the
+   plain numbers in the same column. */
+.player-ranking-table td.first-place span,
+.player-ranking-table td.last-place span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 15%;
+    font-weight: 700;
+    vertical-align: middle;
+}
+.player-ranking-table td.first-place span { background: green; color: #ffffff; }
+.player-ranking-table td.last-place span { background: #FAE9E8; color: #8b0000; }
+
+/* ── Position / rankings summary table ──
+   The summary beneath the ranking grid (Ave, TEGs, 1st–6th). Wider, airier
+   columns than the dense ranking grid above it, centred numerics with a
+   left-aligned player column. */
+.position-table td,
+.position-table th,
+.teg-table.position-table td,
+.teg-table.position-table th {
+    text-align: center;
+    padding: 0.5rem 0.5rem;
+    min-width: 2.75rem;
+    font-size: 0.875rem;
+}
+.position-table td:first-child,
+.position-table th:first-child {
+    text-align: left;
+    min-width: 3rem;
+}
+
+/* ── History table (TEG History page) ──
+   Capped width, fixed layout for four equal columns. Names are inline by
+   default; JS detects if any name wraps and adds .names-break to force all
+   names to stack — so the layout is always consistent. */
+.history-table {
+    width: 100%;
+    table-layout: fixed;
+}
+.history-table .teg-label {
+    display: block;
+    font-weight: 400;
+}
+.history-table .area-label {
+    display: block;
+    margin-top: -0.15rem;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+}
+.history-table .teg-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.55em;
+}
+.history-table .teg-cell .teg-flag.fi {
+    flex-shrink: 0;
+    align-self: stretch;
+    width: 1.3em;
+    border-radius: 2px;
+}
+.history-table .teg-text {
+    min-width: 0;
+}
+/* Emphasise the main trophy winner (first name column) */
+.history-table tbody td:nth-child(2) {
+    font-weight: 700;
+}
+/* All cells allow wrapping (TEG col can break between label and year) */
+.history-table tbody td {
+    white-space: normal;
+}
+/* Default: inline-block container (measurable height) with inline first/last */
+.history-table .player-name {
+    display: inline-block;
+}
+.history-table .player-name .first {
+    display: inline;
+}
+/* JS adds .names-break when any name wraps; all names then stack */
+.history-table.names-break .player-name .first,
+.history-table.names-break .player-name .last {
+    display: block;
+}
+
+/* ── Multi-round scorecards (Full Results → Scorecards tab) ──
+   Each round is a .sc-round section holding a responsive scorecard block
+   (landscape gross + stableford on desktop, portrait toggle on phone). Lives
+   here (always-loaded) rather than scorecard.css (HTMX-injected) so the
+   between-round spacing reliably applies. */
+/* Generous space + a subtle rule between consecutive rounds. */
+.sc-round + .sc-round {
+    margin-top: 3rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--table-cell-border, #e0e0e0);
+}
+
+.records-table {
+    /* Content-sized like the Streamlit datawrapper tables (not stretched to 100%) */
+    width: auto;
+    max-width: 100%;
+    border-collapse: collapse;
+    font-size: var(--table-font-size, 0.875rem);
+    font-family: var(--font-body), sans-serif;
+}
+.records-table thead th {
+    background-color: var(--table-header-bg);
+    padding: 0.75rem;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: var(--table-header-border-width, 2px) solid var(--table-header-border);
+}
+.records-table tbody td {
+    padding: 0.75rem;
+    border-bottom: var(--table-cell-border-width, 1px) solid var(--table-cell-border);
+}
+
+/* Borderless records variant — editorial style, no grid lines */
+.records-table--borderless {
+    width: auto;
+}
+.records-table--borderless thead th {
+    background-color: transparent;
+    border-bottom: none;
+    /* Serif headers like the Streamlit records tables (Lora 16px/600), even though
+       the data cells stay mono — editorial records look. */
+    font-family: var(--font-heading), serif;
+    font-weight: 600;
+    font-size: 1rem;
+}
+.records-table--borderless tbody td {
+    border-bottom: none;
+    padding: 0.5rem 0.75rem;
+    white-space: nowrap;
+}
+.records-table--borderless .col-rank {
+    width: auto;
+}
+.records-table tbody tr:nth-child(even) {
+    background-color: var(--table-stripe-bg, transparent);
+}
+.records-table tbody tr:hover {
+    background-color: var(--table-hover-bg);
+}
+/* Borderless: no stripes, highlight entire record group on hover */
+.records-table--borderless tbody tr:nth-child(even) {
+    background-color: transparent;
+}
+.records-table--borderless tbody:hover tr {
+    background-color: var(--table-hover-bg, #f5f5f5);
+}
+
+/* ── Column alignment classes ── */
+.col-rank {
+    text-align: center;
+    width: 2rem;
+}
+.col-num {
+    /* Content-sized numeric column (table is width:auto). min-width keeps numbers
+       from jittering between datasets; no % width now the table isn't 100%-wide. */
+    text-align: center;
+    min-width: 3.5rem;
+}
+.col-player {
+    text-align: left;
+}
+
+/* ── Buttons / Tabs ── */
+.tab-btn {
+    background-color: var(--btn-inactive-bg);
+    color: var(--btn-inactive-text);
+    border: 1px solid var(--select-border);
+    border-radius: var(--btn-border-radius);
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+}
+.tab-btn:hover {
+    background-color: var(--table-hover-bg, var(--btn-inactive-bg));
+    color: var(--text-primary);
+}
+.tab-btn:focus-visible {
+    outline: 2px solid var(--select-focus-ring, var(--accent));
+    outline-offset: 2px;
+}
+.tab-btn--active,
+.tab-btn--active:hover {
+    background-color: var(--btn-active-bg);
+    color: var(--btn-active-text);
+    border-color: var(--btn-active-bg);
+}
+
+/* Underline tab variant */
+.tab-underline {
+    background: transparent;
+    color: var(--btn-inactive-text);
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s;
+}
+.tab-underline:hover {
+    color: var(--text-primary);
+    border-bottom-color: var(--text-muted);
+}
+.tab-underline:focus-visible {
+    outline: 2px solid var(--select-focus-ring, var(--accent));
+    outline-offset: 2px;
+}
+.tab-underline--active,
+.tab-underline--active:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+/* Alias — canonical active class is .tab-underline--active; .active kept as a
+   safety net for any stray markup. Templates use the canonical class. */
+.tab-underline.active,
+.tab-underline.active:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+/* Legacy aliases — use .tab-btn / .tab-btn--active instead */
+.btn-active {
+    background-color: var(--btn-active-bg);
+    color: var(--btn-active-text);
+    border: 1px solid var(--btn-active-bg);
+    border-radius: var(--btn-border-radius);
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+.btn-inactive {
+    background-color: var(--btn-inactive-bg);
+    color: var(--btn-inactive-text);
+    border: 1px solid var(--select-border);
+    border-radius: var(--btn-border-radius);
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+.btn-inactive:hover {
+    background-color: var(--table-hover-bg, var(--btn-inactive-bg));
+    color: var(--text-primary);
+}
+
+/* ── Selects ── */
+.teg-select {
+    background-color: var(--select-bg);
+    border: 1px solid var(--select-border);
+    border-radius: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+.teg-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--select-focus-ring);
+}
+
+/* Theme switcher */
+.theme-select {
+    background-color: transparent;
+    border: 1px solid var(--nav-text-muted, var(--nav-text));
+    color: var(--nav-text);
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+.theme-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--select-focus-ring, var(--accent));
+}
+.theme-select option {
+    background-color: var(--nav-bg);
+    color: var(--nav-text);
+}
+
+/* ── Error box (always red, all themes) ── */
+.error-box {
+    background-color: #fef2f2;
+    color: #b91c1c;
+    padding: 1rem;
+    border-radius: 0.375rem;
+}
+
+/* ── Spinner ── */
+.accent-spinner {
+    color: var(--accent);
+}
+
+/* ── HTMX indicator ── */
+.htmx-indicator {
+    display: none;
+}
+.htmx-request .htmx-indicator,
+.htmx-request.htmx-indicator {
+    display: inline-block;
+}
+
+/* ── Stat Cards ── */
+.stat-card {
+    background-color: var(--stat-card-bg, var(--bg-card));
+    border: 1px solid var(--stat-card-border, var(--table-cell-border));
+    border-radius: var(--card-radius);
+    padding: 0.75rem 1rem;
+    text-align: center;
+}
+.stat-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--stat-card-value-color, var(--text-primary));
+    line-height: 1.2;
+}
+.stat-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--stat-card-label-color, var(--text-muted));
+    margin-top: 0.125rem;
+}
+/* ── Headline metric cards ──
+   Two lines per card: the metric title on top, then the value with a small,
+   de-emphasised rank sitting on the same baseline beside it. A 3-column grid
+   keeps every card the same width; both metric rows hold exactly three cards. */
+.metric-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.6rem;
+}
+@media (max-width: 720px) {
+    .metric-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.metric-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    min-height: 5rem;
+    background-color: var(--stat-card-bg, var(--bg-card));
+    border: 1px solid var(--stat-card-border, var(--table-cell-border));
+    border-radius: var(--card-radius);
+    padding: 0.7rem 0.6rem;
+    text-align: center;
+}
+.metric-label {
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 1.15;
+    color: var(--stat-card-label-color, var(--text-muted));
+}
+.metric-figure {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+}
+.metric-value {
+    font-size: 1.7rem;
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--stat-card-value-color, var(--text-primary));
+}
+.metric-rank {
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: var(--text-muted);
+}
+/* Cards with hover detail (Eagles / Holes in One locations). */
+.metric-card--info {
+    cursor: help;
+}
+.metric-card--info .metric-label {
+    text-decoration: underline dotted;
+    text-underline-offset: 2px;
+    text-decoration-color: var(--text-muted);
+}
+@media (max-width: 540px) {
+    .metric-grid  { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .metric-value { font-size: 1.35rem; }
+    .metric-rank  { font-size: 1rem; }
+}
+
+/* ── Trophy stars (font characters, not emoji) ──
+   Gold ★ per TEG Trophy, green ★ per Green Jacket. Used both after the player
+   name in the page heading (large) and inside each honour box (small). */
+.trophy-star {
+    display: inline-block;
+    line-height: 1;
+}
+.trophy-star--gold  { color: #f5b301; }
+.trophy-star--green { color: var(--accent); }
+.title-stars {
+    margin-left: 0.55rem;
+    white-space: nowrap;
+}
+.title-stars .trophy-star {
+    /* font-size: 1.35rem; */
+    vertical-align: 0.05em;
+}
+.title-stars-gap {
+    display: inline-block;
+    width: 0.5rem;
+}
+
+/* ── Trophy Cabinet ──
+   A single panel, not separate cards. A three-column honour row, each box
+   ordered name → wins → stars. The wooden-spoon rank uses muted colour so it
+   reads as a dubious distinction rather than a win. */
+.trophy-cabinet {
+    background-color: var(--bg-card);
+    border: 1px solid var(--table-cell-border);
+    border-radius: var(--card-radius);
+    padding: 1rem 1.25rem 0.85rem;
+}
+.trophy-honours {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem 1.5rem;
+}
+.trophy-honour {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+.trophy-honour-label {
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}
+.trophy-honour-count {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--text-primary);
+}
+.trophy-honour-rank {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--text-muted);
+}
+.trophy-honour-stars {
+    min-height: 0.95rem;
+    line-height: 1;
+}
+.trophy-honour-stars .trophy-star {
+    /* font-size: 0.8rem; */
+    margin-right: 0.02rem;
+}
+.trophy-doubles {
+    margin-top: 0.75rem;
+    padding-top: 0.65rem;
+    border-top: 1px dotted var(--table-cell-border);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+/* ── Badges ── */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    background-color: var(--badge-bg, var(--accent));
+    color: var(--badge-text, #ffffff);
+    vertical-align: middle;
+    margin-left: 0.375rem;
+}
+.badge-muted {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    background-color: var(--badge-muted-bg, var(--table-header-bg));
+    color: var(--badge-muted-text, var(--text-muted));
+    vertical-align: middle;
+    margin-left: 0.375rem;
+}
+
+/* ── Detail cards — Career Highlights and TEG Records (unified style) ──
+   Both sections show: an eyebrow label, a main heading value, and an optional
+   sub-line. They are semantically identical so they share one class family.
+   The 'shared' tag is a small pill appended to the eyebrow for jointly-held
+   records. */
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.65rem;
+}
+/* Fixed two-up grid (Career Highlights) — gives long course names room to sit
+   on one line rather than wrapping in a narrow four-across cell. */
+.detail-grid--halves {
+    grid-template-columns: repeat(2, 1fr);
+}
+@media (max-width: 540px) {
+    .detail-grid--halves { grid-template-columns: 1fr; }
+}
+.detail-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    background-color: var(--bg-card);
+    border: 1px solid var(--table-cell-border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--card-radius);
+    padding: 0.65rem 0.85rem;
+}
+.detail-card--bad {
+    border-left-color: #cc2b2b;
+}
+.detail-eyebrow {
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}
+.detail-heading {
+    font-family: var(--font-heading), serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+.detail-sub {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+.detail-shared {
+    display: inline-block;
+    margin-left: 0.3rem;
+    padding: 0.02rem 0.35rem;
+    border-radius: 9999px;
+    background-color: var(--table-header-bg);
+    color: var(--text-muted);
+    font-size: 0.5rem;
+    letter-spacing: 0.04em;
+    vertical-align: middle;
+}
+
+/* ── Player profile in-page heading ──
+   The player name sits on the page itself (after the pills) rather than in the
+   shared page-title-outer banner, giving profile pages a distinct identity feel. */
+.player-profile-heading {
+    margin: 1rem 0 1.25rem;
+}
+.player-profile-name {
+    font-family: var(--font-heading), serif;
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.15;
+}
+
+/* ── Player TEG-results table — win/loss colour pills ──
+   Mirrors the .player-ranking-table first/last-place pills, but the result
+   labels (Trophy/Jacket/Double) are wider than a rank number, so the pill is
+   padded auto-width rather than a fixed square. */
+.player-results-table td.result-win span,
+.player-results-table td.result-loss span {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+.player-results-table td.result-win span { background: green; color: #ffffff; }
+.player-results-table td.result-loss span { background: #FAE9E8; color: #8b0000; }
+
+/* ── Player roster (Player Profiles landing) ── */
+.player-roster {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+}
+.player-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    background-color: var(--bg-card);
+    border: 1px solid var(--table-cell-border);
+    border-radius: var(--card-radius);
+    padding: 1rem 1.1rem 1.1rem;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+.player-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+}
+.player-card-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.player-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 9999px;
+    background-color: var(--table-toprank-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+.player-card-id {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+}
+.player-card-name {
+    font-family: var(--font-heading), serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.player-card-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+.player-card-stars {
+    display: block;
+    line-height: 1;
+    margin: 0.1rem 0 0;
+}
+.player-card-stars .trophy-star {
+    font-size: 0.9rem;
+    margin-right: 0.01rem;
+}
+.player-card-stars-gap {
+    display: inline-block;
+    width: 0.25rem;
+}
+.player-card-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    padding: 0.65rem 0;
+    border-top: 1px dotted var(--table-cell-border);
+    border-bottom: 1px dotted var(--table-cell-border);
+}
+.pc-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+.pc-stat-val {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.pc-stat-lbl {
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-top: 0.1rem;
+}
+.player-card-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+/* Badges sit inline in flowing text elsewhere (hence their left margin); inside
+   a card's own badge row that margin is unwanted. */
+.player-card-badges .badge,
+.player-card-badges .badge-muted {
+    margin-left: 0;
+}
+.player-card-cta {
+    margin-top: auto;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+/* ── Divider ── */
+.divider {
+    border: none;
+    border-top: 1px solid var(--divider-color, var(--table-cell-border));
+    margin: 1rem 0;
+}
+.divider--dotted {
+    border: none;
+    border-top: 1px dotted var(--divider-color, var(--table-cell-border));
+    margin: 1.5rem 0;
+}
+
+/* ── Page Footer ── */
+.page-footer {
+    background-color: var(--footer-bg, var(--nav-bg));
+    color: var(--footer-text, var(--nav-text));
+    text-align: center;
+    padding: 0.75rem 1rem;
+    font-size: 0.75rem;
+    margin-top: auto;
+}
+
+/* ── Page Title (default = Style A: Roboto Mono label + Lora title) ── */
+.page-title-area {
+    padding: 1.5rem 0 0.75rem 0;
+}
+.page-title-area .page-label {
+    display: block;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+}
+.page-title-area .page-title {
+    font-family: var(--font-heading), serif;
+    /* Prominent serif title like the Streamlit st.title heading */
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1.2;
+}
+.page-title-area .page-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+/* ── Style B: All caps title ── */
+body.ts-b .page-title-area .page-title {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 1.2rem;
+}
+
+/* ── Style C: Breadcrumb (label inline, › separator) ── */
+body.ts-c .page-title-area {
+    display: flex;
+    align-items: baseline;
+    gap: 0;
+}
+body.ts-c .page-title-area .page-label {
+    margin-bottom: 0;
+    font-size: 0.875rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--text-muted);
+}
+body.ts-c .page-title-area .page-label::after {
+    content: ' ›';
+    font-family: sans-serif;
+    color: #ccc;
+    margin: 0 0.4rem;
+}
+body.ts-c .page-title-area .page-title {
+    display: inline;
+    font-size: 1.375rem;
+}
+
+/* ── Style D: Left border rule ── */
+body.ts-d .page-title-area {
+    border-left: 3px solid var(--accent);
+    padding-left: 1rem;
+}
+body.ts-d .page-title-area .page-label {
+    color: var(--accent);
+}
+
+/* ── Style E: Underline rule below title ── */
+body.ts-e .page-title-area .page-title {
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--accent);
+}
+
+/* ── Style E2: Underline rule below title (on-page variant — positioned on panel/card) ── */
+body.ts-e2 .page-title-area .page-title {
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--accent);
+}
+
+/* ── Style C1: Forest green block, white text ── */
+body.ts-c1 .page-title-area {
+    background: #228B22;
+    padding: 0.875rem 2.5rem;
+}
+body.ts-c1 .page-title-area .page-label {
+    color: rgba(255,255,255,0.65);
+}
+body.ts-c1 .page-title-area .page-title {
+    color: #ffffff;
+}
+
+/* ── Style C2: White block, forest green text ── */
+body.ts-c2 .page-title-area {
+    background: #ffffff;
+    padding: 0.875rem 2.5rem;
+    border-bottom: 1px solid #e8e8e8;
+}
+body.ts-c2 .page-title-area .page-label {
+    color: #228B22;
+    opacity: 0.8;
+}
+body.ts-c2 .page-title-area .page-title {
+    color: #228B22;
+}
+
+/* ── Style C3: Grey block, dark text ── */
+body.ts-c3 .page-title-area {
+    background: #e8e5e0;
+    padding: 0.875rem 2.5rem;
+    border-bottom: 1px solid #d0cdc8;
+}
+body.ts-c3 .page-title-area .page-label {
+    color: #666;
+}
+body.ts-c3 .page-title-area .page-title {
+    color: #111;
+}
+
+/* ── Page Title Outer — matches content-wrapper width ── */
+.page-title-outer {
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+/* Page panel — transparent wrapper; themed in layered themes */
+.page-panel {
+    flex-grow: 1;
+}
+
+/* Content wrapper — default "best practice" content width.
+   Use body.layout-wide (pass wide=True from the route) for pages that
+   genuinely need more horizontal space (ranking grids, heatmaps, etc.). */
+.content-wrapper {
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+/* Wide layout override */
+body.layout-wide .page-title-outer,
+body.layout-wide .content-wrapper {
+    max-width: 1280px;
+}
+
+/* C1/C2/C3 — full viewport width, flush below navbar */
+body.ts-c1 .page-title-outer,
+body.ts-c2 .page-title-outer,
+body.ts-c3 .page-title-outer {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+}
+
+/* F1/F2/F3/F4/F5 — band caps the white card (card-top layout) */
+body.ts-f1 .page-title-area,
+body.ts-f2 .page-title-area,
+body.ts-f3 .page-title-area,
+body.ts-f4 .page-title-area,
+body.ts-f5 .page-title-area {
+    margin-top: 1.5rem;
+    padding: 0.875rem 2.5rem;
+    border-radius: 0.25rem 0.25rem 0 0;
+}
+body.ts-f1 .main-content,
+body.ts-f2 .main-content,
+body.ts-f3 .main-content,
+body.ts-f4 .main-content,
+body.ts-f5 .main-content {
+    margin-top: 0 !important;
+    border-radius: 0 0 0.25rem 0.25rem !important;
+}
+/* F1: green band */
+body.ts-f1 .page-title-area { background: #228B22; }
+body.ts-f1 .page-title-area .page-label { color: rgba(255,255,255,0.65); }
+body.ts-f1 .page-title-area .page-title  { color: #ffffff; }
+/* F2: white band, green text */
+body.ts-f2 .page-title-area { background: #ffffff; border-bottom: 1px solid #e8e8e8; }
+body.ts-f2 .page-title-area .page-label { color: #228B22; opacity: 0.8; }
+body.ts-f2 .page-title-area .page-title  { color: #228B22; }
+/* F3: grey band */
+body.ts-f3 .page-title-area { background: #e8e5e0; border-bottom: 1px solid #d0cdc8; }
+body.ts-f3 .page-title-area .page-label { color: #666; }
+body.ts-f3 .page-title-area .page-title  { color: #111; }
+/* F4: grey band, green text, inline layout (title left, category right) */
+body.ts-f4 .page-title-area {
+    background: #e8e5e0;
+    border-bottom: 1px solid #d0cdc8;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+body.ts-f4 .page-title-area .page-label {
+    order: 2;
+    color: #228B22;
+    opacity: 0.8;
+    margin-bottom: 0;
+}
+body.ts-f4 .page-title-area .page-title {
+    order: 1;
+    color: #111;
+}
+
+/* F5: green card, white title, light green category (inline layout) */
+body.ts-f5 .page-title-area {
+    background: #228B22;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+body.ts-f5 .page-title-area .page-label {
+    order: 2;
+    color: #7ec87e;
+    margin-bottom: 0;
+}
+body.ts-f5 .page-title-area .page-title {
+    order: 1;
+    color: #ffffff;
+}
+
+
+/* ── Section Title (in-page, Option D style) ── */
+.section-title {
+    font-family: var(--font-heading), serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 1rem 0;
+    line-height: 1.3;
+}
+/* Breathing room above any section title that follows other content, so
+   stacked sections within a panel get a consistent gap without per-template
+   margins. (First section in a panel has no preceding sibling → no gap.) */
+* + .section-title {
+    margin-top: 1.75rem;
+}
+
+/* ── Layout utilities ── */
+.section-gap {
+    margin-bottom: 1.5rem;
+}
+.section-gap-sm {
+    margin-bottom: 1rem;
+}
+
+/* ── Structural hierarchy hooks ──
+   These semantic wrappers OWN the page's spacing rhythm so individual
+   templates don't hand-roll margins. Layout intent that legitimately varies
+   per row (justify-between, items-center vs items-end, gap overrides) is still
+   expressed with Tailwind utilities on the element, which override the
+   defaults below. Do NOT add margin utilities (mb-, mt-, my-) to these wrappers —
+   the spacing is centralised here. */
+
+/* Section level */
+.section-nav {
+    /* in-page primary tab bar (row of .tab-underline) */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    /* A tab bar reads as a strong horizontal rule (active underline), so the
+       panel/heading below needs clear separation — more than a controls row. */
+    margin-bottom: 2rem;
+}
+.section-controls {
+    /* selector / filter rows (dropdowns, inputs) */
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+/* A controls row sitting directly under the tab bar shouldn't double the gap. */
+.section-nav + .section-controls {
+    margin-top: -0.5rem;
+}
+.toggle-group {
+    /* sub-toggle rows inside a panel (score-type, metric, variant, etc.).
+       Owns the gap below it (before the data it controls) so templates don't
+       hand-roll mb-* utilities. For a one-off, kill it with inline
+       style="margin-bottom:0" (see scoring_birdies). */
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+/* A toggle row that follows a data block (e.g. the chart-variant toggle sitting
+   between a results table and its chart) gets breathing room above too. */
+.data-card + .toggle-group {
+    margin-top: 1.5rem;
+}
+.section-panel {
+    /* HTMX swap-target / content container */
+}
+
+/* Data-display level */
+.chart-container {
+    /* Plotly target div — consolidates the universal inline width.
+       Height stays inline because it legitimately varies per chart. */
+    width: 100%;
+}
+/* Horizontal-scroll wrapper for wide tables — keeps them from overflowing the
+   page. Replaces the repeated inline style="overflow-x: auto;". */
+.table-wrapper {
+    overflow-x: auto;
+}
+/* Compact numeric input (e.g. "top N" selectors). Replaces inline width:5rem. */
+.input-numeric {
+    width: 5rem;
+}
+
+/* Inline data links */
+.text-link {
+    /* forward-compat hook for inline links within data output */
+}
+
+/* ── Data card — styled by layered themes; transparent by default ── */
+.data-card {
+    /* no default styling — themed in clean-layered and future layered themes */
+}
+/* Consistent gap between stacked data blocks (chart card + table card, etc.)
+   without per-template margins. */
+.data-card + .data-card {
+    margin-top: 1.5rem;
+}
+/* A padded chart card needs a clearer break before the block beneath it
+   (e.g. the /results race chart sitting above its champion + table) — the
+   plot's baseline labels sit low in the card, so 1.5rem reads as cramped.
+   More specific than the rule above; must follow it to win on source order. */
+.data-card--padded + .data-card {
+    margin-top: 2.5rem;
+}
+/* A chart/title heading that follows a data block gets breathing room too. */
+.data-card + .subheading,
+.data-card + .chart-description {
+    margin-top: 1.5rem;
+}
+
+/* ── Card header — styled via body class ch-X ── */
+.card-header {
+    display: none; /* hidden by default and when ch-ch0 */
+}
+
+/* CH1 — Grey bar, mono caps (sits visually on top of data-card) */
+body.ch-ch1 .card-header {
+    display: block;
+    background: #e2dfda;
+    padding: 0.4rem 1rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #555;
+    border-radius: 0.25rem 0.25rem 0 0;
+    margin-top: 2rem;
+    margin-bottom: 0;
+}
+body.ch-ch1 .card-header:first-child { margin-top: 0; }
+body.ch-ch1 .card-header + .data-card {
+    border-radius: 0 0 0.25rem 0.25rem;
+    margin-top: 0;
+}
+
+/* CH2 — Mono label above card (on panel surface) */
+body.ch-ch2 .card-header {
+    display: block;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #e0ddd8;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+}
+body.ch-ch2 .card-header:first-child { margin-top: 0; }
+
+/* CH3 — Serif title above card (editorial feel) */
+body.ch-ch3 .card-header {
+    display: block;
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #1a1a1a;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+}
+body.ch-ch3 .card-header:first-child { margin-top: 0; }
+
+/* ── Chart description ── */
+.chart-description {
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+    margin-top: 0.5rem;
+}
+
+/* ── Full-width table modifier (handicap history etc.) ── */
+.table--full {
+    width: 100%;
+}
+
+/* ── Handicap tiles (/handicaps current handicaps) ──
+   A responsive row of metric tiles: player name, the handicap, and the change
+   vs the previous TEG. Inverse colour — a drop in handicap is good (green), a
+   rise is bad (red) — mirroring the Streamlit st.metric tiles. */
+.hc-tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(108px, 1fr));
+    gap: 1rem;
+}
+.hc-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.3rem;
+}
+.hc-tile-name span {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.25;
+    color: var(--text-secondary);
+}
+.hc-tile-value {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--text-primary);
+}
+/* Change pill — inverse colour: a drop in handicap is good (green), a rise bad (red). */
+.hc-tile-delta {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 0.1rem 0.55rem;
+    border-radius: 9999px;
+}
+.hc-delta--down { color: #137333; background: #e6f4ea; }
+.hc-delta--up { color: #b91c1c; background: #fce8e6; }
+.hc-delta--none { color: var(--text-muted); background: var(--nav-hover-bg, #f0f0f0); }
+
+/* ── Collapsible section (native <details>) — handicap history etc. ── */
+.collapsible {
+    margin-top: 2rem;
+}
+.collapsible > summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-heading), serif;
+    font-size: 1rem;
+    color: var(--text-primary);
+    padding: 0.3rem 0;
+}
+.collapsible > summary::-webkit-details-marker { display: none; }
+.collapsible > summary::before {
+    content: "▸";
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    transition: transform 0.15s ease;
+}
+.collapsible[open] > summary::before {
+    transform: rotate(90deg);
+}
+.collapsible > summary + * {
+    margin-top: 0.75rem;
+}
+
+/* ── Results page (leaderboard + race chart) ── */
+
+/* The results leaderboard stretches to the panel width (like the Streamlit
+   full-width table), unlike the content-sized default tables. */
+.leaderboard-table {
+    width: 100%;
+}
+
+/* Champion / wooden-spoon line under the leaderboard title: light label,
+   emphasised names. */
+.result-callout {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    margin: 0.1rem 0 1rem 0;
+}
+.result-callout strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+/* Chart block heading — a notch smaller than a .section-title. */
+.chart-title {
+    font-family: var(--font-heading), serif;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1.3;
+}
+* + .chart-title {
+    margin-top: 1.75rem;
+}
+
+/* Placeholder shown where the race chart will be rebuilt (roadmap 1b). */
+.chart-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    min-height: 280px;
+    padding: 1.5rem;
+    text-align: center;
+    border: 1px dashed var(--select-border);
+    border-radius: 0.375rem;
+    background: var(--nav-hover-bg, #f7f7f7);
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+}
+.chart-placeholder .ph-title {
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+.chart-placeholder code {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* Chart pill switcher (e.g. player Career Trend: Gross vs Par / Stableford).
+   Only one .chart-panel is visible at a time; the rest carry .hidden. */
+.chart-panel.hidden {
+    display: none;
+}
+
+/* Pill / segmented control — for the chart-type selector (Standard / Adjusted /
+   Ranking). Reads as connected choices rather than another tab bar. */
+.chart-controls-label {
+    margin-top: 1.5rem;
+    margin-bottom: 0.4rem;
+}
+.pill-group {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+/* A labelled pill group — used where two pill groups sit side by side and need
+   a clear caption to tell them apart (e.g. /scoring/streaks direction vs type). */
+.pill-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+.pill-field-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}
+.pill {
+    background: var(--btn-inactive-bg);
+    border: 1px solid var(--select-border);
+    border-radius: 9999px;
+    padding: 0.3rem 0.85rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+.pill:hover {
+    border-color: var(--accent);
+    color: var(--text-primary);
+}
+.pill--active,
+.pill--active:hover {
+    background: var(--table-toprank-bg);
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 600;
+}
+.chart-note {
+    margin-top: 0.5rem;
+}

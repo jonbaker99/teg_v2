@@ -1,0 +1,144 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e4]:
+      - link "The El Golfo" [ref=e5] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e6]:
+        - generic [ref=e8] [cursor=pointer]: TEG History ▾
+        - generic [ref=e10] [cursor=pointer]: Latest TEG ▾
+        - generic [ref=e12] [cursor=pointer]: Records & PBs ▾
+        - generic [ref=e14] [cursor=pointer]: Scoring analysis ▾
+        - generic [ref=e16] [cursor=pointer]: Scorecards ▾
+        - button "Toggle light or dark mode" [ref=e17] [cursor=pointer]:
+          - generic [ref=e18]: contrast
+  - main [ref=e22]:
+    - generic [ref=e23]:
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - generic [ref=e26]: TEG History
+          - generic [ref=e27]:
+            - link "lists TEG History" [ref=e28] [cursor=pointer]:
+              - /url: /history
+              - generic [ref=e29]: lists
+              - text: TEG History
+            - link "trophy TEG Honours Board" [ref=e30] [cursor=pointer]:
+              - /url: /honours
+              - generic [ref=e31]: trophy
+              - text: TEG Honours Board
+            - link "sports_score Full Results" [ref=e32] [cursor=pointer]:
+              - /url: /results
+              - generic [ref=e33]: sports_score
+              - text: Full Results
+            - link "123 Player Rankings" [ref=e34] [cursor=pointer]:
+              - /url: /player-rankings
+              - generic [ref=e35]: "123"
+              - text: Player Rankings
+            - link "description TEG Reports" [ref=e36] [cursor=pointer]:
+              - /url: /teg-reports
+              - generic [ref=e37]: description
+              - text: TEG Reports
+            - link "person Player Profiles" [ref=e38] [cursor=pointer]:
+              - /url: /player
+              - generic [ref=e39]: person
+              - text: Player Profiles
+        - generic [ref=e40]:
+          - generic [ref=e41]: Records & PBs
+          - generic [ref=e42]:
+            - link "military_tech TEG Records" [ref=e43] [cursor=pointer]:
+              - /url: /records
+              - generic [ref=e44]: military_tech
+              - text: TEG Records
+            - link "social_leaderboard Top TEGs and Rounds" [ref=e45] [cursor=pointer]:
+              - /url: /top-performances
+              - generic [ref=e46]: social_leaderboard
+              - text: Top TEGs and Rounds
+            - link "golf_course Personal Bests" [ref=e47] [cursor=pointer]:
+              - /url: /personal-bests
+              - generic [ref=e48]: golf_course
+              - text: Personal Bests
+      - generic [ref=e49]:
+        - generic [ref=e50]:
+          - generic [ref=e51]: Latest TEG
+          - generic [ref=e52]:
+            - link "leaderboard Latest Leaderboard" [ref=e53] [cursor=pointer]:
+              - /url: /leaderboard
+              - generic [ref=e54]: leaderboard
+              - text: Latest Leaderboard
+            - link "sports_golf Latest Round in context" [ref=e55] [cursor=pointer]:
+              - /url: /latest-round
+              - generic [ref=e56]: sports_golf
+              - text: Latest Round in context
+            - link "sports_golf Latest TEG in context" [ref=e57] [cursor=pointer]:
+              - /url: /latest-teg
+              - generic [ref=e58]: sports_golf
+              - text: Latest TEG in context
+            - link "accessible Handicaps" [ref=e59] [cursor=pointer]:
+              - /url: /handicaps
+              - generic [ref=e60]: accessible
+              - text: Handicaps
+        - generic [ref=e61]:
+          - generic [ref=e62]: Scorecards
+          - generic [ref=e63]:
+            - link "leaderboard Scorecard" [ref=e64] [cursor=pointer]:
+              - /url: /scorecard
+              - generic [ref=e65]: leaderboard
+              - text: Scorecard
+            - link "strategy Best/Worstball" [ref=e66] [cursor=pointer]:
+              - /url: /bestball
+              - generic [ref=e67]: strategy
+              - text: Best/Worstball
+            - link "golf_course Eclectic Scores" [ref=e68] [cursor=pointer]:
+              - /url: /eclectic
+              - generic [ref=e69]: golf_course
+              - text: Eclectic Scores
+            - link "emoji_events Eclectic Records" [ref=e70] [cursor=pointer]:
+              - /url: /eclectic-records
+              - generic [ref=e71]: emoji_events
+              - text: Eclectic Records
+      - generic [ref=e73]:
+        - generic [ref=e74]: Scoring analysis
+        - generic [ref=e75]:
+          - link "strategy Eagles / Birdies / Pars" [ref=e76] [cursor=pointer]:
+            - /url: /scoring/birdies
+            - generic [ref=e77]: strategy
+            - text: Eagles / Birdies / Pars
+          - link "trending_up Streaks" [ref=e78] [cursor=pointer]:
+            - /url: /scoring/streaks
+            - generic [ref=e79]: trending_up
+            - text: Streaks
+          - link "strategy Average by par" [ref=e80] [cursor=pointer]:
+            - /url: /scoring/by-par
+            - generic [ref=e81]: strategy
+            - text: Average by par
+          - link "strategy Average by TEG" [ref=e82] [cursor=pointer]:
+            - /url: /scoring/by-teg
+            - generic [ref=e83]: strategy
+            - text: Average by TEG
+          - link "strategy Course averages and records" [ref=e84] [cursor=pointer]:
+            - /url: /scoring/by-course
+            - generic [ref=e85]: strategy
+            - text: Course averages and records
+          - link "strategy All rounds" [ref=e86] [cursor=pointer]:
+            - /url: /scoring/all-rounds
+            - generic [ref=e87]: strategy
+            - text: All rounds
+          - link "table_chart Score history" [ref=e88] [cursor=pointer]:
+            - /url: /scoring/matrix
+            - generic [ref=e89]: table_chart
+            - text: Score history
+          - link "strategy Scoring distributions" [ref=e90] [cursor=pointer]:
+            - /url: /scoring/distributions
+            - generic [ref=e91]: strategy
+            - text: Scoring distributions
+          - link "strategy Changes vs previous round" [ref=e92] [cursor=pointer]:
+            - /url: /scoring/changes
+            - generic [ref=e93]: strategy
+            - text: Changes vs previous round
+          - link "strategy Heatmap (WIP)" [ref=e94] [cursor=pointer]:
+            - /url: /scoring/heatmap
+            - generic [ref=e95]: strategy
+            - text: Heatmap (WIP)
+          - link "trending_up Final Round Comebacks" [ref=e96] [cursor=pointer]:
+            - /url: /scoring/comebacks
+            - generic [ref=e97]: trending_up
+            - text: Final Round Comebacks
