@@ -6,7 +6,7 @@
   <input type="hidden" name="file" value="{{ selected }}">
   <input type="hidden" name="columns" value='{{ columns | tojson }}'>
 
-  <div class="table-wrapper">
+  <div class="admin-table-scroll">
     <table class="teg-table" id="edit-grid" data-ncols="{{ columns | length }}" data-nextid="{{ rows | length }}">
       <thead>
         <tr>
