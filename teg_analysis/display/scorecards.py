@@ -822,6 +822,81 @@ def build_bestball_contributions_table(round_data: pd.DataFrame) -> str:
     return ''.join(parts)
 
 
+def build_bestball_contribution_bars(round_data: pd.DataFrame) -> str:
+    """Build a player x metric table of CSS bar charts for the round's bestball /
+    worstball contributions.
+
+    One row per player (ordered to match the field card), four columns:
+    Bestball holes+solo, Bestball contribution, Worstball holes+solo, Worstball
+    contribution. The holes columns draw a pale full-length 'holes' bar with the
+    solid 'solo' subset overlaid; the contribution columns draw a single bar
+    scaled by magnitude with the signed value. Bars in a column share one scale
+    so they read horizontally across the table.
+    """
+    if round_data is None or round_data.empty:
+        return "<p class='text-muted text-sm'>No data available.</p>"
+
+    from teg_analysis.analysis.bestball import calculate_player_contributions
+    contrib = calculate_player_contributions(round_data)
+    if contrib.empty:
+        return "<p class='text-muted text-sm'>No data available.</p>"
+
+    by_pl = {row['Pl']: row for _, row in contrib.iterrows()}
+    rows = [(name, by_pl[code]) for code, name in _get_sorted_players(round_data) if code in by_pl]
+
+    holes_scale = max([1] + [int(r['bb_holes']) for _, r in rows] + [int(r['wb_holes']) for _, r in rows])
+    contr_scale = max([1] + [abs(int(r['bb_impact'])) for _, r in rows] + [abs(int(r['wb_impact'])) for _, r in rows])
+
+    def _pct(value: int, scale: int) -> int:
+        v = abs(int(value))
+        return 0 if v == 0 else max(6, round(100 * v / scale))
+
+    def _holes_bar(holes: int, solo: int, kind: str) -> str:
+        hp, sp = _pct(holes, holes_scale), _pct(solo, holes_scale)
+        if holes == 0:
+            label = '<span class="bw-bar-zero">–</span>'
+        else:
+            label = f'{holes}<small>·{solo}</small>'
+        return (f'<div class="bw-bar bw-bar--{kind}">'
+                '<div class="bw-bar-track">'
+                f'<div class="bw-bar-fill bw-bar-fill--pale" style="width:{hp}%"></div>'
+                f'<div class="bw-bar-fill bw-bar-fill--solid" style="width:{sp}%"></div>'
+                f'</div><span class="bw-bar-val">{label}</span></div>')
+
+    def _contr_bar(value: int, kind: str) -> str:
+        v = int(value)
+        if v == 0:
+            return (f'<div class="bw-bar bw-bar--{kind}"><div class="bw-bar-track"></div>'
+                    '<span class="bw-bar-val bw-bar-zero">–</span></div>')
+        return (f'<div class="bw-bar bw-bar--{kind}">'
+                '<div class="bw-bar-track">'
+                f'<div class="bw-bar-fill bw-bar-fill--solid" style="width:{_pct(v, contr_scale)}%"></div>'
+                f'</div><span class="bw-bar-val">{_vp_label(v)}</span></div>')
+
+    parts = ['<table class="bw-bars-table"><colgroup>'
+             '<col class="bw-bars-player"><col><col><col><col></colgroup><thead>']
+    parts.append('<tr class="bw-c-grouphead">'
+                 '<th class="player-label" rowspan="2">Player</th>'
+                 '<th class="bw-c-best" colspan="2">Bestball</th>'
+                 '<th class="bw-c-worst" colspan="2">Worstball</th></tr>')
+    parts.append('<tr class="bw-c-subhead">'
+                 '<th class="bw-c-best">Holes &amp; solo</th><th class="bw-c-best">Contribution</th>'
+                 '<th class="bw-c-worst">Holes &amp; solo</th><th class="bw-c-worst">Contribution</th></tr>')
+    parts.append('</thead><tbody>')
+
+    for name, r in rows:
+        parts.append('<tr>')
+        parts.append(f'<td class="player-label">{name}</td>')
+        parts.append(f'<td>{_holes_bar(int(r["bb_holes"]), int(r["bb_solo"]), "best")}</td>')
+        parts.append(f'<td>{_contr_bar(int(r["bb_impact"]), "best")}</td>')
+        parts.append(f'<td>{_holes_bar(int(r["wb_holes"]), int(r["wb_solo"]), "worst")}</td>')
+        parts.append(f'<td>{_contr_bar(int(r["wb_impact"]), "worst")}</td>')
+        parts.append('</tr>')
+
+    parts.append('</tbody></table>')
+    return ''.join(parts)
+
+
 def build_teg_eclectic_scorecard(teg_data: pd.DataFrame) -> str:
     """Build a TEG eclectic scorecard: best eclectic row at the top (scorecard
     shapes) then per-player eclectic rows highlighting who contributed each hole.

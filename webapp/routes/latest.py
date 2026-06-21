@@ -41,6 +41,7 @@ from teg_analysis.display.scorecards import (
     build_eclectic_scorecard_table,
     build_bestball_worstball_scorecard,
     build_bestball_contributions_table,
+    build_bestball_contribution_bars,
     build_teg_eclectic_scorecard,
 )
 from webapp.deps import (
@@ -53,7 +54,7 @@ from webapp.deps import (
     get_default_teg_num,
     get_rounds_for_teg,
 )
-from webapp.chart_utils import create_round_graph, build_contribution_charts_html
+from webapp.chart_utils import create_round_graph
 
 logger = logging.getLogger(__name__)
 
@@ -370,10 +371,9 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                     ),
                 })
 
-                # Same data as charts, below the table, for visual comparison.
-                charts_html = build_contribution_charts_html(round_data)
-                if charts_html:
-                    sections.append({"title": "Contribution charts", "table_html": charts_html, "raw": True})
+                # Same data as bar charts below, for visual comparison.
+                bars_html = build_bestball_contribution_bars(round_data)
+                sections.append({"title": "Contribution charts", "table_html": bars_html})
                 return {"sections": sections, "scorecard_css": True}
             except Exception as e:
                 sections.append({"title": "Bestball / Worstball", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})

@@ -639,34 +639,74 @@ html[data-mode="dark"] .bw-contrib-table .bw-c-impact--best { background-color: 
 html[data-mode="dark"] .bw-contrib-table .bw-c-impact--worst { background-color: #3a3a3a; border-color: #555; color: #d8d8d8; }
 html[data-mode="dark"] .bw-contrib-table .bw-c-impact--zero { color: #6a6a6a; }
 
-/* ===== BESTBALL / WORSTBALL CONTRIBUTION CHARTS =====
-   Two rows (Bestball / Worstball), each a pair of small horizontal-bar panels:
-   a Holes+Solo overlap chart and a signed-contribution chart. Charts inherit
-   the card background (transparent paper); only the labels need theming. */
-.bw-charts { margin-top: 0.25rem; }
-.bw-chart-row { margin-bottom: 1.5rem; }
-.bw-chart-row:last-child { margin-bottom: 0; }
-.bw-chart-fmt {
-  font-weight: 700;
-  font-size: 0.9rem;
-  margin: 0 0 0.4rem;
+/* ===== BESTBALL / WORSTBALL CONTRIBUTION BAR TABLE =====
+   Player rows x four CSS-bar columns (bestball holes+solo, bestball
+   contribution, worstball holes+solo, worstball contribution). Fixed layout
+   keeps every bar track the same width so bars align across rows and columns.
+   Holes bars overlay a solid 'solo' fill on a pale 'holes' fill; contribution
+   bars scale by magnitude with the signed value alongside. */
+.bw-bars-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12px;
 }
-.bw-chart-fmt--best { color: #1f7a2a; }
-.bw-chart-fmt--worst { color: #555; }
-.bw-chart-pair {
-  display: flex;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-}
-.bw-chart-panel { flex: 1 1 320px; min-width: 280px; }
-.bw-chart-cap {
+.bw-bars-table col.bw-bars-player { width: 84px; }
+.bw-bars-table th,
+.bw-bars-table td { padding: 5px 8px; text-align: center; }
+.bw-bars-table thead th {
   font-size: 11px;
-  color: var(--color-text-secondary);
+  font-weight: 600;
   letter-spacing: 0.02em;
-  margin-bottom: 0.25rem;
+  color: var(--color-text-secondary);
 }
-html[data-mode="dark"] .bw-chart-fmt--best { color: #8fdc97; }
-html[data-mode="dark"] .bw-chart-fmt--worst { color: #c9c9c9; }
+.bw-bars-table .bw-c-grouphead th { font-size: 12px; font-weight: 700; }
+.bw-bars-table th.bw-c-best { background-color: #eaf4ec; color: #1f7a2a; }
+.bw-bars-table th.bw-c-worst { background-color: #ededed; color: #555; }
+.bw-bars-table th.player-label,
+.bw-bars-table td.player-label { text-align: left; font-weight: 600; }
+.bw-bars-table tbody tr + tr td { border-top: 1px solid var(--color-border, #ededed); }
+
+.bw-bar { display: flex; align-items: center; gap: 8px; }
+.bw-bar-track {
+  position: relative;
+  flex: 1;
+  height: 14px;
+  background-color: #f2f2f2;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.bw-bar-fill { position: absolute; left: 0; top: 0; height: 100%; border-radius: 3px; }
+.bw-bar-fill--pale { z-index: 1; }
+.bw-bar-fill--solid { z-index: 2; }
+.bw-bar--best .bw-bar-fill--pale { background-color: #cfe6d3; }
+.bw-bar--best .bw-bar-fill--solid { background-color: #2e8b40; }
+.bw-bar--worst .bw-bar-fill--pale { background-color: #d9d9d9; }
+.bw-bar--worst .bw-bar-fill--solid { background-color: #6b6b6b; }
+.bw-bar-val {
+  flex: none;
+  width: 2.8rem;
+  text-align: right;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 600;
+}
+.bw-bar--best .bw-bar-val { color: #1f7a2a; }
+.bw-bar--worst .bw-bar-val { color: #555; }
+.bw-bar-val small { font-weight: 400; color: var(--color-text-secondary); margin-left: 1px; }
+.bw-bar-zero { color: #b3b3b3; font-weight: 400; }
+
+/* Dark mode */
+html[data-mode="dark"] .bw-bars-table th.bw-c-best { background-color: #1f3a22; color: #8fdc97; }
+html[data-mode="dark"] .bw-bars-table th.bw-c-worst { background-color: #3a3a3a; color: #d8d8d8; }
+html[data-mode="dark"] .bw-bars-table tbody tr + tr td { border-top-color: #3a3a3a; }
+html[data-mode="dark"] .bw-bar-track { background-color: #26261f; }
+html[data-mode="dark"] .bw-bar--best .bw-bar-fill--pale { background-color: #274d2c; }
+html[data-mode="dark"] .bw-bar--best .bw-bar-fill--solid { background-color: #3f9a52; }
+html[data-mode="dark"] .bw-bar--worst .bw-bar-fill--pale { background-color: #3a3a3a; }
+html[data-mode="dark"] .bw-bar--worst .bw-bar-fill--solid { background-color: #8a8a8a; }
+html[data-mode="dark"] .bw-bar--best .bw-bar-val { color: #8fdc97; }
+html[data-mode="dark"] .bw-bar--worst .bw-bar-val { color: #c9c9c9; }
 
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
