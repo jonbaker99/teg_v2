@@ -21,6 +21,10 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## UI Changes
 
+- [ ] **Prefer CSS bar charts over Plotly where feasible** — the bestball/worstball
+  contribution bars (`build_bestball_contribution_bars`) use lightweight CSS bars
+  that read better inline than the equivalent Plotly panels. Roll the same approach
+  out to other small bar charts where Plotly is overkill.
 
 ## PLAYER PROFILES
 - [ ] Revisit again to make UI cleaner and less cluttered

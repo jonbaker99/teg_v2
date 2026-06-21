@@ -847,41 +847,51 @@ def build_bestball_contribution_bars(round_data: pd.DataFrame) -> str:
     holes_scale = max([1] + [int(r['bb_holes']) for _, r in rows] + [int(r['wb_holes']) for _, r in rows])
     contr_scale = max([1] + [abs(int(r['bb_impact'])) for _, r in rows] + [abs(int(r['wb_impact'])) for _, r in rows])
 
+    # Bars fill to at most FILL_MAX% of the track, leaving room for the value
+    # label that sits just past the end of the bar.
+    FILL_MAX = 76
+
     def _pct(value: int, scale: int) -> int:
         v = abs(int(value))
-        return 0 if v == 0 else max(6, round(100 * v / scale))
+        return 0 if v == 0 else max(6, round(FILL_MAX * v / scale))
 
     def _holes_bar(holes: int, solo: int, kind: str) -> str:
         hp, sp = _pct(holes, holes_scale), _pct(solo, holes_scale)
-        if holes == 0:
-            label = '<span class="bw-bar-zero">–</span>'
-        else:
-            label = f'{holes}<small>·{solo}</small>'
+        label = f'{holes}<small>·{solo}</small>' if holes else '–'
+        zcls = '' if holes else ' bw-bar-zero'
         return (f'<div class="bw-bar bw-bar--{kind}">'
                 '<div class="bw-bar-track">'
                 f'<div class="bw-bar-fill bw-bar-fill--pale" style="width:{hp}%"></div>'
                 f'<div class="bw-bar-fill bw-bar-fill--solid" style="width:{sp}%"></div>'
-                f'</div><span class="bw-bar-val">{label}</span></div>')
+                '</div>'
+                f'<span class="bw-bar-val{zcls}" style="left:calc({hp}% + 6px)">{label}</span>'
+                '</div>')
 
     def _contr_bar(value: int, kind: str) -> str:
         v = int(value)
-        if v == 0:
-            return (f'<div class="bw-bar bw-bar--{kind}"><div class="bw-bar-track"></div>'
-                    '<span class="bw-bar-val bw-bar-zero">–</span></div>')
+        p = _pct(v, contr_scale)
+        label = '–' if v == 0 else _vp_label(v)
+        zcls = ' bw-bar-zero' if v == 0 else ''
+        fill = '' if v == 0 else f'<div class="bw-bar-fill bw-bar-fill--solid" style="width:{p}%"></div>'
         return (f'<div class="bw-bar bw-bar--{kind}">'
-                '<div class="bw-bar-track">'
-                f'<div class="bw-bar-fill bw-bar-fill--solid" style="width:{_pct(v, contr_scale)}%"></div>'
-                f'</div><span class="bw-bar-val">{_vp_label(v)}</span></div>')
+                f'<div class="bw-bar-track">{fill}</div>'
+                f'<span class="bw-bar-val{zcls}" style="left:calc({p}% + 6px)">{label}</span>'
+                '</div>')
+
+    def _head(fmt: str, metric: str, kind: str) -> str:
+        return (f'<th class="bw-c-{kind}">'
+                f'<span class="bw-h-fmt">{fmt}</span>'
+                f'<span class="bw-h-metric">{metric}</span></th>')
 
     parts = ['<table class="bw-bars-table"><colgroup>'
              '<col class="bw-bars-player"><col><col><col><col></colgroup><thead>']
-    parts.append('<tr class="bw-c-grouphead">'
-                 '<th class="player-label" rowspan="2">Player</th>'
-                 '<th class="bw-c-best" colspan="2">Bestball</th>'
-                 '<th class="bw-c-worst" colspan="2">Worstball</th></tr>')
-    parts.append('<tr class="bw-c-subhead">'
-                 '<th class="bw-c-best">Holes &amp; solo</th><th class="bw-c-best">Contribution</th>'
-                 '<th class="bw-c-worst">Holes &amp; solo</th><th class="bw-c-worst">Contribution</th></tr>')
+    parts.append('<tr>'
+                 '<th class="player-label">Player</th>'
+                 + _head('Bestball', 'Holes &amp; solo', 'best')
+                 + _head('Bestball', 'Impact', 'best')
+                 + _head('Worstball', 'Holes &amp; solo', 'worst')
+                 + _head('Worstball', 'Impact', 'worst')
+                 + '</tr>')
     parts.append('</thead><tbody>')
 
     for name, r in rows:

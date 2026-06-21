@@ -640,11 +640,12 @@ html[data-mode="dark"] .bw-contrib-table .bw-c-impact--worst { background-color:
 html[data-mode="dark"] .bw-contrib-table .bw-c-impact--zero { color: #6a6a6a; }
 
 /* ===== BESTBALL / WORSTBALL CONTRIBUTION BAR TABLE =====
-   Player rows x four CSS-bar columns (bestball holes+solo, bestball
-   contribution, worstball holes+solo, worstball contribution). Fixed layout
-   keeps every bar track the same width so bars align across rows and columns.
-   Holes bars overlay a solid 'solo' fill on a pale 'holes' fill; contribution
-   bars scale by magnitude with the signed value alongside. */
+   Player rows x four CSS-bar columns. Format lives in two-line column titles
+   (Bestball / Worstball + metric) rather than a group row. Fixed layout keeps
+   every bar track the same width; a fixed row height keeps player rows uniform
+   even when a name wraps. Holes bars overlay a solid 'solo' fill on a pale
+   'holes' fill; contribution bars scale by magnitude. The value label sits just
+   past the end of each bar, inside the chart. */
 .bw-bars-table {
   width: 100%;
   table-layout: fixed;
@@ -652,26 +653,34 @@ html[data-mode="dark"] .bw-contrib-table .bw-c-impact--zero { color: #6a6a6a; }
   border-spacing: 0;
   font-size: 12px;
 }
-.bw-bars-table col.bw-bars-player { width: 84px; }
+.bw-bars-table col.bw-bars-player { width: 88px; }
 .bw-bars-table th,
 .bw-bars-table td { padding: 5px 8px; text-align: center; }
 .bw-bars-table thead th {
-  font-size: 11px;
-  font-weight: 600;
+  vertical-align: bottom;
   letter-spacing: 0.02em;
-  color: var(--color-text-secondary);
 }
-.bw-bars-table .bw-c-grouphead th { font-size: 12px; font-weight: 700; }
+.bw-bars-table .bw-h-fmt { display: block; font-weight: 700; font-size: 12px; }
+.bw-bars-table .bw-h-metric { display: block; font-weight: 600; font-size: 11px; }
 .bw-bars-table th.bw-c-best { background-color: #eaf4ec; color: #1f7a2a; }
 .bw-bars-table th.bw-c-worst { background-color: #ededed; color: #555; }
 .bw-bars-table th.player-label,
 .bw-bars-table td.player-label { text-align: left; font-weight: 600; }
+.bw-bars-table th.player-label {
+  vertical-align: bottom;
+  font-weight: 600;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+/* Uniform row height — tall enough for a two-line player name so every row
+   matches whether or not its name wraps. */
+.bw-bars-table tbody td { height: 46px; vertical-align: middle; }
 .bw-bars-table tbody tr + tr td { border-top: 1px solid var(--color-border, #ededed); }
 
-.bw-bar { display: flex; align-items: center; gap: 8px; }
+.bw-bar { position: relative; width: 100%; }
 .bw-bar-track {
   position: relative;
-  flex: 1;
+  width: 100%;
   height: 14px;
   background-color: #f2f2f2;
   border-radius: 3px;
@@ -684,17 +693,21 @@ html[data-mode="dark"] .bw-contrib-table .bw-c-impact--zero { color: #6a6a6a; }
 .bw-bar--best .bw-bar-fill--solid { background-color: #2e8b40; }
 .bw-bar--worst .bw-bar-fill--pale { background-color: #d9d9d9; }
 .bw-bar--worst .bw-bar-fill--solid { background-color: #6b6b6b; }
+/* Value label sits just past the bar end (left set inline), vertically centred
+   over the track; not clipped because it lives on .bw-bar, not the track. */
 .bw-bar-val {
-  flex: none;
-  width: 2.8rem;
-  text-align: right;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
   font-family: 'Roboto Mono', monospace;
   font-weight: 600;
+  font-size: 11px;
 }
 .bw-bar--best .bw-bar-val { color: #1f7a2a; }
 .bw-bar--worst .bw-bar-val { color: #555; }
 .bw-bar-val small { font-weight: 400; color: var(--color-text-secondary); margin-left: 1px; }
-.bw-bar-zero { color: #b3b3b3; font-weight: 400; }
+.bw-bar-val.bw-bar-zero { color: #b3b3b3; font-weight: 400; }
 
 /* Dark mode */
 html[data-mode="dark"] .bw-bars-table th.bw-c-best { background-color: #1f3a22; color: #8fdc97; }
