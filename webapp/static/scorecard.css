@@ -457,37 +457,64 @@ html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] span { c
 /* ===== BESTBALL / WORSTBALL FIELD CARD + TEG ECLECTIC CARD =====
    Team rows (Bestball/Worstball/Best Eclectic) sit at the top and use the
    standard score-cell shapes (data-vs-par). A thin gap row separates them from
-   the player rows below. Player rows use a filled tint behind the number to
-   show who had the field best (pale green) or worst (dark grey) on each hole;
-   neutral holes stay de-emphasised with no fill. The fill is a contained
-   rounded box on the span (not the whole cell) so adjacent contributing holes
-   stay separated and match the scorecard's rounded shapes. */
+   the player rows below. Player rows mark who had the field best (faint green
+   box) or worst (faint grey box) on each hole; neutral holes are de-emphasised
+   with no box. Both highlights use the same faint fill + thin border so best
+   and worst read at equal weight (red is avoided — it means under-par here).
+   This dense card uses a smaller, lighter type scale than the default
+   scorecard; all overrides are scoped to .bw-scorecard so other scorecards
+   keep the default 14px treatment. */
+
+/* Lighter, tighter type scale for the dense field card */
+.bw-scorecard { font-size: 12px; }
+.bw-scorecard th,
+.bw-scorecard td {
+  min-width: 28px;
+  height: 30px;
+  padding: 3px 4px;
+}
+.bw-scorecard thead th {
+  font-weight: 500;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.02em;
+}
+.bw-scorecard .totals { font-weight: 600; }
+.bw-scorecard td.player-label { font-weight: 400; }
+.bw-scorecard .bw-team-row .player-label { font-weight: 600; }
+
 .bw-scorecard .bw-cell {
   text-align: center;
-  min-width: var(--cell-min-width);
-  height: var(--cell-height);
-  padding: var(--spacing-cell);
   vertical-align: middle;
   background-color: white;
 }
 .bw-scorecard .bw-cell span {
-  font-size: 12px;
+  font-size: 11px;
   font-family: 'Roboto Mono', monospace;
-  color: #aaa; /* neutral holes de-emphasised */
+  color: #b3b3b3; /* neutral holes de-emphasised */
 }
-/* Filled player highlights — contained rounded box behind the number */
+/* Balanced player highlights — faint shaded box + thin border behind the
+   number; best and worst share the same fill lightness and border weight so
+   neither dominates. */
 .bw-scorecard .bw-cell.bw-player-best span,
 .bw-scorecard .bw-cell.bw-player-worst span {
   display: inline-block;
-  min-width: 24px;
-  padding: 2px 4px;
+  min-width: 22px;
+  padding: 1px 4px;
   border-radius: 4px;
-  font-weight: 700;
+  border: 1px solid transparent;
+  font-weight: 600;
 }
-.bw-scorecard .bw-cell.bw-player-best span { background-color: #e3f0e4; color: #14661a; }
-.bw-scorecard .bw-cell.bw-player-worst span { background-color: #3f3f3f; color: #fff; }
-/* Team row label bold */
-.bw-scorecard .bw-team-row .player-label { font-weight: 700; }
+.bw-scorecard .bw-cell.bw-player-best span {
+  background-color: #eaf4ec;
+  border-color: #bcdcc1;
+  color: #1f7a2a;
+}
+.bw-scorecard .bw-cell.bw-player-worst span {
+  background-color: #ededed;
+  border-color: #c2c2c2;
+  color: #444;
+}
 /* Gap row between team rows and player rows */
 .bw-scorecard .bw-gap-row td { height: 10px; background-color: transparent; border: none; }
 
@@ -503,9 +530,13 @@ html[data-mode="dark"] .eclectic-scorecard .eclectic-cell[data-evp="0"] span { c
 
 /* Dark mode */
 html[data-mode="dark"] .bw-scorecard .bw-cell { background-color: #1d1d1a; }
-html[data-mode="dark"] .bw-scorecard .bw-cell span { color: #555; }
-html[data-mode="dark"] .bw-scorecard .bw-cell.bw-player-best span { background-color: #1f3a22; color: #7fd487; }
-html[data-mode="dark"] .bw-scorecard .bw-cell.bw-player-worst span { background-color: #5a5a5a; color: #f2f2f2; }
+html[data-mode="dark"] .bw-scorecard .bw-cell span { color: #6a6a6a; }
+html[data-mode="dark"] .bw-scorecard .bw-cell.bw-player-best span {
+  background-color: #1f3a22; border-color: #2f5a35; color: #8fdc97;
+}
+html[data-mode="dark"] .bw-scorecard .bw-cell.bw-player-worst span {
+  background-color: #3a3a3a; border-color: #555; color: #d8d8d8;
+}
 
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
