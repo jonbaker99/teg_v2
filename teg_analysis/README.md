@@ -82,7 +82,10 @@ teg_analysis/
                      and a bestball/worstball field card
                      (build_bestball_worstball_scorecard) — per-player
                      gross-vs-par rows with the field best/worst highlighted,
-                     plus Bestball and Worstball to-par total rows
+                     plus Bestball and Worstball to-par total rows; and a
+                     contributions table (build_bestball_contributions_table)
+                     summarising each player's holes/solo-holes/shot-impact
+                     on the bestball and worstball totals
   
   api/               REST API endpoints (placeholder)
     __init__.py

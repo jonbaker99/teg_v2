@@ -40,6 +40,7 @@ from teg_analysis.display.scorecards import (
     build_round_comparison_responsive,
     build_eclectic_scorecard_table,
     build_bestball_worstball_scorecard,
+    build_bestball_contributions_table,
     build_teg_eclectic_scorecard,
 )
 from webapp.deps import (
@@ -352,6 +353,22 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
 
                 card_html = build_bestball_worstball_scorecard(round_data)
                 sections.append({"title": None, "table_html": card_html})
+
+                # Per-player contribution breakdown below the scorecard.
+                contrib_html = build_bestball_contributions_table(round_data)
+                sections.append({"title": "Player contributions", "table_html": contrib_html})
+                sections.append({
+                    "title": None, "raw": True,
+                    "table_html": (
+                        "<p class='text-muted text-sm mt-2'>"
+                        "<strong>Holes</strong>: holes where the player matched the field "
+                        "best (bestball) or worst (worstball) — ties counted for each. "
+                        "<strong>Solo</strong>: of those, holes where they were the only one. "
+                        "<strong>Impact</strong>: how the team total would change without their "
+                        "round — bestball would be that much worse (+), worstball that much "
+                        "better (−); only solo holes move it.</p>"
+                    ),
+                })
                 return {"sections": sections, "scorecard_css": True}
             except Exception as e:
                 sections.append({"title": "Bestball / Worstball", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
