@@ -242,7 +242,7 @@ def _player_name_spans(name: str) -> str:
     short form on narrow screens, so data columns aren't squeezed on mobile.
     """
     bits = str(name).split()
-    short = f'{bits[0][0]}. {bits[-1]}' if len(bits) >= 2 else str(name)
+    short = f'{bits[0][0]}.{bits[-1]}' if len(bits) >= 2 else str(name)
     return (f'<span class="bw-name-full">{name}</span>'
             f'<span class="bw-name-short">{short}</span>')
 

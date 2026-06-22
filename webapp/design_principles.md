@@ -25,6 +25,11 @@ Reference point: [theelgolfo.com](https://theelgolfo.com) — the existing Strea
 - **No header background** — just bold text with a 2px bottom border
 - **Light cell borders** (1px) — barely visible, just enough to guide the eye
 - **Active/top rank** — subtle green tint, bold
+- **Row highlight on hover by default** — every data table should tint the hovered
+  row using `var(--table-hover-bg)` (themed light + dark). `.teg-table` gets this for
+  free; bespoke tables (scorecards, the contribution bar table) must opt in. Where
+  cells carry their own background (e.g. scorecard shape cells), tint those cells on
+  `tr:hover` so the highlight isn't masked.
 - Aim for Datawrapper-like density: tight row spacing, thin borders, generous but not excessive cell padding
 - **Player names on narrow screens** — where a player-name column would squeeze the
   data on mobile, emit both a full name and a short `Initial. SURNAME` form (e.g.

@@ -178,7 +178,15 @@
 }
 
 .scorecard-table tr:hover {
-  background-color: var(--color-hover);
+  background-color: var(--table-hover-bg);
+}
+/* Field card: player-row cells carry their own white/grey backgrounds, which
+   would mask the row hover, so tint them directly. Team rows (score-cell
+   shapes) and contributor chips (on the span) are left untouched. */
+.bw-scorecard tbody tr:hover td.bw-cell,
+.bw-scorecard tbody tr:hover td.player-label,
+.bw-scorecard tbody tr:hover td.totals {
+  background-color: var(--table-hover-bg);
 }
 
 /* ===== SCORE CELLS WITH SHAPES ===== */
@@ -608,10 +616,10 @@ html[data-mode="dark"] .bw-rank-num { background-color: #2a2a26; }
 .bw-bars-table .bw-h-metric { display: block; font-weight: 600; font-size: 11px; }
 .bw-bars-table th.bw-c-best { color: #1f7a2a; }
 .bw-bars-table th.bw-c-worst { color: #555; }
-.bw-bars-table th.player-label,
-.bw-bars-table td.player-label { text-align: left; font-weight: 600; }
+.bw-bars-table th.player-label { text-align: left; }
+.bw-bars-table td.player-label { text-align: left; font-weight: 400; }
 /* Names stay on one line; the column is wide enough to hold the full name on
-   normal screens, and a short 'Initial. SURNAME' is swapped in when narrow. */
+   normal screens, and a short 'Initial.SURNAME' is swapped in when narrow. */
 .bw-bars-table td.player-label { white-space: nowrap; }
 .bw-bars-table th.player-label {
   vertical-align: bottom;
@@ -620,22 +628,20 @@ html[data-mode="dark"] .bw-rank-num { background-color: #2a2a26; }
   color: var(--color-text-secondary);
 }
 /* Full / short player-name swap (shared by the bar table and the field card):
-   full name normally, 'Initial. SURNAME' on narrow screens. */
+   full name normally, 'Initial.SURNAME' on narrow screens. */
 .bw-name-short { display: none; }
 @media (max-width: 640px) {
   .bw-name-full { display: none; }
   .bw-name-short { display: inline; }
-  .bw-bars-table col.bw-bars-player { width: 82px; }
+  .bw-bars-table col.bw-bars-player { width: 76px; }
   /* Let the two visible columns expand once two are hidden. */
   .bw-bars-table { table-layout: auto; }
   .bw-fmt-toggle { display: inline-flex; }
   .bw-bars-wrap[data-bw="best"] .bw-col-worst { display: none; }
   .bw-bars-wrap[data-bw="worst"] .bw-col-best { display: none; }
 }
-/* Uniform row height — tall enough for a two-line player name so every row
-   matches whether or not its name wraps. */
-.bw-bars-table tbody td { height: 46px; vertical-align: middle; }
-.bw-bars-table tbody tr + tr td { border-top: 1px solid var(--color-border, #ededed); }
+.bw-bars-table tbody td { height: 30px; vertical-align: middle; }
+.bw-bars-table tbody tr:hover td { background-color: var(--table-hover-bg); }
 
 .bw-bar { position: relative; width: 100%; }
 .bw-bar-track {
@@ -672,7 +678,6 @@ html[data-mode="dark"] .bw-rank-num { background-color: #2a2a26; }
 /* Dark mode */
 html[data-mode="dark"] .bw-bars-table th.bw-c-best { color: #8fdc97; }
 html[data-mode="dark"] .bw-bars-table th.bw-c-worst { color: #d8d8d8; }
-html[data-mode="dark"] .bw-bars-table tbody tr + tr td { border-top-color: #3a3a3a; }
 html[data-mode="dark"] .bw-bar-track { background-color: #26261f; }
 html[data-mode="dark"] .bw-bar--best .bw-bar-fill--pale { background-color: #274d2c; }
 html[data-mode="dark"] .bw-bar--best .bw-bar-fill--solid { background-color: #3f9a52; }
