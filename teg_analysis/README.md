@@ -30,8 +30,13 @@ teg_analysis/
     github_operations.py GitHub API integration
     volume_operations.py Railway volume management
     sync.py          Selective GitHub <-> store sync — build_sync_status/pull_files/push_files,
-                     pre-overwrite store backups + restore_backup/list_sync_backups,
+                     pre-action preview (build_sync_preview) + text diff (file_diff),
+                     pre-overwrite store backups + restore_backup/list_sync_backups/backups_for
+                     (restore backs up the replaced copy too),
+                     volume browsing + delete (list_store_dir/read_store_file/delete_store_file),
                      newer-than overwrite checks (detect_pull_conflicts/detect_push_conflicts)
+    file_catalog.py  Reference catalog of data files (role / format / how-updated /
+                     importance) — DATA_FILE_CATALOG, get_file_definition, catalog_by_importance
   
   core/              Data loading and transformation
     data_loader.py   load_all_data() — loads hole-level tournament data

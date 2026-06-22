@@ -1,0 +1,14 @@
+{# Unified diff (store vs GitHub) for one file, swapped in under its preview row.
+   Expects: name, diff = {diffable, identical, lines, truncated, reason}. #}
+{% if not diff.diffable %}
+  <p class="sync-diff-note">No diff for <code>{{ name }}</code> — {{ diff.reason }}.</p>
+{% elif diff.identical %}
+  <p class="sync-diff-note">No differences — <code>{{ name }}</code> is identical on both sides.</p>
+{% else %}
+  <pre class="sync-diff"><code>{% for line in diff.lines %}{% if line.startswith('+') and not line.startswith('+++') %}<span class="sync-diff-add">{{ line }}</span>
+{% elif line.startswith('-') and not line.startswith('---') %}<span class="sync-diff-del">{{ line }}</span>
+{% elif line.startswith('@@') %}<span class="sync-diff-hunk">{{ line }}</span>
+{% else %}{{ line }}
+{% endif %}{% endfor %}</code></pre>
+  {% if diff.truncated %}<p class="sync-diff-note">Diff truncated (showing first {{ diff.lines | length }} lines).</p>{% endif %}
+{% endif %}

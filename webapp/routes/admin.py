@@ -17,7 +17,7 @@ import logging
 from pathlib import Path
 
 from fastapi import APIRouter, Request, Form
-from fastapi.responses import RedirectResponse, HTMLResponse
+from fastapi.responses import RedirectResponse, HTMLResponse, Response
 from fastapi.templating import Jinja2Templates
 
 from webapp.admin_auth import is_authed, check_password, set_auth_cookie, clear_auth_cookie
@@ -436,6 +436,7 @@ def _sync_body_ctx(request: Request, folder: str, result: dict = None) -> dict:
     """Build the context for the sync body partial (status table + forms)."""
     from teg_analysis.io import (
         build_sync_status, store_label, SYNC_FOLDERS, is_railway, list_sync_backups,
+        get_file_definition, file_anchor,
     )
 
     if folder not in SYNC_FOLDERS:
@@ -448,6 +449,9 @@ def _sync_body_ctx(request: Request, folder: str, result: dict = None) -> dict:
         "store_label": store_label(),
         "is_railway": is_railway(),
         "result": result,
+        # Per-file definition lookups for the info icons (None when uncatalogued).
+        "get_definition": get_file_definition,
+        "file_anchor": file_anchor,
     }
     try:
         ctx["rows"] = build_sync_status(folder)
@@ -483,6 +487,68 @@ def _sync_conflict_response(request: Request, *, action: str, folder: str,
         "conflicts": conflicts,
     }
     return templates.TemplateResponse("partials/admin_sync_conflict.html", ctx)
+
+
+@router.post("/admin/volume-sync/preview", response_class=HTMLResponse)
+async def admin_volume_sync_preview(request: Request):
+    """Show exactly what a pull/push will do before it runs (the confirm step)."""
+    if not is_authed(request):
+        return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
+
+    from teg_analysis.io import build_sync_preview
+
+    form = await request.form()
+    action = form.get("action", "")
+    folder = form.get("folder", "data")
+    names = form.getlist("files")
+    message = form.get("commit_message", "").strip()
+
+    if action not in ("pull", "push"):
+        ctx = _sync_body_ctx(request, folder)
+        return templates.TemplateResponse("partials/admin_sync_body.html", ctx)
+
+    if not names:
+        ctx = _sync_body_ctx(request, folder, result={"action": action, "empty": True})
+        return templates.TemplateResponse("partials/admin_sync_body.html", ctx)
+
+    try:
+        rows = build_sync_preview(action, folder, names)
+    except Exception as e:  # noqa: BLE001 - surface, don't block, on a check failure
+        logger.error(f"Sync preview failed: {e}", exc_info=True)
+        ctx = _sync_body_ctx(request, folder, result={"action": action, "error": str(e)})
+        return templates.TemplateResponse("partials/admin_sync_body.html", ctx)
+
+    ctx = {
+        "request": request,
+        "action": action,
+        "folder": folder,
+        "names": names,
+        "rows": rows,
+        "commit_message": message,
+        "has_conflict": any(r["is_conflict"] for r in rows),
+    }
+    return templates.TemplateResponse("partials/admin_sync_preview.html", ctx)
+
+
+@router.get("/admin/volume-sync/diff", response_class=HTMLResponse)
+async def admin_volume_sync_diff(request: Request, folder: str = "data", name: str = ""):
+    """Return a unified diff (store vs GitHub) for a single text file."""
+    if not is_authed(request):
+        return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
+
+    from teg_analysis.io import file_diff
+
+    try:
+        diff = file_diff(folder, name)
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Diff failed for {folder}/{name}: {e}", exc_info=True)
+        diff = {"diffable": False, "reason": str(e)}
+
+    return templates.TemplateResponse("partials/admin_sync_diff.html", {
+        "request": request,
+        "name": name,
+        "diff": diff,
+    })
 
 
 @router.post("/admin/volume-sync/pull", response_class=HTMLResponse)
@@ -582,3 +648,195 @@ async def admin_volume_sync_restore(request: Request):
 
     ctx = _sync_body_ctx(request, folder, result=result)
     return templates.TemplateResponse("partials/admin_sync_body.html", ctx)
+
+
+# --- File guide ---------------------------------------------------------------
+
+@router.get("/admin/file-guide")
+async def admin_file_guide(request: Request):
+    """Reference table of the project's data files, ranked by importance."""
+    if not is_authed(request):
+        return _redirect("/admin/login")
+
+    from teg_analysis.io import catalog_by_importance, file_anchor
+
+    return templates.TemplateResponse("admin_file_guide.html", {
+        "request": request,
+        "active_page": None,
+        "entries": catalog_by_importance(),
+        "file_anchor": file_anchor,
+    })
+
+
+# --- Volume browser -----------------------------------------------------------
+
+def _volume_body_ctx(request: Request, path: str, result: dict = None) -> dict:
+    """Build the context for the volume-browser body (listing + per-row actions)."""
+    from teg_analysis.io import (
+        list_store_dir, store_label, is_railway, SYNC_FOLDERS, get_file_definition,
+        list_sync_backups,
+    )
+    from teg_analysis.analysis.data_update import EDITABLE_DATA_FILES
+
+    # Map an editable file path -> its edit-data slug, for inline "Edit" links.
+    slug_by_path = {meta["path"]: slug for slug, meta in EDITABLE_DATA_FILES.items()}
+
+    # Count backups per original path once, so each file row can show availability.
+    backup_counts: dict[str, int] = {}
+    try:
+        for b in list_sync_backups():
+            backup_counts[b["original"]] = backup_counts.get(b["original"], 0) + 1
+    except Exception:  # noqa: BLE001 - listing backups must never break the browser
+        backup_counts = {}
+
+    ctx = {
+        "request": request,
+        "store_label": store_label(),
+        "is_railway": is_railway(),
+        "result": result,
+    }
+    try:
+        listing = list_store_dir(path)
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Volume listing failed for {path!r}: {e}", exc_info=True)
+        ctx["error"] = f"Could not list {path!r}: {e}"
+        ctx.update({"path": "", "parent": None, "entries": [], "crumbs": [("store", "")]})
+        return ctx
+
+    # Enrich each file with the quick-action targets the template needs.
+    entries = []
+    for e in listing["entries"]:
+        item = dict(e)
+        if not e["is_dir"]:
+            folder = e["rel"].rsplit("/", 1)[0] if "/" in e["rel"] else ""
+            item["edit_slug"] = slug_by_path.get(e["rel"])
+            item["sync_folder"] = folder if folder in SYNC_FOLDERS else None
+            item["definition"] = get_file_definition(e["name"])
+            item["backup_count"] = backup_counts.get(e["rel"], 0)
+        entries.append(item)
+
+    # Breadcrumb segments: [(label, rel), ...] from root to the current folder.
+    crumbs = [("store", "")]
+    acc = ""
+    for seg in (listing["path"].split("/") if listing["path"] else []):
+        acc = f"{acc}/{seg}" if acc else seg
+        crumbs.append((seg, acc))
+
+    ctx.update({
+        "path": listing["path"],
+        "parent": listing["parent"],
+        "entries": entries,
+        "crumbs": crumbs,
+    })
+    return ctx
+
+
+@router.get("/admin/volume")
+async def admin_volume(request: Request, path: str = ""):
+    if not is_authed(request):
+        return _redirect("/admin/login")
+    ctx = _volume_body_ctx(request, path)
+    ctx["active_page"] = None
+    return templates.TemplateResponse("admin_volume.html", ctx)
+
+
+@router.get("/admin/volume/download")
+async def admin_volume_download(request: Request, path: str = ""):
+    if not is_authed(request):
+        return _redirect("/admin/login")
+
+    from teg_analysis.io import read_store_file
+
+    try:
+        data = read_store_file(path)
+    except FileNotFoundError:
+        return HTMLResponse(f'<p class="error">Not found: {path}</p>', status_code=404)
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Download failed for {path!r}: {e}", exc_info=True)
+        return HTMLResponse(f'<p class="error">Download failed: {e}</p>', status_code=400)
+
+    filename = path.rsplit("/", 1)[-1] or "download"
+    return Response(
+        content=data,
+        media_type="application/octet-stream",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+@router.post("/admin/volume/delete", response_class=HTMLResponse)
+async def admin_volume_delete(request: Request):
+    if not is_authed(request):
+        return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
+
+    from teg_analysis.io import delete_store_file
+
+    form = await request.form()
+    path = form.get("path", "")
+    # Re-render the folder the file lived in.
+    folder = path.rsplit("/", 1)[0] if "/" in path else ""
+
+    try:
+        outcome = delete_store_file(path)
+        deps.clear_all_data_caches()
+        result = {"action": "delete", **outcome}
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Volume delete failed for {path!r}: {e}", exc_info=True)
+        result = {"action": "delete", "error": str(e)}
+
+    ctx = _volume_body_ctx(request, folder, result=result)
+    return templates.TemplateResponse("partials/admin_volume_body.html", ctx)
+
+
+# --- Backups browser ----------------------------------------------------------
+
+def _backups_body_ctx(request: Request, file_filter: str = "", result: dict = None) -> dict:
+    """Build the context for the backups browser (all store backups, restorable)."""
+    from teg_analysis.io import list_sync_backups
+
+    ctx = {"request": request, "file_filter": file_filter, "result": result}
+    try:
+        rows = list_sync_backups()
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Listing backups failed: {e}", exc_info=True)
+        ctx["rows"] = []
+        ctx["error"] = f"Could not list backups: {e}"
+        return ctx
+
+    if file_filter:
+        rows = [b for b in rows if b["original"] == file_filter]
+    ctx["rows"] = rows
+    # Distinct originals (for a quick filter chip row).
+    ctx["originals"] = sorted({b["original"] for b in list_sync_backups()})
+    return ctx
+
+
+@router.get("/admin/backups")
+async def admin_backups(request: Request, file: str = ""):
+    if not is_authed(request):
+        return _redirect("/admin/login")
+    ctx = _backups_body_ctx(request, file_filter=file)
+    ctx["active_page"] = None
+    return templates.TemplateResponse("admin_backups.html", ctx)
+
+
+@router.post("/admin/backups/restore", response_class=HTMLResponse)
+async def admin_backups_restore(request: Request):
+    if not is_authed(request):
+        return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
+
+    from teg_analysis.io import restore_backup
+
+    form = await request.form()
+    backup_rel = form.get("backup_rel", "")
+    file_filter = form.get("file_filter", "")
+
+    try:
+        original = restore_backup(backup_rel)  # backs up the replaced copy first
+        deps.clear_all_data_caches()
+        result = {"action": "restore", "original": original}
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Backup restore failed for {backup_rel}: {e}", exc_info=True)
+        result = {"action": "restore", "error": str(e)}
+
+    ctx = _backups_body_ctx(request, file_filter=file_filter, result=result)
+    return templates.TemplateResponse("partials/admin_backups_body.html", ctx)

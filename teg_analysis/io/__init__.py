@@ -37,12 +37,25 @@ from .sync import (
     is_railway,
     store_label,
     build_sync_status,
+    build_sync_preview,
+    file_diff,
     pull_files,
     push_files,
     detect_pull_conflicts,
     detect_push_conflicts,
     list_sync_backups,
+    backups_for,
     restore_backup,
+    list_store_dir,
+    read_store_file,
+    delete_store_file,
+)
+
+from .file_catalog import (
+    DATA_FILE_CATALOG,
+    get_file_definition,
+    catalog_by_importance,
+    file_anchor,
 )
 
 # Define public API
@@ -71,10 +84,21 @@ __all__ = [
     'is_railway',
     'store_label',
     'build_sync_status',
+    'build_sync_preview',
+    'file_diff',
     'pull_files',
     'push_files',
     'detect_pull_conflicts',
     'detect_push_conflicts',
     'list_sync_backups',
+    'backups_for',
     'restore_backup',
+    'list_store_dir',
+    'read_store_file',
+    'delete_store_file',
+    # Data file catalog
+    'DATA_FILE_CATALOG',
+    'get_file_definition',
+    'catalog_by_importance',
+    'file_anchor',
 ]

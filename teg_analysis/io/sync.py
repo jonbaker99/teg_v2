@@ -16,6 +16,7 @@ the listing stays a single GitHub API call per folder and is responsive.
 """
 
 import base64
+import difflib
 import logging
 import os
 from datetime import datetime, timezone
@@ -216,6 +217,136 @@ def detect_push_conflicts(folder: str, names: list[str]) -> list[dict]:
 
 
 # ---------------------------------------------------------------------------
+# Pre-action preview + diff
+# ---------------------------------------------------------------------------
+
+# Extensions we can show a textual diff for. Everything else (parquet, etc.) is
+# treated as binary — size + timestamp only, no line-level diff.
+_DIFFABLE_EXTS = {".csv", ".md", ".txt", ".json"}
+
+
+def build_sync_preview(action: str, folder: str, names: list[str]) -> list[dict]:
+    """Describe what ``action`` ('pull' or 'push') will do to each selected file.
+
+    For each file returns ``{name, outcome, source_size, dest_size, store_time,
+    gh_time, newer, is_conflict, diffable}`` where:
+
+      * ``outcome`` is ``'create'`` (file doesn't exist on the destination yet) or
+        ``'overwrite'`` (an existing destination copy will be replaced).
+      * ``newer`` is ``'store'`` / ``'github'`` / ``'same'`` / ``'unknown'`` — which
+        side was modified more recently (so the user can see what they'd lose).
+      * ``is_conflict`` is True when the action would overwrite the *newer* copy
+        (store newer on a pull, GitHub newer on a push).
+      * ``diffable`` is True when a textual diff is available (see ``file_diff``).
+
+    One GitHub API call lists the folder; ``github_commit_time`` is then queried
+    per selected file (bounded by the selection size).
+    """
+    gh_sizes = list_github_files(folder)
+    store_sizes = list_store_files(folder)
+
+    rows = []
+    for name in names:
+        rel = f"{folder}/{name}"
+        on_gh = name in gh_sizes
+        on_store = name in store_sizes
+        st_time = _store_mtime(rel)
+        gh_time = github_commit_time(rel)
+
+        if action == "pull":  # GitHub -> store, so the store copy is the destination
+            outcome = "overwrite" if on_store else "create"
+            source_size, dest_size = gh_sizes.get(name), store_sizes.get(name)
+        else:  # push: store -> GitHub, GitHub copy is the destination
+            outcome = "overwrite" if on_gh else "create"
+            source_size, dest_size = store_sizes.get(name), gh_sizes.get(name)
+
+        if st_time and gh_time:
+            if st_time > gh_time:
+                newer = "store"
+            elif gh_time > st_time:
+                newer = "github"
+            else:
+                newer = "same"
+        else:
+            newer = "unknown"
+
+        # A conflict is overwriting the newer copy: store newer on pull, GitHub
+        # newer on push.
+        is_conflict = (
+            outcome == "overwrite"
+            and ((action == "pull" and newer == "store")
+                 or (action == "push" and newer == "github"))
+        )
+
+        rows.append({
+            "name": name,
+            "outcome": outcome,
+            "source_size": source_size,
+            "dest_size": dest_size,
+            "store_time": st_time,
+            "gh_time": gh_time,
+            "newer": newer,
+            "is_conflict": is_conflict,
+            "diffable": Path(name).suffix.lower() in _DIFFABLE_EXTS,
+        })
+    return rows
+
+
+def file_diff(folder: str, name: str, max_lines: int = 400) -> dict:
+    """Unified diff of a file's store copy vs its GitHub copy.
+
+    Returns ``{diffable, identical, lines, truncated, reason}``. Diffs run from
+    store -> GitHub regardless of action (a stable, readable direction); the UI
+    labels which side is which. Binary/unknown extensions return
+    ``diffable=False`` with a ``reason``. A missing side is shown as empty so the
+    diff reads as a full add/remove.
+    """
+    rel = f"{folder}/{name}"
+    if Path(name).suffix.lower() not in _DIFFABLE_EXTS:
+        return {"diffable": False, "reason": "binary (no text diff)"}
+
+    def _decode(raw: bytes | None):
+        if raw is None:
+            return None
+        try:
+            return raw.decode("utf-8")
+        except UnicodeDecodeError:
+            return None
+
+    try:
+        gh_raw = github_download_bytes(rel)
+    except Exception:  # noqa: BLE001 - absent on GitHub or fetch failed
+        gh_raw = None
+    sp = _store_path(rel)
+    store_raw = sp.read_bytes() if sp.exists() else None
+
+    store_text = _decode(store_raw)
+    gh_text = _decode(gh_raw)
+    if (store_raw is not None and store_text is None) or \
+       (gh_raw is not None and gh_text is None):
+        return {"diffable": False, "reason": "not valid UTF-8 text"}
+
+    if store_raw is not None and gh_raw is not None and store_raw == gh_raw:
+        return {"diffable": True, "identical": True, "lines": [], "truncated": False}
+
+    diff = difflib.unified_diff(
+        (store_text or "").splitlines(),
+        (gh_text or "").splitlines(),
+        fromfile=f"store/{rel}",
+        tofile=f"github/{rel}",
+        lineterm="",
+    )
+    lines = list(diff)
+    truncated = len(lines) > max_lines
+    return {
+        "diffable": True,
+        "identical": False,
+        "lines": lines[:max_lines],
+        "truncated": truncated,
+    }
+
+
+# ---------------------------------------------------------------------------
 # Store backups + restore
 # ---------------------------------------------------------------------------
 
@@ -264,10 +395,17 @@ def list_sync_backups() -> list[dict]:
     return rows
 
 
-def restore_backup(backup_rel: str) -> str:
+def backups_for(original_rel: str) -> list[dict]:
+    """Backups whose restore target is ``original_rel`` (newest first)."""
+    return [b for b in list_sync_backups() if b["original"] == original_rel]
+
+
+def restore_backup(backup_rel: str, *, backup_current: bool = True) -> str:
     """Restore a backup file back to its original location in the store.
 
-    Does **not** push to GitHub — it only rewrites the store copy (use Push
+    By default the *current* store copy is backed up first (``backup_current``),
+    so a restore is itself reversible — the replaced file lands under a fresh
+    dated dir alongside the other backups. Does **not** push to GitHub (use Push
     afterwards if you want the restored version on GitHub).
 
     Returns the original path that was restored.
@@ -283,10 +421,95 @@ def restore_backup(backup_rel: str) -> str:
     rest = backup_rel[len(f"{SYNC_BACKUP_ROOT}/"):]
     original_rel = rest.split("/", 1)[1]
 
+    # Back up the file we're about to overwrite so the restore is reversible too.
+    if backup_current:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        backup_store_file(original_rel, timestamp)
+
     dest = _store_path(original_rel)
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_bytes(src.read_bytes())
     return original_rel
+
+
+# ---------------------------------------------------------------------------
+# Volume browsing + delete
+# ---------------------------------------------------------------------------
+
+def _safe_rel(rel: str) -> str:
+    """Normalise a store-relative path and reject traversal outside the store."""
+    rel = (rel or "").strip().strip("/")
+    parts = []
+    for part in rel.split("/"):
+        if part in ("", "."):
+            continue
+        if part == "..":
+            raise ValueError("Path traversal is not allowed")
+        parts.append(part)
+    return "/".join(parts)
+
+
+def list_store_dir(rel: str = "") -> dict:
+    """List one directory in the store for the volume browser.
+
+    Returns ``{path, parent, entries}`` where ``entries`` is a list of
+    ``{name, rel, is_dir, size, mtime}`` (directories first, then files, each
+    alphabetical). ``parent`` is the rel path one level up, or None at the root.
+    """
+    rel = _safe_rel(rel)
+    base = _store_path(rel) if rel else _store_path("")
+    parent = None
+    if rel:
+        parent = rel.rsplit("/", 1)[0] if "/" in rel else ""
+
+    entries: list[dict] = []
+    if base.exists() and base.is_dir():
+        for child in base.iterdir():
+            child_rel = f"{rel}/{child.name}" if rel else child.name
+            is_dir = child.is_dir()
+            stat = child.stat()
+            entries.append({
+                "name": child.name,
+                "rel": child_rel,
+                "is_dir": is_dir,
+                "size": None if is_dir else stat.st_size,
+                "mtime": datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc),
+            })
+    entries.sort(key=lambda e: (not e["is_dir"], e["name"].lower()))
+    return {"path": rel, "parent": parent, "entries": entries}
+
+
+def read_store_file(rel: str) -> bytes:
+    """Return the raw bytes of a store file (for download). Validates the path."""
+    rel = _safe_rel(rel)
+    p = _store_path(rel)
+    if not p.exists() or not p.is_file():
+        raise FileNotFoundError(rel)
+    return p.read_bytes()
+
+
+def delete_store_file(rel: str) -> dict:
+    """Delete a single store file, backing it up first so it stays restorable.
+
+    The backup lands under the same dated sync-backup tree used by pulls, so it
+    shows up in the **Backups / restore** panel on the GitHub-sync page. Does
+    **not** touch GitHub. Refuses directories and anything under the backup root.
+
+    Returns ``{deleted: rel, backup_rel: str|None}``.
+    """
+    rel = _safe_rel(rel)
+    if rel.startswith(SYNC_BACKUP_ROOT):
+        raise ValueError("Refusing to delete from the backup area")
+    p = _store_path(rel)
+    if not p.exists():
+        raise FileNotFoundError(rel)
+    if p.is_dir():
+        raise IsADirectoryError(f"{rel} is a directory")
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_rel = backup_store_file(rel, timestamp)
+    p.unlink()
+    return {"deleted": rel, "backup_rel": backup_rel}
 
 
 # ---------------------------------------------------------------------------

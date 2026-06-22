@@ -26,13 +26,20 @@ Visit `http://localhost:8000` in your browser. Use the theme switcher in the nav
 
 ## Admin / data management
 
-The webapp includes a password-gated admin area for the three data-management
-flows — **add a round**, **edit metadata CSVs** and **delete rounds** — all in
-`webapp/routes/admin.py` + `webapp/admin_auth.py`. A shared sub-nav
-(`partials/admin_nav.html`) links the three pages. Every page is behind the same
-cookie auth and each write calls `deps.clear_all_data_caches()` so the site
-shows fresh data immediately. All three drive headless logic in
-`teg_analysis.analysis.data_update` (no Streamlit, no FastAPI).
+The webapp includes a password-gated admin area, all in `webapp/routes/admin.py`
++ `webapp/admin_auth.py`. A shared sub-nav (`partials/admin_nav.html`) links the
+pages: **Add a round**, **Edit data**, **Delete rounds**, **Volume** (browser),
+**GitHub sync**, **Backups** and **File guide**. Every page is behind the same
+cookie auth and each write calls `deps.clear_all_data_caches()` so the site shows
+fresh data immediately. They drive headless logic in
+`teg_analysis.analysis.data_update` and `teg_analysis.io` (sync / file catalog) —
+no Streamlit, no FastAPI in the analysis layer.
+
+Admin pages load `webapp/static/admin.css`, which (among the form/button styles)
+applies a **compact override** to `.teg-table` — smaller font and tighter row
+padding than the site default — scoped to `.main-content` so it only affects
+admin pages (data density matters more than editorial spacing here). The same
+compactness applies to the inline edit grid (`#edit-grid` cells).
 
 **Add a round** — templates `admin_data_update.html`, `partials/admin_update_*.html`.
 - **Routes:** `/admin/data-update` (load + preview), `/admin/data-update/preview`,
@@ -71,26 +78,74 @@ shows fresh data immediately. All three drive headless logic in
   bestball), batch-committing on Railway.
 
 **GitHub ↔ store sync** — templates `admin_volume_sync.html`,
-`partials/admin_sync_body.html`, backed by `teg_analysis/io/sync.py`.
+`partials/admin_sync_body.html`, `partials/admin_sync_preview.html`,
+`partials/admin_sync_diff.html`, backed by `teg_analysis/io/sync.py`.
 - **Routes:** `/admin/volume-sync?folder=<folder>` (status table),
-  `/admin/volume-sync/pull` and `/admin/volume-sync/push` (HTMX).
+  `/admin/volume-sync/preview` (the pre-action review screen),
+  `/admin/volume-sync/diff` (per-file text diff), `/admin/volume-sync/pull` and
+  `/admin/volume-sync/push` (HTMX, the actual transfer).
 - **Flow:** pick a folder (`data`, `data/commentary`, …) → see a per-file status
   table comparing GitHub vs the store (Only on GitHub / Only in store / Different
-  size / Same size) → tick files → **Pull** (`pull_files`: GitHub → store) or
-  **Push** (`push_files`: store → GitHub in one batch commit). The "store" is the
-  Railway volume in production and the local working tree in dev. Use this to move
-  just the reference CSVs you changed for a new TEG without a full redeploy.
+  size / Same size) → tick files (a live **Selected (N)** box beside the action
+  buttons lists what's currently ticked so the long table can't hide the
+  selection) → **Pull** or **Push** → a **preview** (`build_sync_preview`) lists
+  exactly what each file will do (Create new vs Overwrite, store-vs-GitHub
+  modified times, which side is newer, conflicts highlighted) with an optional
+  per-file **View diff** (`file_diff`, unified text diff for
+  `.csv/.md/.txt/.json`; binary/parquet shows "binary") → **Confirm** runs
+  `pull_files` (GitHub → store) or `push_files` (store → GitHub in one batch
+  commit). The "store" is the Railway volume in production and the local working
+  tree in dev. Use this to move just the reference CSVs you changed for a new TEG
+  without a full redeploy.
+- **Info icons:** each catalogued file in the status table carries a small **ℹ**
+  that shows its role + how-it's-updated on hover and deep-links to the matching
+  row on the **File guide** page (`get_file_definition` / `file_anchor`).
 - **Environment banner:** the page shows whether the store is the Railway volume
   (live) or your local working tree (dev), with a small-print summary of the
   implications (pull overwrites working-tree files / push makes an out-of-band API
   commit when run locally).
 - **Safety:** each pull backs up the existing store file to
-  `data/backups/sync/<timestamp>/…` *before* overwriting (`backup_store_file`); a
-  **Backups / restore** panel lists them and restores on demand (`restore_backup`,
-  store-only — Push afterwards to send back to GitHub). Pushes rely on GitHub's own
-  history. Before either action, `detect_pull_conflicts` / `detect_push_conflicts`
-  compare store mtime vs GitHub last-commit time and, if the destination copy is
-  **newer**, show an overwrite-confirm screen ("…anyway") instead of proceeding.
+  `data/backups/sync/<timestamp>/…` *before* overwriting (`backup_store_file`); an
+  inline **Backups / restore** panel lists them and restores on demand
+  (`restore_backup`, which now also backs up the copy it replaces, store-only —
+  Push afterwards to send back to GitHub). See the dedicated **Backups** page
+  below for the full browser. Pushes rely on GitHub's own
+  history. The preview is the primary confirmation step; as a backstop, a direct
+  (un-previewed) call to `/pull` or `/push` still runs `detect_pull_conflicts` /
+  `detect_push_conflicts` and shows the overwrite-confirm screen
+  (`partials/admin_sync_conflict.html`) if the destination copy is **newer**.
+
+**Volume browser** — template `admin_volume.html`,
+`partials/admin_volume_body.html`, backed by `teg_analysis/io/sync.py`
+(`list_store_dir`, `read_store_file`, `delete_store_file`).
+- **Routes:** `/admin/volume?path=<rel>` (browse), `/admin/volume/download?path=`
+  (stream a file), `/admin/volume/delete` (HTMX, file delete).
+- **Flow:** browse the store's actual file tree (breadcrumb + drill-in). Each file
+  row offers **Edit** (catalogued editable files → Edit data), **Sync** (jump to
+  GitHub sync for that folder), **Download**, **Restore (N)** (if backups exist →
+  Backups page filtered to that file) and **Delete**. Delete takes a timestamped
+  backup first (`delete_store_file`, restorable from the Backups page) and
+  confirms. Paths are validated against traversal (`_safe_rel`). This is the main
+  way to *see what's on the Railway volume*.
+
+**Backups** — template `admin_backups.html`, `partials/admin_backups_body.html`.
+- **Routes:** `/admin/backups?file=<optional rel>` (browse, with a per-file
+  filter), `/admin/backups/restore` (HTMX).
+- **Flow:** lists every store backup (newest first) taken before a pull, a volume
+  delete or a prior restore (`list_sync_backups`). Restore rewrites the store copy
+  and **backs up the copy it replaces first** (so restores are reversible too);
+  store-only — Push from GitHub sync to send it back. Each backup can also be
+  **Downloaded**. The volume browser's per-file **Restore (N)** deep-links here
+  pre-filtered (`backups_for`).
+
+**File guide** — template `admin_file_guide.html`, backed by
+`teg_analysis/io/file_catalog.py` (`DATA_FILE_CATALOG`, `catalog_by_importance`,
+`get_file_definition`, `file_anchor`).
+- **Route:** `/admin/file-guide` (read-only reference).
+- **Flow:** a table of every data file — role, format, how it's updated, editable
+  link — **ranked by importance**. Each row is anchored (`file-<name>`) so the ℹ
+  icons on the GitHub-sync and Volume pages can deep-link to it. The catalog is
+  the single source of truth shared by the page and the info icons.
 
 - **Auth:** one shared password from `WEBAPP_ADMIN_PASSWORD` (defaults to `teg`
   if unset), held in a cookie. This is **not** real security — it only stops a

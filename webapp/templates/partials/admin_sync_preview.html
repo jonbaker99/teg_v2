@@ -1,0 +1,84 @@
+{# Pre-action preview: exactly what a pull/push will do, shown before it runs.
+   Expects: action, folder, names, rows, commit_message, has_conflict. #}
+{% set is_pull = action == 'pull' %}
+<div class="data-card{% if has_conflict %} sync-preview--conflict{% endif %}" style="margin-bottom:1rem;">
+  <h2 class="card-header">
+    {% if is_pull %}⬇️ Review pull — GitHub → store{% else %}⬆️ Review push — store → GitHub{% endif %}
+  </h2>
+  <p style="margin:.4rem 0 .9rem;font-size:.85rem;">
+    {{ rows | length }} file(s) selected. Check what will be overwritten below, then confirm.
+    {% if is_pull %}A backup of each overwritten store file is taken first.{% endif %}
+  </p>
+
+  {% if has_conflict %}
+  <div class="admin-callout admin-callout--warning" style="margin-bottom:1rem;">
+    <div class="admin-callout-title">⚠️ Some files would overwrite a newer copy</div>
+    <div class="admin-callout-detail">
+      The rows flagged <strong>newer overwritten</strong> below replace a copy on the
+      destination that was modified more recently than the source. Confirming will
+      discard those newer changes.
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="table-wrapper">
+    <table class="teg-table">
+      <thead>
+        <tr>
+          <th>File</th><th>What happens</th><th>Store modified</th>
+          <th>GitHub modified</th><th>Newer</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+          <tr{% if r.is_conflict %} class="sync-row--conflict"{% endif %}>
+            <td>{{ r.name }}</td>
+            <td>
+              {% if r.outcome == 'create' %}
+                <span class="badge">Create new</span>
+              {% elif r.is_conflict %}
+                <span class="badge sync-badge--danger">Overwrite — newer overwritten</span>
+              {% else %}
+                Overwrite
+              {% endif %}
+            </td>
+            <td>{{ r.store_time.strftime('%Y-%m-%d %H:%M UTC') if r.store_time else "—" }}</td>
+            <td>{{ r.gh_time.strftime('%Y-%m-%d %H:%M UTC') if r.gh_time else "—" }}</td>
+            <td>
+              {% if r.newer == 'store' %}Store
+              {% elif r.newer == 'github' %}GitHub
+              {% elif r.newer == 'same' %}Same
+              {% else %}—{% endif %}
+            </td>
+            <td>
+              {% if r.diffable %}
+                <button type="button" class="text-link" style="background:none;border:none;cursor:pointer;padding:0;"
+                        hx-get="/admin/volume-sync/diff?folder={{ folder }}&name={{ r.name }}"
+                        hx-target="#diff-{{ loop.index }}" hx-swap="innerHTML">
+                  View diff
+                </button>
+              {% else %}
+                <span style="opacity:.5;">binary</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% if r.diffable %}
+            <tr><td colspan="6" style="padding:0;"><div id="diff-{{ loop.index }}"></div></td></tr>
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <form class="sync-confirm-form" style="margin-top:1rem;display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;">
+    <input type="hidden" name="folder" value="{{ folder }}">
+    <input type="hidden" name="confirm" value="1">
+    <input type="hidden" name="commit_message" value="{{ commit_message }}">
+    {% for n in names %}<input type="hidden" name="files" value="{{ n }}">{% endfor %}
+    <button type="button" class="btn-action"
+            hx-post="/admin/volume-sync/{{ action }}" hx-target="#sync-body" hx-swap="innerHTML">
+      {% if is_pull %}⬇️ Confirm pull{% else %}⬆️ Confirm push{% endif %}
+    </button>
+    <a href="/admin/volume-sync?folder={{ folder }}" class="text-link" style="align-self:center;">Cancel</a>
+  </form>
+</div>
