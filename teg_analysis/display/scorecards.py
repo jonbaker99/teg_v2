@@ -823,6 +823,14 @@ def build_bestball_contribution_bars(round_data: pd.DataFrame) -> str:
                 f'<span class="bw-h-fmt">{fmt}</span>'
                 f'<span class="bw-h-metric">{metric}</span></th>')
 
+    def _name_html(name: str) -> str:
+        """Full name on wide screens; 'Initial. SURNAME' on narrow ones (the
+        narrow variant is shown via CSS, so both are emitted)."""
+        bits = name.split()
+        short = f'{bits[0][0]}. {bits[-1]}' if len(bits) >= 2 else name
+        return (f'<span class="bw-name-full">{name}</span>'
+                f'<span class="bw-name-short">{short}</span>')
+
     parts = ['<table class="bw-bars-table"><colgroup>'
              '<col class="bw-bars-player"><col><col><col><col></colgroup><thead>']
     parts.append('<tr>'
@@ -836,7 +844,7 @@ def build_bestball_contribution_bars(round_data: pd.DataFrame) -> str:
 
     for name, r in rows:
         parts.append('<tr>')
-        parts.append(f'<td class="player-label">{name}</td>')
+        parts.append(f'<td class="player-label">{_name_html(name)}</td>')
         parts.append(f'<td>{_holes_bar(int(r["bb_holes"]), int(r["bb_solo"]), "best")}</td>')
         parts.append(f'<td>{_contr_bar(int(r["bb_impact"]), "best")}</td>')
         parts.append(f'<td>{_holes_bar(int(r["wb_holes"]), int(r["wb_solo"]), "worst")}</td>')

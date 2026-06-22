@@ -593,7 +593,7 @@ html[data-mode="dark"] .bw-rank-num { background-color: #2a2a26; }
   border-spacing: 0;
   font-size: 12px;
 }
-.bw-bars-table col.bw-bars-player { width: 88px; }
+.bw-bars-table col.bw-bars-player { width: 132px; }
 .bw-bars-table th,
 .bw-bars-table td { padding: 5px 8px; text-align: center; }
 .bw-bars-table thead th {
@@ -606,11 +606,20 @@ html[data-mode="dark"] .bw-rank-num { background-color: #2a2a26; }
 .bw-bars-table th.bw-c-worst { color: #555; }
 .bw-bars-table th.player-label,
 .bw-bars-table td.player-label { text-align: left; font-weight: 600; }
+/* Names stay on one line; the column is wide enough to hold the full name on
+   normal screens, and a short 'Initial. SURNAME' is swapped in when narrow. */
+.bw-bars-table td.player-label { white-space: nowrap; }
 .bw-bars-table th.player-label {
   vertical-align: bottom;
   font-weight: 600;
   font-size: 11px;
   color: var(--color-text-secondary);
+}
+.bw-bars-table .bw-name-short { display: none; }
+@media (max-width: 640px) {
+  .bw-bars-table col.bw-bars-player { width: 82px; }
+  .bw-bars-table .bw-name-full { display: none; }
+  .bw-bars-table .bw-name-short { display: inline; }
 }
 /* Uniform row height — tall enough for a two-line player name so every row
    matches whether or not its name wraps. */
