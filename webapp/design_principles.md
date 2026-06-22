@@ -36,9 +36,9 @@ Reference point: [theelgolfo.com](https://theelgolfo.com) — the existing Strea
   `J. BAKER`) and swap to the short form below the mobile breakpoint via CSS, rather
   than letting names wrap or push data off-screen. Shared helper:
   `teg_analysis/display/scorecards.py:_player_name_spans` (classes `bw-name-full` /
-  `bw-name-short`). For very wide tables that can't fit on mobile even when shortened,
-  prefer a per-section toggle that shows one subset of columns at a time (see the
-  bestball/worstball contribution table's Bestball/Worstball toggle).
+  `bw-name-short`). For wide tables that can't fit on mobile even when shortened,
+  prefer splitting into separate tables that sit side by side and wrap to stacked
+  when narrow (see the bestball/worstball Bestball and Worstball contribution tables).
 
 ## Components
 

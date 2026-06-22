@@ -29,8 +29,8 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
   `Initial. SURNAME` swap (`_player_name_spans`, classes `bw-name-full` /
   `bw-name-short`) is used by the bestball/worstball contribution table and field
   card. Audit other tables where a player-name column compromises data display on
-  narrow screens and apply the same helper (and a per-format toggle for very wide
-  tables). See `webapp/design_principles.md` → Tables.
+  narrow screens and apply the same helper (and, for wide tables, split into
+  side-by-side tables that wrap). See `webapp/design_principles.md` → Tables.
 
 ## PLAYER PROFILES
 - [ ] Revisit again to make UI cleaner and less cluttered

@@ -775,15 +775,15 @@ def build_bestball_worstball_scorecard(round_data: pd.DataFrame) -> str:
 
 
 def build_bestball_contribution_bars(round_data: pd.DataFrame) -> str:
-    """Build a player x metric table of CSS bar charts for the round's bestball /
-    worstball contributions.
+    """Build two side-by-side contribution tables (Bestball, Worstball) for the
+    round.
 
-    One row per player (ordered to match the field card), four columns:
-    Bestball holes+solo, Bestball contribution, Worstball holes+solo, Worstball
-    contribution. The holes columns draw a pale full-length 'holes' bar with the
-    solid 'solo' subset overlaid; the contribution columns draw a single bar
-    scaled by magnitude with the signed value. Bars in a column share one scale
-    so they read horizontally across the table.
+    Each table has one row per player (ordered to match the field card) and
+    three columns: Player, Impact (the signed shot contribution — the headline
+    number), and Holes (a CSS bar overlaying the solid 'solo' count on the pale
+    'holes' count). The two tables sit next to each other when there's room and
+    wrap to stacked when narrow. The holes bars share one scale across both
+    tables so they're comparable.
     """
     if round_data is None or round_data.empty:
         return "<p class='text-muted text-sm'>No data available.</p>"
@@ -797,18 +797,17 @@ def build_bestball_contribution_bars(round_data: pd.DataFrame) -> str:
     rows = [(name, by_pl[code]) for code, name in _get_sorted_players(round_data) if code in by_pl]
 
     holes_scale = max([1] + [int(r['bb_holes']) for _, r in rows] + [int(r['wb_holes']) for _, r in rows])
-    contr_scale = max([1] + [abs(int(r['bb_impact'])) for _, r in rows] + [abs(int(r['wb_impact'])) for _, r in rows])
 
-    # Bars fill to at most FILL_MAX% of the track, leaving room for the value
-    # label that sits just past the end of the bar.
-    FILL_MAX = 76
+    # Holes bar fills to at most FILL_MAX% of the track, leaving room for the
+    # count label that sits just past the end of the bar.
+    FILL_MAX = 72
 
-    def _pct(value: int, scale: int) -> int:
+    def _pct(value: int) -> int:
         v = abs(int(value))
-        return 0 if v == 0 else max(6, round(FILL_MAX * v / scale))
+        return 0 if v == 0 else max(6, round(FILL_MAX * v / holes_scale))
 
     def _holes_bar(holes: int, solo: int, kind: str) -> str:
-        hp, sp = _pct(holes, holes_scale), _pct(solo, holes_scale)
+        hp, sp = _pct(holes), _pct(solo)
         label = f'{holes}<small>·{solo}</small>' if holes else '–'
         zcls = '' if holes else ' bw-bar-zero'
         return (f'<div class="bw-bar bw-bar--{kind}">'
@@ -819,52 +818,33 @@ def build_bestball_contribution_bars(round_data: pd.DataFrame) -> str:
                 f'<span class="bw-bar-val{zcls}" style="left:calc({hp}% + 6px)">{label}</span>'
                 '</div>')
 
-    def _contr_bar(value: int, kind: str) -> str:
+    def _impact(value: int, kind: str) -> str:
         v = int(value)
-        p = _pct(v, contr_scale)
-        label = '–' if v == 0 else _vp_label(v)
-        zcls = ' bw-bar-zero' if v == 0 else ''
-        fill = '' if v == 0 else f'<div class="bw-bar-fill bw-bar-fill--solid" style="width:{p}%"></div>'
-        return (f'<div class="bw-bar bw-bar--{kind}">'
-                f'<div class="bw-bar-track">{fill}</div>'
-                f'<span class="bw-bar-val{zcls}" style="left:calc({p}% + 6px)">{label}</span>'
-                '</div>')
+        if v == 0:
+            return '<span class="bw-impact bw-impact--zero">–</span>'
+        return f'<span class="bw-impact bw-impact--{kind}">{_vp_label(v)}</span>'
 
-    def _head(fmt: str, metric: str, kind: str) -> str:
-        return (f'<th class="bw-c-{kind} bw-col-{kind}">'
-                f'<span class="bw-h-fmt">{fmt}</span>'
-                f'<span class="bw-h-metric">{metric}</span></th>')
+    def _table(kind: str, fmt_label: str, holes_key: str, solo_key: str, impact_key: str) -> str:
+        out = [f'<div class="bw-bars-col">',
+               f'<div class="bw-bars-title bw-bars-title--{kind}">{fmt_label}</div>',
+               '<table class="bw-bars-table"><colgroup>'
+               '<col class="bw-bars-player"><col class="bw-bars-impact"><col></colgroup><thead>',
+               '<tr><th class="player-label">Player</th>'
+               '<th class="bw-col-impact">Impact</th><th>Holes</th></tr>',
+               '</thead><tbody>']
+        for name, r in rows:
+            out.append('<tr>')
+            out.append(f'<td class="player-label">{_player_name_spans(name)}</td>')
+            out.append(f'<td class="bw-col-impact">{_impact(int(r[impact_key]), kind)}</td>')
+            out.append(f'<td>{_holes_bar(int(r[holes_key]), int(r[solo_key]), kind)}</td>')
+            out.append('</tr>')
+        out.append('</tbody></table></div>')
+        return ''.join(out)
 
-    # Wrapper + a Bestball/Worstball toggle that only shows on narrow screens
-    # (CSS); on mobile it hides the other format's two columns so the bars have
-    # room. data-bw is flipped by the delegated handler in base.html.
-    parts = ['<div class="bw-bars-wrap" data-bw="best">']
-    parts.append('<div class="bw-fmt-toggle pill-group" role="group" aria-label="Format">'
-                 '<button type="button" class="pill pill--active bw-fmt-pill" data-bw="best">Bestball</button>'
-                 '<button type="button" class="pill bw-fmt-pill" data-bw="worst">Worstball</button>'
-                 '</div>')
-    parts.append('<table class="bw-bars-table"><colgroup>'
-                 '<col class="bw-bars-player"><col><col><col><col></colgroup><thead>')
-    parts.append('<tr>'
-                 '<th class="player-label">Player</th>'
-                 + _head('Bestball', 'Holes &amp; solo', 'best')
-                 + _head('Bestball', 'Impact', 'best')
-                 + _head('Worstball', 'Holes &amp; solo', 'worst')
-                 + _head('Worstball', 'Impact', 'worst')
-                 + '</tr>')
-    parts.append('</thead><tbody>')
-
-    for name, r in rows:
-        parts.append('<tr>')
-        parts.append(f'<td class="player-label">{_player_name_spans(name)}</td>')
-        parts.append(f'<td class="bw-col-best">{_holes_bar(int(r["bb_holes"]), int(r["bb_solo"]), "best")}</td>')
-        parts.append(f'<td class="bw-col-best">{_contr_bar(int(r["bb_impact"]), "best")}</td>')
-        parts.append(f'<td class="bw-col-worst">{_holes_bar(int(r["wb_holes"]), int(r["wb_solo"]), "worst")}</td>')
-        parts.append(f'<td class="bw-col-worst">{_contr_bar(int(r["wb_impact"]), "worst")}</td>')
-        parts.append('</tr>')
-
-    parts.append('</tbody></table></div>')
-    return ''.join(parts)
+    return ('<div class="bw-bars-pair">'
+            + _table('best', 'Bestball', 'bb_holes', 'bb_solo', 'bb_impact')
+            + _table('worst', 'Worstball', 'wb_holes', 'wb_solo', 'wb_impact')
+            + '</div>')
 
 
 def build_teg_eclectic_scorecard(teg_data: pd.DataFrame) -> str:

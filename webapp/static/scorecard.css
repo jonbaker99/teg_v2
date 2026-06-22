@@ -587,13 +587,25 @@ html[data-mode="dark"] .bw-scorecard th:nth-child(11),
 html[data-mode="dark"] .bw-scorecard td:nth-child(11) { border-left-color: #3a3a3a; }
 html[data-mode="dark"] .bw-rank-num { background-color: #2a2a26; }
 
-/* ===== BESTBALL / WORSTBALL CONTRIBUTION BAR TABLE =====
-   Player rows x four CSS-bar columns. Format lives in two-line column titles
-   (Bestball / Worstball + metric) rather than a group row. Fixed layout keeps
-   every bar track the same width; a fixed row height keeps player rows uniform
-   even when a name wraps. Holes bars overlay a solid 'solo' fill on a pale
-   'holes' fill; contribution bars scale by magnitude. The value label sits just
-   past the end of each bar, inside the chart. */
+/* ===== BESTBALL / WORSTBALL CONTRIBUTION TABLES =====
+   Two side-by-side tables (Bestball, Worstball), each: Player | Impact | Holes.
+   Impact is the headline number; Holes is a CSS bar overlaying a solid 'solo'
+   fill on a pale 'holes' fill, with the count just past the bar end. The pair
+   wraps to stacked when there isn't room for both. */
+.bw-bars-pair {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  align-items: flex-start;
+}
+.bw-bars-col { flex: 1 1 300px; min-width: 280px; }
+.bw-bars-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 0.35rem;
+}
+.bw-bars-title--best { color: #1f7a2a; }
+.bw-bars-title--worst { color: #555; }
 .bw-bars-table {
   width: 100%;
   table-layout: fixed;
@@ -602,43 +614,33 @@ html[data-mode="dark"] .bw-rank-num { background-color: #2a2a26; }
   font-size: 12px;
   font-family: 'Roboto Mono', monospace;
 }
-.bw-bars-table col.bw-bars-player { width: 132px; }
-/* Bestball/Worstball toggle — hidden by default, shown only on narrow screens
-   where it swaps which format's two columns are visible (see media query). */
-.bw-fmt-toggle { display: none; margin-bottom: 0.75rem; }
+.bw-bars-table col.bw-bars-player { width: 116px; }
+.bw-bars-table col.bw-bars-impact { width: 56px; }
 .bw-bars-table th,
 .bw-bars-table td { padding: 5px 8px; text-align: center; }
 .bw-bars-table thead th {
   vertical-align: bottom;
   letter-spacing: 0.02em;
-}
-.bw-bars-table .bw-h-fmt { display: block; font-weight: 700; font-size: 12px; }
-.bw-bars-table .bw-h-metric { display: block; font-weight: 600; font-size: 11px; }
-.bw-bars-table th.bw-c-best { color: #1f7a2a; }
-.bw-bars-table th.bw-c-worst { color: #555; }
-.bw-bars-table th.player-label { text-align: left; }
-.bw-bars-table td.player-label { text-align: left; font-weight: 400; }
-/* Names stay on one line; the column is wide enough to hold the full name on
-   normal screens, and a short 'Initial.SURNAME' is swapped in when narrow. */
-.bw-bars-table td.player-label { white-space: nowrap; }
-.bw-bars-table th.player-label {
-  vertical-align: bottom;
   font-weight: 600;
   font-size: 11px;
   color: var(--color-text-secondary);
 }
-/* Full / short player-name swap (shared by the bar table and the field card):
-   full name normally, 'Initial.SURNAME' on narrow screens. */
+.bw-bars-table th.player-label,
+.bw-bars-table td.player-label { text-align: left; }
+.bw-bars-table td.player-label { font-weight: 400; font-size: 11px; white-space: nowrap; }
+/* Impact — the headline metric: larger, bold, coloured by format. */
+.bw-col-impact { text-align: center; }
+.bw-impact { font-weight: 700; font-size: 14px; }
+.bw-impact--best { color: #1f7a2a; }
+.bw-impact--worst { color: #555; }
+.bw-impact--zero { color: #b3b3b3; font-weight: 400; }
+/* Full / short player-name swap (shared with the field card): full name
+   normally, 'Initial.SURNAME' on narrow screens. */
 .bw-name-short { display: none; }
 @media (max-width: 640px) {
   .bw-name-full { display: none; }
   .bw-name-short { display: inline; }
-  .bw-bars-table col.bw-bars-player { width: 76px; }
-  /* Let the two visible columns expand once two are hidden. */
-  .bw-bars-table { table-layout: auto; }
-  .bw-fmt-toggle { display: inline-flex; }
-  .bw-bars-wrap[data-bw="best"] .bw-col-worst { display: none; }
-  .bw-bars-wrap[data-bw="worst"] .bw-col-best { display: none; }
+  .bw-bars-table col.bw-bars-player { width: 84px; }
 }
 .bw-bars-table tbody td { height: 30px; vertical-align: middle; }
 .bw-bars-table tbody tr:hover td { background-color: var(--table-hover-bg); }
@@ -676,8 +678,10 @@ html[data-mode="dark"] .bw-rank-num { background-color: #2a2a26; }
 .bw-bar-val.bw-bar-zero { color: #b3b3b3; font-weight: 400; }
 
 /* Dark mode */
-html[data-mode="dark"] .bw-bars-table th.bw-c-best { color: #8fdc97; }
-html[data-mode="dark"] .bw-bars-table th.bw-c-worst { color: #d8d8d8; }
+html[data-mode="dark"] .bw-bars-title--best { color: #8fdc97; }
+html[data-mode="dark"] .bw-bars-title--worst { color: #d8d8d8; }
+html[data-mode="dark"] .bw-impact--best { color: #8fdc97; }
+html[data-mode="dark"] .bw-impact--worst { color: #c9c9c9; }
 html[data-mode="dark"] .bw-bar-track { background-color: #26261f; }
 html[data-mode="dark"] .bw-bar--best .bw-bar-fill--pale { background-color: #274d2c; }
 html[data-mode="dark"] .bw-bar--best .bw-bar-fill--solid { background-color: #3f9a52; }
