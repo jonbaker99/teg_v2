@@ -9,6 +9,10 @@ Reference point: [theelgolfo.com](https://theelgolfo.com) — the existing Strea
 - **Serif headers** (Lora) — editorial feel, not web-app feel
 - **Mono font** (Roboto Mono) for tables only — numbers should look like data
 - No mono or sans-serif for prose or headings
+- **Captions** — explanatory/footnote text beneath tables, charts and other data
+  points uses the `.caption` class (serif, small, grey; defined in
+  `themes/base-vars.css`). Use it for all such captions rather than ad-hoc
+  `text-muted`/`text-sm` combinations.
 
 ## Layout
 

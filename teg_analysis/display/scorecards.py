@@ -832,7 +832,11 @@ def build_bestball_contribution_bars(round_data: pd.DataFrame) -> str:
                '<tr><th class="player-label">Player</th>'
                '<th class="bw-col-impact">Impact</th><th>Holes</th></tr>',
                '</thead><tbody>']
-        for name, r in rows:
+        # Sort by impact magnitude, biggest first (bestball biggest negative
+        # first, worstball biggest positive first), down to zero. Stable, so
+        # equal impacts keep the gross-score order.
+        ordered = sorted(rows, key=lambda nr: abs(int(nr[1][impact_key])), reverse=True)
+        for name, r in ordered:
             out.append('<tr>')
             out.append(f'<td class="player-label">{_player_name_spans(name)}</td>')
             out.append(f'<td class="bw-col-impact">{_impact(int(r[impact_key]), kind)}</td>')

@@ -360,7 +360,7 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                 sections.append({
                     "title": None, "raw": True,
                     "table_html": (
-                        "<p class='text-muted text-sm mt-2'>"
+                        "<p class='caption'>"
                         "<strong>Holes &amp; solo</strong>: holes where the player matched the "
                         "field best (bestball) or worst (worstball), and how many of those they "
                         "drove alone. <strong>Impact</strong>: the player's net effect on the "

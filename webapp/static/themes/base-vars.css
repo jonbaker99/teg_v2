@@ -63,6 +63,18 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--text-muted);
 }
 
+/* ── Caption ──
+   Standard style for explanatory/footnote text beneath tables, charts and
+   other data points across the site: serif, small, grey. Use .caption for any
+   such caption rather than ad-hoc text-muted/text-sm combinations. */
+.caption {
+    font-family: 'Lora', Georgia, 'Times New Roman', serif;
+    font-size: 0.8rem;
+    line-height: 1.45;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+}
+
 /* ── Cards ── */
 .card {
     background-color: var(--bg-card);
