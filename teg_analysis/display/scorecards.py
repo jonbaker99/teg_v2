@@ -235,6 +235,18 @@ def _get_sorted_players(round_data: pd.DataFrame):
     return [(p, name) for _, p, name in player_totals]
 
 
+def _player_name_spans(name: str) -> str:
+    """Emit a player name as a full + short ('Initial. SURNAME') pair of spans.
+
+    Both are always emitted; CSS shows the full name normally and swaps in the
+    short form on narrow screens, so data columns aren't squeezed on mobile.
+    """
+    bits = str(name).split()
+    short = f'{bits[0][0]}. {bits[-1]}' if len(bits) >= 2 else str(name)
+    return (f'<span class="bw-name-full">{name}</span>'
+            f'<span class="bw-name-short">{short}</span>')
+
+
 def build_round_comparison_gross_table(round_data: pd.DataFrame) -> str:
     """Build gross scores table comparing all players in one round.
 
@@ -752,7 +764,7 @@ def build_bestball_worstball_scorecard(round_data: pd.DataFrame) -> str:
         title = {int(r['Hole']): _cell_title(r) for _, r in pdata.iterrows()}
         total = sum(vp[h] for h in range(1, 19) if h in vp)
 
-        parts.append(f'<tr><td class="player-label">{name}</td>')
+        parts.append(f'<tr><td class="player-label">{_player_name_spans(name)}</td>')
         for hole in range(1, 19):
             parts.append(_bw_player_cell(vp.get(hole), hole_min.get(hole), hole_max.get(hole), title.get(hole, '')))
         parts.append(f'<td class="totals">{_vp_label(total)}</td>')
@@ -819,20 +831,20 @@ def build_bestball_contribution_bars(round_data: pd.DataFrame) -> str:
                 '</div>')
 
     def _head(fmt: str, metric: str, kind: str) -> str:
-        return (f'<th class="bw-c-{kind}">'
+        return (f'<th class="bw-c-{kind} bw-col-{kind}">'
                 f'<span class="bw-h-fmt">{fmt}</span>'
                 f'<span class="bw-h-metric">{metric}</span></th>')
 
-    def _name_html(name: str) -> str:
-        """Full name on wide screens; 'Initial. SURNAME' on narrow ones (the
-        narrow variant is shown via CSS, so both are emitted)."""
-        bits = name.split()
-        short = f'{bits[0][0]}. {bits[-1]}' if len(bits) >= 2 else name
-        return (f'<span class="bw-name-full">{name}</span>'
-                f'<span class="bw-name-short">{short}</span>')
-
-    parts = ['<table class="bw-bars-table"><colgroup>'
-             '<col class="bw-bars-player"><col><col><col><col></colgroup><thead>']
+    # Wrapper + a Bestball/Worstball toggle that only shows on narrow screens
+    # (CSS); on mobile it hides the other format's two columns so the bars have
+    # room. data-bw is flipped by the delegated handler in base.html.
+    parts = ['<div class="bw-bars-wrap" data-bw="best">']
+    parts.append('<div class="bw-fmt-toggle pill-group" role="group" aria-label="Format">'
+                 '<button type="button" class="pill pill--active bw-fmt-pill" data-bw="best">Bestball</button>'
+                 '<button type="button" class="pill bw-fmt-pill" data-bw="worst">Worstball</button>'
+                 '</div>')
+    parts.append('<table class="bw-bars-table"><colgroup>'
+                 '<col class="bw-bars-player"><col><col><col><col></colgroup><thead>')
     parts.append('<tr>'
                  '<th class="player-label">Player</th>'
                  + _head('Bestball', 'Holes &amp; solo', 'best')
@@ -844,14 +856,14 @@ def build_bestball_contribution_bars(round_data: pd.DataFrame) -> str:
 
     for name, r in rows:
         parts.append('<tr>')
-        parts.append(f'<td class="player-label">{_name_html(name)}</td>')
-        parts.append(f'<td>{_holes_bar(int(r["bb_holes"]), int(r["bb_solo"]), "best")}</td>')
-        parts.append(f'<td>{_contr_bar(int(r["bb_impact"]), "best")}</td>')
-        parts.append(f'<td>{_holes_bar(int(r["wb_holes"]), int(r["wb_solo"]), "worst")}</td>')
-        parts.append(f'<td>{_contr_bar(int(r["wb_impact"]), "worst")}</td>')
+        parts.append(f'<td class="player-label">{_player_name_spans(name)}</td>')
+        parts.append(f'<td class="bw-col-best">{_holes_bar(int(r["bb_holes"]), int(r["bb_solo"]), "best")}</td>')
+        parts.append(f'<td class="bw-col-best">{_contr_bar(int(r["bb_impact"]), "best")}</td>')
+        parts.append(f'<td class="bw-col-worst">{_holes_bar(int(r["wb_holes"]), int(r["wb_solo"]), "worst")}</td>')
+        parts.append(f'<td class="bw-col-worst">{_contr_bar(int(r["wb_impact"]), "worst")}</td>')
         parts.append('</tr>')
 
-    parts.append('</tbody></table>')
+    parts.append('</tbody></table></div>')
     return ''.join(parts)
 
 

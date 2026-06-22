@@ -26,6 +26,14 @@ Reference point: [theelgolfo.com](https://theelgolfo.com) — the existing Strea
 - **Light cell borders** (1px) — barely visible, just enough to guide the eye
 - **Active/top rank** — subtle green tint, bold
 - Aim for Datawrapper-like density: tight row spacing, thin borders, generous but not excessive cell padding
+- **Player names on narrow screens** — where a player-name column would squeeze the
+  data on mobile, emit both a full name and a short `Initial. SURNAME` form (e.g.
+  `J. BAKER`) and swap to the short form below the mobile breakpoint via CSS, rather
+  than letting names wrap or push data off-screen. Shared helper:
+  `teg_analysis/display/scorecards.py:_player_name_spans` (classes `bw-name-full` /
+  `bw-name-short`). For very wide tables that can't fit on mobile even when shortened,
+  prefer a per-section toggle that shows one subset of columns at a time (see the
+  bestball/worstball contribution table's Bestball/Worstball toggle).
 
 ## Components
 

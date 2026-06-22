@@ -592,8 +592,12 @@ html[data-mode="dark"] .bw-rank-num { background-color: #2a2a26; }
   border-collapse: separate;
   border-spacing: 0;
   font-size: 12px;
+  font-family: 'Roboto Mono', monospace;
 }
 .bw-bars-table col.bw-bars-player { width: 132px; }
+/* Bestball/Worstball toggle — hidden by default, shown only on narrow screens
+   where it swaps which format's two columns are visible (see media query). */
+.bw-fmt-toggle { display: none; margin-bottom: 0.75rem; }
 .bw-bars-table th,
 .bw-bars-table td { padding: 5px 8px; text-align: center; }
 .bw-bars-table thead th {
@@ -615,11 +619,18 @@ html[data-mode="dark"] .bw-rank-num { background-color: #2a2a26; }
   font-size: 11px;
   color: var(--color-text-secondary);
 }
-.bw-bars-table .bw-name-short { display: none; }
+/* Full / short player-name swap (shared by the bar table and the field card):
+   full name normally, 'Initial. SURNAME' on narrow screens. */
+.bw-name-short { display: none; }
 @media (max-width: 640px) {
+  .bw-name-full { display: none; }
+  .bw-name-short { display: inline; }
   .bw-bars-table col.bw-bars-player { width: 82px; }
-  .bw-bars-table .bw-name-full { display: none; }
-  .bw-bars-table .bw-name-short { display: inline; }
+  /* Let the two visible columns expand once two are hidden. */
+  .bw-bars-table { table-layout: auto; }
+  .bw-fmt-toggle { display: inline-flex; }
+  .bw-bars-wrap[data-bw="best"] .bw-col-worst { display: none; }
+  .bw-bars-wrap[data-bw="worst"] .bw-col-best { display: none; }
 }
 /* Uniform row height — tall enough for a two-line player name so every row
    matches whether or not its name wraps. */

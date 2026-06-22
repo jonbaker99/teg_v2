@@ -346,5 +346,20 @@
         });
     })();
     </script>
+    <!-- Bestball/Worstball contribution-table format toggle (mobile only): flips
+         data-bw on the wrapper so CSS shows that format's two columns. -->
+    <script>
+    (function() {
+        document.addEventListener('click', function(e) {
+            var pill = e.target.closest('.bw-fmt-pill');
+            if (!pill) return;
+            var wrap = pill.closest('.bw-bars-wrap');
+            if (!wrap) return;
+            wrap.querySelectorAll('.bw-fmt-pill').forEach(function(p) { p.classList.remove('pill--active'); });
+            pill.classList.add('pill--active');
+            wrap.setAttribute('data-bw', pill.dataset.bw);
+        });
+    })();
+    </script>
 </body>
 </html>

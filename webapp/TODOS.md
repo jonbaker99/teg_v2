@@ -25,6 +25,12 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
   contribution bars (`build_bestball_contribution_bars`) use lightweight CSS bars
   that read better inline than the equivalent Plotly panels. Roll the same approach
   out to other small bar charts where Plotly is overkill.
+- [ ] **Roll out mobile name shortening where width is tight** — the
+  `Initial. SURNAME` swap (`_player_name_spans`, classes `bw-name-full` /
+  `bw-name-short`) is used by the bestball/worstball contribution table and field
+  card. Audit other tables where a player-name column compromises data display on
+  narrow screens and apply the same helper (and a per-format toggle for very wide
+  tables). See `webapp/design_principles.md` → Tables.
 
 ## PLAYER PROFILES
 - [ ] Revisit again to make UI cleaner and less cluttered
