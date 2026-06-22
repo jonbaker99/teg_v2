@@ -615,6 +615,9 @@ HTML builders).
   gross-vs-par per hole, field best highlighted green / worst black, plus
   Bestball and Worstball to-par rows in the eclectic shading), with each
   round's bestball and worstball totals ranked against all rounds all-time.
+  Below the card, a **Player contributions** CSS-bar table breaks down each
+  player's holes/solo-holes/signed shot-impact on the two totals
+  (`build_bestball_contribution_bars`).
 - ~~**Show the best eclectic for the latest TEG.**~~ Done: an **Eclectic** tab
   on `/latest-teg` shows the TEG's best eclectic (by hole + total) in the
   eclectic scorecard format, ranked against all TEGs.

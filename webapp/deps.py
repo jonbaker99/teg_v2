@@ -63,6 +63,49 @@ def cached_ranked_frontback_data():
     return get_ranked_frontback_data()
 
 
+@lru_cache(maxsize=1)
+def cached_bestball_data():
+    """Round-level bestball/worstball totals (data/bestball.parquet).
+
+    Maintained by pipeline.update_bestball_cache on every add/delete, so the
+    site can rank a round's totals without recomputing the full-history
+    groupby('TRH').apply(...) on every page load.
+    """
+    from teg_analysis.constants import BESTBALL_PARQUET
+    from teg_analysis.io.file_operations import read_file
+    return read_file(BESTBALL_PARQUET)
+
+
+def bestball_worstball_totals(all_data: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Return (bestball_totals, worstball_totals): per-round team-format scores.
+
+    Sourced from the maintained bestball cache (data/bestball.parquet,
+    regenerated on every add/delete) to avoid recomputing the full-history
+    groupby('TRH').apply(...) on every page load. Falls back to live
+    computation if the cache is missing, empty, or malformed, so pages never
+    break. A round's bestball/worstball total is independent of which other
+    TEGs are present, so callers can safely filter the result by TEGNum.
+    """
+    from teg_analysis.analysis.bestball import (
+        prepare_bestball_data,
+        calculate_bestball_scores,
+        calculate_worstball_scores,
+    )
+    try:
+        cache = cached_bestball_data()
+        if cache is not None and not cache.empty and 'Format' in cache.columns:
+            bb = cache[cache['Format'] == 'Bestball']
+            wb = cache[cache['Format'] == 'Worstball']
+            if not bb.empty and not wb.empty:
+                return bb, wb
+        logger.warning("Bestball cache present but unusable; recomputing live")
+    except Exception:
+        logger.warning("Bestball cache unavailable; recomputing live", exc_info=True)
+
+    prepared = prepare_bestball_data(all_data)
+    return calculate_bestball_scores(prepared), calculate_worstball_scores(prepared)
+
+
 def clear_all_data_caches() -> None:
     """Clear every in-process data cache.
 
@@ -77,6 +120,7 @@ def clear_all_data_caches() -> None:
         cached_ranked_teg_data,
         cached_ranked_round_data,
         cached_ranked_frontback_data,
+        cached_bestball_data,
     ):
         fn.cache_clear()
 
