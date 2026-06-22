@@ -42,7 +42,7 @@
   <input type="hidden" name="folder" value="{{ folder }}">
 
   <div class="admin-table-scroll">
-    <table class="teg-table">
+    <table class="teg-table" id="sync-files-table">
       <thead>
         <tr>
           <th><input type="checkbox" onclick="tegSyncToggleAll(this)" title="Select all"></th>
@@ -52,7 +52,7 @@
       <tbody>
         {% for row in rows %}
           <tr>
-            <td><input type="checkbox" name="files" value="{{ row.name }}"></td>
+            <td><input type="checkbox" name="files" value="{{ row.name }}" onchange="tegSyncRefreshSelected()"></td>
             <td>{{ row.name }}</td>
             <td>{{ row.status }}</td>
             <td>{{ "{:,}".format(row.gh_size) if row.gh_size is not none else "—" }}</td>
@@ -68,17 +68,27 @@
     <input name="commit_message" placeholder="Sync files from store to GitHub" style="padding:.5rem;">
   </label>
 
-  <div style="margin-top:1rem;display:flex;gap:.75rem;flex-wrap:wrap;">
-    <button type="button" class="btn-action"
-            hx-post="/admin/volume-sync/pull" hx-target="#sync-body" hx-swap="innerHTML"
-            hx-confirm="Pull the selected files from GitHub, overwriting them in the store?">
-      ⬇️ Pull selected (GitHub → store)
-    </button>
-    <button type="button" class="btn-secondary"
-            hx-post="/admin/volume-sync/push" hx-target="#sync-body" hx-swap="innerHTML"
-            hx-confirm="Push the selected files from the store to GitHub?">
-      ⬆️ Push selected (store → GitHub)
-    </button>
+  {# Actions + a live list of what's currently ticked, so the selection is never
+     lost in the long table above. Both Pull and Push go via a preview first. #}
+  <div class="sync-action-bar">
+    <div class="sync-action-buttons">
+      <button type="button" class="btn-action"
+              hx-post="/admin/volume-sync/preview" hx-vals='{"action": "pull"}'
+              hx-target="#sync-body" hx-swap="innerHTML">
+        ⬇️ Pull selected (GitHub → store)
+      </button>
+      <button type="button" class="btn-secondary"
+              hx-post="/admin/volume-sync/preview" hx-vals='{"action": "push"}'
+              hx-target="#sync-body" hx-swap="innerHTML">
+        ⬆️ Push selected (store → GitHub)
+      </button>
+    </div>
+    <div class="sync-selected-box">
+      <div class="sync-selected-head">Selected (<span id="sync-selected-count">0</span>)</div>
+      <ul id="sync-selected-list" class="sync-selected-list">
+        <li class="sync-selected-empty">No files ticked.</li>
+      </ul>
+    </div>
   </div>
 </form>
 
@@ -87,7 +97,26 @@ function tegSyncToggleAll(master) {
   master.closest('table').querySelectorAll('input[name="files"]').forEach(function (c) {
     c.checked = master.checked;
   });
+  tegSyncRefreshSelected();
 }
+function tegSyncRefreshSelected() {
+  var checked = Array.prototype.slice.call(
+    document.querySelectorAll('#sync-files-table input[name="files"]:checked'));
+  var list = document.getElementById('sync-selected-list');
+  var count = document.getElementById('sync-selected-count');
+  if (!list || !count) return;
+  count.textContent = checked.length;
+  if (checked.length === 0) {
+    list.innerHTML = '<li class="sync-selected-empty">No files ticked.</li>';
+    return;
+  }
+  list.innerHTML = checked.map(function (c) {
+    var span = document.createElement('span');
+    span.textContent = c.value;
+    return '<li>' + span.innerHTML + '</li>';
+  }).join('');
+}
+tegSyncRefreshSelected();
 </script>
 {% endif %}
 

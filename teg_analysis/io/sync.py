@@ -16,6 +16,7 @@ the listing stays a single GitHub API call per folder and is responsive.
 """
 
 import base64
+import difflib
 import logging
 import os
 from datetime import datetime, timezone
@@ -213,6 +214,136 @@ def detect_push_conflicts(folder: str, names: list[str]) -> list[dict]:
         if st and gh and gh > st:
             conflicts.append({"name": name, "store_time": st, "gh_time": gh})
     return conflicts
+
+
+# ---------------------------------------------------------------------------
+# Pre-action preview + diff
+# ---------------------------------------------------------------------------
+
+# Extensions we can show a textual diff for. Everything else (parquet, etc.) is
+# treated as binary — size + timestamp only, no line-level diff.
+_DIFFABLE_EXTS = {".csv", ".md", ".txt", ".json"}
+
+
+def build_sync_preview(action: str, folder: str, names: list[str]) -> list[dict]:
+    """Describe what ``action`` ('pull' or 'push') will do to each selected file.
+
+    For each file returns ``{name, outcome, source_size, dest_size, store_time,
+    gh_time, newer, is_conflict, diffable}`` where:
+
+      * ``outcome`` is ``'create'`` (file doesn't exist on the destination yet) or
+        ``'overwrite'`` (an existing destination copy will be replaced).
+      * ``newer`` is ``'store'`` / ``'github'`` / ``'same'`` / ``'unknown'`` — which
+        side was modified more recently (so the user can see what they'd lose).
+      * ``is_conflict`` is True when the action would overwrite the *newer* copy
+        (store newer on a pull, GitHub newer on a push).
+      * ``diffable`` is True when a textual diff is available (see ``file_diff``).
+
+    One GitHub API call lists the folder; ``github_commit_time`` is then queried
+    per selected file (bounded by the selection size).
+    """
+    gh_sizes = list_github_files(folder)
+    store_sizes = list_store_files(folder)
+
+    rows = []
+    for name in names:
+        rel = f"{folder}/{name}"
+        on_gh = name in gh_sizes
+        on_store = name in store_sizes
+        st_time = _store_mtime(rel)
+        gh_time = github_commit_time(rel)
+
+        if action == "pull":  # GitHub -> store, so the store copy is the destination
+            outcome = "overwrite" if on_store else "create"
+            source_size, dest_size = gh_sizes.get(name), store_sizes.get(name)
+        else:  # push: store -> GitHub, GitHub copy is the destination
+            outcome = "overwrite" if on_gh else "create"
+            source_size, dest_size = store_sizes.get(name), gh_sizes.get(name)
+
+        if st_time and gh_time:
+            if st_time > gh_time:
+                newer = "store"
+            elif gh_time > st_time:
+                newer = "github"
+            else:
+                newer = "same"
+        else:
+            newer = "unknown"
+
+        # A conflict is overwriting the newer copy: store newer on pull, GitHub
+        # newer on push.
+        is_conflict = (
+            outcome == "overwrite"
+            and ((action == "pull" and newer == "store")
+                 or (action == "push" and newer == "github"))
+        )
+
+        rows.append({
+            "name": name,
+            "outcome": outcome,
+            "source_size": source_size,
+            "dest_size": dest_size,
+            "store_time": st_time,
+            "gh_time": gh_time,
+            "newer": newer,
+            "is_conflict": is_conflict,
+            "diffable": Path(name).suffix.lower() in _DIFFABLE_EXTS,
+        })
+    return rows
+
+
+def file_diff(folder: str, name: str, max_lines: int = 400) -> dict:
+    """Unified diff of a file's store copy vs its GitHub copy.
+
+    Returns ``{diffable, identical, lines, truncated, reason}``. Diffs run from
+    store -> GitHub regardless of action (a stable, readable direction); the UI
+    labels which side is which. Binary/unknown extensions return
+    ``diffable=False`` with a ``reason``. A missing side is shown as empty so the
+    diff reads as a full add/remove.
+    """
+    rel = f"{folder}/{name}"
+    if Path(name).suffix.lower() not in _DIFFABLE_EXTS:
+        return {"diffable": False, "reason": "binary (no text diff)"}
+
+    def _decode(raw: bytes | None):
+        if raw is None:
+            return None
+        try:
+            return raw.decode("utf-8")
+        except UnicodeDecodeError:
+            return None
+
+    try:
+        gh_raw = github_download_bytes(rel)
+    except Exception:  # noqa: BLE001 - absent on GitHub or fetch failed
+        gh_raw = None
+    sp = _store_path(rel)
+    store_raw = sp.read_bytes() if sp.exists() else None
+
+    store_text = _decode(store_raw)
+    gh_text = _decode(gh_raw)
+    if (store_raw is not None and store_text is None) or \
+       (gh_raw is not None and gh_text is None):
+        return {"diffable": False, "reason": "not valid UTF-8 text"}
+
+    if store_raw is not None and gh_raw is not None and store_raw == gh_raw:
+        return {"diffable": True, "identical": True, "lines": [], "truncated": False}
+
+    diff = difflib.unified_diff(
+        (store_text or "").splitlines(),
+        (gh_text or "").splitlines(),
+        fromfile=f"store/{rel}",
+        tofile=f"github/{rel}",
+        lineterm="",
+    )
+    lines = list(diff)
+    truncated = len(lines) > max_lines
+    return {
+        "diffable": True,
+        "identical": False,
+        "lines": lines[:max_lines],
+        "truncated": truncated,
+    }
 
 
 # ---------------------------------------------------------------------------

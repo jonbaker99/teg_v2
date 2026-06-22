@@ -485,6 +485,68 @@ def _sync_conflict_response(request: Request, *, action: str, folder: str,
     return templates.TemplateResponse("partials/admin_sync_conflict.html", ctx)
 
 
+@router.post("/admin/volume-sync/preview", response_class=HTMLResponse)
+async def admin_volume_sync_preview(request: Request):
+    """Show exactly what a pull/push will do before it runs (the confirm step)."""
+    if not is_authed(request):
+        return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
+
+    from teg_analysis.io import build_sync_preview
+
+    form = await request.form()
+    action = form.get("action", "")
+    folder = form.get("folder", "data")
+    names = form.getlist("files")
+    message = form.get("commit_message", "").strip()
+
+    if action not in ("pull", "push"):
+        ctx = _sync_body_ctx(request, folder)
+        return templates.TemplateResponse("partials/admin_sync_body.html", ctx)
+
+    if not names:
+        ctx = _sync_body_ctx(request, folder, result={"action": action, "empty": True})
+        return templates.TemplateResponse("partials/admin_sync_body.html", ctx)
+
+    try:
+        rows = build_sync_preview(action, folder, names)
+    except Exception as e:  # noqa: BLE001 - surface, don't block, on a check failure
+        logger.error(f"Sync preview failed: {e}", exc_info=True)
+        ctx = _sync_body_ctx(request, folder, result={"action": action, "error": str(e)})
+        return templates.TemplateResponse("partials/admin_sync_body.html", ctx)
+
+    ctx = {
+        "request": request,
+        "action": action,
+        "folder": folder,
+        "names": names,
+        "rows": rows,
+        "commit_message": message,
+        "has_conflict": any(r["is_conflict"] for r in rows),
+    }
+    return templates.TemplateResponse("partials/admin_sync_preview.html", ctx)
+
+
+@router.get("/admin/volume-sync/diff", response_class=HTMLResponse)
+async def admin_volume_sync_diff(request: Request, folder: str = "data", name: str = ""):
+    """Return a unified diff (store vs GitHub) for a single text file."""
+    if not is_authed(request):
+        return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
+
+    from teg_analysis.io import file_diff
+
+    try:
+        diff = file_diff(folder, name)
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Diff failed for {folder}/{name}: {e}", exc_info=True)
+        diff = {"diffable": False, "reason": str(e)}
+
+    return templates.TemplateResponse("partials/admin_sync_diff.html", {
+        "request": request,
+        "name": name,
+        "diff": diff,
+    })
+
+
 @router.post("/admin/volume-sync/pull", response_class=HTMLResponse)
 async def admin_volume_sync_pull(request: Request):
     if not is_authed(request):

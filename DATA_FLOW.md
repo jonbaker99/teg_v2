@@ -64,7 +64,11 @@ be synced individually without a full data update. Driven by the webapp
 `/admin/volume-sync` page. Each pull backs up the existing store file to
 `data/backups/sync/<timestamp>/` before overwriting (`backup_store_file` /
 `restore_backup`), and `detect_pull_conflicts` / `detect_push_conflicts` warn before
-overwriting a destination copy that is newer than the source.
+overwriting a destination copy that is newer than the source. Before a pull/push runs,
+`build_sync_preview(action, folder, names)` summarises per file what will happen
+(create vs overwrite, store-vs-GitHub modified times, which side is newer, conflict
+flag); `file_diff(folder, name)` returns a unified text diff (store vs GitHub) for
+diffable extensions (`.csv/.md/.txt/.json`).
 
 ---
 

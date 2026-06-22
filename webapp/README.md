@@ -34,6 +34,11 @@ cookie auth and each write calls `deps.clear_all_data_caches()` so the site
 shows fresh data immediately. All three drive headless logic in
 `teg_analysis.analysis.data_update` (no Streamlit, no FastAPI).
 
+Admin pages load `webapp/static/admin.css`, which (among the form/button styles)
+applies a **compact override** to `.teg-table` — smaller font and tighter row
+padding than the site default — scoped to `.main-content` so it only affects
+admin pages (data density matters more than editorial spacing here).
+
 **Add a round** — templates `admin_data_update.html`, `partials/admin_update_*.html`.
 - **Routes:** `/admin/data-update` (load + preview), `/admin/data-update/preview`,
   `/admin/data-update/execute` (HTMX).
@@ -71,15 +76,25 @@ shows fresh data immediately. All three drive headless logic in
   bestball), batch-committing on Railway.
 
 **GitHub ↔ store sync** — templates `admin_volume_sync.html`,
-`partials/admin_sync_body.html`, backed by `teg_analysis/io/sync.py`.
+`partials/admin_sync_body.html`, `partials/admin_sync_preview.html`,
+`partials/admin_sync_diff.html`, backed by `teg_analysis/io/sync.py`.
 - **Routes:** `/admin/volume-sync?folder=<folder>` (status table),
-  `/admin/volume-sync/pull` and `/admin/volume-sync/push` (HTMX).
+  `/admin/volume-sync/preview` (the pre-action review screen),
+  `/admin/volume-sync/diff` (per-file text diff), `/admin/volume-sync/pull` and
+  `/admin/volume-sync/push` (HTMX, the actual transfer).
 - **Flow:** pick a folder (`data`, `data/commentary`, …) → see a per-file status
   table comparing GitHub vs the store (Only on GitHub / Only in store / Different
-  size / Same size) → tick files → **Pull** (`pull_files`: GitHub → store) or
-  **Push** (`push_files`: store → GitHub in one batch commit). The "store" is the
-  Railway volume in production and the local working tree in dev. Use this to move
-  just the reference CSVs you changed for a new TEG without a full redeploy.
+  size / Same size) → tick files (a live **Selected (N)** box beside the action
+  buttons lists what's currently ticked so the long table can't hide the
+  selection) → **Pull** or **Push** → a **preview** (`build_sync_preview`) lists
+  exactly what each file will do (Create new vs Overwrite, store-vs-GitHub
+  modified times, which side is newer, conflicts highlighted) with an optional
+  per-file **View diff** (`file_diff`, unified text diff for
+  `.csv/.md/.txt/.json`; binary/parquet shows "binary") → **Confirm** runs
+  `pull_files` (GitHub → store) or `push_files` (store → GitHub in one batch
+  commit). The "store" is the Railway volume in production and the local working
+  tree in dev. Use this to move just the reference CSVs you changed for a new TEG
+  without a full redeploy.
 - **Environment banner:** the page shows whether the store is the Railway volume
   (live) or your local working tree (dev), with a small-print summary of the
   implications (pull overwrites working-tree files / push makes an out-of-band API
@@ -88,9 +103,10 @@ shows fresh data immediately. All three drive headless logic in
   `data/backups/sync/<timestamp>/…` *before* overwriting (`backup_store_file`); a
   **Backups / restore** panel lists them and restores on demand (`restore_backup`,
   store-only — Push afterwards to send back to GitHub). Pushes rely on GitHub's own
-  history. Before either action, `detect_pull_conflicts` / `detect_push_conflicts`
-  compare store mtime vs GitHub last-commit time and, if the destination copy is
-  **newer**, show an overwrite-confirm screen ("…anyway") instead of proceeding.
+  history. The preview is the primary confirmation step; as a backstop, a direct
+  (un-previewed) call to `/pull` or `/push` still runs `detect_pull_conflicts` /
+  `detect_push_conflicts` and shows the overwrite-confirm screen
+  (`partials/admin_sync_conflict.html`) if the destination copy is **newer**.
 
 - **Auth:** one shared password from `WEBAPP_ADMIN_PASSWORD` (defaults to `teg`
   if unset), held in a cookie. This is **not** real security — it only stops a

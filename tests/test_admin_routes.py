@@ -80,6 +80,54 @@ def test_volume_sync_pull_warns_on_newer(client, monkeypatch):
     assert "pull anyway" in resp.text.lower()
 
 
+def test_volume_sync_preview_shows_table(client, monkeypatch):
+    """Pull/Push first render a preview of what will be overwritten."""
+    import teg_analysis.io as tio
+    from datetime import datetime, timezone
+    monkeypatch.setattr(tio, "build_sync_preview", lambda action, folder, names: [
+        {"name": "round_info.csv", "outcome": "overwrite",
+         "source_size": 10, "dest_size": 9,
+         "store_time": datetime(2026, 1, 1, tzinfo=timezone.utc),
+         "gh_time": datetime(2026, 6, 1, tzinfo=timezone.utc),
+         "newer": "github", "is_conflict": False, "diffable": True},
+    ])
+
+    def _boom(*a, **k):
+        raise AssertionError("pull must not run from the preview step")
+    monkeypatch.setattr(tio, "pull_files", _boom)
+
+    _login(client)
+    resp = client.post("/admin/volume-sync/preview",
+                       data={"action": "pull", "folder": "data", "files": "round_info.csv"})
+    assert resp.status_code == 200
+    assert "review pull" in resp.text.lower()
+    assert "round_info.csv" in resp.text
+    assert "confirm pull" in resp.text.lower()
+
+
+def test_volume_sync_preview_empty_selection(client, monkeypatch):
+    import teg_analysis.io as tio
+    monkeypatch.setattr(tio, "build_sync_status", lambda folder: [])
+    _login(client)
+    resp = client.post("/admin/volume-sync/preview",
+                       data={"action": "pull", "folder": "data"})
+    assert resp.status_code == 200
+    assert "no files selected" in resp.text.lower()
+
+
+def test_volume_sync_diff_renders(client, monkeypatch):
+    import teg_analysis.io as tio
+    monkeypatch.setattr(tio, "file_diff", lambda folder, name: {
+        "diffable": True, "identical": False, "truncated": False,
+        "lines": ["--- store", "+++ github", "@@ -1 +1 @@", "-old", "+new"],
+    })
+    _login(client)
+    resp = client.get("/admin/volume-sync/diff?folder=data&name=round_info.csv")
+    assert resp.status_code == 200
+    assert "+new" in resp.text
+    assert "-old" in resp.text
+
+
 def test_volume_sync_restore(client, monkeypatch):
     import teg_analysis.io as tio
     monkeypatch.setattr(tio, "restore_backup", lambda backup_rel: "data/round_info.csv")
