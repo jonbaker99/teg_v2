@@ -1,0 +1,92 @@
+{# Volume listing + per-file actions. Re-rendered after a delete.
+   Expects: path, parent, crumbs, entries, result (optional), error (optional). #}
+
+{% if result %}
+  {% if result.error %}
+    <p class="error" style="color:#b00020;">Delete failed: {{ result.error }}</p>
+  {% elif result.action == 'delete' %}
+    <div class="data-card" style="margin-bottom:1rem;">
+      <h2 class="card-header">✅ Deleted <code>{{ result.deleted }}</code></h2>
+      {% if result.backup_rel %}
+        <p style="font-size:.8rem;opacity:.8;margin-top:.4rem;">
+          A backup was taken first — restore it from the
+          <a href="/admin/backups" class="text-link">Backups</a> page if needed.
+        </p>
+      {% endif %}
+    </div>
+  {% endif %}
+{% endif %}
+
+{% if error %}
+  <p class="error" style="color:#b00020;">{{ error }}</p>
+{% endif %}
+
+{# Breadcrumb #}
+<div class="section-controls" style="display:flex;gap:.35rem;flex-wrap:wrap;align-items:center;">
+  {% for label, rel in crumbs %}
+    {% if not loop.last %}
+      <a href="/admin/volume?path={{ rel }}" class="text-link">{{ label }}</a>
+      <span style="opacity:.5;">/</span>
+    {% else %}
+      <span style="font-weight:600;">{{ label }}</span>
+    {% endif %}
+  {% endfor %}
+</div>
+
+{% if not entries %}
+  <p>This folder is empty.</p>
+{% else %}
+<div class="admin-table-scroll">
+  <table class="teg-table">
+    <thead>
+      <tr><th>Name</th><th>Size</th><th>Modified</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% if parent is not none %}
+        <tr>
+          <td colspan="4"><a href="/admin/volume?path={{ parent }}" class="text-link">⬆️ ..</a></td>
+        </tr>
+      {% endif %}
+      {% for e in entries %}
+        <tr>
+          <td>
+            {% if e.is_dir %}
+              📁 <a href="/admin/volume?path={{ e.rel }}" class="text-link">{{ e.name }}/</a>
+            {% else %}
+              📄 {{ e.name }}
+              {% if e.definition %}
+                <a class="info-tip" href="/admin/file-guide#file-{{ e.definition.name | replace('.', '-') }}"
+                   title="{{ e.definition.role }} — Updated by: {{ e.definition.updated_by }}">ℹ</a>
+              {% endif %}
+            {% endif %}
+          </td>
+          <td>{{ "{:,}".format(e.size) if e.size is not none else "—" }}</td>
+          <td>{{ e.mtime.strftime('%Y-%m-%d %H:%M UTC') if e.mtime else "—" }}</td>
+          <td>
+            {% if not e.is_dir %}
+              <span class="volume-actions">
+                {% if e.edit_slug %}
+                  <a href="/admin/edit-data?file={{ e.edit_slug }}" class="text-link">Edit</a>
+                {% endif %}
+                {% if e.sync_folder is not none %}
+                  <a href="/admin/volume-sync?folder={{ e.sync_folder }}" class="text-link">Sync</a>
+                {% endif %}
+                <a href="/admin/volume/download?path={{ e.rel }}" class="text-link">Download</a>
+                {% if e.backup_count %}
+                  <a href="/admin/backups?file={{ e.rel }}" class="text-link">Restore ({{ e.backup_count }})</a>
+                {% endif %}
+                <button type="button" class="text-link volume-delete"
+                        hx-post="/admin/volume/delete" hx-target="#volume-body" hx-swap="innerHTML"
+                        hx-vals='{"path": "{{ e.rel }}"}'
+                        hx-confirm="Delete {{ e.name }} from the store? A backup is taken first (restore from the Backups page).">
+                  Delete
+                </button>
+              </span>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}

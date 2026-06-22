@@ -27,11 +27,91 @@ def _login(client):
     assert resp.status_code == 303
 
 
-@pytest.mark.parametrize("path", ["/admin/edit-data", "/admin/delete-data", "/admin/volume-sync"])
+@pytest.mark.parametrize("path", [
+    "/admin/edit-data", "/admin/delete-data", "/admin/volume-sync",
+    "/admin/file-guide", "/admin/volume", "/admin/backups",
+])
 def test_routes_require_auth(client, path):
     resp = client.get(path)
     assert resp.status_code == 303
     assert resp.headers["location"] == "/admin/login"
+
+
+def test_file_guide_renders(client):
+    _login(client)
+    resp = client.get("/admin/file-guide")
+    assert resp.status_code == 200
+    assert "File guide" in resp.text
+    assert "all-scores.parquet" in resp.text
+
+
+def test_volume_browser_renders(client, monkeypatch):
+    import teg_analysis.io as tio
+    from datetime import datetime, timezone
+    monkeypatch.setattr(tio, "list_store_dir", lambda path: {
+        "path": "data", "parent": "",
+        "entries": [
+            {"name": "commentary", "rel": "data/commentary", "is_dir": True,
+             "size": None, "mtime": datetime(2026, 1, 1, tzinfo=timezone.utc)},
+            {"name": "round_info.csv", "rel": "data/round_info.csv", "is_dir": False,
+             "size": 12, "mtime": datetime(2026, 1, 1, tzinfo=timezone.utc)},
+        ],
+    })
+    monkeypatch.setattr(tio, "list_sync_backups", lambda: [])
+    _login(client)
+    resp = client.get("/admin/volume?path=data")
+    assert resp.status_code == 200
+    assert "round_info.csv" in resp.text
+    assert "Download" in resp.text and "Delete" in resp.text
+    # round_info.csv is editable -> Edit link present
+    assert "/admin/edit-data?file=round_info" in resp.text
+
+
+def test_volume_download(client, monkeypatch):
+    import teg_analysis.io as tio
+    monkeypatch.setattr(tio, "read_store_file", lambda path: b"col\n1\n")
+    _login(client)
+    resp = client.get("/admin/volume/download?path=data/round_info.csv")
+    assert resp.status_code == 200
+    assert resp.content == b"col\n1\n"
+    assert "attachment" in resp.headers["content-disposition"]
+
+
+def test_volume_delete_backs_up(client, monkeypatch):
+    import teg_analysis.io as tio
+    monkeypatch.setattr(tio, "delete_store_file",
+                        lambda path: {"deleted": path, "backup_rel": "data/backups/sync/x/" + path})
+    monkeypatch.setattr(tio, "list_store_dir", lambda path: {
+        "path": path, "parent": "", "entries": []})
+    monkeypatch.setattr(tio, "list_sync_backups", lambda: [])
+    _login(client)
+    resp = client.post("/admin/volume/delete", data={"path": "data/old.csv"})
+    assert resp.status_code == 200
+    assert "deleted" in resp.text.lower()
+
+
+def test_backups_page_and_restore(client, monkeypatch):
+    import teg_analysis.io as tio
+    monkeypatch.setattr(tio, "list_sync_backups", lambda: [
+        {"timestamp": "20260101_000000", "original": "data/round_info.csv",
+         "backup_rel": "data/backups/sync/20260101_000000/data/round_info.csv", "size": 10},
+    ])
+    _login(client)
+    resp = client.get("/admin/backups")
+    assert resp.status_code == 200
+    assert "round_info.csv" in resp.text
+
+    captured = {}
+    def fake_restore(backup_rel, *, backup_current=True):
+        captured["backup_rel"] = backup_rel
+        captured["backup_current"] = backup_current
+        return "data/round_info.csv"
+    monkeypatch.setattr(tio, "restore_backup", fake_restore)
+    resp = client.post("/admin/backups/restore", data={
+        "backup_rel": "data/backups/sync/20260101_000000/data/round_info.csv"})
+    assert resp.status_code == 200
+    assert "restored" in resp.text.lower()
+    assert captured["backup_rel"].endswith("round_info.csv")
 
 
 def test_volume_sync_page_renders_when_authed(client, monkeypatch):

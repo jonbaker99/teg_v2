@@ -51,9 +51,16 @@
       </thead>
       <tbody>
         {% for row in rows %}
+          {% set defn = get_definition(row.name) %}
           <tr>
             <td><input type="checkbox" name="files" value="{{ row.name }}" onchange="tegSyncRefreshSelected()"></td>
-            <td>{{ row.name }}</td>
+            <td>
+              {{ row.name }}
+              {% if defn %}
+                <a class="info-tip" href="/admin/file-guide#{{ file_anchor(row.name) }}"
+                   title="{{ defn.role }} — Updated by: {{ defn.updated_by }}">ℹ</a>
+              {% endif %}
+            </td>
             <td>{{ row.status }}</td>
             <td>{{ "{:,}".format(row.gh_size) if row.gh_size is not none else "—" }}</td>
             <td>{{ "{:,}".format(row.store_size) if row.store_size is not none else "—" }}</td>

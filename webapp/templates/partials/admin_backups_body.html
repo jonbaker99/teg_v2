@@ -1,0 +1,66 @@
+{# Backups listing + restore. Re-rendered after a restore.
+   Expects: rows, originals, file_filter, result (optional), error (optional). #}
+
+{% if result %}
+  {% if result.error %}
+    <p class="error" style="color:#b00020;">Restore failed: {{ result.error }}</p>
+  {% elif result.action == 'restore' %}
+    <div class="data-card" style="margin-bottom:1rem;">
+      <h2 class="card-header">✅ Restored <code>{{ result.original }}</code> into the store</h2>
+      <p style="font-size:.8rem;opacity:.8;margin-top:.4rem;">
+        The file it replaced was backed up first (listed below). Push it from
+        GitHub sync if you also want the restored version on GitHub.
+      </p>
+    </div>
+  {% endif %}
+{% endif %}
+
+{% if error %}
+  <p class="error" style="color:#b00020;">{{ error }}</p>
+{% endif %}
+
+{# Filter chips: all, then one per distinct original file. #}
+{% if originals %}
+<div class="section-controls" style="display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;">
+  <span class="page-label" style="margin:0 .25rem 0 0;">Filter</span>
+  <a href="/admin/backups" class="tab-underline{% if not file_filter %} tab-underline--active{% endif %}"
+     style="padding:.3rem .7rem;">All</a>
+  {% for o in originals %}
+    <a href="/admin/backups?file={{ o }}"
+       class="tab-underline{% if file_filter == o %} tab-underline--active{% endif %}"
+       style="padding:.3rem .7rem;">{{ o }}</a>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if not rows %}
+  <p>No backups found{% if file_filter %} for <code>{{ file_filter }}</code>{% endif %}.</p>
+{% else %}
+<div class="admin-table-scroll">
+  <table class="teg-table">
+    <thead>
+      <tr><th>When</th><th>File</th><th>Size</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for b in rows %}
+        <tr>
+          <td>{{ b.timestamp }}</td>
+          <td><code>{{ b.original }}</code></td>
+          <td>{{ "{:,}".format(b.size) }}</td>
+          <td>
+            <span class="volume-actions">
+              <button type="button" class="text-link" style="background:none;border:none;cursor:pointer;padding:0;"
+                      hx-post="/admin/backups/restore" hx-target="#backups-body" hx-swap="innerHTML"
+                      hx-vals='{"backup_rel": "{{ b.backup_rel }}", "file_filter": "{{ file_filter }}"}'
+                      hx-confirm="Restore {{ b.original }} from {{ b.timestamp }}? The current store copy is backed up first.">
+                Restore
+              </button>
+              <a href="/admin/volume/download?path={{ b.backup_rel }}" class="text-link">Download</a>
+            </span>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}

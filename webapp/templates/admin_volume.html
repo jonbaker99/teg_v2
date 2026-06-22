@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title_suffix %} — Volume{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+  <span class="page-label">Admin</span>
+  <h1 class="page-title">Volume browser</h1>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="/static/admin.css">
+{% endblock %}
+
+{% block content %}
+{% set admin_active = 'volume' %}
+{% include "partials/admin_nav.html" %}
+
+<div class="section-panel">
+  <p style="margin-bottom:1rem;font-size:.875rem;">
+    Browse the app's data store (<code>{{ store_label }}</code>) — what's actually
+    on the {% if is_railway %}Railway volume{% else %}local working tree{% endif %}
+    right now. Open folders to drill in; use the per-file actions to edit, sync,
+    download or delete.
+  </p>
+
+  <div id="volume-body">
+    {% include "partials/admin_volume_body.html" %}
+  </div>
+</div>
+{% endblock %}

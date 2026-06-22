@@ -395,10 +395,17 @@ def list_sync_backups() -> list[dict]:
     return rows
 
 
-def restore_backup(backup_rel: str) -> str:
+def backups_for(original_rel: str) -> list[dict]:
+    """Backups whose restore target is ``original_rel`` (newest first)."""
+    return [b for b in list_sync_backups() if b["original"] == original_rel]
+
+
+def restore_backup(backup_rel: str, *, backup_current: bool = True) -> str:
     """Restore a backup file back to its original location in the store.
 
-    Does **not** push to GitHub — it only rewrites the store copy (use Push
+    By default the *current* store copy is backed up first (``backup_current``),
+    so a restore is itself reversible — the replaced file lands under a fresh
+    dated dir alongside the other backups. Does **not** push to GitHub (use Push
     afterwards if you want the restored version on GitHub).
 
     Returns the original path that was restored.
@@ -414,10 +421,95 @@ def restore_backup(backup_rel: str) -> str:
     rest = backup_rel[len(f"{SYNC_BACKUP_ROOT}/"):]
     original_rel = rest.split("/", 1)[1]
 
+    # Back up the file we're about to overwrite so the restore is reversible too.
+    if backup_current:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        backup_store_file(original_rel, timestamp)
+
     dest = _store_path(original_rel)
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_bytes(src.read_bytes())
     return original_rel
+
+
+# ---------------------------------------------------------------------------
+# Volume browsing + delete
+# ---------------------------------------------------------------------------
+
+def _safe_rel(rel: str) -> str:
+    """Normalise a store-relative path and reject traversal outside the store."""
+    rel = (rel or "").strip().strip("/")
+    parts = []
+    for part in rel.split("/"):
+        if part in ("", "."):
+            continue
+        if part == "..":
+            raise ValueError("Path traversal is not allowed")
+        parts.append(part)
+    return "/".join(parts)
+
+
+def list_store_dir(rel: str = "") -> dict:
+    """List one directory in the store for the volume browser.
+
+    Returns ``{path, parent, entries}`` where ``entries`` is a list of
+    ``{name, rel, is_dir, size, mtime}`` (directories first, then files, each
+    alphabetical). ``parent`` is the rel path one level up, or None at the root.
+    """
+    rel = _safe_rel(rel)
+    base = _store_path(rel) if rel else _store_path("")
+    parent = None
+    if rel:
+        parent = rel.rsplit("/", 1)[0] if "/" in rel else ""
+
+    entries: list[dict] = []
+    if base.exists() and base.is_dir():
+        for child in base.iterdir():
+            child_rel = f"{rel}/{child.name}" if rel else child.name
+            is_dir = child.is_dir()
+            stat = child.stat()
+            entries.append({
+                "name": child.name,
+                "rel": child_rel,
+                "is_dir": is_dir,
+                "size": None if is_dir else stat.st_size,
+                "mtime": datetime.fromtimestamp(stat.st_mtime, tz=timezone.utc),
+            })
+    entries.sort(key=lambda e: (not e["is_dir"], e["name"].lower()))
+    return {"path": rel, "parent": parent, "entries": entries}
+
+
+def read_store_file(rel: str) -> bytes:
+    """Return the raw bytes of a store file (for download). Validates the path."""
+    rel = _safe_rel(rel)
+    p = _store_path(rel)
+    if not p.exists() or not p.is_file():
+        raise FileNotFoundError(rel)
+    return p.read_bytes()
+
+
+def delete_store_file(rel: str) -> dict:
+    """Delete a single store file, backing it up first so it stays restorable.
+
+    The backup lands under the same dated sync-backup tree used by pulls, so it
+    shows up in the **Backups / restore** panel on the GitHub-sync page. Does
+    **not** touch GitHub. Refuses directories and anything under the backup root.
+
+    Returns ``{deleted: rel, backup_rel: str|None}``.
+    """
+    rel = _safe_rel(rel)
+    if rel.startswith(SYNC_BACKUP_ROOT):
+        raise ValueError("Refusing to delete from the backup area")
+    p = _store_path(rel)
+    if not p.exists():
+        raise FileNotFoundError(rel)
+    if p.is_dir():
+        raise IsADirectoryError(f"{rel} is a directory")
+
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    backup_rel = backup_store_file(rel, timestamp)
+    p.unlink()
+    return {"deleted": rel, "backup_rel": backup_rel}
 
 
 # ---------------------------------------------------------------------------

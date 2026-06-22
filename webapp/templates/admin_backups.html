@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title_suffix %} — Backups{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+  <span class="page-label">Admin</span>
+  <h1 class="page-title">Backups</h1>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="/static/admin.css">
+{% endblock %}
+
+{% block content %}
+{% set admin_active = 'backups' %}
+{% include "partials/admin_nav.html" %}
+
+<div class="section-panel">
+  <p style="margin-bottom:1rem;font-size:.875rem;">
+    Every store backup taken before a pull, a volume delete or a previous restore.
+    Restoring rewrites the store copy (and backs up whatever it replaces first, so
+    restores are reversible too). It does <strong>not</strong> push to GitHub — use
+    <a href="/admin/volume-sync" class="text-link">GitHub sync</a> afterwards if you
+    want the restored version on GitHub.
+  </p>
+
+  <div id="backups-body">
+    {% include "partials/admin_backups_body.html" %}
+  </div>
+</div>
+{% endblock %}

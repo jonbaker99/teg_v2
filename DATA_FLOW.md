@@ -70,6 +70,20 @@ overwriting a destination copy that is newer than the source. Before a pull/push
 flag); `file_diff(folder, name)` returns a unified text diff (store vs GitHub) for
 diffable extensions (`.csv/.md/.txt/.json`).
 
+**Volume browsing + delete:** `list_store_dir(rel)` lists a store directory (dirs
+then files, with size/mtime) for the webapp `/admin/volume` browser;
+`read_store_file(rel)` returns bytes for download; `delete_store_file(rel)` removes a
+store file after taking a backup under `data/backups/sync/<timestamp>/`. All validate
+the path against traversal (`_safe_rel`). `restore_backup` likewise backs up the copy
+it replaces, and `backups_for(rel)` filters the backup list to one file — surfaced by
+the `/admin/backups` page.
+
+**File catalog (reference only):** `teg_analysis/io/file_catalog.py`
+(`DATA_FILE_CATALOG`) describes each data file — role, format, how it's updated,
+importance, editable slug. It's the single source for the webapp `/admin/file-guide`
+page and the info icons on the sync/volume pages. Keep it in step with this file and
+`constants.py` when data files change.
+
 ---
 
 ## 3. Core Data Loader

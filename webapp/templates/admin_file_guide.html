@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title_suffix %} — File guide{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+  <span class="page-label">Admin</span>
+  <h1 class="page-title">File guide</h1>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="/static/admin.css">
+{% endblock %}
+
+{% block content %}
+{% set admin_active = 'guide' %}
+{% include "partials/admin_nav.html" %}
+
+<div class="section-panel">
+  <p style="margin-bottom:1rem;font-size:.9rem;">
+    What each data file is, what it's used for and how it's updated — ordered most
+    important first. Editable files link straight to the editor.
+  </p>
+
+  <div class="data-card">
+    <div class="table-wrapper">
+      <table class="teg-table file-guide-table">
+        <thead>
+          <tr>
+            <th>#</th><th>File</th><th>Category</th><th>Format</th>
+            <th>What it's for</th><th>How it's updated</th><th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for e in entries %}
+            <tr id="{{ file_anchor(e.name) }}">
+              <td>{{ e.importance }}</td>
+              <td><code>{{ e.name }}</code></td>
+              <td>{{ e.category }}</td>
+              <td>{{ e.format }}</td>
+              <td>{{ e.role }}</td>
+              <td>{{ e.updated_by }}</td>
+              <td>
+                {% if e.edit_slug %}
+                  <a href="/admin/edit-data?file={{ e.edit_slug }}" class="text-link">
+                    {% if e.edit_slug == 'processed' %}View{% else %}Edit{% endif %}
+                  </a>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

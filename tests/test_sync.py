@@ -254,5 +254,111 @@ def test_file_diff_binary_extension(monkeypatch, tmp_path):
     assert "binary" in out["reason"]
 
 
+# ---------------------------------------------------------------------------
+# Volume browsing + delete
+# ---------------------------------------------------------------------------
+
+def test_safe_rel_rejects_traversal():
+    assert sync._safe_rel("data/x.csv") == "data/x.csv"
+    assert sync._safe_rel("/data//x.csv/") == "data/x.csv"
+    assert sync._safe_rel("") == ""
+    with pytest.raises(ValueError):
+        sync._safe_rel("../etc/passwd")
+
+
+def test_list_store_dir(monkeypatch, tmp_path):
+    (tmp_path / "data/commentary").mkdir(parents=True)
+    (tmp_path / "data/a.csv").write_bytes(b"hello")
+    monkeypatch.setattr(sync, "_store_path", lambda rel: tmp_path / rel if rel else tmp_path)
+
+    out = sync.list_store_dir("data")
+    names = [e["name"] for e in out["entries"]]
+    # Directories sort before files.
+    assert names == ["commentary", "a.csv"]
+    assert out["entries"][0]["is_dir"] is True
+    assert out["entries"][1]["size"] == 5
+    assert out["parent"] == ""
+
+
+def test_read_store_file(monkeypatch, tmp_path):
+    (tmp_path / "data").mkdir()
+    (tmp_path / "data/a.csv").write_bytes(b"payload")
+    monkeypatch.setattr(sync, "_store_path", lambda rel: tmp_path / rel if rel else tmp_path)
+    assert sync.read_store_file("data/a.csv") == b"payload"
+    with pytest.raises(FileNotFoundError):
+        sync.read_store_file("data/missing.csv")
+
+
+def test_delete_store_file_backs_up(monkeypatch, tmp_path):
+    (tmp_path / "data").mkdir()
+    (tmp_path / "data/a.csv").write_bytes(b"DELME")
+    monkeypatch.setattr(sync, "_store_path", lambda rel: tmp_path / rel if rel else tmp_path)
+
+    out = sync.delete_store_file("data/a.csv")
+    assert out["deleted"] == "data/a.csv"
+    assert out["backup_rel"] is not None
+    assert not (tmp_path / "data/a.csv").exists()           # removed
+    assert (tmp_path / out["backup_rel"]).read_bytes() == b"DELME"  # backed up
+
+
+def test_delete_store_file_refuses_dir_and_backup_area(monkeypatch, tmp_path):
+    (tmp_path / "data/sub").mkdir(parents=True)
+    monkeypatch.setattr(sync, "_store_path", lambda rel: tmp_path / rel if rel else tmp_path)
+    with pytest.raises(IsADirectoryError):
+        sync.delete_store_file("data/sub")
+    with pytest.raises(ValueError):
+        sync.delete_store_file("data/backups/sync/x/data/a.csv")
+
+
+# ---------------------------------------------------------------------------
+# Backups: restore backs up the replaced file; backups_for filter
+# ---------------------------------------------------------------------------
+
+def test_restore_backs_up_current_first(monkeypatch, tmp_path):
+    monkeypatch.setattr(sync, "_store_path", lambda rel: tmp_path / rel)
+    (tmp_path / "data").mkdir(parents=True)
+    (tmp_path / "data/round_info.csv").write_bytes(b"ORIGINAL")
+    backup_rel = sync.backup_store_file("data/round_info.csv", "20260101_000000")
+
+    # Mutate the live file, then restore. The replaced (CHANGED) copy must be kept.
+    (tmp_path / "data/round_info.csv").write_bytes(b"CHANGED")
+    sync.restore_backup(backup_rel)
+    assert (tmp_path / "data/round_info.csv").read_bytes() == b"ORIGINAL"
+
+    saved = [b for b in sync.list_sync_backups()
+             if b["original"] == "data/round_info.csv" and b["backup_rel"] != backup_rel]
+    assert any((tmp_path / b["backup_rel"]).read_bytes() == b"CHANGED" for b in saved)
+
+
+def test_backups_for_filters(monkeypatch, tmp_path):
+    monkeypatch.setattr(sync, "_store_path", lambda rel: tmp_path / rel)
+    (tmp_path / "data").mkdir(parents=True)
+    (tmp_path / "data/a.csv").write_bytes(b"A")
+    (tmp_path / "data/b.csv").write_bytes(b"B")
+    sync.backup_store_file("data/a.csv", "20260101_000000")
+    sync.backup_store_file("data/b.csv", "20260101_000001")
+
+    only_a = sync.backups_for("data/a.csv")
+    assert len(only_a) == 1 and only_a[0]["original"] == "data/a.csv"
+
+
+# ---------------------------------------------------------------------------
+# File catalog
+# ---------------------------------------------------------------------------
+
+def test_file_catalog_lookup_and_ordering():
+    from teg_analysis.io import file_catalog as fc
+
+    by_imp = fc.catalog_by_importance()
+    assert by_imp[0]["name"] == "all-scores.parquet"  # importance 1
+    imps = [e["importance"] for e in by_imp]
+    assert imps == sorted(imps)
+
+    entry = fc.get_file_definition("round_info.csv")
+    assert entry and entry["edit_slug"] == "round_info"
+    assert fc.get_file_definition("nope.csv") is None
+    assert fc.file_anchor("all-data.parquet") == "file-all-data-parquet"
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
