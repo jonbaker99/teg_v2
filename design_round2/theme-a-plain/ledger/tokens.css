@@ -1,0 +1,156 @@
+/* ─────────────────────────────────────────────────────────────
+   LEDGER · Theme A (Plain)
+   The club's leather-bound record book: warm paper, near-black
+   ink, a single bottle-green reserved for what is interactive.
+   Source Serif 4 for prose, IBM Plex Mono for every figure.
+   ───────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+    /* Typography */
+    --font-heading: 'Source Serif 4', Georgia, serif;
+    --font-body: 'Source Serif 4', Georgia, serif;
+    --font-data: 'IBM Plex Mono';            /* NEW TOKEN — table/chart mono */
+
+    /* Page + text */
+    --bg-page: #f7f5f0;
+    --bg-card: #f7f5f0;
+    --text-primary: #1c1a15;
+    --text-secondary: #56524a;
+    --text-muted: #8d887c;
+
+    /* Nav */
+    --nav-bg: #f7f5f0;
+    --nav-text: #56524a;
+    --nav-text-muted: #8d887c;
+    --nav-hover-bg: transparent;
+    --nav-active-bg: transparent;
+    --nav-active-text: #1c1a15;
+
+    /* Tables */
+    --table-font-size: 0.85rem;
+    --table-header-bg: transparent;
+    --table-header-border: #1c1a15;
+    --table-cell-border: #ddd8cc;
+    --table-hover-bg: #efece3;
+    --table-hover-text: inherit;
+    --table-toprank-bg: transparent;
+    --table-toprank-text: #1e5631;
+    --table-stripe-bg: transparent;
+    --table-cell-border-width: 1px;
+    --table-header-border-width: 1px;
+
+    /* Accent + buttons */
+    --accent: #1e5631;
+    --btn-active-bg: #1c1a15;
+    --btn-active-text: #f7f5f0;
+    --btn-inactive-bg: transparent;
+    --btn-inactive-text: #56524a;
+    --btn-border-radius: 0;
+    --card-radius: 0;
+    --card-shadow: none;
+
+    /* Selects */
+    --select-bg: #f7f5f0;
+    --select-border: #c9c3b4;
+    --select-focus-ring: #1e5631;
+
+    /* Footer */
+    --footer-bg: transparent;
+    --footer-text: #8d887c;
+
+    /* Stat cards */
+    --stat-card-bg: transparent;
+    --stat-card-border: #1c1a15;
+    --stat-card-value-color: #1c1a15;
+    --stat-card-label-color: #8d887c;
+
+    /* Badges */
+    --badge-bg: #1e5631;
+    --badge-text: #f7f5f0;
+    --badge-muted-bg: #ebe7db;
+    --badge-muted-text: #6f6a5e;
+
+    --divider-color: #ddd8cc;
+
+    /* NEW TOKENS — chart palette (race chart needs up to 8 hues) */
+    --chart-1: #1e5631;
+    --chart-2: #9a4a2e;
+    --chart-3: #3f5c78;
+    --chart-4: #b98a2f;
+    --chart-5: #6d4a66;
+    --chart-6: #6a7f3f;
+    --chart-7: #55524a;
+    --chart-8: #b06c4d;
+    --chart-grid: rgba(28, 26, 21, 0.09);
+    --chart-axis-text: #6f6a5e;
+
+    /* NEW TOKEN — used where a "bad" red is needed (worst rank, losses) */
+    --table-tierlast-text: #96382a;
+}
+
+/* Dark — the ledger by lamplight: warm umber black, parchment ink,
+   the green lifted just enough to keep its meaning. */
+html[data-mode="dark"] {
+    color-scheme: dark;
+
+    --bg-page: #16140f;
+    --bg-card: #201d15;
+    --text-primary: #e8e4d8;
+    --text-secondary: #b3ada0;
+    --text-muted: #837e70;
+
+    --nav-bg: #16140f;
+    --nav-text: #b3ada0;
+    --nav-text-muted: #837e70;
+    --nav-hover-bg: transparent;
+    --nav-active-bg: transparent;
+    --nav-active-text: #e8e4d8;
+
+    --table-header-bg: transparent;
+    --table-header-border: #a29c8c;
+    --table-cell-border: #37332a;
+    --table-hover-bg: #201d15;
+    --table-hover-text: inherit;
+    --table-toprank-bg: transparent;
+    --table-toprank-text: #8dbd97;
+    --table-stripe-bg: transparent;
+
+    --accent: #79ad85;
+    --btn-active-bg: #e8e4d8;
+    --btn-active-text: #16140f;
+    --btn-inactive-bg: transparent;
+    --btn-inactive-text: #b3ada0;
+
+    --select-bg: #16140f;
+    --select-border: #4a453a;
+    --select-focus-ring: #79ad85;
+
+    --footer-bg: transparent;
+    --footer-text: #837e70;
+
+    --stat-card-bg: transparent;
+    --stat-card-border: #a29c8c;
+    --stat-card-value-color: #e8e4d8;
+    --stat-card-label-color: #837e70;
+
+    --badge-bg: #79ad85;
+    --badge-text: #16140f;
+    --badge-muted-bg: #26231b;
+    --badge-muted-text: #9b968a;
+
+    --divider-color: #37332a;
+
+    --chart-1: #8dbd97;
+    --chart-2: #d08a68;
+    --chart-3: #8aa9c6;
+    --chart-4: #d4b05e;
+    --chart-5: #b490ab;
+    --chart-6: #a4bb78;
+    --chart-7: #a5a094;
+    --chart-8: #cf9a7c;
+    --chart-grid: rgba(232, 228, 216, 0.1);
+    --chart-axis-text: #9b968a;
+
+    --table-tierlast-text: #d2837a;
+}

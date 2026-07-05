@@ -1,0 +1,155 @@
+/* ─────────────────────────────────────────────────────────────
+   BROADSHEET · Theme B (Editorial)
+   The Monday sports section: newsprint white, pure ink, one
+   press-blue spot colour. Frank Ruhl Libre headlines over
+   PT Serif text; Courier Prime sets the agate.
+   ───────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500;700;900&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Courier+Prime:wght@400;700&display=swap');
+
+:root {
+    /* Typography */
+    --font-heading: 'Frank Ruhl Libre', Georgia, serif;
+    --font-body: 'PT Serif', Georgia, serif;
+    --font-data: 'Courier Prime';            /* NEW TOKEN — table/chart mono */
+
+    /* Page + text */
+    --bg-page: #fdfdfa;
+    --bg-card: #fdfdfa;
+    --text-primary: #161616;
+    --text-secondary: #494949;
+    --text-muted: #8b8b86;
+
+    /* Nav */
+    --nav-bg: #fdfdfa;
+    --nav-text: #494949;
+    --nav-text-muted: #8b8b86;
+    --nav-hover-bg: transparent;
+    --nav-active-bg: transparent;
+    --nav-active-text: #161616;
+
+    /* Tables */
+    --table-font-size: 0.85rem;
+    --table-header-bg: transparent;
+    --table-header-border: #161616;
+    --table-cell-border: #d9d9d3;
+    --table-hover-bg: #f2f2ec;
+    --table-hover-text: inherit;
+    --table-toprank-bg: #eef1f8;
+    --table-toprank-text: #1d3f8f;
+    --table-stripe-bg: transparent;
+    --table-cell-border-width: 1px;
+    --table-header-border-width: 3px;
+
+    /* Accent + buttons */
+    --accent: #1d3f8f;
+    --btn-active-bg: #161616;
+    --btn-active-text: #fdfdfa;
+    --btn-inactive-bg: transparent;
+    --btn-inactive-text: #494949;
+    --btn-border-radius: 0;
+    --card-radius: 0;
+    --card-shadow: none;
+
+    /* Selects */
+    --select-bg: #fdfdfa;
+    --select-border: #b9b9b2;
+    --select-focus-ring: #1d3f8f;
+
+    /* Footer */
+    --footer-bg: transparent;
+    --footer-text: #8b8b86;
+
+    /* Stat cards */
+    --stat-card-bg: transparent;
+    --stat-card-border: #161616;
+    --stat-card-value-color: #161616;
+    --stat-card-label-color: #8b8b86;
+
+    /* Badges */
+    --badge-bg: #1d3f8f;
+    --badge-text: #fdfdfa;
+    --badge-muted-bg: #ecece6;
+    --badge-muted-text: #6d6d68;
+
+    --divider-color: #d9d9d3;
+
+    /* NEW TOKENS — chart palette */
+    --chart-1: #1d3f8f;
+    --chart-2: #161616;
+    --chart-3: #a02c2c;
+    --chart-4: #ab8a2c;
+    --chart-5: #33663d;
+    --chart-6: #6e6e6e;
+    --chart-7: #46648c;
+    --chart-8: #6d4c34;
+    --chart-grid: rgba(22, 22, 22, 0.09);
+    --chart-axis-text: #6d6d68;
+
+    --table-tierlast-text: #a02c2c;
+}
+
+/* Dark — the night edition: soft black stock, warm off-white ink,
+   the press blue lifted for register. */
+html[data-mode="dark"] {
+    color-scheme: dark;
+
+    --bg-page: #171614;
+    --bg-card: #1f1e1b;
+    --text-primary: #e9e6df;
+    --text-secondary: #b5b2a9;
+    --text-muted: #82807a;
+
+    --nav-bg: #171614;
+    --nav-text: #b5b2a9;
+    --nav-text-muted: #82807a;
+    --nav-hover-bg: transparent;
+    --nav-active-bg: transparent;
+    --nav-active-text: #e9e6df;
+
+    --table-header-bg: transparent;
+    --table-header-border: #b5b2a9;
+    --table-cell-border: #35342f;
+    --table-hover-bg: #1f1e1b;
+    --table-hover-text: inherit;
+    --table-toprank-bg: #1d2536;
+    --table-toprank-text: #9db8e8;
+    --table-stripe-bg: transparent;
+
+    --accent: #7e9bd6;
+    --btn-active-bg: #e9e6df;
+    --btn-active-text: #171614;
+    --btn-inactive-bg: transparent;
+    --btn-inactive-text: #b5b2a9;
+
+    --select-bg: #171614;
+    --select-border: #4a4841;
+    --select-focus-ring: #7e9bd6;
+
+    --footer-bg: transparent;
+    --footer-text: #82807a;
+
+    --stat-card-bg: transparent;
+    --stat-card-border: #b5b2a9;
+    --stat-card-value-color: #e9e6df;
+    --stat-card-label-color: #82807a;
+
+    --badge-bg: #7e9bd6;
+    --badge-text: #171614;
+    --badge-muted-bg: #292823;
+    --badge-muted-text: #9c9a92;
+
+    --divider-color: #35342f;
+
+    --chart-1: #7e9bd6;
+    --chart-2: #e9e6df;
+    --chart-3: #d07470;
+    --chart-4: #d0b25e;
+    --chart-5: #7fae8b;
+    --chart-6: #9c9a92;
+    --chart-7: #93a9c9;
+    --chart-8: #b1906a;
+    --chart-grid: rgba(233, 230, 223, 0.1);
+    --chart-axis-text: #9c9a92;
+
+    --table-tierlast-text: #d07470;
+}

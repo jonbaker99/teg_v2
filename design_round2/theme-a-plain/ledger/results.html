@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="light"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEG Stats</title>
+    <link rel="stylesheet" href="../../vendor/tailwind.css">
+    <script src="../../vendor/plotly.min.js"></script>
+    <link rel="stylesheet" href="../../css/base-vars.css">
+    <!-- Report styling (.teg-report) — loaded globally so reports render the same
+         wherever they appear (TEG Reports, Results/Latest report tabs). -->
+    <link rel="stylesheet" href="../../css/teg_reports.css">
+    <!-- Dark mode — inert until <html data-mode="dark">; default is light. -->
+    <!-- Mobile app shell — all rules gated to ≤640px; inert on desktop/iPad. -->
+    <link rel="stylesheet" href="../../css/mobile.css">
+    <!-- Structural hierarchy debug overlay (dev tool; inert unless body.debug-structure) -->
+    <!-- Material Symbols — nav/contents icons (names defined once in webapp/nav.py) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0">
+    <!-- Flag icons — CSS SVG flags via .fi.fi-{code} -->
+    
+    <style>
+        /* Material Symbols base (Google's css2 endpoint ships only @font-face). */
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+        /* Icon sat beside a nav/menu page link. */
+        .menu-icon {
+            font-size: 1.05rem;
+            vertical-align: -0.18em;
+            margin-right: 0.45rem;
+            opacity: 0.75;
+        }
+        /* Dropdown nav */
+        .nav-dropdown { position: relative; }
+        .nav-dropdown-btn {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+        .nav-dropdown-btn::after {
+            content: '▾';
+            font-size: 0.6em;
+            opacity: 0.5;
+        }
+        .nav-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 11rem;
+            padding: 0.25rem 0;
+            z-index: 50;
+            background: var(--nav-bg, #fff);
+            border: 1px solid var(--table-cell-border, #e0e0e0);
+            border-radius: 0.375rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .nav-dropdown:hover .nav-dropdown-menu,
+        .nav-dropdown:focus-within .nav-dropdown-menu {
+            display: block;
+        }
+        .nav-dropdown-menu a {
+            display: block;
+            padding: 0.35rem 0.75rem;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            color: var(--nav-text, #374151);
+            text-decoration: none;
+        }
+        .nav-dropdown-menu a:hover {
+            background: var(--nav-active-bg, #f3f4f6);
+            color: var(--nav-active-text, #111827);
+        }
+        /* Light/dark mode toggle (matches the theme-select chrome) */
+        .mode-toggle {
+            background: transparent;
+            border: 1px solid var(--nav-text-muted, var(--nav-text));
+            color: var(--nav-text);
+            border-radius: 0.25rem;
+            padding: 0.2rem 0.4rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            line-height: 1;
+        }
+        .mode-toggle .material-symbols-outlined { font-size: 1.05rem; }
+        .mode-toggle:focus { outline: none; box-shadow: 0 0 0 2px var(--select-focus-ring, var(--accent)); }
+        /* Mobile hamburger */
+        .nav-hamburger { display: none; cursor: pointer; font-size: 1.3rem; padding: 0.25rem; }
+        .nav-links { display: flex; align-items: center; gap: 0.15rem; flex-wrap: nowrap; }
+        @media (max-width: 600px) {
+            .nav-hamburger { display: block; }
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                align-items: flex-start;
+                background: var(--nav-bg, #fff);
+                border-bottom: 1px solid var(--table-cell-border, #e0e0e0);
+                padding: 0.5rem 1rem;
+                gap: 0.25rem;
+            }
+            .nav-links.open { display: flex; }
+            .nav-dropdown-menu {
+                position: static;
+                box-shadow: none;
+                border: none;
+                padding-left: 1rem;
+            }
+            .nav-dropdown:hover .nav-dropdown-menu { display: none; }
+            .nav-dropdown.open .nav-dropdown-menu { display: block; }
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.ml-2{margin-left:0.5rem}.flex{display:flex}.h-14{height:3.5rem}.cursor-crosshair{cursor:crosshair}.cursor-pointer{cursor:pointer}.items-center{align-items:center}.justify-between{justify-content:space-between}.gap-4{gap:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-8{padding-top:2rem;padding-bottom:2rem}</style><style>      .htmx-indicator{opacity:0}      .htmx-request .htmx-indicator{opacity:1; transition: opacity 200ms ease-in;}      .htmx-request.htmx-indicator{opacity:1; transition: opacity 200ms ease-in;}      </style>    <link rel="stylesheet" href="../theme.css">
+    <link rel="stylesheet" href="tokens.css">
+    <script defer src="../../shared/retheme.js"></script>
+</head>
+<body class="page-bg ts-a ch-ch3">
+    <!-- Navigation -->
+    <nav class="nav" style="position: sticky; top: 0px; transition: none;">
+        <div class="px-6">
+            <div class="flex items-center justify-between h-14" style="position: relative;">
+                <a href="/" class="nav-brand" style="white-space: nowrap">The El Golfo</a>
+                <span class="nav-hamburger" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</span>
+                <div class="nav-links">
+                    <!-- Sections (mirror Streamlit page_config order/labels) -->
+                    
+                    <div class="nav-dropdown">
+                        <span class="nav-link nav-dropdown-btn active">TEG History</span>
+                        <div class="nav-dropdown-menu">
+                            
+                            <a href="/history"><span class="menu-icon material-symbols-outlined">lists</span>TEG History</a>
+                            
+                            <a href="/honours"><span class="menu-icon material-symbols-outlined">trophy</span>TEG Honours Board</a>
+                            
+                            <a href="/results"><span class="menu-icon material-symbols-outlined">sports_score</span>Full Results</a>
+                            
+                            <a href="/player-rankings"><span class="menu-icon material-symbols-outlined">123</span>Player Rankings</a>
+                            
+                            <a href="/teg-reports"><span class="menu-icon material-symbols-outlined">description</span>TEG Reports</a>
+                            
+                            <a href="/player"><span class="menu-icon material-symbols-outlined">person</span>Player Profiles</a>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="nav-dropdown">
+                        <span class="nav-link nav-dropdown-btn ">Latest TEG</span>
+                        <div class="nav-dropdown-menu">
+                            
+                            <a href="/leaderboard"><span class="menu-icon material-symbols-outlined">leaderboard</span>Latest Leaderboard</a>
+                            
+                            <a href="/latest-round"><span class="menu-icon material-symbols-outlined">sports_golf</span>Latest Round in context</a>
+                            
+                            <a href="/latest-teg"><span class="menu-icon material-symbols-outlined">sports_golf</span>Latest TEG in context</a>
+                            
+                            <a href="/handicaps"><span class="menu-icon material-symbols-outlined">accessible</span>Handicaps</a>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="nav-dropdown">
+                        <span class="nav-link nav-dropdown-btn ">Records &amp; PBs</span>
+                        <div class="nav-dropdown-menu">
+                            
+                            <a href="/records"><span class="menu-icon material-symbols-outlined">military_tech</span>TEG Records</a>
+                            
+                            <a href="/top-performances"><span class="menu-icon material-symbols-outlined">social_leaderboard</span>Top TEGs and Rounds</a>
+                            
+                            <a href="/personal-bests"><span class="menu-icon material-symbols-outlined">golf_course</span>Personal Bests</a>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="nav-dropdown">
+                        <span class="nav-link nav-dropdown-btn ">Scoring analysis</span>
+                        <div class="nav-dropdown-menu">
+                            
+                            <a href="/scoring/birdies"><span class="menu-icon material-symbols-outlined">strategy</span>Eagles / Birdies / Pars</a>
+                            
+                            <a href="/scoring/streaks"><span class="menu-icon material-symbols-outlined">trending_up</span>Streaks</a>
+                            
+                            <a href="/scoring/by-par"><span class="menu-icon material-symbols-outlined">strategy</span>Average by par</a>
+                            
+                            <a href="/scoring/by-teg"><span class="menu-icon material-symbols-outlined">strategy</span>Average by TEG</a>
+                            
+                            <a href="/scoring/by-course"><span class="menu-icon material-symbols-outlined">strategy</span>Course averages and records</a>
+                            
+                            <a href="/scoring/all-rounds"><span class="menu-icon material-symbols-outlined">strategy</span>All rounds</a>
+                            
+                            <a href="/scoring/matrix"><span class="menu-icon material-symbols-outlined">table_chart</span>Score history</a>
+                            
+                            <a href="/scoring/distributions"><span class="menu-icon material-symbols-outlined">strategy</span>Scoring distributions</a>
+                            
+                            <a href="/scoring/changes"><span class="menu-icon material-symbols-outlined">strategy</span>Changes vs previous round</a>
+                            
+                            <a href="/scoring/heatmap"><span class="menu-icon material-symbols-outlined">strategy</span>Heatmap (WIP)</a>
+                            
+                            <a href="/scoring/comebacks"><span class="menu-icon material-symbols-outlined">trending_up</span>Final Round Comebacks</a>
+                            
+                        </div>
+                    </div>
+                    
+                    <div class="nav-dropdown">
+                        <span class="nav-link nav-dropdown-btn ">Scorecards</span>
+                        <div class="nav-dropdown-menu">
+                            
+                            <a href="/scorecard"><span class="menu-icon material-symbols-outlined">leaderboard</span>Scorecard</a>
+                            
+                            <a href="/bestball"><span class="menu-icon material-symbols-outlined">strategy</span>Best/Worstball</a>
+                            
+                            <a href="/eclectic"><span class="menu-icon material-symbols-outlined">golf_course</span>Eclectic Scores</a>
+                            
+                            <a href="/eclectic-records"><span class="menu-icon material-symbols-outlined">emoji_events</span>Eclectic Records</a>
+                            
+                        </div>
+                    </div>
+                    <!-- Light/dark toggle (orthogonal to theme; default light) -->
+                    <button type="button" class="mode-toggle ml-2" title="Toggle light / dark" aria-label="Toggle light or dark mode" onclick="tegToggleMode()">
+                        <span class="material-symbols-outlined">contrast</span>
+                    </button></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main content -->
+    <div class="page-container">
+        <div class="page-title-outer">
+            
+<div class="page-title-area">
+    <span class="page-label">History</span>
+    <h1 class="page-title">Full Results</h1>
+</div>
+
+        </div>
+        <div class="page-panel">
+            <div class="content-wrapper">
+                <main class="main-content px-6 py-8">
+                    
+
+<div class="section-controls flex items-center gap-4">
+    <select id="results-teg-select" class="theme-select" hx-get="/results/table" hx-target="#results-content" hx-include="#results-tab-input, #results-chart-variant" name="teg">
+        
+        <option value="2">TEG 2</option>
+        
+        <option value="3">TEG 3</option>
+        
+        <option value="4">TEG 4</option>
+        
+        <option value="5">TEG 5</option>
+        
+        <option value="6">TEG 6</option>
+        
+        <option value="7">TEG 7</option>
+        
+        <option value="8">TEG 8</option>
+        
+        <option value="9">TEG 9</option>
+        
+        <option value="10">TEG 10</option>
+        
+        <option value="11">TEG 11</option>
+        
+        <option value="12">TEG 12</option>
+        
+        <option value="13">TEG 13</option>
+        
+        <option value="14">TEG 14</option>
+        
+        <option value="15">TEG 15</option>
+        
+        <option value="16">TEG 16</option>
+        
+        <option value="17">TEG 17</option>
+        
+        <option value="18" selected="">TEG 18</option>
+        
+    </select>
+
+    <input type="hidden" id="results-tab-input" name="tab" value="net" style="">
+
+    <div class="section-nav" style="margin-bottom: 0;">
+        
+        <button class="tab-underline tab-underline--active" onclick="document.getElementById('results-tab-input').value='net';
+                         htmx.trigger(document.getElementById('results-teg-select'), 'change')">
+            TEG Trophy
+        </button>
+        
+        <button class="tab-underline" onclick="document.getElementById('results-tab-input').value='gross';
+                         htmx.trigger(document.getElementById('results-teg-select'), 'change')">
+            Green Jacket
+        </button>
+        
+        <button class="tab-underline" onclick="document.getElementById('results-tab-input').value='scorecards';
+                         htmx.trigger(document.getElementById('results-teg-select'), 'change')">
+            Scorecards
+        </button>
+        
+        <button class="tab-underline" onclick="document.getElementById('results-tab-input').value='report';
+                         htmx.trigger(document.getElementById('results-teg-select'), 'change')">
+            Report
+        </button>
+        
+    </div>
+</div>
+
+<div id="results-content" class="section-panel">
+    
+<h2 class="section-title">TEG Trophy Final Leaderboard</h2>
+<p class="result-callout">Champion: <strong>Alex BAKER</strong> &nbsp;|&nbsp; Wooden spoon: <strong>Jon BAKER</strong></p>
+<div class="data-card">
+    <div class="table-wrapper"><table class="teg-table leaderboard-table"><thead><tr><th class="col-rank">Rank</th><th class="col-player">Player</th><th class="col-num">R1</th><th class="col-num">R2</th><th class="col-num">R3</th><th class="col-num">R4</th><th class="col-num">Total</th></tr></thead><tbody><tr class="top-rank"><td class="col-rank">1</td><td class="col-player"><a href="/player/AB">Alex BAKER</a></td><td class="col-num">46</td><td class="col-num">41</td><td class="col-num">44</td><td class="col-num">38</td><td class="col-num total">169</td></tr><tr><td class="col-rank">2</td><td class="col-player"><a href="/player/JP">John PATTERSON</a></td><td class="col-num">34</td><td class="col-num">42</td><td class="col-num">43</td><td class="col-num">42</td><td class="col-num total">161</td></tr><tr><td class="col-rank">3</td><td class="col-player"><a href="/player/GW">Gregg WILLIAMS</a></td><td class="col-num">31</td><td class="col-num">42</td><td class="col-num">43</td><td class="col-num">44</td><td class="col-num total">160</td></tr><tr><td class="col-rank">4</td><td class="col-player"><a href="/player/DM">David MULLIN</a></td><td class="col-num">32</td><td class="col-num">35</td><td class="col-num">44</td><td class="col-num">38</td><td class="col-num total">149</td></tr><tr><td class="col-rank">5</td><td class="col-player"><a href="/player/JB">Jon BAKER</a></td><td class="col-num">30</td><td class="col-num">39</td><td class="col-num">28</td><td class="col-num">29</td><td class="col-num total">126</td></tr></tbody></table></div>
+</div>
+
+<h3 class="chart-title">TEG Trophy race: TEG 18</h3>
+<p class="chart-description">Cumulative stableford points | Higher = better</p>
+
+<div class="data-card data-card--padded">
+    <div class="chart-container js-plotly-plot" data-figure="{&quot;data&quot;:[{&quot;line&quot;:{&quot;width&quot;:2,&quot;color&quot;:&quot;#636EFA&quot;},&quot;mode&quot;:&quot;lines+markers&quot;,&quot;name&quot;:&quot;AB&quot;,&quot;x&quot;:{&quot;dtype&quot;:&quot;i1&quot;,&quot;bdata&quot;:&quot;AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAhIiMkJSYnKCkqKywtLi8wMTIzNDU2Nzg5Ojs8PT4\u002fQEFCQ0RFRkdI&quot;},&quot;y&quot;:{&quot;dtype&quot;:&quot;f8&quot;,&quot;bdata&quot;:&quot;AAAAAAAACEAAAAAAAAAIQAAAAAAAABhAAAAAAAAAHEAAAAAAAAAkQAAAAAAAAChAAAAAAAAAKkAAAAAAAAAwQAAAAAAAADNAAAAAAAAAN0AAAAAAAAA7QAAAAAAAAD5AAAAAAAAAP0AAAAAAAIBBQAAAAAAAAERAAAAAAAAARkAAAAAAAABHQAAAAAAAAEdAAAAAAACASEAAAAAAAABKQAAAAAAAgEpAAAAAAACAS0AAAAAAAIBMQAAAAAAAAE5AAAAAAACATkAAAAAAAABQQAAAAAAAwFBAAAAAAAAAUUAAAAAAAABSQAAAAAAAwFJAAAAAAAAAU0AAAAAAAABUQAAAAAAAgFRAAAAAAACAVEAAAAAAAMBVQAAAAAAAwFVAAAAAAACAVkAAAAAAAMBWQAAAAAAAAFdAAAAAAADAV0AAAAAAAIBYQAAAAAAAwFhAAAAAAABAWUAAAAAAAMBZQAAAAAAAQFpAAAAAAACAWkAAAAAAAIBbQAAAAAAAQFxAAAAAAABAXUAAAAAAAEBeQAAAAAAAAF9AAAAAAADAX0AAAAAAACBgQAAAAAAAYGBAAAAAAADAYEAAAAAAACBhQAAAAAAAQGFAAAAAAABgYUAAAAAAAMBhQAAAAAAAIGJAAAAAAABAYkAAAAAAAKBiQAAAAAAAwGJAAAAAAAAAY0AAAAAAAEBjQAAAAAAAwGNAAAAAAAAAZEAAAAAAAABkQAAAAAAAYGRAAAAAAADAZEAAAAAAAMBkQAAAAAAAIGVA&quot;},&quot;type&quot;:&quot;scatter&quot;,&quot;marker&quot;:{&quot;color&quot;:&quot;white&quot;,&quot;line&quot;:{&quot;color&quot;:&quot;#636EFA&quot;,&quot;width&quot;:1},&quot;size&quot;:3,&quot;symbol&quot;:&quot;circle&quot;}},{&quot;line&quot;:{&quot;width&quot;:2,&quot;color&quot;:&quot;#EF553B&quot;},&quot;mode&quot;:&quot;lines+markers&quot;,&quot;name&quot;:&quot;DM&quot;,&quot;x&quot;:{&quot;dtype&quot;:&quot;i1&quot;,&quot;bdata&quot;:&quot;AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAhIiMkJSYnKCkqKywtLi8wMTIzNDU2Nzg5Ojs8PT4\u002fQEFCQ0RFRkdI&quot;},&quot;y&quot;:{&quot;dtype&quot;:&quot;f8&quot;,&quot;bdata&quot;:&quot;AAAAAAAAAAAAAAAAAAAIQAAAAAAAABRAAAAAAAAAIEAAAAAAAAAgQAAAAAAAACBAAAAAAAAAJEAAAAAAAAAoQAAAAAAAACxAAAAAAAAAMUAAAAAAAAA0QAAAAAAAADRAAAAAAAAANkAAAAAAAAA5QAAAAAAAADlAAAAAAAAAO0AAAAAAAAA9QAAAAAAAAEBAAAAAAAAAQUAAAAAAAIBCQAAAAAAAAERAAAAAAAAAREAAAAAAAABEQAAAAAAAAERAAAAAAAAARUAAAAAAAIBGQAAAAAAAgEdAAAAAAACASUAAAAAAAABLQAAAAAAAAExAAAAAAACATUAAAAAAAABPQAAAAAAAAE9AAAAAAAAAUEAAAAAAAIBQQAAAAAAAwFBAAAAAAACAUUAAAAAAAEBSQAAAAAAAAFNAAAAAAACAU0AAAAAAAEBUQAAAAAAAAFVAAAAAAACAVUAAAAAAAEBWQAAAAAAAAFdAAAAAAAAAWEAAAAAAAEBYQAAAAAAAAFlAAAAAAAAAWUAAAAAAAIBZQAAAAAAAAFpAAAAAAADAWkAAAAAAAEBbQAAAAAAAwFtAAAAAAACAXEAAAAAAAABdQAAAAAAAwF1AAAAAAABAXkAAAAAAAABfQAAAAAAAgF9AAAAAAAAgYEAAAAAAAGBgQAAAAAAAgGBAAAAAAADgYEAAAAAAACBhQAAAAAAAYGFAAAAAAADAYUAAAAAAAOBhQAAAAAAA4GFAAAAAAAAAYkAAAAAAACBiQAAAAAAAoGJA&quot;},&quot;type&quot;:&quot;scatter&quot;,&quot;marker&quot;:{&quot;color&quot;:&quot;white&quot;,&quot;line&quot;:{&quot;color&quot;:&quot;#EF553B&quot;,&quot;width&quot;:1},&quot;size&quot;:3,&quot;symbol&quot;:&quot;circle&quot;}},{&quot;line&quot;:{&quot;width&quot;:2,&quot;color&quot;:&quot;#00CC96&quot;},&quot;mode&quot;:&quot;lines+markers&quot;,&quot;name&quot;:&quot;GW&quot;,&quot;x&quot;:{&quot;dtype&quot;:&quot;i1&quot;,&quot;bdata&quot;:&quot;AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAhIiMkJSYnKCkqKywtLi8wMTIzNDU2Nzg5Ojs8PT4\u002fQEFCQ0RFRkdI&quot;},&quot;y&quot;:{&quot;dtype&quot;:&quot;f8&quot;,&quot;bdata&quot;:&quot;AAAAAAAACEAAAAAAAAAUQAAAAAAAABRAAAAAAAAAGEAAAAAAAAAcQAAAAAAAACJAAAAAAAAAIkAAAAAAAAAmQAAAAAAAACpAAAAAAAAALkAAAAAAAAAxQAAAAAAAADNAAAAAAAAANkAAAAAAAAA4QAAAAAAAADxAAAAAAAAAP0AAAAAAAAA\u002fQAAAAAAAAD9AAAAAAAAAQEAAAAAAAABBQAAAAAAAgEJAAAAAAAAAREAAAAAAAIBFQAAAAAAAgEZAAAAAAACAR0AAAAAAAIBIQAAAAAAAgEhAAAAAAACASUAAAAAAAABLQAAAAAAAgEtAAAAAAACATUAAAAAAAABPQAAAAAAAQFBAAAAAAAAAUUAAAAAAAIBRQAAAAAAAQFJAAAAAAADAUkAAAAAAAIBTQAAAAAAAQFRAAAAAAAAAVUAAAAAAAMBVQAAAAAAAAFZAAAAAAABAVkAAAAAAAABXQAAAAAAAgFdAAAAAAABAWEAAAAAAAABZQAAAAAAAgFlAAAAAAABAWkAAAAAAAMBaQAAAAAAAQFtAAAAAAADAW0AAAAAAAEBcQAAAAAAAAF1AAAAAAACAXUAAAAAAAABeQAAAAAAAwF5AAAAAAABAX0AAAAAAACBgQAAAAAAAgGBAAAAAAADAYEAAAAAAACBhQAAAAAAAgGFAAAAAAADgYUAAAAAAACBiQAAAAAAAgGJAAAAAAADAYkAAAAAAAOBiQAAAAAAAQGNAAAAAAACAY0AAAAAAAOBjQAAAAAAAAGRA&quot;},&quot;type&quot;:&quot;scatter&quot;,&quot;marker&quot;:{&quot;color&quot;:&quot;white&quot;,&quot;line&quot;:{&quot;color&quot;:&quot;#00CC96&quot;,&quot;width&quot;:1},&quot;size&quot;:3,&quot;symbol&quot;:&quot;circle&quot;}},{&quot;line&quot;:{&quot;width&quot;:2,&quot;color&quot;:&quot;#AB63FA&quot;},&quot;mode&quot;:&quot;lines+markers&quot;,&quot;name&quot;:&quot;JB&quot;,&quot;x&quot;:{&quot;dtype&quot;:&quot;i1&quot;,&quot;bdata&quot;:&quot;AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAhIiMkJSYnKCkqKywtLi8wMTIzNDU2Nzg5Ojs8PT4\u002fQEFCQ0RFRkdI&quot;},&quot;y&quot;:{&quot;dtype&quot;:&quot;f8&quot;,&quot;bdata&quot;:&quot;AAAAAAAAAEAAAAAAAAAQQAAAAAAAABBAAAAAAAAAGEAAAAAAAAAgQAAAAAAAACZAAAAAAAAAKEAAAAAAAAAqQAAAAAAAACpAAAAAAAAALkAAAAAAAAAyQAAAAAAAADRAAAAAAAAANkAAAAAAAAA5QAAAAAAAADpAAAAAAAAAPEAAAAAAAAA9QAAAAAAAAD5AAAAAAAAAQEAAAAAAAIBBQAAAAAAAAEJAAAAAAACAQkAAAAAAAIBDQAAAAAAAAERAAAAAAAAAREAAAAAAAABFQAAAAAAAgEZAAAAAAAAAR0AAAAAAAIBIQAAAAAAAgElAAAAAAACASkAAAAAAAIBMQAAAAAAAAE5AAAAAAACAT0AAAAAAAIBQQAAAAAAAQFFAAAAAAACAUUAAAAAAAIBRQAAAAAAAQFJAAAAAAABAUkAAAAAAAABTQAAAAAAAwFNAAAAAAADAU0AAAAAAAEBUQAAAAAAAgFRAAAAAAAAAVUAAAAAAAMBVQAAAAAAAQFZAAAAAAACAVkAAAAAAAEBXQAAAAAAAgFdAAAAAAADAV0AAAAAAAABYQAAAAAAAQFhAAAAAAAAAWUAAAAAAAEBZQAAAAAAAwFlAAAAAAAAAWkAAAAAAAIBaQAAAAAAAAFtAAAAAAABAW0AAAAAAAIBbQAAAAAAAwFtAAAAAAAAAXEAAAAAAAEBcQAAAAAAAwFxAAAAAAADAXUAAAAAAAABeQAAAAAAAwF5AAAAAAAAAX0AAAAAAAIBfQAAAAAAAgF9A&quot;},&quot;type&quot;:&quot;scatter&quot;,&quot;marker&quot;:{&quot;color&quot;:&quot;white&quot;,&quot;line&quot;:{&quot;color&quot;:&quot;#AB63FA&quot;,&quot;width&quot;:1},&quot;size&quot;:3,&quot;symbol&quot;:&quot;circle&quot;}},{&quot;line&quot;:{&quot;width&quot;:2,&quot;color&quot;:&quot;#FFA15A&quot;},&quot;mode&quot;:&quot;lines+markers&quot;,&quot;name&quot;:&quot;JP&quot;,&quot;x&quot;:{&quot;dtype&quot;:&quot;i1&quot;,&quot;bdata&quot;:&quot;AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAhIiMkJSYnKCkqKywtLi8wMTIzNDU2Nzg5Ojs8PT4\u002fQEFCQ0RFRkdI&quot;},&quot;y&quot;:{&quot;dtype&quot;:&quot;f8&quot;,&quot;bdata&quot;:&quot;AAAAAAAAAEAAAAAAAAAQQAAAAAAAABBAAAAAAAAAFEAAAAAAAAAYQAAAAAAAABxAAAAAAAAAIEAAAAAAAAAiQAAAAAAAACRAAAAAAAAAKEAAAAAAAAAwQAAAAAAAADJAAAAAAAAANkAAAAAAAAA5QAAAAAAAADxAAAAAAAAAP0AAAAAAAIBAQAAAAAAAAEFAAAAAAACAQkAAAAAAAIBDQAAAAAAAgEVAAAAAAACARUAAAAAAAIBGQAAAAAAAgEZAAAAAAACAR0AAAAAAAIBIQAAAAAAAgElAAAAAAACASkAAAAAAAIBMQAAAAAAAAE5AAAAAAACAT0AAAAAAAIBQQAAAAAAAQFFAAAAAAADAUUAAAAAAAEBSQAAAAAAAAFNAAAAAAACAU0AAAAAAAABUQAAAAAAAwFRAAAAAAAAAVUAAAAAAAMBVQAAAAAAAQFZAAAAAAAAAV0AAAAAAAIBXQAAAAAAAQFhAAAAAAADAWEAAAAAAAABZQAAAAAAAgFlAAAAAAABAWkAAAAAAAMBaQAAAAAAAQFtAAAAAAABAXEAAAAAAAMBcQAAAAAAAwF1AAAAAAADAXkAAAAAAAIBfQAAAAAAAwF9AAAAAAABAYEAAAAAAAKBgQAAAAAAAAGFAAAAAAABAYUAAAAAAAGBhQAAAAAAAwGFAAAAAAADgYUAAAAAAAABiQAAAAAAAQGJAAAAAAADAYkAAAAAAAOBiQAAAAAAAAGNAAAAAAABgY0AAAAAAAABkQAAAAAAAIGRA&quot;},&quot;type&quot;:&quot;scatter&quot;,&quot;marker&quot;:{&quot;color&quot;:&quot;white&quot;,&quot;line&quot;:{&quot;color&quot;:&quot;#FFA15A&quot;,&quot;width&quot;:1},&quot;size&quot;:3,&quot;symbol&quot;:&quot;circle&quot;}}],&quot;layout&quot;:{&quot;template&quot;:{&quot;data&quot;:{&quot;histogram2dcontour&quot;:[{&quot;type&quot;:&quot;histogram2dcontour&quot;,&quot;colorbar&quot;:{&quot;outlinewidth&quot;:0,&quot;ticks&quot;:&quot;&quot;},&quot;colorscale&quot;:[[0.0,&quot;#0d0887&quot;],[0.1111111111111111,&quot;#46039f&quot;],[0.2222222222222222,&quot;#7201a8&quot;],[0.3333333333333333,&quot;#9c179e&quot;],[0.4444444444444444,&quot;#bd3786&quot;],[0.5555555555555556,&quot;#d8576b&quot;],[0.6666666666666666,&quot;#ed7953&quot;],[0.7777777777777778,&quot;#fb9f3a&quot;],[0.8888888888888888,&quot;#fdca26&quot;],[1.0,&quot;#f0f921&quot;]]}],&quot;choropleth&quot;:[{&quot;type&quot;:&quot;choropleth&quot;,&quot;colorbar&quot;:{&quot;outlinewidth&quot;:0,&quot;ticks&quot;:&quot;&quot;}}],&quot;histogram2d&quot;:[{&quot;type&quot;:&quot;histogram2d&quot;,&quot;colorbar&quot;:{&quot;outlinewidth&quot;:0,&quot;ticks&quot;:&quot;&quot;},&quot;colorscale&quot;:[[0.0,&quot;#0d0887&quot;],[0.1111111111111111,&quot;#46039f&quot;],[0.2222222222222222,&quot;#7201a8&quot;],[0.3333333333333333,&quot;#9c179e&quot;],[0.4444444444444444,&quot;#bd3786&quot;],[0.5555555555555556,&quot;#d8576b&quot;],[0.6666666666666666,&quot;#ed7953&quot;],[0.7777777777777778,&quot;#fb9f3a&quot;],[0.8888888888888888,&quot;#fdca26&quot;],[1.0,&quot;#f0f921&quot;]]}],&quot;heatmap&quot;:[{&quot;type&quot;:&quot;heatmap&quot;,&quot;colorbar&quot;:{&quot;outlinewidth&quot;:0,&quot;ticks&quot;:&quot;&quot;},&quot;colorscale&quot;:[[0.0,&quot;#0d0887&quot;],[0.1111111111111111,&quot;#46039f&quot;],[0.2222222222222222,&quot;#7201a8&quot;],[0.3333333333333333,&quot;#9c179e&quot;],[0.4444444444444444,&quot;#bd3786&quot;],[0.5555555555555556,&quot;#d8576b&quot;],[0.6666666666666666,&quot;#ed7953&quot;],[0.7777777777777778,&quot;#fb9f3a&quot;],[0.8888888888888888,&quot;#fdca26&quot;],[1.0,&quot;#f0f921&quot;]]}],&quot;contourcarpet&quot;:[{&quot;type&quot;:&quot;contourcarpet&quot;,&quot;colorbar&quot;:{&quot;outlinewidth&quot;:0,&quot;ticks&quot;:&quot;&quot;}}],&quot;contour&quot;:[{&quot;type&quot;:&quot;contour&quot;,&quot;colorbar&quot;:{&quot;outlinewidth&quot;:0,&quot;ticks&quot;:&quot;&quot;},&quot;colorscale&quot;:[[0.0,&quot;#0d0887&quot;],[0.1111111111111111,&quot;#46039f&quot;],[0.2222222222222222,&quot;#7201a8&quot;],[0.3333333333333333,&quot;#9c179e&quot;],[0.4444444444444444,&quot;#bd3786&quot;],[0.5555555555555556,&quot;#d8576b&quot;],[0.6666666666666666,&quot;#ed7953&quot;],[0.7777777777777778,&quot;#fb9f3a&quot;],[0.8888888888888888,&quot;#fdca26&quot;],[1.0,&quot;#f0f921&quot;]]}],&quot;surface&quot;:[{&quot;type&quot;:&quot;surface&quot;,&quot;colorbar&quot;:{&quot;outlinewidth&quot;:0,&quot;ticks&quot;:&quot;&quot;},&quot;colorscale&quot;:[[0.0,&quot;#0d0887&quot;],[0.1111111111111111,&quot;#46039f&quot;],[0.2222222222222222,&quot;#7201a8&quot;],[0.3333333333333333,&quot;#9c179e&quot;],[0.4444444444444444,&quot;#bd3786&quot;],[0.5555555555555556,&quot;#d8576b&quot;],[0.6666666666666666,&quot;#ed7953&quot;],[0.7777777777777778,&quot;#fb9f3a&quot;],[0.8888888888888888,&quot;#fdca26&quot;],[1.0,&quot;#f0f921&quot;]]}],&quot;mesh3d&quot;:[{&quot;type&quot;:&quot;mesh3d&quot;,&quot;colorbar&quot;:{&quot;outlinewidth&quot;:0,&quot;ticks&quot;:&quot;&quot;}}],&quot;scatter&quot;:[{&quot;fillpattern&quot;:{&quot;fillmode&quot;:&quot;overlay&quot;,&quot;size&quot;:10,&quot;solidity&quot;:0.2},&quot;type&quot;:&quot;scatter&quot;}],&quot;parcoords&quot;:[{&quot;type&quot;:&quot;parcoords&quot;,&quot;line&quot;:{&quot;colorbar&quot;:{&quot;outlinewidth&quot;:0,&quot;ticks&quot;:&quot;&quot;}}}],&quot;scatterpolargl&quot;:[{&quot;type&quot;:&quot;scatterpolargl&quot;,&quot;marker&quot;:{&quot;colorbar&quot;:{&quot;outlinewidth&quot;:0,&quot;ticks&quot;:&quot;&quot;}}}],&quot;bar&quot;:[{&quot;error_x&quot;:{&quot;color&quot;:&quot;#2a3f5f&quot;},&quot;error_y&quot;:{&quot;color&quot;:&quot;#2a3f5f&quot;},&quot;marker&quot;:{&quot;line&quot;:{&quot;color&quot;:&quot;#E5ECF6&quot;,&quot;width&quot;:0.5},&quot;pattern&quot;:{&quot;fillmode&quot;:&quot;overlay&quot;,&quot;size&quot;:10,&quot;solidity&quot;:0.2}},&quot;type&quot;:&quot;bar&quot;}],&quot;scattergeo&quot;:[{&quot;type&quot;:&quot;scattergeo&quot;,&quot;marker&quot;:{&quot;colorbar&quot;:{&quot;outlinewidth&quot;:0,&quot;ticks&quot;:&quot;&quot;}}}],&quot;scatterpolar&quot;:[{&quot;type&quot;:&quot;scatterpolar&quot;,&quot;marker&quot;:{&quot;colorbar&quot;:{&quot;outlinewidth&quot;:0,&quot;ticks&quot;:&quot;&quot;}}}],&quot;histogram&quot;:[{&quot;marker&quot;:{&quot;pattern&quot;:{&quot;fillmode&quot;:&quot;overlay&quot;,&quot;size&quot;:10,&quot;solidity&quot;:0.2}},&quot;type&quot;:&quot;histogram&quot;}],&quot;scattergl&quot;:[{&quot;type&quot;:&quot;scattergl&quot;,&quot;marker&quot;:{&quot;colorbar&quot;:{&quot;outlinewidth&quot;:0,&quot;ticks&quot;:&quot;&quot;}}}],&quot;scatter3d&quot;:[{&quot;type&quot;:&quot;scatter3d&quot;,&quot;line&quot;:{&quot;colorbar&quot;:{&quot;outlinewidth&quot;:0,&quot;ticks&quot;:&quot;&quot;}},&quot;marker&quot;:{&quot;colorbar&quot;:{&quot;outlinewidth&quot;:0,&quot;ticks&quot;:&quot;&quot;}}}],&quot;scattermap&quot;:[{&quot;type&quot;:&quot;scattermap&quot;,&quot;marker&quot;:{&quot;colorbar&quot;:{&quot;outlinewidth&quot;:0,&quot;ticks&quot;:&quot;&quot;}}}],&quot;scattermapbox&quot;:[{&quot;type&quot;:&quot;scattermapbox&quot;,&quot;marker&quot;:{&quot;colorbar&quot;:{&quot;outlinewidth&quot;:0,&quot;ticks&quot;:&quot;&quot;}}}],&quot;scatterternary&quot;:[{&quot;type&quot;:&quot;scatterternary&quot;,&quot;marker&quot;:{&quot;colorbar&quot;:{&quot;outlinewidth&quot;:0,&quot;ticks&quot;:&quot;&quot;}}}],&quot;scattercarpet&quot;:[{&quot;type&quot;:&quot;scattercarpet&quot;,&quot;marker&quot;:{&quot;colorbar&quot;:{&quot;outlinewidth&quot;:0,&quot;ticks&quot;:&quot;&quot;}}}],&quot;carpet&quot;:[{&quot;aaxis&quot;:{&quot;endlinecolor&quot;:&quot;#2a3f5f&quot;,&quot;gridcolor&quot;:&quot;white&quot;,&quot;linecolor&quot;:&quot;white&quot;,&quot;minorgridcolor&quot;:&quot;white&quot;,&quot;startlinecolor&quot;:&quot;#2a3f5f&quot;},&quot;baxis&quot;:{&quot;endlinecolor&quot;:&quot;#2a3f5f&quot;,&quot;gridcolor&quot;:&quot;white&quot;,&quot;linecolor&quot;:&quot;white&quot;,&quot;minorgridcolor&quot;:&quot;white&quot;,&quot;startlinecolor&quot;:&quot;#2a3f5f&quot;},&quot;type&quot;:&quot;carpet&quot;}],&quot;table&quot;:[{&quot;cells&quot;:{&quot;fill&quot;:{&quot;color&quot;:&quot;#EBF0F8&quot;},&quot;line&quot;:{&quot;color&quot;:&quot;white&quot;}},&quot;header&quot;:{&quot;fill&quot;:{&quot;color&quot;:&quot;#C8D4E3&quot;},&quot;line&quot;:{&quot;color&quot;:&quot;white&quot;}},&quot;type&quot;:&quot;table&quot;}],&quot;barpolar&quot;:[{&quot;marker&quot;:{&quot;line&quot;:{&quot;color&quot;:&quot;#E5ECF6&quot;,&quot;width&quot;:0.5},&quot;pattern&quot;:{&quot;fillmode&quot;:&quot;overlay&quot;,&quot;size&quot;:10,&quot;solidity&quot;:0.2}},&quot;type&quot;:&quot;barpolar&quot;}],&quot;pie&quot;:[{&quot;automargin&quot;:true,&quot;type&quot;:&quot;pie&quot;}]},&quot;layout&quot;:{&quot;autotypenumbers&quot;:&quot;strict&quot;,&quot;colorway&quot;:[&quot;#636efa&quot;,&quot;#EF553B&quot;,&quot;#00cc96&quot;,&quot;#ab63fa&quot;,&quot;#FFA15A&quot;,&quot;#19d3f3&quot;,&quot;#FF6692&quot;,&quot;#B6E880&quot;,&quot;#FF97FF&quot;,&quot;#FECB52&quot;],&quot;font&quot;:{&quot;color&quot;:&quot;#2a3f5f&quot;},&quot;hovermode&quot;:&quot;closest&quot;,&quot;hoverlabel&quot;:{&quot;align&quot;:&quot;left&quot;},&quot;paper_bgcolor&quot;:&quot;white&quot;,&quot;plot_bgcolor&quot;:&quot;#E5ECF6&quot;,&quot;polar&quot;:{&quot;bgcolor&quot;:&quot;#E5ECF6&quot;,&quot;angularaxis&quot;:{&quot;gridcolor&quot;:&quot;white&quot;,&quot;linecolor&quot;:&quot;white&quot;,&quot;ticks&quot;:&quot;&quot;},&quot;radialaxis&quot;:{&quot;gridcolor&quot;:&quot;white&quot;,&quot;linecolor&quot;:&quot;white&quot;,&quot;ticks&quot;:&quot;&quot;}},&quot;ternary&quot;:{&quot;bgcolor&quot;:&quot;#E5ECF6&quot;,&quot;aaxis&quot;:{&quot;gridcolor&quot;:&quot;white&quot;,&quot;linecolor&quot;:&quot;white&quot;,&quot;ticks&quot;:&quot;&quot;},&quot;baxis&quot;:{&quot;gridcolor&quot;:&quot;white&quot;,&quot;linecolor&quot;:&quot;white&quot;,&quot;ticks&quot;:&quot;&quot;},&quot;caxis&quot;:{&quot;gridcolor&quot;:&quot;white&quot;,&quot;linecolor&quot;:&quot;white&quot;,&quot;ticks&quot;:&quot;&quot;}},&quot;coloraxis&quot;:{&quot;colorbar&quot;:{&quot;outlinewidth&quot;:0,&quot;ticks&quot;:&quot;&quot;}},&quot;colorscale&quot;:{&quot;sequential&quot;:[[0.0,&quot;#0d0887&quot;],[0.1111111111111111,&quot;#46039f&quot;],[0.2222222222222222,&quot;#7201a8&quot;],[0.3333333333333333,&quot;#9c179e&quot;],[0.4444444444444444,&quot;#bd3786&quot;],[0.5555555555555556,&quot;#d8576b&quot;],[0.6666666666666666,&quot;#ed7953&quot;],[0.7777777777777778,&quot;#fb9f3a&quot;],[0.8888888888888888,&quot;#fdca26&quot;],[1.0,&quot;#f0f921&quot;]],&quot;sequentialminus&quot;:[[0.0,&quot;#0d0887&quot;],[0.1111111111111111,&quot;#46039f&quot;],[0.2222222222222222,&quot;#7201a8&quot;],[0.3333333333333333,&quot;#9c179e&quot;],[0.4444444444444444,&quot;#bd3786&quot;],[0.5555555555555556,&quot;#d8576b&quot;],[0.6666666666666666,&quot;#ed7953&quot;],[0.7777777777777778,&quot;#fb9f3a&quot;],[0.8888888888888888,&quot;#fdca26&quot;],[1.0,&quot;#f0f921&quot;]],&quot;diverging&quot;:[[0,&quot;#8e0152&quot;],[0.1,&quot;#c51b7d&quot;],[0.2,&quot;#de77ae&quot;],[0.3,&quot;#f1b6da&quot;],[0.4,&quot;#fde0ef&quot;],[0.5,&quot;#f7f7f7&quot;],[0.6,&quot;#e6f5d0&quot;],[0.7,&quot;#b8e186&quot;],[0.8,&quot;#7fbc41&quot;],[0.9,&quot;#4d9221&quot;],[1,&quot;#276419&quot;]]},&quot;xaxis&quot;:{&quot;gridcolor&quot;:&quot;white&quot;,&quot;linecolor&quot;:&quot;white&quot;,&quot;ticks&quot;:&quot;&quot;,&quot;title&quot;:{&quot;standoff&quot;:15},&quot;zerolinecolor&quot;:&quot;white&quot;,&quot;automargin&quot;:true,&quot;zerolinewidth&quot;:2},&quot;yaxis&quot;:{&quot;gridcolor&quot;:&quot;white&quot;,&quot;linecolor&quot;:&quot;white&quot;,&quot;ticks&quot;:&quot;&quot;,&quot;title&quot;:{&quot;standoff&quot;:15},&quot;zerolinecolor&quot;:&quot;white&quot;,&quot;automargin&quot;:true,&quot;zerolinewidth&quot;:2},&quot;scene&quot;:{&quot;xaxis&quot;:{&quot;backgroundcolor&quot;:&quot;#E5ECF6&quot;,&quot;gridcolor&quot;:&quot;white&quot;,&quot;linecolor&quot;:&quot;white&quot;,&quot;showbackground&quot;:true,&quot;ticks&quot;:&quot;&quot;,&quot;zerolinecolor&quot;:&quot;white&quot;,&quot;gridwidth&quot;:2},&quot;yaxis&quot;:{&quot;backgroundcolor&quot;:&quot;#E5ECF6&quot;,&quot;gridcolor&quot;:&quot;white&quot;,&quot;linecolor&quot;:&quot;white&quot;,&quot;showbackground&quot;:true,&quot;ticks&quot;:&quot;&quot;,&quot;zerolinecolor&quot;:&quot;white&quot;,&quot;gridwidth&quot;:2},&quot;zaxis&quot;:{&quot;backgroundcolor&quot;:&quot;#E5ECF6&quot;,&quot;gridcolor&quot;:&quot;white&quot;,&quot;linecolor&quot;:&quot;white&quot;,&quot;showbackground&quot;:true,&quot;ticks&quot;:&quot;&quot;,&quot;zerolinecolor&quot;:&quot;white&quot;,&quot;gridwidth&quot;:2}},&quot;shapedefaults&quot;:{&quot;line&quot;:{&quot;color&quot;:&quot;#2a3f5f&quot;}},&quot;annotationdefaults&quot;:{&quot;arrowcolor&quot;:&quot;#2a3f5f&quot;,&quot;arrowhead&quot;:0,&quot;arrowwidth&quot;:1},&quot;geo&quot;:{&quot;bgcolor&quot;:&quot;white&quot;,&quot;landcolor&quot;:&quot;#E5ECF6&quot;,&quot;subunitcolor&quot;:&quot;white&quot;,&quot;showland&quot;:true,&quot;showlakes&quot;:true,&quot;lakecolor&quot;:&quot;white&quot;},&quot;title&quot;:{&quot;x&quot;:0.05},&quot;mapbox&quot;:{&quot;style&quot;:&quot;light&quot;}}},&quot;annotations&quot;:[{&quot;font&quot;:{&quot;color&quot;:&quot;#636EFA&quot;,&quot;size&quot;:10},&quot;showarrow&quot;:false,&quot;text&quot;:&quot;AB: 169&quot;,&quot;x&quot;:72,&quot;xanchor&quot;:&quot;left&quot;,&quot;xshift&quot;:5,&quot;y&quot;:169.0,&quot;yanchor&quot;:&quot;middle&quot;},{&quot;font&quot;:{&quot;color&quot;:&quot;#EF553B&quot;,&quot;size&quot;:10},&quot;showarrow&quot;:false,&quot;text&quot;:&quot;DM: 149&quot;,&quot;x&quot;:72,&quot;xanchor&quot;:&quot;left&quot;,&quot;xshift&quot;:5,&quot;y&quot;:149.0,&quot;yanchor&quot;:&quot;middle&quot;},{&quot;font&quot;:{&quot;color&quot;:&quot;#00CC96&quot;,&quot;size&quot;:10},&quot;showarrow&quot;:false,&quot;text&quot;:&quot;GW: 160&quot;,&quot;x&quot;:72,&quot;xanchor&quot;:&quot;left&quot;,&quot;xshift&quot;:5,&quot;y&quot;:160.0,&quot;yanchor&quot;:&quot;middle&quot;},{&quot;font&quot;:{&quot;color&quot;:&quot;#AB63FA&quot;,&quot;size&quot;:10},&quot;showarrow&quot;:false,&quot;text&quot;:&quot;JB: 126&quot;,&quot;x&quot;:72,&quot;xanchor&quot;:&quot;left&quot;,&quot;xshift&quot;:5,&quot;y&quot;:126.0,&quot;yanchor&quot;:&quot;middle&quot;},{&quot;font&quot;:{&quot;color&quot;:&quot;#FFA15A&quot;,&quot;size&quot;:10},&quot;showarrow&quot;:false,&quot;text&quot;:&quot;JP: 161&quot;,&quot;x&quot;:72,&quot;xanchor&quot;:&quot;left&quot;,&quot;xshift&quot;:5,&quot;y&quot;:161.0,&quot;yanchor&quot;:&quot;middle&quot;},{&quot;showarrow&quot;:false,&quot;text&quot;:&quot;R1&quot;,&quot;x&quot;:9,&quot;y&quot;:0.08,&quot;yref&quot;:&quot;paper&quot;,&quot;yshift&quot;:-40},{&quot;showarrow&quot;:false,&quot;text&quot;:&quot;R2&quot;,&quot;x&quot;:27,&quot;y&quot;:0.08,&quot;yref&quot;:&quot;paper&quot;,&quot;yshift&quot;:-40},{&quot;showarrow&quot;:false,&quot;text&quot;:&quot;R3&quot;,&quot;x&quot;:45,&quot;y&quot;:0.08,&quot;yref&quot;:&quot;paper&quot;,&quot;yshift&quot;:-40},{&quot;showarrow&quot;:false,&quot;text&quot;:&quot;R4&quot;,&quot;x&quot;:63,&quot;y&quot;:0.08,&quot;yref&quot;:&quot;paper&quot;,&quot;yshift&quot;:-40}],&quot;legend&quot;:{&quot;orientation&quot;:&quot;h&quot;,&quot;yanchor&quot;:&quot;bottom&quot;,&quot;y&quot;:1.02,&quot;xanchor&quot;:&quot;left&quot;,&quot;x&quot;:0,&quot;traceorder&quot;:&quot;normal&quot;,&quot;itemsizing&quot;:&quot;constant&quot;},&quot;margin&quot;:{&quot;r&quot;:100,&quot;t&quot;:0,&quot;b&quot;:10,&quot;l&quot;:0},&quot;font&quot;:{&quot;family&quot;:&quot;monospace&quot;},&quot;yaxis&quot;:{&quot;title&quot;:{&quot;text&quot;:&quot;Cumulative Stableford&quot;},&quot;fixedrange&quot;:true,&quot;showgrid&quot;:true,&quot;gridcolor&quot;:&quot;rgba(0,0,0,0.06)&quot;,&quot;gridwidth&quot;:1,&quot;zeroline&quot;:false,&quot;showline&quot;:false},&quot;hovermode&quot;:&quot;x unified&quot;,&quot;shapes&quot;:[{&quot;line&quot;:{&quot;color&quot;:&quot;rgba(0,0,0,0.08)&quot;,&quot;width&quot;:1},&quot;type&quot;:&quot;line&quot;,&quot;x0&quot;:0,&quot;x1&quot;:0,&quot;xref&quot;:&quot;x&quot;,&quot;y0&quot;:0,&quot;y1&quot;:1,&quot;yref&quot;:&quot;y domain&quot;},{&quot;line&quot;:{&quot;color&quot;:&quot;rgba(0,0,0,0.08)&quot;,&quot;width&quot;:1},&quot;type&quot;:&quot;line&quot;,&quot;x0&quot;:18,&quot;x1&quot;:18,&quot;xref&quot;:&quot;x&quot;,&quot;y0&quot;:0,&quot;y1&quot;:1,&quot;yref&quot;:&quot;y domain&quot;},{&quot;line&quot;:{&quot;color&quot;:&quot;rgba(0,0,0,0.08)&quot;,&quot;width&quot;:1},&quot;type&quot;:&quot;line&quot;,&quot;x0&quot;:36,&quot;x1&quot;:36,&quot;xref&quot;:&quot;x&quot;,&quot;y0&quot;:0,&quot;y1&quot;:1,&quot;yref&quot;:&quot;y domain&quot;},{&quot;line&quot;:{&quot;color&quot;:&quot;rgba(0,0,0,0.08)&quot;,&quot;width&quot;:1},&quot;type&quot;:&quot;line&quot;,&quot;x0&quot;:54,&quot;x1&quot;:54,&quot;xref&quot;:&quot;x&quot;,&quot;y0&quot;:0,&quot;y1&quot;:1,&quot;yref&quot;:&quot;y domain&quot;}],&quot;xaxis&quot;:{&quot;tickvals&quot;:[],&quot;range&quot;:[0.5,72.5],&quot;showspikes&quot;:false,&quot;fixedrange&quot;:true,&quot;showgrid&quot;:false,&quot;zeroline&quot;:false,&quot;showline&quot;:false},&quot;paper_bgcolor&quot;:&quot;rgba(0,0,0,0)&quot;,&quot;plot_bgcolor&quot;:&quot;rgba(0,0,0,0)&quot;}}" style="height:450px;"></div>
+</div>
+
+
+<input type="hidden" id="results-chart-variant" name="chart_variant" value="standard" style="">
+<p class="chart-controls-label">Choose chart type:</p>
+<div class="pill-group" role="group" aria-label="Chart type">
+    
+    <button class="pill pill--active" onclick="document.getElementById('results-chart-variant').value='standard'" hx-get="/results/table" hx-target="#results-content" hx-include="#results-teg-select, #results-tab-input" hx-vals="{&quot;chart_variant&quot;: &quot;standard&quot;}">
+        Standard
+    </button>
+    
+    <button class="pill" onclick="document.getElementById('results-chart-variant').value='adjusted'" hx-get="/results/table" hx-target="#results-content" hx-include="#results-teg-select, #results-tab-input" hx-vals="{&quot;chart_variant&quot;: &quot;adjusted&quot;}">
+        Adjusted scale
+    </button>
+    
+    <button class="pill" onclick="document.getElementById('results-chart-variant').value='ranking'" hx-get="/results/table" hx-target="#results-content" hx-include="#results-teg-select, #results-tab-input" hx-vals="{&quot;chart_variant&quot;: &quot;ranking&quot;}">
+        Ranking
+    </button>
+    
+</div>
+
+
+
+</div>
+
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile bottom tab bar (Phase M1) — visible only ≤640px, inert above it.
+         One tab per nav section; single source of truth is webapp/nav.py. -->
+    <nav class="mobile-tabbar" aria-label="Primary sections">
+        
+        
+        <a href="/history" class="mtab mtab--active">
+            <span class="material-symbols-outlined">lists</span>
+            <span class="mtab-label">History</span>
+        </a>
+        
+        
+        
+        <a href="/leaderboard" class="mtab ">
+            <span class="material-symbols-outlined">leaderboard</span>
+            <span class="mtab-label">Latest</span>
+        </a>
+        
+        
+        
+        <a href="/records" class="mtab ">
+            <span class="material-symbols-outlined">military_tech</span>
+            <span class="mtab-label">Records</span>
+        </a>
+        
+        
+        
+        <a href="/scoring/birdies" class="mtab ">
+            <span class="material-symbols-outlined">strategy</span>
+            <span class="mtab-label">Scoring</span>
+        </a>
+        
+        
+        
+        <a href="/scorecard" class="mtab ">
+            <span class="material-symbols-outlined">sports_golf</span>
+            <span class="mtab-label">Cards</span>
+        </a>
+        
+        
+    </nav>
+
+    <script>
+    // Sticky nav that slides off screen after scrolling past threshold
+    (function() {
+        var nav = document.querySelector('.nav');
+        var navHeight = nav.offsetHeight;
+        var threshold = 300;
+        nav.style.position = 'sticky';
+        nav.style.top = '0';
+        nav.style.transition = 'none';
+        window.addEventListener('scroll', function() {
+            var y = window.scrollY;
+            if (y <= threshold) {
+                nav.style.top = '0';
+            } else {
+                var offset = Math.min(y - threshold, navHeight);
+                nav.style.top = -offset + 'px';
+            }
+        }, { passive: true });
+    })();
+    // Structural hierarchy debug overlay — toggle with Ctrl/Cmd+Shift+D,
+    // or call toggleStructureDebug() from the console. State persists in localStorage.
+    (function() {
+        if (localStorage.getItem('debugStructure') === '1') {
+            document.body.classList.add('debug-structure');
+        }
+        window.toggleStructureDebug = function() {
+            var on = document.body.classList.toggle('debug-structure');
+            localStorage.setItem('debugStructure', on ? '1' : '0');
+            return on;
+        };
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'D' || e.key === 'd')) {
+                e.preventDefault();
+                window.toggleStructureDebug();
+            }
+        });
+    })();
+    // Mobile dropdown toggle
+    document.querySelectorAll('.nav-dropdown-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            if (window.innerWidth <= 900) {
+                btn.parentElement.classList.toggle('open');
+            }
+        });
+    });
+    // Global in-page tab active state: clicking a primary tab (a .tab-underline
+    // inside a .section-nav) moves the active underline to it. Scoped to the
+    // nearest .section-nav so multiple tab bars on a page don't interfere, and
+    // so sub-toggles (.toggle-group) keep their own per-page handlers.
+    document.addEventListener('click', function(e) {
+        var btn = e.target.closest('.section-nav .tab-underline');
+        if (!btn) return;
+        var nav = btn.closest('.section-nav');
+        nav.querySelectorAll('.tab-underline').forEach(function(b) {
+            b.classList.remove('tab-underline--active');
+        });
+        btn.classList.add('tab-underline--active');
+    });
+    // Global pill active state: clicking a .pill moves --active within its
+    // nearest .pill-group. Works whether the pills are re-rendered by an HTMX
+    // swap or sit outside the swap target (e.g. /top-performances measure pills).
+    document.addEventListener('click', function(e) {
+        var pill = e.target.closest('.pill-group .pill');
+        if (!pill) return;
+        var group = pill.closest('.pill-group');
+        group.querySelectorAll('.pill').forEach(function(p) {
+            p.classList.remove('pill--active');
+        });
+        pill.classList.add('pill--active');
+    });
+    // Global hover tooltip for any element carrying data-tip (scorecard cells,
+    // eclectic cells). A single floating div, positioned at the cursor with
+    // position:fixed so it is never clipped by the table's scroll wrappers.
+    // Delegated on document, so it also covers HTMX-swapped content.
+    (function() {
+        var tip = null;
+        function ensure() {
+            if (!tip) {
+                tip = document.createElement('div');
+                tip.className = 'sc-tooltip';
+                tip.style.cssText = 'position:fixed;z-index:9999;pointer-events:none;'
+                    + 'background:#222019;color:#fff;font-size:12px;line-height:1.3;'
+                    + 'font-family:system-ui,-apple-system,sans-serif;padding:6px 9px;'
+                    + 'border-radius:6px;box-shadow:0 2px 10px rgba(0,0,0,.28);'
+                    + 'white-space:nowrap;opacity:0;transition:opacity .08s;max-width:92vw;';
+                document.body.appendChild(tip);
+            }
+            return tip;
+        }
+        function place(e) {
+            if (!tip) return;
+            var x = e.clientX + 14, y = e.clientY + 18;
+            var r = tip.getBoundingClientRect();
+            if (x + r.width > window.innerWidth - 8) x = e.clientX - r.width - 14;
+            if (y + r.height > window.innerHeight - 8) y = e.clientY - r.height - 18;
+            tip.style.left = Math.max(8, x) + 'px';
+            tip.style.top = Math.max(8, y) + 'px';
+        }
+        function hide() { if (tip) tip.style.opacity = '0'; }
+        document.addEventListener('mouseover', function(e) {
+            var el = e.target.closest('[data-tip]');
+            if (!el) return;
+            var t = ensure();
+            t.textContent = el.getAttribute('data-tip');
+            t.style.opacity = '1';
+            place(e);
+        });
+        document.addEventListener('mousemove', function(e) {
+            if (e.target.closest('[data-tip]')) place(e); else hide();
+        });
+        document.addEventListener('mouseout', function(e) {
+            if (e.target.closest('[data-tip]')) hide();
+        });
+    })();
+    </script>
+    <!-- Centralised Plotly renderer. Charts use data-figure attribute instead of inline
+         scripts — this handler purges and re-renders on DOMContentLoaded and after every
+         HTMX swap, fixing the stranded top-SVG-layer bug on tab switches. -->
+    <script>
+    (function() {
+        function renderCharts(root) {
+            root.querySelectorAll('.chart-container[data-figure]').forEach(function(el) {
+                Plotly.purge(el);
+                var fig = JSON.parse(el.dataset.figure);
+                Plotly.newPlot(el, fig.data, fig.layout, {responsive: true, displayModeBar: false});
+            });
+        }
+        document.addEventListener('DOMContentLoaded', function() { renderCharts(document); });
+        document.addEventListener('htmx:afterSettle', function(e) { renderCharts(e.detail.elt); });
+    })();
+    </script>
+    <!-- Chart pill switcher: toggles sibling .chart-panel visibility within a
+         .chart-switch and resizes the now-visible Plotly chart (Plotly renders
+         hidden containers at zero width, so a resize on show is required). -->
+    <script>
+    (function() {
+        document.addEventListener('click', function(e) {
+            var pill = e.target.closest('.chart-pill');
+            if (!pill) return;
+            var wrap = pill.closest('.chart-switch');
+            if (!wrap) return;
+            wrap.querySelectorAll('.chart-pill').forEach(function(p) { p.classList.remove('pill--active'); });
+            pill.classList.add('pill--active');
+            wrap.querySelectorAll('.chart-panel').forEach(function(panel) { panel.classList.add('hidden'); });
+            var target = wrap.querySelector(pill.dataset.chartTarget);
+            if (!target) return;
+            target.classList.remove('hidden');
+            var chart = target.querySelector('.chart-container[data-figure]');
+            if (chart && window.Plotly) Plotly.Plots.resize(chart);
+        });
+    })();
+    </script>
+
+<svg id="js-plotly-tester" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="position: absolute; left: -10000px; top: -10000px; width: 9000px; height: 9000px; z-index: 1;"><path class="js-reference-point" d="M0,0H1V1H0Z" style="stroke-width: 0; fill: black;"></path></svg></body></html>

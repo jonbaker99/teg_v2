@@ -1,0 +1,155 @@
+/* ─────────────────────────────────────────────────────────────
+   MANILA · Theme A (Plain)
+   The records office: manila folder stock, sepia ink, a burnt-
+   orange stamp for anything active. Public Sans keeps the file
+   legible; Fragment Mono types the figures.
+   ───────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=Fragment+Mono:ital@0;1&display=swap');
+
+:root {
+    /* Typography */
+    --font-heading: 'Public Sans', Helvetica, sans-serif;
+    --font-body: 'Public Sans', Helvetica, sans-serif;
+    --font-data: 'Fragment Mono';            /* NEW TOKEN — table/chart mono */
+
+    /* Page + text */
+    --bg-page: #f2ecdf;
+    --bg-card: #f2ecdf;
+    --text-primary: #2b2318;
+    --text-secondary: #5d5344;
+    --text-muted: #94886f;
+
+    /* Nav */
+    --nav-bg: #f2ecdf;
+    --nav-text: #5d5344;
+    --nav-text-muted: #94886f;
+    --nav-hover-bg: transparent;
+    --nav-active-bg: transparent;
+    --nav-active-text: #2b2318;
+
+    /* Tables */
+    --table-font-size: 0.85rem;
+    --table-header-bg: transparent;
+    --table-header-border: #2b2318;
+    --table-cell-border: #d9d0bb;
+    --table-hover-bg: #eae2cf;
+    --table-hover-text: inherit;
+    --table-toprank-bg: transparent;
+    --table-toprank-text: #c25e1e;
+    --table-stripe-bg: transparent;
+    --table-cell-border-width: 1px;
+    --table-header-border-width: 1px;
+
+    /* Accent + buttons */
+    --accent: #c25e1e;
+    --btn-active-bg: #2b2318;
+    --btn-active-text: #f2ecdf;
+    --btn-inactive-bg: transparent;
+    --btn-inactive-text: #5d5344;
+    --btn-border-radius: 0;
+    --card-radius: 0;
+    --card-shadow: none;
+
+    /* Selects */
+    --select-bg: #f2ecdf;
+    --select-border: #c3b797;
+    --select-focus-ring: #c25e1e;
+
+    /* Footer */
+    --footer-bg: transparent;
+    --footer-text: #94886f;
+
+    /* Stat cards */
+    --stat-card-bg: transparent;
+    --stat-card-border: #2b2318;
+    --stat-card-value-color: #2b2318;
+    --stat-card-label-color: #94886f;
+
+    /* Badges */
+    --badge-bg: #c25e1e;
+    --badge-text: #f7f2e6;
+    --badge-muted-bg: #e6ddc6;
+    --badge-muted-text: #75694f;
+
+    --divider-color: #d9d0bb;
+
+    /* NEW TOKENS — chart palette */
+    --chart-1: #c25e1e;
+    --chart-2: #3c7a6e;
+    --chart-3: #35506b;
+    --chart-4: #7a7a2e;
+    --chart-5: #a03c30;
+    --chart-6: #bb8f22;
+    --chart-7: #7c5c3c;
+    --chart-8: #6d675c;
+    --chart-grid: rgba(43, 35, 24, 0.1);
+    --chart-axis-text: #75694f;
+
+    --table-tierlast-text: #9c3a24;
+}
+
+/* Dark — the archive after hours: deep tobacco, faded parchment,
+   the stamp glowing amber. */
+html[data-mode="dark"] {
+    color-scheme: dark;
+
+    --bg-page: #1a150d;
+    --bg-card: #241d12;
+    --text-primary: #efe7d4;
+    --text-secondary: #bfb49c;
+    --text-muted: #8c8168;
+
+    --nav-bg: #1a150d;
+    --nav-text: #bfb49c;
+    --nav-text-muted: #8c8168;
+    --nav-hover-bg: transparent;
+    --nav-active-bg: transparent;
+    --nav-active-text: #efe7d4;
+
+    --table-header-bg: transparent;
+    --table-header-border: #a89b7d;
+    --table-cell-border: #3a3222;
+    --table-hover-bg: #241d12;
+    --table-hover-text: inherit;
+    --table-toprank-bg: transparent;
+    --table-toprank-text: #e0863d;
+    --table-stripe-bg: transparent;
+
+    --accent: #e0863d;
+    --btn-active-bg: #efe7d4;
+    --btn-active-text: #1a150d;
+    --btn-inactive-bg: transparent;
+    --btn-inactive-text: #bfb49c;
+
+    --select-bg: #1a150d;
+    --select-border: #4d4330;
+    --select-focus-ring: #e0863d;
+
+    --footer-bg: transparent;
+    --footer-text: #8c8168;
+
+    --stat-card-bg: transparent;
+    --stat-card-border: #a89b7d;
+    --stat-card-value-color: #efe7d4;
+    --stat-card-label-color: #8c8168;
+
+    --badge-bg: #e0863d;
+    --badge-text: #1a150d;
+    --badge-muted-bg: #2c2416;
+    --badge-muted-text: #a3977c;
+
+    --divider-color: #3a3222;
+
+    --chart-1: #e0863d;
+    --chart-2: #6fb3a4;
+    --chart-3: #7d9cbd;
+    --chart-4: #b0b060;
+    --chart-5: #d07a6c;
+    --chart-6: #d6b35c;
+    --chart-7: #b1906a;
+    --chart-8: #9c968a;
+    --chart-grid: rgba(239, 231, 212, 0.1);
+    --chart-axis-text: #a3977c;
+
+    --table-tierlast-text: #d98a76;
+}

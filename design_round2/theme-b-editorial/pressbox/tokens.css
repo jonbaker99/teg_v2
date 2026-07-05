@@ -1,0 +1,155 @@
+/* ─────────────────────────────────────────────────────────────
+   PRESSBOX · Theme B (Editorial)
+   The mid-century sports weekly: warm paper, navy ink, a hot
+   tomato spot colour. Zilla Slab headlines over Faustina text;
+   Space Mono types the box scores.
+   ───────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Faustina:ital,wght@0,400;0,500;0,600;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+    /* Typography */
+    --font-heading: 'Zilla Slab', Georgia, serif;
+    --font-body: 'Faustina', Georgia, serif;
+    --font-data: 'Space Mono';               /* NEW TOKEN — table/chart mono */
+
+    /* Page + text */
+    --bg-page: #faf6ef;
+    --bg-card: #faf6ef;
+    --text-primary: #20242e;
+    --text-secondary: #4e5361;
+    --text-muted: #8a8d96;
+
+    /* Nav */
+    --nav-bg: #faf6ef;
+    --nav-text: #4e5361;
+    --nav-text-muted: #8a8d96;
+    --nav-hover-bg: transparent;
+    --nav-active-bg: transparent;
+    --nav-active-text: #1f2a52;
+
+    /* Tables */
+    --table-font-size: 0.83rem;
+    --table-header-bg: transparent;
+    --table-header-border: #1f2a52;
+    --table-cell-border: #ddd6c6;
+    --table-hover-bg: #f1ece0;
+    --table-hover-text: inherit;
+    --table-toprank-bg: #fbe9e2;
+    --table-toprank-text: #c23f1e;
+    --table-stripe-bg: transparent;
+    --table-cell-border-width: 1px;
+    --table-header-border-width: 3px;
+
+    /* Accent + buttons */
+    --accent: #d54a28;
+    --btn-active-bg: #1f2a52;
+    --btn-active-text: #faf6ef;
+    --btn-inactive-bg: transparent;
+    --btn-inactive-text: #4e5361;
+    --btn-border-radius: 0;
+    --card-radius: 0;
+    --card-shadow: none;
+
+    /* Selects */
+    --select-bg: #faf6ef;
+    --select-border: #bcb5a3;
+    --select-focus-ring: #d54a28;
+
+    /* Footer */
+    --footer-bg: transparent;
+    --footer-text: #8a8d96;
+
+    /* Stat cards */
+    --stat-card-bg: transparent;
+    --stat-card-border: #1f2a52;
+    --stat-card-value-color: #1f2a52;
+    --stat-card-label-color: #8a8d96;
+
+    /* Badges */
+    --badge-bg: #d54a28;
+    --badge-text: #faf6ef;
+    --badge-muted-bg: #ece5d5;
+    --badge-muted-text: #6d7080;
+
+    --divider-color: #ddd6c6;
+
+    /* NEW TOKENS — chart palette */
+    --chart-1: #1f2a52;
+    --chart-2: #e2532f;
+    --chart-3: #17807e;
+    --chart-4: #e0a500;
+    --chart-5: #8c2f39;
+    --chart-6: #77823c;
+    --chart-7: #5b6e8c;
+    --chart-8: #20242e;
+    --chart-grid: rgba(32, 36, 46, 0.09);
+    --chart-axis-text: #6d7080;
+
+    --table-tierlast-text: #8c2f39;
+}
+
+/* Dark — the late edition under stadium lights: deep navy stock,
+   the tomato glowing hot. */
+html[data-mode="dark"] {
+    color-scheme: dark;
+
+    --bg-page: #131828;
+    --bg-card: #1a2138;
+    --text-primary: #e6e9f2;
+    --text-secondary: #adb4c9;
+    --text-muted: #767d93;
+
+    --nav-bg: #131828;
+    --nav-text: #adb4c9;
+    --nav-text-muted: #767d93;
+    --nav-hover-bg: transparent;
+    --nav-active-bg: transparent;
+    --nav-active-text: #e6e9f2;
+
+    --table-header-bg: transparent;
+    --table-header-border: #aab6d9;
+    --table-cell-border: #2b3350;
+    --table-hover-bg: #1a2138;
+    --table-hover-text: inherit;
+    --table-toprank-bg: #3a2118;
+    --table-toprank-text: #ff9a72;
+    --table-stripe-bg: transparent;
+
+    --accent: #ff7a52;
+    --btn-active-bg: #e6e9f2;
+    --btn-active-text: #131828;
+    --btn-inactive-bg: transparent;
+    --btn-inactive-text: #adb4c9;
+
+    --select-bg: #131828;
+    --select-border: #3d4666;
+    --select-focus-ring: #ff7a52;
+
+    --footer-bg: transparent;
+    --footer-text: #767d93;
+
+    --stat-card-bg: transparent;
+    --stat-card-border: #aab6d9;
+    --stat-card-value-color: #e6e9f2;
+    --stat-card-label-color: #767d93;
+
+    --badge-bg: #ff7a52;
+    --badge-text: #131828;
+    --badge-muted-bg: #232b47;
+    --badge-muted-text: #98a0b5;
+
+    --divider-color: #2b3350;
+
+    --chart-1: #8fa7e8;
+    --chart-2: #ff7a52;
+    --chart-3: #4fc4c1;
+    --chart-4: #ffd166;
+    --chart-5: #e08894;
+    --chart-6: #b3c178;
+    --chart-7: #9db0cd;
+    --chart-8: #e6e9f2;
+    --chart-grid: rgba(230, 233, 242, 0.1);
+    --chart-axis-text: #98a0b5;
+
+    --table-tierlast-text: #e08894;
+}

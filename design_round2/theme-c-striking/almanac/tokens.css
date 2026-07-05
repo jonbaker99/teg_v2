@@ -1,0 +1,172 @@
+/* ─────────────────────────────────────────────────────────────
+   ALMANAC · Theme C (Striking)
+   The stats annual, 538-style: cool paper, heavy black headline
+   type, and a disciplined five-hue palette that means the same
+   thing in every table and chart. Archivo Black + IBM Plex Mono.
+   ───────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+    /* Typography */
+    --font-heading: 'Archivo Black', 'Arial Black', sans-serif;
+    --font-body: 'Archivo', Arial, sans-serif;
+    --font-data: 'IBM Plex Mono';            /* NEW TOKEN — table/chart mono */
+
+    /* Page + text */
+    --bg-page: #efeee9;
+    --bg-card: #ffffff;
+    --text-primary: #191919;
+    --text-secondary: #4c4c4a;
+    --text-muted: #8b8b86;
+
+    /* Nav — the ink block */
+    --nav-bg: #191919;
+    --nav-text: #b9b9b4;
+    --nav-text-muted: #8b8b86;
+    --nav-hover-bg: transparent;
+    --nav-active-bg: transparent;
+    --nav-active-text: #ffffff;
+
+    /* Tables */
+    --table-font-size: 0.84rem;
+    --table-header-bg: #191919;
+    --table-header-text: #f2f2ee;            /* NEW TOKEN — header band text */
+    --table-header-border: #191919;
+    --table-cell-border: #dcdcd4;
+    --table-hover-bg: #e9e8e0;
+    --table-hover-text: inherit;
+    --table-toprank-bg: #f5c518;
+    --table-toprank-text: #191919;
+    --table-stripe-bg: transparent;
+    --table-cell-border-width: 1px;
+    --table-header-border-width: 0px;
+
+    /* NEW TOKENS — rank tiers */
+    --table-tier1-bg: #f5c518;
+    --table-tier1-text: #191919;
+    --table-tier2-bg: #cfe0f5;
+    --table-tier2-text: #17395c;
+    --table-tiermid-bg: transparent;
+    --table-tiermid-text: inherit;
+    --table-tierlast-bg: #f6cfc9;
+    --table-tierlast-text: #7c1d12;
+
+    /* Accent + buttons */
+    --accent: #cf3b2f;
+    --btn-active-bg: #191919;
+    --btn-active-text: #ffffff;
+    --btn-inactive-bg: #ffffff;
+    --btn-inactive-text: #4c4c4a;
+    --btn-border-radius: 0;
+    --card-radius: 0;
+    --card-shadow: none;
+
+    /* Selects */
+    --select-bg: #ffffff;
+    --select-border: #191919;
+    --select-focus-ring: #cf3b2f;
+
+    /* Footer */
+    --footer-bg: #191919;
+    --footer-text: #b9b9b4;
+
+    /* Stat cards */
+    --stat-card-bg: #ffffff;
+    --stat-card-border: #cf3b2f;
+    --stat-card-value-color: #191919;
+    --stat-card-label-color: #8b8b86;
+
+    /* Badges */
+    --badge-bg: #cf3b2f;
+    --badge-text: #ffffff;
+    --badge-muted-bg: #e3e2da;
+    --badge-muted-text: #6b6b66;
+
+    --divider-color: #dcdcd4;
+
+    /* NEW TOKENS — chart palette */
+    --chart-1: #cf3b2f;
+    --chart-2: #2d5f9e;
+    --chart-3: #e3a008;
+    --chart-4: #2e7d54;
+    --chart-5: #7d4a75;
+    --chart-6: #4a6572;
+    --chart-7: #a5794b;
+    --chart-8: #191919;
+    --chart-grid: rgba(25, 25, 25, 0.1);
+    --chart-axis-text: #6b6b66;
+}
+
+/* Dark — the annual printed in negative: flat ink page, white
+   headline type, the five hues stepped up one notch. */
+html[data-mode="dark"] {
+    color-scheme: dark;
+
+    --bg-page: #141414;
+    --bg-card: #1f1f1f;
+    --text-primary: #ededea;
+    --text-secondary: #bcbcb7;
+    --text-muted: #858580;
+
+    --nav-bg: #0d0d0d;
+    --nav-text: #9c9c97;
+    --nav-text-muted: #6e6e69;
+    --nav-hover-bg: transparent;
+    --nav-active-bg: transparent;
+    --nav-active-text: #ffffff;
+
+    --table-header-bg: #ededea;
+    --table-header-text: #141414;
+    --table-header-border: #ededea;
+    --table-cell-border: #333330;
+    --table-hover-bg: #262624;
+    --table-hover-text: inherit;
+    --table-toprank-bg: #6b5407;
+    --table-toprank-text: #ffe27a;
+    --table-stripe-bg: transparent;
+
+    --table-tier1-bg: #6b5407;
+    --table-tier1-text: #ffe27a;
+    --table-tier2-bg: #1e3852;
+    --table-tier2-text: #a9cdf2;
+    --table-tiermid-bg: transparent;
+    --table-tiermid-text: inherit;
+    --table-tierlast-bg: #46201a;
+    --table-tierlast-text: #f0a094;
+
+    --accent: #e85c4a;
+    --btn-active-bg: #ededea;
+    --btn-active-text: #141414;
+    --btn-inactive-bg: #1f1f1f;
+    --btn-inactive-text: #bcbcb7;
+
+    --select-bg: #1f1f1f;
+    --select-border: #ededea;
+    --select-focus-ring: #e85c4a;
+
+    --footer-bg: #0d0d0d;
+    --footer-text: #9c9c97;
+
+    --stat-card-bg: #1f1f1f;
+    --stat-card-border: #e85c4a;
+    --stat-card-value-color: #ededea;
+    --stat-card-label-color: #858580;
+
+    --badge-bg: #e85c4a;
+    --badge-text: #141414;
+    --badge-muted-bg: #2c2c2a;
+    --badge-muted-text: #a3a39e;
+
+    --divider-color: #333330;
+
+    --chart-1: #e85c4a;
+    --chart-2: #6ba0dd;
+    --chart-3: #f5c033;
+    --chart-4: #5bb98a;
+    --chart-5: #b585ad;
+    --chart-6: #8fa5b3;
+    --chart-7: #cfa06e;
+    --chart-8: #ededea;
+    --chart-grid: rgba(237, 237, 234, 0.1);
+    --chart-axis-text: #a3a39e;
+}
