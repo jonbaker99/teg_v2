@@ -6,13 +6,12 @@ import pandas as pd
 from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
 
-from teg_analysis.analysis.bestball import (
-    prepare_bestball_data,
-    calculate_bestball_scores,
-    calculate_worstball_scores,
-    format_team_scores_for_display,
+from teg_analysis.analysis.bestball import format_team_scores_for_display
+from webapp.deps import (
+    cached_load_all_data,
+    bestball_worstball_totals,
+    get_available_teg_numbers,
 )
-from webapp.deps import cached_load_all_data, get_available_teg_numbers
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
@@ -37,16 +36,20 @@ def _df_to_html(df: pd.DataFrame, table_class: str = "teg-table") -> str:
 def _bestball_context(mode: str = "bestball", teg: int = 0, sort_best: bool = True, n: int = 3) -> dict:
     try:
         all_data = cached_load_all_data()
-        if teg > 0:
-            all_data = all_data[all_data['TEGNum'] == teg]
-        bb_data = prepare_bestball_data(all_data)
+        # Per-round totals from the maintained cache (live fallback inside).
+        bb_scores, wb_scores = bestball_worstball_totals(all_data)
 
         if mode == "worstball":
-            scores = calculate_worstball_scores(bb_data)
+            scores = wb_scores
             format_label = "Worstball"
         else:
-            scores = calculate_bestball_scores(bb_data)
+            scores = bb_scores
             format_label = "Bestball"
+
+        # A round's team-format total is independent of TEG filtering, so we can
+        # filter the cached per-round result rather than recomputing per TEG.
+        if teg > 0:
+            scores = scores[scores['TEGNum'] == teg]
 
         # Dynamic heading: sort_best=True means ascending GrossVP (lowest/best first)
         # bestball + sort_best=True  → Best Bestball

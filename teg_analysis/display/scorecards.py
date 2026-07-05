@@ -40,15 +40,26 @@ def _cell_title(row) -> str:
     return ' · '.join(parts)
 
 
-def _build_hole_header_row(label_class: str, label_text: str) -> str:
-    """Build the hole-number header row."""
+def _build_hole_header_row(label_class: str, label_text: str,
+                           include_nines: bool = True) -> str:
+    """Build the hole-number header row.
+
+    Args:
+        label_class: CSS class for the leading label cell.
+        label_text: text for the leading label cell.
+        include_nines: when False, omit the OUT and IN nine-totals columns
+            (used by the bestball/worstball + eclectic field cards, which show
+            per-hole marks and a single TOTAL only).
+    """
     parts = [f'<tr><th class="{label_class} hole-header">{label_text}</th>']
     for hole in range(1, 10):
         parts.append(f'<th class="hole-header">{hole}</th>')
-    parts.append('<th class="hole-header totals front-back-divider">OUT</th>')
+    if include_nines:
+        parts.append('<th class="hole-header totals front-back-divider">OUT</th>')
     for hole in range(10, 19):
         parts.append(f'<th class="hole-header">{hole}</th>')
-    parts.append('<th class="hole-header totals">IN</th>')
+    if include_nines:
+        parts.append('<th class="hole-header totals">IN</th>')
     parts.append('<th class="hole-header totals">TOTAL</th>')
     parts.append('</tr>')
     return ''.join(parts)
@@ -222,6 +233,18 @@ def _get_sorted_players(round_data: pd.DataFrame):
         player_totals.append((total_score, player, player_name))
     player_totals.sort(key=lambda x: x[0])
     return [(p, name) for _, p, name in player_totals]
+
+
+def _player_name_spans(name: str) -> str:
+    """Emit a player name as a full + short ('Initial. SURNAME') pair of spans.
+
+    Both are always emitted; CSS shows the full name normally and swaps in the
+    short form on narrow screens, so data columns aren't squeezed on mobile.
+    """
+    bits = str(name).split()
+    short = f'{bits[0][0]}.{bits[-1]}' if len(bits) >= 2 else str(name)
+    return (f'<span class="bw-name-full">{name}</span>'
+            f'<span class="bw-name-short">{short}</span>')
 
 
 def build_round_comparison_gross_table(round_data: pd.DataFrame) -> str:
@@ -715,50 +738,117 @@ def build_bestball_worstball_scorecard(round_data: pd.DataFrame) -> str:
             hole_max[hole] = int(vals.max())
 
     def team_row(label: str, by_hole: dict) -> str:
-        front_tot = sum(by_hole[h] for h in range(1, 10) if h in by_hole)
-        back_tot = sum(by_hole[h] for h in range(10, 19) if h in by_hole)
+        total = sum(by_hole[h] for h in range(1, 19) if h in by_hole)
         cells = [f'<tr class="bw-team-row"><td class="player-label">{label}</td>']
-        for hole in range(1, 10):
+        for hole in range(1, 19):
             cells.append(_bw_team_cell(by_hole.get(hole)))
-        cells.append(f'<td class="totals front-back-divider">{_vp_label(front_tot)}</td>')
-        for hole in range(10, 19):
-            cells.append(_bw_team_cell(by_hole.get(hole)))
-        cells.append(f'<td class="totals">{_vp_label(back_tot)}</td>')
-        cells.append(f'<td class="totals">{_vp_label(front_tot + back_tot)}</td>')
+        cells.append(f'<td class="totals">{_vp_label(total)}</td>')
         cells.append('</tr>')
         return ''.join(cells)
 
     parts = ['<table class="scorecard-table eclectic-scorecard bw-scorecard"><thead>']
-    parts.append(_build_hole_header_row('player-label', 'Player'))
+    parts.append(_build_hole_header_row('player-label', 'Player', include_nines=False))
     parts.append('</thead><tbody>')
 
     # Bestball and Worstball rows at the top with scorecard shapes.
     parts.append(team_row('Bestball', hole_min))
     parts.append(team_row('Worstball', hole_max))
 
-    # Gap row separating team rows from player rows.
-    parts.append('<tr class="bw-gap-row"><td colspan="21"></td></tr>')
+    # Gap row separating team rows from player rows (1 label + 18 holes + TOTAL).
+    parts.append('<tr class="bw-gap-row"><td colspan="20"></td></tr>')
 
     # Player rows — vs-par labels with font-only highlights.
     for code, name in sorted_players:
         pdata = round_data[round_data['Pl'] == code].sort_values('Hole')
         vp = {int(r['Hole']): int(r['GrossVP']) for _, r in pdata.iterrows()}
         title = {int(r['Hole']): _cell_title(r) for _, r in pdata.iterrows()}
-        front_tot = sum(vp[h] for h in range(1, 10) if h in vp)
-        back_tot = sum(vp[h] for h in range(10, 19) if h in vp)
+        total = sum(vp[h] for h in range(1, 19) if h in vp)
 
-        parts.append(f'<tr><td class="player-label">{name}</td>')
-        for hole in range(1, 10):
+        parts.append(f'<tr><td class="player-label">{_player_name_spans(name)}</td>')
+        for hole in range(1, 19):
             parts.append(_bw_player_cell(vp.get(hole), hole_min.get(hole), hole_max.get(hole), title.get(hole, '')))
-        parts.append(f'<td class="totals front-back-divider">{_vp_label(front_tot)}</td>')
-        for hole in range(10, 19):
-            parts.append(_bw_player_cell(vp.get(hole), hole_min.get(hole), hole_max.get(hole), title.get(hole, '')))
-        parts.append(f'<td class="totals">{_vp_label(back_tot)}</td>')
-        parts.append(f'<td class="totals">{_vp_label(front_tot + back_tot)}</td>')
+        parts.append(f'<td class="totals">{_vp_label(total)}</td>')
         parts.append('</tr>')
 
     parts.append('</tbody></table>')
     return ''.join(parts)
+
+
+def build_bestball_contribution_bars(round_data: pd.DataFrame) -> str:
+    """Build two side-by-side contribution tables (Bestball, Worstball) for the
+    round.
+
+    Each table has one row per player (ordered to match the field card) and
+    three columns: Player, Impact (the signed shot contribution — the headline
+    number), and Holes (a CSS bar overlaying the solid 'solo' count on the pale
+    'holes' count). The two tables sit next to each other when there's room and
+    wrap to stacked when narrow. The holes bars share one scale across both
+    tables so they're comparable.
+    """
+    if round_data is None or round_data.empty:
+        return "<p class='text-muted text-sm'>No data available.</p>"
+
+    from teg_analysis.analysis.bestball import calculate_player_contributions
+    contrib = calculate_player_contributions(round_data)
+    if contrib.empty:
+        return "<p class='text-muted text-sm'>No data available.</p>"
+
+    by_pl = {row['Pl']: row for _, row in contrib.iterrows()}
+    rows = [(name, by_pl[code]) for code, name in _get_sorted_players(round_data) if code in by_pl]
+
+    holes_scale = max([1] + [int(r['bb_holes']) for _, r in rows] + [int(r['wb_holes']) for _, r in rows])
+
+    # Holes bar fills to at most FILL_MAX% of the track, leaving room for the
+    # count label that sits just past the end of the bar.
+    FILL_MAX = 72
+
+    def _pct(value: int) -> int:
+        v = abs(int(value))
+        return 0 if v == 0 else max(6, round(FILL_MAX * v / holes_scale))
+
+    def _holes_bar(holes: int, solo: int, kind: str) -> str:
+        hp, sp = _pct(holes), _pct(solo)
+        label = f'{holes}<small>·{solo}</small>' if holes else '–'
+        zcls = '' if holes else ' bw-bar-zero'
+        return (f'<div class="bw-bar bw-bar--{kind}">'
+                '<div class="bw-bar-track">'
+                f'<div class="bw-bar-fill bw-bar-fill--pale" style="width:{hp}%"></div>'
+                f'<div class="bw-bar-fill bw-bar-fill--solid" style="width:{sp}%"></div>'
+                '</div>'
+                f'<span class="bw-bar-val{zcls}" style="left:calc({hp}% + 6px)">{label}</span>'
+                '</div>')
+
+    def _impact(value: int, kind: str) -> str:
+        v = int(value)
+        if v == 0:
+            return '<span class="bw-impact bw-impact--zero">–</span>'
+        return f'<span class="bw-impact bw-impact--{kind}">{_vp_label(v)}</span>'
+
+    def _table(kind: str, fmt_label: str, holes_key: str, solo_key: str, impact_key: str) -> str:
+        out = [f'<div class="bw-bars-col">',
+               f'<div class="bw-bars-title bw-bars-title--{kind}">{fmt_label}</div>',
+               '<table class="bw-bars-table"><colgroup>'
+               '<col class="bw-bars-player"><col class="bw-bars-impact"><col></colgroup><thead>',
+               '<tr><th class="player-label">Player</th>'
+               '<th class="bw-col-impact">Impact</th><th>Holes</th></tr>',
+               '</thead><tbody>']
+        # Sort by impact magnitude, biggest first (bestball biggest negative
+        # first, worstball biggest positive first), down to zero. Stable, so
+        # equal impacts keep the gross-score order.
+        ordered = sorted(rows, key=lambda nr: abs(int(nr[1][impact_key])), reverse=True)
+        for name, r in ordered:
+            out.append('<tr>')
+            out.append(f'<td class="player-label">{_player_name_spans(name)}</td>')
+            out.append(f'<td class="bw-col-impact">{_impact(int(r[impact_key]), kind)}</td>')
+            out.append(f'<td>{_holes_bar(int(r[holes_key]), int(r[solo_key]), kind)}</td>')
+            out.append('</tr>')
+        out.append('</tbody></table></div>')
+        return ''.join(out)
+
+    return ('<div class="bw-bars-pair">'
+            + _table('best', 'Bestball', 'bb_holes', 'bb_solo', 'bb_impact')
+            + _table('worst', 'Worstball', 'wb_holes', 'wb_solo', 'wb_impact')
+            + '</div>')
 
 
 def build_teg_eclectic_scorecard(teg_data: pd.DataFrame) -> str:
@@ -800,38 +890,28 @@ def build_teg_eclectic_scorecard(teg_data: pd.DataFrame) -> str:
         player_eclectics[code] = by_hole
 
     parts = ['<table class="scorecard-table eclectic-scorecard bw-scorecard"><thead>']
-    parts.append(_build_hole_header_row('player-label', 'Player'))
+    parts.append(_build_hole_header_row('player-label', 'Player', include_nines=False))
     parts.append('</thead><tbody>')
 
     # Team best eclectic row at the top with scorecard shapes.
-    front_tot = sum(hole_min.get(h, 0) for h in range(1, 10))
-    back_tot = sum(hole_min.get(h, 0) for h in range(10, 19))
+    total = sum(hole_min.get(h, 0) for h in range(1, 19))
     parts.append('<tr class="bw-team-row"><td class="player-label">Best Eclectic</td>')
-    for hole in range(1, 10):
+    for hole in range(1, 19):
         parts.append(_bw_team_cell(hole_min.get(hole)))
-    parts.append(f'<td class="totals front-back-divider">{_vp_label(front_tot)}</td>')
-    for hole in range(10, 19):
-        parts.append(_bw_team_cell(hole_min.get(hole)))
-    parts.append(f'<td class="totals">{_vp_label(back_tot)}</td>')
-    parts.append(f'<td class="totals">{_vp_label(front_tot + back_tot)}</td>')
+    parts.append(f'<td class="totals">{_vp_label(total)}</td>')
     parts.append('</tr>')
 
-    # Gap row.
-    parts.append('<tr class="bw-gap-row"><td colspan="21"></td></tr>')
+    # Gap row (1 label + 18 holes + TOTAL).
+    parts.append('<tr class="bw-gap-row"><td colspan="20"></td></tr>')
 
     # Per-player eclectic rows — highlight in dark green where player contributed.
     for code, name in sorted_players:
         by_hole = player_eclectics.get(code, {})
-        p_front = sum(by_hole.get(h, 0) for h in range(1, 10))
-        p_back = sum(by_hole.get(h, 0) for h in range(10, 19))
+        p_total = sum(by_hole.get(h, 0) for h in range(1, 19))
         parts.append(f'<tr><td class="player-label">{name}</td>')
-        for hole in range(1, 10):
+        for hole in range(1, 19):
             parts.append(_bw_player_cell(by_hole.get(hole), hole_min.get(hole)))
-        parts.append(f'<td class="totals front-back-divider">{_vp_label(p_front)}</td>')
-        for hole in range(10, 19):
-            parts.append(_bw_player_cell(by_hole.get(hole), hole_min.get(hole)))
-        parts.append(f'<td class="totals">{_vp_label(p_back)}</td>')
-        parts.append(f'<td class="totals">{_vp_label(p_front + p_back)}</td>')
+        parts.append(f'<td class="totals">{_vp_label(p_total)}</td>')
         parts.append('</tr>')
 
     parts.append('</tbody></table>')

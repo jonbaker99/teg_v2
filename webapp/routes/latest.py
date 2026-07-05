@@ -1,5 +1,6 @@
 """Latest TEG section routes: /latest-round, /latest-teg, /handicaps."""
 
+import logging
 from pathlib import Path
 
 import pandas as pd
@@ -34,20 +35,17 @@ from teg_analysis.analysis.aggregation import get_current_in_progress_teg_fast
 from teg_analysis.analysis.streaks import get_player_window_streaks, build_streaks, pivot_window_streaks
 from teg_analysis.analysis.scoring import count_scores_by_player
 from teg_analysis.analysis.eclectic import calculate_eclectic_by_dimension
-from teg_analysis.analysis.bestball import (
-    prepare_bestball_data,
-    calculate_bestball_scores,
-    calculate_worstball_scores,
-)
 from teg_analysis.core.metadata import get_scorecard_data, get_teg_metadata
 from teg_analysis.display.scorecards import (
     build_round_comparison_responsive,
     build_eclectic_scorecard_table,
     build_bestball_worstball_scorecard,
+    build_bestball_contribution_bars,
     build_teg_eclectic_scorecard,
 )
 from webapp.deps import (
     cached_load_all_data,
+    bestball_worstball_totals,
     cached_round_data,
     cached_ranked_teg_data,
     cached_ranked_round_data,
@@ -56,6 +54,8 @@ from webapp.deps import (
     get_rounds_for_teg,
 )
 from webapp.chart_utils import create_round_graph
+
+logger = logging.getLogger(__name__)
 
 _NAME_TO_CODE = {v: k for k, v in PLAYER_DICT.items()}
 
@@ -178,13 +178,18 @@ def _bestball_rank_summary(bb_all: pd.DataFrame, wb_all: pd.DataFrame,
             return ''
         vp = int(row['GrossVP'].iloc[0])
         rank = int(row['__r'].iloc[0])
-        return (f'<strong>{label}</strong>: <span class="bw-rank-num">{format_vs_par(vp)}</span> · '
-                f'ranks <span class="bw-rank-num">{rank} / {len(d)}</span> all-time')
+        return ('<div class="bw-rank-row">'
+                f'<span class="bw-rank-label">{label}</span>'
+                '<span class="bw-rank-num">'
+                f'<strong>{format_vs_par(vp)}</strong>'
+                f'<span class="bw-rank-detail">({rank} / {len(d)})</span>'
+                '</span>'
+                '</div>')
 
     parts = [p for p in (_one(bb_all, 'Bestball'), _one(wb_all, 'Worstball')) if p]
     if not parts:
         return ''
-    return '<p class="bw-rank-summary">' + '<br>'.join(parts) + '</p>'
+    return '<div class="bw-rank-summary">' + ''.join(parts) + '</div>'
 
 
 _RECORDS_DRAFT_NOTE = (
@@ -339,16 +344,30 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                     sections.append({"title": "Bestball / Worstball", "table_html": "<p class='text-muted text-sm'>No data.</p>"})
                     return {"sections": sections}
 
-                # All-time ranks first — shown at the top.
-                bb_prepared = prepare_bestball_data(all_data)
-                bb_all = calculate_bestball_scores(bb_prepared)
-                wb_all = calculate_worstball_scores(bb_prepared)
+                # All-time ranks first — shown at the top. Sourced from the
+                # maintained bestball cache (falls back to live computation).
+                bb_all, wb_all = bestball_worstball_totals(all_data)
                 rank_html = _bestball_rank_summary(bb_all, wb_all, teg_num, round_num)
                 if rank_html:
                     sections.append({"title": None, "table_html": rank_html, "raw": True})
 
                 card_html = build_bestball_worstball_scorecard(round_data)
                 sections.append({"title": None, "table_html": card_html})
+
+                # Per-player contribution breakdown (CSS bar charts) below the card.
+                bars_html = build_bestball_contribution_bars(round_data)
+                sections.append({"title": "Player contributions", "table_html": bars_html})
+                sections.append({
+                    "title": None, "raw": True,
+                    "table_html": (
+                        "<p class='caption'>"
+                        "<strong>Holes &amp; solo</strong>: holes where the player matched the "
+                        "field best (bestball) or worst (worstball), and how many of those they "
+                        "drove alone. <strong>Impact</strong>: the player's net effect on the "
+                        "team total, counting only their solo holes — bestball negative (shots "
+                        "they saved), worstball positive (shots they added).</p>"
+                    ),
+                })
                 return {"sections": sections, "scorecard_css": True}
             except Exception as e:
                 sections.append({"title": "Bestball / Worstball", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
@@ -532,9 +551,12 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
                 total_tegs = len(ranked)
 
                 # Rank summary at the top.
-                rank_html = (f'<p class="bw-rank-summary">Best eclectic total '
-                             f'<span class="bw-rank-num">{format_vs_par(total_val)}</span> · ranks '
-                             f'<span class="bw-rank-num">{rank} / {total_tegs}</span> of all TEGs</p>')
+                rank_html = ('<div class="bw-rank-summary"><div class="bw-rank-row">'
+                             '<span class="bw-rank-label">Best eclectic</span>'
+                             '<span class="bw-rank-num">'
+                             f'<strong>{format_vs_par(total_val)}</strong>'
+                             f'<span class="bw-rank-detail">({rank} / {total_tegs})</span>'
+                             '</span></div></div>')
                 sections.append({"title": None, "table_html": rank_html, "raw": True})
 
                 # Per-player eclectic scorecard with best eclectic row at the top.
