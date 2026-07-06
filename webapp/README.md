@@ -416,9 +416,10 @@ highlight the section) and `pages` (list of `(title, url, active_key)`).
 
 ## Current status
 
-**Full Streamlit page set replicated** (excluding the Data-admin section — data
-update/edit/delete, report generation, volume management — which is
-intentionally out of scope). The nav mirrors Streamlit's structure exactly
+**Full Streamlit page set replicated**, including data-admin (add a round, edit
+metadata CSVs, delete rounds/TEGs, volume browser, GitHub sync, backups, file
+guide — see [Admin / data management](#admin--data-management) above); report
+generation remains out of scope. The nav mirrors Streamlit's structure exactly
 (sections, page titles, ordering) via `webapp/nav.py`. Pages: Contents,
 TEG History / Honours / Full Results / Player Rankings / TEG Reports, TEG
 Records / Top TEGs and Rounds / Personal Bests, Latest Leaderboard / Latest

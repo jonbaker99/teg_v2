@@ -69,7 +69,6 @@ Phases A → G build the canonical post-8 pipeline and an era-aware pre-8 path. 
 | **5b — Strict round-by-round tournament variant** | Different from C: a *tournament* report rendered strictly chronologically (no theme weaving) — alternative format from the same story plan. |
 | **5c — Modes (fast vs archive)** | `mode='fast'` skips the dry draft and uses single-pass authoring (approach B) — cheaper for post-round write-ups. `mode='archive'` = current full chain. Add as a `mode=` arg to a top-level orchestrator. |
 | **5d — Batch API wrapper** | Use Anthropic's Batch API (50% off, 24h SLA, identical output) for any future archive runs. Bigger saver than the easy levers but ~1–2 h of staged-batch wrapper code. |
-| **Pre-TEG-8 net-vs-par Trophy metric** | The Trophy was total net-vs-par for TEGs 1–7 (Stableford only from TEG 8). The pipeline currently hardcodes Stableford as the Trophy metric everywhere (`events.py` arcs + scoring). Pre-8 reports would misrepresent the Trophy standings — **must be fixed before any pre-8 backfill.** |
 | **Light faithfulness-check pass** | Optional final guard that programmatically verifies prose claims against the data. Two writer-drift incidents to date — critique-revise fabricated "countback"; around-draft fabricated a "same hole across courses" rhyme on TEG 14 (now blocked by per-beat `course` + a prompt rule, but a verifier would catch the next class of drift). Useful insurance for scale. |
 
 ## Phase F partial verification (2026-06-02)
@@ -93,7 +92,6 @@ Reports verified: TEGs 8, 9, 10 (tournament + all rounds), TEG 11 (tournament + 
 - All tournament styled reports: final standings ✅, records block ✅ (uses `class="records"`, not `pbs-and-records`).
 
 ## Known issues / gotchas
-- **Pre-TEG-8 Trophy is on the wrong metric** until net-vs-par handling is added. The "Done" reports above (TEGs 9, 14, 18) are all post-8 so this doesn't affect them.
 - **TEG 10 R3 arithmetic error**: "fourteen-point swing" should be "sixteen". Will fix on re-gen.
 - **The isolated `venv/` (Python 3.14) hits a jinja2/starlette template-cache bug** (`TypeError: cannot use 'tuple' as a dict key`) on every templated route. Visual webapp verification needs Python 3.12/3.13, or wait for a fixed jinja2/starlette release.
 - **MCP/CSS coupling between streamlit and webapp**: `teg_reports.css` is duplicated in `streamlit/styles/` and `webapp/static/`. Edits must be kept in sync (or, later, consolidated into a shared location). Streamlit is deferred but still wired.
