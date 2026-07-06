@@ -1,11 +1,16 @@
-/* Mobile app shell — Phase M1.
-   EVERY rule here sits inside @media (max-width: 640px), so desktop/iPad
-   (641px and up) are never affected. The stylesheet is loaded on every page
-   but is completely inert above the breakpoint. See webapp/MOBILE_PLAN.md.
-   Colours come from the theme variables, so the shell also follows dark mode. */
+/* Mobile app shell — Phases M1–M2.
+   EVERY rule here sits inside @media (max-width: 640px) — except the base
+   display:none hooks for mobile-only markup — so desktop/iPad (641px and up)
+   are never affected. The stylesheet is loaded on every page but is completely
+   inert above the breakpoint. See webapp/MOBILE_PLAN.md.
+   Colours come from the theme variables, so the shell also follows dark mode.
+   (Exception: the wooden-spoon gold has no theme var; it is defined here with
+   an explicit dark override, matching the mockup palette.) */
 
-/* Present in the DOM always; hidden until phone width. */
+/* Mobile-only markup, present in the DOM always; hidden until phone width. */
 .mobile-tabbar { display: none; }
+.lb-hero { display: none; }
+.lb-cards { display: none; }
 
 @media (max-width: 640px) {
   /* Leave room for the fixed bottom bar so content never hides behind it. */
@@ -43,8 +48,224 @@
   .mtab-label { white-space: nowrap; }
   .mtab--active { color: var(--accent, forestgreen); }
 
-  /* ── Top app bar: compact + decluttered on phones ── */
+  /* ── Top app bar (M1.4): compact, decluttered, subtly elevated ── */
   .nav-brand { font-size: 1.25rem; }
-  /* The theme-style picker isn't needed on a phone; keep the dark ◑ toggle. */
-  .theme-select { display: none; }
+  /* Hide the nav theme picker only — .theme-select is also the class used by
+     the in-page TEG/filter selects on ~20 pages, and an unscoped rule here was
+     hiding all of them on phones. */
+  .nav .theme-select { display: none; }
+  .nav .h-14 { height: 48px; }
+  .nav .px-6 { padding-left: 14px; padding-right: 14px; }
+  .nav { box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05); }
+
+  /* Tighter page frame: full-bleed feel, comfortable reading gutters. */
+  .main-content {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .page-title-area .page-title { font-size: 1.35rem; }
+
+  /* ── Controls (M1.5): segmented tabs + thumb-friendly pills/selects ── */
+
+  /* In-page primary tab rows (.section-nav of .tab-underline) become an
+     iOS-style segmented control. Scrolls horizontally if the labels overflow
+     (e.g. the 5-tab metric rows on the Latest pages). */
+  .section-nav {
+    display: flex;
+    flex-wrap: nowrap;              /* base style wraps; a segment must not */
+    gap: 3px;
+    padding: 3px;
+    background: var(--btn-inactive-bg, #f5f4f0);
+    border: 1px solid var(--table-cell-border, #e0e0e0);
+    border-radius: 11px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .section-nav::-webkit-scrollbar { display: none; }
+  .section-nav .tab-underline {
+    flex: 1 0 auto;
+    border: none;
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    text-align: center;
+    color: var(--text-secondary, #555555);
+  }
+  .section-nav .tab-underline:hover { border: none; }
+  .section-nav .tab-underline--active,
+  .section-nav .tab-underline--active:hover,
+  .section-nav .tab-underline.active,
+  .section-nav .tab-underline.active:hover {
+    background: var(--bg-card, #ffffff);
+    color: var(--accent, forestgreen);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.10);
+    border: none;
+  }
+
+  /* Pills: bigger tap targets. */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0.45rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  /* Page-level selects/inputs (.theme-select outside the nav): finger-sized,
+     and ≥16px font so iOS Safari doesn't zoom the viewport on focus. */
+  .section-controls { flex-wrap: wrap; row-gap: 0.6rem; }
+  .section-controls .theme-select,
+  .section-controls .teg-select {
+    min-height: 40px;
+    font-size: 16px;
+    border-radius: 10px;
+  }
+
+  /* ── Tables (M1.6): sticky first column + horizontal scroll, site-wide ──
+     Tier-1 treatment from MOBILE_PLAN §4.4: tables keep their server-rendered
+     markup; the wrapper scrolls sideways and the first (label) column stays
+     pinned. Wrappers come in two flavours — .table-wrapper (base-vars) and
+     Tailwind's .overflow-x-auto (records/player partials); cover both, and
+     restate overflow-x on the Tailwind one so phones don't depend on the
+     Tailwind CDN for the no-horizontal-page-scroll rule. Sticky cells need
+     an opaque background — rows are transparent over the content card, so
+     pin cells to the card colour, with the top-rank tint carried through.
+     Opt out per table with .table-wrapper--no-pin on the wrapper. */
+  .table-wrapper,
+  .overflow-x-auto {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .table-wrapper:not(.table-wrapper--no-pin) .teg-table thead th:first-child,
+  .table-wrapper:not(.table-wrapper--no-pin) .teg-table tbody td:first-child,
+  .overflow-x-auto:not(.table-wrapper--no-pin) .teg-table thead th:first-child,
+  .overflow-x-auto:not(.table-wrapper--no-pin) .teg-table tbody td:first-child,
+  .overflow-x-auto:not(.table-wrapper--no-pin) .records-table thead th:first-child,
+  .overflow-x-auto:not(.table-wrapper--no-pin) .records-table tbody td:first-child {
+    position: sticky;
+    left: 0;
+    background-color: var(--bg-card, #ffffff);
+  }
+  .table-wrapper:not(.table-wrapper--no-pin) .teg-table thead th:first-child,
+  .overflow-x-auto:not(.table-wrapper--no-pin) .teg-table thead th:first-child,
+  .overflow-x-auto:not(.table-wrapper--no-pin) .records-table thead th:first-child { z-index: 3; }
+  .table-wrapper:not(.table-wrapper--no-pin) .teg-table tbody td:first-child,
+  .overflow-x-auto:not(.table-wrapper--no-pin) .teg-table tbody td:first-child,
+  .overflow-x-auto:not(.table-wrapper--no-pin) .records-table tbody td:first-child { z-index: 2; }
+  .table-wrapper:not(.table-wrapper--no-pin) .teg-table tbody tr.top-rank td:first-child,
+  .overflow-x-auto:not(.table-wrapper--no-pin) .teg-table tbody tr.top-rank td:first-child {
+    background-color: var(--table-toprank-bg, #F3F7F3);
+  }
+
+  /* ── Leaderboard hero (M2.7): card-reflowed standings ──
+     Markup in partials/lb_cards.html, fed by _results_context (lb_cards /
+     lb_hero). On phones the cards replace the desktop table and the text
+     callout; above 640px they are display:none (base rules at the top) and
+     the table renders exactly as before. */
+  .lb-table-card { display: none; }
+  .lb-callout { display: none; }
+
+  .lb-hero { display: flex; gap: 10px; margin: 2px 0 12px; }
+  .lb-pod {
+    flex: 1;
+    min-width: 0;
+    background: var(--bg-card, #ffffff);
+    border: 1px solid var(--table-cell-border, #e0e0e0);
+    border-radius: 13px;
+    padding: 12px 13px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 4px 16px rgba(0, 0, 0, 0.04);
+  }
+  .lb-pod-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 5px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted, #8c8c86);
+  }
+  .lb-pod-label .material-symbols-outlined { font-size: 15px; }
+  .lb-pod--champ .lb-pod-label { color: var(--accent, forestgreen); }
+  .lb-pod--spoon .lb-pod-label { color: #b08400; }
+  html[data-mode="dark"] .lb-pod--spoon .lb-pod-label { color: #d6ad4e; }
+  .lb-pod-name { font-size: 16px; font-weight: 600; line-height: 1.15; }
+  .lb-pod-sub {
+    margin-top: 2px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted, #8c8c86);
+  }
+
+  .lb-cards { display: block; }
+  .lb-card {
+    display: grid;
+    grid-template-columns: 30px 1fr auto;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg-card, #ffffff);
+    border: 1px solid var(--table-cell-border, #e0e0e0);
+    border-radius: 13px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 4px 16px rgba(0, 0, 0, 0.04);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.08s;
+  }
+  .lb-card:active { transform: scale(0.985); }
+  .lb-card--lead {
+    background: var(--table-toprank-bg, #F3F7F3);
+    border-color: color-mix(in srgb, var(--accent, forestgreen) 28%, var(--table-cell-border, #e0e0e0));
+  }
+  .lb-card-rank {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    color: var(--text-secondary, #555555);
+  }
+  .lb-card--lead .lb-card-rank { color: var(--accent, forestgreen); }
+  .lb-card-who { min-width: 0; }
+  .lb-card-name {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .lb-card-rounds {
+    display: block;
+    margin-top: 3px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    color: var(--text-muted, #8c8c86);
+  }
+  .lb-card-rounds b { color: var(--text-secondary, #555555); font-weight: 500; }
+  .lb-card-total { text-align: right; }
+  .lb-card-total .lb-card-v {
+    display: block;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .lb-card--lead .lb-card-total .lb-card-v { color: var(--accent, forestgreen); }
+  .lb-card-total .lb-card-u {
+    display: block;
+    margin-top: 3px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted, #8c8c86);
+  }
 }
