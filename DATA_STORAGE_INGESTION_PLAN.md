@@ -644,6 +644,55 @@ opening any other file in this folder).
   progress/done state; completing a player's 18th hole auto-advances to the next
   incomplete player.
 
+## Phase 3.2b — voice entry, par-relative keypads, and a fourth pattern (built)
+
+Second prototyping pass, layered onto the 3.2 mockups (edited in place) plus one new
+mockup. All still throwaway, nothing persisted, same conventions. Verified with Playwright
+(keypad taps per par, dictation-string parsing/preview/fill on each voice-enabled page, no
+mockup JS console errors).
+
+**Par-relative keypad (all four mockups).** The flat 1–12 pad wasted prime thumb space on
+numbers that never get tapped. Replaced with six prominent buttons spanning **par−1 to
+par+4** for the active hole, labelled number-first with a small golf term underneath
+(birdie/par/bogey/+2…), plus a quieter one-tap outlier row for the rest of 1–12 so nothing
+is unreachable. The range was picked from the data, not intuition: across all 6,390
+recorded holes, par−1..par+4 covers 97.8% of scores, while eagles are 0.06% (4 ever) and
+par+4 alone is 3.7% — so the window skews high rather than the symmetric par−2..par+3
+(94.0%). Par always sits at the fixed 2nd position, so muscle memory holds across par 3/4/5.
+Trade-off: the six primary buttons show different numbers per hole, so you must glance
+before tapping — the fixed par position and the term labels are the mitigation.
+
+**Voice entry (grid, player-column, and the new flow mockup).** A mic button opens a bottom
+sheet with a plain textarea — deliberately *not* the Web Speech API, which iOS Safari
+doesn't reliably support; the invitation is to tap the field and use the iOS keyboard's
+built-in dictation mic, then parse whatever text lands. The parser handles digits, number
+words (zero–twenty, so mis-sizes are caught rather than mangled), common dictation mishears
+("for/fore"→4, "to/too"→2, "tree/free"→3, "won"→1, "ate"→8), separators from natural
+pauses, and glued digit runs ("three four ten" arriving as "3410" — split digit-wise,
+reading 1 followed by 0–2 as 10–12 since a blow-up is far likelier than an ace). Nothing
+commits without review: a live chip preview maps each parsed value to its target cell
+("H3 DM 7"), unknown words or out-of-range values disable Apply outright (a dropped token
+mid-run would silently shift every later score onto the wrong hole), and filling resumes
+from the current cursor, not hole 1. The wizard didn't get voice — its per-hole,
+across-players frame doesn't match dictating a column of one player's card.
+
+**D. Rapid-fire flow (`round_entry_flow.html`, new).** Rethinking the brief with voice and
+par-relative selection as first-class primitives: the bottleneck in A–C is *aiming* — 126
+small tap targets. Flow removes aiming entirely. One huge target card announces the cell
+being filled ("DM · Hole 7 · Par 4"); six near-thumb-sized par-relative buttons fill it and
+auto-advance to the next *empty* cell in player-major order (never overwriting downstream);
+mis-taps are handled by an undo tape of recent entries (tap a chip to jump back, undo
+restores the previous value) rather than by careful aiming; a tappable 7×18 dot map gives
+the grid's gap-spotting overview and random access; voice fills forward from the cursor
+with the same preview gate. Best fit: heads-down transcription at maximum speed, and
+glare/one-thumb conditions (biggest targets of the four). Main weakness: you see only one
+cell's context at a time, so a transposition against the paper card surfaces via the map
+dots and running total, not the entry surface itself — the tape and map are load-bearing,
+not decorative.
+
+Index page updated: A and C flagged "+ voice", all descriptions mention the par-relative
+pad, D added. The 3.3 decision below should now weigh four patterns, not three.
+
 ## Phase 3.3 decision
 
 *(Not yet made — try the three mockups above on an actual phone via `/mockups/`, ideally

@@ -84,6 +84,50 @@ table.egrid { width:100%; border-collapse:collapse; font-family:var(--font-data)
 .keypad button.k.next { background:var(--accent); color:#fff; border-color:var(--accent); font-size:13px; letter-spacing:.02em; }
 .keypad .disabled-note { text-align:center; font-family:var(--font-data); font-size:11px; color:var(--text-muted); padding:14px 0; }
 
+/* Par-relative keypad: 6 primary buttons (par-1..par+4, 97.8% of all real scores)
+   plus a quieter outlier row so 1-12 stays reachable. */
+.keypad .prow { display:grid; grid-template-columns:repeat(6,1fr); gap:6px; margin-bottom:7px; }
+.keypad button.pk { padding:7px 0 6px; display:flex; flex-direction:column; align-items:center; gap:1px; }
+.keypad button.pk .n { font-size:18px; font-weight:700; line-height:1.15; }
+.keypad button.pk .t { font-size:8px; letter-spacing:.05em; text-transform:uppercase; color:var(--text-muted); font-weight:600; }
+.keypad button.pk.ppar { border-color:var(--accent); background:var(--accent-soft); }
+.keypad button.pk.ppar .t { color:var(--accent-text); }
+.keypad .orow { display:grid; grid-template-columns:repeat(6,1fr); gap:6px; margin-bottom:7px; }
+.keypad button.ok { font-family:var(--font-data); font-size:12.5px; font-weight:600; color:var(--text-2);
+  background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:7px 0; }
+.keypad button.ok:active { background:var(--key-active); }
+
+/* Voice entry (uses the OS keyboard's dictation mic on a plain textarea) */
+.toolbar .voicebtn { display:inline-flex; align-items:center; gap:5px; font-family:var(--font-data); font-size:11px; font-weight:600;
+  color:var(--accent-text); background:var(--accent-soft); border:1px solid var(--line); border-radius:999px; padding:7px 12px; }
+.toolbar .voicebtn .material-symbols-outlined { font-size:15px; }
+.scrim { position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:70; }
+.vsheet { position:fixed; left:0; right:0; bottom:0; z-index:71; background:var(--surface); border-top:1px solid var(--line);
+  border-radius:18px 18px 0 0; box-shadow:0 -8px 30px rgba(0,0,0,.18); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0)); }
+.vsheet .vhead { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+.vsheet .vhead .material-symbols-outlined { color:var(--accent-text); font-size:20px; }
+.vsheet .vhead .tt { font-weight:600; font-size:15px; flex:1; }
+.vsheet .vhead button { border:none; background:transparent; color:var(--text-muted); padding:4px; }
+.vsheet .vfrom { font-family:var(--font-data); font-size:11px; color:var(--text-muted); margin-bottom:8px; }
+.vsheet .vfrom b { color:var(--accent-text); }
+.vsheet textarea { width:100%; min-height:64px; resize:none; font-family:var(--font-data); font-size:14px; line-height:1.5;
+  color:var(--text); background:var(--surface-2); border:1px solid var(--line); border-radius:11px; padding:10px 12px;
+  -webkit-user-select:text; user-select:text; }
+.vsheet textarea:focus { outline:2px solid var(--accent); outline-offset:-1px; }
+.vsheet .vpreview { display:flex; flex-wrap:wrap; gap:5px; margin:10px 0 0; max-height:92px; overflow-y:auto; }
+.vsheet .vchip { font-family:var(--font-data); font-size:11px; background:var(--accent-soft); color:var(--accent-text);
+  border:1px solid var(--line); border-radius:7px; padding:3px 7px; }
+.vsheet .vchip b { font-size:12px; }
+.vsheet .vchip.bad { background:transparent; color:#c0392b; border-color:#c0392b; }
+.vsheet .vchip.skip { background:transparent; color:var(--text-muted); }
+.vsheet .vmsg { font-family:var(--font-data); font-size:11px; color:var(--text-muted); margin:7px 0 0; min-height:14px; }
+.vsheet .vmsg.err { color:#c0392b; }
+.vsheet .vactions { display:flex; gap:8px; margin-top:10px; }
+.vsheet .vactions button { flex:1; font-family:var(--font-data); font-size:13px; font-weight:600; border-radius:11px; padding:12px 0; border:1px solid var(--line); }
+.vsheet .vactions .discard { background:var(--surface-2); color:var(--text-2); }
+.vsheet .vactions .apply { background:var(--accent); border-color:var(--accent); color:#fff; }
+.vsheet .vactions .apply:disabled { opacity:.4; }
+
 .demobar { position:fixed; top:calc(8px + env(safe-area-inset-top,0)); right:10px; z-index:60; }
 .demobar label { background:var(--surface); color:var(--text-2); border:1px solid var(--line); border-radius:999px;
   padding:6px 10px; font-family:var(--font-data); font-size:11px; cursor:pointer; box-shadow:var(--shadow); display:inline-flex; align-items:center; gap:5px; }
@@ -106,7 +150,7 @@ table.egrid { width:100%; border-collapse:collapse; font-family:var(--font-data)
     <button id="trav-col" class="on"><span class="material-symbols-outlined">arrow_downward</span>Column</button>
     <button id="trav-row"><span class="material-symbols-outlined">arrow_forward</span>Row</button>
   </div>
-  <span class="hint">tap a cell to start</span>
+  <button class="voicebtn" id="voice-btn"><span class="material-symbols-outlined">mic</span>Voice</button>
 </div>
 
 <div class="gridwrap">
@@ -115,6 +159,20 @@ table.egrid { width:100%; border-collapse:collapse; font-family:var(--font-data)
 
 <div class="keypad" id="keypad">
   <div class="disabled-note" id="keypad-hint">Tap any score cell above to begin entering scores.</div>
+</div>
+
+<div class="scrim" id="v-scrim" hidden></div>
+<div class="vsheet" id="v-sheet" hidden>
+  <div class="vhead"><span class="material-symbols-outlined">mic</span><div class="tt">Voice entry</div>
+    <button id="v-close"><span class="material-symbols-outlined">close</span></button></div>
+  <div class="vfrom">Fills from <b id="v-from">&hellip;</b> onwards, following the current traversal</div>
+  <textarea id="v-input" placeholder="Tap here, then use your keyboard&rsquo;s mic to dictate scores in order &mdash; e.g. &ldquo;four five 3 seven ten four&rdquo;"></textarea>
+  <div class="vpreview" id="v-preview"></div>
+  <div class="vmsg" id="v-msg"></div>
+  <div class="vactions">
+    <button class="discard" id="v-discard">Discard</button>
+    <button class="apply" id="v-apply" disabled>Nothing to fill yet</button>
+  </div>
 </div>
 
 <script>
@@ -173,13 +231,37 @@ function setActive(hole, player) {
   td?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
 }
 
+// Par-relative keypad: primary row = par-1..par+4 (97.8% of every score in the
+// data — eagles are 0.06%, par+4 is 3.7%, so the range skews high); par sits at a
+// fixed 2nd position for muscle memory. Everything else (1-12) stays one tap away
+// in the quieter outlier row below.
+function relTerm(score, par) {
+  if (score === 1) return 'ace';
+  const d = score - par;
+  if (d === -2) return 'eagle';
+  if (d === -1) return 'birdie';
+  if (d === 0) return 'par';
+  if (d === 1) return 'bogey';
+  return (d > 0 ? '+' : '') + d;
+}
+function parKeypadValues(par) {
+  const lo = Math.max(1, par - 1);
+  const primary = [];
+  for (let v = lo; v <= lo + 5; v++) primary.push(v);
+  const outliers = [];
+  for (let v = 1; v <= 12; v++) if (v < lo || v > lo + 5) outliers.push(v);
+  return { primary, outliers };
+}
+
 function renderKeypad() {
   const kp = document.getElementById('keypad');
   if (!active) return;
+  const par = PARS[active.hole - 1];
+  const { primary, outliers } = parKeypadValues(par);
   kp.innerHTML = `
-    <div class="krow"><button class="k" data-v="1">1</button><button class="k" data-v="2">2</button><button class="k" data-v="3">3</button><button class="k" data-v="4">4</button></div>
-    <div class="krow"><button class="k" data-v="5">5</button><button class="k" data-v="6">6</button><button class="k" data-v="7">7</button><button class="k" data-v="8">8</button></div>
-    <div class="krow"><button class="k" data-v="9">9</button><button class="k" data-v="10">10</button><button class="k" data-v="11">11</button><button class="k" data-v="12">12</button></div>
+    <div class="prow">${primary.map(v =>
+      `<button class="k pk${v === par ? ' ppar' : ''}" data-v="${v}"><span class="n">${v}</span><span class="t">${relTerm(v, par)}</span></button>`).join('')}</div>
+    <div class="orow">${outliers.map(v => `<button class="k ok" data-v="${v}">${v}</button>`).join('')}</div>
     <div class="krow"><button class="k clear" data-v="clear">Clear</button><button class="k next" data-v="next" style="grid-column:span 3;">Next &rarr;</button></div>
   `;
   kp.querySelectorAll('button.k').forEach(btn => {
@@ -266,6 +348,140 @@ document.getElementById('trav-row').addEventListener('click', () => {
   document.getElementById('trav-row').classList.add('on');
   document.getElementById('trav-col').classList.remove('on');
 });
+
+// ---------- Voice entry ----------
+// iOS Safari has no reliable Web Speech API, but the OS keyboard's dictation mic
+// works on any plain text field. So: open a sheet with a textarea, let the user
+// dictate into it with the keyboard mic, parse whatever text lands, preview the
+// hole-by-hole mapping, and only commit on an explicit Apply.
+const NUM_WORDS = {
+  zero:0, oh:0, one:1, won:1, wan:1, two:2, to:2, too:2, three:3, tree:3, free:3, thee:3,
+  four:4, for:4, fore:4, five:5, fife:5, six:6, sicks:6, seven:7, eight:8, ate:8, aid:8,
+  nine:9, nein:9, ten:10, tin:10, tan:10, eleven:11, twelve:12,
+  thirteen:13, fourteen:14, fifteen:15, sixteen:16, seventeen:17, eighteen:18, nineteen:19, twenty:20
+};
+const FILLER_WORDS = new Set(['and','then','uh','um','er','a','the','hole','next']);
+
+function parseDictation(text) {
+  const tokens = text.toLowerCase().replace(/[,.;:!?…'"‘’“”/\\-]+/g, ' ').split(/\s+/).filter(Boolean);
+  const values = [];
+  const unknown = [];
+  for (const tok of tokens) {
+    if (/^\d+$/.test(tok)) {
+      if (tok.length <= 2 && +tok >= 1 && +tok <= 12) { values.push(+tok); continue; }
+      // Dictation often glues a spoken run into one number ("three four ten" -> "3410").
+      // Split it digit-by-digit, reading "1" followed by 0-2 as 10-12 (a 10+ blow-up
+      // is far likelier here than a hole-in-one followed by a low score).
+      let i = 0;
+      while (i < tok.length) {
+        if (tok[i] === '1' && i + 1 < tok.length && '012'.includes(tok[i + 1])) { values.push(+tok.substr(i, 2)); i += 2; }
+        else { values.push(+tok[i]); i += 1; }
+      }
+      continue;
+    }
+    if (tok in NUM_WORDS) { values.push(NUM_WORDS[tok]); continue; }
+    if (!FILLER_WORDS.has(tok)) unknown.push(tok);
+  }
+  return { values, unknown, bad: values.filter(v => v < 1 || v > 12) };
+}
+
+function voiceStartCell() {
+  if (active) return { ...active };
+  // No cursor yet: start at the first empty cell in the current traversal order.
+  if (traversal === 'col') {
+    for (const p of PLAYERS) for (let h = 1; h <= 18; h++) if (scores[cellKey(h, p)] === undefined) return { hole: h, player: p };
+  } else {
+    for (let h = 1; h <= 18; h++) for (const p of PLAYERS) if (scores[cellKey(h, p)] === undefined) return { hole: h, player: p };
+  }
+  return null;
+}
+
+function voiceTargets(count) {
+  let cur = voiceStartCell();
+  if (!cur || count < 1) return [];
+  const step = c => {
+    let { hole, player } = c;
+    const pi = PLAYERS.indexOf(player);
+    if (traversal === 'col') {
+      if (hole < 18) hole += 1; else { hole = 1; player = PLAYERS[(pi + 1) % PLAYERS.length]; }
+    } else {
+      if (pi < PLAYERS.length - 1) player = PLAYERS[pi + 1]; else { player = PLAYERS[0]; hole = hole < 18 ? hole + 1 : 1; }
+    }
+    return { hole, player };
+  };
+  const seq = [cur];
+  while (seq.length < Math.min(count, PLAYERS.length * 18)) seq.push(step(seq[seq.length - 1]));
+  return seq;
+}
+
+function updateVoicePreview() {
+  const res = parseDictation(document.getElementById('v-input').value);
+  const targets = voiceTargets(res.values.length);
+  const chips = res.values.map((v, i) => {
+    if (v < 1 || v > 12) return `<span class="vchip bad">${v} &#10005;</span>`;
+    if (i >= targets.length) return `<span class="vchip skip">${v} &middot; no cell</span>`;
+    const t = targets[i];
+    return `<span class="vchip">H${t.hole} ${t.player} <b>${v}</b></span>`;
+  });
+  document.getElementById('v-preview').innerHTML = chips.join('');
+  const msg = document.getElementById('v-msg');
+  const apply = document.getElementById('v-apply');
+  const n = Math.min(res.values.length, targets.length);
+  if (res.unknown.length) {
+    msg.className = 'vmsg err';
+    msg.textContent = `Didn't understand: "${res.unknown.join('", "')}" — edit the text above.`;
+    apply.disabled = true; apply.textContent = 'Fix before filling';
+  } else if (res.bad.length) {
+    msg.className = 'vmsg err';
+    msg.textContent = 'Scores must be 1–12 — edit the marked values.';
+    apply.disabled = true; apply.textContent = 'Fix before filling';
+  } else {
+    msg.className = 'vmsg';
+    msg.textContent = res.values.length > targets.length ? `Grid runs out after ${targets.length} — extra values ignored.` : '';
+    apply.disabled = n === 0;
+    apply.textContent = n === 0 ? 'Nothing to fill yet' : `Fill ${n} score${n === 1 ? '' : 's'}`;
+  }
+}
+
+function openVoice() {
+  const start = voiceStartCell();
+  if (!start) return;
+  document.getElementById('v-from').textContent = `${start.player} · Hole ${start.hole}`;
+  document.getElementById('v-input').value = '';
+  document.getElementById('v-scrim').hidden = false;
+  document.getElementById('v-sheet').hidden = false;
+  updateVoicePreview();
+  document.getElementById('v-input').focus();
+}
+
+function closeVoice() {
+  document.getElementById('v-scrim').hidden = true;
+  document.getElementById('v-sheet').hidden = true;
+}
+
+function applyVoice() {
+  const res = parseDictation(document.getElementById('v-input').value);
+  if (res.unknown.length || res.bad.length) return;
+  const targets = voiceTargets(res.values.length);
+  const n = Math.min(res.values.length, targets.length);
+  if (!n) return;
+  for (let i = 0; i < n; i++) {
+    const t = targets[i];
+    scores[cellKey(t.hole, t.player)] = res.values[i];
+    renderCell(t.hole, t.player);
+  }
+  updateTotalsAndSubtotals();
+  setActive(targets[n - 1].hole, targets[n - 1].player);
+  advance(); // resume manual entry just past the last filled cell
+  closeVoice();
+}
+
+document.getElementById('voice-btn').addEventListener('click', openVoice);
+document.getElementById('v-close').addEventListener('click', closeVoice);
+document.getElementById('v-discard').addEventListener('click', closeVoice);
+document.getElementById('v-scrim').addEventListener('click', closeVoice);
+document.getElementById('v-apply').addEventListener('click', applyVoice);
+document.getElementById('v-input').addEventListener('input', updateVoicePreview);
 
 buildGrid();
 buildTotalsBar();
