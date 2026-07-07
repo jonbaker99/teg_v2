@@ -170,4 +170,4 @@ Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`t
 
 ## Status
 
-See [STATUS.md](STATUS.md) for the running ledger of what's done and what's deferred (the round-by-round variant, fast/archive modes, batch-scale, pre-TEG-8 net-vs-par metric, optional faithfulness-check pass).
+See [STATUS.md](STATUS.md) for the running ledger of what's done and what's deferred (the round-by-round variant, fast/archive modes, batch-scale, the pre-TEG-8 backfill run, optional faithfulness-check pass).
