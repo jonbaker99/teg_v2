@@ -72,22 +72,34 @@ DATA_FILE_CATALOG: list[dict] = [
         "category": CATEGORY_METADATA,
         "importance": 5,
         "format": "csv",
-        "role": "Hole-level Par/SI per course, backfilled from history "
-                "(scripts/backfill_course_pars.py, majority vote where one round "
-                "disagreed with the rest). Used to prefill scorecards/round entry. "
-                "Estoril is deliberately incomplete (a genuine tie, only 2 rounds "
-                "ever played) pending manual review. Praia D'El Rey is deliberately "
-                "excluded entirely -- confirmed (not a data error) that it's "
-                "sometimes played back-9-first, so there's no single per-hole Par/SI "
-                "to backfill; see scripts/backfill_course_pars.py.",
+        "role": "Hole-level Par/SI per course, backfilled from the most recently "
+                "played round at each course (scripts/backfill_course_pars.py) -- "
+                "a course-level default, not a guarantee. Praia D'El Rey is flagged "
+                "(sometimes played back-9-first, confirmed not a data error) so "
+                "pre-round setup should double-check it. Used to prefill "
+                "round_pars.csv, which is the actual per-round Par/SI round entry "
+                "reads from.",
         "updated_by": "Edit inline on the Edit data page. New/re-rated courses added here.",
         "edit_slug": "course_pars",
+    },
+    {
+        "name": "round_pars.csv",
+        "path": "data/round_pars.csv",
+        "category": CATEGORY_METADATA,
+        "importance": 6,
+        "format": "csv",
+        "role": "Hole-level Par/SI confirmed for a specific TEG+Round, set up by an "
+                "admin before the round is played. This -- not course_pars.csv -- is "
+                "what round entry reads to show Par/SI on the entry screen (read-only "
+                "there; only pre-round setup edits it).",
+        "updated_by": "Set up on the Round Setup page (prefills from course_pars.csv).",
+        "edit_slug": "round_pars",
     },
     {
         "name": "teg_winners.csv",
         "path": "data/teg_winners.csv",
         "category": CATEGORY_METADATA,
-        "importance": 6,
+        "importance": 7,
         "format": "csv",
         "role": "Cached TEG winners for fast history-page loading.",
         "updated_by": "Edit inline on the Edit data page.",
@@ -97,7 +109,7 @@ DATA_FILE_CATALOG: list[dict] = [
         "name": "future_tegs.csv",
         "path": "data/future_tegs.csv",
         "category": CATEGORY_METADATA,
-        "importance": 7,
+        "importance": 8,
         "format": "csv",
         "role": "Planned future tournaments, shown on the history pages.",
         "updated_by": "Edit inline on the Edit data page.",
@@ -107,7 +119,7 @@ DATA_FILE_CATALOG: list[dict] = [
         "name": "streaks.parquet",
         "path": "data/streaks.parquet",
         "category": CATEGORY_DERIVED,
-        "importance": 8,
+        "importance": 9,
         "format": "parquet",
         "role": "Pre-computed streak counters per hole per player.",
         "updated_by": "Regenerated automatically by the add/delete flows.",
@@ -117,7 +129,7 @@ DATA_FILE_CATALOG: list[dict] = [
         "name": "bestball.parquet",
         "path": "data/bestball.parquet",
         "category": CATEGORY_DERIVED,
-        "importance": 9,
+        "importance": 10,
         "format": "parquet",
         "role": "Best-ball / worst-ball competition data.",
         "updated_by": "Regenerated automatically by the add/delete flows.",
@@ -127,7 +139,7 @@ DATA_FILE_CATALOG: list[dict] = [
         "name": "completed_tegs.csv",
         "path": "data/completed_tegs.csv",
         "category": CATEGORY_STATUS,
-        "importance": 10,
+        "importance": 11,
         "format": "csv",
         "role": "Status tracking: TEGs with all rounds complete.",
         "updated_by": "Auto-generated. Rebuild via Edit data → Regenerate. Manual "
@@ -138,7 +150,7 @@ DATA_FILE_CATALOG: list[dict] = [
         "name": "in_progress_tegs.csv",
         "path": "data/in_progress_tegs.csv",
         "category": CATEGORY_STATUS,
-        "importance": 11,
+        "importance": 12,
         "format": "csv",
         "role": "Status tracking: TEGs with 1–3 rounds complete (in progress).",
         "updated_by": "Auto-generated. Rebuild via Edit data → Regenerate. Manual "
@@ -149,7 +161,7 @@ DATA_FILE_CATALOG: list[dict] = [
         "name": "commentary_round_events.parquet",
         "path": "data/commentary_round_events.parquet",
         "category": CATEGORY_COMMENTARY,
-        "importance": 12,
+        "importance": 13,
         "format": "parquet",
         "role": "Evidence beats per round for the LLM report pipeline.",
         "updated_by": "Regenerated automatically by the add/delete flows.",
@@ -159,7 +171,7 @@ DATA_FILE_CATALOG: list[dict] = [
         "name": "commentary_round_summary.parquet",
         "path": "data/commentary_round_summary.parquet",
         "category": CATEGORY_COMMENTARY,
-        "importance": 13,
+        "importance": 14,
         "format": "parquet",
         "role": "Per-round summary data for the report pipeline.",
         "updated_by": "Regenerated automatically by the add/delete flows.",
@@ -169,7 +181,7 @@ DATA_FILE_CATALOG: list[dict] = [
         "name": "commentary_tournament_summary.parquet",
         "path": "data/commentary_tournament_summary.parquet",
         "category": CATEGORY_COMMENTARY,
-        "importance": 14,
+        "importance": 15,
         "format": "parquet",
         "role": "Per-tournament summary data for the report pipeline.",
         "updated_by": "Regenerated automatically by the add/delete flows.",
@@ -179,7 +191,7 @@ DATA_FILE_CATALOG: list[dict] = [
         "name": "commentary_round_streaks.parquet",
         "path": "data/commentary_round_streaks.parquet",
         "category": CATEGORY_COMMENTARY,
-        "importance": 15,
+        "importance": 16,
         "format": "parquet",
         "role": "Round-level streak data for the report pipeline.",
         "updated_by": "Regenerated automatically by the add/delete flows.",
@@ -189,7 +201,7 @@ DATA_FILE_CATALOG: list[dict] = [
         "name": "commentary_tournament_streaks.parquet",
         "path": "data/commentary_tournament_streaks.parquet",
         "category": CATEGORY_COMMENTARY,
-        "importance": 16,
+        "importance": 17,
         "format": "parquet",
         "role": "Tournament-level streak data for the report pipeline.",
         "updated_by": "Regenerated automatically by the add/delete flows.",

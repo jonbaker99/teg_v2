@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title_suffix %} — Round setup{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+  <span class="page-label">Admin</span>
+  <h1 class="page-title">Round setup</h1>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="/static/admin.css">
+{% endblock %}
+
+{% block content %}
+{% set admin_active = 'round-setup' %}
+{% include "partials/admin_nav.html" %}
+
+<div class="section-panel">
+  <p style="margin-bottom:1rem;">
+    Confirm the Par/SI for a round <strong>before</strong> anyone plays it, so whoever
+    enters scores afterwards never has to think about course setup — they just enter
+    strokes. Prefilled from <code>course_pars.csv</code> (the most recently played round
+    at that course); edit and save to confirm.
+  </p>
+
+  {% if error %}
+    <p class="error" style="color:#b00020;">{{ error }}</p>
+  {% elif not rounds %}
+    <p>✅ Nothing pending — every round in <code>round_info.csv</code> already has scores
+      recorded. Add the next TEG/round's metadata on the
+      <a href="/admin/edit-data?file=round_info" class="text-link">Edit data</a> page ahead
+      of time and it'll show up here to set up before anyone plays.</p>
+  {% else %}
+  <div class="data-card">
+    <table class="teg-table">
+      <thead>
+        <tr><th>TEG</th><th>Round</th><th>Course</th><th>Date</th><th>Status</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for r in rounds %}
+        <tr>
+          <td>{{ r.teg_num }}</td>
+          <td>{{ r.round_num }}</td>
+          <td>{{ r.course }}</td>
+          <td>{{ r.date }}</td>
+          <td>{% if r.is_set_up %}✅ Set up{% else %}⚠️ Needs setup{% endif %}</td>
+          <td><a href="/admin/round-setup/{{ r.teg_num }}/{{ r.round_num }}" class="text-link">
+            {{ 'Review' if r.is_set_up else 'Set up' }} →
+          </a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

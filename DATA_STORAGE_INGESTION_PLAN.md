@@ -3,42 +3,40 @@
 **Status (2026-07-07): Phase 0 complete (see [findings](#phase-0-findings)). Phase 1
 complete** (1.1-1.5 all done: backups on add, `backup_file()` volume-copy fix, concurrency
 lock, CSV mirrors retired, docs swept, `DATA_RATIONALISATION_PLAN.md` deleted). **Phase 2
-complete** (`course_pars.csv` backfilled + registered; Boavista resolved by majority vote,
-Praia D'El Rey permanently excluded — genuinely variable routing, not an error, confirmed
-by Jon — only Estoril needs a decision — see [Decisions needed](#decisions-needed-for-jon)).
-**Phase 3.1 + 3.2 complete** (prototype briefs below; all three built as interactive
-mockups at `/mockups/` — `round_entry_grid.html`, `round_entry_wizard.html`,
-`round_entry_player.html` — Playwright-verified to work, no console errors). **Blocked on
-Jon (Phase 3.3):** try the three mockups on a real phone and record the pick under
-"Phase 3.3 decision" below — everything from Phase 3.4 onward depends on it. Temporary
-working document (CLAUDE.md Documentation Rule 3). When Phase 4 is complete, fold the
-outcome into `DATA_FLOW.md`, `webapp/README.md`, `teg_analysis/README.md`, and CLAUDE.md's
-"Current state & next steps", then delete this file (see the wrap-up note at the very end).
+complete, revised** (`course_pars.csv` now defaults every course to its most-recently-played
+round, not majority vote — all 26 courses populated). **Phase 2.5 complete** (new: pre-round
+setup — `round_pars.csv` + the `/admin/round-setup` page — so Par/SI is confirmed by an
+admin before a round is played, never by whoever's entering scores). **[Decisions needed for
+Jon](#decisions-needed-for-jon) — both resolved, nothing outstanding.** **Phase 3.1 + 3.2
+complete** (prototype briefs below; all three built as interactive mockups at `/mockups/` —
+`round_entry_grid.html`, `round_entry_wizard.html`, `round_entry_player.html` —
+Playwright-verified to work, no console errors). **Blocked on Jon (Phase 3.3):** try the
+three mockups on a real phone and record the pick under "Phase 3.3 decision" below —
+everything from Phase 3.4 onward depends on it. Temporary working document (CLAUDE.md
+Documentation Rule 3). When Phase 4 is complete, fold the outcome into `DATA_FLOW.md`,
+`webapp/README.md`, `teg_analysis/README.md`, and CLAUDE.md's "Current state & next steps",
+then delete this file (see the wrap-up note at the very end).
 
 ## Decisions needed for Jon
 
-Everything else in this document that didn't require a judgement call has been executed
-(Phases 0-2, 3.1-3.2). Item 1 below is still open. Item 2 was a candidate decision that
-turned out not to be one — kept here as a resolved record so it doesn't get re-litigated.
+**Both items below are now resolved — nothing outstanding.** Kept as a record so neither
+gets re-litigated. (Superseded history: item 1 was originally an open decision about
+Estoril; Phase 2.5's methodology change — most-recent-round instead of majority vote —
+resolved it as a side effect, and Jon separately said not to investigate further.)
 
-### 1. Estoril Par/SI — a real tie, not enough data to resolve automatically
+### 1. Estoril Par/SI — RESOLVED by the Phase 2.5 methodology change (not a manual decision)
 
 Only 2 rounds have ever been played at Estoril (TEG 15 Round 1, 2022; TEG 16 Round 4,
 2023), and they disagree on Par and/or SI for 15 of 18 holes — e.g. Hole 5: TEG 15 says
-Par 3/SI 3, TEG 16 says Par 5/SI 17. With only one round on each side there's no majority
-to lean on.
+Par 3/SI 3, TEG 16 says Par 5/SI 17. With only one round on each side there was no majority
+to lean on for the original majority-vote approach.
 
-**Options:**
-- **(Recommended) Look up Estoril's current official scorecard** (club website or a quick
-  search) and use that — it's what future rounds there will actually be played against,
-  and settles the question independent of which historical entry was right.
-- Ask whichever of you played in 2022 or 2023 which card you remember using / trust more.
-- Leave Estoril out of `course_pars.csv` for now (current state) — the round-entry form
-  (Phase 3+) will just have no Par/SI prefill for Estoril; whoever's on-course still enters
-  scores fine, just without the autofill convenience.
-
-Once decided: add Estoril's 18 rows directly via `/admin/edit-data?file=course_pars`
-(now registered), or update `scripts/backfill_course_pars.py`'s Estoril handling and rerun.
+**Resolved:** `course_pars.csv` now defaults every course to its most recently played round
+(Phase 2.5), which naturally covers Estoril — it uses TEG 16 (2023), the more recent of the
+two, same as every other course gets its most-recent-round default. Jon: "just leave
+Estoril" — not investigating which historical entry was more accurate; if the TEG 16 default
+turns out wrong when Estoril is next played, it's a one-round edit on the Round Setup page,
+same as any other course.
 
 ### 2. Two apparent Par/SI "conflicts" — RESOLVED, not data errors (Jon, 2026-07-07)
 
@@ -340,6 +338,57 @@ Depends on Phase 0.2. Schema is finalised alongside Phase 3.4; implementation ca
 > `teg_analysis/constants.py`, following the existing patterns for `round_info.csv`/
 > `handicaps.csv` exactly. Add a short entry to `DATA_FLOW.md`'s storage layer section."
 
+## Phase 2.5 — Pre-round setup (built, 2026-07-07, added mid-plan by Jon)
+
+Not in the original plan — added when the `course_pars.csv` work made it obvious that
+**someone** has to confirm a round's Par/SI before it's played, and it must not be whoever's
+entering scores from a phone afterwards (Jon: "Players shouldn't be doing that"). Split the
+concept in two:
+
+- **`course_pars.csv`** (Phase 2, revised) — a *course-level default*, backfilled from the
+  most recently played round at each course (not majority vote — see the revision below).
+- **`round_pars.csv`** (new) — the *confirmed* Par/SI for one specific TEG+Round, set up by
+  an admin ahead of play via the new **Round setup** page. Phase 3's round entry (whenever
+  it's built) reads Par/SI from here, read-only — a player sees it like it's printed on a
+  scorecard, but pre-round setup is the only place it's edited.
+
+**Revised `course_pars.csv` methodology:** switched from majority-vote to **most recently
+played round at each course**. Recency beats historical agreement — a course can be
+legitimately re-rated over time (this is *why* Boavista's SI differed for one old round),
+so "what actually happened most recently" is a better default, and it naturally covers
+courses with too little history for a majority (Estoril, resolved as a side effect — no
+further action needed, per Jon: "just leave Estoril"). All 26 courses now populated
+(`scripts/backfill_course_pars.py`, rewritten). Praia D'El Rey still gets a default (its
+most recent round) but is flagged in `constants.KNOWN_VARIABLE_ROUTING` so pre-round setup
+prompts a double-check rather than silently trusting it.
+
+**Built:**
+- `teg_analysis/analysis/round_setup.py` — `get_rounds_status()` (upcoming rounds needing
+  setup — scoped to `round_info.csv` entries with **no scores yet in `all-scores.parquet`**,
+  so this doesn't list 18 TEGs of already-played history), `get_round_setup_form()`
+  (prefill logic: confirmed `round_pars.csv` → `course_pars.csv` default → blank, with the
+  variable-routing flag), `save_round_setup()` (upsert into `round_pars.csv`).
+- `webapp/routes/admin_round_setup.py` + `admin_round_setup.html` /
+  `admin_round_setup_form.html` / `partials/admin_round_setup_result.html` — the
+  `/admin/round-setup` list page and `/admin/round-setup/{teg}/{round}` 18-hole confirm
+  form, nav-linked as **Round setup**. Manually verified end-to-end via Playwright
+  (screenshots: list empty-state, unflagged form, flagged form) — no page errors, no real
+  data touched during testing.
+- `round_pars.csv` and `course_pars.csv` both registered in `EDITABLE_DATA_FILES` /
+  `DATA_FILE_CATALOG` as usual, so they're also editable via the generic `/admin/edit-data`
+  grid as a fallback.
+- Tests: `tests/test_round_setup.py` (9 unit tests) + additions to
+  `tests/test_admin_routes.py` (7 route tests) — prefill precedence, variable-routing flag,
+  the already-played filter, save upsert semantics, incomplete-form rejection.
+
+**Consequence for Phase 3.4+:** the round-entry draft schema no longer needs a "Par/SI
+overrides" field — pre-round setup already owns that. Round entry should read Par/SI from
+`round_pars.csv` (via `round_setup.get_round_setup_form` or similar) and guard on it existing
+(link to `/admin/round-setup/{teg}/{round}` if not), the same way it already guards on
+`round_info.csv` existing. Updated in the Phase 3.4/3.5/3.6 rows below.
+
+---
+
 ## Phase 3 — Mobile round entry (the core build)
 
 ### 3.1-3.3 — Prototype before committing to a design
@@ -390,9 +439,9 @@ via `/mockups/` and recording a decision in this file.)*
 
 | # | Step | Model | Why | Risk / rollback |
 |---|------|-------|-----|-------------------|
-| 3.4 | **Design note** (temporary .md per CLAUDE.md rule 3) covering: the chosen interaction pattern from 3.3; **the submit UX given Phase 0.1's finding that the full pipeline is ~16.5s median, not the hoped-for <15s** — decide between a background-task/poll pattern or scoping in the incremental-cache-regen option (see [0.1 findings](#phase-0-findings)) as a prerequisite; draft JSON schema (TEGNum, Round, Course, per-player-per-hole scores, Par/SI overrides, updated-at); draft lifecycle (create → autosave → submit → archive/delete; one active draft per TEG+Round); the wide-frame builder contract (must byte-match the layout `process_google_sheets_data` consumes); route surface (`GET /admin/enter-round`, `.../autosave`, `.../preview`, `.../submit`, draft list/delete); offline strategy (server draft = source of truth, `localStorage` mirror replayed on reconnect, last-write-wins is fine for a single admin); how preview/submit reuse existing partials; failure UX (regen error mid-submit, lock contention from 1.3). Module placement: draft store + builder in new `teg_analysis/analysis/round_entry.py` (UI-agnostic), routes in new `webapp/routes/admin_entry.py` (`admin.py` is already 842 lines). | **Opus** | New module + API design feeding the highest-value data path; a wrong call here (drafts entangled with the canonical store, or a builder diverging from the sheet contract) is expensive to unwind — now compounded by a real submit-latency decision to make. | — |
-| 3.5 | Implement `teg_analysis/analysis/round_entry.py`: draft save/load/list/delete under `data/drafts/` (volume on Railway, `data/` locally; excluded from GitHub sync), `build_wide_frame(draft) -> pd.DataFrame`, validation helpers (score bounds, completeness per player). | Sonnet | New functions to a written spec, following existing io patterns. | Drafts are ephemeral; no canonical data touched. |
-| 3.6 | Routes (`webapp/routes/admin_entry.py`, registered in `webapp/app.py`): form page prefilled from `in_progress_tegs.csv`/`round_info.csv`/`course_pars.csv`; HTMX autosave; preview posts the built frame through `process_google_sheets_data` → duplicate analysis → existing `partials/admin_update_preview.html`; submit → `execute_data_update` (with 1.1 backups + 1.3 lock) → `deps.clear_all_data_caches()` → existing result partial. `find_tegs_missing_round_info` guard links to `/admin/edit-data`. | Sonnet | Straightforward new endpoints copying `admin.py`'s established auth/ctx/partial patterns; hard logic lives in already-designed functions. | Submit path writes canonical data — but only via the identical, now-backed-up pipeline. |
+| 3.4 | **Design note** (temporary .md per CLAUDE.md rule 3) covering: the chosen interaction pattern from 3.3; **the submit UX given Phase 0.1's finding that the full pipeline is ~16.5s median, not the hoped-for <15s** — decide between a background-task/poll pattern or scoping in the incremental-cache-regen option (see [0.1 findings](#phase-0-findings)) as a prerequisite; draft JSON schema (TEGNum, Round, Course, per-player-per-hole scores, updated-at — **no Par/SI overrides needed**: pre-round setup, already built, owns that via `round_pars.csv`, and round entry only ever reads it read-only); draft lifecycle (create → autosave → submit → archive/delete; one active draft per TEG+Round); the wide-frame builder contract (must byte-match the layout `process_google_sheets_data` consumes — pull Par/SI from `round_pars.csv`, not from player input); route surface (`GET /admin/enter-round`, `.../autosave`, `.../preview`, `.../submit`, draft list/delete); offline strategy (server draft = source of truth, `localStorage` mirror replayed on reconnect, last-write-wins is fine for a single admin); how preview/submit reuse existing partials; failure UX (regen error mid-submit, lock contention from 1.3, **no `round_pars.csv` entry yet for this TEG+Round** — link to `/admin/round-setup`). Module placement: draft store + builder in new `teg_analysis/analysis/round_entry.py` (UI-agnostic), routes in new `webapp/routes/admin_entry.py` (`admin.py` is already 842 lines). | **Opus** | New module + API design feeding the highest-value data path; a wrong call here (drafts entangled with the canonical store, or a builder diverging from the sheet contract) is expensive to unwind — now compounded by a real submit-latency decision to make. | — |
+| 3.5 | Implement `teg_analysis/analysis/round_entry.py`: draft save/load/list/delete under `data/drafts/` (volume on Railway, `data/` locally; excluded from GitHub sync), `build_wide_frame(draft) -> pd.DataFrame` (Par/SI sourced from `round_setup`'s `round_pars.csv` reads, not the draft itself), validation helpers (score bounds, completeness per player). | Sonnet | New functions to a written spec, following existing io patterns. | Drafts are ephemeral; no canonical data touched. |
+| 3.6 | Routes (`webapp/routes/admin_entry.py`, registered in `webapp/app.py`): form page prefilled from `in_progress_tegs.csv`/`round_info.csv`, guarded on `round_pars.csv` having an entry for this TEG+Round (link to `/admin/round-setup/{teg}/{round}` if not — pre-round setup, not the entry page, is where Par/SI gets confirmed); HTMX autosave; preview posts the built frame through `process_google_sheets_data` → duplicate analysis → existing `partials/admin_update_preview.html`; submit → `execute_data_update` (with 1.1 backups + 1.3 lock) → `deps.clear_all_data_caches()` → existing result partial. `find_tegs_missing_round_info` guard links to `/admin/edit-data`. | Sonnet | Straightforward new endpoints copying `admin.py`'s established auth/ctx/partial patterns; hard logic lives in already-designed functions. | Submit path writes canonical data — but only via the identical, now-backed-up pipeline. |
 | 3.7 | Template + styling for the chosen pattern from 3.3: `admin_enter_round.html`, mobile-first per `webapp/MOBILE_PLAN.md`/`static/mobile.css` conventions (≤640px, desktop untouched); `localStorage` mirror + replay script; disabled-submit while in flight. Build directly on the winning `webapp/mobile_mockups/round_entry_*.html` prototype rather than starting fresh. | Sonnet | Frontend work with an already-chosen, already-prototyped design to follow. | None. |
 | 3.8 | Tests: draft roundtrip; builder output accepted by `process_google_sheets_data` and equivalent to a sheet-shaped fixture; incomplete-round rejection; duplicate/overwrite paths; route auth. Extend `tests/test_admin_routes.py` + new `tests/test_round_entry.py`. | Sonnet | Test writing against a fixed spec. | — |
 | 3.9 | **Opus review gate** (per CLAUDE.md): read modified files end-to-end, run `pytest tests/ -v`, then a real-device end-to-end test: enter a fake round (confirm the TEG-50 sandbox convention with Jon first), airplane-mode mid-entry, resume, submit, verify site pages update, verify a backup exists, delete via `/admin/delete-data`. | **Opus** | Repo-mandated review gate; also the data-integrity sign-off before this becomes the primary ingestion path. | E2E test writes real data — use the TEG-50 sandbox and delete afterwards; both directions are backed up (Phase 1.1/1.2). |
@@ -506,6 +555,8 @@ improves by paying for it.
 - `teg_analysis/io/file_operations.py` — `backup_file` fix; store-path conventions for the draft store
 - `teg_analysis/analysis/round_entry.py` — new module (draft store + wide-frame builder), designed in Phase 3.4
 - `webapp/mobile_mockups/` — Phase 3.1-3.2 prototypes live here before becoming the real template in 3.7
+- `teg_analysis/analysis/round_setup.py` — **built** (pre-round setup, see below): `get_round_setup_form`/`save_round_setup` are what Phase 3.4-3.6 should read Par/SI from, not reinvent
+- `webapp/routes/admin_round_setup.py`, `webapp/templates/admin_round_setup*.html` — **built**: the `/admin/round-setup` pre-round Par/SI confirmation page
 
 ---
 

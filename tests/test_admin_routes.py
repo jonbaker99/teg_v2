@@ -29,7 +29,7 @@ def _login(client):
 
 @pytest.mark.parametrize("path", [
     "/admin/edit-data", "/admin/delete-data", "/admin/volume-sync",
-    "/admin/file-guide", "/admin/volume", "/admin/backups",
+    "/admin/file-guide", "/admin/volume", "/admin/backups", "/admin/round-setup",
 ])
 def test_routes_require_auth(client, path):
     resp = client.get(path)
@@ -313,6 +313,107 @@ def test_edit_save_reconstructs_rows(client, monkeypatch):
     assert df.shape == (2, 2)
     assert df.iloc[0].tolist() == ["TEG 1", "AB"]
     assert df.iloc[1].tolist() == ["TEG 2", "JB"]
+
+
+# ---------------------------------------------------------------------------
+# Round setup (pre-round Par/SI confirmation) -- reads real data, never writes
+# except in the explicitly monkeypatched save test.
+# ---------------------------------------------------------------------------
+
+def test_round_setup_list_renders(client):
+    """With real data every round is already played, so the list is empty --
+    the page should say so rather than list 18 TEGs of played history."""
+    _login(client)
+    resp = client.get("/admin/round-setup")
+    assert resp.status_code == 200
+    assert "Round setup" in resp.text
+    assert "Nothing pending" in resp.text
+
+
+def test_round_setup_list_shows_pending_round(client, monkeypatch):
+    """A round in round_info.csv with no scores yet shows up as needing setup."""
+    import teg_analysis.analysis.round_setup as rs
+
+    monkeypatch.setattr(
+        rs,
+        "get_rounds_status",
+        lambda: [
+            {"teg_num": 19, "round_num": 1, "course": "Ashdown", "date": "01/01/2027", "is_set_up": False},
+        ],
+    )
+
+    _login(client)
+    resp = client.get("/admin/round-setup")
+    assert resp.status_code == 200
+    assert "Needs setup" in resp.text
+    assert "Ashdown" in resp.text
+
+
+def test_round_setup_form_renders_course_default(client):
+    _login(client)
+    # TEG 10 Round 1 (Boavista) has no round_pars entry yet -> course_pars default.
+    resp = client.get("/admin/round-setup/10/1")
+    assert resp.status_code == 200
+    assert "Boavista" in resp.text
+    assert "course_pars.csv" in resp.text
+
+
+def test_round_setup_form_flags_variable_routing(client):
+    _login(client)
+    # TEG 7 Round 1 was played at Praia D'El Rey, which is flagged.
+    resp = client.get("/admin/round-setup/7/1")
+    assert resp.status_code == 200
+    assert "back-9-first" in resp.text.lower()
+
+
+def test_round_setup_form_unknown_round(client):
+    _login(client)
+    resp = client.get("/admin/round-setup/999/1")
+    assert resp.status_code == 200
+    assert "error" in resp.text.lower() or "not found" in resp.text.lower()
+
+
+def test_round_setup_save_writes_round_pars(client, monkeypatch):
+    import teg_analysis.analysis.round_setup as rs
+
+    captured = {}
+
+    def fake_save(teg_num, round_num, holes):
+        captured["teg_num"] = teg_num
+        captured["round_num"] = round_num
+        captured["holes"] = holes
+        return {"teg_num": teg_num, "round_num": round_num, "holes_saved": len(holes)}
+
+    monkeypatch.setattr(rs, "save_round_setup", fake_save)
+
+    _login(client)
+    form = {f"par__{h}": "4" for h in range(1, 19)}
+    form.update({f"si__{h}": str(h) for h in range(1, 19)})
+    resp = client.post("/admin/round-setup/10/1/save", data=form)
+
+    assert resp.status_code == 200
+    assert "saved" in resp.text.lower()
+    assert captured["teg_num"] == 10
+    assert captured["round_num"] == 1
+    assert len(captured["holes"]) == 18
+
+
+def test_round_setup_save_rejects_incomplete_form(client, monkeypatch):
+    import teg_analysis.analysis.round_setup as rs
+
+    def must_not_run(*a, **k):
+        raise AssertionError("save_round_setup must not run on an incomplete form")
+
+    monkeypatch.setattr(rs, "save_round_setup", must_not_run)
+
+    _login(client)
+    # Hole 5 missing -> should reject before saving.
+    form = {f"par__{h}": "4" for h in range(1, 19) if h != 5}
+    form.update({f"si__{h}": str(h) for h in range(1, 19) if h != 5})
+    resp = client.post("/admin/round-setup/10/1/save", data=form)
+
+    assert resp.status_code == 200
+    assert "hole 5" in resp.text.lower()
 
 
 if __name__ == "__main__":

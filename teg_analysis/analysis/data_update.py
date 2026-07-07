@@ -47,6 +47,7 @@ from teg_analysis.constants import (
     HANDICAPS_CSV,
     ROUND_INFO_CSV,
     COURSE_PARS_CSV,
+    ROUND_PARS_CSV,
 )
 
 logger = logging.getLogger(__name__)
@@ -772,9 +773,17 @@ EDITABLE_DATA_FILES: dict[str, dict] = {
     'course_pars': {
         'path': COURSE_PARS_CSV,
         'label': 'Course Pars',
-        'description': 'Hole-level Par/SI per course, backfilled from history. Used to '
-                        'prefill scorecards/round entry. New or re-rated courses are '
-                        'added here.',
+        'description': 'Hole-level Par/SI per course, backfilled from the most recently '
+                        'played round there. A default only -- see Round Pars for the '
+                        'confirmed per-round values round entry actually uses.',
+        'kind': 'metadata',
+    },
+    'round_pars': {
+        'path': ROUND_PARS_CSV,
+        'label': 'Round Pars',
+        'description': 'Hole-level Par/SI confirmed for a specific TEG+Round, set up by '
+                        'an admin before the round is played. Prefer the dedicated Round '
+                        'Setup page over editing this grid directly.',
         'kind': 'metadata',
     },
     'teg_winners': {

@@ -27,12 +27,13 @@ Visit `http://localhost:8000` in your browser. Use the theme switcher in the nav
 ## Admin / data management
 
 The webapp includes a password-gated admin area, all in `webapp/routes/admin.py`
-+ `webapp/admin_auth.py`. A shared sub-nav (`partials/admin_nav.html`) links the
-pages: **Add a round**, **Edit data**, **Delete rounds**, **Volume** (browser),
-**GitHub sync**, **Backups** and **File guide**. Every page is behind the same
-cookie auth and each write calls `deps.clear_all_data_caches()` so the site shows
-fresh data immediately. They drive headless logic in
-`teg_analysis.analysis.data_update` and `teg_analysis.io` (sync / file catalog) —
+(+ `webapp/routes/admin_round_setup.py`) + `webapp/admin_auth.py`. A shared
+sub-nav (`partials/admin_nav.html`) links the pages: **Round setup**, **Add a
+round**, **Edit data**, **Delete rounds**, **Volume** (browser), **GitHub sync**,
+**Backups** and **File guide**. Every page is behind the same cookie auth and each
+write calls `deps.clear_all_data_caches()` so the site shows fresh data
+immediately. They drive headless logic in `teg_analysis.analysis.data_update` /
+`teg_analysis.analysis.round_setup` and `teg_analysis.io` (sync / file catalog) —
 no Streamlit, no FastAPI in the analysis layer.
 
 Admin pages load `webapp/static/admin.css`, which (among the form/button styles)
@@ -40,6 +41,23 @@ applies a **compact override** to `.teg-table` — smaller font and tighter row
 padding than the site default — scoped to `.main-content` so it only affects
 admin pages (data density matters more than editorial spacing here). The same
 compactness applies to the inline edit grid (`#edit-grid` cells).
+
+**Round setup** — templates `admin_round_setup.html`, `admin_round_setup_form.html`,
+`partials/admin_round_setup_result.html`.
+- **Routes:** `/admin/round-setup` (list), `/admin/round-setup/{teg}/{round}`
+  (18-hole form), `/admin/round-setup/{teg}/{round}/save` (HTMX).
+- **Purpose:** confirm a round's Par/SI *before* anyone plays it, so whoever enters
+  scores afterwards (Phase 3 mobile round entry — not built yet) sees Par/SI
+  read-only, like it's printed on a scorecard, and never has to think about course
+  setup. The list is scoped to rounds with `round_info.csv` metadata but no scores
+  yet in `all-scores.parquet` — once a round is played its real Par/SI is already
+  in `all-scores.parquet`, so there's nothing left to set up.
+- **Flow:** `round_setup.get_round_setup_form` prefills from an existing
+  `round_pars.csv` entry if already confirmed, else `course_pars.csv`'s default
+  (the most recently played round at that course), else blank; flags courses in
+  `constants.KNOWN_VARIABLE_ROUTING` (currently Praia D'El Rey — sometimes played
+  back-9-first) for a manual double-check. Save upserts the confirmed 18 holes into
+  `round_pars.csv` via `round_setup.save_round_setup`.
 
 **Add a round** — templates `admin_data_update.html`, `partials/admin_update_*.html`.
 - **Routes:** `/admin/data-update` (load + preview), `/admin/data-update/preview`,
@@ -61,7 +79,7 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   `/admin/edit-data/save`, `/admin/edit-data/regenerate-status` (HTMX).
 - **Flow:** the file picker is driven by
   `data_update.EDITABLE_DATA_FILES` (round_info, future_tegs, handicaps,
-  course_pars, teg_winners, completed_tegs, in_progress_tegs). An inline grid of `<input>`
+  course_pars, round_pars, teg_winners, completed_tegs, in_progress_tegs). An inline grid of `<input>`
   cells (vanilla-JS add/delete-row) posts back; the route rebuilds the frame
   from `cell__{rid}__{cidx}` fields, light-coerces numeric columns and calls
   `data_update.save_data_file` (single-file commit). Auto-generated status files

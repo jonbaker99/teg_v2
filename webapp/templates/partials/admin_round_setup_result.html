@@ -1,0 +1,8 @@
+{% if error %}
+  <p class="error" style="color:#b00020;">{{ error }}</p>
+{% elif result %}
+  <p style="color:#1a1a1a;">
+    ✅ Saved — TEG {{ result.teg_num }} Round {{ result.round_num }} confirmed
+    ({{ result.holes_saved }} holes). Round entry will use these values.
+  </p>
+{% endif %}

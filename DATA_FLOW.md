@@ -17,6 +17,7 @@ data/
   round_info.csv          ← course / date / area metadata per TEG+Round
   handicaps.csv           ← player handicaps per TEG
   course_pars.csv         ← hole-level Par/SI per course, backfilled from history (scripts/backfill_course_pars.py)
+  round_pars.csv          ← hole-level Par/SI per *specific* TEG+Round, set up by an admin before the round is played
   streaks.parquet         ← pre-computed streak counters per hole per player
   bestball.parquet        ← pre-computed per-round bestball/worstball totals (read by the webapp for all-time ranking; rebuilt on every add/delete)
   commentary_*.parquet    ← AI-generated commentary (round/tournament summaries, streaks)
@@ -24,7 +25,9 @@ data/
 
 `all-scores.parquet` and `all-data.parquet` are both hole-level at the same granularity, but the relationship is master → derived, not two independent sources: `all-data` is regenerated wholesale from `all-scores` (+ `round_info.csv` for Date/Course, + cumulative/ranking columns) by `update_all_data()` (`teg_analysis/analysis/pipeline.py`) on every add/delete, so it carries no information that isn't derivable from `all-scores`. Both are still stored (rather than deriving `all-data` on load) since the store costs nothing and keeps webapp reads decoupled from the transform chain. A third copy, a plain-CSV mirror of `all-data` (`data/all-data.csv`, "manual review" copy), was retired — nothing read it and it dominated the size of every data-update GitHub commit (~2.5 MB vs ~40 KB for the parquet).
 
-`course_pars.csv` was backfilled once from `all-scores` + `round_info` history (`scripts/backfill_course_pars.py`) and is now edited like any other metadata CSV. Boavista had one historical round that disagreed with every other round on all 18 holes (SI only, Par matched) — resolved by majority vote; not investigated further (Jon, 2026-07-07: not worth pursuing). Estoril has a genuine tie (only 2 rounds ever played there, each disagrees with the other) and is deliberately incomplete pending a manual decision. Praia D'El Rey is deliberately **excluded entirely**: confirmed with Jon that the course is sometimes played back-9-first, so its apparent Par/SI "conflict" is real variation, not an error — there's no single canonical Par/SI to backfill, and this must not be "resolved" by majority vote or any other automatic method. See `DATA_STORAGE_INGESTION_PLAN.md`.
+`course_pars.csv` is backfilled from `all-scores` + `round_info` history (`scripts/backfill_course_pars.py`) using **the most recently played round at each course**, not majority vote — a course can be legitimately re-rated over time, so recency is a better default than historical agreement, and it naturally covers courses with too little history for a majority (e.g. Estoril, only 2 rounds ever). All 26 courses are populated. Praia D'El Rey is flagged (`KNOWN_VARIABLE_ROUTING` in the script) because it's sometimes played back-9-first — confirmed with Jon this is real variation, not an error — so its entry is just the usual routing, not a guarantee; pre-round setup should prompt a double-check for it specifically. `course_pars.csv` is edited like any other metadata CSV via `/admin/edit-data`.
+
+`course_pars.csv` is a *course-level default*. `round_pars.csv` (below) is the actual per-round Par/SI, confirmed by an admin before a round is played — that's what round entry reads from, not `course_pars.csv` directly. See `DATA_STORAGE_INGESTION_PLAN.md`.
 
 ---
 
