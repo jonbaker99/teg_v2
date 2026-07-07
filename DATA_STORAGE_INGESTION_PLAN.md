@@ -1,0 +1,368 @@
+# Data storage & score ingestion — architecture review and implementation plan
+
+**Status: Phase 0 not started.** Temporary working document (CLAUDE.md Documentation
+Rule 3). When Phase 4 is complete, fold the outcome into `DATA_FLOW.md`, `webapp/README.md`,
+`teg_analysis/README.md`, and CLAUDE.md's "Current state & next steps", then delete this
+file (see the wrap-up note at the very end).
+
+**Supersedes `DATA_RATIONALISATION_PLAN.md`'s open investigation.** That file's Phase 3
+options appraisal (Option 3: keep both parquets, drop the CSV mirror) is adopted directly
+by Phase 1.4 below, on lighter evidence (this review's own file-size/derivation checks)
+rather than its full column-census investigation — justified because that investigation's
+main reason for rigour, "streamlit/ must not break," is no longer a constraint (Jon,
+2026-07-07: "It's ok to break streamlit now"). `DATA_RATIONALISATION_PLAN.md` should be
+deleted once Phase 1.5 lands (see that step).
+
+**Origin:** a full architecture review by Fable (2026-07-07), commissioned to answer two
+questions — is a Railway volume the right storage foundation, and is there a better way to
+capture/ingest new round scores, in particular from a phone immediately after a round.
+Budget ceiling: ~$10/month on top of existing Railway hosting. Streamlit compatibility is
+explicitly not a constraint.
+
+---
+
+## Facts verified directly (do not re-derive; trust these)
+
+- **Sizes:** `all-scores.parquet` 37 KB; `all-data.parquet` 541 KB; the `all-data.csv`
+  mirror **2.5 MB** (committed to GitHub on every update — dominates commit weight); full
+  git pack 16 MB; volume ~4 MB total.
+- **`all-data` is fully derived from `all-scores`** — `update_all_data()`
+  (`teg_analysis/analysis/pipeline.py:452`) regenerates it wholesale on every add/delete.
+- **The add flow takes no backups.** Only `execute_data_deletion` calls
+  `create_timestamped_backups()`; `execute_data_update` with `overwrite=True` can replace
+  existing hole scores with nothing recoverable on `/admin/backups`.
+- **`backup_file()` on Railway backs up the GitHub copy, not the volume copy**
+  (`teg_analysis/io/file_operations.py:261-264`) — snapshots last committed state, not
+  current state; its "backups branch" comment doesn't match what it actually does (commits
+  to the same branch).
+- **No concurrency guard** around `execute_data_update`/`execute_data_deletion` — a
+  double-tapped phone submit could interleave two full read-modify-write cycles.
+- **Hole-level Par/SI exist only in the Google Sheet today.** `course_info.csv` is
+  course-level prose only. A native entry form needs a new `course_pars.csv`, backfillable
+  from `all-scores` (which carries PAR/SI per hole) joined to `round_info.csv`.
+- **`process_google_sheets_data` silently drops any player-round with ≠18 holes** — capture
+  (in-progress) and ingestion (complete round) must be separate states.
+- **`update_commentary_caches` is deterministic pandas, not an LLM call** — full derived-cache
+  regen on add/delete is cheap compute, safe to trigger synchronously from a phone (pending
+  Phase 0.1's actual timing).
+
+---
+
+## Question 1: Is the Railway volume + GitHub the right storage foundation?
+
+**Recommendation: keep it.** Do not migrate to a database. Harden the write path instead. Cost: $0/month.
+
+At this scale (~37 KB of canonical data, growing ~4 KB/year, single writer, ~30 writes/year)
+storage technology barely matters — what matters is integrity, recoverability, and the local-Mac
+story. GitHub-as-system-of-record already gives an atomic-commit audit trail, off-host
+durability, and the Mac workflow (`git pull`) as side effects of the existing design. The
+volume is correctly positioned as a self-healing cache, not a source of truth. A database
+migration would have to rebuild all three properties this design gets for free, while
+rewriting ~1,400 lines of working `teg_analysis/io` + admin tooling.
+
+**Considered and rejected:** managed Postgres (loses the versioned/diffable/self-healing
+properties, requires rewriting the io layer and the notebook workflow, worse backup story
+on a $5 tier than "every state is a git commit"); SQLite on the volume (solves no current
+problem, binary diffs are useless); object storage (versionless by default, new credential,
+duplicates what GitHub already gives free); GitHub-only/no volume (every cold read becomes
+an API call); a separate data-only repo (16 MB repo doesn't justify the churn yet — dropping
+the CSV mirror removes ~75% of per-update commit weight anyway).
+
+**Harden instead** — see Phase 1: backups on add, fix `backup_file()`, add a concurrency
+lock, drop the dead CSV mirror.
+
+## Question 2: Score capture and ingestion
+
+**Recommendation:** build a mobile-first round-entry page in the webapp, backed by
+server-side drafts, that produces the *same wide-format frame* the Google Sheet does — so
+`process_google_sheets_data`, duplicate-checking, the preview/confirm step, and
+`execute_data_update` are all reused untouched. Google Sheets becomes a one-season fallback,
+then gets removed if unused. Ingestion stays an explicit confirm tap (the preview step is a
+real integrity gate, not friction to remove) but happens on the same screen as entry, not a
+separate admin flow.
+
+The Sheet is the actual friction — typing into a spreadsheet grid on a phone — not the
+ingestion trigger (already ~3 taps behind a 30-day cookie). Automating ingestion further
+(webhooks/polling on the sheet) would fix the easy half and leave the hard half. **This is
+also where Jon wants prototyping**: before locking in one interaction pattern, build 2-3
+throwaway mobile mockups and try them on a real phone (Phase 3, steps 3.1-3.3).
+
+**Considered and rejected:** sheet + webhook auto-ingest (fixes the wrong half); a Google
+Form (still Google-shaped, no duplicate preview, no offline story); multi-user live scoring
+with per-player logins (different product; single-admin entry matches the actual
+requirement); a native/PWA offline-first app (overkill — `localStorage` + server drafts
+covers the realistic failure modes, e.g. phone dies mid-round).
+
+---
+
+# Phased implementation plan
+
+Ordering rule: Phase 1 (backups on add) ships before Phase 3's implementation steps — the
+new entry flow raises the chance of a fat-fingered overwrite and must inherit the safety
+net first. Phase 3.1-3.3 (prototyping) has no such dependency and can run any time after
+Phase 0.
+
+Each phase below ends with a **kick-off prompt** — copy it as-is to start a fresh session/agent
+on that step. Prompts are self-contained: they point at this file for full context rather than
+repeating it, so keep this file intact until the final wrap-up.
+
+## Phase 0 — Verification spikes (no production changes)
+
+| # | Step | Model | Why this tier |
+|---|------|-------|----------------|
+| 0.1 | Time a full local `execute_data_update` dry run against a **scratch copy** of `data/`. Confirm end-to-end regen (streaks + commentary + bestball + status) is seconds, not minutes — decides whether the Phase 3 phone submit can be synchronous. If >~15s, flag for Opus at 3.4 — a background-task pattern would be needed. | Sonnet | Throwaway script + measurement; no design judgement unless the number is bad. |
+| 0.2 | Par/SI history census: script joining `all-scores.parquet` to `round_info.csv`, reporting per course whether hole-level Par/SI are self-consistent across all plays. Output: clean vs. conflicted courses, with the conflicting values listed. | Sonnet | Data-quality scripting against a clear spec. |
+| 0.3 | Reader census for `data/all-data.csv` and `data/all-scores.csv`: grep `teg_analysis/`, `webapp/`, `scripts/`, `ad_hoc_analysis/` (and separately note, without acting on, any `streamlit/` hits) for both filenames and `ALL_DATA_CSV_MIRROR`. | Haiku | Mechanical grep + tabulation. |
+| 0.4 | **Manual (Jon):** confirm on Railway whether the volume persists across deploys as assumed and whether the plan tier includes volume snapshots (likely not — fine, GitHub is the durable copy, but should be a known fact); confirm `RAILWAY_GIT_BRANCH` is set (`github_operations._get_github_branch()` assumes it); sanity-check the GitHub token is a fine-grained PAT with an expiry reminder somewhere. | — | Ops facts, not code. |
+
+> **Kick-off prompt — Phase 0 (Sonnet + Haiku, steps 0.1-0.3):**
+> "Read `DATA_STORAGE_INGESTION_PLAN.md` in full for context, then run Phase 0's three
+> verification spikes read-only, no production changes: (0.1) copy `data/` to a scratch
+> directory, run a full `execute_data_update` dry run against the copy, and time the whole
+> pipeline including cache regeneration (streaks/commentary/bestball/status) over a few
+> runs — report the median; (0.2) write a script joining `data/all-scores.parquet` to
+> `data/round_info.csv` and report, per course, whether hole-level Par/SI are consistent
+> across every historical play, listing any conflicts found; (0.3) grep `teg_analysis/`,
+> `webapp/`, `scripts/`, `ad_hoc_analysis/` for references to `all-data.csv`,
+> `all-scores.csv`, and `ALL_DATA_CSV_MIRROR`, and separately list (don't act on) any hits
+> under `streamlit/`. Do not modify anything in `data/` in place. Report all three findings
+> plainly, and call out explicitly whether they clear Phase 1.4 (mirror retirement) and
+> Phase 3.4/3.6 (synchronous phone submit) to proceed."
+
+## Phase 1 — Harden the existing foundation (keep volume + GitHub)
+
+| # | Step | Model | Why | Risk / rollback |
+|---|------|-------|-----|-------------------|
+| 1.1 | Add timestamped backups to the **add** flow: in `execute_data_update` (`teg_analysis/analysis/data_update.py`), call `create_timestamped_backups()` before any write whenever `overwrite=True` or duplicates exist. Return backup paths in the summary dict; surface in `partials/admin_update_result.html`. | Sonnet | Single-file change reusing an existing function. | Additive; no data at risk. Verify: run an overwrite update locally, confirm the backup appears on `/admin/backups` and restores. |
+| 1.2 | Fix `backup_file()` (`teg_analysis/io/file_operations.py:251`): on Railway, copy the **volume** file to the backup path, falling back to GitHub only if the volume copy is absent. Fix the stale "backups branch" comment. | Sonnet | Known-bug fix, clear intended behaviour. | Behaviour change in a safety mechanism — add a test asserting the volume copy wins. Rollback: revert the function. |
+| 1.3 | Concurrency/double-submit guard: module-level `threading.Lock` in `data_update.py` acquired (non-blocking) by `execute_data_update`/`execute_data_deletion`; raise a clear "update already in progress" error on contention. Disable the submit button on first click in the templates. | Sonnet | Small, well-specified mechanism; routes already have error-render paths. | None; purely protective. |
+| 1.4 | Retire the CSV mirrors (gated on 0.3 showing no live modern readers): remove the `ALL_DATA_CSV_MIRROR` write from `update_all_data()` (`pipeline.py:452`) and its call-sites; remove the constant; delete `data/all-data.csv` and `data/all-scores.csv` from the volume (via `/admin/volume` browser, which backs up before delete) and from GitHub. This breaks Streamlit's reader — accepted per brief; note it in the commit message. | Sonnet (code), then Haiku (constant removal + deletion) | Code change touches the core update path → Sonnet with tests; deletion/cleanup is mechanical. | **Data-change step.** Both files are derived/regenerable; volume-delete auto-backs-up; GitHub history retains them regardless. Rollback: restore from backup or `git checkout` the blobs. Verify: local dry-run update; full page sweep; `pytest tests/`. |
+| 1.5 | Documentation: update `DATA_FLOW.md` §1-2 (mirror gone, master→derived made explicit — resolves the "Unresolved" note), `teg_analysis/io/file_catalog.py`, CLAUDE.md's "To investigate" entry. Fold the outcome into `DATA_RATIONALISATION_PLAN.md`'s own §6 wrap-up, then **delete `DATA_RATIONALISATION_PLAN.md`** — its open question is now resolved (Option 3) without needing its full column-census investigation. | Haiku | Pure doc maintenance per the repo's own rules. | None. |
+
+> **Kick-off prompt — Phase 1 code (Sonnet, steps 1.1-1.4a):**
+> "Read `DATA_STORAGE_INGESTION_PLAN.md` in full, in particular Phase 0's findings if they
+> exist yet (check for a Phase 0 findings note; if step 0.3 hasn't run, do a quick grep
+> yourself first for `all-data.csv`/`all-scores.csv`/`ALL_DATA_CSV_MIRROR` outside
+> `streamlit/` before touching 1.4). Implement Phase 1 steps 1.1-1.4: (1.1) add timestamped
+> backups to `execute_data_update` in `teg_analysis/analysis/data_update.py`, matching the
+> pattern `execute_data_deletion` already uses, surfaced in
+> `partials/admin_update_result.html`; (1.2) fix `backup_file()` in
+> `teg_analysis/io/file_operations.py` to snapshot the volume copy on Railway, falling back
+> to GitHub only if absent, and correct the misleading comment; (1.3) add a non-blocking
+> `threading.Lock` around `execute_data_update`/`execute_data_deletion` with a clear
+> in-progress error, and disable the submit button on first click in the relevant
+> templates; (1.4, code half) remove the `ALL_DATA_CSV_MIRROR` write from `update_all_data`
+> in `teg_analysis/analysis/pipeline.py` and its call-sites. Add/extend tests in
+> `tests/test_data_update.py` for each change. Run `pytest tests/ -v` before finishing. Do
+> not touch anything under `streamlit/`."
+
+> **Kick-off prompt — Phase 1 cleanup + docs (Haiku, steps 1.4b-1.5):**
+> "Phase 1's code changes (1.1-1.4a) are done — read `DATA_STORAGE_INGESTION_PLAN.md` for
+> context. Finish step 1.4: remove the now-unused `ALL_DATA_CSV_MIRROR` constant, and
+> delete `data/all-data.csv` and `data/all-scores.csv` — locally via git, and in production
+> via the `/admin/volume` browser (which backs up before deleting) plus the GitHub copy.
+> Then do step 1.5's doc sweep: update `DATA_FLOW.md` §1-2 to remove the CSV mirror and make
+> the master→derived relationship explicit; update `teg_analysis/io/file_catalog.py`; remove
+> the resolved 'To investigate' entry in `CLAUDE.md` and add a one-line note under
+> Architecture recording the decision; fold the outcome into `DATA_RATIONALISATION_PLAN.md`
+> §6, then delete that file."
+
+## Phase 2 — Course par data (prerequisite for the entry form)
+
+Depends on Phase 0.2. Schema is finalised alongside Phase 3.4; implementation can start once
+0.2's findings exist.
+
+| # | Step | Model | Why |
+|---|------|-------|-----|
+| 2.1 | Backfill script (`scripts/`): generate `data/course_pars.csv` (`Course, Hole, Par, SI`) from `all-scores` + `round_info`, writing to a scratch dir. Where 0.2 found conflicts, emit both variants and stop for manual resolution. Jon reviews the output; it then enters the store via the existing `/admin/volume-sync` push. | Sonnet | Clearly specified derivation with a human review gate. |
+| 2.2 | Register the file: add to `EDITABLE_DATA_FILES` in `data_update.py` (so new courses are maintained on `/admin/edit-data`), `DATA_FILE_CATALOG` in `file_catalog.py`, and a constant in `constants.py`. | Sonnet | Three small, pattern-following registry edits. |
+| 2.3 | Docs: `DATA_FLOW.md` storage-layer entry. | Haiku | Mechanical. |
+
+> **Kick-off prompt — Phase 2 (Sonnet):**
+> "Read `DATA_STORAGE_INGESTION_PLAN.md` Phase 2 and Phase 0.2's findings (par/SI
+> consistency census). Write a backfill script under `scripts/` that generates
+> `data/course_pars.csv` (columns: `Course, Hole, Par, SI`) by joining
+> `data/all-scores.parquet` to `data/round_info.csv` on TEG/Round to get Course per hole.
+> Write output to a scratch directory, not `data/`, for review. Where the 0.2 census found
+> a course with inconsistent historical Par/SI, emit all conflicting variants clearly
+> labelled rather than picking one, and stop there for manual resolution — do not guess.
+> Once Jon has reviewed and approved the output, register the new file: add it to
+> `EDITABLE_DATA_FILES` in `teg_analysis/analysis/data_update.py`, add an entry to
+> `DATA_FILE_CATALOG` in `teg_analysis/io/file_catalog.py`, and add a path constant in
+> `teg_analysis/constants.py`, following the existing patterns for `round_info.csv`/
+> `handicaps.csv` exactly. Add a short entry to `DATA_FLOW.md`'s storage layer section."
+
+## Phase 3 — Mobile round entry (the core build)
+
+### 3.1-3.3 — Prototype before committing to a design
+
+Jon's explicit ask: consider phone-entry ergonomics carefully, prototype a couple of
+approaches, and try them for real before writing production code.
+
+| # | Step | Model | Why |
+|---|------|-------|-----|
+| 3.1 | Propose 2-3 candidate mobile score-entry interaction patterns, grounded in the real usage moment (single admin, typically entering scores after the round has finished — clubhouse or course — from memory or a paper/phone scorecard, often under time or social pressure). For each: a short brief covering the interaction flow, the usage moment it's optimised for, and its primary weakness. Append as a new `## Phase 3.1 prototypes` section in this file. | Opus | Getting the candidate patterns wrong wastes real prototyping effort; this is genuine UX/product judgement about what's worth building, same reasoning as 3.4's design note. |
+| 3.2 | Build each brief from 3.1 as a static, standalone HTML mockup under `webapp/mobile_mockups/` (served at `/mockups/`), following the existing conventions in that folder exactly: pure-CSS light/dark toggle via `:has()`, Lora + Roboto Mono + forestgreen identity, no backend calls, no JS framework, phone-viewport sized. Populate with a fake in-progress round (a handful of fake players, 18 holes) so it's actually tappable/testable, not just a static image. Add each to `webapp/mobile_mockups/index.html`'s chooser page with its brief as the description. | Sonnet | Frontend implementation against an existing, well-established convention — no design judgement of its own. |
+| 3.3 | **Manual (Jon):** open each prototype on an actual phone (via `/mockups/`), ideally simulating real conditions — standing, one-handed, outdoor screen glare if possible — and tap through entering a fake round. Pick a direction (or note a hybrid). Record the decision and the reasoning in a short note appended under `## Phase 3.3 decision` in this file. | — | Only Jon can judge the actual feel on a real device. |
+
+> **Kick-off prompt — Phase 3.1 (Opus):**
+> "Read `DATA_STORAGE_INGESTION_PLAN.md` Question 2's recommendation for context. Propose
+> 2-3 candidate interaction patterns for entering golf scores on a phone in this app,
+> grounded in the actual usage moment: a single admin entering a just-finished round's
+> scores, typically in the clubhouse or on the course, from memory or a scorecard, possibly
+> in a hurry. Think through real alternatives — e.g. a touch-optimised grid (18 holes ×
+> players, like the current Google Sheet but redesigned for a small screen), a sequential
+> hole-by-hole wizard matching how the round is actually played, a player-by-player
+> scrollable entry list — and pick the 2-3 most worth prototyping, not necessarily those
+> three verbatim if you see a better option. For each, write a concise brief (~1 short
+> paragraph: interaction flow, the usage moment it best fits, its main weakness). Append
+> them as a new `## Phase 3.1 prototypes` section at the end of
+> `DATA_STORAGE_INGESTION_PLAN.md` — edit that file directly, don't create a new one."
+
+> **Kick-off prompt — Phase 3.2 (Sonnet):**
+> "Read the `## Phase 3.1 prototypes` section of `DATA_STORAGE_INGESTION_PLAN.md` (added by
+> the previous step) and look at a couple of existing files in `webapp/mobile_mockups/`
+> (e.g. `scorecard_field_app.html`, `index.html`) to match their conventions exactly: single
+> self-contained HTML file, pure-CSS light/dark toggle via a `:has(#mode:checked)` pattern
+> (no JS required to view), Lora + Roboto Mono fonts + forestgreen accent, phone-width
+> layout, no backend calls or real data — everything hardcoded. Build one standalone mockup
+> per Phase 3.1 brief under `webapp/mobile_mockups/` (suggested naming:
+> `round_entry_<short-name>.html`), populated with a fake in-progress round (4-5 fake
+> players, 18 holes, plausible golf scores) so each pattern is genuinely tappable and
+> testable on a phone, not just a static image. Add an entry for each to
+> `webapp/mobile_mockups/index.html`'s chooser page, using the corresponding brief as the
+> description, in the same visual style as the existing entries there. These are throwaway
+> prototypes — do not wire them to any backend route, any real data file, or any Python
+> code."
+
+*(Step 3.3 is manual — no kick-off prompt; it's Jon trying the mockups from 3.2 on a phone
+via `/mockups/` and recording a decision in this file.)*
+
+### 3.4-3.10 — Build the real thing (gated on 3.3's decision + Phase 1 complete)
+
+| # | Step | Model | Why | Risk / rollback |
+|---|------|-------|-----|-------------------|
+| 3.4 | **Design note** (temporary .md per CLAUDE.md rule 3) covering: the chosen interaction pattern from 3.3; draft JSON schema (TEGNum, Round, Course, per-player-per-hole scores, Par/SI overrides, updated-at); draft lifecycle (create → autosave → submit → archive/delete; one active draft per TEG+Round); the wide-frame builder contract (must byte-match the layout `process_google_sheets_data` consumes); route surface (`GET /admin/enter-round`, `.../autosave`, `.../preview`, `.../submit`, draft list/delete); offline strategy (server draft = source of truth, `localStorage` mirror replayed on reconnect, last-write-wins is fine for a single admin); how preview/submit reuse existing partials; failure UX (regen error mid-submit, lock contention from 1.3). Module placement: draft store + builder in new `teg_analysis/analysis/round_entry.py` (UI-agnostic), routes in new `webapp/routes/admin_entry.py` (`admin.py` is already 842 lines). | **Opus** | New module + API design feeding the highest-value data path; a wrong call here (drafts entangled with the canonical store, or a builder diverging from the sheet contract) is expensive to unwind. | — |
+| 3.5 | Implement `teg_analysis/analysis/round_entry.py`: draft save/load/list/delete under `data/drafts/` (volume on Railway, `data/` locally; excluded from GitHub sync), `build_wide_frame(draft) -> pd.DataFrame`, validation helpers (score bounds, completeness per player). | Sonnet | New functions to a written spec, following existing io patterns. | Drafts are ephemeral; no canonical data touched. |
+| 3.6 | Routes (`webapp/routes/admin_entry.py`, registered in `webapp/app.py`): form page prefilled from `in_progress_tegs.csv`/`round_info.csv`/`course_pars.csv`; HTMX autosave; preview posts the built frame through `process_google_sheets_data` → duplicate analysis → existing `partials/admin_update_preview.html`; submit → `execute_data_update` (with 1.1 backups + 1.3 lock) → `deps.clear_all_data_caches()` → existing result partial. `find_tegs_missing_round_info` guard links to `/admin/edit-data`. | Sonnet | Straightforward new endpoints copying `admin.py`'s established auth/ctx/partial patterns; hard logic lives in already-designed functions. | Submit path writes canonical data — but only via the identical, now-backed-up pipeline. |
+| 3.7 | Template + styling for the chosen pattern from 3.3: `admin_enter_round.html`, mobile-first per `webapp/MOBILE_PLAN.md`/`static/mobile.css` conventions (≤640px, desktop untouched); `localStorage` mirror + replay script; disabled-submit while in flight. Build directly on the winning `webapp/mobile_mockups/round_entry_*.html` prototype rather than starting fresh. | Sonnet | Frontend work with an already-chosen, already-prototyped design to follow. | None. |
+| 3.8 | Tests: draft roundtrip; builder output accepted by `process_google_sheets_data` and equivalent to a sheet-shaped fixture; incomplete-round rejection; duplicate/overwrite paths; route auth. Extend `tests/test_admin_routes.py` + new `tests/test_round_entry.py`. | Sonnet | Test writing against a fixed spec. | — |
+| 3.9 | **Opus review gate** (per CLAUDE.md): read modified files end-to-end, run `pytest tests/ -v`, then a real-device end-to-end test: enter a fake round (confirm the TEG-50 sandbox convention with Jon first), airplane-mode mid-entry, resume, submit, verify site pages update, verify a backup exists, delete via `/admin/delete-data`. | **Opus** | Repo-mandated review gate; also the data-integrity sign-off before this becomes the primary ingestion path. | E2E test writes real data — use the TEG-50 sandbox and delete afterwards; both directions are backed up (Phase 1.1/1.2). |
+| 3.10 | Docs: `DATA_FLOW.md` (new ingestion path + drafts), `webapp/README.md`, CLAUDE.md current-state, `file_catalog.py`; delete the 3.4 design note. | Haiku | Mechanical doc sweep. | — |
+
+> **Kick-off prompt — Phase 3.4 (Opus):**
+> "Read `DATA_STORAGE_INGESTION_PLAN.md` in full, including the `## Phase 3.3 decision`
+> section (the chosen interaction pattern — if it's not there yet, stop and ask Jon before
+> proceeding). Write a design note as a new temporary file
+> `webapp/ROUND_ENTRY_DESIGN.md` covering: the chosen interaction pattern; the draft JSON
+> schema; the draft lifecycle (create/autosave/submit/archive/delete, one active draft per
+> TEG+Round); the exact wide-format frame contract the builder must produce — inspect
+> `teg_analysis/analysis/pipeline.py`'s `get_google_sheet`/`reshape_round_data` and
+> `teg_analysis/analysis/data_update.py`'s `process_google_sheets_data` to pin this down
+> precisely, since 3.5/3.6 depend on it matching exactly; the new route surface under
+> `/admin/enter-round`; the offline/autosave strategy (server draft as source of truth,
+> `localStorage` mirror, last-write-wins); how preview/submit reuse
+> `partials/admin_update_preview.html` and the existing result partial; failure UX for a
+> mid-submit error or a lock-contention error from Phase 1.3. Confirm module placement: new
+> `teg_analysis/analysis/round_entry.py` for the UI-agnostic draft store + builder, new
+> `webapp/routes/admin_entry.py` for routes (do not add to `admin.py`, which is already
+> large). This is a design note only — no implementation."
+
+> **Kick-off prompt — Phase 3.5-3.8 (Sonnet):**
+> "Read `webapp/ROUND_ENTRY_DESIGN.md` (from Phase 3.4) in full — implement exactly to that
+> spec, and read `DATA_STORAGE_INGESTION_PLAN.md` for surrounding context if anything is
+> ambiguous. Implement in order: (3.5) `teg_analysis/analysis/round_entry.py` — draft
+> save/load/list/delete under the store's `data/drafts/` path (use the existing
+> `teg_analysis/io` volume/local path conventions; this folder must NOT be synced to
+> GitHub), `build_wide_frame(draft) -> pd.DataFrame` matching the design note's frame
+> contract exactly, and score/completeness validation helpers; (3.6)
+> `webapp/routes/admin_entry.py`, registered in `webapp/app.py`, following the auth/context/
+> partial-rendering patterns already established in `webapp/routes/admin.py` — the form
+> page, autosave endpoint, a preview endpoint that runs the built frame through
+> `process_google_sheets_data` and reuses `partials/admin_update_preview.html`, and a submit
+> endpoint that calls `execute_data_update` (relying on the Phase 1.1 backups and Phase 1.3
+> lock already in place) then `deps.clear_all_data_caches()`; (3.7) the entry template,
+> built directly on the winning prototype from `webapp/mobile_mockups/` (see
+> `## Phase 3.3 decision` in the plan file for which one), wired to real data and following
+> `webapp/MOBILE_PLAN.md`/`static/mobile.css` conventions — mobile-only styling behind the
+> existing `≤640px` breakpoint, desktop untouched; (3.8) tests in
+> `tests/test_round_entry.py` and additions to `tests/test_admin_routes.py` covering draft
+> roundtrip, frame-builder output being accepted by `process_google_sheets_data`,
+> incomplete-round rejection, duplicate/overwrite handling, and route auth. Run
+> `pytest tests/ -v` before finishing."
+
+> **Kick-off prompt — Phase 3.9 (Opus):**
+> "This is the CLAUDE.md-mandated Opus review gate for the round-entry feature (Phases
+> 3.4-3.8). Read every file touched by those phases end-to-end (`git diff` against the base
+> branch for the file list). Run `pytest tests/ -v`. Then do a real end-to-end pass: confirm
+> with Jon which TEG number is safe to use as a sandbox (the codebase has a TEG-50
+> convention for this — verify it's still current), enter a full fake round through the new
+> `/admin/enter-round` flow on an actual phone, deliberately go into airplane mode partway
+> through and resume to prove the draft survives, submit, verify the site's other pages
+> reflect the new data, verify a timestamped backup was created (`/admin/backups`), then
+> delete the sandbox round via the existing `/admin/delete-data` flow and confirm the site
+> returns to its prior state. Report pass/fail on each of these checks plus anything you'd
+> flag before this becomes the primary ingestion path."
+
+> **Kick-off prompt — Phase 3.10 (Haiku):**
+> "Phase 3 (mobile round entry) is implemented and reviewed. Update `DATA_FLOW.md` to
+> document the new ingestion path (drafts → wide-frame builder → existing
+> `process_google_sheets_data`/`execute_data_update` pipeline), `webapp/README.md`,
+> CLAUDE.md's 'Current state & next steps', and `teg_analysis/io/file_catalog.py` for the
+> new `course_pars.csv` and drafts folder if not already covered. Delete
+> `webapp/ROUND_ENTRY_DESIGN.md` (its content is now folded into `DATA_FLOW.md`)."
+
+## Phase 4 — Demote Google Sheets, then decide
+
+| # | Step | Model | Why |
+|---|------|-------|-----|
+| 4.1 | Relabel the existing `/admin/data-update` page as "Import from Google Sheet (fallback)"; link both flows from a small admin index; keep it fully functional for one TEG season. | Haiku | Copy/nav changes only. |
+| 4.2 | **Decision gate (human, after next TEG):** if the native form was used and the sheet wasn't missed, remove the sheet path (`get_google_sheet`, `GOOGLE_*` env vars, `gspread`/`google-auth` deps, old page). Until then, no code removal. | Haiku (when triggered) | Deleting dead code and docs. |
+
+> **Kick-off prompt — Phase 4.1 (Haiku):**
+> "The native `/admin/enter-round` flow (Phase 3) is live. Relabel the existing Google Sheet
+> import page (in `webapp/routes/admin.py` / its template) as 'Import from Google Sheet
+> (fallback)', and add a small admin landing/index linking to both the native entry flow and
+> the fallback importer, so it's clear which is primary. Do not remove any Sheet-related
+> code — that's a separate, later, human-gated step (Phase 4.2)."
+
+*(Step 4.2 triggers after a season of real use — no kick-off prompt yet; revisit this file
+when Jon says the native flow has proven itself.)*
+
+---
+
+## Assumptions to verify before committing (consolidated)
+
+1. Full derived-cache regen time on Railway's container (0.1) — determines synchronous vs
+   background submit for Phase 3.
+2. Railway volume persistence/snapshot behaviour and `RAILWAY_GIT_BRANCH` presence (0.4).
+3. Par/SI historical consistency per course (0.2) — sizes the Phase 2 backfill effort.
+4. No non-Streamlit readers of the CSV mirrors (0.3) — gates Phase 1.4.
+5. GitHub PAT type/expiry and rate budget (0.4) — near-certain fine, but ingestion now
+   depends on it at a moment (clubhouse) where failure is annoying; the volume-first write
+   order already means a GitHub outage loses nothing (data lands on the volume; a later
+   manual push via `/admin/volume-sync` recovers — worth confirming that recovery path once,
+   manually).
+
+**Budget outcome:** $0/month added, against a ~$10/month ceiling. Nothing in this design
+improves by paying for it.
+
+## Critical files for implementation
+
+- `teg_analysis/analysis/data_update.py` — add-flow backups, lock, mirror retirement, editable-files registry
+- `teg_analysis/analysis/pipeline.py` — `update_all_data` mirror removal; the sheet contract (`get_google_sheet`, `reshape_round_data`) the new builder must match
+- `webapp/routes/admin.py` — patterns (auth, preview/confirm partials, cache clearing) the new entry routes replicate
+- `teg_analysis/io/file_operations.py` — `backup_file` fix; store-path conventions for the draft store
+- `teg_analysis/analysis/round_entry.py` — new module (draft store + wide-frame builder), designed in Phase 3.4
+- `webapp/mobile_mockups/` — Phase 3.1-3.2 prototypes live here before becoming the real template in 3.7
+
+---
+
+## Wrap-up (do this once Phase 4.1 is complete; Phase 4.2 remains open/gated)
+
+- Fold this file's outcome into `DATA_FLOW.md`, `webapp/README.md`, `teg_analysis/README.md`,
+  and CLAUDE.md's "Current state & next steps".
+- Confirm `DATA_RATIONALISATION_PLAN.md` was deleted at Phase 1.5.
+- Remove the "Data updates" entry in the root `TODOS.md` pointing here, or replace it with
+  the Phase 4.2 decision-gate reminder if that's still outstanding.
+- Delete this file.

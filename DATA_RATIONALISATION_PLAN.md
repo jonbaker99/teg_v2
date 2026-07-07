@@ -1,5 +1,12 @@
 # Data file rationalisation — investigation plan
 
+**Superseded — do not start this investigation.** See
+[`DATA_STORAGE_INGESTION_PLAN.md`](DATA_STORAGE_INGESTION_PLAN.md) Phase 1.4-1.5, which
+adopts this document's Option 3 ("minimal cleanup": keep both parquets, drop the
+`all-data.csv` mirror) directly, on lighter evidence, because this plan's main reason for
+rigour — "streamlit/ must not break" — is no longer a constraint. This file will be deleted
+once Phase 1.5 lands.
+
 **Status: not started.** Temporary working document (CLAUDE.md Documentation Rule 3):
 when the investigation is done, fold the outcome into `DATA_FLOW.md` (and
 `file_catalog.py` if descriptions change) and delete this file.
