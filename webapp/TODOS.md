@@ -38,7 +38,11 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## Mobile & dark mode
 
-- [ ] **Phase M1 — app shell on phones** — bottom tab bar, sticky app bar, reflowed layout. Pickup pointer: `MOBILE_PLAN.md` line 27. Foundations (Phase M0) are done.
+- [X] **Phase M1 — app shell on phones** — bottom tab bar, app bar, segmented controls, sticky-column tables. Done (see `MOBILE_PLAN.md` → Status).
+- [X] **Phase M2.7 — leaderboard card reflow** — `/leaderboard` + `/results` standings as hero pods + card rows on phones.
+- [ ] **Phase M2.8 — mobile chart preset** — blocked on the parked HTMX chart bug.
+- [ ] **Phase M2.9 — per-page mobile pass** — spacing, tap targets, empty states; consider card reflow for Latest Round / Records. Pickup pointer: `MOBILE_PLAN.md` → Status.
+- [ ] **Dark mode: page-title contrast on dark** — `.page-title` nearly invisible in dark mode (pre-existing, seen during M2 verification; part of the deferred dark QA sweep).
 
 ## Planned enhancements
 

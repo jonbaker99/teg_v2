@@ -591,6 +591,26 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "stand
             lb[col] = lb[col].apply(lambda x: format_value(x, value_col))
         table_html = _leaderboard_table_html(lb)
 
+        # Phone-only card reflow of the same standings (MOBILE_PLAN M2.7).
+        # Rendered by partials/lb_cards.html; hidden above 640px by mobile.css.
+        round_cols = [c for c in lb.columns if c not in ('Rank', 'Player', 'Total')]
+        lb_cards = [{
+            "rank": str(row['Rank']),
+            "player": str(row['Player']),
+            "code": _NAME_TO_CODE.get(str(row['Player'])),
+            "rounds": [(c, str(row[c])) for c in round_cols],
+            "total": str(row['Total']),
+            "lead": str(row['Rank']).startswith('1'),
+        } for _, row in lb.iterrows()]
+        lb_hero = {
+            "label": leader_label,
+            "champion": champion,
+            "champion_total": lb_cards[0]["total"] if lb_cards else "",
+            "spoon": spoon if tab != "gross" else None,
+            "spoon_total": lb_cards[-1]["total"] if lb_cards else "",
+            "unit": "pts" if value_col == "Stableford" else "vs par",
+        }
+
         chart_meta = _results_chart_meta(tab, chart_variant, net_measure, teg_name)
         figure_json = _build_race_figure_json(tab, chart_variant, net_measure, teg_name)
         return {
@@ -598,6 +618,8 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "stand
             "section_title": f"{competition} {status_word} Leaderboard",
             "callout": callout,
             "table_html": table_html,
+            "lb_cards": lb_cards,
+            "lb_hero": lb_hero,
             "teg_name": teg_name,
             "chart_types": RESULTS_CHART_TYPES,
             "active_chart_variant": chart_variant,

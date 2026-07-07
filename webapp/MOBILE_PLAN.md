@@ -23,15 +23,32 @@ behind a `≤640px` breakpoint or an opt-in `data-mode`).
   `nav.py`'s new `tab` key), shown only `≤640px`, plus a compacted top bar.
   Preview: `mobile_mockups/mobile_shell_preview.html`.
 - ✅ **Mockups** for Direction A in `webapp/mobile_mockups/` (served at `/mockups/`).
+- ✅ **M1.4–M1.6 sweep + M2.7 leaderboard hero** — all in `static/mobile.css`
+  (≤640px only; desktop verified pixel-identical by before/after screenshot
+  diff on 5 pages):
+  - **Controls (M1.5):** `.section-nav`/`.tab-underline` restyled as a
+    segmented control (scrolls when the labels overflow); pills and
+    `.theme-select` selects get ≥40px tap targets and 16px font (no iOS focus
+    zoom). Also fixed a live bug: the old `.theme-select { display:none }`
+    rule was hiding every page's TEG/filter selects on phones — now scoped to
+    `.nav`.
+  - **Tables (M1.6):** sticky first column + horizontal wrapper scroll for
+    `.teg-table` and `.records-table` inside both `.table-wrapper` and
+    Tailwind `.overflow-x-auto` wrappers (opt out per table with
+    `.table-wrapper--no-pin`); `overflow-x` restated so phones don't depend
+    on the Tailwind CDN for the no-page-scroll rule.
+  - **Leaderboard hero (M2.7):** `/leaderboard` and `/results` standings
+    reflow into champion/wooden-spoon pods + tappable card rows
+    (`partials/lb_cards.html`, fed by `lb_cards`/`lb_hero` from
+    `_results_context`); the desktop table + text callout hide at ≤640px.
+  - **App bar (M1.4):** compacted nav height/padding + soft elevation.
 
-**▶ Pick up here (the full UI work):** with the shell in place, the next steps
-roll the per-page mobile treatments out across the site (Direction-A mockups are
-the spec):
-- **Leaderboard hero** (M2.7) — segmented Gross/Net + card-reflowed rows.
-- **Tables + controls sweep** (M1.5–M1.6) — segmented toggles and sticky-column
-  scroll on the remaining pages (the scorecard is the working reference).
+**▶ Pick up here (the remaining UI work):**
 - **Charts** (M2.8) — mobile preset (still behind the parked HTMX chart bug).
-- **Top app-bar polish** (M1.4 remainder) — a sticky, more app-like header.
+- **Per-page pass** (M2.9) — spacing, tap targets, empty states, safe-area
+  insets; extend the card reflow to Latest Round / Records if it earns it.
+- **Dark-mode page-title contrast** — `.page-title` is near-invisible on dark
+  phones (pre-existing; part of the deferred per-page dark QA).
 
 Everything below §Status is the approach and remains the working reference.
 

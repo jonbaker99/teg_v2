@@ -1,0 +1,34 @@
+{#- Phone-only leaderboard reflow (MOBILE_PLAN M2.7): hero pods + tappable
+    card rows, fed by lb_hero / lb_cards from _results_context. Both blocks
+    are display:none above 640px (mobile.css); at phone width they replace
+    the desktop table (.lb-table-card) and text callout (.lb-callout). -#}
+{% if lb_hero %}
+<div class="lb-hero">
+    <div class="lb-pod lb-pod--champ">
+        <div class="lb-pod-label"><span class="material-symbols-outlined">trophy</span>{{ lb_hero.label }}</div>
+        <div class="lb-pod-name">{{ lb_hero.champion }}</div>
+        <div class="lb-pod-sub">{{ lb_hero.champion_total }} · {{ lb_hero.unit }}</div>
+    </div>
+    {% if lb_hero.spoon %}
+    <div class="lb-pod lb-pod--spoon">
+        <div class="lb-pod-label"><span class="material-symbols-outlined">restaurant</span>Wooden spoon</div>
+        <div class="lb-pod-name">{{ lb_hero.spoon }}</div>
+        <div class="lb-pod-sub">{{ lb_hero.spoon_total }} · {{ lb_hero.unit }}</div>
+    </div>
+    {% endif %}
+</div>
+{% endif %}
+{% if lb_cards %}
+<div class="lb-cards">
+    {% for c in lb_cards %}
+    <a class="lb-card{% if c.lead %} lb-card--lead{% endif %}"{% if c.code %} href="/player/{{ c.code }}"{% endif %}>
+        <span class="lb-card-rank">{{ c.rank }}</span>
+        <span class="lb-card-who">
+            <span class="lb-card-name">{{ c.player }}</span>
+            <span class="lb-card-rounds">{% for label, val in c.rounds %}{{ label }} <b>{{ val }}</b>{% if not loop.last %} · {% endif %}{% endfor %}</span>
+        </span>
+        <span class="lb-card-total"><span class="lb-card-v">{{ c.total }}</span><span class="lb-card-u">total</span></span>
+    </a>
+    {% endfor %}
+</div>
+{% endif %}
