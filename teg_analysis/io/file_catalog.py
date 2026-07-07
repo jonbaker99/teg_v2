@@ -73,9 +73,10 @@ DATA_FILE_CATALOG: list[dict] = [
         "importance": 5,
         "format": "csv",
         "role": "Hole-level Par/SI per course, backfilled from history "
-                "(scripts/backfill_course_pars.py). Used to prefill scorecards/round "
-                "entry. A handful of courses with historically inconsistent Par/SI "
-                "(re-rated over time) are deliberately absent pending manual review.",
+                "(scripts/backfill_course_pars.py, majority vote where one round "
+                "disagreed with the rest). Used to prefill scorecards/round entry. "
+                "Estoril is deliberately incomplete (a genuine tie, only 2 rounds "
+                "ever played) pending manual review.",
         "updated_by": "Edit inline on the Edit data page. New/re-rated courses added here.",
         "edit_slug": "course_pars",
     },

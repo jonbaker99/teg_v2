@@ -3,15 +3,74 @@
 **Status (2026-07-07): Phase 0 complete (see [findings](#phase-0-findings)). Phase 1
 complete** (1.1-1.5 all done: backups on add, `backup_file()` volume-copy fix, concurrency
 lock, CSV mirrors retired, docs swept, `DATA_RATIONALISATION_PLAN.md` deleted). **Phase 2
-complete** (`course_pars.csv` backfilled + registered — 3 courses need a decision, see
-below). **Phase 3.1 + 3.2 complete** (prototype briefs below; all three built as
-interactive mockups at `/mockups/` — `round_entry_grid.html`, `round_entry_wizard.html`,
+complete** (`course_pars.csv` backfilled + registered; Boavista/Praia D'El Rey resolved by
+majority vote, only Estoril needs a decision — see [Decisions needed](#decisions-needed-for-jon)).
+**Phase 3.1 + 3.2 complete** (prototype briefs below; all three built as interactive
+mockups at `/mockups/` — `round_entry_grid.html`, `round_entry_wizard.html`,
 `round_entry_player.html` — Playwright-verified to work, no console errors). **Blocked on
 Jon (Phase 3.3):** try the three mockups on a real phone and record the pick under
 "Phase 3.3 decision" below — everything from Phase 3.4 onward depends on it. Temporary
 working document (CLAUDE.md Documentation Rule 3). When Phase 4 is complete, fold the
 outcome into `DATA_FLOW.md`, `webapp/README.md`, `teg_analysis/README.md`, and CLAUDE.md's
 "Current state & next steps", then delete this file (see the wrap-up note at the very end).
+
+## Decisions needed for Jon
+
+Everything else in this document that didn't require a judgement call has been executed
+(Phases 0-2, 3.1-3.2). These two are genuine decisions — recommendations given, but not
+acted on.
+
+### 1. Estoril Par/SI — a real tie, not enough data to resolve automatically
+
+Only 2 rounds have ever been played at Estoril (TEG 15 Round 1, 2022; TEG 16 Round 4,
+2023), and they disagree on Par and/or SI for 15 of 18 holes — e.g. Hole 5: TEG 15 says
+Par 3/SI 3, TEG 16 says Par 5/SI 17. With only one round on each side there's no majority
+to lean on, unlike Boavista/Praia D'El Rey below.
+
+**Options:**
+- **(Recommended) Look up Estoril's current official scorecard** (club website or a quick
+  search) and use that — it's what future rounds there will actually be played against,
+  and settles the question independent of which historical entry was right.
+- Ask whichever of you played in 2022 or 2023 which card you remember using / trust more.
+- Leave Estoril out of `course_pars.csv` for now (current state) — the round-entry form
+  (Phase 3+) will just have no Par/SI prefill for Estoril; whoever's on-course still enters
+  scores fine, just without the autofill convenience.
+
+Once decided: add Estoril's 18 rows directly via `/admin/edit-data?file=course_pars`
+(now registered), or update `scripts/backfill_course_pars.py`'s Estoril handling and rerun.
+
+### 2. Two historical rounds may have wrong Par/SI recorded in `all-scores.parquet`
+
+While backfilling `course_pars.csv`, the majority-vote resolution surfaced something
+outside course_pars' scope: **TEG 2 Round 3** (Boavista, 18/05/2009) and **TEG 7 Round 1**
+(Praia D'El Rey, 02/10/2014) each disagree with *every other round ever played at that
+course* on **all 18 holes simultaneously** — not a couple of holes, all of them. That's a
+strong signature of a single mis-recorded round (wrong reference card used, or a
+transcription mixup) rather than a genuine course re-rating; `course_pars.csv` was built
+using the majority values and treats these two rounds as the outliers.
+
+**This wasn't touched** — `all-scores.parquet` still has whatever Par/SI those two rounds
+were originally recorded with, which means their `GrossVP`, `NetVP`, and `Stableford`
+columns (all derived from Par/SI) may be computed against the wrong values. That's real
+competition history — trophies, records — so correcting it is a decision, not something to
+fix silently.
+
+**Options:**
+- **(Recommended) Leave it alone unless it changes an actual result.** Check whether
+  correcting either round's Par/SI would flip who won that round/TEG or break/create any
+  record — if not, the cost of touching 16-year-old settled results probably isn't worth
+  it even if the recorded numbers were technically off.
+- Correct the two rounds' PAR/SI in `all-scores.parquet` to match the course's real card
+  (via `/admin/edit-data` → View Processed Data won't do it — this needs a raw edit to
+  all-scores, which isn't currently exposed as an editable file; would need a small script
+  or a one-off admin action) and let `execute_data_update`'s recompute chain (or a manual
+  rerun) fix the derived columns. Higher effort, only worth it if it actually changes a
+  result.
+- Ignore it — it's 16 years old (Boavista) / 12 years old (Praia D'El Rey), Par/SI errors
+  of this shape mostly affect Stableford/handicap-strokes at the margin, not gross
+  finishing order.
+
+---
 
 **Supersedes `DATA_RATIONALISATION_PLAN.md`'s open investigation.** That file's Phase 3
 options appraisal (Option 3: keep both parquets, drop the CSV mirror) is adopted directly
@@ -162,6 +221,12 @@ PAR+SI conflicts on most holes; Praia D'El Rey: front/back 9 conflict pattern mi
 exactly, suggesting a routing swap between visits, not noise). **Verdict for Phase 2:** the
 backfill script must surface these three for manual resolution as designed — do not
 auto-resolve. No course has fewer than 18 holes represented; no orphaned rows.
+
+**Update from Phase 2's deeper TEG+Round breakdown:** Boavista and Praia D'El Rey's
+"conflicts" turned out to be a *single outlier round* disagreeing with every other round on
+all 18 holes, not a genuine multi-way split — resolved by majority vote (see Phase 2
+below). Only Estoril is a true, unresolvable tie. See
+[Decisions needed for Jon](#decisions-needed-for-jon).
 
 ### 0.3 — CSV mirror readers: clear outside Streamlit
 
