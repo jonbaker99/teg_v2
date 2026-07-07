@@ -437,3 +437,58 @@ improves by paying for it.
 - Remove the "Data updates" entry in the root `TODOS.md` pointing here, or replace it with
   the Phase 4.2 decision-gate reminder if that's still outstanding.
 - Delete this file.
+
+---
+
+## Phase 3.1 prototypes
+
+Three candidate interaction patterns for a single admin entering a just-finished round
+(up to 7 players × 18 holes ≈ 126 gross scores) on a phone, usually transcribing from a
+completed paper/phone scorecard in the clubhouse or on the course, one-handed, possibly
+under glare and time pressure. The dominant cost in this moment is raw numeric-entry speed
+and error rate while copying an existing grid — so all three keep a big custom number pad
+(not the OS keyboard), an always-visible running total per player as a live sanity check,
+and clear "holes remaining" progress. They differ in how the cursor moves through the 126
+cells, which is the real variable to test on a phone. Prototype all three (Phase 3.2), then
+pick on feel (Phase 3.3).
+
+### A. Sticky-keypad grid (redesigned scorecard grid)
+A compact holes-as-rows × players-as-columns grid — the same mental model as the paper card
+Jon is copying from — with a number pad pinned to the bottom of the screen. Tapping a cell
+highlights it; the keypad fills it and the cursor auto-advances to the next cell in a chosen
+traversal (down a column, or across a row, toggglable), so most of the round is entered
+without ever re-aiming at a target. The grid scrolls under the fixed keypad, with column
+totals and a per-hole "everyone entered?" tick giving constant overview. **Best fits:** the
+common case — transcribing a complete paper card end-to-end, where seeing the whole grid
+mirrors the source and makes gaps and fat-finger outliers obvious at a glance. **Main
+weakness:** even redesigned, 7 columns on a phone means small cells and horizontal scrolling;
+the highlighted-cursor + auto-advance is the whole bet, and if a mis-tap moves the cursor
+unnoticed, errors cascade down a column before the running total catches them.
+
+### B. Hole-by-hole wizard
+One hole per screen: a big card showing hole N (Par/SI for context) with a large tap-target
+and number pad for each player's score stacked vertically, then a prominent "Next hole"
+advance. Progress is a 1→18 stepper; back/next jumps let you fix any hole. **Best fits:**
+entering live or incrementally as the round is played, or reconstructing from memory where
+you naturally replay the round hole by hole; also the most glare- and one-hand-friendly —
+biggest targets, least on screen, hardest to mis-tap. **Main weakness:** worst fit for the
+actual common case (bulk-transcribing a finished card): 18 screen advances is a lot of taps,
+you lose the whole-round overview, and spotting "did everyone play hole 12?" or an entry
+transposed between two players is harder when you only ever see one hole at a time.
+
+### C. Player-by-player column
+Pick one player and enter all 18 of their holes in a single fast vertical run — one mental
+context ("this is JB's card"), one column of the source scorecard, number pad fixed, cursor
+auto-advancing hole 1→18 — then move to the next player. A player-selector strip along the
+top shows who's done (with their total) and who's left. **Best fits:** the "finish one card
+completely, then the next" transcription style, and the fact that Jon knows his own round
+cold — fastest sustained numeric entry because nothing changes context between taps. **Main
+weakness:** you re-read/traverse the source card up to 7 times, cross-player checks (did
+everyone score hole 7? is a hole accidentally shifted by one row for one player?) are
+invisible until every column is done, and the repetitive middle players are where attention
+(and accuracy) lapses.
+
+*Recommended prototyping priority:* A first (best fit for the most likely moment — copying a
+completed card — and the sticky-keypad/auto-advance mechanic is the least proven), then C
+(the speed play), then B (the safe, low-error fallback and the only one that also suits live
+entry).
