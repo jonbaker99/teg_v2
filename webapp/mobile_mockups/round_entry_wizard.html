@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0">
+<title>Mockup — Round entry B · Hole-by-hole wizard</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0">
+<style>
+:root {
+  --font-body:'Lora', Georgia, serif; --font-data:'Roboto Mono', monospace;
+  --bg:#f4f3ef; --surface:#ffffff; --surface-2:#faf9f6; --text:#1a1a1a; --text-2:#555;
+  --text-muted:#8c8c86; --line:#e7e5e0; --accent:forestgreen; --accent-soft:#F3F7F3; --accent-text:forestgreen;
+  --bar:#ffffff; --bar-line:#e7e5e0; --shadow:0 1px 2px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.04);
+  --key-bg:#ffffff; --key-active:#eef2ee; --row-empty:#faf9f6; --row-filled:#eef4ee;
+  --row-active-ring:forestgreen; --dot-off:#e7e5e0;
+}
+[data-theme="dark"], :root:has(#mode:checked) {
+  --bg:#131311; --surface:#1d1d1a; --surface-2:#242420; --text:#ececea; --text-2:#b7b6b0;
+  --text-muted:#86857e; --line:#2e2e29; --accent:#57c773; --accent-soft:#1b2a1d; --accent-text:#7ad492;
+  --bar:#191916; --bar-line:#2a2a25; --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+  --key-bg:#1d1d1a; --key-active:#26402a; --row-empty:#1d1d1a; --row-filled:#1b2a1d;
+  --row-active-ring:#57c773; --dot-off:#2e2e29;
+}
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; -webkit-user-select:none; user-select:none; }
+html,body { margin:0; height:100%; overflow:hidden; }
+body { font-family:var(--font-body); background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased;
+  display:flex; flex-direction:column; }
+.material-symbols-outlined { font-variation-settings:'opsz' 24,'wght' 400; line-height:1; vertical-align:middle; }
+
+.appbar { flex:0 0 auto; background:var(--bar); border-bottom:1px solid var(--bar-line);
+  padding:calc(10px + env(safe-area-inset-top,0)) 14px 10px; display:flex; align-items:center; gap:10px; }
+.appbar .back { font-size:22px; color:var(--text-2); }
+.appbar .titles { flex:1; min-width:0; }
+.appbar .kicker { font-family:var(--font-data); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-muted); display:block; line-height:1.4; }
+.appbar .title { font-weight:600; font-size:16px; line-height:1.15; }
+
+.dots { flex:0 0 auto; display:flex; gap:4px; padding:10px 14px 4px; overflow-x:auto; }
+.dots .dot { flex:0 0 auto; width:16px; height:5px; border-radius:3px; background:var(--dot-off); }
+.dots .dot.done { background:var(--accent); }
+.dots .dot.cur { background:var(--accent); box-shadow:0 0 0 2px var(--accent-soft); }
+
+.holecard { flex:0 0 auto; margin:8px 14px; background:var(--surface); border:1px solid var(--line); border-radius:16px;
+  box-shadow:var(--shadow); padding:12px 16px; display:flex; align-items:center; gap:14px; }
+.holecard .num { font-family:var(--font-data); font-size:30px; font-weight:700; color:var(--accent-text); line-height:1; }
+.holecard .meta { flex:1; }
+.holecard .meta .lab { font-family:var(--font-data); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-muted); }
+.holecard .meta .val { font-size:15px; font-weight:600; margin-top:2px; }
+.holecard .nav { display:flex; gap:6px; }
+.holecard .nav button { border:1px solid var(--line); background:var(--surface-2); border-radius:9px; width:36px; height:36px;
+  display:flex; align-items:center; justify-content:center; color:var(--text-2); }
+.holecard .nav button:disabled { opacity:.35; }
+
+.rowswrap { flex:1 1 auto; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:2px 14px 10px; }
+.prow { display:flex; align-items:center; gap:12px; background:var(--row-empty); border:1px dashed var(--line);
+  border-radius:12px; padding:10px 14px; margin-bottom:8px; }
+.prow.filled { background:var(--row-filled); border:1px solid transparent; }
+.prow.active { border:2px solid var(--row-active-ring); background:var(--surface); box-shadow:0 0 0 3px var(--accent-soft); }
+.prow .nm { flex:1; font-size:15px; font-weight:600; }
+.prow .vp { font-family:var(--font-data); font-size:10px; color:var(--text-muted); margin-left:6px; }
+.prow .sc { font-family:var(--font-data); font-size:19px; font-weight:700; width:34px; text-align:center; color:var(--text-muted); }
+.prow.filled .sc { color:var(--text); }
+
+.keypad { flex:0 0 auto; background:var(--bar); border-top:1px solid var(--bar-line); padding:8px 10px calc(8px + env(safe-area-inset-bottom,0)); }
+.keypad .krow { display:grid; grid-template-columns:repeat(4,1fr); gap:7px; margin-bottom:7px; }
+.keypad .krow:last-child { margin-bottom:0; }
+.keypad button.k { font-family:var(--font-data); font-size:17px; font-weight:700; background:var(--key-bg); color:var(--text);
+  border:1px solid var(--line); border-radius:11px; padding:13px 0; box-shadow:var(--shadow); }
+.keypad button.k:active { background:var(--key-active); }
+.keypad button.k.clear { color:#c0392b; font-size:13px; }
+.keypad button.k.nexthole { background:var(--accent); color:#fff; border-color:var(--accent); font-size:13px; }
+.keypad button.k.nexthole:disabled { opacity:.4; }
+
+.demobar { position:fixed; top:calc(8px + env(safe-area-inset-top,0)); right:10px; z-index:60; }
+.demobar label { background:var(--surface); color:var(--text-2); border:1px solid var(--line); border-radius:999px;
+  padding:6px 10px; font-family:var(--font-data); font-size:11px; cursor:pointer; box-shadow:var(--shadow); display:inline-flex; align-items:center; gap:5px; }
+.demobar .material-symbols-outlined { font-size:16px; }
+</style>
+</head>
+<body>
+<div class="demobar"><label><input type="checkbox" id="mode" hidden><span class="material-symbols-outlined">contrast</span>Light / Dark</label></div>
+
+<header class="appbar">
+  <span class="material-symbols-outlined back">arrow_back_ios_new</span>
+  <div class="titles"><span class="kicker">TEG 50 &middot; Round 1</span><div class="title">Enter scores</div></div>
+</header>
+
+<div class="dots" id="dots"></div>
+
+<div class="holecard">
+  <div class="num" id="hole-num">1</div>
+  <div class="meta">
+    <div class="lab">Hole <span id="hole-of">1 of 18</span></div>
+    <div class="val" id="hole-meta">Par 4 &middot; SI 7</div>
+  </div>
+  <div class="nav">
+    <button id="prev-hole" disabled><span class="material-symbols-outlined">chevron_left</span></button>
+    <button id="skip-hole"><span class="material-symbols-outlined">chevron_right</span></button>
+  </div>
+</div>
+
+<div class="rowswrap" id="rows"></div>
+
+<div class="keypad" id="keypad"></div>
+
+<script>
+const PLAYERS = ['DM','GW','HM','JP','JB','SN','AB'];
+const PARS = [4,3,5,4,4,3,5,4,4, 4,4,3,5,4,3,4,5,4];
+const SIS  = [7,13,1,17,9,15,3,11,5, 8,14,2,18,10,16,4,12,6];
+
+let scores = {}; // "hole-player" -> score
+let hole = 1;
+let activePlayer = PLAYERS[0];
+
+function key(h, p) { return h + '-' + p; }
+function holeComplete(h) { return PLAYERS.every(p => scores[key(h, p)] !== undefined); }
+
+function render() {
+  document.getElementById('hole-num').textContent = hole;
+  document.getElementById('hole-of').textContent = `${hole} of 18`;
+  document.getElementById('hole-meta').textContent = `Par ${PARS[hole - 1]} · SI ${SIS[hole - 1]}`;
+  document.getElementById('prev-hole').disabled = hole === 1;
+
+  const dots = document.getElementById('dots');
+  dots.innerHTML = '';
+  for (let h = 1; h <= 18; h++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (h === hole ? ' cur' : holeComplete(h) ? ' done' : '');
+    dots.appendChild(d);
+  }
+
+  if (!PLAYERS.includes(activePlayer)) activePlayer = PLAYERS[0];
+  const rows = document.getElementById('rows');
+  rows.innerHTML = PLAYERS.map(p => {
+    const v = scores[key(hole, p)];
+    const cls = ['prow', v !== undefined ? 'filled' : '', p === activePlayer ? 'active' : ''].join(' ').trim();
+    const vp = v !== undefined ? vpLabel(v - PARS[hole - 1]) : '';
+    return `<div class="${cls}" data-player="${p}"><div class="nm">${p}${vp}</div><div class="sc">${v !== undefined ? v : '–'}</div></div>`;
+  }).join('');
+  rows.querySelectorAll('.prow').forEach(row => {
+    row.addEventListener('click', () => { activePlayer = row.dataset.player; render(); });
+  });
+
+  renderKeypad();
+}
+
+function vpLabel(vp) {
+  if (vp <= -2) return '<span class="vp">eagle+</span>';
+  if (vp === -1) return '<span class="vp">birdie</span>';
+  if (vp === 0) return '<span class="vp">par</span>';
+  if (vp === 1) return '<span class="vp">bogey</span>';
+  return `<span class="vp">+${vp}</span>`;
+}
+
+function renderKeypad() {
+  const kp = document.getElementById('keypad');
+  const complete = holeComplete(hole);
+  kp.innerHTML = `
+    <div class="krow"><button class="k" data-v="1">1</button><button class="k" data-v="2">2</button><button class="k" data-v="3">3</button><button class="k" data-v="4">4</button></div>
+    <div class="krow"><button class="k" data-v="5">5</button><button class="k" data-v="6">6</button><button class="k" data-v="7">7</button><button class="k" data-v="8">8</button></div>
+    <div class="krow"><button class="k" data-v="9">9</button><button class="k" data-v="10">10</button><button class="k" data-v="11">11</button><button class="k" data-v="12">12</button></div>
+    <div class="krow"><button class="k clear" data-v="clear">Clear</button>
+      <button class="k nexthole" data-v="next" style="grid-column:span 3;" ${hole === 18 && complete ? 'disabled' : ''}>
+        ${complete ? (hole === 18 ? 'Round complete' : 'Next hole →') : 'Fill all 7 to continue'}
+      </button>
+    </div>`;
+  kp.querySelectorAll('button.k[data-v]:not(.nexthole)').forEach(btn => {
+    btn.addEventListener('click', () => setScore(btn.dataset.v));
+  });
+  const nextBtn = kp.querySelector('.nexthole');
+  if (nextBtn && !nextBtn.disabled) nextBtn.addEventListener('click', () => goNextHole());
+}
+
+function setScore(v) {
+  if (v === 'clear') { delete scores[key(hole, activePlayer)]; }
+  else { scores[key(hole, activePlayer)] = parseInt(v); }
+  const idx = PLAYERS.indexOf(activePlayer);
+  if (v !== 'clear' && idx < PLAYERS.length - 1) activePlayer = PLAYERS[idx + 1];
+  render();
+}
+
+function goNextHole() {
+  if (hole < 18) { hole += 1; activePlayer = PLAYERS[0]; render(); }
+}
+
+document.getElementById('prev-hole').addEventListener('click', () => { if (hole > 1) { hole -= 1; activePlayer = PLAYERS[0]; render(); } });
+document.getElementById('skip-hole').addEventListener('click', () => { if (hole < 18) { hole += 1; activePlayer = PLAYERS[0]; render(); } });
+
+render();
+</script>
+</body>
+</html>

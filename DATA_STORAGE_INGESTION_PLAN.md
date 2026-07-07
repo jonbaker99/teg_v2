@@ -4,11 +4,14 @@
 complete** (1.1-1.5 all done: backups on add, `backup_file()` volume-copy fix, concurrency
 lock, CSV mirrors retired, docs swept, `DATA_RATIONALISATION_PLAN.md` deleted). **Phase 2
 complete** (`course_pars.csv` backfilled + registered — 3 courses need a decision, see
-below). **Phase 3.1 complete** (prototype briefs below). Phase 3.2 onward not started;
-blocked on Jon trying the Phase 3.2 mockups once built. Temporary working document (CLAUDE.md
-Documentation Rule 3). When Phase 4 is complete, fold the outcome into `DATA_FLOW.md`,
-`webapp/README.md`, `teg_analysis/README.md`, and CLAUDE.md's "Current state & next steps",
-then delete this file (see the wrap-up note at the very end).
+below). **Phase 3.1 + 3.2 complete** (prototype briefs below; all three built as
+interactive mockups at `/mockups/` — `round_entry_grid.html`, `round_entry_wizard.html`,
+`round_entry_player.html` — Playwright-verified to work, no console errors). **Blocked on
+Jon (Phase 3.3):** try the three mockups on a real phone and record the pick under
+"Phase 3.3 decision" below — everything from Phase 3.4 onward depends on it. Temporary
+working document (CLAUDE.md Documentation Rule 3). When Phase 4 is complete, fold the
+outcome into `DATA_FLOW.md`, `webapp/README.md`, `teg_analysis/README.md`, and CLAUDE.md's
+"Current state & next steps", then delete this file (see the wrap-up note at the very end).
 
 **Supersedes `DATA_RATIONALISATION_PLAN.md`'s open investigation.** That file's Phase 3
 options appraisal (Option 3: keep both parquets, drop the CSV mirror) is adopted directly
@@ -496,3 +499,29 @@ invisible until every column is done, and the repetitive middle players are wher
 completed card — and the sticky-keypad/auto-advance mechanic is the least proven), then C
 (the speed play), then B (the safe, low-error fallback and the only one that also suits live
 entry).
+
+## Phase 3.2 mockups (built)
+
+All three built as standalone, fully interactive HTML files under `webapp/mobile_mockups/`,
+served at `/mockups/` (see the "Round entry — pick one" section on the mockups index page).
+Populated with a fake TEG 50 · Round 1, the real 7-player roster (DM, GW, HM, JP, JB, SN,
+AB), and a plausible 18-hole par sequence — nothing is saved, this is throwaway. Verified
+with Playwright (cell/row activation, keypad fill, auto-advance in both traversal modes,
+running totals, hole/player completion) — no JS errors from the mockups themselves (the
+only console noise is the same external Google-Fonts CDN calls every other mockup in this
+folder already makes, which just need a live network to render icons/fonts — same as
+opening any other file in this folder).
+
+- `round_entry_grid.html` — Pattern A, sticky-keypad grid. Includes a Column/Row traversal
+  toggle so both cursor directions from the brief are actually testable.
+- `round_entry_wizard.html` — Pattern B, hole-by-hole wizard. Dot-strip progress, "Next
+  hole" only enables once all 7 players are filled for the current hole.
+- `round_entry_player.html` — Pattern C, player-by-player column. Player chips show
+  progress/done state; completing a player's 18th hole auto-advances to the next
+  incomplete player.
+
+## Phase 3.3 decision
+
+*(Not yet made — try the three mockups above on an actual phone via `/mockups/`, ideally
+simulating real conditions, and record the pick and reasoning here before starting Phase
+3.4.)*

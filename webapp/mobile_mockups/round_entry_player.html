@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0">
+<title>Mockup — Round entry C · Player-by-player column</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0">
+<style>
+:root {
+  --font-body:'Lora', Georgia, serif; --font-data:'Roboto Mono', monospace;
+  --bg:#f4f3ef; --surface:#ffffff; --surface-2:#faf9f6; --text:#1a1a1a; --text-2:#555;
+  --text-muted:#8c8c86; --line:#e7e5e0; --accent:forestgreen; --accent-soft:#F3F7F3; --accent-text:forestgreen;
+  --bar:#ffffff; --bar-line:#e7e5e0; --shadow:0 1px 2px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.04);
+  --key-bg:#ffffff; --key-active:#eef2ee; --row-empty:#faf9f6; --row-filled:#eef4ee;
+  --row-active-ring:forestgreen;
+}
+[data-theme="dark"], :root:has(#mode:checked) {
+  --bg:#131311; --surface:#1d1d1a; --surface-2:#242420; --text:#ececea; --text-2:#b7b6b0;
+  --text-muted:#86857e; --line:#2e2e29; --accent:#57c773; --accent-soft:#1b2a1d; --accent-text:#7ad492;
+  --bar:#191916; --bar-line:#2a2a25; --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+  --key-bg:#1d1d1a; --key-active:#26402a; --row-empty:#1d1d1a; --row-filled:#1b2a1d;
+  --row-active-ring:#57c773;
+}
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; -webkit-user-select:none; user-select:none; }
+html,body { margin:0; height:100%; overflow:hidden; }
+body { font-family:var(--font-body); background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased;
+  display:flex; flex-direction:column; }
+.material-symbols-outlined { font-variation-settings:'opsz' 24,'wght' 400; line-height:1; vertical-align:middle; }
+
+.appbar { flex:0 0 auto; background:var(--bar); border-bottom:1px solid var(--bar-line);
+  padding:calc(10px + env(safe-area-inset-top,0)) 14px 10px; display:flex; align-items:center; gap:10px; }
+.appbar .back { font-size:22px; color:var(--text-2); }
+.appbar .titles { flex:1; min-width:0; }
+.appbar .kicker { font-family:var(--font-data); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-muted); display:block; line-height:1.4; }
+.appbar .title { font-weight:600; font-size:16px; line-height:1.15; }
+
+.chips { flex:0 0 auto; display:flex; gap:8px; overflow-x:auto; -webkit-overflow-scrolling:touch; padding:10px 14px; background:var(--surface-2); border-bottom:1px solid var(--line); }
+.chip { flex:0 0 auto; display:flex; flex-direction:column; align-items:center; gap:2px; padding:7px 12px; border-radius:12px;
+  background:var(--surface); border:1px solid var(--line); min-width:52px; }
+.chip.cur { border:2px solid var(--accent); background:var(--accent-soft); }
+.chip .nm { font-family:var(--font-data); font-size:12px; font-weight:700; }
+.chip .st { font-family:var(--font-data); font-size:9.5px; color:var(--text-muted); }
+.chip.done .st { color:var(--accent-text); }
+.chip .material-symbols-outlined { font-size:14px; color:var(--accent-text); }
+
+.playerhead { flex:0 0 auto; padding:10px 16px 6px; display:flex; align-items:baseline; justify-content:space-between; }
+.playerhead .nm { font-size:19px; font-weight:600; }
+.playerhead .prog { font-family:var(--font-data); font-size:12px; color:var(--text-muted); }
+.playerhead .prog b { color:var(--text); }
+
+.rowswrap { flex:1 1 auto; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:2px 14px 10px; }
+.hrow { display:flex; align-items:center; gap:12px; background:var(--row-empty); border:1px dashed var(--line);
+  border-radius:11px; padding:8px 14px; margin-bottom:6px; }
+.hrow.filled { background:var(--row-filled); border:1px solid transparent; }
+.hrow.active { border:2px solid var(--row-active-ring); background:var(--surface); box-shadow:0 0 0 3px var(--accent-soft); }
+.hrow .h { font-family:var(--font-data); font-size:12px; font-weight:700; color:var(--text-2); width:24px; }
+.hrow .par { font-family:var(--font-data); font-size:11px; color:var(--text-muted); width:44px; }
+.hrow .sp { flex:1; }
+.hrow .sc { font-family:var(--font-data); font-size:17px; font-weight:700; width:30px; text-align:center; color:var(--text-muted); }
+.hrow.filled .sc { color:var(--text); }
+.hrow.sub9 { border-top:2px solid var(--line); margin-top:2px; padding-top:10px; }
+
+.keypad { flex:0 0 auto; background:var(--bar); border-top:1px solid var(--bar-line); padding:8px 10px calc(8px + env(safe-area-inset-bottom,0)); }
+.keypad .krow { display:grid; grid-template-columns:repeat(4,1fr); gap:7px; margin-bottom:7px; }
+.keypad .krow:last-child { margin-bottom:0; }
+.keypad button.k { font-family:var(--font-data); font-size:17px; font-weight:700; background:var(--key-bg); color:var(--text);
+  border:1px solid var(--line); border-radius:11px; padding:13px 0; box-shadow:var(--shadow); }
+.keypad button.k:active { background:var(--key-active); }
+.keypad button.k.clear { color:#c0392b; font-size:13px; }
+.keypad button.k.done { background:var(--accent); color:#fff; border-color:var(--accent); font-size:13px; }
+
+.demobar { position:fixed; top:calc(8px + env(safe-area-inset-top,0)); right:10px; z-index:60; }
+.demobar label { background:var(--surface); color:var(--text-2); border:1px solid var(--line); border-radius:999px;
+  padding:6px 10px; font-family:var(--font-data); font-size:11px; cursor:pointer; box-shadow:var(--shadow); display:inline-flex; align-items:center; gap:5px; }
+.demobar .material-symbols-outlined { font-size:16px; }
+</style>
+</head>
+<body>
+<div class="demobar"><label><input type="checkbox" id="mode" hidden><span class="material-symbols-outlined">contrast</span>Light / Dark</label></div>
+
+<header class="appbar">
+  <span class="material-symbols-outlined back">arrow_back_ios_new</span>
+  <div class="titles"><span class="kicker">TEG 50 &middot; Round 1</span><div class="title">Enter scores</div></div>
+</header>
+
+<div class="chips" id="chips"></div>
+
+<div class="playerhead">
+  <div class="nm" id="ph-name">DM</div>
+  <div class="prog" id="ph-prog"><b>0</b> so far &middot; 0/18 holes</div>
+</div>
+
+<div class="rowswrap" id="rows"></div>
+
+<div class="keypad" id="keypad"></div>
+
+<script>
+const PLAYERS = ['DM','GW','HM','JP','JB','SN','AB'];
+const PARS = [4,3,5,4,4,3,5,4,4, 4,4,3,5,4,3,4,5,4];
+const SIS  = [7,13,1,17,9,15,3,11,5, 8,14,2,18,10,16,4,12,6];
+
+let scores = {}; // "player-hole" -> score
+let currentPlayer = PLAYERS[0];
+let activeHole = 1;
+
+function key(p, h) { return p + '-' + h; }
+function playerCompleteCount(p) { return [...Array(18)].filter((_, i) => scores[key(p, i + 1)] !== undefined).length; }
+function playerTotal(p) {
+  let t = 0;
+  for (let h = 1; h <= 18; h++) { const v = scores[key(p, h)]; if (v !== undefined) t += v; }
+  return t;
+}
+
+function render() {
+  renderChips();
+  document.getElementById('ph-name').textContent = currentPlayer;
+  const n = playerCompleteCount(currentPlayer);
+  document.getElementById('ph-prog').innerHTML = `<b>${n ? playerTotal(currentPlayer) : '–'}</b> so far &middot; ${n}/18 holes`;
+
+  const rows = document.getElementById('rows');
+  rows.innerHTML = '';
+  for (let h = 1; h <= 18; h++) {
+    const v = scores[key(currentPlayer, h)];
+    const cls = ['hrow', v !== undefined ? 'filled' : '', h === activeHole ? 'active' : '', h === 10 ? 'sub9' : ''].join(' ').trim();
+    const row = document.createElement('div');
+    row.className = cls;
+    row.dataset.hole = h;
+    row.innerHTML = `<span class="h">${h}</span><span class="par">Par ${PARS[h - 1]}</span><span class="sp"></span><span class="sc">${v !== undefined ? v : '–'}</span>`;
+    row.addEventListener('click', () => { activeHole = h; render(); });
+    rows.appendChild(row);
+  }
+  const activeEl = rows.querySelector('.hrow.active');
+  if (activeEl) activeEl.scrollIntoView({ block: 'center' });
+
+  renderKeypad();
+}
+
+function renderChips() {
+  const chips = document.getElementById('chips');
+  chips.innerHTML = PLAYERS.map(p => {
+    const n = playerCompleteCount(p);
+    const done = n === 18;
+    const cls = ['chip', p === currentPlayer ? 'cur' : '', done ? 'done' : ''].join(' ').trim();
+    return `<div class="${cls}" data-player="${p}">
+      <span class="nm">${p}</span>
+      <span class="st">${done ? '<span class=\"material-symbols-outlined\">check_circle</span>' : n ? n + '/18' : 'not started'}</span>
+    </div>`;
+  }).join('');
+  chips.querySelectorAll('.chip').forEach(c => {
+    c.addEventListener('click', () => {
+      currentPlayer = c.dataset.player;
+      activeHole = firstIncompleteHole(currentPlayer);
+      render();
+    });
+  });
+}
+
+function firstIncompleteHole(p) {
+  for (let h = 1; h <= 18; h++) { if (scores[key(p, h)] === undefined) return h; }
+  return 18;
+}
+
+function renderKeypad() {
+  const kp = document.getElementById('keypad');
+  kp.innerHTML = `
+    <div class="krow"><button class="k" data-v="1">1</button><button class="k" data-v="2">2</button><button class="k" data-v="3">3</button><button class="k" data-v="4">4</button></div>
+    <div class="krow"><button class="k" data-v="5">5</button><button class="k" data-v="6">6</button><button class="k" data-v="7">7</button><button class="k" data-v="8">8</button></div>
+    <div class="krow"><button class="k" data-v="9">9</button><button class="k" data-v="10">10</button><button class="k" data-v="11">11</button><button class="k" data-v="12">12</button></div>
+    <div class="krow"><button class="k clear" data-v="clear">Clear</button><button class="k done" data-v="skip" style="grid-column:span 3;">Skip to next player →</button></div>`;
+  kp.querySelectorAll('button.k[data-v]:not(.done)').forEach(btn => btn.addEventListener('click', () => setScore(btn.dataset.v)));
+  kp.querySelector('.done').addEventListener('click', () => jumpToNextIncompletePlayer());
+}
+
+function setScore(v) {
+  if (v === 'clear') { delete scores[key(currentPlayer, activeHole)]; render(); return; }
+  scores[key(currentPlayer, activeHole)] = parseInt(v);
+  if (activeHole < 18) {
+    activeHole += 1;
+    render();
+  } else {
+    // Player's card is complete -> auto-advance to the next player who still has holes left.
+    jumpToNextIncompletePlayer();
+  }
+}
+
+function jumpToNextIncompletePlayer() {
+  const idx = PLAYERS.indexOf(currentPlayer);
+  for (let i = 1; i <= PLAYERS.length; i++) {
+    const cand = PLAYERS[(idx + i) % PLAYERS.length];
+    if (playerCompleteCount(cand) < 18) { currentPlayer = cand; activeHole = firstIncompleteHole(cand); render(); return; }
+  }
+  render(); // everyone done
+}
+
+render();
+</script>
+</body>
+</html>
