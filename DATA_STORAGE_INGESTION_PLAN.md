@@ -55,20 +55,56 @@ columns (all derived from Par/SI) may be computed against the wrong values. That
 competition history — trophies, records — so correcting it is a decision, not something to
 fix silently.
 
+**Actually computed the impact (2026-07-07), recomputing GrossVP/HCStrokes/Net/NetVP/
+Stableford for both rounds under the majority Par/SI and comparing to what's recorded:**
+
+- **Gross scores/rankings: zero effect, by construction.** Raw strokes (`Sc`) never
+  depended on Par — total gross per round, and every gross ranking/record derived from it,
+  is identical either way.
+- **Net (the actual competition format for both TEGs — both predate TEG8's switch to
+  Stableford): zero effect.** Every player's round `Net` and `NetVP` total is unchanged
+  (0.0 diff for all 11 players across both rounds). This isn't a coincidence: total
+  handicap strokes received in a round only depends on *how many* holes have `SI ≤ HC%18`,
+  which is exactly `HC%18` regardless of which specific holes carry which SI (SI is always
+  a 1–18 permutation) — so **TEG-level trophy/spoon standings for TEG 2 and TEG 7 are
+  unaffected**, whichever way this is decided.
+- **Boavista (TEG 2 R3): near-nonexistent effect.** PAR was already identical to the
+  majority (only SI differed) — 0 hole-level GrossVP relabels, Stableford moves by 1 point
+  for one player (GW, 31→32), no rank-order changes anywhere.
+- **Praia D'El Rey (TEG 7 R1): real, concrete effect on records (not rankings).**
+  72 of 108 hole-level scores get relabelled (par/birdie/bogey shuffle around), because the
+  outlier round's Par sequence is the *majority's back-9 sequence played as the front-9 and
+  vice versa* — i.e. this specific round's front/back 9 appear to have been swapped at
+  entry. Two concrete downstream effects:
+  - **Eagles: 0 → 9 for this one round.** There are only **4 eagles in the entire 18-TEG
+    history today** (David M, John P, Jon B, Stuart N — 1 each). Correcting this round
+    alone would add 9 more (HM ×3, JB ×2, DM ×2, AB ×1, SN ×1), more than tripling the
+    all-time eagle count and putting DM/HM/JB in a 3-way tie for most career eagles instead
+    of a 4-way tie at 1 each.
+  - **Stableford record: would be broken.** The current all-time single-round Stableford
+    record is 51 (HM, TEG 7 Round **2**). Correcting Round 1 would put HM's Round 1 total at
+    52 — a new all-time record, and one held by the same player across two rounds of the
+    same tournament.
+  - **Worth a sanity check either way:** under the correction, **three different players
+    (JB, AB, HM) all eagle hole 12 in the same round** — three simultaneous eagles on one
+    hole is the kind of thing that's usually memorable/talked about, and nothing in the
+    record currently reflects it. That's not proof the correction is wrong, but it's a
+    reason to actually verify against the course's real card rather than trust majority
+    vote alone for this specific course.
+
 **Options:**
-- **(Recommended) Leave it alone unless it changes an actual result.** Check whether
-  correcting either round's Par/SI would flip who won that round/TEG or break/create any
-  record — if not, the cost of touching 16-year-old settled results probably isn't worth
-  it even if the recorded numbers were technically off.
-- Correct the two rounds' PAR/SI in `all-scores.parquet` to match the course's real card
-  (via `/admin/edit-data` → View Processed Data won't do it — this needs a raw edit to
-  all-scores, which isn't currently exposed as an editable file; would need a small script
-  or a one-off admin action) and let `execute_data_update`'s recompute chain (or a manual
-  rerun) fix the derived columns. Higher effort, only worth it if it actually changes a
-  result.
-- Ignore it — it's 16 years old (Boavista) / 12 years old (Praia D'El Rey), Par/SI errors
-  of this shape mostly affect Stableford/handicap-strokes at the margin, not gross
-  finishing order.
+- **(Recommended) Verify Praia D'El Rey's actual routing/Par card before deciding** — the
+  eagle/record impact is large enough, and the "3 simultaneous eagles" pattern odd enough,
+  that this one is worth 10 minutes of external verification rather than a judgement call
+  from the data alone. Boavista's impact is small enough not to bother.
+- Correct anyway, on the majority-vote evidence already gathered (5 of 6 rounds agree cleanly
+  for Praia D'El Rey; the front/back-9-swap pattern is a very plausible single-round entry
+  error). Needs a raw edit to `all-scores.parquet` for just these two rounds' Par/SI
+  columns (not currently an exposed admin flow — would need a small one-off script) and a
+  recompute of the derived columns/caches.
+- Leave it as-is. TEG standings are provably unaffected either way, so the only real cost
+  of leaving it is under-counting historical eagles and the Stableford record sitting one
+  round lower than it "should."
 
 ---
 
