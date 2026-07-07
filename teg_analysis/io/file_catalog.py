@@ -76,7 +76,10 @@ DATA_FILE_CATALOG: list[dict] = [
                 "(scripts/backfill_course_pars.py, majority vote where one round "
                 "disagreed with the rest). Used to prefill scorecards/round entry. "
                 "Estoril is deliberately incomplete (a genuine tie, only 2 rounds "
-                "ever played) pending manual review.",
+                "ever played) pending manual review. Praia D'El Rey is deliberately "
+                "excluded entirely -- confirmed (not a data error) that it's "
+                "sometimes played back-9-first, so there's no single per-hole Par/SI "
+                "to backfill; see scripts/backfill_course_pars.py.",
         "updated_by": "Edit inline on the Edit data page. New/re-rated courses added here.",
         "edit_slug": "course_pars",
     },

@@ -3,8 +3,9 @@
 **Status (2026-07-07): Phase 0 complete (see [findings](#phase-0-findings)). Phase 1
 complete** (1.1-1.5 all done: backups on add, `backup_file()` volume-copy fix, concurrency
 lock, CSV mirrors retired, docs swept, `DATA_RATIONALISATION_PLAN.md` deleted). **Phase 2
-complete** (`course_pars.csv` backfilled + registered; Boavista/Praia D'El Rey resolved by
-majority vote, only Estoril needs a decision — see [Decisions needed](#decisions-needed-for-jon)).
+complete** (`course_pars.csv` backfilled + registered; Boavista resolved by majority vote,
+Praia D'El Rey permanently excluded — genuinely variable routing, not an error, confirmed
+by Jon — only Estoril needs a decision — see [Decisions needed](#decisions-needed-for-jon)).
 **Phase 3.1 + 3.2 complete** (prototype briefs below; all three built as interactive
 mockups at `/mockups/` — `round_entry_grid.html`, `round_entry_wizard.html`,
 `round_entry_player.html` — Playwright-verified to work, no console errors). **Blocked on
@@ -17,15 +18,15 @@ outcome into `DATA_FLOW.md`, `webapp/README.md`, `teg_analysis/README.md`, and C
 ## Decisions needed for Jon
 
 Everything else in this document that didn't require a judgement call has been executed
-(Phases 0-2, 3.1-3.2). These two are genuine decisions — recommendations given, but not
-acted on.
+(Phases 0-2, 3.1-3.2). Item 1 below is still open. Item 2 was a candidate decision that
+turned out not to be one — kept here as a resolved record so it doesn't get re-litigated.
 
 ### 1. Estoril Par/SI — a real tie, not enough data to resolve automatically
 
 Only 2 rounds have ever been played at Estoril (TEG 15 Round 1, 2022; TEG 16 Round 4,
 2023), and they disagree on Par and/or SI for 15 of 18 holes — e.g. Hole 5: TEG 15 says
 Par 3/SI 3, TEG 16 says Par 5/SI 17. With only one round on each side there's no majority
-to lean on, unlike Boavista/Praia D'El Rey below.
+to lean on.
 
 **Options:**
 - **(Recommended) Look up Estoril's current official scorecard** (club website or a quick
@@ -39,72 +40,41 @@ to lean on, unlike Boavista/Praia D'El Rey below.
 Once decided: add Estoril's 18 rows directly via `/admin/edit-data?file=course_pars`
 (now registered), or update `scripts/backfill_course_pars.py`'s Estoril handling and rerun.
 
-### 2. Two historical rounds may have wrong Par/SI recorded in `all-scores.parquet`
+### 2. Two apparent Par/SI "conflicts" — RESOLVED, not data errors (Jon, 2026-07-07)
 
-While backfilling `course_pars.csv`, the majority-vote resolution surfaced something
-outside course_pars' scope: **TEG 2 Round 3** (Boavista, 18/05/2009) and **TEG 7 Round 1**
-(Praia D'El Rey, 02/10/2014) each disagree with *every other round ever played at that
-course* on **all 18 holes simultaneously** — not a couple of holes, all of them. That's a
-strong signature of a single mis-recorded round (wrong reference card used, or a
-transcription mixup) rather than a genuine course re-rating; `course_pars.csv` was built
-using the majority values and treats these two rounds as the outliers.
+While backfilling `course_pars.csv`, majority-vote resolution flagged two rounds that
+disagree with every other round ever played at their course on **all 18 holes
+simultaneously**: **TEG 2 Round 3** (Boavista, 18/05/2009) and **TEG 7 Round 1** (Praia
+D'El Rey, 02/10/2014). Before assuming these were data-entry errors, computed the actual
+impact of "correcting" them (recomputing GrossVP/HCStrokes/Net/NetVP/Stableford under the
+majority Par/SI and comparing to what's recorded) — see the full breakdown in git history
+(commit `e1b6331`) if useful context is ever needed. Headline: gross scores/rankings and
+TEG-level trophy/spoon standings are mathematically unaffected either way (net totals are
+provably invariant to which Par/SI permutation is used); the only real effect would be on
+career eagle counts and the all-time single-round Stableford record for Praia D'El Rey
+specifically.
 
-**This wasn't touched** — `all-scores.parquet` still has whatever Par/SI those two rounds
-were originally recorded with, which means their `GrossVP`, `NetVP`, and `Stableford`
-columns (all derived from Par/SI) may be computed against the wrong values. That's real
-competition history — trophies, records — so correcting it is a decision, not something to
-fix silently.
+**Then Jon corrected the premise: Praia D'El Rey is genuinely, legitimately sometimes
+played back-9-first — this is not a data error.** TEG 7 Round 1's recorded Par/SI is very
+likely *correct as entered* for however that round was actually played that day; the
+"conflict" is real course variation, not a mistake. Decision, final:
 
-**Actually computed the impact (2026-07-07), recomputing GrossVP/HCStrokes/Net/NetVP/
-Stableford for both rounds under the majority Par/SI and comparing to what's recorded:**
+- **`all-scores.parquet` is not touched, for either round.** No correction was or will be
+  applied. Current eagle count (4, one each for David M/John P/Jon B/Stuart N) and the
+  all-time single-round Stableford record (51, HM, TEG 7 Round 2) stand as-is.
+- **Praia D'El Rey is permanently excluded from `course_pars.csv`'s per-hole Par/SI
+  backfill** (`scripts/backfill_course_pars.py`'s `KNOWN_VARIABLE_ROUTING`) — there is no
+  single canonical Par/SI-by-hole-number for this course, so there's nothing to prefill.
+  Future round-entry (Phase 3+) will need manual Par/SI entry for this course; a
+  two-routing-variant prefill would be a nice later enhancement but is out of scope now.
+- **Boavista's SI difference is not being investigated further** (Jon: "just ignore the
+  Boavista SI diffs") — the majority-vote value already in `course_pars.csv` (SI only;
+  Par already matched) stands as a reasonable, low-stakes default. Nothing else to do here.
 
-- **Gross scores/rankings: zero effect, by construction.** Raw strokes (`Sc`) never
-  depended on Par — total gross per round, and every gross ranking/record derived from it,
-  is identical either way.
-- **Net (the actual competition format for both TEGs — both predate TEG8's switch to
-  Stableford): zero effect.** Every player's round `Net` and `NetVP` total is unchanged
-  (0.0 diff for all 11 players across both rounds). This isn't a coincidence: total
-  handicap strokes received in a round only depends on *how many* holes have `SI ≤ HC%18`,
-  which is exactly `HC%18` regardless of which specific holes carry which SI (SI is always
-  a 1–18 permutation) — so **TEG-level trophy/spoon standings for TEG 2 and TEG 7 are
-  unaffected**, whichever way this is decided.
-- **Boavista (TEG 2 R3): near-nonexistent effect.** PAR was already identical to the
-  majority (only SI differed) — 0 hole-level GrossVP relabels, Stableford moves by 1 point
-  for one player (GW, 31→32), no rank-order changes anywhere.
-- **Praia D'El Rey (TEG 7 R1): real, concrete effect on records (not rankings).**
-  72 of 108 hole-level scores get relabelled (par/birdie/bogey shuffle around), because the
-  outlier round's Par sequence is the *majority's back-9 sequence played as the front-9 and
-  vice versa* — i.e. this specific round's front/back 9 appear to have been swapped at
-  entry. Two concrete downstream effects:
-  - **Eagles: 0 → 9 for this one round.** There are only **4 eagles in the entire 18-TEG
-    history today** (David M, John P, Jon B, Stuart N — 1 each). Correcting this round
-    alone would add 9 more (HM ×3, JB ×2, DM ×2, AB ×1, SN ×1), more than tripling the
-    all-time eagle count and putting DM/HM/JB in a 3-way tie for most career eagles instead
-    of a 4-way tie at 1 each.
-  - **Stableford record: would be broken.** The current all-time single-round Stableford
-    record is 51 (HM, TEG 7 Round **2**). Correcting Round 1 would put HM's Round 1 total at
-    52 — a new all-time record, and one held by the same player across two rounds of the
-    same tournament.
-  - **Worth a sanity check either way:** under the correction, **three different players
-    (JB, AB, HM) all eagle hole 12 in the same round** — three simultaneous eagles on one
-    hole is the kind of thing that's usually memorable/talked about, and nothing in the
-    record currently reflects it. That's not proof the correction is wrong, but it's a
-    reason to actually verify against the course's real card rather than trust majority
-    vote alone for this specific course.
-
-**Options:**
-- **(Recommended) Verify Praia D'El Rey's actual routing/Par card before deciding** — the
-  eagle/record impact is large enough, and the "3 simultaneous eagles" pattern odd enough,
-  that this one is worth 10 minutes of external verification rather than a judgement call
-  from the data alone. Boavista's impact is small enough not to bother.
-- Correct anyway, on the majority-vote evidence already gathered (5 of 6 rounds agree cleanly
-  for Praia D'El Rey; the front/back-9-swap pattern is a very plausible single-round entry
-  error). Needs a raw edit to `all-scores.parquet` for just these two rounds' Par/SI
-  columns (not currently an exposed admin flow — would need a small one-off script) and a
-  recompute of the derived columns/caches.
-- Leave it as-is. TEG standings are provably unaffected either way, so the only real cost
-  of leaving it is under-counting historical eagles and the Stableford record sitting one
-  round lower than it "should."
+**If this ever resurfaces:** it isn't a bug and doesn't need re-investigating. Praia D'El
+Rey's Par/SI genuinely varies by which nine was played first that day — check
+`round_info.csv`/course notes for that specific TEG+Round if the routing for a given visit
+ever needs to be known, rather than assuming one of the two recorded variants is "wrong."
 
 ---
 
@@ -258,10 +228,12 @@ exactly, suggesting a routing swap between visits, not noise). **Verdict for Pha
 backfill script must surface these three for manual resolution as designed — do not
 auto-resolve. No course has fewer than 18 holes represented; no orphaned rows.
 
-**Update from Phase 2's deeper TEG+Round breakdown:** Boavista and Praia D'El Rey's
-"conflicts" turned out to be a *single outlier round* disagreeing with every other round on
-all 18 holes, not a genuine multi-way split — resolved by majority vote (see Phase 2
-below). Only Estoril is a true, unresolvable tie. See
+**Update from Phase 2's deeper TEG+Round breakdown:** Boavista's "conflict" was a *single
+outlier round* disagreeing with every other round on all 18 holes — resolved by majority
+vote (see Phase 2 below). **Praia D'El Rey's original hypothesis above was right** — Jon
+confirmed the course is genuinely sometimes played back-9-first; it's excluded from
+`course_pars.csv` entirely rather than "resolved," since there's no single correct
+per-hole Par/SI to backfill. Only Estoril is a true, unresolvable tie. See
 [Decisions needed for Jon](#decisions-needed-for-jon).
 
 ### 0.3 — CSV mirror readers: clear outside Streamlit

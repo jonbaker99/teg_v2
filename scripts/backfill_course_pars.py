@@ -3,7 +3,7 @@
 
 Joins all-scores.parquet to round_info.csv on TEGNum+Round to get Course, then
 checks each Course+Hole for consistent Par/SI across every historical round
-played there. Three outcomes per (course, hole):
+played there. Outcomes per (course, hole):
 
   - Clean: every round agrees -> written straight to course_pars.csv.
   - Majority: most rounds agree and a small number of rounds disagree on
@@ -14,6 +14,11 @@ played there. Three outcomes per (course, hole):
     bigger, separate decision).
   - No majority (a genuine tie): left out of course_pars.csv and reported --
     needs a human decision (see DATA_STORAGE_INGESTION_PLAN.md Phase 2).
+  - Known variable routing (see KNOWN_VARIABLE_ROUTING below): the course is
+    sometimes played with the front/back 9 swapped, so there is no single
+    correct Par/SI-per-hole-number to backfill. Deliberately excluded, not
+    "unresolved" -- do not try to reconcile these via majority vote or any
+    other automatic method. Confirmed with Jon, not a data-entry error.
 
 Run from the repo root:
     python scripts/backfill_course_pars.py
@@ -28,6 +33,20 @@ ALL_SCORES = ROOT / "data" / "all-scores.parquet"
 ROUND_INFO = ROOT / "data" / "round_info.csv"
 OUTPUT = ROOT / "data" / "course_pars.csv"
 
+# Courses confirmed (not guessed) to sometimes be played with the front/back 9
+# swapped -- so a per-hole-number Par/SI conflict here is real variation, not
+# an error, and must never be "resolved" to one canonical set. Confirmed by
+# Jon, 2026-07-07, re: Praia D'El Rey specifically (see
+# DATA_STORAGE_INGESTION_PLAN.md "Decisions needed for Jon" -> resolved).
+KNOWN_VARIABLE_ROUTING = {
+    "Praia D'El Rey": (
+        "Sometimes played back-9-first. The apparent 18-hole Par/SI conflict "
+        "(TEG 7 Round 1 vs every other round there) is real variation, not a "
+        "data-entry error -- do not attempt to resolve it, and do not "
+        "'correct' all-scores.parquet for that round."
+    ),
+}
+
 
 def build_course_pars() -> tuple[pd.DataFrame, dict, dict]:
     """Return (clean_df, overrides, unresolved).
@@ -35,7 +54,8 @@ def build_course_pars() -> tuple[pd.DataFrame, dict, dict]:
     overrides maps {course: {hole: {'used': (par, si), 'outliers': [(teg, round, par, si), ...]}}}
     for holes resolved by majority vote.
     unresolved maps {course: {hole: {'par': [...], 'si': [...]}}} for holes with
-    no clear majority.
+    no clear majority. Courses in KNOWN_VARIABLE_ROUTING are skipped entirely
+    (never appear in clean_rows, overrides, or unresolved).
     """
     scores = pd.read_parquet(ALL_SCORES)
     round_info = pd.read_csv(ROUND_INFO)
@@ -50,6 +70,7 @@ def build_course_pars() -> tuple[pd.DataFrame, dict, dict]:
         raise SystemExit(
             f"Rows with no matching round_info -- resolve before backfilling:\n{missing}"
         )
+    merged = merged[~merged["Course"].isin(KNOWN_VARIABLE_ROUTING)]
 
     clean_rows = []
     overrides: dict = {}
@@ -91,6 +112,14 @@ def main() -> None:
     clean_df, overrides, unresolved = build_course_pars()
     clean_df.to_csv(OUTPUT, index=False)
     print(f"Wrote {len(clean_df)} rows ({clean_df['Course'].nunique()} courses) to {OUTPUT}")
+
+    if KNOWN_VARIABLE_ROUTING:
+        print(
+            f"\n{len(KNOWN_VARIABLE_ROUTING)} course(s) deliberately excluded -- known to be "
+            "played with variable routing, not a data error, do not attempt to resolve:"
+        )
+        for course, note in KNOWN_VARIABLE_ROUTING.items():
+            print(f"\n  {course}: {note}")
 
     if overrides:
         print(
