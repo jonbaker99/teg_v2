@@ -1,9 +1,10 @@
 # Data storage & score ingestion — architecture review and implementation plan
 
-**Status: Phase 0 not started.** Temporary working document (CLAUDE.md Documentation
-Rule 3). When Phase 4 is complete, fold the outcome into `DATA_FLOW.md`, `webapp/README.md`,
-`teg_analysis/README.md`, and CLAUDE.md's "Current state & next steps", then delete this
-file (see the wrap-up note at the very end).
+**Status: Phase 0 complete (2026-07-07) — see [findings](#phase-0-findings) below. Phase 1
+not started.** Temporary working document (CLAUDE.md Documentation Rule 3). When Phase 4 is
+complete, fold the outcome into `DATA_FLOW.md`, `webapp/README.md`, `teg_analysis/README.md`,
+and CLAUDE.md's "Current state & next steps", then delete this file (see the wrap-up note at
+the very end).
 
 **Supersedes `DATA_RATIONALISATION_PLAN.md`'s open investigation.** That file's Phase 3
 options appraisal (Option 3: keep both parquets, drop the CSV mirror) is adopted directly
@@ -105,6 +106,73 @@ Phase 0.
 Each phase below ends with a **kick-off prompt** — copy it as-is to start a fresh session/agent
 on that step. Prompts are self-contained: they point at this file for full context rather than
 repeating it, so keep this file intact until the final wrap-up.
+
+## Phase 0 findings
+
+Run 2026-07-07, all read-only / against a scratch copy of `data/` (real repo `data/` was
+never touched — verified by monkeypatching `teg_analysis.io.volume_operations._REPO_ROOT`
+to a throwaway directory rather than running in place).
+
+### 0.1 — Full pipeline timing: **16.5s median — over the ~15s synchronous threshold**
+
+A full `execute_data_update` dry run (synthetic 18-hole round, 7 players, TEG 50 sandbox),
+median of 5 runs: **16.52s** (range 16.23s–17.14s). Breakdown by sub-step:
+
+| Step | Time | Share |
+|---|---|---|
+| `update_commentary_caches` | 9.61s | 59% |
+| `update_bestball_cache` | 5.00s | 30% |
+| `update_all_data` | 1.34s | 8% |
+| everything else (read/write all-scores, duplicate check, handicap merge, status, streaks) | <0.15s combined | ~1% |
+
+**Root cause:** both `update_commentary_caches` and `update_bestball_cache`
+(`teg_analysis/analysis/pipeline.py`) call `load_all_data(exclude_teg_50=True,
+exclude_incomplete_tegs=False)` and recompute their outputs **from the entire historical
+dataset** on every single add/delete — not incrementally from the changed round. Cost is
+O(full history), currently ~17 TEGs, and will keep growing every year.
+
+**Caveat:** this ran in the dev sandbox container, whose CPU may not match Railway's
+production container — treat the absolute number as indicative, not exact. The *relative*
+breakdown (commentary + bestball dominate, everything else is noise) is the reliable part
+and doesn't depend on hardware.
+
+**Verdict for Phase 3:** this **does not clear** the synchronous-submit assumption. A naive
+mobile submit button would hang for ~15-20s (worse on a flaky course/clubhouse connection).
+Two paths, both worth putting to Opus at Phase 3.4 rather than deciding here:
+1. **Background-task pattern** — submit returns immediately, UI polls/HTMX-polls for
+   completion, as the original plan anticipated for this scenario.
+2. **Make the two caches incremental** — a more invasive change to
+   `update_commentary_caches`/`update_bestball_cache` (recompute only affected
+   TEG/rounds, not full history), which would likely bring the whole pipeline back under
+   ~2s and remove the need for a background-task UX at all. Not scoped or estimated here;
+   flag as an option for Phase 3.4 to weigh, since it's a bigger change than a UI pattern
+   swap but fixes the actual growth problem (today's ~15s only gets worse every TEG).
+
+### 0.2 — Par/SI consistency: 23/26 courses clean, 3 need manual resolution
+
+See full breakdown above (Boavista: SI re-rated at some point, PAR stable; Estoril: mixed
+PAR+SI conflicts on most holes; Praia D'El Rey: front/back 9 conflict pattern mirrors
+exactly, suggesting a routing swap between visits, not noise). **Verdict for Phase 2:** the
+backfill script must surface these three for manual resolution as designed — do not
+auto-resolve. No course has fewer than 18 holes represented; no orphaned rows.
+
+### 0.3 — CSV mirror readers: clear outside Streamlit
+
+`data/all-data.csv` is actively **written** by `teg_analysis/analysis/data_update.py` and by
+Streamlit's parallel pipeline, but **read by nothing** (webapp, scripts, ad_hoc_analysis,
+tests all clean). `data/all-scores.csv` is fully dead — no live code reads or writes it;
+the only references are stale docstring/log text in `teg_analysis/core/data_transforms.py`
+and `streamlit/utils.py`, whose one real caller (`streamlit/1000Data update.py`) actually
+passes the **parquet** paths, not the CSV. **Verdict for Phase 1.4:** clear to proceed —
+nothing outside Streamlit reads either mirror file.
+
+**Minor aside (not a Phase 0 deliverable, noted for later):** `check_for_complete_and_duplicate_data`
+exists as two different functions with different signatures in
+`teg_analysis/core/data_transforms.py` (path-based, Streamlit-oriented) and
+`teg_analysis/io/file_operations.py` (DataFrame-based) — a naming collision worth a
+cleanup pass sometime, unrelated to this plan.
+
+---
 
 ## Phase 0 — Verification spikes (no production changes)
 
@@ -242,7 +310,7 @@ via `/mockups/` and recording a decision in this file.)*
 
 | # | Step | Model | Why | Risk / rollback |
 |---|------|-------|-----|-------------------|
-| 3.4 | **Design note** (temporary .md per CLAUDE.md rule 3) covering: the chosen interaction pattern from 3.3; draft JSON schema (TEGNum, Round, Course, per-player-per-hole scores, Par/SI overrides, updated-at); draft lifecycle (create → autosave → submit → archive/delete; one active draft per TEG+Round); the wide-frame builder contract (must byte-match the layout `process_google_sheets_data` consumes); route surface (`GET /admin/enter-round`, `.../autosave`, `.../preview`, `.../submit`, draft list/delete); offline strategy (server draft = source of truth, `localStorage` mirror replayed on reconnect, last-write-wins is fine for a single admin); how preview/submit reuse existing partials; failure UX (regen error mid-submit, lock contention from 1.3). Module placement: draft store + builder in new `teg_analysis/analysis/round_entry.py` (UI-agnostic), routes in new `webapp/routes/admin_entry.py` (`admin.py` is already 842 lines). | **Opus** | New module + API design feeding the highest-value data path; a wrong call here (drafts entangled with the canonical store, or a builder diverging from the sheet contract) is expensive to unwind. | — |
+| 3.4 | **Design note** (temporary .md per CLAUDE.md rule 3) covering: the chosen interaction pattern from 3.3; **the submit UX given Phase 0.1's finding that the full pipeline is ~16.5s median, not the hoped-for <15s** — decide between a background-task/poll pattern or scoping in the incremental-cache-regen option (see [0.1 findings](#phase-0-findings)) as a prerequisite; draft JSON schema (TEGNum, Round, Course, per-player-per-hole scores, Par/SI overrides, updated-at); draft lifecycle (create → autosave → submit → archive/delete; one active draft per TEG+Round); the wide-frame builder contract (must byte-match the layout `process_google_sheets_data` consumes); route surface (`GET /admin/enter-round`, `.../autosave`, `.../preview`, `.../submit`, draft list/delete); offline strategy (server draft = source of truth, `localStorage` mirror replayed on reconnect, last-write-wins is fine for a single admin); how preview/submit reuse existing partials; failure UX (regen error mid-submit, lock contention from 1.3). Module placement: draft store + builder in new `teg_analysis/analysis/round_entry.py` (UI-agnostic), routes in new `webapp/routes/admin_entry.py` (`admin.py` is already 842 lines). | **Opus** | New module + API design feeding the highest-value data path; a wrong call here (drafts entangled with the canonical store, or a builder diverging from the sheet contract) is expensive to unwind — now compounded by a real submit-latency decision to make. | — |
 | 3.5 | Implement `teg_analysis/analysis/round_entry.py`: draft save/load/list/delete under `data/drafts/` (volume on Railway, `data/` locally; excluded from GitHub sync), `build_wide_frame(draft) -> pd.DataFrame`, validation helpers (score bounds, completeness per player). | Sonnet | New functions to a written spec, following existing io patterns. | Drafts are ephemeral; no canonical data touched. |
 | 3.6 | Routes (`webapp/routes/admin_entry.py`, registered in `webapp/app.py`): form page prefilled from `in_progress_tegs.csv`/`round_info.csv`/`course_pars.csv`; HTMX autosave; preview posts the built frame through `process_google_sheets_data` → duplicate analysis → existing `partials/admin_update_preview.html`; submit → `execute_data_update` (with 1.1 backups + 1.3 lock) → `deps.clear_all_data_caches()` → existing result partial. `find_tegs_missing_round_info` guard links to `/admin/edit-data`. | Sonnet | Straightforward new endpoints copying `admin.py`'s established auth/ctx/partial patterns; hard logic lives in already-designed functions. | Submit path writes canonical data — but only via the identical, now-backed-up pipeline. |
 | 3.7 | Template + styling for the chosen pattern from 3.3: `admin_enter_round.html`, mobile-first per `webapp/MOBILE_PLAN.md`/`static/mobile.css` conventions (≤640px, desktop untouched); `localStorage` mirror + replay script; disabled-submit while in flight. Build directly on the winning `webapp/mobile_mockups/round_entry_*.html` prototype rather than starting fresh. | Sonnet | Frontend work with an already-chosen, already-prototyped design to follow. | None. |
@@ -333,8 +401,11 @@ when Jon says the native flow has proven itself.)*
 
 ## Assumptions to verify before committing (consolidated)
 
-1. Full derived-cache regen time on Railway's container (0.1) — determines synchronous vs
-   background submit for Phase 3.
+1. ~~Full derived-cache regen time~~ — **resolved (0.1): 16.5s median in the dev sandbox,
+   dominated by full-history recompute in `update_commentary_caches`/`update_bestball_cache`.
+   Exceeds the synchronous threshold; Phase 3.4 must pick background-task vs
+   incremental-regen.** Still worth a quick real-Railway timing check once deployed, since
+   the dev sandbox's CPU may not match production.
 2. Railway volume persistence/snapshot behaviour and `RAILWAY_GIT_BRANCH` presence (0.4).
 3. Par/SI historical consistency per course (0.2) — sizes the Phase 2 backfill effort.
 4. No non-Streamlit readers of the CSV mirrors (0.3) — gates Phase 1.4.
