@@ -65,9 +65,6 @@ pip install -r requirements.txt
 3. **REST API** — build proper `/api` layer powered by `teg_analysis`. Goal: expose the analysis layer over HTTP so any client (scripts, mobile, other frontends) can access it without needing Python. Currently a placeholder in `teg_analysis/api/`.
 4. **Retire Streamlit** — long-term goal once REST API + new webapp are production-ready.
 
-### To investigate
-- **Data file rationalisation** — `all-data.parquet` (53 cols, used by `teg_analysis`) and `all-scores.parquet` (17 cols, used by Streamlit) are both hole-level but differ in columns. Unclear if they should be one source. Investigate before making changes to either. See `DATA_FLOW.md`.
-
 ## Pandas 2.x compatibility
 
 The Railway deployment runs pandas 2.x, which has three breaking changes that have caused production errors. All are fixed; note the patterns to avoid when adding code.
@@ -160,6 +157,13 @@ The project has two distinct architectural phases. **The Streamlit app is the or
 4. **`ad_hoc_analysis/`** — Jupyter notebooks for exploratory / one-off analysis. Calls `teg_analysis/` directly. Start with `quickstart.ipynb`.
 
 For Streamlit internals (app structure, page organisation, caching, data loading, GitHub integration), see `streamlit/README.md`. For the full data pipeline (storage → I/O → loader → aggregation → webapp), see `DATA_FLOW.md`.
+
+**Data storage decision (2026-07-07):** the Railway volume + GitHub-commit-as-sync-of-record
+pattern is kept (not replaced by a database) — at this dataset size it already gives an
+atomic-commit audit trail, off-host durability, and the local-Mac sync workflow essentially
+for free. `all-data.parquet`/`all-scores.parquet` stay as two stored files (master →
+derived, not two independent sources); the redundant `all-data.csv` mirror was retired. Full
+review and phased hardening/mobile-ingestion plan: `DATA_STORAGE_INGESTION_PLAN.md`.
 
 ## Design Philosophy
 

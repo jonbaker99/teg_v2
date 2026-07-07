@@ -37,13 +37,15 @@
     <button class="btn-action"
             hx-post="/admin/data-update/execute" hx-target="#preview" hx-swap="innerHTML"
             hx-vals='{"sheet": "{{ sheet }}", "worksheet": "{{ worksheet }}", "mode": "overwrite"}'
-            hx-confirm="Overwrite the existing scores with the sheet's values?">
+            hx-confirm="Overwrite the existing scores with the sheet's values?"
+            hx-disabled-elt="this">
       Overwrite existing
     </button>
     <button class="btn-secondary"
             hx-post="/admin/data-update/execute" hx-target="#preview" hx-swap="innerHTML"
             hx-vals='{"sheet": "{{ sheet }}", "worksheet": "{{ worksheet }}", "mode": "new_only"}'
-            hx-confirm="Add only the holes that aren't already present?">
+            hx-confirm="Add only the holes that aren't already present?"
+            hx-disabled-elt="this">
       Add new only
     </button>
   </div>
@@ -52,7 +54,8 @@
     <button class="btn-action"
             hx-post="/admin/data-update/execute" hx-target="#preview" hx-swap="innerHTML"
             hx-vals='{"sheet": "{{ sheet }}", "worksheet": "{{ worksheet }}", "mode": "append"}'
-            hx-confirm="Save this round and commit to GitHub?">
+            hx-confirm="Save this round and commit to GitHub?"
+            hx-disabled-elt="this">
       Confirm &amp; save
     </button>
   </div>

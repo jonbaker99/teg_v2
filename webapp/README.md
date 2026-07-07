@@ -46,8 +46,9 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   `/admin/data-update/execute` (HTMX).
 - **Flow:** load the "TEG Round Input" Google Sheet → preview round totals +
   hole-level duplicate check → confirm (append / overwrite / add-new-only) →
-  `execute_data_update` writes `all-scores` / `all-data`, regenerates the
-  streaks/commentary/bestball/status caches and batch-commits to GitHub.
+  `execute_data_update` takes a **timestamped backup** of `all-scores`/`all-data`,
+  writes them, regenerates the streaks/commentary/bestball/status caches and
+  batch-commits to GitHub.
 - **round_info guard:** `find_tegs_missing_round_info` checks the new round's TEG
   exists in `round_info.csv`; if not, preview and execute both refuse (no partial
   write) and link to **Edit data → Round Info** to add the metadata first. (As a
@@ -74,8 +75,8 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
 - **Flow:** pick a TEG and rounds — or tick **Whole TEG (all rounds)** to delete an
   entire tournament — → preview the exact rows → confirm → `execute_data_deletion`
   takes a **timestamped backup** first, removes the rows from `all-scores`/`all-data`
-  (+ CSV mirror) and rebuilds every derived cache (status, streaks, commentary,
-  bestball), batch-committing on Railway.
+  and rebuilds every derived cache (status, streaks, commentary, bestball),
+  batch-committing on Railway.
 
 **GitHub ↔ store sync** — templates `admin_volume_sync.html`,
 `partials/admin_sync_body.html`, `partials/admin_sync_preview.html`,

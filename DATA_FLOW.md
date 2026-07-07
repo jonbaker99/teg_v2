@@ -12,8 +12,8 @@ Raw data files in `data/`:
 
 ```
 data/
-  all-data.parquet        ← 53-col hole-level data (pre-computed cumulative stats, rankings)
-  all-scores.parquet      ← 17-col hole-level data (raw scores only, used by Streamlit)
+  all-scores.parquet      ← 17-col hole-level data — the raw master (written directly by add/delete)
+  all-data.parquet        ← 53-col hole-level data — fully regenerated from all-scores on every add/delete
   round_info.csv          ← course / date / area metadata per TEG+Round
   handicaps.csv           ← player handicaps per TEG
   streaks.parquet         ← pre-computed streak counters per hole per player
@@ -21,7 +21,7 @@ data/
   commentary_*.parquet    ← AI-generated commentary (round/tournament summaries, streaks)
 ```
 
-**Unresolved:** `all-data.parquet` and `all-scores.parquet` both contain hole-level data at the same granularity but with different columns (53 vs 17). It is not yet clear whether these should be rationalised into a single source. Investigate before making changes to either file.
+`all-scores.parquet` and `all-data.parquet` are both hole-level at the same granularity, but the relationship is master → derived, not two independent sources: `all-data` is regenerated wholesale from `all-scores` (+ `round_info.csv` for Date/Course, + cumulative/ranking columns) by `update_all_data()` (`teg_analysis/analysis/pipeline.py`) on every add/delete, so it carries no information that isn't derivable from `all-scores`. Both are still stored (rather than deriving `all-data` on load) since the store costs nothing and keeps webapp reads decoupled from the transform chain. A third copy, a plain-CSV mirror of `all-data` (`data/all-data.csv`, "manual review" copy), was retired — nothing read it and it dominated the size of every data-update GitHub commit (~2.5 MB vs ~40 KB for the parquet).
 
 ---
 
@@ -40,12 +40,13 @@ write_file(path, df)  →  Railway volume  +  GitHub commit
 **Write pipeline (UI-agnostic):** `teg_analysis/analysis/data_update.py` provides the
 headless add / edit / delete flows:
 - **Add:** `process_google_sheets_data` → `find_duplicate_keys` → `execute_data_update`,
-  which writes `all-scores`/`all-data`, regenerates the streaks / commentary /
-  bestball / TEG-status caches, and batch-commits to GitHub.
-- **Delete:** `preview_deletion_data` → `execute_data_deletion`, which takes a
+  which takes a **timestamped backup** of `all-scores`/`all-data` under `data/backups/`,
+  writes `all-scores`/`all-data`, regenerates the streaks / commentary / bestball /
+  TEG-status caches, and batch-commits to GitHub.
+- **Delete:** `preview_deletion_data` → `execute_data_deletion`, which takes the same
   **timestamped backup** of `all-scores`/`all-data` under `data/backups/`, removes
-  the selected TEG/rounds from `all-scores`/`all-data` (+ CSV mirror), and rebuilds
-  the same derived caches.
+  the selected TEG/rounds from `all-scores`/`all-data`, and rebuilds the same derived
+  caches.
 - **Edit:** `EDITABLE_DATA_FILES` registry + `save_data_file` (single-file commit of
   an edited metadata CSV) and `regenerate_status_files` (rebuild completed/in-progress
   status from raw data).

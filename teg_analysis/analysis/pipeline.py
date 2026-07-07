@@ -449,20 +449,19 @@ def add_round_info(all_data: pd.DataFrame) -> pd.DataFrame:
     return merged_data
 
 
-def update_all_data(csv_file: str, parquet_file: str, csv_output_file: str, defer_github: bool = False):
+def update_all_data(csv_file: str, parquet_file: str, defer_github: bool = False):
     """
-    Load data from a CSV file, apply cumulative scores and averages, and save it as both a Parquet file and a CSV file.
+    Load data from a CSV file, apply cumulative scores and averages, and save it as a Parquet file.
 
     Parameters:
         csv_file (str): Path to the input CSV file.
         parquet_file (str): Path to the output Parquet file.
-        csv_output_file (str): Path to the output CSV file for review.
         defer_github (bool): If True, defer GitHub push for batch commit
 
     Returns:
         list: List of file infos if defer_github=True, None otherwise
     """
-    logger.info(f"Updating all data from {csv_file} to {parquet_file} and {csv_output_file}")
+    logger.info(f"Updating all data from {csv_file} to {parquet_file}")
 
     # Get dependencies
     deps = _get_deps()
@@ -503,12 +502,7 @@ def update_all_data(csv_file: str, parquet_file: str, csv_output_file: str, defe
     file_info = write_file(parquet_file, df_transformed, "Update all-data parquet", defer_github=defer_github)
     if file_info:
         file_infos.append(file_info)
-
-    # Save the transformed dataframe to a CSV file for manual review
-    file_info = write_file(csv_output_file, df_transformed, "Update all-data CSV", defer_github=defer_github)
-    if file_info:
-        file_infos.append(file_info)
-    logger.info(f"Transformed data saved to {csv_output_file}")
+    logger.info(f"Transformed data saved to {parquet_file}")
 
     if not defer_github:
         clear_all_caches()

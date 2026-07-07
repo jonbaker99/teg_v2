@@ -67,17 +67,6 @@ DATA_FILE_CATALOG: list[dict] = [
         "edit_slug": "handicaps",
     },
     {
-        "name": "all-data.csv",
-        "path": "data/all-data.csv",
-        "category": CATEGORY_PROCESSED,
-        "importance": 5,
-        "format": "csv",
-        "role": "Plain-text CSV mirror of all-data.parquet for inspection / external "
-                "tools.",
-        "updated_by": "Written alongside all-data.parquet by the add/delete flows.",
-        "edit_slug": None,
-    },
-    {
         "name": "teg_winners.csv",
         "path": "data/teg_winners.csv",
         "category": CATEGORY_METADATA,

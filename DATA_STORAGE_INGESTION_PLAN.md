@@ -1,10 +1,13 @@
 # Data storage & score ingestion — architecture review and implementation plan
 
-**Status: Phase 0 complete (2026-07-07) — see [findings](#phase-0-findings) below. Phase 1
-not started.** Temporary working document (CLAUDE.md Documentation Rule 3). When Phase 4 is
-complete, fold the outcome into `DATA_FLOW.md`, `webapp/README.md`, `teg_analysis/README.md`,
-and CLAUDE.md's "Current state & next steps", then delete this file (see the wrap-up note at
-the very end).
+**Status (2026-07-07): Phase 0 complete (see [findings](#phase-0-findings)). Phase 1
+complete** (1.1-1.5 all done: backups on add, `backup_file()` volume-copy fix, concurrency
+lock, CSV mirrors retired, docs swept, `DATA_RATIONALISATION_PLAN.md` deleted). **Phase 3.1
+complete** (prototype briefs below). Phase 2 and Phase 3.2 onward not started; Phase 3.3+
+also blocked on Jon trying the Phase 3.2 mockups. Temporary working document (CLAUDE.md
+Documentation Rule 3). When Phase 4 is complete, fold the outcome into `DATA_FLOW.md`,
+`webapp/README.md`, `teg_analysis/README.md`, and CLAUDE.md's "Current state & next steps",
+then delete this file (see the wrap-up note at the very end).
 
 **Supersedes `DATA_RATIONALISATION_PLAN.md`'s open investigation.** That file's Phase 3
 options appraisal (Option 3: keep both parquets, drop the CSV mirror) is adopted directly

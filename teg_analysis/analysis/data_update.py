@@ -35,6 +35,7 @@ blocks in ``teg_analysis.analysis.pipeline`` (``update_all_data``,
 """
 
 import logging
+import threading
 
 import numpy as np
 import pandas as pd
@@ -43,7 +44,6 @@ from teg_analysis.constants import (
     PLAYER_DICT,
     ALL_SCORES_PARQUET,
     ALL_DATA_PARQUET,
-    ALL_DATA_CSV_MIRROR,
     HANDICAPS_CSV,
     ROUND_INFO_CSV,
 )
@@ -52,6 +52,15 @@ logger = logging.getLogger(__name__)
 
 # Hole-level identity keys used throughout to compare existing vs new data.
 _HOLE_KEYS = ['TEGNum', 'Round', 'Hole', 'Pl']
+
+# Guards execute_data_update / execute_data_deletion so a double-tapped submit
+# (e.g. on a flaky phone connection) can't interleave two read-modify-write
+# cycles against the same files.
+_update_lock = threading.Lock()
+
+
+class UpdateInProgressError(RuntimeError):
+    """Raised when an add/delete is attempted while another is already running."""
 
 
 # ---------------------------------------------------------------------------
@@ -372,7 +381,13 @@ def execute_data_update(
 
     Merges ``new_long_df`` into the existing ``all-scores`` data, recomputes the
     derived datasets (all-data, TEG status, streaks, commentary, bestball) and,
-    on Railway, commits everything to GitHub in a single batch.
+    on Railway, commits everything to GitHub in a single batch. Takes timestamped
+    backups of ``all-scores``/``all-data`` before writing (matches
+    :func:`execute_data_deletion`), so an accidental overwrite is always
+    recoverable via ``/admin/backups``.
+
+    Non-blocking: raises :class:`UpdateInProgressError` immediately if another
+    add/delete is already running, instead of queuing or interleaving writes.
 
     Duplicate handling (records that already exist at hole level):
       * ``overwrite=True``   — drop the existing matching records, keep the new.
@@ -391,8 +406,31 @@ def execute_data_update(
 
     Returns:
         Summary dict: ``records_added``, ``changed_rounds`` ({teg: [rounds]}),
-        ``committed`` (bool), ``files_committed`` (int).
+        ``backups`` (list of paths), ``committed`` (bool), ``files_committed`` (int).
     """
+    if not _update_lock.acquire(blocking=False):
+        raise UpdateInProgressError(
+            "Another data update is already in progress. Please wait and try again."
+        )
+    try:
+        return _execute_data_update_locked(
+            new_long_df,
+            overwrite=overwrite,
+            new_data_only=new_data_only,
+            defer_github=defer_github,
+        )
+    finally:
+        _update_lock.release()
+
+
+def _execute_data_update_locked(
+    new_long_df: pd.DataFrame,
+    *,
+    overwrite: bool = False,
+    new_data_only: bool = False,
+    defer_github: bool = None,
+) -> dict:
+    """Implementation for :func:`execute_data_update` (runs under the lock)."""
     from teg_analysis.io import read_file, write_file, batch_commit_to_github, _is_railway
     from teg_analysis.analysis.pipeline import (
         load_and_prepare_handicap_data,
@@ -438,6 +476,7 @@ def execute_data_update(
         return {
             'records_added': 0,
             'changed_rounds': changed_rounds,
+            'backups': [],
             'committed': False,
             'files_committed': 0,
         }
@@ -450,6 +489,10 @@ def execute_data_update(
 
     final_df = pd.concat([existing_df, processed_rounds], ignore_index=True)
 
+    # Safety backups before touching the canonical files (matches execute_data_deletion).
+    backups = create_timestamped_backups()
+    logger.info(f"Backups created: {backups}")
+
     batch_files = []
 
     file_info = write_file(
@@ -460,9 +503,9 @@ def execute_data_update(
     if file_info:
         batch_files.append(file_info)
 
-    # all-data parquet + CSV mirror.
+    # all-data parquet, regenerated wholesale from all-scores.
     update_files = update_all_data(
-        ALL_SCORES_PARQUET, ALL_DATA_PARQUET, ALL_DATA_CSV_MIRROR, defer_github=defer_github
+        ALL_SCORES_PARQUET, ALL_DATA_PARQUET, defer_github=defer_github
     )
     if update_files:
         batch_files.extend(update_files)
@@ -501,6 +544,7 @@ def execute_data_update(
     return {
         'records_added': len(processed_rounds),
         'changed_rounds': changed_rounds,
+        'backups': list(backups),
         'committed': committed,
         'files_committed': len(batch_files),
     }
@@ -588,6 +632,9 @@ def execute_data_deletion(
     (TEG status, streaks, commentary, bestball) and, on Railway, commits the
     lot in a single batch.
 
+    Non-blocking: raises :class:`UpdateInProgressError` immediately if an
+    add/delete is already running, instead of queuing or interleaving writes.
+
     Args:
         selected_teg: TEG number to delete from.
         selected_rounds: Round numbers to delete.
@@ -599,6 +646,25 @@ def execute_data_deletion(
         Summary dict: ``rows_deleted``, ``teg``, ``rounds``, ``backups``
         (list of paths), ``committed`` (bool), ``files_committed`` (int).
     """
+    if not _update_lock.acquire(blocking=False):
+        raise UpdateInProgressError(
+            "Another data update is already in progress. Please wait and try again."
+        )
+    try:
+        return _execute_data_deletion_locked(
+            selected_teg, selected_rounds, defer_github=defer_github,
+        )
+    finally:
+        _update_lock.release()
+
+
+def _execute_data_deletion_locked(
+    selected_teg: int,
+    selected_rounds: list,
+    *,
+    defer_github: bool = None,
+) -> dict:
+    """Implementation for :func:`execute_data_deletion` (runs under the lock)."""
     from teg_analysis.io import read_file, write_file, batch_commit_to_github, _is_railway
     from teg_analysis.analysis.pipeline import (
         update_streaks_cache,
@@ -636,7 +702,6 @@ def execute_data_deletion(
     for path, frame, msg in (
         (ALL_SCORES_PARQUET, filtered_scores_df, deletion_message),
         (ALL_DATA_PARQUET, filtered_data_df, deletion_message),
-        (ALL_DATA_CSV_MIRROR, filtered_data_df, "Recreated CSV mirror after deletion"),
     ):
         file_info = write_file(path, frame, msg, defer_github=defer_github)
         if file_info:
