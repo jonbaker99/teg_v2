@@ -46,6 +46,7 @@ from teg_analysis.constants import (
     ALL_DATA_PARQUET,
     HANDICAPS_CSV,
     ROUND_INFO_CSV,
+    COURSE_PARS_CSV,
 )
 
 logger = logging.getLogger(__name__)
@@ -766,6 +767,14 @@ EDITABLE_DATA_FILES: dict[str, dict] = {
         'path': HANDICAPS_CSV,
         'label': 'Handicaps',
         'description': 'Player handicap data for net scoring calculations.',
+        'kind': 'metadata',
+    },
+    'course_pars': {
+        'path': COURSE_PARS_CSV,
+        'label': 'Course Pars',
+        'description': 'Hole-level Par/SI per course, backfilled from history. Used to '
+                        'prefill scorecards/round entry. New or re-rated courses are '
+                        'added here.',
         'kind': 'metadata',
     },
     'teg_winners': {

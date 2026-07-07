@@ -61,7 +61,7 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   `/admin/edit-data/save`, `/admin/edit-data/regenerate-status` (HTMX).
 - **Flow:** the file picker is driven by
   `data_update.EDITABLE_DATA_FILES` (round_info, future_tegs, handicaps,
-  teg_winners, completed_tegs, in_progress_tegs). An inline grid of `<input>`
+  course_pars, teg_winners, completed_tegs, in_progress_tegs). An inline grid of `<input>`
   cells (vanilla-JS add/delete-row) posts back; the route rebuilds the frame
   from `cell__{rid}__{cidx}` fields, light-coerces numeric columns and calls
   `data_update.save_data_file` (single-file commit). Auto-generated status files

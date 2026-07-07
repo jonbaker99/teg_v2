@@ -16,6 +16,7 @@ STREAKS_PARQUET = "data/streaks.parquet"
 BESTBALL_PARQUET = "data/bestball.parquet"
 HANDICAPS_CSV = "data/handicaps.csv"
 ROUND_INFO_CSV = "data/round_info.csv"
+COURSE_PARS_CSV = "data/course_pars.csv"
 
 # Commentary data files
 COMMENTARY_ROUND_EVENTS_PARQUET = "data/commentary_round_events.parquet"

@@ -1,0 +1,418 @@
+Course,Hole,Par,SI
+Ashdown,1,4,4
+Ashdown,2,3,8
+Ashdown,3,5,12
+Ashdown,4,4,18
+Ashdown,5,4,2
+Ashdown,6,3,16
+Ashdown,7,4,6
+Ashdown,8,4,10
+Ashdown,9,3,14
+Ashdown,10,4,11
+Ashdown,11,3,3
+Ashdown,12,4,9
+Ashdown,13,4,7
+Ashdown,14,4,1
+Ashdown,15,4,15
+Ashdown,16,3,17
+Ashdown,17,4,13
+Ashdown,18,4,5
+Bletchingley,1,4,5
+Bletchingley,2,3,17
+Bletchingley,3,5,11
+Bletchingley,4,4,3
+Bletchingley,5,4,1
+Bletchingley,6,5,13
+Bletchingley,7,3,7
+Bletchingley,8,4,15
+Bletchingley,9,5,9
+Bletchingley,10,4,10
+Bletchingley,11,5,4
+Bletchingley,12,3,18
+Bletchingley,13,4,12
+Bletchingley,14,3,16
+Bletchingley,15,5,6
+Bletchingley,16,4,2
+Bletchingley,17,3,14
+Bletchingley,18,4,8
+Bom Sucesso,1,4,9
+Bom Sucesso,2,5,5
+Bom Sucesso,3,3,17
+Bom Sucesso,4,5,3
+Bom Sucesso,5,3,15
+Bom Sucesso,6,4,1
+Bom Sucesso,7,5,7
+Bom Sucesso,8,4,11
+Bom Sucesso,9,4,13
+Bom Sucesso,10,3,18
+Bom Sucesso,11,4,12
+Bom Sucesso,12,4,6
+Bom Sucesso,13,3,16
+Bom Sucesso,14,4,10
+Bom Sucesso,15,4,2
+Bom Sucesso,16,4,14
+Bom Sucesso,17,5,4
+Bom Sucesso,18,4,8
+Costa Brava,1,4,7
+Costa Brava,2,5,13
+Costa Brava,3,3,11
+Costa Brava,4,5,17
+Costa Brava,5,5,3
+Costa Brava,6,3,9
+Costa Brava,7,4,1
+Costa Brava,8,4,15
+Costa Brava,9,5,5
+Costa Brava,10,4,14
+Costa Brava,11,4,10
+Costa Brava,12,4,2
+Costa Brava,13,3,16
+Costa Brava,14,4,12
+Costa Brava,15,5,6
+Costa Brava,16,4,8
+Costa Brava,17,3,18
+Costa Brava,18,4,4
+Crowborough,1,4,9
+Crowborough,2,4,1
+Crowborough,3,3,15
+Crowborough,4,4,17
+Crowborough,5,4,3
+Crowborough,6,3,11
+Crowborough,7,5,7
+Crowborough,8,4,13
+Crowborough,9,4,5
+Crowborough,10,5,8
+Crowborough,11,4,14
+Crowborough,12,4,2
+Crowborough,13,3,18
+Crowborough,14,5,10
+Crowborough,15,4,6
+Crowborough,16,4,12
+Crowborough,17,3,16
+Crowborough,18,4,4
+El Prat - Azul,1,4,3
+El Prat - Azul,2,3,17
+El Prat - Azul,3,4,15
+El Prat - Azul,4,5,13
+El Prat - Azul,5,4,5
+El Prat - Azul,6,3,11
+El Prat - Azul,7,4,9
+El Prat - Azul,8,4,1
+El Prat - Azul,9,5,7
+El Prat - Azul,10,5,8
+El Prat - Azul,11,4,4
+El Prat - Azul,12,3,18
+El Prat - Azul,13,4,12
+El Prat - Azul,14,4,14
+El Prat - Azul,15,3,10
+El Prat - Azul,16,4,6
+El Prat - Azul,17,4,2
+El Prat - Azul,18,5,16
+El Prat - Rosa,1,5,4
+El Prat - Rosa,2,4,8
+El Prat - Rosa,3,3,18
+El Prat - Rosa,4,4,16
+El Prat - Rosa,5,4,12
+El Prat - Rosa,6,3,6
+El Prat - Rosa,7,4,10
+El Prat - Rosa,8,4,2
+El Prat - Rosa,9,5,14
+El Prat - Rosa,10,5,3
+El Prat - Rosa,11,3,11
+El Prat - Rosa,12,4,9
+El Prat - Rosa,13,3,7
+El Prat - Rosa,14,4,15
+El Prat - Rosa,15,4,17
+El Prat - Rosa,16,4,5
+El Prat - Rosa,17,4,1
+El Prat - Rosa,18,5,13
+Estoril,11,4,2
+Estoril,17,4,18
+Estoril,18,4,16
+Lingfield,1,3,10
+Lingfield,2,5,16
+Lingfield,3,4,4
+Lingfield,4,4,14
+Lingfield,5,4,2
+Lingfield,6,3,18
+Lingfield,7,4,8
+Lingfield,8,4,6
+Lingfield,9,5,12
+Lingfield,10,3,15
+Lingfield,11,4,13
+Lingfield,12,4,3
+Lingfield,13,4,7
+Lingfield,14,3,9
+Lingfield,15,5,1
+Lingfield,16,4,17
+Lingfield,17,4,5
+Lingfield,18,5,11
+Littlestone,1,4,18
+Littlestone,2,4,4
+Littlestone,3,4,10
+Littlestone,4,4,2
+Littlestone,5,5,16
+Littlestone,6,3,8
+Littlestone,7,5,14
+Littlestone,8,4,12
+Littlestone,9,3,6
+Littlestone,10,4,1
+Littlestone,11,4,13
+Littlestone,12,4,5
+Littlestone,13,4,9
+Littlestone,14,3,11
+Littlestone,15,4,17
+Littlestone,16,4,3
+Littlestone,17,3,7
+Littlestone,18,5,15
+Oitavos Dunes,1,4,5
+Oitavos Dunes,2,4,15
+Oitavos Dunes,3,3,11
+Oitavos Dunes,4,4,13
+Oitavos Dunes,5,4,1
+Oitavos Dunes,6,4,9
+Oitavos Dunes,7,5,7
+Oitavos Dunes,8,5,3
+Oitavos Dunes,9,3,17
+Oitavos Dunes,10,4,4
+Oitavos Dunes,11,4,14
+Oitavos Dunes,12,3,10
+Oitavos Dunes,13,5,6
+Oitavos Dunes,14,3,12
+Oitavos Dunes,15,3,18
+Oitavos Dunes,16,5,16
+Oitavos Dunes,17,4,8
+Oitavos Dunes,18,4,2
+PGA Catalunya - Stadium,1,4,3
+PGA Catalunya - Stadium,2,4,5
+PGA Catalunya - Stadium,3,5,13
+PGA Catalunya - Stadium,4,4,9
+PGA Catalunya - Stadium,5,3,7
+PGA Catalunya - Stadium,6,4,11
+PGA Catalunya - Stadium,7,5,17
+PGA Catalunya - Stadium,8,3,15
+PGA Catalunya - Stadium,9,4,1
+PGA Catalunya - Stadium,10,4,12
+PGA Catalunya - Stadium,11,3,16
+PGA Catalunya - Stadium,12,5,14
+PGA Catalunya - Stadium,13,4,6
+PGA Catalunya - Stadium,14,4,4
+PGA Catalunya - Stadium,15,5,18
+PGA Catalunya - Stadium,16,3,10
+PGA Catalunya - Stadium,17,4,8
+PGA Catalunya - Stadium,18,4,2
+PGA Catalunya - Tour,1,4,14
+PGA Catalunya - Tour,2,3,18
+PGA Catalunya - Tour,3,4,6
+PGA Catalunya - Tour,4,4,2
+PGA Catalunya - Tour,5,5,16
+PGA Catalunya - Tour,6,4,12
+PGA Catalunya - Tour,7,5,8
+PGA Catalunya - Tour,8,3,4
+PGA Catalunya - Tour,9,4,10
+PGA Catalunya - Tour,10,5,9
+PGA Catalunya - Tour,11,3,7
+PGA Catalunya - Tour,12,4,11
+PGA Catalunya - Tour,13,4,1
+PGA Catalunya - Tour,14,3,13
+PGA Catalunya - Tour,15,5,5
+PGA Catalunya - Tour,16,3,17
+PGA Catalunya - Tour,17,4,3
+PGA Catalunya - Tour,18,5,15
+Palmares - Alvor / Lagos,1,4,3
+Palmares - Alvor / Lagos,2,3,13
+Palmares - Alvor / Lagos,3,4,7
+Palmares - Alvor / Lagos,4,5,9
+Palmares - Alvor / Lagos,5,4,17
+Palmares - Alvor / Lagos,6,4,11
+Palmares - Alvor / Lagos,7,3,15
+Palmares - Alvor / Lagos,8,5,5
+Palmares - Alvor / Lagos,9,4,1
+Palmares - Alvor / Lagos,10,4,8
+Palmares - Alvor / Lagos,11,4,2
+Palmares - Alvor / Lagos,12,3,18
+Palmares - Alvor / Lagos,13,5,4
+Palmares - Alvor / Lagos,14,3,14
+Palmares - Alvor / Lagos,15,5,10
+Palmares - Alvor / Lagos,16,3,16
+Palmares - Alvor / Lagos,17,5,12
+Palmares - Alvor / Lagos,18,4,6
+Palmares - Lagos / Praia,1,4,7
+Palmares - Lagos / Praia,2,4,1
+Palmares - Lagos / Praia,3,3,17
+Palmares - Lagos / Praia,4,5,3
+Palmares - Lagos / Praia,5,3,13
+Palmares - Lagos / Praia,6,5,9
+Palmares - Lagos / Praia,7,3,15
+Palmares - Lagos / Praia,8,5,11
+Palmares - Lagos / Praia,9,4,5
+Palmares - Lagos / Praia,10,4,6
+Palmares - Lagos / Praia,11,5,8
+Palmares - Lagos / Praia,12,3,16
+Palmares - Lagos / Praia,13,5,2
+Palmares - Lagos / Praia,14,3,12
+Palmares - Lagos / Praia,15,4,10
+Palmares - Lagos / Praia,16,4,14
+Palmares - Lagos / Praia,17,3,18
+Palmares - Lagos / Praia,18,5,4
+Palmares - Praia / Alvor,1,4,5
+Palmares - Praia / Alvor,2,5,7
+Palmares - Praia / Alvor,3,3,15
+Palmares - Praia / Alvor,4,5,1
+Palmares - Praia / Alvor,5,3,11
+Palmares - Praia / Alvor,6,4,9
+Palmares - Praia / Alvor,7,4,13
+Palmares - Praia / Alvor,8,3,17
+Palmares - Praia / Alvor,9,5,3
+Palmares - Praia / Alvor,10,4,4
+Palmares - Praia / Alvor,11,3,14
+Palmares - Praia / Alvor,12,4,8
+Palmares - Praia / Alvor,13,5,10
+Palmares - Praia / Alvor,14,4,18
+Palmares - Praia / Alvor,15,4,12
+Palmares - Praia / Alvor,16,3,16
+Palmares - Praia / Alvor,17,5,6
+Palmares - Praia / Alvor,18,4,2
+Penha Longa,1,4,10
+Penha Longa,2,4,8
+Penha Longa,3,4,16
+Penha Longa,4,4,2
+Penha Longa,5,3,14
+Penha Longa,6,5,18
+Penha Longa,7,3,4
+Penha Longa,8,5,6
+Penha Longa,9,4,12
+Penha Longa,10,4,9
+Penha Longa,11,4,3
+Penha Longa,12,5,17
+Penha Longa,13,4,13
+Penha Longa,14,4,5
+Penha Longa,15,3,11
+Penha Longa,16,4,1
+Penha Longa,17,3,7
+Penha Longa,18,5,15
+Prince's - Dunes / Himalayas,1,4,4
+Prince's - Dunes / Himalayas,2,3,16
+Prince's - Dunes / Himalayas,3,5,14
+Prince's - Dunes / Himalayas,4,4,2
+Prince's - Dunes / Himalayas,5,4,6
+Prince's - Dunes / Himalayas,6,5,10
+Prince's - Dunes / Himalayas,7,4,18
+Prince's - Dunes / Himalayas,8,3,12
+Prince's - Dunes / Himalayas,9,4,8
+Prince's - Dunes / Himalayas,10,4,13
+Prince's - Dunes / Himalayas,11,5,5
+Prince's - Dunes / Himalayas,12,4,11
+Prince's - Dunes / Himalayas,13,4,3
+Prince's - Dunes / Himalayas,14,3,17
+Prince's - Dunes / Himalayas,15,5,1
+Prince's - Dunes / Himalayas,16,3,7
+Prince's - Dunes / Himalayas,17,4,15
+Prince's - Dunes / Himalayas,18,4,9
+Prince's - Shore / Dunes,1,4,6
+Prince's - Shore / Dunes,2,5,12
+Prince's - Shore / Dunes,3,3,16
+Prince's - Shore / Dunes,4,4,4
+Prince's - Shore / Dunes,5,3,18
+Prince's - Shore / Dunes,6,4,14
+Prince's - Shore / Dunes,7,4,2
+Prince's - Shore / Dunes,8,5,8
+Prince's - Shore / Dunes,9,4,10
+Prince's - Shore / Dunes,10,4,3
+Prince's - Shore / Dunes,11,3,15
+Prince's - Shore / Dunes,12,5,13
+Prince's - Shore / Dunes,13,4,1
+Prince's - Shore / Dunes,14,4,5
+Prince's - Shore / Dunes,15,5,9
+Prince's - Shore / Dunes,16,4,17
+Prince's - Shore / Dunes,17,3,11
+Prince's - Shore / Dunes,18,4,7
+Quinta da Marinha,1,5,5
+Quinta da Marinha,2,3,16
+Quinta da Marinha,3,5,7
+Quinta da Marinha,4,4,9
+Quinta da Marinha,5,3,12
+Quinta da Marinha,6,5,4
+Quinta da Marinha,7,3,18
+Quinta da Marinha,8,4,1
+Quinta da Marinha,9,3,15
+Quinta da Marinha,10,5,3
+Quinta da Marinha,11,5,6
+Quinta da Marinha,12,4,2
+Quinta da Marinha,13,4,8
+Quinta da Marinha,14,3,11
+Quinta da Marinha,15,4,13
+Quinta da Marinha,16,3,17
+Quinta da Marinha,17,4,10
+Quinta da Marinha,18,4,14
+Royal Cinque Ports,1,4,12
+Royal Cinque Ports,2,4,8
+Royal Cinque Ports,3,5,4
+Royal Cinque Ports,4,3,18
+Royal Cinque Ports,5,5,2
+Royal Cinque Ports,6,4,14
+Royal Cinque Ports,7,4,6
+Royal Cinque Ports,8,3,16
+Royal Cinque Ports,9,4,10
+Royal Cinque Ports,10,4,11
+Royal Cinque Ports,11,4,3
+Royal Cinque Ports,12,4,13
+Royal Cinque Ports,13,4,5
+Royal Cinque Ports,14,3,15
+Royal Cinque Ports,15,4,1
+Royal Cinque Ports,16,5,7
+Royal Cinque Ports,17,4,17
+Royal Cinque Ports,18,4,9
+Royal Óbidos,1,4,7
+Royal Óbidos,2,5,3
+Royal Óbidos,3,3,13
+Royal Óbidos,4,4,1
+Royal Óbidos,5,5,9
+Royal Óbidos,6,3,15
+Royal Óbidos,7,5,5
+Royal Óbidos,8,3,17
+Royal Óbidos,9,4,11
+Royal Óbidos,10,4,8
+Royal Óbidos,11,5,10
+Royal Óbidos,12,4,2
+Royal Óbidos,13,3,18
+Royal Óbidos,14,4,6
+Royal Óbidos,15,3,14
+Royal Óbidos,16,4,16
+Royal Óbidos,17,4,12
+Royal Óbidos,18,5,4
+Troia,1,5,9
+Troia,2,3,13
+Troia,3,4,7
+Troia,4,3,15
+Troia,5,4,3
+Troia,6,4,1
+Troia,7,5,11
+Troia,8,4,17
+Troia,9,4,5
+Troia,10,4,12
+Troia,11,3,18
+Troia,12,4,6
+Troia,13,4,14
+Troia,14,5,4
+Troia,15,4,2
+Troia,16,4,10
+Troia,17,3,16
+Troia,18,5,8
+West Cliffs,1,4,17
+West Cliffs,2,3,15
+West Cliffs,3,4,1
+West Cliffs,4,4,5
+West Cliffs,5,3,7
+West Cliffs,6,5,11
+West Cliffs,7,5,3
+West Cliffs,8,4,13
+West Cliffs,9,4,9
+West Cliffs,10,4,10
+West Cliffs,11,4,14
+West Cliffs,12,3,18
+West Cliffs,13,5,8
+West Cliffs,14,4,2
+West Cliffs,15,5,16
+West Cliffs,16,3,12
+West Cliffs,17,4,6
+West Cliffs,18,4,4

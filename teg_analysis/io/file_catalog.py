@@ -67,6 +67,19 @@ DATA_FILE_CATALOG: list[dict] = [
         "edit_slug": "handicaps",
     },
     {
+        "name": "course_pars.csv",
+        "path": "data/course_pars.csv",
+        "category": CATEGORY_METADATA,
+        "importance": 5,
+        "format": "csv",
+        "role": "Hole-level Par/SI per course, backfilled from history "
+                "(scripts/backfill_course_pars.py). Used to prefill scorecards/round "
+                "entry. A handful of courses with historically inconsistent Par/SI "
+                "(re-rated over time) are deliberately absent pending manual review.",
+        "updated_by": "Edit inline on the Edit data page. New/re-rated courses added here.",
+        "edit_slug": "course_pars",
+    },
+    {
         "name": "teg_winners.csv",
         "path": "data/teg_winners.csv",
         "category": CATEGORY_METADATA,

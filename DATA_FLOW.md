@@ -16,12 +16,15 @@ data/
   all-data.parquet        ← 53-col hole-level data — fully regenerated from all-scores on every add/delete
   round_info.csv          ← course / date / area metadata per TEG+Round
   handicaps.csv           ← player handicaps per TEG
+  course_pars.csv         ← hole-level Par/SI per course, backfilled from history (scripts/backfill_course_pars.py)
   streaks.parquet         ← pre-computed streak counters per hole per player
   bestball.parquet        ← pre-computed per-round bestball/worstball totals (read by the webapp for all-time ranking; rebuilt on every add/delete)
   commentary_*.parquet    ← AI-generated commentary (round/tournament summaries, streaks)
 ```
 
 `all-scores.parquet` and `all-data.parquet` are both hole-level at the same granularity, but the relationship is master → derived, not two independent sources: `all-data` is regenerated wholesale from `all-scores` (+ `round_info.csv` for Date/Course, + cumulative/ranking columns) by `update_all_data()` (`teg_analysis/analysis/pipeline.py`) on every add/delete, so it carries no information that isn't derivable from `all-scores`. Both are still stored (rather than deriving `all-data` on load) since the store costs nothing and keeps webapp reads decoupled from the transform chain. A third copy, a plain-CSV mirror of `all-data` (`data/all-data.csv`, "manual review" copy), was retired — nothing read it and it dominated the size of every data-update GitHub commit (~2.5 MB vs ~40 KB for the parquet).
+
+`course_pars.csv` was backfilled once from `all-scores` + `round_info` history and is now edited like any other metadata CSV. Three courses (Boavista, Estoril partially, Praia D'El Rey) have historically inconsistent Par/SI across visits and are deliberately incomplete/absent pending a manual decision — see `DATA_STORAGE_INGESTION_PLAN.md`.
 
 ---
 
