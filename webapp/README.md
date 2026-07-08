@@ -29,9 +29,10 @@ Visit `http://localhost:8000` in your browser. Use the theme switcher in the nav
 The webapp includes a password-gated admin area, all in `webapp/routes/admin.py`
 (+ `webapp/routes/admin_round_setup.py`, `webapp/routes/admin_teg_setup.py`,
 `webapp/routes/admin_live_round.py`) + `webapp/admin_auth.py`. A shared sub-nav
-(`partials/admin_nav.html`) links the pages: **Round setup**, **TEG setup**,
-**Live round**, **Sheet import (fallback)**, **Edit data**, **Delete rounds**,
-**Volume** (browser), **GitHub sync**, **Backups** and **File guide**. Every page is
+(`partials/admin_nav.html`) links the pages: **➕ New round** (the guided
+wizard — start here), **Round setup**, **TEG setup**, **Live round**, **Sheet
+import (fallback)**, **Edit data**, **Delete rounds**, **Volume** (browser),
+**GitHub sync**, **Backups** and **File guide**. Every page is
 behind the same cookie auth and each write calls `deps.clear_all_data_caches()`
 so the site shows fresh data immediately. They drive headless logic in
 `teg_analysis.analysis.data_update` / `teg_analysis.analysis.round_setup` /
@@ -44,6 +45,36 @@ applies a **compact override** to `.teg-table` — smaller font and tighter row
 padding than the site default — scoped to `.main-content` so it only affects
 admin pages (data density matters more than editorial spacing here). The same
 compactness applies to the inline edit grid (`#edit-grid` cells).
+
+**New round (guided wizard)** — templates `admin_new_round.html` (landing),
+`admin_new_round_wizard.html`; route `webapp/routes/admin_new_round.py`; logic
+`teg_analysis.analysis.round_wizard`.
+- **Routes:** `/admin/new-round` (landing: pick TEG+Round, or resume a pending
+  one), `/admin/new-round/{teg}/{round}` (the wizard at its current step, with
+  `?step=` to jump), and one POST per step (`/metadata`, `/roster`, `/parsi`,
+  `/golive`).
+- **Purpose:** the single "start here" entry point for setting up a round for
+  scoring. Setting up a brand-new TEG's first round otherwise means visiting
+  four separate pages in order (metadata → roster → Par/SI → go live); a new
+  round in an existing TEG is three of them. The wizard walks through only the
+  **incomplete** steps and hands over the shareable link at the end. The
+  individual pages below stay in the sub-nav for edits and edge cases — the
+  wizard just orchestrates on top of their already-tested save functions.
+- **Stateless / resumable:** the wizard holds no session state. Each step saves
+  immediately, and which step is "current" is recomputed from the data on every
+  visit (`round_wizard.get_wizard_status`, which reuses the same status probes
+  as the standalone pages — round_info row exists? `handicaps` row confirmed?
+  `round_pars` present? live round active?). So a half-finished setup resumes
+  just by revisiting the URL, and a new round 2/3/4 auto-skips the roster step
+  because that TEG's roster is already confirmed. Par/SI and Go live are
+  **locked** until their prerequisites (metadata, then all three) are met.
+- **Metadata step** is the one net-new piece (`round_wizard.get_round_metadata_form`
+  / `save_round_metadata`): a purpose-built form (course datalist from
+  `course_pars.csv` + date) that **derives** round_info's `TEGRd`/`TEG`/`Area`/
+  `Year` (Area/Year inherited from the TEG's other rounds or `future_tegs.csv`,
+  Year falling back to the date's trailing year) instead of hand-typing them in
+  the raw Edit-data grid. The other three steps reuse `teg_setup` /
+  `round_setup` / `live_round` save functions unchanged.
 
 **Round setup** — templates `admin_round_setup.html`, `admin_round_setup_form.html`,
 `partials/admin_round_setup_result.html`.
@@ -83,10 +114,17 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
 **Live round** — templates `admin_live_round.html`, `admin_live_round_review.html`,
 `partials/admin_live_round_*.html`.
 - **Routes:** `/admin/live-round` (list + start), `/admin/live-round/{token}/review`
-  (conflicts + finalize), `/admin/live-round/{token}/resolve`,
-  `/admin/live-round/{token}/finalize`, `/admin/live-round/{token}/cancel` (all HTMX).
+  (editable scorecard grid + conflicts + finalize), `/admin/live-round/{token}/edit`
+  (bulk admin edit — a plain form POST that redirects back to review),
+  `/admin/live-round/{token}/resolve`, `/admin/live-round/{token}/finalize`,
+  `/admin/live-round/{token}/cancel` (the rest HTMX).
 - **Purpose:** start a live, multi-device round-entry session for an already-set-up
   round, hand out its shareable link, and review/finalize once everyone's done.
+  The review page shows the **full staged scorecard as an editable grid** — the admin
+  can correct any cell (not just flagged conflicts), links out to the live leaderboard,
+  and finalizes. Admin edits go through `live_round.apply_admin_edits`, which is
+  authoritative: an admin value overwrites a player entry and clears any conflict flag,
+  and only cells whose value actually changed are written (a re-save is a no-op).
   Finalizing runs the staged scores through the *existing* `execute_data_update`
   pipeline exactly as "Add a round" does — one GitHub commit, every derived cache
   regenerated. See the player-facing side below and
@@ -219,10 +257,28 @@ the small group, matching the pattern elsewhere in this app), started from
 the admin Live round page above.
 
 - **Routes:** `GET /live-round/{token}` (the entry page itself),
+  `GET /live-round/{token}/leaderboard` (a read-only live leaderboard page),
   `GET /api/live-round/{token}/scores?since={seq}` (poll for changes),
   `POST /api/live-round/{token}/scores` (write N cells — one tap, or a whole
   voice-entry batch — as a single JSON request; Pydantic-validated, the only
-  JSON API in this codebase so far).
+  JSON API in this codebase so far),
+  `GET /api/live-round/{token}/leaderboard` (JSON standings the leaderboard page polls).
+- **Score entry:** three input paths, all writing the same cell via the same API —
+  the on-screen keypad (fixed 2–8 or relative-to-par, plus an **"Other"** field for
+  anything off the buttons, e.g. a 14), **physical-keyboard** entry when a cell is
+  active (type digits, Enter/Tab to commit-and-advance, arrows to navigate, Backspace
+  to clear — for laptop use), and **voice** (OS dictation, parsed client-side). Any
+  score 1–20 is accepted (`MAX_SCORE` in the template; the old 1–12 keypad ceiling was
+  a button-layout limit, not a data one).
+- **Finishing / leaderboard:** there's no hard "submit" (the admin still finalizes) —
+  instead, once every visible player has all 18 holes in, a **"View leaderboard"** done
+  banner appears, and a Leaderboard button is always in the toolbar. The live
+  leaderboard is computed straight from staging by `live_round.get_live_leaderboard`
+  (reusing `data_update.process_round_for_all_scores`, so gross/net/Stableford match
+  the eventual finalized round), shows both competitions (TEG Trophy = net, Green Jacket
+  = gross) with a "scoring in progress" banner until all 18 holes are in for everyone,
+  and polls every 10s. It reads **only staging** — a live round isn't on the main-site
+  `/leaderboard` or `/results` until it's finalized.
 - **Page:** a standalone page (does **not** extend `base.html`'s desktop site
   chrome) styled like `webapp/mobile_mockups/round_entry_grid.html`, which it's
   ported from almost verbatim — same grid/keypad/voice-entry/player-group-chips

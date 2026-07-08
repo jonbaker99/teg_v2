@@ -170,5 +170,59 @@ def test_full_lifecycle_two_devices_conflict_and_finalize(admin, scratch_repo):
     assert final_page.status_code == 200
 
 
+def test_live_leaderboard_out_of_range_and_admin_edit(admin, scratch_repo):
+    token = _start_live_round(admin)
+    device = TestClient(app)
+
+    # DM plays a full round of 4s; GW gets one hole in so far.
+    dm_cells = [{"hole": h, "player": "DM", "value": 4} for h in range(1, 19)]
+    device.post(f"/api/live-round/{token}/scores",
+                json={"device_id": "dev-A", "device_name": "Jon", "cells": dm_cells})
+    device.post(f"/api/live-round/{token}/scores",
+                json={"device_id": "dev-B", "device_name": "Dave",
+                      "cells": [{"hole": 1, "player": "GW", "value": 6}]})
+
+    # Live leaderboard (public, computed from staging) reflects mid-round state.
+    board = device.get(f"/api/live-round/{token}/leaderboard").json()
+    assert board["in_progress"] is True
+    assert board["net_measure"] == "Stableford"  # TEG 999 > 7
+    dm = next(r for r in board["gross"] if r["code"] == "DM")
+    gw = next(r for r in board["gross"] if r["code"] == "GW")
+    assert dm["thru"] == 18 and gw["thru"] == 1
+    assert dm["gross"] == 72 and dm["gross_vp"] == 0 and dm["gross_vp_fmt"] == "E"
+    # Par-4s off an 18 handicap = net birdies = 3 Stableford points each.
+    assert board["net"][0]["code"] == "DM"
+    assert next(r for r in board["net"] if r["code"] == "DM")["net_value"] == 54
+
+    page = device.get(f"/live-round/{token}/leaderboard")
+    assert page.status_code == 200
+    assert "Live leaderboard" in page.text
+
+    # A blow-up score above the old 1-12 button range is accepted end-to-end.
+    device.post(f"/api/live-round/{token}/scores",
+                json={"device_id": "dev-B", "device_name": "Dave",
+                      "cells": [{"hole": 2, "player": "GW", "value": 14}]})
+    poll = device.get(f"/api/live-round/{token}/scores?since=0").json()
+    big = next(c for c in poll["cells"] if c["hole"] == 2 and c["player"] == "GW")
+    assert big["value"] == 14
+
+    # Admin bulk edit: correct GW hole 1 and add hole 3. Blank cells are ignored.
+    resp = admin.post(f"/admin/live-round/{token}/edit",
+                      data={"score-1-GW": "5", "score-3-GW": "7", "score-4-GW": ""})
+    assert resp.status_code == 303
+    assert "saved=2" in resp.headers["location"]
+
+    poll2 = device.get(f"/api/live-round/{token}/scores?since=0").json()
+    gw1 = next(c for c in poll2["cells"] if c["hole"] == 1 and c["player"] == "GW")
+    assert gw1["value"] == 5 and gw1["conflict"] is False
+    # The blank hole-4 cell was never created.
+    assert not any(c["hole"] == 4 and c["player"] == "GW" for c in poll2["cells"])
+
+    # Review page renders the editable grid.
+    review = admin.get(f"/admin/live-round/{token}/review")
+    assert "Review &amp; edit scores" in review.text
+    assert 'name="score-1-DM"' in review.text
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

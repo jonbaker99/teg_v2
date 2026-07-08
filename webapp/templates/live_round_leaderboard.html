@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>{% if board %}TEG {{ board.teg_num }} · Round {{ board.round_num }} — Leaderboard{% else %}Live round leaderboard{% endif %}</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0">
+{#
+  Standalone, phone-first, same house style as live_round_entry.html -- a
+  read-only live leaderboard for a round in progress. Scores come straight
+  from staging via /api/live-round/{token}/leaderboard (NOT the main site,
+  which only sees the round once it's finalized). Polls every 10s.
+#}
+<style>
+:root {
+  --font-body:'Lora', Georgia, serif; --font-data:'Roboto Mono', monospace;
+  --bg:#f4f3ef; --surface:#ffffff; --surface-2:#faf9f6; --text:#1a1a1a; --text-2:#555;
+  --text-muted:#8c8c86; --line:#e7e5e0; --accent:forestgreen; --accent-soft:#F3F7F3; --accent-text:forestgreen;
+  --bar:#ffffff; --bar-line:#e7e5e0; --shadow:0 1px 2px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.04);
+  --inprog:#d99a1f; --inprog-soft:#fbf3e2;
+}
+[data-theme="dark"], :root:has(#mode:checked) {
+  --bg:#131311; --surface:#1d1d1a; --surface-2:#242420; --text:#ececea; --text-2:#b7b6b0;
+  --text-muted:#86857e; --line:#2e2e29; --accent:#57c773; --accent-soft:#1b2a1d; --accent-text:#7ad492;
+  --bar:#191916; --bar-line:#2a2a25; --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+  --inprog:#e0ac3f; --inprog-soft:#2a2314;
+}
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body { margin:0; min-height:100%; }
+body { font-family:var(--font-body); background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; }
+.material-symbols-outlined { font-variation-settings:'opsz' 24,'wght' 400; line-height:1; vertical-align:middle; }
+
+.errpage { padding:40px 20px; text-align:center; }
+.errpage p { color:var(--text-2); font-size:15px; line-height:1.6; max-width:26em; margin:0 auto; }
+
+.appbar { position:sticky; top:0; z-index:30; background:var(--bar); border-bottom:1px solid var(--bar-line);
+  padding:calc(10px + env(safe-area-inset-top,0)) 14px 10px; display:flex; align-items:center; gap:10px; }
+.appbar .titles { flex:1; min-width:0; }
+.appbar .kicker { font-family:var(--font-data); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-muted); display:block; line-height:1.4; }
+.appbar .title { font-weight:600; font-size:16px; line-height:1.15; }
+.appbar .backlink { font-family:var(--font-data); font-size:11px; font-weight:600; color:var(--accent-text);
+  background:var(--accent-soft); border:1px solid var(--line); border-radius:999px; padding:7px 11px; text-decoration:none;
+  display:inline-flex; align-items:center; gap:4px; white-space:nowrap; }
+.appbar .backlink .material-symbols-outlined { font-size:15px; }
+
+.statusbanner { background:var(--inprog-soft); color:var(--inprog); font-family:var(--font-data);
+  font-size:12px; font-weight:600; text-align:center; padding:9px 14px; border-bottom:1px solid var(--line); }
+.statusbanner.done { background:var(--accent-soft); color:var(--accent-text); }
+
+.tabbar { display:flex; gap:6px; padding:12px 14px 0; }
+.tabbar button { flex:1; font-family:var(--font-data); font-size:12px; font-weight:700; color:var(--text-2);
+  background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:10px 0; }
+.tabbar button.on { background:var(--accent-soft); color:var(--accent-text); border-color:var(--accent); }
+
+.board { padding:12px 14px 30px; }
+table.lb { width:100%; border-collapse:collapse; font-family:var(--font-data); background:var(--surface);
+  border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+.lb thead th { font-size:10px; letter-spacing:.05em; text-transform:uppercase; color:var(--text-muted); font-weight:600;
+  padding:10px 8px; border-bottom:1px solid var(--line); text-align:right; }
+.lb thead th.l { text-align:left; }
+.lb tbody td { padding:11px 8px; border-bottom:1px solid var(--line); font-size:14px; text-align:right; }
+.lb tbody tr:last-child td { border-bottom:none; }
+.lb td.pos { width:38px; color:var(--text-muted); font-weight:600; text-align:center; }
+.lb td.nm { text-align:left; font-family:var(--font-body); font-weight:600; }
+.lb td.thru { color:var(--text-muted); font-size:12px; }
+.lb td.big { font-weight:700; color:var(--accent-text); }
+.lb tr.waiting td { color:var(--text-muted); }
+.lb tr.waiting td.big { color:var(--text-muted); font-weight:500; }
+.lb .done-tick { color:var(--accent-text); font-size:11px; }
+
+.foot { text-align:center; font-family:var(--font-data); font-size:11px; color:var(--text-muted); padding:6px 14px 20px; }
+.demobar { position:fixed; top:calc(8px + env(safe-area-inset-top,0)); right:10px; z-index:60; }
+.demobar label { background:var(--surface); color:var(--text-2); border:1px solid var(--line); border-radius:999px;
+  padding:6px 10px; font-family:var(--font-data); font-size:11px; cursor:pointer; box-shadow:var(--shadow); display:inline-flex; align-items:center; gap:5px; }
+.demobar .material-symbols-outlined { font-size:16px; }
+</style>
+</head>
+<body>
+
+{% if error %}
+<div class="errpage"><p>{{ error }}</p></div>
+{% else %}
+
+<script type="application/json" id="live-board-data">{{ board | tojson }}</script>
+
+<div class="demobar"><label><input type="checkbox" id="mode" hidden><span class="material-symbols-outlined">contrast</span>Light / Dark</label></div>
+
+<header class="appbar">
+  <div class="titles"><span class="kicker">TEG {{ board.teg_num }} &middot; Round {{ board.round_num }} &middot; {{ board.course }}</span>
+    <div class="title">Live leaderboard</div></div>
+  <a class="backlink" href="/live-round/{{ board.token }}"><span class="material-symbols-outlined">edit</span>Enter scores</a>
+</header>
+
+<div class="statusbanner" id="status-banner"></div>
+
+<div class="tabbar">
+  <button id="tab-net" class="on">TEG Trophy</button>
+  <button id="tab-gross">Green Jacket</button>
+</div>
+
+<div class="board"><table class="lb" id="lb"></table></div>
+<div class="foot" id="foot"></div>
+
+<script>
+const BOARD_INIT = JSON.parse(document.getElementById('live-board-data').textContent);
+const TOKEN = BOARD_INIT.token;
+let board = BOARD_INIT;
+let tab = 'net'; // 'net' | 'gross'
+
+function render() {
+  const banner = document.getElementById('status-banner');
+  if (board.status !== 'active') {
+    banner.className = 'statusbanner done';
+    banner.textContent = board.status === 'finalized'
+      ? '✅ Round finalized — these scores are now in the record.'
+      : '⚪ This round was cancelled.';
+  } else if (board.in_progress) {
+    banner.className = 'statusbanner';
+    banner.textContent = `⏳ Scoring in progress — ${board.filled} of ${board.total} holes in`;
+  } else {
+    banner.className = 'statusbanner done';
+    banner.textContent = '✅ All scores in — waiting for the admin to finalize';
+  }
+
+  const rows = tab === 'net' ? board.net : board.gross;
+  const head = tab === 'net'
+    ? `<tr><th class="l">Pos</th><th class="l">Player</th><th>Thru</th><th>${board.net_label}</th></tr>`
+    : `<tr><th class="l">Pos</th><th class="l">Player</th><th>Thru</th><th>Gross</th><th>vs Par</th></tr>`;
+  const body = rows.map(r => {
+    const waiting = r.thru === 0 ? ' waiting' : '';
+    const thru = r.thru === 0 ? '–' : (r.thru === 18 ? '<span class="done-tick">F</span>' : r.thru);
+    if (tab === 'net') {
+      return `<tr class="${waiting}"><td class="pos">${r.pos_fmt}</td><td class="nm">${r.name}</td>` +
+        `<td class="thru">${thru}</td><td class="big">${r.net_fmt}</td></tr>`;
+    }
+    const gross = r.gross == null ? '–' : r.gross;
+    return `<tr class="${waiting}"><td class="pos">${r.pos_fmt}</td><td class="nm">${r.name}</td>` +
+      `<td class="thru">${thru}</td><td>${gross}</td><td class="big">${r.gross_vp_fmt}</td></tr>`;
+  }).join('');
+  document.getElementById('lb').innerHTML = '<thead>' + head + '</thead><tbody>' + body + '</tbody>';
+  document.getElementById('foot').textContent = 'Updates automatically · "F" = finished 18';
+}
+
+document.getElementById('tab-net').addEventListener('click', () => {
+  tab = 'net';
+  document.getElementById('tab-net').classList.add('on');
+  document.getElementById('tab-gross').classList.remove('on');
+  render();
+});
+document.getElementById('tab-gross').addEventListener('click', () => {
+  tab = 'gross';
+  document.getElementById('tab-gross').classList.add('on');
+  document.getElementById('tab-net').classList.remove('on');
+  render();
+});
+
+async function poll() {
+  try {
+    const res = await fetch(`/api/live-round/${TOKEN}/leaderboard`);
+    if (res.ok) { board = await res.json(); render(); }
+  } catch (e) { console.warn('Leaderboard poll failed (will retry):', e); }
+}
+
+let pollTimer = null;
+function startPolling() {
+  if (pollTimer) clearInterval(pollTimer);
+  if (board.status === 'active') pollTimer = setInterval(poll, 10000);
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { if (pollTimer) { clearInterval(pollTimer); pollTimer = null; } }
+  else { poll(); startPolling(); }
+});
+
+render();
+startPolling();
+</script>
+
+{% endif %}
+</body>
+</html>

@@ -17,11 +17,21 @@
 {% include "partials/admin_nav.html" %}
 
 <div class="section-panel">
-  <p style="margin-bottom:1rem;"><a href="/admin/live-round" class="text-link">← All live rounds</a></p>
+  <p style="margin-bottom:1rem;">
+    <a href="/admin/live-round" class="text-link">← All live rounds</a>
+    {% if live %}<span style="margin:0 .5rem;color:#ccc;">·</span>
+    <a href="/live-round/{{ token }}/leaderboard" class="text-link" target="_blank">Live leaderboard ↗</a>{% endif %}
+  </p>
 
   {% if error %}
     <p class="error" style="color:#b00020;">{{ error }}</p>
   {% else %}
+
+  {% if saved %}
+    <p style="background:#eef4ee;border:1px solid #cfe0cf;color:#2f6b34;padding:.6rem .9rem;border-radius:8px;margin-bottom:1rem;">
+      {% if saved == '0' %}No changes to save — scores already matched.{% else %}Saved {{ saved }} score edit{{ 's' if saved != '1' }}.{% endif %}
+    </p>
+  {% endif %}
 
   <div class="data-card" style="margin-bottom:1rem;">
     <h2 class="card-header">{{ live.course }} — {{ live.status | capitalize }}</h2>
@@ -37,6 +47,46 @@
         {% endfor %}
       </tbody>
     </table>
+  </div>
+
+  <div class="data-card" style="margin-bottom:1rem;">
+    <h2 class="card-header">Review &amp; edit scores</h2>
+    <p style="margin:.5rem 0;">Every entered score is shown below. Edit any cell and press
+      <strong>Save edits</strong> — admin edits are authoritative (they overwrite player entries and
+      clear any conflict). Leave a cell blank to clear it. Scores may be any value 1–20.</p>
+    <form method="post" action="/admin/live-round/{{ token }}/edit">
+      <div style="overflow-x:auto;">
+        <table class="admin-settings-table live-edit-grid">
+          <thead>
+            <tr>
+              <th>Hole</th><th>Par</th>
+              {% for p in live.players %}<th>{{ p }}</th>{% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for h in live.holes %}
+            <tr>
+              <td style="text-align:center;font-weight:600;">{{ h.hole }}</td>
+              <td style="text-align:center;color:#888;">{{ h.par }}</td>
+              {% for p in live.players %}
+                {% set cell = grid.get(h.hole ~ '-' ~ p) %}
+                <td style="text-align:center;{% if cell and cell.conflict %}background:#fbf3e2;{% endif %}">
+                  <input type="number" name="score-{{ h.hole }}-{{ p }}" min="1" max="20"
+                         value="{{ cell.value if cell and cell.value is not none else '' }}"
+                         style="width:3.2rem;text-align:center;{% if cell and cell.conflict %}border-color:#d99a1f;{% endif %}"
+                         {% if cell and cell.conflict %}title="Conflicted — two devices disagreed; saving your value here resolves it"{% endif %}>
+                </td>
+              {% endfor %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:1rem;display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;">
+        <button type="submit" class="btn-action">💾 Save edits</button>
+        <span style="color:#8a6100;font-size:.85rem;">Cells shaded amber are unresolved conflicts.</span>
+      </div>
+    </form>
   </div>
 
   <div class="data-card" style="margin-bottom:1rem;">
@@ -61,7 +111,7 @@
                     style="display:flex;gap:.4rem;align-items:center;">
                 <input type="hidden" name="hole" value="{{ c.hole }}">
                 <input type="hidden" name="player" value="{{ c.player }}">
-                <input type="number" name="chosen_value" value="{{ c.value }}" min="1" max="12" style="width:4rem;">
+                <input type="number" name="chosen_value" value="{{ c.value }}" min="1" max="20" style="width:4rem;">
                 <button type="submit" class="btn-action" hx-disabled-elt="this">Confirm</button>
               </form>
             </td>
