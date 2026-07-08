@@ -279,8 +279,18 @@ def _archive_staging(token: str) -> None:
     write_file(_archive_path(token), staging, f"Archive finished live round {token}", defer_github=True)
 
 
-def resolve_conflict(token: str, hole: int, player: str, chosen_value: int, resolved_by: str) -> dict:
-    """Admin picks the correct value for one conflicted cell, clearing the flag."""
+def apply_admin_edits(token: str, cells: list[dict], resolved_by: str) -> dict:
+    """Admin sets/clears cells from the review page -- authoritative.
+
+    Each cell: {"hole": int, "player": str, "value": int | None} (None clears).
+    An admin edit is the final word on a cell: it overwrites whatever was there
+    (a player value, or a still-flagged conflict) and clears the Conflict flag,
+    because the admin has now decided the correct value. Only cells whose value
+    actually differs from the current staged value are written, so re-saving an
+    unchanged grid doesn't churn the sequence or stomp concurrent player entry.
+
+    Returns {"seq": <new highest seq>, "written": <count>}.
+    """
     with _lock:
         reg = _get_registry_row(token)
         if reg is None:
@@ -288,19 +298,189 @@ def resolve_conflict(token: str, hole: int, player: str, chosen_value: int, reso
 
         staging = _read_staging(token)
         next_seq = int(staging["Seq"].max()) + 1 if not staging.empty else 1
-        mask = (staging["Hole"] == hole) & (staging["Pl"] == player)
+        written = 0
 
-        new_row = {
-            "Hole": hole, "Pl": player, "Score": chosen_value,
-            "DeviceId": "admin", "DeviceName": resolved_by,
-            "Seq": next_seq, "Conflict": False,
-            "PrevScore": None, "PrevDeviceName": None,
+        for cell in cells:
+            hole = int(cell["hole"])
+            player = cell["player"]
+            value = cell.get("value")
+
+            mask = (staging["Hole"] == hole) & (staging["Pl"] == player)
+            existing = staging[mask]
+            if not existing.empty:
+                row = existing.iloc[0]
+                existing_score = None if pd.isna(row["Score"]) else int(row["Score"])
+                # Nothing to do if the value already matches and the cell isn't
+                # flagged -- an admin re-save shouldn't bump the seq needlessly.
+                if existing_score == value and not bool(row.get("Conflict", False)):
+                    continue
+            elif value is None:
+                # No existing row and nothing to set: don't create an empty row
+                # (a bulk grid save posts every cell, most of them blank).
+                continue
+
+            new_row = {
+                "Hole": hole, "Pl": player, "Score": value,
+                "DeviceId": "admin", "DeviceName": resolved_by,
+                "Seq": next_seq, "Conflict": False,
+                "PrevScore": None, "PrevDeviceName": None,
+            }
+            staging = staging[~mask]
+            staging = pd.concat([staging, pd.DataFrame([new_row])], ignore_index=True)
+            next_seq += 1
+            written += 1
+
+        if written:
+            _write_staging(token, staging)
+
+    return {"seq": next_seq - 1, "written": written}
+
+
+def resolve_conflict(token: str, hole: int, player: str, chosen_value: int, resolved_by: str) -> dict:
+    """Admin picks the correct value for one conflicted cell, clearing the flag."""
+    return apply_admin_edits(
+        token, [{"hole": hole, "player": player, "value": chosen_value}], resolved_by
+    )
+
+
+# ---------------------------------------------------------------------------
+# Live leaderboard: current standings from staging, mid-round
+# ---------------------------------------------------------------------------
+
+def get_live_leaderboard(token: str) -> dict | None:
+    """Current gross + net standings for a round in progress, from staging.
+
+    Computed straight off the staged scores (never all-scores -- a live round
+    isn't in the permanent record until finalize), reusing the same per-hole
+    scoring transform as the real data pipeline
+    (``data_update.process_round_for_all_scores``) so gross/net/Stableford
+    match what the finalized round will show. Partial cards are fine: metrics
+    are summed over whatever holes are in so far, with ``thru`` giving the hole
+    count for context.
+
+    Returns None if the token doesn't exist. ``in_progress`` is True until every
+    playing player has all 18 holes entered.
+    """
+    reg = _get_registry_row(token)
+    if reg is None:
+        return None
+
+    from teg_analysis.analysis.teg_setup import get_teg_roster_form
+    from teg_analysis.analysis.round_setup import get_round_setup_form
+    from teg_analysis.analysis.data_update import process_round_for_all_scores
+    from teg_analysis.analysis.scoring import get_net_competition_measure, format_vs_par
+    from teg_analysis.core.data_loader import get_player_name
+
+    teg_num, round_num = int(reg["TEGNum"]), int(reg["Round"])
+    roster = get_teg_roster_form(teg_num)
+    playing = [p for p in roster["players"] if p["playing"]]
+    setup = get_round_setup_form(teg_num, round_num)
+    net_measure = get_net_competition_measure(teg_num)
+
+    staging = _read_staging(token)
+    entered = staging[staging["Score"].notna()] if not staging.empty else staging
+
+    # Baseline row for every playing player (so a player with no scores yet
+    # still appears, at the bottom, rather than silently vanishing).
+    rows = {
+        p["code"]: {
+            "code": p["code"], "name": get_player_name(p["code"]), "thru": 0,
+            "gross": None, "gross_vp": None, "netvp": None, "stableford": None,
+            "net_value": None,
         }
-        staging = staging[~mask]
-        staging = pd.concat([staging, pd.DataFrame([new_row])], ignore_index=True)
-        _write_staging(token, staging)
+        for p in playing
+    }
 
-    return {"seq": next_seq}
+    if not entered.empty and playing:
+        long_df = entered[["Hole", "Pl", "Score"]].copy()
+        long_df["Hole"] = long_df["Hole"].astype(int)
+        long_df["Score"] = long_df["Score"].astype(int)
+        long_df["TEGNum"] = teg_num
+        long_df["Round"] = round_num
+        long_df = long_df.merge(
+            pd.DataFrame(setup["holes"]).rename(columns={"hole": "Hole", "par": "Par", "si": "SI"}),
+            on="Hole", how="left",
+        )
+        hc_long = pd.DataFrame(
+            [{"TEG": f"TEG {teg_num}", "Pl": p["code"], "HC": p["handicap"] or 0} for p in playing]
+        )
+        processed = process_round_for_all_scores(long_df, hc_long)
+        agg = processed.groupby("Pl").agg(
+            thru=("Sc", "size"), gross=("Sc", "sum"), gross_vp=("GrossVP", "sum"),
+            netvp=("NetVP", "sum"), stableford=("Stableford", "sum"),
+        )
+        for code, a in agg.iterrows():
+            if code not in rows:
+                continue
+            r = rows[code]
+            r["thru"] = int(a["thru"])
+            r["gross"] = int(a["gross"])
+            r["gross_vp"] = int(a["gross_vp"])
+            r["netvp"] = int(a["netvp"])
+            r["stableford"] = int(a["stableford"])
+            r["net_value"] = r["stableford"] if net_measure == "Stableford" else r["netvp"]
+
+    def _standings(net: bool) -> list[dict]:
+        # Higher Stableford wins; lower gross-vp / net-vp wins. Players with no
+        # scores yet sort last regardless.
+        if net and net_measure == "Stableford":
+            key = lambda r: (r["thru"] == 0, -(r["net_value"] or 0), -r["thru"])
+            rank_val = lambda r: r["net_value"]
+        elif net:
+            key = lambda r: (r["thru"] == 0, r["net_value"] if r["net_value"] is not None else 0, -r["thru"])
+            rank_val = lambda r: r["net_value"]
+        else:
+            key = lambda r: (r["thru"] == 0, r["gross_vp"] if r["gross_vp"] is not None else 0, -r["thru"])
+            rank_val = lambda r: r["gross_vp"]
+
+        ordered = sorted(rows.values(), key=key)
+        out, last_val, last_pos = [], object(), 0
+        for i, r in enumerate(ordered, start=1):
+            row = dict(r)
+            if r["thru"] == 0:
+                row["pos"] = None
+            else:
+                v = rank_val(r)
+                if v != last_val:
+                    last_pos, last_val = i, v
+                row["pos"] = last_pos
+            if not net:
+                row["gross_vp_fmt"] = format_vs_par(r["gross_vp"]) if r["gross_vp"] is not None else "–"
+            elif net_measure == "NetVP":
+                row["net_fmt"] = format_vs_par(r["net_value"]) if r["net_value"] is not None else "–"
+            else:
+                row["net_fmt"] = str(r["net_value"]) if r["net_value"] is not None else "–"
+            out.append(row)
+        # Mark shared positions with a trailing '=' like the rest of the app.
+        counts = {}
+        for row in out:
+            if row["pos"] is not None:
+                counts[row["pos"]] = counts.get(row["pos"], 0) + 1
+        for row in out:
+            if row["pos"] is not None:
+                row["pos_fmt"] = f"{row['pos']}=" if counts[row["pos"]] > 1 else str(row["pos"])
+            else:
+                row["pos_fmt"] = "–"
+        return out
+
+    filled = sum(r["thru"] for r in rows.values())
+    total = len(playing) * 18
+    in_progress = any(r["thru"] < 18 for r in rows.values()) if playing else True
+
+    return {
+        "token": token,
+        "teg_num": teg_num,
+        "round_num": round_num,
+        "course": setup["course"],
+        "status": reg["Status"],
+        "net_measure": net_measure,
+        "net_label": "Stableford" if net_measure == "Stableford" else "Net vs par",
+        "filled": filled,
+        "total": total,
+        "in_progress": in_progress,
+        "gross": _standings(net=False),
+        "net": _standings(net=True),
+    }
 
 
 # ---------------------------------------------------------------------------

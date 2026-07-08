@@ -63,9 +63,11 @@ teg_analysis/
     teg_setup.py     Pre-TEG roster + handicap confirmation (handicaps.csv) — not every
                      player plays every TEG — get_teg_roster_form/save_teg_roster
     live_round.py    Multi-device live round entry: registry + per-round staging CSVs,
-                     server-ordered writes, conflict flagging, finalize into
-                     execute_data_update — start_live_round/apply_score_writes/
-                     get_scores_since/resolve_conflict/finalize_live_round
+                     server-ordered writes, conflict flagging, live leaderboard from
+                     staging, finalize into execute_data_update —
+                     start_live_round/apply_score_writes/get_scores_since/
+                     apply_admin_edits (authoritative bulk edit; resolve_conflict wraps
+                     it)/get_live_leaderboard/finalize_live_round
 
   reporting/         LLM tournament-report pipeline (scored beats → story plan → authoring → styled MD)
     README.md        How it works (architecture, artefacts, end-to-end usage)

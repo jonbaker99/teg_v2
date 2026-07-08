@@ -95,7 +95,7 @@ async def admin_live_round_review(request: Request, token: str):
 
     from teg_analysis.analysis.live_round import get_live_round_context, get_scores_since
 
-    ctx = {"request": request, "token": token}
+    ctx = {"request": request, "token": token, "saved": request.query_params.get("saved")}
     try:
         live_ctx = get_live_round_context(token)
         if live_ctx is None:
@@ -105,15 +105,65 @@ async def admin_live_round_review(request: Request, token: str):
             polled = get_scores_since(token, since_seq=0)
             ctx["conflicts"] = [c for c in polled["cells"] if c["conflict"]]
             progress = {p: 0 for p in live_ctx["players"]}
+            # Full grid keyed "hole-player" so the template can render an
+            # editable scorecard with every entered score in place.
+            grid = {}
             for c in polled["cells"]:
                 if c["value"] is not None and c["player"] in progress:
                     progress[c["player"]] += 1
+                grid[f"{c['hole']}-{c['player']}"] = {"value": c["value"], "conflict": c["conflict"]}
             ctx["progress"] = progress
+            ctx["grid"] = grid
     except Exception as e:  # noqa: BLE001
         logger.error(f"Live round review failed: {e}", exc_info=True)
         ctx["error"] = f"Could not load review: {e}"
 
     return templates.TemplateResponse("admin_live_round_review.html", ctx)
+
+
+@router.post("/admin/live-round/{token}/edit")
+async def admin_live_round_edit(request: Request, token: str):
+    """Bulk admin edit of the staged scorecard from the review grid.
+
+    A plain form POST (not HTMX): posts every cell's value, writes only the
+    ones that changed (via apply_admin_edits, which is authoritative and clears
+    any conflict), then redirects back to the review page so the whole grid
+    re-renders from the saved state.
+    """
+    if not is_authed(request):
+        return _redirect("/admin/login")
+
+    from teg_analysis.analysis.live_round import apply_admin_edits, LiveRoundNotFoundError
+
+    form = await request.form()
+    cells = []
+    for key, raw in form.items():
+        if not key.startswith("score-"):
+            continue
+        try:
+            _, hole_s, player = key.split("-", 2)
+            hole = int(hole_s)
+        except ValueError:
+            continue
+        raw = (raw or "").strip()
+        if raw == "":
+            value = None  # blank clears the cell
+        else:
+            try:
+                value = int(raw)
+            except ValueError:
+                continue
+            if value < 1 or value > 20:
+                continue  # ignore out-of-range typos rather than write them
+        cells.append({"hole": hole, "player": player, "value": value})
+
+    try:
+        result = apply_admin_edits(token, cells, resolved_by="Admin")
+        written = result["written"]
+    except LiveRoundNotFoundError:
+        return _redirect(f"/admin/live-round/{token}/review")
+
+    return _redirect(f"/admin/live-round/{token}/review?saved={written}")
 
 
 @router.post("/admin/live-round/{token}/resolve", response_class=HTMLResponse)

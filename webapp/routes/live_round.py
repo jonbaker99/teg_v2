@@ -64,6 +64,36 @@ async def live_round_page(request: Request, token: str):
     return templates.TemplateResponse("live_round_entry.html", ctx)
 
 
+@router.get("/live-round/{token}/leaderboard", name="live_round_leaderboard_page")
+async def live_round_leaderboard_page(request: Request, token: str):
+    from teg_analysis.analysis.live_round import get_live_leaderboard
+
+    ctx = {"request": request, "token": token}
+    try:
+        board = get_live_leaderboard(token)
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Live leaderboard load failed: {e}", exc_info=True)
+        board = None
+        ctx["error"] = "Something went wrong loading the leaderboard."
+
+    if board is None:
+        ctx.setdefault("error", "This link doesn't match a live round. Check the link, or ask whoever started the round.")
+    else:
+        ctx["board"] = board
+
+    return templates.TemplateResponse("live_round_leaderboard.html", ctx)
+
+
+@router.get("/api/live-round/{token}/leaderboard")
+async def api_live_leaderboard(token: str):
+    from teg_analysis.analysis.live_round import get_live_leaderboard
+
+    board = get_live_leaderboard(token)
+    if board is None:
+        raise HTTPException(status_code=404, detail="Live round not found")
+    return board
+
+
 @router.get("/api/live-round/{token}/scores")
 async def api_poll_scores(token: str, since: int = 0):
     from teg_analysis.analysis.live_round import get_scores_since, LiveRoundNotFoundError

@@ -49,6 +49,11 @@ body { font-family:var(--font-body); background:var(--bg); color:var(--text); -w
 
 .statusbanner { flex:0 0 auto; background:var(--accent-soft); color:var(--accent-text); font-family:var(--font-data);
   font-size:12px; font-weight:600; text-align:center; padding:8px 14px; border-bottom:1px solid var(--line); }
+.donebanner { flex:0 0 auto; display:flex; align-items:center; justify-content:center; gap:12px; background:var(--accent-soft);
+  color:var(--accent-text); font-family:var(--font-data); font-size:12px; font-weight:600; text-align:center;
+  padding:9px 14px; border-bottom:1px solid var(--line); }
+.donebanner[hidden] { display:none; }
+.donebanner a { color:var(--accent-text); font-weight:700; text-decoration:underline; }
 
 .totalsbar { flex:0 0 auto; display:flex; overflow-x:auto; -webkit-overflow-scrolling:touch; background:var(--surface-2);
   border-bottom:1px solid var(--line); }
@@ -124,14 +129,21 @@ table.egrid { width:100%; border-collapse:collapse; font-family:var(--font-data)
 .keypad button.ok { font-family:var(--font-data); font-size:13px; font-weight:600; color:var(--text-2);
   background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:9px 0; }
 .keypad button.ok:active { background:var(--key-active); }
+.keypad .otherrow { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.keypad .otherrow .olabel { font-family:var(--font-data); font-size:10px; letter-spacing:.05em; text-transform:uppercase; color:var(--text-muted); font-weight:600; }
+.keypad .otherrow input { flex:1; min-width:0; font-family:var(--font-data); font-size:15px; color:var(--text);
+  background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:9px 12px; -webkit-user-select:text; user-select:text; }
+.keypad .otherrow input:focus { outline:2px solid var(--accent); outline-offset:-1px; }
+.keypad .otherrow button.ok { flex:0 0 auto; padding:9px 16px; }
 
 .kmode { display:flex; justify-content:center; gap:5px; margin-bottom:8px; }
 .kmode button { font-family:var(--font-data); font-size:10px; font-weight:600; color:var(--text-muted);
   background:transparent; border:1px solid var(--line); border-radius:999px; padding:4px 10px; }
 .kmode button.on { background:var(--accent-soft); color:var(--accent-text); border-color:var(--accent); }
 
+.toolbar .toolbar-right { display:flex; align-items:center; gap:8px; }
 .toolbar .voicebtn { display:inline-flex; align-items:center; gap:5px; font-family:var(--font-data); font-size:11px; font-weight:600;
-  color:var(--accent-text); background:var(--accent-soft); border:1px solid var(--line); border-radius:999px; padding:7px 12px; }
+  color:var(--accent-text); background:var(--accent-soft); border:1px solid var(--line); border-radius:999px; padding:7px 12px; text-decoration:none; }
 .toolbar .voicebtn .material-symbols-outlined { font-size:15px; }
 .toolbar .voicebtn:disabled { opacity:.4; }
 .scrim { position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:70; }
@@ -196,6 +208,10 @@ table.egrid { width:100%; border-collapse:collapse; font-family:var(--font-data)
 </header>
 
 <div class="statusbanner" id="status-banner" hidden></div>
+<div class="donebanner" id="done-banner" hidden>
+  <span id="done-text">✅ All scores in for your group.</span>
+  <a href="/live-round/{{ live.token }}/leaderboard">View leaderboard &rarr;</a>
+</div>
 
 <div class="totalsbar" id="totalsbar"></div>
 
@@ -209,7 +225,10 @@ table.egrid { width:100%; border-collapse:collapse; font-family:var(--font-data)
     <button id="trav-col" class="on"><span class="material-symbols-outlined">arrow_downward</span>Column</button>
     <button id="trav-row"><span class="material-symbols-outlined">arrow_forward</span>Row</button>
   </div>
-  <button class="voicebtn" id="voice-btn"><span class="material-symbols-outlined">mic</span>Voice</button>
+  <div class="toolbar-right">
+    <button class="voicebtn" id="voice-btn"><span class="material-symbols-outlined">mic</span>Voice</button>
+    <a class="voicebtn" href="/live-round/{{ live.token }}/leaderboard"><span class="material-symbols-outlined">leaderboard</span>Leaderboard</a>
+  </div>
 </div>
 
 <div class="gridwrap">
@@ -249,10 +268,12 @@ const PLAYERS = DATA.players;
 const PLAYER_NAMES = DATA.player_names;
 const PARS = DATA.holes.map(h => h.par);
 const SIS = DATA.holes.map(h => h.si);
+const MAX_SCORE = 20; // hard cap for any single hole (covers blow-ups like a 14)
 
 let scores = {};      // key "hole-player" -> number | null
 let conflicts = {};   // key "hole-player" -> bool, from the server only
 let active = null;    // {hole, player}
+let typeBuffer = '';  // digits typed on a physical keyboard, before commit
 let traversal = 'col'; // 'col' | 'row'
 let keypadMode = 'fixed'; // 'fixed' | 'relative'
 let visiblePlayers = new Set(PLAYERS);
@@ -352,6 +373,7 @@ function setVisiblePlayers(next) {
 
 function setActive(hole, player) {
   if (liveStatus !== 'active') return;
+  typeBuffer = '';
   active = { hole, player };
   document.querySelectorAll('td.cell.active').forEach(td => td.classList.remove('active'));
   const td = document.querySelector(`td.cell[data-hole="${hole}"][data-player="${player}"]`);
@@ -405,6 +427,11 @@ function renderKeypad() {
        <div class="prow prow2">${primary.slice(4).map(bigBtn).join('')}</div>`;
   kp.innerHTML = modeRow + primaryRows + `
     <div class="orow">${outliers.map(v => `<button class="k ok" data-v="${v}">${v}</button>`).join('')}</div>
+    <div class="otherrow">
+      <span class="olabel">Other</span>
+      <input type="number" inputmode="numeric" pattern="[0-9]*" min="1" max="${MAX_SCORE}" id="other-input" placeholder="type any score, e.g. 14">
+      <button class="k ok" data-v="other">Set</button>
+    </div>
     <div class="krow"><button class="k clear" data-v="clear">Clear</button><button class="k next" data-v="next" style="grid-column:span 3;">Next &rarr;</button></div>
   `;
   kp.querySelectorAll('button.k').forEach(btn => {
@@ -413,12 +440,25 @@ function renderKeypad() {
   kp.querySelectorAll('button[data-kmode]').forEach(btn => {
     btn.addEventListener('click', () => setKeypadMode(btn.dataset.kmode));
   });
+  const other = document.getElementById('other-input');
+  if (other) other.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); handleKey('other'); }
+  });
 }
 
 function handleKey(v) {
   if (!active) return;
   if (v === 'clear') { setScore(active.hole, active.player, null); updateTotalsAndSubtotals(); return; }
   if (v === 'next') { advance(); return; }
+  if (v === 'other') {
+    const inp = document.getElementById('other-input');
+    const val = parseInt(inp && inp.value, 10);
+    if (!(val >= 1 && val <= MAX_SCORE)) return;
+    setScore(active.hole, active.player, val);
+    updateTotalsAndSubtotals();
+    advance();
+    return;
+  }
   setScore(active.hole, active.player, parseInt(v));
   updateTotalsAndSubtotals();
   advance();
@@ -487,6 +527,7 @@ function updateTotalsAndSubtotals() {
     }
   });
   document.getElementById('progress').textContent = `${filled} / ${PLAYERS.length * 18}`;
+  updateDoneState();
 }
 
 document.getElementById('trav-col').addEventListener('click', () => {
@@ -499,6 +540,93 @@ document.getElementById('trav-row').addEventListener('click', () => {
   document.getElementById('trav-row').classList.add('on');
   document.getElementById('trav-col').classList.remove('on');
 });
+
+// ---------- Physical-keyboard entry (laptops, external keyboards) ----------
+// Type digits into the active cell (two digits handle a 10+); Enter/Tab commit
+// and advance, arrows navigate, Backspace clears. This is the same write path
+// as the on-screen keypad -- it just fills the active cell without a tap.
+function renderActiveBuffer() {
+  if (!active) return;
+  const td = document.querySelector(`td.cell[data-hole="${active.hole}"][data-player="${active.player}"]`);
+  if (!td) return;
+  if (typeBuffer) { td.querySelector('.box').textContent = typeBuffer; td.classList.add('filled'); }
+  else renderCell(active.hole, active.player);
+}
+
+function commitBuffer() {
+  if (!active || !typeBuffer) return;
+  const v = parseInt(typeBuffer, 10);
+  typeBuffer = '';
+  if (v >= 1 && v <= MAX_SCORE) { setScore(active.hole, active.player, v); updateTotalsAndSubtotals(); }
+  else renderActiveBuffer();
+}
+
+function retreat() {
+  let { hole, player } = active;
+  const vp = visiblePlayersList();
+  const pi = vp.indexOf(player);
+  if (traversal === 'col') {
+    if (hole > 1) hole -= 1; else { hole = 18; player = vp[(pi - 1 + vp.length) % vp.length]; }
+  } else {
+    if (pi > 0) player = vp[pi - 1]; else { player = vp[vp.length - 1]; hole = hole > 1 ? hole - 1 : 18; }
+  }
+  setActive(hole, player);
+}
+
+function moveActive(dir) {
+  let { hole, player } = active;
+  const vp = visiblePlayersList();
+  const pi = vp.indexOf(player);
+  if (dir === 'up') hole = hole > 1 ? hole - 1 : 1;
+  else if (dir === 'down') hole = hole < 18 ? hole + 1 : 18;
+  else if (dir === 'left') player = vp[(pi - 1 + vp.length) % vp.length];
+  else if (dir === 'right') player = vp[(pi + 1) % vp.length];
+  setActive(hole, player);
+}
+
+document.addEventListener('keydown', e => {
+  if (liveStatus !== 'active' || !active) return;
+  const tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'textarea') return; // let real fields (voice, name, "Other") own the keys
+  const k = e.key;
+  if (k >= '0' && k <= '9') {
+    e.preventDefault();
+    if (typeBuffer.length >= 2) typeBuffer = '';
+    const next = typeBuffer + k;
+    typeBuffer = parseInt(next, 10) > MAX_SCORE ? k : next;
+    renderActiveBuffer();
+  } else if (k === 'Enter') {
+    e.preventDefault(); commitBuffer(); advance();
+  } else if (k === 'Tab') {
+    e.preventDefault(); commitBuffer(); if (e.shiftKey) retreat(); else advance();
+  } else if (k === 'Backspace' || k === 'Delete') {
+    e.preventDefault();
+    if (typeBuffer) { typeBuffer = typeBuffer.slice(0, -1); renderActiveBuffer(); }
+    else { setScore(active.hole, active.player, null); updateTotalsAndSubtotals(); }
+  } else if (k === 'Escape') {
+    e.preventDefault(); typeBuffer = ''; renderActiveBuffer();
+  } else if (k === 'ArrowUp') { e.preventDefault(); commitBuffer(); moveActive('up'); }
+  else if (k === 'ArrowDown') { e.preventDefault(); commitBuffer(); moveActive('down'); }
+  else if (k === 'ArrowLeft') { e.preventDefault(); commitBuffer(); moveActive('left'); }
+  else if (k === 'ArrowRight') { e.preventDefault(); commitBuffer(); moveActive('right'); }
+});
+
+// Soft "done": when every visible player has all 18 holes in, surface the
+// leaderboard link. Locks nothing -- the admin still finalizes.
+function updateDoneState() {
+  const banner = document.getElementById('done-banner');
+  if (!banner || liveStatus !== 'active') { if (banner) banner.hidden = true; return; }
+  const vp = visiblePlayersList();
+  const allIn = vp.length > 0 && vp.every(p => {
+    for (let h = 1; h <= 18; h++) if (scores[cellKey(h, p)] == null) return false;
+    return true;
+  });
+  const everyone = visiblePlayers.size === PLAYERS.length;
+  document.getElementById('done-text').textContent = everyone
+    ? '✅ All scores in.'
+    : '✅ All scores in for your group.';
+  banner.hidden = !allIn;
+}
 
 // ---------- Voice entry ----------
 const NUM_WORDS = {
@@ -515,7 +643,7 @@ function parseDictation(text) {
   const unknown = [];
   for (const tok of tokens) {
     if (/^\d+$/.test(tok)) {
-      if (tok.length <= 2 && +tok >= 1 && +tok <= 12) { values.push(+tok); continue; }
+      if (tok.length <= 2 && +tok >= 1 && +tok <= MAX_SCORE) { values.push(+tok); continue; }
       let i = 0;
       while (i < tok.length) {
         if (tok[i] === '1' && i + 1 < tok.length && '012'.includes(tok[i + 1])) { values.push(+tok.substr(i, 2)); i += 2; }
@@ -526,7 +654,7 @@ function parseDictation(text) {
     if (tok in NUM_WORDS) { values.push(NUM_WORDS[tok]); continue; }
     if (!FILLER_WORDS.has(tok)) unknown.push(tok);
   }
-  return { values, unknown, bad: values.filter(v => v < 1 || v > 12) };
+  return { values, unknown, bad: values.filter(v => v < 1 || v > MAX_SCORE) };
 }
 
 function voiceStartCell() {
@@ -564,7 +692,7 @@ function updateVoicePreview() {
   const res = parseDictation(document.getElementById('v-input').value);
   const targets = voiceTargets(res.values.length);
   const chips = res.values.map((v, i) => {
-    if (v < 1 || v > 12) return `<span class="vchip bad">${v} &#10005;</span>`;
+    if (v < 1 || v > MAX_SCORE) return `<span class="vchip bad">${v} &#10005;</span>`;
     if (i >= targets.length) return `<span class="vchip skip">${v} &middot; no cell</span>`;
     const t = targets[i];
     return `<span class="vchip">H${t.hole} ${t.player} <b>${v}</b></span>`;
@@ -579,7 +707,7 @@ function updateVoicePreview() {
     apply.disabled = true; apply.textContent = 'Fix before filling';
   } else if (res.bad.length) {
     msg.className = 'vmsg err';
-    msg.textContent = 'Scores must be 1–12 — edit the marked values.';
+    msg.textContent = `Scores must be 1–${MAX_SCORE} — edit the marked values.`;
     apply.disabled = true; apply.textContent = 'Fix before filling';
   } else {
     msg.className = 'vmsg';
@@ -717,6 +845,7 @@ function applyStatus() {
   active = null;
   document.getElementById('keypad').innerHTML = '';
   document.getElementById('voice-btn').disabled = true;
+  document.getElementById('done-banner').hidden = true;
 }
 
 function startPolling() {

@@ -83,10 +83,17 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
 **Live round** — templates `admin_live_round.html`, `admin_live_round_review.html`,
 `partials/admin_live_round_*.html`.
 - **Routes:** `/admin/live-round` (list + start), `/admin/live-round/{token}/review`
-  (conflicts + finalize), `/admin/live-round/{token}/resolve`,
-  `/admin/live-round/{token}/finalize`, `/admin/live-round/{token}/cancel` (all HTMX).
+  (editable scorecard grid + conflicts + finalize), `/admin/live-round/{token}/edit`
+  (bulk admin edit — a plain form POST that redirects back to review),
+  `/admin/live-round/{token}/resolve`, `/admin/live-round/{token}/finalize`,
+  `/admin/live-round/{token}/cancel` (the rest HTMX).
 - **Purpose:** start a live, multi-device round-entry session for an already-set-up
   round, hand out its shareable link, and review/finalize once everyone's done.
+  The review page shows the **full staged scorecard as an editable grid** — the admin
+  can correct any cell (not just flagged conflicts), links out to the live leaderboard,
+  and finalizes. Admin edits go through `live_round.apply_admin_edits`, which is
+  authoritative: an admin value overwrites a player entry and clears any conflict flag,
+  and only cells whose value actually changed are written (a re-save is a no-op).
   Finalizing runs the staged scores through the *existing* `execute_data_update`
   pipeline exactly as "Add a round" does — one GitHub commit, every derived cache
   regenerated. See the player-facing side below and
@@ -219,10 +226,28 @@ the small group, matching the pattern elsewhere in this app), started from
 the admin Live round page above.
 
 - **Routes:** `GET /live-round/{token}` (the entry page itself),
+  `GET /live-round/{token}/leaderboard` (a read-only live leaderboard page),
   `GET /api/live-round/{token}/scores?since={seq}` (poll for changes),
   `POST /api/live-round/{token}/scores` (write N cells — one tap, or a whole
   voice-entry batch — as a single JSON request; Pydantic-validated, the only
-  JSON API in this codebase so far).
+  JSON API in this codebase so far),
+  `GET /api/live-round/{token}/leaderboard` (JSON standings the leaderboard page polls).
+- **Score entry:** three input paths, all writing the same cell via the same API —
+  the on-screen keypad (fixed 2–8 or relative-to-par, plus an **"Other"** field for
+  anything off the buttons, e.g. a 14), **physical-keyboard** entry when a cell is
+  active (type digits, Enter/Tab to commit-and-advance, arrows to navigate, Backspace
+  to clear — for laptop use), and **voice** (OS dictation, parsed client-side). Any
+  score 1–20 is accepted (`MAX_SCORE` in the template; the old 1–12 keypad ceiling was
+  a button-layout limit, not a data one).
+- **Finishing / leaderboard:** there's no hard "submit" (the admin still finalizes) —
+  instead, once every visible player has all 18 holes in, a **"View leaderboard"** done
+  banner appears, and a Leaderboard button is always in the toolbar. The live
+  leaderboard is computed straight from staging by `live_round.get_live_leaderboard`
+  (reusing `data_update.process_round_for_all_scores`, so gross/net/Stableford match
+  the eventual finalized round), shows both competitions (TEG Trophy = net, Green Jacket
+  = gross) with a "scoring in progress" banner until all 18 holes are in for everyone,
+  and polls every 10s. It reads **only staging** — a live round isn't on the main-site
+  `/leaderboard` or `/results` until it's finalized.
 - **Page:** a standalone page (does **not** extend `base.html`'s desktop site
   chrome) styled like `webapp/mobile_mockups/round_entry_grid.html`, which it's
   ported from almost verbatim — same grid/keypad/voice-entry/player-group-chips
