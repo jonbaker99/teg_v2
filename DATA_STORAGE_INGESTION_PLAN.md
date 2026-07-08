@@ -7,12 +7,13 @@ complete, revised** (`course_pars.csv` now defaults every course to its most-rec
 round, not majority vote — all 26 courses populated). **Phase 2.5 complete** (new: pre-round
 setup — `round_pars.csv` + the `/admin/round-setup` page — so Par/SI is confirmed by an
 admin before a round is played, never by whoever's entering scores). **[Decisions needed for
-Jon](#decisions-needed-for-jon) — both resolved, nothing outstanding.** **Phase 3.1 + 3.2
-complete** (prototype briefs below; all three built as interactive mockups at `/mockups/` —
-`round_entry_grid.html`, `round_entry_wizard.html`, `round_entry_player.html` —
-Playwright-verified to work, no console errors). **Blocked on Jon (Phase 3.3):** try the
-three mockups on a real phone and record the pick under "Phase 3.3 decision" below —
-everything from Phase 3.4 onward depends on it. Temporary working document (CLAUDE.md
+Jon](#decisions-needed-for-jon) — both resolved, nothing outstanding.** **Phase 3.1 + 3.2 +
+3.2b complete** (four interactive mockups at `/mockups/` — grid/wizard/player-column/flow —
+with par-relative keypads and voice entry layered on). **Phase 3.3 complete:** Pattern A
+(`round_entry_grid.html`) chosen as the final design, refined with a fixed 2–8 keypad, bigger
+buttons, and an all-players/single-player view toggle — see "Phase 3.3 decision" below.
+**Next: Phase 3.4** (build the real, data-writing round-entry page from this reference) is not
+started. Temporary working document (CLAUDE.md
 Documentation Rule 3). When Phase 4 is complete, fold the outcome into `DATA_FLOW.md`,
 `webapp/README.md`, `teg_analysis/README.md`, and CLAUDE.md's "Current state & next steps",
 then delete this file (see the wrap-up note at the very end).
@@ -695,6 +696,59 @@ pad, D added. The 3.3 decision below should now weigh four patterns, not three.
 
 ## Phase 3.3 decision
 
-*(Not yet made — try the three mockups above on an actual phone via `/mockups/`, ideally
-simulating real conditions, and record the pick and reasoning here before starting Phase
-3.4.)*
+**Decided: Pattern A (`round_entry_grid.html`, sticky-keypad grid) is the chosen direction.**
+Tried all four on a real phone. The voice entry and par-relative keypad were both judged
+successes and are being kept; A won over the others for its always-visible grid (gap-spotting
+at a glance) combined with a keypad. Refinements made after the on-phone trial, all in
+`round_entry_grid.html`:
+
+- **Fixed 2–8 keypad, not par-relative shifting.** The par-relative *range* was right, but
+  letting the six primary buttons slide with par (as 3.2b built it) turned out to slow entry
+  down in practice — fingers couldn't build muscle memory for "the low-score button" when its
+  screen position kept moving. Numbers are now pinned: **2–8 are always the big primary
+  buttons**, in the same position on every hole (this range still covers every par-1..par+4
+  case for par 3/4/5, i.e. the same 97.8%-of-all-scores window as before); 1 and 9–12 stay
+  reachable as a smaller outlier row underneath. Only the *label* under each button
+  (birdie/par/bogey/+2…) still moves with par — the position doesn't.
+- **Bigger keypad**, sized up to feel closer to the `round_entry_flow.html` big-pad (larger
+  buttons, bigger digits), since screen space allowed it once the layout wasn't fighting a
+  6-wide single row.
+- **All-players / single-player view toggle.** A segmented control above the grid switches
+  between showing all 7 columns (the gap-spotting overview) and filtering to just one
+  player's column (less visual noise while transcribing one card start-to-finish). Traversal
+  in single-player mode is always hole-by-hole for that player; the Column/Row toggle is
+  hidden since it's moot with one column. Voice entry respects the same filter.
+
+Not carried forward: Patterns B, C, D remain in `webapp/mobile_mockups/` for reference but
+are no longer active candidates. `round_entry_grid.html` is the reference implementation for
+Phase 3.4 (building the real, data-writing round-entry page) — that build-out (auth, wiring to
+`round_pars.csv`/`all-scores.parquet`, roster awareness, persistence) has not started yet.
+
+## TEG roster + handicap setup (built)
+
+Companion admin page to Phase 2.5's round setup, addressing the same gap one level up: not
+every player plays every TEG, and until now the only handicap-prepopulation logic
+(`get_current_handicaps_formatted` / `get_hc` in `teg_analysis/analysis/handicaps.py`) was
+wired into a read-only display on the Handicaps page. New module
+`teg_analysis/analysis/teg_setup.py` (`get_teg_roster_form`, `save_teg_roster`,
+`get_roster_players`, `get_next_teg`) reuses that existing calculation rather than
+reimplementing it, and a new `/admin/teg-setup[/{teg_num}]` page (mirroring
+`/admin/round-setup`'s structure) lets an admin, ahead of a TEG:
+
+- see all 7 rostered players (the ones with a column in `handicaps.csv`) with a
+  playing/not-playing checkbox and a handicap field,
+- prefilled from `handicaps.csv` if a row already exists for that TEG ("confirmed"), else
+  from the calculated draft ("calculated"), else blank,
+- manually override any handicap or roster flag before saving, which upserts the one
+  `handicaps.csv` row for that TEG in place (existing row order untouched; a genuinely new
+  TEG is appended).
+
+Not-playing is still the 0-in-that-cell convention already used throughout the existing data
+(`load_and_prepare_handicap_data` already drops `HC == 0` rows) — no schema change. Scope
+note: this only covers the 7 players who already have a `handicaps.csv` column (AB, DM, GW,
+HM, JB, JP, SN); Graham Patterson (`GP` in `PLAYER_DICT`) has never played and has no column,
+so adding him would need a schema change and is out of scope here. Also noticed in passing,
+not touched: `data/handicaps.csv` has a `TEG 50` row wedged between `TEG 18` and `TEG 19`
+with odd values (`GW,HM` effectively 0/blank) — looks like stray test data from an earlier
+session rather than a real TEG, since real play only goes up to TEG 18/19. Flagged for Jon to
+confirm/clean up; not touched here since it predates this session and isn't blocking.

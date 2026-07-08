@@ -30,6 +30,7 @@ def _login(client):
 @pytest.mark.parametrize("path", [
     "/admin/edit-data", "/admin/delete-data", "/admin/volume-sync",
     "/admin/file-guide", "/admin/volume", "/admin/backups", "/admin/round-setup",
+    "/admin/teg-setup",
 ])
 def test_routes_require_auth(client, path):
     resp = client.get(path)
@@ -414,6 +415,86 @@ def test_round_setup_save_rejects_incomplete_form(client, monkeypatch):
 
     assert resp.status_code == 200
     assert "hole 5" in resp.text.lower()
+
+
+# ---------------------------------------------------------------------------
+# TEG setup (roster + handicap). Real data only for GET renders; save is
+# always monkeypatched, so no test ever writes to the real handicaps.csv
+# except in the explicitly monkeypatched save test.
+# ---------------------------------------------------------------------------
+
+def test_teg_setup_default_redirects_to_next_teg(client, monkeypatch):
+    import teg_analysis.analysis.teg_setup as ts
+
+    monkeypatch.setattr(ts, "get_next_teg", lambda: 19)
+
+    _login(client)
+    resp = client.get("/admin/teg-setup")
+    assert resp.status_code == 303
+    assert resp.headers["location"] == "/admin/teg-setup/19"
+
+
+def test_teg_setup_form_confirmed_teg(client):
+    _login(client)
+    # TEG 18 already has a confirmed row in handicaps.csv.
+    resp = client.get("/admin/teg-setup/18")
+    assert resp.status_code == 200
+    assert "TEG 18" in resp.text
+    assert "Already confirmed" in resp.text
+
+
+def test_teg_setup_form_unconfirmed_teg_does_not_error(client):
+    _login(client)
+    # No handicap history exists this far out -> falls back to blank, not a crash.
+    resp = client.get("/admin/teg-setup/999")
+    assert resp.status_code == 200
+    assert "TEG 999" in resp.text
+
+
+def test_teg_setup_save_writes_roster(client, monkeypatch):
+    import teg_analysis.analysis.teg_setup as ts
+
+    captured = {}
+
+    def fake_save(teg_num, players):
+        captured["teg_num"] = teg_num
+        captured["players"] = players
+        return {"teg_num": teg_num, "players_saved": len(players)}
+
+    monkeypatch.setattr(ts, "save_teg_roster", fake_save)
+    monkeypatch.setattr(ts, "get_roster_players", lambda: ["DM", "GW", "HM", "JB"])
+
+    _login(client)
+    form = {
+        "playing__DM": "on", "handicap__DM": "18",
+        "playing__GW": "on", "handicap__GW": "17",
+        "handicap__HM": "",
+        "playing__JB": "on", "handicap__JB": "20",
+    }
+    resp = client.post("/admin/teg-setup/19/save", data=form)
+
+    assert resp.status_code == 200
+    assert "saved" in resp.text.lower()
+    assert captured["teg_num"] == 19
+    by_code = {p["code"]: p for p in captured["players"]}
+    assert by_code["DM"] == {"code": "DM", "playing": True, "handicap": "18"}
+    assert by_code["HM"] == {"code": "HM", "playing": False, "handicap": None}
+
+
+def test_teg_setup_save_rejects_playing_without_handicap(client, monkeypatch):
+    import teg_analysis.analysis.teg_setup as ts
+
+    def must_not_run(*a, **k):
+        raise AssertionError("save_teg_roster must not run when a playing player has no handicap")
+
+    monkeypatch.setattr(ts, "save_teg_roster", must_not_run)
+    monkeypatch.setattr(ts, "get_roster_players", lambda: ["DM"])
+
+    _login(client)
+    resp = client.post("/admin/teg-setup/19/save", data={"playing__DM": "on", "handicap__DM": ""})
+
+    assert resp.status_code == 200
+    assert "dm" in resp.text.lower()
 
 
 if __name__ == "__main__":

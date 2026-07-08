@@ -53,6 +53,16 @@ body { font-family:var(--font-body); background:var(--bg); color:var(--text); -w
 .toolbar .traversal .material-symbols-outlined { font-size:15px; }
 .toolbar .hint { font-family:var(--font-data); font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; }
 
+.viewbar { flex:0 0 auto; display:flex; align-items:center; gap:8px; padding:0 14px 8px; background:var(--bg); }
+.viewbar .traversal { display:inline-flex; padding:3px; background:var(--surface-2); border:1px solid var(--line); border-radius:10px; }
+.viewbar .traversal button { border:none; background:transparent; font-family:var(--font-data); font-size:11px; font-weight:600;
+  color:var(--text-2); padding:6px 10px; border-radius:7px; display:flex; align-items:center; gap:4px; }
+.viewbar .traversal button.on { background:var(--surface); color:var(--accent-text); box-shadow:0 1px 2px rgba(0,0,0,.08); }
+.viewbar .traversal .material-symbols-outlined { font-size:15px; }
+.viewbar select.player-picker { font-family:var(--font-data); font-size:12px; font-weight:600; color:var(--text);
+  background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:7px 9px; }
+.hidden-col { display:none !important; }
+
 .gridwrap { flex:1 1 auto; overflow:auto; -webkit-overflow-scrolling:touch; }
 table.egrid { width:100%; border-collapse:collapse; font-family:var(--font-data); }
 .egrid thead th { position:sticky; top:0; z-index:4; background:var(--surface); font-size:10px; letter-spacing:.04em;
@@ -84,17 +94,20 @@ table.egrid { width:100%; border-collapse:collapse; font-family:var(--font-data)
 .keypad button.k.next { background:var(--accent); color:#fff; border-color:var(--accent); font-size:13px; letter-spacing:.02em; }
 .keypad .disabled-note { text-align:center; font-family:var(--font-data); font-size:11px; color:var(--text-muted); padding:14px 0; }
 
-/* Par-relative keypad: 6 primary buttons (par-1..par+4, 97.8% of all real scores)
-   plus a quieter outlier row so 1-12 stays reachable. */
-.keypad .prow { display:grid; grid-template-columns:repeat(6,1fr); gap:6px; margin-bottom:7px; }
-.keypad button.pk { padding:7px 0 6px; display:flex; flex-direction:column; align-items:center; gap:1px; }
-.keypad button.pk .n { font-size:18px; font-weight:700; line-height:1.15; }
-.keypad button.pk .t { font-size:8px; letter-spacing:.05em; text-transform:uppercase; color:var(--text-muted); font-weight:600; }
+/* Fixed keypad: 2-8 are always the big primary buttons, in the same screen position
+   every time -- shifting the numbers with par (as an earlier version did) slowed
+   entry down because muscle memory couldn't build up. 1 and 9-12 stay reachable as
+   a quieter, smaller outlier row below. */
+.keypad .prow { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:8px; }
+.keypad .prow.prow2 { grid-template-columns:repeat(3,1fr); }
+.keypad button.pk { padding:15px 0 12px; display:flex; flex-direction:column; align-items:center; gap:2px; }
+.keypad button.pk .n { font-size:25px; font-weight:700; line-height:1.1; }
+.keypad button.pk .t { font-size:9.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--text-muted); font-weight:600; }
 .keypad button.pk.ppar { border-color:var(--accent); background:var(--accent-soft); }
 .keypad button.pk.ppar .t { color:var(--accent-text); }
-.keypad .orow { display:grid; grid-template-columns:repeat(6,1fr); gap:6px; margin-bottom:7px; }
-.keypad button.ok { font-family:var(--font-data); font-size:12.5px; font-weight:600; color:var(--text-2);
-  background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:7px 0; }
+.keypad .orow { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin-bottom:8px; }
+.keypad button.ok { font-family:var(--font-data); font-size:13px; font-weight:600; color:var(--text-2);
+  background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:9px 0; }
 .keypad button.ok:active { background:var(--key-active); }
 
 /* Voice entry (uses the OS keyboard's dictation mic on a plain textarea) */
@@ -145,6 +158,14 @@ table.egrid { width:100%; border-collapse:collapse; font-family:var(--font-data)
 
 <div class="totalsbar" id="totalsbar"></div>
 
+<div class="viewbar">
+  <div class="traversal" id="view-toggle">
+    <button id="view-all" class="on"><span class="material-symbols-outlined">groups</span>All players</button>
+    <button id="view-single"><span class="material-symbols-outlined">person</span>Just&hellip;</button>
+  </div>
+  <select class="player-picker" id="player-picker" hidden></select>
+</div>
+
 <div class="toolbar">
   <div class="traversal">
     <button id="trav-col" class="on"><span class="material-symbols-outlined">arrow_downward</span>Column</button>
@@ -183,16 +204,17 @@ const SIS  = [7,13,1,17,9,15,3,11,5, 8,14,2,18,10,16,4,12,6];
 let scores = {}; // key "hole-player" -> number
 let active = null; // {hole, player}
 let traversal = 'col'; // 'col' | 'row'
+let viewMode = 'all'; // 'all' | 'single'
+let viewPlayer = PLAYERS[0];
 
 function cellKey(h, p) { return h + '-' + p; }
 
 function buildGrid() {
   const table = document.getElementById('egrid');
   let thead = '<thead><tr><th class="k">Hole</th><th class="p">Par</th>' +
-    PLAYERS.map(p => `<th class="d">${p}</th>`).join('') + '</tr></thead>';
+    PLAYERS.map(p => `<th class="d" data-player="${p}">${p}</th>`).join('') + '</tr></thead>';
 
   let rows = '';
-  let outTotals = Object.fromEntries(PLAYERS.map(p => [p, 0]));
   for (let h = 1; h <= 18; h++) {
     const par = PARS[h - 1];
     rows += `<tr data-hole="${h}"><td class="c-hole">${h}</td><td class="c-par">${par}</td>` +
@@ -200,13 +222,13 @@ function buildGrid() {
       '</tr>';
     if (h === 9) {
       rows += `<tr class="sub" data-subtotal="OUT"><td class="c-hole">OUT</td><td class="c-par">36</td>` +
-        PLAYERS.map(p => `<td class="cell" data-subtotal-cell="OUT-${p}"><div class="box">&ndash;</div></td>`).join('') + '</tr>';
+        PLAYERS.map(p => `<td class="cell" data-player="${p}" data-subtotal-cell="OUT-${p}"><div class="box">&ndash;</div></td>`).join('') + '</tr>';
     }
   }
   rows += `<tr class="sub" data-subtotal="IN"><td class="c-hole">IN</td><td class="c-par">36</td>` +
-    PLAYERS.map(p => `<td class="cell" data-subtotal-cell="IN-${p}"><div class="box">&ndash;</div></td>`).join('') + '</tr>';
+    PLAYERS.map(p => `<td class="cell" data-player="${p}" data-subtotal-cell="IN-${p}"><div class="box">&ndash;</div></td>`).join('') + '</tr>';
   rows += `<tr class="sub total" data-subtotal="TOTAL"><td class="c-hole">TOT</td><td class="c-par">72</td>` +
-    PLAYERS.map(p => `<td class="cell" data-subtotal-cell="TOTAL-${p}"><div class="box">&ndash;</div></td>`).join('') + '</tr>';
+    PLAYERS.map(p => `<td class="cell" data-player="${p}" data-subtotal-cell="TOTAL-${p}"><div class="box">&ndash;</div></td>`).join('') + '</tr>';
 
   table.innerHTML = thead + '<tbody>' + rows + '</tbody>';
 
@@ -218,7 +240,41 @@ function buildGrid() {
 function buildTotalsBar() {
   const bar = document.getElementById('totalsbar');
   bar.innerHTML = '<div class="tcell pin"><div class="nm">Running total</div></div>' +
-    PLAYERS.map(p => `<div class="tcell" data-total-player="${p}"><div class="nm">${p}</div><div class="tot zero">&ndash;</div></div>`).join('');
+    PLAYERS.map(p => `<div class="tcell" data-player="${p}" data-total-player="${p}"><div class="nm">${p}</div><div class="tot zero">&ndash;</div></div>`).join('');
+}
+
+function buildPlayerPicker() {
+  const sel = document.getElementById('player-picker');
+  sel.innerHTML = PLAYERS.map(p => `<option value="${p}">${p}</option>`).join('');
+  sel.value = viewPlayer;
+}
+
+// Filters which player columns are visible across the grid, totals bar and
+// subtotal rows. Every element carries data-player (or a "OUT-DM"-style
+// data-subtotal-cell we split on '-') so this stays a single pass.
+function applyPlayerVisibility() {
+  const visible = p => viewMode === 'all' || p === viewPlayer;
+  document.querySelectorAll('[data-player]').forEach(el => {
+    el.classList.toggle('hidden-col', !visible(el.dataset.player));
+  });
+  document.querySelectorAll('[data-subtotal-cell]').forEach(el => {
+    const p = el.dataset.subtotalCell.split('-')[1];
+    el.classList.toggle('hidden-col', !visible(p));
+  });
+}
+
+function setViewMode(mode) {
+  viewMode = mode;
+  document.getElementById('view-all').classList.toggle('on', mode === 'all');
+  document.getElementById('view-single').classList.toggle('on', mode === 'single');
+  document.getElementById('player-picker').hidden = mode !== 'single';
+  document.querySelector('.toolbar .traversal').style.visibility = mode === 'single' ? 'hidden' : 'visible';
+  applyPlayerVisibility();
+  // Jump to this player's first empty hole rather than leaving a hidden cell active.
+  if (mode === 'single' && (!active || active.player !== viewPlayer)) {
+    const firstEmpty = [...Array(18)].map((_, i) => i + 1).find(h => scores[cellKey(h, viewPlayer)] === undefined);
+    setActive(firstEmpty || 1, viewPlayer);
+  }
 }
 
 function setActive(hole, player) {
@@ -231,10 +287,13 @@ function setActive(hole, player) {
   td?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
 }
 
-// Par-relative keypad: primary row = par-1..par+4 (97.8% of every score in the
-// data — eagles are 0.06%, par+4 is 3.7%, so the range skews high); par sits at a
-// fixed 2nd position for muscle memory. Everything else (1-12) stays one tap away
-// in the quieter outlier row below.
+// Fixed keypad: 2-8 are always the big primary buttons, in the same screen
+// position on every hole (97.8% of every score ever recorded falls in
+// par-1..par+4, and 2-8 covers every par-3/4/5 case in that range). Numbers
+// used to shift with par, which felt quick in theory but actually slowed entry
+// down because fingers couldn't build muscle memory for "the low-score button".
+// The label under each button (birdie/par/bogey/...) still moves with par, so
+// the relative meaning is still visible -- just not the position.
 function relTerm(score, par) {
   if (score === 1) return 'ace';
   const d = score - par;
@@ -244,23 +303,19 @@ function relTerm(score, par) {
   if (d === 1) return 'bogey';
   return (d > 0 ? '+' : '') + d;
 }
-function parKeypadValues(par) {
-  const lo = Math.max(1, par - 1);
-  const primary = [];
-  for (let v = lo; v <= lo + 5; v++) primary.push(v);
-  const outliers = [];
-  for (let v = 1; v <= 12; v++) if (v < lo || v > lo + 5) outliers.push(v);
-  return { primary, outliers };
+function parKeypadValues() {
+  return { primary: [2, 3, 4, 5, 6, 7, 8], outliers: [1, 9, 10, 11, 12] };
 }
 
 function renderKeypad() {
   const kp = document.getElementById('keypad');
   if (!active) return;
   const par = PARS[active.hole - 1];
-  const { primary, outliers } = parKeypadValues(par);
+  const { primary, outliers } = parKeypadValues();
+  const bigBtn = v => `<button class="k pk${v === par ? ' ppar' : ''}" data-v="${v}"><span class="n">${v}</span><span class="t">${relTerm(v, par)}</span></button>`;
   kp.innerHTML = `
-    <div class="prow">${primary.map(v =>
-      `<button class="k pk${v === par ? ' ppar' : ''}" data-v="${v}"><span class="n">${v}</span><span class="t">${relTerm(v, par)}</span></button>`).join('')}</div>
+    <div class="prow">${primary.slice(0, 4).map(bigBtn).join('')}</div>
+    <div class="prow prow2">${primary.slice(4).map(bigBtn).join('')}</div>
     <div class="orow">${outliers.map(v => `<button class="k ok" data-v="${v}">${v}</button>`).join('')}</div>
     <div class="krow"><button class="k clear" data-v="clear">Clear</button><button class="k next" data-v="next" style="grid-column:span 3;">Next &rarr;</button></div>
   `;
@@ -303,6 +358,11 @@ function renderCell(hole, player) {
 
 function advance() {
   let { hole, player } = active;
+  if (viewMode === 'single') {
+    hole = hole < 18 ? hole + 1 : 1;
+    setActive(hole, viewPlayer);
+    return;
+  }
   const pi = PLAYERS.indexOf(player);
   if (traversal === 'col') {
     if (hole < 18) { hole += 1; }
@@ -349,6 +409,13 @@ document.getElementById('trav-row').addEventListener('click', () => {
   document.getElementById('trav-col').classList.remove('on');
 });
 
+document.getElementById('view-all').addEventListener('click', () => setViewMode('all'));
+document.getElementById('view-single').addEventListener('click', () => setViewMode('single'));
+document.getElementById('player-picker').addEventListener('change', (e) => {
+  viewPlayer = e.target.value;
+  setViewMode('single');
+});
+
 // ---------- Voice entry ----------
 // iOS Safari has no reliable Web Speech API, but the OS keyboard's dictation mic
 // works on any plain text field. So: open a sheet with a textarea, let the user
@@ -387,6 +454,10 @@ function parseDictation(text) {
 
 function voiceStartCell() {
   if (active) return { ...active };
+  if (viewMode === 'single') {
+    for (let h = 1; h <= 18; h++) if (scores[cellKey(h, viewPlayer)] === undefined) return { hole: h, player: viewPlayer };
+    return null;
+  }
   // No cursor yet: start at the first empty cell in the current traversal order.
   if (traversal === 'col') {
     for (const p of PLAYERS) for (let h = 1; h <= 18; h++) if (scores[cellKey(h, p)] === undefined) return { hole: h, player: p };
@@ -401,6 +472,7 @@ function voiceTargets(count) {
   if (!cur || count < 1) return [];
   const step = c => {
     let { hole, player } = c;
+    if (viewMode === 'single') return { hole: hole < 18 ? hole + 1 : 1, player: viewPlayer };
     const pi = PLAYERS.indexOf(player);
     if (traversal === 'col') {
       if (hole < 18) hole += 1; else { hole = 1; player = PLAYERS[(pi + 1) % PLAYERS.length]; }
@@ -409,8 +481,9 @@ function voiceTargets(count) {
     }
     return { hole, player };
   };
+  const cap = viewMode === 'single' ? 18 : PLAYERS.length * 18;
   const seq = [cur];
-  while (seq.length < Math.min(count, PLAYERS.length * 18)) seq.push(step(seq[seq.length - 1]));
+  while (seq.length < Math.min(count, cap)) seq.push(step(seq[seq.length - 1]));
   return seq;
 }
 
@@ -485,6 +558,7 @@ document.getElementById('v-input').addEventListener('input', updateVoicePreview)
 
 buildGrid();
 buildTotalsBar();
+buildPlayerPicker();
 updateTotalsAndSubtotals();
 </script>
 </body>

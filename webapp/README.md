@@ -27,14 +27,16 @@ Visit `http://localhost:8000` in your browser. Use the theme switcher in the nav
 ## Admin / data management
 
 The webapp includes a password-gated admin area, all in `webapp/routes/admin.py`
-(+ `webapp/routes/admin_round_setup.py`) + `webapp/admin_auth.py`. A shared
-sub-nav (`partials/admin_nav.html`) links the pages: **Round setup**, **Add a
-round**, **Edit data**, **Delete rounds**, **Volume** (browser), **GitHub sync**,
-**Backups** and **File guide**. Every page is behind the same cookie auth and each
-write calls `deps.clear_all_data_caches()` so the site shows fresh data
-immediately. They drive headless logic in `teg_analysis.analysis.data_update` /
-`teg_analysis.analysis.round_setup` and `teg_analysis.io` (sync / file catalog) —
-no Streamlit, no FastAPI in the analysis layer.
+(+ `webapp/routes/admin_round_setup.py`, `webapp/routes/admin_teg_setup.py`) +
+`webapp/admin_auth.py`. A shared sub-nav (`partials/admin_nav.html`) links the
+pages: **Round setup**, **TEG setup**, **Add a round**, **Edit data**, **Delete
+rounds**, **Volume** (browser), **GitHub sync**, **Backups** and **File guide**.
+Every page is behind the same cookie auth and each write calls
+`deps.clear_all_data_caches()` so the site shows fresh data immediately. They
+drive headless logic in `teg_analysis.analysis.data_update` /
+`teg_analysis.analysis.round_setup` / `teg_analysis.analysis.teg_setup` and
+`teg_analysis.io` (sync / file catalog) — no Streamlit, no FastAPI in the
+analysis layer.
 
 Admin pages load `webapp/static/admin.css`, which (among the form/button styles)
 applies a **compact override** to `.teg-table` — smaller font and tighter row
@@ -58,6 +60,24 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   `constants.KNOWN_VARIABLE_ROUTING` (currently Praia D'El Rey — sometimes played
   back-9-first) for a manual double-check. Save upserts the confirmed 18 holes into
   `round_pars.csv` via `round_setup.save_round_setup`.
+
+**TEG setup** — templates `admin_teg_setup.html`, `partials/admin_teg_setup_result.html`.
+- **Routes:** `/admin/teg-setup` (redirects to the next TEG), `/admin/teg-setup/{teg}`
+  (roster form — any TEG number, via the "Jump to TEG" field), `/admin/teg-setup/{teg}/save`
+  (HTMX).
+- **Purpose:** confirm who's playing a TEG and their handicap before it starts — not every
+  player plays every TEG. Reuses the existing handicap-calculation logic
+  (`teg_analysis.analysis.handicaps.get_hc` / `get_current_handicaps_formatted`) rather than
+  reimplementing it, so the read-only Handicaps page and this setup page stay in sync.
+- **Flow:** `teg_setup.get_teg_roster_form` prefills from an existing `handicaps.csv` row for
+  that TEG if already confirmed, else the calculated draft (`get_hc`), else blank/not-playing.
+  A checkbox + handicap field per player lets the admin override before saving; save
+  (`teg_setup.save_teg_roster`) upserts the one `handicaps.csv` row for that TEG in place
+  (not-playing is written as the existing `0`-in-that-cell convention, no schema change).
+  Scoped to the 7 players who already have a `handicaps.csv` column — see
+  `DATA_STORAGE_INGESTION_PLAN.md`'s "TEG roster + handicap setup" section for the full
+  reasoning and a noticed-but-untouched data anomaly (a stray `TEG 50` row in
+  `handicaps.csv`).
 
 **Add a round** — templates `admin_data_update.html`, `partials/admin_update_*.html`.
 - **Routes:** `/admin/data-update` (load + preview), `/admin/data-update/preview`,
