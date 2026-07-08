@@ -24,7 +24,9 @@ round-metadata form that *derives* round_info's ``TEGRd``/``TEG``/``Area``/
 
 import pandas as pd
 
-from teg_analysis.constants import ROUND_INFO_CSV, COURSE_PARS_CSV, ROUND_PARS_CSV
+from teg_analysis.constants import (
+    ROUND_INFO_CSV, COURSE_PARS_CSV, ROUND_PARS_CSV, ALL_SCORES_PARQUET,
+)
 
 FUTURE_TEGS_CSV = "data/future_tegs.csv"
 
@@ -109,6 +111,24 @@ def _parsi_done(teg_num: int, round_num: int) -> bool:
     return not match.empty
 
 
+def _already_played(teg_num: int, round_num: int) -> bool:
+    """Whether TEG+Round already has scores recorded in all-scores.parquet.
+
+    A played round's real Par/SI is already locked in, so there's nothing left
+    for the wizard to set up -- same scoping as ``round_setup.get_rounds_status``.
+    """
+    from teg_analysis.io import read_file
+
+    all_scores = read_file(ALL_SCORES_PARQUET)
+    if all_scores.empty:
+        return False
+    match = all_scores[
+        (all_scores["TEGNum"].astype(int) == teg_num)
+        & (all_scores["Round"].astype(int) == round_num)
+    ]
+    return not match.empty
+
+
 def _live_status(teg_num: int, round_num: int) -> dict | None:
     """The most recent live-round registry row for this TEG+Round, if any."""
     from teg_analysis.analysis.live_round import list_live_rounds
@@ -134,12 +154,29 @@ def get_wizard_status(teg_num: int, round_num: int) -> dict:
           current,               # key of the first actionable incomplete step
           ready_to_go_live,      # metadata + roster + parsi all done
           live,                  # {token, status} | None
+          already_played,        # True if scores already exist -- nothing to set up
         }
 
     ``locked`` marks a step whose prerequisite isn't met yet (Par/SI needs the
     round's metadata for its course; Go live needs all three) so the UI can
     show it greyed rather than lead the admin into a step that would error.
+
+    If the round has already been played (scores in all-scores.parquet), the
+    wizard has nothing left to do -- ``already_played`` is True and ``steps``
+    is empty rather than walking the admin toward re-confirming Par/SI on a
+    round that's already locked in.
     """
+    if _already_played(teg_num, round_num):
+        return {
+            "teg_num": teg_num,
+            "round_num": round_num,
+            "steps": [],
+            "current": "played",
+            "ready_to_go_live": False,
+            "live": None,
+            "already_played": True,
+        }
+
     meta_done, course = _metadata_done(teg_num, round_num)
     roster_done, playing = _roster_done(teg_num)
     parsi_done = _parsi_done(teg_num, round_num) if meta_done else False
@@ -186,6 +223,7 @@ def get_wizard_status(teg_num: int, round_num: int) -> dict:
         "current": current,
         "ready_to_go_live": meta_done and roster_done and parsi_done,
         "live": live,
+        "already_played": False,
     }
 
 

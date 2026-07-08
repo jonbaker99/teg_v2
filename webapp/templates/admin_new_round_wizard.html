@@ -32,7 +32,20 @@
 <div class="section-panel">
   <p style="margin-bottom:1rem;"><a href="/admin/new-round" class="text-link">← All rounds</a></p>
 
-  {% if status %}
+  {% if error %}<p class="error" style="color:#b00020;">{{ error }}</p>{% endif %}
+  {% if notice %}<p style="color:#2f6b3f;">{{ notice }}</p>{% endif %}
+
+  {% if status and status.already_played %}
+  <div class="data-card">
+    <h2 class="card-header">⚠️ Already played</h2>
+    <p style="margin:.25rem 0 1rem;color:#555;">
+      TEG {{ teg_num }} Round {{ round_num }} already has scores recorded in the permanent
+      record — there's nothing left to set up here. To correct something, use
+      <a href="/admin/edit-data?file=round_pars" class="text-link">Edit data</a> or
+      <a href="/admin/delete-data" class="text-link">Delete rounds</a>.
+    </p>
+  </div>
+  {% elif status %}
   {# ---- Stepper ---- #}
   <nav class="wizard-steps">
     {% for s in status.steps %}
@@ -51,9 +64,6 @@
       {% if s.locked %}</span>{% else %}</a>{% endif %}
     {% endfor %}
   </nav>
-
-  {% if error %}<p class="error" style="color:#b00020;">{{ error }}</p>{% endif %}
-  {% if notice %}<p style="color:#2f6b3f;">{{ notice }}</p>{% endif %}
 
   {# ============ STEP 1: METADATA ============ #}
   {% if active_step == 'metadata' and meta_form %}
@@ -150,7 +160,7 @@
   {# ============ STEP 4: GO LIVE ============ #}
   {% elif active_step == 'golive' %}
   <div class="data-card">
-    {% if status.live %}
+    {% if status.live and status.live.status == 'active' %}
       <h2 class="card-header">✅ Ready — you're live</h2>
       <div style="padding:.75rem;background:#f3f7f3;border-radius:8px;margin-bottom:1rem;">
         <p style="margin:0 0 .5rem;">Send this link to the group — anyone with it can enter scores for this round (no password):</p>
@@ -162,8 +172,20 @@
         <a href="{{ review_link }}" class="text-link">Review &amp; finalize</a>
         to check for any conflicts and write the round into the permanent record.
       </p>
+    {% elif status.live and status.live.status == 'finalized' %}
+      <h2 class="card-header">✅ Finalized</h2>
+      <p style="margin:.25rem 0 1rem;color:#555;">
+        This round's scores have already been written into the permanent record.
+        <a href="{{ review_link }}" class="text-link">View it</a> on the Live round page.
+      </p>
     {% elif status.ready_to_go_live %}
       <h2 class="card-header">Go live</h2>
+      {% if status.live and status.live.status == 'cancelled' %}
+        <p style="margin:.25rem 0 1rem;color:#8a6100;">
+          ⚠️ A previous live round for this TEG/Round was cancelled — going live again starts a
+          fresh one with a new link.
+        </p>
+      {% endif %}
       <p style="margin:.25rem 0 1rem;color:#555;">
         Everything's set up. Going live creates the shareable scoring link for TEG {{ teg_num }}
         Round {{ round_num }} so the group can enter scores from their phones.

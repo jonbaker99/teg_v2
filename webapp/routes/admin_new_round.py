@@ -53,8 +53,11 @@ def _render_wizard(request: Request, teg_num: int, round_num: int,
     to a redirect.
     """
     from teg_analysis.analysis.round_wizard import (
-        get_wizard_status, get_round_metadata_form,
+        get_wizard_status, get_round_metadata_form, STEP_KEYS,
     )
+
+    if step is not None and step not in STEP_KEYS:
+        step = None
 
     ctx = {
         "request": request, "active_page": None,
@@ -64,6 +67,11 @@ def _render_wizard(request: Request, teg_num: int, round_num: int,
     try:
         status = get_wizard_status(teg_num, round_num)
         ctx["status"] = status
+
+        if status["already_played"]:
+            ctx["active_step"] = "played"
+            return templates.TemplateResponse("admin_new_round_wizard.html", ctx)
+
         active = step or status["current"]
         ctx["active_step"] = active
 
@@ -82,10 +90,11 @@ def _render_wizard(request: Request, teg_num: int, round_num: int,
                 ctx["meta_form"] = get_round_metadata_form(teg_num, round_num)
                 ctx["error"] = ctx["error"] or str(e)
         elif active == "golive" and status["live"]:
-            ctx["live_link"] = str(
-                request.url_for("live_round_page", token=status["live"]["token"])
-            )
             ctx["review_link"] = f"/admin/live-round/{status['live']['token']}/review"
+            if status["live"]["status"] == "active":
+                ctx["live_link"] = str(
+                    request.url_for("live_round_page", token=status["live"]["token"])
+                )
     except Exception as e:  # noqa: BLE001
         logger.error(f"New-round wizard render failed: {e}", exc_info=True)
         ctx["error"] = f"Could not load the setup wizard: {e}"
