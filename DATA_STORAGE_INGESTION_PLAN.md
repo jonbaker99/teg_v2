@@ -757,7 +757,77 @@ Further feedback after living with Pattern A:
   added. **This does not solve real cross-device sync** — that's Phase 3.4 backend work
   (see the Fable review below for a first pass at that architecture).
 
-**Fable design/performance review requested** (not yet run at time of writing — see below).
+### Fable design/performance review (done)
+
+Asked Fable to review `round_entry_grid.html` end-to-end for correctness, design coherence,
+performance, and — separately — to sketch the real Phase 3.4 backend architecture, since the
+cross-tab sync above is explicitly not that. Full report:
+`/tmp/.../scratchpad/fable_round_entry_review.md` (ephemeral session path; key content
+preserved here since that file won't persist). Verdict: the core design (grid + always-visible
+keypad + auto-advance + group chips) is sound, not cruft; `innerHTML=`-driven re-renders don't
+leak listeners; performance is a non-issue at this scale (~5,000 node creations over a 20-30min
+session — any phone handles that trivially). Found one real shipping bug and several smaller
+ones.
+
+**Fixed immediately** (all verified with Playwright, including a fresh two-tab concurrency
+re-check after all fixes):
+- **HIGH — chips hid themselves.** `applyPlayerVisibility()` selected `[data-player]`
+  document-wide, which also matched the chip buttons themselves (they carry `data-player`
+  too) — so deselecting a player hid its own chip, making it unreachable again except via
+  "All" (you could shrink the visible set but never selectively regrow it). Scoped the
+  selector to `#egrid`/`#totalsbar` only.
+- **iOS auto-zoom**: voice textarea was 14px; iOS Safari auto-zooms any focused field under
+  16px and ignores `maximum-scale=1.0` for it anyway (also dropped that meta value — it's an
+  accessibility anti-pattern with no upside here).
+- **scrollIntoView landing under the sticky header/columns** on wrap-around advance — added
+  `scroll-margin-top`/`scroll-margin-left` matching the sticky thead/left-column sizes.
+- **Hardcoded OUT/IN/TOT pars (36/36/72)** could silently disagree with the `PARS` array —
+  now derived (`PARS.slice(0,9).reduce(...)` etc).
+- **Dead `zero`/`oh` voice mappings** — both always mapped to 0, which is never a valid score,
+  so they could only ever trip the "must be 1-12" error. Removed; they now report as an
+  honest "didn't understand" instead.
+
+**Left as open decisions** (not acted on — need Jon's call or on-device testing, not a
+clear-cut fix):
+- **D1 — keypad mode**: is the fixed/relative toggle worth keeping, or should the real page
+  ship fixed-2–8-only (which the file's own comment says already covers 97.8% of every score
+  ever recorded)? Fable's lean: keep the toggle for the trip as a live A/B, cut it for the
+  real build if nobody defends relative mode after real use.
+- **Voice strictness**: any single unrecognized word currently blocks the whole dictated
+  batch (`Fix before filling`), and "hole fourteen" gets parsed as a literal score of 14 and
+  blocked, since `NUM_WORDS` maps `fourteen:14` and nothing swallows a `hole <n>` pair. Softening
+  either is a real behavior change with tradeoffs, not touched.
+- **Apply button possibly behind the OS keyboard** during voice dictation (`.vsheet` is
+  `position:fixed; bottom:0`) — flagged as needing an actual on-device check before deciding
+  a fix, not something to guess at from a read-through.
+- **LWW tie divergence** (two devices writing the same cell in the same millisecond can swap
+  and permanently diverge) — a real bug in the demo's client-side timestamp approach, but not
+  worth patching there: the recommended real backend design below drops client timestamps
+  entirely (server-assigned order), which eliminates the whole problem class rather than
+  papering over it client-side.
+- **Smaller polish, not done**: voice preview doesn't flag when a value would overwrite an
+  already-filled cell; `traversal` preference isn't persisted (unlike keypad mode / visible
+  players); progress badge counts all 126 cells even when a device is filtered to one group;
+  deselecting the last-visible player silently no-ops with no feedback; muted grid-header text
+  (`--text-muted` at ~3.2:1 contrast) may be hard to read in direct sunlight — the actual use
+  case.
+
+**Real multi-device backend recommendation, for Phase 3.4** (not started — this is a design
+sketch to build from, not code): **polling, not WebSockets** (self-healing on flaky course
+cellular; ~3-4s interval, back off when the tab's hidden; 7 devices is ~2 req/s worst case) —
+`POST .../scores` to write (doubles as a poll response), `GET .../scores?since={seq}` to read
+deltas. **Storage**: one JSON file per live round on the existing Railway volume
+(`live_rounds/{teg}_r{round}.json`), single `asyncio.Lock`, no new dependency — explicitly a
+*staging area*, not the record; "finish round" feeds the existing `data_update.py` pipeline for
+one GitHub commit, never per-stroke. **Conflict model**: drop client timestamps, let the server
+stamp arrival order (kills LWW ties/clock-skew outright); when two *different* devices write
+*different* values to the same cell within ~60s, don't silently pick a winner — flag the cell
+(amber ring) and refuse to finalize the round until resolved, since a silently-wrong golf score
+lives in the record forever. **Identity**: a `localStorage` UUID + self-declared name behind
+the *existing* admin cookie auth (or a per-round shareable link) — no new auth system.
+Estimated size: ~150-250 lines of FastAPI; the mockup's `setScore`/`renderCell` split from the
+transport layer (`broadcastScore`/`bc.onmessage`) makes swapping in `fetch`-based polling a
+clean, contained change when this gets built.
 
 ## TEG roster + handicap setup (built)
 
