@@ -53,15 +53,22 @@ body { font-family:var(--font-body); background:var(--bg); color:var(--text); -w
 .toolbar .traversal .material-symbols-outlined { font-size:15px; }
 .toolbar .hint { font-family:var(--font-data); font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; }
 
-.viewbar { flex:0 0 auto; display:flex; align-items:center; gap:8px; padding:0 14px 8px; background:var(--bg); }
-.viewbar .traversal { display:inline-flex; padding:3px; background:var(--surface-2); border:1px solid var(--line); border-radius:10px; }
-.viewbar .traversal button { border:none; background:transparent; font-family:var(--font-data); font-size:11px; font-weight:600;
-  color:var(--text-2); padding:6px 10px; border-radius:7px; display:flex; align-items:center; gap:4px; }
-.viewbar .traversal button.on { background:var(--surface); color:var(--accent-text); box-shadow:0 1px 2px rgba(0,0,0,.08); }
-.viewbar .traversal .material-symbols-outlined { font-size:15px; }
-.viewbar select.player-picker { font-family:var(--font-data); font-size:12px; font-weight:600; color:var(--text);
-  background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:7px 9px; }
+.viewbar { flex:0 0 auto; display:flex; align-items:center; gap:6px; padding:0 14px 8px; background:var(--bg);
+  overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.viewbar .vlabel { flex:0 0 auto; font-family:var(--font-data); font-size:9.5px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--text-muted); }
+.chiprow { flex:0 0 auto; display:flex; gap:6px; }
+.chip { flex:0 0 auto; font-family:var(--font-data); font-size:12px; font-weight:700; color:var(--text-2);
+  background:var(--surface); border:1px solid var(--line); border-radius:999px; padding:6px 12px; }
+.chip.all { color:var(--text-muted); }
+.chip.on { background:var(--accent-soft); color:var(--accent-text); border-color:var(--accent); }
 .hidden-col { display:none !important; }
+
+/* Which cells came from another device syncing live vs. entered locally. */
+@keyframes remoteFlash { from { box-shadow:0 0 0 4px var(--accent-soft); } to { box-shadow:0 0 0 0 transparent; } }
+.egrid td.cell.remote-flash .box { animation:remoteFlash 900ms ease-out; }
+.livebadge { font-family:var(--font-data); font-size:9.5px; color:var(--text-muted); white-space:nowrap; }
+.livebadge.live { color:var(--accent-text); }
 
 .gridwrap { flex:1 1 auto; overflow:auto; -webkit-overflow-scrolling:touch; }
 table.egrid { width:100%; border-collapse:collapse; font-family:var(--font-data); }
@@ -105,10 +112,16 @@ table.egrid { width:100%; border-collapse:collapse; font-family:var(--font-data)
 .keypad button.pk .t { font-size:9.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--text-muted); font-weight:600; }
 .keypad button.pk.ppar { border-color:var(--accent); background:var(--accent-soft); }
 .keypad button.pk.ppar .t { color:var(--accent-text); }
+.keypad .prow.prow5 { grid-template-columns:repeat(5,1fr); }
 .keypad .orow { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin-bottom:8px; }
 .keypad button.ok { font-family:var(--font-data); font-size:13px; font-weight:600; color:var(--text-2);
   background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:9px 0; }
 .keypad button.ok:active { background:var(--key-active); }
+
+.kmode { display:flex; justify-content:center; gap:5px; margin-bottom:8px; }
+.kmode button { font-family:var(--font-data); font-size:10px; font-weight:600; color:var(--text-muted);
+  background:transparent; border:1px solid var(--line); border-radius:999px; padding:4px 10px; }
+.kmode button.on { background:var(--accent-soft); color:var(--accent-text); border-color:var(--accent); }
 
 /* Voice entry (uses the OS keyboard's dictation mic on a plain textarea) */
 .toolbar .voicebtn { display:inline-flex; align-items:center; gap:5px; font-family:var(--font-data); font-size:11px; font-weight:600;
@@ -141,29 +154,32 @@ table.egrid { width:100%; border-collapse:collapse; font-family:var(--font-data)
 .vsheet .vactions .apply { background:var(--accent); border-color:var(--accent); color:#fff; }
 .vsheet .vactions .apply:disabled { opacity:.4; }
 
-.demobar { position:fixed; top:calc(8px + env(safe-area-inset-top,0)); right:10px; z-index:60; }
+.demobar { position:fixed; top:calc(8px + env(safe-area-inset-top,0)); right:10px; z-index:60; display:flex; gap:6px; }
 .demobar label { background:var(--surface); color:var(--text-2); border:1px solid var(--line); border-radius:999px;
   padding:6px 10px; font-family:var(--font-data); font-size:11px; cursor:pointer; box-shadow:var(--shadow); display:inline-flex; align-items:center; gap:5px; }
 .demobar .material-symbols-outlined { font-size:16px; }
+.demobar button.resetbtn { background:var(--surface); color:#c0392b; border:1px solid var(--line); border-radius:999px;
+  padding:6px 10px; font-family:var(--font-data); font-size:11px; box-shadow:var(--shadow); }
 </style>
 </head>
 <body>
-<div class="demobar"><label><input type="checkbox" id="mode" hidden><span class="material-symbols-outlined">contrast</span>Light / Dark</label></div>
+<div class="demobar">
+  <button class="resetbtn" id="reset-demo">Reset</button>
+  <label><input type="checkbox" id="mode" hidden><span class="material-symbols-outlined">contrast</span>Light / Dark</label>
+</div>
 
 <header class="appbar">
   <span class="material-symbols-outlined back">arrow_back_ios_new</span>
-  <div class="titles"><span class="kicker">TEG 50 &middot; Round 1</span><div class="title">Enter scores</div></div>
+  <div class="titles"><span class="kicker">TEG 50 &middot; Round 1</span><div class="title">Enter scores</div>
+    <span class="livebadge" id="live-badge"></span></div>
   <span class="progress" id="progress">0 / 126</span>
 </header>
 
 <div class="totalsbar" id="totalsbar"></div>
 
 <div class="viewbar">
-  <div class="traversal" id="view-toggle">
-    <button id="view-all" class="on"><span class="material-symbols-outlined">groups</span>All players</button>
-    <button id="view-single"><span class="material-symbols-outlined">person</span>Just&hellip;</button>
-  </div>
-  <select class="player-picker" id="player-picker" hidden></select>
+  <span class="vlabel">Show:</span>
+  <div class="chiprow" id="player-chips"></div>
 </div>
 
 <div class="toolbar">
@@ -202,10 +218,14 @@ const PARS = [4,3,5,4,4,3,5,4,4, 4,4,3,5,4,3,4,5,4];
 const SIS  = [7,13,1,17,9,15,3,11,5, 8,14,2,18,10,16,4,12,6];
 
 let scores = {}; // key "hole-player" -> number
+let scoreTimestamps = {}; // key "hole-player" -> ms, for last-write-wins across devices
 let active = null; // {hole, player}
 let traversal = 'col'; // 'col' | 'row'
-let viewMode = 'all'; // 'all' | 'single'
-let viewPlayer = PLAYERS[0];
+let keypadMode = 'fixed'; // 'fixed' | 'relative'
+// Which players show on THIS device -- typically a round is played in 2 groups of
+// 2-4, and each player only wants to see (and tap through) their own group's cells.
+// Local to this device/tab; never synced -- everyone can pick independently.
+let visiblePlayers = new Set(PLAYERS);
 
 function cellKey(h, p) { return h + '-' + p; }
 
@@ -243,37 +263,58 @@ function buildTotalsBar() {
     PLAYERS.map(p => `<div class="tcell" data-player="${p}" data-total-player="${p}"><div class="nm">${p}</div><div class="tot zero">&ndash;</div></div>`).join('');
 }
 
-function buildPlayerPicker() {
-  const sel = document.getElementById('player-picker');
-  sel.innerHTML = PLAYERS.map(p => `<option value="${p}">${p}</option>`).join('');
-  sel.value = viewPlayer;
+function visiblePlayersList() {
+  return PLAYERS.filter(p => visiblePlayers.has(p));
+}
+
+function buildPlayerChips() {
+  const row = document.getElementById('player-chips');
+  const allOn = visiblePlayers.size === PLAYERS.length;
+  row.innerHTML = `<button class="chip all${allOn ? ' on' : ''}" id="chip-all">All</button>` +
+    PLAYERS.map(p => `<button class="chip${visiblePlayers.has(p) ? ' on' : ''}" data-player="${p}">${p}</button>`).join('');
+  document.getElementById('chip-all').addEventListener('click', () => setVisiblePlayers(new Set(PLAYERS)));
+  row.querySelectorAll('.chip[data-player]').forEach(btn => {
+    btn.addEventListener('click', () => togglePlayerChip(btn.dataset.player));
+  });
+}
+
+function togglePlayerChip(p) {
+  const next = new Set(visiblePlayers);
+  if (next.has(p)) {
+    if (next.size === 1) return; // always keep at least one player visible
+    next.delete(p);
+  } else {
+    next.add(p);
+  }
+  setVisiblePlayers(next);
 }
 
 // Filters which player columns are visible across the grid, totals bar and
 // subtotal rows. Every element carries data-player (or a "OUT-DM"-style
 // data-subtotal-cell we split on '-') so this stays a single pass.
 function applyPlayerVisibility() {
-  const visible = p => viewMode === 'all' || p === viewPlayer;
   document.querySelectorAll('[data-player]').forEach(el => {
-    el.classList.toggle('hidden-col', !visible(el.dataset.player));
+    el.classList.toggle('hidden-col', !visiblePlayers.has(el.dataset.player));
   });
   document.querySelectorAll('[data-subtotal-cell]').forEach(el => {
     const p = el.dataset.subtotalCell.split('-')[1];
-    el.classList.toggle('hidden-col', !visible(p));
+    el.classList.toggle('hidden-col', !visiblePlayers.has(p));
   });
 }
 
-function setViewMode(mode) {
-  viewMode = mode;
-  document.getElementById('view-all').classList.toggle('on', mode === 'all');
-  document.getElementById('view-single').classList.toggle('on', mode === 'single');
-  document.getElementById('player-picker').hidden = mode !== 'single';
-  document.querySelector('.toolbar .traversal').style.visibility = mode === 'single' ? 'hidden' : 'visible';
+function setVisiblePlayers(next) {
+  visiblePlayers = next;
+  try { localStorage.setItem(VISIBLE_PLAYERS_KEY, JSON.stringify([...visiblePlayers])); } catch (e) {}
+  buildPlayerChips();
   applyPlayerVisibility();
-  // Jump to this player's first empty hole rather than leaving a hidden cell active.
-  if (mode === 'single' && (!active || active.player !== viewPlayer)) {
-    const firstEmpty = [...Array(18)].map((_, i) => i + 1).find(h => scores[cellKey(h, viewPlayer)] === undefined);
-    setActive(firstEmpty || 1, viewPlayer);
+  document.querySelector('.toolbar .traversal').style.visibility = visiblePlayers.size === 1 ? 'hidden' : 'visible';
+  // Jump off a now-hidden active cell rather than leaving it stranded.
+  if (!active || !visiblePlayers.has(active.player)) {
+    const vp = visiblePlayersList();
+    if (!vp.length) return;
+    const p = vp[0];
+    const firstEmpty = [...Array(18)].map((_, i) => i + 1).find(h => scores[cellKey(h, p)] === undefined);
+    setActive(firstEmpty || 1, p);
   }
 }
 
@@ -287,13 +328,16 @@ function setActive(hole, player) {
   td?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
 }
 
-// Fixed keypad: 2-8 are always the big primary buttons, in the same screen
-// position on every hole (97.8% of every score ever recorded falls in
-// par-1..par+4, and 2-8 covers every par-3/4/5 case in that range). Numbers
-// used to shift with par, which felt quick in theory but actually slowed entry
-// down because fingers couldn't build muscle memory for "the low-score button".
-// The label under each button (birdie/par/bogey/...) still moves with par, so
-// the relative meaning is still visible -- just not the position.
+// Two keypad layouts, switchable per device/per person:
+//  - fixed:    2-8 always the big buttons, same screen position on every hole, so
+//              muscle memory holds. Covers every par-1..par+4 case for par 3/4/5
+//              (97.8% of every score ever recorded).
+//  - relative: the six buttons re-center on the current hole's par, par-1..par+3,
+//              so the labels read birdie/par/bogey/... left-to-right in a fixed
+//              order -- some players think in "shots vs par" rather than raw
+//              numbers and prefer that over a fixed number pad.
+// Both are one tap away in the keypad header; 1 and the rest of 1-12 stay in the
+// quieter outlier row underneath either way.
 function relTerm(score, par) {
   if (score === 1) return 'ace';
   const d = score - par;
@@ -303,43 +347,85 @@ function relTerm(score, par) {
   if (d === 1) return 'bogey';
   return (d > 0 ? '+' : '') + d;
 }
-function parKeypadValues() {
+function parKeypadValues(par) {
+  if (keypadMode === 'relative') {
+    const lo = Math.max(1, par - 1);
+    const hi = par + 3;
+    const primary = [];
+    for (let v = lo; v <= hi; v++) primary.push(v);
+    const outliers = [];
+    for (let v = 1; v <= 12; v++) if (v < lo || v > hi) outliers.push(v);
+    return { primary, outliers };
+  }
   return { primary: [2, 3, 4, 5, 6, 7, 8], outliers: [1, 9, 10, 11, 12] };
+}
+
+function setKeypadMode(mode) {
+  keypadMode = mode;
+  try { localStorage.setItem(KEYPAD_MODE_KEY, mode); } catch (e) {}
+  renderKeypad();
 }
 
 function renderKeypad() {
   const kp = document.getElementById('keypad');
   if (!active) return;
   const par = PARS[active.hole - 1];
-  const { primary, outliers } = parKeypadValues();
+  const { primary, outliers } = parKeypadValues(par);
   const bigBtn = v => `<button class="k pk${v === par ? ' ppar' : ''}" data-v="${v}"><span class="n">${v}</span><span class="t">${relTerm(v, par)}</span></button>`;
-  kp.innerHTML = `
-    <div class="prow">${primary.slice(0, 4).map(bigBtn).join('')}</div>
-    <div class="prow prow2">${primary.slice(4).map(bigBtn).join('')}</div>
+  const modeRow = `<div class="kmode">
+      <button data-kmode="fixed" class="${keypadMode === 'fixed' ? 'on' : ''}">Fixed 2&ndash;8</button>
+      <button data-kmode="relative" class="${keypadMode === 'relative' ? 'on' : ''}">Relative to par</button>
+    </div>`;
+  const primaryRows = keypadMode === 'relative'
+    ? `<div class="prow prow5">${primary.map(bigBtn).join('')}</div>`
+    : `<div class="prow">${primary.slice(0, 4).map(bigBtn).join('')}</div>
+       <div class="prow prow2">${primary.slice(4).map(bigBtn).join('')}</div>`;
+  kp.innerHTML = modeRow + primaryRows + `
     <div class="orow">${outliers.map(v => `<button class="k ok" data-v="${v}">${v}</button>`).join('')}</div>
     <div class="krow"><button class="k clear" data-v="clear">Clear</button><button class="k next" data-v="next" style="grid-column:span 3;">Next &rarr;</button></div>
   `;
   kp.querySelectorAll('button.k').forEach(btn => {
     btn.addEventListener('click', () => handleKey(btn.dataset.v));
   });
+  kp.querySelectorAll('button[data-kmode]').forEach(btn => {
+    btn.addEventListener('click', () => setKeypadMode(btn.dataset.kmode));
+  });
 }
 
 function handleKey(v) {
   if (!active) return;
   if (v === 'clear') {
-    delete scores[cellKey(active.hole, active.player)];
-    renderCell(active.hole, active.player);
+    clearScore(active.hole, active.player, Date.now(), true);
     updateTotalsAndSubtotals();
+    persistScores();
     return;
   }
   if (v === 'next') {
     advance();
     return;
   }
-  scores[cellKey(active.hole, active.player)] = parseInt(v);
-  renderCell(active.hole, active.player);
+  setScore(active.hole, active.player, parseInt(v), Date.now(), true);
   updateTotalsAndSubtotals();
+  persistScores();
   advance();
+}
+
+// Local write helpers -- both update the score + its LWW timestamp, re-render the
+// cell, and (unless this call is itself applying an incoming remote update)
+// broadcast to any other open tab/device on this round.
+function setScore(hole, player, value, ts, broadcast) {
+  const key = cellKey(hole, player);
+  scores[key] = value;
+  scoreTimestamps[key] = ts;
+  renderCell(hole, player);
+  if (broadcast) broadcastScore(hole, player, value, false, ts);
+}
+function clearScore(hole, player, ts, broadcast) {
+  const key = cellKey(hole, player);
+  delete scores[key];
+  scoreTimestamps[key] = ts;
+  renderCell(hole, player);
+  if (broadcast) broadcastScore(hole, player, null, true, ts);
 }
 
 function renderCell(hole, player) {
@@ -356,20 +442,19 @@ function renderCell(hole, player) {
   }
 }
 
+// Cycles through whichever players are currently visible on this device, in the
+// chosen traversal order. With one player visible this naturally reduces to
+// "just move down that one column" -- no separate single-player special case needed.
 function advance() {
   let { hole, player } = active;
-  if (viewMode === 'single') {
-    hole = hole < 18 ? hole + 1 : 1;
-    setActive(hole, viewPlayer);
-    return;
-  }
-  const pi = PLAYERS.indexOf(player);
+  const vp = visiblePlayersList();
+  const pi = vp.indexOf(player);
   if (traversal === 'col') {
     if (hole < 18) { hole += 1; }
-    else { hole = 1; player = PLAYERS[(pi + 1) % PLAYERS.length]; }
+    else { hole = 1; player = vp[(pi + 1) % vp.length]; }
   } else {
-    if (pi < PLAYERS.length - 1) { player = PLAYERS[pi + 1]; }
-    else { player = PLAYERS[0]; hole = hole < 18 ? hole + 1 : 1; }
+    if (pi < vp.length - 1) { player = vp[pi + 1]; }
+    else { player = vp[0]; hole = hole < 18 ? hole + 1 : 1; }
   }
   setActive(hole, player);
 }
@@ -407,13 +492,6 @@ document.getElementById('trav-row').addEventListener('click', () => {
   traversal = 'row';
   document.getElementById('trav-row').classList.add('on');
   document.getElementById('trav-col').classList.remove('on');
-});
-
-document.getElementById('view-all').addEventListener('click', () => setViewMode('all'));
-document.getElementById('view-single').addEventListener('click', () => setViewMode('single'));
-document.getElementById('player-picker').addEventListener('change', (e) => {
-  viewPlayer = e.target.value;
-  setViewMode('single');
 });
 
 // ---------- Voice entry ----------
@@ -454,15 +532,13 @@ function parseDictation(text) {
 
 function voiceStartCell() {
   if (active) return { ...active };
-  if (viewMode === 'single') {
-    for (let h = 1; h <= 18; h++) if (scores[cellKey(h, viewPlayer)] === undefined) return { hole: h, player: viewPlayer };
-    return null;
-  }
-  // No cursor yet: start at the first empty cell in the current traversal order.
+  const vp = visiblePlayersList();
+  // No cursor yet: start at the first empty cell (among visible players) in the
+  // current traversal order.
   if (traversal === 'col') {
-    for (const p of PLAYERS) for (let h = 1; h <= 18; h++) if (scores[cellKey(h, p)] === undefined) return { hole: h, player: p };
+    for (const p of vp) for (let h = 1; h <= 18; h++) if (scores[cellKey(h, p)] === undefined) return { hole: h, player: p };
   } else {
-    for (let h = 1; h <= 18; h++) for (const p of PLAYERS) if (scores[cellKey(h, p)] === undefined) return { hole: h, player: p };
+    for (let h = 1; h <= 18; h++) for (const p of vp) if (scores[cellKey(h, p)] === undefined) return { hole: h, player: p };
   }
   return null;
 }
@@ -470,18 +546,18 @@ function voiceStartCell() {
 function voiceTargets(count) {
   let cur = voiceStartCell();
   if (!cur || count < 1) return [];
+  const vp = visiblePlayersList();
   const step = c => {
     let { hole, player } = c;
-    if (viewMode === 'single') return { hole: hole < 18 ? hole + 1 : 1, player: viewPlayer };
-    const pi = PLAYERS.indexOf(player);
+    const pi = vp.indexOf(player);
     if (traversal === 'col') {
-      if (hole < 18) hole += 1; else { hole = 1; player = PLAYERS[(pi + 1) % PLAYERS.length]; }
+      if (hole < 18) hole += 1; else { hole = 1; player = vp[(pi + 1) % vp.length]; }
     } else {
-      if (pi < PLAYERS.length - 1) player = PLAYERS[pi + 1]; else { player = PLAYERS[0]; hole = hole < 18 ? hole + 1 : 1; }
+      if (pi < vp.length - 1) player = vp[pi + 1]; else { player = vp[0]; hole = hole < 18 ? hole + 1 : 1; }
     }
     return { hole, player };
   };
-  const cap = viewMode === 'single' ? 18 : PLAYERS.length * 18;
+  const cap = vp.length * 18;
   const seq = [cur];
   while (seq.length < Math.min(count, cap)) seq.push(step(seq[seq.length - 1]));
   return seq;
@@ -538,12 +614,13 @@ function applyVoice() {
   const targets = voiceTargets(res.values.length);
   const n = Math.min(res.values.length, targets.length);
   if (!n) return;
+  const now = Date.now();
   for (let i = 0; i < n; i++) {
     const t = targets[i];
-    scores[cellKey(t.hole, t.player)] = res.values[i];
-    renderCell(t.hole, t.player);
+    setScore(t.hole, t.player, res.values[i], now + i, true); // i offset keeps LWW order stable within this batch
   }
   updateTotalsAndSubtotals();
+  persistScores();
   setActive(targets[n - 1].hole, targets[n - 1].player);
   advance(); // resume manual entry just past the last filled cell
   closeVoice();
@@ -556,10 +633,123 @@ document.getElementById('v-scrim').addEventListener('click', closeVoice);
 document.getElementById('v-apply').addEventListener('click', applyVoice);
 document.getElementById('v-input').addEventListener('input', updateVoicePreview);
 
+// ---------- Multi-device sync (demo) ----------
+// This mockup has no backend, so there's no such thing as "two different phones"
+// syncing here -- that needs the real Phase 3.4 server (shared state + polling/
+// websocket). What this DOES demonstrate, testably, is the interaction pattern for
+// concurrent entry: open this file in two browser tabs (or two windows) and they
+// behave like two devices on the same round -- BroadcastChannel pushes every score
+// live to other open tabs, localStorage lets a newly opened tab catch up on what's
+// already been entered, and a per-cell timestamp makes it last-write-wins so a
+// stale message can't clobber a newer edit if they arrive out of order.
+const STORAGE_KEY = 'teg-round-entry-demo-scores-v1';
+const KEYPAD_MODE_KEY = 'teg-round-entry-demo-keypad-mode';
+const VISIBLE_PLAYERS_KEY = 'teg-round-entry-demo-visible-players';
+const DEVICE_ID = Math.random().toString(36).slice(2, 7).toUpperCase();
+const bc = ('BroadcastChannel' in window) ? new BroadcastChannel('teg-round-entry-demo') : null;
+const presence = new Map(); // deviceId -> last-seen ms, from periodic presence pings
+
+function persistScores() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ scores, scoreTimestamps })); } catch (e) {}
+}
+function loadPersistedScores() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    scores = parsed.scores || {};
+    scoreTimestamps = parsed.scoreTimestamps || {};
+  } catch (e) { /* ignore corrupt storage */ }
+}
+// buildGrid() always renders fresh empty cells -- this paints in whatever's
+// already in `scores` (from a persisted snapshot or a page reload), used once
+// at startup right after buildGrid().
+function renderAllCells() {
+  for (const key in scores) {
+    const sep = key.lastIndexOf('-');
+    renderCell(parseInt(key.slice(0, sep)), key.slice(sep + 1));
+  }
+}
+
+function broadcastScore(hole, player, value, deleted, ts) {
+  if (!bc) return;
+  bc.postMessage({ type: 'score', hole, player, value, deleted, ts, device: DEVICE_ID });
+}
+
+function renderLiveBadge() {
+  const now = Date.now();
+  for (const [id, ts] of presence) if (now - ts > 12000) presence.delete(id);
+  const badge = document.getElementById('live-badge');
+  if (!badge) return;
+  if (!bc) { badge.textContent = ''; badge.className = 'livebadge'; return; }
+  const others = presence.size;
+  badge.className = 'livebadge' + (others > 0 ? ' live' : '');
+  badge.textContent = others > 0
+    ? `\u{1F7E2} Live · ${others + 1} devices`
+    : '\u{1F7E2} Live · this device only';
+}
+
+if (bc) {
+  bc.onmessage = (e) => {
+    const msg = e.data;
+    if (msg.device === DEVICE_ID) return;
+    if (msg.type === 'presence') {
+      const isNewPeer = !presence.has(msg.device);
+      presence.set(msg.device, Date.now());
+      renderLiveBadge();
+      // Reply immediately so a just-opened tab is discovered within one round
+      // trip, not up to one 4s tick late.
+      if (isNewPeer) bc.postMessage({ type: 'presence', device: DEVICE_ID, ts: Date.now() });
+      return;
+    }
+    if (msg.type !== 'score') return;
+    const key = cellKey(msg.hole, msg.player);
+    if ((scoreTimestamps[key] || 0) > msg.ts) return; // a newer local write already won this cell
+    if (msg.deleted) delete scores[key]; else scores[key] = msg.value;
+    scoreTimestamps[key] = msg.ts;
+    renderCell(msg.hole, msg.player);
+    updateTotalsAndSubtotals();
+    persistScores();
+    const td = document.querySelector(`td.cell[data-hole="${msg.hole}"][data-player="${msg.player}"]`);
+    if (td) { td.classList.add('remote-flash'); setTimeout(() => td.classList.remove('remote-flash'), 900); }
+  };
+  const announce = () => bc.postMessage({ type: 'presence', device: DEVICE_ID, ts: Date.now() });
+  announce();
+  setInterval(announce, 4000);
+  setInterval(renderLiveBadge, 4000);
+}
+
+document.getElementById('reset-demo').addEventListener('click', () => {
+  if (!confirm('Clear this device’s copy of the demo scores? (Other open tabs keep theirs until they reset too.)')) return;
+  scores = {};
+  scoreTimestamps = {};
+  localStorage.removeItem(STORAGE_KEY);
+  active = null;
+  buildGrid();
+  applyPlayerVisibility();
+  updateTotalsAndSubtotals();
+  document.getElementById('keypad').innerHTML = '<div class="disabled-note" id="keypad-hint">Tap any score cell above to begin entering scores.</div>';
+});
+
+// ---------- Init ----------
+loadPersistedScores();
+try {
+  const savedMode = localStorage.getItem(KEYPAD_MODE_KEY);
+  if (savedMode === 'fixed' || savedMode === 'relative') keypadMode = savedMode;
+  const savedVisible = JSON.parse(localStorage.getItem(VISIBLE_PLAYERS_KEY) || 'null');
+  if (Array.isArray(savedVisible) && savedVisible.length) {
+    visiblePlayers = new Set(savedVisible.filter(p => PLAYERS.includes(p)));
+  }
+} catch (e) { /* ignore corrupt storage */ }
+
 buildGrid();
+renderAllCells();
 buildTotalsBar();
-buildPlayerPicker();
+buildPlayerChips();
+applyPlayerVisibility();
+document.querySelector('.toolbar .traversal').style.visibility = visiblePlayers.size === 1 ? 'hidden' : 'visible';
 updateTotalsAndSubtotals();
+renderLiveBadge();
 </script>
 </body>
 </html>

@@ -724,6 +724,41 @@ are no longer active candidates. `round_entry_grid.html` is the reference implem
 Phase 3.4 (building the real, data-writing round-entry page) — that build-out (auth, wiring to
 `round_pars.csv`/`all-scores.parquet`, roster awareness, persistence) has not started yet.
 
+### Second refinement pass (multi-device, groups, keypad choice)
+
+Further feedback after living with Pattern A:
+
+- **Keypad style toggle, not a forced choice.** Added a second keypad mode, **relative to
+  par** (par−1..par+3, 5 buttons, re-centering on the hole like the original 3.2b design),
+  selectable alongside the fixed 2–8 layout via a small toggle inside the keypad. Some players
+  think in raw numbers, some in shots-vs-par — this is a genuine preference, not a UX bug to
+  resolve one way. Persisted per device (`localStorage`), defaults to fixed.
+- **Player group picker, generalized from single/all to any subset.** A round is typically
+  played in 2 groups of 2–4, and each player only wants their own group's cells on their
+  phone. The all/single toggle became a **chip multi-select** (tap any of the 7 player chips
+  on/off, plus an "All" quick-reset) — traversal, voice entry, and column visibility all
+  filter to whichever subset is currently chosen. This choice is local to the device (never
+  synced) so each player picks independently. `advance()`/voice-targeting were generalized to
+  cycle through "whichever players are currently visible" rather than special-casing
+  all-vs-one, which also deleted the old single-player branch entirely — one code path instead
+  of two.
+- **Concurrent multi-device entry.** The real requirement — two-plus people entering scores on
+  separate phones for the same round at the same time — needs a backend (shared state +
+  polling/websocket) that doesn't exist yet; a static mockup can't provide that literally. What
+  it *can* do, and now does: a same-browser cross-tab simulation via `BroadcastChannel` +
+  `localStorage`, so opening the mockup in two tabs behaves like two devices on one round for
+  testing the interaction pattern — live merge of entries, a "N devices" presence badge (with
+  an immediate reply-to-new-peer handshake so discovery isn't up to 4s late), a late-joining
+  tab catching up from the `localStorage` snapshot, and per-cell timestamps so a delayed/
+  stale message can't clobber a newer edit (last-write-wins). Two bugs caught and fixed during
+  Playwright verification: `buildGrid()` was rebuilding cells empty and never repainting from
+  a loaded `scores` object (fixed with `renderAllCells()`, called once after `buildGrid()`);
+  and presence discovery relied purely on periodic 4s pings until the reply-handshake was
+  added. **This does not solve real cross-device sync** — that's Phase 3.4 backend work
+  (see the Fable review below for a first pass at that architecture).
+
+**Fable design/performance review requested** (not yet run at time of writing — see below).
+
 ## TEG roster + handicap setup (built)
 
 Companion admin page to Phase 2.5's round setup, addressing the same gap one level up: not
