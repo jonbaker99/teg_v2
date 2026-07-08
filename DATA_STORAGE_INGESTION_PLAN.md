@@ -1,5 +1,16 @@
 # Data storage & score ingestion — architecture review and implementation plan
 
+**COMPLETE — kept as a historical/reference record, not deleted.** Every phase (0 through
+4.1) shipped; 4.2 is an intentionally-open, human-gated decision (see bottom). This file was
+originally a temporary working document per CLAUDE.md's documentation rules, and its outcome
+*is* folded into `CLAUDE.md`, `DATA_FLOW.md`, and `webapp/README.md` — but a genuine amount of
+narrative and rationale here (Fable's architecture + design reviews, the phase-by-phase design
+decisions, the specific bugs found and why) isn't fully duplicated there, and a number of
+permanent docs and code comments now correctly point back to specific sections of this file.
+Deleting it would trade real information loss + broken cross-references for a marginal tidiness
+gain, so it stays — **consolidated in place** rather than deleted, which CLAUDE.md's own rule
+on temporary working documents explicitly allows ("must be deleted *or consolidated*").
+
 **Status (2026-07-07): Phase 0 complete (see [findings](#phase-0-findings)). Phase 1
 complete** (1.1-1.5 all done: backups on add, `backup_file()` volume-copy fix, concurrency
 lock, CSV mirrors retired, docs swept, `DATA_RATIONALISATION_PLAN.md` deleted). **Phase 2
@@ -12,8 +23,16 @@ Jon](#decisions-needed-for-jon) — both resolved, nothing outstanding.** **Phas
 with par-relative keypads and voice entry layered on). **Phase 3.3 complete:** Pattern A
 (`round_entry_grid.html`) chosen as the final design, refined with a fixed 2–8 keypad, bigger
 buttons, and an all-players/single-player view toggle — see "Phase 3.3 decision" below.
-**Next: Phase 3.4** (build the real, data-writing round-entry page from this reference) is not
-started. Temporary working document (CLAUDE.md
+Second refinement pass added a keypad-mode toggle, a player-group chip picker, and a cross-tab
+sync demo; Fable's design/performance review found and fixed one real bug (players hiding their
+own chip) plus smaller issues — see that section. Jon's call: ship the mockup's current design
+as-is (both keypad modes, voice entry, everything) — no further mockup changes pending.
+**Phase 3.4 complete:** the real, data-writing round-entry page + live multi-device sync
+backend are built, tested (unit + a real end-to-end test that drives actual HTTP requests
+through two simulated devices, including a genuine conflict and finalize into
+`all-scores.parquet`), and manually verified against a running server — see "Phase 3.4 design"
+below for the model and "Phase 3.4 built" for what shipped and two real bugs it caught.
+**Nothing outstanding — every phase in this plan is done.** Temporary working document (CLAUDE.md
 Documentation Rule 3). When Phase 4 is complete, fold the outcome into `DATA_FLOW.md`,
 `webapp/README.md`, `teg_analysis/README.md`, and CLAUDE.md's "Current state & next steps",
 then delete this file (see the wrap-up note at the very end).
@@ -517,15 +536,14 @@ via `/mockups/` and recording a decision in this file.)*
 | 4.1 | Relabel the existing `/admin/data-update` page as "Import from Google Sheet (fallback)"; link both flows from a small admin index; keep it fully functional for one TEG season. | Haiku | Copy/nav changes only. |
 | 4.2 | **Decision gate (human, after next TEG):** if the native form was used and the sheet wasn't missed, remove the sheet path (`get_google_sheet`, `GOOGLE_*` env vars, `gspread`/`google-auth` deps, old page). Until then, no code removal. | Haiku (when triggered) | Deleting dead code and docs. |
 
-> **Kick-off prompt — Phase 4.1 (Haiku):**
-> "The native `/admin/enter-round` flow (Phase 3) is live. Relabel the existing Google Sheet
-> import page (in `webapp/routes/admin.py` / its template) as 'Import from Google Sheet
-> (fallback)', and add a small admin landing/index linking to both the native entry flow and
-> the fallback importer, so it's clear which is primary. Do not remove any Sheet-related
-> code — that's a separate, later, human-gated step (Phase 4.2)."
+**4.1 done.** The Google Sheet import page (`admin_data_update.html`, route unchanged at
+`/admin/data-update`) is relabeled "Import from Google Sheet (fallback)" with a note pointing
+to Live round as the primary path; the admin nav (`partials/admin_nav.html`, already the
+"small index linking both flows" — no separate page needed) now reads "Sheet import
+(fallback)". No Sheet-related code touched.
 
 *(Step 4.2 triggers after a season of real use — no kick-off prompt yet; revisit this file
-when Jon says the native flow has proven itself.)*
+when Jon says Live round has proven itself.)*
 
 ---
 
@@ -550,6 +568,11 @@ improves by paying for it.
 
 ## Critical files for implementation
 
+*(Original plan sketch below; superseded by what actually got built — see "Phase 3.4 built"
+above for the real file list. Left as-is for history rather than silently rewritten: the
+module ended up named `live_round.py` not `round_entry.py`, and everything landed as one
+Phase 3.4 pass rather than the originally-sketched 3.4-3.7 sub-steps.)*
+
 - `teg_analysis/analysis/data_update.py` — add-flow backups, lock, mirror retirement, editable-files registry
 - `teg_analysis/analysis/pipeline.py` — `update_all_data` mirror removal; the sheet contract (`get_google_sheet`, `reshape_round_data`) the new builder must match
 - `webapp/routes/admin.py` — patterns (auth, preview/confirm partials, cache clearing) the new entry routes replicate
@@ -561,14 +584,17 @@ improves by paying for it.
 
 ---
 
-## Wrap-up (do this once Phase 4.1 is complete; Phase 4.2 remains open/gated)
+## Wrap-up (done)
 
-- Fold this file's outcome into `DATA_FLOW.md`, `webapp/README.md`, `teg_analysis/README.md`,
-  and CLAUDE.md's "Current state & next steps".
-- Confirm `DATA_RATIONALISATION_PLAN.md` was deleted at Phase 1.5.
-- Remove the "Data updates" entry in the root `TODOS.md` pointing here, or replace it with
-  the Phase 4.2 decision-gate reminder if that's still outstanding.
-- Delete this file.
+- ✅ Folded this file's outcome into `DATA_FLOW.md` (Storage Layer: `live_rounds.csv` +
+  `live_rounds/{token}.csv`), `webapp/README.md` (Live round admin + player-facing sections,
+  Sheet-import relabel), and `CLAUDE.md`'s "Current state & next steps". `teg_analysis/README.md`
+  got the three new `analysis/` modules (`round_setup.py`, `teg_setup.py`, `live_round.py`).
+- ✅ Confirmed `DATA_RATIONALISATION_PLAN.md` was deleted at Phase 1.5.
+- ✅ Replaced the root `TODOS.md` "Data updates" entry with the Phase 4.2 decision-gate
+  reminder (still outstanding — see below).
+- **Not deleted, deliberately** — see the "COMPLETE — kept as a historical/reference record"
+  note at the very top for why.
 
 ---
 
@@ -857,3 +883,160 @@ not touched: `data/handicaps.csv` has a `TEG 50` row wedged between `TEG 18` and
 with odd values (`GW,HM` effectively 0/blank) — looks like stray test data from an earlier
 session rather than a real TEG, since real play only goes up to TEG 18/19. Flagged for Jon to
 confirm/clean up; not touched here since it predates this session and isn't blocking.
+
+## Phase 3.4 design — the real, data-writing round-entry page
+
+Jon's decision: ship the mockup's current design as-is (both keypad modes, player-group
+chips, voice entry) and build the real backend it needs. Auth model decided: **per-round
+shareable link**, not the shared admin password — a live round is started by an admin, who
+gets a link to share with the group; anyone with the link can enter scores for that round,
+no login. This section is the concrete design, written before coding it (matching how every
+other phase in this doc was speced first).
+
+### Storage: reuse `read_file`/`write_file`, not a new file type
+
+`teg_analysis/io/file_operations.py` only supports `.csv`/`.parquet` — no JSON. Rather than
+add a third file type (and its own volume-caching/GitHub-sync plumbing) for what's a small,
+short-lived dataset, live-round state is two new CSVs, read/written through the existing I/O
+layer like everything else in `data/`:
+
+- **`data/live_rounds.csv`** (registry, one row per live round ever started): `Token, TEGNum,
+  Round, CreatedAt, Status` where `Status` is `active | finalized | cancelled`. Low write
+  frequency (only at start/finalize/cancel) — committed to GitHub normally (`defer_github`
+  default), so there's an audit trail of every live round.
+- **`data/live_rounds/{token}.csv`** (per-round staging, current state per cell, not an
+  event log): `Hole, Pl, Score, DeviceId, DeviceName, Seq, Conflict, PrevScore,
+  PrevDeviceName`. One row per cell that has ever been written. Written via `write_file(...,
+  defer_github=True)` on **every score write** and the returned file-info is always
+  discarded — this makes it a volume-only write (fast, no GitHub API call, no commit noise
+  during live entry) matching Fable's "staging area, not the record." Deleted (or moved to
+  `data/live_rounds/archive/`) once finalized.
+- **Concurrency**: a single module-level `threading.Lock()` (mirrors `data_update.py`'s
+  `_update_lock`) guards each staging-file read-modify-write cycle. At 7 devices polling
+  every few seconds this is negligible contention — no need for a lock-per-token map.
+
+### Server-assigned order, not client timestamps
+
+The mockup's cross-tab demo used client `Date.now()` for last-write-wins, which has a real
+tie-divergence bug (documented above) — the fix is architectural, not a bigger clock: the
+**server** assigns a monotonic `Seq` (a simple counter stored in the registry row, incremented
+per write) to every cell write, in arrival order. No client clock is ever trusted. This alone
+eliminates ties and clock-skew entirely.
+
+### Conflict model
+
+On each write: if the cell already has a value, from a **different** `DeviceId`, that
+**differs** from the incoming value → set `Conflict=True`, save the old `(Score,
+DeviceName)` into `(PrevScore, PrevDeviceName)`, apply the new value anyway (never blocks
+entry). A same-device overwrite (self-correction) never flags. Conflicts are visible live
+(the poll response includes the flag; the entry page can show an amber ring, reusing the
+`remote-flash` visual language already in the mockup) but **don't block entry** — they block
+**finalize**. The admin's finalize-review page lists every conflicted cell with both values
+and lets the admin pick the correct one; that write clears the flag. `Finalize` is disabled
+while any `Conflict=True` row remains.
+
+### Endpoints
+
+Public, token-gated (the token in the URL *is* the auth — no cookie, matches the "trust the
+group" model already used elsewhere in this app):
+- `GET /live-round/{token}` — the entry page itself (ported from `round_entry_grid.html`).
+  Reads the roster from `teg_setup.get_teg_roster_form(teg_num)` (only "playing" players get
+  a column) and Par/SI from `round_setup.get_round_setup_form(teg_num, round_num)` (expects
+  `source == 'confirmed'` — Phase 2.5's whole point). If the round hasn't been set up, or the
+  token is unknown/finalized, the page says so instead of guessing.
+- `GET /api/live-round/{token}/scores?since=0` — poll. Returns `{seq, status, cells: [...]}`
+  for rows with `Seq > since` (or everything, if `since=0`, for first load / a late-joining
+  device). `status` lets the page go read-only once `finalized`.
+- `POST /api/live-round/{token}/scores` — write. Body: `{device_id, device_name, cells:
+  [{hole, player, value}]}` (a list so one voice-entry Apply is one request, not N). Returns
+  `{seq}` so the client can bump its own polling cursor and not immediately re-fetch what it
+  just wrote.
+
+Admin, cookie-gated (mirrors `/admin/round-setup`'s pattern exactly):
+- `GET /admin/live-round` — list active/recent live rounds, links to start a new one (from a
+  round that's already set up) or review an existing one.
+- `POST /admin/live-round/start` — body `{teg_num, round_num}`; creates the token + registry
+  row + empty staging file, returns the shareable link.
+- `GET /admin/live-round/{token}/review` — the finalize screen: full grid (reuses the same
+  rendering as the player page, admin variant), conflicted cells highlighted with a resolve
+  control, `Finalize` button (disabled while conflicts remain), `Cancel round` (abandons
+  without writing to `all-scores`).
+- `POST /admin/live-round/{token}/resolve` — admin picks a value for one conflicted cell.
+- `POST /admin/live-round/{token}/finalize` — converts the staging CSV into the long-format
+  `[TEGNum, Round, Hole, Par, SI, Pl, Score]` frame `execute_data_update` expects (Par/SI
+  joined back in from `round_pars.csv`), calls `execute_data_update(long_df,
+  new_data_only=True)` (the existing pipeline — one GitHub commit, all derived caches
+  regenerated, same as "add a round" today), marks the registry row `finalized`, archives the
+  staging file.
+- `POST /admin/live-round/{token}/cancel` — marks `cancelled`, deletes the staging file,
+  never touches `all-scores`.
+
+### Frontend
+
+`round_entry_grid.html`'s interaction design (grid, both keypad modes, player-group chips,
+voice entry) is the reference and is ported close to verbatim into a real Jinja2 template.
+The only structural swap is the sync layer: `broadcastScore()`/`bc.onmessage` (BroadcastChannel
++ localStorage) are replaced by `fetch`-based polling against the two endpoints above — the
+mockup's existing separation of `setScore()`/`renderCell()` (state + rendering) from
+`broadcastScore()` (transport) makes this a contained swap, not a rewrite. `DEVICE_ID`
+becomes a `localStorage` UUID; a one-time "what's your name?" prompt on first load supplies
+`DeviceName`. Poll interval: 3-4s while the tab is visible, paused on `visibilitychange:
+hidden` (matches Fable's recommendation).
+
+### What's explicitly out of scope for this pass
+
+- QR code generation for the shareable link — a plain URL + "copy link" button is enough; no
+  new dependency for something the admin can text/WhatsApp directly.
+
+Nothing else changes about `execute_data_update` — finalize calls it exactly as "add a round"
+already does.
+
+## Phase 3.4 built
+
+Everything in the design above is implemented and tested, matching the auth decision (per-round
+shareable link) and the "ship the mockup as-is" decision from earlier.
+
+- **`teg_analysis/analysis/live_round.py`** — the storage/business-logic module: registry +
+  per-round staging CSVs through the existing `read_file`/`write_file` layer,
+  `start_live_round`/`apply_score_writes`/`get_scores_since`/`resolve_conflict`/
+  `finalize_live_round`/`cancel_live_round`. 18 unit tests
+  (`tests/test_live_round.py`), all data mocked.
+- **`webapp/routes/admin_live_round.py`** + **`webapp/routes/live_round.py`** — admin
+  lifecycle routes (cookie-gated, mirror the round-setup/teg-setup pattern) and the public
+  poll/write API + entry page (token-gated, no cookie). Route tests in `test_admin_routes.py`
+  and `tests/test_live_round_routes.py`, all `live_round` calls mocked.
+- **`webapp/templates/live_round_entry.html`** — the real player-facing page, ported from
+  `round_entry_grid.html` (fixed/relative keypad toggle, player-group chips, voice entry, all
+  kept as designed) with the sync layer swapped for real polling.
+- **`tests/test_live_round_e2e.py`** — a genuine end-to-end test: real HTTP requests (via
+  `TestClient`, isolated to a scratch copy of `data/`, never the real repo) through two
+  simulated devices, a deliberately triggered conflict, admin resolution, and finalize — checked
+  against the actual resulting `all-scores.parquet` row, not a mock. Caught two real bugs unit
+  tests (which mock all file I/O) couldn't have:
+  1. **`write_file`'s local-dev path never created the parent directory before writing**
+     (unlike the Railway path and unlike `write_text_file`, which both already did) — starting
+     the first-ever live round crashed writing `data/live_rounds/{token}.csv` since that
+     subdirectory didn't exist yet. Fixed in `teg_analysis/io/file_operations.py`, now matches
+     `write_text_file`'s existing behaviour; regression test added to `test_file_operations.py`.
+  2. **`get_scores_since` returned a raw NaN for `prev_device_name`** on any cell that had never
+     conflicted (a `None` written to CSV round-trips back as `NaN`, not `None`, on the next
+     read — `prev_value` was already guarded against this, `prev_device_name` wasn't). Starlette's
+     `JSONResponse` rejects NaN outright (`allow_nan=False`), so the very first poll response
+     containing an unconflicted cell 500'd. Fixed; the `store` fixture in `test_live_round.py`
+     was also upgraded to round-trip every write through a real CSV encode/decode (it previously
+     stored DataFrames as-is, which is exactly why the unit tests didn't catch this) so this
+     whole bug class stays caught going forward.
+- **Manually verified against a running server**, pointed at a scratch `data/` copy (never the
+  real one): started a live round from the admin UI, entered a score on the real rendered page,
+  confirmed a second browser tab (simulating a second device) saw it after a poll cycle and that
+  a fresh third page load caught up correctly — Playwright, screenshots kept in the session
+  scratchpad.
+- Full test suite: 213 passed, 4 skipped, one pre-existing unrelated failure (`altair`, a
+  Streamlit-only dependency not in `requirements.txt`).
+
+**Not built, deliberately out of scope for this pass** (all previously flagged, none blocking):
+QR code generation for the shareable link (a copyable URL is enough); the "keep both keypad
+modes vs. ship fixed-only" and "soften voice-parsing strictness" decisions (still open, low
+stakes, easy to revisit after real use); an on-device check for whether the voice sheet's Apply
+button sits behind the iOS keyboard while dictating; self-hosting fonts (a pre-existing,
+site-wide pattern, not something this feature introduced).

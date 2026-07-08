@@ -30,7 +30,7 @@ def _login(client):
 @pytest.mark.parametrize("path", [
     "/admin/edit-data", "/admin/delete-data", "/admin/volume-sync",
     "/admin/file-guide", "/admin/volume", "/admin/backups", "/admin/round-setup",
-    "/admin/teg-setup",
+    "/admin/teg-setup", "/admin/live-round",
 ])
 def test_routes_require_auth(client, path):
     resp = client.get(path)
@@ -495,6 +495,146 @@ def test_teg_setup_save_rejects_playing_without_handicap(client, monkeypatch):
 
     assert resp.status_code == 200
     assert "dm" in resp.text.lower()
+
+
+# ---------------------------------------------------------------------------
+# Live round (admin lifecycle side). All live_round module calls are
+# monkeypatched -- no test here writes to real data.
+# ---------------------------------------------------------------------------
+
+def test_live_round_review_requires_auth(client):
+    resp = client.get("/admin/live-round/some-token/review")
+    assert resp.status_code == 303
+    assert resp.headers["location"] == "/admin/login"
+
+
+def test_live_round_list_renders(client, monkeypatch):
+    import teg_analysis.analysis.live_round as lrmod
+
+    monkeypatch.setattr(lrmod, "list_live_rounds", lambda: [
+        {"Token": "abc123", "TEGNum": 19, "Round": 1, "CreatedAt": "2026-07-08T10:00:00Z", "Status": "active"},
+    ])
+    import teg_analysis.analysis.round_setup as rs
+    monkeypatch.setattr(rs, "get_rounds_status", lambda: [
+        {"teg_num": 19, "round_num": 2, "course": "Ashdown", "date": "01/01/2027", "is_set_up": True},
+        {"teg_num": 19, "round_num": 3, "course": "Ashdown", "date": "01/01/2027", "is_set_up": False},
+    ])
+
+    _login(client)
+    resp = client.get("/admin/live-round")
+    assert resp.status_code == 200
+    assert "abc123" in resp.text
+    assert "🟢" in resp.text or "Active" in resp.text
+    # Round 2 is set up and not live -> startable. Round 3 isn't set up -> not offered.
+    assert 'value="2"' in resp.text
+    assert 'value="3"' not in resp.text
+
+
+def test_live_round_start_success(client, monkeypatch):
+    import teg_analysis.analysis.live_round as lrmod
+
+    monkeypatch.setattr(lrmod, "start_live_round", lambda teg_num, round_num: {
+        "Token": "newtoken", "TEGNum": teg_num, "Round": round_num,
+        "CreatedAt": "now", "Status": "active",
+    })
+
+    _login(client)
+    resp = client.post("/admin/live-round/start", data={"teg_num": "19", "round_num": "1"})
+    assert resp.status_code == 200
+    assert "newtoken" in resp.text
+    assert "/live-round/newtoken" in resp.text
+
+
+def test_live_round_start_rejects_unconfirmed_pars(client, monkeypatch):
+    import teg_analysis.analysis.live_round as lrmod
+
+    def fake_start(teg_num, round_num):
+        raise lrmod.RoundParsNotConfirmedError("not confirmed yet")
+
+    monkeypatch.setattr(lrmod, "start_live_round", fake_start)
+
+    _login(client)
+    resp = client.post("/admin/live-round/start", data={"teg_num": "19", "round_num": "1"})
+    assert resp.status_code == 200
+    assert "not confirmed yet" in resp.text
+
+
+def test_live_round_review_shows_conflicts_and_progress(client, monkeypatch):
+    import teg_analysis.analysis.live_round as lrmod
+
+    monkeypatch.setattr(lrmod, "get_live_round_context", lambda token: {
+        "token": token, "teg_num": 19, "round_num": 1, "status": "active", "course": "Ashdown",
+        "players": ["DM", "GW"], "player_names": {"DM": "David MULLIN", "GW": "Gregg WILLIAMS"},
+        "holes": [{"hole": h, "par": 4, "si": h} for h in range(1, 19)],
+    })
+    monkeypatch.setattr(lrmod, "get_scores_since", lambda token, since_seq=0: {
+        "seq": 3, "status": "active", "cells": [
+            {"hole": 1, "player": "DM", "value": 4, "conflict": False, "device_name": "Jon", "prev_value": None, "prev_device_name": None},
+            {"hole": 2, "player": "DM", "value": 5, "conflict": True, "device_name": "Dave", "prev_value": 4, "prev_device_name": "Jon"},
+        ],
+    })
+
+    _login(client)
+    resp = client.get("/admin/live-round/tok123/review")
+    assert resp.status_code == 200
+    assert "David MULLIN" in resp.text
+    assert "1 cell" in resp.text or "disagree" in resp.text
+    assert "disabled" in resp.text  # Finalize disabled while a conflict remains
+
+
+def test_live_round_resolve(client, monkeypatch):
+    import teg_analysis.analysis.live_round as lrmod
+
+    captured = {}
+    def fake_resolve(token, hole, player, chosen_value, resolved_by):
+        captured.update(token=token, hole=hole, player=player, chosen_value=chosen_value)
+
+    monkeypatch.setattr(lrmod, "resolve_conflict", fake_resolve)
+
+    _login(client)
+    resp = client.post("/admin/live-round/tok123/resolve", data={"hole": "2", "player": "DM", "chosen_value": "5"})
+    assert resp.status_code == 200
+    assert captured == {"token": "tok123", "hole": 2, "player": "DM", "chosen_value": 5}
+    assert "confirmed" in resp.text.lower()
+
+
+def test_live_round_finalize_success(client, monkeypatch):
+    import teg_analysis.analysis.live_round as lrmod
+
+    monkeypatch.setattr(lrmod, "finalize_live_round", lambda token: {
+        "token": token, "teg_num": 19, "round_num": 1, "records_added": 18,
+        "changed_rounds": {}, "backups": [], "committed": True, "files_committed": 1,
+    })
+
+    _login(client)
+    resp = client.post("/admin/live-round/tok123/finalize")
+    assert resp.status_code == 200
+    assert "finalized" in resp.text.lower()
+
+
+def test_live_round_finalize_blocked_by_conflicts(client, monkeypatch):
+    import teg_analysis.analysis.live_round as lrmod
+
+    def fake_finalize(token):
+        raise lrmod.ConflictsUnresolvedError("Resolve every conflicted cell before finalizing this round.")
+
+    monkeypatch.setattr(lrmod, "finalize_live_round", fake_finalize)
+
+    _login(client)
+    resp = client.post("/admin/live-round/tok123/finalize")
+    assert resp.status_code == 200
+    assert "resolve every conflicted cell" in resp.text.lower()
+
+
+def test_live_round_cancel(client, monkeypatch):
+    import teg_analysis.analysis.live_round as lrmod
+
+    monkeypatch.setattr(lrmod, "cancel_live_round", lambda token: {"token": token, "status": "cancelled"})
+
+    _login(client)
+    resp = client.post("/admin/live-round/tok123/cancel")
+    assert resp.status_code == 200
+    assert "cancelled" in resp.text.lower()
 
 
 if __name__ == "__main__":

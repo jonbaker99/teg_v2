@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title_suffix %} — Live round review{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+  <span class="page-label">Admin</span>
+  <h1 class="page-title">Live round review{% if live %} — TEG {{ live.teg_num }} Round {{ live.round_num }}{% endif %}</h1>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="/static/admin.css">
+{% endblock %}
+
+{% block content %}
+{% set admin_active = 'live-round' %}
+{% include "partials/admin_nav.html" %}
+
+<div class="section-panel">
+  <p style="margin-bottom:1rem;"><a href="/admin/live-round" class="text-link">← All live rounds</a></p>
+
+  {% if error %}
+    <p class="error" style="color:#b00020;">{{ error }}</p>
+  {% else %}
+
+  <div class="data-card" style="margin-bottom:1rem;">
+    <h2 class="card-header">{{ live.course }} — {{ live.status | capitalize }}</h2>
+    <p style="margin:.5rem 0;">Player-entered so far:</p>
+    <table class="admin-settings-table">
+      <thead><tr><th>Player</th><th>Holes entered</th></tr></thead>
+      <tbody>
+        {% for p, count in progress.items() %}
+        <tr>
+          <td>{{ live.player_names[p] }} ({{ p }})</td>
+          <td>{{ count }} / 18{% if count == 18 %} ✅{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="data-card" style="margin-bottom:1rem;">
+    <h2 class="card-header">Conflicts</h2>
+    {% if not conflicts %}
+      <p>✅ None — every cell has a single agreed value.</p>
+    {% else %}
+      <p style="color:#8a6100;">⚠️ {{ conflicts | length }} cell{{ 's' if conflicts | length != 1 }} disagree between
+        devices. Pick the correct value for each before finalizing.</p>
+      <table class="admin-settings-table">
+        <thead><tr><th>Hole</th><th>Player</th><th>Current</th><th>Previous</th><th>Resolve</th></tr></thead>
+        <tbody>
+          {% for c in conflicts %}
+          <tr id="conflict-{{ c.hole }}-{{ c.player }}">
+            <td>{{ c.hole }}</td>
+            <td>{{ c.player }}</td>
+            <td>{{ c.value }} <span style="color:#666;font-size:.85rem;">({{ c.device_name }})</span></td>
+            <td>{{ c.prev_value }} <span style="color:#666;font-size:.85rem;">({{ c.prev_device_name }})</span></td>
+            <td>
+              <form hx-post="/admin/live-round/{{ token }}/resolve"
+                    hx-target="#conflict-{{ c.hole }}-{{ c.player }}" hx-swap="outerHTML"
+                    style="display:flex;gap:.4rem;align-items:center;">
+                <input type="hidden" name="hole" value="{{ c.hole }}">
+                <input type="hidden" name="player" value="{{ c.player }}">
+                <input type="number" name="chosen_value" value="{{ c.value }}" min="1" max="12" style="width:4rem;">
+                <button type="submit" class="btn-action" hx-disabled-elt="this">Confirm</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+
+  <div class="data-card">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+      <form hx-post="/admin/live-round/{{ token }}/finalize" hx-target="#finalize-result" hx-swap="innerHTML">
+        <button type="submit" class="btn-action" {% if conflicts %}disabled{% endif %} hx-disabled-elt="this">
+          ✅ Finalize — write to permanent record
+        </button>
+      </form>
+      <form hx-post="/admin/live-round/{{ token }}/cancel" hx-target="#finalize-result" hx-swap="innerHTML"
+            hx-confirm="Cancel this live round without saving anything to the permanent record?">
+        <button type="submit" class="btn-action" style="background:#b00020;" hx-disabled-elt="this">Cancel round</button>
+      </form>
+    </div>
+    {% if conflicts %}
+      <p style="margin-top:.5rem;color:#8a6100;">Resolve every conflict above before Finalize will run.</p>
+    {% endif %}
+    <div id="finalize-result" style="margin-top:1rem;"></div>
+  </div>
+
+  {% endif %}
+</div>
+{% endblock %}

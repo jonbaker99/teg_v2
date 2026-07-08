@@ -86,5 +86,18 @@ def test_backup_file_local_copies_filesystem(monkeypatch, tmp_path):
     assert (tmp_path / "data" / "backups" / "x.parquet").exists()
 
 
+def test_write_file_local_creates_missing_parent_directory(monkeypatch, tmp_path):
+    """write_file's local path didn't mkdir before writing (unlike write_text_file
+    and the Railway branch), so writing the first file into a brand-new
+    subdirectory (e.g. data/live_rounds/{token}.csv) raised OSError. Caught by
+    the live-round E2E test starting a live round in a scratch repo."""
+    monkeypatch.delenv("RAILWAY_ENVIRONMENT", raising=False)
+    monkeypatch.setattr(file_operations.volume_operations, "_REPO_ROOT", tmp_path)
+
+    file_operations.write_file("data/brand_new_dir/x.csv", pd.DataFrame({"a": [1]}))
+
+    assert (tmp_path / "data" / "brand_new_dir" / "x.csv").exists()
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

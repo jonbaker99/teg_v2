@@ -134,8 +134,9 @@ def write_file(file_path: str, data: pd.DataFrame, commit_message: str = "Update
             return {'file_path': file_path, 'data': data}
 
     else:
-        # Local development unchanged
+        # Local development
         local_path = volume_operations._get_local_path(file_path)
+        local_path.parent.mkdir(parents=True, exist_ok=True)  # matches write_text_file's behavior
         if file_path.endswith('.csv'):
             data.to_csv(local_path, index=False)
         elif file_path.endswith('.parquet'):
