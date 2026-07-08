@@ -16,7 +16,10 @@ STREAKS_PARQUET = "data/streaks.parquet"
 BESTBALL_PARQUET = "data/bestball.parquet"
 HANDICAPS_CSV = "data/handicaps.csv"
 ROUND_INFO_CSV = "data/round_info.csv"
-ALL_DATA_CSV_MIRROR = "data/all-data.csv"
+COURSE_PARS_CSV = "data/course_pars.csv"
+ROUND_PARS_CSV = "data/round_pars.csv"
+LIVE_ROUNDS_REGISTRY_CSV = "data/live_rounds.csv"
+LIVE_ROUND_STAGING_DIR = "data/live_rounds"
 
 # Commentary data files
 COMMENTARY_ROUND_EVENTS_PARQUET = "data/commentary_round_events.parquet"
@@ -56,6 +59,22 @@ PLAYER_RELATIONSHIPS = [
     {"players": ["Alex Baker", "Jon Baker"], "relationship": "brothers"},
     {"players": ["John Patterson", "Graham Patterson"], "relationship": "brothers"},
 ]
+
+# ---------------------------------------------------------------------------
+# Course data
+# ---------------------------------------------------------------------------
+# Courses confirmed (not guessed) to sometimes be played with the front/back 9
+# swapped, so a per-hole-number Par/SI "conflict" there is real variation, not
+# an error -- course_pars.csv still has a default (the most recently played
+# round), but pre-round setup should flag these for a human double-check
+# rather than trust the default blindly. Confirmed by Jon, 2026-07-07, re:
+# Praia D'El Rey specifically (see DATA_STORAGE_INGESTION_PLAN.md).
+KNOWN_VARIABLE_ROUTING = {
+    "Praia D'El Rey": (
+        "Sometimes played back-9-first. The course_pars.csv default is just the "
+        "usual routing -- confirm/edit before trusting it for a new round."
+    ),
+}
 
 # ---------------------------------------------------------------------------
 # Tournament structure

@@ -1,0 +1,8 @@
+{% if error %}
+  <p class="error" style="color:#b00020;">{{ error }}</p>
+{% elif result %}
+  <p style="color:#1a1a1a;">
+    ✅ Finalized — TEG {{ result.teg_num }} Round {{ result.round_num }} written to the
+    permanent record ({{ result.records_added }} scores). <a href="/admin/live-round" class="text-link">Back to live rounds</a>.
+  </p>
+{% endif %}

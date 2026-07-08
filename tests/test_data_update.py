@@ -246,5 +246,85 @@ def test_analyze_teg_completion_tolerates_missing_round_info(monkeypatch):
     assert pd.isna(out.loc[12, 'Year'])         # fallback year
 
 
+# ---------------------------------------------------------------------------
+# execute_data_update I/O (isolated scratch repo — never touches real data/)
+# ---------------------------------------------------------------------------
+
+@pytest.fixture
+def scratch_repo(tmp_path, monkeypatch):
+    """Point teg_analysis's local-path resolution at a scratch copy of data/,
+    so I/O tests exercise the real read/write pipeline without touching the
+    real repo's data/ directory."""
+    import shutil
+    from pathlib import Path
+    import teg_analysis.io.volume_operations as volume_operations
+
+    real_data = Path(__file__).resolve().parent.parent / 'data'
+    shutil.copytree(real_data, tmp_path / 'data')
+
+    monkeypatch.setattr(volume_operations, '_REPO_ROOT', tmp_path)
+    monkeypatch.delenv('RAILWAY_ENVIRONMENT', raising=False)
+    return tmp_path
+
+
+def _fake_wide_round(teg_num=50, round_num=1):
+    players = ['DM', 'GW', 'HM', 'JP', 'JB', 'SN', 'AB']
+    rows = []
+    for hole in range(1, 19):
+        row = {'TEGNum': teg_num, 'Round': round_num, 'Hole': hole, 'Par': 4, 'SI': hole}
+        for p in players:
+            row[p] = 4
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def test_execute_data_update_creates_backups(scratch_repo):
+    """execute_data_update backs up all-scores/all-data before writing (Phase 1.1)."""
+    from teg_analysis.analysis.data_update import execute_data_update
+
+    long_df = process_google_sheets_data(_fake_wide_round())
+    result = execute_data_update(long_df, overwrite=True)
+
+    assert result['records_added'] > 0
+    assert len(result['backups']) == 2
+    for backup_path in result['backups']:
+        assert (scratch_repo / backup_path).exists()
+
+
+def test_execute_data_update_no_new_records_skips_backups(scratch_repo):
+    """A no-op call (everything already a duplicate, new_data_only) takes no backups."""
+    from teg_analysis.analysis.data_update import execute_data_update
+
+    long_df = process_google_sheets_data(_fake_wide_round())
+    execute_data_update(long_df, overwrite=True)  # establish the data
+    result = execute_data_update(long_df, new_data_only=True)  # now a full duplicate
+
+    assert result['records_added'] == 0
+    assert result['backups'] == []
+
+
+def test_execute_data_update_rejects_concurrent_call(scratch_repo):
+    """A second add/delete call while one is already running raises
+    UpdateInProgressError instead of interleaving writes (Phase 1.3)."""
+    from teg_analysis.analysis.data_update import (
+        execute_data_update, execute_data_deletion, _update_lock, UpdateInProgressError,
+    )
+
+    long_df = process_google_sheets_data(_fake_wide_round())
+
+    assert _update_lock.acquire(blocking=False)
+    try:
+        with pytest.raises(UpdateInProgressError):
+            execute_data_update(long_df, overwrite=True)
+        with pytest.raises(UpdateInProgressError):
+            execute_data_deletion(50, [1])
+    finally:
+        _update_lock.release()
+
+    # Lock is released afterwards -> a normal call succeeds.
+    result = execute_data_update(long_df, overwrite=True)
+    assert result['records_added'] > 0
+
+
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])

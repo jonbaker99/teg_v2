@@ -4,7 +4,7 @@
 {% block page_title %}
 <div class="page-title-area">
   <span class="page-label">Admin</span>
-  <h1 class="page-title">Add a round</h1>
+  <h1 class="page-title">Import from Google Sheet (fallback)</h1>
 </div>
 {% endblock %}
 
@@ -16,6 +16,12 @@
 {% set admin_active = 'add' %}
 {% include "partials/admin_nav.html" %}
 <div class="section-panel">
+  <p style="margin-bottom:1rem;">
+    <strong>Fallback path</strong> — for entering a round after the fact from the Google Sheet.
+    For scores entered live, on players' own phones as the round is played, use
+    <a href="/admin/live-round" class="text-link">Live round</a> instead. Both end up writing to
+    the same place via the same pipeline.
+  </p>
   <p style="margin-bottom:1rem;">
     Loads the latest scores from the Google Sheet, shows you the round totals and any
     clashes with existing data, then lets you confirm before it's saved and committed.

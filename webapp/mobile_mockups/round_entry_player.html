@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0">
+<title>Mockup — Round entry C · Player-by-player column</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0">
+<style>
+:root {
+  --font-body:'Lora', Georgia, serif; --font-data:'Roboto Mono', monospace;
+  --bg:#f4f3ef; --surface:#ffffff; --surface-2:#faf9f6; --text:#1a1a1a; --text-2:#555;
+  --text-muted:#8c8c86; --line:#e7e5e0; --accent:forestgreen; --accent-soft:#F3F7F3; --accent-text:forestgreen;
+  --bar:#ffffff; --bar-line:#e7e5e0; --shadow:0 1px 2px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.04);
+  --key-bg:#ffffff; --key-active:#eef2ee; --row-empty:#faf9f6; --row-filled:#eef4ee;
+  --row-active-ring:forestgreen;
+}
+[data-theme="dark"], :root:has(#mode:checked) {
+  --bg:#131311; --surface:#1d1d1a; --surface-2:#242420; --text:#ececea; --text-2:#b7b6b0;
+  --text-muted:#86857e; --line:#2e2e29; --accent:#57c773; --accent-soft:#1b2a1d; --accent-text:#7ad492;
+  --bar:#191916; --bar-line:#2a2a25; --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+  --key-bg:#1d1d1a; --key-active:#26402a; --row-empty:#1d1d1a; --row-filled:#1b2a1d;
+  --row-active-ring:#57c773;
+}
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; -webkit-user-select:none; user-select:none; }
+html,body { margin:0; height:100%; overflow:hidden; }
+body { font-family:var(--font-body); background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased;
+  display:flex; flex-direction:column; }
+.material-symbols-outlined { font-variation-settings:'opsz' 24,'wght' 400; line-height:1; vertical-align:middle; }
+
+.appbar { flex:0 0 auto; background:var(--bar); border-bottom:1px solid var(--bar-line);
+  padding:calc(10px + env(safe-area-inset-top,0)) 14px 10px; display:flex; align-items:center; gap:10px; }
+.appbar .back { font-size:22px; color:var(--text-2); }
+.appbar .titles { flex:1; min-width:0; }
+.appbar .kicker { font-family:var(--font-data); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-muted); display:block; line-height:1.4; }
+.appbar .title { font-weight:600; font-size:16px; line-height:1.15; }
+
+.chips { flex:0 0 auto; display:flex; gap:8px; overflow-x:auto; -webkit-overflow-scrolling:touch; padding:10px 14px; background:var(--surface-2); border-bottom:1px solid var(--line); }
+.chip { flex:0 0 auto; display:flex; flex-direction:column; align-items:center; gap:2px; padding:7px 12px; border-radius:12px;
+  background:var(--surface); border:1px solid var(--line); min-width:52px; }
+.chip.cur { border:2px solid var(--accent); background:var(--accent-soft); }
+.chip .nm { font-family:var(--font-data); font-size:12px; font-weight:700; }
+.chip .st { font-family:var(--font-data); font-size:9.5px; color:var(--text-muted); }
+.chip.done .st { color:var(--accent-text); }
+.chip .material-symbols-outlined { font-size:14px; color:var(--accent-text); }
+
+.playerhead { flex:0 0 auto; padding:10px 16px 6px; display:flex; align-items:baseline; justify-content:space-between; }
+.playerhead .nm { font-size:19px; font-weight:600; }
+.playerhead .prog { font-family:var(--font-data); font-size:12px; color:var(--text-muted); }
+.playerhead .prog b { color:var(--text); }
+
+.rowswrap { flex:1 1 auto; overflow-y:auto; -webkit-overflow-scrolling:touch; padding:2px 14px 10px; }
+.hrow { display:flex; align-items:center; gap:12px; background:var(--row-empty); border:1px dashed var(--line);
+  border-radius:11px; padding:8px 14px; margin-bottom:6px; }
+.hrow.filled { background:var(--row-filled); border:1px solid transparent; }
+.hrow.active { border:2px solid var(--row-active-ring); background:var(--surface); box-shadow:0 0 0 3px var(--accent-soft); }
+.hrow .h { font-family:var(--font-data); font-size:12px; font-weight:700; color:var(--text-2); width:24px; }
+.hrow .par { font-family:var(--font-data); font-size:11px; color:var(--text-muted); width:44px; }
+.hrow .sp { flex:1; }
+.hrow .sc { font-family:var(--font-data); font-size:17px; font-weight:700; width:30px; text-align:center; color:var(--text-muted); }
+.hrow.filled .sc { color:var(--text); }
+.hrow.sub9 { border-top:2px solid var(--line); margin-top:2px; padding-top:10px; }
+
+.keypad { flex:0 0 auto; background:var(--bar); border-top:1px solid var(--bar-line); padding:8px 10px calc(8px + env(safe-area-inset-bottom,0)); }
+.keypad .krow { display:grid; grid-template-columns:repeat(4,1fr); gap:7px; margin-bottom:7px; }
+.keypad .krow:last-child { margin-bottom:0; }
+.keypad button.k { font-family:var(--font-data); font-size:17px; font-weight:700; background:var(--key-bg); color:var(--text);
+  border:1px solid var(--line); border-radius:11px; padding:13px 0; box-shadow:var(--shadow); }
+.keypad button.k:active { background:var(--key-active); }
+.keypad button.k.clear { color:#c0392b; font-size:13px; }
+.keypad button.k.done { background:var(--accent); color:#fff; border-color:var(--accent); font-size:13px; }
+
+/* Par-relative keypad: 6 primary buttons (par-1..par+4, 97.8% of all real scores)
+   plus a quieter outlier row so 1-12 stays reachable. */
+.keypad .prow { display:grid; grid-template-columns:repeat(6,1fr); gap:6px; margin-bottom:7px; }
+.keypad button.pk { padding:7px 0 6px; display:flex; flex-direction:column; align-items:center; gap:1px; }
+.keypad button.pk .n { font-size:18px; font-weight:700; line-height:1.15; }
+.keypad button.pk .t { font-size:8px; letter-spacing:.05em; text-transform:uppercase; color:var(--text-muted); font-weight:600; }
+.keypad button.pk.ppar { border-color:var(--accent); background:var(--accent-soft); }
+.keypad button.pk.ppar .t { color:var(--accent-text); }
+.keypad .orow { display:grid; grid-template-columns:repeat(6,1fr); gap:6px; margin-bottom:7px; }
+.keypad button.ok { font-family:var(--font-data); font-size:12.5px; font-weight:600; color:var(--text-2);
+  background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:7px 0; }
+.keypad button.ok:active { background:var(--key-active); }
+
+/* Voice entry (uses the OS keyboard's dictation mic on a plain textarea) */
+.playerhead .voicebtn { display:inline-flex; align-items:center; gap:5px; font-family:var(--font-data); font-size:11px; font-weight:600;
+  color:var(--accent-text); background:var(--accent-soft); border:1px solid var(--line); border-radius:999px; padding:6px 11px; margin-left:10px; }
+.playerhead .voicebtn .material-symbols-outlined { font-size:15px; }
+.scrim { position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:70; }
+.vsheet { position:fixed; left:0; right:0; bottom:0; z-index:71; background:var(--surface); border-top:1px solid var(--line);
+  border-radius:18px 18px 0 0; box-shadow:0 -8px 30px rgba(0,0,0,.18); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0)); }
+.vsheet .vhead { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+.vsheet .vhead .material-symbols-outlined { color:var(--accent-text); font-size:20px; }
+.vsheet .vhead .tt { font-weight:600; font-size:15px; flex:1; }
+.vsheet .vhead button { border:none; background:transparent; color:var(--text-muted); padding:4px; }
+.vsheet .vfrom { font-family:var(--font-data); font-size:11px; color:var(--text-muted); margin-bottom:8px; }
+.vsheet .vfrom b { color:var(--accent-text); }
+.vsheet textarea { width:100%; min-height:64px; resize:none; font-family:var(--font-data); font-size:14px; line-height:1.5;
+  color:var(--text); background:var(--surface-2); border:1px solid var(--line); border-radius:11px; padding:10px 12px;
+  -webkit-user-select:text; user-select:text; }
+.vsheet textarea:focus { outline:2px solid var(--accent); outline-offset:-1px; }
+.vsheet .vpreview { display:flex; flex-wrap:wrap; gap:5px; margin:10px 0 0; max-height:92px; overflow-y:auto; }
+.vsheet .vchip { font-family:var(--font-data); font-size:11px; background:var(--accent-soft); color:var(--accent-text);
+  border:1px solid var(--line); border-radius:7px; padding:3px 7px; }
+.vsheet .vchip b { font-size:12px; }
+.vsheet .vchip.bad { background:transparent; color:#c0392b; border-color:#c0392b; }
+.vsheet .vchip.skip { background:transparent; color:var(--text-muted); }
+.vsheet .vmsg { font-family:var(--font-data); font-size:11px; color:var(--text-muted); margin:7px 0 0; min-height:14px; }
+.vsheet .vmsg.err { color:#c0392b; }
+.vsheet .vactions { display:flex; gap:8px; margin-top:10px; }
+.vsheet .vactions button { flex:1; font-family:var(--font-data); font-size:13px; font-weight:600; border-radius:11px; padding:12px 0; border:1px solid var(--line); }
+.vsheet .vactions .discard { background:var(--surface-2); color:var(--text-2); }
+.vsheet .vactions .apply { background:var(--accent); border-color:var(--accent); color:#fff; }
+.vsheet .vactions .apply:disabled { opacity:.4; }
+
+.demobar { position:fixed; top:calc(8px + env(safe-area-inset-top,0)); right:10px; z-index:60; }
+.demobar label { background:var(--surface); color:var(--text-2); border:1px solid var(--line); border-radius:999px;
+  padding:6px 10px; font-family:var(--font-data); font-size:11px; cursor:pointer; box-shadow:var(--shadow); display:inline-flex; align-items:center; gap:5px; }
+.demobar .material-symbols-outlined { font-size:16px; }
+</style>
+</head>
+<body>
+<div class="demobar"><label><input type="checkbox" id="mode" hidden><span class="material-symbols-outlined">contrast</span>Light / Dark</label></div>
+
+<header class="appbar">
+  <span class="material-symbols-outlined back">arrow_back_ios_new</span>
+  <div class="titles"><span class="kicker">TEG 50 &middot; Round 1</span><div class="title">Enter scores</div></div>
+</header>
+
+<div class="chips" id="chips"></div>
+
+<div class="playerhead">
+  <div class="nm" id="ph-name">DM</div>
+  <div style="flex:1"></div>
+  <div class="prog" id="ph-prog"><b>0</b> so far &middot; 0/18 holes</div>
+  <button class="voicebtn" id="voice-btn"><span class="material-symbols-outlined">mic</span>Voice</button>
+</div>
+
+<div class="rowswrap" id="rows"></div>
+
+<div class="keypad" id="keypad"></div>
+
+<div class="scrim" id="v-scrim" hidden></div>
+<div class="vsheet" id="v-sheet" hidden>
+  <div class="vhead"><span class="material-symbols-outlined">mic</span><div class="tt">Voice entry</div>
+    <button id="v-close"><span class="material-symbols-outlined">close</span></button></div>
+  <div class="vfrom">Fills <b id="v-from">&hellip;</b> down this player&rsquo;s card</div>
+  <textarea id="v-input" placeholder="Tap here, then use your keyboard&rsquo;s mic to dictate scores in hole order &mdash; e.g. &ldquo;four five 3 seven ten four&rdquo;"></textarea>
+  <div class="vpreview" id="v-preview"></div>
+  <div class="vmsg" id="v-msg"></div>
+  <div class="vactions">
+    <button class="discard" id="v-discard">Discard</button>
+    <button class="apply" id="v-apply" disabled>Nothing to fill yet</button>
+  </div>
+</div>
+
+<script>
+const PLAYERS = ['DM','GW','HM','JP','JB','SN','AB'];
+const PARS = [4,3,5,4,4,3,5,4,4, 4,4,3,5,4,3,4,5,4];
+const SIS  = [7,13,1,17,9,15,3,11,5, 8,14,2,18,10,16,4,12,6];
+
+let scores = {}; // "player-hole" -> score
+let currentPlayer = PLAYERS[0];
+let activeHole = 1;
+
+function key(p, h) { return p + '-' + h; }
+function playerCompleteCount(p) { return [...Array(18)].filter((_, i) => scores[key(p, i + 1)] !== undefined).length; }
+function playerTotal(p) {
+  let t = 0;
+  for (let h = 1; h <= 18; h++) { const v = scores[key(p, h)]; if (v !== undefined) t += v; }
+  return t;
+}
+
+function render() {
+  renderChips();
+  document.getElementById('ph-name').textContent = currentPlayer;
+  const n = playerCompleteCount(currentPlayer);
+  document.getElementById('ph-prog').innerHTML = `<b>${n ? playerTotal(currentPlayer) : '–'}</b> so far &middot; ${n}/18 holes`;
+
+  const rows = document.getElementById('rows');
+  rows.innerHTML = '';
+  for (let h = 1; h <= 18; h++) {
+    const v = scores[key(currentPlayer, h)];
+    const cls = ['hrow', v !== undefined ? 'filled' : '', h === activeHole ? 'active' : '', h === 10 ? 'sub9' : ''].join(' ').trim();
+    const row = document.createElement('div');
+    row.className = cls;
+    row.dataset.hole = h;
+    row.innerHTML = `<span class="h">${h}</span><span class="par">Par ${PARS[h - 1]}</span><span class="sp"></span><span class="sc">${v !== undefined ? v : '–'}</span>`;
+    row.addEventListener('click', () => { activeHole = h; render(); });
+    rows.appendChild(row);
+  }
+  const activeEl = rows.querySelector('.hrow.active');
+  if (activeEl) activeEl.scrollIntoView({ block: 'center' });
+
+  renderKeypad();
+}
+
+function renderChips() {
+  const chips = document.getElementById('chips');
+  chips.innerHTML = PLAYERS.map(p => {
+    const n = playerCompleteCount(p);
+    const done = n === 18;
+    const cls = ['chip', p === currentPlayer ? 'cur' : '', done ? 'done' : ''].join(' ').trim();
+    return `<div class="${cls}" data-player="${p}">
+      <span class="nm">${p}</span>
+      <span class="st">${done ? '<span class=\"material-symbols-outlined\">check_circle</span>' : n ? n + '/18' : 'not started'}</span>
+    </div>`;
+  }).join('');
+  chips.querySelectorAll('.chip').forEach(c => {
+    c.addEventListener('click', () => {
+      currentPlayer = c.dataset.player;
+      activeHole = firstIncompleteHole(currentPlayer);
+      render();
+    });
+  });
+}
+
+function firstIncompleteHole(p) {
+  for (let h = 1; h <= 18; h++) { if (scores[key(p, h)] === undefined) return h; }
+  return 18;
+}
+
+// Par-relative keypad: primary row = par-1..par+4 (97.8% of every score in the
+// data — eagles are 0.06%, par+4 is 3.7%, so the range skews high); par sits at a
+// fixed 2nd position for muscle memory. Everything else (1-12) stays one tap away
+// in the quieter outlier row below.
+function relTerm(score, par) {
+  if (score === 1) return 'ace';
+  const d = score - par;
+  if (d === -2) return 'eagle';
+  if (d === -1) return 'birdie';
+  if (d === 0) return 'par';
+  if (d === 1) return 'bogey';
+  return (d > 0 ? '+' : '') + d;
+}
+function parKeypadValues(par) {
+  const lo = Math.max(1, par - 1);
+  const primary = [];
+  for (let v = lo; v <= lo + 5; v++) primary.push(v);
+  const outliers = [];
+  for (let v = 1; v <= 12; v++) if (v < lo || v > lo + 5) outliers.push(v);
+  return { primary, outliers };
+}
+
+function renderKeypad() {
+  const kp = document.getElementById('keypad');
+  const par = PARS[activeHole - 1];
+  const { primary, outliers } = parKeypadValues(par);
+  kp.innerHTML = `
+    <div class="prow">${primary.map(v =>
+      `<button class="k pk${v === par ? ' ppar' : ''}" data-v="${v}"><span class="n">${v}</span><span class="t">${relTerm(v, par)}</span></button>`).join('')}</div>
+    <div class="orow">${outliers.map(v => `<button class="k ok" data-v="${v}">${v}</button>`).join('')}</div>
+    <div class="krow"><button class="k clear" data-v="clear">Clear</button><button class="k done" data-v="skip" style="grid-column:span 3;">Skip to next player →</button></div>`;
+  kp.querySelectorAll('button.k[data-v]:not(.done)').forEach(btn => btn.addEventListener('click', () => setScore(btn.dataset.v)));
+  kp.querySelector('.done').addEventListener('click', () => jumpToNextIncompletePlayer());
+}
+
+function setScore(v) {
+  if (v === 'clear') { delete scores[key(currentPlayer, activeHole)]; render(); return; }
+  scores[key(currentPlayer, activeHole)] = parseInt(v);
+  if (activeHole < 18) {
+    activeHole += 1;
+    render();
+  } else {
+    // Player's card is complete -> auto-advance to the next player who still has holes left.
+    jumpToNextIncompletePlayer();
+  }
+}
+
+function jumpToNextIncompletePlayer() {
+  const idx = PLAYERS.indexOf(currentPlayer);
+  for (let i = 1; i <= PLAYERS.length; i++) {
+    const cand = PLAYERS[(idx + i) % PLAYERS.length];
+    if (playerCompleteCount(cand) < 18) { currentPlayer = cand; activeHole = firstIncompleteHole(cand); render(); return; }
+  }
+  render(); // everyone done
+}
+
+// ---------- Voice entry ----------
+// iOS Safari has no reliable Web Speech API, but the OS keyboard's dictation mic
+// works on any plain text field. So: open a sheet with a textarea, let the user
+// dictate into it with the keyboard mic, parse whatever text lands, preview the
+// hole-by-hole mapping, and only commit on an explicit Apply. Fills the current
+// player's card from the active hole downwards (one dictated run = one column of
+// the paper card); extra values past hole 18 are ignored, never spill to the next player.
+const NUM_WORDS = {
+  zero:0, oh:0, one:1, won:1, wan:1, two:2, to:2, too:2, three:3, tree:3, free:3, thee:3,
+  four:4, for:4, fore:4, five:5, fife:5, six:6, sicks:6, seven:7, eight:8, ate:8, aid:8,
+  nine:9, nein:9, ten:10, tin:10, tan:10, eleven:11, twelve:12,
+  thirteen:13, fourteen:14, fifteen:15, sixteen:16, seventeen:17, eighteen:18, nineteen:19, twenty:20
+};
+const FILLER_WORDS = new Set(['and','then','uh','um','er','a','the','hole','next']);
+
+function parseDictation(text) {
+  const tokens = text.toLowerCase().replace(/[,.;:!?…'"‘’“”/\\-]+/g, ' ').split(/\s+/).filter(Boolean);
+  const values = [];
+  const unknown = [];
+  for (const tok of tokens) {
+    if (/^\d+$/.test(tok)) {
+      if (tok.length <= 2 && +tok >= 1 && +tok <= 12) { values.push(+tok); continue; }
+      // Dictation often glues a spoken run into one number ("three four ten" -> "3410").
+      // Split it digit-by-digit, reading "1" followed by 0-2 as 10-12 (a 10+ blow-up
+      // is far likelier here than a hole-in-one followed by a low score).
+      let i = 0;
+      while (i < tok.length) {
+        if (tok[i] === '1' && i + 1 < tok.length && '012'.includes(tok[i + 1])) { values.push(+tok.substr(i, 2)); i += 2; }
+        else { values.push(+tok[i]); i += 1; }
+      }
+      continue;
+    }
+    if (tok in NUM_WORDS) { values.push(NUM_WORDS[tok]); continue; }
+    if (!FILLER_WORDS.has(tok)) unknown.push(tok);
+  }
+  return { values, unknown, bad: values.filter(v => v < 1 || v > 12) };
+}
+
+function voiceTargets(count) {
+  const seq = [];
+  for (let h = activeHole; h <= 18 && seq.length < count; h++) seq.push(h);
+  return seq;
+}
+
+function updateVoicePreview() {
+  const res = parseDictation(document.getElementById('v-input').value);
+  const targets = voiceTargets(res.values.length);
+  const chips = res.values.map((v, i) => {
+    if (v < 1 || v > 12) return `<span class="vchip bad">${v} &#10005;</span>`;
+    if (i >= targets.length) return `<span class="vchip skip">${v} &middot; past 18</span>`;
+    return `<span class="vchip">H${targets[i]} <b>${v}</b></span>`;
+  });
+  document.getElementById('v-preview').innerHTML = chips.join('');
+  const msg = document.getElementById('v-msg');
+  const apply = document.getElementById('v-apply');
+  const n = Math.min(res.values.length, targets.length);
+  if (res.unknown.length) {
+    msg.className = 'vmsg err';
+    msg.textContent = `Didn't understand: "${res.unknown.join('", "')}" — edit the text above.`;
+    apply.disabled = true; apply.textContent = 'Fix before filling';
+  } else if (res.bad.length) {
+    msg.className = 'vmsg err';
+    msg.textContent = 'Scores must be 1–12 — edit the marked values.';
+    apply.disabled = true; apply.textContent = 'Fix before filling';
+  } else {
+    msg.className = 'vmsg';
+    msg.textContent = res.values.length > targets.length ? `${currentPlayer}'s card ends at 18 — extra values ignored.` : '';
+    apply.disabled = n === 0;
+    apply.textContent = n === 0 ? 'Nothing to fill yet' : `Fill ${n} hole${n === 1 ? '' : 's'} for ${currentPlayer}`;
+  }
+}
+
+function openVoice() {
+  document.getElementById('v-from').textContent = `${currentPlayer} · Hole ${activeHole}`;
+  document.getElementById('v-input').value = '';
+  document.getElementById('v-scrim').hidden = false;
+  document.getElementById('v-sheet').hidden = false;
+  updateVoicePreview();
+  document.getElementById('v-input').focus();
+}
+
+function closeVoice() {
+  document.getElementById('v-scrim').hidden = true;
+  document.getElementById('v-sheet').hidden = true;
+}
+
+function applyVoice() {
+  const res = parseDictation(document.getElementById('v-input').value);
+  if (res.unknown.length || res.bad.length) return;
+  const targets = voiceTargets(res.values.length);
+  const n = Math.min(res.values.length, targets.length);
+  if (!n) return;
+  for (let i = 0; i < n; i++) scores[key(currentPlayer, targets[i])] = res.values[i];
+  closeVoice();
+  if (targets[n - 1] === 18 && playerCompleteCount(currentPlayer) === 18) {
+    jumpToNextIncompletePlayer();
+  } else {
+    activeHole = Math.min(targets[n - 1] + 1, 18);
+    render();
+  }
+}
+
+document.getElementById('voice-btn').addEventListener('click', openVoice);
+document.getElementById('v-close').addEventListener('click', closeVoice);
+document.getElementById('v-discard').addEventListener('click', closeVoice);
+document.getElementById('v-scrim').addEventListener('click', closeVoice);
+document.getElementById('v-apply').addEventListener('click', applyVoice);
+document.getElementById('v-input').addEventListener('input', updateVoicePreview);
+
+render();
+</script>
+</body>
+</html>

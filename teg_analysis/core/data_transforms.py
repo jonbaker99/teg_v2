@@ -210,25 +210,25 @@ def check_for_complete_and_duplicate_data(
     all_scores_path: str,
     all_data_path: str
 ) -> Dict[str, pd.DataFrame]:
-    """Check for complete and duplicate data in scoring files.
+    """Check for complete and duplicate data in the scoring files.
 
     Validates data integrity by checking for incomplete rounds (< 18 holes)
-    and duplicate entries (> 18 holes) in both all-scores.csv and all-data.parquet.
+    and duplicate entries (> 18 holes) in both all-scores and all-data.
 
     Args:
-        all_scores_path: Path to the all-scores CSV file
-        all_data_path: Path to the all-data Parquet file
+        all_scores_path: Path to the all-scores file (parquet)
+        all_data_path: Path to the all-data file (parquet)
 
     Returns:
         dict: Summary with keys:
-            - 'incomplete_scores': DataFrame of incomplete rounds in CSV
-            - 'duplicate_scores': DataFrame of duplicate entries in CSV
-            - 'incomplete_data': DataFrame of incomplete rounds in Parquet
-            - 'duplicate_data': DataFrame of duplicate entries in Parquet
+            - 'incomplete_scores': DataFrame of incomplete rounds in all-scores
+            - 'duplicate_scores': DataFrame of duplicate entries in all-scores
+            - 'incomplete_data': DataFrame of incomplete rounds in all-data
+            - 'duplicate_data': DataFrame of duplicate entries in all-data
 
     Examples:
         >>> summary = check_for_complete_and_duplicate_data(
-        ...     'data/all-scores.csv',
+        ...     'data/all-scores.parquet',
         ...     'data/all-data.parquet'
         ... )
         >>> if not summary['incomplete_scores'].empty:
@@ -245,7 +245,7 @@ def check_for_complete_and_duplicate_data(
     all_scores_count = all_scores_df.groupby(['TEGNum', 'Round', 'Pl']).size().reset_index(name='EntryCount')
     all_data_count = all_data_df.groupby(['TEGNum', 'Round', 'Pl']).size().reset_index(name='EntryCount')
 
-    # Check for incomplete and duplicate data in all-scores.csv
+    # Check for incomplete and duplicate data in all-scores
     incomplete_scores = all_scores_count[all_scores_count['EntryCount'] < TOTAL_HOLES]
     duplicate_scores = all_scores_count[all_scores_count['EntryCount'] > TOTAL_HOLES]
 
@@ -263,14 +263,14 @@ def check_for_complete_and_duplicate_data(
 
     # Log the summary
     if not incomplete_scores.empty:
-        logger.warning("Incomplete data found in all-scores.csv.")
+        logger.warning("Incomplete data found in all-scores.")
     else:
-        logger.info("No incomplete data found in all-scores.csv.")
+        logger.info("No incomplete data found in all-scores.")
 
     if not duplicate_scores.empty:
-        logger.warning("Duplicate data found in all-scores.csv.")
+        logger.warning("Duplicate data found in all-scores.")
     else:
-        logger.info("No duplicate data found in all-scores.csv.")
+        logger.info("No duplicate data found in all-scores.")
 
     if not incomplete_data.empty:
         logger.warning("Incomplete data found in all-data.parquet.")

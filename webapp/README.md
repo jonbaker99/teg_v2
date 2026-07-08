@@ -27,13 +27,17 @@ Visit `http://localhost:8000` in your browser. Use the theme switcher in the nav
 ## Admin / data management
 
 The webapp includes a password-gated admin area, all in `webapp/routes/admin.py`
-+ `webapp/admin_auth.py`. A shared sub-nav (`partials/admin_nav.html`) links the
-pages: **Add a round**, **Edit data**, **Delete rounds**, **Volume** (browser),
-**GitHub sync**, **Backups** and **File guide**. Every page is behind the same
-cookie auth and each write calls `deps.clear_all_data_caches()` so the site shows
-fresh data immediately. They drive headless logic in
-`teg_analysis.analysis.data_update` and `teg_analysis.io` (sync / file catalog) —
-no Streamlit, no FastAPI in the analysis layer.
+(+ `webapp/routes/admin_round_setup.py`, `webapp/routes/admin_teg_setup.py`,
+`webapp/routes/admin_live_round.py`) + `webapp/admin_auth.py`. A shared sub-nav
+(`partials/admin_nav.html`) links the pages: **Round setup**, **TEG setup**,
+**Live round**, **Sheet import (fallback)**, **Edit data**, **Delete rounds**,
+**Volume** (browser), **GitHub sync**, **Backups** and **File guide**. Every page is
+behind the same cookie auth and each write calls `deps.clear_all_data_caches()`
+so the site shows fresh data immediately. They drive headless logic in
+`teg_analysis.analysis.data_update` / `teg_analysis.analysis.round_setup` /
+`teg_analysis.analysis.teg_setup` / `teg_analysis.analysis.live_round` and
+`teg_analysis.io` (sync / file catalog) — no Streamlit, no FastAPI in the
+analysis layer.
 
 Admin pages load `webapp/static/admin.css`, which (among the form/button styles)
 applies a **compact override** to `.teg-table` — smaller font and tighter row
@@ -41,13 +45,66 @@ padding than the site default — scoped to `.main-content` so it only affects
 admin pages (data density matters more than editorial spacing here). The same
 compactness applies to the inline edit grid (`#edit-grid` cells).
 
-**Add a round** — templates `admin_data_update.html`, `partials/admin_update_*.html`.
+**Round setup** — templates `admin_round_setup.html`, `admin_round_setup_form.html`,
+`partials/admin_round_setup_result.html`.
+- **Routes:** `/admin/round-setup` (list), `/admin/round-setup/{teg}/{round}`
+  (18-hole form), `/admin/round-setup/{teg}/{round}/save` (HTMX).
+- **Purpose:** confirm a round's Par/SI *before* anyone plays it, so whoever enters
+  scores afterwards (live round entry, below) sees Par/SI read-only, like it's
+  printed on a scorecard, and never has to think about course setup. The list is
+  scoped to rounds with `round_info.csv` metadata but no scores
+  yet in `all-scores.parquet` — once a round is played its real Par/SI is already
+  in `all-scores.parquet`, so there's nothing left to set up.
+- **Flow:** `round_setup.get_round_setup_form` prefills from an existing
+  `round_pars.csv` entry if already confirmed, else `course_pars.csv`'s default
+  (the most recently played round at that course), else blank; flags courses in
+  `constants.KNOWN_VARIABLE_ROUTING` (currently Praia D'El Rey — sometimes played
+  back-9-first) for a manual double-check. Save upserts the confirmed 18 holes into
+  `round_pars.csv` via `round_setup.save_round_setup`.
+
+**TEG setup** — templates `admin_teg_setup.html`, `partials/admin_teg_setup_result.html`.
+- **Routes:** `/admin/teg-setup` (redirects to the next TEG), `/admin/teg-setup/{teg}`
+  (roster form — any TEG number, via the "Jump to TEG" field), `/admin/teg-setup/{teg}/save`
+  (HTMX).
+- **Purpose:** confirm who's playing a TEG and their handicap before it starts — not every
+  player plays every TEG. Reuses the existing handicap-calculation logic
+  (`teg_analysis.analysis.handicaps.get_hc` / `get_current_handicaps_formatted`) rather than
+  reimplementing it, so the read-only Handicaps page and this setup page stay in sync.
+- **Flow:** `teg_setup.get_teg_roster_form` prefills from an existing `handicaps.csv` row for
+  that TEG if already confirmed, else the calculated draft (`get_hc`), else blank/not-playing.
+  A checkbox + handicap field per player lets the admin override before saving; save
+  (`teg_setup.save_teg_roster`) upserts the one `handicaps.csv` row for that TEG in place
+  (not-playing is written as the existing `0`-in-that-cell convention, no schema change).
+  Scoped to the 7 players who already have a `handicaps.csv` column — see
+  `DATA_STORAGE_INGESTION_PLAN.md`'s "TEG roster + handicap setup" section for the full
+  reasoning and a noticed-but-untouched data anomaly (a stray `TEG 50` row in
+  `handicaps.csv`).
+
+**Live round** — templates `admin_live_round.html`, `admin_live_round_review.html`,
+`partials/admin_live_round_*.html`.
+- **Routes:** `/admin/live-round` (list + start), `/admin/live-round/{token}/review`
+  (conflicts + finalize), `/admin/live-round/{token}/resolve`,
+  `/admin/live-round/{token}/finalize`, `/admin/live-round/{token}/cancel` (all HTMX).
+- **Purpose:** start a live, multi-device round-entry session for an already-set-up
+  round, hand out its shareable link, and review/finalize once everyone's done.
+  Finalizing runs the staged scores through the *existing* `execute_data_update`
+  pipeline exactly as "Add a round" does — one GitHub commit, every derived cache
+  regenerated. See the player-facing side below and
+  `DATA_STORAGE_INGESTION_PLAN.md`'s "Phase 3.4 design" for the full model.
+
+**Sheet import (fallback)** — templates `admin_data_update.html`, `partials/admin_update_*.html`.
+Phase 4.1 of `DATA_STORAGE_INGESTION_PLAN.md`: relabeled from "Add a round" now that Live
+round (above) is the primary way to enter a round. Still fully functional — this is the
+fallback for entering a round after the fact from the Google Sheet, not a deprecated path.
+Phase 4.2 (removing the Sheet path entirely) is a human-gated decision for after a season of
+real Live round use; not triggered yet.
 - **Routes:** `/admin/data-update` (load + preview), `/admin/data-update/preview`,
   `/admin/data-update/execute` (HTMX).
 - **Flow:** load the "TEG Round Input" Google Sheet → preview round totals +
   hole-level duplicate check → confirm (append / overwrite / add-new-only) →
-  `execute_data_update` writes `all-scores` / `all-data`, regenerates the
-  streaks/commentary/bestball/status caches and batch-commits to GitHub.
+  `execute_data_update` takes a **timestamped backup** of `all-scores`/`all-data`,
+  writes them, regenerates the streaks/commentary/bestball/status caches and
+  batch-commits to GitHub.
 - **round_info guard:** `find_tegs_missing_round_info` checks the new round's TEG
   exists in `round_info.csv`; if not, preview and execute both refuse (no partial
   write) and link to **Edit data → Round Info** to add the metadata first. (As a
@@ -60,7 +117,7 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   `/admin/edit-data/save`, `/admin/edit-data/regenerate-status` (HTMX).
 - **Flow:** the file picker is driven by
   `data_update.EDITABLE_DATA_FILES` (round_info, future_tegs, handicaps,
-  teg_winners, completed_tegs, in_progress_tegs). An inline grid of `<input>`
+  course_pars, round_pars, teg_winners, completed_tegs, in_progress_tegs). An inline grid of `<input>`
   cells (vanilla-JS add/delete-row) posts back; the route rebuilds the frame
   from `cell__{rid}__{cidx}` fields, light-coerces numeric columns and calls
   `data_update.save_data_file` (single-file commit). Auto-generated status files
@@ -74,8 +131,8 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
 - **Flow:** pick a TEG and rounds — or tick **Whole TEG (all rounds)** to delete an
   entire tournament — → preview the exact rows → confirm → `execute_data_deletion`
   takes a **timestamped backup** first, removes the rows from `all-scores`/`all-data`
-  (+ CSV mirror) and rebuilds every derived cache (status, streaks, commentary,
-  bestball), batch-committing on Railway.
+  and rebuilds every derived cache (status, streaks, commentary, bestball),
+  batch-committing on Railway.
 
 **GitHub ↔ store sync** — templates `admin_volume_sync.html`,
 `partials/admin_sync_body.html`, `partials/admin_sync_preview.html`,
@@ -153,6 +210,39 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
 - **Env vars needed on Railway:** `WEBAPP_ADMIN_PASSWORD`, the `GOOGLE_*`
   service-account vars (sheet access, add-a-round only) and `GITHUB_TOKEN`
   (commit). Form POSTs need `python-multipart` (in `requirements.txt`).
+
+## Live round entry (player-facing)
+
+`webapp/routes/live_round.py` + `templates/live_round_entry.html`. Not behind
+admin auth — a live round's token in the URL *is* its access control (trust
+the small group, matching the pattern elsewhere in this app), started from
+the admin Live round page above.
+
+- **Routes:** `GET /live-round/{token}` (the entry page itself),
+  `GET /api/live-round/{token}/scores?since={seq}` (poll for changes),
+  `POST /api/live-round/{token}/scores` (write N cells — one tap, or a whole
+  voice-entry batch — as a single JSON request; Pydantic-validated, the only
+  JSON API in this codebase so far).
+- **Page:** a standalone page (does **not** extend `base.html`'s desktop site
+  chrome) styled like `webapp/mobile_mockups/round_entry_grid.html`, which it's
+  ported from almost verbatim — same grid/keypad/voice-entry/player-group-chips
+  interaction design, with the mockup's `BroadcastChannel`/`localStorage`
+  cross-tab demo replaced by real `fetch`-based polling (every 3.5s while the
+  tab is visible) against the API above. Roster comes from
+  `teg_setup.get_teg_roster_form` (only "playing" players get a column) and
+  Par/SI from `round_setup.get_round_setup_form` (a live round can't be started
+  until that's confirmed — enforced in `live_round.start_live_round`).
+- **Sync model:** the server (`teg_analysis.analysis.live_round`), never a
+  client clock, assigns each write a monotonic sequence number in arrival
+  order — that's what polling deltas are keyed on, and it's what makes the
+  mockup's client-timestamp tie-divergence bug structurally impossible here.
+  A write from a different device with a different value than the cell's
+  current one is applied immediately (entry is never blocked) but flagged
+  `conflict: true` (an amber ring in the UI) until an admin resolves it on the
+  review page — see the admin section above and
+  `DATA_STORAGE_INGESTION_PLAN.md`'s "Phase 3.4 design" for the full model.
+- **Device identity:** a `localStorage` UUID plus a self-declared display name
+  (asked once, on first load) — enough for conflict attribution, no new auth.
 
 ## Architecture
 

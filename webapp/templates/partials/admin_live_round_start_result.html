@@ -1,0 +1,13 @@
+{% if error %}
+  <p class="error" style="color:#b00020;">{{ error }}</p>
+{% elif result %}
+  <div style="margin-top:.5rem;padding:.75rem;background:#f3f7f3;border-radius:8px;">
+    <p style="margin:0 0 .5rem;color:#1a1a1a;">
+      ✅ Live — TEG {{ result.TEGNum }} Round {{ result.Round }} is ready for scores.
+    </p>
+    <p style="margin:0;">
+      Share this link with the group:
+      <a href="{{ link }}" class="text-link" target="_blank">{{ link }}</a>
+    </p>
+  </div>
+{% endif %}

@@ -69,7 +69,8 @@
       "Bash(python -c \"from jinja2 import Environment, FileSystemLoader; Environment\\(loader=FileSystemLoader\\('webapp/templates'\\)\\).get_template\\('base.html'\\); print\\('base.html OK'\\)\")",
       "Bash(git worktree *)",
       "Bash(git add *)",
-      "Bash(git commit -m 'Mobile M1.4-M1.6 + M2.7: controls/tables sweep and leaderboard card reflow at <=640px *)"
+      "Bash(git commit -m 'Mobile M1.4-M1.6 + M2.7: controls/tables sweep and leaderboard card reflow at <=640px *)",
+      "Bash(git commit -m ' *)"
     ],
     "deny": [],
     "ask": [

@@ -21,6 +21,13 @@
         TEG {{ teg }} (R{{ rounds | join(', R') }}){% if not loop.last %}; {% endif %}
       {% endfor %}
     </li>
+    {% if result.backups %}
+    <li>Backups created:
+      <ul style="margin:.25rem 0 0 1rem;">
+        {% for b in result.backups %}<li><code>{{ b }}</code></li>{% endfor %}
+      </ul>
+    </li>
+    {% endif %}
     {% if result.committed %}
       <li>{{ result.files_committed }} file(s) committed to GitHub</li>
     {% else %}

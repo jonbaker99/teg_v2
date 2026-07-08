@@ -58,6 +58,14 @@ teg_analysis/
     data_update.py   Headless data-management pipeline — add (process/validate/dedupe/execute_data_update),
                      delete (preview_deletion_data/execute_data_deletion + timestamped backup) and
                      edit metadata CSVs (EDITABLE_DATA_FILES/save_data_file/regenerate_status_files)
+    round_setup.py   Pre-round Par/SI confirmation (round_pars.csv, confirmed by an admin
+                     before a round is played) — get_round_setup_form/save_round_setup
+    teg_setup.py     Pre-TEG roster + handicap confirmation (handicaps.csv) — not every
+                     player plays every TEG — get_teg_roster_form/save_teg_roster
+    live_round.py    Multi-device live round entry: registry + per-round staging CSVs,
+                     server-ordered writes, conflict flagging, finalize into
+                     execute_data_update — start_live_round/apply_score_writes/
+                     get_scores_since/resolve_conflict/finalize_live_round
 
   reporting/         LLM tournament-report pipeline (scored beats → story plan → authoring → styled MD)
     README.md        How it works (architecture, artefacts, end-to-end usage)

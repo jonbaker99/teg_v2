@@ -11,6 +11,7 @@
 
   <form hx-post="/admin/delete-data/execute" hx-target="#delete-preview" hx-swap="innerHTML"
         hx-confirm="Permanently delete these rows? A backup is taken first."
+        hx-disabled-elt="find button"
         style="margin-top:1rem;">
     <input type="hidden" name="teg" value="{{ teg }}">
     {% for r in rounds %}<input type="hidden" name="rounds" value="{{ r }}">{% endfor %}

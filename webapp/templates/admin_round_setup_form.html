@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title_suffix %} — Round setup{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+  <span class="page-label">Admin</span>
+  <h1 class="page-title">Round setup{% if form %} — TEG {{ form.teg_num }} Round {{ form.round_num }}{% endif %}</h1>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="/static/admin.css">
+{% endblock %}
+
+{% block content %}
+{% set admin_active = 'round-setup' %}
+{% include "partials/admin_nav.html" %}
+
+<div class="section-panel">
+  <p style="margin-bottom:1rem;"><a href="/admin/round-setup" class="text-link">← All rounds</a></p>
+
+  {% if error and not form %}
+    <p class="error" style="color:#b00020;">{{ error }}</p>
+  {% else %}
+
+  <div class="data-card" style="margin-bottom:1rem;">
+    <h2 class="card-header">{{ form.course }}</h2>
+    <p style="margin:.25rem 0;">
+      {% if form.source == 'confirmed' %}
+        ✅ Already confirmed for this round.
+      {% elif form.source == 'course_default' %}
+        Prefilled from <code>course_pars.csv</code> (this course's most recently played round) — not yet confirmed.
+      {% else %}
+        ⚠️ No default available for this course — enter Par/SI from a scorecard.
+      {% endif %}
+    </p>
+    {% if form.flagged %}
+      <p style="margin:.5rem 0 0;color:#8a6100;">⚠️ <strong>{{ form.course }}:</strong> {{ form.flag_note }}</p>
+    {% endif %}
+  </div>
+
+  <div class="data-card">
+    <form hx-post="/admin/round-setup/{{ form.teg_num }}/{{ form.round_num }}/save"
+          hx-target="#round-setup-result" hx-swap="innerHTML">
+      <table class="admin-settings-table" style="width:100%;max-width:26rem;">
+        <thead>
+          <tr><th>Hole</th><th>Par</th><th>SI</th></tr>
+        </thead>
+        <tbody>
+          {% for h in form.holes %}
+          <tr>
+            <td style="font-weight:600;">{{ h.hole }}</td>
+            <td><input type="number" name="par__{{ h.hole }}" value="{{ h.par }}" min="3" max="6" required style="width:4rem;"></td>
+            <td><input type="number" name="si__{{ h.hole }}" value="{{ h.si }}" min="1" max="18" required style="width:4rem;"></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <button type="submit" class="btn-action" style="margin-top:1rem;" hx-disabled-elt="this">
+        ✅ Confirm &amp; save
+      </button>
+    </form>
+    <div id="round-setup-result" style="margin-top:1rem;"></div>
+  </div>
+
+  {% endif %}
+</div>
+{% endblock %}

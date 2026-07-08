@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Mockup — Round entry A · Sticky-keypad grid</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0">
+<style>
+:root {
+  --font-body:'Lora', Georgia, serif; --font-data:'Roboto Mono', monospace;
+  --bg:#f4f3ef; --surface:#ffffff; --surface-2:#faf9f6; --text:#1a1a1a; --text-2:#555;
+  --text-muted:#8c8c86; --line:#e7e5e0; --accent:forestgreen; --accent-soft:#F3F7F3; --accent-text:forestgreen;
+  --bar:#ffffff; --bar-line:#e7e5e0; --shadow:0 1px 2px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.04);
+  --key-bg:#ffffff; --key-active:#eef2ee; --cell-empty:#faf9f6; --cell-filled:#eef4ee;
+  --cell-active-ring:forestgreen;
+}
+[data-theme="dark"], :root:has(#mode:checked) {
+  --bg:#131311; --surface:#1d1d1a; --surface-2:#242420; --text:#ececea; --text-2:#b7b6b0;
+  --text-muted:#86857e; --line:#2e2e29; --accent:#57c773; --accent-soft:#1b2a1d; --accent-text:#7ad492;
+  --bar:#191916; --bar-line:#2a2a25; --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+  --key-bg:#1d1d1a; --key-active:#26402a; --cell-empty:#1d1d1a; --cell-filled:#1b2a1d;
+  --cell-active-ring:#57c773;
+}
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; -webkit-user-select:none; user-select:none; }
+html,body { margin:0; height:100%; overflow:hidden; }
+body { font-family:var(--font-body); background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased;
+  display:flex; flex-direction:column; }
+.material-symbols-outlined { font-variation-settings:'opsz' 24,'wght' 400; line-height:1; vertical-align:middle; }
+
+.appbar { flex:0 0 auto; position:relative; z-index:30; background:var(--bar); border-bottom:1px solid var(--bar-line);
+  padding:calc(10px + env(safe-area-inset-top,0)) 14px 10px; display:flex; align-items:center; gap:10px; }
+.appbar .back { font-size:22px; color:var(--text-2); }
+.appbar .titles { flex:1; min-width:0; }
+.appbar .kicker { font-family:var(--font-data); font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-muted); display:block; line-height:1.4; }
+.appbar .title { font-weight:600; font-size:16px; line-height:1.15; }
+.appbar .progress { font-family:var(--font-data); font-size:12px; font-weight:600; color:var(--accent-text);
+  background:var(--accent-soft); border:1px solid var(--line); border-radius:999px; padding:5px 11px; white-space:nowrap; }
+
+.totalsbar { flex:0 0 auto; display:flex; overflow-x:auto; -webkit-overflow-scrolling:touch; background:var(--surface-2);
+  border-bottom:1px solid var(--line); }
+.totalsbar .tcell { flex:0 0 auto; width:52px; text-align:center; padding:7px 3px; border-right:1px solid var(--line); }
+.totalsbar .tcell.pin { position:sticky; left:0; background:var(--surface-2); width:80px; z-index:3; }
+.totalsbar .tcell .nm { font-family:var(--font-data); font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.04em; }
+.totalsbar .tcell .tot { font-family:var(--font-data); font-size:15px; font-weight:700; margin-top:1px; }
+.totalsbar .tcell .tot.zero { color:var(--text-muted); font-weight:500; }
+
+.toolbar { flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; gap:8px; padding:8px 14px; background:var(--bg); }
+.toolbar .traversal { display:inline-flex; padding:3px; background:var(--surface-2); border:1px solid var(--line); border-radius:10px; }
+.toolbar .traversal button { border:none; background:transparent; font-family:var(--font-data); font-size:11px; font-weight:600;
+  color:var(--text-2); padding:6px 10px; border-radius:7px; display:flex; align-items:center; gap:4px; }
+.toolbar .traversal button.on { background:var(--surface); color:var(--accent-text); box-shadow:0 1px 2px rgba(0,0,0,.08); }
+.toolbar .traversal .material-symbols-outlined { font-size:15px; }
+.toolbar .hint { font-family:var(--font-data); font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em; }
+
+.viewbar { flex:0 0 auto; display:flex; align-items:center; gap:6px; padding:0 14px 8px; background:var(--bg);
+  overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.viewbar .vlabel { flex:0 0 auto; font-family:var(--font-data); font-size:9.5px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--text-muted); }
+.chiprow { flex:0 0 auto; display:flex; gap:6px; }
+.chip { flex:0 0 auto; font-family:var(--font-data); font-size:12px; font-weight:700; color:var(--text-2);
+  background:var(--surface); border:1px solid var(--line); border-radius:999px; padding:6px 12px; }
+.chip.all { color:var(--text-muted); }
+.chip.on { background:var(--accent-soft); color:var(--accent-text); border-color:var(--accent); }
+.hidden-col { display:none !important; }
+
+/* Which cells came from another device syncing live vs. entered locally. */
+@keyframes remoteFlash { from { box-shadow:0 0 0 4px var(--accent-soft); } to { box-shadow:0 0 0 0 transparent; } }
+.egrid td.cell.remote-flash .box { animation:remoteFlash 900ms ease-out; }
+.livebadge { font-family:var(--font-data); font-size:9.5px; color:var(--text-muted); white-space:nowrap; }
+.livebadge.live { color:var(--accent-text); }
+
+.gridwrap { flex:1 1 auto; overflow:auto; -webkit-overflow-scrolling:touch; }
+table.egrid { width:100%; border-collapse:collapse; font-family:var(--font-data); }
+.egrid thead th { position:sticky; top:0; z-index:4; background:var(--surface); font-size:10px; letter-spacing:.04em;
+  text-transform:uppercase; color:var(--text-muted); font-weight:600; padding:9px 3px; border-bottom:1px solid var(--line); white-space:nowrap; }
+.egrid th.k, .egrid td.c-hole { width:38px; min-width:38px; position:sticky; left:0; background:var(--surface); z-index:2; }
+.egrid th.p, .egrid td.c-par { width:34px; min-width:34px; position:sticky; left:38px; background:var(--surface); z-index:2; }
+.egrid thead th.k, .egrid thead th.p { z-index:5; }
+.egrid td.c-hole { font-size:12px; font-weight:600; color:var(--text-2); text-align:center; border-bottom:1px solid var(--line); }
+.egrid td.c-par { font-size:11px; color:var(--text-muted); text-align:center; border-bottom:1px solid var(--line); }
+.egrid th.d { min-width:44px; }
+.egrid td.cell { width:44px; height:40px; text-align:center; border-bottom:1px solid var(--line); border-right:1px solid var(--line);
+  /* Keeps scrollIntoView() from landing an active cell underneath the sticky
+     thead (~36px) or the sticky Hole/Par columns (38+34=72px) on wrap-around. */
+  scroll-margin-top:36px; scroll-margin-left:72px; }
+.egrid td.cell .box { width:32px; height:30px; margin:0 auto; border-radius:8px; display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:700; background:var(--cell-empty); border:1px dashed var(--line); color:var(--text-muted); }
+.egrid td.cell.filled .box { background:var(--cell-filled); border:1px solid transparent; color:var(--text); }
+.egrid td.cell.active .box { border:2px solid var(--cell-active-ring); background:var(--surface); color:var(--text); box-shadow:0 0 0 3px var(--accent-soft); }
+.egrid tr.sub td { background:var(--surface-2); font-weight:700; }
+.egrid tr.sub td.c-hole { color:var(--text); font-size:10px; }
+.egrid tr.sub td.cell .box { background:transparent; border:none; font-size:12.5px; }
+.egrid tr.total td { background:var(--accent-soft); }
+.egrid tr.total td.c-hole, .egrid tr.total td.c-par { color:var(--accent-text); }
+
+.keypad { flex:0 0 auto; background:var(--bar); border-top:1px solid var(--bar-line); padding:8px 10px calc(8px + env(safe-area-inset-bottom,0)); }
+.keypad .krow { display:grid; grid-template-columns:repeat(4,1fr); gap:7px; margin-bottom:7px; }
+.keypad .krow:last-child { margin-bottom:0; }
+.keypad button.k { font-family:var(--font-data); font-size:17px; font-weight:700; background:var(--key-bg); color:var(--text);
+  border:1px solid var(--line); border-radius:11px; padding:13px 0; box-shadow:var(--shadow); }
+.keypad button.k:active { background:var(--key-active); }
+.keypad button.k.clear { color:#c0392b; font-size:13px; }
+.keypad button.k.next { background:var(--accent); color:#fff; border-color:var(--accent); font-size:13px; letter-spacing:.02em; }
+.keypad .disabled-note { text-align:center; font-family:var(--font-data); font-size:11px; color:var(--text-muted); padding:14px 0; }
+
+/* Fixed keypad: 2-8 are always the big primary buttons, in the same screen position
+   every time -- shifting the numbers with par (as an earlier version did) slowed
+   entry down because muscle memory couldn't build up. 1 and 9-12 stay reachable as
+   a quieter, smaller outlier row below. */
+.keypad .prow { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:8px; }
+.keypad .prow.prow2 { grid-template-columns:repeat(3,1fr); }
+.keypad button.pk { padding:15px 0 12px; display:flex; flex-direction:column; align-items:center; gap:2px; }
+.keypad button.pk .n { font-size:25px; font-weight:700; line-height:1.1; }
+.keypad button.pk .t { font-size:9.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--text-muted); font-weight:600; }
+.keypad button.pk.ppar { border-color:var(--accent); background:var(--accent-soft); }
+.keypad button.pk.ppar .t { color:var(--accent-text); }
+.keypad .prow.prow5 { grid-template-columns:repeat(5,1fr); }
+.keypad .orow { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin-bottom:8px; }
+.keypad button.ok { font-family:var(--font-data); font-size:13px; font-weight:600; color:var(--text-2);
+  background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:9px 0; }
+.keypad button.ok:active { background:var(--key-active); }
+
+.kmode { display:flex; justify-content:center; gap:5px; margin-bottom:8px; }
+.kmode button { font-family:var(--font-data); font-size:10px; font-weight:600; color:var(--text-muted);
+  background:transparent; border:1px solid var(--line); border-radius:999px; padding:4px 10px; }
+.kmode button.on { background:var(--accent-soft); color:var(--accent-text); border-color:var(--accent); }
+
+/* Voice entry (uses the OS keyboard's dictation mic on a plain textarea) */
+.toolbar .voicebtn { display:inline-flex; align-items:center; gap:5px; font-family:var(--font-data); font-size:11px; font-weight:600;
+  color:var(--accent-text); background:var(--accent-soft); border:1px solid var(--line); border-radius:999px; padding:7px 12px; }
+.toolbar .voicebtn .material-symbols-outlined { font-size:15px; }
+.scrim { position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:70; }
+.vsheet { position:fixed; left:0; right:0; bottom:0; z-index:71; background:var(--surface); border-top:1px solid var(--line);
+  border-radius:18px 18px 0 0; box-shadow:0 -8px 30px rgba(0,0,0,.18); padding:14px 16px calc(14px + env(safe-area-inset-bottom,0)); }
+.vsheet .vhead { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+.vsheet .vhead .material-symbols-outlined { color:var(--accent-text); font-size:20px; }
+.vsheet .vhead .tt { font-weight:600; font-size:15px; flex:1; }
+.vsheet .vhead button { border:none; background:transparent; color:var(--text-muted); padding:4px; }
+.vsheet .vfrom { font-family:var(--font-data); font-size:11px; color:var(--text-muted); margin-bottom:8px; }
+.vsheet .vfrom b { color:var(--accent-text); }
+.vsheet textarea { width:100%; min-height:64px; resize:none; font-family:var(--font-data); font-size:16px; line-height:1.5;
+  color:var(--text); background:var(--surface-2); border:1px solid var(--line); border-radius:11px; padding:10px 12px;
+  -webkit-user-select:text; user-select:text; }
+.vsheet textarea:focus { outline:2px solid var(--accent); outline-offset:-1px; }
+.vsheet .vpreview { display:flex; flex-wrap:wrap; gap:5px; margin:10px 0 0; max-height:92px; overflow-y:auto; }
+.vsheet .vchip { font-family:var(--font-data); font-size:11px; background:var(--accent-soft); color:var(--accent-text);
+  border:1px solid var(--line); border-radius:7px; padding:3px 7px; }
+.vsheet .vchip b { font-size:12px; }
+.vsheet .vchip.bad { background:transparent; color:#c0392b; border-color:#c0392b; }
+.vsheet .vchip.skip { background:transparent; color:var(--text-muted); }
+.vsheet .vmsg { font-family:var(--font-data); font-size:11px; color:var(--text-muted); margin:7px 0 0; min-height:14px; }
+.vsheet .vmsg.err { color:#c0392b; }
+.vsheet .vactions { display:flex; gap:8px; margin-top:10px; }
+.vsheet .vactions button { flex:1; font-family:var(--font-data); font-size:13px; font-weight:600; border-radius:11px; padding:12px 0; border:1px solid var(--line); }
+.vsheet .vactions .discard { background:var(--surface-2); color:var(--text-2); }
+.vsheet .vactions .apply { background:var(--accent); border-color:var(--accent); color:#fff; }
+.vsheet .vactions .apply:disabled { opacity:.4; }
+
+.demobar { position:fixed; top:calc(8px + env(safe-area-inset-top,0)); right:10px; z-index:60; display:flex; gap:6px; }
+.demobar label { background:var(--surface); color:var(--text-2); border:1px solid var(--line); border-radius:999px;
+  padding:6px 10px; font-family:var(--font-data); font-size:11px; cursor:pointer; box-shadow:var(--shadow); display:inline-flex; align-items:center; gap:5px; }
+.demobar .material-symbols-outlined { font-size:16px; }
+.demobar button.resetbtn { background:var(--surface); color:#c0392b; border:1px solid var(--line); border-radius:999px;
+  padding:6px 10px; font-family:var(--font-data); font-size:11px; box-shadow:var(--shadow); }
+</style>
+</head>
+<body>
+<div class="demobar">
+  <button class="resetbtn" id="reset-demo">Reset</button>
+  <label><input type="checkbox" id="mode" hidden><span class="material-symbols-outlined">contrast</span>Light / Dark</label>
+</div>
+
+<header class="appbar">
+  <span class="material-symbols-outlined back">arrow_back_ios_new</span>
+  <div class="titles"><span class="kicker">TEG 50 &middot; Round 1</span><div class="title">Enter scores</div>
+    <span class="livebadge" id="live-badge"></span></div>
+  <span class="progress" id="progress">0 / 126</span>
+</header>
+
+<div class="totalsbar" id="totalsbar"></div>
+
+<div class="viewbar">
+  <span class="vlabel">Show:</span>
+  <div class="chiprow" id="player-chips"></div>
+</div>
+
+<div class="toolbar">
+  <div class="traversal">
+    <button id="trav-col" class="on"><span class="material-symbols-outlined">arrow_downward</span>Column</button>
+    <button id="trav-row"><span class="material-symbols-outlined">arrow_forward</span>Row</button>
+  </div>
+  <button class="voicebtn" id="voice-btn"><span class="material-symbols-outlined">mic</span>Voice</button>
+</div>
+
+<div class="gridwrap">
+  <table class="egrid" id="egrid"></table>
+</div>
+
+<div class="keypad" id="keypad">
+  <div class="disabled-note" id="keypad-hint">Tap any score cell above to begin entering scores.</div>
+</div>
+
+<div class="scrim" id="v-scrim" hidden></div>
+<div class="vsheet" id="v-sheet" hidden>
+  <div class="vhead"><span class="material-symbols-outlined">mic</span><div class="tt">Voice entry</div>
+    <button id="v-close"><span class="material-symbols-outlined">close</span></button></div>
+  <div class="vfrom">Fills from <b id="v-from">&hellip;</b> onwards, following the current traversal</div>
+  <textarea id="v-input" placeholder="Tap here, then use your keyboard&rsquo;s mic to dictate scores in order &mdash; e.g. &ldquo;four five 3 seven ten four&rdquo;"></textarea>
+  <div class="vpreview" id="v-preview"></div>
+  <div class="vmsg" id="v-msg"></div>
+  <div class="vactions">
+    <button class="discard" id="v-discard">Discard</button>
+    <button class="apply" id="v-apply" disabled>Nothing to fill yet</button>
+  </div>
+</div>
+
+<script>
+const PLAYERS = ['DM','GW','HM','JP','JB','SN','AB'];
+const PARS = [4,3,5,4,4,3,5,4,4, 4,4,3,5,4,3,4,5,4];
+const SIS  = [7,13,1,17,9,15,3,11,5, 8,14,2,18,10,16,4,12,6];
+
+let scores = {}; // key "hole-player" -> number
+let scoreTimestamps = {}; // key "hole-player" -> ms, for last-write-wins across devices
+let active = null; // {hole, player}
+let traversal = 'col'; // 'col' | 'row'
+let keypadMode = 'fixed'; // 'fixed' | 'relative'
+// Which players show on THIS device -- typically a round is played in 2 groups of
+// 2-4, and each player only wants to see (and tap through) their own group's cells.
+// Local to this device/tab; never synced -- everyone can pick independently.
+let visiblePlayers = new Set(PLAYERS);
+
+function cellKey(h, p) { return h + '-' + p; }
+
+function buildGrid() {
+  const table = document.getElementById('egrid');
+  let thead = '<thead><tr><th class="k">Hole</th><th class="p">Par</th>' +
+    PLAYERS.map(p => `<th class="d" data-player="${p}">${p}</th>`).join('') + '</tr></thead>';
+
+  // Derived, not hardcoded, so a course/PARS change can't silently disagree with these.
+  const outPar = PARS.slice(0, 9).reduce((a, b) => a + b, 0);
+  const inPar = PARS.slice(9, 18).reduce((a, b) => a + b, 0);
+
+  let rows = '';
+  for (let h = 1; h <= 18; h++) {
+    const par = PARS[h - 1];
+    rows += `<tr data-hole="${h}"><td class="c-hole">${h}</td><td class="c-par">${par}</td>` +
+      PLAYERS.map(p => `<td class="cell" data-hole="${h}" data-player="${p}"><div class="box"></div></td>`).join('') +
+      '</tr>';
+    if (h === 9) {
+      rows += `<tr class="sub" data-subtotal="OUT"><td class="c-hole">OUT</td><td class="c-par">${outPar}</td>` +
+        PLAYERS.map(p => `<td class="cell" data-player="${p}" data-subtotal-cell="OUT-${p}"><div class="box">&ndash;</div></td>`).join('') + '</tr>';
+    }
+  }
+  rows += `<tr class="sub" data-subtotal="IN"><td class="c-hole">IN</td><td class="c-par">${inPar}</td>` +
+    PLAYERS.map(p => `<td class="cell" data-player="${p}" data-subtotal-cell="IN-${p}"><div class="box">&ndash;</div></td>`).join('') + '</tr>';
+  rows += `<tr class="sub total" data-subtotal="TOTAL"><td class="c-hole">TOT</td><td class="c-par">${outPar + inPar}</td>` +
+    PLAYERS.map(p => `<td class="cell" data-player="${p}" data-subtotal-cell="TOTAL-${p}"><div class="box">&ndash;</div></td>`).join('') + '</tr>';
+
+  table.innerHTML = thead + '<tbody>' + rows + '</tbody>';
+
+  table.querySelectorAll('td.cell[data-hole]').forEach(td => {
+    td.addEventListener('click', () => setActive(parseInt(td.dataset.hole), td.dataset.player));
+  });
+}
+
+function buildTotalsBar() {
+  const bar = document.getElementById('totalsbar');
+  bar.innerHTML = '<div class="tcell pin"><div class="nm">Running total</div></div>' +
+    PLAYERS.map(p => `<div class="tcell" data-player="${p}" data-total-player="${p}"><div class="nm">${p}</div><div class="tot zero">&ndash;</div></div>`).join('');
+}
+
+function visiblePlayersList() {
+  return PLAYERS.filter(p => visiblePlayers.has(p));
+}
+
+function buildPlayerChips() {
+  const row = document.getElementById('player-chips');
+  const allOn = visiblePlayers.size === PLAYERS.length;
+  row.innerHTML = `<button class="chip all${allOn ? ' on' : ''}" id="chip-all">All</button>` +
+    PLAYERS.map(p => `<button class="chip${visiblePlayers.has(p) ? ' on' : ''}" data-player="${p}">${p}</button>`).join('');
+  document.getElementById('chip-all').addEventListener('click', () => setVisiblePlayers(new Set(PLAYERS)));
+  row.querySelectorAll('.chip[data-player]').forEach(btn => {
+    btn.addEventListener('click', () => togglePlayerChip(btn.dataset.player));
+  });
+}
+
+function togglePlayerChip(p) {
+  const next = new Set(visiblePlayers);
+  if (next.has(p)) {
+    if (next.size === 1) return; // always keep at least one player visible
+    next.delete(p);
+  } else {
+    next.add(p);
+  }
+  setVisiblePlayers(next);
+}
+
+// Filters which player columns are visible across the grid, totals bar and
+// subtotal rows. Every element carries data-player (or a "OUT-DM"-style
+// data-subtotal-cell we split on '-') so this stays a single pass.
+function applyPlayerVisibility() {
+  // Scoped to the grid + totals bar only -- the chips in #player-chips carry
+  // data-player too, and an unscoped selector here hides the chip you just
+  // tapped, along with every other not-currently-visible player's chip,
+  // leaving no way back in except "All".
+  document.querySelectorAll('#egrid [data-player], #totalsbar [data-player]').forEach(el => {
+    el.classList.toggle('hidden-col', !visiblePlayers.has(el.dataset.player));
+  });
+  document.querySelectorAll('[data-subtotal-cell]').forEach(el => {
+    const p = el.dataset.subtotalCell.split('-')[1];
+    el.classList.toggle('hidden-col', !visiblePlayers.has(p));
+  });
+}
+
+function setVisiblePlayers(next) {
+  visiblePlayers = next;
+  try { localStorage.setItem(VISIBLE_PLAYERS_KEY, JSON.stringify([...visiblePlayers])); } catch (e) {}
+  buildPlayerChips();
+  applyPlayerVisibility();
+  document.querySelector('.toolbar .traversal').style.visibility = visiblePlayers.size === 1 ? 'hidden' : 'visible';
+  // Jump off a now-hidden active cell rather than leaving it stranded.
+  if (!active || !visiblePlayers.has(active.player)) {
+    const vp = visiblePlayersList();
+    if (!vp.length) return;
+    const p = vp[0];
+    const firstEmpty = [...Array(18)].map((_, i) => i + 1).find(h => scores[cellKey(h, p)] === undefined);
+    setActive(firstEmpty || 1, p);
+  }
+}
+
+function setActive(hole, player) {
+  active = { hole, player };
+  document.querySelectorAll('td.cell.active').forEach(td => td.classList.remove('active'));
+  const td = document.querySelector(`td.cell[data-hole="${hole}"][data-player="${player}"]`);
+  if (td) td.classList.add('active');
+  renderKeypad();
+  document.getElementById('keypad-hint')?.remove();
+  td?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+}
+
+// Two keypad layouts, switchable per device/per person:
+//  - fixed:    2-8 always the big buttons, same screen position on every hole, so
+//              muscle memory holds. Covers every par-1..par+4 case for par 3/4/5
+//              (97.8% of every score ever recorded).
+//  - relative: the six buttons re-center on the current hole's par, par-1..par+3,
+//              so the labels read birdie/par/bogey/... left-to-right in a fixed
+//              order -- some players think in "shots vs par" rather than raw
+//              numbers and prefer that over a fixed number pad.
+// Both are one tap away in the keypad header; 1 and the rest of 1-12 stay in the
+// quieter outlier row underneath either way.
+function relTerm(score, par) {
+  if (score === 1) return 'ace';
+  const d = score - par;
+  if (d === -2) return 'eagle';
+  if (d === -1) return 'birdie';
+  if (d === 0) return 'par';
+  if (d === 1) return 'bogey';
+  return (d > 0 ? '+' : '') + d;
+}
+function parKeypadValues(par) {
+  if (keypadMode === 'relative') {
+    const lo = Math.max(1, par - 1);
+    const hi = par + 3;
+    const primary = [];
+    for (let v = lo; v <= hi; v++) primary.push(v);
+    const outliers = [];
+    for (let v = 1; v <= 12; v++) if (v < lo || v > hi) outliers.push(v);
+    return { primary, outliers };
+  }
+  return { primary: [2, 3, 4, 5, 6, 7, 8], outliers: [1, 9, 10, 11, 12] };
+}
+
+function setKeypadMode(mode) {
+  keypadMode = mode;
+  try { localStorage.setItem(KEYPAD_MODE_KEY, mode); } catch (e) {}
+  renderKeypad();
+}
+
+function renderKeypad() {
+  const kp = document.getElementById('keypad');
+  if (!active) return;
+  const par = PARS[active.hole - 1];
+  const { primary, outliers } = parKeypadValues(par);
+  const bigBtn = v => `<button class="k pk${v === par ? ' ppar' : ''}" data-v="${v}"><span class="n">${v}</span><span class="t">${relTerm(v, par)}</span></button>`;
+  const modeRow = `<div class="kmode">
+      <button data-kmode="fixed" class="${keypadMode === 'fixed' ? 'on' : ''}">Fixed 2&ndash;8</button>
+      <button data-kmode="relative" class="${keypadMode === 'relative' ? 'on' : ''}">Relative to par</button>
+    </div>`;
+  const primaryRows = keypadMode === 'relative'
+    ? `<div class="prow prow5">${primary.map(bigBtn).join('')}</div>`
+    : `<div class="prow">${primary.slice(0, 4).map(bigBtn).join('')}</div>
+       <div class="prow prow2">${primary.slice(4).map(bigBtn).join('')}</div>`;
+  kp.innerHTML = modeRow + primaryRows + `
+    <div class="orow">${outliers.map(v => `<button class="k ok" data-v="${v}">${v}</button>`).join('')}</div>
+    <div class="krow"><button class="k clear" data-v="clear">Clear</button><button class="k next" data-v="next" style="grid-column:span 3;">Next &rarr;</button></div>
+  `;
+  kp.querySelectorAll('button.k').forEach(btn => {
+    btn.addEventListener('click', () => handleKey(btn.dataset.v));
+  });
+  kp.querySelectorAll('button[data-kmode]').forEach(btn => {
+    btn.addEventListener('click', () => setKeypadMode(btn.dataset.kmode));
+  });
+}
+
+function handleKey(v) {
+  if (!active) return;
+  if (v === 'clear') {
+    clearScore(active.hole, active.player, Date.now(), true);
+    updateTotalsAndSubtotals();
+    persistScores();
+    return;
+  }
+  if (v === 'next') {
+    advance();
+    return;
+  }
+  setScore(active.hole, active.player, parseInt(v), Date.now(), true);
+  updateTotalsAndSubtotals();
+  persistScores();
+  advance();
+}
+
+// Local write helpers -- both update the score + its LWW timestamp, re-render the
+// cell, and (unless this call is itself applying an incoming remote update)
+// broadcast to any other open tab/device on this round.
+function setScore(hole, player, value, ts, broadcast) {
+  const key = cellKey(hole, player);
+  scores[key] = value;
+  scoreTimestamps[key] = ts;
+  renderCell(hole, player);
+  if (broadcast) broadcastScore(hole, player, value, false, ts);
+}
+function clearScore(hole, player, ts, broadcast) {
+  const key = cellKey(hole, player);
+  delete scores[key];
+  scoreTimestamps[key] = ts;
+  renderCell(hole, player);
+  if (broadcast) broadcastScore(hole, player, null, true, ts);
+}
+
+function renderCell(hole, player) {
+  const td = document.querySelector(`td.cell[data-hole="${hole}"][data-player="${player}"]`);
+  if (!td) return;
+  const val = scores[cellKey(hole, player)];
+  const box = td.querySelector('.box');
+  if (val !== undefined) {
+    box.textContent = val;
+    td.classList.add('filled');
+  } else {
+    box.textContent = '';
+    td.classList.remove('filled');
+  }
+}
+
+// Cycles through whichever players are currently visible on this device, in the
+// chosen traversal order. With one player visible this naturally reduces to
+// "just move down that one column" -- no separate single-player special case needed.
+function advance() {
+  let { hole, player } = active;
+  const vp = visiblePlayersList();
+  const pi = vp.indexOf(player);
+  if (traversal === 'col') {
+    if (hole < 18) { hole += 1; }
+    else { hole = 1; player = vp[(pi + 1) % vp.length]; }
+  } else {
+    if (pi < vp.length - 1) { player = vp[pi + 1]; }
+    else { player = vp[0]; hole = hole < 18 ? hole + 1 : 1; }
+  }
+  setActive(hole, player);
+}
+
+function updateTotalsAndSubtotals() {
+  let filled = 0;
+  PLAYERS.forEach(p => {
+    let out = 0, inn = 0, outN = 0, inN = 0;
+    for (let h = 1; h <= 9; h++) { const v = scores[cellKey(h, p)]; if (v !== undefined) { out += v; outN++; filled++; } }
+    for (let h = 10; h <= 18; h++) { const v = scores[cellKey(h, p)]; if (v !== undefined) { inn += v; inN++; filled++; } }
+    const totCell = document.querySelector(`[data-subtotal-cell="OUT-${p}"] .box`);
+    const inCell = document.querySelector(`[data-subtotal-cell="IN-${p}"] .box`);
+    const totalCell = document.querySelector(`[data-subtotal-cell="TOTAL-${p}"] .box`);
+    if (totCell) totCell.textContent = outN ? out : '–';
+    if (inCell) inCell.textContent = inN ? inn : '–';
+    if (totalCell) totalCell.textContent = (outN + inN) ? (out + inn) : '–';
+
+    const barTot = document.querySelector(`[data-total-player="${p}"] .tot`);
+    if (barTot) {
+      const sum = out + inn;
+      const n = outN + inN;
+      barTot.textContent = n ? sum : '–';
+      barTot.classList.toggle('zero', n === 0);
+    }
+  });
+  document.getElementById('progress').textContent = `${filled} / ${PLAYERS.length * 18}`;
+}
+
+document.getElementById('trav-col').addEventListener('click', () => {
+  traversal = 'col';
+  document.getElementById('trav-col').classList.add('on');
+  document.getElementById('trav-row').classList.remove('on');
+});
+document.getElementById('trav-row').addEventListener('click', () => {
+  traversal = 'row';
+  document.getElementById('trav-row').classList.add('on');
+  document.getElementById('trav-col').classList.remove('on');
+});
+
+// ---------- Voice entry ----------
+// iOS Safari has no reliable Web Speech API, but the OS keyboard's dictation mic
+// works on any plain text field. So: open a sheet with a textarea, let the user
+// dictate into it with the keyboard mic, parse whatever text lands, preview the
+// hole-by-hole mapping, and only commit on an explicit Apply.
+// No "zero"/"oh" entries: a golf score is never 0, so mapping them just meant they
+// always tripped the "must be 1-12" error anyway -- letting them fall through to
+// "unknown word" instead gives a more honest message and doesn't eat a value slot.
+const NUM_WORDS = {
+  one:1, won:1, wan:1, two:2, to:2, too:2, three:3, tree:3, free:3, thee:3,
+  four:4, for:4, fore:4, five:5, fife:5, six:6, sicks:6, seven:7, eight:8, ate:8, aid:8,
+  nine:9, nein:9, ten:10, tin:10, tan:10, eleven:11, twelve:12,
+  thirteen:13, fourteen:14, fifteen:15, sixteen:16, seventeen:17, eighteen:18, nineteen:19, twenty:20
+};
+const FILLER_WORDS = new Set(['and','then','uh','um','er','a','the','hole','next']);
+
+function parseDictation(text) {
+  const tokens = text.toLowerCase().replace(/[,.;:!?…'"‘’“”/\\-]+/g, ' ').split(/\s+/).filter(Boolean);
+  const values = [];
+  const unknown = [];
+  for (const tok of tokens) {
+    if (/^\d+$/.test(tok)) {
+      if (tok.length <= 2 && +tok >= 1 && +tok <= 12) { values.push(+tok); continue; }
+      // Dictation often glues a spoken run into one number ("three four ten" -> "3410").
+      // Split it digit-by-digit, reading "1" followed by 0-2 as 10-12 (a 10+ blow-up
+      // is far likelier here than a hole-in-one followed by a low score).
+      let i = 0;
+      while (i < tok.length) {
+        if (tok[i] === '1' && i + 1 < tok.length && '012'.includes(tok[i + 1])) { values.push(+tok.substr(i, 2)); i += 2; }
+        else { values.push(+tok[i]); i += 1; }
+      }
+      continue;
+    }
+    if (tok in NUM_WORDS) { values.push(NUM_WORDS[tok]); continue; }
+    if (!FILLER_WORDS.has(tok)) unknown.push(tok);
+  }
+  return { values, unknown, bad: values.filter(v => v < 1 || v > 12) };
+}
+
+function voiceStartCell() {
+  if (active) return { ...active };
+  const vp = visiblePlayersList();
+  // No cursor yet: start at the first empty cell (among visible players) in the
+  // current traversal order.
+  if (traversal === 'col') {
+    for (const p of vp) for (let h = 1; h <= 18; h++) if (scores[cellKey(h, p)] === undefined) return { hole: h, player: p };
+  } else {
+    for (let h = 1; h <= 18; h++) for (const p of vp) if (scores[cellKey(h, p)] === undefined) return { hole: h, player: p };
+  }
+  return null;
+}
+
+function voiceTargets(count) {
+  let cur = voiceStartCell();
+  if (!cur || count < 1) return [];
+  const vp = visiblePlayersList();
+  const step = c => {
+    let { hole, player } = c;
+    const pi = vp.indexOf(player);
+    if (traversal === 'col') {
+      if (hole < 18) hole += 1; else { hole = 1; player = vp[(pi + 1) % vp.length]; }
+    } else {
+      if (pi < vp.length - 1) player = vp[pi + 1]; else { player = vp[0]; hole = hole < 18 ? hole + 1 : 1; }
+    }
+    return { hole, player };
+  };
+  const cap = vp.length * 18;
+  const seq = [cur];
+  while (seq.length < Math.min(count, cap)) seq.push(step(seq[seq.length - 1]));
+  return seq;
+}
+
+function updateVoicePreview() {
+  const res = parseDictation(document.getElementById('v-input').value);
+  const targets = voiceTargets(res.values.length);
+  const chips = res.values.map((v, i) => {
+    if (v < 1 || v > 12) return `<span class="vchip bad">${v} &#10005;</span>`;
+    if (i >= targets.length) return `<span class="vchip skip">${v} &middot; no cell</span>`;
+    const t = targets[i];
+    return `<span class="vchip">H${t.hole} ${t.player} <b>${v}</b></span>`;
+  });
+  document.getElementById('v-preview').innerHTML = chips.join('');
+  const msg = document.getElementById('v-msg');
+  const apply = document.getElementById('v-apply');
+  const n = Math.min(res.values.length, targets.length);
+  if (res.unknown.length) {
+    msg.className = 'vmsg err';
+    msg.textContent = `Didn't understand: "${res.unknown.join('", "')}" — edit the text above.`;
+    apply.disabled = true; apply.textContent = 'Fix before filling';
+  } else if (res.bad.length) {
+    msg.className = 'vmsg err';
+    msg.textContent = 'Scores must be 1–12 — edit the marked values.';
+    apply.disabled = true; apply.textContent = 'Fix before filling';
+  } else {
+    msg.className = 'vmsg';
+    msg.textContent = res.values.length > targets.length ? `Grid runs out after ${targets.length} — extra values ignored.` : '';
+    apply.disabled = n === 0;
+    apply.textContent = n === 0 ? 'Nothing to fill yet' : `Fill ${n} score${n === 1 ? '' : 's'}`;
+  }
+}
+
+function openVoice() {
+  const start = voiceStartCell();
+  if (!start) return;
+  document.getElementById('v-from').textContent = `${start.player} · Hole ${start.hole}`;
+  document.getElementById('v-input').value = '';
+  document.getElementById('v-scrim').hidden = false;
+  document.getElementById('v-sheet').hidden = false;
+  updateVoicePreview();
+  document.getElementById('v-input').focus();
+}
+
+function closeVoice() {
+  document.getElementById('v-scrim').hidden = true;
+  document.getElementById('v-sheet').hidden = true;
+}
+
+function applyVoice() {
+  const res = parseDictation(document.getElementById('v-input').value);
+  if (res.unknown.length || res.bad.length) return;
+  const targets = voiceTargets(res.values.length);
+  const n = Math.min(res.values.length, targets.length);
+  if (!n) return;
+  const now = Date.now();
+  for (let i = 0; i < n; i++) {
+    const t = targets[i];
+    setScore(t.hole, t.player, res.values[i], now + i, true); // i offset keeps LWW order stable within this batch
+  }
+  updateTotalsAndSubtotals();
+  persistScores();
+  setActive(targets[n - 1].hole, targets[n - 1].player);
+  advance(); // resume manual entry just past the last filled cell
+  closeVoice();
+}
+
+document.getElementById('voice-btn').addEventListener('click', openVoice);
+document.getElementById('v-close').addEventListener('click', closeVoice);
+document.getElementById('v-discard').addEventListener('click', closeVoice);
+document.getElementById('v-scrim').addEventListener('click', closeVoice);
+document.getElementById('v-apply').addEventListener('click', applyVoice);
+document.getElementById('v-input').addEventListener('input', updateVoicePreview);
+
+// ---------- Multi-device sync (demo) ----------
+// This mockup has no backend, so there's no such thing as "two different phones"
+// syncing here -- that needs the real Phase 3.4 server (shared state + polling/
+// websocket). What this DOES demonstrate, testably, is the interaction pattern for
+// concurrent entry: open this file in two browser tabs (or two windows) and they
+// behave like two devices on the same round -- BroadcastChannel pushes every score
+// live to other open tabs, localStorage lets a newly opened tab catch up on what's
+// already been entered, and a per-cell timestamp makes it last-write-wins so a
+// stale message can't clobber a newer edit if they arrive out of order.
+const STORAGE_KEY = 'teg-round-entry-demo-scores-v1';
+const KEYPAD_MODE_KEY = 'teg-round-entry-demo-keypad-mode';
+const VISIBLE_PLAYERS_KEY = 'teg-round-entry-demo-visible-players';
+const DEVICE_ID = Math.random().toString(36).slice(2, 7).toUpperCase();
+const bc = ('BroadcastChannel' in window) ? new BroadcastChannel('teg-round-entry-demo') : null;
+const presence = new Map(); // deviceId -> last-seen ms, from periodic presence pings
+
+function persistScores() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ scores, scoreTimestamps })); } catch (e) {}
+}
+function loadPersistedScores() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    scores = parsed.scores || {};
+    scoreTimestamps = parsed.scoreTimestamps || {};
+  } catch (e) { /* ignore corrupt storage */ }
+}
+// buildGrid() always renders fresh empty cells -- this paints in whatever's
+// already in `scores` (from a persisted snapshot or a page reload), used once
+// at startup right after buildGrid().
+function renderAllCells() {
+  for (const key in scores) {
+    const sep = key.lastIndexOf('-');
+    renderCell(parseInt(key.slice(0, sep)), key.slice(sep + 1));
+  }
+}
+
+function broadcastScore(hole, player, value, deleted, ts) {
+  if (!bc) return;
+  bc.postMessage({ type: 'score', hole, player, value, deleted, ts, device: DEVICE_ID });
+}
+
+function renderLiveBadge() {
+  const now = Date.now();
+  for (const [id, ts] of presence) if (now - ts > 12000) presence.delete(id);
+  const badge = document.getElementById('live-badge');
+  if (!badge) return;
+  if (!bc) { badge.textContent = ''; badge.className = 'livebadge'; return; }
+  const others = presence.size;
+  badge.className = 'livebadge' + (others > 0 ? ' live' : '');
+  badge.textContent = others > 0
+    ? `\u{1F7E2} Live · ${others + 1} devices`
+    : '\u{1F7E2} Live · this device only';
+}
+
+if (bc) {
+  bc.onmessage = (e) => {
+    const msg = e.data;
+    if (msg.device === DEVICE_ID) return;
+    if (msg.type === 'presence') {
+      const isNewPeer = !presence.has(msg.device);
+      presence.set(msg.device, Date.now());
+      renderLiveBadge();
+      // Reply immediately so a just-opened tab is discovered within one round
+      // trip, not up to one 4s tick late.
+      if (isNewPeer) bc.postMessage({ type: 'presence', device: DEVICE_ID, ts: Date.now() });
+      return;
+    }
+    if (msg.type !== 'score') return;
+    const key = cellKey(msg.hole, msg.player);
+    if ((scoreTimestamps[key] || 0) > msg.ts) return; // a newer local write already won this cell
+    if (msg.deleted) delete scores[key]; else scores[key] = msg.value;
+    scoreTimestamps[key] = msg.ts;
+    renderCell(msg.hole, msg.player);
+    updateTotalsAndSubtotals();
+    persistScores();
+    const td = document.querySelector(`td.cell[data-hole="${msg.hole}"][data-player="${msg.player}"]`);
+    if (td) { td.classList.add('remote-flash'); setTimeout(() => td.classList.remove('remote-flash'), 900); }
+  };
+  const announce = () => bc.postMessage({ type: 'presence', device: DEVICE_ID, ts: Date.now() });
+  announce();
+  setInterval(announce, 4000);
+  setInterval(renderLiveBadge, 4000);
+}
+
+document.getElementById('reset-demo').addEventListener('click', () => {
+  if (!confirm('Clear this device’s copy of the demo scores? (Other open tabs keep theirs until they reset too.)')) return;
+  scores = {};
+  scoreTimestamps = {};
+  localStorage.removeItem(STORAGE_KEY);
+  active = null;
+  buildGrid();
+  applyPlayerVisibility();
+  updateTotalsAndSubtotals();
+  document.getElementById('keypad').innerHTML = '<div class="disabled-note" id="keypad-hint">Tap any score cell above to begin entering scores.</div>';
+});
+
+// ---------- Init ----------
+loadPersistedScores();
+try {
+  const savedMode = localStorage.getItem(KEYPAD_MODE_KEY);
+  if (savedMode === 'fixed' || savedMode === 'relative') keypadMode = savedMode;
+  const savedVisible = JSON.parse(localStorage.getItem(VISIBLE_PLAYERS_KEY) || 'null');
+  if (Array.isArray(savedVisible) && savedVisible.length) {
+    visiblePlayers = new Set(savedVisible.filter(p => PLAYERS.includes(p)));
+  }
+} catch (e) { /* ignore corrupt storage */ }
+
+buildGrid();
+renderAllCells();
+buildTotalsBar();
+buildPlayerChips();
+applyPlayerVisibility();
+document.querySelector('.toolbar .traversal').style.visibility = visiblePlayers.size === 1 ? 'hidden' : 'visible';
+updateTotalsAndSubtotals();
+renderLiveBadge();
+</script>
+</body>
+</html>

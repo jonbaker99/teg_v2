@@ -29,7 +29,9 @@ Tracked here (no sub-folder needed).
 
 ## Data updates
 
-**Data storage & mobile score-ingestion overhaul** — [`DATA_STORAGE_INGESTION_PLAN.md`](DATA_STORAGE_INGESTION_PLAN.md). Architecture review (Fable) recommends keeping the Railway volume + GitHub sync (hardened, not replaced) and building a native mobile round-entry page to replace Google Sheets as the capture step. Phased plan with per-step model tags and ready-to-use kick-off prompts. Status: Phase 0 not started. Also supersedes `DATA_RATIONALISATION_PLAN.md`'s open investigation (resolved at Phase 1.5).
+**Data storage & mobile score-ingestion overhaul** — done; see [`DATA_STORAGE_INGESTION_PLAN.md`](DATA_STORAGE_INGESTION_PLAN.md) (kept as a historical/reference record) and `CLAUDE.md`'s "Current state & next steps" for the current-state summary. One item remains open:
+
+- **Phase 4.2 decision gate (human, after a season of real Live round use):** if the native `/live-round` flow was used and the Google Sheet fallback wasn't missed, remove the Sheet path entirely (`get_google_sheet`, `GOOGLE_*` env vars, `gspread`/`google-auth` deps, the `/admin/data-update` page). Until Jon says the native flow has proven itself, no code removal.
 
 
 ---

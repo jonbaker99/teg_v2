@@ -134,8 +134,9 @@ def write_file(file_path: str, data: pd.DataFrame, commit_message: str = "Update
             return {'file_path': file_path, 'data': data}
 
     else:
-        # Local development unchanged
+        # Local development
         local_path = volume_operations._get_local_path(file_path)
+        local_path.parent.mkdir(parents=True, exist_ok=True)  # matches write_text_file's behavior
         if file_path.endswith('.csv'):
             data.to_csv(local_path, index=False)
         elif file_path.endswith('.parquet'):
@@ -254,13 +255,32 @@ def backup_file(source_path: str, backup_path: str):
     This function creates a backup of a file by copying it to a new location.
     It handles both Railway and local environments.
 
+    On Railway, backs up the current **volume** copy (the file as it stands right
+    now, including any not-yet-committed write) rather than the last GitHub
+    commit, then pushes that snapshot to GitHub as the backup. Falls back to
+    reading from GitHub only if the volume copy is missing (e.g. never cached).
+
     Args:
         source_path (str): The path to the source file.
         backup_path (str): The path to the backup file.
     """
     if os.getenv('RAILWAY_ENVIRONMENT'):
-        # Read and write with new name (to backups branch)
-        data = read_from_github(source_path)
+        volume_path = volume_operations._get_volume_path(source_path)
+
+        if os.path.exists(volume_path):
+            if source_path.endswith('.csv'):
+                data = pd.read_csv(volume_path)
+            elif source_path.endswith('.parquet'):
+                data = pd.read_parquet(volume_path)
+            else:
+                raise ValueError(f"Unsupported file type: {source_path}")
+        else:
+            logger.warning(
+                f"{source_path} not found on volume; backing up the last GitHub commit instead"
+            )
+            data = read_from_github(source_path)
+
+        # Push the snapshot to GitHub as the backup copy.
         write_to_github(backup_path, data, f"Backup of {source_path}")
     else:
         import shutil

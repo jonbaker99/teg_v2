@@ -1,6 +1,9 @@
 {# Shared admin sub-nav. `admin_active` names the current page. #}
 <nav class="section-controls" style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
-  <a href="/admin/data-update" class="tab-underline{% if admin_active == 'add' %} tab-underline--active{% endif %}">Add a round</a>
+  <a href="/admin/round-setup" class="tab-underline{% if admin_active == 'round-setup' %} tab-underline--active{% endif %}">Round setup</a>
+  <a href="/admin/teg-setup" class="tab-underline{% if admin_active == 'teg-setup' %} tab-underline--active{% endif %}">TEG setup</a>
+  <a href="/admin/live-round" class="tab-underline{% if admin_active == 'live-round' %} tab-underline--active{% endif %}">Live round</a>
+  <a href="/admin/data-update" class="tab-underline{% if admin_active == 'add' %} tab-underline--active{% endif %}">Sheet import (fallback)</a>
   <a href="/admin/edit-data" class="tab-underline{% if admin_active == 'edit' %} tab-underline--active{% endif %}">Edit data</a>
   <a href="/admin/delete-data" class="tab-underline{% if admin_active == 'delete' %} tab-underline--active{% endif %}">Delete rounds</a>
   <a href="/admin/volume" class="tab-underline{% if admin_active == 'volume' %} tab-underline--active{% endif %}">Volume</a>

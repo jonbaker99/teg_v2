@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title_suffix %} — Live round{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+  <span class="page-label">Admin</span>
+  <h1 class="page-title">Live round</h1>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="/static/admin.css">
+{% endblock %}
+
+{% block content %}
+{% set admin_active = 'live-round' %}
+{% include "partials/admin_nav.html" %}
+
+<div class="section-panel">
+  <p style="margin-bottom:1rem;">
+    Start a live round to let players enter scores on their own phones as the round is
+    played. Each live round gets a shareable link — anyone with the link can enter scores for
+    that round, no password needed. When everyone's done, review and finalize here to write
+    the scores into the permanent record.
+  </p>
+
+  {% if error %}
+    <p class="error" style="color:#b00020;">{{ error }}</p>
+  {% endif %}
+
+  <div class="data-card" style="margin-bottom:1rem;">
+    <h2 class="card-header">Start a live round</h2>
+    {% if not startable_rounds %}
+      <p>No rounds are ready to go live — a round needs confirmed Par/SI first (see
+        <a href="/admin/round-setup" class="text-link">Round setup</a>).</p>
+    {% else %}
+      <table class="teg-table">
+        <thead><tr><th>TEG</th><th>Round</th><th>Course</th><th>Date</th><th></th></tr></thead>
+        <tbody>
+          {% for r in startable_rounds %}
+          <tr>
+            <td>{{ r.teg_num }}</td>
+            <td>{{ r.round_num }}</td>
+            <td>{{ r.course }}</td>
+            <td>{{ r.date }}</td>
+            <td>
+              <form hx-post="/admin/live-round/start" hx-target="#start-result-{{ r.teg_num }}-{{ r.round_num }}" hx-swap="innerHTML">
+                <input type="hidden" name="teg_num" value="{{ r.teg_num }}">
+                <input type="hidden" name="round_num" value="{{ r.round_num }}">
+                <button type="submit" class="btn-action" hx-disabled-elt="this">Go live</button>
+              </form>
+            </td>
+          </tr>
+          <tr><td colspan="5"><div id="start-result-{{ r.teg_num }}-{{ r.round_num }}"></div></td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+
+  <div class="data-card">
+    <h2 class="card-header">Every live round</h2>
+    {% if not live_rounds %}
+      <p>None started yet.</p>
+    {% else %}
+      <table class="teg-table">
+        <thead><tr><th>TEG</th><th>Round</th><th>Status</th><th>Started</th><th></th></tr></thead>
+        <tbody>
+          {% for r in live_rounds %}
+          <tr>
+            <td>{{ r.TEGNum }}</td>
+            <td>{{ r.Round }}</td>
+            <td>
+              {% if r.Status == 'active' %}🟢 Active
+              {% elif r.Status == 'finalized' %}✅ Finalized
+              {% else %}⚪ Cancelled{% endif %}
+            </td>
+            <td>{{ r.CreatedAt }}</td>
+            <td><a href="/admin/live-round/{{ r.Token }}/review" class="text-link">
+              {{ 'Review' if r.Status == 'active' else 'View' }} →
+            </a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
