@@ -1,5 +1,6 @@
 {# Shared admin sub-nav. `admin_active` names the current page. #}
 <nav class="section-controls" style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;">
+  <a href="/admin/new-round" class="tab-underline{% if admin_active == 'new-round' %} tab-underline--active{% endif %}">➕ New round</a>
   <a href="/admin/round-setup" class="tab-underline{% if admin_active == 'round-setup' %} tab-underline--active{% endif %}">Round setup</a>
   <a href="/admin/teg-setup" class="tab-underline{% if admin_active == 'teg-setup' %} tab-underline--active{% endif %}">TEG setup</a>
   <a href="/admin/live-round" class="tab-underline{% if admin_active == 'live-round' %} tab-underline--active{% endif %}">Live round</a>
