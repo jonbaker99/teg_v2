@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title_suffix %} — New round{% endblock %}
+
+{% block page_title %}
+<div class="page-title-area">
+  <span class="page-label">Admin</span>
+  <h1 class="page-title">Set up a new round</h1>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="/static/admin.css">
+{% endblock %}
+
+{% block content %}
+{% set admin_active = 'new-round' %}
+{% include "partials/admin_nav.html" %}
+
+<div class="section-panel">
+  <p style="margin-bottom:1rem;">
+    Start here to set up a round for scoring. This walks you through everything in order —
+    round details, players &amp; handicaps, Par/SI, and going live — skipping any step that's
+    already done (a new round in an existing TEG reuses that TEG's roster automatically). At
+    the end you get the shareable link to send to the group.
+  </p>
+
+  {% if error %}
+    <p class="error" style="color:#b00020;">{{ error }}</p>
+  {% endif %}
+
+  <div class="data-card" style="margin-bottom:1rem;">
+    <h2 class="card-header">Which round?</h2>
+    <form method="get"
+          onsubmit="event.preventDefault(); window.location = '/admin/new-round/' + this.teg.value + '/' + this.round.value;"
+          style="display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap;">
+      <div>
+        <label for="teg" style="display:block;font-size:.85rem;color:#555;">TEG</label>
+        <input type="number" id="teg" name="teg" min="1" value="{{ suggested.teg_num }}" style="width:5rem;">
+      </div>
+      <div>
+        <label for="round" style="display:block;font-size:.85rem;color:#555;">Round</label>
+        <input type="number" id="round" name="round" min="1" max="8" value="{{ suggested.round_num }}" style="width:5rem;">
+      </div>
+      <button type="submit" class="btn-action">Start →</button>
+    </form>
+    <p style="margin:.75rem 0 0;color:#666;font-size:.85rem;">
+      Suggested: the next TEG. Change the numbers for any TEG/round.
+    </p>
+  </div>
+
+  {% if pending %}
+  <div class="data-card">
+    <h2 class="card-header">Resume a round in progress</h2>
+    <p style="margin:0 0 .75rem;color:#666;font-size:.9rem;">
+      Rounds that have details entered but haven't been played yet — pick one to continue.
+    </p>
+    <table class="teg-table">
+      <thead>
+        <tr><th>TEG</th><th>Round</th><th>Course</th><th>Date</th><th>Par/SI</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for r in pending %}
+        <tr>
+          <td>{{ r.teg_num }}</td>
+          <td>{{ r.round_num }}</td>
+          <td>{{ r.course }}</td>
+          <td>{{ r.date }}</td>
+          <td>{% if r.is_set_up %}✅{% else %}⚠️{% endif %}</td>
+          <td><a href="/admin/new-round/{{ r.teg_num }}/{{ r.round_num }}" class="text-link">Continue →</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
