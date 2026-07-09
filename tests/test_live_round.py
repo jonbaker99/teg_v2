@@ -57,6 +57,28 @@ def confirmed_round_setup(monkeypatch):
     return fake_form
 
 
+@pytest.fixture(autouse=True)
+def playing_roster(monkeypatch):
+    """apply_score_writes/apply_admin_edits validate the player against the
+    TEG's playing roster -- default every test to DM and GW playing, matching
+    the player codes every existing test's cells already use. Override
+    per-test via monkeypatch.setattr(ts, "get_teg_roster_form", ...) same as
+    confirmed_round_setup does for round_setup."""
+    import teg_analysis.analysis.teg_setup as ts
+
+    def fake_roster(teg_num):
+        return {
+            "teg_num": teg_num, "source": "confirmed",
+            "players": [
+                {"code": "DM", "name": "David MULLIN", "playing": True, "handicap": 18, "source": "confirmed"},
+                {"code": "GW", "name": "Gregg WILLIAMS", "playing": True, "handicap": 16, "source": "confirmed"},
+            ],
+        }
+
+    monkeypatch.setattr(ts, "get_teg_roster_form", fake_roster)
+    return fake_roster
+
+
 def test_start_live_round_creates_token_and_empty_staging(store):
     row = lr.start_live_round(10, 1)
     assert row["TEGNum"] == 10 and row["Round"] == 1 and row["Status"] == "active"
@@ -101,6 +123,68 @@ def test_apply_score_writes_basic(store):
     assert by_key[(1, "DM")]["value"] == 4
     assert by_key[(1, "GW")]["value"] == 5
     assert not by_key[(1, "DM")]["conflict"]
+
+
+def test_apply_score_writes_rejects_hole_out_of_range(store):
+    row = lr.start_live_round(10, 1)
+    token = row["Token"]
+
+    with pytest.raises(lr.InvalidScoreCellError) as exc_info:
+        lr.apply_score_writes(token, "dev-A", "Jon", [{"hole": 19, "player": "DM", "value": 4}])
+    assert exc_info.value.errors[0]["hole"] == 19
+
+    # Rejected outright -- nothing written, not even the valid cells in the
+    # same batch (a partial write would still be an unreviewed data change).
+    polled = lr.get_scores_since(token, since_seq=0)
+    assert polled["cells"] == []
+
+
+def test_apply_score_writes_rejects_value_out_of_range(store):
+    row = lr.start_live_round(10, 1)
+    token = row["Token"]
+
+    with pytest.raises(lr.InvalidScoreCellError) as exc_info:
+        lr.apply_score_writes(token, "dev-A", "Jon", [{"hole": 1, "player": "DM", "value": 21}])
+    assert exc_info.value.errors[0]["value"] == 21
+
+    with pytest.raises(lr.InvalidScoreCellError):
+        lr.apply_score_writes(token, "dev-A", "Jon", [{"hole": 1, "player": "DM", "value": 0}])
+
+
+def test_apply_score_writes_rejects_player_not_on_roster(store):
+    row = lr.start_live_round(10, 1)
+    token = row["Token"]
+
+    with pytest.raises(lr.InvalidScoreCellError) as exc_info:
+        lr.apply_score_writes(token, "dev-A", "Jon", [{"hole": 1, "player": "ZZ", "value": 4}])
+    assert exc_info.value.errors[0]["player"] == "ZZ"
+
+
+def test_apply_score_writes_null_value_still_valid(store):
+    """None clears a cell -- it must not be rejected as an out-of-range value."""
+    row = lr.start_live_round(10, 1)
+    token = row["Token"]
+
+    lr.apply_score_writes(token, "dev-A", "Jon", [{"hole": 1, "player": "DM", "value": 4}])
+    result = lr.apply_score_writes(token, "dev-A", "Jon", [{"hole": 1, "player": "DM", "value": None}])
+    assert result["seq"] == 2
+
+    cell = lr.get_scores_since(token, 0)["cells"][0]
+    assert cell["value"] is None
+
+
+def test_apply_score_writes_valid_batch_still_writes(store):
+    row = lr.start_live_round(10, 1)
+    token = row["Token"]
+
+    result = lr.apply_score_writes(token, "dev-A", "Jon", [
+        {"hole": 1, "player": "DM", "value": 4},
+        {"hole": 2, "player": "GW", "value": 20},  # MAX_SCORE itself is valid
+    ])
+    assert result["seq"] == 2
+
+    polled = lr.get_scores_since(token, 0)
+    assert len(polled["cells"]) == 2
 
 
 def test_apply_score_writes_unknown_token_raises(store):
@@ -156,6 +240,33 @@ def test_conflict_flag_persists_until_explicitly_resolved(store):
 
     cell = lr.get_scores_since(token, 0)["cells"][0]
     assert cell["conflict"] is True
+
+
+def test_apply_admin_edits_rejects_invalid_cells(store):
+    row = lr.start_live_round(10, 1)
+    token = row["Token"]
+
+    with pytest.raises(lr.InvalidScoreCellError):
+        lr.apply_admin_edits(token, [{"hole": 0, "player": "DM", "value": 4}], resolved_by="Admin")
+    with pytest.raises(lr.InvalidScoreCellError):
+        lr.apply_admin_edits(token, [{"hole": 1, "player": "DM", "value": 99}], resolved_by="Admin")
+    with pytest.raises(lr.InvalidScoreCellError):
+        lr.apply_admin_edits(token, [{"hole": 1, "player": "ZZ", "value": 4}], resolved_by="Admin")
+
+    # Nothing from any rejected batch made it into staging.
+    polled = lr.get_scores_since(token, since_seq=0)
+    assert polled["cells"] == []
+
+
+def test_apply_admin_edits_valid_batch_still_writes(store):
+    row = lr.start_live_round(10, 1)
+    token = row["Token"]
+
+    result = lr.apply_admin_edits(token, [{"hole": 1, "player": "DM", "value": 5}], resolved_by="Admin")
+    assert result["written"] == 1
+
+    cell = lr.get_scores_since(token, 0)["cells"][0]
+    assert cell["value"] == 5
 
 
 def test_resolve_conflict_clears_flag(store):
@@ -234,6 +345,40 @@ def test_finalize_only_includes_complete_18_hole_rounds(store, monkeypatch):
     reg = store["data/live_rounds.csv"]
     assert reg[reg["Token"] == token].iloc[0]["Status"] == "finalized"
     assert f"data/live_rounds/archive/{token}.csv" in store
+
+
+def test_stray_out_of_range_hole_rejected_not_silently_dropping_round(store, monkeypatch):
+    """Regression: an out-of-range hole (e.g. a client bug sending hole=42)
+    used to be written straight into staging, giving a player a 19th row --
+    finalize_live_round's `len(x) == 18` completeness filter would then
+    silently exclude their entire round. Validation must reject the write
+    outright instead, so a legitimate 18-hole round always finalizes."""
+    _seed_round_pars(store)
+    _seed_handicaps(store)
+    import teg_analysis.analysis.data_update as du
+    captured = {}
+
+    def fake_execute(long_df, **kwargs):
+        captured["long_df"] = long_df.copy()
+        return {"records_added": len(long_df), "changed_rounds": {}, "backups": [], "committed": True, "files_committed": 1}
+
+    monkeypatch.setattr(du, "execute_data_update", fake_execute)
+
+    row = lr.start_live_round(10, 1)
+    token = row["Token"]
+    dm_cells = [{"hole": h, "player": "DM", "value": 4} for h in range(1, 19)]
+    lr.apply_score_writes(token, "dev-A", "Jon", dm_cells)
+
+    # A stray out-of-range hole must be rejected, not merged into staging.
+    with pytest.raises(lr.InvalidScoreCellError):
+        lr.apply_score_writes(token, "dev-A", "Jon", [{"hole": 42, "player": "DM", "value": 4}])
+
+    result = lr.finalize_live_round(token)
+
+    long_df = captured["long_df"]
+    assert len(long_df) == 18  # DM's round is complete and intact, not dropped
+    assert set(long_df["Hole"]) == set(range(1, 19))
+    assert result["teg_num"] == 10
 
 
 def test_finalize_refuses_when_not_active(store, monkeypatch):
