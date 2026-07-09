@@ -92,9 +92,9 @@ documented safe pattern; `player.py:295/381` are comparisons, not assignments).
 Each chat = one session, one coherent scope, sized to stay reviewable. Order matters.
 
 ### Chat 1 — Make the suite green and the guards real *(Sonnet)*
-- [ ] **T1**: Seed `handicaps.csv` in the live-round test fixtures; add a test asserting
+- [x] **T1**: Seed `handicaps.csv` in the live-round test fixtures; add a test asserting
       the unconfirmed-roster refusal path. Files: `tests/test_live_round.py`.
-- [ ] **T3**: Convert `test_no_streamlit_imports` to `assert not imports, ...`
+- [x] **T3**: Convert `test_no_streamlit_imports` to `assert not imports, ...`
       (keep script mode working). Files: `tests/test_no_streamlit_imports.py`.
 - [ ] Review gate (Opus).
 

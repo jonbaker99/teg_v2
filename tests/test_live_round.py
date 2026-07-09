@@ -196,8 +196,15 @@ def _seed_round_pars(store, teg_num=10, round_num=1):
     )
 
 
+def _seed_handicaps(store, tegs=(10,), players=("DM", "GW")):
+    """Seed data/handicaps.csv rows -- finalize_live_round refuses without one."""
+    rows = [{"TEG": f"TEG {teg_num}", **{p: 18 for p in players}} for teg_num in tegs]
+    store["data/handicaps.csv"] = pd.DataFrame(rows)
+
+
 def test_finalize_only_includes_complete_18_hole_rounds(store, monkeypatch):
     _seed_round_pars(store)
+    _seed_handicaps(store)
     import teg_analysis.analysis.data_update as du
     captured = {}
 
@@ -231,6 +238,7 @@ def test_finalize_only_includes_complete_18_hole_rounds(store, monkeypatch):
 
 def test_finalize_refuses_when_not_active(store, monkeypatch):
     _seed_round_pars(store)
+    _seed_handicaps(store)
     import teg_analysis.analysis.data_update as du
     monkeypatch.setattr(du, "execute_data_update", lambda *a, **k: {
         "records_added": 18, "changed_rounds": {}, "backups": [], "committed": True, "files_committed": 1,
@@ -242,6 +250,22 @@ def test_finalize_refuses_when_not_active(store, monkeypatch):
     lr.finalize_live_round(token)
 
     with pytest.raises(lr.LiveRoundInactiveError):
+        lr.finalize_live_round(token)
+
+
+def test_finalize_refuses_when_teg_roster_not_confirmed(store, monkeypatch):
+    """finalize_live_round must refuse when the TEG has no handicaps.csv row --
+    a silent HC=0 would poison net/Stableford scores."""
+    _seed_round_pars(store)
+    _seed_handicaps(store, tegs=(9,))  # handicaps.csv exists, but no row for TEG 10
+    import teg_analysis.analysis.data_update as du
+    monkeypatch.setattr(du, "execute_data_update", lambda *a, **k: pytest.fail("must not run"))
+
+    row = lr.start_live_round(10, 1)
+    token = row["Token"]
+    lr.apply_score_writes(token, "dev-A", "Jon", [{"hole": h, "player": "DM", "value": 4} for h in range(1, 19)])
+
+    with pytest.raises(ValueError, match="roster not confirmed"):
         lr.finalize_live_round(token)
 
 
