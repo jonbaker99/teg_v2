@@ -25,6 +25,9 @@ LLM-powered tournament and round reports. Active agenda (Phases F–G backfill) 
 ### Data updates — [below](#data-updates)
 Tracked here (no sub-folder needed).
 
+### Codebase review remediation — [`REVIEW_PLAN.md`](REVIEW_PLAN.md)
+Findings + batched execution plan from the 2026-07-09 review of `webapp/` and `teg_analysis/` (9 chats, ordered, with model tiers and three owner decisions). Temporary doc — deleted when all batches land.
+
 ---
 
 ## Data updates
