@@ -37,6 +37,7 @@ from teg_analysis.display.formatters import (
     prepare_worst_records_table,
     prepare_score_count_records_table,
 )
+from webapp import deps
 from webapp.deps import (
     cached_load_all_data,
     cached_round_data,
@@ -79,6 +80,12 @@ def _get_winners_data():
     """Get winners DataFrame from all data (cached)."""
     all_data = cached_load_all_data()
     return get_teg_winners(all_data)
+
+
+# Register with deps so a data update (add/delete/finalize a round) invalidates
+# this too -- otherwise the trophy cabinet / winners data on player profiles
+# would show stale results until the process restarts.
+deps.register_cache_clearer(_get_winners_data.cache_clear)
 
 
 def _ordinal(n: int) -> str:

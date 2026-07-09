@@ -25,6 +25,22 @@ logger = logging.getLogger(__name__)
 
 PLAYER_COLUMN = 'Player'
 
+# Route modules can hold their own lru_cache'd data accessors (e.g.
+# player.py's winners cache). deps must not import routes (that would be a
+# circular import), so instead a route registers its cache_clear callable
+# here at import time and clear_all_data_caches() fans out to all of them.
+_extra_cache_clearers: list = []
+
+
+def register_cache_clearer(clear_fn) -> None:
+    """Register a callable to be invoked by clear_all_data_caches().
+
+    Idempotent per callable, so re-importing a module doesn't stack duplicate
+    clearers.
+    """
+    if clear_fn not in _extra_cache_clearers:
+        _extra_cache_clearers.append(clear_fn)
+
 
 # --- Cached data accessors ---------------------------------------------------
 
@@ -127,6 +143,10 @@ def clear_all_data_caches() -> None:
 
     from teg_analysis.core.players import clear_player_cache
     clear_player_cache()
+
+    # Route-level caches that registered themselves (see register_cache_clearer).
+    for clear_fn in _extra_cache_clearers:
+        clear_fn()
 
 
 # --- Leaderboard logic (from streamlit/leaderboard_utils.py) ------------------
