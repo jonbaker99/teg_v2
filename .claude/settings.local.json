@@ -71,7 +71,9 @@
       "Bash(git add *)",
       "Bash(git commit -m 'Mobile M1.4-M1.6 + M2.7: controls/tables sweep and leaderboard card reflow at <=640px *)",
       "Bash(git commit -m ' *)",
-      "Bash(git commit -q -m ' *)"
+      "Bash(git commit -q -m ' *)",
+      "Bash(git commit -m 'Fix dark mode white bands from body.page-bg !important override *)",
+      "Bash(git commit *)"
     ],
     "deny": [],
     "ask": [

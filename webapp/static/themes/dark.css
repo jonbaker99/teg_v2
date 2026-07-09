@@ -70,6 +70,14 @@ html[data-mode="dark"] {
   --divider-color: #2e2e29;
 }
 
+/* Both clean-page.css and clean-layered.css hard-code body.page-bg with
+   !important (their own light/stone base colour), which otherwise wins over
+   --bg-page and shows through as a light band wherever a page's content
+   sits on transparent panels (e.g. the Contents grid's card gaps). */
+html[data-mode="dark"] body.page-bg {
+  background-color: #16150f !important;
+}
+
 /* Clean Layered theme hard-codes its three surfaces (stone / taupe / white) on
    the wrappers rather than via vars, so re-point those wrappers for dark. These
    selectors only have a visible effect under the layered theme; under the flat
