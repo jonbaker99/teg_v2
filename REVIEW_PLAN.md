@@ -84,6 +84,7 @@ documented safe pattern; `player.py:295/381` are comparisons, not assignments).
 | T9 | INFO | `commentary.py:797-799` | Compat-checker `rank-int-unprotected` warnings — verified numeric-only use | No change needed |
 | T10 | MED (tests) | `teg_analysis/reporting/` (~4.5k lines), `analysis/commentary.py`, comeback fns in `aggregation.py` | Zero tests | Regressions in report generation / comeback tables ship undetected |
 | T11 | LOW (docs) | CLAUDE.md vs `DATA_STORAGE_INGESTION_PLAN.md`; `reporting/*.md` ×5 | Docs contradiction + .md accumulation (see owner decision) | Docs describe a state that isn't true |
+| T12 | MED (tests) | `tests/test_core_functions.py` (`test_metadata_functions`, `test_data_loader_functions`, `test_aggregation_functions`, `test_ranking_functions`, `test_display_functions`), `tests/test_independence.py` (`test_no_streamlit_dependency`) | Same return-`True`/`False`-instead-of-assert pattern as T3 (found while fixing T3; pytest emits `PytestReturnNotNoneWarning` on all six) — pytest passes them unconditionally regardless of what the function found | These checks (data-loader/aggregation/ranking/display smoke tests, and the teg_analysis-independence guard) are unenforced; a real regression would show only as a warning, never a failure |
 
 ---
 
@@ -92,11 +93,18 @@ documented safe pattern; `player.py:295/381` are comparisons, not assignments).
 Each chat = one session, one coherent scope, sized to stay reviewable. Order matters.
 
 ### Chat 1 — Make the suite green and the guards real *(Sonnet)*
-- [ ] **T1**: Seed `handicaps.csv` in the live-round test fixtures; add a test asserting
+- [x] **T1**: Seed `handicaps.csv` in the live-round test fixtures; add a test asserting
       the unconfirmed-roster refusal path. Files: `tests/test_live_round.py`.
-- [ ] **T3**: Convert `test_no_streamlit_imports` to `assert not imports, ...`
+- [x] **T3**: Convert `test_no_streamlit_imports` to `assert not imports, ...`
       (keep script mode working). Files: `tests/test_no_streamlit_imports.py`.
 - [ ] Review gate (Opus).
+
+**Flagged for the Opus review gate:** while fixing T3, found the same
+return-`True`/`False`-instead-of-assert pattern in `tests/test_core_functions.py`
+(5 test functions) and `tests/test_independence.py` (`test_no_streamlit_dependency`)
+— now tracked as **T12** in the findings table above. Out of scope for this chat
+(T3 only named `test_no_streamlit_imports.py`), but it's the same class of
+unenforced guard and worth a follow-up chat to convert all six.
 
 *Why together*: both are test-infrastructure fixes; tiny; everything else depends on a
 trustworthy green suite.

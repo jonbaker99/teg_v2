@@ -65,53 +65,29 @@ def find_streamlit_imports(directory):
 
 def test_no_direct_streamlit_imports():
     """Test that teg_analysis has no direct Streamlit imports."""
-    print("=" * 60)
-    print("TEST: No Direct Streamlit Imports in teg_analysis")
-    print("=" * 60)
-
     # Get project root directory
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(script_dir)
 
-    print(f"\nScanning directory: {project_root}/teg_analysis")
-    print("Looking for direct 'import streamlit' or 'from streamlit'...")
-    print("(Conditional imports in try/except blocks are allowed)\n")
-
-    # Find all Streamlit imports
     imports = find_streamlit_imports(project_root)
 
-    if imports:
-        print(f"FAIL: Found {len(imports)} direct Streamlit import(s):\n")
-        for file_path, line_num, line_content in imports:
-            print(f"  {file_path}:{line_num}")
-            print(f"    {line_content}\n")
-        print("=" * 60)
-        print("TEST FAILED")
-        print("=" * 60)
-        print("\nAction Required:")
-        print("Move Streamlit imports inside try/except blocks like this:")
-        print("""
-    try:
-        import streamlit as st
-        HAS_STREAMLIT = True
-    except ImportError:
-        st = None
-        HAS_STREAMLIT = False
-""")
-        return False
-    else:
-        print("OK: No direct Streamlit imports found")
-        print("\n" + "=" * 60)
-        print("TEST PASSED")
-        print("=" * 60)
-        print("\nConclusion: teg_analysis is free of direct Streamlit dependencies")
-        print("(Conditional imports in try/except blocks are allowed and working)")
-        return True
+    formatted = "\n".join(
+        f"  {file_path}:{line_num}\n    {line_content}"
+        for file_path, line_num, line_content in imports
+    )
+    assert not imports, (
+        f"Found {len(imports)} direct Streamlit import(s) in teg_analysis "
+        f"(move them inside a try/except block):\n{formatted}"
+    )
 
 if __name__ == "__main__":
     try:
-        success = test_no_direct_streamlit_imports()
-        sys.exit(0 if success else 1)
+        test_no_direct_streamlit_imports()
+        print("OK: No direct Streamlit imports found")
+        sys.exit(0)
+    except AssertionError as e:
+        print(f"TEST FAILED: {e}")
+        sys.exit(1)
     except Exception as e:
         print(f"\nTEST FAILED: {e}")
         import traceback
