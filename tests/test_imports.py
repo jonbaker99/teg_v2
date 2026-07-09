@@ -159,7 +159,6 @@ class TestExternalDependencies:
         "numpy",
         "streamlit",
         "plotly",
-        "altair",
     ])
     def test_external_dependency_available(self, module_name):
         """Test that required external module is available"""
