@@ -289,6 +289,8 @@ def test_execute_data_update_creates_backups(scratch_repo):
     assert len(result['backups']) == 2
     for backup_path in result['backups']:
         assert (scratch_repo / backup_path).exists()
+    # A clean run reports no cache failures.
+    assert result['cache_errors'] == []
 
 
 def test_execute_data_update_no_new_records_skips_backups(scratch_repo):
@@ -324,6 +326,53 @@ def test_execute_data_update_rejects_concurrent_call(scratch_repo):
     # Lock is released afterwards -> a normal call succeeds.
     result = execute_data_update(long_df, overwrite=True)
     assert result['records_added'] > 0
+
+
+def test_execute_data_update_reports_cache_failure_without_losing_write(scratch_repo, monkeypatch):
+    """A failing derived-cache step is collected into cache_errors rather than
+    swallowed, and the primary all-scores write still lands (records_added is
+    still correct) — the round is never lost to a cache regen error (T2)."""
+    import teg_analysis.analysis.pipeline as pipeline
+    from teg_analysis.analysis.data_update import execute_data_update
+
+    def _boom(all_data, defer_github=False):
+        raise RuntimeError("streaks build blew up")
+
+    # The orchestrator does `from teg_analysis.analysis.pipeline import ...`
+    # at call time, so patching the module attribute is picked up.
+    monkeypatch.setattr(pipeline, 'update_streaks_cache', _boom)
+
+    long_df = process_google_sheets_data(_fake_wide_round())
+    result = execute_data_update(long_df, overwrite=True)
+
+    # Primary write still landed.
+    assert result['records_added'] > 0
+    # The failure surfaced instead of being silently swallowed.
+    assert len(result['cache_errors']) == 1
+    assert result['cache_errors'][0]['step'] == 'streaks'
+    assert 'streaks build blew up' in result['cache_errors'][0]['error']
+
+
+def test_execute_data_deletion_reports_cache_failure(scratch_repo, monkeypatch):
+    """Deletion collects a failing cache step into cache_errors too, while the
+    rows are still deleted."""
+    import teg_analysis.analysis.pipeline as pipeline
+    from teg_analysis.analysis.data_update import execute_data_update, execute_data_deletion
+
+    # Seed a TEG 50 round to delete.
+    long_df = process_google_sheets_data(_fake_wide_round())
+    execute_data_update(long_df, overwrite=True)
+
+    def _boom(all_data, defer_github=False):
+        raise RuntimeError("bestball blew up")
+
+    monkeypatch.setattr(pipeline, 'update_bestball_cache', _boom)
+
+    result = execute_data_deletion(50, [1])
+
+    assert result['rows_deleted'] > 0
+    assert len(result['cache_errors']) == 1
+    assert result['cache_errors'][0]['step'] == 'bestball'
 
 
 if __name__ == '__main__':

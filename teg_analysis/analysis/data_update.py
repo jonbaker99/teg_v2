@@ -65,6 +65,26 @@ class UpdateInProgressError(RuntimeError):
     """Raised when an add/delete is attempted while another is already running."""
 
 
+def _run_cache_step(cache_errors: list, label: str, fn):
+    """Run a derived-cache regeneration step, collecting any failure.
+
+    The primary all-scores/all-data write has already landed (or is queued for
+    the batch commit) by the time these run, so a cache failure must not abort
+    the whole update and lose the round. Instead we log it, record ``{"step",
+    "error"}`` in ``cache_errors`` for the caller to surface, and carry on
+    regenerating the other caches — partial success beats a silently stale site
+    reported as a clean success.
+
+    Returns the step's file-info result, or None if it raised.
+    """
+    try:
+        return fn()
+    except Exception as e:  # noqa: BLE001
+        logger.error("Cache regeneration step %r failed: %s", label, e, exc_info=True)
+        cache_errors.append({"step": label, "error": str(e)})
+        return None
+
+
 # ---------------------------------------------------------------------------
 # Pure processing functions (no I/O)
 # ---------------------------------------------------------------------------
@@ -435,6 +455,7 @@ def _execute_data_update_locked(
 ) -> dict:
     """Implementation for :func:`execute_data_update` (runs under the lock)."""
     from teg_analysis.io import read_file, write_file, batch_commit_to_github, _is_railway
+    from teg_analysis.core.data_loader import load_all_data
     from teg_analysis.analysis.pipeline import (
         load_and_prepare_handicap_data,
         update_all_data,
@@ -482,6 +503,7 @@ def _execute_data_update_locked(
             'backups': [],
             'committed': False,
             'files_committed': 0,
+            'cache_errors': [],
         }
 
     # Align dtypes before concatenating.
@@ -520,15 +542,30 @@ def _execute_data_update_locked(
     if status_files:
         batch_files.extend(status_files)
 
-    streaks_file = update_streaks_cache(defer_github=defer_github)
+    # Load the freshly-written all-data once and hand it to every cache step
+    # (rather than each reloading it), and collect any cache failure so a stale
+    # cache can't be silently reported as a clean success.
+    all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
+    cache_errors: list[dict] = []
+
+    streaks_file = _run_cache_step(
+        cache_errors, 'streaks',
+        lambda: update_streaks_cache(all_data, defer_github=defer_github),
+    )
     if streaks_file:
         batch_files.append(streaks_file)
 
-    commentary_files = update_commentary_caches(defer_github=defer_github)
+    commentary_files = _run_cache_step(
+        cache_errors, 'commentary',
+        lambda: update_commentary_caches(all_data, defer_github=defer_github),
+    )
     if commentary_files:
         batch_files.extend(commentary_files)
 
-    bestball_file = update_bestball_cache(defer_github=defer_github)
+    bestball_file = _run_cache_step(
+        cache_errors, 'bestball',
+        lambda: update_bestball_cache(all_data, defer_github=defer_github),
+    )
     if bestball_file:
         batch_files.append(bestball_file)
 
@@ -542,7 +579,8 @@ def _execute_data_update_locked(
 
     logger.info(
         f"Data update complete: {len(processed_rounds)} records, "
-        f"{len(batch_files)} files, committed={committed}"
+        f"{len(batch_files)} files, committed={committed}, "
+        f"cache_errors={len(cache_errors)}"
     )
     return {
         'records_added': len(processed_rounds),
@@ -550,6 +588,7 @@ def _execute_data_update_locked(
         'backups': list(backups),
         'committed': committed,
         'files_committed': len(batch_files),
+        'cache_errors': cache_errors,
     }
 
 
@@ -669,6 +708,7 @@ def _execute_data_deletion_locked(
 ) -> dict:
     """Implementation for :func:`execute_data_deletion` (runs under the lock)."""
     from teg_analysis.io import read_file, write_file, batch_commit_to_github, _is_railway
+    from teg_analysis.core.data_loader import load_all_data
     from teg_analysis.analysis.pipeline import (
         update_streaks_cache,
         update_commentary_caches,
@@ -715,15 +755,29 @@ def _execute_data_deletion_locked(
     if status_files:
         batch_files.extend(status_files)
 
-    streaks_file = update_streaks_cache(defer_github=defer_github)
+    # Load the post-deletion all-data once and hand it to every cache step,
+    # collecting any cache failure so a stale cache can't be reported as success.
+    all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
+    cache_errors: list[dict] = []
+
+    streaks_file = _run_cache_step(
+        cache_errors, 'streaks',
+        lambda: update_streaks_cache(all_data, defer_github=defer_github),
+    )
     if streaks_file:
         batch_files.append(streaks_file)
 
-    commentary_files = update_commentary_caches(defer_github=defer_github)
+    commentary_files = _run_cache_step(
+        cache_errors, 'commentary',
+        lambda: update_commentary_caches(all_data, defer_github=defer_github),
+    )
     if commentary_files:
         batch_files.extend(commentary_files)
 
-    bestball_file = update_bestball_cache(defer_github=defer_github)
+    bestball_file = _run_cache_step(
+        cache_errors, 'bestball',
+        lambda: update_bestball_cache(all_data, defer_github=defer_github),
+    )
     if bestball_file:
         batch_files.append(bestball_file)
 
@@ -733,7 +787,8 @@ def _execute_data_deletion_locked(
         committed = True
 
     logger.info(
-        f"Deletion complete: {rows_deleted} rows, {len(batch_files)} files, committed={committed}"
+        f"Deletion complete: {rows_deleted} rows, {len(batch_files)} files, "
+        f"committed={committed}, cache_errors={len(cache_errors)}"
     )
     return {
         'rows_deleted': rows_deleted,
@@ -742,6 +797,7 @@ def _execute_data_deletion_locked(
         'backups': list(backups),
         'committed': committed,
         'files_committed': len(batch_files),
+        'cache_errors': cache_errors,
     }
 
 

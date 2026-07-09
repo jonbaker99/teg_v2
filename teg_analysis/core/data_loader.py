@@ -164,60 +164,22 @@ def get_player_name(initials: str) -> str:
     return get_player_dict().get(initials.upper(), 'Unknown Player')
 
 
+# ``process_round_for_all_scores`` has a single canonical implementation in
+# ``teg_analysis.analysis.data_update`` (the version that works on a copy and
+# never mutates its input). It is re-exported here — and via
+# ``teg_analysis.core`` — for backward compatibility with existing importers.
+# The deferred import avoids a module-load cycle (data_update imports core only
+# lazily, inside functions).
 def process_round_for_all_scores(long_df: pd.DataFrame, hc_long: pd.DataFrame) -> pd.DataFrame:
-    """Processes round data to calculate various scores and metrics.
+    """Backward-compatible alias for
+    :func:`teg_analysis.analysis.data_update.process_round_for_all_scores`.
 
-    This function takes long-format round data and handicap data, merges them,
-    and calculates a variety of scores including Gross, Net, and Stableford.
-
-    Args:
-        long_df (pd.DataFrame): DataFrame containing round data.
-        hc_long (pd.DataFrame): DataFrame containing handicap data.
-
-    Returns:
-        pd.DataFrame: A processed DataFrame with additional computed columns.
+    See that function for the full contract. Kept here because ``core`` has long
+    exported this name; new code should import it from ``analysis.data_update``.
     """
-    logger.info("Processing rounds for all scores.")
+    from teg_analysis.analysis.data_update import process_round_for_all_scores as _impl
 
-    # Rename columns if they exist
-    long_df.rename(columns={'Score': 'Sc', 'Par': 'PAR'}, inplace=True)
-    for col in ['Sc', 'PAR']:
-        if col not in long_df.columns:
-            logger.warning(f"Column '{col}' not found.")
-
-    # Create 'TEG' column
-    long_df['TEG'] = 'TEG ' + long_df['TEGNum'].astype(str)
-
-    # Merge handicap data
-    long_df = long_df.merge(hc_long, on=['TEG', 'Pl'], how='left')
-    long_df['HC'] = long_df['HC'].fillna(0)
-    logger.debug("Handicap data merged.")
-
-    # Create 'HoleID' using vectorized operations
-    long_df['HoleID'] = (
-        "T" + long_df['TEGNum'].astype(int).astype(str).str.zfill(2) +
-        "|R" + long_df['Round'].astype(int).astype(str).str.zfill(2) +
-        "|H" + long_df['Hole'].astype(int).astype(str).str.zfill(2)
-    )
-
-    # Determine 'FrontBack' using vectorized operations
-    long_df['FrontBack'] = np.where(long_df['Hole'] < 10, 'Front', 'Back')
-
-    # Map player names using the more efficient .map() method
-    from teg_analysis.core.players import get_player_dict
-    long_df['Player'] = long_df['Pl'].map(get_player_dict()).fillna('Unknown Player')
-
-    # Calculate 'HCStrokes' using vectorized operations
-    long_df['HCStrokes'] = (long_df['HC'] // 18) + ((long_df['HC'] % 18 >= long_df['SI']).astype(int))
-
-    # Calculate scoring metrics
-    long_df['GrossVP'] = long_df['Sc'] - long_df['PAR']
-    long_df['Net'] = long_df['Sc'] - long_df['HCStrokes']
-    long_df['NetVP'] = long_df['Net'] - long_df['PAR']
-    long_df['Stableford'] = (2 - long_df['NetVP']).clip(lower=0)
-
-    logger.info("Round processing completed.")
-    return long_df
+    return _impl(long_df, hc_long)
 
 
 def add_round_info(all_data: pd.DataFrame) -> pd.DataFrame:
