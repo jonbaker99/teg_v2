@@ -73,7 +73,9 @@
       "Bash(git commit -m ' *)",
       "Bash(git commit -q -m ' *)",
       "Bash(git commit -m 'Add codebase review findings + batched execution plan \\(REVIEW_PLAN.md\\) *)",
-      "Bash(git commit -m 'Update local permission allowlist \\(auto-appended by commit approval\\) *)"
+      "Bash(git commit -m 'Update local permission allowlist \\(auto-appended by commit approval\\) *)",
+      "Bash(git commit *)",
+      "Bash(git commit -q -m 'Update local permission allowlist \\(auto-appended by commit approval\\) *)"
     ],
     "deny": [],
     "ask": [
