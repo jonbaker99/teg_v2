@@ -130,7 +130,7 @@ Opus review gate.
 ```
 
 ### Chat 2 — Live-round server-side validation *(Sonnet)*
-- [ ] **W1**: Add `MAX_SCORE = 20` (+ hole 1–18, player-in-roster checks) inside
+- [x] **W1**: Add `MAX_SCORE = 20` (+ hole 1–18, player-in-roster checks) inside
       `apply_score_writes` and `apply_admin_edits`; make the admin route and the entry
       template consume the same constant (template gets it via context). Reject invalid
       cells with a clear error rather than dropping them silently. Tests for each
@@ -141,6 +141,28 @@ Opus review gate.
 
 *Why alone*: highest user-facing data-integrity risk; touches the API contract, so keep
 the diff focused and well-tested.
+
+**Flagged for the Opus review gate:**
+- Validation is all-or-nothing per batch: if any cell in a write is invalid,
+  `InvalidScoreCellError` is raised and *nothing* in that batch is written (not even the
+  valid cells) -- a partial silent write felt like the same class of surprise this fix is
+  meant to remove. Worth confirming that's the right call for voice-entry batches (a
+  whole transcript could be dropped by one bad token) vs. writing the valid subset and
+  reporting the rest as rejected.
+- The player-facing API (`webapp/routes/live_round.py`) surfaces `InvalidScoreCellError`
+  as a 422 with the structured `errors` list in the body, per the starter prompt. The
+  admin bulk-edit route (`webapp/routes/admin_live_round.py`'s `/edit`, a plain form POST
+  + 303 redirect, not a JSON API) instead redirects back to the review page with
+  `?error=<message>`, rendered via the existing `{% if error %}` block -- there's no
+  natural place to return a 422 status from a redirect-based form handler. That route
+  already pre-filters obviously-bad values before calling `apply_admin_edits` (silently
+  ignoring blank/out-of-range typed values, a UX choice for a free-text grid, not a
+  validation bypass), so the new `apply_admin_edits`-level validation is mostly
+  defense-in-depth there; the `?error=` path exists for the player-not-on-roster case,
+  which the route's own pre-filter doesn't check.
+- `apply_score_writes`/`apply_admin_edits` now call `get_teg_roster_form(teg_num)` on
+  every write to validate the player -- an extra `handicaps.csv`/`players.csv` read per
+  request, same class of per-poll cost already accepted for T8 at this group scale.
 
 **Starter prompt:**
 ```text

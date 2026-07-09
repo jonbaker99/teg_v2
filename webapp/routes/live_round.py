@@ -44,9 +44,9 @@ class ScoreWriteRequest(BaseModel):
 
 @router.get("/live-round/{token}", name="live_round_page")
 async def live_round_page(request: Request, token: str):
-    from teg_analysis.analysis.live_round import get_live_round_context
+    from teg_analysis.analysis.live_round import get_live_round_context, MAX_SCORE
 
-    ctx = {"request": request, "token": token}
+    ctx = {"request": request, "token": token, "max_score": MAX_SCORE}
     try:
         live_ctx = get_live_round_context(token)
     except Exception as e:  # noqa: BLE001
@@ -107,7 +107,7 @@ async def api_poll_scores(token: str, since: int = 0):
 @router.post("/api/live-round/{token}/scores")
 async def api_write_scores(token: str, body: ScoreWriteRequest):
     from teg_analysis.analysis.live_round import (
-        apply_score_writes, LiveRoundNotFoundError, LiveRoundInactiveError,
+        apply_score_writes, LiveRoundNotFoundError, LiveRoundInactiveError, InvalidScoreCellError,
     )
 
     if not body.cells:
@@ -122,3 +122,5 @@ async def api_write_scores(token: str, body: ScoreWriteRequest):
         raise HTTPException(status_code=404, detail="Live round not found")
     except LiveRoundInactiveError as e:
         raise HTTPException(status_code=409, detail=str(e))
+    except InvalidScoreCellError as e:
+        raise HTTPException(status_code=422, detail=e.errors)

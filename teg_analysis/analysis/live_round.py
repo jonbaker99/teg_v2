@@ -52,6 +52,11 @@ from teg_analysis.constants import LIVE_ROUNDS_REGISTRY_CSV, LIVE_ROUND_STAGING_
 
 logger = logging.getLogger(__name__)
 
+# Hard cap for any single hole's score (covers blow-ups like a 14). Shared by
+# the player entry template, the admin edit route, and the server-side
+# validation below -- one number, one place.
+MAX_SCORE = 20
+
 _REGISTRY_COLUMNS = ["Token", "TEGNum", "Round", "CreatedAt", "Status"]
 _STAGING_COLUMNS = [
     "Hole", "Pl", "Score", "DeviceId", "DeviceName", "Seq",
@@ -87,6 +92,20 @@ class ConflictsUnresolvedError(LiveRoundError):
 
 class RoundParsNotConfirmedError(LiveRoundError):
     pass
+
+
+class InvalidScoreCellError(LiveRoundError):
+    """One or more submitted cells failed server-side validation.
+
+    Carries every rejected cell (not just the first) so a batch write --
+    a whole voice-entry transcript, or a bulk admin grid save -- reports
+    everything wrong in one round trip. `errors` is a list of
+    {"hole", "player", "value", "errors": [str, ...]}.
+    """
+
+    def __init__(self, errors: list[dict]):
+        self.errors = errors
+        super().__init__(f"{len(errors)} invalid score cell(s): {errors}")
 
 
 def _staging_path(token: str) -> str:
@@ -145,6 +164,54 @@ def _get_registry_row(token: str) -> dict | None:
 
 def generate_token() -> str:
     return secrets.token_urlsafe(8)
+
+
+def _validate_cells(cells: list[dict], teg_num: int) -> None:
+    """Reject cells that would corrupt the permanent record if written.
+
+    Checked, per cell: hole in 1-18, value is None (clears the cell) or an
+    int in 1-MAX_SCORE, and player is on this TEG's *playing* roster --
+    without this, a stray hole=42 gives a player a 19th row and
+    finalize_live_round's ``len(x) == 18`` completeness filter silently
+    drops their whole round, and an unrecognised player code creates an
+    orphan staging row that never finalizes. Raises InvalidScoreCellError
+    listing every invalid cell rather than dropping them one at a time.
+    """
+    from teg_analysis.analysis.teg_setup import get_teg_roster_form
+
+    roster = get_teg_roster_form(teg_num)
+    valid_players = {p["code"] for p in roster["players"] if p["playing"]}
+
+    errors = []
+    for cell in cells:
+        hole = cell.get("hole")
+        player = cell.get("player")
+        value = cell.get("value")
+        cell_errors = []
+
+        try:
+            hole_ok = 1 <= int(hole) <= 18
+        except (TypeError, ValueError):
+            hole_ok = False
+        if not hole_ok:
+            cell_errors.append(f"hole must be 1-18, got {hole!r}")
+
+        if value is not None:
+            try:
+                value_ok = 1 <= int(value) <= MAX_SCORE
+            except (TypeError, ValueError):
+                value_ok = False
+            if not value_ok:
+                cell_errors.append(f"value must be 1-{MAX_SCORE} or null, got {value!r}")
+
+        if player not in valid_players:
+            cell_errors.append(f"player {player!r} is not on TEG {teg_num}'s playing roster")
+
+        if cell_errors:
+            errors.append({"hole": hole, "player": player, "value": value, "errors": cell_errors})
+
+    if errors:
+        raise InvalidScoreCellError(errors)
 
 
 # ---------------------------------------------------------------------------
@@ -306,6 +373,8 @@ def apply_admin_edits(token: str, cells: list[dict], resolved_by: str) -> dict:
         reg = _get_registry_row(token)
         if reg is None:
             raise LiveRoundNotFoundError(token)
+
+        _validate_cells(cells, int(reg["TEGNum"]))
 
         staging = _read_staging(token)
         next_seq = int(staging["Seq"].max()) + 1 if not staging.empty else 1
@@ -545,6 +614,8 @@ def apply_score_writes(token: str, device_id: str, device_name: str, cells: list
             raise LiveRoundNotFoundError(token)
         if reg["Status"] != "active":
             raise LiveRoundInactiveError(f"Live round {token} is {reg['Status']}, not active.")
+
+        _validate_cells(cells, int(reg["TEGNum"]))
 
         staging = _read_staging(token)
         next_seq = int(staging["Seq"].max()) + 1 if not staging.empty else 1

@@ -268,7 +268,7 @@ const PLAYERS = DATA.players;
 const PLAYER_NAMES = DATA.player_names;
 const PARS = DATA.holes.map(h => h.par);
 const SIS = DATA.holes.map(h => h.si);
-const MAX_SCORE = 20; // hard cap for any single hole (covers blow-ups like a 14)
+const MAX_SCORE = {{ max_score }}; // hard cap for any single hole, from the server (teg_analysis.analysis.live_round.MAX_SCORE)
 
 let scores = {};      // key "hole-player" -> number | null
 let conflicts = {};   // key "hole-player" -> bool, from the server only

@@ -95,7 +95,11 @@ async def admin_live_round_review(request: Request, token: str):
 
     from teg_analysis.analysis.live_round import get_live_round_context, get_scores_since
 
-    ctx = {"request": request, "token": token, "saved": request.query_params.get("saved")}
+    ctx = {
+        "request": request, "token": token,
+        "saved": request.query_params.get("saved"),
+        "error": request.query_params.get("error"),
+    }
     try:
         live_ctx = get_live_round_context(token)
         if live_ctx is None:
@@ -137,7 +141,9 @@ async def admin_live_round_edit(request: Request, token: str):
     if not is_authed(request):
         return _redirect("/admin/login")
 
-    from teg_analysis.analysis.live_round import apply_admin_edits, LiveRoundNotFoundError
+    from teg_analysis.analysis.live_round import (
+        apply_admin_edits, LiveRoundNotFoundError, InvalidScoreCellError, MAX_SCORE,
+    )
 
     form = await request.form()
     cells = []
@@ -157,15 +163,20 @@ async def admin_live_round_edit(request: Request, token: str):
                 value = int(raw)
             except ValueError:
                 continue
-            if value < 1 or value > 20:
+            if value < 1 or value > MAX_SCORE:
                 continue  # ignore out-of-range typos rather than write them
         cells.append({"hole": hole, "player": player, "value": value})
+
+    from urllib.parse import quote
 
     try:
         result = apply_admin_edits(token, cells, resolved_by="Admin")
         written = result["written"]
     except LiveRoundNotFoundError:
         return _redirect(f"/admin/live-round/{token}/review")
+    except InvalidScoreCellError as e:
+        logger.warning(f"Live round admin edit rejected invalid cells: {e.errors}")
+        return _redirect(f"/admin/live-round/{token}/review?error={quote(str(e))}")
 
     return _redirect(f"/admin/live-round/{token}/review?saved={written}")
 
