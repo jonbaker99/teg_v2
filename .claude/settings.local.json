@@ -76,6 +76,8 @@
       "Bash(git commit -m 'Update local permission allowlist \\(auto-appended by commit approval\\) *)",
       "Bash(git commit *)",
       "Bash(git commit -q -m 'Update local permission allowlist \\(auto-appended by commit approval\\) *)"
+      "Bash(git commit -m 'Fix dark mode white bands from body.page-bg !important override *)",
+      "Bash(git commit *)"
     ],
     "deny": [],
     "ask": [

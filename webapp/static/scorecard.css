@@ -724,7 +724,13 @@ html[data-mode="dark"] .bw-bar--worst .bw-bar-val { color: #c9c9c9; }
 .scorecard-table-portrait {
   border-collapse: separate;
   border-spacing: 0;
-  width: 100%;
+  /* Fixed layout + no table-level width: column widths come from the
+     explicit widths below (hole/par pinned columns + score columns capped
+     just past the shape size) instead of stretching to fill the viewport.
+     A table narrower than its .sc-scroll wrapper centers via margin auto;
+     a wider one (many rounds/players) still scrolls exactly as before. */
+  table-layout: fixed;
+  margin: 0 auto;
   font-family: 'Roboto Mono', monospace;
   font-size: var(--font-size-base);
 }
@@ -767,6 +773,17 @@ html[data-mode="dark"] .bw-bar--worst .bw-bar-val { color: #c9c9c9; }
 }
 .scorecard-table-portrait thead .par-header { background-color: var(--color-background); }
 .scorecard-table-portrait .hole-label { font-weight: bold; color: var(--color-text); }
+/* Score columns (Gross/Stableford, or one per round/player): capped to just
+   past the score shape's own size (~15% wider) so they sit snugly around the
+   circle/square instead of stretching to fill leftover table width. Width is
+   set on the header cell — table-layout:fixed takes column widths from the
+   first row — and mirrored onto the body cells for robustness. */
+.scorecard-table-portrait .col-header,
+.scorecard-table-portrait td.score-cell,
+.scorecard-table-portrait td.totals:not(.par-cell) {
+  width: calc(var(--shape-size) * 1.15);
+  max-width: calc(var(--shape-size) * 1.15);
+}
 /* Subtotal rows (OUT / IN / TOTAL) */
 .scorecard-table-portrait .totals-row td,
 .scorecard-table-portrait .totals { background-color: var(--color-background); font-weight: bold; }
@@ -823,18 +840,24 @@ html[data-mode="dark"] .scorecard-table-portrait {
   --color-text: #ececea;
   --color-text-secondary: #9a9a90;
   --color-text-inverse: #0e0e0c;
+  /* Eagle unchanged. Birdie: white circle (was a near-invisible transparent
+     red on black) with the same red outline/font as light mode. Over-par
+     (bogey/double-bogey/triple-bogey+) swapped from the light mode's
+     grey→black progression to a dark-appropriate blue progression of the
+     same shape (muted → saturated → brightest), since grey/black read as
+     black-on-black against the dark background. */
   --color-eagle: #e23a40;
-  --color-birdie: #3a201f;
+  --color-birdie: #ffffff;
   --color-par: #1d1d1a;
-  --color-bogey: #33322b;
-  --color-double-bogey: #55554a;
-  --color-triple-bogey: #d8d6cb;
+  --color-bogey: #234668;
+  --color-double-bogey: #2f6db3;
+  --color-triple-bogey: #4da3ff;
   --color-text-eagle: #ffffff;
-  --color-text-birdie: #f08a8d;
+  --color-text-birdie: #dc1a21;
   --color-text-par: #ececea;
-  --color-text-bogey: #ececea;
-  --color-text-double-bogey: #ececea;
-  --color-text-triple-bogey: #15140f;
+  --color-text-bogey: #dbe9fb;
+  --color-text-double-bogey: #ffffff;
+  --color-text-triple-bogey: #0d1b2a;
   --boxshadow-eagle: 0 0 0 1px #1d1d1a, 0 0 0 2px var(--color-eagle);
   --color-stableford-0: #1d1d1a;
   --color-stableford-1: #1d1d1a;

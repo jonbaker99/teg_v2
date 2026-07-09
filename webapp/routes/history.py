@@ -501,7 +501,7 @@ def _build_race_figure_json(tab: str, variant: str, net_measure: str, teg_name: 
         return None
 
 
-def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "standard") -> dict:
+def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjusted") -> dict:
     """Build context for full results page."""
     try:
         if tab == "scorecards":
@@ -645,7 +645,7 @@ async def results_page(request: Request):
 
 @router.get("/results/table")
 async def results_table(request: Request, teg: int = Query(...), tab: str = Query("net"),
-                        chart_variant: str = Query("standard")):
+                        chart_variant: str = Query("adjusted")):
     ctx = _results_context(teg, tab, chart_variant)
     return templates.TemplateResponse("partials/results_table.html", {
         "request": request,

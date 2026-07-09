@@ -95,23 +95,40 @@ scoped under `@media (max-width: 640px)` (desktop/iPad untouched): holes-as-rows
 layout for `.scorecard-table-portrait`, pinned `Hole`+`PAR` columns + horizontal
 scroll for the wide views, and the pure-CSS **Gross/Stableford metric toggle**
 (`.sc-metric-toggle`). Reuses the existing `.score-cell` shape tokens.
+Score columns use `table-layout: fixed` with an explicit width (~15% wider
+than `--shape-size`, i.e. just past the circle/square) instead of `width:
+100%` on the table — otherwise `table-layout: auto` stretched them to fill
+whatever space was left, especially on narrow views (single round, few
+rounds/players). A table narrower than its `.sc-scroll` wrapper now centers
+via `margin: 0 auto`; wide tables (many rounds/players) still overflow into
+horizontal scroll exactly as before.
 
-**Step 4 — Dark-mode tokens** ✅ **DONE (inert).** A `html[data-mode="dark"]`
-override block re-points the scorecard colour variables for dark. It has **no
-effect until** the app-wide dark-mode foundation sets `data-mode="dark"` on
-`<html>` (a separate piece — MOBILE_PLAN §4.2), so the current light render is
-byte-identical on every device. Stableford stays on the **amber** scale (see §6).
+**Step 4 — Dark-mode tokens** ✅ **DONE and live** (the app-wide `data-mode`
+toggle shipped — see CLAUDE.md "Current state"). A `html[data-mode="dark"]`
+override block re-points the scorecard colour variables for dark. Over-par
+cells (bogey/double-bogey/triple-bogey+) use a blue shade progression
+(`#234668` → `#2f6db3` → `#4da3ff`, mirroring light mode's grey→black
+intensity ramp) instead of light mode's grey/black, which read as
+black-on-black against the dark background. Birdie is a solid white circle
+(`--color-birdie: #ffffff`) with the same red outline/font as light mode
+(`--color-text-birdie: #dc1a21`), replacing the previous dark, low-contrast
+reddish fill. Eagle is unchanged. Stableford stays on the **amber** scale
+(see §6). Verified in-browser (Chromium, phone viewport, light + dark, single
+round / whole TEG / field views).
 
-**Step 5 — Webapp wiring** ✅ **DONE (needs in-browser verification).**
+**Step 5 — Webapp wiring** ✅ **DONE, verified in-browser.**
 `routes/scorecard.py` builds the portrait HTML alongside landscape for all three
 views; `partials/scorecard_content.html` renders both, wrapped in `.sc-landscape`
 / `.sc-portrait`, and the CSS shows the right one by breakpoint. *Static checks
-pass (py_compile, Jinja parse, CSS-comment guard); not yet rendered in a browser
-— no app deps/browser in this container.*
+pass (py_compile, Jinja parse, CSS-comment guard); rendered and screenshotted
+in Chromium (single round / whole TEG / field views, light + dark, phone
+viewport).*
 
 **Step 6 — Tests, parity, a11y.** Builder parity tests ✅ done
-(`tests/test_scorecards_portrait.py`). Still to do: dark contrast check (AA) once
-dark mode is activatable; keyboard/scroll behaviour for the field table.
+(`tests/test_scorecards_portrait.py`). Dark contrast spot-checked visually
+(blue over-par shades + white/red birdie clearly readable against the dark
+background). Still to do: formal AA contrast check; keyboard/scroll behaviour
+for the field table.
 
 **Step 7 — Docs.** ✅ `teg_analysis/README.md`, `webapp/README.md`, and the
 MOBILE_PLAN §6 cross-link updated. `streamlit/` untouched.
@@ -141,10 +158,8 @@ A-vs-B look-and-feel conversation ends up.
 4. **Default on mobile:** **portrait is the default** under 640px, landscape
    above it.
 
-> **Still outstanding (separate piece):** dark mode only *activates* once the
-> app-wide dark-mode foundation adds the `data-mode` toggle on `<html>`
-> (MOBILE_PLAN §4.2). The scorecard's dark tokens are already in place and inert
-> until then. And the wired webapp views need a real in-browser pass.
+> **Resolved:** dark mode is live (app-wide `data-mode` toggle shipped), and the
+> wired webapp views have had a real in-browser pass (§Step 5/6 above).
 
 ## 7. Model-tier guide (per CLAUDE.md)
 
