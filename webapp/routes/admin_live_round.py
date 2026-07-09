@@ -114,6 +114,10 @@ async def admin_live_round_review(request: Request, token: str):
                 grid[f"{c['hole']}-{c['player']}"] = {"value": c["value"], "conflict": c["conflict"]}
             ctx["progress"] = progress
             ctx["grid"] = grid
+            # Check if TEG roster is confirmed (needed for accurate net/Stableford scoring)
+            from teg_analysis.analysis.teg_setup import get_teg_roster_form
+            roster = get_teg_roster_form(int(live_ctx["teg_num"]))
+            ctx["roster_confirmed"] = roster["source"] == "confirmed"
     except Exception as e:  # noqa: BLE001
         logger.error(f"Live round review failed: {e}", exc_info=True)
         ctx["error"] = f"Could not load review: {e}"

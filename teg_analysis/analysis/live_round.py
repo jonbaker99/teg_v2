@@ -230,6 +230,7 @@ def finalize_live_round(token: str) -> dict:
     """
     from teg_analysis.io import read_file
     from teg_analysis.analysis.data_update import execute_data_update
+    from teg_analysis.constants import HANDICAPS_CSV
 
     with _lock:
         reg = _get_registry_row(token)
@@ -247,6 +248,16 @@ def finalize_live_round(token: str) -> dict:
             )
 
         teg_num, round_num = int(reg["TEGNum"]), int(reg["Round"])
+
+        # Verify TEG roster is confirmed (has a handicaps.csv row).
+        # Silent HC=0 is data-integrity poison: net/Stableford scores would be wrong.
+        handicaps_raw = read_file(HANDICAPS_CSV)
+        teg_str = f"TEG {teg_num}"
+        if not (handicaps_raw["TEG"] == teg_str).any():
+            raise ValueError(
+                f"TEG {teg_num} roster not confirmed. Visit TEG setup to confirm "
+                f"who's playing and their handicaps before finalizing scores."
+            )
 
         pars = read_file(ROUND_PARS_CSV)
         pars = pars[(pars["TEGNum"] == teg_num) & (pars["Round"] == round_num)][["Hole", "Par", "SI"]]
