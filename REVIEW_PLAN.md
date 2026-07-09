@@ -19,10 +19,13 @@ Work is batched into **chats** (sessions), each sized to one coherent scope. Run
 order — later chats assume earlier ones have landed. For each chat:
 
 1. Start the chat on the model tier listed (per CLAUDE.md Model Selection).
-2. Paste the chat's **scope block** below as the kickoff prompt.
+2. Paste the chat's **starter prompt** (in the ```text block under each chat) as the
+   kickoff message. Prompts are self-contained: they tell the fresh session to read this
+   file for full context.
 3. On completion, tick the checkboxes here, update the "Current state" section of
    CLAUDE.md if the change is architectural, and run the **review gate** (below).
-4. Chats marked ⚠️ **owner decision** need an answer from Jon before starting.
+4. Chats marked ⚠️ **owner decision** need an answer from Jon before starting —
+   fill the answers into the prompt where marked `<<...>>`.
 
 **Review gate (end of every Sonnet/Haiku chat, and Chat 8 in full):** on Opus —
 re-read every changed file end-to-end; grep for old function names to catch orphaned
@@ -98,6 +101,26 @@ Each chat = one session, one coherent scope, sized to stay reviewable. Order mat
 *Why together*: both are test-infrastructure fixes; tiny; everything else depends on a
 trustworthy green suite.
 
+**Starter prompt:**
+```text
+Read REVIEW_PLAN.md (Chat 1) for full context, then fix the test suite — code changes to
+tests only, no product code:
+
+1. T1: tests/test_live_round.py has 2 failures (test_finalize_refuses_when_not_active,
+   test_finalize_only_includes_complete_18_hole_rounds) because finalize_live_round now
+   reads data/handicaps.csv (roster-confirmation guard at
+   teg_analysis/analysis/live_round.py:254) and the fake-file fixtures don't seed it.
+   Seed a handicaps row for the TEGs those tests use, and add one new test asserting
+   finalize raises ValueError when the TEG has no handicaps row.
+2. T3: tests/test_no_streamlit_imports.py returns True/False so pytest always passes it.
+   Convert to `assert not imports, <formatted list>` while keeping the
+   `python tests/test_no_streamlit_imports.py` script mode working.
+
+Done when: `pytest tests/ -v` is green except the known env-only altair import test.
+Then tick the Chat 1 boxes in REVIEW_PLAN.md, commit, and note anything left for the
+Opus review gate.
+```
+
 ### Chat 2 — Live-round server-side validation *(Sonnet)*
 - [ ] **W1**: Add `MAX_SCORE = 20` (+ hole 1–18, player-in-roster checks) inside
       `apply_score_writes` and `apply_admin_edits`; make the admin route and the entry
@@ -110,6 +133,30 @@ trustworthy green suite.
 
 *Why alone*: highest user-facing data-integrity risk; touches the API contract, so keep
 the diff focused and well-tested.
+
+**Starter prompt:**
+```text
+Read REVIEW_PLAN.md (finding W1 / Chat 2) for full context, then add server-side
+validation to live-round score writes. Today the 1-20 cap exists only in template JS
+(webapp/templates/live_round_entry.html, `const MAX_SCORE = 20`) and is separately
+hardcoded in webapp/routes/admin_live_round.py:161; apply_score_writes and
+apply_admin_edits in teg_analysis/analysis/live_round.py accept anything.
+
+1. Define MAX_SCORE = 20 once in teg_analysis/analysis/live_round.py.
+2. In apply_score_writes and apply_admin_edits, reject cells with hole outside 1-18,
+   value outside 1-MAX_SCORE (None stays valid = clear), or player not in the TEG's
+   playing roster (get_teg_roster_form). Reject loudly (raise or return a per-cell
+   error list the API surfaces as 422) — do NOT silently drop cells.
+3. Make admin_live_round.py and the entry template consume the same constant (pass it
+   into the template context instead of the JS literal).
+4. Tests in tests/test_live_round*.py for each rejection case, plus one asserting a
+   valid batch still writes.
+
+Watch out: a stray out-of-range hole row currently makes a player's card 19 rows, so
+finalize's 18-row filter silently drops their whole round — add a test proving that can
+no longer happen. Done when pytest is green. Tick the Chat 2 boxes in REVIEW_PLAN.md,
+commit, and flag anything for the Opus review gate.
+```
 
 ### Chat 3 — Data-pipeline hygiene: no silent failures *(Opus)*
 - [ ] **T2**: Make the `update_*_cache` functions raise (or return typed error markers);
@@ -129,6 +176,35 @@ the diff focused and well-tested.
 *Why together*: all three live in `pipeline.py`/`data_update.py`/`core`; one coherent
 "the update pipeline fails loudly and has one copy of the math" change.
 
+**Starter prompt:**
+```text
+Read REVIEW_PLAN.md (findings T2, T7, T4 / Chat 3) for full context. Goal: the data
+update pipeline fails loudly and has one copy of the scoring math.
+
+1. T2 (the important one): update_streaks_cache / update_commentary_caches /
+   update_bestball_cache in teg_analysis/analysis/pipeline.py catch every exception and
+   return None; execute_data_update / execute_data_deletion in
+   teg_analysis/analysis/data_update.py treat None as benign and report success — so an
+   add can commit new all-scores while derived caches stay silently stale. Make the
+   update_* functions raise (or return a typed error), have the orchestrators collect
+   failures into a `cache_errors` field on the result dict (the primary write should
+   still land — partial success is better than losing the round), and render a warning
+   banner in webapp/templates/partials/admin_update_result.html and
+   admin_live_round_finalize_result.html when cache_errors is non-empty. Tests: mock one
+   update_* to fail, assert cache_errors is populated and records_added still correct.
+2. T7: delete the _get_deps()/locals() hack in pipeline.py (plain deferred imports),
+   and load all_data once in each orchestrator, passing it into the update_* functions
+   instead of each reloading it.
+3. T4: process_round_for_all_scores exists in both core/data_loader.py:167 (mutates its
+   input, no internal callers) and analysis/data_update.py:103 (the good copy). Keep the
+   data_update one, re-export it from core.data_loader and core/__init__.py for
+   compatibility, delete the duplicate body. Grep all callers (incl. tests and
+   ad_hoc_analysis) first.
+
+Don't touch streamlit/. Done when pytest is green and a simulated cache failure shows
+the warning banner. Tick the Chat 3 boxes in REVIEW_PLAN.md and commit.
+```
+
 ### Chat 4 — Event-loop blocking *(Opus)*
 - [ ] **W2**: Convert route handlers to sync `def` (FastAPI threadpools them) or wrap
       heavy calls in `run_in_threadpool`; verify HTMX behaviour unchanged.
@@ -141,6 +217,34 @@ the diff focused and well-tested.
 
 *Why alone*: cross-cutting concurrency change; needs Opus-level care and its own
 verification pass.
+
+**Starter prompt:**
+```text
+Read REVIEW_PLAN.md (findings W2, T8 / Chat 4) for full context. Every webapp route is
+`async def` but does blocking sync work (pandas recompute, volume/CSV reads, and — in
+admin_live_round_finalize — a GitHub commit), so it all runs on the event loop and one
+slow request stalls every other request. This bites hardest during live rounds: phones
+poll /api/live-round/{token}/scores every few seconds while finalize blocks for seconds.
+
+1. W2: Convert route handlers across webapp/routes/*.py from `async def` to plain `def`
+   so FastAPI runs them in its threadpool. Keep `async def` only where a handler
+   genuinely awaits (e.g. `await request.form()` — for those, either keep async and wrap
+   the heavy sync call in `starlette.concurrency.run_in_threadpool`, or read the form
+   differently). Confirm HTMX behaviour and response types are unchanged.
+2. T8 (partial): In teg_analysis/analysis/live_round.py, finalize_live_round holds the
+   module-wide `_lock` through execute_data_update (network I/O to GitHub), blocking all
+   live-round writes for every token. Restructure so the lock covers only the
+   staging/registry read-validate phase and the final status flip, not the GitHub
+   commit — think through what happens if a write arrives mid-finalize and document the
+   chosen ordering in the docstring.
+3. Verify: `pytest tests/ -v` green, then run the app locally and poll the scores API
+   in a loop while triggering a (mocked-slow) finalize — polls must keep responding.
+
+Threading note: the in-process lru_caches in webapp/deps.py will now be hit from
+threadpool workers — confirm that's safe (lru_cache is thread-safe; check anything else
+with shared mutable state, e.g. register_cache_clearer). Tick the Chat 4 boxes in
+REVIEW_PLAN.md and commit.
+```
 
 ### Chat 5 — webapp dedup + caching batch *(Sonnet)*
 - [ ] **W3**: One shared escaping `df_to_html` (new `webapp/tables.py`); delete the 7
@@ -159,6 +263,40 @@ verification pass.
 *Why together*: these interlock (the same route files are touched by W3/W4/W5/W7);
 doing them in one chat avoids repeated conflicts across sessions.
 
+**Starter prompt:**
+```text
+Read REVIEW_PLAN.md (findings W3, W4, W5, W6, W7, W9 / Chat 5) for full context. One
+batch because these all touch the same webapp route files.
+
+1. W3: _df_to_html is copy-pasted 7x (scoring.py:49, latest.py:65, history.py:95,
+   performance.py:25, eclectic.py:30, scorecards.py:20, and player.py's
+   _build_simple_table_html which is the only one that escapes). Create one shared
+   helper (new webapp/tables.py) that escapes every cell via markupsafe and supports the
+   variants the copies need (table class, first-col alignment, per-cell classes, player
+   links). Delete the copies. Where a caller deliberately passes pre-built HTML
+   fragments, give the helper an explicit raw/markup opt-in rather than dropping
+   escaping silently.
+2. W4: every `except Exception as e: return {"error": str(e)}` context builder in
+   scoring.py, latest.py, history.py, performance.py, eclectic.py gets a
+   logger.exception(...) before returning (keep the user-facing message).
+3. W5+W7: add deps.cached_winners() and deps.cached_streaks_data() (lru_cache, cleared
+   by clear_all_data_caches). Point /honours (history.py:307), /latest-* streak/record
+   tabs (latest.py:378,428,587,602) and /scoring/streaks (scoring.py:158) at them.
+   Retire player.py's private _get_winners_data lru cache in favour of the deps one.
+4. W6: in webapp/routes/player.py — compute _metric_specs once per request and share it
+   between _build_overview_metrics and _build_trophy_section; replace the
+   build_streaks(all_data) call at ~line 1049 with the cached streaks data; delete the
+   unused `theme` parameters.
+5. W9: one helper for parsing "TEG N" labels (replaces the ad-hoc parses at
+   latest.py:449 and scoring.py:164); name the hardcoded fallback TEG 18 in
+   deps.get_default_teg_num as a constant.
+
+Behaviour must be unchanged page-for-page (only new escaping of genuinely dangerous
+characters). pytest green. Tick the Chat 5 boxes in REVIEW_PLAN.md, commit, and hand to
+the Opus review gate — this is the biggest diff of the plan, so list the files touched
+for the reviewer.
+```
+
 ### Chat 6 — `aggregate_data` fixed schema *(Opus)*
 - [ ] **T5**: Replace `list_fields_by_aggregation_level` dynamic discovery with a fixed
       level→columns map; make grouping/sort order deterministic. **Output must be
@@ -169,6 +307,34 @@ doing them in one chat avoids repeated conflicts across sessions.
 *Why alone*: every page sits downstream of this function; regression surface is the
 whole site.
 
+**Starter prompt:**
+```text
+Read REVIEW_PLAN.md (finding T5 / Chat 6) for full context. aggregate_data in
+teg_analysis/analysis/aggregation.py calls list_fields_by_aggregation_level on every
+invocation — a groupby().nunique() over every column at up to 4 levels — to rediscover
+a schema that is fixed in practice, and `list(set(group_columns))` (line 126) makes
+column and sort order nondeterministic.
+
+1. FIRST, snapshot current outputs: call get_complete_teg_data, get_round_data,
+   get_9_data, get_Pl_data and aggregate_data(all_data, 'TEG', measures=['GrossVP'])
+   against the repo's real data/ files and save the frames (columns, dtypes, sorted
+   values) to the scratchpad.
+2. Replace the dynamic discovery with an explicit level -> group-columns map that
+   reproduces exactly what discovery finds today (derive it from the snapshot). Keep
+   list_fields_by_aggregation_level available if anything else imports it, but
+   aggregate_data must not call it per-invocation. Preserve a deterministic, documented
+   column order (no set()).
+3. Handle additional_group_fields and the missing-columns ValueError exactly as before.
+4. AFTER, regenerate the same outputs and diff against the snapshots —
+   they must be identical (column order may only change if you deliberately fix the
+   set() nondeterminism; if so, say so and check no caller depends on position, e.g.
+   iloc users in webapp routes and display formatters).
+5. Add a unit test pinning the group columns per level on a small fixture.
+
+pytest green + snapshot diff clean before committing. Tick the Chat 6 box in
+REVIEW_PLAN.md.
+```
+
 ### Chat 7 — Owner-decision items + docs *(Haiku — after answers)* ⚠️
 - [ ] **W8**: Delete or admin-gate the prototype routers per decision.
 - [ ] **T6**: Align the Stableford gate to `get_net_competition_measure` **or** name the
@@ -176,6 +342,32 @@ whole site.
 - [ ] **T11**: Resolve the CLAUDE.md ↔ `DATA_STORAGE_INGESTION_PLAN.md` contradiction
       per decision; consolidate `reporting/reporting-to-do.md` into `reporting/STATUS.md`.
 - [ ] Review gate (Opus).
+
+**Starter prompt** (fill in the `<<answers>>` from the owner-decisions section first):
+```text
+Read REVIEW_PLAN.md (findings W8, T6, T11 / Chat 7) for full context. Jon has decided:
+- Prototype routes (charts_proto, width_test, title_preview, showcase, smoke_test,
+  placeholder): <<delete these: ... / admin-gate these: ... / keep these: ...>>
+- Stableford >= 6 gate in aggregation.py comeback functions: <<intentional — name the
+  constant and comment why / bug — align to get_net_competition_measure (TEG 8+)>>
+- DATA_STORAGE_INGESTION_PLAN.md: <<keep — fix the CLAUDE.md sentence saying it was
+  deleted / delete — fold the still-referenced content into webapp/README.md and
+  live_round.py docstrings first>>
+
+Apply exactly those decisions:
+1. W8: update webapp/app.py imports/includes and delete or gate the route files per the
+   decision (admin-gating = is_authed redirect like admin.py). Update webapp/README.md
+   if it mentions any removed page.
+2. T6: implement the Stableford-gate decision at aggregation.py:433,500,605,740 (one
+   named constant, four uses).
+3. T11: implement the docs decision, and consolidate
+   teg_analysis/reporting/reporting-to-do.md into reporting/STATUS.md (STATUS.md is the
+   single to-do list for that area — update the TODOS.md link too).
+
+Docs rule: no content duplicated in two files; update the folder guide in README.md if
+any file is added/removed. pytest green. Tick the Chat 7 boxes in REVIEW_PLAN.md,
+commit, then hand to the Opus review gate.
+```
 
 ### Chat 8 — Test back-fill *(Sonnet)*
 - [ ] **W10**: Webapp smoke tests — TestClient GET for every `NAV_SECTIONS` page,
@@ -189,6 +381,37 @@ whole site.
 
 *Why last among code chats*: tests should lock in post-fix behaviour, not pre-fix.
 
+**Starter prompt:**
+```text
+Read REVIEW_PLAN.md (findings W10, T10 / Chat 8) for full context. Back-fill tests for
+the areas the review found uncovered. Tests only — if you find a product bug while
+writing them, report it, don't fix it in this batch.
+
+1. W10 — webapp smoke tests (new tests/test_webapp_pages.py), using
+   fastapi.testclient.TestClient against the repo's real data/ files (pattern:
+   tests/test_admin_routes.py):
+   - GET every page URL in webapp/nav.py NAV_SECTIONS -> assert 200 and that the body
+     does not contain the error-context marker the templates render.
+   - GET /player and /player/{code} for one real code, plus all four
+     /player/{code}/tab/{tab} partials.
+   - GET /latest-round and /latest-teg pages plus each tab partial with default params.
+   - GET /results and /honours plus one tab each.
+2. T10 — teg_analysis units:
+   - tests/test_comebacks.py: the four functions in analysis/aggregation.py
+     (calculate_final_round_differentials, calculate_biggest_leads_lost_after_r3,
+     calculate_biggest_leads_lost_in_r4, calculate_biggest_comebacks) on a small
+     hand-built fixture with a known blown lead and a known comeback; assert the ranked
+     rows for both GrossVP and Stableford.
+   - tests/test_reporting_core.py: pure stages of teg_analysis/reporting only — no
+     ANTHROPIC_API_KEY, no network, mock nothing that would call llm.py. Cover at least
+     event/beat scoring in events.py and the markdown/CSS-class rendering in render.py
+     on minimal inputs.
+3. Keep total runtime reasonable (<~1 min added); session-scope any expensive fixture.
+
+pytest green. Tick the Chat 8 boxes in REVIEW_PLAN.md, commit, then the Opus review
+gate.
+```
+
 ### Chat 9 — Final review pass *(Opus)*
 - [ ] Re-read every file changed across Chats 1–8; grep old names for orphaned callers.
 - [ ] `pytest tests/ -v` (the T3 fix means the streamlit-import guard now actually
@@ -196,6 +419,32 @@ whole site.
 - [ ] Confirm `streamlit/` untouched across the whole effort.
 - [ ] Fold anything of lasting value from this file into the relevant READMEs /
       CLAUDE.md "Current state", then **delete `REVIEW_PLAN.md`**.
+
+**Starter prompt:**
+```text
+Read REVIEW_PLAN.md end-to-end — this is Chat 9, the closing Opus review pass for the
+whole remediation effort (Chats 1-8 should all be ticked; stop and say so if any
+aren't).
+
+1. List every file changed since the review baseline (git diff --stat against the
+   commit that added REVIEW_PLAN.md) and read each changed file end-to-end.
+2. Grep for the names retired during the effort (per-route _df_to_html,
+   _build_simple_table_html, _get_winners_data, _get_deps, the duplicated
+   process_round_for_all_scores body, list_fields_by_aggregation_level call sites) —
+   no orphaned callers, no dead leftovers.
+3. Confirm nothing under streamlit/ changed at any point.
+4. Run pytest tests/ -v (the streamlit-import guard is now a real assert) and
+   python scripts/check_pandas_compat.py — both must be clean (env-only altair failure
+   excepted).
+5. Spot-check the app: run uvicorn webapp.app:app, load a few pages including a player
+   profile and the live-round entry page.
+6. Update CLAUDE.md "Current state & next steps" with a short summary of the
+   remediation; remove the REVIEW_PLAN.md pointer from TODOS.md; fold anything of
+   lasting value from REVIEW_PLAN.md into the relevant README, then delete
+   REVIEW_PLAN.md (docs Rule 3 — temporary working doc).
+7. Fix directly anything small you find; flag anything structural back instead of
+   improvising. Commit.
+```
 
 ---
 
