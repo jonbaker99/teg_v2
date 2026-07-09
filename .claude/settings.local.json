@@ -71,7 +71,9 @@
       "Bash(git add *)",
       "Bash(git commit -m 'Mobile M1.4-M1.6 + M2.7: controls/tables sweep and leaderboard card reflow at <=640px *)",
       "Bash(git commit -m ' *)",
-      "Bash(git commit -q -m ' *)"
+      "Bash(git commit -q -m ' *)",
+      "Bash(git commit -m 'Add codebase review findings + batched execution plan \\(REVIEW_PLAN.md\\) *)",
+      "Bash(git commit -m 'Update local permission allowlist \\(auto-appended by commit approval\\) *)"
     ],
     "deny": [],
     "ask": [
