@@ -92,6 +92,7 @@ Reports verified: TEGs 8, 9, 10 (tournament + all rounds), TEG 11 (tournament + 
 - All tournament styled reports: final standings ✅, records block ✅ (uses `class="records"`, not `pbs-and-records`).
 
 ## Known issues / gotchas
+- [ ] **Fix remote commentary generation** — issue to be diagnosed and resolved.
 - **TEG 10 R3 arithmetic error**: "fourteen-point swing" should be "sixteen". Will fix on re-gen.
 - **The isolated `venv/` (Python 3.14) hits a jinja2/starlette template-cache bug** (`TypeError: cannot use 'tuple' as a dict key`) on every templated route. Visual webapp verification needs Python 3.12/3.13, or wait for a fixed jinja2/starlette release.
 - **MCP/CSS coupling between streamlit and webapp**: `teg_reports.css` is duplicated in `streamlit/styles/` and `webapp/static/`. Edits must be kept in sync (or, later, consolidated into a shared location). Streamlit is deferred but still wired.
