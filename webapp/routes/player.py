@@ -11,7 +11,7 @@ from fastapi import APIRouter, Request, HTTPException
 from fastapi.templating import Jinja2Templates
 from markupsafe import escape
 
-from teg_analysis.constants import PLAYER_DICT
+from teg_analysis.core.players import get_player_dict, get_name_to_code
 from teg_analysis.analysis.history import (
     get_teg_winners,
     get_eagles_data,
@@ -60,19 +60,16 @@ PLAYER_TABS = [
     ("records", "Records & Streaks"),
 ]
 
-# Reverse lookup: full name → player code
-_NAME_TO_CODE = {v: k for k, v in PLAYER_DICT.items()}
-
 
 def _get_player_list():
     """Return sorted list of (code, name) tuples."""
-    return sorted(PLAYER_DICT.items(), key=lambda x: x[1])
+    return sorted(get_player_dict().items(), key=lambda x: x[1])
 
 
 def _validate_player(player_code: str) -> str:
     """Validate player code and return it uppercased, or raise 404."""
     pc = player_code.upper()
-    if pc not in PLAYER_DICT:
+    if pc not in get_player_dict():
         raise HTTPException(status_code=404, detail=f"Unknown player code: {player_code}")
     return pc
 
@@ -122,7 +119,7 @@ def _metric_specs(all_data, rd_data, winners):
     ``ascending`` controls rank direction; ``unranked_if_zero`` suppresses the
     rank for honour/count metrics where the player has a zero tally.
     """
-    players = [n for n in PLAYER_DICT.values() if (all_data["Player"] == n).any()]
+    players = [n for n in get_player_dict().values() if (all_data["Player"] == n).any()]
     clean = winners.replace(r"\*", "", regex=True)
 
     tegs_played = all_data.groupby("Player")["TEGNum"].nunique()
@@ -177,7 +174,7 @@ def _build_overview_metrics(player_code: str) -> list[list[dict]]:
     Each card has value, label and cross-player rank. The Eagles and Holes in One
     cards also carry a ``tooltip`` listing where they were scored.
     """
-    name = PLAYER_DICT[player_code]
+    name = get_player_dict()[player_code]
     all_data = cached_load_all_data()
     rd_data = cached_round_data()
     winners = _get_winners_data()
@@ -214,7 +211,7 @@ def _build_trophy_section(player_code: str) -> dict:
     Rank is suppressed when the player has none of that honour. Doubles are
     reported separately as a footnote rather than as a standalone count.
     """
-    name = PLAYER_DICT[player_code]
+    name = get_player_dict()[player_code]
     all_data = cached_load_all_data()
     rd_data = cached_round_data()
     winners = _get_winners_data()
@@ -258,7 +255,7 @@ def _records_held(name: str) -> list[dict]:
     prepare_score_count_records_table (Most Birdies in a Round).
     """
     all_data = cached_load_all_data()
-    pl_code = _NAME_TO_CODE.get(name, "")
+    pl_code = get_name_to_code().get(name, "")
     records: list[dict] = []
 
     # Performance records — TEG / round / 9-hole
@@ -344,7 +341,7 @@ def _worsts_held(name: str) -> list[dict]:
     prepare_score_count_records_table (Most TBPs in a Round).
     """
     all_data = cached_load_all_data()
-    pl_code = _NAME_TO_CODE.get(name, "")
+    pl_code = get_name_to_code().get(name, "")
     worsts: list[dict] = []
 
     # Performance worsts — TEG / round / 9-hole
@@ -433,7 +430,7 @@ def _worsts_held(name: str) -> list[dict]:
 
 def _build_highlights(player_code: str) -> list[dict]:
     """Build 'colour' points: best/worst course, best round/TEG, records, eagles."""
-    name = PLAYER_DICT[player_code]
+    name = get_player_dict()[player_code]
     all_data = cached_load_all_data()
     rd_data = cached_round_data()
     ranked_teg = cached_ranked_teg_data()
@@ -476,7 +473,7 @@ def _build_highlights(player_code: str) -> list[dict]:
 
 def _build_subtitle(player_code: str) -> str:
     """Build subtitle like 'First: TEG N (YYYY) · Latest: TEG N (YYYY)'."""
-    name = PLAYER_DICT[player_code]
+    name = get_player_dict()[player_code]
     all_data = cached_load_all_data()
     player_data = all_data[all_data['Player'] == name]
 
@@ -694,7 +691,7 @@ def _trend_fig(x, y, yaxis_title, avg_fmt, bar_color, bar_labels=None) -> str:
 
 def _build_overview_context(player_code: str, theme: str) -> dict:
     """Build context for the overview tab."""
-    name = PLAYER_DICT[player_code]
+    name = get_player_dict()[player_code]
 
     ranked_teg = cached_ranked_teg_data()
     player_teg = ranked_teg[ranked_teg['Player'] == name].copy()
@@ -782,8 +779,8 @@ def _build_overview_context(player_code: str, theme: str) -> dict:
         "chart_gross_json": chart_gross_json,
         "chart_stab_json": chart_stab_json,
         "highlights": _build_highlights(player_code),
-        "records_held": _records_held(PLAYER_DICT[player_code]),
-        "worsts_held": _worsts_held(PLAYER_DICT[player_code]),
+        "records_held": _records_held(get_player_dict()[player_code]),
+        "worsts_held": _worsts_held(get_player_dict()[player_code]),
         "metrics": _build_overview_metrics(player_code),
         "trophy": _build_trophy_section(player_code),
     }
@@ -796,7 +793,7 @@ def _build_overview_context(player_code: str, theme: str) -> dict:
 def _build_rounds_chart(player_code: str) -> str | None:
     """Bar chart of gross vs par for every round, coloured by score and grouped
     by TEG (a small gap separates TEGs; rounds within a TEG sit flush)."""
-    name = PLAYER_DICT[player_code]
+    name = get_player_dict()[player_code]
     rd_data = cached_round_data()
     player_rd = rd_data[rd_data['Player'] == name].sort_values(['TEGNum', 'Round'])
     if player_rd.empty:
@@ -848,7 +845,7 @@ def _build_rounds_chart(player_code: str) -> str | None:
 
 def _build_rounds_context(player_code: str) -> dict:
     """Build context for the rounds tab."""
-    name = PLAYER_DICT[player_code]
+    name = get_player_dict()[player_code]
 
     chart_json = _build_rounds_chart(player_code)
 
@@ -892,7 +889,7 @@ def _build_rounds_context(player_code: str) -> dict:
 
 def _build_scoring_context(player_code: str, theme: str) -> dict:
     """Build context for the scoring tab."""
-    name = PLAYER_DICT[player_code]
+    name = get_player_dict()[player_code]
     all_data = cached_load_all_data()
     player_data = all_data[all_data['Player'] == name]
 
@@ -964,7 +961,7 @@ def _build_scoring_context(player_code: str, theme: str) -> dict:
 
 def _build_records_context(player_code: str) -> dict:
     """Build context for the records & streaks tab."""
-    name = PLAYER_DICT[player_code]
+    name = get_player_dict()[player_code]
     sections = []
 
     # Personal bests — TEG level
@@ -1087,7 +1084,7 @@ def _build_roster() -> list[dict]:
     winners = _get_winners_data()
 
     cards = []
-    for code, name in PLAYER_DICT.items():
+    for code, name in get_player_dict().items():
         player_data = all_data[all_data['Player'] == name]
         if player_data.empty:
             continue
@@ -1147,7 +1144,7 @@ async def player_index(request: Request):
 @router.get("/player/{player_code}")
 async def player_page(request: Request, player_code: str):
     pc = _validate_player(player_code)
-    name = PLAYER_DICT[pc]
+    name = get_player_dict()[pc]
     theme = request.state.theme
 
     subtitle = _build_subtitle(pc)

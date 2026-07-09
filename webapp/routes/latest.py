@@ -8,7 +8,8 @@ import markdown as md_lib
 from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
 
-from teg_analysis.constants import PLAYER_DICT, HANDICAPS_CSV, STREAKS_PARQUET
+from teg_analysis.constants import HANDICAPS_CSV, STREAKS_PARQUET
+from teg_analysis.core.players import get_name_to_code
 from teg_analysis.io.file_operations import read_file
 from teg_analysis.analysis.aggregation import (
     get_round_data,
@@ -56,8 +57,6 @@ from webapp.deps import (
 from webapp.chart_utils import create_round_graph
 
 logger = logging.getLogger(__name__)
-
-_NAME_TO_CODE = {v: k for k, v in PLAYER_DICT.items()}
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))

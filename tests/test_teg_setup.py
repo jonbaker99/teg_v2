@@ -20,12 +20,19 @@ def _handicaps():
     )
 
 
-def test_get_roster_players_excludes_teg_column(monkeypatch):
+def test_get_roster_players_handicaps_columns_first_then_new_players(monkeypatch):
     import teg_analysis.io as tio
 
     monkeypatch.setattr(tio, "read_file", lambda path: _handicaps())
 
-    assert teg_setup.get_roster_players() == ["DM", "GW", "HM", "JB"]
+    # handicaps.csv column order first (stable), then every other known player
+    # (here the PLAYER_DICT seed, since the monkeypatched read gives players.csv
+    # no usable rows) so a newly added player is offerable before they have a
+    # handicaps column.
+    roster = teg_setup.get_roster_players()
+    assert roster[:4] == ["DM", "GW", "HM", "JB"]
+    assert set(roster[4:]) == {"AB", "SN", "JP", "GP"}
+    assert len(roster) == len(set(roster))
 
 
 def test_get_teg_roster_form_uses_confirmed_row(monkeypatch):

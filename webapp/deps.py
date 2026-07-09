@@ -109,8 +109,9 @@ def bestball_worstball_totals(all_data: pd.DataFrame) -> tuple[pd.DataFrame, pd.
 def clear_all_data_caches() -> None:
     """Clear every in-process data cache.
 
-    Call after a data update so the site re-reads the freshly written files
-    (teg_analysis has no internal caching, so these wrappers are the only ones).
+    Call after a data update so the site re-reads the freshly written files.
+    These wrappers plus teg_analysis's one internal cache (the players.csv
+    code->name dict in ``core.players``) are the complete set.
     """
     for fn in (
         cached_load_all_data,
@@ -123,6 +124,9 @@ def clear_all_data_caches() -> None:
         cached_bestball_data,
     ):
         fn.cache_clear()
+
+    from teg_analysis.core.players import clear_player_cache
+    clear_player_cache()
 
 
 # --- Leaderboard logic (from streamlit/leaderboard_utils.py) ------------------

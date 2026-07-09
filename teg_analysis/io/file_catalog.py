@@ -67,6 +67,18 @@ DATA_FILE_CATALOG: list[dict] = [
         "edit_slug": "handicaps",
     },
     {
+        "name": "players.csv",
+        "path": "data/players.csv",
+        "category": CATEGORY_METADATA,
+        "importance": 4,
+        "format": "csv",
+        "role": "Player identity (Code, Name) — the writable source of truth for who "
+                "exists, used everywhere codes are mapped to display names. Seeded from "
+                "the legacy PLAYER_DICT in constants.py.",
+        "updated_by": "\"Add a new player\" on the TEG setup page.",
+        "edit_slug": "players",
+    },
+    {
         "name": "course_pars.csv",
         "path": "data/course_pars.csv",
         "category": CATEGORY_METADATA,

@@ -10,7 +10,7 @@ import pytest
 from teg_analysis.analysis import round_wizard
 from teg_analysis.constants import (
     ROUND_INFO_CSV, COURSE_PARS_CSV, ROUND_PARS_CSV, ALL_SCORES_PARQUET,
-    HANDICAPS_CSV, LIVE_ROUNDS_REGISTRY_CSV,
+    HANDICAPS_CSV, LIVE_ROUNDS_REGISTRY_CSV, PLAYERS_CSV,
 )
 
 FUTURE_TEGS_CSV = round_wizard.FUTURE_TEGS_CSV
@@ -63,6 +63,8 @@ def _default_files(overrides: dict | None = None) -> dict:
         HANDICAPS_CSV: _handicaps("TEG 18", DM=20, GW=18),
         LIVE_ROUNDS_REGISTRY_CSV: None,
         FUTURE_TEGS_CSV: None,
+        # Player identity falls back to the PLAYER_DICT seed when missing.
+        PLAYERS_CSV: None,
     }
     if overrides:
         files.update(overrides)

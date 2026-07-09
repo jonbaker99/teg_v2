@@ -40,6 +40,10 @@ teg_analysis/
   
   core/              Data loading and transformation
     data_loader.py   load_all_data() — loads hole-level tournament data
+    players.py       Player identity (data/players.csv over the PLAYER_DICT seed) —
+                     get_player_dict/get_name_to_code/get_player_name/add_player;
+                     the one internally cached read in the package
+                     (clear_player_cache after writes)
     data_transforms.py Data manipulation utilities
     metadata.py      Metadata helpers
   

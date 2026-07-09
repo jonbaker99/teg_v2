@@ -15,6 +15,7 @@ ALL_SCORES_PARQUET = "data/all-scores.parquet"
 STREAKS_PARQUET = "data/streaks.parquet"
 BESTBALL_PARQUET = "data/bestball.parquet"
 HANDICAPS_CSV = "data/handicaps.csv"
+PLAYERS_CSV = "data/players.csv"
 ROUND_INFO_CSV = "data/round_info.csv"
 COURSE_PARS_CSV = "data/course_pars.csv"
 ROUND_PARS_CSV = "data/round_pars.csv"
@@ -36,6 +37,11 @@ TOTAL_HOLES = 18
 # ---------------------------------------------------------------------------
 # Player lookup
 # ---------------------------------------------------------------------------
+# LEGACY SEED -- data/players.csv is the source of truth for player identity
+# (it's writable from the deployed webapp; this dict isn't). Use
+# teg_analysis.core.players.get_player_dict() for lookups, never this dict
+# directly. Kept as the fallback seed for environments without the file, and
+# for any player here that the file doesn't list.
 PLAYER_DICT = {
     'AB': 'Alex BAKER',
     'JB': 'Jon BAKER',

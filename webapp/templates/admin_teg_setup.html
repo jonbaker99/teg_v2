@@ -71,6 +71,37 @@
     <div id="teg-setup-result" style="margin-top:1rem;"></div>
   </div>
 
+  <div class="data-card" style="margin-top:1rem;">
+    <h2 class="card-header">Add a new player</h2>
+    <p style="margin:.5rem 0;color:#555;font-size:.9rem;">
+      For someone who has never played a TEG before. They'll appear in the roster above
+      (unticked) — tick them, give them a handicap, and save. Stored in
+      <code>players.csv</code>; their <code>handicaps.csv</code> column is created the
+      first time they're saved onto a TEG.
+    </p>
+    {% if added %}
+      <p style="background:#eef4ee;border:1px solid #cfe0cf;color:#2f6b34;padding:.6rem .9rem;border-radius:8px;">
+        ✅ Added {{ added }} — tick them in the roster above and set a handicap.
+      </p>
+    {% endif %}
+    {% if add_error %}
+      <p class="error" style="color:#b00020;">{{ add_error }}</p>
+    {% endif %}
+    <form method="post" action="/admin/teg-setup/{{ teg_num }}/add-player"
+          style="display:flex;gap:.75rem;align-items:flex-end;flex-wrap:wrap;">
+      <div>
+        <label for="new_name" style="display:block;font-size:.85rem;margin-bottom:.25rem;">Full name</label>
+        <input type="text" id="new_name" name="new_name" placeholder="e.g. John SMITH" required style="width:14rem;">
+      </div>
+      <div>
+        <label for="new_code" style="display:block;font-size:.85rem;margin-bottom:.25rem;">Code (2–3 letters)</label>
+        <input type="text" id="new_code" name="new_code" placeholder="e.g. JS" required
+               maxlength="3" pattern="[A-Za-z]{2,3}" style="width:5rem;text-transform:uppercase;">
+      </div>
+      <button type="submit" class="btn-action">➕ Add player</button>
+    </form>
+  </div>
+
   {% endif %}
 </div>
 {% endblock %}

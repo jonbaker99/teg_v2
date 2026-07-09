@@ -41,10 +41,10 @@ import numpy as np
 import pandas as pd
 
 from teg_analysis.constants import (
-    PLAYER_DICT,
     ALL_SCORES_PARQUET,
     ALL_DATA_PARQUET,
     HANDICAPS_CSV,
+    PLAYERS_CSV,
     ROUND_INFO_CSV,
     COURSE_PARS_CSV,
     ROUND_PARS_CSV,
@@ -142,7 +142,8 @@ def process_round_for_all_scores(long_df: pd.DataFrame, hc_long: pd.DataFrame) -
 
     long_df['FrontBack'] = np.where(long_df['Hole'] < 10, 'Front', 'Back')
 
-    long_df['Player'] = long_df['Pl'].map(PLAYER_DICT).fillna('Unknown Player')
+    from teg_analysis.core.players import get_player_dict
+    long_df['Player'] = long_df['Pl'].map(get_player_dict()).fillna('Unknown Player')
 
     # Strokes received per hole = full rounds of handicap + an extra on holes
     # whose stroke index is within the remainder.
@@ -768,6 +769,14 @@ EDITABLE_DATA_FILES: dict[str, dict] = {
         'path': HANDICAPS_CSV,
         'label': 'Handicaps',
         'description': 'Player handicap data for net scoring calculations.',
+        'kind': 'metadata',
+    },
+    'players': {
+        'path': PLAYERS_CSV,
+        'label': 'Players',
+        'description': 'Player identity (Code, Name) -- the source of truth for who '
+                        'exists. Prefer "Add a new player" on the TEG setup page over '
+                        'editing this grid directly.',
         'kind': 'metadata',
     },
     'course_pars': {
