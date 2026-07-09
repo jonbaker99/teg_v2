@@ -19,7 +19,7 @@ import os
 
 from teg_analysis.io import read_file, write_file
 from teg_analysis.constants import (
-    ALL_DATA_PARQUET, ROUND_INFO_CSV, PLAYER_DICT, TEGNUM_ROUNDS,
+    ALL_DATA_PARQUET, ROUND_INFO_CSV, TEGNUM_ROUNDS,
 )
 
 logger = logging.getLogger(__name__)
@@ -159,7 +159,9 @@ def get_player_name(initials: str) -> str:
         str: The full name of the player, or 'Unknown Player' if the
         initials are not found.
     """
-    return PLAYER_DICT.get(initials.upper(), 'Unknown Player')
+    from teg_analysis.core.players import get_player_dict
+
+    return get_player_dict().get(initials.upper(), 'Unknown Player')
 
 
 def process_round_for_all_scores(long_df: pd.DataFrame, hc_long: pd.DataFrame) -> pd.DataFrame:
@@ -202,7 +204,8 @@ def process_round_for_all_scores(long_df: pd.DataFrame, hc_long: pd.DataFrame) -
     long_df['FrontBack'] = np.where(long_df['Hole'] < 10, 'Front', 'Back')
 
     # Map player names using the more efficient .map() method
-    long_df['Player'] = long_df['Pl'].map(PLAYER_DICT).fillna('Unknown Player')
+    from teg_analysis.core.players import get_player_dict
+    long_df['Player'] = long_df['Pl'].map(get_player_dict()).fillna('Unknown Player')
 
     # Calculate 'HCStrokes' using vectorized operations
     long_df['HCStrokes'] = (long_df['HC'] // 18) + ((long_df['HC'] % 18 >= long_df['SI']).astype(int))

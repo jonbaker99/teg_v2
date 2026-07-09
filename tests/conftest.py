@@ -35,6 +35,21 @@ sys.path.insert(0, str(project_root / "streamlit"))
 os.environ['RAILWAY_ENVIRONMENT'] = ''
 
 
+@pytest.fixture(autouse=True)
+def _fresh_player_cache():
+    """Reset the players.csv identity cache around every test.
+
+    teg_analysis.core.players caches the code->name dict at module level;
+    without this, a test that monkeypatches read_file (or writes a scratch
+    players.csv) could leak player identities into unrelated tests.
+    """
+    from teg_analysis.core.players import clear_player_cache
+
+    clear_player_cache()
+    yield
+    clear_player_cache()
+
+
 @pytest.fixture
 def sample_all_data():
     """Sample all-data dataframe for testing core functionality

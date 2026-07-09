@@ -96,7 +96,8 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
 **TEG setup** — templates `admin_teg_setup.html`, `partials/admin_teg_setup_result.html`.
 - **Routes:** `/admin/teg-setup` (redirects to the next TEG), `/admin/teg-setup/{teg}`
   (roster form — any TEG number, via the "Jump to TEG" field), `/admin/teg-setup/{teg}/save`
-  (HTMX).
+  (HTMX), `/admin/teg-setup/{teg}/add-player` (register a brand-new player; plain form
+  POST → redirect so the roster re-renders with the new row).
 - **Purpose:** confirm who's playing a TEG and their handicap before it starts — not every
   player plays every TEG. Reuses the existing handicap-calculation logic
   (`teg_analysis.analysis.handicaps.get_hc` / `get_current_handicaps_formatted`) rather than
@@ -106,10 +107,19 @@ compactness applies to the inline edit grid (`#edit-grid` cells).
   A checkbox + handicap field per player lets the admin override before saving; save
   (`teg_setup.save_teg_roster`) upserts the one `handicaps.csv` row for that TEG in place
   (not-playing is written as the existing `0`-in-that-cell convention, no schema change).
-  Scoped to the 7 players who already have a `handicaps.csv` column — see
-  `DATA_STORAGE_INGESTION_PLAN.md`'s "TEG roster + handicap setup" section for the full
-  reasoning and a noticed-but-untouched data anomaly (a stray `TEG 50` row in
-  `handicaps.csv`).
+  The roster offers **every known player** — `handicaps.csv` columns first, then anyone
+  in `data/players.csv` without a column yet (they get one the first time they're saved
+  onto a TEG).
+- **Add a new player:** a card below the roster registers someone who has never played —
+  full name + 2–3-letter code, validated (format, duplicate code/name) by
+  `teg_analysis.core.players.add_player`, which appends to `data/players.csv` (the
+  writable source of truth for player identity, seeded from the legacy
+  `constants.PLAYER_DICT`; all code→name lookups route through
+  `core.players.get_player_dict`, cached and cleared by
+  `deps.clear_all_data_caches`). The new player then appears in the roster unticked —
+  tick, set a handicap, save. See `DATA_STORAGE_INGESTION_PLAN.md`'s "TEG roster +
+  handicap setup" section for the original design record (and a noticed-but-untouched
+  data anomaly, a stray `TEG 50` row in `handicaps.csv`).
 
 **Live round** — templates `admin_live_round.html`, `admin_live_round_review.html`,
 `partials/admin_live_round_*.html`.

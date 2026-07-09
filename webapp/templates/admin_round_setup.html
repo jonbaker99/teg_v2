@@ -46,7 +46,7 @@
           <td>{{ r.date }}</td>
           <td>{% if r.is_set_up %}✅ Set up{% else %}⚠️ Needs setup{% endif %}</td>
           <td><a href="/admin/round-setup/{{ r.teg_num }}/{{ r.round_num }}" class="text-link">
-            {{ 'Review' if r.is_set_up else 'Set up' }} →
+            {{ 'Confirm Par/SI' if r.is_set_up else 'Set up' }} →
           </a></td>
         </tr>
         {% endfor %}

@@ -7,7 +7,7 @@ from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
 
 from teg_analysis.core.metadata import get_scorecard_data, get_teg_metadata
-from teg_analysis.constants import PLAYER_DICT
+from teg_analysis.core.players import get_player_dict
 from teg_analysis.display.scorecards import (
     build_single_round_combined_table,
     build_single_round_combined_portrait,
@@ -40,8 +40,10 @@ ALL_TYPES = [
     (TYPE_ONE_ROUND_ALL_PLAYERS, "1 Round / All Players"),
 ]
 
-# Player list: sorted by display name for the selector
-_PLAYER_LIST = sorted(PLAYER_DICT.items(), key=lambda x: x[1])
+# Player list: sorted by display name for the selector. A function, not a
+# module-level snapshot, so a newly added player appears without a restart.
+def _player_list():
+    return sorted(get_player_dict().items(), key=lambda x: x[1])
 
 
 def _format_date(date_str: str) -> str:
@@ -57,7 +59,7 @@ def _format_date(date_str: str) -> str:
 
 def _default_player_code() -> str:
     """Return the first player code (alphabetically by name)."""
-    return _PLAYER_LIST[0][0]
+    return _player_list()[0][0]
 
 
 def _scorecard_context_one_round_one_player(teg_num: int, round_num: int, player_code: str) -> dict:
@@ -198,7 +200,7 @@ async def scorecard_page(
         "selected_round": round_num,
         "selected_player": player_code,
         "selected_type": type,
-        "player_list": _PLAYER_LIST,
+        "player_list": _player_list(),
         "all_types": ALL_TYPES,
         "rounds": rounds,
         **ctx,

@@ -27,9 +27,19 @@ def _read_handicaps_raw() -> pd.DataFrame:
 
 
 def get_roster_players() -> list[str]:
-    """Player codes with a column in handicaps.csv, in file order."""
+    """Every known player code, offerable on a TEG's roster.
+
+    handicaps.csv column order first (stable for the existing players), then
+    any player known to players.csv/PLAYER_DICT without a handicaps column yet
+    (i.e. added via "Add a new player" but never rostered) -- save_teg_roster's
+    upsert creates their column the first time they're saved onto a TEG.
+    """
+    from teg_analysis.core.players import get_player_dict
+
     raw = _read_handicaps_raw()
-    return [c for c in raw.columns if c != "TEG"]
+    from_handicaps = [c for c in raw.columns if c != "TEG"]
+    known = get_player_dict()
+    return from_handicaps + [c for c in known if c not in from_handicaps]
 
 
 def get_next_teg() -> int:
@@ -72,8 +82,10 @@ def get_teg_roster_form(teg_num: int) -> dict:
     rows = []
     for p in players:
         if confirmed:
-            raw_val = existing.iloc[0][p]
-            hc = None if pd.isna(raw_val) else int(raw_val)
+            # A player added after this TEG's row was saved has no column yet
+            # -- treat exactly like a blank cell (not playing).
+            raw_val = existing.iloc[0][p] if p in existing.columns else None
+            hc = None if raw_val is None or pd.isna(raw_val) else int(raw_val)
             playing = bool(hc)
             source = "confirmed"
         elif p in calculated:

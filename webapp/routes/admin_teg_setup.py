@@ -6,9 +6,10 @@ already saved for this TEG) or the calculated draft (if not) — the same two
 sources the read-only Handicaps page already uses.
 
 Flow:
-  GET  /admin/teg-setup                 -> the next TEG's roster form (default target)
-  GET  /admin/teg-setup/{teg_num}       -> the roster form for any TEG
-  POST /admin/teg-setup/{teg_num}/save  -> save, re-render the result
+  GET  /admin/teg-setup                       -> the next TEG's roster form (default target)
+  GET  /admin/teg-setup/{teg_num}             -> the roster form for any TEG
+  POST /admin/teg-setup/{teg_num}/save        -> save, re-render the result
+  POST /admin/teg-setup/{teg_num}/add-player  -> register a brand-new player, reload the form
 """
 
 import logging
@@ -55,7 +56,11 @@ async def admin_teg_setup_form(request: Request, teg_num: int):
 
     from teg_analysis.analysis.teg_setup import get_teg_roster_form
 
-    ctx = {"request": request, "active_page": None, "teg_num": teg_num}
+    ctx = {
+        "request": request, "active_page": None, "teg_num": teg_num,
+        "added": request.query_params.get("added"),
+        "add_error": request.query_params.get("add_error"),
+    }
     try:
         ctx["form"] = get_teg_roster_form(teg_num)
     except Exception as e:  # noqa: BLE001
@@ -63,6 +68,33 @@ async def admin_teg_setup_form(request: Request, teg_num: int):
         ctx["error"] = f"Could not load setup form: {e}"
 
     return templates.TemplateResponse("admin_teg_setup.html", ctx)
+
+
+@router.post("/admin/teg-setup/{teg_num}/add-player")
+async def admin_teg_setup_add_player(request: Request, teg_num: int):
+    """Register a brand-new player (never played before), then reload the form.
+
+    A plain form POST -> redirect (not HTMX): the new player has to appear as
+    a fresh row in the roster table, so a whole-page re-render is the point.
+    Errors round-trip via the query string for the same reason.
+    """
+    if not is_authed(request):
+        return _redirect("/admin/login")
+
+    from urllib.parse import quote
+    from teg_analysis.core.players import add_player, PlayerError
+
+    form = await request.form()
+    try:
+        result = add_player(form.get("new_code", ""), form.get("new_name", ""))
+        deps.clear_all_data_caches()
+    except PlayerError as e:
+        return _redirect(f"/admin/teg-setup/{teg_num}?add_error={quote(str(e))}")
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Add player failed: {e}", exc_info=True)
+        return _redirect(f"/admin/teg-setup/{teg_num}?add_error={quote(f'Could not add player: {e}')}")
+
+    return _redirect(f"/admin/teg-setup/{teg_num}?added={quote(result['code'])}")
 
 
 @router.post("/admin/teg-setup/{teg_num}/save", response_class=HTMLResponse)

@@ -77,7 +77,7 @@
             </td>
             <td>{{ r.CreatedAt }}</td>
             <td><a href="/admin/live-round/{{ r.Token }}/review" class="text-link">
-              {{ 'Review' if r.Status == 'active' else 'View' }} →
+              {{ 'Review & Finalize' if r.Status == 'active' else 'View' }} →
             </a></td>
           </tr>
           {% endfor %}

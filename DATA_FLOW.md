@@ -16,6 +16,7 @@ data/
   all-data.parquet        ← 53-col hole-level data — fully regenerated from all-scores on every add/delete
   round_info.csv          ← course / date / area metadata per TEG+Round
   handicaps.csv           ← player handicaps per TEG
+  players.csv             ← player identity (Code, Name) — writable source of truth; seeded from the legacy PLAYER_DICT
   course_pars.csv         ← hole-level Par/SI per course, backfilled from history (scripts/backfill_course_pars.py)
   round_pars.csv          ← hole-level Par/SI per *specific* TEG+Round, set up by an admin before the round is played
   live_rounds.csv         ← registry of every live (in-progress, multi-device) round entry session ever started

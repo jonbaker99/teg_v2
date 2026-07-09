@@ -25,6 +25,22 @@ logger = logging.getLogger(__name__)
 
 PLAYER_COLUMN = 'Player'
 
+# Route modules can hold their own lru_cache'd data accessors (e.g.
+# player.py's winners cache). deps must not import routes (that would be a
+# circular import), so instead a route registers its cache_clear callable
+# here at import time and clear_all_data_caches() fans out to all of them.
+_extra_cache_clearers: list = []
+
+
+def register_cache_clearer(clear_fn) -> None:
+    """Register a callable to be invoked by clear_all_data_caches().
+
+    Idempotent per callable, so re-importing a module doesn't stack duplicate
+    clearers.
+    """
+    if clear_fn not in _extra_cache_clearers:
+        _extra_cache_clearers.append(clear_fn)
+
 
 # --- Cached data accessors ---------------------------------------------------
 
@@ -109,8 +125,9 @@ def bestball_worstball_totals(all_data: pd.DataFrame) -> tuple[pd.DataFrame, pd.
 def clear_all_data_caches() -> None:
     """Clear every in-process data cache.
 
-    Call after a data update so the site re-reads the freshly written files
-    (teg_analysis has no internal caching, so these wrappers are the only ones).
+    Call after a data update so the site re-reads the freshly written files.
+    These wrappers plus teg_analysis's one internal cache (the players.csv
+    code->name dict in ``core.players``) are the complete set.
     """
     for fn in (
         cached_load_all_data,
@@ -123,6 +140,13 @@ def clear_all_data_caches() -> None:
         cached_bestball_data,
     ):
         fn.cache_clear()
+
+    from teg_analysis.core.players import clear_player_cache
+    clear_player_cache()
+
+    # Route-level caches that registered themselves (see register_cache_clearer).
+    for clear_fn in _extra_cache_clearers:
+        clear_fn()
 
 
 # --- Leaderboard logic (from streamlit/leaderboard_utils.py) ------------------

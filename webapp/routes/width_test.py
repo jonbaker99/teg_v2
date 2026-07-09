@@ -6,7 +6,7 @@ from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 from markupsafe import escape
 
-from teg_analysis.constants import PLAYER_DICT
+from teg_analysis.core.players import get_name_to_code
 from webapp.deps import (
     cached_round_data,
     create_leaderboard,
@@ -14,8 +14,6 @@ from webapp.deps import (
     get_default_teg_num,
     get_net_competition_measure,
 )
-
-_NAME_TO_CODE = {v: k for k, v in PLAYER_DICT.items()}
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
@@ -44,7 +42,7 @@ def _build_wide_table(df, teg_num: int) -> str:
                 rows.append(f"<td class='col-rank'>{row[col]}</td>")
             elif col == 'Player':
                 name = row[col]
-                code = _NAME_TO_CODE.get(name)
+                code = get_name_to_code().get(name)
                 if code:
                     rows.append(f"<td class='col-player'><a href='/player/{code}'>{escape(name)}</a></td>")
                 else:

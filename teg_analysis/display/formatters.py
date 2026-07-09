@@ -256,9 +256,9 @@ def prepare_worst_records_table(data_source: pd.DataFrame, record_type: str) -> 
 
 def prepare_streak_records_table(streak_data: pd.DataFrame, table_title: str) -> pd.DataFrame:
     """Prepares a streak records table with a title in the header row."""
-    from teg_analysis.constants import PLAYER_DICT
+    from teg_analysis.core.players import get_name_to_code
 
-    name_to_initials = {name: initials for initials, name in PLAYER_DICT.items()}
+    name_to_initials = get_name_to_code()
     records_data = []
     grouped = streak_data.groupby(['Streak Type', 'Record'])
 

@@ -8,7 +8,7 @@ from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
 from markupsafe import escape
 
-from teg_analysis.constants import PLAYER_DICT
+from teg_analysis.core.players import get_name_to_code
 from teg_analysis.analysis.history import (
     prepare_complete_history_table_fast,
     get_teg_winners,
@@ -38,8 +38,6 @@ from webapp.deps import (
     get_rounds_for_teg,
 )
 from webapp.chart_utils import create_cumulative_graph, adjusted_stableford, adjusted_grossvp
-
-_NAME_TO_CODE = {v: k for k, v in PLAYER_DICT.items()}
 
 # Country (or UK nation) name -> flag-icons code. Keys are lower-cased and matched
 # against the last comma-separated part of an Area string ("Region, Country").
@@ -110,7 +108,7 @@ def _df_to_html(df: pd.DataFrame, table_class: str = "teg-table", link_players: 
         for col in df.columns:
             val = row[col]
             if link_players and col == 'Player':
-                code = _NAME_TO_CODE.get(str(val))
+                code = get_name_to_code().get(str(val))
                 if code:
                     rows.append(f"<td><a href='/player/{code}'>{escape(str(val))}</a></td>")
                 else:
@@ -208,7 +206,7 @@ def _ranking_table_html(df: pd.DataFrame, player_col: str = "Player",
         for col in cols:
             s = str(row[col])
             if col == player_col:
-                code = _NAME_TO_CODE.get(s) if link_players else None
+                code = get_name_to_code().get(s) if link_players else None
                 if code:
                     rows.append(f"<td><a href='/player/{code}'>{escape(s)}</a></td>")
                 else:
@@ -405,7 +403,7 @@ def _leaderboard_table_html(df: pd.DataFrame) -> str:
         for col in df.columns:
             val = row[col]
             if col == "Player":
-                code = _NAME_TO_CODE.get(str(val))
+                code = get_name_to_code().get(str(val))
                 cell = (f"<a href='/player/{code}'>{escape(str(val))}</a>" if code
                         else escape(str(val)))
                 rows.append(f"<td class='col-player'>{cell}</td>")
@@ -597,7 +595,7 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "stand
         lb_cards = [{
             "rank": str(row['Rank']),
             "player": str(row['Player']),
-            "code": _NAME_TO_CODE.get(str(row['Player'])),
+            "code": get_name_to_code().get(str(row['Player'])),
             "rounds": [(c, str(row[c])) for c in round_cols],
             "total": str(row['Total']),
             "lead": str(row['Rank']).startswith('1'),

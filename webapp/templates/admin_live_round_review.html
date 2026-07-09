@@ -123,6 +123,13 @@
   </div>
 
   <div class="data-card">
+    {% if not roster_confirmed %}
+      <div style="background:#fff3cd;border:1px solid #ffc107;color:#8a6b00;padding:.75rem;border-radius:8px;margin-bottom:1rem;">
+        <p style="margin:.25rem 0;font-weight:600;">⚠️ Handicaps not confirmed</p>
+        <p style="margin:.25rem 0;font-size:.9rem;">The TEG roster hasn't been set up yet. Net/Stableford scores will use handicap=0 unless you confirm the roster in
+          <a href="/admin/teg-setup" class="text-link" style="color:#8a6b00;text-decoration:underline;">TEG setup</a> first.</p>
+      </div>
+    {% endif %}
     <div style="display:flex;gap:1rem;flex-wrap:wrap;">
       <form hx-post="/admin/live-round/{{ token }}/finalize" hx-target="#finalize-result" hx-swap="innerHTML">
         <button type="submit" class="btn-action" {% if conflicts %}disabled{% endif %} hx-disabled-elt="this">

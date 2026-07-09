@@ -68,6 +68,10 @@ pip install -r requirements.txt
 3. **REST API** — build proper `/api` layer powered by `teg_analysis`. Goal: expose the analysis layer over HTTP so any client (scripts, mobile, other frontends) can access it without needing Python. Currently a placeholder in `teg_analysis/api/`.
 4. **Retire Streamlit** — long-term goal once REST API + new webapp are production-ready.
 
+## Player identity
+
+`data/players.csv` (Code, Name) is the **writable source of truth** for who exists — `constants.PLAYER_DICT` is only the legacy seed/fallback. All code→name lookups go through `teg_analysis.core.players.get_player_dict()` (cached; `clear_player_cache()` after writes — `webapp.deps.clear_all_data_caches` does this). Never read `PLAYER_DICT` directly in new code. New players are added from `/admin/teg-setup` ("Add a new player"), which appends to players.csv; their `handicaps.csv` column is created the first time they're saved onto a TEG roster.
+
 ## Pandas 2.x compatibility
 
 The Railway deployment runs pandas 2.x, which has three breaking changes that have caused production errors. All are fixed; note the patterns to avoid when adding code.
