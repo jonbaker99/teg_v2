@@ -189,19 +189,30 @@ commit, and flag anything for the Opus review gate.
 ```
 
 ### Chat 3 — Data-pipeline hygiene: no silent failures *(Opus)*
-- [ ] **T2**: Make the `update_*_cache` functions raise (or return typed error markers);
+- [x] **T2**: Make the `update_*_cache` functions raise (or return typed error markers);
       `execute_data_update`/`execute_data_deletion` collect failures into a
       `cache_errors` field in the result; admin result templates render a warning banner
       when present. Files: `teg_analysis/analysis/pipeline.py`,
       `teg_analysis/analysis/data_update.py`,
       `webapp/templates/partials/admin_update_result.html`,
       `webapp/templates/partials/admin_live_round_finalize_result.html`, tests.
-- [ ] **T7**: Replace `_get_deps()`/`locals()` with plain deferred imports; load
+- [x] **T7**: Replace `_get_deps()`/`locals()` with plain deferred imports; load
       `all_data` once in the orchestrators and pass it into the `update_*` functions.
-- [ ] **T4**: De-duplicate `process_round_for_all_scores` — keep the data_update
+- [x] **T4**: De-duplicate `process_round_for_all_scores` — keep the data_update
       version, re-export from `core.data_loader`/`core.__init__`, delete the mutating
       copy (grep all callers incl. tests first).
-- [ ] Review gate = the chat itself is Opus; still run the checklist before committing.
+- [x] Review gate = the chat itself is Opus; still run the checklist before committing.
+
+**Chat 3 landed:** the `update_*_cache` functions now take `all_data` (loaded once per
+orchestrator) and raise on failure instead of swallowing to `None`; both orchestrators
+wrap the three named cache steps in `_run_cache_step`, so the primary all-scores/all-data
+write still lands while any cache failure is collected into a new `cache_errors` list on
+the result dict (rendered as a warning banner in both admin result partials).
+`process_round_for_all_scores` now has one implementation (in `analysis/data_update.py`);
+`core/data_loader.py` keeps a thin non-mutating re-export for its long-standing importers.
+Tests added: a mocked cache-step failure asserts `cache_errors` is populated while
+`records_added`/`rows_deleted` stay correct (add + delete paths). Full suite green
+(254 passed, 4 skipped); `check_pandas_compat.py` 0 errors; `streamlit/` untouched.
 
 *Why together*: all three live in `pipeline.py`/`data_update.py`/`core`; one coherent
 "the update pipeline fails loudly and has one copy of the math" change.

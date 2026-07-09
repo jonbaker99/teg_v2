@@ -12,6 +12,23 @@
   </p>
 </div>
 {% elif result and result.records_added > 0 %}
+{% if result.cache_errors %}
+<div class="data-card" style="border-left:4px solid #b00020;">
+  <h2 class="card-header">⚠️ Saved, but some derived caches failed to update</h2>
+  <p style="margin:.5rem 0;">
+    The new scores were saved, but {{ result.cache_errors | length }} cache
+    regeneration step(s) failed — parts of the site (streaks, records,
+    commentary, best-ball) may show <strong>stale data</strong> until this is
+    re-run. Check the server logs, then re-run the update or delete/re-add the
+    round.
+  </p>
+  <ul style="margin:.25rem 0 0 1rem;">
+    {% for ce in result.cache_errors %}
+      <li><strong>{{ ce.step }}</strong>: {{ ce.error }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
 <div class="data-card">
   <h2 class="card-header">✅ Update complete</h2>
   <ul style="margin:.5rem 0 0 1rem;">

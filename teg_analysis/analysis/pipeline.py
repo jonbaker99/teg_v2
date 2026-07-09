@@ -30,153 +30,104 @@ def clear_all_caches():
     pass
 
 
-def _get_deps():
-    """Get function dependencies (deferred to avoid circular imports at module level)."""
-    from teg_analysis.core.data_loader import load_all_data
-    from teg_analysis.io import read_file, write_file
-    from teg_analysis.core.data_transforms import add_cumulative_scores, add_rankings_and_gaps
-    from teg_analysis.analysis.streaks import build_streaks
-    from teg_analysis.analysis.commentary import (create_round_events, create_round_summary,
-        create_tournament_summary, create_round_streaks_summary, create_tournament_streaks_summary)
-    return locals()
-
-
-def update_streaks_cache(defer_github: bool = False):
+def update_streaks_cache(all_data: pd.DataFrame, defer_github: bool = False):
     """
     Update the streaks cache file with current streak calculations.
 
     Args:
+        all_data (pd.DataFrame): Hole-level data (including incomplete TEGs)
+            already loaded by the caller — see :func:`load_all_data`.
         defer_github (bool): If True, defer GitHub push for batch commit
 
     Returns:
         dict: File info if defer_github=True, None otherwise
 
-    This function:
-    1. Loads all data (including incomplete TEGs)
-    2. Calls build_streaks() to calculate streak data
-    3. Saves result to streaks.parquet
-    4. Clears streamlit cache
+    Raises on any failure (build/write) so a stale cache can never be reported as
+    success — the orchestrators in ``data_update`` collect the error into
+    ``cache_errors`` rather than losing the primary write.
 
     Called whenever source data changes (data updates, deletions).
     """
-    try:
-        logger.info("Updating streaks cache file")
+    from teg_analysis.io import write_file
+    from teg_analysis.analysis.streaks import build_streaks
 
-        # Get dependencies
-        deps = _get_deps()
-        load_all_data = deps['load_all_data']
-        write_file = deps['write_file']
-        build_streaks = deps['build_streaks']
+    logger.info("Updating streaks cache file")
 
-        # Load all data including incomplete TEGs for streak calculations
-        try:
-            logger.info("Loading all data for streak calculation...")
-            all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
-            logger.info(f"Loaded {len(all_data)} rows of data")
-        except Exception as e:
-            raise Exception(f"Failed to load all data: {e}")
-
-        if all_data.empty:
-            logger.warning("No data available for streak calculation")
-            return None
-
-        # Calculate streaks using the build_streaks function
-        try:
-            logger.info("Calculating streaks...")
-            streaks_df = build_streaks(all_data)
-            logger.info(f"Calculated {len(streaks_df)} streak records")
-        except Exception as e:
-            raise Exception(f"Failed to calculate streaks: {e}")
-
-        # Save to streaks parquet file
-        try:
-            file_info = write_file(STREAKS_PARQUET, streaks_df, "Update streaks cache", defer_github=defer_github)
-            logger.info(f"Streaks cache updated successfully: {STREAKS_PARQUET}")
-        except Exception as e:
-            raise Exception(f"Failed to write streaks cache: {e}")
-
-        # Clear streamlit cache to ensure fresh data on next load (only if not deferred)
-        if not defer_github:
-            clear_all_caches()
-
-        logger.info("Streaks cache update completed successfully")
-        return file_info
-
-    except Exception as e:
-        logger.error(f"Error updating streaks cache: {e}", exc_info=True)
-        error_msg = f"Failed to update streaks cache: {e}"
-        logger.error(error_msg)
-
+    if all_data is None or all_data.empty:
+        logger.warning("No data available for streak calculation")
         return None
 
+    streaks_df = build_streaks(all_data)
+    logger.info(f"Calculated {len(streaks_df)} streak records")
 
-def update_bestball_cache(defer_github: bool = False):
+    file_info = write_file(STREAKS_PARQUET, streaks_df, "Update streaks cache", defer_github=defer_github)
+    logger.info(f"Streaks cache updated successfully: {STREAKS_PARQUET}")
+
+    # Clear streamlit cache to ensure fresh data on next load (only if not deferred)
+    if not defer_github:
+        clear_all_caches()
+
+    return file_info
+
+
+def update_bestball_cache(all_data: pd.DataFrame, defer_github: bool = False):
     """
     Update the bestball/worstball cache file.
 
     Args:
+        all_data (pd.DataFrame): Hole-level data (including incomplete TEGs)
+            already loaded by the caller — see :func:`load_all_data`.
         defer_github (bool): If True, defer GitHub push for batch commit
 
     Returns:
         dict: File info if defer_github=True, None otherwise
 
-    This function:
-    1. Loads all data (including incomplete TEGs)
-    2. Calculates bestball scores
-    3. Calculates worstball scores
-    4. Combines them and saves to bestball.parquet
+    Raises on any failure so a stale cache can never be reported as success.
     """
-    try:
-        # Get dependencies
-        deps = _get_deps()
-        load_all_data = deps['load_all_data']
-        write_file = deps['write_file']
+    from teg_analysis.io import write_file
+    from teg_analysis.analysis.bestball import (
+        prepare_bestball_data, calculate_bestball_scores, calculate_worstball_scores,
+    )
 
-        from teg_analysis.analysis.bestball import prepare_bestball_data, calculate_bestball_scores, calculate_worstball_scores
-
-        # Load all data including incomplete TEGs for up-to-date analysis
-        all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
-
-        if all_data.empty:
-            logger.warning("No data available for bestball calculation")
-            return None
-
-        # Prepare data
-        prepared_data = prepare_bestball_data(all_data)
-
-        # Calculate scores
-        bestball_data = calculate_bestball_scores(prepared_data)
-        worstball_data = calculate_worstball_scores(prepared_data)
-
-        # Add a 'Format' column to distinguish them
-        bestball_data['Format'] = 'Bestball'
-        worstball_data['Format'] = 'Worstball'
-
-        # Combine into a single DataFrame
-        combined_df = pd.concat([bestball_data, worstball_data], ignore_index=True)
-
-        # Save to parquet file
-        file_info = write_file(BESTBALL_PARQUET, combined_df, "Update bestball/worstball cache", defer_github=defer_github)
-        logger.info(f"Bestball/worstball cache updated successfully: {BESTBALL_PARQUET}")
-
-        return file_info
-
-    except Exception as e:
-        logger.error(f"Error updating bestball cache: {e}")
+    if all_data is None or all_data.empty:
+        logger.warning("No data available for bestball calculation")
         return None
 
-def update_commentary_caches(defer_github: bool = False):
+    # Prepare data
+    prepared_data = prepare_bestball_data(all_data)
+
+    # Calculate scores
+    bestball_data = calculate_bestball_scores(prepared_data)
+    worstball_data = calculate_worstball_scores(prepared_data)
+
+    # Add a 'Format' column to distinguish them
+    bestball_data['Format'] = 'Bestball'
+    worstball_data['Format'] = 'Worstball'
+
+    # Combine into a single DataFrame
+    combined_df = pd.concat([bestball_data, worstball_data], ignore_index=True)
+
+    # Save to parquet file
+    file_info = write_file(BESTBALL_PARQUET, combined_df, "Update bestball/worstball cache", defer_github=defer_github)
+    logger.info(f"Bestball/worstball cache updated successfully: {BESTBALL_PARQUET}")
+
+    return file_info
+
+
+def update_commentary_caches(all_data: pd.DataFrame, defer_github: bool = False):
     """
     Update the commentary cache files with current event and summary data.
 
     Args:
+        all_data (pd.DataFrame): Hole-level data (including incomplete TEGs)
+            already loaded by the caller — see :func:`load_all_data`.
         defer_github (bool): If True, defer GitHub push for batch commit
 
     Returns:
         list: List of file infos if defer_github=True, None otherwise
 
     This function:
-    1. Loads all data (including incomplete TEGs)
+    1. Reads round info + the (freshly regenerated) streaks cache
     2. Calls create_round_events() to generate event log
     3. Calls create_round_summary() to generate round summaries
     4. Calls create_tournament_summary() to generate tournament summaries
@@ -185,119 +136,60 @@ def update_commentary_caches(defer_github: bool = False):
     7. Saves results to commentary parquet files
     8. Clears streamlit cache
 
+    Raises on any failure so a stale cache can never be reported as success.
+
     Called whenever source data changes (data updates, deletions).
     """
-    try:
-        logger.info("Updating commentary cache files")
+    from teg_analysis.io import read_file, write_file
+    from teg_analysis.analysis.commentary import (
+        create_round_events, create_round_summary, create_tournament_summary,
+        create_round_streaks_summary, create_tournament_streaks_summary,
+    )
 
-        # Get dependencies
-        deps = _get_deps()
-        load_all_data = deps['load_all_data']
-        read_file = deps['read_file']
-        write_file = deps['write_file']
-        create_round_events = deps['create_round_events']
-        create_round_summary = deps['create_round_summary']
-        create_tournament_summary = deps['create_tournament_summary']
-        create_round_streaks_summary = deps['create_round_streaks_summary']
-        create_tournament_streaks_summary = deps['create_tournament_streaks_summary']
+    logger.info("Updating commentary cache files")
 
-        file_infos = []
-
-        # Load all data including incomplete TEGs for commentary
-        try:
-            logger.info("Loading all data for commentary generation...")
-            all_data = load_all_data(exclude_teg_50=True, exclude_incomplete_tegs=False)
-            logger.info(f"Loaded {len(all_data)} rows of data")
-        except Exception as e:
-            raise Exception(f"Failed to load all data: {e}")
-
-        if all_data.empty:
-            logger.warning("No data available for commentary generation")
-            return None
-
-        # Load round info and streaks data
-        try:
-            logger.info("Loading round info and streaks data...")
-            round_info = read_file(ROUND_INFO_CSV)
-            streaks_df = read_file(STREAKS_PARQUET)
-            logger.info(f"Loaded {len(round_info)} round info records and {len(streaks_df)} streak records")
-        except Exception as e:
-            raise Exception(f"Failed to load round info or streaks data: {e}")
-
-        # Generate round events
-        try:
-            logger.info("Generating round events...")
-            events_df = create_round_events(all_data_df=all_data)
-            logger.info(f"Generated {len(events_df)} round events")
-            file_info = write_file(COMMENTARY_ROUND_EVENTS_PARQUET, events_df, "Update commentary round events cache", defer_github=defer_github)
-            if file_info:
-                file_infos.append(file_info)
-            logger.info(f"Round events cache updated: {COMMENTARY_ROUND_EVENTS_PARQUET}")
-        except Exception as e:
-            raise Exception(f"Failed to generate/write round events: {e}")
-
-        # Generate round summary
-        try:
-            logger.info("Generating round summary...")
-            round_summary_df = create_round_summary(all_data_df=all_data, round_info_df=round_info)
-            logger.info(f"Generated {len(round_summary_df)} round summary records")
-            file_info = write_file(COMMENTARY_ROUND_SUMMARY_PARQUET, round_summary_df, "Update commentary round summary cache", defer_github=defer_github)
-            if file_info:
-                file_infos.append(file_info)
-            logger.info(f"Round summary cache updated: {COMMENTARY_ROUND_SUMMARY_PARQUET}")
-        except Exception as e:
-            raise Exception(f"Failed to generate/write round summary: {e}")
-
-        # Generate tournament summary
-        try:
-            logger.info("Generating tournament summary...")
-            tournament_summary_df = create_tournament_summary(all_data_df=all_data, round_info_df=round_info)
-            logger.info(f"Generated {len(tournament_summary_df)} tournament summary records")
-            file_info = write_file(COMMENTARY_TOURNAMENT_SUMMARY_PARQUET, tournament_summary_df, "Update commentary tournament summary cache", defer_github=defer_github)
-            if file_info:
-                file_infos.append(file_info)
-            logger.info(f"Tournament summary cache updated: {COMMENTARY_TOURNAMENT_SUMMARY_PARQUET}")
-        except Exception as e:
-            raise Exception(f"Failed to generate/write tournament summary: {e}")
-
-        # Generate round streaks summary
-        try:
-            logger.info("Generating round streaks summary...")
-            round_streaks_df = create_round_streaks_summary(all_data_df=all_data, streaks_df=streaks_df)
-            logger.info(f"Generated {len(round_streaks_df)} round streak records")
-            file_info = write_file(COMMENTARY_ROUND_STREAKS_PARQUET, round_streaks_df, "Update commentary round streaks cache", defer_github=defer_github)
-            if file_info:
-                file_infos.append(file_info)
-            logger.info(f"Round streaks cache updated: {COMMENTARY_ROUND_STREAKS_PARQUET}")
-        except Exception as e:
-            raise Exception(f"Failed to generate/write round streaks: {e}")
-
-        # Generate tournament streaks summary
-        try:
-            logger.info("Generating tournament streaks summary...")
-            tournament_streaks_df = create_tournament_streaks_summary(all_data_df=all_data, streaks_df=streaks_df)
-            logger.info(f"Generated {len(tournament_streaks_df)} tournament streak records")
-            file_info = write_file(COMMENTARY_TOURNAMENT_STREAKS_PARQUET, tournament_streaks_df, "Update commentary tournament streaks cache", defer_github=defer_github)
-            if file_info:
-                file_infos.append(file_info)
-            logger.info(f"Tournament streaks cache updated: {COMMENTARY_TOURNAMENT_STREAKS_PARQUET}")
-        except Exception as e:
-            raise Exception(f"Failed to generate/write tournament streaks: {e}")
-
-        # Clear streamlit cache to ensure fresh data on next load (only if not deferred)
-        if not defer_github:
-            clear_all_caches()
-
-        logger.info("Commentary cache files updated successfully")
-
-        return file_infos if defer_github else None
-
-    except Exception as e:
-        logger.error(f"Error updating commentary caches: {e}", exc_info=True)
-        error_msg = f"Failed to update commentary caches: {e}"
-        logger.error(error_msg)
-
+    if all_data is None or all_data.empty:
+        logger.warning("No data available for commentary generation")
         return None
+
+    round_info = read_file(ROUND_INFO_CSV)
+    streaks_df = read_file(STREAKS_PARQUET)
+    logger.info(f"Loaded {len(round_info)} round info records and {len(streaks_df)} streak records")
+
+    file_infos = []
+
+    events_df = create_round_events(all_data_df=all_data)
+    file_info = write_file(COMMENTARY_ROUND_EVENTS_PARQUET, events_df, "Update commentary round events cache", defer_github=defer_github)
+    if file_info:
+        file_infos.append(file_info)
+
+    round_summary_df = create_round_summary(all_data_df=all_data, round_info_df=round_info)
+    file_info = write_file(COMMENTARY_ROUND_SUMMARY_PARQUET, round_summary_df, "Update commentary round summary cache", defer_github=defer_github)
+    if file_info:
+        file_infos.append(file_info)
+
+    tournament_summary_df = create_tournament_summary(all_data_df=all_data, round_info_df=round_info)
+    file_info = write_file(COMMENTARY_TOURNAMENT_SUMMARY_PARQUET, tournament_summary_df, "Update commentary tournament summary cache", defer_github=defer_github)
+    if file_info:
+        file_infos.append(file_info)
+
+    round_streaks_df = create_round_streaks_summary(all_data_df=all_data, streaks_df=streaks_df)
+    file_info = write_file(COMMENTARY_ROUND_STREAKS_PARQUET, round_streaks_df, "Update commentary round streaks cache", defer_github=defer_github)
+    if file_info:
+        file_infos.append(file_info)
+
+    tournament_streaks_df = create_tournament_streaks_summary(all_data_df=all_data, streaks_df=streaks_df)
+    file_info = write_file(COMMENTARY_TOURNAMENT_STREAKS_PARQUET, tournament_streaks_df, "Update commentary tournament streaks cache", defer_github=defer_github)
+    if file_info:
+        file_infos.append(file_info)
+
+    # Clear streamlit cache to ensure fresh data on next load (only if not deferred)
+    if not defer_github:
+        clear_all_caches()
+
+    logger.info("Commentary cache files updated successfully")
+
+    return file_infos if defer_github else None
 
 
 def get_google_sheet(sheet_name: str, worksheet_name: str) -> pd.DataFrame:
@@ -463,12 +355,9 @@ def update_all_data(csv_file: str, parquet_file: str, defer_github: bool = False
     """
     logger.info(f"Updating all data from {csv_file} to {parquet_file}")
 
-    # Get dependencies
-    deps = _get_deps()
-    read_file = deps['read_file']
-    write_file = deps['write_file']
-    add_cumulative_scores = deps['add_cumulative_scores']
-    add_rankings_and_gaps = deps['add_rankings_and_gaps']
+    # Deferred imports (avoid circular imports at module load).
+    from teg_analysis.io import read_file, write_file
+    from teg_analysis.core.data_transforms import add_cumulative_scores, add_rankings_and_gaps
 
     file_infos = []
 

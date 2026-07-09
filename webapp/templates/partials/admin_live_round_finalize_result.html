@@ -1,6 +1,22 @@
 {% if error %}
   <p class="error" style="color:#b00020;">{{ error }}</p>
 {% elif result %}
+  {% if result.cache_errors %}
+  <div class="data-card" style="border-left:4px solid #b00020;">
+    <h2 class="card-header">⚠️ Finalized, but some derived caches failed</h2>
+    <p style="margin:.5rem 0;">
+      The round was written to the permanent record, but
+      {{ result.cache_errors | length }} cache regeneration step(s) failed —
+      parts of the site (streaks, records, commentary, best-ball) may show
+      <strong>stale data</strong> until re-run. Check the server logs.
+    </p>
+    <ul style="margin:.25rem 0 0 1rem;">
+      {% for ce in result.cache_errors %}
+        <li><strong>{{ ce.step }}</strong>: {{ ce.error }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
   <p style="color:#1a1a1a;">
     ✅ Finalized — TEG {{ result.teg_num }} Round {{ result.round_num }} written to the
     permanent record ({{ result.records_added }} scores). <a href="/admin/live-round" class="text-link">Back to live rounds</a>.
