@@ -39,7 +39,7 @@ def _lb_context(teg_num: int, tab: str, chart_variant: str) -> dict:
 async def leaderboard_page(request: Request):
     teg_num = get_default_teg_num()
     teg_numbers = get_available_teg_numbers()
-    ctx = _lb_context(teg_num, "net", "standard")
+    ctx = _lb_context(teg_num, "net", "adjusted")
     return templates.TemplateResponse("leaderboard.html", {
         "request": request,
         "active_page": "leaderboard",
@@ -47,7 +47,7 @@ async def leaderboard_page(request: Request):
         "selected_teg": teg_num,
         "leaderboard_tabs": LEADERBOARD_TABS,
         "active_lb_tab": "net",
-        "active_chart_variant": "standard",
+        "active_chart_variant": "adjusted",
         **ctx,
     })
 
@@ -57,7 +57,7 @@ async def leaderboard_table(
     request: Request,
     teg: int = Query(...),
     tab: str = Query("net"),
-    chart_variant: str = Query("standard"),
+    chart_variant: str = Query("adjusted"),
 ):
     ctx = _lb_context(teg, tab, chart_variant)
     return templates.TemplateResponse("partials/leaderboard_table.html", {
