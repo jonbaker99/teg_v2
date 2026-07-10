@@ -1,5 +1,6 @@
 """Eclectic routes: /eclectic."""
 
+import logging
 from pathlib import Path
 
 import pandas as pd
@@ -14,6 +15,9 @@ from teg_analysis.analysis.eclectic import (
 )
 from teg_analysis.display.scorecards import build_eclectic_scorecard_table
 from webapp.deps import cached_load_all_data
+from webapp.tables import df_to_html as _df_to_html
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
@@ -25,22 +29,6 @@ ECLECTIC_TABS = [
     ("Teams", "Teams"),
     ("Combined", "Combined"),
 ]
-
-
-def _df_to_html(df: pd.DataFrame, table_class: str = "teg-table") -> str:
-    if df is None or df.empty:
-        return "<p class='text-muted text-sm'>No data available.</p>"
-    rows = [f"<table class='{table_class}'><thead><tr>"]
-    for col in df.columns:
-        rows.append(f"<th>{col}</th>")
-    rows.append("</tr></thead><tbody>")
-    for _, row in df.iterrows():
-        rows.append("<tr>")
-        for col in df.columns:
-            rows.append(f"<td>{row[col]}</td>")
-        rows.append("</tr>")
-    rows.append("</tbody></table>")
-    return "".join(rows)
 
 
 def _get_eclectic_filter_options(all_data: pd.DataFrame) -> dict:
@@ -96,6 +84,7 @@ def _eclectic_tab_context(
         total_rounds = len(filtered.groupby(['Player', 'TEGNum', 'Round']))
         return {"table_html": table_html, "total_rounds": total_rounds}
     except Exception as e:
+        logger.exception("_eclectic_tab_context failed")
         return {"error": str(e)}
 
 
@@ -166,6 +155,7 @@ def _eclectic_records_context(dimension: str) -> dict:
         ]
         return {"sections": sections}
     except Exception as e:
+        logger.exception("_eclectic_records_context failed")
         return {"error": str(e)}
 
 

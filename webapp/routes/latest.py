@@ -8,7 +8,7 @@ import markdown as md_lib
 from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
 
-from teg_analysis.constants import HANDICAPS_CSV, STREAKS_PARQUET
+from teg_analysis.constants import HANDICAPS_CSV
 from teg_analysis.core.players import get_name_to_code
 from teg_analysis.io.file_operations import read_file
 from teg_analysis.analysis.aggregation import (
@@ -50,11 +50,14 @@ from webapp.deps import (
     cached_round_data,
     cached_ranked_teg_data,
     cached_ranked_round_data,
+    cached_streaks_data,
     get_available_teg_numbers,
     get_default_teg_num,
     get_rounds_for_teg,
+    parse_teg_label,
 )
 from webapp.chart_utils import create_round_graph
+from webapp.tables import df_to_html as _table_df_to_html
 
 logger = logging.getLogger(__name__)
 
@@ -63,24 +66,12 @@ templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templa
 
 
 def _df_to_html(df: pd.DataFrame, table_class: str = "teg-table") -> str:
-    """Render a DataFrame as a teg-table: first column left-aligned (player /
-    label), remaining columns centred — consistent with the /results tables."""
-    if df is None or df.empty:
-        return "<p class='text-muted text-sm'>No data available.</p>"
-    cols = list(df.columns)
-    rows = [f"<table class='{table_class}'><thead><tr>"]
-    for i, col in enumerate(cols):
-        cls = "col-player" if i == 0 else "col-num"
-        rows.append(f"<th class='{cls}'>{col}</th>")
-    rows.append("</tr></thead><tbody>")
-    for _, row in df.iterrows():
-        rows.append("<tr>")
-        for i, col in enumerate(cols):
-            cls = "col-player" if i == 0 else "col-num"
-            rows.append(f"<td class='{cls}'>{row[col]}</td>")
-        rows.append("</tr>")
-    rows.append("</tbody></table>")
-    return "".join(rows)
+    """Render a teg-table: first column left-aligned (player / label),
+    remaining columns centred — consistent with the /results tables."""
+    return _table_df_to_html(
+        df, table_class=table_class,
+        col_class=lambda i, col: "col-player" if i == 0 else "col-num",
+    )
 
 
 _COMMENTARY_DIR = Path("data/commentary")
@@ -333,6 +324,7 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                     sections.append({"title": None, "table_html": block, "raw": True})
                 return {"sections": sections, "scorecard_css": True}
             except Exception as e:
+                logger.exception("_latest_round_tab_context failed")
                 sections.append({"title": "Scorecard", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
         elif tab == "bestball":
@@ -369,13 +361,14 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                 })
                 return {"sections": sections, "scorecard_css": True}
             except Exception as e:
+                logger.exception("_latest_round_tab_context failed")
                 sections.append({"title": "Bestball / Worstball", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
         elif tab == "records":
             try:
                 ranked = cached_ranked_round_data()
                 all_data = cached_load_all_data()
-                streaks_df = read_file(STREAKS_PARQUET)
+                streaks_df = cached_streaks_data()
                 teg_str = f"TEG {teg_num}"
 
                 from webapp.deps import cached_ranked_frontback_data
@@ -396,6 +389,7 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                 }
                 sections.append({"title": None, "table_html": _render_records_summary(rd_dict, 'Round')})
             except Exception as e:
+                logger.exception("_latest_round_tab_context failed")
                 sections.append({"title": "Records & PBs", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
         elif tab == "report":
@@ -425,7 +419,7 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
         elif tab == "streaks":
             try:
                 all_data = cached_load_all_data()
-                streaks_df = read_file(STREAKS_PARQUET)
+                streaks_df = cached_streaks_data()
                 teg_str = f"TEG {teg_num}"
                 window = get_player_window_streaks(all_data, streaks_df, teg=teg_str, round_num=round_num)
                 pivot = pivot_window_streaks(window)
@@ -434,10 +428,12 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
                     return {"sections": sections, "caption": "Eagles / birdies / par / bogeys are all 'or better'"}
                 sections.append({"title": "Streaks", "table_html": "<p class='text-muted text-sm'>No streak data for this round.</p>"})
             except Exception as e:
+                logger.exception("_latest_round_tab_context failed")
                 sections.append({"title": "Streaks", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
         return {"sections": sections}
     except Exception as e:
+        logger.exception("_latest_round_tab_context failed")
         return {"error": str(e)}
 
 
@@ -445,8 +441,7 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
 def latest_round_page(request: Request):
     rd_data = cached_round_data()
     teg_str, round_num = get_latest_round_defaults(rd_data)
-    # teg_str is like 'TEG 18' — extract the number
-    teg_num = int(teg_str.replace('TEG ', '')) if isinstance(teg_str, str) else int(teg_str)
+    teg_num = parse_teg_label(teg_str)
     teg_numbers = get_available_teg_numbers()
     rounds = get_rounds_for_teg(teg_num)
     context_header = _round_context_header(teg_num, int(round_num))
@@ -564,6 +559,7 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
                 sections.append({"title": None, "table_html": card_html})
                 return {"sections": sections, "scorecard_css": True}
             except Exception as e:
+                logger.exception("_latest_teg_tab_context failed")
                 sections.append({"title": "Eclectic", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
         elif tab == "report":
@@ -584,7 +580,7 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
         elif tab == "streaks":
             try:
                 all_data = cached_load_all_data()
-                streaks_df = read_file(STREAKS_PARQUET)
+                streaks_df = cached_streaks_data()
                 teg_str = f"TEG {teg_num}"
                 window = get_player_window_streaks(all_data, streaks_df, teg=teg_str)
                 pivot = pivot_window_streaks(window)
@@ -593,13 +589,14 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
                     return {"sections": sections, "caption": "Eagles / birdies / par / bogeys are all 'or better'"}
                 sections.append({"title": "Streaks", "table_html": "<p class='text-muted text-sm'>No streak data for this TEG.</p>"})
             except Exception as e:
+                logger.exception("_latest_teg_tab_context failed")
                 sections.append({"title": "Streaks", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
         elif tab == "records":
             try:
                 ranked = cached_ranked_teg_data()
                 all_data = cached_load_all_data()
-                streaks_df = read_file(STREAKS_PARQUET)
+                streaks_df = cached_streaks_data()
                 teg_str = f"TEG {teg_num}"
 
                 agg = identify_aggregate_records_and_pbs(ranked, teg_str)
@@ -616,10 +613,12 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
                 }
                 sections.append({"title": None, "table_html": _render_records_summary(rd_dict, 'TEG')})
             except Exception as e:
+                logger.exception("_latest_teg_tab_context failed")
                 sections.append({"title": "Records & PBs", "table_html": f"<p class='text-muted text-sm'>Error: {e}</p>"})
 
         return {"sections": sections}
     except Exception as e:
+        logger.exception("_latest_teg_tab_context failed")
         return {"error": str(e)}
 
 
@@ -710,6 +709,7 @@ def handicaps_page(request: Request):
                 ctx["draft_title"] = f"Draft handicaps for TEG {next_next} (after {rounds_played} rounds of TEG {in_progress_teg})"
                 ctx["draft_html"] = _df_to_html(draft)
             except Exception as e:
+                logger.exception("handicaps_page failed")
                 ctx["draft_title"] = "Draft handicaps"
                 ctx["draft_html"] = f"<p class='text-muted text-sm'>Error: {e}</p>"
 
@@ -717,6 +717,7 @@ def handicaps_page(request: Request):
             "request": request, "active_page": "handicaps", **ctx,
         })
     except Exception as e:
+        logger.exception("handicaps_page failed")
         return templates.TemplateResponse("handicaps.html", {
             "request": request, "active_page": "handicaps", "error": str(e),
         })

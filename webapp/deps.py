@@ -25,6 +25,12 @@ logger = logging.getLogger(__name__)
 
 PLAYER_COLUMN = 'Player'
 
+# Fallback TEG number when no in-progress or completed TEG can be determined
+# (e.g. an empty/corrupt round_data). Kept as a named constant rather than a
+# bare literal since it's just "the latest TEG at time of writing", not a
+# rule with any domain meaning.
+FALLBACK_TEG_NUM = 18
+
 # Route modules can hold their own lru_cache'd data accessors (e.g.
 # player.py's winners cache). deps must not import routes (that would be a
 # circular import), so instead a route registers its cache_clear callable
@@ -92,6 +98,26 @@ def cached_bestball_data():
     return read_file(BESTBALL_PARQUET)
 
 
+@lru_cache(maxsize=1)
+def cached_winners():
+    """TEG winners table (Trophy / Green Jacket / Wooden Spoon per TEG).
+
+    Recomputed once per process from cached_load_all_data() rather than per
+    request -- used by /honours, /player (trophy cabinet) and the latest-teg
+    result tabs, which previously each sourced this independently.
+    """
+    from teg_analysis.analysis.history import get_teg_winners
+    return get_teg_winners(cached_load_all_data())
+
+
+@lru_cache(maxsize=1)
+def cached_streaks_data():
+    """The maintained streaks cache (data/streaks.parquet), read once per process."""
+    from teg_analysis.constants import STREAKS_PARQUET
+    from teg_analysis.io.file_operations import read_file
+    return read_file(STREAKS_PARQUET)
+
+
 def bestball_worstball_totals(all_data: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Return (bestball_totals, worstball_totals): per-round team-format scores.
 
@@ -138,6 +164,8 @@ def clear_all_data_caches() -> None:
         cached_ranked_round_data,
         cached_ranked_frontback_data,
         cached_bestball_data,
+        cached_winners,
+        cached_streaks_data,
     ):
         fn.cache_clear()
 
@@ -196,13 +224,21 @@ def format_value(value: Any, value_type: str) -> str:
 
 # --- TEG helpers --------------------------------------------------------------
 
+def parse_teg_label(label) -> int:
+    """Parse a 'TEG N' label (or a bare number) into its integer N."""
+    if isinstance(label, int):
+        return label
+    text = str(label).strip()
+    return int(text.replace('TEG', '').strip()) if text.upper().startswith('TEG') else int(text)
+
+
 def get_default_teg_num() -> int:
     """Get the TEG number to show by default (in-progress or last completed)."""
     in_progress_num, _ = get_current_in_progress_teg_fast()
     if in_progress_num:
         return in_progress_num
     completed_num, _ = get_last_completed_teg_fast()
-    return completed_num or 18  # fallback
+    return completed_num or FALLBACK_TEG_NUM
 
 
 def get_available_teg_numbers() -> list[int]:

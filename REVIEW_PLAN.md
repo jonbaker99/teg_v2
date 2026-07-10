@@ -310,18 +310,66 @@ REVIEW_PLAN.md and commit.
 ```
 
 ### Chat 5 — webapp dedup + caching batch *(Sonnet)*
-- [ ] **W3**: One shared escaping `df_to_html` (new `webapp/tables.py`); delete the 7
+- [x] **W3**: One shared escaping `df_to_html` (new `webapp/tables.py`); delete the 7
       copies; keep per-page class hooks via parameters.
-- [ ] **W4**: `logger.exception(...)` in every `except Exception` context builder
+- [x] **W4**: `logger.exception(...)` in every `except Exception` context builder
       (keep the user-facing message).
-- [ ] **W5 + W7**: Add `deps.cached_winners()` and `deps.cached_streaks_data()`
+- [x] **W5 + W7**: Add `deps.cached_winners()` and `deps.cached_streaks_data()`
       (registered with `clear_all_data_caches`); point `/honours`, `/player`,
       `/latest-*`, `/scoring/streaks` at them; retire player.py's private winners cache.
-- [ ] **W6**: Player-profile cleanup — compute `_metric_specs` once per request, use the
+- [x] **W6**: Player-profile cleanup — compute `_metric_specs` once per request, use the
       cached streaks instead of `build_streaks`, drop unused `theme` params.
-- [ ] **W9**: Small tidies — one TEG-label parse helper; named constant for the
+- [x] **W9**: Small tidies — one TEG-label parse helper; named constant for the
       fallback TEG.
 - [ ] Review gate (Opus).
+
+**Chat 5 landed:** new `webapp/tables.py` exposes one escaping `df_to_html(df,
+table_class=, col_class=, cell_classes=, link_players=, highlight_col=,
+highlight_val=)` covering every variant the 7 copies needed (plain, first-col/rest
+positional classing, per-cell class overrides, player-name links, row highlighting).
+All 7 copies deleted; `scoring.py`, `eclectic.py`, `scorecards.py`, `performance.py`
+import it directly as `_df_to_html`/`_df_to_html`(aliased), `history.py` uses it
+directly (its `link_players` signature matched exactly), `latest.py` keeps a
+2-line `_df_to_html` wrapper (first-col-left positional classing is page-specific),
+and `player.py`'s `_build_simple_table_html` + `_build_teg_results_table_html` both
+now delegate to it via a shared `_col_class` helper. No caller currently passes
+pre-built HTML into a cell (verified by trace), so no raw/markup opt-in was added --
+every cell is escaped. `except Exception as e:` blocks across scoring.py, latest.py,
+history.py, performance.py, eclectic.py (31 sites) now `logger.exception(...)`
+before returning/rendering the existing user-facing message; each file gained
+`import logging` + a module `logger` where missing. `deps.cached_winners()` and
+`deps.cached_streaks_data()` added (both `lru_cache(maxsize=1)`, both wired into
+`clear_all_data_caches()`); `history.py` (`_honours_tab_context`), `latest.py`
+(4 streak-tab sites), `scoring.py` (`_streak_detail_context`) and `player.py` all
+point at them. `player.py`'s private `_get_winners_data` lru_cache and its
+`register_cache_clearer` registration are deleted entirely -- `deps.cached_winners()`
+replaces it at all 4 call sites. `player.py`'s `_build_records_context` streaks
+section now reads `deps.cached_streaks_data()` instead of calling
+`build_streaks(all_data)` fresh (same underlying data -- `data/streaks.parquet` is
+exactly `build_streaks(all_data)`'s output, kept in sync by the pipeline).
+`_metric_specs(all_data, rd_data, winners)` is now computed once in
+`_build_overview_context` and passed into both `_build_overview_metrics` and
+`_build_trophy_section` (both signatures changed to accept it) instead of each
+recomputing it independently. The unused `theme: str` parameter is dropped from
+`_build_overview_context` and `_build_scoring_context` (and their 3 call sites in
+`player_page`/`player_tab`) -- confirmed unused in both bodies before removing.
+`webapp/deps.py` gained `parse_teg_label(label)` (handles `"TEG 18"` and bare `18`)
+and a named `FALLBACK_TEG_NUM = 18` constant, replacing the ad-hoc parses at
+`latest.py` (`latest_round_page`) and `scoring.py` (`_streak_detail_context`'s sort
+key) and the bare `18` fallback in `get_default_teg_num`.
+
+Files touched (for the Opus review gate): `webapp/tables.py` (new),
+`webapp/deps.py`, `webapp/routes/scoring.py`, `webapp/routes/latest.py`,
+`webapp/routes/history.py`, `webapp/routes/performance.py`,
+`webapp/routes/eclectic.py`, `webapp/routes/scorecards.py`,
+`webapp/routes/player.py`, `tests/test_deps_cache.py` (updated -- the old test
+asserted `player._get_winners_data` existed, which this chat retired; replaced with
+an equivalent check that `clear_all_data_caches()` invalidates `deps.cached_winners()`),
+`webapp/README.md` (file-structure listing). Full suite green (256 passed, 4
+skipped); `check_pandas_compat.py` 0 errors, 21 warnings (same baseline, all
+pre-existing/verified-safe); manually smoke-tested every touched page via
+`TestClient` (200s, no error banners) plus a direct escaping test on `df_to_html`
+with `<script>`/`&` payloads. `streamlit/` untouched.
 
 *Why together*: these interlock (the same route files are touched by W3/W4/W5/W7);
 doing them in one chat avoids repeated conflicts across sessions.

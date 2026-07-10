@@ -1,5 +1,6 @@
 """History section routes: /history, /honours, /results, /player-rankings."""
 
+import logging
 import re
 from pathlib import Path
 
@@ -11,7 +12,6 @@ from markupsafe import escape
 from teg_analysis.core.players import get_name_to_code
 from teg_analysis.analysis.history import (
     prepare_complete_history_table_fast,
-    get_teg_winners,
     calculate_trophy_jacket_doubles,
     get_eagles_data,
     get_holes_in_one_data,
@@ -30,6 +30,7 @@ from webapp.deps import (
     cached_round_data,
     cached_complete_teg_data,
     cached_ranked_teg_data,
+    cached_winners,
     create_leaderboard,
     format_value,
     get_available_teg_numbers,
@@ -38,6 +39,9 @@ from webapp.deps import (
     get_rounds_for_teg,
 )
 from webapp.chart_utils import create_cumulative_graph, adjusted_stableford, adjusted_grossvp
+from webapp.tables import df_to_html as _df_to_html
+
+logger = logging.getLogger(__name__)
 
 # Country (or UK nation) name -> flag-icons code. Keys are lower-cased and matched
 # against the last comma-separated part of an Area string ("Region, Country").
@@ -90,34 +94,6 @@ def _area_flag_html(area_str: str) -> str:
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
-
-
-def _df_to_html(df: pd.DataFrame, table_class: str = "teg-table", link_players: bool = False) -> str:
-    """Convert a DataFrame to a styled HTML table."""
-    if df is None or df.empty:
-        return "<p class='text-muted text-sm'>No data available.</p>"
-
-    rows = [f"<table class='{table_class}'>"]
-    rows.append("<thead><tr>")
-    for col in df.columns:
-        rows.append(f"<th>{col}</th>")
-    rows.append("</tr></thead><tbody>")
-
-    for _, row in df.iterrows():
-        rows.append("<tr>")
-        for col in df.columns:
-            val = row[col]
-            if link_players and col == 'Player':
-                code = get_name_to_code().get(str(val))
-                if code:
-                    rows.append(f"<td><a href='/player/{code}'>{escape(str(val))}</a></td>")
-                else:
-                    rows.append(f"<td>{escape(str(val))}</td>")
-            else:
-                rows.append(f"<td>{val}</td>")
-        rows.append("</tr>")
-    rows.append("</tbody></table>")
-    return "".join(rows)
 
 
 def _wrap_player_name(name) -> str:
@@ -236,6 +212,7 @@ def history_page(request: Request):
         table_html += ("<p class='text-muted text-sm mt-3'>*Green Jacket awarded in TEG 5 for "
                        "best stableford round; DM had best gross score.</p>")
     except Exception as e:
+        logger.exception("history_page failed")
         table_html = f"<p class='text-muted'>Error: {e}</p>"
 
     return templates.TemplateResponse("data_table.html", {
@@ -304,7 +281,7 @@ def _honours_tab_context(tab: str) -> dict:
     """Build context for an honours tab."""
     try:
         all_data = cached_load_all_data()
-        winners_df = get_teg_winners(all_data)
+        winners_df = cached_winners()
 
         # The selected tab already names the section, so no per-section heading
         # is rendered (see partials/honours_tab.html). Tabs that carry extra
@@ -345,6 +322,7 @@ def _honours_tab_context(tab: str) -> dict:
 
         return {"sections": sections}
     except Exception as e:
+        logger.exception("_honours_tab_context failed")
         return {"error": str(e)}
 
 
@@ -625,6 +603,7 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
             **chart_meta,
         }
     except Exception as e:
+        logger.exception("_results_context failed")
         return {"error": str(e)}
 
 
@@ -719,6 +698,7 @@ def _player_rankings_context(tab: str, row_dim: str = "Player", col_dim: str = "
         return {"sections": sections, "row_dims": PR_ROW_DIMS, "col_dims": PR_COL_DIMS,
                 "selected_row_dim": row_dim, "selected_col_dim": col_dim}
     except Exception as e:
+        logger.exception("_player_rankings_context failed")
         return {"error": str(e)}
 
 
