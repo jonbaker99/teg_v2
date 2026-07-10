@@ -10,7 +10,7 @@ templates = Jinja2Templates(directory=str(Path(__file__).resolve().parent.parent
 
 
 @router.get("/title-preview")
-async def title_preview(request: Request):
+def title_preview(request: Request):
     return templates.TemplateResponse(
         "title_preview.html",
         {"request": request, "active_page": "title-preview"},

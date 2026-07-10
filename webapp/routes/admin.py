@@ -19,6 +19,7 @@ from pathlib import Path
 from fastapi import APIRouter, Request, Form
 from fastapi.responses import RedirectResponse, HTMLResponse, Response
 from fastapi.templating import Jinja2Templates
+from starlette.concurrency import run_in_threadpool
 
 from webapp.admin_auth import is_authed, check_password, set_auth_cookie, clear_auth_cookie
 from webapp import deps
@@ -43,14 +44,14 @@ def _redirect(url: str) -> RedirectResponse:
 # --- Auth ---------------------------------------------------------------------
 
 @router.get("/admin")
-async def admin_home(request: Request):
+def admin_home(request: Request):
     if not is_authed(request):
         return _redirect("/admin/login")
     return _redirect("/admin/data-update")
 
 
 @router.get("/admin/login")
-async def admin_login_form(request: Request, error: str = ""):
+def admin_login_form(request: Request, error: str = ""):
     return templates.TemplateResponse("admin_login.html", {
         "request": request,
         "active_page": None,
@@ -59,7 +60,7 @@ async def admin_login_form(request: Request, error: str = ""):
 
 
 @router.post("/admin/login")
-async def admin_login(request: Request, password: str = Form("")):
+def admin_login(request: Request, password: str = Form("")):
     if not check_password(password):
         return templates.TemplateResponse("admin_login.html", {
             "request": request,
@@ -72,7 +73,7 @@ async def admin_login(request: Request, password: str = Form("")):
 
 
 @router.get("/admin/logout")
-async def admin_logout():
+def admin_logout():
     response = _redirect("/admin/login")
     clear_auth_cookie(response)
     return response
@@ -81,7 +82,7 @@ async def admin_logout():
 # --- Data update --------------------------------------------------------------
 
 @router.get("/admin/data-update")
-async def admin_data_update(request: Request):
+def admin_data_update(request: Request):
     if not is_authed(request):
         return _redirect("/admin/login")
     return templates.TemplateResponse("admin_data_update.html", {
@@ -93,7 +94,7 @@ async def admin_data_update(request: Request):
 
 
 @router.post("/admin/data-update/preview", response_class=HTMLResponse)
-async def admin_data_update_preview(
+def admin_data_update_preview(
     request: Request,
     sheet: str = Form(DEFAULT_SHEET),
     worksheet: str = Form(DEFAULT_WORKSHEET),
@@ -153,7 +154,7 @@ async def admin_data_update_preview(
 
 
 @router.post("/admin/data-update/execute", response_class=HTMLResponse)
-async def admin_data_update_execute(
+def admin_data_update_execute(
     request: Request,
     sheet: str = Form(DEFAULT_SHEET),
     worksheet: str = Form(DEFAULT_WORKSHEET),
@@ -202,7 +203,7 @@ async def admin_data_update_execute(
 # --- Edit metadata CSVs -------------------------------------------------------
 
 @router.get("/admin/edit-data")
-async def admin_edit_data(request: Request, file: str = "round_info"):
+def admin_edit_data(request: Request, file: str = "round_info"):
     if not is_authed(request):
         return _redirect("/admin/login")
 
@@ -264,6 +265,8 @@ async def admin_edit_data(request: Request, file: str = "round_info"):
 
 @router.post("/admin/edit-data/save", response_class=HTMLResponse)
 async def admin_edit_data_save(request: Request):
+    # async because it reads a dynamic-keyed form (cell__{row}__{col}); the
+    # blocking save (a GitHub commit) is pushed to the threadpool below.
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 
@@ -311,7 +314,9 @@ async def admin_edit_data_save(request: Request):
             coerced = pd.to_numeric(df[col], errors="coerce")
             if coerced.notna().all() and len(df) > 0:
                 df[col] = coerced
-        save_data_file(meta["path"], df, commit_message=f"Edit {meta['label']} via admin")
+        await run_in_threadpool(
+            save_data_file, meta["path"], df, commit_message=f"Edit {meta['label']} via admin"
+        )
         deps.clear_all_data_caches()
     except Exception as e:  # noqa: BLE001
         logger.error(f"Edit-data save failed for {meta['path']}: {e}", exc_info=True)
@@ -323,7 +328,7 @@ async def admin_edit_data_save(request: Request):
 
 
 @router.post("/admin/edit-data/regenerate-status", response_class=HTMLResponse)
-async def admin_edit_regenerate_status(request: Request):
+def admin_edit_regenerate_status(request: Request):
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 
@@ -345,7 +350,7 @@ async def admin_edit_regenerate_status(request: Request):
 # --- Delete rounds ------------------------------------------------------------
 
 @router.get("/admin/delete-data")
-async def admin_delete_data(request: Request):
+def admin_delete_data(request: Request):
     if not is_authed(request):
         return _redirect("/admin/login")
 
@@ -365,7 +370,7 @@ async def admin_delete_data(request: Request):
 
 
 @router.post("/admin/delete-data/preview", response_class=HTMLResponse)
-async def admin_delete_data_preview(request: Request):
+def admin_delete_data_preview(request: Request, teg: str = Form(""), rounds: list[str] = Form([])):
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 
@@ -375,9 +380,6 @@ async def admin_delete_data_preview(request: Request):
     from teg_analysis.io import read_file
     from teg_analysis.constants import ALL_SCORES_PARQUET
 
-    form = await request.form()
-    teg = form.get("teg", "")
-    rounds = form.getlist("rounds")
     ctx = {"request": request, "teg": teg, "rounds": rounds}
 
     if not teg or not validate_deletion_selection(rounds):
@@ -400,7 +402,7 @@ async def admin_delete_data_preview(request: Request):
 
 
 @router.post("/admin/delete-data/execute", response_class=HTMLResponse)
-async def admin_delete_data_execute(request: Request):
+def admin_delete_data_execute(request: Request, teg: str = Form(""), rounds: list[str] = Form([])):
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 
@@ -408,9 +410,6 @@ async def admin_delete_data_execute(request: Request):
         execute_data_deletion, validate_deletion_selection,
     )
 
-    form = await request.form()
-    teg = form.get("teg", "")
-    rounds = form.getlist("rounds")
     ctx = {"request": request}
 
     if not teg or not validate_deletion_selection(rounds):
@@ -468,7 +467,7 @@ def _sync_body_ctx(request: Request, folder: str, result: dict = None) -> dict:
 
 
 @router.get("/admin/volume-sync")
-async def admin_volume_sync(request: Request, folder: str = "data"):
+def admin_volume_sync(request: Request, folder: str = "data"):
     if not is_authed(request):
         return _redirect("/admin/login")
     ctx = _sync_body_ctx(request, folder)
@@ -490,18 +489,16 @@ def _sync_conflict_response(request: Request, *, action: str, folder: str,
 
 
 @router.post("/admin/volume-sync/preview", response_class=HTMLResponse)
-async def admin_volume_sync_preview(request: Request):
+def admin_volume_sync_preview(request: Request, action: str = Form(""), folder: str = Form("data"),
+                              files: list[str] = Form([]), commit_message: str = Form("")):
     """Show exactly what a pull/push will do before it runs (the confirm step)."""
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 
     from teg_analysis.io import build_sync_preview
 
-    form = await request.form()
-    action = form.get("action", "")
-    folder = form.get("folder", "data")
-    names = form.getlist("files")
-    message = form.get("commit_message", "").strip()
+    names = files
+    message = commit_message.strip()
 
     if action not in ("pull", "push"):
         ctx = _sync_body_ctx(request, folder)
@@ -531,7 +528,7 @@ async def admin_volume_sync_preview(request: Request):
 
 
 @router.get("/admin/volume-sync/diff", response_class=HTMLResponse)
-async def admin_volume_sync_diff(request: Request, folder: str = "data", name: str = ""):
+def admin_volume_sync_diff(request: Request, folder: str = "data", name: str = ""):
     """Return a unified diff (store vs GitHub) for a single text file."""
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
@@ -552,16 +549,15 @@ async def admin_volume_sync_diff(request: Request, folder: str = "data", name: s
 
 
 @router.post("/admin/volume-sync/pull", response_class=HTMLResponse)
-async def admin_volume_sync_pull(request: Request):
+def admin_volume_sync_pull(request: Request, folder: str = Form("data"),
+                           files: list[str] = Form([]), confirm: str = Form("")):
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 
     from teg_analysis.io import pull_files, detect_pull_conflicts
 
-    form = await request.form()
-    folder = form.get("folder", "data")
-    names = form.getlist("files")
-    confirmed = form.get("confirm", "") == "1"
+    names = files
+    confirmed = confirm == "1"
 
     if not names:
         ctx = _sync_body_ctx(request, folder, result={"action": "pull", "empty": True})
@@ -590,17 +586,16 @@ async def admin_volume_sync_pull(request: Request):
 
 
 @router.post("/admin/volume-sync/push", response_class=HTMLResponse)
-async def admin_volume_sync_push(request: Request):
+def admin_volume_sync_push(request: Request, folder: str = Form("data"), files: list[str] = Form([]),
+                           commit_message: str = Form(""), confirm: str = Form("")):
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 
     from teg_analysis.io import push_files, detect_push_conflicts
 
-    form = await request.form()
-    folder = form.get("folder", "data")
-    names = form.getlist("files")
-    message = form.get("commit_message", "").strip() or None
-    confirmed = form.get("confirm", "") == "1"
+    names = files
+    message = commit_message.strip() or None
+    confirmed = confirm == "1"
 
     if not names:
         ctx = _sync_body_ctx(request, folder, result={"action": "push", "empty": True})
@@ -628,15 +623,11 @@ async def admin_volume_sync_push(request: Request):
 
 
 @router.post("/admin/volume-sync/restore", response_class=HTMLResponse)
-async def admin_volume_sync_restore(request: Request):
+def admin_volume_sync_restore(request: Request, folder: str = Form("data"), backup_rel: str = Form("")):
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 
     from teg_analysis.io import restore_backup
-
-    form = await request.form()
-    folder = form.get("folder", "data")
-    backup_rel = form.get("backup_rel", "")
 
     try:
         original = restore_backup(backup_rel)
@@ -653,7 +644,7 @@ async def admin_volume_sync_restore(request: Request):
 # --- File guide ---------------------------------------------------------------
 
 @router.get("/admin/file-guide")
-async def admin_file_guide(request: Request):
+def admin_file_guide(request: Request):
     """Reference table of the project's data files, ranked by importance."""
     if not is_authed(request):
         return _redirect("/admin/login")
@@ -732,7 +723,7 @@ def _volume_body_ctx(request: Request, path: str, result: dict = None) -> dict:
 
 
 @router.get("/admin/volume")
-async def admin_volume(request: Request, path: str = ""):
+def admin_volume(request: Request, path: str = ""):
     if not is_authed(request):
         return _redirect("/admin/login")
     ctx = _volume_body_ctx(request, path)
@@ -741,7 +732,7 @@ async def admin_volume(request: Request, path: str = ""):
 
 
 @router.get("/admin/volume/download")
-async def admin_volume_download(request: Request, path: str = ""):
+def admin_volume_download(request: Request, path: str = ""):
     if not is_authed(request):
         return _redirect("/admin/login")
 
@@ -764,14 +755,12 @@ async def admin_volume_download(request: Request, path: str = ""):
 
 
 @router.post("/admin/volume/delete", response_class=HTMLResponse)
-async def admin_volume_delete(request: Request):
+def admin_volume_delete(request: Request, path: str = Form("")):
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 
     from teg_analysis.io import delete_store_file
 
-    form = await request.form()
-    path = form.get("path", "")
     # Re-render the folder the file lived in.
     folder = path.rsplit("/", 1)[0] if "/" in path else ""
 
@@ -811,7 +800,7 @@ def _backups_body_ctx(request: Request, file_filter: str = "", result: dict = No
 
 
 @router.get("/admin/backups")
-async def admin_backups(request: Request, file: str = ""):
+def admin_backups(request: Request, file: str = ""):
     if not is_authed(request):
         return _redirect("/admin/login")
     ctx = _backups_body_ctx(request, file_filter=file)
@@ -820,15 +809,11 @@ async def admin_backups(request: Request, file: str = ""):
 
 
 @router.post("/admin/backups/restore", response_class=HTMLResponse)
-async def admin_backups_restore(request: Request):
+def admin_backups_restore(request: Request, backup_rel: str = Form(""), file_filter: str = Form("")):
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 
     from teg_analysis.io import restore_backup
-
-    form = await request.form()
-    backup_rel = form.get("backup_rel", "")
-    file_filter = form.get("file_filter", "")
 
     try:
         original = restore_backup(backup_rel)  # backs up the replaced copy first

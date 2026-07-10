@@ -381,6 +381,76 @@ def test_stray_out_of_range_hole_rejected_not_silently_dropping_round(store, mon
     assert result["teg_num"] == 10
 
 
+def test_write_during_finalize_commit_is_rejected(store, monkeypatch):
+    """T8: finalize releases the module lock *before* the (slow) GitHub commit
+    but keeps the token in ``_finalizing``, so a score arriving mid-commit is
+    rejected outright instead of being appended to staging and then silently
+    excluded from the 18-hole frame already being written. The mocked commit
+    stands in for that window: the lock is free while it runs, but the gate
+    must still block the write."""
+    _seed_round_pars(store)
+    _seed_handicaps(store)
+    import teg_analysis.analysis.data_update as du
+    captured = {}
+
+    def fake_execute(long_df, **kwargs):
+        # We're mid-commit here: finalize has released _lock but the token is
+        # in _finalizing, and Status is still 'active' (not flipped yet).
+        assert token in lr._finalizing
+        try:
+            lr.apply_score_writes(token, "dev-B", "Dave", [{"hole": 5, "player": "GW", "value": 6}])
+            captured["rejected"] = False
+        except lr.LiveRoundInactiveError:
+            captured["rejected"] = True
+        return {"records_added": len(long_df), "changed_rounds": {}, "backups": [], "committed": True, "files_committed": 1}
+
+    monkeypatch.setattr(du, "execute_data_update", fake_execute)
+
+    row = lr.start_live_round(10, 1)
+    token = row["Token"]
+    lr.apply_score_writes(token, "dev-A", "Jon", [{"hole": h, "player": "DM", "value": 4} for h in range(1, 19)])
+
+    result = lr.finalize_live_round(token)
+
+    assert captured["rejected"] is True  # the mid-commit write was blocked, not merged
+    assert result["teg_num"] == 10
+    # Gate cleared and the round finalized once the commit completed.
+    assert token not in lr._finalizing
+    reg = store["data/live_rounds.csv"]
+    assert reg[reg["Token"] == token].iloc[0]["Status"] == "finalized"
+
+
+def test_failed_finalize_commit_rolls_back_and_reopens_writes(store, monkeypatch):
+    """T8: if the GitHub commit raises, the token is dropped from ``_finalizing``
+    and Status is left 'active' -- writes resume and the admin can retry, with
+    no half-finalized state persisted."""
+    _seed_round_pars(store)
+    _seed_handicaps(store)
+    import teg_analysis.analysis.data_update as du
+
+    def boom(long_df, **kwargs):
+        raise RuntimeError("commit failed")
+
+    monkeypatch.setattr(du, "execute_data_update", boom)
+
+    row = lr.start_live_round(10, 1)
+    token = row["Token"]
+    lr.apply_score_writes(token, "dev-A", "Jon", [{"hole": h, "player": "DM", "value": 4} for h in range(1, 19)])
+
+    with pytest.raises(RuntimeError):
+        lr.finalize_live_round(token)
+
+    assert token not in lr._finalizing
+    reg = store["data/live_rounds.csv"]
+    assert reg[reg["Token"] == token].iloc[0]["Status"] == "active"
+    # Writes work again, and a retry can still finalize.
+    lr.apply_score_writes(token, "dev-A", "Jon", [{"hole": 1, "player": "DM", "value": 5}])
+    monkeypatch.setattr(du, "execute_data_update", lambda *a, **k: {
+        "records_added": 18, "changed_rounds": {}, "backups": [], "committed": True, "files_committed": 1,
+    })
+    assert lr.finalize_live_round(token)["teg_num"] == 10
+
+
 def test_finalize_refuses_when_not_active(store, monkeypatch):
     _seed_round_pars(store)
     _seed_handicaps(store)

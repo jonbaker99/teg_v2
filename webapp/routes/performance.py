@@ -118,7 +118,7 @@ def _top_tab_context(tab: str, measure: str = "GrossVP", n: int = 3) -> dict:
 
 
 @router.get("/top-performances")
-async def top_performances_page(request: Request):
+def top_performances_page(request: Request):
     default_tab = "best_teg"
     default_measure = "GrossVP"
     default_n = 3
@@ -136,7 +136,7 @@ async def top_performances_page(request: Request):
 
 
 @router.get("/top-performances/tab")
-async def top_performances_tab(request: Request, tab: str = "best_teg", measure: str = "GrossVP", n: int = 3):
+def top_performances_tab(request: Request, tab: str = "best_teg", measure: str = "GrossVP", n: int = 3):
     ctx = _top_tab_context(tab, measure, n)
     return templates.TemplateResponse("partials/top_performances_tab.html", {
         "request": request,
@@ -352,7 +352,7 @@ def _pb_tab_context(tab: str, measure: str = "GrossVP", n: int = 3) -> dict:
 
 
 @router.get("/personal-bests")
-async def personal_bests_page(request: Request):
+def personal_bests_page(request: Request):
     default_tab = "pb_summary"
     default_measure = "GrossVP"
     default_n = 1
@@ -378,7 +378,7 @@ async def personal_bests_page(request: Request):
 
 
 @router.get("/personal-bests/tab")
-async def personal_bests_tab(
+def personal_bests_tab(
     request: Request,
     tab: str = "pb_summary",
     measure: str = "GrossVP",

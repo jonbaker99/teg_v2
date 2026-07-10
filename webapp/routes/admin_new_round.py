@@ -25,10 +25,11 @@ Flow:
 import logging
 from pathlib import Path
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 
 from fastapi.templating import Jinja2Templates
+from starlette.concurrency import run_in_threadpool
 
 from webapp.admin_auth import is_authed
 from webapp import deps
@@ -106,7 +107,7 @@ def _render_wizard(request: Request, teg_num: int, round_num: int,
 
 
 @router.get("/admin/new-round")
-async def admin_new_round_landing(request: Request):
+def admin_new_round_landing(request: Request):
     if not is_authed(request):
         return _redirect("/admin/login")
 
@@ -128,22 +129,22 @@ async def admin_new_round_landing(request: Request):
 
 
 @router.get("/admin/new-round/{teg_num}/{round_num}")
-async def admin_new_round_wizard(request: Request, teg_num: int, round_num: int, step: str | None = None):
+def admin_new_round_wizard(request: Request, teg_num: int, round_num: int, step: str | None = None):
     if not is_authed(request):
         return _redirect("/admin/login")
     return _render_wizard(request, teg_num, round_num, step=step)
 
 
 @router.post("/admin/new-round/{teg_num}/{round_num}/metadata")
-async def admin_new_round_metadata(request: Request, teg_num: int, round_num: int):
+def admin_new_round_metadata(request: Request, teg_num: int, round_num: int,
+                             course: str = Form(""), date: str = Form("")):
     if not is_authed(request):
         return _redirect("/admin/login")
 
     from teg_analysis.analysis.round_wizard import save_round_metadata
 
-    form = await request.form()
-    course = (form.get("course") or "").strip()
-    date = (form.get("date") or "").strip()
+    course = (course or "").strip()
+    date = (date or "").strip()
     try:
         save_round_metadata(teg_num, round_num, course, date)
         deps.clear_all_data_caches()
@@ -156,6 +157,7 @@ async def admin_new_round_metadata(request: Request, teg_num: int, round_num: in
 
 @router.post("/admin/new-round/{teg_num}/{round_num}/roster")
 async def admin_new_round_roster(request: Request, teg_num: int, round_num: int):
+    # async: dynamic-keyed form (playing__{code}); heavy save offloaded below.
     if not is_authed(request):
         return _redirect("/admin/login")
 
@@ -174,7 +176,7 @@ async def admin_new_round_roster(request: Request, teg_num: int, round_num: int)
         players.append({"code": code, "playing": playing, "handicap": handicap or None})
 
     try:
-        save_teg_roster(teg_num, players)
+        await run_in_threadpool(save_teg_roster, teg_num, players)
         deps.clear_all_data_caches()
     except Exception as e:  # noqa: BLE001
         logger.error(f"New-round roster save failed: {e}", exc_info=True)
@@ -185,6 +187,7 @@ async def admin_new_round_roster(request: Request, teg_num: int, round_num: int)
 
 @router.post("/admin/new-round/{teg_num}/{round_num}/parsi")
 async def admin_new_round_parsi(request: Request, teg_num: int, round_num: int):
+    # async: dynamic-keyed form (par__{h} / si__{h}); heavy save offloaded below.
     if not is_authed(request):
         return _redirect("/admin/login")
 
@@ -203,7 +206,7 @@ async def admin_new_round_parsi(request: Request, teg_num: int, round_num: int):
         holes.append({"hole": h, "par": par, "si": si})
 
     try:
-        save_round_setup(teg_num, round_num, holes)
+        await run_in_threadpool(save_round_setup, teg_num, round_num, holes)
         deps.clear_all_data_caches()
     except Exception as e:  # noqa: BLE001
         logger.error(f"New-round Par/SI save failed: {e}", exc_info=True)
@@ -213,7 +216,7 @@ async def admin_new_round_parsi(request: Request, teg_num: int, round_num: int):
 
 
 @router.post("/admin/new-round/{teg_num}/{round_num}/golive")
-async def admin_new_round_golive(request: Request, teg_num: int, round_num: int):
+def admin_new_round_golive(request: Request, teg_num: int, round_num: int):
     if not is_authed(request):
         return _redirect("/admin/login")
 

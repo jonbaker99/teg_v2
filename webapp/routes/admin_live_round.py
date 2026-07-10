@@ -18,9 +18,10 @@ Flow:
 import logging
 from pathlib import Path
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from starlette.concurrency import run_in_threadpool
 
 from webapp.admin_auth import is_authed
 from webapp import deps
@@ -37,7 +38,7 @@ def _redirect(url: str):
 
 
 @router.get("/admin/live-round")
-async def admin_live_round_list(request: Request):
+def admin_live_round_list(request: Request):
     if not is_authed(request):
         return _redirect("/admin/login")
 
@@ -64,7 +65,7 @@ async def admin_live_round_list(request: Request):
 
 
 @router.post("/admin/live-round/start", response_class=HTMLResponse)
-async def admin_live_round_start(request: Request):
+def admin_live_round_start(request: Request, teg_num: str = Form(""), round_num: str = Form("")):
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 
@@ -72,11 +73,9 @@ async def admin_live_round_start(request: Request):
         start_live_round, RoundParsNotConfirmedError, LiveRoundAlreadyActiveError,
     )
 
-    form = await request.form()
     ctx = {"request": request}
     try:
-        teg_num, round_num = int(form.get("teg_num")), int(form.get("round_num"))
-        row = start_live_round(teg_num, round_num)
+        row = start_live_round(int(teg_num), int(round_num))
         ctx["result"] = row
         ctx["link"] = str(request.url_for("live_round_page", token=row["Token"]))
     except (RoundParsNotConfirmedError, LiveRoundAlreadyActiveError) as e:
@@ -89,7 +88,7 @@ async def admin_live_round_start(request: Request):
 
 
 @router.get("/admin/live-round/{token}/review")
-async def admin_live_round_review(request: Request, token: str):
+def admin_live_round_review(request: Request, token: str):
     if not is_authed(request):
         return _redirect("/admin/login")
 
@@ -137,6 +136,9 @@ async def admin_live_round_edit(request: Request, token: str):
     ones that changed (via apply_admin_edits, which is authoritative and clears
     any conflict), then redirects back to the review page so the whole grid
     re-renders from the saved state.
+
+    async because it reads a dynamic-keyed form (score-{hole}-{player}); the
+    blocking write (apply_admin_edits) is offloaded to the threadpool below.
     """
     if not is_authed(request):
         return _redirect("/admin/login")
@@ -170,7 +172,7 @@ async def admin_live_round_edit(request: Request, token: str):
     from urllib.parse import quote
 
     try:
-        result = apply_admin_edits(token, cells, resolved_by="Admin")
+        result = await run_in_threadpool(apply_admin_edits, token, cells, "Admin")
         written = result["written"]
     except LiveRoundNotFoundError:
         return _redirect(f"/admin/live-round/{token}/review")
@@ -182,19 +184,18 @@ async def admin_live_round_edit(request: Request, token: str):
 
 
 @router.post("/admin/live-round/{token}/resolve", response_class=HTMLResponse)
-async def admin_live_round_resolve(request: Request, token: str):
+def admin_live_round_resolve(request: Request, token: str, hole: str = Form(""),
+                             player: str = Form(""), chosen_value: str = Form("")):
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 
     from teg_analysis.analysis.live_round import resolve_conflict, LiveRoundNotFoundError
 
-    form = await request.form()
     ctx = {"request": request, "token": token}
     try:
-        hole, player = int(form.get("hole")), form.get("player")
-        chosen_value = int(form.get("chosen_value"))
-        resolve_conflict(token, hole=hole, player=player, chosen_value=chosen_value, resolved_by="Admin")
-        ctx["resolved"] = {"hole": hole, "player": player, "value": chosen_value}
+        hole_num, chosen = int(hole), int(chosen_value)
+        resolve_conflict(token, hole=hole_num, player=player, chosen_value=chosen, resolved_by="Admin")
+        ctx["resolved"] = {"hole": hole_num, "player": player, "value": chosen}
     except LiveRoundNotFoundError:
         ctx["error"] = "Live round not found."
     except Exception as e:  # noqa: BLE001
@@ -205,7 +206,7 @@ async def admin_live_round_resolve(request: Request, token: str):
 
 
 @router.post("/admin/live-round/{token}/finalize", response_class=HTMLResponse)
-async def admin_live_round_finalize(request: Request, token: str):
+def admin_live_round_finalize(request: Request, token: str):
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 
@@ -229,7 +230,7 @@ async def admin_live_round_finalize(request: Request, token: str):
 
 
 @router.post("/admin/live-round/{token}/cancel", response_class=HTMLResponse)
-async def admin_live_round_cancel(request: Request, token: str):
+def admin_live_round_cancel(request: Request, token: str):
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 

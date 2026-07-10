@@ -100,7 +100,7 @@ def _eclectic_tab_context(
 
 
 @router.get("/eclectic")
-async def eclectic_page(
+def eclectic_page(
     request: Request,
     player: str = Query(""),
     teg: int = Query(0),
@@ -123,7 +123,7 @@ async def eclectic_page(
 
 
 @router.get("/eclectic/tab")
-async def eclectic_tab(
+def eclectic_tab(
     request: Request,
     dimension: str = Query("Player"),
     player: str = Query(""),
@@ -170,7 +170,7 @@ def _eclectic_records_context(dimension: str) -> dict:
 
 
 @router.get("/eclectic-records")
-async def eclectic_records_page(request: Request):
+def eclectic_records_page(request: Request):
     default_tab = "TEGNum"
     ctx = _eclectic_records_context(default_tab)
     return templates.TemplateResponse("eclectic_records.html", {
@@ -183,7 +183,7 @@ async def eclectic_records_page(request: Request):
 
 
 @router.get("/eclectic-records/tab")
-async def eclectic_records_tab(request: Request, dimension: str = Query("TEGNum")):
+def eclectic_records_tab(request: Request, dimension: str = Query("TEGNum")):
     ctx = _eclectic_records_context(dimension)
     return templates.TemplateResponse("partials/eclectic_records_tab.html", {
         "request": request,

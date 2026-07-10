@@ -87,7 +87,7 @@ def _run(label: str, fn: Callable) -> dict:
 
 
 @router.get("/smoke-test")
-async def smoke_test(request: Request):
+def smoke_test(request: Request):
     teg_num = get_default_teg_num()
     teg_str = f"TEG {teg_num}"
 

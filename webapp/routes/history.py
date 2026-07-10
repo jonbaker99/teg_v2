@@ -229,7 +229,7 @@ def _ranking_table_html(df: pd.DataFrame, player_col: str = "Player",
 # --- /history -----------------------------------------------------------------
 
 @router.get("/history")
-async def history_page(request: Request):
+def history_page(request: Request):
     try:
         df = prepare_complete_history_table_fast()
         table_html = _history_table_html(df)
@@ -349,7 +349,7 @@ def _honours_tab_context(tab: str) -> dict:
 
 
 @router.get("/honours")
-async def honours_page(request: Request):
+def honours_page(request: Request):
     ctx = _honours_tab_context("trophy")
     return templates.TemplateResponse("honours.html", {
         "request": request,
@@ -361,7 +361,7 @@ async def honours_page(request: Request):
 
 
 @router.get("/honours/tab/{tab_name}")
-async def honours_tab(request: Request, tab_name: str):
+def honours_tab(request: Request, tab_name: str):
     ctx = _honours_tab_context(tab_name)
     return templates.TemplateResponse("partials/honours_tab.html", {
         "request": request,
@@ -629,7 +629,7 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
 
 
 @router.get("/results")
-async def results_page(request: Request):
+def results_page(request: Request):
     teg_num = get_default_teg_num()
     teg_numbers = get_available_teg_numbers()
     ctx = _results_context(teg_num, "net")
@@ -644,7 +644,7 @@ async def results_page(request: Request):
 
 
 @router.get("/results/table")
-async def results_table(request: Request, teg: int = Query(...), tab: str = Query("net"),
+def results_table(request: Request, teg: int = Query(...), tab: str = Query("net"),
                         chart_variant: str = Query("adjusted")):
     ctx = _results_context(teg, tab, chart_variant)
     return templates.TemplateResponse("partials/results_table.html", {
@@ -723,7 +723,7 @@ def _player_rankings_context(tab: str, row_dim: str = "Player", col_dim: str = "
 
 
 @router.get("/player-rankings")
-async def player_rankings_page(request: Request, row_dim: str = Query("Player"), col_dim: str = Query("TEGNum")):
+def player_rankings_page(request: Request, row_dim: str = Query("Player"), col_dim: str = Query("TEGNum")):
     default_tab = "trophy"
     ctx = _player_rankings_context(default_tab, row_dim, col_dim)
     return templates.TemplateResponse("player_rankings.html", {
@@ -736,7 +736,7 @@ async def player_rankings_page(request: Request, row_dim: str = Query("Player"),
 
 
 @router.get("/player-rankings/tab")
-async def player_rankings_tab(request: Request, tab: str = "trophy",
+def player_rankings_tab(request: Request, tab: str = "trophy",
                               row_dim: str = Query("Player"), col_dim: str = Query("TEGNum")):
     ctx = _player_rankings_context(tab, row_dim, col_dim)
     return templates.TemplateResponse("partials/player_rankings_tab.html", {

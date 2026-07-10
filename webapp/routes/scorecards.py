@@ -69,7 +69,7 @@ def _bestball_context(mode: str = "bestball", teg: int = 0, sort_best: bool = Tr
 
 
 @router.get("/bestball")
-async def bestball_page(request: Request, teg: int = 0, sort_best: bool = True, n: int = 3):
+def bestball_page(request: Request, teg: int = 0, sort_best: bool = True, n: int = 3):
     ctx = _bestball_context("bestball", teg, sort_best, n)
     teg_numbers = get_available_teg_numbers()
     return templates.TemplateResponse("bestball.html", {
@@ -85,7 +85,7 @@ async def bestball_page(request: Request, teg: int = 0, sort_best: bool = True, 
 
 
 @router.get("/bestball/content")
-async def bestball_content(request: Request, mode: str = "bestball", teg: int = 0, sort_best: bool = True, n: int = 3):
+def bestball_content(request: Request, mode: str = "bestball", teg: int = 0, sort_best: bool = True, n: int = 3):
     ctx = _bestball_context(mode, teg, sort_best, n)
     return templates.TemplateResponse("partials/bestball_content.html", {
         "request": request,

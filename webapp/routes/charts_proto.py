@@ -19,7 +19,7 @@ templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templa
 
 
 @router.get("/charts-proto")
-async def charts_proto(request: Request):
+def charts_proto(request: Request):
     df = cached_load_all_data()
     teg_num = get_default_teg_num()
     teg_name = f"TEG {teg_num}"

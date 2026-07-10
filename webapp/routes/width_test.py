@@ -57,7 +57,7 @@ def _build_wide_table(df, teg_num: int) -> str:
 
 
 @router.get("/width-test")
-async def width_test_page(request: Request):
+def width_test_page(request: Request):
     teg_num = get_default_teg_num()
     rd_data = cached_round_data()
     teg_rd = rd_data[rd_data['TEGNum'] == teg_num]

@@ -21,25 +21,25 @@ def _placeholder(request: Request, title: str, subtitle: str = None, note: str =
 
 # --- Data section ---
 @router.get("/data/update")
-async def data_update(request: Request):
+def data_update(request: Request):
     return _placeholder(request, "Data Update", active_page="data")
 
 
 @router.get("/data/reports")
-async def data_reports(request: Request):
+def data_reports(request: Request):
     return _placeholder(request, "Report Generation", active_page="data")
 
 
 @router.get("/data/edit")
-async def data_edit(request: Request):
+def data_edit(request: Request):
     return _placeholder(request, "Data Edit", active_page="data")
 
 
 @router.get("/data/delete")
-async def data_delete(request: Request):
+def data_delete(request: Request):
     return _placeholder(request, "Delete Data", active_page="data")
 
 
 @router.get("/data/volumes")
-async def data_volumes(request: Request):
+def data_volumes(request: Request):
     return _placeholder(request, "Data Volume Management", active_page="data")

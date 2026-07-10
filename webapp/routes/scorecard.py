@@ -177,7 +177,7 @@ def _build_scorecard_context(
 
 
 @router.get("/scorecard")
-async def scorecard_page(
+def scorecard_page(
     request: Request,
     teg: int = None,
     round: int = None,
@@ -208,7 +208,7 @@ async def scorecard_page(
 
 
 @router.get("/scorecard/content")
-async def scorecard_content(
+def scorecard_content(
     request: Request,
     teg: int = Query(...),
     round: int = Query(None),

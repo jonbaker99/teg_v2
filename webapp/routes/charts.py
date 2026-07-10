@@ -87,7 +87,7 @@ def _chart_context(teg_num: int, chart_type: str, theme: str = "terminal") -> di
 
 
 @router.get("/charts")
-async def charts_page(request: Request, type: str = "stableford"):
+def charts_page(request: Request, type: str = "stableford"):
     teg_num = get_default_teg_num()
     teg_numbers = get_available_teg_numbers()
     ctx = _chart_context(teg_num, type, theme=request.state.theme)
@@ -103,7 +103,7 @@ async def charts_page(request: Request, type: str = "stableford"):
 
 
 @router.get("/charts/figure")
-async def charts_figure(request: Request, teg: int = Query(...), type: str = "stableford"):
+def charts_figure(request: Request, teg: int = Query(...), type: str = "stableford"):
     ctx = _chart_context(teg, type, theme=request.state.theme)
     return templates.TemplateResponse("partials/chart_container.html", {
         "request": request,
