@@ -467,12 +467,10 @@ REVIEW_PLAN.md.
 ```text
 Read REVIEW_PLAN.md (findings W8, T6, T11 / Chat 7) for full context. Jon has decided:
 - Prototype routes (charts_proto, width_test, title_preview, showcase, smoke_test,
-  placeholder): <<delete these: ... / admin-gate these: ... / keep these: ...>>
-- Stableford >= 6 gate in aggregation.py comeback functions: <<intentional — name the
-  constant and comment why / bug — align to get_net_competition_measure (TEG 8+)>>
-- DATA_STORAGE_INGESTION_PLAN.md: <<keep — fix the CLAUDE.md sentence saying it was
-  deleted / delete — fold the still-referenced content into webapp/README.md and
-  live_round.py docstrings first>>
+  placeholder): delete all of these
+- Stableford >= 6 gate in aggregation.py comeback functions: bug — align to get_net_competition_measure (TEG 8+)
+- DATA_STORAGE_INGESTION_PLAN.md: keep — fix the CLAUDE.md sentence saying it was
+  deleted
 
 Apply exactly those decisions:
 1. W8: update webapp/app.py imports/includes and delete or gate the route files per the
