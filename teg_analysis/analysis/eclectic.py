@@ -254,6 +254,157 @@ def format_eclectic_records_table(df: pd.DataFrame) -> pd.DataFrame:
     return formatted_df
 
 
+def eclectic_player_teg_totals(data: pd.DataFrame) -> pd.DataFrame:
+    """One row per (Player, TEGNum): the player's eclectic total for that TEG
+    (sum over holes of their per-hole minimum GrossVP within the TEG).
+
+    Args:
+        data: Hole-by-hole score data with Player, TEGNum, Hole, GrossVP.
+
+    Returns:
+        DataFrame with columns Player, TEGNum, Total.
+    """
+    per_hole = data.groupby(['Player', 'TEGNum', 'Hole'])['GrossVP'].min().reset_index()
+    return per_hole.groupby(['Player', 'TEGNum'])['GrossVP'].sum().reset_index(name='Total')
+
+
+def rank_teg_eclectics(data: pd.DataFrame, teg_num: int, complete_teg_nums=None) -> pd.DataFrame:
+    """For each player who played teg_num, their eclectic Total plus two ranks:
+      - all-time: Total vs the pool of ALL player-TEG eclectic totals
+      - own-history: Total vs that player's own per-TEG totals
+
+    Ranks use 'min' (ties share the lower rank). If complete_teg_nums is given,
+    the all-time POOL is restricted to those TEGs; the player's own-history
+    pool is NOT restricted (a player's own progression is comparable
+    regardless). Lower Total is better; ascending rank.
+
+    Args:
+        data: Hole-by-hole score data with Player, TEGNum, Hole, GrossVP.
+        teg_num: The TEG to build the ranks table for.
+        complete_teg_nums: Optional iterable of TEGNum values considered
+            "complete"; restricts the all-time comparison pool when given.
+
+    Returns:
+        DataFrame with columns Player, Total(int), AllTimeRank(int),
+        AllTimeN(int), OwnRank(int), OwnN(int) — one row per player who
+        played teg_num.
+    """
+    totals = eclectic_player_teg_totals(data)
+    if totals.empty:
+        return pd.DataFrame(columns=['Player', 'Total', 'AllTimeRank', 'AllTimeN', 'OwnRank', 'OwnN'])
+
+    this_teg_players = totals.loc[totals['TEGNum'] == teg_num, 'Player'].unique()
+    if len(this_teg_players) == 0:
+        return pd.DataFrame(columns=['Player', 'Total', 'AllTimeRank', 'AllTimeN', 'OwnRank', 'OwnN'])
+
+    # All-time pool: optionally restricted to complete TEGs, but the current
+    # TEG's own rows are always included so a player's current total ranks
+    # against itself even if teg_num isn't in complete_teg_nums.
+    if complete_teg_nums is not None:
+        complete_set = set(complete_teg_nums) | {teg_num}
+        all_time_pool = totals[totals['TEGNum'].isin(complete_set)].copy()
+    else:
+        all_time_pool = totals.copy()
+
+    all_time_pool['AllTimeRank'] = all_time_pool['Total'].rank(method='min', ascending=True).astype(int)
+    all_time_n = len(all_time_pool)
+
+    rows = []
+    for player in this_teg_players:
+        player_row = totals[(totals['Player'] == player) & (totals['TEGNum'] == teg_num)]
+        total = int(player_row['Total'].iloc[0])
+
+        at_row = all_time_pool[(all_time_pool['Player'] == player) & (all_time_pool['TEGNum'] == teg_num)]
+        all_time_rank = int(at_row['AllTimeRank'].iloc[0]) if not at_row.empty else None
+        all_time_n_row = all_time_n if not at_row.empty else len(all_time_pool)
+
+        own_history = totals[totals['Player'] == player].copy()
+        own_history['OwnRank'] = own_history['Total'].rank(method='min', ascending=True).astype(int)
+        own_row = own_history[own_history['TEGNum'] == teg_num]
+        own_rank = int(own_row['OwnRank'].iloc[0])
+        own_n = len(own_history)
+
+        rows.append({
+            'Player': player,
+            'Total': total,
+            'AllTimeRank': all_time_rank,
+            'AllTimeN': all_time_n_row,
+            'OwnRank': own_rank,
+            'OwnN': own_n,
+        })
+
+    return pd.DataFrame(rows, columns=['Player', 'Total', 'AllTimeRank', 'AllTimeN', 'OwnRank', 'OwnN'])
+
+
+ECLECTIC_CONTRIBUTION_COLS = ['Pl', 'Player', 'ecl_holes', 'ecl_solo', 'ecl_impact']
+
+
+def calculate_eclectic_contributions(teg_data: pd.DataFrame) -> pd.DataFrame:
+    """Per-player contribution to a TEG's team eclectic.
+
+    For each player:
+      - holes:  holes where their personal eclectic (min GrossVP over their
+                rounds that hole) equals the team eclectic (min over ALL
+                players/rounds that hole) — i.e. the highlighted cells on the
+                eclectic scorecard.
+      - solo:   of those, holes where they are the ONLY player whose personal
+                eclectic reaches the team value.
+      - impact: signed shots contributed = (team eclectic total WITH player)
+                minus (WITHOUT). Only moves on solo holes; equals sum over
+                solo holes of (team_value - second_best_personal_ecl).
+                <= 0 (shots the player saved the team).
+
+    Args:
+        teg_data: all hole-level data for one TEG, with Pl, Player, Hole,
+            GrossVP columns (may span multiple rounds per player).
+
+    Returns:
+        DataFrame with one row per player and columns
+        ``ECLECTIC_CONTRIBUTION_COLS`` (int-valued). Row order follows input
+        player order.
+    """
+    if teg_data is None or teg_data.empty:
+        return pd.DataFrame(columns=ECLECTIC_CONTRIBUTION_COLS)
+
+    df = teg_data[['Pl', 'Player', 'Hole', 'GrossVP']].copy()
+    df['GrossVP'] = df['GrossVP'].astype(int)
+
+    # Personal eclectic per (player, hole): min GrossVP over that player's rounds.
+    personal = df.groupby(['Pl', 'Hole'])['GrossVP'].min().reset_index()
+
+    holes = sorted(personal['Hole'].unique())
+    by_hole = {h: personal[personal['Hole'] == h] for h in holes}
+
+    rows = []
+    for pl in df['Pl'].drop_duplicates():
+        name = df.loc[df['Pl'] == pl, 'Player'].iloc[0]
+        pmap = dict(zip(personal.loc[personal['Pl'] == pl, 'Hole'], personal.loc[personal['Pl'] == pl, 'GrossVP']))
+        ecl_holes = ecl_solo = 0
+        ecl_impact = 0
+        for h in holes:
+            if h not in pmap:
+                continue
+            vals = by_hole[h]['GrossVP'].values
+            pv = pmap[h]
+            hmin = int(vals.min())
+            others = by_hole[h].loc[by_hole[h]['Pl'] != pl, 'GrossVP'].values
+            if pv == hmin:
+                ecl_holes += 1
+                if (vals == hmin).sum() == 1:
+                    ecl_solo += 1
+            # Signed contribution = (team eclectic total with player) - (without).
+            # On tied or non-contributing holes the min is unchanged, so this
+            # sums only the player's solo holes. <= 0 (shots the player saved).
+            if len(others) > 0:
+                ecl_impact += hmin - int(others.min())
+        rows.append({
+            'Pl': pl, 'Player': name,
+            'ecl_holes': ecl_holes, 'ecl_solo': ecl_solo, 'ecl_impact': ecl_impact,
+        })
+
+    return pd.DataFrame(rows, columns=ECLECTIC_CONTRIBUTION_COLS)
+
+
 def format_eclectic_table(eclectic_df: pd.DataFrame, dimension: str) -> pd.DataFrame:
     """Formats the eclectic table for display.
 
