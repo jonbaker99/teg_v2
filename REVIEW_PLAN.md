@@ -409,14 +409,23 @@ for the reviewer.
 ```
 
 ### Chat 6 — `aggregate_data` fixed schema *(Opus)*
-- [ ] **T5**: Replace `list_fields_by_aggregation_level` dynamic discovery with a fixed
+- [x] **T5**: Replace `list_fields_by_aggregation_level` dynamic discovery with a fixed
       level→columns map; make grouping/sort order deterministic. **Output must be
       column-for-column identical** — snapshot current outputs for each accessor first
       and diff after. Files: `teg_analysis/analysis/aggregation.py` + caller audit.
-- [ ] Review checklist before committing.
+- [x] Review checklist before committing.
 
 *Why alone*: every page sits downstream of this function; regression surface is the
 whole site.
+
+*Outcome*: `aggregate_data` now uses the fixed `_AGGREGATION_LEVEL_FIELDS` map (no
+`groupby().nunique()` per call). Data output is byte-identical for all accessors
+(snapshot-diffed). Column/row order was previously nondeterministic (`list(set(...))`
+wobbled run-to-run); it is now a deterministic documented order. Audited the only two
+internal callers (`webapp/routes/scoring.py` `/scoring/by-teg`,
+`teg_analysis/display/html_tables.py`) — both select columns by name via `pivot_table`,
+neither depends on position or row order. `list_fields_by_aggregation_level` retained
+for ad-hoc use. New test: `tests/test_aggregation.py`.
 
 **Starter prompt:**
 ```text
