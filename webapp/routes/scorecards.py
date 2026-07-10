@@ -2,7 +2,6 @@
 
 from pathlib import Path
 
-import pandas as pd
 from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
 
@@ -12,25 +11,10 @@ from webapp.deps import (
     bestball_worstball_totals,
     get_available_teg_numbers,
 )
+from webapp.tables import df_to_html as _df_to_html
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
-
-
-def _df_to_html(df: pd.DataFrame, table_class: str = "teg-table") -> str:
-    if df is None or df.empty:
-        return "<p class='text-muted text-sm'>No data available.</p>"
-    rows = [f"<table class='{table_class}'><thead><tr>"]
-    for col in df.columns:
-        rows.append(f"<th>{col}</th>")
-    rows.append("</tr></thead><tbody>")
-    for _, row in df.iterrows():
-        rows.append("<tr>")
-        for col in df.columns:
-            rows.append(f"<td>{row[col]}</td>")
-        rows.append("</tr>")
-    rows.append("</tbody></table>")
-    return "".join(rows)
 
 
 def _bestball_context(mode: str = "bestball", teg: int = 0, sort_best: bool = True, n: int = 3) -> dict:

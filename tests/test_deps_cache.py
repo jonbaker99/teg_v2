@@ -1,27 +1,25 @@
 """The cross-module cache-clear registry in webapp.deps.
 
-Route modules keep their own lru_cache'd accessors (deps can't import routes
-without a circular import), so they register their cache_clear with deps and
-clear_all_data_caches() must fan out to them. This guards the specific bug
-that motivated the registry: player.py's winners cache going stale after a
-data update.
+Route modules can keep their own lru_cache'd accessors (deps can't import
+routes without a circular import), so they'd register their cache_clear with
+deps and clear_all_data_caches() must fan out to them. Also guards that
+deps' own lru_cache'd accessors -- including cached_winners() and
+cached_streaks_data(), shared by /honours, /player and the /latest-* tabs --
+are invalidated after a data update.
 """
 
 import importlib
 
 
-def test_clear_all_data_caches_invalidates_registered_route_caches():
+def test_clear_all_data_caches_invalidates_own_caches():
     from webapp import deps
-    player = importlib.import_module("webapp.routes.player")
+    importlib.import_module("webapp.routes.player")
 
-    # player.py registers its winners cache at import time.
-    assert player._get_winners_data.cache_clear in deps._extra_cache_clearers
-
-    player._get_winners_data()
-    assert player._get_winners_data.cache_info().currsize == 1
+    deps.cached_winners()
+    assert deps.cached_winners.cache_info().currsize == 1
 
     deps.clear_all_data_caches()
-    assert player._get_winners_data.cache_info().currsize == 0
+    assert deps.cached_winners.cache_info().currsize == 0
 
 
 def test_register_cache_clearer_is_idempotent():

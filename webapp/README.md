@@ -333,6 +333,7 @@ the admin Live round page above.
 webapp/
   app.py              # FastAPI init, middleware, static mounts, router includes
   deps.py             # Shared dependencies (data loading with @lru_cache)
+  tables.py           # Shared DataFrame -> escaped HTML table renderer (df_to_html)
   theme.py            # Theme registry + helper to resolve active theme
   chart_utils.py      # Plotly chart generation
   routes/             # One file per page area (history, records, scoring, etc.)

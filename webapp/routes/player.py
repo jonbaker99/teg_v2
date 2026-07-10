@@ -1,7 +1,6 @@
 """Player profile routes."""
 
 import logging
-from functools import lru_cache
 from pathlib import Path
 
 import pandas as pd
@@ -13,7 +12,6 @@ from markupsafe import escape
 
 from teg_analysis.core.players import get_player_dict, get_name_to_code
 from teg_analysis.analysis.history import (
-    get_teg_winners,
     get_eagles_data,
     get_holes_in_one_data,
     calculate_trophy_jacket_doubles,
@@ -25,7 +23,6 @@ from teg_analysis.analysis.scoring import (
     get_net_competition_measure,
 )
 from teg_analysis.analysis.streaks import (
-    build_streaks,
     get_max_streaks,
     get_current_streaks,
     STREAK_CONFIGS,
@@ -48,6 +45,7 @@ from webapp.deps import (
     format_value,
 )
 from webapp.chart_utils import get_chart_style
+from webapp.tables import df_to_html as _table_df_to_html
 
 logger = logging.getLogger(__name__)
 
@@ -73,19 +71,6 @@ def _validate_player(player_code: str) -> str:
     if pc not in get_player_dict():
         raise HTTPException(status_code=404, detail=f"Unknown player code: {player_code}")
     return pc
-
-
-@lru_cache(maxsize=1)
-def _get_winners_data():
-    """Get winners DataFrame from all data (cached)."""
-    all_data = cached_load_all_data()
-    return get_teg_winners(all_data)
-
-
-# Register with deps so a data update (add/delete/finalize a round) invalidates
-# this too -- otherwise the trophy cabinet / winners data on player profiles
-# would show stale results until the process restarts.
-deps.register_cache_clearer(_get_winners_data.cache_clear)
 
 
 def _ordinal(n: int) -> str:
@@ -175,19 +160,18 @@ _METRIC_ROWS = [
 ]
 
 
-def _build_overview_metrics(player_code: str) -> list[list[dict]]:
+def _build_overview_metrics(player_code: str, all_data: pd.DataFrame, specs: list) -> list[list[dict]]:
     """Build the headline metric cards, grouped into themed rows.
 
     Each card has value, label and cross-player rank. The Eagles and Holes in One
-    cards also carry a ``tooltip`` listing where they were scored.
+    cards also carry a ``tooltip`` listing where they were scored. ``specs`` is
+    the shared ``_metric_specs(...)`` output, computed once per request by the
+    caller and passed to both this and ``_build_trophy_section``.
     """
     name = get_player_dict()[player_code]
-    all_data = cached_load_all_data()
-    rd_data = cached_round_data()
-    winners = _get_winners_data()
 
     by_label = {}
-    for label, series, ascending, fmt, unranked_if_zero in _metric_specs(all_data, rd_data, winners):
+    for label, series, ascending, fmt, unranked_if_zero in specs:
         if name in series.index and pd.notna(series[name]):
             raw = series[name]
             value = fmt(raw)
@@ -212,22 +196,20 @@ def _build_overview_metrics(player_code: str) -> list[list[dict]]:
     return [[by_label[lbl] for lbl in row] for row in _METRIC_ROWS]
 
 
-def _build_trophy_section(player_code: str) -> dict:
+def _build_trophy_section(player_code: str, specs: list) -> dict:
     """Build trophy-cabinet data: counts and cross-player ranks for each honour.
 
     Rank is suppressed when the player has none of that honour. Doubles are
     reported separately as a footnote rather than as a standalone count.
+    ``specs`` is the shared ``_metric_specs(...)`` output (see
+    ``_build_overview_metrics``).
     """
     name = get_player_dict()[player_code]
-    all_data = cached_load_all_data()
-    rd_data = cached_round_data()
-    winners = _get_winners_data()
 
-    specs = {label: (series, ascending) for label, series, ascending, _f, _z
-             in _metric_specs(all_data, rd_data, winners)}
+    specs_by_label = {label: (series, ascending) for label, series, ascending, _f, _z in specs}
 
     def get(label):
-        series, ascending = specs[label]
+        series, ascending = specs_by_label[label]
         count = int(series[name]) if name in series.index and pd.notna(series[name]) else 0
         rank = _ordinal_rank(_rank_str(series, name, ascending)) if count > 0 else ""
         return count, rank
@@ -510,30 +492,16 @@ _NUMERIC_COLS = {
 _RANK_COLS = {'#', 'Rank', 'Gross Rank', 'Net Rank', 'Trophy Rank', 'Round Rank'}
 
 
+def _col_class(_i: int, col: str) -> str:
+    return 'col-rank' if col in _RANK_COLS else ('col-num' if col in _NUMERIC_COLS else 'col-player')
+
+
 def _build_simple_table_html(df, highlight_col=None, highlight_val=None):
     """Build a simple HTML table from a DataFrame with escaped values."""
-    if df is None or df.empty:
-        return "<p class='text-muted text-sm'>No data available.</p>"
-
-    rows = ["<table class='teg-table'>", "<thead><tr>"]
-    for col in df.columns:
-        cls = 'col-rank' if col in _RANK_COLS else ('col-num' if col in _NUMERIC_COLS else 'col-player')
-        rows.append(f"<th class='{cls}'>{escape(str(col))}</th>")
-    rows.append("</tr></thead><tbody>")
-
-    for _, row in df.iterrows():
-        row_class = ""
-        if highlight_col and highlight_val and str(row.get(highlight_col, '')) == str(highlight_val):
-            row_class = ' class="top-rank"'
-        rows.append(f"<tr{row_class}>")
-        for col in df.columns:
-            cls = 'col-rank' if col in _RANK_COLS else ('col-num' if col in _NUMERIC_COLS else 'col-player')
-            val = escape(str(row[col]))
-            rows.append(f"<td class='{cls}'>{val}</td>")
-        rows.append("</tr>")
-
-    rows.append("</tbody></table>")
-    return "".join(rows)
+    return _table_df_to_html(
+        df, col_class=_col_class,
+        highlight_col=highlight_col, highlight_val=highlight_val,
+    )
 
 
 _WIN_RESULTS = {"Trophy", "Jacket", "Double"}
@@ -552,7 +520,7 @@ def _build_teg_results_table_html(df):
     cols = list(df.columns)
 
     def col_cls(col):
-        return 'col-rank' if col in _RANK_COLS else ('col-num' if col in _NUMERIC_COLS else 'col-player')
+        return _col_class(0, col)
 
     rows = ["<table class='teg-table player-results-table'>", "<thead><tr>"]
     for col in cols:
@@ -696,14 +664,16 @@ def _trend_fig(x, y, yaxis_title, avg_fmt, bar_color, bar_labels=None) -> str:
     return fig.to_json()
 
 
-def _build_overview_context(player_code: str, theme: str) -> dict:
+def _build_overview_context(player_code: str) -> dict:
     """Build context for the overview tab."""
     name = get_player_dict()[player_code]
 
     ranked_teg = cached_ranked_teg_data()
     player_teg = ranked_teg[ranked_teg['Player'] == name].copy()
-    winners = _get_winners_data()
+    all_data = cached_load_all_data()
+    winners = deps.cached_winners()
     rd_data = cached_round_data()
+    specs = _metric_specs(all_data, rd_data, winners)
 
     # Pre-compute per-TEG finishing ranks once; used for both table and chart labels.
     teg_rank_map: dict[int, dict] = {}
@@ -788,8 +758,8 @@ def _build_overview_context(player_code: str, theme: str) -> dict:
         "highlights": _build_highlights(player_code),
         "records_held": _records_held(get_player_dict()[player_code]),
         "worsts_held": _worsts_held(get_player_dict()[player_code]),
-        "metrics": _build_overview_metrics(player_code),
-        "trophy": _build_trophy_section(player_code),
+        "metrics": _build_overview_metrics(player_code, all_data, specs),
+        "trophy": _build_trophy_section(player_code, specs),
     }
 
 
@@ -894,7 +864,7 @@ def _build_rounds_context(player_code: str) -> dict:
 # Tab: Scoring
 # ---------------------------------------------------------------------------
 
-def _build_scoring_context(player_code: str, theme: str) -> dict:
+def _build_scoring_context(player_code: str) -> dict:
     """Build context for the scoring tab."""
     name = get_player_dict()[player_code]
     all_data = cached_load_all_data()
@@ -1044,9 +1014,8 @@ def _build_records_context(player_code: str) -> dict:
         })
 
     # Streaks
-    all_data = cached_load_all_data()
     try:
-        streaks_df = build_streaks(all_data)
+        streaks_df = deps.cached_streaks_data()
         player_streaks = streaks_df[streaks_df['Pl'] == player_code]
 
         if not player_streaks.empty:
@@ -1088,7 +1057,7 @@ def _build_roster() -> list[dict]:
     """
     all_data = cached_load_all_data()
     rd_data = cached_round_data()
-    winners = _get_winners_data()
+    winners = deps.cached_winners()
 
     cards = []
     for code, name in get_player_dict().items():
@@ -1152,10 +1121,9 @@ def player_index(request: Request):
 def player_page(request: Request, player_code: str):
     pc = _validate_player(player_code)
     name = get_player_dict()[pc]
-    theme = request.state.theme
 
     subtitle = _build_subtitle(pc)
-    overview_ctx = _build_overview_context(pc, theme)
+    overview_ctx = _build_overview_context(pc)
 
     return templates.TemplateResponse("player.html", {
         "request": request,
@@ -1173,16 +1141,15 @@ def player_page(request: Request, player_code: str):
 @router.get("/player/{player_code}/tab/{tab_name}")
 def player_tab(request: Request, player_code: str, tab_name: str):
     pc = _validate_player(player_code)
-    theme = request.state.theme
 
     if tab_name == "overview":
-        ctx = _build_overview_context(pc, theme)
+        ctx = _build_overview_context(pc)
         template = "partials/player_overview.html"
     elif tab_name == "rounds":
         ctx = _build_rounds_context(pc)
         template = "partials/player_rounds.html"
     elif tab_name == "scoring":
-        ctx = _build_scoring_context(pc, theme)
+        ctx = _build_scoring_context(pc)
         template = "partials/player_scoring.html"
     elif tab_name == "records":
         ctx = _build_records_context(pc)

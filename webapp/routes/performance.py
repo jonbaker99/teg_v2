@@ -1,5 +1,6 @@
 """Performance section routes: /top-performances, /personal-bests."""
 
+import logging
 from pathlib import Path
 
 import pandas as pd
@@ -17,27 +18,12 @@ from webapp.deps import (
     cached_round_data,
     get_filtered_teg_data,
 )
+from webapp.tables import df_to_html as _df_to_html
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
-
-
-def _df_to_html(df: pd.DataFrame, table_class: str = "teg-table", cell_classes=None) -> str:
-    if df is None or df.empty:
-        return "<p class='text-muted text-sm'>No data available.</p>"
-    rows = [f"<table class='{table_class}'><thead><tr>"]
-    for col in df.columns:
-        rows.append(f"<th>{col}</th>")
-    rows.append("</tr></thead><tbody>")
-    for i, (_, row) in enumerate(df.iterrows()):
-        rows.append("<tr>")
-        for col in df.columns:
-            cls = cell_classes.get((i, col)) if cell_classes else None
-            cls_attr = f" class='{cls}'" if cls else ""
-            rows.append(f"<td{cls_attr}>{row[col]}</td>")
-        rows.append("</tr>")
-    rows.append("</tbody></table>")
-    return "".join(rows)
 
 
 # --- /top-performances --------------------------------------------------------
@@ -114,6 +100,7 @@ def _top_tab_context(tab: str, measure: str = "GrossVP", n: int = 3) -> dict:
         sections = [{"title": label, "table_html": _df_to_html(display)}]
         return {"sections": sections, "caption": caption}
     except Exception as e:
+        logger.exception("_top_tab_context failed")
         return {"error": str(e)}
 
 
@@ -278,6 +265,7 @@ def _pb_summary_context(view: str = "rounds") -> dict:
         sections = [{"title": title, "table_html": _df_to_html(display, cell_classes=cell_classes)}]
         return {"sections": sections}
     except Exception as e:
+        logger.exception("_pb_summary_context failed")
         return {"error": str(e)}
 
 
@@ -348,6 +336,7 @@ def _pb_tab_context(tab: str, measure: str = "GrossVP", n: int = 3) -> dict:
         sections = [{"title": label, "table_html": _df_to_html(display)}]
         return {"sections": sections}
     except Exception as e:
+        logger.exception("_pb_tab_context failed")
         return {"error": str(e)}
 
 

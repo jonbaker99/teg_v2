@@ -1,5 +1,6 @@
 """Scoring section routes: /scoring/*."""
 
+import logging
 from pathlib import Path
 
 import pandas as pd
@@ -30,36 +31,25 @@ from teg_analysis.analysis.aggregation import (
     calculate_biggest_comebacks,
 )
 from teg_analysis.io.file_operations import read_file
-from teg_analysis.constants import ROUND_INFO_CSV, STREAKS_PARQUET
+from teg_analysis.constants import ROUND_INFO_CSV
 from teg_analysis.display.tables import score_type_stats, max_scoretype_per_round, max_scoretype_per_teg
 from webapp.deps import (
     cached_load_all_data,
     cached_round_data,
     cached_ranked_round_data,
+    cached_streaks_data,
     get_available_teg_numbers,
     get_default_teg_num,
     get_rounds_for_teg,
+    parse_teg_label,
 )
 from webapp.chart_utils import get_chart_style
+from webapp.tables import df_to_html as _df_to_html
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
-
-
-def _df_to_html(df: pd.DataFrame, table_class: str = "teg-table") -> str:
-    if df is None or df.empty:
-        return "<p class='text-muted text-sm'>No data available.</p>"
-    rows = [f"<table class='{table_class}'><thead><tr>"]
-    for col in df.columns:
-        rows.append(f"<th>{col}</th>")
-    rows.append("</tr></thead><tbody>")
-    for _, row in df.iterrows():
-        rows.append("<tr>")
-        for col in df.columns:
-            rows.append(f"<td>{row[col]}</td>")
-        rows.append("</tr>")
-    rows.append("</tbody></table>")
-    return "".join(rows)
 
 
 # --- /scoring/birdies ---------------------------------------------------------
@@ -117,6 +107,7 @@ def _birdies_tab_context(tab: str, score_type: str = "Birdies") -> dict:
 
         return {"sections": sections}
     except Exception as e:
+        logger.exception("_birdies_tab_context failed")
         return {"error": str(e)}
 
 
@@ -155,13 +146,13 @@ STREAK_TABS = [
 def _streak_detail_context(d_teg: str = "All", d_round: str = "All", d_player: str = "All") -> dict:
     """Build the 'Streak detail' tab: filtered window-streak analysis."""
     all_data = cached_load_all_data()
-    streaks_df = read_file(STREAKS_PARQUET)
+    streaks_df = cached_streaks_data()
     df = streaks_df.merge(
         all_data[['HoleID', 'TEG', 'TEGNum', 'Round', 'Pl', 'Player']],
         on=['HoleID', 'Pl'],
     ).sort_values(['Pl', 'TEGNum', 'Round', 'Career Count'])
 
-    teg_options = ['All'] + sorted(df['TEG'].unique(), key=lambda x: int(str(x).split()[1]))
+    teg_options = ['All'] + sorted(df['TEG'].unique(), key=parse_teg_label)
     player_options = ['All'] + sorted(df['Pl'].unique().tolist())
 
     round_df = df if d_teg == 'All' else df[df['TEG'] == d_teg]
@@ -232,6 +223,7 @@ def _streak_tab_context(tab: str, direction: str = "good", mode: str = "max",
 
         return {"sections": sections, "caption": caption}
     except Exception as e:
+        logger.exception("_streak_tab_context failed")
         return {"error": str(e)}
 
 
@@ -282,6 +274,7 @@ def _by_par_context(teg: int = 0) -> dict:
         formatted = format_par_performance_table(matrix)
         return {"table_html": _df_to_html(formatted)}
     except Exception as e:
+        logger.exception("_by_par_context failed")
         return {"error": str(e)}
 
 
@@ -347,6 +340,7 @@ def scoring_by_teg_page(request: Request):
         table_html = _df_to_html(pivot)
         chart_json = _by_teg_chart(agg)
     except Exception as e:
+        logger.exception("scoring_by_teg_page failed")
         table_html = f"<p class='text-muted'>Error: {e}</p>"
 
     return templates.TemplateResponse("scoring_by_teg.html", {
@@ -519,6 +513,7 @@ def _course_tab_context(tab: str, area: str = "All Areas") -> dict:
 
         return {"sections": sections}
     except Exception as e:
+        logger.exception("_course_tab_context failed")
         return {"error": str(e)}
 
 
@@ -600,6 +595,7 @@ def _all_rounds_context(area: str, course: str, player: str, measure: str, n: in
             "n_records": n,
         }
     except Exception as e:
+        logger.exception("_all_rounds_context failed")
         return {"error": str(e)}
 
 
@@ -689,6 +685,7 @@ def _matrix_context(level: str = "teg", score_type: str = "GrossVP") -> dict:
         table_html = _df_to_html(pivot)
         return {"table_html": table_html}
     except Exception as e:
+        logger.exception("_matrix_context failed")
         return {"error": str(e)}
 
 
@@ -836,6 +833,7 @@ def _distributions_context(field="Stableford", player="All players", teg="All TE
             "active_tab": tab,
         }
     except Exception as e:
+        logger.exception("_distributions_context failed")
         return {"error": str(e)}
 
 
@@ -911,6 +909,7 @@ def _changes_context(teg: str = "All TEGs", across: str = "within",
             "top_n": _CHANGES_TOP_N,
         }
     except Exception as e:
+        logger.exception("_changes_context failed")
         return {"error": str(e)}
 
 
@@ -1015,6 +1014,7 @@ def _comebacks_context(competition: str = "gross", n: int = 5) -> dict:
                    "'Gap Closed' measures ground made up on the leader during the final round.")
         return {"sections": sections, "caption": caption}
     except Exception as e:
+        logger.exception("_comebacks_context failed")
         return {"error": str(e)}
 
 
@@ -1310,6 +1310,7 @@ def _heatmap_context(
             "domain_max": dm_max,
         }
     except Exception as e:
+        logger.exception("_heatmap_context failed")
         return {"error": str(e)}
 
 
