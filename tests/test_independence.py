@@ -84,8 +84,6 @@ def test_no_streamlit_dependency():
     print("\nConclusion: teg_analysis is fully UI-independent")
     print("and can be used with any Python framework (FastAPI, Dash, CLI, etc.)")
 
-    return True
-
 if __name__ == "__main__":
     try:
         test_no_streamlit_dependency()

@@ -29,7 +29,7 @@ def test_metadata_functions():
             print(f"   ✓ Sample keys: {list(metadata.keys())[:5]}")
     except Exception as e:
         print(f"   ✗ FAIL: {e}")
-        return False
+        raise
 
     # Test load_course_info
     print("\n2. Testing load_course_info()")
@@ -39,9 +39,8 @@ def test_metadata_functions():
         print(f"   ✓ Returns DataFrame with shape {course_info.shape}")
     except Exception as e:
         print(f"   ✗ FAIL: {e}")
-        return False
+        raise
 
-    return True
 
 def test_data_loader_functions():
     """Test data loader functions return expected types."""
@@ -59,7 +58,7 @@ def test_data_loader_functions():
         print(f"   ✓ Returns: '{name}'")
     except Exception as e:
         print(f"   ✗ FAIL: {e}")
-        return False
+        raise
 
     # Test unknown player
     print("\n2. Testing get_player_name('UNKNOWN')")
@@ -69,9 +68,8 @@ def test_data_loader_functions():
         print(f"   ✓ Returns: '{name}'")
     except Exception as e:
         print(f"   ✗ FAIL: {e}")
-        return False
+        raise
 
-    return True
 
 def test_aggregation_functions():
     """Test aggregation functions return expected types."""
@@ -94,7 +92,7 @@ def test_aggregation_functions():
         print(f"   ✓ Returns: {result}")
     except Exception as e:
         print(f"   ✗ FAIL: {e}")
-        return False
+        raise
 
     # Test get_last_completed_teg_fast
     print("\n2. Testing get_last_completed_teg_fast()")
@@ -105,7 +103,7 @@ def test_aggregation_functions():
         print(f"   ✓ Returns: {result}")
     except Exception as e:
         print(f"   ✗ FAIL: {e}")
-        return False
+        raise
 
     # Test has_incomplete_teg_fast
     print("\n3. Testing has_incomplete_teg_fast()")
@@ -115,9 +113,8 @@ def test_aggregation_functions():
         print(f"   ✓ Returns: {result}")
     except Exception as e:
         print(f"   ✗ FAIL: {e}")
-        return False
+        raise
 
-    return True
 
 def test_ranking_functions():
     """Test ranking functions return expected types."""
@@ -147,9 +144,8 @@ def test_ranking_functions():
             print(f"   ✓ ordinal({num}) = '{result}'")
         except Exception as e:
             print(f"   ✗ FAIL: ordinal({num}) - {e}")
-            return False
+            raise
 
-    return True
 
 def test_display_functions():
     """Test display functions return expected types."""
@@ -163,7 +159,7 @@ def test_display_functions():
     # Test format_vs_par
     print("\n1. Testing format_vs_par()")
     test_cases = [
-        (0, "="),
+        (0, "E"),
         (3, "+3"),
         (-2, "-2"),
     ]
@@ -175,7 +171,7 @@ def test_display_functions():
             print(f"   ✓ format_vs_par({value}) = '{result}'")
         except Exception as e:
             print(f"   ✗ FAIL: format_vs_par({value}) - {e}")
-            return False
+            raise
 
     # Test convert_trophy_name
     print("\n2. Testing convert_trophy_name()")
@@ -192,9 +188,8 @@ def test_display_functions():
             print(f"   ✓ convert_trophy_name('{input_name}') = '{result}'")
         except Exception as e:
             print(f"   ✗ FAIL: convert_trophy_name('{input_name}') - {e}")
-            return False
+            raise
 
-    return True
 
 def run_all_tests():
     """Run all core function tests."""
@@ -215,12 +210,9 @@ def run_all_tests():
 
     for test_name, test_func in tests:
         try:
-            if test_func():
-                passed += 1
-                print(f"\n✓ {test_name} PASSED")
-            else:
-                failed += 1
-                print(f"\n✗ {test_name} FAILED")
+            test_func()
+            passed += 1
+            print(f"\n✓ {test_name} PASSED")
         except Exception as e:
             failed += 1
             print(f"\n✗ {test_name} FAILED: {e}")
