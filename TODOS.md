@@ -19,7 +19,7 @@ Analysis package. REST API placeholder, any outstanding analytical work.
 
 ## Specific areas
 
-### Commentary (reporting pipeline) — [`teg_analysis/reporting/STATUS.md`](teg_analysis/reporting/STATUS.md) - and [`teg_analysis/reporting/reporting-to-do.md`](teg_analysis/reporting/reporting-to-do.md)
+### Commentary (reporting pipeline) — [`teg_analysis/reporting/STATUS.md`](teg_analysis/reporting/STATUS.md)
 LLM-powered tournament and round reports. Active agenda (Phases F–G backfill) and deferred items tracked in STATUS.md — that file *is* the to-do list for this area.
 
 ### Data updates — [below](#data-updates)

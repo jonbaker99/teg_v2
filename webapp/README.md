@@ -440,7 +440,6 @@ for you and still threadpools the handler).
 - **Simple selector + full-page reload** (e.g. `/teg-reports`): a vanilla form `GET` with `<select onchange="this.form.submit()">`. Cheap when no partial update is needed.
 - **HTMX tab bar** (e.g. `/results` in `templates/results.html`): a hidden input holds the active tab; each tab button sets that input then triggers `htmx.trigger(…, 'change')` on the TEG `<select>`, which has `hx-get="/route/table"` returning the partial.
 - **`_results_context()`-style HTMX endpoint**: a `{tab}` switch returns `{result_title, table_html}` rendered into `partials/results_table.html` — see `webapp/routes/history.py`.
-- **Placeholder helper** in `webapp/routes/placeholder.py:_placeholder()` for stub pages before they're real.
 
 ### Component classes (in app.css / base-vars.css)
 - **`teg-table`** — styled data table; used for results/rankings
@@ -512,10 +511,6 @@ return templates.TemplateResponse("my_page.html", {
 
 Currently wide: `/scoring/matrix`, `/scoring/heatmap`.
 Partials (HTMX responses) never need `wide` — only the full-page handler does.
-
-**Scope note:** dev/demo templates (`smoke_test`, `width_test`,
-`title_preview`, `showcase`, `placeholder`) are not part of the page hierarchy
-and are intentionally left unwrapped.
 
 #### Debug overlay (verifying class coverage)
 

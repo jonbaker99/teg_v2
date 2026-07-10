@@ -456,10 +456,10 @@ REVIEW_PLAN.md.
 ```
 
 ### Chat 7 — Owner-decision items + docs *(Haiku — after answers)* ⚠️
-- [ ] **W8**: Delete or admin-gate the prototype routers per decision.
-- [ ] **T6**: Align the Stableford gate to `get_net_competition_measure` **or** name the
+- [x] **W8**: Delete or admin-gate the prototype routers per decision.
+- [x] **T6**: Align the Stableford gate to `get_net_competition_measure` **or** name the
       constant with a comment explaining TEG 6, per decision.
-- [ ] **T11**: Resolve the CLAUDE.md ↔ `DATA_STORAGE_INGESTION_PLAN.md` contradiction
+- [x] **T11**: Resolve the CLAUDE.md ↔ `DATA_STORAGE_INGESTION_PLAN.md` contradiction
       per decision; consolidate `reporting/reporting-to-do.md` into `reporting/STATUS.md`.
 - [ ] Review gate (Opus).
 
