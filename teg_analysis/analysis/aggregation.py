@@ -20,6 +20,12 @@ from teg_analysis.constants import TEG_ROUNDS, TEGNUM_ROUNDS
 logger = logging.getLogger(__name__)
 
 
+# Stableford era: from TEG 8 onwards, net competition uses Stableford points
+# (prior to TEG 8, net was total net vs par). This constant gates commentary
+# and analysis that is only meaningful for Stableford-era tournaments.
+STABLEFORD_ERA_TEG = 8
+
+
 # === LOOKUP FUNCTIONS ===
 
 def get_teg_rounds(TEG: str) -> int:
@@ -454,9 +460,9 @@ def calculate_final_round_differentials(
     valid_tegs = round_info_df[round_info_df['Round'] == 4]['TEGNum'].unique()
     df = all_scores_df[all_scores_df['TEGNum'].isin(valid_tegs)].copy()
 
-    # For Stableford, only include TEG 6+
+    # For Stableford, only include Stableford era (TEG 8+)
     if measure == 'Stableford':
-        df = df[df['TEGNum'] >= 6]
+        df = df[df['TEGNum'] >= STABLEFORD_ERA_TEG]
 
     # Get final round number for each TEG
     final_rounds = round_info_df.groupby('TEGNum')['Round'].max().to_dict()
@@ -521,9 +527,9 @@ def calculate_biggest_leads_lost_after_r3(
     valid_tegs = round_info_df[round_info_df['Round'] == 4]['TEGNum'].unique()
     df = all_scores_df[all_scores_df['TEGNum'].isin(valid_tegs)].copy()
 
-    # For Stableford, only include TEG 6+
+    # For Stableford, only include Stableford era (TEG 8+)
     if measure == 'Stableford':
-        df = df[df['TEGNum'] >= 6]
+        df = df[df['TEGNum'] >= STABLEFORD_ERA_TEG]
 
     # Get penultimate round number for each TEG
     final_rounds = round_info_df.groupby('TEGNum')['Round'].max().to_dict()
@@ -626,9 +632,9 @@ def calculate_biggest_leads_lost_in_r4(
     valid_tegs = round_info_df[round_info_df['Round'] == 4]['TEGNum'].unique()
     df = all_scores_df[all_scores_df['TEGNum'].isin(valid_tegs)].copy()
 
-    # For Stableford, only include TEG 6+
+    # For Stableford, only include Stableford era (TEG 8+)
     if measure == 'Stableford':
-        df = df[df['TEGNum'] >= 6]
+        df = df[df['TEGNum'] >= STABLEFORD_ERA_TEG]
 
     # Get final round number for each TEG
     final_rounds = round_info_df.groupby('TEGNum')['Round'].max().to_dict()
@@ -761,9 +767,9 @@ def calculate_biggest_comebacks(
     valid_tegs = round_info_df[round_info_df['Round'] == 4]['TEGNum'].unique()
     df = all_scores_df[all_scores_df['TEGNum'].isin(valid_tegs)].copy()
 
-    # For Stableford, only include TEG 6+
+    # For Stableford, only include Stableford era (TEG 8+)
     if measure == 'Stableford':
-        df = df[df['TEGNum'] >= 6]
+        df = df[df['TEGNum'] >= STABLEFORD_ERA_TEG]
 
     # Get round information
     final_rounds = round_info_df.groupby('TEGNum')['Round'].max().to_dict()

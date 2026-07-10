@@ -11,9 +11,9 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from webapp.routes import (
-    leaderboard, charts, charts_proto, records, showcase, player, scorecard,
-    placeholder, history, latest, performance, scoring, scorecards,
-    eclectic, width_test, title_preview, smoke_test, reports, contents,
+    leaderboard, charts, records, player, scorecard,
+    history, latest, performance, scoring, scorecards,
+    eclectic, reports, contents,
     admin, admin_round_setup, admin_teg_setup, admin_live_round, live_round,
     admin_new_round,
 )
@@ -57,21 +57,15 @@ async def theme_middleware(request: Request, call_next):
 # Mount route routers
 app.include_router(leaderboard.router)
 app.include_router(charts.router)
-app.include_router(charts_proto.router)
 app.include_router(records.router)
-app.include_router(showcase.router)
 app.include_router(player.router)
 app.include_router(scorecard.router)
 app.include_router(eclectic.router)
-app.include_router(placeholder.router)
 app.include_router(history.router)
 app.include_router(latest.router)
 app.include_router(performance.router)
 app.include_router(scoring.router)
 app.include_router(scorecards.router)
-app.include_router(width_test.router)
-app.include_router(title_preview.router)
-app.include_router(smoke_test.router)
 app.include_router(reports.router)
 app.include_router(contents.router)
 app.include_router(admin.router)
