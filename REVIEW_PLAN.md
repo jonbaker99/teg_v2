@@ -488,14 +488,47 @@ commit, then hand to the Opus review gate.
 ```
 
 ### Chat 8 — Test back-fill *(Sonnet)*
-- [ ] **W10**: Webapp smoke tests — TestClient GET for every `NAV_SECTIONS` page,
+- [x] **W10**: Webapp smoke tests — TestClient GET for every `NAV_SECTIONS` page,
       `/player/{code}` all tabs, `/latest-round` + `/latest-teg` all tabs; assert 200
       and no `"error"` key in rendered context. Files: `tests/test_webapp_pages.py`.
-- [ ] **T10**: Seed tests for untested recent features — pure-stage reporting units
+- [x] **T10**: Seed tests for untested recent features — pure-stage reporting units
       (event scoring, markdown render, lint parsing; no API key needed) and the four
       comeback/collapse functions on a small fixture. Files:
       `tests/test_reporting_core.py`, `tests/test_comebacks.py`.
 - [ ] Review gate (Opus).
+
+**Chat 8 landed:** three new test files, 82 new tests, all green (`pytest tests/` now
+349 passed, 4 skipped, ~120s — no measurable runtime increase over the 267-test
+baseline). `tests/test_comebacks.py` hand-builds a 2-player/1-TEG fixture (a blown
+15-shot/12-point lead after R3, a comeback win in R4) and pins exact output rows for
+`calculate_final_round_differentials`, `calculate_biggest_leads_lost_after_r3`,
+`calculate_biggest_leads_lost_in_r4`, `calculate_biggest_comebacks`, for both GrossVP
+and Stableford. `tests/test_reporting_core.py` covers only the pure/LLM-free stages of
+`teg_analysis/reporting`: the small helpers in `events.py` (`result_label`,
+`hole_evidence`, `_ord`, `_proper`, `_maximal_runs`), the axis-weighting/ranking in
+`scoring.py` (`cap`, `total_score`, `finalise` across modes), `render_events_markdown`,
+and the CSS-class/markdown transforms in `render.py` (`_add_report_title_class`,
+`_add_round_classes`, `_build_at_a_glance` incl. win-count ordinal suffixes,
+`apply_styling` idempotency, both `_inject_standings` branches, `_dedup_entries`) — all
+built from minimal in-memory inputs, nothing from `llm.py` imported or exercised.
+`tests/test_webapp_pages.py` GETs every `NAV_SECTIONS` page plus `/player`,
+`/player/{code}` and its 4 tab partials (using real code `DM`), `/latest-round` +
+`/latest-teg` and their tab partials, and `/results` + `/honours` plus one tab each,
+all against the repo's real `data/` files (no auth needed — only `/admin/*` is
+gated). The "error-context marker" checked for is the shared idiom every context
+builder's `except Exception` path renders: `>Error: ` (the `{% if error %}Error:
+{{ error }}` block used by ~20 partials) or the `error-box` class (used by a handful
+of chart/table partials) — both checked, neither found on any page.
+
+No product bugs found while writing these (in scope: tests only, no fixes).
+
+**Environment note for future sessions in this container:** this remote environment
+ships without `pandas`/`pytest` pre-installed for the interpreter `python3` resolves
+to (`/usr/local/bin/python` -> system Python 3.11); `pip install -r requirements.txt`
+alone lands in a different site-packages than the pre-installed `pytest` binary
+(`/root/.local/bin/pytest`, a `uv tool` isolated venv). Fix: `pip install -r
+requirements.txt` then `pip install pytest` (or just always invoke `python -m pytest`,
+which fixed both) before running the suite.
 
 *Why last among code chats*: tests should lock in post-fix behaviour, not pre-fix.
 
