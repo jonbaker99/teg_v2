@@ -66,7 +66,9 @@ def df_to_html(
                 if override:
                     cls = override
             val = row[col]
-            if link_players and col == "Player":
+            if pd.api.types.is_scalar(val) and pd.isna(val):
+                cell_html = "-"
+            elif link_players and col == "Player":
                 code = name_to_code.get(str(val))
                 text = escape(str(val))
                 cell_html = f"<a href='/player/{code}'>{text}</a>" if code else text

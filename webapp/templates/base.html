@@ -7,11 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
-    <link rel="stylesheet" href="/static/themes/base-vars.css?v=21">
-    <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=21">
+    <link rel="stylesheet" href="/static/themes/base-vars.css?v=22">
+    <link rel="stylesheet" href="/static/themes/{{ request.state.theme }}.css?v=22">
     <!-- Report styling (.teg-report) — loaded globally so reports render the same
          wherever they appear (TEG Reports, Results/Latest report tabs). -->
-    <link rel="stylesheet" href="/static/teg_reports.css?v=21">
+    <link rel="stylesheet" href="/static/teg_reports.css?v=22">
     <!-- Dark mode — inert until <html data-mode="dark">; default is light. -->
     <link rel="stylesheet" href="/static/themes/dark.css?v=1">
     <!-- Mobile app shell — all rules gated to ≤640px; inert on desktop/iPad. -->
@@ -318,9 +318,59 @@
             root.querySelectorAll('.chart-container[data-figure]').forEach(function(el) {
                 Plotly.purge(el);
                 var fig = JSON.parse(el.dataset.figure);
-                Plotly.newPlot(el, fig.data, fig.layout, {responsive: true, displayModeBar: false});
+                Plotly.newPlot(el, fig.data, fig.layout, {responsive: true, displayModeBar: false})
+                    .then(function() { attachSeriesHighlight(el, fig); })
+                    .catch(function() { /* no-highlight is an acceptable degradation */ });
             });
         }
+
+        // Multi-player chart series highlight on hover: dims the other traces
+        // when a legend entry (primary trigger) or a plot-area point is
+        // hovered, restores on leave. Only for charts with >1 trace. Vanilla
+        // JS, fully guarded — any failure just means no highlight, never a
+        // broken chart. Runs after Plotly.newPlot's promise resolves, since
+        // the legend DOM only exists once the plot has rendered; Plotly.purge
+        // above tears the old listeners down with the old DOM, so re-renders
+        // (HTMX swaps) don't double-fire or leak.
+        function attachSeriesHighlight(el, fig) {
+            try {
+                var n = fig.data.length;
+                if (n <= 1) return;
+
+                function restyleOpacity(hoveredIdx) {
+                    var opacities = [];
+                    for (var i = 0; i < n; i++) opacities.push(i === hoveredIdx ? 1 : 0.25);
+                    Plotly.restyle(el, {opacity: opacities});
+                }
+                function resetOpacity() {
+                    Plotly.restyle(el, {opacity: 1});
+                }
+
+                // Legend hover: plotly.js has no legend-hover event, so listen
+                // on the rendered legend trace groups directly. DOM order of
+                // .legend .traces matches trace index order.
+                var legendGroups = el.querySelectorAll('.legend .traces');
+                legendGroups.forEach(function(group, idx) {
+                    group.addEventListener('mouseenter', function() { restyleOpacity(idx); });
+                    group.addEventListener('mouseleave', function() { resetOpacity(); });
+                });
+
+                // Plot-area hover: skip for unified hovermodes ('x unified' etc.)
+                // where per-point trace hover would flicker across all series
+                // rather than highlight one.
+                var hovermode = (fig.layout && fig.layout.hovermode) || '';
+                if (typeof hovermode === 'string' && hovermode.indexOf('x') === 0) return;
+
+                el.on('plotly_hover', function(data) {
+                    if (!data || !data.points || !data.points.length) return;
+                    restyleOpacity(data.points[0].curveNumber);
+                });
+                el.on('plotly_unhover', function() { resetOpacity(); });
+            } catch (err) {
+                // Degrade to no-highlight.
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() { renderCharts(document); });
         document.addEventListener('htmx:afterSettle', function(e) { renderCharts(e.detail.elt); });
     })();
