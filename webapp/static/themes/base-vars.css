@@ -161,6 +161,7 @@ h1, h2, h3, h4, h5, h6 {
     text-align: left;
     width: auto;
     max-width: none;
+    padding-right: 1rem;
 }
 /* The shaded rank "pill" is the span itself — a fixed-size inline-flex box,
    centred horizontally by the cell's text-align:center and with the number
@@ -198,6 +199,7 @@ h1, h2, h3, h4, h5, h6 {
 .position-table th:first-child {
     text-align: left;
     min-width: 3rem;
+    padding-right: 1rem;
 }
 
 /* ── History table (TEG History page) ──
