@@ -315,7 +315,7 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
 
         elif tab == "scorecard":
             try:
-                round_data = get_scorecard_data(teg_num, round_num)
+                round_data = get_scorecard_data(teg_num, round_num, data=cached_load_all_data())
                 if round_data is None or round_data.empty:
                     sections.append({"title": "Scorecard", "table_html": "<p class='text-muted text-sm'>No scorecard data.</p>"})
                 else:

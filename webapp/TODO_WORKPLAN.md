@@ -97,12 +97,28 @@ the complaint is on the eclectic/bestball team rows (`.eclectic-scorecard` /
 
 ---
 
-## Batch 2 — Performance (Opus to confirm diagnosis, Sonnet to implement)
+## Batch 2 — Performance (diagnosis CONFIRMED by Opus 2026-07-10; Sonnet implements)
 
-Jon confirmed slowness is on **every load**. Diagnoses below are from code
-reading; step 0 of each is a 5-minute timing check (wrap the suspect calls
-with `time.perf_counter()` logging locally, or `uvicorn` + curl timings) to
-confirm before changing anything.
+Jon confirmed slowness is on **every load**. Timings taken with all webapp
+caches warm (so this is pure per-request compute, not data loading):
+- **Scorecard context: ~0.26s/request.** Locally `load_all_data` is only ~12ms
+  of that, but on Railway the data is a mounted volume where each per-request
+  read is far slower — this is why it's "slow on every load" in prod but barely
+  shows locally. Fix (2.1) is still correct and cheap.
+- **Player overview context: ~1.7–1.9s/request**, all caches warm. Profiled:
+  `_records_held` (~1.5s) + `_worsts_held` (~1.5s) are essentially the entire
+  cost. Both build **player-independent global tables** (`prepare_records_table`
+  / `prepare_worst_records_table` over the three ranked datasets, plus
+  `prepare_record_best/worst_streaks_data` and `prepare_score_count_records_table`)
+  and only then filter rows to the one player — so the whole global computation
+  is redone on every request and for every player.
+
+**Decided caching boundary (2.2):** cache the six global artifacts (not the
+per-player context), keyed by nothing, cleared via `register_cache_clearer`.
+That makes even the first visit to each player fast and maximally helps the
+roster landing page. NOTE: `register_cache_clearer` exists in `deps.py:41` but
+is currently UNUSED — player.py will be its first consumer (the winners cache
+lives in deps.py, not player.py, contrary to an earlier note).
 
 ### 2.1 `/scorecard` slow  (root cause found — Sonnet)
 `teg_analysis/core/metadata.py::get_scorecard_data` (metadata.py:105-135) calls
@@ -164,45 +180,102 @@ Goal: make `/latest-teg` → Eclectic mirror the bestball "round in context" tab
 (`webapp/routes/latest.py:330-365`). The rank summary line already exists
 (latest.py:547-554). Add, in order below the summary:
 
+**Opus design (2026-07-10), decided — implement exactly:**
+
 ### 3.1 Player ranks table (separate table — per Jon)
-One table, one row per player in this TEG, columns:
-`Player | Eclectic (vs par) | All-time rank | Own-history rank`
-- **All-time rank:** the player's this-TEG eclectic total ranked against every
-  (player, TEG) eclectic ever recorded — shown `N / M` like the bestball
-  summary.
-- **Own-history rank:** ranked against that player's own past TEG eclectics —
-  shown `N of K` (K = TEGs the player has played).
-- **New analysis helper** in `teg_analysis/analysis/eclectic.py` (keep
-  UI-agnostic): something like
-  `eclectic_player_teg_totals(all_data) -> DataFrame[Player, TEGNum, Total]`
-  (min GrossVP per player-per-hole within each TEG, summed), plus a
-  ranking function that returns the table above for a given `teg_num`.
-  Watch: partial/in-progress TEGs — only rank against **complete** TEG
-  eclectics for the all-time comparison, or the comparison is apples-to-oranges;
-  Opus to decide the rule and document it in the docstring (suggest: rank-vs-
-  complete-TEGs only, and caption the table when the current TEG is in
-  progress).
-- Render via `webapp/tables.py::df_to_html` in the eclectic tab context
-  (latest.py:529-563), `link_players=True`.
+New analysis in `teg_analysis/analysis/eclectic.py` (UI-agnostic; compute
+directly, don't reuse the pivot helper):
+
+```python
+def eclectic_player_teg_totals(data):
+    """One row per (Player, TEGNum): the player's eclectic total for that TEG
+    (sum over holes of their per-hole minimum GrossVP within the TEG)."""
+    per_hole = data.groupby(['Player','TEGNum','Hole'])['GrossVP'].min().reset_index()
+    return per_hole.groupby(['Player','TEGNum'])['GrossVP'].sum().reset_index(name='Total')
+
+def rank_teg_eclectics(data, teg_num, complete_teg_nums=None):
+    """For each player who played teg_num, their eclectic Total plus two ranks:
+      - all-time: Total vs the pool of ALL player-TEG eclectic totals
+      - own-history: Total vs that player's own per-TEG totals
+    Ranks use 'min' (ties share the lower rank). If complete_teg_nums is given,
+    the all-time POOL is restricted to those TEGs (see completeness rule below);
+    the player's own-history pool is NOT restricted (a player's own progression
+    is comparable regardless). Returns DataFrame with columns:
+    Player, Total(int), AllTimeRank(int), AllTimeN(int), OwnRank(int), OwnN(int).
+    Lower Total is better; ascending rank."""
+```
+- **Completeness rule (decided):** the route passes
+  `complete_teg_nums = set(cached_complete_teg_data()['TEGNum'])`. All-time pool
+  = player-TEG totals whose TEGNum is complete. Rationale: an in-progress TEG
+  has fewer rounds, so its eclectic is systematically worse and not comparable
+  to 4-round TEGs. This is simpler and more correct than trying to normalise.
+- **In-progress caption (decided):** if the displayed `teg_num` is NOT in
+  `complete_teg_nums`, the route adds a caption: "TEG N is still in progress —
+  its eclectic will improve as more rounds are played; all-time ranks compare
+  only completed TEGs." (Still show the row; the current TEG's own total is
+  always included for the player's own-history rank.)
+- Render in the eclectic tab context (latest.py:529-563) via
+  `webapp/tables.py::df_to_html`, `link_players=True`. Display columns/labels:
+  `Player | Eclectic | All-time | Own history`, where Eclectic uses
+  `format_vs_par(Total)`, All-time shows `f"{AllTimeRank} / {AllTimeN}"`,
+  Own history shows `f"{OwnRank} of {OwnN}"`. Build the display DataFrame in the
+  route (keep the analysis function returning raw ints).
 
 ### 3.2 Contribution by player (bestball-style CSS bars)
-Replicate `build_bestball_contribution_bars`
-(`teg_analysis/display/scorecards.py:777-851`) for the eclectic:
-- Per player: **Holes** = holes where their personal eclectic equals the team
-  eclectic; **Solo** = holes where they're the only such player; **Impact** =
-  shots saved on solo holes (next-best player-eclectic on that hole minus the
-  team value, summed) — the eclectic analogue of bestball impact.
-- Computation lives next to the other eclectic maths in
-  `teg_analysis/analysis/eclectic.py`; the HTML builder
-  (`build_eclectic_contribution_bars`) in `teg_analysis/display/scorecards.py`,
-  reusing the existing `bw-bars-*` CSS classes (single table, not the
-  best/worst pair).
-- **Accept (whole batch):** Eclectic tab shows summary line → ranks table →
-  scorecard → contribution bars; numbers cross-check by hand against one TEG's
-  scorecard (the dark-green highlighted holes ARE the contribution holes —
-  counts must match `_bw_player_cell` highlighting); unit tests for the two
-  new analysis functions with a small synthetic frame; caption explaining
-  Holes/Solo/Impact like the bestball one (latest.py:351-361).
+New analysis in `teg_analysis/analysis/eclectic.py`, mirroring
+`calculate_player_contributions` (`teg_analysis/analysis/bestball.py:58`) but
+over a whole TEG using each player's personal eclectic per hole:
+
+```python
+def calculate_eclectic_contributions(teg_data):
+    """Per-player contribution to a TEG's team eclectic. For each player:
+      - holes:  holes where their personal eclectic (min GrossVP over their
+                rounds that hole) equals the team eclectic (min over ALL
+                players/rounds that hole) — i.e. the highlighted cells on the
+                eclectic scorecard.
+      - solo:   of those, holes where they are the ONLY player whose personal
+                eclectic reaches the team value.
+      - impact: signed shots contributed = (team eclectic total WITH player)
+                minus (WITHOUT). Only moves on solo holes; equals
+                sum over solo holes of (team_value - second_best_personal_ecl).
+                <= 0 (shots the player saved the team).
+    Returns one row per player: columns ['Pl','Player','ecl_holes','ecl_solo',
+    'ecl_impact'] (int). Row order follows input player order."""
+```
+- Note the difference from bestball: value per (player, hole) is the player's
+  *personal eclectic* (min over their rounds), not a single round's score.
+  Compute personal eclectics once (`groupby(['Pl','Hole'])['GrossVP'].min()`),
+  the team eclectic per hole (`groupby('Hole')['GrossVP'].min()`), then apply
+  the same holes/solo/impact logic as bestball over those personal-eclectic
+  values.
+- HTML builder `build_eclectic_contribution_bars(teg_data)` in
+  `teg_analysis/display/scorecards.py`, adapted from
+  `build_bestball_contribution_bars` (scorecards.py:777) but a SINGLE table
+  (not the best/worst pair), reusing the existing `bw-bars-*` CSS classes and
+  `_holes_bar`/`_impact`/`_player_name_spans` helpers. Columns: Player | Impact
+  | Holes. Sort by |impact| desc (biggest savers first), then input order.
+
+### Eclectic tab assembly (latest.py:529-563)
+Order below the existing rank-summary line (latest.py:547-554):
+1. rank-summary line (exists)
+2. **3.1 player ranks table** (new)
+3. eclectic scorecard `build_teg_eclectic_scorecard` (exists)
+4. **3.2 contribution bars** (new) + a caption explaining Holes/Solo/Impact,
+   modelled on the bestball caption (latest.py:351-361).
+
+- **Accept (whole batch):**
+  - Cross-check by hand against one TEG's eclectic scorecard: the dark-green
+    highlighted holes per player (`_bw_player_cell` highlight in
+    `build_teg_eclectic_scorecard`) must equal that player's `ecl_holes`; solo
+    holes are those where exactly one player is highlighted; impact signs are
+    all <= 0.
+  - Unit tests in `tests/` for BOTH new analysis functions using a small
+    synthetic multi-round TEG frame (assert totals, ranks incl. a tie, and a
+    hand-computed solo/impact case).
+  - In-progress path: pick an in-progress TEG (or simulate one) and confirm the
+    caption appears and all-time N counts only complete TEGs.
+  - `python -m pytest tests/ -v` green; no webapp/streamlit imports in
+    teg_analysis.
 
 **Batch 3 gate:** Opus review (esp. the in-progress-TEG ranking rule and
 impact definition) + tests.

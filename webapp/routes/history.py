@@ -485,9 +485,10 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
         if tab == "scorecards":
             rounds = get_rounds_for_teg(teg_num)
             parts = ['<link rel="stylesheet" href="/static/scorecard.css?v=20">']
+            all_data = cached_load_all_data()
             for r in rounds:
                 try:
-                    rd = get_scorecard_data(teg_num, r)
+                    rd = get_scorecard_data(teg_num, r, data=all_data)
                     if rd is None or rd.empty:
                         continue
                     # Responsive block: landscape on desktop/iPad, portrait on phone.

@@ -24,6 +24,7 @@ from webapp.deps import (
     get_default_teg_num,
     get_available_teg_numbers,
     get_rounds_for_teg,
+    cached_load_all_data,
 )
 
 router = APIRouter()
@@ -65,7 +66,7 @@ def _default_player_code() -> str:
 def _scorecard_context_one_round_one_player(teg_num: int, round_num: int, player_code: str) -> dict:
     """Build context for single player, single round view."""
     try:
-        df = get_scorecard_data(teg_num, round_num, player_code)
+        df = get_scorecard_data(teg_num, round_num, player_code, data=cached_load_all_data())
         if df.empty or len(df) != 18:
             count = len(df)
             return {"error": f"Expected 18 holes, found {count} for TEG {teg_num} Round {round_num}, player {player_code}."}
@@ -98,7 +99,7 @@ def _scorecard_context_one_round_one_player(teg_num: int, round_num: int, player
 def _scorecard_context_one_player_all_rounds(teg_num: int, player_code: str) -> dict:
     """Build context for single player, all rounds view."""
     try:
-        player_data = get_scorecard_data(teg_num, player_code=player_code)
+        player_data = get_scorecard_data(teg_num, player_code=player_code, data=cached_load_all_data())
         if player_data.empty:
             return {"error": f"No data found for player {player_code} in TEG {teg_num}."}
 
@@ -131,7 +132,7 @@ def _scorecard_context_one_player_all_rounds(teg_num: int, player_code: str) -> 
 def _scorecard_context_one_round_all_players(teg_num: int, round_num: int) -> dict:
     """Build context for all players, single round view."""
     try:
-        round_data = get_scorecard_data(teg_num, round_num)
+        round_data = get_scorecard_data(teg_num, round_num, data=cached_load_all_data())
         if round_data.empty:
             return {"error": f"No data found for TEG {teg_num}, Round {round_num}."}
 
