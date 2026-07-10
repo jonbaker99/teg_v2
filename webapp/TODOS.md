@@ -16,6 +16,8 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## NEXT UP
 
+- [ ] **2026-07-10 to-do batch** — quick fixes (by-teg `nan`, by-par padding, distributions % chart + team marks, eclectic birdie circle), scorecard/player performance, latest-teg eclectic ranks + contribution bars, chart series highlight on hover. Full plan with tiers, files and acceptance criteria: [TODO_WORKPLAN.md](TODO_WORKPLAN.md).
+
 
 ## Bugs — fix before publish
 
