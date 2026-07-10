@@ -715,8 +715,14 @@ def scoring_matrix_content(request: Request, level: str = Query("teg"), score_ty
 
 # --- /scoring/distributions ---------------------------------------------------
 
-def _distributions_chart(display: pd.DataFrame) -> str | None:
-    """Build a grouped bar chart of score distributions by player, return JSON."""
+def _distributions_chart(display: pd.DataFrame, is_pct: bool = False,
+                          all_players_pct: list | None = None) -> str | None:
+    """Build a grouped bar chart of score distributions by player, return JSON.
+
+    In percentage mode (``is_pct``), ``display`` holds per-player percentages
+    and ``all_players_pct`` (aligned to ``display``'s rows) is overlaid as an
+    "All players" tick per score category rather than another bar.
+    """
     try:
         import plotly.graph_objects as go
 
@@ -735,10 +741,19 @@ def _distributions_chart(display: pd.DataFrame) -> str | None:
                 name=player,
             ))
 
+        if is_pct and all_players_pct is not None:
+            fig.add_trace(go.Scatter(
+                x=display[score_col],
+                y=all_players_pct,
+                mode='markers',
+                marker=dict(symbol='line-ew-open', size=26, line=dict(width=2)),
+                name='All players',
+            ))
+
         fig.update_layout(
             barmode='group',
             xaxis_title='Score vs Par',
-            yaxis_title='Count',
+            yaxis_title='% of holes' if is_pct else 'Count',
             hovermode='x unified',
             legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
             margin=dict(r=20, t=10, b=40, l=50),
@@ -751,6 +766,18 @@ def _distributions_chart(display: pd.DataFrame) -> str | None:
         return fig.to_json()
     except Exception:
         return None
+
+
+def _all_players_score_pct(filtered: pd.DataFrame, field: str, index) -> list:
+    """Combined score distribution across all players (as % of all holes in
+    ``filtered``), aligned row-for-row to ``index`` (a count-data index of raw
+    score-field values, e.g. count_data.index before display formatting)."""
+    counts = filtered.groupby(field).size()
+    total = counts.sum()
+    if not total:
+        return [0.0] * len(index)
+    pct = (counts / total * 100).round(1)
+    return [float(pct.get(v, 0.0)) for v in index]
 
 
 DIST_FIELDS = [("Sc", "Scores"), ("GrossVP", "Scores vs Par"), ("Stableford", "Stableford Points")]
@@ -789,8 +816,13 @@ def _distributions_context(field="Stableford", player="All players", teg="All TE
                 display_data = count_data
             table = prepare_score_count_display(display_data, field, display_name, is_pct)
             table_html = _df_to_html(table)
-            chart_table = prepare_score_count_display(count_data, field, display_name, False)
-            chart_json = _distributions_chart(chart_table)
+            if is_pct:
+                chart_table = prepare_score_count_display(display_data, field, display_name, False)
+                all_players_pct = _all_players_score_pct(filtered, field, count_data.index)
+            else:
+                chart_table = prepare_score_count_display(count_data, field, display_name, False)
+                all_players_pct = None
+            chart_json = _distributions_chart(chart_table, is_pct, all_players_pct)
         else:
             # By TEG crosstab (respects par + player filters, not TEG)
             teg_filtered = all_data

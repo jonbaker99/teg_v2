@@ -16,6 +16,15 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## NEXT UP
 
+- [X] **2026-07-10 to-do batch (done)** — shipped on `claude/web-app-todos-planning-0o3uui` (PR #67):
+  - by-teg `nan` → `-` (fixed centrally in `webapp/tables.py::df_to_html`, + `tests/test_tables.py`)
+  - `/scoring/by-par` wider column padding (page-scoped `.by-par-panel`)
+  - `/scoring/distributions` chart now follows the %/Count toggle; % mode overlays an "All players" team-average tick per score category
+  - eclectic/bestball birdie-ring sizing (`.bw-scorecard`)
+  - **performance:** player pages ~1.7s → ~190ms (cache the global records/worsts tables via `deps.register_cache_clearer`); scorecard no longer re-reads the full dataset per request (`get_scorecard_data(data=...)`)
+  - **latest-teg Eclectic:** player-ranks table (all-time + own-history) + bestball-style contribution bars (`teg_analysis/analysis/eclectic.py`: `eclectic_player_teg_totals`, `rank_teg_eclectics`, `calculate_eclectic_contributions`; `display/scorecards.py::build_eclectic_contribution_bars`)
+  - multi-series charts dim other series on legend hover (centralised Plotly renderer in `base.html`)
+
 
 ## Bugs — fix before publish
 

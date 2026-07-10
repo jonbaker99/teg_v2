@@ -57,6 +57,10 @@ teg_analysis/
     performance.py   Performance measure tables
     leaderboards.py  Leaderboard generation
     bestball.py      Best-ball / worst-ball competition format
+    eclectic.py      Eclectic (best score per hole across rounds) — by-dimension
+                     pivots, per-player-per-TEG totals (eclectic_player_teg_totals),
+                     all-time + own-history ranking (rank_teg_eclectics) and
+                     per-player contribution to a TEG eclectic (calculate_eclectic_contributions)
     commentary.py    Summary/event/streak tables that feed the reporting pipeline
     pipeline.py      Data pipeline coordinator (update_all_data, cache regenerators)
     data_update.py   Headless data-management pipeline — add (process/validate/dedupe/execute_data_update),
@@ -105,7 +109,9 @@ teg_analysis/
                      CSS-bar contribution table
                      (build_bestball_contribution_bars) summarising each
                      player's holes/solo-holes/shot-impact on the bestball and
-                     worstball totals
+                     worstball totals; and the eclectic equivalent
+                     (build_eclectic_contribution_bars) — the same holes/solo/
+                     impact breakdown for a TEG's team eclectic
   
   api/               REST API endpoints (placeholder)
     __init__.py

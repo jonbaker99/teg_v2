@@ -1,6 +1,7 @@
 """Player profile routes."""
 
 import logging
+from functools import lru_cache
 from pathlib import Path
 
 import pandas as pd
@@ -235,6 +236,62 @@ def _build_trophy_section(player_code: str, specs: list) -> dict:
 # Career highlights / colour points
 # ---------------------------------------------------------------------------
 
+# _records_held / _worsts_held build player-INDEPENDENT global tables
+# (prepare_records_table/prepare_worst_records_table over the three ranked
+# datasets, plus the streaks and score-count builders) and only then filter
+# rows to one player. That global computation was previously redone on every
+# request for every player (~1.5s each) -- cache the six global artifacts
+# here, keyed by nothing (or a level string), and registered with
+# deps.register_cache_clearer so a data update still invalidates them.
+
+@lru_cache(maxsize=None)
+def _cached_records_table(level: str):
+    """prepare_records_table for one level ('teg', 'round', or 'frontback')."""
+    dataset = {
+        'teg': cached_ranked_teg_data,
+        'round': cached_ranked_round_data,
+        'frontback': cached_ranked_frontback_data,
+    }[level]()
+    return prepare_records_table(dataset, level)
+
+
+@lru_cache(maxsize=None)
+def _cached_worst_records_table(level: str):
+    """prepare_worst_records_table for one level ('teg', 'round', or 'frontback')."""
+    dataset = {
+        'teg': cached_ranked_teg_data,
+        'round': cached_ranked_round_data,
+        'frontback': cached_ranked_frontback_data,
+    }[level]()
+    return prepare_worst_records_table(dataset, level)
+
+
+@lru_cache(maxsize=1)
+def _cached_best_streaks():
+    return prepare_record_best_streaks_data(cached_load_all_data())
+
+
+@lru_cache(maxsize=1)
+def _cached_worst_streaks():
+    return prepare_record_worst_streaks_data(cached_load_all_data())
+
+
+@lru_cache(maxsize=1)
+def _cached_score_count_records():
+    return prepare_score_count_records_table(cached_load_all_data())
+
+
+for _clear_fn in (
+    _cached_records_table,
+    _cached_worst_records_table,
+    _cached_best_streaks,
+    _cached_worst_streaks,
+    _cached_score_count_records,
+):
+    deps.register_cache_clearer(_clear_fn.cache_clear)
+del _clear_fn
+
+
 def _records_held(name: str) -> list[dict]:
     """All-time TEG records (bests) this player holds.
 
@@ -243,7 +300,6 @@ def _records_held(name: str) -> list[dict]:
     prepare_record_best_streaks_data (Birdies, Pars or Better streaks),
     prepare_score_count_records_table (Most Birdies in a Round).
     """
-    all_data = cached_load_all_data()
     pl_code = get_name_to_code().get(name, "")
     records: list[dict] = []
 
@@ -260,9 +316,9 @@ def _records_held(name: str) -> list[dict]:
 
     seen: set[str] = set()
     for df, level in [
-        (prepare_records_table(cached_ranked_teg_data(), 'teg'), 'TEG'),
-        (prepare_records_table(cached_ranked_round_data(), 'round'), 'round'),
-        (prepare_records_table(cached_ranked_frontback_data(), 'frontback'), '9 holes'),
+        (_cached_records_table('teg'), 'TEG'),
+        (_cached_records_table('round'), 'round'),
+        (_cached_records_table('frontback'), '9 holes'),
     ]:
         for _, row in df.iterrows():
             raw_label = str(row.iloc[0])
@@ -287,7 +343,7 @@ def _records_held(name: str) -> list[dict]:
         "Birdies": "Longest birdies streak",
         "Pars or Better": "Longest pars or better streak",
     }
-    best_streaks = prepare_record_best_streaks_data(all_data)
+    best_streaks = _cached_best_streaks()
     for _, row in best_streaks.iterrows():
         streak_type = str(row['Streak Type'])
         if streak_type not in BEST_STREAK_LABELS:
@@ -303,7 +359,7 @@ def _records_held(name: str) -> list[dict]:
         })
 
     # Most birdies in a round
-    best_sc, _ = prepare_score_count_records_table(all_data)
+    best_sc, _ = _cached_score_count_records()
     for _, row in best_sc.iterrows():
         if str(row.iloc[0]) != 'Most Birdies in a Round':
             continue
@@ -329,7 +385,6 @@ def _worsts_held(name: str) -> list[dict]:
     prepare_record_worst_streaks_data (No Birdies, Over Par, TBPs streaks),
     prepare_score_count_records_table (Most TBPs in a Round).
     """
-    all_data = cached_load_all_data()
     pl_code = get_name_to_code().get(name, "")
     worsts: list[dict] = []
 
@@ -346,9 +401,9 @@ def _worsts_held(name: str) -> list[dict]:
 
     seen: set[str] = set()
     for df, level in [
-        (prepare_worst_records_table(cached_ranked_teg_data(), 'teg'), 'TEG'),
-        (prepare_worst_records_table(cached_ranked_round_data(), 'round'), 'round'),
-        (prepare_worst_records_table(cached_ranked_frontback_data(), 'frontback'), '9 holes'),
+        (_cached_worst_records_table('teg'), 'TEG'),
+        (_cached_worst_records_table('round'), 'round'),
+        (_cached_worst_records_table('frontback'), '9 holes'),
     ]:
         for _, row in df.iterrows():
             raw_label = str(row.iloc[0])
@@ -374,7 +429,7 @@ def _worsts_held(name: str) -> list[dict]:
         "Over Par": "Longest over par streak",
         "TBPs": "Longest TBPs streak",
     }
-    worst_streaks = prepare_record_worst_streaks_data(all_data)
+    worst_streaks = _cached_worst_streaks()
     for _, row in worst_streaks.iterrows():
         streak_type = str(row['Streak Type'])
         if streak_type not in WORST_STREAK_LABELS:
@@ -390,7 +445,7 @@ def _worsts_held(name: str) -> list[dict]:
         })
 
     # Most TBPs in a round
-    _, worst_sc = prepare_score_count_records_table(all_data)
+    _, worst_sc = _cached_score_count_records()
     for _, row in worst_sc.iterrows():
         if str(row.iloc[0]) != 'Most TBPs in a Round':
             continue

@@ -75,7 +75,8 @@ def load_course_info() -> pd.DataFrame:
 def get_scorecard_data(
     teg_num: Optional[int] = None,
     round_num: Optional[int] = None,
-    player_code: Optional[str] = None
+    player_code: Optional[str] = None,
+    data: Optional[pd.DataFrame] = None,
 ) -> pd.DataFrame:
     """Get golf data for scorecard generation with optional filtering.
 
@@ -86,6 +87,11 @@ def get_scorecard_data(
         teg_num: Optional TEG number filter
         round_num: Optional round number filter
         player_code: Optional player code filter (e.g., 'JB')
+        data: Optional pre-loaded DataFrame to filter instead of calling
+            load_all_data() (equivalent to load_all_data(exclude_incomplete_tegs=False),
+            i.e. exclude_teg_50=True). Callers that already hold a cached copy
+            of that frame (e.g. the webapp) should pass it here to avoid a
+            redundant full data load per request.
 
     Returns:
         pd.DataFrame: Filtered and sorted data
@@ -103,10 +109,13 @@ def get_scorecard_data(
         >>> # All data for TEG 18
         >>> data = get_scorecard_data(18)
     """
-    # Import here to avoid circular dependency
-    from .data_loader import load_all_data
+    if data is not None:
+        all_data = data
+    else:
+        # Import here to avoid circular dependency
+        from .data_loader import load_all_data
 
-    all_data = load_all_data(exclude_incomplete_tegs=False)
+        all_data = load_all_data(exclude_incomplete_tegs=False)
 
     # Apply filters if provided
     if teg_num is not None:

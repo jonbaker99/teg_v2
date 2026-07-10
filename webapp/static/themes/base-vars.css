@@ -129,6 +129,16 @@ h1, h2, h3, h4, h5, h6 {
 .teg-table .total {
     font-weight: 700;
 }
+/* /scoring/by-par — the columns felt cramped at the default padding.
+   scoring_matrix_content.html is shared with /scoring/matrix, so this is
+   scoped to the by-par page's wrapper class rather than styling the
+   partial's .teg-table directly. */
+.by-par-panel .teg-table th,
+.by-par-panel .teg-table td {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    white-space: nowrap;
+}
 /* Record-holder cell (Personal Bests summary) — the overall best in a measure
    column: pale-green background, forest-green bold text. td-level background sits
    above any row stripe/hover, so it stays visible. */

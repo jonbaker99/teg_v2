@@ -35,7 +35,10 @@ from teg_analysis.analysis.handicaps import (
 from teg_analysis.analysis.aggregation import get_current_in_progress_teg_fast
 from teg_analysis.analysis.streaks import get_player_window_streaks, build_streaks, pivot_window_streaks
 from teg_analysis.analysis.scoring import count_scores_by_player
-from teg_analysis.analysis.eclectic import calculate_eclectic_by_dimension
+from teg_analysis.analysis.eclectic import (
+    calculate_eclectic_by_dimension,
+    rank_teg_eclectics,
+)
 from teg_analysis.core.metadata import get_scorecard_data, get_teg_metadata
 from teg_analysis.display.scorecards import (
     build_round_comparison_responsive,
@@ -43,6 +46,7 @@ from teg_analysis.display.scorecards import (
     build_bestball_worstball_scorecard,
     build_bestball_contribution_bars,
     build_teg_eclectic_scorecard,
+    build_eclectic_contribution_bars,
 )
 from webapp.deps import (
     cached_load_all_data,
@@ -51,6 +55,7 @@ from webapp.deps import (
     cached_ranked_teg_data,
     cached_ranked_round_data,
     cached_streaks_data,
+    cached_complete_teg_data,
     get_available_teg_numbers,
     get_default_teg_num,
     get_rounds_for_teg,
@@ -315,7 +320,7 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
 
         elif tab == "scorecard":
             try:
-                round_data = get_scorecard_data(teg_num, round_num)
+                round_data = get_scorecard_data(teg_num, round_num, data=cached_load_all_data())
                 if round_data is None or round_data.empty:
                     sections.append({"title": "Scorecard", "table_html": "<p class='text-muted text-sm'>No scorecard data.</p>"})
                 else:
@@ -553,10 +558,50 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
                              '</span></div></div>')
                 sections.append({"title": None, "table_html": rank_html, "raw": True})
 
+                # Player ranks table: eclectic total vs all-time (complete TEGs
+                # only) and vs the player's own history.
+                complete_teg_nums = set(cached_complete_teg_data()['TEGNum'])
+                ranks_df = rank_teg_eclectics(all_data, teg_num, complete_teg_nums=complete_teg_nums)
+                if not ranks_df.empty:
+                    display_ranks = pd.DataFrame({
+                        'Player': ranks_df['Player'],
+                        'Eclectic': ranks_df['Total'].apply(format_vs_par),
+                        'All-time': ranks_df.apply(lambda r: f"{r['AllTimeRank']} / {r['AllTimeN']}", axis=1),
+                        'Own history': ranks_df.apply(lambda r: f"{r['OwnRank']} of {r['OwnN']}", axis=1),
+                    })
+                    sections.append({
+                        "title": "Player ranks",
+                        "table_html": _table_df_to_html(display_ranks, link_players=True),
+                    })
+                    if teg_num not in complete_teg_nums:
+                        sections.append({
+                            "title": None, "raw": True,
+                            "table_html": (
+                                f"<p class='caption'>TEG {teg_num} is still in progress — its "
+                                "eclectic, and these ranks, will improve as more rounds are "
+                                "played.</p>"
+                            ),
+                        })
+
                 # Per-player eclectic scorecard with best eclectic row at the top.
                 teg_data = all_data[all_data['TEGNum'] == teg_num]
                 card_html = build_teg_eclectic_scorecard(teg_data)
                 sections.append({"title": None, "table_html": card_html})
+
+                # Per-player contribution breakdown (CSS bar chart) below the card.
+                bars_html = build_eclectic_contribution_bars(teg_data)
+                sections.append({"title": "Player contributions", "table_html": bars_html})
+                sections.append({
+                    "title": None, "raw": True,
+                    "table_html": (
+                        "<p class='caption'>"
+                        "<strong>Holes &amp; solo</strong>: holes where the player's personal "
+                        "eclectic matched the team eclectic, and how many of those they reached "
+                        "alone. <strong>Impact</strong>: the player's net effect on the team "
+                        "eclectic total, counting only their solo holes — always negative or zero "
+                        "(shots they saved the team).</p>"
+                    ),
+                })
                 return {"sections": sections, "scorecard_css": True}
             except Exception as e:
                 logger.exception("_latest_teg_tab_context failed")
