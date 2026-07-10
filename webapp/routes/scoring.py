@@ -121,7 +121,7 @@ def _birdies_tab_context(tab: str, score_type: str = "Birdies") -> dict:
 
 
 @router.get("/scoring/birdies")
-async def scoring_birdies_page(request: Request):
+def scoring_birdies_page(request: Request):
     ctx = _birdies_tab_context("career", "Birdies")
     return templates.TemplateResponse("scoring_birdies.html", {
         "request": request,
@@ -135,7 +135,7 @@ async def scoring_birdies_page(request: Request):
 
 
 @router.get("/scoring/birdies/tab")
-async def scoring_birdies_tab(request: Request, tab: str = Query("career"), score_type: str = Query("Birdies")):
+def scoring_birdies_tab(request: Request, tab: str = Query("career"), score_type: str = Query("Birdies")):
     ctx = _birdies_tab_context(tab, score_type)
     return templates.TemplateResponse("partials/scoring_birdies_tab.html", {
         "request": request,
@@ -236,7 +236,7 @@ def _streak_tab_context(tab: str, direction: str = "good", mode: str = "max",
 
 
 @router.get("/scoring/streaks")
-async def scoring_streaks_page(request: Request):
+def scoring_streaks_page(request: Request):
     active_tab = "player"
     direction = "good"
     mode = "max"
@@ -253,7 +253,7 @@ async def scoring_streaks_page(request: Request):
 
 
 @router.get("/scoring/streaks/tab")
-async def scoring_streaks_tab(
+def scoring_streaks_tab(
     request: Request,
     tab: str = Query("player"),
     direction: str = Query("good"),
@@ -286,7 +286,7 @@ def _by_par_context(teg: int = 0) -> dict:
 
 
 @router.get("/scoring/by-par")
-async def scoring_by_par_page(request: Request, teg: int = Query(0)):
+def scoring_by_par_page(request: Request, teg: int = Query(0)):
     ctx = _by_par_context(teg)
     teg_numbers = get_available_teg_numbers()
     return templates.TemplateResponse("scoring_by_par.html", {
@@ -299,7 +299,7 @@ async def scoring_by_par_page(request: Request, teg: int = Query(0)):
 
 
 @router.get("/scoring/by-par/content")
-async def scoring_by_par_content(request: Request, teg: int = Query(0)):
+def scoring_by_par_content(request: Request, teg: int = Query(0)):
     ctx = _by_par_context(teg)
     return templates.TemplateResponse("partials/scoring_matrix_content.html", {
         "request": request,
@@ -337,7 +337,7 @@ def _by_teg_chart(agg: pd.DataFrame) -> str:
 
 
 @router.get("/scoring/by-teg")
-async def scoring_by_teg_page(request: Request):
+def scoring_by_teg_page(request: Request):
     chart_json = None
     try:
         all_data = cached_load_all_data()
@@ -523,7 +523,7 @@ def _course_tab_context(tab: str, area: str = "All Areas") -> dict:
 
 
 @router.get("/scoring/by-course")
-async def scoring_by_course_page(request: Request, area: str = Query("All Areas")):
+def scoring_by_course_page(request: Request, area: str = Query("All Areas")):
     areas = _get_course_areas()
     active_tab = "gross_records"
     ctx = _course_tab_context(active_tab, area)
@@ -539,7 +539,7 @@ async def scoring_by_course_page(request: Request, area: str = Query("All Areas"
 
 
 @router.get("/scoring/by-course/tab")
-async def scoring_by_course_tab(request: Request, tab: str = Query("gross_records"), area: str = Query("All Areas")):
+def scoring_by_course_tab(request: Request, tab: str = Query("gross_records"), area: str = Query("All Areas")):
     ctx = _course_tab_context(tab, area)
     return templates.TemplateResponse("partials/scoring_by_course_tab.html", {
         "request": request,
@@ -604,7 +604,7 @@ def _all_rounds_context(area: str, course: str, player: str, measure: str, n: in
 
 
 @router.get("/scoring/all-rounds")
-async def scoring_all_rounds_page(
+def scoring_all_rounds_page(
     request: Request,
     area: str = Query("All Areas"),
     course: str = Query("All courses"),
@@ -621,7 +621,7 @@ async def scoring_all_rounds_page(
 
 
 @router.get("/scoring/all-rounds/content")
-async def scoring_all_rounds_content(
+def scoring_all_rounds_content(
     request: Request,
     area: str = Query("All Areas"),
     course: str = Query("All courses"),
@@ -693,7 +693,7 @@ def _matrix_context(level: str = "teg", score_type: str = "GrossVP") -> dict:
 
 
 @router.get("/scoring/matrix")
-async def scoring_matrix_page(request: Request):
+def scoring_matrix_page(request: Request):
     ctx = _matrix_context("teg", "GrossVP")
     return templates.TemplateResponse("scoring_matrix.html", {
         "request": request,
@@ -708,7 +708,7 @@ async def scoring_matrix_page(request: Request):
 
 
 @router.get("/scoring/matrix/content")
-async def scoring_matrix_content(request: Request, level: str = Query("teg"), score_type: str = Query("GrossVP")):
+def scoring_matrix_content(request: Request, level: str = Query("teg"), score_type: str = Query("GrossVP")):
     ctx = _matrix_context(level, score_type)
     return templates.TemplateResponse("partials/scoring_matrix_content.html", {
         "request": request,
@@ -840,7 +840,7 @@ def _distributions_context(field="Stableford", player="All players", teg="All TE
 
 
 @router.get("/scoring/distributions")
-async def scoring_distributions_page(request: Request, field="Stableford", player="All players",
+def scoring_distributions_page(request: Request, field="Stableford", player="All players",
                                      teg="All TEGs", par="All pars", mode="Percentage", tab="player"):
     ctx = _distributions_context(field, player, teg, par, mode, tab)
     return templates.TemplateResponse("scoring_distributions.html", {
@@ -851,7 +851,7 @@ async def scoring_distributions_page(request: Request, field="Stableford", playe
 
 
 @router.get("/scoring/distributions/content")
-async def scoring_distributions_content(request: Request, field="Stableford", player="All players",
+def scoring_distributions_content(request: Request, field="Stableford", player="All players",
                                         teg="All TEGs", par="All pars", mode="Percentage", tab="player"):
     ctx = _distributions_context(field, player, teg, par, mode, tab)
     return templates.TemplateResponse("partials/scoring_distributions_content.html", {
@@ -915,7 +915,7 @@ def _changes_context(teg: str = "All TEGs", across: str = "within",
 
 
 @router.get("/scoring/changes")
-async def scoring_changes_page(request: Request, teg: str = Query("All TEGs"),
+def scoring_changes_page(request: Request, teg: str = Query("All TEGs"),
                                across: str = Query("within"), rows: str = Query("top"),
                                tab: str = Query("improvements")):
     ctx = _changes_context(teg, across, rows, tab)
@@ -927,7 +927,7 @@ async def scoring_changes_page(request: Request, teg: str = Query("All TEGs"),
 
 
 @router.get("/scoring/changes/content")
-async def scoring_changes_content(request: Request, teg: str = Query("All TEGs"),
+def scoring_changes_content(request: Request, teg: str = Query("All TEGs"),
                                   across: str = Query("within"), rows: str = Query("top"),
                                   tab: str = Query("improvements")):
     ctx = _changes_context(teg, across, rows, tab)
@@ -1019,7 +1019,7 @@ def _comebacks_context(competition: str = "gross", n: int = 5) -> dict:
 
 
 @router.get("/scoring/comebacks")
-async def scoring_comebacks_page(
+def scoring_comebacks_page(
     request: Request,
     competition: str = Query("gross"),
     n: int = Query(5),
@@ -1035,7 +1035,7 @@ async def scoring_comebacks_page(
 
 
 @router.get("/scoring/comebacks/content")
-async def scoring_comebacks_content(
+def scoring_comebacks_content(
     request: Request,
     competition: str = Query("gross"),
     n: int = Query(5),
@@ -1319,7 +1319,7 @@ def _parse_checkbox(val: str | None) -> bool:
 
 
 @router.get("/scoring/heatmap")
-async def scoring_heatmap_page(
+def scoring_heatmap_page(
     request: Request,
     row_by: str = Query("Player"),
     col_by: str = Query("Hole"),
@@ -1356,7 +1356,7 @@ async def scoring_heatmap_page(
 
 
 @router.get("/scoring/heatmap/content")
-async def scoring_heatmap_content(
+def scoring_heatmap_content(
     request: Request,
     row_by: str = Query("Player"),
     col_by: str = Query("Hole"),

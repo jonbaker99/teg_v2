@@ -16,7 +16,7 @@ templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templa
 
 
 @router.get("/contents")
-async def contents_page(request: Request):
+def contents_page(request: Request):
     # Contents-specific column arrangement (does not reorder NAV_SECTIONS, which
     # drives the nav bar). Columns fill top-to-bottom:
     #   1: TEG History / Records & PBs   2: Latest TEG / Scorecards   3: Scoring

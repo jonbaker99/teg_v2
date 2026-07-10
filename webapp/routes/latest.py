@@ -442,7 +442,7 @@ def _latest_round_tab_context(teg_num: int, round_num: int, tab: str,
 
 
 @router.get("/latest-round")
-async def latest_round_page(request: Request):
+def latest_round_page(request: Request):
     rd_data = cached_round_data()
     teg_str, round_num = get_latest_round_defaults(rd_data)
     # teg_str is like 'TEG 18' — extract the number
@@ -469,7 +469,7 @@ async def latest_round_page(request: Request):
 
 
 @router.get("/latest-round/tab")
-async def latest_round_tab(request: Request, teg: int = Query(...), round: int = Query(...),
+def latest_round_tab(request: Request, teg: int = Query(...), round: int = Query(...),
                            tab: str = Query("scoreboard"), score_type: str = Query("GrossVP"),
                            metric: str = Query("Sc"), display_mode: str = Query("count")):
     rounds = get_rounds_for_teg(teg)
@@ -624,7 +624,7 @@ def _latest_teg_tab_context(teg_num: int, tab: str, score_type: str = "GrossVP",
 
 
 @router.get("/latest-teg")
-async def latest_teg_page(request: Request):
+def latest_teg_page(request: Request):
     teg_num = get_default_teg_num()
     teg_numbers = get_available_teg_numbers()
     ctx = _latest_teg_tab_context(teg_num, "aggregate")
@@ -642,7 +642,7 @@ async def latest_teg_page(request: Request):
 
 
 @router.get("/latest-teg/tab")
-async def latest_teg_tab(request: Request, teg: int = Query(...), tab: str = Query("aggregate"),
+def latest_teg_tab(request: Request, teg: int = Query(...), tab: str = Query("aggregate"),
                          score_type: str = Query("GrossVP"), metric: str = Query("Sc"),
                          display_mode: str = Query("count")):
     ctx = _latest_teg_tab_context(teg, tab, score_type, metric, display_mode)
@@ -657,7 +657,7 @@ async def latest_teg_tab(request: Request, teg: int = Query(...), tab: str = Que
 # --- /handicaps ---------------------------------------------------------------
 
 @router.get("/handicaps")
-async def handicaps_page(request: Request):
+def handicaps_page(request: Request):
     try:
         last_completed, next_tegnum, in_progress = get_next_teg_and_check_if_in_progress_fast()
         next_teg_str = f"TEG {next_tegnum}"

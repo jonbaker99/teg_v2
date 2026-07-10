@@ -178,7 +178,7 @@ def _tab_context(tab_name: str) -> dict:
 
 
 @router.get("/records")
-async def records_page(request: Request):
+def records_page(request: Request):
     ctx = _tab_context("teg")
     return templates.TemplateResponse("records.html", {
         "request": request,
@@ -190,7 +190,7 @@ async def records_page(request: Request):
 
 
 @router.get("/records/tab/{tab_name}")
-async def records_tab(request: Request, tab_name: str):
+def records_tab(request: Request, tab_name: str):
     ctx = _tab_context(tab_name)
     return templates.TemplateResponse("partials/records_tab.html", {
         "request": request,

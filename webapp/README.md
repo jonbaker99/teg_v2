@@ -309,6 +309,15 @@ the admin Live round page above.
   `DATA_STORAGE_INGESTION_PLAN.md`'s "Phase 3.4 design" for the full model.
 - **Device identity:** a `localStorage` UUID plus a self-declared display name
   (asked once, on first load) — enough for conflict attribution, no new auth.
+- **Finalize ordering:** `finalize_live_round` holds the module `_lock` only for
+  the fast read-validate phase and the terminal status flip; the slow
+  `execute_data_update` GitHub commit runs *outside* the lock so it never blocks
+  other tokens' writes. A per-token in-process `_finalizing` set (checked under
+  `_lock` in every write path) rejects a score that arrives during the commit
+  window with a 409 instead of appending it to staging and then silently
+  dropping it from the frame already being committed; a failed commit rolls the
+  set back and leaves the round `active` to retry. Full ordering rationale is in
+  the `finalize_live_round` docstring.
 
 ## Architecture
 
@@ -394,7 +403,7 @@ defaults: title style `a` (mono label + serif title), card header `ch3` (serif).
 ### Route → deps → template
 ```python
 @router.get("/leaderboard")
-async def leaderboard(request: Request, data=Depends(get_data)):
+def leaderboard(request: Request, data=Depends(get_data)):
     # get_data() is @lru_cache, called once per process
     df = data.get_round_data()  # already cached
     leaderboard_df = create_leaderboard(df)
@@ -405,6 +414,20 @@ async def leaderboard(request: Request, data=Depends(get_data)):
         ...
     })
 ```
+
+### Sync `def` handlers, not `async def`
+Route handlers here do **blocking** work — cached pandas recompute, volume/CSV
+reads, and (on admin routes) GitHub commits. FastAPI runs a plain `def` handler
+in its threadpool but runs an `async def` handler *on the event loop*, so an
+`async def` handler doing sync work stalls every other in-flight request (worst
+during a live round, when phones poll every few seconds while a finalize
+commits). **Default to `def`.** Only use `async def` when the handler genuinely
+awaits — in practice, reading a **dynamic-keyed** form (`await request.form()`
+with keys like `par__{h}` or `score-{h}-{p}` that can't be `Form(...)`
+parameters); in that case wrap the heavy sync call in
+`starlette.concurrency.run_in_threadpool`. A form with fixed field names should
+instead stay `def` and declare `Form(...)` parameters (FastAPI parses the body
+for you and still threadpools the handler).
 
 ### HTMX partial updates
 - Nav links use `hx-get="/route" hx-target="#main-content"`

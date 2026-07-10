@@ -36,7 +36,7 @@ def _lb_context(teg_num: int, tab: str, chart_variant: str) -> dict:
 
 
 @router.get("/leaderboard")
-async def leaderboard_page(request: Request):
+def leaderboard_page(request: Request):
     teg_num = get_default_teg_num()
     teg_numbers = get_available_teg_numbers()
     ctx = _lb_context(teg_num, "net", "adjusted")
@@ -53,7 +53,7 @@ async def leaderboard_page(request: Request):
 
 
 @router.get("/leaderboard/table")
-async def leaderboard_table(
+def leaderboard_table(
     request: Request,
     teg: int = Query(...),
     tab: str = Query("net"),

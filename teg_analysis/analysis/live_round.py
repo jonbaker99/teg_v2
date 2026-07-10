@@ -69,6 +69,18 @@ _STAGING_COLUMNS = [
 # lock-per-token map.
 _lock = threading.Lock()
 
+# Tokens currently inside finalize_live_round's GitHub-commit phase. That
+# commit (execute_data_update) is seconds of network I/O and is deliberately
+# run WITHOUT _lock so it never blocks other tokens' writes (T8). This
+# in-process set -- added under _lock before the commit, checked under _lock in
+# every write path, removed under _lock after -- is what stops a score from
+# being appended to staging mid-commit and then silently excluded from the
+# already-built 18-hole frame. It's purely in-process because the only
+# concurrency that matters is threadpool workers in this one server process;
+# the registry Status stays active->finalized (no transient state persisted),
+# so a crash mid-commit simply leaves an 'active' round to re-finalize.
+_finalizing: set[str] = set()
+
 
 class LiveRoundError(Exception):
     """Base class for live-round errors."""
@@ -160,6 +172,13 @@ def _get_registry_row(token: str) -> dict | None:
     if match.empty:
         return None
     return match.iloc[0].to_dict()
+
+
+def _set_registry_status(token: str, status: str) -> None:
+    """Set one live round's Status in the registry. Caller must hold _lock."""
+    registry = _read_registry()
+    registry.loc[registry["Token"] == token, "Status"] = status
+    _write_registry(registry)
 
 
 def generate_token() -> str:
@@ -294,6 +313,29 @@ def finalize_live_round(token: str) -> dict:
     scorecard never enters the permanent record. Reuses execute_data_update
     exactly as the "add a round" flow does: one GitHub commit, every derived
     cache regenerated.
+
+    Locking / ordering (T8): the module ``_lock`` is held only for the fast
+    read-validate phase and, separately, for the final status flip -- NOT for
+    execute_data_update's GitHub commit, which is seconds of network I/O and
+    would otherwise block every other token's writes for that whole time. The
+    sequence is:
+
+      1. (locked) validate -- round active, no conflicts, roster confirmed --
+         build the 18-hole frame, add the token to ``_finalizing``, release.
+      2. (unlocked) execute_data_update commits to GitHub. Other tokens'
+         writes proceed normally. A write to *this* token, arriving mid-commit,
+         acquires the lock, sees the token in ``_finalizing``, and is rejected
+         with LiveRoundInactiveError (a 409 the entry page ignores, resyncing
+         on its next poll) rather than being appended to staging and then
+         silently dropped from the frame already being committed -- a score the
+         player believes they saved must never vanish.
+      3. (locked) flip Status active -> 'finalized', archive staging, drop the
+         token from ``_finalizing``.
+
+    If the commit fails, the token is removed from ``_finalizing`` and Status is
+    left 'active', so writes resume and the admin can retry. Status is only ever
+    active/finalized/cancelled -- no half-way state is persisted, so a crash
+    mid-commit just leaves an 'active' round to re-finalize.
     """
     from teg_analysis.io import read_file
     from teg_analysis.analysis.data_update import execute_data_update
@@ -305,6 +347,8 @@ def finalize_live_round(token: str) -> dict:
             raise LiveRoundNotFoundError(token)
         if reg["Status"] != "active":
             raise LiveRoundInactiveError(f"Live round {token} is {reg['Status']}, not active.")
+        if token in _finalizing:
+            raise LiveRoundInactiveError(f"Live round {token} is already being finalized.")
 
         staging = _read_staging(token)
         if staging.empty:
@@ -340,12 +384,22 @@ def finalize_live_round(token: str) -> dict:
         if long_df.empty:
             raise ValueError("No complete 18-hole player-rounds to finalize yet.")
 
-        result = execute_data_update(long_df, new_data_only=True)
+        # Claim the round before releasing the lock: writes arriving during the
+        # commit below are now rejected instead of silently excluded.
+        _finalizing.add(token)
 
-        registry = _read_registry()
-        registry.loc[registry["Token"] == token, "Status"] = "finalized"
-        _write_registry(registry)
+    # GitHub commit runs WITHOUT the lock (see docstring's ordering note).
+    try:
+        result = execute_data_update(long_df, new_data_only=True)
+    except Exception:
+        with _lock:
+            _finalizing.discard(token)
+        raise
+
+    with _lock:
+        _set_registry_status(token, "finalized")
         _archive_staging(token)
+        _finalizing.discard(token)
 
     return {"token": token, "teg_num": teg_num, "round_num": round_num, **result}
 
@@ -373,6 +427,8 @@ def apply_admin_edits(token: str, cells: list[dict], resolved_by: str) -> dict:
         reg = _get_registry_row(token)
         if reg is None:
             raise LiveRoundNotFoundError(token)
+        if token in _finalizing:
+            raise LiveRoundInactiveError(f"Live round {token} is being finalized -- scores are locked.")
 
         _validate_cells(cells, int(reg["TEGNum"]))
 
@@ -614,6 +670,8 @@ def apply_score_writes(token: str, device_id: str, device_name: str, cells: list
             raise LiveRoundNotFoundError(token)
         if reg["Status"] != "active":
             raise LiveRoundInactiveError(f"Live round {token} is {reg['Status']}, not active.")
+        if token in _finalizing:
+            raise LiveRoundInactiveError(f"Live round {token} is being finalized -- scores are locked.")
 
         _validate_cells(cells, int(reg["TEGNum"]))
 

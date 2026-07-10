@@ -247,17 +247,39 @@ the warning banner. Tick the Chat 3 boxes in REVIEW_PLAN.md and commit.
 ```
 
 ### Chat 4 — Event-loop blocking *(Opus)*
-- [ ] **W2**: Convert route handlers to sync `def` (FastAPI threadpools them) or wrap
+- [x] **W2**: Convert route handlers to sync `def` (FastAPI threadpools them) or wrap
       heavy calls in `run_in_threadpool`; verify HTMX behaviour unchanged.
-- [ ] **T8 (partial)**: Move the GitHub commit in `finalize_live_round` outside
+- [x] **T8 (partial)**: Move the GitHub commit in `finalize_live_round` outside
       `live_round._lock` (staging is already read and status not yet flipped — design the
       ordering carefully).
-- [ ] Manual concurrency check: poll `/api/live-round/{token}/scores` while a finalize
+- [x] Manual concurrency check: poll `/api/live-round/{token}/scores` while a finalize
       runs; pages must stay responsive.
-- [ ] Review checklist before committing.
+- [x] Review checklist before committing.
 
 *Why alone*: cross-cutting concurrency change; needs Opus-level care and its own
 verification pass.
+
+**Chat 4 landed:** every handler in `webapp/routes/*.py` that did no `await` is now a
+plain `def`, so FastAPI runs it in its threadpool off the event loop (all GETs, the
+Pydantic-body live-round poll/write APIs, and — critically — `admin_live_round_finalize`,
+which does the GitHub commit). Handlers that read a **static/list** form were converted to
+`def` with `Form(...)` params (whole handler threadpooled, including any ctx-builder I/O);
+the six that read **dynamic-keyed** forms (roster `playing__{code}`, hole `par__{h}`, the
+edit grid's `score-{h}-{p}` / `cell__{r}__{c}`) stay `async def` and wrap only their heavy
+save/commit call in `starlette.concurrency.run_in_threadpool`. HTMX behaviour and response
+types are unchanged (same templates, same 303/200/409/422 codes). For **T8**,
+`finalize_live_round` now holds `_lock` only for the read-validate phase and the terminal
+status flip; `execute_data_update`'s GitHub commit runs *outside* the lock, gated by an
+in-process `_finalizing` set so a write arriving mid-commit is rejected (409) rather than
+appended to staging and silently excluded from the already-built frame — a commit failure
+rolls the set back and leaves Status `active` to retry (no half-finalized state persisted;
+ordering documented in the docstring). New tests:
+`test_write_during_finalize_commit_is_rejected`,
+`test_failed_finalize_commit_rolls_back_and_reopens_writes`. Concurrency verified against
+the real ASGI app: 12 polls stayed at ~8–10 ms while a mocked 4 s finalize was committing.
+Threading: `deps.py` lru_caches are thread-safe; `_extra_cache_clearers` is mutated only at
+import time; `core.players` and `live_round` caches carry their own locks. Full suite green
+(256 passed, 4 skipped); `streamlit/` untouched.
 
 **Starter prompt:**
 ```text

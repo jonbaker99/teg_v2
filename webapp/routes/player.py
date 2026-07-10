@@ -1139,7 +1139,7 @@ def _build_roster() -> list[dict]:
 # ---------------------------------------------------------------------------
 
 @router.get("/player")
-async def player_index(request: Request):
+def player_index(request: Request):
     return templates.TemplateResponse("player_index.html", {
         "request": request,
         "active_page": "player",
@@ -1149,7 +1149,7 @@ async def player_index(request: Request):
 
 
 @router.get("/player/{player_code}")
-async def player_page(request: Request, player_code: str):
+def player_page(request: Request, player_code: str):
     pc = _validate_player(player_code)
     name = get_player_dict()[pc]
     theme = request.state.theme
@@ -1171,7 +1171,7 @@ async def player_page(request: Request, player_code: str):
 
 
 @router.get("/player/{player_code}/tab/{tab_name}")
-async def player_tab(request: Request, player_code: str, tab_name: str):
+def player_tab(request: Request, player_code: str, tab_name: str):
     pc = _validate_player(player_code)
     theme = request.state.theme
 

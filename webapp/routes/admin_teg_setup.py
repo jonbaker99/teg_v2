@@ -15,9 +15,10 @@ Flow:
 import logging
 from pathlib import Path
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from starlette.concurrency import run_in_threadpool
 
 from webapp.admin_auth import is_authed
 from webapp import deps
@@ -34,7 +35,7 @@ def _redirect(url: str):
 
 
 @router.get("/admin/teg-setup")
-async def admin_teg_setup_default(request: Request):
+def admin_teg_setup_default(request: Request):
     if not is_authed(request):
         return _redirect("/admin/login")
 
@@ -50,7 +51,7 @@ async def admin_teg_setup_default(request: Request):
 
 
 @router.get("/admin/teg-setup/{teg_num}")
-async def admin_teg_setup_form(request: Request, teg_num: int):
+def admin_teg_setup_form(request: Request, teg_num: int):
     if not is_authed(request):
         return _redirect("/admin/login")
 
@@ -71,7 +72,8 @@ async def admin_teg_setup_form(request: Request, teg_num: int):
 
 
 @router.post("/admin/teg-setup/{teg_num}/add-player")
-async def admin_teg_setup_add_player(request: Request, teg_num: int):
+def admin_teg_setup_add_player(request: Request, teg_num: int,
+                               new_code: str = Form(""), new_name: str = Form("")):
     """Register a brand-new player (never played before), then reload the form.
 
     A plain form POST -> redirect (not HTMX): the new player has to appear as
@@ -84,9 +86,8 @@ async def admin_teg_setup_add_player(request: Request, teg_num: int):
     from urllib.parse import quote
     from teg_analysis.core.players import add_player, PlayerError
 
-    form = await request.form()
     try:
-        result = add_player(form.get("new_code", ""), form.get("new_name", ""))
+        result = add_player(new_code, new_name)
         deps.clear_all_data_caches()
     except PlayerError as e:
         return _redirect(f"/admin/teg-setup/{teg_num}?add_error={quote(str(e))}")
@@ -99,6 +100,8 @@ async def admin_teg_setup_add_player(request: Request, teg_num: int):
 
 @router.post("/admin/teg-setup/{teg_num}/save", response_class=HTMLResponse)
 async def admin_teg_setup_save(request: Request, teg_num: int):
+    # async because it reads dynamic-keyed form fields (playing__{code} /
+    # handicap__{code}); the blocking save (a GitHub commit) is offloaded below.
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 
@@ -117,7 +120,7 @@ async def admin_teg_setup_save(request: Request, teg_num: int):
         players.append({"code": code, "playing": playing, "handicap": handicap or None})
 
     try:
-        ctx["result"] = save_teg_roster(teg_num, players)
+        ctx["result"] = await run_in_threadpool(save_teg_roster, teg_num, players)
         deps.clear_all_data_caches()
     except Exception as e:  # noqa: BLE001
         logger.error(f"TEG setup save failed: {e}", exc_info=True)

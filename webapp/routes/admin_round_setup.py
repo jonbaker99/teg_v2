@@ -20,6 +20,7 @@ from pathlib import Path
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from starlette.concurrency import run_in_threadpool
 
 from webapp.admin_auth import is_authed
 from webapp import deps
@@ -36,7 +37,7 @@ def _redirect(url: str):
 
 
 @router.get("/admin/round-setup")
-async def admin_round_setup_list(request: Request):
+def admin_round_setup_list(request: Request):
     if not is_authed(request):
         return _redirect("/admin/login")
 
@@ -54,7 +55,7 @@ async def admin_round_setup_list(request: Request):
 
 
 @router.get("/admin/round-setup/{teg_num}/{round_num}")
-async def admin_round_setup_form(request: Request, teg_num: int, round_num: int):
+def admin_round_setup_form(request: Request, teg_num: int, round_num: int):
     if not is_authed(request):
         return _redirect("/admin/login")
 
@@ -74,6 +75,8 @@ async def admin_round_setup_form(request: Request, teg_num: int, round_num: int)
 
 @router.post("/admin/round-setup/{teg_num}/{round_num}/save", response_class=HTMLResponse)
 async def admin_round_setup_save(request: Request, teg_num: int, round_num: int):
+    # async because it reads dynamic-keyed form fields (par__{h} / si__{h});
+    # the blocking save (a GitHub commit) is offloaded to the threadpool below.
     if not is_authed(request):
         return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
 
@@ -92,7 +95,7 @@ async def admin_round_setup_save(request: Request, teg_num: int, round_num: int)
         holes.append({"hole": h, "par": par, "si": si})
 
     try:
-        ctx["result"] = save_round_setup(teg_num, round_num, holes)
+        ctx["result"] = await run_in_threadpool(save_round_setup, teg_num, round_num, holes)
         deps.clear_all_data_caches()
     except Exception as e:  # noqa: BLE001
         logger.error(f"Round setup save failed: {e}", exc_info=True)

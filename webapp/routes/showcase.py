@@ -10,7 +10,7 @@ templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templa
 
 
 @router.get("/showcase")
-async def showcase_page(request: Request):
+def showcase_page(request: Request):
     return templates.TemplateResponse("showcase.html", {
         "request": request,
         "active_page": "showcase",

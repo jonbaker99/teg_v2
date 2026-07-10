@@ -172,7 +172,7 @@ def _load_round_report(teg_num: int, round_num: int) -> tuple[Optional[str], boo
 # ---------------------------------------------------------------------------
 
 @router.get("/teg-reports", response_class=HTMLResponse)
-async def teg_reports(
+def teg_reports(
     request: Request,
     report_type: Optional[str] = None,
     teg: Optional[int] = None,

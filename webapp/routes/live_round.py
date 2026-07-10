@@ -43,7 +43,7 @@ class ScoreWriteRequest(BaseModel):
 
 
 @router.get("/live-round/{token}", name="live_round_page")
-async def live_round_page(request: Request, token: str):
+def live_round_page(request: Request, token: str):
     from teg_analysis.analysis.live_round import get_live_round_context, MAX_SCORE
 
     ctx = {"request": request, "token": token, "max_score": MAX_SCORE}
@@ -65,7 +65,7 @@ async def live_round_page(request: Request, token: str):
 
 
 @router.get("/live-round/{token}/leaderboard", name="live_round_leaderboard_page")
-async def live_round_leaderboard_page(request: Request, token: str):
+def live_round_leaderboard_page(request: Request, token: str):
     from teg_analysis.analysis.live_round import get_live_leaderboard
 
     ctx = {"request": request, "token": token}
@@ -85,7 +85,7 @@ async def live_round_leaderboard_page(request: Request, token: str):
 
 
 @router.get("/api/live-round/{token}/leaderboard")
-async def api_live_leaderboard(token: str):
+def api_live_leaderboard(token: str):
     from teg_analysis.analysis.live_round import get_live_leaderboard
 
     board = get_live_leaderboard(token)
@@ -95,7 +95,7 @@ async def api_live_leaderboard(token: str):
 
 
 @router.get("/api/live-round/{token}/scores")
-async def api_poll_scores(token: str, since: int = 0):
+def api_poll_scores(token: str, since: int = 0):
     from teg_analysis.analysis.live_round import get_scores_since, LiveRoundNotFoundError
 
     try:
@@ -105,7 +105,7 @@ async def api_poll_scores(token: str, since: int = 0):
 
 
 @router.post("/api/live-round/{token}/scores")
-async def api_write_scores(token: str, body: ScoreWriteRequest):
+def api_write_scores(token: str, body: ScoreWriteRequest):
     from teg_analysis.analysis.live_round import (
         apply_score_writes, LiveRoundNotFoundError, LiveRoundInactiveError, InvalidScoreCellError,
     )
