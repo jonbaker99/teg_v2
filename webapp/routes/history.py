@@ -688,7 +688,7 @@ def _format_ranking_for_display(ranking: pd.DataFrame, player_col: str) -> pd.Da
     return df
 
 
-def _player_rankings_context(tab: str, row_dim: str = "Player", col_dim: str = "TEGNum") -> dict:
+def _player_rankings_context(tab: str, row_dim: str = "Pl", col_dim: str = "TEGNum") -> dict:
     try:
         if row_dim not in ("Player", "Pl"):
             row_dim = "Player"
@@ -723,7 +723,7 @@ def _player_rankings_context(tab: str, row_dim: str = "Player", col_dim: str = "
 
 
 @router.get("/player-rankings")
-def player_rankings_page(request: Request, row_dim: str = Query("Player"), col_dim: str = Query("TEGNum")):
+def player_rankings_page(request: Request, row_dim: str = Query("Pl"), col_dim: str = Query("TEGNum")):
     default_tab = "trophy"
     ctx = _player_rankings_context(default_tab, row_dim, col_dim)
     return templates.TemplateResponse("player_rankings.html", {
@@ -737,7 +737,7 @@ def player_rankings_page(request: Request, row_dim: str = Query("Player"), col_d
 
 @router.get("/player-rankings/tab")
 def player_rankings_tab(request: Request, tab: str = "trophy",
-                              row_dim: str = Query("Player"), col_dim: str = Query("TEGNum")):
+                              row_dim: str = Query("Pl"), col_dim: str = Query("TEGNum")):
     ctx = _player_rankings_context(tab, row_dim, col_dim)
     return templates.TemplateResponse("partials/player_rankings_tab.html", {
         "request": request,
