@@ -52,8 +52,41 @@ def get_tegnum_rounds(TEGNum: int) -> int:
 
 # === AGGREGATION ENGINE ===
 
+# Group columns that are constant within each aggregation level, in a fixed,
+# deterministic order. This is the schema `list_fields_by_aggregation_level`
+# rediscovers on every call; in practice it never changes, so we pin it here
+# rather than recompute a groupby().nunique() over every column at up to four
+# levels on every invocation.
+#
+# The lists are cumulative when read top-to-bottom: aggregating at a given level
+# uses that level's fields plus every coarser level above it (see
+# `_AGGREGATION_HIERARCHY`). Ordering within each level follows the order the
+# columns appear in the loaded data, which is also what the old discovery
+# produced — kept explicit so column and row (sort) order are deterministic
+# instead of depending on `set()` iteration order.
+#
+# NOTE: 'Hole' is a valid entry in `_AGGREGATION_HIERARCHY` (and the docstring)
+# but has no entry here — matching the old behaviour, where discovery never
+# produced hole-level fields and aggregating at 'Hole' raised. Left as-is; this
+# is a pre-existing latent gap, not something this refactor changes.
+_AGGREGATION_LEVEL_FIELDS = {
+    'Player': ['Pl', 'Player'],
+    'TEG': ['TEG', 'HC', 'TEGNum', 'Year', 'Area'],
+    'Round': ['Round', 'Date', 'Course', 'TEG-Round'],
+    'FrontBack': ['FrontBack'],
+}
+
+# The hierarchy of aggregation levels, coarsest first.
+_AGGREGATION_HIERARCHY = ['Player', 'TEG', 'Round', 'FrontBack', 'Hole']
+
+
 def list_fields_by_aggregation_level(df):
     """Determine which fields are unique at each aggregation level.
+
+    Retained for backward compatibility and ad-hoc/exploratory use. It is no
+    longer called by ``aggregate_data`` (which uses the fixed
+    ``_AGGREGATION_LEVEL_FIELDS`` map instead); use it if you need to
+    rediscover the schema of an unfamiliar frame.
 
     Args:
         df (pd.DataFrame): DataFrame to analyze.
@@ -99,31 +132,24 @@ def aggregate_data(data: pd.DataFrame, aggregation_level: str, measures: List[st
     if measures is None:
         measures = ['Sc', 'GrossVP', 'NetVP', 'Stableford']
 
-    # Get the fields related to each aggregation level
-    fields_by_level = list_fields_by_aggregation_level(data)
+    if aggregation_level not in _AGGREGATION_HIERARCHY:
+        raise ValueError(f"Invalid aggregation level: '{aggregation_level}'. Choose from: {_AGGREGATION_HIERARCHY}")
 
-    # Define the hierarchy of aggregation levels
-    aggregation_hierarchy = ['Player', 'TEG', 'Round', 'FrontBack', 'Hole']
-
-    if aggregation_level not in aggregation_hierarchy:
-        raise ValueError(f"Invalid aggregation level: '{aggregation_level}'. Choose from: {aggregation_hierarchy}")
-
-    # Determine which fields to include based on the selected aggregation level
-    idx = aggregation_hierarchy.index(aggregation_level)
+    # Determine which fields to include based on the selected aggregation level:
+    # this level's fields plus every coarser level above it, in fixed order.
+    idx = _AGGREGATION_HIERARCHY.index(aggregation_level)
     group_columns = []
-
-    # Add all fields from the selected aggregation level and higher levels
-    for level in aggregation_hierarchy[:idx + 1]:
-        group_columns.extend(fields_by_level[level])
+    for level in _AGGREGATION_HIERARCHY[:idx + 1]:
+        group_columns.extend(_AGGREGATION_LEVEL_FIELDS[level])
 
     # Add additional group fields if provided
     if additional_group_fields:
         if isinstance(additional_group_fields, str):
             additional_group_fields = [additional_group_fields]  # Wrap in a list if it's a string
-        group_columns.extend(additional_group_fields)
-
-    # Ensure group columns are unique
-    group_columns = list(set(group_columns))
+        # Preserve order while de-duplicating against columns already grouped.
+        for col in additional_group_fields:
+            if col not in group_columns:
+                group_columns.append(col)
 
     # Check if all group_columns are present in the DataFrame
     missing_columns = [col for col in group_columns if col not in data.columns]
