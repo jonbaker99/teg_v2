@@ -38,16 +38,16 @@ callers; confirm nothing under `streamlit/` changed; run `pytest tests/ -v` and
 
 - [ ] **Prototype routes**: `charts_proto`, `width_test`, `title_preview`, `showcase`,
       `smoke_test`, `placeholder` are publicly served on the production site
-      (`webapp/app.py:59-74`). Delete, or gate behind admin auth? Which are still used?
+      (`webapp/app.py:59-74`). Delete, or gate behind admin auth? Which are still used? DELETE
 - [ ] **Stableford era gate**: comeback/collapse analysis filters Stableford to
       `TEGNum >= 6` (`teg_analysis/analysis/aggregation.py:433,500,605,740`) but the
       domain rule (`get_net_competition_measure`) says Stableford from TEG 8.
-      Is 6 intentional (Stableford *recorded* from TEG 6) or a bug?
+      Is 6 intentional (Stableford *recorded* from TEG 6) or a bug? A BUG
 - [ ] **Docs contradiction**: CLAUDE.md says the live-round planning doc was deleted,
       but `DATA_STORAGE_INGESTION_PLAN.md` exists and is referenced from
       `webapp/routes/admin_live_round.py:5` and `teg_analysis/analysis/live_round.py`.
       TODOS.md says it's "kept as a historical/reference record", so the likely fix is
-      correcting CLAUDE.md — confirm, or delete-and-fold instead?
+      correcting CLAUDE.md — confirm, or delete-and-fold instead? CONFIRM
 
 ---
 
