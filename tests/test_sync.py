@@ -343,6 +343,67 @@ def test_backups_for_filters(monkeypatch, tmp_path):
 
 
 # ---------------------------------------------------------------------------
+# Report file sync
+# ---------------------------------------------------------------------------
+
+def test_sync_report_files_filters_to_report_patterns(monkeypatch):
+    """Only report-pattern files are synced; draft/version junk is excluded."""
+    gh = {
+        "data/commentary": {
+            "teg_9_report_styled.md": 1,          # report — pull
+            "teg_9_round_1_report_styled.md": 1,  # report — pull
+            "teg_9_dry_draft.md": 1,              # junk — ignore
+        },
+        "data/commentary/drafts": {
+            "teg_9_main_report.md": 1,            # report — pull
+            "teg_9_satire.md": 1,                 # report — pull
+        },
+        "data/commentary/round_reports": {
+            "TEG9_R1_report.md": 1,               # report — pull
+            "TEG9_R1_v2_scratch.md": 1,           # junk — ignore
+        },
+    }
+    monkeypatch.setattr(sync, "list_github_files", lambda folder: gh.get(folder, {}))
+
+    pulled_names = []
+    monkeypatch.setattr(sync, "pull_files",
+                        lambda folder, names: (pulled_names.extend(names)
+                                               or {"pulled": len(names), "failed": []}))
+
+    out = sync.sync_report_files()
+
+    assert set(pulled_names) == {
+        "teg_9_report_styled.md",
+        "teg_9_round_1_report_styled.md",
+        "teg_9_main_report.md",
+        "teg_9_satire.md",
+        "TEG9_R1_report.md",
+    }
+    assert "teg_9_dry_draft.md" not in pulled_names       # non-report junk excluded
+    assert "TEG9_R1_v2_scratch.md" not in pulled_names    # non-report junk excluded
+    assert out["pulled"] == 5
+
+
+def test_sync_report_files_overwrites_present(monkeypatch):
+    """Report files are re-pulled even when the store already has them (refresh)."""
+    monkeypatch.setattr(sync, "list_github_files",
+                        lambda folder: {"teg_9_report_styled.md": 1}
+                        if folder == "data/commentary" else {})
+    # A store copy already exists — sync must still re-pull (it's a refresh lever).
+    monkeypatch.setattr(sync, "list_store_files",
+                        lambda folder: {"teg_9_report_styled.md": 1})
+
+    pulled_names = []
+    monkeypatch.setattr(sync, "pull_files",
+                        lambda folder, names: (pulled_names.extend(names)
+                                               or {"pulled": len(names), "failed": []}))
+
+    out = sync.sync_report_files()
+    assert pulled_names == ["teg_9_report_styled.md"]
+    assert out["pulled"] == 1
+
+
+# ---------------------------------------------------------------------------
 # File catalog
 # ---------------------------------------------------------------------------
 

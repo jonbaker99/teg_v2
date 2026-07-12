@@ -161,6 +161,25 @@ def test_volume_sync_pull_warns_on_newer(client, monkeypatch):
     assert "pull anyway" in resp.text.lower()
 
 
+def test_volume_sync_reports_refreshes(client, monkeypatch):
+    """The one-click reports refresh re-pulls report files and reports the count."""
+    import teg_analysis.io as tio
+
+    calls = {}
+
+    def _fake():
+        calls["ran"] = True
+        return {"pulled": 7, "failed": [], "folders": {"data/commentary": 7}}
+
+    monkeypatch.setattr(tio, "sync_report_files", _fake)
+    _login(client)
+    resp = client.post("/admin/volume-sync/sync-reports",
+                       data={"folder": "data/commentary"})
+    assert resp.status_code == 200
+    assert calls.get("ran") is True         # the refresh actually ran
+    assert "7" in resp.text                 # pulled count surfaced
+
+
 def test_volume_sync_preview_shows_table(client, monkeypatch):
     """Pull/Push first render a preview of what will be overwritten."""
     import teg_analysis.io as tio
