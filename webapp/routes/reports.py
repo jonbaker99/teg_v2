@@ -9,7 +9,10 @@ volume-then-GitHub-aware on Railway (checks the mounted volume, falls back to
 the GitHub API, caches the result). There is no volume-aware directory
 listing, so TEG/round *discovery* (for the dropdown + pills) is driven by
 `data/completed_tegs.csv` instead of scanning `data/commentary/` — see
-`_completed_teg_numbers` / `_available_rounds_for_teg`.
+`_completed_teg_numbers` / `_available_rounds_for_teg`. Discovery is memoised
+in-process (see the "Discovery caching" section) because a probe of a missing
+candidate costs an uncached GitHub 404 on Railway; the caches are cleared on any
+data-cache clear (incl. the report-sync button).
 
 Filename conventions supported
 -------------------------------
@@ -26,6 +29,7 @@ Satire (tournament only):
   data/commentary/drafts/teg_{N}_satire.md
 """
 
+from functools import lru_cache
 from pathlib import Path
 from typing import Optional
 
@@ -77,9 +81,37 @@ def _first_existing(candidates: list[str]) -> Optional[str]:
 
 
 # ---------------------------------------------------------------------------
+# Discovery caching
+# ---------------------------------------------------------------------------
+# Discovery (which TEGs/rounds have reports, whether satire exists) is identical
+# across every request and every user, but each probe of a *missing* candidate
+# path costs a GitHub API round-trip on Railway (read_text_file caches hits to
+# the volume but never caches misses — a 404 is re-fetched every time). Without
+# memoisation the page pays ~3-4 uncached GitHub 404s per load (styled-round
+# misses + the satire check), i.e. ~1-2s of latency on every load even with a
+# fully warm volume. These lru_caches collapse that to at most once per process;
+# _clear_report_caches() is registered with deps so a report sync drops them.
+
+def _clear_report_caches() -> None:
+    """Drop all memoised report discovery. Called on data-cache clears."""
+    _completed_teg_numbers.cache_clear()
+    _rounds_played_for_teg.cache_clear()
+    _available_rounds_for_teg.cache_clear()
+    _satire_available.cache_clear()
+
+
+try:  # pragma: no cover - trivial wiring
+    from webapp import deps as _deps
+    _deps.register_cache_clearer(_clear_report_caches)
+except Exception:  # noqa: BLE001 - never let cache wiring break the route module
+    pass
+
+
+# ---------------------------------------------------------------------------
 # Discovery helpers
 # ---------------------------------------------------------------------------
 
+@lru_cache(maxsize=1)
 def _completed_teg_numbers() -> list[int]:
     """TEG numbers from `data/completed_tegs.csv` (played tournaments).
 
@@ -97,6 +129,7 @@ def _completed_teg_numbers() -> list[int]:
         return []
 
 
+@lru_cache(maxsize=None)
 def _rounds_played_for_teg(teg_num: int) -> int:
     """Number of rounds played in this TEG, from `data/completed_tegs.csv` (default 4)."""
     try:
@@ -119,59 +152,69 @@ def _round_teg_numbers() -> list[int]:
     return sorted(_completed_teg_numbers(), reverse=True)
 
 
+@lru_cache(maxsize=None)
 def _available_rounds_for_teg(teg_num: int) -> list[int]:
     """Return sorted list of round numbers that have a report for the given TEG.
 
     Bounded probe (rounds 1..N played, from completed_tegs.csv) via the
     volume/GitHub-aware read path — there's no directory listing on Railway.
+    Existence-only: probes the raw file (no markdown render, that happens once
+    at display time for the selected round).
     """
     rounds = []
     for r in range(1, _rounds_played_for_teg(teg_num) + 1):
-        if _load_round_report(teg_num, r)[1]:
+        if _round_report_text(teg_num, r) is not None:
             rounds.append(r)
     return rounds
+
+
+@lru_cache(maxsize=None)
+def _satire_available(teg_num: int) -> bool:
+    """Whether a satire draft exists for this TEG (cached — a miss is a GitHub 404)."""
+    return _read_file(f"{DRAFTS_DIR}/teg_{teg_num}_satire.md") is not None
 
 
 # ---------------------------------------------------------------------------
 # Content loading
 # ---------------------------------------------------------------------------
 
-def _load_tournament_report(teg_num: int, variant: str) -> tuple[Optional[str], bool]:
-    """Load tournament report HTML.
-
-    Returns (html_or_None, file_found).
-    For variant='satire', returns satire file if available.
-    For variant='normal', prefers styled then falls back to main_report.
-    """
+def _tournament_report_text(teg_num: int, variant: str) -> Optional[str]:
+    """Return raw tournament report markdown (no render), or None if missing."""
     if variant == "satire":
-        text = _read_file(f"{DRAFTS_DIR}/teg_{teg_num}_satire.md")
-        if text is None:
-            return None, False
-        return _render_md(text), True
-
+        return _read_file(f"{DRAFTS_DIR}/teg_{teg_num}_satire.md")
     # Normal: prefer styled, fallback to main_report
-    text = _first_existing([
+    return _first_existing([
         f"{DATA_DIR}/teg_{teg_num}_report_styled.md",
         f"{DRAFTS_DIR}/teg_{teg_num}_main_report.md",
     ])
+
+
+def _round_report_text(teg_num: int, round_num: int) -> Optional[str]:
+    """Return raw round report markdown (no render), or None if missing.
+
+    Fallback chain:
+      1. data/commentary/teg_{N}_round_{r}_report_styled.md
+      2. data/commentary/round_reports/TEG{N}_R{r}_report.md
+      3. data/commentary/round_reports/teg_{N}_round_{r}_report.md
+    """
+    return _first_existing([
+        f"{DATA_DIR}/teg_{teg_num}_round_{round_num}_report_styled.md",
+        f"{ROUND_REPORTS_DIR}/TEG{teg_num}_R{round_num}_report.md",
+        f"{ROUND_REPORTS_DIR}/teg_{teg_num}_round_{round_num}_report.md",
+    ])
+
+
+def _load_tournament_report(teg_num: int, variant: str) -> tuple[Optional[str], bool]:
+    """Load tournament report HTML. Returns (html_or_None, file_found)."""
+    text = _tournament_report_text(teg_num, variant)
     if text is None:
         return None, False
     return _render_md(text), True
 
 
 def _load_round_report(teg_num: int, round_num: int) -> tuple[Optional[str], bool]:
-    """Load round report HTML with fallback chain.
-
-    Priority:
-      1. data/commentary/teg_{N}_round_{r}_report_styled.md
-      2. data/commentary/round_reports/TEG{N}_R{r}_report.md
-      3. data/commentary/round_reports/teg_{N}_round_{r}_report.md
-    """
-    text = _first_existing([
-        f"{DATA_DIR}/teg_{teg_num}_round_{round_num}_report_styled.md",
-        f"{ROUND_REPORTS_DIR}/TEG{teg_num}_R{round_num}_report.md",
-        f"{ROUND_REPORTS_DIR}/teg_{teg_num}_round_{round_num}_report.md",
-    ])
+    """Load round report HTML. Returns (html_or_None, file_found)."""
+    text = _round_report_text(teg_num, round_num)
     if text is None:
         return None, False
     return _render_md(text), True
@@ -250,7 +293,7 @@ def teg_reports(
     no_report_message = None
 
     if report_type == "tournament":
-        satire_available = _read_file(f"{DRAFTS_DIR}/teg_{teg}_satire.md") is not None
+        satire_available = _satire_available(teg)
         if variant not in ("normal", "satire"):
             variant = "normal"
         html, found = _load_tournament_report(teg, variant)
