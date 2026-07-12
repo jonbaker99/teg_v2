@@ -41,11 +41,17 @@
 <form>
   <input type="hidden" name="folder" value="{{ folder }}">
 
+  <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.5rem;flex-wrap:wrap;">
+    <input type="text" id="sync-filter" placeholder="Filter files… (e.g. report_styled)"
+           oninput="tegSyncApplyFilter()" style="padding:.4rem .6rem;min-width:16rem;flex:1;">
+    <span id="sync-filter-count" style="font-size:.8rem;opacity:.75;"></span>
+  </div>
+
   <div class="admin-table-scroll">
     <table class="teg-table" id="sync-files-table">
       <thead>
         <tr>
-          <th><input type="checkbox" onclick="tegSyncToggleAll(this)" title="Select all"></th>
+          <th><input type="checkbox" onclick="tegSyncToggleAll(this)" title="Select all shown"></th>
           <th>File</th><th>Status</th><th>GitHub size</th><th>Store size</th>
         </tr>
       </thead>
@@ -89,6 +95,15 @@
               hx-target="#sync-body" hx-swap="innerHTML">
         ⬆️ Push selected (store → GitHub)
       </button>
+      {# One-click refresh of every report file GitHub → store (overwrites, with
+         backups). Use after regenerating a report, whatever folder is shown. #}
+      <button type="button" class="btn-secondary"
+              hx-post="/admin/volume-sync/sync-reports"
+              hx-vals='{"folder": "{{ folder }}"}'
+              hx-target="#sync-body" hx-swap="innerHTML"
+              hx-confirm="Re-pull all report files from GitHub, overwriting the store copies (backed up first)?">
+        🔄 Sync all reports from GitHub
+      </button>
     </div>
     <div class="sync-selected-box">
       <div class="sync-selected-head">Selected (<span id="sync-selected-count">0</span>)</div>
@@ -100,9 +115,33 @@
 </form>
 
 <script>
+function tegSyncRowMatches(row, term) {
+  if (!term) return true;
+  var cb = row.querySelector('input[name="files"]');
+  return cb && cb.value.toLowerCase().indexOf(term) !== -1;
+}
+function tegSyncApplyFilter() {
+  var input = document.getElementById('sync-filter');
+  var term = input ? input.value.trim().toLowerCase() : '';
+  var rows = document.querySelectorAll('#sync-files-table tbody tr');
+  var shown = 0;
+  rows.forEach(function (row) {
+    if (tegSyncRowMatches(row, term)) {
+      row.style.display = '';
+      shown++;
+    } else {
+      row.style.display = 'none';
+    }
+  });
+  var count = document.getElementById('sync-filter-count');
+  if (count) count.textContent = term ? (shown + ' of ' + rows.length + ' shown') : '';
+}
 function tegSyncToggleAll(master) {
-  master.closest('table').querySelectorAll('input[name="files"]').forEach(function (c) {
-    c.checked = master.checked;
+  // Only toggle rows currently visible under the active filter.
+  master.closest('table').querySelectorAll('tbody tr').forEach(function (row) {
+    if (row.style.display === 'none') return;
+    var cb = row.querySelector('input[name="files"]');
+    if (cb) cb.checked = master.checked;
   });
   tegSyncRefreshSelected();
 }

@@ -585,6 +585,32 @@ def admin_volume_sync_pull(request: Request, folder: str = Form("data"),
     return templates.TemplateResponse("partials/admin_sync_body.html", ctx)
 
 
+@router.post("/admin/volume-sync/sync-reports", response_class=HTMLResponse)
+def admin_volume_sync_reports(request: Request, folder: str = Form("data")):
+    """One-click refresh: re-pull every report file from GitHub to the store.
+
+    Reports are generated offline and arrive on GitHub out-of-band, so the store
+    can hold a stale copy of a regenerated report. This force-pulls them all
+    (overwriting, with backups) — the refresh lever for regenerations. New
+    reports are picked up too. Re-renders the sync body for the current folder.
+    """
+    if not is_authed(request):
+        return HTMLResponse('<p class="error">Session expired — please reload and log in.</p>', status_code=401)
+
+    from teg_analysis.io import sync_report_files
+
+    try:
+        outcome = sync_report_files()
+        deps.clear_all_data_caches()  # store changed — drop in-process caches
+        result = {"action": "pull", "pulled": outcome["pulled"], "failed": outcome["failed"]}
+    except Exception as e:  # noqa: BLE001
+        logger.error(f"Report sync failed: {e}", exc_info=True)
+        result = {"action": "pull", "error": str(e)}
+
+    ctx = _sync_body_ctx(request, folder, result=result)
+    return templates.TemplateResponse("partials/admin_sync_body.html", ctx)
+
+
 @router.post("/admin/volume-sync/push", response_class=HTMLResponse)
 def admin_volume_sync_push(request: Request, folder: str = Form("data"), files: list[str] = Form([]),
                            commit_message: str = Form(""), confirm: str = Form("")):
