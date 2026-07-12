@@ -1028,6 +1028,14 @@ body.ts-c3 .page-title-area .page-title {
 }
 
 /* ── Page Title Outer — matches content-wrapper width ── */
+/* Horizontal page gutter — keeps the whole content column (title + panel/cards)
+   clear of the viewport edge at narrow widths and aligned with the nav brand
+   (nav uses px-6 = 1.5rem). On wide screens it's absorbed by the 960px centring
+   below, so there's no visible change. */
+.page-container {
+    padding-inline: 1.5rem;
+}
+
 .page-title-outer {
     width: 100%;
     max-width: 960px;
