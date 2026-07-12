@@ -1,6 +1,19 @@
 {% extends "base.html" %}
 {% block title_suffix %} — Player Profiles{% endblock %}
 
+{% block extra_head %}
+<style>
+    /* Let the player cards float directly on the page background (like the
+       Contents site map) — dissolve the single white panel the theme draws on
+       .main-content so each card reads as its own surface. */
+    .main-content {
+        background: transparent !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+</style>
+{% endblock %}
+
 {% block page_title %}
 <div class="page-title-area">
     <span class="page-label">TEG History</span>
