@@ -1155,6 +1155,20 @@ def _build_roster() -> list[dict]:
         })
 
     cards.sort(key=lambda c: (-c["total_trophies"], -c["n_tegs"], c["name"]))
+
+    # Standard competition ranking by silverware won; players with no honours
+    # get no rank marker (a "#8" would misrepresent the silverware ordering).
+    prev_trophies = None
+    rank = 0
+    for i, c in enumerate(cards):
+        if c["total_trophies"] > 0:
+            if c["total_trophies"] != prev_trophies:
+                rank = i + 1
+                prev_trophies = c["total_trophies"]
+            c["rank"] = rank
+        else:
+            c["rank"] = None
+
     return cards
 
 
