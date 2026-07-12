@@ -30,6 +30,10 @@ from teg_analysis.analysis.streaks import (
     prepare_record_best_streaks_data,
     prepare_record_worst_streaks_data,
 )
+from teg_analysis.analysis.handicaps import (
+    get_current_handicaps_formatted,
+    get_next_teg_and_check_if_in_progress_fast,
+)
 from teg_analysis.display.formatters import (
     prepare_records_table,
     prepare_worst_records_table,
@@ -1114,6 +1118,17 @@ def _build_roster() -> list[dict]:
     rd_data = cached_round_data()
     winners = deps.cached_winners()
 
+    # Current playing handicap = each player's HC for the next (or in-progress)
+    # TEG. Map name → HC; players absent from the table just show "–".
+    try:
+        _, next_tegnum, _ = get_next_teg_and_check_if_in_progress_fast()
+        hc_df, _ = get_current_handicaps_formatted(next_tegnum - 1, next_tegnum)
+        hc_col = f"TEG {next_tegnum}"
+        current_hc = dict(zip(hc_df["Handicap"], hc_df[hc_col].astype(int)))
+    except Exception:
+        logger.exception("Could not load current handicaps for roster cards")
+        current_hc = {}
+
     cards = []
     for code, name in get_player_dict().items():
         player_data = all_data[all_data['Player'] == name]
@@ -1148,6 +1163,7 @@ def _build_roster() -> list[dict]:
             "since_year": since_year,
             "avg_gvp": f"{avg_gvp:+.1f}" if avg_gvp is not None else "–",
             "avg_stab": f"{avg_stab:.1f}" if avg_stab is not None else "–",
+            "handicap": current_hc.get(name),
             "total_trophies": total_trophies,
             "trophy_count": trophy_count,
             "jacket_count": jacket_count,
@@ -1155,20 +1171,6 @@ def _build_roster() -> list[dict]:
         })
 
     cards.sort(key=lambda c: (-c["total_trophies"], -c["n_tegs"], c["name"]))
-
-    # Standard competition ranking by silverware won; players with no honours
-    # get no rank marker (a "#8" would misrepresent the silverware ordering).
-    prev_trophies = None
-    rank = 0
-    for i, c in enumerate(cards):
-        if c["total_trophies"] > 0:
-            if c["total_trophies"] != prev_trophies:
-                rank = i + 1
-                prev_trophies = c["total_trophies"]
-            c["rank"] = rank
-        else:
-            c["rank"] = None
-
     return cards
 
 

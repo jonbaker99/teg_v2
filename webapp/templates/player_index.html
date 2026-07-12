@@ -9,12 +9,11 @@
 {% endblock %}
 
 {% block content %}
-<p class="page-subtitle">Players ranked by silverware won — pick a card for the full career record.</p>
+<p class="page-subtitle page-subtitle--mono">Players ranked by silverware won — pick a card for the full career record.</p>
 
 <div class="player-roster">
     {% for p in roster %}
     <a href="/player/{{ p.code }}" class="player-card">
-        {% if p.rank %}<span class="player-card-rank">{{ p.rank }}</span>{% endif %}
         <span class="player-card-name">{{ p.name }}</span>
         {% if p.trophy_count or p.jacket_count %}
         <span class="player-card-stars">
@@ -24,7 +23,20 @@
         <span class="player-card-stars player-card-stars--none">No silverware yet</span>
         {% endif %}
         <span class="player-card-meta">{{ p.n_tegs }} TEGs · since {{ p.since_year }}</span>
-        <span class="player-card-averages">Avg {{ p.avg_gvp }} gross · {{ p.avg_stab }} pts</span>
+        <div class="player-card-stats">
+            <div class="pc-stat">
+                <span class="pc-stat-val">{{ p.handicap if p.handicap is not none else "–" }}</span>
+                <span class="pc-stat-lbl">HC</span>
+            </div>
+            <div class="pc-stat">
+                <span class="pc-stat-val">{{ p.avg_gvp }}</span>
+                <span class="pc-stat-lbl">Avg gross</span>
+            </div>
+            <div class="pc-stat">
+                <span class="pc-stat-val">{{ p.avg_stab }}</span>
+                <span class="pc-stat-lbl">Avg stab</span>
+            </div>
+        </div>
     </a>
     {% endfor %}
 </div>

@@ -780,6 +780,13 @@ h1, h2, h3, h4, h5, h6 {
 .player-results-table td.result-loss span { background: #FAE9E8; color: #8b0000; }
 
 /* ── Player roster (Player Profiles landing) ── */
+/* Mono, lightly-spaced lead-in that sits well clear of the card grid. */
+.page-subtitle--mono {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 1.75rem;
+}
 .player-roster {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -803,33 +810,19 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
     transform: translateY(-2px);
 }
-/* Silverware rank — a quiet index number in the corner, not a coloured badge,
-   so accent-green stays reserved for actual honours (the stars). */
-.player-card-rank {
-    position: absolute;
-    top: 0.9rem;
-    right: 1.2rem;
-    font-family: var(--font-heading), serif;
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    opacity: 0.55;
-    line-height: 1;
-}
-.player-card-rank::before {
-    content: "#";
-    font-size: 0.8em;
-}
+/* Lo-fi / monospaced card identity — mono name in place of the serif heading
+   so the roster reads like a scorecard rather than a magazine page. */
 .player-card-name {
-    font-family: var(--font-heading), serif;
-    font-size: 1.15rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.95rem;
     font-weight: 600;
+    letter-spacing: -0.01em;
     color: var(--text-primary);
-    padding-right: 2rem;
     line-height: 1.2;
 }
 .player-card-meta {
-    font-size: 0.75rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.7rem;
     color: var(--text-muted);
 }
 .player-card-stars {
@@ -846,17 +839,38 @@ h1, h2, h3, h4, h5, h6 {
     width: 0.3rem;
 }
 .player-card-stars--none {
-    font-size: 0.75rem;
-    font-style: italic;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.7rem;
     color: var(--text-muted);
     opacity: 0.75;
 }
-/* One quiet averages line, pinned to the card foot so cards align. */
-.player-card-averages {
+/* Three mono metrics (HC / Avg gross / Avg stab), pinned to the card foot with
+   a single thin rule — no boxed dotted-rule strip. */
+.player-card-stats {
+    display: flex;
+    gap: 1.25rem;
     margin-top: auto;
-    padding-top: 0.55rem;
-    font-size: 0.78rem;
-    color: var(--text-secondary, var(--text-muted));
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--table-cell-border);
+}
+.pc-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+.pc-stat-val {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1;
+}
+.pc-stat-lbl {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
 }
 .player-card-badges {
     display: flex;
