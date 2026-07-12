@@ -4,7 +4,7 @@ Analysis package todos. Commentary/reporting pipeline tracked separately in [`re
 
 ---
 
-## Finalise reporting pipeline
+## TEG Reports
 
 Full detail in [`reporting/STATUS.md`](reporting/STATUS.md). Summary of what's left:
 

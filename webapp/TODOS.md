@@ -6,11 +6,7 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 ## IN PROGRESS
 
-- [X] **Default look** - use 'clean page' and remove the dropdown unless I specifically ask to go into UI development mode
-- [X] **Score-count matrix % pill** — absolute / % toggle on Scoring tab on `/latest-teg`. Use `.pill-group` component.
-
 - [ ] **Bestball/worstball on `/latest-round`** — show best/worst bestball and worstball positions in the round-in-context page.
-- [X] **Score matrix** - rename to score history
 - [ ] **`/scoring/matrix`** - score type as pills; TEG / Round / 9 as tabs
 
 
