@@ -780,19 +780,27 @@ h1, h2, h3, h4, h5, h6 {
 .player-results-table td.result-loss span { background: #FAE9E8; color: #8b0000; }
 
 /* ── Player roster (Player Profiles landing) ── */
+/* Mono, lightly-spaced lead-in that sits well clear of the card grid. */
+.page-subtitle--mono {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 1.75rem;
+}
 .player-roster {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 1rem;
 }
 .player-card {
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 0.85rem;
+    gap: 0.4rem;
     background-color: var(--bg-card);
     border: 1px solid var(--table-cell-border);
     border-radius: var(--card-radius);
-    padding: 1rem 1.1rem 1.1rem;
+    padding: 1.1rem 1.2rem;
     text-decoration: none;
     color: inherit;
     transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
@@ -802,82 +810,67 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
     transform: translateY(-2px);
 }
-.player-card-head {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-.player-avatar {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 auto;
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 9999px;
-    background-color: var(--table-toprank-bg);
-    color: var(--accent);
-    border: 1px solid var(--accent);
-    font-family: 'Roboto Mono', monospace;
-    font-size: 0.9rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-}
-.player-card-id {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.25;
-}
+/* Lo-fi / monospaced card identity — mono name in place of the serif heading
+   so the roster reads like a scorecard rather than a magazine page. */
 .player-card-name {
-    font-family: var(--font-heading), serif;
-    font-size: 1.05rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.95rem;
     font-weight: 600;
+    letter-spacing: -0.01em;
     color: var(--text-primary);
+    line-height: 1.2;
 }
 .player-card-meta {
-    font-size: 0.75rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.7rem;
     color: var(--text-muted);
 }
 .player-card-stars {
     display: block;
     line-height: 1;
-    margin: 0.1rem 0 0;
+    margin: 0.05rem 0 0.15rem;
 }
 .player-card-stars .trophy-star {
-    font-size: 0.9rem;
-    margin-right: 0.01rem;
+    font-size: 1rem;
+    margin-right: 0.04rem;
 }
 .player-card-stars-gap {
     display: inline-block;
-    width: 0.25rem;
+    width: 0.3rem;
 }
+.player-card-stars--none {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    opacity: 0.75;
+}
+/* Three mono metrics (HC / Avg gross / Avg stab), pinned to the card foot with
+   a single thin rule — no boxed dotted-rule strip. */
 .player-card-stats {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5rem;
-    padding: 0.65rem 0;
-    border-top: 1px dotted var(--table-cell-border);
-    border-bottom: 1px dotted var(--table-cell-border);
+    display: flex;
+    gap: 1.25rem;
+    margin-top: auto;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--table-cell-border);
 }
 .pc-stat {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
+    gap: 0.1rem;
 }
 .pc-stat-val {
     font-family: 'Roboto Mono', monospace;
-    font-size: 1.05rem;
-    font-weight: 700;
+    font-size: 0.95rem;
+    font-weight: 600;
     color: var(--text-primary);
+    line-height: 1;
 }
 .pc-stat-lbl {
-    font-size: 0.625rem;
-    font-weight: 600;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.6rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     color: var(--text-muted);
-    margin-top: 0.1rem;
 }
 .player-card-badges {
     display: flex;
@@ -889,12 +882,6 @@ h1, h2, h3, h4, h5, h6 {
 .player-card-badges .badge,
 .player-card-badges .badge-muted {
     margin-left: 0;
-}
-.player-card-cta {
-    margin-top: auto;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--accent);
 }
 
 /* ── Divider ── */
@@ -1041,6 +1028,14 @@ body.ts-c3 .page-title-area .page-title {
 }
 
 /* ── Page Title Outer — matches content-wrapper width ── */
+/* Horizontal page gutter — keeps the whole content column (title + panel/cards)
+   clear of the viewport edge at narrow widths and aligned with the nav brand
+   (nav uses px-6 = 1.5rem). On wide screens it's absorbed by the 960px centring
+   below, so there's no visible change. */
+.page-container {
+    padding-inline: 1.5rem;
+}
+
 .page-title-outer {
     width: 100%;
     max-width: 960px;

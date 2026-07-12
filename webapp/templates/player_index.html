@@ -1,6 +1,19 @@
 {% extends "base.html" %}
 {% block title_suffix %} — Player Profiles{% endblock %}
 
+{% block extra_head %}
+<style>
+    /* Let the player cards float directly on the page background (like the
+       Contents site map) — dissolve the single white panel the theme draws on
+       .main-content so each card reads as its own surface. */
+    .main-content {
+        background: transparent !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+</style>
+{% endblock %}
+
 {% block page_title %}
 <div class="page-title-area">
     <span class="page-label">TEG History</span>
@@ -9,36 +22,34 @@
 {% endblock %}
 
 {% block content %}
-<p class="page-subtitle">Pick a player to dive into their career — records, rounds, scoring and head-to-heads. Cards are ordered by silverware.</p>
-
-{% include "partials/player_pills.html" %}
+<p class="page-subtitle page-subtitle--mono">Players ranked by silverware won — pick a card for the full career record.</p>
 
 <div class="player-roster">
     {% for p in roster %}
     <a href="/player/{{ p.code }}" class="player-card">
-        <div class="player-card-head">
-            <span class="player-avatar">{{ p.code }}</span>
-            <div class="player-card-id">
-                <span class="player-card-name">{{ p.name }}</span>
-                {% if p.trophy_count or p.jacket_count %}
-                <span class="player-card-stars">
-                    {% for i in range(p.trophy_count) %}<span class="trophy-star trophy-star--gold">&#9733;</span>{% endfor %}{% if p.trophy_count and p.jacket_count %}<span class="player-card-stars-gap"></span>{% endif %}{% for i in range(p.jacket_count) %}<span class="trophy-star trophy-star--green">&#9733;</span>{% endfor %}
-                </span>
-                {% endif %}
-                <span class="player-card-meta">{{ p.n_tegs }} TEGs · since {{ p.since_year }}</span>
-            </div>
-        </div>
+        <span class="player-card-name">{{ p.name }}</span>
+        {% if p.trophy_count or p.jacket_count %}
+        <span class="player-card-stars">
+            {% for i in range(p.trophy_count) %}<span class="trophy-star trophy-star--gold">&#9733;</span>{% endfor %}{% if p.trophy_count and p.jacket_count %}<span class="player-card-stars-gap"></span>{% endif %}{% for i in range(p.jacket_count) %}<span class="trophy-star trophy-star--green">&#9733;</span>{% endfor %}
+        </span>
+        {% else %}
+        <span class="player-card-stars player-card-stars--none">No silverware yet</span>
+        {% endif %}
+        <span class="player-card-meta">{{ p.n_tegs }} TEGs · since {{ p.since_year }}</span>
         <div class="player-card-stats">
             <div class="pc-stat">
+                <span class="pc-stat-val">{{ p.handicap if p.handicap is not none else "–" }}</span>
+                <span class="pc-stat-lbl">HC</span>
+            </div>
+            <div class="pc-stat">
                 <span class="pc-stat-val">{{ p.avg_gvp }}</span>
-                <span class="pc-stat-lbl">Avg Gross</span>
+                <span class="pc-stat-lbl">Avg gross</span>
             </div>
             <div class="pc-stat">
                 <span class="pc-stat-val">{{ p.avg_stab }}</span>
-                <span class="pc-stat-lbl">Avg Stab</span>
+                <span class="pc-stat-lbl">Avg stab</span>
             </div>
         </div>
-        <span class="player-card-cta">View profile →</span>
     </a>
     {% endfor %}
 </div>
