@@ -8,8 +8,11 @@ import markdown as md_lib
 from fastapi import APIRouter, Request, Query
 from fastapi.templating import Jinja2Templates
 
+from github import GithubException
+
 from teg_analysis.constants import HANDICAPS_CSV
 from teg_analysis.core.players import get_name_to_code
+from teg_analysis.io import read_text_file
 from teg_analysis.io.file_operations import read_file
 from teg_analysis.analysis.aggregation import (
     get_round_data,
@@ -79,7 +82,7 @@ def _df_to_html(df: pd.DataFrame, table_class: str = "teg-table") -> str:
     )
 
 
-_COMMENTARY_DIR = Path("data/commentary")
+_COMMENTARY_DIR = "data/commentary"
 _MD_EXTS = ["extra", "sane_lists", "smarty"]
 
 
@@ -107,9 +110,11 @@ def _teg_context_header(teg_num: int) -> str:
 def _render_report(candidates: list[str]) -> str | None:
     """Render the first existing markdown file (relative to data/commentary) to HTML."""
     for name in candidates:
-        path = _COMMENTARY_DIR / name
-        if path.is_file():
-            return md_lib.markdown(path.read_text(encoding="utf-8"), extensions=_MD_EXTS)
+        try:
+            text = read_text_file(f"{_COMMENTARY_DIR}/{name}")
+        except (FileNotFoundError, GithubException):
+            continue
+        return md_lib.markdown(text, extensions=_MD_EXTS)
     return None
 
 

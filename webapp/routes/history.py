@@ -503,18 +503,25 @@ def _results_context(teg_num: int, tab: str = "net", chart_variant: str = "adjus
             return {"result_title": "Scorecards", "table_html": table_html, "raw_table": True}
 
         if tab == "report":
-            from pathlib import Path
             import markdown as md_lib
+            from github import GithubException
+            from teg_analysis.io import read_text_file
             # Prefer the styled report; fall back to the plain main report draft.
             candidates = [
-                Path(f"data/commentary/teg_{teg_num}_report_styled.md"),
-                Path(f"data/commentary/drafts/teg_{teg_num}_main_report.md"),
-                Path(f"data/commentary/teg_{teg_num}_main_report.md"),
+                f"data/commentary/teg_{teg_num}_report_styled.md",
+                f"data/commentary/drafts/teg_{teg_num}_main_report.md",
+                f"data/commentary/teg_{teg_num}_main_report.md",
             ]
-            path = next((p for p in candidates if p.is_file()), None)
-            if path is not None:
+            text = None
+            for candidate in candidates:
+                try:
+                    text = read_text_file(candidate)
+                    break
+                except (FileNotFoundError, GithubException):
+                    continue
+            if text is not None:
                 html = md_lib.markdown(
-                    path.read_text(encoding="utf-8"),
+                    text,
                     extensions=["extra", "sane_lists", "smarty", "toc"],
                 )
                 caption = ""

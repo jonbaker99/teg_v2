@@ -92,7 +92,7 @@ Reports verified: TEGs 8, 9, 10 (tournament + all rounds), TEG 11 (tournament + 
 - All tournament styled reports: final standings ✅, records block ✅ (uses `class="records"`, not `pbs-and-records`).
 
 ## Known issues / gotchas
-- [ ] **Fix remote commentary generation** — issue to be diagnosed and resolved.
+- [X] **Fix remote report *viewing*** — diagnosed 2026-07-12: `webapp/routes/reports.py`, `history.py`, and `latest.py` read commentary files via bare `Path(...).is_file()`/`.read_text()` instead of `teg_analysis.io.read_text_file()`, so on Railway they never checked the volume or fell back to GitHub — `/teg-reports` showed "No reports available yet." even though all reports were committed on `main`. Fixed by routing all reads through `read_text_file()`; TEG/round *discovery* (dropdown + pills) now derives from `data/completed_tegs.csv` instead of `iterdir()`-scanning `data/commentary/` (there's no volume-aware directory listing). Remote *generation* (writing a new report from the webapp) is still not built — see the `webapp/TODOS.md` item.
 - **TEG 10 R3 arithmetic error**: "fourteen-point swing" should be "sixteen". Will fix on re-gen.
 - **The isolated `venv/` (Python 3.14) hits a jinja2/starlette template-cache bug** (`TypeError: cannot use 'tuple' as a dict key`) on every templated route. Visual webapp verification needs Python 3.12/3.13, or wait for a fixed jinja2/starlette release.
 - **MCP/CSS coupling between streamlit and webapp**: `teg_reports.css` is duplicated in `streamlit/styles/` and `webapp/static/`. Edits must be kept in sync (or, later, consolidated into a shared location). Streamlit is deferred but still wired.

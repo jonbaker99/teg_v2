@@ -4,6 +4,13 @@ Reads the styled MD produced by `teg_analysis.reporting.render.style_report()`
 (class-tagged headings + dateline + at-a-glance callout) and renders it to HTML
 using the `markdown` library with the same extensions the streamlit page uses.
 
+All file reads go through `teg_analysis.io.read_text_file`, which is
+volume-then-GitHub-aware on Railway (checks the mounted volume, falls back to
+the GitHub API, caches the result). There is no volume-aware directory
+listing, so TEG/round *discovery* (for the dropdown + pills) is driven by
+`data/completed_tegs.csv` instead of scanning `data/commentary/` — see
+`_completed_teg_numbers` / `_available_rounds_for_teg`.
+
 Filename conventions supported
 -------------------------------
 Tournament reports (DATA_DIR = data/commentary/):
@@ -19,7 +26,6 @@ Satire (tournament only):
   data/commentary/drafts/teg_{N}_satire.md
 """
 
-import re
 from pathlib import Path
 from typing import Optional
 
@@ -27,13 +33,18 @@ import markdown as md_lib
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from github import GithubException
+
+from teg_analysis.io import read_text_file
+from teg_analysis.io.file_operations import read_file
 
 router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
-DATA_DIR = Path("data/commentary")
-DRAFTS_DIR = DATA_DIR / "drafts"
-ROUND_REPORTS_DIR = DATA_DIR / "round_reports"
+DATA_DIR = "data/commentary"
+DRAFTS_DIR = f"{DATA_DIR}/drafts"
+ROUND_REPORTS_DIR = f"{DATA_DIR}/round_reports"
+_COMPLETED_TEGS_CSV = "data/completed_tegs.csv"
 _MD_EXTS = ["extra", "sane_lists", "smarty", "toc"]
 
 # Caption shown for pre-TEG-8 tournament reports (matches streamlit/teg_reports.py)
@@ -43,11 +54,12 @@ _PRE_TEG8_CAPTION = (
 )
 
 
-def _read_file(path: Path) -> Optional[str]:
-    """Return file text if it exists, else None."""
-    if path.is_file():
-        return path.read_text(encoding="utf-8")
-    return None
+def _read_file(path: str) -> Optional[str]:
+    """Return file text via the volume/GitHub-aware read path, or None if missing."""
+    try:
+        return read_text_file(path)
+    except (FileNotFoundError, GithubException):
+        return None
 
 
 def _render_md(text: str) -> str:
@@ -55,70 +67,69 @@ def _render_md(text: str) -> str:
     return md_lib.markdown(text, extensions=_MD_EXTS)
 
 
+def _first_existing(candidates: list[str]) -> Optional[str]:
+    """Return the text of the first candidate path that exists, else None."""
+    for path in candidates:
+        text = _read_file(path)
+        if text is not None:
+            return text
+    return None
+
+
 # ---------------------------------------------------------------------------
 # Discovery helpers
 # ---------------------------------------------------------------------------
 
+def _completed_teg_numbers() -> list[int]:
+    """TEG numbers from `data/completed_tegs.csv` (played tournaments).
+
+    Used to drive the TEG dropdown / round pills instead of scanning
+    `data/commentary/` (there's no volume-aware directory listing). A
+    completed TEG that has no report generated yet just falls through to the
+    "no report available" message when selected.
+    """
+    try:
+        completed = read_file(_COMPLETED_TEGS_CSV)
+        if completed.empty:
+            return []
+        return sorted(int(n) for n in completed["TEGNum"].astype(int).unique())
+    except Exception:
+        return []
+
+
+def _rounds_played_for_teg(teg_num: int) -> int:
+    """Number of rounds played in this TEG, from `data/completed_tegs.csv` (default 4)."""
+    try:
+        completed = read_file(_COMPLETED_TEGS_CSV)
+        row = completed[completed["TEGNum"].astype(int) == teg_num]
+        if row.empty:
+            return 4
+        return int(row.iloc[0]["Rounds"])
+    except Exception:
+        return 4
+
+
 def _tournament_teg_numbers() -> list[int]:
     """Return sorted list of TEG numbers that have a tournament report."""
-    nums = set()
-    if DATA_DIR.is_dir():
-        for p in DATA_DIR.iterdir():
-            # styled variant
-            m = re.match(r"^teg_(\d+)_report_styled\.md$", p.name)
-            if m:
-                nums.add(int(m.group(1)))
-    if DRAFTS_DIR.is_dir():
-        for p in DRAFTS_DIR.iterdir():
-            m = re.match(r"^teg_(\d+)_main_report\.md$", p.name)
-            if m:
-                nums.add(int(m.group(1)))
-    return sorted(nums, reverse=True)
+    return sorted(_completed_teg_numbers(), reverse=True)
 
 
 def _round_teg_numbers() -> list[int]:
     """Return sorted list of TEG numbers that have any round report."""
-    nums = set()
-    # Styled variants in DATA_DIR
-    if DATA_DIR.is_dir():
-        for p in DATA_DIR.iterdir():
-            m = re.match(r"^teg_(\d+)_round_\d+_report_styled\.md$", p.name)
-            if m:
-                nums.add(int(m.group(1)))
-    # New and old format in ROUND_REPORTS_DIR
-    if ROUND_REPORTS_DIR.is_dir():
-        for p in ROUND_REPORTS_DIR.iterdir():
-            # New format: TEG{N}_R{r}_report.md
-            m = re.match(r"^TEG(\d+)_R\d+_report\.md$", p.name)
-            if m:
-                nums.add(int(m.group(1)))
-            # Old format: teg_{N}_round_{r}_report.md
-            m = re.match(r"^teg_(\d+)_round_\d+_report\.md$", p.name)
-            if m:
-                nums.add(int(m.group(1)))
-    return sorted(nums, reverse=True)
+    return sorted(_completed_teg_numbers(), reverse=True)
 
 
 def _available_rounds_for_teg(teg_num: int) -> list[int]:
-    """Return sorted list of round numbers that have a report for the given TEG."""
-    rounds = set()
-    # Styled variants in DATA_DIR
-    if DATA_DIR.is_dir():
-        for p in DATA_DIR.iterdir():
-            m = re.match(rf"^teg_{teg_num}_round_(\d+)_report_styled\.md$", p.name)
-            if m:
-                rounds.add(int(m.group(1)))
-    if ROUND_REPORTS_DIR.is_dir():
-        for p in ROUND_REPORTS_DIR.iterdir():
-            # New format: TEG{N}_R{r}_report.md
-            m = re.match(rf"^TEG{teg_num}_R(\d+)_report\.md$", p.name)
-            if m:
-                rounds.add(int(m.group(1)))
-            # Old format
-            m = re.match(rf"^teg_{teg_num}_round_(\d+)_report\.md$", p.name)
-            if m:
-                rounds.add(int(m.group(1)))
-    return sorted(rounds)
+    """Return sorted list of round numbers that have a report for the given TEG.
+
+    Bounded probe (rounds 1..N played, from completed_tegs.csv) via the
+    volume/GitHub-aware read path — there's no directory listing on Railway.
+    """
+    rounds = []
+    for r in range(1, _rounds_played_for_teg(teg_num) + 1):
+        if _load_round_report(teg_num, r)[1]:
+            rounds.append(r)
+    return rounds
 
 
 # ---------------------------------------------------------------------------
@@ -133,15 +144,16 @@ def _load_tournament_report(teg_num: int, variant: str) -> tuple[Optional[str], 
     For variant='normal', prefers styled then falls back to main_report.
     """
     if variant == "satire":
-        text = _read_file(DRAFTS_DIR / f"teg_{teg_num}_satire.md")
+        text = _read_file(f"{DRAFTS_DIR}/teg_{teg_num}_satire.md")
         if text is None:
             return None, False
         return _render_md(text), True
 
     # Normal: prefer styled, fallback to main_report
-    text = _read_file(DATA_DIR / f"teg_{teg_num}_report_styled.md")
-    if text is None:
-        text = _read_file(DRAFTS_DIR / f"teg_{teg_num}_main_report.md")
+    text = _first_existing([
+        f"{DATA_DIR}/teg_{teg_num}_report_styled.md",
+        f"{DRAFTS_DIR}/teg_{teg_num}_main_report.md",
+    ])
     if text is None:
         return None, False
     return _render_md(text), True
@@ -155,16 +167,14 @@ def _load_round_report(teg_num: int, round_num: int) -> tuple[Optional[str], boo
       2. data/commentary/round_reports/TEG{N}_R{r}_report.md
       3. data/commentary/round_reports/teg_{N}_round_{r}_report.md
     """
-    candidates = [
-        DATA_DIR / f"teg_{teg_num}_round_{round_num}_report_styled.md",
-        ROUND_REPORTS_DIR / f"TEG{teg_num}_R{round_num}_report.md",
-        ROUND_REPORTS_DIR / f"teg_{teg_num}_round_{round_num}_report.md",
-    ]
-    for path in candidates:
-        text = _read_file(path)
-        if text is not None:
-            return _render_md(text), True
-    return None, False
+    text = _first_existing([
+        f"{DATA_DIR}/teg_{teg_num}_round_{round_num}_report_styled.md",
+        f"{ROUND_REPORTS_DIR}/TEG{teg_num}_R{round_num}_report.md",
+        f"{ROUND_REPORTS_DIR}/teg_{teg_num}_round_{round_num}_report.md",
+    ])
+    if text is None:
+        return None, False
+    return _render_md(text), True
 
 
 # ---------------------------------------------------------------------------
@@ -240,7 +250,7 @@ def teg_reports(
     no_report_message = None
 
     if report_type == "tournament":
-        satire_available = (DRAFTS_DIR / f"teg_{teg}_satire.md").is_file()
+        satire_available = _read_file(f"{DRAFTS_DIR}/teg_{teg}_satire.md") is not None
         if variant not in ("normal", "satire"):
             variant = "normal"
         html, found = _load_tournament_report(teg, variant)
