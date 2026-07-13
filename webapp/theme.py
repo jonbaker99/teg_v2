@@ -1,12 +1,16 @@
 """Theme management for TEG webapp."""
 
 THEMES = [
+    ("mono", "Mono"),
     ("clean-page", "Clean Page"),
     ("clean-layered", "Clean Layered"),
 ]
 
 THEME_IDS = {t[0] for t in THEMES}
-DEFAULT_THEME = "clean-page"
+# Mono is the production design. The previous design lives on as the
+# "clean-page" theme (untouched) — set DEFAULT_THEME back to it to revert.
+# See webapp/static/themes/archive/pre-mono-backup/REVERT.md.
+DEFAULT_THEME = "mono"
 
 
 def get_theme(request) -> str:
@@ -87,7 +91,21 @@ _DARK = {
     "font_color": "#ececea",
 }
 
+# Mono theme — charts sit inside a shaded band, so the plot surface matches the
+# band colour (--band-bg) rather than the page, and the font uses the axis token.
+_MONO_LIGHT = {
+    "paper_bgcolor": "#f6f6f3",
+    "plot_bgcolor": "#f6f6f3",
+    "font_color": "#8a8d82",
+}
+_MONO_DARK = {
+    "paper_bgcolor": "#1b1b1b",
+    "plot_bgcolor": "#1b1b1b",
+    "font_color": "#7d7d7d",
+}
+
 PLOTLY_THEMES = {
+    "mono": _MONO_LIGHT,
     "clean-page": _LIGHT,
     "clean-layered": _LIGHT,
 }
@@ -100,5 +118,5 @@ def get_plotly_theme(theme: str, mode: str = "light") -> dict:
     ``mode="dark"`` (from ``request.state.mode``) to get the dark surface.
     """
     if mode == "dark":
-        return _DARK
+        return _MONO_DARK if theme == "mono" else _DARK
     return PLOTLY_THEMES.get(theme, PLOTLY_THEMES[DEFAULT_THEME])

@@ -1,0 +1,361 @@
+/* ============================================================================
+   Mono — a monospace "record-book" theme.
+
+   A plain white (light) / near-black (dark) page with NO cards and NO page
+   panels: every block of quantitative content sits in a subtly shaded "band",
+   all tabular/numeric content is monospace, and one accent (forest green) is
+   used sparingly. See webapp/design_handoff for the full handoff spec.
+
+   How it fits the existing system
+   -------------------------------
+   base-vars.css owns all component STRUCTURE and reads colours/fonts through
+   CSS custom-property tokens. This file only (a) declares the Mono palette on
+   those tokens and (b) adds the handful of Mono-specific look rules that aren't
+   expressible as a token alone (bands, mono tables, borderless cells).
+
+   Two font roles per the handoff: a UI sans face and a mono face for all data.
+   Per the project brief the SITE TITLE, MAIN NAV and PAGE (H1) TITLES keep the
+   site's existing Lora serif — see "Serif retention" at the foot of this file.
+
+   Dark mode: this theme owns its own neutral-grey dark palette. base.html tags
+   <html> with data-theme, and dark.css is scoped to :not([data-theme="mono"]),
+   so the two never fight — Mono's dark block below is the single source.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+    /* ── Font roles ── */
+    --font-sans:  'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-mono:  'Roboto Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+    --font-serif: 'Lora', Georgia, serif;   /* retained for title / nav / page titles */
+
+    /* ── Mono palette (handoff token names — the source of truth) ── */
+    --bg:        #ffffff;
+    --ink:       #12140f;
+    --ink2:      #4a4d44;
+    --muted:     #8a8d82;
+    --sec:       #a9aca1;
+    --accent:    #21663f;
+    --band-bg:   #f6f6f3;
+    --divider:   #e6e7e0;
+    --data:      #2a2d24;
+    --star:      #c0962c;
+    --bad:       #9c3a2a;
+    --badgetext: #ffffff;
+    --grid:      #e8e8e1;
+    --axis:      #8a8d82;
+
+    /* ── Map the palette onto the base-vars token names ──
+       These reference the Mono tokens above via var(), so the dark block only
+       has to re-declare the ~14 Mono tokens and every mapping flips with them. */
+    --font-heading: var(--font-sans);
+    --font-body:    var(--font-sans);
+
+    --bg-page:        var(--bg);
+    --bg-card:        var(--band-bg);
+    --text-primary:   var(--ink);
+    --text-secondary: var(--ink2);
+    --text-muted:     var(--muted);
+
+    --card-radius: 3px;
+    --card-shadow: none;
+    --btn-border-radius: 4px;
+
+    /* Nav */
+    --nav-bg:          var(--bg);
+    --nav-text:        var(--ink2);
+    --nav-text-muted:  var(--muted);
+    --nav-hover-bg:    var(--band-bg);
+    --nav-active-bg:   transparent;
+    --nav-active-text: var(--ink);
+
+    /* Tables */
+    --table-font-size:          0.875rem;
+    --table-header-bg:          transparent;
+    --table-header-border:      var(--divider);
+    --table-header-border-width: 1px;
+    --table-cell-border:        var(--divider);
+    --table-cell-border-width:  1px;
+    --table-stripe-bg:          transparent;
+    /* Row hover recolours the row to the accent — no background wash. */
+    --table-hover-bg:      transparent;
+    --table-hover-text:    var(--accent);
+    /* Leader / top rank: emphasised by weight + accent, not a filled band. */
+    --table-toprank-bg:    transparent;
+    --table-toprank-text:  inherit;
+
+    /* Accent + buttons */
+    --btn-active-bg:     var(--ink);
+    --btn-active-text:   var(--bg);
+    --btn-inactive-bg:   transparent;
+    --btn-inactive-text: var(--muted);
+
+    /* Selects */
+    --select-bg:         var(--bg);
+    --select-border:     var(--divider);
+    --select-focus-ring: var(--accent);
+
+    /* Footer */
+    --footer-bg:   var(--bg);
+    --footer-text: var(--muted);
+
+    /* Stat / metric cells (rendered borderless — see below) */
+    --stat-card-bg:          transparent;
+    --stat-card-border:      transparent;
+    --stat-card-value-color: var(--ink);
+    --stat-card-label-color: var(--muted);
+
+    /* Badges */
+    --badge-bg:        var(--accent);
+    --badge-text:      var(--badgetext);
+    --badge-muted-bg:  var(--band-bg);
+    --badge-muted-text: var(--muted);
+
+    --divider-color: var(--divider);
+}
+
+/* ── Dark mode ("neutral grey lift" — no warm/olive cast) ──
+   Two attributes on <html> out-specify dark.css's single [data-mode]; and
+   dark.css is scoped away from mono anyway. Re-declaring only the Mono tokens
+   flips every mapping above. */
+html[data-mode="dark"][data-theme="mono"] {
+    color-scheme: dark;
+
+    --bg:        #0d0d0d;
+    --ink:       #f0f0ee;
+    --ink2:      #b5b5b3;
+    --muted:     #7d7d7d;
+    --sec:       #6e6e6e;
+    --accent:    #6bbf83;
+    --band-bg:   #1b1b1b;
+    --divider:   #262626;
+    --data:      #d7d7d5;
+    --star:      #d2ab48;
+    --bad:       #d98a7a;
+    --badgetext: #0d0d0d;
+    --grid:      #2b2b2b;
+    --axis:      #7d7d7d;
+}
+
+/* ============================================================================
+   Mono-specific look rules (what a token alone can't express)
+   ========================================================================== */
+
+/* ── Page chrome: plain page, thin nav rule ── */
+.nav {
+    box-shadow: none;
+    border-bottom: 1px solid var(--divider);
+}
+.nav-link.active {
+    background: transparent;
+    color: var(--ink);
+    font-weight: 700;
+    border-bottom: 2px solid var(--accent);
+    border-radius: 0;
+}
+
+/* ── The band — the one structural primitive ──
+   Every data block (.data-card / .card) becomes a contained shaded band: no
+   border, no shadow, small radius. Cells and charts keep their own padding. */
+.data-card,
+.card {
+    background: var(--band-bg);
+    border: none;
+    box-shadow: none;
+    border-radius: 3px;
+    padding: 14px 18px;
+}
+/* Charts pad a touch more so the plot baseline labels aren't cramped. */
+.data-card--padded {
+    padding: 18px 20px;
+}
+/* Tables self-pad via their cells; let a table-only band hug tightly. */
+.data-card > .teg-table:only-child,
+.data-card > .table-wrapper:only-child { margin: 0; }
+
+/* ── Band tag / card header → accent "▸" eyebrow ──
+   The default card-header (ch3, serif) becomes the Mono accent tag line. */
+body.ch-ch3 .card-header,
+body.ch-ch2 .card-header,
+body.ch-ch1 .card-header {
+    display: block;
+    background: none;
+    border: none;
+    border-radius: 0;
+    padding: 0 0 8px 0;
+    margin-top: 1.75rem;
+    margin-bottom: 0;
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+body.ch-ch3 .card-header:first-child,
+body.ch-ch2 .card-header:first-child,
+body.ch-ch1 .card-header:first-child { margin-top: 0; }
+
+/* ── Tables: monospace data, muted heads, airy, accent hover ── */
+.teg-table,
+.records-table {
+    font-family: var(--font-mono);
+}
+.teg-table thead th,
+.records-table thead th {
+    color: var(--muted);
+    font-weight: 500;
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    text-transform: none;
+}
+.teg-table tbody td {
+    color: var(--data);
+}
+.teg-table .total,
+.teg-table tbody tr.top-rank {
+    color: var(--ink);
+}
+/* Leaderboard / results: no horizontal borders at all, extra-airy. */
+.leaderboard-table thead th,
+.leaderboard-table tbody td,
+.results-table thead th,
+.results-table tbody td {
+    border: none;
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+}
+
+/* ── Record-holder / conditional cells → accent + bad tints ── */
+.teg-table tbody td.pb-record {
+    background: rgba(33, 102, 63, 0.10);
+    color: var(--accent);
+    font-weight: 600;
+}
+.player-ranking-table td.first-place span {
+    background: var(--accent);
+    color: var(--badgetext);
+}
+.player-ranking-table td.last-place span {
+    background: rgba(156, 58, 42, 0.13);
+    color: var(--bad);
+}
+
+/* ── Player TEG-results badges: win = filled accent, loss = outline ── */
+.player-results-table td.result-win span {
+    background: var(--accent);
+    color: var(--badgetext);
+}
+.player-results-table td.result-loss span {
+    background: transparent;
+    border: 1px solid var(--bad);
+    color: var(--bad);
+}
+
+/* ── Tabs / pills ── */
+.tab-underline { font-weight: 500; }
+.pill { text-transform: none; }
+.pill--active,
+.pill--active:hover {
+    background: transparent;
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* ── Stat / metric / trophy cells: bandless within their block ──
+   Numbers are the Mono "stat number" (mono, large). No per-cell border/box. */
+.stat-card,
+.metric-card {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0.4rem 0.3rem;
+}
+.stat-value,
+.metric-value,
+.trophy-honour-count,
+.hc-tile-value {
+    font-family: var(--font-mono);
+}
+.metric-label,
+.stat-label,
+.trophy-honour-label {
+    font-family: var(--font-mono);
+    color: var(--muted);
+}
+/* Trophy cabinet is itself a band, not a bordered card. */
+.trophy-cabinet {
+    background: var(--band-bg);
+    border: none;
+    border-radius: 3px;
+}
+
+/* ── Detail cells (Career Highlights / Records): left accent rule, no box ── */
+.detail-card {
+    background: transparent;
+    border: none;
+    border-left: 2px solid var(--accent);
+    border-radius: 0;
+    padding: 2px 0 2px 16px;
+}
+.detail-card--bad { border-left-color: var(--bad); }
+.detail-heading { font-family: var(--font-sans); }
+.detail-eyebrow,
+.detail-sub { font-family: var(--font-mono); }
+
+/* ── Player roster cards: hairline, no shadow ── */
+.player-card {
+    box-shadow: none;
+    border: 1px solid var(--divider);
+    border-radius: 3px;
+}
+.player-card:hover {
+    border-color: var(--accent);
+    box-shadow: none;
+}
+
+/* ── Trophy stars: gold from the --star token (not the base hard-coded gold) ── */
+.trophy-star--gold  { color: var(--star); }
+.trophy-star--green { color: var(--accent); }
+
+/* ── Handicap delta pills → accent / bad (keep the inverse semantics) ── */
+.hc-delta--down { color: var(--accent); background: rgba(33, 102, 63, 0.10); }
+.hc-delta--up   { color: var(--bad);    background: rgba(156, 58, 42, 0.12); }
+
+/* ── Captions / metadata → mono, muted ── */
+.caption,
+.chart-description,
+.result-callout,
+.page-title-area .page-subtitle {
+    font-family: var(--font-mono);
+}
+
+/* ── Section headings → sans (Mono spec); eyebrow label → accent ── */
+.section-title,
+.chart-title,
+.subheading {
+    font-family: var(--font-sans);
+}
+.page-title-area .page-label {
+    color: var(--accent);
+}
+
+/* ============================================================================
+   Serif retention — the ONLY serif in the theme.
+   Per the brief, the site keeps its Lora serif for the site title, the main
+   site navigation, and page (H1) titles. Everything else follows the Mono
+   sans/mono split above.
+   ========================================================================== */
+.nav-brand {
+    font-family: var(--font-serif);
+}
+.nav-link,
+.nav-dropdown-btn,
+.nav-dropdown-menu a {
+    font-family: var(--font-serif);
+}
+.page-title-area .page-title,
+.player-profile-name {
+    font-family: var(--font-serif);
+}
