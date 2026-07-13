@@ -533,7 +533,7 @@ through pages and confirm each element is classed at the right level. It is
 
 ## Design principles
 
-See [design_principles.md](design_principles.md) — typography, layout, table conventions, component rules, theme/layout invariants, and the data-card pattern.
+See [design_principles.md](design_principles.md) — starts with the **Design vibe** (the lo-fi / mono-first direction the site is converting to, with a paste-ready brief + checklist), then typography, layout, table conventions, component rules, theme/layout invariants, and the data-card pattern.
 
 See [page_title_switcher.md](page_title_switcher.md) — page title and card header switcher system (cookie-based style testing, page container architecture).
 
@@ -606,7 +606,7 @@ Best-Worstball / Eclectic Scores / Eclectic Records.
 ### Look-and-feel roadmap
 
 Look-and-feel work is sequenced in two phases. The guiding aesthetic target
-(editorial / printed-programme) is in [design_principles.md](design_principles.md);
+(the lo-fi / mono-first **Design vibe**) is in [design_principles.md](design_principles.md);
 this roadmap is the **plan to get there**.
 
 **Phase 1 — make the webapp production-ready (replace Streamlit on Railway).**
