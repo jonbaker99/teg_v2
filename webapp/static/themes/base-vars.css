@@ -592,11 +592,11 @@ h1, h2, h3, h4, h5, h6 {
 .trophy-star--gold  { color: #f5b301; }
 .trophy-star--green { color: var(--accent); }
 .title-stars {
-    margin-left: 0.55rem;
+    /* margin-left: 0.55rem; */
     white-space: nowrap;
 }
 .title-stars .trophy-star {
-    /* font-size: 1.35rem; */
+    font-size: 1rem;
     vertical-align: 0.05em;
 }
 .title-stars-gap {
@@ -761,7 +761,7 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 1.85rem;
     font-weight: 700;
     color: var(--text-primary);
-    line-height: 1.15;
+    line-height: 0.8;
 }
 
 /* ── Player TEG-results table — win/loss colour pills ──
