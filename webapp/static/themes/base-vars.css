@@ -544,6 +544,7 @@ h1, h2, h3, h4, h5, h6 {
     text-align: center;
 }
 .metric-label {
+    font-family: 'Roboto Mono', monospace;
     font-size: 0.625rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -557,13 +558,15 @@ h1, h2, h3, h4, h5, h6 {
     gap: 0.4rem;
 }
 .metric-value {
-    font-size: 1.7rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.55rem;
     font-weight: 700;
     line-height: 1.05;
     color: var(--stat-card-value-color, var(--text-primary));
 }
 .metric-rank {
-    font-size: 1.25rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.1rem;
     font-weight: 400;
     color: var(--text-muted);
 }
@@ -625,6 +628,7 @@ h1, h2, h3, h4, h5, h6 {
     gap: 0.25rem;
 }
 .trophy-honour-label {
+    font-family: 'Roboto Mono', monospace;
     font-size: 0.625rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -635,12 +639,14 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     align-items: baseline;
     gap: 0.4rem;
-    font-size: 1.6rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.5rem;
     font-weight: 700;
     line-height: 1;
     color: var(--text-primary);
 }
 .trophy-honour-rank {
+    font-family: 'Roboto Mono', monospace;
     font-size: 0.8rem;
     font-weight: 400;
     color: var(--text-muted);
@@ -657,7 +663,8 @@ h1, h2, h3, h4, h5, h6 {
     margin-top: 0.75rem;
     padding-top: 0.65rem;
     border-top: 1px dotted var(--table-cell-border);
-    font-size: 0.8rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.72rem;
     color: var(--text-secondary);
 }
 
@@ -721,6 +728,7 @@ h1, h2, h3, h4, h5, h6 {
     border-left-color: #cc2b2b;
 }
 .detail-eyebrow {
+    font-family: 'Roboto Mono', monospace;
     font-size: 0.625rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -728,14 +736,15 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--text-muted);
 }
 .detail-heading {
-    font-family: var(--font-heading), serif;
-    font-size: 1.05rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1rem;
     font-weight: 600;
     color: var(--text-primary);
     line-height: 1.2;
 }
 .detail-sub {
-    font-size: 0.75rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.72rem;
     color: var(--text-secondary);
 }
 .detail-shared {
@@ -756,12 +765,22 @@ h1, h2, h3, h4, h5, h6 {
 .player-profile-heading {
     margin: 1rem 0 1.25rem;
 }
+/* Career-span meta line beneath the name — mono, like the roster's meta. */
+.player-profile-heading p {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.4rem;
+}
 .player-profile-name {
-    font-family: var(--font-heading), serif;
-    font-size: 1.85rem;
+    /* Mono, like the roster card names — the name is a repeated heading across
+       profiles, not a one-off serif masthead. */
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.6rem;
     font-weight: 700;
+    letter-spacing: -0.02em;
     color: var(--text-primary);
-    line-height: 0.8;
+    line-height: 1;
 }
 
 /* ── Player TEG-results table — win/loss colour pills ──
@@ -1138,11 +1157,14 @@ body.ts-f5 .page-title-area .page-title {
 }
 
 
-/* ── Section Title (in-page, Option D style) ── */
+/* ── Section Title (in-page, Option D style) ──
+   Mono, not serif: section headings repeat down a page, so per the Design vibe
+   the one serif survivor is the top page title (.page-title) only. */
 .section-title {
-    font-family: var(--font-heading), serif;
-    font-size: 1.25rem;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.1rem;
     font-weight: 700;
+    letter-spacing: -0.01em;
     color: var(--text-primary);
     margin: 0 0 1rem 0;
     line-height: 1.3;
