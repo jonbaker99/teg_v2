@@ -47,6 +47,29 @@ Paste-ready brief for converting a page (or judging a new one). The gut check:
 - [ ] Honest `–` empty states
 - [ ] Colours from theme vars (light + dark both checked)
 
+### Starter prompt — convert a page
+
+Paste this into a fresh conversation (fill in the bracket) to kick off a
+vibe conversion for one page:
+
+> Apply our **Design vibe** to the `[PAGE — e.g. /player/{code} profile, or /teg-history]` page.
+>
+> First read `webapp/design_principles.md` — start with the **Design vibe** section (the lo-fi / mono-first direction + checklist). That's the target; the `/player` roster (`webapp/templates/player_index.html`) is the reference implementation to match.
+>
+> Then:
+> 1. Look at the page as it renders now (route + template + the CSS it uses) and tell me, briefly, where it currently breaks the vibe — serif where it should be mono, decorative chrome, redundant CTAs, marketing-y copy, misused accent colour, boxed/heavy surfaces, edge alignment.
+> 2. Propose the changes against the checklist before editing. Flag anything that's a judgement call or a shared component (so we don't accidentally restyle other pages), and ask if a change would affect more than this page.
+> 3. Make the changes on a fresh branch off `main`, keeping them scoped to this page unless a fix is genuinely global (like the page-gutter fix was) — in which case flag it as global first.
+> 4. Verify by actually rendering the page (launch the app, screenshot narrow + wide) before committing. Match existing patterns; reuse theme CSS vars so light + dark both work.
+> 5. Commit, push, open a **draft PR**. Don't merge unless I say so.
+>
+> Keep the "not try-hard" spirit: quiet, data-forward, honest empty states, one meaningful accent. Ask before assuming.
+
+Optional add-ons depending on the page:
+
+- **Data-table heavy:** "Respect the Tables section below — mono numerics, thin borders, and the narrow-screen name-shortening / horizontal-scroll approach; don't let content run off the edge."
+- **Look before code:** "Show me a quick mockup or describe the layout first; don't touch files until I approve the direction."
+
 ## Typography (mechanics)
 
 - **Roboto Mono** is the default UI/data face — values, labels, meta, subtitles, repeated headings.
