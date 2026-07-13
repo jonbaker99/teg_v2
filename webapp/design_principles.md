@@ -1,18 +1,60 @@
 # Design Principles
 
-The webapp should feel like a **printed programme**, not a data dashboard. Every decision should favour editorial clarity over information density.
+The webapp should feel **lo-fi and data-forward** — like a well-kept scorecard or a terminal, not a magazine or a SaaS dashboard. Mono-first, quietly confident, never try-hard, while still respecting real aesthetics: restraint, alignment, honest empty states, one meaningful accent.
 
-Reference point: [theelgolfo.com](https://theelgolfo.com) — the existing Streamlit site has this quality. When in doubt, ask: "does this look like a programme or a dashboard?"
+> **Direction note (2026-07):** this supersedes the earlier "printed programme /
+> serif-first" framing. The site is moving to the lo-fi mono vibe below,
+> page by page (the `/player` roster is the reference implementation). Where you
+> still see serif-editorial styling, treat it as *not yet converted*, not as the
+> target. The one intentional serif survivor is the top page title (masthead).
 
-## Typography
+## Design vibe
 
-- **Serif headers** (Lora) — editorial feel, not web-app feel
-- **Mono font** (Roboto Mono) for tables only — numbers should look like data
-- No mono or sans-serif for prose or headings
-- **Captions** — explanatory/footnote text beneath tables, charts and other data
-  points uses the `.caption` class (serif, small, grey; defined in
-  `themes/base-vars.css`). Use it for all such captions rather than ad-hoc
-  `text-muted`/`text-sm` combinations.
+Paste-ready brief for converting a page (or judging a new one). The gut check:
+*does this look like it's trying to impress, or like it quietly does the job well?* Aim for the second.
+
+**Typography**
+- **Roboto Mono is the workhorse.** Data values, metric labels, meta lines, subtitles, and repeated item/card headings (e.g. player names) are all mono. Mono is the default, not the exception.
+- **Avoid serif.** Serif is reserved for one deliberate masthead moment (the top page title) — never for data, repeated headings, or anything appearing more than once on a page. When in doubt, mono.
+- **Hierarchy comes from weight + size + colour, not font-switching.** Values ~600 weight in the primary text colour; labels small, uppercase, letter-spaced, muted.
+
+**Restraint (the "not try-hard" part)**
+- **No decorative identity chrome** — no avatars, monogram circles, initials-in-bubbles, or filler icons added just to fill space.
+- **No redundant affordances** — if the whole card is a link, don't also add a "View profile →" CTA. Let the element be the affordance.
+- **Cut the sell.** No "dive into your career", no four-item em-dash lists, no adjectives doing marketing. Copy is short, factual, faintly wry.
+- **One accent colour, one job.** Green means *honours/silverware* — don't also spend it on borders, CTAs, icons and hover text at once. When an accent means something, keep it meaningful.
+
+**Surfaces & layout**
+- **Cards float directly on the page background** as their own surfaces — avoid nesting cards inside a big panel-within-a-panel.
+- **Thin single rules, not heavy frames.** One 1px divider beats a boxed, dotted-rule strip.
+- **Everything aligns to a shared column with a consistent gutter** — content never sits flush against the viewport edge; titles and content share the same left edge.
+- **Let data breathe** — modest, even spacing; don't cram.
+
+**Honesty & polish**
+- **Real empty states** — show `–` or "No silverware yet", never hide or fake a value.
+- **Subtle feedback** — a small lift + accent border on hover is enough.
+- **Theme-variable driven** — style with the CSS vars so light *and* dark both work; don't hardcode colours.
+
+**Quick checklist**
+- [ ] Data, labels, meta, and repeated headings in **mono**; serif only on the top page title
+- [ ] No avatars / monograms / filler icons
+- [ ] No CTA duplicating an already-clickable element
+- [ ] Copy trimmed — factual, short, no marketing cadence
+- [ ] Accent colour has exactly one meaning on the page
+- [ ] Cards on the background, not boxed inside another panel
+- [ ] Thin rules over heavy frames/dotted strips
+- [ ] Consistent gutter; nothing flush to the edge
+- [ ] Honest `–` empty states
+- [ ] Colours from theme vars (light + dark both checked)
+
+## Typography (mechanics)
+
+- **Roboto Mono** is the default UI/data face — values, labels, meta, subtitles, repeated headings.
+- **Serif (Lora)** only on the top page title (`.page-title`). Not for prose, data, or repeated headings.
+- **Captions** — explanatory/footnote text beneath tables and charts uses the `.caption`
+  class (defined in `themes/base-vars.css`). Use it rather than ad-hoc `text-muted`/`text-sm`
+  combinations. *Note: `.caption` is still serif from the pre-conversion styling — a candidate
+  to move to mono/sans as the vibe rolls out; update the class, not individual call sites.*
 
 ## Layout
 
