@@ -2,11 +2,11 @@
 
 The webapp should feel **lo-fi and data-forward** — like a well-kept scorecard or a terminal, not a magazine or a SaaS dashboard. Mono-first, quietly confident, never try-hard, while still respecting real aesthetics: restraint, alignment, honest empty states, one meaningful accent.
 
-> **Direction note (2026-07):** this supersedes the earlier "printed programme /
-> serif-first" framing. The site is moving to the lo-fi mono vibe below,
-> page by page (the `/player` roster is the reference implementation). Where you
-> still see serif-editorial styling, treat it as *not yet converted*, not as the
-> target. The one intentional serif survivor is the top page title (masthead).
+ **Direction note (2026-07):** this supersedes the earlier "printed programme /
+ serif-first" framing. The site is moving to the lo-fi mono vibe below,
+ page by page (the `/player` roster is the reference implementation). Where you
+ still see serif-editorial styling, treat it as *not yet converted*, not as the
+ target. The one intentional serif survivor is the top page title (masthead).
 
 ## Design vibe
 
@@ -52,18 +52,20 @@ Paste-ready brief for converting a page (or judging a new one). The gut check:
 Paste this into a fresh conversation (fill in the bracket) to kick off a
 vibe conversion for one page:
 
-> Apply our **Design vibe** to the `[PAGE — e.g. /player/{code} profile, or /teg-history]` page.
->
-> First read `webapp/design_principles.md` — start with the **Design vibe** section (the lo-fi / mono-first direction + checklist). That's the target; the `/player` roster (`webapp/templates/player_index.html`) is the reference implementation to match.
->
-> Then:
-> 1. Look at the page as it renders now (route + template + the CSS it uses) and tell me, briefly, where it currently breaks the vibe — serif where it should be mono, decorative chrome, redundant CTAs, marketing-y copy, misused accent colour, boxed/heavy surfaces, edge alignment.
-> 2. Propose the changes against the checklist before editing. Flag anything that's a judgement call or a shared component (so we don't accidentally restyle other pages), and ask if a change would affect more than this page.
-> 3. Make the changes on a fresh branch off `main`, keeping them scoped to this page unless a fix is genuinely global (like the page-gutter fix was) — in which case flag it as global first.
-> 4. Verify by actually rendering the page (launch the app, screenshot narrow + wide) before committing. Match existing patterns; reuse theme CSS vars so light + dark both work.
-> 5. Commit, push, open a **draft PR**. Don't merge unless I say so.
->
-> Keep the "not try-hard" spirit: quiet, data-forward, honest empty states, one meaningful accent. Ask before assuming.
+ ```text
+ Apply our **Design vibe** to the `[PAGE — e.g. /player/{code} profile, or /teg-history]` page.
+
+ First read `webapp/design_principles.md` — start with the **Design vibe** section (the lo-fi / mono-first direction + checklist). That's the target; the `/player` roster (`webapp/templates/player_index.html`) is the reference implementation to match.
+
+ Then:
+ 1. Look at the page as it renders now (route + template + the CSS it uses) and tell me, briefly, where it currently breaks the vibe — serif where it should be mono, decorative chrome, redundant CTAs, marketing-y copy, misused accent colour, boxed/heavy surfaces, edge alignment.
+ 2. Propose the changes against the checklist before editing. Flag anything that's a judgement call or a shared component (so we don't accidentally restyle other pages), and ask if a change would affect more than this page.
+ 3. Make the changes on a fresh branch off `main`, keeping them scoped to this page unless a fix is genuinely global (like the page-gutter fix was) — in which case flag it as global first.
+ 4. Verify by actually rendering the page (launch the app, screenshot narrow + wide) before committing. Match existing patterns; reuse theme CSS vars so light + dark both work.
+ 5. Commit, push, open a **draft PR**. Don't merge unless I say so.
+
+ Keep the "not try-hard" spirit: quiet, data-forward, honest empty states, one meaningful accent. Ask before assuming.
+ ```
 
 Optional add-ons depending on the page:
 
@@ -180,16 +182,16 @@ overrides it (see below), reintroducing the per-page drift this convention
 exists to prevent. To suppress a gap in a nested/edge case, use an inline
 `style="margin-bottom:0"` (as in `results.html` / `bestball.html`).
 
-> **Why a leftover utility wins.** The webapp loads Tailwind via the Play CDN
-> (`cdn.tailwindcss.com`), which injects its generated utilities as a `<style>`
-> block at the **end of `<head>`** — after `base-vars.css`. A utility (`.mb-3`)
-> and a rhythm class (`.toggle-group`) have equal specificity, so the later
-> source order wins: the Tailwind block always does. That's why a single stray
-> `mb-*` makes a global spacing change appear to "not take effect" on that
-> element. Keep the six classes free of margin utilities and the central rule is
-> authoritative everywhere.
+ **Why a leftover utility wins.** The webapp loads Tailwind via the Play CDN
+ (`cdn.tailwindcss.com`), which injects its generated utilities as a `<style`
+ block at the **end of `<head`** — after `base-vars.css`. A utility (`.mb-3`)
+ and a rhythm class (`.toggle-group`) have equal specificity, so the later
+ source order wins: the Tailwind block always does. That's why a single stray
+ `mb-*` makes a global spacing change appear to "not take effect" on that
+ element. Keep the six classes free of margin utilities and the central rule is
+ authoritative everywhere.
 
-Content-level spacing on **non-rhythm** elements (prose `<p>`, dividers `my-6`,
+Content-level spacing on **non-rhythm** elements (prose `<p`, dividers `my-6`,
 page-intro text) is legitimate and stays inline — it was never part of the
 centralised wrapper rhythm.
 
@@ -203,7 +205,7 @@ The Clean Layered theme uses three visual layers:
 
 ### Decision rule
 
-> If removing the card means the user can't see data → it's a control or label (stays on the panel). If it **is** the data → it gets a card.
+ If removing the card means the user can't see data → it's a control or label (stays on the panel). If it **is** the data → it gets a card.
 
 ### What goes on a data card
 
@@ -222,18 +224,18 @@ The Clean Layered theme uses three visual layers:
 
 ### Implementation
 
-Wrap only the data output in `<div class="data-card">`. Text, titles, and controls stay outside.
+Wrap only the data output in `<div class="data-card"`. Text, titles, and controls stay outside.
 
 ```html
-<!-- Table — no padding modifier needed -->
-<div class="data-card">
-  <div style="overflow-x: auto;">{{ table_html | safe }}</div>
-</div>
+<!-- Table — no padding modifier needed --
+<div class="data-card"
+  <div style="overflow-x: auto;"{{ table_html | safe }}</div
+</div
 
-<!-- Chart — needs vertical padding modifier -->
-<div class="data-card data-card--padded">
-  <div id="my-chart" style="width:100%; height:350px;"></div>
-</div>
+<!-- Chart — needs vertical padding modifier --
+<div class="data-card data-card--padded"
+  <div id="my-chart" style="width:100%; height:350px;"</div
+</div
 ```
 
 `.data-card` has zero vertical padding by default — table rows self-pad via cell padding. Use `.data-card--padded` for non-tabular content (charts, text blocks).
