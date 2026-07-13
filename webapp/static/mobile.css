@@ -65,6 +65,31 @@
   }
   .page-title-area .page-title { font-size: 1.35rem; }
 
+  /* ── Full-width page (M1.x): drop the "white card on grey background"
+     look from clean-page.css. On phones the white content fills the
+     screen edge-to-edge instead of floating as a card, freeing up the
+     width the grey margin/shadow was eating. Desktop/iPad keep the card. */
+  body.page-bg {
+    background-color: var(--bg-card, #ffffff) !important;
+  }
+  .main-content {
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  body.ts-e2 .page-container {
+    box-shadow: none;
+    border-radius: 0;
+  }
+  body.ts-e2 .page-title-outer {
+    border-radius: 0;
+  }
+  body.ts-e2 .main-content {
+    border-radius: 0;
+  }
+
   /* ── Controls (M1.5): segmented tabs + thumb-friendly pills/selects ── */
 
   /* In-page primary tab rows (.section-nav of .tab-underline) become an
