@@ -363,23 +363,52 @@ All data comes from `teg_analysis/`. The webapp never calculates anything — it
 
 ## Theme system
 
-Three themes, registered in `theme.py`. Each overrides CSS custom properties defined in `base-vars.css`. Default: **Clean** (flat white, matching the Streamlit site — Phase 1a).
+Themes are registered in `theme.py`. Each overrides CSS custom properties defined in `base-vars.css`. Default: **Mono** (monospace record-book — see below).
 
 | Theme | Description |
 |---|---|
-| **Clean** (default) | Minimal flat white, editorial feel — mirrors the Streamlit app |
-| **Clean Page** | Flat single white content card on a warm grey background |
+| **Mono** (default) | Monospace "record-book": plain white/near-black page, no cards, shaded data **bands**, one forest-green accent, mono data + sans UI. Site title, main nav and page (H1) titles keep the site's **Lora serif**. |
+| **Clean Page** | Flat single white content card on a warm grey background (the pre-Mono design) |
 | **Clean Layered** | 3-layer hierarchy: stone background → taupe panel → white data cards |
+
+**Mono theme** (`static/themes/mono.css`). Built to the handoff spec in
+`webapp/design_handoff` (README there is the source of truth for tokens/spacing).
+Implementation notes:
+- **Token-driven, no structural edits.** `mono.css` declares the handoff palette
+  (`--bg`, `--ink`, `--accent`, `--band-bg`, `--divider`, `--data`, `--star`,
+  `--bad`, …) and maps it onto the existing base-vars token names via `var()`, so
+  every component re-skins with no changes to `base-vars.css` or the 50+ templates.
+- **Two font roles + serif retention.** `--font-body`/`--font-heading` → IBM Plex
+  Sans (UI), all data tables → Roboto Mono, and the site title (`.nav-brand`),
+  main nav (`.nav-link`) and page H1 (`.page-title`, `.player-profile-name`) keep
+  **Lora serif**. In-page section headings (H2) follow the Mono spec → sans.
+- **Owns its dark palette.** Mono's dark ("neutral grey lift") lives in `mono.css`
+  under `html[data-mode="dark"][data-theme="mono"]`; `dark.css` is scoped to
+  `:not([data-theme="mono"])` so the two never fight.
+- **Reverting:** the pre-Mono design is untouched as the `clean-page` theme — set
+  `DEFAULT_THEME = "clean-page"` in `theme.py`. Backup + full revert steps:
+  `static/themes/archive/pre-mono-backup/REVERT.md`.
 
 **Dark mode (orthogonal to theme).** A light/dark **mode** is independent of the
 named theme: a `mode` cookie (`theme.py: get_mode`, injected as
-`request.state.mode`) sets `data-mode="light|dark"` on `<html>`, and
-`static/themes/dark.css` overrides the colour variables under
-`html[data-mode="dark"]`. It's loaded on every page but inert until dark is
-selected (default **light**, so nothing changes unless the user toggles the ◑
-button in the nav). Any theme can be shown light or dark. `get_plotly_theme()`
-takes a `mode` arg for a dark chart surface (chart routes not yet passing it —
-parked with the chart work).
+`request.state.mode`) sets `data-mode="light|dark"` on `<html>` (which also
+carries `data-theme="{theme}"`). Clean themes get their dark palette from
+`static/themes/dark.css` (`html[data-mode="dark"]:not([data-theme="mono"])`);
+Mono supplies its own. Loaded on every page but inert until dark is selected
+(default **light**). `get_plotly_theme(theme, mode)` returns the dark chart
+surface (Mono uses its band colour as the plot surface).
+
+**Theme-cookie versioning (default-change migration).** A `theme` cookie
+persists a selection indefinitely, so changing `DEFAULT_THEME` would otherwise
+leave returning browsers pinned to the *old* default forever (this is exactly
+what made one machine show the old UI and another the new one on the same
+commit). `get_theme` therefore honours a `theme` cookie **only when** a
+`theme_ver` cookie matches `theme.py: THEME_COOKIE_VERSION`; any missing/older
+version is treated as a stale default and migrated to `DEFAULT_THEME`. A theme
+switcher must write both cookies via `set_theme_cookies(response, theme)` for a
+selection to stick. **Bump `THEME_COOKIE_VERSION`** whenever a `DEFAULT_THEME`
+change should re-migrate existing selections. (No live switcher exists today, so
+every stale `theme=…` cookie migrates automatically — no cookie-clearing needed.)
 
 The page-title (`ts-*`) and card-header (`ch-*`) **style switchers were removed
 from the nav** for Phase 1a (the nav now carries only the theme switcher). The
@@ -388,11 +417,12 @@ the experiments can be re-enabled for the Phase 2 design review. Current locked
 defaults: title style `a` (mono label + serif title), card header `ch3` (serif).
 
 **How it works:**
-1. User clicks theme in nav dropdown
-2. HTMX request to `/set-theme/{name}` sets cookie
-3. `theme.py` reads cookie, passes active theme name to templates
-4. Template loads CSS file for that theme
-5. Plotly charts dynamically themed via `get_plotly_theme(request)`
+1. A theme switcher (currently disabled) would set the cookies via
+   `set_theme_cookies(response, theme)` (writes `theme` + `theme_ver`)
+2. `theme.py: get_theme` reads the cookie, migrating stale/legacy cookies to
+   `DEFAULT_THEME` (see versioning above), and passes the active theme to templates
+3. Template loads the CSS file for that theme and tags `<html data-theme=…>`
+4. Plotly charts dynamically themed via `get_plotly_theme(theme, mode)`
 
 **CSS pattern:**
 - `base-vars.css`: defines defaults (e.g. `--color-primary: #333;`)

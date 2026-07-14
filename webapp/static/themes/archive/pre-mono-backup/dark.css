@@ -1,23 +1,19 @@
 /* Dark mode — orthogonal to the named theme.
-   Loaded on every page but scoped entirely under html[data-mode="dark"]:not([data-theme="mono"]), so it
+   Loaded on every page but scoped entirely under html[data-mode="dark"], so it
    is completely inert until the user opts in (default is light). It re-points
    the CSS custom properties the themes define; because every component reads
    those via var(), flipping the variables flips the whole site.
 
-   html[data-mode="dark"]:not([data-theme="mono"]) has higher specificity than the :root rules in the
+   html[data-mode="dark"] has higher specificity than the :root rules in the
    theme files, so these win regardless of stylesheet order. Warm near-black
    palette + brightened forestgreen accent, matching the mobile mockups and the
-   scorecard dark tokens.
+   scorecard dark tokens. */
 
-   Scoped to :not([data-theme="mono"]): the Mono theme owns its own neutral-grey
-   dark palette (mono.css), so this warm palette applies only to the clean
-   themes. base.html tags <html> with data-theme="{theme}". */
-
-html[data-mode="dark"]:not([data-theme="mono"]) {
+html[data-mode="dark"] {
   color-scheme: dark;
 }
 
-html[data-mode="dark"]:not([data-theme="mono"]) {
+html[data-mode="dark"] {
   /* Page + text */
   --bg-page: #16150f;
   --bg-card: #1d1d1a;
@@ -78,7 +74,7 @@ html[data-mode="dark"]:not([data-theme="mono"]) {
    !important (their own light/stone base colour), which otherwise wins over
    --bg-page and shows through as a light band wherever a page's content
    sits on transparent panels (e.g. the Contents grid's card gaps). */
-html[data-mode="dark"]:not([data-theme="mono"]) body.page-bg {
+html[data-mode="dark"] body.page-bg {
   background-color: #16150f !important;
 }
 
@@ -87,11 +83,11 @@ html[data-mode="dark"]:not([data-theme="mono"]) body.page-bg {
    selectors only have a visible effect under the layered theme; under the flat
    Clean theme the panels are already transparent over the dark page, so setting
    them to the same near-black is a no-op. */
-html[data-mode="dark"]:not([data-theme="mono"]) .page-panel,
-html[data-mode="dark"]:not([data-theme="mono"]) .main-content {
+html[data-mode="dark"] .page-panel,
+html[data-mode="dark"] .main-content {
   background: #16150f;
 }
-html[data-mode="dark"]:not([data-theme="mono"]) .data-card {
+html[data-mode="dark"] .data-card {
   background: #1d1d1a;
   border-color: #2e2e29;
 }
@@ -99,23 +95,23 @@ html[data-mode="dark"]:not([data-theme="mono"]) .data-card {
 /* A few rules in the theme files hard-code a colour rather than using a var.
    Override just the ones visible with the default title (ts-a) + card header
    (ch3) styles so the default look reads correctly in dark. */
-html[data-mode="dark"]:not([data-theme="mono"]) .nav-link.active {
+html[data-mode="dark"] .nav-link.active {
   border-bottom-color: var(--nav-active-text);
 }
-html[data-mode="dark"]:not([data-theme="mono"]) body.ch-ch3 .card-header {
+html[data-mode="dark"] body.ch-ch3 .card-header {
   color: var(--text-primary);
 }
-html[data-mode="dark"]:not([data-theme="mono"]) body.ch-ch1 .card-header {
+html[data-mode="dark"] body.ch-ch1 .card-header {
   background: #2a2922;
   color: #c8c6bb;
 }
-html[data-mode="dark"]:not([data-theme="mono"]) .nav {
+html[data-mode="dark"] .nav {
   box-shadow: none;
   border-bottom: 1px solid #2a2a24;
 }
 
 /* Dropdown menu surface (base.html inline styles fall back to #fff). */
-html[data-mode="dark"]:not([data-theme="mono"]) .nav-dropdown-menu {
+html[data-mode="dark"] .nav-dropdown-menu {
   background: #1d1d1a;
   border-color: #2e2e29;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
