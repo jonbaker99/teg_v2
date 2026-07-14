@@ -89,6 +89,20 @@ python -m pytest tests/ -v
 
 `data/players.csv` (Code, Name) is the **writable source of truth** for who exists — `constants.PLAYER_DICT` is only the legacy seed/fallback. All code→name lookups go through `teg_analysis.core.players.get_player_dict()` (cached; `clear_player_cache()` after writes — `webapp.deps.clear_all_data_caches` does this). Never read `PLAYER_DICT` directly in new code. New players are added from `/admin/teg-setup` ("Add a new player"), which appends to players.csv; their `handicaps.csv` column is created the first time they're saved onto a TEG roster.
 
+## Theme / UI-preference changes (persisted-cookie gotcha)
+
+**Before you change the default theme, colours, or any design default, account for the persisted cookie — otherwise returning browsers stay pinned to the old design.**
+
+The webapp stores the active theme in a browser `theme` cookie (`webapp/theme.py: get_theme`), the light/dark choice in a `mode` cookie, etc. **A persisted cookie overrides the app's default indefinitely.** So changing `DEFAULT_THEME` (or any default) does **not** change the UI for any browser holding an older cookie — the site looks "stuck on the old design" even though the server returns correct HTML/CSS on the same commit. This has already bitten us: two machines on the same commit rendered different UIs because one held a stale `theme=clean-page` cookie.
+
+**Required whenever you change `DEFAULT_THEME` (or retire/rename a theme):**
+1. **Version the cookie.** A `theme` cookie must be honoured only when a companion `theme_ver` cookie equals a current `THEME_COOKIE_VERSION`; otherwise `get_theme` migrates it to `DEFAULT_THEME`. **Bump `THEME_COOKIE_VERSION`** so returning browsers with a stale cookie migrate automatically — users must **not** have to clear cookies or run console commands.
+2. **Switchers write both cookies.** Any theme switcher must set `theme` **and** `theme_ver` (at the current version) together via a single helper (e.g. `set_theme_cookies`), so a deliberate selection sticks and survives future default changes.
+3. **Same reasoning for `mode` and any other persisted UI preference** — a persisted preference can mask a default change.
+4. **If `webapp/theme.py` does not yet implement this versioning, add it as part of your change.** Do not ship a `DEFAULT_THEME` change without a migration path.
+
+**Verify like a returning user:** send a request carrying the *old* cookie value and confirm it resolves to the new default; send the current-version cookie and confirm an explicit selection is still respected.
+
 ## Pandas 2.x compatibility
 
 The Railway deployment runs pandas 2.x, which has three breaking changes that have caused production errors. All are fixed; note the patterns to avoid when adding code.
