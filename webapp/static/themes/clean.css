@@ -1,10 +1,15 @@
-/* Clean — Minimal white, Lora for text + Roboto Mono for tables, no dark chrome */
-@import url('https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap');
+/* Clean — Minimal white; IBM Plex Sans for UI/body text, Lora serif retained
+   for the site title / main nav / page (H1) titles, Roboto Mono for tables. */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&display=swap');
 
 :root {
-    /* Typography — Lora for headings/body, Roboto Mono for tables */
-    --font-heading: 'Lora', Georgia, serif;
-    --font-body: 'Lora', Georgia, serif;
+    /* Typography — sans for headings/body/UI (pills, tabs, section titles, page
+       text), Lora serif kept ONLY for the identity elements re-asserted at the
+       foot of this file (site title, main nav, page H1), mono for tables. */
+    --font-sans:  'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-serif: 'Lora', Georgia, serif;
+    --font-heading: var(--font-sans);
+    --font-body: var(--font-sans);
 
     /* Page */
     --bg-page: #ffffff;
@@ -89,5 +94,27 @@
     font-weight: 700;
     border-bottom: 2px solid #1a1a1a;
     border-radius: 0;
+}
+
+/* ── Serif retention ──
+   Everything uses the sans UI face (via --font-heading / --font-body above)
+   EXCEPT three identity/chrome elements, which keep the site's Lora serif:
+     1. the site title / masthead wordmark (.nav-brand);
+     2. the main site navigation links (top nav + its dropdown items);
+     3. page (H1) titles — the big page title, and the player-profile name,
+        which acts as that page's H1.
+   Defined here (global, token-driven) so it holds across every page without
+   any per-template markup. */
+.nav-brand {
+    font-family: var(--font-serif);
+}
+.nav-link,
+.nav-dropdown-btn,
+.nav-dropdown-menu a {
+    font-family: var(--font-serif);
+}
+.page-title-area .page-title,
+.player-profile-name {
+    font-family: var(--font-serif);
 }
 

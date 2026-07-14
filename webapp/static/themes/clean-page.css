@@ -1,5 +1,5 @@
 /* Clean Page — Clean theme + warm grey background with white content card */
-@import url('clean.css');
+@import url('clean.css?v=23');
 
 :root {
     --bg-page: #f5f3f0;

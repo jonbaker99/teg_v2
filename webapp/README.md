@@ -371,6 +371,14 @@ Three themes, registered in `theme.py`. Each overrides CSS custom properties def
 | **Clean Page** | Flat single white content card on a warm grey background |
 | **Clean Layered** | 3-layer hierarchy: stone background → taupe panel → white data cards |
 
+**Typography (all clean themes, set in `clean.css`).** Body/UI text (section
+titles, tabs, pills, captions, page text) uses a sans face (`--font-sans`, IBM
+Plex Sans) via `--font-heading`/`--font-body`; data tables stay Roboto Mono. The
+site's **Lora serif (`--font-serif`) is retained for three identity elements
+only**: the site title (`.nav-brand`), the main nav (`.nav-link` + dropdown), and
+page H1 titles (`.page-title`, `.player-profile-name`). These are re-asserted in a
+"Serif retention" block at the foot of `clean.css` — global, no per-template markup.
+
 **Dark mode (orthogonal to theme).** A light/dark **mode** is independent of the
 named theme: a `mode` cookie (`theme.py: get_mode`, injected as
 `request.state.mode`) sets `data-mode="light|dark"` on `<html>`, and
