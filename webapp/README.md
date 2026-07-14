@@ -398,6 +398,18 @@ Mono supplies its own. Loaded on every page but inert until dark is selected
 (default **light**). `get_plotly_theme(theme, mode)` returns the dark chart
 surface (Mono uses its band colour as the plot surface).
 
+**Theme-cookie versioning (default-change migration).** A `theme` cookie
+persists a selection indefinitely, so changing `DEFAULT_THEME` would otherwise
+leave returning browsers pinned to the *old* default forever (this is exactly
+what made one machine show the old UI and another the new one on the same
+commit). `get_theme` therefore honours a `theme` cookie **only when** a
+`theme_ver` cookie matches `theme.py: THEME_COOKIE_VERSION`; any missing/older
+version is treated as a stale default and migrated to `DEFAULT_THEME`. A theme
+switcher must write both cookies via `set_theme_cookies(response, theme)` for a
+selection to stick. **Bump `THEME_COOKIE_VERSION`** whenever a `DEFAULT_THEME`
+change should re-migrate existing selections. (No live switcher exists today, so
+every stale `theme=…` cookie migrates automatically — no cookie-clearing needed.)
+
 The page-title (`ts-*`) and card-header (`ch-*`) **style switchers were removed
 from the nav** for Phase 1a (the nav now carries only the theme switcher). The
 cookie/CSS infrastructure stays live (`theme.py` defaults + `base-vars.css`), so
@@ -405,11 +417,12 @@ the experiments can be re-enabled for the Phase 2 design review. Current locked
 defaults: title style `a` (mono label + serif title), card header `ch3` (serif).
 
 **How it works:**
-1. User clicks theme in nav dropdown
-2. HTMX request to `/set-theme/{name}` sets cookie
-3. `theme.py` reads cookie, passes active theme name to templates
-4. Template loads CSS file for that theme
-5. Plotly charts dynamically themed via `get_plotly_theme(request)`
+1. A theme switcher (currently disabled) would set the cookies via
+   `set_theme_cookies(response, theme)` (writes `theme` + `theme_ver`)
+2. `theme.py: get_theme` reads the cookie, migrating stale/legacy cookies to
+   `DEFAULT_THEME` (see versioning above), and passes the active theme to templates
+3. Template loads the CSS file for that theme and tags `<html data-theme=…>`
+4. Plotly charts dynamically themed via `get_plotly_theme(theme, mode)`
 
 **CSS pattern:**
 - `base-vars.css`: defines defaults (e.g. `--color-primary: #333;`)

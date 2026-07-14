@@ -12,11 +12,55 @@ THEME_IDS = {t[0] for t in THEMES}
 # See webapp/static/themes/archive/pre-mono-backup/REVERT.md.
 DEFAULT_THEME = "mono"
 
+# ── Theme-cookie versioning (default-change migration) ──
+# A `theme` cookie persists a selection indefinitely, so when DEFAULT_THEME
+# changes, browsers holding the OLD default (e.g. theme=clean-page) would keep
+# rendering it forever — the exact bug that made one machine show the old UI and
+# another the new one on the same commit.
+#
+# Fix: a theme cookie is only honoured when accompanied by a `theme_ver` cookie
+# equal to THEME_COOKIE_VERSION. A theme switcher MUST write BOTH cookies
+# together (theme + theme_ver=THEME_COOKIE_VERSION) for a selection to stick;
+# see `set_theme_cookies` below. Any theme cookie that is missing the version, or
+# carries an older one, is treated as a stale default and migrated to
+# DEFAULT_THEME. Bump this string whenever a change of DEFAULT_THEME should
+# re-migrate existing (pre-bump) selections.
+#
+# There is currently no live switcher, so no browser holds a current-version
+# cookie: every existing `theme=...` cookie is a legacy leftover and correctly
+# migrates to DEFAULT_THEME. No user action / cookie-clearing required.
+THEME_COOKIE_VERSION = "2"  # "2" = Mono-era default (was clean-page under v1)
+
 
 def get_theme(request) -> str:
-    """Read theme from cookie, falling back to default."""
-    theme = request.cookies.get("theme", DEFAULT_THEME)
-    return theme if theme in THEME_IDS else DEFAULT_THEME
+    """Resolve the active theme, migrating stale/legacy theme cookies.
+
+    Honours an explicit selection only when the `theme` cookie is a known theme
+    AND was written with the current THEME_COOKIE_VERSION (the `theme_ver`
+    cookie). Missing, unknown, or older-version cookies fall back to
+    DEFAULT_THEME — so changing the default takes effect for returning browsers
+    instead of being pinned to the old theme by a persisted cookie.
+    """
+    theme = request.cookies.get("theme")
+    if theme not in THEME_IDS:
+        return DEFAULT_THEME
+    # Stale/legacy cookie (no or older version stamp) → migrate to the default.
+    if request.cookies.get("theme_ver") != THEME_COOKIE_VERSION:
+        return DEFAULT_THEME
+    return theme
+
+
+def set_theme_cookies(response, theme: str) -> None:
+    """Persist an explicit theme selection so it survives future default changes.
+
+    Writes the `theme` cookie together with the current-version `theme_ver`
+    stamp. A theme switcher endpoint should call this (rather than setting the
+    `theme` cookie alone) so `get_theme` treats the choice as deliberate. Unknown
+    themes are ignored (falls back to the default on read).
+    """
+    max_age = 31536000  # 1 year
+    response.set_cookie("theme", theme, max_age=max_age, path="/")
+    response.set_cookie("theme_ver", THEME_COOKIE_VERSION, max_age=max_age, path="/")
 
 
 # Light/dark mode — orthogonal to the named theme. A theme picks the palette
