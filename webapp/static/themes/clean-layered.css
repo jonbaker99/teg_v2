@@ -1,5 +1,5 @@
 /* Clean Layered — 3-layer depth: background → page panel → content cards */
-@import url('clean-page.css');
+@import url('clean-page.css?v=23');
 
 /* Layer 1: outer background — warm stone */
 :root {
