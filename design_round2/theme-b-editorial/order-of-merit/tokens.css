@@ -1,0 +1,155 @@
+/* ─────────────────────────────────────────────────────────────
+   ORDER OF MERIT · Theme B (Editorial)
+   The clubhouse programme: cream laid paper, racing green and
+   oxblood, old-gold hairlines. Cormorant Garamond display over
+   EB Garamond text; Cousine sets the figures.
+   ───────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Cousine:wght@400;700&display=swap');
+
+:root {
+    /* Typography */
+    --font-heading: 'Cormorant Garamond', Georgia, serif;
+    --font-body: 'EB Garamond', Georgia, serif;
+    --font-data: 'Cousine';                  /* NEW TOKEN — table/chart mono */
+
+    /* Page + text */
+    --bg-page: #f7f1e3;
+    --bg-card: #f7f1e3;
+    --text-primary: #26221a;
+    --text-secondary: #57503f;
+    --text-muted: #8d8367;
+
+    /* Nav */
+    --nav-bg: #f7f1e3;
+    --nav-text: #57503f;
+    --nav-text-muted: #8d8367;
+    --nav-hover-bg: transparent;
+    --nav-active-bg: transparent;
+    --nav-active-text: #26221a;
+
+    /* Tables */
+    --table-font-size: 0.84rem;
+    --table-header-bg: transparent;
+    --table-header-border: #1c4532;
+    --table-cell-border: #d3c39e;
+    --table-hover-bg: #efe7d2;
+    --table-hover-text: inherit;
+    --table-toprank-bg: #e9efe6;
+    --table-toprank-text: #1c4532;
+    --table-stripe-bg: transparent;
+    --table-cell-border-width: 1px;
+    --table-header-border-width: 3px;
+
+    /* Accent + buttons */
+    --accent: #1c4532;
+    --btn-active-bg: #1c4532;
+    --btn-active-text: #f7f1e3;
+    --btn-inactive-bg: transparent;
+    --btn-inactive-text: #57503f;
+    --btn-border-radius: 0;
+    --card-radius: 0;
+    --card-shadow: none;
+
+    /* Selects */
+    --select-bg: #f7f1e3;
+    --select-border: #c0ab7d;
+    --select-focus-ring: #1c4532;
+
+    /* Footer */
+    --footer-bg: transparent;
+    --footer-text: #8d8367;
+
+    /* Stat cards */
+    --stat-card-bg: transparent;
+    --stat-card-border: #1c4532;
+    --stat-card-value-color: #26221a;
+    --stat-card-label-color: #8d8367;
+
+    /* Badges */
+    --badge-bg: #6d2430;
+    --badge-text: #f7f1e3;
+    --badge-muted-bg: #ece2c9;
+    --badge-muted-text: #75694c;
+
+    --divider-color: #d3c39e;
+
+    /* NEW TOKENS — chart palette */
+    --chart-1: #1c4532;
+    --chart-2: #6d2430;
+    --chart-3: #b78a3c;
+    --chart-4: #2c4a6e;
+    --chart-5: #5c7046;
+    --chart-6: #9c5c34;
+    --chart-7: #55605c;
+    --chart-8: #26221a;
+    --chart-grid: rgba(38, 34, 26, 0.1);
+    --chart-axis-text: #75694c;
+
+    --table-tierlast-text: #6d2430;
+}
+
+/* Dark — the trophy room at night: green-black felt, parchment
+   type, gilt hairlines catching the light. */
+html[data-mode="dark"] {
+    color-scheme: dark;
+
+    --bg-page: #101512;
+    --bg-card: #161d18;
+    --text-primary: #e9e2d0;
+    --text-secondary: #b7ae97;
+    --text-muted: #837c66;
+
+    --nav-bg: #101512;
+    --nav-text: #b7ae97;
+    --nav-text-muted: #837c66;
+    --nav-hover-bg: transparent;
+    --nav-active-bg: transparent;
+    --nav-active-text: #e9e2d0;
+
+    --table-header-bg: transparent;
+    --table-header-border: #d3b06c;
+    --table-cell-border: #2d3a30;
+    --table-hover-bg: #161d18;
+    --table-hover-text: inherit;
+    --table-toprank-bg: #1b2b20;
+    --table-toprank-text: #9cc7a8;
+    --table-stripe-bg: transparent;
+
+    --accent: #7cb08e;
+    --btn-active-bg: #d3b06c;
+    --btn-active-text: #101512;
+    --btn-inactive-bg: transparent;
+    --btn-inactive-text: #b7ae97;
+
+    --select-bg: #101512;
+    --select-border: #3f4d42;
+    --select-focus-ring: #7cb08e;
+
+    --footer-bg: transparent;
+    --footer-text: #837c66;
+
+    --stat-card-bg: transparent;
+    --stat-card-border: #d3b06c;
+    --stat-card-value-color: #e9e2d0;
+    --stat-card-label-color: #837c66;
+
+    --badge-bg: #b0616e;
+    --badge-text: #101512;
+    --badge-muted-bg: #1e2620;
+    --badge-muted-text: #9a917a;
+
+    --divider-color: #2d3a30;
+
+    --chart-1: #7cb08e;
+    --chart-2: #c98795;
+    --chart-3: #d3b06c;
+    --chart-4: #85a3c4;
+    --chart-5: #a3b381;
+    --chart-6: #c98d64;
+    --chart-7: #96a09b;
+    --chart-8: #e9e2d0;
+    --chart-grid: rgba(233, 226, 208, 0.1);
+    --chart-axis-text: #9a917a;
+
+    --table-tierlast-text: #c98795;
+}

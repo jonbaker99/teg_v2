@@ -1,0 +1,50 @@
+/* Mobile app shell — Phase M1.
+   EVERY rule here sits inside @media (max-width: 640px), so desktop/iPad
+   (641px and up) are never affected. The stylesheet is loaded on every page
+   but is completely inert above the breakpoint. See webapp/MOBILE_PLAN.md.
+   Colours come from the theme variables, so the shell also follows dark mode. */
+
+/* Present in the DOM always; hidden until phone width. */
+.mobile-tabbar { display: none; }
+
+@media (max-width: 640px) {
+  /* Leave room for the fixed bottom bar so content never hides behind it. */
+  body { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
+
+  /* ── Bottom tab bar (one tab per nav section) ── */
+  .mobile-tabbar {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 60;
+    background: var(--nav-bg, #ffffff);
+    border-top: 1px solid var(--table-cell-border, #e0e0e0);
+    padding: 6px 2px calc(6px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.06);
+  }
+  .mtab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-height: 44px;               /* comfortable tap target */
+    padding: 4px 0;
+    text-decoration: none;
+    color: var(--nav-text-muted, var(--nav-text, #777777));
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+  .mtab .material-symbols-outlined { font-size: 22px; }
+  .mtab-label { white-space: nowrap; }
+  .mtab--active { color: var(--accent, forestgreen); }
+
+  /* ── Top app bar: compact + decluttered on phones ── */
+  .nav-brand { font-size: 1.25rem; }
+  /* The theme-style picker isn't needed on a phone; keep the dark ◑ toggle. */
+  .theme-select { display: none; }
+}

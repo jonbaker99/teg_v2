@@ -1,0 +1,340 @@
+/* ═══════════════════════════════════════════════════════════════════
+   THEME A — PLAIN · structural language
+   The reference book. No cards, no shadows, no fills: hierarchy comes
+   from typography, hairline rules and alignment. Every visual decision
+   recedes in service of the data. Shared by the Ledger / Gridline /
+   Manila stylings; all colour and type comes from their tokens.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Page chrome ─────────────────────────────────────────────────── */
+body.page-bg {
+    background-color: var(--bg-page) !important;
+}
+.main-content {
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.page-panel,
+.page-container {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/* ── Site navigation — a quiet text row over a single hairline ───── */
+.nav {
+    background-color: var(--nav-bg);
+    box-shadow: none !important;
+    border-bottom: 1px solid var(--divider-color);
+}
+.nav-brand {
+    font-family: var(--font-heading), serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--nav-active-text);
+}
+.nav-link {
+    border-radius: 0;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    padding: 0.5rem 0.7rem;
+}
+.nav-link:hover {
+    background: transparent;
+    color: var(--nav-active-text);
+}
+.nav-link.active {
+    background: transparent;
+    color: var(--nav-active-text);
+    font-weight: 700;
+    border-bottom: 2px solid var(--accent);
+}
+.nav-dropdown-menu {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--divider-color) !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+html[data-mode="dark"] .nav-dropdown-menu {
+    background: var(--bg-card) !important;
+    border-color: var(--divider-color) !important;
+}
+
+/* ── Page title — plate line over a full-width rule ──────────────── */
+.page-title-area {
+    padding: 2.1rem 0 0.9rem;
+    border-bottom: 1px solid var(--table-header-border);
+}
+.page-title-area .page-label {
+    font-family: var(--font-data), monospace;
+    color: var(--text-muted);
+    letter-spacing: 0.22em;
+}
+.page-title-area .page-title {
+    font-family: var(--font-heading), serif;
+    font-size: 1.9rem;
+    font-weight: 600;
+}
+
+/* ── In-page tabs — text with an ink rule, nothing else ──────────── */
+.tab-underline {
+    font-family: var(--font-data), monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.45rem 0.15rem;
+    margin-right: 1.1rem;
+    color: var(--btn-inactive-text);
+    border-bottom: 2px solid transparent;
+}
+.tab-underline:hover {
+    color: var(--text-primary);
+    border-bottom-color: var(--divider-color);
+}
+.tab-underline--active,
+.tab-underline--active:hover,
+.tab-underline.active,
+.tab-underline.active:hover {
+    color: var(--text-primary);
+    font-weight: 700;
+    border-bottom-color: var(--accent);
+}
+
+/* ── Pills / segmented choices — square-cut chips ────────────────── */
+.pill {
+    font-family: var(--font-data), monospace;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    padding: 0.3rem 0.7rem;
+    background: transparent;
+    border: 1px solid var(--select-border);
+    color: var(--btn-inactive-text);
+}
+.pill:hover {
+    border-color: var(--text-secondary);
+    color: var(--text-primary);
+}
+.pill--active,
+.pill--active:hover {
+    background: var(--btn-active-bg);
+    border-color: var(--btn-active-bg);
+    color: var(--btn-active-text);
+    font-weight: 700;
+}
+
+/* ── Buttons & selects — square, hairline ────────────────────────── */
+.tab-btn,
+.btn-active,
+.btn-inactive {
+    border-radius: 0;
+    font-family: var(--font-data), monospace;
+    font-size: 0.78rem;
+}
+.teg-select,
+.theme-select {
+    border-radius: 0;
+    background: var(--select-bg);
+    border: 1px solid var(--select-border);
+    color: var(--text-primary);
+    font-family: var(--font-data), monospace;
+    font-size: 0.8rem;
+}
+
+/* ── Badges — small stamped labels ───────────────────────────────── */
+.badge,
+.badge-muted {
+    border-radius: 2px;
+    font-family: var(--font-data), monospace;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+/* ── Data tables — the hero. Book rules: heavy head + foot, hairline
+      rows, mono throughout, small-cap headers. ─────────────────────── */
+.teg-table,
+.records-table {
+    font-family: var(--font-data), monospace;
+    border-bottom: 2px solid var(--table-header-border);
+}
+.records-table--borderless {
+    border-bottom: none;
+}
+.teg-table thead th,
+.records-table thead th {
+    font-family: var(--font-data), monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+    border-top: 2px solid var(--table-header-border);
+    border-bottom: 1px solid var(--table-cell-border);
+    padding: 0.55rem 0.75rem;
+}
+.records-table--borderless thead th {
+    border-top: none;
+    font-family: var(--font-heading), serif;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 0.95rem;
+}
+.teg-table tbody td,
+.records-table tbody td {
+    padding: 0.55rem 0.75rem;
+}
+.teg-table tbody tr.top-rank {
+    font-weight: 700;
+}
+
+/* Win/loss result marks — wins filled, losses outlined, so the
+   distinction survives even when the accent itself is a red. */
+.player-results-table td.result-win span,
+.player-results-table td.result-loss span {
+    border-radius: 2px;
+    padding: 0.05rem 0.45rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+}
+.player-results-table td.result-win span {
+    background: var(--badge-bg);
+    color: var(--badge-text);
+    border: 1px solid var(--badge-bg);
+}
+.player-results-table td.result-loss span {
+    background: transparent;
+    border: 1px solid currentColor;
+    color: var(--table-tierlast-text, #a33c3c);
+}
+
+/* ── Stat / metric figures — numbers over a rule, left-aligned ───── */
+.stat-card,
+.metric-card {
+    background: transparent;
+    border: none;
+    border-top: 2px solid var(--table-header-border);
+    border-radius: 0;
+    align-items: flex-start;
+    text-align: left;
+    padding: 0.55rem 0.4rem 0.3rem 0;
+    min-height: 4.6rem;
+}
+.stat-label,
+.metric-label {
+    font-family: var(--font-data), monospace;
+    letter-spacing: 0.12em;
+    font-weight: 500;
+}
+.stat-value,
+.metric-value {
+    font-family: var(--font-data), monospace;
+    font-weight: 700;
+    font-size: 1.55rem;
+}
+.metric-rank {
+    font-family: var(--font-data), monospace;
+    font-size: 0.95rem;
+}
+
+/* ── Trophy cabinet / detail entries — rule-bound, not boxed ─────── */
+.trophy-cabinet {
+    background: transparent;
+    border: none;
+    border-top: 2px solid var(--table-header-border);
+    border-bottom: 1px solid var(--divider-color);
+    border-radius: 0;
+    padding: 0.85rem 0.2rem 0.75rem 0;
+}
+.trophy-honour-count {
+    font-family: var(--font-data), monospace;
+}
+.detail-card {
+    background: transparent;
+    border: none;
+    border-top: 1px solid var(--divider-color);
+    border-radius: 0;
+    padding: 0.55rem 0.4rem 0.4rem 0;
+}
+.detail-card--bad .detail-eyebrow {
+    color: var(--table-tierlast-text, #a33c3c);
+}
+.detail-heading {
+    font-family: var(--font-heading), serif;
+}
+.detail-sub {
+    font-family: var(--font-data), monospace;
+    font-size: 0.7rem;
+}
+
+/* ── Section & chart headings ────────────────────────────────────── */
+.section-title {
+    font-size: 1.2rem;
+    letter-spacing: 0.01em;
+}
+.chart-title {
+    font-size: 1.02rem;
+}
+.result-callout {
+    font-size: 0.9rem;
+}
+
+/* ── Charts — a figure in a book: chart, hairline, mono caption ──── */
+.data-card,
+.data-card--padded {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+.chart-description {
+    font-family: var(--font-data), monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.02em;
+    border-top: 1px solid var(--divider-color);
+    padding-top: 0.5rem;
+}
+.chart-controls-label {
+    font-family: var(--font-data), monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+}
+
+/* ── Card headers (component sheet + report pages) ───────────────── */
+.card-header,
+body.ch-ch1 .card-header,
+body.ch-ch2 .card-header,
+body.ch-ch3 .card-header {
+    display: block;
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--table-header-border);
+    border-radius: 0;
+    font-family: var(--font-data), monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--text-secondary);
+    padding: 0 0 0.4rem 0;
+    margin-top: 2rem;
+    margin-bottom: 0.6rem;
+}
+.card-header:first-child { margin-top: 0; }
+
+/* ── Footer ──────────────────────────────────────────────────────── */
+.page-footer {
+    background: transparent;
+    border-top: 1px solid var(--divider-color);
+    font-family: var(--font-data), monospace;
+    letter-spacing: 0.06em;
+}

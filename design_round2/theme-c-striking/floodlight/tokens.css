@@ -1,0 +1,175 @@
+/* ─────────────────────────────────────────────────────────────
+   FLOODLIGHT · Theme C (Striking) — designed dark-first
+   Broadcast graphics under lights: near-black, electric lime
+   and cyan doing the data work. The :root below IS the dark
+   design; the light mode is the "daytime paper" translation of
+   the same hue logic. Pages in this folder default to
+   html[data-mode="dark"]. Space Grotesk + IBM Plex Mono.
+   ───────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
+
+/* Light mode — cool paper, the lime dropped to an olive that keeps
+   contrast, cyan cooled to teal. Fully designed, second on the bill. */
+:root {
+    /* Typography */
+    --font-heading: 'Space Grotesk', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+    --font-data: 'IBM Plex Mono';            /* NEW TOKEN — table/chart mono */
+
+    /* Page + text */
+    --bg-page: #f2f4f3;
+    --bg-card: #ffffff;
+    --text-primary: #16211b;
+    --text-secondary: #46554c;
+    --text-muted: #7f8c84;
+
+    /* Nav */
+    --nav-bg: #16211b;
+    --nav-text: #9fb0a6;
+    --nav-text-muted: #71827a;
+    --nav-hover-bg: transparent;
+    --nav-active-bg: transparent;
+    --nav-active-text: #f2f4f3;
+
+    /* Tables */
+    --table-font-size: 0.84rem;
+    --table-header-bg: #16211b;
+    --table-header-text: #d9e5dd;            /* NEW TOKEN — header band text */
+    --table-header-border: #16211b;
+    --table-cell-border: #dbe2de;
+    --table-hover-bg: #e8efe9;
+    --table-hover-text: inherit;
+    --table-toprank-bg: #dced9e;
+    --table-toprank-text: #2c3a00;
+    --table-stripe-bg: transparent;
+    --table-cell-border-width: 1px;
+    --table-header-border-width: 0px;
+
+    /* NEW TOKENS — rank tiers */
+    --table-tier1-bg: #dced9e;
+    --table-tier1-text: #2c3a00;
+    --table-tier2-bg: #d3edee;
+    --table-tier2-text: #0d4a50;
+    --table-tiermid-bg: transparent;
+    --table-tiermid-text: inherit;
+    --table-tierlast-bg: #f5d9dc;
+    --table-tierlast-text: #8e2a35;
+
+    /* Accent + buttons */
+    --accent: #5a7d00;
+    --btn-active-bg: #16211b;
+    --btn-active-text: #d8f37e;
+    --btn-inactive-bg: #ffffff;
+    --btn-inactive-text: #46554c;
+    --btn-border-radius: 0;
+    --card-radius: 0;
+    --card-shadow: none;
+
+    /* Selects */
+    --select-bg: #ffffff;
+    --select-border: #16211b;
+    --select-focus-ring: #5a7d00;
+
+    /* Footer */
+    --footer-bg: #16211b;
+    --footer-text: #9fb0a6;
+
+    /* Stat cards */
+    --stat-card-bg: #ffffff;
+    --stat-card-border: #5a7d00;
+    --stat-card-value-color: #16211b;
+    --stat-card-label-color: #7f8c84;
+
+    /* Badges */
+    --badge-bg: #5a7d00;
+    --badge-text: #f5ffd6;
+    --badge-muted-bg: #e2e8e4;
+    --badge-muted-text: #5d6a62;
+
+    --divider-color: #dbe2de;
+
+    /* NEW TOKENS — chart palette */
+    --chart-1: #5a7d00;
+    --chart-2: #0e7d86;
+    --chart-3: #c2453f;
+    --chart-4: #b3830e;
+    --chart-5: #3a63a8;
+    --chart-6: #2e8a5c;
+    --chart-7: #c26a2e;
+    --chart-8: #16211b;
+    --chart-grid: rgba(22, 33, 27, 0.1);
+    --chart-axis-text: #5d6a62;
+}
+
+/* Dark — the primary design. Kick-off under floodlights. */
+html[data-mode="dark"] {
+    color-scheme: dark;
+
+    --bg-page: #0f1216;
+    --bg-card: #161b22;
+    --text-primary: #e8edf2;
+    --text-secondary: #aab4bd;
+    --text-muted: #727c86;
+
+    --nav-bg: #0c0f13;
+    --nav-text: #8b969f;
+    --nav-text-muted: #5e6871;
+    --nav-hover-bg: transparent;
+    --nav-active-bg: transparent;
+    --nav-active-text: #e8edf2;
+
+    --table-header-bg: #1d242e;
+    --table-header-text: #c8f051;
+    --table-header-border: #1d242e;
+    --table-cell-border: #242b35;
+    --table-hover-bg: #1a222c;
+    --table-hover-text: inherit;
+    --table-toprank-bg: #c8f051;
+    --table-toprank-text: #131400;
+    --table-stripe-bg: transparent;
+
+    --table-tier1-bg: #c8f051;
+    --table-tier1-text: #131400;
+    --table-tier2-bg: #14383c;
+    --table-tier2-text: #7ee7ee;
+    --table-tiermid-bg: transparent;
+    --table-tiermid-text: inherit;
+    --table-tierlast-bg: #3d1d22;
+    --table-tierlast-text: #ff8f98;
+
+    --accent: #c8f051;
+    --btn-active-bg: #c8f051;
+    --btn-active-text: #131400;
+    --btn-inactive-bg: #161b22;
+    --btn-inactive-text: #aab4bd;
+
+    --select-bg: #161b22;
+    --select-border: #39424d;
+    --select-focus-ring: #c8f051;
+
+    --footer-bg: #0c0f13;
+    --footer-text: #8b969f;
+
+    --stat-card-bg: #161b22;
+    --stat-card-border: #c8f051;
+    --stat-card-value-color: #e8edf2;
+    --stat-card-label-color: #727c86;
+
+    --badge-bg: #c8f051;
+    --badge-text: #131400;
+    --badge-muted-bg: #222a34;
+    --badge-muted-text: #97a1ab;
+
+    --divider-color: #242b35;
+
+    --chart-1: #c8f051;
+    --chart-2: #4fd8e0;
+    --chart-3: #ff7a76;
+    --chart-4: #ffd166;
+    --chart-5: #6aa5ff;
+    --chart-6: #58d68d;
+    --chart-7: #ff9f45;
+    --chart-8: #9aa5b1;
+    --chart-grid: rgba(232, 237, 242, 0.09);
+    --chart-axis-text: #97a1ab;
+}

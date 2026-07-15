@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEG design round 2 — three themes, nine stylings</title>
+<style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body {
+        margin: 0; background: #f4f2ec; color: #1d1b16;
+        font: 15px/1.55 Georgia, 'Times New Roman', serif;
+        padding: 3rem 1.5rem 5rem;
+    }
+    .wrap { max-width: 920px; margin: 0 auto; }
+    h1 { font-size: 1.9rem; margin: 0 0 0.2rem; }
+    .sub { color: #6d675c; margin: 0 0 2.5rem; font-style: italic; }
+    h2 {
+        font-size: 1.05rem; letter-spacing: 0.14em; text-transform: uppercase;
+        border-bottom: 2px solid #1d1b16; padding-bottom: 0.4rem; margin: 2.8rem 0 0.4rem;
+        font-family: Verdana, sans-serif; font-size: 0.85rem;
+    }
+    .theme-note { color: #57524a; margin: 0.4rem 0 1.2rem; }
+    table { width: 100%; border-collapse: collapse; }
+    td, th {
+        text-align: left; padding: 0.55rem 0.75rem;
+        border-bottom: 1px solid #ddd8cc; vertical-align: top;
+    }
+    th { font-family: Verdana, sans-serif; font-size: 0.66rem; letter-spacing: 0.12em;
+         text-transform: uppercase; color: #8d887c; font-weight: 600; }
+    a { color: #1e5631; }
+    .name { font-weight: 700; white-space: nowrap; }
+    .dark-first { font-family: Verdana, sans-serif; font-size: 0.62rem; letter-spacing: 0.08em;
+        text-transform: uppercase; background: #1d1b16; color: #f4f2ec; padding: 0.1rem 0.4rem; }
+    .links a { margin-right: 0.9rem; white-space: nowrap; }
+    .comp { margin: 0.5rem 0 0; font-size: 0.9rem; }
+    footer { margin-top: 3.5rem; color: #8d887c; font-size: 0.8rem; font-style: italic; }
+</style>
+</head>
+<body>
+<div class="wrap">
+    <h1>TEG design round 2</h1>
+    <p class="sub">Three visual languages × three stylings each. Every page has a working light/dark
+        toggle (top right); charts re-colour live from each styling's tokens. Pages are fully
+        self-contained (vendored Plotly/Tailwind) — only Google Fonts loads from the network.</p>
+
+    <h2>Theme A — Plain · “the reference book”</h2>
+    <p class="theme-note">No cards, no shadows, no fills. Hierarchy from typography, hairline rules
+        and alignment; tables read like a well-set almanac. Accent spent only on interactive state.</p>
+    <table>
+        <tr><th>Styling</th><th>Idea</th><th>Pages</th></tr>
+        <tr><td class="name">Ledger</td><td>Warm paper, near-black ink, bottle green. Source Serif 4 + IBM Plex Mono.</td>
+            <td class="links"><a href="theme-a-plain/ledger/results.html">Results</a><a href="theme-a-plain/ledger/player.html">Player</a></td></tr>
+        <tr><td class="name">Gridline</td><td>Swiss timetable: white, black, signal red. Archivo + Spline Sans Mono.</td>
+            <td class="links"><a href="theme-a-plain/gridline/results.html">Results</a><a href="theme-a-plain/gridline/player.html">Player</a></td></tr>
+        <tr><td class="name">Manila</td><td>Records office: manila stock, sepia ink, burnt-orange stamp. Public Sans + Fragment Mono.</td>
+            <td class="links"><a href="theme-a-plain/manila/results.html">Results</a><a href="theme-a-plain/manila/player.html">Player</a></td></tr>
+    </table>
+    <p class="comp"><a href="theme-a-plain/components.html">Component sheet (switch stylings in-page)</a></p>
+
+    <h2>Theme B — Editorial · “the tournament programme”</h2>
+    <p class="theme-note">A masthead instead of an app bar; numbered sections, box-score tables with
+        double rules, figure-framed charts with captions, column rules instead of boxes.</p>
+    <table>
+        <tr><th>Styling</th><th>Idea</th><th>Pages</th></tr>
+        <tr><td class="name">Broadsheet</td><td>Newsprint, pure ink, press-blue spot colour. Frank Ruhl Libre + PT Serif + Courier Prime.</td>
+            <td class="links"><a href="theme-b-editorial/broadsheet/results.html">Results</a><a href="theme-b-editorial/broadsheet/player.html">Player</a></td></tr>
+        <tr><td class="name">Order of Merit</td><td>Clubhouse programme: cream, racing green, oxblood, gold hairlines. Cormorant + EB Garamond + Cousine.</td>
+            <td class="links"><a href="theme-b-editorial/order-of-merit/results.html">Results</a><a href="theme-b-editorial/order-of-merit/player.html">Player</a></td></tr>
+        <tr><td class="name">Pressbox</td><td>Mid-century sports weekly: navy + tomato duotone. Zilla Slab + Faustina + Space Mono.</td>
+            <td class="links"><a href="theme-b-editorial/pressbox/results.html">Results</a><a href="theme-b-editorial/pressbox/player.html">Player</a></td></tr>
+    </table>
+    <p class="comp"><a href="theme-b-editorial/components.html">Component sheet (switch stylings in-page)</a></p>
+
+    <h2>Theme C — Striking · “the almanac infographic”</h2>
+    <p class="theme-note">Flat, saturated, systematic: solid-block chrome, filled segment tabs,
+        oversized numerals, rank-tier colour coding in tables and a named chart palette per styling.</p>
+    <table>
+        <tr><th>Styling</th><th>Idea</th><th>Pages</th></tr>
+        <tr><td class="name">Scoreboard</td><td>The manual scoreboard: deep green boards, cream, gold leaders. Barlow Semi Condensed + JetBrains Mono.</td>
+            <td class="links"><a href="theme-c-striking/scoreboard/results.html">Results</a><a href="theme-c-striking/scoreboard/player.html">Player</a></td></tr>
+        <tr><td class="name">Almanac</td><td>The stats annual: cool paper, heavy black type, disciplined five-hue palette. Archivo Black + IBM Plex Mono.</td>
+            <td class="links"><a href="theme-c-striking/almanac/results.html">Results</a><a href="theme-c-striking/almanac/player.html">Player</a></td></tr>
+        <tr><td class="name">Floodlight <span class="dark-first">dark-first</span></td><td>Broadcast graphics: near-black, electric lime + cyan. Space Grotesk + IBM Plex Mono.</td>
+            <td class="links"><a href="theme-c-striking/floodlight/results.html">Results</a><a href="theme-c-striking/floodlight/player.html">Player</a></td></tr>
+    </table>
+    <p class="comp"><a href="theme-c-striking/components.html">Component sheet (switch stylings in-page)</a></p>
+
+    <footer>Serve this folder (e.g. <code>python3 -m http.server</code> from <code>design_round2/</code>)
+        or open the files directly — everything except Google Fonts is local.
+        Screenshots of all variants live in <code>screenshots/</code>.</footer>
+</div>
+</body>
+</html>

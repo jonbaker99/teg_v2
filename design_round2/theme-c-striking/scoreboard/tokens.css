@@ -1,0 +1,172 @@
+/* ─────────────────────────────────────────────────────────────
+   SCOREBOARD · Theme C (Striking)
+   The manual scoreboard at Augusta: deep green boards, cream
+   stock, gold numerals for the leaders, classic red/green
+   over-under logic. Barlow Semi Condensed + JetBrains Mono.
+   ───────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600;700;800&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+:root {
+    /* Typography */
+    --font-heading: 'Barlow Semi Condensed', 'Arial Narrow', sans-serif;
+    --font-body: 'Barlow', Arial, sans-serif;
+    --font-data: 'JetBrains Mono';           /* NEW TOKEN — table/chart mono */
+
+    /* Page + text */
+    --bg-page: #f4f1e6;
+    --bg-card: #fdfbf2;
+    --text-primary: #14281c;
+    --text-secondary: #47523f;
+    --text-muted: #82806e;
+
+    /* Nav — the board itself */
+    --nav-bg: #0b3d2e;
+    --nav-text: #9dbfa9;
+    --nav-text-muted: #6f9880;
+    --nav-hover-bg: transparent;
+    --nav-active-bg: transparent;
+    --nav-active-text: #f4f1e6;
+
+    /* Tables */
+    --table-font-size: 0.84rem;
+    --table-header-bg: #0b3d2e;
+    --table-header-text: #f0ead2;            /* NEW TOKEN — header band text */
+    --table-header-border: #0b3d2e;
+    --table-cell-border: #ddd6bd;
+    --table-hover-bg: #ece7d2;
+    --table-hover-text: inherit;
+    --table-toprank-bg: #f4d564;
+    --table-toprank-text: #241a00;
+    --table-stripe-bg: transparent;
+    --table-cell-border-width: 1px;
+    --table-header-border-width: 0px;
+
+    /* NEW TOKENS — rank tiers (winner / podium / midfield / last) */
+    --table-tier1-bg: #f4d564;
+    --table-tier1-text: #241a00;
+    --table-tier2-bg: #dcead8;
+    --table-tier2-text: #14381f;
+    --table-tiermid-bg: transparent;
+    --table-tiermid-text: inherit;
+    --table-tierlast-bg: #f2ded9;
+    --table-tierlast-text: #8a2f1d;
+
+    /* Accent + buttons */
+    --accent: #c99b00;
+    --btn-active-bg: #0b3d2e;
+    --btn-active-text: #f4f1e6;
+    --btn-inactive-bg: #fdfbf2;
+    --btn-inactive-text: #47523f;
+    --btn-border-radius: 0;
+    --card-radius: 0;
+    --card-shadow: none;
+
+    /* Selects */
+    --select-bg: #fdfbf2;
+    --select-border: #0b3d2e;
+    --select-focus-ring: #c99b00;
+
+    /* Footer */
+    --footer-bg: #0b3d2e;
+    --footer-text: #9dbfa9;
+
+    /* Stat cards */
+    --stat-card-bg: #fdfbf2;
+    --stat-card-border: #c99b00;
+    --stat-card-value-color: #14281c;
+    --stat-card-label-color: #82806e;
+
+    /* Badges */
+    --badge-bg: #e8b90f;
+    --badge-text: #241a00;
+    --badge-muted-bg: #e7e0c8;
+    --badge-muted-text: #6f6d58;
+
+    --divider-color: #ddd6bd;
+
+    /* NEW TOKENS — chart palette */
+    --chart-1: #d9a400;
+    --chart-2: #2e7d4f;
+    --chart-3: #c0392b;
+    --chart-4: #33658a;
+    --chart-5: #8c6d3f;
+    --chart-6: #1f7a72;
+    --chart-7: #d96c2c;
+    --chart-8: #14281c;
+    --chart-grid: rgba(20, 40, 28, 0.1);
+    --chart-axis-text: #6f6d58;
+}
+
+/* Dark — the board at dusk: green-black timber, the gold numerals
+   burning brighter, cream text chalked on. */
+html[data-mode="dark"] {
+    color-scheme: dark;
+
+    --bg-page: #0e1613;
+    --bg-card: #15241c;
+    --text-primary: #e9e4d2;
+    --text-secondary: #b0b8a4;
+    --text-muted: #7d8873;
+
+    --nav-bg: #0a100d;
+    --nav-text: #8daa96;
+    --nav-text-muted: #5f7a68;
+    --nav-hover-bg: transparent;
+    --nav-active-bg: transparent;
+    --nav-active-text: #f2c530;
+
+    --table-header-bg: #0a2c20;
+    --table-header-text: #d8cfa8;
+    --table-header-border: #0a2c20;
+    --table-cell-border: #24352a;
+    --table-hover-bg: #1a2c21;
+    --table-hover-text: inherit;
+    --table-toprank-bg: #4a3c00;
+    --table-toprank-text: #ffe27a;
+    --table-stripe-bg: transparent;
+
+    --table-tier1-bg: #4a3c00;
+    --table-tier1-text: #ffe27a;
+    --table-tier2-bg: #1b3a26;
+    --table-tier2-text: #a4d8b2;
+    --table-tiermid-bg: transparent;
+    --table-tiermid-text: inherit;
+    --table-tierlast-bg: #3d1e15;
+    --table-tierlast-text: #eda28e;
+
+    --accent: #f2c530;
+    --btn-active-bg: #f2c530;
+    --btn-active-text: #241a00;
+    --btn-inactive-bg: #15241c;
+    --btn-inactive-text: #b0b8a4;
+
+    --select-bg: #15241c;
+    --select-border: #3a5244;
+    --select-focus-ring: #f2c530;
+
+    --footer-bg: #0a100d;
+    --footer-text: #8daa96;
+
+    --stat-card-bg: #15241c;
+    --stat-card-border: #f2c530;
+    --stat-card-value-color: #e9e4d2;
+    --stat-card-label-color: #7d8873;
+
+    --badge-bg: #f2c530;
+    --badge-text: #241a00;
+    --badge-muted-bg: #22332a;
+    --badge-muted-text: #9aa890;
+
+    --divider-color: #24352a;
+
+    --chart-1: #f2c530;
+    --chart-2: #6fbd8c;
+    --chart-3: #e8705c;
+    --chart-4: #6fa3cc;
+    --chart-5: #c8a86a;
+    --chart-6: #58c2b8;
+    --chart-7: #ef9556;
+    --chart-8: #e9e4d2;
+    --chart-grid: rgba(233, 228, 210, 0.1);
+    --chart-axis-text: #9aa890;
+}
