@@ -1,19 +1,12 @@
 <div>
     {% for section in sections %}
-    {% if not loop.first %}
-    <hr class="divider--dotted my-6">
-    {% endif %}
-    <div>
-        <h2 class="section-title">{{ section.title }}</h2>
+    <div class="pp-section">
+        <span class="pp-label">{{ section.title }}</span>
         {% if section.table_html %}
-        <div class="data-card"><div class="overflow-x-auto">
-            {{ section.table_html | safe }}
-        </div></div>
+        <div class="overflow-x-auto">{{ section.table_html | safe }}</div>
         {% endif %}
         {% if section.chart_json %}
-        <div class="data-card data-card--padded">
-            <div class="chart-container" data-figure="{{ section.chart_json }}" style="height:350px;"></div>
-        </div>
+        <div class="chart-container" data-figure="{{ section.chart_json }}" style="height:350px; margin-top:0.9rem;"></div>
         {% endif %}
     </div>
     {% endfor %}

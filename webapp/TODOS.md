@@ -40,6 +40,7 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 ## PLAYER PROFILES
 - [ ] Revisit again to make UI cleaner and less cluttered
 - [ ] UI design pass** — `/player/{code}` and the `/player` roster have been significantly reworked (metric cards, career highlights, records/worsts, bar charts, roster cards with stars). Functionality is complete. Revisit with fresh eyes for: layout rhythm and section ordering, chart sizing and padding, card density, label clarity, mobile view. See `webapp/routes/player.py` and `webapp/templates/partials/player_overview.html`.
+  - **Design-vibe typography pass done** (`/player/{code}`): player name, metric/trophy/detail values + labels, career-span meta and the doubles footnote all moved to Roboto Mono to match the roster; `.section-title` moved serif→mono **globally** (masthead `.page-title` stays the one serif survivor). Green/red detail-card borders kept intentionally (silverware-exclusive accent rule relaxed — see `design_principles.md`). Layout/spacing/section-ordering polish still open.
 
 ## Mobile & dark mode
 

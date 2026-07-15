@@ -1,6 +1,19 @@
 {% extends "base.html" %}
 {% block title_suffix %} — {{ player_name }}{% endblock %}
 
+{% block extra_head %}
+<style>
+    /* Let the profile float directly on the page background (like the /player
+       roster and Contents map) — dissolve the white .main-content panel so the
+       lo-fi stat sheet reads as its own surface, not a boxed card. */
+    .main-content {
+        background: transparent !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+</style>
+{% endblock %}
+
 {% block page_title %}
 <div class="page-title-area">
     <span class="page-label">Player Profile</span>
@@ -8,36 +21,42 @@
 {% endblock %}
 
 {% block content %}
-<!-- Player selector pills -->
-{% with active_code = player_code %}
-{% include "partials/player_pills.html" %}
-{% endwith %}
+<div class="player-profile">
 
-<!-- Player name as in-page heading (not in the top banner) -->
-<div class="player-profile-heading">
-    <h1 class="player-profile-name">{{ player_name }}{% if trophy and (trophy.trophies or trophy.jackets) %}<span class="title-stars">{% for i in range(trophy.trophies) %}<span class="trophy-star trophy-star--gold">&#9733;</span>{% endfor %}{% if trophy.trophies and trophy.jackets %}<span class="title-stars-gap"></span>{% endif %}{% for i in range(trophy.jackets) %}<span class="trophy-star trophy-star--green">&#9733;</span>{% endfor %}</span>{% endif %}</h1>
-    <p class="text-sm text-secondary">{{ subtitle }}</p>
-</div>
+    <!-- Player switcher pills -->
+    {% with active_code = player_code %}
+    {% include "partials/player_pills.html" %}
+    {% endwith %}
 
-<!-- Tab buttons at top, before any content -->
-<div class="section-nav flex flex-wrap gap-2 mb-0">
-    {% for tab_id, tab_label in tabs %}
-    <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
-            hx-get="/player/{{ player_code }}/tab/{{ tab_id }}"
-            hx-target="#tab-content"
-            hx-indicator="#player-loading">
-        {{ tab_label }}
-    </button>
-    {% endfor %}
-    <span id="player-loading" class="htmx-indicator ml-2 self-center">
-        <svg class="animate-spin h-5 w-5 accent-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-        </svg>
-    </span>
-</div>
+    <!-- Identity: name + honours stars on a shared baseline, one meta line -->
+    <div class="pp-head">
+        <div class="pp-name">{{ player_name }}</div>
+        {% if trophy and (trophy.trophies or trophy.jackets) %}
+        <div class="pp-stars">{% for i in range(trophy.trophies) %}<span class="trophy-star trophy-star--gold">&#9733;</span>{% endfor %}{% if trophy.trophies and trophy.jackets %}<span class="pp-stars-gap"></span>{% endif %}{% for i in range(trophy.jackets) %}<span class="trophy-star trophy-star--green">&#9733;</span>{% endfor %}</div>
+        {% endif %}
+    </div>
+    <div class="pp-meta">{{ subtitle }}</div>
 
-<div id="tab-content" class="section-panel">
-    {% include "partials/player_overview.html" %}
+    <!-- Tabs (reuse .section-nav/.tab-underline for the global active-toggle JS) -->
+    <div class="section-nav flex flex-wrap">
+        {% for tab_id, tab_label in tabs %}
+        <button class="tab-underline{% if tab_id == active_tab %} tab-underline--active{% endif %}"
+                hx-get="/player/{{ player_code }}/tab/{{ tab_id }}"
+                hx-target="#tab-content"
+                hx-indicator="#player-loading">
+            {{ tab_label }}
+        </button>
+        {% endfor %}
+        <span id="player-loading" class="htmx-indicator ml-2 self-center">
+            <svg class="animate-spin h-5 w-5 accent-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+            </svg>
+        </span>
+    </div>
+
+    <div id="tab-content">
+        {% include "partials/player_overview.html" %}
+    </div>
 </div>
 {% endblock %}
