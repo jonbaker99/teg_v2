@@ -214,10 +214,56 @@ style_report(teg)  # → teg_N_report_styled.md, ready for the UI
 
 ## Configuration
 
-- **Model**: default `claude-opus-4-7` (per-call override via `model=`).
-- **API key**: `ANTHROPIC_API_KEY` env var, else `.streamlit/secrets.toml` at the repo root (gitignored — see `.streamlit/secrets.toml.template`).
 - **Tone dial**: `tone=` input on `build_story_plan` (default `"house"` = Ronay/Peck). Plan echoes the resolved tone for the writer.
 - **Mode**: `balanced` / `fast` / `archive` — controls scoring weights (fast leans on importance; archive cranks rarity + entertainment).
+
+### API key
+
+`ANTHROPIC_API_KEY` from the environment is the supported route; a gitignored
+`secrets.toml` at the repo root is the fallback. Resolution order is in
+`llm.get_api_key()`.
+
+> **`.streamlit/secrets.toml` is deprecated as a key location.** It still works so
+> existing local checkouts don't break, but it is streamlit legacy and should not be
+> used for new setups — put the key in the environment, or in a root `secrets.toml`
+> (both are covered by the `**/secrets.toml` gitignore rule). Nothing in
+> `teg_analysis` imports streamlit.
+
+| Where you're running | How to set it |
+|---|---|
+| Local shell | `export ANTHROPIC_API_KEY=sk-ant-…` (add to your shell profile to persist) |
+| Local, persisted to the repo | `secrets.toml` at the repo root: `ANTHROPIC_API_KEY = "sk-ant-…"` |
+| Railway (webapp) | Service → Variables → add `ANTHROPIC_API_KEY` |
+| Claude Code on the web | The session container gets its variables from the **environment** config, not from this repo. Add `ANTHROPIC_API_KEY` to the environment's variables so it's present in every session; a key pasted into a chat only lasts that session and ends up in the transcript. |
+
+Report generation needs the key. Everything upstream of Stage 3 (beats, arcs, venue,
+history, records, rendering) is pure Python and runs without one — including
+`build_story_plan(teg, dry_run=True)`, which writes the assembled prompt to disk for
+inspection with no API call.
+
+### Model selection
+
+`llm.DEFAULT_MODEL` is the single place the model is pinned; every stage accepts a
+`model=` override, so per-stage selection needs no refactor.
+
+**There is no floating "latest" alias.** `claude-opus-5` / `claude-sonnet-5` *are*
+the aliases — they carry no date suffix and never need one — but they pin a
+**generation**, and a new generation does not roll in automatically. Nor should it:
+a silent model change under a fixed prompt is exactly the kind of thing that would
+quietly alter every report's voice.
+
+So the protection against running stale is procedural, not automatic:
+
+1. Keep the pin in `DEFAULT_MODEL` only — never hardcode a model at a call site.
+2. Re-check at each Claude release. Within a tier the newer generation is usually
+   the **same price** (Opus 4.7 → Opus 5 is $5/$25 per MTok either way), so staying
+   on an old generation isn't cheaper — it's the same spend for less capability.
+3. `client.models.list()` / `.retrieve(id)` returns live context windows, output
+   caps and capability flags if you want to check what's current from code.
+
+`output_config.effort` is **not currently set anywhere**, so every call runs at the
+default (`high`). It is the primary cost/latency lever and is untested here — see
+[EXPERIMENTS.md](EXPERIMENTS.md).
 
 ## UI surfaces
 

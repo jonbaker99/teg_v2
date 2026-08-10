@@ -11,6 +11,57 @@ a Jacket-leader → Spoon-winner subplot) is the useful second read.
 
 ## OPEN
 
+### H9. Effort levels and cheaper models — how to test this without wasting money
+
+**Goal:** find out whether `output_config.effort` (never set — every call runs at the
+default `high`) and a cheaper model can cut cost without costing quality.
+
+**First, the trap.** The instinct is to test on a short section of prose. Don't —
+it will tell you nothing and the nothing will be misleading. `effort` controls how
+much the model *reasons* before answering. On a short rewrite where the facts,
+structure and voice are all fixed by the input, there is very little to reason about,
+so low and high effort land in roughly the same place. You would conclude "effort
+doesn't matter" and switch it off everywhere, including the one stage where it does.
+
+**Test each lever at the stage where it actually bites:**
+
+| Lever | Test at | Why there | How to score it |
+|---|---|---|---|
+| **`effort`** | **Stage 3 (story plan)** | This is the only stage doing real reasoning — ranking beats, picking vehicles, building setup→payoff pairs. It is also the single most expensive stage (~43% of report cost). | **Machine-checkable.** The plan is JSON. No reading required — see the rubric below. |
+| **Cheap model** | **Stage 4a (dry draft)** | It re-sends the same ~26k bundle as Stage 3 (~31% of report cost) but its job is explicitly faithful, colourless transcription — the least quality-sensitive stage in the pipeline. | Factual check: does the cheap model keep the arithmetic, holes, scores and courses right? |
+| **Cheap model** | Stage 4b (the writing) | Only *after* the humour dial is settled — otherwise you are moving voice and model at once and can't attribute the result. | Taste. Expensive to evaluate; do it last, or not at all. |
+
+Stage 4b is already the cheapest stage (~15%). Cheapening the writing is the
+intuitive move and close to the worst one available: most quality risk, least saving.
+
+**The Stage 3 rubric — score without reading anything.** Regenerate the plan at
+`low` / `medium` / `high` and diff the JSON:
+
+- Does it honour the close-finish hard rule when `tournament_shape.close_finish` is true?
+- Does every beat marked `"mandatory": true` appear in `must_include_beat_ids`, and none in `cuts`?
+- Is there a `payoffs[]` entry for each `foreshadow[]` seed?
+- How many vehicles overlap with the previous 3 TEGs' picks?
+- Beat overlap between effort levels — if `low` picks the same spine as `high`, that is the finding.
+
+**Anchor TEG: 14.** Close finish (exercises the hard rule), 2-point margin (arithmetic
+risk), multiple courses (the cross-course fabrication trap). If a cheaper setting
+breaks anything, it breaks here first.
+
+**Cost:** a 3-level effort sweep at Stage 3 is ~3 × $0.28 ≈ **$0.85**; three model
+variants at Stage 4a ~**$0.40**. The whole experiment is a couple of dollars — the
+expensive part is evaluation time, which is exactly why the machine-checkable rubric
+above matters more than the run itself.
+
+**Sequencing note:** settle H8 (the humour dial) first. Voice and model are separate
+variables and testing them together wastes both runs.
+
+**Notes:**
+- _(empty — to fill in as we run)_
+
+**Verdict:** _(open)_
+
+---
+
 ### H8. Humour dial — 3 vs 6 vs 8 vs 8b *(the live decision)*
 
 **Goal:** the published reports sit at roughly 3/10 humour — deadpan gravitas, very dry. Test whether
@@ -26,10 +77,31 @@ dialling up lands better with the insider audience, and which added register wor
 | `humour8b` | ≈8/10 **Brooker-only** — drops Clive James and the literary-comparison register, adds Marina Hyde. Physical/contemporary comparisons (broken household objects, malfunctioning tech, bodily indignity) instead of literary ones; short sentences; running jokes that accumulate; punch not flourish | TEG 14 only |
 | `humour8bb` | Brooker-only retry on TEG 18 | **never produced** — connection reset mid-run |
 
+**How the test worked** (`scripts/humour_dial.py`) — worth knowing before resuming, because the
+method is a good one and cheap to re-run at another dial setting:
+
+1. It takes an **already-finished report** (`teg_N_report_final.md`) as the user message — it does
+   **not** regenerate from the bundle.
+2. A `HUMOUR_DIAL_SYSTEM` prompt rewrites it at the target level. That prompt is structured as:
+   named influences → what to aim for → an explicit **failure-mode list** (the `❌` block: no
+   literary register, no sustained metaphor, no setup-punchline, no flourish bolted onto sentences
+   that already work) → the ECONOMY rules restated → the faithfulness rules restated.
+3. The output is pushed back through the **same render pipeline** as a normal report
+   (`apply_styling` + standings + records block), so `teg_N_report_humourX_styled.md` is directly
+   comparable, line for line, with `teg_N_report_styled.md`.
+
+Because it rewrites a finished report, **every variable except voice is held constant** — same
+facts, structure, headings and records block. That is what makes the comparison clean, and it costs
+one API call per variant instead of a full regeneration.
+
+**What the method does not prove:** it shows the target voice is *reachable by rewriting*, not that
+the writer will *hit it first time* from the bundle. Whatever wins must be folded into
+`WRITER_SYSTEM` and validated with a from-scratch generation before it is trusted for a backfill.
+
 **How to settle it:** read `teg_14_report_styled.md` against the three TEG 14 variants side by side,
 then the TEG 18 pair. Score on: does it still read as faithful; does the added humour land or strain;
-would the players enjoy it more. Then fold the winning register into `WRITER_SYSTEM` and record the
-verdict here.
+would the players enjoy it more. Then fold the winning register into `WRITER_SYSTEM`, regenerate
+TEG 14 from scratch to confirm it lands, and record the verdict here.
 
 **Notes:**
 - Nothing was published. `scripts/humour_dial.py` is still pointed at `TEGS = [18]` mid-retry.

@@ -21,10 +21,20 @@ from pydantic import BaseModel
 
 DEFAULT_MODEL = "claude-opus-4-7"
 
-# Mirror the Streamlit app's key resolution (env var, then a gitignored
-# secrets.toml) WITHOUT importing streamlit, so teg_analysis stays UI-agnostic.
+# Key resolution: ANTHROPIC_API_KEY from the environment first (the supported
+# route — Railway env var locally and on deploy), then a gitignored secrets.toml.
 # Paths are cwd-relative (repo root), consistent with the rest of the package.
-_SECRETS_CANDIDATES = (".streamlit/secrets.toml", "streamlit/.streamlit/secrets.toml")
+#
+# `secrets.toml` at the repo root is the canonical file. The two `.streamlit/`
+# paths are a DEPRECATED fallback kept only so existing local checkouts keep
+# working while streamlit is retired — nothing here imports streamlit, and the
+# `.streamlit/` locations should not be used for new setups. Remove them once
+# no local checkout still relies on them.
+_SECRETS_CANDIDATES = (
+    "secrets.toml",                        # canonical (gitignored)
+    ".streamlit/secrets.toml",             # deprecated — streamlit legacy
+    "streamlit/.streamlit/secrets.toml",   # deprecated — streamlit legacy
+)
 
 
 def _key_from_secrets_toml() -> Optional[str]:
@@ -43,7 +53,11 @@ def _key_from_secrets_toml() -> Optional[str]:
 
 
 def get_api_key() -> Optional[str]:
-    """ANTHROPIC_API_KEY from the environment, else from .streamlit/secrets.toml."""
+    """ANTHROPIC_API_KEY from the environment, else from a gitignored secrets.toml.
+
+    The environment variable is the supported route. See `_SECRETS_CANDIDATES` for
+    the file fallback and which paths are deprecated.
+    """
     return os.environ.get("ANTHROPIC_API_KEY") or _key_from_secrets_toml()
 
 

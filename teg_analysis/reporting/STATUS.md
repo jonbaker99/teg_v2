@@ -172,6 +172,81 @@ pass is arguably redundant by design — but `enrich_report_with_history()` has 
 anywhere in the repo**, which means either it should be wired in or it should be deleted.
 **Decide, then either wire or remove.** Right now it's undocumented dead code.
 
+**Are reports getting cross-TEG history at all? Yes — but by the other route, and unevenly.**
+Verified 2026-08-10 against the published prose (at-a-glance box and records block excluded, since
+those are deterministic). History *is* reaching the reports via the bundle's `player_history` →
+`WRITER_SYSTEM` palette item (a), not via the orphaned enrich pass. Coverage varies a lot:
+
+| TEG | 10 | 11 | 12 | 13 | 14 | 17 | 18 |
+|---|---|---|---|---|---|---|---|
+| history phrases in prose | 9 | 6 | **1** | 2 | 5 | 9 | 4 |
+| ordinal wins in prose | 3 | **0** | **0** | 5 | 4 | 3 | **0** |
+
+`build_history_enrichment_context()` (the enrich pass) and `build_player_cross_teg_history()` (in
+the bundle) compute the same class of fact from the same prior-TEG data — `achievement_phrases` vs
+`notable_milestones`. So this is duplication, not a gap. The uneven coverage is an argument for
+**tightening palette item (a)** — which the writer already has — rather than for reviving a second
+pass that would deliver the same facts twice.
+
+### 8. The shared editor↔writer vocabulary is defined twice, in prose, with no enforcement
+
+`prominent_vehicle` is specified in two places with two different vocabularies:
+
+- `story_plan.py:245` — *"Pick the **palette** vehicle the writer should foreground"* (the
+  WRITER_SYSTEM palette (a)–(g): `cross_teg_career`, `decisive_moment`, `records`, …)
+- `story_plan.py:202` — the close-finish **HARD RULE** requires `counterfactual` or
+  `dual_narrative`, which are from the **`narrative_vehicles` menu**, a different list
+
+The editor resolves the ambiguity in favour of the field's own spec every time, so the hard rule has
+**never once fired correctly**. It applies to exactly two TEGs and was violated on both:
+
+| TEG | close_finish | margin | `prominent_vehicle` | expected |
+|---|---|---|---|---|
+| 11 | true | 6 | `decisive_moment` | `counterfactual` / `dual_narrative` |
+| 14 | true | **2** | `decisive_moment` | `counterfactual` / `dual_narrative` |
+
+TEG 14 is the tightest finish in the library — the case the rule exists for. Both plans *do* carry
+`counterfactual` / `dual_narrative` in their `narrative_vehicles` list, so the editor understood the
+close finish correctly and simply put the answer in the field the other rule wasn't reading. This is
+a spec bug, not a disobedient model.
+
+**It is one instance of a general class.** Nine terms (`prominent_vehicle`, `narrative_vehicles`,
+`narrative_structure`, `payoffs`, `foreshadow`, `decisive_moment`, `counterfactual`,
+`in_medias_res`, `theme_led`) are defined independently in two ~15k-character prose prompts with no
+single source of truth. Every one of them is a place the two prompts can drift apart, silently.
+
+**Fix: move the shared vocabulary into the schema.** `prominent_vehicle: str = ""` and
+`narrative_vehicles: list[str]` are free strings; as `Literal[...]` enums the collision would have
+been a structured-output validation error at generation time instead of a silent 4-of-7 collapse.
+Related symptoms the same fix addresses: `narrative_structure` sometimes returns a whole sentence
+instead of an enum value (TEGs 11 and 14), and `in_medias_res` appears as both a *structure* and a
+*vehicle* (TEG 12).
+
+**Also symptomatic — the soft anti-repetition rule is leaking.** TEGs 17 and 18, generated
+adjacently, open with the same construction ("Picture Jon Baker walking off the 16th…" / "Picture
+Alex Baker, on the 18th tee…") despite `recent_vehicle_choices` being in the bundle.
+
+### 9. Prompt density is past the point where emphasis carries information
+
+`WRITER_SYSTEM` is ~16k characters with **38 bolded directives and 11 MUST/NEVER/NON-NEGOTIABLE
+absolutes**; `story_plan.SYSTEM_PROMPT` is ~14k with 19 and 10. When most instructions are marked
+critical, the marking stops distinguishing anything.
+
+**Recommendation: targeted fix + audit, not a rewrite.** These prompts have been validated across 17
+published reports, and most of the absolutes trace to a specific observed failure that was expensive
+to find — the countback fabrication, the cross-course "same hole" rhyme, the invented sibling
+relationships, the invented weekdays. A clean-sheet rewrite would discard that hard-won ballast and
+risk reintroducing bugs already paid for. The order that preserves it:
+
+1. **Schema-enforce the shared vocabulary** (issue 8) — fixes a whole class of drift permanently.
+2. **Run a structured prompt audit** over `story_plan.SYSTEM_PROMPT`, `WRITER_SYSTEM`,
+   `DRY_DRAFT_SYSTEM_*`, `ROUND_*`, `TIGHTEN_SYSTEM`, `ENRICH_SYSTEM` — separating instructions that
+   still prevent a live failure from scaffolding written for an earlier model or superseded by a
+   later phase. (`/claude-api prompt-audit` does exactly this and produces a report plus a proposed
+   diff.)
+3. **Keep every faithfulness rule that traces to a real incident**, however shouty. Those are the
+   ones the insider audience notices.
+
 ### 3. Round pipeline behind the tournament pipeline
 
 `RoundStoryPlan` has no `narrative_vehicles`, no `payoffs`, no storyline bullets. If round reports
@@ -222,13 +297,18 @@ Sequenced. Items 1–2 are decisions; 3–5 are the work that follows from them.
    `teg_14_report_humour6.md` / `_humour8.md` / `_humour8b.md`, and the TEG 18 pair. Pick a level,
    fold the winning register into `WRITER_SYSTEM`, record the verdict in EXPERIMENTS.md.
    *Everything downstream depends on this — don't regenerate anything first.*
-2. **Decide the fate of `enrich_report_with_history()`** — wire into `backfill.py` or delete.
-   Same question, lower stakes, for `tighten_prose()`.
-3. **Fix the era leak** (Known issue 1) — `hole_evidence()` era-awareness. Affects TEGs 2–7 only,
+2. **Schema-enforce the shared vocabulary** (known issue 8). Highest-value technical fix: it turns
+   the close-finish hard rule from advisory prose into a validation constraint, and closes a whole
+   class of editor↔writer drift. Do this before any regeneration or the same collapse is baked into
+   the backfill.
+3. **Decide the fate of `enrich_report_with_history()`** — the evidence now points to **delete**
+   (see known issue 2): it duplicates what the bundle already feeds the writer. Same question, lower
+   stakes, for `tighten_prose()`.
+4. **Fix the era leak** (Known issue 1) — `hole_evidence()` era-awareness. Affects TEGs 2–7 only,
    but must be fixed *before* they're regenerated.
-4. **Regenerate the stale tournament reports** so the library is one vintage: TEGs 2–8, 15, 16,
+5. **Regenerate the stale tournament reports** so the library is one vintage: TEGs 2–8, 15, 16,
    plus 9 for the vehicles. 10 reports, ~$6.50.
-5. **Round reports** — decide whether they're wanted at all. If yes, port H1/H3 to `RoundStoryPlan`
+6. **Round reports** — decide whether they're wanted at all. If yes, port H1/H3 to `RoundStoryPlan`
    first, then backfill (50 reports, ~$32 at the current per-report cost; the Batch API item above
    would roughly halve that).
 
