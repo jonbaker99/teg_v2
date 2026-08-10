@@ -59,15 +59,36 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
     as the new default. **Has merge conflicts with current `main`** (PR #78,
     a narrower sans-serif-body swap, merged separately and overlaps it) — would
     need rebasing before it's even mergeable, aside from the design rejection.
-  - **Reasons for rejection: not yet captured in detail** — reviewed visually
-    and didn't feel right, but specific complaints (too spartan? mono hurt
-    name/table readability? bands-not-cards too stark? something else?) weren't
-    written down at rejection time. **Capture specifics here before the next
-    attempt**, so it doesn't repeat the same misses.
+  - **Reasons for rejection (captured 2026-07, on PR #75's `/player/{code}`):**
+    - **No definition/structure — read as a data dump, not an overview.**
+      Content sat straight on the background with nothing to group it, so the
+      page felt like "a list of data" rather than a clear picture of a
+      player's career. Dissolving the panel-in-panel (the pattern that worked
+      well for the *roster*) was over-applied here to mean "remove grouping
+      surfaces entirely" — that's not what the vibe doc's "cards float on the
+      background" principle means. Floating still requires *something* (a
+      card, a rule, a grouped block) to give each section definition; it does
+      not mean flattening everything into one undifferentiated column.
+    - **Horizontal spacing looked unplanned, especially on the "at a glance"
+      section.** Elements didn't align to a shared rhythm/column — this is
+      the same category of miss the roster page had before the page-gutter
+      fix, but wasn't caught here before review.
+    - **Career bests as two plain tables was a regression from the
+      "cards" version** — less inviting/scannable than the previous
+      card-based Career Highlights layout. Converting to mono doesn't require
+      converting cards to tables; card **containers** are fine (and probably
+      needed, per the point above) — it's the fonts/decoration/copy inside
+      them that should follow the vibe.
   - **Before trying again:** check out the two branches above and look first —
-    don't restart from the vibe doc blind. Decide whether the direction is
-    salvageable with adjustments, or whether "lo-fi mono" itself is the wrong
-    call for the profile/site-wide case even though it worked for the roster.
+    don't restart from the vibe doc blind. The direction (mono-first,
+    restrained) is very likely still right; the *execution* over-corrected
+    into "no structure at all." Next attempt should explicitly keep grouping
+    surfaces (cards or clearly-bounded sections) for each part of the profile
+    (at-a-glance, trophy cabinet, career highlights, records), apply the
+    shared-gutter/aligned-column discipline throughout, and keep Career
+    Highlights as cards, not a plain table — converting *only* the
+    typography/decoration/copy per the vibe checklist, not the underlying
+    layout structure.
 
 ## Mobile & dark mode
 

@@ -25,7 +25,7 @@ Paste-ready brief for converting a page (or judging a new one). The gut check:
 - **One accent colour, one job.** Green means *honours/silverware* — don't also spend it on borders, CTAs, icons and hover text at once. When an accent means something, keep it meaningful.
 
 **Surfaces & layout**
-- **Cards float directly on the page background** as their own surfaces — avoid nesting cards inside a big panel-within-a-panel.
+- **Cards float directly on the page background** as their own surfaces — avoid nesting cards inside a big panel-within-a-panel. This means dissolving the *outer* panel, not removing card/section surfaces altogether: each group of content still needs a bounded surface (a card, or a clearly-divided section) to read as a distinct unit. A page where everything sits directly on the background with no grouping reads as an undifferentiated data dump, not a clean overview — that's the opposite of the goal. (Seen in practice: `/player/{code}`'s first conversion attempt over-applied this and lost all definition — see `webapp/TODOS.md` → Player Profiles.)
 - **Thin single rules, not heavy frames.** One 1px divider beats a boxed, dotted-rule strip.
 - **Everything aligns to a shared column with a consistent gutter** — content never sits flush against the viewport edge; titles and content share the same left edge.
 - **Let data breathe** — modest, even spacing; don't cram.
@@ -41,7 +41,8 @@ Paste-ready brief for converting a page (or judging a new one). The gut check:
 - [ ] No CTA duplicating an already-clickable element
 - [ ] Copy trimmed — factual, short, no marketing cadence
 - [ ] Accent colour has exactly one meaning on the page
-- [ ] Cards on the background, not boxed inside another panel
+- [ ] Cards/sections on the background (not boxed inside another panel) — but each still has a bounded surface; nothing floats with zero definition
+- [ ] Elements align to a shared column/rhythm — no unplanned horizontal spacing
 - [ ] Thin rules over heavy frames/dotted strips
 - [ ] Consistent gutter; nothing flush to the edge
 - [ ] Honest `–` empty states
