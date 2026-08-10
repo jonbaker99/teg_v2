@@ -41,6 +41,34 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 - [ ] Revisit again to make UI cleaner and less cluttered
 - [ ] UI design pass** — `/player/{code}` and the `/player` roster have been significantly reworked (metric cards, career highlights, records/worsts, bar charts, roster cards with stars). Functionality is complete. Revisit with fresh eyes for: layout rhythm and section ordering, chart sizing and padding, card density, label clarity, mobile view. See `webapp/routes/player.py` and `webapp/templates/partials/player_overview.html`.
 
+- [ ] **"Design vibe" (lo-fi/mono) attempt — rejected on review, more work needed before retrying.**
+  The `/player` roster redesign (merged, PR #71) established a lo-fi/mono-first
+  direction, written up as a reusable brief in `webapp/design_principles.md` →
+  Design vibe (+ a "convert a page" starter prompt). Two follow-on attempts
+  applied that vibe further and **did not land** on review — kept open as
+  draft PRs (not merged, not closed) purely so the pages can be checked out and
+  reviewed again without redoing the work:
+  - **PR #75** `claude/player-profile-design-vibe-i9n289` — converts
+    `/player/{code}` (name, metric cards, trophy cabinet, Career
+    Highlights/Records) to mono; also made `.section-title` mono **globally**.
+    Also relaxed the "green = silverware only" accent rule to "green = positive
+    /red = negative" on detail cards — a deviation from the vibe doc's "one
+    accent, one meaning" principle worth scrutinising if revisited.
+  - **PR #76** `claude/design-theme-serif-fonts-0tqb5o` — a full site-wide
+    "Mono" theme (record-book look: no cards, shaded bands, one accent) proposed
+    as the new default. **Has merge conflicts with current `main`** (PR #78,
+    a narrower sans-serif-body swap, merged separately and overlaps it) — would
+    need rebasing before it's even mergeable, aside from the design rejection.
+  - **Reasons for rejection: not yet captured in detail** — reviewed visually
+    and didn't feel right, but specific complaints (too spartan? mono hurt
+    name/table readability? bands-not-cards too stark? something else?) weren't
+    written down at rejection time. **Capture specifics here before the next
+    attempt**, so it doesn't repeat the same misses.
+  - **Before trying again:** check out the two branches above and look first —
+    don't restart from the vibe doc blind. Decide whether the direction is
+    salvageable with adjustments, or whether "lo-fi mono" itself is the wrong
+    call for the profile/site-wide case even though it worked for the roster.
+
 ## Mobile & dark mode
 
 - [X] **Phase M1 — app shell on phones** — bottom tab bar, app bar, segmented controls, sticky-column tables. Done (see `MOBILE_PLAN.md` → Status).
