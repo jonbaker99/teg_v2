@@ -289,31 +289,150 @@ templated route. Visual webapp verification needs Python 3.12/3.13.
 
 ---
 
-## Next steps
+## Next steps — ranked to-do list
 
-Sequenced. Items 1–2 are decisions; 3–5 are the work that follows from them.
+**The organising principle.** Regenerating the library (item 10) is the expensive, effectively
+one-way step: it sets the published voice and bakes in whatever state the pipeline is in. So
+everything that changes *what a report is* has to land before it. That single constraint produces
+most of the ordering below.
 
-1. **Settle the humour dial.** Read `teg_14_report_styled.md` (baseline) against
-   `teg_14_report_humour6.md` / `_humour8.md` / `_humour8b.md`, and the TEG 18 pair. Pick a level,
-   fold the winning register into `WRITER_SYSTEM`, record the verdict in EXPERIMENTS.md.
-   *Everything downstream depends on this — don't regenerate anything first.*
-2. **Schema-enforce the shared vocabulary** (known issue 8). Highest-value technical fix: it turns
-   the close-finish hard rule from advisory prose into a validation constraint, and closes a whole
-   class of editor↔writer drift. Do this before any regeneration or the same collapse is baked into
-   the backfill.
-3. **Decide the fate of `enrich_report_with_history()`** — the evidence now points to **delete**
-   (see known issue 2): it duplicates what the bundle already feeds the writer. Same question, lower
-   stakes, for `tighten_prose()`.
-4. **Fix the era leak** (Known issue 1) — `hole_evidence()` era-awareness. Affects TEGs 2–7 only,
-   but must be fixed *before* they're regenerated.
-5. **Regenerate the stale tournament reports** so the library is one vintage: TEGs 2–8, 15, 16,
-   plus 9 for the vehicles. 10 reports, ~$6.50.
-6. **Round reports** — decide whether they're wanted at all. If yes, port H1/H3 to `RoundStoryPlan`
-   first, then backfill (50 reports, ~$32 at the current per-report cost; the Batch API item above
-   would roughly halve that).
+**Shape of the work:** two tracks run fully in parallel with nothing between them — a judgement
+track that only Jon can do, and a code track that needs no API key. They converge at Tier 2, which
+is strictly sequential and needs credentials.
 
-Cost reference: **~$0.65 per report** on Opus 4.7. The story-plan call (~$0.28) dominates because
-the beats bundle is user-message-side and can't be cached.
+```
+Tier 0  API key ─────────────────────────────────┐
+                                                 │ (blocks Tier 2 only)
+Tier 1  Track A (Jon)    1 humour dial ───────┐  │
+        no API needed    2 round-reports call │  │
+                                              ├──┴─► Tier 2 (sequential)
+        Track B (code)   3 schema vocabulary  │       7 effort/model experiment
+        no API needed    4 model pin          │       8 prompt audit
+                         5 era leak           │       9 TEG 14 validation regen
+                         6 delete enrich ─────┘            │
+                                                           ▼
+                                              Tier 3  10 regenerate library
+                                                      11 round reports (if wanted)
+```
+
+---
+
+### Tier 0 — prerequisite
+
+**0. Put `ANTHROPIC_API_KEY` in the environment config.**
+*Why:* every generative step is blocked without it, and a key pasted into a chat lasts one session
+and lands in the transcript.
+*Why here:* it gates all of Tier 2 but nothing in Tier 1, so it only has to be done before the
+tracks converge — not before work starts. Two minutes; do it whenever.
+
+---
+
+### Tier 1 — start now, both tracks in parallel
+
+Track A and Track B touch nothing in common. Track A is reading and judgement; Track B is code.
+
+#### Track A — Jon only (no code, no API key)
+
+**1. Settle the humour dial.** Read `teg_14_report_styled.md` (baseline) against
+`teg_14_report_humour6.md` / `_humour8.md` / `_humour8b.md`, then the TEG 18 pair. Record the
+verdict in EXPERIMENTS.md.
+*Why:* it sets the published voice, and it's the one open question nobody else can answer.
+*Why ranked first:* it is the **longest-lead item on the critical path and the only one with a
+single point of dependency**. The code track can finish everything and still be blocked waiting on
+it. Starting it late is what makes everything else late — and it needs no infrastructure, so
+there's nothing to wait for.
+
+**2. Decide whether round reports are wanted at all.**
+*Why:* 50 reports (~$32) and `RoundStoryPlan` needs the same schema fix as the tournament plan.
+*Why this high, when the work is last:* it's a **scope decision, not a task**. It changes what item
+3 has to cover and what "the library is done" means. Deciding it late means either redoing the
+schema work or discovering the scope doubled after you thought you'd finished.
+
+#### Track B — code changes (no API key needed to make them)
+
+**3. Schema-enforce the shared editor↔writer vocabulary** (known issue 8). Make
+`prominent_vehicle` / `narrative_vehicles` / `narrative_structure` `Literal[...]` enums.
+*Why:* the close-finish hard rule has **never fired correctly** — 0 for 2, including TEG 14, the
+tightest finish in the library. As prose it can fail silently; as a schema constraint it becomes a
+validation error at generation time.
+*Why top of this track:* it's the only item here that changes report *correctness* rather than
+tidiness, and it **must** precede regeneration or the same collapse is baked into every report.
+
+**4. Pin the model to `claude-opus-5`.** One line in `llm.DEFAULT_MODEL`.
+*Why:* same price as Opus 4.7 ($5/$25 per MTok) for a materially better model — staying put is the
+same spend for less capability. The code already sets adaptive thinking, so it's a drop-in.
+*Why here:* trivial and free, but it changes the baseline every later experiment measures against.
+Doing it after item 7 would invalidate that experiment's results.
+
+**5. Fix the pre-TEG-8 era leak** (known issue 1) — make `hole_evidence()` era-aware.
+*Why:* TEGs 5/6/7 currently narrate a net-vs-par Trophy race in Stableford points. It's a factual
+error the players would catch, and the webapp already ships a caption apologising for it.
+*Why below 3:* it's a real bug but a contained one — 6 reports, all of which are being regenerated
+anyway. It only has to be right before item 10.
+
+**6. Delete `enrich_report_with_history()`, `ENRICH_SYSTEM`, and `build_history_enrichment_context()`.**
+*Why:* zero callers, and it duplicates cross-TEG history the bundle already feeds the writer.
+*Why last in this track:* it's tidying, not correctness — nothing downstream is blocked by it. It
+earns its place only because dead code with an impressive prompt attached will cost the next session
+an hour of working out whether it matters. Recoverable from git if the call is wrong.
+
+---
+
+### Tier 2 — sequential, needs the API key and both Tier-1 tracks done
+
+**7. Run the effort + cheap-model experiment** (EXPERIMENTS.md → H9). ~$1.25 on TEG 14.
+*Why:* `output_config.effort` is never set, so every call runs at default `high` — an untested cost
+lever on the most expensive stage.
+*Why it must wait:* it needs the humour dial settled (item 1) or you're moving voice and model
+together and can't attribute the result, and the model pin (item 4) or you're measuring the wrong
+baseline.
+
+**8. Run a structured prompt audit** over `SYSTEM_PROMPT`, `WRITER_SYSTEM`, `DRY_DRAFT_SYSTEM_*`,
+`ROUND_*` (known issue 9).
+*Why:* 38 bolded directives and 11 absolutes in `WRITER_SYSTEM` — past the point where emphasis
+distinguishes anything.
+*Why after 1 and 3:* the audit needs to know the target voice before it can judge which voice
+instructions are dead, and item 3 removes some of the problem at the schema level first. **Keep
+every faithfulness rule that traces to a real incident** — those are the expensive ones.
+
+**9. Regenerate TEG 14 from scratch as the single validation case.**
+*Why:* close finish (exercises the fixed hard rule), 2-point margin (arithmetic risk), multiple
+courses (the fabrication trap). If anything above broke something, it breaks here first.
+*Why it's its own step:* it's the gate between "changes made" and "changes trusted." ~$0.65 to avoid
+discovering a regression 60 reports in.
+
+---
+
+### Tier 3 — the expensive, effectively one-way work
+
+**10. Regenerate the stale tournament reports** — TEGs 2–8, 15, 16, plus 9. 10 reports, ~$6.50.
+*Why:* the library currently spans three pipeline vintages and reads inconsistently.
+*Why last:* every item above changes what a regenerated report contains. Doing this earlier means
+paying for it twice.
+
+**11. Round reports, if item 2 said yes** — port the schema fix to `RoundStoryPlan`, then backfill
+50 reports (~$32; the Batch API item under *Deferred* would roughly halve that).
+*Why last:* largest spend in the plan, and entirely conditional on a decision that hasn't been made.
+
+---
+
+### Whenever — unranked
+
+**12. TEG 11's at-a-glance box renders differently** from every other report
+("Green Jacket: Jon Baker (+70, by 3 from David Mullin)" instead of "(3rd Jacket)"), which suggests
+`build_win_counts` returned nothing for that TEG. Cosmetic, self-contained, fixes itself if the
+cause is in the plan rather than the renderer.
+
+---
+
+**Not on this list, deliberately:** a full evaluation/regression harness. It is the right long-term
+answer to "how do we know a prompt change didn't break faithfulness," but building it before the
+humour dial is settled risks building the wrong rubric. The machine-checkable Stage-3 rubric in
+EXPERIMENTS.md → H9 is the proportionate version for now; revisit a fuller harness after item 9.
+
+Cost reference: **~$0.65 per report** on Opus-tier. The story-plan call (~$0.28) dominates because
+the beats bundle is user-message-side and can't be cached. Total for the full plan above:
+~**$8** without round reports, ~**$40** with.
 
 ---
 
