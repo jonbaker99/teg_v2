@@ -13,6 +13,21 @@ Guidance for Claude Code when working in this repository.
 5. **Suggest better approaches.** Strategic alternatives welcome, not just tactical fixes.
 6. **Documentation is part of the change**, not an afterthought. See [Documentation](#documentation).
 
+## Response style
+
+- **Lead with the answer**. No preamble, no restating the question.
+- **Default to under 150 words** unless I ask for depth.
+- **Sentences under 20 words**. Short words over long ones.
+- **One idea per paragraph**, max three lines.
+- **Bullets for parallel items, prose for connected reasoning.** Don't bullet everything.
+- Bold only conclusions or labels, never whole sentences.
+- **Headings state the point**, not the category.
+- A closing summary is welcome when it adds a decision or next step. Not when it just repeats.
+- Cut: "Great question", stacked hedges, unsolicited offers of further help.
+Never cut a fact to hit a word count. Accuracy beats brevity.
+
+When writing longer documents or reports, follow the focus-style skill.
+
 ## Project overview
 
 TEG v2 is a golf tournament analysis project with two architectural layers: a legacy self-contained Streamlit app (frozen reference) and the current decoupled architecture — a UI-agnostic `teg_analysis/` package plus a `webapp/` FastAPI frontend, which is the site deployed on Railway from `main`. **All new analytical work belongs in `teg_analysis/`.**
