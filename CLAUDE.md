@@ -1,307 +1,194 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code when working in this repository.
 
-## General Claude Rules
-1. Ask, don't assume. If something is unclear, ask before writing a single line. Never make silent assumptions about intent, architecture, or requirements. When running unattended, pick the most reasonable interpretation, proceed, and record the assumption rather than blocking.
+> **Freshness:** last reviewed **2026-08-11**. See [Keeping this file current](#keeping-this-file-current) at the bottom — it is an instruction, not a note.
 
-2. Implement the simplest solution for simple problems, better solutions for harder problems. Do not over-engineer or add flexibility that isn't needed yet. 
+## Working rules
 
-3. Don't touch unrelated code but please do surface bad code or design smells you discover with me so we can address them as a separate issue.
+1. **Ask, don't assume.** If intent, architecture or requirements are unclear, ask before writing code. Running unattended: pick the most reasonable interpretation, proceed, and record the assumption where the work is reported.
+2. **Flag uncertainty explicitly.** If unsure, say so. Where useful, run a small, localised, low-risk experiment and bring the hypothesis and result back for discussion. Confidence without certainty does more damage than admitting a gap.
+3. **Simplest thing that works.** Ask "what's the smallest change that solves this?" first. Reuse existing patterns and components. Add complexity only when it's needed now, not when it might be. Prefer focused changes over rewrites — unless a rewrite meaningfully simplifies the codebase, in which case propose it.
+4. **Don't touch unrelated code** — but do surface bad code and design smells you find, as a separate item.
+5. **Suggest better approaches.** Strategic alternatives welcome, not just tactical fixes.
+6. **Documentation is part of the change**, not an afterthought. See [Documentation](#documentation).
 
-4. Flag uncertainty explicitly. If you're unsure about something, see point 1 above. If it makes sense to do so, conduct a small, localised and low-risk experiment and bring the hypothesis and results to me to discuss. Confidence without certainty causes more damage than admitting a gap.
+## Project overview
 
-5. I'm always open to ideas on better ways to do things. Please don't hesitate to suggest a better way, or one that has long lasting impact over a tactical change. (as a few examples)
-
-
-## Project Overview
-
-TEG v2 is a golf tournament analysis project. It has two architectural layers: a legacy, self-contained Streamlit app (kept as a stable reference) and a newer decoupled architecture — a UI-agnostic `teg_analysis/` Python package plus a `webapp/` FastAPI frontend, which is **now the site deployed on Railway from `main`** (it replaced the Streamlit app). All new analytical work belongs in `teg_analysis/`.
+TEG v2 is a golf tournament analysis project with two architectural layers: a legacy self-contained Streamlit app (frozen reference) and the current decoupled architecture — a UI-agnostic `teg_analysis/` package plus a `webapp/` FastAPI frontend, which is the site deployed on Railway from `main`. **All new analytical work belongs in `teg_analysis/`.**
 
 ## Domain knowledge
 
-- A **TEG** is an annual golf tournament. Each TEG consists of several rounds (usually 4), each of 18 holes split into a front 9 (holes 1–9) and back 9 (holes 10–18).
-- There are two competitions per TEG: **gross** and **net**. Up to TEG 7, net was total net vs par; from TEG 8 onwards it is total Stableford points.
+- A **TEG** is an annual golf tournament. Each consists of several rounds (usually 4), each 18 holes, split into front 9 (1–9) and back 9 (10–18).
+- Two competitions per TEG: **gross** and **net**. Up to TEG 7, net was total net vs par; from TEG 8 onwards it is total Stableford points (`STABLEFORD_ERA_TEG = 8`).
 
-## To-dos
+## Where state lives — read these, don't duplicate them here
 
-**[TODOS.md](TODOS.md)** is the central to-do index. Each area (`webapp/`, `streamlit/`, `teg_analysis/`) has its own `TODOS.md`; the root file links to all of them and holds cross-cutting items (data updates). When a to-do surfaces mid-conversation, add it to the right area's `TODOS.md` before ending the session.
+| Question | File |
+|---|---|
+| What's the current state / what shipped recently? | `STATUS.md` |
+| What's outstanding? | `TODOS.md` (root index → per-area `TODOS.md`) |
+| Full data pipeline (storage → I/O → loader → aggregation → webapp) | `DATA_FLOW.md` |
+| Webapp stack, themes, design principles | `webapp/README.md` |
+| Analysis package API | `teg_analysis/README.md` |
+| Report/commentary pipeline | `teg_analysis/reporting/README.md` + `STATUS.md` |
+| Streamlit internals (frozen) | `streamlit/README.md` |
 
-## Note on documentation
+**Do not read or reference `to_do_jon.md`** unless explicitly asked. It is personal draft notes, not project documentation.
 
-Do not read or reference `to_do_jon.md` unless the user explicitly asks you to. It is a personal draft notes file, not project documentation.
+When a to-do surfaces mid-conversation, add it to the right area's `TODOS.md` before ending the session.
 
-## Development Commands
+## Development commands
 
 ```bash
-# View outstanding to-dos across the project
-python todos.py          # outstanding items only
-python todos.py --all    # include completed items
-
-# Run the webapp (active development)
-uvicorn webapp.app:app --reload
-
-# Run the Streamlit app (production app — see streamlit/README.md)
-streamlit run streamlit/nav.py
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run the test suite
-python -m pytest tests/ -v
+python todos.py                      # outstanding to-dos (--all includes completed)
+uvicorn webapp.app:app --reload      # run the webapp (the deployed app)
+pip install -r requirements.txt      # install deps
+python -m pytest tests/ -v           # run the test suite
+streamlit run streamlit/nav.py       # legacy Streamlit app — frozen, rarely needed
 ```
 
-> **Remote-session gotcha:** on the Claude-Code-on-the-web container, `pytest` is a
-> `uv`-isolated binary that can't see packages installed by `pip install -r
-> requirements.txt`. Always invoke `python -m pytest ...` (not the bare `pytest`),
-> and install both deps and pytest into the same interpreter first
-> (`pip install -r requirements.txt && pip install pytest`).
-
-## Current state & next steps
-
-### What's done
-- **teg_analysis package**: Phases 1–7 cleanup complete (all Streamlit imports removed, aggregation/streaks/scoring refactored, dead code removed). Merged to `main`. Ready to be the canonical analysis layer.
-- **Webapp**: Full Streamlit page set replicated. Data-admin is now ported behind cookie auth — **add a round**, **delete rounds / whole TEGs**, **edit metadata CSVs**, **selective GitHub↔store file sync** (with pre-action preview + text diff and file-definition info icons), a **volume browser** (browse the store tree; per-file edit/sync/download/delete-with-backup), a **backups** browser (restore any backup; restores back up the replaced copy first), and a **file guide** (catalog of every data file by importance, `teg_analysis/io/file_catalog.py`) — all in `webapp/routes/admin.py`, driven by headless `teg_analysis/analysis/data_update.py` + `teg_analysis/io/sync.py`; report generation remains out of scope. Nav mirrors Streamlit's sections/titles/ordering via a single source of truth, `webapp/nav.py` (`NAV_SECTIONS`), injected into templates and looped in `base.html`; `/` lands on the new **Contents** site map. Newly added: **Contents** (`/contents`) and **Eclectic Records** (`/eclectic-records`, backed by new helpers in `teg_analysis/analysis/eclectic.py`). All functional. TEG Reports page at `/teg-reports` and the Report tab on `/results` render the new commentary reports.
-  - **Feature-parity audit complete.** All functional gaps (controls/views/measures/charts) have been closed across every page, including the deep/conditional ports; all webapp endpoints render their Streamlit-equivalent content. New analysis modules: `teg_analysis/analysis/player_rankings.py` (ranking tables + summaries), `teg_analysis/analysis/handicaps.py` (handicap recalc + in-progress status), `teg_analysis/display/scorecards.py` (scorecard HTML builders), plus `pivot_window_streaks` in `analysis/streaks.py`. Highlights: Player Rankings (both competitions + dimension selectors), Scorecard (3 views), Leaderboard & Results race charts (Standard/Adjusted/Ranking) + inline scorecards, full Scoring-section controls, Latest pages (metric sub-tabs + per-metric chart, streak-type pivot, full records-completeness, report tabs, Stableford toggles, inline scorecards), Handicaps draft section, Eclectic filters, TEG Reports satire/fallbacks. Remaining items are **cosmetic only** plus the WIP heatmap — tracked in `webapp/PARITY_AUDIT.md`.
-- **Architecture**: Decoupled design documented and validated. `teg_analysis` is fully UI-agnostic.
-- **Commentary / report pipeline** (`teg_analysis/reporting/`): new LLM-powered tournament reports built around a 5-stage pipeline — scored evidence-carrying beats + competition arcs (code) → structured story plan (LLM) → dry draft as QA scaffold + entertaining write-up + repetition lint (LLM) → CSS-class styled markdown. Three production reports validated (TEGs 9, 14, 18); cost ~$0.65 each on Opus 4.7. **How it works**: `teg_analysis/reporting/README.md`. **Done / next**: `teg_analysis/reporting/STATUS.md`.
-- **Player profile overhaul** (`webapp/routes/player.py`, `webapp/templates/partials/player_overview.html`, `webapp/templates/player_index.html`): major rework of `/player` and `/player/{code}`. Key changes: pill-driven roster landing with player cards (avatar, trophy/jacket stars, TEG count, avg stats); profile overview rebuilt with 11 ranked metric cards, trophy cabinet with ordinal ranks, career highlights (best/worst course, best round/TEG), full records and worsts sections (TEG/round/9-hole level, streaks, score counts) using natural language labels ("Best gross TEG", "Longest birdies streak", "Most birdies in a round"); career trend bar charts (single colour per metric, "TEG N" x-axis labels, rank annotations). Functionality complete; **UI design pass still needed** — tracked in `webapp/TODOS.md`.
-- **Data storage hardening + native round entry** (`teg_analysis/analysis/round_setup.py`, `teg_setup.py`, `live_round.py`; `webapp/routes/admin_round_setup.py`, `admin_teg_setup.py`, `admin_live_round.py`, `live_round.py`): kept the Railway-volume-+-GitHub storage foundation, hardened the write path (backups on add, concurrency lock, retired dead CSV mirrors), and replaced the Google Sheets score-capture flow with a native mobile-first one. **Pre-round setup** (`/admin/round-setup`) confirms Par/SI before a round is played (`round_pars.csv`, course-level defaults from `course_pars.csv`); **TEG setup** (`/admin/teg-setup`) confirms the roster + handicaps before a TEG starts (not every player plays every TEG). **Live round entry** (`/admin/live-round` to start/review/finalize, `/live-round/{token}` — no login, the link is the access control — for players to enter scores from their own phones as a round is played): a fixed/relative keypad toggle, a player-group chip picker (show just your foursome), and voice entry (OS dictation, not Web Speech API) on a sticky-keypad grid; the server (never a client clock) assigns write order, so concurrent devices editing the same cell get flagged for admin review rather than silently resolved, and "Finalize" runs the reviewed scores through the existing `execute_data_update` pipeline — one GitHub commit, same as any other round addition. Design details (conflict model, polling, device identity) live in code comments/docstrings in `teg_analysis/analysis/live_round.py` and `webapp/README.md`'s "Live round entry" section; the detailed planning doc is kept at `DATA_STORAGE_INGESTION_PLAN.md` as a reference.
-  - **Live-round feedback round (post-launch):** four gaps closed. (1) **Finishing/leaderboard** — a read-only **live leaderboard** (`/live-round/{token}/leaderboard`, `get_live_leaderboard` computing gross + net/Stableford straight from staging via `process_round_for_all_scores`), a "View leaderboard" done banner once a player's group has all 18 holes in (soft done — the admin still finalizes), and a toolbar Leaderboard button; the board shows "scoring in progress" until every player is thru 18 and reads only staging (a live round isn't on the main site until finalized). (2) **Central admin review/edit** — the review page now renders the full staged scorecard as an **editable grid**; `apply_admin_edits` is the authoritative bulk-edit primitive (overwrites player entries, clears conflicts, writes only changed cells) and `resolve_conflict` now wraps it. (3) **Scores >12** and (4) **direct text entry** — one fix: physical-keyboard entry on the active cell (digits, Enter/Tab, arrows, Backspace) plus an "Other" keypad field, with the ceiling raised from 12 to `MAX_SCORE=20` across keypad/voice/admin inputs. Covered by `tests/test_live_round_e2e.py::test_live_leaderboard_out_of_range_and_admin_edit`.
-  - **Event-loop / concurrency fix (W2 + T8):** webapp route handlers are now sync `def` (FastAPI threadpools them) rather than `async def` doing blocking work on the event loop — so a slow request (e.g. a finalize's GitHub commit) no longer stalls every polling phone. Handlers stay `async def` only to read a dynamic-keyed form, wrapping the heavy call in `run_in_threadpool`; see webapp/README.md's "Sync `def` handlers, not `async def`". `finalize_live_round` now holds `live_round._lock` only for the read-validate + status-flip phases, running `execute_data_update` outside the lock and gating mid-commit writes with an in-process `_finalizing` set (reject-with-409, not silent-drop).
-- **Guided "New round" setup wizard** (`teg_analysis/analysis/round_wizard.py`, `webapp/routes/admin_new_round.py`, templates `admin_new_round.html` / `admin_new_round_wizard.html`): a single "start here" admin entry point (`/admin/new-round`, first in the admin sub-nav) that orchestrates the four previously-separate setup steps — round metadata → roster+handicaps → Par/SI → go live — into one linear stepper. It's **stateless/resumable**: each step saves immediately via the existing tested `teg_setup`/`round_setup`/`live_round` functions, and the "current" step is recomputed from the data on every visit (`get_wizard_status`), so a new round 2/3/4 auto-skips the already-confirmed roster and a half-finished setup resumes by revisiting the URL. The one net-new piece is a purpose-built round-metadata form (`get_round_metadata_form`/`save_round_metadata`) that derives round_info's `TEGRd`/`TEG`/`Area`/`Year` instead of hand-typing them in the raw grid. Finishing starts the live round and shows the shareable link + "what happens next" (including the live leaderboard link). The standalone pages stay reachable for edits/edge cases. Full detail: `webapp/README.md`'s "New round (guided wizard)" section.
-- **Codebase review remediation (2026-07-09 → 07-10, complete):** a batched review of `webapp/` and `teg_analysis/` (streamlit left frozen) landed across eight change-sets plus a closing Opus pass. Highlights: **live-round data integrity** — server-side score validation (`MAX_SCORE=20`, hole 1–18, roster membership) in `apply_score_writes`/`apply_admin_edits` so a stray value/hole/player can no longer silently drop a round (`teg_analysis/analysis/live_round.py`); **pipeline fails loudly** — `update_*_cache` functions take `all_data` and raise on failure, orchestrators collect them into a `cache_errors` field (`_run_cache_step`) surfaced as an admin warning banner instead of reporting a stale cache as success (`data_update.py`, `pipeline.py`); **one copy of the scoring math** — `process_round_for_all_scores` de-duplicated (canonical in `data_update.py`, thin re-export in `core/data_loader.py`); **no event-loop blocking** — webapp route handlers are sync `def` (threadpooled), finalize's GitHub commit runs outside `live_round._lock` (W2/T8, see the concurrency bullet above); **webapp dedup** — one escaping `webapp/tables.py` `df_to_html` replaced 7 copy-pasted renderers (every cell now HTML-escaped), swallowed `except` blocks now `logger.exception`, `deps.cached_winners()`/`cached_streaks_data()` replace three ad-hoc winner sources and per-request streak reads; **deterministic aggregation** — `aggregate_data` uses a fixed `_AGGREGATION_LEVEL_FIELDS` map instead of per-call `groupby().nunique()` discovery (byte-identical output, deterministic order); **Stableford gate** aligned to the domain rule via `STABLEFORD_ERA_TEG = 8`; **prototype routes deleted** (`charts_proto`/`width_test`/`title_preview`/`showcase`/`smoke_test`/`placeholder`); **test guards made real** — the streamlit-import guard and the `test_core_functions.py`/`test_independence.py` smoke tests now `assert`/`raise` instead of returning a bool pytest ignored (this closing pass also fixed a stale `format_vs_par(0)` expectation the toothless guard had been masking). Test suite: 349 passed, 4 skipped (env-only altair imports). No `streamlit/` file changed at any point.
-
-- **Webapp to-do batch (2026-07-10, branch `claude/web-app-todos-planning-0o3uui`, PR #67):** quick fixes + performance + two features. Quick fixes: `df_to_html` renders scalar NaN/None as `-` (fixes `/scoring/by-teg`); `/scoring/by-par` column padding; `/scoring/distributions` chart now follows the %/Count toggle and overlays an "All players" team-average tick per score category in % mode; eclectic/bestball birdie-ring sizing. **Performance** (slow on every load, confirmed by profiling with warm caches): player pages ~1.7s → ~190ms by caching the player-independent global records/worsts tables in `webapp/routes/player.py` via `deps.register_cache_clearer` (its first consumer); `teg_analysis/core/metadata.py::get_scorecard_data` gained an optional `data=` param so the five webapp callers pass `cached_load_all_data()` instead of re-reading the full dataset per request (the real win is on Railway's mounted volume). **Latest-TEG Eclectic** now mirrors the bestball "in context" tab: a player-ranks table (all-time vs completed TEGs + own-history) and a CSS-bar contribution breakdown, backed by new UI-agnostic helpers `eclectic_player_teg_totals`/`rank_teg_eclectics`/`calculate_eclectic_contributions` (`analysis/eclectic.py`) and `build_eclectic_contribution_bars` (`display/scorecards.py`); an in-progress TEG shows a provisional-ranks caption. **Charts:** multi-series charts dim other series on legend hover (centralised Plotly renderer in `base.html`). Tests: 357 passed, 4 skipped.
-
-- **Report refresh + sync filter (2026-07-12, branch `claude/railway-mounted-storage-badrzy`):** `main` already moved report reads onto the volume (via `read_text_file`, with discovery from `completed_tegs.csv`), which auto-caches a *new* report on first view. The remaining gap: a *regenerated* report (same filename, new content) stays stale on the volume, with no easy way to refresh. Added `sync.sync_report_files()` — re-pulls every report-pattern file (`_REPORT_FILE_PATTERNS`, not the ~250 draft/version `.md`) GitHub→store with backups — wired to a one-click **"Sync all reports from GitHub"** button on `/admin/volume-sync`. The sync page also gained a **filter/search box** + visible-only "select all" for less fiddly selective syncing. Tests: `tests/test_sync.py` (pattern filter + overwrite), `tests/test_admin_routes.py` (endpoint). Docs: `DATA_FLOW.md` I/O layer.
-
-- **TEG Reports load-perf fix (2026-07-12, branch `claude/teg-reports-load-perf-0e74ea`):** `/teg-reports` was slow on every load. Two causes, both in `webapp/routes/reports.py`: (1) `read_text_file` caches volume *hits* but never *misses*, so each probe of a non-existent candidate path was an uncached GitHub 404 round-trip — and discovery probes several (styled-round-report misses per round + the satire check), ~3-4 uncached 404s (~1-2s) on *every* load even with a warm volume; (2) discovery rendered the full markdown of every existing round report to HTML just to test existence, then discarded it (4 wasted renders/load). Fix: discovery is now existence-only (new `_round_report_text`/`_tournament_report_text` raw-text finders; `_load_*_report` render only for display) and memoised in-process (`lru_cache` on `_completed_teg_numbers`/`_rounds_played_for_teg`/`_available_rounds_for_teg` + new `_satire_available`), cleared via `deps.register_cache_clearer` so the report-sync button still surfaces regenerated reports. The *displayed* report stays uncached (fresh volume read). Steady-state load: 4 renders + 9 reads → 1 render + 1 read; the per-load GitHub 404s are now paid once per process. Tests: 116 passed (report/admin/sync subset).
-
-### Next priorities
-1. **Mobile UI + dark mode** — making the webapp "app-like" on phones, in light + dark, **without changing the laptop/iPad render**. Direction chosen: **A — full native-app feel** (bottom tab bar, sticky app bar, reflowed data). Done: dark-mode foundation (`static/themes/dark.css` + `data-mode` toggle, opt-in default light) and the portrait scorecard (a first vertical slice). **Next: Phase M1 — the app shell.** Full approach + progress + pickup pointer in `webapp/MOBILE_PLAN.md`; scorecard work-package in `webapp/SCORECARD_PORT.md`; mockups in `webapp/mobile_mockups/` (served at `/mockups/`).
-2. **Webapp ↔ Streamlit feature-parity audit** — page existence parity is done; now closing missing controls/views/toggles on existing pages so each matches its Streamlit source. Per-page checklist + progress in `webapp/PARITY_AUDIT.md`.
-2. **Webapp formatting pass** — visual polish, number formatting, table styling consistency, layout refinement. In progress in local branches.
-3. **REST API** — build proper `/api` layer powered by `teg_analysis`. Goal: expose the analysis layer over HTTP so any client (scripts, mobile, other frontends) can access it without needing Python. Currently a placeholder in `teg_analysis/api/`.
-4. **Retire Streamlit** — long-term goal once REST API + new webapp are production-ready.
-
-## Player identity
-
-`data/players.csv` (Code, Name) is the **writable source of truth** for who exists — `constants.PLAYER_DICT` is only the legacy seed/fallback. All code→name lookups go through `teg_analysis.core.players.get_player_dict()` (cached; `clear_player_cache()` after writes — `webapp.deps.clear_all_data_caches` does this). Never read `PLAYER_DICT` directly in new code. New players are added from `/admin/teg-setup` ("Add a new player"), which appends to players.csv; their `handicaps.csv` column is created the first time they're saved onto a TEG roster.
-
-## Theme / UI-preference changes (persisted-cookie gotcha)
-
-**Before you change the default theme, colours, or any design default, account for the persisted cookie — otherwise returning browsers stay pinned to the old design.**
-
-The webapp stores the active theme in a browser `theme` cookie (`webapp/theme.py: get_theme`), the light/dark choice in a `mode` cookie, etc. **A persisted cookie overrides the app's default indefinitely.** So changing `DEFAULT_THEME` (or any default) does **not** change the UI for any browser holding an older cookie — the site looks "stuck on the old design" even though the server returns correct HTML/CSS on the same commit. This has already bitten us: two machines on the same commit rendered different UIs because one held a stale `theme=clean-page` cookie.
-
-**Required whenever you change `DEFAULT_THEME` (or retire/rename a theme):**
-1. **Version the cookie.** A `theme` cookie must be honoured only when a companion `theme_ver` cookie equals a current `THEME_COOKIE_VERSION`; otherwise `get_theme` migrates it to `DEFAULT_THEME`. **Bump `THEME_COOKIE_VERSION`** so returning browsers with a stale cookie migrate automatically — users must **not** have to clear cookies or run console commands.
-2. **Switchers write both cookies.** Any theme switcher must set `theme` **and** `theme_ver` (at the current version) together via a single helper (e.g. `set_theme_cookies`), so a deliberate selection sticks and survives future default changes.
-3. **Same reasoning for `mode` and any other persisted UI preference** — a persisted preference can mask a default change.
-4. **If `webapp/theme.py` does not yet implement this versioning, add it as part of your change.** Do not ship a `DEFAULT_THEME` change without a migration path.
-
-**Verify like a returning user:** send a request carrying the *old* cookie value and confirm it resolves to the new default; send the current-version cookie and confirm an explicit selection is still respected.
-
-## Pandas 2.x compatibility
-
-The Railway deployment runs pandas 2.x, which has three breaking changes that have caused production errors. All are fixed; note the patterns to avoid when adding code.
-
-### 1. `DataFrame.applymap` removed (pandas 2.1+)
-
-`applymap` was renamed to `map`. Use `.map(fn)` on a DataFrame, not `.applymap(fn)`.
-
-**Fixed in:**
-- `streamlit/101TEG History.py:77`
-- `streamlit/helpers/course_analysis_processing.py:132`
-
-**Search for future regressions:** `grep -rn "\.applymap(" .`
-
-### 2. Assigning strings into an `int64` column (pandas 2.x strict dtypes)
-
-Pandas 2.x raises `Invalid value '<ArrowStringArray> [] Length: 0, dtype: str' for dtype 'int64'` when a string array (even an empty one) is assigned into an integer-typed column. This occurs in the leaderboard rank pattern where ranks are integers but tied ranks get a `=` suffix appended.
-
-**Root cause:** Creating `Rank` as `int64` then doing `df.loc[mask, 'Rank'] = df.loc[mask, 'Rank'].astype(str) + '='` fails even when `mask` is all-False (empty selection still produces an ArrowStringArray).
-
-**Safe pattern — convert to `object` before any string assignment:**
-```python
-# Safe: convert to object first so both ints and strings are accepted
-pivot_df['Rank'] = pivot_df['Total'].rank(method='min', ascending=ascending).astype(int).astype(object)
-pivot_df.loc[duplicated_scores, 'Rank'] = pivot_df.loc[duplicated_scores, 'Rank'].astype(str) + '='
-```
-
-**Also safe (webapp pattern) — convert to string immediately, guard with `.any()`:**
-```python
-pivot_df['Rank'] = pivot_df['Total'].rank(method='min', ascending=ascending).astype(int).astype(str)
-if duplicated_scores.any():
-    pivot_df.loc[duplicated_scores, 'Rank'] = pivot_df.loc[duplicated_scores, 'Rank'] + '='
-```
-
-**Variant — pivot table columns are `float64` (not `int64`) when NaN is present.** The same error fires when assigning rank strings into a `float64` pivot column. Fix is the same: convert to `object` first.
-```python
-ranked_df[teg_col] = ranked_df[teg_col].astype(object)
-ranked_df.loc[ranks.index, teg_col] = ranks
-```
-
-**Fixed in:** `streamlit/leaderboard_utils.py:37`, `streamlit/player_history.py:419`  
-**Already safe:** `webapp/deps.py:80–86` (uses the string-first pattern)
-
-### 3. Assigning strings into a typed column via `.iloc` (pandas 2.x strict setitem)
-
-Pandas 2.x enforces the existing column dtype on `.iloc` setitem. Assigning a string Series into a `float64` or `int64` column via `.iloc[:, N] = df.iloc[:, N].apply(lambda ...)` raises `TypeError` even when all rows are being replaced.
-
-**Root cause:** `.iloc[rows, col] =` is a positional setitem that enforces dtype. `.loc[]` has the same restriction (see pattern 2 above).
-
-**Fix — use named-column assignment, which replaces the column wholesale:**
-```python
-# Unsafe: iloc enforces float64 dtype, rejects string assignment
-formatted_df.iloc[:, 2] = formatted_df.iloc[:, 2].apply(
-    lambda x: 'n/a' if np.isinf(x) else f"{x:,.1f}"
-)
-
-# Safe: named-column assignment replaces the column entirely
-col2 = formatted_df.columns[2]
-formatted_df[col2] = formatted_df[col2].apply(
-    lambda x: 'n/a' if np.isinf(x) else f"{x:,.1f}"
-)
-```
-
-**Fixed in:** `streamlit/helpers/scoring_achievements_processing.py:68`, `streamlit/helpers/scoring_data_processing.py:87`, `teg_analysis/analysis/scoring.py:133,341`
-
-**Search for future regressions:** `python scripts/check_pandas_compat.py` (detects `iloc-col-assign` pattern)
-
-For detailed next steps on the webapp, see `webapp/README.md`.
+> On the Claude-Code-on-the-web container, install pytest into the same interpreter as the deps: `pip install -r requirements.txt && pip install pytest`.
 
 ## Architecture
 
-### Old vs new
+Two distinct phases. **Streamlit is the original architecture** — self-contained, no longer deployed, not changing. **The decoupled architecture is the current direction.** Never conflate them: changes to `teg_analysis/` or `webapp/` must never touch `streamlit/`.
 
-The project has two distinct architectural phases. **The Streamlit app is the original architecture** — self-contained, deployed, not changing. **The decoupled architecture is the current direction**: `teg_analysis/` is a UI-agnostic analysis layer that any frontend can call; `webapp/` is the new frontend being built on top of it. Do not conflate the two — changes to `teg_analysis/` or `webapp/` should never touch `streamlit/`.
+1. **`teg_analysis/`** — canonical, UI-agnostic analysis package. All new analytical work goes here. No frontend imports at module level.
+   - `constants.py` — file paths, tournament metadata (see [Player identity](#player-identity) for the players caveat)
+   - `io/` — file I/O (`read_file`/`write_file`), GitHub API (`GITHUB_TOKEN`), Railway volume management
+   - `core/` — data loading (`load_all_data`) and transformation
+   - `analysis/` — scoring, rankings, aggregation, streaks, records, eclectic, handicaps, commentary, pipeline, data_update, history, performance, leaderboards, bestball, live_round, round_setup, round_wizard
+   - `display/` — formatting, HTML tables, scorecards, nav utilities. Returns HTML strings; never calls `st.write`
+   - `reporting/` — LLM-powered tournament reports
+   - `api/` — placeholder for the REST API layer
 
-### Layers
+2. **`streamlit/`** — the original app, self-contained via its own `utils.py`. **Dead code kept for reference only**: not deployed, not maintained, not migrated, and nothing else in the repo depends on it. Slated for deletion. Never modify it, and don't use it as a model for new work.
 
-1. **`teg_analysis/`** — The canonical, UI-agnostic analysis package. **All new analytical work goes here.** Fully independent of any frontend (no streamlit imports at module level):
-   - `constants.py` — Centralised file paths, player data, tournament metadata
-   - `io/` — File I/O (`read_file`/`write_file`), GitHub API (uses `GITHUB_TOKEN` env var), Railway volume management
-   - `core/` — Data loading (`load_all_data`) and transformation
-   - `analysis/` — Scoring, rankings, player_rankings, aggregation, streaks, records, eclectic, handicaps, commentary, pipeline, data_update, history, performance, leaderboards, bestball
-   - `display/` — Formatting, HTML tables, scorecards, navigation utilities (returns HTML strings, never calls st.write)
-   - `api/` — Placeholder for REST API endpoints
+3. **`webapp/`** — FastAPI + HTMX + Jinja2 + Tailwind. Deployed on Railway from `main` via `railway.toml` → `uvicorn webapp.app:app`. `requirements.txt` is webapp-only (includes `pyarrow`). Needs `GITHUB_TOKEN` and a volume at `/mnt/data_repo`; `ANTHROPIC_API_KEY` for reports, `GOOGLE_*` for data-update ingestion.
 
-2. **`streamlit/`** — The original app. Uses its own `utils.py` and is intentionally self-contained. **No longer the deployed site** (the webapp replaced it on Railway), but kept as the stable legacy reference; it will not be migrated to use `teg_analysis/`.
+4. **`ad_hoc_analysis/`** — Jupyter notebooks calling `teg_analysis/` directly. Start at `quickstart.ipynb`.
 
-3. **`webapp/`** — FastAPI + HTMX + Jinja2 + Tailwind frontend. **Deployed on Railway from `main`** (replaced the Streamlit app) via `railway.toml` → `uvicorn webapp.app:app`; `requirements.txt` is webapp-only (includes `pyarrow` for parquet reads). Also run locally with `uvicorn webapp.app:app --reload`. Needs `GITHUB_TOKEN` + a volume mounted at `/mnt/data_repo`; `ANTHROPIC_API_KEY` for reports and `GOOGLE_*` vars for data-update ingestion.
+**Data storage decision (2026-07-07):** Railway volume + GitHub-commit-as-sync-of-record is kept deliberately (not a database) — at this dataset size it gives atomic-commit audit trail, off-host durability and local-Mac sync for free. `all-data.parquet`/`all-scores.parquet` are master → derived, not two independent sources; the redundant `all-data.csv` mirror was retired — **don't reintroduce it.** Rationale and phased plan: `DATA_STORAGE_INGESTION_PLAN.md`.
 
-4. **`ad_hoc_analysis/`** — Jupyter notebooks for exploratory / one-off analysis. Calls `teg_analysis/` directly. Start with `quickstart.ipynb`.
+## Codebase invariants
 
-For Streamlit internals (app structure, page organisation, caching, data loading, GitHub integration), see `streamlit/README.md`. For the full data pipeline (storage → I/O → loader → aggregation → webapp), see `DATA_FLOW.md`.
+Rules that hold regardless of what you're working on. Breaking any of these has caused a production incident.
 
-**Data storage decision (2026-07-07):** the Railway volume + GitHub-commit-as-sync-of-record
-pattern is kept (not replaced by a database) — at this dataset size it already gives an
-atomic-commit audit trail, off-host durability, and the local-Mac sync workflow essentially
-for free. `all-data.parquet`/`all-scores.parquet` stay as two stored files (master →
-derived, not two independent sources); the redundant `all-data.csv` mirror was retired. Full
-review and phased hardening/mobile-ingestion plan: `DATA_STORAGE_INGESTION_PLAN.md`.
+### Player identity
 
-## Design Philosophy
+`data/players.csv` (Code, Name) is the **writable source of truth** for who exists. `constants.PLAYER_DICT` is only a legacy seed/fallback — **never read it directly in new code.** All code→name lookups go through `teg_analysis.core.players.get_player_dict()` (cached; call `clear_player_cache()` after writes — `webapp.deps.clear_all_data_caches` does this). New players are added via `/admin/teg-setup`, which appends to `players.csv`; their `handicaps.csv` column is created the first time they're saved onto a TEG roster.
 
-### Core Development Principles
-- **Start with the simplest solution that works** - Don't over-engineer
-- **Use existing patterns and components from the codebase** - Maintain consistency
-- **Only add complexity when absolutely necessary** - Resist feature creep
-- **Prefer minimal, focused changes over comprehensive rewrites** UNLESS a rewrite will significantly simplify the codebase
-- **Ask "What's the smallest change that solves this?" before implementing** - Think minimalism first
+### No frontend imports in `teg_analysis/`
+
+Enforced by a test guard. `teg_analysis/` must import cleanly with no UI package installed.
+
+### Pipelines fail loudly
+
+`update_*_cache` functions take `all_data` and raise on failure; orchestrators collect them into a `cache_errors` field via `_run_cache_step` and surface an admin warning banner (`analysis/data_update.py`, `analysis/pipeline.py`). Never report a stale cache as success.
+
+`process_round_for_all_scores` has exactly one implementation — canonical in `data_update.py`, thin re-export in `core/data_loader.py`. Don't fork it.
+
+### Live-round writes are validated server-side
+
+`apply_score_writes` / `apply_admin_edits` validate score range (`MAX_SCORE = 20`), hole 1–18 and roster membership. The server — never a client clock — assigns write order. Don't add a write path that bypasses these.
+
+### Webapp route handlers are sync `def`
+
+FastAPI threadpools them. `async def` handlers doing blocking work stall every polling phone. Use `async def` only to read a dynamic-keyed form, and wrap the heavy call in `run_in_threadpool`. See `webapp/README.md` → "Sync `def` handlers".
+
+### Pandas strict dtypes
+
+The deployment pins pandas 2.x. Three patterns have caused production errors — all fixed, but avoid reintroducing them.
+
+**1. `DataFrame.applymap` is removed.** Use `.map(fn)`. Check: `grep -rn "\.applymap(" .`
+
+**2. Assigning strings into an `int64`/`float64` column.** The leaderboard tied-rank pattern (`Rank` int + `=` suffix) raises even when the mask is all-False. Convert to `object` first, or build the column as `str` from the start and guard with `.any()`:
+
+```python
+# object-first
+df['Rank'] = df['Total'].rank(method='min', ascending=asc).astype(int).astype(object)
+df.loc[dupes, 'Rank'] = df.loc[dupes, 'Rank'].astype(str) + '='
+
+# string-first (webapp pattern, see webapp/deps.py)
+df['Rank'] = df['Total'].rank(method='min', ascending=asc).astype(int).astype(str)
+if dupes.any():
+    df.loc[dupes, 'Rank'] = df.loc[dupes, 'Rank'] + '='
+```
+
+**3. Assigning strings via `.iloc`/`.loc` positional setitem.** Both enforce the existing column dtype. Use named-column assignment, which replaces the column wholesale:
+
+```python
+col = df.columns[2]                      # not df.iloc[:, 2] = ...
+df[col] = df[col].apply(fmt)
+```
+
+Check: `python scripts/check_pandas_compat.py` (detects the `iloc-col-assign` pattern). Live-code sites previously fixed: `teg_analysis/analysis/scoring.py`, `webapp/deps.py` (already uses string-first). The rest of the historical fixes were in frozen `streamlit/` files.
+
+> If you upgrade pandas, re-verify these three and update this section — don't leave guidance for a version you no longer run.
+
+## Definition of done
+
+Not a gate to run mechanically — a checklist to think against before calling work complete.
+
+- Docs updated per the [table below](#documentation), same session.
+- `STATUS.md` updated if the change is user-visible or shifts direction.
+- Callers of any renamed or removed function checked; back-compat alias considered explicitly rather than by default.
+- No frontend imports in `teg_analysis/`; no `streamlit/` file touched.
+- Tests run where the change plausibly affects behaviour — your judgement on when that's warranted. Test suite: `python -m pytest tests/ -v` (bare `pytest` fails on the Claude-Code-on-the-web container, where it's a `uv`-isolated binary that can't see pip-installed deps).
 
 ## Documentation
 
-### Rule 1 — Always maintain documentation
+**Rule 1 — always maintain documentation.** When you add, rename or remove a data file, function, module or layer, update the relevant doc in the same session. Never leave docs describing something that no longer exists.
 
-Documentation is part of every code change, not an afterthought. When you add, rename, or remove a data file, function, module, or architectural layer, update the relevant doc in the same session. Never leave docs describing something that no longer exists.
-
-### Rule 2 — Each file has one role; content lives in exactly one place
+**Rule 2 — each file has one role; content lives in exactly one place.**
 
 | File | Owns | Does not contain |
-|------|------|-----------------|
+|---|---|---|
 | `README.md` | Public entry point — what it is, how to run, folder map | Deep detail; current state beyond one line |
-| `CLAUDE.md` | Project-wide instructions for Claude — architecture, patterns, model rules, current state | Subfolder-specific detail |
-| `DATA_FLOW.md` | Full data pipeline reference — storage → I/O → analysis → webapp | Per-subfolder data loading patterns |
+| `CLAUDE.md` | Durable instructions for Claude — architecture, invariants, conventions | Subfolder detail; current state; changelog |
+| `STATUS.md` | Current state, recent work, next priorities | Instructions or architecture |
+| `DATA_FLOW.md` | Full data pipeline reference | Per-subfolder loading patterns |
 | `teg_analysis/README.md` | Package API — functions, data levels, constraints | Pipeline or webapp detail |
-| `streamlit/README.md` | Streamlit internals — structure, caching, page org | Anything outside `streamlit/` |
-| `webapp/README.md` | Webapp stack, themes, design principles, current status | Anything outside `webapp/` |
+| `streamlit/README.md` | Streamlit internals | Anything outside `streamlit/` |
+| `webapp/README.md` | Webapp stack, themes, design principles | Anything outside `webapp/` |
 
-**Root vs L1:** `README.md` and `CLAUDE.md` cover the whole project. L1 subfolder READMEs cover only that subfolder. If something is relevant to one subfolder only, it belongs in that subfolder's README, not in the root docs.
+Root docs cover the whole project; L1 subfolder READMEs cover only that subfolder.
 
-### Rule 3 — Additional `.md` files
+**Rule 3 — new `.md` files** only when the content is genuinely too large or specialised for an existing README, or it's a temporary working doc (plan, spike notes) — which must be deleted or consolidated when the work is done. Prefer a new section over a new file. Permanent new files go in the `README.md` folder guide. Split files that grow unwieldy; one clear topic per file.
 
-New `.md` files should only be created when:
-- The content is genuinely too large or specialised for the relevant README (e.g. `webapp/design_principles.md`, `DATA_FLOW.md`)
-- It is a temporary working document (plan, spike notes) — in which case it must be deleted or consolidated when the work is done
-
-Do not accumulate `.md` files. Prefer adding a section to an existing file over creating a new one. If a new file is created permanently, add it to the folder guide in `README.md` and reference it from the relevant README.
-
-`.md` files should not grow so large that they become hard to navigate. If a file is getting unwieldy, split it logically — one clear topic per file — rather than letting it sprawl.
-
-### When to update which file
+**When to update which file**
 
 | Change | Update |
-|--------|--------|
-| New module or layer in `teg_analysis/` | `CLAUDE.md` Architecture + `teg_analysis/README.md` |
+|---|---|
+| New module or layer in `teg_analysis/` | This file's Architecture + `teg_analysis/README.md` |
 | New webapp page area or pattern | `webapp/README.md` |
-| Data file added, renamed, or removed | `DATA_FLOW.md` Storage Layer |
-| New development command | `CLAUDE.md` Development Commands + `README.md` Quick start |
-| Architecture decision | `CLAUDE.md` Architecture |
-| Streamlit structural change (rare) | `streamlit/README.md` |
+| Data file added, renamed or removed | `DATA_FLOW.md` Storage Layer |
+| New development command | This file's Development commands + `README.md` |
+| Architecture decision | This file's Architecture |
+| Work completed / priorities changed | `STATUS.md` |
 
-## Model Selection
+## Model and delegation
 
-### MANDATORY — Model check gate
+Model selection is handled by `/model opusplan` and by `.claude/agents/*.md` frontmatter — **not by instructions in this file.** Two rules only:
 
-**BEFORE doing ANY work — before reading files, before editing, before planning — you MUST output a model check block as your FIRST response text.** No exceptions. Format:
+- **Never pin a model version string** anywhere in this repo's docs or config. Use aliases (`opus`, `sonnet`, `haiku`, `default`), which track the current model for each tier.
+- **Prefer delegating to a subagent over switching models** — especially for broad searches where only the conclusion is needed, and for reviewing work you just did (fresh context, not a continuation).
 
-```
-**Model check:** I am [current model]. This task is [simple/moderate/complex] → recommended model is [Haiku/Sonnet/Opus].
-[If mismatch]: ⚠️ Recommended model is [model] (`/model [model]`). Say "continue" to proceed anyway.
-[If match]: ✅ Proceeding.
-```
+If a task turns out to be a poor fit for the current model, say so in one line rather than pressing on. Don't emit a model-check block on every turn.
 
-If the task is a multi-step plan with mixed complexity tiers, call out which steps match the current model and which don't. Recommend doing same-tier work first, then switching.
+## Keeping this file current
 
-### Complexity tiers
+This file has drifted before. Actively resist it.
 
-| Tier | Model | Task types |
-|------|-------|------------|
-| **Complex** | **Opus** | Architecture decisions, multi-file refactors, designing new modules/APIs, rewriting large files, debugging subtle cross-module issues, planning |
-| **Moderate** | **Sonnet** | Single-file edits, adding/modifying functions, fixing known bugs, writing tests, import cleanup, removing dead code from a single file |
-| **Simple** | **Haiku** | Deleting files, renaming variables, removing comments, formatting, updating docs, simple search-and-replace |
+**On every session where you touch this file's subject matter:** if you find an instruction here that contradicts what the code actually does, **say so and propose the fix** rather than silently working around it. A stale instruction is a bug.
 
-### At task transitions
+**Explicitly flag it when:**
 
-When the current subtask is done and the next one is a different tier, STOP and output:
+- A capability change makes an instruction here unnecessary or inefficient — e.g. a workaround the tool now handles natively, or a manual ritual now automated.
+- A pinned version, model name, or tool behaviour referenced here no longer matches reality.
+- A section describes state (what's done, what's next) rather than durable instruction. State belongs in `STATUS.md`.
+- This file exceeds ~200 lines. That's the point where adherence degrades. Move something out.
+- The freshness date at the top is more than 6 months old.
 
-```
-**Model note:** [Completed work] is done. Next task ([description]) is [tier] → switch to [model] with `/model [model]`.
-```
-
-Do NOT silently start work at a different tier.
-
-### Opus review gate
-
-After Haiku or Sonnet complete a batch of work, switch to Opus for review.
-
-**Sonnet/Haiku: what to document when done**
-
-Update the "Current state & next steps" section in CLAUDE.md with a brief summary of:
-- What you changed (files modified, functions added/removed/renamed)
-- What's next (highest-priority work)
-- Anything you were unsure about or deliberately left for Opus to decide
-
-**Opus: review checklist**
-
-1. Read every modified file end-to-end
-2. Check: do all internal callers (grep for old function names) still work?
-3. Check: are backward-compatible aliases needed that weren't added?
-4. Check: any functions deleted that actually had external callers?
-5. Check: no streamlit imports crept into teg_analysis/
-6. Run tests (`pytest tests/ -v`)
-7. Flag issues in a comment or fix directly, then commit
-
+**Quarterly (or when the above fires), run a review:** ask Claude to check each section of this file against the codebase and against current Claude Code capabilities, and report contradictions, dead references and obsolete workarounds. Update the freshness date when done.
