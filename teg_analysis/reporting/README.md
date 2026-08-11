@@ -76,7 +76,7 @@ the audience is the players themselves, who spot any factual error.
 | # | Component | In → Out | Lives in | Restart from | Cost | Maturity |
 |---|---|---|---|---|---|---|
 | E1 | **Content injection** (which blocks, where) | final MD → styled MD | `render.py` | `_report_final.md` | **free** | **Works** |
-| E2 | **Visual design** | styled MD → rendered page | `teg_reports.css` (×2 — see known issues) | `_styled.md` | **free** | **Works.** CSS duplicated in two directories; edits must be applied to both |
+| E2 | **Visual design** | styled MD → rendered page | `teg_reports.css` (×2 — see known issue 6) | `_styled.md` | **free** | **Works.** The two copies have already drifted; `webapp/static/` is the live one. Delete the `streamlit/` copy rather than re-syncing |
 
 ### Cross-cutting — not components
 

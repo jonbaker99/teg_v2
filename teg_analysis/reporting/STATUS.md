@@ -154,6 +154,53 @@ to read side by side.
 
 ## Known issues
 
+**Register — everything open, ranked by severity.** Detail sections follow in ID order (IDs are
+stable and referenced from README.md and EXPERIMENTS.md; new issues get the next free number rather
+than a renumber). Verified against the code 2026-08-11.
+
+Severity is *impact if left alone*, not effort:
+
+- **P1** — wrong output reaches readers, or silently corrupts every future report. Fix before any regeneration.
+- **P2** — real defect or missing capability, contained or not yet shipped.
+- **P3** — tidiness, dead code, cosmetic. Costs the next session time, not correctness.
+
+| ID | Issue | Sev | Effort | Blocks regen? | Status |
+|---|---|---|---|---|---|
+| 10 | **No programmatic verification (D3) exists** — nothing checks a prose claim against the data | **P1** | L | no, but it's the safety net for it | Open — largest structural gap |
+| 8 | **Editor↔writer vocabulary defined twice, unenforced** — close-finish hard rule has never fired (0/2) | **P1** | S–M | **yes** | Open |
+| 1 | **Pre-TEG-8 era leak** — TEGs 5/6/7 narrate a net-vs-par race in Stableford | **P1** | S | **yes** | Open — shipped, user-visible |
+| — | **Humour dial unsettled** (not a defect — a decision) | **P1** | — | **yes** | Open — Jon only |
+| 4 | **TEG 10 R3 arithmetic error** — "fourteen-point swing" should be sixteen | P2 | S | no | Open — shipped, single instance |
+| 12 | **Arc payload reaches the writer unweighted** — `lead_changes` *and* `bottom_changes` | P2 | S–M | no | Partly fixed (detector built); options 1–3 open |
+| 13 | **Selection weights untuned** | P2 | S | no | Measured 2026-08-11; decision pending |
+| 9 | **Prompt density past the useful point** — 38 bolded, 11 absolutes | P2 | M | no | Open — partly dissolves once 10 lands |
+| 3 | **Round pipeline a generation behind** | P2 | M | only round regen | Open — conditional on wanting round reports |
+| 14 | **TEG 14 fixture chain broken** — the anchor case can't do the cheap loops | P2 | S (~$0.65) | no | Open |
+| 5 | **Remote (webapp) report generation not built** | P2 | L | no | Open — tracked in `webapp/TODOS.md` |
+| 11a | **`DEFAULT_MODEL` still `claude-opus-4-7`** | P2 | XS | no — but changes every later baseline | Open |
+| 2 | **`enrich_report_with_history()` has zero callers** | P3 | XS | no | Open — wire or delete |
+| 11b | **Dead `DRY_DRAFT_SYSTEM = ..._LIGHT` alias** contradicting the settled default | P3 | XS | no | Open |
+| 15 | **`output_config.effort` never set** — untested cost lever, not a defect | P3 | S | no | Open — needs a key (H9) |
+| 6 | **`teg_reports.css` duplicated — and now drifted** | P3 | XS | no | Open — webapp copy is ahead |
+| 7 | **Python 3.14 venv jinja2 bug** | P3 | — | no | Open — workaround: use 3.12/3.13 |
+
+**Fixed this session (2026-08-11):** the missing *long-held-lead-lost* detector (was candidate fix 4
+under H10 — a genuine detection gap, not a re-weighting) and the component-model restructure in
+README.md.
+
+**Recommended fix order** — derived from the blocking column, not from severity alone:
+
+1. **11a** (model pin) and **11b** (dead alias) — minutes each, and 11a changes the baseline every
+   later experiment measures against, so it has to be first or the measurements are wrong.
+2. **8** (schema enums) — the only P1 that silently corrupts *every* future report. Must precede regen.
+3. **1** (era leak) — small, contained, must precede regen of TEGs 2–7.
+4. **10** (build D3) — do it *before* the library regeneration, so the regeneration is the first thing
+   it verifies. Start with the six mechanical rules; that also shrinks **9**.
+5. **2**, **6**, **12** — tidying and data-shaping, any time; none blocks anything.
+6. **13** (weights) and the humour dial — both need judgement; 13 also wants a key for the plan-only rung.
+7. **14**, then the regeneration itself, then **4** falls out of it.
+8. **3**, **5**, **15** — conditional or independent; schedule separately.
+
 ### 1. Pre-TEG-8 reports are framed in Stableford (era leak) — factual, user-visible
 
 TEGs 1–7 decided the Trophy on **net vs par**, not Stableford. `era.trophy_metric()` handles this and
@@ -309,15 +356,64 @@ Viewing was fixed 2026-07-12 (all reads go through `teg_analysis.io.read_text_fi
 **Generating** a report from the webapp is still not possible — it's a local script/notebook job
 with `ANTHROPIC_API_KEY`, then a sync. Tracked in `webapp/TODOS.md`.
 
-### 6. `teg_reports.css` is duplicated
+### 6. `teg_reports.css` is duplicated — and the two copies have now drifted
 
-Lives in both `streamlit/styles/` and `webapp/static/`. Edits must be applied to both, or the
-two be consolidated.
+Lives in both `streamlit/styles/` and `webapp/static/`. **Verified 2026-08-11: they are no longer
+identical.** The webapp copy carries a paragraph-spacing rule the streamlit copy lacks:
+
+```css
+/* Tailwind's preflight zeroes <p> margins, so set our own */
+.teg-report p { margin: 0 0 1.1em 0; }
+```
+
+So the "keep both in sync" instruction has already failed once in practice. Since `streamlit/` is
+frozen dead code slated for deletion and nothing depends on it, **the fix is to delete the streamlit
+copy, not to re-sync them** — the webapp copy is the live one and is ahead. Deleting it also removes
+the only reason anyone would edit a file under `streamlit/`, which the project rules forbid anyway.
 
 ### 7. Python 3.14 venv / jinja2 template-cache bug
 
 The isolated `venv/` (Python 3.14) hits `TypeError: cannot use 'tuple' as a dict key` on every
 templated route. Visual webapp verification needs Python 3.12/3.13.
+
+### 12. Competition arcs reach the writer unweighted (both competitions)
+
+Arcs bypass the selection layer entirely (README → component A3), so anything they carry arrives
+unfiltered. Audited the full payload 2026-08-11: the round-bounded fields are fine, but **two fields
+grow with event count and are handed over raw** — `lead_changes`/`n_lead_changes` (Trophy, Jacket)
+and `bottom_changes`/`n_bottom_changes` (Spoon). The spoon version is worse: spoon changes carry no
+`outright`/`level` flag at all, so there is no field a fix could even condition on without adding one.
+
+This is the root of the "chaos" framing on routine opening jockeying — the beats *were* correctly
+downranked by the scorer; the arc handed over an aggregate count anyway.
+
+**Partly fixed 2026-08-11:** the missing *long-held-lead-lost* signal is now detected
+(`events._lead_tenure_events`). **Still open:** splitting early/late counts, annotating entries with
+their computed significance, or suppressing R1-only changes from the summary — see EXPERIMENTS.md →
+H10 candidate fixes 1–3. All are cheap and need no LLM to evaluate.
+
+### 13. Selection weights are untuned
+
+The three scoring axes have never been tuned; `balanced` (1,1,1) shows the editor a cut that is
+53% blow-ups and 60% disaster-toned. Measured across TEGs 9–18 on 2026-08-11 via
+`scripts/weight_profiler.py` — full results in EXPERIMENTS.md → H10(a).
+
+Not a bug, but a live decision: `fast` (1.5, 0.8, 0.7) drops blow-ups to 40% while staying closest to
+the validated baseline; `importance-led` (2.0, 0.5, 0.5) flips the mix outright but is a bigger jump.
+Needs a plan-only run (~$0.28) to confirm the change survives the LLM's own second selection gate.
+
+### 14. TEG 14's fixture chain is broken — on the standing anchor case
+
+TEG 14 is the designated regression anchor (tight 2-point finish, multiple courses) but is **missing
+`dry_draft.md` and `report_final.md`** — the humour and tighten experiments consumed them into
+variant filenames. Those two files are exactly the restart points for the two cheapest iteration
+loops (C1 at ~$0.37, C2/D1 at ~$0.17), so the cheap loops are broken on the very case chosen for
+being hardest. Rebuilding costs one full generation (~$0.65).
+
+### 15. `output_config.effort` is never set anywhere
+
+Every LLM call runs at the default (`high`). Not a defect — an untested cost/latency lever on the
+most expensive stage. Tracked as EXPERIMENTS.md → H9; needs an API key.
 
 ---
 
