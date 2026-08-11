@@ -27,8 +27,8 @@ on. Working out which component you're changing tells you which loop you're in.
 | 8 | **Determinism boundary** — what code guarantees vs what the LLM is trusted with | `render.py` injections; the beats/arcs split | `_report_final.md` | **free** |
 | 9 | **Presentation — content injection** (which blocks, where) | `render.py` | `_report_final.md` | **free** |
 | 10 | **Presentation — visual design** | `teg_reports.css` (×2 — see known issues) | `_styled.md` | **free** |
-| 11 | **Scope** — tournament vs round | `story_plan.py` vs `round_report.py` | — | — |
-| 12 | **Model & runtime config** | `llm.DEFAULT_MODEL`, `output_config.effort` | varies | varies |
+| 11 | **Scope** — tournament vs round | `story_plan.py` vs `round_report.py` | the data (separate pipelines) | ~$0.65 each |
+| 12 | **Model & runtime config** | `llm.DEFAULT_MODEL`, `output_config.effort` | whichever stage you're changing | cost of that stage |
 
 Three notes that follow from the table:
 
@@ -42,6 +42,90 @@ Three notes that follow from the table:
   prompt. They have a different failure mode (a factual error the players catch, not a flat
   sentence) and a different test (mechanical verification, not taste). Keeping them distinct is what
   makes it safe to rewrite style.
+
+### The plumbing — where each component sits and what it hands on
+
+Every arrow is a place you can stop, freeze the artefact, and restart from later. That is what makes
+the cheap loops cheap.
+
+```
+  data/*.parquet
+        │  load_all_data()
+        ▼
+  ┌─────────────────────────────────────────────────────────────────┐
+  │ build_notable_events(teg)          ── detectors ──►  43–105 raw │  c1
+  │ scoring.finalise(events, mode)     ── axis weights ─► ranked    │  c3  ← FREE loop
+  └─────────────────────────────────────────────────────────────────┘
+        │
+        │   venue / history_context / course_history / era / tournament_shape   c2
+        │   competition_arcs  ⚠ never trimmed — bypasses c3 entirely
+        ▼
+  assemble_bundle(teg, top_n=50)  ──────────────────────►  BUNDLE (~26k tok)  c3 (trim)
+        │
+        ▼
+  build_story_plan(teg)            ─write─►  teg_N_story_plan.json    c4, c5   ~$0.28
+        │                                    ▲ restart point
+        ▼
+  generate_dry_draft(teg, plan)    ─write─►  teg_N_dry_draft.md       (bundle re-sent) ~$0.20
+        │                                    ▲ restart point
+        ▼
+  report_around_draft(teg, plan, dry) ─write─► teg_N_report_A_around_draft.md  c6, c7  ~$0.10
+        │
+        ▼
+  repetition_lint(text)            ─write─►  teg_N_report_final.md    ~$0.07
+        │                                    ▲ restart point ← the cheap-loop workhorse
+        ▼
+  style_report(teg)                ─write─►  teg_N_report_styled.md   c8, c9   FREE
+        │
+        ▼
+  webapp / streamlit  +  teg_reports.css                              c10      FREE
+```
+
+**Two structural facts the diagram makes visible:**
+
+- **`competition_arcs` bypass the selection layer.** They are assembled straight into the bundle and
+  preserved in full regardless of `top_n`, so anything an arc reports reaches the writer
+  *unweighted* — even when the scorer correctly ranked the same events near the bottom. This is the
+  root of the "chaos" framing on routine opening lead changes: the beats were downranked, the arc
+  still handed over a raw count. See [EXPERIMENTS.md](EXPERIMENTS.md) → H10 sub-finding.
+- **Stage 4a re-sends the whole bundle** under a different system prompt, so it gets no cache benefit
+  from Stage 3. Stages 3 and 4a together are ~74% of the cost of a report.
+
+### Restart recipes
+
+`authoring.load_story_plan()` and `authoring.load_dry_draft()` exist precisely so you can re-enter
+mid-chain. Use them — don't regenerate what you aren't testing.
+
+```python
+# c3 — SELECTION. Free, no LLM. Compute beats once, re-score in memory.
+from teg_analysis.reporting.events import build_notable_events
+from teg_analysis.reporting import scoring
+raw = build_notable_events(14)                      # slow (~30s), do once
+ranked = scoring.finalise(list(raw), mode="fast")   # instant, repeat freely
+
+# c4/c5 — VEHICLE + STRUCTURE. Needs the full chain from the plan down.
+from teg_analysis.reporting import build_story_plan
+plan = build_story_plan(14)["plan"]                 # ~$0.28
+# …then dry draft → around draft → lint → style
+
+# c6/c7 — VOICE + GUARDRAILS. Freeze the plan and dry draft; re-run 4b only.
+from teg_analysis.reporting.authoring import (
+    load_story_plan, load_dry_draft, report_around_draft, repetition_lint)
+plan = load_story_plan(17)                          # frozen fixture
+dry  = load_dry_draft(17)                           # frozen fixture
+rpt  = report_around_draft(17, plan, dry)           # ~$0.10
+linted, _ = repetition_lint(rpt["text"])            # ~$0.07
+# total ~$0.17 — no story plan regenerated, so voice is the only variable
+
+# c8/c9 — INJECTION + DETERMINISM BOUNDARY. Free; reads _report_final.md.
+from teg_analysis.reporting.render import style_report
+style_report(17)
+
+# c10 — VISUAL. No Python at all: edit teg_reports.css and reload.
+
+# Inspect the Stage-3 input without spending anything:
+build_story_plan(14, dry_run=True)                  # writes teg_14_story_plan_prompt.md
+```
 
 ### Fixture set
 
