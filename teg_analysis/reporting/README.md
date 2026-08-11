@@ -87,7 +87,13 @@ the cheap loops cheap.
   preserved in full regardless of `top_n`, so anything an arc reports reaches the writer
   *unweighted* — even when the scorer correctly ranked the same events near the bottom. This is the
   root of the "chaos" framing on routine opening lead changes: the beats were downranked, the arc
-  still handed over a raw count. See [EXPERIMENTS.md](EXPERIMENTS.md) → H10 sub-finding.
+  still handed over a raw count. Audited across the whole arc payload (not just lead changes): the
+  round-bounded fields (`leader_by_round`, `winner_trajectory`, `decisive_takeover` and their spoon
+  equivalents) are fine — small, fixed-size, already the weighted signal. The bug is specifically the
+  two growing lists/counts, and it affects the Wooden Spoon arc (`bottom_changes` /
+  `n_bottom_changes`) the same way it affects the Trophy/Jacket one (`lead_changes` /
+  `n_lead_changes`) — worse, even, since spoon changes carry no `outright` flag to filter on at all.
+  See [EXPERIMENTS.md](EXPERIMENTS.md) → H10 sub-finding.
 - **Stage 4a re-sends the whole bundle** under a different system prompt, so it gets no cache benefit
   from Stage 3. Stages 3 and 4a together are ~74% of the cost of a report.
 
@@ -161,6 +167,10 @@ Reuses `teg_analysis.core.data_loader.load_all_data()`.
 `build_notable_events(teg, mode=)` returns a ranked list of `NotableEvent` objects. Detectors:
 
 - Lead/spoon changes (with `outright` vs `level` flag from per-hole rank-1 counts)
+- Long-held leads lost (`_lead_tenure_events`) — a companion to lead changes: walks the hole-by-hole
+  outright-leader sequence and flags spells of 18+ holes (roughly a full round) that end in an
+  outright takeover by someone else, for both Trophy and Green Jacket. Distinct from an ordinary
+  lead-change beat because it scores on tenure length and rounds spanned, not just round-lateness.
 - Maximal cold/hot stretches (no overlapping-window spam)
 - Recoveries (birdie ending a bogey run) / collapses (blow-up ending a steady run)
 - Standout single holes (eagles / HIO / big blow-ups)

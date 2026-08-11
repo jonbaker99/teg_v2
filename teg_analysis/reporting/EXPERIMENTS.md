@@ -57,21 +57,124 @@ principle may become unnecessary — a good example of fixing a problem at the l
 - `mandatory` is partly `rarity >= 7`, and rarity rarely gets there: TEG 11 has **0** mandatory
   beats, TEG 10 has 16. That inconsistency is worth understanding before relying on the guarantee.
 
-#### (a) Testing impact on the final cut — free, no API calls
+#### (a) Testing impact on the final cut — free, no API calls — DONE 2026-08-11
 
-Sweep weight vectors over the cached `build_notable_events()` output and profile the resulting cut.
-Metrics that matter (order churn is the least informative):
+`scripts/weight_profiler.py` sweeps the four candidate settings over cached
+`build_notable_events()` output for TEGs 9–18 (computed once per TEG, reused
+across settings) and profiles the top-20 by weighted total, plus mandatory
+survival at the real production cut (`assemble_bundle`'s top_n=50 + force-add).
+Run: `python scripts/weight_profiler.py`.
 
-| Metric | Why |
-|---|---|
-| **Type mix of the top-N** | The 53%-blowup figure is the headline number to move |
-| **Tone balance** | disasters (blowup, collapse, cold) vs achievements (eagle, hot, PB, recovery) |
-| **Coverage** | distinct players and rounds represented — does the cut describe the tournament, or one man's bad week? |
-| **Mandatory survival** | must stay 100%. A setting that drops a TEG record is invalid regardless of how good the mix looks |
-| **Churn vs baseline** | sensitivity — tells you whether a knob does anything at all |
+**Results — type mix of the top-20 (200 slots across 10 TEGs):**
 
-Run it across all 10 TEGs at once. `build_notable_events()` is the slow part (~30s/TEG), so compute
-once per TEG and re-score in memory.
+| Setting | big_blowup | hot_stretch | disaster tone | achievement tone | mandatory survival | churn vs baseline |
+|---|---|---|---|---|---|---|
+| current (1,1,1) | 106 (53.0%) | 19 (9.5%) | 60.0% | 36.5% | 115/115 (100%) | — |
+| importance-led (2.0,0.5,0.5) | 46 (23.0%) | **54 (27.0%)** | 34.0% | 54.5% | 115/115 (100%) | 66% mean overlap |
+| fast (1.5,0.8,0.7) | 80 (40.0%) | 38 (19.0%) | 48.0% | 46.0% | 115/115 (100%) | 85% mean overlap |
+| archive (1.0,1.3,1.3) | 107 (53.5%) | 16 (8.0%) | 60.5% | 36.0% | 115/115 (100%) | 98% mean overlap |
+
+**Hypothesis confirmed.** At (2.0, 0.5, 0.5), `hot_stretch` (54, 27%) overtakes
+`big_blowup` (46, 23%) on top-20 share, and the tone balance flips from
+disaster-majority (60%) to achievement-majority (54.5%). `fast` (already
+defined, never evaluated as a quality setting) is a genuine middle ground —
+blow-up share drops 53%→40% without fully inverting the mix, and it's the
+setting closest to current (85% churn overlap), which matters if regenerating
+the whole library is the eventual step. `archive` does exactly what
+EXPERIMENTS.md predicted — it *increases* the blow-up share slightly
+(53.0%→53.5%) because rarity and entertainment are exactly the two axes a
+blow-up already dominates on; cranking them further entrenches it rather than
+diversifying it. `archive` is not a fix for the blow-up bias — it's the
+opposite lever.
+
+**Mandatory survival is 100% for every setting, but this is true by
+construction, not something the sweep discovered.** `mandatory` (in
+`assemble_bundle`) depends on event *type* and raw (unweighted) `rarity`, and
+`assemble_bundle` force-adds every mandatory id regardless of what the top-N
+cut contains. None of the four settings can violate it because none of them
+touch the inputs the mandatory test reads. Worth confirming once (done), not
+worth re-checking per setting going forward — it would only move if a future
+change touched `MANDATORY_TYPES` or the force-add logic itself.
+
+**Coverage doesn't discriminate between settings, for a structural reason:**
+the player pool across TEGs 9–18 tops out at 6 distinct players (some TEGs
+have only 4–5), and every setting's top-20 already covers all 6 and 39–40 of
+the 40 possible (TEG, round) pairs. A 20-slot cut over a 6-player field
+saturates coverage regardless of weighting — this metric would only bite in a
+tournament with a much larger field.
+
+**Recommendation:** `fast` (1.5, 0.8, 0.7) is the safer of the two non-trivial
+settings to adopt as the new `balanced` default — it meaningfully rebalances
+tone (60%→48% disaster) while staying closest to what's already been
+validated across 17 published reports. `importance-led` (2.0, 0.5, 0.5) is
+the stronger fix for the stated goal (competitive narrative over carnage) but
+is a bigger jump (66% churn) and hasn't been read by a human yet. Per the H10
+plan, the next rung is plan-only runs (`must_include_beat_ids` composition,
+~$0.28/run) on the shortlist of `fast` and `importance-led` — not attempted
+here, since it needs `ANTHROPIC_API_KEY` (see CONSTRAINTS).
+
+#### Sub-finding, extended: the arc-payload audit — DONE 2026-08-11
+
+Per Jon's request, audited every field `_arc_top`/`_arc_bottom` put into
+`competition_arcs` (`events.py`), not just the `lead_changes` field the
+original sub-finding named:
+
+| Field | Bounded? | Verdict |
+|---|---|---|
+| `leader_by_round` / `bottom_by_round` | yes — one entry per round (≤4) | fine — this is the round-by-round skeleton the writer needs |
+| `winner_trajectory` / `loser_trajectory` | yes — one entry per round (≤4) | fine, same reason |
+| `decisive_takeover` / `decisive_drop` | single dict | fine — this **is** the weighted signal (last *outright* takeover by the eventual winner/loser), correctly the one moment worth flagging |
+| `lead_changes` + `n_lead_changes` | **no — grows with event count** | the already-flagged bug: unweighted list + aggregate count, early-round jockeying reads the same as a late decisive swing |
+| `bottom_changes` + `n_bottom_changes` | **no — grows with event count** | **same bug, not previously flagged.** Identical shape to `lead_changes`/`n_lead_changes` but for the Wooden Spoon race — early-tournament rotation through last place will read as "chaos" at the bottom the same way it does at the top |
+
+**The `bottom_changes` version is actually worse.** `_arc_bottom` never
+computes an outright/level distinction for spoon changes at all (unlike
+`lead_changes`, whose entries at least carry an `outright: bool` the writer
+*could* be told to filter on) — `_turning_points`'s spoon branch emits one
+`spoon_change` type regardless of whether the new last-place player is
+outright last or tied. So `bottom_changes` entries have no field a future fix
+could even condition on without adding one.
+
+**Conclusion:** the bounded-by-round fields (`leader_by_round`,
+`winner_trajectory`, `decisive_takeover`, and their spoon equivalents) are
+correctly exempt from selection weighting — they're small, fixed-size, and
+already carry the "what actually decided it" signal. The only fields that
+need a fix are the two growing lists/counts, and the fix should be applied to
+**both** competitions, not just the Trophy/Jacket arcs the original
+sub-finding covered.
+
+#### Candidate fix 4 — long-held lead lost detector — BUILT 2026-08-11
+
+Implemented as `events._lead_tenure_losses` / `events._lead_tenure_events`,
+wired into `build_notable_events` alongside `_turning_points`. Walks the
+hole-by-hole outright-leader sequence directly from `teg_df` (independent of
+`events_log`): a tied ("level") hole doesn't break a leader's spell, it just
+doesn't advance the tenure clock, so a leader who draws level and immediately
+retakes it outright keeps their run intact. When a spell of at least 18 holes
+(roughly a full round — the threshold that keeps this a rare, high-value beat
+rather than duplicating every ordinary `lead_change`) ends in an outright
+takeover by someone else, it emits a `long_lead_lost` beat for **both** the
+Trophy and the Green Jacket, scored on tenure length, rounds spanned, and the
+existing round-lateness signal — reusing the same "later matters more" logic
+`_turning_points` already applies, on top of the new tenure dimension. This
+sits *alongside* the regular `lead_change` beat for the same hole (which
+still fires from the taker's perspective) rather than replacing it — the
+report can now draw on both "X takes the lead" and "Y's grip at the top
+ends" as distinct facts.
+
+Tested across TEGs 9–18: **7 beats fire, 0–2 per TEG**, all substantial
+(tenure 20–45 holes, i.e. more than a full round, several spanning 2–3
+rounds), importance/rarity/entertainment scores land in the 6.6–10.0 range —
+several exceed the `rarity >= 7` mandatory threshold automatically, with no
+change needed to `MANDATORY_TYPES`. Example: *"Jon Baker loses the Trophy
+(Stableford) lead to Alex Baker after 45 holes in front (R1 H4–R3 H13)"*
+(TEG 11, imp=10.0, rar=8.6, ent=10.0). No TEG produces more than 2 — this is
+not spam.
+
+**Not built:** the Wooden-Spoon equivalent (a long-suffering last place
+finally escaping). Out of scope — Jon's request was specifically about lead
+changes — but the same walk-and-track pattern would generalise directly if
+wanted later.
 
 #### (b) Testing impact on the actual reports — two complications
 
@@ -123,39 +226,35 @@ what it was given. The `WRITER_SYSTEM` rule forbidding "chaos" is a prompt patch
 data-shaping gap, the same pattern as principle 8 and the blow-up bias.
 
 **This matters beyond lead changes: arcs are exempt from component 3 (selection/weighting)
-entirely.** Anything the arc reports reaches the writer unweighted. Worth auditing the whole arc
-payload on the same basis, not just this field.
+entirely.** Anything the arc reports reaches the writer unweighted. **Audited on the same basis
+2026-08-11 — see "Sub-finding, extended" above.** The bounded-by-round fields are fine; the growing
+lists/counts are the bug, and it affects the Wooden Spoon arc too, not just Trophy/Jacket.
 
 **Candidate fixes** (cheap, no LLM needed to evaluate):
 1. Split the count — `n_lead_changes_late` / `n_lead_changes_early`, so the headline number reflects
-   what mattered.
+   what mattered. *(Still open — applies to both `lead_changes` and `bottom_changes` now.)*
 2. Annotate each entry with its computed significance, so the writer sees the weighting the scorer
-   already did.
+   already did. *(Still open.)*
 3. Suppress R1-only changes from the arc summary when nothing later happened, and let the
-   round-by-round detail carry them.
+   round-by-round detail carry them. *(Still open.)*
 4. Add the missing case Jon named: **a long-held lead being lost** is currently not a distinct
    signal — `lead_changes` records the takeover but not how long the previous leader had held it.
    That is arguably the most narratively significant lead-change variant and it isn't detected.
+   **BUILT 2026-08-11 — see "Candidate fix 4" above.**
 
-Option 4 is a genuine gap rather than a re-weighting, and probably the highest-value of the four.
-
-#### Candidate settings to try
-
-| Setting | Weights | Hypothesis |
-|---|---|---|
-| current | 1.0 / 1.0 / 1.0 | baseline — 53% blow-ups |
-| importance-led | 2.0 / 0.5 / 0.5 | competitive narrative over carnage; predicted to flip hot_stretch above big_blowup |
-| existing `fast` | 1.5 / 0.8 / 0.7 | already defined, never evaluated as a quality setting |
-| existing `archive` | 1.0 / 1.3 / 1.3 | already defined; predicted to *increase* the blow-up share |
+Options 1–3 are still open and would need re-weighting-style tuning, not a detector — a reasonable
+follow-up once fix 4 has been read in a real report. Option 4 was the genuine gap and is done.
 
 **If reweighting alone can't fix the mix**, the next lever is a structural one rather than a
 numeric one: a per-type cap (no more than N blow-ups in the cut) or a guaranteed quota for
-achievement beats. Try the weights first — they're free.
+achievement beats. Not needed here — `importance-led` already flips the mix without one.
 
 **Notes:**
-- _(empty — to fill in as we run)_
+- 2026-08-11: part (a) run — see results table above. Part (b) not attempted (no `ANTHROPIC_API_KEY`
+  in this environment). Arc-payload audit done; `long_lead_lost` detector built and tested.
 
-**Verdict:** _(open)_
+**Verdict:** _(part (a) done, recommendation above; part (b) and the final weight-setting decision
+are still open — need an API key and, ideally, a from-scratch TEG 14 read)_
 
 ---
 

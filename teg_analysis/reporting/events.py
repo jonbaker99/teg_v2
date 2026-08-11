@@ -314,6 +314,89 @@ def _turning_points(events_log: pd.DataFrame, teg_df: pd.DataFrame, sw: dict,
     return out
 
 
+def _lead_tenure_losses(teg_df: pd.DataFrame, rank_col: str, comp_label: str,
+                        player_names: dict, sw: dict,
+                        min_tenure_holes: int = 18) -> list:
+    """Detect 'long-held lead lost' beats.
+
+    `_turning_points` records every outright takeover but not how long the
+    displaced leader had held the position — a lead held since the first
+    hole and lost on the final day reads identically to one held for three
+    holes. This walks the hole-by-hole outright-leader sequence directly: a
+    tied ('level') hole doesn't break a spell, it just doesn't advance it,
+    so a leader who draws level and immediately re-takes it outright keeps
+    their tenure clock running. Only spells of at least `min_tenure_holes`
+    (default 18 — roughly a full round) that end in an outright takeover by
+    someone else are reported, so this stays a rare, high-value beat rather
+    than duplicating every `lead_change`.
+    """
+    ordered = sorted(teg_df[["Round", "Hole"]].drop_duplicates()
+                     .itertuples(index=False, name=None))
+    idx_of = {key: i for i, key in enumerate(ordered)}
+    leaders = teg_df[teg_df[rank_col] == 1]
+    leader_at = {}
+    for (rnd, hole), g in leaders.groupby(["Round", "Hole"]):
+        if len(g) == 1:
+            leader_at[(int(rnd), int(hole))] = g.iloc[0]["Pl"]
+        # ties (len > 1) record no outright leader for this snapshot
+
+    last_round = int(teg_df["Round"].max())
+    lookup = {(int(r.Round), r.Pl, int(r.Hole)): r for r in teg_df.itertuples(index=False)}
+
+    out = []
+    current, since_idx, since_key = None, None, None
+    for key in ordered:
+        leader = leader_at.get(key)
+        if leader is None:
+            continue
+        if current is None:
+            current, since_idx, since_key = leader, idx_of[key], key
+            continue
+        if leader != current:
+            tenure_holes = idx_of[key] - since_idx
+            if tenure_holes >= min_tenure_holes:
+                start_rnd, start_hole = since_key
+                end_rnd, end_hole = key
+                rounds_spanned = end_rnd - start_rnd + 1
+                late = 1.0 if end_rnd == last_round else 0.0
+                # Centrality of whichever party (ex-leader or new leader) matters
+                # more to the eventual result — this event is notable from either end.
+                w = max(sw.get(current, 0.4), sw.get(leader, 0.4))
+                prev_player = player_names.get(current, current)
+                new_player = player_names.get(leader, leader)
+                base_imp = 3.0 + 0.12 * tenure_holes + 2.0 * (rounds_spanned - 1) + 1.5 * late + 1.0 * w
+                base_ent = 3.0 + 0.10 * tenure_holes + 1.5 * (rounds_spanned - 1)
+                rar = 3.0 + 0.08 * tenure_holes + 1.0 * (rounds_spanned - 1)
+                ev_key = (end_rnd, leader, end_hole)
+                ev = [hole_evidence(lookup[ev_key]._asdict())] if ev_key in lookup else []
+                out.append(NotableEvent(
+                    teg_num=int(teg_df["TEGNum"].iloc[0]), scope="hole",
+                    type="long_lead_lost", round=end_rnd,
+                    headline=(f"{prev_player} loses the {comp_label} lead to {new_player} "
+                             f"after {tenure_holes} holes in front "
+                             f"(R{start_rnd} H{start_hole}–R{end_rnd} H{end_hole})"),
+                    players=[prev_player, new_player], holes=ev,
+                    importance=scoring.cap(base_imp), rarity=scoring.cap(rar),
+                    entertainment=scoring.cap(base_ent),
+                    context={"competition": comp_label, "previous_leader": prev_player,
+                             "new_leader": new_player, "tenure_holes": tenure_holes,
+                             "rounds_spanned": rounds_spanned,
+                             "held_since": {"round": start_rnd, "hole": start_hole},
+                             "lost_at": {"round": end_rnd, "hole": end_hole}},
+                ))
+            current, since_idx, since_key = leader, idx_of[key], key
+    return out
+
+
+def _lead_tenure_events(teg_df: pd.DataFrame, sw: dict, player_names: dict,
+                        metric: str = "stableford") -> list:
+    """Long-held-lead-lost beats for both the Trophy and the Green Jacket."""
+    cols = _trophy_cols(metric)
+    trophy_label = _trophy_label(metric)
+    return (_lead_tenure_losses(teg_df, cols["rank_hole"], trophy_label, player_names, sw)
+            + _lead_tenure_losses(teg_df, "Rank_GrossVP_TEG", JACKET, player_names, sw))
+
+
 def _safe_int(x):
     try:
         if pd.isna(x):
@@ -836,6 +919,7 @@ def build_notable_events(teg_num: int, all_data: Optional[pd.DataFrame] = None,
     events = []
     events += _tournament_beats(tsum, arcs, metric)
     events += _turning_points(events_log, teg_df, sw, metric)
+    events += _lead_tenure_events(teg_df, sw, player_names, metric)
     events += _sequences(teg_df, sw, player_names,
                          player_par_max=player_par_max, par_max=par_max)
     events += _round_beats(round_summary, sw, metric)

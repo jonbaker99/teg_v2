@@ -2,11 +2,12 @@
 
 **Pick-up ledger.** Read this first when resuming work in a fresh session. The how-it-works architecture is in [README.md](README.md); the running experiment log is in [EXPERIMENTS.md](EXPERIMENTS.md).
 
-> **Last verified against the codebase: 2026-08-10.** Last actual pipeline work: **mid-June 2026**
-> (all `teg_analysis/reporting/*.py` last changed in the 2026-06-17 merge; everything since has been
-> docs or webapp-side plumbing). Note that `data/commentary/` was only added to git in that same
-> merge, so **git dates tell you nothing about when a report was generated** — use the
-> story-plan schema fingerprint in [Report inventory](#report-inventory-what-actually-exists) instead.
+> **Last verified against the codebase: 2026-08-11.** Last actual pipeline code change: **2026-08-11**
+> — a new `long_lead_lost` detector landed in `events.py` (see below); before that, mid-June 2026 (all
+> `teg_analysis/reporting/*.py` last changed in the 2026-06-17 merge until this session). Note that
+> `data/commentary/` was only added to git in the June merge, so **git dates tell you nothing about
+> when a report was generated** — use the story-plan schema fingerprint in
+> [Report inventory](#report-inventory-what-actually-exists) instead.
 
 ---
 
@@ -25,6 +26,16 @@ The pipeline is **built, working and well past what the old docs described**. Th
    is the natural first thing to pick up.
 
 **Suggested pick-up order** is in [Next steps](#next-steps).
+
+**2026-08-11 — H10(a) run + a new detector landed.** The selection-weight profiler
+(`scripts/weight_profiler.py`) swept the four candidate weight settings over cached beats for TEGs
+9–18: confirmed the (2.0, 0.5, 0.5) hypothesis (`hot_stretch` overtakes `big_blowup`), and found
+`fast` (1.5, 0.8, 0.7) is a safer middle-ground fix. Separately, `events.py` gained a new
+`long_lead_lost` detector — a genuinely missing signal (a long-held lead being lost), not a
+re-weighting — which fires 7 times across TEGs 9–18 and is wired into `build_notable_events` for
+every future report. No report was regenerated and no weight setting was adopted yet; both are
+judgment calls for a session with `ANTHROPIC_API_KEY`. Full detail in
+[EXPERIMENTS.md](EXPERIMENTS.md) → H10.
 
 ---
 
