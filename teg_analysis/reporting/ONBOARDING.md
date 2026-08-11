@@ -1,7 +1,7 @@
 # Reporting pipeline — chat onboarding
 
 5-stage LLM pipeline that generates newspaper-style TEG tournament reports (plus per-round reports).
-Cost: ~$0.65/report (Opus 4.7). Output: `data/commentary/teg_N_report_styled.md` → rendered by the
+Cost: ~$0.65/report (Opus-tier). Output: `data/commentary/teg_N_report_styled.md` → rendered by the
 webapp at `/teg-reports` and the Report tab on `/results`.
 
 ---
@@ -19,7 +19,7 @@ Read in this order; stop when you have enough for the task:
    menu) + `assemble_bundle()`; the editorial brain, and the most compressed description of what the
    LLM is asked to do
 5. **`authoring.py`** — Stage 4 orchestration and every system prompt (`WRITER_SYSTEM`,
-   `DRY_DRAFT_SYSTEM_*`, `LINT_SYSTEM`, `TIGHTEN_SYSTEM`, `ENRICH_SYSTEM`)
+   `DRY_DRAFT_SYSTEM_*`, `LINT_SYSTEM`, `TIGHTEN_SYSTEM`)
 6. **`events.py`** — beat detection and 3-axis scoring; only load if the work touches beat
    generation (900 lines)
 7. **`round_report.py`** — per-round pipeline; only load if working on round reports
@@ -43,8 +43,11 @@ the detail lives in STATUS.md, this is just the headline.)*
   `teg_N_story_plan.json` — `payoffs` / `narrative_vehicles` present ⇒ current.
 - **Work stopped mid-experiment** on a humour-dial A/B (3 → 6 → 8 → 8b) run on TEGs 14 and 18.
   Outputs are on disk, unpublished, **no verdict recorded**. That decision is the first pick-up item.
-- **Known issues:** pre-TEG-8 era leak (Stableford framing in net-vs-par-era reports);
-  `enrich_report_with_history()` has zero callers; `backfill.py` doesn't call the tighten/enrich
+- **Known issues:** see STATUS.md — the register was cleared on 2026-08-11 (D3 verification
+  built; era leak, shared-vocabulary schema, arc weighting and model pin all fixed). What
+  remains is two judgement calls (humour dial, selection weights) and prose-wording faults
+  in older reports that regeneration clears. Historic note:
+  `enrich_report_with_history()` was deleted; `backfill.py` doesn't call the tighten
   passes; `RoundStoryPlan` is a generation behind; TEG 10 R3 arithmetic error
   ("fourteen-point swing" should be sixteen); `teg_reports.css` duplicated across
   `streamlit/styles/` and `webapp/static/`; Python 3.14 has a jinja2/starlette template-cache bug so

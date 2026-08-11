@@ -137,12 +137,6 @@ running total.
 - Markdown headings. Keep it tight."""
 
 
-# Default — current behaviour (light). Switch per call via `dry_draft_style` on
-# `generate_dry_draft`. The detailed variant restores the pre-Step-2 wording (one
-# section per round, render specific holes wherever the evidence supports it).
-DRY_DRAFT_SYSTEM = DRY_DRAFT_SYSTEM_LIGHT
-
-
 def _plan_to_text(plan: Union[StoryPlan, dict]) -> str:
     data = plan.model_dump() if isinstance(plan, StoryPlan) else plan
     return json.dumps(data, indent=2, ensure_ascii=False)
@@ -403,7 +397,13 @@ on a different course — NEVER call them "the same hole" or invent a "same-hole
 rhyme/parallel. If you draw a parallel between two holes, make explicit they are \
 different holes and name the courses.
 - Early-round lead changes, when the field is bunched, are normal — do NOT frame routine \
-opening jockeying as "chaos" or high drama. The lead changes that matter are the late ones.
+opening jockeying as "chaos" or high drama. The lead changes that matter are the late ones. \
+**This is now given to you as data, not left to judgement:** each arc carries a \
+`lead_change_summary` (and `bottom_change_summary`) with `early_round1`, `final_round`, \
+`outright` and `all_routine`, and every individual change carries a `significance` of \
+`routine` / `notable` / `decisive`. When `all_routine` is true, the headline count is \
+opening jockeying and nothing more — report it plainly or not at all. Never build drama \
+on a raw `n_lead_changes` total without checking what it is made of.
 - The Trophy metric is `trophy_metric` in the bundle: Stableford points (higher is \
 better) for TEG 8+, or net-vs-par (lower is better, signed) for TEGs 1–7. Gross is \
 raw strokes vs par. Don't conflate them.
@@ -505,83 +505,6 @@ the same voice writing more cleanly, not a different voice writing cleaner.
 
 Output the complete tightened report as markdown — no preamble, no commentary, same \
 structure, same headings, same length or slightly shorter."""
-
-
-ENRICH_SYSTEM = """You are enriching an existing golf tournament report with cross-TEG \
-historical colour. The report is already written; your job is a targeted insert pass only.
-
-VOICE: faithful, entertaining, tongue-in-cheek — in the spirit of Barney Ronay \
-(Guardian), Tom Peck (Times political sketches), Jesse Armstrong (Succession), \
-and Armando Iannucci (The Thick of It). British English. No exclamation marks. \
-No obvious puns. No wacky tropes.
-
-Core mechanism — subverted gravitas: treat every achievement with the unblinking solemnity \
-of a Shakespearean tragedy or a geopolitical crisis. The humour lives in the gap between \
-the gravity of the prose and the lowness of the stakes. Never wink at the camera.
-
-Named principles — hold to these:
-1. Characters are people taking something they shouldn't take seriously with utter, doomed \
-   seriousness. Render that honestly.
-2. Bathos and deadpan are the engine: grand self-conception meets squalid scorecard. State \
-   the momentous thing without escalating it. Let it land on its own.
-3. Trust the reader. State the implication; don't explain it.
-4. Achievements earn their moment too. A "first Trophy" should feel nine years overdue; a \
-   three-peat should carry the weight of something no one expected and nobody can quite \
-   explain; a Wooden Spoon repeat should be rendered with the quiet resignation of a man \
-   who has begun to suspect the universe has a grudge.
-
-YOUR TASK:
-Weave 3–7 of the supplied ACHIEVEMENT PHRASES into the existing report where they fit \
-naturally. These phrases are pre-verified factual anchors. Expand each into a clause or \
-half-sentence that matches the voice and rhythm of the surrounding prose, or add a single \
-new sentence where the existing structure clearly leaves a gap.
-
-RULES:
-- DO NOT rewrite paragraphs or restructure the report. Insert phrases INTO existing \
-  sentences, append a clause to the end of a sentence, or occasionally add a single short \
-  new sentence. The structure — all headings, all sections, all closing bullets — must \
-  remain intact.
-- DO NOT invent any history, win counts, streaks, or statistics not in the supplied phrases. \
-  The supplied phrases are the only historical facts you may use; everything else is already \
-  in the report.
-- DO NOT add parenthetical asides or meta-commentary. Do not write "notably, this was his \
-  second…" or "for the record, he had…" — integrate as if it was always there, woven into \
-  the sentence as naturally as the hole number.
-- If a phrase has already been expressed in the existing report prose (e.g. the report \
-  already says "his third straight win"), SKIP that supplied phrase — no doubling.
-- Match the register. If the existing sentence is deadpan and understated, your insert must \
-  be deadpan and understated. Do not inject levity into a sombre passage or gush into a \
-  dry one.
-- If fewer than 3 supplied phrases fit naturally, insert only those that do. Do not force \
-  unnatural inserts to hit a number.
-- Return the COMPLETE modified report — all content, all headings, all sections, all player \
-  bullets, unchanged except for the additions. The output length should be close to the \
-  input length plus the inserts.
-
-FAITHFULNESS (non-negotiable):
-- Use ONLY the supplied achievement phrases as new historical facts. Add nothing else.
-- TEG has NO countback, NO tiebreakers, NO playoff. Do not introduce these mechanisms.
-- British English. No exclamation marks.
-
-VOICE GUIDANCE FOR SPECIFIC ACHIEVEMENTS:
-- "First Trophy win" → e.g. "claimed his first Trophy, a development that arrived, one felt, \
-  approximately nine years overdue" — not "he won for the first time"
-- "Back-to-back Trophies" → render with appropriate gravity — e.g. "making it back-to-back \
-  Trophies, a fact that the room seemed, for a moment, genuinely unsure how to absorb"
-- "Three-peat / third consecutive Trophy" → "a third consecutive Trophy, a feat of sustained \
-  dominance that sat somewhere between the unprecedented and the faintly alarming"
-- "Zero to hero" → e.g. "from the Wooden Spoon twelve months prior to the Trophy itself — \
-  a journey that suggested either remarkable resilience or a profoundly unreliable scoring system"
-- "First Trophy after N prior runner-up finishes" → render the wait with appropriate irony \
-  about its arrival being overdue; the relief is as heavy as the achievement. **Vary the \
-  framing — don't lock onto "bridesmaid". Alternatives: "the nearly-man finally arrives", \
-  "second twice and now first", "two near-misses made good", "the wait ends", etc. Reuse of \
-  the same framing across players or reports is a tell.**
-- "Milestone first" (first player in history to win N Trophies) → treat as a historical \
-  weight the room has only just caught up with — understated, not triumphant
-- "Hero to zero / from champion to Spoon" → deadpan; the contrast does the work
-- "Back-to-back Spoons" → quiet tragedy; the man who has done it once now finding, to no \
-  one's particular surprise, that he has done it again"""
 
 
 def load_story_plan(teg_num: int) -> dict:
@@ -699,63 +622,3 @@ def run_authoring_ab(teg_num: int, mode: str = "balanced", tone: str = "house",
     return {"A_around_draft": a["output_path"],
             "B_single_pass": b["output_path"],
             "C_critique_revise": c["output_path"]}
-
-
-def enrich_report_with_history(teg_num: int, model: Optional[str] = None) -> dict:
-    """LLM enrichment pass: weave cross-TEG historical colour into an existing report.
-
-    Reads teg_N_report_final.md, computes achievement phrases from prior history,
-    calls the LLM to weave them in (using ENRICH_SYSTEM), writes back to
-    teg_N_report_final.md, and re-runs style_report to regenerate the styled version.
-
-    Returns {"teg": teg_num, "enriched": bool, "usage": ..., "output_path": ...}
-    """
-    import os
-    from teg_analysis.reporting.history_context import build_history_enrichment_context
-    from teg_analysis.reporting.render import style_report
-
-    report_path = f"{OUTPUT_DIR}/teg_{teg_num}_report_final.md"
-    if not os.path.exists(report_path):
-        return {"teg": teg_num, "enriched": False, "usage": None,
-                "error": "report_final.md not found"}
-
-    with open(report_path) as f:
-        report_text = f.read()
-
-    context = build_history_enrichment_context(teg_num)
-    if not context or not context.get("per_player"):
-        return {"teg": teg_num, "enriched": False, "usage": None}
-
-    phrases_by_player = {
-        player: data["achievement_phrases"]
-        for player, data in context["per_player"].items()
-        if data.get("achievement_phrases")
-    }
-    if not phrases_by_player:
-        return {"teg": teg_num, "enriched": False, "usage": None}
-
-    context_json = json.dumps({
-        "trophy_winner": context["trophy_winner"],
-        "jacket_winner": context["jacket_winner"],
-        "spoon_holder": context["spoon_holder"],
-        "achievement_phrases_by_player": phrases_by_player,
-    }, indent=2, ensure_ascii=False)
-
-    user = (
-        "EXISTING REPORT:\n\n" + report_text
-        + "\n\n---\nACHIEVEMENT PHRASES TO WEAVE IN:\n\n" + context_json
-        + "\n\n---\nReturn the complete enriched report."
-    )
-
-    text, usage = llm.generate_text(
-        ENRICH_SYSTEM, user,
-        model=model or "claude-sonnet-4-6",
-        max_tokens=16000,
-    )
-
-    with open(report_path, "w") as f:
-        f.write(text)
-
-    style_report(teg_num)
-
-    return {"teg": teg_num, "enriched": True, "usage": usage, "output_path": report_path}

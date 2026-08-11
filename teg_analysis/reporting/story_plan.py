@@ -14,7 +14,7 @@ call, so the inputs can be validated with no key.
 from __future__ import annotations
 
 import json
-from typing import Optional, Tuple
+from typing import Literal, Optional, Tuple, get_args
 
 from pydantic import BaseModel
 
@@ -26,6 +26,107 @@ from teg_analysis.reporting import llm
 OUTPUT_DIR = "data/commentary"
 
 _ARC_KEY = {"trophy_win": "trophy", "jacket_win": "jacket", "wooden_spoon": "spoon"}
+
+
+# ---------------------------------------------------------------------------
+# Shared editor↔writer vocabulary — THE single source of truth
+# ---------------------------------------------------------------------------
+# These terms were previously spelled out independently in two ~15k-char prose
+# prompts with no enforcement, which let `prominent_vehicle` be specified twice
+# with two DIFFERENT vocabularies: the field spec said "pick a palette vehicle"
+# while the close-finish HARD RULE demanded `counterfactual`/`dual_narrative`
+# from the narrative-vehicle menu. The editor resolved that collision in favour
+# of the field spec every time, so the hard rule never once fired correctly.
+#
+# The fix is structural, not editorial: the vocabulary lives here, the prompt
+# menus are GENERATED from it, and the schema types below are `Literal`s built
+# from the same constants. A collision is now a validation error at generation
+# time instead of a silent wrong answer.
+#
+# Consequence worth knowing: the editor can no longer invent an unlisted vehicle
+# name. That freedom is what allowed the drift; adding a vehicle now means adding
+# it here, which updates the schema and both prompts at once.
+
+# How the report is sequenced.
+NARRATIVE_STRUCTURES: dict[str, str] = {
+    "chronological":       "straight tournament timeline; R1 → R4",
+    "in_medias_res":       "open mid-action, then loop back",
+    "reverse_chronology":  "start at the result, walk backwards through cause",
+    "theme_led":           "body organised around an idea, not rounds",
+    "three_act":           "setup / confrontation / resolution",
+    "player_by_player":    "one section per player rather than per round",
+}
+
+# The storytelling FRAME. Grouped for scanning only — the groups carry no
+# precedence. `prominent_vehicle` must be one of these.
+NARRATIVE_VEHICLES: dict[str, dict[str, str]] = {
+    "TOURNAMENT-SHAPE (what happened over the four days)": {
+        "counterfactual":  'close / decided late ("but for X, Y would have won")',
+        "dual_narrative":  "two players' weeks intertwined",
+        "tragic_arc":      "protagonist's collapse drove the tournament",
+        "motif":           "a recurring image / hole / number carried as connective tissue",
+        "bookends":        "open and close at the same scene / hole / moment",
+        "ensemble":        "the field collectively; course as protagonist",
+        "catalogue":       "inventory of a recurring failure mode",
+        "inevitability":   ("wire-to-wire procession (NOTE: SUPPORTING vehicle only — never "
+                            "`prominent_vehicle`; processions come through in the telling, "
+                            "not the framing)"),
+    },
+    "HISTORICAL-CONTEXT (the framing around the result)": {
+        "hero_arc":        "protagonist's career trajectory carries the report",
+        "comeback":        "long drought / redemption (first win since TEG N, etc.)",
+        "inversion":       "reigning holder dethroned / previous-loser elevated",
+        "origin":          "first win / debut / breakthrough",
+        "underdog":        "unlikely triumph from prior history",
+    },
+    "STYLISTIC (how to tell, pure judgement)": {
+        "theme_led_body":  "body organised around an idea, not rounds",
+    },
+}
+
+# The CONTEXT MATERIAL the writer foregrounds. A different axis from the frame:
+# a report can be framed `counterfactual` while foregrounding `cross_teg_career`.
+# Mirrors the PALETTE (a)-(g) block in `authoring.WRITER_SYSTEM`.
+PALETTE_VEHICLES: dict[str, str] = {
+    "cross_teg_career":  "career storylines across TEGs (Nth win, back-to-back, drought)",
+    "course_history":    "per-player history on this specific course",
+    "venue_character":   "the course / venue as a character in the telling",
+    "decisive_moment":   "the moment the result was effectively decided, + counterfactual",
+    "player_thread":     "one player's thread followed through the whole tournament",
+    "records":           "records and rare feats woven into the prose",
+    "foreshadow_payoff": "a seed planted early and paid off later",
+}
+
+_ALL_VEHICLES = tuple(v for group in NARRATIVE_VEHICLES.values() for v in group)
+
+NarrativeStructure = Literal[tuple(NARRATIVE_STRUCTURES)]          # type: ignore[misc]
+NarrativeVehicle = Literal[_ALL_VEHICLES]                          # type: ignore[misc]
+PaletteVehicle = Literal[tuple(PALETTE_VEHICLES)]                  # type: ignore[misc]
+
+# `inevitability` is explicitly a supporting vehicle only (see its note above).
+PROMINENT_VEHICLE_CHOICES = tuple(v for v in _ALL_VEHICLES if v != "inevitability")
+ProminentVehicle = Literal[PROMINENT_VEHICLE_CHOICES]              # type: ignore[misc]
+
+# Vehicles that satisfy the close-finish HARD RULE.
+CLOSE_FINISH_VEHICLES = ("counterfactual", "dual_narrative")
+
+
+def _render_structure_menu() -> str:
+    return "\n".join(f"    - `{k}`{' ' * max(1, 20 - len(k))}— {v}"
+                     for k, v in NARRATIVE_STRUCTURES.items())
+
+
+def _render_vehicle_menu() -> str:
+    blocks = []
+    for group, items in NARRATIVE_VEHICLES.items():
+        lines = [f"  {group}:"]
+        lines += [f"    - `{k}`{' ' * max(1, 20 - len(k))}— {v}" for k, v in items.items()]
+        blocks.append("\n".join(lines))
+    return "\n\n".join(blocks)
+
+
+def _render_palette_menu() -> str:
+    return " | ".join(f"`{k}`" for k in PALETTE_VEHICLES)
 
 
 # ---------------------------------------------------------------------------
@@ -68,9 +169,9 @@ class StoryPlan(BaseModel):
     title_candidates: list[str]
     theme: str                      # the one-line through-line / spine
     tone: str                       # resolved register for this report
-    narrative_structure: str        # "chronological" | "in_medias_res" | "theme_led" | free-form one-liner
+    narrative_structure: NarrativeStructure   # enum — see NARRATIVE_STRUCTURES
     opening_hook: str               # one-line description of what the report opens with (and why)
-    narrative_vehicles: list[str] = []  # 1-3 named storytelling vehicles (see SYSTEM_PROMPT menu)
+    narrative_vehicles: list[NarrativeVehicle] = []  # 1-3 frames — see NARRATIVE_VEHICLES
     foreshadow: list[str]           # hooks to plant early that pay off later
     competitions: list[Competition] # Trophy, Green Jacket, Wooden Spoon (priority order)
     rounds: list[RoundPlan]
@@ -87,7 +188,13 @@ class StoryPlan(BaseModel):
     player_storyline_bullets: dict[str, list[str]] = {}        # {player_name: [...bullets...]}
     course_history_notes: list[str] = []                       # per-course-history beats worth foregrounding
     decisive_moments: list[str] = []                           # one line per competition naming THE decisive moment
-    prominent_vehicle: str = ""                                # name of the palette vehicle the editor is foregrounding
+    # Two DIFFERENT axes, previously collapsed into one free-string field — which
+    # is what let the close-finish hard rule silently never fire. See the
+    # vocabulary block at the top of this module. Both are REQUIRED: the prompt
+    # always said "ALWAYS populated", and a required enum is how that is actually
+    # enforced rather than merely requested.
+    prominent_vehicle: ProminentVehicle        # the FRAME being foregrounded
+    prominent_palette: PaletteVehicle          # the CONTEXT MATERIAL being foregrounded
     payoffs: list[Payoff] = []                                 # setup→payoff pairs; one per foreshadow seed where possible
 
 
@@ -151,46 +258,26 @@ YOUR JOB:
 - Choose the story: one clear `theme` that runs through the whole report, and 2-4 \
 `foreshadow` hooks to plant early that pay off later.
 - Choose a `narrative_structure` and an `opening_hook` for the report. \
-`narrative_structure` is one of `chronological` | `in_medias_res` | `theme_led` \
-(or a one-line free-form description if none fits). `opening_hook` is a one-line \
-description of what the report opens with, and why. **Chronological is a default, \
+`narrative_structure` MUST be exactly one of these values — a bare value, NOT a \
+sentence, and NOT a value with an explanatory suffix appended:
+
+{STRUCTURE_MENU}
+
+  Put any explanation in `opening_hook`, which is a one-line description of what \
+the report opens with, and why. **Chronological is a default, \
 not a requirement** — favour non-chronological framing when the climax matters more \
 than the build-up (open with the decisive moment then flash back to how it came \
 about), or when the real story is a theme that cuts across rounds.
 
 - Choose **1–3 `narrative_vehicles`** that frame the report. These are NAMED \
-storytelling vehicles drawn from sports / longform conventions. Pick from the menu \
-below or invent a vehicle you can name in a phrase. The writer reads these as a \
+storytelling vehicles drawn from sports / longform conventions. Pick ONLY from the \
+menu below — unlisted names are rejected by the schema. The writer reads these as a \
 steer for how to shape the prose. The menu is grouped (structural / character-driven \
 / thematic) for scanning, not by preference — pick whichever genuinely apply, and \
 **vary your picks across reports**: if every TEG ends up `hero_arc + bookends`, the \
 reports become formulaic.
 
-  TOURNAMENT-SHAPE (what happened over the four days):
-    - `counterfactual`      — close / decided late ("but for X, Y would have won")
-    - `dual_narrative`      — two players' weeks intertwined
-    - `tragic_arc`          — protagonist's collapse drove the tournament
-    - `motif`               — a recurring image / hole / number carried as connective tissue
-    - `bookends`            — open and close at the same scene / hole / moment
-    - `ensemble`            — the field collectively; course as protagonist
-    - `catalogue`           — inventory of a recurring failure mode
-    - `inevitability`       — wire-to-wire procession  (NOTE: only use as a SUPPORTING \
-vehicle, never `prominent_vehicle` — processions come through in the telling, not the \
-framing)
-
-  HISTORICAL-CONTEXT (the framing around the result):
-    - `hero_arc`            — protagonist's career trajectory carries the report
-    - `comeback`            — long drought / redemption (first win since TEG N, etc.)
-    - `inversion`           — reigning holder dethroned / previous-loser elevated
-    - `origin`              — first win / debut / breakthrough
-    - `underdog`            — unlikely triumph from prior history
-
-  STYLISTIC (how to tell, pure judgement):
-    - `chronological`       — straight tournament timeline; R1 → R4
-    - `in_medias_res`       — open mid-action, then loop back
-    - `reverse_chronology`  — start at the result, walk backwards through cause
-    - `three_act`           — setup / confrontation / resolution
-    - `theme_led_body`      — body organised around an idea, not rounds
+{VEHICLE_MENU}
 
   Multiple vehicles can nest: e.g. `["bookends", "hero_arc", "comeback"]` or \
 `["inversion", "dual_narrative"]`. Pick what's MOST INTERESTING about THIS \
@@ -200,8 +287,10 @@ tournament; don't reach for the same pattern by reflex.
 `tournament_shape.close_finish` is computed deterministically from the Trophy \
 arc (small margin and/or a contested R4). When it is `true`, the close finish \
 IS the story: `prominent_vehicle` MUST be `counterfactual` (or `dual_narrative` \
-if two players carried the finish), and the close-finish framing leads the \
-report. Historical-context vehicles (`comeback`, `origin`, `inversion`, \
+if two players carried the finish) — and that same value MUST also appear in \
+`narrative_vehicles`. Note `prominent_vehicle` is a FRAME, chosen from the vehicle \
+menu above; it is NOT the palette field (`prominent_palette`), which is a separate \
+axis defined below. The close-finish framing leads the report. Historical-context vehicles (`comeback`, `origin`, `inversion`, \
 `hero_arc`) can ride alongside as supporting framing — but they cannot displace \
 the close finish as the primary frame. The bundle's `tournament_shape.signals` \
 list the firing reasons; reference them in your editorial reasoning. When \
@@ -242,12 +331,20 @@ headed across the next 56 holes". Leaving any of these empty is wrong — every 
 competition has a decisive moment, even a wire-to-wire procession (where the \
 decisive moment is the round / hole the cushion became unrecoverable).
 
-- `prominent_vehicle`: **ALWAYS populated.** Pick the palette vehicle the writer \
-should foreground: one of `cross_teg_career` | `course_history` | `venue_character` \
-| `decisive_moment` | `player_thread` | `records` | `foreshadow_payoff`. The writer \
-is required to make at least one vehicle prominent; you tell them which. Choose \
-whichever is most interesting about THIS tournament — if multiple feel equal, pick \
-the one most likely to vary the framing across reports.
+- `prominent_vehicle` and `prominent_palette`: **BOTH ALWAYS populated. They are \
+two different axes — do not confuse them.**
+
+  - `prominent_vehicle` = **the FRAME**, chosen from the `narrative_vehicles` menu \
+above (and it must also appear in your `narrative_vehicles` list). This is the one \
+the close-finish HARD RULE constrains.
+  - `prominent_palette` = **the CONTEXT MATERIAL** the writer foregrounds, one of: \
+{PALETTE_MENU}. The writer is required to make at least one palette item prominent; \
+you tell them which.
+
+  A report is normally framed one way and foregrounds material from another — e.g. \
+framed `counterfactual` while foregrounding `cross_teg_career`. Choose each on its \
+own merits; if several feel equal, prefer the combination that varies the framing \
+across reports.
 
 - `payoffs`: **one entry per `foreshadow[]` seed.** If you have 4 foreshadows you \
 should have ~4 payoffs. Each entry: `seed` (short ref to the seed), `resolves_in` \
@@ -309,6 +406,46 @@ in `chosen_headline` or `angle`, take it verbatim from there. For everything els
 cross-round references, foreshadow hooks, payoffs — use the round number ("R3", \
 "Round 3"), NEVER a weekday.
 - Output only the structured plan."""
+
+
+# Fill the generated menus in from the vocabulary constants. Doing this once at
+# import keeps the prompt a single cacheable string while leaving exactly one
+# place (the constants above) where the vocabulary is defined.
+SYSTEM_PROMPT = (SYSTEM_PROMPT
+                 .replace("{STRUCTURE_MENU}", _render_structure_menu())
+                 .replace("{VEHICLE_MENU}", _render_vehicle_menu())
+                 .replace("{PALETTE_MENU}", _render_palette_menu()))
+
+for _placeholder in ("{STRUCTURE_MENU}", "{VEHICLE_MENU}", "{PALETTE_MENU}"):
+    assert _placeholder not in SYSTEM_PROMPT, f"unfilled placeholder {_placeholder}"
+
+
+def check_plan_consistency(plan: StoryPlan, bundle: dict) -> list[str]:
+    """Post-generation checks the schema alone cannot express. Returns warnings.
+
+    The `Literal` types stop an invalid *value*; these catch invalid
+    *combinations* — most importantly the close-finish hard rule, which was
+    stated in prose for four TEGs and silently violated on both the TEGs it
+    applied to.
+    """
+    warnings: list[str] = []
+    shape = bundle.get("tournament_shape") or {}
+    if shape.get("close_finish") and plan.prominent_vehicle not in CLOSE_FINISH_VEHICLES:
+        warnings.append(
+            f"close_finish is true but prominent_vehicle={plan.prominent_vehicle!r}; "
+            f"expected one of {list(CLOSE_FINISH_VEHICLES)}")
+    if plan.prominent_vehicle not in plan.narrative_vehicles:
+        warnings.append(
+            f"prominent_vehicle={plan.prominent_vehicle!r} is not in "
+            f"narrative_vehicles={plan.narrative_vehicles}")
+    mandatory = {b["id"] for b in bundle.get("beats", []) if b.get("mandatory")}
+    missed = sorted(mandatory - set(plan.must_include_beat_ids))
+    if missed:
+        warnings.append(f"mandatory beats missing from must_include_beat_ids: {missed}")
+    cut_mandatory = sorted(mandatory & set(plan.cuts))
+    if cut_mandatory:
+        warnings.append(f"mandatory beats listed in cuts: {cut_mandatory}")
+    return warnings
 
 
 # ---------------------------------------------------------------------------
@@ -493,4 +630,11 @@ def build_story_plan(teg_num: int, mode: str = "balanced", tone: str = "house",
     out_path = f"{OUTPUT_DIR}/teg_{teg_num}_story_plan.json"
     with open(out_path, "w") as f:
         json.dump(plan.model_dump(), f, indent=2, ensure_ascii=False)
-    return {"dry_run": False, "plan": plan, "usage": usage, "output_path": out_path}
+    # Combination-level checks the schema can't express (close-finish rule,
+    # mandatory-beat coverage). Surfaced, not raised: a plan that trips one is
+    # still usable, but it must not pass silently the way it did for four TEGs.
+    plan_warnings = check_plan_consistency(plan, bundle)
+    for w in plan_warnings:
+        print(f"[story_plan] WARNING TEG {teg_num}: {w}")
+    return {"dry_run": False, "plan": plan, "usage": usage, "output_path": out_path,
+            "warnings": plan_warnings}

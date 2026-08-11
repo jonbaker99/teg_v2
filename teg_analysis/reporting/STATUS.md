@@ -2,11 +2,12 @@
 
 **Pick-up ledger.** Read this first when resuming work in a fresh session. The how-it-works architecture is in [README.md](README.md); the running experiment log is in [EXPERIMENTS.md](EXPERIMENTS.md).
 
-> **Last verified against the codebase: 2026-08-11.** Last actual pipeline code change: **2026-08-11**
-> — a new `long_lead_lost` detector landed in `events.py` (see below); before that, mid-June 2026 (all
-> `teg_analysis/reporting/*.py` last changed in the 2026-06-17 merge until this session). Note that
-> `data/commentary/` was only added to git in the June merge, so **git dates tell you nothing about
-> when a report was generated** — use the story-plan schema fingerprint in
+> **Last verified against the codebase: 2026-08-11.** Substantial pipeline work landed that day:
+> the D3 verification layer, the shared-vocabulary schema fix, the era-leak fix, the arc-payload
+> weighting, the `long_lead_lost` detector and the model pin — see
+> [Known issues](#known-issues) for the register. Note that `data/commentary/` was only added to
+> git in the June 2026 merge, so **git dates tell you nothing about when a report was generated**
+> — use the story-plan schema fingerprint in
 > [Report inventory](#report-inventory-what-actually-exists) instead.
 
 ---
@@ -37,6 +38,22 @@ every future report. No report was regenerated and no weight setting was adopted
 judgment calls for a session with `ANTHROPIC_API_KEY`. Full detail in
 [EXPERIMENTS.md](EXPERIMENTS.md) → H10.
 
+**2026-08-11 (later) — the defect backlog was cleared.** Ten of the register's issues are fixed,
+including all three P1s. The two that matter most:
+
+- **D3 exists.** `verify.py` checks a finished report against the data — the assurance mechanism the
+  pipeline never had. Run it with `python -m teg_analysis.reporting.verify --all --rounds`. It
+  independently re-found the TEG 10 R3 arithmetic error and turned up **41 raw beat IDs sitting in
+  TEG 5's published report**, which nobody knew about. Both are now fixed.
+- **The close-finish hard rule can finally fire.** `prominent_vehicle` was specified with two
+  different vocabularies in two prompts; the vocabulary now lives in one place, the prompt menus are
+  generated from it, and the schema enforces it. The exact value that shipped for four TEGs is now a
+  validation error.
+
+**What is deliberately still open: the two judgement calls** — the humour dial and the selection-
+weight setting — plus the 81 prose-wording faults D3 reports across the older reports, which
+regeneration clears. Nothing else is blocking. Test suite: 404 passed, 4 skipped.
+
 ---
 
 ## Architecture status — all stages built
@@ -56,7 +73,8 @@ judgment calls for a session with `ANTHROPIC_API_KEY`. Full detail in
 | ✅ | 4b — entertaining report (around-draft) | `authoring.report_around_draft` |
 | ✅ | 4b — repetition lint | `authoring.repetition_lint` |
 | ⚠️ | 4c — tighten pass | `authoring.tighten_prose` — **built, not wired into `backfill.py`** |
-| ⚠️ | 4d — history enrichment pass | `authoring.enrich_report_with_history` — **built, zero callers** |
+| 🗑️ | 4d — history enrichment pass | **deleted 2026-08-11** — zero callers, duplicated `history_context` |
+| ✅ | D3 — programmatic verification | `verify.py` — 7 mechanical checks, auto-run by `backfill.py` |
 | ✅ | 5 — CSS-class styling renderer | `render.apply_styling` / `render.style_report` |
 | ✅ | round-level pipeline | `round_report.py` |
 | ✅ | batch orchestration | `backfill.py` |
@@ -84,7 +102,7 @@ of most published reports. Reconstructed from the code and the `*_pre*` snapshot
 | **H1** | **Narrative vehicles.** The editor picks 1–3 named storytelling frames from a menu (`bookends`, `motif`, `hero_arc`, `inversion`, `counterfactual`, `dual_narrative`, `three_act`, `theme_led_body`, …) and the writer is required to honour them. | `story_plan.SYSTEM_PROMPT` vehicle menu; `StoryPlan.narrative_vehicles` / `.prominent_vehicle`; WRITER_SYSTEM STRUCTURE rule | `*_report_prevehicles.md` |
 | **H2** | **Anti-repetition across reports.** `recent_vehicle_choices(teg)` feeds the last few TEGs' vehicle picks into the bundle as a SOFT RULE so consecutive reports don't default to the same frame. | `tournament_shape.recent_vehicle_choices` | `*_report_prevehicles.md` |
 | **H3** | **Explicit setup→payoff pairs.** `foreshadow[]` seeds without payoffs was the single most common thinness. `Payoff` model + a non-negotiable writer rule now pairs each seed with the section that resolves it. | `story_plan.Payoff`, `StoryPlan.payoffs` | `*_report_prepayoff.md` |
-| **H4** | **Close-finish hard rule.** `detect_close_finish()` computes deterministically from the Trophy arc whether the finish was close; when true, `prominent_vehicle` MUST be `counterfactual`/`dual_narrative` and the close finish leads. Overrides H2. | `tournament_shape.detect_close_finish` | `*_report_preclose.md` |
+| **H4** | **Close-finish hard rule.** `detect_close_finish()` computes deterministically from the Trophy arc whether the finish was close; when true, `prominent_vehicle` MUST be `counterfactual`/`dual_narrative` and the close finish leads. Overrides H2. **Never fired correctly until the 2026-08-11 schema fix** — see known issue 8. | `tournament_shape.detect_close_finish` | `*_report_preclose.md` |
 | **H5** | **Economy / tightening.** An 11-rule ECONOMY block (em-dash ceiling, subordinate-clause budget, no subject-burying preambles, punchline isolation, …) baked into `WRITER_SYSTEM`, **plus** a standalone `TIGHTEN_SYSTEM` / `tighten_prose()` pass. The economy rules were baked into the writer so tightening happens on the first pass; `tighten_prose` remains as a separate lever. | `authoring.WRITER_SYSTEM` ECONOMY; `authoring.tighten_prose` | `*_report_pretighten.md`, `*_report_tightened.md` |
 | **H6** | **Cross-TEG + per-course context.** Career storylines (Nth Trophy, back-to-back, first win in N years, defending champion), per-course player history, new course records (mandatory beats), and win counts in the at-a-glance box. Plus a standalone `ENRICH_SYSTEM` / `enrich_report_with_history()` insert pass. | `history_context.py`, `course_history.py`, `render._build_at_a_glance` | — |
 | **H7** | **Faithfulness hardening.** New non-negotiable writer rules: verified `player_relationships` only (no inferring siblings from surnames); verbatim `weekday` use, and never call a 4-day TEG "a week"; only players who actually played this TEG; strip internal beat IDs from prose; exact arithmetic. | `authoring.WRITER_SYSTEM` FAITHFULNESS; `constants.PLAYER_RELATIONSHIPS` | — |
@@ -166,42 +184,59 @@ Severity is *impact if left alone*, not effort:
 
 | ID | Issue | Sev | Effort | Blocks regen? | Status |
 |---|---|---|---|---|---|
-| 10 | **No programmatic verification (D3) exists** — nothing checks a prose claim against the data | **P1** | L | no, but it's the safety net for it | Open — largest structural gap |
-| 8 | **Editor↔writer vocabulary defined twice, unenforced** — close-finish hard rule has never fired (0/2) | **P1** | S–M | **yes** | Open |
-| 1 | **Pre-TEG-8 era leak** — TEGs 5/6/7 narrate a net-vs-par race in Stableford | **P1** | S | **yes** | Open — shipped, user-visible |
-| — | **Humour dial unsettled** (not a defect — a decision) | **P1** | — | **yes** | Open — Jon only |
-| 4 | **TEG 10 R3 arithmetic error** — "fourteen-point swing" should be sixteen | P2 | S | no | Open — shipped, single instance |
-| 12 | **Arc payload reaches the writer unweighted** — `lead_changes` *and* `bottom_changes` | P2 | S–M | no | Partly fixed (detector built); options 1–3 open |
-| 13 | **Selection weights untuned** | P2 | S | no | Measured 2026-08-11; decision pending |
-| 9 | **Prompt density past the useful point** — 38 bolded, 11 absolutes | P2 | M | no | Open — partly dissolves once 10 lands |
-| 3 | **Round pipeline a generation behind** | P2 | M | only round regen | Open — conditional on wanting round reports |
-| 14 | **TEG 14 fixture chain broken** — the anchor case can't do the cheap loops | P2 | S (~$0.65) | no | Open |
-| 5 | **Remote (webapp) report generation not built** | P2 | L | no | Open — tracked in `webapp/TODOS.md` |
-| 11a | **`DEFAULT_MODEL` still `claude-opus-4-7`** | P2 | XS | no — but changes every later baseline | Open |
-| 2 | **`enrich_report_with_history()` has zero callers** | P3 | XS | no | Open — wire or delete |
-| 11b | **Dead `DRY_DRAFT_SYSTEM = ..._LIGHT` alias** contradicting the settled default | P3 | XS | no | Open |
-| 15 | **`output_config.effort` never set** — untested cost lever, not a defect | P3 | S | no | Open — needs a key (H9) |
-| 6 | **`teg_reports.css` duplicated — and now drifted** | P3 | XS | no | Open — webapp copy is ahead |
-| 7 | **Python 3.14 venv jinja2 bug** | P3 | — | no | Open — workaround: use 3.12/3.13 |
+| 10 | **No programmatic verification (D3) exists** | **P1** | L | — | ✅ **FIXED 2026-08-11** — `verify.py`, 7 checks, auto-run by `backfill.py` |
+| 8 | **Editor↔writer vocabulary defined twice, unenforced** | **P1** | S–M | yes | ✅ **FIXED** — single source of truth + `Literal` enums; collision is now a validation error |
+| 1 | **Pre-TEG-8 era leak** | **P1** | S | yes | ✅ **FIXED** — `hole_evidence` is era-aware; pre-8 beats carry `netvp`, never `stableford` |
+| 3 | **Round pipeline a generation behind** | P2 | M | round regen | ✅ **FIXED** — `RoundStoryPlan` has vehicles, payoffs and the shared enums |
+| 4 | **TEG 10 R3 arithmetic error** | P2 | S | no | ✅ **FIXED** — "fourteen-point swing" → sixteen; D3 regression-tests it |
+| 16 | **TEG 5 shipped 41 beat IDs to readers** | P2 | S | no | ✅ **FIXED** — found by D3, stripped from final + styled |
+| 12 | **Arc payload reaches the writer unweighted** | P2 | S–M | no | ✅ **FIXED** — per-entry `significance`, early/late summaries, and the Spoon arc finally has an `outright` flag |
+| 11a | **`DEFAULT_MODEL` still `claude-opus-4-7`** | P2 | XS | no | ✅ **FIXED** — pinned to `claude-opus-5` |
+| 2 | **`enrich_report_with_history()` has zero callers** | P3 | XS | no | ✅ **FIXED** — deleted, with `ENRICH_SYSTEM` and `build_history_enrichment_context` |
+| 11b | **Dead `DRY_DRAFT_SYSTEM = ..._LIGHT` alias** | P3 | XS | no | ✅ **FIXED** — deleted |
+| 17 | **81 prose-wording faults across older reports** ("the week" ×71, invented weekdays ×10) | P2 | — | **cleared BY regen** | ⏳ **Open** — surfaced by D3; needs regeneration, not hand-editing |
+| 13 | **Selection weights untuned** | P2 | S | no | ⏳ **Open — decision** (measured; `fast` recommended) |
+| — | **Humour dial unsettled** | **P1** | — | yes | ⏳ **Open — Jon** |
+| 9 | **Prompt density past the useful point** | P2 | M | no | ⏳ **Open** — D3 now duplicates 6 of the 11 absolutes, so the trim is *possible*; do it on evidence from fresh generations, not speculatively |
+| 14 | **TEG 14 fixture chain broken** | P2 | S (~$0.65) | no | ⏳ **Open** — needs one generation |
+| 5 | **Remote (webapp) report generation not built** | P2 | L | no | ⏳ **Open** — `webapp/TODOS.md` |
+| 15 | **`output_config.effort` never set** | P3 | S | no | ⏳ **Open** — needs a key (H9) |
+| 6 | **`teg_reports.css` duplicated and drifted** | P3 | XS | no | ⏳ **Open — deliberately not fixed**, see below |
+| 7 | **Python 3.14 venv jinja2 bug** | P3 | — | no | ⏳ **Open** — use 3.12/3.13 |
 
-**Fixed this session (2026-08-11):** the missing *long-held-lead-lost* detector (was candidate fix 4
-under H10 — a genuine detection gap, not a re-weighting) and the component-model restructure in
-README.md.
+**Issue 6 — why it was left alone.** The obvious fix (delete `streamlit/styles/teg_reports.css`,
+keeping the live `webapp/static/` copy) requires editing `streamlit/`, which the project rules
+forbid outright. The duplication is also harmless in practice: the webapp copy is the live one and
+is already ahead, and nobody is permitted to edit the streamlit copy anyway. It resolves itself when
+`streamlit/` is deleted — which is a scoped decision of its own, not something to slip into an
+unrelated change.
 
-**Recommended fix order** — derived from the blocking column, not from severity alone:
+**What D3 found that nobody knew about.** Running the new checks over the whole published library
+turned up **123 errors across 14 reports**. Two classes were mechanically fixable and are fixed:
+TEG 5's 41 reader-visible beat IDs, and the TEG 10 R3 arithmetic error. The remaining **81 are prose
+wording** — 71 uses of "the week" (a TEG is 3–4 consecutive days; verified against round dates) and
+10 invented weekday names (e.g. TEG 2 names a Tuesday; it ran Saturday–Monday). Those are almost all
+in pre-H7 reports that predate the rules, and rewording them by hand would be editing the writer's
+voice — so they are left for regeneration. **This is the vintage problem made measurable:** it was
+previously described as "reads inconsistently" and is now an exact count that drops as reports are
+regenerated.
 
-1. **11a** (model pin) and **11b** (dead alias) — minutes each, and 11a changes the baseline every
-   later experiment measures against, so it has to be first or the measurements are wrong.
-2. **8** (schema enums) — the only P1 that silently corrupts *every* future report. Must precede regen.
-3. **1** (era leak) — small, contained, must precede regen of TEGs 2–7.
-4. **10** (build D3) — do it *before* the library regeneration, so the regeneration is the first thing
-   it verifies. Start with the six mechanical rules; that also shrinks **9**.
-5. **2**, **6**, **12** — tidying and data-shaping, any time; none blocks anything.
-6. **13** (weights) and the humour dial — both need judgement; 13 also wants a key for the plan-only rung.
-7. **14**, then the regeneration itself, then **4** falls out of it.
-8. **3**, **5**, **15** — conditional or independent; schedule separately.
+**Recommended order for what remains:**
 
-### 1. Pre-TEG-8 reports are framed in Stableford (era leak) — factual, user-visible
+1. **Humour dial** (Jon) and **13** (weights) — the two judgement calls; everything else waits on
+   the first of them.
+2. **14** — rebuild TEG 14's fixture chain (~$0.65) so the cheap loops work on the anchor case.
+3. **Regenerate** — clears issue 17 wholesale. Run `verify --all` after; the error count is the check.
+4. **9** — trim D1 only after D3 has proven itself on fresh generations.
+5. **5**, **15**, **6**, **7** — independent or conditional; schedule separately.
+
+### 1. Pre-TEG-8 era leak — FIXED 2026-08-11
+
+> **FIXED.** `hole_evidence(row, metric)` is era-aware: `net_vs_par` eras carry `netvp` per hole
+> and never `stableford`. `_fmt_evidence` reads whichever is present, and the `hot_stretch`
+> headline reports "shots to par" rather than "points" pre-TEG-8. The published TEG 5/6/7 prose
+> still contains the old framing — that clears on regeneration.
+
 
 TEGs 1–7 decided the Trophy on **net vs par**, not Stableford. `era.trophy_metric()` handles this and
 the prompts reference it — but `events.hole_evidence()` **unconditionally** puts a `stableford` value
@@ -222,31 +257,38 @@ from the legacy 2025 reports and is still accurate for TEGs 5–7 today.
 `trophy_metric(teg) == "net_vs_par"`), then regenerate TEGs 1–7. Also audit `_fmt_evidence()`
 (`events.py:859`), which renders `{stableford}pt` into the inspection artefact unconditionally.
 
-### 2. `backfill.py` is a generation behind the authoring module
+### 2. `backfill.py` was a generation behind the authoring module — RESOLVED
 
-`backfill_teg()` runs `plan → dry → around → lint → style`. It does **not** call `tighten_prose()`
-or `enrich_report_with_history()`. H5's economy rules are baked into `WRITER_SYSTEM` so the tighten
-pass is arguably redundant by design — but `enrich_report_with_history()` has **zero callers
-anywhere in the repo**, which means either it should be wired in or it should be deleted.
-**Decide, then either wire or remove.** Right now it's undocumented dead code.
+`backfill_teg()` runs `plan → dry → around → lint → style`. It did not call `tighten_prose()` or
+`enrich_report_with_history()`.
 
-**Are reports getting cross-TEG history at all? Yes — but by the other route, and unevenly.**
-Verified 2026-08-10 against the published prose (at-a-glance box and records block excluded, since
-those are deterministic). History *is* reaching the reports via the bundle's `player_history` →
-`WRITER_SYSTEM` palette item (a), not via the orphaned enrich pass. Coverage varies a lot:
+**Resolved 2026-08-11 by deleting the enrich path** (`enrich_report_with_history`, `ENRICH_SYSTEM`,
+`build_history_enrichment_context`). It had zero callers and computed the same class of fact the
+bundle already feeds the writer through `player_history` → `WRITER_SYSTEM` palette item (a) —
+duplication, not a gap. `tighten_prose()` is kept as a deliberate standalone lever; H5's economy
+rules are baked into `WRITER_SYSTEM` so the writer constructs tight on the first pass.
+
+`backfill_teg()` now also runs **D3 verification** after each report and reports any findings.
+
+The uneven history coverage that prompted the original question stands as an argument for tightening
+palette item (a), not for reviving a second pass:
 
 | TEG | 10 | 11 | 12 | 13 | 14 | 17 | 18 |
 |---|---|---|---|---|---|---|---|
 | history phrases in prose | 9 | 6 | **1** | 2 | 5 | 9 | 4 |
 | ordinal wins in prose | 3 | **0** | **0** | 5 | 4 | 3 | **0** |
 
-`build_history_enrichment_context()` (the enrich pass) and `build_player_cross_teg_history()` (in
-the bundle) compute the same class of fact from the same prior-TEG data — `achievement_phrases` vs
-`notable_milestones`. So this is duplication, not a gap. The uneven coverage is an argument for
-**tightening palette item (a)** — which the writer already has — rather than for reviving a second
-pass that would deliver the same facts twice.
+### 8. Shared editor↔writer vocabulary defined twice — FIXED 2026-08-11
 
-### 8. The shared editor↔writer vocabulary is defined twice, in prose, with no enforcement
+> **FIXED.** The vocabulary now lives once, in `story_plan.py`'s `NARRATIVE_STRUCTURES` /
+> `NARRATIVE_VEHICLES` / `PALETTE_VEHICLES`; both prompts' menus are *generated* from those
+> constants, and the schema types are `Literal`s built from the same source. The collided field was
+> split into `prominent_vehicle` (the frame) and `prominent_palette` (the context material), both
+> required. `check_plan_consistency()` additionally catches combination-level violations the schema
+> can't express — the close-finish rule, mandatory-beat coverage — and `build_story_plan` prints
+> them. Cost: the editor can no longer invent an unlisted vehicle name; that freedom is what
+> allowed the drift.
+
 
 `prominent_vehicle` is specified in two places with two different vocabularies:
 
@@ -305,7 +347,18 @@ risk reintroducing bugs already paid for. The order that preserves it:
 3. **Keep every faithfulness rule that traces to a real incident**, however shouty. Those are the
    ones the insider audience notices.
 
-### 10. No programmatic verification exists (the D3 gap)
+### 10. No programmatic verification (D3) — FIXED 2026-08-11
+
+> **FIXED.** `teg_analysis/reporting/verify.py` implements seven mechanical checks (beat IDs,
+> invented mechanisms, "a week", non-participants, invented weekdays, impossible over/under-par
+> totals, and mis-stated swings). `backfill.py` runs it after every generation. Findings are
+> reported, never raised.
+>
+> On first run over the whole library it produced **123 errors across 14 reports** — including the
+> TEG 10 R3 arithmetic error it was designed to catch, and 41 beat IDs visible in TEG 5's published
+> report that nobody had noticed. See the register above for what was fixed and what waits on
+> regeneration.
+
 
 Surfaced by the 2026-08-11 component-model rework (README → Theme D). Confirmed by grep: **nothing in
 `teg_analysis/reporting/` checks a prose claim against the source data.** Every faithfulness
@@ -327,7 +380,12 @@ fix. Note the manual version already exists: the sanity grep in
 Tracked as **Deferred → Faithfulness-check pass** below; this entry records *why* it has been
 promoted from "nice to have" to the largest structural gap in the pipeline.
 
-### 11. Two small code/doc contradictions found 2026-08-11
+### 11. Two small code/doc contradictions — FIXED 2026-08-11
+
+> **FIXED.** `llm.DEFAULT_MODEL` is now `claude-opus-5`, and the dead
+> `DRY_DRAFT_SYSTEM = DRY_DRAFT_SYSTEM_LIGHT` alias is deleted (`generate_dry_draft` already
+> defaulted to `detailed`, the settled winner).
+
 
 Both are live, both are cheap:
 
@@ -338,13 +396,25 @@ Both are live, both are cheap:
   `dry_draft_style="detailed"`, and EXPERIMENTS.md records **detailed** as the settled winner. The
   alias has no remaining callers — it's dead, but it reads as a contradicting default. Delete it.
 
-### 3. Round pipeline behind the tournament pipeline
+### 3. Round pipeline behind the tournament pipeline — FIXED 2026-08-11
+
+> **FIXED.** `RoundStoryPlan` gained `narrative_vehicles`, `prominent_vehicle`,
+> `prominent_palette` and `payoffs`, all on the same shared enums as the tournament plan, and
+> `ROUND_PLAN_SYSTEM`'s menus are generated from the same constants. The two pipelines can no
+> longer drift apart. Round *reports* are still unwritten for most rounds — that's coverage, a
+> separate decision.
+
 
 `RoundStoryPlan` has no `narrative_vehicles`, no `payoffs`, no storyline bullets. If round reports
 matter, H1/H3 need porting to `round_report.py` before the ~45 outstanding round reports are
 generated — otherwise the backfill bakes in the older editorial model.
 
-### 4. `teg_10_round_3_report_final.md` arithmetic error
+### 4. `teg_10_round_3` arithmetic error — FIXED 2026-08-11
+
+> **FIXED.** Corrected to "sixteen-point swing" in `_final`, `_styled` and `_A_around_draft`
+> (verified against the data: Mullin 91, 5 clear after R2 → 122, 11 adrift after R3). D3's
+> `check_swing_claims` now regression-tests this exact shape.
+
 
 Opening para claims "a fourteen-point swing" (Mullin: 5 clear → 11 adrift). Correct figure is
 sixteen. The dry draft has the right raw numbers; the writer miscalculated the summary. Fix on re-gen.
@@ -376,7 +446,15 @@ the only reason anyone would edit a file under `streamlit/`, which the project r
 The isolated `venv/` (Python 3.14) hits `TypeError: cannot use 'tuple' as a dict key` on every
 templated route. Visual webapp verification needs Python 3.12/3.13.
 
-### 12. Competition arcs reach the writer unweighted (both competitions)
+### 12. Competition arcs reach the writer unweighted — FIXED 2026-08-11
+
+> **FIXED.** Every lead/bottom change now carries a `significance` of `routine` / `notable` /
+> `decisive`, and each arc carries a `lead_change_summary` / `bottom_change_summary` with the
+> early/late split, the outright count and an `all_routine` flag. The Spoon arc gained the
+> `outright` distinction it never had (`_ranklast_counts`). `WRITER_SYSTEM` now points at this data
+> instead of merely asserting that early changes are routine. TEG 18 — whose entire lead-change
+> story is three R1 changes — now reports `all_routine: true`.
+
 
 Arcs bypass the selection layer entirely (README → component A3), so anything they carry arrives
 unfiltered. Audited the full payload 2026-08-11: the round-bounded fields are fine, but **two fields
@@ -431,148 +509,85 @@ most expensive stage. Tracked as EXPERIMENTS.md → H9; needs an API key.
 
 ## Next steps — ranked to-do list
 
-**The organising principle.** Regenerating the library (item 10) is the expensive, effectively
-one-way step: it sets the published voice and bakes in whatever state the pipeline is in. So
-everything that changes *what a report is* has to land before it. That single constraint produces
-most of the ordering below.
+> **Rewritten 2026-08-11.** The previous Tier 1 code track (schema vocabulary, model pin, era leak,
+> delete enrich) is **done**, along with D3, the arc weighting and the round-plan port. What is left
+> is much shorter, and almost all of it hangs off one decision.
 
-**Shape of the work:** two tracks run fully in parallel with nothing between them — a judgement
-track that only Jon can do, and a code track that needs no API key. They converge at Tier 2, which
-is strictly sequential and needs credentials.
+**The organising principle is unchanged.** Regenerating the library is the expensive, effectively
+one-way step: it sets the published voice and bakes in whatever state the pipeline is in. Everything
+that changes *what a report is* lands before it.
+
+**What changed is where the bottleneck sits.** It is no longer code — it is the two judgement calls.
 
 ```
-Tier 0  API key ─────────────────────────────────┐
-                                                 │ (blocks Tier 2 only)
-Tier 1  Track A (Jon)    1 humour dial ───────┐  │
-        no API needed    2 round-reports call │  │
-                                              ├──┴─► Tier 2 (sequential)
-        Track B (code)   3 schema vocabulary  │       7 effort/model experiment
-        no API needed    4 model pin          │       8 prompt audit
-                         5 era leak           │       9 TEG 14 validation regen
-                         6 delete enrich ─────┘            │
-                                                           ▼
-                                              Tier 3  10 regenerate library
-                                                      11 round reports (if wanted)
+  1 humour dial (Jon) ──┐
+                        ├──► 3 rebuild TEG 14 fixtures ──► 4 regenerate library ──► 5 verify --all
+  2 weight setting  ────┘                                        │
+                                                                 └──► clears issue 17 (81 wording faults)
+
+  independent, any time:  6 effort experiment · 7 prompt trim · 8 round-report scope · 9 remote generation
 ```
 
 ---
 
-### Tier 0 — prerequisite
-
-**0. Put `ANTHROPIC_API_KEY` in the environment config.**
-*Why:* every generative step is blocked without it, and a key pasted into a chat lasts one session
-and lands in the transcript.
-*Why here:* it gates all of Tier 2 but nothing in Tier 1, so it only has to be done before the
-tracks converge — not before work starts. Two minutes; do it whenever.
-
----
-
-### Tier 1 — start now, both tracks in parallel
-
-Track A and Track B touch nothing in common. Track A is reading and judgement; Track B is code.
-
-#### Track A — Jon only (no code, no API key)
+### The two blocking decisions
 
 **1. Settle the humour dial.** Read `teg_14_report_styled.md` (baseline) against
-`teg_14_report_humour6.md` / `_humour8.md` / `_humour8b.md`, then the TEG 18 pair. Record the
-verdict in EXPERIMENTS.md.
-*Why:* it sets the published voice, and it's the one open question nobody else can answer.
-*Why ranked first:* it is the **longest-lead item on the critical path and the only one with a
-single point of dependency**. The code track can finish everything and still be blocked waiting on
-it. Starting it late is what makes everything else late — and it needs no infrastructure, so
-there's nothing to wait for.
+`teg_14_report_humour6.md` / `_humour8.md` / `_humour8b.md`, then the TEG 18 pair. Record the verdict
+in EXPERIMENTS.md and fold the winner into `WRITER_SYSTEM`.
+*Why first:* it sets the published voice, only Jon can call it, and it blocks regeneration.
 
-**2. Decide whether round reports are wanted at all.**
-*Why:* 50 reports (~$32) and `RoundStoryPlan` needs the same schema fix as the tournament plan.
-*Why this high, when the work is last:* it's a **scope decision, not a task**. It changes what item
-3 has to cover and what "the library is done" means. Deciding it late means either redoing the
-schema work or discovering the scope doubled after you thought you'd finished.
-
-#### Track B — code changes (no API key needed to make them)
-
-**3. Schema-enforce the shared editor↔writer vocabulary** (known issue 8). Make
-`prominent_vehicle` / `narrative_vehicles` / `narrative_structure` `Literal[...]` enums.
-*Why:* the close-finish hard rule has **never fired correctly** — 0 for 2, including TEG 14, the
-tightest finish in the library. As prose it can fail silently; as a schema constraint it becomes a
-validation error at generation time.
-*Why top of this track:* it's the only item here that changes report *correctness* rather than
-tidiness, and it **must** precede regeneration or the same collapse is baked into every report.
-
-**4. Pin the model to `claude-opus-5`.** One line in `llm.DEFAULT_MODEL`.
-*Why:* same price as Opus 4.7 ($5/$25 per MTok) for a materially better model — staying put is the
-same spend for less capability. The code already sets adaptive thinking, so it's a drop-in.
-*Why here:* trivial and free, but it changes the baseline every later experiment measures against.
-Doing it after item 7 would invalidate that experiment's results.
-
-**5. Fix the pre-TEG-8 era leak** (known issue 1) — make `hole_evidence()` era-aware.
-*Why:* TEGs 5/6/7 currently narrate a net-vs-par Trophy race in Stableford points. It's a factual
-error the players would catch, and the webapp already ships a caption apologising for it.
-*Why below 3:* it's a real bug but a contained one — 6 reports, all of which are being regenerated
-anyway. It only has to be right before item 10.
-
-**6. Delete `enrich_report_with_history()`, `ENRICH_SYSTEM`, and `build_history_enrichment_context()`.**
-*Why:* zero callers, and it duplicates cross-TEG history the bundle already feeds the writer.
-*Why last in this track:* it's tidying, not correctness — nothing downstream is blocked by it. It
-earns its place only because dead code with an impressive prompt attached will cost the next session
-an hour of working out whether it matters. Recoverable from git if the call is wrong.
+**2. Choose the selection-weight setting** (known issue 13). Measured; see EXPERIMENTS.md → H10(a).
+`fast` (1.5, 0.8, 0.7) is the recommendation — it cuts the blow-up share 53%→40% while staying
+closest to what 17 published reports already validated. `importance-led` (2.0, 0.5, 0.5) is the
+stronger fix but a bigger jump.
+*Next rung before committing:* a plan-only run (~$0.28) on each shortlisted setting, comparing
+`must_include_beat_ids` composition. Needs an API key. Changing the default is one line in
+`scoring.MODE_WEIGHTS`.
 
 ---
 
-### Tier 2 — sequential, needs the API key and both Tier-1 tracks done
+### Then, in order
 
-**7. Run the effort + cheap-model experiment** (EXPERIMENTS.md → H9). ~$1.25 on TEG 14.
-*Why:* `output_config.effort` is never set, so every call runs at default `high` — an untested cost
-lever on the most expensive stage.
-*Why it must wait:* it needs the humour dial settled (item 1) or you're moving voice and model
-together and can't attribute the result, and the model pin (item 4) or you're measuring the wrong
-baseline.
+**3. Rebuild TEG 14's fixture chain** (known issue 14) — one generation, ~$0.65. Restores the two
+cheapest iteration loops on the standing anchor case.
 
-**8. Run a structured prompt audit** over `SYSTEM_PROMPT`, `WRITER_SYSTEM`, `DRY_DRAFT_SYSTEM_*`,
-`ROUND_*` (known issue 9).
-*Why:* 38 bolded directives and 11 absolutes in `WRITER_SYSTEM` — past the point where emphasis
-distinguishes anything.
-*Why after 1 and 3:* the audit needs to know the target voice before it can judge which voice
-instructions are dead, and item 3 removes some of the problem at the schema level first. **Keep
-every faithfulness rule that traces to a real incident** — those are the expensive ones.
+**4. Regenerate the stale reports** — TEGs 2–8, 15, 16, plus 9. ~$6.50. This is what clears issue 17
+(the 81 "the week" / invented-weekday faults), the pre-TEG-8 era framing in TEGs 5–7, and the
+three-vintage inconsistency in one pass.
 
-**9. Regenerate TEG 14 from scratch as the single validation case.**
-*Why:* close finish (exercises the fixed hard rule), 2-point margin (arithmetic risk), multiple
-courses (the fabrication trap). If anything above broke something, it breaks here first.
-*Why it's its own step:* it's the gate between "changes made" and "changes trusted." ~$0.65 to avoid
-discovering a regression 60 reports in.
+**5. Verify.** `python -m teg_analysis.reporting.verify --all --rounds`. The error count is the
+acceptance test — it should fall to near zero. Anything left is a genuine new finding.
 
 ---
 
-### Tier 3 — the expensive, effectively one-way work
+### Independent — schedule whenever
 
-**10. Regenerate the stale tournament reports** — TEGs 2–8, 15, 16, plus 9. 10 reports, ~$6.50.
-*Why:* the library currently spans three pipeline vintages and reads inconsistently.
-*Why last:* every item above changes what a regenerated report contains. Doing this earlier means
-paying for it twice.
+**6. Effort + cheap-model experiment** (EXPERIMENTS.md → H9), ~$1.25. `output_config.effort` is never
+set, so every call runs at default `high`. Needs a key. Do it after the humour dial or the results
+can't be attributed.
 
-**11. Round reports, if item 2 said yes** — port the schema fix to `RoundStoryPlan`, then backfill
-50 reports (~$32; the Batch API item under *Deferred* would roughly halve that).
-*Why last:* largest spend in the plan, and entirely conditional on a decision that hasn't been made.
+**7. Trim `WRITER_SYSTEM`'s faithfulness block** (known issue 9). D3 now independently checks six of
+the eleven absolutes, so they *could* leave the prompt. **Do this on evidence, not speculatively:**
+run a few fresh generations first and check D3 stays quiet with the rules still in place. Belt and
+braces costs nothing; removing a rule that was doing real work is expensive to discover.
+
+**8. Decide whether round reports are wanted** — ~50 outstanding, ~$32. `RoundStoryPlan` is no longer
+the blocker (it was ported on 2026-08-11); this is now purely a scope-and-cost call.
+
+**9. Remote (webapp) report generation** (known issue 5) — tracked in `webapp/TODOS.md`.
+
+**10. Whenever:** TEG 11's at-a-glance box renders differently from every other report, suggesting
+`build_win_counts` returned nothing for that TEG. Cosmetic and self-contained.
 
 ---
 
-### Whenever — unranked
+**Not on this list, deliberately:** a full evaluation/regression harness. D3 is the proportionate
+version and now exists; revisit a fuller harness only if D3's mechanical checks prove insufficient
+in practice.
 
-**12. TEG 11's at-a-glance box renders differently** from every other report
-("Green Jacket: Jon Baker (+70, by 3 from David Mullin)" instead of "(3rd Jacket)"), which suggests
-`build_win_counts` returned nothing for that TEG. Cosmetic, self-contained, fixes itself if the
-cause is in the plan rather than the renderer.
-
----
-
-**Not on this list, deliberately:** a full evaluation/regression harness. It is the right long-term
-answer to "how do we know a prompt change didn't break faithfulness," but building it before the
-humour dial is settled risks building the wrong rubric. The machine-checkable Stage-3 rubric in
-EXPERIMENTS.md → H9 is the proportionate version for now; revisit a fuller harness after item 9.
-
-Cost reference: **~$0.65 per report** on Opus-tier. The story-plan call (~$0.28) dominates because
-the beats bundle is user-message-side and can't be cached. Total for the full plan above:
-~**$8** without round reports, ~**$40** with.
+Cost reference: **~$0.65 per report** on Opus-tier. Total for the plan above: ~**$8** without round
+reports, ~**$40** with.
 
 ---
 

@@ -242,8 +242,13 @@ lists/counts are the bug, and it affects the Wooden Spoon arc too, not just Trop
    That is arguably the most narratively significant lead-change variant and it isn't detected.
    **BUILT 2026-08-11 — see "Candidate fix 4" above.**
 
-Options 1–3 are still open and would need re-weighting-style tuning, not a detector — a reasonable
-follow-up once fix 4 has been read in a real report. Option 4 was the genuine gap and is done.
+**All four are now done (2026-08-11).** Fix 4 was the genuine detection gap. Fixes 1–3 landed
+together as `_change_significance` / `_summarise_changes` in `events.py`: every change carries a
+`significance` of `routine` / `notable` / `decisive`, and each arc carries a summary with the
+early/late split, the outright count and an `all_routine` flag. Applied to **both** competitions —
+the Spoon arc also gained the `outright` distinction it never had (`_ranklast_counts`).
+`WRITER_SYSTEM` now points at that data instead of merely asserting early changes are routine.
+TEG 18, whose entire lead-change story is three R1 changes, now reports `all_routine: true`.
 
 **If reweighting alone can't fix the mix**, the next lever is a structural one rather than a
 numeric one: a per-type cap (no more than N blow-ups in the cut) or a guaranteed quota for
@@ -253,8 +258,10 @@ achievement beats. Not needed here — `importance-led` already flips the mix wi
 - 2026-08-11: part (a) run — see results table above. Part (b) not attempted (no `ANTHROPIC_API_KEY`
   in this environment). Arc-payload audit done; `long_lead_lost` detector built and tested.
 
-**Verdict:** _(part (a) done, recommendation above; part (b) and the final weight-setting decision
-are still open — need an API key and, ideally, a from-scratch TEG 14 read)_
+**Verdict:** _(part (a) done — recommendation is `fast` (1.5, 0.8, 0.7). The arc sub-finding is
+**closed**: all four candidate fixes shipped 2026-08-11. Part (b) and the final weight-setting
+decision remain open — they need an API key for the plan-only rung, and ideally a from-scratch
+TEG 14 read.)_
 
 ---
 

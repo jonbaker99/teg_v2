@@ -4,7 +4,7 @@
 - Prompt caching on the (large, stable) system prompt; the per-TEG data goes in
   the user turn so the cached prefix is reused across reports.
 - Structured output via the Pydantic-validated messages.parse helper.
-- Adaptive thinking (effort defaults to high on Opus 4.7) for editorial quality.
+- Adaptive thinking (effort defaults to high) for editorial quality.
 
 The anthropic SDK is imported lazily so the rest of the reporting package
 (Stages 1-2, pure Python) works without it installed and without a key.
@@ -19,7 +19,7 @@ from typing import Optional, Type, Tuple
 
 from pydantic import BaseModel
 
-DEFAULT_MODEL = "claude-opus-4-7"
+DEFAULT_MODEL = "claude-opus-5"
 
 # Key resolution: ANTHROPIC_API_KEY from the environment first (the supported
 # route — Railway env var locally and on deploy), then a gitignored secrets.toml.

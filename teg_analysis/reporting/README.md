@@ -27,7 +27,7 @@ What the report is *allowed to know*. Everything downstream can only work with w
 | # | Component | In → Out | Lives in | Restart from | Cost | Maturity |
 |---|---|---|---|---|---|---|
 | A1 | **Raw facts — tournament** (scorecards, results, streaks) | parquet → `NotableEvent[]` | `core/data_loader`, `events.py` detectors | the data | full chain | **Works.** One known bug: era leak (`hole_evidence` attaches Stableford pre-TEG-8) |
-| A2 | **Raw facts — context** (cross-TEG, course, venue, era) | parquet → context dicts | `history_context`, `course_history`, `venue`, `era`, `tournament_shape` | the data | full chain | **Works.** `enrich` duplicates `history_context`; one should go |
+| A2 | **Raw facts — context** (cross-TEG, course, venue, era) | parquet → context dicts | `history_context`, `course_history`, `venue`, `era`, `tournament_shape` | the data | full chain | **Works.** The duplicate `enrich` path was deleted 2026-08-11 |
 | A3 | **Selection / weighting** — *what is notable enough to make the cut* | `NotableEvent[]` → ranked, trimmed beats | `scoring.py` (axis weights), `events.py` (sub-scores), `top_n` trim | cached beats | **free** (pure Python) | **Measured, untuned.** Weights never turned; profiler now exists; arcs bypass this layer entirely |
 
 ### Theme B — Editorial plan
@@ -60,15 +60,19 @@ the audience is the players themselves, who spot any factual error.
 
 | # | Component | In → Out | Lives in | Restart from | Cost | Maturity |
 |---|---|---|---|---|---|---|
-| D1 | **Preventive rules** — instructions telling the writer not to fabricate | prompt → constrained prose | `WRITER_SYSTEM` FAITHFULNESS (11 absolutes) | frozen dry draft + plan | ~$0.17 | **Built and overloaded.** Past the density point where emphasis distinguishes anything (known issue 9) |
+| D1 | **Preventive rules** — instructions telling the writer not to fabricate | prompt → constrained prose | `WRITER_SYSTEM` FAITHFULNESS (11 absolutes) | frozen dry draft + plan | ~$0.17 | **Built.** Still carries the 6 rules D3 now also checks — deliberate belt-and-braces; trim only once D3 has run on fresh generations |
 | D2 | **Deterministic guarantees** — facts code emits so prose can't get them wrong | data → injected blocks | `render.py` standings / records / at-a-glance | `_report_final.md` | **free** | **Works well.** The strongest assurance mechanism in the pipeline |
-| D3 | **Programmatic verification** — checking claims against the data after the fact | prose + data → pass/fail | *nothing — does not exist* | `_report_final.md` | **free** | **Absent.** Three recorded drift incidents; the only current practice is a manual grep |
+| D3 | **Programmatic verification** — checking claims against the data after the fact | prose + data → findings | `verify.py` (7 checks), auto-run by `backfill.py` | `_report_final.md` | **free** | **Built 2026-08-11.** Independently re-found the TEG 10 R3 error and 41 reader-visible beat IDs in TEG 5 |
 
 > **The determinism boundary is a policy, not a component.** For each class of fact, it decides
 > whether code emits it (D2), the writer is trusted with it (D1), or the writer produces it and code
 > checks it (D3). It used to be listed as its own row, which made it look editable; it isn't — it's
-> the question you answer when deciding *which of D1–D3 a rule belongs in*. Today the answer is
-> "D1 or D2", because D3 doesn't exist.
+> the question you answer when deciding *which of D1–D3 a rule belongs in*.
+>
+> **Run it:** `python -m teg_analysis.reporting.verify --all --rounds`, or
+> `verify_report(teg)` in code. `backfill.py` calls it after every generation, so a new report
+> cannot ship with a mechanical fault unnoticed. Findings are reported, never raised — a flagged
+> report is still written.
 
 ### Theme E — Presentation
 **In:** `_report_final.md` · **Out:** what the reader sees · **Cost per try:** free
@@ -100,9 +104,11 @@ separately because that's what they are.
 - **D is deliberately separate from C** even though D1 and C2 share a prompt file. They have
   different failure modes (a factual error the players catch, vs a flat sentence) and different tests
   (mechanical verification, vs taste). Keeping them apart is what makes it safe to rewrite style.
-- **Where the work is.** Ranked by risk × unbuiltness: **D3** (absent, and the reason three drift
-  incidents reached published reports) → **B3** (defective, fails silently, must land before any
-  regeneration) → **A3** (measured, decision pending) → the cross-cutting model pin (stale).
+- **Where the work is.** As of 2026-08-11 **D3, B3, A1's era leak and the model pin are all fixed**;
+  see [STATUS.md](STATUS.md) → Known issues for the register. What remains is **A3** (weights
+  measured, setting undecided) and **C2** (the humour dial) — both judgement calls, not defects —
+  plus the 81 prose-wording faults D3 now reports across the older reports, which regeneration
+  clears.
 
 #### Why D3 would reduce the burden on D1
 
@@ -301,7 +307,7 @@ Four further code-only modules assemble context alongside the beats. All are pur
 | Module | Provides | Used for |
 |---|---|---|
 | `era.py` | `trophy_metric(teg)` → `"stableford"` (TEG 8+) or `"net_vs_par"` (TEGs 1–7) | Every era-sensitive branch in `events`, `story_plan`, `authoring`, `round_report`, `render` |
-| `history_context.py` | `build_player_cross_teg_history(teg)` — career storyline phrases per player (Nth Trophy/Jacket/Spoon, back-to-back, first win in N years, defending champion, "first Trophy after 2 runner-up finishes"). Also `build_history_enrichment_context(teg)` and `build_win_counts(teg)` | Bundle's `player_history`; the deterministic at-a-glance win counts in `render` |
+| `history_context.py` | `build_player_cross_teg_history(teg)` — career storyline phrases per player (Nth Trophy/Jacket/Spoon, back-to-back, first win in N years, defending champion, "first Trophy after 2 runner-up finishes"). Also `build_win_counts(teg)` | Bundle's `player_history`; the deterministic at-a-glance win counts in `render` |
 | `course_history.py` | `build_player_course_history(teg)` — first visit / Nth visit / personal best here / strokes vs last visit. `detect_course_records(teg)` — new course gross records (good or bad) | Bundle's `player_course_history`; new course records become **mandatory beats** |
 | `tournament_shape.py` | `detect_close_finish(arcs, metric)` — deterministic close-finish signal. `recent_vehicle_choices(teg, n=3)` — what narrative vehicles the last few reports used | Bundle's `tournament_shape` (drives the close-finish **hard rule**) and `recent_vehicle_choices` (drives the anti-repetition **soft rule**) |
 
@@ -312,7 +318,7 @@ Verified `player_relationships` (from `teg_analysis.constants.PLAYER_RELATIONSHI
 The missing editorial layer. `build_story_plan(teg, mode=, tone=, dry_run=)`:
 
 - Assembles the input bundle (scored beats + arcs + venue) and a token-lean JSON.
-- Calls Claude Opus 4.7 with adaptive thinking, prompt caching on the (large, stable) system prompt, and structured Pydantic output.
+- Calls the model pinned in `llm.DEFAULT_MODEL` with adaptive thinking, prompt caching on the (large, stable) system prompt, and structured Pydantic output.
 - Returns a validated `StoryPlan` and writes `data/commentary/teg_N_story_plan.json`.
 
 Schema:
@@ -370,12 +376,17 @@ This is the steerable artefact — for `archive` mode a human can edit the JSON 
 
 **Repetition lint** — `repetition_lint(text)`. A narrow final pass whose only job is replacing repeated/over-used words. Doesn't change facts or structure. Runs on Haiku 4.5.
 
-#### Optional extra passes (built, not in the default chain)
+#### Optional extra pass (built, not in the default chain)
 
-Two further passes exist as separate levers. **Neither is called by `backfill.py`** — see [STATUS.md](STATUS.md) → Known issues before relying on them.
+- **`tighten_prose(text)`** (`TIGHTEN_SYSTEM`) — sandpapers over-built constructions: em-dash ceiling
+  of two per paragraph, subordinate-clause budget, no subject-burying preambles, punchline isolation,
+  one dominant idea per paragraph. The same 11 rules are also baked into `WRITER_SYSTEM`'s ECONOMY
+  block so the writer constructs tight on the first pass, which makes this pass largely a fix-up
+  lever for older text. Not called by `backfill.py`.
 
-- **`tighten_prose(text)`** (`TIGHTEN_SYSTEM`) — sandpapers over-built constructions: em-dash ceiling of two per paragraph, subordinate-clause budget, no subject-burying preambles, punchline isolation, one dominant idea per paragraph. The same 11 rules are also baked into `WRITER_SYSTEM`'s ECONOMY block so the writer constructs tight on the first pass, which makes this pass largely a fix-up lever for older text.
-- **`enrich_report_with_history(teg)`** (`ENRICH_SYSTEM`) — a targeted insert-only pass that weaves 3–7 pre-verified achievement phrases from `history_context.build_history_enrichment_context()` into an already-written report, without restructuring it.
+> `enrich_report_with_history()` / `ENRICH_SYSTEM` / `build_history_enrichment_context()` were
+> **deleted on 2026-08-11**. They had zero callers and computed the same class of fact the bundle
+> already feeds the writer via `player_history`. Recoverable from git if that call was wrong.
 
 ### 5. Styling — `render.py`
 
@@ -424,7 +435,7 @@ backfill_all([8, 9, 10], scope="tournament", force=True)  # re-run tournaments o
 | `teg_N_report_A_around_draft.md` | 4b | ~$0.10 |
 | `teg_N_report_final.md` | 4b + lint | ~$0.07 |
 | `teg_N_report_styled.md` | 5 | free |
-| **Total per report (Opus 4.7)** | | **~$0.65** |
+| **Total per report (Opus-tier)** | | **~$0.65** |
 
 Round artefacts follow the same names with a `round_{r}_` infix (`teg_N_round_2_story_plan.json`, `teg_N_round_2_report_styled.md`, …).
 
@@ -547,9 +558,10 @@ Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`t
 | `course_history.py` | Per-course player history + course-record detection |
 | `tournament_shape.py` | Close-finish signal + recent-vehicle anti-repetition |
 | `story_plan.py` | Stage 3 + the editor system prompt (incl. the vehicle menu) |
-| `authoring.py` | Stage 4 + all writer/lint/tighten/enrich system prompts |
+| `authoring.py` | Stage 4 + all writer/lint/tighten system prompts |
 | `round_report.py` | The per-round pipeline and its prompts |
 | `render.py` | Stage 5 — CSS hooks, standings, records block |
+| `verify.py` | **D3** — mechanical verification of a finished report against the data |
 | `backfill.py` | Batch orchestration across TEGs |
 | `llm.py` | Thin Anthropic wrapper (key resolution + prompt caching) |
 

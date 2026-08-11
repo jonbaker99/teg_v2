@@ -12,14 +12,17 @@ Full detail — including the report-by-report inventory and pipeline vintages �
 **Decisions (blocking — do these first):**
 
 - [ ] **Settle the humour dial** — a 3 / 6 / 8 / 8b A/B was run on TEGs 14 and 18; outputs are on disk, unpublished, **no verdict recorded**. Pick a level, fold it into `WRITER_SYSTEM`, log it in `reporting/EXPERIMENTS.md`. Blocks all regeneration.
-- [ ] **Decide the fate of `enrich_report_with_history()`** — built, documented, **zero callers**. Wire into `backfill.py` or delete. Same question, lower stakes, for `tighten_prose()`.
+- [ ] **Choose the selection-weight setting** — measured 2026-08-11 (`scripts/weight_profiler.py`); `fast` (1.5, 0.8, 0.7) recommended. Validate with a plan-only run, then set `scoring.MODE_WEIGHTS`. See `reporting/EXPERIMENTS.md` → H10(a).
+- [ ] **Decide whether round reports are wanted** — ~50 outstanding, ~$32. `RoundStoryPlan` is no longer a blocker (ported 2026-08-11); this is purely scope and cost now.
 
 **Then:**
 
-- [ ] **Fix the pre-TEG-8 era leak** — `events.hole_evidence()` attaches Stableford points to every hole regardless of era, so TEGs 5/6/7's reports frame the net-vs-par Trophy race in Stableford terms. Make it era-aware (`era.trophy_metric`), then regenerate.
-- [ ] **Regenerate the stale tournament reports** so the library is one vintage — TEGs 2–8, 15, 16 predate the narrative-vehicle/payoff work and TEG 9 is partial. 10 reports, ~$6.50. (Tournament *coverage* is already complete: TEGs 2–18 is the full set, there is no TEG 1 in the data.)
-- [ ] **Round reports — decide whether they're wanted.** If yes: port narrative vehicles + payoffs to `RoundStoryPlan` first (it's a generation behind `StoryPlan`), then backfill the 50 outstanding rounds (~$32; the Batch API item in STATUS.md would roughly halve that).
-- [ ] **TEG 10 R3 arithmetic fix** — "fourteen-point swing" should be "sixteen"; fixes itself on re-gen.
+- [ ] **Rebuild TEG 14's fixture chain** — missing `dry_draft.md` and `report_final.md`, so the two cheapest iteration loops are broken on the standing anchor case. One generation, ~$0.65.
+- [ ] **Regenerate the stale tournament reports** — TEGs 2–8, 15, 16, plus 9. ~$6.50. Clears the pre-TEG-8 era framing in the published prose, the 81 wording faults D3 reports, and the three-vintage inconsistency in one pass.
+- [ ] **Verify after regenerating** — `python -m teg_analysis.reporting.verify --all --rounds`; the error count is the acceptance test.
+- [ ] **Trim `WRITER_SYSTEM`'s faithfulness block** — D3 now checks 6 of the 11 absolutes independently. Do it on evidence from fresh generations, not speculatively.
+
+**Fixed 2026-08-11** (detail in `reporting/STATUS.md` → Known issues): D3 verification layer built; shared editor↔writer vocabulary schema-enforced (the close-finish hard rule had never fired); pre-TEG-8 era leak; round pipeline brought level; arc payload weighted for both competitions; TEG 10 R3 arithmetic error; 41 beat IDs in TEG 5's published report; model pinned to `claude-opus-5`; dead `enrich` path deleted.
 
 ## REST API
 
