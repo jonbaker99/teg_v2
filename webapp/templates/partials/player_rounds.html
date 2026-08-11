@@ -1,15 +1,15 @@
 <div>
     {% if rounds_chart_json %}
-    <h2 class="section-title">Gross vs Par by Round</h2>
-    <p class="text-sm text-secondary mb-3">Each bar is one round, coloured by score (green = better) and grouped by TEG.</p>
-    <div class="data-card data-card--padded mb-6">
-        <div class="chart-container" data-figure="{{ rounds_chart_json }}" style="height:320px;"></div>
+    <div class="pp-section">
+        <span class="pp-label">Gross vs Par by round</span>
+        <p class="pp-note">Each bar is one round, coloured by score (green = better) and grouped by TEG.</p>
+        <div class="chart-container" data-figure="{{ rounds_chart_json }}" style="height:320px; margin-top:0.9rem;"></div>
     </div>
     {% endif %}
 
-    <h2 class="section-title">All Rounds</h2>
-    <p class="text-sm text-secondary mb-3">* = personal best</p>
-    <div class="data-card"><div class="overflow-x-auto">
-        {{ rounds_table_html | safe }}
-    </div></div>
+    <div class="pp-section">
+        <span class="pp-label">All rounds</span>
+        <p class="pp-note">* = personal best</p>
+        <div class="overflow-x-auto">{{ rounds_table_html | safe }}</div>
+    </div>
 </div>

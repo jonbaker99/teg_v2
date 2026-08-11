@@ -158,11 +158,47 @@ def _metric_specs(all_data, rd_data, winners):
 
 
 # Headline metric cards. Row 1: career overview (4 cards). Row 2: scoring feats.
-# Trophies are broken down in the dedicated Trophy Cabinet section below.
+# Trophies are broken down in the dedicated Honours section below.
 _METRIC_ROWS = [
     ["TEGs Played", "Total Trophies", "Avg Gross vs Par", "Avg Stableford"],
     ["Holes in One", "Eagles", "Birdies"],
 ]
+
+# Order + short labels for the "At a glance" strip (all seven headline metrics).
+_GLANCE_ORDER = [
+    "TEGs Played", "Total Trophies", "Avg Gross vs Par", "Avg Stableford",
+    "Birdies", "Eagles", "Holes in One",
+]
+_GLANCE_SHORT = {
+    "TEGs Played": "TEGs",
+    "Total Trophies": "Trophies",
+    "Avg Gross vs Par": "Avg gross",
+    "Avg Stableford": "Avg stab",
+    "Birdies": "Birdies",
+    "Eagles": "Eagles",
+    "Holes in One": "Holes-in-1",
+}
+
+
+def _build_glance(metrics: list[list[dict]]) -> list[dict]:
+    """Flatten the metric cards into the ordered 'At a glance' strip.
+
+    ``metrics`` is the grouped ``_build_overview_metrics`` output; each card
+    carries value/label/rank (and an optional tooltip). We add a short label
+    and drop the '–' rank marker so empty ranks render as blank in the strip.
+    """
+    by_label = {card["label"]: card for row in metrics for card in row}
+    strip = []
+    for label in _GLANCE_ORDER:
+        card = by_label.get(label)
+        if not card:
+            continue
+        item = dict(card)
+        item["short"] = _GLANCE_SHORT.get(label, label)
+        if item.get("rank") == "–":
+            item["rank"] = ""
+        strip.append(item)
+    return strip
 
 
 def _build_overview_metrics(player_code: str, all_data: pd.DataFrame, specs: list) -> list[list[dict]]:
@@ -482,45 +518,65 @@ def _build_highlights(player_code: str) -> list[dict]:
     all_data = cached_load_all_data()
     rd_data = cached_round_data()
     ranked_teg = cached_ranked_teg_data()
-    items = []
 
-    # Best / worst course by average gross vs par (min 2 rounds for stability)
+    # Ordered best → worst so the rows read from the player's high point down:
+    # Best round, Best TEG, Best course, Worst course.
+    best_round = best_teg = best_course = worst_course = None
+
     player_rd = rd_data[rd_data["Player"] == name]
     if not player_rd.empty:
+        br = player_rd.loc[player_rd["GrossVP"].idxmin()]
+        best_round = {"label": "Best round", "value": format_value(br["GrossVP"], "GrossVP"),
+                      "detail": f"TEG {int(br['TEGNum'])} R{int(br['Round'])} · {br['Course']}"}
+
+        # Best / worst course by average gross vs par (min 2 rounds for stability)
         by_course = player_rd.groupby("Course")["GrossVP"].agg(["mean", "count"])
         by_course = by_course[by_course["count"] >= 2]
         if not by_course.empty:
             best_c = by_course["mean"].idxmin()
             worst_c = by_course["mean"].idxmax()
-            items.append({"label": "Best Course", "value": best_c,
-                          "detail": f"avg {by_course.loc[best_c, 'mean']:+.1f} over "
-                                    f"{int(by_course.loc[best_c, 'count'])} rounds"})
-            items.append({"label": "Worst Course", "value": worst_c,
-                          "detail": f"avg {by_course.loc[worst_c, 'mean']:+.1f} over "
-                                    f"{int(by_course.loc[worst_c, 'count'])} rounds",
-                          "bad": True})
+            best_course = {"label": "Best course", "value": best_c,
+                           "detail": f"avg {by_course.loc[best_c, 'mean']:+.1f} · "
+                                     f"{int(by_course.loc[best_c, 'count'])} rds"}
+            worst_course = {"label": "Worst course", "value": worst_c,
+                            "detail": f"avg {by_course.loc[worst_c, 'mean']:+.1f} · "
+                                      f"{int(by_course.loc[worst_c, 'count'])} rds",
+                            "bad": True}
 
-        # Best round
-        br = player_rd.loc[player_rd["GrossVP"].idxmin()]
-        items.append({"label": "Best Round", "value": format_value(br["GrossVP"], "GrossVP"),
-                      "detail": f"TEG {int(br['TEGNum'])} R{int(br['Round'])} · {br['Course']}"})
-
-    # Best TEG
     player_teg = ranked_teg[ranked_teg["Player"] == name]
     if not player_teg.empty:
         bt = player_teg.loc[player_teg["GrossVP"].idxmin()]
-        items.append({"label": "Best TEG", "value": format_value(bt["GrossVP"], "GrossVP"),
-                      "detail": f"TEG {int(bt['TEGNum'])}"})
+        best_teg = {"label": "Best TEG", "value": format_value(bt["GrossVP"], "GrossVP"),
+                    "detail": f"TEG {int(bt['TEGNum'])}"}
 
-    return items
+    return [i for i in (best_round, best_teg, best_course, worst_course) if i]
 
 
 # ---------------------------------------------------------------------------
 # Header subtitle
 # ---------------------------------------------------------------------------
 
+def _current_handicaps() -> dict:
+    """Map player name → current playing handicap (next/in-progress TEG).
+
+    Shared by the roster cards and the profile meta line. Best-effort: returns
+    an empty dict (players then show no handicap) if the lookup fails.
+    """
+    try:
+        _, next_tegnum, _ = get_next_teg_and_check_if_in_progress_fast()
+        hc_df, _ = get_current_handicaps_formatted(next_tegnum - 1, next_tegnum)
+        hc_col = f"TEG {next_tegnum}"
+        return dict(zip(hc_df["Handicap"], hc_df[hc_col].astype(int)))
+    except Exception:
+        logger.exception("Could not load current handicaps")
+        return {}
+
+
 def _build_subtitle(player_code: str) -> str:
-    """Build subtitle like 'First: TEG N (YYYY) · Latest: TEG N (YYYY)'."""
+    """One meta line: career span, TEG count and current playing handicap.
+
+    e.g. 'TEG 2 (2009) – TEG 18 (2025) · 17 TEGs · playing off 19'.
+    """
     name = get_player_dict()[player_code]
     all_data = cached_load_all_data()
     player_data = all_data[all_data['Player'] == name]
@@ -531,11 +587,17 @@ def _build_subtitle(player_code: str) -> str:
     teg_info = player_data[['TEGNum', 'Year']].drop_duplicates().sort_values('TEGNum')
     first = teg_info.iloc[0]
     latest = teg_info.iloc[-1]
+    n_tegs = len(teg_info)
 
-    return (
-        f"First: TEG {int(first['TEGNum'])} ({int(first['Year'])}) · "
-        f"Latest: TEG {int(latest['TEGNum'])} ({int(latest['Year'])})"
+    span = (
+        f"TEG {int(first['TEGNum'])} ({int(first['Year'])}) – "
+        f"TEG {int(latest['TEGNum'])} ({int(latest['Year'])})"
     )
+    parts = [span, f"{n_tegs} TEGs"]
+    hc = _current_handicaps().get(name)
+    if hc is not None:
+        parts.append(f"playing off {hc}")
+    return "  ·  ".join(parts)
 
 
 # ---------------------------------------------------------------------------
@@ -810,6 +872,7 @@ def _build_overview_context(player_code: str) -> dict:
             bar_labels=net_labels,
         )
 
+    metrics = _build_overview_metrics(player_code, all_data, specs)
     return {
         "teg_table_html": teg_table_html,
         "chart_gross_json": chart_gross_json,
@@ -817,7 +880,7 @@ def _build_overview_context(player_code: str) -> dict:
         "highlights": _build_highlights(player_code),
         "records_held": _records_held(get_player_dict()[player_code]),
         "worsts_held": _worsts_held(get_player_dict()[player_code]),
-        "metrics": _build_overview_metrics(player_code, all_data, specs),
+        "glance": _build_glance(metrics),
         "trophy": _build_trophy_section(player_code, specs),
     }
 
@@ -1120,14 +1183,7 @@ def _build_roster() -> list[dict]:
 
     # Current playing handicap = each player's HC for the next (or in-progress)
     # TEG. Map name → HC; players absent from the table just show "–".
-    try:
-        _, next_tegnum, _ = get_next_teg_and_check_if_in_progress_fast()
-        hc_df, _ = get_current_handicaps_formatted(next_tegnum - 1, next_tegnum)
-        hc_col = f"TEG {next_tegnum}"
-        current_hc = dict(zip(hc_df["Handicap"], hc_df[hc_col].astype(int)))
-    except Exception:
-        logger.exception("Could not load current handicaps for roster cards")
-        current_hc = {}
+    current_hc = _current_handicaps()
 
     cards = []
     for code, name in get_player_dict().items():

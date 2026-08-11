@@ -22,7 +22,7 @@ Paste-ready brief for converting a page (or judging a new one). The gut check:
 - **No decorative identity chrome** — no avatars, monogram circles, initials-in-bubbles, or filler icons added just to fill space.
 - **No redundant affordances** — if the whole card is a link, don't also add a "View profile →" CTA. Let the element be the affordance.
 - **Cut the sell.** No "dive into your career", no four-item em-dash lists, no adjectives doing marketing. Copy is short, factual, faintly wry.
-- **One accent colour, one job.** Green means *honours/silverware* — don't also spend it on borders, CTAs, icons and hover text at once. When an accent means something, keep it meaningful.
+- **One accent colour, kept meaningful.** Green is the single accent — it marks the positive/good (honours, best-of records, a winning result), not decoration. Don't dilute it across CTAs, hover text and filler chrome all at once. When an accent means something, keep it meaningful.
 
 **Surfaces & layout**
 - **Cards float directly on the page background** as their own surfaces — avoid nesting cards inside a big panel-within-a-panel. This means dissolving the *outer* panel, not removing card/section surfaces altogether: each group of content still needs a bounded surface (a card, or a clearly-divided section) to read as a distinct unit. A page where everything sits directly on the background with no grouping reads as an undifferentiated data dump, not a clean overview — that's the opposite of the goal. (Seen in practice: `/player/{code}`'s first conversion attempt over-applied this and lost all definition — see `webapp/TODOS.md` → Player Profiles.)
