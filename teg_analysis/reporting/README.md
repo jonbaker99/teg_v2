@@ -8,6 +8,52 @@ Replaces the old `streamlit/commentary/` system. The old pipeline buried key eve
 
 For the running ledger of what's done and what's deferred, see [STATUS.md](STATUS.md).
 
+## Components — what you can change independently
+
+The five stages below describe how a report is *built*. This table describes what can be *changed*,
+which is a different cut and the more useful one when planning work. Each row is independently
+editable, and — critically — they differ by orders of magnitude in how expensive they are to iterate
+on. Working out which component you're changing tells you which loop you're in.
+
+| # | Component | Lives in | To iterate, restart from | Cost per try |
+|---|---|---|---|---|
+| 1 | **Raw facts — tournament** (scorecards, results, streaks) | `core/data_loader`, `events.py` detectors | the data | full chain |
+| 2 | **Raw facts — context** (cross-TEG, course, venue, era) | `history_context`, `course_history`, `venue`, `era`, `tournament_shape` | the data | full chain |
+| 3 | **Selection / weighting** — *what is notable enough to make the cut* | `scoring.py` (axis weights), `events.py` (sub-scores), `top_n` trim | cached beats | **free** (pure Python) |
+| 4 | **Narrative vehicle** — the frame | `story_plan.SYSTEM_PROMPT` menu, `StoryPlan.narrative_vehicles` | bundle | ~$0.65 |
+| 5 | **Report structure** — round-by-round vs theme-led, closing section | `narrative_structure`, WRITER_SYSTEM STRUCTURE | bundle | ~$0.65 |
+| 6 | **Writing style / voice** | `WRITER_SYSTEM` VOICE + principles + ECONOMY | frozen dry draft + plan | ~$0.17 |
+| 7 | **Faithfulness guardrails** | `WRITER_SYSTEM` FAITHFULNESS | frozen dry draft + plan | ~$0.17 |
+| 8 | **Determinism boundary** — what code guarantees vs what the LLM is trusted with | `render.py` injections; the beats/arcs split | `_report_final.md` | **free** |
+| 9 | **Presentation — content injection** (which blocks, where) | `render.py` | `_report_final.md` | **free** |
+| 10 | **Presentation — visual design** | `teg_reports.css` (×2 — see known issues) | `_styled.md` | **free** |
+| 11 | **Scope** — tournament vs round | `story_plan.py` vs `round_report.py` | — | — |
+| 12 | **Model & runtime config** | `llm.DEFAULT_MODEL`, `output_config.effort` | varies | varies |
+
+Three notes that follow from the table:
+
+- **Components 3, 8, 9 and 10 are free to iterate on.** Selection especially — `build_notable_events()`
+  never calls an LLM, so the most powerful component in the pipeline can be tuned for nothing. See
+  [EXPERIMENTS.md](EXPERIMENTS.md) → H10.
+- **Never test a cheap-layer change by regenerating the expensive layers.** Changing voice means
+  re-running Stage 4b against a *frozen* dry draft. Regenerating the story plan as well changes two
+  things at once and teaches you nothing.
+- **Guardrails (7) are deliberately listed separately from style (6)** even though they share a
+  prompt. They have a different failure mode (a factual error the players catch, not a flat
+  sentence) and a different test (mechanical verification, not taste). Keeping them distinct is what
+  makes it safe to rewrite style.
+
+### Fixture set
+
+Iterating on components 6–10 needs a frozen artefact chain to restart from. **TEGs 9, 12 and 17
+have complete chains** (`story_plan.json` → `dry_draft.md` → `report_A_around_draft.md` →
+`report_final.md` → `report_styled.md`); 12 and 17 are current-vintage and are the best fixtures.
+
+> ⚠️ **TEG 14 — the standing stress-test anchor — is missing `dry_draft.md` and `report_final.md`.**
+> The humour and tighten experiments consumed them into variant filenames, so the two cheapest
+> iteration loops are broken on the very case chosen for being hardest. Rebuilding them costs one
+> full generation (~$0.65) and restores fast iteration on the anchor.
+
 ## The five stages
 
 ```
