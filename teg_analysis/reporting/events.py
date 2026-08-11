@@ -103,7 +103,7 @@ class NotableEvent:
     players: list = field(default_factory=list)   # full names involved
     round: Optional[int] = None
     course: Optional[str] = None                  # course this round was played on
-    holes: list = field(default_factory=list)     # evidence: [{hole,par,sc,grossvp,stableford,result}]
+    holes: list = field(default_factory=list)     # evidence: [{hole,par,sc,grossvp,result,+stableford|netvp}]
     importance: float = 0.0
     rarity: float = 0.0
     entertainment: float = 0.0
@@ -157,7 +157,16 @@ def result_label(grossvp: int, sc: int, par: int) -> str:
     return f"{int(grossvp):+d} (blow-up)"
 
 
-def hole_evidence(row) -> dict:
+def hole_evidence(row, metric: str = "stableford") -> dict:
+    """Per-hole evidence dict for a beat.
+
+    Era-aware: the Trophy is Stableford for TEG 8+ and net-vs-par for TEGs 1-7.
+    Attaching a `stableford` value to every hole regardless of era is what let
+    pre-TEG-8 reports narrate a net-vs-par Trophy race in Stableford points
+    (a real, published, user-visible error). For `net_vs_par` eras the hole
+    carries `netvp` instead, so the writer cannot quote a metric the
+    tournament did not use.
+    """
     par = int(row["PAR"])
     sc = int(row["Sc"])
     gvp = int(row["GrossVP"])
@@ -166,9 +175,12 @@ def hole_evidence(row) -> dict:
         "par": par,
         "sc": sc,
         "grossvp": gvp,
-        "stableford": int(row["Stableford"]),
         "result": result_label(gvp, sc, par),
     }
+    if metric == "net_vs_par":
+        d["netvp"] = int(row["NetVP"])
+    else:
+        d["stableford"] = int(row["Stableford"])
     si_val = row.get("SI") if hasattr(row, "get") else getattr(row, "SI", None)
     if si_val is not None:
         try:
@@ -242,6 +254,19 @@ def _rank1_counts(teg_df: pd.DataFrame, rank_col: str) -> dict:
     return {(int(r), int(h)): int(n) for (r, h), n in counts.items()}
 
 
+def _ranklast_counts(teg_df: pd.DataFrame, rank_col: str) -> dict:
+    """Map (round, hole) -> number of players sharing LAST place.
+
+    The bottom-of-the-board mirror of `_rank1_counts`. Without it the Spoon arc
+    could not distinguish an outright drop to last from merely drawing level at
+    the bottom — the distinction the Trophy/Jacket arcs have always had.
+    """
+    worst = teg_df.groupby(["Round", "Hole"])[rank_col].transform("max")
+    sub = teg_df[teg_df[rank_col] == worst]
+    counts = sub.groupby(["Round", "Hole"]).size()
+    return {(int(r), int(h)): int(n) for (r, h), n in counts.items()}
+
+
 def _turning_points(events_log: pd.DataFrame, teg_df: pd.DataFrame, sw: dict,
                     metric: str = "stableford") -> list:
     """Lead changes (top) and spoon changes (bottom) as discrete turning-point beats.
@@ -271,7 +296,7 @@ def _turning_points(events_log: pd.DataFrame, teg_df: pd.DataFrame, sw: dict,
         comp, etype = wanted[e["Event"]]
         pl, player = e["Pl"], e["Player"]
         key = (rnd, pl, hole)
-        ev = [hole_evidence(lookup[key]._asdict())] if key in lookup else []
+        ev = [hole_evidence(lookup[key]._asdict(), metric)] if key in lookup else []
         late = rnd >= teg_df["Round"].max()
         w = sw.get(pl, 0.4)
         lead_type = None
@@ -314,6 +339,90 @@ def _turning_points(events_log: pd.DataFrame, teg_df: pd.DataFrame, sw: dict,
     return out
 
 
+def _lead_tenure_losses(teg_df: pd.DataFrame, rank_col: str, comp_label: str,
+                        player_names: dict, sw: dict,
+                        metric: str = "stableford",
+                        min_tenure_holes: int = 18) -> list:
+    """Detect 'long-held lead lost' beats.
+
+    `_turning_points` records every outright takeover but not how long the
+    displaced leader had held the position — a lead held since the first
+    hole and lost on the final day reads identically to one held for three
+    holes. This walks the hole-by-hole outright-leader sequence directly: a
+    tied ('level') hole doesn't break a spell, it just doesn't advance it,
+    so a leader who draws level and immediately re-takes it outright keeps
+    their tenure clock running. Only spells of at least `min_tenure_holes`
+    (default 18 — roughly a full round) that end in an outright takeover by
+    someone else are reported, so this stays a rare, high-value beat rather
+    than duplicating every `lead_change`.
+    """
+    ordered = sorted(teg_df[["Round", "Hole"]].drop_duplicates()
+                     .itertuples(index=False, name=None))
+    idx_of = {key: i for i, key in enumerate(ordered)}
+    leaders = teg_df[teg_df[rank_col] == 1]
+    leader_at = {}
+    for (rnd, hole), g in leaders.groupby(["Round", "Hole"]):
+        if len(g) == 1:
+            leader_at[(int(rnd), int(hole))] = g.iloc[0]["Pl"]
+        # ties (len > 1) record no outright leader for this snapshot
+
+    last_round = int(teg_df["Round"].max())
+    lookup = {(int(r.Round), r.Pl, int(r.Hole)): r for r in teg_df.itertuples(index=False)}
+
+    out = []
+    current, since_idx, since_key = None, None, None
+    for key in ordered:
+        leader = leader_at.get(key)
+        if leader is None:
+            continue
+        if current is None:
+            current, since_idx, since_key = leader, idx_of[key], key
+            continue
+        if leader != current:
+            tenure_holes = idx_of[key] - since_idx
+            if tenure_holes >= min_tenure_holes:
+                start_rnd, start_hole = since_key
+                end_rnd, end_hole = key
+                rounds_spanned = end_rnd - start_rnd + 1
+                late = 1.0 if end_rnd == last_round else 0.0
+                # Centrality of whichever party (ex-leader or new leader) matters
+                # more to the eventual result — this event is notable from either end.
+                w = max(sw.get(current, 0.4), sw.get(leader, 0.4))
+                prev_player = player_names.get(current, current)
+                new_player = player_names.get(leader, leader)
+                base_imp = 3.0 + 0.12 * tenure_holes + 2.0 * (rounds_spanned - 1) + 1.5 * late + 1.0 * w
+                base_ent = 3.0 + 0.10 * tenure_holes + 1.5 * (rounds_spanned - 1)
+                rar = 3.0 + 0.08 * tenure_holes + 1.0 * (rounds_spanned - 1)
+                ev_key = (end_rnd, leader, end_hole)
+                ev = [hole_evidence(lookup[ev_key]._asdict(), metric)] if ev_key in lookup else []
+                out.append(NotableEvent(
+                    teg_num=int(teg_df["TEGNum"].iloc[0]), scope="hole",
+                    type="long_lead_lost", round=end_rnd,
+                    headline=(f"{prev_player} loses the {comp_label} lead to {new_player} "
+                             f"after {tenure_holes} holes in front "
+                             f"(R{start_rnd} H{start_hole}–R{end_rnd} H{end_hole})"),
+                    players=[prev_player, new_player], holes=ev,
+                    importance=scoring.cap(base_imp), rarity=scoring.cap(rar),
+                    entertainment=scoring.cap(base_ent),
+                    context={"competition": comp_label, "previous_leader": prev_player,
+                             "new_leader": new_player, "tenure_holes": tenure_holes,
+                             "rounds_spanned": rounds_spanned,
+                             "held_since": {"round": start_rnd, "hole": start_hole},
+                             "lost_at": {"round": end_rnd, "hole": end_hole}},
+                ))
+            current, since_idx, since_key = leader, idx_of[key], key
+    return out
+
+
+def _lead_tenure_events(teg_df: pd.DataFrame, sw: dict, player_names: dict,
+                        metric: str = "stableford") -> list:
+    """Long-held-lead-lost beats for both the Trophy and the Green Jacket."""
+    cols = _trophy_cols(metric)
+    trophy_label = _trophy_label(metric)
+    return (_lead_tenure_losses(teg_df, cols["rank_hole"], trophy_label, player_names, sw, metric)
+            + _lead_tenure_losses(teg_df, "Rank_GrossVP_TEG", JACKET, player_names, sw, metric))
+
+
 def _safe_int(x):
     try:
         if pd.isna(x):
@@ -325,7 +434,8 @@ def _safe_int(x):
 
 def _sequences(teg_df: pd.DataFrame, sw: dict, player_names: dict,
                player_par_max: Optional[dict] = None,
-               par_max: Optional[dict] = None) -> list:
+               par_max: Optional[dict] = None,
+               metric: str = "stableford") -> list:
     """Per player-round: cold/hot stretches, recoveries, collapses, standout holes.
 
     `player_par_max[(player, par)]` and `par_max[par]` carry lifetime worst-gross
@@ -351,7 +461,7 @@ def _sequences(teg_df: pd.DataFrame, sw: dict, player_names: dict,
         for run in _maximal_runs(rows, lambda r: r["GrossVP"] >= 2):
             if len(run) < 3:
                 continue
-            ev = [hole_evidence(r) for r in run]
+            ev = [hole_evidence(r, metric) for r in run]
             dropped = sum(h["grossvp"] for h in ev)
             severity = scoring.cap(dropped / 3.0)
             imp = scoring.cap((2 + 6 * w) * (0.6 + 0.04 * severity) + late)
@@ -370,19 +480,27 @@ def _sequences(teg_df: pd.DataFrame, sw: dict, player_names: dict,
         for run in _maximal_runs(rows, lambda r: r["Stableford"] >= 3):
             if len(run) < 3:
                 continue
-            ev = [hole_evidence(r) for r in run]
-            gained = sum(h["stableford"] for h in ev)
-            severity = scoring.cap(gained / 2.5)
+            ev = [hole_evidence(r, metric) for r in run]
+            # Severity is always measured on the Stableford scale (net birdie or
+            # better is the same idea in either era); only the REPORTED figure and
+            # its unit switch, so pre-TEG-8 beats never quote Stableford points.
+            severity = scoring.cap(sum(int(r["Stableford"]) for r in run) / 2.5)
+            if metric == "net_vs_par":
+                gained = -sum(h["netvp"] for h in ev)
+                gained_str = f"{gained} shots to par"
+            else:
+                gained = sum(h["stableford"] for h in ev)
+                gained_str = f"{gained} points"
             imp = scoring.cap((2 + 6 * w) * (0.6 + 0.04 * severity) + late)
             ent = scoring.cap(severity * (1.1 - 0.4 * w))
             rar = scoring.cap(severity * 0.6)
             h0, h1 = ev[0]["hole"], ev[-1]["hole"]
             out.append(NotableEvent(
                 teg_num=teg_num, scope="stretch", type="hot_stretch", round=rnd,
-                headline=f"{player} piles up {gained} points, holes {h0}-{h1} (R{rnd})",
+                headline=f"{player} piles up {gained_str}, holes {h0}-{h1} (R{rnd})",
                 players=[player], holes=ev,
                 importance=imp, rarity=rar, entertainment=ent,
-                context={"points_gained": gained, "length": len(ev)},
+                context={"points_gained": gained, "metric": metric, "length": len(ev)},
             ))
 
         # --- recovery: birdie+ immediately after a run (len>=2) of bogey-or-worse ---
@@ -391,7 +509,7 @@ def _sequences(teg_df: pd.DataFrame, sw: dict, player_names: dict,
                 prev = _maximal_runs(rows[:i], lambda x: x["GrossVP"] >= 1)
                 if prev and prev[-1][-1]["Hole"] == rows[i - 1]["Hole"] and len(prev[-1]) >= 2:
                     run = prev[-1] + [r]
-                    ev = [hole_evidence(x) for x in run]
+                    ev = [hole_evidence(x, metric) for x in run]
                     out.append(NotableEvent(
                         teg_num=teg_num, scope="stretch", type="recovery", round=rnd,
                         headline=f"{player} stops the bleeding with a {ev[-1]['result']} at the {_ord(ev[-1]['hole'])} (R{rnd})",
@@ -407,7 +525,7 @@ def _sequences(teg_df: pd.DataFrame, sw: dict, player_names: dict,
                 prev = _maximal_runs(rows[:i], lambda x: x["GrossVP"] <= 0)
                 if prev and prev[-1][-1]["Hole"] == rows[i - 1]["Hole"] and len(prev[-1]) >= 3:
                     run = prev[-1] + [r]
-                    ev = [hole_evidence(x) for x in run]
+                    ev = [hole_evidence(x, metric) for x in run]
                     out.append(NotableEvent(
                         teg_num=teg_num, scope="stretch", type="collapse_after_steady", round=rnd,
                         headline=f"{player}'s steady run ends with a {ev[-1]['result']} at the {_ord(ev[-1]['hole'])} (R{rnd})",
@@ -419,7 +537,7 @@ def _sequences(teg_df: pd.DataFrame, sw: dict, player_names: dict,
 
         # --- standout single holes: eagle, hole-in-one, big blow-up (>= quad) ---
         for r in rows:
-            ev = hole_evidence(r)
+            ev = hole_evidence(r, metric)
             if ev["sc"] == 1:
                 out.append(_hole_event(teg_num, rnd, player, ev, "hole_in_one",
                                        f"{player} aces the {_ord(ev['hole'])} (R{rnd})",
@@ -560,6 +678,39 @@ def _round_beats(round_summary: pd.DataFrame, sw: dict, metric: str = "stablefor
     return out
 
 
+def _change_significance(rnd: int, last_round: int, outright: bool) -> str:
+    """Label a lead/bottom change with the weighting the scorer already applies.
+
+    The beat scorer downranks early-round changes correctly (`_turning_points`:
+    importance scales with round, halved for a draw-level). Arcs bypass the
+    selection layer, so without this the writer sees a flat list in which an R1
+    shuffle and an R4 decisive swing look identical — which is exactly how routine
+    opening jockeying got framed as "chaos".
+    """
+    if not outright:
+        return "routine"                      # drawing level is never a takeover
+    if rnd <= 1:
+        return "routine"                      # field still bunched; happens every TEG
+    if rnd >= last_round:
+        return "decisive"
+    return "notable"
+
+
+def _summarise_changes(changes: list, last_round: int) -> dict:
+    """Early/late split + significance counts for an arc's change list."""
+    early = [c for c in changes if c["round"] <= 1]
+    late = [c for c in changes if c["round"] >= last_round]
+    return {
+        "total": len(changes),
+        "early_round1": len(early),
+        "final_round": len(late),
+        "outright": sum(1 for c in changes if c.get("outright")),
+        "decisive": sum(1 for c in changes if c.get("significance") == "decisive"),
+        "all_routine": bool(changes) and all(
+            c.get("significance") == "routine" for c in changes),
+    }
+
+
 def _arc_top(rs, rank_col, gap_col, score_col, events_log, event_name, label, leader_counts) -> dict:
     """Trajectory of a 'highest/lowest wins' competition won from the top."""
     rounds = sorted(int(r) for r in rs["Round"].unique())
@@ -580,11 +731,14 @@ def _arc_top(rs, rank_col, gap_col, score_col, events_log, event_name, label, le
 
     lc = events_log[(events_log["Event"] == event_name)
                     & ~((events_log["Round"] == 1) & (events_log["Hole"] == 1))]
+    last_round = rounds[-1]
     lead_changes = []
     for _, r in lc.iterrows():
         rr, hh = int(r["Round"]), int(r["Hole"])
+        outright = leader_counts.get((rr, hh), 1) <= 1
         lead_changes.append({"round": rr, "hole": hh, "player": r["Player"],
-                             "outright": leader_counts.get((rr, hh), 1) <= 1})
+                             "outright": outright,
+                             "significance": _change_significance(rr, last_round, outright)})
     # Decisive = the last time the eventual winner took the lead OUTRIGHT (a draw-level
     # by a rival afterwards does not count as the winner losing the lead).
     winner_outright = [c for c in lead_changes if c["player"] == winner and c["outright"]]
@@ -593,10 +747,14 @@ def _arc_top(rs, rank_col, gap_col, score_col, events_log, event_name, label, le
     return {"label": label, "winner": winner, "leader_by_round": leader_by_round,
             "winner_trajectory": traj, "lead_changes": lead_changes,
             "n_lead_changes": len(lead_changes),
+            # Weighted view of the same list, so the writer is not handed a bare
+            # aggregate count with no indication of what it is made of.
+            "lead_change_summary": _summarise_changes(lead_changes, last_round),
             "decisive_takeover": decisive}
 
 
-def _arc_bottom(rs, rank_col, score_col, events_log, event_name, label) -> dict:
+def _arc_bottom(rs, rank_col, score_col, events_log, event_name, label,
+                bottom_counts: Optional[dict] = None) -> dict:
     """Trajectory of the wooden-spoon race (won by sinking to last)."""
     rounds = sorted(int(r) for r in rs["Round"].unique())
     bottom_by_round = []
@@ -611,12 +769,20 @@ def _arc_bottom(rs, rank_col, score_col, events_log, event_name, label) -> dict:
         row = rs[(rs["Round"] == rnd) & (rs["Player"] == loser)].iloc[0]
         traj.append({"round": rnd, "pos": int(row[rank_col]), "round_score": int(row[score_col])})
 
+    bottom_counts = bottom_counts or {}
+    last_round = rounds[-1]
     hb = events_log[events_log["Event"] == event_name]
-    hits = [{"round": int(r["Round"]), "hole": int(r["Hole"]), "player": r["Player"]}
-            for _, r in hb.iterrows()]
+    hits = []
+    for _, r in hb.iterrows():
+        rr, hh = int(r["Round"]), int(r["Hole"])
+        outright = bottom_counts.get((rr, hh), 1) <= 1
+        hits.append({"round": rr, "hole": hh, "player": r["Player"],
+                     "outright": outright,
+                     "significance": _change_significance(rr, last_round, outright)})
     loser_hits = [h for h in hits if h["player"] == loser]
     return {"label": label, "loser": loser, "bottom_by_round": bottom_by_round,
             "loser_trajectory": traj, "bottom_changes": hits, "n_bottom_changes": len(hits),
+            "bottom_change_summary": _summarise_changes(hits, last_round),
             "decisive_drop": loser_hits[-1] if loser_hits else None}
 
 
@@ -640,7 +806,8 @@ def _competition_arcs(round_summary: pd.DataFrame, events_log: pd.DataFrame,
                            events_log, "Took Lead (Gross)", JACKET, gr_counts),
         "spoon": _arc_bottom(rs, cols["cum_rank"],
                              cols["round_score"],
-                             events_log, cols["spoon_hit_event"], "Wooden Spoon"),
+                             events_log, cols["spoon_hit_event"], "Wooden Spoon",
+                             bottom_counts=_ranklast_counts(teg_df, cols["rank_hole"])),
     }
 
 
@@ -836,8 +1003,10 @@ def build_notable_events(teg_num: int, all_data: Optional[pd.DataFrame] = None,
     events = []
     events += _tournament_beats(tsum, arcs, metric)
     events += _turning_points(events_log, teg_df, sw, metric)
+    events += _lead_tenure_events(teg_df, sw, player_names, metric)
     events += _sequences(teg_df, sw, player_names,
-                         player_par_max=player_par_max, par_max=par_max)
+                         player_par_max=player_par_max, par_max=par_max,
+                         metric=metric)
     events += _round_beats(round_summary, sw, metric)
 
     # Tag each round-scoped beat with the course it was played on, so the same hole
@@ -855,8 +1024,20 @@ def build_notable_events(teg_num: int, all_data: Optional[pd.DataFrame] = None,
 # Inspection renderer (artefact for eyeballing selection quality)
 # ---------------------------------------------------------------------------
 def _fmt_evidence(holes: list) -> str:
+    """Render hole evidence for the inspection artefact.
+
+    Era-aware by construction: `hole_evidence` attaches `stableford` OR `netvp`
+    depending on the era, so this reads whichever is present rather than
+    assuming Stableford.
+    """
+    def _metric_str(h: dict) -> str:
+        if "netvp" in h:
+            return f", {int(h['netvp']):+d} net"
+        if "stableford" in h:
+            return f", {h['stableford']}pt"
+        return ""
     return ", ".join(
-        f"H{h['hole']}(par {h['par']}) {h['sc']} = {h['result']}, {h['stableford']}pt"
+        f"H{h['hole']}(par {h['par']}) {h['sc']} = {h['result']}" + _metric_str(h)
         for h in holes
     )
 
@@ -871,6 +1052,11 @@ def _render_arc_lines(arc: dict) -> list:
         wt = ", ".join(f"R{x['round']} pos{x['pos']}/gap{x['gap']} ({x['round_score']})"
                        for x in arc["winner_trajectory"])
         L.append(f"    - {arc['winner']}: {wt}")
+        s = arc.get("lead_change_summary") or {}
+        if s:
+            L.append(f"    - lead-change mix: {s['early_round1']} in R1, "
+                     f"{s['final_round']} in the final round, {s['outright']}/{s['total']} outright"
+                     + ("  [ALL ROUTINE — do not dramatise]" if s.get("all_routine") else ""))
         L.append(f"    - lead changes ({arc['n_lead_changes']}): "
                  + (", ".join(f"R{c['round']}H{c['hole']} {c['player']}"
                               + ("" if c.get("outright", True) else " (level)")

@@ -24,6 +24,10 @@ from pydantic import BaseModel
 from teg_analysis.reporting.era import trophy_metric
 from teg_analysis.reporting.events import build_notable_events
 from teg_analysis.reporting.venue import build_venue_context
+from teg_analysis.reporting.story_plan import (
+    NarrativeStructure, NarrativeVehicle, PaletteVehicle, ProminentVehicle,
+    Payoff, _render_structure_menu, _render_vehicle_menu, _render_palette_menu,
+)
 from teg_analysis.reporting import llm
 
 OUTPUT_DIR = "data/commentary"
@@ -51,13 +55,20 @@ class RoundStoryPlan(BaseModel):
     title_candidates: list[str]
     theme: str              # one-line through-line for the round
     tone: str
-    narrative_structure: str  # "chronological" | "in_medias_res" | "theme_led" | free-form
+    narrative_structure: NarrativeStructure   # enum — shared with the tournament plan
     opening_hook: str       # one-line: what the report opens with
     foreshadow: list[str]   # earlier-round events that pay off later in the round
     competition_state: list[RoundCompetitionState]
     key_beat_ids: list[str]
     players: list[RoundPlayerArc]
     venue_notes: str
+    # Ported from the tournament plan (was a generation behind — known issue 3).
+    # Same shared vocabulary, so editor and writer mean the same thing in both
+    # pipelines and a round plan can no longer drift from a tournament plan.
+    narrative_vehicles: list[NarrativeVehicle] = []
+    prominent_vehicle: ProminentVehicle
+    prominent_palette: PaletteVehicle
+    payoffs: list[Payoff] = []
 
 
 # ---------------------------------------------------------------------------
@@ -281,7 +292,12 @@ YOUR JOB:
 - Choose the round's STORY: a clear one-line `theme`, and 2-3 `foreshadow` hooks \
 (events earlier in the round that pay off later — e.g. "early blow-up at the 4th \
 that came back to haunt him at the 18th").
-- Choose a `narrative_structure`. **The default for a round report is \
+- Choose a `narrative_structure`. It MUST be exactly one of these values — a bare \
+value, NOT a sentence and NOT a value with an explanatory suffix:
+
+{STRUCTURE_MENU}
+
+  **The default for a round report is \
 `chronological` or `player_by_player`** — these two reliably cover every notable \
 player and read cleanly. `in_medias_res` and `theme_led` are reserved for rounds \
 with a SINGLE dominant story arc (one player's record round, one decisive \
@@ -290,6 +306,21 @@ collapse, one moment that defines the day). If you choose either of those, the \
 in_medias_res becomes more defensible (the round often has a natural coronation \
 shape).
 - Set `opening_hook` to a one-line description of what to open with and why.
+- Choose **1-3 `narrative_vehicles`** that frame the round, and name the one you \
+are foregrounding as `prominent_vehicle` (which must also appear in your \
+`narrative_vehicles` list). Pick ONLY from this menu — unlisted names are rejected \
+by the schema:
+
+{VEHICLE_MENU}
+
+  A single round is a smaller canvas than a tournament, so prefer ONE clear frame; \
+reach for a second only when the round genuinely carries two threads.
+- Set `prominent_palette` — the CONTEXT MATERIAL the writer should foreground. This \
+is a DIFFERENT axis from `prominent_vehicle` (which is the frame). One of: \
+{PALETTE_MENU}.
+- `payoffs`: one entry per `foreshadow[]` seed wherever the round supports it. Each \
+entry names the `seed`, the section that `resolves_in` it, and the `payoff` itself. \
+A seed planted and never resolved is a bug, not a flourish.
 - Select 5-8 `key_beat_ids` the report MUST cover. **NON-NEGOTIABLE: every beat \
 marked `"mandatory": true` MUST appear in `key_beat_ids`.** Mandatory beats are \
 TEG records, personal bests, rare feats (holes-in-one, eagles), and any \
@@ -332,6 +363,15 @@ by accumulated points (Stableford/net-vs-par for the Trophy, Gross for the Jacke
 Never plan a theme or note that invokes "countback", "tiebreaker", or "playoff" \
 — those mechanisms do not exist.
 - Output only the structured plan."""
+
+
+ROUND_PLAN_SYSTEM = (ROUND_PLAN_SYSTEM
+                     .replace("{STRUCTURE_MENU}", _render_structure_menu())
+                     .replace("{VEHICLE_MENU}", _render_vehicle_menu())
+                     .replace("{PALETTE_MENU}", _render_palette_menu()))
+
+for _placeholder in ("{STRUCTURE_MENU}", "{VEHICLE_MENU}", "{PALETTE_MENU}"):
+    assert _placeholder not in ROUND_PLAN_SYSTEM, f"unfilled placeholder {_placeholder}"
 
 
 ROUND_DRY_DRAFT_SYSTEM = """You are producing a DRY STORYLINE DRAFT for a \

@@ -5,7 +5,7 @@
 <p class="round-scores"><span class="round-scores-header">Round Stableford:</span> AB 47 | GW 47 | SN 36 | JB 35 | DM 31 | JP 27</p>
 <p class="round-scores"><span class="round-scores-header">Round Gross:</span> GW +15 | JB +20 | AB +22 | DM +23 | SN +29 | JP +36</p>
 
-The arithmetic, before we go anywhere near a fairway: David Mullin began Round 3 five points clear in the Trophy and finished it eleven adrift in third. That is a fourteen-point swing on a day when nobody actually went round Palmares in anything resembling a procession. The Robert Trent Jones Jr. parkland in Lagos — TEG's first visit, fourth time in the Algarve — turned out to be the kind of course that hands you the lead with one hand and removes it with the other, sometimes on the same hole. The Trophy lead changed hands, or was levelled, at least five times before the 18th green was reached. Then that finishing hole decided the rest.
+The arithmetic, before we go anywhere near a fairway: David Mullin began Round 3 five points clear in the Trophy and finished it eleven adrift in third. That is a sixteen-point swing on a day when nobody actually went round Palmares in anything resembling a procession. The Robert Trent Jones Jr. parkland in Lagos — TEG's first visit, fourth time in the Algarve — turned out to be the kind of course that hands you the lead with one hand and removes it with the other, sometimes on the same hole. The Trophy lead changed hands, or was levelled, at least five times before the 18th green was reached. Then that finishing hole decided the rest.
 
 Walk it in order, because the sequence is most of the story.
 

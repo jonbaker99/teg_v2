@@ -1,6 +1,6 @@
 # Two Leaders, One Tie, and a 10 on the Card
 
-The arithmetic, before we go anywhere near a fairway: David Mullin began Round 3 five points clear in the Trophy and finished it eleven adrift in third. That is a fourteen-point swing on a day when nobody actually went round Palmares in anything resembling a procession. The Robert Trent Jones Jr. parkland in Lagos — TEG's first visit, fourth time in the Algarve — turned out to be the kind of course that hands you the lead with one hand and removes it with the other, sometimes on the same hole. The Trophy lead changed hands, or was levelled, at least five times before the 18th green was reached. Then the 18th green decided the rest.
+The arithmetic, before we go anywhere near a fairway: David Mullin began Round 3 five points clear in the Trophy and finished it eleven adrift in third. That is a sixteen-point swing on a day when nobody actually went round Palmares in anything resembling a procession. The Robert Trent Jones Jr. parkland in Lagos — TEG's first visit, fourth time in the Algarve — turned out to be the kind of course that hands you the lead with one hand and removes it with the other, sometimes on the same hole. The Trophy lead changed hands, or was levelled, at least five times before the 18th green was reached. Then the 18th green decided the rest.
 
 Walk it in order, because the order is most of the story.
 
