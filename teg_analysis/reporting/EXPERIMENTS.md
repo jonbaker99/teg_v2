@@ -258,10 +258,29 @@ achievement beats. Not needed here — `importance-led` already flips the mix wi
 - 2026-08-11: part (a) run — see results table above. Part (b) not attempted (no `ANTHROPIC_API_KEY`
   in this environment). Arc-payload audit done; `long_lead_lost` detector built and tested.
 
-**Verdict:** _(part (a) done — recommendation is `fast` (1.5, 0.8, 0.7). The arc sub-finding is
-**closed**: all four candidate fixes shipped 2026-08-11. Part (b) and the final weight-setting
-decision remain open — they need an API key for the plan-only rung, and ideally a from-scratch
-TEG 14 read.)_
+**ADOPTED 2026-08-11: `balanced` is now (1.5, 0.8, 0.7).** Set in `scoring.MODE_WEIGHTS`, which
+every call site defaults to, so it applies to every future report. `fast` is retained as an alias.
+
+Re-measured after the `long_lead_lost` detector landed (it takes ~7 top-20 slots, displacing
+blow-ups), so the figures moved slightly from the table above:
+
+| Setting | big_blowup | hot_stretch | disaster | achievement | churn vs old default |
+|---|---|---|---|---|---|
+| pre-2026-08-11 (1,1,1) | 100 (50.0%) | 18 (9.0%) | 57.0% | 36.0% | — |
+| **live default (1.5,0.8,0.7)** | **77 (38.5%)** | **37 (18.5%)** | **45.5%** | **45.0%** | 85% overlap |
+| importance-led (2.0,0.5,0.5) | 44 (22.0%) | 54 (27.0%) | 32.0% | 53.5% | 67% overlap |
+| archive (1.0,1.3,1.3) | 102 (51.0%) | 16 (8.0%) | 58.0% | 35.5% | 98% overlap |
+
+Tone is now essentially even (45.5% disaster / 45.0% achievement) against 57/36 before.
+`importance-led` remains the next step if 38.5% blow-ups still reads as too much carnage — it is a
+bigger jump (67% overlap) and has not been read in prose.
+
+`scripts/weight_profiler.py` now reads the live default from `MODE_WEIGHTS`, so it can never
+describe a setting the pipeline stopped using.
+
+**Verdict:** _(part (a) **done and adopted**. The arc sub-finding is **closed** — all four candidate
+fixes shipped. Part (b) — confirming the change survives the LLM's own second selection gate at the
+plan stage — remains open and needs an API key.)_
 
 ---
 

@@ -26,9 +26,9 @@ What the report is *allowed to know*. Everything downstream can only work with w
 
 | # | Component | In → Out | Lives in | Restart from | Cost | Maturity |
 |---|---|---|---|---|---|---|
-| A1 | **Raw facts — tournament** (scorecards, results, streaks) | parquet → `NotableEvent[]` | `core/data_loader`, `events.py` detectors | the data | full chain | **Works.** One known bug: era leak (`hole_evidence` attaches Stableford pre-TEG-8) |
+| A1 | **Raw facts — tournament** (scorecards, results, streaks) | parquet → `NotableEvent[]` | `core/data_loader`, `events.py` detectors | the data | full chain | **Works.** Era leak fixed 2026-08-11 — `hole_evidence` is era-aware. New `long_lead_lost` detector added |
 | A2 | **Raw facts — context** (cross-TEG, course, venue, era) | parquet → context dicts | `history_context`, `course_history`, `venue`, `era`, `tournament_shape` | the data | full chain | **Works.** The duplicate `enrich` path was deleted 2026-08-11 |
-| A3 | **Selection / weighting** — *what is notable enough to make the cut* | `NotableEvent[]` → ranked, trimmed beats | `scoring.py` (axis weights), `events.py` (sub-scores), `top_n` trim | cached beats | **free** (pure Python) | **Measured, untuned.** Weights never turned; profiler now exists; arcs bypass this layer entirely |
+| A3 | **Selection / weighting** — *what is notable enough to make the cut* | `NotableEvent[]` → ranked, trimmed beats | `scoring.py` (axis weights), `events.py` (sub-scores), `top_n` trim | cached beats | **free** (pure Python) | **Tuned 2026-08-11** to (1.5, 0.8, 0.7) — blow-ups 53%→38.5%, tone near-even. Arcs still bypass this layer but are now weighted at source. Re-measure with `scripts/weight_profiler.py` |
 
 ### Theme B — Editorial plan
 **In:** the bundle · **Out:** `teg_N_story_plan.json` · **Cost per try:** ~$0.28 (plan only) / ~$0.65 (chain)
@@ -38,9 +38,9 @@ edit the JSON before authoring runs.
 
 | # | Component | In → Out | Lives in | Restart from | Cost | Maturity |
 |---|---|---|---|---|---|---|
-| B1 | **Narrative vehicle** — the frame | bundle → `narrative_vehicles`, `prominent_vehicle` | `story_plan.SYSTEM_PROMPT` menu, `StoryPlan` fields | bundle | ~$0.65 | **Built, broken at the contract level** — close-finish hard rule is 0-for-2 (see B3) |
+| B1 | **Narrative vehicle** — the frame | bundle → `narrative_vehicles`, `prominent_vehicle` | `story_plan.SYSTEM_PROMPT` menu, `StoryPlan` fields | bundle | ~$0.65 | **Works.** The close-finish hard rule can finally fire — see B3 |
 | B2 | **Report structure** — round-by-round vs theme-led, closing section | bundle → `narrative_structure`, `rounds[]` | `narrative_structure`, `WRITER_SYSTEM` STRUCTURE | bundle | ~$0.65 | **Works** |
-| B3 | **Plan schema & shared vocabulary** — the editor↔writer contract | *(constrains B1/B2 and all of C)* | `StoryPlan` field types; the same 9 terms in two prose prompts | bundle | ~$0.65 | **Defective.** Free strings where enums are needed; 9 terms defined twice, no enforcement. Known issue 8 |
+| B3 | **Plan schema & shared vocabulary** — the editor↔writer contract | *(constrains B1/B2 and all of C)* | `story_plan.NARRATIVE_VEHICLES` / `PALETTE_VEHICLES` / `NARRATIVE_STRUCTURES` (single source of truth) | bundle | ~$0.65 | **Fixed 2026-08-11.** `Literal` enums; both prompts' menus generated from the constants; `check_plan_consistency()` catches combination violations |
 
 ### Theme C — Prose generation
 **In:** plan + bundle · **Out:** `teg_N_report_final.md` · **Cost per try:** ~$0.17–$0.37
@@ -49,8 +49,8 @@ Turning the plan into text. Two rungs, and the cheaper one is where most iterati
 
 | # | Component | In → Out | Lives in | Restart from | Cost | Maturity |
 |---|---|---|---|---|---|---|
-| C1 | **Factual scaffold** — the dry draft's density and shape | plan + bundle → `dry_draft.md` | `DRY_DRAFT_SYSTEM_DETAILED` / `_LIGHT`, `dry_draft_style=` | frozen plan | ~$0.37 | **Works, A/B settled** (detailed wins). Vestigial `DRY_DRAFT_SYSTEM = ..._LIGHT` alias at `authoring.py:143` contradicts the settled default — dead, but misleading |
-| C2 | **Writing style / voice** | dry draft → finished prose | `WRITER_SYSTEM` VOICE + principles + ECONOMY | frozen dry draft + plan | ~$0.17 | **Works, validated across 17 reports — but the target level is an open decision** (humour dial, unsettled) |
+| C1 | **Factual scaffold** — the dry draft's density and shape | plan + bundle → `dry_draft.md` | `DRY_DRAFT_SYSTEM_DETAILED` / `_LIGHT`, `dry_draft_style=` | frozen plan | ~$0.37 | **Works, A/B settled** (detailed wins). The contradicting dead alias was removed 2026-08-11 |
+| C2 | **Writing style / voice** | dry draft → finished prose | **`WRITER_VOICE`** (own constant since 2026-08-11) | frozen dry draft + plan | ~$0.17 | **Works, validated across 17 reports — but the target level is an open decision** (humour dial, unsettled) |
 
 ### Theme D — Assurance
 **In:** finished prose + the source data · **Out:** a report you can trust · **Cost per try:** free to ~$0.17
@@ -60,7 +60,7 @@ the audience is the players themselves, who spot any factual error.
 
 | # | Component | In → Out | Lives in | Restart from | Cost | Maturity |
 |---|---|---|---|---|---|---|
-| D1 | **Preventive rules** — instructions telling the writer not to fabricate | prompt → constrained prose | `WRITER_SYSTEM` FAITHFULNESS (11 absolutes) | frozen dry draft + plan | ~$0.17 | **Built.** Still carries the 6 rules D3 now also checks — deliberate belt-and-braces; trim only once D3 has run on fresh generations |
+| D1 | **Preventive rules** — instructions telling the writer not to fabricate | prompt → constrained prose | **`WRITER_FAITHFULNESS`** (own constant since 2026-08-11; 11 absolutes) | frozen dry draft + plan | ~$0.17 | **Built.** Still carries the 6 rules D3 now also checks — deliberate belt-and-braces; trim only once D3 has run on fresh generations |
 | D2 | **Deterministic guarantees** — facts code emits so prose can't get them wrong | data → injected blocks | `render.py` standings / records / at-a-glance | `_report_final.md` | **free** | **Works well.** The strongest assurance mechanism in the pipeline |
 | D3 | **Programmatic verification** — checking claims against the data after the fact | prose + data → findings | `verify.py` (7 checks), auto-run by `backfill.py` | `_report_final.md` | **free** | **Built 2026-08-11.** Independently re-found the TEG 10 R3 error and 41 reader-visible beat IDs in TEG 5 |
 
@@ -80,7 +80,7 @@ the audience is the players themselves, who spot any factual error.
 | # | Component | In → Out | Lives in | Restart from | Cost | Maturity |
 |---|---|---|---|---|---|---|
 | E1 | **Content injection** (which blocks, where) | final MD → styled MD | `render.py` | `_report_final.md` | **free** | **Works** |
-| E2 | **Visual design** | styled MD → rendered page | `teg_reports.css` (×2 — see known issue 6) | `_styled.md` | **free** | **Works.** The two copies have already drifted; `webapp/static/` is the live one. Delete the `streamlit/` copy rather than re-syncing |
+| E2 | **Visual design** | styled MD → rendered page | `teg_reports.css` (×2 — see known issue 6) | `_styled.md` | **free** | **Works.** The two copies have drifted; `webapp/static/` is the live one. Resolves when `streamlit/` is deleted — editing it is forbidden by the project rules (known issue 6) |
 
 ### Cross-cutting — not components
 
@@ -91,7 +91,7 @@ separately because that's what they are.
 | Concern | What it actually is | Lives in | Maturity |
 |---|---|---|---|
 | **Scope — tournament vs round** | A **second instance of the whole A→E chain**, not a stage within one. `round_report.py` re-implements plan → draft → write → style for a single round. | `story_plan.py` vs `round_report.py` | **A generation behind at B1/B3** — `RoundStoryPlan` has no vehicles and no payoffs. Port before backfilling ~50 rounds |
-| **Model & runtime config** | A **dial on every LLM row** (all of B, C, D1), not a step. Changing it re-prices whichever rows you're running. | `llm.DEFAULT_MODEL`, `output_config.effort` | **Stale + untested.** Pinned to `claude-opus-4-7`; `effort` is never set anywhere, so every call runs at default `high` |
+| **Model & runtime config** | A **dial on every LLM row** (all of B, C, D1), not a step. Changing it re-prices whichever rows you're running. | `llm.DEFAULT_MODEL`, `output_config.effort` | **Pinned to `claude-opus-5`** (2026-08-11). `effort` is still never set anywhere, so every call runs at default `high` — untested lever (known issue 15) |
 
 ### What follows from this
 
@@ -101,9 +101,19 @@ separately because that's what they are.
 - **Never test a cheap-theme change by regenerating the expensive themes.** Changing voice (C2) means
   re-running Stage 4b against a *frozen* dry draft. Regenerating the plan as well changes two things
   at once and teaches you nothing.
-- **D is deliberately separate from C** even though D1 and C2 share a prompt file. They have
-  different failure modes (a factual error the players catch, vs a flat sentence) and different tests
-  (mechanical verification, vs taste). Keeping them apart is what makes it safe to rewrite style.
+- **D is deliberately separate from C, and now separate in the code too.** They have different
+  failure modes (a factual error the players catch, vs a flat sentence) and different tests
+  (mechanical verification, vs taste). Until 2026-08-11 that separation was conceptual only: voice
+  and faithfulness lived in one 16k-character `WRITER_SYSTEM` literal, so every voice experiment
+  edited the same string as the guardrails — one careless rewrite away from silently dropping a
+  faithfulness rule. They are now `WRITER_VOICE` and `WRITER_FAITHFULNESS`, concatenated at import:
+
+  ```python
+  WRITER_SYSTEM = WRITER_VOICE + "\n" + WRITER_FAITHFULNESS + "\n" + WRITER_OUTPUT_RULE
+  ```
+
+  The composed string is byte-identical to the literal it replaced (asserted in tests), so nothing
+  about generated output moved. Tune the humour dial by editing `WRITER_VOICE` alone.
 - **Where the work is.** As of 2026-08-11 **D3, B3, A1's era leak and the model pin are all fixed**;
   see [STATUS.md](STATUS.md) → Known issues for the register. What remains is **A3** (weights
   measured, setting undecided) and **C2** (the humour dial) — both judgement calls, not defects —
@@ -182,19 +192,48 @@ the cheap loops cheap.
 
 **Two structural facts the diagram makes visible:**
 
-- **`competition_arcs` bypass the selection layer.** They are assembled straight into the bundle and
-  preserved in full regardless of `top_n`, so anything an arc reports reaches the writer
-  *unweighted* — even when the scorer correctly ranked the same events near the bottom. This is the
-  root of the "chaos" framing on routine opening lead changes: the beats were downranked, the arc
-  still handed over a raw count. Audited across the whole arc payload (not just lead changes): the
-  round-bounded fields (`leader_by_round`, `winner_trajectory`, `decisive_takeover` and their spoon
-  equivalents) are fine — small, fixed-size, already the weighted signal. The bug is specifically the
-  two growing lists/counts, and it affects the Wooden Spoon arc (`bottom_changes` /
-  `n_bottom_changes`) the same way it affects the Trophy/Jacket one (`lead_changes` /
-  `n_lead_changes`) — worse, even, since spoon changes carry no `outright` flag to filter on at all.
-  See [EXPERIMENTS.md](EXPERIMENTS.md) → H10 sub-finding.
-- **Stage 4a re-sends the whole bundle** under a different system prompt, so it gets no cache benefit
-  from Stage 3. Stages 3 and 4a together are ~74% of the cost of a report.
+**1. `competition_arcs` skip the weighting step.**
+
+Beats go through selection (A3): they get scored, ranked, and the bundle keeps roughly the top 50.
+Arcs don't. They are attached to the bundle whole, whatever `top_n` says.
+
+That matters because an arc and a beat can describe *the same event* — and disagree about how much
+it mattered. A first-round lead change scores about 2.6/10 on importance, so as a beat it gets
+downranked and usually trimmed out. But the arc still lists it, and still adds it to a headline
+count like `n_lead_changes: 3`.
+
+So the writer was shown "3 lead changes" with nothing to indicate all three were opening-morning
+jockeying. Calling that "chaos" was a reasonable reading of what it had been given. **The prompt
+rule forbidding the word "chaos" was patching a data problem** — the scorer already knew those
+changes were routine; that judgement just never reached the writer.
+
+Auditing the rest of the arc payload found the same shape in one more place, and cleared everything
+else:
+
+| Arc field | Verdict |
+|---|---|
+| `leader_by_round`, `winner_trajectory`, `decisive_takeover` (+ spoon equivalents) | **Fine.** Fixed size — one entry per round — and `decisive_takeover` *is* a weighted signal already: it names the single moment that settled it. |
+| `lead_changes` / `n_lead_changes` | **The bug.** Grows with event count; every entry looked equally significant. |
+| `bottom_changes` / `n_bottom_changes` | **The same bug, in the Wooden Spoon arc** — and worse, because spoon changes carried no outright/level flag at all, so there was nothing to filter on even if you wanted to. |
+
+**Fixed 2026-08-11.** Every change now carries a `significance` (`routine` / `notable` /
+`decisive`), each arc carries a summary with the early/late split and an `all_routine` flag, and the
+Spoon arc has the outright distinction it was missing. TEG 18 — whose entire lead-change story is
+three R1 changes — now reports `all_routine: true` explicitly. Detail in
+[EXPERIMENTS.md](EXPERIMENTS.md) → H10 sub-finding.
+
+**2. Stage 4a pays full price for a bundle Stage 3 already sent.**
+
+Prompt caching only helps when the *cached prefix* is reused. The cache is on the system prompt, and
+the ~26k-token bundle travels in the user message — so it isn't cached in the first place.
+
+Stage 3 (story plan) and Stage 4a (dry draft) both send that bundle, under different system prompts.
+Two different prefixes, no reuse: the bundle is paid for twice, at full rate.
+
+That is why those two stages are **~74% of a report's cost** ($0.28 + $0.20 of $0.65) despite Stage
+4b doing the actual writing. It also explains the cost ladder in the restart recipes: freezing the
+plan and re-running from 4a costs ~$0.37, while freezing the dry draft too costs ~$0.17 — the
+difference is almost entirely whether you re-send the bundle.
 
 ### Restart recipes
 

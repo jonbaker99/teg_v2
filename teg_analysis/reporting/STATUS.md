@@ -50,8 +50,7 @@ including all three P1s. The two that matter most:
   generated from it, and the schema enforces it. The exact value that shipped for four TEGs is now a
   validation error.
 
-**What is deliberately still open: the two judgement calls** — the humour dial and the selection-
-weight setting — plus the 81 prose-wording faults D3 reports across the older reports, which
+**What is deliberately still open: the humour dial** — the one remaining judgement call — plus the 81 prose-wording faults D3 reports across the older reports, which
 regeneration clears. Nothing else is blocking. Test suite: 404 passed, 4 skipped.
 
 ---
@@ -195,9 +194,9 @@ Severity is *impact if left alone*, not effort:
 | 2 | **`enrich_report_with_history()` has zero callers** | P3 | XS | no | ✅ **FIXED** — deleted, with `ENRICH_SYSTEM` and `build_history_enrichment_context` |
 | 11b | **Dead `DRY_DRAFT_SYSTEM = ..._LIGHT` alias** | P3 | XS | no | ✅ **FIXED** — deleted |
 | 17 | **81 prose-wording faults across older reports** ("the week" ×71, invented weekdays ×10) | P2 | — | **cleared BY regen** | ⏳ **Open** — surfaced by D3; needs regeneration, not hand-editing |
-| 13 | **Selection weights untuned** | P2 | S | no | ⏳ **Open — decision** (measured; `fast` recommended) |
+| 13 | **Selection weights untuned** | P2 | S | no | ✅ **FIXED 2026-08-11** — `balanced` set to (1.5, 0.8, 0.7); blow-ups 53%→38.5%, tone near-even |
 | — | **Humour dial unsettled** | **P1** | — | yes | ⏳ **Open — Jon** |
-| 9 | **Prompt density past the useful point** | P2 | M | no | ⏳ **Open** — D3 now duplicates 6 of the 11 absolutes, so the trim is *possible*; do it on evidence from fresh generations, not speculatively |
+| 9 | **Prompt density past the useful point** | P2 | M | no | ⏳ **Partly addressed** — voice and faithfulness split into `WRITER_VOICE` / `WRITER_FAITHFULNESS` (byte-identical composition), so they can be edited independently. Trimming the 6 rules D3 duplicates is still open; do it on evidence from fresh generations |
 | 14 | **TEG 14 fixture chain broken** | P2 | S (~$0.65) | no | ⏳ **Open** — needs one generation |
 | 5 | **Remote (webapp) report generation not built** | P2 | L | no | ⏳ **Open** — `webapp/TODOS.md` |
 | 15 | **`output_config.effort` never set** | P3 | S | no | ⏳ **Open** — needs a key (H9) |
@@ -470,15 +469,20 @@ downranked by the scorer; the arc handed over an aggregate count anyway.
 their computed significance, or suppressing R1-only changes from the summary — see EXPERIMENTS.md →
 H10 candidate fixes 1–3. All are cheap and need no LLM to evaluate.
 
-### 13. Selection weights are untuned
+### 13. Selection weights — TUNED 2026-08-11
 
 The three scoring axes have never been tuned; `balanced` (1,1,1) shows the editor a cut that is
 53% blow-ups and 60% disaster-toned. Measured across TEGs 9–18 on 2026-08-11 via
 `scripts/weight_profiler.py` — full results in EXPERIMENTS.md → H10(a).
 
-Not a bug, but a live decision: `fast` (1.5, 0.8, 0.7) drops blow-ups to 40% while staying closest to
-the validated baseline; `importance-led` (2.0, 0.5, 0.5) flips the mix outright but is a bigger jump.
-Needs a plan-only run (~$0.28) to confirm the change survives the LLM's own second selection gate.
+**Resolved:** `balanced` — the mode every call site defaults to — is now **(1.5, 0.8, 0.7)**.
+Measured effect across TEGs 9–18: blow-ups 50%→38.5% of top-20 slots, tone from 57/36
+disaster/achievement to an even 45.5/45.0, with 85% top-20 overlap against the old default.
+
+`importance-led` (2.0, 0.5, 0.5) remains the next step if 38.5% still reads as too much carnage —
+a bigger jump (67% overlap), not yet read in prose. **Still worth doing when a key is available:**
+a plan-only run to confirm the change survives the LLM's own second selection gate at the plan
+stage (H10 part b). The code change stands on the free profiling either way.
 
 ### 14. TEG 14's fixture chain is broken — on the standing anchor case
 
@@ -520,10 +524,9 @@ that changes *what a report is* lands before it.
 **What changed is where the bottleneck sits.** It is no longer code — it is the two judgement calls.
 
 ```
-  1 humour dial (Jon) ──┐
-                        ├──► 3 rebuild TEG 14 fixtures ──► 4 regenerate library ──► 5 verify --all
-  2 weight setting  ────┘                                        │
-                                                                 └──► clears issue 17 (81 wording faults)
+  1 humour dial (Jon) ──► 3 rebuild TEG 14 fixtures ──► 4 regenerate library ──► 5 verify --all
+                                                              │
+  2 weight setting ✅ done                                     └──► clears issue 17 (81 wording faults)
 
   independent, any time:  6 effort experiment · 7 prompt trim · 8 round-report scope · 9 remote generation
 ```
@@ -537,13 +540,10 @@ that changes *what a report is* lands before it.
 in EXPERIMENTS.md and fold the winner into `WRITER_SYSTEM`.
 *Why first:* it sets the published voice, only Jon can call it, and it blocks regeneration.
 
-**2. Choose the selection-weight setting** (known issue 13). Measured; see EXPERIMENTS.md → H10(a).
-`fast` (1.5, 0.8, 0.7) is the recommendation — it cuts the blow-up share 53%→40% while staying
-closest to what 17 published reports already validated. `importance-led` (2.0, 0.5, 0.5) is the
-stronger fix but a bigger jump.
-*Next rung before committing:* a plan-only run (~$0.28) on each shortlisted setting, comparing
-`must_include_beat_ids` composition. Needs an API key. Changing the default is one line in
-`scoring.MODE_WEIGHTS`.
+**2. ~~Choose the selection-weight setting~~ — DONE.** `balanced` is now (1.5, 0.8, 0.7).
+*Optional follow-up when a key is available:* a plan-only run (~$0.28) to confirm the change
+survives the plan-stage selection gate, and a look at `importance-led` if 38.5% blow-ups still
+reads as too much carnage.
 
 ---
 

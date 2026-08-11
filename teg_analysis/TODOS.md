@@ -12,7 +12,6 @@ Full detail — including the report-by-report inventory and pipeline vintages �
 **Decisions (blocking — do these first):**
 
 - [ ] **Settle the humour dial** — a 3 / 6 / 8 / 8b A/B was run on TEGs 14 and 18; outputs are on disk, unpublished, **no verdict recorded**. Pick a level, fold it into `WRITER_SYSTEM`, log it in `reporting/EXPERIMENTS.md`. Blocks all regeneration.
-- [ ] **Choose the selection-weight setting** — measured 2026-08-11 (`scripts/weight_profiler.py`); `fast` (1.5, 0.8, 0.7) recommended. Validate with a plan-only run, then set `scoring.MODE_WEIGHTS`. See `reporting/EXPERIMENTS.md` → H10(a).
 - [ ] **Decide whether round reports are wanted** — ~50 outstanding, ~$32. `RoundStoryPlan` is no longer a blocker (ported 2026-08-11); this is purely scope and cost now.
 
 **Then:**
@@ -22,7 +21,7 @@ Full detail — including the report-by-report inventory and pipeline vintages �
 - [ ] **Verify after regenerating** — `python -m teg_analysis.reporting.verify --all --rounds`; the error count is the acceptance test.
 - [ ] **Trim `WRITER_SYSTEM`'s faithfulness block** — D3 now checks 6 of the 11 absolutes independently. Do it on evidence from fresh generations, not speculatively.
 
-**Fixed 2026-08-11** (detail in `reporting/STATUS.md` → Known issues): D3 verification layer built; shared editor↔writer vocabulary schema-enforced (the close-finish hard rule had never fired); pre-TEG-8 era leak; round pipeline brought level; arc payload weighted for both competitions; TEG 10 R3 arithmetic error; 41 beat IDs in TEG 5's published report; model pinned to `claude-opus-5`; dead `enrich` path deleted.
+**Fixed 2026-08-11** (detail in `reporting/STATUS.md` → Known issues): selection weights tuned to (1.5, 0.8, 0.7); voice and faithfulness split into separate prompt constants; D3 verification layer built; shared editor↔writer vocabulary schema-enforced (the close-finish hard rule had never fired); pre-TEG-8 era leak; round pipeline brought level; arc payload weighted for both competitions; TEG 10 R3 arithmetic error; 41 beat IDs in TEG 5's published report; model pinned to `claude-opus-5`; dead `enrich` path deleted.
 
 ## REST API
 

@@ -185,7 +185,10 @@ def generate_dry_draft(teg_num: int, plan: Union[StoryPlan, dict],
 # ===========================================================================
 # 4b — the entertaining report (authoring A/B) + repetition lint
 # ===========================================================================
-WRITER_SYSTEM = """You are a golf writer producing the finished, entertaining report \
+# ---------------------------------------------------------------------------
+# C2 — voice, craft and economy. Edit this to change how the report READS.
+# ---------------------------------------------------------------------------
+WRITER_VOICE = """You are a golf writer producing the finished, entertaining report \
 on a TEG (an amateur golf tournament of several rounds), for an audience of THE \
 PLAYERS THEMSELVES — insiders who know each other, the courses and the history, who \
 want to relive the event and be gently ribbed, and who will instantly spot any \
@@ -353,8 +356,25 @@ number that lands — belong as their own paragraph. Attached to a long precedin
 sentence they get absorbed.
 11. **One dominant idea per paragraph.** A shift in subject, tone, or beat is a signal \
 to start a new paragraph. If a paragraph is doing too much, break it at the natural seam.
+"""
 
-FAITHFULNESS (non-negotiable):
+
+# ---------------------------------------------------------------------------
+# D1 — preventive faithfulness rules. Deliberately a SEPARATE constant from the
+# voice block above, even though they are concatenated into one prompt.
+#
+# They are different components with different failure modes and different
+# tests: a flat sentence versus a factual error the players catch; taste versus
+# mechanical verification. Keeping them in one 16k literal meant every voice
+# experiment edited the same string as the guardrails, which is how you lose a
+# faithfulness rule by accident while tuning humour.
+#
+# Every rule here traces to an observed failure. Six of them are now ALSO checked
+# mechanically by `verify.py` (D3) — see the table in reporting/README.md. Do not
+# delete a rule just because D3 covers it: prevention and detection are cheap
+# together, and D3 only sees the finished text.
+# ---------------------------------------------------------------------------
+WRITER_FAITHFULNESS = """FAITHFULNESS (non-negotiable):
 - Use ONLY the supplied facts. Never invent holes, scores, players or events. If it isn't \
 in the data, leave it out.
 - **NEVER include beat IDs in the prose.** Beat references like `b07`, `cr01`, `(b13, b14)` \
@@ -423,8 +443,17 @@ holes, the figure must equal the precise sum of per-hole over-par (bogey = +1, d
 = +2, triple = +3, quad = +4, quint = +5, sext = +6). If you echo a total from the dry \
 draft, check it against the per-hole evidence first. Wrong arithmetic is the most \
 obvious fabrication the players will catch.
+"""
 
-Output GitHub-flavoured markdown. No preamble, no sign-off — just the report."""
+# Shared tail — applies to both blocks, so it lives with neither.
+WRITER_OUTPUT_RULE = """Output GitHub-flavoured markdown. No preamble, no sign-off — just the report."""
+
+# Reassembled in the original order. The composed string is byte-identical to the
+# single literal this replaced (asserted in tests), so this is a pure structural
+# change: nothing about generated output moves.
+# Each block already ends with its own trailing newline, so a single "\n" joiner
+# reproduces the original blank-line separation exactly.
+WRITER_SYSTEM = WRITER_VOICE + "\n" + WRITER_FAITHFULNESS + "\n" + WRITER_OUTPUT_RULE
 
 REVISE_SYSTEM = WRITER_SYSTEM + """
 

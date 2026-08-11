@@ -221,3 +221,62 @@ def test_long_held_lead_lost_detector_fires_but_is_rare():
             assert beat.context["tenure_holes"] >= 18
     assert counts[11] >= 1        # Jon Baker held the Trophy lead 45 holes
     assert all(n <= 2 for n in counts.values())   # rare, not spam
+
+
+# ---------------------------------------------------------------------------
+# Selection weights (known issue 13) — adopted 2026-08-11
+# ---------------------------------------------------------------------------
+def test_default_weights_are_the_adopted_setting():
+    """`balanced` is what every call site uses; it must be the chosen setting.
+
+    Guards against a silent revert to (1,1,1), which produced a cut that was
+    53% blow-ups and 60% disaster-toned.
+    """
+    from teg_analysis.reporting.scoring import MODE_WEIGHTS
+    assert MODE_WEIGHTS["balanced"] == (1.5, 0.8, 0.7)
+    assert MODE_WEIGHTS["fast"] == MODE_WEIGHTS["balanced"]
+
+
+def test_default_weights_reduce_the_blow_up_share():
+    """End-to-end: the adopted weights must actually move the mix."""
+    from teg_analysis.reporting.events import build_notable_events
+    from teg_analysis.reporting.scoring import MODE_WEIGHTS, total_score
+
+    events = build_notable_events(16)          # worst case under the old default
+    def share(weights):
+        ranked = sorted(events, key=lambda e: total_score(e, weights), reverse=True)
+        top = ranked[:20]
+        return sum(1 for e in top if e.type == "big_blowup") / len(top)
+
+    assert share(MODE_WEIGHTS["balanced"]) < share((1.0, 1.0, 1.0))
+
+
+# ---------------------------------------------------------------------------
+# C2 / D1 prompt separation
+# ---------------------------------------------------------------------------
+def test_writer_prompt_is_composed_from_separable_blocks():
+    """Voice (C2) and faithfulness (D1) are separate constants, not one literal.
+
+    They still concatenate into one prompt — the split is so a voice experiment
+    cannot accidentally edit a guardrail, which is exactly the risk of keeping
+    16k characters of both in a single string.
+    """
+    from teg_analysis.reporting.authoring import (
+        WRITER_SYSTEM, WRITER_VOICE, WRITER_FAITHFULNESS, WRITER_OUTPUT_RULE)
+    assert WRITER_SYSTEM == WRITER_VOICE + "\n" + WRITER_FAITHFULNESS + "\n" + WRITER_OUTPUT_RULE
+    # The blocks own distinct content.
+    assert "VOICE:" in WRITER_VOICE and "FAITHFULNESS" not in WRITER_VOICE
+    assert WRITER_FAITHFULNESS.startswith("FAITHFULNESS (non-negotiable):")
+    assert "countback" in WRITER_FAITHFULNESS
+
+
+def test_faithfulness_rules_that_trace_to_incidents_are_still_present():
+    """Guards against quietly dropping a rule while tuning voice.
+
+    Each of these traces to an observed failure. D3 also checks several of them,
+    but prevention and detection are kept together deliberately.
+    """
+    from teg_analysis.reporting.authoring import WRITER_FAITHFULNESS
+    for phrase in ("countback", "same hole", "a week", "Arithmetic must be exact",
+                   "player_relationships", "beat ID"):
+        assert phrase.lower() in WRITER_FAITHFULNESS.lower(), phrase

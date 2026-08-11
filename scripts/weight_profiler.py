@@ -4,13 +4,16 @@ Sweeps candidate (importance, rarity, entertainment) weight vectors over the
 cached `build_notable_events()` output across TEGs 9-18 and reports, per
 setting:
 
-- type mix of the top-20 (the baseline figure quoted in EXPERIMENTS.md ->
-  H10 is "big_blowup is 106/200 top-20 slots, 53%")
+- type mix of the top-20 (the original finding was "big_blowup takes 106/200
+  top-20 slots, 53%" under the old (1,1,1) default)
 - tone balance -- disasters vs achievements vs neutral
 - coverage -- distinct players and rounds represented in the top-20
 - mandatory survival at the real production cut (`assemble_bundle`'s
   top_n=50 + force-add of mandatory beats) -- must stay 100%
-- churn vs the (1,1,1) baseline -- top-20 beat overlap
+- churn vs the pre-2026-08-11 (1,1,1) baseline -- top-20 beat overlap
+
+The live default is read from `scoring.MODE_WEIGHTS`, so this script always
+profiles what the pipeline is actually using alongside the alternatives.
 
 `build_notable_events()` is the slow part (a few seconds per TEG); it is
 computed once per TEG and reused across all weight settings.
@@ -27,16 +30,25 @@ from collections import Counter
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
 
 from teg_analysis.reporting.events import build_notable_events
+from teg_analysis.reporting.scoring import MODE_WEIGHTS
 
 TEGS = range(9, 19)
 
+# The live default is read from `scoring.MODE_WEIGHTS` rather than hardcoded, so
+# this profiler can never silently describe a setting the pipeline stopped using.
+_LIVE = MODE_WEIGHTS["balanced"]
+
 SETTINGS = {
-    "current (1,1,1)": (1.0, 1.0, 1.0),
+    # What the published library was generated under, before 2026-08-11.
+    "pre-2026-08-11 (1,1,1)": (1.0, 1.0, 1.0),
+    f"LIVE DEFAULT {_LIVE}": _LIVE,
     "importance-led (2.0,0.5,0.5)": (2.0, 0.5, 0.5),
-    "fast (1.5,0.8,0.7)": (1.5, 0.8, 0.7),
     "archive (1.0,1.3,1.3)": (1.0, 1.3, 1.3),
 }
-BASELINE = "current (1,1,1)"
+# Churn is measured against the OLD default: the question it answers is "how far
+# does this setting move the cut away from what the existing reports were built
+# on", which is what matters when deciding whether to regenerate.
+BASELINE = "pre-2026-08-11 (1,1,1)"
 
 DISASTER_TYPES = {"cold_stretch", "collapse_after_steady", "big_blowup",
                    "spoon_change", "wooden_spoon"}
