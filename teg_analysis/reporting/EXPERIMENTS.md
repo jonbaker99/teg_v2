@@ -92,6 +92,53 @@ the one or two settings that survive.
 **Cost ladder:** free profiling (all TEGs, all settings) → $0.28/run plan-only for the shortlist →
 $0.65 full generation for the winner. Establishing the noise floor is the only fixed cost.
 
+#### Sub-finding: competition arcs bypass the scoring layer
+
+Raised by Jon 2026-08-11 — *"lead changes grow in importance through the tournament; an R1 lead
+change isn't worth commenting on, an R4 one is a very big event. Some drafts call early-R1 lead
+changes 'chaos', but it's just what happens at the start of every tournament."*
+
+**The scoring already encodes exactly that** (`events.py:285`):
+
+```python
+base_imp = 2.0 + 2.2 * (rnd - 1) + (1.5 if late else 0) + 1.5 * w
+if not outright: base_imp *= 0.6        # drawing level < taking outright
+```
+
+An R1 change scores ~2.6 importance; an R4 outright hits the 10 cap. The individual beats are
+correctly downranked and usually trimmed.
+
+**But `competition_arcs` are preserved in full regardless of trimming** (`assemble_bundle`), and the
+arc carries an unweighted `lead_changes` list plus a headline `n_lead_changes` count:
+
+| TEG | `n_lead_changes` | by round | outright |
+|---|---|---|---|
+| 11 | 7 | R1: 4, R3: 2, R4: 1 | 1/7 |
+| 14 | 2 | R1: 2 | 1/2 |
+| 18 | 3 | R1: 3 | 3/3 |
+
+TEG 18's entire lead-change story is three R1 changes. The writer is shown the aggregate with no
+indication that all of it is routine opening jockeying — so "chaos" is a reasonable inference from
+what it was given. The `WRITER_SYSTEM` rule forbidding "chaos" is a prompt patch over a
+data-shaping gap, the same pattern as principle 8 and the blow-up bias.
+
+**This matters beyond lead changes: arcs are exempt from component 3 (selection/weighting)
+entirely.** Anything the arc reports reaches the writer unweighted. Worth auditing the whole arc
+payload on the same basis, not just this field.
+
+**Candidate fixes** (cheap, no LLM needed to evaluate):
+1. Split the count — `n_lead_changes_late` / `n_lead_changes_early`, so the headline number reflects
+   what mattered.
+2. Annotate each entry with its computed significance, so the writer sees the weighting the scorer
+   already did.
+3. Suppress R1-only changes from the arc summary when nothing later happened, and let the
+   round-by-round detail carry them.
+4. Add the missing case Jon named: **a long-held lead being lost** is currently not a distinct
+   signal — `lead_changes` records the takeover but not how long the previous leader had held it.
+   That is arguably the most narratively significant lead-change variant and it isn't detected.
+
+Option 4 is a genuine gap rather than a re-weighting, and probably the highest-value of the four.
+
 #### Candidate settings to try
 
 | Setting | Weights | Hypothesis |
