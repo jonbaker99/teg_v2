@@ -225,7 +225,7 @@ indication that all of it is routine opening jockeying — so "chaos" is a reaso
 what it was given. The `WRITER_SYSTEM` rule forbidding "chaos" is a prompt patch over a
 data-shaping gap, the same pattern as principle 8 and the blow-up bias.
 
-**This matters beyond lead changes: arcs are exempt from component 3 (selection/weighting)
+**This matters beyond lead changes: arcs are exempt from component A3 (selection/weighting)
 entirely.** Anything the arc reports reaches the writer unweighted. **Audited on the same basis
 2026-08-11 — see "Sub-finding, extended" above.** The bounded-by-round fields are fine; the growing
 lists/counts are the bug, and it affects the Wooden Spoon arc too, not just Trophy/Jacket.

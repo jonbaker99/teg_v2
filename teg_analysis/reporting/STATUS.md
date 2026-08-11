@@ -258,6 +258,39 @@ risk reintroducing bugs already paid for. The order that preserves it:
 3. **Keep every faithfulness rule that traces to a real incident**, however shouty. Those are the
    ones the insider audience notices.
 
+### 10. No programmatic verification exists (the D3 gap)
+
+Surfaced by the 2026-08-11 component-model rework (README → Theme D). Confirmed by grep: **nothing in
+`teg_analysis/reporting/` checks a prose claim against the source data.** Every faithfulness
+mechanism is either a prompt instruction (D1) or a deterministic block that sidesteps the writer
+entirely (D2). There is no third mechanism.
+
+That is why the three recorded drift incidents (fabricated "countback", fabricated cross-course
+"same hole", the TEG 10 R3 arithmetic error) reached published reports — **the arithmetic rule was
+already in the prompt when the TEG 10 error was written.** A rule the model is asked to follow and a
+check that fails the build are not the same guarantee.
+
+Roughly **6 of the 11 `WRITER_SYSTEM` faithfulness absolutes are mechanically checkable** (beat IDs,
+countback vocabulary, "a week", roster membership, weekday-verbatim, arithmetic) — see the table in
+README → "Why D3 would reduce the burden on D1". Building D3 for those six would also let D1 shrink
+to the genuinely semantic rules, which is the targeted version of the known-issue-9 prompt-density
+fix. Note the manual version already exists: the sanity grep in
+[Historical verification record](#historical-verification-record) is D3 done by hand, once.
+
+Tracked as **Deferred → Faithfulness-check pass** below; this entry records *why* it has been
+promoted from "nice to have" to the largest structural gap in the pipeline.
+
+### 11. Two small code/doc contradictions found 2026-08-11
+
+Both are live, both are cheap:
+
+- **`llm.DEFAULT_MODEL` is still `claude-opus-4-7`.** Next-steps item 4 (pin to `claude-opus-5`)
+  has not been done. Same price for a better model — see that item.
+- **`authoring.py:143` has `DRY_DRAFT_SYSTEM = DRY_DRAFT_SYSTEM_LIGHT`**, a module-level alias whose
+  comment claims light is "current behaviour". It isn't: `generate_dry_draft` defaults to
+  `dry_draft_style="detailed"`, and EXPERIMENTS.md records **detailed** as the settled winner. The
+  alias has no remaining callers — it's dead, but it reads as a contradicting default. Delete it.
+
 ### 3. Round pipeline behind the tournament pipeline
 
 `RoundStoryPlan` has no `narrative_vehicles`, no `payoffs`, no storyline bullets. If round reports
@@ -295,7 +328,7 @@ templated route. Visual webapp verification needs Python 3.12/3.13.
 | **5b — strict round-by-round tournament variant** | A *tournament* report rendered strictly chronologically, as an alternative format from the same story plan. |
 | **5c — modes (fast vs archive)** | `mode='fast'` skips the dry draft and uses single-pass authoring — cheaper for post-round write-ups. `mode='archive'` = current full chain. Add as a `mode=` arg to a top-level orchestrator. |
 | **5d — Batch API wrapper** | Anthropic's Batch API (50% off, 24h SLA, identical output) for archive runs. Bigger saver than the easy levers but ~1–2h of staged-batch wrapper code. |
-| **Faithfulness-check pass** | A programmatic verifier of prose claims against the data. Three writer-drift incidents to date (fabricated "countback"; fabricated "same hole across courses"; the TEG 10 R3 arithmetic error). Prompt rules block the first two classes; a verifier would catch the next one. |
+| **Faithfulness-check pass** (component **D3**) | A programmatic verifier of prose claims against the data. Three writer-drift incidents to date (fabricated "countback"; fabricated "same hole across courses"; the TEG 10 R3 arithmetic error). **Promoted 2026-08-11 from "deferred nicety" to the pipeline's largest structural gap — see known issue 10.** The framing that kept it deferred ("prompt rules block the first two classes") is weaker than it looks: the arithmetic rule was already in the prompt when the TEG 10 error was written. ~6 of 11 faithfulness absolutes are mechanically checkable and would move out of the prompt entirely. |
 | **Embed scorecards in reports** | EXPERIMENTS.md item 2b — never built. |
 
 ---

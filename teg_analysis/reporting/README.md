@@ -10,38 +10,129 @@ For the running ledger of what's done and what's deferred, see [STATUS.md](STATU
 
 ## Components — what you can change independently
 
-The five stages below describe how a report is *built*. This table describes what can be *changed*,
-which is a different cut and the more useful one when planning work. Each row is independently
-editable, and — critically — they differ by orders of magnitude in how expensive they are to iterate
-on. Working out which component you're changing tells you which loop you're in.
+The five stages below describe how a report is *built*. This section describes what can be
+*changed*, which is a different cut and the more useful one when planning work. Components are
+grouped into five themes, A–E, that run in order: each theme consumes the previous theme's output.
+Within a theme, rows are independently editable.
 
-| # | Component | Lives in | To iterate, restart from | Cost per try |
-|---|---|---|---|---|
-| 1 | **Raw facts — tournament** (scorecards, results, streaks) | `core/data_loader`, `events.py` detectors | the data | full chain |
-| 2 | **Raw facts — context** (cross-TEG, course, venue, era) | `history_context`, `course_history`, `venue`, `era`, `tournament_shape` | the data | full chain |
-| 3 | **Selection / weighting** — *what is notable enough to make the cut* | `scoring.py` (axis weights), `events.py` (sub-scores), `top_n` trim | cached beats | **free** (pure Python) |
-| 4 | **Narrative vehicle** — the frame | `story_plan.SYSTEM_PROMPT` menu, `StoryPlan.narrative_vehicles` | bundle | ~$0.65 |
-| 5 | **Report structure** — round-by-round vs theme-led, closing section | `narrative_structure`, WRITER_SYSTEM STRUCTURE | bundle | ~$0.65 |
-| 6 | **Writing style / voice** | `WRITER_SYSTEM` VOICE + principles + ECONOMY | frozen dry draft + plan | ~$0.17 |
-| 7 | **Faithfulness guardrails** | `WRITER_SYSTEM` FAITHFULNESS | frozen dry draft + plan | ~$0.17 |
-| 8 | **Determinism boundary** — what code guarantees vs what the LLM is trusted with | `render.py` injections; the beats/arcs split | `_report_final.md` | **free** |
-| 9 | **Presentation — content injection** (which blocks, where) | `render.py` | `_report_final.md` | **free** |
-| 10 | **Presentation — visual design** | `teg_reports.css` (×2 — see known issues) | `_styled.md` | **free** |
-| 11 | **Scope** — tournament vs round | `story_plan.py` vs `round_report.py` | the data (separate pipelines) | ~$0.65 each |
-| 12 | **Model & runtime config** | `llm.DEFAULT_MODEL`, `output_config.effort` | whichever stage you're changing | cost of that stage |
+Two things this cut gives you that the stage list doesn't: **which loop you're in** (themes differ by
+orders of magnitude in cost per try), and **how finished each part is** (maturity column — several
+rows are load-bearing and unbuilt).
 
-Three notes that follow from the table:
+### Theme A — Source & selection
+**In:** `data/*.parquet` · **Out:** the bundle (~26k tokens) · **Cost per try:** free to full chain
 
-- **Components 3, 8, 9 and 10 are free to iterate on.** Selection especially — `build_notable_events()`
+What the report is *allowed to know*. Everything downstream can only work with what survives here.
+
+| # | Component | In → Out | Lives in | Restart from | Cost | Maturity |
+|---|---|---|---|---|---|---|
+| A1 | **Raw facts — tournament** (scorecards, results, streaks) | parquet → `NotableEvent[]` | `core/data_loader`, `events.py` detectors | the data | full chain | **Works.** One known bug: era leak (`hole_evidence` attaches Stableford pre-TEG-8) |
+| A2 | **Raw facts — context** (cross-TEG, course, venue, era) | parquet → context dicts | `history_context`, `course_history`, `venue`, `era`, `tournament_shape` | the data | full chain | **Works.** `enrich` duplicates `history_context`; one should go |
+| A3 | **Selection / weighting** — *what is notable enough to make the cut* | `NotableEvent[]` → ranked, trimmed beats | `scoring.py` (axis weights), `events.py` (sub-scores), `top_n` trim | cached beats | **free** (pure Python) | **Measured, untuned.** Weights never turned; profiler now exists; arcs bypass this layer entirely |
+
+### Theme B — Editorial plan
+**In:** the bundle · **Out:** `teg_N_story_plan.json` · **Cost per try:** ~$0.28 (plan only) / ~$0.65 (chain)
+
+What the report will *say*, and in what order. The steerable artefact — for archive mode a human can
+edit the JSON before authoring runs.
+
+| # | Component | In → Out | Lives in | Restart from | Cost | Maturity |
+|---|---|---|---|---|---|---|
+| B1 | **Narrative vehicle** — the frame | bundle → `narrative_vehicles`, `prominent_vehicle` | `story_plan.SYSTEM_PROMPT` menu, `StoryPlan` fields | bundle | ~$0.65 | **Built, broken at the contract level** — close-finish hard rule is 0-for-2 (see B3) |
+| B2 | **Report structure** — round-by-round vs theme-led, closing section | bundle → `narrative_structure`, `rounds[]` | `narrative_structure`, `WRITER_SYSTEM` STRUCTURE | bundle | ~$0.65 | **Works** |
+| B3 | **Plan schema & shared vocabulary** — the editor↔writer contract | *(constrains B1/B2 and all of C)* | `StoryPlan` field types; the same 9 terms in two prose prompts | bundle | ~$0.65 | **Defective.** Free strings where enums are needed; 9 terms defined twice, no enforcement. Known issue 8 |
+
+### Theme C — Prose generation
+**In:** plan + bundle · **Out:** `teg_N_report_final.md` · **Cost per try:** ~$0.17–$0.37
+
+Turning the plan into text. Two rungs, and the cheaper one is where most iteration should happen.
+
+| # | Component | In → Out | Lives in | Restart from | Cost | Maturity |
+|---|---|---|---|---|---|---|
+| C1 | **Factual scaffold** — the dry draft's density and shape | plan + bundle → `dry_draft.md` | `DRY_DRAFT_SYSTEM_DETAILED` / `_LIGHT`, `dry_draft_style=` | frozen plan | ~$0.37 | **Works, A/B settled** (detailed wins). Vestigial `DRY_DRAFT_SYSTEM = ..._LIGHT` alias at `authoring.py:143` contradicts the settled default — dead, but misleading |
+| C2 | **Writing style / voice** | dry draft → finished prose | `WRITER_SYSTEM` VOICE + principles + ECONOMY | frozen dry draft + plan | ~$0.17 | **Works, validated across 17 reports — but the target level is an open decision** (humour dial, unsettled) |
+
+### Theme D — Assurance
+**In:** finished prose + the source data · **Out:** a report you can trust · **Cost per try:** free to ~$0.17
+
+Does the output match the data. **This is the least-built theme and the one carrying the most risk** —
+the audience is the players themselves, who spot any factual error.
+
+| # | Component | In → Out | Lives in | Restart from | Cost | Maturity |
+|---|---|---|---|---|---|---|
+| D1 | **Preventive rules** — instructions telling the writer not to fabricate | prompt → constrained prose | `WRITER_SYSTEM` FAITHFULNESS (11 absolutes) | frozen dry draft + plan | ~$0.17 | **Built and overloaded.** Past the density point where emphasis distinguishes anything (known issue 9) |
+| D2 | **Deterministic guarantees** — facts code emits so prose can't get them wrong | data → injected blocks | `render.py` standings / records / at-a-glance | `_report_final.md` | **free** | **Works well.** The strongest assurance mechanism in the pipeline |
+| D3 | **Programmatic verification** — checking claims against the data after the fact | prose + data → pass/fail | *nothing — does not exist* | `_report_final.md` | **free** | **Absent.** Three recorded drift incidents; the only current practice is a manual grep |
+
+> **The determinism boundary is a policy, not a component.** For each class of fact, it decides
+> whether code emits it (D2), the writer is trusted with it (D1), or the writer produces it and code
+> checks it (D3). It used to be listed as its own row, which made it look editable; it isn't — it's
+> the question you answer when deciding *which of D1–D3 a rule belongs in*. Today the answer is
+> "D1 or D2", because D3 doesn't exist.
+
+### Theme E — Presentation
+**In:** `_report_final.md` · **Out:** what the reader sees · **Cost per try:** free
+
+| # | Component | In → Out | Lives in | Restart from | Cost | Maturity |
+|---|---|---|---|---|---|---|
+| E1 | **Content injection** (which blocks, where) | final MD → styled MD | `render.py` | `_report_final.md` | **free** | **Works** |
+| E2 | **Visual design** | styled MD → rendered page | `teg_reports.css` (×2 — see known issues) | `_styled.md` | **free** | **Works.** CSS duplicated in two directories; edits must be applied to both |
+
+### Cross-cutting — not components
+
+The two rows that used to sit at the bottom of this table (scope, model config) were never components
+in the same sense: they don't consume one theme's output and hand on to the next. They're listed
+separately because that's what they are.
+
+| Concern | What it actually is | Lives in | Maturity |
+|---|---|---|---|
+| **Scope — tournament vs round** | A **second instance of the whole A→E chain**, not a stage within one. `round_report.py` re-implements plan → draft → write → style for a single round. | `story_plan.py` vs `round_report.py` | **A generation behind at B1/B3** — `RoundStoryPlan` has no vehicles and no payoffs. Port before backfilling ~50 rounds |
+| **Model & runtime config** | A **dial on every LLM row** (all of B, C, D1), not a step. Changing it re-prices whichever rows you're running. | `llm.DEFAULT_MODEL`, `output_config.effort` | **Stale + untested.** Pinned to `claude-opus-4-7`; `effort` is never set anywhere, so every call runs at default `high` |
+
+### What follows from this
+
+- **Themes A, D2/D3 and E are free to iterate on.** Selection (A3) especially — `build_notable_events()`
   never calls an LLM, so the most powerful component in the pipeline can be tuned for nothing. See
   [EXPERIMENTS.md](EXPERIMENTS.md) → H10.
-- **Never test a cheap-layer change by regenerating the expensive layers.** Changing voice means
-  re-running Stage 4b against a *frozen* dry draft. Regenerating the story plan as well changes two
-  things at once and teaches you nothing.
-- **Guardrails (7) are deliberately listed separately from style (6)** even though they share a
-  prompt. They have a different failure mode (a factual error the players catch, not a flat
-  sentence) and a different test (mechanical verification, not taste). Keeping them distinct is what
-  makes it safe to rewrite style.
+- **Never test a cheap-theme change by regenerating the expensive themes.** Changing voice (C2) means
+  re-running Stage 4b against a *frozen* dry draft. Regenerating the plan as well changes two things
+  at once and teaches you nothing.
+- **D is deliberately separate from C** even though D1 and C2 share a prompt file. They have
+  different failure modes (a factual error the players catch, vs a flat sentence) and different tests
+  (mechanical verification, vs taste). Keeping them apart is what makes it safe to rewrite style.
+- **Where the work is.** Ranked by risk × unbuiltness: **D3** (absent, and the reason three drift
+  incidents reached published reports) → **B3** (defective, fails silently, must land before any
+  regeneration) → **A3** (measured, decision pending) → the cross-cutting model pin (stale).
+
+#### Why D3 would reduce the burden on D1
+
+An open thought, assessed against the actual prompt: roughly **half of `WRITER_SYSTEM`'s 11
+faithfulness absolutes are mechanically checkable**, and are currently enforced only by asking the
+model nicely.
+
+| Rule | Checkable? | How |
+|---|---|---|
+| No beat IDs in prose (`b07`, `cr01`) | **yes, trivially** | regex |
+| No countback / tiebreaker / playoff | **yes, trivially** | vocabulary blocklist |
+| Never call a 4-day TEG "a week" | **yes, trivially** | vocabulary blocklist |
+| Only players who played this TEG | **yes** | extract names, diff against the roster |
+| Weekdays verbatim from `venue.rounds[i].weekday` | **yes** | compare any weekday token against the venue record for that section |
+| Arithmetic must be exact | **yes, with parsing** | sum the per-hole evidence behind each asserted total |
+| `must_include_beat_ids` all covered | partially | needs semantic matching |
+| Same hole number ≠ same hole across rounds | no | semantic |
+| Stableford vs Gross is not a paradox | no | semantic |
+| Relationships only from `player_relationships` | partially | relationship vocabulary near name pairs |
+| Early lead changes aren't "chaos" | no | semantic — but **A3 is the real fix**, not a rule |
+
+The six mechanical rules are the ones that trace to real incidents, and they're exactly the ones a
+post-hoc check would catch *more* reliably than a prompt absolute — the TEG 10 R3 arithmetic error
+happened with the rule already in the prompt. Moving them to D3 would let D1 shrink to the semantic
+rules that genuinely need a model's judgement, which is also the targeted version of the known-issue-9
+prompt-density fix.
+
+Note this is already being done, just by hand and unrepeatably: STATUS.md's verification record
+describes a **manual sanity grep** for `countback` / `tiebreak` / `playoff` / `unique double`. D3 is
+mostly the job of turning that grep into code and running it on every generation.
 
 ### The plumbing — where each component sits and what it hands on
 
@@ -53,32 +144,34 @@ the cheap loops cheap.
         │  load_all_data()
         ▼
   ┌─────────────────────────────────────────────────────────────────┐
-  │ build_notable_events(teg)          ── detectors ──►  43–105 raw │  c1
-  │ scoring.finalise(events, mode)     ── axis weights ─► ranked    │  c3  ← FREE loop
+  │ build_notable_events(teg)          ── detectors ──►  43–105 raw │  A1
+  │ scoring.finalise(events, mode)     ── axis weights ─► ranked    │  A3  ← FREE loop
   └─────────────────────────────────────────────────────────────────┘
         │
-        │   venue / history_context / course_history / era / tournament_shape   c2
-        │   competition_arcs  ⚠ never trimmed — bypasses c3 entirely
+        │   venue / history_context / course_history / era / tournament_shape   A2
+        │   competition_arcs  ⚠ never trimmed — bypasses A3 entirely
         ▼
-  assemble_bundle(teg, top_n=50)  ──────────────────────►  BUNDLE (~26k tok)  c3 (trim)
+  assemble_bundle(teg, top_n=50)  ──────────────────────►  BUNDLE (~26k tok)  A3 (trim)
         │
         ▼
-  build_story_plan(teg)            ─write─►  teg_N_story_plan.json    c4, c5   ~$0.28
+  build_story_plan(teg)            ─write─►  teg_N_story_plan.json    B1,B2,B3 ~$0.28
         │                                    ▲ restart point
         ▼
-  generate_dry_draft(teg, plan)    ─write─►  teg_N_dry_draft.md       (bundle re-sent) ~$0.20
+  generate_dry_draft(teg, plan)    ─write─►  teg_N_dry_draft.md       C1  (bundle re-sent) ~$0.20
         │                                    ▲ restart point
         ▼
-  report_around_draft(teg, plan, dry) ─write─► teg_N_report_A_around_draft.md  c6, c7  ~$0.10
+  report_around_draft(teg, plan, dry) ─write─► teg_N_report_A_around_draft.md  C2, D1  ~$0.10
         │
         ▼
   repetition_lint(text)            ─write─►  teg_N_report_final.md    ~$0.07
         │                                    ▲ restart point ← the cheap-loop workhorse
+        │
+        │   ⚠ D3 (verification) would sit HERE — nothing runs at this point today
         ▼
-  style_report(teg)                ─write─►  teg_N_report_styled.md   c8, c9   FREE
+  style_report(teg)                ─write─►  teg_N_report_styled.md   D2, E1   FREE
         │
         ▼
-  webapp / streamlit  +  teg_reports.css                              c10      FREE
+  webapp / streamlit  +  teg_reports.css                              E2       FREE
 ```
 
 **Two structural facts the diagram makes visible:**
@@ -103,18 +196,25 @@ the cheap loops cheap.
 mid-chain. Use them — don't regenerate what you aren't testing.
 
 ```python
-# c3 — SELECTION. Free, no LLM. Compute beats once, re-score in memory.
+# A3 — SELECTION. Free, no LLM. Compute beats once, re-score in memory.
 from teg_analysis.reporting.events import build_notable_events
 from teg_analysis.reporting import scoring
 raw = build_notable_events(14)                      # slow (~30s), do once
 ranked = scoring.finalise(list(raw), mode="fast")   # instant, repeat freely
+# Sweep all four candidate weight settings at once: python scripts/weight_profiler.py
 
-# c4/c5 — VEHICLE + STRUCTURE. Needs the full chain from the plan down.
+# B1/B2/B3 — PLAN. Needs the full chain from the plan down.
 from teg_analysis.reporting import build_story_plan
 plan = build_story_plan(14)["plan"]                 # ~$0.28
 # …then dry draft → around draft → lint → style
 
-# c6/c7 — VOICE + GUARDRAILS. Freeze the plan and dry draft; re-run 4b only.
+# C1 — FACTUAL SCAFFOLD. Freeze the plan; re-run 4a onwards.
+from teg_analysis.reporting.authoring import load_story_plan, generate_dry_draft
+plan = load_story_plan(17)                          # frozen fixture
+dry  = generate_dry_draft(17, plan, dry_draft_style="detailed")   # ~$0.20
+# …then around draft → lint  (~$0.37 total)
+
+# C2/D1 — VOICE + PREVENTIVE RULES. Freeze plan AND dry draft; re-run 4b only.
 from teg_analysis.reporting.authoring import (
     load_story_plan, load_dry_draft, report_around_draft, repetition_lint)
 plan = load_story_plan(17)                          # frozen fixture
@@ -123,11 +223,13 @@ rpt  = report_around_draft(17, plan, dry)           # ~$0.10
 linted, _ = repetition_lint(rpt["text"])            # ~$0.07
 # total ~$0.17 — no story plan regenerated, so voice is the only variable
 
-# c8/c9 — INJECTION + DETERMINISM BOUNDARY. Free; reads _report_final.md.
+# D2/E1 — DETERMINISTIC BLOCKS + INJECTION. Free; reads _report_final.md.
 from teg_analysis.reporting.render import style_report
 style_report(17)
 
-# c10 — VISUAL. No Python at all: edit teg_reports.css and reload.
+# D3 — VERIFICATION. Nothing to run: not built.
+
+# E2 — VISUAL. No Python at all: edit teg_reports.css and reload.
 
 # Inspect the Stage-3 input without spending anything:
 build_story_plan(14, dry_run=True)                  # writes teg_14_story_plan_prompt.md
@@ -135,7 +237,7 @@ build_story_plan(14, dry_run=True)                  # writes teg_14_story_plan_p
 
 ### Fixture set
 
-Iterating on components 6–10 needs a frozen artefact chain to restart from. **TEGs 9, 12 and 17
+Iterating on themes C, D and E needs a frozen artefact chain to restart from. **TEGs 9, 12 and 17
 have complete chains** (`story_plan.json` → `dry_draft.md` → `report_A_around_draft.md` →
 `report_final.md` → `report_styled.md`); 12 and 17 are current-vintage and are the best fixtures.
 
