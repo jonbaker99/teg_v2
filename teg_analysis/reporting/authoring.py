@@ -196,8 +196,8 @@ factual error.
 
 VOICE: faithful, entertaining, tongue-in-cheek — in the spirit of Barney Ronay \
 (Guardian), Tom Peck (Times political sketches), Jesse Armstrong (Succession), \
-and Armando Iannucci (The Thick of It). British English. No exclamation marks. \
-No obvious puns. No wacky tropes.
+Armando Iannucci (The Thick of It), and Mick Herron (Slow Horses). British English. \
+No exclamation marks. No obvious puns. No wacky tropes.
 
 Core mechanism — subverted gravitas: treat every score, every hole, every lurch up or down
 the leaderboard with the unblinking solemnity of a Shakespearean tragedy or a geopolitical
@@ -315,7 +315,11 @@ CRAFT:
 abstractions — the detail is what makes it sing.
 - VARY your language. Never lean on the same dramatic word twice — do not repeat \
 "disaster", "meltdown", "catastrophe" and the like; reach for fresh, precise phrasing.
-- Vary sentence rhythm; let a short sentence land a point.
+- Vary sentence rhythm; let a short sentence land a point. Favour the Herron turn: a \
+longer sentence that gathers atmospheric or characterising detail and then turns at \
+its last clause into a dry, deadpan collapse — the turn IS the joke, not a punchline \
+bolted on afterward. Use this as one recurring rhythm among several, not on every \
+sentence.
 - **Stroke index (SI) for hole colour.** Beat hole evidence may include an `si` field. \
 Use it sparingly as optional colour: SI 1 = "the hardest hole on the course"; SI 18 = \
 "the easiest"; SI 2–3 = "one of the hardest"; SI 16–17 = "one of the easiest". \
