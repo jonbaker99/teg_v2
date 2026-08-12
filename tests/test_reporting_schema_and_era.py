@@ -280,3 +280,22 @@ def test_faithfulness_rules_that_trace_to_incidents_are_still_present():
     for phrase in ("countback", "same hole", "a week", "Arithmetic must be exact",
                    "player_relationships", "beat ID"):
         assert phrase.lower() in WRITER_FAITHFULNESS.lower(), phrase
+
+
+def test_writer_reads_the_right_prominence_field_for_the_palette():
+    """The PALETTE block must point at `prominent_palette`, not `prominent_vehicle`.
+
+    Regression guard for the same class of bug as known issue 8: the writer being
+    told to choose a PALETTE item "informed by" a field that holds a FRAME value.
+    The 2026-08-11 split made these two disjoint vocabularies, so reading the
+    wrong one now yields a value that is not in the palette at all.
+    """
+    from teg_analysis.reporting.authoring import WRITER_VOICE
+    palette_block = WRITER_VOICE[WRITER_VOICE.index("PALETTE —"):]
+    palette_block = palette_block[:palette_block.index("\n\n\n")] if "\n\n\n" in palette_block else palette_block
+    head = palette_block[:1200]
+    assert "prominent_palette" in head
+    # `prominent_vehicle` may appear, but only in the disambiguating warning.
+    for m in __import__("re").finditer(r"prominent_vehicle", head):
+        assert "NOT `prominent_vehicle`" in head[max(0, m.start() - 30):m.end() + 10], \
+            "PALETTE block references prominent_vehicle outside the disambiguation note"

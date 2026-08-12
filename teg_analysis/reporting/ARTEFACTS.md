@@ -64,6 +64,54 @@ Splitting them is the main reason the reports stay faithful.
 
 ---
 
+## Where the story arc is decided, and where it first bites
+
+Worth knowing before you tune anything, because the two points are **not** the same stage.
+
+**Decided: Stage 3, the story plan.** The editor LLM reads the bundle (scored beats, competition
+arcs, venue, player history, `tournament_shape`, `recent_vehicle_choices`) and writes into ①:
+
+| Field | What it fixes |
+|---|---|
+| `theme` | the one-line through-line |
+| `narrative_structure` | the sequence — `chronological`, `in_medias_res`, `theme_led`, … |
+| `narrative_vehicles` | 1–3 storytelling frames |
+| `prominent_vehicle` | **the frame being foregrounded** (e.g. `counterfactual`) |
+| `prominent_palette` | **the context material being foregrounded** (e.g. `cross_teg_career`) |
+| `opening_hook`, `foreshadow`, `payoffs` | what to plant, and where it resolves |
+
+Two constraints bind the choice: the **close-finish hard rule** (if `tournament_shape.close_finish`
+is true, `prominent_vehicle` must be `counterfactual` or `dual_narrative`) and the **soft
+anti-repetition rule** (`recent_vehicle_choices` shows the last few TEGs' picks).
+
+> `prominent_vehicle` and `prominent_palette` are **two different axes with disjoint vocabularies.**
+> A report is normally *framed* one way and *foregrounds* material from another. Confusing them is
+> what caused the close-finish rule to never fire for four TEGs.
+
+**First used: Stage 4b, the writer — not 4a.** The whole plan JSON is passed to both stages, but
+only the writer prompt acts on the framing:
+
+| Field | Dry draft 4a (`detailed`, the default) | Dry draft 4a (`light`) | Writer 4b |
+|---|---|---|---|
+| `theme` | ✓ | ✓ | ✓ |
+| `narrative_structure` | **ignored** | ✓ | ✓ |
+| `narrative_vehicles` / `prominent_vehicle` | **ignored** | **ignored** | ✓ |
+| `opening_hook`, `foreshadow`, `payoffs` | **ignored** | **ignored** | ✓ |
+
+**This is deliberate, and worth understanding.** The default dry draft is *always* a flat
+round-by-round fact dump, whatever structure the plan chose. Its job is completeness and accuracy,
+not shape — a scaffold you can check the facts against. The framing is applied once, at 4b, when the
+prose is written.
+
+Three practical consequences:
+
+1. **A dry draft that reads chronologically is not a bug**, even when the plan says `in_medias_res`.
+2. **Changing the vehicle means re-running 4b only** (~$0.17) — the dry draft is unaffected by it, so
+   there is no reason to regenerate ②.
+3. **Changing the vehicle means regenerating the plan** (~$0.65) if you want the *editor* to pick
+   differently. Editing ① by hand is the cheap alternative: it is just JSON, and archive mode exists
+   precisely so a human can steer it before authoring runs.
+
 ## Which file do I restart from?
 
 The whole point of keeping intermediate files is that you don't re-run — and re-pay for — stages you

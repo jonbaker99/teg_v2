@@ -263,8 +263,10 @@ This closing is non-negotiable; do not omit it.
 PALETTE — context vehicles to pull on. **At least ONE must be prominent in the report \
 (featured in the opener AND threaded through the body); multiple are welcome where each \
 genuinely lands; the one-prominent rule is non-negotiable.** None of (a)-(g) is itself \
-mandatory; the choice is yours, informed by the plan's `prominent_vehicle` and what's \
-most interesting about THIS tournament.
+mandatory; the choice is yours, informed by the plan's **`prominent_palette`** and what's \
+most interesting about THIS tournament. (Note `prominent_palette` — NOT `prominent_vehicle`, \
+which is the structural FRAME and is covered under STRUCTURE above. They are different \
+fields with different vocabularies; do not read one for the other.)
 
 a) **Cross-TEG career storylines.** The bundle's `player_history` and the plan's \
 `players[]` carry factual storyline phrases (Nth Trophy / Jacket / Spoon; back-to-back; \

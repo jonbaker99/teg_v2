@@ -189,6 +189,7 @@ Severity is *impact if left alone*, not effort:
 | 3 | **Round pipeline a generation behind** | P2 | M | round regen | ✅ **FIXED** — `RoundStoryPlan` has vehicles, payoffs and the shared enums |
 | 4 | **TEG 10 R3 arithmetic error** | P2 | S | no | ✅ **FIXED** — "fourteen-point swing" → sixteen; D3 regression-tests it |
 | 16 | **TEG 5 shipped 41 beat IDs to readers** | P2 | S | no | ✅ **FIXED** — found by D3, stripped from final + styled |
+| 18 | **Writer prompt read the wrong prominence field** (self-inflicted by the issue-8 fix; caught pre-generation) | P2 | XS | no | ✅ **FIXED 2026-08-11** — PALETTE block now names `prominent_palette`; regression test added |
 | 12 | **Arc payload reaches the writer unweighted** | P2 | S–M | no | ✅ **FIXED** — per-entry `significance`, early/late summaries, and the Spoon arc finally has an `outright` flag |
 | 11a | **`DEFAULT_MODEL` still `claude-opus-4-7`** | P2 | XS | no | ✅ **FIXED** — pinned to `claude-opus-5` |
 | 2 | **`enrich_report_with_history()` has zero callers** | P3 | XS | no | ✅ **FIXED** — deleted, with `ENRICH_SYSTEM` and `build_history_enrichment_context` |
@@ -444,6 +445,22 @@ the only reason anyone would edit a file under `streamlit/`, which the project r
 
 The isolated `venv/` (Python 3.14) hits `TypeError: cannot use 'tuple' as a dict key` on every
 templated route. Visual webapp verification needs Python 3.12/3.13.
+
+### 18. Writer prompt read the wrong prominence field — FIXED 2026-08-11 (self-inflicted)
+
+Introduced by the issue-8 fix and caught before any report was generated. Splitting
+`prominent_vehicle` into a frame field and a `prominent_palette` context field left
+`WRITER_VOICE`'s PALETTE block still saying *"informed by the plan's `prominent_vehicle`"* — so the
+writer would have been told to choose a palette item (a)–(g) on the basis of a field now holding a
+frame value like `counterfactual`, which is not in that list.
+
+**Exactly the same failure mode as issue 8, reintroduced in the other prompt** — which is the
+argument for the schema-and-generated-menus approach rather than prose cross-references. The prompt
+now names `prominent_palette` with an explicit note that the two fields are different vocabularies,
+and a regression test asserts the PALETTE block never references `prominent_vehicle` outside that
+disambiguation.
+
+No cost: no report has been generated since the split.
 
 ### 12. Competition arcs reach the writer unweighted — FIXED 2026-08-11
 
