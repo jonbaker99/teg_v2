@@ -342,3 +342,62 @@ def test_prompts_never_reference_a_plan_field_that_does_not_exist():
     assert not dangling, (
         "prompt references a plan field that does not exist "
         f"(renamed or removed?): {dangling}")
+
+
+# ---------------------------------------------------------------------------
+# restyle_voice — the voice A/B lever
+# ---------------------------------------------------------------------------
+def test_restyle_voice_composes_guardrails_from_the_shared_constant():
+    """A variant's voice prompt must not be able to shed the faithfulness rules.
+
+    The guardrails come from `WRITER_FAITHFULNESS` — the same constant the main
+    writer uses — so a voice experiment cannot drift out of step with them.
+    """
+    from unittest.mock import patch
+    from teg_analysis.reporting import authoring
+
+    src = open("data/commentary/teg_17_report_final.md").read()
+    with patch.object(authoring.llm, "generate_text", return_value=(src, {})) as m:
+        authoring.restyle_voice(17, "VOICE: drier.", "unittest_tmp",
+                                style=False, verify=False)
+    system = m.call_args[0][0]
+    assert "restyle, not a rewrite" in system          # the contract
+    assert "VOICE: drier." in system                    # the caller's voice
+    assert authoring.WRITER_FAITHFULNESS in system      # shared guardrails
+    assert authoring.WRITER_OUTPUT_RULE in system
+
+    import os
+    os.remove("data/commentary/teg_17_report_unittest_tmp.md")
+
+
+def test_restyle_voice_refuses_to_overwrite_canonical_artefacts():
+    from teg_analysis.reporting.authoring import restyle_voice
+    for label in ("final", "styled", "A_around_draft"):
+        with pytest.raises(ValueError, match="canonical"):
+            restyle_voice(17, "VOICE: x", label)
+
+
+def test_restyle_voice_blames_only_faults_it_introduced():
+    """Inherited faults are not the pass's doing; a new one is.
+
+    This is the guard against the failure that got the critique-revise variant
+    rejected — an extra prose pass fabricating a detail.
+    """
+    from unittest.mock import patch
+    from teg_analysis.reporting import authoring
+    import os
+
+    src = open("data/commentary/teg_17_report_final.md").read()
+
+    with patch.object(authoring.llm, "generate_text",
+                      return_value=(src + "\n\nIt was settled on countback.\n", {})):
+        out = authoring.restyle_voice(17, "VOICE: x", "unittest_tmp", style=False)
+    assert len(out["new_findings"]) == 1
+    assert "countback" in out["new_findings"][0]
+    assert len(out["findings"]) > len(out["new_findings"])   # inherited, not blamed
+
+    with patch.object(authoring.llm, "generate_text", return_value=(src, {})):
+        clean = authoring.restyle_voice(17, "VOICE: x", "unittest_tmp", style=False)
+    assert clean["new_findings"] == []
+
+    os.remove("data/commentary/teg_17_report_unittest_tmp.md")

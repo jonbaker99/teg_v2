@@ -169,6 +169,48 @@ learn nothing — and pay 4× for the privilege.
 
 ---
 
+### Comparing voices without touching the canonical files
+
+`restyle_voice()` rewrites a **finished report's** voice only. Because the input is the finished
+text rather than the bundle, everything else — facts, structure, headings, standings, records — is
+held literally constant. One variable, one API call, ~$0.10.
+
+```python
+from teg_analysis.reporting import restyle_voice
+
+out = restyle_voice(17, "VOICE TARGET: drier. Fewer jokes, shorter sentences.", "drier")
+#   -> data/commentary/teg_17_report_drier.md
+#   -> data/commentary/teg_17_report_drier_styled.md   (directly comparable with _styled.md)
+out["new_findings"]   # faults THIS pass introduced — [] is what you want
+```
+
+The humour-dial registers are already wired up:
+
+```bash
+python scripts/humour_dial.py --list
+python scripts/humour_dial.py --teg 14 --variant humour8b
+```
+
+Three things it does for you:
+
+- **Refuses to write to `final` / `styled` / `A_around_draft`.** Canonical artefacts are safe.
+- **Composes the guardrails from `WRITER_FAITHFULNESS`** — the same constant the main writer uses,
+  so a voice experiment cannot shed the faithfulness rules or drift out of step with them.
+- **Reports what this pass *introduced*, not what it inherited.** A restyle inherits the source's
+  existing faults, so a raw finding list is misleading; `new_findings` is the number that matters.
+
+> **Why this is a lever and not a pipeline stage.** The original authoring A/B tested an extra pass
+> over finished prose as the *default* (variant C, critique-revise) and rejected it: the extra pass
+> fabricated a "countback". Every pass over prose is a fabrication opportunity. What has changed is
+> that D3 now exists, so such a pass can be *checked* rather than trusted — which is what
+> `new_findings` is. It stays opt-in.
+>
+> **What it does not prove:** that a voice is reachable *by rewriting* is not the same as the writer
+> hitting it first time from the bundle. Fold the winner into `WRITER_VOICE`, then confirm with one
+> from-scratch generation before trusting it for a backfill.
+
+---
+
 ## Which TEGs can I iterate voice on?
 
 The voice loop needs ① *and* ② on disk. Verified 2026-08-11:

@@ -653,3 +653,128 @@ def run_authoring_ab(teg_num: int, mode: str = "balanced", tone: str = "house",
     return {"A_around_draft": a["output_path"],
             "B_single_pass": b["output_path"],
             "C_critique_revise": c["output_path"]}
+
+
+# ===========================================================================
+# Voice restyling — an EXPERIMENT LEVER, deliberately not in the default chain
+# ===========================================================================
+# Takes an already-finished report and rewrites ONLY its voice. Everything else
+# — facts, structure, headings, standings, records — is held literally constant,
+# because the input is the finished text rather than the bundle. That makes it
+# the tightest possible A/B for voice: one variable, one API call.
+#
+# WHY THIS IS NOT A PIPELINE STAGE. The original authoring A/B tested exactly
+# this shape as a default (variant C, critique-revise) and rejected it: the extra
+# pass over finished prose fabricated a "countback" detail. Every pass over prose
+# is a fabrication opportunity, so this stays an opt-in tool for experiments.
+#
+# What has changed since that verdict is that D3 now exists, so a rewrite can be
+# *checked* rather than merely trusted — `verify=True` (the default) runs the
+# mechanical checks over the output and returns the findings.
+#
+# WHAT IT DOES NOT PROVE. It shows a target voice is reachable *by rewriting*,
+# not that the writer will hit it first time from the bundle. Whatever wins here
+# must be folded into `WRITER_VOICE` and validated with a from-scratch
+# generation before it is trusted for a backfill.
+
+RESTYLE_CONTRACT = """You are rewriting an existing, finished golf tournament report to change \
+its VOICE ONLY.
+
+NON-NEGOTIABLE — this is a restyle, not a rewrite:
+- DO NOT change any fact: holes, scores, players, par values, weekdays, stroke indexes, course \
+names, records, margins, totals. Every number stays exactly as written.
+- DO NOT change the structure: same sections, same headings, same order, same length or slightly \
+shorter.
+- DO NOT add or remove events. If it is not in the text you were given, it does not exist.
+- DO NOT add weekday names anywhere they do not already appear.
+
+Everything below describes the voice you are writing IN. Apply it to the existing sentences."""
+
+
+def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
+                  source_label: Optional[str] = None,
+                  model: Optional[str] = None,
+                  verify: bool = True,
+                  style: bool = True) -> dict:
+    """Rewrite a finished report's voice and save it under a variant name.
+
+    Args:
+        teg_num: which TEG.
+        voice_prompt: the voice instructions for this variant. Composed with the
+            restyle contract and the shared `WRITER_FAITHFULNESS` block, so the
+            guardrails are the *same constant* the main writer uses and cannot
+            drift out of step with it.
+        label: variant name, e.g. `"humour8b"`. Writes
+            `teg_N_report_{label}.md` (+ `_styled.md`). Refuses labels that would
+            overwrite the canonical files.
+        source_label: read from `teg_N_report_{source_label}.md` instead of
+            `report_final.md` — for chaining or for re-styling another variant.
+        verify: run D3 over both the source and the output, and report which
+            findings are NEW (default True). A restyle inherits whatever faults
+            the source already had, so the raw finding list is misleading — the
+            question that matters for an extra prose pass is whether *this* pass
+            introduced anything. That is `new_findings`.
+        style: also write the styled variant, so it is directly comparable
+            line-for-line with `report_styled.md` (default True).
+
+    Returns {teg, label, source_path, output_path, styled_path, usage,
+    findings, new_findings}.
+    """
+    import os
+
+    from teg_analysis.reporting.render import style_text
+    from teg_analysis.reporting.verify import verify_report
+
+    label = label.strip().strip("_")
+    if not label:
+        raise ValueError("label must be a non-empty variant name")
+    if label in {"final", "styled", "A_around_draft"}:
+        raise ValueError(
+            f"label {label!r} would overwrite a canonical artefact; "
+            "pick an experiment name such as 'humour8b' or 'drier'")
+
+    src_name = f"report_{source_label}" if source_label else "report_final"
+    source_path = f"{OUTPUT_DIR}/teg_{teg_num}_{src_name}.md"
+    if not os.path.exists(source_path):
+        raise FileNotFoundError(
+            f"{source_path} not found. The voice loop needs a finished report to "
+            f"rewrite; generate one first, or pass source_label=")
+
+    with open(source_path) as f:
+        source_text = f.read()
+
+    system = (RESTYLE_CONTRACT + "\n\n" + voice_prompt.strip() + "\n\n"
+              + WRITER_FAITHFULNESS + "\n" + WRITER_OUTPUT_RULE)
+    text, usage = llm.generate_text(system, source_text,
+                                    model=model or llm.DEFAULT_MODEL,
+                                    max_tokens=16000)
+    text = _strip_beat_ids(text)
+
+    output_path = f"{OUTPUT_DIR}/teg_{teg_num}_report_{label}.md"
+    with open(output_path, "w") as f:
+        f.write(text)
+
+    styled_path = None
+    if style:
+        styled_path = f"{OUTPUT_DIR}/teg_{teg_num}_report_{label}_styled.md"
+        with open(styled_path, "w") as f:
+            f.write(style_text(teg_num, text))
+
+    findings: list = []
+    new_findings: list = []
+    if verify:
+        before = {str(f) for f in verify_report(teg_num, text=source_text)}
+        found = verify_report(teg_num, text=text)
+        findings = [str(f) for f in found]
+        # Faults the source already had are not this pass's doing. What matters
+        # is whether rewriting introduced one — that is the exact failure that
+        # got the critique-revise variant rejected.
+        new_findings = [s for s in findings if s not in before]
+        if new_findings:
+            print(f"[restyle_voice] WARNING TEG {teg_num} ({label}): "
+                  f"{len(new_findings)} NEW fault(s) introduced by this pass:")
+            for s in new_findings:
+                print(f"  {s}")
+    return {"teg": teg_num, "label": label, "source_path": source_path,
+            "output_path": output_path, "styled_path": styled_path,
+            "usage": usage, "findings": findings, "new_findings": new_findings}

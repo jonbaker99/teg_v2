@@ -20,7 +20,7 @@ from . import verify
 from .events import build_notable_events, render_events_markdown
 from .venue import build_venue_context, render_venue_markdown
 from .story_plan import build_story_plan, StoryPlan
-from .authoring import generate_dry_draft, tighten_prose
+from .authoring import generate_dry_draft, tighten_prose, restyle_voice
 from .render import apply_styling, style_report
 from .verify import verify_report, format_findings
 
@@ -29,7 +29,7 @@ __all__ = [
     "build_notable_events", "render_events_markdown",
     "build_venue_context", "render_venue_markdown",
     "build_story_plan", "StoryPlan",
-    "generate_dry_draft", "tighten_prose",
+    "generate_dry_draft", "tighten_prose", "restyle_voice",
     "apply_styling", "style_report",
     "verify_report", "format_findings",
 ]

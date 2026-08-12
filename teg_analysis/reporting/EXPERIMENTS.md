@@ -377,7 +377,16 @@ would the players enjoy it more. Then fold the winning register into `WRITER_SYS
 TEG 14 from scratch to confirm it lands, and record the verdict here.
 
 **Notes:**
-- Nothing was published. `scripts/humour_dial.py` is still pointed at `TEGS = [18]` mid-retry.
+- Nothing was published.
+- **2026-08-11: the method is now a proper lever.** `authoring.restyle_voice(teg, voice_prompt,
+  label)` replaces the one-off script; `scripts/humour_dial.py` is a thin parameterised wrapper
+  holding the three registers (`--teg N --variant humour8b`). The `humour8bb` TEG 18 retry that died
+  on a connection reset is a one-line re-run. Guardrails now come from the shared
+  `WRITER_FAITHFULNESS` constant rather than being restated inline, and every variant is checked for
+  faults the rewrite *introduced* (`new_findings`) — which is the specific risk that got the
+  critique-revise variant rejected.
+- Fold the winner into **`WRITER_VOICE`**, not `WRITER_SYSTEM` — voice and faithfulness are separate
+  constants now, and only the voice half should move.
 - This blocks the regeneration work — don't regenerate the stale reports until the voice is locked.
 
 **Verdict:** _(open)_

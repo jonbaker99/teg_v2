@@ -559,14 +559,15 @@ def _strip_at_a_glance(text: str) -> str:
     )
 
 
-def style_report(teg_num: int) -> str:
-    """Read final report + saved plan + venue, write `..._report_styled.md`. Returns path."""
-    from teg_analysis.reporting.history_context import build_win_counts
-    final_path = f"{OUTPUT_DIR}/teg_{teg_num}_report_final.md"
-    out_path = f"{OUTPUT_DIR}/teg_{teg_num}_report_styled.md"
+def style_text(teg_num: int, text: str) -> str:
+    """Apply the full tournament styling pipeline to arbitrary report text.
 
-    with open(final_path) as f:
-        text = f.read()
+    Factored out of `style_report` so a *variant* (an A/B voice experiment, say)
+    can be styled without being written to `report_final.md` first. That matters
+    for comparison: a variant put through the identical styling pipeline is
+    directly readable line-for-line against `report_styled.md`.
+    """
+    from teg_analysis.reporting.history_context import build_win_counts
     plan = load_story_plan(teg_num)           # dict (from saved JSON)
     venue = build_venue_context(teg_num)
     standings = build_round_standings(teg_num)
@@ -576,7 +577,17 @@ def style_report(teg_num: int) -> str:
     styled = apply_styling(text, plan, venue, standings=standings, win_counts=win_counts)
     # Strip old records block so we can re-inject the updated version.
     styled = re.sub(r'\n*## Personal bests and TEG records\n[\s\S]*$', '', styled)
-    styled = _append_records(styled, build_records_block(teg_num))
+    return _append_records(styled, build_records_block(teg_num))
+
+
+def style_report(teg_num: int) -> str:
+    """Read final report + saved plan + venue, write `..._report_styled.md`. Returns path."""
+    final_path = f"{OUTPUT_DIR}/teg_{teg_num}_report_final.md"
+    out_path = f"{OUTPUT_DIR}/teg_{teg_num}_report_styled.md"
+
+    with open(final_path) as f:
+        text = f.read()
+    styled = style_text(teg_num, text)
 
     with open(out_path, "w") as f:
         f.write(styled)

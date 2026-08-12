@@ -71,7 +71,8 @@ regeneration clears. Nothing else is blocking. Test suite: 404 passed, 4 skipped
 | ✅ | 4a — dry storyline draft | `authoring.generate_dry_draft` |
 | ✅ | 4b — entertaining report (around-draft) | `authoring.report_around_draft` |
 | ✅ | 4b — repetition lint | `authoring.repetition_lint` |
-| ⚠️ | 4c — tighten pass | `authoring.tighten_prose` — **built, not wired into `backfill.py`** |
+| ⚠️ | 4c — tighten pass | `authoring.tighten_prose` — **built, not wired into `backfill.py`** (deliberate lever) |
+| ✅ | voice A/B lever | `authoring.restyle_voice` — rewrites a finished report's voice only; **not** in the default chain |
 | 🗑️ | 4d — history enrichment pass | **deleted 2026-08-11** — zero callers, duplicated `history_context` |
 | ✅ | D3 — programmatic verification | `verify.py` — 7 mechanical checks, auto-run by `backfill.py` |
 | ✅ | 5 — CSS-class styling renderer | `render.apply_styling` / `render.style_report` |
@@ -554,8 +555,14 @@ that changes *what a report is* lands before it.
 
 **1. Settle the humour dial.** Read `teg_14_report_styled.md` (baseline) against
 `teg_14_report_humour6.md` / `_humour8.md` / `_humour8b.md`, then the TEG 18 pair. Record the verdict
-in EXPERIMENTS.md and fold the winner into `WRITER_SYSTEM`.
+in EXPERIMENTS.md and fold the winner into **`WRITER_VOICE`** (its own constant since 2026-08-11 —
+the faithfulness rules live separately in `WRITER_FAITHFULNESS` and must not be touched).
 *Why first:* it sets the published voice, only Jon can call it, and it blocks regeneration.
+
+*Tooling:* `python scripts/humour_dial.py --teg 14 --variant humour8b` produces a fresh variant for
+~$0.10 via `authoring.restyle_voice()`. The TEG 18 `humour8bb` retry that died on a connection reset
+can now simply be re-run. Variants never touch `report_final.md`, and each is checked for faults the
+rewrite *introduced*.
 
 **2. ~~Choose the selection-weight setting~~ — DONE.** `balanced` is now (1.5, 0.8, 0.7).
 *Optional follow-up when a key is available:* a plan-only run (~$0.28) to confirm the change
