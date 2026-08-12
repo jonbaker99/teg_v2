@@ -20,8 +20,13 @@ grouped into five themes, A–E, that run in order: each theme consumes the prev
 Within a theme, rows are independently editable.
 
 Two things this cut gives you that the stage list doesn't: **which loop you're in** (themes differ by
-orders of magnitude in cost per try), and **how finished each part is** (maturity column — several
-rows are load-bearing and unbuilt).
+orders of magnitude in cost per try), and **how finished each part is** (maturity column).
+
+> **This is the same pipeline as [The five stages](#the-five-stages), cut a different way** — not a
+> rival model. Roughly: **A** = stages 1–2, **B** = stage 3, **C** = stages 4a/4b, **D** = the
+> faithfulness rules + verification + injected blocks, **E** = stage 5. If you want the runtime
+> sequence rather than the change surface, start from
+> [ARTEFACTS.md](ARTEFACTS.md) → "The whole pipeline in one table".
 
 ### Theme A — Source & selection
 **In:** `data/*.parquet` · **Out:** the bundle (~26k tokens) · **Cost per try:** free to full chain
@@ -296,6 +301,11 @@ files each TEG is missing, is in [ARTEFACTS.md](ARTEFACTS.md) → "Which TEGs ca
 > generation (~$0.65). Use **TEG 17 or 12** meanwhile — both current-vintage with complete chains.
 
 ## The five stages
+
+> **For the at-a-glance version — every stage, what it reads, what it writes, what it costs, in one
+> table — see [ARTEFACTS.md](ARTEFACTS.md) → "The whole pipeline in one table".** That is also where
+> the three vocabularies (stages 1–5, themes A–E, files ①–⑤) are reconciled. The sections below are
+> the deeper per-stage reference.
 
 ```
                                                           (LLM ────────────┐

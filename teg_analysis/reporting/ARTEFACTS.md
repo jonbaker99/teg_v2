@@ -6,18 +6,56 @@ restart from for a given kind of change. Architecture is in [README.md](README.m
 
 ---
 
-## Start here: only five files matter
+## The whole pipeline in one table
 
-Everything else in the folder is a snapshot or an experiment. The live chain is five files, made in
-this order:
+Read this and you have it. Every stage, what it does, what it reads, what it writes.
+
+| Stage | What it does, in plain terms | Reads | Writes | Cost |
+|---|---|---|---|---|
+| **1–2** | Loads the data; finds and scores the notable events ("beats") | `data/*.parquet` | *(memory)* | free |
+| **–** | Packs beats + arcs + venue + history into **the bundle** | beats + context | *(memory)* | free |
+| **3** | **Decides the story** — theme, shape, frame, which beats must appear | the bundle | ① `story_plan.json` | ~$0.28 |
+| **4a** | **States the facts plainly** — correct and complete, deliberately boring | ① + bundle | ② `dry_draft.md` | ~$0.20 |
+| **4b** | **Applies the voice** — rewrites ② in the house style | ① + ② | ③ `report_A_around_draft.md` | ~$0.10 |
+| **lint** | Removes repeated words. Nothing else | ③ | ④ `report_final.md` | ~$0.07 |
+| **D3** | **Checks the prose against the data**, reports faults | ④ + data | *(findings)* | free |
+| **5** | Adds standings tables, records appendix, CSS hooks | ④ | ⑤ `report_styled.md` | free |
+| | | | **total** | **~$0.65** |
+
+Two things that follow:
+
+- **4b can only use facts already in ②.** That is the whole reason 4a exists — the writer cannot
+  invent while reaching for a good line, because it is rewriting, not composing from data.
+- **④ is the canonical text; ⑤ is what the site serves.** ⑤ is regenerated from ④ every time, so
+  editing ⑤ is pointless.
+
+### Other names for the same thing
+
+Three vocabularies exist for this one pipeline. They are not competing models — they are different
+cuts, and this is the mapping:
+
+| Vocabulary | What it's for | Where |
+|---|---|---|
+| **Stages 1–5** | *how a report is built* — the runtime sequence above | this table; README |
+| **Themes A–E** | *what you can change* — grouped by cost to iterate | [README.md](README.md) → Components |
+| **Files ①–⑤** | *what's on disk* — the artefacts | this doc |
+
+Roughly: **A** = stages 1–2, **B** = stage 3, **C** = stages 4a/4b, **D** = the faithfulness rules
+plus D3 plus the injected blocks, **E** = stage 5.
+
+---
+
+## The five files on disk
 
 | # | File | What it is | Made by | Read by |
 |---|---|---|---|---|
-| 1 | `teg_N_story_plan.json` | **The editorial plan.** Theme, per-round angles, chosen headlines, which beats must appear, the frame. No prose. | Stage 3 (LLM) | Stages 4a, 4b, 5 |
-| 2 | `teg_N_dry_draft.md` | **The facts in plain prose.** Correct, complete, deliberately boring. No jokes, no voice. | Stage 4a (LLM) | Stage 4b |
-| 3 | `teg_N_report_A_around_draft.md` | **First pass with the voice on.** The dry draft rewritten in the house style. | Stage 4b (LLM) | the lint |
-| 4 | `teg_N_report_final.md` | **The finished prose.** Same as ③ after a word-repetition clean-up. **This is the canonical text.** | lint (Haiku) | Stage 5, D3 |
-| 5 | `teg_N_report_styled.md` | **What the site serves.** ④ plus CSS hooks, standings tables, records appendix, at-a-glance box. | Stage 5 (code, free) | the webapp |
+| ① | `teg_N_story_plan.json` | **The editorial plan.** Theme, per-round angles, chosen headlines, which beats must appear, the frame. No prose. | Stage 3 (LLM) | 4a, 4b, 5 |
+| ② | `teg_N_dry_draft.md` | **The facts in plain prose.** Correct, complete, deliberately boring. No jokes, no voice. | Stage 4a (LLM) | 4b |
+| ③ | `teg_N_report_A_around_draft.md` | **First pass with the voice on.** ② rewritten in the house style. | Stage 4b (LLM) | the lint |
+| ④ | `teg_N_report_final.md` | **The finished prose.** ③ after a word-repetition clean-up. **The canonical text.** | lint (Haiku) | Stage 5, D3 |
+| ⑤ | `teg_N_report_styled.md` | **What the site serves.** ④ plus CSS hooks, standings, records, at-a-glance box. | Stage 5 (code) | the webapp |
+
+Everything else in `data/commentary/` is a snapshot or an experiment — see the decoder near the end.
 
 Round reports use the same five names with a `round_R_` infix:
 `teg_18_round_3_report_final.md`.
@@ -25,42 +63,17 @@ Round reports use the same five names with a `round_R_` infix:
 ### "The bundle" is not a file
 
 This trips people up. **The bundle is in-memory only** — the ~26k-token blob of scored beats,
-competition arcs, venue and player history that gets handed to the LLM. It is assembled fresh on
-every run by `assemble_bundle()`.
+competition arcs, venue and player history handed to the LLM. It is assembled fresh on every run by
+`assemble_bundle()`, and it is what stages 3 and 4a both read.
 
-You can dump it to disk to inspect it, for free:
+Dump it to disk to inspect it, for free:
 
 ```python
 from teg_analysis.reporting import build_story_plan
 build_story_plan(14, dry_run=True)   # writes teg_14_story_plan_prompt.md, no API call
 ```
 
-That file (`story_plan_prompt.md`) is a debugging artefact, not part of the chain.
-
----
-
-## The flow, in one line each
-
-```
-data (parquet)
-   └─► beats + arcs + context ──────────► THE BUNDLE (memory, ~26k tokens)
-                                             │
-   ①  story_plan.json      ◄── Stage 3 ──────┤   "what story do we tell?"        ~$0.28
-                                             │
-   ②  dry_draft.md         ◄── Stage 4a ─────┘   "say it plainly and correctly"  ~$0.20
-                │
-   ③  report_A_around_draft.md ◄─ Stage 4b       "now say it well"               ~$0.10
-                │
-   ④  report_final.md          ◄─ lint          "remove repeated words"          ~$0.07
-                │                                 ← D3 verification runs here
-   ⑤  report_styled.md         ◄─ Stage 5        "add tables + CSS hooks"        FREE
-                │
-             the webapp
-```
-
-**Why 4a and 4b are separate.** The dry draft is a correctness checkpoint. Stage 4b can only use
-facts already in it, which is what stops the writer inventing things while reaching for a good line.
-Splitting them is the main reason the reports stay faithful.
+That file is a debugging artefact, not part of the chain.
 
 ---
 

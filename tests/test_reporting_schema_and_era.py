@@ -299,3 +299,46 @@ def test_writer_reads_the_right_prominence_field_for_the_palette():
     for m in __import__("re").finditer(r"prominent_vehicle", head):
         assert "NOT `prominent_vehicle`" in head[max(0, m.start() - 30):m.end() + 10], \
             "PALETTE block references prominent_vehicle outside the disambiguation note"
+
+
+def test_prompts_never_reference_a_plan_field_that_does_not_exist():
+    """Every "the plan's `x`" in a prompt must name a real schema field.
+
+    This is the general form of issue 18. The `Literal` enums protect the
+    *values* a field can hold; nothing protected the *field names* the prompts
+    refer to in prose. Renaming `prominent_vehicle` left a prompt pointing at a
+    field whose meaning had changed underneath it.
+
+    Covers the nested models too (`RoundPlan.beat_ids`, `Payoff.seed`, …), since
+    prompts legitimately reference those.
+    """
+    import re
+    from teg_analysis.reporting import authoring, round_report
+    from teg_analysis.reporting.story_plan import (
+        StoryPlan, RoundPlan, Competition, PlayerArc, Payoff)
+
+    known = set()
+    for model in (StoryPlan, RoundPlan, Competition, PlayerArc, Payoff,
+                  round_report.RoundStoryPlan, round_report.RoundCompetitionState,
+                  round_report.RoundPlayerArc):
+        known |= set(model.model_fields)
+
+    prompts = {
+        "WRITER_VOICE": authoring.WRITER_VOICE,
+        "WRITER_FAITHFULNESS": authoring.WRITER_FAITHFULNESS,
+        "DRY_DRAFT_SYSTEM_DETAILED": authoring.DRY_DRAFT_SYSTEM_DETAILED,
+        "DRY_DRAFT_SYSTEM_LIGHT": authoring.DRY_DRAFT_SYSTEM_LIGHT,
+        "ROUND_WRITER_SYSTEM": round_report.ROUND_WRITER_SYSTEM,
+        "ROUND_DRY_DRAFT_SYSTEM": round_report.ROUND_DRY_DRAFT_SYSTEM,
+    }
+    pattern = re.compile(r"plan'?s?\s+\*{0,2}`([a-z_]+)`", re.IGNORECASE)
+
+    dangling = [
+        f"{name}: plan.{m.group(1)}"
+        for name, prompt in prompts.items()
+        for m in pattern.finditer(prompt)
+        if m.group(1) not in known
+    ]
+    assert not dangling, (
+        "prompt references a plan field that does not exist "
+        f"(renamed or removed?): {dangling}")
