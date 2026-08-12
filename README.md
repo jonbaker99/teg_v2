@@ -78,9 +78,9 @@ DATA_FLOW.md         Reference guide for the data pipeline
 | Directory / File | Purpose |
 |---|---|
 | `teg_analysis/` | Standalone analysis package — io, core, analysis, display, api layers. See `teg_analysis/README.md` |
-| `webapp/` | FastAPI + HTMX frontend (local development only). See `webapp/README.md` |
-| `streamlit/` | Production Streamlit app, deployed on Railway. See `streamlit/README.md` |
-| `data/` | Tournament data files (parquet, CSV, commentary markdown) |
+| `webapp/` | FastAPI + HTMX frontend — **the deployed site** (Railway, from `main`). See `webapp/README.md` |
+| `streamlit/` | Legacy Streamlit app — **frozen reference, no longer deployed.** See `streamlit/README.md` |
+| `data/` | Tournament data files (parquet, CSV) + generated reports in `data/commentary/` — see `teg_analysis/reporting/ARTEFACTS.md` for what each report file is |
 | `ad_hoc_analysis/` | Jupyter notebooks for exploratory / one-off analysis |
 | `tests/` | Test suite for `teg_analysis` |
 | `examples/` | FastAPI proof-of-concept |
