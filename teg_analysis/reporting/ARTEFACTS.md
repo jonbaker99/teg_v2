@@ -140,8 +140,8 @@ stages. Freeze what you aren't changing.
 | What the LLM actually sees | *(inspect only)* | **free** | ③ |
 | The frame / structure / beats chosen | hand-edit ① *or* `story_plan.SYSTEM_PROMPT` | **free** / ~$0.28 | ④ |
 | Dry-draft detail level | `DRY_DRAFT_SYSTEM_DETAILED`, `dry_draft_style=` | ~$0.37 | ⑤ |
-| **Tone of voice** | `authoring.WRITER_VOICE` | ~$0.17 | ⑥ |
-| Voice A/B (compare registers) | *(a prompt string)* | ~$0.10 | ⑦ |
+| **Voice — which register do I want?** | *(two prompt strings)* | ~$0.10 each | ⑦ (start here) |
+| **Voice — does the writer hit it from scratch?** | `authoring.WRITER_VOICE` | ~$0.17 | ⑥ |
 | Faithfulness rules | `authoring.WRITER_FAITHFULNESS` | ~$0.17 | ⑧ |
 | Mechanical fault checks | `verify.py` | **free** | ⑨ |
 | Standings / records / CSS hooks | `render.py` | **free** | ⑩ |
@@ -221,7 +221,59 @@ dry  = generate_dry_draft(17, plan, dry_draft_style="light")  # or "detailed" (d
 *Did it work?* Every must-include beat still appears, and hole-level specifics survive. `detailed`
 won the original A/B because `light` lost hole detail the insider audience wants.
 
-### ⑥ Tone of voice — ~$0.17 · the loop you'll use most
+### ⑥ and ⑦ — which voice recipe do I want?
+
+They answer different questions, and you will usually want **both, in this order**:
+
+| Your question | Recipe | Cost | Why |
+|---|---|---|---|
+| *"Brooker or Herron? Which register do I even want?"* | **⑦** | ~$0.10 each | Rewrites a **finished** report, so the facts and structure are literally identical between the two. Pure voice comparison, no code editing — just two strings. |
+| *"I've picked one. Does the writer hit it from scratch?"* | **⑥** | ~$0.17 | Edits `WRITER_VOICE` and re-runs the real writer from the dry draft. This is the one that proves the pipeline produces the voice, rather than a rewrite reaching it. |
+
+**Use ⑦ to choose, ⑥ to confirm.** Comparing registers with ⑥ is possible but wasteful and noisier:
+it costs more, needs a code edit per variant, and re-rolls the writer's structural execution each
+time, so some of what you see is sampling noise rather than voice.
+
+#### Worked example — Brooker vs Herron
+
+```python
+from teg_analysis.reporting import restyle_voice
+
+BROOKER = """VOICE TARGET: Charlie Brooker. Contemporary, vicious, specific, physical.
+Comparisons drawn from broken household objects and malfunctioning tech, never literary.
+Short sentences. Speaking voice. Escalation through specificity."""
+
+HERRON = """VOICE TARGET: Mick Herron. Dry, wry, understated. Comedy from precise
+characterisation and the gap between how people see themselves and how they perform.
+Longer sentences that turn at the last clause. Never cruel for its own sake."""
+
+for label, prompt in (("brooker", BROOKER), ("herron", HERRON)):
+    out = restyle_voice(17, prompt, label)
+    print(label, "->", out["styled_path"], out["new_findings"] or "clean")
+```
+
+**$0.20 for the pair.** Then read three files side by side:
+
+```
+data/commentary/teg_17_report_styled.md            <- the current house voice
+data/commentary/teg_17_report_brooker_styled.md
+data/commentary/teg_17_report_herron_styled.md
+```
+
+Same facts, same structure, same headings, same standings. Only the prose differs.
+
+Then fold the winner into `WRITER_VOICE` and run ⑥ once to confirm the writer reaches it
+from the dry draft rather than only by rewriting.
+
+> **Which TEG to test on.** Use one with a `report_final.md` — **17 or 12** are the current-vintage
+> ones. The two natural anchors are unavailable by default: **TEGs 14 and 18 have no
+> `report_final.md`** (past experiments consumed it), so pass
+> `source_label="A_around_draft"` for those. The error message lists the alternatives if you forget.
+>
+> **Test on two TEGs before committing**, as the original A/B did: one tight finish, one blowout.
+> A register that works on a close finish can fall flat on a procession.
+
+### ⑥ Tone of voice — ~$0.17 · confirming the chosen register
 
 Edit **`authoring.WRITER_VOICE`** (not `WRITER_SYSTEM` — voice and faithfulness are separate
 constants, and only the voice half should move). Then, holding the plan and the facts fixed:
@@ -251,7 +303,7 @@ the voice differs. Promote the winner by copying it over `report_final.md` and r
 > **Note:** `report_around_draft` overwrites ③ (`report_A_around_draft.md`) on every run. That file
 > is an intermediate, not a fixture, so it doesn't matter — but don't treat it as a saved variant.
 
-### ⑦ Comparing voice registers — ~$0.10 each
+### ⑦ Comparing voice registers — ~$0.10 each · choosing the register
 
 When the question is "which register?" rather than "is this prompt better?", rewrite a **finished**
 report instead. The input is the finished text, so facts, structure and headings are held literally

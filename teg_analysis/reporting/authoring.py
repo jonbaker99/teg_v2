@@ -741,9 +741,21 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
     src_name = f"report_{source_label}" if source_label else "report_final"
     source_path = f"{OUTPUT_DIR}/teg_{teg_num}_{src_name}.md"
     if not os.path.exists(source_path):
+        # Several TEGs have had their report_final.md consumed into variant
+        # filenames by past experiments (TEGs 10, 11, 13, 14, 18 as of
+        # 2026-08-11) — including 14 and 18, the usual anchors for a voice A/B.
+        # Listing the real alternatives is more useful than "not found".
+        import glob
+        import re as _re
+        prefix = f"{OUTPUT_DIR}/teg_{teg_num}_report_"
+        available = sorted(
+            _re.sub(r"\.md$", "", os.path.basename(p)[len(os.path.basename(prefix)):])
+            for p in glob.glob(f"{prefix}*.md")
+            if not p.endswith("_styled.md"))
         raise FileNotFoundError(
-            f"{source_path} not found. The voice loop needs a finished report to "
-            f"rewrite; generate one first, or pass source_label=")
+            f"{source_path} not found — TEG {teg_num} has no finished report to "
+            f"rewrite.\nPass source_label= one of: {available}\n"
+            f"'A_around_draft' is usually the right choice (the pre-lint text).")
 
     with open(source_path) as f:
         source_text = f.read()
