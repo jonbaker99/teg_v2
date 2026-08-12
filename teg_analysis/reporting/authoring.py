@@ -658,6 +658,11 @@ def run_authoring_ab(teg_num: int, mode: str = "balanced", tone: str = "house",
 # ===========================================================================
 # Voice restyling — an EXPERIMENT LEVER, deliberately not in the default chain
 # ===========================================================================
+# A ONE-OFF EXPERIMENT TOOL. Nothing in the pipeline calls this — `backfill.py`
+# runs plan -> dry -> around -> lint -> style -> verify and stops. It exists to
+# find a target voice; once found, that voice is folded into `WRITER_VOICE` and
+# this function goes back to being unused until the next voice question.
+#
 # Takes an already-finished report and rewrites ONLY its voice. Everything else
 # — facts, structure, headings, standings, records — is held literally constant,
 # because the input is the finished text rather than the bundle. That makes it
@@ -704,7 +709,7 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
             restyle contract and the shared `WRITER_FAITHFULNESS` block, so the
             guardrails are the *same constant* the main writer uses and cannot
             drift out of step with it.
-        label: variant name, e.g. `"humour8b"`. Writes
+        label: variant name, e.g. `"drier"`. Writes
             `teg_N_report_{label}.md` (+ `_styled.md`). Refuses labels that would
             overwrite the canonical files.
         source_label: read from `teg_N_report_{source_label}.md` instead of
@@ -731,7 +736,7 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
     if label in {"final", "styled", "A_around_draft"}:
         raise ValueError(
             f"label {label!r} would overwrite a canonical artefact; "
-            "pick an experiment name such as 'humour8b' or 'drier'")
+            "pick an experiment name such as 'drier' or 'warmer'")
 
     src_name = f"report_{source_label}" if source_label else "report_final"
     source_path = f"{OUTPUT_DIR}/teg_{teg_num}_{src_name}.md"

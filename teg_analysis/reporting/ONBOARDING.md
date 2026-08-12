@@ -14,9 +14,10 @@ Read in this order; stop when you have enough for the task:
    vintage, the open decisions, known issues. **Read this first, always.**
 2. **`README.md`** — pipeline architecture (stages 1–5, the context modules, how they connect,
    design rules)
-3. **`ARTEFACTS.md`** — which file in `data/commentary/` is which, and which one to restart from
-   for a given change. **Read before touching voice** — the iteration loop costs ~$0.17 if you use
-   the right restart point and ~$0.65 if you don't
+3. **`ARTEFACTS.md`** — the operational guide: the pipeline in one table, which file is which, and
+   **a runnable recipe for testing each element**. **Read before changing anything** — the voice
+   loop costs ~$0.17 from the right restart point and ~$0.65 from the wrong one, and several
+   elements can be inspected for free before you spend at all
 4. **`EXPERIMENTS.md`** — what's been tried on voice/structure, what the verdicts were, what's open
 5. **`story_plan.py`** — `StoryPlan` Pydantic schema + editor system prompt (incl. the narrative-vehicle
    menu) + `assemble_bundle()`; the editorial brain, and the most compressed description of what the

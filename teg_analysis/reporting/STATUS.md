@@ -1,6 +1,6 @@
 # Reporting — Status & Next Steps
 
-**Pick-up ledger.** Read this first when resuming work in a fresh session. The how-it-works architecture is in [README.md](README.md); the running experiment log is in [EXPERIMENTS.md](EXPERIMENTS.md).
+**Pick-up ledger.** Read this first when resuming work in a fresh session. The how-it-works architecture is in [README.md](README.md); **how to test and iterate on each element is in [ARTEFACTS.md](ARTEFACTS.md)**; the running experiment log is in [EXPERIMENTS.md](EXPERIMENTS.md).
 
 > **Last verified against the codebase: 2026-08-11.** Substantial pipeline work landed that day:
 > the D3 verification layer, the shared-vocabulary schema fix, the era-leak fix, the arc-payload

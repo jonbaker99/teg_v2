@@ -8,9 +8,10 @@ Replaces the old `streamlit/commentary/` system. The old pipeline buried key eve
 
 For the running ledger of what's done and what's deferred, see [STATUS.md](STATUS.md).
 
-**Lost in the filenames?** [ARTEFACTS.md](ARTEFACTS.md) is the lookup: what every file in
-`data/commentary/` is, and which one to restart from for a given change (including the
-~$0.17 voice loop).
+**Want to change something and test it?** [ARTEFACTS.md](ARTEFACTS.md) is the operational guide:
+the whole pipeline in one table, what every file in `data/commentary/` is, and **a runnable recipe
+per element** — see *How to test and iterate on each element* (11 recipes, from free inspection to
+the ~$0.17 voice loop).
 
 ## Components — what you can change independently
 

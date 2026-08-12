@@ -401,3 +401,24 @@ def test_restyle_voice_blames_only_faults_it_introduced():
     assert clean["new_findings"] == []
 
     os.remove("data/commentary/teg_17_report_unittest_tmp.md")
+
+
+# ---------------------------------------------------------------------------
+# Stage 5 determinism
+# ---------------------------------------------------------------------------
+def test_standings_are_deterministic_when_players_are_tied():
+    """Stage 5 is documented as free and idempotent — it must actually be.
+
+    `sort_values` on a single column uses quicksort, which is NOT stable, so
+    tied players came out in arbitrary order and re-running `style_report`
+    produced a spurious diff. Ties now break on player code.
+    """
+    from teg_analysis.reporting.render import build_round_standings
+    runs = [build_round_standings(17) for _ in range(3)]
+    assert runs[0] == runs[1] == runs[2]
+
+
+def test_style_text_is_idempotent():
+    from teg_analysis.reporting.render import style_text
+    text = open("data/commentary/teg_17_report_final.md").read()
+    assert style_text(17, text) == style_text(17, text)

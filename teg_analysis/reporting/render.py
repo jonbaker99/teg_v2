@@ -55,8 +55,15 @@ def build_round_standings(teg_num: int) -> dict:
     out: dict = {}
     for rnd in sorted(int(r) for r in rs["Round"].unique()):
         rdf = rs[rs["Round"] == rnd]
-        trophy = rdf.sort_values(trophy_col, ascending=trophy_ascending)
-        jacket = rdf.sort_values("Cumulative_Tournament_Score_Gross", ascending=True)
+        # Tie-break on player code so the order is deterministic. A bare
+        # single-column sort_values uses quicksort, which is NOT stable, so
+        # tied players came out in arbitrary order and re-running style_report
+        # produced a spurious diff — despite Stage 5 being documented as
+        # idempotent and free to re-run.
+        trophy = rdf.sort_values([trophy_col, "Pl"],
+                                 ascending=[trophy_ascending, True])
+        jacket = rdf.sort_values(["Cumulative_Tournament_Score_Gross", "Pl"],
+                                 ascending=[True, True])
 
         trophy_str = " | ".join(
             f"{r['Pl']} {trophy_fmt(r[trophy_col])}"
@@ -614,14 +621,14 @@ def build_round_scores(teg_num: int, round_num: int) -> str:
         return ""
 
     metric = trophy_metric(teg_num)
-    gross = rs.sort_values("Round_Score_Gross", ascending=True)
+    gross = rs.sort_values(["Round_Score_Gross", "Pl"], ascending=[True, True])
     gross_str = " | ".join(
         f"{r['Pl']} {_fmt_signed(int(r['Round_Score_Gross']))}"
         for _, r in gross.iterrows()
     )
 
     if metric == "net_vs_par":
-        trophy_line = rs.sort_values("Round_Score_NetVP", ascending=True)
+        trophy_line = rs.sort_values(["Round_Score_NetVP", "Pl"], ascending=[True, True])
         trophy_str = " | ".join(
             f"{r['Pl']} {_fmt_signed(int(r['Round_Score_NetVP']))}"
             for _, r in trophy_line.iterrows()
@@ -633,7 +640,7 @@ def build_round_scores(teg_num: int, round_num: int) -> str:
             f' {gross_str}</p>'
         )
     else:
-        stab = rs.sort_values("Round_Score_Stableford", ascending=False)
+        stab = rs.sort_values(["Round_Score_Stableford", "Pl"], ascending=[False, True])
         stab_str = " | ".join(
             f"{r['Pl']} {int(r['Round_Score_Stableford'])}"
             for _, r in stab.iterrows()

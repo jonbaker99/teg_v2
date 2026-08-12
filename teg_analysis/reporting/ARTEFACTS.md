@@ -125,91 +125,206 @@ Three practical consequences:
    differently. Editing ① by hand is the cheap alternative: it is just JSON, and archive mode exists
    precisely so a human can steer it before authoring runs.
 
-## Which file do I restart from?
+## How to test and iterate on each element
 
-The whole point of keeping intermediate files is that you don't re-run — and re-pay for — stages you
-aren't changing.
+One recipe per thing you might want to change. **Run everything from the repo root.** Anything
+costing money needs `ANTHROPIC_API_KEY`; the free ones need nothing.
 
-| I want to change… | Edit | Restart from | Re-runs | Cost |
-|---|---|---|---|---|
-| **Tone of voice, humour level** | `authoring.WRITER_VOICE` | ① plan + ② dry draft (both frozen) | 4b + lint | **~$0.17** |
-| Faithfulness rules | `authoring.WRITER_FAITHFULNESS` | ① + ② frozen | 4b + lint | ~$0.17 |
-| How much hole detail the draft carries | `DRY_DRAFT_SYSTEM_DETAILED`, or `dry_draft_style=` | ① plan frozen | 4a → lint | ~$0.37 |
-| The frame, structure, which beats feature | `story_plan.SYSTEM_PROMPT` | the bundle | everything | ~$0.65 |
-| Which beats exist at all | `scoring.MODE_WEIGHTS`, `events.py` | the data | everything | ~$0.65 |
-| Standings/records blocks, CSS hooks | `render.py` | ④ final | Stage 5 only | **free** |
-| Visual design | `webapp/static/teg_reports.css` | ⑤ styled | nothing | **free** |
+**The rule that saves the most money:** never test a cheap change by re-running the expensive
+stages. Freeze what you aren't changing.
 
-### The voice loop, concretely
+| Element | Edit | Cost | Recipe |
+|---|---|---|---|
+| Which events get detected | `events.py` detectors | **free** | ① below |
+| What makes the cut (weights) | `scoring.MODE_WEIGHTS` | **free** | ② |
+| What the LLM actually sees | *(inspect only)* | **free** | ③ |
+| The frame / structure / beats chosen | hand-edit ① *or* `story_plan.SYSTEM_PROMPT` | **free** / ~$0.28 | ④ |
+| Dry-draft detail level | `DRY_DRAFT_SYSTEM_DETAILED`, `dry_draft_style=` | ~$0.37 | ⑤ |
+| **Tone of voice** | `authoring.WRITER_VOICE` | ~$0.17 | ⑥ |
+| Voice A/B (compare registers) | *(a prompt string)* | ~$0.10 | ⑦ |
+| Faithfulness rules | `authoring.WRITER_FAITHFULNESS` | ~$0.17 | ⑧ |
+| Mechanical fault checks | `verify.py` | **free** | ⑨ |
+| Standings / records / CSS hooks | `render.py` | **free** | ⑩ |
+| Visual design | `webapp/static/teg_reports.css` | **free** | ⑪ |
 
-This is the one you'll use most. It costs ~$0.17 and changes **only** the voice, because the plan
-and the facts are held fixed:
+---
+
+### ① Which events get detected — free
+
+Every beat, ranked, with its three sub-scores and hole evidence:
+
+```python
+from teg_analysis.reporting import build_notable_events, render_events_markdown
+events = build_notable_events(17)
+print(render_events_markdown(events, 17, top=25))
+```
+
+*Did it work?* The beat you added appears with a sensible score, and the count hasn't exploded
+(a detector firing 50 times per TEG is spam, not a signal).
+
+### ② What makes the cut — free
+
+```bash
+python scripts/weight_profiler.py
+```
+
+Sweeps the live default against three alternatives over TEGs 9–18: type mix, tone balance,
+coverage, mandatory survival, and churn against the pre-2026-08-11 baseline. The live setting is
+read from `scoring.MODE_WEIGHTS`, so it always profiles what the pipeline actually uses.
+
+*Did it work?* `big_blowup` share moved in the direction you wanted and mandatory survival stayed
+at 100%.
+
+### ③ What the LLM actually sees — free
+
+```python
+from teg_analysis.reporting import build_story_plan
+build_story_plan(17, dry_run=True)   # writes teg_17_story_plan_prompt.md, no API call
+```
+
+The full system prompt plus the assembled bundle, exactly as sent. Read this before paying for a
+generation you suspect will be wrong — most "the report missed X" problems are visible here.
+
+### ④ The frame, structure and chosen beats
+
+**Free option — hand-edit the plan.** ① is just JSON, and this is what archive mode is for. Change
+`prominent_vehicle`, `narrative_structure`, `must_include_beat_ids`, a `chosen_headline`, whatever:
+
+```bash
+$EDITOR data/commentary/teg_17_story_plan.json
+```
+
+Then see the effect for ~$0.17 by re-running the writer only (⑥) — the dry draft does not read the
+framing fields, so it needs no regeneration.
+
+**Paid option — let the editor choose again** (~$0.28 plan, ~$0.65 for the full chain):
+
+```python
+from teg_analysis.reporting import build_story_plan
+out = build_story_plan(17)
+out["warnings"]          # [] means the close-finish rule and mandatory coverage are satisfied
+out["plan"].prominent_vehicle
+```
+
+*Did it work?* `warnings` is empty, and `prominent_vehicle` is a **frame** (`counterfactual`,
+`hero_arc`) while `prominent_palette` is **context material** (`cross_teg_career`, `records`).
+Anything else is a schema error and will now be rejected outright.
+
+### ⑤ Dry-draft detail level — ~$0.37
+
+```python
+from teg_analysis.reporting.authoring import load_story_plan, generate_dry_draft
+plan = load_story_plan(17)                                    # frozen ①
+dry  = generate_dry_draft(17, plan, dry_draft_style="light")  # or "detailed" (default)
+```
+
+*Did it work?* Every must-include beat still appears, and hole-level specifics survive. `detailed`
+won the original A/B because `light` lost hole detail the insider audience wants.
+
+### ⑥ Tone of voice — ~$0.17 · the loop you'll use most
+
+Edit **`authoring.WRITER_VOICE`** (not `WRITER_SYSTEM` — voice and faithfulness are separate
+constants, and only the voice half should move). Then, holding the plan and the facts fixed:
 
 ```python
 from teg_analysis.reporting.authoring import (
     load_story_plan, load_dry_draft, report_around_draft, repetition_lint)
-from teg_analysis.reporting.render import style_report
+from teg_analysis.reporting.render import style_text
+from teg_analysis.reporting.verify import verify_report, format_findings
 
 teg = 17
-plan = load_story_plan(teg)      # frozen ①
-dry  = load_dry_draft(teg)       # frozen ②
-rpt  = report_around_draft(teg, plan, dry)          # ~$0.10
-linted, _ = repetition_lint(rpt["text"])            # ~$0.07
+plan = load_story_plan(teg)                          # frozen ①
+dry  = load_dry_draft(teg)                           # frozen ②
+rpt  = report_around_draft(teg, plan, dry)           # ~$0.10
+linted, _ = repetition_lint(rpt["text"])             # ~$0.07
 
-open(f"data/commentary/teg_{teg}_report_final.md", "w").write(linted)
-style_report(teg)                                    # free
+# Write to a VARIANT name, not report_final.md, until you've read it.
+open(f"data/commentary/teg_{teg}_report_trial.md", "w").write(linted)
+open(f"data/commentary/teg_{teg}_report_trial_styled.md", "w").write(style_text(teg, linted))
+print(format_findings(verify_report(teg, text=linted), teg))
 ```
 
-> **Save a copy before you overwrite.** `report_around_draft` and the write above replace ③ and ④.
-> If you're comparing voices, write to a variant name first (see the naming convention below) and
-> only promote the winner to `report_final.md`.
+Read `..._report_trial_styled.md` against `..._report_styled.md` — same facts, same structure, only
+the voice differs. Promote the winner by copying it over `report_final.md` and running
+`style_report(teg)`.
 
-**Never test a voice change by regenerating the story plan.** You'd move two variables at once and
-learn nothing — and pay 4× for the privilege.
+> **Note:** `report_around_draft` overwrites ③ (`report_A_around_draft.md`) on every run. That file
+> is an intermediate, not a fixture, so it doesn't matter — but don't treat it as a saved variant.
 
----
+### ⑦ Comparing voice registers — ~$0.10 each
 
-### Comparing voices without touching the canonical files
-
-`restyle_voice()` rewrites a **finished report's** voice only. Because the input is the finished
-text rather than the bundle, everything else — facts, structure, headings, standings, records — is
-held literally constant. One variable, one API call, ~$0.10.
+When the question is "which register?" rather than "is this prompt better?", rewrite a **finished**
+report instead. The input is the finished text, so facts, structure and headings are held literally
+constant — the tightest possible A/B.
 
 ```python
 from teg_analysis.reporting import restyle_voice
-
-out = restyle_voice(17, "VOICE TARGET: drier. Fewer jokes, shorter sentences.", "drier")
-#   -> data/commentary/teg_17_report_drier.md
-#   -> data/commentary/teg_17_report_drier_styled.md   (directly comparable with _styled.md)
-out["new_findings"]   # faults THIS pass introduced — [] is what you want
+out = restyle_voice(17, "VOICE TARGET: drier. Shorter sentences, fewer images.", "drier")
+out["new_findings"]     # faults THIS pass introduced — [] is what you want
 ```
 
-The humour-dial registers are already wired up:
+The humour-dial registers are pre-written:
 
 ```bash
 python scripts/humour_dial.py --list
 python scripts/humour_dial.py --teg 14 --variant humour8b
 ```
 
-Three things it does for you:
+**This is an experiment tool, not part of report generation.** Nothing in the pipeline calls it —
+`backfill.py` runs plan → dry → around → lint → style → verify and stops. The point is to *find* a
+target voice; once found, fold it into `WRITER_VOICE` and confirm with one from-scratch generation.
+Rewriting proves a voice is reachable, not that the writer hits it first time from the bundle.
 
-- **Refuses to write to `final` / `styled` / `A_around_draft`.** Canonical artefacts are safe.
-- **Composes the guardrails from `WRITER_FAITHFULNESS`** — the same constant the main writer uses,
-  so a voice experiment cannot shed the faithfulness rules or drift out of step with them.
-- **Reports what this pass *introduced*, not what it inherited.** A restyle inherits the source's
-  existing faults, so a raw finding list is misleading; `new_findings` is the number that matters.
+### ⑧ Faithfulness rules — ~$0.17
 
-> **Why this is a lever and not a pipeline stage.** The original authoring A/B tested an extra pass
-> over finished prose as the *default* (variant C, critique-revise) and rejected it: the extra pass
-> fabricated a "countback". Every pass over prose is a fabrication opportunity. What has changed is
-> that D3 now exists, so such a pass can be *checked* rather than trusted — which is what
-> `new_findings` is. It stays opt-in.
->
-> **What it does not prove:** that a voice is reachable *by rewriting* is not the same as the writer
-> hitting it first time from the bundle. Fold the winner into `WRITER_VOICE`, then confirm with one
-> from-scratch generation before trusting it for a backfill.
+Edit `authoring.WRITER_FAITHFULNESS`, then run recipe ⑥ — same loop, different constant. Kept
+separate from voice precisely so a voice experiment can't disturb a guardrail.
+
+Before removing a rule, check whether ⑨ covers it. Six of the eleven are mechanically checked, but
+**belt and braces is deliberate** — prevention and detection are cheap together.
+
+### ⑨ Mechanical fault checks — free
+
+```bash
+python -m teg_analysis.reporting.verify 17            # one TEG
+python -m teg_analysis.reporting.verify --all --rounds
+```
+
+Checks the prose against the data: leaked beat IDs, invented countback/playoff, "a week" (a TEG is
+3–4 consecutive days), non-participants, invented weekdays, impossible over-par totals, mis-stated
+swings. `backfill.py` runs it automatically after every generation.
+
+*Did it work?* `✓`. Use the error count as the acceptance test after a regeneration.
+
+### ⑩ Standings, records, CSS hooks — free
+
+```python
+from teg_analysis.reporting.render import style_report
+style_report(17)      # re-reads report_final.md, rewrites report_styled.md
+```
+
+Idempotent — running it twice produces byte-identical output. Safe to re-run as often as you like.
+
+### ⑪ Visual design — free
+
+Edit `webapp/static/teg_reports.css` and reload. No Python involved.
+(There is a second copy under `streamlit/`; it is dead code — see known issue 6.)
 
 ---
+
+## Which file do I restart from?
+
+The summary of the above, as a lookup:
+
+| I want to change… | Edit | Restart from | Re-runs | Cost |
+|---|---|---|---|---|
+| **Tone of voice, humour level** | `authoring.WRITER_VOICE` | ① plan + ② dry draft (both frozen) | 4b + lint | **~$0.17** |
+| Faithfulness rules | `authoring.WRITER_FAITHFULNESS` | ① + ② frozen | 4b + lint | ~$0.17 |
+| How much hole detail the draft carries | `DRY_DRAFT_SYSTEM_DETAILED`, or `dry_draft_style=` | ① plan frozen | 4a → lint | ~$0.37 |
+| The frame, structure, which beats feature | hand-edit ①, or `story_plan.SYSTEM_PROMPT` | the bundle | 4b only, or everything | **free** → ~$0.65 |
+| Which beats exist at all | `scoring.MODE_WEIGHTS`, `events.py` | the data | everything | ~$0.65 |
+| Standings/records blocks, CSS hooks | `render.py` | ④ final | Stage 5 only | **free** |
+| Visual design | `webapp/static/teg_reports.css` | ⑤ styled | nothing | **free** |
 
 ## Which TEGs can I iterate voice on?
 
@@ -260,16 +375,3 @@ and safe to create.
 GitHub"** on `/admin/volume-sync`.
 
 ---
-
-## Check your work
-
-D3 runs automatically inside `backfill.py`, but run it by hand after any manual edit:
-
-```bash
-python -m teg_analysis.reporting.verify 17          # one TEG
-python -m teg_analysis.reporting.verify --all --rounds
-```
-
-It checks the finished prose against the data: beat IDs leaking into prose, invented
-countback/playoff, "a week" (a TEG is 3–4 consecutive days), non-participants, invented weekdays,
-impossible over-par totals, and mis-stated swings. Clean output is `✓`.
