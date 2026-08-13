@@ -20,7 +20,7 @@ Analysis package. REST API placeholder, any outstanding analytical work.
 ## Specific areas
 
 ### Commentary (reporting pipeline) — [`teg_analysis/reporting/STATUS.md`](teg_analysis/reporting/STATUS.md)
-LLM-powered tournament and round reports. Pipeline is built and TEGs 2–18 are published; the library spans several pipeline vintages and work stopped mid-experiment on a humour-dial A/B that needs a verdict before anything is regenerated. STATUS.md is the pick-up ledger and *is* the to-do list for this area; the experiment log is in [`EXPERIMENTS.md`](teg_analysis/reporting/EXPERIMENTS.md).
+LLM-powered tournament and round reports. Pipeline is built and every TEG (2–18) was regenerated on one pipeline vintage on 2026-08-13, so the tournament reports no longer span several vintages — but that run was **prose only** (`style=False`), so `*_report_styled.md`, which the site serves, still holds the older reports until a styling pass is run. Round reports were not part of it. The humour-dial A/B still needs a verdict. STATUS.md is the pick-up ledger and *is* the to-do list for this area; the experiment log is in [`EXPERIMENTS.md`](teg_analysis/reporting/EXPERIMENTS.md).
 
 ### Data updates — [below](#data-updates)
 Tracked here (no sub-folder needed).

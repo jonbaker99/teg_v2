@@ -80,10 +80,46 @@ so this is a pure guidance change; existing reports keep their old heading until
 `backfill_teg` / `backfill_all` gained `style=False`, which stops at `teg_N_report_final.md` and
 skips the injection of standings, the at-a-glance box and the records appendix.
 
-**Blocked, not done: a from-scratch regeneration of TEGs 10–15.** Requested 2026-08-13; it needs
-`ANTHROPIC_API_KEY`, which is not set in the Claude-Code-on-the-web container and has no
-`secrets.toml` fallback there. Everything else in that request landed. The command is
-`backfill_all(range(10, 16), scope="tournament", force=True, style=False)`.
+**2026-08-13 — the whole library regenerated (TEGs 2–18), and two silent bugs found by doing it.**
+Every TEG now has a tournament report from the current pipeline, prose only
+(`force=True, scope="tournament", style=False`), so `*_report_styled.md` — what the site serves —
+is deliberately untouched and still carries the old reports until a styling pass is run. The key is
+read from `TEG_ANTHROPIC_API_KEY`, now accepted as an alias in `llm.get_api_key()`.
+
+Both bugs are the same shape: **a value computed one way in the live path and another way in the
+reference path.** Neither could ever fail loudly.
+
+1. **Vehicle fit was scored on trimmed beats.** `assemble_bundle` scored against the `top_n=50`
+   beat list — a token budget for the LLM call — while the checked-in baseline is generated with
+   `top_n=None`. So live z-scores compared a trimmed raw score against an untrimmed population
+   mean, deflating every vehicle that scores as a *sum over beats* (`tragic_arc`,
+   `redemption_arc`, `catalogue`) while leaving arc- and milestone-derived ones untouched. On TEG
+   6, `tragic_arc` went from raw 79.5 / z +2.70 to raw 32.7 / z +0.06 — rank 1 to rank 5. Fixed to
+   score on `all_beats`; `test_vehicle_hints_do_not_depend_on_the_beat_trim` locks it. Measured
+   impact: the top hint changed on only **2 of 12** already-generated TEGs (6 and 15), both
+   re-run.
+2. **`restyle_voice` blamed inherited faults on the restyle pass.** The `new_findings` split
+   exists to catch a prose pass fabricating a detail; it compared source to output on `str(f)`,
+   which embeds the excerpt. A restyle rewrites the prose around a fault by definition, so the
+   excerpt shifts and an inherited fault reads as newly introduced — inverting the mechanism in
+   the normal case. Now keyed on `(rule, detail)` via a `Counter`.
+
+**What seventeen recorded `vehicle_fit_response` rationales show.** The scorer reliably detects
+local texture and reliably mis-weights it against tournament-level meaning. Every rejection traces
+to that one cause: `redemption_arc` sums hole-level recovery beats (rejected as "small change" on
+TEGs 9 and 18); `inevitability` fires on a structural fact (declined as "texture, not the frame" on
+15, 2, 3, 8); `dual_narrative` counts lead changes without knowing whether they were contested
+(TEG 5 — "Mullin faded rather than duelling"). Adopted hints skew to career milestones and genuine
+inventories (`origin`, `comeback`, `underdog`, `catalogue`).
+
+**Candidate fix, not yet done:** weight beat-derived vehicles by whether their beats belong to the
+decisive competition and rounds, rather than summing across the tournament. It changes scoring, so
+it needs a baseline regeneration — a judgement call for Jon.
+
+**The advisory decision looks right in practice.** Three of the four unscoreable vehicles were
+chosen on the editor's own reading (`motif` ×6, `ensemble`, `bookends`), and on TEG 8 `ensemble`
+was the *primary frame* — a frame the scorer cannot nominate under any circumstances. A
+binding-on-divergence rule would have suppressed all of it.
 
 Residual, not fixed: a detectable-but-unfired vehicle (raw 0, negative z) can still reach the top 5
 on a quiet TEG — ~14 of 85 slots. Less misleading than the removed cases, since the editor sees
