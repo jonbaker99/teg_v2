@@ -1,63 +1,62 @@
 {
-  "title": "Eighty-Two at Penha Longa: Williams Finally Gets the Jacket",
+  "title": "The Jacket Finally Fits: Williams Takes the Lot on the Lisbon Coast",
   "title_candidates": [
-    "Eighty-Two at Penha Longa: Williams Finally Gets the Jacket",
-    "First Jacket, Fifteenth Attempt",
-    "Never Headed: Williams Takes the Lot on the Lisbon Coast",
-    "Three Trophies, No Jacket — Until Sintra"
+    "The Jacket Finally Fits",
+    "Green at Last: Williams Completes the Set",
+    "Eighty-Two in the Sintra Hills",
+    "An Eight at the First, Everything by the End"
   ],
-  "theme": "The man who had everything except the Green Jacket takes it, and everything else with it: Gregg Williams — three Trophies, no Jackets, four straight top-three near-misses — leads both competitions from R1 to R4 and stamps the week with a Penha Longa course record, while the nine-time Jacket holder and defending Trophy champion, David Mullin, sinks to the worst round of his TEG life.",
-  "tone": "house — faithful, tongue-in-cheek, Ronay/Peck register; ribbing the carnage, respectful of the record",
+  "theme": "Gregg Williams, three Trophies and never once a Green Jacket, spends four days on the Lisbon Coast winning both from the front — and takes the Jacket off the man who owns nine of them, David Mullin, with a course-record 82 in the Sintra hills as the exclamation mark.",
+  "tone": "house — faithful, tongue-in-cheek, Ronay/Peck: dry, affectionate, anchored in the numbers, gentle ribbing of insiders",
   "narrative_structure": "three_act",
-  "opening_hook": "Open on the ledger Williams carried to Portugal — three Trophies, zero Green Jackets, nine of those belonging to Mullin, and finishes of 3rd, 2nd, 2nd, 3rd in the last four TEGs — then straight to the 1st tee at Estoril, a new course for TEG, where he immediately made an 8. The setup is the man who never wins the Jacket; the confrontation is Penha Longa; the resolution is a 29-shot Jacket margin.",
+  "opening_hook": "Open on Estoril's 1st, where Williams begins TEG 15 with a quadruple-bogey 8 (b25) — the least promising start imaginable to the most complete win of his TEG career — then set up the three-act climb: Act I the two new courses (R1–R2), Act II the course record at Penha Longa (R3), Act III the coronation at Oitavos (R4).",
   "narrative_vehicles": [
     "origin",
     "inversion",
-    "inevitability"
+    "catalogue"
   ],
   "foreshadow": [
-    "Williams arrives with three prior Trophy wins and not a single Green Jacket in his life — the Jacket has been Mullin's (9) and Jon Baker's (3) private property",
-    "Penha Longa beat Williams up on TEG's only previous visit: his best there was 96 gross",
-    "Mullin comes in as defending Trophy champion (TEG 14 double) and a four-time Spoon collector — the two extremes of his career sitting side by side",
-    "Alex Baker arrives off a TEG 14 runner-up finish and with one prior Spoon on the CV"
+    "Williams starts with an 8 at Estoril's 1st and finishes the round with another at the 18th — the worst golf of his tournament happens on day one and costs him nothing",
+    "Mullin arrives as defending Trophy champion with nine Green Jackets and the standing 86 at Penha Longa from TEG 8 — the Jacket has essentially been his personal property",
+    "Mullin's eagle at West Cliffs' 15th is the only eagle anybody makes all tournament — remember which hole that is",
+    "Jon Baker arrives as the reigning Wooden Spoon holder, and there are two Bakers in the field"
   ],
   "competitions": [
     {
       "name": "Trophy (Stableford)",
-      "winner_or_loser": "Gregg Williams (winner, 157 pts, by 21 from Stuart Neumann)",
-      "how": "Williams took the outright lead at Estoril's 4th in R1 and was never passed again. The only lead changes were the routine early exchanges of R1 (Mullin H2, Williams H4, Jon Baker H10) and Patterson briefly at R2 H3 — after that it was arithmetic: 39, 40, 44, 34 for 157, the cushion going 5 → 9 → 18 → 21. The R3 44 at Penha Longa (cr01, b05) was the round that made it unrecoverable; the R4 34 was a lap of honour. Neumann, with no wins and two prior Spoons, backed into the best finish of his TEG career as runner-up.",
+      "winner_or_loser": "Gregg Williams — 157 pts, by 21 from Stuart Neumann",
+      "how": "Williams took the outright lead at R1 H4 and was never headed: 39, 40, then a 44-point round at Penha Longa that doubled the lead from 9 to 18 and ended the argument, before a comfortable 34 at Oitavos. Jon Baker (R1 H10) and John Patterson (R2 H3) briefly shared the top, but no lead change after R2 H3 and none at all in the final round.",
       "key_beat_ids": [
         "b02",
-        "cr01",
         "b05",
-        "b27",
+        "cr01",
+        "b13",
         "b30"
       ]
     },
     {
       "name": "Green Jacket (Gross)",
-      "winner_or_loser": "Gregg Williams (winner, +63, by 29 from Jon Baker)",
-      "how": "Williams went outright top of the gross list at Estoril's 11th in R1 and led by 8, 14, 17 and 29 at the four round-ends — no lead change after R1, no contest at any point. He did it while making two 8s in R1 (b25, b26) and a 10 at West Cliffs' 15th (b13), which tells you what everyone else was doing. The Jacket's real significance is historical: Williams had never won one, and before this the trophy had only ever gone to Mullin (9) or Jon Baker (3). The 82 at Penha Longa (cr01) — a new course record and 14 shots better than his last visit — was the hammer blow; the 91 at Oitavos Dunes was a personal course best too.",
+      "winner_or_loser": "Gregg Williams — +63, by 29 from Jon Baker",
+      "how": "Williams went outright top on gross at R1 H11 and led by 8, 14, 17 and finally 29 — a margin that grew every single round. The 86 at Estoril came despite two quadruple bogeys; the 82 at Penha Longa was a new course record and a 14-shot improvement on his own last visit; the 91 at Oitavos was another personal best there. His first Green Jacket at the fifteenth attempt, taken from a nine-time holder.",
       "key_beat_ids": [
         "b01",
         "cr01",
         "b05",
-        "b13",
         "b25",
         "b26"
       ]
     },
     {
       "name": "Wooden Spoon",
-      "winner_or_loser": "Alex Baker (loser, 114 pts)",
-      "how": "The Spoon race was the only genuinely mobile competition: eight outright changes at the bottom, five of them in the R2 shambles at West Cliffs alone as Mullin, Jon Baker and Neumann took turns propping up the field. Alex Baker was last on the round-by-round table from R1 but the decisive drop came at R3 H1 at Penha Longa (b38) — a double bogey that put him outright bottom and he stayed there for the remaining 53 holes. Rounds of 30, 27, 29, 28 never threatened anyone; the R2 sequence of 11-9-7 through holes 6-8 (b62) and the 10 at the 17th (b10) did the structural damage. His second career Spoon, and an odd companion to a new Oitavos Dunes personal best of 103 in R4.",
+      "winner_or_loser": "Alex Baker — last on 114 pts",
+      "how": "Baker was bottom of the field after both R1 and R2 but only fell to outright last at R3 H1 (b38), a double bogey at Penha Longa that flipped him from 5th to 6th and settled the matter — he stayed there for the remaining 53 holes. The damage was serial rather than singular: 13 shots gone in three holes at West Cliffs (b62), sextuple bogeys at West Cliffs' 6th and 17th (b09, b10), and Penha Longa's 14th (b11). The Spoon passes from Jon Baker to his brother.",
       "key_beat_ids": [
         "b21",
         "b38",
+        "b62",
         "b09",
         "b10",
-        "b11",
-        "b62"
+        "b11"
       ]
     }
   ],
@@ -65,71 +64,79 @@
     {
       "round": 1,
       "headline_candidates": [
-        "Two Eights, Thirty-Nine Points: Williams Opens Five Clear",
-        "Portugal's Oldest Club Meets TEG's Least Patient Men",
-        "Estoril Debut: Neumann Finds a Ten at the 15th"
+        "An Eight at the First, a Lead by the Last",
+        "Portugal's Oldest Club Meets TEG's Newest Ideas",
+        "Williams Bookends an 86 With Two Quadruple Bogeys"
       ],
-      "chosen_headline": "Two Eights, Thirty-Nine Points: Williams Opens Five Clear",
-      "angle": "On a new course for TEG — Portugal's first golf club, all trees and course management — Williams bookends his round with quadruple bogeys at the 1st and 18th and still leads both competitions, taking the outright gross lead at the 11th.",
+      "chosen_headline": "An Eight at the First, a Lead by the Last",
+      "angle": "Estoril, a new course for TEG: Williams opens with a quad at the 1st and closes with another at the 18th, and still leads both competitions by nightfall — the first hint that everyone else was going to have a harder day than he was.",
       "beat_ids": [
         "b25",
         "b26",
-        "b06"
+        "b06",
+        "b14",
+        "b15"
       ]
     },
     {
       "round": 2,
       "headline_candidates": [
-        "Three Elevens, Four Tens and One Eagle: West Cliffs Sorts the Field",
-        "World's Best New Course 2017; Worst Afternoon of 2022",
-        "The 15th Gives Mullin a Three and Williams a Ten"
+        "The Fifteenth Giveth and Taketh Away",
+        "Cynthia Dye's Dunes Take Thirteen Shots Off Alex Baker in Three Holes",
+        "Jon Baker's Eleven, Mullin's Three"
       ],
-      "chosen_headline": "Three Elevens, Four Tens and One Eagle: West Cliffs Sorts the Field",
-      "angle": "Cynthia Dye's award-winning dunes hand out three 11s (b04, b07, b09) and four 10s (b10, b13, b17, b22) — and the field's only eagle of the tournament, Mullin at the par-5 15th (b03), the very hole where Williams took 10. Williams still gains four points of cushion.",
+      "chosen_headline": "The Fifteenth Giveth and Taketh Away",
+      "angle": "West Cliffs, also new, hands out the tournament's only eagle (Mullin, the par-5 15th) and a 10 to Williams on the very same hole — and still Williams stretches the Jacket lead from 8 to 14 while the rest of the field posts elevens.",
       "beat_ids": [
         "b03",
         "b24",
+        "b13",
         "b04",
-        "b07",
         "b09",
         "b10",
-        "b13",
+        "b62",
+        "b07",
         "b17",
-        "b22",
-        "b62"
+        "b22"
       ]
     },
     {
       "round": 3,
       "headline_candidates": [
-        "Eighty-Two: Williams Rewrites Penha Longa",
-        "Fourteen Shots Better Than Last Time, and a Course Record With It",
-        "The Mountain Yields: Personal Bests All Over Sintra"
+        "Eighty-Two in the Sintra Hills",
+        "Williams Rewrites Penha Longa; Alex Baker Rewrites Himself",
+        "Fourteen Shots Better Than Last Time, and a Record Gone"
       ],
-      "chosen_headline": "Eighty-Two: Williams Rewrites Penha Longa",
-      "angle": "The decisive round of the tournament: Williams's 82 is a new Penha Longa course record and a personal-best gross round of +10, worth 44 points and an 18-point Trophy lead — while Alex Baker's double at the 1st (b38) quietly settles the Spoon.",
+      "chosen_headline": "Eighty-Two in the Sintra Hills",
+      "angle": "The decisive round: on TEG's second visit to Penha Longa, Williams's 82 breaks the course record of 86 that had survived six visits, is a personal-best gross round (+10) and 14 shots better than his own last trip — 44 points, the lead out to 18, tournament over. On the same hills Alex Baker slides to outright last at the 1st.",
       "beat_ids": [
         "cr01",
         "b05",
         "b08",
+        "b38",
+        "b46",
+        "b47",
+        "b48",
         "b11",
-        "b38"
+        "b23"
       ]
     },
     {
       "round": 4,
       "headline_candidates": [
-        "Twenty-One Clear: Williams Completes the Double at Oitavos",
-        "A Ten at the First for Patterson, a Lap of Honour for Williams",
-        "Mullin's Worst Round Ever Closes the Handover"
+        "Coronation on the Atlantic, Carnage at the First",
+        "Patterson's Ten, Mullin's Worst Day, Williams's Full Set",
+        "Oitavos Hands Out Personal Bests and One Very Bad Morning"
       ],
-      "chosen_headline": "Twenty-One Clear: Williams Completes the Double at Oitavos",
-      "angle": "Nothing left to decide, so the Atlantic links busies itself with the losers: Patterson opens with a 10 and drops ten shots in three holes (b12, b61), Mullin posts the worst round of his TEG career (b28, b29) and 16 shots worse than his last visit here, and Williams's 91 — his Oitavos personal best — closes out a 21-point Trophy win and a 29-shot Jacket.",
+      "chosen_headline": "Coronation on the Atlantic, Carnage at the First",
+      "angle": "Oitavos Dunes wrecks the first hole for Patterson (a 10) and Alex Baker (an 8) while Williams calmly posts 91 — another personal best there — to finish +63 and 157 points; Mullin, meanwhile, records the worst round of his TEG life, 16 shots worse than his last visit to the same links.",
       "beat_ids": [
         "b12",
         "b61",
+        "b50",
         "b28",
         "b29",
+        "b30",
         "b01",
         "b02",
         "b21"
@@ -139,27 +146,27 @@
   "players": [
     {
       "player": "Gregg Williams",
-      "arc": "Three Trophies but never a Green Jacket, and finishes of 3rd-2nd-2nd-3rd in the last four TEGs: here he led both competitions from R1 to R4, broke the Penha Longa course record with an 82 that was 14 shots better than his last visit, and won the Jacket by 29 at the fifteenth attempt."
+      "arc": "Perennially thereabouts — 3rd, 2nd, 2nd, 3rd in the last four TEGs and never a Green Jacket in his life — Williams leads both competitions from R1 and turns a good week into a historic one with a course-record 82 at Penha Longa, finishing with the Trophy by 21 and his first Jacket by 29."
     },
     {
       "player": "David Mullin",
-      "arc": "Defending Trophy champion and holder of nine Green Jackets, dethroned in both — a Penha Longa personal best of 85 and the tournament's only eagle wedged between a 10 at West Cliffs' 6th and the worst round of his TEG life at Oitavos, 16 shots worse than he managed here in TEG 8."
-    },
-    {
-      "player": "Stuart Neumann",
-      "arc": "Two prior Spoons and no wins of any kind, and he survived a 10 at Estoril's 15th and an 11 at West Cliffs' 13th to finish Trophy runner-up — with a Penha Longa personal best of 92 along the way."
+      "arc": "Defending Trophy champion and owner of nine Green Jackets arrives as the man to beat and leaves 29 shots adrift, his only eagle of the tournament at West Cliffs rendered a footnote by the worst round and worst gross round of his TEG career at Oitavos — though he did quietly set a personal best at Penha Longa, on the day someone else broke the record."
     },
     {
       "player": "Jon Baker",
-      "arc": "Reigning Spoon holder, briefly bottom again twice in R2 after an 11 at the 17th, then hauled himself to Jacket runner-up on the back of an 85 at Penha Longa (six better than TEG 8) and a personal best at Oitavos."
+      "arc": "Reigning Wooden Spoon holder who escapes the family shame by handing it sideways to his brother, surviving an 11 at West Cliffs' 17th to take second in the Jacket on the back of personal bests at Penha Longa (85, six better) and Oitavos (94)."
     },
     {
       "player": "Alex Baker",
-      "arc": "Runner-up in TEG 14, last on every round-by-round table here, outright bottom from R3 H1 onward, and Spoon-holder on 114 — the consolation being a new Oitavos Dunes personal best of 103 in R4."
+      "arc": "One prior Trophy and two runner-up finishes in the last four TEGs count for nothing as he assembles a catalogue of ruin — 13 shots in three holes at West Cliffs, sextuples at three separate courses — falls to outright last at R3's opening hole and stays there, taking the Spoon on 114 points with a one-shot personal best at Oitavos as his sole consolation."
+    },
+    {
+      "player": "Stuart Neumann",
+      "arc": "Never a TEG winner and holder of two Wooden Spoons, Neumann finishes runner-up in the Trophy while simultaneously running up a 10 at Estoril's 15th, an 11 at West Cliffs' 13th and a 10 at its 6th — proof that Stableford forgives what gross never will, plus a seven-shot personal best at Penha Longa."
     },
     {
       "player": "John Patterson",
-      "arc": "Briefly top of the Trophy at R2 H3 and author of the tournament's best purple patch — 19 points in six holes at Penha Longa — before Oitavos undid him with a 10 at the 1st, ten shots gone in three holes and twelve more in five."
+      "arc": "Briefly shares the Trophy lead at R2 H3 and produces the field's hottest run — 19 points in six holes at Penha Longa — before Oitavos opens with a 10 at the 1st and 10 shots lost in three holes."
     }
   ],
   "must_include_beat_ids": [
@@ -180,25 +187,18 @@
     "b17",
     "b21",
     "b22",
-    "b61",
-    "b62",
-    "b38",
     "b25",
-    "b26",
     "b28",
-    "b29",
-    "b08"
+    "b38",
+    "b61",
+    "b62"
   ],
   "cuts": [
-    "b14",
-    "b15",
     "b16",
     "b18",
     "b19",
     "b20",
-    "b23",
     "b27",
-    "b30",
     "b31",
     "b32",
     "b33",
@@ -213,53 +213,49 @@
     "b43",
     "b44",
     "b45",
-    "b46",
-    "b47",
-    "b48",
-    "b49",
-    "b50"
+    "b49"
   ],
-  "venue_notes": "TEG's 4th visit to the Lisbon Coast, October 2022. R1 Estoril and R2 West Cliffs were both new courses for TEG — Estoril, Portugal's first golf club, a short Mackenzie Ross parkland that punishes waywardness with trees; West Cliffs, Cynthia Dye's 'World's Best New Course 2017' dunescape on the Silver Coast, which the field treated as a punishment beach. R3 Penha Longa and R4 Oitavos Dunes were second TEG rounds at each venue, the previous visits being TEG 8 — which is why almost every personal course best in the bundle lands in R3 and R4. Note for the writer: cr01's own wording is 'beating the prior record of 86 (across 6 prior visits)' — quote the record from the beat, and use 'the 2nd TEG round at this venue' language for the round itself.",
+  "venue_notes": "TEG's 4th visit to the Lisbon Coast, October 2022, and a deliberately lopsided itinerary: two brand-new courses first (Estoril, Portugal's oldest club, a short tree-lined Mackenzie Ross parkland that punishes wandering; then Cynthia Dye's West Cliffs links at Obidos, 'World's Best New Course' 2017 and the week's demolition site), then two returns to TEG 8 territory — Penha Longa's Robert Trent Jones Jr mountain course in the Sintra hills for R3 and Arthur Hills's Oitavos Dunes on the Cascais coast for R4. Use the new/old split structurally: nobody had history to defend at Estoril or West Cliffs, and everybody had history to answer for at Penha Longa and Oitavos. Weekday references, if used at all, must be Saturday (R1), Sunday (R2), Monday (R3), Tuesday (R4).",
   "competition_storyline_bullets": {},
   "player_storyline_bullets": {},
   "course_history_notes": [
-    "Williams's new Penha Longa personal best: 82 gross in R3, 14 shots better than the 96 he managed there in TEG 8 — and a new course record (cr01).",
-    "Penha Longa gave up personal bests to four men in R3: Williams 82, Jon Baker 85 (six better than TEG 8), Neumann 92 (seven better), Mullin 85 by a single shot.",
-    "Mullin at Oitavos Dunes: 88 gross in TEG 8, 104 here — sixteen shots worse, on the day he posted the worst round of his TEG career.",
-    "Oitavos personal bests in R4 for Williams (91, -2), Jon Baker (94, -2) and Alex Baker (103, -1); Neumann was four worse than TEG 8."
+    "Penha Longa in R3 was a mass improvement on TEG 8: Williams 82 (14 better, new course record), Jon Baker 85 (6 better), Neumann 92 (7 better), Mullin 85 (a personal best by one).",
+    "Williams's 82 broke a Penha Longa record of 86 that had stood across six prior visits.",
+    "Mullin went the other way at Oitavos Dunes: 104 in R4 against his 88 there in TEG 8 — 16 shots worse.",
+    "Alex Baker's 103 at Oitavos was a personal best there by a single shot, and the only course PB he managed all tournament."
   ],
   "decisive_moments": [
-    "Trophy: R3 at Penha Longa — Williams's record 82 for 44 points pushed the lead from 9 to 18 and made the last 18 holes ceremonial (cr01, b05).",
-    "Green Jacket: R1 H11 at Estoril — Williams took the outright gross lead and was never headed across the remaining 61 holes, the cushion widening 8 → 14 → 17 → 29 (b01).",
-    "Wooden Spoon: R3 H1 at Penha Longa — Alex Baker's double bogey dropped him outright bottom (b38) and he stayed there for the last 53 holes, finishing on 114 (b21)."
+    "Trophy: R3 at Penha Longa — Williams's 44-point round turns a 9-point lead into 18 with a round to play, and the Trophy stops being a contest.",
+    "Green Jacket: R1 H11 at Estoril — Williams goes outright top on gross and is never headed again, the lead growing 8 → 14 → 17 → 29.",
+    "Wooden Spoon: R3 H1 at Penha Longa — Alex Baker's double bogey drops him to outright last (b38), where he remains for the final 53 holes."
   ],
   "prominent_vehicle": "origin",
-  "prominent_palette": "course_history",
+  "prominent_palette": "cross_teg_career",
   "payoffs": [
     {
-      "seed": "Williams: three Trophies, zero Green Jackets, in a competition only ever won by Mullin (9) or Jon Baker (3)",
-      "resolves_in": "Round 4 / How the three were decided",
-      "payoff": "Williams wins the Jacket at +63 by 29 shots from Jon Baker (b01) — the first man other than Mullin or Jon Baker to own it."
+      "seed": "Williams's 8 at Estoril's 1st (and another at the 18th)",
+      "resolves_in": "Round 1 close and the Green Jacket section",
+      "payoff": "He still shoots 86, still leads gross by 8 by close of play, and never trails again — his worst golf of the tournament happens on day one and costs him precisely nothing."
     },
     {
-      "seed": "Penha Longa's previous verdict on Williams: 96 gross in TEG 8",
-      "resolves_in": "Round 3",
-      "payoff": "82 gross — a new course record beating the prior 86, a personal-best gross round of +10, and 14 shots better than his last visit (cr01, b05)."
+      "seed": "Mullin's nine Jackets and the standing 86 at Penha Longa",
+      "resolves_in": "Round 3 and Round 4",
+      "payoff": "Williams's 82 takes the Penha Longa record off him in R3 (cr01), and Mullin closes with the worst round and worst gross round of his TEG career at Oitavos (b28, b29) — 29 shots behind on the Jacket he has won nine times."
     },
     {
-      "seed": "Mullin arrives as defending Trophy champion and a four-time Spoon collector",
-      "resolves_in": "Round 4 / Player-by-player summary",
-      "payoff": "The nine-time Jacket holder posts the worst round and worst gross round of his TEG career at Oitavos — 22 points, +33, sixteen shots worse than TEG 8 (b28, b29)."
+      "seed": "Mullin's eagle at West Cliffs' 15th, the only eagle of TEG 15",
+      "resolves_in": "Round 2 and the Trophy section",
+      "payoff": "The tournament's rarest shot is neutralised the same afternoon — Williams takes a 10 at that exact hole (b13) and still leaves West Cliffs 9 points and 14 shots clear."
     },
     {
-      "seed": "Alex Baker arrives off a TEG 14 runner-up finish with one prior Spoon",
-      "resolves_in": "Round 3 and the Wooden Spoon section",
-      "payoff": "Outright bottom from R3 H1 (b38) after the West Cliffs 11-9-7 sequence (b62) and never out of it — second career Spoon on 114 (b21)."
+      "seed": "Jon Baker arrives as reigning Wooden Spoon holder, with his brother in the field",
+      "resolves_in": "How the three were decided / Wooden Spoon section",
+      "payoff": "Jon escapes to Jacket runner-up; Alex drops to outright last at R3 H1 (b38) and keeps the Spoon in the family on 114 points (b21)."
     }
   ],
   "vehicle_fit_response": {
-    "top_scored_vehicle": "inevitability",
+    "top_scored_vehicle": "catalogue",
     "taken_up": true,
-    "note": "Kept as supporting texture — both competitions genuinely were wire-to-wire with no lead change after R1 — but the frame is origin: Williams's first Green Jacket, prised out of a competition Mullin and Jon Baker had monopolised, with inversion carrying Mullin's fall from defending double champion to his worst-ever round."
+    "note": "Taken as a supporting frame — Alex Baker's seven blow-ups genuinely are an inventory rather than a collapse — but the report is framed on Williams's first Green Jacket in fifteen TEGs (origin) and the dethroning of Mullin, holder of nine (inversion); close_finish is false, so the 21/29-shot procession is texture, not frame."
   }
 }
