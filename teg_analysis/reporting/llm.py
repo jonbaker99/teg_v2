@@ -57,8 +57,15 @@ def get_api_key() -> Optional[str]:
 
     The environment variable is the supported route. See `_SECRETS_CANDIDATES` for
     the file fallback and which paths are deprecated.
+
+    `TEG_ANTHROPIC_API_KEY` is accepted as an alias so the key can be namespaced
+    in a shared environment (the Claude-Code-on-the-web container) without
+    colliding with a generic `ANTHROPIC_API_KEY` belonging to something else.
+    The unprefixed name still wins when both are set.
     """
-    return os.environ.get("ANTHROPIC_API_KEY") or _key_from_secrets_toml()
+    return (os.environ.get("ANTHROPIC_API_KEY")
+            or os.environ.get("TEG_ANTHROPIC_API_KEY")
+            or _key_from_secrets_toml())
 
 
 def has_api_key() -> bool:
