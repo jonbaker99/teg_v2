@@ -364,6 +364,7 @@ Four further code-only modules assemble context alongside the beats. All are pur
 | `history_context.py` | `build_player_cross_teg_history(teg)` — career storyline phrases per player (Nth Trophy/Jacket/Spoon, back-to-back, first win in N years, defending champion, "first Trophy after 2 runner-up finishes"). Also `build_win_counts(teg)` | Bundle's `player_history`; the deterministic at-a-glance win counts in `render` |
 | `course_history.py` | `build_player_course_history(teg)` — first visit / Nth visit / personal best here / strokes vs last visit. `detect_course_records(teg)` — new course gross records (good or bad) | Bundle's `player_course_history`; new course records become **mandatory beats** |
 | `tournament_shape.py` | `detect_close_finish(arcs, metric)` — deterministic close-finish signal. `recent_vehicle_choices(teg, n=3)` — what narrative vehicles the last few reports used | Bundle's `tournament_shape` (drives the close-finish **hard rule**) and `recent_vehicle_choices` (drives the anti-repetition **soft rule**) |
+| `vehicle_fit.py` | `score_vehicle_fit(beats, arcs, shape, history)` — free, deterministic, no LLM call: how well each narrative vehicle fits this TEG's actual facts. `normalize_vehicle_fit(scores, baseline)` z-scores it against `vehicle_fit_baseline.json` (a checked-in 17-TEG population). `refresh_baseline_cache()` regenerates that file | Bundle's `vehicle_fit_hints` (drives the vehicle **advisory**) |
 
 Verified `player_relationships` (from `teg_analysis.constants.PLAYER_RELATIONSHIPS`, filtered to players in this TEG) are also passed in the bundle. The writer is forbidden from inferring any relationship not listed there — shared surnames are not evidence.
 
@@ -379,10 +380,13 @@ Schema:
 
 ```
 title, title_candidates[], theme, tone,
-narrative_structure,                  # chronological | in_medias_res | theme_led | free-form
+narrative_structure,                  # strict enum — a bare value, not a sentence
 opening_hook,
 narrative_vehicles[],                 # 1-3 named storytelling frames (see menu below)
-prominent_vehicle,                    # the one being foregrounded
+prominent_vehicle,                    # the FRAME being foregrounded (enum)
+prominent_palette,                    # the CONTEXT MATERIAL foregrounded (enum) — a different axis
+vehicle_fit_response:                 # the editor's answer to the vehicle_fit_hints advisory
+  { top_scored_vehicle, taken_up, note }
 foreshadow[],                         # hooks to plant early that pay off later
 payoffs[]:                            # one per foreshadow seed where possible
   { seed, resolves_in, payoff }
@@ -399,16 +403,47 @@ course_history_notes[], decisive_moments[]
 ```
 
 **Narrative vehicles** are a shared vocabulary between the editor and the writer, so the editor's
-structural choice actually binds the prose. The menu spans structural frames (`bookends`, `motif`,
-`dual_narrative`, `counterfactual`, `catalogue`, `inevitability`), historical-context frames
-(`hero_arc`, `comeback`, `inversion`, `origin`, `underdog`) and stylistic ones (`chronological`,
-`in_medias_res`, `reverse_chronology`, `three_act`, `theme_led_body`). Two rules govern selection:
+structural choice actually binds the prose. The menu spans tournament-shape frames (`bookends`,
+`motif`, `ensemble`, `dual_narrative`, `counterfactual`, `tragic_arc`, `redemption_arc`,
+`catalogue`, `inevitability`), historical-context frames (`hero_arc`, `comeback`, `inversion`,
+`origin`, `underdog`) and one stylistic frame (`theme_led_body`). `narrative_structure` is a
+separate menu. Three rules govern selection:
 
 - **Hard rule — close finish wins.** When `tournament_shape.close_finish` is true, `prominent_vehicle`
   MUST be `counterfactual` (or `dual_narrative` if two players carried the finish). The close finish
   *is* the story; historical framing can ride alongside but cannot displace it.
 - **Soft rule — vary against recent picks.** `recent_vehicle_choices` shows the last few TEGs'
   selections; when the data is ambiguous, prefer a different combination. The hard rule supersedes.
+- **Advisory — `vehicle_fit_hints`.** `vehicle_fit.py` scores every detectable vehicle against this
+  TEG's facts and z-scores it against a historical baseline, so a hint means "unusually strong
+  evidence for this pattern", not "this pattern is present" (a collapse beat exists in nearly every
+  TEG). **Advisory is deliberate and load-bearing — see below.**
+
+#### Why the vehicle advisory is not binding
+
+Measured across TEGs 2–18 (2026-08-13), normalization does the job it was added for: **raw** scores
+put `tragic_arc` or `redemption_arc` top in all 17 TEGs, while **normalized** scores produce 10
+different winners with none appearing more than twice.
+
+But the scorer detects that a pattern's raw *ingredients* exist, not whether it is the most
+interesting angle, and it has two blind spots — so the editor keeps the final call:
+
+- **Four vehicles have no detector at all**: `motif`, `bookends`, `ensemble`, `theme_led_body`
+  (`vehicle_fit.UNSCORED_VEHICLES`). They are stylistic frames with no deterministic signal in the
+  data. They are excluded from the ranking entirely, because a z of 0 there means "not looked at",
+  not "typical" — left in, they filled 26 of the 85 hint slots the editor sees and made `motif` the
+  joint-most-frequent top-3 hint despite never having been measured. **Their absence from the hints
+  carries no information**, so the prompt names them and asks the editor to judge them on their own
+  merits every time.
+- **Four more are under-detected**: `hero_arc`, `comeback`, `origin`, `underdog` depend on
+  career-milestone phrasing that misses real career arcs.
+
+Binding the choice — e.g. demanding justification whenever the plan diverges from the top hint —
+would apply that pressure hardest to exactly the vehicles that can never be top-scored, which is the
+opposite of the variety the scorer exists to serve. Instead the choice is **accountable**:
+`vehicle_fit_response` records the top hint, whether it was adopted, and one line on why.
+`check_plan_consistency` verifies the record is truthful (the named vehicle really was the top hint;
+`taken_up` matches `narrative_vehicles`) and **never warns on divergence itself**.
 
 `payoffs[]` exists because foreshadow-without-payoff was the most common thinness in earlier reports:
 every seed planted in the opener must be named against the section that resolves it.

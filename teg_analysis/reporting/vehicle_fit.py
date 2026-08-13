@@ -53,6 +53,25 @@ ALL_VEHICLE_NAMES = (
     "inversion", "origin", "underdog", "theme_led_body",
 )
 
+# Vehicles `score_vehicle_fit` has NO detection logic for. They are stylistic /
+# structural frames — a recurring motif, opening and closing on the same scene,
+# the field as a collective — with no deterministic signal in the data to
+# detect. Each scores 0 for every TEG, so its baseline is mean 0 / std 0, and
+# `normalize_vehicle_fit`'s std==0 branch handed them z = 0.0 — which then
+# sorted ABOVE any genuinely scored vehicle that came in below its historical
+# average. Measured across TEGs 2-18 (2026-08-13), that filled 26 of the 85
+# hint slots the editor actually sees, and made `motif` the joint-most-frequent
+# top-3 "hint" of all despite never having been measured for anything. TEG 2's
+# list was 1 real hint and 4 of these.
+#
+# A z of 0 here means "not looked at", not "typical", so they are excluded from
+# the ranking. Their absence is therefore NOT evidence against them: the editor
+# prompt names them explicitly and asks for them to be judged on their merits.
+# If detection logic is ever added for one, drop it from this tuple and
+# regenerate the baseline — `test_unscored_vehicles_score_nothing` fails
+# otherwise.
+UNSCORED_VEHICLES = ("motif", "bookends", "ensemble", "theme_led_body")
+
 
 def _add(scores: dict, vehicle: str, points: float, reason: str) -> None:
     if points <= 0:
@@ -286,14 +305,19 @@ def refresh_baseline_cache(tegs: list = None, mode: str = "balanced",
 
 
 def normalize_vehicle_fit(scores: dict, baseline: dict) -> list[dict]:
-    """Score every vehicle in `ALL_VEHICLE_NAMES` (not just those that fired)
-    as a z-score against `baseline`, sorted desc. A vehicle absent from
-    `scores` is a real 0, scored against the same baseline as everything
-    else — that's what lets "nobody had a collapse this time" outrank a
-    collapse that happens every TEG.
+    """Score every DETECTABLE vehicle (not just those that fired) as a z-score
+    against `baseline`, sorted desc. A vehicle absent from `scores` is a real
+    0, scored against the same baseline as everything else — that's what lets
+    "nobody had a collapse this time" outrank a collapse that happens every TEG.
+
+    `UNSCORED_VEHICLES` are excluded: a 0 for those means "no detector exists",
+    not "this pattern was weak this time", and ranking them was crowding real
+    hints out of the list (see that constant's comment for the measurements).
     """
     ranked = []
     for vehicle in ALL_VEHICLE_NAMES:
+        if vehicle in UNSCORED_VEHICLES:
+            continue
         raw = scores.get(vehicle, {}).get("score", 0.0)
         reasons = scores.get(vehicle, {}).get("reasons", [])[:3]
         b = baseline.get(vehicle, {"mean": 0.0, "std": 0.0})

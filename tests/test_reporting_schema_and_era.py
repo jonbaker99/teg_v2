@@ -32,6 +32,8 @@ def _plan(**kw) -> StoryPlan:
         foreshadow=[], competitions=[], rounds=[], players=[],
         must_include_beat_ids=[], cuts=[], venue_notes="",
         prominent_vehicle="counterfactual", prominent_palette="decisive_moment",
+        vehicle_fit_response={"top_scored_vehicle": "counterfactual",
+                              "taken_up": True, "note": "n"},
     )
     base.update(kw)
     return StoryPlan(**base)
@@ -90,6 +92,8 @@ def test_both_prominence_fields_are_required():
             "must_include_beat_ids": [], "cuts": [], "venue_notes": "",
             "prominent_vehicle": "counterfactual",
             "prominent_palette": "decisive_moment",
+            "vehicle_fit_response": {"top_scored_vehicle": "counterfactual",
+                                     "taken_up": False, "note": "n"},
         }
         del kwargs[missing]
         with pytest.raises(pydantic.ValidationError):
@@ -127,7 +131,9 @@ def test_close_finish_compliance_is_silent():
     bundle = {"tournament_shape": {"close_finish": True}, "beats": []}
     for vehicle in CLOSE_FINISH_VEHICLES:
         assert check_plan_consistency(
-            _plan(prominent_vehicle=vehicle, narrative_vehicles=[vehicle]), bundle) == []
+            _plan(prominent_vehicle=vehicle, narrative_vehicles=[vehicle],
+                  vehicle_fit_response={"top_scored_vehicle": vehicle,
+                                        "taken_up": True, "note": "n"}), bundle) == []
 
 
 def test_prominent_vehicle_must_appear_in_the_vehicle_list():
@@ -147,6 +153,109 @@ def test_mandatory_beat_in_cuts_is_reported():
     warnings = check_plan_consistency(
         _plan(must_include_beat_ids=["b01"], cuts=["b01"]), bundle)
     assert any("cuts" in w for w in warnings)
+
+
+# ---------------------------------------------------------------------------
+# vehicle_fit_hints: advisory, and honest about what it cannot see
+# ---------------------------------------------------------------------------
+def test_unscored_vehicles_score_nothing():
+    """`UNSCORED_VEHICLES` must name EXACTLY the vehicles with no detector.
+
+    The constant is hand-maintained but the baseline is generated, so they can
+    drift apart in either direction: adding a detector without updating the
+    tuple would silently keep a real signal out of the hints, and adding a
+    vehicle to the tuple that does score would silently discard it.
+    """
+    from teg_analysis.reporting.vehicle_fit import (
+        ALL_VEHICLE_NAMES, UNSCORED_VEHICLES, load_baseline_cache)
+
+    baseline = load_baseline_cache()
+    assert baseline, "baseline cache missing — regenerate with refresh_baseline_cache()"
+    flat = {v for v in ALL_VEHICLE_NAMES
+            if baseline[v]["mean"] == 0 and baseline[v]["std"] == 0}
+    assert flat == set(UNSCORED_VEHICLES)
+
+
+def test_unscored_vehicles_never_appear_in_the_hints():
+    """They used to occupy 26 of the 85 hint slots across TEGs 2-18 at z=0.00.
+
+    `normalize_vehicle_fit`'s std==0 branch scored them 0, which sorted above
+    every genuinely-detected vehicle that came in below its historical average.
+    A zero there means "no detector", not "typical", so it must not rank.
+    """
+    from teg_analysis.reporting.vehicle_fit import (
+        UNSCORED_VEHICLES, load_baseline_cache, normalize_vehicle_fit)
+
+    baseline = load_baseline_cache()
+    # A quiet TEG — nothing fired at all — is the case that used to be ALL zeros.
+    for scores in ({}, {"tragic_arc": {"score": 3.0, "reasons": ["r"]}}):
+        ranked = normalize_vehicle_fit(scores, baseline)
+        assert ranked, "ranking must not be empty"
+        assert not ({r["vehicle"] for r in ranked} & set(UNSCORED_VEHICLES))
+
+
+def test_prompt_tells_the_editor_to_judge_the_unscored_vehicles_itself():
+    """Excluding them means their absence carries no information — which is only
+    safe if the prompt says so and asks for them to be considered anyway."""
+    from teg_analysis.reporting.vehicle_fit import UNSCORED_VEHICLES
+
+    for vehicle in UNSCORED_VEHICLES:
+        assert f"`{vehicle}`" in SYSTEM_PROMPT, vehicle
+    assert "never scored and never appear" in SYSTEM_PROMPT
+    assert "own merits" in SYSTEM_PROMPT
+
+
+# ---------------------------------------------------------------------------
+# vehicle_fit_response — accountable, NOT binding
+# ---------------------------------------------------------------------------
+def test_vehicle_fit_response_is_required():
+    kwargs = {
+        "title": "t", "title_candidates": [], "theme": "x", "tone": "house",
+        "narrative_structure": "chronological", "opening_hook": "h",
+        "foreshadow": [], "competitions": [], "rounds": [], "players": [],
+        "must_include_beat_ids": [], "cuts": [], "venue_notes": "",
+        "prominent_vehicle": "counterfactual", "prominent_palette": "decisive_moment",
+    }
+    with pytest.raises(pydantic.ValidationError):
+        StoryPlan(**kwargs)
+
+
+def test_diverging_from_the_top_hint_is_not_a_warning():
+    """THE guard on the advisory/binding decision (2026-08-13).
+
+    The editor is free to frame the report on a vehicle the scorer ranked low
+    or cannot score at all. If divergence ever starts producing a warning, the
+    hints have quietly become a rule — and the pressure would fall hardest on
+    the four vehicles that can never be top-scored.
+    """
+    bundle = {"tournament_shape": {"close_finish": False}, "beats": [],
+              "vehicle_fit_hints": [{"vehicle": "tragic_arc", "z": 2.7}]}
+    plan = _plan(
+        prominent_vehicle="motif", narrative_vehicles=["motif"],
+        vehicle_fit_response={"top_scored_vehicle": "tragic_arc", "taken_up": False,
+                              "note": "real collapse, but the week is Baker's first win"})
+    assert check_plan_consistency(plan, bundle) == []
+
+
+def test_misreported_top_hint_is_caught():
+    """The field is only worth having if it records the ACTUAL top hint."""
+    bundle = {"tournament_shape": {}, "beats": [],
+              "vehicle_fit_hints": [{"vehicle": "tragic_arc", "z": 2.7}]}
+    warnings = check_plan_consistency(
+        _plan(vehicle_fit_response={"top_scored_vehicle": "origin",
+                                    "taken_up": False, "note": "n"}), bundle)
+    assert any("top hint" in w for w in warnings)
+
+
+def test_misreported_taken_up_is_caught():
+    """Claiming to have adopted the top hint while not listing it."""
+    bundle = {"tournament_shape": {}, "beats": [],
+              "vehicle_fit_hints": [{"vehicle": "tragic_arc", "z": 2.7}]}
+    warnings = check_plan_consistency(
+        _plan(narrative_vehicles=["origin"], prominent_vehicle="origin",
+              vehicle_fit_response={"top_scored_vehicle": "tragic_arc",
+                                    "taken_up": True, "note": "n"}), bundle)
+    assert any("taken_up" in w for w in warnings)
 
 
 # ---------------------------------------------------------------------------

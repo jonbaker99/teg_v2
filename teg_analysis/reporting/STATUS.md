@@ -50,8 +50,35 @@ including all three P1s. The two that matter most:
   generated from it, and the schema enforces it. The exact value that shipped for four TEGs is now a
   validation error.
 
+**2026-08-13 — vehicle-fit scoring measured across all 17 TEGs; hints cleaned up; the advisory made
+accountable.** `vehicle_fit.py` (added on the preceding branch) scores each narrative vehicle
+against a TEG's actual facts for free — no LLM call — and z-scores it against the checked-in
+17-TEG baseline. Scored across TEGs 2–18, **the normalization works**: raw scores put `tragic_arc`
+or `redemption_arc` top in all 17 TEGs, normalized scores give 10 different winners with none
+appearing more than twice. Two changes came out of that run:
+
+- **Four vehicles were polluting the hint list.** `motif`, `bookends`, `ensemble` and
+  `theme_led_body` have no detector at all, so their baseline is mean 0 / std 0 and
+  `normalize_vehicle_fit` scored them z = 0.00 — which sorted them *above* every genuinely detected
+  vehicle that came in below its average. They occupied 26 of the 85 hint slots the editor sees
+  (TEG 2's list was 1 real hint and 4 of these), and `motif` was the joint-most-frequent top-3 hint
+  despite never having been measured for anything. They are now excluded from the ranking, and the
+  editor prompt names them and asks for them to be judged on their own merits — their absence is
+  not evidence against them.
+- **The advisory is now accountable, not binding.** Decision (Jon, 2026-08-13): do *not* require the
+  editor to justify diverging from the top hint. That pressure would fall hardest on precisely the
+  vehicles that can never be top-scored, defeating the variety the scorer exists to serve. Instead
+  the new required `vehicle_fit_response` field records the top hint, whether it was adopted, and
+  one line of reasoning; `check_plan_consistency` verifies the record is *truthful* and never warns
+  on divergence itself. `test_diverging_from_the_top_hint_is_not_a_warning` guards that boundary.
+
+Residual, not fixed: a detectable-but-unfired vehicle (raw 0, negative z) can still reach the top 5
+on a quiet TEG — ~14 of 85 slots. Less misleading than the removed cases, since the editor sees
+`raw: 0.0` and an empty `reasons` list, and a genuine 0 for a vehicle that *does* have a detector is
+real evidence of absence. Left as-is deliberately.
+
 **What is deliberately still open: the humour dial** — the one remaining judgement call — plus the 81 prose-wording faults D3 reports across the older reports, which
-regeneration clears. Nothing else is blocking. Test suite: 404 passed, 4 skipped.
+regeneration clears. Nothing else is blocking. Test suite: 422 passed, 4 skipped (2026-08-13).
 
 ---
 

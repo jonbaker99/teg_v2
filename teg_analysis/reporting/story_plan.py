@@ -171,6 +171,27 @@ class Payoff(BaseModel):
     payoff: str         # one-line description of how it resolves
 
 
+class VehicleFitResponse(BaseModel):
+    """The editor's answer to the `vehicle_fit_hints` advisory — accountable,
+    not binding.
+
+    The hints are a heuristic over the raw ingredients of a pattern; they
+    cannot tell whether that pattern is the most interesting angle, and four
+    vehicles have no detector at all (`vehicle_fit.UNSCORED_VEHICLES`). So the
+    editor stays free to frame the report however the material demands.
+
+    What this field adds is a record of the decision, not a constraint on it.
+    Deliberately NOT phrased as a justification the editor owes when it
+    diverges: making divergence costly would push every plan toward whichever
+    vehicles happen to be detectable, which is the opposite of the variety the
+    scorer exists to serve. Ignoring a strong hint is a legitimate call; making
+    it silently is what this prevents.
+    """
+    top_scored_vehicle: NarrativeVehicle   # highest-ranked entry in vehicle_fit_hints
+    taken_up: bool                         # is it in narrative_vehicles?
+    note: str                              # one line: why it fits, or what beat it
+
+
 class StoryPlan(BaseModel):
     title: str
     title_candidates: list[str]
@@ -203,6 +224,12 @@ class StoryPlan(BaseModel):
     prominent_vehicle: ProminentVehicle        # the FRAME being foregrounded
     prominent_palette: PaletteVehicle          # the CONTEXT MATERIAL being foregrounded
     payoffs: list[Payoff] = []                                 # setup→payoff pairs; one per foreshadow seed where possible
+    # Required, like the two prominence fields above and for the same reason:
+    # a prose instruction to "record your reasoning" is a request, a required
+    # field is enforcement. Checked against the bundle by
+    # `check_plan_consistency`, so it cannot be filled in with a vehicle that
+    # was not actually the top hint.
+    vehicle_fit_response: VehicleFitResponse
 
 
 # ---------------------------------------------------------------------------
@@ -331,13 +358,35 @@ matters is whether THIS one has unusually strong evidence for it), with the spec
 milestones behind each score, computed from THIS tournament's actual facts before you saw \
 them. This is a candidate list, not a verdict — it can only detect that a pattern's raw \
 ingredients exist, not whether it is genuinely the most interesting angle, so a high score is \
-a prompt to look closer, not an instruction to pick it. Known gap: `hero_arc`, `comeback`, \
-`origin` and `underdog` are under-detected by this heuristic (they rely on career-milestone \
-phrasing that doesn't cover every real career-arc story, e.g. a player stuck at the same rank \
-for several TEGs) — a low or absent score for those four is NOT evidence the pattern isn't \
-there; use your own reading of `player_history` for those. It is also a useful check against \
-the SOFT RULE above: if a high-scoring vehicle also overlaps recent picks, that is a real \
-signal the data wants it — don't discard it just to be different.
+a prompt to look closer, not an instruction to pick it. **You remain free to frame the report \
+however the material demands, including on a vehicle that scores low or does not appear at \
+all.** If the tournament's real story is somewhere else, go there — a strong hint you \
+overrule is a normal outcome, not a failure. It is also a useful check against the SOFT RULE \
+above: if a high-scoring vehicle also overlaps recent picks, that is a real signal the data \
+wants it — don't discard it just to be different.
+
+  **What the hints CANNOT see.** Two blind spots, and neither is evidence against a vehicle:
+
+    1. `motif`, `bookends`, `ensemble` and `theme_led_body` are **never scored and never \
+appear in the list at all** — they are stylistic frames with nothing in the data to detect \
+them, not weak candidates. Their absence carries no information whatsoever. **Judge these \
+four on their own merits every time**, by reading the beats yourself: is there an image, a \
+hole, a number or a phrase that recurs across the four rounds (`motif`)? Does the tournament \
+open and close on the same scene, hole or pairing (`bookends`)? Is the real story the whole \
+field, or the course beating everyone (`ensemble`)? Does the material want to be organised \
+by idea rather than by round (`theme_led_body`)? They are strong frames and the scorer will \
+never once nominate them.
+    2. `hero_arc`, `comeback`, `origin` and `underdog` are UNDER-detected — they rely on \
+career-milestone phrasing that doesn't cover every real career-arc story (e.g. a player stuck \
+at the same rank for several TEGs). A low or absent score for those four is not evidence the \
+pattern isn't there; read `player_history` yourself.
+
+  **Record the outcome in `vehicle_fit_response`** — `top_scored_vehicle` (the FIRST entry in \
+`vehicle_fit_hints`, copied exactly), `taken_up` (is it in your `narrative_vehicles`?), and a \
+one-line `note`: what it fits if you took it, or what beat it if you didn't. This is a record \
+of the decision, NOT a justification you owe — "the R3 collapse is real but the week is about \
+Baker's first win" is a complete and perfectly good answer. Do not let this field pull you \
+toward the scored vehicles.
 - Select the 6-10 `must_include_beat_ids` the report cannot omit. Be ruthless — \
 list the rest you would cut in `cuts`. **NON-NEGOTIABLE: every beat marked \
 `"mandatory": true` MUST appear in `must_include_beat_ids` and MUST NOT appear \
@@ -478,6 +527,25 @@ def check_plan_consistency(plan: StoryPlan, bundle: dict) -> list[str]:
     cut_mandatory = sorted(mandatory & set(plan.cuts))
     if cut_mandatory:
         warnings.append(f"mandatory beats listed in cuts: {cut_mandatory}")
+
+    # `vehicle_fit_response` is a record of a decision, so the only things worth
+    # checking are that it records the RIGHT decision. Divergence itself is never
+    # a warning — the editor is explicitly free to overrule the hints, and
+    # flagging that would turn an advisory into a de facto rule.
+    resp = plan.vehicle_fit_response
+    hints = bundle.get("vehicle_fit_hints") or []
+    if hints:
+        top = hints[0].get("vehicle")
+        if top and resp.top_scored_vehicle != top:
+            warnings.append(
+                f"vehicle_fit_response.top_scored_vehicle={resp.top_scored_vehicle!r} "
+                f"but the top hint was {top!r}")
+    actually_taken = resp.top_scored_vehicle in plan.narrative_vehicles
+    if resp.taken_up != actually_taken:
+        warnings.append(
+            f"vehicle_fit_response.taken_up={resp.taken_up} but "
+            f"{resp.top_scored_vehicle!r} is "
+            f"{'in' if actually_taken else 'not in'} narrative_vehicles")
     return warnings
 
 
