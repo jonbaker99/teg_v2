@@ -47,6 +47,7 @@ TEG v2 is a golf tournament analysis project with two architectural layers: a le
 | Webapp stack, themes, design principles | `webapp/README.md` |
 | Analysis package API | `teg_analysis/README.md` |
 | Report/commentary pipeline | `teg_analysis/reporting/README.md` + `STATUS.md` |
+| How do I test/iterate on a report-pipeline element (voice, weights, structure)? | `teg_analysis/reporting/ARTEFACTS.md` |
 | Streamlit internals (frozen) | `streamlit/README.md` |
 
 **Do not read or reference `to_do_jon.md`** unless explicitly asked. It is personal draft notes, not project documentation.

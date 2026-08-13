@@ -366,15 +366,27 @@ Edit `webapp/static/teg_reports.css` and reload. No Python involved.
 
 ## Which file do I restart from?
 
-The summary of the above, as a lookup:
+The summary of the above, as a lookup. **"Restart from" means one thing: load that artefact from
+disk instead of regenerating it.** When a row lists two artefacts, that is not two separate restarts
+— it is one action, loading both into memory before running the stages in the next column. Concretely:
 
-| I want to change… | Edit | Restart from | Re-runs | Cost |
+```python
+plan = load_story_plan(teg)   # reads ① from disk — free, no API call
+dry  = load_dry_draft(teg)    # reads ② from disk — free, no API call
+# only NOW does anything in "Then run" actually call the LLM
+```
+
+Nothing downstream of the artefact you load gets touched until "Then run" executes. That is the
+entire saving: the cost column only counts what's in that column, because everything before it was
+loaded, not regenerated.
+
+| I want to change… | Edit | Load from disk (free) | Then run | Cost |
 |---|---|---|---|---|
-| **Tone of voice, humour level** | `authoring.WRITER_VOICE` | ① plan + ② dry draft (both frozen) | 4b + lint | **~$0.17** |
-| Faithfulness rules | `authoring.WRITER_FAITHFULNESS` | ① + ② frozen | 4b + lint | ~$0.17 |
-| How much hole detail the draft carries | `DRY_DRAFT_SYSTEM_DETAILED`, or `dry_draft_style=` | ① plan frozen | 4a → lint | ~$0.37 |
-| The frame, structure, which beats feature | hand-edit ①, or `story_plan.SYSTEM_PROMPT` | the bundle | 4b only, or everything | **free** → ~$0.65 |
-| Which beats exist at all | `scoring.MODE_WEIGHTS`, `events.py` | the data | everything | ~$0.65 |
+| **Tone of voice, humour level** | `authoring.WRITER_VOICE` | ① plan **and** ② dry draft | 4b → lint | **~$0.17** |
+| Faithfulness rules | `authoring.WRITER_FAITHFULNESS` | ① plan **and** ② dry draft | 4b → lint | ~$0.17 |
+| How much hole detail the draft carries | `DRY_DRAFT_SYSTEM_DETAILED`, or `dry_draft_style=` | ① plan only | 4a → lint | ~$0.37 |
+| The frame, structure, which beats feature | hand-edit ①, or `story_plan.SYSTEM_PROMPT` | ① (if hand-editing) | 4b only, or everything | **free** → ~$0.65 |
+| Which beats exist at all | `scoring.MODE_WEIGHTS`, `events.py` | *(nothing — recompute from data)* | everything | ~$0.65 |
 | Standings/records blocks, CSS hooks | `render.py` | ④ final | Stage 5 only | **free** |
 | Visual design | `webapp/static/teg_reports.css` | ⑤ styled | nothing | **free** |
 
