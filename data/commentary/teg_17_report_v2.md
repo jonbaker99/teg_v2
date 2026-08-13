@@ -12,7 +12,7 @@ Four rounds on the Lisbon Coast, TEG's sixth visit to the region, and four cours
 
 ## Round 1 — Twenty-Four Visits, One New Worst
 
-The Saturday round at Praia D'El Rey was TEG's fifth at the venue, which is to say the field knew exactly what it was doing there. Alex Baker, the reigning Spoon holder and holder of the two before that, signed for 114. Across twenty-four prior TEG visits to Praia D'El Rey nobody had managed worse; the previous mark was 110. He was also eleven shots worse than his own last visit to the place.
+The Saturday round at Praia D'El Rey was TEG's fifth at the venue, which is to say the field knew exactly what it was doing there. Alex Baker, the reigning Spoon holder and holder of the two before that, signed for 114. Across twenty-four prior TEG visits to Praia D'El Rey nobody had managed worse; the previous mark was 110. He was also eleven shots worse than his own last outing to the place.
 
 The damage was efficiently concentrated. A quadruple-bogey 8 at the par-4 4th, a sextuple-bogey 10 at the 5th — SI 2, one of the hardest holes on the course — and a quintuple-bogey 9 at the 18th. Fifteen over par across three holes.
 

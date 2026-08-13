@@ -1,4 +1,13 @@
-# The Óbidos Double
+# The Óbidos Double {.report-title}
+
+<p class="dateline">TEG 17 | Lisbon Coast, Portugal | 2024</p>
+
+<section class="callout at-a-glance-box">
+  <p class="at-a-glance-title">RESULTS</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Jon Baker (4th Trophy)</span></p>
+  <p><strong>Green Jacket:</strong> Jon Baker (4th Jacket)</p>
+  <p><strong>Wooden Spoon:</strong> Gregg Williams (2nd Spoon)</p>
+</section>
 
 Jon Baker had led the Green Jacket for thirty-five holes. He surrendered it on the first green at Royal Óbidos, to a double bogey at the par-4 opener, and David Mullin inherited the lead without appearing to have asked for it.
 
@@ -10,9 +19,9 @@ Both trophies were effectively decided on that third afternoon. At the other end
 
 Four rounds on the Lisbon Coast, TEG's sixth visit to the region, and four course records — two of them worth framing, two of them worth burning. The book was rewritten in both directions, frequently on the same day.
 
-## Round 1 — Twenty-Four Visits, One New Worst
+## Round 1 — Twenty-Four Visits, One New Worst {.round1 .round}
 
-The Saturday round at Praia D'El Rey was TEG's fifth at the venue, which is to say the field knew exactly what it was doing there. Alex Baker, the reigning Spoon holder and holder of the two before that, signed for 114. Across twenty-four prior TEG visits to Praia D'El Rey nobody had managed worse; the previous mark was 110. He was also eleven shots worse than his own last visit to the place.
+The Saturday round at Praia D'El Rey was TEG's fifth at the venue, which is to say the field knew exactly what it was doing there. Alex Baker, the reigning Spoon holder and holder of the two before that, signed for 114. Across twenty-four prior TEG visits to Praia D'El Rey nobody had managed worse; the previous mark was 110. He was also eleven shots worse than his own last outing to the place.
 
 The damage was efficiently concentrated. A quadruple-bogey 8 at the par-4 4th, a sextuple-bogey 10 at the 5th — SI 2, one of the hardest holes on the course — and a quintuple-bogey 9 at the 18th. Fifteen over par across three holes.
 
@@ -24,7 +33,11 @@ The Trophy lead was exchanged in the manner of a committee passing a document do
 
 Williams, it should be recorded, arrived here as the form man. TEG 15 Trophy winner, back-to-back Green Jackets, one Wooden Spoon in an entire career. Third after the opening round.
 
-## Round 2 — Mullin's 82, Patterson's 116
+
+<p class="standings"><span class="standings-header">Trophy Standings:</span> JP 39 | JB 38 | DM 33 | GW 33 | AB 32</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +20 | JB +20 | JP +23 | DM +24 | AB +41</p>
+
+## Round 2 — Mullin's 82, Patterson's 116 {.round2 .round}
 
 Cynthia Dye's 2017 links at West Cliffs had hosted TEG precisely once before. On the Sunday it gave up both of its extremes inside a single round.
 
@@ -40,7 +53,11 @@ Alex Baker set a personal best at West Cliffs, built on sixteen points from the 
 
 Baker led the Trophy by two. Mullin drew level with him in the gross at the 18th.
 
-## Round 3 — Lost at the 1st, Won by the 16th
+
+<p class="standings"><span class="standings-header">Trophy Standings:</span> JB 82 | DM 80 | AB 69 | GW 68 | JP 61</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> DM +34 | JB +34 | GW +37 | JP +67 | AB +74</p>
+
+## Round 3 — Lost at the 1st, Won by the 16th {.round3 .round}
 
 Monday brought Seve's last design, on TEG's fourth visit, and the afternoon already described: Baker's double at the 1st, Mullin's single hole in front at the 6th, Baker level at the 7th and gone. The 44 points put him eleven clear on the Trophy and eight clear in the gross, and the 86 put his name on the course.
 
@@ -50,7 +67,11 @@ Alex Baker assembled four separate blow-ups of 8 or more: an 8 at the 4th, SI 1;
 
 Patterson took a quadruple-bogey 9 at the par-5 11th and then, on the same nine, produced thirteen points from the 12th to the 15th — par, par, bogey, par. He signed for 94, a personal best at Royal Óbidos. Two days after the 116, on a different course entirely, the man had rebuilt himself.
 
-## Round 4 — Nine, Nine, and Still Eighteen Clear
+
+<p class="standings"><span class="standings-header">Trophy Standings:</span> JB 126 | DM 115 | AB 103 | JP 102 | GW 94</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> JB +48 | DM +56 | GW +64 | JP +89 | AB +112</p>
+
+## Round 4 — Nine, Nine, and Still Eighteen Clear {.round4 .round}
 
 The Tuesday return to Praia D'El Rey was, in the phrase, a formality, though nobody told the coastal dunes on the back nine.
 
@@ -63,6 +84,10 @@ Williams opened with a quintuple-bogey 9 at the 1st, scored 29, and finished on 
 Patterson closed with an 8 at the 1st, a sextuple-bogey 9 at the par-3 14th — SI 17, one of the easiest holes out there, and his worst score relative to par — a 10 at the 15th, and an 8 at the 18th.
 
 Baker finished on 166 points, a personal best and the ninth best total in TEG history, from a man who had come fourth on the Trophy in each of the previous three TEGs.
+
+
+<p class="standings"><span class="standings-header">Trophy Standings:</span> JB 166 | DM 148 | AB 135 | JP 135 | GW 123</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> JB +67 | DM +80 | GW +89 | JP +124 | AB +150</p>
 
 ## How it was decided
 
@@ -77,3 +102,18 @@ Baker finished on 166 points, a personal best and the ninth best total in TEG hi
 - **Gregg Williams.** Arrived as the reigning Jacket holder and TEG 15 Trophy winner; left with the Spoon. The seven doubles from the Royal Óbidos 12th were less a collapse than an administrative process, executed in order and completed on schedule.
 - **John Patterson.** Led the Trophy after the opening round, then posted the highest gross West Cliffs has ever seen and the worst round of his career at +44. Two days later he set a personal best of 94 at Royal Óbidos. The 9 at the par-3 14th in the final round was a new personal worst relative to par.
 - **Alex Baker.** The worst gross in twenty-four TEG visits to Praia D'El Rey, four blow-ups of 8 or more at Royal Óbidos, twenty-five shots in nine holes in the last round, and a personal best at West Cliffs. He avoided a third consecutive Spoon by finishing above a man who fell further.
+
+## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>Jon Baker's 166 pts is a personal Trophy best</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Personal worsts:</p><ul>
+  <li>John Patterson's worst Gross round to date: +44 (R2)</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>John Patterson runs up a 11 (sextuple bogey) at the 15th (R2) — his career-worst on a par-5</li>
+  <li>John Patterson runs up a 9 (sextuple bogey) at the 14th (R4) — his career-worst on a par-3</li>
+</ul></div>
