@@ -423,6 +423,68 @@ def _lead_tenure_events(teg_df: pd.DataFrame, sw: dict, player_names: dict,
             + _lead_tenure_losses(teg_df, "Rank_GrossVP_TEG", JACKET, player_names, sw, metric))
 
 
+# Threshold for "dramatic" round-to-round swing, in the Trophy metric's own
+# units (Stableford points, or net-vs-par strokes). Chosen against typical
+# TEG round-score spreads (~20-46 Stableford points in a normal field) as
+# roughly "two score categories" of change — comparable in spirit to the
+# cold/hot-stretch thresholds elsewhere in this module. A first cut, not
+# empirically tuned.
+ROUND_SWING_THRESHOLD = 10
+
+
+def _round_swings(round_summary: pd.DataFrame, sw: dict, player_names: dict,
+                  metric: str = "stableford") -> list:
+    """A good round immediately following a bad one, or vice versa, for ANY
+    player — not just the eventual winner or loser. Round-level counterpart
+    to `_sequences`' hole-level `recovery` / `collapse_after_steady`: those
+    catch a swing within a round, this catches one between two consecutive
+    rounds.
+    """
+    cols = _trophy_cols(metric)
+    score_col = cols["round_score"]
+    is_netvp = metric == "net_vs_par"
+    out = []
+    teg_num = int(round_summary["TEGNum"].iloc[0])
+    last_round = int(round_summary["Round"].max())
+
+    for pl, g in round_summary.sort_values("Round").groupby("Pl"):
+        rows = g.to_dict("records")
+        if len(rows) < 2:
+            continue
+        player = player_names.get(pl, pl)
+        w = sw.get(pl, 0.4)
+        for i in range(1, len(rows)):
+            prev, curr = rows[i - 1], rows[i]
+            prev_score, curr_score = prev[score_col], curr[score_col]
+            # Stableford: higher is better. Net-vs-par: lower is better, so
+            # invert the sign to keep "delta > 0" meaning "the round improved"
+            # in both eras.
+            delta = (curr_score - prev_score) if not is_netvp else (prev_score - curr_score)
+            if abs(delta) < ROUND_SWING_THRESHOLD:
+                continue
+            rnd = int(curr["Round"])
+            prev_rnd = int(prev["Round"])
+            late = 1.0 if rnd == last_round else 0.0
+            imp = scoring.cap((1.5 + 3 * w) * (0.5 + 0.03 * abs(delta)) + late)
+            ent = scoring.cap((0.5 + 0.05 * abs(delta)) * (1.1 - 0.3 * w))
+            rar = scoring.cap(0.3 + 0.04 * abs(delta))
+            if delta > 0:
+                direction = "up"
+                headline = f"{player} follows a poor R{prev_rnd} with a strong R{rnd}"
+            else:
+                direction = "down"
+                headline = f"{player} follows a strong R{prev_rnd} with a poor R{rnd}"
+            out.append(NotableEvent(
+                teg_num=teg_num, scope="round", type="round_swing", round=rnd,
+                headline=headline, players=[player], holes=[],
+                importance=imp, rarity=rar, entertainment=ent,
+                context={"direction": direction, "delta": int(delta),
+                        "prev_round": prev_rnd, "prev_score": int(prev_score),
+                        "curr_score": int(curr_score)},
+            ))
+    return out
+
+
 def _safe_int(x):
     try:
         if pd.isna(x):
@@ -1008,6 +1070,7 @@ def build_notable_events(teg_num: int, all_data: Optional[pd.DataFrame] = None,
                          player_par_max=player_par_max, par_max=par_max,
                          metric=metric)
     events += _round_beats(round_summary, sw, metric)
+    events += _round_swings(round_summary, sw, player_names, metric)
 
     # Tag each round-scoped beat with the course it was played on, so the same hole
     # NUMBER in different rounds is never mistaken for "the same hole" (it is almost

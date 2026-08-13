@@ -119,6 +119,13 @@ def score_vehicle_fit(beats: list, arcs: dict, tournament_shape: dict,
             pts = imp * 0.8
             _add(scores, "tragic_arc", pts, f"{b['id']}: {b['headline']}")
             _add(scores, "inversion", pts * 0.7, f"{b['id']}: {b['headline']}")
+            # The player throwing away a long lead is tragic_arc/inversion; the
+            # one who overtook it — coming from behind to dethrone a long-held
+            # leader — is a redemption/hero beat in its own right, not just the
+            # passive beneficiary of someone else's collapse.
+            new_leader = (b.get("context") or {}).get("new_leader")
+            if new_leader in central:
+                _add(scores, "redemption_arc", pts * 0.6, f"{b['id']}: {b['headline']}")
         elif t == "recovery":
             # NOT hot_stretch — a strong run of holes isn't evidence of recovering
             # from anything; `recovery` specifically means birdie-or-better right
@@ -126,8 +133,20 @@ def score_vehicle_fit(beats: list, arcs: dict, tournament_shape: dict,
             early = (b.get("round") or 4) <= 2
             pts = imp * (1.3 if early else 1.0) * 1.2
             _add(scores, "redemption_arc", pts, f"{b['id']} (R{b['round']}): {b['headline']}")
+        elif t == "round_swing":
+            # A good round right after a bad one, or vice versa — the same
+            # tragic/redemption shape as the hole-level beats above, but at
+            # round granularity, per Jon's ask (2026-08-13).
+            direction = (b.get("context") or {}).get("direction")
+            delta = abs((b.get("context") or {}).get("delta") or 0)
+            pts = imp * (1.0 + 0.03 * delta)
+            if direction == "up":
+                _add(scores, "redemption_arc", pts, f"{b['id']}: {b['headline']}")
+            elif direction == "down":
+                _add(scores, "tragic_arc", pts, f"{b['id']}: {b['headline']}")
 
-    # --- redemption_arc (tournament-level): eventual Trophy winner's own R1 position ---
+    # --- redemption_arc (tournament-level): eventual Trophy winner's own R1 position,
+    # and how large a gap they closed to win ("coming back from a long way back") ---
     trophy = arcs.get("trophy", {})
     traj = trophy.get("winner_trajectory") or []
     if len(traj) >= 2:
@@ -135,6 +154,15 @@ def score_vehicle_fit(beats: list, arcs: dict, tournament_shape: dict,
         if early_pos >= 3:
             _add(scores, "redemption_arc", 2.0 + early_pos,
                  f"eventual Trophy winner was ranked {early_pos} after R1")
+        # `gap` is the winner's own deficit to the round leader at that point
+        # (None once they ARE the leader). The largest early deficit they
+        # actually closed is the "long way back" signal.
+        early_gaps = [t["gap"] for t in traj[:-1] if t.get("gap") is not None]
+        if early_gaps:
+            max_gap = max(early_gaps)
+            if max_gap >= 8:
+                _add(scores, "redemption_arc", max_gap * 0.5,
+                     f"eventual Trophy winner was {max_gap} behind the leader at one point")
 
     # --- inevitability (supporting only): wire-to-wire, no lead changes after R1 ---
     for label, key in (("Trophy", "trophy"), ("Green Jacket", "jacket")):
@@ -150,7 +178,13 @@ def score_vehicle_fit(beats: list, arcs: dict, tournament_shape: dict,
     winner = trophy.get("winner")
     for player, hist in player_history.items():
         milestones = hist.get("notable_milestones", [])
-        is_trophy_winner = player == winner
+        # Case-insensitive: arcs['trophy']['winner'] is Proper Case ("Jon
+        # Baker", via events.py's _proper()) but player_history keys are
+        # surname-uppercase ("Jon BAKER", via build_player_cross_teg_history,
+        # which doesn't apply the same normalisation). A plain `==` here
+        # silently never matched anyone — found 2026-08-13 by testing the
+        # new same-rank-streak milestone and seeing it not fire on TEG 17.
+        is_trophy_winner = player.upper() == (winner or "").upper()
         for m in milestones:
             if "defending" in m:
                 if is_trophy_winner:
@@ -164,6 +198,13 @@ def score_vehicle_fit(beats: list, arcs: dict, tournament_shape: dict,
                 _add(scores, "underdog", 3.0, f"{player}: {m}, now wins")
             if "Wooden Spoon" in m and is_trophy_winner:
                 _add(scores, "underdog", 4.0, f"{player}: {m} — now the Trophy winner")
+            # Same-rank streak broken by a win — the "stuck at 4th for three
+            # TEGs, then wins" pattern (see history_context.py, added
+            # 2026-08-13 specifically because this heuristic missed TEG 17's
+            # actual hero_arc pick without it).
+            if m.startswith("Trophy rank") and "each of the last" in m and is_trophy_winner:
+                _add(scores, "comeback", 5.0, f"{player}: {m}, then wins")
+                _add(scores, "hero_arc", 3.5, f"{player}: {m}, then wins")
         if hist.get("trophy_wins", 0) == 0 and is_trophy_winner:
             _add(scores, "origin", 6.0, f"{player}: first-ever Trophy win")
 
