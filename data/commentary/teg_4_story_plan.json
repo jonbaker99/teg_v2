@@ -1,61 +1,65 @@
 {
-  "title": "Mullin's Forest",
+  "title": "The 12th at Bletchingley: Baker Takes a Nine, Mullin Takes the Lot",
   "title_candidates": [
-    "Mullin's Forest",
-    "Coronation in the Ashdown Heather",
-    "The Eagle and the Avalanche"
+    "The 12th at Bletchingley: Baker Takes a Nine, Mullin Takes the Lot",
+    "Twenty-Seven Shots in Eight Holes: How a Title Defence Dissolved in Surrey",
+    "No Bunkers, No Mercy, No Defence: Mullin's Record Week in East Sussex",
+    "Eagle at Eight, Sextuple at Twelve: Baker's Bletchingley"
   ],
-  "theme": "David Mullin's coronation — a wire-to-wire Jacket and a Trophy chase that was effectively settled by Jon Baker's back-nine implosion at Bletchingley",
-  "tone": "house",
+  "theme": "Four brand-new courses flattered everybody — every man in the field posted his best Gross total ever — yet the Trophy was still settled by attrition: Baker held the outright lead on the second hole of the final round and lost it, and eight shots, in the most catastrophic eight-hole stretch of the tournament, while Mullin simply kept making pars and turned a scrap into the best Trophy score in TEG history.",
+  "tone": "house — faithful, tongue-in-cheek, Ronay/Peck; affectionate ribbing of insiders, every number anchored in the data",
   "narrative_structure": "in_medias_res",
-  "opening_hook": "Open on Bletchingley's 8th green on the final afternoon: Jon Baker holes out for an eagle (b04) to wrestle the Trophy lead from Mullin — then flash back to how we got there, and forward to the wreckage that followed.",
+  "opening_hook": "Open on the par-3 12th at Bletchingley in R4 — SI 18, the easiest hole on the card — where Baker signs for a 9 (b10) and Mullin taps in a par to take the lead for the last time (b04); then loop back to Ashdown and explain how a 20-lead-change scrap ended up as a record.",
+  "narrative_vehicles": [
+    "counterfactual",
+    "dual_narrative",
+    "hero_arc"
+  ],
   "foreshadow": [
-    "Mullin's grip on the Gross from the very first round — leader after R1, R2, R3 and R4 — pointed to a coronation long before the Trophy actually fell",
-    "Baker's habit of pairing brilliance with a single catastrophic number (the quintuples at Ashdown's 14th and Lingfield's 17th) hinted at the Bletchingley back nine to come",
-    "Gregg Williams's nine-hole haemorrhage to close Round 1 at Ashdown set the tone for a tournament spent watching the Spoon from the inside",
-    "East Sussex itself — TEG's first visit — a heathland-and-parkland sampler that nobody had played before"
+    "The par-3 12th at Bletchingley — stroke index 18, the easiest hole in the tournament — will decide the Trophy",
+    "Baker arrives as defending champion (TEG 3) and leads after R1 by 3; the defence looks orderly",
+    "Mullin has back-to-back Jacket wins behind him and leads the Gross from R1 H11 onwards — the question is only how big it gets",
+    "Meller is the reigning double-Spoon holder and bottom of the pile after R1 and R3 — the Spoon appears to have a name on it already"
   ],
   "competitions": [
     {
-      "name": "The Trophy (Net vs Par)",
-      "winner_or_loser": "David Mullin",
-      "how": "Mullin trailed Baker by 3 after Ashdown but seized the lead at Lingfield and never gave it back outright until Baker's eagle at Bletchingley's 8th (b04, b07) briefly flipped the standings on the final afternoon. From the 9th tee Baker bled 27 shots in eight holes (b05), including a sextuple at the par-3 12th (b09) and another at the 15th (b10); Mullin reclaimed the lead with a routine par at the 12th (b08) and cruised home to win at +9, by 8 (b01) — the best Trophy score in TEG history.",
+      "name": "Trophy (Net VP)",
+      "winner_or_loser": "David Mullin (winner, +9, by 8 from Jon Baker)",
+      "how": "Ten routine lead changes at Ashdown while the field was bunched, then Mullin took over on R2 H13 and stretched to 16 clear after his +17 gross at Crowborough (b08, b09). Baker refused to go away — outright lead again on R4 H2 with a birdie on the SI-17 3rd hole... sorry, the 2nd (b03) — before Mullin drew level on H3 (b24) and Baker's 27-shot bleed from holes 9–16 (b05) ended it. Mullin's par on the 12th (b04) was the last change of the tournament, and +9 is the best Trophy total in TEG history to date (b01).",
       "key_beat_ids": [
-        "b01",
+        "b03",
+        "b24",
         "b04",
-        "b07",
         "b05",
+        "b09",
         "b08",
-        "b10",
-        "b23"
+        "b01"
       ]
     },
     {
-      "name": "The Green Jacket (Gross)",
-      "winner_or_loser": "David Mullin",
-      "how": "A wire-to-wire procession. Mullin led on Gross from R1 H11 onwards and never relinquished it, the margin widening every round: +3, +7, +16, +19. His +17 at Crowborough (b06) was the second-best Gross round in TEG history to that point and effectively buried the field; he finished at +81, 19 clear of Stuart Neumann (b02). PBs for Neumann (b15), Baker (b14), Meller (b13) and Williams (b12) softened the rout.",
+      "name": "Green Jacket (Gross)",
+      "winner_or_loser": "David Mullin (winner, +81, by 19 from Stuart Neumann)",
+      "how": "Effectively over by lunchtime on day one: Mullin took the Gross lead at Ashdown's 11th and was never headed across the remaining 62 holes, the four lead changes all coming while the card was still half-empty. 23, 22, 17, 19 — the 17 at Crowborough (b08) the second-best Gross round in TEG history — for +81, the best Gross total ever recorded in a TEG, and a third consecutive Jacket (b02).",
       "key_beat_ids": [
         "b02",
-        "b06",
-        "b12",
-        "b13",
-        "b14",
-        "b15"
+        "b08",
+        "b16"
       ]
     },
     {
-      "name": "The Wooden Spoon",
-      "winner_or_loser": "Gregg Williams",
-      "how": "Williams was never bottom until the final round, but he had been bleeding shots all week — 22 dropped over the closing nine at Ashdown (b11), 18 in six holes to start Crowborough (b32). At Bletchingley he overtook Meller for last at the 6th (b25), Meller briefly reclaimed it at the 11th (b26), and Williams sank for good at the 13th (b27) on his way to a personal-worst +15 round (b28, b29) and the Spoon at +40 (b22).",
+      "name": "Wooden Spoon",
+      "winner_or_loser": "Gregg Williams (loser, +40 net VP)",
+      "how": "A slow-motion accident: 3rd, 3rd, 4th, 5th. Williams was already leaking at Ashdown (22 shots gone over the closing nine, b12), lost 18 in six holes at Crowborough (b30), then went to the bottom for good in R4 — quads at the 5th and 6th (b19), triple at the 13th (b21) and 16 shots surrendered over the last six (b23) for his worst round to date in both net and gross (b33, b34). Meller, twice the reigning Spoon holder, occupied last place in R1, R3 and briefly on R4 H11 after a 10 (b20, b27) and still got out alive.",
       "key_beat_ids": [
+        "b12",
+        "b30",
+        "b19",
+        "b21",
+        "b23",
+        "b33",
+        "b34",
         "b22",
-        "b11",
-        "b32",
-        "b25",
-        "b26",
-        "b27",
-        "b28",
-        "b33"
+        "b20"
       ]
     }
   ],
@@ -63,88 +67,112 @@
     {
       "round": 1,
       "headline_candidates": [
-        "A Forest with No Bunkers, and Meller Finds the Only Trouble",
-        "Ashdown Opens its Arms — and Gregg's Back Nine",
-        "Baker Leads, Mullin Lurks, Meller Twelves"
+        "No Bunkers Required: Meller Finds a 12 on a Course With No Sand",
+        "Ashdown Opens Its Doors and Meller Opens a Twelve",
+        "Baker Three Clear, Meller Nine Over on One Hole"
       ],
-      "chosen_headline": "A Forest with No Bunkers, and Meller Finds the Only Trouble",
-      "angle": "Royal Ashdown's bunkerless heathland greets TEG for the first time; Baker leads the Trophy by 3 and Mullin already tops the Gross, but the day belongs to Meller's 12 at the par-3 11th and Williams's slow-motion collapse over the closing nine.",
+      "chosen_headline": "No Bunkers Required: Meller Finds a 12 on a Course With No Sand",
+      "angle": "Royal Ashdown Forest, new to TEG and famously bunkerless, still extracts the worst hole-versus-par score in TEG history from Meller at the SI-3 11th; Baker leads by 3, Mullin already has the Gross by the scruff.",
       "beat_ids": [
-        "b03",
-        "b11"
+        "b06",
+        "b12",
+        "b17",
+        "b38"
       ]
     },
     {
       "round": 2,
       "headline_candidates": [
-        "Mullin Takes the Trophy Lead at Lingfield",
-        "Parkland, Water, and a Lead Changes Hands",
-        "Mullin Edges Ahead; The Field Trades Blowups"
+        "Baker Posts His Worst Round Yet, Mullin Takes the Wheel",
+        "Lingfield's Water Finds Everybody Except the Leader",
+        "Fifteen Shots in Seven Holes: The Defence Springs a Leak"
       ],
-      "chosen_headline": "Mullin Takes the Trophy Lead at Lingfield",
-      "angle": "Lingfield's water and parkland sees Mullin overhaul Baker on the Trophy and extend his Gross lead to 7. Quintuples and quadruples scatter the card across the field.",
-      "beat_ids": []
+      "chosen_headline": "Baker Posts His Worst Round Yet, Mullin Takes the Wheel",
+      "angle": "Baker's +9 at Lingfield — his worst round to date, 15 shots gone between the 5th and 11th and a 9 at the 17th — hands the lead to Mullin on H13, despite Mullin closing with a 9 of his own at the last.",
+      "beat_ids": [
+        "b25",
+        "b37",
+        "b18",
+        "b31",
+        "b40"
+      ]
     },
     {
       "round": 3,
       "headline_candidates": [
-        "Mullin's +17 at Crowborough: A Round for the Record Books",
-        "MacKenzie's Heath, Mullin's Masterclass",
-        "The Lead Becomes a Chasm"
+        "Mullin's 88 on the Beacon: Second-Best Gross Round in TEG History",
+        "MacKenzie's Holes, Mullin's Afternoon, Everyone Else's Sightseeing",
+        "Sixteen Clear and Still Making Pars"
       ],
-      "chosen_headline": "Mullin's +17 at Crowborough: A Round for the Record Books",
-      "angle": "On MacKenzie's heath high above the South Downs, Mullin posts the second-best Gross round in TEG history (b06) and stretches both leads to 16. The tournament is, for all practical purposes, decided.",
+      "chosen_headline": "Mullin's 88 on the Beacon: Second-Best Gross Round in TEG History",
+      "angle": "Crowborough's high heathland gives Mullin a +17 gross — second-best Gross round ever recorded in TEG — and an outright Trophy lead from H10 that balloons to 16; Williams drops 18 shots in the first six holes and Meller sinks to the bottom again.",
       "beat_ids": [
-        "b06"
+        "b08",
+        "b09",
+        "b36",
+        "b30",
+        "b47"
       ]
     },
     {
       "round": 4,
       "headline_candidates": [
-        "The Eagle, the Avalanche, and the Coronation",
-        "Baker's Bletchingley Bonfire",
-        "Eight Holes That Settled It"
+        "Eagle at Eight, Nine at Twelve: Baker's 27-Shot Unravelling",
+        "The Easiest Hole on the Card Settles the Hardest Question",
+        "Mullin Pars the 12th and Walks Off With Everything"
       ],
-      "chosen_headline": "The Eagle, the Avalanche, and the Coronation",
-      "angle": "Baker eagles the 8th (b04) to take the Trophy lead, then loses 27 shots in eight holes (b05) — sextuples at 12 (b09) and 15 (b10) the worst of it. Mullin retakes the lead at the 12th (b08) and completes the double. Behind them, Williams sinks to the Spoon at the 13th (b27) after Meller had briefly held it (b26).",
+      "chosen_headline": "Eagle at Eight, Nine at Twelve: Baker's 27-Shot Unravelling",
+      "angle": "Bletchingley's fast parkland gives Baker the outright lead on H2 and an eagle at the 8th, then takes 27 shots off him in eight holes — sextuples at the SI-18 12th and the 15th — while Mullin's three pars at the SI-3/SI-1/13 stretch and a par at the 12th convert a scrap into records; Williams' closing collapse hands over the Spoon.",
       "beat_ids": [
-        "b04",
-        "b05",
+        "b03",
+        "b24",
         "b07",
-        "b08",
-        "b09",
+        "b05",
         "b10",
+        "b11",
+        "b35",
+        "b04",
+        "b32",
+        "b19",
         "b20",
-        "b21",
-        "b25",
-        "b26",
         "b27",
         "b28",
-        "b29",
-        "b31"
+        "b21",
+        "b23",
+        "b33",
+        "b34",
+        "b48",
+        "b01",
+        "b02",
+        "b22",
+        "b13",
+        "b14",
+        "b15",
+        "b16",
+        "b29"
       ]
     }
   ],
   "players": [
     {
       "player": "David Mullin",
-      "arc": "Trailed by 3 after Ashdown, then led every subsequent round on both metrics and walked off with the Trophy (a TEG-record +9, by 8) and the Green Jacket (by 19) — the centrepiece a Crowborough +17 that ranks second in TEG history."
+      "arc": "Runner-up in TEG 3 and holder of back-to-back Jackets, he leads the Gross from Ashdown's 11th to the final green, posts the second-best Gross round in TEG history at Crowborough, and rides out Baker's R4 charge to claim both the best Trophy total (+9) and the best Gross total (+81) TEG has seen."
     },
     {
       "player": "Jon Baker",
-      "arc": "Led after R1, hung on as runner-up throughout, and briefly seized the Trophy lead with an eagle at Bletchingley's 8th — before haemorrhaging 27 shots in eight holes to hand it straight back. A Gross PB of +113 the consolation."
-    },
-    {
-      "player": "Stuart Neumann",
-      "arc": "Quietly consistent: runner-up for the Jacket at +100, a Gross personal best, never in the Trophy hunt but never near the Spoon either."
-    },
-    {
-      "player": "Henry Meller",
-      "arc": "Opened with a 12 at Ashdown's 11th, spent stretches at the bottom of the Spoon race, briefly held last on R4 H11 — but a Gross PB of +107 and Williams's late collapse spared him."
+      "arc": "The defending champion leads after R1, is level at Bletchingley's 3rd, eagles the 8th — and then loses 27 shots in eight holes, including sextuple bogeys at the 12th and 15th, to finish 8 back with a personal-best Gross total (+113) that will be no consolation whatsoever."
     },
     {
       "player": "Gregg Williams",
-      "arc": "Bled shots in great gushing stretches all week — 22 at Ashdown, 18 at Crowborough, 16 to close at Bletchingley — and finally inherited the Spoon at +40, though somehow also a Gross personal best of +152."
+      "arc": "Third, third, fourth, fifth: a steady erosion that ends with his worst round to date (+15, +43 gross) and the Wooden Spoon, achieved in the same tournament as his best-ever Gross total (+152)."
+    },
+    {
+      "player": "Henry Meller",
+      "arc": "Reigning double-Spoon holder who produces the worst hole in TEG history (a 12 at Ashdown's 11th), sits bottom after R1 and R3, takes two 10s in the final round — and still escapes the Spoon while recording his best Gross total (+107)."
+    },
+    {
+      "player": "Stuart Neumann",
+      "arc": "Jacket runner-up 19 adrift with a personal-best +100 Gross, and a brief resident of last place in R2 and at Crowborough's 2nd before quietly steadying."
     }
   ],
   "must_include_beat_ids": [
@@ -154,9 +182,9 @@
     "b04",
     "b05",
     "b06",
+    "b07",
     "b08",
-    "b10",
-    "b12",
+    "b11",
     "b13",
     "b14",
     "b15",
@@ -164,33 +192,62 @@
     "b20",
     "b21",
     "b22",
-    "b26"
+    "b27",
+    "b28",
+    "b29"
   ],
   "cuts": [
-    "b17",
-    "b18",
-    "b19",
-    "b30",
-    "b34",
-    "b35",
-    "b36",
-    "b37",
-    "b38",
     "b39",
-    "b40",
+    "b26",
     "b41",
     "b42",
     "b43",
     "b44",
     "b45",
     "b46",
-    "b47",
-    "b48",
     "b49",
-    "b50",
-    "b24",
-    "b07 (mention only)",
-    "early-round lead changes within R1 and R2 (routine bunching)"
+    "b50"
   ],
-  "venue_notes": "TEG's first visit to East Sussex (and Surrey on the off-days) — a brand-new four-course menu. Frame Ashdown by its bunkerless heath and elevated views; Lingfield by its mature parkland and water; Crowborough by MacKenzie and the South Downs panorama (the natural stage for Mullin's record round); Bletchingley by its fast modern parkland (the stage for Baker's unravelling). Every course was a TEG debut — note this once up front and let the geography colour each round."
+  "venue_notes": "TEG's first visit to East Sussex (and the Surrey borders) — and all four courses new to everyone, so treat the venues as characters rather than as history: Royal Ashdown Forest's bunkerless heathland high above sea level in R1 (where Meller's 12 needed no sand at all), Harvey Jarrett's mature Lingfield parkland with its grand trees and water in R2, Crowborough Beacon's MacKenzie holes and South Downs panoramas in R3 (backdrop to Mullin's 88), and Paul Wright's modern, fast-draining Bletchingley in R4, where undulating parkland and a short 12th decided all three competitions.",
+  "competition_storyline_bullets": {},
+  "player_storyline_bullets": {},
+  "course_history_notes": [
+    "Every round of TEG 4 was a first visit for all five players — no course history existed anywhere in the field, so nobody had an excuse or a benchmark.",
+    "Unfamiliar ground flattered the whole field: personal-best Gross totals for Williams (+152, b13), Meller (+107, b14), Baker (+113, b15) and Neumann (+100, b16), and an all-time TEG-best +81 for Mullin (b02).",
+    "Mullin's four cards — 91 Ashdown, 94 Lingfield, 88 Crowborough, 91 Bletchingley — set the opening course marks at all four venues."
+  ],
+  "decisive_moments": [
+    "Trophy: R4 H12 at Bletchingley — Baker's 9 on the par-3 SI-18 12th against Mullin's routine par (b10, b04); the outright lead changed hands for the last time and the 8-shot margin was built from there.",
+    "Green Jacket: R1 H11 at Ashdown — Mullin took the Gross lead and was never headed over the remaining 62 holes, the cushion growing 3 → 7 → 16 → 19 (b02).",
+    "Wooden Spoon: R4 H13 at Bletchingley — Williams's triple bogey dropped him to the bottom for the final time (b21), the start of a 16-shot slide over the closing six holes (b23) that let Meller off the hook."
+  ],
+  "prominent_vehicle": "counterfactual",
+  "prominent_palette": "records",
+  "payoffs": [
+    {
+      "seed": "The SI-18 par-3 12th at Bletchingley will decide the Trophy",
+      "resolves_in": "Round 4 / opening scene",
+      "payoff": "Baker takes 9 there (b10) inside his 27-shot bleed (b05) while Mullin pars it to seize the lead for the final time (b04) — the easiest hole on the card settling the whole thing."
+    },
+    {
+      "seed": "Baker as defending champion, 3 clear after R1",
+      "resolves_in": "Round 4 and 'How the three were decided'",
+      "payoff": "He is still level at H3 (b24) and eagles the 8th (b07), then holes 9–16 cost him 27 shots (b05, b10, b11) and the defence ends 8 adrift (b01)."
+    },
+    {
+      "seed": "Mullin's back-to-back Jackets and R1 Gross takeover",
+      "resolves_in": "Round 3 and the Green Jacket section",
+      "payoff": "The +17 at Crowborough (b08) turns a 7-shot cushion into 16, and the wire-to-wire Jacket closes at +81 by 19 — a third straight Jacket and the best Gross total in TEG history (b02)."
+    },
+    {
+      "seed": "Meller, reigning double-Spoon holder, bottom after R1 and R3",
+      "resolves_in": "Wooden Spoon section / Player-by-player summary",
+      "payoff": "Two 10s in R4 (b27, b28) briefly put him last again (b20), but Williams's closing collapse (b21, b23, b33) takes the Spoon instead (b22) — and Meller signs for a personal-best Gross (b14)."
+    }
+  ],
+  "vehicle_fit_response": {
+    "top_scored_vehicle": "dual_narrative",
+    "taken_up": true,
+    "note": "Taken up as the supporting frame — Mullin and Baker traded the lead 20 times across four courses — but the hard close-finish rule puts counterfactual out front, since the 8-shot margin exists only because of Baker's eight holes at Bletchingley."
+  }
 }
