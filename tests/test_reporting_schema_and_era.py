@@ -510,25 +510,46 @@ def test_restyle_voice_blames_only_faults_it_introduced():
 
     This is the guard against the failure that got the critique-revise variant
     rejected — an extra prose pass fabricating a detail.
+
+    The inherited fault is INJECTED into a temporary source rather than borrowed
+    from `teg_17_report_final.md`. That file used to carry D3 faults, so the
+    test passed by accident; regenerating TEG 17 cleanly on 2026-08-13 made it
+    fail, because a clean source leaves nothing to inherit. What is under test
+    is the blame split, not the state of a published artefact.
     """
     from unittest.mock import patch
     from teg_analysis.reporting import authoring
     import os
 
-    src = open("data/commentary/teg_17_report_final.md").read()
+    base = open("data/commentary/teg_17_report_final.md").read()
+    # 'all week' trips the not_a_week check — a TEG is four consecutive days.
+    src = base + "\n\nThey played well all week.\n"
+    src_path = "data/commentary/teg_17_report_unittest_src.md"
+    out_path = "data/commentary/teg_17_report_unittest_tmp.md"
+    with open(src_path, "w") as f:
+        f.write(src)
 
-    with patch.object(authoring.llm, "generate_text",
-                      return_value=(src + "\n\nIt was settled on countback.\n", {})):
-        out = authoring.restyle_voice(17, "VOICE: x", "unittest_tmp", style=False)
-    assert len(out["new_findings"]) == 1
-    assert "countback" in out["new_findings"][0]
-    assert len(out["findings"]) > len(out["new_findings"])   # inherited, not blamed
+    try:
+        from teg_analysis.reporting.verify import verify_report
+        assert verify_report(17, text=src), \
+            "injected fault must be detectable, else the test proves nothing"
 
-    with patch.object(authoring.llm, "generate_text", return_value=(src, {})):
-        clean = authoring.restyle_voice(17, "VOICE: x", "unittest_tmp", style=False)
-    assert clean["new_findings"] == []
+        with patch.object(authoring.llm, "generate_text",
+                          return_value=(src + "\n\nIt was settled on countback.\n", {})):
+            out = authoring.restyle_voice(17, "VOICE: x", "unittest_tmp",
+                                          source_label="unittest_src", style=False)
+        assert len(out["new_findings"]) == 1
+        assert "countback" in out["new_findings"][0]
+        assert len(out["findings"]) > len(out["new_findings"])   # inherited, not blamed
 
-    os.remove("data/commentary/teg_17_report_unittest_tmp.md")
+        with patch.object(authoring.llm, "generate_text", return_value=(src, {})):
+            clean = authoring.restyle_voice(17, "VOICE: x", "unittest_tmp",
+                                            source_label="unittest_src", style=False)
+        assert clean["new_findings"] == []
+    finally:
+        for p in (src_path, out_path):
+            if os.path.exists(p):
+                os.remove(p)
 
 
 # ---------------------------------------------------------------------------

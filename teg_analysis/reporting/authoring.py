@@ -12,6 +12,7 @@ is upstream (scoring/plan), not the writing.
 from __future__ import annotations
 
 import json
+from collections import Counter
 from typing import Optional, Tuple, Union
 
 from teg_analysis.reporting.story_plan import assemble_bundle, StoryPlan
@@ -842,13 +843,30 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
     findings: list = []
     new_findings: list = []
     if verify:
-        before = {str(f) for f in verify_report(teg_num, text=source_text)}
         found = verify_report(teg_num, text=text)
         findings = [str(f) for f in found]
         # Faults the source already had are not this pass's doing. What matters
         # is whether rewriting introduced one — that is the exact failure that
         # got the critique-revise variant rejected.
-        new_findings = [s for s in findings if s not in before]
+        #
+        # Match on (rule, detail), NOT str(f): str() embeds the excerpt, and a
+        # restyle rewrites the prose around a fault by definition, so the
+        # excerpt shifts and an inherited fault was being blamed on the pass.
+        # `Finding` documents rule as stable and detail as human-facing; both
+        # survive a rewrite of the surrounding sentence. Counter, not set, so
+        # that a fault the source had once and the output has twice still
+        # reports one new instance.
+        def _key(f):
+            return (f.rule, f.detail)
+
+        before = Counter(_key(f) for f in verify_report(teg_num, text=source_text))
+        new_findings = []
+        for f in found:
+            k = _key(f)
+            if before[k]:
+                before[k] -= 1          # accounted for by the source
+            else:
+                new_findings.append(str(f))
         if new_findings:
             print(f"[restyle_voice] WARNING TEG {teg_num} ({label}): "
                   f"{len(new_findings)} NEW fault(s) introduced by this pass:")

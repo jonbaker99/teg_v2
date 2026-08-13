@@ -1,64 +1,61 @@
 {
-  "title": "The Óbidos Double",
+  "title": "Eighty-Six on Seve's Last Design: Jon Baker Ends the Run of Fourths",
   "title_candidates": [
-    "The Óbidos Double",
-    "Jon Baker Takes Everything",
-    "Records in Both Directions",
-    "The Week the Course Book Was Rewritten",
-    "Eighteen Points Clear, Thirteen Shots Clear"
+    "Eighty-Six on Seve's Last Design: Jon Baker Ends the Run of Fourths",
+    "Fourth, Fourth, Fourth — and Now Both: Baker Takes Trophy and Jacket by Daylight",
+    "Records at Both Ends: Óbidos Rewrites the Book as Williams Collects the Spoon",
+    "One Hole in Front: Mullin's Green Jacket Reign, Abridged"
   ],
-  "theme": "On four days of the Lisbon Coast the record book was rewritten in both directions at once — Jon Baker rebuilt himself into a double winner (Trophy and Jacket, by 18 and 13) with a new Royal Óbidos course record, while at the other end of the same fairways Alex Baker and John Patterson posted course-worsts and Gregg Williams quietly sank from third to the Spoon. The Lisbon Coast gave and it took, often on the same hole.",
-  "tone": "house — faithful, tongue-in-cheek, Ronay/Peck register: witty, characterful, anchored in the numbers, gently ribbing insiders who were there",
-  "narrative_structure": "three_act",
-  "opening_hook": "Open on R3 at Royal Óbidos: Jon Baker double-bogeys the 1st and hands the Jacket lead away after 35 holes in front (b01), Mullin nudges ahead by the 6th (b07) — and then Baker answers with 20 points in six holes (b05) and an 86 that is the lowest gross the course has ever seen (cr02). That afternoon is where both trophies were settled; Act One backs up to explain how the field got there.",
+  "theme": "A tournament of extremes at both ends of the record book — four course records set in three days, two of them course-worsts — and in the middle of the carnage Jon Baker, fourth in the Trophy three TEGs running, finally converted metronomic competence into the lot, while the reigning Jacket holder Gregg Williams slid the other way into the Spoon.",
+  "tone": "house — faithful, tongue-in-cheek, Barney Ronay/Tom Peck register: dry, affectionate, precise with numbers, gently merciless about double figures",
+  "narrative_structure": "in_medias_res",
+  "opening_hook": "Open on R3 at Royal Óbidos — Jon Baker signing for 86, a new course record on Seve's final design, on the same afternoon Gregg Williams was double-bogeying his way to the bottom of the field: one round in which all three competitions effectively resolved, then loop back to how the field got there.",
   "narrative_vehicles": [
-    "hero_arc",
-    "dual_narrative",
-    "ensemble"
+    "comeback",
+    "tragic_arc",
+    "motif"
   ],
   "foreshadow": [
-    "Jon Baker arrives with three prior Trophies and three prior Jackets but finishes of 4th, 4th and 4th on the Trophy in TEGs 14–16 — the win has been overdue",
-    "Gregg Williams arrives as the form man: TEG 15 Trophy winner, back-to-back Jacket wins, and only one Spoon in his life",
-    "Alex Baker is the reigning Spoon holder with back-to-back Spoons — and gets off to precisely the start you would expect at Praia D'El Rey's 5th",
-    "Four rounds, four course records — two brilliant, two catastrophic; the Lisbon Coast keeps rewriting its own extremes"
+    "Jon Baker arrived having finished 4th in the Trophy in each of the last three TEGs — a man apparently welded to the middle of the leaderboard, and without a Trophy since TEG 13.",
+    "Gregg Williams arrived as the reigning double Green Jacket holder and TEG 15 Trophy champion, with just one Wooden Spoon in his entire history — and led the Jacket after R1.",
+    "Alex Baker's 114 at Praia D'El Rey in R1 — a new course-worst across 24 prior visits — set the tone for a tournament that would attack the record book from both ends.",
+    "David Mullin, holder of nine Green Jackets, opened West Cliffs with an 82 and looked, briefly, like the only man capable of stopping Baker in the gross."
   ],
   "competitions": [
     {
       "name": "Trophy (Stableford)",
-      "winner_or_loser": "Jon Baker",
-      "how": "Baker opened 38 and sat a point behind Patterson after R1; he took the lead on the 1st hole of R2 at West Cliffs (b46) and never gave it back, back-to-back 44s at West Cliffs and Royal Óbidos turning a 2-point lead into 11, and a solid 40 in R4 stretching it to 18. 166 points, 9th best in TEG history and his own personal best.",
+      "winner_or_loser": "Jon Baker (winner, 166 pts, by 18)",
+      "how": "Patterson led by 1 after a scrappy R1 at Praia; Baker took the lead on the very first hole of R2 at West Cliffs (b46) and never gave it back. Back-to-back 44-point rounds in R2 and R3 — the second built on the 20-point burst through holes 11–16 at Royal Óbidos (b05) — turned a 2-point lead into 11, and R4's 40 turned 11 into 18. Contested for one round, decided by the 36th hole, formalised by the 54th.",
       "key_beat_ids": [
-        "b02",
         "b46",
-        "b14",
-        "b47",
         "b05",
-        "b24",
+        "cr02",
+        "b02",
         "b48"
       ]
     },
     {
       "name": "Green Jacket (Gross)",
-      "winner_or_loser": "Jon Baker",
-      "how": "Baker led the gross from R1 H2 but lost it after 35 holes in front when he double-bogeyed the R3 1st (b01); Mullin was outright ahead by the 6th (b07). Baker retook it at the 7th and never looked back, signing for an 86 that broke the Royal Óbidos course record (cr02) and closing at +67, 13 clear of Mullin — despite two 9s in R4 (b21, b22).",
+      "winner_or_loser": "Jon Baker (winner, +67, by 13)",
+      "how": "Baker held the gross lead from R1 H2 for 35 straight holes before a double bogey at Royal Óbidos' 1st handed it to Mullin (b01); Mullin's outright tenure lasted from H6 to H7 (b07) before Baker took it straight back and then set the Royal Óbidos course record of 86 (cr02) to lead by 8. Mullin's own West Cliffs record 82 (cr03) had been the last real threat; by R4 the margin was 13.",
       "key_beat_ids": [
-        "b03",
         "b01",
         "b07",
         "cr02",
-        "b21",
-        "b22"
+        "cr03",
+        "b03"
       ]
     },
     {
       "name": "Wooden Spoon",
-      "winner_or_loser": "Gregg Williams",
-      "how": "Williams was third after R1 with a 33 and a 93 that was seven better than his last Praia D'El Rey visit; he slipped to fourth in R2, then a seven-hole procession of doubles from the 12th at Royal Óbidos (b49) dropped him to the bottom at H14 (b25) and a round of 26. A 29 in R4, opened with a 9 at the 1st (b20), sealed it on 123 points — the first Spoon for the man who won TEG 15.",
+      "winner_or_loser": "Gregg Williams (loser, 123 pts)",
+      "how": "Williams was 3rd after R1 and still 4th after R2; the Spoon was decided at Royal Óbidos, where he double-bogeyed the 14th to drop to the bottom for the first time (b25) and then double-bogeyed every remaining hole — seven in a row, 14 shots gone (b49) — for a round of 26. R4's quintuple bogey at the 1st (b20) confirmed a man with no interest in escaping. Alex Baker, the reigning and back-to-back Spoon holder, was left off the hook despite his own R1 course-worst 114.",
       "key_beat_ids": [
-        "b15",
         "b25",
         "b49",
-        "b20"
+        "b20",
+        "b15",
+        "cr01"
       ]
     }
   ],
@@ -66,159 +63,133 @@
     {
       "round": 1,
       "headline_candidates": [
-        "Praia D'El Rey Sets a New Low Bar",
-        "Patterson Leads, Alex Baker Makes History the Wrong Way",
-        "Twenty-Four Visits, One New Worst"
+        "Praia D'El Rey Sees Something It Has Never Seen in 24 Visits",
+        "A 10, a 9, and a One-Shot Lead: The Field Feels Its Way In",
+        "Patterson Leads, Which Will Not Last"
       ],
-      "chosen_headline": "Twenty-Four Visits, One New Worst",
-      "angle": "Patterson edges the opening day by a point and Mullin's back nine sings, but the round's record belongs to Alex Baker, whose 114 is the worst gross ever posted at Praia D'El Rey.",
+      "chosen_headline": "Praia D'El Rey Sees Something It Has Never Seen in 24 Visits",
+      "angle": "Opening day at the 5th TEG round at Praia D'El Rey produces a record — the wrong sort: Alex Baker's 114 is the worst gross round ever recorded there, while at the front Patterson's one-point lead is the last time anyone but Jon Baker tops the Trophy.",
       "beat_ids": [
         "cr01",
         "b08",
         "b18",
-        "b27",
         "b13",
-        "b44",
-        "b28",
         "b29"
       ]
     },
     {
       "round": 2,
       "headline_candidates": [
-        "West Cliffs, Both Ends of the Book",
-        "Mullin's 82, Patterson's 116",
-        "Thirty-Four Shots Apart on the Same Links"
+        "Eighty-Two and One-Sixteen: West Cliffs Breaks Both Ends in a Single Afternoon",
+        "Mullin Rewrites the Links; Patterson Rewrites Himself",
+        "Thirty-Four Shots Between Them at the 13th and 15th"
       ],
-      "chosen_headline": "Mullin's 82, Patterson's 116",
-      "angle": "On one links, in one round, the West Cliffs course record falls and the course-worst is set — while Jon Baker takes the Trophy lead on the very first hole and never surrenders it.",
+      "chosen_headline": "Eighty-Two and One-Sixteen: West Cliffs Breaks Both Ends in a Single Afternoon",
+      "angle": "On only the 2nd TEG round ever played at West Cliffs, Mullin's 82 sets the course record (cr03) and Patterson's 116 sets the course-worst (cr04) — while Jon Baker quietly takes the Trophy lead on the 1st hole and posts 44 points and a 15-shot personal course improvement.",
       "beat_ids": [
         "cr03",
         "cr04",
         "b46",
-        "b14",
-        "b47",
-        "b06",
         "b09",
         "b19",
+        "b06",
         "b23",
-        "b17",
-        "b50",
-        "b16",
-        "b31",
-        "b32",
-        "b33"
+        "b14"
       ]
     },
     {
       "round": 3,
       "headline_candidates": [
-        "Seve's Course, Baker's Record",
-        "Lost at the 1st, Won by the 16th",
-        "Eighty-Six and the Jacket Back"
+        "One Hole: Mullin's Green Jacket Reign in Full",
+        "Eighty-Six at Royal Óbidos — Baker Takes Seve's Course Apart",
+        "Seven Doubles to Finish: Williams Books the Spoon"
       ],
-      "chosen_headline": "Lost at the 1st, Won by the 16th",
-      "angle": "Baker loses a 35-hole Jacket lead at the R3 1st and Mullin goes outright ahead by the 6th — then Baker piles up 20 points in six holes and signs the lowest gross Royal Óbidos has ever given up.",
+      "chosen_headline": "One Hole: Mullin's Green Jacket Reign in Full",
+      "angle": "The hinge round — Baker loses a 35-hole gross lead at the 1st (b01), Mullin holds it from the 6th to the 7th (b07), and Baker answers with 20 points in six holes (b05) and a course-record 86 (cr02); at the back, Williams drops to last at the 14th (b25) and doubles his way home (b49).",
       "beat_ids": [
         "b01",
         "b07",
-        "cr02",
         "b05",
+        "cr02",
         "b25",
         "b49",
         "b10",
-        "b43",
-        "b34",
-        "b35",
-        "b36",
-        "b37",
-        "b38",
-        "b26"
+        "b26",
+        "b43"
       ]
     },
     {
       "round": 4,
       "headline_candidates": [
-        "Formalities in the Dunes",
-        "Baker Wins Both While Losing Shots",
-        "Nine, Nine, and Still Eighteen Clear"
+        "Baker Wins the Lot Despite Two Nines",
+        "Twenty-Five Shots in Nine Holes: Alex Baker's Long Walk Home",
+        "A Formality with Fireworks at Praia D'El Rey"
       ],
-      "chosen_headline": "Nine, Nine, and Still Eighteen Clear",
-      "angle": "Baker can afford two 9s and still win by 18 and 13; behind him Alex Baker bleeds 25 shots in nine holes and Patterson's 9 and 10 close out a chastening finish.",
+      "chosen_headline": "Baker Wins the Lot Despite Two Nines",
+      "angle": "The 6th TEG round at Praia D'El Rey is a coronation conducted in poor visibility: Baker makes 9s at the 10th and the SI 1 17th and still wins the Trophy by 18 and the Jacket by 13, while Alex Baker bleeds 25 shots in nine holes and Patterson signs off with a 9 and a 10.",
       "beat_ids": [
         "b02",
         "b03",
-        "b48",
-        "b21",
-        "b22",
-        "b45",
-        "b24",
+        "b15",
         "b04",
         "b12",
         "b11",
+        "b21",
+        "b22",
         "b20",
-        "b39",
-        "b40",
-        "b41",
-        "b42",
-        "b15"
+        "b45",
+        "b24",
+        "b48"
       ]
     }
   ],
   "players": [
     {
       "player": "Jon Baker",
-      "arc": "Three straight 4th places on the Trophy answered in emphatic style: a personal-best 166, the Jacket at +67, a new Royal Óbidos course record and a 15-shot improvement on his last West Cliffs visit — the double, and no arguments."
+      "arc": "Fourth in the Trophy in each of the last three TEGs and without a win since TEG 13, he seized the lead on the first hole of R2 and pulled clear with back-to-back 44s, a new Royal Óbidos course record of 86 and personal course bests at both Óbidos and West Cliffs, taking Trophy and Jacket by 18 and 13."
     },
     {
       "player": "David Mullin",
-      "arc": "Nine prior Jackets and the only man to properly test Baker: a 12-shot personal best and a new course record at West Cliffs, outright gross leader for one hole at Royal Óbidos, and runner-up in both competitions."
+      "arc": "Nine-time Jacket holder who produced the single best round of the tournament — an 82 at West Cliffs, 12 shots better than his last visit and a new course record — and held the gross lead for precisely one hole in R3 before finishing runner-up in both Trophy and Jacket."
     },
     {
       "player": "Gregg Williams",
-      "arc": "The reigning Jacket holder and TEG 15 Trophy winner slid from third after R1 to the Spoon, undone by a seven-hole run of doubles at Royal Óbidos and a 9 to open R4."
+      "arc": "Arrived as reigning back-to-back Green Jacket holder and TEG 15 Trophy champion, led the Jacket after R1, then produced a 26-point R3 that finished with seven consecutive double bogeys and collected only the second Wooden Spoon of his career."
     },
     {
       "player": "John Patterson",
-      "arc": "Led the Trophy after R1 and set a personal best at Royal Óbidos, but his week is remembered for West Cliffs: a worst-ever +44, 27 shots gone in eight holes, and the highest gross the course has ever seen."
+      "arc": "Led the Trophy after R1 and was last in it by the end of R2, via a West Cliffs 116 (course-worst, and his worst gross round to date) built on an 11 and a 10 — then answered with a personal-best 94 at Royal Óbidos before signing off with a 9 and a 10 at Praia."
     },
     {
       "player": "Alex Baker",
-      "arc": "Back-to-back Spoon holder who avoided a third only because Williams collapsed faster — new Praia D'El Rey course-worst in R1, four separate blow-ups of 8 or more at Royal Óbidos, 25 shots gone in nine holes in R4, and one genuine bright spot: a personal best at West Cliffs."
+      "arc": "The reigning and back-to-back Spoon holder opened with a 114 that no one had ever matched for badness at Praia D'El Rey, set a personal West Cliffs best two days later, and was spared a third straight Spoon only because Williams collapsed faster."
     }
   ],
   "must_include_beat_ids": [
-    "cr01",
-    "cr02",
-    "cr03",
-    "cr04",
     "b01",
     "b02",
     "b03",
-    "b15",
+    "b05",
     "b08",
     "b09",
     "b10",
     "b12",
+    "b15",
     "b19",
-    "b05",
-    "b04",
-    "b06"
+    "b25",
+    "cr01",
+    "cr02",
+    "cr03",
+    "cr04"
   ],
   "cuts": [
-    "b07 is retained but the remaining routine lead-change beats are cut: b46 kept for the Trophy takeover, b48 used only as a summary",
-    "b11",
     "b13",
     "b14",
     "b16",
     "b17",
     "b18",
-    "b20",
-    "b21",
-    "b22",
     "b23",
     "b24",
-    "b25",
     "b26",
     "b27",
     "b28",
@@ -240,46 +211,50 @@
     "b44",
     "b45",
     "b47",
-    "b49",
+    "b48",
     "b50"
   ],
-  "venue_notes": "TEG's 6th trip to the Lisbon Coast and, at Praia D'El Rey, the 5th and 6th TEG rounds at the venue — familiar enough that a new course-worst there (cr01, across 24 prior visits) genuinely stings. West Cliffs is only the 2nd TEG round at Cynthia Dye's 2017 links, and it produced both extremes in a single day (cr03, cr04). Royal Óbidos — Seve's last design, 4th TEG round there — is the pivot: water, drama, and a new course record. Use the coastal-dunes back nine at Praia D'El Rey to frame R4's carnage (Alex Baker's 5th-to-13th collapse, Patterson's 14th and 15th).",
+  "venue_notes": "TEG's 6th visit to the Lisbon Coast, and the courses are the connective tissue: Praia D'El Rey bookends the tournament (the 5th TEG round there in R1, the 6th in R4), Cabell Robinson's parkland-into-dunes layout obliging with a course-worst on day one and a rash of 9s on day four. West Cliffs (Cynthia Dye, only the 2nd TEG round there, 6 prior visits in the books) is thin enough on history that both ends of its record fell on the same afternoon. Royal Óbidos — Seve's final design, 4th TEG round — is where the tournament was decided in all three competitions, which is the right kind of drama for the man who invented it.",
   "competition_storyline_bullets": {},
   "player_storyline_bullets": {},
   "course_history_notes": [
-    "Alex Baker's 114 in R1 is the worst gross in 24 prior TEG visits to Praia D'El Rey — and he was 11 shots worse than his last visit there (cr01).",
-    "Jon Baker's R3 86 broke the Royal Óbidos record set across 18 prior visits, was his own new PB there (previous best 89, TEG 9) and 8 shots better than his last visit (cr02).",
-    "David Mullin's R2 82 lowered the West Cliffs record from 88 and was 12 shots better than his own last visit; Jon Baker improved on his 2015 West Cliffs mark by 15 (cr03).",
-    "John Patterson's West Cliffs 116 was 19 shots worse than his TEG 15 visit and the highest gross the course has recorded (cr04) — yet he set a personal best of 94 at Royal Óbidos two days later."
+    "Jon Baker set new personal bests at two of the three courses: 86 at West Cliffs in R2 (15 shots better than TEG 15) and 86 at Royal Óbidos in R3 (3 better than his TEG 9 mark, and a course record across 18 prior visits).",
+    "David Mullin's 82 at West Cliffs was 12 shots better than his only previous visit there and beat the course's prior best of 88.",
+    "John Patterson's tournament in miniature: 19 shots worse than his last West Cliffs visit (116, a course-worst), then a personal best 94 at Royal Óbidos, 7 better than his previous visit.",
+    "Alex Baker improved 5 shots on his West Cliffs best (105) but was 11 shots worse than his last visit to Praia D'El Rey and 8 worse at Royal Óbidos."
   ],
   "decisive_moments": [
-    "Trophy: R2 H1 at West Cliffs — Jon Baker takes the outright lead from Patterson (b46) and holds it for the remaining 71 holes, back-to-back 44s making the 18-point final margin inevitable.",
-    "Green Jacket: R3 H7 at Royal Óbidos — Baker retakes the gross lead within a hole of losing it (b01, b07) and turns it into the course record 86 (cr02), an 8-shot cushion he extends to 13.",
-    "Wooden Spoon: R3 H14 at Royal Óbidos — Gregg Williams's double bogey mid-way through a seven-hole run of doubles drops him to last (b25, b49) on a round of 26, and he never climbs out.",
-    "Green Jacket: R3 H7 at Royal Óbidos"
+    "Trophy — R2 H1 at West Cliffs: Jon Baker takes the outright lead (b46) and holds it for the remaining 71 holes, the 44-point round turning a 1-point deficit into a 2-point cushion that became 11 by R3.",
+    "Green Jacket — R3 H7 at Royal Óbidos: Baker reclaims the gross lead one hole after Mullin took it (b07), then closes with the 86 course record (cr02) to stretch the margin to 8 overnight and 13 at the finish.",
+    "Wooden Spoon — R3 H14 at Royal Óbidos: Williams' double bogey drops him to the bottom for the first time (b25) and begins a run of seven straight doubles to the house (b49) that no one else was ever going to match."
   ],
-  "prominent_vehicle": "hero_arc",
-  "prominent_palette": "course_history",
+  "prominent_vehicle": "comeback",
+  "prominent_palette": "records",
   "payoffs": [
     {
-      "seed": "Jon Baker's three straight 4th-place Trophy finishes",
-      "resolves_in": "Round 4 / How the three were decided",
-      "payoff": "166 points, a personal best and 9th best in TEG history, plus the Jacket at +67 — a double from a man who had finished 4th on the Trophy three TEGs running (b02, b03)."
+      "seed": "Jon Baker's three consecutive 4ths and no Trophy since TEG 13",
+      "resolves_in": "Round 2 and the Trophy section of 'How the three were decided'",
+      "payoff": "He takes the lead on the first hole of R2 and turns it into 166 points and an 18-point win — plus the Jacket — ending the run of fourths in the most emphatic way available."
     },
     {
-      "seed": "Gregg Williams as the form man (TEG 15 Trophy, back-to-back Jackets, one career Spoon)",
+      "seed": "Gregg Williams arrives as reigning double Jacket holder and TEG 15 Trophy winner",
       "resolves_in": "Round 3 and the Wooden Spoon section",
-      "payoff": "Seven consecutive doubles from the Royal Óbidos 12th (b49) drops him to last at H14 (b25); a 9 at the R4 1st (b20) confirms 123 points and his second career Spoon (b15)."
+      "payoff": "He drops to the bottom at Royal Óbidos' 14th and doubles the last seven holes for a 26-point round, collecting only the second Spoon of his career on 123 points."
     },
     {
-      "seed": "Alex Baker, reigning and back-to-back Spoon holder",
-      "resolves_in": "Round 1, then Round 4",
-      "payoff": "A 10 at the Praia D'El Rey 5th (SI 2) and a 9 at the 18th add up to 114, the course's worst-ever gross (cr01, b08, b18) — but he escapes a third straight Spoon because Williams fell further, despite bleeding 25 shots in nine holes in R4 (b04)."
+      "seed": "Alex Baker's R1 114 — a Praia D'El Rey course-worst across 24 prior visits",
+      "resolves_in": "Round 2 (and echoed in Round 4)",
+      "payoff": "West Cliffs answers with both ends of its own record in one afternoon — Mullin's 82 and Patterson's 116 — confirming the record-book-at-both-ends motif, before Alex bleeds 25 shots in nine holes in R4 and still escapes the Spoon."
     },
     {
-      "seed": "Four rounds, records in both directions",
-      "resolves_in": "Round 2 and Round 3",
-      "payoff": "West Cliffs surrenders its record and its worst on the same day (cr03, cr04), Royal Óbidos its record to Jon Baker (cr02) — four course records in four rounds, two glorious, two grim."
+      "seed": "Mullin's 82 and nine prior Jackets mark him as the last obstacle in the gross",
+      "resolves_in": "Round 3 and the Green Jacket section",
+      "payoff": "His outright gross lead lasts from the 6th to the 7th at Royal Óbidos before Baker's course-record 86 ends the argument; Mullin finishes runner-up in both competitions."
     }
-  ]
+  ],
+  "vehicle_fit_response": {
+    "top_scored_vehicle": "hero_arc",
+    "taken_up": false,
+    "note": "Same underlying fact (three straight 4ths, then the lot) but framed as `comeback` — a drought since TEG 13 ended — because hero_arc carried the TEG 16 report and this tournament's second half is Williams' tragic slide, not a career procession."
+  }
 }
