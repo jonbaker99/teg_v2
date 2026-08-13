@@ -11,11 +11,47 @@ whether that pattern is genuinely the most interesting angle on the
 tournament — that judgement call still belongs to the editor prompt. Treat
 the output as a ranked candidate list to weigh, the same way
 `recent_vehicle_choices` is advisory rather than a hard rule.
+
+TWO CALIBRATION FIXES (2026-08-13), both born from the same failure: an
+early version returned the same top-4 vehicles (tragic_arc, redemption_arc,
+catalogue, inversion) for every TEG tested. Root cause was two-fold:
+
+1. The beat types feeding those vehicles (a 3-hole cold stretch, a birdie
+   right after bogeys, a lead changing hands) are common in almost any
+   multi-round tournament with a spread of handicaps — the raw sum measured
+   "how much of this generic texture exists", which is roughly constant
+   across TEGs, not "how much does this pattern define THIS one." Fixed by
+   `_central_players`: arc-vehicle beats now only count when they belong to
+   the Trophy winner, Jacket winner, or Wooden Spoon holder — the three
+   names the report is already structured around — not any player in the
+   field. A simplification (it misses a genuine runner-up story), but a
+   principled one.
+2. There was no notion of "typical" to compare against. Fixed by
+   `historical_baseline` + `normalize_vehicle_fit`: score a run of past TEGs
+   the same way, then report each vehicle as a z-score against that
+   population instead of a raw sum. `rank_vehicle_fit` (raw) is kept for
+   callers that don't have a baseline handy; `rank_vehicle_fit_normalized`
+   is what actually differentiates between TEGs.
 """
 
 from __future__ import annotations
 
+import json
+import os
 from collections import Counter
+
+# Checked-in cache of `historical_baseline()`'s output — computing it live is
+# ~5s/TEG (event detection + history), too slow to redo on every plan call.
+# Regenerate with `refresh_baseline_cache()` when beat-detection logic changes
+# materially (a new event type, a changed scoring weight); a routine plan
+# call should never need to.
+BASELINE_CACHE_PATH = os.path.join(os.path.dirname(__file__), "vehicle_fit_baseline.json")
+
+ALL_VEHICLE_NAMES = (
+    "counterfactual", "dual_narrative", "tragic_arc", "redemption_arc", "motif",
+    "bookends", "ensemble", "catalogue", "inevitability", "hero_arc", "comeback",
+    "inversion", "origin", "underdog", "theme_led_body",
+)
 
 
 def _add(scores: dict, vehicle: str, points: float, reason: str) -> None:
@@ -26,16 +62,35 @@ def _add(scores: dict, vehicle: str, points: float, reason: str) -> None:
     entry["reasons"].append(reason)
 
 
+def _central_players(arcs: dict) -> set:
+    """The three names the report is already structured around — Trophy
+    winner, Jacket winner, Wooden Spoon holder. Used to keep arc-vehicle
+    scoring about who the story is actually about, not any player with a
+    stretch of bad holes. Doesn't capture a genuine runner-up story; a
+    deliberate simplification, not an oversight."""
+    out = set()
+    for key in ("trophy", "jacket"):
+        w = (arcs.get(key) or {}).get("winner")
+        if w:
+            out.add(w)
+    loser = (arcs.get("spoon") or {}).get("loser")
+    if loser:
+        out.add(loser)
+    return out
+
+
 def score_vehicle_fit(beats: list, arcs: dict, tournament_shape: dict,
                       player_history: dict) -> dict:
     """Score each narrative vehicle against already-computed bundle signals.
 
     Returns {vehicle: {"score": float, "reasons": [str, ...]}}, unsorted —
-    use `rank_vehicle_fit` to sort. Pure function: takes the pieces
-    `assemble_bundle` already builds, so it can be called during bundle
-    assembly without recomputing beats/arcs.
+    use `rank_vehicle_fit` (raw) or `rank_vehicle_fit_normalized` (against a
+    baseline) to sort. Pure function: takes the pieces `assemble_bundle`
+    already builds, so it can be called during bundle assembly without
+    recomputing beats/arcs.
     """
     scores: dict = {}
+    central = _central_players(arcs)
 
     # --- counterfactual / dual_narrative: close finish ---
     if tournament_shape.get("close_finish"):
@@ -48,9 +103,13 @@ def score_vehicle_fit(beats: list, arcs: dict, tournament_shape: dict,
             _add(scores, "dual_narrative", 4.0,
                  f"{len(outright_leaders)} different outright Trophy leaders in a close finish")
 
-    # --- tragic_arc / inversion / redemption_arc: collapse & recovery beats ---
+    # --- tragic_arc / inversion / redemption_arc: collapse & recovery beats,
+    # restricted to the three central players (see _central_players) ---
     for b in beats:
         t = b["type"]
+        players = set(b.get("players") or [])
+        if not (players & central):
+            continue
         imp = b["scores"]["importance"]
         late = (b.get("round") or 1) >= 3
         if t in ("collapse_after_steady", "cold_stretch"):
@@ -108,13 +167,14 @@ def score_vehicle_fit(beats: list, arcs: dict, tournament_shape: dict,
         if hist.get("trophy_wins", 0) == 0 and is_trophy_winner:
             _add(scores, "origin", 6.0, f"{player}: first-ever Trophy win")
 
-    # --- catalogue: one player racking up repeated blow-up/collapse beats ---
+    # --- catalogue: one CENTRAL player racking up repeated blow-up/collapse beats ---
     blowup_types = {"cold_stretch", "collapse_after_steady"}
     per_player = Counter()
     for b in beats:
         if b["type"] in blowup_types:
             for p in b["players"]:
-                per_player[p] += 1
+                if p in central:
+                    per_player[p] += 1
     for player, n in per_player.items():
         if n >= 3:
             _add(scores, "catalogue", 2.0 + n, f"{player}: {n} separate blow-up/collapse beats")
@@ -123,13 +183,88 @@ def score_vehicle_fit(beats: list, arcs: dict, tournament_shape: dict,
 
 
 def rank_vehicle_fit(scores: dict, n: int = 5) -> list[dict]:
-    """Sort scores desc, trim reasons to the top 3 each, keep the top `n` vehicles."""
+    """Sort RAW scores desc, trim reasons to the top 3 each, keep the top `n`.
+
+    Prefer `rank_vehicle_fit_normalized` when a baseline is available — raw
+    scores don't tell you whether a value is unusual for a TEG, only that
+    it's nonzero. Kept for callers (e.g. the live editor prompt) where
+    computing a fresh baseline per call isn't worth the ~5s/TEG cost.
+    """
     ranked = sorted(
         ({"vehicle": v, "score": round(d["score"], 1), "reasons": d["reasons"][:3]}
          for v, d in scores.items()),
         key=lambda x: -x["score"],
     )
     return ranked[:n]
+
+
+def historical_baseline(tegs: list, mode: str = "balanced", tone: str = "house") -> dict:
+    """Score every vehicle for each TEG in `tegs` and return per-vehicle
+    {"mean": float, "std": float} across that population. Missing vehicles
+    for a given TEG count as 0 (a vehicle that didn't fire is real signal,
+    not missing data) so the baseline reflects true typical/atypical scores.
+
+    Free — no LLM call — but costs ~5s/TEG (event detection + history).
+    """
+    import statistics
+
+    per_teg = {t: score_vehicle_fit_for_teg(t, mode=mode, tone=tone) for t in tegs}
+    baseline: dict = {}
+    for vehicle in ALL_VEHICLE_NAMES:
+        values = [per_teg[t].get(vehicle, {}).get("score", 0.0) for t in tegs]
+        mean = statistics.mean(values)
+        std = statistics.pstdev(values)
+        baseline[vehicle] = {"mean": round(mean, 2), "std": round(std, 2), "n": len(tegs)}
+    return baseline
+
+
+def load_baseline_cache() -> dict:
+    """Load the checked-in baseline, or {} if it hasn't been generated yet
+    (callers should fall back to raw `rank_vehicle_fit` in that case)."""
+    try:
+        with open(BASELINE_CACHE_PATH) as f:
+            return json.load(f)
+    except (OSError, json.JSONDecodeError):
+        return {}
+
+
+def refresh_baseline_cache(tegs: list = None, mode: str = "balanced",
+                           tone: str = "house") -> dict:
+    """Recompute the baseline and overwrite the checked-in cache. Defaults to
+    every TEG with score data (2-18 as of 2026-08-13). Run this, and commit
+    the result, whenever beat-detection logic changes materially."""
+    from teg_analysis.core.data_loader import load_all_data
+
+    if tegs is None:
+        df = load_all_data()
+        tegs = sorted(int(t) for t in df["TEGNum"].unique())
+    baseline = historical_baseline(tegs, mode=mode, tone=tone)
+    with open(BASELINE_CACHE_PATH, "w") as f:
+        json.dump(baseline, f, indent=2)
+    return baseline
+
+
+def normalize_vehicle_fit(scores: dict, baseline: dict) -> list[dict]:
+    """Score every vehicle in `ALL_VEHICLE_NAMES` (not just those that fired)
+    as a z-score against `baseline`, sorted desc. A vehicle absent from
+    `scores` is a real 0, scored against the same baseline as everything
+    else — that's what lets "nobody had a collapse this time" outrank a
+    collapse that happens every TEG.
+    """
+    ranked = []
+    for vehicle in ALL_VEHICLE_NAMES:
+        raw = scores.get(vehicle, {}).get("score", 0.0)
+        reasons = scores.get(vehicle, {}).get("reasons", [])[:3]
+        b = baseline.get(vehicle, {"mean": 0.0, "std": 0.0})
+        mean, std = b["mean"], b["std"]
+        if std > 0:
+            z = (raw - mean) / std
+        else:
+            z = 0.0 if raw == mean else (3.0 if raw > mean else -3.0)
+        ranked.append({"vehicle": vehicle, "raw": round(raw, 1), "z": round(z, 2),
+                       "baseline_mean": mean, "reasons": reasons})
+    ranked.sort(key=lambda x: -x["z"])
+    return ranked
 
 
 def score_vehicle_fit_for_teg(teg_num: int, mode: str = "balanced", tone: str = "house",

@@ -325,13 +325,19 @@ finish hard rule above always supersedes this — a genuinely close finish takes
 the same frame as last time if the data warrants it.
 
   **ADVISORY — `vehicle_fit_hints`.** The bundle also carries a short ranked list of \
-vehicles with a deterministic fit score and the specific beats/milestones that scored \
-them, computed from THIS tournament's actual facts before you saw them. This is a candidate \
-list, not a verdict — it can only detect that a pattern's raw ingredients exist (a collapse \
-beat, a "defending champion" milestone), not whether it is genuinely the most interesting \
-angle, so a high score is a prompt to look closer, not an instruction to pick it. It is also \
-one useful check against the SOFT RULE above: if a high-scoring vehicle also overlaps \
-recent picks, that is a real signal the data wants it — don't discard it just to be different.
+vehicles scored against how TYPICAL that pattern is across TEG history (a z-score against \
+a historical baseline, not a raw count — a collapse beat exists in nearly every TEG, so what \
+matters is whether THIS one has unusually strong evidence for it), with the specific beats/ \
+milestones behind each score, computed from THIS tournament's actual facts before you saw \
+them. This is a candidate list, not a verdict — it can only detect that a pattern's raw \
+ingredients exist, not whether it is genuinely the most interesting angle, so a high score is \
+a prompt to look closer, not an instruction to pick it. Known gap: `hero_arc`, `comeback`, \
+`origin` and `underdog` are under-detected by this heuristic (they rely on career-milestone \
+phrasing that doesn't cover every real career-arc story, e.g. a player stuck at the same rank \
+for several TEGs) — a low or absent score for those four is NOT evidence the pattern isn't \
+there; use your own reading of `player_history` for those. It is also a useful check against \
+the SOFT RULE above: if a high-scoring vehicle also overlaps recent picks, that is a real \
+signal the data wants it — don't discard it just to be different.
 - Select the 6-10 `must_include_beat_ids` the report cannot omit. Be ruthless — \
 list the rest you would cut in `cuts`. **NON-NEGOTIABLE: every beat marked \
 `"mandatory": true` MUST appear in `must_include_beat_ids` and MUST NOT appear \
@@ -599,11 +605,22 @@ def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
 
     # Free, deterministic candidate signal: how well each vehicle fits THIS
     # TEG's actual facts, scored from beats/arcs/shape/history already built
-    # above. Advisory only — see vehicle_fit.py's module docstring for why
-    # this doesn't replace the editor's judgement call.
-    from teg_analysis.reporting.vehicle_fit import score_vehicle_fit, rank_vehicle_fit
-    vehicle_fit_hints = rank_vehicle_fit(
-        score_vehicle_fit(beats, arcs, tournament_shape_signals, player_history), n=5)
+    # above. Normalized against the checked-in historical baseline (z-score)
+    # when it's present — a raw score alone doesn't say whether a pattern is
+    # unusual for a TEG or present in almost every one (see vehicle_fit.py's
+    # module docstring: an early version returned the same top-4 vehicles for
+    # every TEG tested until this normalization was added). Falls back to the
+    # raw ranking if the cache is somehow missing. Advisory either way — see
+    # the module docstring for why this doesn't replace editorial judgement.
+    from teg_analysis.reporting.vehicle_fit import (
+        score_vehicle_fit, rank_vehicle_fit, normalize_vehicle_fit, load_baseline_cache,
+    )
+    _raw_vehicle_scores = score_vehicle_fit(beats, arcs, tournament_shape_signals, player_history)
+    _baseline = load_baseline_cache()
+    if _baseline:
+        vehicle_fit_hints = normalize_vehicle_fit(_raw_vehicle_scores, _baseline)[:5]
+    else:
+        vehicle_fit_hints = rank_vehicle_fit(_raw_vehicle_scores, n=5)
 
     # Verified player relationships. Only ties listed here are facts; the
     # writer is forbidden from inferring any others from shared surnames.
