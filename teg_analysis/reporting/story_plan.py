@@ -69,7 +69,8 @@ NARRATIVE_VEHICLES: dict[str, dict[str, str]] = {
     "TOURNAMENT-SHAPE (what happened over the four days)": {
         "counterfactual":  'close / decided late ("but for X, Y would have won")',
         "dual_narrative":  "two players' weeks intertwined",
-        "tragic_arc":      "protagonist's collapse drove the tournament",
+        "tragic_arc":      "protagonist's collapse drove the tournament (within THIS tournament, not career)",
+        "redemption_arc":  "a player recovers from an early disaster — a blow-up hole or a ruinous round — to finish well (within THIS tournament; the career-level equivalent is `comeback` below)",
         "motif":           "a recurring image / hole / number carried as connective tissue",
         "bookends":        "open and close at the same scene / hole / moment",
         "ensemble":        "the field collectively; course as protagonist",
@@ -288,6 +289,17 @@ reports become formulaic.
   Multiple vehicles can nest: e.g. `["bookends", "hero_arc", "comeback"]` or \
 `["inversion", "dual_narrative"]`. Pick what's MOST INTERESTING about THIS \
 tournament; don't reach for the same pattern by reflex.
+
+  **Watch specifically for arc patterns — they read well and are currently under-used.** \
+Check the beats and competition_arcs for: (a) a player collapsing after a strong start \
+(`tragic_arc`); (b) a player recovering from an early disaster — a blow-up hole or a \
+ruinous round — to finish well (`redemption_arc`); (c) a highlight or personal best \
+rendered moot by what followed (usually `tragic_arc` or `counterfactual`, told with the \
+highlight foregrounded then undercut); (d) a genuine career-level arc across TEGs \
+(`hero_arc`, `comeback`). When the data plainly supports one of these, it is usually the \
+right pick — but this is a candidate to weigh, not a default: if the tournament's real \
+story is something else, don't force an arc onto it. The vary-your-picks rule below still \
+applies to arcs same as any other vehicle.
 
   **HARD RULE — close finish overrides everything.** The bundle's \
 `tournament_shape.close_finish` is computed deterministically from the Trophy \
