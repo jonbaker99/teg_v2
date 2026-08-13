@@ -48,10 +48,16 @@ _ARC_KEY = {"trophy_win": "trophy", "jacket_win": "jacket", "wooden_spoon": "spo
 # it here, which updates the schema and both prompts at once.
 
 # How the report is sequenced.
+#
+# `reverse_chronology` ("start at the result, walk backwards through cause") was
+# removed 2026-08-13: tested on TEG 18 and read as confusing rather than clever —
+# the reader has to hold an unexplained tableau in mind through a full round
+# section before the setup pays off, and by the time it does the payoff has
+# already been spoiled by the opener. Don't reintroduce without a concrete fix
+# for that ordering problem.
 NARRATIVE_STRUCTURES: dict[str, str] = {
     "chronological":       "straight tournament timeline; R1 → R4",
     "in_medias_res":       "open mid-action, then loop back",
-    "reverse_chronology":  "start at the result, walk backwards through cause",
     "theme_led":           "body organised around an idea, not rounds",
     "three_act":           "setup / confrontation / resolution",
     "player_by_player":    "one section per player rather than per round",
