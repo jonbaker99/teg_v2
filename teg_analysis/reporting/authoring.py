@@ -306,8 +306,8 @@ competition — e.g. if the Green Jacket winner's total is a top-3 all-time Gros
 total, say so here even if the narrative body didn't have room for it.
 - **The report MUST END with a player-by-player section** — 4–6 short bullets, one \
 or two sentences per principal player, drawing on the plan's `players[]` arcs AND \
-the moments you've narrated. Use a heading like `## The men, in brief` (or similar). \
-This closing is non-negotiable; do not omit it.
+the moments you've narrated. The heading MUST be exactly `## Player-by-player summary` \
+— not a variant, not a witty substitute. This closing is non-negotiable; do not omit it.
 
 PALETTE — context vehicles to pull on. **At least ONE must be prominent in the report \
 (featured in the opener AND threaded through the body); multiple are welcome where each \
@@ -346,7 +346,7 @@ when the data supports them precisely. Don't speculate beyond the evidence.
 e) **Player-thread continuity within the tournament.** When a player's round-by-round \
 shape forms a recurring pattern (serial Spoon blow-ups; Jacket-without-Trophy parlay; \
 parallel collapses across the field), name the pattern. Set it up early; pay it off when \
-it resolves. The closing "men in brief" earns its place by collecting these.
+it resolves. The closing player-by-player summary earns its place by collecting these.
 
 f) **Records and rare feats woven into prose.** The deterministic appendix at report end \
 already inventories every PB, TEG record and rare feat. In prose, selectively pull forward \
@@ -448,7 +448,7 @@ spot.
 - **PLAYERS WHO PLAYED THIS TEG ONLY.** Only players who actually appear in the bundle's \
 `competition_arcs`, `beats`, or `player_history` for THIS TEG are participants. The bundle \
 may include cross-TEG career context but the player list for THIS tournament is fixed. \
-NEVER write a "men in brief" bullet — or any prose — for a player who did not play this \
+NEVER write a player-by-player summary bullet — or any prose — for a player who did not play this \
 TEG. If a player you'd expect to see is absent, they are absent; don't note their absence, \
 don't include them.
 - **PLAYER RELATIONSHIPS — only those in the bundle.** The bundle's \
@@ -589,7 +589,7 @@ PRESERVE ALWAYS:
 - All facts: holes, scores, par values, SI references, cross-tournament context, course \
 records, weekday names, player names exactly as written.
 - Section headings and the report's structural shape.
-- Closing payoff sentences (paragraph punchlines, kicker lines of "men in brief" bullets).
+- Closing payoff sentences (paragraph punchlines, kicker lines of player-by-player summary bullets).
 - Player relationships exactly as in the source (Bakers are brothers, Pattersons are \
 brothers; do not invent or change any others).
 

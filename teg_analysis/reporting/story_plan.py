@@ -167,7 +167,7 @@ class Payoff(BaseModel):
     `foreshadow[]` seed should have a corresponding `payoffs[]` entry.
     """
     seed: str           # short reference to the seed planted in foreshadow[]
-    resolves_in: str    # which section pays it off (e.g. "Round 3", "men in brief", "How it was decided")
+    resolves_in: str    # which section pays it off (e.g. "Round 3", "Player-by-player summary", "How it was decided")
     payoff: str         # one-line description of how it resolves
 
 
@@ -430,8 +430,8 @@ across reports.
 
 - `payoffs`: **one entry per `foreshadow[]` seed.** If you have 4 foreshadows you \
 should have ~4 payoffs. Each entry: `seed` (short ref to the seed), `resolves_in` \
-(which section pays it off — e.g. "Round 4", "How the three were decided", "the men \
-in brief"), `payoff` (one-line description). This addresses the biggest thinness in \
+(which section pays it off — e.g. "Round 4", "How the three were decided", \
+"Player-by-player summary"), `payoff` (one-line description). This addresses the biggest thinness in \
 past reports: seeds planted in the opener that the body never resolved. An \
 unresolved foreshadow is a bug.
 
@@ -623,7 +623,7 @@ def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
     # Restrict player_history to players who actually played in THIS TEG.
     # Without this, the bundle carries career context for every historical
     # player, which can lead the writer to confabulate non-participants into
-    # "men in brief" (observed: Henry Meller added to TEG 10 closing list).
+    # player-by-player summary (observed: Henry Meller added to TEG 10 closing list).
     _df = load_all_data()
     _current_players = set(_df[_df["TEGNum"] == teg_num]["Player"].unique())
     _full_history = build_player_cross_teg_history(teg_num, df=_df)

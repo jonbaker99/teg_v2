@@ -46,8 +46,17 @@ def _round_exists(teg_num: int, round_num: int) -> bool:
     return os.path.exists(f"{OUTPUT_DIR}/teg_{teg_num}_round_{round_num}_report_final.md")
 
 
-def backfill_teg(teg_num: int, *, force: bool = False, scope: Scope = "both") -> dict:
-    """Generate the chosen scope for a single TEG. Returns per-call paths + timings."""
+def backfill_teg(teg_num: int, *, force: bool = False, scope: Scope = "both",
+                 style: bool = True) -> dict:
+    """Generate the chosen scope for a single TEG. Returns per-call paths + timings.
+
+    `style=False` stops at `teg_N_report_final.md` — the prose — and skips
+    `style_report`, which is the step that injects the deterministic blocks
+    (per-round standings, the at-a-glance box, and the "Personal bests and TEG
+    records" appendix) into `teg_N_report_styled.md`. Use it when you want to
+    read or compare the writing itself without the surrounding furniture.
+    D3 verification still runs either way: it checks the prose, not the blocks.
+    """
     t0 = time.time()
     events = build_notable_events(teg_num)
     venue = build_venue_context(teg_num)
@@ -73,7 +82,7 @@ def backfill_teg(teg_num: int, *, force: bool = False, scope: Scope = "both") ->
             final = f"{OUTPUT_DIR}/teg_{teg_num}_report_final.md"
             with open(final, "w") as f:
                 f.write(linted)
-            styled = style_report(teg_num)
+            styled = style_report(teg_num) if style else None
             # D3 — verify the finished prose against the data. Findings are
             # reported, never raised: a report that trips a check is still
             # written, but it can no longer ship unnoticed.
@@ -113,14 +122,17 @@ def backfill_teg(teg_num: int, *, force: bool = False, scope: Scope = "both") ->
 
 
 def backfill_all(teg_nums: Iterable[int], *, force: bool = False,
-                 scope: Scope = "both") -> list:
-    """Backfill a range of TEGs. Prints per-TEG progress to stdout."""
+                 scope: Scope = "both", style: bool = True) -> list:
+    """Backfill a range of TEGs. Prints per-TEG progress to stdout.
+
+    `style=False` stops at the final prose — see `backfill_teg`.
+    """
     results = []
     teg_list = list(teg_nums)
-    print(f"backfill: {len(teg_list)} TEGs, scope={scope}, force={force}")
+    print(f"backfill: {len(teg_list)} TEGs, scope={scope}, force={force}, style={style}")
     for i, teg in enumerate(teg_list, 1):
         print(f"  [{i}/{len(teg_list)}] TEG {teg} …", flush=True)
-        r = backfill_teg(teg, force=force, scope=scope)
+        r = backfill_teg(teg, force=force, scope=scope, style=style)
         # one-line summary
         t_done = "skip" if (r["tournament"] and "skipped" in r["tournament"]) else (
             "done" if r["tournament"] else "—")

@@ -498,18 +498,21 @@ Writes `teg_N_report_styled.md`. Idempotent. The styled MD plus `teg_reports.css
 
 A parallel, single-round pipeline with the same shape: `assemble_round_bundle` → `build_round_story_plan` (`ROUND_PLAN_SYSTEM`, `RoundStoryPlan`) → `generate_round_dry_draft` → `report_round_around_draft` → lint → `render.style_round_report`. `generate_round_report(teg, round)` runs the lot.
 
-Differences from the tournament pipeline: the bundle carries prior-round context and the competition state at the end of the round, not the whole tournament arc; `render.build_round_scores(teg, round)` puts a deterministic round-scores block at the top; there is no "men in brief" closing; the default structure is chronological/player-by-player; and the final round gets coronation-aware framing.
+Differences from the tournament pipeline: the bundle carries prior-round context and the competition state at the end of the round, not the whole tournament arc; `render.build_round_scores(teg, round)` puts a deterministic round-scores block at the top; there is no "Player-by-player summary" closing; the default structure is chronological/player-by-player; and the final round gets coronation-aware framing.
 
 > **Currently a generation behind.** `RoundStoryPlan` has no `narrative_vehicles` and no `payoffs` — the vehicle and setup→payoff machinery was only added to the tournament plan. See [STATUS.md](STATUS.md).
 
 ## Batch generation — `backfill.py`
 
-`backfill_all(teg_nums, scope="both"|"tournament"|"rounds", force=False)` generates the canonical set for a list of TEGs. `build_notable_events` and `build_venue_context` are computed once per TEG and reused across the tournament and round runs — that's the heaviest pure-Python step. Idempotent: skips a report whose `_final.md` already exists unless `force=True`.
+`backfill_all(teg_nums, scope="both"|"tournament"|"rounds", force=False, style=True)` generates the canonical set for a list of TEGs. `build_notable_events` and `build_venue_context` are computed once per TEG and reused across the tournament and round runs — that's the heaviest pure-Python step. Idempotent: skips a report whose `_final.md` already exists unless `force=True`.
+
+`style=False` stops at `teg_N_report_final.md` and skips `style_report` — i.e. no per-round standings, no at-a-glance box and no "Personal bests and TEG records" appendix injected. Use it when you want to read or compare the *writing* without the surrounding furniture. D3 verification runs either way; it checks the prose, not the injected blocks.
 
 ```python
 from teg_analysis.reporting.backfill import backfill_all
 backfill_all(range(8, 19))                                # TEGs 8-18, tournament + rounds
 backfill_all([8, 9, 10], scope="tournament", force=True)  # re-run tournaments only
+backfill_all(range(10, 16), scope="tournament", force=True, style=False)  # prose only
 ```
 
 ## Artefacts

@@ -115,11 +115,11 @@ FastAPI threadpools them. `async def` handlers doing blocking work stall every p
 
 ### Pandas strict dtypes
 
-The deployment pins pandas 2.x. Three patterns have caused production errors — all fixed, but avoid reintroducing them.
+`requirements.txt` pins `pandas>=3.0,<4.0`. Three patterns have caused production errors — all fixed, but avoid reintroducing them. All three behave **identically on 3.x as on 2.x** (re-verified 2026-08-13 on 3.0.5), so the guidance below is unchanged by the pin; only the version label was wrong.
 
 **1. `DataFrame.applymap` is removed.** Use `.map(fn)`. Check: `grep -rn "\.applymap(" .`
 
-**2. Assigning strings into an `int64`/`float64` column.** The leaderboard tied-rank pattern (`Rank` int + `=` suffix) raises even when the mask is all-False. Convert to `object` first, or build the column as `str` from the start and guard with `.any()`:
+**2. Assigning strings into an `int64`/`float64` column.** The leaderboard tied-rank pattern (`Rank` int + `=` suffix) raises even when the mask is all-False. Convert to `object` first, or build the column as `str` from the start and guard with `.any()`. Both still work on 3.x; note that on 3.x the string-first column comes back as the new Arrow-backed `str` dtype rather than `object`, which is fine here but means **don't assert `== object` on a string column**:
 
 ```python
 # object-first
@@ -141,7 +141,7 @@ df[col] = df[col].apply(fmt)
 
 Check: `python scripts/check_pandas_compat.py` (detects the `iloc-col-assign` pattern). Live-code sites previously fixed: `teg_analysis/analysis/scoring.py`, `webapp/deps.py` (already uses string-first). The rest of the historical fixes were in frozen `streamlit/` files.
 
-> If you upgrade pandas, re-verify these three and update this section — don't leave guidance for a version you no longer run.
+> If you change the pandas pin, re-verify these three and update this section — don't leave guidance for a version you no longer run. The pin lives in `requirements.txt`; **leaving pandas unpinned is what let the deploy drift onto a new major line unnoticed**, so keep the ceiling.
 
 ## Definition of done
 

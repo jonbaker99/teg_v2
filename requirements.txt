@@ -9,7 +9,14 @@ jinja2>=3.1.0,<3.2.0
 python-multipart  # required by FastAPI to parse the admin form POSTs
 
 # Data analysis
-pandas
+# Pinned to the 3.x line (2026-08-13). This was previously unpinned, so every
+# Railway build silently took whatever pandas was current — the deploy was
+# already on 3.x while CLAUDE.md still described it as "pinned to 2.x". The
+# major-version ceiling is the point: this codebase has been bitten repeatedly
+# by dtype-strictness changes across a major bump, so a 4.0 must be a deliberate
+# migration, not something a rebuild picks up. Verified on 3.0.5 — full suite
+# green, and all three dtype hazards in CLAUDE.md behave identically to 2.x.
+pandas>=3.0,<4.0
 numpy
 pyarrow  # parquet engine required by pd.read_parquet (not pulled in by any other dep here)
 plotly

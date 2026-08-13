@@ -72,6 +72,19 @@ appearing more than twice. Two changes came out of that run:
   one line of reasoning; `check_plan_consistency` verifies the record is *truthful* and never warns
   on divergence itself. `test_diverging_from_the_top_hint_is_not_a_warning` guards that boundary.
 
+**2026-08-13 (later) — closing section renamed, and a prose-only backfill switch.** The closing
+player summary heading is now prescribed **exactly** as `## Player-by-player summary` in
+`authoring.py` (it was `## The men, in brief` "or similar", so published reports vary). Nothing
+matches on the heading in code — `verify.check_only_participants` only mentions it in a docstring —
+so this is a pure guidance change; existing reports keep their old heading until regenerated.
+`backfill_teg` / `backfill_all` gained `style=False`, which stops at `teg_N_report_final.md` and
+skips the injection of standings, the at-a-glance box and the records appendix.
+
+**Blocked, not done: a from-scratch regeneration of TEGs 10–15.** Requested 2026-08-13; it needs
+`ANTHROPIC_API_KEY`, which is not set in the Claude-Code-on-the-web container and has no
+`secrets.toml` fallback there. Everything else in that request landed. The command is
+`backfill_all(range(10, 16), scope="tournament", force=True, style=False)`.
+
 Residual, not fixed: a detectable-but-unfired vehicle (raw 0, negative z) can still reach the top 5
 on a quiet TEG — ~14 of 85 slots. Less misleading than the removed cases, since the editor sees
 `raw: 0.0` and an empty `reasons` list, and a genuine 0 for a vehicle that *does* have a detector is

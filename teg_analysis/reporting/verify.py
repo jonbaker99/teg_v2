@@ -176,7 +176,7 @@ def check_only_participants(ctx: ReportContext) -> list[Finding]:
 
     Compares against the full historical roster, so an unrelated capitalised
     word is never mistaken for a player. Observed failure: a non-participant
-    added to a 'men in brief' closing list.
+    added to the player-by-player summary closing list.
     """
     if not ctx.players:
         return []
