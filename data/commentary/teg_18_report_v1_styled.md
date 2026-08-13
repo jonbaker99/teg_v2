@@ -1,4 +1,13 @@
-# TEG 18 — Girona, In Reverse
+# TEG 18 — Girona, In Reverse {.report-title}
+
+<p class="dateline">TEG 18 | Catalonia, Spain | 2025</p>
+
+<section class="callout at-a-glance-box">
+  <p class="at-a-glance-title">RESULTS</p>
+  <p><strong>Trophy Winner:</strong><span class="trophy-winner"> Alex Baker (winner, 169 pts, by 8 from John Patterson)</span></p>
+  <p><strong>Green Jacket:</strong> Gregg Williams (winner, +66, by 14 from David Mullin)</p>
+  <p><strong>Wooden Spoon:</strong> Jon Baker (loser, 126 pts)</p>
+</section>
 
 Tuesday evening, the 18th green at the Stadium, and the tableau makes no sense in any direction you read it. Gregg Williams, who had carried the Wooden Spoon out of TEG 17, is being handed the Green Jacket at +66, fourteen clear of the field. Beside him Alex Baker holds the Trophy on 169 points, the ink still drying on a 10 at the 14th. Jon Baker, Trophy champion twelve months earlier, has the Spoon.
 
@@ -8,19 +17,23 @@ The oddity is not that Alex Baker won. It is the raw material he did it with: an
 
 Walk back through the four days and the result becomes steadily less surprising. By the time you reach the 5th hole of Round 1, it is already over.
 
-## Round 4 — Williams Takes the Jacket by 14; Baker Wins Despite Himself
+## Round 4 — Williams Takes the Jacket by 14; Baker Wins Despite Himself {.round4 .round}
 
 The Tuesday round at the Stadium was, for Williams, an exercise in not needing to do anything at all, executed with the tidiness of a man who had decided to do it properly anyway. He went round in 84, twelve over. Nine points came from the 8th to the 10th, including a bogey at the 9th, the hardest hole on the course. It was a personal best at the Stadium, eight shots better than both his previous best there and his last visit. The Jacket closed at +66, by 14.
 
-Alex Baker, meanwhile, spent the afternoon testing whether an eight-point lead could be given away by hand. He dropped seven shots from the 9th to the 11th — triple, double, double — and then took 10 at the 14th, six over in a single hole. An 8 at the 17th followed.
+Alex Baker, meanwhile, spent the afternoon testing whether an eight-point lead could be surrendered by hand. He dropped seven shots from the 9th to the 11th — triple, double, double — and then took 10 at the 14th, six over in a single hole. An 8 at the 17th followed.
 
 Thirty-eight points. A total of 169, and the Trophy by 8 from Patterson.
 
 Behind him, Jon Baker made five consecutive double bogeys from the 7th to the 11th, ten shots gone, inside an unbroken run of bogey-or-worse from the 2nd to the 12th. A birdie at the 13th ended it, some while after it mattered. He signed for 29 and finished on 126.
 
-Mullin, needing something extraordinary and getting the reverse, dropped nine shots from the 14th to the 17th, the triple coming at the par-5 15th, the easiest hole on the card. Patterson took nine points from the 4th to the 6th, went triple–double–bogey from the 14th, then birdied the 17th.
+Mullin, needing something extraordinary and getting the reverse, shed nine shots from the 14th to the 17th, the triple coming at the par-5 15th, the easiest hole on the card. Patterson took nine points from the 4th to the 6th, went triple–double–bogey from the 14th, then birdied the 17th.
 
-## Round 3 — Eighty-Four: Mullin Rewrites the Stadium
+
+<p class="standings"><span class="standings-header">Trophy Standings:</span> AB 169 | JP 161 | GW 160 | DM 149 | JB 126</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +66 | DM +80 | JB +92 | JP +95 | AB +124</p>
+
+## Round 3 — Eighty-Four: Mullin Rewrites the Stadium {.round3 .round}
 
 Everything of consequence happened on the second green on Monday morning, and it happened twice.
 
@@ -32,7 +45,11 @@ David Mullin chose this afternoon, with nine prior Green Jackets behind him and 
 
 Alex Baker's contribution was to shed twelve shots between the 6th and the 10th — triple, double, double, double, triple — and then take 21 points from the 11th to the 16th. Forty-four points, and the lead back out to 12. Patterson quietly shot 93, a personal best at the Stadium by two.
 
-## Round 2 — One Hundred and Six, and Still Leading
+
+<p class="standings"><span class="standings-header">Trophy Standings:</span> AB 131 | JP 119 | GW 116 | DM 111 | JB 97</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +54 | DM +62 | JB +67 | JP +73 | AB +88</p>
+
+## Round 2 — One Hundred and Six, and Still Leading {.round2 .round}
 
 The Tour course had been sold, gently, as the more forgiving of the pair. On Sunday it produced the worst gross round in twenty-two TEG visits to it, and the man responsible was leading the tournament by eleven points when he handed the card in.
 
@@ -44,11 +61,15 @@ Jon Baker's twenty holes at the head of the gross race ended without ceremony. W
 
 Williams took nine points from the 3rd to the 5th and thirteen from the 13th to the 16th, four consecutive pars, for fourteen over. Mullin dropped eleven shots in three holes — quad at the 4th, triple at the par-5 5th, quad at the 6th — and ended the day bottom of the Spoon race. Patterson, having made an 8 at the 4th and dropped eleven shots from the 6th to the 10th, took sixteen points from the 11th to the 15th and posted 94, a personal best on the course by two.
 
-## Round 1 — Forty-Six Points and a Nine: the Baker Method
+
+<p class="standings"><span class="standings-header">Trophy Standings:</span> AB 87 | JP 76 | GW 73 | JB 69 | DM 67</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> JB +39 | GW +41 | DM +50 | JP +52 | AB +60</p>
+
+## Round 1 — Forty-Six Points and a Nine: the Baker Method {.round1 .round}
 
 The Trophy changed hands three times on Saturday morning, all inside five holes, all of it the ordinary jostling of an opening day. Alex Baker led at the 3rd, Mullin at the 4th, Alex Baker again at the 5th. That third exchange held for the remaining 67 holes of the tournament.
 
-He did not earn it by playing well throughout. He made a quadruple-bogey 7 at the par-3 2nd, the easiest hole on the course. He then took seventeen points from the 8th to the 12th — bogey, bogey, par, par, bogey — and thirteen more from the 14th to the 16th, birdieing the par-5 15th. A double at the 17th stopped that, and he closed with a quadruple-bogey 9 at the last. Forty-six points, which remains the highest single round anybody managed here.
+He did not earn it by playing well throughout. He made a quadruple-bogey 7 at the par-3 2nd, the easiest hole on the course. He then took seventeen points from the 8th to the 12th — bogey, bogey, par, par, bogey — and thirteen more from the 14th to the 16th, birdying the par-5 15th. A double at the 17th stopped that, and he closed with a quadruple-bogey 9 at the last. Forty-six points, which remains the highest single round anybody managed here.
 
 The par-5 15th spent Saturday afternoon dividing the field. Alex Baker birdied it. Williams birdied it, ending a run of bogey-or-worse that had stretched unbroken from the 2nd to the 14th and taken in triples at the 3rd and 4th, a quadruple-bogey 9 at the par-5 7th and, later, an 8 at the 17th. Twenty-seven over par, and the reigning Spoon holder looked entirely like himself.
 
@@ -57,6 +78,10 @@ Mullin took 11 there. It was his worst score against par all tournament, it came
 Patterson's opening morning deserves its own audit. From the 3rd to the 10th he lost twenty-two shots in eight holes: 8 at the 3rd, triple at the 4th, doubles at the 5th and 6th, triples at the 7th, 8th and 9th, double at the par-5 10th. He then took thirteen points from the 13th to the 16th and signed for 34, thirty over, with fourteen points between his two nines. Nothing about it suggested a runner-up.
 
 Jon Baker took the outright gross lead at the 5th and led the Green Jacket by 2. He was also, at close of play, bottom of the Trophy table on 30 points. Both facts were true, and only one of them was temporary.
+
+
+<p class="standings"><span class="standings-header">Trophy Standings:</span> AB 46 | JP 34 | DM 32 | GW 31 | JB 30</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> JB +24 | AB +26 | GW +27 | DM +28 | JP +30</p>
 
 ## How it was decided
 
@@ -71,3 +96,15 @@ Jon Baker took the outright gross lead at the 5th and led the Green Jacket by 2.
 - **Jon Baker** — Defending Trophy champion. Led the gross race for twenty holes and after both rounds on the Tour, lost it to a bogey at the par-5 7th in Round 2, and lost everything else on the second green of Round 3. Eight shots worse at the Stadium than last time; 126 points and the Spoon.
 - **David Mullin** — Nine prior Jackets and a fortnight's worth of variance in four days. Ten shots worse than his last Tour visit, an 11 at the 15th that briefly made him last, then the Stadium course record of 84. Runner-up by 14.
 - **John Patterson** — Lost twenty-two shots in eight holes before lunch on day one, then set personal bests on both Catalunya courses and finished second in the Trophy, eight adrift. The most improved man in the field, from the lowest possible base.
+
+## Personal bests and TEG records
+
+<div class="records"><p class="records-header">Personal bests:</p><ul>
+  <li>Gregg Williams's +66 is a personal Gross best</li>
+</ul></div>
+
+<div class="records"><p class="records-header">Rare feats:</p><ul>
+  <li>Alex Baker runs up a 11 (sextuple bogey) at the 18th (R2) — his career-worst on a par-5</li>
+  <li>David Mullin runs up a 11 (sextuple bogey) at the 15th (R1) — his career-worst on a par-5</li>
+  <li>Alex Baker runs up a 8 (quintuple bogey) at the 16th (R2) — his career-worst on a par-3</li>
+</ul></div>
