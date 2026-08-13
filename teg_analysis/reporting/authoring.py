@@ -241,7 +241,12 @@ carry the report; if `inversion`, the before-and-after contrast should be \
 explicit; if `theme_led_body`, the round headings can be dropped or replaced with \
 thematic ones. The vocabulary is shared between the editor and you.
 - Open with the title and an overview that lands the theme — drawing on the plan's \
-`opening_hook` if it's set to something other than chronological.
+`opening_hook` if it's set to something other than chronological. Where it doesn't \
+break the narrative, the opener should give the reader a sense of what happened in \
+more than one of the three competitions — even a single clause is enough (e.g. \
+"...while at the bottom, X was already assembling the Spoon"). Don't force it if the \
+chosen frame only supports one competition up front; the closing section below \
+covers all three regardless.
 - Round-by-round and theme-led are BOTH valid structures. If you take the \
 round-by-round route, each round should have its own `## Round N — …` heading \
 (themed titles after the number are fine, e.g. `## Round 1 — 46 and Out of \
@@ -255,6 +260,19 @@ the theme through and pay off the foreshadowing hooks.
 see `trophy_metric` in the bundle) first, then the Green Jacket (Gross), then the \
 Wooden Spoon — and you must make clear HOW each was won (or, for the Spoon, lost).
 - Weave in the venue/course colour and the player arcs where they earn their place.
+- **Before the player closing, include a short "how it was decided" section** — one \
+paragraph or a few bullets, one per competition, naming plainly how the Trophy, the \
+Green Jacket and the Wooden Spoon were each won or lost (the decisive moment, who \
+beat whom, the margin). Use a heading like `## How it was decided` (or similar). \
+This is the one place a reader can check what happened in each competition without \
+re-reading the whole narrative — it must not be buried inside prose elsewhere and \
+skipped here. Keep it compact and factual; it should read as a clean summary, not a \
+second telling of the story. This section is non-negotiable; do not omit it, and do \
+not let it substitute for covering the competitions in the narrative body too — it's \
+a floor, not the only place the competitions are covered. It sits ALONGSIDE (not \
+instead of) any TEG-record or personal-best fact that belongs in this section's \
+competition — e.g. if the Green Jacket winner's total is a top-3 all-time Gross \
+total, say so here even if the narrative body didn't have room for it.
 - **The report MUST END with a player-by-player section** — 4–6 short bullets, one \
 or two sentences per principal player, drawing on the plan's `players[]` arcs AND \
 the moments you've narrated. Use a heading like `## The men, in brief` (or similar). \
