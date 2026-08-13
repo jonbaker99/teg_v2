@@ -1,55 +1,51 @@
 {
-  "title": "The Ninth at the Stadium: Baker Makes a Ten, Williams Keeps the Trophy",
+  "title": "Fifty-Nine Holes in Front, Two Holes Behind: Williams Survives Catalonia",
   "title_candidates": [
-    "The Ninth at the Stadium: Baker Makes a Ten, Williams Keeps the Trophy",
-    "Catalonia's Cruellest Yard: Williams Bleeds 14 Shots and Wins Anyway",
-    "Fifty-Nine Holes in Front, Two Holes Behind: Williams Survives Baker",
-    "Nine Shots Melt to Five: The Trophy Decided on the Hardest Hole in Spain"
+    "Fifty-Nine Holes in Front, Two Holes Behind: Williams Survives Catalonia",
+    "Williams's Record Round, and the Three Days He Spent Giving It Back",
+    "The Ninth at the Stadium: One Hole, Two Trophies, One Ten",
+    "Level Par and Barely Standing: Williams Retains the Trophy in Spain"
   ],
-  "theme": "A nine-shot lead built in one record round, spent over three days, and settled in the space of two holes on the Stadium's front nine — where the same hole handed Williams the Trophy and Mullin the Jacket.",
-  "tone": "house",
+  "theme": "A tournament won in one record-breaking afternoon and then defended, badly, for three days: Williams led for 59 holes, lost the lead for two, and got it back at the hardest hole on the trip — the same 9th at the Stadium that handed Mullin the Jacket.",
+  "tone": "House voice: faithful, witty, tongue-in-cheek — Ronay/Peck register, every gag anchored to a real score. Gentle ribbing of insiders who were there.",
   "narrative_structure": "three_act",
-  "opening_hook": "Open on Act I: Williams's R1 -12 at PGA Catalunya Tour, the best round in TEG history to date (b07), and the nine-shot cushion that looked like a formality — with a nod that all of it would come down to a single par 4 on the final afternoon.",
+  "opening_hook": "Open with the bare arithmetic of the duel — Williams in front for 59 holes, Baker in front for two — and the 9th tee at PGA Catalunya Stadium where it flipped back, before Act I rewinds to the record round that made it all necessary.",
   "narrative_vehicles": [
     "dual_narrative",
     "counterfactual",
     "motif"
   ],
   "foreshadow": [
-    "Williams's R1 -12 (b07) is the best round in TEG history to date and opens a nine-shot lead — a cushion that only ever shrinks.",
-    "Baker arrives with one prior Trophy win and runner-up finishes in three of the last four TEGs: the man always within touching distance.",
-    "Mullin arrives as reigning Wooden Spoon holder (TEG 5) with back-to-back Jacket wins — a man who can win the gross prize while losing everything else.",
-    "Meller arrives with two prior Wooden Spoons and, in R2, posts the best round of his TEG life."
+    "Williams's R1 -12 (b07) is the best round in TEG history — and he banks a nine-shot cushion on day one that he will never add a single shot to again.",
+    "The 9th at the Stadium, stroke index 1 — mentioned in passing as the hardest hole of the closing course, then left loaded.",
+    "Baker arrives as the serial nearly-man: Trophy ranks of 2nd, 1st, 2nd, 2nd in the last four TEGs, and a personal-best gross +18 in R1 (b10) suggesting this might finally be the one.",
+    "Meller carries two prior Wooden Spoons into Catalonia — and posts a personal best in R2 (b13/b14) that looks, briefly, like an escape."
   ],
   "competitions": [
     {
       "name": "Trophy (Net VP)",
       "winner_or_loser": "Gregg Williams (winner, +0, by 5 from Jon Baker)",
-      "how": "Williams took the lead on R1 H2 and led at the end of every round: -12 in R1 (b07, the best round in TEG history to date) for a nine-shot cushion, level par net in R2 (lead still 9), +3 in R3 (lead 8). Then the Stadium: he bled 13 shots across holes 6-9 (b22) and after 59 holes in front the lead was gone, Baker taking it outright at R4 H7 (b01, b04). One hole later it came back — Williams took a triple bogey at the 9th, SI 1, and still moved back to outright first (b06) because Baker had signed for a 10 there (b12). Williams then bled a further 14 shots over the closing five holes (b19), but Baker's own quadruple bogey at the 18th (b43) meant the margin held. Final: +0, by 5 (b03) — back-to-back Trophies for the defending champion.",
+      "how": "Won on day one and endured thereafter. Williams's -12 at the Tour course (b07) — the best round in TEG history to date — opened a nine-shot lead he still held after R2 and, at eight, after R3. R4 at the Stadium was a slow-motion demolition: 11 shots gone over holes 1-4 (b40), 13 more over 6-9 (b22), and at the 7th Baker went outright ahead (b04), ending Williams's 59-hole tenure at the top (b01). Two holes later the hardest hole on the course intervened: Baker took 10 at the 9th (b12), Williams took 7, and the lead came straight back (b06). Williams then bled a further 14 shots over 14-18 (b19) and still won by five (b03), finishing at level par net.",
       "key_beat_ids": [
         "b07",
         "b01",
         "b04",
-        "b06",
         "b12",
-        "b22",
+        "b06",
         "b19",
-        "b43",
         "b03"
       ]
     },
     {
       "name": "Green Jacket (Gross)",
       "winner_or_loser": "David Mullin (winner, +85, by 4 from Jon Baker)",
-      "how": "Mullin took the gross lead on R1 H3 and held it for 51 holes on rounds of +17 and +17. R3 at El Prat undid it: his worst gross round to date, +29 (b21), including a 9 at the 15th — his worst hole to par (b18) — and he lost the lead to Baker on the final green of the round (b02, b11). He answered on the Stadium's 9th, a par on SI 1 to retake the outright lead (b05) as Baker ran up a 10 at the same hole (b12), part of a three-hole run of pars from 8-10 (b41). Baker drew level again at H16 (b24) before an 8 at the 18th (b43) settled it. Mullin's fourth Jacket, +85 by 4 (b08).",
+      "how": "Mullin led from R1 H3, stretched it to five after Costa Brava, then collapsed at El Prat Rosa: +29, his worst gross round to date (b21), including a 9 at the 15th (b18) and a 9 at the 18th (b32) — where Baker's par took the lead by one (b02) and ended a 51-hole reign. The counterpunch came at the same 9th that settled the Trophy: Mullin's par on SI 1 against Baker's 10 put him back in front (b05). Baker drew level again at the 16th (b24) before an 8 at the last (b43) settled it: Mullin by four (b08), a fourth straight Jacket.",
       "key_beat_ids": [
         "b02",
-        "b11",
         "b21",
         "b18",
+        "b32",
         "b05",
-        "b12",
-        "b41",
         "b24",
         "b43",
         "b08"
@@ -58,7 +54,7 @@
     {
       "name": "Wooden Spoon",
       "winner_or_loser": "Henry Meller (loser, +30 net VP)",
-      "how": "Meller was bottom after R1 (+7), then produced the best round of his TEG career in R2 at Costa Brava — a personal-best -5 net and personal-best +17 gross (b13, b14) — which lifted him off the foot of the table and left Neumann there instead. It lasted exactly one round: at El Prat he took a 10 at the opening par 5 to drop straight back to the bottom (b27, b44), added a 10 at the 8th, SI 2 (b17) and a 9 at the 17th, SI 1 (b28) for +15, and never climbed out. A +13 R4 confirmed it: +30 and a third Wooden Spoon (b23).",
+      "how": "Bottom after R1 (+7), Meller then produced the trip's feel-good round — a personal-best -5 and personal-best gross +17 at Costa Brava (b13/b14) — which lifted him off the floor and left Neumann there instead. El Prat Rosa undid all of it inside an hour: a 10 at the 1st dropped him back to last (b27, b44) and he never climbed out, adding a 10 at the 8th (b17) and a 9 at the 17th (b28) on the way to +15. A +13 at the Stadium confirmed a third career Spoon.",
       "key_beat_ids": [
         "b13",
         "b14",
@@ -74,29 +70,28 @@
     {
       "round": 1,
       "headline_candidates": [
-        "Twelve Under the Radar: Williams Posts the Best Round TEG Has Seen",
-        "Girona, Day One: Williams Finds a Course He's Never Seen and Empties It",
-        "Personal Bests All Round, and a Nine-Shot Hole for Everyone Else"
+        "Tour de Force: Williams Posts the Best Round in TEG History",
+        "Minus Twelve: Williams Files the Tournament Early",
+        "Nine Clear After One Day, and Nobody Panicking Yet"
       ],
-      "chosen_headline": "Twelve Under the Radar: Williams Posts the Best Round TEG Has Seen",
-      "angle": "On a course none of them had ever played, Williams's -12 (b07) is the best round in TEG history to date and hands him a nine-shot lead he will spend the next three days giving away; Baker and Williams both post personal-best gross rounds.",
+      "chosen_headline": "Tour de Force: Williams Posts the Best Round in TEG History",
+      "angle": "On a brand-new course in a brand-new country, Williams produces -12 net (b07) and a personal-best gross of +20 (b09) — a nine-shot lead built in a single afternoon, with Baker's own gross PB (b10) rendered a footnote.",
       "beat_ids": [
         "b07",
         "b09",
         "b10",
-        "b16",
-        "b26"
+        "b16"
       ]
     },
     {
       "round": 2,
       "headline_candidates": [
-        "Costa Brava Holds Its Nerve, and So Does the Lead",
-        "Meller's Day in the Trees: A Personal Best That Changes Nothing",
-        "Level Par and Nine Clear: Williams Does the Minimum, Beautifully"
+        "Meller's Day in the Sun at Costa Brava",
+        "Personal Best Among the Pines: Meller Escapes the Basement",
+        "Holding Pattern: Nine Shots, Unchanged, Unthreatened"
       ],
-      "chosen_headline": "Meller's Day in the Trees: A Personal Best That Changes Nothing",
-      "angle": "Williams plays a flat level-par net round and the lead stays at nine, while Meller's double personal best (b13, b14) briefly moves the Spoon burden onto Neumann.",
+      "chosen_headline": "Personal Best Among the Pines: Meller Escapes the Basement",
+      "angle": "Costa Brava's tree-lined front and open back produce the trip's happiest anomaly — Meller's -5 and +17 gross, both personal bests (b13, b14) — while Williams treads water at level and the lead stays stubbornly at nine.",
       "beat_ids": [
         "b13",
         "b14",
@@ -106,41 +101,41 @@
     {
       "round": 3,
       "headline_candidates": [
-        "El Prat Charges Interest: Mullin's Worst Ever, Baker's Best Moment",
-        "Three Tens and a Nine: The Pink Course Bares Its Teeth",
-        "Baker Takes the Jacket Lead on the Last Green — 51 Holes Too Late for Mullin"
+        "The Rosa Bites: Mullin's Worst Gross Round Hands Baker the Jacket",
+        "Tens All Round: Greg Norman's Course Takes Its Cut",
+        "Fifty-One Holes in Green: Mullin's Jacket Lead Falls at the Last"
       ],
-      "chosen_headline": "Three Tens and a Nine: The Pink Course Bares Its Teeth",
-      "angle": "Greg Norman's Rosa course dismantles the field: Meller's 10s at the 1st and 8th and 9 at the 17th put him back on the bottom for good (b27, b44, b17, b28), while Mullin's worst gross round to date (b21) hands Baker the gross lead on the 18th green after 51 holes of Mullin rule (b02, b11).",
+      "chosen_headline": "The Rosa Bites: Mullin's Worst Gross Round Hands Baker the Jacket Lead",
+      "angle": "El Prat's Spanish Open venue eats the field: Meller takes 10 at the 1st (b27) and 10 at the 8th (b17), Baker 9 at the same 8th (b20), and Mullin's +29 (b21) — a 9 at the 15th (b18), a 9 at the last (b32) — surrenders a 51-hole Jacket lead on the 18th green (b02).",
       "beat_ids": [
         "b02",
-        "b11",
         "b21",
         "b18",
+        "b32",
         "b20",
         "b17",
         "b27",
-        "b28",
-        "b44"
+        "b44",
+        "b28"
       ]
     },
     {
       "round": 4,
       "headline_candidates": [
-        "The Ninth at the Stadium: One Hole, Two Titles, One Ten",
-        "Williams Drops 27 Shots in a Round and Still Wins the Trophy",
-        "Fifty-Nine Holes in Front, Then Two Holes That Decided the Lot"
+        "The Ninth at the Stadium Settles Both Trophy and Jacket",
+        "Baker Leads for Two Holes, Then Takes Ten",
+        "Spain's Premier Test, and Five Men Who Failed It"
       ],
-      "chosen_headline": "The Ninth at the Stadium: One Hole, Two Titles, One Ten",
-      "angle": "Spain's premier course takes 13 shots off Williams from the 6th to the 9th and Baker leads the Trophy outright at H7 (b01, b04) — then Baker makes a 10 at the 9th (b12), the hardest hole on the card, handing the Trophy back to a triple-bogeying Williams (b06) and the Jacket back to a par-making Mullin (b05); Baker's closing 8 at the 18th (b43) seals both defeats.",
+      "chosen_headline": "The Ninth at the Stadium Settles Both Trophy and Jacket",
+      "angle": "A closing round of collective disintegration on Spain's best course, resolved at the SI 1 ninth: Baker, outright leader since the 7th (b04, b01), makes 10 (b12); Williams's triple is enough to reclaim the Trophy (b06) and Mullin's par reclaims the Jacket (b05) — after which Williams bleeds 14 more shots (b19) and wins by five anyway.",
       "beat_ids": [
-        "b01",
+        "b40",
+        "b22",
         "b04",
+        "b01",
         "b12",
         "b06",
         "b05",
-        "b41",
-        "b22",
         "b19",
         "b24",
         "b43",
@@ -155,23 +150,23 @@
   "players": [
     {
       "player": "Gregg Williams",
-      "arc": "Defending champion who opened with the best round in TEG history to date (-12, plus a personal-best +20 gross) and then spent 63 holes handing it back — 13 shots gone from the 6th to the 9th on the final day, 14 more over the closing five — before a triple bogey at the Stadium's 9th somehow restored his lead and delivered back-to-back Trophies at +0, all while finishing well adrift in the gross he has never won."
+      "arc": "Defending champion who won this Trophy in a single afternoon — -12, the best round TEG has seen (b07) — then spent three days and one grisly Stadium round returning the money, holding on at level par by five."
     },
     {
       "player": "Jon Baker",
-      "arc": "The perennial near-man led the Jacket after R3 and the Trophy outright at R4 H7, then made a 10 at the 9th and an 8 at the 18th and finished runner-up in both — beaten by five and by four respectively."
+      "arc": "Trophy ranks of 2nd, 1st, 2nd, 2nd going in; he finally took an outright lead at R4 H7 (b04), held it for two holes, made 10 at the ninth (b12), and finished runner-up in both the Trophy and the Jacket."
     },
     {
       "player": "David Mullin",
-      "arc": "Reigning Wooden Spoon holder turns his back-to-back Jackets into three in a row and a fourth overall, despite posting his worst gross round to date (+29) and his worst hole to par (a 9 at El Prat's 15th) in the middle of it, reclaiming the lead with a par at the hardest hole on the last day."
+      "arc": "Reigning Wooden Spoon holder with three Jackets already in the wardrobe: survived his worst gross round to date (+29, b21) and a lost 51-hole lead (b02) to par the ninth and win a fourth straight Jacket (b08)."
     },
     {
       "player": "Henry Meller",
-      "arc": "Produced the best round of his TEG life at Costa Brava and the worst 18 holes of anyone's tournament at El Prat 24 hours later — two 10s and a 9 in one round — and collected a third Wooden Spoon at +30."
+      "arc": "Produced the trip's warmest story at Costa Brava — twin personal bests (b13, b14) — and then two 10s and a 9 at El Prat Rosa dragged him to the bottom (b44) for a third career Wooden Spoon."
     },
     {
       "player": "Stuart Neumann",
-      "arc": "Quietly held the middle of the table but bookended his tournament with blow-ups — a 9 at the 9th in R1 and a 10 at the 3rd inside a 12-shot bleed at the Stadium — and briefly wore the Spoon position after R2."
+      "arc": "Jacket runner-up in three of the last four TEGs and nowhere near it here: briefly last after R2, then 12 shots gone in four holes at the Stadium (b47) including a 10 at the 3rd (b30)."
     }
   ],
   "must_include_beat_ids": [
@@ -190,20 +185,18 @@
     "b14",
     "b17",
     "b19",
-    "b21",
-    "b22",
     "b23",
     "b27",
     "b30",
-    "b43",
     "b44",
     "b47"
   ],
   "cuts": [
+    "b11",
     "b15",
     "b25",
+    "b26",
     "b29",
-    "b32",
     "b33",
     "b34",
     "b35",
@@ -211,7 +204,7 @@
     "b37",
     "b38",
     "b39",
-    "b40",
+    "b41",
     "b42",
     "b45",
     "b46",
@@ -219,47 +212,45 @@
     "b49",
     "b50"
   ],
-  "venue_notes": "TEG's first visit to Catalonia, Spain, and all four courses are new to every player — no course history exists anywhere in this tournament, which is itself worth a line: the record round in R1 was posted on a layout nobody had seen. Frame the four days as a sequence of escalating tests: PGA Catalunya's Tour course (the 'slightly more forgiving' sibling) yielding a TEG record; Costa Brava's technical tree-lined front nine as the day of attrition; El Prat's Rosa, Greg Norman-designed and a multiple Spanish Open host, as the day the field was dismantled; and the Stadium — Spain's premier course, European Tour-designed — as the venue that decided both the Trophy and the Jacket on its 9th hole, SI 1.",
+  "venue_notes": "TEG's first visit to Catalonia and four brand-new courses — nobody had a yardage, a memory or an excuse. Frame the trip as a resort bookend: R1 on PGA Catalunya's Tour course, the 'slightly more forgiving sibling', where Williams broke the TEG record; R4 on the Stadium, Spain's premier championship test, where the same resort took it all back. Costa Brava's contrasting nines (technical tree-lined front, open back) suit Meller's R2 escape; El Prat's Greg Norman Rosa, a multiple Spanish Open host, earns its billing as the carnage round.",
   "competition_storyline_bullets": {},
   "player_storyline_bullets": {},
   "course_history_notes": [
-    "Every entry in the bundle's player_course_history is a first visit: no player had seen PGA Catalunya Tour, Costa Brava, El Prat - Rosa or the Stadium before TEG 6.",
-    "Williams's best round in TEG history to date (-12, +20 gross) came on a course he was seeing for the first time.",
-    "Mullin's four gross scores across the new courses — 89, 90, 101, 94 — bracket both his best days and his worst gross round to date (+29 at El Prat).",
-    "No prior TEG has been played in Catalonia, so all four course records set here are baselines rather than benchmarks."
+    "Every course was a first visit for every player — no prior TEG history exists at any of the four venues, so there are no course records, no PBs to beat and no local knowledge to blame.",
+    "The only 'course history' created here is the resort double: PGA Catalunya Tour in R1 and Stadium in R4, played by the same five men four days apart with wildly different results (Williams +20 gross then +41-equivalent carnage on the Stadium's closing five)."
   ],
   "decisive_moments": [
-    "Trophy: R4 H9 at PGA Catalunya Stadium (SI 1) — Williams takes a triple bogey and still regains the outright lead (b06) because Baker signs for a 10 at the same hole (b12); the final five-shot margin traces to that one green.",
-    "Green Jacket: R4 H9 — Mullin's par on the hardest hole reclaims the gross lead he had lost on R3 H18 after 51 holes in front (b05, b02), and Baker's quadruple bogey 8 at the 18th (b43) ends the level-pegging he had restored at H16 (b24).",
-    "Wooden Spoon: R3 H1 at El Prat - Rosa — Meller's 10 at the opening par 5 drops him straight back to the bottom (b27, b44) and he stays there for the remaining 53 holes."
+    "Trophy — R4 H9 at PGA Catalunya Stadium (SI 1): Baker takes 10 (b12), Williams takes 7, and the lead returns to Williams outright (b06); he is never headed again despite bleeding 14 shots over the closing five (b19).",
+    "Green Jacket — R4 H9, the same hole: Mullin's par on the hardest hole on the course retakes the Gross lead (b05) after 51 holes lost at R3 H18 (b02), and survives Baker's level-pegging at the 16th (b24) and 8 at the last (b43).",
+    "Wooden Spoon — R3 H1 at El Prat Rosa: Meller's 10 at the opening par 5 (b27) drops him back to the bottom (b44) and he stays there for the remaining 53 holes."
   ],
   "prominent_vehicle": "dual_narrative",
-  "prominent_palette": "decisive_moment",
+  "prominent_palette": "cross_teg_career",
   "payoffs": [
     {
-      "seed": "Williams's record -12 and nine-shot lead",
+      "seed": "Williams's R1 -12 and a nine-shot cushion built in one afternoon",
       "resolves_in": "Round 4 / How the Trophy was won",
-      "payoff": "The nine becomes eight, then vanishes entirely at R4 H7 after 59 holes in front (b01) — and only a five-shot remnant survives 27 shots of Stadium carnage (b22, b19)."
+      "payoff": "The cushion is the entire margin: nine after R1, nine after R2, eight after R3, five at the finish — Williams adds nothing to it after day one and wins because of it (b07 → b03)."
     },
     {
-      "seed": "Baker the perennial near-man",
-      "resolves_in": "Round 4 / How the three were decided",
-      "payoff": "He leads the Trophy outright at H7 and levels the Jacket at H16, then a 10 at the 9th (b12) and an 8 at the 18th (b43) leave him runner-up in both."
+      "seed": "The 9th at the Stadium, stroke index 1",
+      "resolves_in": "Round 4",
+      "payoff": "Both competitions turn on the same hole in the same group: Baker's 10 (b12) hands the Trophy back to Williams (b06) and the Jacket back to Mullin (b05)."
     },
     {
-      "seed": "Mullin, reigning Spoon holder with back-to-back Jackets",
-      "resolves_in": "Round 3 and Round 4 / How the Green Jacket was won",
-      "payoff": "He posts his worst gross round to date at El Prat (b21) and loses a 51-hole lead (b02), then retakes it with a par at SI 1 (b05) for a third straight Jacket, +85 by 4 (b08)."
+      "seed": "Baker the serial nearly-man, plus his R1 gross personal best",
+      "resolves_in": "Round 4 and the player-by-player close",
+      "payoff": "He leads a TEG Trophy outright for the first time in this report's span at R4 H7 (b04, ending Williams's 59-hole run in b01), holds it for two holes, and ends up runner-up in both Trophy (b03) and Jacket (b08)."
     },
     {
       "seed": "Meller's two prior Spoons and his R2 personal best",
-      "resolves_in": "Round 3 / How the Wooden Spoon was lost",
-      "payoff": "The -5 and +17 gross personal bests (b13, b14) buy him one round off the bottom before two 10s and a 9 at El Prat (b27, b17, b28) hand him a third Spoon at +30 (b23)."
+      "resolves_in": "Round 3 / How the Spoon was lost",
+      "payoff": "The Costa Brava PB (b13, b14) lifts him off the bottom for exactly one round before the 10 at El Prat's 1st (b27, b44) returns him there for good — Spoon number three (b23)."
     }
   ],
   "vehicle_fit_response": {
-    "top_scored_vehicle": "hero_arc",
+    "top_scored_vehicle": "tragic_arc",
     "taken_up": false,
-    "note": "Williams's defence of the Trophy is genuine and threads his player arc, but close_finish fires (final margin 5 with a decisive R4 moment and two outright R4 lead changes), so the frame is the Williams-Baker duel — dual_narrative leads, counterfactual and the ninth-hole motif support, hero_arc rides along in the player arcs."
+    "note": "Williams's R4 disintegration is real and gets full prose weight as texture — but he won, so it isn't a tragedy; close_finish fires (margin 5, decisive R4 outright lead change at H7/H9), so the Williams–Baker duel takes the frame as dual_narrative with counterfactual riding alongside."
   }
 }
