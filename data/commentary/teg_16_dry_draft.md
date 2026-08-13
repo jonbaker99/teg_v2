@@ -1,68 +1,79 @@
-# Dry Storyline Draft — TEG 16, Lisbon Coast 2023
+# DRY STORYLINE DRAFT — TEG 16, Lisbon Coast, 2023
 
 ## OVERVIEW
-Stuart Neumann won the Trophy on 156 Stableford points, 13 clear of Gregg Williams. Gregg Williams won the Green Jacket at +66 gross — the fifth-best gross in TEG history — by 16 from David Mullin. Alex Baker took the Wooden Spoon on 127 points, alone at the foot.
 
-## Round 1 — Oitavos Sets the Template
+Stuart Neumann won the Trophy with 156 Stableford points, 13 clear of Gregg Williams. Williams won the Green Jacket on +66 gross, 16 clear of David Mullin. Alex Baker took the Wooden Spoon on 127 points, last at the end of every round.
 
-Round 1 was played at Oitavos Dunes, Arthur Hills's Atlantic links and TEG's third visit to the course.
+---
 
-Stuart Neumann opened with 9 Stableford points across holes 1–3 — bogey at the par-4 1st, par at the par-4 2nd, bogey at the par-3 3rd (b40) — and finished the round on 39 points, 5 clear of the field on Trophy. Gregg Williams shot 18 over gross to lead the Jacket by 3; the only "lead change" was David Mullin briefly drawing level at the 6th, never outright.
+## Round 1 — Nines All the Way Down: Alex Baker Opens With Four of Them
 
-Jon Baker held a steady run through holes 14–16 — par, par, par — before a double bogey at the par-4 17th ended it (b35).
+Saturday at Oitavos Dunes, the 3rd TEG round at the venue.
 
-Alex Baker's day in the basement began at hole 1, a quintuple-bogey 9 at the par-4 1st (b06), and he closed with an 11-shot bleed across holes 16–18: double bogey at the par-5 16th, a sextuple-bogey 10 at the par-4 17th (b04), and triple bogey at the par-4 18th (b47). He finished the round on 29 points, last.
+Alex Baker signed for 113 gross — a new Oitavos Dunes course-worst, exceeding the prior worst of 111 set across 12 prior visits (cr03), and 10 shots worse than his own last visit here (103). Four holes accounted for much of it: a 9 at the par-4 1st (quintuple bogey, b07), a 9 at the par-5 7th (quadruple bogey, b23), a 9 at the par-4 11th (quintuple bogey, b08) and a 10 at the par-4 17th (sextuple bogey, b04). The closing three holes cost him 11 shots against par — a double bogey 7 at the par-5 16th, the 10 at the 17th, and a triple bogey 7 at the par-4 18th (b44).
 
-## Round 2 — Neumann Bends, Does Not Break
+Neumann posted 39 points for a 5-point Trophy lead. The Trophy lead changed hands twice, both early and both level rather than outright: Williams drew level at the 4th, Mullin at the 5th. Neumann led at the end of the round and at the end of every round thereafter.
 
-Round 2 was at Troia, an RTJ Sr. championship layout and a new course for TEG.
+Williams shot 89 gross — a personal best at the course, beating his prior 91 — for a 3-shot Green Jacket lead. Mullin drew level on gross at the 6th; the lead was never taken from Williams outright. Jon Baker recorded a personal best 92.
 
-Stuart Neumann piled up 11 points across holes 10–12: birdie at the par-4 10th, par at the par-3 11th, par at the par-4 12th (b25). The same purple patch ended at the par-4 13th with a triple-bogey 7 (b33). He also took a quadruple-bogey 8 at the par-4 16th (b11). He posted 35 points and stretched the Trophy lead to 7.
+At the bottom, the outright last place on the Trophy metric changed five times during the round: Alex Baker at the 1st, Mullin at the 10th, Alex Baker at the 11th, Mullin at the 13th, Alex Baker at the 15th. Alex Baker finished the round 5th of five on 29 points.
 
-On the Jacket, Gregg Williams shot 22 over and led by 4. Jon Baker twice drew level on gross — at the 11th and again at the 14th — but never went ahead outright.
+---
 
-Alex Baker had two separate 13-shot bleeds. Holes 4–9: triple bogey at the par-3 4th, then five straight double bogeys through the par-4 9th (b37). A birdie at the par-4 10th stopped that run (b27). Holes 13–17: triple at the par-4 13th, triple at the par-5 14th, triple at the par-4 15th, double at the par-4 16th, double at the par-3 17th (b38). The triple-bogey 7 at the 13th was the decisive drop to the bottom of the Spoon race; he stayed there for the rest of the week (b32).
+## Round 2 — The Thirteenth at Troia Settles the Spoon Before Anyone Notices
 
-## Round 3 — Penha Longa Breaks the Field
+Sunday at Troia, a new course for TEG — a first visit for every player.
 
-Round 3 was at Penha Longa Atlantic, RTJ Jr.'s mountain parkland in the Sintra hills, TEG's third visit.
+Alex Baker's triple bogey 7 at the par-4 13th (b43) dropped him to outright last on the Trophy metric. He stayed there for the remaining 42 holes. His round contained two long bleeds: holes 4 to 9 cost 13 shots against par — a triple bogey 6 at the par-3 4th, then double bogeys at the 5th, 6th, 7th, 8th and 9th (b37) — and holes 13 to 17 cost another 13, with triple bogeys at the 13th (7), the par-5 14th (8) and the 15th (7), then doubles at the 16th (6) and the par-3 17th (5) (b38). A birdie 3 at the par-4 10th ended a run of bogey-or-worse holes and returned 5 points (b39). He finished on 32 points.
 
-The round doubled both leads. Gregg Williams's Jacket lead went from 4 to 14; Stuart Neumann's Trophy lead from 7 to 12.
+Neumann scored 11 points in three holes from the 10th: a birdie 3 at the par-4 10th, a par at the par-3 11th (SI 18, the easiest hole on the course) and a 4-point par at the par-4 12th (b19). That run ended with a triple bogey 7 at the par-4 13th (b34). He posted 35 points and moved the Trophy lead to 7.
 
-Gregg's day included a triple-bogey 7 at the par-4 3rd and double bogey at the par-4 4th, stopped by a birdie at the par-3 5th (b24). He then piled up 9 points across holes 13–15 — three straight pars at the par-4 13th, par-4 14th, par-3 15th (b41).
+Williams went round in 94 and held the Green Jacket lead at 4. Jon Baker drew level on gross at the 11th and again at the 14th, without taking the lead outright.
 
-Stuart took a quadruple-bogey 8 at the par-4 1st (b12) and another at the par-4 14th (b13).
+---
 
-Jon Baker bled 11 shots across holes 11–13: double bogey at the par-4 11th, a quintuple-bogey 10 at the par-5 12th (b08), and a quadruple-bogey 8 at the par-4 13th (b49).
+## Round 3 — Penha Longa Bites: Williams 87, Everyone Else Backwards
 
-David Mullin took a quadruple-bogey 8 at the par-4 16th (b15).
+Monday at Penha Longa, the 3rd TEG round at the venue and the hardest layout of the four.
 
-Alex Baker bled 12 shots across holes 11–14: double at the par-4 11th, a quadruple-bogey 9 at the par-5 12th, triple at the par-4 13th, triple at the par-4 14th (b42).
+Williams shot 87. Jon Baker shot 97, twelve worse than his last visit; Mullin shot 98, 13 worse than his TEG 15 round here. The Green Jacket lead went from 4 to 14.
 
-## Round 4 — Estoril: A Coronation and an 11
+Jon Baker's damage was concentrated in three holes: a double bogey 6 at the par-4 11th, a 10 at the par-5 12th (quintuple bogey, SI 17, one of the easiest holes on the card, b09) and an 8 at the par-4 13th (quadruple bogey, b25) — 11 shots against par across the three (b46). Mullin ran up an 8 at the par-4 16th (quadruple bogey, SI 1, the hardest hole on the course, b20).
 
-Round 4 was at Estoril Golf Club, Mackenzie Ross parkland, TEG's second visit.
+Alex Baker also lost ground in two stretches: holes 2 to 6 cost 11 shots — doubles at the 2nd and 3rd, a triple bogey 7 at the par-4 4th, doubles at the par-3 5th and par-5 6th (b45) — and holes 11 to 14 cost 12, with a double at the 11th, a 9 at the par-5 12th (quadruple bogey, b24) and triples at the 13th and 14th (b42). He scored 33 points and remained last.
 
-Gregg Williams shot 11 over gross — his best round of the week. He piled up 9 points across holes 2–4 (par at the par-3 2nd, par at the par-4 3rd, par at the par-3 4th) (b29) and another 9 across holes 6–8 (par at the par-5 6th, par at the par-4 7th, par at the par-4 8th) (b30). The blemish was a quadruple-bogey 8 at the par-4 14th (b14). Final Jacket margin: 16.
+Neumann scored 39 points and stretched the Trophy lead to 12.
 
-Stuart Neumann posted 43 points, his best round of the week. He piled up 9 points across holes 4–6 — bogey at the par-3 4th, par at the par-3 5th, bogey at the par-5 6th (b31). He then bled 9 shots across holes 7–9: double at the par-4 7th, a quintuple-bogey 9 at the par-4 8th (b05), double at the par-4 9th (b39).
+---
 
-Alex Baker bled 14 shots across holes 5–10: double at the par-3 5th, a quadruple-bogey 9 at the par-5 6th, double at the par-4 7th, double at the par-4 8th, double at the par-4 9th, double at the par-5 10th (b22). He then took a septuple-bogey 11 at the par-4 12th (b02). Final round: 33 points, last.
+## Round 4 — Twenty-Seven Shots Apart: Estoril's Record and Its Rock Bottom
 
-After R4: Stuart Neumann led the Trophy, Gregg Williams led the Jacket (b50).
+Tuesday at Estoril, the 2nd TEG round at the venue, the shortest of the four courses.
+
+Mullin shot 80 gross — a new Estoril course record, beating the prior record of 86 set across 6 prior visits (cr01), and 14 better than his TEG 15 round here. Williams also went round in 80, a personal best at the course (prior best 86), despite a quadruple bogey 8 at the par-4 14th (b14).
+
+Alex Baker shot 107 — a new Estoril course-worst, exceeding the prior worst of 106 across 6 prior visits (cr02), and 8 worse than his last visit (99). The card included a 9 at the par-4 1st (quintuple bogey, b10), an 8 at the par-4 3rd (quadruple bogey, b26), a 9 at the par-5 6th (quadruple bogey, b27) and an 11 at the par-4 12th (septuple bogey, b03) — his worst hole against par on record. Holes 5 to 10 cost 14 shots against par: a double at the par-3 5th, the 9 at the 6th, and doubles at the 7th, 8th, 9th and par-5 10th (b18). He scored 33 points and finished last for the fourth time, on 127 points (b06). The two Estoril extremes — Mullin's 80 and Alex Baker's 107 — were 27 shots apart on the same afternoon.
+
+Neumann lost 9 shots to par across holes 7 to 9: a double bogey 6 at the par-4 7th, a 9 at the par-4 8th (quintuple bogey, SI 1, the hardest hole on the course, b05) and a double bogey 6 at the 9th (b22). He still returned 43 points, his best round of the tournament, for a 92 gross — 14 better than his 106 here in TEG 15 — and won the Trophy by 13 (b02).
+
+Jon Baker recorded a personal best 93 at the course, including a quadruple bogey 8 at the par-4 11th (SI 2, one of the hardest, b28). Williams's 80 secured the Green Jacket at +66 by 16 (b01).
+
+---
 
 ## HOW THE COMPETITIONS WERE DECIDED
 
-**The Trophy (Stableford).** Stuart Neumann led after every round, on 39, 74, 113 and 156 points. The lead grew from 5 to 7 to 12 to 13. There were two early lead changes in Round 1 — Gregg Williams drew level at the 4th, David Mullin drew level at the 5th — neither outright. Stuart was never headed thereafter. Final margin: 13 over Gregg Williams.
+**Trophy (Stableford).** Neumann led after every round: 39 points at Oitavos Dunes (lead 5), 35 at Troia (lead 7), 39 at Penha Longa (lead 12), 43 at Estoril (lead 13). The only two lead changes came at the 4th and 5th holes of Round 1, both level rather than outright, with the field still bunched. The Round 3 39 at Penha Longa, the hardest of the four courses, took the lead from 7 to 12. Final margin: 156 points to Williams's 143 — 13.
 
-**The Green Jacket (Gross).** Gregg Williams led on gross from hole 1 to hole 72. Round leads of 3, 4, 14 and 16. The three "lead changes" were tied-leader moments that never became outright: David Mullin at Oitavos's 6th, Jon Baker at Troia's 11th and 14th. The decisive round was Penha Longa, where the lead jumped from 4 to 14. Final: +66, won by 16 from David Mullin — fifth-best gross in TEG history.
+**Green Jacket (Gross).** Williams led from Round 1 to Round 4 without interruption: 89 at Oitavos Dunes (lead 3), 94 at Troia (lead 4), 87 at Penha Longa (lead 14), 80 at Estoril (lead 16). Three lead changes occurred — Mullin drew level at the 6th in Round 1, Jon Baker at the 11th and 14th in Round 2 — none outright. The decisive round was the third: Williams's 87 against Jon Baker's 97 and Mullin's 98 moved the margin from 4 to 14. Mullin's record 80 in Round 4 reduced nothing, as Williams matched it. Final: +66, by 16.
 
-**The Wooden Spoon.** Alex Baker was bottom after every round (29, 61, 94, 127). He first dropped to last at the quintuple-bogey 9 at Oitavos's 1st, then traded the position with David Mullin during the Oitavos back nine (Mullin at the 10th, Baker at the 11th, Mullin at the 13th, Baker at the 15th). The decisive drop came at the triple-bogey 7 on Troia's 13th in Round 2; he was bottom for the rest of the week. Final: 127 points.
+**Wooden Spoon.** Alex Baker was bottom on the Trophy metric from the 1st hole of Round 1 and finished 5th of five after all four rounds, with round scores of 29, 32, 33 and 33. Last place changed hands five times during Round 1, alternating between Alex Baker and Mullin. The decisive drop came at Troia, Round 2, hole 13: a triple bogey 7 put Alex Baker outright last, and he remained there for the final 42 holes. Final total: 127 points, a second consecutive Wooden Spoon.
+
+---
 
 ## PLAYERS
 
-- **Stuart Neumann** — Won the Trophy wire to wire on 156 points (39-35-39-43). Opened with 9 points across Oitavos's holes 1–3 (b40), absorbed a quad at Troia's 16th (b11) and the triple-bogey end to the H10–12 purple patch (b33), took quads at Penha Longa's 1st and 14th (b12, b13), and posted his best round at Estoril including 9 points across H4–6 (b31) despite a quintuple at the 8th inside a 9-shot bleed (b05, b39). Won by 13.
-- **Gregg Williams** — Won the Green Jacket wire to wire at +66 (18-22-15-11), never headed on gross. Broke the field at Penha Longa with the H13–15 par run (b41) after the recovery birdie at the 5th (b24), and sealed it at Estoril with two three-hole 9-point runs at H2–4 and H6–8 (b29, b30); one quad at the par-4 14th (b14). Runner-up in the Trophy.
-- **Alex Baker** — Wooden Spoon on 127 points. Bottom from the quintuple at Oitavos's 1st (b06) to the septuple at Estoril's 12th (b02), via the sextuple-bogey 10 at Oitavos's 17th (b04), 13-shot bleeds at Troia (b37, b38), the decisive triple at Troia's 13th (b32), a 12-shot bleed at Penha Longa (b42) and a 14-shot bleed at Estoril (b22).
-- **Jon Baker** — Drew level with Gregg on gross twice at Troia (H11, H14), never outright. Undone at Penha Longa by an 11-shot bleed across H11–13 including a quintuple-bogey 10 at the par-5 12th (b08, b49), and took a quad at Estoril's 11th (b21).
-- **David Mullin** — Jacket runner-up at +82. Flirted with the Spoon in Round 1 (bottom at the 10th and 13th), briefly drew level on Trophy at Oitavos's 5th, took a quad at Penha Longa's 16th (b15), and piled up 9 points across Estoril's H11–13 (b36).
+- **Stuart Neumann** — Arrived with no Trophy, no Green Jacket and two Wooden Spoons, with his last four TEG finishes reading 6th, 5th, 3rd, 2nd. Led the Trophy from the end of Round 1 to the finish, closed with a tournament-best 43 points, and won by 13.
+- **Gregg Williams** — Defending Trophy champion; finished second on Stableford, 13 back. Won a second Green Jacket by 16 on the back of a personal-best 89 at Oitavos Dunes, an 87 at Penha Longa and a personal-best 80 at Estoril.
+- **Alex Baker** — Reigning Spoon holder; last from the 1st hole of Round 1 to the final putt. Set two course-worsts (113 at Oitavos Dunes, cr03; 107 at Estoril, cr02), ran up an 11 at Estoril's 12th, and took a back-to-back Wooden Spoon on 127 points.
+- **David Mullin** — Nine-time Green Jacket winner; 13 shots worse than his TEG 15 self at Penha Longa, then set the Estoril course record with an 80 (cr01), 14 better than his last visit. Lost the Jacket by 16.
+- **Jon Baker** — Personal bests at Oitavos Dunes (92) and Estoril (93) either side of a 97 at Penha Longa, twelve worse than his previous round there, in which a 10 at the 12th (b09) and an 8 at the 13th (b25) contributed to Williams's Jacket margin.
