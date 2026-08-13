@@ -1,61 +1,63 @@
 {
-  "title": "Brother Act",
+  "title": "Baker v Baker: Jon Takes the Lot",
   "title_candidates": [
-    "Brother Act",
-    "Keeping It in the Family",
-    "Jon Baker's Catalonia",
-    "The Long-Awaited Double",
-    "No More Mister Runner-Up"
+    "Baker v Baker: Jon Takes the Lot",
+    "Forty-Five Holes in Front, and Then His Brother",
+    "The Jacket Mullin Didn't Get",
+    "Two Course Records and a Family Argument"
   ],
-  "theme": "Jon Baker, three-time Jacket bridesmaid, finally cashes in — and the player who beats him to the line is his own brother, the defending champion. A four-day duel of Bakers settled by a single afternoon at PGA Catalunya.",
-  "tone": "house — faithful, tongue-in-cheek, Ronay/Peck",
-  "narrative_structure": "in_medias_res — open at R4 H6 (the decisive takeover), then loop back to how a Baker civil war reached that point",
-  "opening_hook": "R4 H6 on the Stadium course: Jon Baker draws level with brother Alex on the Trophy and never trails again. The takeover that ended a 56-hole sibling tussle — and a four-TEG Jacket itch.",
+  "theme": "The perennial runner-up finally cashes in: Jon Baker, Jacket bridesmaid in three of the last four TEGs, breaks two course records, holds off his own brother by six, and takes David Mullin's Jacket off him — while Mullin, gross runner-up, ends up holding the Spoon.",
+  "tone": "house — faithful, tongue-in-cheek, Ronay/Peck register; ribbing aimed at the blow-ups, respect for the winner",
+  "narrative_structure": "in_medias_res",
+  "opening_hook": "Open at El Prat, R3 H13 (b01): Jon Baker, 45 holes in front since R1 H4, makes a routine par and still hands the Trophy lead to his brother Alex — then loop back to how a man who had never won a Jacket got there in the first place.",
   "narrative_vehicles": [
     "dual_narrative",
-    "counterfactual",
-    "comeback"
+    "comeback",
+    "motif"
   ],
   "foreshadow": [
-    "Jon Baker arrived as the eternal Jacket runner-up: silver in three of the last four TEGs without a win",
-    "Alex Baker arrived as defending Trophy champion, looking to retain",
-    "David Mullin arrived on the back of EIGHT Jackets and back-to-back wins of golf's most familiar green coat",
-    "John Patterson arrived as reigning Wooden Spoon holder, the one prize nobody wanted to defend"
+    "Jon Baker went in as Jacket runner-up in three of the last four TEGs, with no win; David Mullin arrived with 8 Jacket wins and back-to-back titles.",
+    "Jon's R1 90 at the Stadium (cr01) was a new course record and a 9-shot improvement on his last visit — a hint that this was a different Jon.",
+    "The 13th at PGA Catalunya - Stadium (SI 6) collecting numbers from the start: Alex Baker's 8 in R1 (b17), Patterson's 9 (b25).",
+    "Mullin scoring beautifully in raw shots — new personal bests at both PGA Catalunya courses — while quietly sliding down the Stableford table."
   ],
   "competitions": [
     {
       "name": "Trophy (Stableford)",
       "winner_or_loser": "Jon Baker (143 pts, by 6 from Alex Baker)",
-      "how": "Jon led after R1 and R2; Alex's R3 par-fest (b32) flipped him into outright lead at H13 (b14); Jon's steady R4 drew him level at H6 (b22) while Alex haemorrhaged shots in three separate clusters (b40, b35, b36) — final margin 6.",
+      "how": "Jon led from R1 H4 (35 pts) and stretched it with 41 in R2, the best round of the tournament by any measure; he then bled 7 shots in three holes at El Prat (b42) and lost a 45-hole tenure at R3 H13 to Alex (b01/b06), who had crept level at H1 (b40) and gone outright ahead on the back of a level-par run (b35). Two down starting R4, Jon drew level at H6 (b09) — with a double bogey, because Alex was busy dropping 7 shots in three holes (b38) — and never trailed again. Alex's 27 pts (b11), his worst TEG round, turned a two-point lead into a six-point defeat.",
       "key_beat_ids": [
+        "b03",
         "b01",
-        "b14",
-        "b22",
-        "b40",
-        "b35",
-        "b36"
+        "b06",
+        "b09",
+        "b11",
+        "b42"
       ]
     },
     {
       "name": "Green Jacket (Gross)",
       "winner_or_loser": "Jon Baker (+70, by 3 from David Mullin)",
-      "how": "Jon led wire-to-wire after grabbing it on R1 H3; Mullin briefly drew level at R3 H3 (b38) before Jon retook outright at R3 H6 (b09) and a Catalonia-PB R4 sealed it — dethroning the eight-time holder.",
+      "how": "Jon led the gross from R1 H4 and never once finished a round out of first, but it was closer than the leaderboard suggests: a course-record 90 at the Stadium (cr01) and a course-record 84 on the Tour (cr02) built the cushion, Mullin took the lead back at R3 H5 after 37 holes (b02), and Jon reclaimed it outright at R3 H6 (b05) when Mullin ran up a 7 at the same short hole (b18). Mullin drew level again at R4 H3 (b10) off a three-par opening burst (b22), then bled 7 shots from H15 (b39). Jon's own quadruple bogey at the 13th (b16) cost him nothing. First Jacket for Jon; the end of Mullin's back-to-back run.",
       "key_beat_ids": [
-        "b02",
-        "b09",
+        "b04",
         "cr01",
-        "cr02"
+        "cr02",
+        "b02",
+        "b05",
+        "b10"
       ]
     },
     {
       "name": "Wooden Spoon",
-      "winner_or_loser": "David Mullin (125 pts) — lost it",
-      "how": "Patterson wore the dunce's cap from R1 H14 (b33) through R2; Mullin's R3 unravelling — a quadruple at H6 (b17) and the slip to last at H12 (b21) — handed it over, and he couldn't escape across R4.",
+      "winner_or_loser": "David Mullin (125 pts)",
+      "how": "Patterson looked the obvious candidate, bottom after R1 (from H14, b44) and R2, the latter including an 11 at the 15th (b12) and a new Tour course-worst of 103 (cr03). But Mullin, 4th after two rounds, went 29 and 31 in R3 and R4 and dropped to last at R3 H12 (b21) — a bogey at the easiest hole on the course (SI 18) — after a quadruple bogey at the 6th (b18). He never got back off the bottom. Second in raw shots, last on points: handicap arithmetic, coldly applied.",
       "key_beat_ids": [
         "b08",
         "b21",
-        "b17",
-        "b33"
+        "b18",
+        "b39",
+        "b44"
       ]
     }
   ],
@@ -63,93 +65,78 @@
     {
       "round": 1,
       "headline_candidates": [
-        "Jon Baker Tears Up the Stadium",
-        "Ninety, and a Record to Match",
-        "An Elder Statesman's Statement"
+        "Jon Baker Rewrites the Stadium",
+        "Ninety at Spain's Premier Test",
+        "Williams Finds the Fifth, Patterson Finds Everything Else"
       ],
-      "chosen_headline": "Ninety, and a Record to Match",
-      "angle": "Jon Baker opens with a 90 at the Stadium — nine shots better than his last visit and a new course record across six TEG visits. Patterson and Williams set the early Spoon tone with horror stretches.",
+      "chosen_headline": "Jon Baker Rewrites the Stadium: 90, and the Record With It",
+      "angle": "The tournament's tone is set in one number — Jon's 90 (cr01), nine shots better than his last visit here — while Williams and Patterson hand back shots in bulk.",
       "beat_ids": [
         "cr01",
-        "b05",
-        "b45",
-        "b39",
-        "b33",
-        "b11",
-        "b12"
+        "b13",
+        "b17",
+        "b25",
+        "b44"
       ]
     },
     {
       "round": 2,
       "headline_candidates": [
-        "84 and Bake",
-        "Jon Baker Breaks Another One",
-        "Patterson's 11, and a Course-Worst to Boot"
+        "Two Days, Two Course Records",
+        "The 15th Serves an 11 and a 10",
+        "Patterson's 103 Goes Into the Ledger Too"
       ],
-      "chosen_headline": "84 and Bake",
-      "angle": "Jon goes lower still on the Tour course — 84 gross, another course record. Patterson posts an 11 on H15 and a course-worst 103 on the same card; Williams matches the 15th with a 10 of his own before stopping the bleeding with a birdie at 17.",
+      "chosen_headline": "Two Days, Two Course Records — and Carnage at the 15th",
+      "angle": "Jon's 41 pts and 84 gross (cr02) is the round that wins the tournament; behind him the Tour course's 15th (SI 5) takes an 11 off Patterson (b12) and a 10 off Williams (b14), and Patterson posts a course-worst 103 (cr03).",
       "beat_ids": [
         "cr02",
         "cr03",
-        "b03",
-        "b06",
-        "b04",
-        "b26",
-        "b50",
-        "b49"
+        "b12",
+        "b14",
+        "b07"
       ]
     },
     {
       "round": 3,
       "headline_candidates": [
-        "Brother Alex Strikes Back",
-        "El Prat, El Pivot",
-        "The Defending Champion Stirs"
+        "Forty-Five Holes in Front — Then Along Came Alex",
+        "El Prat: The Defending Champion Remembers Himself",
+        "Mullin Slides Out of the Back of the Picture"
       ],
-      "chosen_headline": "Brother Alex Strikes Back",
-      "angle": "On a new course at El Prat - Azul, Alex Baker's three-hole par streak (12-14) flips the Trophy on its head — first level at H1, then outright by H13. Meanwhile Mullin's quadruple at the 6th and slip at the 12th drop him into the Spoon, and Jon clings to the Jacket through a wobble.",
+      "chosen_headline": "Forty-Five Holes in Front — Then Along Came Alex",
+      "angle": "On TEG's first visit to El Prat, both leads change hands: Jon loses the Trophy to his brother at H13 after 45 holes in front (b01/b06) and loses the gross to Mullin at H5 (b02) before snatching it straight back at H6 (b05) — the hole where Mullin makes 7 (b18) and Mullin's Spoon fate is effectively sealed at H12 (b21).",
       "beat_ids": [
-        "b14",
-        "b37",
-        "b32",
-        "b17",
+        "b01",
+        "b02",
+        "b05",
+        "b06",
+        "b18",
         "b21",
-        "b09",
-        "b38",
-        "b43",
-        "b13",
-        "b20",
-        "b46"
+        "b23",
+        "b42"
       ]
     },
     {
       "round": 4,
       "headline_candidates": [
-        "Brother, Where Art Thou?",
-        "Jon Baker Ends the Wait",
-        "The Sixth Hole, And It Was Done"
+        "Baker Beats Baker: Six Points, and the Jacket at Last",
+        "Alex Baker's 27: A Two-Shot Lead, Dismantled",
+        "The 13th Bites Again, and It Doesn't Matter"
       ],
-      "chosen_headline": "Brother, Where Art Thou?",
-      "angle": "Back on the Stadium for the Sunday finale. Jon draws level with Alex at H6 (b22) and never trails again. Alex bleeds three separate clusters of shots and posts his worst round to date; Mullin's late stumble locks in the Spoon. Jon's first Jacket, by three.",
+      "chosen_headline": "Baker Beats Baker: Six Points, and the Jacket at Last",
+      "angle": "Back at the Stadium, Jon is level by H6 (b09) and gone by lunchtime of the argument: Alex's 27 pts (b11) is his worst TEG round, with an 8 at the SI 1 ninth (b19) and another at the 17th (b20); Jon's own 8 at the 13th (b16) is a footnote, and Mullin's late collapse (b39) hands over the Jacket after a level-pegging start (b22, b10).",
       "beat_ids": [
+        "b09",
+        "b11",
+        "b16",
+        "b19",
+        "b20",
+        "b15",
         "b22",
         "b10",
-        "b40",
-        "b35",
-        "b36",
-        "b18",
-        "b19",
-        "b15",
-        "b41",
-        "b29",
-        "b07",
-        "b48",
-        "b44",
-        "b25",
-        "b28",
-        "b34",
-        "b01",
-        "b02",
+        "b39",
+        "b03",
+        "b04",
         "b08"
       ]
     }
@@ -157,54 +144,42 @@
   "players": [
     {
       "player": "Jon Baker",
-      "arc": "The three-time Jacket bridesmaid finally wears the coat — and the Trophy on top. Two course records inside 48 hours, the wire-to-wire Jacket, and a R4 takeover at H6 against his own brother. No more silver."
+      "arc": "Jacket runner-up in three of the last four TEGs and never better than third on the Trophy in that time, he turns up in Catalonia, breaks the course record at both PGA Catalunya layouts, survives losing a 45-hole lead to his own brother, and walks off with the lot."
     },
     {
       "player": "Alex Baker",
-      "arc": "The defending Trophy champion played the part for three rounds, seized the outright lead at El Prat, then dropped chunks of shots in R4 (clusters at 4-6, 12-14 and 16-18) — runner-up to his brother by six."
+      "arc": "The defending Trophy champion is the only man to take the lead off his brother all tournament, holds it into R4 by two, and then posts 27 points — his worst TEG round — to lose by six."
     },
     {
       "player": "David Mullin",
-      "arc": "Arrived with eight Jackets and back-to-back wins; left without the coat AND with the Spoon. Dethroned in Gross by 3, undone in Stableford by his own R3 unravelling. New PBs at both PGA Catalunya courses — and somehow last."
+      "arc": "Eight Jackets and counting becomes eight Jackets and stopping: new personal bests at both PGA Catalunya courses, gross runner-up by three, and dead last on points with the Spoon in his hands."
     },
     {
       "player": "John Patterson",
-      "arc": "Reigning Spoon holder shed the title the hard way: by being out-bottomed. An 11 at the Tour 15th, a course-worst 103 on the same card, and quintuples on four different cards — yet escaped last place."
+      "arc": "The reigning Spoon holder does everything possible to retain it — an 11 at the 15th, a course-worst 103, three quintuple bogeys — and is spared only by Mullin's late slide."
     },
     {
       "player": "Gregg Williams",
-      "arc": "Three-time Trophy winner reduced to colour: an 8 at R1 H5, a 10 at R2 H15 (followed by a birdie at 17 to stop the bleeding), and an 11-shot bleed in R4. The silver lining — 14 shots better than his last visit to the Stadium."
+      "arc": "Three prior Trophy wins and a quintuple bogey in three of the four rounds, yet his R4 99 at the Stadium was fourteen shots better than his last visit here — improvement measured in wreckage avoided."
     }
   ],
   "must_include_beat_ids": [
     "b01",
     "b02",
+    "b03",
+    "b04",
     "b08",
+    "b12",
+    "b14",
     "cr01",
     "cr02",
-    "cr03",
-    "b03",
-    "b06",
-    "b14",
-    "b22",
-    "b21",
-    "b09"
+    "cr03"
   ],
   "cuts": [
-    "b04",
-    "b05",
-    "b07",
-    "b11",
-    "b12",
-    "b13",
-    "b15",
-    "b16",
-    "b18",
-    "b19",
-    "b20",
-    "b23",
+    "b10",
+    "b22",
     "b24",
-    "b25",
+    "b26",
     "b27",
     "b28",
     "b29",
@@ -216,59 +191,57 @@
     "b35",
     "b36",
     "b37",
-    "b38",
-    "b39",
     "b40",
     "b41",
-    "b42",
     "b43",
-    "b44",
     "b45",
     "b46",
     "b47",
     "b48",
     "b49",
-    "b50",
-    "b10",
-    "b17",
-    "b26"
+    "b50"
   ],
-  "venue_notes": "TEG's 2nd visit to Catalonia (after TEG 6 in 2012). Three rounds at PGA Catalunya (Stadium R1+R4, Tour R2 — both with five prior TEG visits, ripe for records) bookend a new-course excursion to El Prat - Azul on the Saturday. Use the Stadium's championship pedigree as backdrop to Jon Baker's pair of course records; flag El Prat as the only unfamiliar test and the round where the Trophy actually changed hands.",
+  "venue_notes": "TEG's 2nd visit to Catalonia (the courses' prior TEG bests all date to TEG 6). Stadium bookends the tournament (R1 the 2nd TEG round here, R4 the 3rd) — use that for the bookend feel of Jon's record 90 and his closing 35 pts on the same layout. The Tour course (2nd TEG round) is the 'slightly more forgiving sibling' and duly gave up a record 84 and a course-worst 103 on the same day — worth a line. El Prat - Azul (Greg Norman, Barcelona) is a new course for TEG and is where both leads changed hands: frame it as the one unfamiliar day that reshuffled everything. Quote the cr01/cr02/cr03 record wording verbatim; do not reconcile 'prior visits' counts against the round numbering.",
   "competition_storyline_bullets": {},
   "player_storyline_bullets": {},
   "course_history_notes": [
-    "Jon Baker's R1 90 at PGA Catalunya - Stadium beats the prior course best of 94 (set across 5 prior visits) AND is a 9-shot improvement on his own last visit",
-    "Jon Baker's R2 84 at PGA Catalunya - Tour beats the prior course best of 89 and is a 6-shot improvement on his own last visit",
-    "David Mullin set personal bests at BOTH PGA Catalunya courses (85 Tour in R2, 91 Stadium in R4) — and still finished last on Stableford",
-    "Gregg Williams was 14 shots better than his last visit to the Stadium course (113 in TEG 6 → 99 in R4)",
-    "John Patterson's R2 103 at the Tour course is the new course-worst, exceeding the prior worst of 101 across 5 prior visits"
+    "Jon Baker's new personal bests at both PGA Catalunya courses: 90 at the Stadium in R1 (9 better than his last visit) and 84 on the Tour in R2 (6 better) — both also course records for TEG.",
+    "David Mullin's new personal bests too: 85 on the Tour in R2 (prior best 89, TEG 6) and 91 at the Stadium in R4 (prior best 94, TEG 6) — and still the Spoon.",
+    "Gregg Williams's 99 at the Stadium in R4 was 14 shots better than his last visit (113, TEG 6) — his new personal best there.",
+    "El Prat - Azul was a first visit for everyone; the fact that it produced both decisive lead changes is the point, not the yardage."
   ],
   "decisive_moments": [
-    "Trophy: R4 H6 — Jon Baker draws level with Alex on the Stadium and never trails again across the closing 12 holes",
-    "Green Jacket: R3 H6 at El Prat - Azul — Jon Baker retakes outright Gross lead from Mullin and holds it through R4",
-    "Wooden Spoon: R3 H12 at El Prat - Azul — David Mullin's bogey drops him to last, and a R4 31 isn't enough to climb out"
+    "Trophy: R4 H6 at the Stadium — Jon Baker draws level with a double bogey (b09) while Alex bleeds 7 shots in three holes (b38); Jon never trails again en route to 143 and a 6-point win.",
+    "Green Jacket: R3 H6 at El Prat — Jon Baker retakes the gross lead outright (b05) at the hole where Mullin makes 7 (b18), and holds it to the finish at +70.",
+    "Wooden Spoon: R3 H12 at El Prat — a bogey at the easiest hole on the course (SI 18) drops David Mullin to the bottom (b21), a position he never leaves."
   ],
-  "prominent_vehicle": "decisive_moment",
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "cross_teg_career",
   "payoffs": [
     {
-      "seed": "Jon Baker the eternal Jacket runner-up",
-      "resolves_in": "Round 4 + How the three were decided",
-      "payoff": "Wins the Jacket wire-to-wire by 3 — AND adds the Trophy. The drought ends with a double."
+      "seed": "Jon Baker the Jacket bridesmaid; Mullin's 8 Jackets and back-to-back run",
+      "resolves_in": "Round 4 / How the three were decided (Green Jacket)",
+      "payoff": "Jon wins the Jacket at +70 by 3 from Mullin (b04) — his first, and the end of Mullin's run."
     },
     {
-      "seed": "Alex Baker defending Trophy champion",
+      "seed": "The R1 90 at the Stadium as a signal (cr01)",
+      "resolves_in": "Round 2 and the Green Jacket section",
+      "payoff": "Followed immediately by a record 84 on the Tour (cr02); the two rounds are the cushion that survives every later wobble."
+    },
+    {
+      "seed": "The 13th at PGA Catalunya - Stadium collecting numbers (b17, b25)",
       "resolves_in": "Round 4",
-      "payoff": "Held the outright Trophy lead from R3 H13; ceded it to brother Jon at R4 H6 and bled away to runner-up by 6."
+      "payoff": "Jon runs up an 8 there himself in R4 (b16) — and by then it costs him nothing, because Alex is making 8s at the 9th and 17th (b19, b20)."
     },
     {
-      "seed": "David Mullin's eight Jackets and back-to-back run",
-      "resolves_in": "How the three were decided + the men in brief",
-      "payoff": "Dethroned in Gross by 3 — and collects the Wooden Spoon despite course PBs at both PGA Catalunya layouts."
-    },
-    {
-      "seed": "John Patterson the reigning Spoon holder",
-      "resolves_in": "Round 3 + the men in brief",
-      "payoff": "Wore last place from R1 H14 through R2, then Mullin's R3 unravelling lifted him off the bottom — Spoon shed, though with a course-worst 103 as a parting gift."
+      "seed": "Mullin scoring superbly in raw shots while drifting down the points table",
+      "resolves_in": "How the three were decided (Wooden Spoon)",
+      "payoff": "Two personal course bests, gross runner-up by three — and last on 125 points with the Spoon (b08), the drop confirmed at R3 H12 (b21)."
     }
-  ]
+  ],
+  "vehicle_fit_response": {
+    "top_scored_vehicle": "comeback",
+    "taken_up": true,
+    "note": "Taken up as supporting framing — Jon's Jacket-bridesmaid history is the emotional engine — but close_finish fired (final margin 6 with the decisive move at R4 H6), so the brothers' intertwined week leads as dual_narrative."
+  }
 }

@@ -26,7 +26,7 @@ The Tour course is the Stadium's slightly more forgiving sibling, and on the Fri
 
 Jon Baker shot 84: 41 Stableford points, +12 gross, and a new Tour course record, beating the 89 that had stood across five prior visits. Two days, two layouts, two records. He led the Trophy by two and the Jacket by three, and while nobody said so out loud, this was the round that paid for everything that came afterwards.
 
-The par-5 15th was where the rest of the field went to be processed. Patterson made 11 there, a sextuple bogey and his worst hole of the tournament relative to par. Williams came through the same hole and made 10. Alex Baker, meanwhile, had already found a quintuple-bogey 9 at the 12th.
+The par-5 15th was where the rest of the field went to be processed. Patterson made 11 there, a sextuple bogey and his worst hole of the tournament relative to par. Williams came through that same hole and made 10. Alex Baker, meanwhile, had already found a quintuple-bogey 9 at the 12th.
 
 Patterson signed for 103. That exceeded the previous Tour course-worst of 101, set across five prior visits, which means the same course surrendered its record and its anti-record on the same afternoon.
 
@@ -79,5 +79,5 @@ Williams made a quintuple-bogey 9 at the 10th and shot 99, fourteen shots better
 - **Jon Baker.** Three Jacket runner-up finishes in the last four TEGs, and never better than third on the Trophy in that time. He broke the course record at both PGA Catalunya layouts, surrendered a 45-hole lead to his own brother without hitting a bad shot, took it back with a double bogey, and left with the Trophy, the Jacket and both records. Bridesmaid no more.
 - **Alex Baker.** The defending Trophy champion and the only man to take a lead off Jon all tournament. He held it into the final round by two, then made 8s at the 9th and the 17th on the way to 27 points, the worst round of his TEG career, and lost by six.
 - **David Mullin.** Personal bests at both Catalunya courses, 85 on the Tour and 91 at the Stadium, and gross runner-up by three. He also finished dead last on points with the Spoon in his hands. Eight Jackets and counting has become eight Jackets and stopping.
-- **John Patterson.** The reigning Spoon holder did everything a man could to keep it: an 11 at the Tour's 15th, three quintuple bogeys, and a 103 that set a new course-worst there. He was spared only by Mullin's slide, which is not the same as being spared by his golf.
-- **Gregg Williams.** Three prior Trophy wins, and a quintuple bogey in three of the four rounds, including a 10 at the Tour's 15th. His closing 99 at the Stadium was fourteen shots better than his last visit to the course, which counts as a good day out.
+- **John Patterson.** The reigning Spoon holder did everything a man could to keep it: an 11 at the Tour's 15th, three quintuple bogeys, and a 103 that set a new course-worst there. He was spared only by Mullin's decline, which is not the same as being spared by his golf.
+- **Gregg Williams.** Three prior Trophy wins, and a quintuple bogey in three of the four rounds, including a 10 at the Tour's 15th. His closing 99 at the Stadium was fourteen shots better than his last visit to the course, which counts as a solid outing.
