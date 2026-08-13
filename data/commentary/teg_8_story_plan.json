@@ -1,55 +1,65 @@
 {
-  "title": "Wire to Wire on the Estoril Coast",
+  "title": "Tens All Round: Portugal Hands Out Double Figures, Williams Takes the Trophy by 12",
   "title_candidates": [
-    "Wire to Wire on the Estoril Coast",
-    "Lisbon, Decided Early",
-    "The Atlantic Procession",
-    "Three Races, All Settled by Sunday Morning"
+    "Tens All Round: Portugal Hands Out Double Figures, Williams Takes the Trophy by 12",
+    "Six Men, Three New Courses, Seven Double Figures: Williams Bleeds Least and Wins by 12",
+    "The Cascais Carnage: Williams Wins Wire-to-Wire, Mullin Reclaims the Jacket at the Second Hole",
+    "Absorb and Survive: How Gregg Williams Made Two 10s and Still Won by 12"
   ],
-  "theme": "Three competitions, three early verdicts: Williams seizes the Trophy on R1 H10 and never lets go; Mullin's Green Jacket wobbles for one round only; Neumann is bottom of the Spoon by R1 H4 and stays there for four days.",
-  "tone": "house — Ronay/Peck: witty, characterful, anchored in the numbers, gently ribbing insiders",
+  "theme": "Three brand-new Portuguese courses spent four rounds handing out double figures to every single player in the field — TEG 8 was won not by the man who played best but by the man whose disasters cost him least, and Gregg Williams's disasters cost him nothing at all.",
+  "tone": "house — faithful, entertaining, tongue-in-cheek; Ronay/Peck register, dry rather than zany, every joke anchored to a scorecard",
   "narrative_structure": "theme_led",
-  "opening_hook": "Open with the curious fact that all three competitions were effectively decided before lunch on day one — Williams' Trophy lead on R1 H10 (b34 stretch), Mullin's first Jacket lead the same afternoon, and Neumann sinking to bottom by R1 H4 — then flash back round by round to show how little resistance the chasing pack mustered.",
+  "opening_hook": "Open on the arithmetic of destruction rather than the leaderboard: the double-figure holes strewn across Quinta da Marinha, Penha Longa and Oitavos Dunes (b46, b09, b10, b08, b23, b06, b19) — every one of the six men signed for at least one blow-up — then ask the only question that mattered, which was who could absorb them, and answer it: Williams, by 12.",
+  "narrative_vehicles": [
+    "ensemble",
+    "catalogue",
+    "inevitability"
+  ],
   "foreshadow": [
-    "Williams piles 14 points in four holes around the turn at Quinta da Marinha — the Trophy is basically over by mid-afternoon on day one",
-    "Mullin and Jon Baker will trade the Gross lead seven times, but only one of those trades matters",
-    "Neumann is already last by the 4th hole of the tournament and will not move from sixth for 72 holes",
-    "Quinta da Marinha will be visited twice, and both times will produce double-figure scorecards"
+    "Williams comes in with two Trophies and a Green Jacket rank of exactly 5th in each of the last three TEGs — a man who has never once threatened a gross prize.",
+    "Alex Baker arrives as the reigning Wooden Spoon holder, last of six on both counts in TEG 7 — and opens TEG 8 with five straight bogeys.",
+    "Mullin arrives on five Jackets and back-to-back wins; the gross lead looks his by default until a Baker starts posting numbers on the same card.",
+    "Neumann has finished 3rd on the Trophy in each of the last three TEGs and has never held a Spoon — a record that lasts until the fourth hole of the tournament."
   ],
   "competitions": [
     {
       "name": "Trophy (Stableford)",
       "winner_or_loser": "Gregg Williams",
-      "how": "A wire-to-wire procession. Williams took outright lead on R1 H10 during a four-hole burst of 14 points (b34), extended to 11 by the end of Penha Longa despite a 10 at the 12th (b09), survived a wobbly 29-point round at Quinta da Marinha including another 10 at the 11th (b10), then closed the deal at Oitavos with a 41-point round capped by a 12-point spree on 12–15 (b43). Final margin: 12 points over Alex Baker (b02).",
+      "how": "Williams took the outright lead at R1 H10 during a 14-point burst across holes 8-11 (b12), closed R1 on 38 pts and four clear, then produced 41 at Penha Longa — including a 10 at the 12th (b09) — to stretch the cushion to 11. A 29-point R3 at Quinta da Marinha, with a 10 at the 11th (b10) inside a 14-shot bleed across 8-11 (b35), cut the lead to 5 and was the only wobble of the tournament; Oitavos Dunes then produced another 41, with 12 points in four holes from the 12th (b11) after an 11-shot bleed from the 5th (b34). Final: 149 pts, by 12 over Alex Baker (b02) — wire-to-wire, no lead change after R1, a third Trophy.",
       "key_beat_ids": [
-        "b34",
+        "b02",
+        "b12",
         "b09",
         "b10",
-        "b43",
-        "b02"
+        "b35",
+        "b34",
+        "b11"
       ]
     },
     {
       "name": "Green Jacket (Gross)",
       "winner_or_loser": "David Mullin",
-      "how": "Mullin led after rounds 1 and 2 (a +14 at Penha Longa was the round of the week), then surrendered the lead to Jon Baker at Quinta da Marinha after his worst round to date (26 pts, b21) including a quad-bogey 8 at the 12th (b29). The decisive blow came on R4 H2 at Oitavos Dunes, where Mullin retook outright lead (b03) and closed with a +17 to win by 6 (b06).",
+      "how": "Mullin had the outright gross lead from R1 H13 and stood 6 clear after the lowest round of the tournament, an 86 at Penha Longa (+14). Then Quinta da Marinha's second visit undid him: his worst round to date (b17, 26 pts / +26) let Jon Baker — round of 89, the best gross figure posted on that course — take the lead at R3 H13 after 36 holes of Mullin in front (b01). Two holes into Oitavos Dunes, a bogey at the 2nd was enough to take it straight back (b03), the one lead change of the tournament flagged decisive; +17 on the links closed it out at +77, by 6 (b05). Six Jackets, three in a row.",
       "key_beat_ids": [
-        "b21",
+        "b01",
+        "b17",
         "b03",
-        "b06"
+        "b05"
       ]
     },
     {
       "name": "Wooden Spoon",
       "winner_or_loser": "Stuart Neumann",
-      "how": "Settled before the front nine of day one was finished. Neumann sank to bottom at R1 H1, briefly handed it to Meller at H3 (b68), reclaimed it at H4 and never gave it back — sixth in every round. The damage was done in unforgettable stretches: 29 shots bled over holes 7–15 at Quinta da Marinha in R1 (b01), and a 17-shot leak over the first five holes of R3 (b50) anchored by a 10 at the 1st (b17) and an 11 at the 10th (b05). Final tally: 100 points (b20).",
+      "how": "Settled almost before it began. Neumann was bottom of the pile at R1 H1, briefly reprieved when Meller made a 10 at the 3rd (b80), and back at the bottom at H4 — where he stayed for all 72 holes. Holes 7-15 of R1 cost him 29 shots (b04), including nines at the 10th, 11th and 12th, and produced his worst round to date on both metrics (17 pts, +43: b32, b33). R3 repeated the trick — a 10 at the 1st (b23) inside a 17-shot opening five (b36) and an 11 at the 10th (b08). Rounds of 31 and 32 on the two new courses were respectable and irrelevant: 100 pts, last by a distance (b18), and a first Spoon for a man who had been 3rd on the Trophy three TEGs running.",
       "key_beat_ids": [
-        "b68",
-        "b01",
-        "b50",
-        "b17",
-        "b05",
-        "b20"
+        "b18",
+        "b04",
+        "b32",
+        "b33",
+        "b23",
+        "b36",
+        "b08",
+        "b80"
       ]
     }
   ],
@@ -57,95 +67,102 @@
     {
       "round": 1,
       "headline_candidates": [
-        "Quinta da Marinha, and the Tournament Ends Before Tea",
-        "Williams Lights the Fuse, Neumann Lights a Bonfire",
-        "Pine Forest, Open Goals"
+        "Nine Holes, 29 Shots: Neumann's Cascais Afternoon",
+        "Trent Jones Sr. Introduces Himself, and the Pines Keep the Balls",
+        "Williams Birdies the 10th and Is Never Headed Again"
       ],
-      "chosen_headline": "Quinta da Marinha, and the Tournament Ends Before Tea",
-      "angle": "Williams' four-hole burst (8–11) hands him an outright Trophy lead he will never relinquish; Neumann bleeds 29 shots over holes 7–15 and is already irretrievably last; Meller opens with a 10 at the 3rd and briefly owns the basement.",
+      "chosen_headline": "Nine Holes, 29 Shots: Neumann Meets Quinta da Marinha, Williams Quietly Takes the Lead",
+      "angle": "A new course for TEG greets the field with elevated targets and pine trees: Meller makes a 10 at the 3rd and drops to the bottom of the Spoon race (b46, b80), Neumann then takes over the bottom slot for good with 29 shots gone across holes 7-15 (b04) and his worst round to date on both metrics (b32, b33), while Alex Baker's five opening bogeys (b13) and Williams's 14 points in four holes (b12) set up the shape of everything that followed.",
       "beat_ids": [
-        "b34",
-        "b01",
-        "b22",
-        "b68",
-        "b25"
+        "b46",
+        "b80",
+        "b04",
+        "b32",
+        "b33",
+        "b12",
+        "b13"
       ]
     },
     {
       "round": 2,
       "headline_candidates": [
-        "Up the Hill at Penha Longa, Down the Same Order",
-        "Mountain Course, Molehill Resistance",
-        "Williams Banks Eleven on the Sintra Slopes"
+        "Williams Makes a 10 and Gains Seven",
+        "Sintra's Mountain Takes Its Cut, Mullin Posts 86",
+        "Up the Hill Backwards: Penha Longa Fails to Slow the Leader"
       ],
-      "chosen_headline": "Up the Hill at Penha Longa, Down the Same Order",
-      "angle": "Penha Longa's mountain parkland fails to reshuffle anything: Williams shoots 41 and stretches his lead to 11 despite a 10 at the 12th; Mullin shoots a +14 and pads his Jacket lead to 6.",
+      "chosen_headline": "Williams Makes a 10 at the 12th and Gains Seven Anyway",
+      "angle": "Portugal's most punishing layout, and the leaderboard barely notices: Williams runs up a 10 at the par-5 12th (b09) and still signs for 41 pts to go 11 clear, while Mullin's 86 (+14) — the lowest gross round anyone managed all tournament — pushes his Jacket cushion to six and Neumann's 9 at the SI-1 16th (b22) keeps his afternoon on brand.",
       "beat_ids": [
-        "b09"
+        "b09",
+        "b22"
       ]
     },
     {
       "round": 3,
       "headline_candidates": [
-        "Return to Quinta, Return to Carnage",
-        "Williams Wobbles, Nobody Catches Him",
-        "The Day Everyone Took a Ten"
+        "Baker Steals the Jacket, Marinha Feasts on the Rest",
+        "Second Look, Same Bunkers: 36 Holes of Mullin Undone at the 13th",
+        "The Round Everyone Lost: 29, 26, 20 and a 10 at the Hardest Hole"
       ],
-      "chosen_headline": "Williams Wobbles, Nobody Catches Him",
-      "angle": "The one day the leaders looked human: Williams scrapes 29 with a 10 at the 11th; Mullin posts his worst round to date and briefly loses the Jacket to Jon Baker; Alex Baker takes a 10 at the 8th; Neumann bleeds 17 shots over the opening five holes including a 10 at the 1st and an 11 at the 10th. None of it changes the running order at the top or bottom.",
+      "chosen_headline": "Baker Steals the Jacket as Marinha Feasts on Everyone Else",
+      "angle": "The tournament's only repeat course collects its dues: Mullin's worst round to date (b17) hands Jon Baker the gross lead at the 13th after 36 holes in front (b01); Williams bleeds 14 shots from the 8th including a 10 at the 11th (b10, b35) and sees his Trophy lead cut from 11 to 5; Alex Baker makes a 10 at the SI-1 8th (b06) and Neumann a 10 at the 1st and an 11 at the 10th (b23, b36, b08).",
       "beat_ids": [
-        "b50",
+        "b01",
         "b17",
-        "b05",
-        "b04",
         "b10",
-        "b21"
+        "b35",
+        "b06",
+        "b23",
+        "b36",
+        "b08"
       ]
     },
     {
       "round": 4,
       "headline_candidates": [
-        "Oitavos Confirms the Verdict",
-        "Mullin Slips the Jacket On at the 2nd",
-        "Williams Strolls the Links, Meller Combusts on It"
+        "Two Holes In, Mullin Has the Jacket Back",
+        "41 on the Dunes: Williams Closes Out by 12",
+        "Meller Loses 22 Shots in Six Holes on Portugal's Finest Links"
       ],
-      "chosen_headline": "Mullin Slips the Jacket On at the 2nd",
-      "angle": "At the only true links of the week, Mullin retakes the outright Gross lead at the 2nd and never looks back, closing in +17 for a six-shot Jacket win; Williams banks 41 points (12 of them in four holes from the 12th) to seal a 12-point Trophy margin; Meller posts a 10 at the 4th inside a 22-shot collapse over the opening six holes.",
+      "chosen_headline": "Two Holes In, Mullin Has the Jacket Back — and Williams Has the Trophy by 12",
+      "angle": "Oitavos Dunes settles all three: a bogey at the 2nd is enough for Mullin to reclaim the gross lead outright (b03) and win by 6 (b05); Meller drops 22 shots in the first six holes with a 10 at the 4th (b07, b19); Williams bleeds 11 from the 5th (b34), then answers with 12 points in four holes from the 12th (b11) for 41 and a 12-point win (b02); Alex Baker signs off with a 9 at the SI-2 18th (b16) and is runner-up regardless, with Neumann's 32 leaving him bottom for the fourth time in four rounds (b18).",
       "beat_ids": [
         "b03",
+        "b05",
         "b07",
-        "b08",
-        "b43",
+        "b19",
+        "b34",
+        "b11",
         "b02",
-        "b06",
-        "b20"
+        "b16",
+        "b18"
       ]
     }
   ],
   "players": [
     {
       "player": "Gregg Williams",
-      "arc": "Took outright Trophy lead on R1 H10 and held it for 62 more holes, weathering two double-figure holes of his own (10s at Penha Longa's 12th and Quinta's 11th) to win by 12 — his eighth-best TEG showing and a model of inevitability."
-    },
-    {
-      "player": "Alex Baker",
-      "arc": "Runner-up by 12, which flatters him: a hot opening five at Quinta (15 points, b27) was followed by a procession of quadruple bogeys and a 10 at the 8th in R3 — second place by attrition rather than challenge."
+      "arc": "Two prior Trophies and a Jacket rank of exactly 5th in each of the last three TEGs — and here the handicap sheet does its work perfectly: outright leader from R1 H10 to the final putt, two 10s (b09, b10) and a 29-point R3 absorbed without ever being caught, 149 pts and a third Trophy by 12 (b02)."
     },
     {
       "player": "David Mullin",
-      "arc": "Led the Gross from day one, lost it for one round at Quinta when his worst stableford round to date (26 pts) coincided with a quad at the 12th, then retook outright lead at Oitavos H2 and walked off with the Jacket by 6."
+      "arc": "Five Jackets and back-to-back wins going in, and he makes it six and three in a row (b05) — but only after his worst round to date at Quinta da Marinha (b17) let Jon Baker strip him of a lead he had held for 36 holes (b01), and only by taking it straight back two holes into Oitavos (b03)."
     },
     {
       "player": "Jon Baker",
-      "arc": "The only player to lead a competition outright that Mullin or Williams didn't — briefly, after R3 — before Oitavos restored the natural order; runner-up for the Jacket."
+      "arc": "One prior Trophy and gross runner-up in TEG 5 and 6; his 89 in R3 was the best gross round anyone posted at Quinta da Marinha and put him two clear of Mullin (b01), but a quintuple bogey at the 13th in R1 and a links finish left him second in gross again, 6 back."
+    },
+    {
+      "player": "Alex Baker",
+      "arc": "The reigning Wooden Spoon holder, last of six on both counts in TEG 7, opens with 15 points in five holes (b13) and finishes Trophy runner-up — despite a 10 at the SI-1 8th in R3 (b06) and a 9 at the SI-2 last in R4 (b16), which is one way to spend a promotion."
     },
     {
       "player": "Stuart Neumann",
-      "arc": "Bottom of the Spoon race from R1 H4 to the final putt; produced two of the tournament's defining collapses (29 shots over nine holes in R1, 17 over five holes in R3) and four double-figure-or-near-it blow-ups en route to 100 points."
+      "arc": "Third on the Trophy in each of the last three TEGs and never a Spoon holder — until the fourth hole of R1, after which he was bottom at every single checkpoint: 29 shots gone in nine holes (b04), a worst-ever round on both metrics (b32, b33), a 10 and an 11 in R3 (b23, b08), 100 pts and the Spoon (b18)."
     },
     {
       "player": "Henry Meller",
-      "arc": "Opened the tournament with a 10 at the 3rd, briefly held the Spoon basement, and closed it with another 10 at Oitavos' 4th inside a 22-shot six-hole collapse — bookended by blow-ups, untroubled in between."
+      "arc": "Defending Trophy champion with three prior Spoons on the CV; a 10 at the 3rd in R1 briefly deposited him at the bottom of the Spoon race (b46, b80), and 22 shots in the opening six at Oitavos, a 10 at the 4th included (b07, b19), ensured the defence never got going."
     }
   ],
   "must_include_beat_ids": [
@@ -156,52 +173,85 @@
     "b05",
     "b06",
     "b07",
+    "b08",
     "b09",
     "b10",
-    "b17",
-    "b20",
-    "b22",
-    "b50",
-    "b68"
-  ],
-  "cuts": [
     "b11",
-    "b12",
-    "b13",
-    "b14",
-    "b15",
-    "b16",
     "b18",
     "b19",
     "b23",
+    "b36",
+    "b46",
+    "b80"
+  ],
+  "cuts": [
+    "b14",
+    "b15",
+    "b20",
+    "b21",
     "b24",
+    "b25",
     "b26",
+    "b27",
     "b28",
     "b29",
     "b30",
     "b31",
-    "b32",
-    "b33",
-    "b35",
-    "b36",
     "b37",
     "b38",
     "b39",
     "b40",
     "b41",
     "b42",
+    "b43",
     "b44",
     "b45",
-    "b46",
     "b47",
     "b48",
     "b49",
-    "b21",
-    "b27",
-    "b25",
-    "b34",
-    "b43",
-    "b08"
+    "b50"
   ],
-  "venue_notes": "TEG's second visit to the Lisbon Coast (first was three years earlier), but every course this week is new to TEG: Robert Trent Jones Sr.'s Quinta da Marinha hosts rounds 1 and 3 (the only repeat venue of the week, and the scene of most of the tournament's carnage); Penha Longa's Atlantic Course delivers the mountain parkland in the Sintra hills for R2; Oitavos Dunes provides the proper Atlantic links finale. Weave the ocean views, pine forest, and links/parkland contrast into the round openers; flag Quinta as the recurring scene of the crime."
+  "venue_notes": "TEG's 2nd visit to the Lisbon Coast, November 2015, and every one of the three courses was new to TEG — no form, no local knowledge, no excuses that hadn't been invented yet. Use Quinta da Marinha (R1 and R3, the only repeat, Robert Trent Jones Sr., elevated targets and abundant bunkering inside a private pine estate at Cascais) as the venue villain: it produced the tournament's worst rounds and the Jacket lead change. Note the father-and-son back-to-back — RTJ Sr. at Marinha, then RTJ Jr.'s Atlantic Course at Penha Longa in the Sintra hills, steep, dramatic and reputedly Portugal's most testing layout, which nonetheless yielded Mullin's 86 and Williams's 41 pts. Save Oitavos Dunes for the resolution: a pure Arthur Hills links on the Atlantic, host of multiple Portuguese Opens, where two holes decided the Jacket and Meller lost 22 shots in six.",
+  "competition_storyline_bullets": {},
+  "player_storyline_bullets": {},
+  "course_history_notes": [
+    "All three venues were new to TEG in 2015, so nobody had prior course form to lean on — Quinta da Marinha was the only course played twice (R1 and R3).",
+    "Mullin's 86 (+14) at Penha Longa in R2 was the lowest gross round posted by anyone on any of the three courses.",
+    "Jon Baker's 89 at Quinta da Marinha in R3 was the best gross round anyone managed there, and it was worth the Green Jacket lead for one round.",
+    "Neumann's 114 at Quinta da Marinha in R1 (+43) was his worst gross round in TEG history to date (b33)."
+  ],
+  "decisive_moments": [
+    "Trophy: R2 at Penha Longa — Williams signs for 41 pts despite a 10 at the 12th (b09) and stretches the lead from 4 to 11; the Trophy is never genuinely contested again, the R3 dip to 5 notwithstanding.",
+    "Green Jacket: R4 H2 at Oitavos Dunes — a bogey at the 2nd is enough for Mullin to take the gross lead back off Jon Baker outright (b03), the one lead change of the tournament rated decisive; he wins by 6.",
+    "Wooden Spoon: R1 H4 at Quinta da Marinha — Neumann returns to the bottom of the field and stays there for the remaining 68 holes, the 29-shot bleed across holes 7-15 (b04) making it unrecoverable by lunchtime on the first day."
+  ],
+  "prominent_vehicle": "ensemble",
+  "prominent_palette": "venue_character",
+  "payoffs": [
+    {
+      "seed": "Williams: two Trophies, gross rank 5th three TEGs running",
+      "resolves_in": "How the three were decided — Trophy",
+      "payoff": "He wins the Trophy for a third time on 149 pts by 12 (b02) while never appearing in the Jacket conversation: the split is ordinary handicapping, and it is exactly how he wins."
+    },
+    {
+      "seed": "Alex Baker arrives as reigning Wooden Spoon holder",
+      "resolves_in": "Round 4 / Player-by-player summary",
+      "payoff": "He finishes Trophy runner-up, having made a 10 at the SI-1 8th in R3 (b06) and a 9 at the SI-2 18th in R4 (b16) — promotion earned the hard way, and the Spoon passes to Neumann (b18)."
+    },
+    {
+      "seed": "Mullin's Jacket looks his by default",
+      "resolves_in": "Round 3 into Round 4",
+      "payoff": "Jon Baker takes it at R3 H13 after 36 holes of Mullin in front (b01) following Mullin's worst round to date (b17); Mullin reclaims it at R4 H2 (b03) and wins by 6 (b05)."
+    },
+    {
+      "seed": "Neumann: 3rd on the Trophy three TEGs running, no Spoon on the CV",
+      "resolves_in": "How the three were decided — Wooden Spoon",
+      "payoff": "Bottom from R1 H4 onwards, 29 shots gone in nine holes (b04), worst-ever round on both metrics (b32, b33), and a first Wooden Spoon on 100 pts (b18)."
+    }
+  ],
+  "vehicle_fit_response": {
+    "top_scored_vehicle": "tragic_arc",
+    "taken_up": false,
+    "note": "b01, b04 and b34 are all real, but nobody's collapse decided anything — Williams led wire-to-wire and won by 12 — so the collapses are the texture, not the frame: the story is the whole field being mauled by three new Portuguese courses, which is ensemble plus a catalogue of double figures, with the procession as supporting inevitability."
+  }
 }
