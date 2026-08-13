@@ -683,7 +683,20 @@ def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
     from teg_analysis.reporting.vehicle_fit import (
         score_vehicle_fit, rank_vehicle_fit, normalize_vehicle_fit, load_baseline_cache,
     )
-    _raw_vehicle_scores = score_vehicle_fit(beats, arcs, tournament_shape_signals, player_history)
+    # NOTE: `all_beats`, NOT the trimmed `beats`. The `top_n` trim is a token
+    # budget for the LLM call — it says nothing about what happened in the
+    # tournament — but several vehicles (tragic_arc, redemption_arc, catalogue)
+    # score as a SUM over beats, so trimming silently deflated them. Worse, the
+    # checked-in baseline is generated via `score_vehicle_fit_for_teg`, which
+    # passes `top_n=None`, so live z-scores were comparing a trimmed raw score
+    # against an untrimmed population mean.
+    #
+    # Measured on TEG 6 (2026-08-13): tragic_arc raw 79.5 untrimmed vs 32.7 at
+    # top_n=50, i.e. z +2.70 vs +0.06 — enough to drop it from rank 1 to rank 5
+    # and hand the top hint to hero_arc. Every hint list generated before this
+    # fix was skewed against the beat-sum vehicles.
+    _raw_vehicle_scores = score_vehicle_fit(all_beats, arcs, tournament_shape_signals,
+                                            player_history)
     _baseline = load_baseline_cache()
     if _baseline:
         vehicle_fit_hints = normalize_vehicle_fit(_raw_vehicle_scores, _baseline)[:5]

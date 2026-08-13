@@ -194,6 +194,25 @@ def test_unscored_vehicles_never_appear_in_the_hints():
         assert not ({r["vehicle"] for r in ranked} & set(UNSCORED_VEHICLES))
 
 
+def test_vehicle_hints_do_not_depend_on_the_beat_trim():
+    """`top_n` is a token budget, not a claim about the tournament.
+
+    The bug (2026-08-13): `assemble_bundle` scored vehicle fit on the TRIMMED
+    `beats`, while the checked-in baseline is generated with `top_n=None`. So
+    live z-scores compared a trimmed raw score against an untrimmed population
+    mean, deflating every vehicle that scores as a sum over beats. On TEG 6 it
+    moved tragic_arc from z +2.70 (rank 1) to +0.06 (rank 5) and handed the top
+    hint to hero_arc. Slow (two full bundle builds) but this silently corrupts
+    every hint list, and nothing else would catch it.
+    """
+    from teg_analysis.reporting.story_plan import assemble_bundle
+
+    trimmed, _ = assemble_bundle(6, top_n=50)
+    full, _ = assemble_bundle(6, top_n=None)
+    assert len(trimmed["beats"]) < len(full["beats"]), "TEG 6 must actually be trimmed"
+    assert trimmed["vehicle_fit_hints"] == full["vehicle_fit_hints"]
+
+
 def test_prompt_tells_the_editor_to_judge_the_unscored_vehicles_itself():
     """Excluding them means their absence carries no information — which is only
     safe if the prompt says so and asks for them to be considered anyway."""
