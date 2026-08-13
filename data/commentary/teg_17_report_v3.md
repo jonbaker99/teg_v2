@@ -77,7 +77,7 @@ Williams opened with a quintuple-bogey 9 at the 1st, scored 29, and finished on 
 ## The men, in brief
 
 - **Jon Baker** — Fourth, fourth and fourth on the Trophy in TEGs 14, 15 and 16, and then this: the double, a personal-best 166, the Jacket at +67, and the Royal Óbidos course record. Fifteen shots better than his last West Cliffs visit, too, in case anyone was still keeping a ledger against him.
-- **David Mullin** — Runner-up in both, and the only man who ever had a hand on either. His 82 took twelve shots off his last West Cliffs round and six off the course record. He also led the Green Jacket outright, for one hole, on the Monday.
-- **Gregg Williams** — Arrived as the form man with a Trophy and back-to-back Jackets, and led the gross on level terms after the first evening. Seven doubles in a row at Royal Óbidos and a 9 to open the last round did the rest.
+- **David Mullin** — Runner-up in both, and the only man who ever had a hand on either. His 82 took twelve shots off his last West Cliffs round and six off the course record. He also led the Green Jacket outright, for one hole, on Monday.
+- **Gregg Williams** — Arrived as the form man with a Trophy and back-to-back Jackets, and led the gross on level terms after the first evening. Seven doubles in a row at Royal Óbidos and a 9 to open the final round did the rest.
 - **John Patterson** — Led the Trophy after Round 1 and set a personal best of 94 at Royal Óbidos, which deserves saying first. The 116 at West Cliffs, 27 shots dropped in eight holes, is the highest gross that course has recorded.
 - **Alex Baker** — Escaped a third straight Spoon only because Williams sank faster. His 114 is the worst gross in twenty-four visits to Praia D'El Rey, he took four holes of 8 or more at Royal Óbidos, and he bled 25 shots in nine holes on the final day. He also set a personal best at West Cliffs, and nobody can take that away.
