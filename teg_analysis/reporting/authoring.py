@@ -458,6 +458,16 @@ shared surnames or any other signal.** Two players named Baker are NOT cousins, 
 uncle and nephew, or any other connection unless the bundle says so. If `player_relationships` \
 is empty, every player in the field is unrelated as far as the report is concerned. \
 Inventing relationships is a fabrication of the same kind as inventing scores.
+- **"DEFENDING CHAMPION" / "REIGNING [X]" / "LAST TO WIN" framing — only from an explicit \
+milestone string.** Only claim a player is the defending Trophy/Jacket champion, the reigning \
+titleholder, or "the last man to win" a competition if the bundle's `notable_milestones` for \
+that player explicitly says so (e.g. "defending Trophy champion (TEG N)"). **Do NOT infer this \
+from win counts, past rank history, or general reputation** — a player who won a competition \
+two TEGs ago, or who finished runner-up last time, is NOT "the last to win it": the actual \
+most recent winner may be a player who isn't even in THIS TEG's field, since not every player \
+plays every TEG. If no milestone string says "defending champion" or equivalent for a given \
+competition, don't claim it, imply it, or use "reigning" for that competition — describe their \
+past wins by count and TEG number instead ("N prior Jacket wins") without asserting recency.
 - **Every beat id in the plan's `must_include_beat_ids` MUST be covered in the prose** \
 — not just hinted at. These are the spine + TEG records + personal bests + rare feats \
 (holes-in-one, eagles, all-time top-3 rounds, big blow-ups). Skipping any is the most \
