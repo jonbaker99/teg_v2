@@ -1,68 +1,82 @@
-# OVERVIEW
+# DRY STORYLINE DRAFT — TEG 7, Lisbon Coast, Portugal, 2014
 
-Henry Meller won the Trophy at -31 net vs par, seven clear of Gregg Williams; it is the second-best Trophy total in TEG history. David Mullin won the Green Jacket at +53 gross, fifteen clear of Stuart Neumann. Alex Baker took the Wooden Spoon, finishing last on the Trophy metric at -5.
+## OVERVIEW
 
-# ROUND 1 — Meller Rewrites the Book at Praia D'El Rey
+Henry Meller won the Trophy on net vs par at -31, seven clear of Gregg Williams; it is the 2nd-best Trophy score in TEG history (b01). David Mullin won the Green Jacket on gross at +53, 15 shots clear of Stuart Neumann (b03), his fifth Jacket. Alex Baker took the Wooden Spoon at -5 net vs par (b27), 26 shots behind Meller.
 
-The opening round was played at Cabell Robinson's Praia D'El Rey, a links-and-parkland layout on the Óbidos coast and a new course for TEG.
+All three courses were new to TEG, and this was TEG's first visit to the Lisbon Coast.
 
-Henry Meller signed for -13, the best round in TEG history to date (gross +12, also a personal-best Gross round). His front nine included a quadruple-bogey 9 at the par-5 8th. From the 10th onwards he piled up 28 Stableford points across the back nine: pars at the par-4 10th, par-5 11th, par-3 12th, par-4 13th and par-4 14th (4 points at the 14th), a bogey at the par-4 15th, pars at the par-5 16th and par-3 17th, and a bogey at the par-4 18th — gross +2 over the nine, 28 points.
+---
 
-Jon Baker posted -10, the third-best round in TEG history to date, with a gross +11 — also the best Gross round in TEG history at that point.
+## The Spoon-Holder Turns for Home: Meller Posts the Best Round TEG Has Ever Seen
 
-The Trophy lead changed hands at the 10th, where Gregg Williams, Meller and Jon Baker all drew level; Meller went on to lead the Trophy by 3 at the close.
+Round 1, Thursday, Praia D'El Rey (Cabell B. Robinson; parkland out, coastal dunes home) — a new course for TEG.
 
-Alex Baker ran up a quintuple-bogey 8 at the par-3 5th.
+Meller signed for -13 net, at that point the best round in TEG history (b05), together with a personal-best gross round of +12 (b14). It was not a clean card. At the par-5 8th, SI 1, he made a 9 for quadruple bogey (b36). The round was built on the closing nine (b02): pars at the 10th, 11th, the par-3 12th (SI 18, the easiest hole), the 13th and the 14th (SI 2), a bogey at the 15th, a par at the par-5 16th, a par at the par-3 17th, and a bogey at the 18th — two over par gross across the nine, and 10 shots gained against net par.
 
-# ROUND 2 — The Record Falls Again — to the Same Man
+Jon Baker posted +11 gross, then the best Gross round in TEG history (b12), and -10 net, the 3rd-best round in TEG history at the time (b19).
 
-Round 2 was at Bom Sucesso (Donald Steel, with Martin Ebert as lead architect), a parkland course with a flatter front nine and a hillier back with lagoon views — also new to TEG.
+Trophy lead changes were routine and confined to the opening round: Mullin led outright after the 8th, then at the 10th Williams, Meller and Jon Baker all drew level. Meller finished the day leading the Trophy by 3. In the Jacket, Meller led outright from the 2nd, Mullin drew level at the 5th, Jon Baker at the 12th and Meller again at the 14th; Jon Baker led by 1 at the close, with Mullin third, five back.
 
-Meller went one better with -15, breaking his own record from 24 hours earlier as the best round in TEG history; his gross of +10 was the second-best Gross round in TEG history to date. Across holes 3–9 he gained 23 points: pars at the par-3 3rd, par-3 5th, par-4 8th and par-4 9th, bogeys at the par-5 4th and par-4 6th, and a birdie at the par-5 7th.
+Alex Baker made an 8 at the par-3 5th, SI 17, one of the easiest holes on the card (b32). He dropped to the bottom of the field outright at the 14th and stayed there.
 
-Stuart Neumann posted -13 (gross +10) — the second-best round, and joint second-best Gross round, in TEG history to date.
+---
 
-David Mullin posted -10, a personal-best round, with a gross +9 — the best Gross round in TEG history to date.
+## Bom Sucesso, Where Every Record Fell Over
 
-Meller's Trophy lead grew from 3 to 11.
+Round 2, Friday, Bom Sucesso (Donald Steel, Martin Ebert lead architect; flat front nine, hillier lagoon-view back) — a new course for TEG.
 
-# ROUND 3 — Mullin Takes the Gross, the Hard Way
+Four all-time rounds were posted. Meller shot -15 net, better than his own day-old record (b07), with a gross of +10 that was the 2nd-best Gross round in TEG history (b08). Mullin shot +9 gross, taking the all-time Gross record off Jon Baker inside 24 hours (b06), and -10 net for a personal-best round (b15). Neumann shot -13 net, the 2nd-best round in TEG history (b10), and +10 gross, also 2nd-best (b11). The field's best grosses of the tournament came here: Mullin 81, Meller 82, Neumann 82.
 
-Round 3 was at Royal Óbidos, Seve Ballesteros' final design and another course new to TEG.
+Meller's scoring came in a burst from the 3rd to the 9th (b04): par at the par-3 3rd (SI 17), bogey at the par-5 4th, par at the par-3 5th, bogey at the 6th (SI 1), birdie at the par-5 7th, pars at the 8th and 9th — one over par gross across the seven holes, nine shots gained against net par.
 
-Meller posted -1 and stretched the Trophy lead from 11 to 15.
+Williams made a 9 at the par-4 15th, SI 2, for quintuple bogey (b24).
 
-The Green Jacket contest produced three lead changes in the round. Mullin drew level at the 3rd, Meller drew level at the 14th, and Mullin then drew level again at the 16th — the decisive takeover. He did so despite running up a quintuple-bogey 8 at the par-3 15th.
+Meller's Trophy lead went from 3 to 11. In the Jacket, Meller drew level at the 12th, Jon Baker at the 14th and Mullin at the 15th; Meller led by 3 at the end of the round, with Mullin second.
 
-Jon Baker ran up a quintuple-bogey 10 at the par-5 2nd.
+---
 
-# ROUND 4 — The Coronation, with an 11 at the 10th
+## Seve's Parting Gift: Royal Óbidos Takes Its Cut
 
-The closing round returned to Praia D'El Rey.
+Round 3, Saturday, Royal Óbidos (Seve Ballesteros's final design, a Challenge Tour venue) — a new course for TEG. Nobody's best gross here bettered Mullin's 90.
 
-Mullin closed with a gross +10, the joint second-best Gross round in TEG history to date, and won the Jacket by 15.
+The blow-ups: Mullin made an 8 at the par-3 15th for quintuple bogey, his worst hole relative to par in TEG (b22); Williams a 9 at the par-4 14th (b25); Neumann a 9 at the par-4 12th, SI 2 (b26); Jon Baker a 10 at the par-5 2nd, SI 3 (b50).
 
-Gregg Williams posted a personal-best -12 with a personal-best gross of +20.
+Mullin's round was -1 net, +18 gross, and was far stronger on the back nine — an 11-shot split between the nines (b43). In the Jacket, Mullin drew level at the 3rd, Meller drew level at the 14th, and Mullin drew level again at the 16th and was not headed after that. Mullin led the Jacket by 3 at the end of the round.
 
-Jon Baker ran up a sextuple-bogey 11 at the par-5 10th — his worst par-relative score on any hole.
+Meller's -1 was enough to extend the Trophy lead from 11 to 15. Alex Baker's round was level (0) and he remained bottom.
 
-Alex Baker added a quintuple-bogey 9 at the par-4 6th and a quintuple-bogey 9 at the par-4 16th.
+---
 
-Meller's Trophy lead came in from 15 to 7 — his round of -2 enough to seal the win.
+## Back to the Beach: Meller Comes Home, Mullin Collects a Fifth Jacket
 
-# HOW THE COMPETITIONS WERE DECIDED
+Round 4, Sunday, Praia D'El Rey — the second TEG round at this venue.
 
-**The Trophy.** Meller led after every round (by 3, 11, 15 and finally 7). The Trophy had four lead changes, all in Round 1, all on the front nine and at the 10th of Praia D'El Rey: Mullin took outright lead at the 8th, then at the 10th Williams, Meller and Jon Baker all drew level. Meller's back-nine 28 points settled it; the -15 at Bom Sucesso effectively ended the contest. Final margin: 7 over Williams, at -31.
+Williams played his best round: -12 net (b16) and +20 gross (b17), both personal bests. It reduced the Trophy margin but did not threaten the outcome.
 
-**The Green Jacket.** Ten lead changes in total. Jon Baker led after R1 (+1 ahead); Meller led after R2 (+3 ahead); Mullin led after R3 and R4. The decisive takeover came at the 16th of Royal Óbidos in R3, where Mullin drew level — and stayed there. He closed at Praia D'El Rey with gross +10 to win by 15 over Neumann at +53.
+Mullin shot +10 gross, the 2nd-best Gross round in TEG history (b09), and a gross 83 — the lowest gross posted at Praia D'El Rey across the two visits. His Jacket lead went from 3 to 15 (b03).
 
-**The Wooden Spoon.** Alex Baker was last after R1, R2, R3 and R4. The decisive drop came at the 14th of Praia D'El Rey in R1 — his quadruple-bogey 8 there (his second quadruple-or-worse of the day, following the quintuple-bogey 8 at the 5th). He finished at -5 on the Trophy metric.
+Jon Baker made an 11 at the par-5 10th for sextuple bogey (b31), his worst hole relative to par in TEG history. Alex Baker made a 9 at the par-4 6th (b33) and a 9 at the par-4 16th (b34), both quintuple bogeys, and signed for a level round (0).
 
-# PLAYERS
+Meller made an 8 at the par-4 9th for quadruple bogey (b37) and still returned -2, finishing at -31 (b01) with a personal-best gross total of +69 (b20). Neumann finished with a personal-best gross total of +68 (b21) and second place in the Jacket. Alex Baker finished bottom at -5 and took the Wooden Spoon (b27).
 
-- **Henry Meller** — won the Trophy at -31; recorded two consecutive best-rounds-in-TEG-history (-13, then -15); posted a personal-best Gross total of +69.
-- **David Mullin** — won the Green Jacket at +53; set the Gross round record with +9 at Bom Sucesso; took the outright Jacket lead at the 16th of Royal Óbidos in R3; closed with gross +10 in R4.
-- **Stuart Neumann** — Jacket runner-up at +68 (a personal-best Gross total); his R2 -13 was the second-best round in TEG history to date, gross +10 joint second-best Gross.
-- **Gregg Williams** — second on the Trophy; posted a personal-best -12 with a personal-best gross +20 in R4.
-- **Jon Baker** — led the Jacket after R1 with a then-record gross +11 (-10 net); ran up a 10 at the 2nd at Royal Óbidos and an 11 at the par-5 10th at Praia D'El Rey in R4.
-- **Alex Baker** — sixth after every round; took the Wooden Spoon at -5; quintuple-or-worse blow-ups including the 8 at the 5th and 8 at the 14th in R1, and 9s at the 6th and 16th in R4.
+---
+
+## HOW THE COMPETITIONS WERE DECIDED
+
+**Trophy (Net VP).** Meller led after every round: by 3 after R1, 11 after R2, 15 after R3, 7 at the finish. The four lead changes all came in Round 1 and were routine — Mullin outright at the 8th, then Williams, Meller and Jon Baker drawing level at the 10th. Meller was never headed after that. The decisive scoring was R1 holes 10-18 at Praia D'El Rey (b02, 10 shots gained) and the -15 at Bom Sucesso (b07), which made the lead 11. Final: -31, by 7 over Williams.
+
+**Green Jacket (Gross).** Jon Baker led by 1 after R1 with the then-record +11 (b12); Meller led by 3 after R2 (+10, b08), with Mullin second after his record +9 (b06); Mullin led by 3 after R3 and by 15 after R4. Ten lead changes in total, all routine, none in the final round. The last of them was at the 16th at Royal Óbidos in R3, where Mullin drew level and stayed in front — having already made an 8 at the 15th that day (b22). His +10 in R4 (b09) turned three shots into fifteen. Final: +53, by 15 over Neumann.
+
+**Wooden Spoon.** Alex Baker was bottom outright from the 14th in Round 1 and bottom at the end of all four rounds. The five bottom-place changes all occurred in Round 1 (Neumann at the 3rd, Alex Baker at the 6th, Neumann at the 7th, Alex Baker at the 9th and again at the 14th). His rounds: +1, -6, 0, 0. The -6 at Bom Sucesso was his best round and came on the day the rest of the field set records. Final: -5, 26 shots behind Meller.
+
+---
+
+## PLAYERS
+
+- **Henry Meller** — Reigning Wooden Spoon holder with three Spoons and no wins of any kind; posted the best round in TEG history in R1 (-13), beat it in R2 (-15), led the Trophy from R1 hole 10 to the finish, and won at -31, the 2nd-best figure recorded, with a personal-best gross total of +69.
+- **David Mullin** — Won a fifth Green Jacket at +53 by 15: third in Gross after R1, took the all-time gross round record at Bom Sucesso with +9, made an 8 at Óbidos's 15th, drew level and stayed ahead from the 16th in R3, and closed with +10.
+- **Gregg Williams** — Defending Trophy champion; posted personal bests in R4 (-12 net, +20 gross) but finished second, seven back, with quintuple bogeys at Bom Sucesso's 15th and Óbidos's 14th on the card.
+- **Stuart Neumann** — Produced the 2nd-best round in TEG history (-13 at Bom Sucesso) and a personal-best gross total of +68, finishing second in the Jacket, 15 behind Mullin; made a 9 at Óbidos's 12th in R3.
+- **Jon Baker** — Held the Gross round record for one round (+11 in R1) and the Jacket lead after R1; posted -10 in R1, then a 10 at Óbidos's 2nd in R3 and an 11 at Praia's 10th in R4, his worst hole relative to par in TEG history.
+- **Alex Baker** — Bottom of the field outright from R1 hole 14 and bottom at the end of all four rounds; took the Wooden Spoon at -5, with an 8 at the 5th in R1 and 9s at the 6th and 16th in R4.
