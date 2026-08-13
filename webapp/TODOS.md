@@ -36,6 +36,17 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
   card. Audit other tables where a player-name column compromises data display on
   narrow screens and apply the same helper (and, for wide tables, split into
   side-by-side tables that wrap). See `webapp/design_principles.md` → Tables.
+- [ ] **Report page — revisit non-core-text formatting** — Jon liked the look of
+  the "Herron Drafts" artefact built 2026-08-13 to read the TEG 17/12 voice
+  trials on mobile (title block, at-a-glance results pane, per-round standings
+  boxes, PBs/TEG-records appendix). Current `/teg-reports` rendering runs
+  `report_styled.md` through plain `markdown.markdown(...)` with no bespoke CSS
+  for those elements (`webapp/routes/history.py` → `tab == "report"`). Revisit
+  styling for `.at-a-glance-box`, `.standings`, `.records` etc. against that
+  artefact's treatment when UI formatting work picks up — hairline-rule
+  callout box, monospace tabular standings strip, uppercase-label records
+  block. Prose styling (voice) is a separate track — see
+  `teg_analysis/reporting/`.
 
 ## PLAYER PROFILES
 - [ ] Revisit again to make UI cleaner and less cluttered
