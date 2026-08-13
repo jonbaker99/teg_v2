@@ -275,33 +275,85 @@ from the dry draft rather than only by rewriting.
 
 ### ⑥ Tone of voice — ~$0.17 · confirming the chosen register
 
-Edit **`authoring.WRITER_VOICE`** (not `WRITER_SYSTEM` — voice and faithfulness are separate
-constants, and only the voice half should move). Then, holding the plan and the facts fixed:
+Same steps for faithfulness rules — edit `WRITER_FAITHFULNESS` instead at step 1 and everything
+else is identical. **Never both at once**, or you won't know which change did anything.
+
+**Step 1 — edit the prompt constant.**
+Open `teg_analysis/reporting/authoring.py`, find `WRITER_VOICE`, change it. Not `WRITER_SYSTEM` —
+that name still exists but is just the two constants concatenated; editing it edits both voice and
+faithfulness at once, which defeats the point of having split them.
+
+**Step 2 — load the frozen inputs.** No cost, no API call — these already exist on disk from a
+previous generation:
 
 ```python
-from teg_analysis.reporting.authoring import (
-    load_story_plan, load_dry_draft, report_around_draft, repetition_lint)
-from teg_analysis.reporting.render import style_text
-from teg_analysis.reporting.verify import verify_report, format_findings
-
+from teg_analysis.reporting.authoring import load_story_plan, load_dry_draft
 teg = 17
-plan = load_story_plan(teg)                          # frozen ①
-dry  = load_dry_draft(teg)                           # frozen ②
-rpt  = report_around_draft(teg, plan, dry)           # ~$0.10
-linted, _ = repetition_lint(rpt["text"])             # ~$0.07
+plan = load_story_plan(teg)   # reads ① story_plan.json
+dry  = load_dry_draft(teg)    # reads ② dry_draft.md
+```
 
-# Write to a VARIANT name, not report_final.md, until you've read it.
-open(f"data/commentary/teg_{teg}_report_trial.md", "w").write(linted)
-open(f"data/commentary/teg_{teg}_report_trial_styled.md", "w").write(style_text(teg, linted))
+**Step 3 — run the writer with your edited prompt.** This is the only step that calls the LLM and
+costs money. It picks up `WRITER_VOICE` fresh from the module, so your Step 1 edit is live:
+
+```python
+from teg_analysis.reporting.authoring import report_around_draft, repetition_lint
+rpt = report_around_draft(teg, plan, dry)         # ~$0.10 — writes prose in your new voice
+linted, _ = repetition_lint(rpt["text"])          # ~$0.07 — word-repetition cleanup only
+```
+
+**Step 4 — save to a variant name, NOT `report_final.md`.** You haven't read it yet:
+
+```python
+with open(f"data/commentary/teg_{teg}_report_trial.md", "w") as f:
+    f.write(linted)
+```
+
+**Step 5 — style it, so it's comparable to the live report.**
+
+```python
+from teg_analysis.reporting.render import style_text
+styled = style_text(teg, linted)
+with open(f"data/commentary/teg_{teg}_report_trial_styled.md", "w") as f:
+    f.write(styled)
+```
+
+**Step 6 — check it for mechanical faults before reading it.**
+
+```python
+from teg_analysis.reporting.verify import verify_report, format_findings
 print(format_findings(verify_report(teg, text=linted), teg))
 ```
 
-Read `..._report_trial_styled.md` against `..._report_styled.md` — same facts, same structure, only
-the voice differs. Promote the winner by copying it over `report_final.md` and running
-`style_report(teg)`.
+`✓` means clean. Anything else, read the findings before going further — a factual fault here means
+the voice prompt is pulling the writer into fabrication, not that it's a stylistic near-miss.
 
-> **Note:** `report_around_draft` overwrites ③ (`report_A_around_draft.md`) on every run. That file
-> is an intermediate, not a fixture, so it doesn't matter — but don't treat it as a saved variant.
+**Step 7 — compare.** Open both files side by side:
+
+```
+data/commentary/teg_17_report_styled.md         <- current house voice
+data/commentary/teg_17_report_trial_styled.md   <- your edit
+```
+
+Same facts, same structure, same headings, same standings block. Only the prose differs — if
+anything else differs, something upstream of the writer changed and this test isn't isolated.
+
+**Step 8 — promote, only if you like it.** This overwrites the live report:
+
+```python
+import shutil
+from teg_analysis.reporting.render import style_report
+shutil.copy(f"data/commentary/teg_{teg}_report_trial.md",
+           f"data/commentary/teg_{teg}_report_final.md")
+style_report(teg)   # regenerates report_styled.md from the new final
+```
+
+**If you don't like it,** do nothing — `report_trial.md` and `_final.md` are untouched, and you can
+edit `WRITER_VOICE` again and repeat from Step 2 for ~$0.17 more.
+
+> **Note:** Step 3 overwrites ③ (`report_A_around_draft.md`) every time you run it. That file is an
+> intermediate scratch artefact, not a fixture — fine to lose, but don't mistake it for a saved
+> variant of anything.
 
 ### ⑦ Comparing voice registers — ~$0.10 each · choosing the register
 
@@ -380,15 +432,18 @@ Nothing downstream of the artefact you load gets touched until "Then run" execut
 entire saving: the cost column only counts what's in that column, because everything before it was
 loaded, not regenerated.
 
-| I want to change… | Edit | Load from disk (free) | Then run | Cost |
-|---|---|---|---|---|
-| **Tone of voice, humour level** | `authoring.WRITER_VOICE` | ① plan **and** ② dry draft | 4b → lint | **~$0.17** |
-| Faithfulness rules | `authoring.WRITER_FAITHFULNESS` | ① plan **and** ② dry draft | 4b → lint | ~$0.17 |
-| How much hole detail the draft carries | `DRY_DRAFT_SYSTEM_DETAILED`, or `dry_draft_style=` | ① plan only | 4a → lint | ~$0.37 |
-| The frame, structure, which beats feature | hand-edit ①, or `story_plan.SYSTEM_PROMPT` | ① (if hand-editing) | 4b only, or everything | **free** → ~$0.65 |
-| Which beats exist at all | `scoring.MODE_WEIGHTS`, `events.py` | *(nothing — recompute from data)* | everything | ~$0.65 |
-| Standings/records blocks, CSS hooks | `render.py` | ④ final | Stage 5 only | **free** |
-| Visual design | `webapp/static/teg_reports.css` | ⑤ styled | nothing | **free** |
+| I want to change… | Edit | Load from disk (free) | Then run | Cost | Numbered steps |
+|---|---|---|---|---|---|
+| **Tone of voice, humour level** | `authoring.WRITER_VOICE` | ① plan **and** ② dry draft | 4b → lint | **~$0.17** | [Recipe ⑥](#-tone-of-voice--017--confirming-the-chosen-register) |
+| Faithfulness rules | `authoring.WRITER_FAITHFULNESS` | ① plan **and** ② dry draft | 4b → lint | ~$0.17 | Recipe ⑥, same steps, different constant |
+| How much hole detail the draft carries | `DRY_DRAFT_SYSTEM_DETAILED`, or `dry_draft_style=` | ① plan only | 4a → lint | ~$0.37 | [Recipe ⑤](#-dry-draft-detail-level--037) |
+| The frame, structure, which beats feature | hand-edit ①, or `story_plan.SYSTEM_PROMPT` | ① (if hand-editing) | 4b only, or everything | **free** → ~$0.65 | [Recipe ④](#-the-frame-structure-and-chosen-beats) |
+| Which beats exist at all | `scoring.MODE_WEIGHTS`, `events.py` | *(nothing — recompute from data)* | everything | ~$0.65 | [Recipe ①](#-which-events-get-detected--free) / [②](#-what-makes-the-cut--free) |
+| Standings/records blocks, CSS hooks | `render.py` | ④ final | Stage 5 only | **free** | [Recipe ⑩](#-standings-records-css-hooks--free) |
+| Visual design | `webapp/static/teg_reports.css` | ⑤ styled | nothing | **free** | [Recipe ⑪](#-visual-design--free) |
+
+**This table is a lookup, not a walkthrough.** It tells you what's frozen and what runs; the actual
+runnable steps are in the recipe each row links to.
 
 ## Which TEGs can I iterate voice on?
 
