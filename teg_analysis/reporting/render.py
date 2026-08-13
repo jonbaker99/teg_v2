@@ -55,8 +55,15 @@ def build_round_standings(teg_num: int) -> dict:
     out: dict = {}
     for rnd in sorted(int(r) for r in rs["Round"].unique()):
         rdf = rs[rs["Round"] == rnd]
-        trophy = rdf.sort_values(trophy_col, ascending=trophy_ascending)
-        jacket = rdf.sort_values("Cumulative_Tournament_Score_Gross", ascending=True)
+        # Tie-break on player code so the order is deterministic. A bare
+        # single-column sort_values uses quicksort, which is NOT stable, so
+        # tied players came out in arbitrary order and re-running style_report
+        # produced a spurious diff — despite Stage 5 being documented as
+        # idempotent and free to re-run.
+        trophy = rdf.sort_values([trophy_col, "Pl"],
+                                 ascending=[trophy_ascending, True])
+        jacket = rdf.sort_values(["Cumulative_Tournament_Score_Gross", "Pl"],
+                                 ascending=[True, True])
 
         trophy_str = " | ".join(
             f"{r['Pl']} {trophy_fmt(r[trophy_col])}"
@@ -559,14 +566,15 @@ def _strip_at_a_glance(text: str) -> str:
     )
 
 
-def style_report(teg_num: int) -> str:
-    """Read final report + saved plan + venue, write `..._report_styled.md`. Returns path."""
-    from teg_analysis.reporting.history_context import build_win_counts
-    final_path = f"{OUTPUT_DIR}/teg_{teg_num}_report_final.md"
-    out_path = f"{OUTPUT_DIR}/teg_{teg_num}_report_styled.md"
+def style_text(teg_num: int, text: str) -> str:
+    """Apply the full tournament styling pipeline to arbitrary report text.
 
-    with open(final_path) as f:
-        text = f.read()
+    Factored out of `style_report` so a *variant* (an A/B voice experiment, say)
+    can be styled without being written to `report_final.md` first. That matters
+    for comparison: a variant put through the identical styling pipeline is
+    directly readable line-for-line against `report_styled.md`.
+    """
+    from teg_analysis.reporting.history_context import build_win_counts
     plan = load_story_plan(teg_num)           # dict (from saved JSON)
     venue = build_venue_context(teg_num)
     standings = build_round_standings(teg_num)
@@ -576,7 +584,17 @@ def style_report(teg_num: int) -> str:
     styled = apply_styling(text, plan, venue, standings=standings, win_counts=win_counts)
     # Strip old records block so we can re-inject the updated version.
     styled = re.sub(r'\n*## Personal bests and TEG records\n[\s\S]*$', '', styled)
-    styled = _append_records(styled, build_records_block(teg_num))
+    return _append_records(styled, build_records_block(teg_num))
+
+
+def style_report(teg_num: int) -> str:
+    """Read final report + saved plan + venue, write `..._report_styled.md`. Returns path."""
+    final_path = f"{OUTPUT_DIR}/teg_{teg_num}_report_final.md"
+    out_path = f"{OUTPUT_DIR}/teg_{teg_num}_report_styled.md"
+
+    with open(final_path) as f:
+        text = f.read()
+    styled = style_text(teg_num, text)
 
     with open(out_path, "w") as f:
         f.write(styled)
@@ -603,14 +621,14 @@ def build_round_scores(teg_num: int, round_num: int) -> str:
         return ""
 
     metric = trophy_metric(teg_num)
-    gross = rs.sort_values("Round_Score_Gross", ascending=True)
+    gross = rs.sort_values(["Round_Score_Gross", "Pl"], ascending=[True, True])
     gross_str = " | ".join(
         f"{r['Pl']} {_fmt_signed(int(r['Round_Score_Gross']))}"
         for _, r in gross.iterrows()
     )
 
     if metric == "net_vs_par":
-        trophy_line = rs.sort_values("Round_Score_NetVP", ascending=True)
+        trophy_line = rs.sort_values(["Round_Score_NetVP", "Pl"], ascending=[True, True])
         trophy_str = " | ".join(
             f"{r['Pl']} {_fmt_signed(int(r['Round_Score_NetVP']))}"
             for _, r in trophy_line.iterrows()
@@ -622,7 +640,7 @@ def build_round_scores(teg_num: int, round_num: int) -> str:
             f' {gross_str}</p>'
         )
     else:
-        stab = rs.sort_values("Round_Score_Stableford", ascending=False)
+        stab = rs.sort_values(["Round_Score_Stableford", "Pl"], ascending=[False, True])
         stab_str = " | ".join(
             f"{r['Pl']} {int(r['Round_Score_Stableford'])}"
             for _, r in stab.iterrows()

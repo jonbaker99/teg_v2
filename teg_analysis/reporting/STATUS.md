@@ -1,6 +1,6 @@
 # Reporting — Status & Next Steps
 
-**Pick-up ledger.** Read this first when resuming work in a fresh session. The how-it-works architecture is in [README.md](README.md); the running experiment log is in [EXPERIMENTS.md](EXPERIMENTS.md).
+**Pick-up ledger.** Read this first when resuming work in a fresh session. The how-it-works architecture is in [README.md](README.md); **how to test and iterate on each element is in [ARTEFACTS.md](ARTEFACTS.md)**; the running experiment log is in [EXPERIMENTS.md](EXPERIMENTS.md).
 
 > **Last verified against the codebase: 2026-08-11.** Substantial pipeline work landed that day:
 > the D3 verification layer, the shared-vocabulary schema fix, the era-leak fix, the arc-payload
@@ -71,7 +71,8 @@ regeneration clears. Nothing else is blocking. Test suite: 404 passed, 4 skipped
 | ✅ | 4a — dry storyline draft | `authoring.generate_dry_draft` |
 | ✅ | 4b — entertaining report (around-draft) | `authoring.report_around_draft` |
 | ✅ | 4b — repetition lint | `authoring.repetition_lint` |
-| ⚠️ | 4c — tighten pass | `authoring.tighten_prose` — **built, not wired into `backfill.py`** |
+| ⚠️ | 4c — tighten pass | `authoring.tighten_prose` — **built, not wired into `backfill.py`** (deliberate lever) |
+| ✅ | voice A/B lever | `authoring.restyle_voice` — rewrites a finished report's voice only; **not** in the default chain |
 | 🗑️ | 4d — history enrichment pass | **deleted 2026-08-11** — zero callers, duplicated `history_context` |
 | ✅ | D3 — programmatic verification | `verify.py` — 7 mechanical checks, auto-run by `backfill.py` |
 | ✅ | 5 — CSS-class styling renderer | `render.apply_styling` / `render.style_report` |
@@ -189,6 +190,7 @@ Severity is *impact if left alone*, not effort:
 | 3 | **Round pipeline a generation behind** | P2 | M | round regen | ✅ **FIXED** — `RoundStoryPlan` has vehicles, payoffs and the shared enums |
 | 4 | **TEG 10 R3 arithmetic error** | P2 | S | no | ✅ **FIXED** — "fourteen-point swing" → sixteen; D3 regression-tests it |
 | 16 | **TEG 5 shipped 41 beat IDs to readers** | P2 | S | no | ✅ **FIXED** — found by D3, stripped from final + styled |
+| 18 | **Writer prompt read the wrong prominence field** (self-inflicted by the issue-8 fix; caught pre-generation) | P2 | XS | no | ✅ **FIXED 2026-08-11** — PALETTE block now names `prominent_palette`; regression test added |
 | 12 | **Arc payload reaches the writer unweighted** | P2 | S–M | no | ✅ **FIXED** — per-entry `significance`, early/late summaries, and the Spoon arc finally has an `outright` flag |
 | 11a | **`DEFAULT_MODEL` still `claude-opus-4-7`** | P2 | XS | no | ✅ **FIXED** — pinned to `claude-opus-5` |
 | 2 | **`enrich_report_with_history()` has zero callers** | P3 | XS | no | ✅ **FIXED** — deleted, with `ENRICH_SYSTEM` and `build_history_enrichment_context` |
@@ -445,6 +447,22 @@ the only reason anyone would edit a file under `streamlit/`, which the project r
 The isolated `venv/` (Python 3.14) hits `TypeError: cannot use 'tuple' as a dict key` on every
 templated route. Visual webapp verification needs Python 3.12/3.13.
 
+### 18. Writer prompt read the wrong prominence field — FIXED 2026-08-11 (self-inflicted)
+
+Introduced by the issue-8 fix and caught before any report was generated. Splitting
+`prominent_vehicle` into a frame field and a `prominent_palette` context field left
+`WRITER_VOICE`'s PALETTE block still saying *"informed by the plan's `prominent_vehicle`"* — so the
+writer would have been told to choose a palette item (a)–(g) on the basis of a field now holding a
+frame value like `counterfactual`, which is not in that list.
+
+**Exactly the same failure mode as issue 8, reintroduced in the other prompt** — which is the
+argument for the schema-and-generated-menus approach rather than prose cross-references. The prompt
+now names `prominent_palette` with an explicit note that the two fields are different vocabularies,
+and a regression test asserts the PALETTE block never references `prominent_vehicle` outside that
+disambiguation.
+
+No cost: no report has been generated since the split.
+
 ### 12. Competition arcs reach the writer unweighted — FIXED 2026-08-11
 
 > **FIXED.** Every lead/bottom change now carries a `significance` of `routine` / `notable` /
@@ -537,8 +555,14 @@ that changes *what a report is* lands before it.
 
 **1. Settle the humour dial.** Read `teg_14_report_styled.md` (baseline) against
 `teg_14_report_humour6.md` / `_humour8.md` / `_humour8b.md`, then the TEG 18 pair. Record the verdict
-in EXPERIMENTS.md and fold the winner into `WRITER_SYSTEM`.
+in EXPERIMENTS.md and fold the winner into **`WRITER_VOICE`** (its own constant since 2026-08-11 —
+the faithfulness rules live separately in `WRITER_FAITHFULNESS` and must not be touched).
 *Why first:* it sets the published voice, only Jon can call it, and it blocks regeneration.
+
+*Tooling:* `python scripts/humour_dial.py --teg 14 --variant humour8b` produces a fresh variant for
+~$0.10 via `authoring.restyle_voice()`. The TEG 18 `humour8bb` retry that died on a connection reset
+can now simply be re-run. Variants never touch `report_final.md`, and each is checked for faults the
+rewrite *introduced*.
 
 **2. ~~Choose the selection-weight setting~~ — DONE.** `balanced` is now (1.5, 0.8, 0.7).
 *Optional follow-up when a key is available:* a plan-only run (~$0.28) to confirm the change

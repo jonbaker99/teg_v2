@@ -1,162 +1,146 @@
-"""Quick experiment: 8/10 humour dial, BROOKER-ONLY variant. Drops Clive
-James (and the literary-comparison register that came with him); adds
-Marina Hyde for matched contemporary punch. Aim is the Guardian-column
-voice: physical, present-tense, observational, staccato cruelty. No
-sustained literary metaphor; no winking; no flourish.
+"""Humour-dial experiment — produce voice variants of a finished report.
 
-Outputs: data/commentary/teg_{N}_report_humour8bb.md (+ styled variant).
-Run from repo root:
-    venv/bin/python scripts/humour_dial.py
+Thin wrapper over `authoring.restyle_voice()`. This file's real content is the
+VOICE PROMPTS below: the registers that were A/B'd on TEGs 14 and 18 and never
+settled. See EXPERIMENTS.md -> H8.
+
+Was previously a one-off script with the TEG list hardcoded (stuck at
+`TEGS = [18]` mid-retry after a connection reset) and the faithfulness rules
+restated inline. It now takes arguments, and the guardrails come from the shared
+`WRITER_FAITHFULNESS` constant, so a variant cannot drift out of step with the
+main writer's rules.
+
+Usage, from the repo root:
+
+    python scripts/humour_dial.py --teg 14 --variant humour8b
+    python scripts/humour_dial.py --teg 14 --variant humour6 --variant humour8
+    python scripts/humour_dial.py --list
+
+Each run writes `data/commentary/teg_N_report_{variant}.md` and a `_styled.md`
+alongside it, so a variant is directly comparable line-for-line with
+`teg_N_report_styled.md`. The canonical `report_final.md` is never touched.
+
+Cost: ~$0.10 per variant. Verification runs automatically and reports any fault
+the rewrite *introduced* (as opposed to inherited from the source).
 """
 from __future__ import annotations
 
+import argparse
 import pathlib
 import sys
 import time
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
 
-import re
-
-from teg_analysis.reporting import llm
-from teg_analysis.reporting.authoring import load_story_plan
-from teg_analysis.reporting.history_context import build_win_counts
-from teg_analysis.reporting.render import (
-    apply_styling,
-    build_records_block,
-    build_round_standings,
-    _append_records,
-    _strip_at_a_glance,
-)
-from teg_analysis.reporting.venue import build_venue_context
-
-TEGS = [18]  # TEG 14 already produced; retrying just TEG 18 after a connection-reset on the first run.
-OUT_DIR = pathlib.Path("data/commentary")
+from teg_analysis.reporting.authoring import restyle_voice
 
 
-HUMOUR_DIAL_SYSTEM = """You are rewriting an existing TEG golf tournament report \
-to dial the humour up from its current level (≈3/10) to ≈8/10. The existing voice \
-register (deadpan, gravitas — in the spirit of Barney Ronay, Tom Peck, Jesse \
-Armstrong, Armando Iannucci) is the floor. You are ADDING TWO MORE INFLUENCES to \
-that roster — both modern Guardian-column voice, both punch-not-flourish:
+# ---------------------------------------------------------------------------
+# The voice registers. Each is layered ON TOP of the baseline house voice
+# (Ronay / Peck / Armstrong / Iannucci), which stays the floor.
+# ---------------------------------------------------------------------------
+HUMOUR_6 = """VOICE TARGET: the same deadpan gravitas, dialled from roughly 3/10 to 6/10.
+
+Keep the baseline register — Barney Ronay, Tom Peck, Jesse Armstrong, Armando \
+Iannucci. British English, no exclamation marks, no obvious puns.
+
+What changes at 6/10:
+- More frequent comic landings: 5-7 across the report rather than 2-3.
+- Slightly more licence with comparison and overstatement, still anchored to \
+the facts of the round.
+- The core mechanism is unchanged: subverted gravitas. Trivial stakes treated \
+with the solemnity of a geopolitical crisis. Never wink at the camera."""
+
+HUMOUR_8 = """VOICE TARGET: the same deadpan gravitas, dialled from roughly 3/10 to 8/10.
+
+Keep the baseline register as the floor — Ronay, Peck, Armstrong, Iannucci — \
+and add Charlie Brooker and Clive James: bigger swings, sustained comic images, \
+a willingness to let a comparison run.
+
+What changes at 8/10:
+- 7-10 landed comic moments across the report.
+- Big swings permitted: a genuinely funny sustained image is worth a sentence \
+or two of build.
+- Still no exclamation marks, no puns, no winking. The cruelty stays deadpan."""
+
+HUMOUR_8B = """VOICE TARGET: 8/10, BROOKER-ONLY. Drops Clive James and the literary-comparison \
+register that came with him; adds Marina Hyde for matched contemporary punch.
+
+You are ADDING TWO INFLUENCES to the baseline (Ronay / Peck / Armstrong / \
+Iannucci), both modern Guardian-column voice, both punch-not-flourish:
 
 - **Charlie Brooker** (Screen Burn / TV Go Home era): contemporary, vicious, \
 specific, physical. Speaking-voice prose, not essay-voice. Comparisons are \
 PHYSICAL and CONTEMPORARY (broken household objects, malfunctioning tech, \
-mundane horrors, bodily indignity), not literary or classical. Escalation through \
-specificity. Sentences are usually short. He never reaches for a Shakespeare \
-reference where a phrase about a stuck pixel or a faulty kettle will do. The \
-voice of a man watching something dreadful and describing it precisely, fast.
-- **Marina Hyde** (Guardian political/cultural sketch): same register, applied to \
-public absurdity. Running jokes that accumulate, recurring jabs that pay off \
-across the piece, sharp specific cruelty about behaviour and pattern. Refuses to \
-pretty up the subject; refuses to soften the verdict. A natural rhythm: state \
-the absurd thing, follow with the deadpan correction or the cruel restatement, \
-move on.
+mundane horrors, bodily indignity), never literary or classical. Escalation \
+through specificity. Sentences usually short. He never reaches for Shakespeare \
+where a phrase about a stuck pixel or a faulty kettle will do.
+- **Marina Hyde**: same register, applied to public absurdity. Running jokes \
+that accumulate across the piece. Sharp specific cruelty about behaviour and \
+pattern. State the absurd thing, follow with the deadpan correction, move on.
 
-WHAT TO AIM FOR — THE BROOKER/HYDE MODE:
-- PHYSICAL, CONTEMPORARY comparisons. The card looks like a malfunctioning \
-spreadsheet, a player drops shots like a man trying to find the right key in the \
-dark, a quadruple sits on the scorecard the way an alert appears on a phone you \
-were trying to ignore. Things from the present day, things from ordinary life.
-- STACCATO escalation, not sustained metaphor. One short sharp image, then move. \
-If the line wants to keep going, cut it short and let the next sentence carry. \
-This is the OPPOSITE of "earning paragraph length with a comparison".
-- SPEAKING VOICE. The reader should hear it being said, not written. Contractions \
-allowed. Asides allowed. The occasional rhetorical question — sparingly.
-- 7–10 landed comic moments across the report. NOT all big-swing. A mix: 3–4 \
-sharp images, the rest wry observational asides and cruel restatements built \
-into existing sentences.
-- BIG SWINGS still permitted, but in Brooker's mode: a single short image that \
-lands, not a sustained passage. "five identical bricks laid in a row" works; \
-"sits on the card in the manner of a stranger at a funeral" is leaning literary \
-and would be cut in this variant.
+WHAT TO AIM FOR:
+- PHYSICAL, CONTEMPORARY comparisons drawn from present-day ordinary life.
+- STACCATO escalation, not sustained metaphor. One short sharp image, then move.
+- SPEAKING VOICE. The reader should hear it said, not written. Contractions fine.
+- 7-10 landed comic moments: 3-4 sharp images, the rest wry asides and cruel \
+restatements built into existing sentences.
 
 EXPLICIT FAILURE MODES — DO NOT REPEAT:
-- ❌ Literary/classical register. "In the manner of", "the kind of stretch that", \
-"that suggested either remarkable resilience or", "the way the room seemed for a \
-moment unsure how to absorb" — all out. This isn't Ronay-on-Sunday-supplement. \
-This is Brooker-on-deadline.
-- ❌ Sustained metaphor running across multiple clauses or a whole paragraph. If \
-you start an image, finish it inside the sentence; do not extend it.
-- ❌ Generic kicker formulas ("Timing has never been the strong suit of a title \
-defence"). The kicker must be specific to THIS player, THIS round, THIS card.
-- ❌ Setup-punchline structures (feed line / payoff). No "It was as if…", no \
-"What can you say about…", no "you have to admire…".
-- ❌ Surface wit / "look at me being witty" register. You say the cruel thing as \
-if it were the only honest description of what happened. Never advertise the joke.
-- ❌ Adding flourish to a sentence that's already working. The dial is about \
-WHICH sentences get the swing, not bolting wit onto every sentence.
-- ❌ Loosening the deadpan. The cruelty stays gravitas. No exclamation marks, no \
-puns, no wacky tropes, no winking at the camera, no jokes ABOUT golf as a sport.
-- ❌ Clever-for-clever's-sake numerical games (e.g. "the seventeenth-from-last \
-hole" — twee, also mathematically wrong). If the cleverness requires the reader \
-to do mental arithmetic to land, cut it.
+- No literary/classical register. "In the manner of", "the kind of stretch that" \
+— all out. This is Brooker-on-deadline, not Ronay-on-Sunday-supplement.
+- No sustained metaphor across clauses or paragraphs. Start an image, finish it \
+inside the sentence.
+- No generic kicker formulas. The kicker must be specific to THIS player, THIS \
+round, THIS card.
+- No setup-punchline structures. No "It was as if...", no "What can you say \
+about...", no "you have to admire...".
+- No surface wit. Say the cruel thing as if it were the only honest description \
+of what happened. Never advertise the joke.
+- No flourish bolted onto a sentence that already works. The dial is about WHICH \
+sentences get the swing, not adding wit to every sentence.
+- Do not loosen the deadpan. No exclamation marks, no puns, no wacky tropes, no \
+jokes ABOUT golf as a sport.
+- No clever-for-clever's-sake numerical games ("the seventeenth-from-last hole" \
+— twee, and wrong). If the cleverness needs mental arithmetic to land, cut it."""
 
-ECONOMY RULES STILL APPLY (the prose density rules are non-negotiable):
-- Em-dashes: max two per paragraph.
-- Subordinate clauses: max two per sentence unless every clause carries a fact, \
-image or beat.
-- No "particular kind of X / one of them" preambles.
-- No subject-burying preambles ("The detail that elevates X to Y is that…").
-- Punchline isolation: short payoff sentences belong as their own paragraph.
-- One dominant idea per paragraph.
-
-FAITHFULNESS (non-negotiable):
-- DO NOT change any facts: holes, scores, players, par values, weekdays, SI \
-references, course names, records, margins. Every number stays exactly as written.
-- DO NOT invent player relationships. Bakers and Pattersons are brothers; nothing else.
-- DO NOT change section headings or the report's structural shape.
-- DO NOT add weekday names anywhere they aren't already.
-- British English. The protected nomenclature ("Trophy", "Green Jacket", "Jacket", \
-"Wooden Spoon", "Spoon", "Stableford", "Gross", bogey terms) stays exactly as written.
-
-OUTPUT: the complete rewritten report as markdown — same structure, same headings, \
-same facts, voice register preserved but with Brooker/Hyde cruelty dialled to 8/10 \
-in their MODERN, PHYSICAL, STACCATO mode (not literary-comparison mode). No \
-preamble, no commentary, just the report."""
+VARIANTS = {"humour6": HUMOUR_6, "humour8": HUMOUR_8, "humour8b": HUMOUR_8B}
 
 
-def dial_one(teg: int) -> dict:
-    src = OUT_DIR / f"teg_{teg}_report_final.md"
-    dst = OUT_DIR / f"teg_{teg}_report_humour8b.md"
-    print(f"\n=== TEG {teg}: humour-dial start ===", flush=True)
-    t0 = time.time()
-    src_text = src.read_text()
-    print(f"  src: {len(src_text.split())} words", flush=True)
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("--teg", type=int, help="TEG number")
+    ap.add_argument("--variant", action="append", default=[],
+                    help=f"one of {sorted(VARIANTS)} (repeatable)")
+    ap.add_argument("--list", action="store_true", help="list available variants")
+    args = ap.parse_args(argv)
 
-    new_text, usage = llm.generate_text(
-        HUMOUR_DIAL_SYSTEM, src_text,
-        model=llm.DEFAULT_MODEL,
-        max_tokens=16000,
-    )
-    dst.write_text(new_text)
-    print(f"  new: {len(new_text.split())} words ({time.time()-t0:.1f}s) -> {dst}", flush=True)
+    if args.list or not args.teg:
+        print("Available variants:")
+        for name in sorted(VARIANTS):
+            first = VARIANTS[name].split("\n")[0]
+            print(f"  {name:10s} {first}")
+        print("\nUsage: python scripts/humour_dial.py --teg 14 --variant humour8b")
+        return 0
 
-    # Style it for direct comparison with the existing _styled.md.
-    plan = load_story_plan(teg)
-    venue = build_venue_context(teg)
-    standings = build_round_standings(teg)
-    win_counts = build_win_counts(teg)
-    styled = _strip_at_a_glance(new_text)
-    styled = apply_styling(styled, plan, venue, standings=standings, win_counts=win_counts)
-    styled = re.sub(r'\n*## Personal bests and TEG records\n[\s\S]*$', '', styled)
-    styled = _append_records(styled, build_records_block(teg))
-    styled_path = OUT_DIR / f"teg_{teg}_report_humour8b_styled.md"
-    styled_path.write_text(styled)
-    print(f"  styled -> {styled_path}", flush=True)
-    print(f"=== TEG {teg}: done in {time.time()-t0:.1f}s ===", flush=True)
-    return {"teg": teg, "usage": usage, "elapsed": time.time() - t0}
+    variants = args.variant or sorted(VARIANTS)
+    unknown = [v for v in variants if v not in VARIANTS]
+    if unknown:
+        ap.error(f"unknown variant(s) {unknown}; choose from {sorted(VARIANTS)}")
 
-
-def main():
-    overall = time.time()
-    results = [dial_one(teg) for teg in TEGS]
-    print("\n=== SUMMARY ===", flush=True)
-    for r in results:
-        print(f"  TEG {r['teg']}: {r['elapsed']:.1f}s", flush=True)
-    print(f"TOTAL: {time.time()-overall:.1f}s", flush=True)
+    for name in variants:
+        print(f"\n=== TEG {args.teg}: {name} ===", flush=True)
+        t0 = time.time()
+        out = restyle_voice(args.teg, VARIANTS[name], name)
+        print(f"  -> {out['output_path']}")
+        print(f"  -> {out['styled_path']}")
+        print(f"  {time.time() - t0:.1f}s"
+              + ("  ✓ no new faults" if not out["new_findings"] else ""))
+    print("\nCompare each against data/commentary/teg_"
+          f"{args.teg}_report_styled.md, then record the verdict in "
+          "teg_analysis/reporting/EXPERIMENTS.md -> H8.")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

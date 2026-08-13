@@ -280,3 +280,145 @@ def test_faithfulness_rules_that_trace_to_incidents_are_still_present():
     for phrase in ("countback", "same hole", "a week", "Arithmetic must be exact",
                    "player_relationships", "beat ID"):
         assert phrase.lower() in WRITER_FAITHFULNESS.lower(), phrase
+
+
+def test_writer_reads_the_right_prominence_field_for_the_palette():
+    """The PALETTE block must point at `prominent_palette`, not `prominent_vehicle`.
+
+    Regression guard for the same class of bug as known issue 8: the writer being
+    told to choose a PALETTE item "informed by" a field that holds a FRAME value.
+    The 2026-08-11 split made these two disjoint vocabularies, so reading the
+    wrong one now yields a value that is not in the palette at all.
+    """
+    from teg_analysis.reporting.authoring import WRITER_VOICE
+    palette_block = WRITER_VOICE[WRITER_VOICE.index("PALETTE —"):]
+    palette_block = palette_block[:palette_block.index("\n\n\n")] if "\n\n\n" in palette_block else palette_block
+    head = palette_block[:1200]
+    assert "prominent_palette" in head
+    # `prominent_vehicle` may appear, but only in the disambiguating warning.
+    for m in __import__("re").finditer(r"prominent_vehicle", head):
+        assert "NOT `prominent_vehicle`" in head[max(0, m.start() - 30):m.end() + 10], \
+            "PALETTE block references prominent_vehicle outside the disambiguation note"
+
+
+def test_prompts_never_reference_a_plan_field_that_does_not_exist():
+    """Every "the plan's `x`" in a prompt must name a real schema field.
+
+    This is the general form of issue 18. The `Literal` enums protect the
+    *values* a field can hold; nothing protected the *field names* the prompts
+    refer to in prose. Renaming `prominent_vehicle` left a prompt pointing at a
+    field whose meaning had changed underneath it.
+
+    Covers the nested models too (`RoundPlan.beat_ids`, `Payoff.seed`, …), since
+    prompts legitimately reference those.
+    """
+    import re
+    from teg_analysis.reporting import authoring, round_report
+    from teg_analysis.reporting.story_plan import (
+        StoryPlan, RoundPlan, Competition, PlayerArc, Payoff)
+
+    known = set()
+    for model in (StoryPlan, RoundPlan, Competition, PlayerArc, Payoff,
+                  round_report.RoundStoryPlan, round_report.RoundCompetitionState,
+                  round_report.RoundPlayerArc):
+        known |= set(model.model_fields)
+
+    prompts = {
+        "WRITER_VOICE": authoring.WRITER_VOICE,
+        "WRITER_FAITHFULNESS": authoring.WRITER_FAITHFULNESS,
+        "DRY_DRAFT_SYSTEM_DETAILED": authoring.DRY_DRAFT_SYSTEM_DETAILED,
+        "DRY_DRAFT_SYSTEM_LIGHT": authoring.DRY_DRAFT_SYSTEM_LIGHT,
+        "ROUND_WRITER_SYSTEM": round_report.ROUND_WRITER_SYSTEM,
+        "ROUND_DRY_DRAFT_SYSTEM": round_report.ROUND_DRY_DRAFT_SYSTEM,
+    }
+    pattern = re.compile(r"plan'?s?\s+\*{0,2}`([a-z_]+)`", re.IGNORECASE)
+
+    dangling = [
+        f"{name}: plan.{m.group(1)}"
+        for name, prompt in prompts.items()
+        for m in pattern.finditer(prompt)
+        if m.group(1) not in known
+    ]
+    assert not dangling, (
+        "prompt references a plan field that does not exist "
+        f"(renamed or removed?): {dangling}")
+
+
+# ---------------------------------------------------------------------------
+# restyle_voice — the voice A/B lever
+# ---------------------------------------------------------------------------
+def test_restyle_voice_composes_guardrails_from_the_shared_constant():
+    """A variant's voice prompt must not be able to shed the faithfulness rules.
+
+    The guardrails come from `WRITER_FAITHFULNESS` — the same constant the main
+    writer uses — so a voice experiment cannot drift out of step with them.
+    """
+    from unittest.mock import patch
+    from teg_analysis.reporting import authoring
+
+    src = open("data/commentary/teg_17_report_final.md").read()
+    with patch.object(authoring.llm, "generate_text", return_value=(src, {})) as m:
+        authoring.restyle_voice(17, "VOICE: drier.", "unittest_tmp",
+                                style=False, verify=False)
+    system = m.call_args[0][0]
+    assert "restyle, not a rewrite" in system          # the contract
+    assert "VOICE: drier." in system                    # the caller's voice
+    assert authoring.WRITER_FAITHFULNESS in system      # shared guardrails
+    assert authoring.WRITER_OUTPUT_RULE in system
+
+    import os
+    os.remove("data/commentary/teg_17_report_unittest_tmp.md")
+
+
+def test_restyle_voice_refuses_to_overwrite_canonical_artefacts():
+    from teg_analysis.reporting.authoring import restyle_voice
+    for label in ("final", "styled", "A_around_draft"):
+        with pytest.raises(ValueError, match="canonical"):
+            restyle_voice(17, "VOICE: x", label)
+
+
+def test_restyle_voice_blames_only_faults_it_introduced():
+    """Inherited faults are not the pass's doing; a new one is.
+
+    This is the guard against the failure that got the critique-revise variant
+    rejected — an extra prose pass fabricating a detail.
+    """
+    from unittest.mock import patch
+    from teg_analysis.reporting import authoring
+    import os
+
+    src = open("data/commentary/teg_17_report_final.md").read()
+
+    with patch.object(authoring.llm, "generate_text",
+                      return_value=(src + "\n\nIt was settled on countback.\n", {})):
+        out = authoring.restyle_voice(17, "VOICE: x", "unittest_tmp", style=False)
+    assert len(out["new_findings"]) == 1
+    assert "countback" in out["new_findings"][0]
+    assert len(out["findings"]) > len(out["new_findings"])   # inherited, not blamed
+
+    with patch.object(authoring.llm, "generate_text", return_value=(src, {})):
+        clean = authoring.restyle_voice(17, "VOICE: x", "unittest_tmp", style=False)
+    assert clean["new_findings"] == []
+
+    os.remove("data/commentary/teg_17_report_unittest_tmp.md")
+
+
+# ---------------------------------------------------------------------------
+# Stage 5 determinism
+# ---------------------------------------------------------------------------
+def test_standings_are_deterministic_when_players_are_tied():
+    """Stage 5 is documented as free and idempotent — it must actually be.
+
+    `sort_values` on a single column uses quicksort, which is NOT stable, so
+    tied players came out in arbitrary order and re-running `style_report`
+    produced a spurious diff. Ties now break on player code.
+    """
+    from teg_analysis.reporting.render import build_round_standings
+    runs = [build_round_standings(17) for _ in range(3)]
+    assert runs[0] == runs[1] == runs[2]
+
+
+def test_style_text_is_idempotent():
+    from teg_analysis.reporting.render import style_text
+    text = open("data/commentary/teg_17_report_final.md").read()
+    assert style_text(17, text) == style_text(17, text)

@@ -194,9 +194,7 @@ PLAYERS THEMSELVES — insiders who know each other, the courses and the history
 want to relive the event and be gently ribbed, and who will instantly spot any \
 factual error.
 
-VOICE: faithful, entertaining, tongue-in-cheek — in the spirit of Barney Ronay \
-(Guardian), Tom Peck (Times political sketches), Jesse Armstrong (Succession), \
-and Armando Iannucci (The Thick of It). British English. No exclamation marks. \
+VOICE: faithful, entertaining, tongue-in-cheek. British English. No exclamation marks. \
 No obvious puns. No wacky tropes.
 
 Core mechanism — subverted gravitas: treat every score, every hole, every lurch up or down
@@ -204,6 +202,39 @@ the leaderboard with the unblinking solemnity of a Shakespearean tragedy or a ge
 crisis. You are a war correspondent documenting an inevitable, slow-motion disaster. The
 humour lives in the gap between the gravity of the prose and the lowness of the stakes.
 Never wink at the camera.
+
+HUMOUR MECHANISMS — four distinct devices, drawn from four different comic writers. Rotate \
+through them; do not lean on any single one report after report, or even paragraph after \
+paragraph. None is mandatory in any given passage — pick whichever fits the moment. A device \
+should earn its own sentence, sized to develop the idea — not get tacked onto an existing \
+sentence as a trailing clause. A bolted-on aside rarely lands; give it room:
+1. **Restraint and exact detail** (Mick Herron, Slow Horses). Precise, unhurried observation; \
+   the flat delivery of an absurd number; a deadpan aside; what's left unsaid. Occasionally \
+   — not habitually — the gap between how a player sees himself and how he performs.
+2. **Sustained comic image** (Barney Ronay, the Guardian). One small physical detail grown \
+   into an escalating, controlled metaphor, developed across two or three sentences — and, \
+   where the material supports it, called back later in the report for a payoff. This is the \
+   highest-value device of the four; don't ration it to once per report if a second genuinely \
+   earns its place.
+3. **Cool deference** (Jesse Armstrong, Succession). A character's evident self-regard, \
+   undercut by what actually happens, told politely rather than mocked outright. The put-down \
+   lands harder for sounding generous.
+4. **Farcical escalation** (Armando Iannucci, The Thick of It). Small errors compounding while \
+   someone — a player, or the prose itself — maintains an unbroken performance of competence \
+   straight through the collapse.
+
+CLARITY — non-negotiable regardless of which mechanism is in play: the reader must always be \
+able to tell plainly what happened — the score, the hole, who did what, where the competition \
+stood. State the fact cleanly, or make sure it survives intact inside the wit. Never let a \
+device from the list above bury or obscure the underlying fact.
+
+NARRATIVE PULL — the report is a magazine feature, not a results record. Beyond deploying \
+individual devices, the piece as a whole must make the reader want to keep reading. Raise a \
+question, a stake, or an apparent claim early, and let the reader work towards its resolution \
+or contradiction rather than stating the answer upfront and walking through it in order. Vary \
+pace — let some passages breathe, others land fast. If a stretch reads like a faithful account \
+of what happened rather than something someone would choose to read, it needs more shape, not \
+more jokes.
 
 Named principles — hold to these:
 1. Characters are people taking something they shouldn't take seriously with utter, doomed
@@ -241,7 +272,12 @@ carry the report; if `inversion`, the before-and-after contrast should be \
 explicit; if `theme_led_body`, the round headings can be dropped or replaced with \
 thematic ones. The vocabulary is shared between the editor and you.
 - Open with the title and an overview that lands the theme — drawing on the plan's \
-`opening_hook` if it's set to something other than chronological.
+`opening_hook` if it's set to something other than chronological. Where it doesn't \
+break the narrative, the opener should give the reader a sense of what happened in \
+more than one of the three competitions — even a single clause is enough (e.g. \
+"...while at the bottom, X was already assembling the Spoon"). Don't force it if the \
+chosen frame only supports one competition up front; the closing section below \
+covers all three regardless.
 - Round-by-round and theme-led are BOTH valid structures. If you take the \
 round-by-round route, each round should have its own `## Round N — …` heading \
 (themed titles after the number are fine, e.g. `## Round 1 — 46 and Out of \
@@ -255,6 +291,19 @@ the theme through and pay off the foreshadowing hooks.
 see `trophy_metric` in the bundle) first, then the Green Jacket (Gross), then the \
 Wooden Spoon — and you must make clear HOW each was won (or, for the Spoon, lost).
 - Weave in the venue/course colour and the player arcs where they earn their place.
+- **Before the player closing, include a short "how it was decided" section** — one \
+paragraph or a few bullets, one per competition, naming plainly how the Trophy, the \
+Green Jacket and the Wooden Spoon were each won or lost (the decisive moment, who \
+beat whom, the margin). Use a heading like `## How it was decided` (or similar). \
+This is the one place a reader can check what happened in each competition without \
+re-reading the whole narrative — it must not be buried inside prose elsewhere and \
+skipped here. Keep it compact and factual; it should read as a clean summary, not a \
+second telling of the story. This section is non-negotiable; do not omit it, and do \
+not let it substitute for covering the competitions in the narrative body too — it's \
+a floor, not the only place the competitions are covered. It sits ALONGSIDE (not \
+instead of) any TEG-record or personal-best fact that belongs in this section's \
+competition — e.g. if the Green Jacket winner's total is a top-3 all-time Gross \
+total, say so here even if the narrative body didn't have room for it.
 - **The report MUST END with a player-by-player section** — 4–6 short bullets, one \
 or two sentences per principal player, drawing on the plan's `players[]` arcs AND \
 the moments you've narrated. Use a heading like `## The men, in brief` (or similar). \
@@ -263,8 +312,10 @@ This closing is non-negotiable; do not omit it.
 PALETTE — context vehicles to pull on. **At least ONE must be prominent in the report \
 (featured in the opener AND threaded through the body); multiple are welcome where each \
 genuinely lands; the one-prominent rule is non-negotiable.** None of (a)-(g) is itself \
-mandatory; the choice is yours, informed by the plan's `prominent_vehicle` and what's \
-most interesting about THIS tournament.
+mandatory; the choice is yours, informed by the plan's **`prominent_palette`** and what's \
+most interesting about THIS tournament. (Note `prominent_palette` — NOT `prominent_vehicle`, \
+which is the structural FRAME and is covered under STRUCTURE above. They are different \
+fields with different vocabularies; do not read one for the other.)
 
 a) **Cross-TEG career storylines.** The bundle's `player_history` and the plan's \
 `players[]` carry factual storyline phrases (Nth Trophy / Jacket / Spoon; back-to-back; \
@@ -313,7 +364,10 @@ CRAFT:
 abstractions — the detail is what makes it sing.
 - VARY your language. Never lean on the same dramatic word twice — do not repeat \
 "disaster", "meltdown", "catastrophe" and the like; reach for fresh, precise phrasing.
-- Vary sentence rhythm; let a short sentence land a point.
+- Vary sentence rhythm; let a short sentence land a point. **Sentence-length discipline:** \
+no sentence should run past roughly 25 words — length is earned by a clean image, not \
+decoration. Where a thought needs room, split it into two sentences rather than let one \
+run on. The wit lands in something short and flat, not in an unfurling clause.
 - **Stroke index (SI) for hole colour.** Beat hole evidence may include an `si` field. \
 Use it sparingly as optional colour: SI 1 = "the hardest hole on the course"; SI 18 = \
 "the easiest"; SI 2–3 = "one of the hardest"; SI 16–17 = "one of the easiest". \
@@ -404,6 +458,16 @@ shared surnames or any other signal.** Two players named Baker are NOT cousins, 
 uncle and nephew, or any other connection unless the bundle says so. If `player_relationships` \
 is empty, every player in the field is unrelated as far as the report is concerned. \
 Inventing relationships is a fabrication of the same kind as inventing scores.
+- **"DEFENDING CHAMPION" / "REIGNING [X]" / "LAST TO WIN" framing — only from an explicit \
+milestone string.** Only claim a player is the defending Trophy/Jacket champion, the reigning \
+titleholder, or "the last man to win" a competition if the bundle's `notable_milestones` for \
+that player explicitly says so (e.g. "defending Trophy champion (TEG N)"). **Do NOT infer this \
+from win counts, past rank history, or general reputation** — a player who won a competition \
+two TEGs ago, or who finished runner-up last time, is NOT "the last to win it": the actual \
+most recent winner may be a player who isn't even in THIS TEG's field, since not every player \
+plays every TEG. If no milestone string says "defending champion" or equivalent for a given \
+competition, don't claim it, imply it, or use "reigning" for that competition — describe their \
+past wins by count and TEG number instead ("N prior Jacket wins") without asserting recency.
 - **Every beat id in the plan's `must_include_beat_ids` MUST be covered in the prose** \
 — not just hinted at. These are the spine + TEG records + personal bests + rare feats \
 (holes-in-one, eagles, all-time top-3 rounds, big blow-ups). Skipping any is the most \
@@ -651,3 +715,145 @@ def run_authoring_ab(teg_num: int, mode: str = "balanced", tone: str = "house",
     return {"A_around_draft": a["output_path"],
             "B_single_pass": b["output_path"],
             "C_critique_revise": c["output_path"]}
+
+
+# ===========================================================================
+# Voice restyling — an EXPERIMENT LEVER, deliberately not in the default chain
+# ===========================================================================
+# A ONE-OFF EXPERIMENT TOOL. Nothing in the pipeline calls this — `backfill.py`
+# runs plan -> dry -> around -> lint -> style -> verify and stops. It exists to
+# find a target voice; once found, that voice is folded into `WRITER_VOICE` and
+# this function goes back to being unused until the next voice question.
+#
+# Takes an already-finished report and rewrites ONLY its voice. Everything else
+# — facts, structure, headings, standings, records — is held literally constant,
+# because the input is the finished text rather than the bundle. That makes it
+# the tightest possible A/B for voice: one variable, one API call.
+#
+# WHY THIS IS NOT A PIPELINE STAGE. The original authoring A/B tested exactly
+# this shape as a default (variant C, critique-revise) and rejected it: the extra
+# pass over finished prose fabricated a "countback" detail. Every pass over prose
+# is a fabrication opportunity, so this stays an opt-in tool for experiments.
+#
+# What has changed since that verdict is that D3 now exists, so a rewrite can be
+# *checked* rather than merely trusted — `verify=True` (the default) runs the
+# mechanical checks over the output and returns the findings.
+#
+# WHAT IT DOES NOT PROVE. It shows a target voice is reachable *by rewriting*,
+# not that the writer will hit it first time from the bundle. Whatever wins here
+# must be folded into `WRITER_VOICE` and validated with a from-scratch
+# generation before it is trusted for a backfill.
+
+RESTYLE_CONTRACT = """You are rewriting an existing, finished golf tournament report to change \
+its VOICE ONLY.
+
+NON-NEGOTIABLE — this is a restyle, not a rewrite:
+- DO NOT change any fact: holes, scores, players, par values, weekdays, stroke indexes, course \
+names, records, margins, totals. Every number stays exactly as written.
+- DO NOT change the structure: same sections, same headings, same order, same length or slightly \
+shorter.
+- DO NOT add or remove events. If it is not in the text you were given, it does not exist.
+- DO NOT add weekday names anywhere they do not already appear.
+
+Everything below describes the voice you are writing IN. Apply it to the existing sentences."""
+
+
+def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
+                  source_label: Optional[str] = None,
+                  model: Optional[str] = None,
+                  verify: bool = True,
+                  style: bool = True) -> dict:
+    """Rewrite a finished report's voice and save it under a variant name.
+
+    Args:
+        teg_num: which TEG.
+        voice_prompt: the voice instructions for this variant. Composed with the
+            restyle contract and the shared `WRITER_FAITHFULNESS` block, so the
+            guardrails are the *same constant* the main writer uses and cannot
+            drift out of step with it.
+        label: variant name, e.g. `"drier"`. Writes
+            `teg_N_report_{label}.md` (+ `_styled.md`). Refuses labels that would
+            overwrite the canonical files.
+        source_label: read from `teg_N_report_{source_label}.md` instead of
+            `report_final.md` — for chaining or for re-styling another variant.
+        verify: run D3 over both the source and the output, and report which
+            findings are NEW (default True). A restyle inherits whatever faults
+            the source already had, so the raw finding list is misleading — the
+            question that matters for an extra prose pass is whether *this* pass
+            introduced anything. That is `new_findings`.
+        style: also write the styled variant, so it is directly comparable
+            line-for-line with `report_styled.md` (default True).
+
+    Returns {teg, label, source_path, output_path, styled_path, usage,
+    findings, new_findings}.
+    """
+    import os
+
+    from teg_analysis.reporting.render import style_text
+    from teg_analysis.reporting.verify import verify_report
+
+    label = label.strip().strip("_")
+    if not label:
+        raise ValueError("label must be a non-empty variant name")
+    if label in {"final", "styled", "A_around_draft"}:
+        raise ValueError(
+            f"label {label!r} would overwrite a canonical artefact; "
+            "pick an experiment name such as 'drier' or 'warmer'")
+
+    src_name = f"report_{source_label}" if source_label else "report_final"
+    source_path = f"{OUTPUT_DIR}/teg_{teg_num}_{src_name}.md"
+    if not os.path.exists(source_path):
+        # Several TEGs have had their report_final.md consumed into variant
+        # filenames by past experiments (TEGs 10, 11, 13, 14, 18 as of
+        # 2026-08-11) — including 14 and 18, the usual anchors for a voice A/B.
+        # Listing the real alternatives is more useful than "not found".
+        import glob
+        import re as _re
+        prefix = f"{OUTPUT_DIR}/teg_{teg_num}_report_"
+        available = sorted(
+            _re.sub(r"\.md$", "", os.path.basename(p)[len(os.path.basename(prefix)):])
+            for p in glob.glob(f"{prefix}*.md")
+            if not p.endswith("_styled.md"))
+        raise FileNotFoundError(
+            f"{source_path} not found — TEG {teg_num} has no finished report to "
+            f"rewrite.\nPass source_label= one of: {available}\n"
+            f"'A_around_draft' is usually the right choice (the pre-lint text).")
+
+    with open(source_path) as f:
+        source_text = f.read()
+
+    system = (RESTYLE_CONTRACT + "\n\n" + voice_prompt.strip() + "\n\n"
+              + WRITER_FAITHFULNESS + "\n" + WRITER_OUTPUT_RULE)
+    text, usage = llm.generate_text(system, source_text,
+                                    model=model or llm.DEFAULT_MODEL,
+                                    max_tokens=16000)
+    text = _strip_beat_ids(text)
+
+    output_path = f"{OUTPUT_DIR}/teg_{teg_num}_report_{label}.md"
+    with open(output_path, "w") as f:
+        f.write(text)
+
+    styled_path = None
+    if style:
+        styled_path = f"{OUTPUT_DIR}/teg_{teg_num}_report_{label}_styled.md"
+        with open(styled_path, "w") as f:
+            f.write(style_text(teg_num, text))
+
+    findings: list = []
+    new_findings: list = []
+    if verify:
+        before = {str(f) for f in verify_report(teg_num, text=source_text)}
+        found = verify_report(teg_num, text=text)
+        findings = [str(f) for f in found]
+        # Faults the source already had are not this pass's doing. What matters
+        # is whether rewriting introduced one — that is the exact failure that
+        # got the critique-revise variant rejected.
+        new_findings = [s for s in findings if s not in before]
+        if new_findings:
+            print(f"[restyle_voice] WARNING TEG {teg_num} ({label}): "
+                  f"{len(new_findings)} NEW fault(s) introduced by this pass:")
+            for s in new_findings:
+                print(f"  {s}")
+    return {"teg": teg_num, "label": label, "source_path": source_path,
+            "output_path": output_path, "styled_path": styled_path,
+            "usage": usage, "findings": findings, "new_findings": new_findings}

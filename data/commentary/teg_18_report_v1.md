@@ -12,13 +12,13 @@ Walk back through the four days and the result becomes steadily less surprising.
 
 The Tuesday round at the Stadium was, for Williams, an exercise in not needing to do anything at all, executed with the tidiness of a man who had decided to do it properly anyway. He went round in 84, twelve over. Nine points came from the 8th to the 10th, including a bogey at the 9th, the hardest hole on the course. It was a personal best at the Stadium, eight shots better than both his previous best there and his last visit. The Jacket closed at +66, by 14.
 
-Alex Baker, meanwhile, spent the afternoon testing whether an eight-point lead could be given away by hand. He dropped seven shots from the 9th to the 11th — triple, double, double — and then took 10 at the 14th, six over in a single hole. An 8 at the 17th followed.
+Alex Baker, meanwhile, spent the afternoon testing whether an eight-point lead could be surrendered by hand. He dropped seven shots from the 9th to the 11th — triple, double, double — and then took 10 at the 14th, six over in a single hole. An 8 at the 17th followed.
 
 Thirty-eight points. A total of 169, and the Trophy by 8 from Patterson.
 
 Behind him, Jon Baker made five consecutive double bogeys from the 7th to the 11th, ten shots gone, inside an unbroken run of bogey-or-worse from the 2nd to the 12th. A birdie at the 13th ended it, some while after it mattered. He signed for 29 and finished on 126.
 
-Mullin, needing something extraordinary and getting the reverse, dropped nine shots from the 14th to the 17th, the triple coming at the par-5 15th, the easiest hole on the card. Patterson took nine points from the 4th to the 6th, went triple–double–bogey from the 14th, then birdied the 17th.
+Mullin, needing something extraordinary and getting the reverse, shed nine shots from the 14th to the 17th, the triple coming at the par-5 15th, the easiest hole on the card. Patterson took nine points from the 4th to the 6th, went triple–double–bogey from the 14th, then birdied the 17th.
 
 ## Round 3 — Eighty-Four: Mullin Rewrites the Stadium
 
@@ -48,7 +48,7 @@ Williams took nine points from the 3rd to the 5th and thirteen from the 13th to 
 
 The Trophy changed hands three times on Saturday morning, all inside five holes, all of it the ordinary jostling of an opening day. Alex Baker led at the 3rd, Mullin at the 4th, Alex Baker again at the 5th. That third exchange held for the remaining 67 holes of the tournament.
 
-He did not earn it by playing well throughout. He made a quadruple-bogey 7 at the par-3 2nd, the easiest hole on the course. He then took seventeen points from the 8th to the 12th — bogey, bogey, par, par, bogey — and thirteen more from the 14th to the 16th, birdieing the par-5 15th. A double at the 17th stopped that, and he closed with a quadruple-bogey 9 at the last. Forty-six points, which remains the highest single round anybody managed here.
+He did not earn it by playing well throughout. He made a quadruple-bogey 7 at the par-3 2nd, the easiest hole on the course. He then took seventeen points from the 8th to the 12th — bogey, bogey, par, par, bogey — and thirteen more from the 14th to the 16th, birdying the par-5 15th. A double at the 17th stopped that, and he closed with a quadruple-bogey 9 at the last. Forty-six points, which remains the highest single round anybody managed here.
 
 The par-5 15th spent Saturday afternoon dividing the field. Alex Baker birdied it. Williams birdied it, ending a run of bogey-or-worse that had stretched unbroken from the 2nd to the 14th and taken in triples at the 3rd and 4th, a quadruple-bogey 9 at the par-5 7th and, later, an 8 at the 17th. Twenty-seven over par, and the reigning Spoon holder looked entirely like himself.
 

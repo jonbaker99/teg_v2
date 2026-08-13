@@ -109,6 +109,26 @@ def _milestones(player: str, wins: dict, last_finishes: list[dict]) -> list[str]
         if runners_up >= 3:
             ms.append(f"Jacket runner-up in {runners_up} of the last {len(last_finishes)} TEGs without a win")
 
+    # --- Repeat same-rank pattern: identical rank in each of the last 3 finishes ---
+    # Generalises the runner-up-specific rule above to ANY consistently-repeated
+    # rank — a repeated 4th is just as much a "stuck" story as a repeated 2nd.
+    # Excludes 1 / 2, which the win/runner-up rules above already cover. Does
+    # NOT exclude "last place" by field size: field size varies TEG to TEG, so
+    # a rank that happens to equal one TEG's last place is not necessarily
+    # last place in the others — the separate Wooden Spoon magnet rule below
+    # already covers genuine last-place streaks correctly (it checks against
+    # each TEG's own n_players, not a borrowed one), so no overlap risk here.
+    if len(last_finishes) >= 3:
+        recent3 = last_finishes[-3:]
+        trophy_ranks = {f["trophy_rank"] for f in recent3}
+        if len(trophy_ranks) == 1 and recent3[0]["trophy_rank"] not in (1, 2):
+            rank = recent3[0]["trophy_rank"]
+            ms.append(f"Trophy rank {_ordinal(rank)} in each of the last {len(recent3)} TEGs")
+        jacket_ranks = {f["jacket_rank"] for f in recent3}
+        if len(jacket_ranks) == 1 and recent3[0]["jacket_rank"] not in (1, 2):
+            rank = recent3[0]["jacket_rank"]
+            ms.append(f"Jacket rank {_ordinal(rank)} in each of the last {len(recent3)} TEGs")
+
     # --- Wooden Spoon magnet: 2+ of last 3 ---
     if len(last_finishes) >= 3:
         recent3 = last_finishes[-3:]

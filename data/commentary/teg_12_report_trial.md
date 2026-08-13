@@ -4,7 +4,7 @@ The card says 12. Par 4, stroke index 2, the fourth hole of the whole tournament
 
 He won the Trophy by ten.
 
-That is the story of TEG's third pilgrimage to Catalonia, and it needs unpicking, because nothing about it obeys the usual arithmetic of doom. The shape of the trip was straightforward enough: two days on the Tour Course, the gentler of the two Coles-Gallardo siblings, followed by two days on the Stadium, Spain's grandest examination and a venue that had spent fifteen TEG visits declining to yield a round in the eighties. Gregg Williams led for two days. He led on the Tour. Both pots were decided on the Stadium, and the hinge was one hole on Saturday afternoon.
+That is the story of TEG's third pilgrimage to Catalonia, and it needs unpicking, because nothing about it obeys the usual arithmetic of doom. The shape of the trip was straightforward: two days on the Tour Course, the gentler of the two Coles-Gallardo siblings, followed by two days on the Stadium, Spain's grandest examination and a venue that had spent fifteen TEG visits declining to yield a round in the eighties. Gregg Williams led for two days. He led on the Tour. Both pots were decided on the Stadium, and the hinge was one hole on Saturday afternoon.
 
 ## Round 1 — A 12, a 105, and a Leader Nobody Mentions
 
@@ -18,7 +18,7 @@ Stuart Neumann's afternoon was less recoverable. His 105 was a new worst gross r
 
 ## Round 2 — Williams Holds, Patterson Hunts
 
-Friday, same course, same margins, no movement worth the name. Williams held both leads by a single shot, and did so despite a quadruple-bogey 8 at the 4th, which suggests the hole was collecting a toll from anyone who passed. Patterson kept pace and posted a quintuple bogey 10 at the par-5 15th, the only thing standing between him and parity. Neumann opened with an 8 at the 1st, a man getting the formalities out of the way early.
+Friday, same course, same margins, minimal movement. Williams held both leads by a single shot, and did so despite a quadruple-bogey 8 at the 4th, which suggests the hole was collecting a toll from anyone who passed. Patterson kept pace and posted a quintuple bogey 10 at the par-5 15th, the only thing standing between him and parity. Neumann opened with an 8 at the 1st, a man getting the formalities out of the way early.
 
 David Mullin quietly returned an 84 of his own, a Tour Course personal best by a single stroke. Two rounds gone, and the leaderboard had barely twitched. The Tour Course had finished with the field. The Stadium had not started.
 
@@ -36,7 +36,7 @@ And Patterson, having spent three days doing his damage in single, spectacular i
 
 He went to bed eight clear.
 
-The Spoon race, unmoved by any of this, spent the day passing itself back and forth. Mullin dropped to the bottom with a double at the 9th, the hardest hole on the course; Alex Baker reclaimed the position at the 11th; Mullin dropped again at the 14th; Alex Baker took it back at the 17th with a double. Three days of holding the floor, and one round left to lose it.
+The Spoon race, unmoved by any of this, spent the day passing itself back and forth. Mullin dropped to the bottom with a double at the 9th, the hardest hole on the course; Alex Baker reclaimed the position at the 11th; Mullin dropped again at the 14th; Alex Baker took it back at the 17th with a double. Three days of holding the floor, and one remaining round to lose it.
 
 ## Round 4 — Mullin's Sunday Morning, Baker's Sunday Afternoon
 
@@ -46,11 +46,11 @@ Mullin's 9 at the par-5 3rd dropped him to the bottom for the first time since t
 
 Then Jon Baker, defending Trophy champion, went about a different business entirely. His 89 was the first sub-90 round in fifteen TEG visits to the Stadium, breaking a course record of 90 that belonged to him, from TEG 11, by a single stroke. It sealed the Green Jacket at +63, eight clear of Mullin. He had been the third-most-discussed man on the property for two days and never once appeared to mind.
 
-Neumann, whose tournament began with the worst round the Tour Course has ever seen, eagled the par-5 15th — the easiest hole on the Stadium, and the only eagle anybody managed all trip.
+Neumann, whose tournament began with the worst round the Tour Course has ever seen, eagled the par-5 15th — the easiest hole on the Stadium, and the only one anybody managed all trip.
 
 Patterson signed for 40 and won by ten. Along the way he set personal bests at both courses, 96 at the Tour and 95 at the Stadium, which is the least dramatic sentence available about a man who made three double-figure holes.
 
-Williams, for the record, finished runner-up in both competitions with a personal-best gross total of +76 and personal bests at both courses — 84 at the Tour, 92 at the Stadium. He kept absolutely none of the silverware.
+Williams, for the record, finished runner-up in both competitions with a personal-best gross total of +76 and individual bests at both venues — 84 at the Tour, 92 at the Stadium. He kept absolutely none of the silverware.
 
 ## The men, in brief
 

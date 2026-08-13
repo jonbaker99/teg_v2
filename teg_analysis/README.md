@@ -78,6 +78,8 @@ teg_analysis/
                      it)/get_live_leaderboard/finalize_live_round
 
   reporting/         LLM tournament-report pipeline (scored beats → story plan → authoring → styled MD)
+                     See reporting/README.md (architecture) and reporting/ARTEFACTS.md
+                     (which file is which, and a runnable recipe per element you'd iterate on)
     README.md        How it works (architecture, artefacts, end-to-end usage)
     STATUS.md        Done / deferred ledger — read first when resuming
     events.py        Stage 2: notable-event detection + 3-axis scoring + competition arcs

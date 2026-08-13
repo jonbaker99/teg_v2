@@ -8,6 +8,11 @@ Replaces the old `streamlit/commentary/` system. The old pipeline buried key eve
 
 For the running ledger of what's done and what's deferred, see [STATUS.md](STATUS.md).
 
+**Want to change something and test it?** [ARTEFACTS.md](ARTEFACTS.md) is the operational guide:
+the whole pipeline in one table, what every file in `data/commentary/` is, and **a runnable recipe
+per element** — see *How to test and iterate on each element* (11 recipes, from free inspection to
+the ~$0.17 voice loop).
+
 ## Components — what you can change independently
 
 The five stages below describe how a report is *built*. This section describes what can be
@@ -16,8 +21,13 @@ grouped into five themes, A–E, that run in order: each theme consumes the prev
 Within a theme, rows are independently editable.
 
 Two things this cut gives you that the stage list doesn't: **which loop you're in** (themes differ by
-orders of magnitude in cost per try), and **how finished each part is** (maturity column — several
-rows are load-bearing and unbuilt).
+orders of magnitude in cost per try), and **how finished each part is** (maturity column).
+
+> **This is the same pipeline as [The five stages](#the-five-stages), cut a different way** — not a
+> rival model. Roughly: **A** = stages 1–2, **B** = stage 3, **C** = stages 4a/4b, **D** = the
+> faithfulness rules + verification + injected blocks, **E** = stage 5. If you want the runtime
+> sequence rather than the change surface, start from
+> [ARTEFACTS.md](ARTEFACTS.md) → "The whole pipeline in one table".
 
 ### Theme A — Source & selection
 **In:** `data/*.parquet` · **Out:** the bundle (~26k tokens) · **Cost per try:** free to full chain
@@ -282,16 +292,21 @@ build_story_plan(14, dry_run=True)                  # writes teg_14_story_plan_p
 
 ### Fixture set
 
-Iterating on themes C, D and E needs a frozen artefact chain to restart from. **TEGs 9, 12 and 17
-have complete chains** (`story_plan.json` → `dry_draft.md` → `report_A_around_draft.md` →
-`report_final.md` → `report_styled.md`); 12 and 17 are current-vintage and are the best fixtures.
+Iterating on themes C, D and E needs a frozen artefact chain to restart from — specifically
+`story_plan.json` **and** `dry_draft.md`. **11 of 17 TEGs have both**; the current list, and which
+files each TEG is missing, is in [ARTEFACTS.md](ARTEFACTS.md) → "Which TEGs can I iterate voice on?".
 
 > ⚠️ **TEG 14 — the standing stress-test anchor — is missing `dry_draft.md` and `report_final.md`.**
 > The humour and tighten experiments consumed them into variant filenames, so the two cheapest
-> iteration loops are broken on the very case chosen for being hardest. Rebuilding them costs one
-> full generation (~$0.65) and restores fast iteration on the anchor.
+> iteration loops are broken on the very case chosen for being hardest. Rebuilding costs one full
+> generation (~$0.65). Use **TEG 17 or 12** meanwhile — both current-vintage with complete chains.
 
 ## The five stages
+
+> **For the at-a-glance version — every stage, what it reads, what it writes, what it costs, in one
+> table — see [ARTEFACTS.md](ARTEFACTS.md) → "The whole pipeline in one table".** That is also where
+> the three vocabularies (stages 1–5, themes A–E, files ①–⑤) are reconciled. The sections below are
+> the deeper per-stage reference.
 
 ```
                                                           (LLM ────────────┐
@@ -462,32 +477,24 @@ backfill_all(range(8, 19))                                # TEGs 8-18, tournamen
 backfill_all([8, 9, 10], scope="tournament", force=True)  # re-run tournaments only
 ```
 
-## Artefacts (per TEG, under `data/commentary/`)
+## Artefacts
 
-| File | Stage | Cost |
+**Full reference: [ARTEFACTS.md](ARTEFACTS.md)** — what every file in `data/commentary/` is, which
+one to restart from for a given change, and a decoder for the experiment/snapshot filenames.
+
+The short version: five files make up the live chain, in order —
+
+| File | What it is | Cost to produce |
 |---|---|---|
-| `teg_N_notable_events.md` | 2 (inspection) | free |
-| `teg_N_venue_context.md` | 2 (inspection) | free |
-| `teg_N_story_plan_prompt.md` | 3 (dry-run input check) | free |
-| `teg_N_story_plan.json` | 3 (live) | ~$0.28 |
-| `teg_N_dry_draft.md` | 4a | ~$0.20 |
-| `teg_N_report_A_around_draft.md` | 4b | ~$0.10 |
-| `teg_N_report_final.md` | 4b + lint | ~$0.07 |
-| `teg_N_report_styled.md` | 5 | free |
-| **Total per report (Opus-tier)** | | **~$0.65** |
+| `teg_N_story_plan.json` | the editorial plan (no prose) | ~$0.28 |
+| `teg_N_dry_draft.md` | the facts, plainly stated | ~$0.20 |
+| `teg_N_report_A_around_draft.md` | first pass with the voice on | ~$0.10 |
+| `teg_N_report_final.md` | **the canonical text** (post word-lint) | ~$0.07 |
+| `teg_N_report_styled.md` | **what the site serves** (+ tables, CSS hooks) | free |
+| **Total** | | **~$0.65** |
 
-Round artefacts follow the same names with a `round_{r}_` infix (`teg_N_round_2_story_plan.json`, `teg_N_round_2_report_styled.md`, …).
-
-**Naming conventions for everything else in the folder.** `data/commentary/` also holds a lot of experiment output; the convention is worth knowing before you go looking for the live file:
-
-| Pattern | Meaning |
-|---|---|
-| `teg_N_report_styled.md` | **the live report** — this is what the UI renders |
-| `teg_N_report_{pre*}.md` | a snapshot of the report *before* a named prompt change (`prevehicles`, `prepayoff`, `preclose`, `pretighten`, `pre_detailed_baseline`, `pre_phaseA`) |
-| `teg_N_report_{variant}.md` | an A/B variant (`humour6`, `humour8`, `humour8b`, `tightened`, `light`, `detailed`, `B_single_pass`, `C_critique_revise`) |
-| `teg_N_{tournament_,}v0…v5_*.md` | the voice-ladder experiment (`existing`, `baseline`, `restraint`, `economy`, `observer`, `gravitas`) |
-| `archive 2026 v1/`, `archive 2026 v2/` | full snapshots of two earlier generations of the whole library |
-| `archive 2025/`, `drafts/`, `round_reports/` | the pre-pipeline 2025 system's output; still the webapp's fallback read paths |
+Round artefacts use the same names with a `round_R_` infix. Note the **bundle is not a file** — it's
+assembled in memory each run; dump it with `build_story_plan(teg, dry_run=True)`.
 
 ## End-to-end (archive mode, one TEG)
 

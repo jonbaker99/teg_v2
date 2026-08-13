@@ -14,15 +14,19 @@ Read in this order; stop when you have enough for the task:
    vintage, the open decisions, known issues. **Read this first, always.**
 2. **`README.md`** — pipeline architecture (stages 1–5, the context modules, how they connect,
    design rules)
-3. **`EXPERIMENTS.md`** — what's been tried on voice/structure, what the verdicts were, what's open
-4. **`story_plan.py`** — `StoryPlan` Pydantic schema + editor system prompt (incl. the narrative-vehicle
+3. **`ARTEFACTS.md`** — the operational guide: the pipeline in one table, which file is which, and
+   **a runnable recipe for testing each element**. **Read before changing anything** — the voice
+   loop costs ~$0.17 from the right restart point and ~$0.65 from the wrong one, and several
+   elements can be inspected for free before you spend at all
+4. **`EXPERIMENTS.md`** — what's been tried on voice/structure, what the verdicts were, what's open
+5. **`story_plan.py`** — `StoryPlan` Pydantic schema + editor system prompt (incl. the narrative-vehicle
    menu) + `assemble_bundle()`; the editorial brain, and the most compressed description of what the
    LLM is asked to do
-5. **`authoring.py`** — Stage 4 orchestration and every system prompt (`WRITER_SYSTEM`,
-   `DRY_DRAFT_SYSTEM_*`, `LINT_SYSTEM`, `TIGHTEN_SYSTEM`)
-6. **`events.py`** — beat detection and 3-axis scoring; only load if the work touches beat
+6. **`authoring.py`** — Stage 4 orchestration and every system prompt (`WRITER_SYSTEM`,
+   `WRITER_VOICE` / `WRITER_FAITHFULNESS`, `DRY_DRAFT_SYSTEM_*`, `LINT_SYSTEM`, `TIGHTEN_SYSTEM`)
+7. **`events.py`** — beat detection and 3-axis scoring; only load if the work touches beat
    generation (900 lines)
-7. **`round_report.py`** — per-round pipeline; only load if working on round reports
+8. **`round_report.py`** — per-round pipeline; only load if working on round reports
 
 ---
 

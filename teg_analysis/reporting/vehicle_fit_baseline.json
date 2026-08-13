@@ -1,0 +1,77 @@
+{
+  "counterfactual": {
+    "mean": 1.76,
+    "std": 2.73,
+    "n": 17
+  },
+  "dual_narrative": {
+    "mean": 0.71,
+    "std": 1.52,
+    "n": 17
+  },
+  "tragic_arc": {
+    "mean": 31.69,
+    "std": 17.67,
+    "n": 17
+  },
+  "redemption_arc": {
+    "mean": 21.29,
+    "std": 7.85,
+    "n": 17
+  },
+  "motif": {
+    "mean": 0.0,
+    "std": 0.0,
+    "n": 17
+  },
+  "bookends": {
+    "mean": 0.0,
+    "std": 0.0,
+    "n": 17
+  },
+  "ensemble": {
+    "mean": 0.0,
+    "std": 0.0,
+    "n": 17
+  },
+  "catalogue": {
+    "mean": 5.76,
+    "std": 4.99,
+    "n": 17
+  },
+  "inevitability": {
+    "mean": 4.41,
+    "std": 2.91,
+    "n": 17
+  },
+  "hero_arc": {
+    "mean": 0.38,
+    "std": 1.05,
+    "n": 17
+  },
+  "comeback": {
+    "mean": 0.59,
+    "std": 1.61,
+    "n": 17
+  },
+  "inversion": {
+    "mean": 6.86,
+    "std": 3.72,
+    "n": 17
+  },
+  "origin": {
+    "mean": 1.76,
+    "std": 2.73,
+    "n": 17
+  },
+  "underdog": {
+    "mean": 4.18,
+    "std": 4.0,
+    "n": 17
+  },
+  "theme_led_body": {
+    "mean": 0.0,
+    "std": 0.0,
+    "n": 17
+  }
+}
