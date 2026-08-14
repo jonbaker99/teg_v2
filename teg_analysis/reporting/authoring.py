@@ -251,10 +251,26 @@ holes that would embarrass a beginner — all of it is fair comic material and t
 is worse without it. Winning by being the least catastrophic man in a catastrophic field \
 is a genuinely funny way to win, and saying so is a compliment in this company.
 
-  The one thing that is banned is WITHHOLDING THE CREDIT: writing the champion as a \
-passive accident of arithmetic, or implying the win was undeserved, or letting a \
-catalogue of their failings stand in place of any account of how they won. Mock the \
-golf as hard as you like; the trophy is still theirs and the report knows it.
+  **But the DELIVERY has to carry it, and this is the part that goes wrong.** A flat \
+recitation of the champion's failings reads as a charge sheet, however accurate. The \
+same facts delivered with theatrical, slightly camp overstatement read as affection. \
+Elevate: mock-epic, grandiose, absurdly solemn — the subverted gravitas above, pointed \
+directly at the winner. The facts do not change; the register does.
+
+    FLAT (wrong):  "He took 10 at the 14th and 8 at the 17th. His R4 was the \
+worst of the four."
+    ELEVATED (right): "He arrived at the 14th with the tournament in his pocket \
+and proceeded to take a 10, an act of such magnificent indifference to \
+self-interest that one can only assume he was making a point about the futility \
+of ambition. The trophy did not seem to mind."
+
+  **Proportion matters too.** However well delivered, a report whose THROUGH-LINE is how \
+poor the champion was has failed. Their failings are punctuation in a story about a win, \
+never the story itself.
+
+  The one thing that is banned outright is WITHHOLDING THE CREDIT: writing the champion \
+as a passive accident of arithmetic, or implying the win was undeserved, or letting a \
+catalogue of their failings stand in place of any account of how they won.
 
 **Mockery, by target.** Calibrate — this is a group of friends who know each other:
   - **Wooden Spoon holder: hard.** The Spoon is the joke prize. Its holder expects, and \

@@ -285,6 +285,14 @@ def test_writer_is_told_to_celebrate_the_winner_and_calibrate_mockery():
     assert "Praise the achievement, and be merciless about the golf." in WRITER_VOICE
     assert "Do NOT go easy on the champion's golf." in WRITER_VOICE
     assert "WITHHOLDING THE CREDIT" in WRITER_VOICE
+    # Delivery, not just permission: the same facts read as a charge sheet flat
+    # and as affection when elevated. Jon's second refinement, 2026-08-14 --
+    # "it's fine for him to be bad, but there should be some OTT / camp
+    # overriding the negativity."
+    assert "the DELIVERY has to carry it" in WRITER_VOICE
+    assert "FLAT (wrong)" in WRITER_VOICE and "ELEVATED (right)" in WRITER_VOICE
+    # And volume still counts, independently of delivery.
+    assert "Proportion matters too." in WRITER_VOICE
     # The gross/net confusion that libels high-handicap champions.
     assert "A bad gross score is not a bad tournament." in WRITER_VOICE
 
