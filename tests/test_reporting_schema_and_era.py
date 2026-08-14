@@ -276,8 +276,15 @@ def test_writer_is_told_to_celebrate_the_winner_and_calibrate_mockery():
     assert "winner's story" in WRITER_VOICE
     assert "why_the_champion_won" in WRITER_VOICE
     for target in ("Wooden Spoon holder: hard", "rest of the field: moderate",
-                   "runner-up: moderate", "champion: gentle"):
+                   "runner-up: moderate", "champion: hard on the golf"):
         assert target in WRITER_VOICE, target
+    # The correction that matters (Jon, 2026-08-14): "gentle, affectionate only"
+    # asked for restraint on intensity and produced bland praise. The register
+    # wanted is full comic force about the golf with the achievement honoured,
+    # so the ONLY prohibition is withholding credit.
+    assert "Praise the achievement, and be merciless about the golf." in WRITER_VOICE
+    assert "Do NOT go easy on the champion's golf." in WRITER_VOICE
+    assert "WITHHOLDING THE CREDIT" in WRITER_VOICE
     # The gross/net confusion that libels high-handicap champions.
     assert "A bad gross score is not a bad tournament." in WRITER_VOICE
 

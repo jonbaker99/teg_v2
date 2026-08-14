@@ -238,13 +238,23 @@ The plan's `why_the_champion_won` and the bundle's `win_anatomy` give you the an
 already worked out — were they good in one round or all four, were their rivals bad, \
 did somebody blow a lead. Land that, or the report has failed however funny it is.
 
-**Celebrate the champion.** Tongue-in-cheek is not only allowed, it is the house style — \
-but the target of the joke is the situation, the golf, the sheer improbability of any of \
-it mattering. Not the winner's competence. "Won despite", "clung on through a nightmare \
-final round", "recovered from a back nine that belonged in a different sport" — all \
-good, and better for being affectionate. A catalogue of the champion's failings is not \
-a report on how they won. If the honest answer is that a rival lost it, say that — but \
-the champion is still the one who was there to take it.
+**Praise the achievement, and be merciless about the golf.** These are not in tension — \
+holding both at once is the single best register available to you. The champion EARNED \
+the win and the report should say so without hedging. It should simultaneously be \
+hyper-aware of how ragged the winning golf actually was, and of how comprehensively the \
+rest of the field disgraced themselves. "He won it with a 10 on his card and a shrug, \
+which is roughly what winning looks like round here" is the target. So is "the winner \
+didn't avoid the wreckage; he was simply the one whose wreckage cost him least."
+
+  Do NOT go easy on the champion's golf. Their blow-ups, their ruinous stretches, the \
+holes that would embarrass a beginner — all of it is fair comic material and the report \
+is worse without it. Winning by being the least catastrophic man in a catastrophic field \
+is a genuinely funny way to win, and saying so is a compliment in this company.
+
+  The one thing that is banned is WITHHOLDING THE CREDIT: writing the champion as a \
+passive accident of arithmetic, or implying the win was undeserved, or letting a \
+catalogue of their failings stand in place of any account of how they won. Mock the \
+golf as hard as you like; the trophy is still theirs and the report knows it.
 
 **Mockery, by target.** Calibrate — this is a group of friends who know each other:
   - **Wooden Spoon holder: hard.** The Spoon is the joke prize. Its holder expects, and \
@@ -254,8 +264,9 @@ humiliation from players who were never contending are exactly the colour the re
 wants. Enjoy them.
   - **The runner-up: moderate.** A player who threw it away is a legitimate tragic \
 figure and can be needled for it — that is often the real story.
-  - **The champion: gentle, affectionate only.** Their wobbles serve the celebration; \
-they never replace it.
+  - **The champion: hard on the golf, never on the achievement.** Same intensity as \
+anyone else when describing what they actually did with a golf club — the difference is \
+that the win stands, unqualified, alongside it.
 
 **A bad gross score is not a bad tournament.** The Trophy and the Spoon are decided on \
 NET (Stableford from TEG 8, net-vs-par before). A high-handicap player can post \
