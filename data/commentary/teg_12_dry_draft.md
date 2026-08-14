@@ -1,78 +1,98 @@
-# TEG 12 — Catalonia, 2019 — Dry Storyline Draft
+# TEG 12 — Catalonia, 2019 — Storyline Draft
 
 ## OVERVIEW
 
-John Patterson won the Trophy on 172 Stableford points, by 10 from Gregg Williams. Jon Baker won the Green Jacket at +63 gross, by 8 from David Mullin. Mullin finished last on the Trophy metric with 139 points and took the Wooden Spoon, his second in succession. Rounds 1 and 2 were on the PGA Catalunya Tour course; Rounds 3 and 4 on the Stadium course.
+John Patterson won the Trophy with 172 Stableford points, ten clear of runner-up Gregg Williams. Jon Baker won the Green Jacket at +63 gross, eight clear of David Mullin. Mullin finished last on the Trophy metric with 139 points and took the Wooden Spoon.
 
 ---
 
-## Patterson Makes a 12 and Still Signs for 45
+## Round 1 — A 12, a 12, and a Course Record Nobody Wanted
 
-Thursday, Tour course. Patterson took 12 shots at the par-4 4th (SI 2, one of the hardest holes on the course), eight over par and no points. It was the worst hole of the entire TEG.
+Thursday, PGA Catalunya – Tour course, the 3rd TEG round at this venue.
 
-He answered with 19 points across holes 7 to 11: a bogey at the par-5 7th, then pars at the 8th, 9th, 10th and 11th. That run of five straight pars from the 8th ended with a double bogey 6 at the par-4 12th. Patterson signed for 45 points and 96 gross, a course personal best.
+Stuart Neumann signed for 105 gross, a new Tour course-worst across 10 prior visits, exceeding the previous 103. Two holes accounted for much of it: a sextuple-bogey 10 at the par-4 13th (SI 1, the hardest hole on the course) and a septuple-bogey 12 at the par-5 15th, the worst hole of the TEG by gross-over-par along with Patterson's. Both scored zero points.
 
-Stuart Neumann posted 105 gross, a new worst-ever TEG round on the Tour course, exceeding the previous worst of 103 set across 10 prior visits. It contained a 12 at the par-5 15th (septuple bogey) and a 10 at the par-4 13th, SI 1, the hardest hole on the course.
+John Patterson took 12 at the par-4 4th (SI 2, one of the hardest), eight over par and zero points. He still posted 45 points, the joint-best round of his tournament.
 
-Gregg Williams shot +12 gross (84), a personal-best gross round, eight better than his previous mark on the course. Alex Baker made a 10 at the par-5 10th. Jon Baker took 10 points across holes 12 to 14 — pars at the 12th and the 13th (SI 1) and a birdie at the par-3 14th — before a double-bogey 7 at the par-5 15th ended that run; he drew level on gross at the 14th.
+Gregg Williams played 14 holes from the 1st to the 14th without dropping a net shot: bogeys at the 1st, 2nd, 4th, 5th, 6th, 9th, 11th and 13th, pars at the 3rd, 7th, 8th, 10th, 12th and 14th, with the par-3 8th worth four points. He signed for +12 gross, a personal-best gross round.
 
-The Trophy lead changed hands repeatedly in the opening round with the field bunched: Mullin, Williams and Neumann all drew level at the 2nd, Patterson drew level at the 3rd, took the outright lead at the 11th, Williams drew level at the 12th and led outright at the 14th, Patterson led outright at the 15th, and Williams drew level at the 16th. Williams ended the day leading the Trophy by 1 and the Jacket by 5, with Patterson second, one point back.
+Jon Baker went 10 holes without dropping a net shot from the 5th to the 14th, closing that run with a birdie at the par-3 14th. He took the gross lead at the 16th.
 
----
+Alex Baker made a quintuple-bogey 10 at the par-5 10th for zero points.
 
-## Two Rounds, One Point, No Clarity
-
-Friday, Tour course. Patterson made a quadruple-bogey 8 at the par-4 3rd and a quintuple-bogey 10 at the par-5 15th. Williams made a quadruple-bogey 8 at the par-4 4th (SI 2) — the second round running that the 4th produced a blow-up.
-
-Between the two, Patterson scored 12 points across holes 9 to 12, all four bogeys (par-4 9th, par-5 10th, par-3 11th, par-4 12th), and 9 points over the closing three: par at the par-3 16th, bogey at the 17th, par at the par-5 18th. Mullin scored 12 points across holes 5 to 8 with four pars, and shot 84 gross, a Tour course personal best by one. Williams also took 12 points from holes 5 to 8: pars at the 5th, 6th and 7th and a bogey at the par-3 8th.
-
-Trophy leads: Patterson drew level at the 4th, took the outright lead with a bogey at the 12th, Williams drew level at the 13th, led outright at the 15th, and Patterson drew level at the 16th. Patterson scored 42 points. After two rounds Williams still led the Trophy by 1 and the Jacket by 1.
+Williams led the Trophy after R1 by one point from Patterson. There were nine lead changes during the round — Mullin, Williams, Neumann and Patterson all sharing or holding it at various points — all routine in a bunched field. Williams also led the gross by five.
 
 ---
 
-## The Fourth Hole Decides Both Competitions
+## Round 2 — One Point In It — and the Stadium Waiting
 
-Saturday, Stadium course. Patterson drew level on the Trophy at the 1st. Williams then took the outright Trophy lead at the par-5 3rd with a par. On the same hole Jon Baker's grip on the gross lead ended after 23 holes in front, held since the 16th of Round 1 (Williams had drawn level at the 2nd).
+Friday, PGA Catalunya – Tour course, the 4th TEG round at this venue.
 
-Williams held the gross lead for one hole. At the par-4 4th he took 9 shots, a quintuple bogey and no points. Patterson made a bogey 5 there for 3 points and took the outright Trophy lead; Jon Baker made a bogey 5 and took the outright gross lead back. Neither lead changed hands again for the rest of the tournament.
+Patterson posted 42 points. He went 11 holes without dropping a net shot, from the 4th to the 14th: bogeys at the 4th, 5th, 7th, 9th, 10th, 11th and 12th, doubles at the par-3 8th and the par-4 13th, pars at the 6th and the par-3 14th. He then took a quintuple-bogey 10 at the par-5 15th for zero points.
 
-Patterson's round also included a quintuple-bogey 10 at the par-5 3rd and a quadruple-bogey 9 at the par-5 7th (SI 17, one of the easiest). Williams drew level on the Trophy at the 9th, then made an 11 at the par-4 13th, a septuple bogey and his own worst hole relative to par.
+Alex Baker lost 11 shots across the 6th to the 9th — a double at the par-4 6th, a triple at the par-5 7th, a triple at the par-3 8th and a triple at the par-4 9th — before a birdie at the par-5 10th.
 
-Patterson took 19 points across holes 12 to 17: par at the par-5 12th, bogeys at the 13th and 14th, a birdie at the par-5 15th (SI 18, the easiest hole), then bogeys at the 16th and 17th. The birdie at the 15th ended a run of bogey-or-worse. He signed for 45 points and 95 gross, a course personal best. Jon Baker went bogey at the 9th (SI 1), double bogey at the 10th, double bogey at the par-3 11th, then birdie at the par-5 12th.
+Neumann scored 13 points across the 3rd to the 6th: bogeys at the 3rd and 4th, a par at the 5th and a birdie at the par-4 6th.
 
-The Spoon place changed four times: Mullin dropped to the bottom with a double bogey at the 9th (SI 1), Alex Baker with a double bogey at the par-3 11th, Mullin again with a bogey at the 14th, and Alex Baker again with a double bogey at the 17th. Alex Baker finished the round at the bottom for the third time in three rounds. Mullin scored 30 points.
+Mullin scored 40 points.
 
-After Round 3 Patterson led the Trophy by 8 and Jon Baker led the Jacket by 5.
+Williams still led the Trophy by one point after R2, from Patterson. Patterson took the outright lead at the 12th; Williams drew level at the 13th and led outright again from the 15th, with Patterson drawing level at the 16th. Williams led the gross by one.
 
 ---
 
-## Baker Sets the Record, Mullin Takes the Spoon
+## Round 3 — Eleven at the Thirteenth, and the Trophy Changes Hands
 
-Sunday, Stadium course. Jon Baker shot 89 gross, a new Stadium course record, beating the 90 that had stood across 15 prior visits, and his own personal best on the course by one. His round included bogeys at the par-3 5th and the 6th, a double bogey at the par-5 7th and a birdie at the par-3 8th.
+Saturday, PGA Catalunya – Stadium course, the 4th TEG round at this venue.
 
-Mullin made a quadruple-bogey 9 at the par-5 3rd, which dropped him to the bottom of the Spoon race for good, then a quadruple-bogey 8 at the par-4 4th and a double bogey at the par-3 5th: ten shots dropped in three holes. He later took 14 points across holes 11 to 14 — par at the par-3 11th, birdie at the par-5 12th, par at the 13th, birdie at the 14th — and finished the round on 34 points and the tournament on 139, last on the Trophy metric.
+Williams made a quintuple-bogey 9 at the par-4 4th for zero points. Patterson had already taken a quintuple-bogey 10 at the par-5 3rd, also zero points, but took the outright Trophy lead at the 4th.
 
-Patterson took 13 points across holes 3 to 6: par at the par-5 3rd, bogey at the 4th, par at the par-3 5th, bogey at the 6th. He closed with 40 points for 172 and a 10-point win. There were no lead changes in the final round in either the Trophy or the Jacket.
+Williams then lost 12 shots across three holes: a double bogey at the par-3 11th (one point), a triple bogey at the par-5 12th (zero points) and a septuple-bogey 11 at the par-4 13th (zero points). The 11 was his worst hole against par on record.
 
-Stuart Neumann eagled the par-5 15th (SI 18, the easiest hole on the course), the only eagle recorded by the field all tournament, and posted 96 gross, a Stadium personal best. Alex Baker shot 93, a course personal best by seven and thirteen better than his previous visit. Williams shot 92, a Stadium personal best by seven, completing a personal-best gross total of +76.
+Patterson scored 19 points across the 12th to the 17th: par at the par-5 12th, bogeys at the 13th, 14th, 16th and 17th, and a birdie at the par-5 15th (SI 18, the easiest hole). He signed for 45, the best round in the field, nine clear of Williams.
+
+In the gross, Jon Baker lost the lead to Williams at the 3rd, ending a run of 23 holes in front stretching back to the 16th in R1. Baker took it back outright at the 4th and was not headed again.
+
+Alex Baker made a quadruple-bogey 8 at the par-4 2nd.
+
+Mullin fell from 40 points in R2 to 30 in R3, a swing of ten.
+
+After R3 Patterson led the Trophy by eight; Jon Baker led the Jacket by five.
+
+---
+
+## Round 4 — Eighty-Nine for Baker, Two Quads for Mullin, and a Trophy for Patterson
+
+Sunday, PGA Catalunya – Stadium course, the 5th TEG round at this venue.
+
+Jon Baker shot 89 gross, a new Stadium course record across 15 prior visits, beating the previous 90. It was also his own personal best there, and his gross round of +17.
+
+Mullin lost ten shots across three holes: a quadruple-bogey 9 at the par-5 3rd (zero points), a quadruple-bogey 8 at the par-4 4th (zero points) and a double bogey at the par-3 5th (one point). He dropped to last on the Trophy metric at the 3rd for the first time in the tournament and stayed there. Later the same round he took 14 points across the 11th to the 14th: par at the par-3 11th, birdie at the par-5 12th, par at the 13th and birdie at the par-4 14th (SI 4). He finished with 34 points.
+
+Stuart Neumann eagled the par-5 15th, the only eagle in the field all tournament, worth five points. It came after a double at the 13th and a bogey at the 14th. He shot 96, a personal Stadium best.
+
+Patterson posted 40 points, the best round in the field, and won the Trophy on 172.
+
+Williams shot 92, a personal Stadium best, and finished on a personal-best gross total of +76.
+
+Alex Baker shot 93, 13 shots better than his previous Stadium visit.
 
 ---
 
 ## HOW THE COMPETITIONS WERE DECIDED
 
-**Trophy (Stableford).** Williams led after Round 1 by 1 and after Round 2 by 1. Patterson sat second on both occasions, one point back, with rounds of 45 and 42. The decisive moment came at the 4th at the Stadium in Round 3: Williams had taken the outright lead one hole earlier at the 3rd, then made a 9 at the 4th while Patterson made a bogey, and Patterson took the outright lead. Williams drew level once more at the 9th, then made an 11 at the 13th. Patterson's 45 gave him an 8-point lead after Round 3, and a closing 40 stretched it to 10. Final: Patterson 172, Williams 162. Eighteen lead changes in total, none in the final round.
+**Trophy (Stableford).** Williams led after R1 by one point and after R2 by one point. There were 18 lead changes in all, nine of them in R1 and none in R4. The decisive takeover came at the 4th hole of R3 on the Stadium, where Patterson went outright ahead as Williams made his quintuple-bogey 9; by the 13th, where Williams took 11, the one-point deficit had become an eight-point lead. Williams drew level briefly at the 9th in R3 but did not lead again. Patterson posted the best round in the field in both R3 (45) and R4 (40), finishing on 172 points, ten clear.
 
-**Green Jacket (Gross).** Williams led after Rounds 1 (by 5) and 2 (by 1). Jon Baker held the gross lead for 23 holes from the 16th of Round 1 to the 3rd of Round 3, lost it there, and took it back outright one hole later at the 4th with a bogey. He led by 5 after Round 3 and by 8 at the finish, with round gross figures of +12, +16, +18 and +17. Final: Baker +63, Mullin +71. Nine lead changes, none after Round 3 hole 4.
+**Green Jacket (Gross).** Williams led the gross after R1 by five and after R2 by one. Jon Baker had held the lead from the 16th in R1, lost it to Williams at the 3rd in R3 after 23 holes in front, and reclaimed it outright at the 4th in R3 — the decisive moment. He led by five after R3 and by eight after R4, finishing at +63 with Mullin runner-up. Baker's round scores were +12, +16, +18 and +17.
 
-**Wooden Spoon.** Alex Baker was bottom after Rounds 1, 2 and 3. Mullin sat fifth after each of the first three rounds, his 30-point Round 3 leaving him close to the floor. The decisive drop came at the 3rd hole of Round 4: Mullin's quadruple-bogey 9 put him bottom, and he stayed there. Final: Mullin 139 points, last.
+**Wooden Spoon.** Alex Baker was bottom after each of the first three rounds. There were nine changes at the bottom, four of them during R3, when the position passed between Mullin (at the 9th and again at the 14th) and Alex Baker (at the 11th and the 17th). The decisive drop came at the 3rd in R4, where Mullin's quadruple-bogey 9 began the ten shots lost across the 3rd to the 5th and put him last for the first time in the tournament. He did not get off it. Mullin's round scores were 35, 40, 30 and 34, for 139 points.
 
 ---
 
 ## PLAYERS
 
-- **John Patterson** — Trophy winner on 172, by 10. Rounds of 45, 42, 45, 40. Made a 12 at the 4th in Round 1, a 10 at the 15th in Round 2, and a 10 at the 3rd and a 9 at the 7th in Round 3. Course personal bests at both venues (96 Tour, 95 Stadium). Spoon-holder in TEG 10, fourth in TEG 11.
-- **Gregg Williams** — Runner-up on the Trophy by 10 and on nothing else. Personal-best gross round (+12, 84 at the Tour) and personal-best gross total (+76), with personal bests on both Catalunya courses. Led the Trophy after Rounds 1 and 2; lost it to a 9 at the 4th and an 11 at the 13th in Round 3. Three prior Trophies, no Jacket.
-- **Jon Baker** — Green Jacket winner at +63, by 8. Held the gross lead for 23 holes, lost it for one hole at the 3rd in Round 3, regained it at the 4th and held it to the end. Closed with 89, a Stadium course record and his own personal best there. Defending Trophy champion, did not retain.
-- **David Mullin** — Second on gross at +71 and last on Stableford with 139: a second consecutive Wooden Spoon. Tour course personal best of 84 in Round 2. Undone by a 9 at the 3rd and an 8 at the 4th in Round 4. Eight Green Jackets previously.
-- **Stuart Neumann** — Opened with 105, the worst gross round recorded on the Tour course in TEG history. Closed with an eagle at the par-5 15th, the field's only eagle, and 96 gross, a Stadium personal best. Finished above the Spoon line.
-- **Alex Baker** — TEG 10 champion. Bottom of the Spoon race after each of the first three rounds, including a 10 at the par-5 10th in Round 1. Shot 93 in Round 4, a course personal best by seven and thirteen better than his last visit, and finished fifth on the Trophy metric.
+- **John Patterson** — Last of six at TEG 10, fourth at TEG 11, Trophy winner here by ten. Made a 12 in R1 and 10s in R2 and R3, and posted no round below the field median; rounds of 45, 42, 45, 40. Improved his Tour best by seven (96) and his Stadium best by four (95).
+- **Gregg Williams** — Three-time Trophy winner. Led the Trophy after R1 and R2 by one point each time; set a personal-best gross round of +12 in R1 and a personal-best gross total of +76. Lost 12 shots across the 11th, 12th and 13th in R3. Set personal course bests on both layouts: 84 at the Tour and 92 at the Stadium.
+- **Jon Baker** — Defending Trophy champion; did not repeat, but won the Green Jacket at +63 by eight, led the gross from R1 H16 apart from one hole in R3, and shot an 89 in R4 that is a new Stadium course record.
+- **David Mullin** — Eight-time Green Jacket winner and runner-up in the gross here by eight. Below the field median in all four rounds; took the Wooden Spoon on 139 points, his second consecutive.
+- **Stuart Neumann** — Opened with 105, a new Tour course-worst, including a 12 at the 15th and a 10 at the 13th. Closed with an eagle at the Stadium's par-5 15th — the field's only eagle — and a personal Stadium best of 96.
+- **Alex Baker** — Bottom of the Trophy standings after each of the first three rounds but not the Spoon holder. Made a 10 at the Tour's 10th in R1 and an 8 at the Stadium's 2nd in R3; shot 93 in R4, 13 shots better than his last Stadium visit.
