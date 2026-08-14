@@ -571,3 +571,84 @@ def test_style_text_is_idempotent():
     from teg_analysis.reporting.render import style_text
     text = open("data/commentary/teg_17_report_final.md").read()
     assert style_text(17, text) == style_text(17, text)
+
+
+# ---------------------------------------------------------------------------
+# Counterfactual importance + win anatomy (2026-08-14 rework)
+# ---------------------------------------------------------------------------
+def test_importance_demotes_a_champions_non_decisive_disaster():
+    """The failure that prompted the rework.
+
+    TEG 18: Alex Baker won the Trophy by 8 Stableford points. His worst holes —
+    a gross 11 and a gross 10 — cost about 2.3 points each against his own
+    average, so none of them could have cost him the tournament. Under the old
+    hand-tuned axis they scored 5.0-6.5 and half the negative material in the
+    cut was about the champion. `importance` must now say they barely mattered.
+    """
+    from teg_analysis.reporting.events import build_notable_events
+
+    ev = build_notable_events(18)
+    champ = next(e.players[0] for e in ev if e.type == "trophy_win")
+    blowups = [e for e in ev if e.type == "big_blowup" and champ in e.players]
+    assert blowups, "TEG 18's champion must still HAVE blow-ups — they are colour"
+    # Still detected (mockable), but never able to frame the report.
+    assert max(e.importance for e in blowups) < 5.0
+    assert all(e.context.get("importance_legacy") is not None for e in blowups)
+
+
+def test_importance_is_symmetric_between_gains_and_losses():
+    """A run that won the tournament is as important as one that lost it.
+
+    First implementation scored only damage, which zeroed every good beat and
+    pushed the cut from 41% to 58% negative — the opposite of the goal.
+    """
+    from teg_analysis.reporting.events import build_notable_events
+
+    ev = build_notable_events(18)
+    good = [e for e in ev if e.type in ("hot_stretch", "steady_stretch", "recovery")]
+    assert good, "positive beats must exist"
+    assert max(e.importance for e in good) > 0, "positive beats must score importance"
+
+
+def test_detection_is_not_lopsidedly_negative():
+    """Guards the ratio that no prompt could have corrected.
+
+    Detection ran 622 negative to 240 positive (2.59:1) across TEGs 2-18 before
+    `cold_stretch_net` and `steady_stretch` were added. The writer cannot
+    celebrate with material it was never given.
+    """
+    from collections import Counter
+    from teg_analysis.reporting.events import build_notable_events
+
+    c = Counter()
+    for teg in (8, 13, 18):
+        for e in build_notable_events(teg):
+            c[e.type] += 1
+    neg = sum(c[k] for k in ("cold_stretch", "cold_stretch_net", "big_blowup",
+                             "collapse_after_steady", "long_lead_lost"))
+    pos = sum(c[k] for k in ("hot_stretch", "steady_stretch", "recovery"))
+    assert pos > 0 and neg / pos < 2.0, f"detection {neg}:{pos} is too negative"
+
+
+def test_win_anatomy_distinguishes_built_from_inherited():
+    """The causal spine the pipeline never had.
+
+    TEG 18's champion was outscored by the runner-up in half the rounds and won
+    anyway ('inherited'); TEG 8's led the field in three of four ('built').
+    Collapsing those two into the same story is the failure this prevents.
+    """
+    from teg_analysis.reporting.win_anatomy import build_win_anatomy
+
+    assert build_win_anatomy(18)["trophy"]["attribution"] == "inherited"
+    assert build_win_anatomy(8)["trophy"]["attribution"] == "built"
+
+
+def test_win_anatomy_reaches_the_editor():
+    from teg_analysis.reporting.story_plan import assemble_bundle
+
+    bundle, _ = assemble_bundle(18)
+    anat = bundle["win_anatomy"]["trophy"]
+    assert anat["summary_facts"], "facts must be populated"
+    # Proper-cased like every other artefact — two name formats is how
+    # confabulated players start.
+    assert anat["subject"] == "Alex Baker"

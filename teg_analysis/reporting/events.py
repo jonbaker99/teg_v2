@@ -538,6 +538,51 @@ def _sequences(teg_df: pd.DataFrame, sw: dict, player_names: dict,
                 context={"shots_dropped": dropped, "length": len(ev)},
             ))
 
+        # --- cold stretches, NET: maximal run of no-score holes (Stableford 0),
+        # len >= 3. The gross detector above misses the distinction that decides
+        # the Trophy: a high-handicapper's double bogey on a stroke hole still
+        # banks a point, while a scratch player's does not. Jon's spec
+        # (2026-08-14): "cold would be 0, or very long without a 2".
+        for run in _maximal_runs(rows, lambda r: r["Stableford"] <= 0):
+            if len(run) < 3:
+                continue
+            ev = [hole_evidence(r, metric) for r in run]
+            severity = scoring.cap(len(ev) * 1.4)
+            h0, h1 = ev[0]["hole"], ev[-1]["hole"]
+            out.append(NotableEvent(
+                teg_num=teg_num, scope="stretch", type="cold_stretch_net", round=rnd,
+                headline=(f"{player} takes nothing from {len(ev)} straight holes, "
+                          f"{h0}-{h1} (R{rnd})"),
+                players=[player], holes=ev,
+                importance=scoring.cap((2 + 6 * w) * 0.6 + late),
+                rarity=scoring.cap(severity * 0.5),
+                entertainment=scoring.cap(severity * (1.1 - 0.4 * w)),
+                context={"blank_holes": len(ev), "length": len(ev)},
+            ))
+
+        # --- steady stretches: maximal run of net par or better (Stableford >= 2),
+        # len >= 6. The positive mirror of the two cold detectors, and the reason
+        # it exists: detection ran 622 negative to 240 positive across TEGs 2-18
+        # (measured 2026-08-14), so the writer was handed 2.6 disasters for every
+        # good thing and no prompt could correct for it. Threshold is 6 rather
+        # than 3 so this stays an achievement, not wallpaper.
+        for run in _maximal_runs(rows, lambda r: r["Stableford"] >= 2):
+            if len(run) < 6:
+                continue
+            ev = [hole_evidence(r, metric) for r in run]
+            severity = scoring.cap(len(ev) * 0.9)
+            h0, h1 = ev[0]["hole"], ev[-1]["hole"]
+            out.append(NotableEvent(
+                teg_num=teg_num, scope="stretch", type="steady_stretch", round=rnd,
+                headline=(f"{player} goes {len(ev)} holes without dropping a net shot, "
+                          f"{h0}-{h1} (R{rnd})"),
+                players=[player], holes=ev,
+                importance=scoring.cap((2 + 6 * w) * 0.6 + late),
+                rarity=scoring.cap(severity * 0.7),
+                entertainment=scoring.cap(severity * 0.6),
+                context={"clean_holes": len(ev), "length": len(ev)},
+            ))
+
         # --- hot stretches: maximal run of net birdie or better (Stableford >= 3), len >= 3 ---
         for run in _maximal_runs(rows, lambda r: r["Stableford"] >= 3):
             if len(run) < 3:
@@ -1079,6 +1124,13 @@ def build_notable_events(teg_num: int, all_data: Optional[pd.DataFrame] = None,
     for e in events:
         if e.round is not None:
             e.course = round_course.get(e.round)
+
+    # Replace the hand-tuned `importance` with what the event actually cost (or
+    # won) in each competition's own metric. Must run BEFORE `finalise`, which
+    # is what turns the three axes into the rankable total. See impact.py for
+    # why the old axis did not measure what its name claimed.
+    from teg_analysis.reporting.impact import apply_counterfactual_importance
+    apply_counterfactual_importance(events, teg_df, metric)
 
     return scoring.finalise(events, mode=mode)
 

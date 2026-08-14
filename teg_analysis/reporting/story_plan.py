@@ -714,12 +714,20 @@ def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
         if all(p in _current_players_proper for p in r["players"])
     ]
 
+    # WHY each competition was won, computed deterministically — see
+    # win_anatomy.py. `competition_arcs` carries the what (leader by round, lead
+    # changes); this carries the causation the editor was previously left to
+    # infer from a pile of beats.
+    from teg_analysis.reporting.win_anatomy import build_win_anatomy
+    win_anatomy = build_win_anatomy(teg_num)
+
     bundle = {
         "teg": teg_num,
         "tone": tone,
         "trophy_metric": trophy_metric(teg_num),
         "venue": venue,
         "competition_arcs": arcs,
+        "win_anatomy": win_anatomy,
         "player_history": player_history,
         "player_course_history": player_course_history,
         "player_relationships": player_relationships,
