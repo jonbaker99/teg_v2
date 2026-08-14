@@ -37,6 +37,16 @@ def _round_totals(teg_df: pd.DataFrame, col: str) -> pd.DataFrame:
     return teg_df.groupby(["Player", "Round"])[col].sum().unstack(fill_value=0)
 
 
+def _round_position(value: float, field: pd.Series, higher: bool) -> int:
+    """1-based finishing position in that round. Plainer than a median
+    comparison — "no worse than 3rd in any round" is a fact a reader pictures
+    instantly; "never below the field median" is a statistic they have to
+    decode (Jon, 2026-08-14)."""
+    ordered = field.sort_values(ascending=not higher)
+    return int(list(ordered.index).index(field.index[list(field).index(value)]) + 1) \
+        if value in list(field) else len(field)
+
+
 def _label_round(value: float, field: pd.Series, higher: bool) -> str:
     """Where this round sat against the field: the writer's raw material for
     'was he good, or were they bad'."""
@@ -46,6 +56,12 @@ def _label_round(value: float, field: pd.Series, higher: bool) -> str:
         return "best in field"
     better_than_median = value > median if higher else value < median
     return "above field median" if better_than_median else "below field median"
+
+
+def _ordinal(n: int) -> str:
+    if 10 <= n % 100 <= 20:
+        return f"{n}th"
+    return f"{n}{ {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th') }"
 
 
 def build_win_anatomy(teg_num: int, all_data: Optional[pd.DataFrame] = None) -> dict:
@@ -75,6 +91,48 @@ def build_win_anatomy(teg_num: int, all_data: Optional[pd.DataFrame] = None) -> 
     return out
 
 
+def _biggest_lead_blown(teg_df: pd.DataFrame, col: str, higher: bool,
+                        winner: str) -> Optional[dict]:
+    """The largest lead held at any hole by someone who did not go on to win,
+    and the LAST hole at which they held it.
+
+    Reported as "led by N as late as the 12th in round 4, and lost it" — the
+    lateness is what makes it a story. Round-boundary snapshots miss the common
+    case of a lead surrendered mid-round.
+    """
+    pivot = (teg_df.sort_values(["Round", "Hole"])
+             .pivot_table(index=["Round", "Hole"], columns="Player", values=col,
+                          aggfunc="sum")
+             .sort_index())
+    if pivot.empty or pivot.shape[1] < 2:
+        return None
+    cume = pivot.cumsum()
+
+    # Only leads held in the SECOND HALF of the tournament count. Someone is
+    # always fractionally ahead early on, and "led by 1 at the 4th hole of 72"
+    # is not a lead thrown away — it is noise that reads as a story.
+    positions = list(cume.index)
+    halfway = len(positions) // 2
+
+    best = None
+    for i, ((rnd, hole), row) in enumerate(cume.iterrows()):
+        if i < halfway:
+            continue
+        ordered = row.sort_values(ascending=not higher)
+        leader = ordered.index[0]
+        if leader == winner:
+            continue
+        margin = abs(float(ordered.iloc[0]) - float(ordered.iloc[1]))
+        if margin <= 0:
+            continue                     # level, not a lead
+        # Prefer the biggest lead; break ties on the latest hole it was held.
+        if best is None or margin > best["margin"] or (
+                margin == best["margin"] and (rnd, hole) > (best["round"], best["hole"])):
+            best = {"player": leader, "round": int(rnd), "hole": int(hole),
+                    "margin": round(margin, 1)}
+    return best
+
+
 def _anatomy(teg_df: pd.DataFrame, col: str, higher: bool, bottom: bool,
              label: str) -> dict:
     totals = teg_df.groupby("Player")[col].sum().sort_values(ascending=not higher)
@@ -92,7 +150,9 @@ def _anatomy(teg_df: pd.DataFrame, col: str, higher: bool, bottom: bool,
     for r in rounds:
         field = per_round[r]
         val = float(field.get(subject, 0))
-        entry = {"round": int(r), "score": val,
+        ranked = field.sort_values(ascending=not higher)
+        pos = int(list(ranked.index).index(subject) + 1) if subject in ranked.index else len(ranked)
+        entry = {"round": int(r), "score": val, "position": pos,
                  "standing": _label_round(val, field, higher)}
         if rival is not None:
             rv = float(field.get(rival, 0))
@@ -104,56 +164,80 @@ def _anatomy(teg_df: pd.DataFrame, col: str, higher: bool, bottom: bool,
 
     best_rounds = sum(1 for b in breakdown if b["standing"] == "best in field")
     weak_rounds = sum(1 for b in breakdown if b["standing"] == "below field median")
+    worst_pos = max(b["position"] for b in breakdown) if breakdown else 0
+    field_size = len(per_round.index)
 
     # --- built or inherited? Did the subject gain the margin, or did the rival
     # shed it? Answers "were they good or were their competitors bad". ---
+    # PLAIN ENGLISH ONLY. These strings get copied more or less verbatim into
+    # the prose, so statistical phrasing ends up in the report — TEG 12 shipped
+    # "a round-to-round spread of 5 against a field median of 8", which is a
+    # statistic the reader has to decode rather than a picture (Jon,
+    # 2026-08-14). Say "won two of the four rounds outright" and "never worse
+    # than 3rd"; the raw numbers stay available in the structured fields below
+    # for anyone who wants them.
     facts = []
     n = len(rounds)
     if rival is not None:
-        if beat_rival >= n - 1:
+        if beat_rival > lost_to_rival:
             attribution = "built"
-            facts.append(f"{subject} outscored {rival} in {beat_rival} of {n} rounds")
-        elif beat_rival > lost_to_rival:
-            attribution = "built"
-            facts.append(f"{subject} outscored {rival} in {beat_rival} of {n} rounds, "
-                         f"losing {lost_to_rival}")
+            facts.append(f"{subject} beat {rival} head-to-head in "
+                         f"{beat_rival} of the {n} rounds")
         else:
             attribution = "inherited"
-            facts.append(f"{rival} outscored {subject} in {lost_to_rival} of {n} rounds "
-                         f"but still finished behind")
+            facts.append(f"{rival} actually outplayed {subject} over "
+                         f"{lost_to_rival} of the {n} rounds and still lost")
     else:
         attribution = "unopposed"
 
     if best_rounds:
-        facts.append(f"{subject} posted the best round in the field {best_rounds} "
-                     f"time{'s' if best_rounds != 1 else ''}")
-    if weak_rounds:
-        facts.append(f"{subject} was below the field median in {weak_rounds} "
-                     f"round{'s' if weak_rounds != 1 else ''}")
+        facts.append(f"{subject} won {best_rounds} of the {n} rounds outright")
+    if worst_pos:
+        facts.append(f"{subject} never finished a round worse than "
+                     f"{_ordinal(worst_pos)} of {field_size}")
 
     # --- consistency vs one big round ---
     subj_rounds = [b["score"] for b in breakdown]
     spread = max(subj_rounds) - min(subj_rounds) if subj_rounds else 0
-    field_spread = float((per_round.max(axis=1) - per_round.min(axis=1)).median() or 0)
-    shape = "consistent" if spread <= field_spread else "volatile"
-    facts.append(f"{subject}'s round-to-round spread was {spread:.0f} "
-                 f"({'narrower' if shape == 'consistent' else 'wider'} than the field median "
-                 f"of {field_spread:.0f})")
+    spreads = (per_round.max(axis=1) - per_round.min(axis=1)).sort_values()
+    consistency_rank = int(list(spreads.index).index(subject) + 1) \
+        if subject in spreads.index else field_size
+    shape = "consistent" if consistency_rank <= max(field_size // 2, 1) else "volatile"
+    if consistency_rank == 1:
+        facts.append(f"{subject} was the steadiest man in the field, "
+                     f"round to round")
+    elif shape == "consistent":
+        facts.append(f"{subject} was steadier round to round than most of the field")
+    else:
+        facts.append(f"{subject} swung about more between rounds than most of the field")
+
+    # --- the biggest lead anyone threw away ---
+    # Jon (2026-08-14): TEG 4's missing fact was the SIZE of the lead Baker
+    # blew. Computed HOLE BY HOLE, not at round boundaries: Baker led TEG 4
+    # from R1 through the 12th of R4 and lost it there, which a per-round
+    # snapshot misses entirely.
+    blown = _biggest_lead_blown(teg_df, col, higher, subject)
+    if blown:
+        facts.append(
+            f"{blown['player']} led by {blown['margin']:.0f} as late as the "
+            f"{_ordinal(blown['hole'])} in round {blown['round']}, and lost it")
 
     # --- could the rival have flipped it by playing their own average? ---
     flip = None
     if rival is not None:
         rv_rounds = per_round.loc[rival, rounds].astype(float)
         worst = rv_rounds.min() if higher else rv_rounds.max()
-        avg = rv_rounds.mean()
-        recovered = abs(avg - worst)
+        recovered = abs(rv_rounds.mean() - worst)
         flip = bool(recovered > margin)
         facts.append(
-            f"had {rival} played their own average in their worst round instead, "
-            f"they would {'have won' if flip else 'still have lost'} "
-            f"({recovered:.0f} vs a margin of {margin:.0f})")
+            f"even with an ordinary round instead of their worst, {rival} would "
+            f"{'have won' if flip else 'still have lost'}")
 
     return {
+        "worst_round_position": worst_pos,
+        "field_size": field_size,
+        "consistency_rank": consistency_rank,
+        "biggest_lead_blown": blown,
         "subject": subject,
         "runner_up": rival,
         "margin": round(margin, 1),

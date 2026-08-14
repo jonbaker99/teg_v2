@@ -402,12 +402,12 @@ def test_default_weights_are_the_adopted_setting():
 
     Guards against a silent revert to (1,1,1), which produced a cut that was
     53% blow-ups and 60% disaster-toned under the old importance axis.
-    Re-profiled to (2.0, 1.0, 0.5) on 2026-08-14 once importance became
+    Re-profiled to (2.0, 0.8, 1.0) on 2026-08-14 once importance became
     counterfactual — see MODE_WEIGHTS' comment for why the setting matters far
     less than it used to.
     """
     from teg_analysis.reporting.scoring import MODE_WEIGHTS
-    assert MODE_WEIGHTS["balanced"] == (2.0, 1.0, 0.5)
+    assert MODE_WEIGHTS["balanced"] == (2.0, 0.8, 1.0)
     assert MODE_WEIGHTS["fast"] == MODE_WEIGHTS["balanced"]
 
 
