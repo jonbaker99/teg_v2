@@ -34,6 +34,7 @@ def _plan(**kw) -> StoryPlan:
         prominent_vehicle="counterfactual", prominent_palette="decisive_moment",
         vehicle_fit_response={"top_scored_vehicle": "counterfactual",
                               "taken_up": True, "note": "n"},
+        why_the_champion_won="w",
     )
     base.update(kw)
     return StoryPlan(**base)
@@ -94,6 +95,7 @@ def test_both_prominence_fields_are_required():
             "prominent_palette": "decisive_moment",
             "vehicle_fit_response": {"top_scored_vehicle": "counterfactual",
                                      "taken_up": False, "note": "n"},
+            "why_the_champion_won": "w",
         }
         del kwargs[missing]
         with pytest.raises(pydantic.ValidationError):
@@ -228,15 +230,56 @@ def test_prompt_tells_the_editor_to_judge_the_unscored_vehicles_itself():
 # vehicle_fit_response — accountable, NOT binding
 # ---------------------------------------------------------------------------
 def test_vehicle_fit_response_is_required():
+    """Isolated: every other required field is supplied, so only this one fails."""
     kwargs = {
         "title": "t", "title_candidates": [], "theme": "x", "tone": "house",
         "narrative_structure": "chronological", "opening_hook": "h",
         "foreshadow": [], "competitions": [], "rounds": [], "players": [],
         "must_include_beat_ids": [], "cuts": [], "venue_notes": "",
         "prominent_vehicle": "counterfactual", "prominent_palette": "decisive_moment",
+        "why_the_champion_won": "w",
     }
     with pytest.raises(pydantic.ValidationError):
         StoryPlan(**kwargs)
+
+
+def test_why_the_champion_won_is_required():
+    """The report's first duty, enforced rather than requested.
+
+    Jon, 2026-08-14: "the most important thing is that we're clear WHY the
+    champion won". A prose instruction is a request; a required field is the
+    only way to know the editor decided it rather than letting it emerge from
+    whichever beats happened to rank.
+    """
+    kwargs = {
+        "title": "t", "title_candidates": [], "theme": "x", "tone": "house",
+        "narrative_structure": "chronological", "opening_hook": "h",
+        "foreshadow": [], "competitions": [], "rounds": [], "players": [],
+        "must_include_beat_ids": [], "cuts": [], "venue_notes": "",
+        "prominent_vehicle": "counterfactual", "prominent_palette": "decisive_moment",
+        "vehicle_fit_response": {"top_scored_vehicle": "counterfactual",
+                                 "taken_up": True, "note": "n"},
+    }
+    with pytest.raises(pydantic.ValidationError):
+        StoryPlan(**kwargs)
+
+
+def test_writer_is_told_to_celebrate_the_winner_and_calibrate_mockery():
+    """The tone rules that had no existence before 2026-08-14.
+
+    Grepped the whole writer prompt beforehand: every mention of winner or
+    champion was a factual guard about "defending champion" claims. Nothing
+    told the writer how to treat the person the report is about.
+    """
+    from teg_analysis.reporting.authoring import WRITER_VOICE
+
+    assert "winner's story" in WRITER_VOICE
+    assert "why_the_champion_won" in WRITER_VOICE
+    for target in ("Wooden Spoon holder: hard", "rest of the field: moderate",
+                   "runner-up: moderate", "champion: gentle"):
+        assert target in WRITER_VOICE, target
+    # The gross/net confusion that libels high-handicap champions.
+    assert "A bad gross score is not a bad tournament." in WRITER_VOICE
 
 
 def test_diverging_from_the_top_hint_is_not_a_warning():
@@ -358,10 +401,13 @@ def test_default_weights_are_the_adopted_setting():
     """`balanced` is what every call site uses; it must be the chosen setting.
 
     Guards against a silent revert to (1,1,1), which produced a cut that was
-    53% blow-ups and 60% disaster-toned.
+    53% blow-ups and 60% disaster-toned under the old importance axis.
+    Re-profiled to (2.0, 1.0, 0.5) on 2026-08-14 once importance became
+    counterfactual — see MODE_WEIGHTS' comment for why the setting matters far
+    less than it used to.
     """
     from teg_analysis.reporting.scoring import MODE_WEIGHTS
-    assert MODE_WEIGHTS["balanced"] == (1.5, 0.8, 0.7)
+    assert MODE_WEIGHTS["balanced"] == (2.0, 1.0, 0.5)
     assert MODE_WEIGHTS["fast"] == MODE_WEIGHTS["balanced"]
 
 

@@ -230,6 +230,14 @@ class StoryPlan(BaseModel):
     # `check_plan_consistency`, so it cannot be filled in with a vehicle that
     # was not actually the top hint.
     vehicle_fit_response: VehicleFitResponse
+    # Why the champion won, in one line, drawn from `win_anatomy` — the thing
+    # Jon named as the single most important job of the report (2026-08-14).
+    # Required because a report that never makes this clear has failed however
+    # entertaining it is, and a required field is the only way to know the
+    # editor actually decided rather than left it to emerge from the beats.
+    why_the_champion_won: str
+    # Only when departing from the Trophy-leads default; empty otherwise.
+    storyline_note: str = ""
 
 
 # ---------------------------------------------------------------------------
@@ -262,6 +270,17 @@ moments, lead changes, and trajectory. Draw on the competition_arcs provided.
 INPUT (JSON in the user turn):
 - competition_arcs: leader-by-round, winner/loser trajectory, lead changes and the \
 decisive moment for each competition.
+- **win_anatomy: WHY each competition was won or lost.** Computed from the data, not \
+inferred. Per competition: `attribution` (`built` = the winner outscored the runner-up \
+and earned the margin; `inherited` = the runner-up shed more than the winner gained), \
+`shape` (`consistent` vs `volatile` against the field's own spread), \
+`best_in_field_rounds`, `below_median_rounds`, per-round standing vs the field, and \
+whether the runner-up could have flipped it by merely playing their own average. \
+`summary_facts` states all of this in neutral phrasing. **This is the single most \
+important input for the primary storyline** — it answers "was the champion good, were \
+the others bad, was it one great round or four solid ones, did somebody blow it". Use \
+it. A report that never makes clear WHY the champion won has failed, however \
+entertaining it is.
 - beats: a ranked list of notable events. Each has an `id`, three scores \
 (importance = contribution to the result; rarity = how noteworthy in TEG history; \
 entertainment = colour independent of the result), and hole-by-hole `holes` \
@@ -287,6 +306,31 @@ course PBs usually do.
 - Course-record beats: beats with id `cr01`, `cr02`, ... are course gross records \
 (good or bad) set in this TEG on courses with 3+ prior visits. These are MANDATORY \
 — include them all in `must_include_beat_ids` and feature them in the relevant round.
+
+THE STORYLINE HIERARCHY — read this before choosing anything else.
+
+**The report is the winner's story.** The Trophy winner's week is the PRIMARY \
+storyline, and the report's job is to make clear how and why they won — drawing on \
+`win_anatomy`. That story is told as a celebration, tongue-in-cheek by all means, and \
+it takes one of two shapes (often both):
+
+  (a) **what the champion did well** — the round that broke the field, the four steady \
+ones, the stretch where they went clear; or
+  (b) **where their rivals fell short** — when `win_anatomy.attribution` is \
+`inherited`, say so plainly. "Patterson lost it" is often the better and funnier story, \
+and it is honest. But the champion is still the one who capitalised: frame them as the \
+man who was there to take it, never as a passive beneficiary.
+
+Then the SECONDARY storylines, roughly in this order of prominence: the Green Jacket \
+(gross), the Wooden Spoon and how comprehensively it was lost, and the rest of the \
+field humiliating themselves. Third and fourth storylines are welcome where the \
+material is there.
+
+**This ordering is a strong default, not a cage.** Depart from it when the tournament \
+genuinely offers something better — but the departure must still explain why the \
+champion won, and you must say what you did in `storyline_note`. A legitimate \
+departure keeps the winner in frame: "the course beat everyone, and one man by \
+slightly less" is a fine opening. "The champion was poor" is not a storyline.
 
 YOUR JOB:
 - Choose the story: one clear `theme` that runs through the whole report, and 2-4 \
@@ -398,6 +442,12 @@ and the `beat_ids` that belong to that round.
 - Give each notable player a one-sentence `arc`. Mid-pack nobodies can be omitted.
 - `venue_notes`: how/where to weave the course + location colour (use the venue \
 input, e.g. "a new course for TEG" / "the Nth TEG round at this venue").
+- `why_the_champion_won`: **ALWAYS populated**, one line, grounded in `win_anatomy`. \
+Name the mechanism, not the outcome. "Won by 8" is not an answer; "two best-in-field \
+rounds either side of a wobble, while the only man close to him gave back more than he \
+did" is. Say plainly if the answer is that the rivals lost it.
+- `storyline_note`: only if you departed from the Trophy-leads default — one line on \
+what led instead and why it was the better story. Leave empty otherwise.
 - `title` + a few `title_candidates`; record the resolved `tone`.
 
 THREAD-ORGANISED STORYLINE FIELDS — **DEFAULT IS TO POPULATE THESE, NOT LEAVE EMPTY.** \

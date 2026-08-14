@@ -32,11 +32,26 @@ from __future__ import annotations
 # majority) and is the setting to try next if 40% still reads as too much carnage.
 #
 # Re-measure any change with `python scripts/weight_profiler.py`.
+# RE-PROFILED 2026-08-14, after `importance` became counterfactual (impact.py).
+# The old tuning was fitted against the hand-tuned axis and was void.
+#
+# The headline result is that the weights now barely matter. Under the old axis
+# the spread between settings was ~30 points of blow-up share; re-swept over
+# TEGs 2-18 against the new axis, every reasonable setting lands within 34-43%
+# negative. The weights were doing so much work before precisely BECAUSE
+# importance was a poor proxy that correlated with badness. Measuring actual
+# result-impact dissolved the tuning problem rather than re-solving it.
+#
+# (2.0, 1.0, 0.5) was marginally best (34% negative / 33% positive, lowest churn
+# at 15%) and is principled: lean on the axis that now means what it says, keep
+# rarity high enough to surface records and PBs (which serve celebration), and
+# damp entertainment, the one axis a blow-up dominates. The margin over the old
+# setting is ~2 points and within noise — do not read precision into it.
 MODE_WEIGHTS = {
-    "balanced": (1.5, 0.8, 0.7),
+    "balanced": (2.0, 1.0, 0.5),
     # Retained as an alias so `mode="fast"` callers keep working; identical to
     # `balanced` since the fast weights became the default.
-    "fast": (1.5, 0.8, 0.7),
+    "fast": (2.0, 1.0, 0.5),
     # NOTE: measured as the *opposite* lever to what its name suggests. Cranking
     # rarity + entertainment entrenches the blow-up bias rather than adding
     # colour (53.0% -> 53.5% blow-ups), because those are precisely the two axes
