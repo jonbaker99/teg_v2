@@ -1,77 +1,99 @@
-# DRY STORYLINE DRAFT — TEG 4, East Sussex & Surrey, August–September 2011
+# TEG 4 — Dry Storyline Draft
 
 ## OVERVIEW
 
-David Mullin won the Trophy on net vs par at +9, by 8 shots from Jon Baker — the best Trophy total in TEG history to date. Mullin also won the Green Jacket on gross at +81, by 19 from Stuart Neumann, the best Gross total ever recorded in a TEG and his third consecutive Jacket. Gregg Williams took the Wooden Spoon, last on the Trophy metric at +40 net vs par.
+David Mullin won the Trophy at +9 net vs par, by 8 shots from Jon Baker. Mullin also won the Green Jacket at +81 gross, by 19 from Stuart Neumann, completing the double. Gregg Williams took the Wooden Spoon at +40 net vs par, 5 behind Henry Meller.
 
-All four courses were new to TEG and new to every player in the field.
-
----
-
-## ROUND 1 — No Bunkers Required: Meller Finds a 12 on a Course With No Sand
-
-Monday, Royal Ashdown Forest (Old Course), a bunkerless heathland course high above sea level, on TEG's first visit.
-
-The par-3 11th, stroke index 3, did most of the damage. Henry Meller took 12 there — nine over par on a single hole, the worst hole-versus-par score in TEG history to date and his own personal worst (b06). Stuart Neumann took 7 at the same hole for a quadruple bogey (b38). Baker's own blow-up came at the 14th, stroke index 1, where he made 9 for a quintuple bogey (b17).
-
-Williams dropped 22 shots over the closing nine (b12): double bogey at the 10th, triple at the par-3 11th, doubles at the 12th and 13th, triple at the 14th, doubles at the 15th and the par-3 16th, and triples at the 17th and 18th.
-
-The Trophy lead changed hands ten times during the round while the field was bunched — Neumann at the 3rd, Baker at the 5th, Mullin and then Baker at the 7th, Williams at the 8th, Neumann at the 10th, Williams at the 11th, Baker at the 13th, Mullin at the 15th and Baker again at the 15th. Baker ended the day leading the Trophy by 3; Mullin was second, 3 back, with a round of +5 net vs par. In the Gross, Mullin took the lead at the 11th and held it for the rest of the tournament, having led by 3 at the close of a 23-over round.
+TEG 4 was played over four consecutive days in East Sussex and Surrey, 29 August to 1 September 2011. All four courses — Royal Ashdown Forest (Old), Lingfield Park, Crowborough Beacon and Bletchingley — were new to TEG; no player had any course history at any of them.
 
 ---
 
-## ROUND 2 — Baker Posts His Worst Round Yet, Mullin Takes the Wheel
+## Round 1 — No Bunkers, No Mercy: Ashdown Finds Meller a 12 Anyway
 
-Tuesday, Lingfield Park, Harvey Jarrett's mature Surrey parkland with grand trees and water.
+Monday at Royal Ashdown Forest's Old Course, a heathland layout with no bunkers at all.
 
-Baker signed for +9 net vs par (+33 gross), his worst round to date (b25). Fifteen shots went between the 5th and the 11th (b37): triple bogey at the 5th (SI 2), doubles at the par-3 6th, the 7th, the 8th, the par-5 9th, the par-3 10th and the 11th. He then made 9 at the 17th for a quintuple bogey (b18).
+Henry Meller, the reigning Wooden Spoon holder, took 12 at the par-3 11th (SI 3) — nine over par, and the worst hole relative to par recorded by anyone in the tournament. (b07)
 
-Mullin closed with a 9 of his own at the par-5 18th, a quadruple bogey (b31). Neumann made 9 at the par-5 2nd, also a quadruple (b40).
+Jon Baker made 9 at the par-4 14th (SI 1), a quintuple bogey. (b39)
 
-The lead changed three times: Mullin drew level at the 10th, Baker took the outright lead at the 12th, and Mullin drew level again at the 13th. Mullin's round of +4 net vs par put him top by 2 at the close. In the Gross, Mullin's 22 stretched his lead to 7. Neumann finished the round bottom of the Wooden Spoon standings.
+Gregg Williams dropped 22 shots over the closing nine: double bogey at the 10th, triple at the par-3 11th, doubles at the 12th and 13th, triple at the 14th (SI 1), doubles at the 15th and the par-3 16th, and triples at the 17th and 18th. (b40)
 
----
+The Trophy lead changed hands ten times during the round as the field bunched — Neumann at the 3rd, Baker at the 5th, Mullin and then Baker at the 7th, Williams outright at the 8th, Neumann outright at the 10th, Williams outright again at the 11th, Baker at the 13th, Mullin at the 15th and Baker again at the 15th. Routine early exchanges. Baker finished the day leading the Trophy by 3 from Mullin.
 
-## ROUND 3 — Mullin's 88 on the Beacon: Second-Best Gross Round in TEG History
-
-Wednesday, Crowborough Beacon, high heathland with MacKenzie-redesigned holes and views across the South Downs.
-
-Mullin shot +17 gross, the second-best Gross round in TEG history to date (b08). He took the outright Trophy lead with a par at the par-5 10th (b09). Baker drew level at the 11th during a run of four straight pars from the 11th to the 14th, worth 5 shots to par (b36) — the 11th, the 12th (SI 2), the par-3 13th (SI 18, the easiest hole) and the par-5 14th. Mullin drew level again at the 15th and led by 16 at the close, with a round of −1 net vs par. His Gross lead also stood at 16.
-
-Williams lost 18 shots over the first six holes (b30): double at the 1st, quadruple at the 2nd (SI 1, the hardest hole), double at the par-3 3rd, quadruple at the 4th (SI 17, one of the easiest), quadruple at the 5th (SI 3) and double at the par-3 6th. He dropped to the bottom of the Spoon standings at the 4th; Neumann had been bottom at the 2nd. Meller's triple bogey at the par-5 14th took him to the bottom (b47), where he finished the round.
+On gross, Mullin drew level at the 2nd, Neumann at the 2nd, Mullin again at the 7th and at the 11th. From the 11th Mullin held the Green Jacket lead and was never headed for the remaining 62 holes. His +23 gross was the best round in the field; he led the Jacket by 3 after R1.
 
 ---
 
-## ROUND 4 — Eagle at Eight, Nine at Twelve: Baker's 27-Shot Unravelling
+## Round 2 — Baker Posts His Worst Round to Date; Mullin Takes the Lead
 
-Thursday, Bletchingley, Paul Wright's modern, fast-draining parkland on undulating terrain.
+Tuesday at Lingfield Park, mature parkland with trees and water.
 
-Baker took the outright Trophy lead with a birdie at the par-3 2nd, stroke index 17, one of the easiest holes (b03). Mullin drew level at the par-5 3rd with a bogey (b24). Both men gained three shots to par over holes 4–6: Baker bogey, bogey, par (b48); Mullin par, par, par at the 4th (SI 3), the 5th (SI 1) and the par-5 6th (b35). Mullin then took 7 at the par-3 7th for a quadruple bogey (b32). Baker eagled the par-4 8th, holing out in 2 (b07) — the only eagle recorded in the whole tournament (b29).
+Baker bled 15 shots over holes 5 to 11: triple bogey at the 5th (SI 2), then double bogeys at the par-3 6th (SI 18, the easiest hole), the 7th, the 8th, the par-5 9th, the par-3 10th and the 11th. (b49)
 
-From the 9th, Baker lost 27 shots in eight holes (b05): double bogey at the par-5 9th, triple at the 10th, triple at the par-5 11th, a 9 at the par-3 12th for a sextuple bogey (b10), double at the 13th, triple at the par-3 14th, an 11 at the par-5 15th for a sextuple bogey (b11), and a double at the 16th. Both the 9 and the 11 were personal worsts relative to par.
+He then took 9 at the par-4 17th, a quintuple bogey. (b32) Baker signed for +9 net (+33 gross), his worst round to date. (b25)
 
-At that 12th — stroke index 18, the easiest hole on the card — Mullin made a routine par and took the outright Trophy lead for the last time in the tournament (b04).
+Meller posted +2 net, twelve better than his R1 score of +14 — his best TEG round to that point. (b38) It included a 9 at the par-5 15th (SI 1), a quadruple bogey. (b46)
 
-In the Spoon race, Williams made quadruple bogeys at the 5th and the par-5 6th and dropped to the bottom at the 6th (b19). Meller took 10 at the par-5 11th for a quintuple bogey (b27) and dropped to the bottom himself (b20). Williams's triple bogey at the 13th put him back to the bottom for good (b21), the start of a 16-shot slide over the closing six holes (b23): triple at the 13th, quadruple at the par-3 14th, triple at the par-5 15th, doubles at the 16th (SI 2), the par-3 17th and the 18th. Meller also took 10 at the par-5 15th, another quintuple bogey (b28). Williams signed for +15 net vs par and +43 gross, his worst round to date on both measures (b33, b34).
+Mullin's +4 net drew him level with Baker at the 10th; Baker went back to an outright lead at the 12th; Mullin drew level again at the 13th. Mullin ended R2 leading the Trophy by 2 and the Green Jacket by 7, having shot +22 gross. Neumann was bottom of the Spoon race at the end of the round, after dropping there at the 2nd, the 5th and the 9th, with Meller briefly bottom at the 3rd. Williams was third.
 
-Mullin's round of +1 net vs par and 19 gross closed out the Trophy at +9 by 8 (b01) and the Jacket at +81 by 19 (b02). Personal-best Gross totals were recorded across the field: Williams +152 (b13), Meller +107 (b14), Baker +113 (b15), Neumann +100 (b16).
+---
+
+## Round 3 — Mullin's +17 at Crowborough: Second Best in TEG History
+
+Wednesday at Crowborough Beacon, high heathland with eight MacKenzie-redesigned holes.
+
+Mullin went round in +17 gross — the second-best gross round in TEG history to date. (b24) He played holes 9 to 17 without dropping a net shot: pars at the 9th and the par-5 10th, bogeys at the 11th and 12th (SI 2), par at the par-3 13th (SI 18, the easiest hole), par at the par-5 14th, and bogeys at the 15th, 16th and the par-3 17th. (b23) His net round was −1.
+
+Baker posted the best net round of the day at −3, twelve better than his R2. (b27) He played the first nine without dropping a net shot: bogeys at the 1st, 2nd (SI 1), 4th (SI 17), 5th (SI 3), 6th and 8th, pars at the par-3 3rd and the par-5 7th, and a double bogey at the 9th that still cost him nothing net. (b09) He then made four straight pars at the 11th, 12th (SI 2), par-3 13th (SI 18) and par-5 14th, gaining five shots to par against his handicap. (b15) That run ended with a quadruple bogey 8 at the 15th (b35, b47), and he closed with another quadruple bogey 8 at the 18th. (b45)
+
+Baker drew level on the Trophy at the 2nd; Mullin took the outright lead at the 10th; Baker drew level at the 11th; Mullin drew level again at the 15th and finished the round ahead.
+
+Williams dropped 18 shots over the first six holes: double bogey at the 1st, quadruple at the 2nd (SI 1), double at the par-3 3rd, quadruple at the 4th (SI 17), quadruple at the 5th (SI 3) and double at the par-3 6th. (b17, b44) He shot +10 net and fell to fourth.
+
+Meller followed his good R2 with +13 net, eleven worse (b34), including 8 shots dropped over holes 13 to 15: double bogey at the par-3 13th (SI 18), triple at the par-5 14th, triple at the 15th. (b41) He was bottom of the Spoon race at the end of the round, having dropped there at the 14th; Neumann had been bottom from the 2nd and Williams from the 4th.
+
+Mullin led both the Trophy and the Green Jacket by 16 after R3.
+
+---
+
+## Round 4 — Baker Eagles the 8th, Then Loses 27 Shots in Eight Holes
+
+Thursday at Bletchingley, a modern parkland course with excellent drainage and fast playing conditions.
+
+Baker took the outright Trophy lead at the 2nd. Mullin drew level at the 3rd.
+
+Mullin played the first six holes without dropping a net shot: bogeys at the 1st (SI 5), the par-3 2nd (SI 17) and the par-5 3rd, then pars at the 4th (SI 3), the 5th (SI 1) and the par-5 6th. (b42) He then made 7 at the par-3 7th, a quadruple bogey. (b48)
+
+Baker eagled the par-4 8th — a 2 — the only eagle recorded across the field in TEG 4. (b10, b31)
+
+From the 9th, Baker dropped 27 shots in eight holes: double bogey at the par-5 9th, triple at the 10th, triple at the par-5 11th, 9 at the par-3 12th (SI 18, the easiest hole on the course) for a sextuple bogey, double at the 13th, triple at the par-3 14th, 11 at the par-5 15th for another sextuple bogey, and double at the 16th (SI 2). (b03, b08, b06) Gross over par across those eight holes: 2+3+3+6+2+3+6+2 = 27.
+
+Mullin retook the outright Trophy lead at the 12th and was never headed again. He finished with +1 net, the best round in the field, and completed the double.
+
+Meller dropped 11 shots over holes 8 to 11: doubles at the 8th, the par-5 9th and the 10th, then 10 at the par-5 11th, a quintuple bogey. (b11, b14) He later made 10 at the par-5 15th, another quintuple bogey. (b12)
+
+Williams dropped 13 shots over holes 4 to 7: triple at the 4th (SI 3), quadruple at the 5th (SI 1), 9 at the par-5 6th for a quadruple, and double at the par-3 7th. (b26) He dropped to the bottom of the Spoon race at the 6th (b36); Meller's 10 at the 11th put Meller bottom (b22); Williams went bottom for the last time at the 13th. He then dropped 16 shots over the closing six: triple at the 13th, 7 at the par-3 14th for a quadruple, triple at the par-5 15th, double at the 16th (SI 2), double at the par-3 17th and double at the 18th. (b16, b30) His round was +15 net, +43 gross — a personal worst on both counts. (b04, b05)
+
+Final margins: Mullin +9 for the Trophy by 8 (b01); Mullin +81 gross for the Green Jacket by 19 (b02); Williams +40 for the Wooden Spoon (b29).
+
+Four of the five players posted personal-best gross totals: Neumann +100 (b21), Meller +107 (b19), Baker +113 (b20), Williams +152 (b18).
 
 ---
 
 ## HOW THE COMPETITIONS WERE DECIDED
 
-**Trophy (Net VP).** Leaders by round: Baker after R1 (by 3), then Mullin after R2 (by 2), R3 (by 16) and R4 (by 8). Twenty lead changes in total, ten of them in R1 while the field was bunched. Mullin took over on R2 H13, took the outright lead at Crowborough's 10th (b09) and built a 16-shot cushion on the back of his +17 gross round (b08). Baker took the outright lead again at Bletchingley's 2nd (b03) before Mullin drew level at the 3rd (b24). The decisive change came at Bletchingley's par-3 12th: Baker 9, Mullin par (b10, b04). Final margin 8, at +9 — the best Trophy total in TEG history to date (b01).
+**Trophy (Net vs Par).** Baker led after R1 by 3. Mullin led after R2 by 2, after R3 by 16 and after R4 by 8. The lead changed hands 20 times across the tournament, ten of them in R1 alone. Baker retook the outright lead at R4 H2; Mullin drew level at H3. The decisive change came at R4 H12 at Bletchingley, where Baker's 9 at the par-3 12th put Mullin back in the outright lead for good. Baker outscored Mullin in two of the four rounds (R1 and R3) and still lost by 8. Final: Mullin +9, Baker +17.
 
-**Green Jacket (Gross).** Mullin led after every round: by 3, 7, 16 and 19. Four lead changes, all in R1 and all while the field was still on the front nine or early back nine — Mullin at the 2nd, Neumann at the 2nd, Mullin at the 7th, and Mullin again at the 11th. From that 11th hole at Ashdown he was never headed across the remaining 62 holes. Rounds of 23, 22, 17 and 19 for +81, by 19 from Neumann (b02, b16).
+**Green Jacket (Gross).** Mullin led after every round: by 3, 7, 16 and 19. There were four gross lead changes, all in R1 (H2 twice, H7, H11), all level rather than outright. From R1 H11 at Ashdown, Mullin was never headed. He beat Neumann in all four rounds and posted the best gross round in the field three times, including +17 at Crowborough in R3 — the second-best gross round in TEG history to date — which turned a 7-shot lead into 16. Final: Mullin +81, Neumann +100.
 
-**Wooden Spoon.** Williams finished 3rd, 3rd, 4th, 5th across the four rounds. He lost 22 shots over the closing nine at Ashdown (b12) and 18 in the first six at Crowborough (b30), where he first dropped to the bottom at the 4th. In R4 he dropped to the bottom at the 6th (b19), was displaced by Meller's 10 at the 11th (b20, b27), and returned to the bottom for the final time with a triple bogey at the 13th (b21), followed by a 16-shot slide over the last six holes (b23). Final Trophy score +40 net vs par (b22). Meller, bottom after R1 and R3 and briefly again at R4 H11, finished above him.
+**Wooden Spoon.** The bottom place changed hands 15 times. Meller was bottom after R1, Neumann after R2, Meller after R3, Williams after R4. Williams was third after both R1 and R2 despite being below the field median in every round; he fell to fourth after R3 and to fifth in R4. He dropped to the bottom at R4 H6 after a 9 at the par-5 6th, handed it back when Meller made 10 at the 11th, and took it for the final time at H13 before dropping 16 shots over the closing six holes. Final: Williams +40, Meller +35 — a margin of 5.
 
 ---
 
 ## PLAYERS
 
-- **David Mullin** — Runner-up in TEG 3 and holder of back-to-back Jackets. Led the Gross from Ashdown's 11th to the final green, posted the second-best Gross round in TEG history at Crowborough (+17), and took both the best Trophy total (+9) and the best Gross total (+81) TEG has recorded.
-- **Jon Baker** — Defending champion. Led after R1, was level at Bletchingley's 3rd, eagled the 8th, then lost 27 shots over holes 9–16 including sextuple bogeys at the 12th and 15th. Finished 8 back, with a personal-best Gross total of +113.
-- **Gregg Williams** — Third, third, fourth, fifth. Ended with his worst round to date (+15 net, +43 gross) and the Wooden Spoon at +40, in the same tournament as his best-ever Gross total of +152.
-- **Henry Meller** — Reigning double-Spoon holder. Made a 12 at Ashdown's 11th, the worst hole in TEG history, sat bottom after R1 and R3, took two 10s in R4 — and avoided the Spoon while recording a personal-best Gross total of +107.
-- **Stuart Neumann** — Jacket runner-up, 19 adrift, with a personal-best Gross total of +100. Was bottom of the Spoon standings during R2 and again at Crowborough's 2nd before steadying.
+- **David Mullin** — Won the Trophy (+9) and the Green Jacket (+81), his third Jacket and second Trophy. Never below the field median in any round; round-score spread of 6 against a field median of 8; best gross round in the field in three of four rounds.
+- **Jon Baker** — Defending Trophy champion. Led after R1, took the outright lead again at R4 H2, then made 9 at Bletchingley's par-3 12th and 11 at the 15th within four holes. Finished second at +17. Posted a personal-best gross total of +113.
+- **Gregg Williams** — Below the field median in all four rounds, but still third after R2. Took his first Wooden Spoon at +40, with a personal-worst round of +15 (+43 gross) in R4. Posted a personal-best gross total of +152.
+- **Henry Meller** — Reigning Spoon holder with back-to-back Spoons. Opened with a 12 at Ashdown's par-3 11th, then posted +2 in R2. Escaped the Spoon by 5 and set a personal-best gross total of +107.
+- **Stuart Neumann** — Green Jacket runner-up at +100, a personal-best gross total, beaten by Mullin in all four rounds. Was bottom of the Spoon race at the end of R2 and briefly during R3.
