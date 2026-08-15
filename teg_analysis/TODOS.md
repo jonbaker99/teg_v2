@@ -20,6 +20,7 @@ Full detail — including the report-by-report inventory and pipeline vintages �
 - [ ] **Regenerate the stale tournament reports** — TEGs 2–8, 15, 16, plus 9. ~$6.50. Clears the pre-TEG-8 era framing in the published prose, the 81 wording faults D3 reports, and the three-vintage inconsistency in one pass.
 - [ ] **Verify after regenerating** — `python -m teg_analysis.reporting.verify --all --rounds`; the error count is the acceptance test.
 - [ ] **Trim `WRITER_SYSTEM`'s faithfulness block** — D3 now checks 6 of the 11 absolutes independently. Do it on evidence from fresh generations, not speculatively.
+- [ ] **Read one regenerated round report before backfilling rounds** — the round writer adopted the current voice on 2026-08-15 (it had been stuck on the pre-Herron register; see `reporting/STATUS.md`). The change is untested on real output: generate one round, read it, then decide. The 17 published round reports are now stale on voice as well as on schema vintage.
 
 **Fixed 2026-08-11** (detail in `reporting/STATUS.md` → Known issues): selection weights tuned to (1.5, 0.8, 0.7); voice and faithfulness split into separate prompt constants; D3 verification layer built; shared editor↔writer vocabulary schema-enforced (the close-finish hard rule had never fired); pre-TEG-8 era leak; round pipeline brought level; arc payload weighted for both competitions; TEG 10 R3 arithmetic error; 41 beat IDs in TEG 5's published report; model pinned to `claude-opus-5`; dead `enrich` path deleted.
 

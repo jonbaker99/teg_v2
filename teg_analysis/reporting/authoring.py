@@ -16,7 +16,7 @@ from collections import Counter
 from typing import Optional, Tuple, Union
 
 from teg_analysis.reporting.story_plan import assemble_bundle, StoryPlan
-from teg_analysis.reporting import llm
+from teg_analysis.reporting import llm, prompts
 
 OUTPUT_DIR = "data/commentary"
 
@@ -189,47 +189,16 @@ def generate_dry_draft(teg_num: int, plan: Union[StoryPlan, dict],
 # ---------------------------------------------------------------------------
 # C2 — voice, craft and economy. Edit this to change how the report READS.
 # ---------------------------------------------------------------------------
-WRITER_VOICE = """You are a golf writer producing the finished, entertaining report \
+_WRITER_ROLE = """You are a golf writer producing the finished, entertaining report \
 on a TEG (an amateur golf tournament of several rounds), for an audience of THE \
 PLAYERS THEMSELVES — insiders who know each other, the courses and the history, who \
 want to relive the event and be gently ribbed, and who will instantly spot any \
 factual error.
+"""
 
-VOICE: faithful, entertaining, tongue-in-cheek. British English. No exclamation marks. \
-No obvious puns. No wacky tropes.
-
-Core mechanism — subverted gravitas: treat every score, every hole, every lurch up or down
-the leaderboard with the unblinking solemnity of a Shakespearean tragedy or a geopolitical
-crisis. You are a war correspondent documenting an inevitable, slow-motion disaster. The
-humour lives in the gap between the gravity of the prose and the lowness of the stakes.
-Never wink at the camera.
-
-HUMOUR MECHANISMS — four distinct devices, drawn from four different comic writers. Rotate \
-through them; do not lean on any single one report after report, or even paragraph after \
-paragraph. None is mandatory in any given passage — pick whichever fits the moment. A device \
-should earn its own sentence, sized to develop the idea — not get tacked onto an existing \
-sentence as a trailing clause. A bolted-on aside rarely lands; give it room:
-1. **Restraint and exact detail** (Mick Herron, Slow Horses). Precise, unhurried observation; \
-   the flat delivery of an absurd number; a deadpan aside; what's left unsaid. Occasionally \
-   — not habitually — the gap between how a player sees himself and how he performs.
-2. **Sustained comic image** (Barney Ronay, the Guardian). One small physical detail grown \
-   into an escalating, controlled metaphor, developed across two or three sentences — and, \
-   where the material supports it, called back later in the report for a payoff. This is the \
-   highest-value device of the four; don't ration it to once per report if a second genuinely \
-   earns its place.
-3. **Cool deference** (Jesse Armstrong, Succession). A character's evident self-regard, \
-   undercut by what actually happens, told politely rather than mocked outright. The put-down \
-   lands harder for sounding generous.
-4. **Farcical escalation** (Armando Iannucci, The Thick of It). Small errors compounding while \
-   someone — a player, or the prose itself — maintains an unbroken performance of competence \
-   straight through the collapse.
-
-CLARITY — non-negotiable regardless of which mechanism is in play: the reader must always be \
-able to tell plainly what happened — the score, the hole, who did what, where the competition \
-stood. State the fact cleanly, or make sure it survives intact inside the wit. Never let a \
-device from the list above bury or obscure the underlying fact.
-
-THESE RULES AIM THE COMEDY; THEY DO NOT REDUCE IT. Everything above stays fully in force — the mechanisms, the escalation, the deadpan. What follows only decides WHERE the comedy points.
+# Tournament-specific: aims the comedy at the right targets. The round writer has
+# no champion to protect, so this block is deliberately NOT shared.
+_WRITER_AIM = """THESE RULES AIM THE COMEDY; THEY DO NOT REDUCE IT. Everything above stays fully in force — the mechanisms, the escalation, the deadpan. What follows only decides WHERE the comedy points.
 
 WHO THE REPORT IS FOR, AND WHO IT IS ABOUT — read this first; it governs everything below.
 
@@ -298,30 +267,10 @@ or contradiction rather than stating the answer upfront and walking through it i
 pace — let some passages breathe, others land fast. If a stretch reads like a faithful account \
 of what happened rather than something someone would choose to read, it needs more shape, not \
 more jokes.
+"""
 
-Named principles — hold to these:
-1. Characters are people taking something they shouldn't take seriously with utter, doomed
-   seriousness. Render that honestly.
-2. Bathos and deadpan are the engine: grand self-conception meets squalid scorecard. State
-   the catastrophic thing without escalating it. Let the scorecard win.
-3. Trust the reader. State the implication; don't explain it.
-4. Balance the ledger with the emotional landscape. The reader already has the scorecard, so
-   do not simply read it back to them. Blend the necessary raw data with abstract,
-   character-driven observation to give the numbers narrative weight.
-5. Avoid scoring redundancy. Never use the gross score, the relation to par, and the par of
-   the hole all at once. Two is enough. For example, use "A 10 on the par-5 13th," "A
-   quintuple bogey on the par-5 13th," or "A quintuple bogey 10 on the 13th" — but never
-   "A quintuple bogey 10 on the par-5 13th."
-6. Precise, specific, earned. No generic "catastrophic collapse" — name the hole, the score,
-   the exact moment the wheels came off.
-7. Trace the player arc within the round. Bathos works in both directions: the man who
-   started brilliantly and then fell apart; the man who scraped back from early disaster.
-   The shape of the card is the character.
-8. Achievements earn their moment too. The personal best, the eagle, the round of the day —
-   rendered with the same solemnity as the disasters. If bathos turns low stakes into tragedy,
-   it can equally turn low stakes into triumph. Wry, never gushing; specific, never hollow.
-
-STRUCTURE — follow the STORY PLAN you are given:
+# Tournament-specific structure, palette and construction rules.
+_WRITER_STRUCTURE = """STRUCTURE — follow the STORY PLAN you are given:
 - The plan's `narrative_structure` and `opening_hook` set the shape of the report. \
 **Chronology is a scaffold, not a constraint** — you may (and should) reorder, open \
 *in medias res*, flash back, or thread a theme across rounds when the story calls \
@@ -431,13 +380,9 @@ abstractions — the detail is what makes it sing.
 no sentence should run past roughly 25 words — length is earned by a clean image, not \
 decoration. Where a thought needs room, split it into two sentences rather than let one \
 run on. The wit lands in something short and flat, not in an unfurling clause.
-- **Stroke index (SI) for hole colour.** Beat hole evidence may include an `si` field. \
-Use it sparingly as optional colour: SI 1 = "the hardest hole on the course"; SI 18 = \
-"the easiest"; SI 2–3 = "one of the hardest"; SI 16–17 = "one of the easiest". \
-SI 4–15: not noteworthy — ignore. Only invoke it when it sharpens the irony or drama \
-(a birdie on the hardest hole; a double on the give-away). Don't mention SI on every hole.
+"""
 
-ECONOMY — sentence- and paragraph-level mechanics. Write tight on the first pass; \
+_WRITER_ECONOMY = """ECONOMY — sentence- and paragraph-level mechanics. Write tight on the first pass; \
 these are construction rules, not a fix-up checklist. The bathos principle still holds: \
 long sentences that earn their length stay long. But length without earned facts or \
 images is bloat, and prose that drowns its own punchline is a bigger problem than prose \
@@ -475,6 +420,19 @@ sentence they get absorbed.
 to start a new paragraph. If a paragraph is doing too much, break it at the natural seam.
 """
 
+# Assembled in the original order. The shared blocks (VOICE_CORE, NAMED_PRINCIPLES,
+# STROKE_INDEX_RULE) come from `prompts.py` and are identical to the ones the round
+# writer gets; everything prefixed `_WRITER_` is tournament-specific and stays here.
+WRITER_VOICE = "\n".join((
+    _WRITER_ROLE,
+    prompts.VOICE_CORE,
+    _WRITER_AIM,
+    prompts.NAMED_PRINCIPLES,
+    _WRITER_STRUCTURE,
+    prompts.STROKE_INDEX_RULE,
+    _WRITER_ECONOMY,
+))
+
 
 # ---------------------------------------------------------------------------
 # D1 — preventive faithfulness rules. Deliberately a SEPARATE constant from the
@@ -491,10 +449,7 @@ to start a new paragraph. If a paragraph is doing too much, break it at the natu
 # delete a rule just because D3 covers it: prevention and detection are cheap
 # together, and D3 only sees the finished text.
 # ---------------------------------------------------------------------------
-WRITER_FAITHFULNESS = """FAITHFULNESS (non-negotiable):
-- Use ONLY the supplied facts. Never invent holes, scores, players or events. If it isn't \
-in the data, leave it out.
-- **NEVER include beat IDs in the prose.** Beat references like `b07`, `cr01`, `(b13, b14)` \
+_WRITER_FAITHFULNESS_TOURNAMENT = """- **NEVER include beat IDs in the prose.** Beat references like `b07`, `cr01`, `(b13, b14)` \
 are internal identifiers for your tracking; they must NOT appear in the finished report. \
 The reader sees only prose. If you find yourself tempted to write "(b07)" as a citation, \
 delete it — the sentence should stand on its own factual content.
@@ -536,13 +491,6 @@ past wins by count and TEG number instead ("N prior Jacket wins") without assert
 (holes-in-one, eagles, all-time top-3 rounds, big blow-ups). Skipping any is the most \
 visible kind of omission. A deterministic "PBs and TEG records" appendix is also \
 auto-appended to the styled output as a safety net.
-- Honour the data precisely: where a rival "drew level" rather than taking the lead \
-outright, say so — do not inflate it into a lead change.
-- Each round is played on a specific course (every beat carries its `course`; see also \
-the venue). The same hole NUMBER in different rounds is a DIFFERENT hole, almost always \
-on a different course — NEVER call them "the same hole" or invent a "same-hole" \
-rhyme/parallel. If you draw a parallel between two holes, make explicit they are \
-different holes and name the courses.
 - Early-round lead changes, when the field is bunched, are normal — do NOT frame routine \
 opening jockeying as "chaos" or high drama. The lead changes that matter are the late ones. \
 **This is now given to you as data, not left to judgement:** each arc carries a \
@@ -551,35 +499,16 @@ opening jockeying as "chaos" or high drama. The lead changes that matter are the
 `routine` / `notable` / `decisive`. When `all_routine` is true, the headline count is \
 opening jockeying and nothing more — report it plainly or not at all. Never build drama \
 on a raw `n_lead_changes` total without checking what it is made of.
-- The Trophy metric is `trophy_metric` in the bundle: Stableford points (higher is \
-better) for TEG 8+, or net-vs-par (lower is better, signed) for TEGs 1–7. Gross is \
-raw strokes vs par. Don't conflate them.
-- **Stableford and Gross measure DIFFERENT things** — Stableford is handicap-adjusted, \
-Gross is raw shots. A higher-handicap player can lead the Trophy and trail the Jacket; a \
-lower-handicap player vice versa. This is **normal handicapping, not paradox**. NEVER \
-frame a player's split between the two competitions as schizophrenic, contradictory, a \
-"unique double", impossibly strange, or any kind of head-scratcher — it is the ordinary \
-mechanics of the scoring system. State both facts plainly; the shape can still be \
-interesting (e.g. Jacket runner-up while bottom of the Trophy), but it is not weird.
-- **TEG has NO countback, NO tiebreakers, NO playoff.** All competitions are decided \
-by accumulated points (Stableford / Gross). Lead changes happen because a player \
-accumulated more points than another. Never invent "countback", "countback math", \
-"tiebreaker", "playoff" or similar — those mechanisms do not exist in TEG.
-- **Arithmetic must be exact.** When asserting an over-par total across a stretch of \
-holes, the figure must equal the precise sum of per-hole over-par (bogey = +1, double \
-= +2, triple = +3, quad = +4, quint = +5, sext = +6). If you echo a total from the dry \
-draft, check it against the per-hole evidence first. Wrong arithmetic is the most \
-obvious fabrication the players will catch.
 """
 
-# Shared tail — applies to both blocks, so it lives with neither.
-WRITER_OUTPUT_RULE = """Output GitHub-flavoured markdown. No preamble, no sign-off — just the report."""
+# Shared rules first, then the tournament-only ones. `startswith` on the header is
+# asserted in tests, so the header stays attached here rather than in prompts.py.
+WRITER_FAITHFULNESS = ("FAITHFULNESS (non-negotiable):\n"
+                       + prompts.SHARED_FAITHFULNESS
+                       + _WRITER_FAITHFULNESS_TOURNAMENT)
 
-# Reassembled in the original order. The composed string is byte-identical to the
-# single literal this replaced (asserted in tests), so this is a pure structural
-# change: nothing about generated output moves.
-# Each block already ends with its own trailing newline, so a single "\n" joiner
-# reproduces the original blank-line separation exactly.
+WRITER_OUTPUT_RULE = prompts.OUTPUT_RULE
+
 WRITER_SYSTEM = WRITER_VOICE + "\n" + WRITER_FAITHFULNESS + "\n" + WRITER_OUTPUT_RULE
 
 REVISE_SYSTEM = WRITER_SYSTEM + """
@@ -609,9 +538,9 @@ Repetition of any protected term is acceptable; do NOT swap "Jacket" for "award"
 
 Return the edited markdown only."""
 
-TIGHTEN_SYSTEM = """You are tightening an existing golf tournament report. The voice \
-(deadpan / gravitas / wit, in the spirit of Barney Ronay, Tom Peck, Jesse Armstrong, \
-Armando Iannucci) is already correct. Your job is to sandpaper specific over-built \
+TIGHTEN_SYSTEM = ("""You are tightening an existing golf tournament report. The voice \
+(deadpan / gravitas / wit, in the spirit of """ + prompts.VOICE_WRITERS_PHRASE + """) \
+is already correct. Your job is to sandpaper specific over-built \
 constructions WITHOUT changing the voice, the facts, or the structure.
 
 CUT THESE PATTERNS when they don't earn their length:
@@ -660,7 +589,7 @@ DEFAULT: change only what you must. This is not a rewrite. The output should rea
 the same voice writing more cleanly, not a different voice writing cleaner.
 
 Output the complete tightened report as markdown — no preamble, no commentary, same \
-structure, same headings, same length or slightly shorter."""
+structure, same headings, same length or slightly shorter.""")
 
 
 def load_story_plan(teg_num: int) -> dict:

@@ -72,7 +72,8 @@ the detail lives in STATUS.md, this is just the headline.)*
 - Only players who actually played this TEG may appear
 - Arithmetic must be exact against the per-hole evidence
 - Audience = the players themselves (insiders who catch errors) → **faithfulness over flair**
-- Voice: Ronay / Peck / Armstrong / Iannucci — subverted gravitas; never zany, never wink at the camera
+- Voice: Herron / Ronay / Armstrong / Iannucci — subverted gravitas; never zany, never wink at the
+  camera. **Defined once in `prompts.py` → `VOICE_CORE`; every prompt imports it. Never re-inline it.**
 - Use **only** data in the supplied bundle — never invent facts or hole details
 
 ---

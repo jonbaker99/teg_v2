@@ -60,7 +60,7 @@ Turning the plan into text. Two rungs, and the cheaper one is where most iterati
 | # | Component | In → Out | Lives in | Restart from | Cost | Maturity |
 |---|---|---|---|---|---|---|
 | C1 | **Factual scaffold** — the dry draft's density and shape | plan + bundle → `dry_draft.md` | `DRY_DRAFT_SYSTEM_DETAILED` / `_LIGHT`, `dry_draft_style=` | frozen plan | ~$0.37 | **Works, A/B settled** (detailed wins). The contradicting dead alias was removed 2026-08-11 |
-| C2 | **Writing style / voice** | dry draft → finished prose | **`WRITER_VOICE`** (own constant since 2026-08-11) | frozen dry draft + plan | ~$0.17 | **Works, validated across 17 reports — but the target level is an open decision** (humour dial, unsettled) |
+| C2 | **Writing style / voice** | dry draft → finished prose | **`prompts.VOICE_CORE`** — shared by BOTH writers since 2026-08-15; `WRITER_VOICE` composes it with the tournament-only blocks | frozen dry draft + plan | ~$0.17 | **Works, validated across 17 reports — but the target level is an open decision** (humour dial, unsettled) |
 
 ### Theme D — Assurance
 **In:** finished prose + the source data · **Out:** a report you can trust · **Cost per try:** free to ~$0.17
@@ -70,7 +70,7 @@ the audience is the players themselves, who spot any factual error.
 
 | # | Component | In → Out | Lives in | Restart from | Cost | Maturity |
 |---|---|---|---|---|---|---|
-| D1 | **Preventive rules** — instructions telling the writer not to fabricate | prompt → constrained prose | **`WRITER_FAITHFULNESS`** (own constant since 2026-08-11; 11 absolutes) | frozen dry draft + plan | ~$0.17 | **Built.** Still carries the 6 rules D3 now also checks — deliberate belt-and-braces; trim only once D3 has run on fresh generations |
+| D1 | **Preventive rules** — instructions telling the writer not to fabricate | prompt → constrained prose | **`prompts.SHARED_FAITHFULNESS`** (shared with the round writer since 2026-08-15) + `WRITER_FAITHFULNESS` (tournament-only rules) | frozen dry draft + plan | ~$0.17 | **Built.** Still carries the 6 rules D3 now also checks — deliberate belt-and-braces; trim only once D3 has run on fresh generations |
 | D2 | **Deterministic guarantees** — facts code emits so prose can't get them wrong | data → injected blocks | `render.py` standings / records / at-a-glance | `_report_final.md` | **free** | **Works well.** The strongest assurance mechanism in the pipeline |
 | D3 | **Programmatic verification** — checking claims against the data after the fact | prose + data → findings | `verify.py` (7 checks), auto-run by `backfill.py` | `_report_final.md` | **free** | **Built 2026-08-11.** Independently re-found the TEG 10 R3 error and 41 reader-visible beat IDs in TEG 5 |
 
@@ -537,7 +537,7 @@ This is the steerable artefact — for `archive` mode a human can edit the JSON 
 - *Sense-check*: validates Stages 2–3 in prose form before any styling effort.
 - *Scaffold*: the entertaining report (4b) is built around it, which bounds drift.
 
-**4b. Entertaining report** — `report_around_draft(teg, plan, dry_text)`. Rewrites the dry draft into the finished report in the house voice (Ronay/Peck). Because it can only use facts already in the validated draft, it stays faithfully grounded.
+**4b. Entertaining report** — `report_around_draft(teg, plan, dry_text)`. Rewrites the dry draft into the finished report in the house voice (`prompts.VOICE_CORE`). Because it can only use facts already in the validated draft, it stays faithfully grounded.
 
 (Two alternates exist for comparison — `report_single_pass` and `report_critique_revise` — see [STATUS.md](STATUS.md) for why they were rejected.)
 
@@ -629,7 +629,7 @@ style_report(teg)  # → teg_N_report_styled.md, ready for the UI
 
 ## Configuration
 
-- **Tone dial**: `tone=` input on `build_story_plan` (default `"house"` = Ronay/Peck). Plan echoes the resolved tone for the writer.
+- **Tone dial**: `tone=` input on `build_story_plan` (default `"house"` = `prompts.VOICE_CORE`). Plan echoes the resolved tone for the writer.
 - **Mode**: `balanced` / `fast` / `archive` — controls scoring weights (fast leans on importance; archive cranks rarity + entertainment).
 
 ### API key
@@ -690,7 +690,7 @@ Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`t
 ## Design rules (locked decisions)
 
 - **Audience**: the players themselves — insiders who spot any factual error and want to relive the tournament being gently ribbed. Favour faithfulness over flair.
-- **Voice**: Barney Ronay (Guardian) / Tom Peck (Times political sketches), with Jesse Armstrong (Succession) and Armando Iannucci (The Thick of It). British English, no exclamation marks, no obvious puns. The core mechanism is **subverted gravitas** — treat trivial stakes with the solemnity of a geopolitical crisis; the humour lives in the gap. Never wink at the camera.
+- **Voice**: defined once, in **`prompts.py` → `VOICE_CORE`** — do not restate it in a prompt or a doc, link here instead. The core mechanism is **subverted gravitas** (treat trivial stakes with the solemnity of a geopolitical crisis; the humour lives in the gap, never wink at the camera), delivered through four rotating devices: restraint and exact detail (Mick Herron), a sustained comic image (Barney Ronay), cool deference (Jesse Armstrong), farcical escalation (Armando Iannucci). British English, no exclamation marks, no obvious puns. Tom Peck's mock-parliamentary device was tested and **dropped** in `342db93`.
 - **Spine**: Trophy → Green Jacket (Gross) → Wooden Spoon, with explicit "how each was won/lost" drawn from the competition arcs. The Trophy metric is era-dependent: Stableford for TEG 8+, net-vs-par for TEGs 1–7.
 - **Structure**: story-led, with rounds as natural blocks. Each round gets a chosen witty headline plus 2 alternate candidates for the archive editor. Chronology is a scaffold, not a constraint — the editor's `narrative_structure` and `narrative_vehicles` set the shape.
 - **Economy**: 11 construction rules in `WRITER_SYSTEM` (two em-dashes per paragraph max; no subject-burying preambles; two equal facts = two sentences; punchline isolation; one dominant idea per paragraph). Length must be earned by facts or images.
@@ -722,6 +722,7 @@ Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`t
 | `vehicle_fit.py` | Deterministic narrative-vehicle scoring + the checked-in baseline |
 | `impact.py` | **The `importance` axis** — counterfactual: what the event cost or won |
 | `win_anatomy.py` | **Why each competition was won** — built vs inherited, blown leads |
+| `prompts.py` | **Shared prompt blocks — the single source of truth for voice and the common rules.** Imported by both pipelines; edit here to change every prompt at once |
 | `story_plan.py` | Stage 3 + the editor system prompt (incl. the vehicle menu) |
 | `authoring.py` | Stage 4 + all writer/lint/tighten system prompts |
 | `round_report.py` | The per-round pipeline and its prompts |

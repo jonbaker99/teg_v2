@@ -12,7 +12,39 @@
 
 ---
 
-## START HERE — picking this up in a new chat (2026-08-14)
+## START HERE — picking this up in a new chat (2026-08-15)
+
+### Voice is now defined in ONE place — `prompts.py` (2026-08-15)
+
+**The voice work of 11–14 Aug never reached three of the four prompts that carry it.** All three
+voice commits (`ef67417` Herron, `ac55be8` the four humour mechanisms, `342db93` dropping the Peck
+device) edited only `authoring.WRITER_VOICE`, because that is where the voice experiments ran. Both
+editor prompts and the round writer kept their own copies and went on describing a Ronay/Peck
+register — still naming Peck, whose device had been deliberately removed. The faithfulness rules had
+drifted the same way: seven of them existed twice, in two files, edited independently.
+
+**Fixed structurally, not by hand-syncing the copies.** `reporting/prompts.py` now holds
+`VOICE_CORE`, `NAMED_PRINCIPLES`, `HOUSE_VOICE_SUMMARY`, `SHARED_FAITHFULNESS` and
+`STROKE_INDEX_RULE`; all four prompts import them. `tests/test_reporting_prompts.py` (26 tests)
+fails if a block is re-inlined, if any prompt stops naming the current voice, if Peck reappears, or
+if the editor-facing summary drifts from the writer-facing voice.
+
+**What changed in generated output:**
+
+| Pipeline | Effect |
+|---|---|
+| Tournament writer | **None.** Content-identical — six faithfulness bullets moved earlier in the list; verified by diffing the composed prompt against the pre-refactor original |
+| Tournament editor | Plans now aimed at the register the writer actually has |
+| **Round writer** | **Real change** — adopts the four humour mechanisms in place of its pre-Herron formulation |
+| Round editor | Same summary as the tournament editor |
+
+⚠️ **The 17 published round reports are now doubly stale** — they were already pre-H1/H3 vintage, and
+the round voice has now moved as well. Regenerating them is untouched and uncosted.
+
+**One deliberate omission:** `NARRATIVE PULL` stays tournament-only. It is voice-adjacent craft
+rather than voice, and sharing it would have widened the round-report change beyond the voice.
+
+---
 
 Two live workstreams. They are independent; either can be picked up first.
 
@@ -305,11 +337,15 @@ Full coverage is 67 rounds (TEG 2 has 3, the rest 4); 17 are published, so **50 
 ## Where work stopped — the humour dial (unresolved)
 
 The last thing in flight. `scripts/humour_dial.py` takes a finished report and rewrites it at a
-higher humour level, adding influences on top of the baseline Ronay/Peck/Armstrong/Iannucci register.
+higher humour level, adding influences on top of the baseline Herron/Ronay/Armstrong/Iannucci register.
+
+> Its baseline description was stale too (named Peck, no Herron) and was corrected 2026-08-15. The
+> variant outputs on disk were generated against the old description, so they are not exactly
+> reproducible from the current script — that affects reproduction, not the taste call below.
 
 | Variant | Register added | Outputs on disk |
 |---|---|---|
-| baseline (≈3/10) | Ronay / Peck / Armstrong / Iannucci | **this is what the site currently shows** |
+| baseline (≈3/10) | Herron / Ronay / Armstrong / Iannucci | **this is what the site currently shows** |
 | `humour6` | dialled to ≈6/10 | TEG 14, TEG 18 |
 | `humour8` | dialled to ≈8/10 | TEG 14, TEG 18 |
 | `humour8b` | ≈8/10, **Brooker-only** — drops Clive James and the literary-comparison register, adds Marina Hyde; physical/contemporary comparisons, short sentences, punch-not-flourish | TEG 14 only |
