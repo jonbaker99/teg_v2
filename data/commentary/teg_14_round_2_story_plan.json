@@ -1,0 +1,85 @@
+{
+  "title": "Twelve Shots in Four Holes",
+  "title_candidates": [
+    "Twelve Shots in Four Holes",
+    "Nine Points Clear: The Trophy Conversation Shifts",
+    "Baker's Littlestone Front Nine",
+    "Mullin Endures, Baker Implodes — Again"
+  ],
+  "theme": "Alex Baker donated 12 shots in four front-nine holes at Littlestone — triple, double, triple, quad — and a further quad at the 8th, while Mullin survived his own mid-round trouble with a birdie at the 7th to post 41 Stableford points (best in field, again) and extend the Trophy lead to 9 and the Jacket to 12.",
+  "tone": "house",
+  "narrative_structure": "player_by_player",
+  "opening_hook": "Open by referencing Baker's R1 blow-up pattern as a preview, then land the R2 front nine: 12 shots over par in four holes is not a continuation of that pattern — it is an escalation. Then cover Mullin's parallel wobble and recovery.",
+  "foreshadow": [
+    "Baker's H2-5 implosion (12 shots over par in 4 holes) arrives before H8 — foreshadowing one more quad still to come in the same round.",
+    "Mullin's triple-double-bogey run at H4-6 briefly threatens to let the field back in — setting up whether he can arrest the slide before it costs him."
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "David Mullin",
+      "score": 81.0,
+      "gap": 9.0,
+      "note": "Mullin extended his overnight lead of 3 to 9 — Baker's front-nine disaster (12 shots over par, H2-5) built the bulk of the gap; Mullin's best-in-field 41 pts did the rest. Baker remains second but 9 behind with two rounds left."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "David Mullin",
+      "score": 29.0,
+      "gap": 12.0,
+      "note": "Mullin's R2 gross of 14 over par (best in field) extended the overnight Jacket lead from 5 to 12 shots over Jon Baker; with two rounds remaining the Jacket is close to settled."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "Jon Baker",
+      "score": 58.0,
+      "gap": 2.0,
+      "note": "Jon Baker remains last, but the gap to Williams narrowed from 4 to 2 points as Williams posted a worse round (27 pts) than Baker (29 pts) for the day."
+    }
+  ],
+  "key_beat_ids": [
+    "r2_b04",
+    "r2_b02",
+    "r2_b01",
+    "r2_b06",
+    "r2_b03",
+    "r2_b07"
+  ],
+  "players": [
+    {
+      "player": "David Mullin",
+      "arc": "Ran into trouble mid-round — triple at H4 (one of the hardest, SI2), double at H5, bogey at H6 — but answered with a birdie at the par-5 7th, then closed with another birdie at H18 to post 41 Stableford points: best in field for the second consecutive round."
+    },
+    {
+      "player": "Alex Baker",
+      "arc": "Front nine at Littlestone produced the round's defining episode: triple at H2 (SI4), double at H3, triple at H4 (one of the hardest, SI2), quad at H5 (one of the easiest, SI16) — 12 shots over par in four holes — followed by a further quad at H8; he steadied with six holes without a net-dropped shot from H13-18, finishing on 35 pts."
+    },
+    {
+      "player": "Jon Baker",
+      "arc": "Posted 29 Stableford points — the same as his R1 total — and remains last in the Trophy standings, though the Wooden Spoon gap to Williams narrowed to 2 as Williams had a worse round."
+    },
+    {
+      "player": "Gregg Williams",
+      "arc": "27 Stableford points — worst in the field this round — but remains 2 ahead of Jon Baker in the Wooden Spoon standings."
+    }
+  ],
+  "venue_notes": "Littlestone is TEG's 2nd visit to this venue — a remote links on Romney Marshes, designed by the architect of Royal St George's and refined by Braid and MacKenzie. Its exposed, flat character punishes front-nine decisions. Baker's implosion at H2-5 encapsulates what Littlestone does to a round when concentration lapses.",
+  "narrative_vehicles": [
+    "catalogue",
+    "tragic_arc"
+  ],
+  "prominent_vehicle": "catalogue",
+  "prominent_palette": "decisive_moment",
+  "payoffs": [
+    {
+      "seed": "Baker's H2-5 implosion (12 shots over par in 4 holes) arrives before H8",
+      "resolves_in": "H8 — quadruple bogey at the par-4 8th",
+      "payoff": "The front-nine damage was not done at H5 — a further quad at H8 confirmed the pattern was systemic, not isolated, before Baker finally righted himself on the back nine."
+    },
+    {
+      "seed": "Mullin's triple-double-bogey run at H4-6 briefly threatens to let the field back in",
+      "resolves_in": "H7 — birdie at the par-5 7th",
+      "payoff": "Mullin answered the wobble immediately with a birdie at the par-5 7th, arresting the slide and confirming that his R1 performance was not a one-round anomaly."
+    }
+  ]
+}

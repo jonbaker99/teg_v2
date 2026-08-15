@@ -1,69 +1,87 @@
 {
-  "title": "Mullin Masters the Wind at Deal",
+  "title": "The Spoon Holder's Opening Statement",
   "title_candidates": [
-    "Mullin Masters the Wind at Deal",
-    "Deal Me In: Mullin Takes Both Leads",
-    "Sand, Wind and a Ten: Round One at Royal Cinque Ports"
+    "The Spoon Holder's Opening Statement",
+    "Best in Field: From the Last Man You'd Expect",
+    "Championship Links, Championship Form",
+    "Mullin's Hot Stretch, Baker's Double Disaster"
   ],
-  "theme": "David Mullin's mid-round purple patch hands him both leads, while Alex Baker's links nightmare leaves him chasing on Stableford and adrift on Gross",
+  "theme": "The three-time Wooden Spoon holder opened with the best round in the field at one of the Open's most demanding links, while Alex Baker donated two back-nine catastrophes to his early cushion and the defending Trophy champion settled to last place before the fourth hole was done.",
   "tone": "house",
-  "narrative_structure": "chronological",
-  "opening_hook": "Open on a windswept Deal morning — the championship links is supposed to bite, and within an hour it has, with Gregg Williams already 4-over on a single hole",
+  "narrative_structure": "player_by_player",
+  "opening_hook": "Open with the paradox: Mullin scores 40 Stableford points at Royal Cinque Ports, best in the field, from the man arriving with three consecutive Wooden Spoons — then move player by player through how the day unfolded.",
   "foreshadow": [
-    "Gregg Williams's quadruple at the 3rd setting an early tone for what the course was going to extract",
-    "Alex Baker bleeding six shots across holes 3-5, a slow puncture that prefigured the bigger numbers to come at the 11th and 16th",
-    "Jon Baker slipping to the foot of the Spoon race as early as the 4th — a position he never escaped"
+    "Alex Baker leaks three consecutive doubles at H3-H5, an early sign of a concentration pattern that will detonate twice on the back nine.",
+    "Jon Baker, the defending Trophy champion, bogeys the par-3 4th (SI18 — the easiest hole on the course) to drop to last in the Wooden Spoon race; an omen dressed as a blip."
   ],
   "competition_state": [
     {
       "name": "Trophy",
-      "leader_or_laggard": "David MULLIN",
+      "leader_or_laggard": "David Mullin",
       "score": 40.0,
       "gap": 3.0,
-      "note": "Mullin drew level on Stableford at the 11th in the middle of his hot run, then took the outright lead at the 16th and never let it go. Holds a three-point cushion over Alex Baker heading into R2."
+      "note": "Early jockeying was routine (Mullin drew level at H11); he took an outright lead at H16 — the same hole where Alex Baker was posting a quintuple — and held it. Baker's twin back-nine blowups (quad at H11, quintuple at H16) surrendered whatever gap might have closed."
     },
     {
       "name": "Green Jacket",
-      "leader_or_laggard": "David MULLIN",
+      "leader_or_laggard": "David Mullin",
       "score": 15.0,
       "gap": 5.0,
-      "note": "A gross-score race that ebbed and flowed early — Alex Baker level at the 6th, Mullin level by the 9th — before Baker's back-nine carnage settled it. Mullin ends the round five gross shots clear of Jon Baker."
+      "note": "Baker (Alex) drew level at H6, Mullin retook the lead at H9; both exchanges were routine. Mullin led from H9 through the close, finishing 5 shots clear of Jon Baker."
     },
     {
       "name": "Wooden Spoon",
-      "leader_or_laggard": "Jon BAKER",
+      "leader_or_laggard": "Jon Baker",
       "score": 29.0,
       "gap": 4.0,
-      "note": "Jon Baker dropped to the bottom of the Spoon pile as early as the 4th and stayed there, four points adrift of Gregg Williams after eighteen."
+      "note": "Baker (Jon) dropped to last at H4 with a bogey on SI18 and held that position for the remaining 14 holes, finishing 4 points behind Williams (33)."
     }
   ],
   "key_beat_ids": [
-    "r1_b03",
-    "r1_b08",
-    "r1_b07",
-    "r1_b04",
-    "r1_b06",
-    "r1_b02",
     "r1_b01",
-    "r1_b09"
+    "r1_b02",
+    "r1_b03",
+    "r1_b04",
+    "r1_b05",
+    "r1_b08",
+    "r1_b09",
+    "r1_b10"
   ],
   "players": [
     {
-      "player": "David MULLIN",
-      "arc": "Quietly built the round of the day around a 13-point burst from the 9th to 12th, took both leads in the middle of the round and refused to give them back despite a wobble at the 13th."
+      "player": "David Mullin",
+      "arc": "Best in field with 40 Stableford points: a hot stretch H9-12 (birdie at the 10th plus three pars, 13 points across four holes) built the Trophy lead, with a double at the par-4 13th the only interruption before he secured it outright at H16."
     },
     {
-      "player": "Alex BAKER",
-      "arc": "Started the bleeding early (six shots gone across holes 3-5), then hammered the nails in himself with an 8 at the 11th and a 10 at the 16th — second on Stableford but well off the Gross pace."
+      "player": "Alex Baker",
+      "arc": "Three consecutive doubles at H3-5 were the front-nine warning; the back nine collected the bill — quadruple at the par-4 11th (SI3, one of the hardest on the course) and quintuple at the par-5 16th, eight points surrendered in two holes, leaving him 3 behind Mullin at 37."
     },
     {
-      "player": "Gregg WILLIAMS",
-      "arc": "Set the tone for the day's misery with a 9 at the 3rd and never quite recovered, finishing a distant third on Stableford."
+      "player": "Jon Baker",
+      "arc": "Dropped to last in the Wooden Spoon standings at H4 with a bogey on the easiest hole on the course (par 3, SI18) and never recovered: a back-nine run of three consecutive pars H11-13 (9 points) was too late and too little, closing on 29 points — last in the field."
     },
     {
-      "player": "Jon BAKER",
-      "arc": "Slid to the foot of the Spoon race at the 4th and despite a tidy par-par-par run from 11-13, couldn't claw his way out by the end of the round."
+      "player": "Gregg Williams",
+      "arc": "Took a quadruple bogey at the par-5 3rd (SI4) early and recovered to post 33 Stableford points — third in the Trophy and 4 clear of Jon Baker in the Spoon standings; the day's stable presence in an otherwise volatile field."
     }
   ],
-  "venue_notes": "Royal Cinque Ports — TEG's 2nd visit to this championship Kent links, a former Open venue that punishes loose play when the wind blows. The scorecard suggests the wind blew."
+  "venue_notes": "Royal Cinque Ports is TEG's 2nd visit to this venue — a formidable championship links in Deal that has hosted two Open Championships, known for its exposed back nine and punishing rough. The second-visit context sharpens Mullin's 40-point round: the field had prior data on this course, and the reigning Spoon holder still led it.",
+  "narrative_vehicles": [
+    "underdog",
+    "inversion"
+  ],
+  "prominent_vehicle": "underdog",
+  "prominent_palette": "player_thread",
+  "payoffs": [
+    {
+      "seed": "Alex Baker leaks three consecutive doubles at H3-H5, an early sign of a concentration pattern",
+      "resolves_in": "Back nine — H11 and H16",
+      "payoff": "The front-nine leakage was the preview: Baker posted a quadruple at H11 (SI3) and a quintuple at H16, costing him 8 points in two holes and confirming the day's structural pattern."
+    },
+    {
+      "seed": "Jon Baker, the defending Trophy champion, bogeys the par-3 4th (SI18) to drop to last",
+      "resolves_in": "Close of round",
+      "payoff": "What looked like a blip at H4 proved to be the shape of the day: Baker's three pars H11-13 recovered ground but not enough, and he finished last at 29 points, 11 behind Mullin."
+    }
+  ]
 }
