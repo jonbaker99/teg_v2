@@ -675,8 +675,17 @@ the bottom differs.
 **How the hand-off works.** A Python process can't call claude.ai, so instead of an
 API call the pipeline writes the prompt to a file and blocks until an answer file
 appears — see `mailbox.py`. Whoever writes that answer is doing the inference. The
-chain sequences itself, because each call waits for the previous one. For a batch
-the skill spawns a subagent per prompt, so its context stays flat across ~68 calls.
+chain sequences itself, because each call waits for the previous one.
+
+**The skill answers every prompt in a fresh subagent, including single reports.**
+That is a correctness requirement, not a context-budget optimisation. One
+tournament report is ~76k tokens of prompt and answer across four calls (prompts 1
+and 2 carry the same ~20k-token evidence bundle, deliberately — the editor plans
+from it, then the writer needs it again). Answered in one conversation it not only
+compacts, it *contaminates*: a responder that has already read the bundle starts
+skimming the repeat, which is precisely what the API call it stands in for never
+does. A cold subagent reads every prompt in full, which is the behaviour being
+replicated.
 
 **Answering by hand.** `request.md` is self-contained — system prompt, user
 message, and for structured calls the full JSON Schema. The run prints the exact
