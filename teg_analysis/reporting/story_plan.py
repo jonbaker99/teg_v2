@@ -21,7 +21,7 @@ from pydantic import BaseModel
 from teg_analysis.reporting.era import trophy_metric
 from teg_analysis.reporting.events import build_notable_events
 from teg_analysis.reporting.venue import build_venue_context
-from teg_analysis.reporting import llm
+from teg_analysis.reporting import llm, prompts
 
 OUTPUT_DIR = "data/commentary"
 
@@ -251,11 +251,7 @@ AUDIENCE: the players themselves — insiders who know each other, the courses, 
 the history. They will spot any factual error instantly, and they enjoy reliving \
 the tournament and being gently ribbed.
 
-HOUSE VOICE (for the writer who follows your plan): faithful, entertaining, \
-tongue-in-cheek — in the spirit of Barney Ronay (Guardian) and Tom Peck (Times \
-political sketches). Witty and characterful, but always anchored in the facts; \
-never zany or over the top.
-
+""" + prompts.HOUSE_VOICE_SUMMARY + """
 THE SPINE — the report is built around the three competitions, in this priority order:
 1. The Trophy — the main event. The scoring metric varies by era: **Stableford** \
 (higher is better) from TEG 8 onwards; **total net-vs-par** (lower is better, \

@@ -131,6 +131,30 @@ def check_no_beat_ids(ctx: ReportContext) -> list[Finding]:
     return out
 
 
+def check_no_em_dashes(ctx: ReportContext) -> list[Finding]:
+    """Em-dashes are banned outright in the prose (Jon, 2026-08-15).
+
+    Not a style nicety: the em-dash is the construction that turns a clean fact
+    into a sprawling sentence the reader has to hold in their head, and long
+    constructions were the main readability complaint about the published
+    reports. The prompt bans them; this catches the cases where it doesn't hold.
+
+    Deterministic blocks are excluded via `_strip_code_and_tables` — standings
+    and records are D2's output, not the writer's prose. Reported as warnings:
+    a stray em-dash is worth fixing but is not a factual error, and a flagged
+    report is still written.
+    """
+    out = []
+    body = _strip_code_and_tables(ctx.text)
+    for m in re.finditer("—", body):
+        out.append(Finding(
+            "no_em_dashes", "warning",
+            "em-dash in prose; the voice rules ban them outright, "
+            "split the sentence instead",
+            _excerpt(body, m.start(), m.end())))
+    return out
+
+
 _NEGATION_RE = re.compile(r"\b(no|not|never|without|nor|neither)\b", re.IGNORECASE)
 
 
@@ -325,6 +349,7 @@ def check_swing_claims(ctx: ReportContext) -> list[Finding]:
 
 CHECKS = (
     check_no_beat_ids,
+    check_no_em_dashes,
     check_no_invented_mechanisms,
     check_not_a_week,
     check_only_participants,

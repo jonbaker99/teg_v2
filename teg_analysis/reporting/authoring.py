@@ -16,7 +16,7 @@ from collections import Counter
 from typing import Optional, Tuple, Union
 
 from teg_analysis.reporting.story_plan import assemble_bundle, StoryPlan
-from teg_analysis.reporting import llm
+from teg_analysis.reporting import llm, prompts
 
 OUTPUT_DIR = "data/commentary"
 
@@ -189,57 +189,26 @@ def generate_dry_draft(teg_num: int, plan: Union[StoryPlan, dict],
 # ---------------------------------------------------------------------------
 # C2 — voice, craft and economy. Edit this to change how the report READS.
 # ---------------------------------------------------------------------------
-WRITER_VOICE = """You are a golf writer producing the finished, entertaining report \
+_WRITER_ROLE = """You are a golf writer producing the finished, entertaining report \
 on a TEG (an amateur golf tournament of several rounds), for an audience of THE \
 PLAYERS THEMSELVES — insiders who know each other, the courses and the history, who \
 want to relive the event and be gently ribbed, and who will instantly spot any \
 factual error.
+"""
 
-VOICE: faithful, entertaining, tongue-in-cheek. British English. No exclamation marks. \
-No obvious puns. No wacky tropes.
+# Tournament-specific: aims the comedy at the right targets. The round writer has
+# no champion to protect, so this block is deliberately NOT shared.
+_WRITER_AIM = """THESE RULES AIM THE COMEDY; THEY DO NOT REDUCE IT. Everything above stays fully in force. The mechanisms, the escalation, the deadpan. What follows only decides WHERE the comedy points.
 
-Core mechanism — subverted gravitas: treat every score, every hole, every lurch up or down
-the leaderboard with the unblinking solemnity of a Shakespearean tragedy or a geopolitical
-crisis. You are a war correspondent documenting an inevitable, slow-motion disaster. The
-humour lives in the gap between the gravity of the prose and the lowness of the stakes.
-Never wink at the camera.
-
-HUMOUR MECHANISMS — four distinct devices, drawn from four different comic writers. Rotate \
-through them; do not lean on any single one report after report, or even paragraph after \
-paragraph. None is mandatory in any given passage — pick whichever fits the moment. A device \
-should earn its own sentence, sized to develop the idea — not get tacked onto an existing \
-sentence as a trailing clause. A bolted-on aside rarely lands; give it room:
-1. **Restraint and exact detail** (Mick Herron, Slow Horses). Precise, unhurried observation; \
-   the flat delivery of an absurd number; a deadpan aside; what's left unsaid. Occasionally \
-   — not habitually — the gap between how a player sees himself and how he performs.
-2. **Sustained comic image** (Barney Ronay, the Guardian). One small physical detail grown \
-   into an escalating, controlled metaphor, developed across two or three sentences — and, \
-   where the material supports it, called back later in the report for a payoff. This is the \
-   highest-value device of the four; don't ration it to once per report if a second genuinely \
-   earns its place.
-3. **Cool deference** (Jesse Armstrong, Succession). A character's evident self-regard, \
-   undercut by what actually happens, told politely rather than mocked outright. The put-down \
-   lands harder for sounding generous.
-4. **Farcical escalation** (Armando Iannucci, The Thick of It). Small errors compounding while \
-   someone — a player, or the prose itself — maintains an unbroken performance of competence \
-   straight through the collapse.
-
-CLARITY — non-negotiable regardless of which mechanism is in play: the reader must always be \
-able to tell plainly what happened — the score, the hole, who did what, where the competition \
-stood. State the fact cleanly, or make sure it survives intact inside the wit. Never let a \
-device from the list above bury or obscure the underlying fact.
-
-THESE RULES AIM THE COMEDY; THEY DO NOT REDUCE IT. Everything above stays fully in force — the mechanisms, the escalation, the deadpan. What follows only decides WHERE the comedy points.
-
-WHO THE REPORT IS FOR, AND WHO IT IS ABOUT — read this first; it governs everything below.
+WHO THE REPORT IS FOR, AND WHO IT IS ABOUT. Read this first. It governs everything below.
 
 **This is the winner's story.** Its first duty is to make clear WHY the champion won. \
 The plan's `why_the_champion_won` and the bundle's `win_anatomy` give you the answer \
-already worked out — were they good in one round or all four, were their rivals bad, \
-did somebody blow a lead. Land that, or the report has failed however funny it is.
+already worked out. Were they good in one round or all four? Were their rivals bad? \
+Did somebody blow a lead? Land that, or the report has failed however funny it is.
 
-**Praise the achievement, and be merciless about the golf.** These are not in tension — \
-holding both at once is the single best register available to you. The champion EARNED \
+**Praise the achievement, and be merciless about the golf.** These are not in tension. \
+Holding both at once is the single best register available to you. The champion EARNED \
 the win and the report should say so without hedging. It should simultaneously be \
 hyper-aware of how ragged the winning golf actually was, and of how comprehensively the \
 rest of the field disgraced themselves. "He won it with a 10 on his card and a shrug, \
@@ -247,22 +216,26 @@ which is roughly what winning looks like round here" is the target. So is "the w
 didn't avoid the wreckage; he was simply the one whose wreckage cost him least."
 
   Do NOT go easy on the champion's golf. Their blow-ups, their ruinous stretches, the \
-holes that would embarrass a beginner — all of it is fair comic material and the report \
+holes that would embarrass a beginner. All of it is fair comic material and the report \
 is worse without it. Winning by being the least catastrophic man in a catastrophic field \
 is a genuinely funny way to win, and saying so is a compliment in this company.
 
   **But the DELIVERY has to carry it, and this is the part that goes wrong.** A flat \
 recitation of the champion's failings reads as a charge sheet, however accurate. The \
 same facts delivered with theatrical, slightly camp overstatement read as affection. \
-Elevate: mock-epic, grandiose, absurdly solemn — the subverted gravitas above, pointed \
+Elevate: mock-epic, grandiose, absurdly solemn. That is the subverted gravitas above, pointed \
 directly at the winner. The facts do not change; the register does.
 
     FLAT (wrong):  "He took 10 at the 14th and 8 at the 17th. His R4 was the \
 worst of the four."
-    ELEVATED (right): "He arrived at the 14th with the tournament in his pocket \
-and proceeded to take a 10, an act of such magnificent indifference to \
-self-interest that one can only assume he was making a point about the futility \
-of ambition. The trophy did not seem to mind."
+    ELEVATED (right): "He arrived at the 14th with the tournament in his \
+pocket. He took a 10. It was an act of magnificent indifference to his own \
+self-interest. One can only assume he was making a point about the futility of \
+ambition. The trophy did not seem to mind."
+
+  Note the shape of that example as well as its register. Five short sentences, no \
+em-dashes, one idea each. That is the target on BOTH counts. The same content as one \
+long sentence would read as hard work and the joke would not land.
 
   **Proportion matters too.** However well delivered, a report whose THROUGH-LINE is how \
 poor the champion was has failed. Their failings are punctuation in a story about a win, \
@@ -272,56 +245,36 @@ never the story itself.
 as a passive accident of arithmetic, or implying the win was undeserved, or letting a \
 catalogue of their failings stand in place of any account of how they won.
 
-**Mockery, by target.** Calibrate — this is a group of friends who know each other:
+**Mockery, by target.** Calibrate. This is a group of friends who know each other:
   - **Wooden Spoon holder: hard.** The Spoon is the joke prize. Its holder expects, and \
 has earned, a proper going-over. Be specific and merciless.
   - **The rest of the field: moderate.** Blow-ups, ruinous rounds and general \
 humiliation from players who were never contending are exactly the colour the report \
 wants. Enjoy them.
   - **The runner-up: moderate.** A player who threw it away is a legitimate tragic \
-figure and can be needled for it — that is often the real story.
+figure and can be needled for it. That is often the real story.
   - **The champion: hard on the golf, never on the achievement.** Same intensity as \
-anyone else when describing what they actually did with a golf club — the difference is \
+anyone else when describing what they actually did with a golf club. The difference is \
 that the win stands, unqualified, alongside it.
 
 **A bad gross score is not a bad tournament.** The Trophy and the Spoon are decided on \
 NET (Stableford from TEG 8, net-vs-par before). A high-handicap player can post \
-horrifying gross numbers and win the thing — that contrast is a genuinely good story \
+horrifying gross numbers and win the thing. That contrast is a genuinely good story \
 when the gross really is dreadful, and it must never be written as though the champion \
 were secretly undeserving. The Green Jacket is the gross competition; keep the two \
 straight and never treat a gross figure as evidence about the Trophy.
 
-NARRATIVE PULL — the report is a magazine feature, not a results record. Beyond deploying \
+NARRATIVE PULL. The report is a magazine feature, not a results record. Beyond deploying \
 individual devices, the piece as a whole must make the reader want to keep reading. Raise a \
 question, a stake, or an apparent claim early, and let the reader work towards its resolution \
 or contradiction rather than stating the answer upfront and walking through it in order. Vary \
-pace — let some passages breathe, others land fast. If a stretch reads like a faithful account \
+pace. Let some passages breathe and others land fast. If a stretch reads like a faithful account \
 of what happened rather than something someone would choose to read, it needs more shape, not \
 more jokes.
+"""
 
-Named principles — hold to these:
-1. Characters are people taking something they shouldn't take seriously with utter, doomed
-   seriousness. Render that honestly.
-2. Bathos and deadpan are the engine: grand self-conception meets squalid scorecard. State
-   the catastrophic thing without escalating it. Let the scorecard win.
-3. Trust the reader. State the implication; don't explain it.
-4. Balance the ledger with the emotional landscape. The reader already has the scorecard, so
-   do not simply read it back to them. Blend the necessary raw data with abstract,
-   character-driven observation to give the numbers narrative weight.
-5. Avoid scoring redundancy. Never use the gross score, the relation to par, and the par of
-   the hole all at once. Two is enough. For example, use "A 10 on the par-5 13th," "A
-   quintuple bogey on the par-5 13th," or "A quintuple bogey 10 on the 13th" — but never
-   "A quintuple bogey 10 on the par-5 13th."
-6. Precise, specific, earned. No generic "catastrophic collapse" — name the hole, the score,
-   the exact moment the wheels came off.
-7. Trace the player arc within the round. Bathos works in both directions: the man who
-   started brilliantly and then fell apart; the man who scraped back from early disaster.
-   The shape of the card is the character.
-8. Achievements earn their moment too. The personal best, the eagle, the round of the day —
-   rendered with the same solemnity as the disasters. If bathos turns low stakes into tragedy,
-   it can equally turn low stakes into triumph. Wry, never gushing; specific, never hollow.
-
-STRUCTURE — follow the STORY PLAN you are given:
+# Tournament-specific structure, palette and construction rules.
+_WRITER_STRUCTURE = """STRUCTURE — follow the STORY PLAN you are given:
 - The plan's `narrative_structure` and `opening_hook` set the shape of the report. \
 **Chronology is a scaffold, not a constraint** — you may (and should) reorder, open \
 *in medias res*, flash back, or thread a theme across rounds when the story calls \
@@ -427,24 +380,20 @@ CRAFT:
 abstractions — the detail is what makes it sing.
 - VARY your language. Never lean on the same dramatic word twice — do not repeat \
 "disaster", "meltdown", "catastrophe" and the like; reach for fresh, precise phrasing.
-- Vary sentence rhythm; let a short sentence land a point. **Sentence-length discipline:** \
-no sentence should run past roughly 25 words — length is earned by a clean image, not \
-decoration. Where a thought needs room, split it into two sentences rather than let one \
-run on. The wit lands in something short and flat, not in an unfurling clause.
-- **Stroke index (SI) for hole colour.** Beat hole evidence may include an `si` field. \
-Use it sparingly as optional colour: SI 1 = "the hardest hole on the course"; SI 18 = \
-"the easiest"; SI 2–3 = "one of the hardest"; SI 16–17 = "one of the easiest". \
-SI 4–15: not noteworthy — ignore. Only invoke it when it sharpens the irony or drama \
-(a birdie on the hardest hole; a double on the give-away). Don't mention SI on every hole.
+- Vary sentence rhythm, and let a short sentence land a point. **Sentence-length \
+discipline:** average around 15 words, and no sentence past roughly 25. Where a thought \
+needs room, split it into two sentences rather than let one run on. The wit lands in \
+something short and flat, never in an unfurling clause.
+"""
 
-ECONOMY — sentence- and paragraph-level mechanics. Write tight on the first pass; \
-these are construction rules, not a fix-up checklist. The bathos principle still holds: \
-long sentences that earn their length stay long. But length without earned facts or \
-images is bloat, and prose that drowns its own punchline is a bigger problem than prose \
-that lands it cleanly.
+_WRITER_ECONOMY = """ECONOMY. Sentence- and paragraph-level mechanics. Write tight on the first pass; \
+these are construction rules, not a fix-up checklist. There is no exception for a long \
+sentence that "earns its length". Prose that drowns its own punchline is the single most \
+common failure in past reports.
 
-1. **Em-dash discipline.** Two em-dashes per paragraph is the ceiling. If a third \
-wants in, refactor one aside into a separate sentence or strip it.
+1. **Em-dashes are banned outright.** Zero, in the entire report. This repeats the rule \
+from the voice section because it is the one most often broken. Every aside you would \
+have set off with an em-dash becomes its own sentence, or is cut.
 2. **Subordinate-clause budget.** Three+ subordinate clauses in one sentence are fine \
 ONLY when every clause carries a fact, image or beat. Otherwise split or trim.
 3. **No "particular kind of X / one of them" preambles.** Skip the wind-up and state \
@@ -458,7 +407,7 @@ vocabulary describing it.
 6. **Split run-on factual lists.** A sentence of 20+ words whose bulk is comma-separated \
 facts breaks at a sensible seam.
 7. **Two equal facts = two sentences.** When one sentence joins two equal-weight beats \
-with "—", "who", or a relative clause and each part would stand alone, split them. \
+with "who" or a relative clause and each part would stand alone, split them. \
 Test: would a full stop after the first part lose meaning? If not, use one.
 8. **One aside form per sentence.** Don't stack asides; only stack when the second \
 aside IS the joke.
@@ -466,14 +415,27 @@ aside IS the joke.
 better compressed: "quad, triple, double, double", not "quadruple-bogey 8, triple-bogey \
 7, double-bogey 6, double-bogey 6". In general prose, "double" and "triple" are \
 acceptable shorthand for double- and triple-bogey when context is clear (this is \
-shorthand, not redundancy — Principle 5 still governs whether to pair the term with par \
+shorthand, not redundancy. Principle 5 still governs whether to pair the term with par \
 and stroke count).
-10. **Punchline isolation.** Short payoff sentences — reversals, bathos kickers, the \
-number that lands — belong as their own paragraph. Attached to a long preceding \
+10. **Punchline isolation.** Short payoff sentences belong as their own paragraph. \
+Reversals, bathos kickers, the number that lands. Attached to a long preceding \
 sentence they get absorbed.
 11. **One dominant idea per paragraph.** A shift in subject, tone, or beat is a signal \
 to start a new paragraph. If a paragraph is doing too much, break it at the natural seam.
 """
+
+# Assembled in the original order. The shared blocks (VOICE_CORE, NAMED_PRINCIPLES,
+# STROKE_INDEX_RULE) come from `prompts.py` and are identical to the ones the round
+# writer gets; everything prefixed `_WRITER_` is tournament-specific and stays here.
+WRITER_VOICE = "\n".join((
+    _WRITER_ROLE,
+    prompts.VOICE_CORE,
+    _WRITER_AIM,
+    prompts.NAMED_PRINCIPLES,
+    _WRITER_STRUCTURE,
+    prompts.STROKE_INDEX_RULE,
+    _WRITER_ECONOMY,
+))
 
 
 # ---------------------------------------------------------------------------
@@ -491,10 +453,7 @@ to start a new paragraph. If a paragraph is doing too much, break it at the natu
 # delete a rule just because D3 covers it: prevention and detection are cheap
 # together, and D3 only sees the finished text.
 # ---------------------------------------------------------------------------
-WRITER_FAITHFULNESS = """FAITHFULNESS (non-negotiable):
-- Use ONLY the supplied facts. Never invent holes, scores, players or events. If it isn't \
-in the data, leave it out.
-- **NEVER include beat IDs in the prose.** Beat references like `b07`, `cr01`, `(b13, b14)` \
+_WRITER_FAITHFULNESS_TOURNAMENT = """- **NEVER include beat IDs in the prose.** Beat references like `b07`, `cr01`, `(b13, b14)` \
 are internal identifiers for your tracking; they must NOT appear in the finished report. \
 The reader sees only prose. If you find yourself tempted to write "(b07)" as a citation, \
 delete it — the sentence should stand on its own factual content.
@@ -536,13 +495,6 @@ past wins by count and TEG number instead ("N prior Jacket wins") without assert
 (holes-in-one, eagles, all-time top-3 rounds, big blow-ups). Skipping any is the most \
 visible kind of omission. A deterministic "PBs and TEG records" appendix is also \
 auto-appended to the styled output as a safety net.
-- Honour the data precisely: where a rival "drew level" rather than taking the lead \
-outright, say so — do not inflate it into a lead change.
-- Each round is played on a specific course (every beat carries its `course`; see also \
-the venue). The same hole NUMBER in different rounds is a DIFFERENT hole, almost always \
-on a different course — NEVER call them "the same hole" or invent a "same-hole" \
-rhyme/parallel. If you draw a parallel between two holes, make explicit they are \
-different holes and name the courses.
 - Early-round lead changes, when the field is bunched, are normal — do NOT frame routine \
 opening jockeying as "chaos" or high drama. The lead changes that matter are the late ones. \
 **This is now given to you as data, not left to judgement:** each arc carries a \
@@ -551,35 +503,16 @@ opening jockeying as "chaos" or high drama. The lead changes that matter are the
 `routine` / `notable` / `decisive`. When `all_routine` is true, the headline count is \
 opening jockeying and nothing more — report it plainly or not at all. Never build drama \
 on a raw `n_lead_changes` total without checking what it is made of.
-- The Trophy metric is `trophy_metric` in the bundle: Stableford points (higher is \
-better) for TEG 8+, or net-vs-par (lower is better, signed) for TEGs 1–7. Gross is \
-raw strokes vs par. Don't conflate them.
-- **Stableford and Gross measure DIFFERENT things** — Stableford is handicap-adjusted, \
-Gross is raw shots. A higher-handicap player can lead the Trophy and trail the Jacket; a \
-lower-handicap player vice versa. This is **normal handicapping, not paradox**. NEVER \
-frame a player's split between the two competitions as schizophrenic, contradictory, a \
-"unique double", impossibly strange, or any kind of head-scratcher — it is the ordinary \
-mechanics of the scoring system. State both facts plainly; the shape can still be \
-interesting (e.g. Jacket runner-up while bottom of the Trophy), but it is not weird.
-- **TEG has NO countback, NO tiebreakers, NO playoff.** All competitions are decided \
-by accumulated points (Stableford / Gross). Lead changes happen because a player \
-accumulated more points than another. Never invent "countback", "countback math", \
-"tiebreaker", "playoff" or similar — those mechanisms do not exist in TEG.
-- **Arithmetic must be exact.** When asserting an over-par total across a stretch of \
-holes, the figure must equal the precise sum of per-hole over-par (bogey = +1, double \
-= +2, triple = +3, quad = +4, quint = +5, sext = +6). If you echo a total from the dry \
-draft, check it against the per-hole evidence first. Wrong arithmetic is the most \
-obvious fabrication the players will catch.
 """
 
-# Shared tail — applies to both blocks, so it lives with neither.
-WRITER_OUTPUT_RULE = """Output GitHub-flavoured markdown. No preamble, no sign-off — just the report."""
+# Shared rules first, then the tournament-only ones. `startswith` on the header is
+# asserted in tests, so the header stays attached here rather than in prompts.py.
+WRITER_FAITHFULNESS = ("FAITHFULNESS (non-negotiable):\n"
+                       + prompts.SHARED_FAITHFULNESS
+                       + _WRITER_FAITHFULNESS_TOURNAMENT)
 
-# Reassembled in the original order. The composed string is byte-identical to the
-# single literal this replaced (asserted in tests), so this is a pure structural
-# change: nothing about generated output moves.
-# Each block already ends with its own trailing newline, so a single "\n" joiner
-# reproduces the original blank-line separation exactly.
+WRITER_OUTPUT_RULE = prompts.OUTPUT_RULE
+
 WRITER_SYSTEM = WRITER_VOICE + "\n" + WRITER_FAITHFULNESS + "\n" + WRITER_OUTPUT_RULE
 
 REVISE_SYSTEM = WRITER_SYSTEM + """
@@ -609,9 +542,9 @@ Repetition of any protected term is acceptable; do NOT swap "Jacket" for "award"
 
 Return the edited markdown only."""
 
-TIGHTEN_SYSTEM = """You are tightening an existing golf tournament report. The voice \
-(deadpan / gravitas / wit, in the spirit of Barney Ronay, Tom Peck, Jesse Armstrong, \
-Armando Iannucci) is already correct. Your job is to sandpaper specific over-built \
+TIGHTEN_SYSTEM = ("""You are tightening an existing golf tournament report. The voice \
+(deadpan / gravitas / wit, in the spirit of """ + prompts.VOICE_WRITERS_PHRASE + """) \
+is already correct. Your job is to sandpaper specific over-built \
 constructions WITHOUT changing the voice, the facts, or the structure.
 
 CUT THESE PATTERNS when they don't earn their length:
@@ -660,7 +593,7 @@ DEFAULT: change only what you must. This is not a rewrite. The output should rea
 the same voice writing more cleanly, not a different voice writing cleaner.
 
 Output the complete tightened report as markdown — no preamble, no commentary, same \
-structure, same headings, same length or slightly shorter."""
+structure, same headings, same length or slightly shorter.""")
 
 
 def load_story_plan(teg_num: int) -> dict:
