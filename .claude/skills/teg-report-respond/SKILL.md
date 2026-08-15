@@ -12,13 +12,30 @@ plan usage rather than per-token API billing, which is the entire point.
 
 Run from the repo root — every path is cwd-relative.
 
+## Before you start: which run?
+
+```bash
+python -m teg_analysis.reporting.mailbox status
+```
+
+Usually there is one live run and you can ignore this. If **more than one** is
+listed, every command below needs `--run <id>` — ask the user which one they want
+served rather than picking. A second run is often a deliberate paste experiment
+aimed at a different model.
+
+Runs marked `responder=manual` are **not yours**. They are prompts the user is
+pasting into ChatGPT or Gemini by hand, and answering them here would put
+Claude-written prose into a directory labelled as another model's work. The
+commands below skip them automatically; do not override that with `--run` unless
+the user explicitly asks.
+
 ## The loop
 
 Repeat until the run finishes:
 
 1. **Wait for work.**
    ```bash
-   python -m teg_analysis.reporting.mailbox wait
+   python -m teg_analysis.reporting.mailbox wait          # add --run <id> if several are live
    ```
    It blocks and prints one of:
    - a request directory path → answer it (step 2)
@@ -82,9 +99,11 @@ For a single report (four or five calls), answering inline is fine and faster.
 ## Checking on things
 
 ```bash
-python -m teg_analysis.reporting.mailbox status   # active run + what is pending
+python -m teg_analysis.reporting.mailbox status   # live runs + what is pending
 python -m teg_analysis.reporting.mailbox show     # print the next pending request
 ```
+
+Both take `--run <id>` when several runs are live.
 
 ## When it ends
 

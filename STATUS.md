@@ -35,14 +35,20 @@ Design detail lives in docstrings in `analysis/live_round.py` and `webapp/README
 
 ## Recent change log
 
-### 2026-08-15 — Report generation runs on plan usage by default
+### 2026-08-15 — Report generation can run on plan usage, or in any other model
 
 Report generation no longer has to bill per API call. `llm.py` gained a provider switch —
-`TEG_LLM_PROVIDER=api|agent` — and **`agent` is the default**, so a run only spends API credit
-when asked to. Under `agent` the pipeline writes each prompt to `data/llm_mailbox/` and waits;
-a Claude Code skill (`teg-report-respond`) answers it in-session, which draws on claude.ai plan
-usage instead. The same request file is self-contained enough to paste into ChatGPT or Gemini,
-and `TEG_REPORT_VARIANT` keeps each model's output in its own directory for comparison.
+`TEG_LLM_PROVIDER=api|agent` — with **`api` still the default**, because it is the only mode that
+works with nobody present. Three ways to run, one flag each:
+
+- `--tegs 2-18` — the API, as before.
+- `--tegs 14 --plan` — the pipeline writes each prompt to `data/llm_mailbox/` and waits; the
+  `teg-report-respond` Claude Code skill answers it in-session, drawing on claude.ai plan usage.
+- `--tegs 14 --paste gpt5` — same hand-off, but for you to paste into ChatGPT or Gemini, with
+  output kept in `data/commentary/variants/gpt5/`.
+
+Both hand-off modes can run at once: runs are discovered by scanning, and a paste run is marked
+manual so the skill cannot answer prompts meant for another model.
 
 The pipeline itself is unchanged — `backfill_all` and the four-call chain have one
 implementation under either provider. Structured output, which the API path got free from

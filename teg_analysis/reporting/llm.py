@@ -2,16 +2,18 @@
 
 Two providers, one switch:
 
-- **`agent` (the default).** The prompt is written to a file and the process waits
-  for an answer. Whoever answers — the `teg-report-respond` skill in a Claude Code
-  session, or you pasting into a browser tab — is the thing doing the inference, so
-  it draws on plan usage and costs nothing per token. See `mailbox.py`.
-- **`api`.** The Anthropic API, as before: prompt caching on the large stable system
-  prompt, `messages.parse` for structured output, adaptive thinking. Costs money.
+- **`api` (the default).** The Anthropic API, as before: prompt caching on the large
+  stable system prompt, `messages.parse` for structured output, adaptive thinking.
+  Bills per token, and needs nobody present — which is why it stays the default.
+- **`agent`.** The prompt is written to a file and the process waits for an answer.
+  Whoever answers — the `teg-report-respond` skill in a Claude Code session, or you
+  pasting into a browser tab — is the thing doing the inference, so it draws on
+  claude.ai plan usage and costs nothing per token. See `mailbox.py`.
 
-Set the provider with `TEG_LLM_PROVIDER=api|agent`, or `llm.use_provider("api")`
-around a block. **The default is `agent` so no run ever spends API credit unless
-it was asked for**; `api` is the deliberate choice for unattended batch work.
+Set the provider with `TEG_LLM_PROVIDER=api|agent`, `llm.use_provider("agent")`
+around a block, or — easiest — `--plan` / `--paste NAME` on the backfill CLI.
+Plan usage is opt-in per run because it only works with a responder present; a
+run that hands off with nobody listening just waits.
 
 The switch is the only thing callers see. Both providers take the same arguments
 and return the same `(result, usage)` shape, so the pipeline — the four-call
@@ -36,12 +38,14 @@ from pydantic import BaseModel
 
 DEFAULT_MODEL = "claude-opus-5"
 
-# Providers. `agent` is the default: it costs nothing, and choosing to spend API
-# credit should be an explicit act rather than what happens when you forget.
+# Providers. `api` stays the default: it is the unattended path, it needs nobody
+# sitting in the middle, and every existing caller — notebook, script, backfill —
+# keeps working unchanged. Plan usage is opted into per run (`--plan`, `--paste`,
+# `TEG_LLM_PROVIDER=agent`), because it requires a responder to be present.
 PROVIDER_API = "api"
 PROVIDER_AGENT = "agent"
 PROVIDERS = (PROVIDER_AGENT, PROVIDER_API)
-DEFAULT_PROVIDER = PROVIDER_AGENT
+DEFAULT_PROVIDER = PROVIDER_API
 ENV_PROVIDER = "TEG_LLM_PROVIDER"
 
 #: How many times a structured call is re-asked when the answer fails schema

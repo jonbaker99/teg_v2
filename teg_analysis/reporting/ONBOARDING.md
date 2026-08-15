@@ -106,10 +106,11 @@ build_story_plan(teg_num, dry_run=True)   # writes teg_N_story_plan_prompt.md
 
 Run from the repo root with `venv/bin/python`.
 
-**These calls run on claude.ai plan usage by default** — each prompt is written to
-`data/llm_mailbox/` and waits for an answer, which the `teg-report-respond` skill (or you, by
-hand) provides. No API key is involved. Set `TEG_LLM_PROVIDER=api` to call the Anthropic API
-instead, which needs `ANTHROPIC_API_KEY` (else a gitignored `secrets.toml` at the repo root).
+**These calls hit the Anthropic API by default**, which needs `ANTHROPIC_API_KEY` (else a
+gitignored `secrets.toml` at the repo root). To run the same prompts on claude.ai plan usage
+instead — no key, no per-token cost — add `--plan` to the backfill CLI or wrap the call in
+`llm.use_provider("agent")`; each prompt is then written to `data/llm_mailbox/` and waits for
+the `teg-report-respond` skill (or you) to answer it.
 Full detail: [README.md](README.md) → *Who answers the prompts*.
 
 ---

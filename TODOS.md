@@ -24,7 +24,7 @@ LLM-powered tournament and round reports. **Read [`STATUS.md`](teg_analysis/repo
 
 Two open workstreams:
 - **Report quality.** The scoring and voice layers were reworked end to end on 2026-08-14 (counterfactual `importance`, symmetric detection, `win_anatomy`, storyline hierarchy, champion register). TEGs 4, 8, 12 and 18 were regenerated as tests and read well. **Outstanding: regenerate the full library (2–18), ~90 min.** Nothing is user-visible yet — every run used `style=False`, so `*_report_styled.md`, which the site serves, still holds older reports until a styling pass runs. Round reports (~50) were not touched and are a pipeline generation behind.
-- **Get off per-call API billing — built 2026-08-15, not yet run on a real report.** Report generation now defaults to claude.ai plan usage: prompts hand off through `data/llm_mailbox` and the `teg-report-respond` skill (or a browser paste) answers them; `--provider api` switches back. See [README.md](teg_analysis/reporting/README.md) → *Who answers the prompts*. **Outstanding: generate one real report each way to confirm quality matches**, then decide whether the full 2–18 regeneration runs on plan usage or the API.
+- **Get off per-call API billing — built 2026-08-15, not yet run on a real report.** Report generation can now run on claude.ai plan usage (`--plan`) or hand prompts to another model for pasting (`--paste gpt5`); the API stays the default. See [README.md](teg_analysis/reporting/README.md) → *Who answers the prompts*. **Outstanding: generate one real report each way to confirm quality matches**, then decide whether the full 2–18 regeneration runs on plan usage or the API.
 
 The experiment log is in [`EXPERIMENTS.md`](teg_analysis/reporting/EXPERIMENTS.md).
 

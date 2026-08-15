@@ -36,9 +36,17 @@ def _isolated(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     monkeypatch.delenv(paths.ENV_VARIANT, raising=False)
     monkeypatch.delenv(llm.ENV_PROVIDER, raising=False)
+    monkeypatch.delenv(mailbox.ENV_RESPONDER, raising=False)
     mailbox.reset_active_run()
     yield
     mailbox.reset_active_run()
+
+
+@pytest.fixture
+def plan_usage():
+    """Most of these tests exercise the agent path; the default provider is api."""
+    with llm.use_provider(llm.PROVIDER_AGENT):
+        yield
 
 
 def _answer_in_background(replies, timeout=10.0):
@@ -69,14 +77,14 @@ def _answer_in_background(replies, timeout=10.0):
 # ---------------------------------------------------------------------------
 # The switch
 # ---------------------------------------------------------------------------
-def test_default_provider_is_plan_usage():
-    """Nobody should spend API credit by forgetting to set something."""
-    assert llm.get_provider() == llm.PROVIDER_AGENT
-
-
-def test_env_var_selects_api(monkeypatch):
-    monkeypatch.setenv(llm.ENV_PROVIDER, "api")
+def test_default_provider_is_the_api():
+    """The default has to work with nobody present, which plan usage does not."""
     assert llm.get_provider() == llm.PROVIDER_API
+
+
+def test_env_var_selects_plan_usage(monkeypatch):
+    monkeypatch.setenv(llm.ENV_PROVIDER, "agent")
+    assert llm.get_provider() == llm.PROVIDER_AGENT
 
 
 def test_unknown_provider_raises(monkeypatch):
@@ -104,7 +112,7 @@ def test_api_provider_without_key_says_how_to_avoid_it(monkeypatch):
 # ---------------------------------------------------------------------------
 # The hand-off
 # ---------------------------------------------------------------------------
-def test_text_call_round_trips():
+def test_text_call_round_trips(plan_usage):
     t, served = _answer_in_background(["the finished prose"])
     text, usage = llm.generate_text("SYS", "USER", stage="report", label="teg14")
     t.join(timeout=5)
@@ -114,7 +122,7 @@ def test_text_call_round_trips():
     assert "report" in str(served[0])
 
 
-def test_request_file_is_self_contained():
+def test_request_file_is_self_contained(plan_usage):
     """It has to work as a paste into ChatGPT, not just as an agent's input."""
     t, _ = _answer_in_background(["ok"])
     llm.generate_text("THE-SYSTEM-PROMPT", "THE-USER-MESSAGE", stage="report",
@@ -126,7 +134,7 @@ def test_request_file_is_self_contained():
     assert "response.md" in request            # tells the responder where to write
 
 
-def test_structured_call_validates_without_messages_parse():
+def test_structured_call_validates_without_messages_parse(plan_usage):
     reply = json.dumps({"verdict": "won it", "vehicle": "counterfactual"})
     t, _ = _answer_in_background([reply])
     obj, usage = llm.generate_structured("SYS", "USER", Tiny, stage="story_plan",
@@ -137,7 +145,7 @@ def test_structured_call_validates_without_messages_parse():
     assert usage.attempts == 1
 
 
-def test_schema_travels_in_the_prompt():
+def test_schema_travels_in_the_prompt(plan_usage):
     """A foreign model has no Pydantic — the enum vocabulary must be in the text."""
     reply = json.dumps({"verdict": "v", "vehicle": "hero_arc"})
     t, _ = _answer_in_background([reply])
@@ -149,7 +157,7 @@ def test_schema_travels_in_the_prompt():
     assert "response.json" in request
 
 
-def test_fenced_json_is_accepted():
+def test_fenced_json_is_accepted(plan_usage):
     """Chat models fence JSON by reflex; a retry round-trip for that is waste."""
     reply = "```json\n" + json.dumps({"verdict": "v", "vehicle": "hero_arc"}) + "\n```"
     t, _ = _answer_in_background([reply])
@@ -158,7 +166,7 @@ def test_fenced_json_is_accepted():
     assert obj.vehicle == "hero_arc"
 
 
-def test_invalid_json_is_re_asked_with_the_error():
+def test_invalid_json_is_re_asked_with_the_error(plan_usage):
     """The API path has no retry at all; this is the one place the agent path wins."""
     bad = json.dumps({"verdict": "v", "vehicle": "decisive_moment"})   # wrong vocabulary
     good = json.dumps({"verdict": "v", "vehicle": "counterfactual"})
@@ -172,7 +180,7 @@ def test_invalid_json_is_re_asked_with_the_error():
     assert "decisive_moment" in retry          # shows what was rejected
 
 
-def test_gives_up_after_max_attempts():
+def test_gives_up_after_max_attempts(plan_usage):
     bad = json.dumps({"verdict": "v", "vehicle": "nonsense"})
     t, _ = _answer_in_background([bad] * llm.MAX_STRUCTURED_ATTEMPTS)
     with pytest.raises(RuntimeError, match="no valid Tiny"):
@@ -180,7 +188,7 @@ def test_gives_up_after_max_attempts():
     t.join(timeout=10)
 
 
-def test_timeout_names_the_unanswered_request(monkeypatch):
+def test_timeout_names_the_unanswered_request(monkeypatch, plan_usage):
     monkeypatch.setenv(mailbox.ENV_TIMEOUT, "1")
     with pytest.raises(mailbox.MailboxTimeout, match="request.md"):
         llm.generate_text("SYS", "USER", stage="report", label="teg14")
@@ -189,16 +197,81 @@ def test_timeout_names_the_unanswered_request(monkeypatch):
 # ---------------------------------------------------------------------------
 # Discovery — what the responder sees
 # ---------------------------------------------------------------------------
-def test_only_the_active_run_is_served():
-    """A crashed run must not leave requests that look pending forever."""
+def _request_in(run, stage="report", label="teg1"):
+    directory = run.next_dir(stage, label)
+    mailbox.write_request(directory, system="s", user="u", stage=stage,
+                          label=label, expects="text")
+    return directory
+
+
+def test_a_finished_run_is_not_served():
+    """A finished run must not leave requests that look pending forever."""
     run = mailbox.Run("stale-run").start()
-    directory = run.next_dir("report", "teg1")
-    mailbox.write_request(directory, system="s", user="u", stage="report",
-                          label="teg1", expects="text")
+    _request_in(run)
     assert len(mailbox.pending_requests()) == 1
     run.finish()
     assert mailbox.pending_requests() == []
     assert mailbox.current_run_dir() is None
+
+
+# ---------------------------------------------------------------------------
+# Two runs at once — plan usage in one window, a paste experiment in another
+# ---------------------------------------------------------------------------
+def test_two_live_runs_are_both_visible():
+    """A second run must not hide the first, which a single global pointer did."""
+    a = mailbox.Run("run-a").start()
+    b = mailbox.Run("run-b").start()
+    _request_in(a)
+    _request_in(b)
+    assert {p.name for p in mailbox.active_runs()} == {"run-a", "run-b"}
+
+
+def test_ambiguity_is_an_error_not_a_guess():
+    """Guessing would have one model answer another model's prompts."""
+    mailbox.Run("run-a").start()
+    mailbox.Run("run-b").start()
+    with pytest.raises(mailbox.AmbiguousRun, match="--run"):
+        mailbox.resolve_run()
+
+
+def test_naming_a_run_resolves_the_ambiguity():
+    mailbox.Run("run-a").start()
+    mailbox.Run("run-b").start()
+    assert mailbox.resolve_run("run-b").name == "run-b"
+
+
+def test_a_paste_run_is_invisible_to_the_skill(monkeypatch):
+    """The crossover hazard: Claude answering prompts meant for ChatGPT."""
+    monkeypatch.setenv(mailbox.ENV_RESPONDER, mailbox.RESPONDER_MANUAL)
+    manual = mailbox.Run("paste-run").start()
+    _request_in(manual)
+    monkeypatch.delenv(mailbox.ENV_RESPONDER)
+    agent = mailbox.Run("skill-run").start()
+    _request_in(agent)
+
+    # What the skill sees, via `wait`/`next` — only its own run.
+    assert mailbox.resolve_run(responder=mailbox.RESPONDER_AGENT).name == "skill-run"
+    # And with only the paste run live, the skill sees nothing at all.
+    agent.finish()
+    assert mailbox.resolve_run(responder=mailbox.RESPONDER_AGENT) is None
+    assert mailbox.resolve_run(responder=mailbox.RESPONDER_MANUAL).name == "paste-run"
+
+
+def test_responder_defaults_to_agent_when_unrecorded(tmp_path):
+    """Runs started before responders existed must still be servable."""
+    run = mailbox.Run("legacy").start()
+    (run.dir / mailbox.RUN_META_NAME).write_text(json.dumps({"pid": 1}))
+    assert mailbox.run_responder(run.dir) == mailbox.RESPONDER_AGENT
+
+
+def test_pending_is_scoped_to_one_run():
+    a = mailbox.Run("run-a").start()
+    b = mailbox.Run("run-b").start()
+    _request_in(a, label="tegA")
+    _request_in(b, label="tegB")
+    assert len(mailbox.pending_requests(a.dir)) == 1
+    assert "tegA" in str(mailbox.pending_requests(a.dir)[0])
+    assert "tegB" in str(mailbox.pending_requests(b.dir)[0])
 
 
 def test_a_dead_run_is_detected():

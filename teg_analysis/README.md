@@ -78,9 +78,10 @@ teg_analysis/
                      it)/get_live_leaderboard/finalize_live_round
 
   reporting/         LLM tournament-report pipeline (scored beats → story plan → authoring → styled MD)
-                     Runs on claude.ai plan usage by default (llm.py provider switch +
-                     mailbox.py file hand-off); TEG_LLM_PROVIDER=api bills the API instead.
-                     paths.py owns output locations and model-comparison variants.
+                     Calls the Anthropic API by default; `--plan` runs the same prompts
+                     on claude.ai plan usage instead (llm.py provider switch +
+                     mailbox.py file hand-off), `--paste NAME` hands them to you for
+                     another model. paths.py owns output locations and variants.
                      See reporting/README.md (architecture) and reporting/ARTEFACTS.md
                      (which file is which, and a runnable recipe per element you'd iterate on)
     README.md        How it works (architecture, artefacts, end-to-end usage)

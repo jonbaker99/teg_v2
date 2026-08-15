@@ -65,12 +65,14 @@ pip install -r requirements.txt      # install deps
 python -m pytest tests/ -v           # run the test suite
 streamlit run streamlit/nav.py       # legacy Streamlit app — frozen, rarely needed
 
-# Reports. Default runs on claude.ai plan usage: prompts hand off through
-# data/llm_mailbox and the `teg-report-respond` skill answers them.
-python -m teg_analysis.reporting.backfill --tegs 14
-python -m teg_analysis.reporting.backfill --tegs 2-18 --provider api   # spends API credit
-python -m teg_analysis.reporting.mailbox status                        # what's waiting
+# Reports. Default is the Anthropic API (bills per token).
+python -m teg_analysis.reporting.backfill --tegs 2-18
+python -m teg_analysis.reporting.backfill --tegs 14 --plan        # claude.ai plan usage
+python -m teg_analysis.reporting.backfill --tegs 14 --paste gpt5  # paste into another model
+python -m teg_analysis.reporting.mailbox status                   # prompts waiting
 ```
+
+> `--plan` and `--paste` hand each prompt off through `data/llm_mailbox` instead of calling the API; the `teg-report-respond` skill answers `--plan` runs, you answer `--paste` runs by hand. Both can run at once.
 
 > On the Claude-Code-on-the-web container, install pytest into the same interpreter as the deps: `pip install -r requirements.txt && pip install pytest`.
 

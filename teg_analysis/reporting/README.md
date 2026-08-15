@@ -632,48 +632,67 @@ style_report(teg)  # → teg_N_report_styled.md, ready for the UI
 - **Tone dial**: `tone=` input on `build_story_plan` (default `"house"` = Ronay/Peck). Plan echoes the resolved tone for the writer.
 - **Mode**: `balanced` / `fast` / `archive` — controls scoring weights (fast leans on importance; archive cranks rarity + entertainment).
 
-### Who answers the prompts — plan usage or the API
+### Who answers the prompts — the API, a Claude Code session, or you
 
 Every model call goes through `llm.generate_text` / `llm.generate_structured`, and
-those dispatch on a **provider**:
-
-| Provider | Who answers | What it costs | Set with |
-|---|---|---|---|
-| `agent` (**default**) | a Claude Code session, or you pasting into a browser tab | nothing — draws on claude.ai plan usage | nothing; it's the default |
-| `api` | the Anthropic API | per token | `TEG_LLM_PROVIDER=api`, `--provider api`, or `llm.use_provider("api")` |
-
-**The default is `agent` deliberately: no run spends API credit unless it was
-asked for.** `api` is the right choice for unattended batch work, where prompt
-caching and no-human-in-the-loop matter more than the bill.
-
-The pipeline is *identical* under both. `backfill_all`, the four-call tournament
-chain and the round pipeline have one implementation; only the call at the bottom
-differs.
-
-**How `agent` works.** A Python process can't call claude.ai, so instead of an API
-call the pipeline writes the prompt to a file and blocks until an answer file
-appears — see `mailbox.py`. Whoever writes that answer is doing the inference. The
-chain sequences itself, because each call waits for the previous one.
+those dispatch on a **provider**. Three ways to run, one flag each:
 
 ```bash
-# terminal 1 — the pipeline (waits at each call)
-python -m teg_analysis.reporting.backfill --tegs 14
+# 1. API — the default. Unattended, bills per token.
+python -m teg_analysis.reporting.backfill --tegs 2-18
 
-# Claude Code, same directory — answer the prompts
-/teg-report-respond
+# 2. Plan usage. Prompts hand off; a Claude Code session answers them.
+python -m teg_analysis.reporting.backfill --tegs 14 --plan
+#    …then in Claude Code, same directory:  /teg-report-respond
+
+# 3. Another model. Prompts hand off for you to paste; output kept separate.
+python -m teg_analysis.reporting.backfill --tegs 14 --paste gpt5
 ```
 
-For a batch the skill spawns a subagent per prompt, so its context stays flat
-across ~68 calls.
+| Provider | Who answers | Costs | Set with |
+|---|---|---|---|
+| `api` (**default**) | the Anthropic API | per token | nothing; it's the default |
+| `agent` | a Claude Code session | nothing — claude.ai plan usage | `--plan` |
+| `agent`, manual | you, pasting into a browser tab | nothing | `--paste NAME` |
 
-**Answering by hand** (ChatGPT, Gemini, claude.ai in a browser) uses the same
-files. `request.md` is self-contained — system prompt, user message, and for
-structured calls the full JSON Schema:
+**`api` stays the default because it is the only one that works with nobody
+present.** Plan usage needs a responder listening; a run that hands off into an
+empty room just waits. So it is opted into per run rather than inherited.
+
+`--paste NAME` is `--plan` plus two things: output goes to
+`data/commentary/variants/NAME/`, and the run is marked **manual** so the
+`teg-report-respond` skill will not touch it. Without that mark a Claude Code
+session would cheerfully answer the prompts you meant for ChatGPT, and the result
+would sit in a directory labelled as another model's work.
+
+The long way round — `TEG_LLM_PROVIDER=api|agent`, `--provider`, or
+`llm.use_provider("agent")` in a notebook — still works, and is what the flags set.
+
+The pipeline is *identical* under all three. `backfill_all`, the four-call
+tournament chain and the round pipeline have one implementation; only the call at
+the bottom differs.
+
+**How the hand-off works.** A Python process can't call claude.ai, so instead of an
+API call the pipeline writes the prompt to a file and blocks until an answer file
+appears — see `mailbox.py`. Whoever writes that answer is doing the inference. The
+chain sequences itself, because each call waits for the previous one. For a batch
+the skill spawns a subagent per prompt, so its context stays flat across ~68 calls.
+
+**Answering by hand.** `request.md` is self-contained — system prompt, user
+message, and for structured calls the full JSON Schema. The run prints the exact
+commands when it starts:
 
 ```bash
-python -m teg_analysis.reporting.mailbox show          # print the pending prompt
+python -m teg_analysis.reporting.mailbox show --run <id>    # print the pending prompt
 python -m teg_analysis.reporting.mailbox answer <dir> --file reply.txt
 ```
+
+**Two runs at once is supported** — plan usage in one window, a paste experiment in
+another. Runs are found by scanning `data/llm_mailbox/`, not by following a global
+pointer, so neither hides the other. A run is live while its recorded PID is alive
+and no `FINISHED` marker exists. When several are live the CLI asks which with
+`--run <id>` rather than guessing, because guessing here means one model answering
+another's prompts.
 
 **Structured output off the API.** The API path gets validation free from
 `messages.parse`. The agent path ships `model_json_schema()` in the prompt — enums
@@ -729,8 +748,8 @@ Variants are gitignored: promote the one you want and commit that.
 | Railway (webapp) | Service → Variables → add `ANTHROPIC_API_KEY` |
 | Claude Code on the web | The session container gets its variables from the **environment** config, not from this repo. Add `ANTHROPIC_API_KEY` to the environment's variables so it's present in every session; a key pasted into a chat only lasts that session and ends up in the transcript. |
 
-**Only the `api` provider needs a key.** Under the default `agent` provider there is
-no key and no SDK involved at all. Everything upstream of Stage 3 (beats, arcs,
+**Only the `api` provider needs a key**, so a `--plan` or `--paste` run involves no
+key and no SDK at all. Everything upstream of Stage 3 (beats, arcs,
 venue, history, records, rendering) is pure Python and runs without either —
 including `build_story_plan(teg, dry_run=True)`, which writes the assembled prompt
 to disk for inspection with no call of any kind.

@@ -154,9 +154,21 @@ def backfill_all(teg_nums: Iterable[int], *, force: bool = False,
           f"style={style}, provider={provider}"
           + (f", variant={variant}" if variant else ""))
     if provider == llm.PROVIDER_AGENT:
-        print("  plan usage: prompts hand off through data/llm_mailbox — run the "
-              "`teg-report-respond` skill in Claude Code, or answer them by hand.",
-              flush=True)
+        # Start the run now rather than lazily on the first call, so the run id
+        # can be printed up front. With two runs live, the responder needs it.
+        run = mailbox.active_run()
+        if run.responder == mailbox.RESPONDER_MANUAL:
+            print(f"  paste mode — run {run.run_id}. The skill will NOT touch this "
+                  f"run. Answer each prompt with:\n"
+                  f"    python -m teg_analysis.reporting.mailbox show --run {run.run_id}\n"
+                  f"    python -m teg_analysis.reporting.mailbox answer <dir> --file reply.txt",
+                  flush=True)
+        else:
+            print(f"  plan usage — run {run.run_id}. Answer the prompts with the "
+                  f"`teg-report-respond` skill in Claude Code (same directory), or "
+                  f"by hand:\n"
+                  f"    python -m teg_analysis.reporting.mailbox show --run {run.run_id}",
+                  flush=True)
     started = time.time()
     try:
         for i, teg in enumerate(teg_list, 1):
@@ -171,8 +183,8 @@ def backfill_all(teg_nums: Iterable[int], *, force: bool = False,
                   f"{rounds_done} done, {rounds_skipped} skip", flush=True)
             results.append(r)
     finally:
-        # Clear the mailbox CURRENT pointer even on failure, so a responder does
-        # not sit waiting on a run that has stopped.
+        # Mark the run finished even on failure, so a responder does not sit
+        # waiting on a run that has stopped.
         mailbox.reset_active_run()
 
     write_manifest({
@@ -227,19 +239,38 @@ def main(argv=None) -> int:
                    help="regenerate even when a final report already exists")
     p.add_argument("--no-style", action="store_true",
                    help="stop at the prose; skip the deterministic styled blocks")
+    p.add_argument("--plan", action="store_true",
+                   help="run on claude.ai plan usage instead of the API: prompts "
+                        "hand off through data/llm_mailbox and the "
+                        "`teg-report-respond` skill answers them")
+    p.add_argument("--paste", metavar="NAME",
+                   help="hand prompts off for you to paste into another model "
+                        "(ChatGPT, Gemini, claude.ai). Implies --plan, keeps the "
+                        "skill's hands off this run, and writes output to "
+                        "data/commentary/variants/NAME/")
     p.add_argument("--provider", choices=list(llm.PROVIDERS),
-                   help=f"override {llm.ENV_PROVIDER} for this run "
-                        f"(default: {llm.DEFAULT_PROVIDER})")
+                   help=f"the long way round: override {llm.ENV_PROVIDER} for this "
+                        f"run (default: {llm.DEFAULT_PROVIDER})")
     p.add_argument("--variant",
                    help="write to data/commentary/variants/<name>/ instead of the "
                         "canonical set — use for model comparisons")
     args = p.parse_args(argv)
 
-    if args.variant:
-        os.environ[ENV_VARIANT] = args.variant
+    if args.provider and (args.plan or args.paste):
+        p.error("--provider conflicts with --plan/--paste; use one or the other")
 
+    variant = args.paste or args.variant
+    if variant:
+        os.environ[ENV_VARIANT] = variant
+    if args.paste:
+        # A paste run must be invisible to the responder skill, or a Claude Code
+        # session will cheerfully answer the prompts meant for ChatGPT and the
+        # output lands in a directory labelled as another model's work.
+        os.environ[mailbox.ENV_RESPONDER] = mailbox.RESPONDER_MANUAL
+
+    provider = args.provider or (llm.PROVIDER_AGENT if (args.plan or args.paste) else None)
     tegs = parse_teg_spec(args.tegs)
-    ctx = llm.use_provider(args.provider) if args.provider else nullcontext()
+    ctx = llm.use_provider(provider) if provider else nullcontext()
     with ctx:
         backfill_all(tegs, force=args.force, scope=args.scope, style=not args.no_style)
     return 0

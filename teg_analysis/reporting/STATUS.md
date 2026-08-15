@@ -91,9 +91,15 @@ Built, tested, **not yet run on a real report** — the round-trip is proven by 
 CLI exercise, not by a generated TEG. Full detail in [README.md](README.md) → *Who answers the
 prompts*.
 
-- **`TEG_LLM_PROVIDER=api|agent` in `llm.py`, defaulting to `agent`.** Nothing else in the pipeline
-  changed: `backfill_all` and the four-call chain keep one implementation, which was the main
-  constraint on the design.
+- **`TEG_LLM_PROVIDER=api|agent` in `llm.py`, defaulting to `api`.** Plan usage is opt-in per run
+  (`--plan`), because it is the one mode that needs a responder present. Nothing else in the
+  pipeline changed: `backfill_all` and the four-call chain keep one implementation, which was the
+  main constraint on the design.
+- **`--paste NAME`** — one flag for the cross-model workflow: hand-off, variant directory, and the
+  run marked `manual` so the skill cannot answer prompts intended for ChatGPT or Gemini.
+- **Concurrent runs supported.** Runs are found by scanning `data/llm_mailbox/` (live PID, no
+  `FINISHED` marker) rather than a single `CURRENT` pointer, which a second run used to clobber.
+  Ambiguity is an error listing `--run <id>` options, never a guess.
 - **`mailbox.py`** — the file hand-off. The pipeline writes `request.md` and blocks; a Claude Code
   skill (`.claude/skills/teg-report-respond/`) or a human answers it. `request.md` is
   self-contained, so the same file pastes into ChatGPT or Gemini.
@@ -105,9 +111,8 @@ prompts*.
 - **CLI**: `python -m teg_analysis.reporting.backfill --tegs 2-18 [--provider api] [--variant gpt5]`.
 - 34 new tests; full suite **466 passed, 4 skipped**.
 
-**Open**: the default flip to `agent` means any existing notebook call now hands off instead of
-calling the API. That is intended, but it will surprise until it's habit — `llm.use_provider("api")`
-is the escape hatch.
+**Open**: whether plan-usage output matches API output in quality. Run one report each way on the
+same TEG before committing the full 2–18 regeneration to either.
 
 ---
 

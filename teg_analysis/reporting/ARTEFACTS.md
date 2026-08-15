@@ -130,11 +130,11 @@ Three practical consequences:
 One recipe per thing you might want to change. **Run everything from the repo root.** The free ones
 need nothing at all.
 
-**The costs quoted below are API prices, and only apply when you run with
-`TEG_LLM_PROVIDER=api`** (which also needs `ANTHROPIC_API_KEY`). The default provider hands each
-prompt off to a Claude Code session or a browser tab instead, so it draws on claude.ai plan usage
-and the cash cost is zero — read the columns as *relative* expense in that case. See
-[README.md](README.md) → *Who answers the prompts*.
+**The costs quoted below are API prices**, which is what you pay by default (and needs
+`ANTHROPIC_API_KEY`). Add `--plan` to a backfill run — or `llm.use_provider("agent")` around a
+call — and the prompt hands off to a Claude Code session or a browser tab instead, drawing on
+claude.ai plan usage: read the columns as *relative* expense in that case, because the cash cost
+is zero. See [README.md](README.md) → *Who answers the prompts*.
 
 **The rule that saves the most money:** never test a cheap change by re-running the expensive
 stages. Freeze what you aren't changing.
