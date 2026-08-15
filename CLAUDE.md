@@ -47,7 +47,9 @@ TEG v2 is a golf tournament analysis project with two architectural layers: a le
 | Webapp stack, themes, design principles | `webapp/README.md` |
 | Analysis package API | `teg_analysis/README.md` |
 | Report/commentary pipeline | `teg_analysis/reporting/README.md` + `STATUS.md` |
+| **Picking up report work in a new chat** | `teg_analysis/reporting/STATUS.md` → **START HERE** (goals, what changed and why, open workstreams) |
 | How do I test/iterate on a report-pipeline element (voice, weights, structure)? | `teg_analysis/reporting/ARTEFACTS.md` |
+| Moving report generation off API billing onto claude.ai plan usage | `teg_analysis/reporting/API_TO_PLAN_USAGE.md` |
 | Streamlit internals (frozen) | `streamlit/README.md` |
 
 **Do not read or reference `to_do_jon.md`** unless explicitly asked. It is personal draft notes, not project documentation.
@@ -81,7 +83,7 @@ Two distinct phases. **Streamlit is the original architecture** — self-contain
 
 2. **`streamlit/`** — the original app, self-contained via its own `utils.py`. **Dead code kept for reference only**: not deployed, not maintained, not migrated, and nothing else in the repo depends on it. Slated for deletion. Never modify it, and don't use it as a model for new work.
 
-3. **`webapp/`** — FastAPI + HTMX + Jinja2 + Tailwind. Deployed on Railway from `main` via `railway.toml` → `uvicorn webapp.app:app`. `requirements.txt` is webapp-only (includes `pyarrow`). Needs `GITHUB_TOKEN` and a volume at `/mnt/data_repo`; `ANTHROPIC_API_KEY` for reports, `GOOGLE_*` for data-update ingestion.
+3. **`webapp/`** — FastAPI + HTMX + Jinja2 + Tailwind. Deployed on Railway from `main` via `railway.toml` → `uvicorn webapp.app:app`. `requirements.txt` is webapp-only (includes `pyarrow`). Needs `GITHUB_TOKEN` and a volume at `/mnt/data_repo`; `ANTHROPIC_API_KEY` for reports (`TEG_ANTHROPIC_API_KEY` is accepted as an alias), `GOOGLE_*` for data-update ingestion. **Report generation currently bills per API call, separately from any claude.ai plan** — moving it onto plan usage is an open workstream, see `teg_analysis/reporting/API_TO_PLAN_USAGE.md`.
 
 4. **`ad_hoc_analysis/`** — Jupyter notebooks calling `teg_analysis/` directly. Start at `quickstart.ipynb`.
 

@@ -12,19 +12,94 @@
 
 ---
 
-## TL;DR — where we got to
+## START HERE — picking this up in a new chat (2026-08-14)
+
+Two live workstreams. They are independent; either can be picked up first.
+
+| | Workstream | State | Doc |
+|---|---|---|---|
+| **A** | **Report quality** — data, vehicles, voice | Reworked end to end; 4 test TEGs regenerated and read well; **full library regeneration outstanding** | this file + [README.md](README.md) |
+| **B** | **Stop paying per API call** — run the same prompts through claude.ai plan usage instead of the Anthropic API | Not started; problem and constraints captured | [API_TO_PLAN_USAGE.md](API_TO_PLAN_USAGE.md) |
+
+### What workstream A was trying to achieve
+
+Reports that are **entertaining, engaging and insightful**: they celebrate the winner (tongue-in-cheek,
+and better for it), mock the losers where deserved, and are clear about **why the champion won**.
+Course history, previous results and recent form are welcome texture.
+
+### What was wrong, and what we did about it
+
+Three root causes, all in the data layer rather than the prompts — which is why earlier prompt-only
+attempts had not fixed them:
+
+1. **`importance` did not measure what it claimed.** Its docstring said "contribution to the result";
+   it was a hand-tuned function of shot-cost, round and standing that never consulted the result. On
+   TEG 18 the champion won by 8 Stableford points and none of his eight worst holes could have cost
+   him more than 2.3, yet they scored 5.0–6.5 and made up half the champion-negative material.
+   → **`impact.py`**: importance is now the counterfactual — *if this player had scored their own
+   average over these holes, would the competition have finished differently?* Measured in each
+   competition's own metric, discounted by how much time remained to recover.
+2. **Detection was lopsided 2.6:1 against the champion's dignity.** Bad things were detected on
+   *gross*, good things on *net*, so a high-handicap player in contention was the maximum-negative
+   configuration — champion's handicap literally predicted how negative the report was about them
+   (handicap 16 → 0 negative beats; handicap 36 → 10). → **`cold_stretch_net` + `steady_stretch`**,
+   ratio now 1.52:1.
+3. **Nothing computed WHY the champion won.** `competition_arcs` gave the *what*; causation was left
+   to inference over a pile of beats, which is exactly where "the champion was rubbish" comes from.
+   → **`win_anatomy.py`** + a required `why_the_champion_won` plan field.
+
+Then the voice: a storyline hierarchy (winner's story leads, departures recorded), mockery calibrated
+by target, and the champion register — hard on the golf, never on the achievement, **elevated
+delivery**, proportion capped. See [README.md](README.md#the-storyline-hierarchy-and-the-champion-register)
+for the three failed attempts at that last rule and why each failed.
+
+### Measured effect (TEGs 2–18, deterministic, no LLM)
+
+| | Before | After |
+|---|---|---|
+| Champion's share of negative beats | 20% | **14%** |
+| Overall negative share of the cut | 41% | **39%** |
+| Detection ratio (negative:positive) | 2.59:1 | **1.52:1** |
+
+### Two mistakes worth not repeating
+
+- **I optimised the wrong objective twice.** First minimising the cut's overall negative share, then
+  minimising the champion's share of negatives. Negative material *is* the comic material, and
+  champion-negative *volume* was never the real problem — the **framing** was. Both metrics are
+  useful diagnostics; neither is the target. The prose is the only real test.
+- **Every string in `win_anatomy` is copied into prose.** Statistical phrasing anywhere in that
+  module ships to the reader ("a round-to-round spread of 5 against a field median of 8"). Plain
+  English only — there is a test enforcing it.
+
+### Where workstream A got to
+
+- Pipeline reworked and green: **432 passed, 4 skipped**.
+- **TEGs 4, 8, 12, 18 regenerated** as tests and all read well. TEG 4's report is now framed on the
+  seven-shot lead Baker threw away; TEG 18 leads on the champion's gross 10 and elevates it.
+- **Outstanding: regenerate the full library (2–18).** ~90 min. Jon's call was "a few tests first,
+  then everything" — the tests are done.
+- Two late fixes (plain-English round labels, inverted Spoon phrasing) **postdate the four test
+  reports**, so those flaws are still visible on disk in the Spoon sections of TEGs 4 and 18. They
+  clear on the full run.
+- **Nothing is user-visible yet.** All regeneration ran `style=False`, so `*_report_styled.md` —
+  what the site serves — still holds the older reports. A styling pass is free and deterministic.
+- Round reports (~50) were not touched and remain a pipeline generation behind.
+
+---
+
+## TL;DR — the older ledger
 
 The pipeline is **built, working and well past what the old docs described**. Three things are true:
 
 1. **Tournament coverage is complete.** Every TEG has a published tournament report and the webapp
    renders them. (TEG 1 predates the data — it isn't in `completed_tegs.csv` or `all-data.parquet`,
    so TEGs 2–18 *is* the full set. TEG 2 has 3 rounds; every other TEG has 4.)
-2. **The pipeline kept evolving after the last backfill run.** Roughly half the published reports
-   were generated by an *older* version of the pipeline than the one in the code today, so the
-   library is stylistically inconsistent.
+2. **The pipeline kept evolving after the last backfill run.** As of 2026-08-13 every *tournament*
+   report was regenerated on one vintage, so this no longer applies to them — but round reports
+   still span several.
 3. **Work stopped mid-experiment.** A "humour dial" A/B (3 → 6 → 8 → 8b) was run on TEGs 14 and 18,
-   the outputs are sitting on disk unpublished, and **no verdict was ever recorded**. That decision
-   is the natural first thing to pick up.
+   the outputs are sitting on disk unpublished, and **no verdict was ever recorded**. Largely
+   superseded by the 2026-08-14 voice rework, but the artefacts are still there.
 
 **Suggested pick-up order** is in [Next steps](#next-steps).
 

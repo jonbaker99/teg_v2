@@ -333,7 +333,10 @@ Reuses `teg_analysis.core.data_loader.load_all_data()`.
   outright-leader sequence and flags spells of 18+ holes (roughly a full round) that end in an
   outright takeover by someone else, for both Trophy and Green Jacket. Distinct from an ordinary
   lead-change beat because it scores on tenure length and rounds spanned, not just round-lateness.
-- Maximal cold/hot stretches (no overlapping-window spam)
+- Maximal cold/hot stretches (no overlapping-window spam). **Gross and net both**: `cold_stretch`
+  (gross double-bogey-or-worse runs) alongside `cold_stretch_net` (runs of no-score holes), and
+  `hot_stretch` (net birdie or better) alongside `steady_stretch` (6+ holes without dropping a net
+  shot). The two net detectors were added 2026-08-14 — see [Detection must not be lopsided](#detection-must-not-be-lopsided).
 - Recoveries (birdie ending a bogey run) / collapses (blow-up ending a steady run)
 - Standout single holes (eagles / HIO / big blow-ups)
 - Per-round and tournament beats (round shapes, winners, margins)
@@ -345,6 +348,48 @@ Each beat carries:
 - Three scores on a 0–10 scale: **importance** (contribution to the result, scored at top *and* bottom of the board), **rarity** (vs TEG history — PBs, records, records-to-date), **entertainment** (colour independent of result — non-contender brilliance/disaster).
 
 Weights per axis are a dial per mode (`balanced` / `fast` / `archive`).
+
+#### Why importance is counterfactual
+
+`importance` is **not** a hand-tuned function of shot-cost and round number — it is computed by
+`impact.py` as *what the event actually cost or won*: replace the player's scores over those holes
+with their own TEG average, recompute each competition, and measure the swing. Three consequences,
+all deliberate:
+
+- **The gross/net mismatch dissolves.** Impact is measured in each competition's own metric —
+  Stableford or net-vs-par for Trophy and Spoon, gross-vs-par for the Green Jacket. A gross
+  catastrophe costing nothing in net scores low for the Trophy and can still score high for the
+  Jacket.
+- **A winner's disaster that cost them nothing scores near zero, by construction.** On TEG 18 the
+  champion's gross 11 and gross 10 fell from 5.0–6.5 to 2.9. They stay in the cut as *colour* via
+  the entertainment axis; they can no longer frame the report.
+- **Recoverability is priced in.** A point dropped at R1 H1 is arithmetically identical to one at
+  R4 H18 but cannot claim to have *caused* the result, so early events are discounted (floor 0.45),
+  not erased.
+
+The counterfactual is **symmetric**: a birdie run that sealed the win matters as much as a collapse
+that lost it. Scoring only damage zeroed every good beat and pushed the cut from 41% to 58%
+negative.
+
+#### Detection must not be lopsided
+
+Before 2026-08-14 detection ran **622 negative to 240 positive** across TEGs 2–18 — `big_blowup`
+alone (382) outnumbered every positive detector combined. No prompt can correct for material the
+writer was never given, which is why this is fixed in detection rather than in the voice.
+`cold_stretch_net` and `steady_stretch` bring it to **1.52:1**.
+
+#### A note on tuning the weights
+
+`MODE_WEIGHTS` matters far less than it used to. Under the old hand-tuned `importance` the spread
+between settings was ~30 points of blow-up share; against the counterfactual axis every reasonable
+setting lands within 34–43% negative. The weights were doing so much work precisely *because*
+importance was a poor proxy that correlated with badness.
+
+**Do not tune these to minimise negativity.** Negative material is the comic material. The goal is
+less denigration of the *champion*, not less carnage — and those are not in tension, because
+champion-negativity is held down by the counterfactual axis, not by suppressing entertainment.
+Dropping entertainment 1.0 → 0.5 stripped a fifth of the blow-ups *and* made the champion metric
+worse.
 
 `events.py` also assembles a **competition arc** for each of Trophy / Green Jacket / Wooden Spoon — leader-by-round, winner-or-loser trajectory, lead changes (with outright/level flags), the decisive moment. These arcs are the report's spine.
 
@@ -365,6 +410,8 @@ Four further code-only modules assemble context alongside the beats. All are pur
 | `course_history.py` | `build_player_course_history(teg)` — first visit / Nth visit / personal best here / strokes vs last visit. `detect_course_records(teg)` — new course gross records (good or bad) | Bundle's `player_course_history`; new course records become **mandatory beats** |
 | `tournament_shape.py` | `detect_close_finish(arcs, metric)` — deterministic close-finish signal. `recent_vehicle_choices(teg, n=3)` — what narrative vehicles the last few reports used | Bundle's `tournament_shape` (drives the close-finish **hard rule**) and `recent_vehicle_choices` (drives the anti-repetition **soft rule**) |
 | `vehicle_fit.py` | `score_vehicle_fit(beats, arcs, shape, history)` — free, deterministic, no LLM call: how well each narrative vehicle fits this TEG's actual facts. `normalize_vehicle_fit(scores, baseline)` z-scores it against `vehicle_fit_baseline.json` (a checked-in 17-TEG population). `refresh_baseline_cache()` regenerates that file | Bundle's `vehicle_fit_hints` (drives the vehicle **advisory**) |
+| `impact.py` | `apply_counterfactual_importance(events, teg_df, metric)` — rewrites every beat's `importance` as *what the event actually cost or won*, by replacing the player's scores with their own TEG average and recomputing each competition. Post-processing pass, so detectors stay responsible for FINDING and this is the one place that decides MATTERING | The `importance` axis for every beat — see [Why importance is counterfactual](#why-importance-is-counterfactual) |
+| `win_anatomy.py` | `build_win_anatomy(teg)` — the deterministic answer to *why* each competition was won: `built` vs `inherited`, `consistent` vs `volatile`, rounds won outright, worst round position, the biggest lead anyone threw away, and whether one ordinary round would have flipped it. `summary_facts` states all of it in plain English | Bundle's `win_anatomy`; the required `why_the_champion_won` plan field |
 
 Verified `player_relationships` (from `teg_analysis.constants.PLAYER_RELATIONSHIPS`, filtered to players in this TEG) are also passed in the bundle. The writer is forbidden from inferring any relationship not listed there — shared surnames are not evidence.
 
@@ -387,6 +434,8 @@ prominent_vehicle,                    # the FRAME being foregrounded (enum)
 prominent_palette,                    # the CONTEXT MATERIAL foregrounded (enum) — a different axis
 vehicle_fit_response:                 # the editor's answer to the vehicle_fit_hints advisory
   { top_scored_vehicle, taken_up, note }
+why_the_champion_won,                 # REQUIRED — one line, grounded in win_anatomy
+storyline_note,                       # only when departing from the Trophy-leads default
 foreshadow[],                         # hooks to plant early that pay off later
 payoffs[]:                            # one per foreshadow seed where possible
   { seed, resolves_in, payoff }
@@ -401,6 +450,35 @@ venue_notes,
 competition_storyline_bullets{}, player_storyline_bullets{},
 course_history_notes[], decisive_moments[]
 ```
+
+### The storyline hierarchy and the champion register
+
+Two rules added 2026-08-14 that govern what the report is *about*, independent of vehicles.
+
+**The report is the winner's story.** The Trophy winner's week is the primary storyline; then the
+Green Jacket, the Wooden Spoon, and the field humiliating itself. Departure is allowed when the
+tournament offers something genuinely better, must still explain why the champion won, and must be
+recorded in `storyline_note`. *"The course beat everyone, and one man by slightly less"* is a
+legitimate lead. *"The champion was poor"* is not a storyline.
+
+`why_the_champion_won` is a **required** field. A report that never makes this clear has failed
+however entertaining it is, and a required field is the only way to know the editor decided it
+rather than letting it emerge from whichever beats happened to rank.
+
+**Mockery is calibrated by target** (`WRITER_VOICE`): Wooden Spoon holder hard, the field and the
+runner-up moderate, and the champion — **hard on the golf, never on the achievement**. This last one
+took three attempts to state correctly and the failure modes are worth knowing:
+
+| Attempt | What it said | Why it failed |
+|---|---|---|
+| 1 | "champion: gentle, affectionate only" | Asks for restraint on *intensity* → bland praise |
+| 2 | "be merciless about the golf" | Grants permission but ignores *delivery* → reads as a charge sheet |
+| 3 | Hard on the golf + **elevated delivery** + **proportion cap** + credit unqualified | Current |
+
+The delivery point is the one that matters: the same facts read as an indictment when recited flat
+and as affection when elevated into mock-epic. `WRITER_VOICE` carries a worked FLAT-vs-ELEVATED
+example, because an abstract instruction did not fix it. Proportion is a separate constraint —
+however well delivered, a report whose *through-line* is how poor the champion was has failed.
 
 **Narrative vehicles** are a shared vocabulary between the editor and the writer, so the editor's
 structural choice actually binds the prose. The menu spans tournament-shape frames (`bookends`,
@@ -641,6 +719,9 @@ Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`t
 | `history_context.py` | Cross-TEG career storylines, milestones, win counts |
 | `course_history.py` | Per-course player history + course-record detection |
 | `tournament_shape.py` | Close-finish signal + recent-vehicle anti-repetition |
+| `vehicle_fit.py` | Deterministic narrative-vehicle scoring + the checked-in baseline |
+| `impact.py` | **The `importance` axis** — counterfactual: what the event cost or won |
+| `win_anatomy.py` | **Why each competition was won** — built vs inherited, blown leads |
 | `story_plan.py` | Stage 3 + the editor system prompt (incl. the vehicle menu) |
 | `authoring.py` | Stage 4 + all writer/lint/tighten system prompts |
 | `round_report.py` | The per-round pipeline and its prompts |
@@ -648,6 +729,12 @@ Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`t
 | `verify.py` | **D3** — mechanical verification of a finished report against the data |
 | `backfill.py` | Batch orchestration across TEGs |
 | `llm.py` | Thin Anthropic wrapper (key resolution + prompt caching) |
+
+**Companion docs:** [STATUS.md](STATUS.md) is the pick-up ledger and *is* the to-do list for this
+area — start there. [ARTEFACTS.md](ARTEFACTS.md) covers how to test and iterate on each element,
+[EXPERIMENTS.md](EXPERIMENTS.md) is the running experiment log, and
+[API_TO_PLAN_USAGE.md](API_TO_PLAN_USAGE.md) holds the open workstream on moving report generation
+off per-call API billing onto claude.ai plan usage.
 
 Suggested reading order for a fresh session is in [ONBOARDING.md](ONBOARDING.md).
 
