@@ -37,11 +37,12 @@ from teg_analysis.reporting.authoring import restyle_voice
 
 # ---------------------------------------------------------------------------
 # The voice registers. Each is layered ON TOP of the baseline house voice
-# (Ronay / Peck / Armstrong / Iannucci), which stays the floor.
+# (Herron / Ronay / Armstrong / Iannucci — see reporting/prompts.VOICE_CORE),
+# which stays the floor.
 # ---------------------------------------------------------------------------
 HUMOUR_6 = """VOICE TARGET: the same deadpan gravitas, dialled from roughly 3/10 to 6/10.
 
-Keep the baseline register — Barney Ronay, Tom Peck, Jesse Armstrong, Armando \
+Keep the baseline register — Mick Herron, Barney Ronay, Jesse Armstrong, Armando \
 Iannucci. British English, no exclamation marks, no obvious puns.
 
 What changes at 6/10:
@@ -53,7 +54,7 @@ with the solemnity of a geopolitical crisis. Never wink at the camera."""
 
 HUMOUR_8 = """VOICE TARGET: the same deadpan gravitas, dialled from roughly 3/10 to 8/10.
 
-Keep the baseline register as the floor — Ronay, Peck, Armstrong, Iannucci — \
+Keep the baseline register as the floor — Herron, Ronay, Armstrong, Iannucci — \
 and add Charlie Brooker and Clive James: bigger swings, sustained comic images, \
 a willingness to let a comparison run.
 
@@ -66,7 +67,7 @@ or two of build.
 HUMOUR_8B = """VOICE TARGET: 8/10, BROOKER-ONLY. Drops Clive James and the literary-comparison \
 register that came with him; adds Marina Hyde for matched contemporary punch.
 
-You are ADDING TWO INFLUENCES to the baseline (Ronay / Peck / Armstrong / \
+You are ADDING TWO INFLUENCES to the baseline (Herron / Ronay / Armstrong / \
 Iannucci), both modern Guardian-column voice, both punch-not-flourish:
 
 - **Charlie Brooker** (Screen Burn / TV Go Home era): contemporary, vicious, \
