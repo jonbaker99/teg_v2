@@ -48,14 +48,19 @@ def _round_position(value: float, field: pd.Series, higher: bool) -> int:
 
 
 def _label_round(value: float, field: pd.Series, higher: bool) -> str:
-    """Where this round sat against the field: the writer's raw material for
-    'was he good, or were they bad'."""
+    """Where this round sat against the field, in words a reader pictures.
+
+    Said "above/below field median" until 2026-08-14, and that phrasing reached
+    published prose — "Williams was below the field median in all four rounds".
+    Every string in this module is raw material the writer copies, so statistical
+    vocabulary anywhere in it ends up in the report.
+    """
     best = field.max() if higher else field.min()
     median = field.median()
     if value == best:
-        return "best in field"
+        return "best in the field"
     better_than_median = value > median if higher else value < median
-    return "above field median" if better_than_median else "below field median"
+    return "top half of the field" if better_than_median else "bottom half of the field"
 
 
 def _ordinal(n: int) -> str:
@@ -162,8 +167,8 @@ def _anatomy(teg_df: pd.DataFrame, col: str, higher: bool, bottom: bool,
             lost_to_rival += int((not won) and val != rv)
         breakdown.append(entry)
 
-    best_rounds = sum(1 for b in breakdown if b["standing"] == "best in field")
-    weak_rounds = sum(1 for b in breakdown if b["standing"] == "below field median")
+    best_rounds = sum(1 for b in breakdown if b["standing"] == "best in the field")
+    weak_rounds = sum(1 for b in breakdown if b["standing"] == "bottom half of the field")
     worst_pos = max(b["position"] for b in breakdown) if breakdown else 0
     field_size = len(per_round.index)
 
@@ -178,23 +183,48 @@ def _anatomy(teg_df: pd.DataFrame, col: str, higher: bool, bottom: bool,
     # for anyone who wants them.
     facts = []
     n = len(rounds)
-    if rival is not None:
-        if beat_rival > lost_to_rival:
-            attribution = "built"
-            facts.append(f"{subject} beat {rival} head-to-head in "
-                         f"{beat_rival} of the {n} rounds")
-        else:
-            attribution = "inherited"
-            facts.append(f"{rival} actually outplayed {subject} over "
-                         f"{lost_to_rival} of the {n} rounds and still lost")
-    else:
-        attribution = "unopposed"
+    last_rounds = sum(1 for b in breakdown if b["position"] == field_size)
 
-    if best_rounds:
-        facts.append(f"{subject} won {best_rounds} of the {n} rounds outright")
-    if worst_pos:
-        facts.append(f"{subject} never finished a round worse than "
-                     f"{_ordinal(worst_pos)} of {field_size}")
+    if bottom:
+        # The Spoon is a race to the bottom, so every phrase above inverts.
+        # Left un-inverted until 2026-08-14, which produced nonsense in the
+        # published plans: "Williams never finished a round worse than 5th of
+        # 5", and "Meller outplayed Williams and still lost" — backwards, since
+        # here `rival` is the man who ESCAPED the Spoon.
+        if rival is not None:
+            if lost_to_rival >= beat_rival:
+                attribution = "built"
+                facts.append(f"{subject} was worse than {rival} in "
+                             f"{lost_to_rival} of the {n} rounds")
+            else:
+                attribution = "inherited"
+                facts.append(f"{subject} actually outscored {rival} in "
+                             f"{beat_rival} of the {n} rounds and took the Spoon anyway")
+            facts.append(f"{subject} finished {margin:.0f} adrift of {rival}, "
+                         f"the next worst")
+        else:
+            attribution = "unopposed"
+        if last_rounds:
+            facts.append(f"{subject} was last in the field in {last_rounds} "
+                         f"of the {n} rounds")
+    else:
+        if rival is not None:
+            if beat_rival > lost_to_rival:
+                attribution = "built"
+                facts.append(f"{subject} beat {rival} head-to-head in "
+                             f"{beat_rival} of the {n} rounds")
+            else:
+                attribution = "inherited"
+                facts.append(f"{rival} actually outplayed {subject} over "
+                             f"{lost_to_rival} of the {n} rounds and still lost")
+        else:
+            attribution = "unopposed"
+
+        if best_rounds:
+            facts.append(f"{subject} won {best_rounds} of the {n} rounds outright")
+        if worst_pos:
+            facts.append(f"{subject} never finished a round worse than "
+                         f"{_ordinal(worst_pos)} of {field_size}")
 
     # --- consistency vs one big round ---
     subj_rounds = [b["score"] for b in breakdown]
@@ -216,22 +246,37 @@ def _anatomy(teg_df: pd.DataFrame, col: str, higher: bool, bottom: bool,
     # blew. Computed HOLE BY HOLE, not at round boundaries: Baker led TEG 4
     # from R1 through the 12th of R4 and lost it there, which a per-round
     # snapshot misses entirely.
-    blown = _biggest_lead_blown(teg_df, col, higher, subject)
+    # Not for the Spoon: `_biggest_lead_blown` looks for whoever was LEADING and
+    # is not the subject, which in a Spoon section is the tournament leader —
+    # producing "Alex Baker led by 15 and lost it" inside a paragraph about who
+    # came last. A wrong fact is worse than a missing one. The mirror ("X was
+    # heading for the Spoon until the 15th and escaped") would be a real
+    # addition; it is not this function.
+    blown = None if bottom else _biggest_lead_blown(teg_df, col, higher, subject)
     if blown:
         facts.append(
             f"{blown['player']} led by {blown['margin']:.0f} as late as the "
             f"{_ordinal(blown['hole'])} in round {blown['round']}, and lost it")
 
-    # --- could the rival have flipped it by playing their own average? ---
+    # --- could it have gone the other way on one ordinary round? ---
+    # For a competition, that question is about the RUNNER-UP: could they have
+    # caught the winner. For the Spoon it is about the HOLDER: could they have
+    # escaped it. Asking it of `rival` in both cases was the same inversion bug.
     flip = None
-    if rival is not None:
-        rv_rounds = per_round.loc[rival, rounds].astype(float)
-        worst = rv_rounds.min() if higher else rv_rounds.max()
-        recovered = abs(rv_rounds.mean() - worst)
+    who = subject if bottom else rival
+    if who is not None:
+        rr = per_round.loc[who, rounds].astype(float)
+        worst = rr.min() if higher else rr.max()
+        recovered = abs(rr.mean() - worst)
         flip = bool(recovered > margin)
-        facts.append(
-            f"even with an ordinary round instead of their worst, {rival} would "
-            f"{'have won' if flip else 'still have lost'}")
+        if bottom:
+            facts.append(
+                f"even with an ordinary round instead of their worst, {subject} "
+                f"would {'have escaped the Spoon' if flip else 'still have taken the Spoon'}")
+        else:
+            facts.append(
+                f"even with an ordinary round instead of their worst, {who} would "
+                f"{'have won' if flip else 'still have lost'}")
 
     return {
         "worst_round_position": worst_pos,
@@ -244,7 +289,7 @@ def _anatomy(teg_df: pd.DataFrame, col: str, higher: bool, bottom: bool,
         "attribution": attribution,          # built | inherited | unopposed
         "shape": shape,                      # consistent | volatile
         "best_in_field_rounds": best_rounds,
-        "below_median_rounds": weak_rounds,
+        "rounds_in_bottom_half": weak_rounds,
         "rounds": breakdown,
         "rival_could_have_flipped_it": flip,
         "summary_facts": facts,

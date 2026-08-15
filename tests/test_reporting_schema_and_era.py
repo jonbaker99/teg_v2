@@ -713,3 +713,41 @@ def test_win_anatomy_reaches_the_editor():
     # Proper-cased like every other artefact — two name formats is how
     # confabulated players start.
     assert anat["subject"] == "Alex Baker"
+
+
+def test_spoon_anatomy_is_not_phrased_as_a_competition_won():
+    """The Spoon is a race to the bottom; every phrase has to invert.
+
+    Shipped backwards on 2026-08-14: "Williams never finished a round worse
+    than 5th of 5" (meaningless), "Meller outplayed Williams and still lost"
+    (here the rival is the man who ESCAPED), and a blown-lead line naming the
+    tournament leader inside a paragraph about who came last.
+    """
+    from teg_analysis.reporting.win_anatomy import build_win_anatomy
+
+    spoon = build_win_anatomy(18)["spoon"]
+    facts = " ".join(spoon["summary_facts"])
+    assert "adrift of" in facts
+    assert "taken the Spoon" in facts
+    assert "never finished a round worse than" not in facts
+    assert "and still lost" not in facts
+    # The blown-lead fact belongs to competitions, not to the Spoon.
+    assert spoon["biggest_lead_blown"] is None
+
+
+def test_anatomy_facts_carry_no_statistical_vocabulary():
+    """Every string here is copied into prose, so stats vocabulary ships.
+
+    "Williams was below the field median in all four rounds" reached published
+    reports for TEGs 4 and 18.
+    """
+    from teg_analysis.reporting.win_anatomy import build_win_anatomy
+
+    for teg in (4, 18):
+        anat = build_win_anatomy(teg)
+        for comp in anat.values():
+            blob = " ".join(comp["summary_facts"]).lower()
+            for banned in ("median", "spread", "variance", "z-score", "percentile"):
+                assert banned not in blob, f"TEG {teg}: '{banned}' in {blob}"
+            for entry in comp["rounds"]:
+                assert "median" not in entry["standing"]
