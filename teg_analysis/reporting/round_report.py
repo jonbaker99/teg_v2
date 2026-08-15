@@ -410,7 +410,7 @@ lead outright, say "drew level", not "took the lead".
 - For non-final rounds: describe race STATE/SHIFTS, not WINNERS.
 - For final rounds (`is_final_round=true`): the race-shifts section becomes the \
 race-results section — declare winners and final margins.
-- No closing "Players" / "men, in brief" bullet list — coverage lives in section 2.
+- No closing "Players" / "Player-by-player summary" bullet list — coverage lives in section 2.
 - **Prior rounds (R≥2).** Use `prior_rounds` for factual callbacks only: one-line \
 references like "recovering from yesterday's 9-over R2" or "he held the overnight \
 lead". No extended retelling of prior rounds.
@@ -482,7 +482,7 @@ SINGLE dominant story arc; only use one of those structures if the plan's \
 - **Every notable player's round MUST be covered in the prose itself** — \
 substantively, not as a passing mention. The core of the report is comprehensive \
 player coverage, not editorial flourish. There is no closing player-bullet \
-section (no "men, in brief"); coverage lives in the body.
+section (no "Player-by-player summary"); coverage lives in the body.
 - The round IS the unit. Don't break into sub-sections by nines or phases unless \
 the story genuinely calls for it. Carry the theme; pay off the foreshadow hooks.
 - Render specific holes drawn from the dry draft's hole evidence — concrete hole \

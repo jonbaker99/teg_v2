@@ -1,31 +1,73 @@
-# TEG 5 — Dry Storyline Draft
+# DRY STORYLINE DRAFT — TEG 5, Algarve, June 2012
 
 ## OVERVIEW
-Gregg Williams won the Trophy at -6 net vs par, two clear of Jon Baker. David Mullin won the Green Jacket at +72 gross, twelve clear of Baker. Mullin also took the Wooden Spoon at +12 net vs par.
 
-## Round 1 — Mullin Rewrites the Gross Book on Day One
-Played at Boavista (the 8th TEG round at the venue). David Mullin shot +12 gross, the best gross round in TEG history to date (b01). He moved to outright Green Jacket lead at hole 3 and was never headed thereafter; he also finished R1 as Trophy leader at +1, one shot clear. The net field was bunched: Mullin, Baker and Williams traded the Trophy lead through the day, with Mullin going outright at hole 3, Baker drawing level at hole 4 and again at the 16th, and Mullin retaking outright at the 18th. Williams sat third overnight, five back.
+Gregg Williams won the Trophy on net versus par at -6, two clear of Jon Baker. David Mullin won the Green Jacket on gross at +72, twelve clear of Baker. Mullin also finished last on the Trophy metric at +12 net versus par and took the Wooden Spoon.
 
-## Round 2 — Boavista's Day of Records
-A day of records at Boavista. Mullin shot +11 gross, equalling the 24-hour-old TEG record (b02), and personal-bested at -4 net (b06). Stuart Neumann shot -9 net, the best round in TEG history to date (b03), and his +11 gross tied Mullin's record on the same afternoon (b04). Williams personal-bested at -6 net (b07) despite a +27 gross. Henry Meller ran up a 10 (quintuple bogey) at the par-5 16th (b25). Mullin extended his Trophy lead to three; Williams closed to second, three back.
+Rounds 1–3 were at Boavista (the 8th, 9th and 10th TEG rounds at the venue); Round 4 was at Palmares — Lagos/Praia, a new course for TEG and unseen by all five players.
 
-## Round 3 — Williams Walks Through the Door
-Played at Boavista (the 10th TEG round at the venue). Williams took outright Trophy lead at the par-5 3rd, where he made par for 4 Stableford (b21). Mullin's net game collapsed to +12, his worst TEG round to date (b20); his gross was +27. Williams closed the day five clear in the Trophy. Mullin dropped to 4th in the net standings. The Green Jacket race was unaffected: Mullin's lead held at 14.
+---
 
-## Round 4 — Palmares Holds, Williams Wins, Mullin Spoons
-A new course for TEG: Palmares (Robert Trent Jones Jr., parkland and links). Williams bled 10 shots across holes 10–13 — triple bogey at the par-4 10th, double at the par-5 11th, double at the par-3 12th, triple at the par-5 13th (b46) — and added a 9 (quintuple bogey) at the par-4 16th (b13), but held on for the Trophy by two (b05). Mullin shot +22 gross to complete the Green Jacket by twelve (b11). Mullin made quadruple bogey 9 at the par-5 6th to drop to the bottom of the Spoon race (b22, b30); Meller's double bogey at the par-4 15th briefly sent him to the bottom (b23); Mullin's par at the par-3 17th left him bottom for good (b24, b19). Baker posted a personal-best +18 gross (b08) and Meller a personal-best -3 net and +17 gross (b09, b10).
+## Round 1 — Mullin's +12: The Best Gross Round TEG Has Ever Seen, and a Field Left Filling In Boxes
+
+Sunday at Boavista. Mullin shot +12 gross, the best gross round in TEG history to date (b03). He went to the front on gross at the 3rd — the only Green Jacket lead change of the tournament — and finished the day eight shots clear on gross and one shot clear on the Trophy.
+
+The Trophy lead moved four times during the round, all routine early-round movement in a bunched field: Mullin outright at the 3rd, Baker drawing level at the 4th and again at the 16th, and Mullin taking it back outright at the 18th.
+
+Two double-figure holes were posted. Williams ran up a 9 at the par-4 17th, a quintuple bogey on SI 17, one of the easiest holes on the course (b12). Baker took 8 at the par-3 6th, also a quintuple bogey (b17), and closed with an 8 at the par-4 18th, a quadruple bogey (b34).
+
+Williams ended the round third on the Trophy, five behind. Neumann held bottom place on the Trophy metric after a round of repeated shuffling at the foot of the table.
+
+## Round 2 — Two 82s, One Course Record: Boavista's 35-Visit Best Falls Twice in an Afternoon
+
+Monday, Boavista, the 9th TEG round at the venue. Mullin shot 82 gross, a new Boavista course record, beating the prior mark of 85 which had stood across 35 prior visits (cr01). His +11 gross was the best gross round in TEG history to date, superseding his own mark from the previous day (b04), and his -4 net was a personal best (b08).
+
+Neumann matched the 82. His +11 gross equalled the new TEG gross best (b07) and his -9 net was the best round in TEG history to date (b06).
+
+Williams posted a personal-best -6 net (b09) off a gross of +27. It included a 9 at the par-5 8th, a quadruple bogey on SI 2, one of the hardest holes on the course (b28), and a 7 at the par-3 14th, also a quadruple bogey (b29).
+
+Meller signed for a 10 at the par-5 16th, a quintuple bogey and his worst hole relative to par (b36).
+
+Mullin led the Trophy by three at the close, with Williams second. Mullin's Jacket lead went to 14. Meller took bottom place on the Trophy metric at the 3rd hole and held it to the end of the round.
+
+## Round 3 — Twenty-One Holes at the Top, Then a Par at the 3rd: Williams Is In Front
+
+Tuesday, Boavista, the 10th TEG round at the venue. At the 3rd, a par-5, Williams made par for a net -2 and moved outright ahead of Mullin on the Trophy (b10). It ended Mullin's 21 holes in front, held since the 18th hole of Round 1 (b01). It was the only lead change of the tournament outside Round 1.
+
+Mullin posted +12 net, his worst round to date (b21), off a gross of +27. It included a 9 at the par-5 13th, a quadruple bogey (b30). He fell to fourth on the Trophy.
+
+Baker made two nines: a quintuple bogey at the par-4 7th (b18) and another at the par-4 18th (b19). Neumann also took 9 at the 18th, a quintuple bogey (b27).
+
+Williams finished the round leading the Trophy by five. Mullin's Jacket lead stayed at 14. Meller remained bottom on the Trophy metric.
+
+## Round 4 — Palmares, First Acquaintance: Williams Makes a 9 at the 16th and Still Wins by Two
+
+Wednesday at Palmares — Lagos/Praia, a first visit for all five.
+
+Baker opened with par, bogey, birdie at the par-3 3rd and bogey at the par-5 4th, worth five net shots to par across the first four holes (b16). At the par-3 5th he took 8, a quintuple bogey (b20). He shot +18 gross, a personal best (b11), and finished runner-up in both the Trophy and the Jacket.
+
+Williams dropped ten shots across holes 10–13: a triple bogey at the par-4 10th, a double at the par-5 11th, a double at the par-3 12th and a triple at the par-5 13th (b33). At the par-4 16th he made a 9, a quintuple bogey (b13). He still came home in -1 net and won the Trophy at -6 by two (b02).
+
+Mullin took 9 at the par-5 6th, a quadruple bogey (b31), which dropped him to the bottom of the Wooden Spoon race for the first time (b22). Meller's double bogey at the par-4 15th moved him to the bottom (b23). At the par-3 17th — SI 18, the easiest hole on the course — Mullin's par returned him to the bottom for the last time (b24). He finished last on the Trophy metric at +12 and took the Wooden Spoon (b25), on the same day he sealed the Green Jacket at +72 by 12 (b05).
+
+Meller shot -3 net, a personal best (b14), off +17 gross, also a personal best (b15).
+
+---
 
 ## HOW THE COMPETITIONS WERE DECIDED
 
-**Trophy (Net VP).** Mullin led after R1 (+1) and R2 (by three). Williams, second after R2 following his -6 net personal best, took outright lead at R3 hole 3 (b21) and was never headed. Mullin's +12 net in R3 (b20) opened a five-shot overnight gap. Despite the 10–13 bleed and the 9 at the 16th at Palmares (b46, b13), Williams won by two from Baker at -6 (b05).
+**Trophy (Net VP).** Mullin led after Round 1 by one and after Round 2 by three, with Williams third then second. Williams's personal-best -6 in Round 2 (b09) closed the gap to three. The decisive moment was Round 3, hole 3 at Boavista: a par at the par-5 for net -2 put Williams outright ahead and ended Mullin's 21-hole spell in front (b01/b10). Williams led by five after Round 3 and was not headed over the remaining 33 holes. He shot -1 in Round 4 despite the 9 at Palmares' 16th and won at -6, by two from Baker.
 
-**Green Jacket (Gross).** Mullin took outright lead at R1 hole 3 and led wire-to-wire (one lead change all week). Lead by round: 8, 14, 14, 12. Final margin twelve over Baker at +72 (b11).
+**Green Jacket (Gross).** Mullin led from the 3rd hole of Round 1, the only Jacket lead change of the tournament. His +12 that day (b03) gave him an eight-shot cushion; the +11 and course-record 82 in Round 2 (b04/cr01) made it 14. Rounds of +27 and +22 followed, and the lead was still 14 after Round 3 and 12 at the finish. Final: +72, by 12 from Baker.
 
-**Wooden Spoon.** Mullin sat 1st on net through 36 holes (-3, then -4). His +12 in R3 dropped him to 4th (b20). At Palmares his quadruple bogey 9 at the 6th took him to the bottom (b22); Meller's double at the 15th briefly took it back (b23); Mullin's par at the 17th left him bottom at +12 (b24, b19).
+**Wooden Spoon.** Neumann held bottom place after Round 1's repeated changes. Meller took it at Round 2, hole 3, and held it through Round 3. Mullin, first on the Trophy metric after Rounds 1 and 2 at -3 and -4, posted +12 in Round 3 (b21) — his worst round to date, including the 9 at the 13th (b30) — and fell to fourth. At Palmares he went to the bottom at the 6th after a 9 (b22/b31), Meller returned to the bottom with a double bogey at the 15th (b23), and Mullin dropped to the bottom for the final time with a par at the 17th, SI 18 (b24). He finished at +12 net versus par (b25).
+
+---
 
 ## PLAYERS
-- **Gregg Williams** — R1 third (+5). R2 personal-best -6 net (b07) alongside +27 gross. Took outright Trophy lead at R3 hole 3 (b21). At Palmares, bled 10 shots across holes 10–13 (b46) and made a 9 at the 16th (b13), but won the Trophy by two at -6 (b05).
-- **David Mullin** — +12 gross R1 (b01) and +11 gross R2 (b02), both TEG records; -4 net R2 personal best (b06). +12 net in R3, worst round to date (b20). Won the Green Jacket by twelve at +72 (b11). Took the Wooden Spoon at +12 net via R4 quadruple bogey at the 6th and par at the 17th (b22, b24, b19).
-- **Jon Baker** — Runner-up in both Trophy (by two) and Green Jacket (by twelve). Personal-best +18 gross at Palmares (b08).
-- **Stuart Neumann** — Posted -9 net in R2, the best TEG round to date (b03), with +11 gross tying the gross record (b04). Did not lead either Trophy or Jacket.
-- **Henry Meller** — 10 (quintuple bogey) at Boavista's par-5 16th in R2 (b25). Bottom of the net standings after R2 and R3. Personal bests at Palmares: -3 net and +17 gross (b09, b10).
+
+- **Gregg Williams** — Reigning Wooden Spoon holder and last on gross in each of the previous three TEGs. Posted a personal-best -6 in Round 2, took the Trophy lead with a par at the 3rd in Round 3 and held it to the finish, winning his first Trophy at -6 by two despite a 9 at Palmares' 16th.
+- **David Mullin** — Defending champion. Set the best gross round in TEG history twice (+12 in R1, +11 in R2) and broke Boavista's 35-visit course record with an 82. Then went +12 net in R3 and +7 in R4, winning the Green Jacket by 12 and taking the Wooden Spoon.
+- **Jon Baker** — Runner-up in both the Trophy (by two) and the Jacket (by 12). Made four separate holes of 8 or 9: the 6th and 18th in R1, the 7th and 18th in R3, and the 5th at Palmares on the day he shot a personal-best +18 gross.
+- **Stuart Neumann** — Posted -9 in R2, the best net round in TEG history to date, with an 82 gross matching the new course record. Made a 9 at Boavista's 18th in R3.
+- **Henry Meller** — Held bottom place on the Trophy metric from R2, hole 3 through R3, including a 10 at Boavista's 16th in R2. Escaped at Palmares with a personal-best -3 net and personal-best +17 gross.

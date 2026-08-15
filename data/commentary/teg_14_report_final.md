@@ -10,7 +10,7 @@ Kent handed out its prizes in more or less the wrong order. The reigning Wooden 
 
 ## Round 1 — Deal, and the Reigning Spoon Holder Deals Himself In
 
-Royal Cinque Ports on the Thursday, a course that has staged two Open Championships and which, in a November wind, is not interested in your feelings about that.
+Royal Cinque Ports on the Thursday, a venue that has staged two Open Championships and which, in a November wind, is not interested in your feelings about that.
 
 Consider David Mullin's luggage on arrival. Four Wooden Spoons to his name, one in each of the last three TEGs, the most recent still warm. A man does not carry that much cutlery without it shaping his gait. He had reached the point where the Spoon was less an award than an accessory, something he'd learned to pack around.
 
@@ -24,7 +24,7 @@ File that, for now, as slapstick.
 
 Jon Baker's contribution was quieter and, in the long run, more expensive. At the par-3 4th, stroke index 18, the easiest hole at Royal Cinque Ports, he made bogey. It dropped him to the bottom of the Trophy board. He would remain there for the remaining 68 holes.
 
-Mullin signed for 40 points and 87 gross, a personal best at Deal by seven shots. Alex Baker's 98 was also a course best, four better than his TEG 13 visit, and contained the 10. Jon Baker's 29 left him seven shots worse than the last time he came here. Trophy lead: three. Jacket lead: five.
+Mullin signed for 40 points and 87 gross, a personal best at Deal by seven shots. Alex Baker's 98 was also a course record, four better than his TEG 13 visit, and contained the 10. Jon Baker's 29 left him seven shots worse than the last time he came here. Trophy lead: three. Jacket lead: five.
 
 ## Round 2 — Littlestone, Big Lead on the Marsh
 
@@ -32,7 +32,7 @@ Friday on the Romney Marshes, at Purves's links as refined by Braid and MacKenzi
 
 Alex Baker dropped twelve shots in four holes: triple bogey 7 at the 2nd, double 6 at the 3rd, triple 7 at the par-4 4th, quadruple bogey 9 at the par-5 5th. He added a second quad, an 8 at the par-4 8th. His day was effectively concluded before nine o'clock in the morning, in golfing terms, and he still had thirteen holes to walk.
 
-Mullin was not immune. He went triple at the par-4 4th, stroke index 2, double at the 5th, bogey at the par-3 6th. The difference is that he stopped it, with a birdie at the par-5 7th. He did the same trick at the close: bogey, bogey, double bogey at the par-3 17th, then a birdie at the par-5 18th to walk off with the bleeding staunched.
+Mullin was not immune. He went triple at the par-4 4th, stroke index 2, double at the 5th, bogey at the par-3 6th. The difference is that he stopped it, with a birdie at the par-5 7th. He did the same trick at the finish: bogey, bogey, double bogey at the par-3 17th, then a birdie at the par-5 18th to walk off with the bleeding staunched.
 
 That was 41 points and 85 gross, a second course personal best in two days, again by exactly seven shots. The Trophy lead went to nine. The Jacket lead went to twelve, which in a field of this shape is not a lead but a moat.
 
@@ -46,7 +46,7 @@ Mullin played his worst golf of the tournament and lost precisely one point of h
 
 Alex Baker's contribution to the pursuit was a quadruple bogey 8 at the par-4 10th, stroke index 3.
 
-Williams, at least, found something. Pars at the 9th, 10th and 11th, then a triple bogey 8 at the par-5 12th, and 39 points for 86 gross — a personal best at Prince's and a twelve-point improvement on his Littlestone round. It was the only real answer anybody gave all day and it moved nothing.
+Williams, at least, found something. Pars at the 9th, 10th and 11th, then a triple bogey 8 at the par-5 12th, and 39 points for 86 gross — a personal best at Prince's and a twelve-point improvement on his Littlestone score. It was the only real answer anybody gave all day and it moved nothing.
 
 Jon Baker made a quadruple bogey 8 at the par-4 13th, stroke index 1, the hardest hole on the course. He then parred the 14th, 15th and 16th, which suggested a recovery, and made a triple bogey 6 at the par-3 17th, which cancelled it. Twenty-eight points. By now the Spoon was not being contested so much as welded shut.
 
@@ -66,7 +66,7 @@ The most Jon Baker moment of the tournament arrived roughly in parallel. Par at 
 
 It made no difference to anything. He had been last since the 4th hole of the opening round and he was last now.
 
-Mullin scored 37 and 91 gross, one better than his previous best at Prince's, completing a set of personal bests at all three Kent courses. He finished on 154 points and +68. The reigning Spoon holder had won both prizes, and the Spoon went to a man who had never held one.
+Mullin scored 37 and 91 gross, one better than his previous best at Prince's, completing a set of personal bests at all three Kent venues. He finished on 154 points and +68. The reigning Spoon holder had won both prizes, and the Spoon went to a man who had never held one.
 
 ## How it was decided
 
@@ -77,6 +77,6 @@ Mullin scored 37 and 91 gross, one better than his previous best at Prince's, co
 ## Player-by-player summary
 
 - **David Mullin** — Arrived with four Spoons and three consecutive ones, left with the Trophy on 154 and his ninth Green Jacket at +68. Personal bests at Royal Cinque Ports, Littlestone and Prince's, and two quadruple bogeys — the 9 at the 8th in the third round, the 8 at the 10th in the fourth — that he simply absorbed.
-- **Alex Baker** — Course best of 98 at Deal, twelve shots gone in four holes at Littlestone, quadruple bogeys in every round, and 21 points across two charges on the final afternoon. Second by two, undone on the second-easiest hole on the card.
-- **Jon Baker** — The defending Trophy champion, with back-to-back Jackets behind him and no Spoon in his history until this one. Last from the 4th hole of the tournament onwards, second in the Jacket at +75, and the new Prince's course record holder at 83. Nobody has ever collected a Wooden Spoon with more style.
-- **Gregg Williams** — Posted the best Gross total of his TEG career at +76, including 86 at Prince's for a course personal best and a twelve-point jump on his Littlestone round. Third in the Jacket, nowhere near the Trophy, and entirely unsurprised.
+- **Alex Baker** — Course record of 98 at Deal, twelve shots gone in four holes at Littlestone, quadruple bogeys in every round, and 21 points across two charges on the final afternoon. Second by two, undone on the second-easiest hole on the card.
+- **Jon Baker** — The defending Trophy champion, with back-to-back Jackets behind him and no Spoon in his history until this one. Last from the 4th hole of the tournament onwards, second in the Jacket at +75, and the new Prince's Shore/Dunes course record holder at 83. Nobody has ever collected a Wooden Spoon with more style.
+- **Gregg Williams** — Posted the best Gross total of his TEG career at +76, including 86 at Prince's for a course personal best and a twelve-point jump on his Littlestone score. Third in the Jacket, nowhere near the Trophy, and entirely unsurprised.

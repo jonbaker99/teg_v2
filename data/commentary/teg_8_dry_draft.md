@@ -1,62 +1,76 @@
-# OVERVIEW
+# DRY STORYLINE DRAFT — TEG 8, Lisbon Coast, November 2015
 
-Gregg Williams won the Trophy on 149 Stableford points, 12 clear of Alex Baker. David Mullin took the Green Jacket at +77 gross, six clear of Jon Baker. Stuart Neumann collected the Wooden Spoon with 100 points.
+## OVERVIEW
 
-# Quinta da Marinha, and the Tournament Ends Before Tea
+Gregg Williams won the Trophy on 149 Stableford points, 12 clear of Alex Baker (137). David Mullin won the Green Jacket on gross at +77, six strokes clear of Jon Baker. Stuart Neumann took the Wooden Spoon on 100 points, 11 behind Henry Meller.
 
-Round 1 was played at Robert Trent Jones Sr.'s Quinta da Marinha, a new course for TEG.
+Four rounds on three courses: Quinta da Marinha (R1 and R3, Robert Trent Jones Sr. parkland), Penha Longa (R2, Robert Trent Jones Jr., Sintra hills), Oitavos Dunes (R4, Arthur Hills links). All three were new to TEG on this trip; Quinta da Marinha was the only one played twice.
 
-Williams took outright Trophy lead at the 10th and never relinquished it. The move came inside a four-hole burst from holes 8 to 11: a bogey at the par-4 8th (3 pts), a par at the par-3 9th (3 pts), a birdie at the par-5 10th (5 pts) and a bogey at the par-5 11th (3 pts) — 14 points in four holes. He closed the round on 38 points, four clear at the top of the Trophy.
+## ROUND 1 — Williams Leads at the 10th and Nobody Sees Him Again
 
-Henry Meller opened with a 10 (quintuple bogey) at the par-5 3rd. That hole dropped him to the bottom of the Wooden Spoon table, where he had briefly displaced Neumann (who had been bottom since the 1st). Neumann reclaimed last place at the 4th and stayed there for the rest of the tournament.
+Wednesday, Quinta da Marinha, a new course for TEG.
 
-From the 7th to the 15th Neumann bled 29 shots: double bogey at the par-3 7th, double at the par-4 8th, triple at the par-3 9th, quadruple at the par-5 10th, quadruple at the par-5 11th, quintuple bogey 9 at the par-4 12th, double at the par-4 13th, quintuple bogey 8 at the par-3 14th, and double at the par-4 15th. He finished the round on 17 points.
+Williams posted 38 points, best in the field, and took the outright Trophy lead at the 10th. That was the only lead change in the Trophy all tournament; he led by four after the round.
 
-David Mullin led the Green Jacket after R1 by one shot.
+The Jacket changed hands four times in the round, all routine early exchanges: Jon Baker drew level at the 6th, Mullin drew level at the 10th, Williams drew level at the 11th, and Mullin took it outright at the 13th. Mullin led on gross by one after 18 holes.
 
-# Up the Hill at Penha Longa, Down the Same Order
+Meller made a 10 at the par-5 3rd — a quintuple bogey — which dropped him to the bottom of the Wooden Spoon race at that point.
 
-Round 2 moved to Penha Longa's Atlantic Course, mountain parkland in the Sintra hills, designed by Robert Trent Jones Jr. — a new course for TEG.
+Neumann went bottom of the field at the 4th and stayed there. He bled 29 shots across nine holes from the 7th to the 15th: double bogey at the par-3 7th (SI 18, the easiest hole), double at the 8th (SI 1, the hardest), triple at the 9th, quadruple at the par-5 10th, quadruple at the par-5 11th, quintuple at the 12th, double at the 13th, quintuple at the par-3 14th and double at the 15th. He signed for 17 points and +43 gross (114) — both his worst to date, and the worst gross return anyone made at Quinta da Marinha all tournament.
 
-Williams shot 41 points and stretched his Trophy lead to 11, despite a 10 (quintuple bogey) at the par-5 12th.
+Alex Baker made 30 points, with a 10-point split between his nines. He dropped 14 shots over the last four holes: double at the 15th, triple at the 16th, a 9 at the 17th and an 8 at the 18th.
 
-Mullin posted +14 gross, his best round of the week, and extended his Green Jacket lead to six.
+## ROUND 2 — Eleven Clean Holes, Then a Ten: Williams's Penha Longa Masterclass
 
-# Williams Wobbles, Nobody Catches Him
+Thursday, Penha Longa, a new course for TEG.
 
-Round 3 returned to Quinta da Marinha, the only course played twice.
+Williams played the first 11 holes without dropping a net shot: bogey, bogey, bogey, par at the 4th (SI 2), bogey, par at the par-5 6th, par at the par-3 7th (SI 4), double at the 8th, bogey at the 9th, par at the 10th and double at the 11th (SI 3). At the par-5 12th (SI 17, one of the easiest holes) he made a 10, a quintuple bogey. He still signed for 41 points, best in the field, and pushed the Trophy lead from four to 11.
 
-Williams scraped together 29 points — his worst round of the week — including a 10 (quintuple bogey) at the par-5 11th. His Trophy lead narrowed to five but he stayed in front.
+Mullin went nine holes without dropping a net shot from the 4th to the 12th: par at the 4th (SI 2), bogey, birdie at the par-5 6th (SI 18, the easiest hole), par at the 7th, bogey at the 8th, bogey, bogey, bogey at the 11th (SI 3), par at the par-5 12th. He shot 86, +14 — the lowest gross round anyone played all tournament — and led the Jacket by six at halfway.
 
-Mullin posted 26 points, his worst round to date, with a quadruple-bogey 8 at the par-4 12th. He lost the Green Jacket lead to Jon Baker, who finished the round two clear.
+After R2: Williams led the Trophy, Mullin led the Jacket.
 
-Alex Baker ran up a 10 (sextuple bogey) at the par-4 8th.
+## ROUND 3 — Everybody's Worst Day: Quinta da Marinha, Second Helping
 
-Neumann bled 17 shots over the opening five holes: a 10 (quintuple bogey) at the par-5 1st, a double at the par-3 2nd, a double at the par-5 3rd, a quintuple bogey 9 at the par-4 4th, and a triple at the par-3 5th. Later in the round he ran up an 11 (sextuple bogey) at the par-5 10th. He remained bottom of the Spoon.
+Friday, Quinta da Marinha, the second TEG round at the venue.
 
-# Mullin Slips the Jacket On at the 2nd
+Williams dropped 14 shots in four holes: triple bogey at the 8th (SI 1), double at the par-3 9th, a 9 at the par-5 10th (SI 3) and a 10 at the par-5 11th. He signed for 29 points, fourth of six on the day, three behind Alex Baker, and his Trophy lead fell from 11 to five.
 
-Round 4 was at Oitavos Dunes, Arthur Hills' Atlantic links — a new course for TEG.
+Mullin made 26 points, his worst round to date, ten fewer than his 36 in R2. He made an 8 at the 12th (SI 2). Jon Baker drew level on gross at the 12th, took the lead outright at the 13th — ending Mullin's 36-hole run in front, held since R1 H13 — and although Mullin drew level again at the 15th, Jon Baker finished the round leading the Jacket by two. Jon Baker's 89 was the best gross return recorded at Quinta da Marinha in the tournament.
 
-At the par-4 2nd, Mullin made bogey and took outright Green Jacket lead back from Jon Baker. He closed the round in +17 gross.
+Alex Baker made a 10 at the 8th, SI 1, the hardest hole on the course. His round ran triple-triple-triple at the 3rd, 4th and 5th, bogey at the 6th, double at the 7th, the 10 at the 8th, double at the 9th, triple at the 10th, bogey at the 11th, an 8 at the 12th (SI 2), triple at the 13th, bogey, double, triple at the 16th, and then a birdie at the 17th — his first hole better than bogey since the 6th.
 
-Williams shot 41 points. The round included a 12-point burst across holes 12 to 15: par at the par-3 12th, bogey at the par-5 13th, par at the par-3 14th and par at the par-3 15th.
+Neumann dropped 17 shots in the first five holes: a 10 at the par-5 1st, double at the par-3 2nd, double at the par-5 3rd, a 9 at the 4th and a triple at the par-3 5th. He later made an 8 at the par-3 9th and an 11 at the par-5 10th (SI 3). He scored 20 points, bottom of the field, 14 behind Meller's 34.
 
-Meller ran up a 10 (sextuple bogey) at the par-4 4th. Across the opening six holes he bled 22 shots: double at the par-4 1st, quadruple at the par-4 2nd, triple at the par-3 3rd, the 10 at the 4th, quintuple bogey 9 at the par-4 5th and double at the par-4 6th.
+After R3: Williams led the Trophy, Jon Baker led the Jacket.
 
-# HOW THE COMPETITIONS WERE DECIDED
+## ROUND 4 — Oitavos Dunes: Mullin Takes the Jacket Back at the Second, Williams Cruises Home
 
-**Trophy.** Williams led from R1 H10 to the finish — a wire-to-wire victory with only one outright lead change in the competition. His four-round leads were 4, 11, 5 and 12. The decisive moment was the four-hole burst at holes 8–11 of R1 that put him in front. Final margin: 12 points over Alex Baker.
+Saturday, Oitavos Dunes, a new course for TEG.
 
-**Green Jacket.** Mullin led after R1 (by 1) and R2 (by 6), surrendered the lead to Jon Baker after R3 (down by 2), and retook it outright at the par-4 2nd of R4. He closed in +17 gross to win by 6 over Jon Baker. Seven lead changes in total across the four rounds; the decisive one was R4 H2.
+Mullin retook the gross lead outright at the 2nd and held it to the finish. He made an 8 at the 11th (SI 14), then bogeyed the 14th and 15th before a birdie at the par-5 16th. He shot 88, +17, eight strokes better than Jon Baker, and won the Green Jacket at +77 by six. The day's gross spread at Oitavos was 25 shots, from Mullin's 88 to Meller's 111.
 
-**Wooden Spoon.** Neumann dropped to bottom at R1 H1, briefly handed it to Meller after Meller's 10 at the 3rd, and reclaimed it at the 4th. He was bottom in every round thereafter. Final tally: 100 points.
+Williams played the last ten holes without dropping a net shot: par at the par-3 9th, bogey at the 10th, bogey at the 11th, par at the par-3 12th, bogey at the par-5 13th, pars at the par-3 14th and par-3 15th (SI 18, the easiest hole), bogey at the par-5 16th, bogey at the 17th and double at the 18th (SI 2). He signed for 41 points and won the Trophy by 12.
 
-# PLAYERS
+Alex Baker went seven holes without dropping a net shot from the 8th to the 14th: bogey at the par-5 8th (SI 3), bogey at the par-3 9th, par at the 10th, double at the 11th, par at the par-3 12th, double at the par-5 13th, bogey at the par-3 14th. He finished on 137, runner-up.
 
-- **Gregg Williams** — Took outright Trophy lead at R1 H10 and held it for the rest of the week, weathering 10s at Penha Longa's 12th and Quinta's 11th to win by 12; his 8th-best TEG showing.
-- **Alex Baker** — Trophy runner-up by 12; opened R1 with 15 points across the first five holes but took a 10 at the 8th in R3.
-- **David Mullin** — Led the Green Jacket after R1 and R2, lost it after R3 (worst round to date, 26 pts, with a quad at the 12th), retook it outright at R4 H2 and won by 6.
-- **Jon Baker** — Led the Green Jacket outright after R3 by 2; Jacket runner-up.
-- **Stuart Neumann** — Bottom of the Spoon from R1 H4 to the finish; round scores of 17, 31, 20, 32 for 100 points; major collapses included 29 shots across R1 holes 7–15, 17 shots across R3 holes 1–5, a 10 at R3's 1st and an 11 at R3's 10th.
-- **Henry Meller** — Opened with a 10 at the par-5 3rd in R1, briefly held the Spoon bottom, and ran up another 10 at the par-4 4th in R4 inside a 22-shot, six-hole opening stretch.
+Meller dropped 22 shots in the first six holes: double at the 1st, an 8 at the 2nd, a 6 at the par-3 3rd, a 10 at the 4th and a 9 at the 5th (SI 1), then a double at the 6th. He took nothing from the 2nd, 3rd, 4th and 5th. He scored 21 points, 13 fewer than his R3 34.
+
+Neumann scored 32, 12 more than his R3 20, but was still bottom of the field on the day. The Wooden Spoon was confirmed at 100 points.
+
+## HOW THE COMPETITIONS WERE DECIDED
+
+**Trophy (Stableford).** Williams took the outright lead at the 10th hole of R1 and led after every round: by four, 11, five and 12. That was the tournament's only Trophy lead change; no rival led at any point across the remaining 62 holes. He posted 38, 41 and 41 — all best in field — either side of a 29 in R3, and beat Alex Baker head-to-head in three of the four rounds. The decisive round was R2 at Penha Longa, where the 41 moved the lead from four to 11. Final margin: 149 to 137.
+
+**Green Jacket (Gross).** Mullin took the lead outright at R1 H13 and held it for 36 holes, leading by one after R1 and six after R2. He lost it at R3 H13 to Jon Baker, who led by two after R3. At R4 H2 at Oitavos, Mullin retook the lead outright — the decisive change — and won the round by eight strokes. Final: +77 to Jon Baker's +83, a margin of six. Mullin was never worse than second on gross after any round.
+
+**Wooden Spoon.** Neumann went to the bottom at R1 H4 and was bottom of the field in all four rounds. Three bottom changes, all in the opening holes of R1. R1 gave him 17 points and +43; R3 gave him 20 and left him 14 behind Meller with one round to play. His R4 32 was his best round but did not close the gap. Final: 100 points, 11 behind Meller.
+
+## PLAYERS
+
+- **Gregg Williams** — Trophy winner on 149. Rounds of 38, 41, 29, 41. Made a 10 at Penha Longa's 12th in R2 and a 10 at Quinta da Marinha's 11th in R3, and led the Trophy from R1 H10 to the finish.
+- **David Mullin** — Green Jacket winner at +77. Gross rounds of +20, +14, +26, +17; the +14 (86) at Penha Longa was the lowest gross round of the tournament. His 26 points in R3 was his worst round to date. He made no double-figure score all tournament.
+- **Alex Baker** — Trophy runner-up on 137. Made a 10 at the SI 1 8th in R3 and a 9 at the 18th in R4; posted seven clean net holes from the 8th to the 14th at Oitavos.
+- **Jon Baker** — Green Jacket runner-up. Led the gross after R3 by two, lost the lead at R4 H2, and lost the final round to Mullin by eight strokes. His 89 in R3 was the best gross round at Quinta da Marinha.
+- **Henry Meller** — Defending Trophy champion. Made a 10 at Quinta da Marinha's 3rd in R1, scored 34 in R3, then 21 in R4 after dropping 22 shots in the first six holes at Oitavos, including a 10 at the 4th and a 9 at the SI 1 5th. Finished 11 clear of the Spoon.
+- **Stuart Neumann** — Wooden Spoon on 100 points. Rounds of 17, 31, 20, 32; bottom of the field in all four. Bled 29 shots from the 7th to the 15th in R1 and 17 in the opening five holes of R3, with a 10 at the 1st, a 9 at the 4th, an 8 at the 9th and an 11 at the 10th that day.

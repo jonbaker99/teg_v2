@@ -1,71 +1,97 @@
-# TEG 5 — The Mullin Paradox
+# Williams Makes a Nine and Wins Anyway: The Spoon-Holder Takes the Trophy
 
-There is a moment, somewhere in the late morning of the third day at Boavista, when David Mullin stands on the 3rd green knowing two things at once. He is going to win the Green Jacket by a distance that will require fresh adjectives. And he has just, quietly, lost the Trophy.
+The 16th at Palmares is a par 4. Gregg Williams, who had never laid eyes on it before that morning, took nine shots to complete it.
 
-Gregg Williams has rolled in a par at the par-5 3rd for four Stableford points, and with that small, blameless act has moved into outright lead of the net competition for the first time all week. He will not be displaced. The man wearing — figuratively, prematurely, but indisputably — the Green Jacket is about to spend the rest of the week sliding all the way to the bottom of the other leaderboard.
+There was no scene. No club was thrown, no playing partner offered condolences, and the group moved to the 17th with the brisk courtesy of men who have agreed not to mention something. Ninety minutes later Williams signed for 104 and won the TEG Trophy by two.
 
-This is the shape of TEG 5. Two competitions, one man at the top of one and the bottom of the other, and a third party walking off with the silverware that actually counts. The third party had been holding the Wooden Spoon twelve months earlier; the man about to inherit it had been holding the Trophy. To understand any of this, we have to rewind forty-eight hours, to a Tuesday in June at Boavista when David Mullin started rewriting the record book.
+He had arrived in the Algarve as the reigning Wooden Spoon holder, fifth on gross in each of the previous three TEGs, which is to say the least likely man in a field of five. He left with the thing he had never won. Meanwhile the defending champion broke Boavista's course record, then TEG's all-time gross record, then TEG's all-time gross record again, and finished the tournament in last place with the Spoon in his hand.
 
-## Round 1 — +12, and the Book Reopens
+The scorecards tell you how. They mostly tell you in nines. Across the four days at Boavista and Palmares, the little printed boxes on those cards — sized, optimistically, for one digit — were repeatedly asked to accommodate two. Every player in the field contributed. Some contributed generously.
 
-The 8th TEG round at Boavista began like any of the previous seven, and ended unlike any tournament TEG had previously witnessed. Mullin signed for +12 gross. The best round, gross, in TEG history.
+## Round 1 — Mullin's +12, and a Field Filling In Boxes
 
-He took outright lead of the Green Jacket at the 3rd and was never headed — a sentence that will, over the next three days, acquire an increasingly load-bearing weight. The net competition, by contrast, behaved the way such competitions tend to behave on a Tuesday: Mullin, Baker and Williams traded the lead in polite increments — Mullin out at 3, Baker level at 4, level again at 16, Mullin retaking outright at the last to finish the day one clear at +1. Williams sat third, five back, the kind of position from which one is supposed to applaud politely and order another beer.
+Sunday at Boavista, TEG's eighth round on the ground it knows best. David Mullin went to the front on gross at the 3rd. That was the only Green Jacket lead change of the entire tournament, though nobody could have known it at the time, and nobody was watching anyway.
 
-Nothing about the evening suggested that the bunched net field at the top of the board mattered less than the eight-shot gap at the top of the gross one. Nothing yet suggested that those two facts were the entire story of the week.
+He shot +12. It was the best gross round in TEG history to that point, and it left him eight clear on the Jacket and one clear on the Trophy by nightfall.
 
-## Round 2 — Boavista's Day of Records
+The Trophy lead changed four times during the round, which sounds like turmoil and was in fact five men in a bunch bumping into each other. Baker drew level at the 4th and again at the 16th without ever going ahead. Mullin took it back outright at the last.
 
-If Round 1 was a record, Round 2 was a small genre.
+Elsewhere the tournament established its house style. Williams made a 9 at the 17th, a quintuple bogey on SI 17 — one of the easiest holes on the course, and a hole he had played on seven previous TEG visits. Baker matched the quintuple with an 8 at the short 6th, then closed with a quadruple-bogey 8 at the 18th.
 
-Mullin came back out and shot +11 gross, equalling the TEG mark he had set the previous afternoon. For good measure he posted a personal best of -4 net. This would, on almost any other day in TEG history, be the headline. On this day it was arguably the third item on the bulletin.
+Williams ended the day third on net, five off the lead. Neumann held bottom place after an afternoon of shuffling that meant nothing. None of it yet looked like evidence.
 
-Because Stuart Neumann shot -9 net. The best round in TEG history to date. And, on the same card, +11 gross — tying Mullin's twenty-four-hour-old benchmark. Two men holding the gross record jointly by sundown, one of them also holding the best net round ever recorded. Boavista, eighth and ninth TEG visits, was simply handing out plaques.
+## Round 2 — Two 82s and a Record That Had Survived Thirty-Five Visits
 
-The quietest record of the three belonged to Williams, who personal-bested at -6 net — and did so on a card that came in at +27 gross. The handicap engine, humming beautifully in the background, doing the work that would eventually win him the Trophy while nobody was looking. State the implication: the man who would lift the Trophy was, on the day of his personal-best net round, sixteen shots worse on raw strokes than the man who would lift the Jacket. This is not a paradox. It is the system functioning as designed.
+Boavista's gross record was 85. It had stood across 35 prior visits, unthreatened, the sort of number that has stopped expecting to be troubled.
 
-Henry Meller, meanwhile, made a 10 at the par-5 16th, which under the circumstances felt almost companionable.
+Mullin shot 82.
 
-Mullin led the Trophy by three. Williams was second. The Jacket race was, in any meaningful sense, over.
+The +11 was the best gross round in TEG history, superseding the mark he had set himself the previous afternoon, and the -4 net was a personal best on top. Then Stuart Neumann, playing in the same field on the same course on the same day, also shot 82. His +11 equalled the brand-new TEG gross best. His -9 net was the best round, net or otherwise, that TEG had ever recorded.
 
-## Round 3 — Williams Walks Through the Door
+Two men broke a 35-visit course record within a few hours of each other and one of them still isn't the headline.
 
-We return to where we began. The 10th TEG round at Boavista. The 3rd hole. Williams' par, four Stableford points, outright lead. It is the only lead change in the Trophy race that will matter.
+The improvement was collective and slightly indecent. Mullin was nine shots better than his last visit here, Neumann twelve, Baker and Williams eight apiece. Neumann's 82 was a seven-shot personal best at the venue.
 
-What made the door open was Mullin walking through it backwards. His net game, which had spent two days quietly being good while his gross game was being historic, came apart entirely. He posted +12 net — his worst TEG round to date — on a gross card of +27. The wheels did not so much come off as politely detach themselves and roll into the Atlantic.
+Williams's contribution to the record books was quieter and, as it turned out, more consequential. He posted -6 net, a personal best, off a gross of +27. The card included a quadruple-bogey 9 at the par-5 8th, SI 2, one of the hardest holes on the course. It also included a 7 at the short 14th, four over on a par 3.
 
-By close of play Williams led the Trophy by five. Mullin had fallen to fourth in the net standings. The Green Jacket lead, untouched by any of this, held at fourteen, because of course it did — Mullin's +27 gross was, by the standards of his own week, a bad day, and by the standards of everyone else's a perfectly defensible afternoon.
+A personal best containing a 9 and a 7 is not a contradiction. It is simply what handicap golf looks like when a man has been fifth on gross for three years running.
 
-Two competitions, two directions, one man.
+Henry Meller signed for a 10 at the par-5 16th, a quintuple bogey and the worst hole relative to par he recorded all tournament. He took bottom place on net at the 3rd and stayed there.
 
-## Round 4 — Palmares Holds, Williams Wins, Mullin Spoons
+Mullin led the Trophy by three and the Jacket by fourteen. He was, on the evidence, running away with everything.
 
-Round 4 took everyone to Palmares — a Robert Trent Jones Jr. design new to TEG, blending parkland with genuine links, a change of surface for the closing act. It mattered.
+## Round 3 — Twenty-One Holes at the Top, Then a Par at the 3rd
 
-Williams' overnight five-shot cushion looked, for a stretch on the back nine, like the kind of cushion that gets thrown out of an upstairs window. He bled ten strokes across four holes: triple at the par-4 10th, double at the par-5 11th, double at the par-3 12th, triple at the par-5 13th. Then, just to keep things interesting, a 9 at the par-4 16th. Most overnight leaders, given a links debut and that particular run of numbers, would be shaking hands with the runner-up by the 17th tee.
+The 3rd at Boavista is a par 5. Williams made a par. Net, with shots, that was two under, and it moved him outright ahead of Mullin on the Trophy for the first time.
 
-Williams held. He won the Trophy by two from Baker at -6. His first.
+It ended twenty-one consecutive holes of Mullin leadership, held since the 18th green of the opening round. It was the only lead change of the tournament that took place outside Round 1, and Williams was not headed across the 33 holes that remained.
 
-Mullin completed his Jacket procession with +22 gross — a final margin of twelve over Baker at +72. The lead by round, for the record-keepers: eight, fourteen, fourteen, twelve. One lead change all week, at the 3rd hole of the opening morning, and then nothing.
+Mullin's afternoon then did something nobody had budgeted for. He went round in +27 gross for +12 net, his worst round to that date, and fell from first to fourth on the Trophy. The 9 came at the par-5 13th, a quadruple bogey, and by then the descent had a certain momentum to it.
 
-And then there was the Spoon. Mullin had begun the day fourth on net, already a striking position for a man about to be fitted for a Green Jacket. At the par-5 6th he made a quadruple-bogey 9 and slid to the bottom. Meller — who had been propping up the table for two rounds — looked like he might be granted a reprieve when he doubled the par-4 15th and briefly took the wooden one back. Mullin parred the par-3 17th. That was that. Bottom for good at +12 net.
+Baker, for his part, was assembling the tournament's most reliable subplot. Two nines this time, quintuple bogeys both, at the 7th and the 18th. Neumann also took 9 at the 18th, which at least made the walk in companionable.
 
-The same man wearing the Jacket carrying the Spoon home. The dry facts: Jacket by twelve, Spoon by one.
+Williams finished five clear. Meller remained bottom, Mullin's collapse notwithstanding, and Mullin's Jacket lead sat unmoved at fourteen. The Green Jacket had stopped being a competition somewhere around teatime and nobody had thought to tell it.
 
-The closing day's other business was tidier. Baker posted a personal-best +18 gross at Palmares, the runner-up's ancillary reward. Meller, who had spent the week in the basement, signed off with a personal-best -3 net and a personal-best +17 gross — the links, apparently, suiting him in a way that the parkland never had.
+## Round 4 — Palmares, First Acquaintance
 
-## How the three were decided
+Wednesday at Palmares, the Lagos and Praia nines, Robert Trent Jones Jr. Nobody in the field had ever seen it. After three rounds on the most familiar ground in TEG's short history, the final day was a blank sheet handed to five men with different amounts to lose.
 
-**The Trophy.** Mullin led after R1 and stretched it to three after R2. Williams' -6 net personal best in R2 parked him second. He took outright lead at R3's 3rd, got the five-shot overnight cushion when Mullin posted +12, and survived the Palmares wobble to win by two.
+Baker had the most to gain and began like it: par, bogey, birdie at the short 3rd, bogey at the par-5 4th. Five net shots to par in four holes, and a two-shot deficit suddenly looking like a live question.
 
-**The Green Jacket.** Mullin, hole 3 of R1 onwards. Wire-to-wire. Twelve clear. Records at,,.
+At the par-3 5th he took 8.
 
-**The Wooden Spoon.** Mullin, via his R3 +12, the quad at Palmares' 6th and the par at the 17th. Net leader through 36, last through 72.
+That was the fourth time in four days a single hole had cost Baker five or more shots to par, and it was the last. He shot +18 gross, 90 on a course he had never played, and a personal best. He finished runner-up in the Trophy by two and runner-up in the Jacket by twelve.
 
-## The men, in brief
+Williams, meanwhile, was going through the middle of the round in the manner of a man being slowly relieved of his wallet. Triple at the par-4 10th. Double at the par-5 11th. Double at the short 12th. Triple at the par-5 13th. Ten shots gone across four holes, and a five-shot cushion getting airy.
 
-- **Gregg Williams** — A maiden Trophy, assembled so quietly that one wonders if he meant to, and assembled twelve months after he had collected the Wooden Spoon at TEG 4. The R2 personal-best -6 net closed the gap; the par at R3's 3rd opened the door; the Palmares back nine, ten strokes gone in four holes and a 9 at the 16th, was the bit where he held his nerve when there was no obvious reason to.
-- **David Mullin** — Two of the greatest gross rounds in TEG history, back to back at Boavista, and a fourth consecutive Green Jacket won by twelve. Also: his worst-ever TEG net round in between, a quadruple at Palmares' 6th, and a Spoon to carry home alongside the Jacket. A week that will require its own shelf.
-- **Jon Baker** — Runner-up in both Trophy and Jacket, which is the kind of double that earns sympathy rather than headlines. Personal-best +18 gross at Palmares was the highlight of a fortnight spent two paces behind two different men.
-- **Stuart Neumann** — Posted -9 net in R2, the best round in TEG history, and tied the gross record at +11 the same afternoon. Did not seriously threaten the lead of either competition. A reminder that records and trophies are not, in TEG, the same currency.
-- **Henry Meller** — A 10 at Boavista's 16th in R2, large stretches of the week at the bottom of the net table, and then a Palmares farewell of -3 net and +17 gross, both personal bests. The links, in the end, were kinder than the parkland.
+Then the 9 at the 16th. Quintuple bogey, on a par 4, on a course he had first seen four hours earlier, with the Trophy on the line.
+
+He came home in -1 net for the round and won at -6.
+
+The Wooden Spoon, by contrast, was still changing hands with the frantic reluctance of a hot dish. Mullin's quadruple-bogey 9 at the par-5 6th dropped him to the bottom for the first time in the tournament. Meller's double bogey at the 15th passed it straight back to himself. And at the par-3 17th, SI 18, the easiest hole on the course, Mullin made a par and returned to the bottom for the final time.
+
+Losing the Spoon race with a par is a distinction few have managed. He finished at +12 net, last of five, on the same afternoon he sealed the Green Jacket at +72, twelve clear.
+
+Meller escaped with the round of his life: -3 net and +17 gross, personal bests both, 89 on unfamiliar ground after ten rounds of failing to improve his Boavista best of 89 from TEG 3. He found his form the moment the course stopped being one he knew.
+
+## The Arithmetic of Two Shots
+
+Baker lost the Trophy by two. Across four rounds he handed back an 8 at the 6th and an 8 at the 18th in Round 1, nines at the 7th and 18th in Round 3, and the 8 at Palmares' 5th. Five holes, five separate afternoons of otherwise competent golf.
+
+Any one of them played to a double bogey and he wins it.
+
+Williams's 9 at Palmares' 16th, the one that ought to have been fatal, cost him five. He had four to spare. That is the whole tournament: a man who could afford a nine and a man who could not.
+
+## How it was decided
+
+- **The Trophy (net vs par).** Mullin led by one after Round 1 and by three after Round 2, with Williams third then second. Williams's personal-best -6 in Round 2 closed the gap. The decisive stroke came at the 3rd at Boavista in Round 3: par at the par-5, net -2, outright lead, and the end of Mullin's 21-hole spell in front. Williams led by five overnight and won at -6, two clear of Baker — his first Trophy, three TEGs after last place on gross became his habit.
+- **The Green Jacket (gross).** Over at the 3rd hole of Round 1, effectively. Mullin's move to the front there was the only Jacket lead change of the tournament, and his +12 that day — the best gross round in TEG history at the time — made it an eight-shot cushion. The 82 at Boavista in Round 2 broke a course record that had survived 35 visits, and the +11 lifted the lead to fourteen. Rounds of +27 and +22 followed and changed nothing. Final: +72, by twelve.
+- **The Wooden Spoon.** Neumann held bottom through Round 1's routine shuffling; Meller took it at the 3rd in Round 2 and kept it through Round 3. Mullin's +12 net in Round 3, his worst round to that point and containing a 9 at the 13th, dropped him to fourth. The 9 at Palmares' 6th put him bottom for the first time, Meller's double at the 15th briefly relieved him, and his par at the 17th settled it. He finished at +12 net: Jacket and Spoon, same hands, same day.
+
+## Player-by-player summary
+
+- **Gregg Williams** — Arrived as the reigning Spoon holder and fifth on gross three TEGs running, and left as Trophy champion at -6. The personal-best -6 in Round 2 got him within range, the par at Boavista's 3rd in Round 3 got him in front, and the 9 at Palmares' 16th could not get him out of it. First Trophy, and he made it look like an accident.
+- **David Mullin** — Broke the all-time TEG gross record on Sunday, broke it again on Monday, and broke Boavista's 35-visit course record with an 82 in between. Then +12 net and +7 net, a Green Jacket by twelve, and the Wooden Spoon. Nobody has ever been so good at half of this.
+- **Jon Baker** — Runner-up twice, by two and by twelve, and the author of five separate holes of 8 or worse. The personal-best +18 gross at Palmares came on the day he also took 8 at the 5th, which is the tournament in one card.
+- **Stuart Neumann** — Posted -9 in Round 2, the best net round TEG had ever seen, with an 82 gross that matched the new course record and beat his own Boavista best by seven. Followed it with a 9 at the 18th in Round 3, lest anyone mistake him for someone else.
+- **Henry Meller** — Two prior Spoons and the bottom slot from the 3rd hole of Round 2 all the way through Round 3, the 10 at Boavista's 16th being the pick of it. Escaped at Palmares with personal bests in both net and gross, and passed the parcel to the Jacket winner.

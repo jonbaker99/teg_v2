@@ -12,6 +12,7 @@ is upstream (scoring/plan), not the writing.
 from __future__ import annotations
 
 import json
+from collections import Counter
 from typing import Optional, Tuple, Union
 
 from teg_analysis.reporting.story_plan import assemble_bundle, StoryPlan
@@ -228,6 +229,68 @@ able to tell plainly what happened — the score, the hole, who did what, where 
 stood. State the fact cleanly, or make sure it survives intact inside the wit. Never let a \
 device from the list above bury or obscure the underlying fact.
 
+THESE RULES AIM THE COMEDY; THEY DO NOT REDUCE IT. Everything above stays fully in force — the mechanisms, the escalation, the deadpan. What follows only decides WHERE the comedy points.
+
+WHO THE REPORT IS FOR, AND WHO IT IS ABOUT — read this first; it governs everything below.
+
+**This is the winner's story.** Its first duty is to make clear WHY the champion won. \
+The plan's `why_the_champion_won` and the bundle's `win_anatomy` give you the answer \
+already worked out — were they good in one round or all four, were their rivals bad, \
+did somebody blow a lead. Land that, or the report has failed however funny it is.
+
+**Praise the achievement, and be merciless about the golf.** These are not in tension — \
+holding both at once is the single best register available to you. The champion EARNED \
+the win and the report should say so without hedging. It should simultaneously be \
+hyper-aware of how ragged the winning golf actually was, and of how comprehensively the \
+rest of the field disgraced themselves. "He won it with a 10 on his card and a shrug, \
+which is roughly what winning looks like round here" is the target. So is "the winner \
+didn't avoid the wreckage; he was simply the one whose wreckage cost him least."
+
+  Do NOT go easy on the champion's golf. Their blow-ups, their ruinous stretches, the \
+holes that would embarrass a beginner — all of it is fair comic material and the report \
+is worse without it. Winning by being the least catastrophic man in a catastrophic field \
+is a genuinely funny way to win, and saying so is a compliment in this company.
+
+  **But the DELIVERY has to carry it, and this is the part that goes wrong.** A flat \
+recitation of the champion's failings reads as a charge sheet, however accurate. The \
+same facts delivered with theatrical, slightly camp overstatement read as affection. \
+Elevate: mock-epic, grandiose, absurdly solemn — the subverted gravitas above, pointed \
+directly at the winner. The facts do not change; the register does.
+
+    FLAT (wrong):  "He took 10 at the 14th and 8 at the 17th. His R4 was the \
+worst of the four."
+    ELEVATED (right): "He arrived at the 14th with the tournament in his pocket \
+and proceeded to take a 10, an act of such magnificent indifference to \
+self-interest that one can only assume he was making a point about the futility \
+of ambition. The trophy did not seem to mind."
+
+  **Proportion matters too.** However well delivered, a report whose THROUGH-LINE is how \
+poor the champion was has failed. Their failings are punctuation in a story about a win, \
+never the story itself.
+
+  The one thing that is banned outright is WITHHOLDING THE CREDIT: writing the champion \
+as a passive accident of arithmetic, or implying the win was undeserved, or letting a \
+catalogue of their failings stand in place of any account of how they won.
+
+**Mockery, by target.** Calibrate — this is a group of friends who know each other:
+  - **Wooden Spoon holder: hard.** The Spoon is the joke prize. Its holder expects, and \
+has earned, a proper going-over. Be specific and merciless.
+  - **The rest of the field: moderate.** Blow-ups, ruinous rounds and general \
+humiliation from players who were never contending are exactly the colour the report \
+wants. Enjoy them.
+  - **The runner-up: moderate.** A player who threw it away is a legitimate tragic \
+figure and can be needled for it — that is often the real story.
+  - **The champion: hard on the golf, never on the achievement.** Same intensity as \
+anyone else when describing what they actually did with a golf club — the difference is \
+that the win stands, unqualified, alongside it.
+
+**A bad gross score is not a bad tournament.** The Trophy and the Spoon are decided on \
+NET (Stableford from TEG 8, net-vs-par before). A high-handicap player can post \
+horrifying gross numbers and win the thing — that contrast is a genuinely good story \
+when the gross really is dreadful, and it must never be written as though the champion \
+were secretly undeserving. The Green Jacket is the gross competition; keep the two \
+straight and never treat a gross figure as evidence about the Trophy.
+
 NARRATIVE PULL — the report is a magazine feature, not a results record. Beyond deploying \
 individual devices, the piece as a whole must make the reader want to keep reading. Raise a \
 question, a stake, or an apparent claim early, and let the reader work towards its resolution \
@@ -306,8 +369,8 @@ competition — e.g. if the Green Jacket winner's total is a top-3 all-time Gros
 total, say so here even if the narrative body didn't have room for it.
 - **The report MUST END with a player-by-player section** — 4–6 short bullets, one \
 or two sentences per principal player, drawing on the plan's `players[]` arcs AND \
-the moments you've narrated. Use a heading like `## The men, in brief` (or similar). \
-This closing is non-negotiable; do not omit it.
+the moments you've narrated. The heading MUST be exactly `## Player-by-player summary` \
+— not a variant, not a witty substitute. This closing is non-negotiable; do not omit it.
 
 PALETTE — context vehicles to pull on. **At least ONE must be prominent in the report \
 (featured in the opener AND threaded through the body); multiple are welcome where each \
@@ -346,7 +409,7 @@ when the data supports them precisely. Don't speculate beyond the evidence.
 e) **Player-thread continuity within the tournament.** When a player's round-by-round \
 shape forms a recurring pattern (serial Spoon blow-ups; Jacket-without-Trophy parlay; \
 parallel collapses across the field), name the pattern. Set it up early; pay it off when \
-it resolves. The closing "men in brief" earns its place by collecting these.
+it resolves. The closing player-by-player summary earns its place by collecting these.
 
 f) **Records and rare feats woven into prose.** The deterministic appendix at report end \
 already inventories every PB, TEG record and rare feat. In prose, selectively pull forward \
@@ -448,7 +511,7 @@ spot.
 - **PLAYERS WHO PLAYED THIS TEG ONLY.** Only players who actually appear in the bundle's \
 `competition_arcs`, `beats`, or `player_history` for THIS TEG are participants. The bundle \
 may include cross-TEG career context but the player list for THIS tournament is fixed. \
-NEVER write a "men in brief" bullet — or any prose — for a player who did not play this \
+NEVER write a player-by-player summary bullet — or any prose — for a player who did not play this \
 TEG. If a player you'd expect to see is absent, they are absent; don't note their absence, \
 don't include them.
 - **PLAYER RELATIONSHIPS — only those in the bundle.** The bundle's \
@@ -589,7 +652,7 @@ PRESERVE ALWAYS:
 - All facts: holes, scores, par values, SI references, cross-tournament context, course \
 records, weekday names, player names exactly as written.
 - Section headings and the report's structural shape.
-- Closing payoff sentences (paragraph punchlines, kicker lines of "men in brief" bullets).
+- Closing payoff sentences (paragraph punchlines, kicker lines of player-by-player summary bullets).
 - Player relationships exactly as in the source (Bakers are brothers, Pattersons are \
 brothers; do not invent or change any others).
 
@@ -842,13 +905,30 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
     findings: list = []
     new_findings: list = []
     if verify:
-        before = {str(f) for f in verify_report(teg_num, text=source_text)}
         found = verify_report(teg_num, text=text)
         findings = [str(f) for f in found]
         # Faults the source already had are not this pass's doing. What matters
         # is whether rewriting introduced one — that is the exact failure that
         # got the critique-revise variant rejected.
-        new_findings = [s for s in findings if s not in before]
+        #
+        # Match on (rule, detail), NOT str(f): str() embeds the excerpt, and a
+        # restyle rewrites the prose around a fault by definition, so the
+        # excerpt shifts and an inherited fault was being blamed on the pass.
+        # `Finding` documents rule as stable and detail as human-facing; both
+        # survive a rewrite of the surrounding sentence. Counter, not set, so
+        # that a fault the source had once and the output has twice still
+        # reports one new instance.
+        def _key(f):
+            return (f.rule, f.detail)
+
+        before = Counter(_key(f) for f in verify_report(teg_num, text=source_text))
+        new_findings = []
+        for f in found:
+            k = _key(f)
+            if before[k]:
+                before[k] -= 1          # accounted for by the source
+            else:
+                new_findings.append(str(f))
         if new_findings:
             print(f"[restyle_voice] WARNING TEG {teg_num} ({label}): "
                   f"{len(new_findings)} NEW fault(s) introduced by this pass:")

@@ -1,8 +1,8 @@
 # Second, Second, First
 
-Alex Baker landed in Lagos with a ledger that read like a caution notice. Second in TEG 8. Second in TEG 9, behind the man who would spend this tournament at the bottom of the field. Last in the Green Jacket in each of the last three TEGs, and a Wooden Spoon already gathering dust at home. He had never set foot on Boavista.
+Alex Baker landed in Lagos with a ledger that read like a caution notice. Second in TEG 8. Runner-up in TEG 9, behind the man who would spend this tournament at the bottom of the field. Last in the Green Jacket in each of the last three TEGs, and a Wooden Spoon already gathering dust at home. He had never set foot on Boavista.
 
-Four days later he had played the best round in the history of TEG.
+Four days later he had played the finest round in the history of TEG.
 
 That is the destination. The journey opens somewhere else entirely, because on the first afternoon in the Algarve — TEG's fourth visit to this coast — David Mullin was taking a golf course apart with the calm of a man dismantling a shed. Behind him, John Patterson, the defending Trophy champion, had already found the bottom of the field and was settling in for a long stay.
 
@@ -62,9 +62,9 @@ What Baker did next was not spectacular so much as relentless. From the 5th to t
 
 He signed for 51 points at +17 gross. The 51 is the best round ever played in TEG. The +17 was another personal best, his fourth of the tournament. His four rounds read 41, 45, 47, 51: better every single day, which is not a thing golf normally permits.
 
-The total came to 184 points and the Trophy by eleven, with a personal-best gross aggregate of +90 alongside it. Second twice, and now first.
+The total came to 184 points and the Trophy by eleven, with a personal-best gross aggregate of +90 alongside it. Runner-up twice, and now first.
 
-Williams, whose three Trophies gave him every right to expect otherwise, made 7 at the par-3 6th and 8 at the 18th. He finished second by eleven with a personal-best gross total of +76 and a new Boavista best of 93, ten shots better than his last visit here. The 18th, one last time, had taken its fee.
+Williams, whose three Trophies gave him every right to expect otherwise, made 7 at the par-3 6th and 8 at the 18th. He finished second by eleven with a personal-best gross total of +76 and a new Boavista best of 93, ten shots better than his last visit here. The closing hole, one last time, had taken its fee.
 
 Mullin came home in +13 for +51 and the Green Jacket by twelve — an eighth Jacket, and a third in succession. Jon Baker was runner-up with a personal-best gross total of +63 and a Boavista best of 86, nine better than his previous visit. That makes four Jacket runner-up finishes in five TEGs. He is becoming very good at the view from there.
 

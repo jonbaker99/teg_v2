@@ -20,7 +20,13 @@ Analysis package. REST API placeholder, any outstanding analytical work.
 ## Specific areas
 
 ### Commentary (reporting pipeline) — [`teg_analysis/reporting/STATUS.md`](teg_analysis/reporting/STATUS.md)
-LLM-powered tournament and round reports. Pipeline is built and TEGs 2–18 are published; the library spans several pipeline vintages and work stopped mid-experiment on a humour-dial A/B that needs a verdict before anything is regenerated. STATUS.md is the pick-up ledger and *is* the to-do list for this area; the experiment log is in [`EXPERIMENTS.md`](teg_analysis/reporting/EXPERIMENTS.md).
+LLM-powered tournament and round reports. **Read [`STATUS.md`](teg_analysis/reporting/STATUS.md) → START HERE first** — it is the pick-up ledger and *is* the to-do list for this area.
+
+Two open workstreams:
+- **Report quality.** The scoring and voice layers were reworked end to end on 2026-08-14 (counterfactual `importance`, symmetric detection, `win_anatomy`, storyline hierarchy, champion register). TEGs 4, 8, 12 and 18 were regenerated as tests and read well. **Outstanding: regenerate the full library (2–18), ~90 min.** Nothing is user-visible yet — every run used `style=False`, so `*_report_styled.md`, which the site serves, still holds older reports until a styling pass runs. Round reports (~50) were not touched and are a pipeline generation behind.
+- **[Get off per-call API billing](teg_analysis/reporting/API_TO_PLAN_USAGE.md).** Report generation calls the Anthropic API directly, which bills separately from a claude.ai plan. Not started; problem and constraints captured.
+
+The experiment log is in [`EXPERIMENTS.md`](teg_analysis/reporting/EXPERIMENTS.md).
 
 ### Data updates — [below](#data-updates)
 Tracked here (no sub-folder needed).

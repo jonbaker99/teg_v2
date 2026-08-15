@@ -1,55 +1,63 @@
 {
-  "title": "Mullin Takes the Algarve",
+  "title": "Two Records, One Wobble, and the 14th Hole for Everybody Else",
   "title_candidates": [
-    "Mullin Takes the Algarve",
-    "The Boavista Benchmark",
-    "First Blood in Portugal: Mullin Sets the Standard"
+    "Two Records, One Wobble, and the 14th Hole for Everybody Else",
+    "The Boavista Standard: Mullin Sets the Bar, Then Clears It Again",
+    "Baker Led for Twenty-One Holes. Mullin Needed Three.",
+    "The Fourteenth Will See You Now"
   ],
-  "theme": "David Mullin sets a new standard for TEG: a coronation on a new continent, bookended by the two best rounds ever played, with Jon Baker the only man who briefly looked like he could live with him.",
-  "tone": "house",
+  "theme": "On a course none of them had ever seen, David Mullin twice posted the best round TEG had yet recorded — and the only man who got close, Jon Baker, held the Trophy lead for barely a round before losing it in the first three holes of R3. Around them, Boavista's par-3 14th quietly collected 8s and 9s from everyone else.",
+  "tone": "house — faithful, tongue-in-cheek, insider-facing; ribbing earned by the scorecards, never invented",
   "narrative_structure": "in_medias_res",
-  "opening_hook": "Open on Mullin's closing -2 in R3 — the best round in TEG history — then flash back to how Boavista was conquered, because the headline is the record-shattering, not the build-up.",
+  "opening_hook": "Open on R3, hole 3: Baker three clear overnight and already 12 shots to par through five; Mullin bogeys the par-5 3rd for a net par (b07) and takes an outright lead he never gives back — then loop back to R1 to explain how a three-shot deficit came to be so easily reversed.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "tragic_arc",
+    "motif"
+  ],
   "foreshadow": [
-    "Boavista's back nine — and the 14th in particular — as a serial wrecker of cards",
-    "Jon Baker as the one man capable of pressing Mullin, and the fragility that would betray him",
-    "Henry Meller's slide to the bottom of the Spoon race as early as R1 H3"
+    "Mullin's R1 net +0 (b02) and +20 gross (b03) were the best rounds TEG had ever seen — a bar he would end up having to clear a second time",
+    "The par-3 14th at Boavista collected an 8 from Neumann, an 8 from Meller and a 9 from Williams on day one alone",
+    "Baker's near-record rounds (+4, then +1) came with a habit hidden in the margins: quadruple bogeys, at the 17th, the 12th, the 18th",
+    "Meller was outright last by the 3rd hole of the tournament and never moved from bottom of any round"
   ],
   "competitions": [
     {
       "name": "Trophy (Net VP)",
-      "winner_or_loser": "David Mullin",
-      "how": "Mullin led from R1 on the back of a record +0, was overhauled by Jon Baker after R2 when a closing 16-18 collapse (b48) cost him 10 shots, then reclaimed the lead for good at R3 H3 (b16) and pulled away with the greatest round in TEG history (b03) to win by 7 at +6.",
+      "winner_or_loser": "David Mullin (winner, +6, by 7 from Jon Baker)",
+      "how": "Mullin opened with net +0 (b02), the best round in TEG history to date, for a four-shot lead. He then coughed it up in R2 — ten shots to par across 16-17-18 (b43) turned a +8 round into a handover, and Baker, with a +1 (b10) built on a three-hole burst at 6-7-8 (b41), went three clear. The reign lasted 18 holes: Baker bled 12 shots over the first five holes of R3 (b24) while Mullin bogeyed the par-5 3rd for a net par and the outright lead (b07). Mullin's closing -2 (b04) — again the best round TEG had recorded — turned a three-shot deficit into a seven-shot win (b01).",
       "key_beat_ids": [
-        "b01",
+        "b02",
+        "b10",
         "b43",
-        "b45",
-        "b48",
-        "b16",
-        "b03",
-        "b10"
+        "b24",
+        "b07",
+        "b04",
+        "b01"
       ]
     },
     {
       "name": "Green Jacket (Gross)",
-      "winner_or_loser": "David Mullin",
-      "how": "Never headed after a record-setting R1 +20 (b02), Mullin extended through R2 and closed with another record gross round of +18 (b04) to win by 11 at +66 over Stuart Neumann (b14). A procession.",
+      "winner_or_loser": "David Mullin (winner, +66, by 11 from Stuart Neumann)",
+      "how": "Effectively over by tea on day one: Mullin's +20 (b03) was the best gross round in TEG history to date and opened a nine-shot cushion. His R2 +28 (b12) was still third-best all-time and kept him eight clear despite the closing collapse; his R3 +18 (b05) reset the record again and stretched the margin to eleven (b06). Neumann's two second-best-ever gross rounds (b09, b11) were plenty good enough for the runner-up spot and nowhere near enough for the Jacket — the last Jacket lead change came on hole 5 of R1.",
       "key_beat_ids": [
-        "b02",
+        "b03",
+        "b09",
         "b11",
-        "b04",
-        "b14"
+        "b12",
+        "b05",
+        "b06"
       ]
     },
     {
       "name": "Wooden Spoon",
-      "winner_or_loser": "Henry Meller",
-      "how": "Meller fell to the bottom as early as R1 H3 (b49) and never climbed out, his card shredded by a brutal back nine (b21, b20) and a R2 13-16 bleed (b50). He did, in fairness, post the 2nd-best gross round in TEG history in R3 (b09) — too late to matter.",
+      "winner_or_loser": "Henry Meller (loser, +39 net VP)",
+      "how": "Decided almost immediately: Meller was outright bottom by the 3rd hole of R1 and stayed there after all three rounds. The damage was the 11th-to-15th stretch on day one — 20 shots gone in five holes (b16), including a quintuple at the 14th — for a +24 round. He improved every day (+24, +13, +2) and signed off with a +20 gross (b13), then the second-best gross round in TEG history, but the Spoon had been settled 54 holes earlier.",
       "key_beat_ids": [
-        "b49",
-        "b21",
-        "b50",
-        "b09",
-        "b22"
+        "b16",
+        "b19",
+        "b48",
+        "b13"
       ]
     }
   ],
@@ -57,89 +65,90 @@
     {
       "round": 1,
       "headline_candidates": [
-        "Mullin Sets a Marker, Boavista Sets a Trap",
-        "+0 and the 14th from Hell",
-        "A New Course, A New Benchmark"
+        "Mullin's +0: The Best Round TEG Had Ever Seen (So Far)",
+        "Level Net Par, and Boavista's Record Book Opens With a Flourish",
+        "Twenty Shots in Five Holes for Meller, None for Mullin"
       ],
-      "chosen_headline": "Mullin Sets a Marker, Boavista Sets a Trap",
-      "angle": "Mullin's record-breaking +0 / +20 gross opens TEG2 on a new course, while the back nine — and the par-3 14th in particular — devours the rest of the field.",
+      "chosen_headline": "Mullin's +0: The Best Round TEG Had Ever Seen (So Far)",
+      "angle": "Five men meet Boavista for the first time; one of them plays it as if he drew the plans, the rest are eaten by the back nine — and the par-3 14th starts its collection.",
       "beat_ids": [
-        "b01",
         "b02",
-        "b05",
-        "b12",
-        "b13",
-        "b06",
-        "b49",
-        "b21",
-        "b20",
-        "b19",
-        "b15"
-      ]
-    },
-    {
-      "round": 2,
-      "headline_candidates": [
-        "Baker's Day, Mullin's Stumble",
-        "Three Holes from Glory",
-        "The 16-18 That Wasn't Quite Fatal"
-      ],
-      "chosen_headline": "Baker's Day, Mullin's Stumble",
-      "angle": "Jon Baker briefly seizes the Trophy lead with a +1 — the day's best net round — as Mullin haemorrhages 10 shots over 16-18; but the Jacket lead never moves.",
-      "beat_ids": [
-        "b07",
+        "b03",
         "b08",
-        "b11",
-        "b45",
-        "b43",
-        "b46",
-        "b48",
+        "b14",
+        "b09",
+        "b15",
+        "b16",
+        "b17",
+        "b20",
         "b42",
         "b50"
       ]
     },
     {
+      "round": 2,
+      "headline_candidates": [
+        "Ten Shots in Three Holes — Mullin Gift-Wraps the Lead",
+        "Baker Ahead by Three, and Not Entirely by His Own Doing",
+        "Mullin Breaks Another Gross Record and Still Loses the Lead"
+      ],
+      "chosen_headline": "Ten Shots in Three Holes — Mullin Gift-Wraps the Lead",
+      "angle": "Mullin's third-best-ever gross round (b12) is undone by 16, 17 and 18 (b43); Baker's +1 (b10) puts him three clear, while Neumann posts another near-record gross and Boavista's 14th takes a second 8 off him.",
+      "beat_ids": [
+        "b10",
+        "b11",
+        "b12",
+        "b39",
+        "b38",
+        "b43",
+        "b18",
+        "b48",
+        "b37"
+      ]
+    },
+    {
       "round": 3,
       "headline_candidates": [
-        "Mullin's Masterpiece",
-        "The Best Round Ever Played in TEG",
-        "H3, and That Was That"
+        "Baker Leads by Three, Trails by the Third",
+        "Mullin's -2 and the Shortest Reign in TEG History",
+        "Meller's Consolation Prize: A Record-Book Round and a Wooden Spoon"
       ],
-      "chosen_headline": "Mullin's Masterpiece",
-      "angle": "Baker bleeds 12 shots out of the gate, Mullin retakes the lead at H3 and never looks back, closing with a -2 that is both the best net and best gross round in TEG history.",
+      "chosen_headline": "Baker Leads by Three, Trails by the Third",
+      "angle": "Baker gives away 12 shots in five holes (b24) before he is properly awake; Mullin's -2 (b04) and +18 gross (b05) rewrite both record lines again, and behind them Meller finally plays the golf he came for (b13) with nothing left to save.",
       "beat_ids": [
-        "b03",
+        "b24",
+        "b07",
         "b04",
-        "b16",
+        "b05",
+        "b13",
         "b40",
-        "b09",
-        "b41",
-        "b10",
-        "b14",
-        "b22"
+        "b44",
+        "b01",
+        "b06",
+        "b19"
       ]
     }
   ],
   "players": [
     {
       "player": "David Mullin",
-      "arc": "Untouchable: a record +0 to open, the only wobble at the end of R2, then a record-breaking -2 to close and the Trophy/Jacket double by daylight."
+      "arc": "Sets the TEG standard on day one, hands it back over the last three holes of R2, then reclaims it inside three holes of R3 and wins both the Trophy by 7 and the Jacket by 11 — four separate TEG-best round marks in three days on a course he had never seen."
     },
     {
       "player": "Jon Baker",
-      "arc": "The only credible challenger — two top-class rounds and a brief R2 lead — undone by a R3 opening five-hole bleed and a habit of finding 8s."
+      "arc": "Two of the best net rounds TEG had recorded (+4, +1), a lead of three going into the last day, and then 12 shots to par in the first five holes of R3 — a tragic arc compressed into an hour, finishing runner-up by seven."
     },
     {
       "player": "Stuart Neumann",
-      "arc": "Quietly excellent in gross terms (Jacket runner-up, two top-three gross rounds), but the 14th and a R1 13-17 wobble stopped the net challenge."
+      "arc": "The most consistent striker of the ball after Mullin — second-best-ever gross rounds in both R1 and R2 — and Jacket runner-up by 11, with two quintuple bogeys at the same par-3 14th to show for his trouble."
     },
     {
       "player": "Henry Meller",
-      "arc": "Bottom from R1 H3 to the final putt; salvaged pride with the 2nd-best gross round in TEG history in R3 — far too late."
+      "arc": "Last after every round and Spoon-bound by the 3rd hole of the tournament, yet the only man in the field to improve in every round (+24, +13, +2), signing off with what was then the second-best gross round in TEG history."
     },
     {
       "player": "Gregg Williams",
-      "arc": "A serial blow-up artist: a 9 at the 14th, a 9 at the 17th, a 9 at R3's 12th, and a 22-shot R1 back-nine collapse to set the tone."
+      "arc": "Briefly leading on hole 2 of the entire TEG, then the back nine of R1 relieved him of 22 shots in seven holes, including a 9 at the 14th — his 105 in R3 was his best of the three."
     }
   ],
   "must_include_beat_ids": [
@@ -157,14 +166,19 @@
     "b12",
     "b13",
     "b14",
-    "b22",
-    "b16"
-  ],
-  "cuts": [
+    "b15",
+    "b16",
     "b17",
     "b18",
-    "b23",
+    "b19",
+    "b20",
     "b24",
+    "b43"
+  ],
+  "cuts": [
+    "b21",
+    "b22",
+    "b23",
     "b25",
     "b26",
     "b27",
@@ -177,11 +191,53 @@
     "b34",
     "b35",
     "b36",
-    "b37",
-    "b38",
-    "b39",
-    "b44",
-    "b47"
+    "b42",
+    "b45",
+    "b46",
+    "b47",
+    "b49",
+    "b50"
   ],
-  "venue_notes": "TEG's first visit to the Algarve and a brand-new course in Boavista (Howard Swan parkland, Atlantic views, Lagos), played three times in three days — so frame it as a course the field had to learn in real time, with the back nine (especially the par-3 14th) emerging as the defining stretch."
+  "venue_notes": "TEG's first trip to the Algarve, and Boavista (Lagos) staged all three rounds — Howard Swan parkland, Atlantic views, and a layout that splits into two distinct halves, which is a polite way of saying the back nine did most of the eating (Meller 11-15, Williams 12-18, Neumann 13-17, all in R1). A new course for TEG, so no prior form for anyone and every mark set here becomes the Boavista benchmark. Thread the par-3 14th as the running character: three 8s and a 9 across the week, and both of Neumann's worst holes of the tournament. Use the same-course-three-days angle to explain why the field improved and the scores tightened while Mullin simply got better.",
+  "competition_storyline_bullets": {},
+  "player_storyline_bullets": {},
+  "course_history_notes": [
+    "First visit to Boavista for all five players — no prior form to lean on, which makes Mullin's back-to-back record rounds on unfamiliar ground the more notable.",
+    "Mullin's best Boavista gross was his 89 in R3; Neumann's 92 (R3), Meller's 91 (R3), Baker's 100 (R2) and Williams's 105 (R3) set the rest of the founding benchmarks at the course.",
+    "Meller's best Boavista round (91 gross, R3) arrived two days after the Spoon had effectively been settled."
+  ],
+  "decisive_moments": [
+    "Trophy: R3 H3 — Mullin bogeys the par-5 3rd for a net par (b07) while Baker plays the opening five in 12 over (b24); a three-shot overnight deficit becomes an outright lead never surrendered.",
+    "Green Jacket: R1 — Mullin's +20 gross (b03), then the best gross round in TEG history, opens a nine-shot cushion after 18 holes; the Jacket lead never changes hands again (b06).",
+    "Wooden Spoon: R1 holes 11-15 — Meller bleeds 20 shots in five holes (b16) for a +24 round, sitting bottom by the 3rd hole of the tournament and after every round thereafter (b19)."
+  ],
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "records",
+  "payoffs": [
+    {
+      "seed": "Mullin's R1 +0 / +20 gross set the TEG bar",
+      "resolves_in": "Round 3",
+      "payoff": "He has to clear his own bar to win: -2 net (b04) and +18 gross (b05) rewrite both marks again and turn a deficit into a seven-shot victory."
+    },
+    {
+      "seed": "The par-3 14th collecting 8s and 9s on day one",
+      "resolves_in": "Round 2 and the venue/motif thread",
+      "payoff": "Neumann posts a second quintuple bogey there in R2 (b18), sealing the 14th as the week's shared enemy — the hole that took shots off everyone except the winner."
+    },
+    {
+      "seed": "Baker's near-record rounds hid recurring quadruple bogeys",
+      "resolves_in": "Round 3",
+      "payoff": "The habit metastasises into the opening five holes of R3 — 12 shots to par (b24) — costing him the lead by the 3rd and the Trophy by seven."
+    },
+    {
+      "seed": "Meller bottom by the 3rd hole of the tournament",
+      "resolves_in": "How the three were decided / Wooden Spoon",
+      "payoff": "He improves in every round and closes with a then TEG-second-best +20 gross (b13), but the Spoon (b19) was decided 54 holes earlier — the best round of his week counted for nothing."
+    }
+  ],
+  "vehicle_fit_response": {
+    "top_scored_vehicle": "inevitability",
+    "taken_up": false,
+    "note": "The Jacket procession is real but it is texture, not the frame: the Trophy changed hands four times outright, including a decisive takeover at R3 H3, so the report is framed on the Mullin/Baker dual narrative with Baker's R3 collapse as the tragic strand."
+  }
 }

@@ -12,19 +12,94 @@
 
 ---
 
-## TL;DR — where we got to
+## START HERE — picking this up in a new chat (2026-08-14)
+
+Two live workstreams. They are independent; either can be picked up first.
+
+| | Workstream | State | Doc |
+|---|---|---|---|
+| **A** | **Report quality** — data, vehicles, voice | Reworked end to end; 4 test TEGs regenerated and read well; **full library regeneration outstanding** | this file + [README.md](README.md) |
+| **B** | **Stop paying per API call** — run the same prompts through claude.ai plan usage instead of the Anthropic API | Not started; problem and constraints captured | [API_TO_PLAN_USAGE.md](API_TO_PLAN_USAGE.md) |
+
+### What workstream A was trying to achieve
+
+Reports that are **entertaining, engaging and insightful**: they celebrate the winner (tongue-in-cheek,
+and better for it), mock the losers where deserved, and are clear about **why the champion won**.
+Course history, previous results and recent form are welcome texture.
+
+### What was wrong, and what we did about it
+
+Three root causes, all in the data layer rather than the prompts — which is why earlier prompt-only
+attempts had not fixed them:
+
+1. **`importance` did not measure what it claimed.** Its docstring said "contribution to the result";
+   it was a hand-tuned function of shot-cost, round and standing that never consulted the result. On
+   TEG 18 the champion won by 8 Stableford points and none of his eight worst holes could have cost
+   him more than 2.3, yet they scored 5.0–6.5 and made up half the champion-negative material.
+   → **`impact.py`**: importance is now the counterfactual — *if this player had scored their own
+   average over these holes, would the competition have finished differently?* Measured in each
+   competition's own metric, discounted by how much time remained to recover.
+2. **Detection was lopsided 2.6:1 against the champion's dignity.** Bad things were detected on
+   *gross*, good things on *net*, so a high-handicap player in contention was the maximum-negative
+   configuration — champion's handicap literally predicted how negative the report was about them
+   (handicap 16 → 0 negative beats; handicap 36 → 10). → **`cold_stretch_net` + `steady_stretch`**,
+   ratio now 1.52:1.
+3. **Nothing computed WHY the champion won.** `competition_arcs` gave the *what*; causation was left
+   to inference over a pile of beats, which is exactly where "the champion was rubbish" comes from.
+   → **`win_anatomy.py`** + a required `why_the_champion_won` plan field.
+
+Then the voice: a storyline hierarchy (winner's story leads, departures recorded), mockery calibrated
+by target, and the champion register — hard on the golf, never on the achievement, **elevated
+delivery**, proportion capped. See [README.md](README.md#the-storyline-hierarchy-and-the-champion-register)
+for the three failed attempts at that last rule and why each failed.
+
+### Measured effect (TEGs 2–18, deterministic, no LLM)
+
+| | Before | After |
+|---|---|---|
+| Champion's share of negative beats | 20% | **14%** |
+| Overall negative share of the cut | 41% | **39%** |
+| Detection ratio (negative:positive) | 2.59:1 | **1.52:1** |
+
+### Two mistakes worth not repeating
+
+- **I optimised the wrong objective twice.** First minimising the cut's overall negative share, then
+  minimising the champion's share of negatives. Negative material *is* the comic material, and
+  champion-negative *volume* was never the real problem — the **framing** was. Both metrics are
+  useful diagnostics; neither is the target. The prose is the only real test.
+- **Every string in `win_anatomy` is copied into prose.** Statistical phrasing anywhere in that
+  module ships to the reader ("a round-to-round spread of 5 against a field median of 8"). Plain
+  English only — there is a test enforcing it.
+
+### Where workstream A got to
+
+- Pipeline reworked and green: **432 passed, 4 skipped**.
+- **TEGs 4, 8, 12, 18 regenerated** as tests and all read well. TEG 4's report is now framed on the
+  seven-shot lead Baker threw away; TEG 18 leads on the champion's gross 10 and elevates it.
+- **Outstanding: regenerate the full library (2–18).** ~90 min. Jon's call was "a few tests first,
+  then everything" — the tests are done.
+- Two late fixes (plain-English round labels, inverted Spoon phrasing) **postdate the four test
+  reports**, so those flaws are still visible on disk in the Spoon sections of TEGs 4 and 18. They
+  clear on the full run.
+- **Nothing is user-visible yet.** All regeneration ran `style=False`, so `*_report_styled.md` —
+  what the site serves — still holds the older reports. A styling pass is free and deterministic.
+- Round reports (~50) were not touched and remain a pipeline generation behind.
+
+---
+
+## TL;DR — the older ledger
 
 The pipeline is **built, working and well past what the old docs described**. Three things are true:
 
 1. **Tournament coverage is complete.** Every TEG has a published tournament report and the webapp
    renders them. (TEG 1 predates the data — it isn't in `completed_tegs.csv` or `all-data.parquet`,
    so TEGs 2–18 *is* the full set. TEG 2 has 3 rounds; every other TEG has 4.)
-2. **The pipeline kept evolving after the last backfill run.** Roughly half the published reports
-   were generated by an *older* version of the pipeline than the one in the code today, so the
-   library is stylistically inconsistent.
+2. **The pipeline kept evolving after the last backfill run.** As of 2026-08-13 every *tournament*
+   report was regenerated on one vintage, so this no longer applies to them — but round reports
+   still span several.
 3. **Work stopped mid-experiment.** A "humour dial" A/B (3 → 6 → 8 → 8b) was run on TEGs 14 and 18,
-   the outputs are sitting on disk unpublished, and **no verdict was ever recorded**. That decision
-   is the natural first thing to pick up.
+   the outputs are sitting on disk unpublished, and **no verdict was ever recorded**. Largely
+   superseded by the 2026-08-14 voice rework, but the artefacts are still there.
 
 **Suggested pick-up order** is in [Next steps](#next-steps).
 
@@ -50,8 +125,84 @@ including all three P1s. The two that matter most:
   generated from it, and the schema enforces it. The exact value that shipped for four TEGs is now a
   validation error.
 
+**2026-08-13 — vehicle-fit scoring measured across all 17 TEGs; hints cleaned up; the advisory made
+accountable.** `vehicle_fit.py` (added on the preceding branch) scores each narrative vehicle
+against a TEG's actual facts for free — no LLM call — and z-scores it against the checked-in
+17-TEG baseline. Scored across TEGs 2–18, **the normalization works**: raw scores put `tragic_arc`
+or `redemption_arc` top in all 17 TEGs, normalized scores give 10 different winners with none
+appearing more than twice. Two changes came out of that run:
+
+- **Four vehicles were polluting the hint list.** `motif`, `bookends`, `ensemble` and
+  `theme_led_body` have no detector at all, so their baseline is mean 0 / std 0 and
+  `normalize_vehicle_fit` scored them z = 0.00 — which sorted them *above* every genuinely detected
+  vehicle that came in below its average. They occupied 26 of the 85 hint slots the editor sees
+  (TEG 2's list was 1 real hint and 4 of these), and `motif` was the joint-most-frequent top-3 hint
+  despite never having been measured for anything. They are now excluded from the ranking, and the
+  editor prompt names them and asks for them to be judged on their own merits — their absence is
+  not evidence against them.
+- **The advisory is now accountable, not binding.** Decision (Jon, 2026-08-13): do *not* require the
+  editor to justify diverging from the top hint. That pressure would fall hardest on precisely the
+  vehicles that can never be top-scored, defeating the variety the scorer exists to serve. Instead
+  the new required `vehicle_fit_response` field records the top hint, whether it was adopted, and
+  one line of reasoning; `check_plan_consistency` verifies the record is *truthful* and never warns
+  on divergence itself. `test_diverging_from_the_top_hint_is_not_a_warning` guards that boundary.
+
+**2026-08-13 (later) — closing section renamed, and a prose-only backfill switch.** The closing
+player summary heading is now prescribed **exactly** as `## Player-by-player summary` in
+`authoring.py` (it was `## The men, in brief` "or similar", so published reports vary). Nothing
+matches on the heading in code — `verify.check_only_participants` only mentions it in a docstring —
+so this is a pure guidance change; existing reports keep their old heading until regenerated.
+`backfill_teg` / `backfill_all` gained `style=False`, which stops at `teg_N_report_final.md` and
+skips the injection of standings, the at-a-glance box and the records appendix.
+
+**2026-08-13 — the whole library regenerated (TEGs 2–18), and two silent bugs found by doing it.**
+Every TEG now has a tournament report from the current pipeline, prose only
+(`force=True, scope="tournament", style=False`), so `*_report_styled.md` — what the site serves —
+is deliberately untouched and still carries the old reports until a styling pass is run. The key is
+read from `TEG_ANTHROPIC_API_KEY`, now accepted as an alias in `llm.get_api_key()`.
+
+Both bugs are the same shape: **a value computed one way in the live path and another way in the
+reference path.** Neither could ever fail loudly.
+
+1. **Vehicle fit was scored on trimmed beats.** `assemble_bundle` scored against the `top_n=50`
+   beat list — a token budget for the LLM call — while the checked-in baseline is generated with
+   `top_n=None`. So live z-scores compared a trimmed raw score against an untrimmed population
+   mean, deflating every vehicle that scores as a *sum over beats* (`tragic_arc`,
+   `redemption_arc`, `catalogue`) while leaving arc- and milestone-derived ones untouched. On TEG
+   6, `tragic_arc` went from raw 79.5 / z +2.70 to raw 32.7 / z +0.06 — rank 1 to rank 5. Fixed to
+   score on `all_beats`; `test_vehicle_hints_do_not_depend_on_the_beat_trim` locks it. Measured
+   impact: the top hint changed on only **2 of 12** already-generated TEGs (6 and 15), both
+   re-run.
+2. **`restyle_voice` blamed inherited faults on the restyle pass.** The `new_findings` split
+   exists to catch a prose pass fabricating a detail; it compared source to output on `str(f)`,
+   which embeds the excerpt. A restyle rewrites the prose around a fault by definition, so the
+   excerpt shifts and an inherited fault reads as newly introduced — inverting the mechanism in
+   the normal case. Now keyed on `(rule, detail)` via a `Counter`.
+
+**What seventeen recorded `vehicle_fit_response` rationales show.** The scorer reliably detects
+local texture and reliably mis-weights it against tournament-level meaning. Every rejection traces
+to that one cause: `redemption_arc` sums hole-level recovery beats (rejected as "small change" on
+TEGs 9 and 18); `inevitability` fires on a structural fact (declined as "texture, not the frame" on
+15, 2, 3, 8); `dual_narrative` counts lead changes without knowing whether they were contested
+(TEG 5 — "Mullin faded rather than duelling"). Adopted hints skew to career milestones and genuine
+inventories (`origin`, `comeback`, `underdog`, `catalogue`).
+
+**Candidate fix, not yet done:** weight beat-derived vehicles by whether their beats belong to the
+decisive competition and rounds, rather than summing across the tournament. It changes scoring, so
+it needs a baseline regeneration — a judgement call for Jon.
+
+**The advisory decision looks right in practice.** Three of the four unscoreable vehicles were
+chosen on the editor's own reading (`motif` ×6, `ensemble`, `bookends`), and on TEG 8 `ensemble`
+was the *primary frame* — a frame the scorer cannot nominate under any circumstances. A
+binding-on-divergence rule would have suppressed all of it.
+
+Residual, not fixed: a detectable-but-unfired vehicle (raw 0, negative z) can still reach the top 5
+on a quiet TEG — ~14 of 85 slots. Less misleading than the removed cases, since the editor sees
+`raw: 0.0` and an empty `reasons` list, and a genuine 0 for a vehicle that *does* have a detector is
+real evidence of absence. Left as-is deliberately.
+
 **What is deliberately still open: the humour dial** — the one remaining judgement call — plus the 81 prose-wording faults D3 reports across the older reports, which
-regeneration clears. Nothing else is blocking. Test suite: 404 passed, 4 skipped.
+regeneration clears. Nothing else is blocking. Test suite: 422 passed, 4 skipped (2026-08-13).
 
 ---
 

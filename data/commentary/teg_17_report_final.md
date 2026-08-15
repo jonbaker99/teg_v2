@@ -1,71 +1,81 @@
-# The Coronation at Óbidos
+# Eighty-Six on Seve's Last Design: Jon Baker Ends the Run of Fourths
 
-## The 16th green at Royal Óbidos, late afternoon
+Royal Óbidos, third afternoon. Jon Baker signs for 86 gross. It is a new course record on Seve Ballesteros' final design — the previous best across 18 prior visits was 87, and the man who held it was Jon Baker, at TEG 9.
 
-Picture Jon Baker walking off the 16th at Royal Óbidos on the third afternoon. He has, in the previous six holes, accumulated twenty Stableford points — birdie, bogey, birdie, par, par, par — across a stretch of Seve Ballesteros's final routing that had, until this Monday, been seen by eighteen prior TEG rounds and survived all of them. He is on his way to an 86. It is the course record. It is also his second new personal best at a Lisbon Coast course in two days. The Trophy lead, which had been two overnight, is about to become eleven. The Jacket advantage stands at eight and counting.
+Elsewhere on the same venue, Gregg Williams was engaged in a different kind of record-keeping. He double-bogeyed the 12th. Then the 13th, the 14th, the 15th, the 16th, the 17th and the 18th: seven consecutive double bogeys, fourteen shots handed over without visible complaint, for a round of 26 points.
 
-To grasp the scale of this moment you have to know who Jon Baker had been until the previous Saturday morning. Three TEGs, three fourth places on the Trophy. A man so reliably nearly-there that "fourth" had become less a finishing position than a personality trait. The perennial bridesmaid of Stableford, slightly hunched, perfectly pleasant about it.
+By the time both cards were in, Baker led the Trophy by 11 and the Green Jacket by 8, and Williams was bottom of the field for the first time in the tournament. Three competitions, one course, one afternoon.
 
-What follows is the story of how, across four consecutive days on the Lisbon Coast — the sixth such visit, with Praia D'El Rey bookending West Cliffs and Royal Óbidos in the middle — that all changed. And how, at the other end of the leaderboard, the reigning Green Jacket holder discovered that defending titles is not, in fact, a passive activity.
+That the record book took the beating it did was, by then, established practice. Four course records fell in three days on the Lisbon Coast, two of them at the wrong end. And in the middle of the carnage stood a man who had finished fourth in the Trophy in each of the last three TEGs, and who had not won one since TEG 13.
 
----
+## Round 1 — Praia D'El Rey Sees Something It Has Never Seen in 24 Visits
 
-## Act I — A Single Point Clear at Praia
+The Saturday opener was TEG's fifth round at Cabell Robinson's parkland-into-dunes routing, and the venue had 24 prior visits in its ledger. In all that time nobody had gone round in worse than 110.
 
-The Saturday round at Praia D'El Rey, Cabell Robinson's links-meets-parkland routing on its fifth TEG outing, opened in the manner the venue tends to open: with everybody hitting the first tee in good order and several of them then striking their second, third, fourth and fifth shots in considerably less good order. John Patterson, by close of play, was a single Stableford point clear of the field. This was, on the evidence of his actual round, slightly miraculous. He had run up a quadruple-bogey 8 at the 1st, repeated the trick at the 6th, and only steadied himself on the back nine with a birdie at the par-5 12th that interrupted what had been a bogey-or-worse run.
+Alex Baker signed for 114.
 
-Gregg Williams, meanwhile, was top of the Green Jacket on a gross 93, a tidy three clear and, by his own recent standards, business as usual. The reigning Jacket holder, back-to-back winner of the thing, four-time Trophy champion in his time — Williams arrived in Lisbon with the bearing of a man who knew where the cutlery drawer was and had no intention of opening it. His 93 included a quadruple at the par-4 5th, one of the harder holes on the course, but he drew level on the Jacket at the 17th and edged ahead by the close. David Mullin, for his part, did what Mullin tends to do, which is wait. A back-nine surge yielded sixteen points across holes 12 to 16 — a birdie at the 13th, pars at 12, 14 and 16 — the sort of stretch that whispers rather than shouts.
+The architecture of it was straightforward enough: a quadruple bogey at the par-4 4th, a 10 at the 5th — SI 2, one of the hardest holes on the course — and a quintuple bogey to close at the 18th. Patterson had already opened his own account with an 8 at the 1st, which at the time looked like clumsiness rather than prophecy.
 
-And at the very bottom, Alex Baker. Arriving with back-to-back Wooden Spoons already in his luggage, Alex set about consolidating his portfolio with 114 gross, a new course-worst at a venue that had hosted twenty-four prior TEG rounds without anybody finding a way to score that high. The damage centred on a sextuple-bogey 10 at the par-4 5th, supported by a quadruple at the 4th and a quintuple 9 at the 18th. The Spoon, after eighteen holes, was his.
+At the front, things were sober by comparison. David Mullin took 16 points from the 12th to the 16th — par, birdie, par, bogey, par — and signed for 33 points and +24. The Trophy lead changed twice, in the manner of a field feeling for the light switch: Jon Baker took it at the 3rd, Patterson took it back at the 16th, and Patterson finished the day one point clear of Baker's 38.
 
-The leaderboard at this point looked, in retrospect, like a magician's setup: Patterson nominally ahead, Williams in command of the Jacket, Alex bottom of the Spoon, Jon Baker quietly fourth-ish. Everybody where you'd expect them. Nothing yet seen.
+In the gross, Jon Baker had led since the 2nd hole. Williams drew level at the 17th and went to bed holding the Green Jacket by three, which for a man arriving with back-to-back Jackets and the TEG 15 Trophy was no more than the natural order.
 
-## Act II — Two Course Records at the Cliffs, in Both Directions
+At the other end, last place changed hands three times and settled on Alex Baker.
 
-Sunday at West Cliffs, Cynthia Dye's clifftop design, on only its second TEG outing — and in a single round it produced both the best and worst gross scores anybody has ever posted on it.
+## Round 2 — Eighty-Two and One-Sixteen: West Cliffs Breaks Both Ends in a Single Afternoon
 
-The best belonged to David Mullin. An 82, six shots inside the previous course record, anchored by a fourteen-point burst across holes 7 to 10 — bogey, par, birdie, birdie — and otherwise immaculate. It was the round of the tournament. It was also, as it turned out, very nearly the only stretch Mullin would lead the Jacket: he drew level at the 18th to carry it into Monday morning, and held it outright for precisely six holes the following afternoon before the thing was taken from him again. A Jacket lead with a half-life measured in single holes.
+Cynthia Dye's West Cliffs had been visited six times but played only once by TEG, which left its record book thin and easily rewritten. On the Sunday, both ends of it went in the same afternoon.
 
-The worst belonged to John Patterson, who twenty-four hours after sitting one point clear of the Trophy had a 116 on his card. The previous course-worst was 115; he beat it by one, which is the kind of margin that suggests not so much misfortune as commitment. The route to it began with a quadruple at the par-4 3rd — the hardest hole on the course — and then, across holes 8 to 15, Patterson bled twenty-seven shots: double, triple, triple, triple, double, a quintuple-bogey 10 at the par-5 13th, triple, and a sextuple-bogey 11 at the par-5 15th. He dropped to the bottom of the Spoon race at the 10th and stayed there for the rest of the afternoon.
+Mullin went first, and upwards. His 82 beat the course's previous best of 88 and improved on his only previous visit there by twelve shots. It was the single best round anybody played all tournament, and it made him, briefly, the only plausible obstacle in the gross.
 
-Between Mullin's ascension and Patterson's descent, Jon Baker did the thing that decided the Trophy. At the 1st hole of the round he took the outright lead from Patterson. He would hold it for the remaining fifty-six holes of the tournament. Fifty-six holes. He was never headed again. The taking of it was not theatrical — fourteen points across holes 2 to 5, par on the SI 1 third, birdie at the 4th — the kind of stretch a man puts together when the wheels of everyone else's wagons are coming off in the background and he, alone, has remembered to bring a wrench.
+Patterson went the other direction. His 116 was a course-worst, exceeding the prior 115, and at +44 the worst gross round of his career. The damage was compressed into eight holes, from the 8th to the 15th: double, triple, triple, triple, double, then a 10 at the par-5 13th, a triple at the 14th and an 11 at the 15th. Twenty-seven shots gone in eight holes.
 
-Alex Baker, meanwhile, posted a personal-best 105 at West Cliffs, five better than his previous visit, featuring a sixteen-point surge across holes 4 to 8 and a recovery birdie at the par-3 12th — the easiest hole on the course, taken after consecutive quadruple-bogey 8s at the 10th and 11th. The PB was not enough to vault him up the field, but it was enough to lift him off the basement. The Spoon was now, formally, available. Patterson was holding it.
+He had led the Trophy that morning. He was bottom of it by evening.
 
-Two days in, then: Jon Baker leading the Trophy by two, Mullin level on the Jacket, Patterson at the bottom, Alex Baker free at last. The lid was off.
+Jon Baker, meanwhile, did something quieter and rather more permanent. He bogeyed the 1st — SI 17, one of the easiest holes on the course — and that was enough to take the Trophy lead outright. He held it for the remaining 71 holes of the tournament.
 
-## Act II, continued — Jon Baker Rewrites Seve's Course
+Then he built. Fourteen points across holes 2 to 5, including a par at the 3rd, the hardest hole on the course, and a birdie at the 4th. He posted 44 points and 86 gross, fifteen shots better than his previous West Cliffs mark from TEG 15. Alex Baker, five shots better than his own best there, went round in 105 and heard almost nothing about it.
 
-Monday at Royal Óbidos, Seve Ballesteros's last design, fourth TEG visit. This is the pivot. This is where it was decided.
+Baker led the Trophy by two. Mullin drew level in the gross at the 18th and led the Jacket by three.
 
-Jon Baker shot 86. The previous course record, across eighteen prior TEG rounds at Royal Óbidos, was 87 — his own 89 from TEG 9, among many others, blown out of the water. The Jacket arithmetic ran like this: he drew level with Mullin at the 2nd; Mullin took it outright at the 6th and held it for one hole; Jon drew level again at the 7th and pulled clear and stayed clear, and by the time he walked off 18 he was eight gross shots ahead of the field. The six-hole stretch from 11 to 16 — birdie at the par-5 11th, bogey at the par-4 12th (one of the hardest), birdie at the par-3 13th (the easiest), pars at 14, 15 and 16 — produced twenty Stableford points. The Trophy cushion went from two to eleven on the back of it. Mullin's Jacket reign, born on a course record at West Cliffs the previous afternoon, had lasted six holes of the next round.
+## Round 3 — One Hole: Mullin's Green Jacket Reign in Full
 
-At the other end, the inversion of the week was unfolding in real time. Gregg Williams, who had arrived as reigning Green Jacket holder, back-to-back winner, four-time Trophy champion, a man for whom the Wooden Spoon was a thing other people occasionally found themselves stuck with — Williams put together a round of 26 Stableford points. The deterioration happened, mostly, in seven consecutive holes from the 12th to the 18th: double bogey, double bogey, double bogey, double bogey, double bogey, double bogey, double bogey. Fourteen shots to par across that run. The cumulative effect was that at the 14th — a par-4 — Williams dropped outright to the bottom of the Spoon race for the first time in the tournament. He would stay there for the remaining twenty-two holes. Earlier in the round he had managed a recovery birdie at the par-5 11th, breaking a bogey-or-worse run. It now reads like the calm before the actual weather.
+Jon Baker had led the Green Jacket since the 2nd hole of Round 1, a run of 35 holes. On the Monday at Royal Óbidos he double-bogeyed the 1st, and the lead passed to Mullin.
 
-Elsewhere in the wreckage of the afternoon Alex Baker bled fifteen shots across holes 12 to 16, including a sextuple-bogey 10 at the par-4 14th and added a quadruple 9 at the par-5 18th — and was, by virtue of Williams's collapse, no longer the man holding the Spoon. Patterson, for his part, posted a new personal-best 94 at Royal Óbidos, six better than his TEG 9 visit, the kind of achievement that in any other week would have been a story. Here it was buried beneath everything else going on.
+Baker drew level again at the 2nd. Mullin took it outright at the 6th with a par at the short hole. Baker drew level at the 7th.
 
-By Monday evening, then: Jon Baker eleven clear on the Trophy and eight clear on the Jacket. Williams alone at the bottom. The tournament was, in all meaningful senses, over.
+That was the reign in full. One hole, held outright, by a man with nine Green Jackets in the cabinet.
 
-## Act III — Procession at Praia
+What followed was Baker taking 20 points from the 11th to the 16th: birdie at the par-5 11th, bogey at the 12th, birdie at the 13th — SI 18, the easiest hole on the course — and pars at the 14th, 15th and 16th. The 86 that resulted was the course record described above, and the 44 points alongside it turned a two-point Trophy lead into eleven and an overnight gross deficit into an eight-shot cushion.
 
-The Tuesday round at Praia D'El Rey, the venue's sixth TEG outing, was a closing ceremony with light golf attached. The eleven-point Trophy lead and eight-shot Jacket advantage were never threatened. Jon Baker himself ran up a quadruple-bogey 9 at the par-5 10th, then another quadruple 9 at the par-5 17th — the SI 1, the hardest hole on the course — and still won both prizes pulling up. He had earlier stopped a bogey-or-worse opening with a birdie at the par-4 4th. The final margins: 18 on the Trophy, 13 on the Jacket. The Trophy total of 166 is the ninth-best in TEG history.
+The same closing stretch was doing very different work elsewhere. Alex Baker dropped 15 shots between the 12th and the 16th, including a 10 at the par-4 14th. Patterson, of all people, took 13 points from the 12th to the 15th and posted 94 — a personal best at the venue, seven better than his previous visit there, and evidence that the West Cliffs 116 had been an event rather than a condition.
 
-Patterson, who had spent the first eighteen holes of the tournament leading the Trophy and the last fifty-six watching it disappear, signed off with a sextuple-bogey 9 at the par-3 14th and a sextuple-bogey 10 at the par-4 15th — one of the harder holes — plus quadruple 8s at the 1st and 18th, for symmetry. Alex Baker dropped twenty-five shots across nine holes from the 5th to the 13th and it did not matter; the Spoon was settled. Williams opened with a quintuple-bogey 9 at the 1st and the procession continued.
+And Williams double-bogeyed the 14th, which dropped him to the bottom of the Trophy for the first time. He had been third after Round 1 and fourth after Round 2. He then double-bogeyed the last four as well, completing the set of seven, and the Wooden Spoon had effectively been engraved before anyone reached the clubhouse.
 
----
+## Round 4 — Baker Wins the Lot Despite Two Nines
+
+Back to Praia D'El Rey on the Tuesday for the venue's sixth TEG round, and a coronation conducted with a certain amount of thrashing about.
+
+Jon Baker opened with a double at the 1st, bogeys at the 2nd and 3rd and a birdie at the 4th. He then made a 9 at the par-5 10th. He took nine points from the 14th to the 16th — par, bogey, par — and promptly made another 9 at the 17th, the hardest hole on the course.
+
+Two quadruple bogeys, 40 points, and the lot: 166 on the Trophy and +67 in the gross.
+
+Alex Baker's day was longer. He dropped 25 shots between the 5th and the 13th, a nine-hole passage containing two triples, four doubles and, at the 12th and 13th, back-to-back quadruple bogeys. His reward for it was escaping a third consecutive Wooden Spoon, which he managed without having to do anything much at all.
+
+Patterson signed off in keeping with everything else. A quadruple bogey at the 1st, a 9 at the par-3 14th — SI 17, one of the easiest — a 10 at the 15th, which is SI 3 and at least had the decency to be difficult, and an 8 at the last.
+
+Williams made a quintuple bogey at the 1st and scored 29. He had stopped resisting some time on Monday.
 
 ## How it was decided
 
-**Trophy.** Patterson led after R1 by one. Jon Baker took the outright lead at the 1st hole of R2 at West Cliffs and was never headed across the next fifty-six holes. The cushion: two after R2, eleven after R3, eighteen at the close. Final: Jon Baker 166, Mullin 148.
+- **Trophy (Stableford).** Patterson led by one after Round 1. Jon Baker took the lead outright at the 1st hole of Round 2 at West Cliffs and held it for the remaining 71 holes. Back-to-back 44-point rounds turned a one-point deficit into an eleven-point lead; the closing 40 made it 18. Final: Jon Baker 166, from Mullin. The run of three straight fourth places, and the drought since TEG 13, ends in the most emphatic manner available.
+- **Green Jacket (Gross).** Five lead changes, only one of them outright: Mullin's, at the 6th hole of Round 3, which lasted until the 7th. Baker's course-record 86 that afternoon established an eight-shot overnight margin and ended the argument. His gross rounds ran +20, +14, +14, +19. Final: Jon Baker +67, 13 clear of Mullin, whose West Cliffs 82 was the best round anyone played and still not enough.
+- **Wooden Spoon.** Williams was third after Round 1 and fourth after Round 2. His double bogey at the 14th at Royal Óbidos moved him to last for the first time, and the seven straight doubles home produced 26 points. Round 4's 29, opened with a 9 at the 1st, left him on 123 and bottom. Second Spoon of his career.
 
-**Green Jacket.** Five lead changes in the first forty-two holes. Williams led after R1; Mullin's course-record 82 took it at the close of R2; Mullin held it outright for one hole of R3, the 6th; Jon Baker drew level at the 7th and pulled clear with his own course record. Final: Jon Baker +67, Mullin +80.
+## Player-by-player summary
 
-**Wooden Spoon.** Alex bottom after R1, Patterson bottom from R2 H10, Williams outright bottom from R3 H14 — and there for the remaining twenty-two holes. Williams 123. The reigning Jacket holder, second Spoon of his career.
-
-## The men, in brief
-
-- **Jon Baker** — Three TEGs of fourth on the Trophy resolved, in one Lisbon trip, into the double. Course records at Royal Óbidos (86, beating his own 89 from TEG 9) and at West Cliffs (86, fifteen better than his TEG 15 visit). The 166 is the ninth-best Trophy total ever posted. Third Green Jacket. The nearly-man arrives.
-- **David Mullin** — Runner-up in both competitions and author of the round of the tournament, the 82 at West Cliffs that lowered the course record by six. His Jacket lead lasted from the 18th green of R2 to the 6th green of R3, which is roughly an hour of competitive golf the following morning. Beaten, finally, by a man having a superior week.
-- **Gregg Williams** — Arrived as reigning Green Jacket, departed with the Wooden Spoon. Led the Jacket after R1, then 26 points at Royal Óbidos, seven consecutive double bogeys from the 12th to the 18th, fourteen shots to par across the closing seven holes, and the basement to himself from the 14th onwards. Second Spoon of nine prior TEGs. The inversion of the week.
-- **John Patterson** — Eighteen-hole Trophy leader, fifty-six-hole front-of-mind absence. The West Cliffs 116 — a new course-worst, twenty-seven shots bled across holes 8 to 15 — was the round he never recovered from. A new personal-best 94 at Royal Óbidos went uncelebrated in the surrounding circumstances.
-- **Alex Baker** — Carried two Spoons in, set a course-worst 114 at Praia D'El Rey on day one, then posted a personal-best 105 at West Cliffs and quietly handed the cutlery on. The streak ends at two. Williams took it from there.
+- **Jon Baker** — Rounds of 38, 44, 44 and 40 for 166 points, the Trophy by 18 and the Green Jacket by 13. Set the Royal Óbidos course record of 86 and personal bests at both Óbidos and West Cliffs. Made two nines on the final day and won by daylight anyway.
+- **David Mullin** — Nine Green Jackets already, and the best golf of the tournament in his 82 at West Cliffs, twelve shots better than his only previous visit and a new course record. Held the outright gross lead from the 6th to the 7th at Royal Óbidos. Runner-up in both.
+- **Gregg Williams** — Arrived holding the Green Jacket back-to-back and the TEG 15 Trophy, and led the Jacket after Round 1. Finished Round 3 with seven consecutive double bogeys for 26 points, and never showed the slightest interest in climbing back out.
+- **John Patterson** — Led the Trophy after Round 1 and was bottom of it 24 hours later, via a 116 at West Cliffs that was both a course-worst and his worst round to date. Answered with a personal-best 94 at Royal Óbidos, then closed at Praia with a 9 and a 10.
+- **Alex Baker** — Opened with 114 at Praia D'El Rey, worse than anything seen there in 24 prior visits. Improved his West Cliffs best by five to 105, dropped 15 shots in five holes in Round 3 and 25 in nine in Round 4, and still avoided a third straight Spoon.

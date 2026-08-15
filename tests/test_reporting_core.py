@@ -8,6 +8,8 @@ from minimal in-memory inputs. Nothing in reporting/llm.py is imported or
 exercised.
 """
 
+import pytest
+
 from teg_analysis.reporting import scoring
 from teg_analysis.reporting.events import (
     NotableEvent,
@@ -104,8 +106,13 @@ def test_finalise_ranks_events_descending_by_total():
     ranked = scoring.finalise([low, high], mode="balanced")
 
     assert [e.headline for e in ranked] == ["high", "low"]
-    assert ranked[0].total == 24.0
-    assert ranked[1].total == 3.0
+    # Derived from the weights, not hardcoded — this asserted 24.0 (the old
+    # 1.5+0.8+0.7) and broke on the 2026-08-14 re-profile for no real reason.
+    # What is under test is that `total` is the weighted sum and the ordering
+    # follows it, which holds at any setting.
+    unit = sum(scoring.MODE_WEIGHTS["balanced"])
+    assert ranked[0].total == pytest.approx(8.0 * unit)
+    assert ranked[1].total == pytest.approx(1.0 * unit)
 
 
 def test_finalise_fast_mode_leans_on_importance():

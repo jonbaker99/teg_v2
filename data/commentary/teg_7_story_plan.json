@@ -1,53 +1,67 @@
 {
-  "title": "Meller on the Cabo",
+  "title": "From Spoon to Trophy: Meller's -31 Leaves the Field Seven Back",
   "title_candidates": [
-    "Meller on the Cabo",
-    "The Lisbon Heist",
-    "Two Days in Portugal",
-    "Henry's Record, David's Jacket"
+    "From Spoon to Trophy: Meller's -31 Leaves the Field Seven Back",
+    "The Reigning Spoon-Holder Ransacks the Record Book",
+    "Meller Turns for Home at Praia D'El Rey and Never Looks Back",
+    "Portugal's Record Haul: Meller Wins the Lot, Mullin Takes a Fifth Jacket"
   ],
-  "theme": "Henry Meller wins TEG 7 in two days: two record-shattering rounds at Praia D'El Rey and Bom Sucesso build a 15-shot Trophy lead so vast that the weekend becomes a procession, while David Mullin quietly assembles a Green Jacket cushion of his own and Alex Baker takes up permanent residence at the foot of the table.",
-  "tone": "house — faithful, witty, tongue-in-cheek, Ronay/Peck-flavoured",
-  "narrative_structure": "in_medias_res",
-  "opening_hook": "Open on Sunday evening at Bom Sucesso: Meller signs for -15, the best round in TEG history — three days after his -13 at Praia D'El Rey, which was also the best round in TEG history. Fifteen shots clear. The tournament, in effect, has already been won. Then flash back to how we got here.",
+  "theme": "The man who had finished last more often than anyone — three Wooden Spoons, the reigning holder — walks onto a brand-new coastline and immediately plays the two best rounds in TEG history, converting a career of bottom-of-the-table into a first Trophy by seven; everyone else spends four rounds chasing a scoring standard that Portugal briefly made feel normal.",
+  "tone": "house — faithful, dry, tongue-in-cheek; ribbing aimed at the blow-up holes, genuine warmth for Meller's breakthrough",
+  "narrative_structure": "chronological",
+  "opening_hook": "Open on the 10th tee at Praia D'El Rey in R1 — the reigning Wooden Spoon holder about to play the nine holes (b02) that turned him into a Trophy winner — then run the tournament straight from there, returning to the same course in R4 to close.",
+  "narrative_vehicles": [
+    "origin",
+    "inversion",
+    "bookends"
+  ],
   "foreshadow": [
-    "Meller's R1 -13 is tabled as a record — only to last 24 hours",
-    "Mullin's +9 gross at Bom Sucesso hints at the Jacket campaign assembling beneath the Meller fireworks",
-    "Alex Baker's R1 octuple at the 5th sets a tone he never escapes",
-    "Gregg Williams' habit of one ruinous hole per round sets up a final-day redemption"
+    "Meller arrives with three Wooden Spoons and the current one round his neck, and no wins of any kind",
+    "Williams arrives as back-to-back Trophy champion, and as a man ranked 5th in Gross in each of the last three TEGs",
+    "Mullin arrives on a run of back-to-back Jackets, with four already won, and Portugal's soft new courses in front of him",
+    "Three courses never seen by TEG before, and a scoring record book that looked safe on the flight out"
   ],
   "competitions": [
     {
-      "name": "The Trophy (Net VP)",
-      "winner_or_loser": "Henry Meller",
-      "how": "Meller takes outright lead at Praia D'El Rey's 10th in R1 and never relinquishes it. A back-nine blitz (28 points, holes 10-18) anchors a -13 — the best round in TEG history. At Bom Sucesso the next day he goes one better with -15 (a new record, his own), opening a 15-shot lead through 36. R3 (-1) and R4 (-2) are a controlled glide; he wins by 7 from Gregg Williams at -31, the second-best Trophy total in TEG history.",
+      "name": "Trophy (Net VP)",
+      "winner_or_loser": "Henry Meller (winner, -31, by 7 over Gregg Williams)",
+      "how": "Meller was among the leaders from R1 H10 and never gave the lead up: the back nine at Praia D'El Rey (b02) yielded 10 shots to par and TEG's best-ever round at -13 (b05), a 3-shot cushion. R2 at Bom Sucesso turned the screw — -15 (b07), better again than anything in TEG history, built on a 9-shot burst from the 3rd to the 9th (b04) — and the lead ballooned to 11. Royal Óbidos flattened everyone in R3 and Meller's -1 still widened the gap to 15. R4 was pure management: -2, an 8 at the 9th (b37) absorbed without alarm, Williams's personal-best -12 (b16) trimming the margin but nothing more. Final: -31, seven clear, the 2nd-best Trophy score in TEG history (b01).",
       "key_beat_ids": [
         "b02",
-        "b03",
         "b05",
+        "b07",
+        "b04",
+        "b16",
+        "b37",
         "b01"
       ]
     },
     {
-      "name": "The Green Jacket (Gross)",
-      "winner_or_loser": "David Mullin",
-      "how": "Mullin sits 3rd after R1 (gross +16) while Baker and Meller trade the lead. At Bom Sucesso he posts +9 gross — a TEG record — to move within 3. He takes the outright lead at Royal Óbidos' 16th in R3 despite a quintuple at the 15th, then crushes R4 at Praia D'El Rey with +10 (joint-2nd best gross ever) to win by 15 from Stuart Neumann at +53. Ten lead changes in total, settled only on the back nine of R3.",
+      "name": "Green Jacket (Gross)",
+      "winner_or_loser": "David Mullin (winner, +53, by 15 over Stuart Neumann)",
+      "how": "Jon Baker led after R1 with a +11 that was then the best Gross round TEG had seen (b12); Mullin was 3rd, five back. R2 at Bom Sucesso was a gross bloodbath in the good sense — Mullin's +9 (b06) took the record off Baker inside 24 hours, with Meller and Neumann both on +10 (b08, b11) — and Mullin closed to within 3 of Meller's lead. R3 at Royal Óbidos decided it: despite an 8 at the par-3 15th (b22), Mullin's much stronger back nine (b43) took the lead back at the 16th and he was never headed. A +10 in R4 (b09) turned a 3-shot lead into 15 and a fifth Jacket (b03), with Neumann's personal-best +68 total (b21) only good enough for second.",
       "key_beat_ids": [
-        "b04",
-        "b08",
         "b12",
-        "b21"
+        "b06",
+        "b08",
+        "b11",
+        "b22",
+        "b43",
+        "b09",
+        "b21",
+        "b03"
       ]
     },
     {
-      "name": "The Wooden Spoon",
-      "winner_or_loser": "Alex Baker",
-      "how": "Sixth after R1, sixth after R2, sixth after R3, sixth after R4. Baker takes outright last at Praia D'El Rey's 14th in R1 (his second octuple of the day) and never gives anyone else a sniff. Six quintuple-or-worse blow-ups across four rounds keep the gap from ever closing.",
+      "name": "Wooden Spoon",
+      "winner_or_loser": "Alex Baker (loser, -5 net VP)",
+      "how": "Bottom of the pile outright from R1 H14 and bottom at the end of every single round — no escape attempt was ever really mounted. An 8 at the 5th in R1 (b32) set the tone; his best round was R2's -6 at Bom Sucesso, the day everyone else was rewriting the record book, so it gained him nothing. R3 and R4 were level-par-net efforts (0 and 0), the last of them punctuated by quintuple bogeys at the 6th and the 16th (b33, b34) at a Praia D'El Rey where his brother was busy making an 11 (b31). Final margin of misery: 26 shots behind the winner (b27).",
       "key_beat_ids": [
-        "b30",
-        "b26",
-        "b27",
-        "b28"
+        "b32",
+        "b33",
+        "b34",
+        "b31",
+        "b27"
       ]
     }
   ],
@@ -55,98 +69,108 @@
     {
       "round": 1,
       "headline_candidates": [
-        "Meller Rewrites the Book at Praia D'El Rey",
-        "-13, and the Record Lasts 24 Hours",
-        "A Back Nine for the Ages"
+        "The Spoon-Holder Turns for Home: Meller Posts the Best Round TEG Has Ever Seen",
+        "Praia D'El Rey Opens Its Doors and TEG Walks Off With the Record Book",
+        "Ten Shots in Nine Holes: Meller's Back Nine Changes Everything"
       ],
-      "chosen_headline": "Meller Rewrites the Book at Praia D'El Rey",
-      "angle": "Cabell Robinson's coastal links-parkland hybrid yields TEG's best-ever round — Meller's -13, built on a 28-point back nine — while Jon Baker (-10, +11 gross, both records of their own at the time) leads the Jacket and Alex Baker plants the Spoon flag at the 14th.",
+      "chosen_headline": "The Spoon-Holder Turns for Home: Meller Posts the Best Round TEG Has Ever Seen",
+      "angle": "A brand-new course on a brand-new coast, and by the 18th two all-time records have gone: Meller's -13 net and Jon Baker's +11 gross — with the blow-ups (Meller's 9 at SI 1, Alex Baker's 8 at the 5th) proving nobody was actually playing well, just scoring beautifully.",
       "beat_ids": [
-        "b03",
+        "b05",
         "b02",
-        "b13",
-        "b06",
         "b14",
-        "b26",
-        "b34"
+        "b12",
+        "b19",
+        "b36",
+        "b32"
       ]
     },
     {
       "round": 2,
       "headline_candidates": [
-        "The Record Falls Again — to the Same Man",
-        "Bom Sucesso, Better Sucesso",
-        "Mullin's Gross Masterpiece, Buried on Page Three"
+        "Bom Sucesso, Where Every Record Fell Over",
+        "Records Set on Thursday, Broken on Friday",
+        "Mullin Takes the Gross Record Off Baker; Meller Takes Everything Else"
       ],
-      "chosen_headline": "The Record Falls Again — to the Same Man",
-      "angle": "At Donald Steel's Bom Sucesso, three of the four best rounds in TEG history happen on the same afternoon: Meller's -15, Neumann's -13, Mullin's -10 (with +9 gross — a Gross record). Meller's lead balloons to 11; the Trophy is, functionally, decided.",
+      "chosen_headline": "Bom Sucesso, Where Every Record Fell Over",
+      "angle": "Donald Steel's lagoon-view parkland hands out four all-time rounds in one afternoon — Meller -15, Neumann -13, Mullin's record +9 gross, Meller and Neumann on +10 — while Williams posts a 9 at the SI 2 15th and watches the Trophy lead stretch to 11.",
       "beat_ids": [
-        "b05",
-        "b04",
-        "b09",
-        "b10",
         "b07",
+        "b06",
+        "b08",
+        "b10",
+        "b11",
         "b15",
-        "b11"
+        "b04",
+        "b24"
       ]
     },
     {
       "round": 3,
       "headline_candidates": [
-        "Seve's Last Course, Meller's Easiest Day",
-        "The Procession Begins at Royal Óbidos",
-        "Mullin Takes the Gross, the Hard Way"
+        "Seve's Parting Gift: Royal Óbidos Takes Its Cut",
+        "The Day the Scoring Stopped",
+        "Quintuple Bogeys All Round, and Mullin Still Wins the Day"
       ],
-      "chosen_headline": "Mullin Takes the Gross, the Hard Way",
-      "angle": "On Ballesteros' final design, Meller coasts to -1 and extends to 15 clear; the day's real contest is the Jacket, which Mullin seizes outright at the 16th despite a quintuple at the par-3 15th. Jon Baker's 10 at the 2nd ends his Gross challenge.",
+      "chosen_headline": "Seve's Parting Gift: Royal Óbidos Takes Its Cut",
+      "angle": "Ballesteros's final design answers two days of record-breaking with an 8 for Mullin, 9s for Williams and Neumann and a 10 for Jon Baker — and yet it is here, at the 16th, that Mullin quietly takes the Jacket lead for good while Meller's -1 still gains him four shots.",
       "beat_ids": [
-        "b31",
-        "b21"
+        "b22",
+        "b25",
+        "b26",
+        "b50",
+        "b43"
       ]
     },
     {
       "round": 4,
       "headline_candidates": [
-        "The Coronation, with a 11 at the 10th",
-        "Williams' Personal Best, Baker's Personal Worst",
-        "Mullin Seals It, Meller Strolls Home"
+        "Back to the Beach: Meller Comes Home, Mullin Collects a Fifth Jacket",
+        "The Spoon Passes On: Meller -31, Alex Baker -5",
+        "Williams Plays His Best Round Ever and Loses by Seven"
       ],
-      "chosen_headline": "The Coronation, with a 11 at the 10th",
-      "angle": "Back at Praia D'El Rey, Meller's lead halves to 7 but the trophy is never in doubt. Mullin closes with +10 gross to win the Jacket by 15. Williams posts a personal-best -12 (+20 gross — also a PB). Jon Baker rings up an 11 at the par-5 10th. Alex Baker contributes two more quintuples for good measure.",
+      "chosen_headline": "Back to the Beach: Meller Comes Home, Mullin Collects a Fifth Jacket",
+      "angle": "A second look at Praia D'El Rey closes the loop: Williams's career-best -12 arrives 15 shots too late, Jon Baker makes an 11 at the 10th, Alex Baker signs off with two 9s and the Spoon, and Meller strolls in at -31 with a personal-best gross total to go with it.",
       "beat_ids": [
-        "b08",
         "b16",
         "b17",
-        "b18",
-        "b27",
-        "b28"
+        "b09",
+        "b31",
+        "b33",
+        "b34",
+        "b37",
+        "b20",
+        "b21",
+        "b01",
+        "b03",
+        "b27"
       ]
     }
   ],
   "players": [
     {
       "player": "Henry Meller",
-      "arc": "Wins the Trophy at a canter on the back of two consecutive TEG-record rounds; sets a personal-best Gross total (+69) almost as an afterthought."
+      "arc": "Reigning Wooden Spoon holder with three Spoons and no wins of any description, he opened with the best round in TEG history, beat it the next day, led from R1 H10 to the last putt and won his first Trophy at -31 — the 2nd-best figure ever recorded — with a personal-best gross total of +69 thrown in."
     },
     {
       "player": "David Mullin",
-      "arc": "Quietly stitches together the Green Jacket while everyone watches Meller — a Gross record at Bom Sucesso, the decisive takeover at Royal Óbidos' 16th, and a +10 close-out at Praia D'El Rey."
-    },
-    {
-      "player": "Stuart Neumann",
-      "arc": "Personal-best Gross total (+68) and the second-best round in TEG history (-13 at Bom Sucesso) — Jacket runner-up by 15."
+      "arc": "Four Jackets and counting became five: beaten to the gross lead in R1, he took the all-time gross round record at Bom Sucesso with +9, survived an 8 at Óbidos's 15th, seized the lead at the 16th and won by 15."
     },
     {
       "player": "Gregg Williams",
-      "arc": "Quietly second on the Trophy thanks to a personal-best -12 in R4, but only after a quadruple or quintuple every round."
+      "arc": "The defending Trophy champion played the best round of his life in R4 (-12, and a personal-best +20 gross) but had already given the tournament away in quintuple bogeys — the 15th at Bom Sucesso, the 14th at Óbidos — and finished a distant second, seven back."
+    },
+    {
+      "player": "Stuart Neumann",
+      "arc": "Third in the Trophy in each of the last three TEGs, he produced the 2nd-best round in TEG history (-13) and a personal-best gross total of +68 — and was still 15 shots adrift of Mullin in the Jacket, with a 9 at Óbidos's 12th to explain part of it."
     },
     {
       "player": "Jon Baker",
-      "arc": "Leads the Jacket after R1 with a then-record +11 gross, then unravels via a 10 at Royal Óbidos and an 11 at Praia D'El Rey's 10th."
+      "arc": "Held the gross record for precisely one round (+11 at Praia D'El Rey) and the Jacket lead for slightly less, then contributed a 10 at Óbidos's 2nd and an 11 at Praia's 10th in R4 — his worst hole relative to par in TEG history."
     },
     {
       "player": "Alex Baker",
-      "arc": "Sixth after every round; six blow-ups of quintuple or worse; the Wooden Spoon arrives without ever changing hands."
+      "arc": "Bottom of the field outright from R1 H14 and bottom at the end of all four rounds, he collected the Wooden Spoon at -5 with an 8 at the 5th in R1 and a pair of 9s in R4 as the punctuation."
     }
   ],
   "must_include_beat_ids": [
@@ -160,45 +184,80 @@
     "b08",
     "b09",
     "b10",
+    "b11",
     "b12",
-    "b13",
     "b14",
     "b15",
     "b16",
     "b17",
-    "b18",
     "b19",
     "b20",
-    "b30",
+    "b21",
+    "b27",
     "b31",
-    "b21"
+    "b50"
   ],
   "cuts": [
-    "b22",
+    "b13",
+    "b18",
     "b23",
-    "b24",
-    "b25",
+    "b28",
     "b29",
-    "b32",
-    "b33",
-    "b34",
+    "b30",
     "b35",
-    "b36",
-    "b37",
     "b38",
     "b39",
     "b40",
     "b41",
     "b42",
-    "b43",
     "b44",
     "b45",
     "b46",
     "b47",
     "b48",
-    "b49",
-    "b50",
-    "b11"
+    "b49"
   ],
-  "venue_notes": "This is TEG's first visit to the Lisbon Coast — three brand-new courses plus a return leg to Praia D'El Rey. Use Robinson's links-and-dunes back nine to frame Meller's R1 takeover (his decisive surge starts at the 10th). Bom Sucesso (Donald Steel/Martin Ebert, lagoon views on the hillier back) is the scene of the record onslaught — three of the four best rounds ever, all in one day. Royal Óbidos as 'Seve's final design' gives R3 its sombre, championship-tour edge (and a fitting venue for Mullin's blow-up-then-recover Jacket takeover). The R4 return to Praia D'El Rey closes the loop — same dunes, different mood: coronation, not contest."
+  "venue_notes": "TEG's first visit to the Lisbon Coast, and all three layouts new to the tournament: Praia D'El Rey (Cabell B. Robinson; parkland out, coastal dunes home) takes R1 and R4 and gives the report its bookends — the 10th tee where Meller's Trophy began, the same nine where Jon Baker made his 11 three days later. Bom Sucesso (Donald Steel, with Martin Ebert leading, flat front nine into a hilly lagoon-view back) is the record-breaking day and should be written as the friendliest course TEG had ever met. Royal Óbidos — Seve Ballesteros's final design, water everywhere, a Challenge Tour venue — is the corrective, and deserves credit as the round that decided the Jacket.",
+  "competition_storyline_bullets": {},
+  "player_storyline_bullets": {},
+  "course_history_notes": [
+    "Every course was new to TEG: no player had prior history at Praia D'El Rey, Bom Sucesso or Royal Óbidos.",
+    "Praia D'El Rey was seen twice — R1 and R4 — and Mullin's 83 in R4 was the lowest gross anyone posted there across the two visits.",
+    "Royal Óbidos was the hardest of the three on the card: nobody's best gross there bettered Mullin's 90, against 81 for him at Bom Sucesso.",
+    "Bom Sucesso produced the field's best grosses of the tournament — Mullin 81, Meller 82, Neumann 82 — which is why the record book took such a beating in R2."
+  ],
+  "decisive_moments": [
+    "R1 holes 10-18 at Praia D'El Rey — Meller takes 10 shots off par over the closing nine (b02) for a -13 that led the Trophy and was never headed across the next 54 holes; R2's -15 (b07) made the 11-shot cushion effectively unrecoverable.",
+    "R3 H16 at Royal Óbidos — Mullin retakes the Gross lead from Meller for good (b43), having already survived an 8 at the 15th (b22); +10 in R4 (b09) turned three shots into fifteen.",
+    "R1 H14 at Praia D'El Rey — Alex Baker drops to the bottom outright (b32 the 8 at the 5th behind it) and stays there at the end of every round to the finish (b27)."
+  ],
+  "prominent_vehicle": "origin",
+  "prominent_palette": "cross_teg_career",
+  "payoffs": [
+    {
+      "seed": "Meller: three Spoons, reigning holder, no wins",
+      "resolves_in": "Round 4 / How the three were decided",
+      "payoff": "First Trophy at -31 (b01), the 2nd-best score in TEG history, plus a personal-best gross total of +69 (b20) — the Spoon passes to Alex Baker (b27)."
+    },
+    {
+      "seed": "Williams: back-to-back Trophy champion, 5th in Gross three TEGs running",
+      "resolves_in": "Round 4",
+      "payoff": "Career-best round of -12 and career-best +20 gross (b16, b17) arrives with the Trophy already gone; second, seven back, the damage done by the 9s at Bom Sucesso's 15th (b24) and Óbidos's 14th (b25)."
+    },
+    {
+      "seed": "Mullin: four Jackets, two in a row, soft new courses ahead",
+      "resolves_in": "Round 3 and Round 4",
+      "payoff": "Record +9 gross round at Bom Sucesso (b06), lead retaken at Óbidos's 16th, +10 in R4 (b09) and a fifth Jacket by 15 (b03)."
+    },
+    {
+      "seed": "Three unseen courses and a record book that looked safe",
+      "resolves_in": "Round 2 (and its correction in Round 3)",
+      "payoff": "R1 and R2 hand over the best-ever net rounds (b05, b07, b10) and the best-ever gross rounds (b12, then b06, b08, b11) — before Royal Óbidos answers with an 8, two 9s and a 10 (b22, b25, b26, b50)."
+    }
+  ],
+  "vehicle_fit_response": {
+    "top_scored_vehicle": "origin",
+    "taken_up": true,
+    "note": "Taken: Meller's first-ever win is unmistakably the story, with inversion (reigning Spoon holder to Trophy winner) riding alongside and bookends supplied by Praia D'El Rey hosting R1 and R4."
+  }
 }

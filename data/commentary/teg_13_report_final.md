@@ -1,22 +1,22 @@
 # Fifty, and Never Headed
 
-Littlestone sits out on the Romney Marshes doing very little to advertise itself. No clubhouse grandeur, no Open Championship plaque, no reason for anyone to drive there on purpose. On the Saturday of TEG 13 it gave up the two best rounds of the tournament and one of the best afternoons of scoring in the history of the thing.
+Littlestone sits out on the Romney Marshes doing very little to advertise itself. No clubhouse grandeur, no Open Championship plaque, no reason for anyone to drive there on purpose. On the Saturday of TEG 13 it gave up the two best rounds of the tournament and one of the finest afternoons of scoring in the history of the thing.
 
 Jon Baker went round in 79, eight over, the second-best gross round TEG has ever recorded. In the same weather, on the same marsh, John Patterson signed for 49 Stableford points, the third-best round in TEG history, off a gross of 83 and a personal-best +12.
 
 The two of them finished the day fourteen shots apart in the Green Jacket.
 
-That is the honest shape of this tournament, and it needs saying early: the golf produced numbers nobody had seen before, and none of it altered the result by a syllable. Baker took the Trophy lead at the 2nd hole of Round 1 and, apart from a two-hole excursion at Prince's, kept it until somebody handed him a trophy. Kent was TEG's first visit to Kent. Four links, four first visits for every man in the field, four blank pages in the record book with no course records on them to chase.
+That is the honest shape of this tournament, and it needs saying early: the golf produced numbers nobody had seen before, and none of it altered the result by a syllable. Baker took the Trophy lead at the 2nd hole of Round 1 and, apart from a two-hole excursion at Prince's, kept it until somebody handed him a trophy. Kent was TEG's first visit to the county. Four links, four inaugural outings for every man in the field, four blank pages in the record book with no course records on them to chase.
 
 So he set a different one instead.
 
 ## Round 1 — Deal or No Deal: Baker Nine Clear, Patterson Signs for 108
 
-Thursday at Royal Cinque Ports, two Open Championships on its CV and a stiff opinion about visitors. TEG's first ball in Kent was struck here and the scoreboard split in half almost immediately.
+Thursday at Royal Cinque Ports, two Open Championships on its CV and a stiff opinion about visitors. TEG's first ball here was struck at this venue and the scoreboard split in half almost immediately.
 
-Baker played the first three holes in par, par, birdie at the par-5 3rd: ten points from three holes, and the tone set before anyone had settled. He signed for 85, thirteen over, and 39 points. That was nine clear in the Jacket and six in the Trophy, and he had been in front since the 2nd.
+Baker played the opening three holes in par, par, birdie at the par-5 3rd: ten points from three holes, and the tone set before anyone had settled. He signed for 85, thirteen over, and 39 points. That was nine clear in the Jacket and six in the Trophy, and he had been in front since the 2nd.
 
-Patterson opened with an 8 at the 1st. By the 2nd he was bottom of the Wooden Spoon race, which is a position that usually requires several hours of dedicated work. He added a 9 at the 7th and a 9 at the par-5 16th, and his 108 was the highest gross round anyone posted all tournament.
+Patterson opened with an 8 at the 1st. By the 2nd he was bottom of the Wooden Spoon race, which is a position that usually requires several hours of dedicated work. He added a 9 at the 7th and another at the par-5 16th, and his 108 was the highest gross round anyone posted all tournament.
 
 Alex Baker's afternoon turned on the 11th, SI 3 and playing like it, where he took 8.
 
@@ -56,7 +56,7 @@ Baker's closing round was a professionally dull 85, thirteen over, for 39 points
 
 That was Mullin's. A 9 at the par-4 10th, SI 3, and after three and a half rounds of finishing 3rd, 3rd and 4th on the Trophy metric, he was suddenly last for the first time in the entire tournament, with eight holes left to do something about it. He did not do something about it. The final ledger read 135 points: a third consecutive Wooden Spoon and a fourth in total, for the most decorated gross golfer TEG has ever produced.
 
-Alex Baker, who had spent two rounds bleeding shots in clusters, closed with 89 — seventeen over, a personal best, and his best round of the trip. It was the only meaningful piece of family business he was permitted all tournament.
+Alex Baker, who had spent two rounds bleeding shots in clusters, closed with 89 — seventeen over, a personal best, and his finest round of the trip. It was the only meaningful piece of family business he was permitted all tournament.
 
 Baker's 85 completed a gross aggregate of +50. There were no course records in Kent to aim at, because nobody had ever been to any of these places.
 

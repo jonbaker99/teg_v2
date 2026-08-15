@@ -1,62 +1,78 @@
-# Lisbon Belongs to Gregg
+# The Jacket Finally Fits: Williams Takes the Lot on the Lisbon Coast
 
-There is a precise moment at which a four-day golf tournament can be said to be over, and in TEG's fourth pilgrimage to the Lisbon Coast it arrived at roughly half past eleven on the first morning. Estoril, 11th green. Gregg Williams holes out, glances at the board, and finds himself alone at the top of the Gross column. He would remain alone at the top of the Gross column for the following 61 holes — through a links, a mountain and a dune-scape; through his own quintuple-bogey 10 and the field's serial double-figure unravellings; through three further rounds that functioned, structurally, as escort duties.
+The par-4 1st at Estoril is not a long hole. Gregg Williams took eight shots to get down.
 
-To understand how a tournament contested across four courses on Portugal's most lavish stretch of coast was decided before lunch on day one, we must rewind ten holes — and then forward four days, through what was almost certainly the most blow-up-strewn week TEG has recently filed under "competitive golf".
+There is no version of that opening that forecasts what came next. Williams arrived on the Lisbon Coast with fifteen TEGs behind him, three Trophies in the cabinet and not a single Green Jacket. For most of his career the Jacket has functioned less as a competition than as a storage arrangement in David Mullin's wardrobe, where nine of them hang. Williams had been thereabouts for years — third, second, second, third across the last four TEGs — in the manner of a man permanently being measured and never issued the garment.
 
-## Round 1 — Williams Plants the Flag at the 11th
+Four days later he had both trophies, by 21 points and 29 shots. Alex Baker, meanwhile, had the Wooden Spoon, taking delivery of it from his brother.
 
-Estoril Golf Club: Mackenzie Ross's 1936 redesign, Portugal's oldest course, tree-lined and pleading for accuracy over power. A new venue for TEG, and for three holes it looked like it might not belong to Williams at all.
+The itinerary was deliberately lopsided. Two courses new to TEG first, at Estoril and West Cliffs, where nobody had any history to defend. Then two returns to TEG 8 country in the Sintra hills and on the Cascais coast, where everybody did.
 
-He opened with a quadruple-bogey 8 at the par-4 1st — the kind of card-opener that, in a tighter field, would have constituted a story. Mullin nudged ahead in both competitions at the 2nd. By the 4th, Williams had reclaimed the Trophy outright and drawn level on the Jacket. By the 11th he was alone on the Gross board. Jon Baker briefly drew level on the Trophy at the 10th — worth noting, because it was the last time Williams would share a lead with anyone for the rest of the week.
+## Round 1 — An Eight at the First, a Lead by the Last
 
-While Williams sorted himself out, Stuart Neumann was busy at the par-4 15th, where he assembled a sextuple-bogey 10 — the round's most decisive piece of evidence that Estoril, for all its mid-century manners, would punish indiscretion. Williams closed on 39 Stableford for +17, leading the Trophy by five and the Jacket by eight.
+Saturday at Estoril, Portugal's oldest club, a short tree-lined Mackenzie Ross parkland that asks only that you remain on the mown parts. Williams declined at the first opportunity and again at the last: the quadruple-bogey 8 to open, and another 8 at the 18th, the second-easiest hole on the course.
 
-Alex Baker, meanwhile, finished the day bottom of the Stableford pile. He would spend most of the week there, with brief sublets to Neumann and Mullin, before signing a longer lease in Round 3.
+Between those two he shot 86 and took 39 points. Eight strokes thrown away on the bookends, and quiet command of everything in the middle.
 
-## Round 2 — Carnage on the Cliffs
+The early jockeying was as consequential as early jockeying ever is. Mullin drew level at the top of both competitions at the 2nd. Williams went outright top of the Trophy at the 4th and drew level on gross at the same hole. Jon Baker drew level on the Trophy at the 10th. Then Williams went outright top on gross at the 11th, and nobody saw the front of him again in either competition for the rest of the tournament.
 
-West Cliffs Golf Links, Cynthia Dye's dune layout on the Silver Coast: another debut for TEG, and the holder of a 2017 World's Best New Course award which it spent the day vindicating by eating everyone except the leader.
+Elsewhere the parkland collected its dues. Neumann took a sextuple-bogey 10 at the par-4 15th. Jon Baker posted back-to-back quintuple-bogey 9s at the 11th, one of the hardest holes on the course, and the 12th.
 
-The bookkeeping first. John Patterson drew level on the Trophy at the 3rd — the final lead change of the tournament, an asterisk no one knew was an asterisk at the time. From there, the round became a study in how many ways six men can post double figures on a par 5.
+By nightfall Williams led the Trophy by 5 and the Jacket by 8. The worst golf of his tournament had already happened, and it had cost him nothing at all.
 
-Mullin went first, at the par-5 6th: a quintuple-bogey 10. Neumann joined him there with his own quintuple-bogey 10, then went one better at the par-5 13th with a sextuple-bogey 11. Jon Baker waited until the par-4 17th, where he produced a septuple-bogey 11 — a number that, in the calmer arithmetic of normal weeks, would headline a report. Here it has to queue.
+## Round 2 — The Fifteenth Giveth and Taketh Away
 
-Alex Baker's contribution had its own awful coherence. Across holes 6, 7 and 8 — par 5, par 5, par 4 — he carded 11, 9 and 7, dropping thirteen shots in three holes. The Spoon was not yet mathematically his, but the wreckage on those three scorecards made the rest of the week a formality. He would later add a sextuple-bogey 10 at the par-4 17th, because the day was that kind of day.
+Sunday took the field north to Obidos and West Cliffs, Cynthia Dye's links, voted World's Best New Course in 2017 and functioning here as the demolition site of the trip.
 
-And amidst it all, the week's single act of grace: Mullin, on the same card as his 10 at the 6th, eagled the par-5 15th. A 3. The only sub-par anything anyone produced all week. That it sat next to a quintuple bogey, on the same nine, is the entire tournament in miniature.
+At the par-5 15th, Mullin made a 3. It was the only eagle recorded by anybody across the four days, the rarest thing that happened all tournament, and it was answered on the same hole by Williams taking 10. Williams shot 16 over regardless, took 40 points, and left West Cliffs 9 clear on the Trophy and 14 clear on gross. The finest single shot of the fortnight's golf changed the arithmetic by precisely nothing.
 
-Williams shot 40 for +16 — and contributed his own quintuple-bogey 10 at the par-5 15th, the eagle hole, a moment best understood as a man stretching his legs. He left West Cliffs nine clear on the Trophy and fourteen clear on the Jacket.
+The par-5 6th did the heavy lifting. Alex Baker made 11, Neumann 10, Mullin 10.
 
-## Round 3 — Williams Goes Personal Best; Spoon Goes Permanent
+Baker's 11 was merely the opening lot in a three-hole auction of his own scorecard: 11 at the 6th, 9 at the 7th, 7 at the 8th. Thirteen shots gone in twenty minutes of honest effort. This is the shape of his entire tournament in miniature — not one collapse but a steadily expanding inventory, each item catalogued, each new course adding to the holdings.
 
-Penha Longa's Atlantic Course, Robert Trent Jones Jr.'s mountain layout above Sintra — TEG's second visit, and the site at which the contest, already lopsided, was officially declared a procession.
+The 17th then took Jon Baker for a septuple-bogey 11 and Alex Baker for a sextuple-bogey 10. Neumann added an 11 at the par-5 13th, for a card that would eventually make him Trophy runner-up. Stableford forgives what gross never will.
 
-Williams shot +10 Gross. A personal best. He took 44 Stableford points from the round — the highest single-round haul of the week — and converted a nine-shot Trophy lead into eighteen. The Gross lead crept from fourteen to seventeen. The numbers across his four rounds — 39, 40, 44, 34 — make him the only player to clear thirty in every round of the week, which is the sort of statistic that sounds modest until you remember what everyone else was doing.
+John Patterson drew level at the top of the Trophy at the 3rd. It was the last lead change of the tournament in either competition, with 51 holes still to play.
 
-What everyone else was doing, at the bottom of the board, was confirming Alex Baker in his role. He dropped to outright last at the 1st tee of Round 3 and never moved off the bottom again. The day's exclamation mark came at the par-4 14th: a sextuple-bogey 10. By close of play, the only remaining question of the week was the margin.
+## Round 3 — Eighty-Two in the Sintra Hills
 
-## Round 4 — Coronation by the Atlantic
+Monday, Penha Longa, Robert Trent Jones Jr's mountain course, and TEG's second visit. Everyone had a number here to answer for.
 
-Oitavos Dunes, Arthur Hills's links at Cascais, TEG's second visit. A coronation backdrop, and — for one player — an opening sequence that belonged in a different report entirely.
+Mullin answered his in the most gratifying way available. He shot 85, a personal best at the course by one shot, which broke the standing course record of 86 that had survived six prior visits — a record he had set himself.
 
-John Patterson stood on the 1st tee and carded a sextuple-bogey 10. He followed it with a double-bogey 6 at the par-4 2nd and a double-bogey 5 at the par-3 3rd: ten shots dropped over three holes, which is essentially Patterson's tournament in compressed form — a man who had briefly led the Trophy at West Cliffs' 3rd reduced, by Oitavos' 3rd, to running the maths on how many holes remained.
+He held it for as long as it took Williams to sign for 82.
 
-Williams shot 34 for +20 — his loosest round of the week, and entirely sufficient. The Trophy went to him by 21 points over Neumann. The Green Jacket went to him by 29 strokes over Jon Baker, on a total of +63 — the fourth-best Gross score in TEG history.
+The 82 is the round of the tournament and probably the round of Williams's life: +10, a personal-best gross round, fourteen shots better than his own effort here in TEG 8, and a new Penha Longa record by three. It was worth 44 points. The Trophy lead doubled from 9 to 18 with a round still to play, and the gross lead went to 17. From that afternoon on, the tournament was a procession being conducted with great seriousness by everyone involved.
 
-## How the three pots were settled
+The hills were generous to most of them. Jon Baker went round in 85, six better than TEG 8; Neumann in 92, seven better. Patterson produced the hottest sequence anyone managed all tournament, 19 points in six holes from the 3rd to the 8th, built on four pars and two bogeys and nothing showier than that. He later made a quintuple-bogey 9 at the 16th, the hardest hole on the course.
 
-**The Trophy** was Williams's from the 4th hole of Round 1. Brief lead-shares from Mullin (R1, hole 2), Jon Baker (R1, hole 10) and Patterson (R2, hole 3) were the kind of jockeying that happens before anyone has properly woken up. The 44-point round at Penha Longa was the decisive blow: a nine-shot lead became eighteen, and the back nine of the tournament became ceremonial. Final margins by round: +5, +9, +18, +21. Final: 157, by 21 from Neumann.
+Alex Baker's day was decided before he had properly begun it. A double bogey at the 1st dropped him from fifth to outright last in the Wooden Spoon race, and he stayed there for the remaining 53 holes. The rest of the round was housekeeping: a quadruple-bogey 7 at the par-3 7th, quadruple-bogey 9s at the par-5 8th and the par-5 12th, and a sextuple-bogey 10 at the par-4 14th. Three courses now, three sextuple bogeys, all of them filed and none of them wasted.
 
-**The Green Jacket** was Williams's from the 11th hole of Round 1 and never genuinely in doubt thereafter. He led after every round by 8, 14, 17 and 29. When the winner's worst hole of the week is a 10 and he still wins by 29, the field is required to ask some questions.
+## Round 4 — Coronation on the Atlantic, Carnage at the First
 
-**The Wooden Spoon** belonged to Alex Baker from the first hole of Round 1, with brief intermissions during which Neumann, Mullin and Jon Baker auditioned for the role. The defining passage was West Cliffs' 6–8 — thirteen shots in three holes — bracketed by the 10 at the 17th the same afternoon and the 10 at Penha Longa's 14th the following day. Four double-figure scores in four rounds. Final: 114, last by daylight.
+Tuesday at Oitavos Dunes, Arthur Hills on the Cascais coast, where the tournament's remaining business was ceremonial and the 1st hole had not been told.
 
-## The men, in brief
+It cost Patterson a sextuple-bogey 10 and Alex Baker a quadruple-bogey 8. Patterson then doubled the 2nd and doubled the 3rd, which is ten shots lost in three holes, and a start you cannot walk off.
 
-- **Gregg Williams.** Wire-to-wire on the Gross from Estoril's 11th, wire-to-wire on the Trophy from Estoril's 4th, a personal-best round in the Sintra mountains and a +63 total that ranks fourth in TEG history. The quad at the opener and the 10 at West Cliffs' 15th sit on his card like a man indulging the field. They did not, in the end, indulge it much.
-- **Jon Baker.** Green Jacket runner-up at 29 back, which is both a creditable second place and a 29-shot margin. The septuple-bogey 11 at West Cliffs' 17th was the round's most expensive single hole, and his brief Trophy lead-share at Estoril's 10th is now a piece of trivia.
-- **Stuart Neumann.** Trophy runner-up at 21 back, and the week's most reliable supplier of double figures: a 10 at Estoril's 15th, a 10 at West Cliffs' 6th, an 11 at West Cliffs' 13th. Consistent, in his own way.
-- **David Mullin.** Briefly led both competitions at Estoril's 2nd; author of the week's one eagle, the 3 at West Cliffs' 15th, made on the same scorecard as a quintuple-bogey 10 at the 6th. The card is the man.
-- **John Patterson.** Drew level on the Trophy at West Cliffs' 3rd — the last lead change of the week — and then opened Oitavos with a 10, a 6 and a 5, ten shots gone in three holes. The season's nearly-man, narrowed to the last word.
-- **Alex Baker.** Last from the first hole of the week, briefly relieved by friends, then nailed down for good at Penha Longa's 1st tee. West Cliffs' 6–8 did most of the damage; the 10s at the 17th and at Penha Longa's 14th provided structural support. Spoon by daylight on 114.
+Williams shot 91 for 34 points, another personal best at the course, and did it with the air of a man completing paperwork. The heart of the round was three consecutive pars from the 13th to the 15th, worth 9 points, the last of them at the easiest hole on the course.
+
+Mullin's day went the other way entirely. He took 22 points, the worst round of his TEG career, and +33, his worst gross round. He had gone round Oitavos in 88 in TEG 8. This was 104.
+
+Alex Baker shot 103, a personal best here by a single stroke and his only course personal best of the four days. He took the Wooden Spoon on 114 points.
+
+Williams finished on 157 points and +63. Nine Jackets hang in Mullin's wardrobe, and the tenth on offer went to the man who had opened the tournament by taking eight at a short par 4.
+
+## How it was decided
+
+- **Trophy (Stableford).** Williams led after every round — by 5, 9, 18 and 21 — going outright top at Estoril's 4th and never being headed. Mullin, Jon Baker and Patterson each drew level in the early exchanges, the last of them at R2's 3rd; there were no lead changes after that and none at all in the final round. Rounds of 39, 40, 44 and 34 for 157, with the 44 at Penha Longa the moment the argument stopped. Neumann was runner-up, 21 back.
+- **Green Jacket (Gross).** Williams went outright top on gross at Estoril's 11th in the first round and stayed there. The lead grew every round: 8, 14, 17, 29. Rounds of +17, +16, +10 and +20 for +63. The 82 at Penha Longa was a course record and a personal-best gross round. It is his first Green Jacket, at the fifteenth attempt, taken from a man with nine. Jon Baker was runner-up on gross.
+- **Wooden Spoon.** Alex Baker was bottom of the field after all four rounds but only fell to outright last at Penha Longa's 1st in R3, a double bogey that moved him from fifth to sixth and settled it for the final 53 holes. Rounds of 30, 27, 29 and 28 for 114. The Spoon passes from Jon Baker to his brother.
+
+## Player-by-player summary
+
+- **Gregg Williams** — Led both competitions from the first round and won both, the Trophy by 21 and his first Green Jacket by 29. The course-record 82 in the Sintra hills was the round of his TEG life and, at fourteen shots better than his previous visit, a demolition of his own history there. He also opened the tournament with an 8 and closed the day with another. Neither mattered.
+- **David Mullin** — Defending Trophy champion and owner of nine Jackets, he made the only eagle anybody managed, at West Cliffs' par-5 15th, and set a personal best of 85 at Penha Longa on the afternoon his course record was taken off him. Oitavos then gave him the worst round and worst gross round of his TEG career. Twenty-nine shots adrift on gross, which is an unfamiliar postcode.
+- **Jon Baker** — Arrived as the reigning Wooden Spoon holder and departed as Green Jacket runner-up, which is a considerable morning's work. Survived quintuple-bogey 9s at Estoril's 11th and 12th and a septuple-bogey 11 at West Cliffs' 17th. Personal bests at Penha Longa and Oitavos did the rest.
+- **Alex Baker** — One prior Trophy and two runner-up finishes counted for nothing against an inventory that ran to sextuple bogeys on three different courses and thirteen shots dropped in three holes at West Cliffs. Outright last from Penha Longa's opening hole onwards, and last on 114 points. His 103 at Oitavos was a personal best there by one shot, and the sole consolation available.
+- **Stuart Neumann** — Still without a TEG win and carrying two Wooden Spoons, he finished Trophy runner-up while posting a 10 at Estoril's 15th, a 10 at West Cliffs' 6th and an 11 at its 13th. A seven-shot personal best of 92 at Penha Longa was the quietest and best round he played.
+- **John Patterson** — Drew level at the top of the Trophy at West Cliffs' 3rd and produced the field's hottest stretch at Penha Longa, 19 points in six holes. He then took a 9 at that course's hardest hole and opened Oitavos with a 10, losing ten shots in three holes before he was properly awake.

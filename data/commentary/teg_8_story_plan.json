@@ -1,55 +1,66 @@
 {
-  "title": "Wire to Wire on the Estoril Coast",
+  "title": "Two Tens and a Trophy: Williams Wins Lisbon by Twelve",
   "title_candidates": [
-    "Wire to Wire on the Estoril Coast",
-    "Lisbon, Decided Early",
-    "The Atlantic Procession",
-    "Three Races, All Settled by Sunday Morning"
+    "Two Tens and a Trophy: Williams Wins Lisbon by Twelve",
+    "The Wipeout Index: Stableford Forgives, Gross Does Not",
+    "Blow-Ups by the Atlantic: Williams Takes a Third Trophy, Mullin a Sixth Jacket",
+    "Six Men, Nine Double-Figure Holes, One Comfortable Winner"
   ],
-  "theme": "Three competitions, three early verdicts: Williams seizes the Trophy on R1 H10 and never lets go; Mullin's Green Jacket wobbles for one round only; Neumann is bottom of the Spoon by R1 H4 and stays there for four days.",
-  "tone": "house — Ronay/Peck: witty, characterful, anchored in the numbers, gently ribbing insiders",
+  "theme": "TEG 8 was the tournament of the wipeout hole — sextuple bogeys and double-figure scores scattered across three Lisbon Coast courses — and the two men who won did so on opposite terms with it: Gregg Williams made two 10s and still won the Trophy by 12, because Stableford charges you for one hole and then moves on; David Mullin refused to make one at all and won the Jacket, because gross charges you for every shot.",
+  "tone": "house — faithful, tongue-in-cheek, Ronay/Peck register; ribbing but never zany, every joke anchored to a scorecard",
   "narrative_structure": "theme_led",
-  "opening_hook": "Open with the curious fact that all three competitions were effectively decided before lunch on day one — Williams' Trophy lead on R1 H10 (b34 stretch), Mullin's first Jacket lead the same afternoon, and Neumann sinking to bottom by R1 H4 — then flash back round by round to show how little resistance the chasing pack mustered.",
+  "opening_hook": "Open on the ledger of carnage — Williams's 10 at Penha Longa's 12th and his 10 at Quinta da Marinha's 11th — then the reveal that the man who made them won the Trophy by twelve, because Stableford only bills you for the hole; the body is organised around that idea rather than the calendar.",
+  "narrative_vehicles": [
+    "catalogue",
+    "theme_led_body",
+    "hero_arc"
+  ],
   "foreshadow": [
-    "Williams piles 14 points in four holes around the turn at Quinta da Marinha — the Trophy is basically over by mid-afternoon on day one",
-    "Mullin and Jon Baker will trade the Gross lead seven times, but only one of those trades matters",
-    "Neumann is already last by the 4th hole of the tournament and will not move from sixth for 72 holes",
-    "Quinta da Marinha will be visited twice, and both times will produce double-figure scorecards"
+    "Williams has finished 5th of 5 in the Jacket in each of the last three TEGs — a man who cannot beat anyone at golf but keeps beating everyone at points.",
+    "Alex Baker arrives as the reigning Wooden Spoon holder, last in both competitions at TEG 7.",
+    "Henry Meller arrives as defending Trophy champion (TEG 7), with three prior Spoons already on the shelf.",
+    "Stuart Neumann has finished 3rd on the Trophy in each of the last three TEGs — the most reliably mid man in TEG history, and never once last."
   ],
   "competitions": [
     {
       "name": "Trophy (Stableford)",
-      "winner_or_loser": "Gregg Williams",
-      "how": "A wire-to-wire procession. Williams took outright lead on R1 H10 during a four-hole burst of 14 points (b34), extended to 11 by the end of Penha Longa despite a 10 at the 12th (b09), survived a wobbly 29-point round at Quinta da Marinha including another 10 at the 11th (b10), then closed the deal at Oitavos with a 41-point round capped by a 12-point spree on 12–15 (b43). Final margin: 12 points over Alex Baker (b02).",
+      "winner_or_loser": "Gregg Williams — 149 pts, by 12 from Alex Baker",
+      "how": "Williams took the outright lead at R1 H10 at Quinta da Marinha and was never headed across the remaining 62 holes — the only lead change of the tournament. He built it rather than inherited it: 38, 41 and 41 were all best in field, he beat Baker head-to-head in three of the four rounds, and the lead went 4, 11, 5, 12. The single wobble was R3 (29 pts, 4th of 6, three behind Baker) — 14 shots bled from the 8th to the 11th including a 10 at the 11th — and the field still only clawed back six of it. R4 at Oitavos settled it early: ten straight holes from the 9th without dropping a net shot and another 41. Even had Alex Baker replaced his worst round with a merely ordinary one, he loses.",
       "key_beat_ids": [
-        "b34",
-        "b09",
-        "b10",
-        "b43",
-        "b02"
+        "b01",
+        "b15",
+        "b64",
+        "b57",
+        "b50",
+        "b08"
       ]
     },
     {
       "name": "Green Jacket (Gross)",
-      "winner_or_loser": "David Mullin",
-      "how": "Mullin led after rounds 1 and 2 (a +14 at Penha Longa was the round of the week), then surrendered the lead to Jon Baker at Quinta da Marinha after his worst round to date (26 pts, b21) including a quad-bogey 8 at the 12th (b29). The decisive blow came on R4 H2 at Oitavos Dunes, where Mullin retook outright lead (b03) and closed with a +17 to win by 6 (b06).",
+      "winner_or_loser": "David Mullin — +77, by 6 from Jon Baker",
+      "how": "Mullin led outright from R1 H13 and held it for 36 holes, including a +14 at Penha Longa that was the low gross round of the tournament and six clear at halfway. Then R3 at Quinta da Marinha: his worst TEG round to date on points (26), an 8 at the 12th, and at the 13th Jon Baker took the lead away from him. Baker still led by two standing on the 18th tee — and lost it there. At Oitavos, Mullin retook the lead outright at the 2nd and buried it: +17, eight strokes better than Baker, an 8 at the 11th absorbed and a birdie at the 16th to stop the bleeding. Three best-in-field rounds, never worse than 3rd, steadier than anyone: built, not gifted.",
       "key_beat_ids": [
-        "b21",
         "b03",
-        "b06"
+        "b07",
+        "b11",
+        "b04",
+        "b30",
+        "b19",
+        "b43"
       ]
     },
     {
       "name": "Wooden Spoon",
-      "winner_or_loser": "Stuart Neumann",
-      "how": "Settled before the front nine of day one was finished. Neumann sank to bottom at R1 H1, briefly handed it to Meller at H3 (b68), reclaimed it at H4 and never gave it back — sixth in every round. The damage was done in unforgettable stretches: 29 shots bled over holes 7–15 at Quinta da Marinha in R1 (b01), and a 17-shot leak over the first five holes of R3 (b50) anchored by a 10 at the 1st (b17) and an 11 at the 10th (b05). Final tally: 100 points (b20).",
+      "winner_or_loser": "Stuart Neumann — 100 pts, last by 11 from Henry Meller",
+      "how": "Neumann went to the bottom at R1 H4 and stayed there for all 72 holes — bottom of the field in every single round, the only man in the six never to post a round above the median. R1 set the tone: 17 points, +43 gross, 29 shots bled between the 7th and the 15th. R3 finished it: 17 shots gone in the opening five holes, a 10 at the 1st, a 9 at the 4th, an 8 at the 9th and an 11 at the 10th, for 20 points and a 14-point hiding from Meller. The cruelty is that it was partly inherited — Meller outplayed him over two of the four rounds and finished 11 adrift anyway, because Meller's R4 at Oitavos was worse than anything even Neumann managed.",
       "key_beat_ids": [
-        "b68",
-        "b01",
-        "b50",
-        "b17",
+        "b12",
+        "b06",
+        "b31",
+        "b46",
+        "b24",
         "b05",
-        "b20"
+        "b16"
       ]
     }
   ],
@@ -57,151 +68,195 @@
     {
       "round": 1,
       "headline_candidates": [
-        "Quinta da Marinha, and the Tournament Ends Before Tea",
-        "Williams Lights the Fuse, Neumann Lights a Bonfire",
-        "Pine Forest, Open Goals"
+        "Quinta da Marinha Opens Its Arms, and Its Bunkers",
+        "Williams Leads at the 10th and Nobody Sees Him Again",
+        "Neumann Bleeds 29 Shots in Nine Holes; Meller Posts a 10 by the Third"
       ],
-      "chosen_headline": "Quinta da Marinha, and the Tournament Ends Before Tea",
-      "angle": "Williams' four-hole burst (8–11) hands him an outright Trophy lead he will never relinquish; Neumann bleeds 29 shots over holes 7–15 and is already irretrievably last; Meller opens with a 10 at the 3rd and briefly owns the basement.",
+      "chosen_headline": "Williams Leads at the 10th and Nobody Sees Him Again",
+      "angle": "A new Robert Trent Jones Sr. parkland, and within three hours the tournament's two defining trajectories are already set: Williams 38 and clear, Neumann bottom and sinking.",
       "beat_ids": [
-        "b34",
-        "b01",
+        "b21",
         "b22",
-        "b68",
-        "b25"
+        "b06",
+        "b51",
+        "b95",
+        "b29",
+        "b34"
       ]
     },
     {
       "round": 2,
       "headline_candidates": [
-        "Up the Hill at Penha Longa, Down the Same Order",
-        "Mountain Course, Molehill Resistance",
-        "Williams Banks Eleven on the Sintra Slopes"
+        "Eleven Clean Holes, Then a Ten: Williams's Penha Longa Masterclass",
+        "Sintra's Mountain Fails to Slow the Points Machine",
+        "Mullin Shoots 86 and Leads by Six; Williams Leads by Eleven"
       ],
-      "chosen_headline": "Up the Hill at Penha Longa, Down the Same Order",
-      "angle": "Penha Longa's mountain parkland fails to reshuffle anything: Williams shoots 41 and stretches his lead to 11 despite a 10 at the 12th; Mullin shoots a +14 and pads his Jacket lead to 6.",
+      "chosen_headline": "Eleven Clean Holes, Then a Ten: Williams's Penha Longa Masterclass",
+      "angle": "The theme in miniature — Williams goes eleven holes without dropping a net shot, makes a 10 at the 12th, signs for 41 and stretches the lead to eleven, while Mullin's +14 is the best gross round anyone plays all tournament.",
       "beat_ids": [
-        "b09"
+        "b15",
+        "b64",
+        "b07",
+        "b36"
       ]
     },
     {
       "round": 3,
       "headline_candidates": [
-        "Return to Quinta, Return to Carnage",
-        "Williams Wobbles, Nobody Catches Him",
-        "The Day Everyone Took a Ten"
+        "Everybody's Worst Day: Quinta da Marinha, Second Helping",
+        "Williams Loses 14 Shots in Four Holes and Loses Six of His Lead",
+        "Mullin Surrenders the Jacket at the 13th — Baker Has 18 Holes to Regret"
       ],
-      "chosen_headline": "Williams Wobbles, Nobody Catches Him",
-      "angle": "The one day the leaders looked human: Williams scrapes 29 with a 10 at the 11th; Mullin posts his worst round to date and briefly loses the Jacket to Jon Baker; Alex Baker takes a 10 at the 8th; Neumann bleeds 17 shots over the opening five holes including a 10 at the 1st and an 11 at the 10th. None of it changes the running order at the top or bottom.",
+      "chosen_headline": "Everybody's Worst Day: Quinta da Marinha, Second Helping",
+      "angle": "The round where the wipeout hole did its worst to all six — Neumann's 10-9-8-11 catalogue, Alex Baker's 10 at the SI 1 8th, Williams's 10 at the 11th, Mullin's worst round to date and the loss of a 36-hole Jacket lead — and the leaderboard barely moved.",
       "beat_ids": [
+        "b57",
         "b50",
-        "b17",
-        "b05",
         "b04",
-        "b10",
-        "b21"
+        "b18",
+        "b30",
+        "b11",
+        "b40",
+        "b46",
+        "b31",
+        "b24",
+        "b20",
+        "b14"
       ]
     },
     {
       "round": 4,
       "headline_candidates": [
-        "Oitavos Confirms the Verdict",
-        "Mullin Slips the Jacket On at the 2nd",
-        "Williams Strolls the Links, Meller Combusts on It"
+        "Oitavos Dunes: Mullin Takes the Jacket Back at the Second and Never Gives It Up",
+        "Meller Loses 22 Shots in Six Holes and the Defence Is Over",
+        "Ten Clean Holes to the House: Williams Signs for 41 and a Third Trophy"
       ],
-      "chosen_headline": "Mullin Slips the Jacket On at the 2nd",
-      "angle": "At the only true links of the week, Mullin retakes the outright Gross lead at the 2nd and never looks back, closing in +17 for a six-shot Jacket win; Williams banks 41 points (12 of them in four holes from the 12th) to seal a 12-point Trophy margin; Meller posts a 10 at the 4th inside a 22-shot collapse over the opening six holes.",
+      "chosen_headline": "Oitavos Dunes: Mullin Takes the Jacket Back at the Second, Williams Cruises Home",
+      "angle": "A links finish that rewarded exactly one kind of golf: Mullin retakes the gross lead at the 2nd and wins the round by eight, Williams plays the last ten without dropping a net shot for 41 and a twelve-point win, and the defending Trophy champion drops 22 shots in six holes.",
       "beat_ids": [
+        "b01",
         "b03",
-        "b07",
         "b08",
+        "b05",
+        "b16",
+        "b32",
+        "b38",
+        "b19",
         "b43",
         "b02",
-        "b06",
-        "b20"
+        "b26",
+        "b12"
       ]
     }
   ],
   "players": [
     {
       "player": "Gregg Williams",
-      "arc": "Took outright Trophy lead on R1 H10 and held it for 62 more holes, weathering two double-figure holes of his own (10s at Penha Longa's 12th and Quinta's 11th) to win by 12 — his eighth-best TEG showing and a model of inevitability."
-    },
-    {
-      "player": "Alex Baker",
-      "arc": "Runner-up by 12, which flatters him: a hot opening five at Quinta (15 points, b27) was followed by a procession of quadruple bogeys and a 10 at the 8th in R3 — second place by attrition rather than challenge."
+      "arc": "Two prior Trophies and three consecutive last-place Jacket finishes, and here is the purest expression of the type: two 10s, one dreadful R3, three best-in-field rounds and a third Trophy by twelve."
     },
     {
       "player": "David Mullin",
-      "arc": "Led the Gross from day one, lost it for one round at Quinta when his worst stableford round to date (26 pts) coincided with a quad at the 12th, then retook outright lead at Oitavos H2 and walked off with the Jacket by 6."
+      "arc": "Back-to-back Jacket holder makes it three and six overall — the only man in the field who never once made a double-figure score, which is precisely why he won the competition that counts them all."
+    },
+    {
+      "player": "Alex Baker",
+      "arc": "Arrives as reigning Wooden Spoon holder, leaves as Trophy runner-up, having made a 10 at the hardest hole on the course in R3 and a 9 at the last in R4 — improvement in TEG is rarely tidy."
     },
     {
       "player": "Jon Baker",
-      "arc": "The only player to lead a competition outright that Mullin or Williams didn't — briefly, after R3 — before Oitavos restored the natural order; runner-up for the Jacket."
-    },
-    {
-      "player": "Stuart Neumann",
-      "arc": "Bottom of the Spoon race from R1 H4 to the final putt; produced two of the tournament's defining collapses (29 shots over nine holes in R1, 17 over five holes in R3) and four double-figure-or-near-it blow-ups en route to 100 points."
+      "arc": "Led the Jacket by two with one hole of R3 to play, gave it back on the 18th green, then lost R4 to Mullin by eight — beaten in three of four rounds and second again, which is becoming his genre."
     },
     {
       "player": "Henry Meller",
-      "arc": "Opened the tournament with a 10 at the 3rd, briefly held the Spoon basement, and closed it with another 10 at Oitavos' 4th inside a 22-shot six-hole collapse — bookended by blow-ups, untroubled in between."
+      "arc": "Defending Trophy champion whose title defence expired somewhere between the 2nd and the 5th at Oitavos, where 22 shots vanished in six holes, including a 10 and a 9 — and he still avoided the Spoon by eleven."
+    },
+    {
+      "player": "Stuart Neumann",
+      "arc": "Third on the Trophy in each of the last three TEGs, and now bottom of the field in every round of this one: 17, 31, 20, 32, a Spoon by eleven, and an R4 32 that arrived four days too late."
     }
   ],
   "must_include_beat_ids": [
     "b01",
-    "b02",
     "b03",
-    "b04",
-    "b05",
+    "b12",
+    "b11",
     "b06",
-    "b07",
-    "b09",
-    "b10",
-    "b17",
+    "b08",
+    "b05",
+    "b16",
     "b20",
-    "b22",
-    "b50",
-    "b68"
+    "b24",
+    "b31",
+    "b46",
+    "b51",
+    "b57",
+    "b64",
+    "b95"
   ],
   "cuts": [
-    "b11",
-    "b12",
     "b13",
-    "b14",
-    "b15",
-    "b16",
-    "b18",
-    "b19",
+    "b17",
     "b23",
-    "b24",
-    "b26",
+    "b25",
+    "b27",
     "b28",
-    "b29",
-    "b30",
-    "b31",
-    "b32",
     "b33",
+    "b34",
     "b35",
     "b36",
-    "b37",
-    "b38",
     "b39",
-    "b40",
     "b41",
     "b42",
     "b44",
     "b45",
-    "b46",
     "b47",
     "b48",
-    "b49",
-    "b21",
-    "b27",
-    "b25",
-    "b34",
-    "b43",
-    "b08"
+    "b49"
   ],
-  "venue_notes": "TEG's second visit to the Lisbon Coast (first was three years earlier), but every course this week is new to TEG: Robert Trent Jones Sr.'s Quinta da Marinha hosts rounds 1 and 3 (the only repeat venue of the week, and the scene of most of the tournament's carnage); Penha Longa's Atlantic Course delivers the mountain parkland in the Sintra hills for R2; Oitavos Dunes provides the proper Atlantic links finale. Weave the ocean views, pine forest, and links/parkland contrast into the round openers; flag Quinta as the recurring scene of the crime."
+  "venue_notes": "TEG's 2nd visit to the Lisbon Coast, and a neat family outing: R1 and R3 on Robert Trent Jones Sr.'s parkland at Quinta da Marinha (new to TEG in R1, played twice), R2 on his son's mountain layout at Penha Longa in the Sintra hills, R4 on Arthur Hills's Atlantic links at Oitavos Dunes. Use the father-and-son framing once, lightly; use Penha Longa's steepness to set up Mullin's 86 as the low gross round of the tournament; save the pure-links exposure of Oitavos for R4, where it flattered Mullin and Williams and dismembered Meller.",
+  "competition_storyline_bullets": {},
+  "player_storyline_bullets": {},
+  "course_history_notes": [
+    "Every course was new to TEG this trip, so all six were playing blind — Quinta da Marinha was the only one seen twice, in R1 and again in R3.",
+    "Quinta da Marinha's best return of the tournament was Jon Baker's 89 in R3; its worst was Neumann's 114 in R1.",
+    "Penha Longa, billed as the hardest of the three, produced the lowest gross round anyone shot all tournament: Mullin's 86 in R2.",
+    "Oitavos Dunes yielded a 25-shot spread on the closing day, from Mullin's 88 to Meller's 111."
+  ],
+  "decisive_moments": [
+    "Trophy — R2 at Penha Longa: Williams's 41 pushed the lead from 4 to 11; he had taken it outright at R1 H10 and nobody got within five of him again.",
+    "Green Jacket — R4 H2 at Oitavos Dunes: Mullin retook the gross lead outright from Jon Baker and never lost it, winning the round by eight.",
+    "Wooden Spoon — R3 at Quinta da Marinha: Neumann's 17 shots dropped in the opening five holes, and a 20-point round that left him 14 behind Meller with only Oitavos remaining.",
+    "(Ordering note for the writer: Trophy, Jacket, Spoon, in that order.)"
+  ],
+  "prominent_vehicle": "catalogue",
+  "prominent_palette": "cross_teg_career",
+  "payoffs": [
+    {
+      "seed": "Williams 5th of 5 in the Jacket in each of the last three TEGs",
+      "resolves_in": "How the three were decided / Green Jacket section",
+      "payoff": "He makes 10s at R2 H12 and R3 H11, finishes nowhere near Mullin's +77 on gross — and wins the Trophy by twelve, because a Stableford card charges you for one hole and then hands you a fresh one."
+    },
+    {
+      "seed": "Alex Baker as reigning Wooden Spoon holder",
+      "resolves_in": "Trophy section / Round 4",
+      "payoff": "Runner-up on 137, seven clean holes at Oitavos from the 8th to the 14th, and the Spoon passed to a man who had never held it — despite Baker's own 10 at the SI 1 8th in R3."
+    },
+    {
+      "seed": "Meller the defending Trophy champion with three prior Spoons",
+      "resolves_in": "Round 4",
+      "payoff": "22 shots gone in the first six holes at Oitavos — a 10 at the 4th, a 9 at the SI 1 5th, four blank holes in a row — for 21 points, 13 down on his R3; the defence ends with him closer to the Spoon than the Trophy."
+    },
+    {
+      "seed": "Neumann 3rd on the Trophy in each of the last three TEGs, never last",
+      "resolves_in": "Wooden Spoon section / Player-by-player summary",
+      "payoff": "Bottom of the field in all four rounds and the Spoon by eleven — the run of thirds ends in the least dignified direction available."
+    }
+  ],
+  "vehicle_fit_response": {
+    "top_scored_vehicle": "catalogue",
+    "taken_up": true,
+    "note": "Taken up as the prominent frame: nine double-figure holes across six players is the actual texture of TEG 8, and cataloguing them is what makes the Williams/Mullin contrast land — the man with the most wipeouts won the points, the man with none won the gross."
+  },
+  "why_the_champion_won": "Built, not inherited: three best-in-field rounds (38, 41, 41) either side of one below-median 29, head-to-head wins over Alex Baker in three of the four rounds, and a scoring format that billed him only two zeros for his two 10s — even Baker playing to his own average doesn't flip it.",
+  "storyline_note": ""
 }

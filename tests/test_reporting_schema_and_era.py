@@ -32,6 +32,9 @@ def _plan(**kw) -> StoryPlan:
         foreshadow=[], competitions=[], rounds=[], players=[],
         must_include_beat_ids=[], cuts=[], venue_notes="",
         prominent_vehicle="counterfactual", prominent_palette="decisive_moment",
+        vehicle_fit_response={"top_scored_vehicle": "counterfactual",
+                              "taken_up": True, "note": "n"},
+        why_the_champion_won="w",
     )
     base.update(kw)
     return StoryPlan(**base)
@@ -90,6 +93,9 @@ def test_both_prominence_fields_are_required():
             "must_include_beat_ids": [], "cuts": [], "venue_notes": "",
             "prominent_vehicle": "counterfactual",
             "prominent_palette": "decisive_moment",
+            "vehicle_fit_response": {"top_scored_vehicle": "counterfactual",
+                                     "taken_up": False, "note": "n"},
+            "why_the_champion_won": "w",
         }
         del kwargs[missing]
         with pytest.raises(pydantic.ValidationError):
@@ -127,7 +133,9 @@ def test_close_finish_compliance_is_silent():
     bundle = {"tournament_shape": {"close_finish": True}, "beats": []}
     for vehicle in CLOSE_FINISH_VEHICLES:
         assert check_plan_consistency(
-            _plan(prominent_vehicle=vehicle, narrative_vehicles=[vehicle]), bundle) == []
+            _plan(prominent_vehicle=vehicle, narrative_vehicles=[vehicle],
+                  vehicle_fit_response={"top_scored_vehicle": vehicle,
+                                        "taken_up": True, "note": "n"}), bundle) == []
 
 
 def test_prominent_vehicle_must_appear_in_the_vehicle_list():
@@ -147,6 +155,184 @@ def test_mandatory_beat_in_cuts_is_reported():
     warnings = check_plan_consistency(
         _plan(must_include_beat_ids=["b01"], cuts=["b01"]), bundle)
     assert any("cuts" in w for w in warnings)
+
+
+# ---------------------------------------------------------------------------
+# vehicle_fit_hints: advisory, and honest about what it cannot see
+# ---------------------------------------------------------------------------
+def test_unscored_vehicles_score_nothing():
+    """`UNSCORED_VEHICLES` must name EXACTLY the vehicles with no detector.
+
+    The constant is hand-maintained but the baseline is generated, so they can
+    drift apart in either direction: adding a detector without updating the
+    tuple would silently keep a real signal out of the hints, and adding a
+    vehicle to the tuple that does score would silently discard it.
+    """
+    from teg_analysis.reporting.vehicle_fit import (
+        ALL_VEHICLE_NAMES, UNSCORED_VEHICLES, load_baseline_cache)
+
+    baseline = load_baseline_cache()
+    assert baseline, "baseline cache missing — regenerate with refresh_baseline_cache()"
+    flat = {v for v in ALL_VEHICLE_NAMES
+            if baseline[v]["mean"] == 0 and baseline[v]["std"] == 0}
+    assert flat == set(UNSCORED_VEHICLES)
+
+
+def test_unscored_vehicles_never_appear_in_the_hints():
+    """They used to occupy 26 of the 85 hint slots across TEGs 2-18 at z=0.00.
+
+    `normalize_vehicle_fit`'s std==0 branch scored them 0, which sorted above
+    every genuinely-detected vehicle that came in below its historical average.
+    A zero there means "no detector", not "typical", so it must not rank.
+    """
+    from teg_analysis.reporting.vehicle_fit import (
+        UNSCORED_VEHICLES, load_baseline_cache, normalize_vehicle_fit)
+
+    baseline = load_baseline_cache()
+    # A quiet TEG — nothing fired at all — is the case that used to be ALL zeros.
+    for scores in ({}, {"tragic_arc": {"score": 3.0, "reasons": ["r"]}}):
+        ranked = normalize_vehicle_fit(scores, baseline)
+        assert ranked, "ranking must not be empty"
+        assert not ({r["vehicle"] for r in ranked} & set(UNSCORED_VEHICLES))
+
+
+def test_vehicle_hints_do_not_depend_on_the_beat_trim():
+    """`top_n` is a token budget, not a claim about the tournament.
+
+    The bug (2026-08-13): `assemble_bundle` scored vehicle fit on the TRIMMED
+    `beats`, while the checked-in baseline is generated with `top_n=None`. So
+    live z-scores compared a trimmed raw score against an untrimmed population
+    mean, deflating every vehicle that scores as a sum over beats. On TEG 6 it
+    moved tragic_arc from z +2.70 (rank 1) to +0.06 (rank 5) and handed the top
+    hint to hero_arc. Slow (two full bundle builds) but this silently corrupts
+    every hint list, and nothing else would catch it.
+    """
+    from teg_analysis.reporting.story_plan import assemble_bundle
+
+    trimmed, _ = assemble_bundle(6, top_n=50)
+    full, _ = assemble_bundle(6, top_n=None)
+    assert len(trimmed["beats"]) < len(full["beats"]), "TEG 6 must actually be trimmed"
+    assert trimmed["vehicle_fit_hints"] == full["vehicle_fit_hints"]
+
+
+def test_prompt_tells_the_editor_to_judge_the_unscored_vehicles_itself():
+    """Excluding them means their absence carries no information — which is only
+    safe if the prompt says so and asks for them to be considered anyway."""
+    from teg_analysis.reporting.vehicle_fit import UNSCORED_VEHICLES
+
+    for vehicle in UNSCORED_VEHICLES:
+        assert f"`{vehicle}`" in SYSTEM_PROMPT, vehicle
+    assert "never scored and never appear" in SYSTEM_PROMPT
+    assert "own merits" in SYSTEM_PROMPT
+
+
+# ---------------------------------------------------------------------------
+# vehicle_fit_response — accountable, NOT binding
+# ---------------------------------------------------------------------------
+def test_vehicle_fit_response_is_required():
+    """Isolated: every other required field is supplied, so only this one fails."""
+    kwargs = {
+        "title": "t", "title_candidates": [], "theme": "x", "tone": "house",
+        "narrative_structure": "chronological", "opening_hook": "h",
+        "foreshadow": [], "competitions": [], "rounds": [], "players": [],
+        "must_include_beat_ids": [], "cuts": [], "venue_notes": "",
+        "prominent_vehicle": "counterfactual", "prominent_palette": "decisive_moment",
+        "why_the_champion_won": "w",
+    }
+    with pytest.raises(pydantic.ValidationError):
+        StoryPlan(**kwargs)
+
+
+def test_why_the_champion_won_is_required():
+    """The report's first duty, enforced rather than requested.
+
+    Jon, 2026-08-14: "the most important thing is that we're clear WHY the
+    champion won". A prose instruction is a request; a required field is the
+    only way to know the editor decided it rather than letting it emerge from
+    whichever beats happened to rank.
+    """
+    kwargs = {
+        "title": "t", "title_candidates": [], "theme": "x", "tone": "house",
+        "narrative_structure": "chronological", "opening_hook": "h",
+        "foreshadow": [], "competitions": [], "rounds": [], "players": [],
+        "must_include_beat_ids": [], "cuts": [], "venue_notes": "",
+        "prominent_vehicle": "counterfactual", "prominent_palette": "decisive_moment",
+        "vehicle_fit_response": {"top_scored_vehicle": "counterfactual",
+                                 "taken_up": True, "note": "n"},
+    }
+    with pytest.raises(pydantic.ValidationError):
+        StoryPlan(**kwargs)
+
+
+def test_writer_is_told_to_celebrate_the_winner_and_calibrate_mockery():
+    """The tone rules that had no existence before 2026-08-14.
+
+    Grepped the whole writer prompt beforehand: every mention of winner or
+    champion was a factual guard about "defending champion" claims. Nothing
+    told the writer how to treat the person the report is about.
+    """
+    from teg_analysis.reporting.authoring import WRITER_VOICE
+
+    assert "winner's story" in WRITER_VOICE
+    assert "why_the_champion_won" in WRITER_VOICE
+    for target in ("Wooden Spoon holder: hard", "rest of the field: moderate",
+                   "runner-up: moderate", "champion: hard on the golf"):
+        assert target in WRITER_VOICE, target
+    # The correction that matters (Jon, 2026-08-14): "gentle, affectionate only"
+    # asked for restraint on intensity and produced bland praise. The register
+    # wanted is full comic force about the golf with the achievement honoured,
+    # so the ONLY prohibition is withholding credit.
+    assert "Praise the achievement, and be merciless about the golf." in WRITER_VOICE
+    assert "Do NOT go easy on the champion's golf." in WRITER_VOICE
+    assert "WITHHOLDING THE CREDIT" in WRITER_VOICE
+    # Delivery, not just permission: the same facts read as a charge sheet flat
+    # and as affection when elevated. Jon's second refinement, 2026-08-14 --
+    # "it's fine for him to be bad, but there should be some OTT / camp
+    # overriding the negativity."
+    assert "the DELIVERY has to carry it" in WRITER_VOICE
+    assert "FLAT (wrong)" in WRITER_VOICE and "ELEVATED (right)" in WRITER_VOICE
+    # And volume still counts, independently of delivery.
+    assert "Proportion matters too." in WRITER_VOICE
+    # The gross/net confusion that libels high-handicap champions.
+    assert "A bad gross score is not a bad tournament." in WRITER_VOICE
+
+
+def test_diverging_from_the_top_hint_is_not_a_warning():
+    """THE guard on the advisory/binding decision (2026-08-13).
+
+    The editor is free to frame the report on a vehicle the scorer ranked low
+    or cannot score at all. If divergence ever starts producing a warning, the
+    hints have quietly become a rule — and the pressure would fall hardest on
+    the four vehicles that can never be top-scored.
+    """
+    bundle = {"tournament_shape": {"close_finish": False}, "beats": [],
+              "vehicle_fit_hints": [{"vehicle": "tragic_arc", "z": 2.7}]}
+    plan = _plan(
+        prominent_vehicle="motif", narrative_vehicles=["motif"],
+        vehicle_fit_response={"top_scored_vehicle": "tragic_arc", "taken_up": False,
+                              "note": "real collapse, but the week is Baker's first win"})
+    assert check_plan_consistency(plan, bundle) == []
+
+
+def test_misreported_top_hint_is_caught():
+    """The field is only worth having if it records the ACTUAL top hint."""
+    bundle = {"tournament_shape": {}, "beats": [],
+              "vehicle_fit_hints": [{"vehicle": "tragic_arc", "z": 2.7}]}
+    warnings = check_plan_consistency(
+        _plan(vehicle_fit_response={"top_scored_vehicle": "origin",
+                                    "taken_up": False, "note": "n"}), bundle)
+    assert any("top hint" in w for w in warnings)
+
+
+def test_misreported_taken_up_is_caught():
+    """Claiming to have adopted the top hint while not listing it."""
+    bundle = {"tournament_shape": {}, "beats": [],
+              "vehicle_fit_hints": [{"vehicle": "tragic_arc", "z": 2.7}]}
+    warnings = check_plan_consistency(
+        _plan(narrative_vehicles=["origin"], prominent_vehicle="origin",
+              vehicle_fit_response={"top_scored_vehicle": "tragic_arc",
+                                    "taken_up": True, "note": "n"}), bundle)
+    assert any("taken_up" in w for w in warnings)
 
 
 # ---------------------------------------------------------------------------
@@ -230,10 +416,13 @@ def test_default_weights_are_the_adopted_setting():
     """`balanced` is what every call site uses; it must be the chosen setting.
 
     Guards against a silent revert to (1,1,1), which produced a cut that was
-    53% blow-ups and 60% disaster-toned.
+    53% blow-ups and 60% disaster-toned under the old importance axis.
+    Re-profiled to (2.0, 0.8, 1.0) on 2026-08-14 once importance became
+    counterfactual — see MODE_WEIGHTS' comment for why the setting matters far
+    less than it used to.
     """
     from teg_analysis.reporting.scoring import MODE_WEIGHTS
-    assert MODE_WEIGHTS["balanced"] == (1.5, 0.8, 0.7)
+    assert MODE_WEIGHTS["balanced"] == (2.0, 0.8, 1.0)
     assert MODE_WEIGHTS["fast"] == MODE_WEIGHTS["balanced"]
 
 
@@ -382,25 +571,46 @@ def test_restyle_voice_blames_only_faults_it_introduced():
 
     This is the guard against the failure that got the critique-revise variant
     rejected — an extra prose pass fabricating a detail.
+
+    The inherited fault is INJECTED into a temporary source rather than borrowed
+    from `teg_17_report_final.md`. That file used to carry D3 faults, so the
+    test passed by accident; regenerating TEG 17 cleanly on 2026-08-13 made it
+    fail, because a clean source leaves nothing to inherit. What is under test
+    is the blame split, not the state of a published artefact.
     """
     from unittest.mock import patch
     from teg_analysis.reporting import authoring
     import os
 
-    src = open("data/commentary/teg_17_report_final.md").read()
+    base = open("data/commentary/teg_17_report_final.md").read()
+    # 'all week' trips the not_a_week check — a TEG is four consecutive days.
+    src = base + "\n\nThey played well all week.\n"
+    src_path = "data/commentary/teg_17_report_unittest_src.md"
+    out_path = "data/commentary/teg_17_report_unittest_tmp.md"
+    with open(src_path, "w") as f:
+        f.write(src)
 
-    with patch.object(authoring.llm, "generate_text",
-                      return_value=(src + "\n\nIt was settled on countback.\n", {})):
-        out = authoring.restyle_voice(17, "VOICE: x", "unittest_tmp", style=False)
-    assert len(out["new_findings"]) == 1
-    assert "countback" in out["new_findings"][0]
-    assert len(out["findings"]) > len(out["new_findings"])   # inherited, not blamed
+    try:
+        from teg_analysis.reporting.verify import verify_report
+        assert verify_report(17, text=src), \
+            "injected fault must be detectable, else the test proves nothing"
 
-    with patch.object(authoring.llm, "generate_text", return_value=(src, {})):
-        clean = authoring.restyle_voice(17, "VOICE: x", "unittest_tmp", style=False)
-    assert clean["new_findings"] == []
+        with patch.object(authoring.llm, "generate_text",
+                          return_value=(src + "\n\nIt was settled on countback.\n", {})):
+            out = authoring.restyle_voice(17, "VOICE: x", "unittest_tmp",
+                                          source_label="unittest_src", style=False)
+        assert len(out["new_findings"]) == 1
+        assert "countback" in out["new_findings"][0]
+        assert len(out["findings"]) > len(out["new_findings"])   # inherited, not blamed
 
-    os.remove("data/commentary/teg_17_report_unittest_tmp.md")
+        with patch.object(authoring.llm, "generate_text", return_value=(src, {})):
+            clean = authoring.restyle_voice(17, "VOICE: x", "unittest_tmp",
+                                            source_label="unittest_src", style=False)
+        assert clean["new_findings"] == []
+    finally:
+        for p in (src_path, out_path):
+            if os.path.exists(p):
+                os.remove(p)
 
 
 # ---------------------------------------------------------------------------
@@ -422,3 +632,122 @@ def test_style_text_is_idempotent():
     from teg_analysis.reporting.render import style_text
     text = open("data/commentary/teg_17_report_final.md").read()
     assert style_text(17, text) == style_text(17, text)
+
+
+# ---------------------------------------------------------------------------
+# Counterfactual importance + win anatomy (2026-08-14 rework)
+# ---------------------------------------------------------------------------
+def test_importance_demotes_a_champions_non_decisive_disaster():
+    """The failure that prompted the rework.
+
+    TEG 18: Alex Baker won the Trophy by 8 Stableford points. His worst holes —
+    a gross 11 and a gross 10 — cost about 2.3 points each against his own
+    average, so none of them could have cost him the tournament. Under the old
+    hand-tuned axis they scored 5.0-6.5 and half the negative material in the
+    cut was about the champion. `importance` must now say they barely mattered.
+    """
+    from teg_analysis.reporting.events import build_notable_events
+
+    ev = build_notable_events(18)
+    champ = next(e.players[0] for e in ev if e.type == "trophy_win")
+    blowups = [e for e in ev if e.type == "big_blowup" and champ in e.players]
+    assert blowups, "TEG 18's champion must still HAVE blow-ups — they are colour"
+    # Still detected (mockable), but never able to frame the report.
+    assert max(e.importance for e in blowups) < 5.0
+    assert all(e.context.get("importance_legacy") is not None for e in blowups)
+
+
+def test_importance_is_symmetric_between_gains_and_losses():
+    """A run that won the tournament is as important as one that lost it.
+
+    First implementation scored only damage, which zeroed every good beat and
+    pushed the cut from 41% to 58% negative — the opposite of the goal.
+    """
+    from teg_analysis.reporting.events import build_notable_events
+
+    ev = build_notable_events(18)
+    good = [e for e in ev if e.type in ("hot_stretch", "steady_stretch", "recovery")]
+    assert good, "positive beats must exist"
+    assert max(e.importance for e in good) > 0, "positive beats must score importance"
+
+
+def test_detection_is_not_lopsidedly_negative():
+    """Guards the ratio that no prompt could have corrected.
+
+    Detection ran 622 negative to 240 positive (2.59:1) across TEGs 2-18 before
+    `cold_stretch_net` and `steady_stretch` were added. The writer cannot
+    celebrate with material it was never given.
+    """
+    from collections import Counter
+    from teg_analysis.reporting.events import build_notable_events
+
+    c = Counter()
+    for teg in (8, 13, 18):
+        for e in build_notable_events(teg):
+            c[e.type] += 1
+    neg = sum(c[k] for k in ("cold_stretch", "cold_stretch_net", "big_blowup",
+                             "collapse_after_steady", "long_lead_lost"))
+    pos = sum(c[k] for k in ("hot_stretch", "steady_stretch", "recovery"))
+    assert pos > 0 and neg / pos < 2.0, f"detection {neg}:{pos} is too negative"
+
+
+def test_win_anatomy_distinguishes_built_from_inherited():
+    """The causal spine the pipeline never had.
+
+    TEG 18's champion was outscored by the runner-up in half the rounds and won
+    anyway ('inherited'); TEG 8's led the field in three of four ('built').
+    Collapsing those two into the same story is the failure this prevents.
+    """
+    from teg_analysis.reporting.win_anatomy import build_win_anatomy
+
+    assert build_win_anatomy(18)["trophy"]["attribution"] == "inherited"
+    assert build_win_anatomy(8)["trophy"]["attribution"] == "built"
+
+
+def test_win_anatomy_reaches_the_editor():
+    from teg_analysis.reporting.story_plan import assemble_bundle
+
+    bundle, _ = assemble_bundle(18)
+    anat = bundle["win_anatomy"]["trophy"]
+    assert anat["summary_facts"], "facts must be populated"
+    # Proper-cased like every other artefact — two name formats is how
+    # confabulated players start.
+    assert anat["subject"] == "Alex Baker"
+
+
+def test_spoon_anatomy_is_not_phrased_as_a_competition_won():
+    """The Spoon is a race to the bottom; every phrase has to invert.
+
+    Shipped backwards on 2026-08-14: "Williams never finished a round worse
+    than 5th of 5" (meaningless), "Meller outplayed Williams and still lost"
+    (here the rival is the man who ESCAPED), and a blown-lead line naming the
+    tournament leader inside a paragraph about who came last.
+    """
+    from teg_analysis.reporting.win_anatomy import build_win_anatomy
+
+    spoon = build_win_anatomy(18)["spoon"]
+    facts = " ".join(spoon["summary_facts"])
+    assert "adrift of" in facts
+    assert "taken the Spoon" in facts
+    assert "never finished a round worse than" not in facts
+    assert "and still lost" not in facts
+    # The blown-lead fact belongs to competitions, not to the Spoon.
+    assert spoon["biggest_lead_blown"] is None
+
+
+def test_anatomy_facts_carry_no_statistical_vocabulary():
+    """Every string here is copied into prose, so stats vocabulary ships.
+
+    "Williams was below the field median in all four rounds" reached published
+    reports for TEGs 4 and 18.
+    """
+    from teg_analysis.reporting.win_anatomy import build_win_anatomy
+
+    for teg in (4, 18):
+        anat = build_win_anatomy(teg)
+        for comp in anat.values():
+            blob = " ".join(comp["summary_facts"]).lower()
+            for banned in ("median", "spread", "variance", "z-score", "percentile"):
+                assert banned not in blob, f"TEG {teg}: '{banned}' in {blob}"
+            for entry in comp["rounds"]:
+                assert "median" not in entry["standing"]

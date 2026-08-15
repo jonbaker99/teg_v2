@@ -167,8 +167,29 @@ class Payoff(BaseModel):
     `foreshadow[]` seed should have a corresponding `payoffs[]` entry.
     """
     seed: str           # short reference to the seed planted in foreshadow[]
-    resolves_in: str    # which section pays it off (e.g. "Round 3", "men in brief", "How it was decided")
+    resolves_in: str    # which section pays it off (e.g. "Round 3", "Player-by-player summary", "How it was decided")
     payoff: str         # one-line description of how it resolves
+
+
+class VehicleFitResponse(BaseModel):
+    """The editor's answer to the `vehicle_fit_hints` advisory — accountable,
+    not binding.
+
+    The hints are a heuristic over the raw ingredients of a pattern; they
+    cannot tell whether that pattern is the most interesting angle, and four
+    vehicles have no detector at all (`vehicle_fit.UNSCORED_VEHICLES`). So the
+    editor stays free to frame the report however the material demands.
+
+    What this field adds is a record of the decision, not a constraint on it.
+    Deliberately NOT phrased as a justification the editor owes when it
+    diverges: making divergence costly would push every plan toward whichever
+    vehicles happen to be detectable, which is the opposite of the variety the
+    scorer exists to serve. Ignoring a strong hint is a legitimate call; making
+    it silently is what this prevents.
+    """
+    top_scored_vehicle: NarrativeVehicle   # highest-ranked entry in vehicle_fit_hints
+    taken_up: bool                         # is it in narrative_vehicles?
+    note: str                              # one line: why it fits, or what beat it
 
 
 class StoryPlan(BaseModel):
@@ -203,6 +224,20 @@ class StoryPlan(BaseModel):
     prominent_vehicle: ProminentVehicle        # the FRAME being foregrounded
     prominent_palette: PaletteVehicle          # the CONTEXT MATERIAL being foregrounded
     payoffs: list[Payoff] = []                                 # setup→payoff pairs; one per foreshadow seed where possible
+    # Required, like the two prominence fields above and for the same reason:
+    # a prose instruction to "record your reasoning" is a request, a required
+    # field is enforcement. Checked against the bundle by
+    # `check_plan_consistency`, so it cannot be filled in with a vehicle that
+    # was not actually the top hint.
+    vehicle_fit_response: VehicleFitResponse
+    # Why the champion won, in one line, drawn from `win_anatomy` — the thing
+    # Jon named as the single most important job of the report (2026-08-14).
+    # Required because a report that never makes this clear has failed however
+    # entertaining it is, and a required field is the only way to know the
+    # editor actually decided rather than left it to emerge from the beats.
+    why_the_champion_won: str
+    # Only when departing from the Trophy-leads default; empty otherwise.
+    storyline_note: str = ""
 
 
 # ---------------------------------------------------------------------------
@@ -235,6 +270,17 @@ moments, lead changes, and trajectory. Draw on the competition_arcs provided.
 INPUT (JSON in the user turn):
 - competition_arcs: leader-by-round, winner/loser trajectory, lead changes and the \
 decisive moment for each competition.
+- **win_anatomy: WHY each competition was won or lost.** Computed from the data, not \
+inferred. Per competition: `attribution` (`built` = the winner outscored the runner-up \
+and earned the margin; `inherited` = the runner-up shed more than the winner gained), \
+`shape` (`consistent` vs `volatile` against the field's own spread), \
+`best_in_field_rounds`, `below_median_rounds`, per-round standing vs the field, and \
+whether the runner-up could have flipped it by merely playing their own average. \
+`summary_facts` states all of this in neutral phrasing. **This is the single most \
+important input for the primary storyline** — it answers "was the champion good, were \
+the others bad, was it one great round or four solid ones, did somebody blow it". Use \
+it. A report that never makes clear WHY the champion won has failed, however \
+entertaining it is.
 - beats: a ranked list of notable events. Each has an `id`, three scores \
 (importance = contribution to the result; rarity = how noteworthy in TEG history; \
 entertainment = colour independent of the result), and hole-by-hole `holes` \
@@ -260,6 +306,31 @@ course PBs usually do.
 - Course-record beats: beats with id `cr01`, `cr02`, ... are course gross records \
 (good or bad) set in this TEG on courses with 3+ prior visits. These are MANDATORY \
 — include them all in `must_include_beat_ids` and feature them in the relevant round.
+
+THE STORYLINE HIERARCHY — read this before choosing anything else.
+
+**The report is the winner's story.** The Trophy winner's week is the PRIMARY \
+storyline, and the report's job is to make clear how and why they won — drawing on \
+`win_anatomy`. That story is told as a celebration, tongue-in-cheek by all means, and \
+it takes one of two shapes (often both):
+
+  (a) **what the champion did well** — the round that broke the field, the four steady \
+ones, the stretch where they went clear; or
+  (b) **where their rivals fell short** — when `win_anatomy.attribution` is \
+`inherited`, say so plainly. "Patterson lost it" is often the better and funnier story, \
+and it is honest. But the champion is still the one who capitalised: frame them as the \
+man who was there to take it, never as a passive beneficiary.
+
+Then the SECONDARY storylines, roughly in this order of prominence: the Green Jacket \
+(gross), the Wooden Spoon and how comprehensively it was lost, and the rest of the \
+field humiliating themselves. Third and fourth storylines are welcome where the \
+material is there.
+
+**This ordering is a strong default, not a cage.** Depart from it when the tournament \
+genuinely offers something better — but the departure must still explain why the \
+champion won, and you must say what you did in `storyline_note`. A legitimate \
+departure keeps the winner in frame: "the course beat everyone, and one man by \
+slightly less" is a fine opening. "The champion was poor" is not a storyline.
 
 YOUR JOB:
 - Choose the story: one clear `theme` that runs through the whole report, and 2-4 \
@@ -331,13 +402,35 @@ matters is whether THIS one has unusually strong evidence for it), with the spec
 milestones behind each score, computed from THIS tournament's actual facts before you saw \
 them. This is a candidate list, not a verdict — it can only detect that a pattern's raw \
 ingredients exist, not whether it is genuinely the most interesting angle, so a high score is \
-a prompt to look closer, not an instruction to pick it. Known gap: `hero_arc`, `comeback`, \
-`origin` and `underdog` are under-detected by this heuristic (they rely on career-milestone \
-phrasing that doesn't cover every real career-arc story, e.g. a player stuck at the same rank \
-for several TEGs) — a low or absent score for those four is NOT evidence the pattern isn't \
-there; use your own reading of `player_history` for those. It is also a useful check against \
-the SOFT RULE above: if a high-scoring vehicle also overlaps recent picks, that is a real \
-signal the data wants it — don't discard it just to be different.
+a prompt to look closer, not an instruction to pick it. **You remain free to frame the report \
+however the material demands, including on a vehicle that scores low or does not appear at \
+all.** If the tournament's real story is somewhere else, go there — a strong hint you \
+overrule is a normal outcome, not a failure. It is also a useful check against the SOFT RULE \
+above: if a high-scoring vehicle also overlaps recent picks, that is a real signal the data \
+wants it — don't discard it just to be different.
+
+  **What the hints CANNOT see.** Two blind spots, and neither is evidence against a vehicle:
+
+    1. `motif`, `bookends`, `ensemble` and `theme_led_body` are **never scored and never \
+appear in the list at all** — they are stylistic frames with nothing in the data to detect \
+them, not weak candidates. Their absence carries no information whatsoever. **Judge these \
+four on their own merits every time**, by reading the beats yourself: is there an image, a \
+hole, a number or a phrase that recurs across the four rounds (`motif`)? Does the tournament \
+open and close on the same scene, hole or pairing (`bookends`)? Is the real story the whole \
+field, or the course beating everyone (`ensemble`)? Does the material want to be organised \
+by idea rather than by round (`theme_led_body`)? They are strong frames and the scorer will \
+never once nominate them.
+    2. `hero_arc`, `comeback`, `origin` and `underdog` are UNDER-detected — they rely on \
+career-milestone phrasing that doesn't cover every real career-arc story (e.g. a player stuck \
+at the same rank for several TEGs). A low or absent score for those four is not evidence the \
+pattern isn't there; read `player_history` yourself.
+
+  **Record the outcome in `vehicle_fit_response`** — `top_scored_vehicle` (the FIRST entry in \
+`vehicle_fit_hints`, copied exactly), `taken_up` (is it in your `narrative_vehicles`?), and a \
+one-line `note`: what it fits if you took it, or what beat it if you didn't. This is a record \
+of the decision, NOT a justification you owe — "the R3 collapse is real but the week is about \
+Baker's first win" is a complete and perfectly good answer. Do not let this field pull you \
+toward the scored vehicles.
 - Select the 6-10 `must_include_beat_ids` the report cannot omit. Be ruthless — \
 list the rest you would cut in `cuts`. **NON-NEGOTIABLE: every beat marked \
 `"mandatory": true` MUST appear in `must_include_beat_ids` and MUST NOT appear \
@@ -349,6 +442,12 @@ and the `beat_ids` that belong to that round.
 - Give each notable player a one-sentence `arc`. Mid-pack nobodies can be omitted.
 - `venue_notes`: how/where to weave the course + location colour (use the venue \
 input, e.g. "a new course for TEG" / "the Nth TEG round at this venue").
+- `why_the_champion_won`: **ALWAYS populated**, one line, grounded in `win_anatomy`. \
+Name the mechanism, not the outcome. "Won by 8" is not an answer; "two best-in-field \
+rounds either side of a wobble, while the only man close to him gave back more than he \
+did" is. Say plainly if the answer is that the rivals lost it.
+- `storyline_note`: only if you departed from the Trophy-leads default — one line on \
+what led instead and why it was the better story. Leave empty otherwise.
 - `title` + a few `title_candidates`; record the resolved `tone`.
 
 THREAD-ORGANISED STORYLINE FIELDS — **DEFAULT IS TO POPULATE THESE, NOT LEAVE EMPTY.** \
@@ -381,8 +480,8 @@ across reports.
 
 - `payoffs`: **one entry per `foreshadow[]` seed.** If you have 4 foreshadows you \
 should have ~4 payoffs. Each entry: `seed` (short ref to the seed), `resolves_in` \
-(which section pays it off — e.g. "Round 4", "How the three were decided", "the men \
-in brief"), `payoff` (one-line description). This addresses the biggest thinness in \
+(which section pays it off — e.g. "Round 4", "How the three were decided", \
+"Player-by-player summary"), `payoff` (one-line description). This addresses the biggest thinness in \
 past reports: seeds planted in the opener that the body never resolved. An \
 unresolved foreshadow is a bug.
 
@@ -478,6 +577,25 @@ def check_plan_consistency(plan: StoryPlan, bundle: dict) -> list[str]:
     cut_mandatory = sorted(mandatory & set(plan.cuts))
     if cut_mandatory:
         warnings.append(f"mandatory beats listed in cuts: {cut_mandatory}")
+
+    # `vehicle_fit_response` is a record of a decision, so the only things worth
+    # checking are that it records the RIGHT decision. Divergence itself is never
+    # a warning — the editor is explicitly free to overrule the hints, and
+    # flagging that would turn an advisory into a de facto rule.
+    resp = plan.vehicle_fit_response
+    hints = bundle.get("vehicle_fit_hints") or []
+    if hints:
+        top = hints[0].get("vehicle")
+        if top and resp.top_scored_vehicle != top:
+            warnings.append(
+                f"vehicle_fit_response.top_scored_vehicle={resp.top_scored_vehicle!r} "
+                f"but the top hint was {top!r}")
+    actually_taken = resp.top_scored_vehicle in plan.narrative_vehicles
+    if resp.taken_up != actually_taken:
+        warnings.append(
+            f"vehicle_fit_response.taken_up={resp.taken_up} but "
+            f"{resp.top_scored_vehicle!r} is "
+            f"{'in' if actually_taken else 'not in'} narrative_vehicles")
     return warnings
 
 
@@ -555,7 +673,7 @@ def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
     # Restrict player_history to players who actually played in THIS TEG.
     # Without this, the bundle carries career context for every historical
     # player, which can lead the writer to confabulate non-participants into
-    # "men in brief" (observed: Henry Meller added to TEG 10 closing list).
+    # player-by-player summary (observed: Henry Meller added to TEG 10 closing list).
     _df = load_all_data()
     _current_players = set(_df[_df["TEGNum"] == teg_num]["Player"].unique())
     _full_history = build_player_cross_teg_history(teg_num, df=_df)
@@ -615,7 +733,20 @@ def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
     from teg_analysis.reporting.vehicle_fit import (
         score_vehicle_fit, rank_vehicle_fit, normalize_vehicle_fit, load_baseline_cache,
     )
-    _raw_vehicle_scores = score_vehicle_fit(beats, arcs, tournament_shape_signals, player_history)
+    # NOTE: `all_beats`, NOT the trimmed `beats`. The `top_n` trim is a token
+    # budget for the LLM call — it says nothing about what happened in the
+    # tournament — but several vehicles (tragic_arc, redemption_arc, catalogue)
+    # score as a SUM over beats, so trimming silently deflated them. Worse, the
+    # checked-in baseline is generated via `score_vehicle_fit_for_teg`, which
+    # passes `top_n=None`, so live z-scores were comparing a trimmed raw score
+    # against an untrimmed population mean.
+    #
+    # Measured on TEG 6 (2026-08-13): tragic_arc raw 79.5 untrimmed vs 32.7 at
+    # top_n=50, i.e. z +2.70 vs +0.06 — enough to drop it from rank 1 to rank 5
+    # and hand the top hint to hero_arc. Every hint list generated before this
+    # fix was skewed against the beat-sum vehicles.
+    _raw_vehicle_scores = score_vehicle_fit(all_beats, arcs, tournament_shape_signals,
+                                            player_history)
     _baseline = load_baseline_cache()
     if _baseline:
         vehicle_fit_hints = normalize_vehicle_fit(_raw_vehicle_scores, _baseline)[:5]
@@ -633,12 +764,20 @@ def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
         if all(p in _current_players_proper for p in r["players"])
     ]
 
+    # WHY each competition was won, computed deterministically — see
+    # win_anatomy.py. `competition_arcs` carries the what (leader by round, lead
+    # changes); this carries the causation the editor was previously left to
+    # infer from a pile of beats.
+    from teg_analysis.reporting.win_anatomy import build_win_anatomy
+    win_anatomy = build_win_anatomy(teg_num)
+
     bundle = {
         "teg": teg_num,
         "tone": tone,
         "trophy_metric": trophy_metric(teg_num),
         "venue": venue,
         "competition_arcs": arcs,
+        "win_anatomy": win_anatomy,
         "player_history": player_history,
         "player_course_history": player_course_history,
         "player_relationships": player_relationships,

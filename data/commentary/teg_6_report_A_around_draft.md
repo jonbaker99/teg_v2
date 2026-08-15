@@ -1,77 +1,101 @@
-# Catalonia, or: How Gregg Williams Nearly Threw It All Away
+# Fifty-Nine Holes in Front, Two Holes Behind: Williams Survives Catalonia
 
-TEG, for the first time in its history, packed a passport. Four courses, all new, all Catalan: the PGA Catalunya Tour as the gentle hors d'oeuvre, Costa Brava's woodland-then-prairie oddity in the middle, El Prat's Norman-designed Rosa lying in wait, and the Stadium — Spain's most ranked layout, a European Tour regular — as the final examiner. What followed was four days of golf that arranged itself, retrospectively, around a single par four on a Sunday afternoon. Everything else was prologue or epilogue.
+For fifty-nine holes of this tournament, Gregg Williams led the Trophy. For two holes, he did not.
 
-So let us begin where it ended.
+Both of those holes came on the Tuesday afternoon at PGA Catalunya's Stadium course, and the second of them was the 9th, stroke index 1, the hardest hole on the property. Jon Baker arrived on that tee in front for the first time in four days. He left it having taken 10. Williams took 7 and had the lead back, and on the same green David Mullin holed out for a par that returned the Green Jacket to him after he had spent the previous afternoon giving it away.
 
-## In medias res: the 9th tee, Stadium Course, Sunday
+One hole. Two competitions. Nobody, so far as anyone could tell, enjoyed any of it.
 
-By the time the principals reached the 9th tee of the Stadium, the Trophy had quietly changed hands. Gregg Williams, who had spent three days carrying an eight- and nine-shot lead like a man trying not to spill a tray of drinks, had just played holes 6, 7 and 8 in quadruple, quadruple, double — and at the par-5 7th, Jon Baker's calm par had nudged him into outright Trophy lead for the first time all week. After 61 holes of arithmetic, the only number that mattered was Baker's, and it was the smaller one.
+Williams won the Trophy at level par net, five clear of Baker. Mullin took the Jacket on gross at +85, four clear of Baker, who thus finished second in everything available to finish second in. At the other end, Henry Meller collected his third Wooden Spoon at +30. It was TEG's first visit to Catalonia and all four courses were new to all five men, which removed the usual excuses and replaced them with nothing.
 
-What happened next would, in a saner sport, be reviewed by a coroner. At the 9th — a par four — Baker made 10. Williams, alongside, made 7. In the space of one hole, played badly by both men but catastrophically by one, Williams was handed back the outright Trophy lead he had spent the previous hour mislaying. The same hole, in the same group, in the same minutes, also flipped the Green Jacket back to David Mullin, who had been quietly enduring his own afternoon a step or two behind.
+---
 
-One hole. Two competitions. Both decided.
+## Round 1 — Tour de Force: Williams Posts the Best Round in TEG History
 
-To understand how the week arrived at that tee box, we have to go back to Thursday.
+The Saturday round was played on the Tour course at PGA Catalunya, the resort's second championship layout and the slightly more forgiving sibling of the one that would be waiting at the end of the trip. Nobody had a yardage. Nobody had a memory. Williams had a plan he probably could not have articulated, and it worked immediately.
 
-## Round 1 — Williams Rewrites the Book at PGA Catalunya
+He shot -12 net against par. That is the best round in TEG history, full stop, and it doubled as a personal-best gross of +20.
 
-PGA Catalunya's Tour course — the more forgiving of the resort's two siblings, and very much the warm-up act — was supposed to be a settling-in round. Williams treated it as the most important round of his life and shot a net −12, the lowest single round in TEG history to that point. The gross was +20, a personal best.
+The engine was a four-hole stretch from the 13th that gained seven net shots: a bogey at the par-4 13th, which is the hardest hole out there and therefore a triumph; a birdie at the short 14th; then pars at the par-5 15th and the par-3 16th, one of the easiest holes on the course and duly treated as such. Four holes. Seven shots. The tournament, in most meaningful respects, filed and closed.
 
-The engine room was a four-hole passage from the 13th: bogey, birdie, par, par. In the chilly idiom of Stableford, that reads 3-5-4-3, which is fifteen points in four holes, which is the sort of run that does not happen, and which, on a Thursday afternoon in Girona, did. He led the Trophy by nine before anyone had quite worked out where the clubhouse was.
+Baker also posted a personal-best gross round, +18, the lowest gross of the day. In any other week that is the headline. Here it was a line of small print underneath a man who had just rewritten the record book.
 
-Underneath the avalanche, Baker was producing his own quiet personal best — gross +18, most of it banked on the front nine. Mullin, the eventual Jacket winner, slipped into the Gross lead at the 3rd hole of the tournament (after Williams had briefly held it at the 2nd) and would now lead that race for almost the entire week. He sat one clear after eighteen. Meller, with a +7 net, sat at the bottom of the Spoon ledger and looked likely to stay there. Neumann's 9 at the 9th was a brief footnote that would, much later, look like an overture.
+Mullin took the Green Jacket lead at the 3rd and finished the day one in front. Two Trophy lead changes occurred on the opening holes, both to Mullin, neither outright — the ordinary shuffling of a bunched field before anyone has settled. Meller was last on +7.
 
-Nine was the figure to remember. Nine shots clear in the Trophy. A cushion Williams would, in due course, be very, very glad of.
+Williams went to bed nine clear. He would not add another shot to that cushion for the rest of the tournament. Everything from here is the story of him spending it.
 
-## Round 2 — Costa Brava: Meller's False Dawn
+---
 
-Costa Brava — woodland out, open in, a course of two distinct moods — produced the week's most unexpected story. Henry Meller, who had been measured in R1 for the Spoon, played the round of his TEG life: a net −5 and a gross +17, both personal bests, both achieved on what was supposed to be the week he was buried.
+## Round 2 — Personal Best Among the Pines: Meller Escapes the Basement
 
-The damage was inflicted in a brutally efficient stretch beginning at the par-5 9th: par, par, par, par. Four holes of nothing happening, which in Stableford terms is thirteen points, which in TEG terms is sedition. The Spoon, briefly, passed to Neumann.
+Costa Brava on the Sunday is a woodland parkland course of two distinct halves: a tight, technical, tree-lined front and an altogether more generous back. Meller, who had arrived in Spain carrying two Wooden Spoons and the reasonable expectation of a third, played both halves like a man who had misplaced his own reputation.
 
-Williams, for his part, played the round at level par — the sort of card that produces no anecdotes and protects every lead. His Trophy advantage stayed at nine. Mullin's Jacket margin stretched to five. Everything, on the surface, was orderly. Nobody yet knew that Meller's resurrection was a feint and the Norman course was sharpening its knives.
+He shot -5 net, a personal best. He also shot +17 gross, also a personal best. Twin bests in one afternoon, and the second-happiest hour of anyone's trip after Williams's Saturday.
 
-## Round 3 — El Prat, El Pratfall
+It lifted him clean off the bottom of the Trophy table and left Stuart Neumann sitting there instead, which nobody, least of all Neumann, had budgeted for.
 
-The Rosa course at El Prat is a Greg Norman design that has hosted the Spanish Open. It did, on Saturday, what it was built to do.
+Williams, meanwhile, went round in level par, a figure that conceals a quadruple-bogey 8 at the par-4 7th — the hardest hole on the course, and the first evidence that the record-breaker was capable of the occasional lapse in the family silverware. His lead stayed at nine. Mullin stretched the gross lead to five.
 
-Mullin, the metronome of the Jacket race, shot +29 gross — his worst single round to that point — including a quintuple-bogey 9 at the par-4 15th and a quadruple bogey at the par-5 18th. The par he made on that 18th green, ordinary as it was, completed Baker's overhaul of the Gross lead by exactly one shot. After 54 holes of leading, Mullin was, for one fitful overnight, second.
+Two rounds down, nothing had moved. It was the last time that would be true.
 
-Meller's Costa Brava sermon was revealed as scripture of the briefest sort. At the par-5 1st he made 10. That single hole returned him to the bottom of the Spoon race, where, after a sextuple-bogey 10 at the par-4 8th and a quintuple-bogey 9 at the 17th, he would now remain. The round closed at +15 net. The comeback was over before lunch.
+---
 
-Williams, gnawed at but not bitten, watched his lead shrink from nine to eight. Eight, he would soon discover, was the absolute minimum acceptable cushion for what was coming.
+## Round 3 — The Rosa Bites: Mullin's Worst Gross Round Hands Baker the Jacket Lead
 
-## Round 4 — The 9th Hole That Settled Everything
+El Prat's Rosa course is a Greg Norman design and a repeat host of the Spanish Open, and on the Monday it went through the field like a tax audit.
 
-The Stadium Course, the resort's premier card and Spain's calling card to the wider tour, played host to one of the strangest closing rounds in TEG's short history.
+Meller opened with a 10 at the par-5 1st. That single hole undid the whole of Costa Brava and dropped him straight back to the bottom of the Wooden Spoon race, where he would remain for the final fifty-three holes of the tournament. He added a 10 at the par-4 8th and a quintuple-bogey 9 at the 17th, which is the hardest hole out there and did not require the help. His round was +15.
 
-Williams's eight-shot Trophy lead was shelled methodically, like a town under siege. A quadruple bogey at the par-5 3rd. A quadruple at the par-4 6th. Another at the par-5 7th. From the 6th tee to the 9th green he dropped thirteen shots in four holes: quad, quad, double, triple. Baker's par at the 7th moved him, finally, into outright Trophy lead. The wire-to-wire week was, with eleven holes to play, no longer wire-to-wire.
+Baker also took 9 at that 8th, one of the toughest on the card. He would not have chosen the company.
 
-Then the 9th. We have been here before, in the opening paragraphs. Baker made 10. Williams made 7. The Trophy lead returned to Williams. The Jacket lead returned to Mullin — who had himself opened bogey-double-bogey before steadying with a birdie at the par-4 4th, and was now the principal beneficiary of someone else's collapse rather than the author of his own recovery. One par four. Two competitions. Two reversals.
+The real business, though, was Mullin. He shot +29 gross, the worst round of his TEG career to date. Inside it sat a quintuple-bogey 9 at the par-4 15th — one of the easiest holes on the course, which is the kind of detail that follows a man home — and a 9 at the par-5 last.
 
-Baker, to his credit, refused to disappear. A bogey at the par-3 16th drew him level with Mullin again on the Gross. Two holes later, at the par-4 18th, he made 8. The Jacket was Mullin's by four.
+Baker parred that 18th. It put him one clear on gross and ended Mullin's reign at the top of the Green Jacket after fifty-one holes, held unbroken since the 3rd hole of the opening round.
 
-Williams, meanwhile, was conducting his own private dismantling down the closing stretch: double, triple, quadruple, double, triple across 14 through 18 — fourteen shots dropped in five holes, which is the sort of finishing kick that loses most tournaments and somehow, somehow, did not lose this one. The R1 cushion held by the thickness of a scorecard. He won the Trophy by five, at +0 net.
+Williams shot +3 and watched his cushion narrow to eight. Still comfortable. Still, entirely, the cushion he had built on the Saturday.
 
-At the back of the field, Neumann produced a sympathetic echo of the main events: a quintuple-bogey 10 at the par-5 3rd, then double, double, triple through to the 6th — twelve shots gone in four holes, an hour's work that nearly bought him the Spoon all over again. Meller, going through the motions of the man who already knows, made a quintuple-bogey 9 at the par-4 1st, took quadruples at the 4th and the 7th, and signed for +13 net. The Spoon was confirmed at +30.
+---
 
-## How the silverware was distributed
+## Round 4 — The Ninth at the Stadium Settles Both Trophy and Jacket
 
-**The Trophy.** Won by Williams at +0 net, by five. Effectively decided on Thursday morning at PGA Catalunya Tour and protected, with mounting visible effort, across the next 54 holes. Briefly lost on Sunday at the 7th of the Stadium when Baker took outright command, and returned one hole later when Baker's 10 at the 9th outweighed Williams's 7. No countback was required; none ever is.
+The Stadium course on the Tuesday is Spain's premier championship test, and five men turned up to fail it in their own individual styles.
 
-**The Green Jacket.** Won by Mullin at +85 gross, by four. Led every round bar R3, where his +29 at El Prat dropped him a shot behind Baker overnight. Reclaimed outright on Sunday at — yes — the 9th, as Baker's 10 did its second piece of work in five minutes. Baker drew level again at 16 before the 8 at the last decided things.
+Williams got the collapse under way early and did it thoroughly: doubles at the 1st and 2nd, a quadruple-bogey 9 at the par-5 3rd, a triple at the 4th. Eleven shots gone in four holes, on the same resort where four days earlier he had produced the finest round the tournament has ever seen.
 
-**The Wooden Spoon.** Lost by Meller at +30 net. He sat bottom after R1, escaped to Neumann via his Costa Brava personal best, then went back to the foot of the table at the 1st hole of El Prat and never left it. Three double-figure scores on the Rosa course did the structural work; the Stadium round merely notarised it.
+Neumann, not to be outdone, dropped twelve over holes 3 to 6 — a 10 at the par-5 3rd, doubles at the 4th and 5th, a triple at the 6th. Three of the last four TEGs have seen him finish Jacket runner-up. This was not going to be the fourth.
 
-## The men, in brief
+Williams then shed thirteen more over holes 6 to 9: quads at the 6th and the par-5 7th, a double at the short 8th, a triple at the 9th.
 
-- **Gregg Williams** — Wrote the TEG record book before lunch on Thursday with a net −12, and then spent three days trying not to set the book on fire. A closing +9 of pure white-knuckle survival, including quad bogeys at the 3rd, 6th, 7th and 16th of the Stadium and a fourteen-shot bleed over the final five holes. Champion by five. Won it on Thursday; very nearly gave it back on Sunday.
+Which brings us back to where we started.
 
-- **David Mullin** — Led the Gross from the 3rd hole of the tournament. Lost the lead on the 72nd green of Round 3 to his own quintuple at the 15th and quadruple at the 18th. Took it back on the 9th of Round 4 without lifting a finger, and held on. A Jacket won by patience, by metronome, and by other men's misfortune.
+At the par-5 7th, one of the easiest holes on the course, Baker made par and went outright ahead in the Trophy. Fifty-nine holes of Williams at the top, unbroken since the 2nd hole of Saturday, ended there. For Baker — second, first, second, second in the Trophy across the last four TEGs, the definition of a man who keeps getting measured for a suit he never wears — it was the summit.
 
-- **Jon Baker** — The almost-man of Catalonia. A personal-best gross +18 on day one. Outright leader of the Jacket overnight after R3, outright leader of the Trophy for one hole on Sunday afternoon, and runner-up in both by the time he holed out at the 18th — where he made 8. The 10 at the par-4 9th is the number that will not leave him.
+He held it for two holes.
 
-- **Henry Meller** — Briefly the story of the week, with personal bests both net (−5) and gross (+17) at Costa Brava; then, with greater conviction, the story of the week for the wrong reasons. Tens at the 1st and the 8th of El Prat, a 9 at the 17th, and a Stadium round of +13 to confirm what the Rosa course had already written. Spoon by some distance.
+At the 9th, stroke index 1, Baker took 10. Williams's triple-bogey 7 at the same hole was, in the circumstances, a masterclass, and it took the Trophy lead straight back. Mullin parred it and retook the Green Jacket outright. One hole, in one group, resolved both competitions in favour of the men who had led them for most of the trip.
 
-- **Stuart Neumann** — Held the Spoon for a single round after Costa Brava, escaped, and then arrived on Sunday determined to apply for it again: a 10 at the par-5 3rd of the Stadium followed by double, double, triple — twelve shots in four holes before he had really warmed up. Survived. Just.
+Williams was never headed again, though he made a spirited attempt at it. Over the closing five holes he bled fourteen shots: a double at the 14th, a triple at the par-5 15th, which is the easiest hole on the course, a quadruple-bogey 7 at the par-3 16th, a double at the 17th and a triple at the 18th. He finished the round +9 net and the tournament at level par.
+
+The Jacket had one more twist. Baker's bogey at the 16th drew him level with Mullin, and for two holes the gross competition was a dead heat. Then he made 8 at the 18th, the second-hardest hole on the course, and it was over.
+
+Meller shot +13 and finished where he had been since the first green at El Prat.
+
+Williams won by five. He had built nine in a single afternoon and spent the following three days handing it back in instalments, and he still crossed the line with more than half of it in his pocket. Nothing he did after the Saturday improved his position. Nothing he did after the Saturday was required to.
+
+---
+
+## How it was decided
+
+- **Trophy (Net VP).** Williams led after every round: by nine, nine, eight, and five at the finish. Rounds of -12, 0, +3, +9. The only outright lead change came at the par-5 7th on the final day, where Baker's par put him ahead; two holes later Baker's 10 at the 9th and Williams's 7 handed it back. Final: Williams +0, Baker +5. The -12 in Round 1 is the best single round in TEG history to date.
+- **Green Jacket (Gross).** Mullin led from the 3rd hole of Round 1 for fifty-one holes, until his +29 at El Prat Rosa — his worst gross round to date — and Baker's par at the 18th there put Baker one ahead. Mullin's par at the Stadium's 9th retook it outright. Baker drew level again at the 16th, then made 8 at the last. Final: Mullin +85, Baker +89. A fourth Jacket in succession.
+- **Wooden Spoon.** Meller was bottom after Round 1 on +7, escaped it with twin personal bests at Costa Brava (-5 net, +17 gross), and returned to the bottom with a 10 at El Prat's opening par 5. He stayed there for the remaining fifty-three holes. Rounds of +15 and +13 completed a total of +30, and a third career Spoon.
+
+---
+
+## Player-by-player summary
+
+- **Gregg Williams** — Won the Trophy at level par, defending it successfully, and effectively won it between the 13th and 16th holes of the opening afternoon. His -12 is the best round TEG has recorded and came with a personal-best gross of +20. He then dropped 11 shots in four holes, 13 in another four and 14 in the closing five at the Stadium, and won by five anyway.
+- **Jon Baker** — Second in the Trophy, second in the Jacket, and second in the ledger of men who deserved better. Opened with a personal-best gross of +18, took the Jacket lead with a par at El Prat's 18th, and led the Trophy outright for two holes before the 9th at the Stadium removed both ambitions with a single 10.
+- **David Mullin** — Arrived as the Wooden Spoon holder with three Jackets already hanging up, survived the worst gross round of his career and a lost fifty-one-hole lead, and won a fourth straight Jacket by four with a par on the hardest hole of the trip.
+- **Henry Meller** — Produced the warmest story of the four days at Costa Brava, with personal bests in both net and gross, and then unpicked it inside an hour at El Prat: 10 at the 1st, 10 at the 8th, 9 at the 17th. Third Wooden Spoon, at +30.
+- **Stuart Neumann** — Briefly bottom of the Trophy after 36 holes and never a factor in the Jacket he has finished runner-up in three times in the last four TEGs. His Stadium round included a 10 at the par-5 3rd and twelve shots lost between the 3rd and the 6th.

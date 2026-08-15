@@ -1,55 +1,66 @@
 {
-  "title": "Procession in the Sun: Boavista, Records, and a 12",
+  "title": "First Blood at Boavista: Baker Runs Away, Mullin Rewrites the Record",
   "title_candidates": [
-    "Procession in the Sun: Boavista, Records, and a 12",
-    "Wire-to-Wire at Boavista",
-    "The Algarve Record Book",
-    "Baker by Eighteen"
+    "First Blood at Boavista: Baker Runs Away, Mullin Rewrites the Record",
+    "Eighteen Shots Clear, and Still Only the Second-Best Story",
+    "The Handicap Heist of Lagos",
+    "Eighty-Five, and the Wrong Trophy"
   ],
-  "theme": "A four-day procession at Boavista in which the two big trophies were effectively decided by Wednesday lunchtime, while the record book quietly burned and Henry Meller's 17th-hole adventures provided the only real suspense.",
-  "tone": "house",
-  "narrative_structure": "theme_led",
-  "opening_hook": "Open on Boavista's 17th in Round 1 — Meller's 12 — then pull back to reveal that, while one man was carving an octuple into the par-4, Jon Baker was twelve holes into the lowest round in TEG history and the tournament was already, essentially, over.",
+  "theme": "A tournament of firsts on one much-abused parkland course: Jon Baker's maiden Trophy, taken from the front and never once threatened, while everyone else — Mullin included — set personal bests, a course record and a small museum of blow-ups on Boavista's supposedly harmless 17th.",
+  "tone": "house — faithful, tongue-in-cheek, insider ribbing; Barney Ronay by way of Tom Peck",
+  "narrative_structure": "three_act",
+  "opening_hook": "Act I opens on the R1 scoring hut at Boavista, where two TEG records fell in the same afternoon (Baker's -9, Mullin's +17 gross) and Henry Meller signed for a 12 at the 17th — all three competitions effectively cast in a single round, which the rest of the report then explains.",
+  "narrative_vehicles": [
+    "origin",
+    "catalogue",
+    "inevitability"
+  ],
   "foreshadow": [
-    "Baker's R1 -9 (b04) — a TEG record on day one, planted as 'the day the chase ended before it began'",
-    "Mullin's R1 +17 gross (b03) — also a TEG record, foreshadowing a Jacket procession of his own",
-    "The 17th at Boavista — Meller's 12 in R1 (b02) sets up Mullin's 9 there in R2 and Neumann's 10 there in R4",
-    "Meller's spoon-bound drop on R1 H17 (b58) — he never really climbs out"
+    "Boavista's 17th — stroke index 17, the second-easiest hole on the card — begins collecting victims from R1 and does not stop.",
+    "Jon Baker's R1 90 gross is 10 better than anything he had ever managed here and 17 better than his last visit: the handicap is about to be looted.",
+    "David Mullin arrives as defending Trophy champion and the best gross player in the field — and will end up owning the course record and still losing the main event by 18.",
+    "Henry Meller arrives as reigning Wooden Spoon holder, then posts one of the best rounds in TEG history in R2."
   ],
   "competitions": [
     {
-      "name": "The Trophy (Net vs Par)",
-      "winner_or_loser": "Jon Baker",
-      "how": "Baker led from the first round to the last and never gave the lead up — the only lead change came on R1 hole 6 (David Mullin briefly tied), after which Baker's record-breaking -9 (b04) opened an eight-shot gap that only ever grew: 8 → 13 → 16 → 18. He added a -2 in R2 (b06, then 2nd-best ever), a -7 in R3 (b07), and was so far clear by Sunday that a level-par 0 closed it out at -18, winning by 18 shots. A procession, but a brilliant one.",
-      "key_beat_ids": [
-        "b04",
-        "b06",
-        "b07",
-        "b19",
-        "b01"
-      ]
-    },
-    {
-      "name": "The Green Jacket (Gross)",
-      "winner_or_loser": "David Mullin",
-      "how": "Mullin led the Jacket from R1 hole 4 to the final green and was never headed. His +17 in R1 (b03) was the best Gross round in TEG history; his +14 in R3 (b05) then broke that same record. Margins ballooned 2 → 5 → 9 → 12. A quintuple at the 17th in R2 (b17) and a quad at the 11th in R4 (b23) barely scratched the lead. Won at +72 by 12 from Stuart Neumann.",
+      "name": "Trophy (Net VP)",
+      "winner_or_loser": "Jon Baker — winner at -18, by 18",
+      "how": "Baker's opening -9 (b03), the best round in TEG history to date and built on a 90 gross that was 10 shots better than any previous Boavista effort of his, gave him an 8-shot lead after R1. The only lead change of the entire Trophy came at R1 H6 (Mullin, not outright, routine) — after that Baker was never headed across 66 holes. He widened it to 13 with R2's -2 (b07) despite bleeding shots through the turn, to 16 with R3's -7 (b08) — a round that also contained a 9 at the 18th (b19) and a quadruple at the 5th, and still gained ground — and closed out level par in R4 (b21 stretch, b40) for an 18-shot margin, 9th-best Trophy score all-time and a first TEG title.",
       "key_beat_ids": [
         "b03",
-        "b05",
-        "b16"
+        "b07",
+        "b08",
+        "b01",
+        "b40"
       ]
     },
     {
-      "name": "The Wooden Spoon",
-      "winner_or_loser": "Henry Meller",
-      "how": "Meller's spoon was a wild ride rather than a steady slide. A 12 at the 17th in R1 (b02) shoved him to the bottom (b58); a stirring -2 in R2 (b08, b09) lifted him out and onto Neumann (b42); but R3 undid him for good — a triple at the 1st, then a quintuple-10 at the 3rd (b20) put him back at the foot (b35), and he stayed there despite a brave front-nine flurry. Finished at +16.",
+      "name": "Green Jacket (Gross)",
+      "winner_or_loser": "David Mullin — winner at +72, by 12",
+      "how": "Mullin took gross command at R1 H4 (b02: +17, the best gross round in TEG history to date) and led the Jacket wire-to-wire: 2 clear after R1, 5 after R2, 9 after R3, 12 at the finish over Stuart Neumann. The signature act was R3's 85 gross (cr01, b04) — a new Boavista course record, beating the 89 that had stood across 15 prior visits, and his own personal best here by 4. His only real blemishes were a 9 at the 17th in R2 (b18) and a quadruple at the 11th in R4 (b24), neither of which cost him a thing.",
       "key_beat_ids": [
-        "b58",
         "b02",
-        "b08",
-        "b35",
-        "b20",
-        "b21"
+        "cr01",
+        "b04",
+        "b09",
+        "b11",
+        "b05"
+      ]
+    },
+    {
+      "name": "Wooden Spoon",
+      "winner_or_loser": "Henry Meller — loser at +16 net VP",
+      "how": "Meller's Spoon was booked twice. First in R1, when a 12 at the 17th (b06) — the worst hole relative to par in TEG history to date, on stroke index 17 — dropped him outright to the bottom (b61). He then produced the escape act of the tournament in R2: -2 and 89 gross (b12, b13), a personal Boavista best, lifting him to 3rd. R3 undid all of it inside three holes: a triple at the 1st put him back to the bottom (b27), Gregg Williams's quadruple at the 2nd briefly took it off him (b28), and Meller's 10 at the 3rd (b22) returned him to last (b29) for good. A +4 in R4, complete with an 8 at the 7th (b38), confirmed back-to-back Spoons.",
+      "key_beat_ids": [
+        "b06",
+        "b61",
+        "b12",
+        "b13",
+        "b27",
+        "b28",
+        "b29",
+        "b22",
+        "b20"
       ]
     }
   ],
@@ -57,93 +68,105 @@
     {
       "round": 1,
       "headline_candidates": [
-        "Baker's -9, Mullin's +17, Meller's 12: the day the record book caught fire",
-        "Boavista Day One: two records broken, one par-4 turned into a par-12",
-        "Procession Begins, 17th Hole Ends"
+        "Baker Plunders, Mullin Purrs, Meller Finds the 17th",
+        "Two TEG Records and a Twelve",
+        "Boavista Opens With the Best Round Anyone Has Ever Played"
       ],
-      "chosen_headline": "Baker's -9, Mullin's +17, Meller's 12: the day the record book caught fire",
-      "angle": "Two TEG records (Baker net, Mullin gross) on the same afternoon effectively decide both top prizes, while Meller's 12 at the 17th sends him to the foot of the spoon.",
+      "chosen_headline": "Baker Plunders, Mullin Purrs, Meller Finds the 17th",
+      "angle": "One afternoon in Lagos produces the best net round (b03) and the best gross round (b02) in TEG history, plus the worst hole — and all three competitions take the shape they will keep.",
       "beat_ids": [
-        "b04",
         "b03",
-        "b11",
         "b10",
         "b02",
-        "b58"
+        "b09",
+        "b06",
+        "b61",
+        "b45",
+        "b31"
       ]
     },
     {
       "round": 2,
       "headline_candidates": [
-        "Meller's redemption, Mullin's blip, Baker's drift onwards",
-        "-2 for Meller — and a 9 at the 17th for Mullin",
-        "The day the chasers chased themselves"
+        "Meller's Finest Hour, Baker's Quiet Larceny",
+        "Eighty-Nine and Off the Bottom",
+        "Everybody Signs for a Souvenir at the 17th"
       ],
-      "chosen_headline": "Meller's -2 and Mullin's 9: the chase that wasn't",
-      "angle": "Meller posts the 2nd-best round in TEG history (b08/b09) and briefly escapes the spoon; Mullin takes a 9 at the 17th but still extends the Jacket lead; Baker adds another sub-par round and pulls further clear.",
+      "chosen_headline": "Meller's Finest Hour, Baker's Quiet Larceny",
+      "angle": "Meller posts a career Boavista best (b12, b13) and climbs to 3rd; Baker still extends to 13 with a -2 (b07) that included five straight doubles; the 17th takes Mullin (b18).",
       "beat_ids": [
-        "b06",
-        "b08",
-        "b09",
-        "b42"
+        "b07",
+        "b12",
+        "b13",
+        "b18",
+        "b32"
       ]
     },
     {
       "round": 3,
       "headline_candidates": [
-        "Mullin breaks his own record; Meller breaks himself",
-        "Records tumble, Meller tumbles further",
-        "The 16-shot lead and the 10 at the 3rd"
+        "Eighty-Five: Mullin Takes Boavista Apart",
+        "The Spoon Changes Hands Three Times in Three Holes",
+        "A Course Record, and a Man Nine Shots Worse Off at the Last"
       ],
-      "chosen_headline": "Mullin breaks his own record; Meller breaks himself",
-      "angle": "Mullin's +14 gross (b05) eclipses his own week-old TEG mark; Baker's -7 (b07) pushes the Trophy lead to 16; Meller's 10 at the 3rd (b20) hands the spoon back for good (b35); Williams and Neumann post notable rounds of their own.",
+      "chosen_headline": "Eighty-Five: Mullin Takes Boavista Apart",
+      "angle": "The centrepiece round — Mullin's course-record 85 (cr01, b04, b11) against a Spoon race that swaps owner at H1, H2 and H3 (b27, b28, b29) — while Baker shrugs off a 9 at the 18th (b19) and still gains three.",
       "beat_ids": [
-        "b05",
-        "b07",
-        "b12",
+        "cr01",
+        "b04",
+        "b11",
+        "b08",
+        "b19",
         "b14",
-        "b13",
-        "b20",
-        "b35"
+        "b15",
+        "b27",
+        "b33",
+        "b28",
+        "b22",
+        "b29"
       ]
     },
     {
       "round": 4,
       "headline_candidates": [
-        "Baker home by 18, Mullin by 12 — and Neumann finds a 10",
-        "A coronation, a Jacket, and one last 17th-hole disaster",
-        "Boavista signs off in the only way it knows how"
+        "The 17th Claims One Last Victim",
+        "Baker Coasts, Neumann Detonates, Williams Files His Quadruples",
+        "Level Par Is Quite Enough, Thank You"
       ],
-      "chosen_headline": "Baker home by 18, Mullin by 12 — and Neumann finds a 10",
-      "angle": "Both leaders cruise to record-margin wins; Neumann's 10 at the 17th (b15) is Boavista's parting shot; Meller seals the spoon at +16.",
+      "chosen_headline": "The 17th Claims One Last Victim",
+      "angle": "Nothing left to decide but plenty left to survive: Baker's level-par lap seals -18 (b01), Mullin's 20 confirms the Jacket (b05), Neumann's 10 at the 17th (b17) closes the motif, and Meller signs for the Spoon (b20).",
       "beat_ids": [
-        "b15",
         "b01",
-        "b16",
-        "b21"
+        "b05",
+        "b17",
+        "b35",
+        "b36",
+        "b37",
+        "b38",
+        "b20"
       ]
     }
   ],
   "players": [
     {
       "player": "Jon Baker",
-      "arc": "Won the Trophy in the most emphatic style imaginable — record-breaking opening round, lead in every round, winning margin of 18; only a R3 quintuple at the 18th and a R3 quad at the 5th suggested he was mortal."
+      "arc": "Runner-up in TEG 2 and with no titles to his name, Baker opened with the best round in TEG history, led from R1 H6 to the final putt, and turned a 90 gross — 17 shots better than his previous visit to Boavista — into a first Trophy by a preposterous 18."
     },
     {
       "player": "David Mullin",
-      "arc": "Twice broke the TEG record for lowest Gross round in the space of three days and led the Jacket wire-to-wire, surviving his own 9 at the 17th in R2."
+      "arc": "The defending champion played the best golf in the field by any raw measure — two TEG-record gross rounds and a course-record 85 — and was comprehensively beaten on the metric that hands out the Trophy."
     },
     {
       "player": "Henry Meller",
-      "arc": "The week's most volatile card: a 12 at the 17th in R1, the 2nd-best round in TEG history in R2, a 10 at the 3rd in R3, and the Wooden Spoon at the end of it."
+      "arc": "Reigning Spoon holder who set a personal Boavista best in R2 and still contrived to lose the Spoon race twice, the second time inside three holes of R3."
     },
     {
       "player": "Stuart Neumann",
-      "arc": "Jacket runner-up on the strength of a record-equalling +18 gross in R3, undone slightly by his own 10 at the 17th in the final round."
+      "arc": "Quietly the second-best gross player of the tournament, briefly bottom of the Spoon race in R2, and author of the final indignity at the 17th."
     },
     {
       "player": "Gregg Williams",
-      "arc": "Boavista's serial quadruple-bogey merchant — a R3 -4 (b14) buried among a remarkable collection of sevens, eights and nines."
+      "arc": "Improved his Boavista best by eight shots to 97 while simultaneously compiling the tournament's fullest catalogue of quadruple bogeys — and spent two holes of R3 as the Spoon incumbent."
     }
   ],
   "must_include_beat_ids": [
@@ -162,18 +185,75 @@
     "b13",
     "b14",
     "b15",
-    "b16",
+    "b17",
     "b20",
-    "b21",
-    "b35",
-    "b58"
+    "b22",
+    "b29",
+    "b61",
+    "cr01"
   ],
   "cuts": [
-    "b17 (Mullin's 9 at 17, R2) — referenced in passing only",
-    "b18, b22, b23, b24, b25, b26, b27, b28, b29, b30, b31, b32 — the long tail of quadruple bogeys; mention Williams's collection en bloc rather than itemise",
-    "b19, b36, b37, b41, b47, b48, b50 — hot stretches that don't change anything",
-    "b33, b34, b42 — earlier spoon shuffles superseded by b35",
-    "b38, b39, b40, b43, b44, b45, b46, b49 — minor narrative texture, cut for pace"
+    "b16",
+    "b21",
+    "b23",
+    "b24",
+    "b25",
+    "b26",
+    "b30",
+    "b34",
+    "b39",
+    "b40",
+    "b41",
+    "b42",
+    "b43",
+    "b44",
+    "b46",
+    "b47",
+    "b48",
+    "b49",
+    "b50"
   ],
-  "venue_notes": "Four rounds at Boavista Golf & Spa Resort, Lagos — TEG's 4th–7th rounds at this Howard Swan parkland and TEG's 2nd visit to the Algarve (2010). Lean on the Atlantic-view parkland feel, the two-sections quirk, and above all the 17th, which devoured Meller (12), Mullin (9) and Neumann (10) across the week — a recurring character in its own right."
+  "venue_notes": "All four rounds at Boavista Golf & Spa Resort, Lagos — the 4th, 5th, 6th and 7th TEG rounds at the venue and TEG's 2nd trip to the Algarve. Use Howard Swan's parkland-with-Atlantic-views and the course's two distinct halves early, then let the course become an accounting exercise: everyone in the field posted a new personal best here, and the record that had stood across 15 prior visits fell in R3. The running venue gag is the 17th — a par 4 ranked stroke index 17, the second-easiest hole on the card — which took a 12, a 9 and a 10 off three different players across the four days.",
+  "competition_storyline_bullets": {},
+  "player_storyline_bullets": {},
+  "course_history_notes": [
+    "Every one of the five set a new personal best at Boavista on his 4th visit — a field-wide reappraisal of a course TEG had already played three times.",
+    "Jon Baker's R1 90 gross beat his prior Boavista best of 100 (TEG 2) by 10, and was 17 shots better than his last visit.",
+    "Gregg Williams's R3 97 was 8 better than his previous Boavista best of 105 (TEG 2).",
+    "David Mullin's R3 85 (cr01) beat both his own prior best of 89 and the Boavista course record of 89 that had survived 15 prior visits."
+  ],
+  "decisive_moments": [
+    "Trophy: R1's -9 (b03) — Baker outright ahead by 8 after one round, and never headed again across the remaining 66 holes; by R3 (b08) the lead was 16 and the argument was over.",
+    "Green Jacket: R1 H4 (b02) — Mullin ahead on gross and gone, the 85 course record in R3 (cr01) turning a 5-shot cushion into 9 and rendering R4 ceremonial.",
+    "Wooden Spoon: R3 H3 (b29) — Meller's 10 at the 3rd (b22) returned him to the bottom for the final time, three holes after R2 had lifted him clear of it."
+  ],
+  "prominent_vehicle": "origin",
+  "prominent_palette": "records",
+  "payoffs": [
+    {
+      "seed": "Boavista's 17th, stroke index 17, starts collecting victims",
+      "resolves_in": "Round 4 and the Wooden Spoon section",
+      "payoff": "Neumann's 10 at the 17th in R4 (b17) closes a sequence begun by Meller's 12 (b06/b61) and continued by Mullin's 9 (b18) and Williams's triples (b45, b31) — the easiest hole on the card doing the most damage."
+    },
+    {
+      "seed": "Baker's R1 90 gross, 17 better than his last visit here",
+      "resolves_in": "How the three were decided — Trophy",
+      "payoff": "That single round becomes the -9 (b03) that wins the tournament on day one; the eventual -18 and 18-shot margin (b01) are simply the invoice."
+    },
+    {
+      "seed": "Mullin, defending champion and best gross player alive, will end up with the record and not the Trophy",
+      "resolves_in": "Round 3 and the Green Jacket section",
+      "payoff": "The course-record 85 (cr01, b04) and two TEG-best gross rounds (b02, b04) deliver the Jacket by 12 (b05) while he finishes second on the Trophy by 18 — different competitions, different metrics, one very good week of ball-striking."
+    },
+    {
+      "seed": "The reigning Spoon holder posts one of the best rounds in TEG history in R2",
+      "resolves_in": "Round 3 and the Wooden Spoon section",
+      "payoff": "Meller's -2 and 89 gross (b12, b13) lift him to 3rd, then H1 and H3 of R3 (b27, b22, b29) put it all back where it was and hand him back-to-back Spoons (b20)."
+    }
+  ],
+  "vehicle_fit_response": {
+    "top_scored_vehicle": "inevitability",
+    "taken_up": true,
+    "note": "Kept as a supporting vehicle — both wire-to-wire arcs are real and drive the telling — but the frame is Baker's first-ever Trophy (origin), with the field's blow-up inventory as catalogue; inevitability can't be prominent by rule and shouldn't be, since a maiden win by 18 is a story about arrival, not procession."
+  }
 }

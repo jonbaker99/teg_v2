@@ -32,11 +32,35 @@ from __future__ import annotations
 # majority) and is the setting to try next if 40% still reads as too much carnage.
 #
 # Re-measure any change with `python scripts/weight_profiler.py`.
+# RE-PROFILED 2026-08-14, after `importance` became counterfactual (impact.py).
+# The old tuning was fitted against the hand-tuned axis and was void.
+#
+# The headline result is that the weights now barely matter. Under the old axis
+# the spread between settings was ~30 points of blow-up share; re-swept over
+# TEGs 2-18 against the new axis, every reasonable setting lands within 34-43%
+# negative. The weights were doing so much work before precisely BECAUSE
+# importance was a poor proxy that correlated with badness. Measuring actual
+# result-impact dissolved the tuning problem rather than re-solving it.
+#
+# CORRECTED same day. The first pick was (2.0, 1.0, 0.5), chosen by minimising
+# the cut's overall NEGATIVE share — which was the wrong objective. Negative
+# material is the comic material: blow-ups and collapses are what the reports
+# are funny about. The goal was never less carnage, it was less denigration of
+# the CHAMPION, while the Spoon and the field still get mocked properly.
+#
+# Measured over TEGs 2-18, entertainment at 1.0 vs 0.5:
+#   (2.0, 1.0, 0.5)  neg 34%  blow-ups 21%  champion-negative 10%
+#   (2.0, 0.8, 1.0)  neg 37%  blow-ups 26%  champion-negative  8%
+# The low-entertainment setting was strictly worse — it stripped a fifth of the
+# blow-ups AND was worse on the champion metric. The two goals are not in
+# tension, because champion-negativity is held down by counterfactual
+# `importance` (a winner's collapse that cost them nothing scores near zero),
+# not by suppressing entertainment. So keep entertainment high for the comedy.
 MODE_WEIGHTS = {
-    "balanced": (1.5, 0.8, 0.7),
+    "balanced": (2.0, 0.8, 1.0),
     # Retained as an alias so `mode="fast"` callers keep working; identical to
     # `balanced` since the fast weights became the default.
-    "fast": (1.5, 0.8, 0.7),
+    "fast": (2.0, 0.8, 1.0),
     # NOTE: measured as the *opposite* lever to what its name suggests. Cranking
     # rarity + entertainment entrenches the blow-up bias rather than adding
     # colour (53.0% -> 53.5% blow-ups), because those are precisely the two axes
