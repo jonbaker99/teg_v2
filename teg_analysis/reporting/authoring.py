@@ -198,17 +198,17 @@ factual error.
 
 # Tournament-specific: aims the comedy at the right targets. The round writer has
 # no champion to protect, so this block is deliberately NOT shared.
-_WRITER_AIM = """THESE RULES AIM THE COMEDY; THEY DO NOT REDUCE IT. Everything above stays fully in force — the mechanisms, the escalation, the deadpan. What follows only decides WHERE the comedy points.
+_WRITER_AIM = """THESE RULES AIM THE COMEDY; THEY DO NOT REDUCE IT. Everything above stays fully in force. The mechanisms, the escalation, the deadpan. What follows only decides WHERE the comedy points.
 
-WHO THE REPORT IS FOR, AND WHO IT IS ABOUT — read this first; it governs everything below.
+WHO THE REPORT IS FOR, AND WHO IT IS ABOUT. Read this first. It governs everything below.
 
 **This is the winner's story.** Its first duty is to make clear WHY the champion won. \
 The plan's `why_the_champion_won` and the bundle's `win_anatomy` give you the answer \
-already worked out — were they good in one round or all four, were their rivals bad, \
-did somebody blow a lead. Land that, or the report has failed however funny it is.
+already worked out. Were they good in one round or all four? Were their rivals bad? \
+Did somebody blow a lead? Land that, or the report has failed however funny it is.
 
-**Praise the achievement, and be merciless about the golf.** These are not in tension — \
-holding both at once is the single best register available to you. The champion EARNED \
+**Praise the achievement, and be merciless about the golf.** These are not in tension. \
+Holding both at once is the single best register available to you. The champion EARNED \
 the win and the report should say so without hedging. It should simultaneously be \
 hyper-aware of how ragged the winning golf actually was, and of how comprehensively the \
 rest of the field disgraced themselves. "He won it with a 10 on his card and a shrug, \
@@ -216,22 +216,26 @@ which is roughly what winning looks like round here" is the target. So is "the w
 didn't avoid the wreckage; he was simply the one whose wreckage cost him least."
 
   Do NOT go easy on the champion's golf. Their blow-ups, their ruinous stretches, the \
-holes that would embarrass a beginner — all of it is fair comic material and the report \
+holes that would embarrass a beginner. All of it is fair comic material and the report \
 is worse without it. Winning by being the least catastrophic man in a catastrophic field \
 is a genuinely funny way to win, and saying so is a compliment in this company.
 
   **But the DELIVERY has to carry it, and this is the part that goes wrong.** A flat \
 recitation of the champion's failings reads as a charge sheet, however accurate. The \
 same facts delivered with theatrical, slightly camp overstatement read as affection. \
-Elevate: mock-epic, grandiose, absurdly solemn — the subverted gravitas above, pointed \
+Elevate: mock-epic, grandiose, absurdly solemn. That is the subverted gravitas above, pointed \
 directly at the winner. The facts do not change; the register does.
 
     FLAT (wrong):  "He took 10 at the 14th and 8 at the 17th. His R4 was the \
 worst of the four."
-    ELEVATED (right): "He arrived at the 14th with the tournament in his pocket \
-and proceeded to take a 10, an act of such magnificent indifference to \
-self-interest that one can only assume he was making a point about the futility \
-of ambition. The trophy did not seem to mind."
+    ELEVATED (right): "He arrived at the 14th with the tournament in his \
+pocket. He took a 10. It was an act of magnificent indifference to his own \
+self-interest. One can only assume he was making a point about the futility of \
+ambition. The trophy did not seem to mind."
+
+  Note the shape of that example as well as its register. Five short sentences, no \
+em-dashes, one idea each. That is the target on BOTH counts. The same content as one \
+long sentence would read as hard work and the joke would not land.
 
   **Proportion matters too.** However well delivered, a report whose THROUGH-LINE is how \
 poor the champion was has failed. Their failings are punctuation in a story about a win, \
@@ -241,30 +245,30 @@ never the story itself.
 as a passive accident of arithmetic, or implying the win was undeserved, or letting a \
 catalogue of their failings stand in place of any account of how they won.
 
-**Mockery, by target.** Calibrate — this is a group of friends who know each other:
+**Mockery, by target.** Calibrate. This is a group of friends who know each other:
   - **Wooden Spoon holder: hard.** The Spoon is the joke prize. Its holder expects, and \
 has earned, a proper going-over. Be specific and merciless.
   - **The rest of the field: moderate.** Blow-ups, ruinous rounds and general \
 humiliation from players who were never contending are exactly the colour the report \
 wants. Enjoy them.
   - **The runner-up: moderate.** A player who threw it away is a legitimate tragic \
-figure and can be needled for it — that is often the real story.
+figure and can be needled for it. That is often the real story.
   - **The champion: hard on the golf, never on the achievement.** Same intensity as \
-anyone else when describing what they actually did with a golf club — the difference is \
+anyone else when describing what they actually did with a golf club. The difference is \
 that the win stands, unqualified, alongside it.
 
 **A bad gross score is not a bad tournament.** The Trophy and the Spoon are decided on \
 NET (Stableford from TEG 8, net-vs-par before). A high-handicap player can post \
-horrifying gross numbers and win the thing — that contrast is a genuinely good story \
+horrifying gross numbers and win the thing. That contrast is a genuinely good story \
 when the gross really is dreadful, and it must never be written as though the champion \
 were secretly undeserving. The Green Jacket is the gross competition; keep the two \
 straight and never treat a gross figure as evidence about the Trophy.
 
-NARRATIVE PULL — the report is a magazine feature, not a results record. Beyond deploying \
+NARRATIVE PULL. The report is a magazine feature, not a results record. Beyond deploying \
 individual devices, the piece as a whole must make the reader want to keep reading. Raise a \
 question, a stake, or an apparent claim early, and let the reader work towards its resolution \
 or contradiction rather than stating the answer upfront and walking through it in order. Vary \
-pace — let some passages breathe, others land fast. If a stretch reads like a faithful account \
+pace. Let some passages breathe and others land fast. If a stretch reads like a faithful account \
 of what happened rather than something someone would choose to read, it needs more shape, not \
 more jokes.
 """
@@ -376,20 +380,20 @@ CRAFT:
 abstractions — the detail is what makes it sing.
 - VARY your language. Never lean on the same dramatic word twice — do not repeat \
 "disaster", "meltdown", "catastrophe" and the like; reach for fresh, precise phrasing.
-- Vary sentence rhythm; let a short sentence land a point. **Sentence-length discipline:** \
-no sentence should run past roughly 25 words — length is earned by a clean image, not \
-decoration. Where a thought needs room, split it into two sentences rather than let one \
-run on. The wit lands in something short and flat, not in an unfurling clause.
+- Vary sentence rhythm, and let a short sentence land a point. **Sentence-length \
+discipline:** average around 15 words, and no sentence past roughly 25. Where a thought \
+needs room, split it into two sentences rather than let one run on. The wit lands in \
+something short and flat, never in an unfurling clause.
 """
 
-_WRITER_ECONOMY = """ECONOMY — sentence- and paragraph-level mechanics. Write tight on the first pass; \
-these are construction rules, not a fix-up checklist. The bathos principle still holds: \
-long sentences that earn their length stay long. But length without earned facts or \
-images is bloat, and prose that drowns its own punchline is a bigger problem than prose \
-that lands it cleanly.
+_WRITER_ECONOMY = """ECONOMY. Sentence- and paragraph-level mechanics. Write tight on the first pass; \
+these are construction rules, not a fix-up checklist. There is no exception for a long \
+sentence that "earns its length". Prose that drowns its own punchline is the single most \
+common failure in past reports.
 
-1. **Em-dash discipline.** Two em-dashes per paragraph is the ceiling. If a third \
-wants in, refactor one aside into a separate sentence or strip it.
+1. **Em-dashes are banned outright.** Zero, in the entire report. This repeats the rule \
+from the voice section because it is the one most often broken. Every aside you would \
+have set off with an em-dash becomes its own sentence, or is cut.
 2. **Subordinate-clause budget.** Three+ subordinate clauses in one sentence are fine \
 ONLY when every clause carries a fact, image or beat. Otherwise split or trim.
 3. **No "particular kind of X / one of them" preambles.** Skip the wind-up and state \
@@ -403,7 +407,7 @@ vocabulary describing it.
 6. **Split run-on factual lists.** A sentence of 20+ words whose bulk is comma-separated \
 facts breaks at a sensible seam.
 7. **Two equal facts = two sentences.** When one sentence joins two equal-weight beats \
-with "—", "who", or a relative clause and each part would stand alone, split them. \
+with "who" or a relative clause and each part would stand alone, split them. \
 Test: would a full stop after the first part lose meaning? If not, use one.
 8. **One aside form per sentence.** Don't stack asides; only stack when the second \
 aside IS the joke.
@@ -411,10 +415,10 @@ aside IS the joke.
 better compressed: "quad, triple, double, double", not "quadruple-bogey 8, triple-bogey \
 7, double-bogey 6, double-bogey 6". In general prose, "double" and "triple" are \
 acceptable shorthand for double- and triple-bogey when context is clear (this is \
-shorthand, not redundancy — Principle 5 still governs whether to pair the term with par \
+shorthand, not redundancy. Principle 5 still governs whether to pair the term with par \
 and stroke count).
-10. **Punchline isolation.** Short payoff sentences — reversals, bathos kickers, the \
-number that lands — belong as their own paragraph. Attached to a long preceding \
+10. **Punchline isolation.** Short payoff sentences belong as their own paragraph. \
+Reversals, bathos kickers, the number that lands. Attached to a long preceding \
 sentence they get absorbed.
 11. **One dominant idea per paragraph.** A shift in subject, tone, or beat is a signal \
 to start a new paragraph. If a paragraph is doing too much, break it at the natural seam.

@@ -179,8 +179,16 @@ def test_verify_report_runs_against_a_real_report():
 
 
 def test_teg10_r3_arithmetic_error_is_fixed():
-    """The published error was corrected; guard against reintroduction."""
-    assert verify_report(10, round_num=3) == []
+    """The published error was corrected; guard against reintroduction.
+
+    Scoped to the arithmetic rule rather than asserting an empty findings list.
+    The blanket version broke when `no_em_dashes` was added on 2026-08-15: every
+    report generated before the em-dash ban trips it, which is the check working,
+    not the arithmetic regressing. Same pattern as the TEG 5 beat-id guard below.
+    """
+    findings = verify_report(10, round_num=3)
+    assert [f for f in findings if f.rule == "arithmetic_claims"] == []
+    assert [f for f in findings if f.severity == "error"] == []
 
 
 def test_teg5_beat_ids_are_stripped():

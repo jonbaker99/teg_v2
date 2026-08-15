@@ -14,6 +14,49 @@
 
 ## START HERE — picking this up in a new chat (2026-08-15)
 
+### Readability pass: em-dashes banned, humour dialled to 6, sentences capped (2026-08-15)
+
+Jon's verdict on the current reports: **"80% good, lacking a bit in humour, and a bit hard to read.
+Sentences run long and the constructs rapidly become hard work."** That settles the humour-dial
+question that had been blocking regeneration since 2026-08-10.
+
+**What changed in `VOICE_CORE`, so both pipelines get it:**
+
+- **Em-dashes banned outright.** Not a ceiling of two per paragraph, zero. This was the specific
+  construction Jon identified as driving the sprawl.
+- **Comic density specified**: five to seven landed moments, not two or three. This is the
+  `humour6` register from `scripts/humour_dial.py`, folded into the baseline voice.
+- **Sentence discipline moved to the top of the voice block** and made concrete: average ~15
+  words, hard stop around 25, one idea per sentence.
+
+**Why the old 25-word cap never worked.** It was contradicted twice: `ECONOMY` licensed
+*"long sentences that earn their length stay long"*, and the `ELEVATED (right)` exemplar — the
+clearest picture of the target the writer gets — was a single 40-word sentence. Measured output
+broke the cap 18–31% of the time. By contrast the em-dash *ceiling* (2/paragraph), which nothing
+contradicted, had **zero** violations across all four recent reports. Same prompt, same model:
+unambiguous rules are obeyed, contradicted ones are not. Both contradictions are now removed and
+the exemplar rewritten as five short sentences.
+
+**Enforcement, because a prompt rule alone was never going to hold it:** `verify.py` has a new
+`check_no_em_dashes` (warning severity), auto-run by `backfill.py` after every generation.
+`tests/test_reporting_prompts.py` asserts the style-setting blocks contain no em-dashes themselves,
+and that the worked exemplar obeys the sentence cap it sits above.
+
+**Scope call on the prompt's own punctuation:** `VOICE_CORE`, `NAMED_PRINCIPLES`, `_WRITER_AIM` and
+`_WRITER_ECONOMY` are now em-dash free, so the blocks that teach register don't model the thing they
+ban. The structural, palette and faithfulness blocks still contain them: they are procedural lists
+rather than prose the model imitates for style, and one test locates a block by the literal
+`"PALETTE —"`. Revisit if the ban doesn't hold in generated output.
+
+⚠️ **All published reports predate this and trip the new check** — 17 to 23 em-dashes each, ~120
+across the six checked. That is the backlog clearing on regeneration, not a new defect.
+
+**Untested end-to-end.** The `humour6` outputs on disk were produced by `restyle_voice` rewriting a
+*finished* report, not by generating cold with the dialled prompt — see `EXPERIMENTS.md` on what that
+method does and does not prove. **Next step is one from-scratch generation (~$0.65) and a read.**
+
+---
+
 ### Voice is now defined in ONE place — `prompts.py` (2026-08-15)
 
 **The voice work of 11–14 Aug never reached three of the four prompts that carry it.** All three

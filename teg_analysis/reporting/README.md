@@ -60,7 +60,7 @@ Turning the plan into text. Two rungs, and the cheaper one is where most iterati
 | # | Component | In → Out | Lives in | Restart from | Cost | Maturity |
 |---|---|---|---|---|---|---|
 | C1 | **Factual scaffold** — the dry draft's density and shape | plan + bundle → `dry_draft.md` | `DRY_DRAFT_SYSTEM_DETAILED` / `_LIGHT`, `dry_draft_style=` | frozen plan | ~$0.37 | **Works, A/B settled** (detailed wins). The contradicting dead alias was removed 2026-08-11 |
-| C2 | **Writing style / voice** | dry draft → finished prose | **`prompts.VOICE_CORE`** — shared by BOTH writers since 2026-08-15; `WRITER_VOICE` composes it with the tournament-only blocks | frozen dry draft + plan | ~$0.17 | **Works, validated across 17 reports — but the target level is an open decision** (humour dial, unsettled) |
+| C2 | **Writing style / voice** | dry draft → finished prose | **`prompts.VOICE_CORE`** — shared by BOTH writers since 2026-08-15; `WRITER_VOICE` composes it with the tournament-only blocks | frozen dry draft + plan | ~$0.17 | **Humour dial settled 2026-08-15** at `humour6` (5-7 comic landings), plus an outright em-dash ban and a ~15-word sentence average. **Not yet validated on a cold generation** — every report on disk predates it |
 
 ### Theme D — Assurance
 **In:** finished prose + the source data · **Out:** a report you can trust · **Cost per try:** free to ~$0.17
@@ -72,7 +72,7 @@ the audience is the players themselves, who spot any factual error.
 |---|---|---|---|---|---|---|
 | D1 | **Preventive rules** — instructions telling the writer not to fabricate | prompt → constrained prose | **`prompts.SHARED_FAITHFULNESS`** (shared with the round writer since 2026-08-15) + `WRITER_FAITHFULNESS` (tournament-only rules) | frozen dry draft + plan | ~$0.17 | **Built.** Still carries the 6 rules D3 now also checks — deliberate belt-and-braces; trim only once D3 has run on fresh generations |
 | D2 | **Deterministic guarantees** — facts code emits so prose can't get them wrong | data → injected blocks | `render.py` standings / records / at-a-glance | `_report_final.md` | **free** | **Works well.** The strongest assurance mechanism in the pipeline |
-| D3 | **Programmatic verification** — checking claims against the data after the fact | prose + data → findings | `verify.py` (7 checks), auto-run by `backfill.py` | `_report_final.md` | **free** | **Built 2026-08-11.** Independently re-found the TEG 10 R3 error and 41 reader-visible beat IDs in TEG 5 |
+| D3 | **Programmatic verification** — checking claims against the data after the fact | prose + data → findings | `verify.py` (8 checks), auto-run by `backfill.py` | `_report_final.md` | **free** | **Built 2026-08-11.** Independently re-found the TEG 10 R3 error and 41 reader-visible beat IDs in TEG 5 |
 
 > **The determinism boundary is a policy, not a component.** For each class of fact, it decides
 > whether code emits it (D2), the writer is trusted with it (D1), or the writer produces it and code
@@ -727,7 +727,7 @@ Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`t
 | `authoring.py` | Stage 4 + all writer/lint/tighten system prompts |
 | `round_report.py` | The per-round pipeline and its prompts |
 | `render.py` | Stage 5 — CSS hooks, standings, records block |
-| `verify.py` | **D3** — mechanical verification of a finished report against the data |
+| `verify.py` | **D3** — mechanical verification of a finished report against the data (8 checks, incl. the em-dash ban) |
 | `backfill.py` | Batch orchestration across TEGs |
 | `llm.py` | Thin Anthropic wrapper (key resolution + prompt caching) |
 

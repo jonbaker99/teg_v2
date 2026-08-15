@@ -143,6 +143,72 @@ def test_the_sweep_actually_sees_the_known_prompts():
         assert expected in found, f"prompt discovery missed {expected}"
 
 
+# ---------------------------------------------------------------------------
+# Em-dash ban + sentence discipline (Jon, 2026-08-15): long constructions were
+# the main readability complaint. The rule is only credible if the prompt does
+# not demonstrate the thing it bans, which is what killed the old 25-word cap.
+# ---------------------------------------------------------------------------
+STYLE_SETTING_BLOCKS = {
+    "prompts.VOICE_CORE": prompts.VOICE_CORE,
+    "prompts.NAMED_PRINCIPLES": prompts.NAMED_PRINCIPLES,
+    "authoring._WRITER_AIM": authoring._WRITER_AIM,
+    "authoring._WRITER_ECONOMY": authoring._WRITER_ECONOMY,
+}
+
+
+@pytest.mark.parametrize("name", sorted(STYLE_SETTING_BLOCKS))
+def test_style_setting_blocks_contain_no_em_dashes(name):
+    """The blocks that teach register must not model the punctuation they ban.
+
+    Scoped deliberately to the style-setting blocks. The structural and
+    faithfulness blocks are procedural lists rather than prose the model imitates,
+    and still contain em-dashes; see STATUS.md for that call.
+    """
+    assert "—" not in STYLE_SETTING_BLOCKS[name], (
+        f"{name} uses an em-dash while instructing the writer never to"
+    )
+
+
+@pytest.mark.parametrize("name", sorted(WRITER_PROMPTS))
+def test_both_writers_are_told_to_ban_em_dashes(name):
+    assert "NO EM-DASHES" in WRITER_PROMPTS[name]
+
+
+def test_the_worked_example_obeys_its_own_rules():
+    """The FLAT/ELEVATED pair is the clearest picture of the target the model gets.
+
+    The old ELEVATED example was a single 40-word sentence sitting above a rule
+    capping sentences at 25 words. The exemplar wins that argument every time, so
+    the cap was dead on arrival. It now demonstrates the rule instead.
+    """
+    import re
+    m = re.search(r'ELEVATED \(right\): "(.*?)"', WRITER_VOICE, re.S)
+    assert m, "the ELEVATED exemplar has gone missing"
+    example = re.sub(r"\s+", " ", m.group(1))
+    assert "—" not in example, "the exemplar uses a banned em-dash"
+    sentences = [s for s in re.split(r"(?<=[.!?]) ", example) if s.strip()]
+    longest = max(len(s.split()) for s in sentences)
+    assert longest <= 25, f"exemplar has a {longest}-word sentence; the rule caps at 25"
+
+
+def test_the_sentence_length_rule_is_not_contradicted():
+    """`ECONOMY` used to license exactly what `CRAFT` capped."""
+    assert "earn their length stay long" not in WRITER_VOICE
+    assert "no exception for a long" in WRITER_VOICE
+
+
+def test_comic_density_is_specified_not_left_to_taste():
+    """"Be funny" is not an instruction. The dial-up trial settled on 5-7."""
+    assert "COMIC DENSITY" in prompts.VOICE_CORE
+    assert "five to seven" in prompts.VOICE_CORE
+
+
+def test_em_dash_check_is_wired_into_verification():
+    """A prompt rule alone was never going to hold; D3 runs after every generation."""
+    from teg_analysis.reporting import verify
+    assert verify.check_no_em_dashes in verify.CHECKS
+
+
 @pytest.mark.parametrize("rule", [
     "countback",
     "drew level",

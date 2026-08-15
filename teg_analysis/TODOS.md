@@ -11,7 +11,8 @@ Full detail — including the report-by-report inventory and pipeline vintages �
 
 **Decisions (blocking — do these first):**
 
-- [ ] **Settle the humour dial** — a 3 / 6 / 8 / 8b A/B was run on TEGs 14 and 18; outputs are on disk, unpublished, **no verdict recorded**. Pick a level, fold it into `WRITER_SYSTEM`, log it in `reporting/EXPERIMENTS.md`. Blocks all regeneration.
+- [x] **Settle the humour dial** — done 2026-08-15. Jon's verdict: "lacking a bit in humour". `humour6` (5-7 comic landings) folded into `prompts.VOICE_CORE`, along with an outright em-dash ban and a ~15-word average sentence target. **Still needs one from-scratch generation to validate** — the dial variants on disk were rewrites of finished reports, not cold generations.
+- [ ] **Generate one TEG cold under the new voice and read it** (~$0.65) — validates humour6 + the em-dash ban end to end. Blocks the full regeneration.
 - [ ] **Decide whether round reports are wanted** — ~50 outstanding, ~$32. `RoundStoryPlan` is no longer a blocker (ported 2026-08-11); this is purely scope and cost now.
 
 **Then:**
