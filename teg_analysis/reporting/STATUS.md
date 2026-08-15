@@ -94,7 +94,7 @@ Two live workstreams. They are independent; either can be picked up first.
 | | Workstream | State | Doc |
 |---|---|---|---|
 | **A** | **Report quality** — data, vehicles, voice | Reworked end to end; 4 test TEGs regenerated and read well; **full library regeneration outstanding** | this file + [README.md](README.md) |
-| **B** | **Stop paying per API call** — run the same prompts through claude.ai plan usage instead of the Anthropic API | Not started; problem and constraints captured | [API_TO_PLAN_USAGE.md](API_TO_PLAN_USAGE.md) |
+| **B** | **Stop paying per API call** — run the same prompts through claude.ai plan usage instead of the Anthropic API | **Built 2026-08-15, not yet run on a real report.** Provider switch + mailbox hand-off + variants; plan usage is now the default | [README.md](README.md) → *Who answers the prompts* |
 
 ### What workstream A was trying to achieve
 
@@ -159,6 +159,35 @@ for the three failed attempts at that last rule and why each failed.
 - **Nothing is user-visible yet.** All regeneration ran `style=False`, so `*_report_styled.md` —
   what the site serves — still holds the older reports. A styling pass is free and deterministic.
 - Round reports (~50) were not touched and remain a pipeline generation behind.
+
+### Where workstream B got to (2026-08-15)
+
+Built, tested, **not yet run on a real report** — the round-trip is proven by tests and a manual
+CLI exercise, not by a generated TEG. Full detail in [README.md](README.md) → *Who answers the
+prompts*.
+
+- **`TEG_LLM_PROVIDER=api|agent` in `llm.py`, defaulting to `api`.** Plan usage is opt-in per run
+  (`--plan`), because it is the one mode that needs a responder present. Nothing else in the
+  pipeline changed: `backfill_all` and the four-call chain keep one implementation, which was the
+  main constraint on the design.
+- **`--paste NAME`** — one flag for the cross-model workflow: hand-off, variant directory, and the
+  run marked `manual` so the skill cannot answer prompts intended for ChatGPT or Gemini.
+- **Concurrent runs supported.** Runs are found by scanning `data/llm_mailbox/` (live PID, no
+  `FINISHED` marker) rather than a single `CURRENT` pointer, which a second run used to clobber.
+  Ambiguity is an error listing `--run <id>` options, never a guess.
+- **`mailbox.py`** — the file hand-off. The pipeline writes `request.md` and blocks; a Claude Code
+  skill (`.claude/skills/teg-report-respond/`) or a human answers it. `request.md` is
+  self-contained, so the same file pastes into ChatGPT or Gemini.
+- **Structured output survives without `messages.parse`**: the JSON Schema travels in the prompt,
+  Pydantic validates on the way back, and a failure is re-asked with the error attached (3
+  attempts). This is a net gain — the API path has no retry.
+- **`paths.py`** — `TEG_REPORT_VARIANT` redirects artefacts to `variants/<name>/` for model
+  comparisons, with `promote_variant` to pick a winner.
+- **CLI**: `python -m teg_analysis.reporting.backfill --tegs 2-18 [--provider api] [--variant gpt5]`.
+- 34 new tests; full suite **466 passed, 4 skipped**.
+
+**Open**: whether plan-usage output matches API output in quality. Run one report each way on the
+same TEG before committing the full 2–18 regeneration to either.
 
 ---
 

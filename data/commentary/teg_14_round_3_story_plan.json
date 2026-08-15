@@ -1,0 +1,87 @@
+{
+  "title": "The Williams Correction",
+  "title_candidates": [
+    "The Williams Correction",
+    "Best in Field: The Spoon Gap Blows Out",
+    "From Worst to First: Williams at Prince's",
+    "Thirteen Points Clear of Last"
+  ],
+  "theme": "Gregg Williams reversed from worst in field (R2, 27 pts) to best in field (R3, 39 pts) at Prince's, while Jon Baker's 28-point day — the round's worst — blew the Wooden Spoon gap from 2 to 13. Mullin survived a front-nine quadruple at H8 by going 10 holes clean on the back nine; Baker's 37 pts (edging Mullin by one) trimmed the Trophy lead from 9 to 8.",
+  "tone": "house",
+  "narrative_structure": "player_by_player",
+  "opening_hook": "Open with the Williams swing — from the field's worst round (R2, 27 pts) to its best (R3, 39 pts) — as the round's sharpest reversal. This sets up the wider theme: Prince's redistributed the misery, and the Wooden Spoon gap was the casualty.",
+  "foreshadow": [
+    "Mullin's quadruple at the par-5 8th leaves him with a front nine to forget — setting up whether he can arrest the damage before the Trophy lead narrows further.",
+    "Baker absorbs three consecutive double bogeys at H1-3 and then goes 6 clean holes from H4-9 — planting the possibility that his pattern from R1 and R2 might finally be broken before the par-4 10th intervenes."
+  ],
+  "competition_state": [
+    {
+      "name": "Trophy",
+      "leader_or_laggard": "David Mullin",
+      "score": 117.0,
+      "gap": 8.0,
+      "note": "Mullin's lead narrowed from 9 to 8 as Baker edged him by one point (37 vs 36). The Trophy is still Mullin's to lose but Baker gave the closest chase of the TEG so far."
+    },
+    {
+      "name": "Green Jacket",
+      "leader_or_laggard": "David Mullin",
+      "score": 49.0,
+      "gap": 12.0,
+      "note": "Jacket gap held at 12, but Williams's strong gross round (14 over par, best in field) lifted him above Jon Baker into second — reshuffling the standings without touching Mullin's lead."
+    },
+    {
+      "name": "Wooden Spoon",
+      "leader_or_laggard": "Jon Baker",
+      "score": 86.0,
+      "gap": 13.0,
+      "note": "The Spoon gap exploded from 2 to 13: Williams's 39-point bounce-back and Jon Baker's 28-point worst round of the TEG combined for an 11-point swing. Jon Baker is now firmly isolated in last."
+    }
+  ],
+  "key_beat_ids": [
+    "r3_b12",
+    "r3_b04",
+    "r3_b01",
+    "r3_b13",
+    "r3_b09",
+    "r3_b03",
+    "r3_b05",
+    "r3_b07"
+  ],
+  "players": [
+    {
+      "player": "Gregg Williams",
+      "arc": "Posted 39 Stableford points — best in the field — bouncing back from R2's 27 (worst in field); after a triple at H12 he ran 6 clean holes H13-18 to close, and his Wooden Spoon gap over Jon Baker widened from 2 to 13."
+    },
+    {
+      "player": "David Mullin",
+      "arc": "Absorbed a quadruple bogey at the par-5 8th on the front nine, then went 10 holes without dropping a net shot from H9-18 — closing with a birdie at H18 — to post 36 pts and hold his Trophy lead at 8."
+    },
+    {
+      "player": "Alex Baker",
+      "arc": "Three consecutive double bogeys at H1-3, then 6 clean holes H4-9, then a quadruple at the par-4 10th (one of the hardest, SI3) — yet still posted 37 pts, his best round of the TEG and the only player to outscore Mullin on the day."
+    },
+    {
+      "player": "Jon Baker",
+      "arc": "28 points — the worst round of the day — including a quad at the par-4 13th (the hardest hole, SI1) and a triple at H17 after three consecutive clean holes; the Wooden Spoon gap over Williams grew from 2 to 13."
+    }
+  ],
+  "venue_notes": "Prince's - Shore / Dunes at Sandwich, Kent — TEG's 2nd visit. The Shore and Dunes combination is considered the strongest routing at Prince's. Sitting adjacent to Royal St George's, it is a links of genuine pedigree. Its two hardest holes — H10 (SI3) and H13 (SI1) — both produced quadruples on the day, from Baker and Jon Baker respectively, illustrating what Prince's extracts from any lapse in concentration.",
+  "narrative_vehicles": [
+    "redemption_arc",
+    "tragic_arc"
+  ],
+  "prominent_vehicle": "redemption_arc",
+  "prominent_palette": "player_thread",
+  "payoffs": [
+    {
+      "seed": "Mullin's quadruple at the par-5 8th leaves him with a front nine to forget — setting up whether he can arrest the damage before the Trophy lead narrows further.",
+      "resolves_in": "Mullin's back nine — 10 holes without dropping a net shot, H9-18, closing with a birdie at H18.",
+      "payoff": "Mullin answered the front-nine damage with a flawless back nine, confirming that the quadruple at H8 was an interruption rather than a collapse."
+    },
+    {
+      "seed": "Baker absorbs three consecutive double bogeys at H1-3 and then goes 6 clean holes from H4-9 — planting the possibility that his pattern from R1 and R2 might finally be broken before the par-4 10th intervenes.",
+      "resolves_in": "Baker's quadruple bogey at the par-4 10th (SI3).",
+      "payoff": "The steady middle section did not represent a reformed Baker — the 10th arrived on cue to confirm the pattern was still very much intact, even if the overall scorecard (37 pts) read better than his prior rounds."
+    }
+  ]
+}

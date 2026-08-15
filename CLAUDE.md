@@ -49,7 +49,7 @@ TEG v2 is a golf tournament analysis project with two architectural layers: a le
 | Report/commentary pipeline | `teg_analysis/reporting/README.md` + `STATUS.md` |
 | **Picking up report work in a new chat** | `teg_analysis/reporting/STATUS.md` → **START HERE** (goals, what changed and why, open workstreams) |
 | How do I test/iterate on a report-pipeline element (voice, weights, structure)? | `teg_analysis/reporting/ARTEFACTS.md` |
-| Moving report generation off API billing onto claude.ai plan usage | `teg_analysis/reporting/API_TO_PLAN_USAGE.md` |
+| Running reports on plan usage vs API billing; model comparisons | `teg_analysis/reporting/README.md` → *Who answers the prompts* |
 | Streamlit internals (frozen) | `streamlit/README.md` |
 
 **Do not read or reference `to_do_jon.md`** unless explicitly asked. It is personal draft notes, not project documentation.
@@ -64,7 +64,15 @@ uvicorn webapp.app:app --reload      # run the webapp (the deployed app)
 pip install -r requirements.txt      # install deps
 python -m pytest tests/ -v           # run the test suite
 streamlit run streamlit/nav.py       # legacy Streamlit app — frozen, rarely needed
+
+# Reports. Default is the Anthropic API (bills per token).
+python -m teg_analysis.reporting.backfill --tegs 2-18
+python -m teg_analysis.reporting.backfill --tegs 14 --plan        # claude.ai plan usage
+python -m teg_analysis.reporting.backfill --tegs 14 --paste gpt5  # paste into another model
+python -m teg_analysis.reporting.mailbox status                   # prompts waiting
 ```
+
+> `--plan` and `--paste` hand each prompt off through `data/llm_mailbox` instead of calling the API; the `teg-report-respond` skill answers `--plan` runs, you answer `--paste` runs by hand. Both can run at once.
 
 > On the Claude-Code-on-the-web container, install pytest into the same interpreter as the deps: `pip install -r requirements.txt && pip install pytest`.
 
@@ -83,7 +91,7 @@ Two distinct phases. **Streamlit is the original architecture** — self-contain
 
 2. **`streamlit/`** — the original app, self-contained via its own `utils.py`. **Dead code kept for reference only**: not deployed, not maintained, not migrated, and nothing else in the repo depends on it. Slated for deletion. Never modify it, and don't use it as a model for new work.
 
-3. **`webapp/`** — FastAPI + HTMX + Jinja2 + Tailwind. Deployed on Railway from `main` via `railway.toml` → `uvicorn webapp.app:app`. `requirements.txt` is webapp-only (includes `pyarrow`). Needs `GITHUB_TOKEN` and a volume at `/mnt/data_repo`; `ANTHROPIC_API_KEY` for reports (`TEG_ANTHROPIC_API_KEY` is accepted as an alias), `GOOGLE_*` for data-update ingestion. **Report generation currently bills per API call, separately from any claude.ai plan** — moving it onto plan usage is an open workstream, see `teg_analysis/reporting/API_TO_PLAN_USAGE.md`.
+3. **`webapp/`** — FastAPI + HTMX + Jinja2 + Tailwind. Deployed on Railway from `main` via `railway.toml` → `uvicorn webapp.app:app`. `requirements.txt` is webapp-only (includes `pyarrow`). Needs `GITHUB_TOKEN` and a volume at `/mnt/data_repo`; `ANTHROPIC_API_KEY` for reports (`TEG_ANTHROPIC_API_KEY` is accepted as an alias), `GOOGLE_*` for data-update ingestion. The webapp only *reads* finished reports; it never generates them.
 
 4. **`ad_hoc_analysis/`** — Jupyter notebooks calling `teg_analysis/` directly. Start at `quickstart.ipynb`.
 

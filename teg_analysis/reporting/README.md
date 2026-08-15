@@ -632,6 +632,103 @@ style_report(teg)  # → teg_N_report_styled.md, ready for the UI
 - **Tone dial**: `tone=` input on `build_story_plan` (default `"house"` = `prompts.VOICE_CORE`). Plan echoes the resolved tone for the writer.
 - **Mode**: `balanced` / `fast` / `archive` — controls scoring weights (fast leans on importance; archive cranks rarity + entertainment).
 
+### Who answers the prompts — the API, a Claude Code session, or you
+
+Every model call goes through `llm.generate_text` / `llm.generate_structured`, and
+those dispatch on a **provider**. Three ways to run, one flag each:
+
+```bash
+# 1. API — the default. Unattended, bills per token.
+python -m teg_analysis.reporting.backfill --tegs 2-18
+
+# 2. Plan usage. Prompts hand off; a Claude Code session answers them.
+python -m teg_analysis.reporting.backfill --tegs 14 --plan
+#    …then in Claude Code, same directory:  /teg-report-respond
+
+# 3. Another model. Prompts hand off for you to paste; output kept separate.
+python -m teg_analysis.reporting.backfill --tegs 14 --paste gpt5
+```
+
+| Provider | Who answers | Costs | Set with |
+|---|---|---|---|
+| `api` (**default**) | the Anthropic API | per token | nothing; it's the default |
+| `agent` | a Claude Code session | nothing — claude.ai plan usage | `--plan` |
+| `agent`, manual | you, pasting into a browser tab | nothing | `--paste NAME` |
+
+**`api` stays the default because it is the only one that works with nobody
+present.** Plan usage needs a responder listening; a run that hands off into an
+empty room just waits. So it is opted into per run rather than inherited.
+
+`--paste NAME` is `--plan` plus two things: output goes to
+`data/commentary/variants/NAME/`, and the run is marked **manual** so the
+`teg-report-respond` skill will not touch it. Without that mark a Claude Code
+session would cheerfully answer the prompts you meant for ChatGPT, and the result
+would sit in a directory labelled as another model's work.
+
+The long way round — `TEG_LLM_PROVIDER=api|agent`, `--provider`, or
+`llm.use_provider("agent")` in a notebook — still works, and is what the flags set.
+
+The pipeline is *identical* under all three. `backfill_all`, the four-call
+tournament chain and the round pipeline have one implementation; only the call at
+the bottom differs.
+
+**How the hand-off works.** A Python process can't call claude.ai, so instead of an
+API call the pipeline writes the prompt to a file and blocks until an answer file
+appears — see `mailbox.py`. Whoever writes that answer is doing the inference. The
+chain sequences itself, because each call waits for the previous one. For a batch
+the skill spawns a subagent per prompt, so its context stays flat across ~68 calls.
+
+**Answering by hand.** `request.md` is self-contained — system prompt, user
+message, and for structured calls the full JSON Schema. The run prints the exact
+commands when it starts:
+
+```bash
+python -m teg_analysis.reporting.mailbox show --run <id>    # print the pending prompt
+python -m teg_analysis.reporting.mailbox answer <dir> --file reply.txt
+```
+
+**Two runs at once is supported** — plan usage in one window, a paste experiment in
+another. Runs are found by scanning `data/llm_mailbox/`, not by following a global
+pointer, so neither hides the other. A run is live while its recorded PID is alive
+and no `FINISHED` marker exists. When several are live the CLI asks which with
+`--run <id>` rather than guessing, because guessing here means one model answering
+another's prompts.
+
+**Structured output off the API.** The API path gets validation free from
+`messages.parse`. The agent path ships `model_json_schema()` in the prompt — enums
+and all, so a non-Anthropic model has the vocabulary — and validates with Pydantic
+on the way back in. A failure is re-asked with the exact validation error attached,
+up to `llm.MAX_STRUCTURED_ATTEMPTS` (3). A wrapping ```` ```json ```` fence is
+stripped rather than rejected, because chat models add one by reflex.
+
+**What the agent path loses.** Prompt caching is API-only — no cash cost on a plan,
+but a slower first token and more of the plan's budget per call. The model is *not
+pinned*: `model=` becomes advisory metadata, because the responding session answers
+with whatever model it is running (so the repetition lint, which deliberately uses
+Haiku on the API, gets a heavier model for free). Token counts come back `None`.
+
+### Comparing models — variants
+
+`TEG_REPORT_VARIANT=gpt5` (or `--variant gpt5`) redirects every artefact to
+`data/commentary/variants/gpt5/` instead of the canonical `data/commentary/`, so
+three models' output can sit side by side. Nothing reads a variant automatically —
+the webapp and `style_report` only ever see the canonical set.
+
+```python
+from teg_analysis.reporting.paths import promote_variant, list_variants
+list_variants()                      # ['gemini', 'gpt5']
+promote_variant("gpt5", 14)          # copy that one into data/commentary/
+```
+
+Each variant directory carries a `manifest.json` recording provider, requested
+model and timings — without it a variant folder is anonymous three weeks later.
+Variants are gitignored: promote the one you want and commit that.
+
+> **One deliberate exception to variant-awareness.** `tournament_shape.recent_vehicle_choices`
+> always reads canonical story plans, so a variant run sees the *same* history as
+> the canonical run. Otherwise a model comparison would be comparing different
+> prompts as well as different models.
+
 ### API key
 
 `ANTHROPIC_API_KEY` from the environment is the supported route; a gitignored
@@ -651,10 +748,11 @@ style_report(teg)  # → teg_N_report_styled.md, ready for the UI
 | Railway (webapp) | Service → Variables → add `ANTHROPIC_API_KEY` |
 | Claude Code on the web | The session container gets its variables from the **environment** config, not from this repo. Add `ANTHROPIC_API_KEY` to the environment's variables so it's present in every session; a key pasted into a chat only lasts that session and ends up in the transcript. |
 
-Report generation needs the key. Everything upstream of Stage 3 (beats, arcs, venue,
-history, records, rendering) is pure Python and runs without one — including
-`build_story_plan(teg, dry_run=True)`, which writes the assembled prompt to disk for
-inspection with no API call.
+**Only the `api` provider needs a key**, so a `--plan` or `--paste` run involves no
+key and no SDK at all. Everything upstream of Stage 3 (beats, arcs,
+venue, history, records, rendering) is pure Python and runs without either —
+including `build_story_plan(teg, dry_run=True)`, which writes the assembled prompt
+to disk for inspection with no call of any kind.
 
 ### Model selection
 
@@ -727,15 +825,18 @@ Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`t
 | `authoring.py` | Stage 4 + all writer/lint/tighten system prompts |
 | `round_report.py` | The per-round pipeline and its prompts |
 | `render.py` | Stage 5 — CSS hooks, standings, records block |
+| `verify.py` | **D3** — mechanical verification of a finished report against the data |
+| `backfill.py` | Batch orchestration across TEGs, plus the `--tegs` CLI |
+| `llm.py` | **The provider switch** — API (key resolution + prompt caching) or plan usage |
+| `mailbox.py` | The file hand-off that makes plan usage work, plus its CLI |
+| `paths.py` | Where artefacts are written; variant namespacing and promotion |
 | `verify.py` | **D3** — mechanical verification of a finished report against the data (8 checks, incl. the em-dash ban) |
 | `backfill.py` | Batch orchestration across TEGs |
 | `llm.py` | Thin Anthropic wrapper (key resolution + prompt caching) |
 
 **Companion docs:** [STATUS.md](STATUS.md) is the pick-up ledger and *is* the to-do list for this
-area — start there. [ARTEFACTS.md](ARTEFACTS.md) covers how to test and iterate on each element,
-[EXPERIMENTS.md](EXPERIMENTS.md) is the running experiment log, and
-[API_TO_PLAN_USAGE.md](API_TO_PLAN_USAGE.md) holds the open workstream on moving report generation
-off per-call API billing onto claude.ai plan usage.
+area — start there. [ARTEFACTS.md](ARTEFACTS.md) covers how to test and iterate on each element, and
+[EXPERIMENTS.md](EXPERIMENTS.md) is the running experiment log.
 
 Suggested reading order for a fresh session is in [ONBOARDING.md](ONBOARDING.md).
 

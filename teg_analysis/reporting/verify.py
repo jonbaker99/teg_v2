@@ -34,7 +34,7 @@ import re
 from dataclasses import dataclass, field
 from typing import Optional
 
-OUTPUT_DIR = "data/commentary"
+from teg_analysis.reporting.paths import output_dir
 
 # Words the tournament has no mechanism for. Every one of these traces to a real
 # fabrication incident, not a hypothetical.
@@ -371,7 +371,7 @@ def load_context(teg_num: int, text: Optional[str] = None,
 
     if text is None:
         infix = f"round_{round_num}_" if round_num else ""
-        path = f"{OUTPUT_DIR}/teg_{teg_num}_{infix}report_final.md"
+        path = f"{output_dir()}/teg_{teg_num}_{infix}report_final.md"
         try:
             text = read_text_file(path)
         except Exception:
@@ -427,13 +427,13 @@ def main(argv: Optional[list] = None) -> int:
 
     targets: list[tuple] = []
     if args.all or not args.tegs:
-        for path in sorted(glob.glob(f"{OUTPUT_DIR}/teg_*_report_final.md")):
+        for path in sorted(glob.glob(f"{output_dir()}/teg_*_report_final.md")):
             base = os.path.basename(path)
             m = re.match(r"teg_(\d+)_report_final\.md$", base)
             if m:
                 targets.append((int(m.group(1)), None))
         if args.rounds:
-            for path in sorted(glob.glob(f"{OUTPUT_DIR}/teg_*_round_*_report_final.md")):
+            for path in sorted(glob.glob(f"{output_dir()}/teg_*_round_*_report_final.md")):
                 m = re.match(r"teg_(\d+)_round_(\d+)_report_final\.md$",
                              os.path.basename(path))
                 if m:

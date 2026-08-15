@@ -84,6 +84,11 @@ def detect_close_finish(arcs: dict, trophy_metric: str) -> dict:
     }
 
 
+# NOTE: pinned to the canonical directory on purpose, and NOT variant-aware.
+# This reads prior TEGs' story plans so the editor can avoid repeating a recent
+# narrative vehicle. A variant run (TEG_REPORT_VARIANT) must see the SAME history
+# as the canonical run, or a model comparison is comparing different prompts as
+# well as different models.
 def recent_vehicle_choices(teg_num: int, n: int = 3, output_dir: str = "data/commentary") -> list[dict]:
     """Read the last `n` TEG story-plan JSON files (TEGs before this one) and
     return their `narrative_vehicles` picks. Surfaces "what got picked recently"

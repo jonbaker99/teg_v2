@@ -18,7 +18,7 @@ from typing import Optional, Tuple, Union
 from teg_analysis.reporting.story_plan import assemble_bundle, StoryPlan
 from teg_analysis.reporting import llm, prompts
 
-OUTPUT_DIR = "data/commentary"
+from teg_analysis.reporting.paths import output_dir
 
 
 DRY_DRAFT_SYSTEM_DETAILED = """You are producing a DRY STORYLINE DRAFT for a report on a TEG \
@@ -176,8 +176,9 @@ def generate_dry_draft(teg_num: int, plan: Union[StoryPlan, dict],
                                 events_cache=events_cache, venue_cache=venue_cache)
     user = _build_author_input(plan, bundle)
     text, usage = llm.generate_text(system, user,
-                                    model=model or llm.DEFAULT_MODEL, max_tokens=8000)
-    out_path = f"{OUTPUT_DIR}/teg_{teg_num}_dry_draft.md"
+                                    model=model or llm.DEFAULT_MODEL, max_tokens=8000,
+                                    stage="dry_draft", label=f"teg{teg_num}")
+    out_path = f"{output_dir()}/teg_{teg_num}_dry_draft.md"
     with open(out_path, "w") as f:
         f.write(text)
     return {"text": text, "usage": usage, "output_path": out_path}
@@ -597,17 +598,17 @@ structure, same headings, same length or slightly shorter.""")
 
 
 def load_story_plan(teg_num: int) -> dict:
-    with open(f"{OUTPUT_DIR}/teg_{teg_num}_story_plan.json") as f:
+    with open(f"{output_dir()}/teg_{teg_num}_story_plan.json") as f:
         return json.load(f)
 
 
 def load_dry_draft(teg_num: int) -> str:
-    with open(f"{OUTPUT_DIR}/teg_{teg_num}_dry_draft.md") as f:
+    with open(f"{output_dir()}/teg_{teg_num}_dry_draft.md") as f:
         return f.read()
 
 
 def _write(teg_num: int, label: str, text: str) -> str:
-    path = f"{OUTPUT_DIR}/teg_{teg_num}_report_{label}.md"
+    path = f"{output_dir()}/teg_{teg_num}_report_{label}.md"
     with open(path, "w") as f:
         f.write(text)
     return path
@@ -620,7 +621,8 @@ def report_single_pass(teg_num: int, plan: Union[StoryPlan, dict],
     bundle, _ = assemble_bundle(teg_num, mode=mode, tone=tone)
     user = _build_author_input(plan, bundle) + "\n\nWrite the finished report now."
     text, usage = llm.generate_text(WRITER_SYSTEM, user,
-                                    model=model or llm.DEFAULT_MODEL, max_tokens=16000)
+                                    model=model or llm.DEFAULT_MODEL, max_tokens=16000,
+                                    stage="report_single_pass", label=f"teg{teg_num}")
     return {"text": text, "usage": usage, "output_path": _write(teg_num, "B_single_pass", text)}
 
 
@@ -633,7 +635,8 @@ def report_around_draft(teg_num: int, plan: Union[StoryPlan, dict], dry_text: st
             + "\n\nRewrite this into the finished, entertaining report. Reshape structure "
               "and wording freely for engagement, but add NO new facts.")
     text, usage = llm.generate_text(WRITER_SYSTEM, user,
-                                    model=model or llm.DEFAULT_MODEL, max_tokens=16000)
+                                    model=model or llm.DEFAULT_MODEL, max_tokens=16000,
+                                    stage="report", label=f"teg{teg_num}")
     return {"text": text, "usage": usage, "output_path": _write(teg_num, "A_around_draft", text)}
 
 
@@ -644,12 +647,14 @@ def report_critique_revise(teg_num: int, plan: Union[StoryPlan, dict],
     bundle, _ = assemble_bundle(teg_num, mode=mode, tone=tone)
     draft_user = _build_author_input(plan, bundle) + "\n\nWrite the finished report now."
     draft, u1 = llm.generate_text(WRITER_SYSTEM, draft_user,
-                                  model=model or llm.DEFAULT_MODEL, max_tokens=16000)
+                                  model=model or llm.DEFAULT_MODEL, max_tokens=16000,
+                                  stage="report_draft", label=f"teg{teg_num}")
     revise_user = ("STORY PLAN:\n" + _plan_to_text(plan)
                    + "\n\nYOUR FIRST DRAFT:\n" + draft
                    + "\n\nRevise it per your instructions. Output only the improved report.")
     final, u2 = llm.generate_text(REVISE_SYSTEM, revise_user,
-                                  model=model or llm.DEFAULT_MODEL, max_tokens=16000)
+                                  model=model or llm.DEFAULT_MODEL, max_tokens=16000,
+                                  stage="report_revise", label=f"teg{teg_num}")
     return {"text": final, "draft": draft, "usage": (u1, u2),
             "output_path": _write(teg_num, "C_critique_revise", final)}
 
@@ -674,18 +679,24 @@ def _strip_beat_ids(text: str) -> str:
     return text
 
 
-def repetition_lint(text: str, model: str = "claude-haiku-4-5") -> Tuple[str, object]:
+def repetition_lint(text: str, model: str = "claude-haiku-4-5",
+                    label: str = "") -> Tuple[str, object]:
     """Narrow final pass: kill repeated/over-used words only. Returns (text, usage).
 
     Defaults to Haiku 4.5 — the lint is a mechanical copy-edit (no reasoning), so the
     cheap model is appropriate. `thinking=False` because Haiku doesn't support
     adaptive thinking. Pass `model=` to override.
 
+    Under the `agent` provider the model choice is advisory: the responding session
+    answers with whatever model it is running, so the lint costs nothing but is
+    done by a heavier model than it needs. `label` names the call in the mailbox.
+
     Also runs `_strip_beat_ids` after the LLM lint to mechanically remove any
     leaked beat-ID references (`b07`, `(cr01)`, etc.) that slipped through the
     writer prompt rule.
     """
-    linted, usage = llm.generate_text(LINT_SYSTEM, text, model=model, max_tokens=16000, thinking=False)
+    linted, usage = llm.generate_text(LINT_SYSTEM, text, model=model, max_tokens=16000,
+                                      thinking=False, stage="lint", label=label)
     return _strip_beat_ids(linted), usage
 
 
@@ -695,7 +706,8 @@ def tighten_prose(text: str, model: str = "claude-sonnet-4-6") -> Tuple[str, obj
     Returns (text, usage). Does not touch facts, voice, or structure.
     Defaults to Sonnet 4.6 — needs judgement to distinguish bathos from bloat.
     """
-    tightened, usage = llm.generate_text(TIGHTEN_SYSTEM, text, model=model, max_tokens=16000, thinking=False)
+    tightened, usage = llm.generate_text(TIGHTEN_SYSTEM, text, model=model, max_tokens=16000,
+                                         thinking=False, stage="tighten")
     return tightened, usage
 
 
@@ -797,7 +809,7 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
             "pick an experiment name such as 'drier' or 'warmer'")
 
     src_name = f"report_{source_label}" if source_label else "report_final"
-    source_path = f"{OUTPUT_DIR}/teg_{teg_num}_{src_name}.md"
+    source_path = f"{output_dir()}/teg_{teg_num}_{src_name}.md"
     if not os.path.exists(source_path):
         # Several TEGs have had their report_final.md consumed into variant
         # filenames by past experiments (TEGs 10, 11, 13, 14, 18 as of
@@ -805,7 +817,7 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
         # Listing the real alternatives is more useful than "not found".
         import glob
         import re as _re
-        prefix = f"{OUTPUT_DIR}/teg_{teg_num}_report_"
+        prefix = f"{output_dir()}/teg_{teg_num}_report_"
         available = sorted(
             _re.sub(r"\.md$", "", os.path.basename(p)[len(os.path.basename(prefix)):])
             for p in glob.glob(f"{prefix}*.md")
@@ -822,16 +834,17 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
               + WRITER_FAITHFULNESS + "\n" + WRITER_OUTPUT_RULE)
     text, usage = llm.generate_text(system, source_text,
                                     model=model or llm.DEFAULT_MODEL,
-                                    max_tokens=16000)
+                                    max_tokens=16000,
+                                    stage="restyle", label=f"teg{teg_num}")
     text = _strip_beat_ids(text)
 
-    output_path = f"{OUTPUT_DIR}/teg_{teg_num}_report_{label}.md"
+    output_path = f"{output_dir()}/teg_{teg_num}_report_{label}.md"
     with open(output_path, "w") as f:
         f.write(text)
 
     styled_path = None
     if style:
-        styled_path = f"{OUTPUT_DIR}/teg_{teg_num}_report_{label}_styled.md"
+        styled_path = f"{output_dir()}/teg_{teg_num}_report_{label}_styled.md"
         with open(styled_path, "w") as f:
             f.write(style_text(teg_num, text))
 
