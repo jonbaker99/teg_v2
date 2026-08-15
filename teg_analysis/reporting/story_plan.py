@@ -23,7 +23,7 @@ from teg_analysis.reporting.events import build_notable_events
 from teg_analysis.reporting.venue import build_venue_context
 from teg_analysis.reporting import llm
 
-OUTPUT_DIR = "data/commentary"
+from teg_analysis.reporting.paths import output_dir
 
 _ARC_KEY = {"trophy_win": "trophy", "jacket_win": "jacket", "wooden_spoon": "spoon"}
 
@@ -808,7 +808,7 @@ def build_story_plan(teg_num: int, mode: str = "balanced", tone: str = "house",
                     + json.dumps(bundle, indent=2, ensure_ascii=False))
 
     if dry_run:
-        path = f"{OUTPUT_DIR}/teg_{teg_num}_story_plan_prompt.md"
+        path = f"{output_dir()}/teg_{teg_num}_story_plan_prompt.md"
         with open(path, "w") as f:
             f.write("# SYSTEM PROMPT (cached)\n\n" + SYSTEM_PROMPT
                     + "\n\n---\n\n# USER MESSAGE\n\n" + user_message + "\n")
@@ -818,8 +818,9 @@ def build_story_plan(teg_num: int, mode: str = "balanced", tone: str = "house",
                 "competitions_in_arcs": sorted(bundle["competition_arcs"].keys())}
 
     plan, usage = llm.generate_structured(SYSTEM_PROMPT, user_message, StoryPlan,
-                                          model=model or llm.DEFAULT_MODEL)
-    out_path = f"{OUTPUT_DIR}/teg_{teg_num}_story_plan.json"
+                                          model=model or llm.DEFAULT_MODEL,
+                                          stage="story_plan", label=f"teg{teg_num}")
+    out_path = f"{output_dir()}/teg_{teg_num}_story_plan.json"
     with open(out_path, "w") as f:
         json.dump(plan.model_dump(), f, indent=2, ensure_ascii=False)
     # Combination-level checks the schema can't express (close-finish rule,

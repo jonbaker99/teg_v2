@@ -20,7 +20,7 @@ from teg_analysis.reporting.story_plan import StoryPlan
 from teg_analysis.reporting.venue import build_venue_context
 from teg_analysis.reporting.authoring import load_story_plan
 
-OUTPUT_DIR = "data/commentary"
+from teg_analysis.reporting.paths import output_dir
 
 
 # ---------------------------------------------------------------------------
@@ -589,8 +589,8 @@ def style_text(teg_num: int, text: str) -> str:
 
 def style_report(teg_num: int) -> str:
     """Read final report + saved plan + venue, write `..._report_styled.md`. Returns path."""
-    final_path = f"{OUTPUT_DIR}/teg_{teg_num}_report_final.md"
-    out_path = f"{OUTPUT_DIR}/teg_{teg_num}_report_styled.md"
+    final_path = f"{output_dir()}/teg_{teg_num}_report_final.md"
+    out_path = f"{output_dir()}/teg_{teg_num}_report_styled.md"
 
     with open(final_path) as f:
         text = f.read()
@@ -683,8 +683,8 @@ def style_round_report(teg_num: int, round_num: int) -> str:
 
     Idempotent: re-running on an already-styled file is a no-op.
     """
-    final_path = f"{OUTPUT_DIR}/teg_{teg_num}_round_{round_num}_report_final.md"
-    out_path = f"{OUTPUT_DIR}/teg_{teg_num}_round_{round_num}_report_styled.md"
+    final_path = f"{output_dir()}/teg_{teg_num}_round_{round_num}_report_final.md"
+    out_path = f"{output_dir()}/teg_{teg_num}_round_{round_num}_report_styled.md"
 
     with open(final_path) as f:
         text = f.read()

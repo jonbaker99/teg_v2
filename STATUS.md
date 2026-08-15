@@ -2,7 +2,7 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-08-11 (split out of `CLAUDE.md`; content current as at 2026-07-12)
+**Last updated:** 2026-08-15 (report generation can now run on claude.ai plan usage; earlier content current as at 2026-07-12)
 
 ## Where things stand
 
@@ -34,6 +34,24 @@ Design detail lives in docstrings in `analysis/live_round.py` and `webapp/README
 **Guided new-round wizard** (`teg_analysis/analysis/round_wizard.py`, `webapp/routes/admin_new_round.py`, templates `admin_new_round.html` / `admin_new_round_wizard.html`) — `/admin/new-round` (first in admin sub-nav) orchestrates round metadata → roster+handicaps → Par/SI → go live as one linear stepper. Stateless and resumable: each step saves via the existing tested functions and the current step is recomputed from data on every visit (`get_wizard_status`), so round 2/3/4 auto-skips confirmed roster and a half-finished setup resumes by revisiting the URL. Net-new piece is a round-metadata form (`get_round_metadata_form`/`save_round_metadata`) deriving `TEGRd`/`TEG`/`Area`/`Year`. Standalone pages remain reachable for edits. Detail: `webapp/README.md` → "New round (guided wizard)".
 
 ## Recent change log
+
+### 2026-08-15 — Report generation runs on plan usage by default
+
+Report generation no longer has to bill per API call. `llm.py` gained a provider switch —
+`TEG_LLM_PROVIDER=api|agent` — and **`agent` is the default**, so a run only spends API credit
+when asked to. Under `agent` the pipeline writes each prompt to `data/llm_mailbox/` and waits;
+a Claude Code skill (`teg-report-respond`) answers it in-session, which draws on claude.ai plan
+usage instead. The same request file is self-contained enough to paste into ChatGPT or Gemini,
+and `TEG_REPORT_VARIANT` keeps each model's output in its own directory for comparison.
+
+The pipeline itself is unchanged — `backfill_all` and the four-call chain have one
+implementation under either provider. Structured output, which the API path got free from
+`messages.parse`, now ships its JSON Schema in the prompt and validates with Pydantic on the way
+back, re-asking with the error on failure.
+
+New: `teg_analysis/reporting/mailbox.py`, `paths.py`, a `--tegs` CLI on `backfill`, and
+`.claude/skills/teg-report-respond/`. **Built and tested, not yet run on a real report.**
+Detail in `teg_analysis/reporting/README.md` → *Who answers the prompts*.
 
 ### 2026-07-09 → 07-10 — Codebase review remediation (complete)
 

@@ -127,8 +127,14 @@ Three practical consequences:
 
 ## How to test and iterate on each element
 
-One recipe per thing you might want to change. **Run everything from the repo root.** Anything
-costing money needs `ANTHROPIC_API_KEY`; the free ones need nothing.
+One recipe per thing you might want to change. **Run everything from the repo root.** The free ones
+need nothing at all.
+
+**The costs quoted below are API prices, and only apply when you run with
+`TEG_LLM_PROVIDER=api`** (which also needs `ANTHROPIC_API_KEY`). The default provider hands each
+prompt off to a Claude Code session or a browser tab instead, so it draws on claude.ai plan usage
+and the cash cost is zero — read the columns as *relative* expense in that case. See
+[README.md](README.md) → *Who answers the prompts*.
 
 **The rule that saves the most money:** never test a cheap change by re-running the expensive
 stages. Freeze what you aren't changing.

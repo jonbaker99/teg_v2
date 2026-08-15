@@ -30,7 +30,7 @@ from teg_analysis.reporting.story_plan import (
 )
 from teg_analysis.reporting import llm
 
-OUTPUT_DIR = "data/commentary"
+from teg_analysis.reporting.paths import output_dir
 
 
 # ---------------------------------------------------------------------------
@@ -567,15 +567,17 @@ def build_round_story_plan(teg_num: int, round_num: int, mode: str = "balanced",
             + json.dumps(bundle, indent=2, ensure_ascii=False))
 
     if dry_run:
-        path = f"{OUTPUT_DIR}/teg_{teg_num}_round_{round_num}_plan_prompt.md"
+        path = f"{output_dir()}/teg_{teg_num}_round_{round_num}_plan_prompt.md"
         with open(path, "w") as f:
             f.write("# SYSTEM PROMPT\n\n" + ROUND_PLAN_SYSTEM
                     + "\n\n---\n\n# USER MESSAGE\n\n" + user + "\n")
         return {"dry_run": True, "prompt_path": path, "n_beats": len(bundle["beats"])}
 
     plan, usage = llm.generate_structured(ROUND_PLAN_SYSTEM, user, RoundStoryPlan,
-                                          model=model or llm.DEFAULT_MODEL)
-    out_path = f"{OUTPUT_DIR}/teg_{teg_num}_round_{round_num}_story_plan.json"
+                                          model=model or llm.DEFAULT_MODEL,
+                                          stage="round_plan",
+                                          label=f"teg{teg_num}r{round_num}")
+    out_path = f"{output_dir()}/teg_{teg_num}_round_{round_num}_story_plan.json"
     with open(out_path, "w") as f:
         json.dump(plan.model_dump(), f, indent=2, ensure_ascii=False)
     return {"plan": plan, "usage": usage, "output_path": out_path}
@@ -602,8 +604,10 @@ def generate_round_dry_draft(teg_num: int, round_num: int,
         + json.dumps(bundle["round_venue"] or {}, indent=2, ensure_ascii=False)
     )
     text, usage = llm.generate_text(ROUND_DRY_DRAFT_SYSTEM, user,
-                                    model=model or llm.DEFAULT_MODEL, max_tokens=6000)
-    out_path = f"{OUTPUT_DIR}/teg_{teg_num}_round_{round_num}_dry_draft.md"
+                                    model=model or llm.DEFAULT_MODEL, max_tokens=6000,
+                                    stage="round_dry_draft",
+                                    label=f"teg{teg_num}r{round_num}")
+    out_path = f"{output_dir()}/teg_{teg_num}_round_{round_num}_dry_draft.md"
     with open(out_path, "w") as f:
         f.write(text)
     return {"text": text, "usage": usage, "output_path": out_path}
@@ -620,8 +624,10 @@ add voice, colour, foreshadowing, and reorder for narrative effect):\n"
         + dry_text
     )
     text, usage = llm.generate_text(ROUND_WRITER_SYSTEM, user,
-                                    model=model or llm.DEFAULT_MODEL, max_tokens=8000)
-    out_path = f"{OUTPUT_DIR}/teg_{teg_num}_round_{round_num}_report_A_around_draft.md"
+                                    model=model or llm.DEFAULT_MODEL, max_tokens=8000,
+                                    stage="round_report",
+                                    label=f"teg{teg_num}r{round_num}")
+    out_path = f"{output_dir()}/teg_{teg_num}_round_{round_num}_report_A_around_draft.md"
     with open(out_path, "w") as f:
         f.write(text)
     return {"text": text, "usage": usage, "output_path": out_path}
@@ -644,8 +650,8 @@ def generate_round_report(teg_num: int, round_num: int, mode: str = "balanced",
     dry = generate_round_dry_draft(teg_num, round_num, plan, mode=mode, tone=tone,
                                    events_cache=events_cache, venue_cache=venue_cache)
     around = report_round_around_draft(teg_num, round_num, plan, dry["text"])
-    linted, _ = repetition_lint(around["text"])
-    out_path = f"{OUTPUT_DIR}/teg_{teg_num}_round_{round_num}_report_final.md"
+    linted, _ = repetition_lint(around["text"], label=f"teg{teg_num}r{round_num}")
+    out_path = f"{output_dir()}/teg_{teg_num}_round_{round_num}_report_final.md"
     with open(out_path, "w") as f:
         f.write(linted)
     styled_path = style_round_report(teg_num, round_num)
