@@ -324,6 +324,20 @@ the live report is never at risk.
 Narrowing the scope adds a note telling the writer which plan fields it actually has, so it does not
 hunt for the missing ones and improvise. The structural requirements hold at every scope.
 
+**Full material without preset phrasing** — `bundle_context=True`, the third dial. Every story-plan
+field is editorial prose the writer can lift; `rounds[].angle` and `players[].arc` are already
+written sentences. The bundle is not: `venue`, `player_history`, `player_course_history`,
+`player_relationships` and `win_anatomy` are structured data. So:
+
+```python
+write_from_dry(17, PLAIN, "plain_rich", plan_scope="none", bundle_context=True)
+```
+
+gives the writer the competition resolutions and hole detail (from the dry draft, which already
+carries a full "HOW THE COMPETITIONS WERE DECIDED" section), plus venue character, cross-TEG career
+storylines and per-course history — and not one pre-written phrase. Deterministic, no extra LLM
+call, so it costs nothing beyond the tokens.
+
 **Step 3 — get a control.** Voice comparisons are worthless without one, because the writer re-rolls
 its structural execution on every call and some of what you see is sampling noise:
 

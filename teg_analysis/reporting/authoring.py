@@ -149,6 +149,28 @@ ARC_PLAN_FIELDS = ("title", "theme", "narrative_structure", "opening_hook",
 
 PLAN_SCOPES = ("full", "arc", "none")
 
+# The bundle keys that carry CONTEXT the dry draft does not: venue character
+# (architect, course type, TEG-visit counts), cross-TEG career storylines, and
+# per-course player history. Deliberately excludes `beats` and
+# `competition_arcs` — the dry draft is built from those and already renders
+# them flat, so re-sending them would turn this into `report_single_pass`.
+#
+# Unlike the story plan, every one of these is STRUCTURED DATA rather than
+# editorial prose. That is the whole point: it supplies material without
+# supplying phrasing the writer will lift.
+BUNDLE_CONTEXT_KEYS = ("venue", "player_history", "player_course_history",
+                       "player_relationships", "win_anatomy")
+
+
+def _bundle_context_text(teg_num: int) -> str:
+    """Assemble the structured context block. Deterministic; no LLM call."""
+    bundle, _ = assemble_bundle(teg_num)
+    payload = {k: bundle[k] for k in BUNDLE_CONTEXT_KEYS if k in bundle}
+    return ("CONTEXT (structured data, not prose — venue character, career and "
+            "per-course history, and the anatomy of the win. These are FACTS you "
+            "may use and colour you may draw on; the phrasing is entirely yours):\n"
+            + json.dumps(payload, indent=2, ensure_ascii=False) + "\n\n")
+
 
 def _plan_to_text(plan: Union[StoryPlan, dict], scope: str = "full") -> str:
     """Render the story plan for the writer, optionally narrowed to the arc.
@@ -725,7 +747,8 @@ def report_around_draft(teg_num: int, plan: Union[StoryPlan, dict], dry_text: st
                         model: Optional[str] = None, *,
                         voice: Optional[str] = None,
                         label: str = "A_around_draft",
-                        plan_scope: str = "full") -> dict:
+                        plan_scope: str = "full",
+                        bundle_context: bool = False) -> dict:
     """Approach A: build the entertaining report around the dry factual draft.
 
     This is stage 4b of the production chain AND the voice-experiment path.
@@ -745,11 +768,19 @@ def report_around_draft(teg_num: int, plan: Union[StoryPlan, dict], dry_text: st
             (production), `"arc"` (narrative vehicles and story-arc fields only
             — the dry draft supplies the facts), or `"none"` (dry draft alone,
             which isolates the voice from any structural steer).
+        bundle_context: append the structured venue / career-history /
+            win-anatomy block from the bundle (see `BUNDLE_CONTEXT_KEYS`). This
+            is how you give a variant the full material WITHOUT the plan's
+            pre-written phrasing: every plan field is editorial prose the writer
+            can lift, whereas these are data. Deterministic, no extra LLM call.
     """
     plan_block = ("STORY PLAN:\n" + _plan_to_text(plan, plan_scope) + "\n\n"
                   if plan_scope != "none" else "")
-    facts_source = "here or in the plan" if plan_scope == "full" else "in the draft below"
-    user = (plan_block
+    context_block = _bundle_context_text(teg_num) if bundle_context else ""
+    facts_source = ("here or in the plan" if plan_scope == "full"
+                    else "in the draft below or the context above" if context_block
+                    else "in the draft below")
+    user = (plan_block + context_block
             + "DRY FACTUAL DRAFT (accurate — every fact you may use is "
             + facts_source + "; add no others):\n" + dry_text
             + "\n\nRewrite this into the finished, entertaining report. Reshape structure "
@@ -1029,6 +1060,7 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
 # fold the winning voice into `WRITER_VOICE` and re-run the backfill.
 def write_from_dry(teg_num: int, voice: Optional[str], label: str, *,
                    plan_scope: str = "arc",
+                   bundle_context: bool = False,
                    model: Optional[str] = None,
                    lint: bool = True,
                    style: bool = True,
@@ -1046,6 +1078,9 @@ def write_from_dry(teg_num: int, voice: Optional[str], label: str, *,
             (default) adds the narrative vehicles and story-arc fields, so the
             report has a shape to follow; `"none"` sends the dry draft alone,
             isolating the voice completely; `"full"` matches production.
+        bundle_context: add the structured venue / career-history / win-anatomy
+            block. Pair with `plan_scope="none"` when you want the full material
+            with none of the plan's pre-written phrasing.
         lint: run the repetition lint, as the production chain does (default
             True, so the output is comparable with `report_styled.md`). Turn it
             off to see the writer's unmediated prose.
@@ -1061,7 +1096,8 @@ def write_from_dry(teg_num: int, voice: Optional[str], label: str, *,
     dry = load_dry_draft(teg_num)
 
     rpt = report_around_draft(teg_num, plan, dry, model=model,
-                              voice=voice, label=label, plan_scope=plan_scope)
+                              voice=voice, label=label, plan_scope=plan_scope,
+                              bundle_context=bundle_context)
     text, usage = rpt["text"], [rpt["usage"]]
 
     if lint:
@@ -1088,5 +1124,6 @@ def write_from_dry(teg_num: int, voice: Optional[str], label: str, *,
                 print(f"  {s}")
 
     return {"teg": teg_num, "label": label, "voice_is_house": voice is None,
-            "plan_scope": plan_scope, "output_path": rpt["output_path"],
+            "plan_scope": plan_scope, "bundle_context": bundle_context,
+            "output_path": rpt["output_path"],
             "styled_path": styled_path, "usage": usage, "findings": findings}

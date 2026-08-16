@@ -54,7 +54,10 @@ Nothing regenerates until a backfill runs, so no report on disk or on the site h
 `report_around_draft` — same function production calls, so an experiment cannot be true of the
 trial and false of the pipeline. `plan_scope` is the second dial: `"none"` (dry draft alone,
 isolating the voice), `"arc"` (default — narrative vehicles and story-arc fields only) or `"full"`
-(production). Recipe ⑥ in [ARTEFACTS.md](ARTEFACTS.md) is the walkthrough.
+(production). `bundle_context=True` is the third: it appends the structured venue / career-history /
+win-anatomy block, which is how a variant gets the full material without the plan's pre-written
+phrasing — every plan field is editorial prose, the bundle keys are data. Recipe ⑥ in
+[ARTEFACTS.md](ARTEFACTS.md) is the walkthrough.
 
 **Not promoted, and not the default.** Nothing in the chain calls `write_from_dry`; it refuses to
 write `report_final`, `report_styled` or `A_around_draft`. Promotion stays a deliberate act: paste
