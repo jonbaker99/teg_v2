@@ -116,14 +116,29 @@ separately because that's what they are.
   (mechanical verification, vs taste). Until 2026-08-11 that separation was conceptual only: voice
   and faithfulness lived in one 16k-character `WRITER_SYSTEM` literal, so every voice experiment
   edited the same string as the guardrails — one careless rewrite away from silently dropping a
-  faithfulness rule. They are now `WRITER_VOICE` and `WRITER_FAITHFULNESS`, concatenated at import:
+  faithfulness rule. They are now separate constants, concatenated at import.
+
+  **Since 2026-08-16 there are three slots, not two** — the middle one is swappable:
 
   ```python
-  WRITER_SYSTEM = WRITER_VOICE + "\n" + WRITER_FAITHFULNESS + "\n" + WRITER_OUTPUT_RULE
+  def build_writer_system(voice=None):
+      return "\n".join((WRITER_CONTRACT,            # what the report must BE
+                        voice or WRITER_VOICE,      # how it READS   <- swappable
+                        WRITER_FAITHFULNESS,        # what it must not do
+                        WRITER_OUTPUT_RULE))
+
+  WRITER_SYSTEM = build_writer_system()              # production passes no voice
   ```
 
-  The composed string is byte-identical to the literal it replaced (asserted in tests), so nothing
-  about generated output moved. Tune the humour dial by editing `WRITER_VOICE` alone.
+  The line between contract and voice is *"would this still be true if the report were written flat
+  and straight?"* — the winner's-story duty, the structure, the palette, the scoring-redundancy
+  notation and the SI guidance all survive that test and live in `WRITER_CONTRACT`; the comic
+  mechanisms, the mockery calibration and the sentence economy do not, and live in `WRITER_VOICE`.
+  A `voice=` argument **replaces** `WRITER_VOICE` wholesale — it is a complete register description,
+  not a delta — and cannot shed the contract or the guardrails. Asserted in tests.
+
+  Tune the humour dial by editing `WRITER_VOICE`; trial a register without editing anything via
+  `write_from_dry` ([ARTEFACTS.md](ARTEFACTS.md) recipe ⑥).
 - **Where the work is.** As of 2026-08-11 **D3, B3, A1's era leak and the model pin are all fixed**;
   see [STATUS.md](STATUS.md) → Known issues for the register. What remains is **A3** (weights
   measured, setting undecided) and **C2** (the humour dial) — both judgement calls, not defects —
@@ -538,6 +553,8 @@ This is the steerable artefact — for `archive` mode a human can edit the JSON 
 - *Scaffold*: the entertaining report (4b) is built around it, which bounds drift.
 
 **4b. Entertaining report** — `report_around_draft(teg, plan, dry_text)`. Rewrites the dry draft into the finished report in the house voice (`prompts.VOICE_CORE`). Because it can only use facts already in the validated draft, it stays faithfully grounded.
+
+Three opt-in keyword arguments make this the voice-experiment path as well as the production one, so a register tried here is tried on the real writer: `voice=` (a complete replacement register), `plan_scope=` (`"full"` / `"arc"` / `"none"` — how much of the story plan goes in with the draft) and `label=` (output filename stem). The defaults are production. `write_from_dry(teg, voice, label)` wraps it with the load/lint/style/verify ergonomics.
 
 (Two alternates exist for comparison — `report_single_pass` and `report_critique_revise` — see [STATUS.md](STATUS.md) for why they were rejected.)
 

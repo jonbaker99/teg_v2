@@ -270,11 +270,15 @@ def test_writer_is_told_to_celebrate_the_winner_and_calibrate_mockery():
     Grepped the whole writer prompt beforehand: every mention of winner or
     champion was a factual guard about "defending champion" claims. Nothing
     told the writer how to treat the person the report is about.
-    """
-    from teg_analysis.reporting.authoring import WRITER_VOICE
 
-    assert "winner's story" in WRITER_VOICE
-    assert "why_the_champion_won" in WRITER_VOICE
+    Split across the two slots on 2026-08-16. The duty owed to the winner is in
+    WRITER_CONTRACT, so it survives a voice swap; where the comedy points is in
+    WRITER_VOICE, because it only means anything for a comic register.
+    """
+    from teg_analysis.reporting.authoring import WRITER_CONTRACT, WRITER_VOICE
+
+    assert "winner's story" in WRITER_CONTRACT
+    assert "why_the_champion_won" in WRITER_CONTRACT
     for target in ("Wooden Spoon holder: hard", "rest of the field: moderate",
                    "runner-up: moderate", "champion: hard on the golf"):
         assert target in WRITER_VOICE, target
@@ -284,7 +288,7 @@ def test_writer_is_told_to_celebrate_the_winner_and_calibrate_mockery():
     # so the ONLY prohibition is withholding credit.
     assert "Praise the achievement, and be merciless about the golf." in WRITER_VOICE
     assert "Do NOT go easy on the champion's golf." in WRITER_VOICE
-    assert "WITHHOLDING THE CREDIT" in WRITER_VOICE
+    assert "WITHHOLDING THE CREDIT" in WRITER_CONTRACT
     # Delivery, not just permission: the same facts read as a charge sheet flat
     # and as affection when elevated. Jon's second refinement, 2026-08-14 --
     # "it's fine for him to be bad, but there should be some OTT / camp
@@ -292,9 +296,9 @@ def test_writer_is_told_to_celebrate_the_winner_and_calibrate_mockery():
     assert "the DELIVERY has to carry it" in WRITER_VOICE
     assert "FLAT (wrong)" in WRITER_VOICE and "ELEVATED (right)" in WRITER_VOICE
     # And volume still counts, independently of delivery.
-    assert "Proportion matters too." in WRITER_VOICE
+    assert "Proportion matters." in WRITER_CONTRACT
     # The gross/net confusion that libels high-handicap champions.
-    assert "A bad gross score is not a bad tournament." in WRITER_VOICE
+    assert "A bad gross score is not a bad tournament." in WRITER_CONTRACT
 
 
 def test_diverging_from_the_top_hint_is_not_a_warning():
@@ -444,19 +448,52 @@ def test_default_weights_reduce_the_blow_up_share():
 # C2 / D1 prompt separation
 # ---------------------------------------------------------------------------
 def test_writer_prompt_is_composed_from_separable_blocks():
-    """Voice (C2) and faithfulness (D1) are separate constants, not one literal.
+    """Contract, voice (C2) and faithfulness (D1) are separate constants.
 
     They still concatenate into one prompt — the split is so a voice experiment
     cannot accidentally edit a guardrail, which is exactly the risk of keeping
-    16k characters of both in a single string.
+    16k characters of all three in a single string.
     """
     from teg_analysis.reporting.authoring import (
-        WRITER_SYSTEM, WRITER_VOICE, WRITER_FAITHFULNESS, WRITER_OUTPUT_RULE)
-    assert WRITER_SYSTEM == WRITER_VOICE + "\n" + WRITER_FAITHFULNESS + "\n" + WRITER_OUTPUT_RULE
+        WRITER_SYSTEM, WRITER_CONTRACT, WRITER_VOICE, WRITER_FAITHFULNESS,
+        WRITER_OUTPUT_RULE, build_writer_system)
+    assert WRITER_SYSTEM == "\n".join(
+        (WRITER_CONTRACT, WRITER_VOICE, WRITER_FAITHFULNESS, WRITER_OUTPUT_RULE))
+    # The house voice is not privileged — it is just the default occupant of the
+    # middle slot, and passing none reproduces the production prompt exactly.
+    assert build_writer_system() == WRITER_SYSTEM
     # The blocks own distinct content.
     assert "VOICE:" in WRITER_VOICE and "FAITHFULNESS" not in WRITER_VOICE
+    assert "VOICE:" not in WRITER_CONTRACT
     assert WRITER_FAITHFULNESS.startswith("FAITHFULNESS (non-negotiable):")
     assert "countback" in WRITER_FAITHFULNESS
+
+
+def test_a_custom_voice_cannot_shed_the_contract_or_the_guardrails():
+    """The point of the third slot: a voice replaces the register, nothing else.
+
+    `voice=` takes a COMPLETE register description rather than a delta, so it
+    displaces `WRITER_VOICE` entirely. Everything a report owes the reader
+    regardless of register — the winner's-story duty, the structure, the closing
+    sections, the notation rules, the faithfulness absolutes — must survive that.
+    """
+    from teg_analysis.reporting.authoring import (
+        WRITER_CONTRACT, WRITER_VOICE, WRITER_FAITHFULNESS, build_writer_system)
+
+    system = build_writer_system("VOICE: a plain broadsheet match report. No jokes.")
+
+    assert WRITER_CONTRACT in system
+    assert WRITER_FAITHFULNESS in system
+    assert WRITER_VOICE not in system, "a custom voice must displace the house voice"
+    # Spot-check the specific duties, not just the block identity.
+    for duty in ("winner's story", "WITHHOLDING THE CREDIT",
+                 "A bad gross score is not a bad tournament.",
+                 "## Player-by-player summary", "How it was decided",
+                 "Avoid scoring redundancy"):
+        assert duty in system, duty
+    # And the house register is genuinely gone, not merely reordered.
+    for register in ("Mick Herron", "COMIC DENSITY", "subverted gravitas"):
+        assert register not in system, register
 
 
 def test_faithfulness_rules_that_trace_to_incidents_are_still_present():
@@ -479,8 +516,8 @@ def test_writer_reads_the_right_prominence_field_for_the_palette():
     The 2026-08-11 split made these two disjoint vocabularies, so reading the
     wrong one now yields a value that is not in the palette at all.
     """
-    from teg_analysis.reporting.authoring import WRITER_VOICE
-    palette_block = WRITER_VOICE[WRITER_VOICE.index("PALETTE —"):]
+    from teg_analysis.reporting.authoring import WRITER_CONTRACT
+    palette_block = WRITER_CONTRACT[WRITER_CONTRACT.index("PALETTE —"):]
     palette_block = palette_block[:palette_block.index("\n\n\n")] if "\n\n\n" in palette_block else palette_block
     head = palette_block[:1200]
     assert "prominent_palette" in head
@@ -513,6 +550,7 @@ def test_prompts_never_reference_a_plan_field_that_does_not_exist():
         known |= set(model.model_fields)
 
     prompts = {
+        "WRITER_CONTRACT": authoring.WRITER_CONTRACT,
         "WRITER_VOICE": authoring.WRITER_VOICE,
         "WRITER_FAITHFULNESS": authoring.WRITER_FAITHFULNESS,
         "DRY_DRAFT_SYSTEM_DETAILED": authoring.DRY_DRAFT_SYSTEM_DETAILED,

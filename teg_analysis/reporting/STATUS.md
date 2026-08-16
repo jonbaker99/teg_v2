@@ -12,6 +12,59 @@
 
 ---
 
+## START HERE — picking this up in a new chat (2026-08-16)
+
+### The writer prompt now has a swappable VOICE slot (2026-08-16)
+
+**Why:** trying a new register meant editing `WRITER_VOICE` in the source, running the writer, then
+editing it back. Five registers meant five source edits. Meanwhile `restyle_voice` — which only
+rewrites a *finished* report, the weaker test — took its voice as an argument. The ergonomics were
+backwards: the path that proves the pipeline reaches a voice was the awkward one.
+
+**What changed.** `WRITER_SYSTEM` went from two slots to three:
+
+```python
+build_writer_system(voice=None) -> WRITER_CONTRACT + (voice or WRITER_VOICE)
+                                   + WRITER_FAITHFULNESS + WRITER_OUTPUT_RULE
+```
+
+`WRITER_CONTRACT` is new and holds everything that is true of the report **whatever register it is
+written in**: the role, the winner's-story duty, the structure and palette, the scoring-redundancy
+notation, the SI guidance. `WRITER_VOICE` keeps only the register: `VOICE_CORE`, the comic aim, the
+named principles, the economy rules. A `voice=` argument **replaces** `WRITER_VOICE` — it is a
+complete register description, not a delta — and cannot shed the contract or the guardrails.
+
+**Two blocks were split to draw that line:**
+
+- The old `_WRITER_AIM` interleaved the duty owed to the champion (voice-independent) with where the
+  comedy points (voice-specific). Now `_WRITER_EDITORIAL` (contract) and `_WRITER_COMIC_AIM` (voice).
+- `NAMED_PRINCIPLES` principle 5, scoring redundancy, moved out to
+  `prompts.SCORING_REDUNDANCY_RULE`. It is a notation rule, not an aesthetic principle, and a
+  swappable block is the wrong home for something that must survive the swap. The round writer
+  carries it explicitly now.
+
+**Same content, one reordering.** Every substantive sentence of the old prompt survives; the diff is
+six deliberate rewordings (removing cross-references to the comic devices from blocks that are now
+voice-neutral) plus **STRUCTURE and STROKE_INDEX moving before the voice instead of after**, so the
+contract is contiguous and a swap is a single substitution. **The house prompt is therefore not
+byte-identical to its predecessor** — the earlier `WRITER_VOICE`/`WRITER_FAITHFULNESS` split was.
+Nothing regenerates until a backfill runs, so no report on disk or on the site has moved.
+
+**The lever:** `write_from_dry(teg, voice, label, plan_scope=...)`. Thin wrapper over
+`report_around_draft` — same function production calls, so an experiment cannot be true of the
+trial and false of the pipeline. `plan_scope` is the second dial: `"none"` (dry draft alone,
+isolating the voice), `"arc"` (default — narrative vehicles and story-arc fields only) or `"full"`
+(production). Recipe ⑥ in [ARTEFACTS.md](ARTEFACTS.md) is the walkthrough.
+
+**Not promoted, and not the default.** Nothing in the chain calls `write_from_dry`; it refuses to
+write `report_final`, `report_styled` or `A_around_draft`. Promotion stays a deliberate act: paste
+the winning voice into `WRITER_VOICE` and re-run the backfill.
+
+**Open:** no voice has been trialled through it yet. The house voice still needs the from-scratch
+validation the 2026-08-15 readability pass has been waiting on.
+
+---
+
 ## START HERE — picking this up in a new chat (2026-08-15)
 
 ### Readability pass: em-dashes banned, humour dialled to 6, sentences capped (2026-08-15)
@@ -327,7 +380,8 @@ regeneration clears. Nothing else is blocking. Test suite: 422 passed, 4 skipped
 | ✅ | 4b — entertaining report (around-draft) | `authoring.report_around_draft` |
 | ✅ | 4b — repetition lint | `authoring.repetition_lint` |
 | ⚠️ | 4c — tighten pass | `authoring.tighten_prose` — **built, not wired into `backfill.py`** (deliberate lever) |
-| ✅ | voice A/B lever | `authoring.restyle_voice` — rewrites a finished report's voice only; **not** in the default chain |
+| ✅ | voice A/B lever (rewrite) | `authoring.restyle_voice` — rewrites a finished report's voice only; **not** in the default chain |
+| ✅ | voice A/B lever (from scratch) | `authoring.write_from_dry` — runs the real writer over the frozen dry draft in a supplied voice; **not** in the default chain |
 | 🗑️ | 4d — history enrichment pass | **deleted 2026-08-11** — zero callers, duplicated `history_context` |
 | ✅ | D3 — programmatic verification | `verify.py` — 7 mechanical checks, auto-run by `backfill.py` |
 | ✅ | 5 — CSS-class styling renderer | `render.apply_styling` / `render.style_report` |
