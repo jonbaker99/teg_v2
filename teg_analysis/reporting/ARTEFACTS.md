@@ -335,8 +335,26 @@ write_from_dry(17, PLAIN, "plain_rich", plan_scope="none", bundle_context=True)
 
 gives the writer the competition resolutions and hole detail (from the dry draft, which already
 carries a full "HOW THE COMPETITIONS WERE DECIDED" section), plus venue character, cross-TEG career
-storylines and per-course history — and not one pre-written phrase. Deterministic, no extra LLM
-call, so it costs nothing beyond the tokens.
+storylines and per-course history. Deterministic, no extra LLM call, so it costs nothing beyond the
+tokens.
+
+**Strictly data-only** — `bundle_context="data"`. The block above still contains five
+sentence-valued fields: `summary_facts`, `notable_milestones`, `description`, `visit_str` and
+`area_visit`. Four are code-generated from templates and one is a human-written course blurb, so
+none is authorial in the way the story plan is — but they are readable phrasing. `"data"` drops all
+five, leaving names, dates, enums and numbers. On TEG 17 the block goes 20.3k → 13.6k characters and
+the longest remaining string is `"Praia D'El Rey Golf & Beach Resort"`.
+
+Two things to know before using it:
+
+- **Arithmetic moves onto the model.** `"Jon Baker was 15 shots better than his last visit"` becomes
+  `"strokes_vs_last_visit": -15`. Every comparison now has to be derived, against a faithfulness
+  rule demanding exact arithmetic. Read `findings` before reading the prose.
+- **"Defending champion" framing becomes unavailable.** `WRITER_FAITHFULNESS` allows it only when
+  `notable_milestones` says so explicitly, and forbids inferring it from rank history — so stripping
+  the field removes the framing along with the phrasing. It fails closed, which is right, but the
+  narrative fact goes too. Drop `"notable_milestones"` from `DERIVED_PROSE_FIELDS` if you want it
+  back.
 
 **Step 3 — get a control.** Voice comparisons are worthless without one, because the writer re-rolls
 its structural execution on every call and some of what you see is sampling noise:

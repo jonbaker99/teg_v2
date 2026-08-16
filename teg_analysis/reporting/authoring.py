@@ -161,15 +161,58 @@ PLAN_SCOPES = ("full", "arc", "none")
 BUNDLE_CONTEXT_KEYS = ("venue", "player_history", "player_course_history",
                        "player_relationships", "win_anatomy")
 
+# The only fields in those keys whose values are SENTENCES rather than names,
+# dates, enums or numbers. Four are code-generated from templates and one
+# (`description`) is a human-written course blurb. `bundle_context="data"`
+# drops all five, leaving a packet with no readable phrasing in it at all.
+#
+# Nothing factual is lost: every summary string is derived from numeric fields
+# that stay (`visit_n`, `n_prior_visits`, `prior_best_gross`, `prior_best_teg`,
+# `strokes_vs_last_visit`, `vs_runner_up`, …). What is lost is the arithmetic
+# being done for the model — see the docstring warning on `report_around_draft`.
+#
+# ONE NON-OBVIOUS CONSEQUENCE. `WRITER_FAITHFULNESS` permits "defending
+# champion" / "reigning holder" framing ONLY when a player's
+# `notable_milestones` says so explicitly, and forbids inferring it from rank
+# history. Stripping the field therefore makes that framing unavailable —
+# correctly (it fails closed), but the narrative fact goes with it, even though
+# `last_4_positions` still shows the win. If you want the framing, use
+# `bundle_context=True`, or drop "notable_milestones" from this tuple.
+DERIVED_PROSE_FIELDS = ("summary_facts", "notable_milestones", "description",
+                        "visit_str", "area_visit")
 
-def _bundle_context_text(teg_num: int) -> str:
+CONTEXT_STYLES = ("annotated", "data")
+
+
+def _strip_derived_prose(obj):
+    """Recursively drop the sentence-valued fields, keeping the raw data."""
+    if isinstance(obj, dict):
+        return {k: _strip_derived_prose(v) for k, v in obj.items()
+                if k not in DERIVED_PROSE_FIELDS}
+    if isinstance(obj, list):
+        return [_strip_derived_prose(v) for v in obj]
+    return obj
+
+
+def _bundle_context_text(teg_num: int, style: str = "annotated") -> str:
     """Assemble the structured context block. Deterministic; no LLM call."""
+    if style not in CONTEXT_STYLES:
+        raise ValueError(f"bundle_context style must be one of {CONTEXT_STYLES}, "
+                         f"got {style!r}")
     bundle, _ = assemble_bundle(teg_num)
     payload = {k: bundle[k] for k in BUNDLE_CONTEXT_KEYS if k in bundle}
-    return ("CONTEXT (structured data, not prose — venue character, career and "
-            "per-course history, and the anatomy of the win. These are FACTS you "
-            "may use and colour you may draw on; the phrasing is entirely yours):\n"
-            + json.dumps(payload, indent=2, ensure_ascii=False) + "\n\n")
+    if style == "data":
+        payload = _strip_derived_prose(payload)
+        note = ("CONTEXT (raw data — venue, career and per-course history, and the "
+                "anatomy of the win. Numbers and names only: no summary sentences "
+                "are provided, deliberately. Derive what you need and phrase all of "
+                "it yourself. Any comparison you state must follow exactly from "
+                "these figures; if the arithmetic is not clean, leave it out")
+    else:
+        note = ("CONTEXT (structured data, not prose — venue character, career and "
+                "per-course history, and the anatomy of the win. These are FACTS you "
+                "may use and colour you may draw on; the phrasing is entirely yours")
+    return note + "):\n" + json.dumps(payload, indent=2, ensure_ascii=False) + "\n\n"
 
 
 def _plan_to_text(plan: Union[StoryPlan, dict], scope: str = "full") -> str:
@@ -748,7 +791,7 @@ def report_around_draft(teg_num: int, plan: Union[StoryPlan, dict], dry_text: st
                         voice: Optional[str] = None,
                         label: str = "A_around_draft",
                         plan_scope: str = "full",
-                        bundle_context: bool = False) -> dict:
+                        bundle_context: Union[bool, str] = False) -> dict:
     """Approach A: build the entertaining report around the dry factual draft.
 
     This is stage 4b of the production chain AND the voice-experiment path.
@@ -773,10 +816,22 @@ def report_around_draft(teg_num: int, plan: Union[StoryPlan, dict], dry_text: st
             is how you give a variant the full material WITHOUT the plan's
             pre-written phrasing: every plan field is editorial prose the writer
             can lift, whereas these are data. Deterministic, no extra LLM call.
+
+            `True` (or `"annotated"`) sends the block as the bundle builds it,
+            including the code-generated summary sentences. `"data"` strips
+            every sentence-valued field (`DERIVED_PROSE_FIELDS`), leaving names,
+            dates, enums and numbers only.
+
+            **`"data"` moves arithmetic onto the model.** The stripped summaries
+            are where "11 shots worse than his last visit" is computed for it;
+            without them it derives comparisons itself, against a faithfulness
+            rule that demands exact arithmetic. Check `findings` on the output.
     """
     plan_block = ("STORY PLAN:\n" + _plan_to_text(plan, plan_scope) + "\n\n"
                   if plan_scope != "none" else "")
-    context_block = _bundle_context_text(teg_num) if bundle_context else ""
+    context_block = (_bundle_context_text(
+        teg_num, "annotated" if bundle_context is True else bundle_context)
+        if bundle_context else "")
     facts_source = ("here or in the plan" if plan_scope == "full"
                     else "in the draft below or the context above" if context_block
                     else "in the draft below")
@@ -1060,7 +1115,7 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
 # fold the winning voice into `WRITER_VOICE` and re-run the backfill.
 def write_from_dry(teg_num: int, voice: Optional[str], label: str, *,
                    plan_scope: str = "arc",
-                   bundle_context: bool = False,
+                   bundle_context: Union[bool, str] = False,
                    model: Optional[str] = None,
                    lint: bool = True,
                    style: bool = True,
@@ -1080,7 +1135,9 @@ def write_from_dry(teg_num: int, voice: Optional[str], label: str, *,
             isolating the voice completely; `"full"` matches production.
         bundle_context: add the structured venue / career-history / win-anatomy
             block. Pair with `plan_scope="none"` when you want the full material
-            with none of the plan's pre-written phrasing.
+            with none of the plan's pre-written phrasing. Pass `"data"` instead
+            of `True` for a packet with no sentences in it at all — see the
+            arithmetic warning on `report_around_draft`.
         lint: run the repetition lint, as the production chain does (default
             True, so the output is comparable with `report_styled.md`). Turn it
             off to see the writer's unmediated prose.

@@ -554,7 +554,7 @@ This is the steerable artefact — for `archive` mode a human can edit the JSON 
 
 **4b. Entertaining report** — `report_around_draft(teg, plan, dry_text)`. Rewrites the dry draft into the finished report in the house voice (`prompts.VOICE_CORE`). Because it can only use facts already in the validated draft, it stays faithfully grounded.
 
-Four opt-in keyword arguments make this the voice-experiment path as well as the production one, so a register tried here is tried on the real writer: `voice=` (a complete replacement register), `plan_scope=` (`"full"` / `"arc"` / `"none"` — how much of the story plan goes in with the draft), `bundle_context=` (append the structured venue / career-history / win-anatomy block — material without the plan's pre-written phrasing) and `label=` (output filename stem). The defaults are production. `write_from_dry(teg, voice, label)` wraps it with the load/lint/style/verify ergonomics.
+Four opt-in keyword arguments make this the voice-experiment path as well as the production one, so a register tried here is tried on the real writer: `voice=` (a complete replacement register), `plan_scope=` (`"full"` / `"arc"` / `"none"` — how much of the story plan goes in with the draft), `bundle_context=` (append the structured venue / career-history / win-anatomy block — material without the plan's pre-written phrasing; `"data"` instead of `True` strips the code-generated summary sentences too) and `label=` (output filename stem). The defaults are production. `write_from_dry(teg, voice, label)` wraps it with the load/lint/style/verify ergonomics.
 
 (Two alternates exist for comparison — `report_single_pass` and `report_critique_revise` — see [STATUS.md](STATUS.md) for why they were rejected.)
 
