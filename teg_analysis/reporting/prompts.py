@@ -177,49 +177,45 @@ is. Not by comparing it to something bigger. By describing THIS thing with more 
 consequence and more finality than five men on a golf holiday could possibly warrant. You are \
 not reaching for something grand. You are inflating what is in front of you.
 
-**THE THREE THINGS YOU INFLATE.**
+**THE THREE THINGS YOU INFLATE.** Every tournament offers at least one. Work out which is \
+biggest here, and put it up front.
 
-- **The achievement.** A win, a record, a personal best, a drought ended. Make it monumental. \
-Not "a good week", a demonstration of something.
-- **The drama.** A lead changing hands, a margin closing, a collapse under way. Make it \
-unbearable while it is happening.
-- **The defeat.** The Spoon, the blow-up, the chance missed. Make it final. Not a bad day, a \
-condition.
+**1. The achievement.** A win, a record, a personal best, a drought ended. Inflating it means:
 
-**HOW YOU INFLATE.** All of these work on the subject itself:
+- the result is presented as settled and inevitable rather than merely achieved
+- the margin is treated as meaningful evidence, not an incidental number
+- it is given permanence, so it alters the player's standing rather than just this week
+- the reader finishes in no doubt that this was the largest thing that happened
 
-- **Promote a result into a status.** He did not come last. He holds an office, a title, a post \
-with duties attached.
-- **Give an ordinary act consequence out of all proportion.** A par becomes a decision. A \
-concession becomes a policy.
-- **Use finality.** Never again, for the last time, permanently, henceforth, and that was that.
-- **Attribute intent to what was plainly luck or panic.** He meant it. He had reasons. He has \
-never explained them.
-- **Treat a number as though it settles a question** rather than merely reports one.
-- **Formalise it.** A result becomes a verdict, a finding, a ruling, a diagnosis, a matter of \
-record.
+**2. The drama.** A lead changing hands, a margin closing, a collapse under way. Inflating it \
+means:
 
-**THREE WORKED EXAMPLES, ONE PER THING.** Note that none of them contains a comparison.
+- the moment is slowed down and given room, while everything around it stays brisk
+- the turning point is located exactly, at a named hole in a named round
+- the outcome is made to feel genuinely in doubt at the time, even though the reader knows it
+- the consequences are stated as though they were large
 
-    ACHIEVEMENT
-    STATED:  "Baker won the Trophy by 18 and the Jacket by 13."
-    HAMMED:  "Baker won the Trophy by eighteen. He won the Jacket by thirteen. There is no
-              third competition, or he would have won that as well. This was not a tournament.
-              It was a demonstration, staged over four days, for an audience of four men who
-              had paid to attend."
+**3. The defeat.** The Spoon, the blow-up, the chance missed. Inflating it means:
 
-    DEFEAT
-    STATED:  "Williams took his second Wooden Spoon."
-    HAMMED:  "Williams took the Spoon for the second time. He is no longer a man who
-              occasionally finishes last. He is the incumbent. At some point there should
-              probably be a handover."
+- the failure is presented as a condition rather than an incident
+- it is given continuity, as part of a pattern rather than a bad afternoon
+- it is treated with complete seriousness and never with pity
+- the player's relationship to failure becomes a standing, not a result
 
-    DRAMA
-    STATED:  "Baker led by seven at the 8th in round four, and lost."
-    HAMMED:  "Baker stood on the 8th tee in round four with a seven-shot lead and eleven holes
-              left. He would not lead again. What followed was not a collapse, because a
-              collapse is sudden. This was a managed withdrawal, conducted over two hours,
-              with full documentation."
+**WAYS TO INFLATE.** All of these operate on the subject itself. They are operations, not \
+phrasings; choose the wording in the voice you have been given.
+
+- Promote a result into a status, a title or a position with duties attached.
+- Give an ordinary act consequences out of all proportion to it.
+- Treat the outcome as permanent rather than as one week's finishing order.
+- Attribute intent and deliberation to what was plainly luck, panic or exhaustion.
+- Present a number as settling a question rather than reporting one.
+- Formalise it, so a result becomes a finding, a ruling, a diagnosis or a matter of record.
+- Sustain it. An inflation stated once is an aside; returned to, it becomes the spine.
+
+**A NOTE ON THE EXAMPLES ABOVE: there are none, deliberately.** Any specimen sentence would \
+demonstrate a register as well as a technique, and you would copy both. The register is \
+set by the voice you were given, not by this block. Apply the operations above in whatever voice you have been given.
 
 **COMPARISONS: allowed, never automatic.** Reaching outside for a parallel is a perfectly good \
 way to inflate, and when the material genuinely invites one it can be the best line in the \
@@ -240,8 +236,14 @@ where to look, and there is always at least one. What you must not do is manufac
 draped over nothing reads as a writer straining rather than a subject deserving.
 
 *Hammed* is about the delivery, and it is the more common failure. Having found the angle, \
-COMMIT. Half-hamming is worse than not hamming: it spends the material and lands nothing. Every \
-STATED line above is accurate, publishable and dead.
+COMMIT. Half-hamming is worse than not hamming, because it spends the material and lands \
+nothing. You have under-hammed if:
+
+- the passage would sit comfortably in a results summary
+- the fact is stated once and then left alone
+- the register drops back to neutral in the very next sentence
+- a reader could not tell from the prose whether this was the biggest thing in the report or \
+the fifth biggest
 
 **WHAT TO HAM, AXIS ONE: how did this tournament finish?** Read it off `win_anatomy` and \
 `tournament_shape`. These fields classify it already; do not guess.

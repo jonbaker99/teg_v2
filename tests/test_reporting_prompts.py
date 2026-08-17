@@ -313,11 +313,13 @@ def test_the_occasion_device_demands_both_hammable_and_hammed():
     """
     block = prompts.ELEVATION_DEVICE
     assert "HAMMABLE" in block and "HAMMED" in block
-    assert block.count("STATED:") == 3, "one worked pair per thing being inflated"
-    assert block.count("HAMMED:") == 3
     # The hammable half must warn against manufacturing an angle, or it reads
     # as pure encouragement and every report opens with something strained.
     assert "manufacture" in block
+    # The hammed half is diagnostic rather than exemplary: a specimen sentence
+    # would demonstrate a register as well as a technique, and the register is
+    # supplied by the voice, not by this block. See the test below.
+    assert "You have under-hammed if" in block
 
 
 def test_the_occasion_device_is_about_inflation_not_parallels():
@@ -332,7 +334,7 @@ def test_the_occasion_device_is_about_inflation_not_parallels():
     """
     block = prompts.ELEVATION_DEVICE
 
-    # The three things being inflated are named, each with a worked example.
+    # The three things being inflated are named, each unpacked in bullets.
     for thing in ("The achievement.", "The drama.", "The defeat."):
         assert thing in block, thing
     assert "not a template" in block
@@ -399,3 +401,33 @@ def test_the_two_writer_entry_points_default_the_same_way():
     from teg_analysis.reporting import authoring
     for fn in (authoring.report_around_draft, authoring.write_from_dry):
         assert inspect.signature(fn).parameters["plan_scope"].default == "full", fn.__name__
+
+
+def test_the_occasion_device_shows_no_specimen_prose():
+    """Jon, 2026-08-17: the worked examples were "far too style specific".
+
+    A specimen sentence teaches a register as well as a technique, and the
+    model copies both. In this pipeline the register arrives separately, as a
+    `voice=` argument or a style brief, so any example here actively fights the
+    thing the block is embedded in. The technique is taught as operations in
+    bullets instead, and the block says out loud why there are no examples.
+
+    The one quotation that remains is the Bristow line, which is confined to the
+    comparisons warning and labelled there as an illustration of attitude rather
+    than a template.
+    """
+    block = prompts.ELEVATION_DEVICE
+
+    assert "there are none, deliberately" in block
+    for exemplar_marker in ("STATED:", "HAMMED:", "STATED (wrong)", "HAMMED (right)"):
+        assert exemplar_marker not in block, exemplar_marker
+
+    # Bristow survives only inside the comparisons warning.
+    assert block.count("Bristow") == 1
+    warning = block[block.index("**COMPARISONS"):]
+    assert "Bristow" in warning
+
+    # Operations, not phrasings. The old version listed literal words to use
+    # ("Never again, for the last time, permanently, henceforth").
+    assert "They are operations, not" in block
+    assert "henceforth" not in block
