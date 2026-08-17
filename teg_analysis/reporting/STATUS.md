@@ -2,17 +2,55 @@
 
 **Pick-up ledger.** Read this first when resuming work in a fresh session. The how-it-works architecture is in [README.md](README.md); **how to test and iterate on each element is in [ARTEFACTS.md](ARTEFACTS.md)**; the running experiment log is in [EXPERIMENTS.md](EXPERIMENTS.md).
 
-> **Last verified against the codebase: 2026-08-11.** Substantial pipeline work landed that day:
-> the D3 verification layer, the shared-vocabulary schema fix, the era-leak fix, the arc-payload
-> weighting, the `long_lead_lost` detector and the model pin — see
-> [Known issues](#known-issues) for the register. Note that `data/commentary/` was only added to
+> **Last verified against the codebase: 2026-08-17** — docs reconciled against the code, the artefacts
+> on disk, a full test run and a full `verify --all --rounds` run. Everything below the START HERE
+> block is the older ledger and had drifted; the corrections are in
+> [Doc reconciliation](#doc-reconciliation-2026-08-17). Note that `data/commentary/` was only added to
 > git in the June 2026 merge, so **git dates tell you nothing about when a report was generated**
 > — use the story-plan schema fingerprint in
-> [Report inventory](#report-inventory-what-actually-exists) instead.
+> [Report inventory](#report-inventory--what-actually-exists) instead.
 
 ---
 
-## START HERE — picking this up in a new chat (2026-08-16)
+## START HERE — picking this up in a new chat (2026-08-17)
+
+### Doc reconciliation (2026-08-17)
+
+No pipeline change. The reporting docs were checked against the code and the artefacts and corrected;
+**four of the corrections change what you would do next**, so they are here rather than only in a diff:
+
+- **The library is no longer three vintages, and no longer has fixture gaps.** All 17 TEGs have the
+  complete artefact chain (plan, dry draft, final, styled) and all 17 carry `narrative_vehicles` +
+  `payoffs`. The old "regenerate TEGs 2–8, 15, 16 and 9" item and known issue 14 (TEG 14's broken
+  fixture chain) were both already done and are now closed.
+- **D3 is clean on every tournament report.** `verify --all --rounds` reports **0 errors across all 17
+  tournaments**; the 81-fault backlog (known issue 17) cleared on the 2026-08-13 regeneration. The
+  only errors left are **4, all in round reports** (TEG 9 R1/R4, TEG 10 R4). The 566 warnings are all
+  `no_em_dashes` and clear on regeneration.
+- **The round pipeline is not "a generation behind" any more** — the *code* is level (schema ported
+  2026-08-11, shared voice 2026-08-15). It is the 18 **published** round reports that are two
+  generations behind, and none of the code changes has ever been run.
+- **`TIGHTEN_SYSTEM` was missed by the em-dash decision** — new known issue 19. It still sets a
+  two-per-paragraph em-dash ceiling and still licenses long sentences, the exact two contradictions
+  removed from `_WRITER_ECONOMY`. Nothing calls it, so nothing is broken today.
+
+⚠️ **And the one to act on: none of the regenerated prose has reached a reader.** `style=False` on the
+2026-08-13 run was deliberate, but the consequence was never measured. Measured now: **16 of 17
+`*_report_styled.md` files — everything except TEG 14 — do not match their own `report_final.md`.** The
+titles alone give it away (TEG 17 final: *"Eighty-Six on Seve's Last Design"*; TEG 17 styled, which is
+what the site serves: *"The Coronation at Óbidos"*). So the entire library regeneration, the era-leak
+fix in TEGs 5–7, and the 81 cleared wording faults are all invisible on the site. `style_report(teg)` is
+free, deterministic and idempotent — see [next steps](#next-steps--ranked-to-do-list) step 2 for why it
+is bundled with the regeneration rather than run now.
+
+Also corrected, without changing any decision: several files still described D3 as unbuilt, `verify.py`
+was recorded as 7 checks in two places (it is 8), the `agent` provider was still called the default in
+the skill doc and in `llm.get_provider`'s docstring, and the round-report count was 17 (it is 18).
+
+Test suite at the time of writing: **520 passed, 20 skipped** (skip count is environment-dependent —
+no API key and no network in this container).
+
+---
 
 ### The writer prompt now has a swappable VOICE slot (2026-08-16)
 
@@ -68,8 +106,6 @@ validation the 2026-08-15 readability pass has been waiting on.
 
 ---
 
-## START HERE — picking this up in a new chat (2026-08-15)
-
 ### Readability pass: em-dashes banned, humour dialled to 6, sentences capped (2026-08-15)
 
 Jon's verdict on the current reports: **"80% good, lacking a bit in humour, and a bit hard to read.
@@ -104,8 +140,11 @@ ban. The structural, palette and faithfulness blocks still contain them: they ar
 rather than prose the model imitates for style, and one test locates a block by the literal
 `"PALETTE —"`. Revisit if the ban doesn't hold in generated output.
 
-⚠️ **All published reports predate this and trip the new check** — 17 to 23 em-dashes each, ~120
-across the six checked. That is the backlog clearing on regeneration, not a new defect.
+⚠️ **All published reports predate this and trip the new check.** Measured across the whole library
+2026-08-17: **566 `no_em_dashes` warnings**, every tournament and round report affected, 10 to 40 each
+(TEG 14 is the worst at 40). That is the backlog clearing on regeneration, not a new defect — and it
+doubles as the acceptance test for the regeneration, since a report generated under the ban should
+report zero.
 
 **Untested end-to-end.** The `humour6` outputs on disk were produced by `restyle_voice` rewriting a
 *finished* report, not by generating cold with the dialled prompt — see `EXPERIMENTS.md` on what that
@@ -137,7 +176,7 @@ if the editor-facing summary drifts from the writer-facing voice.
 | **Round writer** | **Real change** — adopts the four humour mechanisms in place of its pre-Herron formulation |
 | Round editor | Same summary as the tournament editor |
 
-⚠️ **The 17 published round reports are now doubly stale** — they were already pre-H1/H3 vintage, and
+⚠️ **The 18 published round reports are now doubly stale** — they were already pre-H1/H3 vintage, and
 the round voice has now moved as well. Regenerating them is untouched and uncosted.
 
 **One deliberate omission:** `NARRATIVE PULL` stays tournament-only. It is voice-adjacent craft
@@ -150,7 +189,7 @@ Two live workstreams. They are independent; either can be picked up first.
 | | Workstream | State | Doc |
 |---|---|---|---|
 | **A** | **Report quality** — data, vehicles, voice | Reworked end to end; 4 test TEGs regenerated and read well; **full library regeneration outstanding** | this file + [README.md](README.md) |
-| **B** | **Stop paying per API call** — run the same prompts through claude.ai plan usage instead of the Anthropic API | **Built 2026-08-15, not yet run on a real report.** Provider switch + mailbox hand-off + variants; plan usage is now the default | [README.md](README.md) → *Who answers the prompts* |
+| **B** | **Stop paying per API call** — run the same prompts through claude.ai plan usage instead of the Anthropic API | **Built 2026-08-15.** Provider switch + mailbox hand-off + variants. **The API remains the default**; plan usage is opt-in per run via `--plan`. See the note below on whether it has been run for real | [README.md](README.md) → *Who answers the prompts* |
 
 ### What workstream A was trying to achieve
 
@@ -204,23 +243,44 @@ for the three failed attempts at that last rule and why each failed.
 
 ### Where workstream A got to
 
-- Pipeline reworked and green: **432 passed, 4 skipped**.
-- **TEGs 4, 8, 12, 18 regenerated** as tests and all read well. TEG 4's report is now framed on the
-  seven-shot lead Baker threw away; TEG 18 leads on the champion's gross 10 and elevates it.
+- Pipeline reworked and green: **518 passed** as of 2026-08-17.
+- **TEGs 4, 8, 12, 14 and 18 regenerated** under the rework and all read well. TEG 4's report is now
+  framed on the seven-shot lead Baker threw away; TEG 18 leads on the champion's gross 10 and elevates
+  it. Fingerprint for "has the rework": `why_the_champion_won` present in the story plan — those five
+  TEGs have it, the other twelve don't.
 - **Outstanding: regenerate the full library (2–18).** ~90 min. Jon's call was "a few tests first,
-  then everything" — the tests are done.
+  then everything" — the tests are done. Note the five test reports **also predate the em-dash ban and
+  the humour dial** (both landed later on 2026-08-15), so the cold-generation validation still comes
+  first.
 - Two late fixes (plain-English round labels, inverted Spoon phrasing) **postdate the four test
   reports**, so those flaws are still visible on disk in the Spoon sections of TEGs 4 and 18. They
   clear on the full run.
-- **Nothing is user-visible yet.** All regeneration ran `style=False`, so `*_report_styled.md` —
-  what the site serves — still holds the older reports. A styling pass is free and deterministic.
-- Round reports (~50) were not touched and remain a pipeline generation behind.
+- **Nothing is user-visible yet, and this was verified 2026-08-17: 16 of 17 styled reports are out of
+  sync with their finals.** All regeneration ran `style=False`, so `*_report_styled.md` — what the site
+  serves — still holds pre-2026-08-13 prose. A styling pass is free, deterministic and idempotent.
+- Round reports (49 outstanding) were not touched. The round *code* is level with the tournament
+  pipeline; the published round reports are two generations behind it.
 
 ### Where workstream B got to (2026-08-15)
 
-Built, tested, **not yet run on a real report** — the round-trip is proven by tests and a manual
-CLI exercise, not by a generated TEG. Full detail in [README.md](README.md) → *Who answers the
-prompts*.
+Built and tested. Full detail in [README.md](README.md) → *Who answers the prompts*.
+
+> **"Not yet run on a real report" is out of date — but nobody wrote up the run.** Three pieces of
+> evidence on disk say the hand-off has produced whole reports:
+>
+> - **`reply.txt` at the repo root** is a complete, unpublished TEG 17 tournament report
+>   (*"Order Restored on the Silver Coast"*). That filename is the scratch file from the documented
+>   manual command, `mailbox answer <dir> --file reply.txt`. It was committed by accident in `aafad8b`
+>   and is **still tracked** — see known issue 20.
+> - **TEG 14 was regenerated in `aafad8b`** (Jon's own commit, same day): tournament + R1 + R2 rewritten,
+>   R2 and R3 story plans added, R3 left plan-only. A `--plan` run at `scope="both"` interrupted during
+>   round 3 produces exactly that footprint.
+> - **`4a78bb9` quotes per-call token counts "measured on TEG 17"** across all four calls, which needs a
+>   real run to obtain.
+>
+> **What is genuinely still open is the quality comparison**, which was always the point: nobody has
+> read a plan-usage report against an API report of the same TEG and recorded a verdict. Treat the
+> mechanism as proven and the equivalence as unmeasured.
 
 - **`TEG_LLM_PROVIDER=api|agent` in `llm.py`, defaulting to `api`.** Plan usage is opt-in per run
   (`--plan`), because it is the one mode that needs a responder present. Nothing else in the
@@ -240,10 +300,11 @@ prompts*.
 - **`paths.py`** — `TEG_REPORT_VARIANT` redirects artefacts to `variants/<name>/` for model
   comparisons, with `promote_variant` to pick a winner.
 - **CLI**: `python -m teg_analysis.reporting.backfill --tegs 2-18 [--provider api] [--variant gpt5]`.
-- 34 new tests; full suite **466 passed, 4 skipped**.
+- 34 new tests; full suite **518 passed** as of 2026-08-17.
 
 **Open**: whether plan-usage output matches API output in quality. Run one report each way on the
-same TEG before committing the full 2–18 regeneration to either.
+same TEG before committing the full 2–18 regeneration to either. `reply.txt` is half of that comparison
+already — it is a plan-usage TEG 17 against a published API TEG 17.
 
 ---
 
@@ -257,11 +318,12 @@ The pipeline is **built, working and well past what the old docs described**. Th
 2. **The pipeline kept evolving after the last backfill run.** As of 2026-08-13 every *tournament*
    report was regenerated on one vintage, so this no longer applies to them — but round reports
    still span several.
-3. **Work stopped mid-experiment.** A "humour dial" A/B (3 → 6 → 8 → 8b) was run on TEGs 14 and 18,
-   the outputs are sitting on disk unpublished, and **no verdict was ever recorded**. Largely
-   superseded by the 2026-08-14 voice rework, but the artefacts are still there.
+3. ~~**Work stopped mid-experiment.**~~ **Settled 2026-08-15.** The "humour dial" A/B (3 → 6 → 8 → 8b)
+   on TEGs 14 and 18 got its verdict: `humour6`, folded into `prompts.VOICE_CORE` with the em-dash ban
+   and the sentence cap. The variant files are still on disk as history. See
+   [the humour dial](#where-work-stopped--the-humour-dial-settled-2026-08-15).
 
-**Suggested pick-up order** is in [Next steps](#next-steps).
+**Suggested pick-up order** is in [Next steps](#next-steps--ranked-to-do-list).
 
 **2026-08-11 — H10(a) run + a new detector landed.** The selection-weight profiler
 (`scripts/weight_profiler.py`) swept the four candidate weight settings over cached beats for TEGs
@@ -361,8 +423,9 @@ on a quiet TEG — ~14 of 85 slots. Less misleading than the removed cases, sinc
 `raw: 0.0` and an empty `reasons` list, and a genuine 0 for a vehicle that *does* have a detector is
 real evidence of absence. Left as-is deliberately.
 
-**What is deliberately still open: the humour dial** — the one remaining judgement call — plus the 81 prose-wording faults D3 reports across the older reports, which
-regeneration clears. Nothing else is blocking. Test suite: 422 passed, 4 skipped (2026-08-13).
+*(As written on 2026-08-13, the humour dial and the 81 prose-wording faults were the two open items.
+Both are now closed — the dial on 2026-08-15, the faults by the regeneration described above. Test
+suite was 422 passed at the time; it is 518 as of 2026-08-17.)*
 
 ---
 
@@ -386,7 +449,9 @@ regeneration clears. Nothing else is blocking. Test suite: 422 passed, 4 skipped
 | ✅ | voice A/B lever (rewrite) | `authoring.restyle_voice` — rewrites a finished report's voice only; **not** in the default chain |
 | ✅ | voice A/B lever (from scratch) | `authoring.write_from_dry` — runs the real writer over the frozen dry draft in a supplied voice; **not** in the default chain |
 | 🗑️ | 4d — history enrichment pass | **deleted 2026-08-11** — zero callers, duplicated `history_context` |
-| ✅ | D3 — programmatic verification | `verify.py` — 7 mechanical checks, auto-run by `backfill.py` |
+| ✅ | D3 — programmatic verification | `verify.py` — **8** mechanical checks, auto-run by `backfill.py` (8th = `no_em_dashes`, added 2026-08-15) |
+| ✅ | shared prompt blocks | `prompts.py` — `VOICE_CORE`, `NAMED_PRINCIPLES`, `HOUSE_VOICE_SUMMARY`, `SHARED_FAITHFULNESS`, `STROKE_INDEX_RULE`, `OUTPUT_RULE`; imported by all four prompts |
+| ✅ | provider switch (API / plan usage) | `llm.py` + `mailbox.py` + `paths.py` — API is the default |
 | ✅ | 5 — CSS-class styling renderer | `render.apply_styling` / `render.style_report` |
 | ✅ | round-level pipeline | `round_report.py` |
 | ✅ | batch orchestration | `backfill.py` |
@@ -415,12 +480,18 @@ of most published reports. Reconstructed from the code and the `*_pre*` snapshot
 | **H2** | **Anti-repetition across reports.** `recent_vehicle_choices(teg)` feeds the last few TEGs' vehicle picks into the bundle as a SOFT RULE so consecutive reports don't default to the same frame. | `tournament_shape.recent_vehicle_choices` | `*_report_prevehicles.md` |
 | **H3** | **Explicit setup→payoff pairs.** `foreshadow[]` seeds without payoffs was the single most common thinness. `Payoff` model + a non-negotiable writer rule now pairs each seed with the section that resolves it. | `story_plan.Payoff`, `StoryPlan.payoffs` | `*_report_prepayoff.md` |
 | **H4** | **Close-finish hard rule.** `detect_close_finish()` computes deterministically from the Trophy arc whether the finish was close; when true, `prominent_vehicle` MUST be `counterfactual`/`dual_narrative` and the close finish leads. Overrides H2. **Never fired correctly until the 2026-08-11 schema fix** — see known issue 8. | `tournament_shape.detect_close_finish` | `*_report_preclose.md` |
-| **H5** | **Economy / tightening.** An 11-rule ECONOMY block (em-dash ceiling, subordinate-clause budget, no subject-burying preambles, punchline isolation, …) baked into `WRITER_SYSTEM`, **plus** a standalone `TIGHTEN_SYSTEM` / `tighten_prose()` pass. The economy rules were baked into the writer so tightening happens on the first pass; `tighten_prose` remains as a separate lever. | `authoring.WRITER_SYSTEM` ECONOMY; `authoring.tighten_prose` | `*_report_pretighten.md`, `*_report_tightened.md` |
+| **H5** | **Economy / tightening.** An 11-rule ECONOMY block (subordinate-clause budget, no subject-burying preambles, punchline isolation, …) baked into `WRITER_SYSTEM`, **plus** a standalone `TIGHTEN_SYSTEM` / `tighten_prose()` pass. The economy rules were baked into the writer so tightening happens on the first pass; `tighten_prose` remains as a separate lever. ⚠️ **Two of the original 11 were superseded on 2026-08-15** — the em-dash *ceiling* became an outright ban and the "long sentences that earn their length" licence was withdrawn. `_WRITER_ECONOMY` was updated; `TIGHTEN_SYSTEM` was not (known issue 19). | `authoring.WRITER_SYSTEM` ECONOMY; `authoring.tighten_prose` | `*_report_pretighten.md`, `*_report_tightened.md` |
 | **H6** | **Cross-TEG + per-course context.** Career storylines (Nth Trophy, back-to-back, first win in N years, defending champion), per-course player history, new course records (mandatory beats), and win counts in the at-a-glance box. Plus a standalone `ENRICH_SYSTEM` / `enrich_report_with_history()` insert pass. | `history_context.py`, `course_history.py`, `render._build_at_a_glance` | — |
 | **H7** | **Faithfulness hardening.** New non-negotiable writer rules: verified `player_relationships` only (no inferring siblings from surnames); verbatim `weekday` use, and never call a 4-day TEG "a week"; only players who actually played this TEG; strip internal beat IDs from prose; exact arithmetic. | `authoring.WRITER_SYSTEM` FAITHFULNESS; `constants.PLAYER_RELATIONSHIPS` | — |
 
-**Important consequence:** `RoundStoryPlan` (`round_report.py`) did **not** get H1/H3 — no `narrative_vehicles`,
-no `payoffs`, no storyline bullets. The round pipeline is a generation behind the tournament pipeline.
+**Important consequence, as it stood:** `RoundStoryPlan` (`round_report.py`) did **not** get H1/H3 — no
+`narrative_vehicles`, no `payoffs`, no storyline bullets.
+
+> **Closed 2026-08-11**, and the wording above is kept only because it explains the vintage of the
+> published round reports. `RoundStoryPlan` now carries `narrative_vehicles`, `prominent_vehicle`,
+> `prominent_palette` and `payoffs` from the same shared enums as the tournament plan, and since
+> 2026-08-15 `ROUND_WRITER_SYSTEM` composes the same `prompts.VOICE_CORE` blocks. **The code is level;
+> the 18 published round reports are two generations behind it, and neither change has been run.**
 
 ---
 
@@ -432,40 +503,68 @@ at `archive 2025/`, `drafts/` and `round_reports/` (these are also the webapp's 
 
 ### Tournament reports
 
-Vintage is fingerprinted from `teg_N_story_plan.json`: `payoffs` present ⇒ H3 or later;
-`narrative_vehicles` populated ⇒ H1/H2 or later.
+Vintage is fingerprinted from `teg_N_story_plan.json`, in two tiers:
+
+- `narrative_vehicles` + `payoffs` populated ⇒ **Phase H or later**
+- `why_the_champion_won` present ⇒ **the 2026-08-14 A–D rework** (counterfactual importance,
+  `win_anatomy`, storyline hierarchy, champion register)
 
 TEGs 2–18 is the complete set — there is no TEG 1 in the data.
 
-| TEG | Published | Story-plan vintage | Notes |
-|---|---|---|---|
-| 2–7 | ✅ | **pre-H1** (old schema) | Pre-Stableford era; **era leak — see Known issues** |
-| 8 | ✅ | **pre-H1** | |
-| 9 | ✅ | H3 only (payoffs, no vehicles) | Original validation anchor |
-| 10–14 | ✅ | **current** (payoffs + vehicles) | |
-| 15, 16 | ✅ | **pre-H1** | |
-| 17, 18 | ✅ | **current** | |
+**Verified on disk 2026-08-17:**
 
-So: **all 17 TEGs have a report, but 9 of them (2–8, 15, 16) predate H1/H3** and TEG 9 is partial.
+| TEG | Published | Artefact chain | Story-plan vintage |
+|---|---|---|---|
+| 4, 8, 12, 14, 18 | ✅ | complete | **A–D rework** (2026-08-14/15) — the five test reports |
+| 2, 3, 5, 6, 7, 9, 10, 11, 13, 15, 16, 17 | ✅ | complete | **Phase H** (regenerated 2026-08-13) |
+
+Two things this replaces. The old three-vintage split (**pre-H1 for 2–8, 15, 16; partial for 9**) is
+gone — the 2026-08-13 run regenerated every tournament report on one vintage, so the pre-TEG-8 era
+leak and the "reads inconsistently" problem are no longer in the published prose. And every TEG now has
+**all four artefacts** (plan, dry draft, final, styled), so there are no fixture gaps anywhere.
+
+**What is still uniform-and-stale:** all 17 predate the 2026-08-15 readability decision (em-dash ban,
+`humour6`, sentence cap), which is what the outstanding regeneration is for. D3 reports **0 errors**
+across all 17 and 566 em-dash warnings library-wide.
 
 ### Round reports
+
+Verified on disk 2026-08-17:
 
 | TEG | Rounds published |
 |---|---|
 | 8, 9, 10 | 1, 2, 3, 4 ✅ complete |
 | 11 | 1, 2 (R3 has a story plan but no report — an interrupted run; R4 missing) |
-| 14 | 1, 4 |
+| 14 | 1, 2, 4 (R3 plan-only — the 2026-08-15 hand-off run stopped there) |
 | 18 | 3 |
 | 2–7, 12, 13, 15, 16, 17 | none |
 
-**All round reports are pre-H1/H3 vintage** (see the RoundStoryPlan note above).
-Full coverage is 67 rounds (TEG 2 has 3, the rest 4); 17 are published, so **50 outstanding**.
+Full coverage is 67 rounds (TEG 2 has 3, the rest 4); **18 are published, so 49 outstanding** (~$32).
+
+**All 18 are two generations behind the round code**, which is the thing to know before backfilling:
+they predate both the `RoundStoryPlan` schema port (2026-08-11) *and* the shared-voice change
+(2026-08-15) that moved the round writer off its pre-Herron register. Neither has been run on real
+round output. **Generate one round and read it before spending on the other 49.**
+
+The 4 remaining D3 errors in the whole library are all here — TEG 9 R1 (`weekdays`), TEG 9 R4
+(`weekdays`, `not_a_week`), TEG 10 R4 (`not_a_week`). Regeneration clears them; hand-editing them would
+be editing the writer's voice.
 
 ---
 
-## Where work stopped — the humour dial (unresolved)
+## Where work stopped — the humour dial (SETTLED 2026-08-15)
 
-The last thing in flight. `scripts/humour_dial.py` takes a finished report and rewrites it at a
+> **Resolved.** Jon's verdict on the published reports: *"80% good, lacking a bit in humour, and a bit
+> hard to read."* **`humour6` won** and is folded into `prompts.VOICE_CORE` as the baseline — 5–7 landed
+> comic moments per report, not the 2–3 the old baseline produced — alongside the em-dash ban and the
+> ~15-word sentence average. Recorded in [EXPERIMENTS.md](EXPERIMENTS.md) → H8.
+>
+> **What is left is validation, not the decision:** every variant on disk was `restyle_voice` rewriting
+> a *finished* report, which proves a register is reachable but not that the writer hits it cold from
+> the bundle. One from-scratch generation (~$0.65) closes it.
+
+The historical record, kept because the variant files are still on disk.
+`scripts/humour_dial.py` takes a finished report and rewrites it at a
 higher humour level, adding influences on top of the baseline Herron/Ronay/Armstrong/Iannucci register.
 
 > Its baseline description was stale too (named Peck, no Herron) and was corrected 2026-08-15. The
@@ -480,9 +579,9 @@ higher humour level, adding influences on top of the baseline Herron/Ronay/Armst
 | `humour8b` | ≈8/10, **Brooker-only** — drops Clive James and the literary-comparison register, adds Marina Hyde; physical/contemporary comparisons, short sentences, punch-not-flourish | TEG 14 only |
 | `humour8bb` | intended Brooker-only retry on TEG 18 | **never produced** — the script header records a connection reset |
 
-**Nothing was published and no verdict was recorded.** `scripts/humour_dial.py` is still pointed at
-`TEGS = [18]` mid-retry. **This is a taste call only Jon can make** — the comparison files are ready
-to read side by side.
+**None of the variants was ever published**, and `scripts/humour_dial.py` is still pointed at
+`TEGS = [18]` mid-retry. The verdict came from reading them, not from promoting one — the winning
+register was folded into the writer prompt instead, which is the durable form of the decision.
 
 ---
 
@@ -490,7 +589,8 @@ to read side by side.
 
 **Register — everything open, ranked by severity.** Detail sections follow in ID order (IDs are
 stable and referenced from README.md and EXPERIMENTS.md; new issues get the next free number rather
-than a renumber). Verified against the code 2026-08-11.
+than a renumber). Verified against the code, the artefacts on disk and a full `verify --all --rounds`
+run on **2026-08-17**.
 
 Severity is *impact if left alone*, not effort:
 
@@ -500,7 +600,7 @@ Severity is *impact if left alone*, not effort:
 
 | ID | Issue | Sev | Effort | Blocks regen? | Status |
 |---|---|---|---|---|---|
-| 10 | **No programmatic verification (D3) exists** | **P1** | L | — | ✅ **FIXED 2026-08-11** — `verify.py`, 7 checks, auto-run by `backfill.py` |
+| 10 | **No programmatic verification (D3) exists** | **P1** | L | — | ✅ **FIXED 2026-08-11** — `verify.py`, now 8 checks, auto-run by `backfill.py` |
 | 8 | **Editor↔writer vocabulary defined twice, unenforced** | **P1** | S–M | yes | ✅ **FIXED** — single source of truth + `Literal` enums; collision is now a validation error |
 | 1 | **Pre-TEG-8 era leak** | **P1** | S | yes | ✅ **FIXED** — `hole_evidence` is era-aware; pre-8 beats carry `netvp`, never `stableford` |
 | 3 | **Round pipeline a generation behind** | P2 | M | round regen | ✅ **FIXED** — `RoundStoryPlan` has vehicles, payoffs and the shared enums |
@@ -511,11 +611,15 @@ Severity is *impact if left alone*, not effort:
 | 11a | **`DEFAULT_MODEL` still `claude-opus-4-7`** | P2 | XS | no | ✅ **FIXED** — pinned to `claude-opus-5` |
 | 2 | **`enrich_report_with_history()` has zero callers** | P3 | XS | no | ✅ **FIXED** — deleted, with `ENRICH_SYSTEM` and `build_history_enrichment_context` |
 | 11b | **Dead `DRY_DRAFT_SYSTEM = ..._LIGHT` alias** | P3 | XS | no | ✅ **FIXED** — deleted |
-| 17 | **81 prose-wording faults across older reports** ("the week" ×71, invented weekdays ×10) | P2 | — | **cleared BY regen** | ⏳ **Open** — surfaced by D3; needs regeneration, not hand-editing |
+| 17 | **81 prose-wording faults across older reports** ("the week" ×71, invented weekdays ×10) | P2 | — | **cleared BY regen** | ✅ **FIXED by the 2026-08-13 regeneration** — verified 2026-08-17: **0 errors across all 17 tournament reports.** Rescoped as issue 21 for the 4 that remain in round reports |
 | 13 | **Selection weights untuned** | P2 | S | no | ✅ **FIXED 2026-08-11** — `balanced` set to (1.5, 0.8, 0.7); blow-ups 53%→38.5%, tone near-even |
-| — | **Humour dial unsettled** | **P1** | — | yes | ⏳ **Open — Jon** |
-| 9 | **Prompt density past the useful point** | P2 | M | no | ⏳ **Partly addressed** — voice and faithfulness split into `WRITER_VOICE` / `WRITER_FAITHFULNESS` (byte-identical composition), so they can be edited independently. Trimming the 6 rules D3 duplicates is still open; do it on evidence from fresh generations |
-| 14 | **TEG 14 fixture chain broken** | P2 | S (~$0.65) | no | ⏳ **Open** — needs one generation |
+| — | **Humour dial unsettled** | **P1** | — | yes | ✅ **SETTLED 2026-08-15** — `humour6` + em-dash ban + ~15-word sentences, in `prompts.VOICE_CORE`. One cold generation still owed as validation |
+| 19 | **`TIGHTEN_SYSTEM` contradicts the em-dash ban and the sentence cap** | P3 | XS | no | ⏳ **Open (new 2026-08-17)** — dormant; nothing calls the pass |
+| 20 | **`reply.txt` tracked at the repo root** — a complete unpublished TEG 17 report | P3 | XS | no | ⏳ **Open (new 2026-08-17)** — needs a keep-or-delete call from Jon |
+| 21 | **4 D3 errors in round reports** (TEG 9 R1/R4, 10 R4) | P2 | — | cleared by round regen | ⏳ **Open** — the residue of issue 17 |
+| 22 | **Raw `SI n` leaks into published prose** | P2 | S | no | ⏳ **Open** — TEG 8 does it 8 times; candidate 9th D3 check |
+| 9 | **Prompt density past the useful point** | P2 | M | no | ⏳ **Partly addressed** — voice and faithfulness split into `WRITER_VOICE` / `WRITER_FAITHFULNESS` (byte-identical composition), and the shared blocks now live once in `prompts.py`. Trimming the 6 rules D3 duplicates is still open; do it on evidence from fresh generations |
+| 14 | **TEG 14 fixture chain broken** | P2 | S (~$0.65) | no | ✅ **FIXED 2026-08-15** — rebuilt by the TEG 14 regeneration; all four artefacts present |
 | 5 | **Remote (webapp) report generation not built** | P2 | L | no | ⏳ **Open** — `webapp/TODOS.md` |
 | 15 | **`output_config.effort` never set** | P3 | S | no | ⏳ **Open** — needs a key (H9) |
 | 6 | **`teg_reports.css` duplicated and drifted** | P3 | XS | no | ⏳ **Open — deliberately not fixed**, see below |
@@ -528,24 +632,35 @@ is already ahead, and nobody is permitted to edit the streamlit copy anyway. It 
 `streamlit/` is deleted — which is a scoped decision of its own, not something to slip into an
 unrelated change.
 
-**What D3 found that nobody knew about.** Running the new checks over the whole published library
-turned up **123 errors across 14 reports**. Two classes were mechanically fixable and are fixed:
-TEG 5's 41 reader-visible beat IDs, and the TEG 10 R3 arithmetic error. The remaining **81 are prose
-wording** — 71 uses of "the week" (a TEG is 3–4 consecutive days; verified against round dates) and
-10 invented weekday names (e.g. TEG 2 names a Tuesday; it ran Saturday–Monday). Those are almost all
-in pre-H7 reports that predate the rules, and rewording them by hand would be editing the writer's
-voice — so they are left for regeneration. **This is the vintage problem made measurable:** it was
-previously described as "reads inconsistently" and is now an exact count that drops as reports are
-regenerated.
+**What D3 found that nobody knew about — and how it ended.** Running the new checks over the library on
+2026-08-11 turned up **123 errors across 14 reports**. Two classes were fixed by hand: TEG 5's 41
+reader-visible beat IDs, and the TEG 10 R3 arithmetic error. The remaining **81 were prose wording** —
+71 uses of "the week" (a TEG is 3–4 consecutive days) and 10 invented weekday names (TEG 2 names a
+Tuesday; it ran Saturday–Monday) — and were left for regeneration rather than hand-edited, on the
+grounds that rewording them is editing the writer's voice.
+
+**That worked.** Re-run on 2026-08-17, after the 2026-08-13 regeneration:
+
+| | 2026-08-11 | 2026-08-17 |
+|---|---|---|
+| Errors, tournament reports | ~119 | **0** |
+| Errors, round reports | 4 | **4** (untouched — rounds were never regenerated) |
+| Warnings | — | 566, all `no_em_dashes` (the check did not exist in August 11) |
+
+The prediction and the mechanism both held: D3 turned "reads inconsistently" into a number, and the
+number went to zero for exactly the reports that were regenerated. That is the strongest evidence to
+date for regenerating rather than patching.
 
 **Recommended order for what remains:**
 
-1. **Humour dial** (Jon) and **13** (weights) — the two judgement calls; everything else waits on
-   the first of them.
-2. **14** — rebuild TEG 14's fixture chain (~$0.65) so the cheap loops work on the anchor case.
-3. **Regenerate** — clears issue 17 wholesale. Run `verify --all` after; the error count is the check.
+1. **One cold generation** under the settled voice (~$0.65) — validates `humour6` and the em-dash ban
+   from scratch rather than by rewrite. The last thing blocking the library regeneration.
+2. **Regenerate the library** — clears the 566 em-dash warnings. Run `verify --all` after; the error
+   count stays 0 and the warning count should collapse.
+3. **Rounds** — one round report read first (the voice change is untested there), then the scope call on
+   the other 49. Clears issue 21.
 4. **9** — trim D1 only after D3 has proven itself on fresh generations.
-5. **5**, **15**, **6**, **7** — independent or conditional; schedule separately.
+5. **19**, **20**, **22** — small and independent; **5**, **15**, **6**, **7** — schedule separately.
 
 ### 1. Pre-TEG-8 era leak — FIXED 2026-08-11
 
@@ -818,18 +933,66 @@ a bigger jump (67% overlap), not yet read in prose. **Still worth doing when a k
 a plan-only run to confirm the change survives the LLM's own second selection gate at the plan
 stage (H10 part b). The code change stands on the free profiling either way.
 
-### 14. TEG 14's fixture chain is broken — on the standing anchor case
+### 14. TEG 14's fixture chain is broken — FIXED 2026-08-15
 
-TEG 14 is the designated regression anchor (tight 2-point finish, multiple courses) but is **missing
-`dry_draft.md` and `report_final.md`** — the humour and tighten experiments consumed them into
-variant filenames. Those two files are exactly the restart points for the two cheapest iteration
-loops (C1 at ~$0.37, C2/D1 at ~$0.17), so the cheap loops are broken on the very case chosen for
-being hardest. Rebuilding costs one full generation (~$0.65).
+> **FIXED.** The TEG 14 regeneration on 2026-08-15 rebuilt the chain. All four artefacts are present
+> (verified 2026-08-17), so the two cheapest iteration loops work on the anchor case again — and since
+> every other TEG also has a complete chain, there is no fixture gap anywhere in the library.
+
+TEG 14 is the designated regression anchor (tight 2-point finish, multiple courses) and had been
+**missing `dry_draft.md` and `report_final.md`** — the humour and tighten experiments consumed them into
+variant filenames, breaking the cheap loops on the very case chosen for being hardest.
 
 ### 15. `output_config.effort` is never set anywhere
 
 Every LLM call runs at the default (`high`). Not a defect — an untested cost/latency lever on the
 most expensive stage. Tracked as EXPERIMENTS.md → H9; needs an API key.
+
+### 19. `TIGHTEN_SYSTEM` contradicts the settled readability rules — new 2026-08-17
+
+The 2026-08-15 decision removed two clauses from `_WRITER_ECONOMY` because they *contradicted* the
+em-dash ban and the sentence cap, and a contradicted rule gets ignored. `TIGHTEN_SYSTEM` still carries
+both:
+
+| `TIGHTEN_SYSTEM` says | The settled rule |
+|---|---|
+| *"Two [em-dashes] per paragraph is the ceiling"* (rule 1) | Zero. Banned outright |
+| *"Bathos: long sentences that are funny BECAUSE they are long stay long"* (PRESERVE ALWAYS) | ~15-word average, hard stop ~25, no earned-length exemption |
+| *"long sentence contains two equal-weight beats joined by `—`"* (rule 8) | The construction it describes cannot occur |
+
+**Nothing is broken today** — `tighten_prose()` has no callers and `backfill.py` does not run it, which
+is exactly why the em-dash commit missed it. But it is a live lever documented for fixing up older text,
+and running it on a report would reintroduce both faults. Fix when the pass is next wanted, or delete
+the pass: it duplicates rules the writer now applies on the first pass.
+
+### 20. `reply.txt` is tracked at the repo root — new 2026-08-17
+
+A complete, styled, unpublished **TEG 17 tournament report** (*"Order Restored on the Silver Coast:
+Baker Leaves the Mid-Pack Behind"*, 6.9 KB), committed by accident in `aafad8b` alongside the TEG 14
+regeneration. The filename comes from the documented manual mailbox command,
+`mailbox answer <dir> --file reply.txt`, so this is very likely the plan-usage TEG 17 output.
+
+**Needs a decision, not a cleanup.** It is either (a) the missing half of the plan-usage-vs-API quality
+comparison, in which case it belongs in `data/commentary/variants/` with a manifest, or (b) scratch, in
+which case delete it. Deleting it blind would throw away a generated report; leaving it tracked at the
+repo root implies it is a project file.
+
+### 21. Four D3 errors remain in round reports
+
+The residue of issue 17, in the three round reports that were never regenerated: TEG 9 R1
+(`weekdays`), TEG 9 R4 (`weekdays` + `not_a_week`), TEG 10 R4 (`not_a_week`). Same class as the 81 that
+cleared, same fix — regeneration, not hand-editing. Blocked behind the round-report scope decision.
+
+### 22. Raw `SI n` leaks into published prose
+
+`prompts.STROKE_INDEX_RULE` tells both writers to translate stroke index into English ("the hardest hole
+on the course"). **TEG 8's published report does both**: correct translations in some places, raw
+`"the SI 2 last"` / `"the SI 1 8th"` in eight others. TEGs 4, 12 and 18 have zero, so the rule works and
+is obeyed unreliably — per-run variance, not a dead rule. Reads as machine output to the audience least
+likely to forgive it.
+
+**Mechanical and unambiguous, so it belongs in D3** as a 9th check rather than as more prompt emphasis —
+the same argument that moved the other six.
 
 ---
 
@@ -847,57 +1010,62 @@ most expensive stage. Tracked as EXPERIMENTS.md → H9; needs an API key.
 
 ## Next steps — ranked to-do list
 
-> **Rewritten 2026-08-11.** The previous Tier 1 code track (schema vocabulary, model pin, era leak,
-> delete enrich) is **done**, along with D3, the arc weighting and the round-plan port. What is left
-> is much shorter, and almost all of it hangs off one decision.
+> **Rewritten 2026-08-17.** Both judgement calls that used to head this list are settled — the humour
+> dial on 2026-08-15, the weights on 2026-08-11 — and three of the "then, in order" items turned out to
+> be already done (TEG 14's fixtures, the stale-report regeneration, issue 17). What is left is one
+> cheap validation step and then spending.
 
 **The organising principle is unchanged.** Regenerating the library is the expensive, effectively
 one-way step: it sets the published voice and bakes in whatever state the pipeline is in. Everything
 that changes *what a report is* lands before it.
 
-**What changed is where the bottleneck sits.** It is no longer code — it is the two judgement calls.
+**What changed is where the bottleneck sits.** It is no longer a decision, and no longer code. It is one
+generation nobody has paid for yet.
 
 ```
-  1 humour dial (Jon) ──► 3 rebuild TEG 14 fixtures ──► 4 regenerate library ──► 5 verify --all
-                                                              │
-  2 weight setting ✅ done                                     └──► clears issue 17 (81 wording faults)
+  1 cold generation (~$0.65) ──► 2 regenerate 2-18 ──► 3 verify --all
+     validates humour6 +              (~$11)              warnings → 0, errors stay 0
+     the em-dash ban cold
 
-  independent, any time:  6 effort experiment · 7 prompt trim · 8 round-report scope · 9 remote generation
+  rounds, gated on a scope call:  4 read one round report ──► 5 backfill 49 (~$32) ──► clears issue 21
+
+  independent, any time:  6 effort experiment · 7 prompt trim · 8 remote generation · 19/20/22 small fixes
 ```
 
 ---
 
-### The two blocking decisions
+### 1. The one thing blocking regeneration
 
-**1. Settle the humour dial.** Read `teg_14_report_styled.md` (baseline) against
-`teg_14_report_humour6.md` / `_humour8.md` / `_humour8b.md`, then the TEG 18 pair. Record the verdict
-in EXPERIMENTS.md and fold the winner into **`WRITER_VOICE`** (its own constant since 2026-08-11 —
-the faithfulness rules live separately in `WRITER_FAITHFULNESS` and must not be touched).
-*Why first:* it sets the published voice, only Jon can call it, and it blocks regeneration.
+**Generate one TEG cold and read it** (~$0.65). Every variant behind the `humour6` verdict was
+`restyle_voice` rewriting a *finished* report; that proves the register is reachable, not that the
+writer reaches it from the bundle. The em-dash ban and the sentence cap have never been exercised on a
+cold generation at all.
 
-*Tooling:* `python scripts/humour_dial.py --teg 14 --variant humour8b` produces a fresh variant for
-~$0.10 via `authoring.restyle_voice()`. The TEG 18 `humour8bb` retry that died on a connection reset
-can now simply be re-run. Variants never touch `report_final.md`, and each is checked for faults the
-rewrite *introduced*.
+Use **TEG 14** (the anchor: 2-point finish, multiple courses) or **TEG 17**. Acceptance test is
+mechanical for once: `verify` should report **0 em-dash warnings**, against 10–40 on every report
+currently on disk.
 
-**2. ~~Choose the selection-weight setting~~ — DONE.** `balanced` is now (1.5, 0.8, 0.7).
-*Optional follow-up when a key is available:* a plan-only run (~$0.28) to confirm the change
-survives the plan-stage selection gate, and a look at `importance-led` if 38.5% blow-ups still
-reads as too much carnage.
+*Both former blockers, for the record:* the humour dial is settled (`humour6`, in
+`prompts.VOICE_CORE`); `balanced` weights are (1.5, 0.8, 0.7). The optional weight follow-up still
+stands — a plan-only run (~$0.28) to confirm the change survives the plan-stage selection gate, and a
+look at `importance-led` if 38.5% blow-ups still reads as too much carnage.
 
 ---
 
 ### Then, in order
 
-**3. Rebuild TEG 14's fixture chain** (known issue 14) — one generation, ~$0.65. Restores the two
-cheapest iteration loops on the standing anchor case.
+**2. Regenerate the library** — all of 2–18, ~$11 at ~$0.65 each. Not "the stale ones": every report on
+disk predates the readability decision, so this is a full pass. It is also the point at which
+`style=True` should run — the 2026-08-13 regeneration used `style=False`, so **`*_report_styled.md`,
+which is what the site actually serves, still holds pre-2026-08-13 prose.** Styling is free and
+deterministic; it just has to be remembered.
 
-**4. Regenerate the stale reports** — TEGs 2–8, 15, 16, plus 9. ~$6.50. This is what clears issue 17
-(the 81 "the week" / invented-weekday faults), the pre-TEG-8 era framing in TEGs 5–7, and the
-three-vintage inconsistency in one pass.
+**3. Verify.** `python -m teg_analysis.reporting.verify --all --rounds`. Errors should stay at 0 and the
+566 em-dash warnings should collapse to near zero. Anything else is a genuine new finding.
 
-**5. Verify.** `python -m teg_analysis.reporting.verify --all --rounds`. The error count is the
-acceptance test — it should fall to near zero. Anything left is a genuine new finding.
+**4–5. Rounds, if wanted.** Generate and read **one** round report first: the round writer's voice
+changed on 2026-08-15 and has never been run. Then the scope call on the remaining 49 (~$32), which
+also clears issue 21.
 
 ---
 
@@ -912,7 +1080,7 @@ the eleven absolutes, so they *could* leave the prompt. **Do this on evidence, n
 run a few fresh generations first and check D3 stays quiet with the rules still in place. Belt and
 braces costs nothing; removing a rule that was doing real work is expensive to discover.
 
-**8. Decide whether round reports are wanted** — ~50 outstanding, ~$32. `RoundStoryPlan` is no longer
+**8. Decide whether round reports are wanted** — 49 outstanding, ~$32. `RoundStoryPlan` is no longer
 the blocker (it was ported on 2026-08-11); this is now purely a scope-and-cost call.
 
 **9. Remote (webapp) report generation** (known issue 5) — tracked in `webapp/TODOS.md`.
@@ -935,14 +1103,17 @@ reports, ~**$40** with.
 
 1. Read this file top to bottom — five minutes.
 2. Skim [README.md](README.md) for the architecture refresher — five more.
-3. Start at [Next steps](#next-steps).
+3. Start at [Next steps](#next-steps--ranked-to-do-list).
 4. **Sanity-test any change by regenerating TEG 14** — it's the trickiest validated case (tight
    finish, multiple courses, the kind of pattern the writer wants to fabricate into a "rhyme") and
-   any regression shows there first. Baselines preserved at `teg_14_report_baseline.md` (pre-Step-1
-   chronological), `teg_14_report_step1.md`, `teg_14_report_pretighten.md` and
-   `teg_14_report_prepayoff.md`.
-5. Environment: `ANTHROPIC_API_KEY` env var, else `.streamlit/secrets.toml` at the repo root.
-   Run with `venv/bin/python` from the repo root.
+   any regression shows there first. Its fixture chain is complete again as of 2026-08-15. Baselines
+   preserved at `teg_14_report_baseline.md` (pre-Step-1 chronological), `teg_14_report_step1.md`,
+   `teg_14_report_pretighten.md` and `teg_14_report_prepayoff.md`.
+5. Environment: `ANTHROPIC_API_KEY` (or `TEG_ANTHROPIC_API_KEY`) in the environment, else a gitignored
+   `secrets.toml` at the repo root. `.streamlit/secrets.toml` still works but is **deprecated** —
+   don't use it for new setups. Run with `venv/bin/python` from the repo root.
+   **Or skip the key entirely:** `--plan` hands the prompts to a Claude Code session instead
+   ([README.md](README.md) → *Who answers the prompts*).
 
 ## Historical verification record
 
