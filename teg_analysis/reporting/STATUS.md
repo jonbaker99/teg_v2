@@ -62,8 +62,10 @@ Bristow's only 27."*
 
 **`prompts.ELEVATION_DEVICE`** puts that engine in. Raise a frame far grander than the occasion
 deserves, then let a plain fact land against it. Crucially the frame is **read off the data, not
-guessed**: `win_anatomy` and `tournament_shape` already classify every result, and the block maps
-each classification to an archetype.
+guessed**, on two axes.
+
+**Axis one, the result** (`win_anatomy`, `tournament_shape`) — what shape did this tournament
+finish in?
 
 | Signal | Archetype |
 |---|---|
@@ -74,6 +76,26 @@ each classification to an archetype.
 | `rival_could_have_flipped_it` | the haunting counterfactual |
 | `close_finish` | trivial margin treated as dynastic |
 | `shape: "volatile"` / `"consistent"` | carried by a machine he isn't operating / grinding inevitability |
+
+**Axis two, the career** (`player_history.notable_milestones`, `last_4_positions`) — what walked
+in, and what walked out? Added 2026-08-17 on Jon's prompting; often the better axis, because it
+carries stakes the tournament alone cannot.
+
+| Milestone pattern | Archetype |
+|---|---|
+| runner-up / repeated rank, and wins this time | **chance seized** — a sentence commuted, a siege lifted |
+| runner-up / repeated rank, and falls short again | **chance missed** — Sisyphean, played straight |
+| `"rank Nth in each of the last M TEGs"` | the position as an office he holds |
+| `"back-to-back Wooden Spoons"`, `"reigning Wooden Spoon holder"` | **the inverted achievement** — sustained awfulness as a vocation heroically maintained |
+| `"defending Trophy champion"` | incumbency: a dynasty or a deposition |
+
+The strongest openings **braid** the two: a two-point win is a small thing, a two-point win by a
+man who has been runner-up three times is a story.
+
+**Hammable AND hammed** (Jon's phrasing). Two distinct failures, both now named in the block: a
+grand frame draped over material that cannot carry it, and finding the angle then under-delivering
+it. The second is the common one, so the block carries a worked STATED-vs-HAMMED pair, because
+"commit to the frame" is not actionable without an example.
 
 **It is CONTRACT, not voice.** It specifies a rhetorical move and leaves the register of the frame
 entirely to the voice: a deadpan voice states the grand parallel flatly, a vicious one reaches for

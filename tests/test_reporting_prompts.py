@@ -270,3 +270,50 @@ def test_the_occasion_device_is_contract_not_voice():
     assert prompts.ELEVATION_DEVICE in authoring.WRITER_CONTRACT
     assert prompts.ELEVATION_DEVICE not in authoring.WRITER_VOICE
     assert prompts.ELEVATION_DEVICE in authoring.build_writer_system("VOICE: plain.")
+
+
+def test_the_occasion_device_covers_both_axes_of_the_data():
+    """The career axis must stay in step with what `history_context` emits.
+
+    `notable_milestones` is the only licensed source for career framing, so an
+    archetype keyed off a phrase the generator cannot produce is dead, and a
+    milestone category with no archetype is material the writer will not use.
+    Both are silent failures: the report simply comes out flatter.
+    """
+    from pathlib import Path
+
+    src = Path("teg_analysis/reporting/history_context.py").read_text()
+
+    # Each pair is (a phrase the milestone generator emits, a word the
+    # archetype table must use to pick that milestone up).
+    for emitted, archetype_cue in (
+            ("runner-up in", "runner-up"),
+            ("back-to-back", "back-to-back"),
+            ("Wooden Spoon in", "Wooden Spoon in"),
+            ("rank {_ordinal(rank)} in each of the last", "in each of the last"),
+            ("reigning Wooden Spoon holder", "reigning Wooden Spoon holder"),
+            ("defending Trophy champion", "defending champion"),
+    ):
+        assert emitted in src, f"history_context no longer emits {emitted!r}"
+        assert archetype_cue in prompts.ELEVATION_DEVICE, (
+            f"history_context emits {emitted!r} but ELEVATION_DEVICE has no "
+            f"archetype cued by {archetype_cue!r}")
+
+    assert "notable_milestones" in prompts.ELEVATION_DEVICE
+    assert "last_4_positions" in prompts.ELEVATION_DEVICE
+
+
+def test_the_occasion_device_demands_both_hammable_and_hammed():
+    """Jon, 2026-08-17: "it needs to be both 'hammable' and 'hammed'."
+
+    Two distinct failures. Framing material that cannot carry it (a grand frame
+    over nothing) and finding the angle then under-delivering it. The block
+    states both as tests and shows the second with a worked pair, because
+    "commit to the frame" is not an instruction a model can act on without one.
+    """
+    block = prompts.ELEVATION_DEVICE
+    assert "HAMMABLE" in block and "HAMMED" in block
+    assert "STATED (wrong)" in block and "HAMMED (right)" in block
+    # The hammable half must warn against manufacturing an angle, or it reads
+    # as pure encouragement and every report opens with a strained parallel.
+    assert "manufacture" in block
