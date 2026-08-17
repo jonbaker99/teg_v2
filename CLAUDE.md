@@ -70,6 +70,7 @@ python -m teg_analysis.reporting.backfill --tegs 2-18
 python -m teg_analysis.reporting.backfill --tegs 14 --plan        # claude.ai plan usage
 python -m teg_analysis.reporting.backfill --tegs 14 --paste gpt5  # paste into another model
 python -m teg_analysis.reporting.mailbox status                   # prompts waiting
+python -m scripts.export_cowork_kit --tegs 4,14,17 --out DIR # report kit for rewriting outside the pipeline
 ```
 
 > `--plan` and `--paste` hand each prompt off through `data/llm_mailbox` instead of calling the API; the `teg-report-respond` skill answers `--plan` runs, you answer `--paste` runs by hand. Both can run at once.

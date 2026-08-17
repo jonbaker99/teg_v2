@@ -496,6 +496,9 @@ Keep callbacks brief and earned; this is still a round report, not a tournament 
 ROUND_WRITER_SYSTEM = "\n".join((
     _ROUND_WRITER_ROLE,
     prompts.VOICE_CORE,
+    # Left VOICE_CORE on 2026-08-17 so a custom voice cannot shed it; carried
+    # explicitly here for the same reason as SCORING_REDUNDANCY_RULE below.
+    prompts.SENTENCE_DISCIPLINE,
     prompts.NAMED_PRINCIPLES,
     _ROUND_WRITER_STRUCTURE,
     prompts.SHARED_FAITHFULNESS,

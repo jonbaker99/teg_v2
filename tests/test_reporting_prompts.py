@@ -151,6 +151,7 @@ def test_the_sweep_actually_sees_the_known_prompts():
 STYLE_SETTING_BLOCKS = {
     "prompts.VOICE_CORE": prompts.VOICE_CORE,
     "prompts.NAMED_PRINCIPLES": prompts.NAMED_PRINCIPLES,
+    "prompts.ELEVATION_DEVICE": prompts.ELEVATION_DEVICE,
     "authoring._WRITER_EDITORIAL": authoring._WRITER_EDITORIAL,
     "authoring._WRITER_COMIC_AIM": authoring._WRITER_COMIC_AIM,
     "authoring._WRITER_ECONOMY": authoring._WRITER_ECONOMY,
@@ -221,3 +222,152 @@ def test_em_dash_check_is_wired_into_verification():
 def test_shared_faithfulness_carries_every_rule_that_was_duplicated(rule):
     """Each of these previously existed in two files, edited independently."""
     assert rule in prompts.SHARED_FAITHFULNESS, rule
+
+
+# ---------------------------------------------------------------------------
+# The occasion device reads win_anatomy. Its archetype table is prose, so a new
+# enum value in the code would leave a branch silently unaddressed.
+# ---------------------------------------------------------------------------
+def test_every_win_anatomy_classification_has_an_archetype():
+    """`ELEVATION_DEVICE` must cover every value `win_anatomy` can emit.
+
+    The block tells the writer to read the frame off `attribution` and `shape`.
+    If the detector gains a value and the block does not, the writer meets a
+    classification with no instruction attached and improvises a frame, which
+    is exactly the fabrication the data-driven approach exists to prevent.
+    """
+    import re
+    from pathlib import Path
+
+    src = Path("teg_analysis/reporting/win_anatomy.py").read_text()
+    emitted = set()
+    for field in ("attribution", "shape"):
+        emitted |= set(re.findall(rf'{field} = "([a-z_]+)"', src))
+        emitted |= set(re.findall(rf'{field} = "([a-z_]+)" if ', src))
+    assert emitted, "found no classification literals — did win_anatomy.py move?"
+
+    missing = [v for v in sorted(emitted)
+               if f'"{v}"' not in prompts.ELEVATION_DEVICE]
+    assert not missing, (
+        f"win_anatomy can emit {missing} but ELEVATION_DEVICE names no archetype "
+        "for it; the writer would meet that classification with no instruction")
+
+
+def test_the_occasion_device_names_real_bundle_fields():
+    """Guards the other direction: an archetype keyed off a renamed field."""
+    from teg_analysis.reporting import authoring
+    for field in ("attribution", "shape", "biggest_lead_blown",
+                  "rival_could_have_flipped_it", "close_finish"):
+        assert f"`{field}" in prompts.ELEVATION_DEVICE, field
+    # And the data actually reaches the writer when the context block is sent.
+    assert "win_anatomy" in authoring.BUNDLE_CONTEXT_KEYS
+    assert "tournament_shape" in authoring.BUNDLE_CONTEXT_KEYS
+
+
+def test_the_occasion_device_is_contract_not_voice():
+    """It must survive a voice swap, or a plain register loses the opening."""
+    from teg_analysis.reporting import authoring
+    assert prompts.ELEVATION_DEVICE in authoring.WRITER_CONTRACT
+    assert prompts.ELEVATION_DEVICE not in authoring.WRITER_VOICE
+    assert prompts.ELEVATION_DEVICE in authoring.build_writer_system("VOICE: plain.")
+
+
+def test_the_occasion_device_covers_both_axes_of_the_data():
+    """The career axis must stay in step with what `history_context` emits.
+
+    `notable_milestones` is the only licensed source for career framing, so an
+    archetype keyed off a phrase the generator cannot produce is dead, and a
+    milestone category with no archetype is material the writer will not use.
+    Both are silent failures: the report simply comes out flatter.
+    """
+    from pathlib import Path
+
+    src = Path("teg_analysis/reporting/history_context.py").read_text()
+
+    # Each pair is (a phrase the milestone generator emits, a word the
+    # archetype table must use to pick that milestone up).
+    for emitted, archetype_cue in (
+            ("runner-up in", "runner-up"),
+            ("back-to-back", "back-to-back"),
+            ("Wooden Spoon in", "Wooden Spoon in"),
+            ("rank {_ordinal(rank)} in each of the last", "in each of the last"),
+            ("reigning Wooden Spoon holder", "reigning Wooden Spoon holder"),
+            ("defending Trophy champion", "defending champion"),
+    ):
+        assert emitted in src, f"history_context no longer emits {emitted!r}"
+        assert archetype_cue in prompts.ELEVATION_DEVICE, (
+            f"history_context emits {emitted!r} but ELEVATION_DEVICE has no "
+            f"archetype cued by {archetype_cue!r}")
+
+    assert "notable_milestones" in prompts.ELEVATION_DEVICE
+    assert "last_4_positions" in prompts.ELEVATION_DEVICE
+
+
+def test_the_occasion_device_demands_both_hammable_and_hammed():
+    """Jon, 2026-08-17: "it needs to be both 'hammable' and 'hammed'."
+
+    Two distinct failures. Framing material that cannot carry it (a grand frame
+    over nothing) and finding the angle then under-delivering it. The block
+    states both as tests and shows the second with a worked pair, because
+    "commit to the frame" is not an instruction a model can act on without one.
+    """
+    block = prompts.ELEVATION_DEVICE
+    assert "HAMMABLE" in block and "HAMMED" in block
+    assert "STATED (wrong)" in block and "HAMMED (right)" in block
+    # The hammable half must warn against manufacturing an angle, or it reads
+    # as pure encouragement and every report opens with a strained parallel.
+    assert "manufacture" in block
+
+
+def test_readability_rules_survive_a_voice_swap():
+    """Jon, 2026-08-17: "we need the em dash and sentence length rules."
+
+    They lived in VOICE_CORE and `_WRITER_ECONOMY`, both in the half a `voice=`
+    swap REPLACES, so every style trial silently dropped them. They exist
+    because Jon found the reports hard to read, and that verdict does not stop
+    applying because the register changed.
+    """
+    from teg_analysis.reporting import authoring
+
+    custom = authoring.build_writer_system("VOICE: whatever you like.")
+    assert "NO EM-DASHES" in custom
+    assert "Average around 15 words" in custom
+    assert "Em-dashes are banned outright" in custom      # the ECONOMY restatement
+    assert prompts.SENTENCE_DISCIPLINE in authoring.WRITER_CONTRACT
+    assert prompts.SENTENCE_DISCIPLINE not in authoring.WRITER_VOICE
+    # The round writer lost it from VOICE_CORE too and must carry it explicitly.
+    from teg_analysis.reporting import round_report
+    assert prompts.SENTENCE_DISCIPLINE in round_report.ROUND_WRITER_SYSTEM
+
+
+def test_sentence_discipline_reconciles_styles_that_want_an_ornate_build():
+    """Several house styles call for a long build. The rule must say how.
+
+    Without this the block simply contradicts the style brief, and the model
+    picks one at random. The resolution is that a build is made of several short
+    sentences, which is what VOICE_CORE already said about the Ronay device.
+    """
+    assert "ACROSS SENTENCES" in prompts.SENTENCE_DISCIPLINE
+
+
+def test_arc_scope_carries_no_editor_prose():
+    """`arc` is the frame VOCABULARY, not a précis of the report.
+
+    `opening_hook` is a draft of the opening and `theme` is a written
+    through-line; shipping them to a voice experiment contaminates the thing
+    being measured, which is the same reason `players[].arc` was never in `arc`.
+    """
+    from teg_analysis.reporting.authoring import ARC_PLAN_FIELDS
+    for prose_field in ("title", "theme", "opening_hook", "foreshadow",
+                        "payoffs", "why_the_champion_won"):
+        assert prose_field not in ARC_PLAN_FIELDS, prose_field
+    assert set(ARC_PLAN_FIELDS) == {"narrative_structure", "narrative_vehicles",
+                                    "prominent_vehicle", "prominent_palette"}
+
+
+def test_the_two_writer_entry_points_default_the_same_way():
+    """One parameter, one default. Two was a trap."""
+    import inspect
+    from teg_analysis.reporting import authoring
+    for fn in (authoring.report_around_draft, authoring.write_from_dry):
+        assert inspect.signature(fn).parameters["plan_scope"].default == "full", fn.__name__

@@ -138,14 +138,18 @@ running total.
 - Markdown headings. Keep it tight."""
 
 
-# The story-plan fields that carry the STORYTELLING FRAME rather than the
-# material: which shape the report takes, what it opens on, what gets planted
-# early and paid off later. `plan_scope="arc"` sends these and nothing else —
-# the dry draft already carries the facts, so this is the vehicle guidance on
-# its own, without the per-round angles and per-player arcs steering the prose.
-ARC_PLAN_FIELDS = ("title", "theme", "narrative_structure", "opening_hook",
-                   "narrative_vehicles", "prominent_vehicle", "prominent_palette",
-                   "foreshadow", "payoffs", "why_the_champion_won")
+# The story-plan fields that carry the STORYTELLING FRAME and nothing else.
+#
+# Narrowed on 2026-08-17. `arc` used to include `title`, `theme`, `opening_hook`,
+# `foreshadow`, `payoffs` and `why_the_champion_won`, all of which are
+# already-written SENTENCES — an opening hook is a draft of the opening. Sending
+# them to a voice experiment contaminates the thing being measured, which is the
+# same objection that keeps `rounds[].angle` and `players[].arc` out of `arc`.
+#
+# What survives is the vocabulary: which frame, which structure, which palette.
+# Enum values, not prose. The writer decides what the theme is and what to plant.
+ARC_PLAN_FIELDS = ("narrative_structure", "narrative_vehicles",
+                   "prominent_vehicle", "prominent_palette")
 
 PLAN_SCOPES = ("full", "arc", "none")
 
@@ -158,8 +162,11 @@ PLAN_SCOPES = ("full", "arc", "none")
 # Unlike the story plan, every one of these is STRUCTURED DATA rather than
 # editorial prose. That is the whole point: it supplies material without
 # supplying phrasing the writer will lift.
+# `tournament_shape` joined on 2026-08-17: `ELEVATION_DEVICE` reads `close_finish`
+# off it to pick the frame, so a context packet without it leaves one branch of
+# the archetype table unanswerable.
 BUNDLE_CONTEXT_KEYS = ("venue", "player_history", "player_course_history",
-                       "player_relationships", "win_anatomy")
+                       "player_relationships", "win_anatomy", "tournament_shape")
 
 # The only fields in those keys whose values are SENTENCES rather than names,
 # dates, enums or numbers. Four are code-generated from templates and one
@@ -184,13 +191,18 @@ DERIVED_PROSE_FIELDS = ("summary_facts", "notable_milestones", "description",
 CONTEXT_STYLES = ("annotated", "data")
 
 
-def _strip_derived_prose(obj):
-    """Recursively drop the sentence-valued fields, keeping the raw data."""
+def _strip_derived_prose(obj, fields: tuple = DERIVED_PROSE_FIELDS):
+    """Recursively drop the sentence-valued fields, keeping the raw data.
+
+    `fields` is a parameter so a caller can spare one. The Cowork kit spares
+    `notable_milestones`, which is template output rather than authorial prose
+    and the only licensed source for "defending champion" framing.
+    """
     if isinstance(obj, dict):
-        return {k: _strip_derived_prose(v) for k, v in obj.items()
-                if k not in DERIVED_PROSE_FIELDS}
+        return {k: _strip_derived_prose(v, fields) for k, v in obj.items()
+                if k not in fields}
     if isinstance(obj, list):
-        return [_strip_derived_prose(v) for v in obj]
+        return [_strip_derived_prose(v, fields) for v in obj]
     return obj
 
 
@@ -547,9 +559,17 @@ to start a new paragraph. If a paragraph is doing too much, break it at the natu
 WRITER_CONTRACT = "\n".join((
     _WRITER_ROLE,
     _WRITER_EDITORIAL,
+    prompts.ELEVATION_DEVICE,
     _WRITER_STRUCTURE,
     prompts.SCORING_REDUNDANCY_RULE,
     prompts.STROKE_INDEX_RULE,
+    # Readability is not a matter of register. Both of these sat in the voice
+    # half until 2026-08-17, so a `voice=` swap dropped the em-dash ban and the
+    # 11 economy rules along with the house humour, which is precisely backwards:
+    # they exist because Jon found the reports hard to read, and that verdict
+    # does not stop applying because the register changed.
+    prompts.SENTENCE_DISCIPLINE,
+    _WRITER_ECONOMY,
 ))
 
 # The house voice. Edit this to change how the standard report READS; pass a
@@ -558,7 +578,6 @@ WRITER_VOICE = "\n".join((
     prompts.VOICE_CORE,
     _WRITER_COMIC_AIM,
     prompts.NAMED_PRINCIPLES,
-    _WRITER_ECONOMY,
 ))
 
 
@@ -808,9 +827,9 @@ def report_around_draft(teg_num: int, plan: Union[StoryPlan, dict], dry_text: st
             experiment should name its own so it doesn't clobber the chain's
             intermediate. `write_from_dry` handles that for you.
         plan_scope: how much of the story plan the writer sees. `"full"`
-            (production), `"arc"` (narrative vehicles and story-arc fields only
-            — the dry draft supplies the facts), or `"none"` (dry draft alone,
-            which isolates the voice from any structural steer).
+            (production), `"arc"` (the frame vocabulary only: structure,
+            vehicles, palette. Enum values, no editor prose), or `"none"`
+            (dry draft alone, which isolates the voice from any steer).
         bundle_context: append the structured venue / career-history /
             win-anatomy block from the bundle (see `BUNDLE_CONTEXT_KEYS`). This
             is how you give a variant the full material WITHOUT the plan's
@@ -1114,7 +1133,7 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
 # `A_around_draft` intermediate. Promotion is a deliberate, separate act:
 # fold the winning voice into `WRITER_VOICE` and re-run the backfill.
 def write_from_dry(teg_num: int, voice: Optional[str], label: str, *,
-                   plan_scope: str = "arc",
+                   plan_scope: str = "full",
                    bundle_context: Union[bool, str] = False,
                    model: Optional[str] = None,
                    lint: bool = True,
@@ -1129,10 +1148,11 @@ def write_from_dry(teg_num: int, voice: Optional[str], label: str, *,
             as a delta ("drier than usual"). Pass None to run the house voice
             through the same path — the control case for any comparison.
         label: variant name. Writes `teg_N_report_{label}.md` (+ `_styled`).
-        plan_scope: how much story plan goes in with the draft. `"arc"`
-            (default) adds the narrative vehicles and story-arc fields, so the
-            report has a shape to follow; `"none"` sends the dry draft alone,
-            isolating the voice completely; `"full"` matches production.
+        plan_scope: how much story plan goes in with the draft. Defaults to
+            `"full"`, matching `report_around_draft` and production. `"arc"`
+            sends only the frame vocabulary (structure, vehicles, palette), so
+            the report has a shape to follow without inheriting any of the
+            editor's phrasing; `"none"` sends the dry draft alone.
         bundle_context: add the structured venue / career-history / win-anatomy
             block. Pair with `plan_scope="none"` when you want the full material
             with none of the plan's pre-written phrasing. Pass `"data"` instead

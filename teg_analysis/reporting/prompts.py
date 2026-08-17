@@ -53,11 +53,17 @@ VOICE_WRITERS_PHRASE = ", ".join(VOICE_WRITERS)
 # EXPERIMENTS.md (H8 / the restyle-voice method); do not edit it casually, and
 # regenerate a test report before and after if you do.
 # ---------------------------------------------------------------------------
-VOICE_CORE = """VOICE: faithful, entertaining, tongue-in-cheek. British English. No exclamation marks. \
-No obvious puns. No wacky tropes.
-
-SENTENCE DISCIPLINE. Read this before anything else. It is the single biggest thing that has \
-made past reports hard work to read.
+# ---------------------------------------------------------------------------
+# SENTENCE DISCIPLINE. Lived inside VOICE_CORE until 2026-08-17, which meant a
+# custom voice silently dropped it: the em-dash ban and the length rules were in
+# the half that a `voice=` swap REPLACES. Jon's readability verdict is the whole
+# reason these exist, so losing them on every style trial was backwards.
+#
+# Now its own constant, carried in `WRITER_CONTRACT` and by the round writer.
+# ---------------------------------------------------------------------------
+SENTENCE_DISCIPLINE = """SENTENCE DISCIPLINE. This holds whatever voice you are writing in. \
+It is the single biggest thing that has made past reports hard work to read, and no style \
+brief overrides it.
 
 1. **NO EM-DASHES. Not one, anywhere in the report.** This is absolute. If you want to add an \
    aside, a qualification or a second thought, start a new sentence instead. The em-dash is \
@@ -71,6 +77,16 @@ made past reports hard work to read.
 None of this reduces the comedy. It is the delivery mechanism for it. A punchline hung off the \
 end of a long sentence gets absorbed and dies. The same words, given their own short sentence, \
 land. Gravitas comes from the words you choose and the framing, never from sentence length.
+
+**If your style brief calls for an ornate or escalating build, build it ACROSS SENTENCES.** A \
+long run-up followed by a short flat landing is one of the best structures available, and it \
+does not require a single long sentence. Three short sentences climbing, then a four-word one \
+that drops. That is the same effect, and the reader can actually follow it.
+"""
+
+
+VOICE_CORE = """VOICE: faithful, entertaining, tongue-in-cheek. British English. No exclamation marks. \
+No obvious puns. No wacky tropes.
 
 Core mechanism, subverted gravitas: treat every score, every hole, every lurch up or down the \
 leaderboard with the unblinking solemnity of a Shakespearean tragedy or a geopolitical crisis. \
@@ -132,6 +148,131 @@ NAMED_PRINCIPLES = """Named principles, hold to these:
    rendered with the same solemnity as the disasters. If bathos turns low stakes into tragedy,
    it can equally turn low stakes into triumph. Wry, never gushing. Specific, never hollow.
 """
+
+# ---------------------------------------------------------------------------
+# THE OCCASION — mock-epic framing of the RESULT SHAPE, added 2026-08-17.
+#
+# Why it exists: the report's humour was almost entirely hole-level. A quintuple
+# bogey is funny, but a report built only from blow-ups has nothing to say about
+# a tournament where nobody blew up, and nothing that scales with the RESULT.
+# This block puts the second engine in: comedy from the shape of the win.
+#
+# Why it is CONTRACT and not voice: it specifies a rhetorical MOVE (find the
+# frame that scales the result, let the reality land against it) and leaves the
+# register of the frame entirely to the voice. A deadpan voice reaches for a
+# flat historical parallel; a vicious one reaches for Bristow. Both are doing
+# the same move. What must not vary is that the opening establishes the scale.
+#
+# The archetype is DATA, not judgement: every branch below reads a field the
+# bundle already computes in `win_anatomy` and `tournament_shape`.
+# ---------------------------------------------------------------------------
+ELEVATION_DEVICE = """THE OCCASION. How the report opens, and where its biggest laugh usually lives.
+
+Most of the comedy in a golf report comes from bad holes. That is one engine and it is not \
+enough: it says nothing about tournaments where nobody collapsed, and it does not scale with \
+the STORY. The second engine is the story itself, and it belongs in the opening.
+
+**THE MOVE.** Raise a frame far grander than the occasion deserves, then let a plain fact land \
+against it. The gap does the work. The canonical example, from darts:
+
+    "When Alexander of Macedonia was 33, he cried salt tears because there were no more worlds
+     to conquer. Bristow's only 27."
+
+Note what makes it work. The comparison is to something genuinely enormous. The deflation is a \
+FACT, delivered flat, not a joke. Nobody winks. The speaker appears entirely sincere.
+
+**THE TWO TESTS. Every occasion must be both HAMMABLE and HAMMED.**
+
+*Hammable* is about the material. A frame needs a real asymmetry to hang on: a drought, a \
+collapse, a streak, a margin, a reversal, a career arriving somewhere. The tables below tell \
+you where to look, and there is always at least one. What you must not do is manufacture one. A \
+grand frame draped over nothing is the worst available outcome, because it reads as a writer \
+straining rather than a subject deserving.
+
+*Hammed* is about the delivery, and it is the more common failure. Having found the angle, \
+COMMIT to it. Half-hamming is worse than not hamming: it spends the material and lands nothing. \
+The difference is between stating a fact and building a frame.
+
+    STATED (wrong):  "Baker had finished fourth three times and finally won."
+    HAMMED (right):  "Baker had finished fourth in three consecutive TEGs. Fourth is not a
+                      result. It is a verdict, delivered annually, by a committee of his
+                      friends. This year the committee was overruled."
+
+Same fact. The second one is the job.
+
+**AXIS ONE, THE RESULT: what shape did this tournament finish in?** Read it off `win_anatomy` \
+and `tournament_shape`. Do not guess; these fields classify it already.
+
+- **`attribution: "built"` with a wide margin.** A procession. The frame is conquest with \
+nothing left to conquer, dominance that has run out of opposition, an empire administering \
+territory nobody contests. The deflating fact is the smallness of what was actually won.
+- **`attribution: "inherited"`.** The rival outplayed the winner over more rounds and lost \
+anyway. This is a ROBBERY and should be written as one: the wronged party, the injustice \
+recorded with the solemnity of a public inquiry, the beneficiary entirely untroubled. Never \
+frame it as the winner being undeserving; frame it as fate being administratively incompetent.
+- **`attribution: "unopposed"`.** Nobody laid a glove on them. The comedy is the absence of a \
+contest, an occasion staged for a result nobody was going to change.
+- **`biggest_lead_blown` present.** Somebody led by a stated margin as late as a stated hole \
+and lost it. This is the collapse, and it is tragedy, not slapstick. Name the hole. The frame \
+is a fall from a great height, and the drop is measured precisely because precision is what \
+makes it hurt.
+- **`rival_could_have_flipped_it: true`.** One ordinary round instead of their worst and the \
+result reverses. The frame is haunting: the thing that did not happen, present throughout.
+- **`close_finish: true`.** The margin is trivial and the stakes are nothing, so treat both as \
+though civilisations turned on them. Geopolitical, seismic, dynastic.
+- **`shape: "volatile"` in a winner.** They won while swinging wildly. The frame is a man \
+carried to victory by a machine he is not operating.
+- **`shape: "consistent"` in a winner.** They never had a bad day. This is the hardest one to \
+make funny and the easiest to skip, so do not skip it: the frame is grinding inevitability, \
+something geological or bureaucratic, a process rather than a contest. Steadiness is only dull \
+if you write it as an absence of drama instead of as the thing that crushed everyone else.
+
+**AXIS TWO, THE CAREER: what walked into this tournament, and what walked out?** Read it off \
+each player's `notable_milestones` and `last_4_positions` in `player_history`. This axis is \
+often the better one, because it carries stakes the tournament alone cannot.
+
+- **A drought ended.** A milestone naming prior runner-up finishes or a repeated rank, and the \
+player wins this time. This is the CHANCE SEIZED, and it is the most emotionally loaded thing \
+in the data. The frame is a sentence commuted, a siege lifted, a long-running injustice \
+belatedly corrected. Earn it by making the years of failure real first. A payoff with no setup \
+is just a result.
+- **A drought extended.** The same milestones, and the player falls short again. The CHANCE \
+MISSED. The frame is Sisyphean, or a man kept permanently one rung below a promotion nobody \
+will explain. Play it straight and it is funnier: no pity, no consolation, just the record \
+noting another year.
+- **A repeated rank** (`"rank Nth in each of the last M TEGs"`). Someone has finished in the \
+same position with machine-like reliability. Treat the position as an office they hold, a post \
+they were appointed to, a seat with their name on it.
+- **Serial Wooden Spoons** (`"back-to-back Wooden Spoons"`, `"Wooden Spoon in N of the last M"`, \
+`"reigning Wooden Spoon holder"`). The best of the inversions. Sustained, reliable, \
+year-on-year awfulness is an ACHIEVEMENT and should be written as one: a discipline, a \
+vocation, a standard heroically maintained against the constant threat of accidental \
+competence. Congratulate the dedication. Never pity the golf.
+- **The defending champion** (only where a milestone says so in as many words). Incumbency, \
+with everything that implies: a title to defend, a reign, and either a dynasty or a deposition.
+
+**BRAIDING THE TWO.** The strongest openings run both axes at once, because the result gets its \
+meaning from the career. A two-point win is a small thing; a two-point win by a man who has \
+been runner-up three times is a story. Where the axes point the same way, braid them. Where \
+they conflict, the career usually wins.
+
+**RULES.**
+1. **Once per report, in the opening.** A second grand frame halves the first. Later callbacks \
+to the SAME frame are welcome; a new one is not.
+2. **The frame must be true to the data.** Do not write a robbery when `attribution` says \
+`built`, a collapse when nothing was blown, or a drought ended when no milestone records a \
+drought. A misapplied frame is a factual error wearing a costume.
+3. **Deflate with a fact, never with a punchline.** The fact is funnier and it cannot be wrong.
+4. **Reach outside golf.** History, myth, war, geology, statecraft, natural disaster, the law. \
+A comparison to another sport is not elevation, it is a like-for-like.
+5. **The register of the frame is the VOICE's business, not this block's.** Whatever voice you \
+have been given, execute the move in it. A plain voice states the grand parallel plainly. That \
+still works. What is not optional is that the opening establishes the SCALE of what happened.
+6. **It must survive being true.** Every fact inside the frame comes from the draft or the \
+context. Invent nothing to make the parallel land, and claim no career history that is not in \
+`notable_milestones`.
+"""
+
 
 # ---------------------------------------------------------------------------
 # Scoring redundancy. Was principle 5 of NAMED_PRINCIPLES until 2026-08-16.

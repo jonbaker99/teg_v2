@@ -52,6 +52,99 @@ no API key and no network in this container).
 
 ---
 
+### Readability moved into the contract; `arc` narrowed (2026-08-17)
+
+Three corrections once the swappable voice slot met a real styles file.
+
+**1. A custom voice was dropping the em-dash ban and the length rules.** `SENTENCE_DISCIPLINE`
+(extracted from `VOICE_CORE`) and `_WRITER_ECONOMY` both sat in the half a `voice=` swap replaces.
+They exist because Jon found the reports hard to read; that verdict does not stop applying because
+the register changed. Both now live in `WRITER_CONTRACT`, and the round writer carries
+`SENTENCE_DISCIPLINE` explicitly since it has left `VOICE_CORE`.
+
+`SENTENCE_DISCIPLINE` also gained a reconciliation clause, because several house styles (Wodehouse,
+Hyde) call for a long ornate build: **build it across several short sentences**, then land on a
+short flat one. Same effect, followable prose. Without this the block simply contradicts the style
+brief and the model picks one at random.
+
+**2. `plan_scope` had two defaults.** `report_around_draft` defaulted `"full"`, `write_from_dry`
+`"arc"`. One parameter, one default: both are `"full"` now.
+
+**3. The base report was shipping the editor's headlines.** Stage 4a is told to use the plan's
+`chosen_headline` as each round heading, so a dry draft is flat everywhere except the four lines
+that sit exactly where the report's own headings go: TEG 17's rounds opened on *"One Hole:
+Mullin's Green Jacket Reign in Full"*. Fine inside the pipeline, where the writer has the plan
+anyway. In a voice trial it is the largest piece of borrowed phrasing in the packet, and it was
+being missed because attention was on the context file. `export_cowork_kit` now rewrites them to
+`## Round N: Course, Weekday` by default (`--keep-headlines` to opt out).
+
+**4. `arc` was still shipping the editor's prose.** It carried `title`, `theme`, `opening_hook`,
+`foreshadow`, `payoffs` and `why_the_champion_won` — all written sentences, and an opening hook is
+a draft of the opening. Narrowed to the frame VOCABULARY alone: `narrative_structure`,
+`narrative_vehicles`, `prominent_vehicle`, `prominent_palette`. Enum values, no prose. Same
+objection that kept `rounds[].angle` out of it.
+
+---
+
+### A second comic engine: the occasion device (2026-08-17)
+
+**The problem.** The report's humour was almost entirely hole-level. A quintuple bogey is funny, but
+a report built only from blow-ups has nothing to say about a tournament where nobody blew up, and
+nothing that scales with the RESULT. Jon's example of the missing register, from darts: *"When
+Alexander of Macedonia was 33, he cried salt tears because there were no more worlds to conquer.
+Bristow's only 27."*
+
+**`prompts.ELEVATION_DEVICE`** puts that engine in. Raise a frame far grander than the occasion
+deserves, then let a plain fact land against it. Crucially the frame is **read off the data, not
+guessed**, on two axes.
+
+**Axis one, the result** (`win_anatomy`, `tournament_shape`) — what shape did this tournament
+finish in?
+
+| Signal | Archetype |
+|---|---|
+| `attribution: "built"`, wide margin | procession, conquest with nothing left to conquer |
+| `attribution: "inherited"` | robbery, the rival who outplayed and lost |
+| `attribution: "unopposed"` | walkover, an occasion staged for a foregone result |
+| `biggest_lead_blown` present | collapse, a fall from a stated height at a named hole |
+| `rival_could_have_flipped_it` | the haunting counterfactual |
+| `close_finish` | trivial margin treated as dynastic |
+| `shape: "volatile"` / `"consistent"` | carried by a machine he isn't operating / grinding inevitability |
+
+**Axis two, the career** (`player_history.notable_milestones`, `last_4_positions`) — what walked
+in, and what walked out? Added 2026-08-17 on Jon's prompting; often the better axis, because it
+carries stakes the tournament alone cannot.
+
+| Milestone pattern | Archetype |
+|---|---|
+| runner-up / repeated rank, and wins this time | **chance seized** — a sentence commuted, a siege lifted |
+| runner-up / repeated rank, and falls short again | **chance missed** — Sisyphean, played straight |
+| `"rank Nth in each of the last M TEGs"` | the position as an office he holds |
+| `"back-to-back Wooden Spoons"`, `"reigning Wooden Spoon holder"` | **the inverted achievement** — sustained awfulness as a vocation heroically maintained |
+| `"defending Trophy champion"` | incumbency: a dynasty or a deposition |
+
+The strongest openings **braid** the two: a two-point win is a small thing, a two-point win by a
+man who has been runner-up three times is a story.
+
+**Hammable AND hammed** (Jon's phrasing). Two distinct failures, both now named in the block: a
+grand frame draped over material that cannot carry it, and finding the angle then under-delivering
+it. The second is the common one, so the block carries a worked STATED-vs-HAMMED pair, because
+"commit to the frame" is not actionable without an example.
+
+**It is CONTRACT, not voice.** It specifies a rhetorical move and leaves the register of the frame
+entirely to the voice: a deadpan voice states the grand parallel flatly, a vicious one reaches for
+Bristow. Both execute the same move. What must not vary is that the opening establishes the scale.
+`tournament_shape` joined `BUNDLE_CONTEXT_KEYS` so `close_finish` reaches the writer.
+
+**This does change the house writer prompt** — it is the first content added to `WRITER_CONTRACT`
+rather than moved within it. Nothing regenerates until a backfill runs.
+
+Two tests guard it: every value `win_anatomy` can emit must have an archetype (this caught
+`shape: "consistent"` being unaddressed on the first pass), and every field the block names must
+exist and be in `BUNDLE_CONTEXT_KEYS`.
+
+---
+
 ### The writer prompt now has a swappable VOICE slot (2026-08-16)
 
 **Why:** trying a new register meant editing `WRITER_VOICE` in the source, running the writer, then

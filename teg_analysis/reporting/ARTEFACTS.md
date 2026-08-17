@@ -388,6 +388,30 @@ inert — the site never reads them.
 > the guardrails below it (faithfulness, output format) are fixed by design — a voice cannot shed
 > them. To change those, edit `WRITER_CONTRACT` or `WRITER_FAITHFULNESS` and see ⑧.
 
+#### Running the loop outside the pipeline
+
+If the rewriting happens somewhere else — a Cowork folder, a browser tab, another model — the same
+constants have to travel as a file:
+
+```bash
+python -m scripts.export_cowork_kit --tegs 4,14,17 --out ~/cowork/teg
+```
+
+Writes `base reports/teg_N_dry_draft.md`, `base reports/teg_N_context.json` (the
+`bundle_context="data"` packet) and `reporting guidance.md` (`WRITER_CONTRACT` + `WRITER_FAITHFULNESS`
++ the output rule, with a preamble saying there is no story plan). **Generate it, never hand-copy it**
+— a hand-written copy is a fourth place the faithfulness rules live, and copies are what `prompts.py`
+exists to prevent. Re-run after any constant changes.
+
+The default trio exercises three branches of `ELEVATION_DEVICE`: **4** is a collapse (Jon Baker led by
+7 as late as the 8th of R4 and lost it), **14** a robbery (`attribution: "inherited"`, two-point
+finish), **17** a procession (`attribution: "built"`, eighteen-point margin). A register that works on
+one can fall flat on the others.
+
+Unlike the in-pipeline `bundle_context="data"` packet, the kit **keeps `notable_milestones`**: it is
+the only licensed source for "defending champion" framing, which the occasion device leans on. Pass
+`--strict-data` to drop it.
+
 ### ⑦ Comparing voice registers — ~$0.10 each · choosing the register
 
 When the question is "which register?" rather than "is this prompt better?", rewrite a **finished**
