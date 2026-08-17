@@ -11,6 +11,13 @@ a Jacket-leader → Spoon-winner subplot) is the useful second read.
 
 ## OPEN
 
+> **H8 (humour dial) is settled** as of 2026-08-15 — verdict `humour6`. It is left in place in this
+> section rather than moved down, because the method write-up is long, is the reusable part, and is
+> referenced from STATUS.md by heading. Its own heading carries the verdict.
+>
+> **H10 (selection weights) is also settled** — `balanced` is (1.5, 0.8, 0.7) as of 2026-08-11. What
+> remains open under H10 is the optional plan-stage confirmation, not the setting.
+
 ### H10. Selection weights — the untuned lever
 
 **Goal:** the 3-axis scoring in `scoring.py` decides which beats the editor ever sees. The weights
@@ -335,7 +342,23 @@ variables and testing them together wastes both runs.
 
 ---
 
-### H8. Humour dial — 3 vs 6 vs 8 vs 8b *(the live decision)*
+### H8. Humour dial — 3 vs 6 vs 8 vs 8b → **SETTLED at `humour6`, 2026-08-15**
+
+> **Verdict (Jon, 2026-08-15):** the published reports are *"80% good, lacking a bit in humour, and a bit
+> hard to read. Sentences run long and the constructs rapidly become hard work."* **`humour6` wins** —
+> 5–7 landed comic moments per report rather than the 2–3 the baseline produced.
+>
+> It was folded into **`prompts.VOICE_CORE`** (not `WRITER_VOICE`, because by then the voice had moved to
+> the shared module and both writers needed it), together with two readability changes that came out of
+> the same reading — **em-dashes banned outright** and a **~15-word sentence average, hard stop ~25**.
+>
+> **Still owed: one from-scratch generation.** See *What the method does not prove* below — that caveat
+> was written before the verdict and is exactly the outstanding step. Every report on disk predates the
+> change (566 em-dash warnings library-wide as of 2026-08-17), so nothing yet demonstrates the writer
+> reaching `humour6` cold from the bundle.
+>
+> Kept in full below because the *method* is the reusable part: a rewrite-a-finished-report A/B is the
+> cheapest way to choose a register, and the next voice question should use it again.
 
 **Goal:** the published reports sit at roughly 3/10 humour — deadpan gravitas, very dry. Test whether
 dialling up lands better with the insider audience, and which added register works.
@@ -371,13 +394,13 @@ one API call per variant instead of a full regeneration.
 the writer will *hit it first time* from the bundle. Whatever wins must be folded into
 `WRITER_SYSTEM` and validated with a from-scratch generation before it is trusted for a backfill.
 
-**How to settle it:** read `teg_14_report_styled.md` against the three TEG 14 variants side by side,
-then the TEG 18 pair. Score on: does it still read as faithful; does the added humour land or strain;
-would the players enjoy it more. Then fold the winning register into `WRITER_SYSTEM`, regenerate
-TEG 14 from scratch to confirm it lands, and record the verdict here.
+**How it was settled:** read `teg_14_report_styled.md` against the three TEG 14 variants side by side,
+then the TEG 18 pair, scoring on faithfulness, whether the added humour lands or strains, and whether
+the players would enjoy it more. The winning register went into the writer prompt; the from-scratch
+confirmation on TEG 14 is the one step not yet done.
 
 **Notes:**
-- Nothing was published.
+- Nothing was published — the decision lives in the prompt, not in a promoted variant file.
 - **2026-08-11: the method is now a proper lever.** `authoring.restyle_voice(teg, voice_prompt,
   label)` replaces the one-off script; `scripts/humour_dial.py` is a thin parameterised wrapper
   holding the three registers (`--teg N --variant humour8b`). The `humour8bb` TEG 18 retry that died
@@ -385,11 +408,12 @@ TEG 14 from scratch to confirm it lands, and record the verdict here.
   `WRITER_FAITHFULNESS` constant rather than being restated inline, and every variant is checked for
   faults the rewrite *introduced* (`new_findings`) — which is the specific risk that got the
   critique-revise variant rejected.
-- Fold the winner into **`WRITER_VOICE`**, not `WRITER_SYSTEM` — voice and faithfulness are separate
-  constants now, and only the voice half should move.
-- This blocks the regeneration work — don't regenerate the stale reports until the voice is locked.
+- The winner went into **`prompts.VOICE_CORE`** — voice and faithfulness are separate constants, and the
+  voice half is shared by both pipelines, so a change there reaches the round writer too.
+- This blocked the regeneration work. **It no longer does** — what blocks it now is the cold-generation
+  validation, which is ~$0.65 rather than a decision.
 
-**Verdict:** _(open)_
+**Verdict:** **`humour6`**, plus an em-dash ban and a ~15-word sentence average. 2026-08-15.
 
 ---
 
@@ -466,11 +490,16 @@ times — only two of {result name, raw score, par} are needed.
 
 1. **Principle 5** in `WRITER_SYSTEM`: never use gross score, relation to par, and par of the hole
    all at once. Two is enough.
-2. The **ECONOMY** block — 11 construction rules: em-dash ceiling of two per paragraph;
+2. The **ECONOMY** block — 11 construction rules: em-dashes **banned outright** (this was a ceiling of
+   two per paragraph until 2026-08-15, when H8 tightened it to zero);
    subordinate-clause budget; no "particular kind of X" preambles; no subject-burying preambles;
    plain word over inflated phrasing; split run-on factual lists; two equal facts = two sentences;
    one aside form per sentence; compressed rhythmic lists and bogey shorthand ("quad, triple, double");
    punchline isolation; one dominant idea per paragraph.
+
+   The same pass removed the block's *"long sentences that earn their length stay long"* licence, which
+   had been silently cancelling the sentence cap. `TIGHTEN_SYSTEM` still carries both old forms — see
+   STATUS.md known issue 19.
 
 **Design decision:** these were deliberately baked into `WRITER_SYSTEM` so the writer constructs tight
 on the *first* pass, rather than relying on a fix-up pass. The standalone `tighten_prose()` /

@@ -5,10 +5,12 @@ description: Answer TEG report-generation prompts so they run on claude.ai plan 
 
 # Answer TEG report prompts from the mailbox
 
-The report pipeline is running in another terminal with `TEG_LLM_PROVIDER=agent`
-(the default). Instead of calling the Anthropic API, it writes each prompt to a
-file and waits. **You are the model it is waiting for.** Answering here draws on
-plan usage rather than per-token API billing, which is the entire point.
+The report pipeline is running in another terminal under the `agent` provider —
+started with `--plan`, or with `TEG_LLM_PROVIDER=agent` set. **`api` is the
+default**, so this only happens when someone opted in. Instead of calling the
+Anthropic API, the pipeline writes each prompt to a file and waits. **You are the
+model it is waiting for.** Answering here draws on plan usage rather than
+per-token API billing, which is the entire point.
 
 Run from the repo root — every path is cwd-relative.
 

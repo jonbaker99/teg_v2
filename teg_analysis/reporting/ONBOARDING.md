@@ -19,43 +19,52 @@ Read in this order; stop when you have enough for the task:
    loop costs ~$0.17 from the right restart point and ~$0.65 from the wrong one, and several
    elements can be inspected for free before you spend at all
 4. **`EXPERIMENTS.md`** — what's been tried on voice/structure, what the verdicts were, what's open
-5. **`story_plan.py`** — `StoryPlan` Pydantic schema + editor system prompt (incl. the narrative-vehicle
+5. **`prompts.py`** — **the shared prompt blocks, and the only place the voice is defined**
+   (`VOICE_CORE`, `NAMED_PRINCIPLES`, `HOUSE_VOICE_SUMMARY`, `SHARED_FAITHFULNESS`,
+   `STROKE_INDEX_RULE`, `OUTPUT_RULE`). All four prompts import from here. Short, and it is where any
+   voice or faithfulness change belongs — read it before `authoring.py`
+6. **`story_plan.py`** — `StoryPlan` Pydantic schema + editor system prompt (incl. the narrative-vehicle
    menu) + `assemble_bundle()`; the editorial brain, and the most compressed description of what the
    LLM is asked to do
-6. **`authoring.py`** — Stage 4 orchestration and every system prompt (`WRITER_SYSTEM`,
-   `WRITER_VOICE` / `WRITER_FAITHFULNESS`, `DRY_DRAFT_SYSTEM_*`, `LINT_SYSTEM`, `TIGHTEN_SYSTEM`)
-7. **`events.py`** — beat detection and 3-axis scoring; only load if the work touches beat
-   generation (900 lines)
-8. **`round_report.py`** — per-round pipeline; only load if working on round reports
+7. **`authoring.py`** — Stage 4 orchestration and the tournament-only prompts (`WRITER_SYSTEM`,
+   composed from `WRITER_VOICE` + `WRITER_FAITHFULNESS` + `WRITER_OUTPUT_RULE`; `DRY_DRAFT_SYSTEM_*`,
+   `LINT_SYSTEM`, `TIGHTEN_SYSTEM`)
+8. **`events.py`** — beat detection and 3-axis scoring; only load if the work touches beat
+   generation (900 lines). `impact.py` (counterfactual importance) and `win_anatomy.py` (why the
+   champion won) go with it
+9. **`round_report.py`** — per-round pipeline; only load if working on round reports
+10. **`mailbox.py`** — the prompt hand-off behind `--plan` / `--paste`; only load if a run is stuck
 
 ---
 
 ## Current state snapshot
 
-*(Verified 2026-08-10. Update this section when phases complete or known issues are fixed —
+*(Verified 2026-08-17. Update this section when phases complete or known issues are fixed —
 the detail lives in STATUS.md, this is just the headline.)*
 
-- **All stages built.** Phases A–G closed; an unlogged **Phase H** (narrative vehicles, setup→payoff
-  pairs, close-finish rule, economy/tightening, cross-TEG + course history, faithfulness hardening)
-  landed after them.
-- **Tournament coverage complete** — TEGs 2–18 all published. (There is no TEG 1 in the data;
+- **All stages built**, including D3 verification (`verify.py`, 8 checks, auto-run by `backfill.py`) and
+  a provider switch that runs the same prompts on claude.ai plan usage instead of the API.
+- **Tournament coverage complete and now one vintage** — TEGs 2–18 all published, all regenerated on
+  2026-08-13, all with a complete artefact chain (plan, dry draft, final, styled). Five (4, 8, 12, 14, 18)
+  also carry the 2026-08-14 counterfactual/`win_anatomy` rework. (There is no TEG 1 in the data;
   TEG 2 has 3 rounds, every other TEG has 4.)
-- **Round reports published for TEGs 8/9/10 (all rounds), 11 (R1–R2), 14 (R1, R4), 18 (R3).**
-  17 of 67 — **50 outstanding** for full coverage.
-- **The library is not one vintage.** TEGs 2–8, 15, 16 predate Phase H; 9 is partial; 10–14, 17, 18
-  are current. All round reports predate Phase H. Vintage is fingerprinted from
-  `teg_N_story_plan.json` — `payoffs` / `narrative_vehicles` present ⇒ current.
-- **Work stopped mid-experiment** on a humour-dial A/B (3 → 6 → 8 → 8b) run on TEGs 14 and 18.
-  Outputs are on disk, unpublished, **no verdict recorded**. That decision is the first pick-up item.
-- **Known issues:** see STATUS.md — the register was cleared on 2026-08-11 (D3 verification
-  built; era leak, shared-vocabulary schema, arc weighting and model pin all fixed). What
-  remains is two judgement calls (humour dial, selection weights) and prose-wording faults
-  in older reports that regeneration clears. Historic note:
-  `enrich_report_with_history()` was deleted; `backfill.py` doesn't call the tighten
-  passes; `RoundStoryPlan` is a generation behind; TEG 10 R3 arithmetic error
-  ("fourteen-point swing" should be sixteen); `teg_reports.css` duplicated across
-  `streamlit/styles/` and `webapp/static/`; Python 3.14 has a jinja2/starlette template-cache bug so
-  webapp visual checks need 3.12/3.13.
+- **Round reports: TEGs 8/9/10 (all rounds), 11 (R1–R2), 14 (R1, R2, R4), 18 (R3).** 18 of 67 —
+  **49 outstanding**. All 18 are two generations behind the round code, which is itself untested on real
+  output.
+- ⚠️ **What the site serves is not what was generated.** The 2026-08-13 run used `style=False`, so **16
+  of 17 `*_report_styled.md` files still hold pre-regeneration prose.** Re-styling is free; it hasn't
+  been done. Check before concluding anything from reading the site.
+- **Voice is settled and unvalidated.** The humour dial closed on 2026-08-15 at `humour6`, with em-dashes
+  banned outright and a ~15-word sentence average, all in `prompts.VOICE_CORE`. **No report on disk was
+  generated under it** — 566 em-dash warnings library-wide say so. One cold generation is the first
+  pick-up item.
+- **Known issues:** see STATUS.md. The 2026-08-11 register is almost entirely cleared, and the 81
+  prose-wording faults cleared with the regeneration (D3 now reports **0 errors on all 17 tournament
+  reports**; the only 4 left are in round reports). Still open: `TIGHTEN_SYSTEM` contradicts the em-dash
+  ban (dormant, nothing calls it); raw `SI n` leaking into prose; a stray tracked `reply.txt` at the repo
+  root; `output_config.effort` never set; `teg_reports.css` duplicated across `streamlit/styles/` and
+  `webapp/static/`; Python 3.14 has a jinja2/starlette template-cache bug so webapp visual checks need
+  3.12/3.13.
 
 ---
 
@@ -74,6 +83,11 @@ the detail lives in STATUS.md, this is just the headline.)*
 - Audience = the players themselves (insiders who catch errors) → **faithfulness over flair**
 - Voice: Herron / Ronay / Armstrong / Iannucci — subverted gravitas; never zany, never wink at the
   camera. **Defined once in `prompts.py` → `VOICE_CORE`; every prompt imports it. Never re-inline it.**
+- **No em-dashes at all** (banned outright 2026-08-15, not a ceiling), sentences averaging ~15 words with
+  a hard stop around 25, and 5–7 landed comic moments per report. D3 checks the em-dash rule
+- **The report is the winner's story** — `why_the_champion_won` is a required plan field. Hard on the
+  champion's golf, never on the achievement, and delivered elevated rather than flat
+- **Translate stroke index, never quote it** — "the hardest hole on the course", not "SI 1"
 - Use **only** data in the supplied bundle — never invent facts or hole details
 
 ---
@@ -127,5 +141,5 @@ Full detail: [README.md](README.md) → *Who answers the prompts*.
 | `teg_N_report_styled.md` | 5 | **The live file** — CSS-class annotated, standings + records injected |
 | `teg_N_round_R_*` | — | Same set, round level |
 
-Anything else in `data/commentary/` is experiment output or an archived generation — see the naming
-conventions table in [README.md](README.md#artefacts-per-teg-under-datacommentary).
+Anything else in `data/commentary/` is experiment output, a variant directory or an archived
+generation — see the decoder in [ARTEFACTS.md](ARTEFACTS.md#everything-else-in-the-folder).
