@@ -127,6 +127,31 @@ that works on one can fall flat on another.
 | 14 | Two points, and the rival outplayed him over more rounds | robbery |
 | 17 | Eighteen points, built from the front | procession |
 
+## Which styles suit this material
+
+From `styles/humour styles.md`, read against what a TEG report actually is: third-person
+reportage, no dialogue, real people who will read it.
+
+| Style | Fit | Why |
+|---|---|---|
+| Marina Hyde | strong | Reportage voice, already contemporary, thrives on a reader who knows the cast |
+| Clive James | strong | Built for "praise generously before the knife", which is exactly the champion rule |
+| Mick Herron | strong | Already the house register's first device, so it doubles as a familiar baseline |
+| PG Wodehouse | strong | Scale mismatch IS the occasion device. Watch the build rule below |
+| Auberon Waugh | good | Note its own warning about real living people. These are your friends |
+| Evelyn Waugh | awkward | "Almost no metaphor" fights a device that asks for a grand frame. Resolve it by stating the parallel flatly, which the guidance explicitly permits |
+| Armando Iannucci | poor | Its own entry says it needs dialogue or quoted voices. A TEG report has none |
+| Jesse Armstrong | poor | Same. Dialogue-driven, and there is no dialogue to drive |
+
+Two collisions worth knowing before you read the output and blame the style:
+
+- **Wodehouse and Hyde both call for a long ornate build.** The guidance caps sentence length
+  and bans em-dashes outright. These are reconcilable and the guidance says how: build the
+  escalation ACROSS several short sentences, then land it on a short flat one. Do not let the
+  style brief win that argument.
+- **Every style is a register, not a licence.** The guidance's structural and faithfulness rules
+  are not part of the voice and cannot be overridden by a style entry.
+
 ## Checking the output
 
 Before judging the prose, check the facts. The failure that matters is the voice

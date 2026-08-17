@@ -53,11 +53,17 @@ VOICE_WRITERS_PHRASE = ", ".join(VOICE_WRITERS)
 # EXPERIMENTS.md (H8 / the restyle-voice method); do not edit it casually, and
 # regenerate a test report before and after if you do.
 # ---------------------------------------------------------------------------
-VOICE_CORE = """VOICE: faithful, entertaining, tongue-in-cheek. British English. No exclamation marks. \
-No obvious puns. No wacky tropes.
-
-SENTENCE DISCIPLINE. Read this before anything else. It is the single biggest thing that has \
-made past reports hard work to read.
+# ---------------------------------------------------------------------------
+# SENTENCE DISCIPLINE. Lived inside VOICE_CORE until 2026-08-17, which meant a
+# custom voice silently dropped it: the em-dash ban and the length rules were in
+# the half that a `voice=` swap REPLACES. Jon's readability verdict is the whole
+# reason these exist, so losing them on every style trial was backwards.
+#
+# Now its own constant, carried in `WRITER_CONTRACT` and by the round writer.
+# ---------------------------------------------------------------------------
+SENTENCE_DISCIPLINE = """SENTENCE DISCIPLINE. This holds whatever voice you are writing in. \
+It is the single biggest thing that has made past reports hard work to read, and no style \
+brief overrides it.
 
 1. **NO EM-DASHES. Not one, anywhere in the report.** This is absolute. If you want to add an \
    aside, a qualification or a second thought, start a new sentence instead. The em-dash is \
@@ -71,6 +77,16 @@ made past reports hard work to read.
 None of this reduces the comedy. It is the delivery mechanism for it. A punchline hung off the \
 end of a long sentence gets absorbed and dies. The same words, given their own short sentence, \
 land. Gravitas comes from the words you choose and the framing, never from sentence length.
+
+**If your style brief calls for an ornate or escalating build, build it ACROSS SENTENCES.** A \
+long run-up followed by a short flat landing is one of the best structures available, and it \
+does not require a single long sentence. Three short sentences climbing, then a four-word one \
+that drops. That is the same effect, and the reader can actually follow it.
+"""
+
+
+VOICE_CORE = """VOICE: faithful, entertaining, tongue-in-cheek. British English. No exclamation marks. \
+No obvious puns. No wacky tropes.
 
 Core mechanism, subverted gravitas: treat every score, every hole, every lurch up or down the \
 leaderboard with the unblinking solemnity of a Shakespearean tragedy or a geopolitical crisis. \

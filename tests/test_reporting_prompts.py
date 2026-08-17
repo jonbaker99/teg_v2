@@ -317,3 +317,57 @@ def test_the_occasion_device_demands_both_hammable_and_hammed():
     # The hammable half must warn against manufacturing an angle, or it reads
     # as pure encouragement and every report opens with a strained parallel.
     assert "manufacture" in block
+
+
+def test_readability_rules_survive_a_voice_swap():
+    """Jon, 2026-08-17: "we need the em dash and sentence length rules."
+
+    They lived in VOICE_CORE and `_WRITER_ECONOMY`, both in the half a `voice=`
+    swap REPLACES, so every style trial silently dropped them. They exist
+    because Jon found the reports hard to read, and that verdict does not stop
+    applying because the register changed.
+    """
+    from teg_analysis.reporting import authoring
+
+    custom = authoring.build_writer_system("VOICE: whatever you like.")
+    assert "NO EM-DASHES" in custom
+    assert "Average around 15 words" in custom
+    assert "Em-dashes are banned outright" in custom      # the ECONOMY restatement
+    assert prompts.SENTENCE_DISCIPLINE in authoring.WRITER_CONTRACT
+    assert prompts.SENTENCE_DISCIPLINE not in authoring.WRITER_VOICE
+    # The round writer lost it from VOICE_CORE too and must carry it explicitly.
+    from teg_analysis.reporting import round_report
+    assert prompts.SENTENCE_DISCIPLINE in round_report.ROUND_WRITER_SYSTEM
+
+
+def test_sentence_discipline_reconciles_styles_that_want_an_ornate_build():
+    """Several house styles call for a long build. The rule must say how.
+
+    Without this the block simply contradicts the style brief, and the model
+    picks one at random. The resolution is that a build is made of several short
+    sentences, which is what VOICE_CORE already said about the Ronay device.
+    """
+    assert "ACROSS SENTENCES" in prompts.SENTENCE_DISCIPLINE
+
+
+def test_arc_scope_carries_no_editor_prose():
+    """`arc` is the frame VOCABULARY, not a précis of the report.
+
+    `opening_hook` is a draft of the opening and `theme` is a written
+    through-line; shipping them to a voice experiment contaminates the thing
+    being measured, which is the same reason `players[].arc` was never in `arc`.
+    """
+    from teg_analysis.reporting.authoring import ARC_PLAN_FIELDS
+    for prose_field in ("title", "theme", "opening_hook", "foreshadow",
+                        "payoffs", "why_the_champion_won"):
+        assert prose_field not in ARC_PLAN_FIELDS, prose_field
+    assert set(ARC_PLAN_FIELDS) == {"narrative_structure", "narrative_vehicles",
+                                    "prominent_vehicle", "prominent_palette"}
+
+
+def test_the_two_writer_entry_points_default_the_same_way():
+    """One parameter, one default. Two was a trap."""
+    import inspect
+    from teg_analysis.reporting import authoring
+    for fn in (authoring.report_around_draft, authoring.write_from_dry):
+        assert inspect.signature(fn).parameters["plan_scope"].default == "full", fn.__name__

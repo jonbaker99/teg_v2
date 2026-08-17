@@ -131,9 +131,15 @@ separately because that's what they are.
   ```
 
   The line between contract and voice is *"would this still be true if the report were written flat
-  and straight?"* — the winner's-story duty, the structure, the palette, the scoring-redundancy
-  notation and the SI guidance all survive that test and live in `WRITER_CONTRACT`; the comic
-  mechanisms, the mockery calibration and the sentence economy do not, and live in `WRITER_VOICE`.
+  and straight?"* — the winner's-story duty, the occasion device, the structure, the palette, the
+  notation rules, **the em-dash ban and the sentence/economy discipline** all survive that test and
+  live in `WRITER_CONTRACT`; the comic mechanisms, the named principles and the mockery calibration
+  do not, and live in `WRITER_VOICE`.
+
+  > Readability moved across on 2026-08-17. `SENTENCE_DISCIPLINE` and `_WRITER_ECONOMY` had been in
+  > the voice half, so a `voice=` swap silently dropped the em-dash ban and the length rules. They
+  > exist because the reports were found hard to read, and that does not stop applying because the
+  > register changed.
   A `voice=` argument **replaces** `WRITER_VOICE` wholesale — it is a complete register description,
   not a delta — and cannot shed the contract or the guardrails. Asserted in tests.
 

@@ -52,6 +52,32 @@ no API key and no network in this container).
 
 ---
 
+### Readability moved into the contract; `arc` narrowed (2026-08-17)
+
+Three corrections once the swappable voice slot met a real styles file.
+
+**1. A custom voice was dropping the em-dash ban and the length rules.** `SENTENCE_DISCIPLINE`
+(extracted from `VOICE_CORE`) and `_WRITER_ECONOMY` both sat in the half a `voice=` swap replaces.
+They exist because Jon found the reports hard to read; that verdict does not stop applying because
+the register changed. Both now live in `WRITER_CONTRACT`, and the round writer carries
+`SENTENCE_DISCIPLINE` explicitly since it has left `VOICE_CORE`.
+
+`SENTENCE_DISCIPLINE` also gained a reconciliation clause, because several house styles (Wodehouse,
+Hyde) call for a long ornate build: **build it across several short sentences**, then land on a
+short flat one. Same effect, followable prose. Without this the block simply contradicts the style
+brief and the model picks one at random.
+
+**2. `plan_scope` had two defaults.** `report_around_draft` defaulted `"full"`, `write_from_dry`
+`"arc"`. One parameter, one default: both are `"full"` now.
+
+**3. `arc` was still shipping the editor's prose.** It carried `title`, `theme`, `opening_hook`,
+`foreshadow`, `payoffs` and `why_the_champion_won` — all written sentences, and an opening hook is
+a draft of the opening. Narrowed to the frame VOCABULARY alone: `narrative_structure`,
+`narrative_vehicles`, `prominent_vehicle`, `prominent_palette`. Enum values, no prose. Same
+objection that kept `rounds[].angle` out of it.
+
+---
+
 ### A second comic engine: the occasion device (2026-08-17)
 
 **The problem.** The report's humour was almost entirely hole-level. A quintuple bogey is funny, but
