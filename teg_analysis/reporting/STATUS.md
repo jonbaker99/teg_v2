@@ -52,6 +52,43 @@ no API key and no network in this container).
 
 ---
 
+### A second comic engine: the occasion device (2026-08-17)
+
+**The problem.** The report's humour was almost entirely hole-level. A quintuple bogey is funny, but
+a report built only from blow-ups has nothing to say about a tournament where nobody blew up, and
+nothing that scales with the RESULT. Jon's example of the missing register, from darts: *"When
+Alexander of Macedonia was 33, he cried salt tears because there were no more worlds to conquer.
+Bristow's only 27."*
+
+**`prompts.ELEVATION_DEVICE`** puts that engine in. Raise a frame far grander than the occasion
+deserves, then let a plain fact land against it. Crucially the frame is **read off the data, not
+guessed**: `win_anatomy` and `tournament_shape` already classify every result, and the block maps
+each classification to an archetype.
+
+| Signal | Archetype |
+|---|---|
+| `attribution: "built"`, wide margin | procession, conquest with nothing left to conquer |
+| `attribution: "inherited"` | robbery, the rival who outplayed and lost |
+| `attribution: "unopposed"` | walkover, an occasion staged for a foregone result |
+| `biggest_lead_blown` present | collapse, a fall from a stated height at a named hole |
+| `rival_could_have_flipped_it` | the haunting counterfactual |
+| `close_finish` | trivial margin treated as dynastic |
+| `shape: "volatile"` / `"consistent"` | carried by a machine he isn't operating / grinding inevitability |
+
+**It is CONTRACT, not voice.** It specifies a rhetorical move and leaves the register of the frame
+entirely to the voice: a deadpan voice states the grand parallel flatly, a vicious one reaches for
+Bristow. Both execute the same move. What must not vary is that the opening establishes the scale.
+`tournament_shape` joined `BUNDLE_CONTEXT_KEYS` so `close_finish` reaches the writer.
+
+**This does change the house writer prompt** — it is the first content added to `WRITER_CONTRACT`
+rather than moved within it. Nothing regenerates until a backfill runs.
+
+Two tests guard it: every value `win_anatomy` can emit must have an archetype (this caught
+`shape: "consistent"` being unaddressed on the first pass), and every field the block names must
+exist and be in `BUNDLE_CONTEXT_KEYS`.
+
+---
+
 ### The writer prompt now has a swappable VOICE slot (2026-08-16)
 
 **Why:** trying a new register meant editing `WRITER_VOICE` in the source, running the writer, then

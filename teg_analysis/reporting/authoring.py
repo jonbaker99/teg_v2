@@ -158,8 +158,11 @@ PLAN_SCOPES = ("full", "arc", "none")
 # Unlike the story plan, every one of these is STRUCTURED DATA rather than
 # editorial prose. That is the whole point: it supplies material without
 # supplying phrasing the writer will lift.
+# `tournament_shape` joined on 2026-08-17: `ELEVATION_DEVICE` reads `close_finish`
+# off it to pick the frame, so a context packet without it leaves one branch of
+# the archetype table unanswerable.
 BUNDLE_CONTEXT_KEYS = ("venue", "player_history", "player_course_history",
-                       "player_relationships", "win_anatomy")
+                       "player_relationships", "win_anatomy", "tournament_shape")
 
 # The only fields in those keys whose values are SENTENCES rather than names,
 # dates, enums or numbers. Four are code-generated from templates and one
@@ -184,13 +187,18 @@ DERIVED_PROSE_FIELDS = ("summary_facts", "notable_milestones", "description",
 CONTEXT_STYLES = ("annotated", "data")
 
 
-def _strip_derived_prose(obj):
-    """Recursively drop the sentence-valued fields, keeping the raw data."""
+def _strip_derived_prose(obj, fields: tuple = DERIVED_PROSE_FIELDS):
+    """Recursively drop the sentence-valued fields, keeping the raw data.
+
+    `fields` is a parameter so a caller can spare one. The Cowork kit spares
+    `notable_milestones`, which is template output rather than authorial prose
+    and the only licensed source for "defending champion" framing.
+    """
     if isinstance(obj, dict):
-        return {k: _strip_derived_prose(v) for k, v in obj.items()
-                if k not in DERIVED_PROSE_FIELDS}
+        return {k: _strip_derived_prose(v, fields) for k, v in obj.items()
+                if k not in fields}
     if isinstance(obj, list):
-        return [_strip_derived_prose(v) for v in obj]
+        return [_strip_derived_prose(v, fields) for v in obj]
     return obj
 
 
@@ -547,6 +555,7 @@ to start a new paragraph. If a paragraph is doing too much, break it at the natu
 WRITER_CONTRACT = "\n".join((
     _WRITER_ROLE,
     _WRITER_EDITORIAL,
+    prompts.ELEVATION_DEVICE,
     _WRITER_STRUCTURE,
     prompts.SCORING_REDUNDANCY_RULE,
     prompts.STROKE_INDEX_RULE,

@@ -134,6 +134,82 @@ NAMED_PRINCIPLES = """Named principles, hold to these:
 """
 
 # ---------------------------------------------------------------------------
+# THE OCCASION — mock-epic framing of the RESULT SHAPE, added 2026-08-17.
+#
+# Why it exists: the report's humour was almost entirely hole-level. A quintuple
+# bogey is funny, but a report built only from blow-ups has nothing to say about
+# a tournament where nobody blew up, and nothing that scales with the RESULT.
+# This block puts the second engine in: comedy from the shape of the win.
+#
+# Why it is CONTRACT and not voice: it specifies a rhetorical MOVE (find the
+# frame that scales the result, let the reality land against it) and leaves the
+# register of the frame entirely to the voice. A deadpan voice reaches for a
+# flat historical parallel; a vicious one reaches for Bristow. Both are doing
+# the same move. What must not vary is that the opening establishes the scale.
+#
+# The archetype is DATA, not judgement: every branch below reads a field the
+# bundle already computes in `win_anatomy` and `tournament_shape`.
+# ---------------------------------------------------------------------------
+ELEVATION_DEVICE = """THE OCCASION. How the report opens, and where its biggest laugh usually lives.
+
+Most of the comedy in a golf report comes from bad holes. That is one engine and it is not \
+enough: it says nothing about tournaments where nobody collapsed, and it does not scale with \
+the RESULT. The second engine is the shape of the win itself, and it belongs in the opening.
+
+**THE MOVE.** Raise a frame far grander than the occasion deserves, then let a plain fact land \
+against it. The gap does the work. The canonical example, from darts:
+
+    "When Alexander of Macedonia was 33, he cried salt tears because there were no more worlds
+     to conquer. Bristow's only 27."
+
+Note what makes it work. The comparison is to something genuinely enormous. The deflation is a \
+FACT, delivered flat, not a joke. Nobody winks. The speaker appears entirely sincere.
+
+**WHICH FRAME. Read it off the data, do not guess.** The bundle's `win_anatomy` and \
+`tournament_shape` classify the result already:
+
+- **`attribution: "built"` with a wide margin.** A procession. The frame is conquest with \
+nothing left to conquer, dominance that has run out of opposition, an empire administering \
+territory nobody contests. The deflating fact is the smallness of what was actually won.
+- **`attribution: "inherited"`.** The rival outplayed the winner over more rounds and lost \
+anyway. This is a ROBBERY and should be written as one: the wronged party, the injustice \
+recorded with the solemnity of a public inquiry, the beneficiary entirely untroubled. Never \
+frame it as the winner being undeserving; frame it as fate being administratively incompetent.
+- **`biggest_lead_blown` present.** Somebody led by a stated margin as late as a stated hole \
+and lost it. This is the collapse, and it is tragedy, not slapstick. Name the hole. The frame \
+is a fall from a great height, and the drop is measured precisely because precision is what \
+makes it hurt.
+- **`rival_could_have_flipped_it: true`.** One ordinary round instead of their worst and the \
+result reverses. The frame is haunting: the thing that did not happen, present throughout.
+- **`close_finish: true`.** The margin is trivial and the stakes are nothing, so treat both as \
+though civilisations turned on them. Geopolitical, seismic, dynastic.
+- **`attribution: "unopposed"`.** Nobody laid a glove on them. The comedy is the absence of a \
+contest, an occasion staged for a result nobody was going to change.
+- **`shape: "volatile"` in a winner.** They won while swinging wildly. The frame is a man \
+carried to victory by a machine he is not operating.
+- **`shape: "consistent"` in a winner.** They never had a bad day. This is the hardest one to \
+make funny and the easiest to skip, so do not skip it: the frame is grinding inevitability, \
+something geological or bureaucratic, a process rather than a contest. Steadiness is only dull \
+if you write it as an absence of drama instead of as the thing that crushed everyone else.
+
+**RULES.**
+1. **Once per report, in the opening.** A second grand frame halves the first. Later callbacks \
+to the SAME frame are welcome; a new one is not.
+2. **The frame must be true to the data.** Do not write a robbery when `attribution` says \
+`built`, or a collapse when nothing was blown. A misapplied frame is a factual error wearing a \
+costume.
+3. **Deflate with a fact, never with a punchline.** The fact is funnier and it cannot be wrong.
+4. **Reach outside golf.** History, myth, war, geology, statecraft, natural disaster. A \
+comparison to another sport is not elevation, it is a like-for-like.
+5. **The register of the frame is the VOICE's business, not this block's.** Whatever voice you \
+have been given, execute the move in it. A plain voice states the grand parallel plainly. That \
+still works. What is not optional is that the opening establishes the SCALE of what happened.
+6. **It must survive being true.** Every fact inside the frame comes from the draft or the \
+context. Invent nothing to make the parallel land.
+"""
+
+
+# ---------------------------------------------------------------------------
 # Scoring redundancy. Was principle 5 of NAMED_PRINCIPLES until 2026-08-16.
 #
 # Moved out because it is a mechanical notation rule, not an aesthetic

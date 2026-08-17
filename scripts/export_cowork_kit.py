@@ -10,7 +10,7 @@ place the faithfulness rules live, and the whole reason `prompts.py` exists is
 that copies drift. Re-run this script after any change to `WRITER_CONTRACT`,
 `WRITER_FAITHFULNESS` or the shared blocks.
 
-    python scripts/export_cowork_kit.py --tegs 14,17 --out ~/cowork/teg
+    python -m scripts.export_cowork_kit --tegs 4,14,17 --out ~/cowork/teg
 
 Writes, under `--out`:
 
@@ -18,10 +18,12 @@ Writes, under `--out`:
     base reports/teg_N_context.json     venue + career/course history + win anatomy
     reporting guidance.md               contract + faithfulness + output rule
 
-`teg_N_context.json` is the `bundle_context="data"` packet: structured data with
-every sentence-valued field stripped, so it supplies material without supplying
-phrasing. See `authoring.DERIVED_PROSE_FIELDS` for what comes out, and the note
-there about "defending champion" framing going with it.
+`teg_N_context.json` is close to the `bundle_context="data"` packet: structured
+data with the sentence-valued fields stripped, so it supplies material without
+supplying phrasing. `notable_milestones` is **kept** by default, unlike the
+in-pipeline packet, because it is the only place "defending champion" /
+"reigning holder" framing is licensed from and that framing is exactly what the
+occasion device wants. Pass `--strict-data` to drop it too.
 """
 from __future__ import annotations
 
@@ -77,7 +79,22 @@ def build_guidance() -> str:
     return "\n".join(parts)
 
 
-def export(tegs: list[int], out_dir: str) -> list[str]:
+def _strip(payload: dict, *, keep_milestones: bool) -> dict:
+    """Drop the sentence-valued fields, optionally sparing `notable_milestones`.
+
+    The in-pipeline `bundle_context="data"` packet strips all of them. Here the
+    milestones are kept by default: they are the ONLY licensed source for
+    "defending champion" / "reigning holder" (see `WRITER_FAITHFULNESS`), and
+    the occasion device leans on exactly that framing. They are template output,
+    not authorial prose, so keeping them costs very little phrasing.
+    """
+    fields = authoring.DERIVED_PROSE_FIELDS
+    if keep_milestones:
+        fields = tuple(f for f in fields if f != "notable_milestones")
+    return authoring._strip_derived_prose(payload, fields)
+
+
+def export(tegs: list[int], out_dir: str, *, keep_milestones: bool = True) -> list[str]:
     base = os.path.join(out_dir, "base reports")
     os.makedirs(base, exist_ok=True)
     written = []
@@ -95,7 +112,7 @@ def export(tegs: list[int], out_dir: str) -> list[str]:
 
         bundle, _ = assemble_bundle(teg)
         payload = {k: bundle[k] for k in authoring.BUNDLE_CONTEXT_KEYS if k in bundle}
-        payload = authoring._strip_derived_prose(payload)
+        payload = _strip(payload, keep_milestones=keep_milestones)
         ctx_path = os.path.join(base, f"teg_{teg}_context.json")
         with open(ctx_path, "w") as f:
             json.dump(payload, f, indent=2, ensure_ascii=False)
@@ -106,14 +123,21 @@ def export(tegs: list[int], out_dir: str) -> list[str]:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--tegs", default="14,17",
-                    help="comma-separated TEG numbers (default: 14,17 — a close "
-                         "finish and a procession, the pair worth testing on)")
+    ap.add_argument("--tegs", default="4,14,17",
+                    help="comma-separated TEG numbers. The default trio exercises three "
+                         "different branches of the occasion device: 4 is a collapse "
+                         "(led by 7 at the 8th of R4 and lost it), 14 a robbery "
+                         "(attribution 'inherited', 2-point finish), 17 a procession "
+                         "(attribution 'built', 18-point margin).")
     ap.add_argument("--out", required=True, help="destination directory")
+    ap.add_argument("--strict-data", action="store_true",
+                    help="also strip notable_milestones, so the context file has no "
+                         "generated sentences at all. Costs the 'defending champion' "
+                         "framing, which is licensed only from that field.")
     args = ap.parse_args()
 
     tegs = [int(t) for t in args.tegs.split(",") if t.strip()]
-    for path in export(tegs, args.out):
+    for path in export(tegs, args.out, keep_milestones=not args.strict_data):
         print(f"  {os.path.getsize(path):>7,}  {path}")
 
 

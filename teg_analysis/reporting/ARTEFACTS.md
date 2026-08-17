@@ -394,7 +394,7 @@ If the rewriting happens somewhere else — a Cowork folder, a browser tab, anot
 constants have to travel as a file:
 
 ```bash
-python -m scripts.export_cowork_kit --tegs 14,17 --out ~/cowork/teg
+python -m scripts.export_cowork_kit --tegs 4,14,17 --out ~/cowork/teg
 ```
 
 Writes `base reports/teg_N_dry_draft.md`, `base reports/teg_N_context.json` (the
@@ -403,8 +403,14 @@ Writes `base reports/teg_N_dry_draft.md`, `base reports/teg_N_context.json` (the
 — a hand-written copy is a fourth place the faithfulness rules live, and copies are what `prompts.py`
 exists to prevent. Re-run after any constant changes.
 
-Defaults to TEGs 14 and 17 deliberately: a two-point finish across three courses, and an eighteen-point
-procession. A register that works on one can fall flat on the other.
+The default trio exercises three branches of `ELEVATION_DEVICE`: **4** is a collapse (Jon Baker led by
+7 as late as the 8th of R4 and lost it), **14** a robbery (`attribution: "inherited"`, two-point
+finish), **17** a procession (`attribution: "built"`, eighteen-point margin). A register that works on
+one can fall flat on the others.
+
+Unlike the in-pipeline `bundle_context="data"` packet, the kit **keeps `notable_milestones`**: it is
+the only licensed source for "defending champion" framing, which the occasion device leans on. Pass
+`--strict-data` to drop it.
 
 ### ⑦ Comparing voice registers — ~$0.10 each · choosing the register
 
