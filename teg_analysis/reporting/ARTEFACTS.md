@@ -388,6 +388,24 @@ inert — the site never reads them.
 > the guardrails below it (faithfulness, output format) are fixed by design — a voice cannot shed
 > them. To change those, edit `WRITER_CONTRACT` or `WRITER_FAITHFULNESS` and see ⑧.
 
+#### Running the loop outside the pipeline
+
+If the rewriting happens somewhere else — a Cowork folder, a browser tab, another model — the same
+constants have to travel as a file:
+
+```bash
+python -m scripts.export_cowork_kit --tegs 14,17 --out ~/cowork/teg
+```
+
+Writes `base reports/teg_N_dry_draft.md`, `base reports/teg_N_context.json` (the
+`bundle_context="data"` packet) and `reporting guidance.md` (`WRITER_CONTRACT` + `WRITER_FAITHFULNESS`
++ the output rule, with a preamble saying there is no story plan). **Generate it, never hand-copy it**
+— a hand-written copy is a fourth place the faithfulness rules live, and copies are what `prompts.py`
+exists to prevent. Re-run after any constant changes.
+
+Defaults to TEGs 14 and 17 deliberately: a two-point finish across three courses, and an eighteen-point
+procession. A register that works on one can fall flat on the other.
+
 ### ⑦ Comparing voice registers — ~$0.10 each · choosing the register
 
 When the question is "which register?" rather than "is this prompt better?", rewrite a **finished**
