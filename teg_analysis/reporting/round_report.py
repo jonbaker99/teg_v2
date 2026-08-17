@@ -499,6 +499,10 @@ ROUND_WRITER_SYSTEM = "\n".join((
     prompts.NAMED_PRINCIPLES,
     _ROUND_WRITER_STRUCTURE,
     prompts.SHARED_FAITHFULNESS,
+    # Left NAMED_PRINCIPLES on 2026-08-16 when it became a swappable voice block
+    # in the tournament writer; it is a notation rule, so it is carried
+    # explicitly here rather than riding along with the principles.
+    prompts.SCORING_REDUNDANCY_RULE,
     prompts.STROKE_INDEX_RULE,
     _ROUND_WRITER_RULES,
 ))

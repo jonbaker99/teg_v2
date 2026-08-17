@@ -138,8 +138,94 @@ running total.
 - Markdown headings. Keep it tight."""
 
 
-def _plan_to_text(plan: Union[StoryPlan, dict]) -> str:
+# The story-plan fields that carry the STORYTELLING FRAME rather than the
+# material: which shape the report takes, what it opens on, what gets planted
+# early and paid off later. `plan_scope="arc"` sends these and nothing else —
+# the dry draft already carries the facts, so this is the vehicle guidance on
+# its own, without the per-round angles and per-player arcs steering the prose.
+ARC_PLAN_FIELDS = ("title", "theme", "narrative_structure", "opening_hook",
+                   "narrative_vehicles", "prominent_vehicle", "prominent_palette",
+                   "foreshadow", "payoffs", "why_the_champion_won")
+
+PLAN_SCOPES = ("full", "arc", "none")
+
+# The bundle keys that carry CONTEXT the dry draft does not: venue character
+# (architect, course type, TEG-visit counts), cross-TEG career storylines, and
+# per-course player history. Deliberately excludes `beats` and
+# `competition_arcs` — the dry draft is built from those and already renders
+# them flat, so re-sending them would turn this into `report_single_pass`.
+#
+# Unlike the story plan, every one of these is STRUCTURED DATA rather than
+# editorial prose. That is the whole point: it supplies material without
+# supplying phrasing the writer will lift.
+BUNDLE_CONTEXT_KEYS = ("venue", "player_history", "player_course_history",
+                       "player_relationships", "win_anatomy")
+
+# The only fields in those keys whose values are SENTENCES rather than names,
+# dates, enums or numbers. Four are code-generated from templates and one
+# (`description`) is a human-written course blurb. `bundle_context="data"`
+# drops all five, leaving a packet with no readable phrasing in it at all.
+#
+# Nothing factual is lost: every summary string is derived from numeric fields
+# that stay (`visit_n`, `n_prior_visits`, `prior_best_gross`, `prior_best_teg`,
+# `strokes_vs_last_visit`, `vs_runner_up`, …). What is lost is the arithmetic
+# being done for the model — see the docstring warning on `report_around_draft`.
+#
+# ONE NON-OBVIOUS CONSEQUENCE. `WRITER_FAITHFULNESS` permits "defending
+# champion" / "reigning holder" framing ONLY when a player's
+# `notable_milestones` says so explicitly, and forbids inferring it from rank
+# history. Stripping the field therefore makes that framing unavailable —
+# correctly (it fails closed), but the narrative fact goes with it, even though
+# `last_4_positions` still shows the win. If you want the framing, use
+# `bundle_context=True`, or drop "notable_milestones" from this tuple.
+DERIVED_PROSE_FIELDS = ("summary_facts", "notable_milestones", "description",
+                        "visit_str", "area_visit")
+
+CONTEXT_STYLES = ("annotated", "data")
+
+
+def _strip_derived_prose(obj):
+    """Recursively drop the sentence-valued fields, keeping the raw data."""
+    if isinstance(obj, dict):
+        return {k: _strip_derived_prose(v) for k, v in obj.items()
+                if k not in DERIVED_PROSE_FIELDS}
+    if isinstance(obj, list):
+        return [_strip_derived_prose(v) for v in obj]
+    return obj
+
+
+def _bundle_context_text(teg_num: int, style: str = "annotated") -> str:
+    """Assemble the structured context block. Deterministic; no LLM call."""
+    if style not in CONTEXT_STYLES:
+        raise ValueError(f"bundle_context style must be one of {CONTEXT_STYLES}, "
+                         f"got {style!r}")
+    bundle, _ = assemble_bundle(teg_num)
+    payload = {k: bundle[k] for k in BUNDLE_CONTEXT_KEYS if k in bundle}
+    if style == "data":
+        payload = _strip_derived_prose(payload)
+        note = ("CONTEXT (raw data — venue, career and per-course history, and the "
+                "anatomy of the win. Numbers and names only: no summary sentences "
+                "are provided, deliberately. Derive what you need and phrase all of "
+                "it yourself. Any comparison you state must follow exactly from "
+                "these figures; if the arithmetic is not clean, leave it out")
+    else:
+        note = ("CONTEXT (structured data, not prose — venue character, career and "
+                "per-course history, and the anatomy of the win. These are FACTS you "
+                "may use and colour you may draw on; the phrasing is entirely yours")
+    return note + "):\n" + json.dumps(payload, indent=2, ensure_ascii=False) + "\n\n"
+
+
+def _plan_to_text(plan: Union[StoryPlan, dict], scope: str = "full") -> str:
+    """Render the story plan for the writer, optionally narrowed to the arc.
+
+    `scope`: `"full"` (production — the whole plan), `"arc"` (the narrative
+    vehicles and story-arc fields only, see `ARC_PLAN_FIELDS`), or `"none"`.
+    """
+    if scope not in PLAN_SCOPES:
+        raise ValueError(f"plan_scope must be one of {PLAN_SCOPES}, got {scope!r}")
     data = plan.model_dump() if isinstance(plan, StoryPlan) else plan
+    if scope == "arc":
+        data = {k: v for k, v in data.items() if k in ARC_PLAN_FIELDS}
     return json.dumps(data, indent=2, ensure_ascii=False)
 
 
@@ -197,16 +283,51 @@ want to relive the event and be gently ribbed, and who will instantly spot any \
 factual error.
 """
 
-# Tournament-specific: aims the comedy at the right targets. The round writer has
-# no champion to protect, so this block is deliberately NOT shared.
-_WRITER_AIM = """THESE RULES AIM THE COMEDY; THEY DO NOT REDUCE IT. Everything above stays fully in force. The mechanisms, the escalation, the deadpan. What follows only decides WHERE the comedy points.
-
-WHO THE REPORT IS FOR, AND WHO IT IS ABOUT. Read this first. It governs everything below.
+# ---------------------------------------------------------------------------
+# Editorial stance — CONTRACT, not voice. What the report is FOR and what it
+# owes the champion. Holds whatever register the prose is written in.
+#
+# Split out of the old `_WRITER_AIM` on 2026-08-16. That block interleaved two
+# separable things: the duty the report owes the winner (voice-independent) and
+# where the comedy points (voice-specific). Since a custom voice now replaces
+# the voice block wholesale, anything that must survive the swap had to come out
+# of it. The prose is the original prose, sorted into the two halves; the only
+# rewritten sentence is NARRATIVE PULL's opener, which used to cross-refer to
+# the comic devices sitting below it.
+# ---------------------------------------------------------------------------
+_WRITER_EDITORIAL = """WHO THE REPORT IS FOR, AND WHO IT IS ABOUT. Read this first. It governs everything below.
 
 **This is the winner's story.** Its first duty is to make clear WHY the champion won. \
 The plan's `why_the_champion_won` and the bundle's `win_anatomy` give you the answer \
 already worked out. Were they good in one round or all four? Were their rivals bad? \
-Did somebody blow a lead? Land that, or the report has failed however funny it is.
+Did somebody blow a lead? Land that, or the report has failed however good the prose is.
+
+**Proportion matters.** A report whose THROUGH-LINE is how poor the champion was has \
+failed, however well written. Their failings are punctuation in a story about a win, \
+never the story itself.
+
+The one thing that is banned outright is WITHHOLDING THE CREDIT: writing the champion \
+as a passive accident of arithmetic, or implying the win was undeserved, or letting a \
+catalogue of their failings stand in place of any account of how they won.
+
+**A bad gross score is not a bad tournament.** The Trophy and the Spoon are decided on \
+NET (Stableford from TEG 8, net-vs-par before). A high-handicap player can post \
+horrifying gross numbers and win the thing. That contrast is a genuinely good story \
+when the gross really is dreadful, and it must never be written as though the champion \
+were secretly undeserving. The Green Jacket is the gross competition; keep the two \
+straight and never treat a gross figure as evidence about the Trophy.
+
+NARRATIVE PULL. The report is a magazine feature, not a results record. The piece as a \
+whole must make the reader want to keep reading. Raise a question, a stake, or an \
+apparent claim early, and let the reader work towards its resolution or contradiction \
+rather than stating the answer upfront and walking through it in order. Vary pace. Let \
+some passages breathe and others land fast. If a stretch reads like a faithful account \
+of what happened rather than something someone would choose to read, it needs more shape.
+"""
+
+# Tournament-specific, and VOICE: aims the comedy at the right targets. The round
+# writer has no champion to protect, so this block is deliberately NOT shared.
+_WRITER_COMIC_AIM = """THESE RULES AIM THE COMEDY; THEY DO NOT REDUCE IT. Everything above stays fully in force. The mechanisms, the escalation, the deadpan. What follows only decides WHERE the comedy points.
 
 **Praise the achievement, and be merciless about the golf.** These are not in tension. \
 Holding both at once is the single best register available to you. The champion EARNED \
@@ -238,14 +359,6 @@ ambition. The trophy did not seem to mind."
 em-dashes, one idea each. That is the target on BOTH counts. The same content as one \
 long sentence would read as hard work and the joke would not land.
 
-  **Proportion matters too.** However well delivered, a report whose THROUGH-LINE is how \
-poor the champion was has failed. Their failings are punctuation in a story about a win, \
-never the story itself.
-
-  The one thing that is banned outright is WITHHOLDING THE CREDIT: writing the champion \
-as a passive accident of arithmetic, or implying the win was undeserved, or letting a \
-catalogue of their failings stand in place of any account of how they won.
-
 **Mockery, by target.** Calibrate. This is a group of friends who know each other:
   - **Wooden Spoon holder: hard.** The Spoon is the joke prize. Its holder expects, and \
 has earned, a proper going-over. Be specific and merciless.
@@ -257,21 +370,6 @@ figure and can be needled for it. That is often the real story.
   - **The champion: hard on the golf, never on the achievement.** Same intensity as \
 anyone else when describing what they actually did with a golf club. The difference is \
 that the win stands, unqualified, alongside it.
-
-**A bad gross score is not a bad tournament.** The Trophy and the Spoon are decided on \
-NET (Stableford from TEG 8, net-vs-par before). A high-handicap player can post \
-horrifying gross numbers and win the thing. That contrast is a genuinely good story \
-when the gross really is dreadful, and it must never be written as though the champion \
-were secretly undeserving. The Green Jacket is the gross competition; keep the two \
-straight and never treat a gross figure as evidence about the Trophy.
-
-NARRATIVE PULL. The report is a magazine feature, not a results record. Beyond deploying \
-individual devices, the piece as a whole must make the reader want to keep reading. Raise a \
-question, a stake, or an apparent claim early, and let the reader work towards its resolution \
-or contradiction rather than stating the answer upfront and walking through it in order. Vary \
-pace. Let some passages breathe and others land fast. If a stretch reads like a faithful account \
-of what happened rather than something someone would choose to read, it needs more shape, not \
-more jokes.
 """
 
 # Tournament-specific structure, palette and construction rules.
@@ -425,16 +523,41 @@ sentence they get absorbed.
 to start a new paragraph. If a paragraph is doing too much, break it at the natural seam.
 """
 
-# Assembled in the original order. The shared blocks (VOICE_CORE, NAMED_PRINCIPLES,
-# STROKE_INDEX_RULE) come from `prompts.py` and are identical to the ones the round
-# writer gets; everything prefixed `_WRITER_` is tournament-specific and stays here.
-WRITER_VOICE = "\n".join((
+# ---------------------------------------------------------------------------
+# The writer prompt has THREE slots, not two, since 2026-08-16:
+#
+#   WRITER_CONTRACT   what the report must be, whatever register it is in
+#   <voice>           how it reads               <- the swappable slot
+#   WRITER_FAITHFULNESS + WRITER_OUTPUT_RULE     the guardrails
+#
+# `WRITER_VOICE` is the HOUSE occupant of the middle slot. It is not privileged
+# in the assembly: `build_writer_system(voice=...)` drops any complete voice
+# description into the same position, and production simply passes none.
+#
+# The line between contract and voice is "would this still be true if the report
+# were written flat and straight?" — the winner's-story duty, the structure, the
+# scoring-redundancy notation and the SI guidance all survive that test; the
+# comic mechanisms, the mockery calibration and the sentence economy do not.
+#
+# ORDER NOTE: STRUCTURE and STROKE_INDEX now sit BEFORE the voice rather than
+# inside it. Same content, one block moved, so that the contract is contiguous
+# and a voice swap is a single substitution. `_WRITER_ECONOMY`'s back-reference
+# to the voice section still resolves — VOICE_CORE is directly above it.
+# ---------------------------------------------------------------------------
+WRITER_CONTRACT = "\n".join((
     _WRITER_ROLE,
-    prompts.VOICE_CORE,
-    _WRITER_AIM,
-    prompts.NAMED_PRINCIPLES,
+    _WRITER_EDITORIAL,
     _WRITER_STRUCTURE,
+    prompts.SCORING_REDUNDANCY_RULE,
     prompts.STROKE_INDEX_RULE,
+))
+
+# The house voice. Edit this to change how the standard report READS; pass a
+# `voice=` argument instead to try one without touching the file.
+WRITER_VOICE = "\n".join((
+    prompts.VOICE_CORE,
+    _WRITER_COMIC_AIM,
+    prompts.NAMED_PRINCIPLES,
     _WRITER_ECONOMY,
 ))
 
@@ -514,7 +637,27 @@ WRITER_FAITHFULNESS = ("FAITHFULNESS (non-negotiable):\n"
 
 WRITER_OUTPUT_RULE = prompts.OUTPUT_RULE
 
-WRITER_SYSTEM = WRITER_VOICE + "\n" + WRITER_FAITHFULNESS + "\n" + WRITER_OUTPUT_RULE
+
+def build_writer_system(voice: Optional[str] = None) -> str:
+    """Assemble the tournament writer's system prompt around a voice description.
+
+    `voice` is a COMPLETE description of the register to write in, not a delta
+    from the house voice — it REPLACES `WRITER_VOICE` rather than appending to
+    it. "Drier than usual" is the wrong shape of input here and will read as an
+    instruction with no baseline; describe the voice you want from scratch.
+
+    Everything else is fixed: the contract above it (who the report is for, the
+    winner's-story duty, structure, the palette, scoring-redundancy notation, SI)
+    and the guardrails below it (faithfulness, output format). A voice cannot
+    shed either, which is the point of the split.
+
+    Pass nothing for the house voice. `WRITER_SYSTEM` is exactly that.
+    """
+    return "\n".join((WRITER_CONTRACT, voice.strip() if voice else WRITER_VOICE,
+                      WRITER_FAITHFULNESS, WRITER_OUTPUT_RULE))
+
+
+WRITER_SYSTEM = build_writer_system()
 
 REVISE_SYSTEM = WRITER_SYSTEM + """
 
@@ -607,6 +750,23 @@ def load_dry_draft(teg_num: int) -> str:
         return f.read()
 
 
+def _variant_label(label: str) -> str:
+    """Normalise an experiment label and refuse ones that clobber the chain.
+
+    `report_final` / `report_styled` are what the site reads; `A_around_draft`
+    is the production chain's own intermediate. An experiment writing to any of
+    them stops being an experiment.
+    """
+    label = label.strip().strip("_")
+    if not label:
+        raise ValueError("label must be a non-empty variant name")
+    if label in {"final", "styled", "A_around_draft"}:
+        raise ValueError(
+            f"label {label!r} would overwrite a canonical artefact; "
+            "name the voice instead, e.g. 'broadsheet' or 'plainspoken'")
+    return label
+
+
 def _write(teg_num: int, label: str, text: str) -> str:
     path = f"{output_dir()}/teg_{teg_num}_report_{label}.md"
     with open(path, "w") as f:
@@ -627,17 +787,73 @@ def report_single_pass(teg_num: int, plan: Union[StoryPlan, dict],
 
 
 def report_around_draft(teg_num: int, plan: Union[StoryPlan, dict], dry_text: str,
-                        model: Optional[str] = None) -> dict:
-    """Approach A: build the entertaining report around the dry factual draft."""
-    user = ("STORY PLAN:\n" + _plan_to_text(plan)
-            + "\n\nDRY FACTUAL DRAFT (accurate — every fact you may use is here or in the "
-              "plan; add no others):\n" + dry_text
+                        model: Optional[str] = None, *,
+                        voice: Optional[str] = None,
+                        label: str = "A_around_draft",
+                        plan_scope: str = "full",
+                        bundle_context: Union[bool, str] = False) -> dict:
+    """Approach A: build the entertaining report around the dry factual draft.
+
+    This is stage 4b of the production chain AND the voice-experiment path.
+    Deliberately one function: a voice tried here is tried on the real writer,
+    through the real prompt assembly, so nothing can be true of the experiment
+    and false of the pipeline. The defaults ARE production — every experiment
+    knob below is opt-in.
+
+    Args:
+        voice: a COMPLETE description of the register to write in, replacing
+            `WRITER_VOICE` (see `build_writer_system`). None = house voice,
+            which is what `backfill` passes.
+        label: output filename stem. Leave it alone in production; a voice
+            experiment should name its own so it doesn't clobber the chain's
+            intermediate. `write_from_dry` handles that for you.
+        plan_scope: how much of the story plan the writer sees. `"full"`
+            (production), `"arc"` (narrative vehicles and story-arc fields only
+            — the dry draft supplies the facts), or `"none"` (dry draft alone,
+            which isolates the voice from any structural steer).
+        bundle_context: append the structured venue / career-history /
+            win-anatomy block from the bundle (see `BUNDLE_CONTEXT_KEYS`). This
+            is how you give a variant the full material WITHOUT the plan's
+            pre-written phrasing: every plan field is editorial prose the writer
+            can lift, whereas these are data. Deterministic, no extra LLM call.
+
+            `True` (or `"annotated"`) sends the block as the bundle builds it,
+            including the code-generated summary sentences. `"data"` strips
+            every sentence-valued field (`DERIVED_PROSE_FIELDS`), leaving names,
+            dates, enums and numbers only.
+
+            **`"data"` moves arithmetic onto the model.** The stripped summaries
+            are where "11 shots worse than his last visit" is computed for it;
+            without them it derives comparisons itself, against a faithfulness
+            rule that demands exact arithmetic. Check `findings` on the output.
+    """
+    plan_block = ("STORY PLAN:\n" + _plan_to_text(plan, plan_scope) + "\n\n"
+                  if plan_scope != "none" else "")
+    context_block = (_bundle_context_text(
+        teg_num, "annotated" if bundle_context is True else bundle_context)
+        if bundle_context else "")
+    facts_source = ("here or in the plan" if plan_scope == "full"
+                    else "in the draft below or the context above" if context_block
+                    else "in the draft below")
+    user = (plan_block + context_block
+            + "DRY FACTUAL DRAFT (accurate — every fact you may use is "
+            + facts_source + "; add no others):\n" + dry_text
             + "\n\nRewrite this into the finished, entertaining report. Reshape structure "
               "and wording freely for engagement, but add NO new facts.")
-    text, usage = llm.generate_text(WRITER_SYSTEM, user,
+    if plan_scope != "full":
+        # The contract block references plan fields (`players[]`,
+        # `must_include_beat_ids`, the per-round angles) that a narrowed scope
+        # does not supply. Say so, or the writer hunts for them and improvises.
+        supplied = (", ".join(f"`{f}`" for f in ARC_PLAN_FIELDS)
+                    if plan_scope == "arc" else "none")
+        user += ("\n\nNOTE ON THE PLAN: the only story-plan fields supplied to you are: "
+                 + supplied + ". Where your instructions refer to a plan field you have "
+                 "not been given, disregard that reference and work from the dry draft "
+                 "instead. Every structural requirement still stands.")
+    text, usage = llm.generate_text(build_writer_system(voice), user,
                                     model=model or llm.DEFAULT_MODEL, max_tokens=16000,
                                     stage="report", label=f"teg{teg_num}")
-    return {"text": text, "usage": usage, "output_path": _write(teg_num, "A_around_draft", text)}
+    return {"text": text, "usage": usage, "output_path": _write(teg_num, label, text)}
 
 
 def report_critique_revise(teg_num: int, plan: Union[StoryPlan, dict],
@@ -800,13 +1016,7 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
     from teg_analysis.reporting.render import style_text
     from teg_analysis.reporting.verify import verify_report
 
-    label = label.strip().strip("_")
-    if not label:
-        raise ValueError("label must be a non-empty variant name")
-    if label in {"final", "styled", "A_around_draft"}:
-        raise ValueError(
-            f"label {label!r} would overwrite a canonical artefact; "
-            "pick an experiment name such as 'drier' or 'warmer'")
+    label = _variant_label(label)
 
     src_name = f"report_{source_label}" if source_label else "report_final"
     source_path = f"{output_dir()}/teg_{teg_num}_{src_name}.md"
@@ -883,3 +1093,94 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
     return {"teg": teg_num, "label": label, "source_path": source_path,
             "output_path": output_path, "styled_path": styled_path,
             "usage": usage, "findings": findings, "new_findings": new_findings}
+
+
+# ===========================================================================
+# Writing a variant FROM THE DRY DRAFT — the other half of the voice loop
+# ===========================================================================
+# `restyle_voice` above rewrites a FINISHED report. That holds facts and
+# structure literally constant, which makes it the tightest A/B, but it only
+# proves a voice is reachable by rewriting. This one runs the REAL writer over
+# the frozen dry draft — the same call production makes — so it proves the
+# pipeline can reach the voice cold.
+#
+# It is a thin wrapper over `report_around_draft`, not a parallel path. The
+# prompt assembly, the user message and the model call are production's. What
+# this adds is the ergonomics: load the frozen inputs, refuse a label that
+# would clobber the chain, then style and verify the result.
+#
+# STILL AN EXPERIMENT LEVER. Nothing in the default chain calls it, and it
+# cannot write `report_final.md`, `report_styled.md` or the chain's own
+# `A_around_draft` intermediate. Promotion is a deliberate, separate act:
+# fold the winning voice into `WRITER_VOICE` and re-run the backfill.
+def write_from_dry(teg_num: int, voice: Optional[str], label: str, *,
+                   plan_scope: str = "arc",
+                   bundle_context: Union[bool, str] = False,
+                   model: Optional[str] = None,
+                   lint: bool = True,
+                   style: bool = True,
+                   verify: bool = True) -> dict:
+    """Write a variant report from TEG `teg_num`'s frozen dry draft in `voice`.
+
+    Args:
+        voice: a COMPLETE description of the register to write in. It REPLACES
+            the house voice rather than modifying it, so write it as a
+            standalone brief ("VOICE: plain broadsheet match report. …"), not
+            as a delta ("drier than usual"). Pass None to run the house voice
+            through the same path — the control case for any comparison.
+        label: variant name. Writes `teg_N_report_{label}.md` (+ `_styled`).
+        plan_scope: how much story plan goes in with the draft. `"arc"`
+            (default) adds the narrative vehicles and story-arc fields, so the
+            report has a shape to follow; `"none"` sends the dry draft alone,
+            isolating the voice completely; `"full"` matches production.
+        bundle_context: add the structured venue / career-history / win-anatomy
+            block. Pair with `plan_scope="none"` when you want the full material
+            with none of the plan's pre-written phrasing. Pass `"data"` instead
+            of `True` for a packet with no sentences in it at all — see the
+            arithmetic warning on `report_around_draft`.
+        lint: run the repetition lint, as the production chain does (default
+            True, so the output is comparable with `report_styled.md`). Turn it
+            off to see the writer's unmediated prose.
+
+    Returns {teg, label, voice_is_house, plan_scope, output_path, styled_path,
+    usage, findings}.
+    """
+    from teg_analysis.reporting.render import style_text
+    from teg_analysis.reporting.verify import verify_report
+
+    label = _variant_label(label)
+    plan = load_story_plan(teg_num)
+    dry = load_dry_draft(teg_num)
+
+    rpt = report_around_draft(teg_num, plan, dry, model=model,
+                              voice=voice, label=label, plan_scope=plan_scope,
+                              bundle_context=bundle_context)
+    text, usage = rpt["text"], [rpt["usage"]]
+
+    if lint:
+        text, lint_usage = repetition_lint(text, label=f"teg{teg_num}_{label}")
+        usage.append(lint_usage)
+        _write(teg_num, label, text)
+
+    styled_path = None
+    if style:
+        styled_path = f"{output_dir()}/teg_{teg_num}_report_{label}_styled.md"
+        with open(styled_path, "w") as f:
+            f.write(style_text(teg_num, text))
+
+    findings: list = []
+    if verify:
+        findings = [str(f) for f in verify_report(teg_num, text=text)]
+        if findings:
+            # A fault here usually means the voice pulled the writer into
+            # fabrication, not that it is a stylistic near-miss. Worth seeing
+            # before you form a view on the prose.
+            print(f"[write_from_dry] TEG {teg_num} ({label}): "
+                  f"{len(findings)} finding(s):")
+            for s in findings:
+                print(f"  {s}")
+
+    return {"teg": teg_num, "label": label, "voice_is_house": voice is None,
+            "plan_scope": plan_scope, "bundle_context": bundle_context,
+            "output_path": rpt["output_path"],
+            "styled_path": styled_path, "usage": usage, "findings": findings}

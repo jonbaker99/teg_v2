@@ -151,7 +151,8 @@ def test_the_sweep_actually_sees_the_known_prompts():
 STYLE_SETTING_BLOCKS = {
     "prompts.VOICE_CORE": prompts.VOICE_CORE,
     "prompts.NAMED_PRINCIPLES": prompts.NAMED_PRINCIPLES,
-    "authoring._WRITER_AIM": authoring._WRITER_AIM,
+    "authoring._WRITER_EDITORIAL": authoring._WRITER_EDITORIAL,
+    "authoring._WRITER_COMIC_AIM": authoring._WRITER_COMIC_AIM,
     "authoring._WRITER_ECONOMY": authoring._WRITER_ECONOMY,
 }
 
@@ -182,7 +183,7 @@ def test_the_worked_example_obeys_its_own_rules():
     the cap was dead on arrival. It now demonstrates the rule instead.
     """
     import re
-    m = re.search(r'ELEVATED \(right\): "(.*?)"', WRITER_VOICE, re.S)
+    m = re.search(r'ELEVATED \(right\): "(.*?)"', WRITER_SYSTEM, re.S)
     assert m, "the ELEVATED exemplar has gone missing"
     example = re.sub(r"\s+", " ", m.group(1))
     assert "—" not in example, "the exemplar uses a banned em-dash"
@@ -193,8 +194,8 @@ def test_the_worked_example_obeys_its_own_rules():
 
 def test_the_sentence_length_rule_is_not_contradicted():
     """`ECONOMY` used to license exactly what `CRAFT` capped."""
-    assert "earn their length stay long" not in WRITER_VOICE
-    assert "no exception for a long" in WRITER_VOICE
+    assert "earn their length stay long" not in WRITER_SYSTEM
+    assert "no exception for a long" in WRITER_SYSTEM
 
 
 def test_comic_density_is_specified_not_left_to_taste():

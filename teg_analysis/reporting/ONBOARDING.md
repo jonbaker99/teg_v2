@@ -27,8 +27,9 @@ Read in this order; stop when you have enough for the task:
    menu) + `assemble_bundle()`; the editorial brain, and the most compressed description of what the
    LLM is asked to do
 7. **`authoring.py`** — Stage 4 orchestration and the tournament-only prompts (`WRITER_SYSTEM`,
-   composed from `WRITER_VOICE` + `WRITER_FAITHFULNESS` + `WRITER_OUTPUT_RULE`; `DRY_DRAFT_SYSTEM_*`,
-   `LINT_SYSTEM`, `TIGHTEN_SYSTEM`)
+   composed by `build_writer_system()` from `WRITER_CONTRACT` + `WRITER_VOICE` +
+   `WRITER_FAITHFULNESS` + `WRITER_OUTPUT_RULE`, where the voice slot is swappable per call;
+   `DRY_DRAFT_SYSTEM_*`, `LINT_SYSTEM`, `TIGHTEN_SYSTEM`)
 8. **`events.py`** — beat detection and 3-axis scoring; only load if the work touches beat
    generation (900 lines). `impact.py` (counterfactual importance) and `win_anatomy.py` (why the
    champion won) go with it
@@ -83,6 +84,8 @@ the detail lives in STATUS.md, this is just the headline.)*
 - Audience = the players themselves (insiders who catch errors) → **faithfulness over flair**
 - Voice: Herron / Ronay / Armstrong / Iannucci — subverted gravitas; never zany, never wink at the
   camera. **Defined once in `prompts.py` → `VOICE_CORE`; every prompt imports it. Never re-inline it.**
+  The register is the one part of the writer prompt that is *meant* to be replaceable: everything
+  else lives in `WRITER_CONTRACT` or `WRITER_FAITHFULNESS`, which a `voice=` swap cannot shed
 - **No em-dashes at all** (banned outright 2026-08-15, not a ceiling), sentences averaging ~15 words with
   a hard stop around 25, and 5–7 landed comic moments per report. D3 checks the em-dash rule
 - **The report is the winner's story** — `why_the_champion_won` is a required plan field. Hard on the

@@ -38,7 +38,7 @@ Design detail lives in docstrings in `analysis/live_round.py` and `webapp/README
 ### 2026-08-17 — Reporting docs reconciled against the code
 
 No pipeline change. `teg_analysis/reporting/` docs (README, ARTEFACTS, STATUS, ONBOARDING, EXPERIMENTS)
-were checked against the code, the artefacts on disk, a full test run (**518 passed**) and a full
+were checked against the code, the artefacts on disk, a full test run (**518 passed** then; 520 after the 08-16 voice-slot tests) and a full
 `verify --all --rounds` run, and corrected. Four corrections change what to do next:
 
 - **The library has no fixture gaps and only one vintage.** All 17 TEGs have the complete artefact chain;
@@ -50,6 +50,18 @@ were checked against the code, the artefacts on disk, a full test run (**518 pas
 - **Three new small issues logged**: `TIGHTEN_SYSTEM` still contradicts the em-dash ban (dormant), a
   stray tracked `reply.txt` at the repo root holding an unpublished TEG 17 report, and raw `SI n` leaking
   into published prose.
+
+### 2026-08-16 — Writer prompt gains a swappable voice slot
+
+`WRITER_SYSTEM` went from two composed constants to three. The new `WRITER_CONTRACT` holds everything
+true of a report whatever register it is written in (the winner's-story duty, structure, palette,
+notation rules); `WRITER_VOICE` keeps only the register and can be replaced per call via
+`build_writer_system(voice=...)`. `write_from_dry(teg, voice, label)` runs the real writer over a
+frozen dry draft in a supplied voice, so trialling a register no longer needs a source edit;
+`plan_scope=` and `bundle_context=` control how much material goes in with the draft.
+
+Opt-in throughout — the production chain passes no voice, and nothing regenerates until a backfill
+runs. Detail: `teg_analysis/reporting/STATUS.md` → START HERE.
 
 ### 2026-08-14 → 08-15 — Report quality: counterfactual importance, then a readability pass
 

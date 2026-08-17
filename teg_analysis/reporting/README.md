@@ -116,16 +116,38 @@ separately because that's what they are.
   (mechanical verification, vs taste). Until 2026-08-11 that separation was conceptual only: voice
   and faithfulness lived in one 16k-character `WRITER_SYSTEM` literal, so every voice experiment
   edited the same string as the guardrails — one careless rewrite away from silently dropping a
-  faithfulness rule. They are now `WRITER_VOICE` and `WRITER_FAITHFULNESS`, concatenated at import:
+  faithfulness rule. They are now separate constants, concatenated at import.
+
+  **Since 2026-08-16 there are three slots, not two** — the middle one is swappable:
 
   ```python
-  WRITER_SYSTEM = WRITER_VOICE + "\n" + WRITER_FAITHFULNESS + "\n" + WRITER_OUTPUT_RULE
+  def build_writer_system(voice=None):
+      return "\n".join((WRITER_CONTRACT,            # what the report must BE
+                        voice or WRITER_VOICE,      # how it READS   <- swappable
+                        WRITER_FAITHFULNESS,        # what it must not do
+                        WRITER_OUTPUT_RULE))
+
+  WRITER_SYSTEM = build_writer_system()              # production passes no voice
   ```
 
-  The composed string is byte-identical to the literal it replaced (asserted in tests), so nothing
-  about generated output moved. Since 2026-08-15 the voice half is composed from the shared blocks in
-  `prompts.py`, so **change the register in `prompts.VOICE_CORE`** (both pipelines get it) and use
-  `WRITER_VOICE` only for tournament-specific aim — the champion register, `NARRATIVE PULL`.
+  The line between contract and voice is *"would this still be true if the report were written flat
+  and straight?"* — the winner's-story duty, the structure, the palette, the scoring-redundancy
+  notation and the SI guidance all survive that test and live in `WRITER_CONTRACT`; the comic
+  mechanisms, the mockery calibration and the sentence economy do not, and live in `WRITER_VOICE`.
+  A `voice=` argument **replaces** `WRITER_VOICE` wholesale — it is a complete register description,
+  not a delta — and cannot shed the contract or the guardrails. Asserted in tests.
+
+  **Where to change the register.** `WRITER_VOICE` is itself composed from the shared blocks in
+  `prompts.py`, so a register change that both pipelines should get belongs in
+  **`prompts.VOICE_CORE`**; `WRITER_VOICE` adds only the tournament-specific comic aim, the named
+  principles and the economy rules. To *trial* a register without editing anything, pass it to
+  `write_from_dry` ([ARTEFACTS.md](ARTEFACTS.md) recipe ⑥).
+
+  > The 2026-08-11 two-way split was byte-identical to the literal it replaced. **The 2026-08-16
+  > three-way split is not** — `_WRITER_AIM` was divided into its editorial and comic halves, the
+  > scoring-redundancy rule moved to `prompts.SCORING_REDUNDANCY_RULE`, and STRUCTURE / STROKE_INDEX
+  > moved above the voice so the contract is contiguous. Every substantive sentence survives; the
+  > assembled order does not. Nothing regenerates until a backfill runs.
 - **Where the work is.** Both judgement calls that used to sit here are now settled: **A3** (weights
   at `(1.5, 0.8, 0.7)`, 2026-08-11) and **C2** (the humour dial at `humour6`, 2026-08-15). The
   remaining work is not a defect either — it is **one cold generation under the new voice**, then the
@@ -546,6 +568,8 @@ This is the steerable artefact — for `archive` mode a human can edit the JSON 
 - *Scaffold*: the entertaining report (4b) is built around it, which bounds drift.
 
 **4b. Entertaining report** — `report_around_draft(teg, plan, dry_text)`. Rewrites the dry draft into the finished report in the house voice (`prompts.VOICE_CORE`). Because it can only use facts already in the validated draft, it stays faithfully grounded.
+
+Four opt-in keyword arguments make this the voice-experiment path as well as the production one, so a register tried here is tried on the real writer: `voice=` (a complete replacement register), `plan_scope=` (`"full"` / `"arc"` / `"none"` — how much of the story plan goes in with the draft), `bundle_context=` (append the structured venue / career-history / win-anatomy block — material without the plan's pre-written phrasing; `"data"` instead of `True` strips the code-generated summary sentences too) and `label=` (output filename stem). The defaults are production. `write_from_dry(teg, voice, label)` wraps it with the load/lint/style/verify ergonomics.
 
 (Two alternates exist for comparison — `report_single_pass` and `report_critique_revise` — see [STATUS.md](STATUS.md) for why they were rejected.)
 

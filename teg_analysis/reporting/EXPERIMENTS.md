@@ -391,8 +391,9 @@ facts, structure, headings and records block. That is what makes the comparison 
 one API call per variant instead of a full regeneration.
 
 **What the method does not prove:** it shows the target voice is *reachable by rewriting*, not that
-the writer will *hit it first time* from the bundle. Whatever wins must be folded into
-`WRITER_SYSTEM` and validated with a from-scratch generation before it is trusted for a backfill.
+the writer will *hit it first time* from the dry draft. Whatever wins must be confirmed with a
+from-scratch generation — `write_from_dry(teg, voice, label)` since 2026-08-16 — and only then
+folded into `WRITER_VOICE` and trusted for a backfill.
 
 **How it was settled:** read `teg_14_report_styled.md` against the three TEG 14 variants side by side,
 then the TEG 18 pair, scoring on faithfulness, whether the added humour lands or strains, and whether
@@ -401,6 +402,10 @@ confirmation on TEG 14 is the one step not yet done.
 
 **Notes:**
 - Nothing was published — the decision lives in the prompt, not in a promoted variant file.
+- **2026-08-16: the from-scratch half is a lever too.** `authoring.write_from_dry(teg, voice, label)`
+  runs the real writer over the frozen dry draft in a supplied voice, so the confirmation step no
+  longer needs a source edit either. `plan_scope=` and `bundle_context=` control how much material
+  goes in with the draft. See ARTEFACTS recipe ⑥.
 - **2026-08-11: the method is now a proper lever.** `authoring.restyle_voice(teg, voice_prompt,
   label)` replaces the one-off script; `scripts/humour_dial.py` is a thin parameterised wrapper
   holding the three registers (`--teg N --variant humour8b`). The `humour8bb` TEG 18 retry that died

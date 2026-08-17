@@ -123,18 +123,29 @@ NAMED_PRINCIPLES = """Named principles, hold to these:
 4. Balance the ledger with the emotional landscape. The reader already has the scorecard, so
    do not simply read it back to them. Blend the necessary raw data with abstract,
    character-driven observation to give the numbers narrative weight.
-5. Avoid scoring redundancy. Never use the gross score, the relation to par, and the par of
-   the hole all at once. Two is enough. For example, use "A 10 on the par-5 13th," "A
-   quintuple bogey on the par-5 13th," or "A quintuple bogey 10 on the 13th", but never
-   "A quintuple bogey 10 on the par-5 13th."
-6. Precise, specific, earned. No generic "catastrophic collapse". Name the hole, the score,
+5. Precise, specific, earned. No generic "catastrophic collapse". Name the hole, the score,
    the exact moment the wheels came off.
-7. Trace the player arc within the round. Bathos works in both directions: the man who
+6. Trace the player arc within the round. Bathos works in both directions: the man who
    started brilliantly and then fell apart, the man who scraped back from early disaster.
    The shape of the card is the character.
-8. Achievements earn their moment too. The personal best, the eagle, the round of the day,
+7. Achievements earn their moment too. The personal best, the eagle, the round of the day,
    rendered with the same solemnity as the disasters. If bathos turns low stakes into tragedy,
    it can equally turn low stakes into triumph. Wry, never gushing. Specific, never hollow.
+"""
+
+# ---------------------------------------------------------------------------
+# Scoring redundancy. Was principle 5 of NAMED_PRINCIPLES until 2026-08-16.
+#
+# Moved out because it is a mechanical notation rule, not an aesthetic
+# principle: it holds for a deadpan voice, a plain voice, and every voice in
+# between. NAMED_PRINCIPLES is now swappable as part of the voice block, and a
+# swappable block is the wrong home for a rule that must survive the swap.
+# See `authoring.WRITER_CONTRACT`.
+# ---------------------------------------------------------------------------
+SCORING_REDUNDANCY_RULE = """- **Avoid scoring redundancy.** Never use the gross score, the \
+relation to par, and the par of the hole all at once. Two is enough. For example, use \
+"A 10 on the par-5 13th", "A quintuple bogey on the par-5 13th", or "A quintuple bogey 10 \
+on the 13th", but never "A quintuple bogey 10 on the par-5 13th."
 """
 
 # ---------------------------------------------------------------------------

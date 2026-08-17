@@ -147,7 +147,8 @@ stages. Freeze what you aren't changing.
 | The frame / structure / beats chosen | hand-edit ① *or* `story_plan.SYSTEM_PROMPT` | **free** / ~$0.28 | ④ |
 | Dry-draft detail level | `DRY_DRAFT_SYSTEM_DETAILED`, `dry_draft_style=` | ~$0.37 | ⑤ |
 | **Voice — which register do I want?** | *(two prompt strings)* | ~$0.10 each | ⑦ (start here) |
-| **Voice — does the writer hit it from scratch?** | `authoring.WRITER_VOICE` | ~$0.17 | ⑥ |
+| **Voice — does the writer hit it from scratch?** | *(a voice string; no code edit)* | ~$0.17 | ⑥ |
+| **Voice — promote one to the house voice** | `authoring.WRITER_VOICE` | ~$0.17 | ⑥, step 5 |
 | Faithfulness rules | `authoring.WRITER_FAITHFULNESS` | ~$0.17 | ⑧ |
 | Mechanical fault checks | `verify.py` | **free** | ⑨ |
 | Standings / records / CSS hooks | `render.py` | **free** | ⑩ |
@@ -234,11 +235,12 @@ They answer different questions, and you will usually want **both, in this order
 | Your question | Recipe | Cost | Why |
 |---|---|---|---|
 | *"Brooker or Herron? Which register do I even want?"* | **⑦** | ~$0.10 each | Rewrites a **finished** report, so the facts and structure are literally identical between the two. Pure voice comparison, no code editing — just two strings. |
-| *"I've picked one. Does the writer hit it from scratch?"* | **⑥** | ~$0.17 | Edits `WRITER_VOICE` and re-runs the real writer from the dry draft. This is the one that proves the pipeline produces the voice, rather than a rewrite reaching it. |
+| *"I've picked one. Does the writer hit it from scratch?"* | **⑥** | ~$0.17 | Re-runs the real writer from the dry draft in a voice you pass as a string. This is the one that proves the pipeline produces the voice, rather than a rewrite reaching it. |
 
-**Use ⑦ to choose, ⑥ to confirm.** Comparing registers with ⑥ is possible but wasteful and noisier:
-it costs more, needs a code edit per variant, and re-rolls the writer's structural execution each
-time, so some of what you see is sampling noise rather than voice.
+**Use ⑦ to choose, ⑥ to confirm.** Comparing registers with ⑥ works — neither needs a code edit
+since 2026-08-16 — but it costs more and re-rolls the writer's structural execution each time, so
+some of what you see is sampling noise rather than voice. Run a house-voice control alongside any ⑥
+comparison.
 
 #### Worked example — Brooker vs Herron
 
@@ -268,8 +270,8 @@ data/commentary/teg_17_report_herron_styled.md
 
 Same facts, same structure, same headings, same standings. Only the prose differs.
 
-Then fold the winner into `WRITER_VOICE` and run ⑥ once to confirm the writer reaches it
-from the dry draft rather than only by rewriting.
+Then run ⑥ once to confirm the writer reaches the winning register from the dry draft rather than
+only by rewriting, and fold it into `WRITER_VOICE` after that confirms.
 
 > **Which TEG to test on.** Any of them — every TEG 2–18 has a `report_final.md` as of 2026-08-17, so
 > the `source_label="A_around_draft"` workaround the old anchors needed is no longer necessary. The
@@ -280,85 +282,111 @@ from the dry draft rather than only by rewriting.
 
 ### ⑥ Tone of voice — ~$0.17 · confirming the chosen register
 
-Same steps for faithfulness rules — edit `WRITER_FAITHFULNESS` instead at step 1 and everything
-else is identical. **Never both at once**, or you won't know which change did anything.
+Runs the **real writer** over the frozen dry draft in a voice you pass as a string. Same function
+the production chain calls, same prompt assembly — the only difference is that you supply the middle
+slot instead of letting it default to the house voice.
 
-**Step 1 — edit the prompt constant.**
-Open `teg_analysis/reporting/authoring.py`, find `WRITER_VOICE`, change it. Not `WRITER_SYSTEM` —
-that name still exists but is just the two constants concatenated; editing it edits both voice and
-faithfulness at once, which defeats the point of having split them.
+**Write the voice as a complete description, not a change.** `write_from_dry` REPLACES
+`WRITER_VOICE`; it does not modify it. "Drier, shorter sentences" is the wrong shape of input here —
+there is no baseline for it to be drier *than*, so the model invents one. Describe the register from
+scratch, at whatever level of detail you want to test.
 
-**Step 2 — load the frozen inputs.** No cost, no API call — these already exist on disk from a
-previous generation:
-
-```python
-from teg_analysis.reporting.authoring import load_story_plan, load_dry_draft
-teg = 17
-plan = load_story_plan(teg)   # reads ① story_plan.json
-dry  = load_dry_draft(teg)    # reads ② dry_draft.md
-```
-
-**Step 3 — run the writer with your edited prompt.** This is the only step that calls the LLM and
-costs money. It picks up `WRITER_VOICE` fresh from the module, so your Step 1 edit is live:
+**Step 1 — write the voice.** No code edit. A string in a notebook is enough:
 
 ```python
-from teg_analysis.reporting.authoring import report_around_draft, repetition_lint
-rpt = report_around_draft(teg, plan, dry)         # ~$0.10 — writes prose in your new voice
-linted, _ = repetition_lint(rpt["text"])          # ~$0.07 — word-repetition cleanup only
+PLAIN = """VOICE: a plain broadsheet match report. British English. Report what happened,
+in order, clearly. No jokes, no metaphor, no authorial personality. Short declarative
+sentences. The reader wants the facts and the shape of the contest, nothing else."""
 ```
 
-**Step 4 — save to a variant name, NOT `report_final.md`.** You haven't read it yet:
+**Step 2 — run it.**
 
 ```python
-with open(f"data/commentary/teg_{teg}_report_trial.md", "w") as f:
-    f.write(linted)
+from teg_analysis.reporting import write_from_dry
+out = write_from_dry(17, PLAIN, "plain")        # ~$0.17 incl. lint
+out["styled_path"]      # data/commentary/teg_17_report_plain_styled.md
+out["findings"]         # [] is what you want
 ```
 
-**Step 5 — style it, so it's comparable to the live report.**
+It loads the frozen plan and dry draft, writes, lints, styles and runs the D3 checks. It refuses
+labels that would overwrite `report_final`, `report_styled` or the chain's own `A_around_draft`, so
+the live report is never at risk.
+
+**How much story plan goes in** — `plan_scope=`, the second dial:
+
+| `plan_scope` | What the writer gets besides the dry draft | Use it to |
+|---|---|---|
+| `"none"` | nothing | Isolate the voice completely. The draft's own chronology is the only structure. |
+| `"arc"` *(default)* | `narrative_vehicles`, `prominent_vehicle`, `narrative_structure`, `opening_hook`, `theme`, `foreshadow`, `payoffs`, `why_the_champion_won` | Give the report a shape to follow without the per-round angles and per-player arcs steering the prose. |
+| `"full"` | the whole plan | Match production exactly. |
+
+Narrowing the scope adds a note telling the writer which plan fields it actually has, so it does not
+hunt for the missing ones and improvise. The structural requirements hold at every scope.
+
+**Full material without preset phrasing** — `bundle_context=True`, the third dial. Every story-plan
+field is editorial prose the writer can lift; `rounds[].angle` and `players[].arc` are already
+written sentences. The bundle is not: `venue`, `player_history`, `player_course_history`,
+`player_relationships` and `win_anatomy` are structured data. So:
 
 ```python
-from teg_analysis.reporting.render import style_text
-styled = style_text(teg, linted)
-with open(f"data/commentary/teg_{teg}_report_trial_styled.md", "w") as f:
-    f.write(styled)
+write_from_dry(17, PLAIN, "plain_rich", plan_scope="none", bundle_context=True)
 ```
 
-**Step 6 — check it for mechanical faults before reading it.**
+gives the writer the competition resolutions and hole detail (from the dry draft, which already
+carries a full "HOW THE COMPETITIONS WERE DECIDED" section), plus venue character, cross-TEG career
+storylines and per-course history. Deterministic, no extra LLM call, so it costs nothing beyond the
+tokens.
+
+**Strictly data-only** — `bundle_context="data"`. The block above still contains five
+sentence-valued fields: `summary_facts`, `notable_milestones`, `description`, `visit_str` and
+`area_visit`. Four are code-generated from templates and one is a human-written course blurb, so
+none is authorial in the way the story plan is — but they are readable phrasing. `"data"` drops all
+five, leaving names, dates, enums and numbers. On TEG 17 the block goes 20.3k → 13.6k characters and
+the longest remaining string is `"Praia D'El Rey Golf & Beach Resort"`.
+
+Two things to know before using it:
+
+- **Arithmetic moves onto the model.** `"Jon Baker was 15 shots better than his last visit"` becomes
+  `"strokes_vs_last_visit": -15`. Every comparison now has to be derived, against a faithfulness
+  rule demanding exact arithmetic. Read `findings` before reading the prose.
+- **"Defending champion" framing becomes unavailable.** `WRITER_FAITHFULNESS` allows it only when
+  `notable_milestones` says so explicitly, and forbids inferring it from rank history — so stripping
+  the field removes the framing along with the phrasing. It fails closed, which is right, but the
+  narrative fact goes too. Drop `"notable_milestones"` from `DERIVED_PROSE_FIELDS` if you want it
+  back.
+
+**Step 3 — get a control.** Voice comparisons are worthless without one, because the writer re-rolls
+its structural execution on every call and some of what you see is sampling noise:
 
 ```python
-from teg_analysis.reporting.verify import verify_report, format_findings
-print(format_findings(verify_report(teg, text=linted), teg))
+write_from_dry(17, None, "house_control")   # house voice, same path, same scope
 ```
 
-`✓` means clean. Anything else, read the findings before going further — a factual fault here means
-the voice prompt is pulling the writer into fabrication, not that it's a stylistic near-miss.
-
-**Step 7 — compare.** Open both files side by side:
+**Step 4 — compare.**
 
 ```
-data/commentary/teg_17_report_styled.md         <- current house voice
-data/commentary/teg_17_report_trial_styled.md   <- your edit
+data/commentary/teg_17_report_house_control_styled.md
+data/commentary/teg_17_report_plain_styled.md
 ```
 
-Same facts, same structure, same headings, same standings block. Only the prose differs — if
-anything else differs, something upstream of the writer changed and this test isn't isolated.
+Check `findings` before you form a view on the prose. A factual fault means the voice pulled the
+writer into fabrication, which is a different verdict from "I don't like the tone".
 
-**Step 8 — promote, only if you like it.** This overwrites the live report:
+**Step 5 — promote, only if you like it.** This is the deliberate, separate act that makes a trial
+voice the house voice. Nothing before this point changes what the pipeline produces:
 
 ```python
-import shutil
-from teg_analysis.reporting.render import style_report
-shutil.copy(f"data/commentary/teg_{teg}_report_trial.md",
-           f"data/commentary/teg_{teg}_report_final.md")
-style_report(teg)   # regenerates report_styled.md from the new final
+# 1. paste the winning voice into `authoring.WRITER_VOICE`
+# 2. re-run the backfill for the TEGs you want regenerated
 ```
 
-**If you don't like it,** do nothing — `report_trial.md` and `_final.md` are untouched, and you can
-edit `WRITER_VOICE` again and repeat from Step 2 for ~$0.17 more.
+**If you don't like it,** do nothing. `report_final.md` is untouched and the variant files are
+inert — the site never reads them.
 
-> **Note:** Step 3 overwrites ③ (`report_A_around_draft.md`) every time you run it. That file is an
-> intermediate scratch artefact, not a fixture — fine to lose, but don't mistake it for a saved
-> variant of anything.
+> **What ⑥ can't reach.** `write_from_dry` fills the VOICE slot only. The contract above it (who the
+> report is for, the winner's-story duty, structure, palette, scoring-redundancy notation, SI) and
+> the guardrails below it (faithfulness, output format) are fixed by design — a voice cannot shed
+> them. To change those, edit `WRITER_CONTRACT` or `WRITER_FAITHFULNESS` and see ⑧.
 
 ### ⑦ Comparing voice registers — ~$0.10 each · choosing the register
 
@@ -381,8 +409,8 @@ python scripts/humour_dial.py --teg 14 --variant humour8b
 
 **This is an experiment tool, not part of report generation.** Nothing in the pipeline calls it —
 `backfill.py` runs plan → dry → around → lint → style → verify and stops. The point is to *find* a
-target voice; once found, fold it into `WRITER_VOICE` and confirm with one from-scratch generation.
-Rewriting proves a voice is reachable, not that the writer hits it first time from the bundle.
+target voice; once found, confirm it with ⑥ and only then fold it into `WRITER_VOICE`. Rewriting
+proves a voice is reachable, not that the writer hits it first time from the bundle.
 
 ### ⑧ Faithfulness rules — ~$0.17
 
@@ -450,7 +478,8 @@ loaded, not regenerated.
 
 | I want to change… | Edit | Load from disk (free) | Then run | Cost | Numbered steps |
 |---|---|---|---|---|---|
-| **Tone of voice, humour level** | `authoring.WRITER_VOICE` | ① plan **and** ② dry draft | 4b → lint | **~$0.17** | [Recipe ⑥](#-tone-of-voice--017--confirming-the-chosen-register) |
+| **Tone of voice, humour level** | a `voice=` string, or `authoring.WRITER_VOICE` to promote it | ① plan **and** ② dry draft | 4b → lint | **~$0.17** | [Recipe ⑥](#-tone-of-voice--017--confirming-the-chosen-register) |
+| What the report must be, whatever its voice | `authoring.WRITER_CONTRACT` | ① plan **and** ② dry draft | 4b → lint | ~$0.17 | Recipe ⑥, run it with `voice=None` |
 | Faithfulness rules | `authoring.WRITER_FAITHFULNESS` | ① plan **and** ② dry draft | 4b → lint | ~$0.17 | Recipe ⑥, same steps, different constant |
 | How much hole detail the draft carries | `DRY_DRAFT_SYSTEM_DETAILED`, or `dry_draft_style=` | ① plan only | 4a → lint | ~$0.37 | [Recipe ⑤](#-dry-draft-detail-level--037) |
 | The frame, structure, which beats feature | hand-edit ①, or `story_plan.SYSTEM_PROMPT` | ① (if hand-editing) | 4b only, or everything | **free** → ~$0.65 | [Recipe ④](#-the-frame-structure-and-chosen-beats) |
