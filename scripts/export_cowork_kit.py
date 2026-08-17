@@ -23,6 +23,14 @@ Drop the whole folder somewhere with a `styles/` directory alongside it and the
 workflow is self-contained: `how to run.md` says what to paste, `reporting
 guidance.md` is what the model reads.
 
+**The base report carries the editor's headlines unless you strip them.** Stage 4a
+uses the story plan's `chosen_headline` as each round's section heading, so a dry
+draft opens its rounds on crafted lines like *"One Hole: Mullin's Green Jacket
+Reign in Full"*. The body is flat by construction; the headings are not. For a
+voice trial that is the single largest piece of borrowed phrasing in the packet,
+so it is replaced by default with `## Round N: Course, Weekday`. Pass
+`--keep-headlines` to leave the originals in.
+
 `teg_N_context.json` is close to the `bundle_context="data"` packet: structured
 data with the sentence-valued fields stripped, so it supplies material without
 supplying phrasing. `notable_milestones` is **kept** by default, unlike the
@@ -116,6 +124,26 @@ Save the result to `output/teg_<TEG>_<STYLE NAME>.md`.
 4. **Read the openings first.** The occasion device puts the biggest swing in
    the first paragraph, so that is where the styles separate fastest.
 
+## What the base report is, and what has been taken out of it
+
+`teg_N_dry_draft.md` is stage 4a's output: a complete, accurate, deliberately flat account.
+It is generated under a prompt that bans narrative hooks, characterisation and dramatisation,
+so the body carries facts and nothing else.
+
+Two things were stripped on export so the packet does not hand you phrasing:
+
+- **The round headings.** Stage 4a uses the story plan's `chosen_headline`, so TEG 17's rounds
+  originally opened on lines like *"One Hole: Mullin's Green Jacket Reign in Full"*. Those are
+  the editor's words sitting exactly where your report's headings go. They now read
+  `## Round 3: Royal Óbidos, Monday`. Re-run with `--keep-headlines` if you ever want them.
+- **The summary sentences in the context file** (`summary_facts` and friends), leaving numbers
+  and names. `notable_milestones` is deliberately kept, because it is the only licensed source
+  for "defending champion" framing.
+
+What remains is prose, because a dry draft is prose. It cannot be reduced to data without
+becoming the context file. What it is not is *styled* prose, and nothing in it is a draft of
+a line you might want to write.
+
 ## Which base report
 
 Each one exercises a different branch of the occasion device, and a register
@@ -173,6 +201,37 @@ def build_guidance() -> str:
     return "\n".join(parts)
 
 
+# Section headings stage 4a writes that are NOT round sections. Everything else
+# at `## ` level is a round, in document order.
+_FIXED_SECTIONS = ("OVERVIEW", "HOW THE COMPETITIONS WERE DECIDED", "PLAYERS")
+
+
+def _neutral_headings(dry: str, venue: dict) -> str:
+    """Replace the plan's crafted round headlines with factual ones.
+
+    Stage 4a is told to use `chosen_headline` as each round heading, so the dry
+    draft, flat everywhere else, opens each round on a line the editor wrote.
+    In the pipeline that is fine: the writer has the plan anyway. In a voice
+    trial it is the largest piece of borrowed phrasing in the packet, and it
+    sits exactly where the report's own headings will go.
+    """
+    rounds = {r["round"]: r for r in venue.get("rounds", [])}
+    out, seen = [], 0
+    for line in dry.splitlines():
+        if line.startswith("## ") and line[3:].strip().upper() not in _FIXED_SECTIONS:
+            seen += 1
+            meta = rounds.get(seen)
+            if meta:
+                # Colon, not an em-dash: the guidance bans them outright and the
+                # base report should not model punctuation the report may not use.
+                bits = [b for b in (meta.get("course"), meta.get("weekday")) if b]
+                line = f"## Round {seen}" + (f": {', '.join(bits)}" if bits else "")
+            else:
+                line = f"## Round {seen}"
+        out.append(line)
+    return "\n".join(out) + ("\n" if dry.endswith("\n") else "")
+
+
 def _strip(payload: dict, *, keep_milestones: bool) -> dict:
     """Drop the sentence-valued fields, optionally sparing `notable_milestones`.
 
@@ -188,7 +247,8 @@ def _strip(payload: dict, *, keep_milestones: bool) -> dict:
     return authoring._strip_derived_prose(payload, fields)
 
 
-def export(tegs: list[int], out_dir: str, *, keep_milestones: bool = True) -> list[str]:
+def export(tegs: list[int], out_dir: str, *, keep_milestones: bool = True,
+           keep_headlines: bool = False) -> list[str]:
     base = os.path.join(out_dir, "base reports")
     os.makedirs(base, exist_ok=True)
     written = []
@@ -204,12 +264,16 @@ def export(tegs: list[int], out_dir: str, *, keep_milestones: bool = True) -> li
     written.append(how_to)
 
     for teg in tegs:
+        bundle, _ = assemble_bundle(teg)
+
+        dry = authoring.load_dry_draft(teg)
+        if not keep_headlines:
+            dry = _neutral_headings(dry, bundle.get("venue", {}))
         dry_path = os.path.join(base, f"teg_{teg}_dry_draft.md")
         with open(dry_path, "w") as f:
-            f.write(authoring.load_dry_draft(teg))
+            f.write(dry)
         written.append(dry_path)
 
-        bundle, _ = assemble_bundle(teg)
         payload = {k: bundle[k] for k in authoring.BUNDLE_CONTEXT_KEYS if k in bundle}
         payload = _strip(payload, keep_milestones=keep_milestones)
         ctx_path = os.path.join(base, f"teg_{teg}_context.json")
@@ -233,10 +297,15 @@ def main() -> None:
                     help="also strip notable_milestones, so the context file has no "
                          "generated sentences at all. Costs the 'defending champion' "
                          "framing, which is licensed only from that field.")
+    ap.add_argument("--keep-headlines", action="store_true",
+                    help="leave the story plan's crafted round headlines in the base "
+                         "report. Off by default: they are the editor's phrasing, "
+                         "sitting where the report's own headings go.")
     args = ap.parse_args()
 
     tegs = [int(t) for t in args.tegs.split(",") if t.strip()]
-    for path in export(tegs, args.out, keep_milestones=not args.strict_data):
+    for path in export(tegs, args.out, keep_milestones=not args.strict_data,
+                       keep_headlines=args.keep_headlines):
         print(f"  {os.path.getsize(path):>7,}  {path}")
 
 

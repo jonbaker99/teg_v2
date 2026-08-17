@@ -70,7 +70,15 @@ brief and the model picks one at random.
 **2. `plan_scope` had two defaults.** `report_around_draft` defaulted `"full"`, `write_from_dry`
 `"arc"`. One parameter, one default: both are `"full"` now.
 
-**3. `arc` was still shipping the editor's prose.** It carried `title`, `theme`, `opening_hook`,
+**3. The base report was shipping the editor's headlines.** Stage 4a is told to use the plan's
+`chosen_headline` as each round heading, so a dry draft is flat everywhere except the four lines
+that sit exactly where the report's own headings go: TEG 17's rounds opened on *"One Hole:
+Mullin's Green Jacket Reign in Full"*. Fine inside the pipeline, where the writer has the plan
+anyway. In a voice trial it is the largest piece of borrowed phrasing in the packet, and it was
+being missed because attention was on the context file. `export_cowork_kit` now rewrites them to
+`## Round N: Course, Weekday` by default (`--keep-headlines` to opt out).
+
+**4. `arc` was still shipping the editor's prose.** It carried `title`, `theme`, `opening_hook`,
 `foreshadow`, `payoffs` and `why_the_champion_won` — all written sentences, and an opening hook is
 a draft of the opening. Narrowed to the frame VOCABULARY alone: `narrative_structure`,
 `narrative_vehicles`, `prominent_vehicle`, `prominent_palette`. Enum values, no prose. Same
