@@ -306,17 +306,45 @@ def test_the_occasion_device_covers_both_axes_of_the_data():
 def test_the_occasion_device_demands_both_hammable_and_hammed():
     """Jon, 2026-08-17: "it needs to be both 'hammable' and 'hammed'."
 
-    Two distinct failures. Framing material that cannot carry it (a grand frame
+    Two distinct failures. Framing material that cannot carry it (overstatement
     over nothing) and finding the angle then under-delivering it. The block
-    states both as tests and shows the second with a worked pair, because
-    "commit to the frame" is not an instruction a model can act on without one.
+    states both as tests and shows the second with worked pairs, because
+    "commit to it" is not an instruction a model can act on without one.
     """
     block = prompts.ELEVATION_DEVICE
     assert "HAMMABLE" in block and "HAMMED" in block
-    assert "STATED (wrong)" in block and "HAMMED (right)" in block
+    assert block.count("STATED:") == 3, "one worked pair per thing being inflated"
+    assert block.count("HAMMED:") == 3
     # The hammable half must warn against manufacturing an angle, or it reads
-    # as pure encouragement and every report opens with a strained parallel.
+    # as pure encouragement and every report opens with something strained.
     assert "manufacture" in block
+
+
+def test_the_occasion_device_is_about_inflation_not_parallels():
+    """Jon, 2026-08-17: "over-do the achievement, the drama, the defeat. not
+    *necessarily* to draw parallels."
+
+    The first version read the Bristow quote as the mechanism rather than as an
+    illustration, and instructed "reach outside golf: history, myth, war,
+    geology, statecraft". Every report then opened on a historical comparison.
+    The move is overstating the SUBJECT. A comparison is one optional way to do
+    that, neither the mechanism nor forbidden.
+    """
+    block = prompts.ELEVATION_DEVICE
+
+    # The three things being inflated are named, each with a worked example.
+    for thing in ("The achievement.", "The drama.", "The defeat."):
+        assert thing in block, thing
+    assert "not a template" in block
+
+    # Comparisons: permitted, not mandated, not the default.
+    assert "allowed, never automatic" in block
+    assert "default to inflating the thing in front of you" in block
+    # Not forbidden either. Banning them outright was the over-correction.
+    assert "perfectly good" in block
+
+    # The instruction that produced the tic must not come back.
+    assert "Reach outside golf. History, myth" not in block
 
 
 def test_readability_rules_survive_a_voice_swap():

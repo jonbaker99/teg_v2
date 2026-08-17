@@ -166,111 +166,147 @@ NAMED_PRINCIPLES = """Named principles, hold to these:
 # The archetype is DATA, not judgement: every branch below reads a field the
 # bundle already computes in `win_anatomy` and `tournament_shape`.
 # ---------------------------------------------------------------------------
-ELEVATION_DEVICE = """THE OCCASION. How the report opens, and where its biggest laugh usually lives.
+ELEVATION_DEVICE = """THE OCCASION. Over-do it.
 
 Most of the comedy in a golf report comes from bad holes. That is one engine and it is not \
-enough: it says nothing about tournaments where nobody collapsed, and it does not scale with \
-the STORY. The second engine is the story itself, and it belongs in the opening.
+enough: it says nothing about a tournament where nobody collapsed, and it does not scale with \
+the STORY. The second engine is overstatement, and it belongs up front.
 
-**THE MOVE.** Raise a frame far grander than the occasion deserves, then let a plain fact land \
-against it. The gap does the work. The canonical example, from darts:
+**THE MOVE.** Take the achievement, the drama or the defeat, and treat it as far bigger than it \
+is. Not by comparing it to something bigger. By describing THIS thing with more weight, more \
+consequence and more finality than five men on a golf holiday could possibly warrant. You are \
+not reaching for something grand. You are inflating what is in front of you.
 
-    "When Alexander of Macedonia was 33, he cried salt tears because there were no more worlds
-     to conquer. Bristow's only 27."
+**THE THREE THINGS YOU INFLATE.**
 
-Note what makes it work. The comparison is to something genuinely enormous. The deflation is a \
-FACT, delivered flat, not a joke. Nobody winks. The speaker appears entirely sincere.
+- **The achievement.** A win, a record, a personal best, a drought ended. Make it monumental. \
+Not "a good week", a demonstration of something.
+- **The drama.** A lead changing hands, a margin closing, a collapse under way. Make it \
+unbearable while it is happening.
+- **The defeat.** The Spoon, the blow-up, the chance missed. Make it final. Not a bad day, a \
+condition.
+
+**HOW YOU INFLATE.** All of these work on the subject itself:
+
+- **Promote a result into a status.** He did not come last. He holds an office, a title, a post \
+with duties attached.
+- **Give an ordinary act consequence out of all proportion.** A par becomes a decision. A \
+concession becomes a policy.
+- **Use finality.** Never again, for the last time, permanently, henceforth, and that was that.
+- **Attribute intent to what was plainly luck or panic.** He meant it. He had reasons. He has \
+never explained them.
+- **Treat a number as though it settles a question** rather than merely reports one.
+- **Formalise it.** A result becomes a verdict, a finding, a ruling, a diagnosis, a matter of \
+record.
+
+**THREE WORKED EXAMPLES, ONE PER THING.** Note that none of them contains a comparison.
+
+    ACHIEVEMENT
+    STATED:  "Baker won the Trophy by 18 and the Jacket by 13."
+    HAMMED:  "Baker won the Trophy by eighteen. He won the Jacket by thirteen. There is no
+              third competition, or he would have won that as well. This was not a tournament.
+              It was a demonstration, staged over four days, for an audience of four men who
+              had paid to attend."
+
+    DEFEAT
+    STATED:  "Williams took his second Wooden Spoon."
+    HAMMED:  "Williams took the Spoon for the second time. He is no longer a man who
+              occasionally finishes last. He is the incumbent. At some point there should
+              probably be a handover."
+
+    DRAMA
+    STATED:  "Baker led by seven at the 8th in round four, and lost."
+    HAMMED:  "Baker stood on the 8th tee in round four with a seven-shot lead and eleven holes
+              left. He would not lead again. What followed was not a collapse, because a
+              collapse is sudden. This was a managed withdrawal, conducted over two hours,
+              with full documentation."
+
+**COMPARISONS: allowed, never automatic.** Reaching outside for a parallel is a perfectly good \
+way to inflate, and when the material genuinely invites one it can be the best line in the \
+report. It is also the one that misbehaves, because it is the easiest thing to reach for, so it \
+arrives whether or not it was wanted. The famous example of this register, from darts, is \
+*"When Alexander of Macedonia was 33, he cried salt tears because there were no more worlds to \
+conquer. Bristow's only 27."* **That is an illustration of hamming, not a template for \
+openings.** What to take from it is the attitude: enormous seriousness, sincerely maintained, \
+deflated by a plain fact. The parallel is incidental to that. Use one where it earns its place; \
+**default to inflating the thing in front of you**, and never let two reports in a row open the \
+same way.
 
 **THE TWO TESTS. Every occasion must be both HAMMABLE and HAMMED.**
 
-*Hammable* is about the material. A frame needs a real asymmetry to hang on: a drought, a \
-collapse, a streak, a margin, a reversal, a career arriving somewhere. The tables below tell \
-you where to look, and there is always at least one. What you must not do is manufacture one. A \
-grand frame draped over nothing is the worst available outcome, because it reads as a writer \
-straining rather than a subject deserving.
+*Hammable* is about the material. Overstatement needs a real asymmetry underneath it: a drought, \
+a collapse, a streak, a margin, a reversal, a career arriving somewhere. The tables below say \
+where to look, and there is always at least one. What you must not do is manufacture one. Ham \
+draped over nothing reads as a writer straining rather than a subject deserving.
 
 *Hammed* is about the delivery, and it is the more common failure. Having found the angle, \
-COMMIT to it. Half-hamming is worse than not hamming: it spends the material and lands nothing. \
-The difference is between stating a fact and building a frame.
+COMMIT. Half-hamming is worse than not hamming: it spends the material and lands nothing. Every \
+STATED line above is accurate, publishable and dead.
 
-    STATED (wrong):  "Baker had finished fourth three times and finally won."
-    HAMMED (right):  "Baker had finished fourth in three consecutive TEGs. Fourth is not a
-                      result. It is a verdict, delivered annually, by a committee of his
-                      friends. This year the committee was overruled."
+**WHAT TO HAM, AXIS ONE: how did this tournament finish?** Read it off `win_anatomy` and \
+`tournament_shape`. These fields classify it already; do not guess.
 
-Same fact. The second one is the job.
-
-**AXIS ONE, THE RESULT: what shape did this tournament finish in?** Read it off `win_anatomy` \
-and `tournament_shape`. Do not guess; these fields classify it already.
-
-- **`attribution: "built"` with a wide margin.** A procession. The frame is conquest with \
-nothing left to conquer, dominance that has run out of opposition, an empire administering \
-territory nobody contests. The deflating fact is the smallness of what was actually won.
+- **`attribution: "built"` with a wide margin.** A procession. Dominance that has run out of \
+opposition, and the smallness of what was actually won.
 - **`attribution: "inherited"`.** The rival outplayed the winner over more rounds and lost \
-anyway. This is a ROBBERY and should be written as one: the wronged party, the injustice \
-recorded with the solemnity of a public inquiry, the beneficiary entirely untroubled. Never \
-frame it as the winner being undeserving; frame it as fate being administratively incompetent.
-- **`attribution: "unopposed"`.** Nobody laid a glove on them. The comedy is the absence of a \
-contest, an occasion staged for a result nobody was going to change.
-- **`biggest_lead_blown` present.** Somebody led by a stated margin as late as a stated hole \
-and lost it. This is the collapse, and it is tragedy, not slapstick. Name the hole. The frame \
-is a fall from a great height, and the drop is measured precisely because precision is what \
-makes it hurt.
+anyway. A ROBBERY: the wronged party, the injustice gravely recorded, the beneficiary entirely \
+untroubled. Never frame it as the winner being undeserving. Frame it as fate being \
+administratively incompetent.
+- **`attribution: "unopposed"`.** Nobody laid a glove on them. The absence of a contest is the \
+joke, an occasion staged for a result nobody was going to change.
+- **`biggest_lead_blown` present.** Somebody led by a stated margin as late as a stated hole and \
+lost it. A COLLAPSE, and tragedy rather than slapstick. Name the hole. Measure the drop \
+precisely, because precision is what makes it hurt.
 - **`rival_could_have_flipped_it: true`.** One ordinary round instead of their worst and the \
-result reverses. The frame is haunting: the thing that did not happen, present throughout.
-- **`close_finish: true`.** The margin is trivial and the stakes are nothing, so treat both as \
-though civilisations turned on them. Geopolitical, seismic, dynastic.
-- **`shape: "volatile"` in a winner.** They won while swinging wildly. The frame is a man \
-carried to victory by a machine he is not operating.
-- **`shape: "consistent"` in a winner.** They never had a bad day. This is the hardest one to \
-make funny and the easiest to skip, so do not skip it: the frame is grinding inevitability, \
-something geological or bureaucratic, a process rather than a contest. Steadiness is only dull \
-if you write it as an absence of drama instead of as the thing that crushed everyone else.
+result reverses. The thing that did not happen, present throughout.
+- **`close_finish: true`.** The margin is trivial and the stakes are nothing. Treat both as \
+though something enormous turned on them.
+- **`shape: "volatile"` in a winner.** They won while swinging wildly. A man carried to victory \
+by a machine he is not operating.
+- **`shape: "consistent"` in a winner.** They never had a bad day. The hardest to make funny and \
+the easiest to skip, so do not skip it: grinding inevitability, a process rather than a contest. \
+Steadiness is only dull if you write it as an absence of drama instead of as the thing that \
+crushed everyone else.
 
-**AXIS TWO, THE CAREER: what walked into this tournament, and what walked out?** Read it off \
-each player's `notable_milestones` and `last_4_positions` in `player_history`. This axis is \
-often the better one, because it carries stakes the tournament alone cannot.
+**WHAT TO HAM, AXIS TWO: what walked in, and what walked out?** Read it off each player's \
+`notable_milestones` and `last_4_positions` in `player_history`. Often the better axis, because \
+it carries stakes the tournament alone cannot.
 
 - **A drought ended.** A milestone naming prior runner-up finishes or a repeated rank, and the \
-player wins this time. This is the CHANCE SEIZED, and it is the most emotionally loaded thing \
-in the data. The frame is a sentence commuted, a siege lifted, a long-running injustice \
-belatedly corrected. Earn it by making the years of failure real first. A payoff with no setup \
-is just a result.
+player wins this time. The CHANCE SEIZED, and the most emotionally loaded thing in the data. \
+Earn it by making the years of failure real first. A payoff with no setup is just a result.
 - **A drought extended.** The same milestones, and the player falls short again. The CHANCE \
-MISSED. The frame is Sisyphean, or a man kept permanently one rung below a promotion nobody \
-will explain. Play it straight and it is funnier: no pity, no consolation, just the record \
-noting another year.
-- **A repeated rank** (`"rank Nth in each of the last M TEGs"`). Someone has finished in the \
-same position with machine-like reliability. Treat the position as an office they hold, a post \
-they were appointed to, a seat with their name on it.
+MISSED. No pity and no consolation. The record simply notes another year.
+- **A repeated rank** (`"rank Nth in each of the last M TEGs"`). Someone has finished in the same \
+position with machine-like reliability. Treat the position as an office he holds.
 - **Serial Wooden Spoons** (`"back-to-back Wooden Spoons"`, `"Wooden Spoon in N of the last M"`, \
-`"reigning Wooden Spoon holder"`). The best of the inversions. Sustained, reliable, \
-year-on-year awfulness is an ACHIEVEMENT and should be written as one: a discipline, a \
-vocation, a standard heroically maintained against the constant threat of accidental \
-competence. Congratulate the dedication. Never pity the golf.
-- **The defending champion** (only where a milestone says so in as many words). Incumbency, \
-with everything that implies: a title to defend, a reign, and either a dynasty or a deposition.
+`"reigning Wooden Spoon holder"`). The best of the inversions. Sustained, reliable, year-on-year \
+awfulness is an ACHIEVEMENT and should be written as one: a discipline, a vocation, a standard \
+heroically maintained against the constant threat of accidental competence. Congratulate the \
+dedication. Never pity the golf.
+- **The defending champion** (only where a milestone says so in as many words). Incumbency: a \
+title to defend, and either a dynasty or a deposition.
 
 **BRAIDING THE TWO.** The strongest openings run both axes at once, because the result gets its \
-meaning from the career. A two-point win is a small thing; a two-point win by a man who has \
-been runner-up three times is a story. Where the axes point the same way, braid them. Where \
-they conflict, the career usually wins.
+meaning from the career. A two-point win is a small thing. A two-point win by a man who has been \
+runner-up three times is a story. Where the axes point the same way, braid them. Where they \
+conflict, the career usually wins.
 
 **RULES.**
-1. **Once per report, in the opening.** A second grand frame halves the first. Later callbacks \
-to the SAME frame are welcome; a new one is not.
-2. **The frame must be true to the data.** Do not write a robbery when `attribution` says \
+1. **The opening must establish what this tournament WAS**, at the size the story deserves.
+2. **Vary how you do it.** These reports are read as a series. If the last one opened on a \
+grand comparison, this one must not. Any device used every time stops being a device.
+3. **Overstatement is not decoration; it is applied to something.** Name the achievement, the \
+drama or the defeat you are inflating, and stay on it. Do not inflate in general.
+4. **The angle must be true to the data.** Do not write a robbery when `attribution` says \
 `built`, a collapse when nothing was blown, or a drought ended when no milestone records a \
 drought. A misapplied frame is a factual error wearing a costume.
-3. **Deflate with a fact, never with a punchline.** The fact is funnier and it cannot be wrong.
-4. **Reach outside golf.** History, myth, war, geology, statecraft, natural disaster, the law. \
-A comparison to another sport is not elevation, it is a like-for-like.
-5. **The register of the frame is the VOICE's business, not this block's.** Whatever voice you \
-have been given, execute the move in it. A plain voice states the grand parallel plainly. That \
-still works. What is not optional is that the opening establishes the SCALE of what happened.
-6. **It must survive being true.** Every fact inside the frame comes from the draft or the \
-context. Invent nothing to make the parallel land, and claim no career history that is not in \
-`notable_milestones`.
+5. **Deflate with a fact, never with a punchline.** The fact is funnier and it cannot be wrong.
+6. **The register is the VOICE's business.** Whatever voice you have been given, ham it in that \
+voice. A dry voice hams by being drier. A warm voice hams by caring far too much. If a style \
+brief forbids metaphor, ham it without metaphor: overstatement needs no imagery at all.
+7. **It must survive being true.** Every fact inside it comes from the draft or the context. \
+Invent nothing to make it land, and claim no career history that is not in `notable_milestones`.
 """
 
 
