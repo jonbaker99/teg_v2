@@ -24,6 +24,9 @@ data/
   streaks.parquet         ← pre-computed streak counters per hole per player
   bestball.parquet        ← pre-computed per-round bestball/worstball totals (read by the webapp for all-time ranking; rebuilt on every add/delete)
   commentary_*.parquet    ← AI-generated commentary (round/tournament summaries, streaks)
+  commentary/             ← the LLM report pipeline's artefacts (see below) — markdown + story-plan JSON
+  commentary/variants/    ← per-model artefact sets for comparison runs — GITIGNORED
+  llm_mailbox/            ← prompt hand-off for `--plan` / `--paste` report runs — GITIGNORED, transient
 ```
 
 `all-scores.parquet` and `all-data.parquet` are both hole-level at the same granularity, but the relationship is master → derived, not two independent sources: `all-data` is regenerated wholesale from `all-scores` (+ `round_info.csv` for Date/Course, + cumulative/ranking columns) by `update_all_data()` (`teg_analysis/analysis/pipeline.py`) on every add/delete, so it carries no information that isn't derivable from `all-scores`. Both are still stored (rather than deriving `all-data` on load) since the store costs nothing and keeps webapp reads decoupled from the transform chain. A third copy, a plain-CSV mirror of `all-data` (`data/all-data.csv`, "manual review" copy), was retired — nothing read it and it dominated the size of every data-update GitHub commit (~2.5 MB vs ~40 KB for the parquet).
@@ -31,6 +34,17 @@ data/
 `course_pars.csv` is backfilled from `all-scores` + `round_info` history (`scripts/backfill_course_pars.py`) using **the most recently played round at each course**, not majority vote — a course can be legitimately re-rated over time, so recency is a better default than historical agreement, and it naturally covers courses with too little history for a majority (e.g. Estoril, only 2 rounds ever). All 26 courses are populated. Praia D'El Rey is flagged (`KNOWN_VARIABLE_ROUTING` in the script) because it's sometimes played back-9-first — confirmed with Jon this is real variation, not an error — so its entry is just the usual routing, not a guarantee; pre-round setup should prompt a double-check for it specifically. `course_pars.csv` is edited like any other metadata CSV via `/admin/edit-data`.
 
 `course_pars.csv` is a *course-level default*. `round_pars.csv` (below) is the actual per-round Par/SI, confirmed by an admin before a round is played — that's what round entry reads from, not `course_pars.csv` directly. See `DATA_STORAGE_INGESTION_PLAN.md`.
+
+`commentary/` holds the report pipeline's output: five artefacts per TEG (`teg_N_story_plan.json` →
+`_dry_draft.md` → `_report_A_around_draft.md` → `_report_final.md` → `_report_styled.md`), the same set
+with a `round_R_` infix for round reports, plus experiment snapshots and archived generations.
+`_report_styled.md` is the only one the webapp reads. Two sibling directories are **gitignored and safe
+to delete**: `commentary/variants/<name>/` is a parallel artefact set for one model
+(`TEG_REPORT_VARIANT` / `--variant` / `--paste`), promoted into `commentary/` with
+`reporting.paths.promote_variant` when it wins; `llm_mailbox/` is transient prompt hand-off state for
+`--plan` and `--paste` runs (one directory per run: `run.json`, per-call `request.md` / `response.*`, a
+`FINISHED` marker). Neither is written by `write_file` and neither goes to the Railway volume — report
+generation is offline-only. Full reference: `teg_analysis/reporting/ARTEFACTS.md`.
 
 `live_rounds.csv` / `live_rounds/{token}.csv` back multi-device live round entry (`teg_analysis/analysis/live_round.py`, `/live-round/{token}`) — an admin starts a live round for an already-set-up TEG+Round, gets a shareable link, and players enter scores from their own phones with the server (not client clocks) arbitrating write order and flagging genuine conflicts. The per-round staging file is written `defer_github=True` on every score entry (volume-only, never committed — it's a staging area, not the record) and is archived once finalized, at which point its scores are converted to the same long-format shape the "add a round" flow uses and written via the existing `execute_data_update` — one GitHub commit, same as any other round addition. See `DATA_STORAGE_INGESTION_PLAN.md`, "Phase 3.4 design", for the full model (conflict resolution, polling, device identity).
 

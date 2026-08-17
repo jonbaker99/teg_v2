@@ -2,7 +2,7 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-08-15 (report generation can now run on claude.ai plan usage; earlier content current as at 2026-07-12)
+**Last updated:** 2026-08-17 (reporting docs reconciled against the code; report-quality rework and readability pass logged below; earlier content current as at 2026-07-12)
 
 ## Where things stand
 
@@ -14,7 +14,7 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 **Data admin** — Behind cookie auth in `webapp/routes/admin.py`, driven by headless `analysis/data_update.py` + `io/sync.py`: add a round; delete rounds/TEGs; edit metadata CSVs; selective GitHub↔store file sync (pre-action preview + text diff); volume browser (per-file edit/sync/download/delete-with-backup); backups browser (restores back up the replaced copy first); file guide (`io/file_catalog.py`). Report generation is out of scope here.
 
-**Reporting** — LLM-powered tournament reports (`teg_analysis/reporting/`), 5-stage pipeline: scored evidence-carrying beats + competition arcs (code) → structured story plan (LLM) → dry draft as QA scaffold + entertaining write-up + repetition lint (LLM) → CSS-class styled markdown. Three production reports validated (TEGs 9, 14, 18); ~$0.65 each at the time of validation. Details: `teg_analysis/reporting/README.md`, `teg_analysis/reporting/STATUS.md`.
+**Reporting** — LLM-powered tournament reports (`teg_analysis/reporting/`), 5-stage pipeline: scored evidence-carrying beats + competition arcs (code) → structured story plan (LLM) → dry draft as QA scaffold + entertaining write-up + repetition lint (LLM) → CSS-class styled markdown, with mechanical verification (`verify.py`, 8 checks) after every generation. **All 17 TEGs (2–18) published and regenerated on one vintage**; ~$0.65 each. Can run on the Anthropic API (default) or hand prompts off to claude.ai plan usage. ⚠️ **What the site serves lags what was generated** — 16 of 17 styled files still hold pre-2026-08-13 prose, because the regeneration ran `style=False`. Details: `teg_analysis/reporting/README.md`, `teg_analysis/reporting/STATUS.md`.
 
 **Player profiles** (`webapp/routes/player.py`, `webapp/templates/partials/player_overview.html`, `webapp/templates/player_index.html`) — `/player` and `/player/{code}` reworked: pill-driven roster landing with player cards; overview with 11 ranked metric cards, trophy cabinet with ordinal ranks, career highlights, records/worsts in natural language, career trend bar charts with rank annotations. Functionality complete; **UI design pass still outstanding** (`webapp/TODOS.md`).
 
@@ -34,6 +34,42 @@ Design detail lives in docstrings in `analysis/live_round.py` and `webapp/README
 **Guided new-round wizard** (`teg_analysis/analysis/round_wizard.py`, `webapp/routes/admin_new_round.py`, templates `admin_new_round.html` / `admin_new_round_wizard.html`) — `/admin/new-round` (first in admin sub-nav) orchestrates round metadata → roster+handicaps → Par/SI → go live as one linear stepper. Stateless and resumable: each step saves via the existing tested functions and the current step is recomputed from data on every visit (`get_wizard_status`), so round 2/3/4 auto-skips confirmed roster and a half-finished setup resumes by revisiting the URL. Net-new piece is a round-metadata form (`get_round_metadata_form`/`save_round_metadata`) deriving `TEGRd`/`TEG`/`Area`/`Year`. Standalone pages remain reachable for edits. Detail: `webapp/README.md` → "New round (guided wizard)".
 
 ## Recent change log
+
+### 2026-08-17 — Reporting docs reconciled against the code
+
+No pipeline change. `teg_analysis/reporting/` docs (README, ARTEFACTS, STATUS, ONBOARDING, EXPERIMENTS)
+were checked against the code, the artefacts on disk, a full test run (**518 passed**) and a full
+`verify --all --rounds` run, and corrected. Four corrections change what to do next:
+
+- **The library has no fixture gaps and only one vintage.** All 17 TEGs have the complete artefact chain;
+  the old "regenerate 2–8, 15, 16, 9" and "rebuild TEG 14's fixtures" items were already done.
+- **D3 is clean on every tournament report** — 0 errors across all 17, so the 81-fault backlog cleared on
+  the 2026-08-13 regeneration. The only 4 errors left are in round reports.
+- ⚠️ **16 of 17 styled reports don't match their finals**, so none of the regenerated prose has reached a
+  reader. `style=False` was deliberate; the consequence was never measured until now.
+- **Three new small issues logged**: `TIGHTEN_SYSTEM` still contradicts the em-dash ban (dormant), a
+  stray tracked `reply.txt` at the repo root holding an unpublished TEG 17 report, and raw `SI n` leaking
+  into published prose.
+
+### 2026-08-14 → 08-15 — Report quality: counterfactual importance, then a readability pass
+
+Two rounds of change to what a report says and how it reads. Detail in
+`teg_analysis/reporting/STATUS.md` → START HERE.
+
+**The data layer (08-14).** Three root causes of "the reports are hard on the champion" turned out to be
+in the data, not the prompts. `importance` claimed to measure contribution to the result but never
+consulted the result — it is now **counterfactual** (`impact.py`): replace a player's scores over the
+event with their own TEG average, recompute each competition in its own metric, and measure the swing.
+Detection was lopsided 2.6:1 negative because bad things were found on gross and good things on net —
+two new detectors bring it to 1.52:1. And nothing computed *why* the champion won, so `win_anatomy.py`
+plus a required `why_the_champion_won` plan field now do. Champion's share of negative beats: 20% → 14%.
+
+**The voice (08-15).** Voice was being defined in four places and three had drifted; it now lives once in
+`reporting/prompts.py` and every prompt imports it, which incidentally moved the round writer onto the
+current register. Then Jon read the reports — *"80% good, lacking a bit in humour, and a bit hard to
+read"* — and the humour dial was settled at `humour6`, em-dashes banned outright, sentences capped at a
+~15-word average. Enforced by a new `verify.py` check, not just prompt text, because the previous
+sentence cap was contradicted elsewhere in the prompt and consequently ignored 18–31% of the time.
 
 ### 2026-08-15 — Report generation can run on plan usage, or in any other model
 
@@ -56,8 +92,9 @@ implementation under either provider. Structured output, which the API path got 
 back, re-asking with the error on failure.
 
 New: `teg_analysis/reporting/mailbox.py`, `paths.py`, a `--tegs` CLI on `backfill`, and
-`.claude/skills/teg-report-respond/`. **Built and tested, not yet run on a real report.**
-Detail in `teg_analysis/reporting/README.md` → *Who answers the prompts*.
+`.claude/skills/teg-report-respond/`. **The mechanism has since been run on real reports** (TEG 17 and
+TEG 14 both went through the hand-off); what remains unmeasured is whether plan-usage output matches API
+output in quality. Detail in `teg_analysis/reporting/README.md` → *Who answers the prompts*.
 
 ### 2026-07-09 → 07-10 — Codebase review remediation (complete)
 

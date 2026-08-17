@@ -271,13 +271,12 @@ Same facts, same structure, same headings, same standings. Only the prose differ
 Then fold the winner into `WRITER_VOICE` and run ⑥ once to confirm the writer reaches it
 from the dry draft rather than only by rewriting.
 
-> **Which TEG to test on.** Use one with a `report_final.md` — **17 or 12** are the current-vintage
-> ones. The two natural anchors are unavailable by default: **TEGs 14 and 18 have no
-> `report_final.md`** (past experiments consumed it), so pass
-> `source_label="A_around_draft"` for those. The error message lists the alternatives if you forget.
+> **Which TEG to test on.** Any of them — every TEG 2–18 has a `report_final.md` as of 2026-08-17, so
+> the `source_label="A_around_draft"` workaround the old anchors needed is no longer necessary. The
+> error message lists the alternatives if a file ever is missing.
 >
 > **Test on two TEGs before committing**, as the original A/B did: one tight finish, one blowout.
-> A register that works on a close finish can fall flat on a procession.
+> A register that works on a close finish can fall flat on a procession. **14 and 18** are the pair.
 
 ### ⑥ Tone of voice — ~$0.17 · confirming the chosen register
 
@@ -400,11 +399,22 @@ python -m teg_analysis.reporting.verify 17            # one TEG
 python -m teg_analysis.reporting.verify --all --rounds
 ```
 
-Checks the prose against the data: leaked beat IDs, invented countback/playoff, "a week" (a TEG is
-3–4 consecutive days), non-participants, invented weekdays, impossible over-par totals, mis-stated
-swings. `backfill.py` runs it automatically after every generation.
+Eight checks against the prose and the data: leaked beat IDs, invented countback/playoff, "a week" (a
+TEG is 3–4 consecutive days), non-participants, invented weekdays, impossible over-par totals,
+mis-stated swings, and **em-dashes** (added 2026-08-15 with the ban). `backfill.py` runs it
+automatically after every generation. Findings are reported, never raised — a flagged report still
+gets written.
 
-*Did it work?* `✓`. Use the error count as the acceptance test after a regeneration.
+*Did it work?* `✓`. Use the **error** count as the acceptance test after a regeneration; warnings are
+advisory.
+
+**Current library state (2026-08-17), for a baseline to compare against:**
+
+| | Count | Where |
+|---|---|---|
+| Errors | **4** | round reports only — TEG 9 R1/R4 and 10 R4 (`weekdays` ×2, `not_a_week` ×2) |
+| Errors in tournament reports | **0** | all 17 clean; the old 81-fault backlog cleared on the 2026-08-13 regeneration |
+| Warnings | **566** | all `no_em_dashes` — every report predates the ban, so this clears on regeneration |
 
 ### ⑩ Standings, records, CSS hooks — free
 
@@ -453,16 +463,22 @@ runnable steps are in the recipe each row links to.
 
 ## Which TEGs can I iterate voice on?
 
-The voice loop needs ① *and* ② on disk. Verified 2026-08-11:
+The voice loop needs ① *and* ② on disk. **All of them — TEGs 2 through 18 have the complete chain**
+(① plan, ② dry draft, ④ final, ⑤ styled). Verified 2026-08-17.
 
-| Ready (11) | Not ready |
-|---|---|
-| 2, 3, 4, 5, 6, 7, 8, 9, 12, 15, 16, 17 | **10** — `report_final` missing<br>**11, 13, 14, 18** — `dry_draft` + `report_final` missing |
+That is new. The 2026-08-13 library regeneration filled every gap, and TEG 14's chain — consumed into
+variant filenames by the humour experiments — was rebuilt on 2026-08-15. Nothing needs generating
+before you can start a cheap loop.
 
-**TEG 14 is the standing anchor case** (2-point finish, multiple courses — the case that most tempts
-fabrication) **and it is not currently usable for the voice loop.** The humour experiments consumed
-its intermediate files into variant filenames. One full regeneration rebuilds them. Until then use
-**TEG 17 or 12** — both current-vintage with complete chains.
+**Prefer TEG 14 as the anchor.** Two-point finish, multiple courses: the case that most tempts the
+writer into fabricating a pattern, so a regression shows there first. **Then test on a second TEG
+before committing** — one tight finish, one procession. A register that works on a close finish can
+fall flat on a blowout; 17 and 12 are the natural second picks.
+
+> **Vintage is not the same as availability.** Every TEG has usable fixtures, but only **4, 8, 12, 14
+> and 18** were generated under the 2026-08-14 counterfactual-importance / `win_anatomy` rework
+> (fingerprint: `why_the_champion_won` present in ①). The other twelve are one generation back. That
+> matters when you are comparing prose, not when you are freezing a fixture.
 
 ---
 
@@ -481,8 +497,14 @@ Decoder for the ~40 other files. None of these are read by anything; they're his
 | `..._tournament_v{0..5}_*.md` | the voice ladder (`existing` → `baseline` → `restraint` → `economy` → `observer` → `gravitas`). Gravitas won |
 | `..._story_plan_prompt.md` | dry-run dump of the assembled prompt + bundle. Free to regenerate |
 | `..._notable_events.md`, `..._venue_context.md` | inspection dumps of Stage 2. Free |
+| `variants/<name>/` | **a whole parallel artefact set for one model** (`variants/gpt5/`, `variants/gemini/`) written when `TEG_REPORT_VARIANT` / `--variant` / `--paste NAME` is set. Same five filenames inside, plus a `manifest.json` recording provider, requested model and timings. **Gitignored** — promote the one you want with `paths.promote_variant(name, teg)` and commit that. Nothing reads a variant automatically |
 | `archive 2026 v1/`, `archive 2026 v2/` | full snapshots of two earlier generations of the library |
 | `archive 2025/`, `drafts/`, `round_reports/` | the pre-pipeline 2025 system. Still the webapp's fallback read paths |
+
+**Not under `data/commentary/` at all:** `data/llm_mailbox/` holds the prompt hand-off for `--plan` and
+`--paste` runs — one directory per run, each with `run.json`, per-call `request.md` / `response.*` and
+a `FINISHED` marker. Also gitignored, and safe to delete once a run is done. See
+[README.md](README.md) → *Who answers the prompts*.
 
 **Naming a new variant:** `teg_N_report_{yourlabel}.md`, and `_styled` on the end for the rendered
 version. Anything that isn't exactly `report_final.md` / `report_styled.md` is invisible to the site

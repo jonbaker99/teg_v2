@@ -100,7 +100,7 @@ separately because that's what they are.
 
 | Concern | What it actually is | Lives in | Maturity |
 |---|---|---|---|
-| **Scope — tournament vs round** | A **second instance of the whole A→E chain**, not a stage within one. `round_report.py` re-implements plan → draft → write → style for a single round. | `story_plan.py` vs `round_report.py` | **A generation behind at B1/B3** — `RoundStoryPlan` has no vehicles and no payoffs. Port before backfilling ~50 rounds |
+| **Scope — tournament vs round** | A **second instance of the whole A→E chain**, not a stage within one. `round_report.py` re-implements plan → draft → write → style for a single round. | `story_plan.py` vs `round_report.py` | **Code is level** — `RoundStoryPlan` gained vehicles, palettes and payoffs on 2026-08-11, and the round writer picked up the shared voice on 2026-08-15. The **published** round reports are two generations behind it: read one fresh round before backfilling the other ~49 |
 | **Model & runtime config** | A **dial on every LLM row** (all of B, C, D1), not a step. Changing it re-prices whichever rows you're running. | `llm.DEFAULT_MODEL`, `output_config.effort` | **Pinned to `claude-opus-5`** (2026-08-11). `effort` is still never set anywhere, so every call runs at default `high` — untested lever (known issue 15) |
 
 ### What follows from this
@@ -123,18 +123,22 @@ separately because that's what they are.
   ```
 
   The composed string is byte-identical to the literal it replaced (asserted in tests), so nothing
-  about generated output moved. Tune the humour dial by editing `WRITER_VOICE` alone.
-- **Where the work is.** As of 2026-08-11 **D3, B3, A1's era leak and the model pin are all fixed**;
-  see [STATUS.md](STATUS.md) → Known issues for the register. What remains is **A3** (weights
-  measured, setting undecided) and **C2** (the humour dial) — both judgement calls, not defects —
-  plus the 81 prose-wording faults D3 now reports across the older reports, which regeneration
-  clears.
+  about generated output moved. Since 2026-08-15 the voice half is composed from the shared blocks in
+  `prompts.py`, so **change the register in `prompts.VOICE_CORE`** (both pipelines get it) and use
+  `WRITER_VOICE` only for tournament-specific aim — the champion register, `NARRATIVE PULL`.
+- **Where the work is.** Both judgement calls that used to sit here are now settled: **A3** (weights
+  at `(1.5, 0.8, 0.7)`, 2026-08-11) and **C2** (the humour dial at `humour6`, 2026-08-15). The
+  remaining work is not a defect either — it is **one cold generation under the new voice**, then the
+  library regeneration that clears the em-dash backlog. See [STATUS.md](STATUS.md) → Known issues for
+  the register.
 
-#### Why D3 would reduce the burden on D1
+#### Why D3 reduces the burden on D1
 
-An open thought, assessed against the actual prompt: roughly **half of `WRITER_SYSTEM`'s 11
-faithfulness absolutes are mechanically checkable**, and are currently enforced only by asking the
-model nicely.
+Assessed against the actual prompt: roughly **half of `WRITER_SYSTEM`'s 11 faithfulness absolutes are
+mechanically checkable**. D3 now checks six of them, but the prompt still carries all eleven —
+deliberate belt-and-braces, not an oversight. (The other two of D3's eight checks aren't on this list:
+`swing_claims` is arithmetic-adjacent, and `no_em_dashes` enforces a voice rule rather than a
+faithfulness one.)
 
 | Rule | Checkable? | How |
 |---|---|---|
@@ -151,14 +155,15 @@ model nicely.
 | Early lead changes aren't "chaos" | no | semantic — but **A3 is the real fix**, not a rule |
 
 The six mechanical rules are the ones that trace to real incidents, and they're exactly the ones a
-post-hoc check would catch *more* reliably than a prompt absolute — the TEG 10 R3 arithmetic error
-happened with the rule already in the prompt. Moving them to D3 would let D1 shrink to the semantic
-rules that genuinely need a model's judgement, which is also the targeted version of the known-issue-9
-prompt-density fix.
+post-hoc check catches *more* reliably than a prompt absolute — the TEG 10 R3 arithmetic error
+happened with the rule already in the prompt. **Dropping them from D1 would let it shrink to the
+semantic rules that genuinely need a model's judgement**, which is the targeted version of the
+known-issue-9 prompt-density fix. Do it on evidence from fresh generations, not speculatively: a rule
+that was doing real work is expensive to discover after removing it.
 
-Note this is already being done, just by hand and unrepeatably: STATUS.md's verification record
-describes a **manual sanity grep** for `countback` / `tiebreak` / `playoff` / `unique double`. D3 is
-mostly the job of turning that grep into code and running it on every generation.
+What D3 replaced was a **manual sanity grep** for `countback` / `tiebreak` / `playoff` /
+`unique double`, recorded in STATUS.md's verification record. Turning that grep into code was most of
+the job; it now runs on every generation.
 
 ### The plumbing — where each component sits and what it hands on
 
@@ -192,7 +197,8 @@ the cheap loops cheap.
   repetition_lint(text)            ─write─►  teg_N_report_final.md    ~$0.07
         │                                    ▲ restart point ← the cheap-loop workhorse
         │
-        │   ⚠ D3 (verification) would sit HERE — nothing runs at this point today
+  verify_report(teg)               ─report─►  findings (never raised)   D3       FREE
+        │                                    auto-run by backfill.py
         ▼
   style_report(teg)                ─write─►  teg_N_report_styled.md   D2, E1   FREE
         │
@@ -282,7 +288,9 @@ linted, _ = repetition_lint(rpt["text"])            # ~$0.07
 from teg_analysis.reporting.render import style_report
 style_report(17)
 
-# D3 — VERIFICATION. Nothing to run: not built.
+# D3 — VERIFICATION. Free; reads _report_final.md. Also runs inside backfill.
+from teg_analysis.reporting.verify import verify_report, format_findings
+print(format_findings(verify_report(17), 17))        # or: python -m ...verify --all --rounds
 
 # E2 — VISUAL. No Python at all: edit teg_reports.css and reload.
 
@@ -293,13 +301,13 @@ build_story_plan(14, dry_run=True)                  # writes teg_14_story_plan_p
 ### Fixture set
 
 Iterating on themes C, D and E needs a frozen artefact chain to restart from — specifically
-`story_plan.json` **and** `dry_draft.md`. **11 of 17 TEGs have both**; the current list, and which
-files each TEG is missing, is in [ARTEFACTS.md](ARTEFACTS.md) → "Which TEGs can I iterate voice on?".
+`story_plan.json` **and** `dry_draft.md`. **All 17 TEGs now have the full chain** (plan, dry draft,
+final, styled), verified 2026-08-17: the 2026-08-13 library regeneration filled every gap, and TEG
+14's chain was rebuilt on 2026-08-15. Any TEG is a valid restart point.
 
-> ⚠️ **TEG 14 — the standing stress-test anchor — is missing `dry_draft.md` and `report_final.md`.**
-> The humour and tighten experiments consumed them into variant filenames, so the two cheapest
-> iteration loops are broken on the very case chosen for being hardest. Rebuilding costs one full
-> generation (~$0.65). Use **TEG 17 or 12** meanwhile — both current-vintage with complete chains.
+> **TEG 14 is the standing stress-test anchor** — the 2-point finish across multiple courses, the case
+> that most tempts fabrication — and it is usable again. Sanity-test voice and faithfulness changes
+> there first.
 
 ## The five stages
 
@@ -545,11 +553,17 @@ This is the steerable artefact — for `archive` mode a human can edit the JSON 
 
 #### Optional extra pass (built, not in the default chain)
 
-- **`tighten_prose(text)`** (`TIGHTEN_SYSTEM`) — sandpapers over-built constructions: em-dash ceiling
-  of two per paragraph, subordinate-clause budget, no subject-burying preambles, punchline isolation,
-  one dominant idea per paragraph. The same 11 rules are also baked into `WRITER_SYSTEM`'s ECONOMY
-  block so the writer constructs tight on the first pass, which makes this pass largely a fix-up
-  lever for older text. Not called by `backfill.py`.
+- **`tighten_prose(text)`** (`TIGHTEN_SYSTEM`) — sandpapers over-built constructions:
+  subordinate-clause budget, no subject-burying preambles, punchline isolation, one dominant idea per
+  paragraph. The same 11 rules are also baked into `WRITER_SYSTEM`'s ECONOMY block so the writer
+  constructs tight on the first pass, which makes this pass largely a fix-up lever for older text.
+  Not called by `backfill.py`.
+
+  > ⚠️ **`TIGHTEN_SYSTEM` is stale against the 2026-08-15 readability decision.** It still sets an
+  > em-dash *ceiling of two per paragraph* and still licenses *"long sentences that are funny BECAUSE
+  > they are long stay long"* — the two rules that were removed from `_WRITER_ECONOMY` precisely
+  > because they contradicted the ban and the sentence cap. Harmless today (nothing calls this pass),
+  > but running it on a report would reintroduce both. See [STATUS.md](STATUS.md) → known issue 19.
 
 > `enrich_report_with_history()` / `ENRICH_SYSTEM` / `build_history_enrichment_context()` were
 > **deleted on 2026-08-11**. They had zero callers and computed the same class of fact the bundle
@@ -578,7 +592,13 @@ A parallel, single-round pipeline with the same shape: `assemble_round_bundle` �
 
 Differences from the tournament pipeline: the bundle carries prior-round context and the competition state at the end of the round, not the whole tournament arc; `render.build_round_scores(teg, round)` puts a deterministic round-scores block at the top; there is no "Player-by-player summary" closing; the default structure is chronological/player-by-player; and the final round gets coronation-aware framing.
 
-> **Currently a generation behind.** `RoundStoryPlan` has no `narrative_vehicles` and no `payoffs` — the vehicle and setup→payoff machinery was only added to the tournament plan. See [STATUS.md](STATUS.md).
+> **The code is level with the tournament pipeline; the published reports are not.** `RoundStoryPlan`
+> gained `narrative_vehicles`, `prominent_vehicle`, `prominent_palette` and `payoffs` on 2026-08-11,
+> and `ROUND_WRITER_SYSTEM` composes the same `prompts.VOICE_CORE` / `NAMED_PRINCIPLES` /
+> `SHARED_FAITHFULNESS` blocks as the tournament writer since 2026-08-15 — a real change to round
+> output, since the round writer had been stuck on a pre-Herron register. `NARRATIVE PULL` stays
+> tournament-only, deliberately. **None of this has been run**: all 18 published round reports predate
+> both changes. Generate one and read it before backfilling. See [STATUS.md](STATUS.md).
 
 ## Batch generation — `backfill.py`
 
@@ -800,7 +820,8 @@ Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`t
 - **Voice**: defined once, in **`prompts.py` → `VOICE_CORE`** — do not restate it in a prompt or a doc, link here instead. The core mechanism is **subverted gravitas** (treat trivial stakes with the solemnity of a geopolitical crisis; the humour lives in the gap, never wink at the camera), delivered through four rotating devices: restraint and exact detail (Mick Herron), a sustained comic image (Barney Ronay), cool deference (Jesse Armstrong), farcical escalation (Armando Iannucci). British English, no exclamation marks, no obvious puns. Tom Peck's mock-parliamentary device was tested and **dropped** in `342db93`.
 - **Spine**: Trophy → Green Jacket (Gross) → Wooden Spoon, with explicit "how each was won/lost" drawn from the competition arcs. The Trophy metric is era-dependent: Stableford for TEG 8+, net-vs-par for TEGs 1–7.
 - **Structure**: story-led, with rounds as natural blocks. Each round gets a chosen witty headline plus 2 alternate candidates for the archive editor. Chronology is a scaffold, not a constraint — the editor's `narrative_structure` and `narrative_vehicles` set the shape.
-- **Economy**: 11 construction rules in `WRITER_SYSTEM` (two em-dashes per paragraph max; no subject-burying preambles; two equal facts = two sentences; punchline isolation; one dominant idea per paragraph). Length must be earned by facts or images.
+- **Readability** (settled 2026-08-15, in `prompts.VOICE_CORE`): **em-dashes are banned outright** — zero in the report, not a ceiling; sentences average ~15 words with a hard stop around 25, one idea each; comic density is **five to seven landed moments** per report (the `humour6` register). There is no "long sentences that earn their length" exemption — that clause was removed because it contradicted the cap and the cap was consequently ignored 18–31% of the time.
+- **Economy**: 11 construction rules in `WRITER_SYSTEM` (no subject-burying preambles; two equal facts = two sentences; punchline isolation; one dominant idea per paragraph). Length must be earned by facts or images.
 - **Faithfulness rules** (enforced in scoring AND in prompts):
   - Use only supplied data; never invent.
   - Honour `outright` vs `level` lead changes — drawing level is not a takeover.
@@ -814,6 +835,7 @@ Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`t
   - **Only players who actually played this TEG** appear in the prose.
   - **Arithmetic must be exact** — any stated total must equal the sum of the per-hole evidence.
   - **No beat IDs in the prose** (`b07`, `cr01`) — they are internal identifiers.
+  - **Stroke index is translated, never quoted** (`prompts.STROKE_INDEX_RULE`, shared by both writers). SI 1 is "the hardest hole on the course", SI 18 "the easiest"; SI 4–15 is not noteworthy and should be ignored. Raw `SI 2` in prose reads as machine output. Craft rather than faithfulness, but it is duplicated in both writers so it lives in `prompts.py` with the shared blocks. **Obeyed unreliably** — TEG 8's published report emits raw `SI n` eight times alongside correct translations; a candidate 9th D3 check (`teg_analysis/TODOS.md`).
 
 ## Where to read
 
@@ -834,14 +856,11 @@ Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`t
 | `authoring.py` | Stage 4 + all writer/lint/tighten system prompts |
 | `round_report.py` | The per-round pipeline and its prompts |
 | `render.py` | Stage 5 — CSS hooks, standings, records block |
-| `verify.py` | **D3** — mechanical verification of a finished report against the data |
+| `verify.py` | **D3** — mechanical verification of a finished report against the data (8 checks, incl. the em-dash ban) |
 | `backfill.py` | Batch orchestration across TEGs, plus the `--tegs` CLI |
 | `llm.py` | **The provider switch** — API (key resolution + prompt caching) or plan usage |
 | `mailbox.py` | The file hand-off that makes plan usage work, plus its CLI |
 | `paths.py` | Where artefacts are written; variant namespacing and promotion |
-| `verify.py` | **D3** — mechanical verification of a finished report against the data (8 checks, incl. the em-dash ban) |
-| `backfill.py` | Batch orchestration across TEGs |
-| `llm.py` | Thin Anthropic wrapper (key resolution + prompt caching) |
 
 **Companion docs:** [STATUS.md](STATUS.md) is the pick-up ledger and *is* the to-do list for this
 area — start there. [ARTEFACTS.md](ARTEFACTS.md) covers how to test and iterate on each element, and

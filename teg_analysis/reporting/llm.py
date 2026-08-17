@@ -75,7 +75,7 @@ _provider_override: Optional[str] = None
 # Provider selection
 # ---------------------------------------------------------------------------
 def get_provider() -> str:
-    """The active provider: `use_provider()` override, else env, else `agent`."""
+    """The active provider: `use_provider()` override, else env, else `DEFAULT_PROVIDER` (`api`)."""
     if _provider_override is not None:
         return _provider_override
     raw = (os.environ.get(ENV_PROVIDER) or "").strip().lower()
