@@ -82,6 +82,7 @@ DATA_FLOW.md         Reference guide for the data pipeline
 | `streamlit/` | Legacy Streamlit app — **frozen reference, no longer deployed.** See `streamlit/README.md` |
 | `data/` | Tournament data files (parquet, CSV) + generated reports in `data/commentary/` — see `teg_analysis/reporting/ARTEFACTS.md` for what each report file is |
 | `ad_hoc_analysis/` | Jupyter notebooks for exploratory / one-off analysis |
+| `scripts/` | Standalone maintenance and experiment scripts. `export_cowork_kit.py` (report-writing kit for rewriting outside the pipeline), `humour_dial.py`, `check_pandas_compat.py` |
 | `tests/` | Test suite for `teg_analysis` |
 | `examples/` | FastAPI proof-of-concept |
 | `CLAUDE.md` | Development guidelines for Claude Code |

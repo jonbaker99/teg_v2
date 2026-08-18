@@ -149,6 +149,7 @@ stages. Freeze what you aren't changing.
 | **Voice — which register do I want?** | *(two prompt strings)* | ~$0.10 each | ⑦ (start here) |
 | **Voice — does the writer hit it from scratch?** | *(a voice string; no code edit)* | ~$0.17 | ⑥ |
 | **Voice — promote one to the house voice** | `authoring.WRITER_VOICE` | ~$0.17 | ⑥, step 5 |
+| **Voice — trial styles outside the pipeline** (Cowork, a browser tab, another model) | *(a styles file; no code edit)* | **free to export** | ⑥, *Running the loop outside the pipeline* |
 | Faithfulness rules | `authoring.WRITER_FAITHFULNESS` | ~$0.17 | ⑧ |
 | Mechanical fault checks | `verify.py` | **free** | ⑨ |
 | Standings / records / CSS hooks | `render.py` | **free** | ⑩ |
