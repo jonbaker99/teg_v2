@@ -11,6 +11,7 @@ Full detail — including the report-by-report inventory and pipeline vintages �
 
 **Decisions (blocking — do these first):**
 
+- [ ] **Storyline-first reports** — proposal in [`reporting/STORYLINE_PLAN.md`](reporting/STORYLINE_PLAN.md), not started. Reports are ~6.5/10: round-by-round detail dominates regardless of what the story plan's `narrative_structure` chose (16/17 plans picked non-chronological, 16/17 finals shipped `## Round N` anyway), and subplots are buried or absent. Plan: free beat-clustering pass (`threads.py`, new) to surface candidate subplots, then restructure `StoryPlan` around 2–4 chosen `storylines[]` with `rounds[]` made optional. Independent of the humour-dial / regeneration items below — do not bundle.
 - [x] **Settle the humour dial** — done 2026-08-15. Jon's verdict: "lacking a bit in humour". `humour6` (5-7 comic landings) folded into `prompts.VOICE_CORE`, along with an outright em-dash ban and a ~15-word average sentence target. **Still needs one from-scratch generation to validate** — the dial variants on disk were rewrites of finished reports, not cold generations.
 - [ ] **Generate one TEG cold under the new voice and read it** (~$0.65) — validates humour6 + the em-dash ban end to end. Blocks the full regeneration.
 - [ ] **Decide whether round reports are wanted** — ~50 outstanding, ~$32. `RoundStoryPlan` is no longer a blocker (ported 2026-08-11); this is purely scope and cost now.

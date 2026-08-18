@@ -14,6 +14,12 @@
 
 ## START HERE — picking this up in a new chat (2026-08-17)
 
+**Open proposal, not started:** [`STORYLINE_PLAN.md`](STORYLINE_PLAN.md) — reports are ~6.5/10;
+round-by-round detail dominates every report regardless of what the story plan's
+`narrative_structure` chose, and subplots are buried or absent. Confirmed against all 17 plans/finals
+on disk before writing the plan, not just from reading prose. Read that file before touching
+`story_plan.py` or `authoring.py`'s dry-draft prompts.
+
 ### Doc reconciliation (2026-08-17)
 
 No pipeline change. The reporting docs were checked against the code and the artefacts and corrected;
