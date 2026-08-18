@@ -120,6 +120,16 @@ generate_round_report(teg_num, round_num)
 
 # Test bundle assembly without an LLM call
 build_story_plan(teg_num, dry_run=True)   # writes teg_N_story_plan_prompt.md
+
+# Try a voice without editing any source: replaces WRITER_VOICE for one call
+from teg_analysis.reporting import write_from_dry
+write_from_dry(17, "VOICE: a plain broadsheet match report.", "plain")
+```
+
+```bash
+# Same job outside the pipeline (Cowork, a browser tab, another model): exports
+# the prompt constants and the frozen inputs as files. Generate, never hand-copy.
+python -m scripts.export_cowork_kit --tegs 4,14,17 --out ~/cowork/teg
 ```
 
 Run from the repo root with `venv/bin/python`.

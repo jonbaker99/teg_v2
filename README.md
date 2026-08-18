@@ -54,23 +54,18 @@ python todos.py --all    # include completed items too
 
 See [TODOS.md](TODOS.md) for the central to-do index. Each area (`webapp/`, `streamlit/`, `teg_analysis/`) has its own `TODOS.md` file for working details.
 
+Inside the analysis package (the top-level map is the [folder guide](#folder-guide) below):
+
 ```
-teg_analysis/        Core analysis package (standalone, no Streamlit dependency)
-  constants.py       File paths, player data, tournament metadata
+teg_analysis/
+  constants.py       File paths, tournament metadata
   io/                File I/O, GitHub API, Railway volume management
   core/              Data loading and transformation
-  analysis/          Scoring, rankings, aggregation, streaks, records, commentary
-  display/           Formatting, HTML tables, navigation utilities
+  analysis/          Scoring, rankings, aggregation, streaks, records, handicaps,
+                     eclectic, pipeline, data update, live round, leaderboards
+  display/           Formatting, HTML tables, scorecards, navigation utilities
+  reporting/         LLM-powered tournament reports
   api/               (Placeholder for REST API endpoints)
-
-ad_hoc_analysis/     Jupyter notebooks for exploratory / one-off analysis
-streamlit/           The existing Streamlit app (deployed on Railway)
-tests/               Test suite for teg_analysis
-examples/            FastAPI proof-of-concept
-data/                Tournament data files (parquet, CSV, commentary reports)
-
-CLAUDE.md            Development guidelines for Claude Code
-DATA_FLOW.md         Reference guide for the data pipeline
 ```
 
 ## Folder guide
@@ -82,8 +77,11 @@ DATA_FLOW.md         Reference guide for the data pipeline
 | `streamlit/` | Legacy Streamlit app — **frozen reference, no longer deployed.** See `streamlit/README.md` |
 | `data/` | Tournament data files (parquet, CSV) + generated reports in `data/commentary/` — see `teg_analysis/reporting/ARTEFACTS.md` for what each report file is |
 | `ad_hoc_analysis/` | Jupyter notebooks for exploratory / one-off analysis |
+| `scripts/` | Standalone maintenance and experiment scripts. `export_cowork_kit.py` (report-writing kit for rewriting outside the pipeline), `humour_dial.py`, `check_pandas_compat.py` |
 | `tests/` | Test suite for `teg_analysis` |
 | `examples/` | FastAPI proof-of-concept |
+| `prompts/` | Saved prompt text for one-off work. Not read by any code |
+| `reference/` | Reference material, including report images |
 | `CLAUDE.md` | Development guidelines for Claude Code |
 | `DATA_FLOW.md` | Data pipeline reference guide |
 

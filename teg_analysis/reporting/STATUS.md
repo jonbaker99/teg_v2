@@ -94,9 +94,30 @@ nothing that scales with the RESULT. Jon's example of the missing register, from
 Alexander of Macedonia was 33, he cried salt tears because there were no more worlds to conquer.
 Bristow's only 27."*
 
-**`prompts.ELEVATION_DEVICE`** puts that engine in. Raise a frame far grander than the occasion
-deserves, then let a plain fact land against it. Crucially the frame is **read off the data, not
-guessed**, on two axes.
+**`prompts.ELEVATION_DEVICE`** puts that engine in: **over-do the achievement, the drama or the
+defeat.** Take the thing in front of you and describe it with more weight, consequence and
+finality than five men on a golf holiday could warrant.
+
+> **Rewritten same day, twice.** The first version treated the Bristow darts quote as the
+> mechanism rather than as an illustration, and told the writer to "reach outside golf: history,
+> myth, war, geology, statecraft". Every report then opened on a historical parallel. Jon:
+> *"every article starts with a historical parallel... it was meant to be an example of hamming it
+> up, not a template"*, and then *"the point is to over-do the achievement, the drama, the defeat.
+> not **necessarily** to draw parallels."* The block now leads on inflating the subject and demotes
+> comparisons to allowed but never automatic. A test asserts the old instruction cannot come back.
+>
+> **Then the worked examples came out too.** They had been three STATED/HAMMED prose pairs, and
+> Jon's read was that they were *"far too style specific... without appearing to illustrate how it
+> should be written"*. He is right, and the reason matters for this pipeline specifically: a
+> specimen sentence teaches a register as well as a technique, and here the register arrives
+> separately as a `voice=` argument or a style brief. An example in the contract actively fights
+> the thing the contract is wrapped around. The technique is now taught as bullets — what
+> inflation does to an achievement, to drama, to a defeat, and the operations that produce it —
+> and the block says out loud why it shows no specimens. The under-hammed test is diagnostic
+> rather than exemplary for the same reason. The Bristow line survives only inside the comparisons
+> warning, where it is labelled an illustration of attitude.
+
+Which thing to inflate is **read off the data, not guessed**, on two axes.
 
 **Axis one, the result** (`win_anatomy`, `tournament_shape`) — what shape did this tournament
 finish in?

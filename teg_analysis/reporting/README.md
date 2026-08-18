@@ -577,6 +577,8 @@ This is the steerable artefact — for `archive` mode a human can edit the JSON 
 
 Four opt-in keyword arguments make this the voice-experiment path as well as the production one, so a register tried here is tried on the real writer: `voice=` (a complete replacement register), `plan_scope=` (`"full"` / `"arc"` / `"none"` — how much of the story plan goes in with the draft), `bundle_context=` (append the structured venue / career-history / win-anatomy block — material without the plan's pre-written phrasing; `"data"` instead of `True` strips the code-generated summary sentences too) and `label=` (output filename stem). The defaults are production. `write_from_dry(teg, voice, label)` wraps it with the load/lint/style/verify ergonomics.
 
+The same stage can be run **outside the pipeline entirely** — in a Cowork folder, a browser tab or another model — by exporting the prompt constants and the frozen inputs as files: `python -m scripts.export_cowork_kit --tegs 4,14,17 --out DIR`. Generate that kit, never hand-copy it; a hand-written copy of the guidance is another home for the faithfulness rules. Walkthrough: [ARTEFACTS.md](ARTEFACTS.md) recipe ⑥, *Running the loop outside the pipeline*.
+
 (Two alternates exist for comparison — `report_single_pass` and `report_critique_revise` — see [STATUS.md](STATUS.md) for why they were rejected.)
 
 **Repetition lint** — `repetition_lint(text)`. A narrow final pass whose only job is replacing repeated/over-used words. Doesn't change facts or structure. Runs on Haiku 4.5.
