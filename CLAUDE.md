@@ -164,6 +164,19 @@ Not a gate to run mechanically — a checklist to think against before calling w
 - No frontend imports in `teg_analysis/`; no `streamlit/` file touched.
 - Tests run where the change plausibly affects behaviour — your judgement on when that's warranted. Test suite: `python -m pytest tests/ -v` (bare `pytest` fails on the Claude-Code-on-the-web container, where it's a `uv`-isolated binary that can't see pip-installed deps).
 
+### Don't run the full suite after every change
+
+It takes ~4 minutes. Running it reflexively wastes the session and buries the actual work.
+
+| Change | What to run |
+|---|---|
+| Documentation, comments, docstrings | **nothing** |
+| Prompt text, or one module | that module's test file |
+| Anything else | the files plausibly affected |
+| Before pushing a branch for review, or before a merge | the full suite, **once** |
+
+If a targeted run passes and nothing else could be affected, that is the end of it. Say what you ran; don't re-run to feel sure.
+
 ## Documentation
 
 **Rule 1 — always maintain documentation.** When you add, rename or remove a data file, function, module or layer, update the relevant doc in the same session. Never leave docs describing something that no longer exists.
