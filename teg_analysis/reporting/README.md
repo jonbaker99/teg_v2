@@ -369,13 +369,24 @@ Reuses `teg_analysis.core.data_loader.load_all_data()`.
   outright-leader sequence and flags spells of 18+ holes (roughly a full round) that end in an
   outright takeover by someone else, for both Trophy and Green Jacket. Distinct from an ordinary
   lead-change beat because it scores on tenure length and rounds spanned, not just round-lateness.
-- Maximal cold/hot stretches (no overlapping-window spam). **Gross and net both**: `cold_stretch`
-  (gross double-bogey-or-worse runs) alongside `cold_stretch_net` (runs of no-score holes), and
-  `hot_stretch` (net birdie or better) alongside `steady_stretch` (6+ holes without dropping a net
-  shot). The two net detectors were added 2026-08-14 — see [Detection must not be lopsided](#detection-must-not-be-lopsided).
+- Maximal cold/hot stretches (no overlapping-window spam). **One hot and one cold detector per
+  metric** (simplified 2026-08-18 from an asymmetric set): `cold_stretch_gross` (GrossVP ≥2
+  sustained, len≥3) / `hot_stretch_gross` (GrossVP ≤0 sustained, len≥2 — shorter bar than the cold
+  side because gross has no handicap strokes to lean on, so a sustained par-or-better run is
+  intrinsically rarer than a sustained double-bogey run for these handicaps) and
+  `cold_stretch_net` (Stableford ≤1 sustained, len≥3) / `hot_stretch_net` (Stableford ≥3 sustained,
+  len≥3) — net par (2) is the single excluded neutral value on both sides. See
+  [Detection must not be lopsided](#detection-must-not-be-lopsided).
 - Recoveries (birdie ending a bogey run) / collapses (blow-up ending a steady run)
 - Standout single holes (eagles / HIO / big blow-ups)
 - Per-round and tournament beats (round shapes, winners, margins)
+- **Round-by-round trajectories, every player** (`_trajectory_beats`, added 2026-08-18):
+  `gap_closed` (biggest deficit at any point vs where they actually finished) and
+  `position_reversal` (led/near-led early then fell away, or the mirror climb), for both Trophy
+  and Green Jacket, excluding each competition's own winner. `round_leadership` only ever names
+  the round leader and `win_anatomy`'s trajectory only tracks the eventual champion — the same
+  rank/gap columns exist for every other player but were previously never read. Built to give
+  non-Trophy storylines real material — see `STORYLINE_PLAN.md`.
 
 Each beat carries:
 
@@ -412,7 +423,11 @@ negative.
 Before 2026-08-14 detection ran **622 negative to 240 positive** across TEGs 2–18 — `big_blowup`
 alone (382) outnumbered every positive detector combined. No prompt can correct for material the
 writer was never given, which is why this is fixed in detection rather than in the voice.
-`cold_stretch_net` and `steady_stretch` bring it to **1.52:1**.
+`cold_stretch_net` and `steady_stretch` brought it to **1.52:1** (2026-08-14). The 2026-08-18
+stretch-detector simplification (one hot/cold pair per metric, `steady_stretch` retired) briefly
+regressed this to 2.79:1 — measured on TEGs 8/13/18, caught by
+`test_detection_is_not_lopsidedly_negative` — before `hot_stretch_gross`'s length bar was lowered
+to 2 to compensate; back to ~1.5:1.
 
 #### A note on tuning the weights
 
@@ -482,9 +497,12 @@ rounds[]:
 players[]: { player, arc }
 must_include_beat_ids[], cuts[],
 venue_notes,
-# thread-organised extras (optional; empty unless the data supports them)
-competition_storyline_bullets{}, player_storyline_bullets{},
-course_history_notes[], decisive_moments[]
+course_history_notes[],                # optional; empty unless the data supports it
+# storyline discovery (2026-08-18) — see STORYLINE_PLAN.md
+trophy_storyline, jacket_storyline, spoon_storyline:  # ALWAYS populated, one each
+  { subject, why_it_matters, shape, beat_ids[], compelling_score }
+discovered_storylines[]:               # 1-3, found independently — can be zero
+  { subject, why_it_matters, shape, beat_ids[], compelling_score }
 ```
 
 ### The storyline hierarchy and the champion register

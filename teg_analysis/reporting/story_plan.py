@@ -16,7 +16,7 @@ from __future__ import annotations
 import json
 from typing import Literal, Optional, Tuple, get_args
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from teg_analysis.reporting.era import trophy_metric
 from teg_analysis.reporting.events import build_notable_events
@@ -140,10 +140,14 @@ def _render_palette_menu() -> str:
 # Output schema (what the LLM must return)
 # ---------------------------------------------------------------------------
 class Competition(BaseModel):
+    """Just the name + winner, for the at-a-glance box (`render._build_at_a_glance`
+    reads only these two fields). `how`/`key_beat_ids` were dropped 2026-08-18 —
+    unused downstream and duplicated by `trophy_storyline`/`jacket_storyline`/
+    `spoon_storyline`'s `shape`/`beat_ids`, which is where that detail now lives.
+    Also shrinks the schema: the API rejected the plan schema as "too large" once
+    the storyline fields were added (see StoryPlan docstring)."""
     name: str                       # "Trophy" | "Green Jacket" | "Wooden Spoon"
     winner_or_loser: str
-    how: str                        # how it was won (or lost, for the Spoon)
-    key_beat_ids: list[str]
 
 
 class RoundPlan(BaseModel):
@@ -169,6 +173,26 @@ class Payoff(BaseModel):
     seed: str           # short reference to the seed planted in foreshadow[]
     resolves_in: str    # which section pays it off (e.g. "Round 3", "Player-by-player summary", "How it was decided")
     payoff: str         # one-line description of how it resolves
+
+
+class DraftedStoryline(BaseModel):
+    """A narrative thread with a real shape, grounded in specific beats.
+
+    Schema proven in `scripts/storyline_experiment.py`'s A/B (2026-08-18,
+    STORYLINE_PLAN.md): a cold discovery call (beats + arcs only, no
+    `candidate_threads` / `win_anatomy` advisory) using this shape beat a
+    hinted one on lead clarity, subplot quality and factual grounding on all
+    3 test TEGs. Replaces the unconsumed `competition_storyline_bullets` /
+    `player_storyline_bullets` / `decisive_moments` fields (zero downstream
+    readers — dead code, found during this replacement).
+    """
+    subject: str            # who/what this storyline is about
+    why_it_matters: str     # one sentence
+    shape: str              # setup -> turn -> resolution, 2-3 sentences
+    beat_ids: list[str]     # the specific beats this is built from — checked
+                            # against the bundle by `check_plan_consistency`
+    compelling_score: int = Field(ge=1, le=10)  # your own rating of how GOOD A
+                            # STORY this is — not how much it mattered to the standings
 
 
 class VehicleFitResponse(BaseModel):
@@ -207,15 +231,18 @@ class StoryPlan(BaseModel):
     must_include_beat_ids: list[str]
     cuts: list[str]                 # beat ids (or notes) to deliberately leave out
     venue_notes: str
-    # --- Thread-organised storyline content (optional; populated when interesting) ---
-    # Each list/dict is empty by default. The editor populates them when the data
-    # supports a thread worth feeding to the writer. The writer uses these as
-    # additional palette material; none is individually required, but every
-    # foreshadow[] seed SHOULD have a matching payoffs[] entry.
-    competition_storyline_bullets: dict[str, list[str]] = {}  # {"Trophy": [...], "Green Jacket": [...], "Wooden Spoon": [...]}
-    player_storyline_bullets: dict[str, list[str]] = {}        # {player_name: [...bullets...]}
     course_history_notes: list[str] = []                       # per-course-history beats worth foregrounding
-    decisive_moments: list[str] = []                           # one line per competition naming THE decisive moment
+    # --- Storyline discovery (2026-08-18) ---
+    # Mandatory Trophy/Jacket/Spoon storylines (baseline material for "how the
+    # trophies were won", and a bar to judge discovered_storylines against —
+    # Jon's framing, STORYLINE_PLAN.md) plus 1-3 independently-discovered ones.
+    # Replaces `competition_storyline_bullets` / `player_storyline_bullets` /
+    # `decisive_moments` — same job, but grounded (every beat_id checked
+    # against the bundle) rather than free-text bullets nothing verified.
+    trophy_storyline: DraftedStoryline
+    jacket_storyline: DraftedStoryline
+    spoon_storyline: DraftedStoryline
+    discovered_storylines: list[DraftedStoryline] = Field(default_factory=list, max_length=3)
     # Two DIFFERENT axes, previously collapsed into one free-string field — which
     # is what let the close-finish hard rule silently never fire. See the
     # vocabulary block at the top of this module. Both are REQUIRED: the prompt
@@ -446,18 +473,9 @@ did" is. Say plainly if the answer is that the rivals lost it.
 what led instead and why it was the better story. Leave empty otherwise.
 - `title` + a few `title_candidates`; record the resolved `tone`.
 
-THREAD-ORGANISED STORYLINE FIELDS — **DEFAULT IS TO POPULATE THESE, NOT LEAVE EMPTY.** \
-The writer relies on them to thread context through the prose; empty fields mean a \
-thinner report. Populate every one for which the data offers any material; the \
-specific per-field guidance below names the narrow cases where empty is acceptable:
-
-- `decisive_moments`: **ALWAYS 3 entries** (Trophy, Green Jacket, Wooden Spoon — in \
-that order). Each is one line naming THE moment the result was effectively decided. \
-Draw from `competition_arcs[*].decisive_moment` plus your editorial judgement. \
-Example: "R1 H16 par at Royal Cinque Ports — Mullin's outright Trophy lead, never \
-headed across the next 56 holes". Leaving any of these empty is wrong — every \
-competition has a decisive moment, even a wire-to-wire procession (where the \
-decisive moment is the round / hole the cushion became unrecoverable).
+THREAD-ORGANISED STORYLINE FIELDS — the per-field guidance below says which of \
+these must always be populated and which are allowed to come back thin or empty \
+(`discovered_storylines` specifically: honest scarcity beats manufactured content):
 
 - `prominent_vehicle` and `prominent_palette`: **BOTH ALWAYS populated. They are \
 two different axes — do not confuse them.**
@@ -481,19 +499,42 @@ should have ~4 payoffs. Each entry: `seed` (short ref to the seed), `resolves_in
 past reports: seeds planted in the opener that the body never resolved. An \
 unresolved foreshadow is a bug.
 
-- `competition_storyline_bullets`: **typically 3–6 factual bullets per competition** \
-("Trophy", "Green Jacket", "Wooden Spoon"). Each bullet is a fact + a connection — \
-not a round-by-round chronicle but the causal arc. "Mullin's R1 +4 opened a 14-shot \
-Jacket cushion that he was never asked to defend" beats "Mullin shot +4 in R1". \
-Empty is only acceptable for a competition whose arc is literally "X led wire-to-wire \
-and won; nothing else happened" — almost no TEG has all three competitions that flat.
+- `trophy_storyline`, `jacket_storyline`, `spoon_storyline`: **ALWAYS populated, one \
+each, regardless of how good you judge them to be.** How the Trophy/Jacket was won, \
+and how the Spoon was "won" (i.e. who finished last and how). These are mandatory \
+whether or not they turn out to be the best story in the tournament — they are \
+guaranteed material for the "how the trophies were won" section, and the bar \
+`discovered_storylines` below must clear to earn a place. For `trophy_storyline` \
+specifically: find the MOST COMPELLING way to tell it, not a flat recitation of who \
+led each round — this is the report's lead.
 
-- `player_storyline_bullets`: **2–4 factual bullets per principal player** \
-(certainly the three competition winners and the Spoon holder; usually the runners-up \
-too; mid-pack players who carry a recurring thread, like a habitual blow-up artist, \
-also). Different role from the one-line `arc`: the bullets carry the connective \
-tissue the writer riffs off. Empty only when this TEG is genuinely a two-man story \
-(very rare).
+- `discovered_storylines`: **1 to 3 ADDITIONAL storylines**, found independently in \
+the beats, that you judge to be genuinely the most compelling stories in this \
+tournament — not necessarily about who won a competition. A player's arc across \
+rounds, a rivalry, a course, a recurring pattern are all fair game. Only include ones \
+supported by real beats spanning more than one round that you would actually call a \
+story. **If nothing clears that bar, return fewer — even zero.** A storyline that just \
+restates `trophy_storyline`/`jacket_storyline`/`spoon_storyline` from a different \
+angle does not count as discovered; a manufactured subplot is worse than an honest \
+absence.
+
+  Find these from `beats` and `competition_arcs` directly — do NOT lean on \
+`win_anatomy` or `candidate_threads` to find the SUBJECT of a storyline. Measured \
+(2026-08-18, three TEGs, blind-judged): giving an editor those two as hints added no \
+storylines it didn't already find without them, and consistently produced MORE \
+invented specifics (head-to-head records, precise gaps, visit counts, "best in the \
+field" claims not in the data) — more material in context gave more surface to \
+compute a plausible-sounding wrong number from. `win_anatomy` stays the right source \
+for `why_the_champion_won` specifically; keep it out of storyline discovery.
+
+  Every `DraftedStoryline` (all four fields above) needs: `subject`, `why_it_matters` \
+(one sentence), `shape` (setup -> turn -> resolution, 2-3 sentences), `beat_ids` (the \
+specific beats it's built from — every ID is checked against the bundle, so an \
+invented one is caught), and `compelling_score` (1-10: how good a STORY this is, not \
+how much it mattered to the standings). **Never state a comparative or aggregate \
+claim** ("beat X head-to-head in N of M rounds", "Nth visit to this course", "best in \
+the field twice") **unless that exact figure appears in a bundle field** — this is the \
+specific failure mode measured above, not a generic reminder.
 
 - `course_history_notes`: **populate when the bundle's `player_course_history` carries \
 anything beyond first-visits.** Material lives there: new PBs on a course, big deltas \
@@ -592,6 +633,18 @@ def check_plan_consistency(plan: StoryPlan, bundle: dict) -> list[str]:
             f"vehicle_fit_response.taken_up={resp.taken_up} but "
             f"{resp.top_scored_vehicle!r} is "
             f"{'in' if actually_taken else 'not in'} narrative_vehicles")
+
+    # Grounding check (2026-08-18, STORYLINE_PLAN.md 2c): every beat_id cited in a
+    # storyline must actually exist in the bundle. Catches a hallucinated citation
+    # for free, before any prose gets written on top of it — the A/B measured this
+    # exact failure mode (invented figures the beats don't support).
+    all_beat_ids = {b["id"] for b in bundle.get("beats", [])}
+    storylines = ([plan.trophy_storyline, plan.jacket_storyline, plan.spoon_storyline]
+                 + plan.discovered_storylines)
+    for s in storylines:
+        bad = sorted(set(s.beat_ids) - all_beat_ids)
+        if bad:
+            warnings.append(f"storyline {s.subject!r} cites unknown beat_ids: {bad}")
     return warnings
 
 
@@ -749,6 +802,15 @@ def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
     else:
         vehicle_fit_hints = rank_vehicle_fit(_raw_vehicle_scores, n=5)
 
+    # Free, deterministic candidate signal: beats clustered by shared subject
+    # (player, repeated course, recurring failure motif) spanning 2+ rounds —
+    # a candidate subplot list, same advisory shape as `vehicle_fit_hints`.
+    # Same reasoning applies for using `all_beats` over the trimmed `beats`:
+    # a cluster scores as a sum over its member beats, so trimming would
+    # silently deflate it. See threads.py and STORYLINE_PLAN.md Phase 1.
+    from teg_analysis.reporting.threads import detect_threads
+    candidate_threads = detect_threads(all_beats, arcs)
+
     # Verified player relationships. Only ties listed here are facts; the
     # writer is forbidden from inferring any others from shared surnames.
     from teg_analysis.constants import PLAYER_RELATIONSHIPS
@@ -780,6 +842,7 @@ def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
         "tournament_shape": tournament_shape_signals,
         "recent_vehicle_choices": recent_vehicles,
         "vehicle_fit_hints": vehicle_fit_hints,
+        "candidate_threads": candidate_threads,
         "beats": beats,
     }
     return bundle, events

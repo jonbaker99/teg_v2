@@ -98,7 +98,7 @@ def _trophy_cols(metric: str) -> dict:
 class NotableEvent:
     teg_num: int
     scope: str                      # 'tournament' | 'round' | 'stretch' | 'hole'
-    type: str                       # machine type, e.g. 'lead_change', 'cold_stretch'
+    type: str                       # machine type, e.g. 'lead_change', 'cold_stretch_gross'
     headline: str                   # short human description (for inspection / planning)
     players: list = field(default_factory=list)   # full names involved
     round: Optional[int] = None
@@ -485,6 +485,99 @@ def _round_swings(round_summary: pd.DataFrame, sw: dict, player_names: dict,
     return out
 
 
+def _trajectory_beats(round_summary: pd.DataFrame, sw: dict, metric: str = "stableford") -> list:
+    """Round-by-round rank + gap-to-leader for EVERY player, not just the
+    round leader or the eventual winner.
+
+    `round_leadership` only ever names each round's Trophy/Jacket leader, and
+    `win_anatomy`'s `winner_trajectory` only tracks the eventual champion's own
+    path — but the same `Cumulative_Tournament_Rank_*` / `Gap_To_Leader_After_
+    Round_*` columns exist for every player. A chaser who closed a big gap
+    without winning, or someone who led early and quietly faded, was invisible
+    to the pipeline even though the data was there. Fills that gap (2026-08-18,
+    see STORYLINE_PLAN.md): `gap_closed` and `position_reversal` beats,
+    computed for both Trophy and Green Jacket, excluding each competition's
+    own winner (already covered by `win_anatomy` / the `redemption_arc`
+    vehicle scoring — this is deliberately the non-winner material).
+    """
+    teg_num = int(round_summary["TEGNum"].iloc[0])
+    rounds = sorted(int(r) for r in round_summary["Round"].unique())
+    if len(rounds) < 2:
+        return []
+    last_round = rounds[-1]
+    out = []
+
+    cols = _trophy_cols(metric)
+    competitions = [
+        ("Trophy", cols["cum_rank"], cols["gap_after"], cols["round_score"]),
+        ("Green Jacket", "Cumulative_Tournament_Rank_Gross",
+         "Gap_To_Leader_After_Round_Gross", "Round_Score_Gross"),
+    ]
+
+    for label, rank_col, gap_col, score_col in competitions:
+        final = round_summary[round_summary["Round"] == last_round]
+        winner = final.loc[final[rank_col].idxmin(), "Player"]
+
+        for pl, g in round_summary.sort_values("Round").groupby("Pl"):
+            player = g["Player"].iloc[0]
+            if player == winner:
+                continue
+            w = sw.get(pl, 0.4)
+            traj = [{"round": int(r["Round"]), "pos": int(r[rank_col]),
+                     "gap": _safe_int(r[gap_col]), "round_score": int(r[score_col])}
+                    for _, r in g.iterrows()]
+            if len(traj) < 2:
+                continue
+
+            # --- gap closed: biggest deficit at any point before the final
+            # round, vs where they actually finished. Mirrors the winner-only
+            # "max_gap" signal `vehicle_fit.score_vehicle_fit` reads off
+            # `winner_trajectory`, but for a player who never got there. ---
+            early_gaps = [t["gap"] for t in traj[:-1] if t["gap"] is not None]
+            final_gap = traj[-1]["gap"]
+            if early_gaps and final_gap is not None:
+                max_gap = max(early_gaps)
+                closed = max_gap - final_gap
+                if closed >= 6:
+                    imp = scoring.cap((1.5 + 3 * w) * (0.4 + 0.05 * closed))
+                    ent = scoring.cap(0.5 + 0.08 * closed)
+                    rar = scoring.cap(0.3 + 0.05 * closed)
+                    out.append(NotableEvent(
+                        teg_num=teg_num, scope="tournament", type="gap_closed",
+                        round=last_round,
+                        headline=(f"{player} closes to {final_gap} off the {label} lead "
+                                 f"after trailing by {max_gap} at one point"),
+                        players=[player], holes=[],
+                        importance=imp, rarity=rar, entertainment=ent,
+                        context={"competition": label, "max_gap": max_gap,
+                                "final_gap": final_gap, "closed": closed},
+                    ))
+
+            # --- position reversal: led/near-led early then fell away, or the
+            # mirror climb from the back. len(rounds)>=2 guaranteed above. ---
+            early_pos = traj[0]["pos"]
+            final_pos = traj[-1]["pos"]
+            swing = early_pos - final_pos  # positive = climbed, negative = fell
+            if abs(swing) >= 3:
+                direction = "climb" if swing > 0 else "fade"
+                verb = "climbs" if swing > 0 else "fades"
+                severity = abs(swing)
+                imp = scoring.cap((1.5 + 3 * w) * (0.3 + 0.3 * severity))
+                ent = scoring.cap(0.5 + 0.5 * severity)
+                rar = scoring.cap(0.3 + 0.4 * severity)
+                out.append(NotableEvent(
+                    teg_num=teg_num, scope="tournament", type="position_reversal",
+                    round=last_round,
+                    headline=(f"{player} {verb} from {_ord(early_pos)} after "
+                             f"R{traj[0]['round']} to {_ord(final_pos)} in the {label}"),
+                    players=[player], holes=[],
+                    importance=imp, rarity=rar, entertainment=ent,
+                    context={"competition": label, "direction": direction,
+                            "early_pos": early_pos, "final_pos": final_pos, "swing": swing},
+                ))
+    return out
+
+
 def _safe_int(x):
     try:
         if pd.isna(x):
@@ -519,7 +612,18 @@ def _sequences(teg_df: pd.DataFrame, sw: dict, player_names: dict,
         w = sw.get(pl, 0.4)
         late = 1.0 if rnd == last_round else 0.0
 
-        # --- cold stretches: maximal run of double-bogey-or-worse, len >= 3 ---
+        # --- stretch detectors: ONE hot and ONE cold per metric (gross, net),
+        # symmetric around the single excluded "neutral" score (gross bogey /
+        # net bogey), len >= 3. Simplified 2026-08-18 from an asymmetric set
+        # (gross had cold only; net had cold + steady + hot) that missed a
+        # sustained run of net bogeys entirely — neither "blank" (old
+        # cold_stretch_net, <=0) nor "at par" (old steady_stretch, >=2) caught
+        # it. See STORYLINE_PLAN.md for why detection was revisited, and
+        # `test_detection_is_not_lopsidedly_negative` for the balance this must
+        # not regress — dropping `steady_stretch` removes a positive detector,
+        # so re-measure rather than assume the ratio still holds.
+
+        # --- cold stretch, GROSS: double-bogey-or-worse sustained ---
         for run in _maximal_runs(rows, lambda r: r["GrossVP"] >= 2):
             if len(run) < 3:
                 continue
@@ -531,59 +635,68 @@ def _sequences(teg_df: pd.DataFrame, sw: dict, player_names: dict,
             rar = scoring.cap(severity * 0.6)
             h0, h1 = ev[0]["hole"], ev[-1]["hole"]
             out.append(NotableEvent(
-                teg_num=teg_num, scope="stretch", type="cold_stretch", round=rnd,
+                teg_num=teg_num, scope="stretch", type="cold_stretch_gross", round=rnd,
                 headline=f"{player} bleeds {dropped} shots, holes {h0}-{h1} (R{rnd})",
                 players=[player], holes=ev,
                 importance=imp, rarity=rar, entertainment=ent,
                 context={"shots_dropped": dropped, "length": len(ev)},
             ))
 
-        # --- cold stretches, NET: maximal run of no-score holes (Stableford 0),
-        # len >= 3. The gross detector above misses the distinction that decides
-        # the Trophy: a high-handicapper's double bogey on a stroke hole still
-        # banks a point, while a scratch player's does not. Jon's spec
-        # (2026-08-14): "cold would be 0, or very long without a 2".
-        for run in _maximal_runs(rows, lambda r: r["Stableford"] <= 0):
+        # --- hot stretch, GROSS: par-or-better sustained. No strokes to lean
+        # on, so this is genuinely rarer at these handicaps than a double-bogey
+        # run is — measured (2026-08-18): len>=3 fires 13 times across TEGs
+        # 8/13/18 against cold_stretch_gross's 43, re-breaking the negative:
+        # positive balance `steady_stretch` used to hold at ~1.5:1. Net's pair
+        # balances fine at len>=3 because Stableford is handicap-adjusted; gross
+        # isn't, so the length bar (not the per-hole bar) is what compensates:
+        # len>=2 measures 52, back in line. The per-hole bar (par-or-better,
+        # every hole) stays the meaningful threshold either way. ---
+        for run in _maximal_runs(rows, lambda r: r["GrossVP"] <= 0):
+            if len(run) < 2:
+                continue
+            ev = [hole_evidence(r, metric) for r in run]
+            gained = -sum(h["grossvp"] for h in ev)  # shots better than par, >= 0
+            severity = scoring.cap(len(ev) * 0.9 + gained * 0.5)
+            imp = scoring.cap((2 + 6 * w) * (0.6 + 0.04 * severity) + late)
+            ent = scoring.cap(severity * (1.1 - 0.4 * w))
+            rar = scoring.cap(severity * 0.7)
+            h0, h1 = ev[0]["hole"], ev[-1]["hole"]
+            out.append(NotableEvent(
+                teg_num=teg_num, scope="stretch", type="hot_stretch_gross", round=rnd,
+                headline=(f"{player} goes {len(ev)} holes without dropping a gross shot, "
+                          f"{h0}-{h1} (R{rnd})"),
+                players=[player], holes=ev,
+                importance=imp, rarity=rar, entertainment=ent,
+                context={"shots_gained": gained, "length": len(ev)},
+            ))
+
+        # --- cold stretch, NET: below net par sustained (Stableford <= 1) —
+        # blank holes AND sustained net-bogeying both count. Broadened from
+        # <=0 (blanks only): a high-handicapper's double bogey on a stroke
+        # hole still banks a point, so the old threshold missed "very long
+        # without a 2", which was Jon's original spec (2026-08-14). ---
+        for run in _maximal_runs(rows, lambda r: r["Stableford"] <= 1):
             if len(run) < 3:
                 continue
             ev = [hole_evidence(r, metric) for r in run]
-            severity = scoring.cap(len(ev) * 1.4)
+            # From the raw rows, not `ev` — `hole_evidence` strips the
+            # Stableford figure entirely pre-TEG-8 (era-aware evidence), but
+            # detection itself runs on the raw Stableford column in both eras.
+            shortfall = sum(2 - int(r["Stableford"]) for r in run)  # 1/hole bogey, 2/hole blank
+            severity = scoring.cap(shortfall * 0.5 + len(ev) * 0.3)
             h0, h1 = ev[0]["hole"], ev[-1]["hole"]
             out.append(NotableEvent(
                 teg_num=teg_num, scope="stretch", type="cold_stretch_net", round=rnd,
-                headline=(f"{player} takes nothing from {len(ev)} straight holes, "
+                headline=(f"{player} goes {len(ev)} holes without a net par, "
                           f"{h0}-{h1} (R{rnd})"),
                 players=[player], holes=ev,
                 importance=scoring.cap((2 + 6 * w) * 0.6 + late),
                 rarity=scoring.cap(severity * 0.5),
                 entertainment=scoring.cap(severity * (1.1 - 0.4 * w)),
-                context={"blank_holes": len(ev), "length": len(ev)},
+                context={"shortfall": shortfall, "length": len(ev)},
             ))
 
-        # --- steady stretches: maximal run of net par or better (Stableford >= 2),
-        # len >= 6. The positive mirror of the two cold detectors, and the reason
-        # it exists: detection ran 622 negative to 240 positive across TEGs 2-18
-        # (measured 2026-08-14), so the writer was handed 2.6 disasters for every
-        # good thing and no prompt could correct for it. Threshold is 6 rather
-        # than 3 so this stays an achievement, not wallpaper.
-        for run in _maximal_runs(rows, lambda r: r["Stableford"] >= 2):
-            if len(run) < 6:
-                continue
-            ev = [hole_evidence(r, metric) for r in run]
-            severity = scoring.cap(len(ev) * 0.9)
-            h0, h1 = ev[0]["hole"], ev[-1]["hole"]
-            out.append(NotableEvent(
-                teg_num=teg_num, scope="stretch", type="steady_stretch", round=rnd,
-                headline=(f"{player} goes {len(ev)} holes without dropping a net shot, "
-                          f"{h0}-{h1} (R{rnd})"),
-                players=[player], holes=ev,
-                importance=scoring.cap((2 + 6 * w) * 0.6 + late),
-                rarity=scoring.cap(severity * 0.7),
-                entertainment=scoring.cap(severity * 0.6),
-                context={"clean_holes": len(ev), "length": len(ev)},
-            ))
-
-        # --- hot stretches: maximal run of net birdie or better (Stableford >= 3), len >= 3 ---
+        # --- hot stretch, NET: net birdie or better sustained (Stableford >= 3) ---
         for run in _maximal_runs(rows, lambda r: r["Stableford"] >= 3):
             if len(run) < 3:
                 continue
@@ -603,7 +716,7 @@ def _sequences(teg_df: pd.DataFrame, sw: dict, player_names: dict,
             rar = scoring.cap(severity * 0.6)
             h0, h1 = ev[0]["hole"], ev[-1]["hole"]
             out.append(NotableEvent(
-                teg_num=teg_num, scope="stretch", type="hot_stretch", round=rnd,
+                teg_num=teg_num, scope="stretch", type="hot_stretch_net", round=rnd,
                 headline=f"{player} piles up {gained_str}, holes {h0}-{h1} (R{rnd})",
                 players=[player], holes=ev,
                 importance=imp, rarity=rar, entertainment=ent,
@@ -1116,6 +1229,7 @@ def build_notable_events(teg_num: int, all_data: Optional[pd.DataFrame] = None,
                          metric=metric)
     events += _round_beats(round_summary, sw, metric)
     events += _round_swings(round_summary, sw, player_names, metric)
+    events += _trajectory_beats(round_summary, sw, metric)
 
     # Tag each round-scoped beat with the course it was played on, so the same hole
     # NUMBER in different rounds is never mistaken for "the same hole" (it is almost

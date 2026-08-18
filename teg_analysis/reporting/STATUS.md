@@ -12,7 +12,50 @@
 
 ---
 
-## START HERE — picking this up in a new chat (2026-08-17)
+## START HERE — picking this up in a new chat (2026-08-18)
+
+### Storyline-first reports — Phase 1 built, detectors simplified (2026-08-18)
+
+New workstream, not yet folded into the ranked list below. Full detail, live, in
+`STORYLINE_PLAN.md` (a working doc — see its own status line for when to fold or delete it).
+
+- **`threads.py`** clusters beats into candidate subplot threads (by player / repeated course /
+  recurring failure mode, spanning 2+ rounds) and feeds `candidate_threads` into the bundle,
+  advisory-only like `vehicle_fit_hints`. Run over all 17 TEGs: course clusters and failure-mode
+  clusters are genuine finds; bare player clusters are mostly noise (fires for nearly every player,
+  reads as an index not a subplot).
+- **A/B tested (`scripts/storyline_experiment.py`) on TEGs 14/16/18: cold beats hinted, 3 for 3.**
+  Feeding `candidate_threads` + `win_anatomy` to a storyline-discovery LLM call added no storylines
+  it didn't already find cold, and consistently made it invent more unsupported specifics (gaps,
+  head-to-head records, visit counts) — more context, more surface to confabulate a derived number
+  from, not better discovery. **Verdict: drop the hint-feeding approach.**
+- **2a/2c built and validated (branch `claude/storyline-first-reports`).** `StoryPlan` gained
+  `trophy_storyline`/`jacket_storyline`/`spoon_storyline`/`discovered_storylines` (replacing the dead
+  `competition_storyline_bullets`/`player_storyline_bullets`/`decisive_moments` — zero downstream
+  readers, found while replacing them) plus a `beat_ids`-exist grounding check in
+  `check_plan_consistency`. Hit and fixed the API's structured-output size limit along the way
+  (trimmed a second dead/redundant field, `Competition.how`/`key_beat_ids`). Validated with real
+  `build_story_plan()` calls on TEGs 14/16/18: **zero grounding warnings, all three**, every
+  discovered storyline genuinely distinct from its trophy/jacket/spoon story. Not yet wired
+  downstream — `rounds[]` still drives dry-draft/writer structure (Phase 3/4), and the separate
+  narrow-context "telling" call (2b) isn't built. Full detail in `STORYLINE_PLAN.md`.
+- **Stretch detectors simplified** (`events.py`): one hot + one cold per metric replaces the old
+  asymmetric set (gross had cold only; net had cold + steady + hot). Net was already handicap-level,
+  so `hot_stretch_net`/`cold_stretch_net` split cleanly at the neutral value (net par). Gross has no
+  strokes to lean on, so `hot_stretch_gross` needed a shorter length bar (2, not 3) than
+  `cold_stretch_gross` to hold the same negative:positive balance the 2026-08-14 fix established —
+  regressed to 2.79:1 on the first pass, caught by `test_detection_is_not_lopsidedly_negative`,
+  fixed back to ~1.5:1. Also closed a real gap: a sustained run of net bogeys (not blanks) was
+  previously undetected — `cold_stretch_net` broadened from Stableford ≤0 to ≤1.
+- **Per-player round-by-round trajectories — built.** `_trajectory_beats` (`events.py`) reads the
+  `Gap_To_Leader_After_Round_*` / `Cumulative_Tournament_Rank_*` columns for every player, not just
+  the round leader and the eventual Trophy winner, and emits `gap_closed` / `position_reversal`
+  beats for both Trophy and Green Jacket (each competition's own winner excluded — that's
+  `win_anatomy`'s job). Verified on TEGs 14/16/18: fires real non-winner material (a chaser closing
+  from 18 back to 8, a 2nd-after-R1 fade to 5th) that `threads.py`'s player clusters now pick up.
+  Net-new signal, no detection-balance impact (not part of the hot/cold stretch counts).
+
+---
 
 **Open proposal, not started:** [`STORYLINE_PLAN.md`](STORYLINE_PLAN.md) — reports are ~6.5/10;
 round-by-round detail dominates every report regardless of what the story plan's

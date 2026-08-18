@@ -1,0 +1,197 @@
+{
+  "teg": 14,
+  "results": [
+    {
+      "subject": "David Mullin's Trophy: nine ahead, home by two",
+      "telling": [
+        "Setup: at its widest the Trophy race wasn't a race at all — David Mullin held a nine-point cushion over Alex Baker, the only man who would get anywhere near him.",
+        "Where Baker spent that cushion: Littlestone in Round 2, holes 2 to 5 — 7 at the par-4 2nd, 6 at the 3rd, 7 at the par-4 4th, then a 9 at the par-5 5th. Twelve shots gone in four holes, three Stableford points banked out of a possible dozen and a blank at the last of them.",
+        "Mullin's answer came late in Round 3 at Prince's: par, par, par, birdie across 15-18 for 13 points, the closing stretch that turned a lead into a buffer.",
+        "The wobble: Round 4 at Prince's, the par-4 10th (stroke index 3) swallowed an 8 — quadruple bogey, zero points — and the door swung open.",
+        "Baker walked through it, grinding the nine-shot gap down to two, seven points recovered — and then met the 16th at Prince's, a par 4 he left with a 10. Sextuple bogey, no points, on the round's easiest hole by index.",
+        "Resolution: Mullin home on 154 points, the Trophy by 2 over Baker — his third Trophy and the 16th-best winning total of all time. The chase ran out of holes, not out of form; Baker's own wreckage was the margin."
+      ],
+      "text_with_telling": "Three consecutive TEGs spent propping up the bottom of the field had rather lowered expectations of David Mullin. Then he opened with 40 at Deal and 41 at Littlestone, best in the field both times, and by the first afternoon the Trophy race was less a contest than a procession: nine points clear of Alex Baker, the only man who would get within touching distance.\n\nBaker had already spent his cushion by then. Littlestone's second through fifth took 7, 6, 7 and 9 off him, twelve shots in four holes, three Stableford points from a possible twelve.\n\nMullin's cushion held despite Prince's taking a nine off him at the 8th in Round 3 and an eight at the 10th in Round 4, both rounds leaving him in the bottom half of the field. What saved him was the close of Round 3: par, par, par, birdie across 15 to 18 for 13 points, a lead converted into a buffer.\n\nBaker duly came, seven points recovered, the gap down to two, before the 16th at Prince's, the round's easiest hole by index, returned a 10.\n\nMullin home on 154, the Trophy by two, his third. The chase ran out of holes, not out of form.",
+      "text_without_telling": "A man who had finished last in three consecutive TEGs is not supposed to set the pace, but David Mullin did it from the opening afternoon. Forty points at Deal, forty-one at Littlestone, best in the field on both occasions, and by the time the caravan reached Prince's he was nine clear and apparently writing his own script.\n\nPrince's had other ideas. A nine at the 8th in the third round and an eight at the 10th in the fourth left him in the bottom half of the field twice over, the cushion thinning by the hole. There was still class in there, notably a run of 13 points from the 15th to the 18th in round three, three pars and a birdie to close, but the swagger had gone.\n\nBehind him, Alex Baker came from nine back to two, which sounds like a chase that ran out of holes rather than form. It did, though the damage had been done earlier: twelve shots bled between the 2nd and 5th at Littlestone, ending with a nine at the par five. A ten at Prince's 16th in the final round hardly helped.\n\nMullin's 154 points took the Trophy by two, a third title for a man lately more familiar with the bottom.",
+      "label_map": {
+        "A": "with_telling",
+        "B": "without_telling"
+      },
+      "verdict": {
+        "winner": "A",
+        "compellingness": {
+          "A": 8,
+          "B": 7
+        },
+        "clarity": {
+          "A": 8,
+          "B": 6
+        },
+        "factual_grounding": {
+          "A": 6,
+          "B": 7
+        },
+        "reads_as_story_not_list": {
+          "A": 8,
+          "B": 8
+        },
+        "notes": "Both drafts draw on the same off-evidence background (three straight last-place TEGs, 40 at Deal and 41 at Littlestone 'best in field', a nine at the 8th in R3, 'bottom half of the field' finishes) which the supplied evidence does not support, so neither can be credited or penalised differentially there; the 'third' title is at least plausibly the player_rank field. On the verifiable material both are accurate: A correctly totals Baker's Littlestone collapse as three Stableford points from holes 2-5 and the 7-6-7-9 sequence; B correctly notes the 12 shots bled and the nine at the par five. A's one slip is calling Prince's 16th 'the round's easiest hole by index' when SI 17 makes it second-easiest; B avoids that. Structurally A is the tighter narrative: lead built, Baker's cushion spent, Mullin's own wobbles at the 8th and 10th, the 13-point close as the buffer, then the charge and the 10 at the 16th, capped by a genuinely earned closing line ('The chase ran out of holes, not out of form'). B has the more attractive voice ('by the time the caravan reached Prince's') but muddles its third paragraph by pre-empting that same line and then arguing with itself ('which sounds like a chase that ran out of holes rather than form. It did, though...'), and it soft-pedals the sextuple bogey — the highest-scored beat in the evidence — as something that 'hardly helped'. Neither reads as a bullet list; A's clipped fragments are a stylistic choice rather than list residue. Narrow win to A on clarity and payoff, with B slightly ahead on grounding precision."
+      },
+      "winner_arm": "with_telling"
+    },
+    {
+      "subject": "David Mullin's Green Jacket: built at Deal and Littlestone, defended with a calculator",
+      "telling": [
+        "Setup: Mullin built a Green Jacket cushion so big that Jon Baker, the eventual runner-up, at one point trailed by 15 — an arithmetic problem rather than a golf tournament.",
+        "Turn: the final round at Prince's (Shore/Dunes) brought Baker's best golf of the week — an 83 gross that broke the course record of 85 standing from five previous visits there.",
+        "Mullin gave a little back on the same loop: a quadruple-bogey 8 at the par-4 10th, stroke index 3, worth exactly zero Stableford points.",
+        "The scoreboard tightened accordingly — eight shots of the deficit gone, Baker closing from 15 back to 7 off the lead.",
+        "Resolution: seven was still seven. Mullin took the Green Jacket at +68 gross, Baker second, the margin comfortable enough that the closing charge never became a threat.",
+        "Context for the number: +68 stands as the sixth-best gross total in Green Jacket history, and the fourth-best of Mullin's own career."
+      ],
+      "text_with_telling": "The Green Jacket was settled early and audited late. David Mullin opened with an 87 at Deal and an 85 at Littlestone, the best gross in the field on both days and personal bests on both courses, and by halfway the lead stood at 12. That is not a duel, it is a spreadsheet.\n\nPrince's had other ideas. The Shore/Dunes loop bit back, Mullin signing for 20 over par and then 19 over across the closing two rounds, and among the damage was a quadruple-bogey 8 at the par-four 10th, stroke index three, worth precisely nothing in Stableford terms.\n\nMeanwhile Jon Baker produced the round of the week and arguably of the venue's history: an 83 gross that erased the previous Prince's Shore/Dunes course record of 85, a mark that had survived five prior visits. From 15 adrift at his lowest ebb, Baker clawed back eight shots to finish seven off the lead.\n\nSeven, though, remained seven. Mullin took the Jacket at +68 gross, a total that ranks sixth on the all-time Green Jacket list and fourth in his own career, having beaten Baker head-to-head in three of the four rounds. The charge was admirable; the arithmetic was never really in doubt.",
+      "text_without_telling": "**Mullin's Jacket: built at Deal and Littlestone, defended with a calculator**\n\nOf all the arguments this week threw up, the Green Jacket was not one of them. David Mullin simply took the first two rounds and put them in his pocket: an 87 and an 85 across Deal and Littlestone, best gross in the field both times, and both personal bests on the ground beneath him. By halfway the lead was 12, and the rest of the field were reduced to doing sums.\n\nPrince's, inevitably, had opinions. Mullin went 20 over and then 19 over across the closing two rounds, the low point a quadruple-bogey eight at the 10th in the final round, a stroke index three hole that took four shots off him and returned nothing. Jon Baker, meanwhile, produced the week's outstanding round, an 83 on the Shore/Dunes that broke a course record of 85 standing across five previous visits, and hauled himself from 15 adrift to 7.\n\nSeven was as close as it got. Mullin signed for +68, sixth-best in the competition's history and the fourth-best of his own career, having beaten Baker head-to-head in three of the four rounds. Stirring finish, admirable arithmetic, no actual jeopardy.",
+      "label_map": {
+        "A": "without_telling",
+        "B": "with_telling"
+      },
+      "verdict": {
+        "winner": "A",
+        "compellingness": {
+          "A": 8,
+          "B": 7
+        },
+        "clarity": {
+          "A": 8,
+          "B": 8
+        },
+        "factual_grounding": {
+          "A": 6,
+          "B": 6
+        },
+        "reads_as_story_not_list": {
+          "A": 8,
+          "B": 7
+        },
+        "notes": "Both drafts tell the same story with essentially the same shape and the same strengths: the early-lead framing, the Prince's wobble, Baker's record round, and the closing arithmetic gag. Both are also equally exposed on grounding — the evidence supports only the +68/margin-7/rank data, the 83 course record (prior 85, five visits), the 15-to-7 gap closure, and the R4 quad at the SI-3 10th. Neither the 87 at Deal / 85 at Littlestone, 'best gross in the field', 'personal bests', the 12-shot halfway lead, the 20-over and 19-over closing rounds, nor the 'beat Baker head-to-head in three of four rounds' claim appears anywhere in the raw material; both drafts assert all of it with equal confidence, so neither can be rewarded or penalised relative to the other. Draft A is marginally the better piece of writing: three paragraphs that move, the contrast between Mullin's quad and Baker's 83 landing inside a single breath so the reader feels the swing, and a closing tricolon ('Stirring finish, admirable arithmetic, no actual jeopardy') that is crisper than B's more explanatory ending. Draft B has the best single line of either draft ('That is not a duel, it is a spreadsheet') and its 'settled early and audited late' opening is strong, but it segments the material more mechanically — Mullin's damage, then 'Meanwhile Jon Baker', then the maths — which reads slightly closer to the underlying event list. B also overreaches a touch with 'arguably of the venue's history'. Narrow win for A on flow and economy."
+      },
+      "winner_arm": "without_telling"
+    },
+    {
+      "subject": "Jon Baker: defending champion, first-ever Wooden Spoon, and a course record on the way out",
+      "telling": [
+        "Setup — Round 3 at Prince's (Shore/Dunes): Baker holds it together through the closing stretch, pars at the 14th, the par-5 15th and the 16th, then walks off the par-3 17th with a 6, a triple bogey and a blob that ends the steady run. Round 3: 28 points.",
+        "The turn — Round 4, the same course, and from the 11th he stops leaking shots entirely: par at the par-3 11th, birdie 4 at the par-5 12th, then a birdie 3 at the 13th, the stroke index 1 hole, followed by pars at the 14th and 15th. Five holes, not a single gross shot dropped, two gained.",
+        "In Stableford terms it's a haul: 14 points across four holes, the 12th through the 15th, with back-to-back 4-pointers at the 12th and 13th.",
+        "The wobble — the run dies at the 16th, stroke index 17, where a 6 for double bogey brings a zero, and it ends the way the tournament seemed determined to end: an 8 at the 18th, quadruple bogey, another blank.",
+        "Resolution I — even with an 8 on the last, Round 4 comes in at 39 points, an 11-point swing on his 28 in Round 3, and the gross card reads 83: a new Prince's Shore/Dunes course record, beating the previous best of 85 set across five prior visits.",
+        "Resolution II — the record round is the final act, not a rescue: Baker's tournament total of 125 points leaves him collecting the Wooden Spoon."
+      ],
+      "text_with_telling": "Jon Baker arrived at this one holding the Trophy and two straight Jackets, with not a single Wooden Spoon anywhere on his record. He left having been bottom of the Spoon race from the 4th hole of the opening round to the final putt, which is a thorough way of surrendering a title.\n\nDeal set the tone: 29 points, five holes without so much as a net par. Prince's offered no sanctuary, 29 and then 28, the latter featuring an eight at the 13th and, after he had steadied himself with pars at the 14th, 15th and 16th, a triple bogey six at the par-3 17th to end his best run of the round.\n\nThen, with nothing left to play for but pride, he produced the round of the week. From the 11th he stopped dropping gross shots altogether, birdied the par-5 12th and the stroke index 1 13th, and piled up 14 points in four holes. A double at the 16th and a quadruple-bogey eight at the last could not spoil it: 39 points and 83 gross, a new Prince's Shore/Dunes course record, beating the 85 that had stood across five previous visits.\n\nFinal tally, 125 points. The Spoon, by 12.",
+      "text_without_telling": "Jon Baker arrived with the Trophy in his luggage, two Green Jackets on the spin behind him and not a single Wooden Spoon anywhere on his CV. He left having led the Spoon race, if that is the word, from the fourth hole of the opening round to the final putt.\n\nDeal set the tone: 29 points, including a spell of five holes without so much as a net par, and by the time the field reached the fourth he was already propping up the table. Prince's offered no comfort. Another 29, then 28, the latter featuring an eight at the 13th and a triple bogey at the 17th that snuffed out his best sequence of the day.\n\nThen, with nothing whatsoever at stake, he produced the round of the week. Thirty-nine points, and a gross 83 that stands as a new Prince's Shore/Dunes course record, beating the 85 that had survived five previous visits. He went five holes without dropping a shot to gross par from the 11th, birdieing the 12th and the stroke index one 13th, and harvested 14 points across the 12th to 15th. A double bogey at the 16th and an eight at the last followed. He took the Spoon by 12 regardless.",
+      "label_map": {
+        "A": "with_telling",
+        "B": "without_telling"
+      },
+      "verdict": {
+        "winner": "A",
+        "compellingness": {
+          "A": 8,
+          "B": 7
+        },
+        "clarity": {
+          "A": 8,
+          "B": 7
+        },
+        "factual_grounding": {
+          "A": 6,
+          "B": 6
+        },
+        "reads_as_story_not_list": {
+          "A": 8,
+          "B": 7
+        },
+        "notes": "Both drafts share the same arc and the same set of unsupported claims (defending Trophy plus two Green Jackets, leading/propping up the Spoon race from the fourth hole, the Deal round of 29 with five holes without a net par, the second 29, the eight at the 13th in R3, and the 12-point Spoon margin) — none of these appear in the evidence, so neither can be rewarded on grounding. Where they draw on the evidence both are accurate: R3 28 with the triple bogey at the 17th ending a run of pars, R4 39 and the 83 gross record beating 85 across five prior visits, the bogey-free 11-15 gross stretch, birdies at the par-5 12th and SI 1 13th, 14 points from 12-15, the double at the 16th and the quad-bogey eight at the last, and the 125-point total. A edges it on detail precision (naming the par-3 17th and the triple-bogey six, the quadruple-bogey eight) and on structure: it builds to the record and lands a crisp two-beat ending. B repeats the 'fourth hole' beat twice within two paragraphs, front-loads the 39/83 result before the stretch that produced it, and then deflates with 'He took the Spoon by 12 regardless.' Both read as prose rather than dressed-up bullets, but A flows more economically."
+      },
+      "winner_arm": "with_telling"
+    },
+    {
+      "subject": "Alex Baker's ledger of catastrophes — second place assembled from wreckage",
+      "telling": [
+        "Setup at Royal Cinque Ports: Baker's opening round carries two craters — an 8 at the 11th, a stroke index 3 hole, and a 10 at the par-5 16th, a quintuple bogey worth zero points on each.",
+        "Littlestone empties his pockets early: 7 at the 2nd, 6 at the 3rd, 7 at the 4th and a nine at the par-5 5th — 12 gross shots gone in four holes, with only three Stableford points to show for the stretch.",
+        "Same round, the 8th (par 4, SI 12) yields another quadruple-bogey 8 and another blank — the second zero of a front nine that never stopped bleeding.",
+        "Prince's starts no kinder in round three: double bogeys at the 1st, 2nd and 3rd bleed six shots straight out of the gate, then an 8 at the 10th — SI 3, four over, no points.",
+        "The turn on the final afternoon: par at the 13th, the hardest hole on the card (SI 1), par at the 14th, par at the par-5 15th — 4, 4 and 3 points for 11 in three holes, the run of a man closing in.",
+        "Then the 16th, SI 17 — the second-easiest hole on the card — hands him a 10, a sextuple bogey that breaks the par streak stone dead and returns zero.",
+        "Resolution: a ledger of catastrophes that still ended two points off the Trophy, having at one stage trailed by nine — seven of the gap closed, two too many left on the 16th green."
+      ],
+      "text_with_telling": "Second place, and a ledger you could frame. Alex Baker's week at the top of the leaderboard was assembled entirely from wreckage, and the remarkable thing is how little it seemed to matter until the very end.\n\nRoyal Cinque Ports set the tone: an 8 at the 11th, stroke index 3, and a quintuple-bogey 10 at the par-5 16th, both worth precisely nothing, and still he signed for 37 points. Littlestone then emptied his pockets before he had properly warmed up, 7, 6, 7 and a nine at the 5th, twelve gross shots gone in four holes for a return of three points, with another quadruple-bogey 8 waiting at the 8th. Prince's opened round three with three straight double bogeys and six shots surrendered, then an 8 at the 10th.\n\nWhich made the final afternoon almost cruel. Baker parred the 13th, the hardest hole on the card, parred the 14th, parred the par-5 15th: eleven points in three holes, the walk of a man about to win something. Then the 16th, stroke index 17, the second-easiest hole out there, handed him a 10. He posted the best round of the day, having closed seven of a nine-shot gap, and finished two points short.",
+      "text_without_telling": "Alex Baker's week reads less like a scorecard than a charge sheet, and yet it ends in second place, two points off the Trophy. That is the peculiar genius of the man: he produced the loudest gross damage in the field in all four rounds and still very nearly walked off with the thing.\n\nIt began at Royal Cinque Ports, where an eight at the 11th and a 10 at the par-five 16th somehow coexisted with an opening 37 points. Littlestone was less forgiving, emptying his pockets to the tune of 12 shots between the 2nd and the 5th, the last of them a nine, with an eight at the 8th for company. Prince's opened by taking six shots off him in three holes on Saturday and added an eight at the 10th.\n\nThe final afternoon was the cruellest joke of all. He parred the 13th, stroke index one, then the 14th, then the 15th, 11 points from three holes and a genuine run at the lead. Then came the 16th, the second-easiest hole on the card, and a 10. He signed for the best round of the day, having trailed by nine at one stage and closed to two. Two points too late.",
+      "label_map": {
+        "A": "with_telling",
+        "B": "without_telling"
+      },
+      "verdict": {
+        "winner": "A",
+        "compellingness": {
+          "A": 8,
+          "B": 8
+        },
+        "clarity": {
+          "A": 8,
+          "B": 8
+        },
+        "factual_grounding": {
+          "A": 8,
+          "B": 6
+        },
+        "reads_as_story_not_list": {
+          "A": 8,
+          "B": 8
+        },
+        "notes": "Both drafts hit the same arc — carnage at Deal and Littlestone, the three-par surge at 13-15, the sextuple at the SI-17 16th, seven of nine shots clawed back to finish two short — and both write it as narrative rather than an itemised list, with strong closing beats ('the walk of a man about to win something' vs 'Two points too late'). Draft A is tighter on evidence: it correctly cites SI 3 at the 11th, SI 1 as the hardest hole, the exact 7-6-7-9 sequence and the three-point return from that Littlestone stretch (stableford 1+1+1+0), and SI 17 as second-easiest. Draft B invents two things the evidence does not carry: the sweeping claim that he 'produced the loudest gross damage in the field in all four rounds' (nothing here is field-relative; is_teg_par_worst is false throughout) and 'on Saturday' (no dates or days appear anywhere). Both share one unsupported figure — the opening 37 points — and both assert 'best round of the day', which the evidence also doesn't establish, so those cancel. Given near-parity on prose, A wins on grounding."
+      },
+      "winner_arm": "with_telling"
+    },
+    {
+      "subject": "Gregg Williams: a personal-best gross total that bought him nothing",
+      "telling": [
+        "Setup: at Royal Cinque Ports in R1, Williams walks off the 3rd — a par 5, stroke index 4 — with a 9, a quadruple bogey worth precisely nothing on the card.",
+        "The turn comes in round 2: 27 Stableford points, the kind of number that quietly ends a week's ambitions before the weekend.",
+        "Round 3 at Prince's (Shore/Dunes) is the answer: 39 points, a 12-point improvement on R2 and the biggest single-round swing of his week.",
+        "The engine of it is holes 9-11 — par, par, par, at stroke indexes 10, 3 and 15 — nine Stableford points in three holes and a run of pars that felt unbreakable.",
+        "Then the 12th breaks it: another par 5, another blow-up, an 8 for triple bogey and a zero that snaps the streak dead.",
+        "Even so, he keeps closing: from 18 points adrift of the Green Jacket lead at his low point, he finishes the week just 8 back, ten shots of the deficit clawed back.",
+        "The prize for all of it is a number rather than a trophy — a personal-best Gross total of +76, the best Williams has ever posted, and no silverware to set beside it."
+      ],
+      "text_with_telling": "There is a particular cruelty in playing the best golf of your life and having nothing to show for it. Gregg Williams walked off the 3rd at Royal Cinque Ports in round one having signed for a 9, a quadruple bogey on a par 5 worth precisely nothing on the card, and still came home in 93, a course personal best. So far, so encouraging.\n\nThen came Littlestone, and 27 Stableford points, eleven shots worse than his previous visit there. Weeks end quietly like that, and the Trophy conversation moved on without him.\n\nHis response at Prince's was the round of his week: 39 points and an 86, a twelve-point swing on round two. The engine was holes 9 to 11, par, par, par at stroke indexes 10, 3 and 15, nine points in three holes and a streak that looked unbreakable until the 12th, another par 5, where an 8 snapped it dead.\n\nHe kept coming anyway, reeling in ten of the eighteen points he had trailed the Green Jacket lead by to finish just 8 back. The reward was a number rather than a trophy: a personal-best Gross total of +76, two course bests, and a tidy, unrewarded third.",
+      "text_without_telling": "Gregg Williams will look back on this one and wonder what he has to do. He opened at Deal with a nine at the third, a par five swallowed whole for a return of precisely nothing, and still walked off with a 93, a course best. That is the sort of week it was: the numbers kept improving and the reward kept declining.\n\nLittlestone was where the Trophy quietly slipped away. Twenty-seven points, and 11 shots worse than his last visit to the place, was the one round that could not be absorbed, and it duly wasn't.\n\nThe response at Prince's was the best of him. Thirty-nine points and an 86, another course best, with pars at the ninth, tenth and eleventh worth nine points in three holes before the 12th, another par five, took an eight off him and ended the run. Even that could not spoil it.\n\nBy the close he had hauled himself from 18 off the Green Jacket lead to eight, and assembled a personal-best gross total of +76. Third place, a tidy week, and precious little silverware to show for the best golf he has played.",
+      "label_map": {
+        "A": "with_telling",
+        "B": "without_telling"
+      },
+      "verdict": {
+        "winner": "B",
+        "compellingness": {
+          "A": 7,
+          "B": 8
+        },
+        "clarity": {
+          "A": 7,
+          "B": 8
+        },
+        "factual_grounding": {
+          "A": 5,
+          "B": 5
+        },
+        "reads_as_story_not_list": {
+          "A": 7,
+          "B": 8
+        },
+        "notes": "Both drafts hit the same core beats supported by the evidence: the quadruple-bogey 9 at the 3rd at Royal Cinque Ports (B correctly glosses it as Deal), the 27-point round, the 39-point recovery at Prince's, the nine points across holes 9-11, the triple-bogey 8 at the par-5 12th that ended the streak, the closing of an 18-shot Green Jacket gap to 8, and the mandatory +76 personal-best gross. Both also share the same unsupported inventions in near-identical measure: gross round figures (93, 86), 'course personal best' claims, naming Littlestone as the R2 venue, a 'Trophy' competition that appears nowhere in the evidence, an 11-shot regression 'from his last visit', and a third-place finish. Neither can be preferred on grounding, though A earns a small credit for correctly framing the R3 improvement as a twelve-point Stableford swing (matching delta 12) and for using the supported stroke indexes, while simultaneously mis-framing the R2 gap as 'eleven shots'. Stylistically A is solid but slips ('Weeks end quietly like that' is vague, the stroke-index recitation edges toward data-dump). B is tighter and more purposeful: 'a par five swallowed whole', 'the numbers kept improving and the reward kept declining', and a closing line that lands the storyline's premise squarely. B reads more like a continuous narrative with a controlled arc; A reads slightly more like annotated evidence. Narrow win for B on craft, with grounding a wash."
+      },
+      "winner_arm": "without_telling"
+    }
+  ]
+}

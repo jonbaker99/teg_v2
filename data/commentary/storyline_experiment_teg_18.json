@@ -1,0 +1,491 @@
+{
+  "teg": 18,
+  "arms": [
+    {
+      "arm": "cold",
+      "draft": {
+        "trophy_storyline": {
+          "subject": "Alex Baker — wire-to-wire Trophy winner whose golf was falling apart the whole way",
+          "why_it_matters": "Baker led the Trophy from the fifth hole of the tournament to the last and won by eight, yet he did it while posting the worst gross round ever recorded on the Tour Course and losing shots by the bucket — the most controlled runaway imaginable, built on total chaos.",
+          "shape": "Baker grabbed the lead at R1 H3, briefly surrendered it to David Mullin at the 4th, took it back at the 5th and never let go, banking 46 points in the opening round and 21 in a six-hole burst on the Stadium in R3. Underneath the points, though, his ball-striking was a horror show: a course-worst 106 gross on the Tour Course in R2, an 11 at the last that same day, a 10 at the Stadium's 14th and an 8 at the 17th in the final round, all of which dragged him from 2nd to 5th in the gross standings. The margin narrowed from 12 to 8 as Gregg Williams closed from 15 back to 9, but it was never truly threatened: 169 points, the 7th-best TEG total ever and the second-best of Baker's career.",
+          "beat_ids": [
+            "b01",
+            "b99",
+            "b98",
+            "b100",
+            "b40",
+            "b47",
+            "b04",
+            "cr02",
+            "b36",
+            "b46",
+            "b25",
+            "b43",
+            "b44",
+            "b08",
+            "b05",
+            "b17",
+            "b81"
+          ],
+          "compelling_score": 8
+        },
+        "jacket_storyline": {
+          "subject": "Gregg Williams — from the bottom of the Wooden Spoon race to a record Green Jacket romp",
+          "why_it_matters": "Williams played the worst golf of anyone on day one and the best golf of his life over the next three, winning the Jacket by 14 — the biggest gross margin of his career and 6th-best in TEG history.",
+          "shape": "Round one was a wreck: triple-triple-double through 3-5, a 9 at the 7th, an 8 at the 17th, 27 over par, and by the 14th hole he was propping up the Wooden Spoon table. He rebuilt from there — 11 points better in R2, drawing level with Jon Baker for the Jacket lead three separate times before finally seizing it outright with a par at the 2nd on the Stadium in R3, a hole into a four-hole run of straight pars. From that moment he never trailed again, grinding his gross rounds down 27 → 14 → 13 → 12 and finishing at +66, fourteen clear of David Mullin.",
+          "beat_ids": [
+            "b02",
+            "b24",
+            "b20",
+            "b52",
+            "b53",
+            "b74",
+            "b42",
+            "b38",
+            "b19",
+            "b26",
+            "b90",
+            "b88",
+            "b34",
+            "b48",
+            "b28",
+            "b16",
+            "b21",
+            "b12",
+            "b27",
+            "b06",
+            "b10"
+          ],
+          "compelling_score": 9
+        },
+        "spoon_storyline": {
+          "subject": "Jon Baker — the man who led the Green Jacket for 20 holes and finished with the Wooden Spoon",
+          "why_it_matters": "Jon Baker was the best gross player in the field for two days and the last man in the field for the other two, while his brother Alex ran away with the Trophy.",
+          "shape": "He took the Jacket lead at R1 H5 and held it for 20 holes across two rounds — closing R2 with five straight pars-or-better for 16 points — even though a bottom-of-the-table double bogey at the last on Saturday had already put the Spoon around his neck. He handed the gross lead to Gregg Williams at R2 H7, and on the Stadium it all came apart: a 9 at the 4th, a triple at the 2nd that dropped him to the bottom for good, four straight doubles home for 28 points, an 11-point collapse on his R2 score. Round four brought five more consecutive doubles from the 7th; a birdie at the 13th finally stopped the bleeding, but 126 points and the Spoon were already his.",
+          "beat_ids": [
+            "b14",
+            "b103",
+            "b81",
+            "b84",
+            "b09",
+            "b13",
+            "b70",
+            "b37",
+            "b48",
+            "b87",
+            "b67",
+            "b39",
+            "b77",
+            "b83",
+            "b80",
+            "b65",
+            "b68",
+            "b72"
+          ],
+          "compelling_score": 9
+        },
+        "discovered_storylines": [
+          {
+            "subject": "David Mullin's course record 84 on the Stadium — the week's single best round from the week's most erratic player",
+            "why_it_matters": "Mullin broke a Stadium course record that had stood across 27 prior TEG visits, and did it days after making an 11 and three quadruple bogeys.",
+            "shape": "Mullin was at the bottom of the Spoon race twice in the first two rounds — an 11 at the 15th on Saturday, then quad-triple-quad through 4-6 on Sunday, and last place again by the 18th. Then on Spain's premier championship course he opened with three straight pars, birdied the 10th inside a 10-point three-hole run, and signed for 84 gross, beating the previous best of 89 across 27 visits. He held on to finish runner-up for the Green Jacket, though the final round bit back with nine shots bled from the 14th to the 17th.",
+            "beat_ids": [
+              "cr01",
+              "b35",
+              "b66",
+              "b59",
+              "b60",
+              "b61",
+              "b62",
+              "b75",
+              "b79",
+              "b85",
+              "b69",
+              "b02",
+              "b45",
+              "b49"
+            ],
+            "compelling_score": 9
+          },
+          {
+            "subject": "John Patterson — the worst opening nine of the week, and a runner-up finish",
+            "why_it_matters": "Patterson bled 22 shots in eight holes on Saturday morning and still finished second in the Trophy, closing with a birdie when he had nothing left to play for.",
+            "shape": "His tournament began with an 8 at the 3rd and seven straight holes without a net par, 22 gross shots gone between the 3rd and the 10th. He turned it around on the same afternoon — 13 points from the 13th to the 16th and a back nine 14 points better than his front — then rebuilt again after another quadruple bogey at R2 H4 with 16 points across holes 11-15. The final round summed him up: nine points in three holes early, then triple-double at 14 and 15 before a birdie at the 17th stopped the rot, enough to end the week eight behind Alex Baker in second.",
+            "beat_ids": [
+              "b23",
+              "b18",
+              "b29",
+              "b22",
+              "b30",
+              "b33",
+              "b15",
+              "b32",
+              "b11",
+              "b41",
+              "b07",
+              "b03",
+              "b01"
+            ],
+            "compelling_score": 8
+          },
+          {
+            "subject": "The Baker brothers at opposite ends of the table",
+            "why_it_matters": "One brother won the Trophy by eight; the other collected the Wooden Spoon — and for two rounds it looked like it might be the other way round.",
+            "shape": "Jon Baker was the tournament's leading gross player after both rounds on the Tour Course while Alex was piling up Stableford points with golf that produced a course-worst 106. The Stadium reversed everything: Jon fell to the bottom at R3 H2 and stayed there, Alex kept scoring despite a 10 and an 8 in the final round. Alex finished on 169 points and first, Jon on 126 and last.",
+            "beat_ids": [
+              "b81",
+              "b37",
+              "b01",
+              "b14",
+              "b48",
+              "b67",
+              "cr02",
+              "b25",
+              "b17",
+              "b05"
+            ],
+            "compelling_score": 7
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 50816,
+        "output_tokens": 3737
+      }
+    },
+    {
+      "arm": "hinted",
+      "draft": {
+        "trophy_storyline": {
+          "subject": "Alex Baker's wire-to-wire Trophy win, won on day one and never surrendered despite four days of carnage",
+          "why_it_matters": "Alex Baker took the lead on the 5th hole of the tournament and never gave it back — while simultaneously setting a course-worst gross record and making three separate scores of 8 or worse.",
+          "shape": "Baker seized the Trophy lead at the 5th in R1, piled up 17 points in five holes and closed with 46 to lead by 12 before anyone had found their feet. From there the story is not who chased him down but how much wreckage he survived: a 106 that stands as the worst gross round ever recorded on the Tour course, an 11 at the last in R2, a 10 at the Stadium's 14th in R4, and quadruple bogeys strewn across all four rounds. Yet he was the steadiest man in the field where it counted — never worse than 3rd in a round, best in the field twice, and 8 clear of John Patterson at the finish even though Patterson outscored him in two of the four rounds.",
+          "beat_ids": [
+            "b01",
+            "b99",
+            "b100",
+            "b40",
+            "b47",
+            "b81",
+            "b37",
+            "b36",
+            "b46",
+            "cr02",
+            "b04",
+            "b17",
+            "b25",
+            "b43",
+            "b05"
+          ],
+          "compelling_score": 7
+        },
+        "jacket_storyline": {
+          "subject": "Gregg Williams turning the worst start into the best golf to win the Green Jacket by 14",
+          "why_it_matters": "Williams opened the week bleeding shots in threes and fours and briefly sat bottom of the Wooden Spoon race, then improved every single round to win the gross prize by 14.",
+          "shape": "R1 was a mess: 8 shots dropped in three holes, a 9 at the 7th, an 8 at the 17th, +27 for the round and a spell propping up the Spoon table. He answered with the best gross round in the field in R2, and at the 2nd hole of R3 he took the Jacket lead outright from Jon Baker, who had held it for 20 holes. From there Williams simply refused to go backwards — +14, +13, +12 across the last three rounds, best in the field again in R4 — and beat David Mullin by 14 shots.",
+          "beat_ids": [
+            "b02",
+            "b24",
+            "b20",
+            "b53",
+            "b52",
+            "b31",
+            "b74",
+            "b71",
+            "b42",
+            "b48",
+            "b28",
+            "b16",
+            "b21",
+            "b12",
+            "b06",
+            "b10",
+            "b17",
+            "b05"
+          ],
+          "compelling_score": 7
+        },
+        "spoon_storyline": {
+          "subject": "Jon Baker: leading the Green Jacket after two rounds, holding the Wooden Spoon by 23 at the end",
+          "why_it_matters": "The man who was the best ball-striker in the field for 20 holes and led the gross competition after both R1 and R2 ended up last on Stableford by a margin nobody could have bridged.",
+          "shape": "Jon Baker took the Jacket lead at the 5th hole of R1 and still led it after two rounds, closing R2 with five holes without dropping a gross shot and 16 points in the process. He lost that lead to Gregg Williams at the 7th in R2 and the Stadium course then dismantled him: a 9 at the 4th in R3, four straight net bogey-or-worse to finish that round, and five consecutive doubles from the 7th in R4. He dropped to the bottom of the Spoon race at the 2nd hole of R3 and never came back up, finishing on 126 points — 23 adrift of David Mullin, last in the field in three of four rounds.",
+          "beat_ids": [
+            "b14",
+            "b81",
+            "b103",
+            "b87",
+            "b13",
+            "b09",
+            "b37",
+            "b48",
+            "b67",
+            "b39",
+            "b77",
+            "b83",
+            "b80",
+            "b65",
+            "b68",
+            "b72"
+          ],
+          "compelling_score": 8
+        },
+        "discovered_storylines": [
+          {
+            "subject": "David Mullin's record round at the Stadium, book-ended by disasters",
+            "why_it_matters": "The same player who made an 11 in R1 and went three holes without a point in R2 shot 84 at the Stadium in R3 — the lowest gross round in 27 previous visits to Spain's premier course.",
+            "shape": "Mullin's week began in ruin: an 11 at the 15th in R1, his worst score ever relative to par, which dropped him to the bottom of the Spoon race, followed by 11 shots bled in three holes in R2 and another spell in last place. Then on the hardest course of the trip he opened R3 with three pars, birdied the 10th, and posted 84 — a new Stadium course record, beating the previous best of 89. He couldn't quite hold it together: 9 shots dropped over holes 14-17 in R4 left him Jacket runner-up, 14 behind Williams, but the record is his.",
+            "beat_ids": [
+              "b35",
+              "b66",
+              "b59",
+              "b60",
+              "b61",
+              "b62",
+              "b75",
+              "b79",
+              "b85",
+              "b69",
+              "cr01",
+              "b45",
+              "b49",
+              "b02"
+            ],
+            "compelling_score": 8
+          },
+          {
+            "subject": "John Patterson finishing runner-up in the Trophy while repeatedly setting fire to his own card",
+            "why_it_matters": "Patterson came second and actually outscored the champion in two of the four rounds, all while producing some of the most spectacular wreckage of the week.",
+            "shape": "His tournament opened with an 8 at the 3rd in R1 and a run of 22 gross shots dropped across holes 3-10, seven holes without a net par — and yet he came home 14 points better on the back nine. The pattern repeated: another 8 at the 4th in R2 and 11 shots gone in five holes, answered by 16 points in five holes from the 11th; in R4 a triple-double start to the closing stretch was halted by a birdie at the 17th. Round for round he beat Alex Baker twice, but the early damage was never recoverable and he finished 8 short.",
+            "beat_ids": [
+              "b23",
+              "b18",
+              "b29",
+              "b22",
+              "b30",
+              "b15",
+              "b32",
+              "b11",
+              "b41",
+              "b07",
+              "b03",
+              "b01"
+            ],
+            "compelling_score": 7
+          },
+          {
+            "subject": "The Baker brothers at opposite ends of the leaderboard",
+            "why_it_matters": "One brother won the Trophy with 169 points; the other collected the Wooden Spoon with 126 — a 43-point gulf between family members in a five-man field.",
+            "shape": "Both Bakers led something after R1: Alex the Trophy, Jon the Green Jacket, and the same was true after R2. From R3 onwards the paths split violently — Alex holding the Trophy lead every round despite a 10 and an 11 on his card, Jon sliding to the bottom of the Spoon race at the 2nd hole of R3 and staying there. They finished as champion and Spoon-holder, 43 points apart.",
+            "beat_ids": [
+              "b81",
+              "b37",
+              "b01",
+              "b14",
+              "b17",
+              "b05",
+              "b67"
+            ],
+            "compelling_score": 7
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 62665,
+        "output_tokens": 3639
+      }
+    },
+    {
+      "arm": "fallback",
+      "draft": {
+        "trophy_storyline": {
+          "subject": "Alex Baker — wire-to-wire Trophy winner with the worst gross golf in the field",
+          "why_it_matters": "Baker led the Trophy from the fifth hole of the tournament to the last and still won by eight, all while playing gross golf so bad it set a course-worst record — a win built entirely on the Stableford card.",
+          "shape": "Baker seized the Stableford lead on the 5th hole of round one after a 17-point burst through holes 8-12 and a 46-point opener, and never gave it back — leading by 12, 11, 12 and finally 8. Yet the same man posted a 106 at the Tour Course, the worst gross round ever recorded there, and littered his week with an 11 at the 18th, a quintuple at the 16th, a 10 at the 14th and an 8 at the 17th, sliding from 2nd to last in the Green Jacket. He won because he never finished a round worse than third of five: John Patterson outplayed him in two of the four rounds and was never nearer than eight.",
+          "beat_ids": [
+            "b01",
+            "b99",
+            "b100",
+            "b40",
+            "b47",
+            "b81",
+            "b37",
+            "b17",
+            "b05",
+            "b04",
+            "cr02",
+            "b36",
+            "b46",
+            "b25",
+            "b43",
+            "b44"
+          ],
+          "compelling_score": 7
+        },
+        "jacket_storyline": {
+          "subject": "Gregg Williams — from the bottom of the Spoon race to the Green Jacket by 14",
+          "why_it_matters": "The man who spent parts of the opening two rounds propping up the Wooden Spoon table turned into the best ball-striker in Spain and won the gross prize by a distance.",
+          "shape": "Williams's opening round was a wreck — eight shots bled over holes 3-5, a nine at the 7th, an eight at the 17th, and two separate drops to the bottom of the Wooden Spoon race (R1 H14, R2 H2). Then came the turn: a +11 swing into round two, four holes without dropping a gross shot from 13, and on the 2nd hole of round three at the Stadium he took the Green Jacket lead outright from Jon Baker for good. From there he built rather than defended — best in the field in gross in rounds two and four, a lead of 8 after R3 and 14 at the finish, beating runner-up David Mullin head-to-head in three of the four rounds.",
+          "beat_ids": [
+            "b02",
+            "b24",
+            "b20",
+            "b52",
+            "b53",
+            "b74",
+            "b71",
+            "b31",
+            "b42",
+            "b38",
+            "b19",
+            "b26",
+            "b34",
+            "b28",
+            "b16",
+            "b21",
+            "b12",
+            "b06",
+            "b10",
+            "b17",
+            "b05"
+          ],
+          "compelling_score": 8
+        },
+        "spoon_storyline": {
+          "subject": "Jon Baker — the early Green Jacket leader who finished 23 points adrift at the bottom",
+          "why_it_matters": "Baker held the tournament's gross lead for 20 holes and still ended up with the Wooden Spoon by the widest of margins, while his brother lifted the Trophy.",
+          "shape": "Baker took the Green Jacket lead on the 5th hole of round one and led the gross race after both of the first two rounds, capped by five flawless closing holes and 16 points from 14-18 in round two. But he lost that lead to Gregg Williams at the 7th in round two, and the Stadium Course finished him: a nine at the 4th and four straight doubles home in round three (a 28 after a 39), then five holes without a net par from the 7th in round four. He was last in the field in three of the four rounds and signed off on 126 points, 23 behind David Mullin, the next worst — the Spoon was never in doubt.",
+          "beat_ids": [
+            "b14",
+            "b103",
+            "b87",
+            "b81",
+            "b37",
+            "b09",
+            "b13",
+            "b48",
+            "b39",
+            "b77",
+            "b67",
+            "b83",
+            "b80",
+            "b65",
+            "b68",
+            "b72"
+          ],
+          "compelling_score": 7
+        },
+        "discovered_storylines": [
+          {
+            "subject": "David Mullin's 84 — a course record out of nowhere at the Stadium",
+            "why_it_matters": "The player who made an 11 in round one and three quadruple bogeys in round two produced the lowest gross round ever shot at PGA Catalunya's Stadium Course, beating a mark that had stood across 27 prior visits.",
+            "shape": "Mullin's tournament opened in farce — a sextuple-bogey 11 at the 15th that dumped him to the bottom of the Spoon race, then 11 shots bled across holes 4-6 in round two, three quadruple bogeys and another drop to last. On the Stadium Course he was transformed: par-par-par to open round three, ten points in three holes from the 8th including a birdie at the 10th, and an 84 gross that smashed the previous course record of 89. The fairytale didn't quite hold — nine shots bled over 14-17 in round four left him Green Jacket runner-up, 14 behind Gregg Williams — but the record is his.",
+            "beat_ids": [
+              "cr01",
+              "b35",
+              "b66",
+              "b59",
+              "b60",
+              "b61",
+              "b62",
+              "b75",
+              "b79",
+              "b85",
+              "b69",
+              "b45",
+              "b49",
+              "b02"
+            ],
+            "compelling_score": 8
+          },
+          {
+            "subject": "John Patterson — runner-up after the worst opening nine of the week",
+            "why_it_matters": "Patterson lost 22 shots in eight holes on the first morning and still finished second in the Trophy, outplaying the champion in half the rounds.",
+            "shape": "His TEG began with an eight at the 3rd, then seven straight holes without a net par and 22 gross shots bled between the 3rd and 10th, dropping him to the bottom of the Spoon race by the 4th hole. He turned it round the same afternoon — 14 points better on the back nine, 13 points in four holes from the 13th — and kept going, another eight at the 4th in round two answered by 16 points from the 11th. In the end he beat Alex Baker's score in two of the four rounds and, after a triple and a double at 14 and 15 in the final round, stopped the bleeding with a birdie at the 17th to seal second place, eight adrift.",
+            "beat_ids": [
+              "b23",
+              "b18",
+              "b29",
+              "b33",
+              "b22",
+              "b30",
+              "b15",
+              "b32",
+              "b11",
+              "b07",
+              "b03",
+              "b01"
+            ],
+            "compelling_score": 7
+          },
+          {
+            "subject": "The Baker brothers at opposite ends of the table",
+            "why_it_matters": "The same family took both the biggest prize and the biggest embarrassment, 43 points apart.",
+            "shape": "Both brothers spent the first two rounds in front of something — Alex led the Trophy from the 5th hole of round one, Jon led the Green Jacket after rounds one and two. Then the Stadium Course split them: Jon lost the gross lead to Gregg Williams, dropped to the bottom of the Spoon race at the 2nd in round three, and never climbed out, while Alex simply kept banking points despite an ugly gross card. Alex finished on 169 with the Trophy; Jon finished on 126 with the Wooden Spoon.",
+            "beat_ids": [
+              "b81",
+              "b37",
+              "b103",
+              "b87",
+              "b48",
+              "b99",
+              "b100",
+              "b67",
+              "b01",
+              "b14"
+            ],
+            "compelling_score": 6
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 62665,
+        "output_tokens": 3545
+      }
+    }
+  ],
+  "judge": {
+    "verdict": {
+      "scores": [
+        {
+          "label": "A",
+          "lead_clarity": 8,
+          "subplot_quality": 8,
+          "chosen_not_defaulted": 7,
+          "factual_integrity": 8,
+          "notes": "Best version of the Trophy story: the \"controlled runaway built on total chaos\" framing is sharp and it's the only draft to load in real stakes (169 = 7th-best ever, 2nd-best of Baker's career, margin 12→8 as Williams closed from 15 to 9), all correctly sourced to b01/b08. Subplots have genuine turn-and-resolution shape, and the Baker-brothers piece earns its place with the \"for two rounds it looked the other way round\" reversal. Minor slips: Jon was bottom in three rounds not two (contradicts its own \"last man for the other two\" line), the 20-hole gross tenure is bundled with a R2 14-18 stretch that came after he lost it, and it invents weekday labels not present in the data."
+        },
+        {
+          "label": "B",
+          "lead_clarity": 6,
+          "subplot_quality": 7,
+          "chosen_not_defaulted": 6,
+          "factual_integrity": 5,
+          "notes": "Competent but the weakest-grounded: \"quadruple bogeys strewn across all four rounds\" is false (none in R3), and \"never worse than 3rd in a round, best in the field twice\", \"Patterson outscored him in two of the four rounds\" and \"23 adrift of David Mullin\" are all inferences with no supporting beat (b17/b05 don't carry them). It does correctly use b35's is_player_par_worst flag for Mullin's 11, and the spoon storyline has a clean arc, but the discovered set is the same default trio with a thin Baker-brothers entry."
+        },
+        {
+          "label": "C",
+          "lead_clarity": 7,
+          "subplot_quality": 7,
+          "chosen_not_defaulted": 7,
+          "factual_integrity": 6,
+          "notes": "Tightest prose of the three and the jacket storyline (\"he built rather than defended\") is the best-shaped version of Williams' arc, with lead margins 8→14 correctly read from the arcs. Factual leakage: \"three quadruple bogeys in round two\" (Mullin made two in R2), \"beat runner-up David Mullin head-to-head in three of the four rounds\", \"23 behind David Mullin\", \"outplaying the champion in half the rounds\" and \"best in the field in gross in rounds two and four\" are all unsupported by any cited beat. Baker-brothers subplot is the thinnest of the three and largely re-treads the trophy and spoon stories."
+        }
+      ],
+      "overall_ranking": [
+        "A",
+        "C",
+        "B"
+      ],
+      "summary": "All three drafts landed on the same editorial skeleton — Alex Baker's paradoxical wire-to-wire win, Williams' spoon-to-jacket rise, Jon Baker's fall, plus Mullin's course record, Patterson's runner-up and the Baker-brothers coda — so the differentiator is execution and discipline rather than selection. A wins on both: its lead carries the most context (all-time and career ranks, the closing gap) and its claims stay closest to the cited beats. B and C both drift into plausible-sounding but ungrounded round-by-round comparisons (\"best in the field\", \"outscored him twice\", \"23 clear of Mullin\"), with B additionally asserting a flatly false quadruple-bogey-in-every-round claim."
+    },
+    "label_to_arm": {
+      "A": "cold",
+      "B": "hinted",
+      "C": "fallback"
+    },
+    "usage": {
+      "input_tokens": 57619,
+      "output_tokens": 7026
+    }
+  }
+}

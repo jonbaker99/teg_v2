@@ -24,6 +24,10 @@ from teg_analysis.reporting.story_plan import (
 )
 
 
+_STORYLINE = {"subject": "s", "why_it_matters": "w", "shape": "sh",
+             "beat_ids": [], "compelling_score": 5}
+
+
 def _plan(**kw) -> StoryPlan:
     base = dict(
         title="t", title_candidates=[], theme="x", tone="house",
@@ -35,6 +39,8 @@ def _plan(**kw) -> StoryPlan:
         vehicle_fit_response={"top_scored_vehicle": "counterfactual",
                               "taken_up": True, "note": "n"},
         why_the_champion_won="w",
+        trophy_storyline=_STORYLINE, jacket_storyline=_STORYLINE,
+        spoon_storyline=_STORYLINE, discovered_storylines=[],
     )
     base.update(kw)
     return StoryPlan(**base)
@@ -96,6 +102,8 @@ def test_both_prominence_fields_are_required():
             "vehicle_fit_response": {"top_scored_vehicle": "counterfactual",
                                      "taken_up": False, "note": "n"},
             "why_the_champion_won": "w",
+            "trophy_storyline": _STORYLINE, "jacket_storyline": _STORYLINE,
+            "spoon_storyline": _STORYLINE, "discovered_storylines": [],
         }
         del kwargs[missing]
         with pytest.raises(pydantic.ValidationError):
@@ -238,6 +246,8 @@ def test_vehicle_fit_response_is_required():
         "must_include_beat_ids": [], "cuts": [], "venue_notes": "",
         "prominent_vehicle": "counterfactual", "prominent_palette": "decisive_moment",
         "why_the_champion_won": "w",
+        "trophy_storyline": _STORYLINE, "jacket_storyline": _STORYLINE,
+        "spoon_storyline": _STORYLINE, "discovered_storylines": [],
     }
     with pytest.raises(pydantic.ValidationError):
         StoryPlan(**kwargs)
@@ -259,6 +269,8 @@ def test_why_the_champion_won_is_required():
         "prominent_vehicle": "counterfactual", "prominent_palette": "decisive_moment",
         "vehicle_fit_response": {"top_scored_vehicle": "counterfactual",
                                  "taken_up": True, "note": "n"},
+        "trophy_storyline": _STORYLINE, "jacket_storyline": _STORYLINE,
+        "spoon_storyline": _STORYLINE, "discovered_storylines": [],
     }
     with pytest.raises(pydantic.ValidationError):
         StoryPlan(**kwargs)
@@ -375,7 +387,7 @@ def test_pre_teg8_hot_stretch_headline_avoids_stableford_points():
     """TEGs 5-7 narrated a net-vs-par race in Stableford points, in published prose."""
     from teg_analysis.reporting.events import build_notable_events
     for e in build_notable_events(5):
-        if e.type == "hot_stretch":
+        if e.type == "hot_stretch_net":
             assert "points" not in e.headline, e.headline
 
 
@@ -704,7 +716,7 @@ def test_importance_is_symmetric_between_gains_and_losses():
     from teg_analysis.reporting.events import build_notable_events
 
     ev = build_notable_events(18)
-    good = [e for e in ev if e.type in ("hot_stretch", "steady_stretch", "recovery")]
+    good = [e for e in ev if e.type in ("hot_stretch_gross", "hot_stretch_net", "recovery")]
     assert good, "positive beats must exist"
     assert max(e.importance for e in good) > 0, "positive beats must score importance"
 
@@ -713,8 +725,10 @@ def test_detection_is_not_lopsidedly_negative():
     """Guards the ratio that no prompt could have corrected.
 
     Detection ran 622 negative to 240 positive (2.59:1) across TEGs 2-18 before
-    `cold_stretch_net` and `steady_stretch` were added. The writer cannot
-    celebrate with material it was never given.
+    `cold_stretch_net` and `steady_stretch` were added, bringing it to 1.52:1.
+    The stretch detectors were simplified 2026-08-18 to one hot/cold pair per
+    metric (dropping `steady_stretch`, adding `hot_stretch_gross`) — this
+    assertion is what re-measures whether that regressed the balance.
     """
     from collections import Counter
     from teg_analysis.reporting.events import build_notable_events
@@ -723,9 +737,9 @@ def test_detection_is_not_lopsidedly_negative():
     for teg in (8, 13, 18):
         for e in build_notable_events(teg):
             c[e.type] += 1
-    neg = sum(c[k] for k in ("cold_stretch", "cold_stretch_net", "big_blowup",
+    neg = sum(c[k] for k in ("cold_stretch_gross", "cold_stretch_net", "big_blowup",
                              "collapse_after_steady", "long_lead_lost"))
-    pos = sum(c[k] for k in ("hot_stretch", "steady_stretch", "recovery"))
+    pos = sum(c[k] for k in ("hot_stretch_gross", "hot_stretch_net", "recovery"))
     assert pos > 0 and neg / pos < 2.0, f"detection {neg}:{pos} is too negative"
 
 
