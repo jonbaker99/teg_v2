@@ -16,7 +16,15 @@ first, voice second) plus the writer-richness fix from the context A/B:
    clean win on 10/10 storylines across 2 TEGs: richness +2.4, compellingness
    +1.7, reads-as-story +1.4, AND factual_grounding +0.5 (no regression —
    unlike 2b, this is raw structured data, not a competing prose channel).
-   Plain, unstyled prose — this stage's only job is structure + facts.
+   Storylines that independently cite 2+ of the same beats (they're planned
+   against the same pool, so this happens without any special-casing) are
+   merged into ONE cross-cut section instead of two separate ones — the
+   interweaving A/B (STORYLINE_PLAN.md, "Interweaving A/B result",
+   2026-08-19, `scripts/storyline_interweave_experiment.py`) measured this as
+   a 3/3-TEG win on every judged axis, driven mostly by eliminating the
+   duplicate scene-setting two separate sections about the same round
+   otherwise both write. Plain, unstyled prose — this stage's only job is
+   structure + facts.
 2. **Voice pass** — `authoring.restyle_voice` rewrites that draft in the
    CURRENT house voice (`authoring.WRITER_VOICE` — Herron/Ronay/Armstrong/
    Iannucci, em-dash ban, humour6, faithfulness rules), the same function and

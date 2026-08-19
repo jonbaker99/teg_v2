@@ -610,16 +610,44 @@ beats (R1 14–16, R2 blow-ups, R4 blow-ups) each told twice in near-identical t
 "draining the second half of surprise."
 
 **Caveats before generalising.** N=3 TEGs, one pair each, one judge call each — enough
-to justify a bigger run, not enough to treat as final. All three candidate pairs
-happened to share a *round* (same-day, same-course scenes); the heuristic hasn't been
-tested on a pair that shares a *player* or *failure mode* across different rounds
-instead (`threads.py`'s other cluster types), which is a structurally different kind of
-overlap and might behave differently. Not yet wired into `storyline_full_report_experiment.py`
-— this is the A/B verdict, not a pipeline change. Next step if pursued: extend
-`pick_overlapping_pair`-style detection into `build_storyline_draft()` itself (run it
-against the full storyline list, not just the top pair, since a plan can have more than
-one qualifying overlap) and re-validate end-to-end voice-pass output, not just the
-structural draft this A/B tested.
+to justify wiring it in, not a large sample. All three candidate pairs happened to
+share a *round* (same-day, same-course scenes); the heuristic hasn't been tested on a
+pair that shares a *player* or *failure mode* across different rounds instead
+(`threads.py`'s other cluster types), which is a structurally different kind of overlap
+and might behave differently.
+
+**Wired into the pipeline and re-validated end-to-end (2026-08-19).**
+`find_overlapping_pairs` (generalised from `pick_overlapping_pair` to return every
+non-overlapping qualifying pair, greedily, not just the top one — a plan can have more
+than one) now runs inside `build_storyline_draft()` in
+`storyline_full_report_experiment.py`, right before section drafting: any two
+storylines in the section order that clear the overlap bar are merged into one
+`interweave.draft_interwoven()` call instead of two separate `draft_section()` calls;
+everything else in the order is drafted as before. Ran the full pipeline (fresh plan →
+structural draft → `restyle_voice`) on TEG 16: the plan this time paired the Baker
+brothers' shared Penha Longa 12th-hole collapse with Alex Baker's Wooden Spoon
+storyline — a different (and better) pair than the A/B's own run, since the plan is
+regenerated fresh each time — and it read as a single clean section, correctly
+attributing each brother's holes throughout a three-round span. Zero new `check_diff`
+(D3) findings from the voice pass, i.e. it introduced nothing the voice layer had to
+flag. Output: `data/commentary/teg_16_report_storylinefirst.md`.
+
+**Second TEG, different overlap shape (2026-08-19).** TEG 18's fresh plan paired Gregg
+Williams's Green Jacket storyline with Jon Baker's Wooden Spoon storyline — only 2
+shared beats (two lead-change events), but structurally unlike TEG 16's pair: not a
+shared single-round collapse, but two players' *fortunes crossing across the whole
+tournament* (Williams's Jacket rise against Jon Baker's Trophy-defence-to-Spoon fall),
+narrated round by round with a clean payoff line ("He led one competition from the
+fifth hole of the tournament and finished last in the other"). This is the "two
+players' fortunes crossing" case Jon raised as the original motivating example for
+trying interweaving at all. Attribution held throughout (writer used full names
+consistently), zero new D3 findings. Output: `data/commentary/teg_18_report_storylinefirst.md`.
+Both validated pairs are still round-anchored in the technical sense (the overlap
+heuristic only fires on shared `beat_ids`, and beats always carry a round), so the
+`threads.py` player/failure-mode cluster types remain untested against this mechanism
+— but the TEG 18 pair shows the heuristic already covers narratively different cases,
+not just literal same-scene collapses. Treating this as validated; not blocking further
+work on finding a non-round-anchored example.
 
 ## Explicitly out of scope for this proposal
 

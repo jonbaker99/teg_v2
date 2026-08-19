@@ -517,6 +517,34 @@ body_fallback,                         # "none" (default) | "player_by_player" |
 are unchanged and still serve the legacy round-by-round pipeline (`authoring.py` dry-draft/writer);
 `scripts/storyline_full_report_experiment.py` calls `build_storyline_plan` only.
 
+#### Storyline-first pipeline — stages and outputs (2026-08-19)
+
+Runs end to end via `scripts/storyline_full_report_experiment.py --teg N`. Not wired into
+`backfill.py` — still an experiment script, not the production path (`report_final.md` /
+`report_styled.md` are untouched by it). Three stages, three file outputs per TEG:
+
+1. **Plan (Call A)** — `build_storyline_plan(teg)` → `teg_N_storyline_plan.json`. The `StorylinePlan`
+   schema above: 3 mandatory anatomy storylines + 0-3 discovered + optional `body_fallback`.
+2. **Structural draft — no voice** — `build_storyline_draft(teg)` → `teg_N_report_storylinedraft.md`.
+   One `##` section per storyline, in order (trophy → discovered → fallback → jacket → spoon), each
+   drafted fact-isolated (own `evidence` + scoped `context`, `DRAFT_WRITER_SYSTEM`) by a writer told
+   explicitly *"do not try to be funny or stylish."* Storylines whose `beat_ids` overlap 2+ beats are
+   merged into one cross-cut section instead of two separate ones
+   (`storyline_interweave_experiment.find_overlapping_pairs`, validated 2x on TEG 16/18 — see
+   `STORYLINE_PLAN.md` → "Interweaving A/B result"). **This file is plain, factual, unvoiced prose —
+   the right input for any tone/voice experiment.** Never start a voice A/B from an already-styled
+   report; iterating on "slightly funnier than the finished piece" compounds instead of comparing.
+3. **Voice pass** — `authoring.restyle_voice(teg, WRITER_VOICE, label="storylinefirst",
+   source_label="storylinedraft")` → `teg_N_report_storylinefirst.md` (+ `_styled.md`). Rewrites stage
+   2's draft in the current house voice — the same `WRITER_VOICE` constant and the same function
+   production uses for legacy-pipeline restyles. D3-verified; `new_findings` isolates faults the voice
+   pass introduced vs. inherited from the draft.
+
+To test a tone variant: draft once per TEG (stage 1+2, expensive relative to stage 3), then run stage
+3 twice — once with `WRITER_VOICE` (baseline) and once with the candidate voice prompt — both reading
+the SAME `teg_N_report_storylinedraft.md`. That is what `restyle_voice`'s `voice_prompt` argument and
+`source_label="storylinedraft"` are for; no need to regenerate the plan/draft per tone variant.
+
 ### The storyline hierarchy and the champion register
 
 Two rules added 2026-08-14 that govern what the report is *about*, independent of vehicles.

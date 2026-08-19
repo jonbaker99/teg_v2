@@ -87,15 +87,23 @@
   channel). Wired into `storyline_full_report_experiment.py`'s `draft_section()` as the standard path.
   TEG 14/16/18 regenerated in full with it on. Full detail: `STORYLINE_PLAN.md` → "Writer-richness A/B
   result".
-- **Point 3 (interweaving storylines) deliberately not started** — deferred to a fresh chat, see
-  `STORYLINE_PLAN.md`.
+- **Point 3 (interweaving storylines) — done, wired into the pipeline.** Deferred to a fresh chat as
+  planned; A/B'd first (`scripts/storyline_interweave_experiment.py`, 3/3 TEGs, every judged axis —
+  compellingness, factual_grounding, clarity, redundancy, reads-as-story), then wired into
+  `build_storyline_draft()`: overlapping storylines (2+ shared `beat_ids`) merge into one cross-cut
+  section automatically, no flag. Re-validated end to end (fresh plan → draft → voice pass) on TEG 16
+  and TEG 18 — zero new D3 findings either time. Full detail: `STORYLINE_PLAN.md` → "Interweaving A/B
+  result". **The storyline-first pipeline is now complete, three stages, plan → unvoiced structural
+  draft → voice pass** — see `README.md` → "Storyline-first pipeline — stages and outputs". Next open
+  item is tone/voice: the house voice was settled 2026-08-15 against the old round-by-round structure,
+  not yet re-checked against this one.
 
 ### API usage limit hit and resolved mid-session (2026-08-19)
 
 Briefly hit `account has reached its specified API usage limits` mid-session; resolved (credits
 topped up) within the same session. Noted only because the limit forced sequencing: the Call A/B
 split's live validation and the TEG 14/16/18 comparison both had to wait for resolution — both since
-completed. The writer-richness A/B (proposed above) is still not started.
+completed, along with the writer-richness A/B and the interweaving A/B that followed it.
 
 ### Storyline-first reports — Phase 1 built, detectors simplified (2026-08-18)
 
