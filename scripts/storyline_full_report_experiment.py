@@ -1,16 +1,22 @@
 """Generate a full report from the storyline-first method, then apply the
 CURRENT production house voice as a final language layer.
 
-Two-stage, mirroring `authoring.restyle_voice`'s own split (structure/facts
-first, voice second):
+Three-stage, mirroring `authoring.restyle_voice`'s own split (structure/facts
+first, voice second) plus the writer-richness fix from the context A/B:
 
 1. **Structural draft** — one section per storyline (trophy_storyline lead,
    then discovered_storylines, then jacket_storyline, spoon_storyline), each
    written fact-isolated (STORYLINE_PLAN.md's validated fix: the writer sees
    only `subject` + raw beat evidence, never the discovery step's own
    why_it_matters/shape prose — 2b's telling call is skipped, per the
-   documented 3-TEG verdict that it doesn't earn its cost). Plain, unstyled
-   prose — this stage's only job is structure + facts.
+   documented 3-TEG verdict that it doesn't earn its cost) PLUS scoped,
+   structured `context` (venue + this storyline's own players' career/course
+   history, numbers-only) — the writer-richness A/B (STORYLINE_PLAN.md,
+   2026-08-19, `scripts/storyline_context_experiment.py`) measured this as a
+   clean win on 10/10 storylines across 2 TEGs: richness +2.4, compellingness
+   +1.7, reads-as-story +1.4, AND factual_grounding +0.5 (no regression —
+   unlike 2b, this is raw structured data, not a competing prose channel).
+   Plain, unstyled prose — this stage's only job is structure + facts.
 2. **Voice pass** — `authoring.restyle_voice` rewrites that draft in the
    CURRENT house voice (`authoring.WRITER_VOICE` — Herron/Ronay/Armstrong/
    Iannucci, em-dash ban, humour6, faithfulness rules), the same function and
@@ -20,8 +26,8 @@ first, voice second):
 This is still an experiment, not a pipeline change: nothing in `backfill.py`
 calls this, and it never touches `report_final`/`report_styled`.
 
-Usage, from the repo root (needs a story plan already generated for --teg, and
-ANTHROPIC_API_KEY / TEG_ANTHROPIC_API_KEY):
+Usage, from the repo root (needs ANTHROPIC_API_KEY / TEG_ANTHROPIC_API_KEY —
+the story plan is generated fresh on each run via `build_storyline_plan`):
 
     python scripts/storyline_full_report_experiment.py --teg 14
 """
@@ -36,7 +42,7 @@ from typing import Optional
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
 
 from teg_analysis.reporting import llm
-from teg_analysis.reporting.authoring import WRITER_VOICE, restyle_voice
+from teg_analysis.reporting.authoring import WRITER_VOICE, _strip_derived_prose, restyle_voice
 from teg_analysis.reporting.paths import output_dir
 from teg_analysis.reporting.story_plan import assemble_bundle, build_storyline_plan
 
@@ -44,6 +50,24 @@ from teg_analysis.reporting.story_plan import assemble_bundle, build_storyline_p
 def _evidence_for(storyline: dict, all_beats: list) -> list:
     by_id = {b["id"]: b for b in all_beats}
     return [by_id[bid] for bid in storyline["beat_ids"] if bid in by_id]
+
+
+def _context_for(storyline_players: set, bundle: dict) -> dict:
+    """Structured, numbers-only context scoped to this storyline's own
+    players. Validated in `scripts/storyline_context_experiment.py`'s A/B —
+    see the module docstring above for the result. Scoping to the storyline's
+    own players (rather than the whole tournament) keeps the writer's
+    attention on who this section is actually about, same reasoning as
+    `evidence` being scoped to the storyline's own cited beat_ids.
+    """
+    ctx = {
+        "venue": bundle.get("venue"),
+        "player_history": {p: h for p, h in (bundle.get("player_history") or {}).items()
+                           if p in storyline_players},
+        "player_course_history": {p: h for p, h in (bundle.get("player_course_history") or {}).items()
+                                  if p in storyline_players},
+    }
+    return _strip_derived_prose(ctx)
 
 
 def _fallback_sections(plan: dict, all_beats: list) -> list:
@@ -87,13 +111,18 @@ DRAFT_WRITER_SYSTEM = """You are writing one section of a golf tournament report
 single storyline, not the whole report. Plain, clear, factual prose — this is a \
 structural draft, not the final voice; do not try to be funny or stylish. 150-250 \
 words. `subject` is a label only, NOT a source of facts — do not copy any score, \
-margin, comparison, or claim from it unless it also appears in `evidence`. Every \
-fact you write must trace to `evidence`. Never invent scores, margins, or \
-comparisons not present in your input."""
+margin, comparison, or claim from it unless it also appears in `evidence` or \
+`context`. `context` is RAW DATA — venue character and per-player career/course \
+history, numbers and names only, no summary sentences. You may draw on it for \
+colour (a player's history on this course, a career milestone) but any comparison \
+you state must follow exactly from its figures; if the arithmetic is not clean, \
+leave it out. Do not let it crowd out `evidence` — this storyline's own beats are \
+still the spine. Every fact you write must trace to `evidence` or `context`. Never \
+invent scores, margins, or comparisons not present in your input."""
 
 
-def draft_section(storyline: dict, evidence: list, model: Optional[str] = None) -> str:
-    payload = {"subject": storyline["subject"], "evidence": evidence}
+def draft_section(storyline: dict, evidence: list, context: dict, model: Optional[str] = None) -> str:
+    payload = {"subject": storyline["subject"], "evidence": evidence, "context": context}
     user = "Write this storyline as a prose section:\n\n" + json.dumps(payload, indent=2, ensure_ascii=False)
     text, usage = llm.generate_text(user=user, system=DRAFT_WRITER_SYSTEM,
                                     model=model or llm.DEFAULT_MODEL,
@@ -126,7 +155,9 @@ def build_storyline_draft(teg_num: int, model: Optional[str] = None) -> tuple[st
     for s in order:
         print(f"[storyline_full_report] drafting: {s['subject'][:60]}")
         evidence = _evidence_for(s, all_beats)
-        text = draft_section(s, evidence, model=model)
+        storyline_players = {p for b in evidence for p in b.get("players", [])}
+        context = _context_for(storyline_players, bundle)
+        text = draft_section(s, evidence, context, model=model)
         sections.append(f"## {s['subject']}\n\n{text}")
 
     body = f"# {plan['title']}\n\n" + "\n\n".join(sections) + "\n"

@@ -1159,6 +1159,7 @@ def build_storyline_plan(teg_num: int, mode: str = "balanced", tone: str = "hous
                 "competitions_in_arcs": sorted(bundle["competition_arcs"].keys())}
 
     plan, usage = llm.generate_structured(STORYLINE_SYSTEM_PROMPT, user_message, StorylinePlan,
+                                          max_tokens=20000,
                                           model=model or llm.DEFAULT_MODEL,
                                           stage="storyline_plan", label=f"teg{teg_num}")
     out_path = f"{output_dir()}/teg_{teg_num}_storyline_plan.json"

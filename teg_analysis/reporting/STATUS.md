@@ -78,11 +78,15 @@
   beat_ids now filtered to the in-bundle set, empty threads dropped. Pre-existing since Phase 1
   (`threads.py`), not introduced by the Call A/B split — just hadn't surfaced before now. Regression
   test added; TEG 14 re-run clean after the fix. Full detail: `STORYLINE_PLAN.md`.
-- **Writer-richness gap identified, not yet fixed.** The legacy writer (`authoring.py`) gets raw
-  bundle context re-injected at prose time (`BUNDLE_CONTEXT_KEYS`); the storyline-first writer only
-  sees the beats a storyline explicitly cited. Real narrowing for non-record course-history colour.
-  Proposed fix (a 4th writer variant, structured-context-only, A/B'd against current) not started —
-  same API-limit block.
+- **Writer-richness gap closed — `with_context` adopted as the default.** New
+  `scripts/storyline_context_experiment.py` A/B'd the current evidence-only writer against evidence +
+  scoped structured context (venue + the storyline's own players' career/course history, numbers-only,
+  same stripping as `authoring._strip_derived_prose`). **Won 10/10 storylines across TEG 14/16**:
+  richness 5.70→8.10, compellingness 6.10→7.80, reads-as-story 6.30→7.70, and — the important
+  one — factual_grounding 7.70→**8.20** (up, not down; unlike 2b, this isn't a competing prose
+  channel). Wired into `storyline_full_report_experiment.py`'s `draft_section()` as the standard path.
+  TEG 14/16/18 regenerated in full with it on. Full detail: `STORYLINE_PLAN.md` → "Writer-richness A/B
+  result".
 - **Point 3 (interweaving storylines) deliberately not started** — deferred to a fresh chat, see
   `STORYLINE_PLAN.md`.
 

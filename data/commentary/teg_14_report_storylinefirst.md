@@ -1,59 +1,55 @@
-# Spoon to Silverware: Mullin Survives Kent by Two
+# Nine Ahead, Two Home: Mullin's Kent Double
 
-## David Mullin wins the Trophy on 154 points by 2 — four TEGs after his first Spoon and one after his most recent
+## David Mullin wins the Trophy on 154 points by 2 — a lead built on the first two links and defended by fingernails at Prince's
 
-David Mullin won the Trophy with 154 Stableford points, two clear of Alex Baker. The total ranks 16th on the all-time list and is the third-best return of his career. He earned it. He also spent large parts of the four days behaving like a man with no particular stake in the outcome.
+**Mullin holds on for the Trophy**
 
-The winning score was not built on consistency. In the opening round at Royal Cinque Ports he collected 13 points across holes 9 to 12, three pars either side of a birdie at the 10th, the golf of a man who had solved something. The sequence ended with a double bogey at the 13th. Round three at Prince's Shore/Dunes ran to the same design. He arrived at the par-five 8th and took nine. A quadruple bogey, a blank hole, no points, no discernible regret. He then closed with another 13-point burst over holes 15 to 18, birdied the last and signed for 36 points, with a ten-point split between the nines. In the final round he took eight at the 10th, a further quadruple bogey, presumably in the interests of symmetry.
+David Mullin won the Trophy with 154 points, two clear of Alex Baker. It is the 16th-best total in TEG history and the third-best of his own career, and very nearly all of it was banked before anyone thought to object.
 
-Baker made the finish closer than it deserved to be. Having trailed by as many as nine points, he recovered seven of them to sit two behind at the end. His own contributions to the cause were twelve shots dropped from the 2nd to the 5th at Littlestone in round two, and a ten at the 16th in the final round, a sextuple bogey that returned nothing whatsoever. Mullin led both the Trophy and the Jacket after round four.
+The foundation was laid on the first two links. At Royal Cinque Ports he went round in 87, seven strokes better than his previous visit. The engine room was a four-hole run from the 9th: par, birdie at the 10th, then two more pars, 13 points, a man briefly playing golf on purpose. The sequence ended at the 13th with a double bogey. At Littlestone he shot 85, again seven better than last time out, and another course best.
 
-## Alex Baker and the collapse of the workmanlike: four rounds of solid golf punctuated by demolition
+Prince's declined to co-operate. In round three he arrived at the par-five 8th with a tournament in his pocket and took nine. A quadruple bogey. It returned nothing, which is the standard yield on a nine. He then took 13 points from the closing four holes, three pars and a birdie at the last, as though the 8th had happened to a stranger. Round four produced another quadruple bogey, an eight at the 10th. Two quads on the same links in two days. The trophy did not appear to mind.
 
-**Alex Baker: steady work, undone in single strokes**
+That opened the door for Baker, who had trailed by as many as nine. He answered with 10 points across the first three holes of the final round and 11 more from the 13th to the 15th, closing to within two. Then he reached the 16th and made a ten. His four days had begun to come apart considerably earlier, at Littlestone, where he dropped 12 shots across holes 2 to 5.
 
-Baker keeps his golf like a careful set of books. Column after column of neat entries, everything reconciled, nothing left hanging. Then, once a round, he sets fire to the building.
+## Alex Baker and the 16th hole: two 10s in one TEG, and a Trophy left on the table
 
-It began at Royal Cinque Ports, where he took eight at the par-four 11th and ten at the par-five 16th. A quadruple and a quintuple bogey, and not one Stableford point between them.
+**Alex Baker and the 16th**
 
-Littlestone offered no relief. From the 2nd to the 5th he dropped twelve shots, a seven, a six, a seven and a nine at the par-five 5th, before adding an eight at the par-four 8th. Round three at Prince's opened with three straight double bogeys. Six shots gone inside three holes, and the round barely under way.
+Two of Baker's four rounds in Kent ended with a 10 on the card, and on both occasions the number arrived at a hole numbered 16. Different courses, different pars, no connection whatsoever beyond the obvious one. The first came in the opening round at Royal Cinque Ports, a quintuple bogey at the par-five 16th, stroke index 7, no Stableford points. The second, at Prince's on the Sunday, was worse in relative terms: a 10 at a par four, a sextuple bogey, on stroke index 17, the second-easiest hole on the card. Taking ten shots there requires a degree of commitment.
 
-The final round showed both halves of him. Baker parred the first three holes for ten points, holding his gross figures on all of them, until a double bogey at the 4th closed the account. He rebuilt on the back nine, parring the 13th, 14th and 15th, the first two of those stroke index 1 and 5, for eleven points across three holes and the best stretch of his tournament.
+The Prince's 10 was the more painful for what preceded it. Baker had played the 13th, 14th and 15th in par, par, par, three holes without dropping a gross shot, worth eleven Stableford points. The 16th erased the lot at a stroke. He was not alone in losing his footing there. Jon Baker arrived at the same hole having gone par-birdie-birdie-par-par from the 11th, and made a double bogey for no points.
 
-Then came the 16th, a par four of stroke index 17. Baker took ten. A sextuple bogey, no points, and the tidiest sequence of his four days went up with the building.
+These were the headline numbers, not the only ones. Baker also had an 8 at the 11th at Royal Cinque Ports, a 9 at the 5th and an 8 at the 8th at Littlestone, and an 8 at the 10th at Prince's in round three. Five further holes returning nothing. His round-one 98 at Royal Cinque Ports was still four strokes better than his previous visit, which tells you a good deal about the previous visit.
 
-## Gregg Williams posts the best gross total of his TEG life and finishes third of four
+## Gregg Williams plays the best gross golf of his TEG life and wins nothing
 
-**Gregg Williams**
+**Gregg Williams: the best gross golf of his TEG life, and nothing to show for it**
 
-Williams left Kent with the best gross total he has ever recorded at a TEG: +76, a personal best, and entirely his own work.
+Williams finished TEG 14 with a Gross total of +76, a personal best, and no prize of any description. The number rested on two course records of his own: 93 at Royal Cinque Ports, one better than his previous mark there of 94, and 86 at Prince's in round three, three strokes better than his last visit and inside his previous best of 89.
 
-It did not arrive by way of good golf throughout. His opening round at Royal Cinque Ports contained a nine at the par-five 3rd, a quadruple bogey worth no Stableford points at all. Round two was worse in points terms, 27 of them, by which stage he had drifted 18 behind the Green Jacket lead. That is less a deficit than a separate tournament being played nearby.
+It was not tidy. He opened at Deal with a 9 at the par-five 3rd, stroke index 4, a quadruple bogey worth nothing at all. Littlestone was worse in the wider sense: 97, eleven strokes adrift of the 86 he had managed there before, and only 27 Stableford points.
 
-Round three at Prince's Shore/Dunes reversed it. Williams posted 39 points, a swing of 12 on the previous day. The heart of it came in the middle of the round: par at the 9th, par at the 10th, par at the 11th, three points apiece, nine points in three holes without conceding a single gross shot. The run did not taper. It stopped. He took eight at the par-five 12th, a triple bogey, and scored nothing.
+Round three was the correction. He gained twelve points on the day, reaching 39, and the middle of it was genuinely solid: pars at the 9th, 10th and 11th for nine points, three holes without dropping a gross shot, then two more clean holes at the 15th and 16th. Between those came an 8 at the par-five 12th, which brought the exhibition to a close.
 
-He carried the momentum into the final round with back-to-back pars at the 5th and 6th, again without giving a shot to the card.
+Sunday offered more steadiness in patches, gross pars at the 5th and 6th and again at the 14th and 15th. Having trailed the Green Jacket lead by 18 at one stage, he closed to within 8. Ten shots recovered. Eight still owed.
 
-The recovery closed the Green Jacket deficit by ten, from its maximum of 18 down to eight at the finish. He got no closer than that. The +76 is the figure that survives him.
+## David Mullin's Green Jacket at +68, by 7 — his ninth
 
-## David Mullin wins the Green Jacket at +68 by 7 — built, not inherited
+David Mullin took the Green Jacket at TEG 14 with a gross total of +68, seven clear of Jon Baker. His ninth. It is the sixth-best Green Jacket total on record and the fourth-best of his own career at the metric.
 
-David Mullin won the Green Jacket with a gross total of +68, seven clear of Jon Baker. It is the sixth-best gross total in the event's history and the fourth-best of his own career.
+The number was built on consistency across Kent's four links rounds. Mullin set a personal best on every course he played: 87 at Royal Cinque Ports and 85 at Littlestone, each seven strokes better than his previous visit in TEG 13, and 91 at Prince's Shore/Dunes, one better than before. None of those figures would trouble a club noticeboard in isolation. Stacked together, they were unanswerable.
 
-This one was assembled rather than inherited. Mullin held the Jacket lead after the third round, and was level at the top of the Trophy standings on Stableford at the same point. He closed that third round with four holes in a row without dropping a gross shot, pars at the 15th, 16th and 17th followed by a birdie at the 18th, gaining a shot on the card. He opened the final round in the same register, playing the 2nd and 3rd in par.
+Behind him the chase was real, and late. Baker trailed by 15 at one point and closed to seven, the bulk of that work arriving in the final round at Prince's, where his 83 gross set a new course record. The previous mark of 85 had stood across five prior visits, and was Baker's own. Gregg Williams made up more ground still, trailing by 18 at his worst and finishing eight back. His +76 is a personal-best Green Jacket gross total, and his 86 at Prince's in round three was a course best for him too.
 
-The tidiness was not the whole story. He took nine at the par-five 8th in round three, a quadruple bogey. He took eight at the par-four 10th in the final round, another quadruple bogey. Two blank holes, no Stableford points, and no visible effect on his composure or his advantage. One admires the serenity.
+The gap never closed far enough. Mullin's margin of seven at the finish flatters the field, given how much larger it had been for most of the four days.
 
-The chasers made a contest of it without ever arriving. Jon Baker had trailed the Jacket lead by 15 shots and closed to within seven. Williams did more with less, 18 adrift at his lowest, eight back at the end. Both were closing on a man who had already gone.
+## Jon Baker, defending Trophy champion, collects the Wooden Spoon on 125 points — 12 adrift of the next worst
 
-## Jon Baker — defending Trophy champion, back-to-back Jacket holder — takes his first Wooden Spoon on 125 points, and sets a course record on the way
+Jon Baker finished last in the Stableford count and took the Wooden Spoon with 125 points across the four rounds. The defence of a title can take many forms. He chose this one, and won it by 12, which is a margin of some authority.
 
-Jon Baker came to Kent with a Trophy to defend and consecutive Jackets to his name. He finished bottom of a field of four on 125 Stableford points. There is no kinder way to arrange those two sentences.
+The early links did him no favours, and he returned the courtesy. At Royal Cinque Ports his best gross was 92, seven strokes worse than the 85 he had managed on his previous visit. At Littlestone he posted 92 against a prior best of 79. Thirteen shots is not a bad day; it is a change of identity. His third round at Prince's brought 28 points, held down in part by a run of pars from the 14th that ended with a triple bogey six at the par-three 17th.
 
-The peculiar part is that the same four days produced the best gross round anyone has posted at Prince's Shore / Dunes. Baker's 83 in the final round broke the previous mark of 85, set across five prior visits to the course. It was also an 11-point improvement on his third round, 28 becoming 39.
+The final round was another man entirely. Baker returned 39 points, an improvement of 11 on the previous day, and his 83 gross set a new course record for Prince's Shore/Dunes, beating the previous mark of 85 that had stood across five prior visits. It was also his personal best on the layout, two strokes better than his last time there. The scoring came in a burst: five holes without dropping a gross shot from the 11th to the 15th, back-to-back birdies at the 12th and 13th, a two-hole birdie streak that equals the all-time TEG record, and 14 points across holes 12 to 15.
 
-The scoring came in a single burst. He played holes 11 to 15 without dropping a gross shot, birdieing the par-5 12th and the par-4 13th, a two-hole birdie streak that ties the all-time TEG record, before parring the 14th and 15th. Holes 12 to 15 alone brought him 14 points. For four holes he was the best player ever to walk that course.
-
-Both of his better rounds then ended in the usual manner. In the third he had parred the 14th, 15th and 16th before taking six at the par-3 17th, a triple bogey, nothing returned. In the fourth, the run through 15 was broken by a double bogey six at the 16th, after which he ran up an eight at the par-4 18th, a quadruple bogey worth nothing at all. The record round finished with a full and detailed explanation of the Wooden Spoon.
-
-So the course record and the Spoon belong to the same player and, in large part, to the same round.
+Then the 16th, which had already relieved Alex Baker of the Trophy that afternoon, took a double bogey from Jon and ended the run. He ran up an eight at the 18th. He therefore holds the course record and the Wooden Spoon at the same time, which takes some arranging.

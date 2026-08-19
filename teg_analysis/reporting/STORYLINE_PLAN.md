@@ -519,6 +519,37 @@ style already produces (stripped of derived prose), A/B'd against the current ev
 factual_grounding / richness / reads-as-story, same judge methodology as the 2b experiment. Not started
 — blocked on the same API limit.
 
+## Writer-richness A/B result (2026-08-19) — adopt `with_context`, clean win
+
+`scripts/storyline_context_experiment.py` tested the open question from the previous section:
+`without_context` (current production — `subject` + `evidence` only) vs `with_context` (the same,
+plus `context`: `venue` + this storyline's own players' `player_history`/`player_course_history`,
+scoped to the players actually in the storyline and stripped of derived prose via
+`authoring._strip_derived_prose` — numbers and names only, no summary sentences to lift). Same blind
+judge methodology as 2b, order randomised per storyline, scored on compellingness, factual_grounding,
+richness (genuine colour vs. padding), and reads-as-story.
+
+**Result: `with_context` won 10/10 storylines across TEG 14 and TEG 16.** Averaged scores:
+
+| axis | without_context | with_context |
+|---|---|---|
+| compellingness | 6.10 | **7.80** |
+| factual_grounding | 7.70 | **8.20** |
+| richness | 5.70 | **8.10** |
+| reads_as_story_not_list | 6.30 | **7.70** |
+
+**The key result is factual_grounding going UP, not down** — the opposite of what 2b found when the
+writer got a second free-text channel. This confirms the hypothesis: 2b's fabrication risk came from
+handing the writer an editor's own UNVERIFIED PROSE summary (why_it_matters/shape) that competed with
+the evidence channel. Raw structured data — numbers/names, no sentences — doesn't carry that risk; it
+gives the writer real material without giving it something to copy uncritically.
+
+**Adopted as the default**, not left as an experiment. `storyline_full_report_experiment.py`'s
+`draft_section()` now takes `context` as a required argument, built by `_context_for()` (same scoping
+and stripping as the experiment script) and passed for every section. `DRAFT_WRITER_SYSTEM` updated
+with the same anti-fabrication clause used in the A/B's `with_context` arm. Regenerated TEG 14/16/18
+in full (fresh plan → context-aware draft → voice pass) to reflect it.
+
 ## Explicitly out of scope for this proposal
 
 - Round reports (`round_report.py` / `RoundStoryPlan`) — separate pipeline instance, not touched.
