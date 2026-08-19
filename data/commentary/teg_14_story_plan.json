@@ -1,66 +1,67 @@
 {
-  "title": "The Spoon Holder Takes the Lot — By Two",
+  "title": "Mullin Banks It at Deal, Spends It at Sandwich",
   "title_candidates": [
-    "The Spoon Holder Takes the Lot — By Two",
-    "Nine Ahead, Home by Two",
-    "Eighty-Three and Last: Jon Baker's Kent",
-    "Four Spoons, Then Everything"
+    "Mullin Banks It at Deal, Spends It at Sandwich",
+    "The Sixteenth Will See You Now",
+    "Spoon to Silverware: Mullin by Two",
+    "The Reigning Spoon Holder Takes the Lot"
   ],
-  "theme": "Kent inverted the order of things: the man who had finished last in three straight TEGs led from the first afternoon and hung on by two, while the defending champion shot a course record on his way to the first Wooden Spoon of his life.",
-  "tone": "house — faithful, tongue-in-cheek, British English; trivial stakes handled with grave ceremony",
-  "narrative_structure": "in_medias_res",
-  "opening_hook": "Open on the 16th green at Prince's on the final afternoon — Alex Baker, playing the best round of the tournament, signing for a 10 at the second-easiest hole on the card, and destined to finish two short — then loop back to how a man with four Wooden Spoons came to be defending a lead at all.",
+  "theme": "Capital and expenditure: Mullin won this Trophy on the two Kent links he had never handled before, banked nine points by Friday, and then spent almost all of it at Prince's — surviving by two because Alex Baker spent faster.",
+  "tone": "house",
+  "narrative_structure": "three_act",
+  "opening_hook": "Open on Alex Baker on the 16th tee at Prince's on Sunday, two points and three pars from the Trophy, and the 10 that followed — then rewind to Deal, where the reigning Wooden Spoon holder had quietly banked the lot.",
   "narrative_vehicles": [
     "counterfactual",
-    "underdog",
-    "inversion"
+    "inversion",
+    "motif"
   ],
   "foreshadow": [
-    "R1 at Deal: David Mullin, reigning Wooden Spoon holder, opens 40 points and 87 gross — a personal best at Royal Cinque Ports by seven shots — and is in front by the 16th hole of the tournament.",
-    "R2 at Littlestone: Alex Baker bleeds 12 shots between the 2nd and the 5th. Bank the number; it comes due on Sunday.",
-    "Two 10s and one hole number: Alex Baker takes 10 at Royal Cinque Ports' 16th in R1.",
-    "Jon Baker arrives as defending Trophy champion with back-to-back Jackets and no Spoon on his record — and is 13 shots worse than his last visit to Littlestone."
+    "Mullin arrives as the reigning Wooden Spoon holder — a Spoon in each of the last three TEGs, four in all — with eight Jackets and two Trophies behind him.",
+    "Alex Baker's 10 at the 16th at Royal Cinque Ports in R1: note the hole number.",
+    "Jon Baker arrives as defending Trophy champion and back-to-back Jacket holder, a man with no Wooden Spoon anywhere on his record.",
+    "Mullin's cushion after R2 is nine points — bank the number."
   ],
   "competitions": [
     {
       "name": "Trophy (Stableford)",
-      "winner_or_loser": "David Mullin — 154 pts, by 2 from Alex Baker"
+      "winner_or_loser": "David Mullin"
     },
     {
       "name": "Green Jacket (Gross)",
-      "winner_or_loser": "David Mullin — +68, by 7 from Jon Baker"
+      "winner_or_loser": "David Mullin"
     },
     {
       "name": "Wooden Spoon",
-      "winner_or_loser": "Jon Baker — 125 pts, 12 adrift of Gregg Williams"
+      "winner_or_loser": "Jon Baker"
     }
   ],
   "rounds": [
     {
       "round": 1,
       "headline_candidates": [
-        "The Spoon Holder Leads at Deal",
-        "Eighty-Seven at Royal Cinque Ports, and Nobody Laughing",
-        "A 10 at the 16th: Alex Baker Opens His Account"
+        "Deal With It: Mullin Banks 40 and Seven Shots of Improvement",
+        "Alex Baker Finds a 10 at the 16th, and Not for the Last Time",
+        "Two Open Championships, and a Nine at the Third"
       ],
-      "chosen_headline": "The Spoon Holder Leads at Deal",
-      "angle": "Mullin's 40 points and 87 gross — a Royal Cinque Ports personal best by seven — put the reigning Spoon holder in front on a links that has hosted two Opens; the lead changes at the 11th and 16th are routine housekeeping, not drama.",
+      "chosen_headline": "Deal With It: Mullin Banks 40 and Seven Shots of Improvement",
+      "angle": "The reigning Spoon holder opens with the best round in the field — 40 points, 87 gross, seven better than his TEG 13 visit — while Alex Baker plants the tournament's motif with a 10 at the 16th and Gregg Williams takes a nine at the third.",
       "beat_ids": [
+        "b48",
+        "b49",
         "b25",
         "b39",
-        "b41",
-        "b48"
+        "b41"
       ]
     },
     {
       "round": 2,
       "headline_candidates": [
-        "Twelve Shots in Four Holes: Alex Baker's Littlestone Toll",
-        "Mullin 85, and the Lead Becomes Nine",
-        "Romney Marshes Collects: a Nine at the Fifth, an Eight at the Eighth"
+        "Mullin 41, and the Lead Becomes a Cushion",
+        "Twelve Shots in Four Holes: Littlestone Presents Its Bill",
+        "Romney Marsh Remembers Jon Baker's 79. Jon Baker Does Not."
       ],
-      "chosen_headline": "Twelve Shots in Four Holes: Alex Baker's Littlestone Toll",
-      "angle": "Mullin's 41 points and 85 gross (another course personal best, another seven shots better than TEG 13) stretch the lead to nine — while the man who would finish two behind him quietly posts the round he can never have back.",
+      "chosen_headline": "Mullin 41, and the Lead Becomes a Cushion",
+      "angle": "A second best-in-field round (41 points, 85 gross, seven better than last visit) stretches the lead to nine, while Alex Baker bleeds twelve shots in four holes and Jon Baker comes home thirteen worse than the 79 he posted here in TEG 13.",
       "beat_ids": [
         "b47",
         "b33",
@@ -70,66 +71,73 @@
     {
       "round": 3,
       "headline_candidates": [
-        "A Nine at the Eighth, and Mullin Still Leads by Eight",
-        "Williams Remembers Himself; Jon Baker Doesn't",
-        "Thirteen Points From the 15th: the Leader Steadies"
+        "A Nine at the Eighth, and a Lead That Barely Notices",
+        "Williams Answers 27 With 39; Nobody Sees It",
+        "The Leak Begins at Prince's"
       ],
-      "chosen_headline": "A Nine at the Eighth, and Mullin Still Leads by Eight",
-      "angle": "First look at Prince's: Mullin takes nine at the 8th, is outscored by Alex Baker for the first time, and repairs it with 13 points from the 15th; Williams jumps from 27 to 39 with a course best 86, and Jon Baker's 28 makes the Spoon a formality.",
+      "chosen_headline": "A Nine at the Eighth, and a Lead That Barely Notices",
+      "angle": "Mullin's first bottom-half round — 36 points, a nine at the eighth — is rescued by thirteen points in the last four holes; Gregg Williams follows a 27 with a 39 and a Prince's personal best of 86; Jon Baker's 28 pins him to the bottom.",
       "beat_ids": [
-        "b12",
         "b14",
-        "b15",
-        "b16",
-        "b23",
-        "b43",
         "b10",
-        "b50"
+        "b15",
+        "b24",
+        "b12",
+        "b50",
+        "b43",
+        "b34",
+        "b23",
+        "b16"
       ]
     },
     {
       "round": 4,
       "headline_candidates": [
-        "Eighty-Three, a Course Record, and the Wooden Spoon",
-        "The 16th Comes for Alex Baker Again",
-        "Mullin Wins Everything With the Worst Round of the Day"
+        "The Sixteenth Will See You Now",
+        "A Course Record and a Wooden Spoon, Same Man, Same Afternoon",
+        "Mullin Loses the Round, Wins Everything Else"
       ],
-      "chosen_headline": "Eighty-Three, a Course Record, and the Wooden Spoon",
-      "angle": "Jon Baker breaks the Prince's course record with 83 and 39 points and still collects the Spoon by 12; Alex Baker's 43 — best round of the final day — comes with a 10 at the 16th and lands two short; Mullin's 37 is the worst score in the field and wins him both pots.",
+      "chosen_headline": "The Sixteenth Will See You Now",
+      "angle": "Alex Baker outscores the leader by six and closes nine to two, then makes 10 at the 16th — stroke index 17, the easiest hole on the card; Jon Baker breaks the Prince's record with 83 and ties the all-time birdie-streak record and still takes the Spoon; Mullin's 37, quad at the 10th and all, is exactly enough.",
       "beat_ids": [
-        "cr01",
-        "b01",
-        "b03",
-        "b04",
-        "b05",
-        "b06",
-        "b07",
-        "b09",
-        "b20",
         "b21",
-        "b22",
+        "b27",
+        "b09",
+        "b01",
+        "b06",
+        "b20",
+        "b04",
+        "b03",
+        "b05",
+        "b07",
+        "cr01",
+        "sr01",
         "b44",
-        "b17",
-        "b19"
+        "b22",
+        "b19",
+        "b02",
+        "b08",
+        "b32",
+        "b31"
       ]
     }
   ],
   "players": [
     {
       "player": "David Mullin",
-      "arc": "Reigning Wooden Spoon holder with four to his name and Spoons in each of the last three TEGs, he opened 40 and 41 with personal bests at Deal and Littlestone, went bottom-half of the field in both closing rounds, and still walked off with the Trophy and a Jacket to add to his eight previous."
+      "arc": "Reigning Wooden Spoon holder with four Spoons and eight Jackets behind him: posts the two best rounds in the field at Deal and Littlestone with personal bests at both, then two bottom-half rounds at Prince's, and still walks off with the Trophy on 154 and the Jacket at +68."
     },
     {
       "player": "Alex Baker",
-      "arc": "Second by two after taking 12 shots in four holes at Littlestone, an 8 at the 10th at Prince's, and 10s at the 16th in both R1 and R4 — the best final round in the field, attached to the worst arithmetic in it."
+      "arc": "Outscored the champion in two of the four rounds and lost by two, with twelve shots bled in four holes at Littlestone and two 10s at a 16th hole as the itemised receipt."
     },
     {
       "player": "Jon Baker",
-      "arc": "Defending Trophy champion and двух-time reigning Jacket holder who was bottom of the Spoon race from the 4th hole of R1 and never moved, then set a Prince's course record of 83 on the afternoon it was confirmed."
+      "arc": "Defending Trophy champion with no Spoon on his record: thirteen worse than his 79 at Littlestone, last in the field twice, then a course-record 83 and a record-tying pair of birdies on the final day — and the Wooden Spoon by twelve."
     },
     {
       "player": "Gregg Williams",
-      "arc": "A personal-best gross total of +76 and course bests at Royal Cinque Ports and Prince's, undone as a Trophy contender by 27 points at Littlestone; third, and 12 clear of the Spoon."
+      "arc": "Quietly posted a personal-best gross total of +76 with new personal bests at Royal Cinque Ports and Prince's, swung 27 to 39 between R2 and R3, and was never once in the Trophy conversation."
     }
   ],
   "must_include_beat_ids": [
@@ -137,86 +145,85 @@
     "b08",
     "b32",
     "cr01",
-    "b31",
+    "sr01",
     "b01",
     "b25",
-    "b47",
+    "b31",
     "b20",
-    "b22"
+    "b47"
   ],
   "cuts": [
-    "b11",
     "b13",
     "b18",
     "b26",
     "b27",
     "b28",
     "b29",
-    "b34",
     "b35",
     "b36",
-    "b37",
     "b38",
     "b40",
-    "b42",
     "b45",
     "b46",
-    "b49"
+    "b37",
+    "b42",
+    "b17"
   ],
-  "venue_notes": "TEG's 2nd visit to Kent, and four rounds of pure links: Royal Cinque Ports at Deal (2nd TEG round there, two Open Championships to its name, brutal in wind), Littlestone on the Romney Marshes (Purves, refined by Braid and MacKenzie, 2nd TEG round), then Prince's Shore/Dunes twice — the 2nd and 3rd TEG rounds at that venue, and where the course record fell. Every course was on its second visit, so TEG 13 comparisons are available everywhere and should be used: this is a tournament measured against itself a year earlier.",
+  "venue_notes": "TEG's 2nd visit to Kent, and four rounds of pure links: Royal Cinque Ports and Littlestone each for the 2nd TEG round, Prince's Shore/Dunes for the 2nd and 3rd. Frame Deal as the formidable Open venue where the Trophy was actually banked, and Prince's as the place it was nearly given back. Every player had a TEG 13 number here to be measured against — use those deltas rather than generic wind talk.",
   "course_history_notes": [
-    "David Mullin set a personal best on every Kent course: 87 at Royal Cinque Ports in R1 (improved by 7), 85 at Littlestone in R2 (improved by 7), 91 at Prince's in R4 (improved by 1).",
-    "Jon Baker was 13 shots worse than his last visit to Littlestone (prior best there 79 gross, TEG 13) and 7 worse at Royal Cinque Ports — before a new personal best of 83 at Prince's in R4.",
-    "Gregg Williams was 11 shots worse than his last visit to Littlestone, then posted a new personal best at Prince's: 86 gross in R3.",
-    "Alex Baker's new personal best at Royal Cinque Ports in R1 — 98 gross, improved by 4 — sat alongside being 5 shots worse than his last visit to Prince's."
+    "David Mullin set a new personal best at all three Kent courses: 87 at Royal Cinque Ports (7 better), 85 at Littlestone (7 better), 91 at Prince's (1 better).",
+    "Jon Baker was 13 shots worse than his last visit to Littlestone, where his prior best was 79 gross (TEG 13), and 7 worse at Royal Cinque Ports — before a new personal best of 83 at Prince's in R4.",
+    "Gregg Williams was 11 shots worse than his last visit to Littlestone, but posted new personal bests at Prince's (86 in R3) and Royal Cinque Ports (93 in R1).",
+    "Alex Baker's new personal best at Royal Cinque Ports in R1 — 98 gross, 4 better — and 5 shots worse than his last visit to Prince's."
   ],
   "trophy_storyline": {
-    "subject": "David Mullin's Trophy: nine ahead, home by two",
-    "why_it_matters": "The man who had finished last in three consecutive TEGs led from the opening afternoon and won the main event for the third time — but only because the one man in range had already spent his cushion at Littlestone.",
-    "shape": "Setup: 40 at Deal and 41 at Littlestone, best in the field both times, and the lead is nine. Turn: Prince's takes a nine off him at the 8th in R3 and an eight at the 10th in R4, he finishes bottom half of the field in both rounds, and Alex Baker closes from nine back to two. Resolution: 154 points and the Trophy by 2 — the chase ran out of holes, not out of form, and Baker's own worst round was the difference.",
+    "subject": "David Mullin's Trophy: banked at Deal and Littlestone, then defended with his fingernails at Prince's",
+    "why_it_matters": "The man who had taken the Wooden Spoon in each of the last three TEGs won the main event, and won it in the first two rounds rather than the last two.",
+    "shape": "Setup: two best-in-field rounds, 40 at Royal Cinque Ports and 41 at Littlestone, with personal bests on both links, open a nine-point lead by Friday evening. Turn: Prince's takes it straight back — 36 and 37, bottom half of the field both days, a nine at the eighth and an eight at the tenth — while Alex Baker charges and closes nine to two. Resolution: the margin holds at two because Alex Baker's own final round detonated at the 16th; Mullin was the man still standing there to collect.",
     "beat_ids": [
       "b02",
-      "b20",
-      "b47",
+      "b48",
+      "b14",
       "b04",
-      "b15",
+      "b20",
       "b01"
     ],
-    "compelling_score": 8
+    "compelling_score": 8,
+    "humour_score": 5
   },
   "jacket_storyline": {
-    "subject": "David Mullin's Green Jacket: built at Deal and Littlestone, defended with a calculator",
-    "why_it_matters": "The Jacket was the one competition nobody could argue about — Mullin beat Jon Baker head-to-head in 3 of the 4 rounds and was 12 clear by halfway.",
-    "shape": "Setup: 87 and 85, best gross in the field in R1 and R2, both personal bests on the course, and the Jacket lead reaches 12. Turn: Prince's bites — 20 and 19 over par across the last two rounds, and Jon Baker's course-record 83 in R4 hauls him from 15 behind to 7. Resolution: +68, by 7, and the arithmetic was never actually in question.",
+    "subject": "The Green Jacket: +68, and settled before Prince's ever got a say",
+    "why_it_matters": "Mullin's Jacket was the one competition genuinely built rather than inherited — he beat Jon Baker head-to-head in three of the four rounds and was twelve clear after R2.",
+    "shape": "Setup: 87 at Deal and 85 at Littlestone, both personal bests, put Mullin twelve clear of Jon Baker by Friday. Turn: Jon Baker's final-round 83 — a new Prince's course record — claws the deficit from fifteen at its worst down to seven. Resolution: too late by two rounds; Mullin closes at +68 by seven, and even Jon Baker's best day of the tournament could not have flipped it.",
     "beat_ids": [
       "b08",
       "cr01",
-      "b19",
-      "b04"
+      "b19"
     ],
-    "compelling_score": 7
+    "compelling_score": 6,
+    "humour_score": 3
   },
   "spoon_storyline": {
-    "subject": "Jon Baker: defending champion, first-ever Wooden Spoon, and a course record on the way out",
-    "why_it_matters": "He arrived as the holder of the Trophy and two straight Jackets with no Spoon anywhere on his record, and left having been bottom of the Spoon race from the 4th hole of the tournament to the last putt.",
-    "shape": "Setup: 29 points at Deal after going five holes without a net par, and bottom of the pile by R1's 4th. Turn: 29 and then 28 at Prince's, with an eight at the 13th and a triple at the 17th ending his best run of the round. Resolution: a 39-point final round containing a new Prince's course record of 83 gross — birdies at the 12th and the SI 1 13th — and, an 8 at the last later, the Spoon by 12 anyway.",
+    "subject": "Jon Baker's Wooden Spoon: the defending champion who set a course record on his way to last place",
+    "why_it_matters": "The reigning Trophy holder, back-to-back Jacket winner and a man with no Spoon anywhere on his record finished twelve adrift of the next worst — and did it while breaking a course record.",
+    "shape": "Setup: bottom of the Spoon race from the fourth hole of R1 and never off it, with 29, 29 and 28 and a Littlestone round thirteen shots worse than the 79 he posted there in TEG 13. Turn: on the final day he plays the best golf of anyone — back-to-back birdies at the 12th and 13th that tie the all-time TEG birdie-streak record, 39 points, and an 83 that is a new Prince's course record. Resolution: he still takes the Spoon on 125, twelve behind Gregg Williams, and rounds it off with a quadruple-bogey eight at the last, which is the sort of punctuation the record book deserves.",
     "beat_ids": [
       "b32",
       "cr01",
+      "sr01",
       "b22",
       "b16",
       "b44",
-      "b03",
-      "b05",
       "b07"
     ],
-    "compelling_score": 9
+    "compelling_score": 9,
+    "humour_score": 8
   },
   "discovered_storylines": [
     {
-      "subject": "Alex Baker's ledger of catastrophes — second place assembled from wreckage",
-      "why_it_matters": "He finished two points off the Trophy while producing the loudest gross damage in the field in all four rounds, including 10s at the 16th in both R1 and R4.",
-      "shape": "Setup: Deal gives him an 8 at the 11th and a 10 at the 16th, and he still opens with 37 points. Turn: Littlestone empties his pockets — 12 shots gone between the 2nd and the 5th, a nine at the 5th, an eight at the 8th — and Prince's adds an 8 at the 10th in R3. Resolution: on the final afternoon he pars the SI 1 13th, 14th and 15th, then takes 10 at the 16th, the second-easiest hole on the card, and posts the best round of the day two points too late.",
+      "subject": "Alex Baker's four-round audit of the blow-up hole",
+      "why_it_matters": "He lost the Trophy by two points having outscored the champion in two rounds — every point of that margin is traceable to a small number of catastrophic holes, itemised across all four days.",
+      "shape": "Setup: a 10 at the 16th and an eight at the 11th at Royal Cinque Ports, then twelve shots bled in four holes at Littlestone including a nine at the fifth and an eight at the eighth. Turn: he keeps arriving anyway — an eight at the tenth at Prince's on Saturday, then a final round that goes 10 points in the opening three holes and 11 more from the 13th to the 15th, closing him to within two. Resolution: a 10 at the 16th, stroke index 17, the easiest hole on the card, and the audit balances at exactly two points short.",
       "beat_ids": [
         "b25",
         "b39",
@@ -225,57 +232,60 @@
         "b30",
         "b12",
         "b50",
+        "b21",
         "b09",
-        "b06",
         "b01",
         "b20"
       ],
-      "compelling_score": 8
+      "compelling_score": 8,
+      "humour_score": 8
     },
     {
-      "subject": "Gregg Williams: a personal-best gross total that bought him nothing",
-      "why_it_matters": "His best-ever Gross week (+76) and two course personal bests coincided with the one round that removed him from the Trophy conversation.",
-      "shape": "Setup: a nine at Deal's 3rd, and still a course-best 93. Turn: 27 points at Littlestone, 11 shots worse than his last visit there, and the Trophy is gone. Resolution: 39 points and an 86 at Prince's in R3, a triple at the 12th notwithstanding, closing from 18 off the Jacket lead to 8 — and a personal-best gross total of +76 for a tidy, unrewarded third.",
+      "subject": "Gregg Williams's best golf, played entirely offstage",
+      "why_it_matters": "He posted a personal-best gross total and two new course personal bests in a tournament where nobody once mentioned his name in a competition.",
+      "shape": "Setup: a nine at the third at Deal, then a 27 at Littlestone, eleven shots worse than his previous visit — a man apparently heading for the Spoon conversation. Turn: 39 points and an 86 at Prince's on Saturday, a new personal best there, with nine points in three holes from the 9th before a triple bogey at the 12th ends it. Resolution: a personal-best gross total of +76, having trailed the Jacket by eighteen at one stage and closed to eight, and a finish of third with nothing whatsoever to show for it.",
       "beat_ids": [
         "b41",
         "b43",
         "b34",
         "b23",
-        "b31",
-        "b17"
+        "b17",
+        "b31"
       ],
-      "compelling_score": 7
+      "compelling_score": 6,
+      "humour_score": 4
     }
   ],
+  "body_fallback": "none",
   "prominent_vehicle": "counterfactual",
   "prominent_palette": "cross_teg_career",
   "payoffs": [
     {
-      "seed": "Mullin the Spoon holder leading from R1 with an 87 at Deal",
-      "resolves_in": "Round 4 and 'How the three were decided'",
-      "payoff": "He posts the worst round in the field on the final day — 37 points, 19 over — and it is still enough for the Trophy and the Jacket; the three straight Spoons are formally retired."
+      "seed": "Mullin the reigning Wooden Spoon holder, three in a row",
+      "resolves_in": "How the three were decided",
+      "payoff": "He takes the Trophy on 154 and the Jacket at +68 in the same TEG (b02, b08) — the previous loser elevated, comprehensively."
     },
     {
-      "seed": "Alex Baker bleeding 12 shots between the 2nd and 5th at Littlestone",
-      "resolves_in": "How the three were decided (Trophy)",
-      "payoff": "The final margin is 2: with a merely ordinary round in place of that one, Alex Baker wins the Trophy — the debt from R2 was never repayable."
-    },
-    {
-      "seed": "The 10 at Royal Cinque Ports' 16th in R1",
+      "seed": "Alex Baker's 10 at the 16th at Royal Cinque Ports (R1)",
       "resolves_in": "Round 4",
-      "payoff": "Another 10 at another 16th — SI 17, the second-easiest hole at Prince's — ending three straight pars and the last realistic charge of the tournament."
+      "payoff": "A second 10 at a 16th (b01), this one on stroke index 17, three holes from the Trophy, losing it by two."
     },
     {
-      "seed": "Jon Baker as defending champion, no Spoon on his record, 13 worse than last time at Littlestone",
-      "resolves_in": "Round 4 and 'How the three were decided' (Spoon)",
-      "payoff": "The Wooden Spoon by 12 on 125 points, collected on the same afternoon he broke the Prince's course record with 83."
+      "seed": "Jon Baker has never been last",
+      "resolves_in": "How the three were decided — the Spoon",
+      "payoff": "He collects it on 125 points, twelve adrift (b32), on the same afternoon he sets the Prince's course record (cr01) and ties the all-time birdie-streak record (sr01)."
+    },
+    {
+      "seed": "The nine-point cushion after R2",
+      "resolves_in": "Round 3 and Round 4",
+      "payoff": "Outscored in both Prince's rounds, Mullin finishes with exactly two of the nine still in hand (b20)."
     }
   ],
   "vehicle_fit_response": {
     "top_scored_vehicle": "underdog",
-    "taken_up": true,
-    "note": "Taken up — a man with four Wooden Spoons and last place in three straight TEGs winning both pots is exactly the underdog frame — but it rides behind the close finish (final margin 2), which the hard rule installs as the lead frame."
+    "taken_up": false,
+    "note": "The Spoon-holder-turned-champion material is real and gets full prominence, but `inversion` carries it better because it also holds the other half — the defending Trophy champion taking his first Spoon — and the close finish (final margin 2) mandates `counterfactual` as the frame."
   },
-  "why_the_champion_won": "Two best-in-field rounds up front — 40 and 41, with course personal bests at Deal and Littlestone — bought a nine-point cushion he then spent almost entirely: he was bottom half of the field in R3 and R4 and won anyway, because Alex Baker had already given away more at Littlestone than he could win back, and an ordinary round in place of that one would have taken the Trophy off Mullin.",
+  "why_the_champion_won": "He banked it early — best-in-field 40 and 41 with personal bests on two links he had never handled — and then held on through two bottom-half rounds at Prince's while Alex Baker, who outscored him over both of them and could have won with merely an ordinary round instead of his worst, gave back more at the 16th than he had managed to take.",
   "storyline_note": ""
 }

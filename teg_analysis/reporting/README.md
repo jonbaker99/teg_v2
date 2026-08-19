@@ -452,13 +452,14 @@ Sourced from `data/round_info.csv` + `data/course_info.csv` (the latter relocate
 
 ### Context modules feeding the bundle
 
-Four further code-only modules assemble context alongside the beats. All are pure Python — no LLM, no cost.
+Five further code-only modules assemble context alongside the beats. All are pure Python — no LLM, no cost.
 
 | Module | Provides | Used for |
 |---|---|---|
 | `era.py` | `trophy_metric(teg)` → `"stableford"` (TEG 8+) or `"net_vs_par"` (TEGs 1–7) | Every era-sensitive branch in `events`, `story_plan`, `authoring`, `round_report`, `render` |
 | `history_context.py` | `build_player_cross_teg_history(teg)` — career storyline phrases per player (Nth Trophy/Jacket/Spoon, back-to-back, first win in N years, defending champion, "first Trophy after 2 runner-up finishes"). Also `build_win_counts(teg)` | Bundle's `player_history`; the deterministic at-a-glance win counts in `render` |
 | `course_history.py` | `build_player_course_history(teg)` — first visit / Nth visit / personal best here / strokes vs last visit. `detect_course_records(teg)` — new course gross records (good or bad) | Bundle's `player_course_history`; new course records become **mandatory beats** |
+| `milestone_records.py` | `detect_streak_records(teg)` — TEG-level streaks (Eagles, Birdies, Pars-or-better, TBPs, +2s-or-worse, Over-par) that tie/break the all-time record. `detect_score_count_records(teg)` — TEG-total scoring-category counts (most Eagles/Birdies-or-better/Pars-or-better, most TBPs) that tie/break the all-time record. Wraps `analysis/streaks.py` and `analysis/records.py` (the webapp Records page's own detection), which nothing previously fed into the beat/bundle system | New `sr*`/`sc*` **mandatory beats** — closes the gap where these records existed on the webapp Records page but had no beat for the report pipeline to hang a storyline on |
 | `tournament_shape.py` | `detect_close_finish(arcs, metric)` — deterministic close-finish signal. `recent_vehicle_choices(teg, n=3)` — what narrative vehicles the last few reports used | Bundle's `tournament_shape` (drives the close-finish **hard rule**) and `recent_vehicle_choices` (drives the anti-repetition **soft rule**) |
 | `vehicle_fit.py` | `score_vehicle_fit(beats, arcs, shape, history)` — free, deterministic, no LLM call: how well each narrative vehicle fits this TEG's actual facts. `normalize_vehicle_fit(scores, baseline)` z-scores it against `vehicle_fit_baseline.json` (a checked-in 17-TEG population). `refresh_baseline_cache()` regenerates that file | Bundle's `vehicle_fit_hints` (drives the vehicle **advisory**) |
 | `impact.py` | `apply_counterfactual_importance(events, teg_df, metric)` — rewrites every beat's `importance` as *what the event actually cost or won*, by replacing the player's scores with their own TEG average and recomputing each competition. Post-processing pass, so detectors stay responsible for FINDING and this is the one place that decides MATTERING | The `importance` axis for every beat — see [Why importance is counterfactual](#why-importance-is-counterfactual) |
@@ -491,19 +492,30 @@ foreshadow[],                         # hooks to plant early that pay off later
 payoffs[]:                            # one per foreshadow seed where possible
   { seed, resolves_in, payoff }
 competitions[]:                       # Trophy → Jacket → Spoon (priority order)
-  { name, winner_or_loser, how, key_beat_ids[] }
+  { name, winner_or_loser }            # `how`/`key_beat_ids` dropped 2026-08-18 — see below
 rounds[]:
   { round, headline_candidates[], chosen_headline, angle, beat_ids[] }
 players[]: { player, arc }
 must_include_beat_ids[], cuts[],
 venue_notes,
 course_history_notes[],                # optional; empty unless the data supports it
-# storyline discovery (2026-08-18) — see STORYLINE_PLAN.md
+# storyline discovery (2026-08-18/19) — see STORYLINE_PLAN.md
 trophy_storyline, jacket_storyline, spoon_storyline:  # ALWAYS populated, one each
-  { subject, why_it_matters, shape, beat_ids[], compelling_score }
+  { subject, why_it_matters, shape, beat_ids[], compelling_score, humour_score }
 discovered_storylines[]:               # 1-3, found independently — can be zero
-  { subject, why_it_matters, shape, beat_ids[], compelling_score }
+  { subject, why_it_matters, shape, beat_ids[], compelling_score, humour_score }
+body_fallback,                         # "none" (default) | "player_by_player" | "round_by_round"
+                                        # — used only when discovered_storylines is empty/thin
 ```
+
+**`StorylinePlan`** (2026-08-19) is a leaner sibling schema, same file — same input bundle as
+`StoryPlan`, but only the fields above from `title` through `body_fallback` (drops `rounds[]`,
+`players[]`, `must_include_beat_ids`, `cuts`, `venue_notes`, `course_history_notes`, `foreshadow`,
+`payoffs`, `narrative_structure` — none of which the storyline-first pipeline reads). Produced by
+`build_storyline_plan()` (writes `teg_{n}_storyline_plan.json`) with its own
+`STORYLINE_SYSTEM_PROMPT` and `check_storyline_plan_consistency()`. `StoryPlan`/`build_story_plan`
+are unchanged and still serve the legacy round-by-round pipeline (`authoring.py` dry-draft/writer);
+`scripts/storyline_full_report_experiment.py` calls `build_storyline_plan` only.
 
 ### The storyline hierarchy and the champion register
 
@@ -897,6 +909,7 @@ Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`t
 | `era.py` | Trophy metric by TEG (the pre/post-8 switch) |
 | `history_context.py` | Cross-TEG career storylines, milestones, win counts |
 | `course_history.py` | Per-course player history + course-record detection |
+| `milestone_records.py` | All-time streak and score-count record detection (TEG-level analogue of `course_history.py`) |
 | `tournament_shape.py` | Close-finish signal + recent-vehicle anti-repetition |
 | `vehicle_fit.py` | Deterministic narrative-vehicle scoring + the checked-in baseline |
 | `impact.py` | **The `importance` axis** — counterfactual: what the event cost or won |

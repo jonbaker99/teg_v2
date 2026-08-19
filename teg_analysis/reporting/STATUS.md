@@ -12,7 +12,86 @@
 
 ---
 
-## START HERE — picking this up in a new chat (2026-08-18)
+## START HERE — picking this up in a new chat (2026-08-19)
+
+### Storyline-first reports — full-report experiment run; records/streaks beat gap closed (2026-08-19)
+
+- **Full-report experiment (`scripts/storyline_full_report_experiment.py`) proved the pipeline
+  end-to-end on TEG 14/16/18.** Structural draft (fact-isolated, storyline-ordered sections) +
+  `authoring.restyle_voice` as a final language layer: zero new D3 findings on TEG 14, genuinely
+  readable house-voice prose, no round-by-round structure. Plain "straight" drafts (no voice pass,
+  `--no-voice` flag) read strong on their own — "The twelfth hole" (TEG 16, both Baker brothers
+  blowing up the same hole on two different courses) and "The brothers Baker at opposite ends of
+  the same tournament" (TEG 18) are storylines a round-by-round report would never surface. Minor
+  cosmetic issue seen in ~half of sections across all three TEGs: the draft writer inserts an
+  unrequested bold mini-header duplicating the `##` heading — not yet fixed. Word counts short of
+  production (1161–1424w vs 1700–2300w) because the mandatory closing sections
+  (`## How it was decided`, `## Player-by-player summary`) aren't built into the experiment yet.
+  Not wired into `backfill.py` — still an experiment script.
+- **Records/streaks beat gap closed (`milestone_records.py`, new).** Audit of "does the pipeline
+  organically surface records/streaks, or only via the injected end-of-report block" found that
+  `course_history.py`'s course records were already wired into `beats` as mandatory, but the
+  webapp Records page's other two record types — all-time streak records (`analysis/streaks.py`)
+  and TEG-total score-count records, most Eagles/Birdies/Pars-or-better/TBPs
+  (`analysis/records.py`) — were never wired into the beat/bundle system at all. `milestone_records.py`
+  wraps both as `sr*`/`sc*` mandatory beats, following the `course_history.py` pattern exactly
+  (same `assemble_bundle` wiring). Validated across TEGs 2–18: fires occasionally (streak records
+  rarer — 1-hole "Birdies" ties on TEGs 5/14/17; score-count records on 6 of 17 TEGs), no crashes,
+  player-code-to-name mapping bug caught and fixed before landing (`identify_score_count_records`
+  returns `Pl` codes, not names). `test_reporting_schema_and_era.py`: 51/51 pass.
+- **Point 2 done: quality bar + fallback ladder (`story_plan.py`).** `DraftedStoryline` gained
+  `humour_score`; SYSTEM_PROMPT now states the eligibility-floor-vs-quality-bar distinction explicitly
+  (humour/intrigue/drama/importance required, not just "has beats"), requires at least one
+  `humour_score >= 7` storyline per report, and calls out `sr*`/`sc*`/`cr*` record beats as legitimate
+  storyline subjects, not just facts to mention. New `StoryPlan.body_fallback` (`"none"` default |
+  `"player_by_player"` | `"round_by_round"`) — used only when `discovered_storylines` is empty/thin,
+  never above it; `check_plan_consistency` warns on both the no-humour and fallback-misuse cases.
+  Wired into `scripts/storyline_full_report_experiment.py` (`_fallback_sections`, deterministic
+  grouping by player/round, same fact-isolation principle as the rest of the pipeline).
+  `test_reporting_schema_and_era.py`: 53/53 pass. **Validated live on TEGs 14 and 16** — first attempt
+  truncated (`ValidationError: EOF while parsing a string`): the new fields pushed output over the
+  default `max_tokens=16000` for `generate_structured`. Fixed by raising `story_plan.py`'s call site to
+  `max_tokens=20000` (below the Anthropic SDK's streaming-required threshold — confirmed by testing
+  24000, which throws). Both TEGs then returned zero warnings, real humour spread (TEG 14 Spoon
+  storyline scored 8/10, TEG 16 Spoon scored 9/10), `body_fallback="none"` both times (discovered
+  storylines cleared the bar), and — the actual proof this was worth doing — **TEG 16 discovered
+  "Anatomy of an 80: Mullin's Estoril course record, two days after Penha Longa took him apart" as a
+  storyline**, built directly from the new `cr*` course-record beat. Full detail: `STORYLINE_PLAN.md`
+  → "Full-report proof + user's 3-point punch list".
+- **Call A / Call B split built (`story_plan.py`).** New `StorylinePlan` (leaner sibling of
+  `StoryPlan`) + `STORYLINE_SYSTEM_PROMPT` + `build_storyline_plan()` + `check_storyline_plan_consistency()`
+  carry ONLY what `storyline_full_report_experiment.py` actually reads — dropping `rounds[]`,
+  `players[]`, `must_include_beat_ids`, `cuts`, `venue_notes`, `course_history_notes`, `foreshadow`,
+  `payoffs`, `narrative_structure`, which turned out to be most of what pushed the earlier
+  `max_tokens` fix into being necessary. Both calls see the SAME input bundle — this is an
+  output-schema split, not an input split. `StoryPlan`/`build_story_plan` untouched, still serving the
+  legacy round-by-round pipeline. Writes to `teg_{n}_storyline_plan.json`, distinct from
+  `teg_{n}_story_plan.json`. `storyline_full_report_experiment.py` now calls `build_storyline_plan`
+  directly instead of reading a pre-generated file. **Validated live on TEGs 14, 16, 18** — clean end
+  to end on 16/18 (zero grounding warnings); TEG 14's first run surfaced a real pre-existing bug, see
+  below. 54/54 tests pass (53 + 1 new regression test).
+- **Bug found and fixed: `candidate_threads` leaked beat IDs outside the trimmed bundle.**
+  `threads.py`'s clusters are scored from the untrimmed beat set (correctly — trimming would deflate
+  the score) but their `beat_ids` weren't filtered back down before entering the bundle. The editor
+  cited phantom IDs from `candidate_threads` into 4 storylines on TEG 14; `check_plan_consistency`
+  caught it correctly, but the bundle shouldn't have offered them. Fixed in `assemble_bundle` — thread
+  beat_ids now filtered to the in-bundle set, empty threads dropped. Pre-existing since Phase 1
+  (`threads.py`), not introduced by the Call A/B split — just hadn't surfaced before now. Regression
+  test added; TEG 14 re-run clean after the fix. Full detail: `STORYLINE_PLAN.md`.
+- **Writer-richness gap identified, not yet fixed.** The legacy writer (`authoring.py`) gets raw
+  bundle context re-injected at prose time (`BUNDLE_CONTEXT_KEYS`); the storyline-first writer only
+  sees the beats a storyline explicitly cited. Real narrowing for non-record course-history colour.
+  Proposed fix (a 4th writer variant, structured-context-only, A/B'd against current) not started —
+  same API-limit block.
+- **Point 3 (interweaving storylines) deliberately not started** — deferred to a fresh chat, see
+  `STORYLINE_PLAN.md`.
+
+### API usage limit hit and resolved mid-session (2026-08-19)
+
+Briefly hit `account has reached its specified API usage limits` mid-session; resolved (credits
+topped up) within the same session. Noted only because the limit forced sequencing: the Call A/B
+split's live validation and the TEG 14/16/18 comparison both had to wait for resolution — both since
+completed. The writer-richness A/B (proposed above) is still not started.
 
 ### Storyline-first reports — Phase 1 built, detectors simplified (2026-08-18)
 

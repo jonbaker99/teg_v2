@@ -1,63 +1,57 @@
-# Sixth, Fifth, Third, Second — First: Neumann Never Headed on the Lisbon Coast
+# The Long Way Up: Neumann's First Trophy, Led From the Front
 
-## Stuart Neumann's first Trophy, built from the front
+## Stuart Neumann's first Trophy — 156 points, led after every single round
 
-Stuart Neumann led the Trophy race from early on and never gave it back. He was the Trophy leader after Round 2 at Troia, again after Round 3 at Penha Longa, and again after Round 4 at Estoril, holding the top spot on Stableford at each checkpoint. Gregg Williams, meanwhile, led the Jacket standings at every one of those same stages, so the two competitions ran on separate tracks for most of the week.
+Stuart Neumann won the Trophy with 156 Stableford points, finishing 13 clear of runner-up Gregg Williams. It is the first Trophy of his career, and the total ranks 16th on the all-time list and second-best of his own record.
 
-Neumann finished on 156 points, 13 clear of Williams, who was runner-up in the Trophy. The total ranks 16th on the all-time list and stands as the second-best mark of Neumann's own record.
+The win was built on sustained control rather than a late charge. Neumann held the Trophy lead after the second round at Troia, still had it after the third at Penha Longa, and carried it through the fourth at Estoril. Through the same stretch Gregg Williams led the Jacket, so the two competitions ran on separate tracks: Williams ahead on one measure, Neumann ahead on the other, week after week.
 
-The margin meant he could absorb a bad hole without real damage, and he had one. At the 8th at Estoril in the final round — a par 4 and the toughest hole on the card at stroke index 1 — Neumann ran up a 9. The quintuple bogey returned zero Stableford points, the worst possible outcome on a hole where he had a shot in hand. It made no difference to the outcome. By that stage the lead was large enough that a blank hole was an inconvenience rather than a threat, and Neumann closed out the Trophy at Estoril without the result ever coming into question.
+The margin also meant Neumann could absorb damage that would have sunk a tighter lead. In the fourth round at Estoril he ran up a nine on the par-4 8th, the hardest hole on the course at stroke index 1. The quintuple bogey returned no Stableford points at all. On a card being counted for the Trophy, that is a five-shot hole handed back for nothing, and it barely registered in the final accounting.
 
-## The twelfth hole
+That is the shape of the week: a leader who took the front early, never surrendered it across the closing three rounds, and finished 13 points ahead despite a round-four disaster hole.
 
-**The twelfth hole**
+## Estoril, R4: David Mullin turns 30 points into 45 and takes the course record with him
 
-Two courses, two twelfth holes, and the same result for the Baker brothers.
+David Mullin's third round at Penha Longa had gone badly enough to be forgotten quickly. He signed for 30 points, a total that included a quadruple-bogey 8 at the 16th, the hardest hole on the card, worth nothing. He at least finished tidily, with gross pars at the 17th and 18th.
 
-At Penha Longa in round three, the par-five 12th — stroke index 17, nominally the easiest hole on the card — took ten shots from Jon Baker, a quintuple bogey worth no Stableford points. Alex Baker went round in nine, a quadruple bogey, also for nothing.
+The fourth round at Estoril began no more promisingly. Mullin bogeyed the 4th and the 5th and then ran up a double bogey at the par-5 6th, three holes that yielded just five points between them. The birdie at the 7th stopped the run, and from there the round changed shape entirely.
 
-Neither blow-up happened in isolation. Alex's twelfth sat in the middle of a four-hole stretch from the 11th to the 14th in which he dropped twelve shots to par: a double bogey at the 11th, the nine at the 12th, then triple bogeys at the 13th and 14th. That run yielded three Stableford points in total. Jon's collapse was shorter but steeper — eleven shots dropped across the 11th, 12th and 13th, comprising a double bogey, the ten, and a quadruple-bogey eight. Only the 11th returned a point.
+The stretch from the 11th to the 13th brought nine points — a bogey at the toughest hole on the course, still worth three with his shots, followed by two pars. He then held par again at the 16th and 17th, going two holes without dropping a gross shot late in the round.
 
-The pattern repeated a round later. At Estoril, the 12th is a par four, stroke index 6, and Alex Baker took eleven shots on it — a septuple bogey, and the worst score he has recorded on a par four. Again, no points.
+The final numbers: 45 points, a gain of 15 on his third-round total, and a gross 80. That is a new course record at Estoril, beating the previous best of 86 set across six earlier visits.
 
-Across the two rounds, the 12th hole cost the pair three blank holes, a combined sixteen shots over par on that hole alone, and a good deal more besides.
+The same round produced the other end of the scale. Alex Baker's 107 gross is a new Estoril course-worst, exceeding the previous mark of 106.
 
-## David Mullin's Penha Longa to Estoril reversal
+## The 12th hole and the Baker brothers
 
-**Mullin: from Penha Longa wreckage to an Estoril record**
+**The 12th hole and the Baker brothers**
 
-David Mullin's third round at Penha Longa included an eight at the 16th, a quadruple bogey on the hardest hole on the card that returned no Stableford points. He finished the round with 30 points.
+The 12th at Penha Longa is a par 5 and the easiest hole on the card, stroke index 17. In round three it took both Bakers apart. Jon Baker ran up a 10, a quintuple bogey, for no Stableford points. Alex Baker was only marginally better off with a 9, a quadruple bogey, also worth nothing.
 
-The fourth round at Estoril went differently. Mullin gained 15 points on his previous total, posting 45, and his gross score of 80 set a new course record at Estoril, beating the previous mark of 86 established across six prior visits.
+Neither hole was an isolated incident. Both brothers had already dropped shots at the 11th, each making a double bogey six, and both kept dropping them afterwards. Alex went 6-9-7-7 across holes 11 to 14, a stretch of four holes that cost him 12 shots to gross par and produced a single point. Jon's damage was compressed into three holes — 6-10-8 through 11 to 13, 11 shots gone. Measured against their handicaps the picture is the same: Alex went three holes without a net par from the 12th to the 14th, Jon from the 11th to the 13th, each falling five shots short of the mark.
 
-The round was not clean from the start. Mullin bogeyed the 4th and the 5th, then made a double bogey at the par-five 6th, a run of three holes that yielded five points. He stopped the slide at the 7th with a birdie for four points, ending the streak of bogeys or worse.
+The 12th had one more word to say in round four at Estoril, a par 4 this time and stroke index 6. Alex Baker took 11 on it, a septuple bogey and the worst score he has recorded on a par 4. Jon, playing alongside, had already made an eight at the 11th, a quadruple bogey on the second-hardest hole on the course.
 
-The most productive stretch came after the turn. Between the 11th and the 13th, Mullin collected nine points from three holes: a bogey at the 11th, which is the second-hardest hole at Estoril and therefore worth three points against his handicap allowance, followed by pars at the 12th and 13th, each also returning three.
+## Gregg Williams retains the Green Jacket at +66, by 16 — best gross in the field in all four rounds
 
-The combination of the recovery at the 7th and the run through the middle of the back nine accounted for much of the 15-point improvement on the previous day's work.
+Gregg Williams won the Green Jacket, finishing at +66 gross and beating runner-up David Mullin by 16 shots. The score ranks fifth on the all-time list for the event and stands as Williams's own best.
 
-## Gregg Williams's Green Jacket at +66
+The margin flattered a week that was not without damage. At Troia in round two he lost his way in the middle of the round, going four holes from the 8th to the 11th without a net par — a bogey followed by three straight double bogeys — and then dropping six gross shots in three holes from the 13th, another run of doubles at the 13th, 14th and 15th.
 
-**Williams Takes the Green Jacket**
+Round three at Penha Longa opened badly, with a triple bogey at the 3rd and a double at the 4th, before a birdie at the par-three 5th halted the slide. From there he found the steadiness that defined his week: five holes from the 11th to the 15th without dropping a gross shot, including nine Stableford points across the 13th, 14th and 15th.
 
-Gregg Williams won the Green Jacket with a gross total of +66, finishing 16 shots clear of runner-up David Mullin. The score ranks fifth on the all-time list and stands as Williams's own best return in the event.
+The final round at Estoril repeated the pattern. Williams took nine points from the 6th to the 8th, three straight pars, before a double bogey at the 9th ended the run. Worse came at the 14th, where he ran up an eight, a quadruple bogey, for no points. With a lead that size, it did not matter.
 
-The margin makes the week sound smoother than it was. Williams's third round at Penha Longa contained the tournament's roughest patch of scoring from the eventual champion. He took seven at the par-four 3rd for a triple bogey, followed it with a double bogey at the 4th, then steadied himself with a birdie two at the par-three 5th. The reprieve was brief. Over the next three holes he went bogey, triple bogey, double bogey — six shots gone at the 6th, 7th and 8th, and three holes without a net par.
+## Alex Baker takes back-to-back Wooden Spoons on 127 points — bottom of the table from the first round to the last
 
-The back nine was a different round. From the 11th through the 15th, Williams made five consecutive pars and did not drop a gross shot, closing out the damage and protecting his position at the top of the leaderboard.
+**Baker takes the Wooden Spoon**
 
-Mullin, meanwhile, produced the single most notable round of the week in the final round at Estoril, shooting 80 gross to set a new course record and beat the previous mark of 86 across six prior visits. It was not enough to close the gap; Williams's lead held to the finish.
+Alex Baker finished the tournament with 127 Stableford points and collected the Wooden Spoon.
 
-## Alex Baker's back-to-back Wooden Spoon
+The trouble started immediately. His opening round at Oitavos Dunes produced a 113 gross, a new course-worst there, beating the previous mark of 111 set across 12 prior visits. The round included a 10 at the par-4 17th, a sextuple bogey worth no points.
 
-Alex Baker finished the tournament with 127 Stableford points, the lowest total in the field, and collected the Wooden Spoon.
+Round 2 at Troia brought a damaging closing stretch. Between the 13th and the 17th, Baker dropped 13 shots to par: three straight triple bogeys at 13, 14 and 15, followed by doubles at the 16th and 17th. Those five holes returned five Stableford points in total.
 
-The trouble began immediately. His opening round of 113 gross at Oitavos Dunes set a new course-worst for the event, beating the previous mark of 111 set across twelve prior visits there. The round included a 10 at the par-four 17th, a sextuple bogey worth no points.
+The fourth round at Estoril followed a similar pattern. Baker opened with a 9 at the par-4 1st, a quintuple bogey. From the 5th through the 10th he dropped a further 14 shots, a run that began with three holes without a net par — a double at the 5th, a quadruple bogey at the par-5 6th, and another double at the 7th — before four consecutive doubles at the 8th, 9th, 10th and, earlier, the 7th. The round totalled 107 gross, another course-worst, exceeding the previous 106 recorded across six prior visits.
 
-Round two at Troia brought a damaging run through the closing stretch. Baker dropped 13 shots across holes 13 to 17, opening with three consecutive triple bogeys at the 13th, 14th and 15th, then adding double bogeys at the 16th and 17th. The five holes returned five Stableford points between them.
-
-The pattern repeated at Penha Longa in round three, where he lost 12 shots in just four holes. A double bogey at the 11th was followed by a quadruple bogey at the par-five 12th, then triple bogeys at the 13th and 14th. Three of those four holes returned nothing.
-
-The final round at Estoril produced a second course record of the wrong kind: 107 gross, one worse than the previous high mark of 106 from six prior visits. The centrepiece was an 11 at the par-four 12th, a septuple bogey and the worst score Baker has recorded on a par four.
-
-Two course-worsts in four rounds made the outcome difficult to avoid.
+Two course-worst rounds in one week, and the Wooden Spoon to go with them.

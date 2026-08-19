@@ -25,7 +25,7 @@ from teg_analysis.reporting.story_plan import (
 
 
 _STORYLINE = {"subject": "s", "why_it_matters": "w", "shape": "sh",
-             "beat_ids": [], "compelling_score": 5}
+             "beat_ids": [], "compelling_score": 5, "humour_score": 8}
 
 
 def _plan(**kw) -> StoryPlan:
@@ -165,6 +165,23 @@ def test_mandatory_beat_in_cuts_is_reported():
     assert any("cuts" in w for w in warnings)
 
 
+def test_no_humour_anywhere_is_reported():
+    bundle = {"tournament_shape": {}, "beats": []}
+    low_humour = {**_STORYLINE, "humour_score": 3}
+    warnings = check_plan_consistency(
+        _plan(trophy_storyline=low_humour, jacket_storyline=low_humour,
+              spoon_storyline=low_humour, discovered_storylines=[]), bundle)
+    assert any("humour_score" in w for w in warnings)
+
+
+def test_fallback_used_alongside_full_discovered_storylines_is_reported():
+    bundle = {"tournament_shape": {}, "beats": []}
+    warnings = check_plan_consistency(
+        _plan(discovered_storylines=[_STORYLINE, _STORYLINE],
+              body_fallback="player_by_player"), bundle)
+    assert any("body_fallback" in w for w in warnings)
+
+
 # ---------------------------------------------------------------------------
 # vehicle_fit_hints: advisory, and honest about what it cannot see
 # ---------------------------------------------------------------------------
@@ -221,6 +238,28 @@ def test_vehicle_hints_do_not_depend_on_the_beat_trim():
     full, _ = assemble_bundle(6, top_n=None)
     assert len(trimmed["beats"]) < len(full["beats"]), "TEG 6 must actually be trimmed"
     assert trimmed["vehicle_fit_hints"] == full["vehicle_fit_hints"]
+
+
+def test_candidate_threads_never_cite_beats_outside_the_bundle():
+    """`candidate_threads` is scored from the UNTRIMMED `all_beats` (same reasoning
+    as `vehicle_fit_hints` above — a cluster score is a sum over beats, trimming
+    would deflate it), but its `beat_ids` must be filtered to the trimmed `beats`
+    actually sent to the model.
+
+    The bug (2026-08-19, found live on TEG 14): before this fix, a thread could
+    cite a beat_id that only existed in the untrimmed set. The editor read that
+    ID out of candidate_threads and put it straight into a storyline's own
+    beat_ids — `check_plan_consistency`'s grounding check correctly flagged it
+    as "cites unknown beat_ids", but the bundle handed the model a phantom ID to
+    begin with, four times in one TEG.
+    """
+    from teg_analysis.reporting.story_plan import assemble_bundle
+
+    bundle, _ = assemble_bundle(14, top_n=50)
+    in_bundle = {b["id"] for b in bundle["beats"]}
+    for thread in bundle["candidate_threads"]:
+        bad = set(thread["beat_ids"]) - in_bundle
+        assert not bad, f"thread cites beat_ids outside the bundle: {bad}"
 
 
 def test_prompt_tells_the_editor_to_judge_the_unscored_vehicles_itself():

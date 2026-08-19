@@ -1,0 +1,141 @@
+{
+  "title": "The Family Business: Alex Baker Takes the Trophy, Jon Baker Takes the Spoon",
+  "title_candidates": [
+    "The Family Business: Alex Baker Takes the Trophy, Jon Baker Takes the Spoon",
+    "A Ten at the 14th and Still Eight Clear",
+    "The Spoon Collector Cashes In at Catalunya",
+    "One Baker Up, One Baker Down",
+    "Forty-Six on Saturday, Four Days of Hanging On"
+  ],
+  "theme": "PGA Catalunya extracted a toll from all five men — the Trophy went to the one who paid it in the cheapest currency, and the two ends of the final table were occupied by brothers.",
+  "tone": "house",
+  "opening_hook": "Open on the 14th at the Stadium in R4: the man leading the Trophy makes a sextuple-bogey 10 (SI 4) and the lead barely flinches — the perfect image of a TEG where the champion's card was as ugly as anyone's and it simply did not matter. From there, pull back to the two Bakers heading in opposite directions.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "underdog",
+    "inversion"
+  ],
+  "competitions": [
+    {
+      "name": "The Trophy (Stableford)",
+      "winner_or_loser": "Alex Baker"
+    },
+    {
+      "name": "The Green Jacket (Gross)",
+      "winner_or_loser": "Gregg Williams"
+    },
+    {
+      "name": "The Wooden Spoon",
+      "winner_or_loser": "Jon Baker"
+    }
+  ],
+  "trophy_storyline": {
+    "subject": "Alex Baker leads from the 5th hole of R1 to the last, winning the Trophy on 169 points by 8 — while his gross game falls apart around him",
+    "why_it_matters": "A man with three prior Wooden Spoons, and the Spoon in two of the last three TEGs, never once finished a round worse than 3rd of 5 and was the steadiest man in the field.",
+    "shape": "He opened with 46 points at the Tour course — 17 of them in holes 8-12 (b40), 13 more in holes 14-16 (b47) — and led by 12 before anyone had found their feet. Then the wheels came off the gross card: 106 in R2 (cr02), a new course-worst at the Tour across 22 prior visits, including an 11 at the 18th (b36) and an 8 at the 16th (b46), and a slide from 2nd to 5th in the Jacket (b44) — yet Stableford charges nothing worse than a blank for a ruined hole, and he answered with 44 in R3, 21 points of it in holes 11-16 (b04). A closing 38 with a 10 at the 14th (b25) and an 8 at the 17th (b43) was still enough, because the man who eventually finished second had lost the tournament on day one.",
+    "beat_ids": [
+      "b01",
+      "b40",
+      "b47",
+      "cr02",
+      "b36",
+      "b46",
+      "b04",
+      "b44",
+      "b25",
+      "b43",
+      "b37",
+      "b17",
+      "b05"
+    ],
+    "compelling_score": 8,
+    "humour_score": 7
+  },
+  "jacket_storyline": {
+    "subject": "Gregg Williams, the reigning Wooden Spoon holder, wins the Green Jacket at +66 by 14",
+    "why_it_matters": "He arrived as the man who came last in TEG 17 and left with the Jacket, having spent parts of the first two rounds at the bottom of the Spoon race.",
+    "shape": "R1 was a shambles: 8 shots gone across holes 3-5 (b53 territory), a 9 at the 7th (b24) and an 8 at the 17th (SI 3, b20), rescued only in the sense that a birdie at the 15th ended a long run of bogey-or-worse (b31). R2 was the swing — 11 points better than R1 (b42), 13 points from holes 13-16 (b19), the Jacket lead prised off Jon Baker at the 7th after his 20 holes in front (b48). He took the lead outright at the 2nd in R3 (b28) after four holes without dropping a shot (b21, b16), survived a double at the 6th (b12), and closed with 12 over — 84 gross, a personal best at the Stadium improved by 8 — beating David Mullin head-to-head in three of the four rounds and, along the way, closing to within 9 of the Trophy lead after trailing by 15 (b08).",
+    "beat_ids": [
+      "b02",
+      "b24",
+      "b20",
+      "b31",
+      "b42",
+      "b19",
+      "b26",
+      "b48",
+      "b28",
+      "b21",
+      "b16",
+      "b12",
+      "b27",
+      "b06",
+      "b10",
+      "b08"
+    ],
+    "compelling_score": 8,
+    "humour_score": 5
+  },
+  "spoon_storyline": {
+    "subject": "Jon Baker, defending Trophy champion, collects the Wooden Spoon on 126 points, 23 adrift of the next worst",
+    "why_it_matters": "The man who won TEG 17 was last in the field in three of the four rounds and finished the tournament behind his own brother by a distance no handicap can explain away.",
+    "shape": "It began respectably enough — the Jacket lead from the 5th in R1, and an R2 finish of 16 points in five holes, a birdie at the 14th and four pars without dropping a gross shot (b09, b13), good for 39 points and the Jacket lead still in hand after two rounds (b37). Then the 7th in R2 took the Jacket off him after 20 holes in front (b48), and the Stadium finished the job: a 9 at the 4th in R3 (b39), bottom of the Spoon race by the 2nd hole, 28 points, then 29 in R4. Champion to Spoon in one tournament, 23 behind David Mullin, and no amount of ordinary golf in his worst round would have saved him (b14).",
+    "beat_ids": [
+      "b14",
+      "b37",
+      "b09",
+      "b13",
+      "b48",
+      "b39"
+    ],
+    "compelling_score": 8,
+    "humour_score": 8
+  },
+  "discovered_storylines": [
+    {
+      "subject": "David Mullin's 84 at the Stadium in R3 — a new all-time TEG course record — bookended by an 11 and a collapse",
+      "why_it_matters": "The lowest round ever recorded at the Stadium across 27 prior visits, set by a man who three days earlier had taken 11 shots at a par 5 and been last in the Spoon race.",
+      "shape": "R1 at the Tour produced an 11 at the 15th (b35), his worst on any par 5, and dropped him to the bottom of the Wooden Spoon race on the spot (b66). Two days later, on the harder course, he went 1-3 without dropping a shot and shot 84 gross: a new Stadium course record, beating the prior mark of 89, and a personal best there improved by 7 (cr01). R4 undid the reward — 9 shots gone and four holes without a net par across 14-17, including a triple at the 15th (b45, b49) — leaving him 14 short in the Jacket he has won nine times before.",
+      "beat_ids": [
+        "cr01",
+        "b35",
+        "b66",
+        "b45",
+        "b49"
+      ],
+      "compelling_score": 9,
+      "humour_score": 6
+    },
+    {
+      "subject": "John Patterson finishes second having thrown the Trophy away in the first eight holes he played",
+      "why_it_matters": "He set personal bests on both Catalunya courses and outscored the champion in two of the four rounds, yet the eight holes that opened his tournament cost him more than he ever recovered.",
+      "shape": "Holes 3-10 of R1: an 8 at the 3rd (b23), 22 shots bled in eight holes (b18), seven consecutive holes without a net par (b29) and the bottom of the Spoon race by the 4th (b33). He was a different golfer thereafter — 13 points from holes 13-16 to make R1 a 14-point split between the nines (b30, b22), 16 points from holes 11-15 in R2 around an 8 at the 4th (b11, b15, b32), a personal best 94 at the Tour and a personal best 93 at the Stadium in R3. R4 gave him 9 points from holes 4-6 (b07) and a birdie at the 17th to stop the bleeding (b03), and he still lost by 8 to a man who beat him in only two rounds.",
+      "beat_ids": [
+        "b18",
+        "b23",
+        "b29",
+        "b33",
+        "b30",
+        "b22",
+        "b11",
+        "b15",
+        "b32",
+        "b41",
+        "b07",
+        "b03"
+      ],
+      "compelling_score": 8,
+      "humour_score": 6
+    }
+  ],
+  "body_fallback": "none",
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "records",
+  "vehicle_fit_response": {
+    "top_scored_vehicle": "catalogue",
+    "taken_up": false,
+    "note": "The blow-up inventory is real (Alex Baker four, Jon Baker three, plus Mullin's 11 and Williams's 9) and will run through the prose as texture, but it works better as evidence than as the frame — the two brothers finishing first and last, one with three prior Spoons and one the defending champion, is the story the players will actually want told."
+  },
+  "why_the_champion_won": "A 46-point opening round put 12 on the field before anyone settled, and although John Patterson outscored him in two of the four rounds, Alex Baker was the steadiest man in the field — never worse than 3rd of 5, best in the field twice — so the margin he took on day one was never handed back; Patterson would have lost even with an ordinary round in place of his worst.",
+  "storyline_note": "The Trophy still leads, but it is braided from the opening with the Wooden Spoon rather than told to its conclusion first: the two are the same story here — brothers finishing first and last, one a serial Spoon-collector, the other the defending champion — and separating them would waste the tournament's best material."
+}

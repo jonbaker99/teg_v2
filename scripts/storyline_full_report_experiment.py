@@ -38,12 +38,49 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
 from teg_analysis.reporting import llm
 from teg_analysis.reporting.authoring import WRITER_VOICE, restyle_voice
 from teg_analysis.reporting.paths import output_dir
-from teg_analysis.reporting.story_plan import assemble_bundle
+from teg_analysis.reporting.story_plan import assemble_bundle, build_storyline_plan
 
 
 def _evidence_for(storyline: dict, all_beats: list) -> list:
     by_id = {b["id"]: b for b in all_beats}
     return [by_id[bid] for bid in storyline["beat_ids"] if bid in by_id]
+
+
+def _fallback_sections(plan: dict, all_beats: list) -> list:
+    """Deterministic body_fallback sections (2026-08-19): used ONLY when the
+    editor set body_fallback != "none" because discovered_storylines came back
+    empty or thin. Content is grouped from raw beats, same fact-isolation
+    principle as everywhere else in this pipeline — the fallback is a
+    structural decision, not a second LLM-authored "shape".
+    """
+    fallback = plan.get("body_fallback", "none")
+    if fallback == "none":
+        return []
+
+    spine_players = {plan["trophy_storyline"]["subject"], plan["jacket_storyline"]["subject"],
+                     plan["spoon_storyline"]["subject"]}
+
+    if fallback == "player_by_player":
+        by_player: dict[str, list] = {}
+        for b in all_beats:
+            for p in b.get("players", []):
+                by_player.setdefault(p, []).append(b)
+        sections = []
+        for player, beats in sorted(by_player.items(), key=lambda kv: -len(kv[1])):
+            if len(beats) < 3 or player in spine_players:
+                continue
+            sections.append({"subject": f"{player}'s tournament", "beat_ids": [b["id"] for b in beats]})
+        return sections
+
+    if fallback == "round_by_round":
+        by_round: dict[int, list] = {}
+        for b in all_beats:
+            if b.get("round"):
+                by_round.setdefault(b["round"], []).append(b)
+        return [{"subject": f"Round {rnd}", "beat_ids": [b["id"] for b in beats]}
+                for rnd, beats in sorted(by_round.items())]
+
+    return []
 
 
 DRAFT_WRITER_SYSTEM = """You are writing one section of a golf tournament report — a \
@@ -65,14 +102,24 @@ def draft_section(storyline: dict, evidence: list, model: Optional[str] = None) 
 
 
 def build_storyline_draft(teg_num: int, model: Optional[str] = None) -> tuple[str, dict]:
-    plan_path = f"{output_dir()}/teg_{teg_num}_story_plan.json"
-    with open(plan_path) as f:
-        plan = json.load(f)
+    """Runs Call A only (`build_storyline_plan`) — this prototype never calls
+    the legacy full `StoryPlan` (Call B); see story_plan.py's module comment
+    above `StorylinePlan` for the split.
+    """
+    plan_result = build_storyline_plan(teg_num, model=model)
+    for w in plan_result["warnings"]:
+        print(f"[storyline_full_report] WARNING: {w}")
+    plan = plan_result["plan"].model_dump()
 
     bundle, _ = assemble_bundle(teg_num, top_n=None)
     all_beats = bundle["beats"]
 
-    order = ([plan["trophy_storyline"]] + plan["discovered_storylines"]
+    fallback_sections = _fallback_sections(plan, all_beats)
+    if fallback_sections:
+        print(f"[storyline_full_report] body_fallback={plan.get('body_fallback')!r}: "
+              f"{len(fallback_sections)} fallback section(s)")
+
+    order = ([plan["trophy_storyline"]] + plan["discovered_storylines"] + fallback_sections
             + [plan["jacket_storyline"], plan["spoon_storyline"]])
 
     sections = []

@@ -388,6 +388,137 @@ fallback — the code exists (`scripts/storyline_telling_experiment.py`), it's j
 dry-draft-and-writer pipeline (Phase 3/4) — the three-TEG experiment above used a standalone minimal
 writer, not the production `authoring.py` writer, and `rounds[]` still drives report structure today.
 
+## Full-report proof + user's 3-point punch list (2026-08-19)
+
+`scripts/storyline_full_report_experiment.py` proved the pipeline end-to-end (structural draft →
+`authoring.restyle_voice`) on TEG 14, and the plain "straight" draft (no voice pass, `--no-voice`)
+read strong on TEGs 16/18 too — "The twelfth hole" (TEG 16, both Baker brothers blowing up the same
+hole on two different courses) and "The brothers Baker at opposite ends of the same tournament"
+(TEG 18) are storylines a round-by-round report would never surface. Full detail and read of all
+three drafts: see the STATUS.md entry dated 2026-08-19.
+
+Reviewing that output, Jon raised three points, tackled in order:
+
+**1. Records/streaks weren't guaranteed to reach the beat layer — closed.** Course records were
+already wired into `beats` as mandatory (`course_history.py`). All-time streak records
+(`analysis/streaks.py`) and TEG-total score-count records (`analysis/records.py`) — both already
+computed for the webapp Records page — were not. New `milestone_records.py` wraps both as `sr*`/`sc*`
+mandatory beats, same wiring pattern as `course_history.py`. This guarantees these facts are
+*mentioned*; it does not yet guarantee they *drive* a storyline — that's addressed by the "records
+are legitimate storyline subjects" guidance added in point 2 below (SYSTEM_PROMPT), not by new code.
+
+**2. Storyline quality bar + fallback ladder — added to `story_plan.py`'s `SYSTEM_PROMPT` and
+schema.** Jon's framing: "how each trophy was won" (`trophy_storyline`/`jacket_storyline`/
+`spoon_storyline`, always populated) always leads; `discovered_storylines` is the default
+enrichment; `player_by_player`/`round_by_round` are fallbacks that sit at the SAME tier as each
+other and BELOW discovered-storylines — used only when nothing clears the bar, never above it.
+
+- `DraftedStoryline` gained `humour_score` (1-10, self-rated like `compelling_score`). SYSTEM_PROMPT
+  requires at least one storyline in the report to score `humour_score >= 7`; `check_plan_consistency`
+  surfaces a warning (not a hard failure — some tournaments genuinely have no funny material) when
+  none does.
+- SYSTEM_PROMPT now states the quality bar explicitly: "spans 2+ rounds and has beats" is the
+  eligibility floor, not the bar — a storyline must deliver humour, intrigue, drama, or importance to
+  be included, and a technically-grounded-but-flat storyline should be left out even if it's the only
+  candidate.
+- New `sr*`/`sc*`/`cr*` mandatory beats (records) are explicitly called out as legitimate storyline
+  SUBJECTS ("Anatomy of a TEG record"), not just facts that need a mention.
+- New `StoryPlan.body_fallback: Literal["none", "player_by_player", "round_by_round"] = "none"`.
+  `check_plan_consistency` warns if a fallback is chosen while `discovered_storylines` already has
+  2+ entries (contradicts the tiering). Wired into `scripts/storyline_full_report_experiment.py`'s
+  `_fallback_sections()`: when the editor sets a non-`"none"` fallback, sections are built
+  **deterministically** from grouped raw beats (by player, or by round) — same fact-isolation
+  principle as everywhere else in this pipeline; the editor's job is the structural call, not
+  authoring a second unverified "shape" for the fallback content.
+
+**Bug found and fixed live on TEG 14 (2026-08-19): `candidate_threads` leaked beat IDs outside the
+trimmed bundle.** `candidate_threads` (`threads.py`) is deliberately scored from `all_beats`
+(untrimmed) — same reasoning as `vehicle_fit_hints` — but its `beat_ids` were never filtered back down
+to the trimmed `beats` actually sent to the model. On TEG 14 the editor read beat IDs straight out of
+`candidate_threads` and cited them in four different storylines' own `beat_ids`; none of those IDs
+existed in the bundle the model was given. `check_plan_consistency`'s grounding check caught it
+correctly ("cites unknown beat_ids") — the bundle handed the model phantom IDs to begin with, not a
+new failure of the check. Fixed in `assemble_bundle`: threads now get their `beat_ids` filtered to the
+in-bundle set immediately after `detect_threads` runs, and any thread left with zero beats is dropped.
+Regression test: `test_candidate_threads_never_cite_beats_outside_the_bundle`
+(`tests/test_reporting_schema_and_era.py`). Re-ran TEG 14 live after the fix: zero grounding warnings.
+Pre-existing bug, not introduced by the Call A/B split — `candidate_threads` has worked this way since
+Phase 1; it simply hadn't been exercised enough times to surface until now.
+
+**Validated live on TEGs 14 and 16.** First call truncated: the new `humour_score`/`body_fallback`
+fields pushed StoryPlan's structured-output length over `generate_structured`'s default
+`max_tokens=16000` (a `pydantic.ValidationError: EOF while parsing a string` — the JSON was cut off
+mid-string, not a schema-shape problem). Fixed by raising the `build_story_plan` call site to
+`max_tokens=20000` (tested 24000 first — the Anthropic SDK requires streaming above some threshold
+and threw before the request was even sent, so 20000 is the safe number, not an arbitrary one).
+
+Both TEGs then came back with zero `check_plan_consistency` warnings. Humour requirement: real spread,
+not every storyline padded to a high score (TEG 14: 3, 4, 5, 8, 8; TEG 16: 4, 5, 5, 8, 9) — both
+tournaments' Wooden Spoon storyline scored highest, matching the SYSTEM_PROMPT's own prediction that
+disaster is usually the funny one. `body_fallback` was `"none"` both times (discovered_storylines
+cleared the bar on its own) — the fallback path itself is still unexercised on real output; worth
+checking on a TEG where discovery genuinely comes up empty before calling it proven.
+
+**The actual payoff, unprompted:** TEG 16's `discovered_storylines` included *"Anatomy of an 80:
+Mullin's Estoril course record, two days after Penha Longa took him apart"* — built from the `cr*`
+course-record beat this session wired in under point 1, exactly the "records driving a storyline"
+outcome Jon asked for, without any code beyond the SYSTEM_PROMPT guidance above.
+
+**3. Interweaving storylines instead of running them as separate sections — not started.** Flagged
+by Jon as worth trying despite the added complexity risk (clarity vs. richness trade-off). Deferred
+to its own fresh-context chat per the session's own advice (see chat history) — it's a different kind
+of problem (narrative ordering, not fact-grounding or discovery) and the most exploratory of the
+three, so cleanest to explore once 1 and 2 have landed as the new baseline to interweave *from*.
+
+## Call A / Call B split, and the writer-richness gap (2026-08-19)
+
+Two follow-ups from reading the TEG 14/16/18 output: Jon noticed the `max_tokens` fix (16000 →
+20000, previous section) was patching a symptom, and separately asked whether the storyline-first
+writer has access to the same richness of context the legacy pipeline's writer does.
+
+**Diagnosis, not assumption — checked against the code.** `StoryPlan` carries every field the
+LEGACY round-by-round pipeline needs (`rounds[]`, `players[]`, `must_include_beat_ids`, `cuts`,
+`venue_notes`, `course_history_notes`, `foreshadow`, `payoffs`, `narrative_structure`) even though
+`scripts/storyline_full_report_experiment.py` reads none of them — only
+`trophy_storyline`/`jacket_storyline`/`spoon_storyline`/`discovered_storylines`/`body_fallback`. That
+dead weight, not the humour/fallback additions alone, is most of what pushed the call over budget.
+
+**The split ("Call A" / "Call B").** New `StorylinePlan` (in `story_plan.py`, right after
+`check_plan_consistency`) is the same underlying bundle/beats as `StoryPlan` — an OUTPUT-schema split,
+not an input split; both would see identical `beats`/`player_course_history`/`win_anatomy`/etc. Only
+what each is *asked to produce* differs. `StorylinePlan` keeps: title/theme/tone, `opening_hook`,
+`narrative_vehicles`, `competitions` (name/winner only), the three anatomy storylines,
+`discovered_storylines`, `body_fallback`, `prominent_vehicle`/`prominent_palette`/
+`vehicle_fit_response`, `why_the_champion_won`, `storyline_note`. A trimmed `STORYLINE_SYSTEM_PROMPT`
+drops the round-plan/must-include/venue-notes/payoffs instructions and adds an explicit **MANDATORY
+BEAT COVERAGE** rule in their place: every `mandatory: true` beat must appear in *some* storyline's
+`beat_ids`, checked by new `check_storyline_plan_consistency` (replaces the `must_include_beat_ids`/
+`cuts` check, which doesn't apply to this schema). New `build_storyline_plan()` writes
+`teg_{n}_storyline_plan.json` — a distinct filename from `build_story_plan`'s
+`teg_{n}_story_plan.json`, so this doesn't clobber the file the legacy pipeline reads.
+`storyline_full_report_experiment.py` now calls `build_storyline_plan` directly (Call A only) instead
+of reading a pre-generated `StoryPlan` off disk — **`StoryPlan`/`SYSTEM_PROMPT`/`build_story_plan` are
+untouched**, still serving the legacy pipeline, and this prototype never calls them.
+
+Validated: imports cleanly, `dry_run=True` assembles the prompt+bundle without an API call (TEG 16:
+53 beats, 94183 user-message chars), 53/53 unit tests still pass. **Not yet validated with a live
+call** — the Anthropic API usage limit was hit immediately after this landed (`account has reached
+its specified API usage limits, resets 2026-09-01`). Blocked until then, or until run through
+`--plan`/`--paste` mailbox mode instead of the direct API.
+
+**The writer-richness gap (raised by Jon, not yet addressed by code).** Separate from the plan split:
+the LEGACY writer (`authoring.py`) re-injects raw bundle context — `venue`, `player_history`,
+`player_course_history`, `player_relationships`, `win_anatomy`, `tournament_shape`
+(`BUNDLE_CONTEXT_KEYS`, `authoring.py:168`) — directly into the prose prompt, on top of the plan. The
+storyline-first `draft_section()` writer gets none of that: only `evidence`, the beats a storyline's
+`beat_ids` cited. Deliberate (the 2b fact-isolation fix), but a real narrowing — course-history colour
+that never became a beat (ordinary Nth-visit notes, non-record deltas) cannot reach the page, only
+`cr*`/`sr*`/`sc*` records can. Proposed next step: a fourth writer variant that gives `draft_section`
+read-only access to the same *structured, numbers-only* context `authoring.py`'s `bundle_context="data"`
+style already produces (stripped of derived prose), A/B'd against the current evidence-only writer on
+factual_grounding / richness / reads-as-story, same judge methodology as the 2b experiment. Not started
+— blocked on the same API limit.
+
 ## Explicitly out of scope for this proposal
 
 - Round reports (`round_report.py` / `RoundStoryPlan`) — separate pipeline instance, not touched.

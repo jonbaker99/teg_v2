@@ -1,50 +1,50 @@
 {
-  "title": "Sixth, Fifth, Third, Second — First: Neumann Never Headed on the Lisbon Coast",
+  "title": "Two Spoons, No Trophies, Now This",
   "title_candidates": [
-    "Sixth, Fifth, Third, Second — First: Neumann Never Headed on the Lisbon Coast",
-    "The Long Way Up: Two Spoons, Then a Trophy",
-    "Never Headed: Neumann's 156 on the Lisbon Coast",
-    "Estoril Rewrites Its Book at Both Ends"
+    "Two Spoons, No Trophies, Now This",
+    "The Nearly Man Who Never Trailed",
+    "Eighty and a Hundred and Seven",
+    "Neumann Goes First at Oitavos and Stays There"
   ],
-  "theme": "A man who had only ever gone backwards or nearly-there finally arrives: Neumann leads from the first afternoon at Oitavos and is never headed, while the rest of the field spends four days handing the course its own material — two course-worst records, three double-figure holes and one genuine course record.",
-  "tone": "house — faithful, entertaining, tongue-in-cheek British English; subverted gravitas, trivial stakes handled with the solemnity of statecraft",
-  "narrative_structure": "chronological",
-  "opening_hook": "Open on the plain ledger of Stuart Neumann's TEG career — 6th, 5th, 3rd, 2nd, and two Wooden Spoons in the cupboard — then start at Oitavos Dunes on the Saturday, where he posted 39 and took a lead nobody would take off him.",
+  "theme": "A tournament of extremes on the Lisbon Coast — the field posting some of the biggest numbers in living memory and the lowest gross ever recorded at Estoril in the same four days — while the one man with no silverware to his name led it from the first afternoon to the last and was never once headed.",
+  "tone": "house",
+  "narrative_structure": "in_medias_res",
+  "opening_hook": "Open on the R4 scorer's table at Estoril, where the same short parkland course has just yielded an 80 (a new course record, Mullin) and a 107 (a new course-worst, Alex Baker) within the same five-man field — then loop back to Oitavos on R1 to explain why the Trophy had, by then, long since been decided in favour of Stuart Neumann.",
   "narrative_vehicles": [
-    "hero_arc",
-    "motif",
-    "dual_narrative"
+    "underdog",
+    "origin",
+    "catalogue"
   ],
   "foreshadow": [
-    "Neumann's finishing ladder across the last four TEGs he played — 6th, 5th, 3rd, 2nd — and the two Spoons that sit behind it",
-    "Penha Longa's par-five 12th, SI 17 and nominally one of the easiest holes on the card, noted early as harmless",
-    "Alex Baker arrives as reigning Spoon holder (TEG 15) and opens with a 9 at the very first hole of the tournament",
-    "Gregg Williams arrives as defending Trophy champion and immediately posts the best gross in the field — 89, his best ever round at Oitavos"
+    "Stuart Neumann's CV going in: no Trophy, no Jacket, two prior Wooden Spoons, and best finishes of 3rd (TEG 12) and 2nd (TEG 15).",
+    "Alex Baker arrives as the reigning Wooden Spoon holder (TEG 15) with two Spoons already on the sideboard.",
+    "Estoril's record book had stood undisturbed across six prior TEG visits — best 86, worst 106.",
+    "Gregg Williams comes in as defending Trophy champion (TEG 15) and, on gross, is about to be the best player in the field every single round."
   ],
   "competitions": [
     {
       "name": "Trophy (Stableford)",
-      "winner_or_loser": "Stuart Neumann — 156 pts, by 13"
+      "winner_or_loser": "Stuart Neumann"
     },
     {
       "name": "Green Jacket (Gross)",
-      "winner_or_loser": "Gregg Williams — +66, by 16"
+      "winner_or_loser": "Gregg Williams"
     },
     {
       "name": "Wooden Spoon",
-      "winner_or_loser": "Alex Baker — 127 pts, 4 behind Jon Baker"
+      "winner_or_loser": "Alex Baker"
     }
   ],
   "rounds": [
     {
       "round": 1,
       "headline_candidates": [
-        "Neumann Opens With 39 and a Lead He Never Gives Back",
-        "Alex Baker Rewrites the Oitavos Ledger, Downwards",
-        "Atlantic Links, Arthur Hills, and a 10 at the 17th"
+        "Oitavos Writes a New Worst — and Neumann Quietly Goes Five Clear",
+        "The Atlantic Rearranges Alex Baker: 113 and a Fresh Entry in the Book",
+        "Links Opening, Long-Term Consequences"
       ],
-      "chosen_headline": "Neumann Opens With 39 and a Lead He Never Gives Back",
-      "angle": "On the third TEG round at Oitavos Dunes, Neumann's 39 puts him five clear immediately; Williams answers with the best gross in the field, 89, his own personal best there; and at the other end Alex Baker signs for 113, a new course-worst across 12 prior visits.",
+      "chosen_headline": "Oitavos Writes a New Worst — and Neumann Quietly Goes Five Clear",
+      "angle": "Neumann's 39 points is best in the field and opens a five-point lead nobody yet takes seriously; Williams (89) and Jon Baker (92) both set personal bests at Oitavos; Alex Baker's 113 is the worst gross ever posted here across 12 prior visits, assembled from a 9 at the 1st, a 9 at the 11th and a 10 at the 17th.",
       "beat_ids": [
         "cr03",
         "b37",
@@ -56,61 +56,63 @@
     {
       "round": 2,
       "headline_candidates": [
-        "A New Course, the Same Two Leaders",
-        "Troia, Unvisited and Unimpressed",
-        "Alex Baker Concedes the Bottom for Good at the 13th"
+        "Troia, Unwrapped: A New Course Learns What It Is Dealing With",
+        "Neumann's Worst Round Is Still the Field's Best",
+        "Robert Trent Jones Sr Meets Five Men From Kent"
       ],
-      "chosen_headline": "A New Course, the Same Two Leaders",
-      "angle": "Troia is new to TEG so nobody has history to hide behind: Neumann's 35 is still best in the field and the lead goes to 7, Jon Baker draws level for the gross lead at the 11th and 14th — the closest the Jacket ever came — and Alex Baker bleeds 13 shots from the 13th and takes outright last in the Spoon race for keeps.",
+      "chosen_headline": "Troia, Unwrapped: A New Course Learns What It Is Dealing With",
+      "angle": "A brand-new course for TEG, and Neumann's poorest round of the tournament (35) is still the best of the five, stretching the lead to seven; Williams bleeds through 8-11 and again 13-15 yet keeps the gross lead; Alex Baker drops to the foot of the Spoon race at the 13th and stays there for the duration, having shed 13 shots between the 13th and the 17th.",
       "beat_ids": [
+        "b43",
         "b33",
         "b41",
-        "b43"
+        "b50"
       ]
     },
     {
       "round": 3,
       "headline_candidates": [
-        "Both Bakers Broken by the Same Par Five",
-        "The Sintra Hills Present Their Invoice",
-        "Neumann's Second 39 Turns a Contest Into Paperwork"
+        "Sintra's 12th Collects Its Tolls: A Ten, a Nine, and the Trophy All But Over",
+        "Mountain Parkland, Mountainous Numbers",
+        "Williams Goes Five Holes Without a Blemish; Everyone Else Goes Down the Hill"
       ],
-      "chosen_headline": "Both Bakers Broken by the Same Par Five",
-      "angle": "At Penha Longa's 12th — SI 17, supposedly the soft spot — Jon Baker takes 10 and Alex Baker 9; Mullin loses an 8 at the 16th (SI 1) and slides to 30 points; Williams's five straight pars from the 11th push the Jacket lead from 4 to 14 while Neumann's 39 pushes the Trophy lead to 12.",
+      "chosen_headline": "Sintra's 12th Collects Its Tolls: A Ten, a Nine, and the Trophy All But Over",
+      "angle": "Neumann's second 39 pushes the lead to twelve and effectively ends the contest; Penha Longa's 12th — a par 5 marked SI 17, the second-easiest hole on the card — takes a 10 from Jon Baker and a 9 from Alex Baker inside the same hour; Williams pars five in a row from the 11th to seal the gross race, while Mullin's quadruple at the SI 1 16th caps a round 13 shots worse than his last visit here.",
       "beat_ids": [
+        "b28",
         "b34",
         "b44",
         "b19",
         "b21",
-        "b05",
         "b18",
         "b25",
-        "b35",
-        "b28"
+        "b05"
       ]
     },
     {
       "round": 4,
       "headline_candidates": [
-        "Estoril Rewrites Its Book at Both Ends",
-        "Two 80s and a 107 on Portugal's Oldest Card",
-        "Mullin's Record, Neumann's 43, Baker's Eleven"
+        "Eighty and a Hundred and Seven: Estoril Rewrites Both Ends of the Book",
+        "Mullin Finds the Course Record Two Days Too Late",
+        "Neumann's Best Round Arrives With Nothing Left to Win"
       ],
-      "chosen_headline": "Estoril Rewrites Its Book at Both Ends",
-      "angle": "Mullin's 80 is a new Estoril course record, beating 86 across 6 prior visits, and a 14-shot improvement on his last visit; Williams matches the number for his own Estoril best and closes the Jacket out at +66; Neumann posts his tournament-best 43 despite a 9 at the 8th (SI 1); Alex Baker's 107 is a new Estoril course-worst, complete with an 11 at the 12th.",
+      "chosen_headline": "Eighty and a Hundred and Seven: Estoril Rewrites Both Ends of the Book",
+      "angle": "On Portugal's oldest course, Mullin signs for 80 — a new TEG course record, 14 better than his last visit — while Alex Baker signs for 107, a new course-worst, built on a 9 at the 1st and an 11 at the 12th; Neumann posts his best round of the tournament (43, and a 92 gross that is 14 better than TEG 15) despite a quintuple bogey at the SI 1 8th, and Williams closes out the Jacket with an 80 of his own in spite of a quadruple at the 14th.",
       "beat_ids": [
         "cr01",
         "cr02",
+        "b13",
         "b09",
-        "b46",
+        "b30",
         "b03",
         "b06",
         "b07",
-        "b13",
-        "b32",
-        "b30",
-        "b36",
         "b04",
+        "b22",
+        "b10",
+        "b14",
+        "b36",
+        "b46",
         "b08"
       ]
     }
@@ -118,23 +120,23 @@
   "players": [
     {
       "player": "Stuart Neumann",
-      "arc": "Two prior Wooden Spoons, no wins and a best-ever second: he led the Trophy from Oitavos to Estoril with 39-35-39-43, best in the field in the first three rounds, never worse than second of five, and closed with a 14-shot improvement on his last visit to Estoril."
+      "arc": "Two Wooden Spoons and no silverware in fifteen previous attempts, and then 39/35/39/43 — best in the field in the first three rounds, never worse than second in any, leader after every single one, and a first Trophy by 13."
     },
     {
       "player": "Gregg Williams",
-      "arc": "The defending Trophy champion lost the crown while being the best gross player in the field in all four rounds — +66 for the Jacket, the fifth-best gross in TEG history, and yet beaten head-to-head by Neumann on every one of the four days."
+      "arc": "The defending Trophy champion who was the best gross player in all four rounds, took the Jacket by 16 at +66 with personal bests at Oitavos (89) and Estoril (80) — and still lost the main event by 13, which is handicapping, not injustice."
     },
     {
       "player": "David Mullin",
-      "arc": "Nine prior Jackets and a shrug of a Penha Longa (30 points, an 8 at the 16th, 13 shots worse than his last visit there) answered by 45 points and an 80 at Estoril — a new course record and a personal best by 14 — which still left him 16 adrift of Williams."
+      "arc": "Nine Jackets in the bank, a Penha Longa round 13 shots worse than his last visit and a quadruple at the SI 1 16th — then a closing 80 at Estoril, a new course record and a 15-point swing on his R3."
     },
     {
       "player": "Jon Baker",
-      "arc": "A personal best 92 at Oitavos to start, then 11 shots gone in three holes at Penha Longa including a 10 at the 12th; a new Estoril best of 93 to finish, and the small mercy of being 4 points clear of his brother."
+      "arc": "Personal bests at Oitavos (92) and Estoril (93) bracketing a Penha Longa collapse of 11 shots in three holes, including a 10 at the 12th, which is how a man with three Trophies and three Jackets finishes fourth."
     },
     {
       "player": "Alex Baker",
-      "arc": "The reigning Spoon holder retained it in comprehensive style: 9s at the 1st and 11th and a 10 at the 17th on day one, a new Oitavos course-worst of 113, a new Estoril course-worst of 107, an 11 at the 12th, and last place in the Trophy race from the opening hole to the last."
+      "arc": "The reigning Spoon holder was bottom of the field after every round, set new course-worsts at both Oitavos (113) and Estoril (107), and signed off with an 11 at the 12th — a third Spoon, comprehensively earned."
     }
   ],
   "must_include_beat_ids": [
@@ -147,135 +149,146 @@
     "b09",
     "b34",
     "b37",
-    "b46"
+    "b13",
+    "b46",
+    "b30"
   ],
   "cuts": [
-    "b10",
     "b11",
     "b12",
-    "b14",
     "b15",
     "b16",
     "b17",
     "b20",
-    "b22",
-    "b23",
     "b26",
     "b27",
     "b29",
     "b31",
+    "b32",
+    "b35",
     "b38",
     "b39",
     "b42",
     "b45",
-    "b48",
-    "b50"
+    "b48"
   ],
-  "venue_notes": "TEG's 5th visit to the Lisbon Coast, four courses in four days: Oitavos Dunes (3rd TEG round there; Arthur Hills links on the Atlantic, host of Portuguese Opens) as the exposed opener; Troia (a new course for TEG, Robert Trent Jones Sr. on the Setubal peninsula) in R2, where nobody has any history to lean on, so no personal-best talk is available; Penha Longa (3rd TEG round there; RTJ Jr. mountain parkland in the Sintra hills, steep and long-regarded as one of Portugal's hardest) as the day the field bled; and Estoril in R4 (2nd TEG round there; Portugal's first golf club, short, tree-lined, Mackenzie Ross), the friendliest card of the four — which is exactly where the course record fell at one end and the course-worst at the other.",
+  "venue_notes": "TEG's 5th visit to the Lisbon Coast. Use the courses as the shape of the story: Oitavos Dunes (3rd TEG round here, Arthur Hills links on the Atlantic) for the exposed opening; Troia (a new course for TEG, Robert Trent Jones Sr on the peninsula) as the unknown quantity in R2; Penha Longa (3rd TEG round here, mountain parkland in the Sintra hills) as the punishment round where the field's cards came apart; Estoril (2nd TEG round here, Portugal's first golf club, short, tree-lined, Mackenzie Ross) as the finale that flattered and humiliated in equal measure.",
   "course_history_notes": [
-    "Mullin's 80 at Estoril in R4 was both a new personal best there (by 14) and a new course record, beating 86 across 6 prior visits.",
-    "Williams set personal bests at two venues: 89 at Oitavos Dunes in R1 (by 2) and 80 at Estoril in R4 (by 6).",
-    "Neumann's 92 at Estoril in R4 was a new personal best there — 14 shots better than his last visit.",
-    "Penha Longa punished the returners: Jon Baker 12 shots worse than his last visit, Mullin 13 worse, Neumann 6 worse; Alex Baker was 10 worse at Oitavos and 8 worse at Estoril."
+    "Estoril's R4 rewrote both ends of its ledger in a single afternoon: Mullin's 80 beat the prior record of 86, and Alex Baker's 107 exceeded the prior worst of 106, across six prior visits.",
+    "Four personal bests at Estoril in R4: Mullin 80 (14 better than his last visit), Williams 80 (6 better), Neumann 92 (14 better), Jon Baker 93 (3 better).",
+    "Oitavos in R1 cut both ways: personal bests there for Williams (89) and Jon Baker (92), and a new course-worst of 113 for Alex Baker.",
+    "Penha Longa was where the ground gave way: Mullin 13 shots worse than his last visit, Jon Baker 12 worse, Neumann 6 worse, Williams 5 worse."
   ],
   "trophy_storyline": {
-    "subject": "Stuart Neumann's first Trophy, built from the front",
-    "why_it_matters": "A player whose TEG record consisted of two Wooden Spoons and a best finish of second led every round of the tournament and won by 13 — the first win of his career.",
-    "shape": "Setup: Neumann arrives with two prior Spoons and a runner-up finish at TEG 15 as his high-water mark, then posts 39 at Oitavos and is five clear before the sun has properly set. Turn: he is best in the field again at Troia and again at Penha Longa, beating Williams head-to-head all four days, and the lead ratchets 5 to 7 to 12 with no lead change after the opening exchanges. Resolution: 43 points at Estoril — his best of the tournament, and posted with a 9 at the 8th on the card — for 156 and a 13-point win that was never in doubt.",
+    "subject": "Stuart Neumann's first Trophy, led from the first round to the last",
+    "why_it_matters": "A man with two Wooden Spoons and no Trophy or Jacket to his name took the lead on day one and was never headed, winning by 13 on 156 points.",
+    "shape": "Setup: Neumann opens with 39 at Oitavos, best in the field, five clear, and nobody treats it as more than an opening-day quirk. Turn: he simply keeps doing it — 35 at Troia is still the best round of the day and the lead goes to seven; a second 39 in the Sintra hills takes it to twelve and quietly ends the argument. Resolution: he closes with his best round of all, 43 at Estoril, absorbing a quintuple bogey at the SI 1 8th along the way, and wins by 13 from the defending champion.",
     "beat_ids": [
       "b01",
-      "b08",
-      "b28",
       "b43",
-      "b46"
+      "b28",
+      "b46",
+      "b08"
     ],
-    "compelling_score": 9
+    "compelling_score": 8,
+    "humour_score": 5
   },
   "jacket_storyline": {
-    "subject": "Gregg Williams's Green Jacket at +66",
-    "why_it_matters": "Dethroned as Trophy champion, Williams was still the best gross player in the field in all four rounds and posted the fifth-best gross aggregate in TEG history.",
-    "shape": "Setup: 89 at Oitavos, his best ever there, gives him a 3-shot gross lead, and Jon Baker's level-pegging at the 11th and 14th at Troia is the only moment it looks contestable. Turn: Penha Longa settles it — a triple at the 7th answered by five consecutive pars from the 11th, an 87 while Mullin goes 98 and Jon Baker 97, and the lead balloons from 4 to 14. Resolution: 80 at Estoril, his own personal best there, on the same afternoon Mullin's matching 80 broke the course record — +66 and a 16-shot Jacket.",
+    "subject": "Gregg Williams's second Green Jacket, +66 by 16",
+    "why_it_matters": "Williams was the best gross player in the field in every round of the tournament and still finished second in the main event — the cleanest illustration the players will ever get that gross and Stableford are two different sports.",
+    "shape": "Setup: an 89 at Oitavos, a personal best there, puts him three clear on gross before anyone has settled. Turn: Troia is scruffy — six shots gone between the 13th and the 15th — but Mullin and Jon Baker cannot capitalise, and at Penha Longa Williams pars five straight from the 11th to blow the gross race open to fourteen. Resolution: an 80 at Estoril, his best there by six, seals it at +66 by 16, quadruple bogey at the 14th and all.",
     "beat_ids": [
       "b02",
       "b18",
       "b25",
-      "b35",
-      "cr01"
+      "b50",
+      "b03",
+      "b06"
     ],
-    "compelling_score": 7
+    "compelling_score": 7,
+    "humour_score": 4
   },
   "spoon_storyline": {
-    "subject": "Alex Baker's back-to-back Wooden Spoon",
-    "why_it_matters": "The reigning Spoon holder never left the bottom of the Trophy table for a single round and set new course-worst records at two different venues on the way.",
-    "shape": "Setup: he opens the tournament with a 9 at the 1st at Oitavos, adds a 9 at the 11th and a 10 at the 17th, and signs for 113 — the worst gross ever recorded there across 12 prior visits. Turn: at Troia's 13th he drops to outright last in the Spoon race and stays there, having bled 13 shots over the closing five holes. Resolution: Penha Longa costs him 12 shots in four holes, and Estoril produces an 11 at the 12th and a 107 — a new course-worst there too — for 127 points and a second consecutive Spoon, 4 behind his brother.",
+    "subject": "Alex Baker's third Wooden Spoon, and the two course records he set on the way to it",
+    "why_it_matters": "The reigning Spoon holder defended his title by sitting at the bottom of the field after all four rounds and leaving two courses with new worst-ever gross scores against his name.",
+    "shape": "Setup: he is last after R1 at Oitavos with 113 — the worst gross posted there in thirteen visits — assembled from a 9 at the 1st, a 9 at the 11th and a 10 at the 17th. Turn: at Troia he drops to the foot of the Spoon race for good at the 13th, shedding 13 shots between there and the 17th, and Penha Longa offers no relief. Resolution: Estoril takes 14 shots off him in six holes and an 11 at the 12th, for a 107 that is a new course-worst, and a Spoon finished 4 adrift of his own brother on 127 points.",
     "beat_ids": [
       "b24",
       "cr03",
       "b37",
       "b33",
-      "b19",
-      "cr02",
-      "b09"
+      "b30",
+      "b09",
+      "cr02"
     ],
-    "compelling_score": 8
+    "compelling_score": 8,
+    "humour_score": 9
   },
   "discovered_storylines": [
     {
-      "subject": "The twelfth hole",
-      "why_it_matters": "Three of the tournament's biggest single-hole disasters happened at a 12th, including two in the same round on a par five rated SI 17 — nominally the softest hole on the card.",
-      "shape": "Setup: Penha Longa's 12th is a par five with a stroke index of 17, the sort of hole you are supposed to bank points on. Turn: in R3 it takes 10 from Jon Baker and 9 from Alex Baker inside the same afternoon, in both cases as the middle of a longer haemorrhage from the 11th. Resolution: a round later, on a different course, Estoril's 12th takes 11 from Alex Baker — a septuple bogey and his worst hole of the tournament.",
-      "beat_ids": [
-        "b34",
-        "b44",
-        "b19",
-        "b21",
-        "b09"
-      ],
-      "compelling_score": 8
-    },
-    {
-      "subject": "David Mullin's Penha Longa to Estoril reversal",
-      "why_it_matters": "The holder of nine prior Jackets went from the worst round of his tournament to a course record inside 24 hours, and it still wasn't enough to win anything.",
-      "shape": "Setup: Penha Longa reduces him to 30 points and a gross 98 — 13 worse than his last visit — with an 8 at the 16th, SI 1, doing most of the damage. Turn: he steadies with two clean holes to close R3, then at Estoril birdies the 2nd, stops a bogey run with a birdie at the 7th and piles up 9 points from the 11th to the 13th. Resolution: 45 points and an 80 gross — a new Estoril course record, beating 86 across 6 prior visits, and a personal best there by 14 — which lifted him to Jacket runner-up, 16 behind.",
+      "subject": "Anatomy of an 80: Mullin's Estoril course record, two days after Penha Longa took him apart",
+      "why_it_matters": "The lowest gross round ever recorded by TEG at Estoril came from a man who had, 48 hours earlier, played the same tournament 13 shots worse than his previous visit to Penha Longa.",
+      "shape": "Setup: at Penha Longa, Mullin makes a quadruple bogey at the 16th — the SI 1, the hardest hole on the card — in a round that leaves him well adrift of the Jacket he has won nine times. Turn: at Estoril he birdies the 2nd, stops an early bleed with a birdie at the 7th, and then goes about the business of not dropping a shot — pars at 12 and 13, 16 and 17, nine points in three holes from the 11th. Resolution: an 80, beating the previous Estoril best of 86 across six prior visits, and a 15-point improvement on his R3 — a course record arriving precisely one round too late to matter to anything.",
       "beat_ids": [
         "b05",
         "b13",
+        "cr01",
         "b04",
+        "b22",
         "b07",
-        "cr01"
+        "b14",
+        "b10"
       ],
-      "compelling_score": 8
+      "compelling_score": 8,
+      "humour_score": 5
+    },
+    {
+      "subject": "The ledger of big numbers: nobody in the field escaped a quadruple bogey or worse",
+      "why_it_matters": "This was a tournament in which every single player, champion included, posted at least a quadruple bogey — and the hole that did most of the damage was one of the easiest on its card.",
+      "shape": "Setup: Alex Baker opens the account at Oitavos with a 10 at the 17th. Turn: Penha Longa's 12th, a par 5 marked SI 17, takes a 10 from Jon Baker and a 9 from Alex Baker in the same round, while Mullin makes 8 at the SI 1 16th. Resolution: Estoril finishes the collection — Williams a quadruple at the 14th on his way to the Jacket, Neumann a quintuple at the SI 1 8th inside his best round of the tournament, and Alex Baker an 11 at the 12th, the biggest single number of the four days.",
+      "beat_ids": [
+        "b37",
+        "b34",
+        "b44",
+        "b05",
+        "b03",
+        "b46",
+        "b09"
+      ],
+      "compelling_score": 7,
+      "humour_score": 8
     }
   ],
-  "prominent_vehicle": "hero_arc",
+  "body_fallback": "none",
+  "prominent_vehicle": "underdog",
   "prominent_palette": "records",
   "payoffs": [
     {
-      "seed": "Neumann's ladder: 6th, 5th, 3rd, 2nd, and two Spoons behind it",
-      "resolves_in": "Round 4 and 'How the three were decided'",
-      "payoff": "156 points, first place, wire-to-wire, by 13 — the top step reached at last, and his best round of the four was the final one (b01, b08)."
+      "seed": "Neumann's CV: two Spoons, no Trophy, best finish 2nd",
+      "resolves_in": "How the three were decided — the Trophy",
+      "payoff": "156 points, leader after every round, winner by 13 — best in the field in R1, R2 and R3 and never worse than second in any of the four."
     },
     {
-      "seed": "Penha Longa's 12th, SI 17, described early as the soft spot",
-      "resolves_in": "Round 3, then again in Round 4",
-      "payoff": "Jon Baker 10 and Alex Baker 9 at that same par five in R3, and Alex Baker 11 at Estoril's 12th in R4 (b34, b44, b09)."
+      "seed": "Alex Baker as reigning Spoon holder",
+      "resolves_in": "How the three were decided — the Wooden Spoon",
+      "payoff": "Bottom of the field after all four rounds, sealed at Troia's 13th in R2, finishing 4 adrift of Jon Baker on 127 points: Spoon number three."
     },
     {
-      "seed": "Alex Baker arrives as reigning Spoon holder and opens with a 9 at the 1st",
-      "resolves_in": "Round 4 and the Wooden Spoon section",
-      "payoff": "Course-worst records at both Oitavos (113) and Estoril (107), an 11 at the 12th, and a second straight Spoon on 127 (cr03, cr02, b24)."
+      "seed": "Estoril's record book untouched across six prior visits",
+      "resolves_in": "Round 4",
+      "payoff": "Both ends of it fall on the same afternoon — Mullin's 80 (prior best 86) and Alex Baker's 107 (prior worst 106)."
     },
     {
-      "seed": "Williams the defending Trophy champion, best gross in the field on day one",
-      "resolves_in": "Round 4 and 'How the three were decided'",
-      "payoff": "He kept the gross crown — +66, by 16, the fifth-best in TEG history — but was beaten head-to-head by Neumann on all four days and handed the Trophy over (b02, b01)."
+      "seed": "Williams the defending champion, best gross player in the field",
+      "resolves_in": "How the three were decided — the Green Jacket",
+      "payoff": "Green Jacket by 16 at +66 with best-in-field gross in all four rounds, and beaten by 13 in the Trophy — different measure, different sport, no paradox."
     }
   ],
   "vehicle_fit_response": {
     "top_scored_vehicle": "catalogue",
-    "taken_up": false,
-    "note": "Alex Baker's inventory of blow-ups is genuinely spectacular and gets the whole Spoon section, but it's a subplot: the week is Neumann's climb from two Spoons to a first Trophy, and catalogue was the frame only three TEGs ago."
+    "taken_up": true,
+    "note": "Taken up, but as the comic engine rather than the frame: Alex Baker's blow-up ledger (plus the field's collective 8s-and-worse) carries the humour, while the report is framed on Neumann's first Trophy after two Spoons."
   },
-  "why_the_champion_won": "He built it: best in the field in each of the first three rounds, never worse than 2nd of 5, beating Williams head-to-head on all four days — and Williams playing an ordinary round in place of his worst would still not have closed 13 points.",
+  "why_the_champion_won": "Built, not inherited: Neumann was the best player in the field in each of the first three rounds, beat Williams head-to-head in all four, and closed with his highest round of the tournament — even an ordinary round in place of Williams's worst would not have changed the result.",
   "storyline_note": ""
 }
