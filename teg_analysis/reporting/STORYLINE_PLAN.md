@@ -550,6 +550,77 @@ and stripping as the experiment script) and passed for every section. `DRAFT_WRI
 with the same anti-fabrication clause used in the A/B's `with_context` arm. Regenerated TEG 14/16/18
 in full (fresh plan → context-aware draft → voice pass) to reflect it.
 
+## Interweaving A/B result (2026-08-19) — interwoven wins 3/3, on every axis
+
+Point 3 from the punch list, picked back up: should two storylines that share a scene
+ever be told as one cross-cut section, instead of always running as fully separate
+sections? Tested with `scripts/storyline_interweave_experiment.py` before touching the
+pipeline, per the fact-isolation risk flagged when this was deferred — an interwoven
+writer needs evidence from BOTH storylines at once, which changes the isolation
+guarantee that's been load-bearing for grounding all workstream.
+
+**Candidate pairs needed no new code.** Storylines are planned independently against
+the full beat pool, so citation already overlaps across them in real output — e.g. TEG
+16's Jacket storyline and its Penha Longa R3 storyline both independently cite `b18`,
+`b23`, `b28`. That overlap is the candidate signal: count shared `beat_ids` between
+every storyline pair in an already-generated `StorylinePlan`, pick the pair with the
+most overlap (`MIN_OVERLAP=2`), excluding near-identical pairs (`MAX_OVERLAP_RATIO=0.6`
+of the smaller set — that similar means one storyline's content is leaking into the
+other's citations, not two threads sharing a scene). Ran against the TEG 14/16/18 plans
+already on disk from the writer-richness A/B — no fresh LLM call needed for selection,
+and each TEG surfaced a plausible pair on the first try (TEG 16's pair matches the
+"Penha Longa" material Jon flagged as the motivating example).
+
+**Two arms, one pair per TEG.** `separate` — today's production behaviour, each
+storyline drafted independently (own `subject`/`evidence`/scoped `context`),
+concatenated with its own `##` heading. `interwoven` — one writer call given both
+storylines' `subject`+`evidence` side by side (each beat still tagged to its own
+storyline) plus the union of scoped context, instructed to cut between the two threads
+by round/moment rather than resolving one before starting the other, and explicitly
+forbidden from attributing one storyline's fact to the other's subject or inventing a
+connection beyond what both storylines' evidence supports. Same blind, order-randomised
+judge methodology as the other two A/Bs in this workstream, scored on compellingness,
+factual_grounding, clarity (new axis specific to this test: can the reader always tell
+which fact belongs to which player), redundancy (does interweaving avoid restating
+shared scene-setting twice), reads_as_story_not_list.
+
+**Result: interwoven won 3/3 TEGs, and led on every axis, averaged:**
+
+| axis | separate | interwoven |
+|---|---|---|
+| compellingness | 6.67 | **7.67** |
+| factual_grounding | 6.00 | **8.00** |
+| clarity | 7.33 | **7.67** |
+| redundancy | 4.67 | **8.33** |
+| reads_as_story_not_list | 6.67 | **7.33** |
+
+**The fact-isolation worry didn't materialise as a clarity cost** — clarity was a
+near-wash (7.33 vs 7.67), with the judge noting the interwoven arm mostly kept
+attribution straight by always writing full names, and in one TEG (18) actually scored
+separate slightly higher on clarity while still preferring interwoven overall.
+**factual_grounding went UP, not down**, for a concrete, recurring reason: the
+`separate` arm's own errors were mostly *attribution* errors introduced by writing the
+same shared scene twice from two angles — TEG 14's separate draft reversed which player
+closed 8 points and which closed 10, TEG 16's separate draft gave the "toughest hole by
+stroke index" label to the wrong hole. The interwoven draft, forced to hold both
+storylines' evidence at once in a single pass, didn't make either mistake. **The
+dominant driver was redundancy**: every `separate` transcript restated the same
+round/course scene-setting once per section — TEG 18's judge notes three separate
+beats (R1 14–16, R2 blow-ups, R4 blow-ups) each told twice in near-identical terms,
+"draining the second half of surprise."
+
+**Caveats before generalising.** N=3 TEGs, one pair each, one judge call each — enough
+to justify a bigger run, not enough to treat as final. All three candidate pairs
+happened to share a *round* (same-day, same-course scenes); the heuristic hasn't been
+tested on a pair that shares a *player* or *failure mode* across different rounds
+instead (`threads.py`'s other cluster types), which is a structurally different kind of
+overlap and might behave differently. Not yet wired into `storyline_full_report_experiment.py`
+— this is the A/B verdict, not a pipeline change. Next step if pursued: extend
+`pick_overlapping_pair`-style detection into `build_storyline_draft()` itself (run it
+against the full storyline list, not just the top pair, since a plan can have more than
+one qualifying overlap) and re-validate end-to-end voice-pass output, not just the
+structural draft this A/B tested.
+
 ## Explicitly out of scope for this proposal
 
 - Round reports (`round_report.py` / `RoundStoryPlan`) — separate pipeline instance, not touched.

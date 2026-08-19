@@ -40,11 +40,14 @@ import sys
 from typing import Optional
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
+sys.path.insert(0, str(pathlib.Path(__file__).parent))
 
 from teg_analysis.reporting import llm
 from teg_analysis.reporting.authoring import WRITER_VOICE, _strip_derived_prose, restyle_voice
 from teg_analysis.reporting.paths import output_dir
 from teg_analysis.reporting.story_plan import assemble_bundle, build_storyline_plan
+
+import storyline_interweave_experiment as interweave
 
 
 def _evidence_for(storyline: dict, all_beats: list) -> list:
@@ -151,8 +154,30 @@ def build_storyline_draft(teg_num: int, model: Optional[str] = None) -> tuple[st
     order = ([plan["trophy_storyline"]] + plan["discovered_storylines"] + fallback_sections
             + [plan["jacket_storyline"], plan["spoon_storyline"]])
 
+    # Interweaving A/B (STORYLINE_PLAN.md, "Interweaving A/B result", 2026-08-19):
+    # interwoven won 3/3 TEGs on every judged axis (compellingness, factual_grounding,
+    # clarity, redundancy, reads_as_story_not_list) against today's always-separate
+    # sections. Candidate pairs need no LLM call — storylines already cite overlapping
+    # beat_ids independently (planned against the same beat pool), so shared citation
+    # IS the candidate signal. Multiple non-overlapping pairs can exist in one plan;
+    # `find_overlapping_pairs` greedily picks the highest-overlap set.
+    pairs = interweave.find_overlapping_pairs(order)
+    merge_at = {i: (a, b) for a, b, i, j in pairs}       # position -> pair to merge in
+    skip = {j for _, _, i, j in pairs}                    # position already covered by its pair
+
     sections = []
-    for s in order:
+    for idx, s in enumerate(order):
+        if idx in skip:
+            continue
+        if idx in merge_at:
+            a, b = merge_at[idx]
+            print(f"[storyline_full_report] interweaving: {a['subject'][:40]} / {b['subject'][:40]}")
+            evidence_a, evidence_b = _evidence_for(a, all_beats), _evidence_for(b, all_beats)
+            players = {p for beat in evidence_a + evidence_b for p in beat.get("players", [])}
+            context = _context_for(players, bundle)
+            text = interweave.draft_interwoven(a, evidence_a, b, evidence_b, context, model=model)
+            sections.append(f"## {a['subject']} / {b['subject']}\n\n{text}")
+            continue
         print(f"[storyline_full_report] drafting: {s['subject'][:60]}")
         evidence = _evidence_for(s, all_beats)
         storyline_players = {p for b in evidence for p in b.get("players", [])}

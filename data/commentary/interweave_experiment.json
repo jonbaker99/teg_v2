@@ -1,0 +1,123 @@
+{
+  "tegs": [
+    14,
+    16,
+    18
+  ],
+  "results": [
+    {
+      "teg": 14,
+      "pair": [
+        "David Mullin's Green Jacket at +68, by 7 — his ninth",
+        "Gregg Williams plays the best gross golf of his TEG life and wins nothing"
+      ],
+      "text_separate": "## David Mullin's Green Jacket at +68, by 7 — his ninth\n\n## Mullin Takes the Green Jacket\n\nDavid Mullin won the Green Jacket at TEG 14 with a gross total of +68, finishing seven clear of Jon Baker. It is the sixth-best Green Jacket total on record and the fourth-best of Mullin's own career.\n\nThe win was built on consistency across all three Kent links. Mullin set a course personal best at every venue on the schedule: 87 at Royal Cinque Ports in Round 1, seven better than his previous visit; 85 at Littlestone in Round 2, again seven strokes better; and 91 at Prince's in Round 4, one better than his 2019 mark.\n\nThe chasers made the closing round competitive without ever threatening the outcome. Baker, who at one stage trailed by 15, cut the deficit to seven. His Round 4 at Prince's produced a gross 83, a new course record there, beating the previous best of 85 set across five prior visits. Gregg Williams closed from as far back as 18 to finish eight off the lead, and his gross total of +76 was a personal best for the competition.\n\nBetween them, Baker and Williams took ten and eight strokes respectively out of the margin over the closing stretch. Mullin's lead was large enough that neither run changed the result.\n\n## Gregg Williams plays the best gross golf of his TEG life and wins nothing\n\n**Gregg Williams: a personal best, and nothing to show for it**\n\nGregg Williams left Kent with the best gross golf of his TEG career and no silverware. His four-round gross total of +76 was a personal best, and two of the three courses produced individual bests as well: 93 at Royal Cinque Ports, one better than his previous mark there, and 86 at Prince's in round three, three strokes better than his last visit to the Shore/Dunes layout.\n\nThe scoring was uneven rather than smooth. In round one he ran up a nine at the par-5 third at Royal Cinque Ports, a quadruple bogey worth no points. Round two at Littlestone was his weakest week's work — 97, eleven strokes worse than his previous visit, and only 27 Stableford points. He answered it immediately with 39 points in round three, a swing of twelve. That round contained his best sequence of the week, three straight pars at the 9th, 10th and 11th for nine points, before a triple bogey eight at the par-5 12th ended the run. He added pars at the 15th and 16th, and in the final round went without dropping a gross shot at the 5th and 6th and again at the 14th and 15th.\n\nThe Green Jacket, though, was gone too early. Having trailed the lead by as many as 18 points, Williams closed to within eight by the end — progress, but not a win.",
+      "text_interwoven": "**Round 1, Royal Cinque Ports.** The gap that would define the week was already opening. David Mullin's tournament ended at +68 gross, seven clear, but the margin was built early: at their widest, the chasers were 15 and 18 points back on the Green Jacket board.\n\nGregg Williams began his week by handing some of that back in a single hole. At the 3rd at Deal, a par 5 and stroke index 4, he took nine — a quadruple bogey, no points. He still went round in 93, one better than his previous visit to the course.\n\n**Round 2, Littlestone.** Williams managed 27 points and 97 gross, eleven worse than his last time there. Mullin, by contrast, shot 85 at Littlestone, seven strokes better than his previous visit and his best there.\n\n**Round 3, Prince's.** Williams' answer was a 39-point round, a twelve-point improvement, and 86 gross — his best score at Prince's. The middle of it was the best golf: pars at the 9th, 10th and 11th, three holes without dropping a gross shot, nine Stableford points in the run. Then the 12th, a par 5, cost him a triple bogey and ended the streak. He recovered enough to par the 15th and 16th.\n\n**Round 4, Prince's.** Jon Baker went out and shot 83 gross, a new course record for the Shore/Dunes combination, beating the 85 that had stood across five prior visits. It moved him to within seven of the lead, having trailed by 15 at one point — eight points recovered, and not nearly enough.\n\nWilliams was doing the same arithmetic from further back. He parred the 5th and 6th, parred the 14th and 15th, and closed to eight off the lead from a maximum deficit of 18 — ten points taken back over the week.\n\nMullin's +68 was the sixth-best gross total in TEG history and the fourth-best of his own career; the Green Jacket was his ninth. Baker was runner-up. Williams finished the week with a personal-best gross total of +76 — the best gross golf of his TEG life — and nothing to show for it.",
+      "label_map": {
+        "A": "separate",
+        "B": "interwoven"
+      },
+      "verdict": {
+        "winner": "B",
+        "compellingness": {
+          "A": 6,
+          "B": 7
+        },
+        "factual_grounding": {
+          "A": 5,
+          "B": 8
+        },
+        "clarity": {
+          "A": 6,
+          "B": 8
+        },
+        "redundancy": {
+          "A": 4,
+          "B": 8
+        },
+        "reads_as_story_not_list": {
+          "A": 6,
+          "B": 7
+        },
+        "notes": "Draft A gets most individual facts right (Mullin's +68, rank 6 all-time / 4th personally, the three course PBs, Williams' 97/27 at Littlestone, the 39-point R3, the nine at the 3rd, the pars at 9-11 and 15-16) but contains a clear attribution error: it says 'Baker and Williams took ten and eight strokes respectively out of the margin', reversing the evidence (Baker closed 8, from 15 to 7; Williams closed 10, from 18 to 8) and calling stableford points 'strokes'. It also invents a date ('one better than his 2019 mark' — the prior visit is only recorded as TEG 13, no year given). Structurally A is sloppy: a duplicated headline/subhead, and Williams' personal-best +76 plus his 18-to-8 gap-closing are told twice, once in each section, which is exactly the wasted repetition the two-section format invites. Draft B cross-cuts round by round and I could always tell whose fact was whose — Williams' nine at the par-5 3rd (SI 4) and 93 at Deal against Mullin's 85 at Littlestone, Baker's record 83 in R4 against Williams' pars at 5-6 and 14-15 — and it gets the closing arithmetic the right way round (Baker 15 to 7, eight recovered; Williams 18 to 8, ten recovered). Its only soft spot is the interpretive 'the margin was built early', and it omits Mullin's 87 at Royal Cinque Ports and 91 at Prince's, so it is slightly thinner on the jacket storyline. The round headers make it read a touch like a log, but the payoff paragraph (Mullin's ninth jacket, Baker runner-up, Williams' PB and nothing to show for it) lands the double ending cleanly. B wins on accuracy and economy."
+      },
+      "winner_arm": "interwoven"
+    },
+    {
+      "teg": 16,
+      "pair": [
+        "Gregg Williams's Green Jacket: +66, the best gross round in the field on all four days, won by 16",
+        "Penha Longa, R3: the field comes apart on the mountain while two men keep their footing"
+      ],
+      "text_separate": "## Gregg Williams's Green Jacket: +66, the best gross round in the field on all four days, won by 16\n\nGregg Williams won the Green Jacket at TEG 16 with a gross total of +66, finishing 16 shots clear of runner-up David Mullin. It ranks as the fifth-best Jacket-winning total on record.\n\nThe margin was built on consistency rather than a single dominant round. Williams opened with 89 at Oitavos Dunes, a course best by two strokes on his third visit there, added 94 at Troia and 87 at Penha Longa, and closed with 80 at Estoril — six shots better than his previous visit and another course personal best. He led the Jacket race after round three, at a point when Stuart Neumann topped the Stableford standings.\n\nThe winning week was not without damage. His third round at Penha Longa included a triple bogey at the 3rd and a double at the 4th, answered immediately by a birdie at the short 5th, before a worse spell of bogey, triple bogey and double bogey across holes 6 to 8. He steadied on the back nine, playing the 11th through the 15th in level par, with three consecutive three-point holes from the 13th.\n\nEven in his closing 80 at Estoril there was a blemish: a quadruple-bogey eight at the par-four 14th, the toughest hole on the card by stroke index. By then the outcome was not in doubt.\n\n## Penha Longa, R3: the field comes apart on the mountain while two men keep their footing\n\n**Penha Longa, Round Three**\n\nThe Atlantic Course at Penha Longa, Robert Trent Jones Jr.'s mountain parkland layout in Sintra, took its toll on the middle of the round. The stretch from the 11th onwards was where most of the damage was done.\n\nJon Baker's collapse was the sharpest. He began with a double bogey at the 11th, then ran up a 10 at the par-five 12th — a quintuple bogey on the round's easiest hole by stroke index — and followed it with a quadruple-bogey 8 at the 13th. Across those three holes he dropped eleven shots to par and failed to record a single net par, returning one Stableford point in total.\n\nAlex Baker's trouble covered the same ground and lasted a hole longer. A double bogey at the 11th was followed by a quadruple-bogey 9 at the 12th and triple bogeys at the 13th and 14th: twelve shots dropped over four holes, with no net par from the 12th through the 14th. David Mullin's blow-up came later, a quadruple-bogey 8 at the 16th, the hardest hole on the card.\n\nGregg Williams went the other way. He played the 11th through the 15th in level par, five holes without dropping a gross shot, and collected nine Stableford points across the 13th, 14th and 15th alone.\n\nAfter three rounds, Stuart Neumann led the Trophy on Stableford, level at the top, with Williams leading the Jacket.",
+      "text_interwoven": "The third round, Monday at Penha Longa in Sintra, is where both stories run through the same eighteen holes.\n\nGregg Williams did not start well on the mountain course. He took seven at the 3rd, a triple bogey, and six at the 4th for a double, before stopping the slide with a birdie two at the par-three 5th. The relief was brief: bogey at the 6th, a triple bogey six at the short 7th, and a double bogey seven at the 8th, three holes that yielded him just two Stableford points.\n\nBy the time the field turned for home, others were in worse trouble. Jon Baker played the 11th, 12th and 13th in double bogey, quintuple bogey and quadruple bogey — a ten at the par-five 12th, an eight at the 13th — dropping eleven gross shots in three holes and returning a single point across them. Alex Baker took the same route: double bogey at the 11th, a nine at the 12th, then triple bogeys at the 13th and 14th, twelve shots gone in four holes.\n\nWilliams played that identical stretch in par, par, par, par, par. Holes 11 through 15 cost him nothing against the card, and the last three of them — 13, 14 and 15 — brought him nine Stableford points. David Mullin's round then took its own hit at the 16th, stroke index 1, where he made eight, a quadruple bogey worth no points.\n\nAt the close of Round 3, Stuart Neumann led the Trophy on Stableford, with the gap at zero. Williams led the Jacket.\n\nHe kept it through Tuesday at Estoril, though not cleanly. At the 14th, a par four, he ran up an eight — a quadruple bogey, no points — in the final round.\n\nIt made no difference to the outcome. Williams finished the tournament at +66 gross and won the Green Jacket by sixteen shots from David Mullin, having posted the best gross round in the field on all four days. It stands as the fifth-best Jacket-winning total on record, and the best of his own career.",
+      "label_map": {
+        "A": "interwoven",
+        "B": "separate"
+      },
+      "verdict": {
+        "winner": "A",
+        "compellingness": {
+          "A": 8,
+          "B": 7
+        },
+        "factual_grounding": {
+          "A": 9,
+          "B": 6
+        },
+        "clarity": {
+          "A": 8,
+          "B": 8
+        },
+        "redundancy": {
+          "A": 9,
+          "B": 5
+        },
+        "reads_as_story_not_list": {
+          "A": 8,
+          "B": 6
+        },
+        "notes": "A interleaves both threads through the single Penha Longa round and every claim checks out: Williams's 7 at the 3rd, birdie two at the par-3 5th, the 6-8 stretch worth exactly two points, Jon Baker's eleven shots and single point over 11-13, Alex Baker's twelve over 11-14, Mullin's quad at SI-1 16th, the R3 leadership split, the R4 quad at Estoril's 14th, and +66/16/rank-5 (with 'best of his own career' fairly reading player_rank 1). Only the meta opening line ('both stories run through the same eighteen holes') slightly breaks the fiction. B adds welcome round-by-round texture from course history (89/94/87/80, the Oitavos and Estoril PBs), but contains a clear error: it calls Estoril's 14th 'the toughest hole on the card by stroke index' when its SI is 4 — and it separately (correctly) gives that label to Penha Longa's 16th, so the mistake also muddies attribution. It also calls the 12th 'the round's easiest hole by stroke index' at SI 17 when SI 18 exists in the same round's data, and its 'consistency rather than a single dominant round' framing sits awkwardly with the headline fact (best gross round in the field all four days) that the body never states. Structurally, B pays for the split: Penha Longa R3 is scene-set twice, and Williams's level-par 11-15 plus the three-point run at 13-15 is told in both sections. A is tighter, cleaner and more clearly a single narrative."
+      },
+      "winner_arm": "interwoven"
+    },
+    {
+      "teg": 18,
+      "pair": [
+        "Alex Baker leads from the 5th hole of R1 to the last and wins the Trophy on 169, by 8",
+        "The closing stretch as the tournament's crime scene: holes 14-18, four rounds, both courses"
+      ],
+      "text_separate": "## Alex Baker leads from the 5th hole of R1 to the last and wins the Trophy on 169, by 8\n\n**Baker holds on for the Trophy**\n\nAlex Baker won the Trophy at TEG 18 with 169 Stableford points, eight clear of runner-up John Patterson. It is the seventh-highest winning total on record and the second-best of Baker's own career.\n\nThe foundation was laid on the Tour Course on the Saturday. Baker collected 17 points across holes 8 to 12, a run built on nothing more dramatic than three bogeys and two pars at holes where his handicap strokes were falling, and added 13 more from holes 14 to 16, including a birdie at the par-five 15th. His 98 gross that day was his best round of the week on the course.\n\nSunday was the opposite. Baker signed for 106 gross, a new course-worst at PGA Catalunya - Tour, beating the previous mark of 105 set across 22 prior visits. The damage came late: a quintuple-bogey 8 at the par-three 16th and an 11 at the par-five 18th, both the worst he has recorded on those pars.\n\nHe still held the Trophy lead after round two, and kept it after round three, where a stretch of 21 points from holes 11 to 16 on the Stadium Course steadied things. Round four brought two more blow-ups — a 10 at the 14th and an 8 at the 17th — but the cushion held, and Baker led the Stableford count at the close of all three remaining rounds. Gregg Williams took the Jacket.\n\n## The closing stretch as the tournament's crime scene: holes 14-18, four rounds, both courses\n\n**The closing stretch**\n\nAcross four rounds and two courses, holes 14 through 18 did most of the damage — and delivered most of the recoveries.\n\nThe pattern set in on the Tour Course in round one. David Mullin took 11 on the par-five 15th, a sextuple bogey and his worst return on a par five, while Gregg Williams ran up an eight at the 17th. Alex Baker arrived at the same hole having played 14, 15 and 16 in par, birdie, par, then made double bogey to end the run. Williams, for his part, had made bogey or worse on twelve straight holes before birdieing the 15th.\n\nRound two on the same course produced the best closing golf of the week. Jon Baker birdied the 14th and parred the last four for 16 Stableford points across 14-18, dropping no gross shots. Williams gathered 13 points from 13 to 16 with four pars. Alex Baker went the other way, taking eight at the par-three 16th and 11 at the par-five 18th.\n\nThe Stadium Course in round four repeated it. Alex Baker made ten at the 14th and eight at the 17th. Mullin played 14 to 17 in double, triple, double, double — nine gross shots dropped, not a net par among them. John Patterson followed a triple and a double at 14 and 15 with a bogey and then a birdie at the 17th.",
+      "text_interwoven": "**Round 1.** Alex Baker went to the front on the fifth hole of the first round at PGA Catalunya's Tour Course and stayed there. His scoring came in bursts: 17 points across holes 8 to 12, three bogeys around a par at the 10th and a par at the 11th, then 13 more from the 14th to the 16th, including a birdie at the par-five 15th.\n\nThe same finishing holes were doing damage elsewhere that Saturday. David Mullin took 11 at the 15th, a sextuple bogey. Gregg Williams, who had not made better than a bogey since the second hole, birdied the 15th to stop the run, then ran up an eight at the 17th. Baker's own par-or-better sequence ended at the 17th too, with a double bogey.\n\n**Round 2.** Baker's card fell apart. A quintuple-bogey eight at the par-three 16th and an 11 at the par-five 18th contributed to a gross 106 — a new course-worst at the Tour Course, one worse than the previous 105 set across 22 prior visits. He still led the Trophy after the round; Jon Baker led the Jacket.\n\nJon Baker had spent the closing holes doing the opposite: 16 points from the 14th to the 18th, five holes without dropping a gross shot, starting with a birdie at the 14th. Williams played 13 to 16 in level par for 13 points.\n\n**Round 3.** On the Stadium Course, Baker gathered 21 points between the 11th and the 16th — four pars and two bogeys, nothing worse. He still led the Trophy at the close of play, with Williams leading the Jacket.\n\n**Round 4.** The finish took its last set of victims. Mullin went from the 14th to the 17th without a net par, dropping nine shots. John Patterson made a triple at the 14th and a double at the 15th before birdieing the 17th. Baker had a sextuple-bogey 10 at the 14th and a quadruple-bogey eight at the 17th, and led the Trophy anyway.\n\nHe finished on 169 points, eight clear of Patterson — the seventh-highest total on record.",
+      "label_map": {
+        "A": "separate",
+        "B": "interwoven"
+      },
+      "verdict": {
+        "winner": "B",
+        "compellingness": {
+          "A": 7,
+          "B": 8
+        },
+        "factual_grounding": {
+          "A": 7,
+          "B": 7
+        },
+        "clarity": {
+          "A": 8,
+          "B": 7
+        },
+        "redundancy": {
+          "A": 5,
+          "B": 8
+        },
+        "reads_as_story_not_list": {
+          "A": 8,
+          "B": 7
+        },
+        "notes": "Both are well-written and largely accurate. Draft A: correct on 169/8/Patterson, all-time rank 7, player rank 2, the 17-point 8-12 run (three bogeys, two pars), the 13-point 14-16 run with the 15th birdie, the 98 gross as best Tour round (matches course history), the 106 course-worst vs 105 over 22 visits, both R2 blow-ups being player par-worsts, R2/R3/R4 Trophy leadership, and the R4 10 and 8. One error: Williams was bogey-or-worse from hole 2 through 14, i.e. thirteen straight holes, not 'twelve'; 'Gregg Williams took the Jacket' is a mild extrapolation from 'leads after R4'. Draft B: correct on the 5th-hole lead (from the storyline title), the burst structure, Williams's pre-15th run ('not better than a bogey since the second hole' — accurate), the 106 course-worst, Jon Baker's Jacket lead after R2, Jon Baker's 16 points/no gross shots dropped 14-18, Williams level par 13-16 for 13 points, Mullin's nine shots with no net par 14-17, Patterson's triple-double-birdie, and the R4 blow-ups. One error: the 21-point R3 stretch (11-16) was three pars and three bogeys, not 'four pars and two bogeys'. So factual grounding is a wash. The decisive difference is redundancy: A tells the two threads separately and therefore restates the shared scene three times — the R1 14-16 stretch, the R2 16th/18th blow-ups and the R4 14th/17th blow-ups all appear in both sections in near-identical terms, which drains the second half of surprise. B folds them in once, so Alex Baker's collapse on the closing holes doubles as the crime-scene evidence and the story keeps moving. A is cleaner on attribution thanks to its section split (B relies on always writing 'Jon Baker' in full to keep the two Bakers apart, which mostly works), and its paragraphs flow slightly more naturally than B's bolded 'Round 1./Round 2.' spine. On balance B's tighter, non-repetitive chronology and stronger closing beat outweigh A's clarity edge."
+      },
+      "winner_arm": "interwoven"
+    }
+  ]
+}
