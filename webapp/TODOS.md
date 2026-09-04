@@ -8,6 +8,10 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 - [ ] **Bestball/worstball on `/latest-round`** — show best/worst bestball and worstball positions in the round-in-context page.
 - [ ] **`/scoring/matrix`** - score type as pills; TEG / Round / 9 as tabs
+- [ ] **Newspaper report layout — choose a direction** — four prototype layouts (A Broadsheet, B
+  Modern editorial, C Sports section, D Back page) are built and published; see
+  `webapp/report_layout_prototypes/PLAN.md`. Once a direction is picked, wire it into
+  `routes/reports.py` (currently out of scope for the prototype).
 
 
 ## NEXT UP

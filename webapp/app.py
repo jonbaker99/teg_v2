@@ -36,6 +36,13 @@ app.mount(
     StaticFiles(directory=str(Path(__file__).parent / "mobile_mockups"), html=True),
     name="mockups",
 )
+# Newspaper report-layout prototypes (static, self-contained — a presentation
+# trial, not part of the app's page hierarchy). Served at /report-layouts/.
+app.mount(
+    "/report-layouts",
+    StaticFiles(directory=str(Path(__file__).parent / "report_layout_prototypes"), html=True),
+    name="report-layouts",
+)
 
 templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
 

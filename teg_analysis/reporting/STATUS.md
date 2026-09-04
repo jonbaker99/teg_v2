@@ -20,6 +20,14 @@ round-by-round detail dominates every report regardless of what the story plan's
 on disk before writing the plan, not just from reading prose. Read that file before touching
 `story_plan.py` or `authoring.py`'s dry-draft prompts.
 
+**Presentation trial running in parallel (2026-09-04):** a newspaper front-page layout is being
+trialled against the storyline-first output (TEG 14, 16) in `webapp/report_layout_prototypes/` —
+no pipeline change. It surfaced a real gap worth fixing here: `StorylinePlan` has no `headline`
+(3–8 words) or `standfirst` (one sentence) field, so every layout has to derive one from `subject`
+(a 15–25 word descriptive line) and the derived headlines are the weakest text on the page; the
+unrequested `**bold**` mini-header some sections get is that missing field arriving by accident,
+half the time. See `webapp/report_layout_prototypes/PLAN.md` → *Feedback to the pipeline*.
+
 ### Doc reconciliation (2026-08-17)
 
 No pipeline change. The reporting docs were checked against the code and the artefacts and corrected;
