@@ -136,16 +136,67 @@ def _parse_paragraphs(content: str) -> tuple[str | None, list[str]]:
     return bold_headline, paragraphs
 
 
+_TRAILING_STOPWORDS = {
+    "a", "an", "and", "at", "by", "for", "from", "his", "her", "their", "in",
+    "into", "of", "on", "or", "the", "to", "with",
+}
+
+
 def _derive_headline(heading: str) -> str:
-    """Truncate at the first of —, :, or , (per PLAN.md Phase 2 rule 4).
-    Deliberately literal/naive — a weak derived headline is the trial's
-    documented finding, not a bug to paper over here."""
-    idx = None
-    for ch in ("—", ":", ","):
-        pos = heading.find(ch)
-        if pos != -1 and (idx is None or pos < idx):
-            idx = pos
-    return heading[:idx].strip() if idx is not None else heading.strip()
+    """Cut a section heading down to a headline-length phrase.
+
+    Cuts at the first of —, :, or , that leaves at least MIN_WORDS words, so a
+    heading like "Jon Baker, defending Trophy champion, collects the Wooden
+    Spoon..." yields "Jon Baker, defending Trophy champion" rather than the bare
+    name. Falls back to the first MAX_WORDS words. A merged (' / '-joined)
+    heading is cut to its first storyline first.
+
+    The derived text is still weaker than a written headline — that remains the
+    trial's finding (see PLAN.md). This only stops the weakness reading as a
+    parser bug on the page.
+    """
+    MIN_WORDS, MAX_WORDS, FULL_WORDS = 4, 10, 14
+    heading = heading.split(" / ")[0].strip()
+    cuts = sorted(
+        pos for ch in ("—", ":", ",") for pos in [heading.find(ch)] if pos != -1
+    )
+    for pos in cuts:
+        candidate = heading[:pos].strip()
+        if len(candidate.split()) >= MIN_WORDS:
+            return candidate
+    words = heading.split()
+    if len(words) <= FULL_WORDS:
+        return heading
+    words = words[:MAX_WORDS]
+    while len(words) > MIN_WORDS and words[-1].lower() in _TRAILING_STOPWORDS:
+        words.pop()
+    return " ".join(words)
+
+
+def _choose_headline(bold_headline: str | None, heading: str) -> str:
+    """Prefer the writer's bold mini-header, but only at headline length.
+
+    The draft writer emits it for roughly half of sections and it is the best
+    text available when it fits (2-9 words). Longer than that it is a second
+    standfirst, not a headline, so derive instead.
+    """
+    if bold_headline and 2 <= len(bold_headline.split()) <= 9:
+        return bold_headline
+    return _derive_headline(heading)
+
+
+def _choose_standfirst(headline: str, heading: str) -> str:
+    """Drop the standfirst when it would only restate the headline.
+
+    A derived headline is a prefix of its own heading, so printing both repeats
+    the same line. Keep the heading only where the part beyond the headline
+    carries real extra information (MIN_EXTRA words or more).
+    """
+    MIN_EXTRA = 8
+    if not heading.lower().startswith(headline.lower()):
+        return heading
+    remainder = heading[len(headline):].strip(" ,:—-")
+    return heading if len(remainder.split()) >= MIN_EXTRA else ""
 
 
 def _match_storyline(subject: str, plan: dict[str, Any]) -> tuple[str, dict[str, Any]]:
@@ -179,14 +230,15 @@ def _parse_articles(
         humour = max(s["humour_score"] for _, s in matches)
 
         bold_headline, paragraphs = _parse_paragraphs(content)
-        headline = bold_headline or _derive_headline(heading)
+        headline = _choose_headline(bold_headline, heading)
+        standfirst = _choose_standfirst(headline, heading)
         words = sum(len(p.split()) for p in paragraphs)
 
         articles.append(
             {
                 "kicker": kicker,
                 "headline": headline,
-                "standfirst": heading,
+                "standfirst": standfirst,
                 "paragraphs": paragraphs,
                 "words": words,
                 "compelling": compelling,
