@@ -653,5 +653,125 @@ work on finding a non-round-anchored example.
 
 - Round reports (`round_report.py` / `RoundStoryPlan`) — separate pipeline instance, not touched.
 - Voice/register (`WRITER_VOICE`, humour dial) — already settled 2026-08-15, unrelated lever.
+  **Superseded 2026-08-19 — see "Voice tone A/B result" below; the settled voice was retested
+  against the storyline-first pipeline and beaten by every candidate variant.**
 - Re-running the library regeneration — a separate outstanding item in `teg_analysis/TODOS.md`, not
   to be bundled with this until the storyline approach is validated on the 3 test TEGs above.
+
+## Voice tone A/B result (2026-08-19) — `overstatement` wins; baseline finishes last on every TEG
+
+**Why re-open voice now, despite it being "settled 2026-08-15":** that voice was tuned against the
+old round-by-round pipeline. The storyline-first pipeline is now done end to end (plan → unvoiced
+draft → voice pass), and the unvoiced draft (`teg_N_report_storylinedraft.md`) makes it possible for
+the first time to A/B tone in complete isolation from structure/discovery — same fixed draft in,
+only the voice prompt changes. Script: `scripts/storyline_voice_tone_experiment.py`.
+
+**Design conversation.** Jon wanted to test "hamming up" outcomes (career-defining wins, full-blown
+disasters, tear-jerking comebacks) without tipping into sincere absolute claims ("the greatest round
+ever played"). Iterating on hand-drafted samples converged on two things:
+
+1. A discovery mid-build: `prompts.ELEVATION_DEVICE` ("THE OCCASION — Over-do it") already does
+   hyperbole at the CONTRACT level, applied to every arm including baseline, and explicitly defers
+   *delivery* to the voice. So the real lever wasn't "add overstatement" — it was refining how the
+   existing device gets delivered.
+2. The refinement, confirmed by example after example: **one move per joke — big claim, immediate
+   plain qualifier, stop.** Stacking a second flourish onto an already-complete line ("the greatest
+   round he's ever played — on this course, in this competition, *by this specific 54-year-old with
+   a bad knee*") makes it worse, not funnier. Reaching for an invented external comparison
+   ("a channel with a budget for strings") reads as try-hard; a plain internal (golf-only) qualifier
+   or a simple universal trope (a sporting montage) beats a constructed one.
+
+A second idea — reporting the player's extreme internal/emotional state as flat verified fact
+("for four hours, doubt did not so much subside as cease to exist as a concept") — read very well in
+hand-drafted samples and was tested both alone and combined with the overstatement discipline. Two
+more were added at Jon's request: a "crueller" calibration (field/runner-up mockery raised to
+Wooden-Spoon-holder intensity, champion carve-out explicitly unchanged — Jon: don't extend cruelty to
+a deserving winner) and a single consistent Clive James / Marina Hyde register replacing the current
+four-writer rotation.
+
+**Six arms, all built as amendments to the current `WRITER_VOICE`** (not designed from scratch — the
+point was testing deltas against the settled voice, not replacing it):
+
+| Arm | What it adds/changes |
+|---|---|
+| `baseline` | `WRITER_VOICE` unchanged |
+| `overstatement` | one-move-per-joke discipline on the existing `ELEVATION_DEVICE` hamming |
+| `interiority` | new register: extreme internal psychological state, reported as flat fact |
+| `combined` | overstatement + interiority together |
+| `crueller` | field/runner-up mockery raised to Spoon-holder intensity; champion carve-out unchanged |
+| `cjmh` | four-writer rotation replaced by a single consistent Clive James / Marina Hyde register |
+
+**Method.** Each arm run via `authoring.restyle_voice` against the SAME fixed
+`teg_N_report_storylinedraft.md`, for TEG 14/16/18 (18 restyle calls total). A single blind,
+order-randomised judge call per TEG scored all 6 arms at once (not pairwise) on compellingness,
+humor_landing, emotional_resonance, factual_grounding and tone_fit (1-10 each), plus a best-to-worst
+ranking. Full data: `data/commentary/voice_tone_experiment.json`.
+
+**Result — averages across the 3 TEGs (1-10 scale), final consolidated 7-arm judging run** (a 7th
+arm, `kitchen_sink`, was added after Jon asked to try combining all four ideas at once — see below;
+numbers below supersede the original 6-arm table, re-judged together with `kitchen_sink` in one
+pass for a consistent comparison — expect small run-to-run judge variance, one call per TEG, not
+averaged over repeats):
+
+| Arm | Overall | Compelling | Humor | Emotional | Grounding | Tone fit | #1 finishes |
+|---|---|---|---|---|---|---|---|
+| **overstatement** | **8.20** | 8.0 | 8.33 | 7.0 | **9.0** | **8.67** | 1/3 |
+| combined | 7.80 | 8.0 | 8.0 | 7.0 | 8.0 | 8.0 | 1/3 |
+| interiority | 7.60 | 8.0 | 7.67 | 7.33 | 7.0 | 8.0 | 1/3 |
+| cjmh | 7.34 | 7.67 | 7.0 | 6.67 | 7.67 | 7.67 | 0/3 |
+| crueller | 6.87 | 7.33 | 6.67 | 6.67 | 7.0 | 6.67 | 0/3 |
+| kitchen_sink | 6.60 | 6.67 | 6.67 | 6.67 | 6.67 | 6.33 | 0/3 |
+| baseline | 6.47 | 6.67 | 6.0 | 6.67 | 6.33 | 6.67 | **0/3** |
+
+**`kitchen_sink` (all four ideas combined, tried at Jon's request) underperforms — second-to-last,
+barely above baseline.** Built as the `cjmh` register plus overstatement + interiority + crueller
+layered on top, gated by an explicit "use each device only where it's earned, most of the report
+stays plain" selectivity rule. The selectivity rule did not hold under test: judge notes show the
+model reaching for MORE devices per passage, not fewer, when more are available. TEG 16's
+kitchen-sink draft scored the worst grounding in the whole 7-arm set (4/10) with a genuine rule
+violation — *"both facts belong on the same card, and the card says champion"* is sincere hyperbole
+played straight, exactly what the house voice forbids. TEG 18's version invents an interior
+narrative the source doesn't license. **Lesson: stacking devices multiplies the temptation to
+over-reach faster than it multiplies the payoff, even with an explicit instruction not to.** A
+single, well-drilled device (`overstatement`) beats a kitchen sink of four.
+
+**Baseline finished last on average and never placed first, across all three TEGs.** The currently
+shipping house voice was beaten by every tested refinement in this blind judge's scoring — a real
+result, though n=3 TEGs and one judge model.
+
+**What the judge's own reasoning confirms, independent of the design conversation:** in all three
+TEGs' notes, the discriminator between winning and losing arms was explicitly restraint — arms that
+"know when a sentence is finished" beat arms that "keep adding a second flourish/coda to a joke that
+had already landed." That is exactly the one-move-per-joke principle the design conversation
+converged on by hand, now confirmed independently by a blind judge reading different material.
+
+**`interiority` alone shows a specific failure mode: invented supporting claims.** Judge notes
+flagged, across the two runs, an invented superlative ("best gross improver of the four days" — not
+stated in the source), an invented chronology, and other over-claims specifically in the
+interiority-only arm. Reaching for an extreme internal state seems to pull the model toward
+fabricating the evidence that would justify it. `combined` (interiority + the overstatement
+discipline) scores higher than `interiority` alone on grounding (8.0 vs 7.0 in the final run),
+suggesting the one-move discipline reins in this tendency — but interiority should not ship
+standalone without tightening its own grounding rule first.
+
+**`crueller` barely beats baseline and never won a TEG.** No evidence it broke the champion
+carve-out (judge notes don't single it out for that), but it also didn't buy compellingness or humor
+— raising mockery intensity on the field/runner-up didn't make the arms funnier, just harsher.
+
+**`cjmh` is high-variance:** won TEG 14 clearly, came last or near-last on TEG 16, mid/low on TEG 18.
+A single sustained literary register seems to depend heavily on whether that TEG's material suits
+it, unlike `overstatement`/`combined`/`interiority` which stayed consistently top-half across all
+three.
+
+**`kitchen_sink` (all four ideas combined — see above) is a clear no.** Stacking devices multiplies
+the temptation to over-reach faster than it multiplies the payoff, even under an explicit
+selectivity instruction telling the model to hold back.
+
+**Recommendation:** fold the `overstatement` delivery discipline (one move per joke, stay inside
+golf vocabulary, avoid stacked flourishes) into `WRITER_VOICE` as a refinement of the existing
+`ELEVATION_DEVICE` guidance — it is the clear, consistent winner and the highest scorer on the axis
+that matters most for a faithfulness-first pipeline (factual_grounding, 9.0). `combined` and
+`interiority` are close behind and worth a second look once `interiority`'s grounding issue is
+fixed — neither is yet safe to ship standalone. `crueller`, `cjmh` and `kitchen_sink` are not clear
+wins; park them. Not yet adopted into `authoring.WRITER_VOICE` — this section records the experiment
+result, adoption is a separate, explicit step.

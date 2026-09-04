@@ -2,7 +2,7 @@
 
 Guidance for Claude Code when working in this repository.
 
-> **Freshness:** last reviewed **2026-08-11**. See [Keeping this file current](#keeping-this-file-current) at the bottom — it is an instruction, not a note.
+> **Freshness:** last reviewed **2026-08-19**. See [Keeping this file current](#keeping-this-file-current) at the bottom — it is an instruction, not a note.
 
 ## Working rules
 
@@ -73,9 +73,7 @@ python -m teg_analysis.reporting.mailbox status                   # prompts wait
 python -m scripts.export_cowork_kit --tegs 4,14,17 --out DIR # report kit for rewriting outside the pipeline
 ```
 
-> `--plan` and `--paste` hand each prompt off through `data/llm_mailbox` instead of calling the API; the `teg-report-respond` skill answers `--plan` runs, you answer `--paste` runs by hand. Both can run at once.
-
-> On the Claude-Code-on-the-web container, install pytest into the same interpreter as the deps: `pip install -r requirements.txt && pip install pytest`.
+> `--plan` and `--paste` hand each prompt off through `data/llm_mailbox` instead of calling the API; the `teg-report-respond` skill answers `--plan` runs, you answer `--paste` runs by hand. Both can run at once. On the Claude-Code-on-the-web container, install pytest into the same interpreter as the deps: `pip install -r requirements.txt && pip install pytest` — bare `pytest` there is a `uv`-isolated binary that can't see pip-installed deps.
 
 ## Architecture
 
@@ -126,33 +124,17 @@ FastAPI threadpools them. `async def` handlers doing blocking work stall every p
 
 ### Pandas strict dtypes
 
-`requirements.txt` pins `pandas>=3.0,<4.0`. Three patterns have caused production errors — all fixed, but avoid reintroducing them. All three behave **identically on 3.x as on 2.x** (re-verified 2026-08-13 on 3.0.5), so the guidance below is unchanged by the pin; only the version label was wrong.
+`requirements.txt` pins `pandas>=3.0,<4.0`. Three patterns have caused production errors — all fixed, but avoid reintroducing them (re-verified 2026-08-13 on 3.0.5, identical to 2.x behaviour).
 
 **1. `DataFrame.applymap` is removed.** Use `.map(fn)`. Check: `grep -rn "\.applymap(" .`
 
-**2. Assigning strings into an `int64`/`float64` column.** The leaderboard tied-rank pattern (`Rank` int + `=` suffix) raises even when the mask is all-False. Convert to `object` first, or build the column as `str` from the start and guard with `.any()`. Both still work on 3.x; note that on 3.x the string-first column comes back as the new Arrow-backed `str` dtype rather than `object`, which is fine here but means **don't assert `== object` on a string column**:
+**2. Assigning strings into an `int64`/`float64` column.** The leaderboard tied-rank pattern (`Rank` int + `=` suffix) raises even when the mask is all-False. Build the column as `str` from the start and guard with `.any()`: `df['Rank'] = df['Total'].rank(...).astype(int).astype(str)`, then `df.loc[dupes, 'Rank'] += '='` only when `dupes.any()` (webapp pattern, `webapp/deps.py`). On 3.x this comes back as Arrow-backed `str`, not `object` — don't assert `== object` on it.
 
-```python
-# object-first
-df['Rank'] = df['Total'].rank(method='min', ascending=asc).astype(int).astype(object)
-df.loc[dupes, 'Rank'] = df.loc[dupes, 'Rank'].astype(str) + '='
+**3. Assigning strings via `.iloc`/`.loc` positional setitem.** Both enforce the existing column dtype. Use named-column assignment instead: `df[col] = df[col].apply(fmt)`, not `df.iloc[:, 2] = ...`.
 
-# string-first (webapp pattern, see webapp/deps.py)
-df['Rank'] = df['Total'].rank(method='min', ascending=asc).astype(int).astype(str)
-if dupes.any():
-    df.loc[dupes, 'Rank'] = df.loc[dupes, 'Rank'] + '='
-```
+Check: `python scripts/check_pandas_compat.py` (detects `iloc-col-assign`). Fixed live-code sites: `teg_analysis/analysis/scoring.py`, `webapp/deps.py`.
 
-**3. Assigning strings via `.iloc`/`.loc` positional setitem.** Both enforce the existing column dtype. Use named-column assignment, which replaces the column wholesale:
-
-```python
-col = df.columns[2]                      # not df.iloc[:, 2] = ...
-df[col] = df[col].apply(fmt)
-```
-
-Check: `python scripts/check_pandas_compat.py` (detects the `iloc-col-assign` pattern). Live-code sites previously fixed: `teg_analysis/analysis/scoring.py`, `webapp/deps.py` (already uses string-first). The rest of the historical fixes were in frozen `streamlit/` files.
-
-> If you change the pandas pin, re-verify these three and update this section — don't leave guidance for a version you no longer run. The pin lives in `requirements.txt`; **leaving pandas unpinned is what let the deploy drift onto a new major line unnoticed**, so keep the ceiling.
+> Change the pandas pin → re-verify these three and update this section. Pin lives in `requirements.txt`; leaving pandas unpinned is what let the deploy drift onto a new major line unnoticed, so keep the ceiling.
 
 ## Definition of done
 
@@ -162,20 +144,7 @@ Not a gate to run mechanically — a checklist to think against before calling w
 - `STATUS.md` updated if the change is user-visible or shifts direction.
 - Callers of any renamed or removed function checked; back-compat alias considered explicitly rather than by default.
 - No frontend imports in `teg_analysis/`; no `streamlit/` file touched.
-- Tests run where the change plausibly affects behaviour — your judgement on when that's warranted. Test suite: `python -m pytest tests/ -v` (bare `pytest` fails on the Claude-Code-on-the-web container, where it's a `uv`-isolated binary that can't see pip-installed deps).
-
-### Don't run the full suite after every change
-
-It takes ~4 minutes. Running it reflexively wastes the session and buries the actual work.
-
-| Change | What to run |
-|---|---|
-| Documentation, comments, docstrings | **nothing** |
-| Prompt text, or one module | that module's test file |
-| Anything else | the files plausibly affected |
-| Before pushing a branch for review, or before a merge | the full suite, **once** |
-
-If a targeted run passes and nothing else could be affected, that is the end of it. Say what you ran; don't re-run to feel sure.
+- Tests run where the change plausibly affects behaviour, not reflexively — the full suite takes ~4 minutes and running it every time wastes the session. Nothing for docs/comments, one module's test file for a prompt/module-scoped change, the full suite once before pushing for review or merging. Say what you ran; don't re-run to feel sure. Suite: `python -m pytest tests/ -v` (Claude-Code-on-the-web pytest caveat: see Development commands).
 
 ## Documentation
 
@@ -219,9 +188,7 @@ If a task turns out to be a poor fit for the current model, say so in one line r
 
 ## Keeping this file current
 
-This file has drifted before. Actively resist it.
-
-**On every session where you touch this file's subject matter:** if you find an instruction here that contradicts what the code actually does, **say so and propose the fix** rather than silently working around it. A stale instruction is a bug.
+This file has drifted before. Actively resist it. **On every session where you touch this file's subject matter:** if you find an instruction here that contradicts what the code actually does, **say so and propose the fix** rather than silently working around it. A stale instruction is a bug.
 
 **Explicitly flag it when:**
 
