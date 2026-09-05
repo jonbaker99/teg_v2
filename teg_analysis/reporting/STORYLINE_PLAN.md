@@ -616,6 +616,10 @@ pair that shares a *player* or *failure mode* across different rounds instead
 (`threads.py`'s other cluster types), which is a structurally different kind of overlap
 and might behave differently.
 
+> **Superseded 2026-09-05 — interweaving is now off by default** (`--interweave` to opt in). The
+> A/B below still stands; what changed is the destination. See "Interweaving mothballed" at the end
+> of this file.
+
 **Wired into the pipeline and re-validated end-to-end (2026-08-19).**
 `find_overlapping_pairs` (generalised from `pick_overlapping_pair` to return every
 non-overlapping qualifying pair, greedily, not just the top one — a plan can have more
@@ -775,3 +779,31 @@ that matters most for a faithfulness-first pipeline (factual_grounding, 9.0). `c
 fixed — neither is yet safe to ship standalone. `crueller`, `cjmh` and `kitchen_sink` are not clear
 wins; park them. Not yet adopted into `authoring.WRITER_VOICE` — this section records the experiment
 result, adoption is a separate, explicit step.
+
+
+---
+
+## Interweaving mothballed (2026-09-05)
+
+**`find_overlapping_pairs` no longer runs by default.** `build_storyline_draft()` takes
+`interweave_sections=False`; the CLI takes `--interweave` to turn it back on.
+
+**The A/B is not overturned.** Interwoven won 3/3 TEGs on every judged axis against always-separate
+sections, and that result was measured honestly. What changed is what the prose is poured into.
+
+That A/B scored reports read as **one flowing document**, where cross-cutting two threads genuinely
+reads better than stating them one after the other. Reports are now presented as a **newspaper
+edition** — a lead story on the Trophy winner plus separate articles in a grid
+(`webapp/report_layout_prototypes/`, PR #92). In that frame a merged section is a defect:
+
+- One double-length article carrying two subjects. TEG 16's merged section is 430 words against
+  ~250 for every other article, which unbalances the grid.
+- A `' / '`-joined heading that is not a headline, and cannot be cut down into one — the newspaper
+  parser has to special-case it.
+- Two kickers for one article (`WOODEN SPOON & SIDEBAR`), so the edition cannot label it.
+
+Jon's read, seeing the layout: separate articles are markedly more digestible than one long report,
+and that is the whole point of the change.
+
+**Kept behind a flag rather than deleted.** The mechanism works and the evidence is real. If the
+presentation changes again, this is a flag flip rather than a rebuild.

@@ -12,7 +12,28 @@
 
 ---
 
-## START HERE — picking this up in a new chat (2026-08-19)
+## START HERE — picking this up in a new chat (2026-09-05)
+
+### Reports are going to a newspaper layout; interweaving is mothballed (2026-09-05)
+
+**The presentation changed, and it changes what the pipeline should produce.** Tournament reports
+are being moved from one flowing document to a **newspaper edition** — a lead story on the Trophy
+winner, then the remaining storylines as separate articles in a grid. Prototype (four layout
+directions, TEG 14 and 16): `webapp/report_layout_prototypes/`, PR #92. Jon's verdict on seeing it:
+markedly more digestible than one long report, direction confirmed, layout details still open.
+
+Two consequences for this pipeline:
+
+- **Interweaving is off by default** (`--interweave` to opt in). Its A/B win stands — it was
+  measured against a flowing document, where cross-cutting reads better. A newspaper edition wants
+  one subject per article, and a merged section is a double-length article with a `' / '`-joined
+  heading and two kickers. Full reasoning: `STORYLINE_PLAN.md` → "Interweaving mothballed".
+- **`StorylinePlan` needs `headline` and `standfirst` fields.** `subject` is a 15–25 word
+  descriptive line: a good section heading, a poor headline. The prototype has to derive one, and
+  derived headlines are the weakest text on the page. Note that the **unrequested `**bold**`
+  mini-header** logged below as a cosmetic bug is this missing field arriving by accident, about
+  half the time — fix it by asking for it, not by removing it.
+
 
 ### Storyline-first reports — full-report experiment run; records/streaks beat gap closed (2026-08-19)
 
@@ -91,7 +112,8 @@
   planned; A/B'd first (`scripts/storyline_interweave_experiment.py`, 3/3 TEGs, every judged axis —
   compellingness, factual_grounding, clarity, redundancy, reads-as-story), then wired into
   `build_storyline_draft()`: overlapping storylines (2+ shared `beat_ids`) merge into one cross-cut
-  section automatically, no flag. Re-validated end to end (fresh plan → draft → voice pass) on TEG 16
+  section. **Mothballed 2026-09-05 — now behind `--interweave`, off by default** (see the entry at
+  the top of this file). Re-validated end to end (fresh plan → draft → voice pass) on TEG 16
   and TEG 18 — zero new D3 findings either time. Full detail: `STORYLINE_PLAN.md` → "Interweaving A/B
   result". **The storyline-first pipeline is now complete, three stages, plan → unvoiced structural
   draft → voice pass** — see `README.md` → "Storyline-first pipeline — stages and outputs". Next open

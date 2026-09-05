@@ -141,10 +141,14 @@ def draft_section(storyline: dict, evidence: list, context: dict, model: Optiona
     return text.strip()
 
 
-def build_storyline_draft(teg_num: int, model: Optional[str] = None) -> tuple[str, dict]:
+def build_storyline_draft(teg_num: int, model: Optional[str] = None,
+                          interweave_sections: bool = False) -> tuple[str, dict]:
     """Runs Call A only (`build_storyline_plan`) — this prototype never calls
     the legacy full `StoryPlan` (Call B); see story_plan.py's module comment
     above `StorylinePlan` for the split.
+
+    `interweave_sections` merges storylines that share beats into one cross-cut
+    section. Off by default — see the comment at the call site below.
     """
     plan_result = build_storyline_plan(teg_num, model=model)
     for w in plan_result["warnings"]:
@@ -162,14 +166,28 @@ def build_storyline_draft(teg_num: int, model: Optional[str] = None) -> tuple[st
     order = ([plan["trophy_storyline"]] + plan["discovered_storylines"] + fallback_sections
             + [plan["jacket_storyline"], plan["spoon_storyline"]])
 
-    # Interweaving A/B (STORYLINE_PLAN.md, "Interweaving A/B result", 2026-08-19):
-    # interwoven won 3/3 TEGs on every judged axis (compellingness, factual_grounding,
-    # clarity, redundancy, reads_as_story_not_list) against today's always-separate
-    # sections. Candidate pairs need no LLM call — storylines already cite overlapping
-    # beat_ids independently (planned against the same beat pool), so shared citation
-    # IS the candidate signal. Multiple non-overlapping pairs can exist in one plan;
-    # `find_overlapping_pairs` greedily picks the highest-overlap set.
-    pairs = interweave.find_overlapping_pairs(order)
+    # Interweaving — OFF by default since 2026-09-05, opt in with --interweave.
+    #
+    # The A/B still stands on its own terms (STORYLINE_PLAN.md, "Interweaving A/B
+    # result", 2026-08-19): interwoven won 3/3 TEGs on every judged axis —
+    # compellingness, factual_grounding, clarity, redundancy,
+    # reads_as_story_not_list — against always-separate sections. Candidate pairs
+    # need no LLM call: storylines already cite overlapping beat_ids independently
+    # (planned against the same beat pool), so shared citation IS the candidate
+    # signal, and `find_overlapping_pairs` greedily picks the highest-overlap set.
+    #
+    # What changed is the destination, not the judgement. That A/B scored reports
+    # read as one flowing document, where merging two threads into a cross-cut
+    # section genuinely reads better. Reports are now presented as a newspaper
+    # edition — a lead story plus separate articles in a grid
+    # (webapp/report_layout_prototypes/) — and there a merged section is one
+    # double-length article carrying two subjects and a ' / '-joined heading that
+    # is no longer a headline. Separate storylines are what that layout wants.
+    #
+    # Kept behind a flag rather than deleted: the mechanism is sound and the
+    # evidence is real, so if the presentation changes again this is a flag flip,
+    # not a rebuild.
+    pairs = interweave.find_overlapping_pairs(order) if interweave_sections else []
     merge_at = {i: (a, b) for a, b, i, j in pairs}       # position -> pair to merge in
     skip = {j for _, _, i, j in pairs}                    # position already covered by its pair
 
@@ -203,13 +221,17 @@ def main():
     ap.add_argument("--model", default=None)
     ap.add_argument("--no-voice", action="store_true",
                     help="Write only the structural draft; skip the restyle_voice pass.")
+    ap.add_argument("--interweave", action="store_true",
+                    help="Merge storylines that share beats into one cross-cut section. "
+                         "Off by default: the newspaper layout wants separate articles.")
     args = ap.parse_args()
 
     if not llm.has_api_key():
         print("No API key found. Aborting.")
         sys.exit(1)
 
-    draft_text, plan = build_storyline_draft(args.teg, model=args.model)
+    draft_text, plan = build_storyline_draft(args.teg, model=args.model,
+                                             interweave_sections=args.interweave)
     draft_path = f"{output_dir()}/teg_{args.teg}_report_storylinedraft.md"
     with open(draft_path, "w") as f:
         f.write(draft_text)

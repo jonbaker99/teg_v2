@@ -528,10 +528,11 @@ Runs end to end via `scripts/storyline_full_report_experiment.py --teg N`. Not w
 2. **Structural draft — no voice** — `build_storyline_draft(teg)` → `teg_N_report_storylinedraft.md`.
    One `##` section per storyline, in order (trophy → discovered → fallback → jacket → spoon), each
    drafted fact-isolated (own `evidence` + scoped `context`, `DRAFT_WRITER_SYSTEM`) by a writer told
-   explicitly *"do not try to be funny or stylish."* Storylines whose `beat_ids` overlap 2+ beats are
-   merged into one cross-cut section instead of two separate ones
-   (`storyline_interweave_experiment.find_overlapping_pairs`, validated 2x on TEG 16/18 — see
-   `STORYLINE_PLAN.md` → "Interweaving A/B result"). **This file is plain, factual, unvoiced prose —
+   explicitly *"do not try to be funny or stylish."* Optionally (`--interweave`, **off by default**)
+   storylines whose `beat_ids` overlap 2+ beats merge into one cross-cut section instead of two
+   separate ones (`storyline_interweave_experiment.find_overlapping_pairs`, validated 2x on TEG
+   16/18 — see `STORYLINE_PLAN.md` → "Interweaving A/B result"). It is off because reports are now
+   presented as a newspaper edition of separate articles, which wants one subject per section. **This file is plain, factual, unvoiced prose —
    the right input for any tone/voice experiment.** Never start a voice A/B from an already-styled
    report; iterating on "slightly funnier than the finished piece" compounds instead of comparing.
 3. **Voice pass** — `authoring.restyle_voice(teg, WRITER_VOICE, label="storylinefirst",
