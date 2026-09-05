@@ -26,7 +26,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 COMMENTARY_DIR = REPO_ROOT / "data" / "commentary"
 OUTPUT_PATH = REPO_ROOT / "webapp" / "report_layout_prototypes" / "editions.json"
 
-TEGS = (14, 16)
+TEGS = (14, 16, 18)
 
 # Priority order for combining kickers on a merged (" / "-joined) heading.
 _KICKER_PRIORITY = ["TROPHY", "GREEN JACKET", "WOODEN SPOON", "SIDEBAR"]
