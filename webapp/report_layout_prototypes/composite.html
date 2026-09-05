@@ -57,7 +57,8 @@
   }
   /* grid and flex children default to min-width:auto, which stops a scrollable
      descendant's overflow-x from ever engaging. */
-  .main-split > *, .subs > *, .apx-2col > *, .second-split > *, .r-list > *{ min-width:0; }
+  .main-split > *, .subs > *, .apx-records > *, .second-split > *, .r-list > *{ min-width:0; }
+  .apx-standings{ min-width:0; }
 
   /* ---------- M1 masthead ------------------------------------------------ */
   .masthead{ padding:1.5rem var(--pad) 0; }
@@ -124,7 +125,8 @@
 
   /* ---------- P1 appendices ---------------------------------------------- */
   .appendix{ border-top:1px solid var(--rule); margin-top:2rem; padding:1.7rem var(--pad) 2.3rem; }
-  .apx-2col{ display:grid; grid-template-columns:1.4fr 1fr; gap:2.5rem; }
+  .apx-standings{ margin-bottom:1.6rem; }
+  .apx-records{ display:grid; grid-template-columns:repeat(2,1fr); gap:0 2.5rem; align-items:start; }
   .apx-h{ font-family:var(--font-mono); font-size:0.7rem; font-weight:700; letter-spacing:0.11em;
     text-transform:uppercase; color:var(--accent); margin-bottom:0.7rem; }
   .table-scroll{ overflow-x:auto; max-width:100%; }
@@ -280,6 +282,7 @@
   </div>
   <div class="control-group" role="group" aria-label="Arrangement">
     <span class="control-label">Arrangement</span>
+    <button type="button" class="control-btn" data-arr="auto">Auto</button>
     <button type="button" class="control-btn" data-arr="e1">E1 &middot; Classic front</button>
     <button type="button" class="control-btn" data-arr="e2">E2 &middot; Second lead</button>
     <button type="button" class="control-btn" data-arr="e3">E3 &middot; Two decks</button>
@@ -693,6 +696,7 @@
   ];
 
   var ARR_NOTES = {
+    auto: "The rule: 5 or more stories -> E2, fewer -> E1. E2's second lead is the Green Jacket unless a storyline clearly beats it.",
     e1: "Flat grid: every sub-article is equal. Simplest to reason about; a fourth story has to span the width.",
     e2: "Ranked: the strongest sub-article is promoted to a second lead across the full width, the rest follow in one row.",
     e3: "Rail runs the full height of the lead, so the page opens as two columns rather than a band.",
@@ -704,7 +708,7 @@
   var editionsByTeg = {};
   EDITIONS.forEach(function(e){ editionsByTeg[e.teg] = e; });
 
-  var state = { teg: 14, arr: "e1", fill: "f2" };
+  var state = { teg: 14, arr: "auto", fill: "f1" };
 
   function esc(s){
     return String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
@@ -776,12 +780,14 @@
       return '<div class="recs-group"><p class="recs-cat">' + esc(c) + '</p><ul class="recs">' +
         by[c].map(function(t){ return "<li>" + esc(t) + "</li>"; }).join("") + '</ul></div>';
     }).join("");
-    return '<section class="appendix"><div class="apx-2col">' +
-      '<div><h3 class="apx-h">Standings by round</h3><div class="table-scroll"><table class="stab">' +
-        '<thead><tr><th>Rd</th><th>Trophy</th><th>Green Jacket</th></tr></thead><tbody>' + rows + '</tbody>' +
-      '</table></div></div>' +
-      '<div><h3 class="apx-h">Personal bests &amp; records</h3>' + recs + '</div>' +
-    '</div></section>';
+    return '<section class="appendix">' +
+      '<div class="apx-standings"><h3 class="apx-h">Standings by round</h3>' +
+        '<div class="table-scroll"><table class="stab">' +
+          '<thead><tr><th>Rd</th><th>Trophy</th><th>Green Jacket</th></tr></thead>' +
+          '<tbody>' + rows + '</tbody></table></div></div>' +
+      '<div><h3 class="apx-h">Personal bests &amp; records</h3>' +
+        '<div class="apx-records">' + recs + '</div></div>' +
+    '</section>';
   }
 
   /* ---- the three arrangements ------------------------------------------ */
@@ -799,10 +805,11 @@
   }
 
   function renderE2(e, lead, subs, railExtra){
-    // The highest-scoring sub-article is promoted to a second lead across the
-    // full width; the rest follow in one ruled row.
-    var second = subs[0];
-    var rest = subs.slice(1).map(function(a){ return subCardHtml(a); }).join("");
+    // One sub-article is promoted to a second lead across the full width; the
+    // rest follow in one ruled row. See chooseSecondStory for which.
+    var second = chooseSecondStory(subs);
+    var rest = subs.filter(function(a){ return a !== second; })
+      .map(function(a){ return subCardHtml(a); }).join("");
     return mastheadHtml(e) +
       '<div class="lead-head">' + leadHeadHtml(lead) + '</div>' +
       '<div class="main-split">' + leadBodyHtml(lead) + railHtml(e, railExtra) + '</div>' +
@@ -904,6 +911,38 @@
     });
   }
 
+  /* -------------------------------------------------------------------------
+     The shipping rules, as chosen against the rendered pages.
+
+     Arrangement follows the story count. With four stories E1's 3-up row holds
+     the three sub-articles exactly; a fifth leaves an orphan spanning the page,
+     so E2 promotes one to a second lead and the remaining three fill the row.
+
+     The Green Jacket is the second competition, so it is the second lead by
+     default. A discovered storyline takes the slot only when it is clearly
+     stronger — CLEAR_MARGIN or more on compelling_score. TEG 14 sits exactly on
+     that boundary (Wooden Spoon 9 against Green Jacket 7), so this constant is
+     the one number to turn if the wrong story is being promoted.
+     ------------------------------------------------------------------------- */
+  var E2_MIN_ARTICLES = 5;
+  var CLEAR_MARGIN = 2;
+
+  function chooseArrangement(edition){
+    return edition.articles.length >= E2_MIN_ARTICLES ? "e2" : "e1";
+  }
+
+  function chooseSecondStory(subs){
+    if (!subs.length) return null;
+    var jacket = subs.filter(function(a){
+      return a.kicker.indexOf("GREEN JACKET") !== -1;
+    })[0];
+    if (!jacket) return subs[0];
+    // subs arrive sorted by compelling_score desc, then humour_score desc
+    var top = subs[0];
+    if (top !== jacket && top.compelling - jacket.compelling >= CLEAR_MARGIN) return top;
+    return jacket;
+  }
+
   var RENDERERS = {
     e1: renderE1, e2: renderE2, e3: renderE3,
     g1: renderG1, g2: renderG2, g3: renderG3
@@ -926,10 +965,12 @@
       railExtra = '<div class="rail-block">' + subCardHtml(shortest) + '</div>';
     }
 
+    var arr = state.arr === "auto" ? chooseArrangement(e) : state.arr;
+
     var stage = document.getElementById("stage");
-    stage.className = "paper arr-" + state.arr;
-    stage.innerHTML = RENDERERS[state.arr](e, lead, subs, railExtra);
-    if (state.arr === "g2") balanceG2();
+    stage.className = "paper arr-" + arr;
+    stage.innerHTML = RENDERERS[arr](e, lead, subs, railExtra);
+    if (arr === "g2") balanceG2();
 
     document.querySelectorAll("[data-teg]").forEach(function(b){
       b.setAttribute("aria-pressed", String(b.getAttribute("data-teg") === String(state.teg)));
@@ -940,7 +981,8 @@
     document.querySelectorAll("[data-fill]").forEach(function(b){
       b.setAttribute("aria-pressed", String(b.getAttribute("data-fill") === state.fill));
     });
-    document.getElementById("arrNote").textContent = ARR_NOTES[state.arr];
+    document.getElementById("arrNote").textContent =
+      (state.arr === "auto" ? "Auto -> " + arr.toUpperCase() + ". " : "") + ARR_NOTES[state.arr];
     document.body.setAttribute("data-ready", "1");
   }
 
@@ -962,6 +1004,13 @@
       render();
     });
   });
+
+  // hook the screenshot script drives, so the boundary case can be rendered
+  // both ways without editing the constant
+  window.__composite = {
+    set: function(patch){ Object.assign(state, patch); render(); },
+    setClearMargin: function(n){ CLEAR_MARGIN = n; render(); }
+  };
 
   render();
 })();

@@ -27,7 +27,7 @@ A/B/C). See *Open* below.
 | Card treatment | **C2** ruled columns, no gaps, no boxes *(desktop; mobile decided separately)* |
 | Kickers | **K1** plain mono caps in the accent colour |
 | Standings rail | **S2** results + final standings beside the lead |
-| Appendices | **P1** open block at the foot |
+| Appendices | **P1** open at the foot — standings full width, records in two columns beneath |
 
 
 Tournament reports move from one flowing document to a **newspaper edition**: a lead story on the
@@ -83,59 +83,33 @@ https://claude.ai/code/artifact/37e0dc5d-5cc3-4475-bf7b-7857de19bf91
 
 ## Open — and what is needed to close it
 
-### 1. Page composition — needs Jon's pick from `composite.html`
+### 1. Page composition — DECIDED
 
-The elements are chosen; how they compose is not. Six arrangements, all using the same vocabulary.
+The rule is in `composite.html` as the **Auto** setting, and it is the default:
 
-**E1–E3 vary where the blocks sit.** Jon's read: they "do a good job of fixing the main issues".
+- **Five or more stories → E2 second lead.** A fifth story leaves E1's 3-up row with an orphan
+  spanning the page; E2 promotes one to a second lead and the remaining three fill the row exactly.
+- **Fewer than five → E1 classic front.** Three sub-articles fit the 3-up row with nothing left
+  over.
+- **The second lead defaults to the Green Jacket**, since it is the second competition. A
+  discovered storyline takes the slot only when it is clearly stronger — `CLEAR_MARGIN` (2) or more
+  on `compelling_score`. TEG 14 sits exactly on that boundary: Wooden Spoon 9 against Green Jacket
+  7, so the Spoon is promoted. **That constant is the one number to turn** if the wrong story is
+  being promoted.
+- **Rail fill: F1, nothing below the standings.** The gap under the rail is accepted; a story or
+  the round-by-round table there were both rejected as worse.
 
-- **E1 classic front** — lead across two thirds with the rail beside it, one heavy rule, then a
-  3-up ruled row. A fourth sub-article spans the full width.
-- **E2 second lead** — the highest-scoring sub-article is promoted to full width with its own
-  three columns; the rest follow in one ruled row. Uses `compelling_score` for more than ordering.
-- **E3 two decks** — the rail runs the full height of the lead block, so the page opens as two
-  columns rather than a band; then a 2×2 ruled grid.
+Of the current tournaments only TEG 14 has five stories, so it is the only one that renders as E2.
 
-**G1–G3 attack tessellation and white space**, which is what Jon flagged as the remaining fault
-along with the lead and the grid reading as two pages:
+**Rejected, and why it is worth remembering.** G1 packed — one three-column flow with stories
+breaking across columns — was the only arrangement that tessellated consistently (spread between
+tallest and shortest column bottom: 202/124/8px against 66–1348px for everything else). It was
+still rejected: *"too dense, feels like it loses its way."* Measured tessellation is not the same
+as readable. Do not re-propose it on the strength of that number.
 
-- **G1 packed** — the whole page is one three-column flow. Stories break across columns the way a
-  newspaper's do, so the browser balances them; no divider rule anywhere.
-- **G2 balanced** — three columns, but no story is ever split. Each is placed into the shortest
-  column by measured height (longest-processing-time packing, `balanceG2`).
-- **G3 interlocked** — the lead occupies an L, the rail runs the right edge full height and the
-  remaining stories fill under the lead in the other two columns.
-
-**Measured, not judged by eye.** Spread between the tallest and shortest column bottom, in px —
-lower tessellates better:
-
-| | TEG 14 | TEG 16 | TEG 18 |
-|---|---:|---:|---:|
-| E1 | 66 | 608 | 629 |
-| E2 | 100 | 1348 | 1331 |
-| E3 | 1199 | 55 | 55 |
-| **G1** | **202** | **124** | **8** |
-| G2 | 638 | 501 | 563 |
-| G3 | 733 | 694 | 814 |
-
-**G1 is the only arrangement that tessellates consistently.** E1 and E3 each look tidy on some
-tournaments and ragged on others, which is copy-dependence, not layout. And G2 is the useful
-negative result: with only three to five stories of 220–410 words, keeping every story whole and
-balancing three columns is close to arithmetically impossible — better packing does not help,
-because there are too few pieces. **Splitting stories across columns is what makes a newspaper
-page tessellate**, and G1 is the only option here that does it.
-
-Crossed with a second, smaller decision the rail forces. The rail is shorter than the lead body,
-so its column ends in a void unless something follows the standings:
-
-- **F1** nothing — accept the gap.
-- **F2** the round-by-round Trophy table.
-- **F3** the shortest sub-article moved up into the rail, picked by `words`.
-
-Two arrangements were rebuilt during this pass and the reasons are worth keeping: E2 originally
-stacked the remaining stories in a narrow column beside the promoted one, and three full-length
-articles in that column left a column-height void; G3 originally spanned the rail across two grid
-rows, which stretched the first row to the rail's height and left a gap under the headline.
+E2 was rebuilt once during this pass: it originally stacked the remaining stories in a narrow
+column beside the promoted one, and three full-length articles in that column left a
+column-height void. G2 and G3 remain in the file as the record of what was tried.
 
 ### 2. Mobile — three patterns built, one to choose
 

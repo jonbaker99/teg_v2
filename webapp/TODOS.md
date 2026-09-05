@@ -13,8 +13,10 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
   Modern editorial, C Sports section, D Back page) and the answer is a composite: Jon likes and
   dislikes elements of each, so the next step is to collect that element by element, not to pick
   one of the four. Then wire it into `routes/reports.py`.
-  **Element pass done (2026-09-05)** — ten choices made in `elements.html` and assembled in
-  `composite.html`. What remains is page composition: E1/E2/E3 crossed with rail fill F1/F2/F3.
+  **Decided (2026-09-05)** — ten elements chosen in `elements.html`, assembled in `composite.html`,
+  and the page composition settled: E2 at five or more stories, E1 below that, Green Jacket as the
+  default second lead, nothing below the standings in the rail. Remaining work is the mobile
+  pattern, then wiring into `routes/reports.py`.
 - [ ] **Newspaper report layout — rethink mobile** — stacking the grid vertically recreates the
   one-long-report problem the layout solved. Needs a different pattern (index-first, swipeable
   cards, accordion), prototyped like A–D were, not tuned breakpoints.
