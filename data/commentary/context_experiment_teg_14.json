@@ -1,0 +1,725 @@
+{
+  "teg": 14,
+  "results": [
+    {
+      "subject": "David Mullin wins the Trophy on 154 points by 2 — four TEGs after his first Spoon and one after his most recent",
+      "context": {
+        "venue": {
+          "teg_num": 14,
+          "area": "Kent, England",
+          "year": 2021,
+          "area_visit_n": 2,
+          "n_rounds": 4,
+          "rounds": [
+            {
+              "round": 1,
+              "course": "Royal Cinque Ports",
+              "date": "04/11/2021",
+              "weekday": "Thursday",
+              "visit_n": 2,
+              "full_name": "Royal Cinque Ports Golf Club",
+              "location": "Deal, Kent, England",
+              "type": "Links",
+              "designer": null
+            },
+            {
+              "round": 2,
+              "course": "Littlestone",
+              "date": "05/11/2021",
+              "weekday": "Friday",
+              "visit_n": 2,
+              "full_name": "Littlestone Golf Club - Championship Links",
+              "location": "Littlestone-on-Sea, Kent, England",
+              "type": "Links",
+              "designer": "William Laidlaw Purves (same as Royal St George's), refined by James Braid and Alister MacKenzie"
+            },
+            {
+              "round": 3,
+              "course": "Prince's - Shore / Dunes",
+              "date": "06/11/2021",
+              "weekday": "Saturday",
+              "visit_n": 2,
+              "full_name": "Prince's Golf Club",
+              "location": "Sandwich, Kent, England",
+              "type": "Links",
+              "designer": "Various; Mackenzie & Ebert recent work"
+            },
+            {
+              "round": 4,
+              "course": "Prince's - Shore / Dunes",
+              "date": "07/11/2021",
+              "weekday": "Sunday",
+              "visit_n": 3,
+              "full_name": "Prince's Golf Club",
+              "location": "Sandwich, Kent, England",
+              "type": "Links",
+              "designer": "Various; Mackenzie & Ebert recent work"
+            }
+          ]
+        },
+        "player_history": {},
+        "player_course_history": {
+          "Alex Baker": {
+            "Littlestone": {
+              "course": "Littlestone",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 100,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 100,
+              "this_teg_best_round": 2,
+              "strokes_vs_last_visit": 0,
+              "is_course_pb_this_teg": false
+            },
+            "Prince's - Shore / Dunes": {
+              "course": "Prince's - Shore / Dunes",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 1,
+              "prior_best_gross": 89,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 94,
+              "this_teg_best_round": 4,
+              "strokes_vs_last_visit": 5,
+              "is_course_pb_this_teg": false
+            },
+            "Royal Cinque Ports": {
+              "course": "Royal Cinque Ports",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 102,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 98,
+              "this_teg_best_round": 1,
+              "strokes_vs_last_visit": -4,
+              "is_course_pb_this_teg": true
+            }
+          },
+          "David Mullin": {
+            "Littlestone": {
+              "course": "Littlestone",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 92,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 85,
+              "this_teg_best_round": 2,
+              "strokes_vs_last_visit": -7,
+              "is_course_pb_this_teg": true
+            },
+            "Prince's - Shore / Dunes": {
+              "course": "Prince's - Shore / Dunes",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 1,
+              "prior_best_gross": 92,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 91,
+              "this_teg_best_round": 4,
+              "strokes_vs_last_visit": -1,
+              "is_course_pb_this_teg": true
+            },
+            "Royal Cinque Ports": {
+              "course": "Royal Cinque Ports",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 94,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 87,
+              "this_teg_best_round": 1,
+              "strokes_vs_last_visit": -7,
+              "is_course_pb_this_teg": true
+            }
+          }
+        }
+      },
+      "text_with_context": "**Mullin takes the Trophy on 154**\n\nDavid Mullin won the Trophy with 154 Stableford points, two clear of Alex Baker. It is the 16th-highest Trophy total on record and the third-best of Mullin's own career.\n\nThe winning score was built in bursts rather than steadily. At Royal Cinque Ports in Round 1 he took 13 points from holes 9 to 12 — three pars around a birdie at the 10th — before the run ended abruptly with a double bogey six at the 13th. Round 3 at Prince's followed the same pattern in reverse: a quadruple-bogey nine at the par-five 8th, then a much stronger back nine, worth ten points more than the front, closing with another 13-point stretch over holes 15 to 18 and a birdie at the last for a round of 36 points. A quadruple-bogey eight at the 10th in the final round was a further reminder that the card was rarely tidy.\n\nThe scoring came alongside better ball-striking than on his previous visit to Kent. Mullin set course bests at all three venues, going round Littlestone in 85 against a previous best of 92, Royal Cinque Ports in 87 against 94, and Prince's in 91.\n\nHe needed the cushion. Baker, who at one stage trailed by nine points, closed seven of that gap to finish within two, his recovery checked in part by a sextuple-bogey ten at the 16th in Round 4.",
+      "text_without_context": "David Mullin took the Trophy with 154 Stableford points, two clear of Alex Baker. The total ranks 16th on the all-time list and is Mullin's own third-best.\n\nThe scoring came in bursts. At Royal Cinque Ports in round one he put together 13 points across holes 9-12 — par, birdie, par, par — before the run ended with a double bogey at the 13th. Round three at Prince's Shore/Dunes followed a similar pattern: 36 points for the day, with the back nine worth ten more than the front, and another 13-point block over the closing four holes, finished off with a birdie at the last. The same round contained a nine at the par-five 8th, a quadruple bogey worth nothing, and he added another quadruple bogey — an eight at the 10th — in round four.\n\nThose gaps left the door open. Baker had trailed by as many as nine points at one stage, and dropped twelve shots in four holes at Littlestone in round two, going triple, double, triple, quadruple through the 2nd to the 5th. He clawed seven of the nine points back over the closing stages, but a ten at the 16th in the final round — six over par on a stroke index 17 hole, no points — ended the chase.\n\nMullin led both the Trophy and the Jacket after round four.",
+      "label_map": {
+        "A": "with_context",
+        "B": "without_context"
+      },
+      "verdict": {
+        "winner": "A",
+        "compellingness": {
+          "A": 8,
+          "B": 6
+        },
+        "factual_grounding": {
+          "A": 9,
+          "B": 8
+        },
+        "richness": {
+          "A": 8,
+          "B": 7
+        },
+        "reads_as_story_not_list": {
+          "A": 8,
+          "B": 6
+        },
+        "notes": "Both drafts are accurate on the core spine: 154 points, two clear of Baker, 16th all-time and third-best personally, the 13-point bursts at Royal Cinque Ports (9-12) and Prince's (15-18), the double bogey at the 13th, the quads at the 8th and 10th, the 36-point third round with the ten-point nine split, Baker's nine-point deficit closed to two, and the sextuple-bogey ten at the 16th. Draft A adds genuine texture beyond the scorecard by drawing on course history — PBs at all three Kent links (85 v 92 at Littlestone, 87 v 94 at Deal, 91 at Prince's) — and frames it as improvement on the previous Kent visit, which the context supports (visit_n 2, prior best TEG 13). That gives it a second layer of story rather than just re-narrating the events, and its closing 'He needed the cushion' turn ties Mullin's messy card to Baker's charge. Draft B instead mines the raw evidence harder — Baker's twelve-shot bleed at Littlestone (triple/double/triple/quad) and the stroke-index-17 detail on the 16th — which is legitimate colour, and its factual grounding is fine, but it ignores the course-history context entirely and ends on a flat, faintly redundant line ('Mullin led both the Trophy and the Jacket after round four' — after the final round, that is simply the win restated). B also has slightly clunkier phrasing ('a quadruple bogey worth nothing', 'clawed seven of the nine points back over the closing stages', the latter a mild inference beyond the evidence). A reads more like a report with a thesis; B reads closer to a well-written sweep of the beat list. A wins narrowly on richness and narrative shape."
+      },
+      "winner_arm": "with_context"
+    },
+    {
+      "subject": "David Mullin wins the Green Jacket at +68 by 7 — built, not inherited",
+      "context": {
+        "venue": {
+          "teg_num": 14,
+          "area": "Kent, England",
+          "year": 2021,
+          "area_visit_n": 2,
+          "n_rounds": 4,
+          "rounds": [
+            {
+              "round": 1,
+              "course": "Royal Cinque Ports",
+              "date": "04/11/2021",
+              "weekday": "Thursday",
+              "visit_n": 2,
+              "full_name": "Royal Cinque Ports Golf Club",
+              "location": "Deal, Kent, England",
+              "type": "Links",
+              "designer": null
+            },
+            {
+              "round": 2,
+              "course": "Littlestone",
+              "date": "05/11/2021",
+              "weekday": "Friday",
+              "visit_n": 2,
+              "full_name": "Littlestone Golf Club - Championship Links",
+              "location": "Littlestone-on-Sea, Kent, England",
+              "type": "Links",
+              "designer": "William Laidlaw Purves (same as Royal St George's), refined by James Braid and Alister MacKenzie"
+            },
+            {
+              "round": 3,
+              "course": "Prince's - Shore / Dunes",
+              "date": "06/11/2021",
+              "weekday": "Saturday",
+              "visit_n": 2,
+              "full_name": "Prince's Golf Club",
+              "location": "Sandwich, Kent, England",
+              "type": "Links",
+              "designer": "Various; Mackenzie & Ebert recent work"
+            },
+            {
+              "round": 4,
+              "course": "Prince's - Shore / Dunes",
+              "date": "07/11/2021",
+              "weekday": "Sunday",
+              "visit_n": 3,
+              "full_name": "Prince's Golf Club",
+              "location": "Sandwich, Kent, England",
+              "type": "Links",
+              "designer": "Various; Mackenzie & Ebert recent work"
+            }
+          ]
+        },
+        "player_history": {},
+        "player_course_history": {
+          "David Mullin": {
+            "Littlestone": {
+              "course": "Littlestone",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 92,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 85,
+              "this_teg_best_round": 2,
+              "strokes_vs_last_visit": -7,
+              "is_course_pb_this_teg": true
+            },
+            "Prince's - Shore / Dunes": {
+              "course": "Prince's - Shore / Dunes",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 1,
+              "prior_best_gross": 92,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 91,
+              "this_teg_best_round": 4,
+              "strokes_vs_last_visit": -1,
+              "is_course_pb_this_teg": true
+            },
+            "Royal Cinque Ports": {
+              "course": "Royal Cinque Ports",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 94,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 87,
+              "this_teg_best_round": 1,
+              "strokes_vs_last_visit": -7,
+              "is_course_pb_this_teg": true
+            }
+          },
+          "Gregg Williams": {
+            "Littlestone": {
+              "course": "Littlestone",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 86,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 97,
+              "this_teg_best_round": 2,
+              "strokes_vs_last_visit": 11,
+              "is_course_pb_this_teg": false
+            },
+            "Prince's - Shore / Dunes": {
+              "course": "Prince's - Shore / Dunes",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 1,
+              "prior_best_gross": 89,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 86,
+              "this_teg_best_round": 3,
+              "strokes_vs_last_visit": -3,
+              "is_course_pb_this_teg": true
+            },
+            "Royal Cinque Ports": {
+              "course": "Royal Cinque Ports",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 94,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 93,
+              "this_teg_best_round": 1,
+              "strokes_vs_last_visit": -1,
+              "is_course_pb_this_teg": true
+            }
+          },
+          "Jon Baker": {
+            "Littlestone": {
+              "course": "Littlestone",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 79,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 92,
+              "this_teg_best_round": 2,
+              "strokes_vs_last_visit": 13,
+              "is_course_pb_this_teg": false
+            },
+            "Prince's - Shore / Dunes": {
+              "course": "Prince's - Shore / Dunes",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 1,
+              "prior_best_gross": 85,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 83,
+              "this_teg_best_round": 4,
+              "strokes_vs_last_visit": -2,
+              "is_course_pb_this_teg": true
+            },
+            "Royal Cinque Ports": {
+              "course": "Royal Cinque Ports",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 85,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 92,
+              "this_teg_best_round": 1,
+              "strokes_vs_last_visit": 7,
+              "is_course_pb_this_teg": false
+            }
+          }
+        }
+      },
+      "text_with_context": "**The Green Jacket: Mullin closes it out**\n\nDavid Mullin took the Green Jacket at +68 gross, seven clear of Jon Baker. It is the sixth-best gross total in TEG history and the fourth-best of Mullin's own career.\n\nThe number was assembled rather than handed over. Mullin set a personal course best at every venue in Kent: 87 at Royal Cinque Ports and 85 at Littlestone, each seven strokes better than his previous visit, and 91 at Prince's, one better than before. He led both the Jacket and the Trophy after the third round.\n\nHe also did it while carrying two ruinous holes. In round three he ran up a nine at the par-five 8th, a quadruple bogey. In round four he made eight at the 10th, another quadruple, this time at the hardest hole on the card. Between them came the steadier work: four holes without a dropped gross shot to close round three, pars at 15, 16 and 17 and a birdie at the last, then pars at the 2nd and 3rd on Sunday morning.\n\nThe margin makes the finish look quieter than it was. Baker had trailed by as many as 15 before closing to seven, and Gregg Williams came from 18 back to finish eight off the lead. Both those charges arrived over the final round at Prince's, by which point Mullin had built enough cushion to absorb them.",
+      "text_without_context": "David Mullin won the Green Jacket with a gross total of +68, seven clear of runner-up Jon Baker. It is the sixth-best gross total in the event's history and the fourth-best of Mullin's own career.\n\nThe win was set up before the final day. After round three at Prince's (Shore / Dunes), Mullin led both the Jacket and the Trophy, the latter with a gap of zero on Stableford. His third round finished strongly: he played the last four holes, 15 through 18, without dropping a gross shot, closing with a birdie at the par-4 18th.\n\nThat does not mean the lead was untroubled. Mullin twice ran up quadruple bogeys — a nine at the par-5 8th in round three, and an eight at the par-4 10th, stroke index 3, in round four. Both holes returned zero Stableford points.\n\nBehind him, the field made ground. Baker had trailed by as many as 15 shots at one point before closing to seven by the finish, a swing of eight. Gregg Williams closed even more, cutting a deficit that had reached 18 down to eight, a gain of ten. Neither run arrived early enough to threaten the outcome. Mullin steadied where he needed to in round four, going par-par at the 2nd and 3rd, and the seven-shot margin held to the end.",
+      "label_map": {
+        "A": "with_context",
+        "B": "without_context"
+      },
+      "verdict": {
+        "winner": "A",
+        "compellingness": {
+          "A": 8,
+          "B": 6
+        },
+        "factual_grounding": {
+          "A": 7,
+          "B": 9
+        },
+        "richness": {
+          "A": 8,
+          "B": 6
+        },
+        "reads_as_story_not_list": {
+          "A": 8,
+          "B": 6
+        },
+        "notes": "A frames the win as constructed rather than gifted and earns that framing with real texture from course history: personal bests at all three Kent links (87 at Royal Cinque Ports and 85 at Littlestone, both seven better than the previous visit; 91 at Prince's, one better) — all correctly matched to the supplied history. It also reads as continuous narrative, with the blow-ups and the chasers woven into the arc rather than itemised. One clear slip: the 10th is called 'the hardest hole on the card' when its stroke index is 3, so third-hardest; 'Sunday morning' for the 2nd and 3rd is an unsupported embellishment, and 'both those charges arrived over the final round' over-reads the round tag on tournament-scope gap events. B is the cleaner of the two factually — it correctly cites stroke index 3, the par-4 18th, the zero Stableford gap on the Trophy, and the eight- and ten-point swings — but it stays inside the scorecard and never touches the venue or the career/course history, so it reads thinner and more paragraph-per-fact, with linking sentences ('Behind him, the field made ground') doing the work instead of a genuine through-line. The pars at the 2nd and 3rd are also thin material presented as though load-bearing in both drafts, but A at least buries them. A wins on colour and shape despite the SI error."
+      },
+      "winner_arm": "with_context"
+    },
+    {
+      "subject": "Jon Baker — defending Trophy champion, back-to-back Jacket holder — takes his first Wooden Spoon on 125 points, and sets a course record on the way",
+      "context": {
+        "venue": {
+          "teg_num": 14,
+          "area": "Kent, England",
+          "year": 2021,
+          "area_visit_n": 2,
+          "n_rounds": 4,
+          "rounds": [
+            {
+              "round": 1,
+              "course": "Royal Cinque Ports",
+              "date": "04/11/2021",
+              "weekday": "Thursday",
+              "visit_n": 2,
+              "full_name": "Royal Cinque Ports Golf Club",
+              "location": "Deal, Kent, England",
+              "type": "Links",
+              "designer": null
+            },
+            {
+              "round": 2,
+              "course": "Littlestone",
+              "date": "05/11/2021",
+              "weekday": "Friday",
+              "visit_n": 2,
+              "full_name": "Littlestone Golf Club - Championship Links",
+              "location": "Littlestone-on-Sea, Kent, England",
+              "type": "Links",
+              "designer": "William Laidlaw Purves (same as Royal St George's), refined by James Braid and Alister MacKenzie"
+            },
+            {
+              "round": 3,
+              "course": "Prince's - Shore / Dunes",
+              "date": "06/11/2021",
+              "weekday": "Saturday",
+              "visit_n": 2,
+              "full_name": "Prince's Golf Club",
+              "location": "Sandwich, Kent, England",
+              "type": "Links",
+              "designer": "Various; Mackenzie & Ebert recent work"
+            },
+            {
+              "round": 4,
+              "course": "Prince's - Shore / Dunes",
+              "date": "07/11/2021",
+              "weekday": "Sunday",
+              "visit_n": 3,
+              "full_name": "Prince's Golf Club",
+              "location": "Sandwich, Kent, England",
+              "type": "Links",
+              "designer": "Various; Mackenzie & Ebert recent work"
+            }
+          ]
+        },
+        "player_history": {},
+        "player_course_history": {
+          "Jon Baker": {
+            "Littlestone": {
+              "course": "Littlestone",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 79,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 92,
+              "this_teg_best_round": 2,
+              "strokes_vs_last_visit": 13,
+              "is_course_pb_this_teg": false
+            },
+            "Prince's - Shore / Dunes": {
+              "course": "Prince's - Shore / Dunes",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 1,
+              "prior_best_gross": 85,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 83,
+              "this_teg_best_round": 4,
+              "strokes_vs_last_visit": -2,
+              "is_course_pb_this_teg": true
+            },
+            "Royal Cinque Ports": {
+              "course": "Royal Cinque Ports",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 85,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 92,
+              "this_teg_best_round": 1,
+              "strokes_vs_last_visit": 7,
+              "is_course_pb_this_teg": false
+            }
+          }
+        }
+      },
+      "text_with_context": "Jon Baker finished the week on 125 points, last of the field and the holder of his first Wooden Spoon. The route there was uneven rather than uniformly poor. At Royal Cinque Ports he posted 92, seven strokes worse than the 85 he managed there on the previous visit; at Littlestone another 92, thirteen shots adrift of his 79 from TEG 13. Round three at Prince's brought 28 points, a steady run of pars through 14, 15 and 16 undone by a triple bogey six at the par-three 17th.\n\nRound four was a different matter. Baker went round Prince's Shore/Dunes in 83 gross, a course record: the previous best there was 85, set across five prior visits, and it also stands as his personal best on the course, two strokes better than his last time out. The heart of it came in the middle of the back nine, five holes from the 11th without dropping a gross shot, including birdies at the 12th and 13th. Those back-to-back birdies tie the all-time TEG streak record of two. Holes 12 to 15 returned 14 points.\n\nThe finish was less tidy: a double bogey at the 16th ended the run, and an eight at the 18th closed the round. Still, 39 points, eleven better than the day before, and a record that stands regardless of where he placed.",
+      "text_without_context": "Jon Baker finished the week at the bottom of the Stableford table, taking the Wooden Spoon with 125 points.\n\nThe odd part is where that total came from. In the final round at Prince's Shore/Dunes, Baker shot 83 gross — a new course record, beating the previous mark of 85 set across five prior visits. He also recorded 39 points in that round, an improvement of 11 on the 28 he managed in round three on the same course.\n\nThe record round turned on the stretch from the 11th. Baker parred the par-three 11th, then birdied the par-five 12th and the par-four 13th — the hardest hole on the card, stroke index 1 — before parring the 14th and 15th. That is five holes without dropping a gross shot, and 14 points across the four holes from the 12th. The back-to-back birdies at the 12th and 13th also tied the all-time TEG record for consecutive birdies, which stands at two.\n\nThe finish undid some of it. Baker made double bogey at the 16th to end the run, and then ran up an eight, a quadruple bogey, at the par-four 18th. Round three had ended in similar fashion: three straight pars from the 14th, then a triple bogey six at the par-three 17th.\n\nTwo closing holes, two rounds, and a course record that still left him last on points.",
+      "label_map": {
+        "A": "with_context",
+        "B": "without_context"
+      },
+      "verdict": {
+        "winner": "A",
+        "compellingness": {
+          "A": 8,
+          "B": 7
+        },
+        "factual_grounding": {
+          "A": 9,
+          "B": 9
+        },
+        "richness": {
+          "A": 8,
+          "B": 7
+        },
+        "reads_as_story_not_list": {
+          "A": 8,
+          "B": 7
+        },
+        "notes": "Both are accurate and neither invents facts: A's cross-course comparisons (92 at Royal Cinque Ports vs 85 prior; 92 at Littlestone vs 79 in TEG 13; the 83 as a course PB, two better than last visit) are all supported by the supplied course history, and B's hole-level detail (SI 1 at the 13th, par values, 39 vs 28) is all in the evidence. A is the fuller story because it actually explains how a 125-point week happened — two 92s on the Kent links before the Prince's record — which makes the Spoon-plus-record paradox land; B asserts the paradox but only ever shows rounds three and four, so the 125 total hangs unexplained. B compensates with slightly better texture inside the record round (naming the par-three 11th, the SI 1 13th) and a neat closing line ('Two closing holes, two rounds'), and its paragraph on the mirrored late collapses in R3 and R4 is a smart structural touch. B also occasionally lapses into stat-recital cadence ('He also recorded 39 points in that round, an improvement of 11 on...'), which reads more like annotated evidence than narrative. Both drafts ignore the storyline's strongest hook — the defending Trophy champion and back-to-back Jacket holder now collecting a Spoon — though the provided player_history was empty, so neither is penalised for omitting unsupported detail. Narrow win for A on scope, texture drawn from real history, and the more coherent arc."
+      },
+      "winner_arm": "with_context"
+    },
+    {
+      "subject": "Alex Baker and the collapse of the workmanlike: four rounds of solid golf punctuated by demolition",
+      "context": {
+        "venue": {
+          "teg_num": 14,
+          "area": "Kent, England",
+          "year": 2021,
+          "area_visit_n": 2,
+          "n_rounds": 4,
+          "rounds": [
+            {
+              "round": 1,
+              "course": "Royal Cinque Ports",
+              "date": "04/11/2021",
+              "weekday": "Thursday",
+              "visit_n": 2,
+              "full_name": "Royal Cinque Ports Golf Club",
+              "location": "Deal, Kent, England",
+              "type": "Links",
+              "designer": null
+            },
+            {
+              "round": 2,
+              "course": "Littlestone",
+              "date": "05/11/2021",
+              "weekday": "Friday",
+              "visit_n": 2,
+              "full_name": "Littlestone Golf Club - Championship Links",
+              "location": "Littlestone-on-Sea, Kent, England",
+              "type": "Links",
+              "designer": "William Laidlaw Purves (same as Royal St George's), refined by James Braid and Alister MacKenzie"
+            },
+            {
+              "round": 3,
+              "course": "Prince's - Shore / Dunes",
+              "date": "06/11/2021",
+              "weekday": "Saturday",
+              "visit_n": 2,
+              "full_name": "Prince's Golf Club",
+              "location": "Sandwich, Kent, England",
+              "type": "Links",
+              "designer": "Various; Mackenzie & Ebert recent work"
+            },
+            {
+              "round": 4,
+              "course": "Prince's - Shore / Dunes",
+              "date": "07/11/2021",
+              "weekday": "Sunday",
+              "visit_n": 3,
+              "full_name": "Prince's Golf Club",
+              "location": "Sandwich, Kent, England",
+              "type": "Links",
+              "designer": "Various; Mackenzie & Ebert recent work"
+            }
+          ]
+        },
+        "player_history": {},
+        "player_course_history": {
+          "Alex Baker": {
+            "Littlestone": {
+              "course": "Littlestone",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 100,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 100,
+              "this_teg_best_round": 2,
+              "strokes_vs_last_visit": 0,
+              "is_course_pb_this_teg": false
+            },
+            "Prince's - Shore / Dunes": {
+              "course": "Prince's - Shore / Dunes",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 1,
+              "prior_best_gross": 89,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 94,
+              "this_teg_best_round": 4,
+              "strokes_vs_last_visit": 5,
+              "is_course_pb_this_teg": false
+            },
+            "Royal Cinque Ports": {
+              "course": "Royal Cinque Ports",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 102,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 98,
+              "this_teg_best_round": 1,
+              "strokes_vs_last_visit": -4,
+              "is_course_pb_this_teg": true
+            }
+          }
+        }
+      },
+      "text_with_context": "**Alex Baker**\n\nBaker's week in Kent followed a pattern he never quite broke: long passages of competent golf, then a hole that undid them. It began at Royal Cinque Ports, where he took eight at the par-four 11th and then ten at the par-five 16th, a quintuple bogey on a stroke index seven hole. Despite the two wrecks, his 98 was four strokes better than his only previous round at Deal, and his best there.\n\nAt Littlestone the damage came in a block. Holes two through five went 7-6-7-9, twelve shots gone in four holes, with the quadruple bogey nine at the par-five fifth the worst of it. Another eight followed at the eighth. His 100 matched his previous visit exactly.\n\nRound three at Prince's opened with three straight double bogeys, six shots dropped before he had settled. The final round was the clearest illustration of the whole story. He parred the first three holes for ten points, then dropped two at the fourth. He parred 13, 14 and 15 — including the stroke index one 13th — for eleven points, the best short stretch of his tournament. Then came the 16th, a par four measured at stroke index 17, where he made ten. A sextuple bogey, no points, and the steady run erased.\n\nHis 94 in that round was his best of the three visits to Prince's this week, though still five strokes short of the 89 he posted there previously.",
+      "text_without_context": "**Alex Baker: solid golf, and the holes that undid it**\n\nAlex Baker's week followed a repeating pattern: stretches of competent scoring interrupted by single holes that wiped them out.\n\nIt began at Royal Cinque Ports, where he took eight at the par-four 11th and then ten at the par-five 16th, a quintuple bogey that returned no Stableford points. At Littlestone the damage came in a run rather than a single blow: holes two through five cost him twelve shots against par, a triple, a double, another triple and then a nine at the par-five fifth. A quadruple-bogey eight followed at the eighth.\n\nRound three at Prince's opened with three straight double bogeys, six shots gone in as many holes played.\n\nThe final round produced the clearest version of the pattern. Baker started par, par, par for ten points across the first three holes, only for a double bogey at the fourth to end the run. He rebuilt on the back nine, playing 13, 14 and 15 in par for eleven points, including four points apiece at the stroke index one 13th and the 14th. Then came the 16th, a par four measured as the easiest hole on the card at stroke index 17. He made ten. The sextuple bogey scored nothing and ended three holes of flawless golf in a single swing of the pencil.",
+      "label_map": {
+        "A": "without_context",
+        "B": "with_context"
+      },
+      "verdict": {
+        "winner": "B",
+        "compellingness": {
+          "A": 6,
+          "B": 8
+        },
+        "factual_grounding": {
+          "A": 6,
+          "B": 8
+        },
+        "richness": {
+          "A": 5,
+          "B": 8
+        },
+        "reads_as_story_not_list": {
+          "A": 7,
+          "B": 8
+        },
+        "notes": "Both drafts share the same spine and sequence the evidence accurately (R1 eight at the 11th and ten at the 16th; Littlestone's 2-5 bleed of twelve shots plus the eight at the 8th; three opening doubles in R3; the R4 par-par-par bookends broken by the fourth and demolished by the ten at the 16th). Draft A is competent but thin — it adds almost nothing beyond the scorecard, and makes two avoidable slips: 'six shots gone in as many holes played' (it was three holes) and calling stroke index 17 'the easiest hole on the card' (it's the second easiest). Its best line, 'a single swing of the pencil', is genuinely good. Draft B adds real texture that checks out against the context: Kent, Deal, the 98 being four better than his only prior round at Royal Cinque Ports and a course best; the 100 exactly matching his previous Littlestone visit; the 94 at Prince's still five short of the 89 he'd posted there. The 7-6-7-9 run is a nice compact touch. B's one error is 'three visits to Prince's this week' — it was two rounds this week, the third visit overall. That's a smaller misstep than A's pair, and B's grounding is otherwise richer and verified. B also reads more like a story, with the gross-score frame giving the blow-ups consequence rather than leaving them as isolated craters. B wins on richness and grounding without sacrificing flow."
+      },
+      "winner_arm": "with_context"
+    },
+    {
+      "subject": "Gregg Williams posts the best gross total of his TEG life and finishes third of four",
+      "context": {
+        "venue": {
+          "teg_num": 14,
+          "area": "Kent, England",
+          "year": 2021,
+          "area_visit_n": 2,
+          "n_rounds": 4,
+          "rounds": [
+            {
+              "round": 1,
+              "course": "Royal Cinque Ports",
+              "date": "04/11/2021",
+              "weekday": "Thursday",
+              "visit_n": 2,
+              "full_name": "Royal Cinque Ports Golf Club",
+              "location": "Deal, Kent, England",
+              "type": "Links",
+              "designer": null
+            },
+            {
+              "round": 2,
+              "course": "Littlestone",
+              "date": "05/11/2021",
+              "weekday": "Friday",
+              "visit_n": 2,
+              "full_name": "Littlestone Golf Club - Championship Links",
+              "location": "Littlestone-on-Sea, Kent, England",
+              "type": "Links",
+              "designer": "William Laidlaw Purves (same as Royal St George's), refined by James Braid and Alister MacKenzie"
+            },
+            {
+              "round": 3,
+              "course": "Prince's - Shore / Dunes",
+              "date": "06/11/2021",
+              "weekday": "Saturday",
+              "visit_n": 2,
+              "full_name": "Prince's Golf Club",
+              "location": "Sandwich, Kent, England",
+              "type": "Links",
+              "designer": "Various; Mackenzie & Ebert recent work"
+            },
+            {
+              "round": 4,
+              "course": "Prince's - Shore / Dunes",
+              "date": "07/11/2021",
+              "weekday": "Sunday",
+              "visit_n": 3,
+              "full_name": "Prince's Golf Club",
+              "location": "Sandwich, Kent, England",
+              "type": "Links",
+              "designer": "Various; Mackenzie & Ebert recent work"
+            }
+          ]
+        },
+        "player_history": {},
+        "player_course_history": {
+          "Gregg Williams": {
+            "Littlestone": {
+              "course": "Littlestone",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 86,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 97,
+              "this_teg_best_round": 2,
+              "strokes_vs_last_visit": 11,
+              "is_course_pb_this_teg": false
+            },
+            "Prince's - Shore / Dunes": {
+              "course": "Prince's - Shore / Dunes",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 1,
+              "prior_best_gross": 89,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 86,
+              "this_teg_best_round": 3,
+              "strokes_vs_last_visit": -3,
+              "is_course_pb_this_teg": true
+            },
+            "Royal Cinque Ports": {
+              "course": "Royal Cinque Ports",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 94,
+              "prior_best_teg": 13,
+              "this_teg_best_gross": 93,
+              "this_teg_best_round": 1,
+              "strokes_vs_last_visit": -1,
+              "is_course_pb_this_teg": true
+            }
+          }
+        }
+      },
+      "text_with_context": "**Williams finds his best gross in Kent**\n\nGregg Williams left TEG 14 with the best gross total of his TEG career: +76. That headline number was assembled unevenly across four links rounds, and it did not come with a trophy.\n\nThe opening round at Royal Cinque Ports included a 9 at the par-five 3rd, a quadruple bogey on the fourth-hardest hole on the card. Even so, his 93 there beat the 94 he posted on his previous visit. Littlestone was the outlier in the other direction — 97, eleven strokes worse than the 86 he managed at the course in TEG 13 — and his second round return of 27 points was the low point of his week.\n\nThe response was immediate. He answered with 39 points at Prince's, a twelve-point improvement, and an 86 that took three strokes off his previous best there. The engine of that round was a run of three straight pars from the 9th through the 11th, worth nine Stableford points and three holes without a gross shot dropped. It ended abruptly at the par-five 12th, where an 8 wiped out the momentum in a single hole.\n\nSunday brought back-to-back pars at the 5th and 6th on the same Prince's layout. In the Green Jacket standings, Williams had at one stage trailed the lead by 18 shots; he closed that to 8 by the finish, recovering ten of the deficit but never getting close enough to threaten.",
+      "text_without_context": "**Williams finds his best gross golf**\n\nGregg Williams left this TEG with the best gross total he has ever recorded: +76, a personal best.\n\nIt did not begin that way. On the opening day at Royal Cinque Ports he ran up a nine at the par-five 3rd, a quadruple bogey that cost him the hole outright. Round two was worse in points terms, finishing on 27.\n\nRound three at Prince's Shore/Dunes was the turnaround. Williams scored 39 points, a swing of 12 on the previous day. The heart of it came at the turn: pars at the 9th, 10th and 11th brought nine Stableford points in three holes and three holes without a gross shot dropped. The run ended abruptly at the 12th, where an eight on the par five — a triple bogey — wiped out the hole.\n\nHe kept the steadier golf going into the final round, with back-to-back pars at the 5th and 6th on the Shore/Dunes layout.\n\nThe wider effect was on the Green Jacket table. Having trailed the lead by as many as 18 points at one stage, Williams closed that gap to eight by the finish, recovering ten points across the closing stages of the week.",
+      "label_map": {
+        "A": "without_context",
+        "B": "with_context"
+      },
+      "verdict": {
+        "winner": "B",
+        "compellingness": {
+          "A": 6,
+          "B": 8
+        },
+        "factual_grounding": {
+          "A": 8,
+          "B": 8
+        },
+        "richness": {
+          "A": 5,
+          "B": 9
+        },
+        "reads_as_story_not_list": {
+          "A": 6,
+          "B": 8
+        },
+        "notes": "Both cover the same beat structure (R1 blow-up at Royal Cinque Ports, poor R2, R3 turnaround with the 9-11 par run and the 12th collapse, R4 pars, Green Jacket gap closing) and both correctly report the +76 gross PB. Draft B is markedly richer and the extra colour is genuine and verifiable: the 9 at the 3rd as the fourth-hardest hole on the card (SI 4), the 93 at Deal beating 94 from the prior visit, Littlestone's 97 being eleven strokes worse than the TEG 13 86, and the 86 at Prince's shaving three off the previous best — all straight from the course-history context. It also frames the week as four links rounds in Kent at TEG 14, again supported. Draft A stays inside the bare scorecard and reads thinner; its one soft spot is asserting R2 was 'worse in points terms' than R1, which the evidence doesn't establish (only that R2 was 27 and poor). Draft B's one slip is calling the Green Jacket gap 18 'shots' when the impact metric is stableford — A's 'points' is safer, and B's 'recovering ten of the deficit' inherits the ambiguity. Neither draft states the third-of-four finish, though B gestures at it ('did not come with a trophy', 'never getting close enough to threaten'), which A omits entirely. B flows better as narrative with a clearer arc and closing note; A is closer to a sequenced recap. B wins on richness and story shape with grounding essentially level."
+      },
+      "winner_arm": "with_context"
+    }
+  ]
+}

@@ -24,6 +24,10 @@ from teg_analysis.reporting.story_plan import (
 )
 
 
+_STORYLINE = {"subject": "s", "why_it_matters": "w", "shape": "sh",
+             "beat_ids": [], "compelling_score": 5, "humour_score": 8}
+
+
 def _plan(**kw) -> StoryPlan:
     base = dict(
         title="t", title_candidates=[], theme="x", tone="house",
@@ -35,6 +39,8 @@ def _plan(**kw) -> StoryPlan:
         vehicle_fit_response={"top_scored_vehicle": "counterfactual",
                               "taken_up": True, "note": "n"},
         why_the_champion_won="w",
+        trophy_storyline=_STORYLINE, jacket_storyline=_STORYLINE,
+        spoon_storyline=_STORYLINE, discovered_storylines=[],
     )
     base.update(kw)
     return StoryPlan(**base)
@@ -96,6 +102,8 @@ def test_both_prominence_fields_are_required():
             "vehicle_fit_response": {"top_scored_vehicle": "counterfactual",
                                      "taken_up": False, "note": "n"},
             "why_the_champion_won": "w",
+            "trophy_storyline": _STORYLINE, "jacket_storyline": _STORYLINE,
+            "spoon_storyline": _STORYLINE, "discovered_storylines": [],
         }
         del kwargs[missing]
         with pytest.raises(pydantic.ValidationError):
@@ -157,6 +165,23 @@ def test_mandatory_beat_in_cuts_is_reported():
     assert any("cuts" in w for w in warnings)
 
 
+def test_no_humour_anywhere_is_reported():
+    bundle = {"tournament_shape": {}, "beats": []}
+    low_humour = {**_STORYLINE, "humour_score": 3}
+    warnings = check_plan_consistency(
+        _plan(trophy_storyline=low_humour, jacket_storyline=low_humour,
+              spoon_storyline=low_humour, discovered_storylines=[]), bundle)
+    assert any("humour_score" in w for w in warnings)
+
+
+def test_fallback_used_alongside_full_discovered_storylines_is_reported():
+    bundle = {"tournament_shape": {}, "beats": []}
+    warnings = check_plan_consistency(
+        _plan(discovered_storylines=[_STORYLINE, _STORYLINE],
+              body_fallback="player_by_player"), bundle)
+    assert any("body_fallback" in w for w in warnings)
+
+
 # ---------------------------------------------------------------------------
 # vehicle_fit_hints: advisory, and honest about what it cannot see
 # ---------------------------------------------------------------------------
@@ -215,6 +240,28 @@ def test_vehicle_hints_do_not_depend_on_the_beat_trim():
     assert trimmed["vehicle_fit_hints"] == full["vehicle_fit_hints"]
 
 
+def test_candidate_threads_never_cite_beats_outside_the_bundle():
+    """`candidate_threads` is scored from the UNTRIMMED `all_beats` (same reasoning
+    as `vehicle_fit_hints` above — a cluster score is a sum over beats, trimming
+    would deflate it), but its `beat_ids` must be filtered to the trimmed `beats`
+    actually sent to the model.
+
+    The bug (2026-08-19, found live on TEG 14): before this fix, a thread could
+    cite a beat_id that only existed in the untrimmed set. The editor read that
+    ID out of candidate_threads and put it straight into a storyline's own
+    beat_ids — `check_plan_consistency`'s grounding check correctly flagged it
+    as "cites unknown beat_ids", but the bundle handed the model a phantom ID to
+    begin with, four times in one TEG.
+    """
+    from teg_analysis.reporting.story_plan import assemble_bundle
+
+    bundle, _ = assemble_bundle(14, top_n=50)
+    in_bundle = {b["id"] for b in bundle["beats"]}
+    for thread in bundle["candidate_threads"]:
+        bad = set(thread["beat_ids"]) - in_bundle
+        assert not bad, f"thread cites beat_ids outside the bundle: {bad}"
+
+
 def test_prompt_tells_the_editor_to_judge_the_unscored_vehicles_itself():
     """Excluding them means their absence carries no information — which is only
     safe if the prompt says so and asks for them to be considered anyway."""
@@ -238,6 +285,8 @@ def test_vehicle_fit_response_is_required():
         "must_include_beat_ids": [], "cuts": [], "venue_notes": "",
         "prominent_vehicle": "counterfactual", "prominent_palette": "decisive_moment",
         "why_the_champion_won": "w",
+        "trophy_storyline": _STORYLINE, "jacket_storyline": _STORYLINE,
+        "spoon_storyline": _STORYLINE, "discovered_storylines": [],
     }
     with pytest.raises(pydantic.ValidationError):
         StoryPlan(**kwargs)
@@ -259,6 +308,8 @@ def test_why_the_champion_won_is_required():
         "prominent_vehicle": "counterfactual", "prominent_palette": "decisive_moment",
         "vehicle_fit_response": {"top_scored_vehicle": "counterfactual",
                                  "taken_up": True, "note": "n"},
+        "trophy_storyline": _STORYLINE, "jacket_storyline": _STORYLINE,
+        "spoon_storyline": _STORYLINE, "discovered_storylines": [],
     }
     with pytest.raises(pydantic.ValidationError):
         StoryPlan(**kwargs)
@@ -375,7 +426,7 @@ def test_pre_teg8_hot_stretch_headline_avoids_stableford_points():
     """TEGs 5-7 narrated a net-vs-par race in Stableford points, in published prose."""
     from teg_analysis.reporting.events import build_notable_events
     for e in build_notable_events(5):
-        if e.type == "hot_stretch":
+        if e.type == "hot_stretch_net":
             assert "points" not in e.headline, e.headline
 
 
@@ -704,7 +755,7 @@ def test_importance_is_symmetric_between_gains_and_losses():
     from teg_analysis.reporting.events import build_notable_events
 
     ev = build_notable_events(18)
-    good = [e for e in ev if e.type in ("hot_stretch", "steady_stretch", "recovery")]
+    good = [e for e in ev if e.type in ("hot_stretch_gross", "hot_stretch_net", "recovery")]
     assert good, "positive beats must exist"
     assert max(e.importance for e in good) > 0, "positive beats must score importance"
 
@@ -713,8 +764,10 @@ def test_detection_is_not_lopsidedly_negative():
     """Guards the ratio that no prompt could have corrected.
 
     Detection ran 622 negative to 240 positive (2.59:1) across TEGs 2-18 before
-    `cold_stretch_net` and `steady_stretch` were added. The writer cannot
-    celebrate with material it was never given.
+    `cold_stretch_net` and `steady_stretch` were added, bringing it to 1.52:1.
+    The stretch detectors were simplified 2026-08-18 to one hot/cold pair per
+    metric (dropping `steady_stretch`, adding `hot_stretch_gross`) — this
+    assertion is what re-measures whether that regressed the balance.
     """
     from collections import Counter
     from teg_analysis.reporting.events import build_notable_events
@@ -723,9 +776,9 @@ def test_detection_is_not_lopsidedly_negative():
     for teg in (8, 13, 18):
         for e in build_notable_events(teg):
             c[e.type] += 1
-    neg = sum(c[k] for k in ("cold_stretch", "cold_stretch_net", "big_blowup",
+    neg = sum(c[k] for k in ("cold_stretch_gross", "cold_stretch_net", "big_blowup",
                              "collapse_after_steady", "long_lead_lost"))
-    pos = sum(c[k] for k in ("hot_stretch", "steady_stretch", "recovery"))
+    pos = sum(c[k] for k in ("hot_stretch_gross", "hot_stretch_net", "recovery"))
     assert pos > 0 and neg / pos < 2.0, f"detection {neg}:{pos} is too negative"
 
 

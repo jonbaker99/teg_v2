@@ -369,13 +369,24 @@ Reuses `teg_analysis.core.data_loader.load_all_data()`.
   outright-leader sequence and flags spells of 18+ holes (roughly a full round) that end in an
   outright takeover by someone else, for both Trophy and Green Jacket. Distinct from an ordinary
   lead-change beat because it scores on tenure length and rounds spanned, not just round-lateness.
-- Maximal cold/hot stretches (no overlapping-window spam). **Gross and net both**: `cold_stretch`
-  (gross double-bogey-or-worse runs) alongside `cold_stretch_net` (runs of no-score holes), and
-  `hot_stretch` (net birdie or better) alongside `steady_stretch` (6+ holes without dropping a net
-  shot). The two net detectors were added 2026-08-14 — see [Detection must not be lopsided](#detection-must-not-be-lopsided).
+- Maximal cold/hot stretches (no overlapping-window spam). **One hot and one cold detector per
+  metric** (simplified 2026-08-18 from an asymmetric set): `cold_stretch_gross` (GrossVP ≥2
+  sustained, len≥3) / `hot_stretch_gross` (GrossVP ≤0 sustained, len≥2 — shorter bar than the cold
+  side because gross has no handicap strokes to lean on, so a sustained par-or-better run is
+  intrinsically rarer than a sustained double-bogey run for these handicaps) and
+  `cold_stretch_net` (Stableford ≤1 sustained, len≥3) / `hot_stretch_net` (Stableford ≥3 sustained,
+  len≥3) — net par (2) is the single excluded neutral value on both sides. See
+  [Detection must not be lopsided](#detection-must-not-be-lopsided).
 - Recoveries (birdie ending a bogey run) / collapses (blow-up ending a steady run)
 - Standout single holes (eagles / HIO / big blow-ups)
 - Per-round and tournament beats (round shapes, winners, margins)
+- **Round-by-round trajectories, every player** (`_trajectory_beats`, added 2026-08-18):
+  `gap_closed` (biggest deficit at any point vs where they actually finished) and
+  `position_reversal` (led/near-led early then fell away, or the mirror climb), for both Trophy
+  and Green Jacket, excluding each competition's own winner. `round_leadership` only ever names
+  the round leader and `win_anatomy`'s trajectory only tracks the eventual champion — the same
+  rank/gap columns exist for every other player but were previously never read. Built to give
+  non-Trophy storylines real material — see `STORYLINE_PLAN.md`.
 
 Each beat carries:
 
@@ -412,7 +423,11 @@ negative.
 Before 2026-08-14 detection ran **622 negative to 240 positive** across TEGs 2–18 — `big_blowup`
 alone (382) outnumbered every positive detector combined. No prompt can correct for material the
 writer was never given, which is why this is fixed in detection rather than in the voice.
-`cold_stretch_net` and `steady_stretch` bring it to **1.52:1**.
+`cold_stretch_net` and `steady_stretch` brought it to **1.52:1** (2026-08-14). The 2026-08-18
+stretch-detector simplification (one hot/cold pair per metric, `steady_stretch` retired) briefly
+regressed this to 2.79:1 — measured on TEGs 8/13/18, caught by
+`test_detection_is_not_lopsidedly_negative` — before `hot_stretch_gross`'s length bar was lowered
+to 2 to compensate; back to ~1.5:1.
 
 #### A note on tuning the weights
 
@@ -437,13 +452,14 @@ Sourced from `data/round_info.csv` + `data/course_info.csv` (the latter relocate
 
 ### Context modules feeding the bundle
 
-Four further code-only modules assemble context alongside the beats. All are pure Python — no LLM, no cost.
+Five further code-only modules assemble context alongside the beats. All are pure Python — no LLM, no cost.
 
 | Module | Provides | Used for |
 |---|---|---|
 | `era.py` | `trophy_metric(teg)` → `"stableford"` (TEG 8+) or `"net_vs_par"` (TEGs 1–7) | Every era-sensitive branch in `events`, `story_plan`, `authoring`, `round_report`, `render` |
 | `history_context.py` | `build_player_cross_teg_history(teg)` — career storyline phrases per player (Nth Trophy/Jacket/Spoon, back-to-back, first win in N years, defending champion, "first Trophy after 2 runner-up finishes"). Also `build_win_counts(teg)` | Bundle's `player_history`; the deterministic at-a-glance win counts in `render` |
 | `course_history.py` | `build_player_course_history(teg)` — first visit / Nth visit / personal best here / strokes vs last visit. `detect_course_records(teg)` — new course gross records (good or bad) | Bundle's `player_course_history`; new course records become **mandatory beats** |
+| `milestone_records.py` | `detect_streak_records(teg)` — TEG-level streaks (Eagles, Birdies, Pars-or-better, TBPs, +2s-or-worse, Over-par) that tie/break the all-time record. `detect_score_count_records(teg)` — TEG-total scoring-category counts (most Eagles/Birdies-or-better/Pars-or-better, most TBPs) that tie/break the all-time record. Wraps `analysis/streaks.py` and `analysis/records.py` (the webapp Records page's own detection), which nothing previously fed into the beat/bundle system | New `sr*`/`sc*` **mandatory beats** — closes the gap where these records existed on the webapp Records page but had no beat for the report pipeline to hang a storyline on |
 | `tournament_shape.py` | `detect_close_finish(arcs, metric)` — deterministic close-finish signal. `recent_vehicle_choices(teg, n=3)` — what narrative vehicles the last few reports used | Bundle's `tournament_shape` (drives the close-finish **hard rule**) and `recent_vehicle_choices` (drives the anti-repetition **soft rule**) |
 | `vehicle_fit.py` | `score_vehicle_fit(beats, arcs, shape, history)` — free, deterministic, no LLM call: how well each narrative vehicle fits this TEG's actual facts. `normalize_vehicle_fit(scores, baseline)` z-scores it against `vehicle_fit_baseline.json` (a checked-in 17-TEG population). `refresh_baseline_cache()` regenerates that file | Bundle's `vehicle_fit_hints` (drives the vehicle **advisory**) |
 | `impact.py` | `apply_counterfactual_importance(events, teg_df, metric)` — rewrites every beat's `importance` as *what the event actually cost or won*, by replacing the player's scores with their own TEG average and recomputing each competition. Post-processing pass, so detectors stay responsible for FINDING and this is the one place that decides MATTERING | The `importance` axis for every beat — see [Why importance is counterfactual](#why-importance-is-counterfactual) |
@@ -476,16 +492,59 @@ foreshadow[],                         # hooks to plant early that pay off later
 payoffs[]:                            # one per foreshadow seed where possible
   { seed, resolves_in, payoff }
 competitions[]:                       # Trophy → Jacket → Spoon (priority order)
-  { name, winner_or_loser, how, key_beat_ids[] }
+  { name, winner_or_loser }            # `how`/`key_beat_ids` dropped 2026-08-18 — see below
 rounds[]:
   { round, headline_candidates[], chosen_headline, angle, beat_ids[] }
 players[]: { player, arc }
 must_include_beat_ids[], cuts[],
 venue_notes,
-# thread-organised extras (optional; empty unless the data supports them)
-competition_storyline_bullets{}, player_storyline_bullets{},
-course_history_notes[], decisive_moments[]
+course_history_notes[],                # optional; empty unless the data supports it
+# storyline discovery (2026-08-18/19) — see STORYLINE_PLAN.md
+trophy_storyline, jacket_storyline, spoon_storyline:  # ALWAYS populated, one each
+  { subject, why_it_matters, shape, beat_ids[], compelling_score, humour_score }
+discovered_storylines[]:               # 1-3, found independently — can be zero
+  { subject, why_it_matters, shape, beat_ids[], compelling_score, humour_score }
+body_fallback,                         # "none" (default) | "player_by_player" | "round_by_round"
+                                        # — used only when discovered_storylines is empty/thin
 ```
+
+**`StorylinePlan`** (2026-08-19) is a leaner sibling schema, same file — same input bundle as
+`StoryPlan`, but only the fields above from `title` through `body_fallback` (drops `rounds[]`,
+`players[]`, `must_include_beat_ids`, `cuts`, `venue_notes`, `course_history_notes`, `foreshadow`,
+`payoffs`, `narrative_structure` — none of which the storyline-first pipeline reads). Produced by
+`build_storyline_plan()` (writes `teg_{n}_storyline_plan.json`) with its own
+`STORYLINE_SYSTEM_PROMPT` and `check_storyline_plan_consistency()`. `StoryPlan`/`build_story_plan`
+are unchanged and still serve the legacy round-by-round pipeline (`authoring.py` dry-draft/writer);
+`scripts/storyline_full_report_experiment.py` calls `build_storyline_plan` only.
+
+#### Storyline-first pipeline — stages and outputs (2026-08-19)
+
+Runs end to end via `scripts/storyline_full_report_experiment.py --teg N`. Not wired into
+`backfill.py` — still an experiment script, not the production path (`report_final.md` /
+`report_styled.md` are untouched by it). Three stages, three file outputs per TEG:
+
+1. **Plan (Call A)** — `build_storyline_plan(teg)` → `teg_N_storyline_plan.json`. The `StorylinePlan`
+   schema above: 3 mandatory anatomy storylines + 0-3 discovered + optional `body_fallback`.
+2. **Structural draft — no voice** — `build_storyline_draft(teg)` → `teg_N_report_storylinedraft.md`.
+   One `##` section per storyline, in order (trophy → discovered → fallback → jacket → spoon), each
+   drafted fact-isolated (own `evidence` + scoped `context`, `DRAFT_WRITER_SYSTEM`) by a writer told
+   explicitly *"do not try to be funny or stylish."* Optionally (`--interweave`, **off by default**)
+   storylines whose `beat_ids` overlap 2+ beats merge into one cross-cut section instead of two
+   separate ones (`storyline_interweave_experiment.find_overlapping_pairs`, validated 2x on TEG
+   16/18 — see `STORYLINE_PLAN.md` → "Interweaving A/B result"). It is off because reports are now
+   presented as a newspaper edition of separate articles, which wants one subject per section. **This file is plain, factual, unvoiced prose —
+   the right input for any tone/voice experiment.** Never start a voice A/B from an already-styled
+   report; iterating on "slightly funnier than the finished piece" compounds instead of comparing.
+3. **Voice pass** — `authoring.restyle_voice(teg, WRITER_VOICE, label="storylinefirst",
+   source_label="storylinedraft")` → `teg_N_report_storylinefirst.md` (+ `_styled.md`). Rewrites stage
+   2's draft in the current house voice — the same `WRITER_VOICE` constant and the same function
+   production uses for legacy-pipeline restyles. D3-verified; `new_findings` isolates faults the voice
+   pass introduced vs. inherited from the draft.
+
+To test a tone variant: draft once per TEG (stage 1+2, expensive relative to stage 3), then run stage
+3 twice — once with `WRITER_VOICE` (baseline) and once with the candidate voice prompt — both reading
+the SAME `teg_N_report_storylinedraft.md`. That is what `restyle_voice`'s `voice_prompt` argument and
+`source_label="storylinedraft"` are for; no need to regenerate the plan/draft per tone variant.
 
 ### The storyline hierarchy and the champion register
 
@@ -879,6 +938,7 @@ Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`t
 | `era.py` | Trophy metric by TEG (the pre/post-8 switch) |
 | `history_context.py` | Cross-TEG career storylines, milestones, win counts |
 | `course_history.py` | Per-course player history + course-record detection |
+| `milestone_records.py` | All-time streak and score-count record detection (TEG-level analogue of `course_history.py`) |
 | `tournament_shape.py` | Close-finish signal + recent-vehicle anti-repetition |
 | `vehicle_fit.py` | Deterministic narrative-vehicle scoring + the checked-in baseline |
 | `impact.py` | **The `importance` axis** — counterfactual: what the event cost or won |

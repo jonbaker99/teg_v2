@@ -1,0 +1,419 @@
+{
+  "teg": 14,
+  "arms": [
+    {
+      "arm": "cold",
+      "draft": {
+        "trophy_storyline": {
+          "subject": "David Mullin's wire-to-wire Trophy win, and Alex Baker's late charge that died on the 16th",
+          "why_it_matters": "Mullin led from the 16th hole of the opening round to the last, but the nine-point cushion he built shrank to two — and the final margin was decided by one catastrophic hole.",
+          "shape": "Mullin took the Stableford lead on the 16th at Royal Cinque Ports and never gave it back, stretching the gap to nine after a 41-point round at Littlestone. But he leaked shots at Prince's — a quadruple-bogey 8 at the 10th in the final round — while Alex Baker, pars piling up (10 points through the first three holes, 11 more from 13-15), hauled himself back to within touching distance. Then Baker made 10 at the par-four 16th, ending his run of pars and the contest with it: Mullin home on 154 points by two.",
+          "beat_ids": [
+            "b02",
+            "b70",
+            "b73",
+            "b53",
+            "b37",
+            "b04",
+            "b20",
+            "b21",
+            "b09",
+            "b13",
+            "b01",
+            "b06",
+            "b42"
+          ],
+          "compelling_score": 8
+        },
+        "jacket_storyline": {
+          "subject": "David Mullin's Green Jacket, won early and defended against two closing chasers",
+          "why_it_matters": "Mullin's +68 is the sixth-best gross total in TEG history, yet the final margin of seven flatters nobody — both men behind him were coming hard at the end.",
+          "shape": "Alex Baker briefly drew level on gross at the sixth hole of round one before Mullin answered on the ninth and pulled clear, twelve ahead after both Littlestone and the first trip round Prince's. The chase came far too late: Jon Baker, who had trailed by fifteen, cut it to seven with a course-record 83 on Sunday, while Gregg Williams closed from eighteen back to eight on the way to his personal-best gross total. Mullin's early lead was simply too big to eat into in one afternoon, and the Jacket went with the Trophy.",
+          "beat_ids": [
+            "b08",
+            "b72",
+            "b74",
+            "b19",
+            "b17",
+            "b31",
+            "cr01",
+            "b42"
+          ],
+          "compelling_score": 6
+        },
+        "spoon_storyline": {
+          "subject": "Jon Baker, last from the fourth hole of the week — and holder of the Prince's course record",
+          "why_it_matters": "It is one thing to finish bottom; it is another to finish bottom while shooting the lowest gross round ever recorded at the venue.",
+          "shape": "Jon Baker dropped to the foot of the standings at the fourth hole of round one, after five holes without a net par, and stayed there for every one of the remaining 68 holes — 29, 29 and 28 points offering no way back. Then came Sunday: a birdie-birdie burst at the 12th and 13th, five holes without a dropped gross shot, 39 points and a gross 83 that broke the Prince's record of 85 set across five prior visits. It was worth a runner-up finish in the Green Jacket and precisely nothing in the Trophy — a double at the 16th and a quadruple-bogey 8 at the last rounded off the week, and the Spoon was his on 125 points.",
+          "beat_ids": [
+            "b32",
+            "b71",
+            "b66",
+            "b22",
+            "cr01",
+            "b03",
+            "b05",
+            "b07",
+            "b44",
+            "b56"
+          ],
+          "compelling_score": 9
+        },
+        "discovered_storylines": [
+          {
+            "subject": "Alex Baker and the hole that wrecks the round",
+            "why_it_matters": "Baker finished runner-up in the Trophy despite a week of numbers that would have buried most players — and it was one more of them that cost him the win.",
+            "shape": "It started at Royal Cinque Ports with a 10 at the 16th and a quadruple-bogey 8 at the 11th, continued at Littlestone where he bled 12 shots in four holes and went four without a net par, and carried on with an 8 at Prince's 10th in round three. Every time he steadied — three straight pars to open Sunday, three more from 13-15 — the pattern reasserted itself. The last instalment, a 10 at the 16th on Sunday with the Trophy two points away, was the one that mattered.",
+            "beat_ids": [
+              "b25",
+              "b39",
+              "b69",
+              "b47",
+              "b54",
+              "b33",
+              "b30",
+              "b12",
+              "b50",
+              "b21",
+              "b27",
+              "b09",
+              "b13",
+              "b11",
+              "b01",
+              "b06",
+              "b20"
+            ],
+            "compelling_score": 8
+          },
+          {
+            "subject": "Gregg Williams's quiet best week",
+            "why_it_matters": "The player nobody was watching turned a wretched Friday into a personal-best gross total.",
+            "shape": "Williams opened with a quadruple-bogey 9 at the third at Royal Cinque Ports and then posted just 27 points at Littlestone, eighteen adrift of the Jacket lead. Prince's transformed him: 39 points in round three, built on runs of pars through 9-11 and 15-16, with only a triple at the 12th interrupting. He closed the gross gap from eighteen to eight and signed for +76, the best gross total he has ever recorded in a TEG.",
+            "beat_ids": [
+              "b41",
+              "b43",
+              "b34",
+              "b38",
+              "b23",
+              "b40",
+              "b51",
+              "b29",
+              "b36",
+              "b18",
+              "b17",
+              "b31"
+            ],
+            "compelling_score": 6
+          },
+          {
+            "subject": "Prince's 10th and 16th, the two holes that ate the tournament",
+            "why_it_matters": "Two of the week's biggest numbers came at the same two holes on the same routing, and between them they shaped both the Trophy and the Jacket.",
+            "shape": "Prince's Shore/Dunes was played twice, and the same addresses kept collecting wreckage: Alex Baker made 8 at the 10th on Saturday, David Mullin made 8 there on Sunday. The 16th, stroke index 17 and supposedly the easiest hole on the back nine, took a 10 from Alex Baker and a double from Jon Baker within minutes of each other on the final afternoon. Both men had been playing beautifully — Baker three straight pars, his brother five holes without a dropped shot — right up until they got there.",
+            "beat_ids": [
+              "b12",
+              "b04",
+              "b01",
+              "b06",
+              "b07",
+              "b03",
+              "b13"
+            ],
+            "compelling_score": 6
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 33586,
+        "output_tokens": 3278
+      }
+    },
+    {
+      "arm": "hinted",
+      "draft": {
+        "trophy_storyline": {
+          "subject": "David Mullin's wire-to-wire Trophy win, and how nearly it slipped away at Prince's",
+          "why_it_matters": "Mullin led after every single round yet finished with the field's worst final-day score and won by only two — a front-running win that was decided by damage limitation, not dominance.",
+          "shape": "Mullin seized the lead at Royal Cinque Ports (40 pts, outright by the 16th) and stretched it to nine after a 41 at Littlestone, the two best rounds in the field. But at Prince's he stopped being the best player in the group: 36 then 37, both bottom-half rounds, including a quadruple-bogey 8 at the 10th on Sunday, while Alex Baker chipped the nine-point gap down to two. Mullin's steadiness — never worse than fourth of four, never a genuinely bad round — held on for 154 points, and it took Alex Baker's own 10 at the 16th to settle it.",
+          "beat_ids": [
+            "b02",
+            "b67",
+            "b53",
+            "b37",
+            "b42",
+            "b70",
+            "b73",
+            "b20",
+            "b04",
+            "b01",
+            "b10",
+            "b15"
+          ],
+          "compelling_score": 8
+        },
+        "jacket_storyline": {
+          "subject": "David Mullin's Green Jacket, built on the links at Deal and Littlestone",
+          "why_it_matters": "The Jacket was effectively won before the field reached Prince's, and the closing charge behind him only made the margin look respectable.",
+          "shape": "Mullin went round Royal Cinque Ports in 15 over and Littlestone in 14, both the best gross rounds in the field, and by the end of Friday he was 12 clear. Prince's was harder on him — 20 and then 19, the worst gross round of the four men on Sunday — and both Jon Baker (from 15 back) and Gregg Williams (from 18 back) came surging at him. He still won at +68 by seven, the sixth-best gross total in TEG history, because he had beaten his nearest rival in three of the four rounds.",
+          "beat_ids": [
+            "b08",
+            "b74",
+            "b72",
+            "b19",
+            "b17",
+            "b04",
+            "b14",
+            "b24"
+          ],
+          "compelling_score": 6
+        },
+        "spoon_storyline": {
+          "subject": "Jon Baker: last from the fourth hole of the week to the last putt, then the best round of his life too late",
+          "why_it_matters": "Baker owned the Spoon from Thursday morning and only found his golf once it was mathematically pointless — then found so much of it he broke a course record with it.",
+          "shape": "Baker dropped to the bottom of the Spoon race at the 4th hole of round one and never climbed out, sitting last after every round with 29, 29 and 28 points across the first three days, twelve adrift of Gregg Williams. On Sunday at Prince's he suddenly played: birdies at the 12th and 13th, five holes without dropping a gross shot, 39 points and a new course record 83. It arrived far too late — he still collected the Spoon on 125 points, with a quadruple bogey at the 18th for a punchline.",
+          "beat_ids": [
+            "b32",
+            "b71",
+            "b66",
+            "b56",
+            "b16",
+            "b22",
+            "b05",
+            "b03",
+            "cr01",
+            "b44"
+          ],
+          "compelling_score": 8
+        },
+        "discovered_storylines": [
+          {
+            "subject": "Jon Baker's Sunday at Prince's — the course record in the same round as the Wooden Spoon",
+            "why_it_matters": "The worst player of the week shot the best round ever recorded at the venue, an absurd collision of the two competitions that makes the whole TEG.",
+            "shape": "Through three rounds Baker had 29, 29 and 28 points and a quadruple bogey at Prince's 13th, dead last and out of every conversation. On Sunday he birdied the 6th, then the 12th and 13th, went five holes from the 11th without dropping a shot and piled up 14 points in four holes, an 11-point swing on his round three score. It added up to 83 gross — a new Prince's Shore/Dunes record, beating 85 across five prior visits — and finished, inevitably, with an 8 at the last and the Spoon in his hands.",
+            "beat_ids": [
+              "cr01",
+              "b22",
+              "b26",
+              "b03",
+              "b05",
+              "b07",
+              "b44",
+              "b56",
+              "b32"
+            ],
+            "compelling_score": 9
+          },
+          {
+            "subject": "Alex Baker's runner-up finish, and the blow-up holes that cost him the Trophy",
+            "why_it_matters": "He outplayed the champion over two of the four rounds and lost by two, undone by a recurring habit of ruinous single holes.",
+            "shape": "Alex Baker's week was a pattern: 6 shots bled in three holes at Deal and a quintuple-bogey 10 at the 16th, quadruple bogeys at the 5th and 8th at Littlestone inside a stretch that cost him 12 shots in four holes, another 8 at Prince's 10th. By Sunday he had hauled a nine-point deficit down to a genuine chance, opening with three straight pars for 10 points and adding 11 more from the 13th to the 15th. Then at the 16th he made 10 — a sextuple bogey that ended the steady run and the Trophy challenge in one stroke, and left him two short.",
+            "beat_ids": [
+              "b20",
+              "b69",
+              "b25",
+              "b47",
+              "b54",
+              "b30",
+              "b33",
+              "b12",
+              "b50",
+              "b21",
+              "b27",
+              "b09",
+              "b13",
+              "b01",
+              "b06",
+              "b02"
+            ],
+            "compelling_score": 9
+          },
+          {
+            "subject": "Gregg Williams's quiet personal best",
+            "why_it_matters": "Alone among the field he left Kent with a career number, having spent the first two days looking like nobody's story.",
+            "shape": "Williams started with a quadruple-bogey 9 at the 3rd at Royal Cinque Ports and slumped to 27 points at Littlestone, at one stage 18 shots off the Jacket lead. Round three at Prince's turned it: nine points in three holes from the 9th, three holes without dropping a shot, and a 39-point round, a 12-point improvement. He closed to within eight of the Jacket lead and posted +76, his best gross total in a TEG.",
+            "beat_ids": [
+              "b41",
+              "b43",
+              "b34",
+              "b38",
+              "b23",
+              "b17",
+              "b31"
+            ],
+            "compelling_score": 6
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 41519,
+        "output_tokens": 1986
+      }
+    },
+    {
+      "arm": "fallback",
+      "draft": {
+        "trophy_storyline": {
+          "subject": "David Mullin's front-running Trophy win, and Alex Baker's 16th-hole implosion that let it stand",
+          "why_it_matters": "Mullin led wire to wire yet finished the week as the worst player in the field over the closing rounds — he won because his chaser blew up first.",
+          "shape": "Mullin seized the Stableford lead at the 16th in R1 and never gave it back, stretching it to nine after a 41-point Friday at Littlestone. But the lead haemorrhaged over the two Prince's rounds — he was bottom of the field in both, ran up a quadruple bogey at the 10th in R4, and Alex Baker, who had trailed by nine, closed to within touching distance with pars through 13-15. Baker then took a 10 at the 16th; Mullin's 154 points survived by two, a win he inherited as much as built.",
+          "beat_ids": [
+            "b02",
+            "b70",
+            "b73",
+            "b20",
+            "b01",
+            "b06",
+            "b04",
+            "b09",
+            "b13",
+            "b53",
+            "b37",
+            "b42"
+          ],
+          "compelling_score": 8
+        },
+        "jacket_storyline": {
+          "subject": "David Mullin's Green Jacket, built on the links of Deal and Littlestone",
+          "why_it_matters": "Unlike the Trophy, the Jacket was genuinely won rather than merely held — Mullin banked it early and no late charge could reach him.",
+          "shape": "Alex Baker drew level for the gross lead at the 6th in R1 before Mullin answered at the 9th and posted +15 at Royal Cinque Ports, then +14 at Littlestone to lead by 12. Jon Baker and Gregg Williams both mounted late charges at Prince's — Jon cut a 15-shot deficit to seven, Gregg an 18-shot deficit to eight — and Mullin was only third in the field in the final round. The cushion was simply too big: +68 for the week, the sixth-best gross total in TEG history, by seven.",
+          "beat_ids": [
+            "b08",
+            "b72",
+            "b74",
+            "b19",
+            "b17",
+            "b31"
+          ],
+          "compelling_score": 6
+        },
+        "spoon_storyline": {
+          "subject": "Jon Baker: bottom of the Spoon race from the 4th hole of the week to the last",
+          "why_it_matters": "It is one of the most complete Spoon collections on record — last from Thursday morning to Sunday evening, 12 points adrift — and yet it ended with the best round of anyone's week.",
+          "shape": "Jon Baker dropped to the bottom of the standings at the 4th hole of R1 at Royal Cinque Ports, went five holes without a net par, and never climbed out: 29, 29, 28 across the first three rounds, last in the field after every one. The Spoon was mathematically beyond saving by Sunday, so he played as though it didn't matter — 39 points, an 11-point improvement, birdies at 12 and 13 and five holes without dropping a gross shot. He collected the Spoon on 125 points, 12 behind Gregg Williams, having shot the lowest gross round of the tournament.",
+          "beat_ids": [
+            "b32",
+            "b71",
+            "b66",
+            "b22",
+            "b05",
+            "b03",
+            "b16",
+            "b44",
+            "cr01"
+          ],
+          "compelling_score": 8
+        },
+        "discovered_storylines": [
+          {
+            "subject": "Jon Baker's course record at Prince's — set by the man already holding the Wooden Spoon",
+            "why_it_matters": "The rarest achievement of the week belonged to the player who finished last, and it came on the one afternoon nothing was at stake for him.",
+            "shape": "Jon Baker arrived at Prince's on Sunday having scored 29, 29 and 28, dead last and out of every race. He then went out and broke the Prince's Shore/Dunes course record with an 83 gross, beating a mark that had stood across five prior visits, with birdies at 12 and 13 inside a five-hole run without a dropped shot. The round even hauled him to within seven of Mullin's gross lead — and still he took the Spoon, a double bogey at 16 and a quadruple at the last a reminder of the week he'd had.",
+            "beat_ids": [
+              "cr01",
+              "b22",
+              "b03",
+              "b05",
+              "b07",
+              "b44",
+              "b19",
+              "b32"
+            ],
+            "compelling_score": 9
+          },
+          {
+            "subject": "Alex Baker's four-round war with the big number",
+            "why_it_matters": "Baker was arguably the best player in the field over the weekend and lost the Trophy by two because he could not stop making 8s, 9s and 10s.",
+            "shape": "From the first day at Deal he was leaking shots — six dropped in three holes, a quadruple at the 11th, a 10 at the 16th — and Littlestone was worse, 12 shots bled across holes 2-5 including a nine. Yet he kept dragging himself back: level for the gross lead in R1, and at Prince's on Sunday he opened with three straight pars for 10 points and stood on the 16th tee two off Mullin with the Trophy in sight. He made 10 there too. Over the week he outplayed Mullin in two of the four rounds and still finished runner-up.",
+            "beat_ids": [
+              "b69",
+              "b39",
+              "b25",
+              "b47",
+              "b54",
+              "b30",
+              "b33",
+              "b50",
+              "b12",
+              "b21",
+              "b27",
+              "b09",
+              "b13",
+              "b01",
+              "b06",
+              "b20",
+              "b72"
+            ],
+            "compelling_score": 9
+          },
+          {
+            "subject": "Gregg Williams's quiet best week",
+            "why_it_matters": "In a field where everyone else's story was a disaster or a record, Williams just got steadily better and walked away with a personal best.",
+            "shape": "Williams began with a nine at the 3rd at Royal Cinque Ports and slumped to 27 points at Littlestone. He turned it around at Prince's with a 39-point Saturday built on runs of pars through 9-11 and 15-16, briefly derailed by a triple at the 12th, and kept it going on Sunday. Having trailed the gross lead by 18 at one stage, he closed to eight and posted +76 — his best Green Jacket total ever.",
+            "beat_ids": [
+              "b41",
+              "b43",
+              "b34",
+              "b38",
+              "b23",
+              "b40",
+              "b29",
+              "b36",
+              "b18",
+              "b17",
+              "b31"
+            ],
+            "compelling_score": 6
+          }
+        ]
+      },
+      "usage": {
+        "input_tokens": 41519,
+        "output_tokens": 1966
+      }
+    }
+  ],
+  "judge": {
+    "verdict": {
+      "scores": [
+        {
+          "label": "A",
+          "lead_clarity": 8,
+          "subplot_quality": 8,
+          "chosen_not_defaulted": 8,
+          "factual_integrity": 8,
+          "notes": "Trophy story braids Mullin's wire-to-wire lead with Alex Baker's charge and its ruin at the 16th, all cleanly sourced (b70, b21, b09, b01, b20). Notably avoids re-telling the Jon Baker course-record story in the discovered set — instead offers a genuinely different lens (Prince's 10th and 16th as protagonists), which reads as an editorial choice rather than a formula. Only quibbles: the unstated 'brother' relationship, 'within minutes of each other', and the slightly out-of-order 'after five holes without a net par' at the 4th hole."
+        },
+        {
+          "label": "B",
+          "lead_clarity": 8,
+          "subplot_quality": 8,
+          "chosen_not_defaulted": 6,
+          "factual_integrity": 5,
+          "notes": "Strong angle (a front-runner who stopped being the best player) and the Alex Baker subplot correctly infers that he outscored Mullin in two rounds, but the lead contains a garbled/self-contradictory 'never worse than fourth of four' and an unsupported 'field's worst final-day score'; 'beaten his nearest rival in three of the four rounds' contradicts the gross leads (5→12→12→7), and 'twelve adrift of Gregg Williams' isn't in the data. The discovered Jon Baker Sunday story largely duplicates the spoon storyline, so the set feels less deliberately curated."
+        },
+        {
+          "label": "C",
+          "lead_clarity": 7,
+          "subplot_quality": 7,
+          "chosen_not_defaulted": 6,
+          "factual_integrity": 4,
+          "notes": "Punchy 'he won because his chaser blew up first' framing, but it rests on a demonstrable error: Mullin was not 'bottom of the field' in R3 (36 vs Jon Baker's 28), and 'only third in the field in the final round' on gross is unsupported. Also invents '12 behind Gregg Williams', 'one of the most complete Spoon collections on record', and has Alex standing on the 16th tee 'two off Mullin' when the two-point gap was the post-blow-up final margin; discovered #1 rehashes the spoon storyline."
+        }
+      ],
+      "overall_ranking": [
+        "A",
+        "B",
+        "C"
+      ],
+      "summary": "All three converge on the same raw material — Mullin's front-running double, Alex Baker's 10 at the 16th, and Jon Baker's absurd Spoon-plus-course-record — so the differentiator is discipline and curation. A is the most factually careful and the only draft whose discovered set doesn't simply re-run a story it already told, adding a distinctive hole-based angle. B has the sharpest sentence-level writing but leans on several claims the beats don't support (including a garbled 'fourth of four'), and C compounds that with a flat error about Mullin being bottom of the field in R3 plus multiple invented margins."
+    },
+    "label_to_arm": {
+      "A": "cold",
+      "B": "hinted",
+      "C": "fallback"
+    },
+    "usage": {
+      "input_tokens": 39442,
+      "output_tokens": 7762
+    }
+  }
+}

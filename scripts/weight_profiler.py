@@ -50,10 +50,10 @@ SETTINGS = {
 # on", which is what matters when deciding whether to regenerate.
 BASELINE = "pre-2026-08-11 (1,1,1)"
 
-DISASTER_TYPES = {"cold_stretch", "collapse_after_steady", "big_blowup",
-                   "spoon_change", "wooden_spoon"}
-ACHIEVEMENT_TYPES = {"hot_stretch", "recovery", "eagle", "hole_in_one",
-                      "trophy_win", "jacket_win", "jacket_pb",
+DISASTER_TYPES = {"cold_stretch_gross", "cold_stretch_net", "collapse_after_steady",
+                   "big_blowup", "spoon_change", "wooden_spoon"}
+ACHIEVEMENT_TYPES = {"hot_stretch_gross", "hot_stretch_net", "recovery", "eagle",
+                      "hole_in_one", "trophy_win", "jacket_win", "jacket_pb",
                       "feat_eagles", "feat_hole_in_one"}
 NEUTRAL_TYPES = {"lead_change", "round_leadership"}
 # Tone depends on outcome, not type -- classify from the headline text.

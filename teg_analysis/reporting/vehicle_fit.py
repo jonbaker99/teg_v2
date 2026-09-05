@@ -131,7 +131,7 @@ def score_vehicle_fit(beats: list, arcs: dict, tournament_shape: dict,
             continue
         imp = b["scores"]["importance"]
         late = (b.get("round") or 1) >= 3
-        if t in ("collapse_after_steady", "cold_stretch"):
+        if t in ("collapse_after_steady", "cold_stretch_gross"):
             pts = imp * (1.3 if late else 1.0) * 0.6
             _add(scores, "tragic_arc", pts, f"{b['id']} (R{b['round']}): {b['headline']}")
         elif t == "long_lead_lost":
@@ -228,7 +228,7 @@ def score_vehicle_fit(beats: list, arcs: dict, tournament_shape: dict,
             _add(scores, "origin", 6.0, f"{player}: first-ever Trophy win")
 
     # --- catalogue: one CENTRAL player racking up repeated blow-up/collapse beats ---
-    blowup_types = {"cold_stretch", "collapse_after_steady"}
+    blowup_types = {"cold_stretch_gross", "collapse_after_steady"}
     per_player = Counter()
     for b in beats:
         if b["type"] in blowup_types:

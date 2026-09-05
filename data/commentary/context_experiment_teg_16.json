@@ -1,0 +1,813 @@
+{
+  "teg": 16,
+  "results": [
+    {
+      "subject": "Stuart Neumann's first Trophy — 156 points, led after every single round",
+      "context": {
+        "venue": {
+          "teg_num": 16,
+          "area": "Lisbon Coast, Portugal",
+          "year": 2023,
+          "area_visit_n": 5,
+          "n_rounds": 4,
+          "rounds": [
+            {
+              "round": 1,
+              "course": "Oitavos Dunes",
+              "date": "07/10/2023",
+              "weekday": "Saturday",
+              "visit_n": 3,
+              "full_name": "Oitavos Dunes Natural Links Golf",
+              "location": "Cascais, Lisbon Coast, Portugal",
+              "type": "Links",
+              "designer": "Arthur Hills"
+            },
+            {
+              "round": 2,
+              "course": "Troia",
+              "date": "08/10/2023",
+              "weekday": "Sunday",
+              "visit_n": 1,
+              "full_name": "Troia Golf Championship Course",
+              "location": "Troia Peninsula, Setubal, Portugal",
+              "type": "Championship Course",
+              "designer": "Robert Trent Jones Sr."
+            },
+            {
+              "round": 3,
+              "course": "Penha Longa",
+              "date": "09/10/2023",
+              "weekday": "Monday",
+              "visit_n": 3,
+              "full_name": "The Ritz-Carlton Penha Longa - Atlantic Course",
+              "location": "Sintra, Lisbon Coast, Portugal",
+              "type": "Mountain Parkland",
+              "designer": "Robert Trent Jones Jr."
+            },
+            {
+              "round": 4,
+              "course": "Estoril",
+              "date": "10/10/2023",
+              "weekday": "Tuesday",
+              "visit_n": 2,
+              "full_name": "Estoril Golf Club",
+              "location": "Estoril, Cascais, Portugal",
+              "type": "Parkland",
+              "designer": "Mackenzie Ross (redesign 1936)"
+            }
+          ]
+        },
+        "player_history": {},
+        "player_course_history": {
+          "Gregg Williams": {
+            "Estoril": {
+              "course": "Estoril",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 86,
+              "prior_best_teg": 15,
+              "this_teg_best_gross": 80,
+              "this_teg_best_round": 4,
+              "strokes_vs_last_visit": -6,
+              "is_course_pb_this_teg": true
+            },
+            "Oitavos Dunes": {
+              "course": "Oitavos Dunes",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 2,
+              "prior_best_gross": 91,
+              "prior_best_teg": 15,
+              "this_teg_best_gross": 89,
+              "this_teg_best_round": 1,
+              "strokes_vs_last_visit": -2,
+              "is_course_pb_this_teg": true
+            },
+            "Penha Longa": {
+              "course": "Penha Longa",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 2,
+              "prior_best_gross": 82,
+              "prior_best_teg": 15,
+              "this_teg_best_gross": 87,
+              "this_teg_best_round": 3,
+              "strokes_vs_last_visit": 5,
+              "is_course_pb_this_teg": false
+            },
+            "Troia": {
+              "course": "Troia",
+              "visit_count_through_this_teg": 1,
+              "n_prior_visits": 0,
+              "prior_best_gross": null,
+              "prior_best_teg": null,
+              "this_teg_best_gross": 94,
+              "this_teg_best_round": 2,
+              "strokes_vs_last_visit": null,
+              "is_course_pb_this_teg": false
+            }
+          },
+          "Stuart Neumann": {
+            "Estoril": {
+              "course": "Estoril",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 106,
+              "prior_best_teg": 15,
+              "this_teg_best_gross": 92,
+              "this_teg_best_round": 4,
+              "strokes_vs_last_visit": -14,
+              "is_course_pb_this_teg": true
+            },
+            "Oitavos Dunes": {
+              "course": "Oitavos Dunes",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 2,
+              "prior_best_gross": 95,
+              "prior_best_teg": 8,
+              "this_teg_best_gross": 97,
+              "this_teg_best_round": 1,
+              "strokes_vs_last_visit": -2,
+              "is_course_pb_this_teg": false
+            },
+            "Penha Longa": {
+              "course": "Penha Longa",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 2,
+              "prior_best_gross": 92,
+              "prior_best_teg": 15,
+              "this_teg_best_gross": 98,
+              "this_teg_best_round": 3,
+              "strokes_vs_last_visit": 6,
+              "is_course_pb_this_teg": false
+            },
+            "Troia": {
+              "course": "Troia",
+              "visit_count_through_this_teg": 1,
+              "n_prior_visits": 0,
+              "prior_best_gross": null,
+              "prior_best_teg": null,
+              "this_teg_best_gross": 102,
+              "this_teg_best_round": 2,
+              "strokes_vs_last_visit": null,
+              "is_course_pb_this_teg": false
+            }
+          }
+        }
+      },
+      "text_with_context": "**Neumann's Trophy, held from start to finish**\n\nStuart Neumann won the Trophy at TEG 16 on the Lisbon Coast with 156 Stableford points, finishing 13 clear of Gregg Williams. The winning total ranks 16th on the all-time list.\n\nWhat marks the win is that it was never really in doubt. Neumann held the Trophy lead after the second round at Troia, still held it after the third at Penha Longa, and carried it through the final round at Estoril. Williams, meanwhile, led the Jacket — the gross competition — at each of those same checkpoints, so the two prizes ran on separate tracks all week.\n\nThe one significant wobble came on the last day. At Estoril's 8th, a par 4 and the course's stroke index 1, Neumann ran up a nine — a quintuple bogey worth no points at all. By then the cushion was large enough that it cost him nothing but pride.\n\nEstoril otherwise treated him well. His round of 92 there was a course best by some distance: on his only previous visit, in TEG 15, his best was 106, making this a 14-stroke improvement and a course personal best. Troia, a first visit for the group, produced his 102, and Oitavos Dunes and Penha Longa yielded 97 and 98 respectively.",
+      "text_without_context": "Stuart Neumann won the Trophy with 156 Stableford points, finishing 13 clear of runner-up Gregg Williams. It is the first Trophy of his career, and the total ranks as the 16th best in the event's history, as well as the second best of Neumann's own record.\n\nThe win was built on a lead he held throughout. Neumann was the Trophy leader after the second round at Troia, still in front after the third at Penha Longa, and remained ahead after the fourth at Estoril. Through the same stretch, Gregg Williams led the Jacket standings, so the two competitions ran on separate tracks even as Williams ended up second on the Stableford count.\n\nThe final round was not entirely smooth. At Estoril's 8th, a par 4 and the toughest hole on the card at stroke index 1, Neumann took nine shots — a quintuple bogey worth no points at all. On a format where every hole contributes, giving away a full scoring hole on the hardest test on the course might have opened the door. It did not. Neumann's margin was wide enough to absorb the damage and he stayed in front to the finish.\n\nThe result leaves him with a first Trophy and a total that stands comparison with the better winning scores on record.",
+      "label_map": {
+        "A": "with_context",
+        "B": "without_context"
+      },
+      "verdict": {
+        "winner": "A",
+        "compellingness": {
+          "A": 7,
+          "B": 6
+        },
+        "factual_grounding": {
+          "A": 8,
+          "B": 7
+        },
+        "richness": {
+          "A": 8,
+          "B": 5
+        },
+        "reads_as_story_not_list": {
+          "A": 7,
+          "B": 7
+        },
+        "notes": "Both drafts handle the core facts correctly: 156 points, 13-shot margin over Gregg Williams, 16th all-time, leadership at R2 Troia / R3 Penha Longa / R4 Estoril, and the quintuple-bogey nine at Estoril's SI 1 8th. Neither overclaims leadership after R1, which is right since the evidence only covers R2-R4. Draft A adds genuine, verifiable colour: TEG 16 on the Lisbon Coast, the round-by-round gross scores (97 Oitavos, 102 Troia, 98 Penha Longa, 92 Estoril), and the 14-stroke Estoril improvement over his 106 from the previous visit, which is a real course PB per the context and is the single best untapped fact in the file. Its one soft spot is glossing the Jacket as 'the gross competition' (plausible convention but not stated) and it never says this is his first Trophy, which is the storyline hook. Draft B does land the 'first Trophy' angle and the second-best-of-his-own-record reading of player_rank, but otherwise stays inside the bare scorecard, pads with restatement ('a total that stands comparison with the better winning scores on record' after already saying 16th), and closes on a summary paragraph that adds nothing. B's speculative 'might have opened the door. It did not.' is decent narrative shaping, but overall it reads thinner. A wins on richness and grounding depth; B edges it only on capturing the career milestone."
+      },
+      "winner_arm": "with_context"
+    },
+    {
+      "subject": "Gregg Williams retains the Green Jacket at +66, by 16 — best gross in the field in all four rounds",
+      "context": {
+        "venue": {
+          "teg_num": 16,
+          "area": "Lisbon Coast, Portugal",
+          "year": 2023,
+          "area_visit_n": 5,
+          "n_rounds": 4,
+          "rounds": [
+            {
+              "round": 1,
+              "course": "Oitavos Dunes",
+              "date": "07/10/2023",
+              "weekday": "Saturday",
+              "visit_n": 3,
+              "full_name": "Oitavos Dunes Natural Links Golf",
+              "location": "Cascais, Lisbon Coast, Portugal",
+              "type": "Links",
+              "designer": "Arthur Hills"
+            },
+            {
+              "round": 2,
+              "course": "Troia",
+              "date": "08/10/2023",
+              "weekday": "Sunday",
+              "visit_n": 1,
+              "full_name": "Troia Golf Championship Course",
+              "location": "Troia Peninsula, Setubal, Portugal",
+              "type": "Championship Course",
+              "designer": "Robert Trent Jones Sr."
+            },
+            {
+              "round": 3,
+              "course": "Penha Longa",
+              "date": "09/10/2023",
+              "weekday": "Monday",
+              "visit_n": 3,
+              "full_name": "The Ritz-Carlton Penha Longa - Atlantic Course",
+              "location": "Sintra, Lisbon Coast, Portugal",
+              "type": "Mountain Parkland",
+              "designer": "Robert Trent Jones Jr."
+            },
+            {
+              "round": 4,
+              "course": "Estoril",
+              "date": "10/10/2023",
+              "weekday": "Tuesday",
+              "visit_n": 2,
+              "full_name": "Estoril Golf Club",
+              "location": "Estoril, Cascais, Portugal",
+              "type": "Parkland",
+              "designer": "Mackenzie Ross (redesign 1936)"
+            }
+          ]
+        },
+        "player_history": {},
+        "player_course_history": {
+          "Gregg Williams": {
+            "Estoril": {
+              "course": "Estoril",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 86,
+              "prior_best_teg": 15,
+              "this_teg_best_gross": 80,
+              "this_teg_best_round": 4,
+              "strokes_vs_last_visit": -6,
+              "is_course_pb_this_teg": true
+            },
+            "Oitavos Dunes": {
+              "course": "Oitavos Dunes",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 2,
+              "prior_best_gross": 91,
+              "prior_best_teg": 15,
+              "this_teg_best_gross": 89,
+              "this_teg_best_round": 1,
+              "strokes_vs_last_visit": -2,
+              "is_course_pb_this_teg": true
+            },
+            "Penha Longa": {
+              "course": "Penha Longa",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 2,
+              "prior_best_gross": 82,
+              "prior_best_teg": 15,
+              "this_teg_best_gross": 87,
+              "this_teg_best_round": 3,
+              "strokes_vs_last_visit": 5,
+              "is_course_pb_this_teg": false
+            },
+            "Troia": {
+              "course": "Troia",
+              "visit_count_through_this_teg": 1,
+              "n_prior_visits": 0,
+              "prior_best_gross": null,
+              "prior_best_teg": null,
+              "this_teg_best_gross": 94,
+              "this_teg_best_round": 2,
+              "strokes_vs_last_visit": null,
+              "is_course_pb_this_teg": false
+            }
+          }
+        }
+      },
+      "text_with_context": "**Williams makes it his own**\n\nGregg Williams took the Green Jacket with a gross total of +66, sixteen shots clear of runner-up David Mullin. It is the best gross aggregate of his career and the fifth-lowest recorded in the event's history.\n\nThe margin flattered the smoothness of it. Troia, the one course on the rota nobody had seen before, gave him the most trouble: he went four holes without a net par from the 8th, dropping five points across that run, then bled six gross shots in three holes from the 13th, doubling the 13th, 14th and 15th in succession. He signed for 94 there, his worst round of the week.\n\nPenha Longa began badly too — a triple bogey at the 3rd, a double at the 4th — before he birdied the par-three 5th to stop the slide. From the 11th he made five straight pars, nine Stableford points in the last three of them, and came home in 87.\n\nThe closing round at Estoril produced both his best golf and his worst hole. Three pars from the 6th brought nine more points, then a double bogey at the 9th and, later, an eight at the par-four 14th. He still shot 80, six better than his previous visit to the course and a personal best there. He also lowered his Oitavos Dunes best to 89.",
+      "text_without_context": "Gregg Williams took the Green Jacket with a gross total of +66, finishing 16 clear of runner-up David Mullin. It ranks as the fifth-best winning score in the event's history.\n\nThe margin did not come from four flawless rounds. At Troia in round two, Williams went four holes without a net par, from the 8th through the 11th — a bogey followed by three double bogeys — and later dropped six shots in three holes, doubling the 13th, 14th and 15th.\n\nRound three at Penha Longa began badly too, with a triple bogey at the 3rd and a double at the 4th, before a birdie at the par-three 5th ended the run. From there he settled: five straight pars from the 11th to the 15th without dropping a gross shot, with the run from the 13th to the 15th worth nine Stableford points.\n\nThe final round at Estoril followed a similar pattern. Williams parred the 6th, 7th and 8th for another nine-point stretch, including the stroke index one 8th, before a double bogey at the 9th ended the sequence. His worst hole of the week came later, an eight at the par-four 14th — a quadruple bogey.\n\nWith a 16-shot cushion, none of it mattered to the outcome. Williams finished the week as the tournament's clear winner.",
+      "label_map": {
+        "A": "with_context",
+        "B": "without_context"
+      },
+      "verdict": {
+        "winner": "A",
+        "compellingness": {
+          "A": 8,
+          "B": 6
+        },
+        "factual_grounding": {
+          "A": 8,
+          "B": 7
+        },
+        "richness": {
+          "A": 8,
+          "B": 6
+        },
+        "reads_as_story_not_list": {
+          "A": 8,
+          "B": 5
+        },
+        "notes": "Both open correctly on +66, the 16-shot margin over David Mullin and the all-time rank of five, and both cover the same Troia bleed, the Penha Longa recovery and the Estoril quad. A is the fuller piece: it anchors each round with an actual gross figure (94, 87, 80) drawn from the course-history data, correctly flags Estoril as a course PB six better than the previous visit, and notes the Oitavos best coming down to 89 — real texture rather than padding. Its line about Troia being the one course nobody had seen before is a fair reading of visit_n=1, and 'the margin flattered the smoothness of it' gives the piece a spine. Its only soft claim is 'best gross aggregate of his career', which rests on an interpretation of player_rank 1, and 'dropping five points' is a loose gloss on shortfall=5. B is clean and accurate — the stroke-index-one detail at the 8th is a nice small touch, and 'fifth-best winning score' is a defensible reading of all_time_rank — but it stays inside the scorecard, adds no venue or history colour, and its closing two sentences ('none of it mattered', 'the tournament's clear winner') are flat and redundant, deflating rather than resolving the story. B also drifts toward round-by-round recitation with connective phrases ('followed a similar pattern') doing the work. Neither draft engages the headline claim of best gross in the field in all four rounds, which is unsupported by the evidence anyway, so no penalty either way. A wins on richness and narrative shape."
+      },
+      "winner_arm": "with_context"
+    },
+    {
+      "subject": "Alex Baker takes back-to-back Wooden Spoons on 127 points — bottom of the table from the first round to the last",
+      "context": {
+        "venue": {
+          "teg_num": 16,
+          "area": "Lisbon Coast, Portugal",
+          "year": 2023,
+          "area_visit_n": 5,
+          "n_rounds": 4,
+          "rounds": [
+            {
+              "round": 1,
+              "course": "Oitavos Dunes",
+              "date": "07/10/2023",
+              "weekday": "Saturday",
+              "visit_n": 3,
+              "full_name": "Oitavos Dunes Natural Links Golf",
+              "location": "Cascais, Lisbon Coast, Portugal",
+              "type": "Links",
+              "designer": "Arthur Hills"
+            },
+            {
+              "round": 2,
+              "course": "Troia",
+              "date": "08/10/2023",
+              "weekday": "Sunday",
+              "visit_n": 1,
+              "full_name": "Troia Golf Championship Course",
+              "location": "Troia Peninsula, Setubal, Portugal",
+              "type": "Championship Course",
+              "designer": "Robert Trent Jones Sr."
+            },
+            {
+              "round": 3,
+              "course": "Penha Longa",
+              "date": "09/10/2023",
+              "weekday": "Monday",
+              "visit_n": 3,
+              "full_name": "The Ritz-Carlton Penha Longa - Atlantic Course",
+              "location": "Sintra, Lisbon Coast, Portugal",
+              "type": "Mountain Parkland",
+              "designer": "Robert Trent Jones Jr."
+            },
+            {
+              "round": 4,
+              "course": "Estoril",
+              "date": "10/10/2023",
+              "weekday": "Tuesday",
+              "visit_n": 2,
+              "full_name": "Estoril Golf Club",
+              "location": "Estoril, Cascais, Portugal",
+              "type": "Parkland",
+              "designer": "Mackenzie Ross (redesign 1936)"
+            }
+          ]
+        },
+        "player_history": {},
+        "player_course_history": {
+          "Alex Baker": {
+            "Estoril": {
+              "course": "Estoril",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 99,
+              "prior_best_teg": 15,
+              "this_teg_best_gross": 107,
+              "this_teg_best_round": 4,
+              "strokes_vs_last_visit": 8,
+              "is_course_pb_this_teg": false
+            },
+            "Oitavos Dunes": {
+              "course": "Oitavos Dunes",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 2,
+              "prior_best_gross": 103,
+              "prior_best_teg": 15,
+              "this_teg_best_gross": 113,
+              "this_teg_best_round": 1,
+              "strokes_vs_last_visit": 10,
+              "is_course_pb_this_teg": false
+            },
+            "Penha Longa": {
+              "course": "Penha Longa",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 2,
+              "prior_best_gross": 106,
+              "prior_best_teg": 8,
+              "this_teg_best_gross": 106,
+              "this_teg_best_round": 3,
+              "strokes_vs_last_visit": 0,
+              "is_course_pb_this_teg": false
+            },
+            "Troia": {
+              "course": "Troia",
+              "visit_count_through_this_teg": 1,
+              "n_prior_visits": 0,
+              "prior_best_gross": null,
+              "prior_best_teg": null,
+              "this_teg_best_gross": 106,
+              "this_teg_best_round": 2,
+              "strokes_vs_last_visit": null,
+              "is_course_pb_this_teg": false
+            }
+          }
+        }
+      },
+      "text_with_context": "Alex Baker finished the week with the Wooden Spoon, his 127 Stableford points leaving him at the foot of the table.\n\nThe tone was set immediately. At Oitavos Dunes on the Saturday, Baker signed for 113 gross, a new course-worst at the venue, beating the previous high of 111 set across twelve prior visits. The damage included a 10 at the par-four 17th, a sextuple bogey worth nothing on the card. On his two earlier trips to Oitavos his best had been 103, in TEG 15, so this was ten strokes worse than his last visit.\n\nTroia, a first visit for the group, brought a 106 and a five-hole collapse from the 13th, where triple bogeys at 13, 14 and 15 and doubles at 16 and 17 cost him 13 shots to par. Penha Longa was steadier: his 106 matched his best previous round there.\n\nEstoril on the final day repeated the pattern. Baker opened with a 9 at the first, a quintuple bogey, then dropped 14 shots between the 5th and the 10th, including a quadruple bogey at the par-five 6th and doubles at each of the other five holes in the run. He went three holes from the 5th without a net par. The round totalled 107 gross — another course-worst, one stroke above the previous mark of 106 from six prior visits, and eight worse than the 99 he posted there in TEG 15.",
+      "text_without_context": "**Baker's Wooden Spoon**\n\nAlex Baker finished the tournament on 127 Stableford points, which was enough to secure the Wooden Spoon.\n\nThe trouble started immediately. Baker's opening round at Oitavos Dunes produced a gross 113, a new course-worst for the group there, beating the previous mark of 111 set across 12 prior visits. The round included a 10 at the par-four 17th, a sextuple bogey worth no points.\n\nRound two at Troia brought a damaging run through the closing stretch. Baker dropped 13 shots across holes 13 to 17, with triple bogeys at the 13th, 14th and 15th followed by doubles at the 16th and 17th. The five holes yielded five points in total.\n\nThe final round at Estoril was worse still in gross terms. Baker opened with a nine at the first, a quintuple bogey, and then bled 14 shots between the 5th and the 10th — a double at the 5th, a quadruple bogey at the par-five 6th, and doubles at each of the next four holes. Holes 5 to 7 passed without a net par. The round finished on 107 gross, another course-worst, one shot beyond the previous 106 recorded over six prior visits.\n\nTwo course-worsts in the same week, at two different venues, tells the story of the week as clearly as the final points total does.",
+      "label_map": {
+        "A": "without_context",
+        "B": "with_context"
+      },
+      "verdict": {
+        "winner": "B",
+        "compellingness": {
+          "A": 6,
+          "B": 8
+        },
+        "factual_grounding": {
+          "A": 8,
+          "B": 9
+        },
+        "richness": {
+          "A": 5,
+          "B": 8
+        },
+        "reads_as_story_not_list": {
+          "A": 6,
+          "B": 7
+        },
+        "notes": "Both drafts are factually clean: A's arithmetic checks out (the 13-17 stretch does yield five points; doubles at 7-10; 5-7 without a net par), and its closing line about two course-worsts in one week is a neat button. But A stays almost entirely inside the bare scorecard evidence, round by round, and reads like a tidy summary rather than a narrative — it also omits Troia's and Penha Longa's numbers entirely, leaving a gap in the week. B pulls in genuine, verifiable colour: the Saturday date at Oitavos, Troia as a first visit for the group, the 103 at Oitavos and 99 at Estoril from TEG 15 with the ten- and eight-stroke deteriorations, and the Penha Longa 106 that matched his previous best — all of which are supported by the supplied context and give the collapse a career-shaped frame rather than a one-week snapshot. B's claim that the 6th was a quad with 'doubles at each of the other five holes in the run' is accurate. Neither draft explicitly asserts the unsupported 'bottom from first round to last' angle beyond what the spoon supports. B is stronger on richness and flows better as a single account; A is marginally crisper sentence to sentence but thinner. B wins.\n"
+      },
+      "winner_arm": "with_context"
+    },
+    {
+      "subject": "Estoril, R4: David Mullin turns 30 points into 45 and takes the course record with him",
+      "context": {
+        "venue": {
+          "teg_num": 16,
+          "area": "Lisbon Coast, Portugal",
+          "year": 2023,
+          "area_visit_n": 5,
+          "n_rounds": 4,
+          "rounds": [
+            {
+              "round": 1,
+              "course": "Oitavos Dunes",
+              "date": "07/10/2023",
+              "weekday": "Saturday",
+              "visit_n": 3,
+              "full_name": "Oitavos Dunes Natural Links Golf",
+              "location": "Cascais, Lisbon Coast, Portugal",
+              "type": "Links",
+              "designer": "Arthur Hills"
+            },
+            {
+              "round": 2,
+              "course": "Troia",
+              "date": "08/10/2023",
+              "weekday": "Sunday",
+              "visit_n": 1,
+              "full_name": "Troia Golf Championship Course",
+              "location": "Troia Peninsula, Setubal, Portugal",
+              "type": "Championship Course",
+              "designer": "Robert Trent Jones Sr."
+            },
+            {
+              "round": 3,
+              "course": "Penha Longa",
+              "date": "09/10/2023",
+              "weekday": "Monday",
+              "visit_n": 3,
+              "full_name": "The Ritz-Carlton Penha Longa - Atlantic Course",
+              "location": "Sintra, Lisbon Coast, Portugal",
+              "type": "Mountain Parkland",
+              "designer": "Robert Trent Jones Jr."
+            },
+            {
+              "round": 4,
+              "course": "Estoril",
+              "date": "10/10/2023",
+              "weekday": "Tuesday",
+              "visit_n": 2,
+              "full_name": "Estoril Golf Club",
+              "location": "Estoril, Cascais, Portugal",
+              "type": "Parkland",
+              "designer": "Mackenzie Ross (redesign 1936)"
+            }
+          ]
+        },
+        "player_history": {},
+        "player_course_history": {
+          "Alex Baker": {
+            "Estoril": {
+              "course": "Estoril",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 99,
+              "prior_best_teg": 15,
+              "this_teg_best_gross": 107,
+              "this_teg_best_round": 4,
+              "strokes_vs_last_visit": 8,
+              "is_course_pb_this_teg": false
+            },
+            "Oitavos Dunes": {
+              "course": "Oitavos Dunes",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 2,
+              "prior_best_gross": 103,
+              "prior_best_teg": 15,
+              "this_teg_best_gross": 113,
+              "this_teg_best_round": 1,
+              "strokes_vs_last_visit": 10,
+              "is_course_pb_this_teg": false
+            },
+            "Penha Longa": {
+              "course": "Penha Longa",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 2,
+              "prior_best_gross": 106,
+              "prior_best_teg": 8,
+              "this_teg_best_gross": 106,
+              "this_teg_best_round": 3,
+              "strokes_vs_last_visit": 0,
+              "is_course_pb_this_teg": false
+            },
+            "Troia": {
+              "course": "Troia",
+              "visit_count_through_this_teg": 1,
+              "n_prior_visits": 0,
+              "prior_best_gross": null,
+              "prior_best_teg": null,
+              "this_teg_best_gross": 106,
+              "this_teg_best_round": 2,
+              "strokes_vs_last_visit": null,
+              "is_course_pb_this_teg": false
+            }
+          },
+          "David Mullin": {
+            "Estoril": {
+              "course": "Estoril",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 94,
+              "prior_best_teg": 15,
+              "this_teg_best_gross": 80,
+              "this_teg_best_round": 4,
+              "strokes_vs_last_visit": -14,
+              "is_course_pb_this_teg": true
+            },
+            "Oitavos Dunes": {
+              "course": "Oitavos Dunes",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 2,
+              "prior_best_gross": 88,
+              "prior_best_teg": 8,
+              "this_teg_best_gross": 94,
+              "this_teg_best_round": 1,
+              "strokes_vs_last_visit": -10,
+              "is_course_pb_this_teg": false
+            },
+            "Penha Longa": {
+              "course": "Penha Longa",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 2,
+              "prior_best_gross": 85,
+              "prior_best_teg": 15,
+              "this_teg_best_gross": 98,
+              "this_teg_best_round": 3,
+              "strokes_vs_last_visit": 13,
+              "is_course_pb_this_teg": false
+            },
+            "Troia": {
+              "course": "Troia",
+              "visit_count_through_this_teg": 1,
+              "n_prior_visits": 0,
+              "prior_best_gross": null,
+              "prior_best_teg": null,
+              "this_teg_best_gross": 94,
+              "this_teg_best_round": 2,
+              "strokes_vs_last_visit": null,
+              "is_course_pb_this_teg": false
+            }
+          }
+        }
+      },
+      "text_with_context": "David Mullin arrived at Estoril on the back of his worst round of the week. His Monday at Penha Longa had included a quadruple-bogey eight at the 16th, the hardest hole on the card, and finished with 30 Stableford points — though he did at least sign off with pars at the 17th and 18th.\n\nTuesday's parkland finale went differently, but not immediately. Mullin bogeyed the two short holes at the 4th and 5th, then ran up a double bogey at the par-five 6th, before a birdie three at the 7th ended the run of dropped shots.\n\nFrom there the round turned. Holes 11 to 13 brought him nine points — a bogey at the stroke-index-two 11th still worth three, then pars at the 12th and 13th — and he gave nothing back at the 16th and 17th, matching par on both.\n\nThe total was 45 points and, more significantly, 80 gross. That is a new Estoril course record, beating the previous mark of 86 set across six earlier visits, and it is 14 strokes better than the 94 Mullin shot here on his only previous appearance, in TEG 15. It is comfortably a course personal best, and a 15-point improvement on the previous day.\n\nThe same round produced a record at the other end of the scale: Alex Baker's 107 is a new Estoril course-worst, one stroke beyond the previous 106.",
+      "text_without_context": "David Mullin arrived at Estoril for the final round with a Penha Longa hangover. His third round had produced only 30 points and included a quadruple-bogey eight at the 16th, a stroke-index-one par four, where he took no points at all. He did at least walk off steadily, closing that round with gross pars at the 17th and 18th.\n\nRound four did not begin cleanly either. Mullin bogeyed the 4th and 5th, both par threes, then ran up a seven at the par-five 6th for a single point. The bleeding stopped at the 7th, where a birdie three brought four points and turned the round around.\n\nFrom there he built. Holes 11 to 13 yielded nine points — a bogey at the stroke-index-two 11th still worth three, followed by pars at the 12th and 13th, each also worth three. He gave nothing back in gross terms at the 16th and 17th, taking par at both.\n\nThe round finished at 45 points, a 15-point improvement on his third-round total, and the gross figure was the more striking number: 80. That is a new Estoril course record, beating the previous mark of 86 set across six prior visits to the course.\n\nThe same round produced the other end of the scale. Alex Baker signed for 107 gross, a new Estoril course-worst, one shot beyond the previous high of 106.",
+      "label_map": {
+        "A": "with_context",
+        "B": "without_context"
+      },
+      "verdict": {
+        "winner": "A",
+        "compellingness": {
+          "A": 7,
+          "B": 6
+        },
+        "factual_grounding": {
+          "A": 9,
+          "B": 9
+        },
+        "richness": {
+          "A": 8,
+          "B": 6
+        },
+        "reads_as_story_not_list": {
+          "A": 7,
+          "B": 7
+        },
+        "notes": "Both drafts follow the same structure and are essentially clean on the raw evidence: the quad-bogey eight at Penha Longa's 16th (par four, SI 1), the 4th/5th bogeys and par-five double, the birdie at the 7th, nine points across 11-13, the two gross pars at 16-17, 45 points against 30, the 80 gross record beating 86 over six prior visits, and Baker's 107 course-worst beating 106. Draft A adds genuine, verifiable colour from the venue and course-history context — Tuesday's parkland finale, the 94 he shot here on his only previous visit in TEG 15, the 14-stroke improvement and course PB — which materially deepens the 'took the course record with him' angle rather than just restating the scorecard. Its 'worst round of the week' framing is inferential but supported by the per-course gross figures (98 at Penha Longa vs 94/94 elsewhere). Draft B is competent and precise on hole-level points, but stays inside the evidence blob: no venue, no prior-visit comparison, so the record lands as a bare number. Draft B's per-hole point restatements ('each also worth three', 'brought four points') edge slightly toward itemising. A is the better story with more real texture; B is a solid but thinner version of the same piece."
+      },
+      "winner_arm": "with_context"
+    },
+    {
+      "subject": "The 12th hole and the Baker brothers",
+      "context": {
+        "venue": {
+          "teg_num": 16,
+          "area": "Lisbon Coast, Portugal",
+          "year": 2023,
+          "area_visit_n": 5,
+          "n_rounds": 4,
+          "rounds": [
+            {
+              "round": 1,
+              "course": "Oitavos Dunes",
+              "date": "07/10/2023",
+              "weekday": "Saturday",
+              "visit_n": 3,
+              "full_name": "Oitavos Dunes Natural Links Golf",
+              "location": "Cascais, Lisbon Coast, Portugal",
+              "type": "Links",
+              "designer": "Arthur Hills"
+            },
+            {
+              "round": 2,
+              "course": "Troia",
+              "date": "08/10/2023",
+              "weekday": "Sunday",
+              "visit_n": 1,
+              "full_name": "Troia Golf Championship Course",
+              "location": "Troia Peninsula, Setubal, Portugal",
+              "type": "Championship Course",
+              "designer": "Robert Trent Jones Sr."
+            },
+            {
+              "round": 3,
+              "course": "Penha Longa",
+              "date": "09/10/2023",
+              "weekday": "Monday",
+              "visit_n": 3,
+              "full_name": "The Ritz-Carlton Penha Longa - Atlantic Course",
+              "location": "Sintra, Lisbon Coast, Portugal",
+              "type": "Mountain Parkland",
+              "designer": "Robert Trent Jones Jr."
+            },
+            {
+              "round": 4,
+              "course": "Estoril",
+              "date": "10/10/2023",
+              "weekday": "Tuesday",
+              "visit_n": 2,
+              "full_name": "Estoril Golf Club",
+              "location": "Estoril, Cascais, Portugal",
+              "type": "Parkland",
+              "designer": "Mackenzie Ross (redesign 1936)"
+            }
+          ]
+        },
+        "player_history": {},
+        "player_course_history": {
+          "Alex Baker": {
+            "Estoril": {
+              "course": "Estoril",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 99,
+              "prior_best_teg": 15,
+              "this_teg_best_gross": 107,
+              "this_teg_best_round": 4,
+              "strokes_vs_last_visit": 8,
+              "is_course_pb_this_teg": false
+            },
+            "Oitavos Dunes": {
+              "course": "Oitavos Dunes",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 2,
+              "prior_best_gross": 103,
+              "prior_best_teg": 15,
+              "this_teg_best_gross": 113,
+              "this_teg_best_round": 1,
+              "strokes_vs_last_visit": 10,
+              "is_course_pb_this_teg": false
+            },
+            "Penha Longa": {
+              "course": "Penha Longa",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 2,
+              "prior_best_gross": 106,
+              "prior_best_teg": 8,
+              "this_teg_best_gross": 106,
+              "this_teg_best_round": 3,
+              "strokes_vs_last_visit": 0,
+              "is_course_pb_this_teg": false
+            },
+            "Troia": {
+              "course": "Troia",
+              "visit_count_through_this_teg": 1,
+              "n_prior_visits": 0,
+              "prior_best_gross": null,
+              "prior_best_teg": null,
+              "this_teg_best_gross": 106,
+              "this_teg_best_round": 2,
+              "strokes_vs_last_visit": null,
+              "is_course_pb_this_teg": false
+            }
+          },
+          "Jon Baker": {
+            "Estoril": {
+              "course": "Estoril",
+              "visit_count_through_this_teg": 2,
+              "n_prior_visits": 1,
+              "prior_best_gross": 96,
+              "prior_best_teg": 15,
+              "this_teg_best_gross": 93,
+              "this_teg_best_round": 4,
+              "strokes_vs_last_visit": -3,
+              "is_course_pb_this_teg": true
+            },
+            "Oitavos Dunes": {
+              "course": "Oitavos Dunes",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 2,
+              "prior_best_gross": 94,
+              "prior_best_teg": 15,
+              "this_teg_best_gross": 92,
+              "this_teg_best_round": 1,
+              "strokes_vs_last_visit": -2,
+              "is_course_pb_this_teg": true
+            },
+            "Penha Longa": {
+              "course": "Penha Longa",
+              "visit_count_through_this_teg": 3,
+              "n_prior_visits": 2,
+              "prior_best_gross": 85,
+              "prior_best_teg": 15,
+              "this_teg_best_gross": 97,
+              "this_teg_best_round": 3,
+              "strokes_vs_last_visit": 12,
+              "is_course_pb_this_teg": false
+            },
+            "Troia": {
+              "course": "Troia",
+              "visit_count_through_this_teg": 1,
+              "n_prior_visits": 0,
+              "prior_best_gross": null,
+              "prior_best_teg": null,
+              "this_teg_best_gross": 95,
+              "this_teg_best_round": 2,
+              "strokes_vs_last_visit": null,
+              "is_course_pb_this_teg": false
+            }
+          }
+        }
+      },
+      "text_with_context": "**The 12th hole and the Baker brothers**\n\nPenha Longa's 12th is the easiest hole on the card — stroke index 17, a par 5 — and on Monday it took both Bakers apart in the same group. Alex ran up a 9, four over, for no points. Jon went one worse: a 10, quintuple bogey, also blanked.\n\nNeither blow-up was isolated. Alex's damage ran from the 11th to the 14th, a stretch of double bogey, quadruple, triple, triple that cost him twelve shots to par and left him three holes without a net par. Jon's version was shorter and steeper: 6, 10, 8 across 11 to 13, eleven shots gone in three holes, no net par among them. Alex signed for 106 at Penha Longa, matching the best he had managed on his two previous visits; Jon's 97 was twelve strokes worse than his last time round, and a long way from the 85 he owns here.\n\nThe 12th had one more turn to take. At Estoril the following day — a par 4 this time, stroke index 6 — Alex made an 11, a septuple bogey and the worst score he has recorded on a par 4. Jon had already dropped four shots in one go at the 11th, a quadruple-bogey 8 at the hardest hole on the course, yet still came home in 93 for a course best, three better than his previous visit.",
+      "text_without_context": "**The 12th hole and the Baker brothers**\n\nPenha Longa's 12th is a par 5 and the easiest hole on the card, stroke index 17. It did not play that way for either Baker in round three. Jon Baker took ten shots on it, a quintuple bogey worth no Stableford points. Alex Baker, playing the same hole, signed for a nine, a quadruple bogey and likewise a blank.\n\nNeither disaster was isolated. Jon had already dropped a double bogey six at the 11th and followed the 12th with a quadruple-bogey eight at the 13th — eleven shots lost across three holes, and three consecutive holes without a net par. Alex's slide ran a hole longer: a six at the 11th, the nine at the 12th, then sevens at the 13th and 14th, twelve shots gone in four holes and only three Stableford points salvaged from the stretch.\n\nThe 12th came back for them at Estoril in round four, this time a par 4 at stroke index 6. Alex Baker made an eleven, a septuple bogey and the worst score against par he recorded all week. Jon's round-four damage arrived one hole earlier, an eight at the 11th, the hardest hole on the course at stroke index 2 — another quadruple bogey, another zero. Between them, the two 12th holes cost the brothers four blank returns.",
+      "label_map": {
+        "A": "without_context",
+        "B": "with_context"
+      },
+      "verdict": {
+        "winner": "B",
+        "compellingness": {
+          "A": 6,
+          "B": 8
+        },
+        "factual_grounding": {
+          "A": 6,
+          "B": 7
+        },
+        "richness": {
+          "A": 5,
+          "B": 8
+        },
+        "reads_as_story_not_list": {
+          "A": 6,
+          "B": 8
+        },
+        "notes": "Both open on the same hook (Penha Longa's 12th as the softest hole on the card at SI 17 — a shared, minor overstatement, since SI 17 is second-easiest) and both call Estoril's 11th 'the hardest hole on the course' when it is SI 2, i.e. second hardest. Draft A is clean and orderly but stays inside the scorecard: its only added colour is arithmetic (three Stableford points from the four-hole slide, correctly computed). It also closes on a demonstrable error — 'the two 12th holes cost the brothers four blank returns' — when the two 12ths produced three blanks (Alex twice, Jon once); the fourth zero came at Estoril's 11th, which A itself has just placed elsewhere. Its 'worst score against par he recorded all week' is a looser reading of the is_player_par_worst flag than the data supports. Draft B carries the same two SI quibbles and one unsupported detail ('in the same group' — playing partners are nowhere in the evidence), but it earns real texture from course history: Alex's 106 matching his prior best at Penha Longa, Jon's 97 twelve worse than last visit and adrift of the 85 he owns there, and the neat sting of Jon following a quadruple-bogey 8 with a 93 that was a course best, three better than his previous visit. Those are all accurate to the supplied context and they turn a list of blow-ups into a shape — collapse for one brother, collapse-then-recovery for the other. B also handles the day-to-day chronology correctly (Monday at Penha Longa, Estoril 'the following day'). B is the stronger, fuller piece; A's tidy prose is undercut by a countable factual slip and thinner substance."
+      },
+      "winner_arm": "with_context"
+    }
+  ]
+}

@@ -12,7 +12,163 @@
 
 ---
 
-## START HERE — picking this up in a new chat (2026-08-17)
+## START HERE — picking this up in a new chat (2026-09-05)
+
+### Reports are going to a newspaper layout; interweaving is mothballed (2026-09-05)
+
+**The presentation changed, and it changes what the pipeline should produce.** Tournament reports
+are being moved from one flowing document to a **newspaper edition** — a lead story on the Trophy
+winner, then the remaining storylines as separate articles in a grid. Prototype (four layout
+directions, TEG 14 and 16): `webapp/report_layout_prototypes/`, PR #92. Jon's verdict on seeing it:
+markedly more digestible than one long report, direction confirmed, layout details still open.
+
+Two consequences for this pipeline:
+
+- **Interweaving is off by default** (`--interweave` to opt in). Its A/B win stands — it was
+  measured against a flowing document, where cross-cutting reads better. A newspaper edition wants
+  one subject per article, and a merged section is a double-length article with a `' / '`-joined
+  heading and two kickers. Full reasoning: `STORYLINE_PLAN.md` → "Interweaving mothballed".
+- **`StorylinePlan` needs `headline` and `standfirst` fields.** `subject` is a 15–25 word
+  descriptive line: a good section heading, a poor headline. The prototype has to derive one, and
+  derived headlines are the weakest text on the page. Note that the **unrequested `**bold**`
+  mini-header** logged below as a cosmetic bug is this missing field arriving by accident, about
+  half the time — fix it by asking for it, not by removing it.
+
+
+### Storyline-first reports — full-report experiment run; records/streaks beat gap closed (2026-08-19)
+
+- **Full-report experiment (`scripts/storyline_full_report_experiment.py`) proved the pipeline
+  end-to-end on TEG 14/16/18.** Structural draft (fact-isolated, storyline-ordered sections) +
+  `authoring.restyle_voice` as a final language layer: zero new D3 findings on TEG 14, genuinely
+  readable house-voice prose, no round-by-round structure. Plain "straight" drafts (no voice pass,
+  `--no-voice` flag) read strong on their own — "The twelfth hole" (TEG 16, both Baker brothers
+  blowing up the same hole on two different courses) and "The brothers Baker at opposite ends of
+  the same tournament" (TEG 18) are storylines a round-by-round report would never surface. Minor
+  cosmetic issue seen in ~half of sections across all three TEGs: the draft writer inserts an
+  unrequested bold mini-header duplicating the `##` heading — not yet fixed. Word counts short of
+  production (1161–1424w vs 1700–2300w) because the mandatory closing sections
+  (`## How it was decided`, `## Player-by-player summary`) aren't built into the experiment yet.
+  Not wired into `backfill.py` — still an experiment script.
+- **Records/streaks beat gap closed (`milestone_records.py`, new).** Audit of "does the pipeline
+  organically surface records/streaks, or only via the injected end-of-report block" found that
+  `course_history.py`'s course records were already wired into `beats` as mandatory, but the
+  webapp Records page's other two record types — all-time streak records (`analysis/streaks.py`)
+  and TEG-total score-count records, most Eagles/Birdies/Pars-or-better/TBPs
+  (`analysis/records.py`) — were never wired into the beat/bundle system at all. `milestone_records.py`
+  wraps both as `sr*`/`sc*` mandatory beats, following the `course_history.py` pattern exactly
+  (same `assemble_bundle` wiring). Validated across TEGs 2–18: fires occasionally (streak records
+  rarer — 1-hole "Birdies" ties on TEGs 5/14/17; score-count records on 6 of 17 TEGs), no crashes,
+  player-code-to-name mapping bug caught and fixed before landing (`identify_score_count_records`
+  returns `Pl` codes, not names). `test_reporting_schema_and_era.py`: 51/51 pass.
+- **Point 2 done: quality bar + fallback ladder (`story_plan.py`).** `DraftedStoryline` gained
+  `humour_score`; SYSTEM_PROMPT now states the eligibility-floor-vs-quality-bar distinction explicitly
+  (humour/intrigue/drama/importance required, not just "has beats"), requires at least one
+  `humour_score >= 7` storyline per report, and calls out `sr*`/`sc*`/`cr*` record beats as legitimate
+  storyline subjects, not just facts to mention. New `StoryPlan.body_fallback` (`"none"` default |
+  `"player_by_player"` | `"round_by_round"`) — used only when `discovered_storylines` is empty/thin,
+  never above it; `check_plan_consistency` warns on both the no-humour and fallback-misuse cases.
+  Wired into `scripts/storyline_full_report_experiment.py` (`_fallback_sections`, deterministic
+  grouping by player/round, same fact-isolation principle as the rest of the pipeline).
+  `test_reporting_schema_and_era.py`: 53/53 pass. **Validated live on TEGs 14 and 16** — first attempt
+  truncated (`ValidationError: EOF while parsing a string`): the new fields pushed output over the
+  default `max_tokens=16000` for `generate_structured`. Fixed by raising `story_plan.py`'s call site to
+  `max_tokens=20000` (below the Anthropic SDK's streaming-required threshold — confirmed by testing
+  24000, which throws). Both TEGs then returned zero warnings, real humour spread (TEG 14 Spoon
+  storyline scored 8/10, TEG 16 Spoon scored 9/10), `body_fallback="none"` both times (discovered
+  storylines cleared the bar), and — the actual proof this was worth doing — **TEG 16 discovered
+  "Anatomy of an 80: Mullin's Estoril course record, two days after Penha Longa took him apart" as a
+  storyline**, built directly from the new `cr*` course-record beat. Full detail: `STORYLINE_PLAN.md`
+  → "Full-report proof + user's 3-point punch list".
+- **Call A / Call B split built (`story_plan.py`).** New `StorylinePlan` (leaner sibling of
+  `StoryPlan`) + `STORYLINE_SYSTEM_PROMPT` + `build_storyline_plan()` + `check_storyline_plan_consistency()`
+  carry ONLY what `storyline_full_report_experiment.py` actually reads — dropping `rounds[]`,
+  `players[]`, `must_include_beat_ids`, `cuts`, `venue_notes`, `course_history_notes`, `foreshadow`,
+  `payoffs`, `narrative_structure`, which turned out to be most of what pushed the earlier
+  `max_tokens` fix into being necessary. Both calls see the SAME input bundle — this is an
+  output-schema split, not an input split. `StoryPlan`/`build_story_plan` untouched, still serving the
+  legacy round-by-round pipeline. Writes to `teg_{n}_storyline_plan.json`, distinct from
+  `teg_{n}_story_plan.json`. `storyline_full_report_experiment.py` now calls `build_storyline_plan`
+  directly instead of reading a pre-generated file. **Validated live on TEGs 14, 16, 18** — clean end
+  to end on 16/18 (zero grounding warnings); TEG 14's first run surfaced a real pre-existing bug, see
+  below. 54/54 tests pass (53 + 1 new regression test).
+- **Bug found and fixed: `candidate_threads` leaked beat IDs outside the trimmed bundle.**
+  `threads.py`'s clusters are scored from the untrimmed beat set (correctly — trimming would deflate
+  the score) but their `beat_ids` weren't filtered back down before entering the bundle. The editor
+  cited phantom IDs from `candidate_threads` into 4 storylines on TEG 14; `check_plan_consistency`
+  caught it correctly, but the bundle shouldn't have offered them. Fixed in `assemble_bundle` — thread
+  beat_ids now filtered to the in-bundle set, empty threads dropped. Pre-existing since Phase 1
+  (`threads.py`), not introduced by the Call A/B split — just hadn't surfaced before now. Regression
+  test added; TEG 14 re-run clean after the fix. Full detail: `STORYLINE_PLAN.md`.
+- **Writer-richness gap closed — `with_context` adopted as the default.** New
+  `scripts/storyline_context_experiment.py` A/B'd the current evidence-only writer against evidence +
+  scoped structured context (venue + the storyline's own players' career/course history, numbers-only,
+  same stripping as `authoring._strip_derived_prose`). **Won 10/10 storylines across TEG 14/16**:
+  richness 5.70→8.10, compellingness 6.10→7.80, reads-as-story 6.30→7.70, and — the important
+  one — factual_grounding 7.70→**8.20** (up, not down; unlike 2b, this isn't a competing prose
+  channel). Wired into `storyline_full_report_experiment.py`'s `draft_section()` as the standard path.
+  TEG 14/16/18 regenerated in full with it on. Full detail: `STORYLINE_PLAN.md` → "Writer-richness A/B
+  result".
+- **Point 3 (interweaving storylines) — done, wired into the pipeline.** Deferred to a fresh chat as
+  planned; A/B'd first (`scripts/storyline_interweave_experiment.py`, 3/3 TEGs, every judged axis —
+  compellingness, factual_grounding, clarity, redundancy, reads-as-story), then wired into
+  `build_storyline_draft()`: overlapping storylines (2+ shared `beat_ids`) merge into one cross-cut
+  section. **Mothballed 2026-09-05 — now behind `--interweave`, off by default** (see the entry at
+  the top of this file). Re-validated end to end (fresh plan → draft → voice pass) on TEG 16
+  and TEG 18 — zero new D3 findings either time. Full detail: `STORYLINE_PLAN.md` → "Interweaving A/B
+  result". **The storyline-first pipeline is now complete, three stages, plan → unvoiced structural
+  draft → voice pass** — see `README.md` → "Storyline-first pipeline — stages and outputs". Next open
+  item is tone/voice: the house voice was settled 2026-08-15 against the old round-by-round structure,
+  not yet re-checked against this one.
+
+### API usage limit hit and resolved mid-session (2026-08-19)
+
+Briefly hit `account has reached its specified API usage limits` mid-session; resolved (credits
+topped up) within the same session. Noted only because the limit forced sequencing: the Call A/B
+split's live validation and the TEG 14/16/18 comparison both had to wait for resolution — both since
+completed, along with the writer-richness A/B and the interweaving A/B that followed it.
+
+### Storyline-first reports — Phase 1 built, detectors simplified (2026-08-18)
+
+New workstream, not yet folded into the ranked list below. Full detail, live, in
+`STORYLINE_PLAN.md` (a working doc — see its own status line for when to fold or delete it).
+
+- **`threads.py`** clusters beats into candidate subplot threads (by player / repeated course /
+  recurring failure mode, spanning 2+ rounds) and feeds `candidate_threads` into the bundle,
+  advisory-only like `vehicle_fit_hints`. Run over all 17 TEGs: course clusters and failure-mode
+  clusters are genuine finds; bare player clusters are mostly noise (fires for nearly every player,
+  reads as an index not a subplot).
+- **A/B tested (`scripts/storyline_experiment.py`) on TEGs 14/16/18: cold beats hinted, 3 for 3.**
+  Feeding `candidate_threads` + `win_anatomy` to a storyline-discovery LLM call added no storylines
+  it didn't already find cold, and consistently made it invent more unsupported specifics (gaps,
+  head-to-head records, visit counts) — more context, more surface to confabulate a derived number
+  from, not better discovery. **Verdict: drop the hint-feeding approach.**
+- **2a/2c built and validated (branch `claude/storyline-first-reports`).** `StoryPlan` gained
+  `trophy_storyline`/`jacket_storyline`/`spoon_storyline`/`discovered_storylines` (replacing the dead
+  `competition_storyline_bullets`/`player_storyline_bullets`/`decisive_moments` — zero downstream
+  readers, found while replacing them) plus a `beat_ids`-exist grounding check in
+  `check_plan_consistency`. Hit and fixed the API's structured-output size limit along the way
+  (trimmed a second dead/redundant field, `Competition.how`/`key_beat_ids`). Validated with real
+  `build_story_plan()` calls on TEGs 14/16/18: **zero grounding warnings, all three**, every
+  discovered storyline genuinely distinct from its trophy/jacket/spoon story. Not yet wired
+  downstream — `rounds[]` still drives dry-draft/writer structure (Phase 3/4), and the separate
+  narrow-context "telling" call (2b) isn't built. Full detail in `STORYLINE_PLAN.md`.
+- **Stretch detectors simplified** (`events.py`): one hot + one cold per metric replaces the old
+  asymmetric set (gross had cold only; net had cold + steady + hot). Net was already handicap-level,
+  so `hot_stretch_net`/`cold_stretch_net` split cleanly at the neutral value (net par). Gross has no
+  strokes to lean on, so `hot_stretch_gross` needed a shorter length bar (2, not 3) than
+  `cold_stretch_gross` to hold the same negative:positive balance the 2026-08-14 fix established —
+  regressed to 2.79:1 on the first pass, caught by `test_detection_is_not_lopsidedly_negative`,
+  fixed back to ~1.5:1. Also closed a real gap: a sustained run of net bogeys (not blanks) was
+  previously undetected — `cold_stretch_net` broadened from Stableford ≤0 to ≤1.
+- **Per-player round-by-round trajectories — built.** `_trajectory_beats` (`events.py`) reads the
+  `Gap_To_Leader_After_Round_*` / `Cumulative_Tournament_Rank_*` columns for every player, not just
+  the round leader and the eventual Trophy winner, and emits `gap_closed` / `position_reversal`
+  beats for both Trophy and Green Jacket (each competition's own winner excluded — that's
+  `win_anatomy`'s job). Verified on TEGs 14/16/18: fires real non-winner material (a chaser closing
+  from 18 back to 8, a 2nd-after-R1 fade to 5th) that `threads.py`'s player clusters now pick up.
+  Net-new signal, no detection-balance impact (not part of the hot/cold stretch counts).
+
+---
 
 **Open proposal, not started:** [`STORYLINE_PLAN.md`](STORYLINE_PLAN.md) — reports are ~6.5/10;
 round-by-round detail dominates every report regardless of what the story plan's

@@ -1,0 +1,195 @@
+{
+  "teg": 16,
+  "results": [
+    {
+      "subject": "Stuart Neumann's first Trophy, built from the front",
+      "telling": [
+        "Setup: by the time the field left Troia after Round 2, Stuart Neumann's name was already at the top of the Trophy standings — the Stableford leaderboard his to defend, with Gregg Williams holding the Jacket (gross) lead alongside him.",
+        "Turn: nothing changed at Penha Longa. After Round 3 the board read the same way — Neumann in front on Stableford, Williams leading the Jacket — the two of them locked into their separate races with no change at the top of the Trophy.",
+        "The one wobble worth recording came at Estoril on Sunday: a 9 at the par-4 8th, stroke index 1, a quintuple bogey worth precisely zero points on a hole rated the hardest on the card.",
+        "It didn't matter. Neumann still led the Trophy after Round 4, closing out the week on 156 points with Williams — again the man nearest him — 13 points back.",
+        "Resolution: 156 stands as the 16th-best Trophy total in TEG history and the second-best of Neumann's own career, and it came from a player who was in front at every checkpoint from Troia onwards. A blown-up 8th hole was the only real blemish on a win that was never in doubt."
+      ],
+      "text_with_telling": "By the time the caravan packed up and left Troia, the shape of the week was already set. Stuart Neumann sat top of the Trophy standings on Stableford, with Gregg Williams leading the Jacket alongside him, two men running separate races from the same front row.\n\nPenha Longa changed nothing. After Round 3 the board read exactly as before: Neumann in front on points, Williams ahead on the gross count, the pair of them apparently allergic to giving anything up.\n\nThe one wobble worth recording arrived at Estoril on the final day. Neumann took nine at the par-4 8th, stroke index 1 and the hardest hole on the card, a quintuple bogey that returned precisely zero points and no consolation whatsoever.\n\nIt made not a jot of difference. He still led the Trophy after Round 4 and signed off on 156 points, with Williams, once again the nearest man, a full 13 adrift.\n\nThat 156 goes into the books as the 16th-best Trophy total in TEG history and the second-best of Neumann's own career, compiled by a player who was in front at every checkpoint from Troia onwards. One ruinous hole aside, it never looked like slipping.",
+      "text_without_telling": "Some winners creep up on a trophy. Stuart Neumann simply took hold of it early and refused to let anyone else near.\n\nFrom the moment the Trophy standings were checked after the second round at Troia, Neumann was the man on top. Penha Longa did not change that. Nor did Estoril. Round after round the same line appeared in the reckoning: Neumann leading the Stableford, with Gregg Williams keeping his own counsel at the head of the Jacket race. Front-running is supposed to be the hardest way to win a golf tournament, which rather suggests nobody told Neumann.\n\nNot that the closing round was entirely serene. The 8th at Estoril, stroke index one and clearly in no mood to be charitable, extracted a nine from him, a quintuple bogey worth precisely nothing on the card. A more brittle leader might have unravelled from there. Neumann shrugged and carried on.\n\nThe final accounting made the wobble look academic. He finished on 156 points, 13 clear of Williams, a margin that removes any need for debate about who the best player of the week was. It stands as the 16th best Trophy total on record, and the second best of Neumann's own career. His first Trophy, and he never once trailed.",
+      "label_map": {
+        "A": "with_telling",
+        "B": "without_telling"
+      },
+      "verdict": {
+        "winner": "B",
+        "compellingness": {
+          "A": 7,
+          "B": 8
+        },
+        "clarity": {
+          "A": 8,
+          "B": 8
+        },
+        "factual_grounding": {
+          "A": 8,
+          "B": 7
+        },
+        "reads_as_story_not_list": {
+          "A": 7,
+          "B": 9
+        },
+        "notes": "Both drafts cover the same five beats accurately: the R2/R3/R4 leadership sequence, the quintuple-bogey nine at Estoril's SI-1 8th for zero points, the 156-point total, the 13-shot margin over Gregg Williams, and the 16th all-time / 2nd-personal rankings. Draft A is crisply written and careful with its claims — 'in front at every checkpoint from Troia onwards' correctly avoids asserting anything about Round 1 — but it slips in one unsupported inference, describing Williams as ahead 'on the gross count', since the evidence never states the Jacket metric. Its structure also tracks the evidence items in order (Troia, then Penha Longa, then the blow-up, then the finish), which makes it feel a little like the bullet list still showing through the prose. Draft B opens with a genuine thesis ('took hold of it early and refused to let anyone else near'), then compresses the three leadership beats into a single flowing sentence rather than three paragraphs, which reads more like a story and less like an itemised recap; the front-running framing gives the piece a spine. Its one grounding wobble is 'he never once trailed', which overreaches slightly given no Round 1 data, and 'keeping his own counsel at the head of the Jacket race' is a slightly murky phrase. Net: A is marginally safer factually, B is noticeably better as narrative, and the margin on storytelling is larger than the margin on accuracy."
+      },
+      "winner_arm": "without_telling"
+    },
+    {
+      "subject": "Gregg Williams's Green Jacket at +66",
+      "telling": [
+        "Setup — Round 3 at Penha Longa, and the man in front nearly hands it back: Gregg Williams runs up a triple bogey at the 3rd (7 on a par 4) and follows it with a double at the 4th, five gross shots gone in two holes.",
+        "First stop of the bleeding: a birdie 2 at the par-3 5th, his first hole under par of the stretch, snapping the run of bogey-or-worse.",
+        "The wobble returns, worse — bogey at the par-5 6th, then a triple bogey 6 at the short par-3 7th (stroke index 4), then a double bogey 7 at the 8th: three holes without so much as a net par, four shots adrift of his own mark.",
+        "Turn — from the 11th he simply refuses to drop another shot: par, par, par, par, par through the 15th, including the stroke-index-3 11th and the stroke-index-5 14th. Five holes, zero gross shots lost, the round steadied.",
+        "Sunday at Estoril belongs to the chase: David Mullin posts 80 gross, a new course record, wiping out the previous best of 86 set across six prior visits.",
+        "Resolution — it makes no dent. Williams closes at +66, the best gross player in the field, and beats Mullin by 16 shots for the Green Jacket. The aggregate stands as the fifth-best gross total in TEG history."
+      ],
+      "text_with_telling": "Round three at Penha Longa, and the man in front looked briefly minded to give it all back. Gregg Williams took seven at the par-four 3rd, a triple bogey, then six at the 4th for a double, five gross shots surrendered inside two holes. A birdie two at the par-three 5th stopped the bleeding, his first hole under par of the sequence and the end of a run of bogey-or-worse.\n\nThe relief did not last. A bogey at the par-five 6th, a triple-bogey six at the short 7th, stroke index four, and a double-bogey seven at the 8th left him three holes without so much as a net par, four shots adrift of his own mark.\n\nThen, from the 11th, he simply declined to drop another. Par, par, par, par, par through the 15th, the stroke-index-three 11th and the stroke-index-five 14th included. Five holes, nothing lost, the round steadied.\n\nSunday at Estoril belonged to the chase. David Mullin signed for 80 gross, a new course record, erasing the previous best of 86 compiled across six prior visits. It made no dent whatsoever. Williams closed at +66, the best gross player in the field, 16 clear of Mullin, and the aggregate stands as the fifth-best gross total in TEG history.",
+      "text_without_telling": "**Williams strolls home in green**\n\nGregg Williams is the Green Jacket winner, and the manner of it barely invites argument: +66 gross, sixteen clear of David Mullin, and the fifth best winning total the tournament has seen. A margin like that is not built on a single flourish. It is built on turning up, day after day, while everyone else takes turns falling over.\n\nThat is not to say Williams floated round untroubled. His third round at Penha Longa began like a man wrestling a deckchair, a triple bogey at the 3rd followed by a double at the 4th, before a birdie at the short 5th stopped the rot. The relief did not last. Bogey at the 6th, another triple at the 7th and a double at the 8th made for three holes without a net par, and briefly the arithmetic looked interesting. Then came the answer: five holes from the 11th to the 15th without dropping a single gross shot, the sort of quiet, unglamorous run that settles tournaments.\n\nMullin, to his credit, refused to go quietly. His closing 80 at Estoril is a new course record, bettering the previous mark of 86 set across six prior visits. It earned him second place, and not a great deal else.",
+      "label_map": {
+        "A": "with_telling",
+        "B": "without_telling"
+      },
+      "verdict": {
+        "winner": "A",
+        "compellingness": {
+          "A": 8,
+          "B": 8
+        },
+        "clarity": {
+          "A": 8,
+          "B": 8
+        },
+        "factual_grounding": {
+          "A": 9,
+          "B": 7
+        },
+        "reads_as_story_not_list": {
+          "A": 8,
+          "B": 8
+        },
+        "notes": "Both are genuine prose with a clear arc rather than dressed-up bullets. A is tightly grounded: the 7 at the par-4 3rd, the 6 at the 4th, the birdie two at the short 5th, the stroke-index-4 7th, the four-shot net shortfall, the five straight pars from the 11th through the 15th, the 80 beating 86 across six visits, +66 by 16 with rank five — every detail checks out against the evidence, and the delayed reveal of the winning total plus 'It made no dent whatsoever' lands well. Minor inferences only ('the man in front', 'Sunday'). B has more voice ('wrestling a deckchair', 'not a great deal else') and a cleaner top-down structure, but it invents unsupported colour ('everyone else takes turns falling over') and overclaims tension — 'briefly the arithmetic looked interesting' sits oddly against a 16-shot margin; it also drops the specific hole detail (scores, stroke indexes) that gives A its texture. Close call, but A wins on precision without sacrificing flow."
+      },
+      "winner_arm": "with_telling"
+    },
+    {
+      "subject": "Alex Baker's back-to-back Wooden Spoon",
+      "telling": [
+        "Setup — Oitavos Dunes, Round 1: Alex Baker signs for 113 gross, a new course-worst at the Dunes, eclipsing the previous high of 111 set across 12 prior visits there.",
+        "The signature wound of that opening round comes at the 17th, a par 4 where he runs up a 10 — a sextuple bogey, six over on one hole, zero Stableford points.",
+        "Turn — Troia, Round 2: the closing stretch unravels. Holes 13 through 15 all go triple bogey (7 on the par-4 13th, 8 on the par-5 14th, 7 on the par-4 15th), then doubles at the 16th and the par-3 17th: 13 shots bled in five holes.",
+        "Turn — Penha Longa, Round 3: the same story, faster. A double at the 11th, then a 9 on the par-5 12th (quadruple), sevens at the 13th and 14th — 12 shots gone in four holes.",
+        "Resolution — Estoril, Round 4: the 12th, a stroke-index-6 par 4, produces an 11. A septuple bogey, seven over on a single hole, and the worst score he has ever made on a par 4.",
+        "That round adds up to 107 — a second new course-worst of the week, beating Estoril's prior high of 106 from six previous visits.",
+        "Final accounting: 127 Stableford points across the four rounds, and the Wooden Spoon stays in Alex Baker's hands."
+      ],
+      "text_with_telling": "Alex Baker set the tone early. His opening round at Oitavos Dunes came back as a 113, a new course-worst there, beating the previous high of 111 accumulated over 12 prior visits. The defining wound arrived at the 17th, a par 4 that somehow yielded a 10: six over on one hole, no Stableford points, nowhere to hide.\n\nTroia offered no sanctuary. The closing stretch of Round 2 came apart in sequence, triple bogeys at the 13th, 14th and 15th (a seven, an eight and another seven), then doubles at the 16th and the short 17th. Thirteen shots surrendered in five holes.\n\nPenha Longa told the same story, only quicker. A double at the 11th, a nine on the par-5 12th, sevens at the 13th and 14th: 12 shots gone in four holes.\n\nThe finale was almost inevitable. At Estoril's 12th, a stroke-index-six par 4, Baker signed for an 11, seven over on a single hole and the worst he has ever managed on a par 4. The round totalled 107, a second course-worst of the week, edging past the 106 that had survived six previous visits.\n\nThe final accounting: 127 points across four rounds, and the Wooden Spoon remains in Baker's keeping.",
+      "text_without_telling": "**Baker's Spoon, and the Records That Came With It**\n\nSome players collect trophies. Alex Baker collected the Wooden Spoon, 127 points marking him out as the man the rest of the field could measure themselves against, and he did it with a thoroughness that bordered on artistry.\n\nIt began at Oitavos Dunes, where his opening 113 gross became the course-worst in TEG history, nudging past the previous low-water mark of 111 set across twelve prior visits. The 17th did much of the heavy lifting: a par four that somehow required ten strokes, a sextuple bogey of genuine commitment.\n\nTroia offered no sanctuary. Holes 13 to 17 in round two cost him thirteen shots against par, three consecutive triples followed by a pair of doubles, a slow puncture rather than a blowout. At Penha Longa the bleeding resumed, twelve shots gone across holes 11 to 14, the quadruple-bogey nine at the par-five 12th the centrepiece.\n\nThen Estoril, and a fitting finale. A gross 107 established another course-worst, edging the 106 that had stood through six visits, and the par-four 12th yielded an eleven, a septuple bogey and the worst hole of Baker's career on that par. Comprehensive work, in its way.",
+      "label_map": {
+        "A": "with_telling",
+        "B": "without_telling"
+      },
+      "verdict": {
+        "winner": "A",
+        "compellingness": {
+          "A": 8,
+          "B": 8
+        },
+        "clarity": {
+          "A": 9,
+          "B": 7
+        },
+        "factual_grounding": {
+          "A": 9,
+          "B": 6
+        },
+        "reads_as_story_not_list": {
+          "A": 8,
+          "B": 8
+        },
+        "notes": "Both cover the same arc — Oitavos course-worst and the 10 at the 17th, the Troia and Penha Longa bleed-outs, the Estoril 107 and the 11 — in flowing prose rather than bullets. A is more precise: 113 vs prior 111 over 12 visits, the seven-eight-seven triple sequence, doubles at 16 and the short par-3 17th, the nine at the par-5 12th, SI 6 and the career-worst par-4 11, 107 past 106 over six visits, and 127 points. It also lands the storyline's back-to-back framing with 'the Wooden Spoon remains in Baker's keeping'. B has more voice ('a sextuple bogey of genuine commitment', 'a slow puncture rather than a blowout') but slips factually and rhetorically: the Oitavos 113 is a course-worst at that course, not 'the course-worst in TEG history'; calling the prior 111 a 'low-water mark' inverts the sense; and 'the man the rest of the field could measure themselves against' is an unsupported flourish. B also ignores the back-to-back angle entirely and opens with a markdown headline. A wins narrowly on grounding and clarity."
+      },
+      "winner_arm": "with_telling"
+    },
+    {
+      "subject": "The twelfth hole",
+      "telling": [
+        "Setup: Penha Longa's 12th is a par five carrying stroke index 17 — the softest hole on the card, the one you're supposed to bank points on with a shot in hand to spare.",
+        "Round 3, Jon Baker: a double bogey six at the 11th (SI 3) was the warning shot. At the 12th he made 10 — a quintuple bogey, five over par, nil points — then followed it with an 8 at the 13th. Eleven shots gone in three holes.",
+        "Round 3, Alex Baker, the same afternoon: an identical double bogey six at the 11th, then a 9 at the 12th — quadruple bogey, no points. Then a 7 at the 13th and a 7 at the 14th: twelve shots dropped across four holes, with a single Stableford point salvaged at the 14th.",
+        "The pattern: two players, same round, same par five, same SI 17, both walking off with zero points — and in both cases the 12th sat in the middle of a longer bleed that began at the 11th.",
+        "Resolution: a round later, a different course, and the twelfth found Alex Baker again. Estoril's 12th is a par four, SI 6, and he signed for an 11 — a septuple bogey, seven over on one hole.",
+        "That 11 stands as Alex Baker's worst hole of the tournament, the highest-rarity single-hole blowup in the evidence — and the third time a twelfth had emptied a card in two days."
+      ],
+      "text_with_telling": "**The twelfth hole**\n\nPenha Longa's 12th is a par five off stroke index 17, the softest hole on the card, the sort you are supposed to arrive at with a shot in hand and leave with points banked. Nobody told the Bakers.\n\nJon Baker had fair warning: a double bogey six at the 11th, the hardest hole on the course. Then came the 12th, where he signed for a 10, a quintuple bogey worth precisely nothing, before adding an 8 at the 13th. Eleven shots gone in three holes.\n\nAlex Baker, the same afternoon, followed the script with unsettling fidelity: an identical six at the 11th, then a 9 at the 12th for another blank, then a 7 at the 13th and a 7 at the 14th. Twelve shots dropped across four holes, with one lonely Stableford point rescued at the last of them.\n\nTwo players, one par five, two empty boxes, and in both cases the damage started a hole earlier. A round later, at Estoril, the twelfth came calling again. This one is a par four off SI 6, and Alex Baker made 11, a septuple bogey and the worst hole of his tournament. Three twelfths, two days, nothing to show.",
+      "text_without_telling": "**The twelfth hole**\n\nSome numbers on a card look like typing errors. The twelfth at Penha Longa produced two of them inside the same third round, and the fact that it was ranked stroke index 17, a par five deemed the second-easiest hole on the property, only sharpens the joke.\n\nJon Baker went first, or at least loudest, signing for a 10. Five over par on a single hole, no Stableford points, nothing to show for it but a long walk to the thirteenth tee. Alex Baker was barely more restrained with a 9.\n\nNeither man treated it as an isolated incident. Alex bled 12 shots across holes 11 to 14, a double bogey to open, the quadruple at the twelfth, then triple bogeys at the thirteenth and fourteenth. Jon shed 11 in just three holes, 11 through 13, his quintuple followed by a quadruple bogey eight at the next.\n\nThe hole then followed them to Estoril. On the final round's twelfth, a par four this time, Alex ran up an 11. Seven over par on one hole, his worst return on any par four across the week. Whatever the twelfth is doing, it is doing it deliberately.",
+      "label_map": {
+        "A": "without_telling",
+        "B": "with_telling"
+      },
+      "verdict": {
+        "winner": "A",
+        "compellingness": {
+          "A": 8,
+          "B": 8
+        },
+        "clarity": {
+          "A": 8,
+          "B": 8
+        },
+        "factual_grounding": {
+          "A": 9,
+          "B": 6
+        },
+        "reads_as_story_not_list": {
+          "A": 7,
+          "B": 8
+        },
+        "notes": "Both drafts build the same arc well: SI-17 par five wrecks both Bakers in R3, then the 12th at Estoril delivers Alex's 11 in R4. Draft A is more accurate: 'second-easiest hole' correctly reads SI 17, the 10/9, the 12-shot and 11-shot bleeds and the quadruple-bogey 8 at 13 all check out, and the Estoril claim ('worst return on any par four') maps precisely onto is_player_par_worst. Its weakness is a middle paragraph that stacks the two cold stretches back-to-back in a slightly inventory-like way. Draft B flows better and uses the 11th as foreshadowing to good effect, plus the nice 'one lonely Stableford point' detail (hole 14, 1 point — correct). But it makes two unsupported claims that carry narrative weight: SI 17 is called 'the softest hole on the card' (it is second-softest) and the 11th is called 'the hardest hole on the course' when it is SI 3. It also upgrades the Estoril 11 to 'the worst hole of his tournament', where the evidence only supports worst at that par (is_teg_par_worst is false, is_player_par_worst true). B's storytelling edge does not outweigh three overreaches, so A takes it narrowly."
+      },
+      "winner_arm": "without_telling"
+    },
+    {
+      "subject": "David Mullin's Penha Longa to Estoril reversal",
+      "telling": [
+        "Setup: Penha Longa grinds David Mullin down to 30 Stableford points in R3 — his low-water mark of the week.",
+        "The damage hole: the 16th, a par 4 and the course's stroke index 1, where he signs for an 8 — a quadruple bogey worth exactly zero points.",
+        "Next morning at Estoril the bleeding continues: bogey at the par-3 4th, bogey at the par-3 5th, then a 7 at the par-5 6th for double.",
+        "The turn: he stops the run dead at the 7th, a 3 at the par 4 for birdie and 4 points — the first hole all day that goes his way.",
+        "The surge: holes 11 to 13 yield 9 points, starting with a bogey at the SI 2 11th that still banks 3, then pars at the 12th and the par-3 13th for 3 apiece.",
+        "Resolution: 45 points, a 15-point swing on the previous round, and an 80 gross — a new Estoril course record, beating the previous mark of 86 set across six prior visits."
+      ],
+      "text_with_telling": "# Mullin Finds the Exit Door\n\nPenha Longa spent the third round taking David Mullin apart, and by the close he had 30 Stableford points to show for it, his low-water mark of the week. The damage was concentrated at the 16th, a par 4 and the course's stroke index 1, where he signed for an 8. A quadruple bogey, worth precisely nothing.\n\nThe bleeding carried over to Estoril the following morning. A bogey at the par-3 4th, another at the par-3 5th, then a 7 at the par-5 6th for a double, and the round looked to be heading the same way as the last. Then the 7th, where a 3 at the par 4 brought a birdie and 4 points, the first hole of the day to go his way.\n\nFrom there it turned into something else entirely. Holes 11 to 13 produced 9 points, beginning with a bogey at the stroke index 2 11th that still banked 3, followed by pars at the 12th and the par-3 13th for 3 apiece.\n\nThe final accounting: 45 points, a 15-point swing on the previous round, and an 80 gross. That is a new Estoril course record, beating the 86 that had stood across six prior visits.",
+      "text_without_telling": "Penha Longa's 16th does not forgive, and it certainly did not forgive David Mullin. The stroke index one hole took an eight from him in the third round, a quadruple bogey worth precisely nothing on the card, and the 30 points he limped home with told the rest of the story.\n\nEstoril, mercifully, was next. Not that the opening exchanges suggested a change of fortune: bogeys at the 4th and 5th, then a seven at the par-five 6th, and the familiar sinking feeling was settling in. Then came a birdie at the 7th, the bleeding stopped, and something rather different began.\n\nThe middle of the round was where it turned properly. Holes 11 to 13 yielded nine points from a bogey and two pars, which is what happens when a generous handicap allowance meets a player who has stopped making a mess of things. He finished with 45 points, a swing of 15 on the previous day, and a gross 80.\n\nThat last number matters most. Estoril had been visited six times before and never yielded anything better than 86. Mullin's 80 is the new course record, achieved roughly 24 hours after he had appeared to forget how to play golf entirely.",
+      "label_map": {
+        "A": "without_telling",
+        "B": "with_telling"
+      },
+      "verdict": {
+        "winner": "A",
+        "compellingness": {
+          "A": 8,
+          "B": 7
+        },
+        "clarity": {
+          "A": 8,
+          "B": 8
+        },
+        "factual_grounding": {
+          "A": 8,
+          "B": 6
+        },
+        "reads_as_story_not_list": {
+          "A": 8,
+          "B": 6
+        },
+        "notes": "Both cover the same arc accurately in the main: the SI-1 16th quadruple bogey and 30 points at Penha Longa, the early Estoril bogey run broken by the birdie at the 7th, 9 points across 11-13, and the 45-point, 15-swing round that produced the record 80 against a prior best of 86 over six visits. Draft A tells it as a continuous narrative with a clear thematic spine (the 80 as the number that matters), and its only soft spots are mild inferences ('generous handicap allowance', 'roughly 24 hours'), both defensible from the stroke-index/points data and round sequencing. Draft B is cleanly written but adds two claims the evidence does not support: that the 30-point R3 was his 'low-water mark of the week' (only R3 and R4 are given) and that the 7th was 'the first hole of the day to go his way' (holes 1-3 are unknown and could have scored). Draft B also leans more toward recitation \\u2ail the hole-by-hole restatement of pars for '3 apiece' and the 'final accounting:' framing read as a tidied-up data dump, plus an unnecessary markdown headline. A wins on flow and grounding; clarity is a tie."
+      },
+      "winner_arm": "without_telling"
+    }
+  ]
+}

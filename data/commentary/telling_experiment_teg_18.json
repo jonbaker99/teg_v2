@@ -1,0 +1,196 @@
+{
+  "teg": 18,
+  "results": [
+    {
+      "subject": "Alex Baker's wire-to-wire Trophy win from the least likely CV in the field",
+      "telling": [
+        "Setup: Baker seizes the Trophy lead early in R1 at PGA Catalunya's Tour course and never gives it back — the engine is a five-hole burst from the 8th to the 12th worth 17 points, three bogeys sandwiching pars at the 10th and 11th, all of them cashing in on the strokes he's given.",
+        "Turn one: R2 on the same Tour course is a demolition — 106 gross, a new course-worst in 22 prior visits there, beating the old high of 105.",
+        "The centrepiece of the 106: an 11 at the par-5 18th, six over on one hole, zero points, the worst he has ever made on a par 5.",
+        "Answer: R3 at the Stadium, and Baker rattles off 21 points in six holes from the 11th — pars at 11, 13 and 14, bogeys at 12, 15 and 16 — a stretch that turns a wobble back into a cushion.",
+        "Turn two: R4 at the Stadium hands him two more blanks — a sextuple-bogey 10 at the par-4 14th, then a quadruple-bogey 8 at the 17th, no points from either.",
+        "Resolution: none of it matters. Baker finishes on 169 points, top of the Trophy after R4, eight clear of runner-up John Patterson — the seventh-best total all time and the second-best of his own career.",
+        "The story in one line: a man who made the worst gross round in Tour course history mid-tournament still won wire-to-wire by eight, because every collapse was followed immediately by a run."
+      ],
+      "text_with_telling": "Alex Baker's Trophy was not built on elegance. The foundation was laid on the Tour course in round one, a five-hole burst from the 8th to the 12th worth 17 points, and the remarkable thing is how it was assembled: bogeys at the 8th, 9th and 12th wrapped around pars at the 10th and 11th, every one of them cashing in the strokes his handicap so generously provides.\n\nThen came round two on the same course, and a genuine piece of history. Baker signed for 106 gross, a new course-worst across 22 prior visits, edging past the old high of 105. Its centrepiece was an 11 at the par-5 18th, six over on a single hole for no points at all, the worst he has ever made on a par 5.\n\nThe answer arrived at the Stadium in round three: 21 points in six holes from the 11th, pars at the 11th, 13th and 14th, bogeys at the 12th, 15th and 16th. Round four offered two more blanks, a 10 at the 14th and an 8 at the 17th, and none of it mattered.\n\nBaker finished on 169 points, leading the Trophy after round four, eight clear of John Patterson. Seventh-best total in history, second-best of his own.",
+      "text_without_telling": "Alex Baker won the Trophy with 169 points and an eight-point cushion over John Patterson, which is the seventh-best total in the competition's history and the second-best of his own career. All of which sounds serene, and almost none of it was.\n\nConsider the raw material. In round two at PGA Catalunya's Tour course he compiled a gross 106, a new course-worst across 22 prior visits, edging past the previous low-water mark of 105. The finishing touch was an 11 at the par-five 18th, a sextuple bogey and the worst he has managed on a par five. Round four brought a 10 at the Stadium's 14th and a quadruple-bogey eight at the 17th for good measure.\n\nThe counterweight was his knack for grinding. On the Tour course he took 17 points from holes eight to 12 with nothing better than a par on the card, three bogeys among them, the handicap strokes doing handsome work. Better still came at the Stadium, where holes 11 to 16 yielded 21 points from three pars and three bogeys.\n\nHe led the Trophy after round four and was not for shifting. Not pretty, then, but thoroughly effective.",
+      "label_map": {
+        "A": "with_telling",
+        "B": "without_telling"
+      },
+      "verdict": {
+        "winner": "B",
+        "compellingness": {
+          "A": 7,
+          "B": 8
+        },
+        "clarity": {
+          "A": 6,
+          "B": 8
+        },
+        "factual_grounding": {
+          "A": 9,
+          "B": 9
+        },
+        "reads_as_story_not_list": {
+          "A": 6,
+          "B": 8
+        },
+        "notes": "Both are accurate against the evidence: the 17-point R1 stretch (three bogeys, two pars), the 106 gross course-worst past 105 over 22 prior visits, the 11 at the par-5 18th correctly flagged as his personal par-5 worst, the 21-point R3 stretch (three pars, three bogeys), the R4 ten and quadruple-bogey eight, and the 169-point, eight-shot win over John Patterson ranked seventh all-time and second personally. Neither over-claims 'wire-to-wire', which is prudent since the evidence only supports leadership after R4 — Draft B's 'was not for shifting' hints at it without asserting it. Draft A stumbles on cohesion: 'The answer arrived at the Stadium in round three' answers a question never posed, and the closing fragment plus the round-by-round march make the middle read like annotated evidence entries. Draft B frames the whole thing as a contrast between wreckage and grinding, which gives the piece an argument rather than a chronology, and the paragraph roles are clearer. B's 'low-water mark' for a worst score is a slightly muddled idiom, and 'nothing better than a par on the card' is a shade redundant with the bogey count, but these are small. B wins narrowly on structure and readability."
+      },
+      "winner_arm": "without_telling"
+    },
+    {
+      "subject": "Gregg Williams builds the Green Jacket out of a ruined opening round",
+      "telling": [
+        "SETUP — Round 1 on the Tour comes apart in the space of six holes: bogey at the 2nd, triple-bogey 7s at both the 3rd and 4th, a double at the 5th, another bogey at the 6th, and then the wreck of the day, a quadruple-bogey 9 at the par-5 7th for zero points.",
+        "The 17th delivers the second blank of the round — an 8 on the par-4, another quadruple bogey, on stroke index 3 where he could least afford it.",
+        "The bleeding finally stops at the par-5 15th: a birdie 4, worth 4 points, ends a run of nothing but bogey-or-worse and salvages a 31-point opening round that leaves him third.",
+        "TURN — Round 2 is a different player entirely: 42 points, an 11-point swing on the day. And at the 7th — the hole that had cost him the 9 — a bogey 6 is enough to take the Green Jacket (Gross) lead off Jon Baker, who had held it for 20 holes since the 5th of Round 1.",
+        "At the Stadium in Round 3 he makes it outright at the 2nd, a plain par 4 that hands him the gross lead for good — the first of four straight holes (2 through 5) without a single gross shot dropped: par, par, par, par.",
+        "RESOLUTION — Round 4 on the Stadium yields the biggest haul of the week in miniature: 9 points across holes 8, 9 and 10 — par at the short 8th, a 3-point bogey at the stroke-index-1 9th, par at the 10th.",
+        "He signs off at +66 gross and wins the Green Jacket by 14 from David Mullin — the sixth-best gross performance of all time and the best of his own career, built out of a first round that contained a 9 and an 8."
+      ],
+      "text_with_telling": "Round one on the Tour was less a round than a controlled demolition. A bogey at the 2nd, triple-bogey sevens at the 3rd and 4th, a double at the 5th, another bogey at the 6th, and then the centrepiece: a quadruple-bogey 9 at the par-5 7th, worth precisely nothing. The 17th supplied a second blank, an 8 on the par 4, stroke index three, the last place a man wants to hand back four shots. Only at the par-5 15th did the bleeding stop, a birdie four for four points ending a procession of bogey-or-worse and rescuing 31 points.\n\nRound two brought a different golfer altogether: 42 points, an 11-point swing. And at the 7th, of all holes, a bogey six was enough to prise the Green Jacket (Gross) lead from Jon Baker, who had held it for 20 holes since the 5th of round one.\n\nAt the Stadium, a plain par at the 2nd made the gross lead outright, the first of four holes without a gross shot dropped. Round four delivered nine points across the 8th, 9th and 10th, including a three-point bogey at stroke index one.\n\nHe signed off at +66, winning by 14 from David Mullin: sixth-best gross round of all time, and his own finest.",
+      "text_without_telling": "Nobody would have picked Gregg Williams out of the R1 wreckage. On the Tour course he ran up a nine at the par-five 7th, a quadruple bogey, then repeated the trick at the 17th, where a par four became an eight. In between came the sort of sequence that makes players study train timetables: bogey or worse on thirteen consecutive holes, from the 2nd all the way to the 14th, including triples at the 3rd and 4th. A birdie at the 15th finally stopped the bleeding, and 31 points was the salvage job.\n\nWhat followed was a different tournament. Williams returned 42 points in R2, an improvement of eleven, and by the 7th hole of that round he had relieved Jon Baker of the Green Jacket gross lead, ending a tenure that had lasted 20 holes since the 5th in R1. Over to the Stadium course, four straight pars from the 2nd to the 5th underpinned an outright lead taken at the 2nd, and in R4 he gathered nine points across holes eight to ten.\n\nThe final accounting: a Green Jacket at +66, fourteen clear of David Mullin, and the sixth-best gross return in the event's history. Ruined openings are apparently negotiable.",
+      "label_map": {
+        "A": "without_telling",
+        "B": "with_telling"
+      },
+      "verdict": {
+        "winner": "A",
+        "compellingness": {
+          "A": 8,
+          "B": 7
+        },
+        "clarity": {
+          "A": 8,
+          "B": 7
+        },
+        "factual_grounding": {
+          "A": 8,
+          "B": 7
+        },
+        "reads_as_story_not_list": {
+          "A": 8,
+          "B": 6
+        },
+        "notes": "Both drafts cover the same arc accurately and neither invents much. Draft A is tighter and more genuinely narrative: it compresses the R1 carnage into a single characterised sequence (correctly identifying the 13-hole bogey-or-worse run from the 2nd to the 14th, which the evidence supports), then builds a clean three-beat structure — ruin, recovery, coronation — with a closing line that lands. Its one slip is 'in between came...' when the 7th's nine actually sits inside the streak it describes. Draft B is richer in verified texture (stroke index 3 at the 17th, the bogey six that prised the lead at the 7th, the three-point bogey at SI 1) and correctly uses player_rank with 'his own finest', which A omits. But B's opening paragraph is essentially the hole-by-hole card recited in prose — the exact list-turned-sentences failure mode — and its final two paragraphs are clipped and choppy by comparison. B also mislabels the all-time rank as 'sixth-best gross round of all time' when the datum is a tournament total, a small but real factual wobble. A wins narrowly on flow and voice; B is the better-sourced but more mechanical read."
+      },
+      "winner_arm": "without_telling"
+    },
+    {
+      "subject": "Jon Baker, defending champion, takes the Wooden Spoon by 23",
+      "telling": [
+        "Setup: Baker seizes the Green Jacket (Gross) lead as early as the 5th hole of Round 1 at PGA Catalunya — and still holds it when he tees off in Round 2.",
+        "The turn on the lead: 20 holes in front and then it's gone — a bogey six at the par-5 7th in R2 (2 points, stroke index 8) hands the Jacket to Gregg Williams, and Baker never gets it back.",
+        "Late-Friday redemption: from the 14th he plays the best golf of his week — a birdie two at the par-3 14th, then four straight pars at 15, 16, 17 and 18, five holes without dropping a single gross shot and 16 Stableford points banked.",
+        "R3 at the Stadium course undoes it all: at the par-4 4th he runs up a nine — quintuple bogey, a blob, zero points — on a hole where his shot came at SI 9.",
+        "Resolution: the round that began with a Jacket lead ends as a week that finishes at the bottom. Baker signs for 126 points across the tournament and collects the Wooden Spoon."
+      ],
+      "text_with_telling": "Jon Baker's week began in the manner of a man who intended to keep the good china. By the 5th hole of Round 1 at PGA Catalunya he had the Green Jacket (Gross) lead, and he was still carrying it out onto the course on Friday morning.\n\nTwenty holes in front, and then it was gone. A bogey six at the par-5 7th in Round 2, stroke index 8, worth two meagre points, handed the Jacket to Gregg Williams, and Baker never laid a glove on it again.\n\nThere was redemption of a sort late that afternoon. From the 14th he produced the best golf of his tournament: a birdie two at the par-3, then four straight pars at 15, 16, 17 and 18, five holes without dropping a single gross shot and 16 Stableford points banked. Proof, if it were needed, that the ability had not gone anywhere.\n\nThen came the Stadium course. At the par-4 4th in Round 3 he ran up a nine, a quintuple bogey, a blob, nothing at all from a hole where he was receiving a shot at SI 9.\n\nThe week that opened with a lead closed at the bottom: 126 points, and the Wooden Spoon.",
+      "text_without_telling": "Jon Baker began this thing at the sharp end. He took hold of the Green Jacket gross lead at the fifth hole of the opening round and held it for 20 holes, which is long enough to get comfortable and start thinking about tailoring. Then came the seventh at PGA Catalunya's Tour course, a par five that yielded a six, and with it the lead passed to Gregg Williams. Baker has not looked like getting it back since.\n\nWhat makes it all the more maddening is that the game was clearly in there somewhere. Later that same afternoon he closed out his round with 16 points from the last five holes, a birdie at the short 14th followed by four unfussy pars, and not a single gross shot dropped across the stretch. Proper golf, arriving fashionably late.\n\nRound three at the Stadium course put paid to any romance. The fourth, a par four of no particular menace, swallowed a nine. Quintuple bogey, no points, and the sort of hole that lingers.\n\nHe finishes with 126 points and the Wooden Spoon, an award nobody polishes. From leading the field to collecting the cutlery: golf, as ever, keeps its own accounts.",
+      "label_map": {
+        "A": "with_telling",
+        "B": "without_telling"
+      },
+      "verdict": {
+        "winner": "B",
+        "compellingness": {
+          "A": 7,
+          "B": 8
+        },
+        "clarity": {
+          "A": 8,
+          "B": 8
+        },
+        "factual_grounding": {
+          "A": 7,
+          "B": 8
+        },
+        "reads_as_story_not_list": {
+          "A": 7,
+          "B": 8
+        },
+        "notes": "Both drafts cover the same five beats (lost gross lead at R2 H7 after 20 holes in front, the 14-18 surge worth 16 points with no gross shots dropped, the quintuple-bogey nine at the Stadium 4th, 126 points and the Spoon) and both get the hard numbers right: par-5 7th for a six, birdie at the par-3 14th plus four pars, nine at the par-4 4th for zero points, 126 total. Neither picks up the headline's 'defending champion' or the 23-point margin, which is fair since neither appears in the evidence. Draft A is crisper on detail (SI 8, two points) but adds two small unsupported touches: 'Friday morning' as a timeframe, and the claim he was 'receiving a shot at SI 9', which assumes a handicap allocation not given. Draft B stays inside the evidence, correctly names the Tour course for the lead change and the Stadium for the blow-up, and reads with more momentum and voice ('Proper golf, arriving fashionably late', 'collecting the cutlery'). Its one wobble is tense: 'has not looked like getting it back since' implies an ongoing event before the final total is stated. A's closing line is neat but the middle paragraphs are slightly more report-like, with the birdie/pars sequence enumerated hole by hole. Narrow win for B on flow and clean grounding."
+      },
+      "winner_arm": "without_telling"
+    },
+    {
+      "subject": "The Stadium course record broken and immediately rendered pointless — David Mullin's 84",
+      "telling": [
+        "Setup: Mullin's week detonates on the Tour course in Round 1 — an 11 at the par-5 15th, a sextuple bogey worth zero Stableford points, the worst he has ever made on a par 5.",
+        "That single hole drops him from 2nd to 5th in the Wooden Spoon race on the spot — bottom of the pile, before the tournament has even reached halfway.",
+        "Turn: Round 3 at the Stadium, and Mullin shoots 84 gross — a new course record, erasing the 89 that had stood across 27 prior TEG visits to the Stadium.",
+        "Resolution begins on the same course in Round 4: from the 14th to the 17th he goes four holes without a net par — double bogey at the 4th-hardest hole, triple bogey 8 at the par-5 15th for a blob, then doubles at the par-3 16th and the 17th.",
+        "Nine gross shots bled across four holes, five points short of net par over the stretch, on the very course where he'd made history 24 hours earlier.",
+        "Final reckoning: Gregg Williams takes the Green Jacket at +66 — the 6th-best gross total of all time — by 14 shots. Mullin, course record and all, is the runner-up."
+      ],
+      "text_with_telling": "David Mullin's week detonated early, and it happened on the Tour course. The par-5 15th in Round 1 swallowed him whole: an 11, a sextuple bogey, no Stableford points, and the worst score he has ever posted on a par 5. One hole was enough to shove him from second to fifth in the Wooden Spoon race, bottom of the pile, with the tournament not yet at halfway.\n\nThen came the turn. Round 3 at the Stadium, and Mullin went round in 84 gross, a new course record that swept aside the 89 which had survived 27 previous visits to the place. Genuine history, properly earned.\n\nThe Stadium reclaimed it the very next day. From the 14th to the 17th he could not manage a single net par: a double at the 14th, the fourth-hardest hole on the card, a triple-bogey eight at the par-5 15th for a blob, then doubles at the par-3 16th and the 17th. Nine gross shots gone in four holes, five points short of net par, on the same turf where he had made his name 24 hours earlier.\n\nThe reckoning belonged elsewhere. Gregg Williams took the Green Jacket at +66, the sixth-best gross total on record, by 14. Mullin, course record and all, finished second.",
+      "text_without_telling": "For one round at least, David Mullin looked like a man who had solved PGA Catalunya's Stadium course. His third-round 84 gross is a new course record, and not by a whisker: the previous best across 27 prior visits was 89, so five shots were lopped off in a single afternoon. Records that stand that long tend to fall quietly. This one did not.\n\nThe trouble is what sat either side of it. Back in the opening round on the Tour course, Mullin had run up an 11 at the par-five 15th, a sextuple bogey that returned precisely nothing in Stableford terms and shunted him from second to fifth in the Wooden Spoon race, which is one league nobody wants to lead from the wrong end.\n\nThen came Sunday, and the Stadium extracted its rent. From the 14th to the 17th he went double, triple, double, double, nine shots gone in four holes and not a net par among them. The record book keeps the 84 regardless, but the trophy went elsewhere: Gregg Williams took the Green Jacket at +66, with Mullin runner-up at a distance of 14 shots. History made, tournament lost, all in the same week.",
+      "label_map": {
+        "A": "with_telling",
+        "B": "without_telling"
+      },
+      "verdict": {
+        "winner": "B",
+        "compellingness": {
+          "A": 7,
+          "B": 8
+        },
+        "clarity": {
+          "A": 8,
+          "B": 9
+        },
+        "factual_grounding": {
+          "A": 9,
+          "B": 8
+        },
+        "reads_as_story_not_list": {
+          "A": 7,
+          "B": 9
+        },
+        "notes": "Both drafts are accurate on the core facts: the R1 11 at the Tour 15th (sextuple bogey, blob, second-to-fifth in the Wooden Spoon), the R3 84 gross beating 89 across 27 prior visits, the R4 14-17 collapse (double/triple/double/double, nine shots, no net par), and Williams's +66 win by 14 with Mullin runner-up. Draft A is the more granular and best-grounded: it correctly reads SI 4 as the fourth-hardest hole, correctly derives 'five points short of net par' from the shortfall, and correctly cites the sixth-best gross total on record. But it reads more like a chronological beat-by-beat walk through the evidence, and the final paragraph ('The reckoning belonged elsewhere') is clunky and undersells the runner-up sting. Draft B frames the storyline properly — record as the one bright island, trouble either side of it — and its closing line ('History made, tournament lost, all in the same week') lands the premise of the headline. B loses a point for inventing 'Sunday' as the R4 day, which the evidence doesn't establish, and for dropping the all-time-rank detail. On balance B flows as a story where A flows as a list, so B takes it narrowly."
+      },
+      "winner_arm": "without_telling"
+    },
+    {
+      "subject": "The brothers Baker at opposite ends of the same tournament",
+      "telling": [
+        "Setup: through 36 holes at PGA Catalunya the Baker name sat atop both boards — Alex Baker leading the Trophy on Stableford, brother Jon leading the Green Jacket on gross.",
+        "Jon's gross reign had run 20 straight holes, from the 5th of Round 1; it ended on the 7th at Catalunya Tour in R2, a par-5 bogey for 6 and just 2 points handing the Jacket lead to Gregg Williams.",
+        "R3 at the Stadium course finished the job: a nine at the par-4 4th — quintuple bogey, blob, zero points on stroke index 9.",
+        "Alex, meanwhile, went the other way on the same course: 21 points across holes 11-16, pars worth four apiece at the 11th, 13th and 14th and three-point bogeys at the 12th, 15th and 16th.",
+        "Resolution: Alex closed out the Trophy on 169 points, eight clear of runner-up John Patterson — the seventh-best total in TEG history and the best of his own career bar one.",
+        "Jon collected the Wooden Spoon on 126 — 43 points, and the entire spread of the tournament, inside one family."
+      ],
+      "text_with_telling": "Through 36 holes at PGA Catalunya, the Baker name sat atop both leaderboards. Alex led the Trophy on Stableford, while brother Jon led the Green Jacket on gross, which is the sort of family monopoly that tends not to last.\n\nJon's reign on the gross board had run 20 consecutive holes, held since the 5th of Round 1. It ended on the 7th at the Tour course in Round 2, a par 5 bogeyed for six and worth only two points, and with that Gregg Williams took the Jacket lead.\n\nRound 3 at the Stadium course completed the unravelling: a nine at the par-4 4th, quintuple bogey, no points at all on stroke index 9.\n\nAlex spent the same afternoon travelling in precisely the opposite direction, gathering 21 points from holes 11 to 16. Pars at the 11th, 13th and 14th were worth four apiece, with three-point bogeys at the 12th, 15th and 16th filling the gaps.\n\nThe resolution was suitably lopsided. Alex closed out the Trophy on 169 points, eight clear of runner-up John Patterson, the seventh-best total in TEG history and bettered only once in his own career. Jon took the Wooden Spoon on 126. Forty-three points, and the tournament's entire range, inside one family.",
+      "text_without_telling": "**A shared surname, a shared postcode, wildly different weekends**\n\nFor one brief, glorious interlude at PGA Catalunya, the Baker family had the whole thing sewn up. After two rounds Alex led the Trophy on Stableford, while Jon sat atop the Green Jacket, a state of affairs that must have made Sunday lunch a fairly relaxed prospect. It did not last. Jon had held the gross lead for 20 holes, from the fifth of the opening round, before a bogey six at the par-five seventh in round two handed it over to Gregg Williams, and it never came back.\n\nRound three at the Stadium course was where the two stories properly diverged. Jon ran up a nine at the fourth, a quintuple bogey worth precisely nothing on the card. Alex, meanwhile, went through holes 11 to 16 collecting 21 points, a run of pars and tidy bogeys that his handicap rewarded handsomely.\n\nThe final ledger reads about as you would expect. Alex Baker took the Trophy on 169 points, eight clear of John Patterson, the seventh-best total in the event's history. Jon finished on 126 and duly collected the Wooden Spoon. Somewhere, a mantelpiece is being reorganised with considerable care.",
+      "label_map": {
+        "A": "with_telling",
+        "B": "without_telling"
+      },
+      "verdict": {
+        "winner": "A",
+        "compellingness": {
+          "A": 8,
+          "B": 8
+        },
+        "clarity": {
+          "A": 9,
+          "B": 8
+        },
+        "factual_grounding": {
+          "A": 9,
+          "B": 7
+        },
+        "reads_as_story_not_list": {
+          "A": 8,
+          "B": 9
+        },
+        "notes": "Both drafts frame the same divergence well and neither reads like a list. A is tighter on evidence: the 20-hole tenure, the bogey-six worth two points, the quintuple bogey at SI 9, the exact composition of the 21-point run (three four-point pars, three three-point bogeys), and it correctly unpacks player_rank 2 as 'bettered only once in his own career' plus the neat 43-point spread. Its one small stretch is naming 'TEG history' where the evidence only gives an all-time rank. B has the livelier voice (Sunday lunch, the mantelpiece) and flows most naturally, but it invents unsupported colour ('a shared postcode', 'his handicap rewarded handsomely' as causal explanation) and is vaguer on the specifics, and the bolded title header is a formatting artefact rather than prose. B's 'it never came back' is a fair inference. Close, but A wins on grounding and specificity without sacrificing narrative shape."
+      },
+      "winner_arm": "with_telling"
+    }
+  ]
+}

@@ -1,0 +1,279 @@
+{
+  "tegs": [
+    14,
+    16,
+    18
+  ],
+  "arms": [
+    "baseline",
+    "overstatement",
+    "interiority",
+    "combined",
+    "crueller",
+    "cjmh",
+    "kitchen_sink"
+  ],
+  "results": [
+    {
+      "teg": 14,
+      "slot_to_arm": {
+        "A": "cjmh",
+        "B": "combined",
+        "C": "interiority",
+        "D": "baseline",
+        "E": "kitchen_sink",
+        "F": "overstatement",
+        "G": "crueller"
+      },
+      "scores_by_slot": {
+        "A": {
+          "slot": "A",
+          "compellingness": 8,
+          "humor_landing": 8,
+          "emotional_resonance": 7,
+          "factual_grounding": 9,
+          "tone_fit": 9,
+          "notes": "Consistently dry and well-modulated: 'as though somebody had been alerted', 'apparently keen to establish that he could afford it. He could.', 'restored the natural order of things', 'a lead that had been rather ruder than that'. The Wooden Spoon close ('He then set about undoing it... The record stands. So does the Spoon.') is the best version of that ending among the set. Marked down slightly for occasional stacking: 'Ten shots recovered. Eight short. The best gross golf of his life, and the cabinet stays empty.' adds a third flourish to a line already finished, and 'another quadruple bogey, another shrug' piles a shrug on a shrug. 'a thirteen-stroke regression that cannot have happened by accident' is derived but fair. Grounding clean throughout."
+        },
+        "B": {
+          "slot": "B",
+          "compellingness": 7,
+          "humor_landing": 6,
+          "emotional_resonance": 7,
+          "factual_grounding": 6,
+          "tone_fit": 6,
+          "notes": "Some genuinely good lines — 'treating the surrender of a stroke cushion as a form of hospitality', 'consistency, which in Kent counts as an exotic skill'. But it reaches for effect more often than the others and occasionally over-claims: 'a man who had forgotten he was bad at this' is an invented characterisation of a nine-time Green Jacket winner; 'genuinely tragic' is earnest hyperbole played straight; 'For roughly an hour, the Wooden Spoon was somebody else's problem' is not supported — he was twelve points adrift and never near escaping it. 'the same digit sitting there like an accusation' is a shade purple. 'an eight at the 18th ended the argument' is a good beat, but 'The Spoon went home with him' immediately after is a tacked-on second flourish."
+        },
+        "C": {
+          "slot": "C",
+          "compellingness": 8,
+          "humor_landing": 8,
+          "emotional_resonance": 8,
+          "factual_grounding": 8,
+          "tone_fit": 8,
+          "notes": "Strong and controlled. 'which is the only mitigation available to him', 'the sort of start a lesser man would treat as information', 'He will be told this counts as progress', and 'That is not a scrap for last place. That is solitude.' all land dry. 'He would have liked two of them back' is a neat callback to the two-point margin, though it quietly blends dropped shots with Stableford points. 'The hole did not discriminate' is an unnecessary extra beat after the Jon Baker sentence has already made the point. 'Somewhere around the 13th green he stopped being a man playing out a lost tournament and became a man with a record to protect' is invented interiority but plausibly within licence."
+        },
+        "D": {
+          "slot": "D",
+          "compellingness": 6,
+          "humor_landing": 6,
+          "emotional_resonance": 6,
+          "factual_grounding": 6,
+          "tone_fit": 7,
+          "notes": "Competent and mostly restrained, with two good lines — 'he had known where the golf was all along and had simply been keeping it somewhere else' and 'The early links did him no favours, and he returned the courtesy' / 'which takes commitment'. Weakened by a flat, half-invented Williams closer: 'He will get no trophy for it, and he was the best gross improver of the four days' — derivable at a stretch, but it reads as an added claim and kills the rhythm of 'Ten shots recovered. Eight short.' 'Golf of genuine composure' is sincere praise stated straight, off-register. 'played on as though nothing had happened' after Littlestone is invented. 'Baker's collapse' overstates the source's 'undoing'."
+        },
+        "E": {
+          "slot": "E",
+          "compellingness": 7,
+          "humor_landing": 7,
+          "emotional_resonance": 7,
+          "factual_grounding": 8,
+          "tone_fit": 7,
+          "notes": "Several excellent dry beats: 'a hole the handicapping system had examined and concluded he required no assistance with whatsoever', 'against all available evidence', 'There is always an 8', 'That is roughly what winning looks like round here'. Loses ground at the ends of sections, where jokes are stacked: 'For four holes he played like a man who had never heard of the Wooden Spoon' is followed shortly by 'The Spoon, which had briefly wondered whether it had chosen wrongly, settled back into his hands' — two gags on the same idea, the second personifying the trophy into whimsy. 'It was a vacancy filled with conviction' is good; 'a comparison it is difficult to look at directly' good. Grounding sound."
+        },
+        "F": {
+          "slot": "F",
+          "compellingness": 8,
+          "humor_landing": 9,
+          "emotional_resonance": 7,
+          "factual_grounding": 9,
+          "tone_fit": 9,
+          "notes": "The most disciplined of the set. Opens with the best single line available — 'He did not avoid the wreckage. He simply arranged for his to cost less than everyone else's' — and then resists the temptation to top it. Jokes arrive one per paragraph and are allowed to end the paragraph: 'One can only assume he had decided the margin was becoming impolite'; 'Twelve adrift of the next worst is not a margin. It is a separate competition'; 'thirteen strokes, mislaid in open country'; 'Ten shots recovered. Eight still owing.' No invention detectable; every figure traceable. 'Two begins to look like a method' is slightly loose in its referent but reads. Slightly less colourful in the Williams section than A or C, which is the only real cost."
+        },
+        "G": {
+          "slot": "G",
+          "compellingness": 7,
+          "humor_landing": 6,
+          "emotional_resonance": 7,
+          "factual_grounding": 6,
+          "tone_fit": 6,
+          "notes": "The best individual images in the set — 'It is the hole they give you', 'arriving like a phone call in the night', 'He holds a course record and the Wooden Spoon. Both were earned' — but undone by the soup. Introduced, revisited ('mostly on the stairs'), then dragged into a third callback that makes no sense and, worse, garbles a fact: 'Mullin's seven-shot margin at the finish was the smallest it had been for most of the four days, which is one way of saying the soup arrived' — the source says the lead was larger for most of the week, and 'the soup arrived' means nothing. Running visual gag across sections tips toward zany rather than deadpan. 'a course he had already solved once' and 'took less time to ruin his tournament than it takes to describe' are over-reaches."
+        }
+      },
+      "ranking_arms_best_to_worst": [
+        "overstatement",
+        "cjmh",
+        "interiority",
+        "kitchen_sink",
+        "combined",
+        "crueller",
+        "baseline"
+      ],
+      "overall_notes": "All seven are recognisably the same house voice; the differentiator is restraint. F wins by knowing when a paragraph is finished — its jokes are single, placed at the close, and never followed by a second flourish. A and C are close behind, both rich and largely clean, A marginally stronger on the Trophy and Spoon sections, C on its closers. E has the sharpest one-liner in the set (the handicapping system examining stroke index 17) but doubles up its gags at section ends and personifies the Spoon into whimsy. B over-reaches on characterisation and makes a claim the source will not support (the Spoon being 'somebody else's problem'). G writes the most vividly and pays for it: a three-part soup metaphor is one part too many, and the third instalment mangles the closing fact about Mullin's margin. D is the safest and the dullest, and spoils its best rhythm ('Ten shots recovered. Eight short.') with an appended claim about being 'the best gross improver'."
+    },
+    {
+      "teg": 16,
+      "slot_to_arm": {
+        "A": "cjmh",
+        "B": "crueller",
+        "C": "interiority",
+        "D": "overstatement",
+        "E": "baseline",
+        "F": "combined",
+        "G": "kitchen_sink"
+      },
+      "scores_by_slot": {
+        "A": {
+          "slot": "A",
+          "compellingness": 8,
+          "humor_landing": 7,
+          "emotional_resonance": 7,
+          "factual_grounding": 6,
+          "tone_fit": 7,
+          "notes": "Strong, confident voice with several genuinely good closers (\"Golf does not usually apologise this handsomely\"; \"He merely arranged for his to cost the least\"). But it over-reaches in places: \"twelve years of collective incompetence\" converts twelve prior visits into twelve years, and \"in a field of five\" asserts a field size the draft never gives. The bridge-guarding simile is opaque rather than dry, and the Baker section piles three flourishes on top of each other (\"both of them in the wrong direction\" then \"Few men leave a mark on this tournament at all\"), which reads as stacked. Otherwise the facts are handled carefully."
+        },
+        "B": {
+          "slot": "B",
+          "compellingness": 7,
+          "humor_landing": 6,
+          "emotional_resonance": 6,
+          "factual_grounding": 6,
+          "tone_fit": 6,
+          "notes": "Best single gag in the set (\"stops being a contest and becomes a commute\") and \"he sat down on all of it at once\" is excellent. But it repeatedly bolts a second flourish onto a finished line (\"It cost him nothing beyond tidiness, and tidiness has never been legal tender here\"). The parenthetical \"This was Estoril's 12th, not Penha Longa's; the hole number is coincidence, the golf was not\" is an editorial intrusion that breaks the register entirely. \"before lunch\" is invented timing; \"took the Wooden Spoon, back-to-back, for the third time\" garbles the source's third-Spoon/back-to-back distinction. The \"not even the only 80\" aside is defensible from the source but is doing work the draft didn't ask for."
+        },
+        "C": {
+          "slot": "C",
+          "compellingness": 9,
+          "humor_landing": 8,
+          "emotional_resonance": 8,
+          "factual_grounding": 8,
+          "tone_fit": 9,
+          "notes": "The most consistently controlled voice here. \"Pars at 17 and 18 delivered with the composure of a man tidying a room he has just set fire to\" and \"a collapse conducted with real administrative efficiency\" are exactly the register — dry, understated, never zany. The Neumann nine is handled beautifully (\"played, walked, recorded and rendered entirely notional\"). Grounding is largely clean; the gloss on points vs strokes is a fair reading of the source. Marked down slightly for two invented interiorities (\"the prospect of losing quietly ceased to be available to him\", \"without any apparent sense of occasion\") and for a Baker closing paragraph that runs one flourish long."
+        },
+        "D": {
+          "slot": "D",
+          "compellingness": 8,
+          "humor_landing": 8,
+          "emotional_resonance": 7,
+          "factual_grounding": 9,
+          "tone_fit": 9,
+          "notes": "Disciplined and clean. \"The cushion absorbed it without a word of complaint\", \"Nobody had asked him for one\", and \"Sixteen shots is a margin that forgives a great deal. It was asked to\" are all properly deadpan and none outstay their welcome. Grounding is the tightest of the set — nothing asserted that isn't in the draft. Slight demerits: \"Fifth is the bottom of the pile. There is nowhere below it to go\" is a redundant second beat, and \"Timing of that order cannot be taught\" edges toward sincere admiration. Less distinctive than the top two but nothing misfires."
+        },
+        "E": {
+          "slot": "E",
+          "compellingness": 7,
+          "humor_landing": 6,
+          "emotional_resonance": 7,
+          "factual_grounding": 5,
+          "tone_fit": 6,
+          "notes": "\"Something to put on the mantelpiece that is not a joke\" invents a history of failure the source doesn't support — Neumann's is the second-best total of his own career. \"Like separate wars in adjacent countries\" is too big a swing for the material and tips toward zany; \"one pocket on fire\" is similarly overcooked. \"Earlier in the day\" for Neumann's nine is unsupported sequencing. Redeemed somewhat by \"Nobody quite knew where to look\" and \"Two courses now hold their all-time worst round in his name. There is a kind of consistency in that\", which is the best Baker closer in the field."
+        },
+        "F": {
+          "slot": "F",
+          "compellingness": 8,
+          "humor_landing": 9,
+          "emotional_resonance": 7,
+          "factual_grounding": 9,
+          "tone_fit": 9,
+          "notes": "Quietly the most economical. The \"He had begun a collection... The collection was complete\" through-line is a genuinely elegant structural joke rather than a bolted-on gag, and \"a category he has now examined from most available angles\", \"which by then was a luxury item\", \"encouraging for exactly one hole\" and \"Nobody was going to ask him about the 14th\" all land first time with no second flourish. Grounding is impeccable. Only real cost is that it leaves the third-Spoon/back-to-back detail to the headline and is slightly cooler emotionally than C."
+        },
+        "G": {
+          "slot": "G",
+          "compellingness": 6,
+          "humor_landing": 6,
+          "emotional_resonance": 6,
+          "factual_grounding": 4,
+          "tone_fit": 5,
+          "notes": "\"Unquestionably the finest round played at Estoril in the history of the tournament\" is a straight over-claim — the source supports a course record gross, and Williams posted the same number at the same venue. \"Demolish the repair job within the hour\" invents timing. \"Both facts belong on the same card, and the card says champion\" is sincere hyperbole played straight, precisely the wrong note. \"He stopped being a man salvaging a round and became a man who had forgotten he was capable of anything else\" is over-written to the point of confusion. Credit for \"Three holes, twenty-eight strokes\" (correct and nicely flat) and the opening \"never been better at a more convenient moment\", but the jokes are stacked throughout and the grounding is the loosest here."
+        }
+      },
+      "ranking_arms_best_to_worst": [
+        "interiority",
+        "combined",
+        "overstatement",
+        "cjmh",
+        "crueller",
+        "baseline",
+        "kitchen_sink"
+      ],
+      "overall_notes": "The field divides cleanly on discipline rather than wit. C and F win because their jokes are load-bearing — C through image (\"tidying a room he has just set fire to\"), F through the running \"collection\" motif — and neither adds a second punchline to a line that has already closed. D is the safest and the most factually watertight, and finishes just behind on distinctiveness. A has the strongest individual sentences of anyone but spends them carelessly and mistranslates twelve visits into twelve years. B, E and G all reach past the source: B with a fourth-wall aside and a garbled Spoon count, E with an invented backstory of past humiliation, G with an unsupported \"unquestionably the finest round\" and a closing line that abandons dry understatement for straight-faced anthem. The recurring failure mode across the weaker half is the tacked-on flourish; the recurring virtue in the stronger half is knowing when the sentence is finished."
+    },
+    {
+      "teg": 18,
+      "slot_to_arm": {
+        "A": "baseline",
+        "B": "cjmh",
+        "C": "crueller",
+        "D": "interiority",
+        "E": "kitchen_sink",
+        "F": "combined",
+        "G": "overstatement"
+      },
+      "scores_by_slot": {
+        "A": {
+          "slot": "A",
+          "compellingness": 7,
+          "humor_landing": 6,
+          "emotional_resonance": 7,
+          "factual_grounding": 8,
+          "tone_fit": 7,
+          "notes": "Solid and readable, but the quips stack: the Alex Baker gross paragraph closes three separate times ('Twenty-two visits had failed to find the bottom / offered without apparent embarrassment / He did not appear to lose sleep over the distinction'), which dilutes each. 'That is a proper win, and nothing that follows takes it away from him' is a sincere reassurance where the other drafts find something drier. The meta-editorial 'That is the second 84 in this report, and the second eight-shot improvement. The Stadium had evidently decided who it liked' is accurate and mildly clever but breaks the reporting frame and adds a whimsical flourish the house voice wouldn't need. Strong closer, though: knitting Jon Baker's fifth-hole Jacket lead to the Spoon ('He has the whole year to consider how he managed both') is genuine synthesis, all of it traceable. 'For roughly ninety minutes' is an invented unit but a harmless one."
+        },
+        "B": {
+          "slot": "B",
+          "compellingness": 7,
+          "humor_landing": 6,
+          "emotional_resonance": 6,
+          "factual_grounding": 8,
+          "tone_fit": 7,
+          "notes": "Some very good lines — 'the consequences were administrative as well as spiritual', 'contractually obliged', 'the collapses left in as load-bearing walls', and the neat closing pivot of Jon Baker collecting the Spoon 'from him'. But the register keeps reaching: 'His largest single seizure' is an odd word choice, 'in this company that is close to statesmanship' strains, 'insurrection' and the haemorrhage/tourniquet pairing pile on. 'An 11-point improvement on his opening round, which was not a high bar to clear, but he cleared it by a distance' is exactly the tacked-on second flourish that weakens a complete line. 'Within three holes of one another' is loose but defensible (16th to 18th). Grounded otherwise."
+        },
+        "C": {
+          "slot": "C",
+          "compellingness": 8,
+          "humor_landing": 8,
+          "emotional_resonance": 7,
+          "factual_grounding": 9,
+          "tone_fit": 8,
+          "notes": "Consistently well-judged. 'The win is not in dispute. What he did with a golf club along the way requires a separate hearing' sets the frame cleanly; 'a form of greatness, if not the intended one' and 'Stableford asks about one hole at a time and then, mercifully, forgets' are the best two lines in the set. 'The most secure position he occupied all morning' and 'apparently to confirm the first one had not been a clerical error' both land dry. Minor demerits: 'the finest golfer ever to walk the place, and the ledger says so' adds a flourish to an already-finished sentence, and the closing 'a separate tournament, held nearby, at the same time, by himself' extends a joke that was complete two clauses earlier — funny, but over-served. 'Thirteen holes to stem the bleeding' checks out against the 2nd-to-14th run."
+        },
+        "D": {
+          "slot": "D",
+          "compellingness": 7,
+          "humor_landing": 7,
+          "emotional_resonance": 6,
+          "factual_grounding": 5,
+          "tone_fit": 7,
+          "notes": "Well written but has the clearest grounding failures. 'Both were personal worsts against par, achieved consecutively' is simply wrong — the 8 came at the 16th and the 11 at the 18th. 'The most sustained competence anyone managed all tournament' over-claims: the source says only that it was his own biggest stretch. 'Twenty-two visits of patient, accumulated inadequacy' and 'For eighteen holes he played like a man who had temporarily forgotten his own history' are good; 'a remarkable turn of speed in any discipline' and 'His ended in a different postcode' both land. But the invented facts are the thing this brief penalises hardest, and there are two."
+        },
+        "E": {
+          "slot": "E",
+          "compellingness": 7,
+          "humor_landing": 7,
+          "emotional_resonance": 7,
+          "factual_grounding": 8,
+          "tone_fit": 7,
+          "notes": "Fluent and often funny — 'a considerable amount of golf for one short hole', 'to set a course-worst requires a certain refusal to be discouraged', 'in the manner of a man who resents eviction', 'incapable of a bad round without also having a good one inside it'. But it is the wordiest draft: 'which is the only currency that was being counted' explains a joke the sentence had already made, 'looked like a man in complete command of his own destiny' tips into straight hyperbole, and 'somewhere in that round he stopped playing carefully and simply forgot to make a mess of anything' invents an interior narrative. 'The first evidence that the Spoon holder had other plans' is a mild over-read. Closer is good and restrained."
+        },
+        "F": {
+          "slot": "F",
+          "compellingness": 9,
+          "humor_landing": 9,
+          "emotional_resonance": 7,
+          "factual_grounding": 9,
+          "tone_fit": 9,
+          "notes": "The most disciplined of the set. Every joke is one sentence and then stops: 'The Trophy did not inquire', 'The collapses he supplied himself', 'a considerable amount of jeopardy to acquire before lunch', 'Twenty-two visits, and nobody had got there. He arrived in a single afternoon.' The Mullin callback — 'For four hours he was not a man who had recently taken eleven at a par five' — is the best structural joke in any draft, and it does emotional work as well as comic. Closing paragraph earns its extra detail (the 9 inside seven holes is straight from the R1 account) and then resists elaborating: 'It is a separate tournament.' No inventions spotted. Deadpan throughout, never zany, never sincere."
+        },
+        "G": {
+          "slot": "G",
+          "compellingness": 8,
+          "humor_landing": 8,
+          "emotional_resonance": 7,
+          "factual_grounding": 9,
+          "tone_fit": 8,
+          "notes": "Tight and confident. 'The golfing equivalent of becoming wealthy by never leaving the house' is the sharpest gloss on the stroke-index bogeys anyone manages, and 'it read less like a slump than a forecast', 'He appears to require a disaster before he can begin', and 'The defence, it is fair to say, was not spirited' are all properly understated. 'Visited both ends of the human experience' overreaches slightly, and 'which in this company constitutes a complete rehabilitation' is a good line placed one sentence before another good line, so they blunt each other a little. Mullin section is the flattest of the seven — restraint, but it leaves the record round underplayed. Grounding clean."
+        }
+      },
+      "ranking_arms_best_to_worst": [
+        "combined",
+        "crueller",
+        "overstatement",
+        "baseline",
+        "kitchen_sink",
+        "cjmh",
+        "interiority"
+      ],
+      "overall_notes": "All seven share the same skeleton and most of the same set-pieces, so the separation is almost entirely in restraint. F wins because it lets each joke finish and then moves on, and because its one added flourish (the four-hours callback to the eleven) is structural rather than decorative. C is nearly as good and has the two funniest single sentences, but repeatedly adds a coda to a line that was already done. G is clean and dry with a slightly underfed Mullin section. A has the best synthesis in its final paragraph but stacks quips three-deep earlier and steps outside the frame with the 'second 84 in this report' aside. E and B both write well but write too much — E explains its own punchlines, B reaches for vocabulary ('seizure', 'statesmanship') that pulls against the deadpan. D is placed last purely on grounding: 'achieved consecutively' is false, and 'the most sustained competence anyone managed all tournament' is an invention the source doesn't support."
+    }
+  ]
+}

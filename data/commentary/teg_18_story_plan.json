@@ -1,254 +1,318 @@
 {
-  "title": "First and Last: Alex Baker Takes the Trophy, His Brother Takes the Spoon",
+  "title": "One Baker Up, One Baker Down",
   "title_candidates": [
-    "First and Last: Alex Baker Takes the Trophy, His Brother Takes the Spoon",
-    "Three Spoons and a Trophy: Alex Baker Wins TEG 18 the Hard Way",
-    "106, an 11 and a 10 — and 169 Points All the Same",
-    "The Ends of the Table Swap Places at Camiral"
+    "One Baker Up, One Baker Down",
+    "Top and Tail: The Bakers Take Both Ends of Catalunya",
+    "Forty-Six on the First Day, Then Three Days of Hanging On",
+    "A Hundred and Six, and Still the Champion"
   ],
-  "theme": "Handicap golf as the great leveller: the man who wrote the worst round in the Tour course's history led TEG 18 from the fifth hole to the last, while at Camiral the ends of the table simply swapped occupants — a three-time Spoon holder lifting the Trophy, the defending champion collecting the Spoon, and the reigning Spoon holder putting on the Green Jacket.",
-  "tone": "house — faithful, entertaining, tongue-in-cheek; Ronay/Peck register, always anchored to the card",
-  "narrative_structure": "in_medias_res",
-  "opening_hook": "Open on R4 H14 at the Stadium: Alex Baker making a 10 on a par 4 (b33) with the Trophy already effectively in his bag — the perfect image of a champion who spent four days doing spectacular damage and never once losing the lead — then loop back to the 46 points on Saturday that had already settled it.",
+  "theme": "TEG 18 was won in its first eighteen holes and then spent three days not being given back — and the family that supplied the champion also supplied the Wooden Spoon.",
+  "tone": "house — faithful, tongue-in-cheek, British English; subverted gravitas, trivial stakes handled with diplomatic solemnity",
+  "narrative_structure": "theme_led",
+  "opening_hook": "Open on the image rather than the timeline: Alex Baker on the Stadium 14th in R4 (b25) writing a 10 on a par 4 and still, mathematically, untouchable — then pull back to explain that the tournament had been decided on the Tour course in R1, and that the man finishing 43 points behind him shares his surname.",
   "narrative_vehicles": [
-    "underdog",
+    "dual_narrative",
     "inversion",
-    "dual_narrative"
+    "redemption_arc"
   ],
   "foreshadow": [
-    "Alex Baker arrives with 3 prior Wooden Spoons and the Spoon in 2 of the last 3 TEGs — the least likely leader in the field",
-    "Jon Baker arrives as defending Trophy champion (TEG 17) and holds the gross lead after R1 and R2",
-    "Gregg Williams arrives as reigning Wooden Spoon holder (TEG 17) and opens with a 9 and an 8 on the Tour course",
-    "David Mullin, nine-time Jacket winner, is bottom of the pile by the 15th hole of the tournament after an 11"
+    "Alex Baker's 46 in R1 (b40, b47) puts him 12 clear of Patterson — plant that the winning margin was already banked before anyone had unpacked.",
+    "Jon Baker takes the Green Jacket lead at the 5th in R1 and holds it into R2 (b48) — the defending Trophy champion looks like the man to beat.",
+    "Gregg Williams, the reigning Wooden Spoon holder, opens with a 9 at the 7th and an 8 at the 17th (b24, b20) — plant him as a man on course to keep his trinket.",
+    "David Mullin runs up an 11 at the 15th in R1 and drops to the bottom of the Spoon race (b35, b66) — plant the nine-time Jacket winner as a man in freefall."
   ],
   "competitions": [
     {
       "name": "Trophy (Stableford)",
-      "winner_or_loser": "Alex Baker (169 pts, by 8 from John Patterson)",
-      "how": "Decided on day one and defended thereafter: Baker's 46 in R1 was best in field and 12 clear, and he was never headed again after taking the outright lead at R1 H5. Patterson actually outscored him in R2 (-1) and R4 (-4), but never got the deficit under 8; win_anatomy calls it 'inherited' — Baker was the steadiest man in the field (never worse than 3rd of 5, consistency rank 1) while the chasers gave shots back faster than they took them. Even an ordinary round in place of Patterson's worst would not have flipped it.",
-      "key_beat_ids": [
-        "b02",
-        "b46",
-        "b25",
-        "cr02",
-        "b41",
-        "b33",
-        "b09"
-      ]
+      "winner_or_loser": "Alex Baker — 169 pts, by 8 from John Patterson"
     },
     {
       "name": "Green Jacket (Gross)",
-      "winner_or_loser": "Gregg Williams (+66, by 14 from David Mullin)",
-      "how": "Built, not inherited, and built from a ruin: Williams opened with a 9 at the 7th and an 8 at the 17th on the Tour course and sat 3rd, then went best-in-field in R2 (+14), took the outright gross lead at R3 H2 as Jon Baker's challenge disintegrated, and shut the door with a best-in-field +12 in R4 — a new personal best 84 at the Stadium. Beat Mullin head-to-head in 3 of the 4 rounds; the 8-shot cushion after R3 became 14 by the close.",
-      "key_beat_ids": [
-        "b03",
-        "b36",
-        "b48",
-        "b34",
-        "b04",
-        "b01",
-        "b10"
-      ]
+      "winner_or_loser": "Gregg Williams — +66, by 14 from David Mullin"
     },
     {
       "name": "Wooden Spoon",
-      "winner_or_loser": "Jon Baker (126 pts, 23 adrift of David Mullin)",
-      "how": "Comprehensive. Bottom of the field in R1, R3 and R4, below the field median in all four rounds, and never once posted a best-in-field round. He had actually led the Jacket after 36 holes; the collapse came at the Stadium — bottom of the Spoon table for good at R3 H2, a 9 at the 4th two holes later, and a 28-point round that put him 16 behind Mullin in a single day. Mullin outplayed him in 3 of the 4 rounds and the gap still finished at 23.",
-      "key_beat_ids": [
-        "b19",
-        "b13",
-        "b44",
-        "b40",
-        "b65"
-      ]
+      "winner_or_loser": "Jon Baker — 126 pts, 23 adrift of the next worst"
     }
   ],
   "rounds": [
     {
       "round": 1,
       "headline_candidates": [
-        "Forty-Six and Farewell: Alex Baker Wins TEG 18 on Saturday",
-        "Patterson Bleeds 22 Shots in Eight Holes While Baker Counts His Points",
-        "Mullin Makes 11 at the 15th and Discovers the Bottom of the Table"
+        "Forty-Six: Alex Baker Settles It Before Anyone Notices",
+        "The Forgiving Course Bleeds Patterson for 22 Shots in Eight Holes",
+        "An Eleven at the 15th: Mullin Finds the Bottom of the Table"
       ],
-      "chosen_headline": "Forty-Six and Farewell: Alex Baker Effectively Wins TEG 18 on Saturday",
-      "angle": "The tournament's decisive round dressed up as an opening one: Baker's 46 points on the Tour course opened a 12-point lead that nobody ever reduced, while Patterson haemorrhaged 22 shots between the 3rd and the 10th, Williams made a 9 and an 8, and Mullin's 11 at the 15th dropped him to the foot of the field.",
+      "chosen_headline": "Forty-Six: Alex Baker Posts the Number That Decided TEG 18",
+      "angle": "The one round that won the tournament — 46 points, 12 clear — set against a Tour course quietly dismantling everyone else: Patterson 22 shots gone from the 3rd to the 10th, Williams a 9 and an 8, Mullin an 11.",
       "beat_ids": [
-        "b46",
-        "b25",
-        "b31",
         "b40",
-        "b65",
-        "b36",
-        "b32",
-        "b29",
+        "b47",
+        "b18",
+        "b22",
+        "b23",
+        "b24",
         "b20",
-        "b30"
+        "b31",
+        "b35",
+        "b66"
       ]
     },
     {
       "round": 2,
       "headline_candidates": [
-        "106: The Champion Writes the Tour Course's Worst-Ever Card",
-        "An 11, an 8, and an Eleven-Point Lead Still Standing",
-        "Patterson Posts a Personal Best and Gains One Shot on the Leader"
+        "A Hundred and Six: The Leader Writes Himself Into the Wrong Record Book",
+        "An Eleven at the Last, and Not a Point Surrendered",
+        "Jon Baker Comes Home in Five Straight Pars — Peak Achieved"
       ],
-      "chosen_headline": "106: The Trophy Leader Writes the Worst Card in the Tour Course's History",
-      "angle": "Alex Baker's 106 gross — an 11 at the 18th, an 8 at the 16th — is the worst round in 22 prior TEG visits to the Tour course, and he still went to bed 11 clear on Stableford; behind him Patterson made a personal-best 94, Williams turned 31 points into 42, and Jon Baker's tidy finish left him holding a gross lead he had four holes of R3 left to enjoy.",
+      "chosen_headline": "A Hundred and Six: Alex Baker Sets the Record Nobody Wanted and Stays Top",
+      "angle": "The champion posts the worst gross round in the Tour course's TEG history (cr02), including an 11 at the 18th, and loses precisely one point of his lead — while Williams answers his R1 wreckage with 42 and Jon Baker's five closing pars mark the high-water line of his defence.",
       "beat_ids": [
         "cr02",
-        "b41",
-        "b50",
-        "b06",
-        "b21",
-        "b48",
+        "b36",
+        "b46",
+        "b09",
         "b13",
-        "b14",
-        "b42"
+        "b48",
+        "b42",
+        "b19",
+        "b11",
+        "b15",
+        "b37"
       ]
     },
     {
       "round": 3,
       "headline_candidates": [
-        "Eighty-Four, and Still Eight Behind: Mullin Rewrites the Stadium Record",
-        "The Best Round in TEG History at Camiral Buys Precisely Nothing",
-        "Two Holes on Monday Cost Jon Baker Everything"
+        "Eighty-Four: Mullin Rewrites the Stadium",
+        "Williams Takes the Jacket at the 2nd and Never Looks Back",
+        "A Nine at the 4th: The Defending Champion Reaches the Bottom"
       ],
-      "chosen_headline": "Eighty-Four, and Still Eight Behind: Mullin Rewrites the Stadium Record on Monday",
-      "angle": "The round of the tournament and the round of the record book belong to Mullin — 84 gross, seven better than his own Camiral best and five better than the course record across 27 prior visits — and it gained him one shot on Williams, who took the outright gross lead at the 2nd and never gave it back; the same two holes dropped Jon Baker to the bottom of the Spoon table for good, a 9 at the 4th confirming it.",
+      "chosen_headline": "Eighty-Four on the Stadium: Mullin Breaks the Course Record, Williams Breaks the Jacket Race",
+      "angle": "The Stadium's lowest TEG round ever (cr01) lands on the same afternoon Williams takes the Jacket lead at the 2nd and Jon Baker's 9 at the 4th sends him to the bottom for good — and Alex Baker still wins the round with 44.",
       "beat_ids": [
         "cr01",
-        "b34",
-        "b44",
-        "b07",
-        "b15",
+        "b04",
+        "b28",
+        "b39",
+        "b16",
         "b12",
-        "b18",
-        "b22",
-        "b24"
+        "b17"
       ]
     },
     {
       "round": 4,
       "headline_candidates": [
-        "A 10 at the 14th, and the Trophy Anyway",
-        "Williams Signs for 84 and the Jacket; the Bakers Finish First and Last",
-        "Thirteen Clean Holes for Williams, Six Shots Gone in One for Baker"
+        "A Ten at the 14th, a Trophy at the 18th",
+        "Williams Signs for 84 and Slips the Jacket On",
+        "Two Bakers, Two Ends of the Table, One Family Photograph"
       ],
-      "chosen_headline": "A 10 at the 14th, and the Trophy Anyway",
-      "angle": "Baker's coronation round contains a sextuple bogey and a quadruple, and it doesn't matter a jot; Williams closes with 13 consecutive holes without dropping a net shot and a personal-best 84 for a 14-shot Jacket, Patterson birdies the 17th to salvage a last flourish, and the brothers Baker collect the Trophy and the Spoon from the same clubhouse.",
+      "chosen_headline": "A Ten at the 14th, a Trophy at the 18th",
+      "angle": "Alex Baker's closing round is a 38 containing a 10 and an 8 and it is still enough by 8; Williams closes with a personal-best 84 to take the Jacket by 14; Mullin drops nine shots from the 14th to the 17th; Jon Baker signs for 29 and the Spoon.",
       "beat_ids": [
-        "b33",
-        "b49",
         "b01",
-        "b10",
-        "b05",
-        "b11",
-        "b45",
-        "b09",
         "b02",
+        "b14",
+        "b25",
+        "b43",
+        "b06",
+        "b10",
         "b03",
-        "b19"
+        "b45",
+        "b49",
+        "b44",
+        "b08",
+        "b05",
+        "b07"
       ]
     }
   ],
   "players": [
     {
       "player": "Alex Baker",
-      "arc": "Three prior Wooden Spoons and the Spoon in two of the last three TEGs, and he leads from the fifth hole of the tournament to the last — 169 points, the seventh-best Trophy total on record, built on a 46 in R1 and defended through a 106, an 11, a 10 and two quadruple bogeys."
-    },
-    {
-      "player": "Gregg Williams",
-      "arc": "Reigning Wooden Spoon holder opens with a 9 and an 8 and finishes as the only man in the field improving every single round — 42 points and best-in-field gross in R2, outright Jacket lead at R3 H2, a personal-best 84 at the Stadium in R4 and the Green Jacket by 14."
+      "arc": "Three prior Wooden Spoons and one in two of the last three TEGs; posts 46 on the first day to bank the entire winning margin, then survives a course-worst 106, an 11, a 10 and an 8 without ever finishing a round worse than 3rd of five — a second Trophy won by refusing to be caught rather than by pulling away."
     },
     {
       "player": "Jon Baker",
-      "arc": "Defending Trophy champion, gross leader after 36 holes, and then two holes at the Stadium on Monday: bottom of the table at R3 H2, a 9 at the 4th, and no round above the field median all tournament — the Spoon by 23."
+      "arc": "Defending Trophy champion and holder of the Jacket lead from the 5th in R1, he loses that lead after 20 holes in front (b48), makes a 9 at the 4th in R3 that drops him to the bottom for good, and finishes 23 points adrift of the next worst man — the Spoon collected in the same week his brother collects the Trophy."
     },
     {
-      "player": "John Patterson",
-      "arc": "Ran up an 8 in R1 and another in R2 and still finished runner-up, outscoring the champion in two of the four rounds, setting personal bests on both courses and birdieing the 17th on the final day — comfortably the best week of anyone who never led."
+      "player": "Gregg Williams",
+      "arc": "The reigning Wooden Spoon holder opens with a 9 at the 7th and an 8 at the 17th, answers with 42 points in R2, takes the Jacket lead at the Stadium 2nd in R3 and closes with a personal-best 84 to win the gross by 14."
     },
     {
       "player": "David Mullin",
-      "arc": "Nine Jackets to his name; makes an 11 at the 15th on the opening day, sits bottom of the field by nightfall, then shoots the lowest round in TEG's history at the Stadium — 84 — and still loses the Jacket by 14 and finishes fourth of five."
+      "arc": "An 11 at the 15th in R1 puts the nine-time Jacket winner bottom of the Spoon race; two days later he shoots 84 to break the Stadium course record, then bleeds nine shots from the 14th to the 17th in R4 and loses the Jacket by 14."
+    },
+    {
+      "player": "John Patterson",
+      "arc": "Bleeds 22 shots in eight holes on the opening morning, is bottom of the Spoon race by the 4th, and still finishes runner-up on the Trophy with new personal bests on both Catalunya courses — the best week of anyone who never led anything."
     }
   ],
   "must_include_beat_ids": [
+    "b01",
     "b02",
-    "b03",
-    "b19",
+    "b14",
     "cr01",
     "cr02",
-    "b33",
-    "b41",
-    "b40",
-    "b65",
-    "b01",
-    "b06",
-    "b34",
     "b25",
-    "b44"
+    "b35",
+    "b36",
+    "b66",
+    "b48"
   ],
   "cuts": [
-    "b04",
-    "b08",
-    "b16",
-    "b17",
-    "b23",
+    "b29",
+    "b30",
+    "b32",
+    "b33",
+    "b34",
+    "b38",
+    "b41",
+    "b21",
     "b26",
     "b27",
-    "b28",
-    "b35",
-    "b37",
-    "b38",
-    "b39",
-    "b43",
-    "b47"
+    "b50"
   ],
-  "venue_notes": "TEG's 4th visit to Catalonia and a familiar double bill at Camiral (PGA Catalunya), Girona: R1–R2 on the Tour course (the 5th and 6th TEG rounds there, Saturday and Sunday), R3–R4 on the Stadium (the 6th and 7th, Monday and Tuesday). Frame the Tour course as the 'more forgiving sibling' — and then note it yielded both the worst round in its TEG history (Alex Baker's 106) and Patterson's personal best; frame the Stadium, Spain's premier championship test, as the course that gave up its record to Mullin's 84 and then a matching 84 to Williams two days later. TEG 11 and TEG 12 are the reference points for almost every personal best here — worth noting how long these men have been coming back.",
-  "competition_storyline_bullets": {},
-  "player_storyline_bullets": {},
+  "venue_notes": "TEG's 4th visit to Catalonia: two rounds on the Tour course (the 5th and 6th TEG rounds there) then two on the Stadium (the 6th and 7th). Lean on the irony in the course descriptions — the Tour is billed as the more forgiving sibling and it produced the course-worst 106 (cr02), Patterson's 22-shot bleed and Mullin's 11, while the Stadium, 'Spain's premier golf course', gave up the lowest TEG round ever recorded on it (cr01) and two personal-best 84s. Note the switch of venues as the tournament's hinge: both the Jacket and the Spoon were settled in the first two holes of R3, the moment the field moved across.",
   "course_history_notes": [
-    "Mullin's 6th visit to the Stadium: 84 gross in R3 — a personal best there by 7 (prior best 91, TEG 11), 8 better than his last visit, and a new TEG course record beating 89 across 27 prior visits (cr01).",
-    "Williams's 6th Stadium visit: 84 gross in R4 — a personal best by 8 (prior best 92, TEG 12) and 8 better than his last visit; the Jacket was won on his best-ever golf at the venue.",
-    "Patterson set new personal bests at both courses: 94 at the Tour in R2 and 93 at the Stadium in R3 — the runner-up's week was genuinely his best Camiral golf.",
-    "Alex Baker went the other way: 7 shots worse than his last Stadium visit and, with the 106 in R2, the worst round recorded on the Tour course in 22 prior TEG visits (cr02) — and won the Trophy regardless."
+    "Mullin's 84 in R3 was a new personal best at the Stadium, improved by 7 on his prior 91 (TEG 11) — and the course record (cr01).",
+    "Williams's 84 in R4 was a new personal best at the Stadium, improved by 8 on his prior 92 (TEG 12), and 8 shots better than his last visit.",
+    "Patterson set new personal bests on both courses: 94 at the Tour in R2 and 93 at the Stadium in R3.",
+    "The two Bakers went backwards on the Stadium — Jon 8 shots worse than his last visit, Alex 7 worse — while the Jacket contenders went forwards."
   ],
-  "decisive_moments": [
-    "Trophy — R1 on the Tour course: Alex Baker's 46 points, best in field by 12, taken outright at H5 and never surrendered across the remaining 67 holes (b46, b02).",
-    "Green Jacket — R3 H2 at the Stadium: Williams pars, Jon Baker's 20-hole gross lead ends, and the outright lead changes hands for the last time; 8 clear that evening, 14 by Tuesday (b34, b03).",
-    "Wooden Spoon — R3 H2 at the Stadium: Jon Baker drops to the bottom of the table for the final 52 holes, the 9 at the 4th two holes later confirming a 28-point round and a 16-point loss to Mullin in a single day (b44, b19)."
+  "trophy_storyline": {
+    "subject": "Alex Baker's Trophy: won in eighteen holes, defended over fifty-four",
+    "why_it_matters": "The entire eight-point winning margin, and more, was banked on the first day; everything after it was a man declining to hand it back while golf happened to him.",
+    "shape": "Setup: 46 points in R1 on the Tour course, best in the field, 12 clear of Patterson before anyone had settled in. Turn: R2 hands him the worst gross round in the course's TEG history — 106, with an 11 at the 18th and an 8 at the 16th — and costs him exactly one point of the lead, and R4 contains a 10 at the 14th and an 8 at the 17th. Resolution: two rounds won outright, never a round worse than 3rd of five, and a closing 38 that was quite bad enough and still won by 8.",
+    "beat_ids": [
+      "b40",
+      "b47",
+      "cr02",
+      "b36",
+      "b04",
+      "b25",
+      "b43",
+      "b01",
+      "b05"
+    ],
+    "compelling_score": 8,
+    "humour_score": 7
+  },
+  "jacket_storyline": {
+    "subject": "Gregg Williams: from reigning Spoon holder to Green Jacket by 14",
+    "why_it_matters": "The man who arrived holding TEG 17's Wooden Spoon left with the gross title and a personal best on Spain's premier course, and he built the margin rather than inheriting it.",
+    "shape": "Setup: R1 is a shambles — a 9 at the 7th, an 8 at the 17th, the bleeding stopped only by a birdie at the 15th — and he is third and drifting. Turn: 42 points in R2, four holes from the 13th without dropping a shot, and then the takeover at the Stadium's 2nd hole in R3, ending Jon Baker's 20-hole tenure in front. Resolution: a closing 84, his best ever round on the Stadium, and the Jacket by 14.",
+    "beat_ids": [
+      "b02",
+      "b24",
+      "b20",
+      "b31",
+      "b42",
+      "b19",
+      "b28",
+      "b48",
+      "b16",
+      "b10",
+      "b06"
+    ],
+    "compelling_score": 8,
+    "humour_score": 5
+  },
+  "spoon_storyline": {
+    "subject": "Jon Baker: the defending champion who finished 23 points behind the next worst man",
+    "why_it_matters": "The holder of the Trophy and the Jacket from TEG 17 led the gross for 20 holes and then fell further than anyone in the field, in the same tournament his brother won the lot that mattered.",
+    "shape": "Setup: leads the Jacket from the 5th in R1 and closes R2 with five holes and 16 points, birdie at the 14th — the best golf anyone played that afternoon. Turn: the lead goes at the 7th in R2, and a 9 at the 4th in R3 drops him to the bottom of the Spoon race at the Stadium's 2nd, where he stays. Resolution: 28 and 29 to finish, last in three rounds of four, 126 points, 23 adrift of Mullin and 43 behind his brother.",
+    "beat_ids": [
+      "b14",
+      "b48",
+      "b09",
+      "b13",
+      "b39",
+      "b37"
+    ],
+    "compelling_score": 9,
+    "humour_score": 8
+  },
+  "discovered_storylines": [
+    {
+      "subject": "David Mullin's fortnight of extremes: an 11, then the lowest round in Stadium history",
+      "why_it_matters": "The same man produced the single worst hole and the single best round of TEG 18, and finished with neither a trophy nor a Spoon to show for it.",
+      "shape": "Setup: an 11 at the Tour 15th in R1 drops the nine-time Jacket winner straight to the bottom of the Spoon race. Turn: 84 gross on the Stadium in R3 — a new course record, beating the prior mark of 89 across 27 prior visits, and his own best there by 7. Resolution: nine shots gone between the 14th and the 17th in R4, and the Jacket lost by 14 to a man who shot the same number a day later.",
+      "beat_ids": [
+        "b35",
+        "b66",
+        "cr01",
+        "b45",
+        "b49"
+      ],
+      "compelling_score": 8,
+      "humour_score": 6
+    },
+    {
+      "subject": "John Patterson, runner-up, having spent the opening morning going backwards",
+      "why_it_matters": "The man who came second on the Trophy began the tournament by dropping 22 shots in eight holes and bottoming the Spoon race by the 4th.",
+      "shape": "Setup: R1 holes 3 to 10 — 8, 7, 7, 6, 8, 6, 7, 7 — 22 shots gone and last in the field. Turn: a back nine 14 points better than his front, 13 points from the 13th to the 16th, and 16 points across five holes in R2 either side of a quadruple-bogey 8 at the 4th. Resolution: personal bests on both courses, a birdie at the 17th in R4, and second place behind a man he outplayed in two of the four rounds.",
+      "beat_ids": [
+        "b18",
+        "b22",
+        "b23",
+        "b15",
+        "b11",
+        "b07",
+        "b03"
+      ],
+      "compelling_score": 7,
+      "humour_score": 7
+    },
+    {
+      "subject": "The Catalunya toll: every man in the field signs for at least one 8 or worse",
+      "why_it_matters": "A resort billed as one of Europe's elite tests was met with a sustained, democratic outbreak of double figures and near-misses, and the champion led the way.",
+      "shape": "Setup: R1 alone yields Patterson's 8 at the 3rd, Williams's 9 at the 7th and Mullin's 11 at the 15th. Turn: R2 adds Alex Baker's 8 at the 16th and 11 at the 18th, the second of which completes a 106; R3 adds Jon Baker's 9 at the 4th. Resolution: R4 supplies the champion with a 10 at the 14th and an 8 at the 17th, and he wins by 8 anyway — the tournament's governing principle stated in full.",
+      "beat_ids": [
+        "b23",
+        "b24",
+        "b35",
+        "b46",
+        "b36",
+        "b39",
+        "b25",
+        "b43"
+      ],
+      "compelling_score": 7,
+      "humour_score": 8
+    }
   ],
-  "prominent_vehicle": "underdog",
+  "body_fallback": "none",
+  "prominent_vehicle": "dual_narrative",
   "prominent_palette": "cross_teg_career",
   "payoffs": [
     {
-      "seed": "Alex Baker's 3 prior Spoons, two of them in the last three TEGs",
-      "resolves_in": "Round 1 and the Trophy section",
-      "payoff": "The least likely man in the field posts 46 on Saturday, leads wire-to-wire and signs for 169 — the 7th-best Trophy total on record and his second Trophy (b46, b02)."
+      "seed": "Alex Baker's 46 in R1 and the 12-point lead",
+      "resolves_in": "How the three were decided — the Trophy section",
+      "payoff": "The final margin was 8: he took 12 out of R1 and gave 4 of them back over the following three days, so the tournament was over before the Stadium was reached."
     },
     {
-      "seed": "Jon Baker as defending champion, holding the gross lead after 36 holes",
-      "resolves_in": "Round 3 and the Wooden Spoon section",
-      "payoff": "Two holes on Monday take the gross lead and hand him the bottom of the table; 126 points, four below-median rounds, Spoon by 23 (b34, b44, b19)."
+      "seed": "Jon Baker leading the Jacket from the 5th in R1",
+      "resolves_in": "Round 3",
+      "payoff": "The 20-hole tenure ends at the 7th in R2 (b48) and by the 2nd at the Stadium in R3 he is bottom of the Spoon race for good — from leading one competition to losing the other by 23."
     },
     {
-      "seed": "Gregg Williams, reigning Spoon holder, opening with a 9 and an 8",
-      "resolves_in": "Rounds 2–4 and the Green Jacket section",
-      "payoff": "31 points becomes 42, the outright gross lead arrives at R3 H2, and a personal-best 84 with 13 clean holes closes out the Jacket by 14 (b48, b34, b01, b03)."
+      "seed": "Williams's R1 wreckage as reigning Spoon holder",
+      "resolves_in": "Round 4",
+      "payoff": "A personal-best 84 on the Stadium and the Green Jacket by 14 — the Spoon handed on to the defending Trophy champion."
     },
     {
-      "seed": "Mullin's 11 at the 15th and the bottom of the field on day one",
-      "resolves_in": "Round 3 and the player-by-player summary",
-      "payoff": "The nine-time Jacket winner answers with 84 — a Stadium course record across 27 prior visits — and it earns him one shot on Williams, a 14-shot Jacket defeat and fourth place (b40, b65, cr01)."
+      "seed": "Mullin's 11 at the 15th in R1",
+      "resolves_in": "Round 3",
+      "payoff": "The same man shoots 84 to break the Stadium course record (cr01), the lowest gross ever recorded there in TEG."
     }
   ],
   "vehicle_fit_response": {
     "top_scored_vehicle": "catalogue",
     "taken_up": false,
-    "note": "The inventory of blow-ups is real (Alex Baker alone: 106, an 11, a 10, two quads) but it works as texture inside the winner's story rather than as the frame — and catalogue led two of the last three reports; the genuinely rare thing here is a three-time Spoon holder winning the Trophy while the defending champion took the Spoon."
+    "note": "The blow-up catalogue is real and runs as a discovered storyline (b23/b24/b35/b36/b39/b25), but catalogue framed both TEG 15 and TEG 16; the Baker brothers taking first and last, with the defending champion sliding to the Spoon and the reigning Spoon holder taking the Jacket, is the fresher and truer frame."
   },
-  "why_the_champion_won": "He banked the entire margin on day one — 46 points, best in field by 12 — and then simply refused to fall over: never worse than 3rd of 5, the steadiest man in the field round to round, while Patterson (who outscored him in two rounds) never assembled four days good enough to erase a lead that was handed over at R1 H5 and never returned.",
-  "storyline_note": ""
+  "why_the_champion_won": "One enormous opening round and then sheer refusal to fall over: 46 points in R1 put him 12 clear of Patterson, and over the next three rounds he gave back 1, gained 1 and gave back 4 — he won two rounds outright, was never worse than 3rd of five, and Patterson, who outplayed him in two of the four rounds, could not have flipped it even with an ordinary round in place of his worst.",
+  "storyline_note": "The Trophy still leads, but the Spoon is promoted to co-lead rather than third billing: the Spoon-taker is the champion's brother and the defending champion, so a single dual narrative covers both ends of the table and the Jacket sits between them."
 }
