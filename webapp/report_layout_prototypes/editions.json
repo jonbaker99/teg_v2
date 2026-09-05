@@ -11,17 +11,20 @@
       {
         "label": "Trophy Winner",
         "value": "David Mullin (3rd Trophy)",
-        "lead": true
+        "lead": true,
+        "runner_up": "Runner-up: Alex Baker (152)"
       },
       {
         "label": "Green Jacket",
         "value": "David Mullin (9th Jacket)",
-        "lead": false
+        "lead": false,
+        "runner_up": "Runner-up: Jon Baker (+75)"
       },
       {
         "label": "Wooden Spoon",
         "value": "Jon Baker (1st Spoon)",
-        "lead": false
+        "lead": false,
+        "runner_up": "Next above: Gregg Williams (137)"
       }
     ],
     "articles": [
@@ -141,17 +144,20 @@
       {
         "label": "Trophy Winner",
         "value": "Stuart Neumann (1st Trophy)",
-        "lead": true
+        "lead": true,
+        "runner_up": "Runner-up: Gregg Williams (143)"
       },
       {
         "label": "Green Jacket",
         "value": "Gregg Williams (2nd Jacket)",
-        "lead": false
+        "lead": false,
+        "runner_up": "Runner-up: David Mullin (+82)"
       },
       {
         "label": "Wooden Spoon",
         "value": "Alex Baker (3rd Spoon)",
-        "lead": false
+        "lead": false,
+        "runner_up": "Next above: Jon Baker (131)"
       }
     ],
     "articles": [
@@ -260,17 +266,20 @@
       {
         "label": "Trophy Winner",
         "value": "Alex Baker \u2014 169 pts, by 8 from John Patterson",
-        "lead": true
+        "lead": true,
+        "runner_up": "Runner-up: John Patterson (161)"
       },
       {
         "label": "Green Jacket",
         "value": "Gregg Williams \u2014 +66, by 14 from David Mullin",
-        "lead": false
+        "lead": false,
+        "runner_up": "Runner-up: David Mullin (+80)"
       },
       {
         "label": "Wooden Spoon",
         "value": "Jon Baker \u2014 126 pts, 23 adrift of the next worst",
-        "lead": false
+        "lead": false,
+        "runner_up": "Next above: David Mullin (149)"
       }
     ],
     "articles": [

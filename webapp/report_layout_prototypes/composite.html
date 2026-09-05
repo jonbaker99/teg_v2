@@ -90,10 +90,12 @@
   .r5-title{ background:var(--ink); color:var(--paper); font-family:var(--font-mono); font-size:0.63rem;
     font-weight:700; letter-spacing:0.16em; text-transform:uppercase; padding:0.38rem 0.75rem; }
   .r-list{ display:flex; flex-direction:column; padding:0.55rem 0.75rem 0.65rem; gap:0.3rem; }
-  .r-item{ display:flex; justify-content:space-between; gap:0.8rem; align-items:baseline; }
+  .r-item{ display:flex; flex-direction:column; align-items:flex-start; gap:0.08rem; }
+  .r-vals{ display:flex; flex-direction:column; align-items:flex-start; gap:0.05rem; }
+  .r-runner{ font-family:var(--font-mono); font-size:0.63rem; letter-spacing:0.02em; color:var(--ink-soft); }
   .r-label{ font-family:var(--font-mono); font-size:0.69rem; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink-soft); }
   .r-value{ font-family:var(--font-mono); font-size:0.81rem; font-variant-numeric:tabular-nums; font-weight:600; }
-  .r-lead{ padding:0.28rem 0.4rem; margin:0 -0.4rem; background:var(--tint); }
+  .r-lead{ padding:0.3rem 0.4rem; margin:0.05rem -0.4rem; background:var(--tint); }
   .r-lead .r-value{ color:var(--accent); font-weight:700; }
   .rail-standings{ margin-top:1.1rem; padding-top:1rem; border-top:1px solid var(--rule); }
   .rail-block{ margin-top:1.1rem; padding-top:1rem; border-top:1px solid var(--rule); }
@@ -189,6 +191,83 @@
   .arr-e3 .sub-card.wide{ grid-column:1/-1; padding-left:0; padding-right:0; border-left:none; }
   .arr-e3 .sub-card.wide .sub-headline{ font-size:1.4rem; }
   .arr-e3 .sub-card.wide .sub-body{ columns:2; column-gap:2.1rem; column-rule:1px solid var(--rule); }
+
+  /* =========================================================================
+     G1/G2/G3 — TESSELLATION
+     E1-E3 vary where the blocks sit. They share a fault: every column ends
+     wherever its copy runs out, so the page never bottoms out level, and the
+     heavy rule under the lead divides the page into a lead and then a grid
+     rather than joining them. These three attack that directly.
+     ========================================================================= */
+
+  /* --- G1 packed: the whole page is one three-column flow. Stories break
+         across columns the way a newspaper's do, so the browser balances the
+         columns and they finish level. No divider rule anywhere. --- */
+  .arr-g1 .page-flow{
+    padding:1.35rem var(--pad) 0;
+    columns:3; column-gap:2.1rem; column-rule:1px solid var(--rule);
+    orphans:3; widows:3;
+  }
+  .arr-g1 .span-all{ column-span:all; margin-bottom:1.1rem; }
+  .arr-g1 .span-all .lead-headline{ max-width:24ch; }
+  .arr-g1 .page-flow > p{ font-family:var(--font-body); font-size:0.95rem; line-height:1.55; }
+  .arr-g1 .page-flow > p + p{ margin-top:0.8em; }
+  .arr-g1 .page-flow > p.lead-open::first-letter{
+    float:left; font-family:var(--font-display); font-weight:700; font-size:3.4rem;
+    line-height:0.78; padding:0.1rem 0.45rem 0 0;
+  }
+  .arr-g1 .rail{ break-inside:avoid; margin:1.2rem 0; }
+  .arr-g1 .sub-card{
+    padding:0; border-left:none; margin-top:1.3rem; padding-top:1.1rem;
+    border-top:1px solid var(--rule);
+  }
+  .arr-g1 .sub-card .kicker, .arr-g1 .sub-card .sub-headline, .arr-g1 .sub-card .sub-standfirst{
+    break-after:avoid;
+  }
+  .arr-g1 .sub-headline{ font-size:1.16rem; }
+  .arr-g1 .sub-body p{ font-size:0.9rem; line-height:1.53; }
+
+  /* --- G2 balanced: three columns again, but each story stays whole. A story
+         is placed into whichever column is currently shortest, so the columns
+         finish close to level without ever splitting a piece. --- */
+  .arr-g2 .lead-head{ padding:1.35rem var(--pad) 0; }
+  .arr-g2 .main-split{ display:grid; grid-template-columns:2fr 1fr; gap:2.2rem; padding:1.15rem var(--pad) 0; }
+  .arr-g2 .cols{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:0;
+    padding:1.5rem var(--pad) 0; margin-top:1.6rem; border-top:1px solid var(--rule);
+  }
+  .arr-g2 .col{ padding:0 1.55rem; border-left:1px solid var(--rule); }
+  .arr-g2 .col:first-child{ padding-left:0; border-left:none; }
+  .arr-g2 .col:last-child{ padding-right:0; }
+  .arr-g2 .col .sub-card{ padding:0; border-left:none; }
+  .arr-g2 .col .sub-card + .sub-card{ margin-top:1.3rem; padding-top:1.1rem; border-top:1px solid var(--rule); }
+  .arr-g2 .sub-headline{ font-size:1.18rem; }
+
+  /* --- G3 interlocked: the lead occupies an L — headline and body across two
+         columns, rail and the next story down the third — and the remaining
+         stories run under it in the same grid. One page, no divider. --- */
+  .arr-g3 .page-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:0 2.1rem;
+    padding:1.35rem var(--pad) 0;
+  }
+  .arr-g3 .lead-wrap{ grid-column:1/3; grid-row:1; }
+  .arr-g3 .lead-body{ columns:2; column-gap:2.1rem; column-rule:1px solid var(--rule); }
+  /* the rail runs down the whole right edge; the remaining stories fill the
+     space under the lead in the other two columns, so the two sides finish
+     closer together than they do when the rest is pushed below the rail */
+  .arr-g3 .rail{ grid-column:3; grid-row:1/3; align-self:start;
+    border-left:1px solid var(--rule); padding-left:2.1rem; }
+  .arr-g3 .rail .sub-card{ padding:0; border-left:none; margin-top:1.2rem; padding-top:1rem;
+    border-top:1px solid var(--rule); }
+  .arr-g3 .rail .sub-headline{ font-size:1.1rem; }
+  .arr-g3 .under{
+    grid-column:1/3; grid-row:2; margin-top:1.5rem; padding-top:1.3rem;
+    border-top:1px solid var(--rule);
+    display:grid; grid-template-columns:repeat(2,1fr); gap:0;
+  }
+  .arr-g3 .under .sub-card:first-child{ padding-left:0; border-left:none; }
+  .arr-g3 .under .sub-card:last-child{ padding-right:0; }
+  .arr-g3 .sub-headline{ font-size:1.2rem; }
 </style>
 
 <div class="control-bar" role="toolbar" aria-label="Prototype controls">
@@ -204,6 +283,9 @@
     <button type="button" class="control-btn" data-arr="e1">E1 &middot; Classic front</button>
     <button type="button" class="control-btn" data-arr="e2">E2 &middot; Second lead</button>
     <button type="button" class="control-btn" data-arr="e3">E3 &middot; Two decks</button>
+    <button type="button" class="control-btn" data-arr="g1">G1 &middot; Packed</button>
+    <button type="button" class="control-btn" data-arr="g2">G2 &middot; Balanced</button>
+    <button type="button" class="control-btn" data-arr="g3">G3 &middot; Interlocked</button>
   </div>
   <div class="control-group" role="group" aria-label="Rail fill">
     <span class="control-label">Rail below the standings</span>
@@ -236,17 +318,20 @@
         {
           "label": "Trophy Winner",
           "value": "David Mullin (3rd Trophy)",
-          "lead": true
+          "lead": true,
+          "runner_up": "Runner-up: Alex Baker (152)"
         },
         {
           "label": "Green Jacket",
           "value": "David Mullin (9th Jacket)",
-          "lead": false
+          "lead": false,
+          "runner_up": "Runner-up: Jon Baker (+75)"
         },
         {
           "label": "Wooden Spoon",
           "value": "Jon Baker (1st Spoon)",
-          "lead": false
+          "lead": false,
+          "runner_up": "Next above: Gregg Williams (137)"
         }
       ],
       "articles": [
@@ -366,17 +451,20 @@
         {
           "label": "Trophy Winner",
           "value": "Stuart Neumann (1st Trophy)",
-          "lead": true
+          "lead": true,
+          "runner_up": "Runner-up: Gregg Williams (143)"
         },
         {
           "label": "Green Jacket",
           "value": "Gregg Williams (2nd Jacket)",
-          "lead": false
+          "lead": false,
+          "runner_up": "Runner-up: David Mullin (+82)"
         },
         {
           "label": "Wooden Spoon",
           "value": "Alex Baker (3rd Spoon)",
-          "lead": false
+          "lead": false,
+          "runner_up": "Next above: Jon Baker (131)"
         }
       ],
       "articles": [
@@ -485,17 +573,20 @@
         {
           "label": "Trophy Winner",
           "value": "Alex Baker \u2014 169 pts, by 8 from John Patterson",
-          "lead": true
+          "lead": true,
+          "runner_up": "Runner-up: John Patterson (161)"
         },
         {
           "label": "Green Jacket",
           "value": "Gregg Williams \u2014 +66, by 14 from David Mullin",
-          "lead": false
+          "lead": false,
+          "runner_up": "Runner-up: David Mullin (+80)"
         },
         {
           "label": "Wooden Spoon",
           "value": "Jon Baker \u2014 126 pts, 23 adrift of the next worst",
-          "lead": false
+          "lead": false,
+          "runner_up": "Next above: David Mullin (149)"
         }
       ],
       "articles": [
@@ -604,7 +695,10 @@
   var ARR_NOTES = {
     e1: "Flat grid: every sub-article is equal. Simplest to reason about; a fourth story has to span the width.",
     e2: "Ranked: the strongest sub-article is promoted to a second lead across the full width, the rest follow in one row.",
-    e3: "Rail runs the full height of the lead, so the page opens as two columns rather than a band."
+    e3: "Rail runs the full height of the lead, so the page opens as two columns rather than a band.",
+    g1: "One three-column flow. Stories break across columns, so the browser balances them and the page finishes level.",
+    g2: "Three columns, stories kept whole, each placed into the shortest column so the bottoms come out close to level.",
+    g3: "The lead occupies an L and the rest fills around it. One grid, no full-width divider rule."
   };
 
   var editionsByTeg = {};
@@ -650,7 +744,9 @@
     var items = e.results.map(function(r){
       return '<li class="r-item' + (r.lead ? " r-lead" : "") + '">' +
         '<span class="r-label">' + esc(r.label) + '</span>' +
-        '<span class="r-value">' + esc(r.value) + '</span></li>';
+        '<span class="r-vals"><span class="r-value">' + esc(r.value) + '</span>' +
+        (r.runner_up ? '<span class="r-runner">' + esc(r.runner_up) + '</span>' : '') +
+        '</span></li>';
     }).join("");
     var last = e.standings[e.standings.length - 1];
     return '<aside class="rail">' +
@@ -732,7 +828,86 @@
       appendixHtml(e);
   }
 
-  var RENDERERS = { e1: renderE1, e2: renderE2, e3: renderE3 };
+  /* ---- the tessellation set ---------------------------------------------- */
+
+  function renderG1(e, lead, subs, railExtra){
+    // One three-column flow. Everything below the headline is a block in it,
+    // so the browser balances the columns and the page finishes level.
+    var leadParas = lead.paragraphs.map(function(p, i){
+      return '<p' + (i === 0 ? ' class="lead-open"' : '') + '>' +
+        esc(p).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>") + '</p>';
+    }).join("");
+    return mastheadHtml(e) +
+      '<div class="page-flow">' +
+        '<div class="span-all">' + leadHeadHtml(lead) + '</div>' +
+        leadParas +
+        railHtml(e, railExtra) +
+        subs.map(function(a){ return subCardHtml(a); }).join("") +
+      '</div>' +
+      appendixHtml(e);
+  }
+
+  var G2_COLS = 3;
+
+  function renderG2(e, lead, subs, railExtra){
+    // Stories stay whole — nothing is ever split across a column. They are
+    // emitted into the first column and then redistributed by balanceG2(),
+    // which measures real rendered heights; `words` is too crude an estimate
+    // because headline and standfirst heights vary independently of length.
+    var colsHtml = '<div class="col">' +
+      subs.map(function(a){ return subCardHtml(a); }).join("") + '</div>';
+    for (var i = 1; i < G2_COLS; i++){ colsHtml += '<div class="col"></div>'; }
+    return mastheadHtml(e) +
+      '<div class="lead-head">' + leadHeadHtml(lead) + '</div>' +
+      '<div class="main-split">' + leadBodyHtml(lead) + railHtml(e, railExtra) + '</div>' +
+      '<div class="cols">' + colsHtml + '</div>' +
+      appendixHtml(e);
+  }
+
+  function renderG3(e, lead, subs, railExtra){
+    // The lead occupies an L: headline and body across two columns, rail and
+    // the next story down the third. The rest run underneath in the same grid,
+    // so there is no full-width rule dividing lead from grid.
+    var inRail = subs.slice(0, 1);
+    var under = subs.slice(1);
+    var railCards = inRail.map(function(a){ return subCardHtml(a); }).join("");
+    return mastheadHtml(e) +
+      '<div class="page-grid">' +
+        '<div class="lead-wrap">' + leadHeadHtml(lead) + leadBodyHtml(lead) + '</div>' +
+        railHtml(e, railExtra + railCards) +
+        (under.length
+          ? '<div class="under">' + under.map(function(a){ return subCardHtml(a); }).join("") + '</div>'
+          : "") +
+      '</div>' +
+      appendixHtml(e);
+  }
+
+  // Longest-processing-time bin packing: place the tallest story into the
+  // shortest column, repeatedly. Gets the column bottoms close to level
+  // without breaking a story, which is the whole point of G2.
+  function balanceG2(){
+    var cols = [].slice.call(document.querySelectorAll("#stage .arr-g2-cols .col, #stage .cols .col"));
+    if (cols.length < 2) return;
+    var cards = [];
+    cols.forEach(function(c){
+      [].slice.call(c.children).forEach(function(el){
+        cards.push({ el: el, h: el.getBoundingClientRect().height });
+      });
+    });
+    cards.sort(function(a, b){ return b.h - a.h; });
+    var loads = cols.map(function(){ return 0; });
+    cols.forEach(function(c){ c.innerHTML = ""; });
+    cards.forEach(function(card){
+      var i = loads.indexOf(Math.min.apply(null, loads));
+      cols[i].appendChild(card.el);
+      loads[i] += card.h;
+    });
+  }
+
+  var RENDERERS = {
+    e1: renderE1, e2: renderE2, e3: renderE3,
+    g1: renderG1, g2: renderG2, g3: renderG3
+  };
 
   function render(){
     var e = editionsByTeg[state.teg];
@@ -754,6 +929,7 @@
     var stage = document.getElementById("stage");
     stage.className = "paper arr-" + state.arr;
     stage.innerHTML = RENDERERS[state.arr](e, lead, subs, railExtra);
+    if (state.arr === "g2") balanceG2();
 
     document.querySelectorAll("[data-teg]").forEach(function(b){
       b.setAttribute("aria-pressed", String(b.getAttribute("data-teg") === String(state.teg)));

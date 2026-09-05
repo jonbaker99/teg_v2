@@ -20,7 +20,7 @@ A/B/C). See *Open* below.
 |---|---|
 | Type & palette | **T1** broadsheet — Fraunces / Source Serif, cream, oxblood |
 | Masthead | **M1** wordmark left, dateline right, thick/thin rule under |
-| Results panel | **R5** ruled scorecard, mono tabular values (rail-shaped) |
+| Results panel | **R5** ruled scorecard, mono tabular values (rail-shaped), now carrying the runner-up under each line |
 | Lead headline | **H1** kicker over, italic standfirst under |
 | Drop cap | **D2** three-line Fraunces initial |
 | Lead body | **B2** two columns, hairline rule |
@@ -75,6 +75,9 @@ https://claude.ai/code/artifact/37e0dc5d-5cc3-4475-bf7b-7857de19bf91
 - **All three tournaments are in.** TEG 18's artefacts landed on main with the storyline-first
   pipeline and parse cleanly. Its merged section opens paragraphs with a `**Round N, Course.**`
   run-in, which the pages now render as bold rather than printing the asterisks.
+- **Runners-up belong in the at-a-glance box.** Derived in the build script from the final
+  standings — second place on Trophy and Green Jacket, second from last on Trophy for the Wooden
+  Spoon — with codes resolved through `get_player_dict()`.
 - **The element vocabulary** in the table above. Reopen a single choice in `elements.html`; do not
   restart the whole pass.
 
@@ -82,8 +85,9 @@ https://claude.ai/code/artifact/37e0dc5d-5cc3-4475-bf7b-7857de19bf91
 
 ### 1. Page composition — needs Jon's pick from `composite.html`
 
-The elements are chosen; how they compose is not. Three arrangements, all using the same
-vocabulary:
+The elements are chosen; how they compose is not. Six arrangements, all using the same vocabulary.
+
+**E1–E3 vary where the blocks sit.** Jon's read: they "do a good job of fixing the main issues".
 
 - **E1 classic front** — lead across two thirds with the rail beside it, one heavy rule, then a
   3-up ruled row. A fourth sub-article spans the full width.
@@ -92,8 +96,37 @@ vocabulary:
 - **E3 two decks** — the rail runs the full height of the lead block, so the page opens as two
   columns rather than a band; then a 2×2 ruled grid.
 
-Crossed with a second, smaller decision the rail forces. The rail is much shorter than the lead
-body, so its column ends in a void in all three arrangements:
+**G1–G3 attack tessellation and white space**, which is what Jon flagged as the remaining fault
+along with the lead and the grid reading as two pages:
+
+- **G1 packed** — the whole page is one three-column flow. Stories break across columns the way a
+  newspaper's do, so the browser balances them; no divider rule anywhere.
+- **G2 balanced** — three columns, but no story is ever split. Each is placed into the shortest
+  column by measured height (longest-processing-time packing, `balanceG2`).
+- **G3 interlocked** — the lead occupies an L, the rail runs the right edge full height and the
+  remaining stories fill under the lead in the other two columns.
+
+**Measured, not judged by eye.** Spread between the tallest and shortest column bottom, in px —
+lower tessellates better:
+
+| | TEG 14 | TEG 16 | TEG 18 |
+|---|---:|---:|---:|
+| E1 | 66 | 608 | 629 |
+| E2 | 100 | 1348 | 1331 |
+| E3 | 1199 | 55 | 55 |
+| **G1** | **202** | **124** | **8** |
+| G2 | 638 | 501 | 563 |
+| G3 | 733 | 694 | 814 |
+
+**G1 is the only arrangement that tessellates consistently.** E1 and E3 each look tidy on some
+tournaments and ragged on others, which is copy-dependence, not layout. And G2 is the useful
+negative result: with only three to five stories of 220–410 words, keeping every story whole and
+balancing three columns is close to arithmetically impossible — better packing does not help,
+because there are too few pieces. **Splitting stories across columns is what makes a newspaper
+page tessellate**, and G1 is the only option here that does it.
+
+Crossed with a second, smaller decision the rail forces. The rail is shorter than the lead body,
+so its column ends in a void unless something follows the standings:
 
 - **F1** nothing — accept the gap.
 - **F2** the round-by-round Trophy table.
@@ -101,8 +134,8 @@ body, so its column ends in a void in all three arrangements:
 
 Two arrangements were rebuilt during this pass and the reasons are worth keeping: E2 originally
 stacked the remaining stories in a narrow column beside the promoted one, and three full-length
-articles in that column left a column-height void; and F1/F2/F3 exists at all because the first
-build of every arrangement had a dead right-hand column below the standings.
+articles in that column left a column-height void; G3 originally spanned the rail across two grid
+rows, which stretched the first row to the rail's height and left a gap under the headline.
 
 ### 2. Mobile — three patterns built, one to choose
 

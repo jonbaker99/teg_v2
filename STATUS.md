@@ -55,9 +55,16 @@ The layout was then chosen element by element rather than direction by direction
 from all four prototypes were wanted. `elements.html` renders ten elements with 4–5 variants each
 on identical copy; the answers are T1 broadsheet type, M1 masthead, R5 scorecard results, H1
 headline, D2 drop cap, B2 two ruled columns, C2 ruled sub-columns, K1 plain kickers, S2 rail and
-P1 appendices. Those are assembled in `composite.html`, which now switches only page composition
-(E1 classic front / E2 second lead / E3 two decks) and what fills the rail below the standings
-(F1 nothing / F2 round table / F3 shortest story).
+P1 appendices. Those are assembled in `composite.html`, which now switches only page composition and what fills
+the rail below the standings (F1 nothing / F2 round table / F3 shortest story). Six arrangements:
+E1 classic front, E2 second lead and E3 two decks vary where the blocks sit; G1 packed, G2
+balanced and G3 interlocked attack tessellation and white space. Measured by the spread between
+the tallest and shortest column bottom, **G1 is the only one that tessellates consistently**
+(202/124/8px across TEG 14/16/18, against 66-1348px for the rest). G2 is the useful negative
+result: with three to five stories of 220-410 words, keeping every story whole and balancing three
+columns is close to arithmetically impossible — splitting stories across columns is what makes a
+newspaper page tessellate. The at-a-glance box now also carries the runner-up on each line,
+derived in the build script from the final standings.
 
 `mobile.html` prototypes the three candidate mobile patterns properly rather than tuning
 breakpoints: A index-first, B swipeable cards, C accordion. Measured first-screen length is the
