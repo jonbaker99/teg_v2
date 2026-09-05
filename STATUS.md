@@ -46,13 +46,30 @@ editorial, C Sports section, D Back page), switchable per TEG, served at `/repor
 a published Artifact.
 
 **Verdict (2026-09-05): the direction is confirmed** — a newspaper edition is markedly more
-digestible than one long report. Two things stay open: the final layout is a composite of elements
-from all four prototypes rather than any one of them, and **mobile needs a different pattern**,
-since stacking the grid vertically recreates the long-report problem. One knock-on: interweaving in
-the storyline pipeline is now mothballed (off by default), because an edition wants one subject per
-article. Findings for the pipeline (the story plan needs `headline`/`standfirst` fields — `subject`
-is neither) and next steps: `webapp/report_layout_prototypes/PICKUP.md`; original specification:
-`PLAN.md` alongside it.
+digestible than one long report. One knock-on: interweaving in the storyline pipeline is now
+mothballed (off by default), because an edition wants one subject per article.
+
+### 2026-09-05 — Composite layout and mobile patterns
+
+The layout was then chosen element by element rather than direction by direction, since elements
+from all four prototypes were wanted. `elements.html` renders ten elements with 4–5 variants each
+on identical copy; the answers are T1 broadsheet type, M1 masthead, R5 scorecard results, H1
+headline, D2 drop cap, B2 two ruled columns, C2 ruled sub-columns, K1 plain kickers, S2 rail and
+P1 appendices. Those are assembled in `composite.html`, which now switches only page composition
+(E1 classic front / E2 second lead / E3 two decks) and what fills the rail below the standings
+(F1 nothing / F2 round table / F3 shortest story).
+
+`mobile.html` prototypes the three candidate mobile patterns properly rather than tuning
+breakpoints: A index-first, B swipeable cards, C accordion. Measured first-screen length is the
+evidence — the desktop composite squeezed to 390px runs 10.8 phone screens; A is 1.1, B is 1.5,
+C is 2.1 closed and 4.3 with two sections open.
+
+All three tournaments (14, 16, 18) render in every prototype; TEG 18 joined once the
+storyline-first pipeline merged. `scripts/inline_editions.py` pushes a regenerated `editions.json`
+back into the pages. Awaiting a pick on composition and mobile pattern, then wiring into
+`routes/reports.py`. Findings for the pipeline (the story plan needs `headline`/`standfirst`
+fields — `subject` is neither) and next steps:
+`webapp/report_layout_prototypes/PICKUP.md`; original specification: `PLAN.md` alongside it.
 
 ### 2026-08-17 — Reporting docs reconciled against the code
 

@@ -1,0 +1,954 @@
+<meta charset="utf-8">
+<title>TEG Edition — Mobile Patterns</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
+<style>
+  /* =========================================================================
+     MOBILE PATTERNS.
+     Stacking the desktop grid vertically recreates the single long scroll the
+     edition was built to replace, so these are three different structures
+     rather than three sets of breakpoints. Same T1 element vocabulary as
+     composite.html; same edition data.
+       A  index first     — front screen is masthead, results and headlines;
+                            an article is its own screen.
+       B  swipeable cards — one article per horizontal panel, kicker tabs
+                            across the top carrying the affordance.
+       C  accordion       — every headline visible, bodies collapsed, the lead
+                            open by default, expanding in place.
+     ========================================================================= */
+  :root{
+    --desk:#E7E5DE; --desk-edge:#D3D0C6;
+    --chrome-bg:#F4F3EF; --chrome-border:#D8D6CE; --chrome-ink:#23231F;
+    --chrome-ink-soft:#6B6A62; --chrome-accent:#2F5D8A;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--desk); color:var(--chrome-ink); font-family:'Libre Franklin',Arial,sans-serif; }
+  h1,h2,h3,h4,h5,p,ul,ol,figure,table{ margin:0; padding:0; }
+  ul{ list-style:none; }
+  table{ border-collapse:collapse; }
+  button{ font:inherit; color:inherit; }
+  :focus-visible{ outline:2.5px solid var(--chrome-accent); outline-offset:2px; }
+  @media (prefers-reduced-motion: reduce){ *{ scroll-behavior:auto !important; transition:none !important; } }
+
+  /* ---------- prototype chrome ------------------------------------------- */
+  .control-bar{ position:sticky; top:0; z-index:30; display:flex; flex-wrap:wrap; align-items:center;
+    gap:1.4rem; padding:0.75rem 1.2rem; background:var(--chrome-bg); border-bottom:1px solid var(--chrome-border); }
+  .control-brand{ font-weight:800; font-size:0.76rem; letter-spacing:0.06em; text-transform:uppercase; }
+  .control-brand span{ color:var(--chrome-ink-soft); font-weight:500; text-transform:none; letter-spacing:0; }
+  .control-group{ display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap; }
+  .control-label{ font-size:0.64rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--chrome-ink-soft); }
+  .control-btn{ appearance:none; border:1px solid var(--chrome-border); background:#fff; font-size:0.76rem;
+    font-weight:600; padding:0.35rem 0.68rem; border-radius:5px; cursor:pointer; line-height:1.1; }
+  .control-btn[aria-pressed="true"]{ background:var(--chrome-accent); border-color:var(--chrome-accent); color:#F4F3EF; }
+  .control-spacer{ flex:1 1 auto; }
+  .control-note{ font-size:0.71rem; color:var(--chrome-ink-soft); max-width:40ch; line-height:1.35; }
+  .metric{ font-size:0.71rem; color:var(--chrome-ink-soft); font-variant-numeric:tabular-nums; }
+  .metric b{ color:var(--chrome-ink); }
+
+  /* ---------- the phone --------------------------------------------------- */
+  .phone-wrap{ display:flex; justify-content:center; padding:2rem 1rem 3.5rem; }
+  .phone{
+    width:390px; flex:none; position:relative;
+    height:844px; overflow:hidden;
+    border:1px solid var(--desk-edge); border-radius:24px;
+    box-shadow:0 1px 2px rgba(0,0,0,0.08), 0 20px 44px -22px rgba(0,0,0,0.45);
+    background:var(--paper);
+  }
+  /* capture mode: let the whole screen render so a screenshot shows all of it */
+  body.capture .phone{ height:auto; overflow:visible; border-radius:0; }
+  body.capture .scroller{ height:auto !important; overflow:visible !important; }
+  body.capture .panel{ height:auto !important; min-height:0 !important; overflow:visible !important; }
+
+  /* on an actual phone, drop the frame and run full bleed */
+  @media (max-width:700px){
+    .phone-wrap{ padding:0; }
+    .phone{ width:100%; height:auto; border:none; border-radius:0; box-shadow:none; }
+    .scroller{ height:auto; overflow:visible; }
+    .control-note, .metric{ display:none; }
+  }
+
+  /* ---------- T1 tokens, mobile-tuned ------------------------------------- */
+  .phone{
+    --paper:#F6F3EA; --ink:#211D17; --ink-soft:#66604F; --accent:#7A2420; --rule:#C9C2AC; --tint:#EDE8D9;
+    --font-display:'Fraunces',Georgia,serif;
+    --font-body:'Source Serif 4',Georgia,serif;
+    --font-mono:'IBM Plex Mono','Courier New',monospace;
+    --pad:1.15rem;
+    color:var(--ink);
+    background-image: radial-gradient(rgba(33,29,23,0.05) 0.55px, transparent 0.55px);
+    background-size:3.4px 3.4px;
+  }
+  .scroller{ height:100%; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+
+  .m-masthead{ padding:0.95rem var(--pad) 0; }
+  .m-mh-row{ display:flex; align-items:baseline; justify-content:space-between; gap:0.6rem; }
+  .m-wordmark{ font-family:var(--font-display); font-weight:600; font-size:1.18rem; letter-spacing:0.02em; }
+  .m-dateline{ font-family:var(--font-mono); font-size:0.58rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-soft); }
+  .m-mh-rule{ border-top:3px solid var(--ink); border-bottom:1px solid var(--ink); height:4px; margin-top:0.6rem; }
+
+  .kicker{ font-family:var(--font-mono); font-weight:700; font-size:0.63rem; letter-spacing:0.13em;
+    text-transform:uppercase; color:var(--accent); }
+  .m-hl{ font-family:var(--font-display); font-weight:700; line-height:1.09; color:var(--ink); text-wrap:balance; }
+  .m-sf{ font-family:var(--font-body); font-style:italic; color:var(--ink-soft); line-height:1.4; }
+  .m-body p{ font-family:var(--font-body); font-size:1rem; line-height:1.6; color:var(--ink); }
+  .m-body p + p{ margin-top:0.8em; }
+  .m-meta{ font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.09em; text-transform:uppercase; color:var(--ink-soft); }
+
+  /* results scorecard (R5), mobile */
+  .m-r5{ border:1px solid var(--ink); margin:0.95rem var(--pad) 0; }
+  .m-r5-title{ background:var(--ink); color:var(--paper); font-family:var(--font-mono); font-size:0.58rem;
+    font-weight:700; letter-spacing:0.16em; text-transform:uppercase; padding:0.34rem 0.7rem; }
+  .m-r-list{ padding:0.5rem 0.7rem 0.6rem; display:flex; flex-direction:column; gap:0.28rem; }
+  .m-r-item{ display:flex; justify-content:space-between; gap:0.7rem; align-items:baseline; }
+  .m-r-label{ font-family:var(--font-mono); font-size:0.62rem; letter-spacing:0.04em; text-transform:uppercase; color:var(--ink-soft); }
+  .m-r-value{ font-family:var(--font-mono); font-size:0.75rem; font-weight:600; font-variant-numeric:tabular-nums; text-align:right; }
+  .m-r-lead{ background:var(--tint); padding:0.26rem 0.35rem; margin:0 -0.35rem; }
+  .m-r-lead .m-r-value{ color:var(--accent); font-weight:700; }
+</style>
+<style>
+  /* =========================================================================
+     A — INDEX FIRST
+     ========================================================================= */
+  .pat-a .idx-lead{ padding:1.1rem var(--pad) 0; }
+  .pat-a .idx-lead .m-hl{ font-size:1.72rem; margin-top:0.3rem; }
+  .pat-a .idx-lead .m-sf{ font-size:0.94rem; margin-top:0.5rem; }
+  .pat-a .idx-list{ margin-top:1.3rem; border-top:3px solid var(--ink); }
+  .pat-a .idx-h{ font-family:var(--font-mono); font-size:0.6rem; font-weight:700; letter-spacing:0.16em;
+    text-transform:uppercase; color:var(--ink-soft); padding:0.6rem var(--pad) 0.2rem; }
+  .pat-a .idx-item{
+    display:block; width:100%; text-align:left; background:none; border:none;
+    border-top:1px solid var(--rule); padding:0.85rem var(--pad); cursor:pointer;
+  }
+  .pat-a .idx-item:first-of-type{ border-top:none; }
+  .pat-a .idx-item .m-hl{ font-size:1.14rem; margin-top:0.25rem; }
+  .pat-a .idx-item .idx-foot{ display:flex; justify-content:space-between; align-items:baseline;
+    gap:0.6rem; margin-top:0.45rem; }
+  .pat-a .idx-item .chev{ font-family:var(--font-mono); font-size:0.72rem; color:var(--accent); }
+  .pat-a .idx-item.is-lead{ background:var(--tint); }
+
+  .pat-a .topbar{
+    position:sticky; top:0; z-index:5; display:flex; align-items:center; gap:0.55rem;
+    padding:0.7rem var(--pad); background:var(--paper); border-bottom:1px solid var(--ink);
+  }
+  .pat-a .topbar button{ background:none; border:none; cursor:pointer; display:flex; align-items:center;
+    gap:0.4rem; font-family:var(--font-mono); font-size:0.66rem; font-weight:700; letter-spacing:0.1em;
+    text-transform:uppercase; color:var(--accent); padding:0; }
+  .pat-a .topbar .tb-title{ margin-left:auto; font-family:var(--font-mono); font-size:0.6rem;
+    letter-spacing:0.09em; text-transform:uppercase; color:var(--ink-soft); }
+  .pat-a .article{ padding:1.15rem var(--pad) 1.6rem; }
+  .pat-a .article .m-hl{ font-size:1.55rem; margin-top:0.3rem; }
+  .pat-a .article .m-sf{ font-size:0.92rem; margin-top:0.5rem; }
+  .pat-a .article .m-body{ margin-top:1rem; }
+  .pat-a .artnav{ display:flex; border-top:3px solid var(--ink); }
+  .pat-a .artnav button{ flex:1; background:none; border:none; border-left:1px solid var(--rule);
+    padding:0.9rem var(--pad); text-align:left; cursor:pointer; }
+  .pat-a .artnav button:first-child{ border-left:none; }
+  .pat-a .artnav button:disabled{ opacity:0.35; cursor:default; }
+  .pat-a .artnav .an-lab{ font-family:var(--font-mono); font-size:0.58rem; letter-spacing:0.12em;
+    text-transform:uppercase; color:var(--ink-soft); }
+  .pat-a .artnav .an-hl{ font-family:var(--font-display); font-weight:700; font-size:0.88rem;
+    line-height:1.2; margin-top:0.25rem; }
+
+  /* =========================================================================
+     B — SWIPEABLE CARDS
+     ========================================================================= */
+  .pat-b .tabs{
+    position:sticky; top:0; z-index:5; display:flex; gap:0; overflow-x:auto; scrollbar-width:none;
+    background:var(--paper); border-bottom:1px solid var(--ink);
+  }
+  .pat-b .tabs::-webkit-scrollbar{ display:none; }
+  .pat-b .tab{
+    flex:none; background:none; border:none; border-bottom:3px solid transparent; cursor:pointer;
+    padding:0.6rem 0.75rem 0.5rem; font-family:var(--font-mono); font-size:0.6rem; font-weight:700;
+    letter-spacing:0.11em; text-transform:uppercase; color:var(--ink-soft); white-space:nowrap;
+  }
+  .pat-b .tab[aria-selected="true"]{ color:var(--accent); border-bottom-color:var(--accent); }
+  .pat-b .track{
+    display:flex; overflow-x:auto; scroll-snap-type:x mandatory; height:100%;
+    scrollbar-width:none;
+  }
+  .pat-b .track::-webkit-scrollbar{ display:none; }
+  .pat-b .panel{
+    flex:0 0 92%; scroll-snap-align:center; height:100%; overflow-y:auto;
+    border-right:1px solid var(--rule); padding:1.05rem var(--pad) 2rem;
+  }
+  body.capture .pat-b .track{ display:block; overflow:visible; }
+  body.capture .pat-b .panel{ width:100%; border-right:none; border-bottom:1px dashed var(--rule); }
+  .pat-b .panel .m-hl{ font-size:1.5rem; margin-top:0.3rem; }
+  .pat-b .panel .m-sf{ font-size:0.9rem; margin-top:0.45rem; }
+  .pat-b .panel .m-body{ margin-top:0.9rem; }
+  .pat-b .panel-foot{ margin-top:1.4rem; padding-top:0.7rem; border-top:1px solid var(--rule);
+    display:flex; justify-content:space-between; align-items:baseline; gap:0.6rem; }
+  .pat-b .swipe-hint{ font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.1em;
+    text-transform:uppercase; color:var(--accent); }
+  .pat-b .dots{ display:flex; gap:0.3rem; justify-content:center; padding:0.5rem 0 0.6rem;
+    border-top:1px solid var(--rule); background:var(--paper); }
+  .pat-b .dot{ width:6px; height:6px; border-radius:50%; background:var(--rule); }
+  .pat-b .dot.on{ background:var(--accent); }
+
+  /* =========================================================================
+     C — ACCORDION
+     ========================================================================= */
+  .pat-c .acc-lead{ padding:1.1rem var(--pad) 1.4rem; }
+  .pat-c .acc-lead .m-hl{ font-size:1.68rem; margin-top:0.3rem; }
+  .pat-c .acc-lead .m-sf{ font-size:0.93rem; margin-top:0.5rem; }
+  .pat-c .acc-lead .m-body{ margin-top:1rem; }
+  .pat-c .acc-list{ border-top:3px solid var(--ink); }
+  .pat-c .acc-row{ border-bottom:1px solid var(--rule); }
+  .pat-c .acc-btn{
+    display:block; width:100%; text-align:left; background:none; border:none; cursor:pointer;
+    padding:0.85rem var(--pad);
+  }
+  .pat-c .acc-btn .m-hl{ font-size:1.12rem; margin-top:0.25rem; }
+  .pat-c .acc-foot{ display:flex; justify-content:space-between; align-items:baseline; gap:0.6rem; margin-top:0.45rem; }
+  .pat-c .acc-sign{ font-family:var(--font-mono); font-size:0.8rem; font-weight:700; color:var(--accent); }
+  .pat-c .acc-panel{ padding:0 var(--pad) 1.2rem; }
+  .pat-c .acc-panel .m-sf{ font-size:0.88rem; margin-bottom:0.75rem; }
+  .pat-c .acc-row.open{ background:var(--tint); }
+  .pat-c .acc-row.open .acc-btn{ padding-bottom:0.5rem; }
+
+  /* ---------- appendix, shared across the three patterns ------------------ */
+  .m-apx{ border-top:3px solid var(--ink); }
+  .m-apx-btn{ display:block; width:100%; text-align:left; background:none; border:none; cursor:pointer;
+    padding:0.85rem var(--pad); display:flex; justify-content:space-between; align-items:center; gap:0.6rem; }
+  .m-apx-h{ font-family:var(--font-mono); font-size:0.63rem; font-weight:700; letter-spacing:0.12em;
+    text-transform:uppercase; color:var(--accent); }
+  .m-apx-body{ padding:0 var(--pad) 1.5rem; }
+  .m-apx-sec + .m-apx-sec{ margin-top:1.2rem; }
+  .table-scroll{ overflow-x:auto; max-width:100%; }
+  .stab{ width:100%; }
+  .stab th,.stab td{ text-align:left; padding:0.32rem 0.6rem 0.32rem 0; font-family:var(--font-mono);
+    font-size:0.68rem; white-space:nowrap; border-bottom:1px solid var(--rule); font-variant-numeric:tabular-nums; }
+  .stab th{ font-weight:700; font-size:0.58rem; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink-soft); }
+  .recs-cat{ font-family:var(--font-body); font-weight:700; font-size:0.8rem; margin-bottom:0.3rem; }
+  .recs li{ font-family:var(--font-body); font-size:0.86rem; color:var(--ink-soft); position:relative;
+    padding-left:0.9rem; line-height:1.45; }
+  .recs li + li{ margin-top:0.3rem; }
+  .recs li::before{ content:"—"; position:absolute; left:0; color:var(--accent); }
+  .recs-group + .recs-group{ margin-top:0.9rem; }
+</style>
+
+<div class="control-bar" role="toolbar" aria-label="Prototype controls">
+  <span class="control-brand">Mobile patterns <span>&middot; 390&thinsp;&times;&thinsp;844</span></span>
+  <div class="control-group" role="group" aria-label="Tournament">
+    <span class="control-label">Tournament</span>
+    <button type="button" class="control-btn" data-teg="14">TEG 14</button>
+    <button type="button" class="control-btn" data-teg="16">TEG 16</button>
+    <button type="button" class="control-btn" data-teg="18">TEG 18</button>
+  </div>
+  <div class="control-group" role="group" aria-label="Pattern">
+    <span class="control-label">Pattern</span>
+    <button type="button" class="control-btn" data-pat="a">A &middot; Index first</button>
+    <button type="button" class="control-btn" data-pat="b">B &middot; Swipeable cards</button>
+    <button type="button" class="control-btn" data-pat="c">C &middot; Accordion</button>
+  </div>
+  <div class="control-spacer"></div>
+  <p class="metric" id="metric"></p>
+  <p class="control-note" id="patNote"></p>
+</div>
+
+<div class="phone-wrap">
+  <div class="phone" id="phone"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var EDITIONS = [
+    {
+      "teg": 14,
+      "title": "Nine Ahead, Two Home: Mullin's Kent Double",
+      "dateline": {
+        "teg": "TEG 14",
+        "venue": "Kent, England",
+        "year": "2021"
+      },
+      "results": [
+        {
+          "label": "Trophy Winner",
+          "value": "David Mullin (3rd Trophy)",
+          "lead": true
+        },
+        {
+          "label": "Green Jacket",
+          "value": "David Mullin (9th Jacket)",
+          "lead": false
+        },
+        {
+          "label": "Wooden Spoon",
+          "value": "Jon Baker (1st Spoon)",
+          "lead": false
+        }
+      ],
+      "articles": [
+        {
+          "kicker": "TROPHY",
+          "headline": "Mullin holds on for the Trophy",
+          "standfirst": "David Mullin wins the Trophy on 154 points by 2 \u2014 a lead built on the first two links and defended by fingernails at Prince's",
+          "paragraphs": [
+            "David Mullin won the Trophy with 154 points, two clear of Alex Baker. It is the 16th-best total in TEG history and the third-best of his own career, and very nearly all of it was banked before anyone thought to object.",
+            "The foundation was laid on the first two links. At Royal Cinque Ports he went round in 87, seven strokes better than his previous visit. The engine room was a four-hole run from the 9th: par, birdie at the 10th, then two more pars, 13 points, a man briefly playing golf on purpose. The sequence ended at the 13th with a double bogey. At Littlestone he shot 85, again seven better than last time out, and another course best.",
+            "Prince's declined to co-operate. In round three he arrived at the par-five 8th with a tournament in his pocket and took nine. A quadruple bogey. It returned nothing, which is the standard yield on a nine. He then took 13 points from the closing four holes, three pars and a birdie at the last, as though the 8th had happened to a stranger. Round four produced another quadruple bogey, an eight at the 10th. Two quads on the same links in two days. The trophy did not appear to mind.",
+            "That opened the door for Baker, who had trailed by as many as nine. He answered with 10 points across the first three holes of the final round and 11 more from the 13th to the 15th, closing to within two. Then he reached the 16th and made a ten. His four days had begun to come apart considerably earlier, at Littlestone, where he dropped 12 shots across holes 2 to 5."
+          ],
+          "words": 282,
+          "compelling": 8,
+          "humour": 5,
+          "is_lead": true
+        },
+        {
+          "kicker": "WOODEN SPOON",
+          "headline": "Jon Baker, defending Trophy champion, collects the Wooden Spoon on 125 points",
+          "standfirst": "",
+          "paragraphs": [
+            "Jon Baker finished last in the Stableford count and took the Wooden Spoon with 125 points across the four rounds. The defence of a title can take many forms. He chose this one, and won it by 12, which is a margin of some authority.",
+            "The early links did him no favours, and he returned the courtesy. At Royal Cinque Ports his best gross was 92, seven strokes worse than the 85 he had managed on his previous visit. At Littlestone he posted 92 against a prior best of 79. Thirteen shots is not a bad day; it is a change of identity. His third round at Prince's brought 28 points, held down in part by a run of pars from the 14th that ended with a triple bogey six at the par-three 17th.",
+            "The final round was another man entirely. Baker returned 39 points, an improvement of 11 on the previous day, and his 83 gross set a new course record for Prince's Shore/Dunes, beating the previous mark of 85 that had stood across five prior visits. It was also his personal best on the layout, two strokes better than his last time there. The scoring came in a burst: five holes without dropping a gross shot from the 11th to the 15th, back-to-back birdies at the 12th and 13th, a two-hole birdie streak that equals the all-time TEG record, and 14 points across holes 12 to 15.",
+            "Then the 16th, which had already relieved Alex Baker of the Trophy that afternoon, took a double bogey from Jon and ended the run. He ran up an eight at the 18th. He therefore holds the course record and the Wooden Spoon at the same time, which takes some arranging."
+          ],
+          "words": 289,
+          "compelling": 9,
+          "humour": 8,
+          "is_lead": false
+        },
+        {
+          "kicker": "SIDEBAR",
+          "headline": "Alex Baker and the 16th",
+          "standfirst": "Alex Baker and the 16th hole: two 10s in one TEG, and a Trophy left on the table",
+          "paragraphs": [
+            "Two of Baker's four rounds in Kent ended with a 10 on the card, and on both occasions the number arrived at a hole numbered 16. Different courses, different pars, no connection whatsoever beyond the obvious one. The first came in the opening round at Royal Cinque Ports, a quintuple bogey at the par-five 16th, stroke index 7, no Stableford points. The second, at Prince's on the Sunday, was worse in relative terms: a 10 at a par four, a sextuple bogey, on stroke index 17, the second-easiest hole on the card. Taking ten shots there requires a degree of commitment.",
+            "The Prince's 10 was the more painful for what preceded it. Baker had played the 13th, 14th and 15th in par, par, par, three holes without dropping a gross shot, worth eleven Stableford points. The 16th erased the lot at a stroke. He was not alone in losing his footing there. Jon Baker arrived at the same hole having gone par-birdie-birdie-par-par from the 11th, and made a double bogey for no points.",
+            "These were the headline numbers, not the only ones. Baker also had an 8 at the 11th at Royal Cinque Ports, a 9 at the 5th and an 8 at the 8th at Littlestone, and an 8 at the 10th at Prince's in round three. Five further holes returning nothing. His round-one 98 at Royal Cinque Ports was still four strokes better than his previous visit, which tells you a good deal about the previous visit."
+          ],
+          "words": 249,
+          "compelling": 8,
+          "humour": 8,
+          "is_lead": false
+        },
+        {
+          "kicker": "GREEN JACKET",
+          "headline": "David Mullin's Green Jacket at +68",
+          "standfirst": "",
+          "paragraphs": [
+            "David Mullin took the Green Jacket at TEG 14 with a gross total of +68, seven clear of Jon Baker. His ninth. It is the sixth-best Green Jacket total on record and the fourth-best of his own career at the metric.",
+            "The number was built on consistency across Kent's four links rounds. Mullin set a personal best on every course he played: 87 at Royal Cinque Ports and 85 at Littlestone, each seven strokes better than his previous visit in TEG 13, and 91 at Prince's Shore/Dunes, one better than before. None of those figures would trouble a club noticeboard in isolation. Stacked together, they were unanswerable.",
+            "Behind him the chase was real, and late. Baker trailed by 15 at one point and closed to seven, the bulk of that work arriving in the final round at Prince's, where his 83 gross set a new course record. The previous mark of 85 had stood across five prior visits, and was Baker's own. Gregg Williams made up more ground still, trailing by 18 at his worst and finishing eight back. His +76 is a personal-best Green Jacket gross total, and his 86 at Prince's in round three was a course best for him too.",
+            "The gap never closed far enough. Mullin's margin of seven at the finish flatters the field, given how much larger it had been for most of the four days."
+          ],
+          "words": 232,
+          "compelling": 7,
+          "humour": 4,
+          "is_lead": false
+        },
+        {
+          "kicker": "SIDEBAR",
+          "headline": "Gregg Williams plays the best gross golf of his TEG life and wins nothing",
+          "standfirst": "",
+          "paragraphs": [
+            "Williams finished TEG 14 with a Gross total of +76, a personal best, and no prize of any description. The number rested on two course records of his own: 93 at Royal Cinque Ports, one better than his previous mark there of 94, and 86 at Prince's in round three, three strokes better than his last visit and inside his previous best of 89.",
+            "It was not tidy. He opened at Deal with a 9 at the par-five 3rd, stroke index 4, a quadruple bogey worth nothing at all. Littlestone was worse in the wider sense: 97, eleven strokes adrift of the 86 he had managed there before, and only 27 Stableford points.",
+            "Round three was the correction. He gained twelve points on the day, reaching 39, and the middle of it was genuinely solid: pars at the 9th, 10th and 11th for nine points, three holes without dropping a gross shot, then two more clean holes at the 15th and 16th. Between those came an 8 at the par-five 12th, which brought the exhibition to a close.",
+            "Sunday offered more steadiness in patches, gross pars at the 5th and 6th and again at the 14th and 15th. Having trailed the Green Jacket lead by 18 at one stage, he closed to within 8. Ten shots recovered. Eight still owed."
+          ],
+          "words": 220,
+          "compelling": 6,
+          "humour": 5,
+          "is_lead": false
+        }
+      ],
+      "standings": [
+        {
+          "round": 1,
+          "trophy": "DM 40 | AB 37 | GW 33 | JB 29",
+          "jacket": "DM +15 | JB +20 | GW +21 | AB +26"
+        },
+        {
+          "round": 2,
+          "trophy": "DM 81 | AB 72 | GW 60 | JB 58",
+          "jacket": "DM +29 | JB +41 | GW +47 | AB +55"
+        },
+        {
+          "round": 3,
+          "trophy": "DM 117 | AB 109 | GW 99 | JB 86",
+          "jacket": "DM +49 | GW +61 | JB +64 | AB +80"
+        },
+        {
+          "round": 4,
+          "trophy": "DM 154 | AB 152 | GW 137 | JB 125",
+          "jacket": "DM +68 | JB +75 | GW +76 | AB +102"
+        }
+      ],
+      "records": [
+        {
+          "category": "Personal bests",
+          "text": "Gregg Williams's +76 is a personal Gross best"
+        }
+      ]
+    },
+    {
+      "teg": 16,
+      "title": "Two Spoons, Then This",
+      "dateline": {
+        "teg": "TEG 16",
+        "venue": "Lisbon Coast, Portugal",
+        "year": "2023"
+      },
+      "results": [
+        {
+          "label": "Trophy Winner",
+          "value": "Stuart Neumann (1st Trophy)",
+          "lead": true
+        },
+        {
+          "label": "Green Jacket",
+          "value": "Gregg Williams (2nd Jacket)",
+          "lead": false
+        },
+        {
+          "label": "Wooden Spoon",
+          "value": "Alex Baker (3rd Spoon)",
+          "lead": false
+        }
+      ],
+      "articles": [
+        {
+          "kicker": "TROPHY",
+          "headline": "Neumann's first Trophy",
+          "standfirst": "Stuart Neumann's first Trophy \u2014 156 points, 13 clear, and never headed after the opening afternoon",
+          "paragraphs": [
+            "Stuart Neumann won the Trophy at TEG 16 on the Lisbon Coast with 156 Stableford points, finishing 13 clear of Gregg Williams. It is the 16th-highest Trophy total recorded and the second-best of his own career. A man can wait a long time for a first Trophy. Neumann waited, and then won it by rather more than he needed to.",
+            "The margin was built early and never surrendered. He held the Trophy lead after round two at Troia, still held it after round three at Penha Longa, and carried it through the closing round at Estoril. Williams, meanwhile, led the Jacket standings at each of those same checkpoints. For three days the two of them occupied separate thrones, and neither gave an inch in his own.",
+            "The final round was not flawless. At Estoril's 8th, a par 4 and the hardest hole on the card at stroke index 1, Neumann took nine. A quintuple bogey. Worth no points at all, which is to say the hole may as well not have happened, and in scoring terms it did not. The lead never so much as shifted in its seat. That is what a cushion is for.",
+            "Estoril otherwise gave him his best golf of the four days. His 92 there was a course personal best, 14 strokes better than the 106 he posted on his only previous visit in TEG 15. It was the one venue of the four where he improved on his own history, and he chose the day the Trophy was settled to do it."
+          ],
+          "words": 258,
+          "compelling": 8,
+          "humour": 5,
+          "is_lead": true
+        },
+        {
+          "kicker": "SIDEBAR",
+          "headline": "David Mullin: from the bottom of the Spoon race",
+          "standfirst": "David Mullin: from the bottom of the Spoon race in R1 to the Estoril course record in R4",
+          "paragraphs": [
+            "David Mullin's tournament ended a very long way from where it started. At Oitavos Dunes in the opening round he ran up a triple-bogey seven at the 10th, a stroke index 4 par four, and the zero points dropped him from second to fifth in the Wooden Spoon race. Fifth in the Spoon race is not a mid-table sort of fifth. It is the bottom of the pile. Round three at Penha Longa was worse in places: a quadruple-bogey eight at the 16th, the hardest hole on the card, after which he composed himself and parred 17 and 18 like a man tidying a room he had just set fire to. The round came to 30 points, and his 98 there was well adrift of his previous best at the course.",
+            "Estoril, on the Tuesday, was a different matter. Mullin birdied the 2nd and parred the 3rd, then wobbled through a bogey-bogey-double stretch at the 4th, 5th and 6th before a birdie at the 7th stopped the slide. The back nine simply held. Nine points from the 11th, 12th and 13th, with pars at 12 and 13, and two more pars at 16 and 17 to finish.",
+            "The total was 45 points, a 15-point improvement on round three. The gross number mattered more. His 80 set a new course record at Estoril, beating the previous mark of 86 established across six prior visits, and bettered his own best there, a 94 at TEG 15, by fourteen strokes. Four days earlier he had been last in the race for the Spoon. Golf is not a fair sport, but it is occasionally a generous one."
+          ],
+          "words": 273,
+          "compelling": 8,
+          "humour": 5,
+          "is_lead": false
+        },
+        {
+          "kicker": "WOODEN SPOON & SIDEBAR",
+          "headline": "The Baker brothers and Penha Longa's 12th",
+          "standfirst": "The Baker brothers and Penha Longa's 12th / Alex Baker's third Wooden Spoon, back-to-back, 127 points \u2014 and two all-time course-worst records to go with it",
+          "paragraphs": [
+            "Alex Baker's tournament began badly and then declined to change course. In the first round at Oitavos Dunes he took nine at the 1st, nine at the 11th and ten at the 17th, signing for 113 gross. That is a new course-worst for Oitavos, beating the previous mark of 111 set across twelve prior visits. Twelve visits' worth of human frailty, surpassed before lunch on day one. At Troia the next day the damage was more concentrated: thirteen shots dropped over the five holes from the 13th to the 17th, three triples followed by two doubles.",
+            "Round three took the field to Penha Longa, where both Bakers found the same piece of ground. Jon Baker made a double bogey six at the 11th, then took ten at the par-five 12th, a quintuple bogey and no points, and followed it with an eight at the 13th. Eleven shots gone in three holes, three holes without a net par. It was his only round of the tournament in which he failed to improve on a previous visit: 97 gross at a course where his prior best was 85.",
+            "Alex was on the same holes, doing much the same thing at a marginally gentler gradient. Double bogey at the 11th, then a nine at the 12th for quadruple bogey, then a seven at the 13th and a seven at the 14th. Twelve shots dropped across four holes and, like his brother, three holes from the 12th onward without a net par. Whatever the 12th at Penha Longa is, it is in the family.",
+            "The final round at Estoril separated them. Jon's one lapse came at the 11th, the hardest hole on the card, where he made an eight, and that was the extent of it. Alex's round was a lapse with holes attached. Nine at the 1st. Eight at the 3rd. Nine at the 6th. Fourteen shots bled over the six holes from the 5th to the 10th, every single one a double or worse, an unbroken run of ruin conducted with no apparent loss of composure. Then the 12th, a par four, where he took eleven. A septuple bogey, and the worst score he has ever recorded on a par four in his life. The round came to 107 gross, a second course-worst of the four days, exceeding Estoril's previous high of 106 across six prior visits. He finished on 127 points and collected the Wooden Spoon, his third, and the second in a row. He did not merely lose. He amended the record books at two separate venues while doing it."
+          ],
+          "words": 430,
+          "compelling": 7,
+          "humour": 9,
+          "is_lead": false
+        },
+        {
+          "kicker": "GREEN JACKET",
+          "headline": "Gregg Williams's second Green Jacket",
+          "standfirst": "",
+          "paragraphs": [
+            "Gregg Williams's second Green Jacket was never really in doubt, and the final margin, 16 shots clear of David Mullin, says as much. His gross total of +66 is the fifth-best in the event's history and comfortably the best of his own career. It was, by any measure, thoroughly deserved.",
+            "It was also not tidy. Troia, a course none of the field had seen before, produced a 94 and two of his worst passages of the tournament: four holes from the 8th without a net par, then three straight doubles from the 13th, six gross shots gone in as many holes.",
+            "Penha Longa on the Monday was similarly uneven. A triple at the 3rd and a double at the 4th were answered at once with a birdie at the short 5th, a repair immediately undone by a bogey-triple-double run through the 6th, 7th and 8th. He then steadied himself, playing the 11th through the 15th in level par and collecting nine points across the last three of those. His 87 was five worse than his previous visit here.",
+            "Estoril produced both his best round and his loudest mistake. The 80 was a course best by six on his only prior visit, and it arrived despite an eight at the par-four 14th, a quadruple bogey, and a double at the 9th that ended a run of three straight pars. He won the Jacket by 16. He did not avoid the wreckage. He was simply the man whose wreckage cost him least."
+          ],
+          "words": 250,
+          "compelling": 7,
+          "humour": 4,
+          "is_lead": false
+        }
+      ],
+      "standings": [
+        {
+          "round": 1,
+          "trophy": "SN 39 | GW 34 | JB 34 | DM 33 | AB 29",
+          "jacket": "GW +18 | JB +21 | DM +23 | SN +26 | AB +42"
+        },
+        {
+          "round": 2,
+          "trophy": "SN 74 | DM 67 | JB 66 | GW 64 | AB 61",
+          "jacket": "GW +40 | JB +44 | DM +45 | SN +56 | AB +76"
+        },
+        {
+          "round": 3,
+          "trophy": "SN 113 | GW 101 | JB 99 | DM 97 | AB 94",
+          "jacket": "GW +55 | JB +69 | DM +71 | SN +82 | AB +110"
+        },
+        {
+          "round": 4,
+          "trophy": "SN 156 | GW 143 | DM 142 | JB 131 | AB 127",
+          "jacket": "GW +66 | DM +82 | JB +93 | SN +105 | AB +148"
+        }
+      ],
+      "records": [
+        {
+          "category": "Personal bests",
+          "text": "Gregg Williams's +66 is a personal Gross best"
+        },
+        {
+          "category": "Rare feats",
+          "text": "Alex Baker runs up a 11 (septuple bogey) at the 12th (R4) \u2014 his career-worst on a par-4"
+        }
+      ]
+    },
+    {
+      "teg": 18,
+      "title": "An Eleven, a Ten, and the Trophy: Alex Baker Wins in Catalonia",
+      "dateline": {
+        "teg": "TEG 18",
+        "venue": "Catalonia, Spain",
+        "year": "2025"
+      },
+      "results": [
+        {
+          "label": "Trophy Winner",
+          "value": "Alex Baker \u2014 169 pts, by 8 from John Patterson",
+          "lead": true
+        },
+        {
+          "label": "Green Jacket",
+          "value": "Gregg Williams \u2014 +66, by 14 from David Mullin",
+          "lead": false
+        },
+        {
+          "label": "Wooden Spoon",
+          "value": "Jon Baker \u2014 126 pts, 23 adrift of the next worst",
+          "lead": false
+        }
+      ],
+      "articles": [
+        {
+          "kicker": "TROPHY",
+          "headline": "Alex Baker's Trophy: 169 points",
+          "standfirst": "Alex Baker's Trophy: 169 points, two field-best rounds, and a course-worst gross that cost him nothing",
+          "paragraphs": [
+            "Alex Baker won the Trophy with 169 points, eight clear of runner-up John Patterson. It stands as the seventh-highest Trophy total on record and the second-best of his own career. He led the Stableford count after each of the final three rounds, and once he reached the front after R2 he was never headed. The victory is entirely his and requires no qualification whatsoever. The golf is another matter.",
+            "The scoring came in bursts. On the Tour Course in R1 he took 17 points from holes 8 to 12, a run assembled from bogeys at stroke-index holes rather than anything one could reasonably call thrilling, then added 13 more across 14 to 16, including a birdie at the par-five 15th. His biggest single stretch came in R3 on the Stadium Course: 21 points from holes 11 to 16, six consecutive holes without a blank.",
+            "The gross figures were fighting a different campaign. In R2 he made an 8 at the par-three 16th and an 11 at the par-five 18th, both personal worsts against par, and signed for 106. That is a new PGA Catalunya Tour course-worst, beating the previous mark of 105, which had stood across 22 prior visits. Nobody sets a record like that casually. It takes commitment. R4 then produced a 10 at the 14th and an 8 at the 17th, delivered with the serenity of a man who had already counted his points and found them sufficient. His best gross of the four days was 98 on the Tour and 100 on the Stadium, against prior bests of 92 and 93. It cost him the Green Jacket, where he slid from second after R1 to fifth. On Stableford, it cost him nothing at all."
+          ],
+          "words": 287,
+          "compelling": 9,
+          "humour": 7,
+          "is_lead": true
+        },
+        {
+          "kicker": "SIDEBAR",
+          "headline": "David Mullin",
+          "standfirst": "David Mullin: an 11 at the 15th, then the lowest gross round ever played at the Stadium",
+          "paragraphs": [
+            "Mullin visited both extremes available to a golfer, and the first arrived at the 15th on the Tour Course in Round 1. The par five took him eleven strokes. A sextuple bogey, no Stableford points, and the worst score he has ever recorded on a par five. The consequences reached beyond the card: the hole dropped him from second to fifth in the Wooden Spoon standings, which is the bottom of that particular race.",
+            "Two days later, on the Stadium Course, he built something the tournament had never seen. His 84 gross in Round 3 is a new course record at the Stadium, beating the previous mark of 89 set across 27 prior visits. It was also comfortably his own best there, his previous best gross on the course being 91 across five earlier visits, and it was eight strokes better than his last time out on it.",
+            "Round 4 arrived to explain that the record had been a round of golf and not a change of personality. Through the closing stretch he went four holes without a net par: a double bogey at the 14th, a triple at the 15th, then doubles at the 16th and 17th. Nine shots gone in four holes, and five Stableford points went with them. A tournament, then, of one number nobody will forget and several he would rather."
+          ],
+          "words": 225,
+          "compelling": 9,
+          "humour": 6,
+          "is_lead": false
+        },
+        {
+          "kicker": "GREEN JACKET & WOODEN SPOON",
+          "headline": "Gregg Williams's Green Jacket",
+          "standfirst": "Gregg Williams's Green Jacket: reigning Wooden Spoon holder to +66 and a 14-shot win / Jon Baker's Wooden Spoon: the defending Trophy champion finishes 23 points adrift of the next man",
+          "paragraphs": [
+            "**Round 1, Tour Course.** Gregg Williams opened in the manner expected of a man holding the Wooden Spoon: a quadruple-bogey 9 at the par-5 7th, another quadruple bogey, an 8, at the 17th, and a haemorrhage of dropped shots running from the 2nd all the way to the 14th, taking in triple bogeys at the 3rd and 4th. A birdie at the par-5 15th finally applied a tourniquet. He signed for 31 points. Jon Baker, meanwhile, had led the Green Jacket gross race since the 5th hole of that same round.",
+            "**Round 2, Tour Course.** The Sunday round is where Baker discovered that his tenure at the top would be measured in holes rather than rounds. It lasted 20 of them. A bogey at the 7th handed the gross lead to Williams. Baker answered late: a birdie at the 14th began a run of five holes without a dropped gross shot, worth 16 points to the 18th, and by the close of the round he was the Jacket leader again, with Alex Baker heading the Trophy. Williams produced his own surge over the same closing stretch, 13 points from the 13th to the 16th, four pars in a row and not a gross shot dropped, and posted 42 points, an 11-point improvement on his opening round.",
+            "**Round 3, Stadium Course.** The Jacket changed hands for good, and it happened early. Williams parred the 2nd and took the outright gross lead. Baker's round then disintegrated at the 4th, where a 9, a quintuple bogey on a par 4, went down as a blank. By nightfall the boards read Alex Baker in the Trophy and Williams in the Jacket, and they would not be revised.",
+            "**Round 4, Stadium Course.** Williams birdied the par-3 5th, parred the 6th and gathered nine points across the 8th, 9th and 10th, closing out an 84 that was his best gross score in seven visits to the Stadium, eight shots better than his last time round it.",
+            "The two ledgers closed in opposite corners. Williams took the Green Jacket at +66, winning by 14 from David Mullin, the sixth-best gross total in TEG history and his own best. Jon Baker, the defending Trophy champion, finished on 126 Stableford points, 23 adrift of the next man, and collected the Wooden Spoon. He led one competition from the fifth hole of the tournament and finished last in the other. The defence of his Trophy consisted largely of attendance."
+          ],
+          "words": 409,
+          "compelling": 8,
+          "humour": 8,
+          "is_lead": false
+        },
+        {
+          "kicker": "SIDEBAR",
+          "headline": "John Patterson's second place",
+          "standfirst": "John Patterson's second place, and the eight holes on the opening morning",
+          "paragraphs": [
+            "John Patterson's tournament was defined, and very nearly ended, in a single stretch of the opening morning on the Tour Course. From the 3rd he ran up an eight, a quadruple bogey, and then declined to stop: holes 3 through 10 cost him 22 shots to par, including triple bogeys at the 4th, 7th, 8th and 9th. Across the seven holes from the 3rd to the 9th he failed to make a single net par. By the 4th he had slipped from fourth to fifth in the Wooden Spoon standings, which is to say the bottom of it, on the fourth hole of the tournament.",
+            "What followed is the reason he was still in the argument at the close. Later in the same round he took 13 points from the 13th to the 16th, three pars and a bogey at the par-five 15th. In round two he made another eight at the 4th and leaked 11 shots between the 6th and the 10th, then answered with 16 points across the 11th to the 15th. That round produced a 94, his best gross on the Tour Course, bettering his previous mark of 96.",
+            "The pattern held to the last day. After a triple at the 14th and a double at the 15th on the Stadium, he halted proceedings with a bogey at the 16th and a birdie at the 17th. Second place, built on the recoveries rather than the collapses, of which there were plenty to choose from."
+          ],
+          "words": 247,
+          "compelling": 8,
+          "humour": 5,
+          "is_lead": false
+        }
+      ],
+      "standings": [
+        {
+          "round": 1,
+          "trophy": "AB 46 | JP 34 | DM 32 | GW 31 | JB 30",
+          "jacket": "JB +24 | AB +26 | GW +27 | DM +28 | JP +30"
+        },
+        {
+          "round": 2,
+          "trophy": "AB 87 | JP 76 | GW 73 | JB 69 | DM 67",
+          "jacket": "JB +39 | GW +41 | DM +50 | JP +52 | AB +60"
+        },
+        {
+          "round": 3,
+          "trophy": "AB 131 | JP 119 | GW 116 | DM 111 | JB 97",
+          "jacket": "GW +54 | DM +62 | JB +67 | JP +73 | AB +88"
+        },
+        {
+          "round": 4,
+          "trophy": "AB 169 | JP 161 | GW 160 | DM 149 | JB 126",
+          "jacket": "GW +66 | DM +80 | JB +92 | JP +95 | AB +124"
+        }
+      ],
+      "records": [
+        {
+          "category": "Personal bests",
+          "text": "Gregg Williams's +66 is a personal Gross best"
+        },
+        {
+          "category": "Rare feats",
+          "text": "David Mullin runs up a 11 (sextuple bogey) at the 15th (R1) \u2014 his career-worst on a par-5"
+        },
+        {
+          "category": "Rare feats",
+          "text": "Alex Baker runs up a 11 (sextuple bogey) at the 18th (R2) \u2014 his career-worst on a par-5"
+        },
+        {
+          "category": "Rare feats",
+          "text": "Alex Baker runs up a 8 (quintuple bogey) at the 16th (R2) \u2014 his career-worst on a par-3"
+        }
+      ]
+    }
+  ];
+
+  var PAT_NOTES = {
+    a: "Costs a tap to reach any prose. Nothing is ever half-read; the front screen is a contents page.",
+    b: "Everything one gesture away. Discoverability rests on the kicker tabs and the panel edge.",
+    c: "Cheapest to build. The risk is that two open sections read as a long report again."
+  };
+
+  var editionsByTeg = {};
+  EDITIONS.forEach(function(e){ editionsByTeg[e.teg] = e; });
+
+  var state = { teg: 14, pat: "a", view: null, open: {}, apxOpen: false, panel: 0 };
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+  function paragraphsHtml(ps){
+    return ps.map(function(p){
+      return "<p>" + esc(p).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>") + "</p>";
+    }).join("");
+  }
+  function readTime(words){ return Math.max(1, Math.ceil(words / 200)) + " min read"; }
+
+  function mastheadHtml(e){
+    var d = e.dateline;
+    return '<header class="m-masthead"><div class="m-mh-row">' +
+      '<span class="m-wordmark">The TEG</span>' +
+      '<span class="m-dateline">' + esc(d.teg) + ' &middot; ' + esc(d.venue) + ' &middot; ' + esc(d.year) + '</span>' +
+      '</div><div class="m-mh-rule"></div></header>';
+  }
+  function resultsHtml(e){
+    var items = e.results.map(function(r){
+      return '<li class="m-r-item' + (r.lead ? " m-r-lead" : "") + '">' +
+        '<span class="m-r-label">' + esc(r.label) + '</span>' +
+        '<span class="m-r-value">' + esc(r.value) + '</span></li>';
+    }).join("");
+    return '<div class="m-r5"><p class="m-r5-title">At a glance</p>' +
+      '<ul class="m-r-list">' + items + '</ul></div>';
+  }
+  function appendixHtml(e, open){
+    var rows = e.standings.map(function(s){
+      return '<tr><td>R' + s.round + '</td><td>' + esc(s.trophy) + '</td><td>' + esc(s.jacket) + '</td></tr>';
+    }).join("");
+    var by = {}, order = [];
+    e.records.forEach(function(r){
+      if (!by[r.category]){ by[r.category] = []; order.push(r.category); }
+      by[r.category].push(r.text);
+    });
+    var recs = order.map(function(c){
+      return '<div class="recs-group"><p class="recs-cat">' + esc(c) + '</p><ul class="recs">' +
+        by[c].map(function(t){ return "<li>" + esc(t) + "</li>"; }).join("") + '</ul></div>';
+    }).join("");
+    var body = open
+      ? '<div class="m-apx-body">' +
+          '<div class="m-apx-sec"><div class="table-scroll"><table class="stab">' +
+            '<thead><tr><th>Rd</th><th>Trophy</th><th>Green Jacket</th></tr></thead>' +
+            '<tbody>' + rows + '</tbody></table></div></div>' +
+          '<div class="m-apx-sec">' + recs + '</div>' +
+        '</div>'
+      : "";
+    return '<section class="m-apx">' +
+      '<button type="button" class="m-apx-btn" data-apx="1" aria-expanded="' + (open ? "true" : "false") + '">' +
+        '<span class="m-apx-h">Standings &amp; records</span>' +
+        '<span class="acc-sign">' + (open ? "−" : "+") + '</span>' +
+      '</button>' + body + '</section>';
+  }
+
+  /* ---- A · index first --------------------------------------------------- */
+
+  function renderIndexA(e, lead, subs){
+    var items = subs.map(function(a, i){
+      return '<button type="button" class="idx-item" data-open="' + (i + 1) + '">' +
+        '<p class="kicker">' + esc(a.kicker) + '</p>' +
+        '<h2 class="m-hl">' + esc(a.headline) + '</h2>' +
+        '<span class="idx-foot"><span class="m-meta">' + readTime(a.words) + '</span>' +
+        '<span class="chev">Read &rarr;</span></span></button>';
+    }).join("");
+
+    return '<div class="scroller">' +
+      mastheadHtml(e) + resultsHtml(e) +
+      '<div class="idx-lead">' +
+        '<p class="kicker">' + esc(lead.kicker) + '</p>' +
+        '<h1 class="m-hl">' + esc(lead.headline) + '</h1>' +
+        (lead.standfirst ? '<p class="m-sf">' + esc(lead.standfirst) + '</p>' : '') +
+      '</div>' +
+      '<div class="idx-list">' +
+        '<p class="idx-h">In this edition</p>' +
+        '<button type="button" class="idx-item is-lead" data-open="0">' +
+          '<p class="kicker">' + esc(lead.kicker) + ' &middot; Lead</p>' +
+          '<h2 class="m-hl">' + esc(lead.headline) + '</h2>' +
+          '<span class="idx-foot"><span class="m-meta">' + readTime(lead.words) + '</span>' +
+          '<span class="chev">Read &rarr;</span></span></button>' +
+        items +
+      '</div>' +
+      appendixHtml(e, state.apxOpen) +
+    '</div>';
+  }
+
+  function renderArticleA(e, all, i){
+    var a = all[i];
+    var prev = all[i - 1], next = all[i + 1];
+    var navBtn = function(art, j, label){
+      if (!art) return '<button type="button" disabled><span class="an-lab">' + label + '</span></button>';
+      return '<button type="button" data-open="' + j + '"><span class="an-lab">' + label + '</span>' +
+        '<span class="an-hl">' + esc(art.headline) + '</span></button>';
+    };
+    return '<div class="scroller">' +
+      '<div class="topbar"><button type="button" data-index="1">&larr; Front page</button>' +
+        '<span class="tb-title">' + esc(e.dateline.teg) + '</span></div>' +
+      '<article class="article">' +
+        '<p class="kicker">' + esc(a.kicker) + '</p>' +
+        '<h1 class="m-hl">' + esc(a.headline) + '</h1>' +
+        (a.standfirst ? '<p class="m-sf">' + esc(a.standfirst) + '</p>' : '') +
+        '<div class="m-body">' + paragraphsHtml(a.paragraphs) + '</div>' +
+      '</article>' +
+      '<div class="artnav">' + navBtn(prev, i - 1, "Previous") + navBtn(next, i + 1, "Next") + '</div>' +
+    '</div>';
+  }
+
+  /* ---- B · swipeable cards ----------------------------------------------- */
+
+  function renderB(e, lead, subs){
+    var all = [lead].concat(subs);
+    var tabs = all.map(function(a, i){
+      return '<button type="button" class="tab" role="tab" data-panel="' + i + '" ' +
+        'aria-selected="' + (i === state.panel ? "true" : "false") + '">' + esc(a.kicker) + '</button>';
+    }).join("") +
+      '<button type="button" class="tab" role="tab" data-panel="' + all.length + '" ' +
+      'aria-selected="' + (all.length === state.panel ? "true" : "false") + '">Standings</button>';
+
+    var panels = all.map(function(a, i){
+      var isLead = i === 0;
+      return '<section class="panel" data-panel-index="' + i + '">' +
+        (isLead ? resultsHtml(e).replace(' class="m-r5"', ' class="m-r5" style="margin-left:0;margin-right:0;margin-top:0"') : "") +
+        '<p class="kicker"' + (isLead ? ' style="margin-top:0.95rem"' : '') + '>' + esc(a.kicker) + '</p>' +
+        '<h1 class="m-hl">' + esc(a.headline) + '</h1>' +
+        (a.standfirst ? '<p class="m-sf">' + esc(a.standfirst) + '</p>' : '') +
+        '<div class="m-body">' + paragraphsHtml(a.paragraphs) + '</div>' +
+        '<div class="panel-foot"><span class="m-meta">' + (i + 1) + ' of ' + (all.length + 1) + '</span>' +
+        '<span class="swipe-hint">Swipe &rarr;</span></div>' +
+      '</section>';
+    }).join("");
+
+    var apxPanel = '<section class="panel" data-panel-index="' + all.length + '">' +
+      '<p class="kicker">Reference</p><h1 class="m-hl">Standings &amp; records</h1>' +
+      appendixHtml(e, true).replace('<section class="m-apx">', '<div style="margin-top:1rem">')
+        .replace('</section>', '</div>') +
+      '</section>';
+
+    var dots = all.concat([null]).map(function(_, i){
+      return '<span class="dot' + (i === state.panel ? " on" : "") + '"></span>';
+    }).join("");
+
+    return mastheadHtml(e) +
+      '<div class="tabs" role="tablist">' + tabs + '</div>' +
+      '<div class="track" id="track">' + panels + apxPanel + '</div>' +
+      '<div class="dots">' + dots + '</div>';
+  }
+
+  /* ---- C · accordion ------------------------------------------------------ */
+
+  function renderC(e, lead, subs){
+    var rows = subs.map(function(a, i){
+      var open = !!state.open[i];
+      return '<div class="acc-row' + (open ? " open" : "") + '">' +
+        '<button type="button" class="acc-btn" data-acc="' + i + '" aria-expanded="' + open + '">' +
+          '<p class="kicker">' + esc(a.kicker) + '</p>' +
+          '<h2 class="m-hl">' + esc(a.headline) + '</h2>' +
+          '<span class="acc-foot"><span class="m-meta">' + readTime(a.words) + '</span>' +
+          '<span class="acc-sign">' + (open ? "−" : "+") + '</span></span>' +
+        '</button>' +
+        (open ? '<div class="acc-panel">' +
+            (a.standfirst ? '<p class="m-sf">' + esc(a.standfirst) + '</p>' : '') +
+            '<div class="m-body">' + paragraphsHtml(a.paragraphs) + '</div></div>' : '') +
+      '</div>';
+    }).join("");
+
+    return '<div class="scroller">' +
+      mastheadHtml(e) + resultsHtml(e) +
+      '<article class="acc-lead">' +
+        '<p class="kicker">' + esc(lead.kicker) + '</p>' +
+        '<h1 class="m-hl">' + esc(lead.headline) + '</h1>' +
+        (lead.standfirst ? '<p class="m-sf">' + esc(lead.standfirst) + '</p>' : '') +
+        '<div class="m-body">' + paragraphsHtml(lead.paragraphs) + '</div>' +
+      '</article>' +
+      '<div class="acc-list">' + rows + '</div>' +
+      appendixHtml(e, state.apxOpen) +
+    '</div>';
+  }
+
+  /* ---- render ------------------------------------------------------------- */
+
+  function render(){
+    var e = editionsByTeg[state.teg];
+    var lead = e.articles.filter(function(a){ return a.is_lead; })[0];
+    var subs = e.articles.filter(function(a){ return !a.is_lead; });
+    var all = [lead].concat(subs);
+
+    var phone = document.getElementById("phone");
+    phone.className = "phone pat-" + state.pat;
+
+    if (state.pat === "a"){
+      phone.innerHTML = state.view === null
+        ? renderIndexA(e, lead, subs)
+        : renderArticleA(e, all, state.view);
+    } else if (state.pat === "b"){
+      phone.innerHTML = renderB(e, lead, subs);
+      var track = document.getElementById("track");
+      if (track){
+        track.addEventListener("scroll", onTrackScroll, { passive: true });
+        var target = track.querySelector('[data-panel-index="' + state.panel + '"]');
+        if (target) track.scrollLeft = target.offsetLeft - track.offsetLeft;
+      }
+    } else {
+      phone.innerHTML = renderC(e, lead, subs);
+    }
+
+    bindScreen();
+    document.querySelectorAll("[data-teg]").forEach(function(b){
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-teg") === String(state.teg)));
+    });
+    document.querySelectorAll("[data-pat]").forEach(function(b){
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-pat") === state.pat));
+    });
+    document.getElementById("patNote").textContent = PAT_NOTES[state.pat];
+    reportMetric();
+    document.body.setAttribute("data-ready", "1");
+  }
+
+  // How long is the first screen? This is the number the whole exercise is
+  // about: a vertical stack of the desktop grid is one very long scroll.
+  function reportMetric(){
+    var el = document.querySelector("#phone .scroller") ||
+             document.querySelector("#phone .track .panel") || document.getElementById("phone");
+    var h = el ? el.scrollHeight : 0;
+    var screens = (h / 844).toFixed(1);
+    document.getElementById("metric").innerHTML =
+      "First screen: <b>" + Math.round(h) + "px</b> (" + screens + " phone screens)";
+  }
+
+  function onTrackScroll(){
+    var track = document.getElementById("track");
+    if (!track) return;
+    var mid = track.scrollLeft + track.clientWidth / 2;
+    var panels = track.querySelectorAll(".panel");
+    for (var i = 0; i < panels.length; i++){
+      var p = panels[i];
+      if (mid >= p.offsetLeft - track.offsetLeft && mid < p.offsetLeft - track.offsetLeft + p.offsetWidth){
+        if (state.panel !== i){
+          state.panel = i;
+          syncTabs();
+        }
+        return;
+      }
+    }
+  }
+  function syncTabs(){
+    document.querySelectorAll("#phone .tab").forEach(function(b){
+      b.setAttribute("aria-selected", String(parseInt(b.getAttribute("data-panel"), 10) === state.panel));
+    });
+    document.querySelectorAll("#phone .dot").forEach(function(d, i){
+      d.classList.toggle("on", i === state.panel);
+    });
+  }
+
+  function bindScreen(){
+    document.querySelectorAll("#phone [data-open]").forEach(function(b){
+      b.addEventListener("click", function(){
+        state.view = parseInt(b.getAttribute("data-open"), 10);
+        render();
+        var s = document.querySelector("#phone .scroller");
+        if (s) s.scrollTop = 0;
+      });
+    });
+    document.querySelectorAll("#phone [data-index]").forEach(function(b){
+      b.addEventListener("click", function(){ state.view = null; render(); });
+    });
+    document.querySelectorAll("#phone [data-acc]").forEach(function(b){
+      b.addEventListener("click", function(){
+        var i = b.getAttribute("data-acc");
+        state.open[i] = !state.open[i];
+        render();
+      });
+    });
+    document.querySelectorAll("#phone [data-apx]").forEach(function(b){
+      b.addEventListener("click", function(){ state.apxOpen = !state.apxOpen; render(); });
+    });
+    document.querySelectorAll("#phone .tab").forEach(function(b){
+      b.addEventListener("click", function(){
+        state.panel = parseInt(b.getAttribute("data-panel"), 10);
+        var track = document.getElementById("track");
+        var target = track && track.querySelector('[data-panel-index="' + state.panel + '"]');
+        if (target) track.scrollTo({ left: target.offsetLeft - track.offsetLeft, behavior: "smooth" });
+        syncTabs();
+      });
+    });
+  }
+
+  function resetView(){ state.view = null; state.open = {}; state.apxOpen = false; state.panel = 0; }
+
+  document.querySelectorAll("[data-teg]").forEach(function(b){
+    b.addEventListener("click", function(){
+      state.teg = parseInt(b.getAttribute("data-teg"), 10);
+      resetView(); render();
+    });
+  });
+  document.querySelectorAll("[data-pat]").forEach(function(b){
+    b.addEventListener("click", function(){
+      state.pat = b.getAttribute("data-pat");
+      resetView(); render();
+    });
+  });
+
+  // hooks the screenshot script drives
+  window.__proto = {
+    set: function(patch){ Object.assign(state, patch); render(); },
+    reset: resetView
+  };
+
+  render();
+})();
+</script>

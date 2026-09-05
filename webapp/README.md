@@ -750,9 +750,12 @@ HTML builders).
   [MOBILE_PLAN.md](MOBILE_PLAN.md); look-and-feel mockups (app vs editorial,
   light + dark) live in `mobile_mockups/` and are served at `/mockups/` when the
   webapp runs. Awaiting a direction decision before the broad implementation.
-  A newspaper front-page report layout trial (four directions, storyline-first
-  content) lives in `report_layout_prototypes/`, served at `/report-layouts/`
-  — see that folder's `PLAN.md`.
+  A newspaper front-page report layout trial (storyline-first content) lives in
+  `report_layout_prototypes/`, served at `/report-layouts/`: `newspaper.html`
+  (the original four directions), `elements.html` (the element-by-element
+  chooser), `composite.html` (the chosen elements, switching page composition)
+  and `mobile.html` (three mobile patterns). Start at that folder's
+  `PICKUP.md`; `PLAN.md` alongside it is the original specification.
   - **First slice shipped:** the **Scorecard** page now renders a portrait
     (holes-as-rows) layout on phones (`≤640px`) for all three views, with a
     Gross/Stableford toggle and dark-ready (inert) colour tokens. Desktop/iPad
