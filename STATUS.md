@@ -43,9 +43,16 @@ Built from the storyline-first artefacts on `origin/claude/storyline-first-repor
 16 only, copied not merged) via a deterministic parser, `scripts/build_newspaper_edition.py`, into
 `webapp/report_layout_prototypes/newspaper.html` — four distinct layouts (A Broadsheet, B Modern
 editorial, C Sports section, D Back page), switchable per TEG, served at `/report-layouts/` and as
-a published Artifact. Awaiting a direction decision. Plan, feedback-to-pipeline findings (the
-story plan needs a `headline`/`standfirst` field — `subject` is neither) and scope: see
-`webapp/report_layout_prototypes/PLAN.md`.
+a published Artifact.
+
+**Verdict (2026-09-05): the direction is confirmed** — a newspaper edition is markedly more
+digestible than one long report. Two things stay open: the final layout is a composite of elements
+from all four prototypes rather than any one of them, and **mobile needs a different pattern**,
+since stacking the grid vertically recreates the long-report problem. One knock-on: interweaving in
+the storyline pipeline is now mothballed (off by default), because an edition wants one subject per
+article. Findings for the pipeline (the story plan needs `headline`/`standfirst` fields — `subject`
+is neither) and next steps: `webapp/report_layout_prototypes/PICKUP.md`; original specification:
+`PLAN.md` alongside it.
 
 ### 2026-08-17 — Reporting docs reconciled against the code
 

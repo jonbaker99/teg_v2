@@ -3,6 +3,10 @@
 **Status:** working doc for the prototype only. Delete or fold into `STATUS.md` once a direction is
 chosen (CLAUDE.md → Documentation rule 3). Written 2026-09-04.
 
+> **The trial ran and the direction was confirmed. For where it got to and what to do next, read
+> [PICKUP.md](PICKUP.md) first** — this file is the original specification, kept for the reasoning
+> behind each choice.
+
 ## What is being tested
 
 Whether a newspaper front-page layout — lead story = the Trophy winner, sub-stories in a grid — is a

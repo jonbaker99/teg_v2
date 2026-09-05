@@ -8,10 +8,16 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 - [ ] **Bestball/worstball on `/latest-round`** — show best/worst bestball and worstball positions in the round-in-context page.
 - [ ] **`/scoring/matrix`** - score type as pills; TEG / Round / 9 as tabs
-- [ ] **Newspaper report layout — choose a direction** — four prototype layouts (A Broadsheet, B
-  Modern editorial, C Sports section, D Back page) are built and published; see
-  `webapp/report_layout_prototypes/PLAN.md`. Once a direction is picked, wire it into
-  `routes/reports.py` (currently out of scope for the prototype).
+- [ ] **Newspaper report layout — compose the final layout** — direction confirmed against the
+  prototype (newspaper edition beats one long report). Four layouts were built (A Broadsheet, B
+  Modern editorial, C Sports section, D Back page) and the answer is a composite: Jon likes and
+  dislikes elements of each, so the next step is to collect that element by element, not to pick
+  one of the four. Then wire it into `routes/reports.py`.
+- [ ] **Newspaper report layout — rethink mobile** — stacking the grid vertically recreates the
+  one-long-report problem the layout solved. Needs a different pattern (index-first, swipeable
+  cards, accordion), prototyped like A–D were, not tuned breakpoints.
+
+  Both: `webapp/report_layout_prototypes/PICKUP.md`.
 
 
 ## NEXT UP
