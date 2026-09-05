@@ -2,7 +2,7 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-08-17 (reporting docs reconciled against the code; report-quality rework and readability pass logged below; earlier content current as at 2026-07-12)
+**Last updated:** 2026-09-04 (newspaper report-layout prototype added; reporting docs reconciliation and report-quality rework logged below; earlier content current as at 2026-07-12)
 
 ## Where things stand
 
@@ -34,6 +34,25 @@ Design detail lives in docstrings in `analysis/live_round.py` and `webapp/README
 **Guided new-round wizard** (`teg_analysis/analysis/round_wizard.py`, `webapp/routes/admin_new_round.py`, templates `admin_new_round.html` / `admin_new_round_wizard.html`) — `/admin/new-round` (first in admin sub-nav) orchestrates round metadata → roster+handicaps → Par/SI → go live as one linear stepper. Stateless and resumable: each step saves via the existing tested functions and the current step is recomputed from data on every visit (`get_wizard_status`), so round 2/3/4 auto-skips confirmed roster and a half-finished setup resumes by revisiting the URL. Net-new piece is a round-metadata form (`get_round_metadata_form`/`save_round_metadata`) deriving `TEGRd`/`TEG`/`Area`/`Year`. Standalone pages remain reachable for edits. Detail: `webapp/README.md` → "New round (guided wizard)".
 
 ## Recent change log
+
+### 2026-09-04 — Newspaper report-layout prototype (presentation trial)
+
+Presentation trial only — no pipeline change, no LLM call. Tests whether a newspaper front-page
+layout (lead = Trophy winner, sub-stories in a grid) beats the current single flowing column.
+Built from the storyline-first artefacts on `origin/claude/storyline-first-reports` (TEG 14 and
+16 only, copied not merged) via a deterministic parser, `scripts/build_newspaper_edition.py`, into
+`webapp/report_layout_prototypes/newspaper.html` — four distinct layouts (A Broadsheet, B Modern
+editorial, C Sports section, D Back page), switchable per TEG, served at `/report-layouts/` and as
+a published Artifact.
+
+**Verdict (2026-09-05): the direction is confirmed** — a newspaper edition is markedly more
+digestible than one long report. Two things stay open: the final layout is a composite of elements
+from all four prototypes rather than any one of them, and **mobile needs a different pattern**,
+since stacking the grid vertically recreates the long-report problem. One knock-on: interweaving in
+the storyline pipeline is now mothballed (off by default), because an edition wants one subject per
+article. Findings for the pipeline (the story plan needs `headline`/`standfirst` fields — `subject`
+is neither) and next steps: `webapp/report_layout_prototypes/PICKUP.md`; original specification:
+`PLAN.md` alongside it.
 
 ### 2026-08-17 — Reporting docs reconciled against the code
 

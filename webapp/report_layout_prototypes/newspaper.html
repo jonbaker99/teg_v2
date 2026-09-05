@@ -1,0 +1,992 @@
+<title>TEG Newspaper Layouts</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600;700&family=Libre+Franklin:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,500;0,600;1,500&family=Playfair+Display:wght@600;700;800;900&family=Anton&display=swap">
+<style>
+  :root{
+    --desk: #E7E5DE;
+    --desk-edge: #D3D0C6;
+    --chrome-bg: #F4F3EF;
+    --chrome-border: #D8D6CE;
+    --chrome-ink: #23231F;
+    --chrome-ink-soft: #6B6A62;
+    --chrome-accent: #2F5D8A;
+    --chrome-accent-ink: #F4F3EF;
+    --focus-ring: #2F5D8A;
+  }
+
+  *{ box-sizing:border-box; }
+  body{
+    background: var(--desk);
+    color: var(--chrome-ink);
+    font-family: 'Libre Franklin', Arial, Helvetica, sans-serif;
+  }
+
+  h1,h2,h3,h4,h5,p,ul,ol,figure,table{ margin:0; padding:0; }
+  ul{ list-style:none; }
+  table{ border-collapse:collapse; }
+  img{ display:block; }
+  :focus-visible{ outline: 2.5px solid var(--focus-ring); outline-offset: 2px; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; }
+  }
+
+  /* ---------- control bar (utility chrome — deliberately NOT newspaper-styled) --- */
+
+  .control-bar{
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap: 1.75rem;
+    padding: 0.85rem 1.5rem;
+    background: var(--chrome-bg);
+    border-bottom: 1px solid var(--chrome-border);
+    font-family: 'Libre Franklin', Arial, sans-serif;
+  }
+  .control-brand{
+    font-weight:800;
+    font-size:0.8rem;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color: var(--chrome-ink);
+    white-space:nowrap;
+  }
+  .control-brand span{ color: var(--chrome-ink-soft); font-weight:500; }
+  .control-group{
+    display:flex;
+    align-items:center;
+    gap:0.55rem;
+    flex-wrap:wrap;
+  }
+  .control-label{
+    font-size:0.68rem;
+    font-weight:700;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color: var(--chrome-ink-soft);
+    margin-right:0.15rem;
+  }
+  .control-btn{
+    appearance:none;
+    border:1px solid var(--chrome-border);
+    background:#fff;
+    color: var(--chrome-ink);
+    font-family:inherit;
+    font-size:0.8rem;
+    font-weight:600;
+    padding:0.4rem 0.75rem;
+    border-radius:5px;
+    cursor:pointer;
+    line-height:1.1;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  }
+  .control-btn:hover{ border-color: var(--chrome-accent); }
+  .control-btn:active{ transform: translateY(1px); }
+  .control-btn[aria-pressed="true"]{
+    background: var(--chrome-accent);
+    border-color: var(--chrome-accent);
+    color: var(--chrome-accent-ink);
+  }
+  .control-spacer{ flex:1 1 auto; }
+  .control-note{
+    font-size:0.72rem;
+    color: var(--chrome-ink-soft);
+    max-width:22ch;
+    line-height:1.35;
+  }
+
+  /* ---------- stage: the paper sits on a "desk" ---------------------------- */
+
+  .stage-wrap{
+    padding: 2.5rem 1.5rem 4rem;
+    display:flex;
+    justify-content:center;
+  }
+  .newspaper{
+    width:100%;
+    max-width: 1180px;
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08), 0 18px 40px -20px rgba(0,0,0,0.35);
+    border: 1px solid var(--desk-edge);
+    opacity:0;
+    transform: translateY(6px);
+    animation: paper-in 0.42s ease forwards;
+  }
+  @keyframes paper-in{ to{ opacity:1; transform:translateY(0); } }
+
+  .section-pad{ padding: 2.2rem clamp(1.1rem, 4vw, 3.2rem); }
+
+  /* ================= shared component structure (skinned per layout) ===== */
+
+  /* -- masthead -- */
+  .masthead{ padding: 1.6rem clamp(1.1rem, 4vw, 3.2rem) 0; }
+  .wordmark-row{ display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+  .wordmark{ font-family: var(--font-mast); }
+  .dateline{
+    font-family: var(--font-mono);
+    font-size:0.74rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color: var(--ink-soft);
+    white-space:nowrap;
+  }
+  .lead-headline{ font-family: var(--font-display); color: var(--ink); text-wrap: balance; }
+  .lead-standfirst{ font-family: var(--font-body); color: var(--ink-soft); text-wrap: balance; }
+
+  /* -- results panel -- */
+  .results-panel{ }
+  .results-title{
+    font-family: var(--font-mono);
+    font-size:0.68rem;
+    font-weight:700;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color: var(--accent);
+  }
+  .results-list{ display:flex; flex-direction:column; }
+  .result{ display:flex; justify-content:space-between; gap:1rem; align-items:baseline; }
+  .result-label{
+    font-family: var(--font-mono);
+    font-size:0.72rem;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    color: var(--ink-soft);
+    white-space:nowrap;
+  }
+  .result-value{ font-family: var(--font-body); font-weight:600; text-align:right; }
+  .result-lead .result-value{ color: var(--accent); }
+
+  /* -- kicker / article typography -- */
+  .kicker{
+    font-family: var(--font-mono);
+    font-weight:700;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color: var(--accent);
+  }
+  .sub-headline{ font-family: var(--font-display); color: var(--ink); text-wrap: balance; }
+  .standfirst{ font-family: var(--font-body); color: var(--ink-soft); }
+  .body p{ font-family: var(--font-body); color: var(--ink); }
+  .body p + p{ margin-top: 0.85em; }
+
+  /* -- appendix (identical structure/behaviour everywhere; only re-inked) -- */
+  .appendix{
+    border-top: 1px solid var(--rule);
+    padding: 1.8rem clamp(1.1rem, 4vw, 3.2rem) 2.4rem;
+    display:grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 2.5rem;
+  }
+  /* grid/flex items default to min-width:auto, which blocks a scrollable
+     descendant's own overflow-x:auto from ever engaging — this is what was
+     causing horizontal page scroll on mobile. */
+  .appendix > div,
+  .edition-grid, .edition-grid > *,
+  .edition-top, .edition-top > *,
+  .subs-grid > *, .asym-grid > *, .blocks-grid > *, .bottom-row > *,
+  .results-list, .results-list > *{
+    min-width: 0;
+  }
+  .appendix h4{
+    font-family: var(--font-mono);
+    font-size:0.72rem;
+    font-weight:700;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color: var(--accent);
+    margin-bottom:0.75rem;
+  }
+  .table-scroll{ overflow-x:auto; max-width:100%; }
+  .standings-table{ width:100%; border-collapse:collapse; }
+  .standings-table th, .standings-table td{
+    text-align:left;
+    padding: 0.4rem 0.7rem 0.4rem 0;
+    font-family: var(--font-mono);
+    font-size:0.78rem;
+    white-space:nowrap;
+    border-bottom: 1px solid var(--rule);
+    font-variant-numeric: tabular-nums;
+  }
+  .standings-table th{
+    font-weight:700;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    font-size:0.66rem;
+    color: var(--ink-soft);
+  }
+  .records-group{ margin-bottom:1rem; }
+  .records-group:last-child{ margin-bottom:0; }
+  .records-cat{
+    font-family: var(--font-body);
+    font-weight:700;
+    font-size:0.78rem;
+    color: var(--ink);
+    margin-bottom:0.3rem;
+  }
+  .records-group li{
+    font-family: var(--font-body);
+    font-size:0.85rem;
+    color: var(--ink-soft);
+    position:relative;
+    padding-left:0.9rem;
+  }
+  .records-group li + li{ margin-top:0.3rem; }
+  .records-group li::before{
+    content:"—";
+    position:absolute; left:0; color: var(--accent);
+  }
+
+  @media (max-width: 640px){
+    .appendix{ grid-template-columns:1fr; gap:1.75rem; }
+    .dateline, .result-label{ white-space:normal; }
+  }
+
+  /* =========================================================================
+     LAYOUT A — Broadsheet
+     ========================================================================= */
+  .layout-a{
+    --paper:#F6F3EA; --ink:#211D17; --ink-soft:#66604F;
+    --accent:#7A2420; --rule:#C9C2AC;
+    --font-mast:'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-display:'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-body:'Source Serif 4', Georgia, 'Times New Roman', serif;
+    --font-mono:'IBM Plex Mono', 'Courier New', monospace;
+    background-image: radial-gradient(rgba(33,29,23,0.05) 0.55px, transparent 0.55px);
+    background-size: 3.4px 3.4px;
+  }
+  .layout-a .wordmark{ font-weight:600; font-size:1.6rem; letter-spacing:0.02em; }
+  .layout-a .wordmark-flag{ font-size:0.62rem; letter-spacing:0.32em; color:var(--ink-soft); }
+  .layout-a .masthead-rule{ border-top:3px solid var(--ink); border-bottom:1px solid var(--ink); height:5px; margin-top:0.9rem; }
+  .layout-a .lead-headline{ font-size:clamp(2.05rem, 4vw, 3rem); font-weight:700; line-height:1.04; margin-top:1.3rem; }
+  .layout-a .lead-standfirst{ font-size:1.02rem; font-style:italic; margin-top:0.6rem; line-height:1.4; }
+  .layout-a .lead-kicker{ font-family:var(--font-mono); font-size:0.72rem; font-weight:700; letter-spacing:0.14em; color:var(--accent); text-transform:uppercase; }
+
+  .layout-a .edition-grid{ display:grid; grid-template-columns:2fr 1px 1fr; column-gap:2rem; padding: 2rem clamp(1.1rem,4vw,3.2rem) 0; }
+  .layout-a .col-rule{ background:var(--rule); }
+  .layout-a .lead .body{ columns:2; column-gap:2.1rem; column-rule:1px solid var(--rule); margin-top:1.1rem; font-size:0.98rem; line-height:1.56; }
+  .layout-a .lead .body p:first-of-type::first-letter{
+    font-family:var(--font-display); font-weight:700; color:var(--accent);
+    float:left; font-size:4.4rem; line-height:0.82; padding:0.05rem 0.4rem 0 0;
+  }
+  .layout-a .rail{ padding-top:0.2rem; }
+  .layout-a .rail .results-panel{ padding-bottom:1.2rem; border-bottom:1px solid var(--rule); margin-bottom:1.2rem; }
+  .layout-a .results-list{ margin-top:0.5rem; gap:0.4rem; }
+  .layout-a .result{ padding-bottom:0.35rem; border-bottom:1px dotted var(--rule); }
+  .layout-a .rail .sub-card{ margin-top:0; }
+  .layout-a .sub-headline{ font-size:1.28rem; font-weight:700; line-height:1.14; margin-top:0.35rem; }
+  .layout-a .standfirst{ font-size:0.86rem; font-style:italic; margin-top:0.4rem; line-height:1.4; }
+  .layout-a .sub-card .body{ margin-top:0.7rem; font-size:0.9rem; line-height:1.52; }
+
+  .layout-a .bottom-row{
+    grid-column: 1 / -1;
+    margin-top:2.2rem;
+    padding-top:1.6rem;
+    border-top:1px solid var(--ink);
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap:0 2rem;
+  }
+  .layout-a .bottom-row .sub-card{ padding-left:2rem; border-left:1px solid var(--rule); }
+  .layout-a .bottom-row .sub-card:first-child{ padding-left:0; border-left:none; }
+
+  @media (max-width:640px){
+    .layout-a .edition-grid{ display:block; padding-top:1.5rem; }
+    .layout-a .col-rule{ display:none; }
+    .layout-a .lead .body{ columns:1; }
+    .layout-a .rail{ margin-top:2rem; padding-top:1.5rem; border-top:2px solid var(--ink); }
+    .layout-a .bottom-row{ grid-template-columns:1fr; gap:1.5rem; margin-top:1.75rem; }
+    .layout-a .bottom-row .sub-card{ padding-left:0; border-left:none; padding-top:1.5rem; border-top:1px solid var(--rule); }
+    .layout-a .bottom-row .sub-card:first-child{ border-top:none; padding-top:0; }
+  }
+
+  /* =========================================================================
+     LAYOUT B — Modern editorial
+     ========================================================================= */
+  .layout-b{
+    --paper:#FBFAF8; --ink:#171A16; --ink-soft:#5D655B;
+    --accent:#1F5B44; --accent2:#B4832B; --rule:#E2E1DA;
+    --font-mast:'Libre Franklin', Arial, sans-serif;
+    --font-display:'Libre Franklin', Arial, sans-serif;
+    --font-body:'Lora', Georgia, serif;
+    --font-mono:'Libre Franklin', Arial, sans-serif;
+  }
+  .layout-b .wordmark{ font-weight:900; font-size:1.15rem; letter-spacing:-0.01em; text-transform:lowercase; }
+  .layout-b .wordmark::after{ content:"."; color:var(--accent2); }
+  .layout-b .dateline{ font-family:'Libre Franklin',sans-serif; font-weight:700; letter-spacing:0.06em; background:var(--accent); color:#fff; padding:0.28rem 0.65rem; border-radius:999px; }
+  .layout-b .masthead-rule{ display:none; }
+  .layout-b .lead-kicker{ font-family:var(--font-mono); font-size:0.72rem; font-weight:800; letter-spacing:0.12em; color:var(--accent); text-transform:uppercase; }
+  .layout-b .lead-headline{ font-size:clamp(2rem,4.4vw,3.15rem); font-weight:800; line-height:1.06; letter-spacing:-0.01em; margin-top:1rem; max-width:20ch; }
+  .layout-b .lead-standfirst{ font-size:1.14rem; margin-top:0.9rem; line-height:1.5; max-width:60ch; }
+
+  .layout-b .edition-grid{ padding: 2.1rem clamp(1.1rem,4vw,3.2rem) 0; }
+  .layout-b .edition-top{ display:grid; grid-template-columns:2.1fr 1fr; gap:3rem; }
+  .layout-b .lead .body{ margin-top:1.4rem; font-size:1.03rem; line-height:1.72; max-width:62ch; }
+  .layout-b .results-panel{ background:#F1F0EA; padding:1.3rem 1.4rem; border-left:3px solid var(--accent); }
+  .layout-b .results-list{ margin-top:0.7rem; gap:0.6rem; }
+  .layout-b .result{ flex-direction:column; align-items:flex-start; gap:0.1rem; }
+  .layout-b .result-value{ font-size:1rem; }
+
+  .layout-b .subs-grid{
+    margin-top:2.75rem;
+    padding-top:2rem;
+    border-top:1px solid var(--rule);
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:2.2rem;
+  }
+  .layout-b .sub-card .kicker{ display:inline-block; background:#EEEDE5; color:var(--ink); font-weight:700; font-size:0.66rem; padding:0.25rem 0.55rem; letter-spacing:0.08em; }
+  .layout-b .sub-headline{ font-size:1.25rem; font-weight:800; line-height:1.18; margin-top:0.6rem; letter-spacing:-0.005em; }
+  .layout-b .standfirst{ font-size:0.88rem; margin-top:0.45rem; line-height:1.5; }
+  .layout-b .sub-card .body{ margin-top:0.85rem; font-size:0.9rem; line-height:1.62; }
+  .layout-b .sub-card.solo{
+    grid-column: 1 / -1;
+    display:grid;
+    grid-template-columns: 1fr 1.6fr;
+    column-gap:2.5rem;
+    padding-top:1.6rem;
+    border-top:1px solid var(--rule);
+  }
+  .layout-b .sub-card.solo .kicker{ grid-column:1; }
+  .layout-b .sub-card.solo .sub-headline{ grid-column:1; font-size:1.55rem; }
+  .layout-b .sub-card.solo .standfirst{ grid-column:1; }
+  .layout-b .sub-card.solo .body{ grid-column:2; grid-row:1/5; margin-top:0; }
+  @media (max-width:640px){
+    .layout-b .sub-card.solo{ grid-template-columns:1fr; }
+    .layout-b .sub-card.solo .body{ grid-column:1; grid-row:auto; margin-top:0.85rem; }
+  }
+
+  @media (max-width:640px){
+    .layout-b .edition-top{ grid-template-columns:1fr; gap:1.75rem; }
+    .layout-b .subs-grid{ grid-template-columns:1fr; gap:2rem; }
+  }
+
+  /* =========================================================================
+     LAYOUT C — Sports section
+     ========================================================================= */
+  .layout-c{
+    --paper:#F3EFE2; --ink:#1B2430; --ink-soft:#56606D;
+    --accent:#B32A2A; --accent2:#1F5C3F; --rule:#CFC7AE;
+    --font-mast:'Playfair Display', Georgia, serif;
+    --font-display:'Playfair Display', Georgia, serif;
+    --font-body:'Source Serif 4', Georgia, serif;
+    --font-mono:'IBM Plex Mono', 'Courier New', monospace;
+  }
+  .layout-c .masthead{ background:#1B2430; color:#F3EFE2; padding:0.8rem clamp(1.1rem,4vw,3.2rem); }
+  .layout-c .wordmark{ font-weight:800; font-size:1.15rem; color:#F3EFE2; letter-spacing:0.02em; }
+  .layout-c .wordmark-flag{ font-family:var(--font-mono); font-size:0.62rem; letter-spacing:0.24em; color:#B6BFC9; }
+  .layout-c .dateline{ color:#D8DEE4; }
+  .layout-c .masthead-rule{ display:none; }
+  .layout-c .lead-block{ padding:1.8rem clamp(1.1rem,4vw,3.2rem) 0; }
+  .layout-c .lead-kicker{ font-family:var(--font-mono); font-size:0.72rem; font-weight:700; letter-spacing:0.12em; color:var(--accent); text-transform:uppercase; }
+  .layout-c .lead-headline{ font-size:clamp(1.9rem,3.8vw,2.7rem); font-weight:800; line-height:1.08; margin-top:0.6rem; }
+  .layout-c .lead-standfirst{ font-size:1rem; margin-top:0.6rem; line-height:1.45; }
+
+  .layout-c .edition-grid{ padding: 1.5rem clamp(1.1rem,4vw,3.2rem) 0; display:grid; grid-template-columns:2fr 1fr; gap:2.5rem; }
+  .layout-c .lead .body{ margin-top:1.1rem; font-size:0.98rem; line-height:1.6; }
+  .layout-c .side-rail{ background:#EAE3CC; border:1px solid var(--rule); padding:1.1rem 1.2rem; align-self:start; }
+  .layout-c .side-rail .results-panel{ padding-bottom:1rem; border-bottom:1px solid var(--rule); margin-bottom:1rem; }
+  .layout-c .results-list{ margin-top:0.55rem; gap:0.45rem; }
+  .layout-c .result-label{ font-size:0.68rem; }
+  .layout-c .result-value{ font-family:var(--font-mono); font-variant-numeric:tabular-nums; }
+  .layout-c .scoreboard-title{ font-family:var(--font-mono); font-size:0.68rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent2); margin-bottom:0.5rem; }
+  .layout-c .scoreboard-row{ display:flex; justify-content:space-between; gap:0.5rem; font-family:var(--font-mono); font-size:0.76rem; font-variant-numeric:tabular-nums; padding:0.22rem 0; border-bottom:1px dotted var(--rule); }
+  .layout-c .scoreboard-row:last-child{ border-bottom:none; }
+  .layout-c .scoreboard-label{ color:var(--ink-soft); }
+
+  .layout-c .asym-grid{
+    grid-column:1/-1;
+    margin-top:2rem;
+    padding-top:1.6rem;
+    border-top:2px solid var(--ink);
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:2rem 2.5rem;
+  }
+  .layout-c .sub-card.narrow{ border-left:1px solid var(--rule); padding-left:1.6rem; }
+  .layout-c .sub-card.full{ grid-column:1/-1; border-left:none; padding-left:0; }
+  .layout-c .kicker{ font-size:0.68rem; }
+  .layout-c .sub-headline{ font-size:1.3rem; font-weight:800; line-height:1.15; margin-top:0.4rem; }
+  .layout-c .sub-card.narrow .sub-headline{ font-size:1.08rem; }
+  .layout-c .standfirst{
+    font-size:1.02rem; font-style:italic; line-height:1.44; margin-top:0.55rem;
+    padding-left:0.85rem; border-left:3px solid var(--accent2); color:var(--ink);
+  }
+  .layout-c .sub-card.narrow .standfirst{ font-size:0.86rem; }
+  .layout-c .sub-card .body{ margin-top:0.8rem; font-size:0.92rem; line-height:1.56; }
+  .layout-c .sub-card.narrow .body{ font-size:0.85rem; }
+
+  @media (max-width:640px){
+    .layout-c .edition-grid{ grid-template-columns:1fr; gap:1.75rem; }
+    .layout-c .asym-grid{ grid-template-columns:1fr; gap:1.75rem; }
+    .layout-c .sub-card.narrow{ border-left:none; padding-left:0; padding-top:1.5rem; border-top:1px solid var(--rule); }
+  }
+
+  /* =========================================================================
+     LAYOUT D — Back page
+     ========================================================================= */
+  .layout-d{
+    --paper:#FAF9F6; --ink:#0E0E0C; --ink-soft:#514F49;
+    --accent:#D3242C; --accent2:#F0BA1F; --rule:#D8D5CC;
+    --font-mast:'Anton', 'Arial Narrow', sans-serif;
+    --font-display:'Anton', 'Arial Narrow', sans-serif;
+    --font-body:'Libre Franklin', Arial, sans-serif;
+    --font-mono:'IBM Plex Mono', 'Courier New', monospace;
+  }
+  .layout-d .masthead{ padding:0; }
+  .layout-d .wordmark-row{ background:var(--ink); padding:0.75rem clamp(1.1rem,4vw,3.2rem); justify-content:space-between; }
+  .layout-d .wordmark{ font-family:var(--font-mast); font-size:1.7rem; color:#fff; letter-spacing:0.02em; text-transform:uppercase; }
+  .layout-d .dateline{ color:var(--accent2); font-weight:700; }
+  .layout-d .masthead-rule{ height:6px; background:var(--accent); }
+  .layout-d .lead-block{ padding:1.7rem clamp(1.1rem,4vw,3.2rem) 0; }
+  .layout-d .lead-kicker{
+    display:inline-block; font-family:var(--font-mono); font-weight:700; font-size:0.74rem;
+    letter-spacing:0.1em; text-transform:uppercase; background:var(--accent); color:#fff; padding:0.3rem 0.65rem;
+  }
+  .layout-d .lead-headline{
+    font-family:var(--font-mast); text-transform:uppercase; font-weight:400;
+    font-size:clamp(2.6rem,7vw,4.7rem); line-height:0.92; letter-spacing:0.002em; margin-top:0.7rem;
+  }
+  .layout-d .lead-standfirst{ font-size:1.02rem; font-weight:600; margin-top:0.75rem; line-height:1.4; max-width:58ch; }
+
+  .layout-d .results-panel{
+    margin: 1.6rem clamp(1.1rem,4vw,3.2rem) 0; background:var(--ink); padding:1rem 1.3rem;
+    display:flex; gap:2rem; flex-wrap:wrap;
+  }
+  .layout-d .results-title{ display:none; }
+  .layout-d .results-list{ flex-direction:row; flex-wrap:wrap; gap:1.6rem; }
+  .layout-d .result{ flex-direction:column; align-items:flex-start; gap:0.15rem; }
+  .layout-d .result-label{ color:#B9B6AC; }
+  .layout-d .result-value{ font-family:var(--font-body); color:#fff; font-weight:700; }
+  .layout-d .result-lead .result-value{ color:var(--accent2); }
+
+  .layout-d .edition-grid{ padding:1.6rem clamp(1.1rem,4vw,3.2rem) 0; }
+  .layout-d .lead .body{ margin-top:1rem; font-size:0.96rem; line-height:1.5; columns:2; column-gap:2.4rem; }
+
+  .layout-d .blocks-grid{
+    margin-top:2.2rem; padding-top:1.6rem; border-top:6px solid var(--ink);
+    display:grid; grid-template-columns:repeat(2,1fr); gap:1.6rem 2rem;
+  }
+  .layout-d .sub-card{ border:1px solid var(--rule); padding:1.1rem 1.2rem; }
+  .layout-d .sub-card .kicker{
+    display:inline-block; font-size:0.66rem; padding:0.22rem 0.5rem;
+    background:var(--accent2); color:var(--ink);
+  }
+  .layout-d .sub-headline{
+    font-family:var(--font-mast); text-transform:uppercase; font-weight:400;
+    font-size:1.55rem; line-height:0.98; margin-top:0.55rem;
+  }
+  .layout-d .standfirst{ font-size:0.85rem; font-weight:600; margin-top:0.5rem; line-height:1.4; }
+  .layout-d .sub-card .body{ margin-top:0.75rem; font-size:0.86rem; line-height:1.5; }
+
+  @media (max-width:640px){
+    .layout-d .blocks-grid{ grid-template-columns:1fr; }
+    .layout-d .results-list{ gap:1rem 1.6rem; }
+    .layout-d .lead .body{ columns:1; }
+  }
+</style>
+
+<div class="control-bar" role="toolbar" aria-label="Prototype controls">
+  <span class="control-brand">Newspaper layouts <span>· prototype</span></span>
+  <div class="control-group" role="group" aria-label="Tournament">
+    <span class="control-label">Tournament</span>
+    <button type="button" class="control-btn" data-teg="14">TEG 14</button>
+    <button type="button" class="control-btn" data-teg="16">TEG 16</button>
+  </div>
+  <div class="control-group" role="group" aria-label="Layout">
+    <span class="control-label">Layout</span>
+    <button type="button" class="control-btn" data-layout="a">A · Broadsheet</button>
+    <button type="button" class="control-btn" data-layout="b">B · Modern editorial</button>
+    <button type="button" class="control-btn" data-layout="c">C · Sports section</button>
+    <button type="button" class="control-btn" data-layout="d">D · Back page</button>
+  </div>
+  <div class="control-spacer"></div>
+  <p class="control-note" id="riskNote"></p>
+</div>
+
+<div class="stage-wrap">
+  <main id="stage" class="newspaper" aria-live="polite"></main>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var EDITIONS = [
+    {
+      "teg": 14,
+      "title": "Nine Ahead, Two Home: Mullin's Kent Double",
+      "dateline": {
+        "teg": "TEG 14",
+        "venue": "Kent, England",
+        "year": "2021"
+      },
+      "results": [
+        {
+          "label": "Trophy Winner",
+          "value": "David Mullin (3rd Trophy)",
+          "lead": true
+        },
+        {
+          "label": "Green Jacket",
+          "value": "David Mullin (9th Jacket)",
+          "lead": false
+        },
+        {
+          "label": "Wooden Spoon",
+          "value": "Jon Baker (1st Spoon)",
+          "lead": false
+        }
+      ],
+      "articles": [
+        {
+          "kicker": "TROPHY",
+          "headline": "Mullin holds on for the Trophy",
+          "standfirst": "David Mullin wins the Trophy on 154 points by 2 — a lead built on the first two links and defended by fingernails at Prince's",
+          "paragraphs": [
+            "David Mullin won the Trophy with 154 points, two clear of Alex Baker. It is the 16th-best total in TEG history and the third-best of his own career, and very nearly all of it was banked before anyone thought to object.",
+            "The foundation was laid on the first two links. At Royal Cinque Ports he went round in 87, seven strokes better than his previous visit. The engine room was a four-hole run from the 9th: par, birdie at the 10th, then two more pars, 13 points, a man briefly playing golf on purpose. The sequence ended at the 13th with a double bogey. At Littlestone he shot 85, again seven better than last time out, and another course best.",
+            "Prince's declined to co-operate. In round three he arrived at the par-five 8th with a tournament in his pocket and took nine. A quadruple bogey. It returned nothing, which is the standard yield on a nine. He then took 13 points from the closing four holes, three pars and a birdie at the last, as though the 8th had happened to a stranger. Round four produced another quadruple bogey, an eight at the 10th. Two quads on the same links in two days. The trophy did not appear to mind.",
+            "That opened the door for Baker, who had trailed by as many as nine. He answered with 10 points across the first three holes of the final round and 11 more from the 13th to the 15th, closing to within two. Then he reached the 16th and made a ten. His four days had begun to come apart considerably earlier, at Littlestone, where he dropped 12 shots across holes 2 to 5."
+          ],
+          "words": 282,
+          "compelling": 8,
+          "humour": 5,
+          "is_lead": true
+        },
+        {
+          "kicker": "WOODEN SPOON",
+          "headline": "Jon Baker, defending Trophy champion, collects the Wooden Spoon on 125 points",
+          "standfirst": "",
+          "paragraphs": [
+            "Jon Baker finished last in the Stableford count and took the Wooden Spoon with 125 points across the four rounds. The defence of a title can take many forms. He chose this one, and won it by 12, which is a margin of some authority.",
+            "The early links did him no favours, and he returned the courtesy. At Royal Cinque Ports his best gross was 92, seven strokes worse than the 85 he had managed on his previous visit. At Littlestone he posted 92 against a prior best of 79. Thirteen shots is not a bad day; it is a change of identity. His third round at Prince's brought 28 points, held down in part by a run of pars from the 14th that ended with a triple bogey six at the par-three 17th.",
+            "The final round was another man entirely. Baker returned 39 points, an improvement of 11 on the previous day, and his 83 gross set a new course record for Prince's Shore/Dunes, beating the previous mark of 85 that had stood across five prior visits. It was also his personal best on the layout, two strokes better than his last time there. The scoring came in a burst: five holes without dropping a gross shot from the 11th to the 15th, back-to-back birdies at the 12th and 13th, a two-hole birdie streak that equals the all-time TEG record, and 14 points across holes 12 to 15.",
+            "Then the 16th, which had already relieved Alex Baker of the Trophy that afternoon, took a double bogey from Jon and ended the run. He ran up an eight at the 18th. He therefore holds the course record and the Wooden Spoon at the same time, which takes some arranging."
+          ],
+          "words": 289,
+          "compelling": 9,
+          "humour": 8,
+          "is_lead": false
+        },
+        {
+          "kicker": "SIDEBAR",
+          "headline": "Alex Baker and the 16th",
+          "standfirst": "Alex Baker and the 16th hole: two 10s in one TEG, and a Trophy left on the table",
+          "paragraphs": [
+            "Two of Baker's four rounds in Kent ended with a 10 on the card, and on both occasions the number arrived at a hole numbered 16. Different courses, different pars, no connection whatsoever beyond the obvious one. The first came in the opening round at Royal Cinque Ports, a quintuple bogey at the par-five 16th, stroke index 7, no Stableford points. The second, at Prince's on the Sunday, was worse in relative terms: a 10 at a par four, a sextuple bogey, on stroke index 17, the second-easiest hole on the card. Taking ten shots there requires a degree of commitment.",
+            "The Prince's 10 was the more painful for what preceded it. Baker had played the 13th, 14th and 15th in par, par, par, three holes without dropping a gross shot, worth eleven Stableford points. The 16th erased the lot at a stroke. He was not alone in losing his footing there. Jon Baker arrived at the same hole having gone par-birdie-birdie-par-par from the 11th, and made a double bogey for no points.",
+            "These were the headline numbers, not the only ones. Baker also had an 8 at the 11th at Royal Cinque Ports, a 9 at the 5th and an 8 at the 8th at Littlestone, and an 8 at the 10th at Prince's in round three. Five further holes returning nothing. His round-one 98 at Royal Cinque Ports was still four strokes better than his previous visit, which tells you a good deal about the previous visit."
+          ],
+          "words": 249,
+          "compelling": 8,
+          "humour": 8,
+          "is_lead": false
+        },
+        {
+          "kicker": "GREEN JACKET",
+          "headline": "David Mullin's Green Jacket at +68",
+          "standfirst": "",
+          "paragraphs": [
+            "David Mullin took the Green Jacket at TEG 14 with a gross total of +68, seven clear of Jon Baker. His ninth. It is the sixth-best Green Jacket total on record and the fourth-best of his own career at the metric.",
+            "The number was built on consistency across Kent's four links rounds. Mullin set a personal best on every course he played: 87 at Royal Cinque Ports and 85 at Littlestone, each seven strokes better than his previous visit in TEG 13, and 91 at Prince's Shore/Dunes, one better than before. None of those figures would trouble a club noticeboard in isolation. Stacked together, they were unanswerable.",
+            "Behind him the chase was real, and late. Baker trailed by 15 at one point and closed to seven, the bulk of that work arriving in the final round at Prince's, where his 83 gross set a new course record. The previous mark of 85 had stood across five prior visits, and was Baker's own. Gregg Williams made up more ground still, trailing by 18 at his worst and finishing eight back. His +76 is a personal-best Green Jacket gross total, and his 86 at Prince's in round three was a course best for him too.",
+            "The gap never closed far enough. Mullin's margin of seven at the finish flatters the field, given how much larger it had been for most of the four days."
+          ],
+          "words": 232,
+          "compelling": 7,
+          "humour": 4,
+          "is_lead": false
+        },
+        {
+          "kicker": "SIDEBAR",
+          "headline": "Gregg Williams plays the best gross golf of his TEG life and wins nothing",
+          "standfirst": "",
+          "paragraphs": [
+            "Williams finished TEG 14 with a Gross total of +76, a personal best, and no prize of any description. The number rested on two course records of his own: 93 at Royal Cinque Ports, one better than his previous mark there of 94, and 86 at Prince's in round three, three strokes better than his last visit and inside his previous best of 89.",
+            "It was not tidy. He opened at Deal with a 9 at the par-five 3rd, stroke index 4, a quadruple bogey worth nothing at all. Littlestone was worse in the wider sense: 97, eleven strokes adrift of the 86 he had managed there before, and only 27 Stableford points.",
+            "Round three was the correction. He gained twelve points on the day, reaching 39, and the middle of it was genuinely solid: pars at the 9th, 10th and 11th for nine points, three holes without dropping a gross shot, then two more clean holes at the 15th and 16th. Between those came an 8 at the par-five 12th, which brought the exhibition to a close.",
+            "Sunday offered more steadiness in patches, gross pars at the 5th and 6th and again at the 14th and 15th. Having trailed the Green Jacket lead by 18 at one stage, he closed to within 8. Ten shots recovered. Eight still owed."
+          ],
+          "words": 220,
+          "compelling": 6,
+          "humour": 5,
+          "is_lead": false
+        }
+      ],
+      "standings": [
+        {
+          "round": 1,
+          "trophy": "DM 40 | AB 37 | GW 33 | JB 29",
+          "jacket": "DM +15 | JB +20 | GW +21 | AB +26"
+        },
+        {
+          "round": 2,
+          "trophy": "DM 81 | AB 72 | GW 60 | JB 58",
+          "jacket": "DM +29 | JB +41 | GW +47 | AB +55"
+        },
+        {
+          "round": 3,
+          "trophy": "DM 117 | AB 109 | GW 99 | JB 86",
+          "jacket": "DM +49 | GW +61 | JB +64 | AB +80"
+        },
+        {
+          "round": 4,
+          "trophy": "DM 154 | AB 152 | GW 137 | JB 125",
+          "jacket": "DM +68 | JB +75 | GW +76 | AB +102"
+        }
+      ],
+      "records": [
+        {
+          "category": "Personal bests",
+          "text": "Gregg Williams's +76 is a personal Gross best"
+        }
+      ]
+    },
+    {
+      "teg": 16,
+      "title": "Two Spoons, Then This",
+      "dateline": {
+        "teg": "TEG 16",
+        "venue": "Lisbon Coast, Portugal",
+        "year": "2023"
+      },
+      "results": [
+        {
+          "label": "Trophy Winner",
+          "value": "Stuart Neumann (1st Trophy)",
+          "lead": true
+        },
+        {
+          "label": "Green Jacket",
+          "value": "Gregg Williams (2nd Jacket)",
+          "lead": false
+        },
+        {
+          "label": "Wooden Spoon",
+          "value": "Alex Baker (3rd Spoon)",
+          "lead": false
+        }
+      ],
+      "articles": [
+        {
+          "kicker": "TROPHY",
+          "headline": "Neumann's first Trophy",
+          "standfirst": "Stuart Neumann's first Trophy — 156 points, 13 clear, and never headed after the opening afternoon",
+          "paragraphs": [
+            "Stuart Neumann won the Trophy at TEG 16 on the Lisbon Coast with 156 Stableford points, finishing 13 clear of Gregg Williams. It is the 16th-highest Trophy total recorded and the second-best of his own career. A man can wait a long time for a first Trophy. Neumann waited, and then won it by rather more than he needed to.",
+            "The margin was built early and never surrendered. He held the Trophy lead after round two at Troia, still held it after round three at Penha Longa, and carried it through the closing round at Estoril. Williams, meanwhile, led the Jacket standings at each of those same checkpoints. For three days the two of them occupied separate thrones, and neither gave an inch in his own.",
+            "The final round was not flawless. At Estoril's 8th, a par 4 and the hardest hole on the card at stroke index 1, Neumann took nine. A quintuple bogey. Worth no points at all, which is to say the hole may as well not have happened, and in scoring terms it did not. The lead never so much as shifted in its seat. That is what a cushion is for.",
+            "Estoril otherwise gave him his best golf of the four days. His 92 there was a course personal best, 14 strokes better than the 106 he posted on his only previous visit in TEG 15. It was the one venue of the four where he improved on his own history, and he chose the day the Trophy was settled to do it."
+          ],
+          "words": 258,
+          "compelling": 8,
+          "humour": 5,
+          "is_lead": true
+        },
+        {
+          "kicker": "SIDEBAR",
+          "headline": "David Mullin: from the bottom of the Spoon race",
+          "standfirst": "David Mullin: from the bottom of the Spoon race in R1 to the Estoril course record in R4",
+          "paragraphs": [
+            "David Mullin's tournament ended a very long way from where it started. At Oitavos Dunes in the opening round he ran up a triple-bogey seven at the 10th, a stroke index 4 par four, and the zero points dropped him from second to fifth in the Wooden Spoon race. Fifth in the Spoon race is not a mid-table sort of fifth. It is the bottom of the pile. Round three at Penha Longa was worse in places: a quadruple-bogey eight at the 16th, the hardest hole on the card, after which he composed himself and parred 17 and 18 like a man tidying a room he had just set fire to. The round came to 30 points, and his 98 there was well adrift of his previous best at the course.",
+            "Estoril, on the Tuesday, was a different matter. Mullin birdied the 2nd and parred the 3rd, then wobbled through a bogey-bogey-double stretch at the 4th, 5th and 6th before a birdie at the 7th stopped the slide. The back nine simply held. Nine points from the 11th, 12th and 13th, with pars at 12 and 13, and two more pars at 16 and 17 to finish.",
+            "The total was 45 points, a 15-point improvement on round three. The gross number mattered more. His 80 set a new course record at Estoril, beating the previous mark of 86 established across six prior visits, and bettered his own best there, a 94 at TEG 15, by fourteen strokes. Four days earlier he had been last in the race for the Spoon. Golf is not a fair sport, but it is occasionally a generous one."
+          ],
+          "words": 273,
+          "compelling": 8,
+          "humour": 5,
+          "is_lead": false
+        },
+        {
+          "kicker": "WOODEN SPOON & SIDEBAR",
+          "headline": "The Baker brothers and Penha Longa's 12th",
+          "standfirst": "The Baker brothers and Penha Longa's 12th / Alex Baker's third Wooden Spoon, back-to-back, 127 points — and two all-time course-worst records to go with it",
+          "paragraphs": [
+            "Alex Baker's tournament began badly and then declined to change course. In the first round at Oitavos Dunes he took nine at the 1st, nine at the 11th and ten at the 17th, signing for 113 gross. That is a new course-worst for Oitavos, beating the previous mark of 111 set across twelve prior visits. Twelve visits' worth of human frailty, surpassed before lunch on day one. At Troia the next day the damage was more concentrated: thirteen shots dropped over the five holes from the 13th to the 17th, three triples followed by two doubles.",
+            "Round three took the field to Penha Longa, where both Bakers found the same piece of ground. Jon Baker made a double bogey six at the 11th, then took ten at the par-five 12th, a quintuple bogey and no points, and followed it with an eight at the 13th. Eleven shots gone in three holes, three holes without a net par. It was his only round of the tournament in which he failed to improve on a previous visit: 97 gross at a course where his prior best was 85.",
+            "Alex was on the same holes, doing much the same thing at a marginally gentler gradient. Double bogey at the 11th, then a nine at the 12th for quadruple bogey, then a seven at the 13th and a seven at the 14th. Twelve shots dropped across four holes and, like his brother, three holes from the 12th onward without a net par. Whatever the 12th at Penha Longa is, it is in the family.",
+            "The final round at Estoril separated them. Jon's one lapse came at the 11th, the hardest hole on the card, where he made an eight, and that was the extent of it. Alex's round was a lapse with holes attached. Nine at the 1st. Eight at the 3rd. Nine at the 6th. Fourteen shots bled over the six holes from the 5th to the 10th, every single one a double or worse, an unbroken run of ruin conducted with no apparent loss of composure. Then the 12th, a par four, where he took eleven. A septuple bogey, and the worst score he has ever recorded on a par four in his life. The round came to 107 gross, a second course-worst of the four days, exceeding Estoril's previous high of 106 across six prior visits. He finished on 127 points and collected the Wooden Spoon, his third, and the second in a row. He did not merely lose. He amended the record books at two separate venues while doing it."
+          ],
+          "words": 430,
+          "compelling": 7,
+          "humour": 9,
+          "is_lead": false
+        },
+        {
+          "kicker": "GREEN JACKET",
+          "headline": "Gregg Williams's second Green Jacket",
+          "standfirst": "",
+          "paragraphs": [
+            "Gregg Williams's second Green Jacket was never really in doubt, and the final margin, 16 shots clear of David Mullin, says as much. His gross total of +66 is the fifth-best in the event's history and comfortably the best of his own career. It was, by any measure, thoroughly deserved.",
+            "It was also not tidy. Troia, a course none of the field had seen before, produced a 94 and two of his worst passages of the tournament: four holes from the 8th without a net par, then three straight doubles from the 13th, six gross shots gone in as many holes.",
+            "Penha Longa on the Monday was similarly uneven. A triple at the 3rd and a double at the 4th were answered at once with a birdie at the short 5th, a repair immediately undone by a bogey-triple-double run through the 6th, 7th and 8th. He then steadied himself, playing the 11th through the 15th in level par and collecting nine points across the last three of those. His 87 was five worse than his previous visit here.",
+            "Estoril produced both his best round and his loudest mistake. The 80 was a course best by six on his only prior visit, and it arrived despite an eight at the par-four 14th, a quadruple bogey, and a double at the 9th that ended a run of three straight pars. He won the Jacket by 16. He did not avoid the wreckage. He was simply the man whose wreckage cost him least."
+          ],
+          "words": 250,
+          "compelling": 7,
+          "humour": 4,
+          "is_lead": false
+        }
+      ],
+      "standings": [
+        {
+          "round": 1,
+          "trophy": "SN 39 | GW 34 | JB 34 | DM 33 | AB 29",
+          "jacket": "GW +18 | JB +21 | DM +23 | SN +26 | AB +42"
+        },
+        {
+          "round": 2,
+          "trophy": "SN 74 | DM 67 | JB 66 | GW 64 | AB 61",
+          "jacket": "GW +40 | JB +44 | DM +45 | SN +56 | AB +76"
+        },
+        {
+          "round": 3,
+          "trophy": "SN 113 | GW 101 | JB 99 | DM 97 | AB 94",
+          "jacket": "GW +55 | JB +69 | DM +71 | SN +82 | AB +110"
+        },
+        {
+          "round": 4,
+          "trophy": "SN 156 | GW 143 | DM 142 | JB 131 | AB 127",
+          "jacket": "GW +66 | DM +82 | JB +93 | SN +105 | AB +148"
+        }
+      ],
+      "records": [
+        {
+          "category": "Personal bests",
+          "text": "Gregg Williams's +66 is a personal Gross best"
+        },
+        {
+          "category": "Rare feats",
+          "text": "Alex Baker runs up a 11 (septuple bogey) at the 12th (R4) — his career-worst on a par-4"
+        }
+      ]
+    }
+  ];
+
+  var LAYOUT_NOTES = {
+    a: "The risk: can 300-word copy survive being set in narrow columns?",
+    b: "The risk: does it still read as an edition, or a list of blog posts?",
+    c: "The risk: does the standings rail compete with the lead story?",
+    d: "The risk: does the comic register read as funny, or as kitsch?"
+  };
+
+  var editionsByTeg = {};
+  EDITIONS.forEach(function(e){ editionsByTeg[e.teg] = e; });
+
+  var state = { teg: 14, layout: "a" };
+
+  function esc(s){
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function lengthClass(words){
+    if (words >= 350) return "len-long";
+    if (words >= 250) return "len-medium";
+    return "len-short";
+  }
+
+  function paragraphsHtml(paragraphs){
+    return paragraphs.map(function(p){ return "<p>" + esc(p) + "</p>"; }).join("");
+  }
+
+  function resultsPanelHtml(edition){
+    var items = edition.results.map(function(r){
+      return '<li class="result' + (r.lead ? " result-lead" : "") + '">' +
+        '<span class="result-label">' + esc(r.label) + '</span>' +
+        '<span class="result-value">' + esc(r.value) + '</span></li>';
+    }).join("");
+    return '<div class="results-panel">' +
+      '<p class="results-title">At a glance</p>' +
+      '<ul class="results-list">' + items + '</ul></div>';
+  }
+
+  function subCardHtml(article, extraClass){
+    return '<article class="sub-card ' + (extraClass || "") + " " + lengthClass(article.words) + '">' +
+      '<p class="kicker">' + esc(article.kicker) + '</p>' +
+      '<h3 class="sub-headline">' + esc(article.headline) + '</h3>' +
+      (article.standfirst ? '<p class="standfirst">' + esc(article.standfirst) + '</p>' : '') +
+      '<div class="body">' + paragraphsHtml(article.paragraphs) + '</div>' +
+      '</article>';
+  }
+
+  function appendixHtml(edition){
+    var rows = edition.standings.map(function(s){
+      return '<tr><td>R' + s.round + '</td><td>' + esc(s.trophy) + '</td><td>' + esc(s.jacket) + '</td></tr>';
+    }).join("");
+
+    var byCategory = {};
+    var order = [];
+    edition.records.forEach(function(r){
+      if (!byCategory[r.category]){ byCategory[r.category] = []; order.push(r.category); }
+      byCategory[r.category].push(r.text);
+    });
+    var recordsHtml = order.map(function(cat){
+      var items = byCategory[cat].map(function(t){ return "<li>" + esc(t) + "</li>"; }).join("");
+      return '<div class="records-group"><p class="records-cat">' + esc(cat) + '</p><ul>' + items + '</ul></div>';
+    }).join("");
+
+    return '<section class="appendix">' +
+      '<div class="appendix-standings">' +
+        '<h4>Standings by round</h4>' +
+        '<div class="table-scroll"><table class="standings-table">' +
+          '<thead><tr><th>Rd</th><th>Trophy</th><th>Green Jacket</th></tr></thead>' +
+          '<tbody>' + rows + '</tbody></table></div>' +
+      '</div>' +
+      '<div class="appendix-records"><h4>Personal bests &amp; records</h4>' + recordsHtml + '</div>' +
+    '</section>';
+  }
+
+  function mastheadHtml(edition){
+    var dl = edition.dateline;
+    return '<header class="masthead">' +
+      '<div class="wordmark-row">' +
+        '<span class="wordmark">The TEG<span class="wordmark-flag"></span></span>' +
+        '<span class="dateline">' + esc(dl.teg) + ' &middot; ' + esc(dl.venue) + ' &middot; ' + esc(dl.year) + '</span>' +
+      '</div>' +
+      '<div class="masthead-rule"></div>' +
+    '</header>';
+  }
+
+  function leadArticleHtml(lead){
+    return '<article class="lead">' +
+      '<p class="lead-kicker">' + esc(lead.kicker) + '</p>' +
+      '<h1 class="lead-headline">' + esc(lead.headline) + '</h1>' +
+      (lead.standfirst ? '<p class="lead-standfirst">' + esc(lead.standfirst) + '</p>' : '') +
+      '<div class="body">' + paragraphsHtml(lead.paragraphs) + '</div>' +
+    '</article>';
+  }
+
+  function renderA(edition, lead, subs){
+    var rail = subs[0];
+    var bottom = subs.slice(1);
+    return mastheadHtml(edition) +
+      '<div class="edition-grid">' +
+        leadArticleHtml(lead) +
+        '<div class="col-rule"></div>' +
+        '<aside class="rail">' + resultsPanelHtml(edition) + (rail ? subCardHtml(rail) : "") + '</aside>' +
+        '<div class="bottom-row">' + bottom.map(function(a){ return subCardHtml(a); }).join("") + '</div>' +
+      '</div>' +
+      appendixHtml(edition);
+  }
+
+  function renderB(edition, lead, subs){
+    // A fixed 3-up grid leaves a lone last card stranded with two empty
+    // tracks beside it whenever the count isn't a multiple of 3 minus a
+    // full row (i.e. remainder 1) — give that lone card the full width
+    // instead of leaving a gap.
+    var solo = subs.length % 3 === 1;
+    var cards = subs.map(function(a, i){
+      var isSolo = solo && i === subs.length - 1;
+      return subCardHtml(a, isSolo ? "solo" : "");
+    }).join("");
+    return mastheadHtml(edition) +
+      '<div class="edition-grid">' +
+        '<div class="edition-top">' +
+          leadArticleHtml(lead) +
+          resultsPanelHtml(edition) +
+        '</div>' +
+        '<div class="subs-grid">' + cards + '</div>' +
+      '</div>' +
+      appendixHtml(edition);
+  }
+
+  function renderC(edition, lead, subs){
+    var lastRound = edition.standings[edition.standings.length - 1];
+    var scoreboard =
+      '<p class="scoreboard-title">Final standings &middot; R' + lastRound.round + '</p>' +
+      '<div class="scoreboard-row"><span class="scoreboard-label">Trophy</span></div>' +
+      '<div class="scoreboard-row" style="font-weight:600;">' + esc(lastRound.trophy) + '</div>' +
+      '<div class="scoreboard-row" style="margin-top:0.4rem;"><span class="scoreboard-label">Green Jacket</span></div>' +
+      '<div class="scoreboard-row" style="font-weight:600;">' + esc(lastRound.jacket) + '</div>';
+
+    var asymItems = subs.map(function(a, i){
+      var isLast = i === subs.length - 1;
+      var leftoverSingle = isLast && (subs.length % 2 === 1);
+      var cls = leftoverSingle ? "wide full" : (i % 2 === 0 ? "wide" : "narrow");
+      return subCardHtml(a, cls);
+    }).join("");
+
+    return '<div class="masthead">' +
+        '<div class="wordmark-row">' +
+          '<span class="wordmark">The TEG<span class="wordmark-flag"> &nbsp;SPORT</span></span>' +
+          '<span class="dateline">' + esc(edition.dateline.teg) + ' &middot; ' + esc(edition.dateline.venue) + ' &middot; ' + esc(edition.dateline.year) + '</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="lead-block">' +
+        '<p class="lead-kicker">' + esc(lead.kicker) + '</p>' +
+        '<h1 class="lead-headline">' + esc(lead.headline) + '</h1>' +
+        (lead.standfirst ? '<p class="lead-standfirst">' + esc(lead.standfirst) + '</p>' : '') +
+      '</div>' +
+      '<div class="edition-grid">' +
+        '<article class="lead"><div class="body">' + paragraphsHtml(lead.paragraphs) + '</div></article>' +
+        '<aside class="side-rail">' + resultsPanelHtml(edition) + scoreboard + '</aside>' +
+        '<div class="asym-grid">' + asymItems + '</div>' +
+      '</div>' +
+      appendixHtml(edition);
+  }
+
+  function renderD(edition, lead, subs){
+    return '<header class="masthead">' +
+        '<div class="wordmark-row">' +
+          '<span class="wordmark">The TEG</span>' +
+          '<span class="dateline">' + esc(edition.dateline.teg) + ' &middot; ' + esc(edition.dateline.venue) + ' &middot; ' + esc(edition.dateline.year) + '</span>' +
+        '</div>' +
+        '<div class="masthead-rule"></div>' +
+      '</header>' +
+      '<div class="lead-block">' +
+        '<p class="lead-kicker">' + esc(lead.kicker) + '</p>' +
+        '<h1 class="lead-headline">' + esc(lead.headline) + '</h1>' +
+        (lead.standfirst ? '<p class="lead-standfirst">' + esc(lead.standfirst) + '</p>' : '') +
+      '</div>' +
+      resultsPanelHtml(edition) +
+      '<div class="edition-grid">' +
+        '<article class="lead"><div class="body">' + paragraphsHtml(lead.paragraphs) + '</div></article>' +
+        '<div class="blocks-grid">' + subs.map(function(a){ return subCardHtml(a); }).join("") + '</div>' +
+      '</div>' +
+      appendixHtml(edition);
+  }
+
+  var RENDERERS = { a: renderA, b: renderB, c: renderC, d: renderD };
+
+  function render(){
+    var edition = editionsByTeg[state.teg];
+    var lead = edition.articles.filter(function(a){ return a.is_lead; })[0];
+    var subs = edition.articles.filter(function(a){ return !a.is_lead; });
+
+    var stage = document.getElementById("stage");
+    stage.className = "newspaper layout-" + state.layout;
+    stage.style.animation = "none";
+    // force reflow so the paper-in animation replays on every switch
+    void stage.offsetWidth;
+    stage.style.animation = "";
+    stage.innerHTML = RENDERERS[state.layout](edition, lead, subs);
+
+    document.querySelectorAll("[data-teg]").forEach(function(btn){
+      btn.setAttribute("aria-pressed", String(btn.getAttribute("data-teg") === String(state.teg)));
+    });
+    document.querySelectorAll("[data-layout]").forEach(function(btn){
+      btn.setAttribute("aria-pressed", String(btn.getAttribute("data-layout") === state.layout));
+    });
+    document.getElementById("riskNote").textContent = LAYOUT_NOTES[state.layout];
+  }
+
+  document.querySelectorAll("[data-teg]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      state.teg = parseInt(btn.getAttribute("data-teg"), 10);
+      render();
+    });
+  });
+  document.querySelectorAll("[data-layout]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      state.layout = btn.getAttribute("data-layout");
+      render();
+    });
+  });
+
+  render();
+})();
+</script>
