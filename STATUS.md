@@ -68,10 +68,14 @@ the rest) and was still rejected as too dense. Measured tessellation is not read
 at-a-glance box now also carries the runner-up on each line, derived in the build script from the
 final standings.
 
-`mobile.html` prototypes the three candidate mobile patterns properly rather than tuning
-breakpoints: A index-first, B swipeable cards, C accordion. Measured first-screen length is the
-evidence — the desktop composite squeezed to 390px runs 10.8 phone screens; A is 1.1, B is 1.5,
-C is 2.1 closed and 4.3 with two sections open.
+`mobile.html` prototypes the mobile patterns properly rather than tuning breakpoints. Measured
+first-screen length is the evidence — the desktop composite squeezed to 390px runs 10.7 phone
+screens; A index-first is 1.1, B swipeable cards is 1.5, C accordion is 2.2 closed and 4.4 with two
+sections open. **A and B are built to shippable quality** (hash routing so the Back gesture works,
+deep links, scroll restore, focus management, 44px targets, safe-area insets, full tab semantics
+and keyboard control); C stays at prototype quality as the record. `checks/check_mobile_patterns.py`
+asserts that behaviour in a browser at both phone and desktop widths — it is not in the pytest
+suite because it needs a browser and a served copy of the folder.
 
 All three tournaments (14, 16, 18) render in every prototype; TEG 18 joined once the
 storyline-first pipeline merged. `scripts/inline_editions.py` pushes a regenerated `editions.json`

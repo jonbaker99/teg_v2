@@ -754,8 +754,9 @@ HTML builders).
   `report_layout_prototypes/`, served at `/report-layouts/`: `newspaper.html`
   (the original four directions), `elements.html` (the element-by-element
   chooser), `composite.html` (the chosen elements, switching page composition)
-  and `mobile.html` (three mobile patterns). Start at that folder's
-  `PICKUP.md`; `PLAN.md` alongside it is the original specification.
+  and `mobile.html` (the mobile patterns, with `checks/check_mobile_patterns.py`
+  asserting their behaviour in a browser). Start at that folder's `PICKUP.md`;
+  `PLAN.md` alongside it is the original specification.
   - **First slice shipped:** the **Scorecard** page now renders a portrait
     (holes-as-rows) layout on phones (`≤640px`) for all three views, with a
     Gross/Stableford toggle and dark-ready (inert) colour tokens. Desktop/iPad

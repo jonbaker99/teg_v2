@@ -124,7 +124,8 @@
   .pat-a .idx-item .m-hl{ font-size:1.14rem; margin-top:0.25rem; }
   .pat-a .idx-item .idx-foot{ display:flex; justify-content:space-between; align-items:baseline;
     gap:0.6rem; margin-top:0.45rem; }
-  .pat-a .idx-item .chev{ font-family:var(--font-mono); font-size:0.72rem; color:var(--accent); }
+  .pat-a .chev{ font-family:var(--font-mono); font-size:0.72rem; font-weight:600;
+    letter-spacing:0.04em; color:var(--accent); }
   .pat-a .idx-item.is-lead{ background:var(--tint); }
 
   .pat-a .topbar{
@@ -227,6 +228,49 @@
   .recs li + li{ margin-top:0.3rem; }
   .recs li::before{ content:"—"; position:absolute; left:0; color:var(--accent); }
   .recs-group + .recs-group{ margin-top:0.9rem; }
+  /* ---------- shippable-quality additions -------------------------------- */
+
+  /* Touch targets. Every tappable row is at least 44px tall and takes the
+     whole width, so nothing needs aiming at. */
+  .idx-item, .acc-btn, .m-apx-btn, .tab, .topbar button, .artnav button{
+    min-height:44px; -webkit-tap-highlight-color:transparent;
+  }
+  .idx-item:active, .acc-btn:active, .m-apx-btn:active{ background:var(--tint); }
+  .phone :focus-visible{ outline:2.5px solid var(--accent); outline-offset:-2px; }
+
+  /* Real phones: fill the viewport, respect the notch and the home indicator. */
+  @media (max-width:700px){
+    .pat-b .track{ height:100dvh; }
+    .pat-b .panel{ height:100dvh; padding-bottom:calc(2rem + env(safe-area-inset-bottom)); }
+    .m-masthead{ padding-top:calc(0.95rem + env(safe-area-inset-top)); }
+    .pat-a .topbar{ padding-top:calc(0.7rem + env(safe-area-inset-top)); }
+    .pat-a .artnav{ padding-bottom:env(safe-area-inset-bottom); }
+  }
+
+  /* A: the lead is the hero and the hero is the tap target — it used to also
+     appear as the first row of the list, which read as a duplicate. */
+  .pat-a .idx-lead{
+    display:block; width:100%; text-align:left; background:none; border:none;
+    padding:1.1rem var(--pad) 1.2rem; cursor:pointer; border-bottom:3px solid var(--ink);
+  }
+  .pat-a .idx-lead:active{ background:var(--tint); }
+  .pat-a .idx-lead .lead-cta{
+    display:flex; justify-content:space-between; align-items:baseline; gap:0.6rem; margin-top:0.7rem;
+  }
+  .pat-a .idx-list{ margin-top:0; border-top:none; }
+
+  /* B: the active tab is scrolled into view, and the panel edge is visible so
+     there is always something to swipe towards. */
+  .pat-b .tab{ scroll-margin-inline:1rem; }
+  .pat-b .panel:last-child{ border-right:none; }
+  .pat-b .kbd-hint{
+    font-family:var(--font-mono); font-size:0.58rem; letter-spacing:0.08em;
+    text-transform:uppercase; color:var(--ink-soft);
+  }
+
+  /* Deep-linking means a screen can be entered cold; give the heading focus
+     without showing a ring for pointer users. */
+  .phone [tabindex="-1"]:focus{ outline:none; }
 </style>
 
 <div class="control-bar" role="toolbar" aria-label="Prototype controls">
@@ -645,14 +689,15 @@
 
   var PAT_NOTES = {
     a: "Costs a tap to reach any prose. Nothing is ever half-read; the front screen is a contents page.",
-    b: "Everything one gesture away. Discoverability rests on the kicker tabs and the panel edge.",
-    c: "Cheapest to build. The risk is that two open sections read as a long report again."
+    b: "Everything one gesture away. Kicker tabs and the panel edge carry the affordance; arrow keys work too.",
+    c: "Prototype only — not polished. Kept as the record of what a collapse-in-place page does to scroll length."
   };
 
   var editionsByTeg = {};
   EDITIONS.forEach(function(e){ editionsByTeg[e.teg] = e; });
 
   var state = { teg: 14, pat: "a", view: null, open: {}, apxOpen: false, panel: 0 };
+  var indexScroll = 0;   // so Back from an article lands where you left off
 
   function esc(s){
     return String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
@@ -664,6 +709,12 @@
   }
   function readTime(words){ return Math.max(1, Math.ceil(words / 200)) + " min read"; }
 
+  function edition(){ return editionsByTeg[state.teg]; }
+  function leadOf(e){ return e.articles.filter(function(a){ return a.is_lead; })[0]; }
+  function subsOf(e){ return e.articles.filter(function(a){ return !a.is_lead; }); }
+
+  /* ---- shared atoms ------------------------------------------------------ */
+
   function mastheadHtml(e){
     var d = e.dateline;
     return '<header class="m-masthead"><div class="m-mh-row">' +
@@ -671,7 +722,7 @@
       '<span class="m-dateline">' + esc(d.teg) + ' &middot; ' + esc(d.venue) + ' &middot; ' + esc(d.year) + '</span>' +
       '</div><div class="m-mh-rule"></div></header>';
   }
-  function resultsHtml(e){
+  function resultsHtml(e, flush){
     var items = e.results.map(function(r){
       return '<li class="m-r-item' + (r.lead ? " m-r-lead" : "") + '">' +
         '<span class="m-r-label">' + esc(r.label) + '</span>' +
@@ -679,7 +730,8 @@
         (r.runner_up ? '<span class="m-r-runner">' + esc(r.runner_up) + '</span>' : '') +
         '</span></li>';
     }).join("");
-    return '<div class="m-r5"><p class="m-r5-title">At a glance</p>' +
+    return '<div class="m-r5"' + (flush ? ' style="margin:0"' : '') + '>' +
+      '<p class="m-r5-title">At a glance</p>' +
       '<ul class="m-r-list">' + items + '</ul></div>';
   }
   function appendixHtml(e, open){
@@ -696,7 +748,7 @@
         by[c].map(function(t){ return "<li>" + esc(t) + "</li>"; }).join("") + '</ul></div>';
     }).join("");
     var body = open
-      ? '<div class="m-apx-body">' +
+      ? '<div class="m-apx-body" id="apx-body">' +
           '<div class="m-apx-sec"><div class="table-scroll"><table class="stab">' +
             '<thead><tr><th>Rd</th><th>Trophy</th><th>Green Jacket</th></tr></thead>' +
             '<tbody>' + rows + '</tbody></table></div></div>' +
@@ -704,123 +756,131 @@
         '</div>'
       : "";
     return '<section class="m-apx">' +
-      '<button type="button" class="m-apx-btn" data-apx="1" aria-expanded="' + (open ? "true" : "false") + '">' +
+      '<button type="button" class="m-apx-btn" data-apx="1" aria-expanded="' + (open ? "true" : "false") +
+        '" aria-controls="apx-body">' +
         '<span class="m-apx-h">Standings &amp; records</span>' +
-        '<span class="acc-sign">' + (open ? "−" : "+") + '</span>' +
+        '<span class="acc-sign" aria-hidden="true">' + (open ? "−" : "+") + '</span>' +
       '</button>' + body + '</section>';
   }
 
-  /* ---- A · index first --------------------------------------------------- */
+  /* ---- A · index first ---------------------------------------------------- */
 
   function renderIndexA(e, lead, subs){
+    // The lead is the hero and the hero is the tap target. It used to also be
+    // the first row of the list below, which read as the same story twice.
     var items = subs.map(function(a, i){
       return '<button type="button" class="idx-item" data-open="' + (i + 1) + '">' +
         '<p class="kicker">' + esc(a.kicker) + '</p>' +
         '<h2 class="m-hl">' + esc(a.headline) + '</h2>' +
         '<span class="idx-foot"><span class="m-meta">' + readTime(a.words) + '</span>' +
-        '<span class="chev">Read &rarr;</span></span></button>';
+        '<span class="chev" aria-hidden="true">Read &rarr;</span></span></button>';
     }).join("");
 
-    return '<div class="scroller">' +
+    return '<div class="scroller" id="scroller">' +
       mastheadHtml(e) + resultsHtml(e) +
-      '<div class="idx-lead">' +
+      '<button type="button" class="idx-lead" data-open="0">' +
         '<p class="kicker">' + esc(lead.kicker) + '</p>' +
         '<h1 class="m-hl">' + esc(lead.headline) + '</h1>' +
         (lead.standfirst ? '<p class="m-sf">' + esc(lead.standfirst) + '</p>' : '') +
-      '</div>' +
-      '<div class="idx-list">' +
-        '<p class="idx-h">In this edition</p>' +
-        '<button type="button" class="idx-item is-lead" data-open="0">' +
-          '<p class="kicker">' + esc(lead.kicker) + ' &middot; Lead</p>' +
-          '<h2 class="m-hl">' + esc(lead.headline) + '</h2>' +
-          '<span class="idx-foot"><span class="m-meta">' + readTime(lead.words) + '</span>' +
-          '<span class="chev">Read &rarr;</span></span></button>' +
-        items +
-      '</div>' +
+        '<span class="lead-cta"><span class="m-meta">' + readTime(lead.words) + '</span>' +
+        '<span class="chev" aria-hidden="true">Read the report &rarr;</span></span>' +
+      '</button>' +
+      '<nav class="idx-list" aria-label="In this edition">' +
+        '<p class="idx-h">Also in this edition</p>' + items +
+      '</nav>' +
       appendixHtml(e, state.apxOpen) +
     '</div>';
   }
 
   function renderArticleA(e, all, i){
-    var a = all[i];
-    var prev = all[i - 1], next = all[i + 1];
-    var navBtn = function(art, j, label){
+    var a = all[i], prev = all[i - 1], next = all[i + 1];
+    function navBtn(art, j, label){
       if (!art) return '<button type="button" disabled><span class="an-lab">' + label + '</span></button>';
       return '<button type="button" data-open="' + j + '"><span class="an-lab">' + label + '</span>' +
         '<span class="an-hl">' + esc(art.headline) + '</span></button>';
-    };
-    return '<div class="scroller">' +
+    }
+    return '<div class="scroller" id="scroller">' +
       '<div class="topbar"><button type="button" data-index="1">&larr; Front page</button>' +
         '<span class="tb-title">' + esc(e.dateline.teg) + '</span></div>' +
       '<article class="article">' +
         '<p class="kicker">' + esc(a.kicker) + '</p>' +
-        '<h1 class="m-hl">' + esc(a.headline) + '</h1>' +
+        '<h1 class="m-hl" id="screen-title" tabindex="-1">' + esc(a.headline) + '</h1>' +
         (a.standfirst ? '<p class="m-sf">' + esc(a.standfirst) + '</p>' : '') +
         '<div class="m-body">' + paragraphsHtml(a.paragraphs) + '</div>' +
       '</article>' +
-      '<div class="artnav">' + navBtn(prev, i - 1, "Previous") + navBtn(next, i + 1, "Next") + '</div>' +
+      '<nav class="artnav" aria-label="Other articles">' +
+        navBtn(prev, i - 1, "Previous") + navBtn(next, i + 1, "Next") + '</nav>' +
     '</div>';
   }
 
-  /* ---- B · swipeable cards ----------------------------------------------- */
+  /* ---- B · swipeable cards ------------------------------------------------ */
 
   function renderB(e, lead, subs){
     var all = [lead].concat(subs);
-    var tabs = all.map(function(a, i){
-      return '<button type="button" class="tab" role="tab" data-panel="' + i + '" ' +
-        'aria-selected="' + (i === state.panel ? "true" : "false") + '">' + esc(a.kicker) + '</button>';
-    }).join("") +
-      '<button type="button" class="tab" role="tab" data-panel="' + all.length + '" ' +
-      'aria-selected="' + (all.length === state.panel ? "true" : "false") + '">Standings</button>';
+    var labels = all.map(function(a){ return a.kicker; }).concat(["Standings"]);
+
+    var tabs = labels.map(function(label, i){
+      return '<button type="button" class="tab" role="tab" id="tab-' + i + '" data-panel="' + i + '" ' +
+        'aria-controls="panel-' + i + '" aria-selected="' + (i === state.panel) + '" ' +
+        'tabindex="' + (i === state.panel ? "0" : "-1") + '">' + esc(label) + '</button>';
+    }).join("");
 
     var panels = all.map(function(a, i){
       var isLead = i === 0;
-      return '<section class="panel" data-panel-index="' + i + '">' +
-        (isLead ? resultsHtml(e).replace(' class="m-r5"', ' class="m-r5" style="margin-left:0;margin-right:0;margin-top:0"') : "") +
+      return '<section class="panel" role="tabpanel" id="panel-' + i + '" aria-labelledby="tab-' + i + '" ' +
+        'data-panel-index="' + i + '" tabindex="0">' +
+        (isLead ? resultsHtml(e, true) : "") +
         '<p class="kicker"' + (isLead ? ' style="margin-top:0.95rem"' : '') + '>' + esc(a.kicker) + '</p>' +
         '<h1 class="m-hl">' + esc(a.headline) + '</h1>' +
         (a.standfirst ? '<p class="m-sf">' + esc(a.standfirst) + '</p>' : '') +
         '<div class="m-body">' + paragraphsHtml(a.paragraphs) + '</div>' +
         '<div class="panel-foot"><span class="m-meta">' + (i + 1) + ' of ' + (all.length + 1) + '</span>' +
-        '<span class="swipe-hint">Swipe &rarr;</span></div>' +
+        '<span class="swipe-hint" aria-hidden="true">Swipe &rarr;</span></div>' +
       '</section>';
     }).join("");
 
-    var apxPanel = '<section class="panel" data-panel-index="' + all.length + '">' +
+    var apxIndex = all.length;
+    var apxPanel = '<section class="panel" role="tabpanel" id="panel-' + apxIndex + '" ' +
+      'aria-labelledby="tab-' + apxIndex + '" data-panel-index="' + apxIndex + '" tabindex="0">' +
       '<p class="kicker">Reference</p><h1 class="m-hl">Standings &amp; records</h1>' +
-      appendixHtml(e, true).replace('<section class="m-apx">', '<div style="margin-top:1rem">')
+      appendixHtml(e, true)
+        .replace('<section class="m-apx">', '<div style="margin-top:1rem">')
+        .replace(/<button type="button" class="m-apx-btn"[\s\S]*?<\/button>/, "")
         .replace('</section>', '</div>') +
+      '<div class="panel-foot"><span class="m-meta">' + (apxIndex + 1) + ' of ' + (apxIndex + 1) + '</span>' +
+      '<span class="kbd-hint" aria-hidden="true">&larr; back</span></div>' +
       '</section>';
 
-    var dots = all.concat([null]).map(function(_, i){
+    var dots = labels.map(function(_, i){
       return '<span class="dot' + (i === state.panel ? " on" : "") + '"></span>';
     }).join("");
 
     return mastheadHtml(e) +
-      '<div class="tabs" role="tablist">' + tabs + '</div>' +
+      '<div class="tabs" role="tablist" aria-label="Articles">' + tabs + '</div>' +
       '<div class="track" id="track">' + panels + apxPanel + '</div>' +
-      '<div class="dots">' + dots + '</div>';
+      '<div class="dots" aria-hidden="true">' + dots + '</div>';
   }
 
-  /* ---- C · accordion ------------------------------------------------------ */
+  /* ---- C · accordion (prototype only, kept as the record) ----------------- */
 
   function renderC(e, lead, subs){
     var rows = subs.map(function(a, i){
       var open = !!state.open[i];
       return '<div class="acc-row' + (open ? " open" : "") + '">' +
-        '<button type="button" class="acc-btn" data-acc="' + i + '" aria-expanded="' + open + '">' +
+        '<button type="button" class="acc-btn" data-acc="' + i + '" aria-expanded="' + open +
+          '" aria-controls="acc-panel-' + i + '">' +
           '<p class="kicker">' + esc(a.kicker) + '</p>' +
           '<h2 class="m-hl">' + esc(a.headline) + '</h2>' +
           '<span class="acc-foot"><span class="m-meta">' + readTime(a.words) + '</span>' +
-          '<span class="acc-sign">' + (open ? "−" : "+") + '</span></span>' +
+          '<span class="acc-sign" aria-hidden="true">' + (open ? "−" : "+") + '</span></span>' +
         '</button>' +
-        (open ? '<div class="acc-panel">' +
+        (open ? '<div class="acc-panel" id="acc-panel-' + i + '">' +
             (a.standfirst ? '<p class="m-sf">' + esc(a.standfirst) + '</p>' : '') +
             '<div class="m-body">' + paragraphsHtml(a.paragraphs) + '</div></div>' : '') +
       '</div>';
     }).join("");
 
-    return '<div class="scroller">' +
+    return '<div class="scroller" id="scroller">' +
       mastheadHtml(e) + resultsHtml(e) +
       '<article class="acc-lead">' +
         '<p class="kicker">' + esc(lead.kicker) + '</p>' +
@@ -833,21 +893,57 @@
     '</div>';
   }
 
-  /* ---- render ------------------------------------------------------------- */
+  /* ---- routing ------------------------------------------------------------
+     The phone's Back gesture is the most-used control on a phone, so each
+     screen is a history entry. Hash form: #a/14, #a/14/story/2, #b/14/panel/3.
+     ------------------------------------------------------------------------- */
+
+  function toHash(){
+    var h = "#" + state.pat + "/" + state.teg;
+    if (state.pat === "a" && state.view !== null) h += "/story/" + state.view;
+    if (state.pat === "b" && state.panel) h += "/panel/" + state.panel;
+    return h;
+  }
+
+  function fromHash(){
+    var parts = (location.hash || "").replace(/^#/, "").split("/").filter(Boolean);
+    if (!parts.length) return false;
+    var pat = parts[0], teg = parseInt(parts[1], 10);
+    if (["a", "b", "c"].indexOf(pat) === -1 || !editionsByTeg[teg]) return false;
+    state.pat = pat;
+    state.teg = teg;
+    state.view = null;
+    state.panel = 0;
+    if (parts[2] === "story") state.view = parseInt(parts[3], 10) || 0;
+    if (parts[2] === "panel") state.panel = parseInt(parts[3], 10) || 0;
+    return true;
+  }
+
+  function go(patch, replace){
+    Object.assign(state, patch);
+    var h = toHash();
+    if (location.hash === h) { render(); return; }
+    if (replace) history.replaceState(null, "", h);
+    else history.pushState(null, "", h);
+    render();
+  }
+
+  window.addEventListener("popstate", function(){
+    if (!fromHash()) { state.view = null; state.panel = 0; }
+    render();
+  });
+
+  /* ---- render -------------------------------------------------------------- */
 
   function render(){
-    var e = editionsByTeg[state.teg];
-    var lead = e.articles.filter(function(a){ return a.is_lead; })[0];
-    var subs = e.articles.filter(function(a){ return !a.is_lead; });
-    var all = [lead].concat(subs);
-
+    var e = edition(), lead = leadOf(e), subs = subsOf(e), all = [lead].concat(subs);
     var phone = document.getElementById("phone");
-    phone.className = "phone pat-" + state.pat;
 
+    phone.className = "phone pat-" + state.pat;
     if (state.pat === "a"){
       phone.innerHTML = state.view === null
         ? renderIndexA(e, lead, subs)
-        : renderArticleA(e, all, state.view);
+        : renderArticleA(e, all, Math.min(state.view, all.length - 1));
     } else if (state.pat === "b"){
       phone.innerHTML = renderB(e, lead, subs);
       var track = document.getElementById("track");
@@ -855,12 +951,44 @@
         track.addEventListener("scroll", onTrackScroll, { passive: true });
         var target = track.querySelector('[data-panel-index="' + state.panel + '"]');
         if (target) track.scrollLeft = target.offsetLeft - track.offsetLeft;
+        scrollTabIntoView();
       }
     } else {
       phone.innerHTML = renderC(e, lead, subs);
     }
 
     bindScreen();
+    restoreScroll();
+    syncControls();
+    reportMetric();
+    document.body.setAttribute("data-ready", "1");
+  }
+
+  // Which element actually scrolls. In the desktop phone frame it is .scroller;
+  // below 700px the frame is dropped and the document scrolls instead, so
+  // writing scrollTop to .scroller there silently does nothing.
+  function scrollHost(){
+    var s = document.getElementById("scroller");
+    if (s && s.scrollHeight > s.clientHeight + 1) return s;
+    return document.scrollingElement || document.documentElement;
+  }
+
+  // Returning to the index should land where you left it, not at the top.
+  function restoreScroll(){
+    var host = scrollHost();
+    var onScroll = function(){ indexScroll = host.scrollTop; };
+    if (state.pat === "a" && state.view === null){
+      host.scrollTop = indexScroll;
+      (host === document.scrollingElement ? window : host)
+        .addEventListener("scroll", onScroll, { passive: true });
+    } else {
+      host.scrollTop = 0;
+      var h = document.getElementById("screen-title");
+      if (h) h.focus({ preventScroll: true });
+    }
+  }
+
+  function syncControls(){
     document.querySelectorAll("[data-teg]").forEach(function(b){
       b.setAttribute("aria-pressed", String(b.getAttribute("data-teg") === String(state.teg)));
     });
@@ -868,20 +996,19 @@
       b.setAttribute("aria-pressed", String(b.getAttribute("data-pat") === state.pat));
     });
     document.getElementById("patNote").textContent = PAT_NOTES[state.pat];
-    reportMetric();
-    document.body.setAttribute("data-ready", "1");
   }
 
-  // How long is the first screen? This is the number the whole exercise is
-  // about: a vertical stack of the desktop grid is one very long scroll.
+  // The number the whole exercise is about: a vertical stack of the desktop
+  // grid is one very long scroll, and each pattern is measured against it.
   function reportMetric(){
-    var el = document.querySelector("#phone .scroller") ||
+    var el = document.getElementById("scroller") ||
              document.querySelector("#phone .track .panel") || document.getElementById("phone");
-    var h = el ? el.scrollHeight : 0;
-    var screens = (h / 844).toFixed(1);
+    var h = el ? Math.max(el.scrollHeight, el.getBoundingClientRect().height) : 0;
     document.getElementById("metric").innerHTML =
-      "First screen: <b>" + Math.round(h) + "px</b> (" + screens + " phone screens)";
+      "First screen: <b>" + Math.round(h) + "px</b> (" + (h / 844).toFixed(1) + " phone screens)";
   }
+
+  /* ---- B: swipe, tabs, keyboard -------------------------------------------- */
 
   function onTrackScroll(){
     var track = document.getElementById("track");
@@ -889,11 +1016,15 @@
     var mid = track.scrollLeft + track.clientWidth / 2;
     var panels = track.querySelectorAll(".panel");
     for (var i = 0; i < panels.length; i++){
-      var p = panels[i];
-      if (mid >= p.offsetLeft - track.offsetLeft && mid < p.offsetLeft - track.offsetLeft + p.offsetWidth){
+      var left = panels[i].offsetLeft - track.offsetLeft;
+      if (mid >= left && mid < left + panels[i].offsetWidth){
         if (state.panel !== i){
           state.panel = i;
           syncTabs();
+          scrollTabIntoView();
+          // a swipe replaces rather than stacks, so Back leaves the edition
+          history.replaceState(null, "", toHash());
+          reportMetric();
         }
         return;
       }
@@ -901,24 +1032,42 @@
   }
   function syncTabs(){
     document.querySelectorAll("#phone .tab").forEach(function(b){
-      b.setAttribute("aria-selected", String(parseInt(b.getAttribute("data-panel"), 10) === state.panel));
+      var on = parseInt(b.getAttribute("data-panel"), 10) === state.panel;
+      b.setAttribute("aria-selected", String(on));
+      b.setAttribute("tabindex", on ? "0" : "-1");
     });
     document.querySelectorAll("#phone .dot").forEach(function(d, i){
       d.classList.toggle("on", i === state.panel);
     });
   }
+  function scrollTabIntoView(){
+    var tab = document.querySelector('#phone .tab[aria-selected="true"]');
+    if (tab && tab.scrollIntoView) tab.scrollIntoView({ inline: "center", block: "nearest" });
+  }
+  function goToPanel(i){
+    var track = document.getElementById("track");
+    if (!track) return;
+    var panels = track.querySelectorAll(".panel");
+    i = Math.max(0, Math.min(panels.length - 1, i));
+    var target = track.querySelector('[data-panel-index="' + i + '"]');
+    if (!target) return;
+    state.panel = i;
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    track.scrollTo({ left: target.offsetLeft - track.offsetLeft, behavior: reduce ? "auto" : "smooth" });
+    syncTabs();
+    scrollTabIntoView();
+  }
+
+  /* ---- events -------------------------------------------------------------- */
 
   function bindScreen(){
     document.querySelectorAll("#phone [data-open]").forEach(function(b){
       b.addEventListener("click", function(){
-        state.view = parseInt(b.getAttribute("data-open"), 10);
-        render();
-        var s = document.querySelector("#phone .scroller");
-        if (s) s.scrollTop = 0;
+        go({ view: parseInt(b.getAttribute("data-open"), 10) });
       });
     });
     document.querySelectorAll("#phone [data-index]").forEach(function(b){
-      b.addEventListener("click", function(){ state.view = null; render(); });
+      b.addEventListener("click", function(){ go({ view: null }); });
     });
     document.querySelectorAll("#phone [data-acc]").forEach(function(b){
       b.addEventListener("click", function(){
@@ -931,37 +1080,41 @@
       b.addEventListener("click", function(){ state.apxOpen = !state.apxOpen; render(); });
     });
     document.querySelectorAll("#phone .tab").forEach(function(b){
-      b.addEventListener("click", function(){
-        state.panel = parseInt(b.getAttribute("data-panel"), 10);
-        var track = document.getElementById("track");
-        var target = track && track.querySelector('[data-panel-index="' + state.panel + '"]');
-        if (target) track.scrollTo({ left: target.offsetLeft - track.offsetLeft, behavior: "smooth" });
-        syncTabs();
-      });
+      b.addEventListener("click", function(){ goToPanel(parseInt(b.getAttribute("data-panel"), 10)); });
     });
   }
 
-  function resetView(){ state.view = null; state.open = {}; state.apxOpen = false; state.panel = 0; }
+  document.addEventListener("keydown", function(ev){
+    if (ev.metaKey || ev.ctrlKey || ev.altKey) return;
+    if (state.pat === "b"){
+      if (ev.key === "ArrowRight"){ ev.preventDefault(); goToPanel(state.panel + 1); }
+      if (ev.key === "ArrowLeft"){ ev.preventDefault(); goToPanel(state.panel - 1); }
+    }
+    if (state.pat === "a" && state.view !== null && ev.key === "Escape"){
+      ev.preventDefault();
+      history.back();
+    }
+  });
 
   document.querySelectorAll("[data-teg]").forEach(function(b){
     b.addEventListener("click", function(){
-      state.teg = parseInt(b.getAttribute("data-teg"), 10);
-      resetView(); render();
+      go({ teg: parseInt(b.getAttribute("data-teg"), 10), view: null, panel: 0, open: {}, apxOpen: false });
     });
   });
   document.querySelectorAll("[data-pat]").forEach(function(b){
     b.addEventListener("click", function(){
-      state.pat = b.getAttribute("data-pat");
-      resetView(); render();
+      indexScroll = 0;
+      go({ pat: b.getAttribute("data-pat"), view: null, panel: 0, open: {}, apxOpen: false });
     });
   });
 
   // hooks the screenshot script drives
   window.__proto = {
     set: function(patch){ Object.assign(state, patch); render(); },
-    reset: resetView
+    panel: goToPanel
   };
 
+  if (!fromHash()) history.replaceState(null, "", toHash());
   render();
 })();
 </script>

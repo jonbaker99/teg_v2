@@ -111,22 +111,40 @@ E2 was rebuilt once during this pass: it originally stacked the remaining storie
 column beside the promoted one, and three full-length articles in that column left a
 column-height void. G2 and G3 remain in the file as the record of what was tried.
 
-### 2. Mobile — three patterns built, one to choose
+### 2. Mobile — A and B built properly, decide on a real phone
 
-All three are in `mobile.html`, on the same element vocabulary. The measured first-screen length
-is the number that matters, because the defect being fixed is scroll length:
+Both are shippable; C was left at prototype quality as the record of what a collapse-in-place page
+does to scroll length. Measured first-screen length, against the desktop composite squeezed to
+390px at **9,069px — 10.7 phone screens**:
 
-| | Pattern | First screen | Notes |
+| | Pattern | First screen | Shape |
 |---|---|---|---|
-| — | *Desktop composite at 390px* | *9,085px — 10.8 phone screens* | *the problem, quantified* |
-| **A** | Index first | 938px — 1.1 screens | Article is its own screen, prev/next at the foot. Costs a tap. |
-| **B** | Swipeable cards | 1,227px — 1.5 screens | Kicker tabs across the top carry the affordance; next panel peeks. |
-| **C** | Accordion | 1,774px closed — 2.1 screens | Two sections open: 3,657px, 4.3 screens. The long-report risk, visible. |
+| **A** | Index first | 921px — 1.1 screens | Front screen is masthead, results, lead hero, then the other headlines. Each article is its own screen. |
+| **B** | Swipeable cards | 1,268px — 1.5 screens | One article per horizontal panel, kicker tabs across the top, appendix as the last panel. |
+| C | Accordion | 1,815px closed, 3,698px with two open | Not polished. |
 
-Note the card treatment answer (C2, ruled columns) was given for desktop only — mobile card
-separation follows from whichever pattern wins here, not from that answer.
+What "properly" added, in both: hash routing so **the phone's Back gesture works** and a screen can
+be deep-linked cold; scroll position restored when you come back to the index; focus moved to the
+article heading on navigation; 44px minimum touch targets; `env(safe-area-inset-*)` and `100dvh` so
+the notch and home indicator are respected; full `tablist`/`tabpanel` semantics on B with arrow-key
+control, and Escape to leave an article in A.
+
+One bug worth remembering: below 700px the frame is dropped and **the document scrolls, not
+`.scroller`** — scroll restore written to the inner element silently did nothing on an actual
+phone while working perfectly in the desktop preview. `scrollHost()` picks whichever is really
+scrolling. Anything else that reads or writes scroll position needs the same treatment.
+
+`checks/check_mobile_patterns.py` covers all of the above — 15 assertions, run at 390×844 and at
+1280×900 because the two take different code paths. It needs a browser and a served copy of the
+folder, so it is not in the pytest suite; run it by hand after touching `mobile.html`.
 
 ### 3. `StorylinePlan` needs `headline` and `standfirst`
+
+**One decision is parked behind this.** On TEG 14 the second-lead slot currently goes to the Wooden
+Spoon (compelling 9) rather than the Green Jacket (7) — a margin of exactly `CLEAR_MARGIN`. Whether
+that is the right call cannot be judged while every headline is derived from the subject line, so
+revisit it once this field exists. The threshold is one constant in `composite.html`.
+
 
 The pipeline gives each storyline a `subject`: a 15–25 word descriptive line. Good section heading,
 poor headline. The parser derives one, and derived headlines are the weakest text on the page —
