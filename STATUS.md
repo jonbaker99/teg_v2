@@ -68,21 +68,23 @@ the rest) and was still rejected as too dense. Measured tessellation is not read
 at-a-glance box now also carries the runner-up on each line, derived in the build script from the
 final standings.
 
-`mobile.html` prototypes the mobile patterns properly rather than tuning breakpoints. Measured
-first-screen length is the evidence — the desktop composite squeezed to 390px runs 10.7 phone
-screens; A index-first is 1.1, B swipeable cards is 1.5, C accordion is 2.2 closed and 4.4 with two
-sections open. **A and B are built to shippable quality** (hash routing so the Back gesture works,
-deep links, scroll restore, focus management, 44px targets, safe-area insets, full tab semantics
-and keyboard control); C stays at prototype quality as the record. `checks/check_mobile_patterns.py`
-asserts that behaviour in a browser at both phone and desktop widths — it is not in the pytest
-suite because it needs a browser and a served copy of the folder.
+**Mobile is decided too: pattern A, index first** — the front screen is the masthead, results and
+headlines, and each article is its own screen. Measured first-screen length is the evidence: the
+desktop composite squeezed to 390px runs 10.7 phone screens, A runs 1.1, B swipeable cards 1.5, C
+accordion 2.2 closed and 4.4 with two sections open. A and B are built to shippable quality (hash
+routing so the phone's Back gesture works, deep links, scroll restore, focus management, 44px
+targets, safe-area insets, full tab semantics and keyboard control); C stays at prototype quality
+as the record. `checks/check_mobile_patterns.py` asserts that behaviour in a browser at both phone
+and desktop widths — it is not in the pytest suite because it needs a browser and a served copy of
+the folder.
 
 All three tournaments (14, 16, 18) render in every prototype; TEG 18 joined once the
 storyline-first pipeline merged. `scripts/inline_editions.py` pushes a regenerated `editions.json`
 back into the pages. Awaiting a pick on composition and mobile pattern, then wiring into
 `routes/reports.py`. Findings for the pipeline (the story plan needs `headline`/`standfirst`
-fields — `subject` is neither) and next steps:
-`webapp/report_layout_prototypes/PICKUP.md`; original specification: `PLAN.md` alongside it.
+fields — `subject` is neither) and what remains:
+`webapp/report_layout_prototypes/README.md`, which the trial's two working docs were folded into
+once the design was settled. **Next: wiring it into `webapp/routes/reports.py`.**
 
 ### 2026-08-17 — Reporting docs reconciled against the code
 

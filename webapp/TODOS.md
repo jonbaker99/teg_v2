@@ -20,11 +20,11 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 - [ ] **Newspaper report layout — rethink mobile** — stacking the grid vertically recreates the
   one-long-report problem the layout solved. Needs a different pattern (index-first, swipeable
   cards, accordion), prototyped like A–D were, not tuned breakpoints.
-  **A and B built to shippable quality (2026-09-05)** in `mobile.html`, measured against a
-  10.7-screen baseline: A 1.1 screens, B 1.5. C left at prototype quality. Awaiting a pick on a
-  real phone; `checks/check_mobile_patterns.py` guards the behaviour.
+  **Decided (2026-09-05): pattern A, index first**, at 1.1 phone screens against a 10.7-screen
+  baseline. B is also shippable and stays switchable; C left at prototype quality.
+  `checks/check_mobile_patterns.py` guards the behaviour.
 
-  Both: `webapp/report_layout_prototypes/PICKUP.md`.
+  Both: `webapp/report_layout_prototypes/README.md`.
 
 
 ## NEXT UP
