@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>TEG Reports Preview — Newspaper Layout</title>
+<!--
+  Standalone page, deliberately NOT extending base.html: the newspaper design
+  is its own self-contained visual system (own fonts, palette, CSS reset) and
+  was settled against composite.html/mobile.html directly. Fighting the site's
+  Tailwind/theme chrome here would risk the preview no longer matching the
+  design it is meant to validate. See webapp/report_layout_prototypes/README.md.
+-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/static/newspaper_preview.css">
+</head>
+<body class="np-page">
+
+<nav class="np-switcher" aria-label="Preview TEG switcher">
+    <span class="np-label">Newspaper layout preview</span>
+    {% for n in teg_numbers %}
+    <a href="/teg-reports-preview?teg={{ n }}" class="{% if n == selected_teg %}active{% endif %}">TEG {{ n }}</a>
+    {% endfor %}
+</nav>
+
+{% if no_report_message %}
+<p style="padding:2rem; font-family:var(--font-body);">{{ no_report_message }}</p>
+{% else %}
+
+<div class="np-desktop" id="desktop-stage">
+    <main class="np-paper arr-{{ arrangement }}">{{ desktop_html|safe }}</main>
+</div>
+
+<div class="np-mobile" id="mobile-stage" aria-live="polite"></div>
+
+<script type="application/json" id="edition-data">{{ edition_json|safe }}</script>
+<script src="/static/newspaper_preview.js"></script>
+
+{% endif %}
+</body>
+</html>

@@ -4,8 +4,9 @@ Tournament reports are presented as a **newspaper edition**: a lead story on the
 the remaining storylines as separate articles. This folder holds the prototypes that settled that
 design and the record of how each choice was made.
 
-**The design is decided. What has not happened is wiring it into the site** — see
-[Still to do](#still-to-do).
+**The design is decided and is wired into the site as a preview** at
+`/teg-reports-preview` — not linked from the nav, and `/teg-reports` is untouched. See
+[Still to do](#still-to-do) for what's left before switching `/teg-reports` over to it.
 
 Served at `/report-layouts/` when the webapp runs (mounted in `webapp/app.py` beside `/mockups/`).
 
@@ -96,10 +97,23 @@ matters to a reader.
 
 ## Still to do
 
-1. **Wire it into the site.** `webapp/routes/reports.py` currently renders the styled markdown to
-   one HTML blob; the edition parser replaces that. Sync `def` handler (CLAUDE.md invariant), and
-   reports are read through `teg_analysis.io.read_text_file` (volume-then-GitHub aware), not the
-   filesystem.
+1. **Wired in as a preview; not yet switched over.** `/teg-reports-preview`
+   (`webapp/routes/report_preview.py` + `webapp/templates/teg_reports_preview.html`) renders the
+   settled layout: desktop server-side (`teg_analysis.reporting.newspaper_edition.render_desktop_html`,
+   a straight Python port of `composite.html`'s JS — no interactivity needed there), mobile pattern
+   A client-side (`webapp/static/newspaper_preview.js`, ported from `mobile.html`'s pattern A only —
+   index screen + one screen per article, hash routing so the phone's Back gesture works and any
+   article deep-links cold, scroll restored on return to the index, focus moved to the article
+   heading). A CSS breakpoint in `webapp/static/newspaper_preview.css` (`max-width:700px`, matching
+   mobile.html's own "this is a real phone" breakpoint) picks which stage is visible; both are
+   always rendered so a resize across it is instant. Sync `def` handler; reports are read through
+   `teg_analysis.io.read_text_file` (volume-then-GitHub aware), not the filesystem — the parser
+   moved to `teg_analysis/reporting/newspaper_edition.py` for exactly this (`scripts/` cannot be
+   imported from `webapp/`). Verified in a real browser at 390×844 and 1280×900: index → article →
+   Back, cold deep-link to `#story/N`, focus-on-open, E1/E2 arrangement both render correctly.
+   **Not done yet:** `/teg-reports` itself is untouched and still renders the old one-blob markdown;
+   switching it over (or deciding the two coexist) is a separate, deliberately small change once
+   the preview is confirmed right.
 2. **`StorylinePlan` needs `headline` (3–8 words) and `standfirst` (one sentence) per storyline.**
    `subject` is neither — it is a 15–25 word descriptive line that works as a section heading and
    fails as a headline. Every layout has to derive one, and derived headlines are the weakest text
