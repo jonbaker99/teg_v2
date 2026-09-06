@@ -750,9 +750,11 @@ HTML builders).
   [MOBILE_PLAN.md](MOBILE_PLAN.md); look-and-feel mockups (app vs editorial,
   light + dark) live in `mobile_mockups/` and are served at `/mockups/` when the
   webapp runs. Awaiting a direction decision before the broad implementation.
-  A newspaper front-page report layout trial (four directions, storyline-first
-  content) lives in `report_layout_prototypes/`, served at `/report-layouts/`
-  — see that folder's `PLAN.md`.
+  The newspaper report layout lives in `report_layout_prototypes/`, served at
+  `/report-layouts/`. The design is settled — `composite.html` is the desktop
+  design and `mobile.html` the mobile one — but is not yet wired into
+  `routes/reports.py`. Start at that folder's `README.md`, which carries the
+  chosen elements, the composition rule and what remains.
   - **First slice shipped:** the **Scorecard** page now renders a portrait
     (holes-as-rows) layout on phones (`≤640px`) for all three views, with a
     Gross/Stableford toggle and dark-ready (inert) colour tokens. Desktop/iPad

@@ -13,11 +13,18 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
   Modern editorial, C Sports section, D Back page) and the answer is a composite: Jon likes and
   dislikes elements of each, so the next step is to collect that element by element, not to pick
   one of the four. Then wire it into `routes/reports.py`.
+  **Decided (2026-09-05)** — ten elements chosen in `elements.html`, assembled in `composite.html`,
+  and the page composition settled: E2 at five or more stories, E1 below that, Green Jacket as the
+  default second lead, nothing below the standings in the rail. Remaining work is the mobile
+  pattern, then wiring into `routes/reports.py`.
 - [ ] **Newspaper report layout — rethink mobile** — stacking the grid vertically recreates the
   one-long-report problem the layout solved. Needs a different pattern (index-first, swipeable
   cards, accordion), prototyped like A–D were, not tuned breakpoints.
+  **Decided (2026-09-05): pattern A, index first**, at 1.1 phone screens against a 10.7-screen
+  baseline. B is also shippable and stays switchable; C left at prototype quality.
+  `checks/check_mobile_patterns.py` guards the behaviour.
 
-  Both: `webapp/report_layout_prototypes/PICKUP.md`.
+  Both: `webapp/report_layout_prototypes/README.md`.
 
 
 ## NEXT UP

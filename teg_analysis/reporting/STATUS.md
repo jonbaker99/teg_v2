@@ -182,7 +182,7 @@ no pipeline change. It surfaced a real gap worth fixing here: `StorylinePlan` ha
 (3–8 words) or `standfirst` (one sentence) field, so every layout has to derive one from `subject`
 (a 15–25 word descriptive line) and the derived headlines are the weakest text on the page; the
 unrequested `**bold**` mini-header some sections get is that missing field arriving by accident,
-half the time. See `webapp/report_layout_prototypes/PLAN.md` → *Feedback to the pipeline*.
+half the time. See `webapp/report_layout_prototypes/README.md` → *Still to do*.
 
 ### Doc reconciliation (2026-08-17)
 

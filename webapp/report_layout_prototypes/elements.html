@@ -1,0 +1,616 @@
+<meta charset="utf-8">
+<title>TEG Edition — Element Options</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600;700&family=Libre+Franklin:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,500;0,600;1,500&family=Playfair+Display:wght@600;700;800;900&family=Anton&display=swap">
+<style>
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:#E7E5DE; color:#23231F; font-family:'Libre Franklin',Arial,sans-serif; }
+  h1,h2,h3,h4,h5,p,ul,ol,figure,figcaption,table{ margin:0; padding:0; }
+  ul{ list-style:none; }
+  table{ border-collapse:collapse; }
+
+  /* ---------- catalogue chrome (deliberately not newspaper-styled) -------- */
+  .cat-head{ padding:2rem 2rem 1.4rem; background:#fff; border-bottom:1px solid #D8D6CE; }
+  .cat-head h1{ font-size:1.5rem; font-weight:800; letter-spacing:-0.01em; }
+  .cat-head p{ margin-top:0.5rem; max-width:78ch; font-size:0.92rem; line-height:1.55; color:#55534C; }
+  .cat-head p + p{ margin-top:0.4rem; }
+
+  .spec{ padding:1.6rem 2rem 2rem; border-bottom:1px solid #D3D0C6; background:#E7E5DE; }
+  .spec-head{ margin-bottom:1.15rem; }
+  .spec-head h2{ font-size:1.12rem; font-weight:800; letter-spacing:0.01em; }
+  .spec-head .q{ margin-top:0.35rem; font-size:0.88rem; line-height:1.5; color:#55534C; max-width:88ch; }
+  .spec-head .q b{ color:#23231F; }
+
+  .row{ display:grid; gap:1.1rem; align-items:start; }
+  .row-2{ grid-template-columns:repeat(2,1fr); }
+  .row-3{ grid-template-columns:repeat(3,1fr); }
+  .row-4{ grid-template-columns:repeat(4,1fr); }
+  .row-1{ grid-template-columns:1fr; }
+  /* desktop comparison tool; on a narrow screen just stack the specimens */
+  @media (max-width:700px){ .row{ grid-template-columns:1fr !important; } }
+
+  .variant{ background:#fff; border:1px solid #CFCCC2; }
+  .variant > figcaption{
+    font-size:0.74rem; font-weight:800; letter-spacing:0.06em; text-transform:uppercase;
+    padding:0.45rem 0.75rem; background:#23231F; color:#F4F3EF;
+    display:flex; gap:0.6rem; align-items:baseline;
+  }
+  .variant > figcaption em{ font-style:normal; font-weight:500; letter-spacing:0.02em; text-transform:none; color:#B8B6AE; }
+  .demo{ padding:1.25rem; background:var(--paper); color:var(--ink); }
+  .demo.flush{ padding:0; }
+
+  /* ---------- the neutral newspaper base used for structural sections ----- */
+  .nb{
+    --paper:#F7F4EC; --ink:#1E1B16; --ink-soft:#635D4E;
+    --accent:#7A2420; --accent2:#1F5B44; --rule:#C9C2AC; --tint:#EEEADC;
+    --font-mast:'Fraunces',Georgia,serif; --font-display:'Fraunces',Georgia,serif;
+    --font-body:'Source Serif 4',Georgia,serif; --font-mono:'IBM Plex Mono','Courier New',monospace;
+  }
+  /* the four prototype palettes, for section 1 only */
+  .pal-a{ --paper:#F6F3EA; --ink:#211D17; --ink-soft:#66604F; --accent:#7A2420; --accent2:#7A2420; --rule:#C9C2AC; --tint:#EDE8D9;
+    --font-mast:'Fraunces',Georgia,serif; --font-display:'Fraunces',Georgia,serif;
+    --font-body:'Source Serif 4',Georgia,serif; --font-mono:'IBM Plex Mono',monospace; }
+  .pal-b{ --paper:#FBFAF8; --ink:#171A16; --ink-soft:#5D655B; --accent:#1F5B44; --accent2:#B4832B; --rule:#E2E1DA; --tint:#F1F0EA;
+    --font-mast:'Libre Franklin',Arial,sans-serif; --font-display:'Libre Franklin',Arial,sans-serif;
+    --font-body:'Lora',Georgia,serif; --font-mono:'Libre Franklin',Arial,sans-serif; }
+  .pal-c{ --paper:#F3EFE2; --ink:#1B2430; --ink-soft:#56606D; --accent:#B32A2A; --accent2:#1F5C3F; --rule:#CFC7AE; --tint:#EAE3CC;
+    --font-mast:'Playfair Display',Georgia,serif; --font-display:'Playfair Display',Georgia,serif;
+    --font-body:'Source Serif 4',Georgia,serif; --font-mono:'IBM Plex Mono',monospace; }
+  .pal-d{ --paper:#FAF9F6; --ink:#0E0E0C; --ink-soft:#514F49; --accent:#D3242C; --accent2:#F0BA1F; --rule:#D8D5CC; --tint:#F0EEE7;
+    --font-mast:'Anton','Arial Narrow',sans-serif; --font-display:'Anton','Arial Narrow',sans-serif;
+    --font-body:'Libre Franklin',Arial,sans-serif; --font-mono:'IBM Plex Mono',monospace; }
+
+  /* ---------- shared newspaper atoms -------------------------------------- */
+  .wordmark{ font-family:var(--font-mast); font-weight:600; font-size:1.55rem; letter-spacing:0.02em; color:var(--ink); }
+  .dateline{ font-family:var(--font-mono); font-size:0.72rem; letter-spacing:0.09em; text-transform:uppercase; color:var(--ink-soft); }
+  .hl{ font-family:var(--font-display); color:var(--ink); text-wrap:balance; line-height:1.05; font-weight:700; }
+  .sf{ font-family:var(--font-body); color:var(--ink-soft); line-height:1.42; text-wrap:balance; }
+  .kick{ font-family:var(--font-mono); font-weight:700; font-size:0.7rem; letter-spacing:0.13em; text-transform:uppercase; color:var(--accent); }
+  .bodycopy p{ font-family:var(--font-body); color:var(--ink); font-size:0.97rem; line-height:1.58; }
+  .bodycopy p + p{ margin-top:0.8em; }
+  .subhl{ font-family:var(--font-display); font-weight:700; color:var(--ink); line-height:1.16; font-size:1.22rem; text-wrap:balance; }
+  .card-sf{ font-family:var(--font-body); color:var(--ink-soft); font-size:0.85rem; line-height:1.42; margin-top:0.4rem; }
+  .card-body p{ font-family:var(--font-body); color:var(--ink); font-size:0.875rem; line-height:1.55; }
+  .card-body p + p{ margin-top:0.7em; }
+
+  /* results atoms */
+  .res-title{ font-family:var(--font-mono); font-size:0.66rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--accent); }
+  .res-label{ font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink-soft); }
+  .res-value{ font-family:var(--font-body); font-weight:600; color:var(--ink); }
+
+  /* standings table atom */
+  .stab{ width:100%; }
+  .stab th,.stab td{ text-align:left; padding:0.34rem 0.7rem 0.34rem 0; font-family:var(--font-mono); font-size:0.74rem;
+    white-space:nowrap; border-bottom:1px solid var(--rule); font-variant-numeric:tabular-nums; color:var(--ink); }
+  .stab th{ font-weight:700; font-size:0.62rem; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink-soft); }
+  .recs li{ font-family:var(--font-body); font-size:0.84rem; color:var(--ink-soft); position:relative; padding-left:0.9rem; line-height:1.45; }
+  .recs li + li{ margin-top:0.3rem; }
+  .recs li::before{ content:"—"; position:absolute; left:0; color:var(--accent); }
+  .recs-cat{ font-family:var(--font-body); font-weight:700; font-size:0.78rem; color:var(--ink); margin-bottom:0.28rem; }
+  .recs-group + .recs-group{ margin-top:0.9rem; }
+  .apx-h{ font-family:var(--font-mono); font-size:0.7rem; font-weight:700; letter-spacing:0.11em; text-transform:uppercase; color:var(--accent); margin-bottom:0.6rem; }
+</style>
+<style>
+  /* ===================== 2 · MASTHEAD ==================================== */
+  .mh{ padding:1.15rem 1.5rem; }
+  .mh-row{ display:flex; justify-content:space-between; align-items:baseline; gap:1rem; flex-wrap:wrap; }
+  .m1 .mh-rule{ border-top:3px solid var(--ink); border-bottom:1px solid var(--ink); height:5px; margin-top:0.85rem; }
+  .m2{ text-align:center; }
+  .m2 .wordmark{ font-size:2.9rem; letter-spacing:0.1em; text-transform:uppercase; display:block; }
+  .m2 .mh-top{ border-top:1px solid var(--ink); padding-top:0.7rem; }
+  .m2 .dateline{ display:block; margin-top:0.55rem; padding-top:0.5rem; border-top:1px solid var(--rule); }
+  .m3{ background:var(--ink); padding:0.85rem 1.5rem; }
+  .m3 .wordmark{ color:var(--paper); font-size:1.35rem; font-weight:700; }
+  .m3 .wordmark small{ font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.28em; color:#B0AEA5; margin-left:0.6rem; }
+  .m3 .dateline{ color:#CFCCC2; }
+  .m4{ padding:0.85rem 1.5rem; border-bottom:1px solid var(--rule); }
+  .m4 .wordmark{ font-size:1.05rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; }
+  .m4 .dateline{ font-size:0.68rem; }
+  .m5 .mh-ears{ display:grid; grid-template-columns:repeat(3,1fr); border-top:2px solid var(--ink); border-bottom:1px solid var(--ink); margin-top:0.8rem; }
+  .m5 .ear{ padding:0.42rem 0.7rem; border-right:1px solid var(--rule); }
+  .m5 .ear:last-child{ border-right:none; }
+  .m5 .ear b{ display:block; font-family:var(--font-mono); font-size:0.58rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink-soft); font-weight:700; }
+  .m5 .ear span{ font-family:var(--font-body); font-size:0.88rem; font-weight:600; color:var(--ink); }
+  .mh-stub{ padding:0 1.5rem 0.2rem; }
+  .mh-stub .hl{ font-size:2rem; margin-top:1rem; }
+  .m2 .mh-stub{ padding:0; }
+
+  /* ===================== 3 · RESULTS PANEL =============================== */
+  .r-list{ display:flex; flex-direction:column; }
+  .r1 .r-list{ margin-top:0.5rem; gap:0.38rem; }
+  .r1 .r-item{ display:flex; justify-content:space-between; gap:0.8rem; align-items:baseline; padding-bottom:0.32rem; border-bottom:1px dotted var(--rule); }
+  .r1 .r-item:last-child{ border-bottom:none; }
+  .r1 .r-lead .res-value{ color:var(--accent); }
+
+  .r2{ background:var(--tint); border-left:3px solid var(--accent); padding:1rem 1.1rem; }
+  .r2 .r-list{ margin-top:0.65rem; gap:0.6rem; }
+  .r2 .r-item{ display:flex; flex-direction:column; gap:0.08rem; }
+  .r2 .res-value{ font-size:1rem; }
+  .r2 .r-lead .res-value{ color:var(--accent); }
+
+  .r3{ border-top:2px solid var(--ink); border-bottom:1px solid var(--ink); }
+  .r3 .r-list{ flex-direction:row; }
+  .r3 .r-item{ flex:1; padding:0.75rem 1.1rem; border-right:1px solid var(--rule); display:flex; flex-direction:column; gap:0.12rem; }
+  .r3 .r-item:last-child{ border-right:none; }
+  .r3 .r-lead{ background:var(--tint); }
+  .r3 .r-lead .res-value{ color:var(--accent); font-size:1.08rem; }
+  .r3 .res-value{ font-size:0.98rem; }
+
+  .r4{ background:var(--ink); padding:0.9rem 1.2rem; }
+  .r4 .r-list{ flex-direction:row; gap:2.2rem; flex-wrap:wrap; }
+  .r4 .r-item{ display:flex; flex-direction:column; gap:0.12rem; }
+  .r4 .res-label{ color:#B0AEA5; }
+  .r4 .res-value{ color:#fff; font-weight:700; }
+  .r4 .r-lead .res-value{ color:var(--accent2); }
+
+  .r5{ border:1px solid var(--ink); }
+  .r5 .r5-title{ background:var(--ink); color:var(--paper); font-family:var(--font-mono); font-size:0.64rem; font-weight:700;
+    letter-spacing:0.16em; text-transform:uppercase; padding:0.38rem 0.75rem; }
+  .r5 .r-list{ padding:0.55rem 0.75rem 0.65rem; gap:0.3rem; }
+  .r5 .r-item{ display:flex; justify-content:space-between; gap:0.8rem; align-items:baseline; }
+  .r5 .res-value{ font-family:var(--font-mono); font-size:0.82rem; font-variant-numeric:tabular-nums; }
+  .r5 .r-lead{ padding:0.28rem 0.4rem; margin:0 -0.4rem; background:var(--tint); }
+  .r5 .r-lead .res-value{ color:var(--accent); font-weight:700; }
+
+  /* ===================== 4 · LEAD HEADLINE =============================== */
+  .h-demo{ padding:0.4rem 0.2rem; }
+  .h1v .hl{ font-size:2.9rem; margin-top:0.5rem; }
+  .h1v .sf{ font-size:1.02rem; font-style:italic; margin-top:0.65rem; max-width:64ch; }
+
+  .h2v .h-over{ font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--ink-soft); padding-bottom:0.5rem; border-bottom:1px solid var(--rule); }
+  .h2v .hl{ font-size:3.1rem; margin-top:0.75rem; }
+  .h2v .sf{ font-size:1.06rem; margin-top:0.7rem; max-width:62ch; }
+
+  .h3v .kick{ display:inline-block; background:var(--accent); color:var(--paper); padding:0.28rem 0.6rem; }
+  .h3v .hl{ font-size:3.4rem; text-transform:uppercase; letter-spacing:-0.01em; line-height:0.98; margin-top:0.7rem; font-weight:900; }
+  .h3v .sf{ font-size:1rem; font-weight:600; color:var(--ink); margin-top:0.7rem; max-width:60ch; }
+
+  .h4v .h-rule{ display:flex; align-items:center; gap:0.9rem; }
+  .h4v .h-rule::after{ content:""; flex:1; height:1px; background:var(--rule); }
+  .h4v .hl{ font-size:2.75rem; margin-top:0.8rem; max-width:22ch; }
+  .h4v .sf{ font-size:1.02rem; margin-top:0.7rem; padding-left:0.9rem; border-left:3px solid var(--accent); max-width:58ch; }
+
+  /* ===================== 5 · DROP CAP ==================================== */
+  .dc-demo{ max-width:62ch; }
+  .dc2 p:first-of-type::first-letter{
+    float:left; font-family:var(--font-display); font-weight:700; font-size:3.9rem;
+    line-height:0.78; padding:0.1rem 0.55rem 0 0; color:var(--ink);
+  }
+  .dc3 p:first-of-type::first-letter{
+    float:left; font-family:var(--font-display); font-weight:700; font-size:3.4rem; line-height:0.82;
+    margin:0.12rem 0.6rem 0 0; padding:0.4rem 0.55rem; background:var(--accent); color:var(--paper);
+  }
+  .dc4 p:first-of-type::first-line{ font-variant-caps:small-caps; letter-spacing:0.03em; font-weight:600; }
+
+  /* ===================== 6 · BODY SETTING ================================ */
+  .b1 .bodycopy{ max-width:64ch; }
+  .b2 .bodycopy{ columns:2; column-gap:2.1rem; column-rule:1px solid var(--rule); }
+  .b3 .bodycopy{ columns:2; column-gap:3rem; }
+  .b4 .bodycopy{ columns:3; column-gap:1.9rem; column-rule:1px solid var(--rule); font-size:0.92rem; }
+  .b5 .b5-open{ font-family:var(--font-body); font-size:1.1rem; line-height:1.5; color:var(--ink); max-width:70ch; }
+  .b5 .bodycopy{ columns:2; column-gap:2.1rem; column-rule:1px solid var(--rule); margin-top:0.9rem; }
+
+  /* ===================== 7 · CARD TREATMENT ============================== */
+  .cards{ display:grid; grid-template-columns:repeat(3,1fr); }
+  .c1 .cards{ gap:1.8rem; }
+  .c1 .card{ border-top:1px solid var(--rule); padding-top:0.75rem; }
+  .c2 .cards{ gap:0; }
+  .c2 .card{ padding:0 1.5rem; border-left:1px solid var(--rule); }
+  .c2 .card:first-child{ padding-left:0; border-left:none; }
+  .c2 .card:last-child{ padding-right:0; }
+  .c3 .cards{ gap:1.2rem; }
+  .c3 .card{ border:1px solid var(--rule); padding:1rem 1.05rem; }
+  .c4 .cards{ gap:1.2rem; }
+  .c4 .card{ background:var(--tint); padding:1rem 1.05rem; }
+  .c5 .cards{ gap:1.6rem; }
+  .c5 .card{ border-top:4px solid var(--accent); padding-top:0.8rem; }
+  .card .subhl{ margin-top:0.35rem; }
+  .card .card-body{ margin-top:0.65rem; }
+
+  /* ===================== 8 · KICKERS ===================================== */
+  .k-demo .subhl{ font-size:1.25rem; margin-top:0.45rem; }
+  .k2 .kick{ display:inline-block; background:var(--tint); color:var(--ink); padding:0.24rem 0.55rem; letter-spacing:0.1em; }
+  .k3 .kick{ display:inline-block; background:var(--accent); color:var(--paper); padding:0.26rem 0.6rem; }
+  .k4 .kick{ display:flex; align-items:center; gap:0.45rem; }
+  .k4 .kick::before{ content:""; width:0.6rem; height:0.6rem; background:var(--accent); flex:none; }
+  .k5 .kick{ display:block; padding-bottom:0.35rem; border-bottom:2px solid var(--ink); color:var(--ink); }
+
+  /* ===================== 9 · STANDINGS RAIL ============================== */
+  .pg{ background:var(--paper); }
+  .pg-body{ padding:1.4rem 1.6rem 1.6rem; }
+  .pg .lead-hl{ font-family:var(--font-display); font-weight:700; font-size:2.3rem; line-height:1.05; color:var(--ink); text-wrap:balance; }
+  .pg .lead-sf{ font-family:var(--font-body); font-style:italic; color:var(--ink-soft); font-size:1rem; margin-top:0.55rem; line-height:1.42; max-width:62ch; }
+  .pg-split{ display:grid; grid-template-columns:2fr 1fr; gap:2.2rem; margin-top:1.2rem; }
+  .pg-split.norail{ grid-template-columns:1fr; }
+  .rail-box{ align-self:start; }
+  .rail-box.boxed{ background:var(--tint); border:1px solid var(--rule); padding:1rem 1.1rem; }
+  .rail-sec + .rail-sec{ margin-top:1rem; padding-top:1rem; border-top:1px solid var(--rule); }
+  .sb-row{ display:flex; justify-content:space-between; gap:0.5rem; font-family:var(--font-mono); font-size:0.74rem;
+    font-variant-numeric:tabular-nums; padding:0.2rem 0; color:var(--ink); }
+  .sb-lab{ font-family:var(--font-mono); font-size:0.63rem; font-weight:700; letter-spacing:0.11em; text-transform:uppercase; color:var(--accent2); }
+  .pg-note{ font-family:var(--font-mono); font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft);
+    padding:0.5rem 1.6rem; background:var(--tint); border-top:1px solid var(--rule); }
+
+  /* ===================== 10 · APPENDICES ================================= */
+  .apx{ border-top:1px solid var(--rule); padding:1.4rem 1.6rem 1.6rem; }
+  .apx-2col{ display:grid; grid-template-columns:1.4fr 1fr; gap:2.3rem; }
+  .apx-fold{ padding:0.9rem 1.6rem; border-top:2px solid var(--ink); display:flex; justify-content:space-between; align-items:center; gap:1rem; }
+  .apx-fold .apx-h{ margin:0; }
+  .apx-fold .chev{ font-family:var(--font-mono); font-size:0.72rem; color:var(--ink-soft); }
+  .apx-dark{ background:var(--ink); padding:1.3rem 1.6rem 1.5rem; }
+  .apx-dark .apx-h{ color:var(--accent2); }
+  .apx-dark .stab th,.apx-dark .stab td{ color:#F0EEE7; border-bottom-color:#3A382F; }
+  .apx-dark .stab th{ color:#B0AEA5; }
+  .apx-dark .recs li{ color:#CFCCC2; }
+  .apx-dark .recs-cat{ color:#fff; }
+  .apx-strip{ border-top:2px solid var(--ink); padding:1rem 1.6rem 1.2rem; }
+  .apx-strip .recs{ display:grid; grid-template-columns:repeat(2,1fr); gap:0.3rem 2rem; }
+</style>
+
+<div class="cat-head">
+  <h1>TEG edition — element options</h1>
+  <p>One decision per section. Every specimen uses the real TEG&nbsp;14 copy, so the only thing changing
+     within a section is the element being chosen. Sections 2–10 are all set in one neutral type
+     system on purpose — <b>type and colour are chosen once, in section 1</b>, and then applied to
+     whatever structure you pick here.</p>
+  <p>Headline text is derived from the storyline subject line and is known to be weak. Judge the
+     treatment, not the words.</p>
+</div>
+<main id="cat"></main>
+
+<script>
+(function(){
+  "use strict";
+
+  function esc(s){
+    return String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+  function inlineMd(s){ return esc(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>"); }
+
+  function el(html){ var d = document.createElement("div"); d.innerHTML = html; return d.firstElementChild; }
+
+  /* ---- section scaffolding ------------------------------------------- */
+  function renderSpec(spec){
+    var rows = spec.rows.map(function(row){
+      var vs = row.variants.map(function(v){
+        return '<figure class="variant" data-code="' + esc(v.code) + '">' +
+          '<figcaption>' + esc(v.code) + ' <em>' + esc(v.name) + '</em></figcaption>' +
+          '<div class="demo nb ' + (v.cls || "") + (v.flush ? " flush" : "") + '">' + v.html + '</div>' +
+        '</figure>';
+      }).join("");
+      return '<div class="row ' + row.cls + '">' + vs + '</div>';
+    }).join('<div style="height:1.1rem"></div>');
+
+    return '<section class="spec" id="' + spec.id + '"' + (spec.whole ? ' data-whole="1"' : '') + '>' +
+      '<div class="spec-head"><h2>' + spec.n + ' &middot; ' + spec.title + '</h2>' +
+      '<p class="q">' + spec.q + '</p></div>' + rows + '</section>';
+  }
+
+  /* ---- content atoms -------------------------------------------------- */
+  var E, LEAD, SUBS;
+
+  function paras(list, n){
+    return list.slice(0, n || list.length).map(function(p){ return "<p>" + inlineMd(p) + "</p>"; }).join("");
+  }
+  function resultItems(){
+    return E.results.map(function(r){
+      return '<li class="r-item' + (r.lead ? " r-lead" : "") + '">' +
+        '<span class="res-label">' + esc(r.label) + '</span>' +
+        '<span class="res-value">' + esc(r.value) + '</span></li>';
+    }).join("");
+  }
+  function dateline(){
+    var d = E.dateline;
+    return esc(d.teg) + " &middot; " + esc(d.venue) + " &middot; " + esc(d.year);
+  }
+  function cardHtml(a, nParas){
+    return '<article class="card">' +
+      '<p class="kick">' + esc(a.kicker) + '</p>' +
+      '<h3 class="subhl">' + esc(a.headline) + '</h3>' +
+      (a.standfirst ? '<p class="card-sf">' + esc(a.standfirst) + '</p>' : '') +
+      '<div class="card-body">' + paras(a.paragraphs, nParas) + '</div></article>';
+  }
+  function standingsTable(){
+    var rows = E.standings.map(function(s){
+      return '<tr><td>R' + s.round + '</td><td>' + esc(s.trophy) + '</td><td>' + esc(s.jacket) + '</td></tr>';
+    }).join("");
+    return '<table class="stab"><thead><tr><th>Rd</th><th>Trophy</th><th>Green Jacket</th></tr></thead>' +
+      '<tbody>' + rows + '</tbody></table>';
+  }
+  function recordsHtml(){
+    var by = {}, order = [];
+    E.records.forEach(function(r){
+      if (!by[r.category]){ by[r.category] = []; order.push(r.category); }
+      by[r.category].push(r.text);
+    });
+    return order.map(function(c){
+      return '<div class="recs-group"><p class="recs-cat">' + esc(c) + '</p><ul class="recs">' +
+        by[c].map(function(t){ return "<li>" + esc(t) + "</li>"; }).join("") + '</ul></div>';
+    }).join("");
+  }
+  function recordsFlat(){
+    return '<ul class="recs">' + E.records.map(function(r){
+      return "<li>" + esc(r.text) + "</li>"; }).join("") + '</ul>';
+  }
+  function finalScoreboard(){
+    var last = E.standings[E.standings.length - 1];
+    return '<p class="sb-lab">Final &middot; R' + last.round + ' Trophy</p>' +
+      '<div class="sb-row">' + esc(last.trophy) + '</div>' +
+      '<p class="sb-lab" style="margin-top:0.5rem">Final &middot; R' + last.round + ' Green Jacket</p>' +
+      '<div class="sb-row">' + esc(last.jacket) + '</div>';
+  }
+
+  /* ---- 1 · type & palette --------------------------------------------- */
+  function miniFront(pal){
+    return '<div class="' + pal + '" style="background:var(--paper);padding:1.15rem 1.25rem;">' +
+      '<div class="mh-row"><span class="wordmark">The TEG</span><span class="dateline">' + dateline() + '</span></div>' +
+      '<div style="border-top:3px solid var(--ink);border-bottom:1px solid var(--ink);height:5px;margin-top:0.7rem"></div>' +
+      '<p class="kick" style="margin-top:0.95rem">' + esc(LEAD.kicker) + '</p>' +
+      '<h2 class="hl" style="font-size:2rem;margin-top:0.4rem">' + esc(LEAD.headline) + '</h2>' +
+      '<p class="sf" style="font-size:0.95rem;margin-top:0.5rem">' + esc(LEAD.standfirst) + '</p>' +
+      '<div class="r3" style="margin-top:0.95rem"><ul class="r-list">' + resultItems() + '</ul></div>' +
+      '<div class="bodycopy" style="margin-top:0.95rem">' + paras(LEAD.paragraphs, 2) + '</div>' +
+      '<div style="margin-top:1rem;border-top:1px solid var(--rule);padding-top:0.85rem">' + cardHtml(SUBS[0], 1) + '</div>' +
+    '</div>';
+  }
+
+  /* ---- 2 · masthead ---------------------------------------------------- */
+  function mhStub(){
+    return '<div class="mh-stub"><p class="kick">' + esc(LEAD.kicker) + '</p>' +
+      '<h2 class="hl">' + esc(LEAD.headline) + '</h2></div>';
+  }
+  function mastheads(){
+    return [
+      { code:"M1", name:"Rule under — wordmark left, dateline right, thick/thin rule", flush:true,
+        html:'<div class="m1"><div class="mh"><div class="mh-row">' +
+          '<span class="wordmark">The TEG</span><span class="dateline">' + dateline() + '</span>' +
+          '</div><div class="mh-rule"></div></div>' + mhStub() + '<div style="height:1.2rem"></div></div>' },
+      { code:"M2", name:"Centred flag — big wordmark, rules above and below", flush:true,
+        html:'<div class="m2"><div class="mh"><div class="mh-top">' +
+          '<span class="wordmark">The TEG</span><span class="dateline">' + dateline() + '</span>' +
+          '</div></div><div style="padding:0 1.5rem 1.2rem">' +
+          '<p class="kick">' + esc(LEAD.kicker) + '</p><h2 class="hl" style="font-size:2rem;margin-top:0.5rem">' +
+          esc(LEAD.headline) + '</h2></div></div>' },
+      { code:"M3", name:"Reversed bar — dark strip, section flag", flush:true,
+        html:'<div><div class="m3"><div class="mh-row">' +
+          '<span class="wordmark">The TEG<small>SPORT</small></span><span class="dateline">' + dateline() + '</span>' +
+          '</div></div>' + mhStub() + '<div style="height:1.2rem"></div></div>' },
+      { code:"M4", name:"Quiet — small letterspaced wordmark, single hairline", flush:true,
+        html:'<div><div class="m4"><div class="mh-row">' +
+          '<span class="wordmark">The TEG</span><span class="dateline">' + dateline() + '</span>' +
+          '</div></div>' + mhStub() + '<div style="height:1.2rem"></div></div>' },
+      { code:"M5", name:"Flag + ears — dateline split into three ruled cells", flush:true,
+        html:'<div class="m5"><div class="mh"><div class="mh-row">' +
+          '<span class="wordmark">The TEG</span></div>' +
+          '<div class="mh-ears">' +
+            '<div class="ear"><b>Edition</b><span>' + esc(E.dateline.teg) + '</span></div>' +
+            '<div class="ear"><b>Venue</b><span>' + esc(E.dateline.venue) + '</span></div>' +
+            '<div class="ear"><b>Year</b><span>' + esc(E.dateline.year) + '</span></div>' +
+          '</div></div>' + mhStub() + '<div style="height:1.2rem"></div></div>' }
+    ];
+  }
+
+  /* ---- 3 · results panel ---------------------------------------------- */
+  function resultsRail(){
+    return [
+      { code:"R1", name:"Rail list — dotted separators, no container",
+        html:'<div class="r1"><p class="res-title">At a glance</p><ul class="r-list">' + resultItems() + '</ul></div>' },
+      { code:"R2", name:"Tinted box — accent edge, value under label",
+        html:'<div class="r2"><p class="res-title">At a glance</p><ul class="r-list">' + resultItems() + '</ul></div>' },
+      { code:"R5", name:"Scorecard — ruled box, mono tabular values",
+        html:'<div class="r5"><p class="r5-title">At a glance</p><ul class="r-list">' + resultItems() + '</ul></div>' }
+    ];
+  }
+  function resultsStrip(){
+    return [
+      { code:"R3", name:"Ruled strip — full width, three cells, winner tinted", flush:true,
+        html:'<div class="r3"><ul class="r-list">' + resultItems() + '</ul></div>' },
+      { code:"R4", name:"Dark band — full width, reversed out", flush:true,
+        html:'<div class="r4"><ul class="r-list">' + resultItems() + '</ul></div>' }
+    ];
+  }
+
+  /* ---- 4 · lead headline ---------------------------------------------- */
+  function headlines(){
+    return [
+      { code:"H1", name:"Kicker over, italic standfirst under", cls:"h1v",
+        html:'<div class="h-demo"><p class="kick">' + esc(LEAD.kicker) + '</p>' +
+          '<h2 class="hl">' + esc(LEAD.headline) + '</h2>' +
+          '<p class="sf">' + esc(LEAD.standfirst) + '</p></div>' },
+      { code:"H2", name:"Ruled overline instead of a kicker, roman standfirst", cls:"h2v",
+        html:'<div class="h-demo"><p class="h-over">' + esc(LEAD.kicker) + ' &nbsp;/&nbsp; ' + esc(E.dateline.venue) + '</p>' +
+          '<h2 class="hl">' + esc(LEAD.headline) + '</h2>' +
+          '<p class="sf">' + esc(LEAD.standfirst) + '</p></div>' },
+      { code:"H3", name:"Caps and heavy — solid kicker block, uppercase headline", cls:"h3v",
+        html:'<div class="h-demo"><p class="kick">' + esc(LEAD.kicker) + '</p>' +
+          '<h2 class="hl">' + esc(LEAD.headline) + '</h2>' +
+          '<p class="sf">' + esc(LEAD.standfirst) + '</p></div>' },
+      { code:"H4", name:"Kicker on a rule, standfirst on an accent edge", cls:"h4v",
+        html:'<div class="h-demo"><p class="kick h-rule">' + esc(LEAD.kicker) + '</p>' +
+          '<h2 class="hl">' + esc(LEAD.headline) + '</h2>' +
+          '<p class="sf">' + esc(LEAD.standfirst) + '</p></div>' }
+    ];
+  }
+
+  /* ---- 5 · drop cap ---------------------------------------------------- */
+  function dropcaps(){
+    var copy = '<div class="bodycopy dc-demo">' + paras(LEAD.paragraphs, 2) + '</div>';
+    return [
+      { code:"D1", name:"None — plain first paragraph", html:copy },
+      { code:"D2", name:"Drop cap — three lines, ink", cls:"dc2", html:copy },
+      { code:"D3", name:"Boxed cap — reversed out of the accent", cls:"dc3", html:copy },
+      { code:"D4", name:"No cap — small-caps first line instead", cls:"dc4", html:copy }
+    ];
+  }
+
+  /* ---- 6 · lead body setting ------------------------------------------ */
+  function bodySettings(){
+    var copy = '<div class="bodycopy">' + paras(LEAD.paragraphs) + '</div>';
+    return [
+      { code:"B1", name:"One measure — single wide column, ~64 characters", cls:"b1", html:copy },
+      { code:"B2", name:"Two columns with a hairline rule", cls:"b2", html:copy },
+      { code:"B3", name:"Two columns, no rule, wide gutter", cls:"b3", html:copy },
+      { code:"B4", name:"Three columns with rules — true broadsheet", cls:"b4", html:copy },
+      { code:"B5", name:"Full-width opener, then two ruled columns", cls:"b5",
+        html:'<p class="b5-open">' + inlineMd(LEAD.paragraphs[0]) + '</p><div class="bodycopy">' +
+          paras(LEAD.paragraphs.slice(1)) + '</div>' }
+    ];
+  }
+
+  /* ---- 7 · card treatment --------------------------------------------- */
+  function cardSet(){
+    return '<div class="cards">' + SUBS.slice(0,3).map(function(a){ return cardHtml(a, 2); }).join("") + '</div>';
+  }
+  function cardTreatments(){
+    var set = cardSet();
+    return [
+      { code:"C1", name:"Naked — hairline over each card, generous gaps", cls:"c1", html:set },
+      { code:"C2", name:"Ruled columns — vertical rules, no gaps", cls:"c2", html:set },
+      { code:"C3", name:"Boxed — full hairline border", cls:"c3", html:set },
+      { code:"C4", name:"Tinted panel — no border", cls:"c4", html:set },
+      { code:"C5", name:"Accent bar — heavy rule over each card", cls:"c5", html:set }
+    ];
+  }
+
+  /* ---- 8 · kickers ----------------------------------------------------- */
+  function kickerDemo(a){
+    return '<div class="k-demo"><p class="kick">' + esc(a.kicker) + '</p>' +
+      '<h3 class="subhl">' + esc(a.headline) + '</h3>' +
+      '<div class="card-body" style="margin-top:0.55rem">' + paras(a.paragraphs, 1) + '</div></div>';
+  }
+  function kickers(){
+    var a = SUBS[0];
+    return [
+      { code:"K1", name:"Plain — mono caps in the accent colour", cls:"k1", html:kickerDemo(a) },
+      { code:"K2", name:"Chip — tinted background, ink text", cls:"k2", html:kickerDemo(a) },
+      { code:"K3", name:"Block — reversed out of the accent", cls:"k3", html:kickerDemo(a) },
+      { code:"K4", name:"Bullet — accent square before the label", cls:"k4", html:kickerDemo(a) },
+      { code:"K5", name:"Ruled — label sits on a rule across the card", cls:"k5", html:kickerDemo(a) }
+    ];
+  }
+
+  /* ---- 9 · standings rail --------------------------------------------- */
+  function pageTop(inner){
+    return '<div class="pg"><div class="pg-body">' + inner + '</div></div>';
+  }
+  function leadHead(){
+    return '<p class="kick">' + esc(LEAD.kicker) + '</p>' +
+      '<h2 class="lead-hl" style="margin-top:0.4rem">' + esc(LEAD.headline) + '</h2>' +
+      '<p class="lead-sf">' + esc(LEAD.standfirst) + '</p>';
+  }
+  function railVariants(){
+    var body = '<div class="bodycopy">' + paras(LEAD.paragraphs, 3) + '</div>';
+    var resBox = '<div class="r1"><p class="res-title">At a glance</p><ul class="r-list">' + resultItems() + '</ul></div>';
+    return [
+      { code:"S1", name:"No rail — results as a full-width strip, standings only in the appendix", flush:true,
+        html: pageTop(leadHead() +
+          '<div class="r3" style="margin:1.1rem 0 1.1rem"><ul class="r-list">' + resultItems() + '</ul></div>' +
+          '<div class="b2">' + body + '</div>') +
+          '<p class="pg-note">Round-by-round standings appear once, at the foot of the page.</p>' },
+      { code:"S2", name:"Rail: results + final standings only", flush:true,
+        html: pageTop(leadHead() +
+          '<div class="pg-split"><div class="bodycopy">' + paras(LEAD.paragraphs, 3) + '</div>' +
+          '<aside class="rail-box boxed"><div class="rail-sec">' + resBox + '</div>' +
+          '<div class="rail-sec">' + finalScoreboard() + '</div></aside></div>') },
+      { code:"S3", name:"Rail: results + every round's standings", flush:true,
+        html: pageTop(leadHead() +
+          '<div class="pg-split"><div class="bodycopy">' + paras(LEAD.paragraphs, 3) + '</div>' +
+          '<aside class="rail-box boxed"><div class="rail-sec">' + resBox + '</div>' +
+          '<div class="rail-sec"><p class="sb-lab" style="margin-bottom:0.4rem">Standings by round</p>' +
+          standingsTable() + '</div></aside></div>') +
+          '<p class="pg-note">Nothing left for the appendix but the records.</p>' },
+      { code:"S4", name:"Rail: results + the first sub-article (standings go to the appendix)", flush:true,
+        html: pageTop(leadHead() +
+          '<div class="pg-split"><div class="bodycopy">' + paras(LEAD.paragraphs, 3) + '</div>' +
+          '<aside class="rail-box"><div class="rail-sec">' + resBox + '</div>' +
+          '<div class="rail-sec">' + cardHtml(SUBS[0], 2) + '</div></aside></div>') }
+    ];
+  }
+
+  /* ---- 10 · appendices -------------------------------------------------- */
+  function apxContext(){
+    return '<div style="padding:1.2rem 1.6rem 1.4rem">' +
+      '<div class="cards c3-inner" style="display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem">' +
+      SUBS.slice(0,2).map(function(a){ return cardHtml(a, 1); }).join("") + '</div></div>';
+  }
+  function appendices(){
+    return [
+      { code:"P1", name:"Open block — standings and records side by side at the foot", flush:true,
+        html: apxContext() + '<section class="apx"><div class="apx-2col">' +
+          '<div><h4 class="apx-h">Standings by round</h4>' + standingsTable() + '</div>' +
+          '<div><h4 class="apx-h">Personal bests &amp; records</h4>' + recordsHtml() + '</div>' +
+          '</div></section>' },
+      { code:"P2", name:"Folded — one bar, opens on tap; page ends on the articles", flush:true,
+        html: apxContext() +
+          '<div class="apx-fold"><h4 class="apx-h">Full standings &amp; records</h4><span class="chev">SHOW +</span></div>' },
+      { code:"P3", name:"Scoreboard band — dark full-width block, deliberately not story", flush:true,
+        html: apxContext() + '<section class="apx-dark"><div class="apx-2col">' +
+          '<div><h4 class="apx-h">Standings by round</h4>' + standingsTable() + '</div>' +
+          '<div><h4 class="apx-h">Personal bests &amp; records</h4>' + recordsHtml() + '</div>' +
+          '</div></section>' },
+      { code:"P4", name:"Records strip only — standings live in the rail (pairs with S3)", flush:true,
+        html: apxContext() + '<section class="apx-strip">' +
+          '<h4 class="apx-h">Personal bests &amp; records</h4>' + recordsFlat() + '</section>' }
+    ];
+  }
+
+  /* ---- assemble --------------------------------------------------------- */
+  function build(){
+    var specs = [
+      { n:"1", id:"type", title:"Type &amp; palette", whole:true,
+        q:"Same structure four ways. This picks the fonts and colours everything else is set in. " +
+          "<b>Judge the voice, not the arrangement.</b>",
+        rows:[{ cls:"row-2", variants:[
+          { code:"T1", name:"Broadsheet — Fraunces / Source Serif, cream, oxblood", flush:true, html:miniFront("pal-a") },
+          { code:"T2", name:"Modern editorial — Libre Franklin / Lora, white, green", flush:true, html:miniFront("pal-b") },
+          { code:"T3", name:"Sports section — Playfair / Source Serif, sand, navy + red", flush:true, html:miniFront("pal-c") },
+          { code:"T4", name:"Back page — Anton / Libre Franklin, white, red + yellow", flush:true, html:miniFront("pal-d") }
+        ]}] },
+      { n:"2", id:"masthead", title:"Masthead",
+        q:"The paper's name is constant; the tournament is the dateline. How much furniture does the top of the page need?",
+        rows:[{ cls:"row-1", variants:mastheads() }] },
+      { n:"3", id:"results", title:"Results panel",
+        q:"The at-a-glance block. First three are rail-shaped (narrow, beside the lead); last two are strips " +
+          "(full width, under the masthead). <b>Shape is part of the choice</b> — it constrains section 9.",
+        rows:[{ cls:"row-3", variants:resultsRail() }, { cls:"row-1", variants:resultsStrip() }] },
+      { n:"4", id:"headline", title:"Lead headline treatment",
+        q:"Scale, case, and what sits above and below the headline.",
+        rows:[{ cls:"row-1", variants:headlines() }] },
+      { n:"5", id:"dropcap", title:"Drop cap",
+        q:"How the lead story starts.",
+        rows:[{ cls:"row-2", variants:dropcaps() }] },
+      { n:"6", id:"columns", title:"Lead body setting &amp; column rules",
+        q:"The lead runs 280&ndash;300 words. Narrower columns look more like a newspaper and read worse.",
+        rows:[{ cls:"row-1", variants:bodySettings() }] },
+      { n:"7", id:"cards", title:"Card treatment",
+        q:"How a sub-article is separated from its neighbours.",
+        rows:[{ cls:"row-1", variants:cardTreatments() }] },
+      { n:"8", id:"kickers", title:"Kickers",
+        q:"The TROPHY / GREEN JACKET / WOODEN SPOON / SIDEBAR label above each headline.",
+        rows:[{ cls:"row-3", variants:kickers() }] },
+      { n:"9", id:"rail", title:"The standings rail",
+        q:"Whether there is a column beside the lead story, and what goes in it.",
+        rows:[{ cls:"row-1", variants:railVariants() }] },
+      { n:"10", id:"appendix", title:"Appendices",
+        q:"Standings by round and the records list. Reference, not story &mdash; but they are the numbers people check.",
+        rows:[{ cls:"row-1", variants:appendices() }] }
+    ];
+    document.getElementById("cat").innerHTML = specs.map(renderSpec).join("");
+  }
+
+  fetch("./editions.json")
+    .then(function(r){ return r.json(); })
+    .then(function(editions){
+      E = editions.filter(function(x){ return x.teg === 14; })[0];
+      LEAD = E.articles.filter(function(a){ return a.is_lead; })[0];
+      SUBS = E.articles.filter(function(a){ return !a.is_lead; });
+      build();
+      document.body.setAttribute("data-ready", "1");
+    })
+    .catch(function(err){
+      document.getElementById("cat").innerHTML =
+        '<section class="spec"><p class="q">Could not load editions.json — serve this folder over HTTP ' +
+        '(python -m http.server) rather than opening the file directly. ' + esc(err.message) + '</p></section>';
+    });
+})();
+</script>

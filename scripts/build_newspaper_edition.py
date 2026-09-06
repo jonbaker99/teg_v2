@@ -26,7 +26,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 COMMENTARY_DIR = REPO_ROOT / "data" / "commentary"
 OUTPUT_PATH = REPO_ROOT / "webapp" / "report_layout_prototypes" / "editions.json"
 
-TEGS = (14, 16)
+TEGS = (14, 16, 18)
 
 # Priority order for combining kickers on a merged (" / "-joined) heading.
 _KICKER_PRIORITY = ["TROPHY", "GREEN JACKET", "WOODEN SPOON", "SIDEBAR"]
@@ -257,6 +257,46 @@ def _parse_articles(
     return [lead] + sub_articles
 
 
+_STANDING_ENTRY_RE = re.compile(r"([A-Z]{2})\s+([+-]?\d+)")
+
+
+def _player_name(code: str) -> str:
+    """Code -> display name. players.csv stores the surname in caps; the report
+    prose does not, so title-case it to match."""
+    from teg_analysis.core.players import get_player_dict
+
+    raw = get_player_dict().get(code)
+    if not raw:
+        return code
+    return " ".join(part.capitalize() if part.isupper() else part for part in raw.split())
+
+
+def _add_runners_up(results: list[dict[str, Any]], standings: list[dict[str, Any]]) -> None:
+    """Attach the near-miss to each at-a-glance line, from the final standings.
+
+    Trophy and Green Jacket take second place; the Wooden Spoon is decided on
+    the Trophy metric, so its near-miss is second from last on that table.
+    """
+    if not standings:
+        return
+    final = standings[-1]
+    trophy = _STANDING_ENTRY_RE.findall(final["trophy"])
+    jacket = _STANDING_ENTRY_RE.findall(final["jacket"])
+
+    def line(entry: tuple[str, str] | None, label: str) -> str:
+        if not entry:
+            return ""
+        return f"{label}: {_player_name(entry[0])} ({entry[1]})"
+
+    by_label = {
+        "Trophy Winner": line(trophy[1] if len(trophy) > 1 else None, "Runner-up"),
+        "Green Jacket": line(jacket[1] if len(jacket) > 1 else None, "Runner-up"),
+        "Wooden Spoon": line(trophy[-2] if len(trophy) > 1 else None, "Next above"),
+    }
+    for r in results:
+        r["runner_up"] = by_label.get(r["label"], "")
+
+
 def _parse_standings(appendix_md: str) -> list[dict[str, Any]]:
     rounds = re.findall(
         r"\*\*End of Round (\d+)\*\*\s*"
@@ -291,13 +331,17 @@ def build_edition(teg: int) -> dict[str, Any]:
 
     article_sections, appendix_md = _split_body_sections(md)
 
+    results = _parse_results(md)
+    standings = _parse_standings(appendix_md)
+    _add_runners_up(results, standings)
+
     edition = {
         "teg": teg,
         "title": _parse_title(md),
         "dateline": _parse_dateline(md),
-        "results": _parse_results(md),
+        "results": results,
         "articles": _parse_articles(article_sections, plan),
-        "standings": _parse_standings(appendix_md),
+        "standings": standings,
         "records": _parse_records(appendix_md),
     }
     return edition

@@ -46,13 +46,45 @@ editorial, C Sports section, D Back page), switchable per TEG, served at `/repor
 a published Artifact.
 
 **Verdict (2026-09-05): the direction is confirmed** — a newspaper edition is markedly more
-digestible than one long report. Two things stay open: the final layout is a composite of elements
-from all four prototypes rather than any one of them, and **mobile needs a different pattern**,
-since stacking the grid vertically recreates the long-report problem. One knock-on: interweaving in
-the storyline pipeline is now mothballed (off by default), because an edition wants one subject per
-article. Findings for the pipeline (the story plan needs `headline`/`standfirst` fields — `subject`
-is neither) and next steps: `webapp/report_layout_prototypes/PICKUP.md`; original specification:
-`PLAN.md` alongside it.
+digestible than one long report. One knock-on: interweaving in the storyline pipeline is now
+mothballed (off by default), because an edition wants one subject per article.
+
+### 2026-09-05 — Composite layout and mobile patterns
+
+The layout was then chosen element by element rather than direction by direction, since elements
+from all four prototypes were wanted. `elements.html` renders ten elements with 4–5 variants each
+on identical copy; the answers are T1 broadsheet type, M1 masthead, R5 scorecard results, H1
+headline, D2 drop cap, B2 two ruled columns, C2 ruled sub-columns, K1 plain kickers, S2 rail and
+P1 appendices. Those are assembled in `composite.html`, which now switches only page composition and what fills
+the rail below the standings (F1 nothing / F2 round table / F3 shortest story). Six arrangements were built and **the composition is now decided**: five or more stories render as
+E2 (one sub-article promoted to a second lead, the rest filling the row), fewer as E1; the second
+lead defaults to the Green Jacket unless a storyline beats it by 2 or more on `compelling_score`;
+and nothing sits below the standings in the rail. That rule is the page's Auto setting and the
+default.
+
+Worth keeping: G1, a single three-column flow with stories breaking across columns, was the only
+arrangement that tessellated consistently (column-bottom spread 202/124/8px against 66-1348px for
+the rest) and was still rejected as too dense. Measured tessellation is not readability. The
+at-a-glance box now also carries the runner-up on each line, derived in the build script from the
+final standings.
+
+**Mobile is decided too: pattern A, index first** — the front screen is the masthead, results and
+headlines, and each article is its own screen. Measured first-screen length is the evidence: the
+desktop composite squeezed to 390px runs 10.7 phone screens, A runs 1.1, B swipeable cards 1.5, C
+accordion 2.2 closed and 4.4 with two sections open. A and B are built to shippable quality (hash
+routing so the phone's Back gesture works, deep links, scroll restore, focus management, 44px
+targets, safe-area insets, full tab semantics and keyboard control); C stays at prototype quality
+as the record. `checks/check_mobile_patterns.py` asserts that behaviour in a browser at both phone
+and desktop widths — it is not in the pytest suite because it needs a browser and a served copy of
+the folder.
+
+All three tournaments (14, 16, 18) render in every prototype; TEG 18 joined once the
+storyline-first pipeline merged. `scripts/inline_editions.py` pushes a regenerated `editions.json`
+back into the pages. Awaiting a pick on composition and mobile pattern, then wiring into
+`routes/reports.py`. Findings for the pipeline (the story plan needs `headline`/`standfirst`
+fields — `subject` is neither) and what remains:
+`webapp/report_layout_prototypes/README.md`, which the trial's two working docs were folded into
+once the design was settled. **Next: wiring it into `webapp/routes/reports.py`.**
 
 ### 2026-08-17 — Reporting docs reconciled against the code
 

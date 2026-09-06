@@ -1,515 +1,307 @@
 <meta charset="utf-8">
-<title>TEG Newspaper Layouts</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600;700&family=Libre+Franklin:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,500;0,600;1,500&family=Playfair+Display:wght@600;700;800;900&family=Anton&display=swap">
+<title>TEG Edition — Composite Layout</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
 <style>
+  /* =========================================================================
+     THE COMPOSITE. Element vocabulary is fixed and was chosen element by
+     element from elements.html:
+       T1 broadsheet type/palette   M1 masthead, rule under
+       H1 kicker over headline      D2 three-line drop cap
+       B2 lead body, two ruled cols C2 sub-cards as ruled columns
+       K1 plain mono kickers        S2 rail: R5 scorecard + final standings
+       P1 appendices open at the foot
+     What is still open, and all that changes between E1/E2/E3, is the page
+     composition: how those blocks sit relative to each other.
+     ========================================================================= */
   :root{
-    --desk: #E7E5DE;
-    --desk-edge: #D3D0C6;
-    --chrome-bg: #F4F3EF;
-    --chrome-border: #D8D6CE;
-    --chrome-ink: #23231F;
-    --chrome-ink-soft: #6B6A62;
-    --chrome-accent: #2F5D8A;
-    --chrome-accent-ink: #F4F3EF;
-    --focus-ring: #2F5D8A;
+    --desk:#E7E5DE; --desk-edge:#D3D0C6;
+    --chrome-bg:#F4F3EF; --chrome-border:#D8D6CE; --chrome-ink:#23231F;
+    --chrome-ink-soft:#6B6A62; --chrome-accent:#2F5D8A;
   }
-
   *{ box-sizing:border-box; }
-  body{
-    background: var(--desk);
-    color: var(--chrome-ink);
-    font-family: 'Libre Franklin', Arial, Helvetica, sans-serif;
-  }
-
+  body{ margin:0; background:var(--desk); color:var(--chrome-ink); font-family:'Libre Franklin',Arial,sans-serif; }
   h1,h2,h3,h4,h5,p,ul,ol,figure,table{ margin:0; padding:0; }
   ul{ list-style:none; }
   table{ border-collapse:collapse; }
-  img{ display:block; }
-  :focus-visible{ outline: 2.5px solid var(--focus-ring); outline-offset: 2px; }
+  :focus-visible{ outline:2.5px solid var(--chrome-accent); outline-offset:2px; }
 
-  @media (prefers-reduced-motion: reduce){
-    *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; }
-  }
-
-  /* ---------- control bar (utility chrome — deliberately NOT newspaper-styled) --- */
-
-  .control-bar{
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    gap: 1.75rem;
-    padding: 0.85rem 1.5rem;
-    background: var(--chrome-bg);
-    border-bottom: 1px solid var(--chrome-border);
-    font-family: 'Libre Franklin', Arial, sans-serif;
-  }
-  .control-brand{
-    font-weight:800;
-    font-size:0.8rem;
-    letter-spacing:0.06em;
-    text-transform:uppercase;
-    color: var(--chrome-ink);
-    white-space:nowrap;
-  }
-  .control-brand span{ color: var(--chrome-ink-soft); font-weight:500; }
-  .control-group{
-    display:flex;
-    align-items:center;
-    gap:0.55rem;
-    flex-wrap:wrap;
-  }
-  .control-label{
-    font-size:0.68rem;
-    font-weight:700;
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    color: var(--chrome-ink-soft);
-    margin-right:0.15rem;
-  }
-  .control-btn{
-    appearance:none;
-    border:1px solid var(--chrome-border);
-    background:#fff;
-    color: var(--chrome-ink);
-    font-family:inherit;
-    font-size:0.8rem;
-    font-weight:600;
-    padding:0.4rem 0.75rem;
-    border-radius:5px;
-    cursor:pointer;
-    line-height:1.1;
-    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
-  }
-  .control-btn:hover{ border-color: var(--chrome-accent); }
-  .control-btn:active{ transform: translateY(1px); }
-  .control-btn[aria-pressed="true"]{
-    background: var(--chrome-accent);
-    border-color: var(--chrome-accent);
-    color: var(--chrome-accent-ink);
-  }
+  /* ---------- control bar ------------------------------------------------ */
+  .control-bar{ position:sticky; top:0; z-index:20; display:flex; flex-wrap:wrap; align-items:center;
+    gap:1.6rem; padding:0.8rem 1.5rem; background:var(--chrome-bg); border-bottom:1px solid var(--chrome-border); }
+  .control-brand{ font-weight:800; font-size:0.78rem; letter-spacing:0.06em; text-transform:uppercase; white-space:nowrap; }
+  .control-brand span{ color:var(--chrome-ink-soft); font-weight:500; }
+  .control-group{ display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; }
+  .control-label{ font-size:0.66rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--chrome-ink-soft); }
+  .control-btn{ appearance:none; border:1px solid var(--chrome-border); background:#fff; color:var(--chrome-ink);
+    font-family:inherit; font-size:0.78rem; font-weight:600; padding:0.38rem 0.72rem; border-radius:5px; cursor:pointer; line-height:1.1; }
+  .control-btn:hover{ border-color:var(--chrome-accent); }
+  .control-btn[aria-pressed="true"]{ background:var(--chrome-accent); border-color:var(--chrome-accent); color:#F4F3EF; }
   .control-spacer{ flex:1 1 auto; }
-  .control-note{
-    font-size:0.72rem;
-    color: var(--chrome-ink-soft);
-    max-width:22ch;
-    line-height:1.35;
-  }
+  .control-note{ font-size:0.72rem; color:var(--chrome-ink-soft); max-width:34ch; line-height:1.35; }
 
-  /* ---------- stage: the paper sits on a "desk" ---------------------------- */
+  .stage-wrap{ padding:2.4rem 1.5rem 4rem; display:flex; justify-content:center; }
 
-  .stage-wrap{
-    padding: 2.5rem 1.5rem 4rem;
-    display:flex;
-    justify-content:center;
-  }
-  .newspaper{
-    width:100%;
-    max-width: 1180px;
-    background: var(--paper);
-    color: var(--ink);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.08), 0 18px 40px -20px rgba(0,0,0,0.35);
-    border: 1px solid var(--desk-edge);
-    opacity:0;
-    transform: translateY(6px);
-    animation: paper-in 0.42s ease forwards;
-  }
-  @keyframes paper-in{ to{ opacity:1; transform:translateY(0); } }
-
-  .section-pad{ padding: 2.2rem clamp(1.1rem, 4vw, 3.2rem); }
-
-  /* ================= shared component structure (skinned per layout) ===== */
-
-  /* -- masthead -- */
-  .masthead{ padding: 1.6rem clamp(1.1rem, 4vw, 3.2rem) 0; }
-  .wordmark-row{ display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
-  .wordmark{ font-family: var(--font-mast); }
-  .dateline{
-    font-family: var(--font-mono);
-    font-size:0.74rem;
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    color: var(--ink-soft);
-    white-space:nowrap;
-  }
-  .lead-headline{ font-family: var(--font-display); color: var(--ink); text-wrap: balance; }
-  .lead-standfirst{ font-family: var(--font-body); color: var(--ink-soft); text-wrap: balance; }
-
-  /* -- results panel -- */
-  .results-panel{ }
-  .results-title{
-    font-family: var(--font-mono);
-    font-size:0.68rem;
-    font-weight:700;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    color: var(--accent);
-  }
-  .results-list{ display:flex; flex-direction:column; }
-  .result{ display:flex; justify-content:space-between; gap:1rem; align-items:baseline; }
-  .result-label{
-    font-family: var(--font-mono);
-    font-size:0.72rem;
-    letter-spacing:0.04em;
-    text-transform:uppercase;
-    color: var(--ink-soft);
-    white-space:nowrap;
-  }
-  .result-value{ font-family: var(--font-body); font-weight:600; text-align:right; }
-  .result-lead .result-value{ color: var(--accent); }
-
-  /* -- kicker / article typography -- */
-  .kicker{
-    font-family: var(--font-mono);
-    font-weight:700;
-    letter-spacing:0.1em;
-    text-transform:uppercase;
-    color: var(--accent);
-  }
-  .sub-headline{ font-family: var(--font-display); color: var(--ink); text-wrap: balance; }
-  .standfirst{ font-family: var(--font-body); color: var(--ink-soft); }
-  .body p{ font-family: var(--font-body); color: var(--ink); }
-  .body p + p{ margin-top: 0.85em; }
-
-  /* -- appendix (identical structure/behaviour everywhere; only re-inked) -- */
-  .appendix{
-    border-top: 1px solid var(--rule);
-    padding: 1.8rem clamp(1.1rem, 4vw, 3.2rem) 2.4rem;
-    display:grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 2.5rem;
-  }
-  /* grid/flex items default to min-width:auto, which blocks a scrollable
-     descendant's own overflow-x:auto from ever engaging — this is what was
-     causing horizontal page scroll on mobile. */
-  .appendix > div,
-  .edition-grid, .edition-grid > *,
-  .edition-top, .edition-top > *,
-  .subs-grid > *, .asym-grid > *, .blocks-grid > *, .bottom-row > *,
-  .results-list, .results-list > *{
-    min-width: 0;
-  }
-  .appendix h4{
-    font-family: var(--font-mono);
-    font-size:0.72rem;
-    font-weight:700;
-    letter-spacing:0.1em;
-    text-transform:uppercase;
-    color: var(--accent);
-    margin-bottom:0.75rem;
-  }
-  .table-scroll{ overflow-x:auto; max-width:100%; }
-  .standings-table{ width:100%; border-collapse:collapse; }
-  .standings-table th, .standings-table td{
-    text-align:left;
-    padding: 0.4rem 0.7rem 0.4rem 0;
-    font-family: var(--font-mono);
-    font-size:0.78rem;
-    white-space:nowrap;
-    border-bottom: 1px solid var(--rule);
-    font-variant-numeric: tabular-nums;
-  }
-  .standings-table th{
-    font-weight:700;
-    letter-spacing:0.04em;
-    text-transform:uppercase;
-    font-size:0.66rem;
-    color: var(--ink-soft);
-  }
-  .records-group{ margin-bottom:1rem; }
-  .records-group:last-child{ margin-bottom:0; }
-  .records-cat{
-    font-family: var(--font-body);
-    font-weight:700;
-    font-size:0.78rem;
-    color: var(--ink);
-    margin-bottom:0.3rem;
-  }
-  .records-group li{
-    font-family: var(--font-body);
-    font-size:0.85rem;
-    color: var(--ink-soft);
-    position:relative;
-    padding-left:0.9rem;
-  }
-  .records-group li + li{ margin-top:0.3rem; }
-  .records-group li::before{
-    content:"—";
-    position:absolute; left:0; color: var(--accent);
-  }
-
-  @media (max-width: 640px){
-    .appendix{ grid-template-columns:1fr; gap:1.75rem; }
-    .dateline, .result-label{ white-space:normal; }
-  }
-
-  /* =========================================================================
-     LAYOUT A — Broadsheet
-     ========================================================================= */
-  .layout-a{
-    --paper:#F6F3EA; --ink:#211D17; --ink-soft:#66604F;
-    --accent:#7A2420; --rule:#C9C2AC;
-    --font-mast:'Fraunces', Georgia, 'Times New Roman', serif;
-    --font-display:'Fraunces', Georgia, 'Times New Roman', serif;
-    --font-body:'Source Serif 4', Georgia, 'Times New Roman', serif;
-    --font-mono:'IBM Plex Mono', 'Courier New', monospace;
+  /* ---------- T1: the fixed palette and type system ---------------------- */
+  .paper{
+    width:100%; max-width:1180px;
+    --paper:#F6F3EA; --ink:#211D17; --ink-soft:#66604F; --accent:#7A2420; --rule:#C9C2AC; --tint:#EDE8D9;
+    --font-display:'Fraunces',Georgia,'Times New Roman',serif;
+    --font-body:'Source Serif 4',Georgia,'Times New Roman',serif;
+    --font-mono:'IBM Plex Mono','Courier New',monospace;
+    --pad: clamp(1.1rem, 4vw, 3.2rem);
+    background:var(--paper); color:var(--ink);
+    border:1px solid var(--desk-edge);
+    box-shadow:0 1px 2px rgba(0,0,0,0.08), 0 18px 40px -20px rgba(0,0,0,0.35);
     background-image: radial-gradient(rgba(33,29,23,0.05) 0.55px, transparent 0.55px);
-    background-size: 3.4px 3.4px;
+    background-size:3.4px 3.4px;
   }
-  .layout-a .wordmark{ font-weight:600; font-size:1.6rem; letter-spacing:0.02em; }
-  .layout-a .wordmark-flag{ font-size:0.62rem; letter-spacing:0.32em; color:var(--ink-soft); }
-  .layout-a .masthead-rule{ border-top:3px solid var(--ink); border-bottom:1px solid var(--ink); height:5px; margin-top:0.9rem; }
-  .layout-a .lead-headline{ font-size:clamp(2.05rem, 4vw, 3rem); font-weight:700; line-height:1.04; margin-top:1.3rem; }
-  .layout-a .lead-standfirst{ font-size:1.02rem; font-style:italic; margin-top:0.6rem; line-height:1.4; }
-  .layout-a .lead-kicker{ font-family:var(--font-mono); font-size:0.72rem; font-weight:700; letter-spacing:0.14em; color:var(--accent); text-transform:uppercase; }
+  /* grid and flex children default to min-width:auto, which stops a scrollable
+     descendant's overflow-x from ever engaging. */
+  .main-split > *, .subs > *, .apx-records > *, .second-split > *, .r-list > *{ min-width:0; }
+  .apx-standings{ min-width:0; }
 
-  .layout-a .edition-grid{ display:grid; grid-template-columns:2fr 1px 1fr; column-gap:2rem; padding: 2rem clamp(1.1rem,4vw,3.2rem) 0; }
-  .layout-a .col-rule{ background:var(--rule); }
-  .layout-a .lead .body{ columns:2; column-gap:2.1rem; column-rule:1px solid var(--rule); margin-top:1.1rem; font-size:0.98rem; line-height:1.56; }
-  .layout-a .lead .body p:first-of-type::first-letter{
-    font-family:var(--font-display); font-weight:700; color:var(--accent);
-    float:left; font-size:4.4rem; line-height:0.82; padding:0.05rem 0.4rem 0 0;
-  }
-  .layout-a .rail{ padding-top:0.2rem; }
-  .layout-a .rail .results-panel{ padding-bottom:1.2rem; border-bottom:1px solid var(--rule); margin-bottom:1.2rem; }
-  .layout-a .results-list{ margin-top:0.5rem; gap:0.4rem; }
-  .layout-a .result{ padding-bottom:0.35rem; border-bottom:1px dotted var(--rule); }
-  .layout-a .rail .sub-card{ margin-top:0; }
-  .layout-a .sub-headline{ font-size:1.28rem; font-weight:700; line-height:1.14; margin-top:0.35rem; }
-  .layout-a .standfirst{ font-size:0.86rem; font-style:italic; margin-top:0.4rem; line-height:1.4; }
-  .layout-a .sub-card .body{ margin-top:0.7rem; font-size:0.9rem; line-height:1.52; }
+  /* ---------- M1 masthead ------------------------------------------------ */
+  .masthead{ padding:1.5rem var(--pad) 0; }
+  .mh-row{ display:flex; align-items:baseline; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+  .wordmark{ font-family:var(--font-display); font-weight:600; font-size:1.6rem; letter-spacing:0.02em; }
+  .dateline{ font-family:var(--font-mono); font-size:0.73rem; letter-spacing:0.09em; text-transform:uppercase;
+    color:var(--ink-soft); white-space:nowrap; }
+  .mh-rule{ border-top:3px solid var(--ink); border-bottom:1px solid var(--ink); height:5px; margin-top:0.85rem; }
 
-  .layout-a .bottom-row{
-    grid-column: 1 / -1;
-    margin-top:2.2rem;
-    padding-top:1.6rem;
-    border-top:1px solid var(--ink);
-    display:grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap:0 2rem;
-  }
-  .layout-a .bottom-row .sub-card{ padding-left:2rem; border-left:1px solid var(--rule); }
-  .layout-a .bottom-row .sub-card:first-child{ padding-left:0; border-left:none; }
+  /* ---------- K1 kickers, H1 headline ------------------------------------ */
+  .kicker{ font-family:var(--font-mono); font-weight:700; font-size:0.71rem; letter-spacing:0.13em;
+    text-transform:uppercase; color:var(--accent); }
+  .lead-headline{ font-family:var(--font-display); font-weight:700; line-height:1.04; color:var(--ink);
+    text-wrap:balance; font-size:clamp(2.05rem,4vw,3rem); margin-top:0.45rem; }
+  .lead-standfirst{ font-family:var(--font-body); font-style:italic; font-size:1.02rem; line-height:1.42;
+    color:var(--ink-soft); margin-top:0.6rem; text-wrap:balance; }
 
-  @media (max-width:640px){
-    .layout-a .edition-grid{ display:block; padding-top:1.5rem; }
-    .layout-a .col-rule{ display:none; }
-    .layout-a .lead .body{ columns:1; }
-    .layout-a .rail{ margin-top:2rem; padding-top:1.5rem; border-top:2px solid var(--ink); }
-    .layout-a .bottom-row{ grid-template-columns:1fr; gap:1.5rem; margin-top:1.75rem; }
-    .layout-a .bottom-row .sub-card{ padding-left:0; border-left:none; padding-top:1.5rem; border-top:1px solid var(--rule); }
-    .layout-a .bottom-row .sub-card:first-child{ border-top:none; padding-top:0; }
+  /* ---------- B2 + D2: lead body ----------------------------------------- */
+  .lead-body{ margin-top:1.15rem; columns:2; column-gap:2.1rem; column-rule:1px solid var(--rule); }
+  .lead-body p{ font-family:var(--font-body); font-size:0.98rem; line-height:1.56; color:var(--ink); }
+  .lead-body p + p{ margin-top:0.85em; }
+  .lead-body p:first-of-type::first-letter{
+    float:left; font-family:var(--font-display); font-weight:700; font-size:3.6rem; line-height:0.78;
+    padding:0.12rem 0.5rem 0 0; color:var(--ink);
   }
+
+  /* ---------- S2 rail: R5 scorecard + final standings --------------------- */
+  .rail{ align-self:start; }
+  .r5{ border:1px solid var(--ink); }
+  .r5-title{ background:var(--ink); color:var(--paper); font-family:var(--font-mono); font-size:0.63rem;
+    font-weight:700; letter-spacing:0.16em; text-transform:uppercase; padding:0.38rem 0.75rem; }
+  .r-list{ display:flex; flex-direction:column; padding:0.55rem 0.75rem 0.65rem; gap:0.3rem; }
+  .r-item{ display:flex; flex-direction:column; align-items:flex-start; gap:0.08rem; }
+  .r-vals{ display:flex; flex-direction:column; align-items:flex-start; gap:0.05rem; }
+  .r-runner{ font-family:var(--font-mono); font-size:0.63rem; letter-spacing:0.02em; color:var(--ink-soft); }
+  .r-label{ font-family:var(--font-mono); font-size:0.69rem; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink-soft); }
+  .r-value{ font-family:var(--font-mono); font-size:0.81rem; font-variant-numeric:tabular-nums; font-weight:600; }
+  .r-lead{ padding:0.3rem 0.4rem; margin:0.05rem -0.4rem; background:var(--tint); }
+  .r-lead .r-value{ color:var(--accent); font-weight:700; }
+  .rail-standings{ margin-top:1.1rem; padding-top:1rem; border-top:1px solid var(--rule); }
+  .rail-block{ margin-top:1.1rem; padding-top:1rem; border-top:1px solid var(--rule); }
+  .rail-block .sb-lab{ display:block; margin-bottom:0.45rem; }
+  .stab-rail th, .stab-rail td{ font-size:0.72rem; padding:0.3rem 0.6rem 0.3rem 0; }
+  .rail-block .sub-card{ padding:0; border-left:none; }
+  .rail-block .sub-headline{ font-size:1.08rem; }
+  .rail-block .sub-body p{ font-size:0.85rem; line-height:1.5; }
+  .sb-lab{ font-family:var(--font-mono); font-size:0.62rem; font-weight:700; letter-spacing:0.12em;
+    text-transform:uppercase; color:var(--accent); }
+  .sb-row{ font-family:var(--font-mono); font-size:0.75rem; font-variant-numeric:tabular-nums; padding:0.18rem 0 0; }
+  .sb-lab + .sb-row{ margin-bottom:0.5rem; }
+
+  /* ---------- C2 sub-cards as ruled columns ------------------------------- */
+  .subs{ display:grid; }
+  .sub-card{ padding:0 1.55rem; border-left:1px solid var(--rule); }
+  .sub-card:first-child{ padding-left:0; border-left:none; }
+  .sub-card:last-child{ padding-right:0; }
+  .sub-headline{ font-family:var(--font-display); font-weight:700; font-size:1.24rem; line-height:1.15;
+    color:var(--ink); margin-top:0.35rem; text-wrap:balance; }
+  .sub-standfirst{ font-family:var(--font-body); font-style:italic; font-size:0.85rem; line-height:1.4;
+    color:var(--ink-soft); margin-top:0.4rem; }
+  .sub-body{ margin-top:0.7rem; }
+  .sub-body p{ font-family:var(--font-body); font-size:0.895rem; line-height:1.53; color:var(--ink); }
+  .sub-body p + p{ margin-top:0.75em; }
+
+  /* ---------- P1 appendices ---------------------------------------------- */
+  .appendix{ border-top:1px solid var(--rule); margin-top:2rem; padding:1.7rem var(--pad) 2.3rem; }
+  .apx-standings{ margin-bottom:1.6rem; }
+  .apx-records{ display:grid; grid-template-columns:repeat(2,1fr); gap:0 2.5rem; align-items:start; }
+  .apx-h{ font-family:var(--font-mono); font-size:0.7rem; font-weight:700; letter-spacing:0.11em;
+    text-transform:uppercase; color:var(--accent); margin-bottom:0.7rem; }
+  .table-scroll{ overflow-x:auto; max-width:100%; }
+  .stab{ width:100%; }
+  .stab th,.stab td{ text-align:left; padding:0.36rem 0.7rem 0.36rem 0; font-family:var(--font-mono);
+    font-size:0.755rem; white-space:nowrap; border-bottom:1px solid var(--rule); font-variant-numeric:tabular-nums; }
+  .stab th{ font-weight:700; font-size:0.63rem; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink-soft); }
+  .recs-group + .recs-group{ margin-top:0.95rem; }
+  .recs-cat{ font-family:var(--font-body); font-weight:700; font-size:0.78rem; margin-bottom:0.3rem; }
+  .recs li{ font-family:var(--font-body); font-size:0.845rem; color:var(--ink-soft); position:relative;
+    padding-left:0.9rem; line-height:1.45; }
+  .recs li + li{ margin-top:0.3rem; }
+  .recs li::before{ content:"—"; position:absolute; left:0; color:var(--accent); }
+</style>
+<style>
+  /* =========================================================================
+     E1 — CLASSIC FRONT
+     Lead headline full width; body + rail beneath it; one heavy rule; then a
+     3-up ruled row of sub-articles, a fourth spanning the full width.
+     ========================================================================= */
+  .arr-e1 .lead-head{ padding:1.35rem var(--pad) 0; }
+  .arr-e1 .main-split{ display:grid; grid-template-columns:2fr 1fr; gap:2.2rem; padding:1.15rem var(--pad) 0; }
+  .arr-e1 .deck-rule{ margin:1.9rem var(--pad) 0; border-top:3px solid var(--ink); }
+  .arr-e1 .subs{ grid-template-columns:repeat(3,1fr); padding:1.5rem var(--pad) 0; }
+  .arr-e1 .sub-card.wide{
+    grid-column:1/-1; margin-top:1.7rem; padding:1.4rem 0 0;
+    border-left:none; border-top:1px solid var(--rule);
+  }
+  .arr-e1 .sub-card.wide .sub-headline{ font-size:1.5rem; }
+  .arr-e1 .sub-card.wide .sub-standfirst{ font-size:0.95rem; max-width:70ch; }
+  .arr-e1 .sub-card.wide .sub-body{ columns:3; column-gap:1.9rem; column-rule:1px solid var(--rule); }
 
   /* =========================================================================
-     LAYOUT B — Modern editorial
+     E2 — SECOND LEAD
+     Same top. Below the rule the strongest sub-article is promoted: wide, big
+     headline, its own two columns. The rest stack in a narrow ruled column
+     beside it. Gives the sub-articles a hierarchy instead of a flat grid.
      ========================================================================= */
-  .layout-b{
-    --paper:#FBFAF8; --ink:#171A16; --ink-soft:#5D655B;
-    --accent:#1F5B44; --accent2:#B4832B; --rule:#E2E1DA;
-    --font-mast:'Libre Franklin', Arial, sans-serif;
-    --font-display:'Libre Franklin', Arial, sans-serif;
-    --font-body:'Lora', Georgia, serif;
-    --font-mono:'Libre Franklin', Arial, sans-serif;
+  .arr-e2 .lead-head{ padding:1.35rem var(--pad) 0; }
+  .arr-e2 .main-split{ display:grid; grid-template-columns:2fr 1fr; gap:2.2rem; padding:1.15rem var(--pad) 0; }
+  .arr-e2 .deck-rule{ margin:1.9rem var(--pad) 0; border-top:3px solid var(--ink); }
+  .arr-e2 .second-lead{ padding:1.5rem var(--pad) 0; }
+  .arr-e2 .sub-card.second{ padding:0; border-left:none; }
+  .arr-e2 .sub-card.second .sub-headline{ font-size:1.75rem; max-width:26ch; }
+  .arr-e2 .sub-card.second .sub-standfirst{ font-size:0.95rem; max-width:72ch; }
+  .arr-e2 .sub-card.second .sub-body{ columns:3; column-gap:1.9rem; column-rule:1px solid var(--rule); }
+  .arr-e2 .thin-rule{ margin:1.7rem var(--pad) 0; border-top:1px solid var(--rule); }
+  .arr-e2 .subs{ grid-template-columns:repeat(3,1fr); padding:1.4rem var(--pad) 0; }
+  .arr-e2 .subs .sub-headline{ font-size:1.15rem; }
+
+  /* =========================================================================
+     E3 — TWO DECKS
+     The rail runs the full height of the lead block, headline included, so the
+     top of the page is two columns rather than a band across it. Sub-articles
+     then sit in a 2x2 ruled grid — fewer, wider columns than E1.
+     ========================================================================= */
+  .arr-e3 .main-split{ display:grid; grid-template-columns:2.2fr 1fr; gap:2.2rem; padding:1.4rem var(--pad) 0; }
+  .arr-e3 .lead-headline{ font-size:clamp(1.9rem,3.4vw,2.5rem); }
+  .arr-e3 .deck-rule{ margin:1.9rem var(--pad) 0; border-top:2px solid var(--ink); }
+  .arr-e3 .subs{ grid-template-columns:repeat(2,1fr); padding:1.5rem var(--pad) 0; }
+  .arr-e3 .subs .sub-card:nth-child(odd){ padding-left:0; border-left:none; }
+  .arr-e3 .subs .sub-card:nth-child(even){ padding-right:0; }
+  .arr-e3 .subs .sub-card:nth-child(n+3){ margin-top:1.5rem; padding-top:1.5rem; border-top:1px solid var(--rule); }
+  .arr-e3 .sub-card.wide{ grid-column:1/-1; padding-left:0; padding-right:0; border-left:none; }
+  .arr-e3 .sub-card.wide .sub-headline{ font-size:1.4rem; }
+  .arr-e3 .sub-card.wide .sub-body{ columns:2; column-gap:2.1rem; column-rule:1px solid var(--rule); }
+
+  /* =========================================================================
+     G1/G2/G3 — TESSELLATION
+     E1-E3 vary where the blocks sit. They share a fault: every column ends
+     wherever its copy runs out, so the page never bottoms out level, and the
+     heavy rule under the lead divides the page into a lead and then a grid
+     rather than joining them. These three attack that directly.
+     ========================================================================= */
+
+  /* --- G1 packed: the whole page is one three-column flow. Stories break
+         across columns the way a newspaper's do, so the browser balances the
+         columns and they finish level. No divider rule anywhere. --- */
+  .arr-g1 .page-flow{
+    padding:1.35rem var(--pad) 0;
+    columns:3; column-gap:2.1rem; column-rule:1px solid var(--rule);
+    orphans:3; widows:3;
   }
-  .layout-b .wordmark{ font-weight:900; font-size:1.15rem; letter-spacing:-0.01em; text-transform:lowercase; }
-  .layout-b .wordmark::after{ content:"."; color:var(--accent2); }
-  .layout-b .dateline{ font-family:'Libre Franklin',sans-serif; font-weight:700; letter-spacing:0.06em; background:var(--accent); color:#fff; padding:0.28rem 0.65rem; border-radius:999px; }
-  .layout-b .masthead-rule{ display:none; }
-  .layout-b .lead-kicker{ font-family:var(--font-mono); font-size:0.72rem; font-weight:800; letter-spacing:0.12em; color:var(--accent); text-transform:uppercase; }
-  .layout-b .lead-headline{ font-size:clamp(2rem,4.4vw,3.15rem); font-weight:800; line-height:1.06; letter-spacing:-0.01em; margin-top:1rem; max-width:20ch; }
-  .layout-b .lead-standfirst{ font-size:1.14rem; margin-top:0.9rem; line-height:1.5; max-width:60ch; }
-
-  .layout-b .edition-grid{ padding: 2.1rem clamp(1.1rem,4vw,3.2rem) 0; }
-  .layout-b .edition-top{ display:grid; grid-template-columns:2.1fr 1fr; gap:3rem; }
-  .layout-b .lead .body{ margin-top:1.4rem; font-size:1.03rem; line-height:1.72; max-width:62ch; }
-  .layout-b .results-panel{ background:#F1F0EA; padding:1.3rem 1.4rem; border-left:3px solid var(--accent); }
-  .layout-b .results-list{ margin-top:0.7rem; gap:0.6rem; }
-  .layout-b .result{ flex-direction:column; align-items:flex-start; gap:0.1rem; }
-  .layout-b .result-value{ font-size:1rem; }
-
-  .layout-b .subs-grid{
-    margin-top:2.75rem;
-    padding-top:2rem;
+  .arr-g1 .span-all{ column-span:all; margin-bottom:1.1rem; }
+  .arr-g1 .span-all .lead-headline{ max-width:24ch; }
+  .arr-g1 .page-flow > p{ font-family:var(--font-body); font-size:0.95rem; line-height:1.55; }
+  .arr-g1 .page-flow > p + p{ margin-top:0.8em; }
+  .arr-g1 .page-flow > p.lead-open::first-letter{
+    float:left; font-family:var(--font-display); font-weight:700; font-size:3.4rem;
+    line-height:0.78; padding:0.1rem 0.45rem 0 0;
+  }
+  .arr-g1 .rail{ break-inside:avoid; margin:1.2rem 0; }
+  .arr-g1 .sub-card{
+    padding:0; border-left:none; margin-top:1.3rem; padding-top:1.1rem;
     border-top:1px solid var(--rule);
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:2.2rem;
   }
-  .layout-b .sub-card .kicker{ display:inline-block; background:#EEEDE5; color:var(--ink); font-weight:700; font-size:0.66rem; padding:0.25rem 0.55rem; letter-spacing:0.08em; }
-  .layout-b .sub-headline{ font-size:1.25rem; font-weight:800; line-height:1.18; margin-top:0.6rem; letter-spacing:-0.005em; }
-  .layout-b .standfirst{ font-size:0.88rem; margin-top:0.45rem; line-height:1.5; }
-  .layout-b .sub-card .body{ margin-top:0.85rem; font-size:0.9rem; line-height:1.62; }
-  .layout-b .sub-card.solo{
-    grid-column: 1 / -1;
-    display:grid;
-    grid-template-columns: 1fr 1.6fr;
-    column-gap:2.5rem;
-    padding-top:1.6rem;
+  .arr-g1 .sub-card .kicker, .arr-g1 .sub-card .sub-headline, .arr-g1 .sub-card .sub-standfirst{
+    break-after:avoid;
+  }
+  .arr-g1 .sub-headline{ font-size:1.16rem; }
+  .arr-g1 .sub-body p{ font-size:0.9rem; line-height:1.53; }
+
+  /* --- G2 balanced: three columns again, but each story stays whole. A story
+         is placed into whichever column is currently shortest, so the columns
+         finish close to level without ever splitting a piece. --- */
+  .arr-g2 .lead-head{ padding:1.35rem var(--pad) 0; }
+  .arr-g2 .main-split{ display:grid; grid-template-columns:2fr 1fr; gap:2.2rem; padding:1.15rem var(--pad) 0; }
+  .arr-g2 .cols{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:0;
+    padding:1.5rem var(--pad) 0; margin-top:1.6rem; border-top:1px solid var(--rule);
+  }
+  .arr-g2 .col{ padding:0 1.55rem; border-left:1px solid var(--rule); }
+  .arr-g2 .col:first-child{ padding-left:0; border-left:none; }
+  .arr-g2 .col:last-child{ padding-right:0; }
+  .arr-g2 .col .sub-card{ padding:0; border-left:none; }
+  .arr-g2 .col .sub-card + .sub-card{ margin-top:1.3rem; padding-top:1.1rem; border-top:1px solid var(--rule); }
+  .arr-g2 .sub-headline{ font-size:1.18rem; }
+
+  /* --- G3 interlocked: the lead occupies an L — headline and body across two
+         columns, rail and the next story down the third — and the remaining
+         stories run under it in the same grid. One page, no divider. --- */
+  .arr-g3 .page-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:0 2.1rem;
+    padding:1.35rem var(--pad) 0;
+  }
+  .arr-g3 .lead-wrap{ grid-column:1/3; grid-row:1; }
+  .arr-g3 .lead-body{ columns:2; column-gap:2.1rem; column-rule:1px solid var(--rule); }
+  /* the rail runs down the whole right edge; the remaining stories fill the
+     space under the lead in the other two columns, so the two sides finish
+     closer together than they do when the rest is pushed below the rail */
+  .arr-g3 .rail{ grid-column:3; grid-row:1/3; align-self:start;
+    border-left:1px solid var(--rule); padding-left:2.1rem; }
+  .arr-g3 .rail .sub-card{ padding:0; border-left:none; margin-top:1.2rem; padding-top:1rem;
+    border-top:1px solid var(--rule); }
+  .arr-g3 .rail .sub-headline{ font-size:1.1rem; }
+  .arr-g3 .under{
+    grid-column:1/3; grid-row:2; margin-top:1.5rem; padding-top:1.3rem;
     border-top:1px solid var(--rule);
+    display:grid; grid-template-columns:repeat(2,1fr); gap:0;
   }
-  .layout-b .sub-card.solo .kicker{ grid-column:1; }
-  .layout-b .sub-card.solo .sub-headline{ grid-column:1; font-size:1.55rem; }
-  .layout-b .sub-card.solo .standfirst{ grid-column:1; }
-  .layout-b .sub-card.solo .body{ grid-column:2; grid-row:1/5; margin-top:0; }
-  @media (max-width:640px){
-    .layout-b .sub-card.solo{ grid-template-columns:1fr; }
-    .layout-b .sub-card.solo .body{ grid-column:1; grid-row:auto; margin-top:0.85rem; }
-  }
-
-  @media (max-width:640px){
-    .layout-b .edition-top{ grid-template-columns:1fr; gap:1.75rem; }
-    .layout-b .subs-grid{ grid-template-columns:1fr; gap:2rem; }
-  }
-
-  /* =========================================================================
-     LAYOUT C — Sports section
-     ========================================================================= */
-  .layout-c{
-    --paper:#F3EFE2; --ink:#1B2430; --ink-soft:#56606D;
-    --accent:#B32A2A; --accent2:#1F5C3F; --rule:#CFC7AE;
-    --font-mast:'Playfair Display', Georgia, serif;
-    --font-display:'Playfair Display', Georgia, serif;
-    --font-body:'Source Serif 4', Georgia, serif;
-    --font-mono:'IBM Plex Mono', 'Courier New', monospace;
-  }
-  .layout-c .masthead{ background:#1B2430; color:#F3EFE2; padding:0.8rem clamp(1.1rem,4vw,3.2rem); }
-  .layout-c .wordmark{ font-weight:800; font-size:1.15rem; color:#F3EFE2; letter-spacing:0.02em; }
-  .layout-c .wordmark-flag{ font-family:var(--font-mono); font-size:0.62rem; letter-spacing:0.24em; color:#B6BFC9; }
-  .layout-c .dateline{ color:#D8DEE4; }
-  .layout-c .masthead-rule{ display:none; }
-  .layout-c .lead-block{ padding:1.8rem clamp(1.1rem,4vw,3.2rem) 0; }
-  .layout-c .lead-kicker{ font-family:var(--font-mono); font-size:0.72rem; font-weight:700; letter-spacing:0.12em; color:var(--accent); text-transform:uppercase; }
-  .layout-c .lead-headline{ font-size:clamp(1.9rem,3.8vw,2.7rem); font-weight:800; line-height:1.08; margin-top:0.6rem; }
-  .layout-c .lead-standfirst{ font-size:1rem; margin-top:0.6rem; line-height:1.45; }
-
-  .layout-c .edition-grid{ padding: 1.5rem clamp(1.1rem,4vw,3.2rem) 0; display:grid; grid-template-columns:2fr 1fr; gap:2.5rem; }
-  .layout-c .lead .body{ margin-top:1.1rem; font-size:0.98rem; line-height:1.6; }
-  .layout-c .side-rail{ background:#EAE3CC; border:1px solid var(--rule); padding:1.1rem 1.2rem; align-self:start; }
-  .layout-c .side-rail .results-panel{ padding-bottom:1rem; border-bottom:1px solid var(--rule); margin-bottom:1rem; }
-  .layout-c .results-list{ margin-top:0.55rem; gap:0.45rem; }
-  .layout-c .result-label{ font-size:0.68rem; }
-  .layout-c .result-value{ font-family:var(--font-mono); font-variant-numeric:tabular-nums; }
-  .layout-c .scoreboard-title{ font-family:var(--font-mono); font-size:0.68rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent2); margin-bottom:0.5rem; }
-  .layout-c .scoreboard-row{ display:flex; justify-content:space-between; gap:0.5rem; font-family:var(--font-mono); font-size:0.76rem; font-variant-numeric:tabular-nums; padding:0.22rem 0; border-bottom:1px dotted var(--rule); }
-  .layout-c .scoreboard-row:last-child{ border-bottom:none; }
-  .layout-c .scoreboard-label{ color:var(--ink-soft); }
-
-  .layout-c .asym-grid{
-    grid-column:1/-1;
-    margin-top:2rem;
-    padding-top:1.6rem;
-    border-top:2px solid var(--ink);
-    display:grid;
-    grid-template-columns:2fr 1fr;
-    gap:2rem 2.5rem;
-  }
-  .layout-c .sub-card.narrow{ border-left:1px solid var(--rule); padding-left:1.6rem; }
-  .layout-c .sub-card.full{ grid-column:1/-1; border-left:none; padding-left:0; }
-  .layout-c .kicker{ font-size:0.68rem; }
-  .layout-c .sub-headline{ font-size:1.3rem; font-weight:800; line-height:1.15; margin-top:0.4rem; }
-  .layout-c .sub-card.narrow .sub-headline{ font-size:1.08rem; }
-  .layout-c .standfirst{
-    font-size:1.02rem; font-style:italic; line-height:1.44; margin-top:0.55rem;
-    padding-left:0.85rem; border-left:3px solid var(--accent2); color:var(--ink);
-  }
-  .layout-c .sub-card.narrow .standfirst{ font-size:0.86rem; }
-  .layout-c .sub-card .body{ margin-top:0.8rem; font-size:0.92rem; line-height:1.56; }
-  .layout-c .sub-card.narrow .body{ font-size:0.85rem; }
-
-  @media (max-width:640px){
-    .layout-c .edition-grid{ grid-template-columns:1fr; gap:1.75rem; }
-    .layout-c .asym-grid{ grid-template-columns:1fr; gap:1.75rem; }
-    .layout-c .sub-card.narrow{ border-left:none; padding-left:0; padding-top:1.5rem; border-top:1px solid var(--rule); }
-  }
-
-  /* =========================================================================
-     LAYOUT D — Back page
-     ========================================================================= */
-  .layout-d{
-    --paper:#FAF9F6; --ink:#0E0E0C; --ink-soft:#514F49;
-    --accent:#D3242C; --accent2:#F0BA1F; --rule:#D8D5CC;
-    --font-mast:'Anton', 'Arial Narrow', sans-serif;
-    --font-display:'Anton', 'Arial Narrow', sans-serif;
-    --font-body:'Libre Franklin', Arial, sans-serif;
-    --font-mono:'IBM Plex Mono', 'Courier New', monospace;
-  }
-  .layout-d .masthead{ padding:0; }
-  .layout-d .wordmark-row{ background:var(--ink); padding:0.75rem clamp(1.1rem,4vw,3.2rem); justify-content:space-between; }
-  .layout-d .wordmark{ font-family:var(--font-mast); font-size:1.7rem; color:#fff; letter-spacing:0.02em; text-transform:uppercase; }
-  .layout-d .dateline{ color:var(--accent2); font-weight:700; }
-  .layout-d .masthead-rule{ height:6px; background:var(--accent); }
-  .layout-d .lead-block{ padding:1.7rem clamp(1.1rem,4vw,3.2rem) 0; }
-  .layout-d .lead-kicker{
-    display:inline-block; font-family:var(--font-mono); font-weight:700; font-size:0.74rem;
-    letter-spacing:0.1em; text-transform:uppercase; background:var(--accent); color:#fff; padding:0.3rem 0.65rem;
-  }
-  .layout-d .lead-headline{
-    font-family:var(--font-mast); text-transform:uppercase; font-weight:400;
-    font-size:clamp(2.6rem,7vw,4.7rem); line-height:0.92; letter-spacing:0.002em; margin-top:0.7rem;
-  }
-  .layout-d .lead-standfirst{ font-size:1.02rem; font-weight:600; margin-top:0.75rem; line-height:1.4; max-width:58ch; }
-
-  .layout-d .results-panel{
-    margin: 1.6rem clamp(1.1rem,4vw,3.2rem) 0; background:var(--ink); padding:1rem 1.3rem;
-    display:flex; gap:2rem; flex-wrap:wrap;
-  }
-  .layout-d .results-title{ display:none; }
-  .layout-d .results-list{ flex-direction:row; flex-wrap:wrap; gap:1.6rem; }
-  .layout-d .result{ flex-direction:column; align-items:flex-start; gap:0.15rem; }
-  .layout-d .result-label{ color:#B9B6AC; }
-  .layout-d .result-value{ font-family:var(--font-body); color:#fff; font-weight:700; }
-  .layout-d .result-lead .result-value{ color:var(--accent2); }
-
-  .layout-d .edition-grid{ padding:1.6rem clamp(1.1rem,4vw,3.2rem) 0; }
-  .layout-d .lead .body{ margin-top:1rem; font-size:0.96rem; line-height:1.5; columns:2; column-gap:2.4rem; }
-
-  .layout-d .blocks-grid{
-    margin-top:2.2rem; padding-top:1.6rem; border-top:6px solid var(--ink);
-    display:grid; grid-template-columns:repeat(2,1fr); gap:1.6rem 2rem;
-  }
-  .layout-d .sub-card{ border:1px solid var(--rule); padding:1.1rem 1.2rem; }
-  .layout-d .sub-card .kicker{
-    display:inline-block; font-size:0.66rem; padding:0.22rem 0.5rem;
-    background:var(--accent2); color:var(--ink);
-  }
-  .layout-d .sub-headline{
-    font-family:var(--font-mast); text-transform:uppercase; font-weight:400;
-    font-size:1.55rem; line-height:0.98; margin-top:0.55rem;
-  }
-  .layout-d .standfirst{ font-size:0.85rem; font-weight:600; margin-top:0.5rem; line-height:1.4; }
-  .layout-d .sub-card .body{ margin-top:0.75rem; font-size:0.86rem; line-height:1.5; }
-
-  @media (max-width:640px){
-    .layout-d .blocks-grid{ grid-template-columns:1fr; }
-    .layout-d .results-list{ gap:1rem 1.6rem; }
-    .layout-d .lead .body{ columns:1; }
-  }
+  .arr-g3 .under .sub-card:first-child{ padding-left:0; border-left:none; }
+  .arr-g3 .under .sub-card:last-child{ padding-right:0; }
+  .arr-g3 .sub-headline{ font-size:1.2rem; }
 </style>
 
 <div class="control-bar" role="toolbar" aria-label="Prototype controls">
-  <span class="control-brand">Newspaper layouts <span>· prototype</span></span>
+  <span class="control-brand">Composite <span>&middot; T1 M1 R5 H1 D2 B2 C2 K1 S2 P1</span></span>
   <div class="control-group" role="group" aria-label="Tournament">
     <span class="control-label">Tournament</span>
     <button type="button" class="control-btn" data-teg="14">TEG 14</button>
     <button type="button" class="control-btn" data-teg="16">TEG 16</button>
     <button type="button" class="control-btn" data-teg="18">TEG 18</button>
   </div>
-  <div class="control-group" role="group" aria-label="Layout">
-    <span class="control-label">Layout</span>
-    <button type="button" class="control-btn" data-layout="a">A · Broadsheet</button>
-    <button type="button" class="control-btn" data-layout="b">B · Modern editorial</button>
-    <button type="button" class="control-btn" data-layout="c">C · Sports section</button>
-    <button type="button" class="control-btn" data-layout="d">D · Back page</button>
+  <div class="control-group" role="group" aria-label="Arrangement">
+    <span class="control-label">Arrangement</span>
+    <button type="button" class="control-btn" data-arr="auto">Auto</button>
+    <button type="button" class="control-btn" data-arr="e1">E1 &middot; Classic front</button>
+    <button type="button" class="control-btn" data-arr="e2">E2 &middot; Second lead</button>
+    <button type="button" class="control-btn" data-arr="e3">E3 &middot; Two decks</button>
+    <button type="button" class="control-btn" data-arr="g1">G1 &middot; Packed</button>
+    <button type="button" class="control-btn" data-arr="g2">G2 &middot; Balanced</button>
+    <button type="button" class="control-btn" data-arr="g3">G3 &middot; Interlocked</button>
+  </div>
+  <div class="control-group" role="group" aria-label="Rail fill">
+    <span class="control-label">Rail below the standings</span>
+    <button type="button" class="control-btn" data-fill="f1">F1 &middot; Nothing</button>
+    <button type="button" class="control-btn" data-fill="f2">F2 &middot; Round table</button>
+    <button type="button" class="control-btn" data-fill="f3">F3 &middot; Shortest story</button>
   </div>
   <div class="control-spacer"></div>
-  <p class="control-note" id="riskNote"></p>
+  <p class="control-note" id="arrNote"></p>
 </div>
 
 <div class="stage-wrap">
-  <main id="stage" class="newspaper" aria-live="polite"></main>
+  <main id="stage" class="paper" aria-live="polite"></main>
 </div>
 
 <script>
@@ -903,230 +695,322 @@
     }
   ];
 
-  var LAYOUT_NOTES = {
-    a: "The risk: can 300-word copy survive being set in narrow columns?",
-    b: "The risk: does it still read as an edition, or a list of blog posts?",
-    c: "The risk: does the standings rail compete with the lead story?",
-    d: "The risk: does the comic register read as funny, or as kitsch?"
+  var ARR_NOTES = {
+    auto: "The rule: 5 or more stories -> E2, fewer -> E1. E2's second lead is the Green Jacket unless a storyline clearly beats it.",
+    e1: "Flat grid: every sub-article is equal. Simplest to reason about; a fourth story has to span the width.",
+    e2: "Ranked: the strongest sub-article is promoted to a second lead across the full width, the rest follow in one row.",
+    e3: "Rail runs the full height of the lead, so the page opens as two columns rather than a band.",
+    g1: "One three-column flow. Stories break across columns, so the browser balances them and the page finishes level.",
+    g2: "Three columns, stories kept whole, each placed into the shortest column so the bottoms come out close to level.",
+    g3: "The lead occupies an L and the rest fills around it. One grid, no full-width divider rule."
   };
 
   var editionsByTeg = {};
   EDITIONS.forEach(function(e){ editionsByTeg[e.teg] = e; });
 
-  var state = { teg: 14, layout: "a" };
+  var state = { teg: 14, arr: "auto", fill: "f1" };
 
   function esc(s){
-    return String(s == null ? "" : s)
-      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    return String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
   }
-
-  function lengthClass(words){
-    if (words >= 350) return "len-long";
-    if (words >= 250) return "len-medium";
-    return "len-short";
-  }
-
   function paragraphsHtml(paragraphs){
-    // TEG 18's merged section opens each paragraph with a "**Round N, Course.**"
+    // TEG 18's merged section opens paragraphs with a "**Round N, Course.**"
     // run-in. Escape first, then re-allow that one inline mark.
     return paragraphs.map(function(p){
       return "<p>" + esc(p).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>") + "</p>";
     }).join("");
   }
 
-  function resultsPanelHtml(edition){
-    var items = edition.results.map(function(r){
-      return '<li class="result' + (r.lead ? " result-lead" : "") + '">' +
-        '<span class="result-label">' + esc(r.label) + '</span>' +
-        '<span class="result-value">' + esc(r.value) + '</span></li>';
+  function mastheadHtml(e){
+    var d = e.dateline;
+    return '<header class="masthead"><div class="mh-row">' +
+        '<span class="wordmark">The TEG</span>' +
+        '<span class="dateline">' + esc(d.teg) + ' &middot; ' + esc(d.venue) + ' &middot; ' + esc(d.year) + '</span>' +
+      '</div><div class="mh-rule"></div></header>';
+  }
+  function leadHeadHtml(lead){
+    return '<p class="kicker">' + esc(lead.kicker) + '</p>' +
+      '<h1 class="lead-headline">' + esc(lead.headline) + '</h1>' +
+      (lead.standfirst ? '<p class="lead-standfirst">' + esc(lead.standfirst) + '</p>' : '');
+  }
+  function leadBodyHtml(lead){
+    return '<div class="lead-body">' + paragraphsHtml(lead.paragraphs) + '</div>';
+  }
+  function railStandingsTableHtml(e){
+    var rows = e.standings.map(function(s){
+      return '<tr><td>R' + s.round + '</td><td>' + esc(s.trophy) + '</td></tr>';
     }).join("");
-    return '<div class="results-panel">' +
-      '<p class="results-title">At a glance</p>' +
-      '<ul class="results-list">' + items + '</ul></div>';
+    return '<div class="rail-block"><p class="sb-lab">Trophy by round</p>' +
+      '<div class="table-scroll"><table class="stab stab-rail"><tbody>' + rows + '</tbody></table></div></div>';
   }
 
-  function subCardHtml(article, extraClass){
-    return '<article class="sub-card ' + (extraClass || "") + " " + lengthClass(article.words) + '">' +
-      '<p class="kicker">' + esc(article.kicker) + '</p>' +
-      '<h3 class="sub-headline">' + esc(article.headline) + '</h3>' +
-      (article.standfirst ? '<p class="standfirst">' + esc(article.standfirst) + '</p>' : '') +
-      '<div class="body">' + paragraphsHtml(article.paragraphs) + '</div>' +
-      '</article>';
+  function railHtml(e, extra){
+    var items = e.results.map(function(r){
+      return '<li class="r-item' + (r.lead ? " r-lead" : "") + '">' +
+        '<span class="r-label">' + esc(r.label) + '</span>' +
+        '<span class="r-vals"><span class="r-value">' + esc(r.value) + '</span>' +
+        (r.runner_up ? '<span class="r-runner">' + esc(r.runner_up) + '</span>' : '') +
+        '</span></li>';
+    }).join("");
+    var last = e.standings[e.standings.length - 1];
+    return '<aside class="rail">' +
+      '<div class="r5"><p class="r5-title">At a glance</p><ul class="r-list">' + items + '</ul></div>' +
+      '<div class="rail-standings">' +
+        '<p class="sb-lab">Final &middot; Trophy</p><p class="sb-row">' + esc(last.trophy) + '</p>' +
+        '<p class="sb-lab">Final &middot; Green Jacket</p><p class="sb-row">' + esc(last.jacket) + '</p>' +
+      '</div>' + (extra || "") + '</aside>';
   }
-
-  function appendixHtml(edition){
-    var rows = edition.standings.map(function(s){
+  function subCardHtml(a, extra){
+    return '<article class="sub-card ' + (extra || "") + '">' +
+      '<p class="kicker">' + esc(a.kicker) + '</p>' +
+      '<h2 class="sub-headline">' + esc(a.headline) + '</h2>' +
+      (a.standfirst ? '<p class="sub-standfirst">' + esc(a.standfirst) + '</p>' : '') +
+      '<div class="sub-body">' + paragraphsHtml(a.paragraphs) + '</div></article>';
+  }
+  function appendixHtml(e){
+    var rows = e.standings.map(function(s){
       return '<tr><td>R' + s.round + '</td><td>' + esc(s.trophy) + '</td><td>' + esc(s.jacket) + '</td></tr>';
     }).join("");
-
-    var byCategory = {};
-    var order = [];
-    edition.records.forEach(function(r){
-      if (!byCategory[r.category]){ byCategory[r.category] = []; order.push(r.category); }
-      byCategory[r.category].push(r.text);
+    var by = {}, order = [];
+    e.records.forEach(function(r){
+      if (!by[r.category]){ by[r.category] = []; order.push(r.category); }
+      by[r.category].push(r.text);
     });
-    var recordsHtml = order.map(function(cat){
-      var items = byCategory[cat].map(function(t){ return "<li>" + esc(t) + "</li>"; }).join("");
-      return '<div class="records-group"><p class="records-cat">' + esc(cat) + '</p><ul>' + items + '</ul></div>';
+    var recs = order.map(function(c){
+      return '<div class="recs-group"><p class="recs-cat">' + esc(c) + '</p><ul class="recs">' +
+        by[c].map(function(t){ return "<li>" + esc(t) + "</li>"; }).join("") + '</ul></div>';
     }).join("");
-
     return '<section class="appendix">' +
-      '<div class="appendix-standings">' +
-        '<h4>Standings by round</h4>' +
-        '<div class="table-scroll"><table class="standings-table">' +
+      '<div class="apx-standings"><h3 class="apx-h">Standings by round</h3>' +
+        '<div class="table-scroll"><table class="stab">' +
           '<thead><tr><th>Rd</th><th>Trophy</th><th>Green Jacket</th></tr></thead>' +
-          '<tbody>' + rows + '</tbody></table></div>' +
-      '</div>' +
-      '<div class="appendix-records"><h4>Personal bests &amp; records</h4>' + recordsHtml + '</div>' +
+          '<tbody>' + rows + '</tbody></table></div></div>' +
+      '<div><h3 class="apx-h">Personal bests &amp; records</h3>' +
+        '<div class="apx-records">' + recs + '</div></div>' +
     '</section>';
   }
 
-  function mastheadHtml(edition){
-    var dl = edition.dateline;
-    return '<header class="masthead">' +
-      '<div class="wordmark-row">' +
-        '<span class="wordmark">The TEG<span class="wordmark-flag"></span></span>' +
-        '<span class="dateline">' + esc(dl.teg) + ' &middot; ' + esc(dl.venue) + ' &middot; ' + esc(dl.year) + '</span>' +
-      '</div>' +
-      '<div class="masthead-rule"></div>' +
-    '</header>';
+  /* ---- the three arrangements ------------------------------------------ */
+
+  function renderE1(e, lead, subs, railExtra){
+    // 3-up ruled row; a fourth story spans the full width beneath it.
+    var row = subs.slice(0, 3).map(function(a){ return subCardHtml(a); }).join("");
+    var overflow = subs.slice(3).map(function(a){ return subCardHtml(a, "wide"); }).join("");
+    return mastheadHtml(e) +
+      '<div class="lead-head">' + leadHeadHtml(lead) + '</div>' +
+      '<div class="main-split">' + leadBodyHtml(lead) + railHtml(e, railExtra) + '</div>' +
+      '<div class="deck-rule"></div>' +
+      '<div class="subs">' + row + overflow + '</div>' +
+      appendixHtml(e);
   }
 
-  function leadArticleHtml(lead){
-    return '<article class="lead">' +
-      '<p class="lead-kicker">' + esc(lead.kicker) + '</p>' +
-      '<h1 class="lead-headline">' + esc(lead.headline) + '</h1>' +
-      (lead.standfirst ? '<p class="lead-standfirst">' + esc(lead.standfirst) + '</p>' : '') +
-      '<div class="body">' + paragraphsHtml(lead.paragraphs) + '</div>' +
-    '</article>';
+  function renderE2(e, lead, subs, railExtra){
+    // One sub-article is promoted to a second lead across the full width; the
+    // rest follow in one ruled row. See chooseSecondStory for which.
+    var second = chooseSecondStory(subs);
+    var rest = subs.filter(function(a){ return a !== second; })
+      .map(function(a){ return subCardHtml(a); }).join("");
+    return mastheadHtml(e) +
+      '<div class="lead-head">' + leadHeadHtml(lead) + '</div>' +
+      '<div class="main-split">' + leadBodyHtml(lead) + railHtml(e, railExtra) + '</div>' +
+      '<div class="deck-rule"></div>' +
+      '<div class="second-lead">' + (second ? subCardHtml(second, "second") : "") + '</div>' +
+      (rest ? '<div class="thin-rule"></div><div class="subs">' + rest + '</div>' : "") +
+      appendixHtml(e);
   }
 
-  function renderA(edition, lead, subs){
-    var rail = subs[0];
-    var bottom = subs.slice(1);
-    return mastheadHtml(edition) +
-      '<div class="edition-grid">' +
-        leadArticleHtml(lead) +
-        '<div class="col-rule"></div>' +
-        '<aside class="rail">' + resultsPanelHtml(edition) + (rail ? subCardHtml(rail) : "") + '</aside>' +
-        '<div class="bottom-row">' + bottom.map(function(a){ return subCardHtml(a); }).join("") + '</div>' +
-      '</div>' +
-      appendixHtml(edition);
-  }
-
-  function renderB(edition, lead, subs){
-    // A fixed 3-up grid leaves a lone last card stranded with two empty
-    // tracks beside it whenever the count isn't a multiple of 3 minus a
-    // full row (i.e. remainder 1) — give that lone card the full width
-    // instead of leaving a gap.
-    var solo = subs.length % 3 === 1;
+  function renderE3(e, lead, subs, railExtra){
+    // 2x2; an odd last card spans both columns rather than leaving a gap.
+    var odd = subs.length % 2 === 1;
     var cards = subs.map(function(a, i){
-      var isSolo = solo && i === subs.length - 1;
-      return subCardHtml(a, isSolo ? "solo" : "");
+      return subCardHtml(a, odd && i === subs.length - 1 ? "wide" : "");
     }).join("");
-    return mastheadHtml(edition) +
-      '<div class="edition-grid">' +
-        '<div class="edition-top">' +
-          leadArticleHtml(lead) +
-          resultsPanelHtml(edition) +
-        '</div>' +
-        '<div class="subs-grid">' + cards + '</div>' +
+    return mastheadHtml(e) +
+      '<div class="main-split">' +
+        '<div>' + leadHeadHtml(lead) + leadBodyHtml(lead) + '</div>' +
+        railHtml(e, railExtra) +
       '</div>' +
-      appendixHtml(edition);
+      '<div class="deck-rule"></div>' +
+      '<div class="subs">' + cards + '</div>' +
+      appendixHtml(e);
   }
 
-  function renderC(edition, lead, subs){
-    var lastRound = edition.standings[edition.standings.length - 1];
-    var scoreboard =
-      '<p class="scoreboard-title">Final standings &middot; R' + lastRound.round + '</p>' +
-      '<div class="scoreboard-row"><span class="scoreboard-label">Trophy</span></div>' +
-      '<div class="scoreboard-row" style="font-weight:600;">' + esc(lastRound.trophy) + '</div>' +
-      '<div class="scoreboard-row" style="margin-top:0.4rem;"><span class="scoreboard-label">Green Jacket</span></div>' +
-      '<div class="scoreboard-row" style="font-weight:600;">' + esc(lastRound.jacket) + '</div>';
+  /* ---- the tessellation set ---------------------------------------------- */
 
-    var asymItems = subs.map(function(a, i){
-      var isLast = i === subs.length - 1;
-      var leftoverSingle = isLast && (subs.length % 2 === 1);
-      var cls = leftoverSingle ? "wide full" : (i % 2 === 0 ? "wide" : "narrow");
-      return subCardHtml(a, cls);
+  function renderG1(e, lead, subs, railExtra){
+    // One three-column flow. Everything below the headline is a block in it,
+    // so the browser balances the columns and the page finishes level.
+    var leadParas = lead.paragraphs.map(function(p, i){
+      return '<p' + (i === 0 ? ' class="lead-open"' : '') + '>' +
+        esc(p).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>") + '</p>';
     }).join("");
-
-    return '<div class="masthead">' +
-        '<div class="wordmark-row">' +
-          '<span class="wordmark">The TEG<span class="wordmark-flag"> &nbsp;SPORT</span></span>' +
-          '<span class="dateline">' + esc(edition.dateline.teg) + ' &middot; ' + esc(edition.dateline.venue) + ' &middot; ' + esc(edition.dateline.year) + '</span>' +
-        '</div>' +
+    return mastheadHtml(e) +
+      '<div class="page-flow">' +
+        '<div class="span-all">' + leadHeadHtml(lead) + '</div>' +
+        leadParas +
+        railHtml(e, railExtra) +
+        subs.map(function(a){ return subCardHtml(a); }).join("") +
       '</div>' +
-      '<div class="lead-block">' +
-        '<p class="lead-kicker">' + esc(lead.kicker) + '</p>' +
-        '<h1 class="lead-headline">' + esc(lead.headline) + '</h1>' +
-        (lead.standfirst ? '<p class="lead-standfirst">' + esc(lead.standfirst) + '</p>' : '') +
-      '</div>' +
-      '<div class="edition-grid">' +
-        '<article class="lead"><div class="body">' + paragraphsHtml(lead.paragraphs) + '</div></article>' +
-        '<aside class="side-rail">' + resultsPanelHtml(edition) + scoreboard + '</aside>' +
-        '<div class="asym-grid">' + asymItems + '</div>' +
-      '</div>' +
-      appendixHtml(edition);
+      appendixHtml(e);
   }
 
-  function renderD(edition, lead, subs){
-    return '<header class="masthead">' +
-        '<div class="wordmark-row">' +
-          '<span class="wordmark">The TEG</span>' +
-          '<span class="dateline">' + esc(edition.dateline.teg) + ' &middot; ' + esc(edition.dateline.venue) + ' &middot; ' + esc(edition.dateline.year) + '</span>' +
-        '</div>' +
-        '<div class="masthead-rule"></div>' +
-      '</header>' +
-      '<div class="lead-block">' +
-        '<p class="lead-kicker">' + esc(lead.kicker) + '</p>' +
-        '<h1 class="lead-headline">' + esc(lead.headline) + '</h1>' +
-        (lead.standfirst ? '<p class="lead-standfirst">' + esc(lead.standfirst) + '</p>' : '') +
-      '</div>' +
-      resultsPanelHtml(edition) +
-      '<div class="edition-grid">' +
-        '<article class="lead"><div class="body">' + paragraphsHtml(lead.paragraphs) + '</div></article>' +
-        '<div class="blocks-grid">' + subs.map(function(a){ return subCardHtml(a); }).join("") + '</div>' +
-      '</div>' +
-      appendixHtml(edition);
+  var G2_COLS = 3;
+
+  function renderG2(e, lead, subs, railExtra){
+    // Stories stay whole — nothing is ever split across a column. They are
+    // emitted into the first column and then redistributed by balanceG2(),
+    // which measures real rendered heights; `words` is too crude an estimate
+    // because headline and standfirst heights vary independently of length.
+    var colsHtml = '<div class="col">' +
+      subs.map(function(a){ return subCardHtml(a); }).join("") + '</div>';
+    for (var i = 1; i < G2_COLS; i++){ colsHtml += '<div class="col"></div>'; }
+    return mastheadHtml(e) +
+      '<div class="lead-head">' + leadHeadHtml(lead) + '</div>' +
+      '<div class="main-split">' + leadBodyHtml(lead) + railHtml(e, railExtra) + '</div>' +
+      '<div class="cols">' + colsHtml + '</div>' +
+      appendixHtml(e);
   }
 
-  var RENDERERS = { a: renderA, b: renderB, c: renderC, d: renderD };
+  function renderG3(e, lead, subs, railExtra){
+    // The lead occupies an L: headline and body across two columns, rail and
+    // the next story down the third. The rest run underneath in the same grid,
+    // so there is no full-width rule dividing lead from grid.
+    var inRail = subs.slice(0, 1);
+    var under = subs.slice(1);
+    var railCards = inRail.map(function(a){ return subCardHtml(a); }).join("");
+    return mastheadHtml(e) +
+      '<div class="page-grid">' +
+        '<div class="lead-wrap">' + leadHeadHtml(lead) + leadBodyHtml(lead) + '</div>' +
+        railHtml(e, railExtra + railCards) +
+        (under.length
+          ? '<div class="under">' + under.map(function(a){ return subCardHtml(a); }).join("") + '</div>'
+          : "") +
+      '</div>' +
+      appendixHtml(e);
+  }
+
+  // Longest-processing-time bin packing: place the tallest story into the
+  // shortest column, repeatedly. Gets the column bottoms close to level
+  // without breaking a story, which is the whole point of G2.
+  function balanceG2(){
+    var cols = [].slice.call(document.querySelectorAll("#stage .arr-g2-cols .col, #stage .cols .col"));
+    if (cols.length < 2) return;
+    var cards = [];
+    cols.forEach(function(c){
+      [].slice.call(c.children).forEach(function(el){
+        cards.push({ el: el, h: el.getBoundingClientRect().height });
+      });
+    });
+    cards.sort(function(a, b){ return b.h - a.h; });
+    var loads = cols.map(function(){ return 0; });
+    cols.forEach(function(c){ c.innerHTML = ""; });
+    cards.forEach(function(card){
+      var i = loads.indexOf(Math.min.apply(null, loads));
+      cols[i].appendChild(card.el);
+      loads[i] += card.h;
+    });
+  }
+
+  /* -------------------------------------------------------------------------
+     The shipping rules, as chosen against the rendered pages.
+
+     Arrangement follows the story count. With four stories E1's 3-up row holds
+     the three sub-articles exactly; a fifth leaves an orphan spanning the page,
+     so E2 promotes one to a second lead and the remaining three fill the row.
+
+     The Green Jacket is the second competition, so it is the second lead by
+     default. A discovered storyline takes the slot only when it is clearly
+     stronger — CLEAR_MARGIN or more on compelling_score. TEG 14 sits exactly on
+     that boundary (Wooden Spoon 9 against Green Jacket 7), so this constant is
+     the one number to turn if the wrong story is being promoted.
+     ------------------------------------------------------------------------- */
+  var E2_MIN_ARTICLES = 5;
+  var CLEAR_MARGIN = 2;
+
+  function chooseArrangement(edition){
+    return edition.articles.length >= E2_MIN_ARTICLES ? "e2" : "e1";
+  }
+
+  function chooseSecondStory(subs){
+    if (!subs.length) return null;
+    var jacket = subs.filter(function(a){
+      return a.kicker.indexOf("GREEN JACKET") !== -1;
+    })[0];
+    if (!jacket) return subs[0];
+    // subs arrive sorted by compelling_score desc, then humour_score desc
+    var top = subs[0];
+    if (top !== jacket && top.compelling - jacket.compelling >= CLEAR_MARGIN) return top;
+    return jacket;
+  }
+
+  var RENDERERS = {
+    e1: renderE1, e2: renderE2, e3: renderE3,
+    g1: renderG1, g2: renderG2, g3: renderG3
+  };
 
   function render(){
-    var edition = editionsByTeg[state.teg];
-    var lead = edition.articles.filter(function(a){ return a.is_lead; })[0];
-    var subs = edition.articles.filter(function(a){ return !a.is_lead; });
+    var e = editionsByTeg[state.teg];
+    var lead = e.articles.filter(function(a){ return a.is_lead; })[0];
+    var subs = e.articles.filter(function(a){ return !a.is_lead; });
+
+    // The rail is much shorter than the lead body, so its column ends in a
+    // void unless something follows the standings. F3 moves the shortest
+    // sub-article up into it — `words` is on every article for exactly this.
+    var railExtra = "";
+    if (state.fill === "f2"){
+      railExtra = railStandingsTableHtml(e);
+    } else if (state.fill === "f3" && subs.length > 1){
+      var shortest = subs.reduce(function(a, b){ return b.words < a.words ? b : a; });
+      subs = subs.filter(function(a){ return a !== shortest; });
+      railExtra = '<div class="rail-block">' + subCardHtml(shortest) + '</div>';
+    }
+
+    var arr = state.arr === "auto" ? chooseArrangement(e) : state.arr;
 
     var stage = document.getElementById("stage");
-    stage.className = "newspaper layout-" + state.layout;
-    stage.style.animation = "none";
-    // force reflow so the paper-in animation replays on every switch
-    void stage.offsetWidth;
-    stage.style.animation = "";
-    stage.innerHTML = RENDERERS[state.layout](edition, lead, subs);
+    stage.className = "paper arr-" + arr;
+    stage.innerHTML = RENDERERS[arr](e, lead, subs, railExtra);
+    if (arr === "g2") balanceG2();
 
-    document.querySelectorAll("[data-teg]").forEach(function(btn){
-      btn.setAttribute("aria-pressed", String(btn.getAttribute("data-teg") === String(state.teg)));
+    document.querySelectorAll("[data-teg]").forEach(function(b){
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-teg") === String(state.teg)));
     });
-    document.querySelectorAll("[data-layout]").forEach(function(btn){
-      btn.setAttribute("aria-pressed", String(btn.getAttribute("data-layout") === state.layout));
+    document.querySelectorAll("[data-arr]").forEach(function(b){
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-arr") === state.arr));
     });
-    document.getElementById("riskNote").textContent = LAYOUT_NOTES[state.layout];
+    document.querySelectorAll("[data-fill]").forEach(function(b){
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-fill") === state.fill));
+    });
+    document.getElementById("arrNote").textContent =
+      (state.arr === "auto" ? "Auto -> " + arr.toUpperCase() + ". " : "") + ARR_NOTES[state.arr];
+    document.body.setAttribute("data-ready", "1");
   }
 
-  document.querySelectorAll("[data-teg]").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      state.teg = parseInt(btn.getAttribute("data-teg"), 10);
+  document.querySelectorAll("[data-teg]").forEach(function(b){
+    b.addEventListener("click", function(){
+      state.teg = parseInt(b.getAttribute("data-teg"), 10);
       render();
     });
   });
-  document.querySelectorAll("[data-layout]").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      state.layout = btn.getAttribute("data-layout");
+  document.querySelectorAll("[data-arr]").forEach(function(b){
+    b.addEventListener("click", function(){
+      state.arr = b.getAttribute("data-arr");
       render();
     });
   });
+  document.querySelectorAll("[data-fill]").forEach(function(b){
+    b.addEventListener("click", function(){
+      state.fill = b.getAttribute("data-fill");
+      render();
+    });
+  });
+
+  // hook the screenshot script drives, so the boundary case can be rendered
+  // both ways without editing the constant
+  window.__composite = {
+    set: function(patch){ Object.assign(state, patch); render(); },
+    setClearMargin: function(n){ CLEAR_MARGIN = n; render(); }
+  };
 
   render();
 })();
