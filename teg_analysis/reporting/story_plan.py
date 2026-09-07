@@ -185,12 +185,34 @@ class DraftedStoryline(BaseModel):
     3 test TEGs. Replaces the unconsumed `competition_storyline_bullets` /
     `player_storyline_bullets` / `decisive_moments` fields (zero downstream
     readers — dead code, found during this replacement).
+
+    `headline_candidates`/`chosen_headline`/`standfirst` added 2026-09-06,
+    mirroring `RoundPlan`'s headline_candidates + chosen_headline shape rather
+    than inventing a new one. Fixes a real pipeline gap: `subject` is a
+    15-25 word editorial label that reads fine as a section heading and badly
+    as a newspaper headline, so every consumer (`scripts/build_newspaper_
+    edition.py`) had to derive one, and the derivation is the weakest text on
+    the page (webapp/report_layout_prototypes/README.md, "Still to do" #2).
+    Defaulted to empty rather than required: `DraftedStoryline` is also
+    embedded (via `trophy_storyline`/`jacket_storyline`/`spoon_storyline`/
+    `discovered_storylines`) in the legacy `StoryPlan`, whose schema has
+    already once been rejected by the API as too large (see `Competition`'s
+    docstring) — leaving these optional there avoids growing that schema's
+    required-field surface for a pipeline that never reads them.
+    `STORYLINE_SYSTEM_PROMPT` asks for them as always-populated; the legacy
+    `SYSTEM_PROMPT` does not.
     """
     subject: str            # who/what this storyline is about
     why_it_matters: str     # one sentence
     shape: str              # setup -> turn -> resolution, 2-3 sentences
     beat_ids: list[str]     # the specific beats this is built from — checked
                             # against the bundle by `check_plan_consistency`
+    headline_candidates: list[str] = Field(default_factory=list)  # ~3 headline
+                            # options, 3-8 words each — see STORYLINE_SYSTEM_PROMPT
+    chosen_headline: str = ""   # 3-8 words — the newspaper headline for this
+                            # storyline's article; NOT a shrunken `subject`
+    standfirst: str = ""        # one sentence — the strap under the headline;
+                            # adds context, never just restates the headline
     compelling_score: int = Field(ge=1, le=10)  # your own rating of how GOOD A
                             # STORY this is — not how much it mattered to the standings
     humour_score: int = Field(ge=1, le=10)  # your own rating of how genuinely FUNNY
@@ -1007,6 +1029,20 @@ to this course", "best in the field twice") **unless that exact figure appears i
 bundle field** — this is the specific failure mode measured above, not a generic \
 reminder.
 
+  Every `DraftedStoryline` ALSO needs a real headline, not just a `subject` line. \
+`subject` is a 15-25 word internal editorial label — good for finding and citing the \
+storyline, useless as something a reader would want to read under a masthead. Write: \
+`headline_candidates` (3 options, 3-8 words each) and `chosen_headline` (3-8 words, \
+picked from them) — a NEWSPAPER HEADLINE for this storyline's own article. Punchy and \
+specific, not a shrunken `subject` and not a second `why_it_matters`; avoid a bare \
+verb-less noun pile-up ("Baker's Trophy Triumph") in favour of something with an actual \
+claim in it. Then `standfirst`: ONE sentence, the strap that runs under the headline in \
+smaller type. Its job is to add the context the headline had no room for — who, what, \
+the stake — NOT to restate the headline in longer words, and NOT to duplicate \
+`why_it_matters` verbatim (they can share facts; they should not share a sentence). A \
+reader should get the headline, then the standfirst, then want to read on — if the \
+standfirst already told them the ending, it did its job wrong.
+
 - `body_fallback`: **"none" is the default and the common case** — the trophy/jacket/ \
 spoon anatomy stories stand alone as the report's spine, with `discovered_storylines` \
 adding 0-3 more. Use `"player_by_player"` or `"round_by_round"` ONLY when \
@@ -1078,6 +1114,9 @@ def check_storyline_plan_consistency(plan: StorylinePlan, bundle: dict) -> list[
     coverage computed directly against the storylines' `beat_ids` — StoryPlan's
     version of this check reads `must_include_beat_ids`/`cuts`, which don't
     exist on this schema; see the MANDATORY BEAT COVERAGE rule in the prompt.
+    Also checks `chosen_headline`/`standfirst` are populated and the headline
+    is roughly 3-8 words — not a hard fail, since a plan with a thin headline
+    is still usable, but it must not pass silently.
     """
     warnings: list[str] = []
     shape = bundle.get("tournament_shape") or {}
@@ -1114,6 +1153,14 @@ def check_storyline_plan_consistency(plan: StorylinePlan, bundle: dict) -> list[
         if bad:
             warnings.append(f"storyline {s.subject!r} cites unknown beat_ids: {bad}")
         cited_beat_ids |= set(s.beat_ids)
+        if not s.chosen_headline:
+            warnings.append(f"storyline {s.subject!r} has no chosen_headline")
+        elif not (3 <= len(s.chosen_headline.split()) <= 8):
+            warnings.append(
+                f"storyline {s.subject!r} chosen_headline is "
+                f"{len(s.chosen_headline.split())} words (want 3-8): {s.chosen_headline!r}")
+        if not s.standfirst:
+            warnings.append(f"storyline {s.subject!r} has no standfirst")
 
     mandatory = {b["id"] for b in bundle.get("beats", []) if b.get("mandatory")}
     missed = sorted(mandatory - cited_beat_ids)
