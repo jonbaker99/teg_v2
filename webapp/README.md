@@ -752,9 +752,11 @@ HTML builders).
   webapp runs. Awaiting a direction decision before the broad implementation.
   The newspaper report layout lives in `report_layout_prototypes/`, served at
   `/report-layouts/`. The design is settled — `composite.html` is the desktop
-  design and `mobile.html` the mobile one — but is not yet wired into
-  `routes/reports.py`. Start at that folder's `README.md`, which carries the
-  chosen elements, the composition rule and what remains.
+  design and `mobile.html` the mobile one — and is wired in as a preview at
+  `/teg-reports-preview` (`routes/report_preview.py`; not linked from the nav,
+  `/teg-reports` itself untouched). Start at that folder's `README.md`, which
+  carries the chosen elements, the composition rule and what remains before
+  switching `/teg-reports` over to it.
   - **First slice shipped:** the **Scorecard** page now renders a portrait
     (holes-as-rows) layout on phones (`≤640px`) for all three views, with a
     Gross/Stableford toggle and dark-ready (inert) colour tokens. Desktop/iPad

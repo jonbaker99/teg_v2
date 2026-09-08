@@ -12,7 +12,39 @@
 
 ---
 
-## START HERE — picking this up in a new chat (2026-09-07)
+## START HERE — picking this up in a new chat (2026-09-08)
+
+### Pending: storyline-first reporting is only done for 3 of 17 TEGs, and 3 are currently desynced (2026-09-08)
+
+Two separate to-dos, both deliberately not started yet — no LLM calls, no cost incurred, until asked for.
+
+**(a) Generate storyline-first reporting for the other 14 TEGs.** Only TEG 14, 16, 18 have
+storyline-first artefacts (`data/commentary/teg_N_storyline_plan.json` +
+`teg_N_report_storylinefirst_styled.md`); the newspaper layout (`/teg-reports-preview`,
+`teg_analysis/reporting/newspaper_edition.py`) can only ever render a TEG that has these. TEGs 2–13,
+15, 17 have never had the storyline-first pipeline run at all — they still only have the older
+`teg_N_report_styled.md`. Run per TEG:
+
+    python scripts/storyline_full_report_experiment.py --teg N
+
+Real Anthropic API billing (`ANTHROPIC_API_KEY`/`TEG_ANTHROPIC_API_KEY`), no `--plan`/`--paste`
+mailbox support on this script (unlike `backfill.py`) as of 2026-09-08. Still explicitly an
+experiment script (see its own docstring) — not wired into `backfill.py` or any production path.
+After a run, `teg_analysis.reporting.newspaper_edition.AVAILABLE_TEGS` (currently hardcoded
+`(14, 16, 18)`) needs the new TEG numbers added, or the preview won't offer them.
+
+**(b) Regenerate the styled `.md` for TEG 14/16/18 — they're currently desynced from their own
+plan.json.** PR #95 (2026-09-07, "give StorylinePlan real headline and standfirst fields")
+regenerated `teg_{14,16,18}_storyline_plan.json` with fresh LLM-written `subject` text but did
+**not** regenerate the paired `_report_storylinefirst_styled.md`. `newspaper_edition.py` matches
+plan storylines to markdown `## ` sections by exact `subject` string, so all three now fail that
+match. The failure is caught (`ValueError` → `no_report_message`), so `/teg-reports-preview` shows
+"no edition available" rather than crashing — but as of now **none of the three TEGs the preview
+supports actually render.** Fix: re-run the same command above for 14, 16, 18 — it generates a
+fresh plan + draft + styled markdown together in one pass, which re-syncs them. Note it also
+re-rolls the `subject`/`chosen_headline` text again (LLM, not deterministic), so this is a fresh
+generation, not a patch — the previously-reviewed TEG 14 second-lead judgement call
+(`webapp/report_layout_prototypes/README.md` → "Still to do" #2) may shift again.
 
 ### `DraftedStoryline` gained real `headline`/`standfirst` fields (2026-09-07)
 
