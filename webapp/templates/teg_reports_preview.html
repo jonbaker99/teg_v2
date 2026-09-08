@@ -11,16 +11,45 @@
   Tailwind/theme chrome here would risk the preview no longer matching the
   design it is meant to validate. See webapp/report_layout_prototypes/README.md.
 -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Source+Serif+4:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600;700&family=Libre+Franklin:wght@400;500;600;700;800;900&family=Lora:ital,wght@0,400;0,500;0,600;1,500&family=Playfair+Display:wght@600;700;800;900&family=Anton&display=swap">
 <link rel="stylesheet" href="/static/newspaper_preview.css">
+<!--
+  pal-{{ selected_pal }} / sf-{{ selected_sf }} on <body>, and rail-{{ selected_rail }}
+  on .np-paper below: provisional preset switches for layout review (see
+  webapp/report_layout_prototypes/README.md "Still to do"). selected_pal/
+  selected_sf/selected_rail are validated against a known set in
+  report_preview.py before reaching a class attribute — never a raw query
+  value. Remove all three (and the whole np-switcher block below, and the
+  corresponding CSS in newspaper_preview.css) once choices are locked in.
+-->
 </head>
-<body class="np-page">
+<body class="np-page pal-{{ selected_pal }} sf-{{ selected_sf }}">
 
-<nav class="np-switcher" aria-label="Preview TEG switcher">
-    <span class="np-label">Newspaper layout preview</span>
-    {% for n in teg_numbers %}
-    <a href="/teg-reports-preview?teg={{ n }}" class="{% if n == selected_teg %}active{% endif %}">TEG {{ n }}</a>
-    {% endfor %}
+<nav class="np-switcher" aria-label="Preview layout switches">
+    <span class="np-group">
+        <span class="np-label">TEG</span>
+        {% for n in teg_numbers %}
+        <a href="{{ make_url(teg=n) }}" class="{% if n == selected_teg %}active{% endif %}">{{ n }}</a>
+        {% endfor %}
+    </span>
+    <span class="np-group">
+        <span class="np-label">Palette</span>
+        {% for p in ['a', 'b', 'c', 'd'] %}
+        <a href="{{ make_url(pal=p) }}" class="{% if p == selected_pal %}active{% endif %}">{{ p|upper }}</a>
+        {% endfor %}
+    </span>
+    <span class="np-group">
+        <span class="np-label">Standfirst</span>
+        {% for s in ['italic', 'roman', 'edge'] %}
+        <a href="{{ make_url(sf=s) }}" class="{% if s == selected_sf %}active{% endif %}">{{ s }}</a>
+        {% endfor %}
+    </span>
+    <span class="np-group">
+        <span class="np-label">Rail</span>
+        {% for r in ['s1', 's2'] %}
+        <a href="{{ make_url(rail=r) }}" class="{% if r == selected_rail %}active{% endif %}">{{ r|upper }}</a>
+        {% endfor %}
+    </span>
 </nav>
 
 {% if no_report_message %}
@@ -28,7 +57,7 @@
 {% else %}
 
 <div class="np-desktop" id="desktop-stage">
-    <main class="np-paper arr-{{ arrangement }}">{{ desktop_html|safe }}</main>
+    <main class="np-paper arr-{{ arrangement }} rail-{{ selected_rail }}">{{ desktop_html|safe }}</main>
 </div>
 
 <div class="np-mobile" id="mobile-stage" aria-live="polite"></div>

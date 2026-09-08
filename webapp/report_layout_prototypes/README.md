@@ -45,7 +45,16 @@ The **Auto** setting in `composite.html`, and its default:
 
 - **Five or more stories → E2 second lead.** A fifth story leaves E1's 3-up row with an orphan
   spanning the page; E2 promotes one story to a second lead and the remaining three fill the row.
-- **Fewer than five → E1 classic front**, where three sub-articles fit the row exactly.
+- **Exactly three sub-articles, one materially longer → E3.** `E1`'s 3-up row leaves a badly
+  unbalanced column when one sub-article runs much longer than the other two. E3 fires when the
+  longest is at least `LONG_STORY_RATIO` (1.4) times the median of the other two's word counts: the
+  two shorter subs sit in a 2-up row, the long one runs full width, after the row. Measured
+  (longest ÷ median of rest): TEG 16 — 430/273/250 words, 1.64; TEG 18 — 409/247/225 words, 1.73;
+  TEG 14 — 289/249/232/220 words, 1.20 (but 5 articles, so it takes E2 regardless). Added in
+  `teg_analysis/reporting/newspaper_edition.py` (`choose_arrangement`, `_render_e3`) for the
+  `/teg-reports-preview` switch matrix — E1/E2/E3 are all this route's `arr-*` CSS classes in
+  `webapp/static/newspaper_preview.css`; `composite.html` itself still only has E1/E2.
+- **Otherwise → E1 classic front**, where three sub-articles fit the row exactly.
 - **The second lead defaults to the Green Jacket**, as the second competition. A discovered
   storyline takes the slot only when it beats it by `CLEAR_MARGIN` (2) or more on
   `compelling_score`.
@@ -112,7 +121,13 @@ matters to a reader.
    Back, cold deep-link to `#story/N`, focus-on-open, E1/E2 arrangement both render correctly.
    **Not done yet:** `/teg-reports` itself is untouched and still renders the old one-blob markdown;
    switching it over (or deciding the two coexist) is a separate, deliberately small change once
-   the preview is confirmed right.
+   the preview is confirmed right. The preview page also currently carries three **provisional**
+   switches (`?pal=`, `?sf=`, `?rail=`, alongside the existing `?teg=`) for comparing the type &
+   palette, standfirst and standings-rail options directly against real content, server-rendered
+   and validated (unrecognised values fall back to the shipped default). This is throwaway
+   scaffolding for layout review, not part of the design — remove the switcher markup in
+   `teg_reports_preview.html`, its CSS in `newspaper_preview.css`, and the query-param handling in
+   `report_preview.py` once the choices are locked in.
 2. ~~`StorylinePlan` needs `headline` and `standfirst` fields.~~ **Done (2026-09-06).**
    `DraftedStoryline` now carries `headline_candidates`/`chosen_headline`/`standfirst`, mirroring
    `RoundPlan`'s shape (`teg_analysis/reporting/story_plan.py`). `newspaper_edition.py` uses them

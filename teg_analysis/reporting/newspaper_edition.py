@@ -19,11 +19,14 @@ Two source files per TEG:
 in `build_edition`). Only TEGs with storyline-first artefacts have one —
 currently `AVAILABLE_TEGS`.
 
-`render_desktop_html(edition)` ports the desktop composite's JS (E1/E2 "auto"
-composition, fill "f1") to Python 1:1 — see
+`render_desktop_html(edition, rail="s2")` ports the desktop composite's JS
+(E1/E2 "auto" composition, fill "f1") to Python 1:1 — see
 `webapp/report_layout_prototypes/composite.html`'s `render()`/`renderE1`/
 `renderE2`. It is a straight port so it stays trivially comparable to the
-prototype if the prototype changes.
+prototype if the prototype changes. E3 (a third arrangement, added for the
+`/teg-reports-preview` switch matrix — see that route's docstring) and the
+`rail` parameter (S1/S2, from `elements.html`'s `railVariants()`) are not in
+the prototype and only exist here.
 """
 
 from __future__ import annotations
@@ -31,6 +34,7 @@ from __future__ import annotations
 import html
 import json
 import re
+import statistics
 from typing import Any
 
 from teg_analysis.io import read_text_file
@@ -391,6 +395,16 @@ def build_edition(teg: int) -> dict[str, Any]:
 E2_MIN_ARTICLES = 5
 CLEAR_MARGIN = 2
 
+# E3 (long sub-story full width, after a 2-up row) fires when there are
+# exactly 3 sub-articles and the longest is at least this many times the
+# median of the other two's word counts. Measured on the three real editions
+# (longest ÷ median-of-rest):
+#   TEG 16: 430 / 273 / 250 words -> 1.64
+#   TEG 18: 409 / 247 / 225 words -> 1.73
+#   TEG 14: 289 / 249 / 232 / 220 words -> 1.20 (5 articles -> E2 regardless)
+# 1.4 sits clear of TEG 14's 1.20 and well under TEG 16/18's ratios.
+LONG_STORY_RATIO = 1.4
+
 
 def _esc(s: Any) -> str:
     return html.escape("" if s is None else str(s), quote=True)
@@ -427,7 +441,10 @@ def _lead_body_html(lead: dict[str, Any]) -> str:
     return f'<div class="lead-body">{_paragraphs_html(lead["paragraphs"])}</div>'
 
 
-def _rail_html(edition: dict[str, Any]) -> str:
+def _result_items_html(edition: dict[str, Any]) -> str:
+    """The three at-a-glance result lines, value with the runner-up under it.
+    Shared by the S2 rail's R5 box and S1's full-width R3 strip — the two rail
+    variants differ in where the list sits, not in what it contains."""
     items = []
     for r in edition["results"]:
         cls = " r-lead" if r["lead"] else ""
@@ -436,15 +453,26 @@ def _rail_html(edition: dict[str, Any]) -> str:
             f'<li class="r-item{cls}"><span class="r-label">{_esc(r["label"])}</span>'
             f'<span class="r-vals"><span class="r-value">{_esc(r["value"])}</span>{runner}</span></li>'
         )
+    return "".join(items)
+
+
+def _rail_html(edition: dict[str, Any]) -> str:
+    items = _result_items_html(edition)
     last = edition["standings"][-1]
     return (
         '<aside class="rail">'
-        f'<div class="r5"><p class="r5-title">At a glance</p><ul class="r-list">{"".join(items)}</ul></div>'
+        f'<div class="r5"><p class="r5-title">At a glance</p><ul class="r-list">{items}</ul></div>'
         '<div class="rail-standings">'
         f'<p class="sb-lab">Final &middot; Trophy</p><p class="sb-row">{_esc(last["trophy"])}</p>'
         f'<p class="sb-lab">Final &middot; Green Jacket</p><p class="sb-row">{_esc(last["jacket"])}</p>'
         "</div></aside>"
     )
+
+
+def _results_strip_html(edition: dict[str, Any]) -> str:
+    """S1's full-width results strip (`.r3`) — the same result lines as the
+    S2 rail's R5 box, laid out in a row instead of a column."""
+    return f'<div class="r3"><ul class="r-list">{_result_items_html(edition)}</ul></div>'
 
 
 def _sub_card_html(a: dict[str, Any], extra: str = "") -> str:
@@ -501,33 +529,61 @@ def _choose_second_story(subs: list[dict[str, Any]]) -> dict[str, Any] | None:
 
 
 def choose_arrangement(edition: dict[str, Any]) -> str:
-    """"e1" (classic front) or "e2" (second lead) — the CSS class the caller
-    puts on the `.paper` element, since the E1/E2 rules are keyed on it."""
-    return "e2" if len(edition["articles"]) >= E2_MIN_ARTICLES else "e1"
+    """"e1" (classic front), "e2" (second lead) or "e3" (2-up row + a long
+    sub-story full width) — the CSS class the caller puts on the `.paper`
+    element, since the E1/E2/E3 rules are keyed on it."""
+    articles = edition["articles"]
+    if len(articles) >= E2_MIN_ARTICLES:
+        return "e2"
+    subs = [a for a in articles if not a["is_lead"]]
+    if len(subs) == 3:
+        by_words = sorted(a["words"] for a in subs)
+        longest = by_words[-1]
+        median_rest = statistics.median(by_words[:-1])
+        if median_rest and longest >= LONG_STORY_RATIO * median_rest:
+            return "e3"
+    return "e1"
 
 
-def _render_e1(edition: dict[str, Any], lead: dict[str, Any], subs: list[dict[str, Any]]) -> str:
+def _main_html(edition: dict[str, Any], lead: dict[str, Any], rail: str) -> str:
+    """`.lead-head` plus the results/lead-body block, which differs by rail:
+    S2 puts the results (and final standings) in an `<aside>` beside the lead
+    body; S1 drops the aside and renders the results as a full-width strip
+    above a full-width, 3-column lead body instead."""
+    head = f'<div class="lead-head">{_lead_head_html(lead)}</div>'
+    if rail == "s1":
+        return (
+            head
+            + _results_strip_html(edition)
+            + f'<div class="main-split">{_lead_body_html(lead)}</div>'
+        )
+    return head + f'<div class="main-split">{_lead_body_html(lead)}{_rail_html(edition)}</div>'
+
+
+def _render_e1(
+    edition: dict[str, Any], lead: dict[str, Any], subs: list[dict[str, Any]], rail: str = "s2"
+) -> str:
     row = "".join(_sub_card_html(a) for a in subs[:3])
     overflow = "".join(_sub_card_html(a, "wide") for a in subs[3:])
     return (
         _masthead_html(edition)
-        + f'<div class="lead-head">{_lead_head_html(lead)}</div>'
-        + f'<div class="main-split">{_lead_body_html(lead)}{_rail_html(edition)}</div>'
+        + _main_html(edition, lead, rail)
         + '<div class="deck-rule"></div>'
         + f'<div class="subs">{row}{overflow}</div>'
         + _appendix_html(edition)
     )
 
 
-def _render_e2(edition: dict[str, Any], lead: dict[str, Any], subs: list[dict[str, Any]]) -> str:
+def _render_e2(
+    edition: dict[str, Any], lead: dict[str, Any], subs: list[dict[str, Any]], rail: str = "s2"
+) -> str:
     second = _choose_second_story(subs)
     rest = "".join(_sub_card_html(a) for a in subs if a is not second)
     second_html = _sub_card_html(second, "second") if second else ""
     rest_block = f'<div class="thin-rule"></div><div class="subs">{rest}</div>' if rest else ""
     return (
         _masthead_html(edition)
-        + f'<div class="lead-head">{_lead_head_html(lead)}</div>'
-        + f'<div class="main-split">{_lead_body_html(lead)}{_rail_html(edition)}</div>'
+        + _main_html(edition, lead, rail)
         + '<div class="deck-rule"></div>'
         + f'<div class="second-lead">{second_html}</div>'
         + rest_block
@@ -535,10 +591,39 @@ def _render_e2(edition: dict[str, Any], lead: dict[str, Any], subs: list[dict[st
     )
 
 
-def render_desktop_html(edition: dict[str, Any]) -> str:
-    """Render the `.paper` inner HTML for the desktop composite (auto/f1)."""
+def _render_e3(
+    edition: dict[str, Any], lead: dict[str, Any], subs: list[dict[str, Any]], rail: str = "s2"
+) -> str:
+    """Two shorter subs in a 2-up row (existing compelling/humour order
+    preserved), then the longest sub full width, after the row."""
+    long_story = max(subs, key=lambda a: a["words"])
+    shorter = [a for a in subs if a is not long_story]
+    row = "".join(_sub_card_html(a) for a in shorter)
+    long_html = _sub_card_html(long_story, "long")
+    return (
+        _masthead_html(edition)
+        + _main_html(edition, lead, rail)
+        + '<div class="deck-rule"></div>'
+        + f'<div class="subs">{row}</div>'
+        + '<div class="thin-rule"></div>'
+        + f'<div class="long-lead">{long_html}</div>'
+        + _appendix_html(edition)
+    )
+
+
+_RENDERERS = {"e1": _render_e1, "e2": _render_e2, "e3": _render_e3}
+
+
+def render_desktop_html(edition: dict[str, Any], rail: str = "s2") -> str:
+    """Render the `.paper` inner HTML for the desktop composite (auto/f1).
+
+    `rail` is "s2" (default — results + final standings beside the lead) or
+    "s1" (no rail — results as a full-width strip, standings only in the
+    appendix); see `webapp/report_layout_prototypes/elements.html`'s
+    `railVariants()`.
+    """
     lead = next(a for a in edition["articles"] if a["is_lead"])
     subs = [a for a in edition["articles"] if not a["is_lead"]]
     arrangement = choose_arrangement(edition)
-    renderer = _render_e2 if arrangement == "e2" else _render_e1
-    return renderer(edition, lead, subs)
+    renderer = _RENDERERS[arrangement]
+    return renderer(edition, lead, subs, rail)
