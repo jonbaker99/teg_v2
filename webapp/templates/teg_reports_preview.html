@@ -40,7 +40,7 @@
     </span>
     <span class="np-group">
         <span class="np-label">Standfirst</span>
-        {% for s in ['italic', 'roman', 'edge'] %}
+        {% for s in ['italic', 'roman', 'edge', 'contrast'] %}
         <a href="{{ make_url(sf=s) }}" class="{% if s == selected_sf %}active{% endif %}">{{ s }}</a>
         {% endfor %}
     </span>

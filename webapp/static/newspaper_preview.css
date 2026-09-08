@@ -19,6 +19,7 @@
   --font-display:'Fraunces',Georgia,'Times New Roman',serif;
   --font-body:'Source Serif 4',Georgia,'Times New Roman',serif;
   --font-mono:'IBM Plex Mono','Courier New',monospace;
+  --font-contrast:'Libre Franklin',Arial,sans-serif;
   margin:0; background:var(--paper); color:var(--ink); font-family:var(--font-body);
   background-image: radial-gradient(rgba(33,29,23,0.05) 0.55px, transparent 0.55px);
   background-size:3.4px 3.4px;
@@ -37,6 +38,7 @@
   --font-display:'Fraunces',Georgia,'Times New Roman',serif;
   --font-body:'Source Serif 4',Georgia,'Times New Roman',serif;
   --font-mono:'IBM Plex Mono','Courier New',monospace;
+  --font-contrast:'Libre Franklin',Arial,sans-serif;
 }
 .pal-b{
   --paper:#FBFAF8; --ink:#171A16; --ink-soft:#5D655B; --accent:#1F5B44; --accent2:#B4832B;
@@ -44,6 +46,7 @@
   --font-display:'Libre Franklin',Arial,sans-serif;
   --font-body:'Lora',Georgia,'Times New Roman',serif;
   --font-mono:'Libre Franklin',Arial,sans-serif;
+  --font-contrast:'Lora',Georgia,'Times New Roman',serif;
 }
 .pal-c{
   --paper:#F3EFE2; --ink:#1B2430; --ink-soft:#56606D; --accent:#B32A2A; --accent2:#1F5C3F;
@@ -51,6 +54,7 @@
   --font-display:'Playfair Display',Georgia,serif;
   --font-body:'Source Serif 4',Georgia,'Times New Roman',serif;
   --font-mono:'IBM Plex Mono','Courier New',monospace;
+  --font-contrast:'Libre Franklin',Arial,sans-serif;
 }
 .pal-d{
   --paper:#FAF9F6; --ink:#0E0E0C; --ink-soft:#514F49; --accent:#D3242C; --accent2:#F0BA1F;
@@ -58,6 +62,7 @@
   --font-display:'Anton','Arial Narrow',sans-serif;
   --font-body:'Libre Franklin',Arial,sans-serif;
   --font-mono:'IBM Plex Mono','Courier New',monospace;
+  --font-contrast:'Source Serif 4',Georgia,'Times New Roman',serif;
 }
 
 /* ==========================================================================
@@ -77,7 +82,30 @@
 .sf-edge .lead-standfirst,.sf-edge .sub-standfirst,.sf-edge .m-sf{
   font-style:normal; color:var(--ink-soft); padding-left:0.9rem; border-left:3px solid var(--accent);
 }
-.np-page h1,.np-page h2,.np-page h3,.np-page p,.np-page ul,.np-page table{ margin:0; padding:0; }
+/* Contrast: the standfirst switches to `--font-contrast` — the opposite
+ * type family from the headline's `--font-display` (a sans under a serif
+ * headline, a serif under a sans one; see each `.pal-*` block above), always
+ * upright. A sans reads bigger than a serif at the same px, so the sizes
+ * below are nudged down from the italic/roman/edge default so the standfirst
+ * doesn't out-weigh the headline; the three-class overrides for `.m-sf` beat
+ * `.idx-lead .m-sf`/`.article .m-sf` on specificity regardless of source
+ * order, so they can live in this switch block with the rest of `sf-*`. */
+.sf-contrast .lead-standfirst,.sf-contrast .sub-standfirst,.sf-contrast .m-sf{
+  font-family:var(--font-contrast); font-style:normal; font-weight:500; color:var(--ink-soft);
+  padding-left:0; border-left:none; letter-spacing:0.003em;
+}
+.sf-contrast .lead-standfirst{ font-size:0.92rem; }
+.sf-contrast .sub-standfirst{ font-size:0.79rem; }
+.sf-contrast .idx-lead .m-sf{ font-size:0.85rem; }
+.sf-contrast .article .m-sf{ font-size:0.83rem; }
+/* :where() contributes zero specificity, so this reset still beats UA
+ * defaults but loses to every single-class component rule below (0,1,0).
+ * The previous version repeated the selector list as plain `h1,h2,...`,
+ * which is specificity (0,1,1) — it silently beat every component rule
+ * on this page (`.r5-title` padding, `.lead-headline` margin-top, etc,
+ * see README.md's CSS-reset note) and had to be worked around per-rule
+ * instead of fixed once. Do not "simplify" this back to a bare selector. */
+.np-page :where(h1,h2,h3,p,ul,table){ margin:0; padding:0; }
 .np-page ul{ list-style:none; }
 .np-page table{ border-collapse:collapse; }
 .np-page :focus-visible{ outline:2.5px solid var(--accent); outline-offset:2px; }
@@ -139,27 +167,30 @@
 
   .rail{ align-self:start; }
   .r5{ border:1px solid var(--ink); }
-  .r5-title{ background:var(--ink); color:var(--paper); font-family:var(--font-mono); font-size:0.63rem;
-    font-weight:700; letter-spacing:0.16em; text-transform:uppercase; padding:0.38rem 0.75rem; }
-  /* `.np-page .r-list` (not bare `.r-list`) beats the `.np-page ul{padding:0}`
-   * reset above on specificity — bare `.r-list` used to lose that fight and
-   * compute to padding:0, which let `.r-lead`'s negative margin bleed the
-   * tinted highlight outside the box border. See README.md item 1. */
-  .np-page .r-list{ display:flex; flex-direction:column; padding:0.6rem 0.8rem 0.7rem; gap:0.55rem; }
-  .r-item{ display:flex; flex-direction:column; align-items:flex-start; gap:0.08rem; }
+  .r5-title{ background:var(--ink); color:var(--paper); font-family:var(--font-body); font-size:0.72rem;
+    font-weight:700; letter-spacing:0.12em; text-transform:uppercase; padding:0.38rem 0.75rem; }
+  /* Gap plus a hairline between rows (the "ruled scorecard" the box border
+   * already implies) — three results need to read as three entries, not one
+   * run-on list; see README.md item 2. */
+  .r-list{ display:flex; flex-direction:column; padding:0.6rem 0.8rem 0.7rem; gap:0.9rem; }
+  .r-item{ display:flex; flex-direction:column; align-items:flex-start; gap:0.1rem; }
+  .r-item + .r-item{ border-top:1px solid var(--rule); padding-top:0.75rem; }
   .r-vals{ display:flex; flex-direction:column; align-items:flex-start; gap:0.05rem; }
-  .r-runner{ font-family:var(--font-mono); font-size:0.63rem; letter-spacing:0.02em; color:var(--ink-soft); }
-  .r-label{ font-family:var(--font-mono); font-size:0.69rem; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink-soft); }
-  .r-value{ font-family:var(--font-mono); font-size:0.81rem; font-variant-numeric:tabular-nums; font-weight:600; }
+  .r-runner{ font-family:var(--font-body); font-size:0.71rem; letter-spacing:0.01em; color:var(--ink-soft); }
+  .r-label{ font-family:var(--font-body); font-size:0.76rem; letter-spacing:0.03em; text-transform:uppercase; color:var(--ink-soft); }
+  .r-value{ font-family:var(--font-body); font-size:0.9rem; font-variant-numeric:tabular-nums; font-weight:700; }
+  /* The text after the name (a short "(3rd Trophy)" or a long "— 169 pts, by
+   * 8 from John Patterson") de-emphasised so the name reads first — task 4. */
+  .r-qual{ font-weight:400; font-size:0.76rem; color:var(--ink-soft); }
   /* Scoped to .r5 (not bare `.r-lead`) — the R3 results strip (S1, below)
    * reuses `.r-lead` for its tinted cell but lays it out as a row, not this
    * negative-margin bleed-into-padding trick. */
   .r5 .r-lead{ padding:0.3rem 0.4rem; margin:0.05rem -0.4rem; background:var(--tint); }
   .r-lead .r-value{ color:var(--accent); font-weight:700; }
   .rail-standings{ margin-top:1.1rem; padding-top:1rem; border-top:1px solid var(--rule); }
-  .sb-lab{ font-family:var(--font-mono); font-size:0.62rem; font-weight:700; letter-spacing:0.12em;
+  .sb-lab{ font-family:var(--font-body); font-size:0.68rem; font-weight:700; letter-spacing:0.09em;
     text-transform:uppercase; color:var(--accent); }
-  .sb-row{ font-family:var(--font-mono); font-size:0.75rem; font-variant-numeric:tabular-nums; padding:0.18rem 0 0; }
+  .sb-row{ font-family:var(--font-body); font-size:0.82rem; font-variant-numeric:tabular-nums; padding:0.18rem 0 0; }
   .sb-lab + .sb-row{ margin-bottom:0.5rem; }
 
   /* S1 — full-width results strip in place of the rail (elements.html's
@@ -281,17 +312,16 @@
   .m-meta{ font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.09em; text-transform:uppercase; color:var(--ink-soft); }
 
   .m-r5{ border:1px solid var(--ink); margin:0.95rem var(--pad) 0; }
-  .m-r5-title{ background:var(--ink); color:var(--paper); font-family:var(--font-mono); font-size:0.58rem;
-    font-weight:700; letter-spacing:0.16em; text-transform:uppercase; padding:0.34rem 0.7rem; }
-  /* `.np-page .m-r-list`, not bare `.m-r-list` — same specificity fix as
-   * desktop `.r-list` above (see README.md item 1); the mobile box had the
-   * identical bleed bug. */
-  .np-page .m-r-list{ padding:0.6rem 0.8rem 0.7rem; display:flex; flex-direction:column; gap:0.5rem; }
+  .m-r5-title{ background:var(--ink); color:var(--paper); font-family:var(--font-body); font-size:0.67rem;
+    font-weight:700; letter-spacing:0.12em; text-transform:uppercase; padding:0.34rem 0.7rem; }
+  .m-r-list{ padding:0.6rem 0.8rem 0.7rem; display:flex; flex-direction:column; gap:0.75rem; }
   .m-r-item{ display:flex; justify-content:space-between; gap:0.7rem; align-items:baseline; }
-  .m-r-label{ font-family:var(--font-mono); font-size:0.62rem; letter-spacing:0.04em; text-transform:uppercase; color:var(--ink-soft); }
-  .m-r-value{ font-family:var(--font-mono); font-size:0.75rem; font-weight:600; font-variant-numeric:tabular-nums; text-align:right; }
+  .m-r-item + .m-r-item{ border-top:1px solid var(--rule); padding-top:0.6rem; }
+  .m-r-label{ font-family:var(--font-body); font-size:0.7rem; letter-spacing:0.02em; text-transform:uppercase; color:var(--ink-soft); }
+  .m-r-value{ font-family:var(--font-body); font-size:0.85rem; font-weight:700; font-variant-numeric:tabular-nums; text-align:right; }
+  .m-r-qual{ font-weight:400; font-size:0.72rem; color:var(--ink-soft); }
   .m-r-vals{ display:flex; flex-direction:column; align-items:flex-end; gap:0.05rem; }
-  .m-r-runner{ font-family:var(--font-mono); font-size:0.58rem; color:var(--ink-soft); text-align:right; }
+  .m-r-runner{ font-family:var(--font-body); font-size:0.65rem; color:var(--ink-soft); text-align:right; }
   .m-r-lead{ background:var(--tint); padding:0.26rem 0.35rem; margin:0 -0.35rem; }
   .m-r-lead .m-r-value{ color:var(--accent); font-weight:700; }
 

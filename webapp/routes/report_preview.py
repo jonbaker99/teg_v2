@@ -25,8 +25,11 @@ the CSS/template switch markup once choices are locked in):
     teg=<int>          TEG number; defaults to the most recent with an
                         edition (unchanged from before the switches).
     pal=a|b|c|d         Type & palette (elements.html .pal-a..d). Default a.
-    sf=italic|roman|edge  Standfirst treatment (elements.html H1/H2/H4).
-                        Default italic (today's look).
+    sf=italic|roman|edge|contrast  Standfirst treatment (elements.html
+                        H1/H2/H4, plus `contrast`: upright, in the palette's
+                        `--font-contrast` — the opposite family from the
+                        headline's `--font-display`). Default italic (today's
+                        look).
     rail=s1|s2          Standings rail: s2 = rail beside the lead (default,
                         today's look), s1 = no rail, results as a full-width
                         strip (elements.html railVariants() S1).
@@ -57,7 +60,7 @@ router = APIRouter()
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
 _VALID_PAL = {"a", "b", "c", "d"}
-_VALID_SF = {"italic", "roman", "edge"}
+_VALID_SF = {"italic", "roman", "edge", "contrast"}
 _VALID_RAIL = {"s1", "s2"}
 _DEFAULT_PAL, _DEFAULT_SF, _DEFAULT_RAIL = "a", "italic", "s2"
 

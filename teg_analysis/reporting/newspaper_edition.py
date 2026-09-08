@@ -294,6 +294,38 @@ def _parse_articles(
     return [lead] + sub_articles
 
 
+_DASH_QUALIFIER_RE = re.compile(r"\s([—–])\s")
+_TRAILING_PAREN_RE = re.compile(r"(\([^()]*\))\s*$")
+
+
+def split_value_qualifier(value: str) -> tuple[str, str]:
+    """Split an at-a-glance result value into (value_name, value_qual).
+
+    The value carries two shapes in real data: a short parenthetical
+    ("David Mullin (3rd Trophy)") and a long em-dash aside ("Alex Baker —
+    169 pts, by 8 from John Patterson"). Splits at whichever separator
+    occurs first in the string:
+
+    - an em-dash/en-dash surrounded by spaces, or
+    - the final parenthetical, when it runs to the end of the string.
+      `[^()]*` (not `.*`) keeps this to the LAST parenthetical: greedy
+      `.*` matched from an earlier "(" all the way to the closing ")",
+      so "Player (Jr) wins (1st Trophy)" split at "(Jr)" and swallowed
+      "wins" into the qualifier. Parentheses that are not at the end are
+      left alone either way.
+
+    Neither present -> value_qual is "" and value_name is the whole string.
+    `value_qual` keeps its separator (the dash, or the parens) verbatim.
+    """
+    dash_m = _DASH_QUALIFIER_RE.search(value)
+    paren_m = _TRAILING_PAREN_RE.search(value)
+    starts = [m.start(1) for m in (dash_m, paren_m) if m]
+    if not starts:
+        return value, ""
+    split_at = min(starts)
+    return value[:split_at].rstrip(), value[split_at:].rstrip()
+
+
 _STANDING_ENTRY_RE = re.compile(r"([A-Z]{2})\s+([+-]?\d+)")
 
 
@@ -332,6 +364,14 @@ def _add_runners_up(results: list[dict[str, Any]], standings: list[dict[str, Any
     }
     for r in results:
         r["runner_up"] = by_label.get(r["label"], "")
+
+
+def _add_value_split(results: list[dict[str, Any]]) -> None:
+    """Add `value_name`/`value_qual` (see `split_value_qualifier`) to each
+    at-a-glance line, leaving the original `value` untouched — `editions.json`
+    is also read by the frozen prototype HTML files via `r.value`."""
+    for r in results:
+        r["value_name"], r["value_qual"] = split_value_qualifier(r["value"])
 
 
 def _parse_standings(appendix_md: str) -> list[dict[str, Any]]:
@@ -374,6 +414,7 @@ def build_edition(teg: int) -> dict[str, Any]:
     results = _parse_results(md)
     standings = _parse_standings(appendix_md)
     _add_runners_up(results, standings)
+    _add_value_split(results)
 
     return {
         "teg": teg,
@@ -449,9 +490,10 @@ def _result_items_html(edition: dict[str, Any]) -> str:
     for r in edition["results"]:
         cls = " r-lead" if r["lead"] else ""
         runner = f'<span class="r-runner">{_esc(r["runner_up"])}</span>' if r.get("runner_up") else ""
+        qual = f' <span class="r-qual">{_esc(r["value_qual"])}</span>' if r.get("value_qual") else ""
         items.append(
             f'<li class="r-item{cls}"><span class="r-label">{_esc(r["label"])}</span>'
-            f'<span class="r-vals"><span class="r-value">{_esc(r["value"])}</span>{runner}</span></li>'
+            f'<span class="r-vals"><span class="r-value">{_esc(r["value_name"])}{qual}</span>{runner}</span></li>'
         )
     return "".join(items)
 

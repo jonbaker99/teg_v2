@@ -30,7 +30,7 @@ Chosen one at a time against rendered specimens in `elements.html`:
 |---|---|
 | Type & palette | **T1** broadsheet — Fraunces / Source Serif 4, cream paper, oxblood accent |
 | Masthead | **M1** wordmark left, dateline right, thick/thin rule under |
-| Results panel | **R5** ruled scorecard, mono tabular values, with the runner-up under each line |
+| Results panel | **R5** ruled scorecard, tabular values, with the runner-up under each line. *Mono overridden* — the preview page sets the rail in the body serif with `tabular-nums`, on request (2026-09-08); the rest of R5 stands. |
 | Lead headline | **H1** kicker over, italic standfirst under |
 | Drop cap | **D2** three-line Fraunces initial |
 | Lead body | **B2** two columns, hairline rule |
@@ -124,7 +124,10 @@ matters to a reader.
    the preview is confirmed right. The preview page also currently carries three **provisional**
    switches (`?pal=`, `?sf=`, `?rail=`, alongside the existing `?teg=`) for comparing the type &
    palette, standfirst and standings-rail options directly against real content, server-rendered
-   and validated (unrecognised values fall back to the shipped default). This is throwaway
+   and validated (unrecognised values fall back to the shipped default). `?sf=` carries four
+   options: `italic` (H1, the default), `roman` (H2), `edge` (H4) and `contrast` — upright in
+   the palette's `--font-contrast`, the opposite family from the headline's `--font-display`
+   (a sans under a serif headline and vice versa), so it varies with `?pal=`. This is throwaway
    scaffolding for layout review, not part of the design — remove the switcher markup in
    `teg_reports_preview.html`, its CSS in `newspaper_preview.css`, and the query-param handling in
    `report_preview.py` once the choices are locked in.
@@ -148,6 +151,23 @@ matters to a reader.
    truncating to the first fragment. The merge step itself
    (`scripts/storyline_interweave_experiment.py`) still emits a `' / '`-joined `subject` — untouched,
    since interweaving is off by default and this is low priority until it's turned back on.
+
+## The CSS reset trap (fixed 2026-09-08)
+
+`newspaper_preview.css` resets margins and padding on the bare elements the renderers emit. It was
+written as `.np-page h1,.np-page h2,...{ margin:0; padding:0 }` — specificity **(0,1,1)**, which
+silently beat every single-class component rule **(0,1,0)** on the page. Eight settled values were
+computing to `0` without anyone noticing: `.r5-title` padding (the "AT A GLANCE" bar sat flush against
+the box edge), `.sb-row` padding, the `margin-top` on `.lead-headline`, `.lead-standfirst`,
+`.sub-headline` and `.sub-standfirst`, and the `margin-bottom` on `.apx-h` and `.recs-cat`. The
+at-a-glance highlight bleeding outside its box was the same bug via `.r-list`.
+
+The first attempt fixed it per-rule, by rewriting the losers as `.np-page .r-list` to out-specify the
+reset. That treats the symptom and leaves the trap armed for the next rule someone adds. The reset is
+now wrapped in `:where()`, which contributes **zero** specificity — it still beats UA defaults but
+loses to every component rule, so the per-rule workarounds could be reverted.
+
+**Do not "simplify" it back to a bare selector list.**
 
 ## Decisions worth not relitigating
 
