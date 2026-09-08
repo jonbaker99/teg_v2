@@ -72,7 +72,7 @@ A parallel set, written only for **TEGs 14, 16 and 18** by
 | File | What it is | Made by | Read by |
 |---|---|---|---|
 | `teg_N_storyline_plan.json` | **The storyline plan.** 3 mandatory anatomy storylines (trophy / jacket / spoon) + 0–3 discovered, each with `subject`, `chosen_headline`, `standfirst`, `beat_ids`, `compelling_score`, `humour_score`. A leaner sibling of `StoryPlan` — no `rounds[]`, no `players[]` | `build_storyline_plan()` (LLM) | the draft stage; `build_edition` |
-| `teg_N_report_storylinedraft.md` | **One plain section per storyline.** Fact-isolated, explicitly told not to be funny or stylish. **Start any voice or tone A/B from this file**, never from a styled report | one LLM call per storyline | the voice pass |
+| `teg_N_report_storylinedraft.md` | **One plain section per storyline.** Fact-isolated, explicitly told not to be funny or stylish. **Start any voice or tone A/B from this file**, never from a styled report — `--from voice` does exactly that, reusing this file and re-running the voice pass alone | one LLM call per storyline | the voice pass |
 | `teg_N_report_storylinefirst.md` | The same draft in the house voice (`WRITER_VOICE`, via `restyle_voice`). D3-verified, with `new_findings` isolating faults this pass introduced | `restyle_voice()` (LLM) | the styler |
 | `teg_N_report_storylinefirst_styled.md` | **What the newspaper edition parses** — the voiced report plus standings, records and CSS hooks | `style_text()` (code, free) | `newspaper_edition.build_edition` |
 
