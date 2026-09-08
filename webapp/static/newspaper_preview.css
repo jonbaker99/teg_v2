@@ -9,31 +9,120 @@
  * width instead — the breakpoint mobile.html itself uses for "this is a real
  * phone, drop the simulator frame" (`max-width:700px`).
  */
-:root{
-  --paper:#F6F3EA; --ink:#211D17; --ink-soft:#66604F; --accent:#7A2420; --rule:#C9C2AC; --tint:#EDE8D9;
+.np-page *{ box-sizing:border-box; }
+.np-page{
+  /* Palette/type variables live on the page wrapper (not :root) so a `.pal-*`
+   * class on the same element can override them — see PALETTE SWITCH below.
+   * These are T1 Broadsheet (elements.html .pal-a), the shipped default. */
+  --paper:#F6F3EA; --ink:#211D17; --ink-soft:#66604F; --accent:#7A2420; --accent2:#7A2420;
+  --rule:#C9C2AC; --tint:#EDE8D9;
   --font-display:'Fraunces',Georgia,'Times New Roman',serif;
   --font-body:'Source Serif 4',Georgia,'Times New Roman',serif;
   --font-mono:'IBM Plex Mono','Courier New',monospace;
-}
-.np-page *{ box-sizing:border-box; }
-.np-page{
+  --font-contrast:'Libre Franklin',Arial,sans-serif;
   margin:0; background:var(--paper); color:var(--ink); font-family:var(--font-body);
   background-image: radial-gradient(rgba(33,29,23,0.05) 0.55px, transparent 0.55px);
   background-size:3.4px 3.4px;
 }
-.np-page h1,.np-page h2,.np-page h3,.np-page p,.np-page ul,.np-page table{ margin:0; padding:0; }
+
+/* ==========================================================================
+   PALETTE SWITCH (provisional — see webapp/report_layout_prototypes/README.md
+   "Still to do"). Values copied verbatim from elements.html's .pal-a/b/c/d.
+   `.pal-a` restates the default so the switch is uniform; remove this block
+   and the `?pal=` param handling in report_preview.py once a palette is
+   chosen for good.
+   ========================================================================= */
+.pal-a{
+  --paper:#F6F3EA; --ink:#211D17; --ink-soft:#66604F; --accent:#7A2420; --accent2:#7A2420;
+  --rule:#C9C2AC; --tint:#EDE8D9;
+  --font-display:'Fraunces',Georgia,'Times New Roman',serif;
+  --font-body:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --font-mono:'IBM Plex Mono','Courier New',monospace;
+  --font-contrast:'Libre Franklin',Arial,sans-serif;
+}
+.pal-b{
+  --paper:#FBFAF8; --ink:#171A16; --ink-soft:#5D655B; --accent:#1F5B44; --accent2:#B4832B;
+  --rule:#E2E1DA; --tint:#F1F0EA;
+  --font-display:'Libre Franklin',Arial,sans-serif;
+  --font-body:'Lora',Georgia,'Times New Roman',serif;
+  --font-mono:'Libre Franklin',Arial,sans-serif;
+  --font-contrast:'Lora',Georgia,'Times New Roman',serif;
+}
+.pal-c{
+  --paper:#F3EFE2; --ink:#1B2430; --ink-soft:#56606D; --accent:#B32A2A; --accent2:#1F5C3F;
+  --rule:#CFC7AE; --tint:#EAE3CC;
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --font-mono:'IBM Plex Mono','Courier New',monospace;
+  --font-contrast:'Libre Franklin',Arial,sans-serif;
+}
+.pal-d{
+  --paper:#FAF9F6; --ink:#0E0E0C; --ink-soft:#514F49; --accent:#D3242C; --accent2:#F0BA1F;
+  --rule:#D8D5CC; --tint:#F0EEE7;
+  --font-display:'Anton','Arial Narrow',sans-serif;
+  --font-body:'Libre Franklin',Arial,sans-serif;
+  --font-mono:'IBM Plex Mono','Courier New',monospace;
+  --font-contrast:'Source Serif 4',Georgia,'Times New Roman',serif;
+}
+
+/* ==========================================================================
+   STANDFIRST SWITCH (provisional — see README.md "Still to do"). One class on
+   the page wrapper cascades to every standfirst. Font-size/margin stay on the
+   base .lead-standfirst/.sub-standfirst/.m-sf rules below; only style/colour/
+   edge vary here, from elements.html's H1 (italic), H2 (roman) and H4 (edge).
+   `sf-italic` reproduces today's look exactly. Remove alongside the `?sf=`
+   handling in report_preview.py once a treatment is chosen.
+   ========================================================================= */
+.sf-italic .lead-standfirst,.sf-italic .sub-standfirst,.sf-italic .m-sf{
+  font-style:italic; color:var(--ink-soft); padding-left:0; border-left:none;
+}
+.sf-roman .lead-standfirst,.sf-roman .sub-standfirst,.sf-roman .m-sf{
+  font-style:normal; color:var(--ink-soft); padding-left:0; border-left:none;
+}
+.sf-edge .lead-standfirst,.sf-edge .sub-standfirst,.sf-edge .m-sf{
+  font-style:normal; color:var(--ink-soft); padding-left:0.9rem; border-left:3px solid var(--accent);
+}
+/* Contrast: the standfirst switches to `--font-contrast` — the opposite
+ * type family from the headline's `--font-display` (a sans under a serif
+ * headline, a serif under a sans one; see each `.pal-*` block above), always
+ * upright. A sans reads bigger than a serif at the same px, so the sizes
+ * below are nudged down from the italic/roman/edge default so the standfirst
+ * doesn't out-weigh the headline; the three-class overrides for `.m-sf` beat
+ * `.idx-lead .m-sf`/`.article .m-sf` on specificity regardless of source
+ * order, so they can live in this switch block with the rest of `sf-*`. */
+.sf-contrast .lead-standfirst,.sf-contrast .sub-standfirst,.sf-contrast .m-sf{
+  font-family:var(--font-contrast); font-style:normal; font-weight:500; color:var(--ink-soft);
+  padding-left:0; border-left:none; letter-spacing:0.003em;
+}
+.sf-contrast .lead-standfirst{ font-size:0.92rem; }
+.sf-contrast .sub-standfirst{ font-size:0.79rem; }
+.sf-contrast .idx-lead .m-sf{ font-size:0.85rem; }
+.sf-contrast .article .m-sf{ font-size:0.83rem; }
+/* :where() contributes zero specificity, so this reset still beats UA
+ * defaults but loses to every single-class component rule below (0,1,0).
+ * The previous version repeated the selector list as plain `h1,h2,...`,
+ * which is specificity (0,1,1) — it silently beat every component rule
+ * on this page (`.r5-title` padding, `.lead-headline` margin-top, etc,
+ * see README.md's CSS-reset note) and had to be worked around per-rule
+ * instead of fixed once. Do not "simplify" this back to a bare selector. */
+.np-page :where(h1,h2,h3,p,ul,table){ margin:0; padding:0; }
 .np-page ul{ list-style:none; }
 .np-page table{ border-collapse:collapse; }
 .np-page :focus-visible{ outline:2.5px solid var(--accent); outline-offset:2px; }
 
+/* Provisional scaffolding for comparing presets during layout review — not
+ * part of the design. Kept as one block so it is easy to delete outright
+ * (together with the query-param handling in report_preview.py and the
+ * `make_url`/switch markup in teg_reports_preview.html) once choices settle. */
 .np-switcher{
-  display:flex; align-items:center; gap:0.9rem; padding:0.6rem 1rem;
+  display:flex; flex-wrap:wrap; align-items:center; gap:0.5rem 1.2rem; padding:0.6rem 1rem;
   background:#F4F3EF; border-bottom:1px solid #D8D6CE; font-family:var(--font-mono);
   font-size:0.72rem; text-transform:uppercase; letter-spacing:0.06em;
 }
+.np-switcher .np-group{ display:flex; align-items:center; gap:0.35rem; }
 .np-switcher a{ color:var(--ink-soft); text-decoration:none; padding:0.2rem 0.5rem; border-radius:4px; }
 .np-switcher a.active{ background:var(--accent); color:#F4F3EF; }
-.np-switcher .np-label{ color:var(--ink-soft); opacity:0.7; }
+.np-switcher .np-label{ color:var(--ink-soft); opacity:0.7; margin-right:0.1rem; }
 
 /* ==========================================================================
    DESKTOP — composite.html, arrangements E1/E2 only, fill F1 (nothing extra
@@ -57,16 +146,16 @@
   .masthead{ padding:1.5rem var(--pad) 0; }
   .mh-row{ display:flex; align-items:baseline; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
   .wordmark{ font-family:var(--font-display); font-weight:600; font-size:1.6rem; letter-spacing:0.02em; }
-  .dateline{ font-family:var(--font-mono); font-size:0.73rem; letter-spacing:0.09em; text-transform:uppercase;
-    color:var(--ink-soft); white-space:nowrap; }
+  .dateline{ font-family:var(--font-body); font-weight:500; font-size:0.73rem; letter-spacing:0.07em;
+    text-transform:uppercase; color:var(--ink-soft); white-space:nowrap; }
   .mh-rule{ border-top:3px solid var(--ink); border-bottom:1px solid var(--ink); height:5px; margin-top:0.85rem; }
 
   .kicker{ font-family:var(--font-mono); font-weight:700; font-size:0.71rem; letter-spacing:0.13em;
     text-transform:uppercase; color:var(--accent); }
   .lead-headline{ font-family:var(--font-display); font-weight:700; line-height:1.04; color:var(--ink);
     text-wrap:balance; font-size:clamp(2.05rem,4vw,3rem); margin-top:0.45rem; }
-  .lead-standfirst{ font-family:var(--font-body); font-style:italic; font-size:1.02rem; line-height:1.42;
-    color:var(--ink-soft); margin-top:0.6rem; text-wrap:balance; }
+  .lead-standfirst{ font-family:var(--font-body); font-size:1.02rem; line-height:1.42;
+    margin-top:0.6rem; text-wrap:balance; }
 
   .lead-body{ margin-top:1.15rem; columns:2; column-gap:2.1rem; column-rule:1px solid var(--rule); }
   .lead-body p{ font-family:var(--font-body); font-size:0.98rem; line-height:1.56; color:var(--ink); }
@@ -78,21 +167,42 @@
 
   .rail{ align-self:start; }
   .r5{ border:1px solid var(--ink); }
-  .r5-title{ background:var(--ink); color:var(--paper); font-family:var(--font-mono); font-size:0.63rem;
-    font-weight:700; letter-spacing:0.16em; text-transform:uppercase; padding:0.38rem 0.75rem; }
-  .r-list{ display:flex; flex-direction:column; padding:0.55rem 0.75rem 0.65rem; gap:0.3rem; }
-  .r-item{ display:flex; flex-direction:column; align-items:flex-start; gap:0.08rem; }
+  .r5-title{ background:var(--ink); color:var(--paper); font-family:var(--font-body); font-size:0.72rem;
+    font-weight:700; letter-spacing:0.12em; text-transform:uppercase; padding:0.38rem 0.75rem; }
+  /* Gap plus a hairline between rows (the "ruled scorecard" the box border
+   * already implies) — three results need to read as three entries, not one
+   * run-on list; see README.md item 2. */
+  .r-list{ display:flex; flex-direction:column; padding:0.6rem 0.8rem 0.7rem; gap:0.9rem; }
+  .r-item{ display:flex; flex-direction:column; align-items:flex-start; gap:0.1rem; }
+  .r-item + .r-item{ border-top:1px solid var(--rule); padding-top:0.75rem; }
   .r-vals{ display:flex; flex-direction:column; align-items:flex-start; gap:0.05rem; }
-  .r-runner{ font-family:var(--font-mono); font-size:0.63rem; letter-spacing:0.02em; color:var(--ink-soft); }
-  .r-label{ font-family:var(--font-mono); font-size:0.69rem; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink-soft); }
-  .r-value{ font-family:var(--font-mono); font-size:0.81rem; font-variant-numeric:tabular-nums; font-weight:600; }
-  .r-lead{ padding:0.3rem 0.4rem; margin:0.05rem -0.4rem; background:var(--tint); }
+  .r-runner{ font-family:var(--font-body); font-size:0.71rem; letter-spacing:0.01em; color:var(--ink-soft); }
+  .r-label{ font-family:var(--font-body); font-size:0.76rem; letter-spacing:0.03em; text-transform:uppercase; color:var(--ink-soft); }
+  .r-value{ font-family:var(--font-body); font-size:0.9rem; font-variant-numeric:tabular-nums; font-weight:700; }
+  /* The text after the name (a short "(3rd Trophy)" or a long "— 169 pts, by
+   * 8 from John Patterson") de-emphasised so the name reads first — task 4. */
+  .r-qual{ font-weight:400; font-size:0.76rem; color:var(--ink-soft); }
+  /* The trophy row carries no shading in either rail variant (2026-09-08) —
+   * the accent value below is the only emphasis it gets. `.r5 .r-lead` used to
+   * set padding and a negative margin purely so its tint bled into the list
+   * padding; with the tint gone those would only push the row out of line with
+   * its siblings, so the rule went with it. */
   .r-lead .r-value{ color:var(--accent); font-weight:700; }
   .rail-standings{ margin-top:1.1rem; padding-top:1rem; border-top:1px solid var(--rule); }
-  .sb-lab{ font-family:var(--font-mono); font-size:0.62rem; font-weight:700; letter-spacing:0.12em;
+  .sb-lab{ font-family:var(--font-body); font-size:0.68rem; font-weight:700; letter-spacing:0.09em;
     text-transform:uppercase; color:var(--accent); }
-  .sb-row{ font-family:var(--font-mono); font-size:0.75rem; font-variant-numeric:tabular-nums; padding:0.18rem 0 0; }
+  .sb-row{ font-family:var(--font-body); font-size:0.82rem; font-variant-numeric:tabular-nums; padding:0.18rem 0 0; }
   .sb-lab + .sb-row{ margin-bottom:0.5rem; }
+
+  /* S1 — full-width results strip in place of the rail (elements.html's
+   * `.r3`: "ruled strip — full width, three cells"; its winner tint was
+   * dropped here, as in S2). */
+  .r3{ border-top:2px solid var(--ink); border-bottom:1px solid var(--ink); margin:1.15rem var(--pad) 0; }
+  .r3 .r-list{ flex-direction:row; padding:0; gap:0; }
+  .r3 .r-item{ flex:1; padding:0.8rem 1.1rem; border-right:1px solid var(--rule); }
+  .r3 .r-item:last-child{ border-right:none; }
+  .r3 .r-lead .r-value{ font-size:1.08rem; }
+  .r3 .r-value{ font-size:0.98rem; }
 
   .subs{ display:grid; }
   .sub-card{ padding:0 1.55rem; border-left:1px solid var(--rule); }
@@ -100,8 +210,7 @@
   .sub-card:last-child{ padding-right:0; }
   .sub-headline{ font-family:var(--font-display); font-weight:700; font-size:1.24rem; line-height:1.15;
     color:var(--ink); margin-top:0.35rem; text-wrap:balance; }
-  .sub-standfirst{ font-family:var(--font-body); font-style:italic; font-size:0.85rem; line-height:1.4;
-    color:var(--ink-soft); margin-top:0.4rem; }
+  .sub-standfirst{ font-family:var(--font-body); font-size:0.85rem; line-height:1.4; margin-top:0.4rem; }
   .sub-body{ margin-top:0.7rem; }
   .sub-body p{ font-family:var(--font-body); font-size:0.895rem; line-height:1.53; color:var(--ink); }
   .sub-body p + p{ margin-top:0.75em; }
@@ -149,6 +258,32 @@
   .arr-e2 .thin-rule{ margin:1.7rem var(--pad) 0; border-top:1px solid var(--rule); }
   .arr-e2 .subs{ grid-template-columns:repeat(3,1fr); padding:1.4rem var(--pad) 0; }
   .arr-e2 .subs .sub-headline{ font-size:1.15rem; }
+
+  /* E3 — long sub-story full width, after a 2-up row: fires when one
+     sub-article is materially longer than the other two (choose_arrangement,
+     LONG_STORY_RATIO). The two shorter subs sit side by side; the long one
+     runs full width below, styled like E2's promoted second lead. */
+  .arr-e3 .lead-head{ padding:1.35rem var(--pad) 0; }
+  .arr-e3 .main-split{ display:grid; grid-template-columns:2fr 1fr; gap:2.2rem; padding:1.15rem var(--pad) 0; }
+  .arr-e3 .deck-rule{ margin:1.9rem var(--pad) 0; border-top:3px solid var(--ink); }
+  .arr-e3 .subs{ grid-template-columns:repeat(2,1fr); padding:1.5rem var(--pad) 0; }
+  .arr-e3 .thin-rule{ margin:1.7rem var(--pad) 0; border-top:1px solid var(--rule); }
+  .arr-e3 .long-lead{ padding:1.5rem var(--pad) 0; }
+  .arr-e3 .sub-card.long{ padding:0; border-left:none; }
+  /* Wider measure than E2's second lead (26ch): E3's long story is
+     systematically the merged cross-cut section — being two storylines is
+     what makes it long enough to trip LONG_STORY_RATIO — so its `&`-joined
+     headline runs 98-117 chars, against E2's single-storyline length. At
+     26ch that wrapped to 4 lines on TEG 16 and 5 on TEG 18. */
+  .arr-e3 .sub-card.long .sub-headline{ font-size:1.75rem; max-width:42ch; }
+  .arr-e3 .sub-card.long .sub-standfirst{ font-size:0.95rem; max-width:72ch; }
+  .arr-e3 .sub-card.long .sub-body{ columns:3; column-gap:1.9rem; column-rule:1px solid var(--rule); }
+
+  /* S1 — no rail: results become the full-width `.r3` strip above (in
+     _main_html) and the lead body needs a third column so the measure stays
+     readable at the full 1180px page width instead of a 2-column rail width. */
+  .rail-s1 .main-split{ grid-template-columns:1fr; gap:0; }
+  .rail-s1 .lead-body{ columns:3; column-gap:1.9rem; }
 }
 
 /* ==========================================================================
@@ -165,26 +300,29 @@
   .m-masthead{ padding:calc(0.95rem + env(safe-area-inset-top)) var(--pad) 0; }
   .m-mh-row{ display:flex; align-items:baseline; justify-content:space-between; gap:0.6rem; }
   .m-wordmark{ font-family:var(--font-display); font-weight:600; font-size:1.18rem; letter-spacing:0.02em; }
-  .m-dateline{ font-family:var(--font-mono); font-size:0.58rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-soft); }
+  .m-dateline{ font-family:var(--font-body); font-weight:500; font-size:0.58rem; letter-spacing:0.06em;
+    text-transform:uppercase; color:var(--ink-soft); }
   .m-mh-rule{ border-top:3px solid var(--ink); border-bottom:1px solid var(--ink); height:4px; margin-top:0.6rem; }
 
   .kicker{ font-family:var(--font-mono); font-weight:700; font-size:0.63rem; letter-spacing:0.13em;
     text-transform:uppercase; color:var(--accent); }
   .m-hl{ font-family:var(--font-display); font-weight:700; line-height:1.09; color:var(--ink); text-wrap:balance; }
-  .m-sf{ font-family:var(--font-body); font-style:italic; color:var(--ink-soft); line-height:1.4; }
+  .m-sf{ font-family:var(--font-body); line-height:1.4; }
   .m-body p{ font-family:var(--font-body); font-size:1rem; line-height:1.6; color:var(--ink); }
   .m-body p + p{ margin-top:0.8em; }
   .m-meta{ font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.09em; text-transform:uppercase; color:var(--ink-soft); }
 
   .m-r5{ border:1px solid var(--ink); margin:0.95rem var(--pad) 0; }
-  .m-r5-title{ background:var(--ink); color:var(--paper); font-family:var(--font-mono); font-size:0.58rem;
-    font-weight:700; letter-spacing:0.16em; text-transform:uppercase; padding:0.34rem 0.7rem; }
-  .m-r-list{ padding:0.5rem 0.7rem 0.6rem; display:flex; flex-direction:column; gap:0.28rem; }
+  .m-r5-title{ background:var(--ink); color:var(--paper); font-family:var(--font-body); font-size:0.67rem;
+    font-weight:700; letter-spacing:0.12em; text-transform:uppercase; padding:0.34rem 0.7rem; }
+  .m-r-list{ padding:0.6rem 0.8rem 0.7rem; display:flex; flex-direction:column; gap:0.75rem; }
   .m-r-item{ display:flex; justify-content:space-between; gap:0.7rem; align-items:baseline; }
-  .m-r-label{ font-family:var(--font-mono); font-size:0.62rem; letter-spacing:0.04em; text-transform:uppercase; color:var(--ink-soft); }
-  .m-r-value{ font-family:var(--font-mono); font-size:0.75rem; font-weight:600; font-variant-numeric:tabular-nums; text-align:right; }
+  .m-r-item + .m-r-item{ border-top:1px solid var(--rule); padding-top:0.6rem; }
+  .m-r-label{ font-family:var(--font-body); font-size:0.7rem; letter-spacing:0.02em; text-transform:uppercase; color:var(--ink-soft); }
+  .m-r-value{ font-family:var(--font-body); font-size:0.85rem; font-weight:700; font-variant-numeric:tabular-nums; text-align:right; }
+  .m-r-qual{ font-weight:400; font-size:0.72rem; color:var(--ink-soft); }
   .m-r-vals{ display:flex; flex-direction:column; align-items:flex-end; gap:0.05rem; }
-  .m-r-runner{ font-family:var(--font-mono); font-size:0.58rem; color:var(--ink-soft); text-align:right; }
+  .m-r-runner{ font-family:var(--font-body); font-size:0.65rem; color:var(--ink-soft); text-align:right; }
   .m-r-lead{ background:var(--tint); padding:0.26rem 0.35rem; margin:0 -0.35rem; }
   .m-r-lead .m-r-value{ color:var(--accent); font-weight:700; }
 
