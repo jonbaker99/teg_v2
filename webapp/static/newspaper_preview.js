@@ -50,9 +50,10 @@
   }
   function resultsHtml() {
     var items = edition.results.map(function (r) {
+      var qual = r.value_qual ? ' <span class="m-r-qual">' + esc(r.value_qual) + "</span>" : "";
       return '<li class="m-r-item' + (r.lead ? " m-r-lead" : "") + '">' +
         '<span class="m-r-label">' + esc(r.label) + "</span>" +
-        '<span class="m-r-vals"><span class="m-r-value">' + esc(r.value) + "</span>" +
+        '<span class="m-r-vals"><span class="m-r-value">' + esc(r.value_name) + qual + "</span>" +
         (r.runner_up ? '<span class="m-r-runner">' + esc(r.runner_up) + "</span>" : "") +
         "</span></li>";
     }).join("");
