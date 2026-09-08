@@ -160,7 +160,9 @@ silently beat every single-class component rule **(0,1,0)** on the page. Eight s
 computing to `0` without anyone noticing: `.r5-title` padding (the "AT A GLANCE" bar sat flush against
 the box edge), `.sb-row` padding, the `margin-top` on `.lead-headline`, `.lead-standfirst`,
 `.sub-headline` and `.sub-standfirst`, and the `margin-bottom` on `.apx-h` and `.recs-cat`. The
-at-a-glance highlight bleeding outside its box was the same bug via `.r-list`.
+at-a-glance highlight bleeding outside its box was the same bug via `.r-list` (that tinted
+highlight has since been removed from both rail variants, so only the accent-coloured value
+marks the trophy row — the bug record stands, the highlight does not).
 
 The first attempt fixed it per-rule, by rewriting the losers as `.np-page .r-list` to out-specify the
 reset. That treats the symptom and leaves the trap armed for the next rule someone adds. The reset is

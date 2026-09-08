@@ -182,10 +182,11 @@
   /* The text after the name (a short "(3rd Trophy)" or a long "— 169 pts, by
    * 8 from John Patterson") de-emphasised so the name reads first — task 4. */
   .r-qual{ font-weight:400; font-size:0.76rem; color:var(--ink-soft); }
-  /* Scoped to .r5 (not bare `.r-lead`) — the R3 results strip (S1, below)
-   * reuses `.r-lead` for its tinted cell but lays it out as a row, not this
-   * negative-margin bleed-into-padding trick. */
-  .r5 .r-lead{ padding:0.3rem 0.4rem; margin:0.05rem -0.4rem; background:var(--tint); }
+  /* The trophy row carries no shading in either rail variant (2026-09-08) —
+   * the accent value below is the only emphasis it gets. `.r5 .r-lead` used to
+   * set padding and a negative margin purely so its tint bled into the list
+   * padding; with the tint gone those would only push the row out of line with
+   * its siblings, so the rule went with it. */
   .r-lead .r-value{ color:var(--accent); font-weight:700; }
   .rail-standings{ margin-top:1.1rem; padding-top:1rem; border-top:1px solid var(--rule); }
   .sb-lab{ font-family:var(--font-body); font-size:0.68rem; font-weight:700; letter-spacing:0.09em;
@@ -194,12 +195,12 @@
   .sb-lab + .sb-row{ margin-bottom:0.5rem; }
 
   /* S1 — full-width results strip in place of the rail (elements.html's
-   * `.r3`: "ruled strip — full width, three cells, winner tinted"). */
+   * `.r3`: "ruled strip — full width, three cells"; its winner tint was
+   * dropped here, as in S2). */
   .r3{ border-top:2px solid var(--ink); border-bottom:1px solid var(--ink); margin:1.15rem var(--pad) 0; }
   .r3 .r-list{ flex-direction:row; padding:0; gap:0; }
   .r3 .r-item{ flex:1; padding:0.8rem 1.1rem; border-right:1px solid var(--rule); }
   .r3 .r-item:last-child{ border-right:none; }
-  .r3 .r-lead{ background:var(--tint); }
   .r3 .r-lead .r-value{ font-size:1.08rem; }
   .r3 .r-value{ font-size:0.98rem; }
 
