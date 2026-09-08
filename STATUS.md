@@ -2,7 +2,7 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-06 (newspaper report layout wired into the site as a preview page; earlier content below current as at 2026-07-12)
+**Last updated:** 2026-09-04 (newspaper report-layout prototype added; reporting docs reconciliation and report-quality rework logged below; earlier content current as at 2026-07-12)
 
 ## Where things stand
 
@@ -80,27 +80,11 @@ the folder.
 
 All three tournaments (14, 16, 18) render in every prototype; TEG 18 joined once the
 storyline-first pipeline merged. `scripts/inline_editions.py` pushes a regenerated `editions.json`
-back into the pages. Findings for the pipeline (the story plan needs `headline`/`standfirst`
+back into the pages. Awaiting a pick on composition and mobile pattern, then wiring into
+`routes/reports.py`. Findings for the pipeline (the story plan needs `headline`/`standfirst`
 fields — `subject` is neither) and what remains:
 `webapp/report_layout_prototypes/README.md`, which the trial's two working docs were folded into
-once the design was settled.
-
-### 2026-09-06 — Newspaper layout wired in as a preview page
-
-`/teg-reports-preview` (`webapp/routes/report_preview.py`) renders the settled design for real
-data — not linked from the nav, `/teg-reports` untouched. Desktop renders server-side (a Python
-port of `composite.html`'s JS, `teg_analysis/reporting/newspaper_edition.py::render_desktop_html`);
-mobile pattern A renders client-side (`webapp/static/newspaper_preview.js`, ported from
-`mobile.html`'s pattern A — hash routing, Back gesture, cold deep-links, scroll restore, focus
-management), switched by a CSS breakpoint. The parser (`build_edition`) moved out of
-`scripts/build_newspaper_edition.py` into `teg_analysis/reporting/newspaper_edition.py` — UI-agnostic,
-so the webapp route can import it without reaching into `scripts/`; the CLI script is now a thin
-wrapper. Only TEG 14/16/18 have storyline-first artefacts, so those are the only editions the
-preview can render; other TEG numbers fall back to the newest available. Verified in a real
-browser at 390×844 and 1280×900. Remaining before switching `/teg-reports` over: real
-`headline`/`standfirst` fields on `StorylinePlan` (landing on a parallel branch), and a decision on
-whether the two pages coexist or the preview replaces `/teg-reports` outright. Detail:
-`webapp/report_layout_prototypes/README.md` → "Still to do".
+once the design was settled. **Next: wiring it into `webapp/routes/reports.py`.**
 
 ### 2026-08-17 — Reporting docs reconciled against the code
 

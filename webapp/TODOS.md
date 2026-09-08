@@ -8,22 +8,23 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 - [ ] **Bestball/worstball on `/latest-round`** — show best/worst bestball and worstball positions in the round-in-context page.
 - [ ] **`/scoring/matrix`** - score type as pills; TEG / Round / 9 as tabs
-- [ ] **Newspaper report layout — switch `/teg-reports` over** — the design is settled (desktop
-  E1/E2 composite, mobile pattern A) and is now wired into the site at `/teg-reports-preview`
-  (not linked from nav, `/teg-reports` untouched). Parser moved to
-  `teg_analysis/reporting/newspaper_edition.py` (`build_edition`, `render_desktop_html`,
-  `choose_arrangement`) so both the preview route and `scripts/build_newspaper_edition.py` share
-  it. Only TEG 14/16/18 have storyline-first artefacts, so the preview's TEG switcher is limited
-  to those; other TEG numbers fall back to the newest available, same convention as
-  `/teg-reports`'s own dropdown.
-  Remaining before the switch-over: (1) `StorylinePlan` needs real `headline`/`standfirst` fields
-  instead of the parser deriving one from `subject` (`webapp/report_layout_prototypes/README.md`
-  → "Still to do" #2 — a parallel branch is landing this on `story_plan.py`); (2) decide whether
-  `/teg-reports-preview` replaces `/teg-reports` outright or the two coexist, and update
-  `webapp/routes/reports.py`/`teg_reports.html` accordingly; (3) a real design pass on
-  `/teg-reports-preview`'s own chrome (currently a bare TEG-switcher bar, not part of the settled
-  design) if it needs to look finished rather than reviewable.
-  `webapp/report_layout_prototypes/README.md` carries the full design record.
+- [ ] **Newspaper report layout — compose the final layout** — direction confirmed against the
+  prototype (newspaper edition beats one long report). Four layouts were built (A Broadsheet, B
+  Modern editorial, C Sports section, D Back page) and the answer is a composite: Jon likes and
+  dislikes elements of each, so the next step is to collect that element by element, not to pick
+  one of the four. Then wire it into `routes/reports.py`.
+  **Decided (2026-09-05)** — ten elements chosen in `elements.html`, assembled in `composite.html`,
+  and the page composition settled: E2 at five or more stories, E1 below that, Green Jacket as the
+  default second lead, nothing below the standings in the rail. Remaining work is the mobile
+  pattern, then wiring into `routes/reports.py`.
+- [ ] **Newspaper report layout — rethink mobile** — stacking the grid vertically recreates the
+  one-long-report problem the layout solved. Needs a different pattern (index-first, swipeable
+  cards, accordion), prototyped like A–D were, not tuned breakpoints.
+  **Decided (2026-09-05): pattern A, index first**, at 1.1 phone screens against a 10.7-screen
+  baseline. B is also shippable and stays switchable; C left at prototype quality.
+  `checks/check_mobile_patterns.py` guards the behaviour.
+
+  Both: `webapp/report_layout_prototypes/README.md`.
 
 
 ## NEXT UP

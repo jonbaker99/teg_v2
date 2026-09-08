@@ -4,9 +4,8 @@ Tournament reports are presented as a **newspaper edition**: a lead story on the
 the remaining storylines as separate articles. This folder holds the prototypes that settled that
 design and the record of how each choice was made.
 
-**The design is decided and is wired into the site as a preview** at
-`/teg-reports-preview` — not linked from the nav, and `/teg-reports` is untouched. See
-[Still to do](#still-to-do) for what's left before switching `/teg-reports` over to it.
+**The design is decided. What has not happened is wiring it into the site** — see
+[Still to do](#still-to-do).
 
 Served at `/report-layouts/` when the webapp runs (mounted in `webapp/app.py` beside `/mockups/`).
 
@@ -114,17 +113,26 @@ matters to a reader.
    **Not done yet:** `/teg-reports` itself is untouched and still renders the old one-blob markdown;
    switching it over (or deciding the two coexist) is a separate, deliberately small change once
    the preview is confirmed right.
-2. **`StorylinePlan` needs `headline` (3–8 words) and `standfirst` (one sentence) per storyline.**
-   `subject` is neither — it is a 15–25 word descriptive line that works as a section heading and
-   fails as a headline. Every layout has to derive one, and derived headlines are the weakest text
-   on the page; `_derive_headline` and `_choose_standfirst` in the build script exist only to stop
-   that reading as a bug. The unrequested `**bold**` mini-header is this missing field arriving by
-   accident about half the time. **Fix it by asking for it**, in `story_plan.py`.
-   One decision is parked behind this: on TEG 14 the second-lead slot goes to the Wooden Spoon
-   (compelling 9) over the Green Jacket (7), a margin of exactly `CLEAR_MARGIN`. That cannot be
-   judged fairly while every headline is derived.
+2. ~~`StorylinePlan` needs `headline` and `standfirst` fields.~~ **Done (2026-09-06).**
+   `DraftedStoryline` now carries `headline_candidates`/`chosen_headline`/`standfirst`, mirroring
+   `RoundPlan`'s shape (`teg_analysis/reporting/story_plan.py`). `newspaper_edition.py` uses them
+   when present, falling back to `_derive_headline`/`_choose_standfirst` only for artefacts that
+   predate the fields. TEG 14/16/18 regenerated with real headlines. **Not yet clean** — the model
+   still reaches for a two-clause "X — Y" headline over the requested single 3-8 word clause on
+   several storylines; `check_storyline_plan_consistency` flags it as a warning rather than
+   failing. See `STORYLINE_PLAN.md` → "Real headlines" for detail and the follow-up prompt fix
+   needed.
+   The parked TEG 14 decision (Wooden Spoon compelling 9 vs Green Jacket 7, margin exactly
+   `CLEAR_MARGIN`) is answered there too: regeneration reshuffled the scores (now Jacket 7 vs
+   Spoon 6, since `compelling_score` is a per-run LLM rating, not deterministic), so the exact case
+   can't be re-litigated — but judged on the real headlines now in the artefact, either would read
+   fine as second lead.
 3. **A cross-cut section needs a kicker the merge step can name.** ` / `-joined headings are a
-   parsing artefact; the merge should emit a single subject.
+   parsing artefact from the mothballed interweave path. Partially addressed: `newspaper_edition.py`
+   now joins the matched storylines' own `chosen_headline`s with `&` for a merged article instead of
+   truncating to the first fragment. The merge step itself
+   (`scripts/storyline_interweave_experiment.py`) still emits a `' / '`-joined `subject` — untouched,
+   since interweaving is off by default and this is low priority until it's turned back on.
 
 ## Decisions worth not relitigating
 

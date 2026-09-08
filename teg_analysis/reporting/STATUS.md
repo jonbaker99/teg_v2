@@ -12,7 +12,25 @@
 
 ---
 
-## START HERE — picking this up in a new chat (2026-09-05)
+## START HERE — picking this up in a new chat (2026-09-07)
+
+### `DraftedStoryline` gained real `headline`/`standfirst` fields (2026-09-07)
+
+Closed the gap flagged below on 2026-09-05: `DraftedStoryline` (`story_plan.py`) now has
+`headline_candidates`/`chosen_headline`/`standfirst`, mirroring `RoundPlan`'s
+`headline_candidates`/`chosen_headline` shape. `STORYLINE_SYSTEM_PROMPT` asks for them as
+always-populated; the legacy `SYSTEM_PROMPT`/`StoryPlan` does not — the fields default to empty
+there, to avoid growing a schema that has already once been rejected by the API as too large (see
+`Competition`'s docstring in `story_plan.py`). `teg_analysis/reporting/newspaper_edition.py` (the
+parser that moved out of `scripts/build_newspaper_edition.py` when the layout was wired into the
+webapp) now prefers these real fields, falling back to `_derive_headline`/`_choose_standfirst` only
+for artefacts predating them. Full writeup: `STORYLINE_PLAN.md` → "Real headlines".
+
+Regenerated `teg_{14,16,18}_storyline_plan.json` on plan usage (`llm.PROVIDER_AGENT`). **Open
+follow-up:** the model reliably ignores the 3-8 word target in favour of a two-clause "X — Y" or
+"X: Y" headline (9-11 words) on several storylines per TEG. `check_storyline_plan_consistency`
+warns on this (surfaced, not blocking) — next prompt pass should explicitly forbid the colon/dash
+two-clause construction rather than just stating a word count.
 
 ### Reports are going to a newspaper layout; interweaving is mothballed (2026-09-05)
 
@@ -45,7 +63,9 @@ Two consequences for this pipeline:
   blowing up the same hole on two different courses) and "The brothers Baker at opposite ends of
   the same tournament" (TEG 18) are storylines a round-by-round report would never surface. Minor
   cosmetic issue seen in ~half of sections across all three TEGs: the draft writer inserts an
-  unrequested bold mini-header duplicating the `##` heading — not yet fixed. Word counts short of
+  unrequested bold mini-header duplicating the `##` heading. **Root cause identified and fixed
+  2026-09-07 — see the START HERE entry above:** `DraftedStoryline` had no `headline` field, so the
+  model was improvising one inline. Word counts short of
   production (1161–1424w vs 1700–2300w) because the mandatory closing sections
   (`## How it was decided`, `## Player-by-player summary`) aren't built into the experiment yet.
   Not wired into `backfill.py` — still an experiment script.
