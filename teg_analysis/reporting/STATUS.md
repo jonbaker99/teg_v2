@@ -25,9 +25,16 @@ storyline-first artefacts (`data/commentary/teg_N_storyline_plan.json` +
 
     python scripts/storyline_full_report_experiment.py --teg N
 
-Real Anthropic API billing (`ANTHROPIC_API_KEY`/`TEG_ANTHROPIC_API_KEY`), no `--plan`/`--paste`
-mailbox support on this script (unlike `backfill.py`) as of 2026-09-08. Still explicitly an
-experiment script (see its own docstring) — not wired into `backfill.py` or any production path.
+**It runs on plan usage too, as of 2026-09-08** — prefix the command with
+`TEG_LLM_PROVIDER=agent` and answer the prompts with the `teg-report-respond` skill, exactly as for
+a `backfill.py --plan` run. The script has no `--plan`/`--paste` flags of its own, but it never
+needed them: `llm.generate_text`/`generate_structured` dispatch on the provider for every call, so
+the env var is the whole mechanism. What blocked it was a provider-blind
+`if not llm.has_api_key(): sys.exit(1)` guard that aborted an `agent` run before its first call,
+despite `has_api_key`'s own docstring saying only the `api` provider needs a key; the guard now
+checks the provider first. Without the env var it is still real Anthropic API billing
+(`ANTHROPIC_API_KEY`/`TEG_ANTHROPIC_API_KEY`). Still explicitly an experiment script (see its own
+docstring) — not wired into `backfill.py` or any production path.
 After a run, `teg_analysis.reporting.newspaper_edition.AVAILABLE_TEGS` (currently hardcoded
 `(14, 16, 18)`) needs the new TEG numbers added, or the preview won't offer them. Not started yet —
 deliberately, no LLM calls until asked for.

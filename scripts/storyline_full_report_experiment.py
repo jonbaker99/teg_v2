@@ -34,10 +34,24 @@ first, voice second) plus the writer-richness fix from the context A/B:
 This is still an experiment, not a pipeline change: nothing in `backfill.py`
 calls this, and it never touches `report_final`/`report_styled`.
 
-Usage, from the repo root (needs ANTHROPIC_API_KEY / TEG_ANTHROPIC_API_KEY —
-the story plan is generated fresh on each run via `build_storyline_plan`):
+Nothing is reused between runs: the storyline plan is generated fresh every time
+via `build_storyline_plan` (there is no load-from-disk path), and the draft and
+voice passes follow from it, so a re-run overwrites all four artefacts and
+re-rolls every subject, headline and score. The beats and bundle underneath are
+recomputed from the parquet data by code, not by the model.
 
+Usage, from the repo root — either provider:
+
+    # Anthropic API, bills per token
     python scripts/storyline_full_report_experiment.py --teg 14
+
+    # claude.ai plan usage: prompts hand off through `data/llm_mailbox`, and a
+    # Claude Code session answers them with the `teg-report-respond` skill.
+    TEG_LLM_PROVIDER=agent python scripts/storyline_full_report_experiment.py --teg 14
+
+This script has no `--plan`/`--paste` flags of its own (unlike `backfill.py`);
+the env var is the whole mechanism, since `llm.generate_text` /
+`llm.generate_structured` dispatch on the provider for every call.
 """
 from __future__ import annotations
 
@@ -226,8 +240,13 @@ def main():
                          "Off by default: the newspaper layout wants separate articles.")
     args = ap.parse_args()
 
-    if not llm.has_api_key():
-        print("No API key found. Aborting.")
+    # Only the `api` provider needs a key — under `agent` the prompts hand off
+    # through the mailbox and there is no key at all (see `llm.has_api_key`).
+    # Guarding unconditionally used to abort a perfectly valid
+    # `TEG_LLM_PROVIDER=agent` run before it made a single call.
+    if llm.get_provider() == llm.PROVIDER_API and not llm.has_api_key():
+        print(f"No API key found, and the provider is {llm.PROVIDER_API}. "
+              f"Set one, or run on plan usage with {llm.ENV_PROVIDER}={llm.PROVIDER_AGENT}.")
         sys.exit(1)
 
     draft_text, plan = build_storyline_draft(args.teg, model=args.model,
