@@ -604,8 +604,11 @@ call, no cost.**
 
 5. **Render.** Two consumers, from the same edition dict:
    - **The site** — `webapp/routes/report_preview.py` at `/teg-reports-preview`. Desktop renders
-     server-side via `render_desktop_html()` (a 1:1 Python port of `composite.html`'s JS: E1/E2
-     composition, fill f1); mobile pattern A renders client-side from the edition JSON
+     server-side via `render_desktop_html(edition, rail=)`, a 1:1 Python port of `composite.html`'s
+     JS (auto composition, fill f1) picking between **E1** (classic front), **E2** (second lead, at
+     five or more articles) and **E3** (2-up row plus one long sub-story full width). E3 and the
+     `rail` argument (S1 no rail / S2 results and standings beside the lead) exist only here, not in
+     the prototype. Mobile pattern A renders client-side from the edition JSON
      (`webapp/static/newspaper_preview.js`), switched by a CSS breakpoint.
      Live, but deliberately not linked from the nav.
    - **The prototypes** — `python -m scripts.build_newspaper_edition` writes

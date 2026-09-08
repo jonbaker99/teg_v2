@@ -9,7 +9,7 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 - [ ] **Bestball/worstball on `/latest-round`** — show best/worst bestball and worstball positions in the round-in-context page.
 - [ ] **`/scoring/matrix`** - score type as pills; TEG / Round / 9 as tabs
 - [ ] **Newspaper report layout — switch `/teg-reports` over** — the design is settled (desktop
-  E1/E2 composite, mobile pattern A) and is wired into the site at `/teg-reports-preview` (not
+  E1/E2/E3 composite, mobile pattern A) and is wired into the site at `/teg-reports-preview` (not
   linked from nav, `/teg-reports` untouched). Parser lives in
   `teg_analysis/reporting/newspaper_edition.py` (`build_edition`, `render_desktop_html`,
   `choose_arrangement`), shared by the preview route and the CLI script. Only TEG 14/16/18 have
