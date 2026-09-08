@@ -11,7 +11,6 @@ TODO_FILES = [
     ("webapp", ROOT / "webapp" / "TODOS.md"),
     ("streamlit", ROOT / "streamlit" / "TODOS.md"),
     ("teg_analysis", ROOT / "teg_analysis" / "TODOS.md"),
-    ("reporting", ROOT / "teg_analysis" / "reporting" / "reporting-to-do.md"),
 ]
 
 # Reporting STATUS.md uses a different format (phase table), just flag it
@@ -24,9 +23,15 @@ ITEM_RE = re.compile(r"^- \[([ x~])\] (.+)")
 
 
 def parse_todos(path: Path):
-    """Return list of (section, status, text) tuples from a TODOS.md file."""
+    """Return list of (section, status, text) tuples from a TODOS.md file.
+
+    Returns an empty list rather than raising if `path` doesn't exist — a stale
+    entry in TODO_FILES shouldn't take down the whole command.
+    """
     items = []
     current_section = "General"
+    if not path.exists():
+        return items
     for line in path.read_text().splitlines():
         m = SECTION_RE.match(line)
         if m:
