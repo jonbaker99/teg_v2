@@ -578,14 +578,10 @@ To test a tone variant: draft once per TEG (stage 1+2, expensive relative to sta
 the SAME `teg_N_report_storylinedraft.md`. That is what `restyle_voice`'s `voice_prompt` argument and
 `source_label="storylinedraft"` are for; no need to regenerate the plan/draft per tone variant.
 
-> ⚠️ **Stage 3's styling step still depends on the legacy plan.** `render.style_text()` calls
-> `authoring.load_story_plan()`, which reads `teg_N_story_plan.json` — not
-> `teg_N_storyline_plan.json`. TEGs 14, 16 and 18 all have legacy artefacts, so it works; on a TEG
-> that doesn't, the styling step raises `FileNotFoundError`. **This blocks running storyline-first on
-> the other 14 TEGs**, which is the prerequisite for switching `/teg-reports` over. The fix is small:
-> the plan is used for one thing only — `_build_at_a_glance` reads `plan["competitions"]` — and
-> `StorylinePlan` already carries `competitions[]` in the identical `{name, winner_or_loser}` shape.
-> Tracked in `teg_analysis/TODOS.md`.
+Stage 3's styling step reads `render.style_text()` → `authoring.load_story_or_storyline_plan()`,
+which reads the legacy `teg_N_story_plan.json` if present and falls back to
+`teg_N_storyline_plan.json` otherwise — so styling works on any TEG that has run *either* pipeline,
+not only the three that have run both.
 
 #### From styled markdown to a finished report — the presentation stage
 

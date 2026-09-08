@@ -21,7 +21,7 @@ pytestmark = [pytest.mark.unit]
 
 import pydantic
 
-from teg_analysis.reporting import llm, mailbox, paths
+from teg_analysis.reporting import authoring, llm, mailbox, paths
 
 
 class Tiny(pydantic.BaseModel):
@@ -355,6 +355,35 @@ def test_manifest_records_what_produced_a_variant(monkeypatch):
 
 def test_manifest_is_a_noop_for_the_canonical_set():
     assert paths.write_manifest({"provider": "api"}) is None
+
+
+# ---------------------------------------------------------------------------
+# load_story_or_storyline_plan — legacy-first fallback for style_text()
+# ---------------------------------------------------------------------------
+def test_load_story_or_storyline_plan_prefers_legacy():
+    out = Path(paths.output_dir())
+    (out / "teg_14_story_plan.json").write_text(
+        json.dumps({"competitions": [{"name": "Trophy", "winner_or_loser": "Legacy Winner"}]}))
+    (out / "teg_14_storyline_plan.json").write_text(
+        json.dumps({"competitions": [{"name": "Trophy", "winner_or_loser": "Storyline Winner"}]}))
+
+    plan = authoring.load_story_or_storyline_plan(14)
+    assert plan["competitions"][0]["winner_or_loser"] == "Legacy Winner"
+
+
+def test_load_story_or_storyline_plan_falls_back_to_storyline():
+    out = Path(paths.output_dir())
+    (out / "teg_14_storyline_plan.json").write_text(
+        json.dumps({"competitions": [{"name": "Trophy", "winner_or_loser": "Storyline Winner"}]}))
+
+    plan = authoring.load_story_or_storyline_plan(14)
+    assert plan["competitions"][0]["winner_or_loser"] == "Storyline Winner"
+
+
+def test_load_story_or_storyline_plan_raises_naming_both_paths_when_neither_exists():
+    with pytest.raises(FileNotFoundError, match="teg_14_story_plan.json") as exc_info:
+        authoring.load_story_or_storyline_plan(14)
+    assert "teg_14_storyline_plan.json" in str(exc_info.value)
 
 
 # ---------------------------------------------------------------------------

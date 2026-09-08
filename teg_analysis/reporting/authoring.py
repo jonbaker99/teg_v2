@@ -764,6 +764,30 @@ def load_story_plan(teg_num: int) -> dict:
         return json.load(f)
 
 
+def load_story_or_storyline_plan(teg_num: int) -> dict:
+    """Load whichever plan exists for `teg_num`: legacy first, storyline-first as fallback.
+
+    Callers that only need `plan["competitions"]` (identical `{name, winner_or_loser}`
+    shape in both `StoryPlan` and `StorylinePlan`) can use this instead of
+    `load_story_plan` to work on TEGs that only ever ran the storyline-first pipeline.
+    Raises `FileNotFoundError` naming both paths it tried if neither exists.
+    """
+    legacy_path = f"{output_dir()}/teg_{teg_num}_story_plan.json"
+    storyline_path = f"{output_dir()}/teg_{teg_num}_storyline_plan.json"
+    try:
+        with open(legacy_path) as f:
+            return json.load(f)
+    except FileNotFoundError:
+        pass
+    try:
+        with open(storyline_path) as f:
+            return json.load(f)
+    except FileNotFoundError:
+        raise FileNotFoundError(
+            f"no story plan for TEG {teg_num}: looked for {legacy_path} and {storyline_path}"
+        ) from None
+
+
 def load_dry_draft(teg_num: int) -> str:
     with open(f"{output_dir()}/teg_{teg_num}_dry_draft.md") as f:
         return f.read()

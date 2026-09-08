@@ -426,13 +426,9 @@ Everything above `assemble_bundle` is shared; everything below it forks.
 | 6S | `restyle_voice(label="storylinefirst", source_label="storylinedraft")` | `teg_N_report_storylinefirst.md` | 7S | **yes** |
 | 7S | `style_text()` inside the same call | `teg_N_report_storylinefirst_styled.md` | 9, 11b | no |
 
-> ⚠️ **7S has a hidden dependency on the legacy chain.** `style_text()` calls
-> `authoring.load_story_plan()`, which opens `teg_N_**story**_plan.json` — the *legacy* plan, not
-> `teg_N_storyline_plan.json`. It works today only because TEGs 14, 16 and 18 happen to have full
-> legacy artefacts too. Run storyline-first on a TEG without them and the styling step raises
-> `FileNotFoundError`, so this blocks generating storyline-first reports for the other 14 TEGs.
-> Small fix: the plan is used for one thing only (the at-a-glance box reads `competitions[]`), and
-> `StorylinePlan` already carries that field in the same shape.
+`style_text()` calls `authoring.load_story_or_storyline_plan()`, which reads the legacy
+`teg_N_story_plan.json` if present and falls back to `teg_N_storyline_plan.json` otherwise — so 7S
+runs on any TEG that has *either* plan, not just the three with both.
 
 **Round reports** run the same five stages against one round, writing the same filenames with a
 `round_R_` infix (`round_report.py`). `/teg-reports` reads them the same way. Storyline-first has no
