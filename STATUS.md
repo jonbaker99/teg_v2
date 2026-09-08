@@ -2,7 +2,7 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-04 (newspaper report-layout prototype added; reporting docs reconciliation and report-quality rework logged below; earlier content current as at 2026-07-12)
+**Last updated:** 2026-09-08 (report build documented end to end in `DATA_FLOW.md` §10; newspaper layout preview and storyline headlines logged below; earlier content current as at 2026-07-12)
 
 ## Where things stand
 
@@ -14,7 +14,11 @@ Current state and next priorities. Instructions and architecture live in `CLAUDE
 
 **Data admin** — Behind cookie auth in `webapp/routes/admin.py`, driven by headless `analysis/data_update.py` + `io/sync.py`: add a round; delete rounds/TEGs; edit metadata CSVs; selective GitHub↔store file sync (pre-action preview + text diff); volume browser (per-file edit/sync/download/delete-with-backup); backups browser (restores back up the replaced copy first); file guide (`io/file_catalog.py`). Report generation is out of scope here.
 
-**Reporting** — LLM-powered tournament reports (`teg_analysis/reporting/`), 5-stage pipeline: scored evidence-carrying beats + competition arcs (code) → structured story plan (LLM) → dry draft as QA scaffold + entertaining write-up + repetition lint (LLM) → CSS-class styled markdown, with mechanical verification (`verify.py`, 8 checks) after every generation. **All 17 TEGs (2–18) published and regenerated on one vintage**; ~$0.65 each. Can run on the Anthropic API (default) or hand prompts off to claude.ai plan usage. ⚠️ **What the site serves lags what was generated** — 16 of 17 styled files still hold pre-2026-08-13 prose, because the regeneration ran `style=False`. Details: `teg_analysis/reporting/README.md`, `teg_analysis/reporting/STATUS.md`.
+**Reporting** — LLM-powered tournament reports (`teg_analysis/reporting/`). **Two pipelines now
+exist:** the production **five-stage** chain below, and a newer **storyline-first** chain (TEGs 14,
+16, 18) that produces the separate-articles content the settled newspaper layout renders. Neither has
+replaced the other; `/teg-reports` still serves the five-stage output. The end-to-end route for both
+— scores entered through to the rendered report — is `DATA_FLOW.md` → §10. Five-stage pipeline: scored evidence-carrying beats + competition arcs (code) → structured story plan (LLM) → dry draft as QA scaffold + entertaining write-up + repetition lint (LLM) → CSS-class styled markdown, with mechanical verification (`verify.py`, 8 checks) after every generation. **All 17 TEGs (2–18) published and regenerated on one vintage**; ~$0.65 each. Can run on the Anthropic API (default) or hand prompts off to claude.ai plan usage. ⚠️ **What the site serves lags what was generated** — 16 of 17 styled files still hold pre-2026-08-13 prose, because the regeneration ran `style=False`. Details: `teg_analysis/reporting/README.md`, `teg_analysis/reporting/STATUS.md`.
 
 **Player profiles** (`webapp/routes/player.py`, `webapp/templates/partials/player_overview.html`, `webapp/templates/player_index.html`) — `/player` and `/player/{code}` reworked: pill-driven roster landing with player cards; overview with 11 ranked metric cards, trophy cabinet with ordinal ranks, career highlights, records/worsts in natural language, career trend bar charts with rank annotations. Functionality complete; **UI design pass still outstanding** (`webapp/TODOS.md`).
 
@@ -80,11 +84,42 @@ the folder.
 
 All three tournaments (14, 16, 18) render in every prototype; TEG 18 joined once the
 storyline-first pipeline merged. `scripts/inline_editions.py` pushes a regenerated `editions.json`
-back into the pages. Awaiting a pick on composition and mobile pattern, then wiring into
-`routes/reports.py`. Findings for the pipeline (the story plan needs `headline`/`standfirst`
-fields — `subject` is neither) and what remains:
+back into the pages. Composition and mobile pattern were both picked; the `headline`/`standfirst`
+gap noted here was closed on 2026-09-06 (below). Full record:
 `webapp/report_layout_prototypes/README.md`, which the trial's two working docs were folded into
-once the design was settled. **Next: wiring it into `webapp/routes/reports.py`.**
+once the design was settled.
+
+### 2026-09-06/07 — Newspaper layout wired in as a preview; real headlines on the plan
+
+Two changes landed. **`/teg-reports-preview`** (`webapp/routes/report_preview.py`) renders the
+settled design for real data — not linked from the nav, `/teg-reports` untouched. Desktop renders
+server-side (a Python port of `composite.html`'s JS,
+`teg_analysis/reporting/newspaper_edition.py::render_desktop_html`); mobile pattern A renders
+client-side (`webapp/static/newspaper_preview.js` — hash routing, Back gesture, cold deep-links,
+scroll restore, focus management), switched by a CSS breakpoint. The parser moved out of
+`scripts/build_newspaper_edition.py` into the package so the route can import it without reaching
+into `scripts/`. Only TEG 14/16/18 have storyline-first artefacts.
+
+**`DraftedStoryline` gained real `headline_candidates`/`chosen_headline`/`standfirst` fields**, so
+the layout stops deriving headlines from `subject`. TEG 14/16/18 plans regenerated. Open follow-up:
+the model still reaches for a two-clause "X — Y" headline over the requested 3–8 word single clause;
+`check_storyline_plan_consistency` warns rather than fails.
+
+⚠️ **Merge `9b6f423` reverted parts of the first change and they are still broken on `main`:**
+`webapp/app.py` no longer imports or includes `report_preview.router`, so **the preview route 404s**,
+and `scripts/build_newspaper_edition.py` is a 392-line copy of the parser instead of the thin
+wrapper. Both are tracked in `webapp/TODOS.md`. Detail:
+`webapp/report_layout_prototypes/README.md` → "Still to do".
+
+### 2026-09-08 — Report build documented end to end
+
+Docs only. `DATA_FLOW.md` gained **§10 "Report build"** — the single path from a round of scores to
+the report a reader sees, as a mermaid diagram plus a hop-by-hop table (what each step writes, what
+reads it, whether it costs an LLM call), covering both pipelines. `DATA_FLOW.md`'s commentary section
+no longer claims five artefacts per TEG; `teg_analysis/reporting/README.md` gained a "Two pipelines"
+block and the presentation stage that was missing after the styled markdown;
+`ARTEFACTS.md` gained the storyline-first artefact set. The two merge regressions above were found
+while verifying, and are flagged rather than fixed.
 
 ### 2026-08-17 — Reporting docs reconciled against the code
 

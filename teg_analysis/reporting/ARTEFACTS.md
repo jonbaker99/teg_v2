@@ -4,6 +4,12 @@
 restart from for a given kind of change. Architecture is in [README.md](README.md); state is in
 [STATUS.md](STATUS.md).
 
+> **Everything here describes the legacy five-stage pipeline** — the production chain behind
+> `/teg-reports`, and the one every iteration recipe below is written against. The **storyline-first**
+> pipeline writes a second, parallel set of artefacts for TEGs 14, 16 and 18; they are listed in
+> [The storyline-first files](#the-storyline-first-files) and explained in
+> [README.md](README.md) → *Two pipelines*. The end-to-end route for both is `DATA_FLOW.md` → §10.
+
 ---
 
 ## The whole pipeline in one table
@@ -56,6 +62,25 @@ plus D3 plus the injected blocks, **E** = stage 5.
 | ⑤ | `teg_N_report_styled.md` | **What the site serves.** ④ plus CSS hooks, standings, records, at-a-glance box. | Stage 5 (code) | the webapp |
 
 Everything else in `data/commentary/` is a snapshot or an experiment — see the decoder near the end.
+
+## The storyline-first files
+
+A parallel set, written only for **TEGs 14, 16 and 18** by
+`scripts/storyline_full_report_experiment.py --teg N`. It never writes `report_final.md` or
+`report_styled.md`, so the two chains cannot collide.
+
+| File | What it is | Made by | Read by |
+|---|---|---|---|
+| `teg_N_storyline_plan.json` | **The storyline plan.** 3 mandatory anatomy storylines (trophy / jacket / spoon) + 0–3 discovered, each with `subject`, `chosen_headline`, `standfirst`, `beat_ids`, `compelling_score`, `humour_score`. A leaner sibling of `StoryPlan` — no `rounds[]`, no `players[]` | `build_storyline_plan()` (LLM) | the draft stage; `build_edition` |
+| `teg_N_report_storylinedraft.md` | **One plain section per storyline.** Fact-isolated, explicitly told not to be funny or stylish. **Start any voice or tone A/B from this file**, never from a styled report | one LLM call per storyline | the voice pass |
+| `teg_N_report_storylinefirst.md` | The same draft in the house voice (`WRITER_VOICE`, via `restyle_voice`). D3-verified, with `new_findings` isolating faults this pass introduced | `restyle_voice()` (LLM) | the styler |
+| `teg_N_report_storylinefirst_styled.md` | **What the newspaper edition parses** — the voiced report plus standings, records and CSS hooks | `style_text()` (code, free) | `newspaper_edition.build_edition` |
+
+`build_edition(teg)` then reads the **last file and the plan together** — the prose supplies the
+articles, the plan supplies each article's headline, standfirst and scores. Deterministic, free. It
+is not a file: the edition dict is built per request by the webapp route, and only
+`scripts/build_newspaper_edition` persists it, to
+`webapp/report_layout_prototypes/editions.json` for the prototype pages.
 
 Round reports use the same five names with a `round_R_` infix:
 `teg_18_round_3_report_final.md`.
@@ -549,9 +574,12 @@ Decoder for the ~40 other files. None of these are read by anything; they're his
 | `..._report_{tightened,step1,baseline,buggy}.md` | one-off experiment outputs |
 | `..._report_{B_single_pass,C_critique_revise}.md` | the rejected authoring alternatives. C fabricated a "countback" — that's why the around-draft route won |
 | `..._tournament_v{0..5}_*.md` | the voice ladder (`existing` → `baseline` → `restraint` → `economy` → `observer` → `gravitas`). Gravitas won |
+| `..._storyline_plan.json`, `..._report_storyline{draft,first}.md` | **the storyline-first chain** (TEGs 14/16/18) — a live parallel set, not history. See [The storyline-first files](#the-storyline-first-files) |
 | `..._story_plan_prompt.md` | dry-run dump of the assembled prompt + bundle. Free to regenerate |
+| `..._storyline_plan_prompt.md` | dry-run dump of the storyline-plan prompt. Free to regenerate |
+| `storyline_experiment_teg_N.json` | output of `scripts/storyline_experiment.py`, the discovery trial. History |
 | `..._notable_events.md`, `..._venue_context.md` | inspection dumps of Stage 2. Free |
-| `variants/<name>/` | **a whole parallel artefact set for one model** (`variants/gpt5/`, `variants/gemini/`) written when `TEG_REPORT_VARIANT` / `--variant` / `--paste NAME` is set. Same five filenames inside, plus a `manifest.json` recording provider, requested model and timings. **Gitignored** — promote the one you want with `paths.promote_variant(name, teg)` and commit that. Nothing reads a variant automatically |
+| `variants/<name>/` | **a whole parallel artefact set for one model** (`variants/gpt5/`, `variants/gemini/`) written when `TEG_REPORT_VARIANT` / `--variant` / `--paste NAME` is set. Same five filenames inside, plus a `manifest.json` recording provider, requested model and timings. **Gitignored** — promote the one you want with `paths.promote_variant(name, teg)` and commit that. Nothing reads a variant automatically. ⚠️ `promote_variant` only knows the **legacy five filenames** (`paths._artefact_names`): storyline-first artefacts in a variant are never promoted — skipped without a warning if legacy files are there too, and a bare `FileNotFoundError` if they are not. Copy them by hand until that list is extended |
 | `archive 2026 v1/`, `archive 2026 v2/` | full snapshots of two earlier generations of the library |
 | `archive 2025/`, `drafts/`, `round_reports/` | the pre-pipeline 2025 system. Still the webapp's fallback read paths |
 

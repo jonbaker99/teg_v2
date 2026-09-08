@@ -8,6 +8,34 @@ Replaces the old `streamlit/commentary/` system. The old pipeline buried key eve
 
 For the running ledger of what's done and what's deferred, see [STATUS.md](STATUS.md).
 
+## Two pipelines — which one am I looking at?
+
+This folder contains **two** report pipelines. Everything below the bundle differs between them, so
+establish which one you are in before reading anything else.
+
+| | **Legacy five-stage** | **Storyline-first** |
+|---|---|---|
+| Status | **Current production.** All 17 TEGs (2–18) | **Newer method, script-driven.** TEGs 14, 16, 18 only |
+| Run it with | `python -m teg_analysis.reporting.backfill --tegs N` | `python scripts/storyline_full_report_experiment.py --teg N` |
+| Editorial plan | `StoryPlan` → `teg_N_story_plan.json` | `StorylinePlan` → `teg_N_storyline_plan.json` |
+| Shape | one flowing document, rounds as blocks | one lead story plus separate articles |
+| Final artefact | `teg_N_report_styled.md` | `teg_N_report_storylinefirst_styled.md` |
+| Reaches a reader | `/teg-reports` — **live** | via the newspaper edition — **not live yet** |
+| Documented in | [The five stages](#the-five-stages) — most of this file | [Storyline-first pipeline](#storyline-first-pipeline--stages-and-outputs-2026-08-19) |
+
+**Neither has replaced the other.** The legacy chain is what the site serves; storyline-first is what
+the settled newspaper layout is built on. Switching `/teg-reports` over is the open decision —
+`webapp/report_layout_prototypes/README.md` → "Still to do".
+
+They share everything up to the bundle: detection, 3-axis scoring, the context modules,
+`assemble_bundle`. Both write into `data/commentary/` side by side, and `prompts.py` is the single
+source of voice and shared rules for both.
+
+> **The one-path map — scores entered through to the report a reader sees — is
+> `DATA_FLOW.md` → §10 "Report build".** It owns the end-to-end route and the hop-by-hop table
+> (what each step writes, what reads it, whether it costs an LLM call). This file owns how each
+> stage works; go there for where a stage sits.
+
 **Want to change something and test it?** [ARTEFACTS.md](ARTEFACTS.md) is the operational guide:
 the whole pipeline in one table, what every file in `data/commentary/` is, and **a runnable recipe
 per element** — see *How to test and iterate on each element* (11 recipes, from free inspection to
@@ -197,6 +225,10 @@ the job; it now runs on every generation.
 
 Every arrow is a place you can stop, freeze the artefact, and restart from later. That is what makes
 the cheap loops cheap.
+
+**This is the legacy five-stage chain.** For the storyline-first equivalent see
+[its own section](#storyline-first-pipeline--stages-and-outputs-2026-08-19); for both side by side,
+`DATA_FLOW.md` → §10.
 
 ```
   data/*.parquet
@@ -546,6 +578,57 @@ To test a tone variant: draft once per TEG (stage 1+2, expensive relative to sta
 the SAME `teg_N_report_storylinedraft.md`. That is what `restyle_voice`'s `voice_prompt` argument and
 `source_label="storylinedraft"` are for; no need to regenerate the plan/draft per tone variant.
 
+> ⚠️ **Stage 3's styling step still depends on the legacy plan.** `render.style_text()` calls
+> `authoring.load_story_plan()`, which reads `teg_N_story_plan.json` — not
+> `teg_N_storyline_plan.json`. TEGs 14, 16 and 18 all have legacy artefacts, so it works; on a TEG
+> that doesn't, the styling step raises `FileNotFoundError`. **This blocks running storyline-first on
+> the other 14 TEGs**, which is the prerequisite for switching `/teg-reports` over. The fix is small:
+> the plan is used for one thing only — `_build_at_a_glance` reads `plan["competitions"]` — and
+> `StorylinePlan` already carries `competitions[]` in the identical `{name, winner_or_loser}` shape.
+> Tracked in `teg_analysis/TODOS.md`.
+
+#### From styled markdown to a finished report — the presentation stage
+
+The three stages above end at a markdown file. They are not the end of the pipeline: the report a
+reader sees is a **newspaper edition**, and two more hops build it. Both are deterministic — **no LLM
+call, no cost.**
+
+4. **Parse into an edition** — `teg_analysis/reporting/newspaper_edition.py`. `build_edition(teg)`
+   reads *two* artefacts, `teg_N_report_storylinefirst_styled.md` **and**
+   `teg_N_storyline_plan.json`, and returns one edition dict: title, dateline, results (with
+   runners-up), `articles[]` (kicker, headline, standfirst, paragraphs, `is_lead`, `words`,
+   `compelling_score`, `humour_score`), standings, records. Headlines come from the plan's
+   `chosen_headline`/`standfirst` where present, falling back to `_derive_headline` /
+   `_choose_standfirst` only for artefacts written before those fields existed (2026-09-06).
+   Reads go through `teg_analysis.io.read_text_file`, so it is volume-then-GitHub aware on Railway
+   and never touches the raw filesystem. `AVAILABLE_TEGS` is the set with artefacts: **14, 16, 18**.
+
+5. **Render.** Two consumers, from the same edition dict:
+   - **The site** — `webapp/routes/report_preview.py` at `/teg-reports-preview`. Desktop renders
+     server-side via `render_desktop_html()` (a 1:1 Python port of `composite.html`'s JS: E1/E2
+     composition, fill f1); mobile pattern A renders client-side from the edition JSON
+     (`webapp/static/newspaper_preview.js`), switched by a CSS breakpoint.
+     ⚠️ **This route is not registered on `main`** — see the warning below.
+   - **The prototypes** — `python -m scripts.build_newspaper_edition` writes
+     `webapp/report_layout_prototypes/editions.json`, then `python -m scripts.inline_editions`
+     inlines it into the prototype pages (they carry data inline because a published Artifact cannot
+     fetch a sibling file). Served at `/report-layouts/`. **`editions.json` feeds only the
+     prototypes** — the live route calls `build_edition` directly and never reads it.
+
+   Design record for the layout itself — chosen elements, composition rule, mobile evidence:
+   `webapp/report_layout_prototypes/README.md`.
+
+> ⚠️ **Two things merge `9b6f423` undid, still broken on `main`:**
+> 1. `/teg-reports-preview` does not exist. The route module, template, CSS and JS are all present,
+>    but the `report_preview` import and `app.include_router(report_preview.router)` line were
+>    dropped from `webapp/app.py`. Restoring those two lines is the whole fix.
+> 2. `scripts/build_newspaper_edition.py` is a 392-line **copy** of the parser, not the 46-line
+>    wrapper it was reduced to when the logic moved into `newspaper_edition.py`. The two copies are
+>    byte-identical apart from the file reads, so they agree today and will silently diverge on the
+>    next parser change.
+>
+> Tracked in `webapp/TODOS.md`. Documented here as-is rather than worked around.
+
 ### The storyline hierarchy and the champion register
 
 Two rules added 2026-08-14 that govern what the report is *about*, independent of vehicles.
@@ -709,7 +792,7 @@ backfill_all(range(10, 16), scope="tournament", force=True, style=False)  # pros
 **Full reference: [ARTEFACTS.md](ARTEFACTS.md)** — what every file in `data/commentary/` is, which
 one to restart from for a given change, and a decoder for the experiment/snapshot filenames.
 
-The short version: five files make up the live chain, in order —
+The short version: five files make up the **legacy** live chain, in order —
 
 | File | What it is | Cost to produce |
 |---|---|---|
@@ -723,7 +806,23 @@ The short version: five files make up the live chain, in order —
 Round artefacts use the same names with a `round_R_` infix. Note the **bundle is not a file** — it's
 assembled in memory each run; dump it with `build_story_plan(teg, dry_run=True)`.
 
+The **storyline-first** chain writes its own four files alongside them, for TEGs 14, 16 and 18 only —
+it never touches `report_final.md` or `report_styled.md`:
+
+| File | What it is | Cost to produce |
+|---|---|---|
+| `teg_N_storyline_plan.json` | the storyline plan — 3 mandatory + 0–3 discovered, each with a real headline and standfirst | one LLM call |
+| `teg_N_report_storylinedraft.md` | one plain, unvoiced section per storyline. **The right input for any tone/voice A/B** | one LLM call per storyline |
+| `teg_N_report_storylinefirst.md` | the same draft in the house voice | one LLM call |
+| `teg_N_report_storylinefirst_styled.md` | **what the newspaper edition parses** (+ tables, CSS hooks) | free |
+
+Then `newspaper_edition.build_edition(teg)` turns the **styled file and the plan** into the edition object the
+layout renders — deterministic, no LLM. See
+[the presentation stage](#from-styled-markdown-to-a-finished-report--the-presentation-stage).
+
 ## End-to-end (archive mode, one TEG)
+
+The legacy chain, by hand — what `backfill.py` does for you:
 
 ```python
 from teg_analysis.reporting import build_story_plan, generate_dry_draft, style_report
@@ -737,6 +836,23 @@ linted, _ = repetition_lint(rpt["text"])
 open(f"data/commentary/teg_{teg}_report_final.md", "w").write(linted)
 style_report(teg)  # → teg_N_report_styled.md, ready for the UI
 ```
+
+The storyline-first equivalent is one command, and one more free step to the edition:
+
+```bash
+python scripts/storyline_full_report_experiment.py --teg 14
+#   → teg_14_storyline_plan.json, _report_storylinedraft.md,
+#     _report_storylinefirst.md, _report_storylinefirst_styled.md
+#   add --no-voice to stop after the structural draft
+```
+
+```python
+from teg_analysis.reporting.newspaper_edition import build_edition, render_desktop_html
+edition = build_edition(14)          # free, deterministic — no LLM
+html = render_desktop_html(edition)  # what /teg-reports-preview serves
+```
+
+**The full route from a round of scores to the rendered report is `DATA_FLOW.md` → §10.**
 
 ## Configuration
 
@@ -901,6 +1017,7 @@ default (`high`). It is the primary cost/latency lever and is untested here — 
 ## UI surfaces
 
 - **Webapp (primary)** — `/teg-reports` page (see `webapp/routes/reports.py` + `webapp/templates/teg_reports.html`) and the Report tab on `/results` (see `webapp/routes/history.py` `_results_context()` `tab == "report"` branch).
+- **Newspaper edition (built, not serving)** — `/teg-reports-preview` (`webapp/routes/report_preview.py` + `webapp/templates/teg_reports_preview.html`), rendering the storyline-first artefacts through `newspaper_edition.py`. **Currently unreachable — its router is not registered in `webapp/app.py`**; see the warning in [the presentation stage](#from-styled-markdown-to-a-finished-report--the-presentation-stage).
 - **Streamlit (legacy, still wired)** — `streamlit/teg_reports.py` prefers the new styled MD, falls back to the legacy `teg_N_main_report.md`.
 
 Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`toc` extensions; same CSS file in both static dirs.
@@ -953,6 +1070,7 @@ Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`t
 | `llm.py` | **The provider switch** — API (key resolution + prompt caching) or plan usage |
 | `mailbox.py` | The file hand-off that makes plan usage work, plus its CLI |
 | `paths.py` | Where artefacts are written; variant namespacing and promotion |
+| `newspaper_edition.py` | **The presentation stage** — parses the storyline-first artefacts into an edition dict, plus the server-side desktop renderer. UI-agnostic; shared by the webapp route and the CLI script |
 
 **Companion docs:** [STATUS.md](STATUS.md) is the pick-up ledger and *is* the to-do list for this
 area — start there. [ARTEFACTS.md](ARTEFACTS.md) covers how to test and iterate on each element, and

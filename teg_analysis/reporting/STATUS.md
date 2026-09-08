@@ -12,7 +12,34 @@
 
 ---
 
-## START HERE — picking this up in a new chat (2026-09-07)
+## START HERE — picking this up in a new chat (2026-09-08)
+
+### The report build is now documented end to end (2026-09-08)
+
+Docs only, no pipeline change. **`DATA_FLOW.md` → §10 "Report build"** is the new single map from a
+round of scores to the report a reader sees — a mermaid diagram plus a hop-by-hop table (what each
+step writes, what reads it, whether it costs an LLM call), covering **both** pipelines. Read it
+before this file if you are new to the area. [README.md](README.md) gained a *Two pipelines* block up
+top and the presentation stage that was missing after the styled markdown;
+[ARTEFACTS.md](ARTEFACTS.md) gained the storyline-first artefact set.
+
+Three pieces of drift found while verifying, flagged not fixed:
+- **`/teg-reports-preview` 404s.** Merge `9b6f423` dropped `report_preview` from `webapp/app.py`'s
+  router imports and its `include_router` call. Two-line fix, `webapp/TODOS.md`.
+- **`scripts/build_newspaper_edition.py` is a second copy of the parser**, not the thin wrapper it
+  was reduced to. Same merge. `webapp/TODOS.md`.
+- **`paths.promote_variant` cannot promote storyline-first artefacts** — `_artefact_names` lists only
+  the legacy five. `teg_analysis/TODOS.md`.
+
+**Considered and not done: splitting `README.md`.** It is now 1,076 lines, over CLAUDE.md's
+"split files that grow unwieldy" line, and the obvious cut is *Components — what you can change
+independently* (328 lines) plus *Restart recipes*, which overlap ARTEFACTS.md's stated role
+("how to test and iterate on each element"). But ARTEFACTS.md is already 606 lines, so that move
+produces two ~900-line files instead of one 1,076 and one 606 — the bulk moves sideways and the
+folder's seventh markdown file makes landing cold worse, not better. **The real problem is that
+README.md and ARTEFACTS.md have overlapping roles** (both document the pipeline stage by stage, one
+by mechanism and one by iteration cost), and that is a boundary decision, not a line-count one.
+Worth doing deliberately, on its own, not folded into a correctness pass.
 
 ### `DraftedStoryline` gained real `headline`/`standfirst` fields (2026-09-07)
 

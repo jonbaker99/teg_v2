@@ -4,8 +4,13 @@ Tournament reports are presented as a **newspaper edition**: a lead story on the
 the remaining storylines as separate articles. This folder holds the prototypes that settled that
 design and the record of how each choice was made.
 
-**The design is decided. What has not happened is wiring it into the site** — see
-[Still to do](#still-to-do).
+**The design is decided, and the code that serves it is written** — `/teg-reports-preview`
+(`webapp/routes/report_preview.py`), not linked from the nav, `/teg-reports` untouched.
+⚠️ **The route is not reachable on `main`**: merge `9b6f423` dropped the `report_preview` import and
+`app.include_router(report_preview.router)` line from `webapp/app.py`. Restoring those two lines is
+the whole fix. See [Still to do](#still-to-do).
+
+Where this sits in the wider pipeline: `DATA_FLOW.md` → §10 *Report build*.
 
 Served at `/report-layouts/` when the webapp runs (mounted in `webapp/app.py` beside `/mockups/`).
 
@@ -17,7 +22,7 @@ Served at `/report-layouts/` when the webapp runs (mounted in `webapp/app.py` be
 | `mobile.html` | **The mobile design.** Pattern A is chosen and is the default; B and C remain switchable as the record. |
 | `elements.html` | The element-by-element chooser: ten elements, 4–5 variants each, all on identical copy so only the element varies. Its job is done; it is the tool to reopen any single choice. |
 | `newspaper.html` | The original four directions (A Broadsheet, B Modern editorial, C Sports section, D Back page) that settled the overall approach. Kept as the record. |
-| `editions.json` | Content for TEG 14, 16 and 18, built by `scripts/build_newspaper_edition.py`. |
+| `editions.json` | Content for TEG 14, 16 and 18, built by `scripts/build_newspaper_edition.py`. **Feeds these prototype pages only** — the live route builds its edition in memory and never reads this file. |
 | `checks/check_mobile_patterns.py` | Browser assertions on the mobile patterns. Not in the pytest suite — see [Checks](#checks). |
 
 ## The design
@@ -70,8 +75,15 @@ semantics with arrow keys on B and Escape on A. C was left at prototype quality.
 
 ## Content
 
-`scripts/build_newspaper_edition.py` turns a `storyline_plan.json` plus a
-`report_storylinefirst_styled.md` into an edition object. Deterministic, no LLM, no cost.
+`teg_analysis/reporting/newspaper_edition.py` turns a `storyline_plan.json` plus a
+`report_storylinefirst_styled.md` into an edition object. Deterministic, no LLM, no cost. It lives in
+the package, not in `scripts/`, because `webapp/` cannot import from `scripts/` and the live route
+needs the same parser; it reads through `teg_analysis.io.read_text_file`, so it works on Railway's
+volume as well as locally.
+
+⚠️ `scripts/build_newspaper_edition.py` **is currently a second copy of that parser**, not the thin
+CLI wrapper it was reduced to — merge `9b6f423` restored the old body. The two are byte-identical
+apart from the file reads, so they agree today and will diverge on the next parser change.
 
 ```bash
 python -m scripts.build_newspaper_edition    # rebuilds editions.json
@@ -96,7 +108,10 @@ matters to a reader.
 
 ## Still to do
 
-1. **Wired in as a preview; not yet switched over.** `/teg-reports-preview`
+1. **Written as a preview; currently unregistered, and not yet switched over.**
+   ⚠️ **Do this first:** merge `9b6f423` dropped `report_preview` from `webapp/app.py`'s router
+   imports and its `include_router` call, so the page 404s despite every file being present.
+   Everything below describes the code as written. `/teg-reports-preview`
    (`webapp/routes/report_preview.py` + `webapp/templates/teg_reports_preview.html`) renders the
    settled layout: desktop server-side (`teg_analysis.reporting.newspaper_edition.render_desktop_html`,
    a straight Python port of `composite.html`'s JS — no interactivity needed there), mobile pattern

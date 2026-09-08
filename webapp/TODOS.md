@@ -8,23 +8,28 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 - [ ] **Bestball/worstball on `/latest-round`** — show best/worst bestball and worstball positions in the round-in-context page.
 - [ ] **`/scoring/matrix`** - score type as pills; TEG / Round / 9 as tabs
-- [ ] **Newspaper report layout — compose the final layout** — direction confirmed against the
-  prototype (newspaper edition beats one long report). Four layouts were built (A Broadsheet, B
-  Modern editorial, C Sports section, D Back page) and the answer is a composite: Jon likes and
-  dislikes elements of each, so the next step is to collect that element by element, not to pick
-  one of the four. Then wire it into `routes/reports.py`.
-  **Decided (2026-09-05)** — ten elements chosen in `elements.html`, assembled in `composite.html`,
-  and the page composition settled: E2 at five or more stories, E1 below that, Green Jacket as the
-  default second lead, nothing below the standings in the rail. Remaining work is the mobile
-  pattern, then wiring into `routes/reports.py`.
-- [ ] **Newspaper report layout — rethink mobile** — stacking the grid vertically recreates the
-  one-long-report problem the layout solved. Needs a different pattern (index-first, swipeable
-  cards, accordion), prototyped like A–D were, not tuned breakpoints.
-  **Decided (2026-09-05): pattern A, index first**, at 1.1 phone screens against a 10.7-screen
-  baseline. B is also shippable and stays switchable; C left at prototype quality.
-  `checks/check_mobile_patterns.py` guards the behaviour.
-
-  Both: `webapp/report_layout_prototypes/README.md`.
+- [ ] **Re-register the `/teg-reports-preview` route** — *two-line fix, do this before anything else
+  on the layout.* Merge `9b6f423` dropped `report_preview` from `webapp/app.py`'s router import list
+  and deleted its `app.include_router(report_preview.router)` line, so the page 404s even though
+  `routes/report_preview.py`, `templates/teg_reports_preview.html`,
+  `static/newspaper_preview.{css,js}` are all present and unchanged. Restore both lines.
+- [ ] **Restore `scripts/build_newspaper_edition.py` to a thin wrapper** — same merge restored its
+  old 392-line body, so the parser now exists twice: there and in
+  `teg_analysis/reporting/newspaper_edition.py`. The copies are byte-identical apart from the file
+  reads, so they agree today and will diverge on the next parser change. The intended 46-line
+  version is at `git show df1c7e0:scripts/build_newspaper_edition.py` — it imports `build_edition`
+  and `AVAILABLE_TEGS` from the package and keeps only `main()`.
+- [ ] **Newspaper report layout — switch `/teg-reports` over** — the design is settled (desktop
+  E1/E2 composite, mobile pattern A) and the preview page is written (see the two fixes above).
+  Parser lives in `teg_analysis/reporting/newspaper_edition.py` (`build_edition`,
+  `render_desktop_html`, `choose_arrangement`), shared by the route and the CLI script. Only TEG
+  14/16/18 have storyline-first artefacts, so the preview's TEG switcher is limited to those.
+  Remaining before the switch-over: (1) decide whether `/teg-reports-preview` replaces
+  `/teg-reports` outright or the two coexist, and update `webapp/routes/reports.py` /
+  `teg_reports.html` accordingly — note the other 14 TEGs have **no** storyline-first artefacts, so
+  a straight replacement needs a plan for them; (2) a real design pass on the preview's own chrome
+  (currently a bare TEG-switcher bar, not part of the settled design).
+  Design record: `webapp/report_layout_prototypes/README.md`. Pipeline context: `DATA_FLOW.md` §10.
 
 
 ## NEXT UP

@@ -44,6 +44,7 @@ TEG v2 is a golf tournament analysis project with two architectural layers: a le
 | What's the current state / what shipped recently? | `STATUS.md` |
 | What's outstanding? | `TODOS.md` (root index → per-area `TODOS.md`) |
 | Full data pipeline (storage → I/O → loader → aggregation → webapp) | `DATA_FLOW.md` |
+| **How a report gets from scores to the page** (both pipelines, one path) | `DATA_FLOW.md` → §10 *Report build* |
 | Webapp stack, themes, design principles | `webapp/README.md` |
 | Analysis package API | `teg_analysis/README.md` |
 | Report/commentary pipeline | `teg_analysis/reporting/README.md` + `STATUS.md` |

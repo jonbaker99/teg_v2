@@ -35,11 +35,18 @@ data/
 
 `course_pars.csv` is a *course-level default*. `round_pars.csv` (below) is the actual per-round Par/SI, confirmed by an admin before a round is played — that's what round entry reads from, not `course_pars.csv` directly. See `DATA_STORAGE_INGESTION_PLAN.md`.
 
-`commentary/` holds the report pipeline's output: five artefacts per TEG (`teg_N_story_plan.json` →
-`_dry_draft.md` → `_report_A_around_draft.md` → `_report_final.md` → `_report_styled.md`), the same set
-with a `round_R_` infix for round reports, plus experiment snapshots and archived generations.
-`_report_styled.md` is the only one the webapp reads. Two sibling directories are **gitignored and safe
-to delete**: `commentary/variants/<name>/` is a parallel artefact set for one model
+`commentary/` holds the report pipeline's output. **Two pipelines write into it** and their
+artefacts sit side by side (full map: [§10](#10-report-build--scores--published-report)):
+
+- **Legacy five-stage** — `teg_N_story_plan.json` → `_dry_draft.md` → `_report_A_around_draft.md` →
+  `_report_final.md` → `_report_styled.md`, the same set with a `round_R_` infix for round reports.
+  All 17 TEGs. `_report_styled.md` is the only one `/teg-reports` reads.
+- **Storyline-first** — `teg_N_storyline_plan.json` → `_report_storylinedraft.md` →
+  `_report_storylinefirst.md` → `_report_storylinefirst_styled.md`. TEGs 14, 16 and 18 only. These
+  are the input to the newspaper edition, not to `/teg-reports`.
+
+Plus experiment snapshots and archived generations. Two sibling directories are **gitignored and
+safe to delete**: `commentary/variants/<name>/` is a parallel artefact set for one model
 (`TEG_REPORT_VARIANT` / `--variant` / `--paste`), promoted into `commentary/` with
 `reporting.paths.promote_variant` when it wins; `llm_mailbox/` is transient prompt hand-off state for
 `--plan` and `--paste` runs (one directory per run: `run.json`, per-call `request.md` / `response.*`, a
@@ -319,3 +326,145 @@ GET /player/{code}
                     Browser
 ```
 
+
+---
+
+## 10. Report build — scores → published report
+
+Sections 1–9 end at a rendered *page*. This one follows the other output: the written tournament
+report. It is the whole path in one place — every hop, what it writes, what reads that, and whether
+it costs an LLM call. **How each stage works is not here**: mechanics, prompts and per-stage costs
+live in `teg_analysis/reporting/README.md`; per-file detail in that folder's `ARTEFACTS.md`.
+
+**There are two report pipelines, and telling them apart is the thing that trips people up.**
+
+| | Legacy five-stage | Storyline-first |
+|---|---|---|
+| Status | **Current production.** All 17 TEGs (2–18) | **Newer method, script-driven.** TEGs 14, 16, 18 |
+| Runs via | `python -m teg_analysis.reporting.backfill --tegs N` | `python scripts/storyline_full_report_experiment.py --teg N` |
+| Shape | one flowing document, rounds as blocks | one lead story + separate articles |
+| Final artefact | `teg_N_report_styled.md` | `teg_N_report_storylinefirst_styled.md` |
+| Reaches a reader via | `/teg-reports` — **live** | the newspaper edition — **not live yet**, see below |
+
+Neither has replaced the other. The legacy chain is what the site serves today; storyline-first is
+what the settled newspaper layout is built on, and switching `/teg-reports` over to it is the open
+decision (`webapp/report_layout_prototypes/README.md` → "Still to do").
+
+### The path
+
+```mermaid
+flowchart TD
+    subgraph entry ["Scores in — §1-2 above"]
+        A["Round played<br/>/live-round/{token} staging"] --> B["execute_data_update()<br/>all-scores + all-data + GitHub commit"]
+    end
+
+    B --> C["load_all_data()"]
+    C --> D["build_notable_events() + scoring.finalise()<br/>beats, scored on 3 axes"]
+    D --> E["assemble_bundle(teg)<br/>beats + arcs + venue + history<br/>IN MEMORY, never a file"]
+
+    subgraph legacy ["LEGACY FIVE-STAGE — production"]
+        L1["build_story_plan()<br/>LLM"] --> L1f(["teg_N_story_plan.json"])
+        L1f --> L2["generate_dry_draft()<br/>LLM"] --> L2f(["teg_N_dry_draft.md"])
+        L2f --> L3["report_around_draft()<br/>LLM"] --> L3f(["teg_N_report_A_around_draft.md"])
+        L3f --> L4["repetition_lint()<br/>LLM - Haiku"] --> L4f(["teg_N_report_final.md<br/>THE CANONICAL TEXT"])
+        L4f --> L5["style_report()<br/>free, code only"] --> L5f(["teg_N_report_styled.md"])
+        L4f -.-> LV["verify_report() — D3<br/>free, reports, never raises"]
+    end
+
+    subgraph storyline ["STORYLINE-FIRST — script-driven"]
+        S1["build_storyline_plan()<br/>LLM"] --> S1f(["teg_N_storyline_plan.json"])
+        S1f --> S2["build_storyline_draft()<br/>LLM, one call per storyline"] --> S2f(["teg_N_report_storylinedraft.md"])
+        S2f --> S3["restyle_voice(label=storylinefirst)<br/>LLM"] --> S3f(["teg_N_report_storylinefirst.md"])
+        S3f --> S4["style_text()<br/>free, code only"] --> S4f(["teg_N_report_storylinefirst_styled.md"])
+    end
+
+    E --> L1
+    E --> S1
+
+    L5f --> P["git push — NOT the app's write path"]
+    S4f --> P
+    P --> G["GitHub repo"]
+    G --> R["read_text_file()<br/>Railway volume, GitHub fallback"]
+
+    R --> W1["/teg-reports<br/>webapp/routes/reports.py<br/>markdown lib + teg_reports.css"]
+    R --> NE["newspaper_edition.build_edition(teg)<br/>free, deterministic, NO LLM"]
+
+    NE --> W2["/teg-reports-preview<br/>webapp/routes/report_preview.py<br/>NOT REGISTERED IN app.py"]
+    NE --> PR["scripts/build_newspaper_edition<br/>→ editions.json<br/>→ scripts/inline_editions<br/>→ /report-layouts/ prototypes"]
+
+    W1 --> BR["Browser"]
+    W2 -.-> BR
+```
+
+### Hop by hop
+
+Everything above `assemble_bundle` is shared; everything below it forks.
+
+| # | Step | Writes | Read by | LLM? |
+|---|---|---|---|---|
+| 1 | Round entered and finalized (`live_round.py`) or added via `/admin/new-round` | `all-scores.parquet`, `all-data.parquet` (+ GitHub commit) | everything downstream | no |
+| 2 | `load_all_data()` → `build_notable_events()` → `scoring.finalise()` | *(memory)* — scored "beats" | the bundle | no |
+| 3 | `assemble_bundle(teg)` adds arcs, venue, career/course history, win anatomy | *(memory)* — **the bundle is not a file** | stages 4L / 4S | no |
+
+**Legacy five-stage** — one `backfill.py` run does 4L–8L end to end:
+
+| # | Step | Writes | Read by | LLM? |
+|---|---|---|---|---|
+| 4L | `build_story_plan()` | `teg_N_story_plan.json` | 5L, 6L, 8L | **yes** |
+| 5L | `generate_dry_draft()` — facts only, deliberately unstyled | `teg_N_dry_draft.md` | 6L | **yes** |
+| 6L | `report_around_draft()` — the voice pass | `teg_N_report_A_around_draft.md` | 7L | **yes** |
+| 7L | `repetition_lint()` | `teg_N_report_final.md` — **canonical** | 8L, D3 | **yes** (Haiku) |
+| — | `verify_report()` — D3 mechanical checks | *(findings printed)* | you | no |
+| 8L | `style_report()` — standings, records, CSS hooks | `teg_N_report_styled.md` | `/teg-reports` | no |
+
+**Storyline-first** — `scripts/storyline_full_report_experiment.py --teg N` does 4S–7S:
+
+| # | Step | Writes | Read by | LLM? |
+|---|---|---|---|---|
+| 4S | `build_storyline_plan()` — 3 mandatory + 0–3 discovered storylines, each with `chosen_headline` and `standfirst` | `teg_N_storyline_plan.json` | 5S, 11b | **yes** |
+| 5S | `build_storyline_draft()` — one fact-isolated section per storyline | `teg_N_report_storylinedraft.md` | 6S | **yes**, one call per storyline |
+| 6S | `restyle_voice(label="storylinefirst", source_label="storylinedraft")` | `teg_N_report_storylinefirst.md` | 7S | **yes** |
+| 7S | `style_text()` inside the same call | `teg_N_report_storylinefirst_styled.md` | 9, 11b | no |
+
+> ⚠️ **7S has a hidden dependency on the legacy chain.** `style_text()` calls
+> `authoring.load_story_plan()`, which opens `teg_N_**story**_plan.json` — the *legacy* plan, not
+> `teg_N_storyline_plan.json`. It works today only because TEGs 14, 16 and 18 happen to have full
+> legacy artefacts too. Run storyline-first on a TEG without them and the styling step raises
+> `FileNotFoundError`, so this blocks generating storyline-first reports for the other 14 TEGs.
+> Small fix: the plan is used for one thing only (the at-a-glance box reads `competitions[]`), and
+> `StorylinePlan` already carries that field in the same shape.
+
+**Round reports** run the same five stages against one round, writing the same filenames with a
+`round_R_` infix (`round_report.py`). `/teg-reports` reads them the same way. Storyline-first has no
+round equivalent.
+
+**Publication** — the same for both, and it is *not* the app's write path:
+
+| # | Step | Writes | Read by | LLM? |
+|---|---|---|---|---|
+| 9 | `git push` — report generation is offline; nothing goes through `write_file` | GitHub | the webapp | no |
+| 10 | `read_text_file()` — volume first, GitHub fallback, caches the hit | Railway volume | the routes | no |
+| 11a | `/teg-reports` renders `teg_N_report_styled.md` through the `markdown` library | HTML | the reader | no |
+| 11b | `newspaper_edition.build_edition(teg)` parses the styled MD **plus** the storyline plan into one edition dict | *(memory)* | 12a, 12b | no |
+| 12a | `render_desktop_html()` + edition JSON → `/teg-reports-preview` | HTML | the reader — **see the warning below** | no |
+| 12b | `scripts/build_newspaper_edition` → `editions.json`, then `scripts/inline_editions` inlines it into the prototype pages | `editions.json`, `composite.html` etc. | `/report-layouts/` | no |
+
+> ⚠️ **`/teg-reports-preview` does not exist on `main` right now.** `webapp/routes/report_preview.py`,
+> its template, CSS and JS are all in the tree, but merge `9b6f423` dropped the `report_preview`
+> import and `app.include_router(report_preview.router)` line from `webapp/app.py`, so nothing
+> serves the route. Restoring those two lines is the whole fix. Same merge left
+> `scripts/build_newspaper_edition.py` as a 392-line copy of the parser rather than the thin wrapper
+> it was reduced to — see `webapp/TODOS.md`.
+
+### Three things that are easy to get wrong
+
+**The bundle is not a file.** Stages 4L and 4S each assemble it in memory and send it in full. Dump
+it without spending anything with `build_story_plan(teg, dry_run=True)`.
+
+**Editing a styled file is pointless.** `_report_styled.md` is regenerated from `_report_final.md`
+every time `style_report()` runs. Edit the canonical text, then re-style.
+
+**Merging to `main` does not update the site.** Railway serves from a volume that already holds a
+cached copy of a report at that filename, and reports never travel through the app's write path.
+A *new* report is pulled on first view; a *regenerated* one needs **"Sync all reports from GitHub"**
+on `/admin/volume-sync` (`sync.sync_report_files()`, §2 above).
