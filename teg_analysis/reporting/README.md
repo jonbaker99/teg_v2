@@ -577,7 +577,8 @@ To test a tone variant: draft once per TEG (stage 1+2, expensive relative to sta
 3 twice — once with `WRITER_VOICE` (baseline) and once with the candidate voice prompt — both reading
 the SAME `teg_N_report_storylinedraft.md`. From the CLI that second run is
 `--from voice`, which reuses the draft on disk and re-runs the voice pass alone: **one LLM call
-instead of seven.** That is what `restyle_voice`'s `voice_prompt` argument and
+instead of seven.** Its sibling `--from draft` reuses the plan and redrafts the sections (six calls),
+for when the drafting prompt is what you are changing. That is what `restyle_voice`'s `voice_prompt` argument and
 `source_label="storylinedraft"` are for; no need to regenerate the plan/draft per tone variant.
 
 Stage 3's styling step reads `render.style_text()` → `authoring.load_story_or_storyline_plan()`,

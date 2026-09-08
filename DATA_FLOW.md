@@ -417,7 +417,7 @@ Everything above `assemble_bundle` is shared; everything below it forks.
 | — | `verify_report()` — D3 mechanical checks | *(findings printed)* | you | no |
 | 8L | `style_report()` — standings, records, CSS hooks | `teg_N_report_styled.md` | `/teg-reports` | no |
 
-**Storyline-first** — `scripts/storyline_full_report_experiment.py --teg N` does 4S–7S:
+**Storyline-first** — `scripts/storyline_full_report_experiment.py --teg N` does 4S–7S. `--from draft` re-enters at 5S (reusing the plan), `--from voice` at 6S (reusing the draft) — the same freeze-and-restart idea as the legacy chain's restart recipes:
 
 | # | Step | Writes | Read by | LLM? |
 |---|---|---|---|---|
