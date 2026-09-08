@@ -8,13 +8,6 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
 
 - [ ] **Bestball/worstball on `/latest-round`** — show best/worst bestball and worstball positions in the round-in-context page.
 - [ ] **`/scoring/matrix`** - score type as pills; TEG / Round / 9 as tabs
-- [ ] **Restore `scripts/build_newspaper_edition.py` to a thin wrapper** — merge `9b6f423` restored
-  its old 392-line body, so the parser now exists twice: there and in
-  `teg_analysis/reporting/newspaper_edition.py`. The copies are byte-identical apart from the file
-  reads, so they agree today and will diverge on the next parser change. The intended 46-line
-  version is at `git show df1c7e0:scripts/build_newspaper_edition.py` — it imports `build_edition`
-  and `AVAILABLE_TEGS` from the package and keeps only `main()`. (The sibling regression from that
-  merge, the unregistered `report_preview` router, was fixed in `bb614c0`.)
 - [ ] **Newspaper report layout — switch `/teg-reports` over** — the design is settled (desktop
   E1/E2 composite, mobile pattern A) and is wired into the site at `/teg-reports-preview` (not
   linked from nav, `/teg-reports` untouched). Parser lives in

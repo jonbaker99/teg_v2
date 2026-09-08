@@ -79,10 +79,6 @@ the package, not in `scripts/`, because `webapp/` cannot import from `scripts/` 
 needs the same parser; it reads through `teg_analysis.io.read_text_file`, so it works on Railway's
 volume as well as locally.
 
-⚠️ `scripts/build_newspaper_edition.py` **is currently a second copy of that parser**, not the thin
-CLI wrapper it was reduced to — merge `9b6f423` restored the old body. The two are byte-identical
-apart from the file reads, so they agree today and will diverge on the next parser change.
-
 ```bash
 python -m scripts.build_newspaper_edition    # rebuilds editions.json
 python -m scripts.inline_editions            # pushes it back into the pages

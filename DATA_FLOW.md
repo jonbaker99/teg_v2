@@ -449,12 +449,7 @@ round equivalent.
 | 12a | `render_desktop_html()` + edition JSON → `/teg-reports-preview` | HTML | the reader — live, but not linked from the nav | no |
 | 12b | `scripts/build_newspaper_edition` → `editions.json`, then `scripts/inline_editions` inlines it into the prototype pages | `editions.json`, `composite.html` etc. | `/report-layouts/` | no |
 
-> ⚠️ **The parser exists twice.** `scripts/build_newspaper_edition.py` is a 392-line copy of
-> `newspaper_edition.py` rather than the thin wrapper it was reduced to by PR #96 — merge `9b6f423`
-> restored its old body. The two are byte-identical apart from the file reads, so they agree today
-> and will diverge on the next parser change. Tracked in `webapp/TODOS.md`.
->
-> `/teg-reports-preview` was unreachable for the same reason (its router was dropped from
+> `/teg-reports-preview` was unreachable for a merge regression (its router was dropped from
 > `webapp/app.py`); **fixed on `main` in `bb614c0`.** It renders, but is deliberately not linked
 > from the nav, and only TEGs 14/16/18 have the artefacts it needs.
 

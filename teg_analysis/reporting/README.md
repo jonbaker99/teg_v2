@@ -618,13 +618,8 @@ call, no cost.**
    Design record for the layout itself — chosen elements, composition rule, mobile evidence:
    `webapp/report_layout_prototypes/README.md`.
 
-> ⚠️ **`scripts/build_newspaper_edition.py` is a 392-line copy of the parser**, not the 46-line
-> wrapper it was reduced to when the logic moved into `newspaper_edition.py` — merge `9b6f423`
-> restored its old body. The two copies are byte-identical apart from the file reads, so they agree
-> today and will silently diverge on the next parser change. Tracked in `webapp/TODOS.md`.
->
-> The same merge also left `/teg-reports-preview` unregistered in `webapp/app.py`; **fixed on `main`
-> in `bb614c0`.**
+> `/teg-reports-preview` was briefly unregistered in `webapp/app.py` by a merge regression; **fixed
+> on `main` in `bb614c0`.**
 
 ### The storyline hierarchy and the champion register
 
