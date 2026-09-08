@@ -53,17 +53,17 @@ before this file if you are new to the area. [README.md](README.md) gained a *Tw
 top and the presentation stage that was missing after the styled markdown;
 [ARTEFACTS.md](ARTEFACTS.md) gained the storyline-first artefact set.
 
-Drift found while verifying, still open (the `/teg-reports-preview` 404 also found by this pass was
+Drift found while verifying, since fixed (the `/teg-reports-preview` 404 also found by this pass was
 fixed on main in `bb614c0`):
-- **`scripts/build_newspaper_edition.py` is a second copy of the parser**, not the thin wrapper it
-  was reduced to by PR #96. Byte-identical to `newspaper_edition.py` apart from the file reads, so
-  the two agree today and will diverge on the next parser change. `webapp/TODOS.md`.
-- **`render.style_text()` reads the *legacy* story plan** (`load_story_plan` → `teg_N_story_plan.json`),
-  so styling a storyline-first report needs a legacy plan for the same TEG. Invisible on 14/16/18,
-  `FileNotFoundError` anywhere else — **this blocks the "other 14 TEGs" task above.**
-  `teg_analysis/TODOS.md`.
-- **`paths.promote_variant` cannot promote storyline-first artefacts** — `_artefact_names` lists only
-  the legacy five. `teg_analysis/TODOS.md`.
+- **`scripts/build_newspaper_edition.py` was a second copy of the parser**, not the thin wrapper PR
+  #96 reduced it to. Restored to the thin wrapper.
+- **`render.style_text()` read only the *legacy* story plan** (`load_story_plan` →
+  `teg_N_story_plan.json`), so styling a storyline-first report needed a legacy plan for the same
+  TEG — invisible on 14/16/18, `FileNotFoundError` anywhere else. `style_text()` now calls
+  `authoring.load_story_or_storyline_plan()`, which falls back to `teg_N_storyline_plan.json` when
+  the legacy plan is absent — no longer blocks the "other 14 TEGs" task above.
+- **`paths.promote_variant` could not promote storyline-first artefacts** — `_artefact_names` now
+  lists the storyline-first filenames alongside the legacy five.
 
 **Considered and not done: splitting `README.md`.** It is now 1,076 lines, over CLAUDE.md's
 "split files that grow unwieldy" line, and the obvious cut is *Components — what you can change

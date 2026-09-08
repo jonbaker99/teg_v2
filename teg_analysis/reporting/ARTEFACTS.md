@@ -579,7 +579,7 @@ Decoder for the ~40 other files. None of these are read by anything; they're his
 | `..._storyline_plan_prompt.md` | dry-run dump of the storyline-plan prompt. Free to regenerate |
 | `storyline_experiment_teg_N.json` | output of `scripts/storyline_experiment.py`, the discovery trial. History |
 | `..._notable_events.md`, `..._venue_context.md` | inspection dumps of Stage 2. Free |
-| `variants/<name>/` | **a whole parallel artefact set for one model** (`variants/gpt5/`, `variants/gemini/`) written when `TEG_REPORT_VARIANT` / `--variant` / `--paste NAME` is set. Same five filenames inside, plus a `manifest.json` recording provider, requested model and timings. **Gitignored** — promote the one you want with `paths.promote_variant(name, teg)` and commit that. Nothing reads a variant automatically. ⚠️ `promote_variant` only knows the **legacy five filenames** (`paths._artefact_names`): storyline-first artefacts in a variant are never promoted — skipped without a warning if legacy files are there too, and a bare `FileNotFoundError` if they are not. Copy them by hand until that list is extended |
+| `variants/<name>/` | **a whole parallel artefact set for one model** (`variants/gpt5/`, `variants/gemini/`) written when `TEG_REPORT_VARIANT` / `--variant` / `--paste NAME` is set. Legacy-five and storyline-first filenames alike, plus a `manifest.json` recording provider, requested model and timings. **Gitignored** — promote the one you want with `paths.promote_variant(name, teg)` and commit that. Nothing reads a variant automatically |
 | `archive 2026 v1/`, `archive 2026 v2/` | full snapshots of two earlier generations of the library |
 | `archive 2025/`, `drafts/`, `round_reports/` | the pre-pipeline 2025 system. Still the webapp's fallback read paths |
 

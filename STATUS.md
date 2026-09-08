@@ -124,11 +124,11 @@ no longer claims five artefacts per TEG; `teg_analysis/reporting/README.md` gain
 block and the presentation stage that was missing after the styled markdown; `ARTEFACTS.md` gained
 the storyline-first artefact set.
 
-Three code/doc contradictions were found while verifying and are tracked as to-dos:
-`scripts/build_newspaper_edition.py` is still a 392-line copy of the parser rather than the thin
-wrapper (`webapp/TODOS.md`); `render.style_text()` reads the *legacy* story plan, which blocks
-storyline-first generation for the other 14 TEGs; and `paths.promote_variant` cannot promote
-storyline-first artefacts (both `teg_analysis/TODOS.md`).
+Three code/doc contradictions were found while verifying and have since been fixed:
+`scripts/build_newspaper_edition.py` was restored to the thin wrapper; `render.style_text()` now
+falls back to the storyline-first plan when the legacy one is absent, unblocking storyline-first
+generation for the other 14 TEGs; and `paths.promote_variant` now promotes storyline-first
+artefacts too.
 
 
 ### 2026-08-17 — Reporting docs reconciled against the code

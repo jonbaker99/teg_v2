@@ -337,6 +337,19 @@ def test_promote_copies_variant_into_canonical(monkeypatch):
     assert len(written) == 2
 
 
+def test_promote_copies_storyline_first_artefacts(monkeypatch):
+    monkeypatch.setenv(paths.ENV_VARIANT, "gemini")
+    out = Path(paths.output_dir())
+    (out / "teg_14_storyline_plan.json").write_text("{}")
+    (out / "teg_14_report_storylinefirst_styled.md").write_text("styled")
+
+    monkeypatch.delenv(paths.ENV_VARIANT)
+    written = paths.promote_variant("gemini", 14)
+    assert Path("data/commentary/teg_14_storyline_plan.json").read_text() == "{}"
+    assert Path("data/commentary/teg_14_report_storylinefirst_styled.md").read_text() == "styled"
+    assert len(written) == 2
+
+
 def test_promote_refuses_when_there_is_nothing_to_promote():
     Path("data/commentary/variants/empty").mkdir(parents=True)
     with pytest.raises(FileNotFoundError, match="no artefacts"):
