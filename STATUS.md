@@ -2,7 +2,7 @@
 
 Current state and next priorities. Instructions and architecture live in `CLAUDE.md`; outstanding items live in `TODOS.md`.
 
-**Last updated:** 2026-09-08 (report build documented end to end in `DATA_FLOW.md` §10; newspaper layout preview and storyline headlines logged below; earlier content current as at 2026-07-12)
+**Last updated:** 2026-09-08 (newspaper layout preview page fixed and its artefacts re-synced; report build documented end to end in `DATA_FLOW.md` §10; earlier content current as at 2026-07-12)
 
 ## Where things stand
 
@@ -89,27 +89,31 @@ gap noted here was closed on 2026-09-06 (below). Full record:
 `webapp/report_layout_prototypes/README.md`, which the trial's two working docs were folded into
 once the design was settled.
 
-### 2026-09-06/07 — Newspaper layout wired in as a preview; real headlines on the plan
+### 2026-09-06 — Newspaper layout wired in as a preview page
 
-Two changes landed. **`/teg-reports-preview`** (`webapp/routes/report_preview.py`) renders the
-settled design for real data — not linked from the nav, `/teg-reports` untouched. Desktop renders
-server-side (a Python port of `composite.html`'s JS,
-`teg_analysis/reporting/newspaper_edition.py::render_desktop_html`); mobile pattern A renders
-client-side (`webapp/static/newspaper_preview.js` — hash routing, Back gesture, cold deep-links,
-scroll restore, focus management), switched by a CSS breakpoint. The parser moved out of
-`scripts/build_newspaper_edition.py` into the package so the route can import it without reaching
-into `scripts/`. Only TEG 14/16/18 have storyline-first artefacts.
+`/teg-reports-preview` (`webapp/routes/report_preview.py`) renders the settled design for real
+data — not linked from the nav, `/teg-reports` untouched. Desktop renders server-side (a Python
+port of `composite.html`'s JS, `teg_analysis/reporting/newspaper_edition.py::render_desktop_html`);
+mobile pattern A renders client-side (`webapp/static/newspaper_preview.js`, ported from
+`mobile.html`'s pattern A — hash routing, Back gesture, cold deep-links, scroll restore, focus
+management), switched by a CSS breakpoint. The parser (`build_edition`) moved out of
+`scripts/build_newspaper_edition.py` into `teg_analysis/reporting/newspaper_edition.py` — UI-agnostic,
+so the webapp route can import it without reaching into `scripts/`; the CLI script is now a thin
+wrapper. Only TEG 14/16/18 have storyline-first artefacts, so those are the only editions the
+preview can render; other TEG numbers fall back to the newest available. Verified in a real
+browser at 390×844 and 1280×900.
 
-**`DraftedStoryline` gained real `headline_candidates`/`chosen_headline`/`standfirst` fields**, so
-the layout stops deriving headlines from `subject`. TEG 14/16/18 plans regenerated. Open follow-up:
-the model still reaches for a two-clause "X — Y" headline over the requested 3–8 word single clause;
-`check_storyline_plan_consistency` warns rather than fails.
+A parallel PR (#95, headline/standfirst fields) briefly broke all three: it regenerated
+`teg_{14,16,18}_storyline_plan.json` without the paired styled markdown, desyncing the parser's
+exact-string matching. **Fixed by hand 2026-09-08** (renamed headings for 14/16, restored a
+dropped storyline for 18 — no LLM call). All three verified rendering again. Still only 3 of 17
+TEGs have storyline-first artefacts at all — generating the rest is a real LLM-cost task, not
+started. Detail: `teg_analysis/reporting/STATUS.md` → START HERE.
 
-⚠️ **Merge `9b6f423` reverted parts of the first change and they are still broken on `main`:**
-`webapp/app.py` no longer imports or includes `report_preview.router`, so **the preview route 404s**,
-and `scripts/build_newspaper_edition.py` is a 392-line copy of the parser instead of the thin
-wrapper. Both are tracked in `webapp/TODOS.md`. Detail:
-`webapp/report_layout_prototypes/README.md` → "Still to do".
+**Also landed (PR #95): `DraftedStoryline` gained real
+`headline_candidates`/`chosen_headline`/`standfirst` fields**, so the layout stops deriving headlines
+from `subject`. Open follow-up: the model still reaches for a two-clause "X — Y" headline over the
+requested 3–8 word single clause; `check_storyline_plan_consistency` warns rather than fails.
 
 ### 2026-09-08 — Report build documented end to end
 
@@ -117,9 +121,15 @@ Docs only. `DATA_FLOW.md` gained **§10 "Report build"** — the single path fro
 the report a reader sees, as a mermaid diagram plus a hop-by-hop table (what each step writes, what
 reads it, whether it costs an LLM call), covering both pipelines. `DATA_FLOW.md`'s commentary section
 no longer claims five artefacts per TEG; `teg_analysis/reporting/README.md` gained a "Two pipelines"
-block and the presentation stage that was missing after the styled markdown;
-`ARTEFACTS.md` gained the storyline-first artefact set. The two merge regressions above were found
-while verifying, and are flagged rather than fixed.
+block and the presentation stage that was missing after the styled markdown; `ARTEFACTS.md` gained
+the storyline-first artefact set.
+
+Three code/doc contradictions were found while verifying and are tracked as to-dos:
+`scripts/build_newspaper_edition.py` is still a 392-line copy of the parser rather than the thin
+wrapper (`webapp/TODOS.md`); `render.style_text()` reads the *legacy* story plan, which blocks
+storyline-first generation for the other 14 TEGs; and `paths.promote_variant` cannot promote
+storyline-first artefacts (both `teg_analysis/TODOS.md`).
+
 
 ### 2026-08-17 — Reporting docs reconciled against the code
 

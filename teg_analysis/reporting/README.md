@@ -608,7 +608,7 @@ call, no cost.**
      server-side via `render_desktop_html()` (a 1:1 Python port of `composite.html`'s JS: E1/E2
      composition, fill f1); mobile pattern A renders client-side from the edition JSON
      (`webapp/static/newspaper_preview.js`), switched by a CSS breakpoint.
-     ⚠️ **This route is not registered on `main`** — see the warning below.
+     Live, but deliberately not linked from the nav.
    - **The prototypes** — `python -m scripts.build_newspaper_edition` writes
      `webapp/report_layout_prototypes/editions.json`, then `python -m scripts.inline_editions`
      inlines it into the prototype pages (they carry data inline because a published Artifact cannot
@@ -618,16 +618,13 @@ call, no cost.**
    Design record for the layout itself — chosen elements, composition rule, mobile evidence:
    `webapp/report_layout_prototypes/README.md`.
 
-> ⚠️ **Two things merge `9b6f423` undid, still broken on `main`:**
-> 1. `/teg-reports-preview` does not exist. The route module, template, CSS and JS are all present,
->    but the `report_preview` import and `app.include_router(report_preview.router)` line were
->    dropped from `webapp/app.py`. Restoring those two lines is the whole fix.
-> 2. `scripts/build_newspaper_edition.py` is a 392-line **copy** of the parser, not the 46-line
->    wrapper it was reduced to when the logic moved into `newspaper_edition.py`. The two copies are
->    byte-identical apart from the file reads, so they agree today and will silently diverge on the
->    next parser change.
+> ⚠️ **`scripts/build_newspaper_edition.py` is a 392-line copy of the parser**, not the 46-line
+> wrapper it was reduced to when the logic moved into `newspaper_edition.py` — merge `9b6f423`
+> restored its old body. The two copies are byte-identical apart from the file reads, so they agree
+> today and will silently diverge on the next parser change. Tracked in `webapp/TODOS.md`.
 >
-> Tracked in `webapp/TODOS.md`. Documented here as-is rather than worked around.
+> The same merge also left `/teg-reports-preview` unregistered in `webapp/app.py`; **fixed on `main`
+> in `bb614c0`.**
 
 ### The storyline hierarchy and the champion register
 
@@ -1017,7 +1014,7 @@ default (`high`). It is the primary cost/latency lever and is untested here — 
 ## UI surfaces
 
 - **Webapp (primary)** — `/teg-reports` page (see `webapp/routes/reports.py` + `webapp/templates/teg_reports.html`) and the Report tab on `/results` (see `webapp/routes/history.py` `_results_context()` `tab == "report"` branch).
-- **Newspaper edition (built, not serving)** — `/teg-reports-preview` (`webapp/routes/report_preview.py` + `webapp/templates/teg_reports_preview.html`), rendering the storyline-first artefacts through `newspaper_edition.py`. **Currently unreachable — its router is not registered in `webapp/app.py`**; see the warning in [the presentation stage](#from-styled-markdown-to-a-finished-report--the-presentation-stage).
+- **Newspaper edition (live, not linked)** — `/teg-reports-preview` (`webapp/routes/report_preview.py` + `webapp/templates/teg_reports_preview.html`), rendering the storyline-first artefacts through `newspaper_edition.py`. Not in the nav, and only TEGs 14/16/18 have the artefacts; switching `/teg-reports` over is the open decision.
 - **Streamlit (legacy, still wired)** — `streamlit/teg_reports.py` prefers the new styled MD, falls back to the legacy `teg_N_main_report.md`.
 
 Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`toc` extensions; same CSS file in both static dirs.

@@ -4,11 +4,9 @@ Tournament reports are presented as a **newspaper edition**: a lead story on the
 the remaining storylines as separate articles. This folder holds the prototypes that settled that
 design and the record of how each choice was made.
 
-**The design is decided, and the code that serves it is written** — `/teg-reports-preview`
-(`webapp/routes/report_preview.py`), not linked from the nav, `/teg-reports` untouched.
-⚠️ **The route is not reachable on `main`**: merge `9b6f423` dropped the `report_preview` import and
-`app.include_router(report_preview.router)` line from `webapp/app.py`. Restoring those two lines is
-the whole fix. See [Still to do](#still-to-do).
+**The design is decided and is wired into the site as a preview** at `/teg-reports-preview`
+(`webapp/routes/report_preview.py`) — not linked from the nav, `/teg-reports` untouched. See
+[Still to do](#still-to-do) for what's left before switching `/teg-reports` over to it.
 
 Where this sits in the wider pipeline: `DATA_FLOW.md` → §10 *Report build*.
 
@@ -108,10 +106,7 @@ matters to a reader.
 
 ## Still to do
 
-1. **Written as a preview; currently unregistered, and not yet switched over.**
-   ⚠️ **Do this first:** merge `9b6f423` dropped `report_preview` from `webapp/app.py`'s router
-   imports and its `include_router` call, so the page 404s despite every file being present.
-   Everything below describes the code as written. `/teg-reports-preview`
+1. **Wired in as a preview; not yet switched over.** `/teg-reports-preview`
    (`webapp/routes/report_preview.py` + `webapp/templates/teg_reports_preview.html`) renders the
    settled layout: desktop server-side (`teg_analysis.reporting.newspaper_edition.render_desktop_html`,
    a straight Python port of `composite.html`'s JS — no interactivity needed there), mobile pattern

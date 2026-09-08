@@ -14,6 +14,36 @@
 
 ## START HERE — picking this up in a new chat (2026-09-08)
 
+### Pending: storyline-first reporting is only done for 3 of 17 TEGs (2026-09-08)
+
+**Generate storyline-first reporting for the other 14 TEGs.** Only TEG 14, 16, 18 have
+storyline-first artefacts (`data/commentary/teg_N_storyline_plan.json` +
+`teg_N_report_storylinefirst_styled.md`); the newspaper layout (`/teg-reports-preview`,
+`teg_analysis/reporting/newspaper_edition.py`) can only ever render a TEG that has these. TEGs 2–13,
+15, 17 have never had the storyline-first pipeline run at all — they still only have the older
+`teg_N_report_styled.md`. Run per TEG:
+
+    python scripts/storyline_full_report_experiment.py --teg N
+
+Real Anthropic API billing (`ANTHROPIC_API_KEY`/`TEG_ANTHROPIC_API_KEY`), no `--plan`/`--paste`
+mailbox support on this script (unlike `backfill.py`) as of 2026-09-08. Still explicitly an
+experiment script (see its own docstring) — not wired into `backfill.py` or any production path.
+After a run, `teg_analysis.reporting.newspaper_edition.AVAILABLE_TEGS` (currently hardcoded
+`(14, 16, 18)`) needs the new TEG numbers added, or the preview won't offer them. Not started yet —
+deliberately, no LLM calls until asked for.
+
+**Fixed (2026-09-08): the 14/16/18 desync from PR #95.** That PR (headline/standfirst fields)
+regenerated `teg_{14,16,18}_storyline_plan.json` with fresh LLM-written `subject` text but not the
+paired `_report_storylinefirst_styled.md`, so `newspaper_edition.py`'s exact-string matching broke
+for all three. Patched by hand rather than a full pipeline re-run (cost/time tradeoff, and a re-run
+would re-roll every `subject`/`chosen_headline` again, non-deterministically): the styled markdown's
+`## ` headings were renamed to the new `subject` text for TEG 14 and 16 (same underlying storylines,
+wording only). TEG 18's regeneration had also **dropped** a storyline outright — John Patterson's
+runner-up story — while its article was still in the markdown; his old `DraftedStoryline` entry
+(pre-headline schema, so no `chosen_headline`/`standfirst` — falls back to derivation, same as any
+other pre-2026-09-06 artefact) was copied back into `discovered_storylines` verbatim to restore the
+pairing. All three verified rendering correctly at `/teg-reports-preview`, full suite green.
+
 ### The report build is now documented end to end (2026-09-08)
 
 Docs only, no pipeline change. **`DATA_FLOW.md` → §10 "Report build"** is the new single map from a
@@ -23,11 +53,15 @@ before this file if you are new to the area. [README.md](README.md) gained a *Tw
 top and the presentation stage that was missing after the styled markdown;
 [ARTEFACTS.md](ARTEFACTS.md) gained the storyline-first artefact set.
 
-Three pieces of drift found while verifying, flagged not fixed:
-- **`/teg-reports-preview` 404s.** Merge `9b6f423` dropped `report_preview` from `webapp/app.py`'s
-  router imports and its `include_router` call. Two-line fix, `webapp/TODOS.md`.
+Drift found while verifying, still open (the `/teg-reports-preview` 404 also found by this pass was
+fixed on main in `bb614c0`):
 - **`scripts/build_newspaper_edition.py` is a second copy of the parser**, not the thin wrapper it
-  was reduced to. Same merge. `webapp/TODOS.md`.
+  was reduced to by PR #96. Byte-identical to `newspaper_edition.py` apart from the file reads, so
+  the two agree today and will diverge on the next parser change. `webapp/TODOS.md`.
+- **`render.style_text()` reads the *legacy* story plan** (`load_story_plan` → `teg_N_story_plan.json`),
+  so styling a storyline-first report needs a legacy plan for the same TEG. Invisible on 14/16/18,
+  `FileNotFoundError` anywhere else — **this blocks the "other 14 TEGs" task above.**
+  `teg_analysis/TODOS.md`.
 - **`paths.promote_variant` cannot promote storyline-first artefacts** — `_artefact_names` lists only
   the legacy five. `teg_analysis/TODOS.md`.
 
@@ -40,6 +74,7 @@ folder's seventh markdown file makes landing cold worse, not better. **The real 
 README.md and ARTEFACTS.md have overlapping roles** (both document the pipeline stage by stage, one
 by mechanism and one by iteration cost), and that is a boundary decision, not a line-count one.
 Worth doing deliberately, on its own, not folded into a correctness pass.
+
 
 ### `DraftedStoryline` gained real `headline`/`standfirst` fields (2026-09-07)
 

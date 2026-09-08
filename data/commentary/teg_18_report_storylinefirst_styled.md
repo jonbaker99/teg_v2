@@ -9,7 +9,7 @@
   <p><strong>Wooden Spoon:</strong> Jon Baker — 126 pts, 23 adrift of the next worst</p>
 </section>
 
-## Alex Baker's Trophy: 169 points, two field-best rounds, and a course-worst gross that cost him nothing
+## Alex Baker takes outright control of the Trophy on Round 1's 5th hole and never surrenders it, surviving two personal collapses to win by 8
 
 Alex Baker won the Trophy with 169 points, eight clear of runner-up John Patterson. It stands as the seventh-highest Trophy total on record and the second-best of his own career. He led the Stableford count after each of the final three rounds, and once he reached the front after R2 he was never headed. The victory is entirely his and requires no qualification whatsoever. The golf is another matter.
 
@@ -17,7 +17,7 @@ The scoring came in bursts. On the Tour Course in R1 he took 17 points from hole
 
 The gross figures were fighting a different campaign. In R2 he made an 8 at the par-three 16th and an 11 at the par-five 18th, both personal worsts against par, and signed for 106. That is a new PGA Catalunya Tour course-worst, beating the previous mark of 105, which had stood across 22 prior visits. Nobody sets a record like that casually. It takes commitment. R4 then produced a 10 at the 14th and an 8 at the 17th, delivered with the serenity of a man who had already counted his points and found them sufficient. His best gross of the four days was 98 on the Tour and 100 on the Stadium, against prior bests of 92 and 93. It cost him the Green Jacket, where he slid from second after R1 to fifth. On Stableford, it cost him nothing at all.
 
-## David Mullin: an 11 at the 15th, then the lowest gross round ever played at the Stadium
+## David Mullin drops to the bottom of the Wooden Spoon race after a sextuple bogey at the Tour course's 15th, then two rounds later shoots a new course record on the Stadium
 
 **David Mullin**
 
@@ -35,7 +35,7 @@ What followed is the reason he was still in the argument at the close. Later in 
 
 The pattern held to the last day. After a triple at the 14th and a double at the 15th on the Stadium, he halted proceedings with a bogey at the 16th and a birdie at the 17th. Second place, built on the recoveries rather than the collapses, of which there were plenty to choose from.
 
-## Gregg Williams's Green Jacket: reigning Wooden Spoon holder to +66 and a 14-shot win / Jon Baker's Wooden Spoon: the defending Trophy champion finishes 23 points adrift of the next man
+## Gregg Williams climbs from a bottom-half Round 1 to win the Green Jacket by 14, overtaking Jon Baker's 20-hole lead along the way / Jon Baker, the reigning Trophy and Jacket champion, collects the Wooden Spoon 23 points clear of the next-worst finisher
 
 **Round 1, Tour Course.** Gregg Williams opened in the manner expected of a man holding the Wooden Spoon: a quadruple-bogey 9 at the par-5 7th, another quadruple bogey, an 8, at the 17th, and a haemorrhage of dropped shots running from the 2nd all the way to the 14th, taking in triple bogeys at the 3rd and 4th. A birdie at the par-5 15th finally applied a tourniquet. He signed for 31 points. Jon Baker, meanwhile, had led the Green Jacket gross race since the 5th hole of that same round.
 

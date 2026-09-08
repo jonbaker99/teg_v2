@@ -389,7 +389,7 @@ flowchart TD
     R --> W1["/teg-reports<br/>webapp/routes/reports.py<br/>markdown lib + teg_reports.css"]
     R --> NE["newspaper_edition.build_edition(teg)<br/>free, deterministic, NO LLM"]
 
-    NE --> W2["/teg-reports-preview<br/>webapp/routes/report_preview.py<br/>NOT REGISTERED IN app.py"]
+    NE --> W2["/teg-reports-preview<br/>webapp/routes/report_preview.py<br/>live, not linked from nav"]
     NE --> PR["scripts/build_newspaper_edition<br/>→ editions.json<br/>→ scripts/inline_editions<br/>→ /report-layouts/ prototypes"]
 
     W1 --> BR["Browser"]
@@ -446,15 +446,17 @@ round equivalent.
 | 10 | `read_text_file()` — volume first, GitHub fallback, caches the hit | Railway volume | the routes | no |
 | 11a | `/teg-reports` renders `teg_N_report_styled.md` through the `markdown` library | HTML | the reader | no |
 | 11b | `newspaper_edition.build_edition(teg)` parses the styled MD **plus** the storyline plan into one edition dict | *(memory)* | 12a, 12b | no |
-| 12a | `render_desktop_html()` + edition JSON → `/teg-reports-preview` | HTML | the reader — **see the warning below** | no |
+| 12a | `render_desktop_html()` + edition JSON → `/teg-reports-preview` | HTML | the reader — live, but not linked from the nav | no |
 | 12b | `scripts/build_newspaper_edition` → `editions.json`, then `scripts/inline_editions` inlines it into the prototype pages | `editions.json`, `composite.html` etc. | `/report-layouts/` | no |
 
-> ⚠️ **`/teg-reports-preview` does not exist on `main` right now.** `webapp/routes/report_preview.py`,
-> its template, CSS and JS are all in the tree, but merge `9b6f423` dropped the `report_preview`
-> import and `app.include_router(report_preview.router)` line from `webapp/app.py`, so nothing
-> serves the route. Restoring those two lines is the whole fix. Same merge left
-> `scripts/build_newspaper_edition.py` as a 392-line copy of the parser rather than the thin wrapper
-> it was reduced to — see `webapp/TODOS.md`.
+> ⚠️ **The parser exists twice.** `scripts/build_newspaper_edition.py` is a 392-line copy of
+> `newspaper_edition.py` rather than the thin wrapper it was reduced to by PR #96 — merge `9b6f423`
+> restored its old body. The two are byte-identical apart from the file reads, so they agree today
+> and will diverge on the next parser change. Tracked in `webapp/TODOS.md`.
+>
+> `/teg-reports-preview` was unreachable for the same reason (its router was dropped from
+> `webapp/app.py`); **fixed on `main` in `bb614c0`.** It renders, but is deliberately not linked
+> from the nav, and only TEGs 14/16/18 have the artefacts it needs.
 
 ### Three things that are easy to get wrong
 
