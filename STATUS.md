@@ -99,13 +99,12 @@ wrapper. Only TEG 14/16/18 have storyline-first artefacts, so those are the only
 preview can render; other TEG numbers fall back to the newest available. Verified in a real
 browser at 390×844 and 1280×900.
 
-⚠️ **2026-09-08: currently non-functional.** A parallel PR (#95, headline/standfirst fields)
-regenerated `teg_{14,16,18}_storyline_plan.json` without regenerating the paired styled markdown,
-desyncing the parser's exact-string matching for all three TEGs the preview supports — it now shows
-"no edition available" everywhere (gracefully, not a crash). Also still only 3 of 17 TEGs have
-storyline-first artefacts at all. Neither is fixed yet — deliberately, both need a real LLM
-generation run. Full detail and the exact command to run when ready:
-`teg_analysis/reporting/STATUS.md` → START HERE.
+A parallel PR (#95, headline/standfirst fields) briefly broke all three: it regenerated
+`teg_{14,16,18}_storyline_plan.json` without the paired styled markdown, desyncing the parser's
+exact-string matching. **Fixed by hand 2026-09-08** (renamed headings for 14/16, restored a
+dropped storyline for 18 — no LLM call). All three verified rendering again. Still only 3 of 17
+TEGs have storyline-first artefacts at all — generating the rest is a real LLM-cost task, not
+started. Detail: `teg_analysis/reporting/STATUS.md` → START HERE.
 
 ### 2026-08-17 — Reporting docs reconciled against the code
 

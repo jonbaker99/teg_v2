@@ -96,13 +96,6 @@ matters to a reader.
 
 ## Still to do
 
-0. **Currently broken: the preview can't render any TEG.** The 2026-09-07 headline/standfirst
-   regeneration (item 2 below) desynced `teg_{14,16,18}_storyline_plan.json` from their paired
-   styled markdown — `/teg-reports-preview` shows "no edition available" for all three until the
-   markdown is regenerated to match. Also still only 3 of 17 TEGs have storyline-first artefacts at
-   all. Both are next-time-we-touch-reporting to-dos, deliberately not actioned yet (real LLM cost).
-   Full detail and the exact command: `teg_analysis/reporting/STATUS.md` → START HERE, "Pending:
-   storyline-first reporting is only done for 3 of 17 TEGs, and 3 are currently desynced".
 1. **Wired in as a preview; not yet switched over.** `/teg-reports-preview`
    (`webapp/routes/report_preview.py` + `webapp/templates/teg_reports_preview.html`) renders the
    settled layout: desktop server-side (`teg_analysis.reporting.newspaper_edition.render_desktop_html`,

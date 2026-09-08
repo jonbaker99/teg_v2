@@ -110,6 +110,24 @@
       "standfirst": "Two rounds after his worst hole of the week, David Mullin played the best round anyone has shot at the Stadium course - and still didn't win a thing.",
       "compelling_score": 7,
       "humour_score": 4
+    },
+    {
+      "subject": "John Patterson's second place, and the eight holes on the opening morning",
+      "why_it_matters": "Patterson outscored the champion in two of the four rounds and still lost by 8, having gone 22 shots over par between the 3rd and the 10th of R1.",
+      "shape": "Setup: an 8 at the 3rd in R1, then seven consecutive holes without a net par and 22 shots bled by the time he left the 10th green; he was bottom of the Spoon race by the 4th hole of the tournament (b23, b29, b18, b33). Turn: he spends the rest of the tournament hauling it back \u2014 13 points across 13-16 to salvage R1, then 16 points over 11-15 in R2 despite another 8 at the 4th (SI 2) and 11 shots lost from the 6th to the 10th (b30, b11, b15, b32) \u2014 and sets personal bests at both courses along the way, 94 on the Tour in R2 and 93 at the Stadium in R3. Resolution: a birdie at the 17th in R4 halts one final slide (b03), and he finishes second, 8 adrift \u2014 a gap that had already been 12 before the first round was over.",
+      "beat_ids": [
+        "b23",
+        "b29",
+        "b18",
+        "b33",
+        "b30",
+        "b11",
+        "b15",
+        "b32",
+        "b03"
+      ],
+      "compelling_score": 8,
+      "humour_score": 5
     }
   ],
   "body_fallback": "none",
