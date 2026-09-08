@@ -807,3 +807,55 @@ and that is the whole point of the change.
 
 **Kept behind a flag rather than deleted.** The mechanism works and the evidence is real. If the
 presentation changes again, this is a flag flip rather than a rebuild.
+
+
+---
+
+## Real headlines: `chosen_headline` / `standfirst` (2026-09-07)
+
+Closed the gap the newspaper layout landed with (PR #94, `webapp/report_layout_prototypes/README.md`
+→ "Still to do" #2): `DraftedStoryline.subject` is a 15-25 word editorial label, good for citing a
+storyline and bad as a headline. Every layout consumer had to derive one
+(`teg_analysis/reporting/newspaper_edition.py`'s `_derive_headline`/`_choose_standfirst`), and the
+derivation was the weakest text on the page. It also explained a "cosmetic" symptom logged in
+`STATUS.md`: the draft writer's unrequested `**bold**` mini-header, showing up on roughly half of
+sections, was the model reaching for a headline nobody had asked it for.
+
+**Fix:** `DraftedStoryline` gained `headline_candidates` (list[str]), `chosen_headline` (str),
+`standfirst` (str) — mirroring `RoundPlan`'s `headline_candidates` + `chosen_headline` shape rather
+than inventing a new one. Defaulted to empty (not required): the class is shared with the legacy
+`StoryPlan`, whose schema has already once been rejected by the API as too large (see `Competition`'s
+docstring), so growing its required-field surface for fields the legacy round-by-round pipeline never
+reads was the wrong trade. `STORYLINE_SYSTEM_PROMPT` asks for them as always-populated; the legacy
+`SYSTEM_PROMPT` is untouched. `check_storyline_plan_consistency` now warns (does not fail) when
+`chosen_headline`/`standfirst` are missing or the headline runs outside ~3-8 words.
+
+`newspaper_edition.py` now prefers the plan's real `chosen_headline`/`standfirst` per matched
+storyline, falling back to derivation only for artefacts that predate the fields (checked via
+`dict.get` returning `None` on old JSON). For a merged (`' / '`-joined) heading it joins the matched
+storylines' own `chosen_headline`s with `&` instead of truncating to the first fragment — a real,
+if partial, answer to "the cross-cut heading needs a single subject the layout can name" without
+touching the mothballed interweave code that produces those merges.
+
+**Regenerated** `teg_{14,16,18}_storyline_plan.json` via `build_storyline_plan` under
+`llm.PROVIDER_AGENT` (plan usage, not API billing). All three now carry real headlines and
+standfirsts for every storyline. **Not yet clean**, and worth a follow-up prompt pass: the model
+consistently reaches for a two-clause "X — Y" or "X: Y" headline construction (9-11 words) rather
+than the requested single 3-8 word clause — e.g. TEG 18's "Wire to Wire, Warts and All: Baker Lands
+the Trophy" (10 words). `check_storyline_plan_consistency` caught every instance and printed a
+warning per the codebase's existing surface-don't-fail convention; it did not block the run. Next
+attempt at this prompt should explicitly forbid the colon/dash two-clause pattern rather than just
+stating a word count.
+
+**The parked TEG 14 second-lead question is answered, with a caveat.** The README noted the
+Wooden Spoon (compelling 9) beat the Green Jacket (7) by exactly `CLEAR_MARGIN`, and that this
+couldn't be judged fairly with derived headlines. Compelling/humour scores are the model's own
+per-run rating, not deterministic, so this regeneration produced different numbers: Jacket 7 vs
+Spoon 6 (Jacket now ahead, margin 1). The original 9-vs-7 scenario no longer exists in the artefact.
+Judged on the current real headlines instead — Jacket: "Twelve Down to Seven, Never in Doubt"
+(humour 3) vs Spoon: "Twelve Shots Adrift, No Argument" (humour 6) — both read as legitimate,
+properly-scaled newspaper headlines; the earlier worry (that a derived headline might be
+misrepresenting one side) does not apply to either. The general answer to "does a
+`compelling_score` margin, now backed by a real headline, look like a good editorial choice?" is
+yes on this evidence, but the specific numeric case cited in the README can't be re-litigated
+without re-running until it recurs.

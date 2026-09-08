@@ -199,6 +199,21 @@ def _choose_standfirst(headline: str, heading: str) -> str:
     return heading if len(remainder.split()) >= MIN_EXTRA else ""
 
 
+def _plan_headline(matches: list[tuple[str, dict[str, Any]]]) -> str | None:
+    """The real `chosen_headline`(s) from the plan, joined for a merged
+    (' / ') heading. `None` when any matched storyline predates the field
+    (`story_plan.py`, 2026-09-06) — the caller falls back to `_derive_headline`."""
+    headlines = [s.get("chosen_headline") for _, s in matches]
+    if not all(headlines):
+        return None
+    return " & ".join(headlines)
+
+
+def _plan_standfirst(matches: list[tuple[str, dict[str, Any]]]) -> str:
+    standfirsts = [s.get("standfirst") for _, s in matches if s.get("standfirst")]
+    return " ".join(standfirsts)
+
+
 def _match_storyline(subject: str, plan: dict[str, Any]) -> tuple[str, dict[str, Any]]:
     """Match a heading fragment (post ' / ' split) to its plan slot by exact
     subject string. Returns (kicker, storyline_dict)."""
@@ -230,8 +245,15 @@ def _parse_articles(
         humour = max(s["humour_score"] for _, s in matches)
 
         bold_headline, paragraphs = _parse_paragraphs(content)
-        headline = _choose_headline(bold_headline, heading)
-        standfirst = _choose_standfirst(headline, heading)
+        plan_headline = _plan_headline(matches)
+        if plan_headline:
+            headline = plan_headline
+            standfirst = _plan_standfirst(matches)
+        else:
+            # Artefact predates the headline/standfirst fields (story_plan.py,
+            # 2026-09-06) — derive, same as before.
+            headline = _choose_headline(bold_headline, heading)
+            standfirst = _choose_standfirst(headline, heading)
         words = sum(len(p.split()) for p in paragraphs)
 
         articles.append(
