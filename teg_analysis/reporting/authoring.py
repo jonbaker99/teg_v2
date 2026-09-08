@@ -764,6 +764,62 @@ def load_story_plan(teg_num: int) -> dict:
         return json.load(f)
 
 
+def load_storyline_plan(teg_num: int) -> dict:
+    """Load `teg_N_storyline_plan.json`, validated, as the same dict a fresh run builds.
+
+    Returns `StorylinePlan(...).model_dump()` rather than the raw JSON, so a caller
+    reusing a plan from disk sees exactly the shape `build_storyline_plan` hands
+    back — no second code path to keep in step.
+
+    Validation catches a truncated or hand-edited file before the draft stage
+    spends anything on it. It will NOT catch a legacy plan passed by mistake:
+    `StoryPlan` is a strict superset of `StorylinePlan` (verified 2026-09-08 —
+    every StorylinePlan field, required ones included, exists on StoryPlan), so
+    a legacy plan validates cleanly here. That is harmless rather than lucky:
+    the fields the draft stage reads mean the same thing in both, so a legacy
+    plan would draft correctly. Only the path this reads keeps the two apart.
+    """
+    from teg_analysis.reporting.story_plan import StorylinePlan
+
+    path = f"{output_dir()}/teg_{teg_num}_storyline_plan.json"
+    try:
+        with open(path) as f:
+            raw = json.load(f)
+    except FileNotFoundError:
+        raise FileNotFoundError(
+            f"{path} not found — TEG {teg_num} has no storyline plan to reuse. "
+            f"Run the storyline-first pipeline for it first."
+        ) from None
+    try:
+        return StorylinePlan(**raw).model_dump()
+    except Exception as e:
+        raise ValueError(f"{path} is not a valid StorylinePlan: {e}") from None
+
+
+def load_story_or_storyline_plan(teg_num: int) -> dict:
+    """Load whichever plan exists for `teg_num`: legacy first, storyline-first as fallback.
+
+    Callers that only need `plan["competitions"]` (identical `{name, winner_or_loser}`
+    shape in both `StoryPlan` and `StorylinePlan`) can use this instead of
+    `load_story_plan` to work on TEGs that only ever ran the storyline-first pipeline.
+    Raises `FileNotFoundError` naming both paths it tried if neither exists.
+    """
+    legacy_path = f"{output_dir()}/teg_{teg_num}_story_plan.json"
+    storyline_path = f"{output_dir()}/teg_{teg_num}_storyline_plan.json"
+    try:
+        with open(legacy_path) as f:
+            return json.load(f)
+    except FileNotFoundError:
+        pass
+    try:
+        with open(storyline_path) as f:
+            return json.load(f)
+    except FileNotFoundError:
+        raise FileNotFoundError(
+            f"no story plan for TEG {teg_num}: looked for {legacy_path} and {storyline_path}"
+        ) from None
+
+
 def load_dry_draft(teg_num: int) -> str:
     with open(f"{output_dir()}/teg_{teg_num}_dry_draft.md") as f:
         return f.read()

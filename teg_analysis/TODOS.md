@@ -11,10 +11,18 @@ Full detail — including the report-by-report inventory and pipeline vintages �
 
 **Decisions (blocking — do these first):**
 
-- [ ] **Storyline-first reports** — proposal in [`reporting/STORYLINE_PLAN.md`](reporting/STORYLINE_PLAN.md), not started. Reports are ~6.5/10: round-by-round detail dominates regardless of what the story plan's `narrative_structure` chose (16/17 plans picked non-chronological, 16/17 finals shipped `## Round N` anyway), and subplots are buried or absent. Plan: free beat-clustering pass (`threads.py`, new) to surface candidate subplots, then restructure `StoryPlan` around 2–4 chosen `storylines[]` with `rounds[]` made optional. Independent of the humour-dial / regeneration items below — do not bundle.
+- [x] **Storyline-first reports** — **shipped** (PR #93, 2026-08/09), not "not started" as this line said until 2026-09-08. `StorylinePlan` + `build_storyline_plan` in `story_plan.py`; the three-stage run is `scripts/storyline_full_report_experiment.py --teg N`; artefacts exist for TEGs 14, 16 and 18. Record: [`reporting/STORYLINE_PLAN.md`](reporting/STORYLINE_PLAN.md). Route map: `DATA_FLOW.md` §10.
+- [ ] **Decide storyline-first's status** — it is still script-driven and outside `backfill.py`, so the production path for all 17 TEGs remains the five-stage chain while the settled newspaper layout is built on storyline-first output that only 3 TEGs have. Either promote it into `backfill.py` and generate the other 14, or decide the two coexist. Blocks the `/teg-reports` switch-over (`webapp/TODOS.md`).
 - [x] **Settle the humour dial** — done 2026-08-15. Jon's verdict: "lacking a bit in humour". `humour6` (5-7 comic landings) folded into `prompts.VOICE_CORE`, along with an outright em-dash ban and a ~15-word average sentence target. **Still needs one from-scratch generation to validate** — the dial variants on disk were rewrites of finished reports, not cold generations.
 - [ ] **Generate one TEG cold under the new voice and read it** (~$0.65) — validates humour6 + the em-dash ban end to end. Blocks the full regeneration.
 - [ ] **Decide whether round reports are wanted** — ~50 outstanding, ~$32. `RoundStoryPlan` is no longer a blocker (ported 2026-08-11); this is purely scope and cost now.
+
+- [x] **Give the storyline-first script restart points, like the legacy chain has** — **done 2026-09-08.** `scripts/storyline_full_report_experiment.py` used to run all three stages from scratch every time: `build_storyline_draft` called `build_storyline_plan` unconditionally, so changing the voice on TEG 18 cost a fresh plan and five fresh section drafts too — 7 LLM calls to change one. It now has `--from {plan,draft,voice}`, mirroring the legacy chain's `load_story_plan`/`load_dry_draft` restart points and `backfill`'s `force`/`scope`/`style=False`:
+  - `--from voice` reuses `teg_N_report_storylinedraft.md` and runs the voice pass alone — **1 call**. The right way to try a tone change: the draft is plain unvoiced prose, so the A/B compares like with like.
+  - `--from draft` reuses `teg_N_storyline_plan.json` via the new `authoring.load_storyline_plan()` and redrafts the sections — **6 calls**, for iterating on the drafting prompt where the plan is not the variable.
+  - `--from plan` (default) is the full 7-call run, unchanged.
+
+  Verified by provider hand-off rather than by spending calls: under `TEG_LLM_PROVIDER=agent`, `--from voice` raises only the `restyle` request and `--from draft` raises a section-draft request first, neither preceded by a `storyline_plan` request.
 
 **Then:**
 

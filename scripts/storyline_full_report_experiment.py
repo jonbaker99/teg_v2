@@ -34,10 +34,43 @@ first, voice second) plus the writer-richness fix from the context A/B:
 This is still an experiment, not a pipeline change: nothing in `backfill.py`
 calls this, and it never touches `report_final`/`report_styled`.
 
-Usage, from the repo root (needs ANTHROPIC_API_KEY / TEG_ANTHROPIC_API_KEY —
-the story plan is generated fresh on each run via `build_storyline_plan`):
+A default run reuses nothing: the storyline plan is generated fresh via
+`build_storyline_plan` (there is no load-from-disk path for it), and the draft
+and voice passes follow from it, so it overwrites all four artefacts and re-rolls
+every subject, headline and score. The beats and bundle underneath are recomputed
+from the parquet data by code, not by the model.
 
+`--from` is how you avoid paying for what you are not testing, mirroring the
+legacy chain's `load_story_plan`/`load_dry_draft` restart points:
+
+    --from plan    (default)  everything: plan + a call per storyline + voice
+    --from draft              reuse the plan on disk, redraft the sections, voice
+    --from voice              reuse the draft, run the voice pass alone
+
+`--from voice` is the cheap loop and the right way to try a tone change — the
+draft is plain, unvoiced prose, so a voice A/B against it compares like with
+like, where restyling an already-styled report compounds rather than compares.
+`--from draft` is for iterating on the section-drafting prompt, where the plan
+is not the variable.
+
+Usage, from the repo root — either provider:
+
+    # Anthropic API, bills per token
     python scripts/storyline_full_report_experiment.py --teg 14
+
+    # claude.ai plan usage: prompts hand off through `data/llm_mailbox`, and a
+    # Claude Code session answers them with the `teg-report-respond` skill.
+    TEG_LLM_PROVIDER=agent python scripts/storyline_full_report_experiment.py --teg 14
+
+    # Re-run the voice pass alone against the existing structural draft.
+    python scripts/storyline_full_report_experiment.py --teg 14 --from voice
+
+    # Redraft the sections against the plan already on disk.
+    python scripts/storyline_full_report_experiment.py --teg 14 --from draft
+
+This script has no `--plan`/`--paste` flags of its own (unlike `backfill.py`);
+the env var is the whole mechanism, since `llm.generate_text` /
+`llm.generate_structured` dispatch on the provider for every call.
 """
 from __future__ import annotations
 
@@ -51,7 +84,8 @@ sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 
 from teg_analysis.reporting import llm
-from teg_analysis.reporting.authoring import WRITER_VOICE, _strip_derived_prose, restyle_voice
+from teg_analysis.reporting.authoring import (WRITER_VOICE, _strip_derived_prose,
+                                             load_storyline_plan, restyle_voice)
 from teg_analysis.reporting.paths import output_dir
 from teg_analysis.reporting.story_plan import assemble_bundle, build_storyline_plan
 
@@ -142,18 +176,25 @@ def draft_section(storyline: dict, evidence: list, context: dict, model: Optiona
 
 
 def build_storyline_draft(teg_num: int, model: Optional[str] = None,
-                          interweave_sections: bool = False) -> tuple[str, dict]:
+                          interweave_sections: bool = False,
+                          plan: Optional[dict] = None) -> tuple[str, dict]:
     """Runs Call A only (`build_storyline_plan`) — this prototype never calls
     the legacy full `StoryPlan` (Call B); see story_plan.py's module comment
     above `StorylinePlan` for the split.
 
     `interweave_sections` merges storylines that share beats into one cross-cut
     section. Off by default — see the comment at the call site below.
+
+    `plan` skips Call A and drafts against a plan you already have — pass
+    `authoring.load_storyline_plan(teg)` to redraft against the plan on disk
+    without re-rolling it. It must be in `StorylinePlan.model_dump()` shape,
+    which is what that loader returns.
     """
-    plan_result = build_storyline_plan(teg_num, model=model)
-    for w in plan_result["warnings"]:
-        print(f"[storyline_full_report] WARNING: {w}")
-    plan = plan_result["plan"].model_dump()
+    if plan is None:
+        plan_result = build_storyline_plan(teg_num, model=model)
+        for w in plan_result["warnings"]:
+            print(f"[storyline_full_report] WARNING: {w}")
+        plan = plan_result["plan"].model_dump()
 
     bundle, _ = assemble_bundle(teg_num, top_n=None)
     all_beats = bundle["beats"]
@@ -215,10 +256,41 @@ def build_storyline_draft(teg_num: int, model: Optional[str] = None,
     return body, plan
 
 
+def run_voice_pass(teg_num: int, model: Optional[str] = None) -> dict:
+    """Stage 3 alone: rewrite the frozen structural draft in the house voice.
+
+    Reads `teg_N_report_storylinedraft.md` and writes `teg_N_report_storylinefirst.md`
+    (+ `_styled.md`). One LLM call, against whatever draft is already on disk —
+    it does not regenerate the plan or the sections. `restyle_voice` raises with
+    the available `source_label`s if the draft is missing.
+    """
+    print("[storyline_full_report] applying house voice (restyle_voice)...")
+    result = restyle_voice(teg_num, WRITER_VOICE, label="storylinefirst",
+                           source_label="storylinedraft", model=model)
+    print(f"[storyline_full_report] wrote voiced report: {result['output_path']}")
+    print(f"[storyline_full_report] wrote styled report: {result['styled_path']}")
+    print(f"[storyline_full_report] D3 new findings introduced by voice pass: "
+          f"{len(result['new_findings'])}")
+    for f in result["new_findings"]:
+        print(f"  - {f}")
+    return result
+
+
 def main():
-    ap = argparse.ArgumentParser(description=__doc__)
+    ap = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--teg", type=int, required=True)
     ap.add_argument("--model", default=None)
+    ap.add_argument("--from", dest="start_from", choices=("plan", "draft", "voice"),
+                    default="plan",
+                    help="Which stage to start from, reusing everything above it. "
+                         "'plan' (default) runs the lot: storyline plan, one draft call "
+                         "per storyline, then the voice pass. 'draft' reuses the plan on "
+                         "disk and redrafts the sections — for iterating on the drafting "
+                         "prompt, where the plan is not what you are testing. 'voice' "
+                         "reuses the structural draft and re-runs the voice pass alone: "
+                         "one LLM call, and the right way to try a tone change.")
     ap.add_argument("--no-voice", action="store_true",
                     help="Write only the structural draft; skip the restyle_voice pass.")
     ap.add_argument("--interweave", action="store_true",
@@ -226,12 +298,44 @@ def main():
                          "Off by default: the newspaper layout wants separate articles.")
     args = ap.parse_args()
 
-    if not llm.has_api_key():
-        print("No API key found. Aborting.")
+    # These combinations ask for nothing to happen, or for a flag that only
+    # applies to a stage being skipped. Say so rather than running and silently
+    # ignoring half the command line.
+    if args.start_from == "voice":
+        if args.no_voice:
+            ap.error("--from voice with --no-voice would do nothing: the first says "
+                     "run only the voice pass, the second says skip it.")
+        if args.interweave:
+            ap.error("--interweave affects section drafting, which --from voice skips. "
+                     "Re-run without --from to redraft.")
+
+    # Only the `api` provider needs a key — under `agent` the prompts hand off
+    # through the mailbox and there is no key at all (see `llm.has_api_key`).
+    # Guarding unconditionally used to abort a perfectly valid
+    # `TEG_LLM_PROVIDER=agent` run before it made a single call.
+    if llm.get_provider() == llm.PROVIDER_API and not llm.has_api_key():
+        print(f"No API key found, and the provider is {llm.PROVIDER_API}. "
+              f"Set one, or run on plan usage with {llm.ENV_PROVIDER}={llm.PROVIDER_AGENT}.")
         sys.exit(1)
 
+    if args.start_from == "voice":
+        draft_path = f"{output_dir()}/teg_{args.teg}_report_storylinedraft.md"
+        print(f"[storyline_full_report] --from voice: reusing {draft_path}, "
+              f"regenerating nothing above it.")
+        run_voice_pass(args.teg, model=args.model)
+        return
+
+    reused_plan = None
+    if args.start_from == "draft":
+        reused_plan = load_storyline_plan(args.teg)
+        print(f"[storyline_full_report] --from draft: reusing "
+              f"{output_dir()}/teg_{args.teg}_storyline_plan.json "
+              f"({1 + len(reused_plan['discovered_storylines']) + 2} storylines), "
+              f"redrafting sections.")
+
     draft_text, plan = build_storyline_draft(args.teg, model=args.model,
-                                             interweave_sections=args.interweave)
+                                             interweave_sections=args.interweave,
+                                             plan=reused_plan)
     draft_path = f"{output_dir()}/teg_{args.teg}_report_storylinedraft.md"
     with open(draft_path, "w") as f:
         f.write(draft_text)
@@ -241,14 +345,7 @@ def main():
         print("[storyline_full_report] --no-voice: skipping the restyle_voice pass.")
         return
 
-    print("[storyline_full_report] applying house voice (restyle_voice)...")
-    result = restyle_voice(args.teg, WRITER_VOICE, label="storylinefirst",
-                           source_label="storylinedraft", model=args.model)
-    print(f"[storyline_full_report] wrote voiced report: {result['output_path']}")
-    print(f"[storyline_full_report] wrote styled report: {result['styled_path']}")
-    print(f"[storyline_full_report] D3 new findings introduced by voice pass: {len(result['new_findings'])}")
-    for f in result["new_findings"]:
-        print(f"  - {f}")
+    run_voice_pass(args.teg, model=args.model)
 
 
 if __name__ == "__main__":

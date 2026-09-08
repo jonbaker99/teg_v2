@@ -18,7 +18,7 @@ from typing import Optional, Union
 
 from teg_analysis.reporting.story_plan import StoryPlan
 from teg_analysis.reporting.venue import build_venue_context
-from teg_analysis.reporting.authoring import load_story_plan
+from teg_analysis.reporting.authoring import load_story_or_storyline_plan
 
 from teg_analysis.reporting.paths import output_dir
 
@@ -575,7 +575,7 @@ def style_text(teg_num: int, text: str) -> str:
     directly readable line-for-line against `report_styled.md`.
     """
     from teg_analysis.reporting.history_context import build_win_counts
-    plan = load_story_plan(teg_num)           # dict (from saved JSON)
+    plan = load_story_or_storyline_plan(teg_num)  # dict (legacy, or storyline-first fallback)
     venue = build_venue_context(teg_num)
     standings = build_round_standings(teg_num)
     win_counts = build_win_counts(teg_num)

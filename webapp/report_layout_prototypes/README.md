@@ -4,8 +4,11 @@ Tournament reports are presented as a **newspaper edition**: a lead story on the
 the remaining storylines as separate articles. This folder holds the prototypes that settled that
 design and the record of how each choice was made.
 
-**The design is decided. What has not happened is wiring it into the site** — see
-[Still to do](#still-to-do).
+**The design is decided and is wired into the site as a preview** at `/teg-reports-preview`
+(`webapp/routes/report_preview.py`) — not linked from the nav, `/teg-reports` untouched. See
+[Still to do](#still-to-do) for what's left before switching `/teg-reports` over to it.
+
+Where this sits in the wider pipeline: `DATA_FLOW.md` → §10 *Report build*.
 
 Served at `/report-layouts/` when the webapp runs (mounted in `webapp/app.py` beside `/mockups/`).
 
@@ -17,7 +20,7 @@ Served at `/report-layouts/` when the webapp runs (mounted in `webapp/app.py` be
 | `mobile.html` | **The mobile design.** Pattern A is chosen and is the default; B and C remain switchable as the record. |
 | `elements.html` | The element-by-element chooser: ten elements, 4–5 variants each, all on identical copy so only the element varies. Its job is done; it is the tool to reopen any single choice. |
 | `newspaper.html` | The original four directions (A Broadsheet, B Modern editorial, C Sports section, D Back page) that settled the overall approach. Kept as the record. |
-| `editions.json` | Content for TEG 14, 16 and 18, built by `scripts/build_newspaper_edition.py`. |
+| `editions.json` | Content for TEG 14, 16 and 18, built by `scripts/build_newspaper_edition.py`. **Feeds these prototype pages only** — the live route builds its edition in memory and never reads this file. |
 | `checks/check_mobile_patterns.py` | Browser assertions on the mobile patterns. Not in the pytest suite — see [Checks](#checks). |
 
 ## The design
@@ -79,8 +82,11 @@ semantics with arrow keys on B and Escape on A. C was left at prototype quality.
 
 ## Content
 
-`scripts/build_newspaper_edition.py` turns a `storyline_plan.json` plus a
-`report_storylinefirst_styled.md` into an edition object. Deterministic, no LLM, no cost.
+`teg_analysis/reporting/newspaper_edition.py` turns a `storyline_plan.json` plus a
+`report_storylinefirst_styled.md` into an edition object. Deterministic, no LLM, no cost. It lives in
+the package, not in `scripts/`, because `webapp/` cannot import from `scripts/` and the live route
+needs the same parser; it reads through `teg_analysis.io.read_text_file`, so it works on Railway's
+volume as well as locally.
 
 ```bash
 python -m scripts.build_newspaper_edition    # rebuilds editions.json

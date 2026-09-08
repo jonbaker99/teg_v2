@@ -143,7 +143,10 @@ def _artefact_names(teg_num: int, round_num: Optional[int] = None) -> list[str]:
         stem = f"teg_{teg_num}"
         return [f"{stem}_story_plan.json", f"{stem}_dry_draft.md",
                 f"{stem}_report_A_around_draft.md", f"{stem}_report_final.md",
-                f"{stem}_report_styled.md"]
+                f"{stem}_report_styled.md",
+                # Storyline-first has no round equivalent, so these are tournament-only.
+                f"{stem}_storyline_plan.json", f"{stem}_report_storylinedraft.md",
+                f"{stem}_report_storylinefirst.md", f"{stem}_report_storylinefirst_styled.md"]
     stem = f"teg_{teg_num}_round_{round_num}"
     return [f"{stem}_story_plan.json", f"{stem}_dry_draft.md",
             f"{stem}_report_A_around_draft.md", f"{stem}_report_final.md",

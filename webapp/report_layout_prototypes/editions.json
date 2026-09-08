@@ -30,8 +30,8 @@
     "articles": [
       {
         "kicker": "TROPHY",
-        "headline": "Mullin holds on for the Trophy",
-        "standfirst": "David Mullin wins the Trophy on 154 points by 2 \u2014 a lead built on the first two links and defended by fingernails at Prince's",
+        "headline": "Mullin Survives the Sixteenth",
+        "standfirst": "A three-time Wooden Spoon holder turned Trophy champion held off a grandstand finish from Alex Baker, whose charge was undone by the same nightmare hole that had wrecked his tournament three rounds earlier.",
         "paragraphs": [
           "David Mullin won the Trophy with 154 points, two clear of Alex Baker. It is the 16th-best total in TEG history and the third-best of his own career, and very nearly all of it was banked before anyone thought to object.",
           "The foundation was laid on the first two links. At Royal Cinque Ports he went round in 87, seven strokes better than his previous visit. The engine room was a four-hole run from the 9th: par, birdie at the 10th, then two more pars, 13 points, a man briefly playing golf on purpose. The sequence ended at the 13th with a double bogey. At Littlestone he shot 85, again seven better than last time out, and another course best.",
@@ -39,43 +39,43 @@
           "That opened the door for Baker, who had trailed by as many as nine. He answered with 10 points across the first three holes of the final round and 11 more from the 13th to the 15th, closing to within two. Then he reached the 16th and made a ten. His four days had begun to come apart considerably earlier, at Littlestone, where he dropped 12 shots across holes 2 to 5."
         ],
         "words": 282,
-        "compelling": 8,
+        "compelling": 9,
         "humour": 5,
         "is_lead": true
       },
       {
-        "kicker": "WOODEN SPOON",
-        "headline": "Jon Baker, defending Trophy champion, collects the Wooden Spoon on 125 points",
-        "standfirst": "",
-        "paragraphs": [
-          "Jon Baker finished last in the Stableford count and took the Wooden Spoon with 125 points across the four rounds. The defence of a title can take many forms. He chose this one, and won it by 12, which is a margin of some authority.",
-          "The early links did him no favours, and he returned the courtesy. At Royal Cinque Ports his best gross was 92, seven strokes worse than the 85 he had managed on his previous visit. At Littlestone he posted 92 against a prior best of 79. Thirteen shots is not a bad day; it is a change of identity. His third round at Prince's brought 28 points, held down in part by a run of pars from the 14th that ended with a triple bogey six at the par-three 17th.",
-          "The final round was another man entirely. Baker returned 39 points, an improvement of 11 on the previous day, and his 83 gross set a new course record for Prince's Shore/Dunes, beating the previous mark of 85 that had stood across five prior visits. It was also his personal best on the layout, two strokes better than his last time there. The scoring came in a burst: five holes without dropping a gross shot from the 11th to the 15th, back-to-back birdies at the 12th and 13th, a two-hole birdie streak that equals the all-time TEG record, and 14 points across holes 12 to 15.",
-          "Then the 16th, which had already relieved Alex Baker of the Trophy that afternoon, took a double bogey from Jon and ended the run. He ran up an eight at the 18th. He therefore holds the course record and the Wooden Spoon at the same time, which takes some arranging."
-        ],
-        "words": 289,
-        "compelling": 9,
-        "humour": 8,
-        "is_lead": false
-      },
-      {
         "kicker": "SIDEBAR",
-        "headline": "Alex Baker and the 16th",
-        "standfirst": "Alex Baker and the 16th hole: two 10s in one TEG, and a Trophy left on the table",
+        "headline": "Baker Breaks the Course Record \u2014 And Still Finishes Last",
+        "standfirst": "A new Prince's course record and a share of the all-time TEG streak mark landed in the same round that sealed Jon Baker's Wooden Spoon.",
         "paragraphs": [
           "Two of Baker's four rounds in Kent ended with a 10 on the card, and on both occasions the number arrived at a hole numbered 16. Different courses, different pars, no connection whatsoever beyond the obvious one. The first came in the opening round at Royal Cinque Ports, a quintuple bogey at the par-five 16th, stroke index 7, no Stableford points. The second, at Prince's on the Sunday, was worse in relative terms: a 10 at a par four, a sextuple bogey, on stroke index 17, the second-easiest hole on the card. Taking ten shots there requires a degree of commitment.",
           "The Prince's 10 was the more painful for what preceded it. Baker had played the 13th, 14th and 15th in par, par, par, three holes without dropping a gross shot, worth eleven Stableford points. The 16th erased the lot at a stroke. He was not alone in losing his footing there. Jon Baker arrived at the same hole having gone par-birdie-birdie-par-par from the 11th, and made a double bogey for no points.",
           "These were the headline numbers, not the only ones. Baker also had an 8 at the 11th at Royal Cinque Ports, a 9 at the 5th and an 8 at the 8th at Littlestone, and an 8 at the 10th at Prince's in round three. Five further holes returning nothing. His round-one 98 at Royal Cinque Ports was still four strokes better than his previous visit, which tells you a good deal about the previous visit."
         ],
         "words": 249,
-        "compelling": 8,
+        "compelling": 9,
         "humour": 8,
         "is_lead": false
       },
       {
+        "kicker": "SIDEBAR",
+        "headline": "The Sixteenth Strikes Twice",
+        "standfirst": "Two different courses, the same hole number, and the same catastrophic 10 \u2014 bookending a tournament Alex Baker otherwise nearly won.",
+        "paragraphs": [
+          "Williams finished TEG 14 with a Gross total of +76, a personal best, and no prize of any description. The number rested on two course records of his own: 93 at Royal Cinque Ports, one better than his previous mark there of 94, and 86 at Prince's in round three, three strokes better than his last visit and inside his previous best of 89.",
+          "It was not tidy. He opened at Deal with a 9 at the par-five 3rd, stroke index 4, a quadruple bogey worth nothing at all. Littlestone was worse in the wider sense: 97, eleven strokes adrift of the 86 he had managed there before, and only 27 Stableford points.",
+          "Round three was the correction. He gained twelve points on the day, reaching 39, and the middle of it was genuinely solid: pars at the 9th, 10th and 11th for nine points, three holes without dropping a gross shot, then two more clean holes at the 15th and 16th. Between those came an 8 at the par-five 12th, which brought the exhibition to a close.",
+          "Sunday offered more steadiness in patches, gross pars at the 5th and 6th and again at the 14th and 15th. Having trailed the Green Jacket lead by 18 at one stage, he closed to within 8. Ten shots recovered. Eight still owed."
+        ],
+        "words": 220,
+        "compelling": 7,
+        "humour": 7,
+        "is_lead": false
+      },
+      {
         "kicker": "GREEN JACKET",
-        "headline": "David Mullin's Green Jacket at +68",
-        "standfirst": "",
+        "headline": "Twelve Down to Seven, Never in Doubt",
+        "standfirst": "David Mullin's gross lead shrank by five shots in the final round alone, but the Green Jacket was never seriously threatened.",
         "paragraphs": [
           "David Mullin took the Green Jacket at TEG 14 with a gross total of +68, seven clear of Jon Baker. His ninth. It is the sixth-best Green Jacket total on record and the fourth-best of his own career at the metric.",
           "The number was built on consistency across Kent's four links rounds. Mullin set a personal best on every course he played: 87 at Royal Cinque Ports and 85 at Littlestone, each seven strokes better than his previous visit in TEG 13, and 91 at Prince's Shore/Dunes, one better than before. None of those figures would trouble a club noticeboard in isolation. Stacked together, they were unanswerable.",
@@ -84,22 +84,22 @@
         ],
         "words": 232,
         "compelling": 7,
-        "humour": 4,
+        "humour": 3,
         "is_lead": false
       },
       {
-        "kicker": "SIDEBAR",
-        "headline": "Gregg Williams plays the best gross golf of his TEG life and wins nothing",
-        "standfirst": "",
+        "kicker": "WOODEN SPOON",
+        "headline": "Twelve Shots Adrift, No Argument",
+        "standfirst": "Jon Baker was worst in the field in two separate rounds, and the final one came a day too late to change anything.",
         "paragraphs": [
-          "Williams finished TEG 14 with a Gross total of +76, a personal best, and no prize of any description. The number rested on two course records of his own: 93 at Royal Cinque Ports, one better than his previous mark there of 94, and 86 at Prince's in round three, three strokes better than his last visit and inside his previous best of 89.",
-          "It was not tidy. He opened at Deal with a 9 at the par-five 3rd, stroke index 4, a quadruple bogey worth nothing at all. Littlestone was worse in the wider sense: 97, eleven strokes adrift of the 86 he had managed there before, and only 27 Stableford points.",
-          "Round three was the correction. He gained twelve points on the day, reaching 39, and the middle of it was genuinely solid: pars at the 9th, 10th and 11th for nine points, three holes without dropping a gross shot, then two more clean holes at the 15th and 16th. Between those came an 8 at the par-five 12th, which brought the exhibition to a close.",
-          "Sunday offered more steadiness in patches, gross pars at the 5th and 6th and again at the 14th and 15th. Having trailed the Green Jacket lead by 18 at one stage, he closed to within 8. Ten shots recovered. Eight still owed."
+          "Jon Baker finished last in the Stableford count and took the Wooden Spoon with 125 points across the four rounds. The defence of a title can take many forms. He chose this one, and won it by 12, which is a margin of some authority.",
+          "The early links did him no favours, and he returned the courtesy. At Royal Cinque Ports his best gross was 92, seven strokes worse than the 85 he had managed on his previous visit. At Littlestone he posted 92 against a prior best of 79. Thirteen shots is not a bad day; it is a change of identity. His third round at Prince's brought 28 points, held down in part by a run of pars from the 14th that ended with a triple bogey six at the par-three 17th.",
+          "The final round was another man entirely. Baker returned 39 points, an improvement of 11 on the previous day, and his 83 gross set a new course record for Prince's Shore/Dunes, beating the previous mark of 85 that had stood across five prior visits. It was also his personal best on the layout, two strokes better than his last time there. The scoring came in a burst: five holes without dropping a gross shot from the 11th to the 15th, back-to-back birdies at the 12th and 13th, a two-hole birdie streak that equals the all-time TEG record, and 14 points across holes 12 to 15.",
+          "Then the 16th, which had already relieved Alex Baker of the Trophy that afternoon, took a double bogey from Jon and ended the run. He ran up an eight at the 18th. He therefore holds the course record and the Wooden Spoon at the same time, which takes some arranging."
         ],
-        "words": 220,
+        "words": 289,
         "compelling": 6,
-        "humour": 5,
+        "humour": 6,
         "is_lead": false
       }
     ],
@@ -163,8 +163,8 @@
     "articles": [
       {
         "kicker": "TROPHY",
-        "headline": "Neumann's first Trophy",
-        "standfirst": "Stuart Neumann's first Trophy \u2014 156 points, 13 clear, and never headed after the opening afternoon",
+        "headline": "Two Spoons Later, the Trophy's His",
+        "standfirst": "Stuart Neumann led the Trophy from the fourth hole of the tournament and was never seriously troubled again, closing out a first career win by 13 points.",
         "paragraphs": [
           "Stuart Neumann won the Trophy at TEG 16 on the Lisbon Coast with 156 Stableford points, finishing 13 clear of Gregg Williams. It is the 16th-highest Trophy total recorded and the second-best of his own career. A man can wait a long time for a first Trophy. Neumann waited, and then won it by rather more than he needed to.",
           "The margin was built early and never surrendered. He held the Trophy lead after round two at Troia, still held it after round three at Penha Longa, and carried it through the closing round at Estoril. Williams, meanwhile, led the Jacket standings at each of those same checkpoints. For three days the two of them occupied separate thrones, and neither gave an inch in his own.",
@@ -172,28 +172,14 @@
           "Estoril otherwise gave him his best golf of the four days. His 92 there was a course personal best, 14 strokes better than the 106 he posted on his only previous visit in TEG 15. It was the one venue of the four where he improved on his own history, and he chose the day the Trophy was settled to do it."
         ],
         "words": 258,
-        "compelling": 8,
-        "humour": 5,
+        "compelling": 7,
+        "humour": 3,
         "is_lead": true
       },
       {
-        "kicker": "SIDEBAR",
-        "headline": "David Mullin: from the bottom of the Spoon race",
-        "standfirst": "David Mullin: from the bottom of the Spoon race in R1 to the Estoril course record in R4",
-        "paragraphs": [
-          "David Mullin's tournament ended a very long way from where it started. At Oitavos Dunes in the opening round he ran up a triple-bogey seven at the 10th, a stroke index 4 par four, and the zero points dropped him from second to fifth in the Wooden Spoon race. Fifth in the Spoon race is not a mid-table sort of fifth. It is the bottom of the pile. Round three at Penha Longa was worse in places: a quadruple-bogey eight at the 16th, the hardest hole on the card, after which he composed himself and parred 17 and 18 like a man tidying a room he had just set fire to. The round came to 30 points, and his 98 there was well adrift of his previous best at the course.",
-          "Estoril, on the Tuesday, was a different matter. Mullin birdied the 2nd and parred the 3rd, then wobbled through a bogey-bogey-double stretch at the 4th, 5th and 6th before a birdie at the 7th stopped the slide. The back nine simply held. Nine points from the 11th, 12th and 13th, with pars at 12 and 13, and two more pars at 16 and 17 to finish.",
-          "The total was 45 points, a 15-point improvement on round three. The gross number mattered more. His 80 set a new course record at Estoril, beating the previous mark of 86 established across six prior visits, and bettered his own best there, a 94 at TEG 15, by fourteen strokes. Four days earlier he had been last in the race for the Spoon. Golf is not a fair sport, but it is occasionally a generous one."
-        ],
-        "words": 273,
-        "compelling": 8,
-        "humour": 5,
-        "is_lead": false
-      },
-      {
         "kicker": "WOODEN SPOON & SIDEBAR",
-        "headline": "The Baker brothers and Penha Longa's 12th",
-        "standfirst": "The Baker brothers and Penha Longa's 12th / Alex Baker's third Wooden Spoon, back-to-back, 127 points \u2014 and two all-time course-worst records to go with it",
+        "headline": "A Course Record, One Day After the Wheels Came Off & Baker Breaks Two Records \u2014 Both the Wrong Way",
+        "standfirst": "David Mullin shot the worst round of his tournament at Penha Longa, then came back the next day to break the Estoril course record. Alex Baker propped up the Trophy table from the first hole of the tournament and closed it out by setting new course-worst marks at both ends of the week.",
         "paragraphs": [
           "Alex Baker's tournament began badly and then declined to change course. In the first round at Oitavos Dunes he took nine at the 1st, nine at the 11th and ten at the 17th, signing for 113 gross. That is a new course-worst for Oitavos, beating the previous mark of 111 set across twelve prior visits. Twelve visits' worth of human frailty, surpassed before lunch on day one. At Troia the next day the damage was more concentrated: thirteen shots dropped over the five holes from the 13th to the 17th, three triples followed by two doubles.",
           "Round three took the field to Penha Longa, where both Bakers found the same piece of ground. Jon Baker made a double bogey six at the 11th, then took ten at the par-five 12th, a quintuple bogey and no points, and followed it with an eight at the 13th. Eleven shots gone in three holes, three holes without a net par. It was his only round of the tournament in which he failed to improve on a previous visit: 97 gross at a course where his prior best was 85.",
@@ -201,14 +187,28 @@
           "The final round at Estoril separated them. Jon's one lapse came at the 11th, the hardest hole on the card, where he made an eight, and that was the extent of it. Alex's round was a lapse with holes attached. Nine at the 1st. Eight at the 3rd. Nine at the 6th. Fourteen shots bled over the six holes from the 5th to the 10th, every single one a double or worse, an unbroken run of ruin conducted with no apparent loss of composure. Then the 12th, a par four, where he took eleven. A septuple bogey, and the worst score he has ever recorded on a par four in his life. The round came to 107 gross, a second course-worst of the four days, exceeding Estoril's previous high of 106 across six prior visits. He finished on 127 points and collected the Wooden Spoon, his third, and the second in a row. He did not merely lose. He amended the record books at two separate venues while doing it."
         ],
         "words": 430,
-        "compelling": 7,
-        "humour": 9,
+        "compelling": 8,
+        "humour": 8,
+        "is_lead": false
+      },
+      {
+        "kicker": "SIDEBAR",
+        "headline": "The 12th at Penha Longa Claims Both Bakers",
+        "standfirst": "Jon and Alex Baker, brothers in the same field, both came unstuck at the same par-5 in Round 3 \u2014 one with a quintuple bogey, the other a quadruple.",
+        "paragraphs": [
+          "David Mullin's tournament ended a very long way from where it started. At Oitavos Dunes in the opening round he ran up a triple-bogey seven at the 10th, a stroke index 4 par four, and the zero points dropped him from second to fifth in the Wooden Spoon race. Fifth in the Spoon race is not a mid-table sort of fifth. It is the bottom of the pile. Round three at Penha Longa was worse in places: a quadruple-bogey eight at the 16th, the hardest hole on the card, after which he composed himself and parred 17 and 18 like a man tidying a room he had just set fire to. The round came to 30 points, and his 98 there was well adrift of his previous best at the course.",
+          "Estoril, on the Tuesday, was a different matter. Mullin birdied the 2nd and parred the 3rd, then wobbled through a bogey-bogey-double stretch at the 4th, 5th and 6th before a birdie at the 7th stopped the slide. The back nine simply held. Nine points from the 11th, 12th and 13th, with pars at 12 and 13, and two more pars at 16 and 17 to finish.",
+          "The total was 45 points, a 15-point improvement on round three. The gross number mattered more. His 80 set a new course record at Estoril, beating the previous mark of 86 established across six prior visits, and bettered his own best there, a 94 at TEG 15, by fourteen strokes. Four days earlier he had been last in the race for the Spoon. Golf is not a fair sport, but it is occasionally a generous one."
+        ],
+        "words": 273,
+        "compelling": 8,
+        "humour": 7,
         "is_lead": false
       },
       {
         "kicker": "GREEN JACKET",
-        "headline": "Gregg Williams's second Green Jacket",
-        "standfirst": "",
+        "headline": "Best in the Field, Every Time",
+        "standfirst": "Gregg Williams topped the gross leaderboard in every round of the tournament, seeing off a grandstand finish from David Mullin, who broke the Estoril course record along the way.",
         "paragraphs": [
           "Gregg Williams's second Green Jacket was never really in doubt, and the final margin, 16 shots clear of David Mullin, says as much. His gross total of +66 is the fifth-best in the event's history and comfortably the best of his own career. It was, by any measure, thoroughly deserved.",
           "It was also not tidy. Troia, a course none of the field had seen before, produced a 94 and two of his worst passages of the tournament: four holes from the 8th without a net par, then three straight doubles from the 13th, six gross shots gone in as many holes.",
@@ -216,8 +216,8 @@
           "Estoril produced both his best round and his loudest mistake. The 80 was a course best by six on his only prior visit, and it arrived despite an eight at the par-four 14th, a quadruple bogey, and a double at the 9th that ended a run of three straight pars. He won the Jacket by 16. He did not avoid the wreckage. He was simply the man whose wreckage cost him least."
         ],
         "words": 250,
-        "compelling": 7,
-        "humour": 4,
+        "compelling": 6,
+        "humour": 2,
         "is_lead": false
       }
     ],
@@ -256,7 +256,7 @@
   },
   {
     "teg": 18,
-    "title": "An Eleven, a Ten, and the Trophy: Alex Baker Wins in Catalonia",
+    "title": "The Baker Reversal: Alex Takes the Trophy, Jon Takes the Spoon",
     "dateline": {
       "teg": "TEG 18",
       "venue": "Catalonia, Spain",
@@ -285,60 +285,79 @@
     "articles": [
       {
         "kicker": "TROPHY",
-        "headline": "Alex Baker's Trophy: 169 points",
-        "standfirst": "Alex Baker's Trophy: 169 points, two field-best rounds, and a course-worst gross that cost him nothing",
+        "headline": "Baker Wins It on Day One",
+        "standfirst": "A 46 in the opening round put twelve points between Alex Baker and John Patterson; across the next three days the runner-up took back only four of them.",
         "paragraphs": [
-          "Alex Baker won the Trophy with 169 points, eight clear of runner-up John Patterson. It stands as the seventh-highest Trophy total on record and the second-best of his own career. He led the Stableford count after each of the final three rounds, and once he reached the front after R2 he was never headed. The victory is entirely his and requires no qualification whatsoever. The golf is another matter.",
-          "The scoring came in bursts. On the Tour Course in R1 he took 17 points from holes 8 to 12, a run assembled from bogeys at stroke-index holes rather than anything one could reasonably call thrilling, then added 13 more across 14 to 16, including a birdie at the par-five 15th. His biggest single stretch came in R3 on the Stadium Course: 21 points from holes 11 to 16, six consecutive holes without a blank.",
-          "The gross figures were fighting a different campaign. In R2 he made an 8 at the par-three 16th and an 11 at the par-five 18th, both personal worsts against par, and signed for 106. That is a new PGA Catalunya Tour course-worst, beating the previous mark of 105, which had stood across 22 prior visits. Nobody sets a record like that casually. It takes commitment. R4 then produced a 10 at the 14th and an 8 at the 17th, delivered with the serenity of a man who had already counted his points and found them sufficient. His best gross of the four days was 98 on the Tour and 100 on the Stadium, against prior bests of 92 and 93. It cost him the Green Jacket, where he slid from second after R1 to fifth. On Stableford, it cost him nothing at all."
+          "Alex Baker won the Trophy at TEG 18 in Catalonia with 169 Stableford points, eight clear of runner-up John Patterson. It is the seventh-highest total on record and the second best of his own career. A man who already owns three Wooden Spoons has now led a Trophy from the fifth hole of round one to the last. The record book has no way of registering surprise.",
+          "The points arrived in bursts, with long dry stretches in between. On the Tour Course in round one he took 17 from holes 8 to 12, three-point bogeys either side of pars at the 10th and 11th, then 13 more over holes 14 to 16, including a birdie at the par-5 15th. His 98 that day was his best gross of the four days on that course, though still six shots adrift of the 92 he had once posted there.",
+          "Round two was the same man, operated in reverse. He ran up an 11 at the par-5 18th and an eight at the par-3 16th, both blank holes, and signed for 106 gross. That is a new course-worst at PGA Catalunya Tour, one stroke worse than the 105 that had stood across 22 prior visits. Twenty-two visits of assembled human incompetence, and he surpassed the lot of them in an afternoon. He still led the Trophy at the end of the day.",
+          "He led after round three as well, propped up by 21 points across holes 11 to 16 on the Stadium Course. He led after round four too. He arrived at the 14th with the tournament in his pocket and took a 10 out of it. Then he added an eight at the 17th, in case anyone had missed the first gesture. The lead absorbed both without visible complaint."
         ],
-        "words": 287,
-        "compelling": 9,
-        "humour": 7,
+        "words": 297,
+        "compelling": 8,
+        "humour": 5,
         "is_lead": true
       },
       {
         "kicker": "SIDEBAR",
-        "headline": "David Mullin",
-        "standfirst": "David Mullin: an 11 at the 15th, then the lowest gross round ever played at the Stadium",
+        "headline": "Mullin Sets the Course Record, Loses the Jacket",
+        "standfirst": "An 11 at the 15th on Saturday, the lowest gross round the Stadium has ever given up on Monday, and nine shots gone in four holes on Tuesday.",
         "paragraphs": [
-          "Mullin visited both extremes available to a golfer, and the first arrived at the 15th on the Tour Course in Round 1. The par five took him eleven strokes. A sextuple bogey, no Stableford points, and the worst score he has ever recorded on a par five. The consequences reached beyond the card: the hole dropped him from second to fifth in the Wooden Spoon standings, which is the bottom of that particular race.",
-          "Two days later, on the Stadium Course, he built something the tournament had never seen. His 84 gross in Round 3 is a new course record at the Stadium, beating the previous mark of 89 set across 27 prior visits. It was also comfortably his own best there, his previous best gross on the course being 91 across five earlier visits, and it was eight strokes better than his last time out on it.",
-          "Round 4 arrived to explain that the record had been a round of golf and not a change of personality. Through the closing stretch he went four holes without a net par: a double bogey at the 14th, a triple at the 15th, then doubles at the 16th and 17th. Nine shots gone in four holes, and five Stableford points went with them. A tournament, then, of one number nobody will forget and several he would rather."
+          "David Mullin's trip to Catalonia swung between the best and the worst golf of the four days.",
+          "It began badly. On the 15th at the Tour Course in round one, a par 5 of stroke index 5, he ran up an eleven: a sextuple bogey, worth no Stableford points and the worst hole against par of his entire TEG career. Every hole he has ever played, and this one stands alone at the summit. It cost him ground in the Wooden Spoon race too, second in that competition before the hole and fifth after it.",
+          "Round three was the reverse. At the Stadium Course he shot 84 gross, the lowest round the course had ever surrendered, beating the previous record of 89 set across 27 prior visits. It was a personal best there as well. His best in five previous Stadium rounds was 91, and the 84 was eight shots better than his last visit. A course that had spent 27 visits refusing to yield anything under 89 handed him the lot in a single afternoon and asked for nothing in return.",
+          "Round four then unravelled over four holes. From the 14th to the 17th he went double bogey, triple bogey, double bogey, double bogey: 6, 8, 5, 6. Nine shots dropped in four holes, four holes without a net par, a single Stableford point on three of them and none at all at the 15th. The Stadium, having given away its record, spent the following day quietly reclaiming the interest.",
+          "He finished runner-up in the Green Jacket, 14 shots behind Gregg Williams, who won at +66."
         ],
-        "words": 225,
+        "words": 267,
         "compelling": 9,
         "humour": 6,
         "is_lead": false
       },
       {
-        "kicker": "GREEN JACKET & WOODEN SPOON",
-        "headline": "Gregg Williams's Green Jacket",
-        "standfirst": "Gregg Williams's Green Jacket: reigning Wooden Spoon holder to +66 and a 14-shot win / Jon Baker's Wooden Spoon: the defending Trophy champion finishes 23 points adrift of the next man",
+        "kicker": "WOODEN SPOON",
+        "headline": "Last Year's Double Winner Takes the Spoon",
+        "standfirst": "Jon Baker landed in Girona holding both the Trophy and the Green Jacket, led the gross for twenty holes, and finished 43 points behind his own brother.",
         "paragraphs": [
-          "**Round 1, Tour Course.** Gregg Williams opened in the manner expected of a man holding the Wooden Spoon: a quadruple-bogey 9 at the par-5 7th, another quadruple bogey, an 8, at the 17th, and a haemorrhage of dropped shots running from the 2nd all the way to the 14th, taking in triple bogeys at the 3rd and 4th. A birdie at the par-5 15th finally applied a tourniquet. He signed for 31 points. Jon Baker, meanwhile, had led the Green Jacket gross race since the 5th hole of that same round.",
-          "**Round 2, Tour Course.** The Sunday round is where Baker discovered that his tenure at the top would be measured in holes rather than rounds. It lasted 20 of them. A bogey at the 7th handed the gross lead to Williams. Baker answered late: a birdie at the 14th began a run of five holes without a dropped gross shot, worth 16 points to the 18th, and by the close of the round he was the Jacket leader again, with Alex Baker heading the Trophy. Williams produced his own surge over the same closing stretch, 13 points from the 13th to the 16th, four pars in a row and not a gross shot dropped, and posted 42 points, an 11-point improvement on his opening round.",
-          "**Round 3, Stadium Course.** The Jacket changed hands for good, and it happened early. Williams parred the 2nd and took the outright gross lead. Baker's round then disintegrated at the 4th, where a 9, a quintuple bogey on a par 4, went down as a blank. By nightfall the boards read Alex Baker in the Trophy and Williams in the Jacket, and they would not be revised.",
-          "**Round 4, Stadium Course.** Williams birdied the par-3 5th, parred the 6th and gathered nine points across the 8th, 9th and 10th, closing out an 84 that was his best gross score in seven visits to the Stadium, eight shots better than his last time round it.",
-          "The two ledgers closed in opposite corners. Williams took the Green Jacket at +66, winning by 14 from David Mullin, the sixth-best gross total in TEG history and his own best. Jon Baker, the defending Trophy champion, finished on 126 Stableford points, 23 adrift of the next man, and collected the Wooden Spoon. He led one competition from the fifth hole of the tournament and finished last in the other. The defence of his Trophy consisted largely of attendance."
+          "Jon Baker arrived holding both titles and left holding the Wooden Spoon, his 126 Stableford points the total nobody wants. Twenty-three points adrift at the bottom, last in three rounds out of four. The handover was conducted with impressive efficiency.",
+          "It did not begin that way. He took the Green Jacket lead on the fifth hole of round one and held it for 20 holes, across into round two, before a bogey six at the par-five seventh on the Tour course handed the lead to Gregg Williams.",
+          "He answered on the same afternoon. Over the closing five holes he birdied the par-three 14th and parred 15, 16, 17 and 18, banking 16 points and covering the stretch one under par without dropping a gross shot anywhere in it. It put him back in front. After round two he led the Jacket, with Alex Baker top of the Trophy. This was the high-water mark, and he had two days left in which to demonstrate it.",
+          "Round three, on the Stadium course, undid the good work. He ran up a nine at the par-four fourth, a quintuple bogey worth no points at all. One hole, five over, nothing to show. Whatever remained of the defence was conducted from a considerable distance behind the front line.",
+          "The wider numbers tell the same story with less charity. This was his seventh visit to the Stadium course, and his best gross round there across the four days, 97, was eight strokes worse than the 89 he had once managed and eight worse than his last visit. On the Tour course, 87 against a previous best of 84. Seven visits to the Stadium have taught him a great deal about the Stadium. None of it appears to be usable."
         ],
-        "words": 409,
+        "words": 293,
         "compelling": 8,
         "humour": 8,
         "is_lead": false
       },
       {
         "kicker": "SIDEBAR",
-        "headline": "John Patterson's second place",
-        "standfirst": "John Patterson's second place, and the eight holes on the opening morning",
+        "headline": "Last After Four Holes, Second After Four Rounds",
+        "standfirst": "John Patterson dropped 22 shots between the 3rd and the 10th on the opening day, and still finished the closest thing Alex Baker had to a rival.",
         "paragraphs": [
-          "John Patterson's tournament was defined, and very nearly ended, in a single stretch of the opening morning on the Tour Course. From the 3rd he ran up an eight, a quadruple bogey, and then declined to stop: holes 3 through 10 cost him 22 shots to par, including triple bogeys at the 4th, 7th, 8th and 9th. Across the seven holes from the 3rd to the 9th he failed to make a single net par. By the 4th he had slipped from fourth to fifth in the Wooden Spoon standings, which is to say the bottom of it, on the fourth hole of the tournament.",
-          "What followed is the reason he was still in the argument at the close. Later in the same round he took 13 points from the 13th to the 16th, three pars and a bogey at the par-five 15th. In round two he made another eight at the 4th and leaked 11 shots between the 6th and the 10th, then answered with 16 points across the 11th to the 15th. That round produced a 94, his best gross on the Tour Course, bettering his previous mark of 96.",
-          "The pattern held to the last day. After a triple at the 14th and a double at the 15th on the Stadium, he halted proceedings with a bogey at the 16th and a birdie at the 17th. Second place, built on the recoveries rather than the collapses, of which there were plenty to choose from."
+          "John Patterson's tournament was decided at both ends, and the first end came at speed. Four holes into round one on the Tour course he was already bottom of the Wooden Spoon race, down from fourth to fifth on the back of a quadruple-bogey eight at the 3rd and a triple-bogey seven at the 4th. The bleeding continued in an orderly fashion. He lost 22 shots to par across holes 3 to 10 and went seven straight holes, the 3rd to the 9th, without a net par.",
+          "Then he turned it around, which nobody had thought to ask him to do. Holes 13 to 16 brought him 13 points, and he finished round one 14 points stronger on the back nine than the front, for 34 points in all. Round two repeated the shape almost exactly: another quadruple-bogey eight, this time at the 4th, 11 shots dropped from the 6th to the 10th, then 16 points across holes 11 to 15. A man who has found a formula does not abandon it merely because the first half of it is a catastrophe.",
+          "The recovery held. In round four he took nine points from holes 4 to 6, and ended a run of bogeys or worse with a birdie at the 17th. Both courses yielded personal bests: 94 on the Tour, beating his previous 96, and 93 on the Stadium, beating his previous 95.",
+          "It was not enough. Alex Baker took the Trophy on 169 points, eight clear, with Patterson runner-up."
         ],
-        "words": 247,
+        "words": 250,
         "compelling": 8,
-        "humour": 5,
+        "humour": 6,
+        "is_lead": false
+      },
+      {
+        "kicker": "GREEN JACKET",
+        "headline": "Williams Improves Every Round, Wins By Fourteen",
+        "standfirst": "Twenty-seven over par on Saturday and third of five; by Tuesday he had a personal-best 84 on the Stadium and the Green Jacket by a distance.",
+        "paragraphs": [
+          "Gregg Williams started badly. On the Tour course he ran up a nine at the par-five 7th and an eight at the par-four 17th, both quadruple bogeys, and failed to make a par from the 2nd through the 14th before a birdie at the par-five 15th finally stopped the run. Thirteen holes without a par is not a slump so much as a policy. The round came to 31 points.",
+          "Round two was a different story: 42 points, eleven better. He took nine points from holes 3 to 5 and thirteen from 13 to 16, four consecutive pars without a gross shot dropped anywhere in them. The par at the 13th drew him level at the head of the Green Jacket, and during that same round Jon Baker's 20-hole spell in front ended with Williams overtaking him.",
+          "On the Stadium course a par at the 2nd put him outright in the lead. Four pars from the 2nd to the 5th were worth twelve points before a double bogey at the 6th closed the sequence. In round four he birdied the par-three 5th and gathered nine points from the 8th to the 10th, closing to nine off the Trophy lead having at one stage trailed by fifteen. His 84 that day was his best on the Stadium course, eight strokes better than his last visit there.",
+          "He finished on +66, fourteen clear of David Mullin: his own best gross total, and the sixth best ever recorded. The reigning Wooden Spoon holder has spent four days getting steadily better at golf, which is the sort of behaviour that ruins a reputation."
+        ],
+        "words": 269,
+        "compelling": 8,
+        "humour": 6,
         "is_lead": false
       }
     ],
