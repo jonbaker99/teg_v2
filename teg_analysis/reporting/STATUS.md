@@ -14,6 +14,24 @@
 
 ## START HERE — picking this up in a new chat (2026-09-08)
 
+### Regenerating a report, or just part of one
+
+Three stages, in order: **storylines → draft → voice.** `--from` = where to start (everything before
+is reused from disk), `--to` = where to stop. Only pay for the stages you are changing.
+
+```bash
+python scripts/storyline_full_report_experiment.py --tegs 18                   # all three
+python scripts/storyline_full_report_experiment.py --tegs 18 --to storylines   # pick subjects only, 1 call
+python scripts/storyline_full_report_experiment.py --tegs 18 --from voice      # restyle only, 1 call
+python scripts/storyline_full_report_experiment.py --tegs 2-6 --to storylines  # across several TEGs
+```
+
+Bills the API unless prefixed `TEG_LLM_PROVIDER=agent` (then answer prompts with
+`teg-report-respond`). `--to storylines` is a **stage**; `--plan` on backfill is **billing** — the
+stage was renamed from `plan` because of that clash. Full explanation: [README.md](README.md) →
+*Running only the stages you need*.
+
+
 ### Pending: storyline-first reporting is only done for 3 of 17 TEGs (2026-09-08)
 
 **Generate storyline-first reporting for the other 14 TEGs.** Only TEG 14, 16, 18 have
@@ -25,7 +43,7 @@ storyline-first artefacts (`data/commentary/teg_N_storyline_plan.json` +
 
     python scripts/storyline_full_report_experiment.py --tegs N
 
-(`--tegs` takes `2-18` or `8,9,14` too, so the whole backlog is one command; `--to plan` stops
+(`--tegs` takes `2-18` or `8,9,14` too, so the whole backlog is one command; `--to storylines` stops
 after the storyline plan if you want to see what each report would be about before paying for
 prose. A TEG that fails no longer aborts the ones after it.)
 

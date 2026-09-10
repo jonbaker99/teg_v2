@@ -40,17 +40,32 @@ and voice passes follow from it, so it overwrites all four artefacts and re-roll
 every subject, headline and score. The beats and bundle underneath are recomputed
 from the parquet data by code, not by the model.
 
-`--from` and `--to` bound which stages run, so you never pay for what you are
-not testing — mirroring the legacy chain's `load_story_plan`/`load_dry_draft`
-restart points. The three stages are plan -> draft -> voice:
+PICKING WHICH STAGES RUN
+------------------------
+Making a report has three stages, in order:
 
-    --from plan   (default)  start by regenerating the storyline plan
-    --from draft             reuse the plan on disk, redraft the sections
-    --from voice             reuse the draft, run the voice pass alone
+    storylines  ->  draft  ->  voice
 
-    --to plan                stop after the plan — one call, no prose
-    --to draft               stop after the structural draft (was --no-voice)
-    --to voice    (default)  run through to the finished styled report
+    storylines  decide what the report is about (which storylines)
+    draft       write each storyline as plain, unfunny prose
+    voice       rewrite that in the house style
+
+`--from` says where to START. `--to` says where to STOP. Together they pick a
+slice. Everything before `--from` is reused from disk; everything after `--to`
+does not run.
+
+    --from storylines --to voice       storylines -> draft -> voice  (default: all three)
+    --from storylines --to storylines  storylines                    (just decide the subject)
+    --from storylines --to draft       storylines -> draft           (stop before styling)
+    --from draft      --to voice       draft -> voice                (keep the storylines, redo the rest)
+    --from voice      --to voice       voice                         (just restyle)
+
+The point is not paying for work you are not changing. Restyling for tone does
+not need a new set of storylines.
+
+NOTE: `--to storylines` is a PIPELINE STAGE. It is unrelated to `--plan` on
+backfill, which is about BILLING (claude.ai plan usage vs the API). This script
+takes no billing flag — see below.
 
 `--from voice` is the cheap loop and the right way to try a tone change — the
 draft is plain, unvoiced prose, so a voice A/B against it compares like with
@@ -74,7 +89,7 @@ Usage, from the repo root — either provider:
     python scripts/storyline_full_report_experiment.py --tegs 14 --from draft
 
     # Just decide what the reports are about, across several TEGs.
-    python scripts/storyline_full_report_experiment.py --tegs 2-6 --to plan
+    python scripts/storyline_full_report_experiment.py --tegs 2-6 --to storylines
 
 This script has no `--plan`/`--paste` flags of its own (unlike `backfill.py`);
 the env var is the whole mechanism, since `llm.generate_text` /
@@ -285,7 +300,7 @@ def run_voice_pass(teg_num: int, model: Optional[str] = None) -> dict:
     return result
 
 
-def run_one(teg_num: int, *, start_from: str = "plan", stop_after: str = "voice",
+def run_one(teg_num: int, *, start_from: str = "storylines", stop_after: str = "voice",
             model: Optional[str] = None, interweave: bool = False) -> None:
     """Run the stages between `start_from` and `stop_after` for one TEG.
 
@@ -307,7 +322,7 @@ def run_one(teg_num: int, *, start_from: str = "plan", stop_after: str = "voice"
               f"({1 + len(reused_plan['discovered_storylines']) + 2} storylines), "
               f"redrafting sections.")
 
-    if stop_after == "plan":
+    if stop_after == "storylines":
         # Stop at the editorial decision: what is this report about? One LLM
         # call, before anything is spent on prose.
         result = build_storyline_plan(teg_num, model=model)
@@ -344,22 +359,22 @@ def main():
                          "`backfill.parse_teg_spec`, the same syntax backfill takes. "
                          "Runs them in order and keeps going if one fails.")
     ap.add_argument("--model", default=None)
-    ap.add_argument("--from", dest="start_from", choices=("plan", "draft", "voice"),
-                    default="plan",
-                    help="Which stage to start from, reusing everything above it. "
-                         "'plan' (default) runs the lot: storyline plan, one draft call "
-                         "per storyline, then the voice pass. 'draft' reuses the plan on "
-                         "disk and redrafts the sections — for iterating on the drafting "
-                         "prompt, where the plan is not what you are testing. 'voice' "
-                         "reuses the structural draft and re-runs the voice pass alone: "
-                         "one LLM call, and the right way to try a tone change.")
-    ap.add_argument("--to", dest="stop_after", choices=("plan", "draft", "voice"),
-                    default="voice",
-                    help="Which stage to stop after. 'voice' (default) runs to the "
-                         "finished styled report. 'draft' stops at the structural "
-                         "draft. 'plan' stops at the storyline plan — one LLM call, "
-                         "for deciding what the report is about before spending "
-                         "anything on prose.")
+    ap.add_argument("--from", dest="start_from",
+                    choices=("storylines", "plan", "draft", "voice"), default="storylines",
+                    help="Which stage to START at. Everything before it is reused from "
+                         "disk. 'storylines' (default) regenerates the storyline plan; "
+                         "'draft' reuses that plan and redrafts the sections; 'voice' "
+                         "reuses the draft and restyles only. ('plan' is a deprecated "
+                         "alias for 'storylines'.)")
+    ap.add_argument("--to", dest="stop_after",
+                    choices=("storylines", "plan", "draft", "voice"), default="voice",
+                    help="Which stage to STOP after. Nothing past it runs. 'voice' "
+                         "(default) goes through to the finished styled report; 'draft' "
+                         "stops at the plain unvoiced prose; 'storylines' stops at the "
+                         "storyline plan — one call, for deciding what a report is about "
+                         "before paying for prose. ('plan' is a deprecated alias, renamed "
+                         "because --plan means claude.ai billing and the clash confused "
+                         "people.)")
     ap.add_argument("--no-voice", action="store_true",
                     help="Deprecated alias for --to draft. Kept because it appears in "
                          "existing notes and docs.")
@@ -367,6 +382,14 @@ def main():
                     help="Merge storylines that share beats into one cross-cut section. "
                          "Off by default: the newspaper layout wants separate articles.")
     args = ap.parse_args()
+
+    # `plan` was the original name for this stage. Renamed to `storylines` because
+    # `--plan` on backfill means claude.ai billing, and one word meaning both a
+    # billing mode and a pipeline stage confused people. Alias kept, not advertised.
+    if args.start_from == "plan":
+        args.start_from = "storylines"
+    if args.stop_after == "plan":
+        args.stop_after = "storylines"
 
     if args.no_voice:
         if args.stop_after != "voice":
@@ -376,15 +399,15 @@ def main():
     # Reject combinations that ask for nothing to happen, or for a flag that only
     # applies to a stage this run skips, rather than running and silently
     # ignoring half the command line.
-    _ORDER = {"plan": 0, "draft": 1, "voice": 2}
+    _ORDER = {"storylines": 0, "draft": 1, "voice": 2}
     if _ORDER[args.stop_after] < _ORDER[args.start_from]:
         ap.error(f"--to {args.stop_after} is before --from {args.start_from}: "
                  f"that range has no stages in it.")
     if args.start_from == "voice" and args.interweave:
         ap.error("--interweave affects section drafting, which --from voice skips. "
                  "Re-run from plan or draft to redraft.")
-    if args.stop_after == "plan" and args.interweave:
-        ap.error("--interweave affects section drafting, which --to plan stops before.")
+    if args.stop_after == "storylines" and args.interweave:
+        ap.error("--interweave affects section drafting, which --to storylines stops before.")
 
     # Only the `api` provider needs a key — under `agent` the prompts hand off
     # through the mailbox and there is no key at all (see `llm.has_api_key`).
