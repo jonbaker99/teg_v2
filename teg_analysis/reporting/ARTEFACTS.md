@@ -152,6 +152,12 @@ Three practical consequences:
 
 ## How to test and iterate on each element
 
+> **Storyline-first shortcut:** these recipes are written for the legacy chain's restart points. The
+> storyline-first script has the same idea as two flags — `--from {storylines,draft,voice}` and
+> `--to {storylines,draft,voice}` — so a tone A/B is `--tegs N --from voice` (1 call) rather than a
+> full regeneration. See [README.md](README.md) → *Running only the stages you need*.
+
+
 One recipe per thing you might want to change. **Run everything from the repo root.** The free ones
 need nothing at all.
 

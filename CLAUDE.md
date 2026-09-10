@@ -50,6 +50,7 @@ TEG v2 is a golf tournament analysis project with two architectural layers: a le
 | Report/commentary pipeline | `teg_analysis/reporting/README.md` + `STATUS.md` |
 | **Picking up report work in a new chat** | `teg_analysis/reporting/STATUS.md` → **START HERE** (goals, what changed and why, open workstreams) |
 | How do I test/iterate on a report-pipeline element (voice, weights, structure)? | `teg_analysis/reporting/ARTEFACTS.md` |
+| **How do I regenerate a report, or just part of one?** | Development commands below, then `teg_analysis/reporting/README.md` → *Running only the stages you need* |
 | Running reports on plan usage vs API billing; model comparisons | `teg_analysis/reporting/README.md` → *Who answers the prompts* |
 | Streamlit internals (frozen) | `streamlit/README.md` |
 
@@ -72,7 +73,25 @@ python -m teg_analysis.reporting.backfill --tegs 14 --plan        # claude.ai pl
 python -m teg_analysis.reporting.backfill --tegs 14 --paste gpt5  # paste into another model
 python -m teg_analysis.reporting.mailbox status                   # prompts waiting
 python -m scripts.export_cowork_kit --tegs 4,14,17 --out DIR # report kit for rewriting outside the pipeline
+
+# Storyline-first reports (TEGs 14/16/18 so far). Three stages, in order:
+#   storylines -> draft -> voice
+#   storylines  decide what the report is about   draft  plain unfunny prose   voice  house style
+# --from = where to START (everything before it is reused from disk)
+# --to   = where to STOP  (nothing after it runs). Only pay for what you're changing.
+python scripts/storyline_full_report_experiment.py --tegs 18                    # all three
+python scripts/storyline_full_report_experiment.py --tegs 18 --to storylines    # just pick subjects, 1 call
+python scripts/storyline_full_report_experiment.py --tegs 18 --to draft         # stop before styling
+python scripts/storyline_full_report_experiment.py --tegs 18 --from draft       # keep storylines, redo the rest
+python scripts/storyline_full_report_experiment.py --tegs 18 --from voice       # just restyle, 1 call
+python scripts/storyline_full_report_experiment.py --tegs 2-6 --to storylines   # what would these be about?
 ```
+
+> **Both report entry points BILL THE API by default.** For claude.ai plan usage: `--plan` on
+> `backfill`, or prefix `TEG_LLM_PROVIDER=agent` on the storyline script (it has no billing flag),
+> then answer the queued prompts with the `teg-report-respond` skill. **`--plan` is billing;
+> `--to storylines` is a pipeline stage** — unrelated, and that stage was called `plan` until the
+> clash was renamed away. `--tegs` takes `14`, `2-18`, `8,9,14` or a mix.
 
 > `--plan` and `--paste` hand each prompt off through `data/llm_mailbox` instead of calling the API; the `teg-report-respond` skill answers `--plan` runs, you answer `--paste` runs by hand. Both can run at once. On the Claude-Code-on-the-web container, install pytest into the same interpreter as the deps: `pip install -r requirements.txt && pip install pytest` — bare `pytest` there is a `uv`-isolated binary that can't see pip-installed deps.
 

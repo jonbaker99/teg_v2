@@ -20,11 +20,11 @@ Full detail — including the report-by-report inventory and pipeline vintages �
 - [x] **Give the storyline-first script restart points, like the legacy chain has** — **done 2026-09-08.** `scripts/storyline_full_report_experiment.py` used to run all three stages from scratch every time: `build_storyline_draft` called `build_storyline_plan` unconditionally, so changing the voice on TEG 18 cost a fresh plan and five fresh section drafts too — 7 LLM calls to change one. It now has `--from {plan,draft,voice}`, mirroring the legacy chain's `load_story_plan`/`load_dry_draft` restart points and `backfill`'s `force`/`scope`/`style=False`:
   - `--from voice` reuses `teg_N_report_storylinedraft.md` and runs the voice pass alone — **1 call**. The right way to try a tone change: the draft is plain unvoiced prose, so the A/B compares like with like.
   - `--from draft` reuses `teg_N_storyline_plan.json` via the new `authoring.load_storyline_plan()` and redrafts the sections — **6 calls**, for iterating on the drafting prompt where the plan is not the variable.
-  - `--from plan` (default) is the full 7-call run, unchanged.
+  - `--from storylines` (default) is the full 7-call run, unchanged.
 
   Verified by provider hand-off rather than by spending calls: under `TEG_LLM_PROVIDER=agent`, `--from voice` raises only the `restyle` request and `--from draft` raises a section-draft request first, neither preceded by a `storyline_plan` request.
 
-  **`--to` and `--tegs` followed (2026-09-10).** `--to {plan,draft,voice}` bounds the other end, so `--to plan` stops after the storyline plan — one call, for deciding what a report is about before spending anything on prose. `--no-voice` stays as a deprecated alias for `--to draft`. `--tegs` now takes the same spec as `backfill` (`14`, `2-18`, `8,9,14`), reusing `backfill.parse_teg_spec` rather than a second parser, and a TEG that fails no longer discards the ones already paid for.
+  **`--to` and `--tegs` followed (2026-09-10).** `--to {storylines,draft,voice}` bounds the other end, so `--to storylines` stops after the storyline plan — one call, for deciding what a report is about before spending anything on prose. `--no-voice` stays as a deprecated alias for `--to draft`. `--tegs` now takes the same spec as `backfill` (`14`, `2-18`, `8,9,14`), reusing `backfill.parse_teg_spec` rather than a second parser, and a TEG that fails no longer discards the ones already paid for.
 
 **Then:**
 
