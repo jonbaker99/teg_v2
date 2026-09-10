@@ -56,59 +56,21 @@ broken (PR #95, then the hand-patch destroyed by re-styling); it should be the l
 **Found while doing it: `teg_16_report_storylinefirst_styled.md` had its section headings one
 section out of step.** The styled file carried the plan's `subject` strings, misaligned — the
 Baker-brothers heading sat over the David Mullin section and vice versa. Re-styling from the plan
-replaces them with `chosen_headline` and puts each heading over its own body. TEG 16 has been
-re-styled; **14 and 18 have not been checked for the same fault.** Three D3 `no_em_dashes`
+replaces them with `chosen_headline` and puts each heading over its own body. All three have now been
+re-styled; **TEG 14 had the same fault, TEG 18 did not.** Three D3 `no_em_dashes`
 warnings remain, all in injected headline and record text, and all pre-existing — the plan's
 headlines carry em-dashes, and so did the `subject` strings they replaced.
 
 The review was cut short at claim 16 of ~60, so the rule list is the four above rather than an
-exhaustive pass. Remaining known content questions from that session, not yet decided: whether
-sub-headlines must match the body they head (TEG 16's line-24 headline is about the Baker
-brothers, its paragraphs are about David Mullin), and whether stroke index outside SI 1–3 / 16–18
-should ever appear (Jon's ruling: fine occasionally, as long as it is not on every hole — which is
+exhaustive pass. One open content question from that session, not yet decided: whether stroke
+index outside SI 1–3 / 16–18 should ever appear (Jon's ruling: fine occasionally, as long as it is not on every hole — which is
 what `STROKE_INDEX_RULE` already says, so no change made).
 
+### Regenerating a report, or just part of one
 
-### Pending: storyline-first reporting is only done for 3 of 17 TEGs (2026-09-08)
-
-**Generate storyline-first reporting for the other 14 TEGs.** Only TEG 14, 16, 18 have
-storyline-first artefacts (`data/commentary/teg_N_storyline_plan.json` +
-`teg_N_report_storylinefirst_styled.md`); the newspaper layout (`/teg-reports-preview`,
-`teg_analysis/reporting/newspaper_edition.py`) can only ever render a TEG that has these. TEGs 2–13,
-15, 17 have never had the storyline-first pipeline run at all — they still only have the older
-`teg_N_report_styled.md`. Run per TEG:
-
-    python scripts/storyline_full_report_experiment.py --tegs N
-
-(`--tegs` takes `2-18` or `8,9,14` too, so the whole backlog is one command; `--to plan` stops
-after the storyline plan if you want to see what each report would be about before paying for
-prose. A TEG that fails no longer aborts the ones after it.)
-
-**It runs on plan usage too, as of 2026-09-08** — prefix the command with
-`TEG_LLM_PROVIDER=agent` and answer the prompts with the `teg-report-respond` skill, exactly as for
-a `backfill.py --plan` run. The script has no `--plan`/`--paste` flags of its own, but it never
-needed them: `llm.generate_text`/`generate_structured` dispatch on the provider for every call, so
-the env var is the whole mechanism. What blocked it was a provider-blind
-`if not llm.has_api_key(): sys.exit(1)` guard that aborted an `agent` run before its first call,
-despite `has_api_key`'s own docstring saying only the `api` provider needs a key; the guard now
-checks the provider first. Without the env var it is still real Anthropic API billing
-(`ANTHROPIC_API_KEY`/`TEG_ANTHROPIC_API_KEY`). Still explicitly an experiment script (see its own
-docstring) — not wired into `backfill.py` or any production path.
-After a run, `teg_analysis.reporting.newspaper_edition.AVAILABLE_TEGS` (currently hardcoded
-`(14, 16, 18)`) needs the new TEG numbers added, or the preview won't offer them. Not started yet —
-deliberately, no LLM calls until asked for.
-
-**Fixed (2026-09-08): the 14/16/18 desync from PR #95.** That PR (headline/standfirst fields)
-regenerated `teg_{14,16,18}_storyline_plan.json` with fresh LLM-written `subject` text but not the
-paired `_report_storylinefirst_styled.md`, so `newspaper_edition.py`'s exact-string matching broke
-for all three. Patched by hand rather than a full pipeline re-run (cost/time tradeoff, and a re-run
-would re-roll every `subject`/`chosen_headline` again, non-deterministically): the styled markdown's
-`## ` headings were renamed to the new `subject` text for TEG 14 and 16 (same underlying storylines,
-wording only). TEG 18's regeneration had also **dropped** a storyline outright — John Patterson's
-runner-up story — while its article was still in the markdown; his old `DraftedStoryline` entry
-(pre-headline schema, so no `chosen_headline`/`standfirst` — falls back to derivation, same as any
-other pre-2026-09-06 artefact) was copied back into `discovered_storylines` verbatim to restore the
-pairing. All three verified rendering correctly at `/teg-reports-preview`, full suite green.
+Three stages — **storylines → draft → voice**. `--from` picks where to start (everything before is
+reused from disk), `--to` where to stop, so you only pay for what you are changing. Commands, costs
+per stage, and plan-usage vs API: [README.md](README.md) → *Running only the stages you need*.
 
 ### The report build is now documented end to end (2026-09-08)
 

@@ -600,6 +600,47 @@ which reads the legacy `teg_N_story_plan.json` if present and falls back to
 `teg_N_storyline_plan.json` otherwise — so styling works on any TEG that has run *either* pipeline,
 not only the three that have run both.
 
+#### Running only the stages you need — `--from` and `--to`
+
+Making a report has three stages, in order:
+
+```
+storylines  →  draft  →  voice
+```
+
+- **storylines** — decide what the report is about (which storylines)
+- **draft** — write each storyline as plain, unfunny prose
+- **voice** — rewrite that in the house style
+
+**`--from` says where to start. `--to` says where to stop.** Together they pick a slice. Everything
+before `--from` is reused from disk; everything after `--to` doesn't run.
+
+```
+--from storylines --to voice       storylines → draft → voice  (the default: all three)
+--from storylines --to storylines  storylines                  (just decide the subject)
+--from storylines --to draft       storylines → draft          (stop before styling)
+--from draft      --to voice       draft → voice               (keep the storylines, redo the rest)
+--from voice      --to voice       voice                       (just restyle)
+```
+
+The point is not paying for work you're not changing. Restyling for tone doesn't need a new set of
+storylines.
+
+```bash
+python scripts/storyline_full_report_experiment.py --tegs 18 --to storylines   # 1 call
+python scripts/storyline_full_report_experiment.py --tegs 18 --from voice      # 1 call
+python scripts/storyline_full_report_experiment.py --tegs 2-6 --to storylines  # 5 calls
+```
+
+`--tegs` takes `14`, `2-18`, `8,9,14` or a mix (the same spec as `backfill`). A TEG that fails
+doesn't discard the ones already paid for. `--no-voice` is a deprecated alias for `--to draft`, and
+`plan` a deprecated alias for the `storylines` stage.
+
+> ⚠️ **`--to storylines` is a pipeline stage. `--plan` is billing.** They are unrelated, and the
+> stage used to be called `plan`, which is exactly why it was renamed. This script has no billing
+> flag at all — prefix `TEG_LLM_PROVIDER=agent` to run on claude.ai plan usage. See
+> [Who answers the prompts](#who-answers-the-prompts--the-api-a-claude-code-session-or-you).
+
 #### From styled markdown to a finished report — the presentation stage
 
 The three stages above end at a markdown file. They are not the end of the pipeline: the report a
@@ -868,6 +909,16 @@ html = render_desktop_html(edition)  # what /teg-reports-preview serves
 - **Mode**: `balanced` / `fast` / `archive` — controls scoring weights (fast leans on importance; archive cranks rarity + entertainment).
 
 ### Who answers the prompts — the API, a Claude Code session, or you
+
+> **Two different things are called "plan", and confusing them costs money.**
+> **`--plan`** (and `TEG_LLM_PROVIDER`) is about **billing** — who answers the prompts.
+> **`--to storylines` / `--from storylines`** on the storyline script is a **pipeline stage** — the
+> editorial decision about what the report is about. They are unrelated.
+> `--tegs 2-6 --to storylines` still bills the API unless you also ask for plan usage.
+> (That stage was called `plan` until 2026-09-10; the clash is why it was renamed.)
+>
+> **Both entry points bill the API unless told otherwise.** `backfill.py`'s epilog claimed the
+> opposite until 2026-09-10; it was wrong, and `llm.DEFAULT_PROVIDER` has always been `api`.
 
 Every model call goes through `llm.generate_text` / `llm.generate_structured`, and
 those dispatch on a **provider**. Three ways to run, one flag each:
