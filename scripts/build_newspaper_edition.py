@@ -50,7 +50,8 @@ def _parse_args(argv=None):
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     ap.add_argument("--min-compelling", type=int, default=None,
-                    help="Only print stories scoring at least this (0-10).")
+                    help="Only print DISCOVERED stories scoring at least this (0-10). "
+                         "Trophy, Green Jacket and Wooden Spoon are always printed.")
     ap.add_argument("--min-humour", type=int, default=None,
                     help="Only print stories scoring at least this (0-10).")
     ap.add_argument("--match", choices=("all", "any"), default="all",
