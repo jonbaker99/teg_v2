@@ -675,8 +675,9 @@ call, no cost.**
 
 6. **Choose which stories are printed** — optional, and applied last.
    Every plan carries three **mandatory** storylines (trophy, jacket, spoon), populated *"regardless
-   of how good you judge them to be"*, plus 0–3 discovered. So a weak article is not a fault: the
-   editor was told to write it. `ArticleFilter` is the lever for not *printing* it.
+   of how good you judge them to be"*, plus 0–3 discovered. So a weak competition article is not a
+   fault: the editor was told to write it, and it still gets printed. `ArticleFilter` is the lever
+   for thinning the **discovered** stories.
 
    ```bash
    # try a policy — writes filtered pages, and names what it left out
@@ -687,8 +688,12 @@ call, no cost.**
 
    `--match all` (default) needs both floors, `--match any` needs either, and `--min-combined`
    rescues a lopsided piece — a 9-humour/5-compelling story survives a compelling floor of 7.
-   **The lead is never dropped**, whatever it scores: the renderer requires one and a tournament
-   always has a winner.
+
+   **Trophy, Green Jacket and Wooden Spoon are always printed**, whatever they score. A report that
+   never says who won the Jacket has a hole in it, however dull that week's Jacket was — and the
+   editor was required to write all three. The filter reaches only the **discovered** stories, which
+   are the ones the editor *chose* to add and so the ones worth second-guessing. A merged cross-cut
+   article carrying a competition (`WOODEN SPOON & SIDEBAR`) counts as a competition and stays.
 
    Filtering is **presentation only, applied at edition-build time**. The plan, the draft and the
    styled markdown still contain every storyline — a dropped story is still on disk and returns by

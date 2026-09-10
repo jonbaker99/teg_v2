@@ -161,9 +161,9 @@ def test_an_anchor_past_the_end_of_the_plan_degrades():
 # ArticleFilter — which stories make the paper. Presentation only: nothing on
 # disk changes, and a dropped story returns by moving a threshold.
 # ---------------------------------------------------------------------------
-def _scored(compelling, humour, is_lead=False):
+def _scored(compelling, humour, is_lead=False, kicker="SIDEBAR"):
     return {"headline": "x", "compelling": compelling, "humour": humour,
-            "is_lead": is_lead, "kicker": "SIDEBAR"}
+            "is_lead": is_lead, "kicker": kicker}
 
 
 def test_default_filter_prints_everything():
@@ -199,13 +199,30 @@ def test_min_combined_rescues_a_lopsided_scored():
     assert kept == [lopsided] and dropped == []
 
 
-def test_the_lead_is_never_dropped():
-    """`render_desktop_html` requires a lead, and a tournament always has a winner."""
+def test_the_three_competitions_are_never_dropped():
+    """A report that never says who won the Jacket has a hole in it, however dull
+    that week's Jacket was. Only discovered (SIDEBAR) stories are filterable."""
     from teg_analysis.reporting.newspaper_edition import ArticleFilter, filter_articles
 
-    lead = _scored(1, 1, is_lead=True)
-    kept, dropped = filter_articles([lead, _scored(1, 1)], ArticleFilter(10, 10))
-    assert kept == [lead] and len(dropped) == 1
+    trophy = _scored(1, 1, is_lead=True, kicker="TROPHY")
+    jacket = _scored(1, 1, kicker="GREEN JACKET")
+    spoon = _scored(1, 1, kicker="WOODEN SPOON")
+    sidebar = _scored(1, 1, kicker="SIDEBAR")
+
+    kept, dropped = filter_articles([trophy, jacket, spoon, sidebar],
+                                    ArticleFilter(10, 10))
+    assert kept == [trophy, jacket, spoon]
+    assert dropped == [sidebar]
+
+
+def test_a_merged_article_carrying_a_competition_is_kept():
+    """Cross-cut sections join kickers with ' & '; one carrying a competition is
+    still mandatory, so the test is substring not equality."""
+    from teg_analysis.reporting.newspaper_edition import ArticleFilter, filter_articles
+
+    merged = _scored(1, 1, kicker="WOODEN SPOON & SIDEBAR")
+    kept, dropped = filter_articles([merged], ArticleFilter(10, 10))
+    assert kept == [merged] and dropped == []
 
 
 def test_dropped_articles_never_reach_the_page():

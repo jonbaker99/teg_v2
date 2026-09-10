@@ -49,8 +49,10 @@ class ArticleFilter(NamedTuple):
 
     Every plan carries three MANDATORY storylines — trophy, jacket, spoon —
     populated "regardless of how good you judge them to be", plus 0-3 discovered
-    ones. So a weak article is not a bug: the editor was told to write it. This
-    is the lever for not *printing* it.
+    ones. The three competitions are always printed: a report that never says who
+    won the Jacket has a hole in it, however dull that week's Jacket was. This
+    filter applies to the DISCOVERED stories only — the ones the editor chose to
+    add, and so the ones worth second-guessing.
 
     Deliberately applied at edition-build time, not earlier. The plan, the draft
     and the voiced report all still contain every storyline; filtering here means
@@ -102,16 +104,37 @@ KEEP_EVERYTHING = ArticleFilter()
 DEFAULT_ARTICLE_FILTER = KEEP_EVERYTHING
 
 
+#: The three competitions. Their storylines are mandatory in the plan — the
+#: editor writes one each "regardless of how good you judge them to be" — and
+#: they are mandatory on the page for the same reason: a tournament report that
+#: does not say who won the Jacket has a hole in it, however dull that week's
+#: Jacket was. Only discovered stories (SIDEBAR) are filterable.
+COMPETITION_KICKERS = ("TROPHY", "GREEN JACKET", "WOODEN SPOON")
+
+
+def is_competition_article(article: dict[str, Any]) -> bool:
+    """Whether this article carries one of the three mandatory competitions.
+
+    Substring, not equality: a merged cross-cut article joins its kickers with
+    " & " ("WOODEN SPOON & SIDEBAR"), and one carrying a competition is still
+    mandatory. Same test `_choose_second_story` uses to find the Jacket.
+    """
+    return any(k in article.get("kicker", "") for k in COMPETITION_KICKERS)
+
+
 def filter_articles(articles: list[dict[str, Any]],
                     article_filter: ArticleFilter) -> tuple[list, list]:
-    """Split `articles` into (kept, dropped) — the lead is never dropped.
+    """Split `articles` into (kept, dropped).
 
-    The lead is the report's spine and `render_desktop_html` requires one, so it
-    is exempt however it scores. A tournament always has a winner worth leading on.
+    Trophy, Green Jacket and Wooden Spoon are always kept, whatever they score.
+    The filter exists to thin the *discovered* stories, which are the ones the
+    editor chose to add; the competitions are the report's spine, and the lead is
+    one of them, which `render_desktop_html` requires anyway.
     """
     kept, dropped = [], []
     for a in articles:
-        (kept if a.get("is_lead") or article_filter.keeps(a) else dropped).append(a)
+        keep = a.get("is_lead") or is_competition_article(a) or article_filter.keeps(a)
+        (kept if keep else dropped).append(a)
     return kept, dropped
 
 
