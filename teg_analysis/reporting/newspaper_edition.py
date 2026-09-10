@@ -229,9 +229,72 @@ def _plan_standfirst(matches: list[tuple[str, dict[str, Any]]]) -> str:
     return " ".join(standfirsts)
 
 
-def _match_storyline(subject: str, plan: dict[str, Any]) -> tuple[str, dict[str, Any]]:
+# ---------------------------------------------------------------------------
+# Matching a report section back to the plan storyline it was written from.
+#
+# THE ANCHOR IS THE KEY; the heading is only a fallback. Exact subject equality
+# was the whole mechanism until 2026-09-10 and it broke repeatedly, because it
+# made a PROSE STRING the join between two artefacts written by different
+# passes at different times:
+#
+#   - PR #95 regenerated the plans with fresh `subject` text but not the
+#     reports, so every heading stopped matching. It was patched by editing the
+#     styled markdown by hand — a fix living only in a DERIVED file, which the
+#     next `style_report` duly destroyed.
+#   - The voice pass is told to leave headings alone and does not always comply.
+#
+# Fuzzy matching was tried and rejected: measured against ground truth on TEGs
+# 14 and 16, every metric (fragment overlap, Jaccard, Dice, candidate overlap)
+# put TEG 14's "Alex Baker and the 16th hole" section on the DAVID MULLIN
+# trophy storyline, because a long subject string absorbs any short heading's
+# words. A wrong match is worse than no match: it drives the kicker and the
+# layout scores.
+#
+# So the section carries its own identity. `_ANCHOR_RE` reads
+# `<!-- storyline: trophy -->` (or `d1,spoon` for a merged section) from the
+# line under the heading. Reports written before anchors existed fall back to
+# exact subject matching, and a section that resolves by neither route is
+# DEGRADED rather than fatal — see `_degraded_storyline`. A preview page that
+# renders four articles correctly and one plainly beats one that 500s.
+_ANCHOR_RE = re.compile(r"<!--\s*storyline:\s*([a-z0-9,\s]+?)\s*-->", re.IGNORECASE)
+
+
+def _slot_by_key(key: str, plan: dict[str, Any]) -> tuple[str, dict[str, Any]] | None:
+    """Resolve one anchor key. `trophy` / `jacket` / `spoon`, or `dN` for the
+    Nth discovered storyline. Returns None for a key the plan cannot satisfy —
+    an anchor pointing past the end of a regenerated plan degrades like a
+    missing one rather than raising."""
+    key = key.strip().lower()
+    fixed = {"trophy": ("TROPHY", "trophy_storyline"),
+             "jacket": ("GREEN JACKET", "jacket_storyline"),
+             "spoon": ("WOODEN SPOON", "spoon_storyline")}
+    if key in fixed:
+        kicker, field = fixed[key]
+        return kicker, plan[field]
+    if key.startswith("d") and key[1:].isdigit():
+        discovered = plan["discovered_storylines"]
+        idx = int(key[1:])
+        if idx < len(discovered):
+            return "SIDEBAR", discovered[idx]
+    return None
+
+
+def _anchor_matches(content: str, plan: dict[str, Any]
+                    ) -> list[tuple[str, dict[str, Any]]] | None:
+    """The storylines named by this section's anchor, or None if it has none
+    (or none that resolve)."""
+    m = _ANCHOR_RE.search(content)
+    if not m:
+        return None
+    matches = [_slot_by_key(k, plan) for k in m.group(1).split(",") if k.strip()]
+    if not matches or not all(matches):
+        return None
+    return matches  # type: ignore[return-value]
+
+
+def _match_storyline(subject: str, plan: dict[str, Any]) -> tuple[str, dict[str, Any]] | None:
     """Match a heading fragment (post ' / ' split) to its plan slot by exact
-    subject string. Returns (kicker, storyline_dict)."""
+    subject string. Returns (kicker, storyline_dict), or None if nothing matches."""
     if plan["trophy_storyline"]["subject"] == subject:
         return "TROPHY", plan["trophy_storyline"]
     if plan["jacket_storyline"]["subject"] == subject:
@@ -241,7 +304,33 @@ def _match_storyline(subject: str, plan: dict[str, Any]) -> tuple[str, dict[str,
     for storyline in plan["discovered_storylines"]:
         if storyline["subject"] == subject:
             return "SIDEBAR", storyline
-    raise ValueError(f"heading fragment did not match any plan subject: {subject!r}")
+    return None
+
+
+def _degraded_storyline(heading: str) -> tuple[str, dict[str, Any]]:
+    """Stand-in for a section that resolves to no plan storyline.
+
+    Keeps the section's own prose and heading, which are the parts a reader
+    actually sees, and gives up only the plan-side extras: the kicker becomes
+    SIDEBAR and the layout scores go to zero, so an unmatched section is never
+    promoted to the lead on scores it does not have.
+    """
+    return "SIDEBAR", {"subject": heading, "chosen_headline": "", "standfirst": "",
+                       "compelling_score": 0, "humour_score": 0}
+
+
+def _resolve_section(heading: str, content: str, plan: dict[str, Any]
+                     ) -> list[tuple[str, dict[str, Any]]]:
+    anchored = _anchor_matches(content, plan)
+    if anchored:
+        return anchored
+    fragments = [f.strip() for f in heading.split(" / ")]
+    matched = [_match_storyline(f, plan) for f in fragments]
+    if all(matched):
+        return matched  # type: ignore[return-value]
+    print(f"[newspaper_edition] WARNING: section has no storyline anchor and its "
+          f"heading matches no plan subject; rendering it plainly: {heading[:80]!r}")
+    return [_degraded_storyline(heading)]
 
 
 def _parse_articles(
@@ -249,8 +338,8 @@ def _parse_articles(
 ) -> list[dict[str, Any]]:
     articles = []
     for heading, content in article_sections:
-        fragments = [f.strip() for f in heading.split(" / ")]
-        matches = [_match_storyline(f, plan) for f in fragments]
+        matches = _resolve_section(heading, content, plan)
+        content = _ANCHOR_RE.sub("", content)
 
         kickers = sorted(
             {k for k, _ in matches}, key=lambda k: _KICKER_PRIORITY.index(k)
@@ -284,9 +373,19 @@ def _parse_articles(
             }
         )
 
+    # The Trophy section leads. Where it cannot be identified — a degraded
+    # section, or a plan/report pair that has drifted — the strongest article
+    # leads instead. An edition that leads on the wrong story is a worse layout;
+    # an edition that raises here is no page at all.
     leads = [a for a in articles if a["is_lead"]]
     if len(leads) != 1:
-        raise ValueError(f"expected exactly 1 TROPHY lead article, got {len(leads)}")
+        print(f"[newspaper_edition] WARNING: expected exactly 1 TROPHY lead article, "
+              f"got {len(leads)}; leading on the strongest article instead.")
+        articles.sort(key=lambda a: (-a["compelling"], -a["humour"]))
+        for a in articles:
+            a["is_lead"] = False
+        articles[0]["is_lead"] = True
+        leads = [articles[0]]
 
     lead = leads[0]
     sub_articles = [a for a in articles if not a["is_lead"]]

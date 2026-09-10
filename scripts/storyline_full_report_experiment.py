@@ -225,6 +225,20 @@ def build_storyline_draft(teg_num: int, model: Optional[str] = None,
     order = ([plan["trophy_storyline"]] + plan["discovered_storylines"] + fallback_sections
             + [plan["jacket_storyline"], plan["spoon_storyline"]])
 
+    # Anchor keys, so the finished report can be matched back to this plan
+    # WITHOUT relying on the heading text — see `newspaper_edition`'s matcher
+    # comment for the two ways that string join has broken. Built here, where
+    # the mapping is known for certain, rather than inferred later.
+    anchor_key = {id(plan["trophy_storyline"]): "trophy",
+                  id(plan["jacket_storyline"]): "jacket",
+                  id(plan["spoon_storyline"]): "spoon"}
+    for i, storyline in enumerate(plan["discovered_storylines"]):
+        anchor_key.setdefault(id(storyline), f"d{i}")
+
+    def anchor(*storylines) -> str:
+        keys = [anchor_key.get(id(x), "") for x in storylines]
+        return f"<!-- storyline: {','.join(k for k in keys if k)} -->"
+
     # Interweaving — OFF by default since 2026-09-05, opt in with --interweave.
     #
     # The A/B still stands on its own terms (STORYLINE_PLAN.md, "Interweaving A/B
@@ -261,14 +275,14 @@ def build_storyline_draft(teg_num: int, model: Optional[str] = None,
             players = {p for beat in evidence_a + evidence_b for p in beat.get("players", [])}
             context = _context_for(players, bundle)
             text = interweave.draft_interwoven(a, evidence_a, b, evidence_b, context, model=model)
-            sections.append(f"## {a['subject']} / {b['subject']}\n\n{text}")
+            sections.append(f"## {a['subject']} / {b['subject']}\n{anchor(a, b)}\n\n{text}")
             continue
         print(f"[storyline_full_report] drafting: {s['subject'][:60]}")
         evidence = _evidence_for(s, all_beats)
         storyline_players = {p for b in evidence for p in b.get("players", [])}
         context = _context_for(storyline_players, bundle)
         text = draft_section(s, evidence, context, model=model)
-        sections.append(f"## {s['subject']}\n\n{text}")
+        sections.append(f"## {s['subject']}\n{anchor(s)}\n\n{text}")
 
     body = f"# {plan['title']}\n\n" + "\n\n".join(sections) + "\n"
     return body, plan

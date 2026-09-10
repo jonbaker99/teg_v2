@@ -46,6 +46,13 @@ drafting under the old rules; it now imports both constants. The retrofit path i
 and the default runs `authoring.apply_corrections` (one call per TEG, two permitted edits) first.
 See [README.md](README.md) → *Retrofitting a new rule onto reports already written*.
 
+**Fixed (2026-09-10): the heading-as-join-key fragility, for good.** Report sections now carry
+`<!-- storyline: trophy -->` anchors and `newspaper_edition` matches on those, falling back to
+exact `subject` matching and then to a degraded section rather than raising. The generator emits
+them; the three existing reports have been backfilled. This is the third time this join has
+broken (PR #95, then the hand-patch destroyed by re-styling); it should be the last. See
+[README.md](README.md) → *Section anchors*.
+
 **Found while doing it: `teg_16_report_storylinefirst_styled.md` had its section headings one
 section out of step.** The styled file carried the plan's `subject` strings, misaligned — the
 Baker-brothers heading sat over the David Mullin section and vice versa. Re-styling from the plan

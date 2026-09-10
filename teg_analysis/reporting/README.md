@@ -1055,6 +1055,32 @@ Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`t
   - **No beat IDs in the prose** (`b07`, `cr01`) — they are internal identifiers.
   - **Stroke index is translated, never quoted** (`prompts.STROKE_INDEX_RULE`, shared by both writers). SI 1 is "the hardest hole on the course", SI 18 "the easiest"; SI 4–15 is not noteworthy and should be ignored. Raw `SI 2` in prose reads as machine output. Craft rather than faithfulness, but it is duplicated in both writers so it lives in `prompts.py` with the shared blocks. **Obeyed unreliably** — TEG 8's published report emits raw `SI n` eight times alongside correct translations; a candidate 9th D3 check (`teg_analysis/TODOS.md`).
 
+## Section anchors — how a report section maps back to its plan
+
+Each article section in a storyline-first report carries a machine-readable anchor on the line
+under its heading:
+
+    ## Alex Baker and the 16th hole: two 10s in one TEG
+    <!-- storyline: d1 -->
+
+Keys are `trophy`, `jacket`, `spoon`, or `dN` for the Nth `discovered_storylines` entry; a merged
+section lists both (`d0,spoon`). `newspaper_edition._resolve_section` reads the anchor, falls back
+to exact `subject` matching for reports written before anchors existed, and **degrades rather than
+raising** when neither resolves — the section renders with its own prose and heading, kicker
+`SIDEBAR`, layout scores zero. If the Trophy section is among the casualties, the strongest
+article leads instead of the edition failing to build.
+
+**Why the anchor exists.** Heading text was the join key until 2026-09-10 and broke twice: PR #95
+regenerated the plans with fresh `subject` strings but not the reports, and the fix was applied by
+hand to the *styled* markdown, which is derived and was destroyed by the next `style_report`; and
+the voice pass, told to leave headings alone, does not always comply. Fuzzy matching was tried and
+rejected — measured against ground truth on TEGs 14 and 16, fragment overlap, Jaccard, Dice and
+candidate overlap all put TEG 14's Alex Baker section on the David Mullin trophy storyline, since
+a long `subject` string absorbs any short heading's words.
+
+`RESTYLE_CONTRACT` and `CORRECTIONS_CONTRACT` both instruct the model to reproduce HTML comments
+verbatim. A dropped anchor is silent, so it is worth a D3 check if it ever happens.
+
 ## Retrofitting a new rule onto reports already written
 
 A rule added to `prompts.py` reaches the writers and editors immediately, but not the reports

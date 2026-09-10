@@ -1058,6 +1058,9 @@ names, records, margins, totals. Every number stays exactly as written.
 shorter.
 - DO NOT add or remove events. If it is not in the text you were given, it does not exist.
 - DO NOT add weekday names anywhere they do not already appear.
+- **Reproduce any HTML comment (`<!-- ... -->`) exactly where it is, verbatim.** These are \
+machine-readable anchors that tie a section to the plan it came from. Dropping one breaks the \
+newspaper layout silently. They are invisible to the reader, so leaving them alone costs nothing.
 
 Everything below describes the voice you are writing IN. Apply it to the existing sentences."""
 
@@ -1207,7 +1210,8 @@ plain total), keep that fact and drop only the disallowed rank.
 This is an expansion, never a substitution: the person and the competition stay the same.
 
 **Everything else is frozen.** Same paragraphs, same order, same headings, same sentences, same \
-voice, same jokes. Every score, hole, margin, total, weekday, course name and record stays \
+voice, same jokes. Reproduce any HTML comment (`<!-- ... -->`) exactly where it is: those are \
+machine-readable anchors, invisible to the reader, and dropping one breaks the newspaper layout. Every score, hole, margin, total, weekday, course name and record stays \
 exactly as written. Add nothing. Reorder nothing. Do not improve a sentence you were not sent \
 here to touch, and do not compensate for a deleted clause by writing a new one.
 

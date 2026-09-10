@@ -10,6 +10,7 @@
 </section>
 
 ## How Alex Baker, owner of three prior Wooden Spoons, led the Trophy from the fifth hole of round one to the last and won by eight
+<!-- storyline: trophy -->
 
 Alex Baker won the Trophy at TEG 18 in Catalonia with 169 Stableford points, eight clear of runner-up John Patterson. It is the seventh-highest total on record and the second best of his own career. A man who already owns three Wooden Spoons has now led a Trophy from the fifth hole of round one to the last. The record book has no way of registering surprise.
 
@@ -20,6 +21,7 @@ Round two was the same man, operated in reverse. He ran up an 11 at the par-5 18
 He led after round three as well, propped up by 21 points across holes 11 to 16 on the Stadium Course. He led after round four too. He arrived at the 14th with the tournament in his pocket and took a 10 out of it. Then he added an eight at the 17th, in case anyone had missed the first gesture. The lead absorbed both without visible complaint.
 
 ## David Mullin's week of extremes: an 11 in R1, the lowest gross round the Stadium has ever surrendered in R3, and nine shots gone in four holes in R4
+<!-- storyline: d0 -->
 
 David Mullin's trip to Catalonia swung between the best and the worst golf of the four days.
 
@@ -32,6 +34,7 @@ Round four then unravelled over four holes. From the 14th to the 17th he went do
 He finished runner-up in the Green Jacket, 14 shots behind Gregg Williams, who won at +66.
 
 ## John Patterson is bottom of the Wooden Spoon race after four holes of the tournament and finishes as Trophy runner-up, eight points back
+<!-- storyline: d1 -->
 
 John Patterson's tournament was decided at both ends, and the first end came at speed. Four holes into round one on the Tour course he was already bottom of the Wooden Spoon race, down from fourth to fifth on the back of a quadruple-bogey eight at the 3rd and a triple-bogey seven at the 4th. The bleeding continued in an orderly fashion. He lost 22 shots to par across holes 3 to 10 and went seven straight holes, the 3rd to the 9th, without a net par.
 
@@ -42,6 +45,7 @@ The recovery held. In round four he took nine points from holes 4 to 6, and ende
 It was not enough. Alex Baker took the Trophy on 169 points, eight clear, with Patterson runner-up.
 
 ## Gregg Williams, reigning Wooden Spoon holder, improves in every round and turns a wretched R1 into the Green Jacket by fourteen
+<!-- storyline: jacket -->
 
 Gregg Williams started badly. On the Tour course he ran up a nine at the par-five 7th and an eight at the par-four 17th, both quadruple bogeys, and failed to make a par from the 2nd through the 14th before a birdie at the par-five 15th finally stopped the run. Thirteen holes without a par is not a slump so much as a policy. The round came to 31 points.
 
@@ -52,6 +56,7 @@ On the Stadium course a par at the 2nd put him outright in the lead. Four pars f
 He finished on +66, fourteen clear of David Mullin: his own best gross total, and the sixth best ever recorded. The reigning Wooden Spoon holder has spent four days getting steadily better at golf, which is the sort of behaviour that ruins a reputation.
 
 ## Jon Baker arrives as defending Trophy and Jacket champion and leaves 23 points adrift at the bottom, last in three of the four rounds
+<!-- storyline: spoon -->
 
 Jon Baker arrived holding both titles and left holding the Wooden Spoon, his 126 Stableford points the total nobody wants. Twenty-three points adrift at the bottom, last in three rounds out of four. The handover was conducted with impressive efficiency.
 
