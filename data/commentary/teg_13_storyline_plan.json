@@ -1,0 +1,170 @@
+{
+  "title": "Thirty-Four Pars and a Hatful of Nines",
+  "title_candidates": [
+    "Thirty-Four Pars and a Hatful of Nines",
+    "Kent Asks One Question",
+    "The Par Merchant of Deal",
+    "Links, Wind, Quadruple Bogeys"
+  ],
+  "theme": "Four championship links on the Kent coast asked the field one question — can you still make a par? — and only Jon Baker kept answering it, while everyone else filed returns full of eights and nines.",
+  "tone": "house",
+  "opening_hook": "Open at Littlestone in R3 with the two extremes standing side by side — Jon Baker's +8 gross and John Patterson's 49 points on the same turf — then pull back to what the Kent links did to the rest, because the tournament's real subject is who could still make a par, not the order of the leaderboard.",
+  "narrative_vehicles": [
+    "ensemble",
+    "theme_led_body",
+    "inevitability"
+  ],
+  "competitions": [
+    {
+      "name": "TEG 13 Trophy (Stableford)",
+      "winner_or_loser": "Jon Baker"
+    },
+    {
+      "name": "TEG 13 Green Jacket (Gross)",
+      "winner_or_loser": "Jon Baker"
+    },
+    {
+      "name": "TEG 13 Wooden Spoon",
+      "winner_or_loser": "David Mullin"
+    }
+  ],
+  "trophy_storyline": {
+    "subject": "Jon Baker leads the TEG 13 Trophy after every round, loses the lead only once at Prince's and takes it straight back, winning by six",
+    "why_it_matters": "It is Jon Baker's third Trophy, and the manner of it — pars piled up while the field bled shots — is the report's central argument.",
+    "shape": "Jon Baker opened with 39 points at Royal Cinque Ports, six clear, and was in front from R1's second hole onwards. Gregg Williams finally got past him at the 16th at Prince's after 32 holes of Jon Baker in front (b44), only for Jon Baker to reclaim the lead outright on the very next-but-one green, the 18th, and to be drawn level again at Littlestone's 1st; the answer came in R3, where 44 points and a run of 13 points from the 8th to the 11th (b37, b45) opened five clear. A 39 at Prince's Shore/Dunes on the final day closed it out at 158 points, six ahead of Gregg Williams, with a record 34 pars or better across the four rounds (sc02).",
+    "beat_ids": [
+      "b05",
+      "b44",
+      "b48",
+      "b37",
+      "b45",
+      "b08",
+      "b24",
+      "sc02"
+    ],
+    "headline_candidates": [
+      "Jon Baker's Pars Break The Field",
+      "Jon Baker Leads All Four Rounds",
+      "Six Points And Thirty-Four Pars"
+    ],
+    "chosen_headline": "Jon Baker's Pars Break The Field",
+    "standfirst": "Six points clear of Gregg Williams over four Kent links, the champion never finished a round worse than third of five — and his 44 at Littlestone was where the argument ended.",
+    "compelling_score": 8,
+    "humour_score": 4
+  },
+  "jacket_storyline": {
+    "subject": "Jon Baker wins the TEG 13 Green Jacket at +50 by eighteen shots, leading gross from R1 to R4 with no lead change at all",
+    "why_it_matters": "A third consecutive Jacket, built on the second-best gross round in TEG history, and the clearest measure of how far ahead of the field he was with the handicaps stripped out.",
+    "shape": "Nine clear after Royal Cinque Ports, the gross lead never once changed hands; it narrowed to seven at Prince's and that was the closest anybody got. At Littlestone in R3 Jon Baker went round in +8 — the second-best gross round in TEG history (b08) — including four holes from the 8th without dropping a shot, and the lead jumped to fourteen. A best-in-field +13 on the Shore/Dunes in R4 finished it at +50 and eighteen clear of Gregg Williams (b03), the whole thing underwritten by an all-time record 34 pars or better (sc02).",
+    "beat_ids": [
+      "b03",
+      "b08",
+      "sc02",
+      "b48"
+    ],
+    "headline_candidates": [
+      "Eighteen Clear: Jon Baker's Third Straight Jacket",
+      "Plus Eight At Littlestone Ends It",
+      "Nobody Led The Jacket But Jon Baker"
+    ],
+    "chosen_headline": "Eighteen Clear: Jon Baker's Third Straight Jacket",
+    "standfirst": "The gross lead was nine after Royal Cinque Ports and only ever grew; a +8 at Littlestone, the second-best gross round TEG has recorded, turned a competition into an inspection.",
+    "compelling_score": 7,
+    "humour_score": 4
+  },
+  "spoon_storyline": {
+    "subject": "David Mullin, eight-time Jacket winner and reigning Spoon holder, takes a third consecutive TEG 13 Wooden Spoon by being unwaveringly mediocre",
+    "why_it_matters": "The steadiest man in the field, round to round, finished last of five — and it is his third Wooden Spoon in a row and fourth in all.",
+    "shape": "David Mullin came into TEG 13 as the reigning Spoon holder with back-to-back Spoons behind him, and for two days looked to have found the exit: 31 points at Royal Cinque Ports, then 37 at Prince's, second in the field and nine better than John Patterson. Littlestone undid it — 32 points on the day John Patterson posted 49 — and he slid to fourth with a round to play. The Spoon was formally accepted at the 10th at Prince's on the final afternoon, a quintuple-bogey nine on the third-hardest hole (b35, b46) that dropped him to the bottom for good: 135 points, six adrift of John Patterson (b17).",
+    "beat_ids": [
+      "b17",
+      "b46",
+      "b35"
+    ],
+    "headline_candidates": [
+      "David Mullin Completes The Spoon Hat-Trick",
+      "Steadiest Man In The Field, Still Last",
+      "A Nine At The Tenth Settles It"
+    ],
+    "chosen_headline": "David Mullin Completes The Spoon Hat-Trick",
+    "standfirst": "Eight prior Green Jackets, two prior Trophies and the most consistent scoring of anyone here still added up to 135 points and last place, sealed by a nine at Prince's tenth.",
+    "compelling_score": 8,
+    "humour_score": 8
+  },
+  "discovered_storylines": [
+    {
+      "subject": "John Patterson, defending Trophy champion, produces the third-best round in TEG history at Littlestone and surrounds it with eights and nines",
+      "why_it_matters": "The defending champion's four rounds contained both the finest scoring of the tournament and its most spectacular self-harm, and he still finished only six clear of the Wooden Spoon.",
+      "shape": "At Royal Cinque Ports he opened with an eight at the 1st, added a quintuple-bogey nine at the 7th, an eight at the 10th and a nine at the 16th, and was bottom of the Spoon race twice before lunch on day one (b26, b16, b22, b20, b34). Prince's was worse — eleven shots gone in the first four holes and an eight at the 17th (b41, b14) — and then, at Littlestone, he went out and posted 49 points and a personal-best +12 gross, 13 points in four holes from the 8th, a swing of 21 points on the previous round (b04, b06, b13, b23). R4 gave the full portrait in two holes: an eagle at the par-5 2nd, the only eagle anybody managed and an all-time TEG record for eagles in a tournament (b02, sc01, b27), followed by a nine at the 15th (b07).",
+      "beat_ids": [
+        "b04",
+        "b06",
+        "b02",
+        "sc01",
+        "b27",
+        "b16",
+        "b20",
+        "b22",
+        "b26",
+        "b18",
+        "b14",
+        "b09",
+        "b07",
+        "b23",
+        "b31",
+        "b41",
+        "b39",
+        "b13",
+        "b34"
+      ],
+      "headline_candidates": [
+        "Forty-Nine At Littlestone, Eights Everywhere Else",
+        "John Patterson Eagles, Then Finds A Nine",
+        "The Defending Champion's Four Rounds Of Extremes"
+      ],
+      "chosen_headline": "Forty-Nine At Littlestone, Eights Everywhere Else",
+      "standfirst": "John Patterson arrived as the TEG 12 Trophy holder, posted the third-best round in TEG history and a personal-best gross at Littlestone, and bracketed it with quadruple bogeys at Royal Cinque Ports and Prince's — finishing six points clear of the Spoon.",
+      "compelling_score": 9,
+      "humour_score": 9
+    },
+    {
+      "subject": "Alex Baker bottoms out in the Spoon race at Littlestone and answers with a personal-best gross round at Prince's on the final day",
+      "why_it_matters": "He was last in the field with a round to play and finished it with the best gross round of his TEG career, which is the difference between a Spoon and a story.",
+      "shape": "Alex Baker had spent R1 haemorrhaging — nine shots in three holes from the 10th, an eight at the 11th on the third-hardest hole — and R2 ended with ten shots dropped over the closing five (b21, b50, b29). Littlestone was the floor: eight shots gone in the first three holes including an eight at the 2nd, seven more from the 8th, and the bottom of the Spoon race arrived at the 9th (b32, b11, b28, b10). Then, on the Shore/Dunes, 44 points and a personal-best +17 gross — a twelve-point improvement in twenty-four hours (b01, b12, b19, b15).",
+      "beat_ids": [
+        "b01",
+        "b12",
+        "b10",
+        "b11",
+        "b32",
+        "b28",
+        "b29",
+        "b21",
+        "b50",
+        "b47",
+        "b15",
+        "b19",
+        "b42"
+      ],
+      "headline_candidates": [
+        "Alex Baker Saves His Best For Last",
+        "Bottom Of The Spoon Race, Then A Career Best",
+        "Alex Baker's Twelve-Point Answer"
+      ],
+      "chosen_headline": "Alex Baker Saves His Best For Last",
+      "standfirst": "Last in the Wooden Spoon race at Littlestone's ninth after an eight at the second, Alex Baker replied at Prince's with 44 points and the best gross round of his TEG career.",
+      "compelling_score": 7,
+      "humour_score": 6
+    }
+  ],
+  "body_fallback": "none",
+  "prominent_vehicle": "ensemble",
+  "prominent_palette": "records",
+  "vehicle_fit_response": {
+    "top_scored_vehicle": "inevitability",
+    "taken_up": true,
+    "note": "Kept as supporting texture — the Jacket ran wire-to-wire with no lead changes at all — but the frame is the ensemble: four new Kent links, a field filing eights and nines, and one man making pars."
+  },
+  "why_the_champion_won": "Built, not inherited: Jon Baker led after every round, took the lead straight back at Prince's 18th after the only time he lost it, and his 44 points at Littlestone (the same round as his +8 gross) put him beyond a Gregg Williams who could not have flipped it even by replacing his worst round with an ordinary one.",
+  "storyline_note": "Framed as ensemble rather than straight Trophy-leads: the tournament's throughline is what four Kent links did to five players, and Jon Baker's double is told as the one man who answered the course's only question — his Trophy and Jacket still lead the report."
+}

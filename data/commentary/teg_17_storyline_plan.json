@@ -1,0 +1,167 @@
+{
+  "title": "Fourth Place, No More",
+  "title_candidates": [
+    "Fourth Place, No More",
+    "Baker Breaks the Habit",
+    "Consistency Finally Pays in Portugal"
+  ],
+  "theme": "Jon Baker ends three straight TEGs stuck in fourth with the most consistent week in the field, never worse than second in either competition, while the rest of the Lisbon Coast field supplied the chaos: course records struck in both directions at West Cliffs, and Gregg Williams sliding from back-to-back Jacket champion to Wooden Spoon.",
+  "tone": "house",
+  "opening_hook": "Open on Baker's last three Trophy finishes laid out flat — 4th, 4th, 4th — against this year's 18-point runaway win, before rewinding to show it was built on four rounds of not putting a foot wrong, not one big round.",
+  "narrative_vehicles": [
+    "hero_arc",
+    "dual_narrative",
+    "catalogue"
+  ],
+  "competitions": [
+    {
+      "name": "Trophy",
+      "winner_or_loser": "Jon Baker"
+    },
+    {
+      "name": "Green Jacket",
+      "winner_or_loser": "Jon Baker"
+    },
+    {
+      "name": "Wooden Spoon",
+      "winner_or_loser": "Gregg Williams"
+    }
+  ],
+  "trophy_storyline": {
+    "subject": "Jon Baker converts three years of nearly-there fourth-place finishes into a consistent, front-running Trophy win, never dropping below second all tournament and pulling clear with best-in-field rounds in R3 and R4.",
+    "why_it_matters": "It ends a three-TEG run stuck at 4th and gives Baker a third Trophy built on genuine week-long consistency rather than one hot round.",
+    "shape": "Baker sits second after R1 (down by 1), takes the outright Trophy lead for good at the 1st in R2, then produces best-in-field rounds in R3 and R4 — the second capped by a streak-record run of back-to-back birdies — while Mullin, the only rival who got close, never closes the gap; the lead grows from 2 to 11 to 18.",
+    "beat_ids": [
+      "b03",
+      "b50",
+      "cr02",
+      "sr01"
+    ],
+    "headline_candidates": [
+      "Fourth Place, No More",
+      "Baker Breaks the Habit",
+      "Consistency Finally Pays in Portugal"
+    ],
+    "chosen_headline": "Fourth Place, No More",
+    "standfirst": "After three straight TEGs stuck in fourth, Jon Baker builds an 18-point Trophy win the hard way — round after round, never worse than second.",
+    "compelling_score": 8,
+    "humour_score": 3
+  },
+  "jacket_storyline": {
+    "subject": "Baker leads the Green Jacket from Round 1, cedes it to a rampant David Mullin for 35 holes, briefly loses it back to Mullin for a single hole in Round 3, retakes it immediately and pulls clear to win by 13.",
+    "why_it_matters": "The Jacket is the tournament's closest sustained duel — Baker and Mullin trade the gross lead five times before Baker's stronger closing rounds decide it.",
+    "shape": "Baker leads by 3 after R1, Mullin leads by 3 after R2, the pair draw level twice early in R3 before Mullin snatches it outright at the 6th — only for Baker to retake it immediately at the 7th and never let go, beating Mullin head-to-head in three of the four rounds to win by 13, with Mullin setting a new West Cliffs course record along the way.",
+    "beat_ids": [
+      "b09",
+      "b38",
+      "cr03"
+    ],
+    "headline_candidates": [
+      "One Hole in the Sun",
+      "Baker and Mullin Trade Blows for the Jacket",
+      "The Lead Changes Nobody Noticed Stick"
+    ],
+    "chosen_headline": "One Hole in the Sun",
+    "standfirst": "David Mullin held the Green Jacket lead for exactly one hole in Round 3 before Jon Baker took it straight back and never let go.",
+    "compelling_score": 6,
+    "humour_score": 4
+  },
+  "spoon_storyline": {
+    "subject": "Gregg Williams, the back-to-back reigning Jacket champion with four prior Trophy wins, spends all four rounds in the bottom half of the field and collects the Wooden Spoon, sealed by a seven-hole stretch without a net par at Royal Óbidos.",
+    "why_it_matters": "A player who won the last two Jackets and has four Trophy wins to his name finishing dead last is a real inversion of recent form.",
+    "shape": "Williams sits mid-table through R1-R2, drops to bottom outright at Royal Óbidos during a seven-hole stretch without a net par, then opens R4 with a quintuple bogey at the 1st; he's in the bottom half all four rounds and finishes 12 adrift of Patterson, the next worst.",
+    "beat_ids": [
+      "b29",
+      "b42",
+      "b40"
+    ],
+    "headline_candidates": [
+      "From the Podium to the Cellar",
+      "Reigning Jacket Champion Finishes Last",
+      "Williams's Fall From Grace"
+    ],
+    "chosen_headline": "From the Podium to the Cellar",
+    "standfirst": "The back-to-back Jacket champion never left the bottom half all tournament, and a horror stretch at Royal Óbidos sealed the Wooden Spoon.",
+    "compelling_score": 7,
+    "humour_score": 8
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Alex Baker produces a blow-up hole or a bleeding stretch in every single round of the tournament, capped by a new Praia D'El Rey course-worst in Round 1.",
+      "why_it_matters": "Baker set a fresh all-time course-worst at Praia D'El Rey and never went a round without a multi-hole collapse — the tournament's most consistent performer, just not in the way that counts.",
+      "shape": "Opens in Round 1 with a sextuple bogey that helps set a new Praia D'El Rey course-worst; the pattern repeats through Rounds 2 and 3 with double-figure holes and multi-hole bleeding stretches, and Round 4 produces the worst of the lot — 25 shots dropped across nine holes.",
+      "beat_ids": [
+        "cr01",
+        "b07",
+        "b23",
+        "b04",
+        "b06",
+        "b16",
+        "b46",
+        "b48"
+      ],
+      "headline_candidates": [
+        "The Baker Who Couldn't Stop Bleeding Shots",
+        "Four Rounds, Four Collapses",
+        "A Tour of Portuguese Disaster Areas"
+      ],
+      "chosen_headline": "The Baker Who Couldn't Stop Bleeding Shots",
+      "standfirst": "From a course-worst 114 at Praia D'El Rey to a 25-shot horror stretch in the final round, Alex Baker's week reads as one long cautionary tale.",
+      "compelling_score": 7,
+      "humour_score": 9
+    },
+    {
+      "subject": "In the same Round 2 at West Cliffs, David Mullin sets a new course-record low while John Patterson sets a new course-record high — the field's two extremes on the same course, the same day.",
+      "why_it_matters": "Two all-time TEG course records, one at each end of the scale, on the same course in the same round, is a genuine rarity in TEG history.",
+      "shape": "Mullin fires an 82 to break the West Cliffs record by 6, while in the same round Patterson runs to a course-worst 116 — capping a round in which he bled 27 shots across an eight-hole stretch.",
+      "beat_ids": [
+        "cr03",
+        "cr04",
+        "b19",
+        "b13"
+      ],
+      "headline_candidates": [
+        "West Cliffs Breaks Both Ways",
+        "Best of Times, Worst of Times, Same Round",
+        "One Course, Two Records, Total Opposites"
+      ],
+      "chosen_headline": "West Cliffs Breaks Both Ways",
+      "standfirst": "In Round 2 at West Cliffs, David Mullin carded the new course record while John Patterson set the course-worst — on the very same day.",
+      "compelling_score": 7,
+      "humour_score": 6
+    },
+    {
+      "subject": "John Patterson leads the Trophy race after Round 1, suffers the tournament's worst gross round in Round 2, rallies to a strong Round 3, then blows up again with three separate quadruple-bogey-or-worse holes in Round 4.",
+      "why_it_matters": "No player in the field swung between form and collapse as violently as Patterson, whose week captures the tournament's chaos better than any single other story.",
+      "shape": "Patterson leads outright after Round 1 despite early blow-up holes, then implodes in Round 2 with a 27-shot bleed across eight holes including sextuple and quintuple bogeys and a new course-worst; he rebounds with a strong Round 3 before three more quadruple-bogey-or-worse holes in Round 4 undo the recovery.",
+      "beat_ids": [
+        "b12",
+        "b17",
+        "b01",
+        "b19",
+        "b34",
+        "b32",
+        "b13"
+      ],
+      "headline_candidates": [
+        "Leader, Loser, Fighter, Fallen",
+        "Patterson's Week of Whiplash",
+        "Four Rounds, Four Different Golfers"
+      ],
+      "chosen_headline": "Leader, Loser, Fighter, Fallen",
+      "standfirst": "Patterson topped the Trophy table after Round 1, then produced the tournament's worst gross round, fought back in Round 3, and blew up again in Round 4.",
+      "compelling_score": 8,
+      "humour_score": 7
+    }
+  ],
+  "body_fallback": "none",
+  "prominent_vehicle": "hero_arc",
+  "prominent_palette": "records",
+  "vehicle_fit_response": {
+    "top_scored_vehicle": "hero_arc",
+    "taken_up": true,
+    "note": "Took it up — 'stuck at 4th for three straight TEGs, then wins' is exactly Baker's story and anchors the whole report."
+  },
+  "why_the_champion_won": "Two best-in-field rounds in R3 and R4 stacked on top of two solid top-half rounds, while Mullin — the only rival who got close — gave back more ground than Baker gained; Baker was never worse than 2nd all tournament and beat Mullin head-to-head in 3 of the 4 rounds.",
+  "storyline_note": ""
+}

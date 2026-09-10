@@ -1,0 +1,196 @@
+{
+  "title": "The Great Reversal: Gregg Williams by Two as David Mullin Takes the Spoon",
+  "title_candidates": [
+    "The Great Reversal: Gregg Williams by Two as David Mullin Takes the Spoon",
+    "The Spoon Holder Is Champion, the Champion Holds the Spoon",
+    "Two Shots in the Algarve: Williams Up, Mullin Down",
+    "Record Birdies, Record 82, Wooden Spoon: David Mullin's TEG 5"
+  ],
+  "theme": "The order of things inverted: the reigning Wooden Spoon holder wins the TEG 5 Trophy by two, while the defending champion breaks the Boavista course record, sets an all-time TEG birdie record, wins the Green Jacket — and finishes stone last.",
+  "tone": "house — subverted gravitas, British English, exact detail over zaniness",
+  "opening_hook": "Open at the 17th at Palmares in Round 4, where David Mullin — Green Jacket already mathematically safe — drops to the bottom of the Wooden Spoon race for the final time; then rewind to the five-shot lead he held at the 1st in Round 3. Non-chronological because the inversion, not the build-up, is the story.",
+  "narrative_vehicles": [
+    "counterfactual",
+    "underdog",
+    "tragic_arc"
+  ],
+  "competitions": [
+    {
+      "name": "Trophy (Net VP)",
+      "winner_or_loser": "Gregg Williams"
+    },
+    {
+      "name": "Green Jacket (Gross)",
+      "winner_or_loser": "David Mullin"
+    },
+    {
+      "name": "Wooden Spoon",
+      "winner_or_loser": "David Mullin"
+    }
+  ],
+  "trophy_storyline": {
+    "subject": "How Gregg Williams, the reigning Wooden Spoon holder, took his first Trophy by two after David Mullin's five-shot lead evaporated at Boavista in Round 3",
+    "why_it_matters": "A first Trophy for a man who held the Wooden Spoon going into this TEG and had finished 5th in the Jacket in each of the last three.",
+    "shape": "Setup: Williams opens the TEG 5 Trophy at +2 and third of five, five off the lead, having run up a 9 at Boavista's 17th in R1 (b46). Turn: a personal-best -6 in R2 (b20) drags him to within three, and at the 3rd hole of R3 he takes the outright lead from Mullin, who had held it for 21 holes (b13) — the only round Williams wins outright. Resolution: he plays R4 in the bottom half of the field, bleeding ten shots from the 10th to the 13th (b29) and a 9 at the 16th (b04), and still wins at -6 by two (b05, b28), because Jon Baker's own worst round — a 9 at the 7th and a 9 at the last in R3 (b21, b11) — cost him more than the margin.",
+    "beat_ids": [
+      "b05",
+      "b13",
+      "b20",
+      "b46",
+      "b21",
+      "b11",
+      "b29",
+      "b04",
+      "b28"
+    ],
+    "headline_candidates": [
+      "Gregg Williams Turns Spoon Into Trophy",
+      "Two Shots, And Williams Is Champion",
+      "Williams Wins The Lead At The Third"
+    ],
+    "chosen_headline": "Gregg Williams Turns Spoon Into Trophy",
+    "standfirst": "Holder of the Wooden Spoon going into TEG 5, Williams seized the Trophy lead at the 3rd hole of Round 3 and held it through a ruinous stretch at Palmares to win by two.",
+    "compelling_score": 8,
+    "humour_score": 5
+  },
+  "jacket_storyline": {
+    "subject": "David Mullin's fourth Green Jacket in succession, effectively settled inside two rounds at Boavista and including a course record that had stood 35 visits",
+    "why_it_matters": "A fourth straight Jacket, and an 82 at Boavista that broke a course record set across 35 prior TEG visits.",
+    "shape": "Setup: Mullin leads the TEG 5 Green Jacket from the 3rd hole of R1 and never surrenders it, posting +12 gross in R1 and +11 in R2 — the best gross rounds in TEG history to date (b18, b09) — the second of them an 82 that beat the previous Boavista record of 85 (cr01), alongside a personal-best -4 net (b19). Turn: R3 is his worst round to date at +12 net, +27 gross (b16), and R4 is no better in relative terms; he finishes both in the bottom half of the field. Resolution: Henry Meller claws back twelve of a thirty-shot deficit (b33) and Jon Baker seven of nineteen (b37), and it makes no difference — Mullin wins by 12 at +72 (b15), a title won on the first two days and merely endured thereafter.",
+    "beat_ids": [
+      "b15",
+      "b18",
+      "b09",
+      "cr01",
+      "b19",
+      "b16",
+      "b33",
+      "b37"
+    ],
+    "headline_candidates": [
+      "Mullin Wins Fourth Jacket With Record 82",
+      "Boavista's Record Falls, And So Does Mullin",
+      "Twelve Clear, And Going Backwards"
+    ],
+    "chosen_headline": "Mullin Wins Fourth Jacket With Record 82",
+    "standfirst": "The gross title was over by Monday evening: David Mullin's 82 at Boavista beat a course record that had survived 35 prior TEG visits, and the two rounds he then played from the bottom half of the field could not undo it.",
+    "compelling_score": 7,
+    "humour_score": 4
+  },
+  "spoon_storyline": {
+    "subject": "The defending Trophy champion leads by five at the 1st in Round 3 and finishes last: David Mullin's descent from the top of everything to the Wooden Spoon",
+    "why_it_matters": "Mullin arrived as defending Trophy champion with no Wooden Spoons to his name and left with one, having set an all-time TEG birdie record on the way down.",
+    "shape": "Setup: Mullin leads the TEG 5 Trophy after R1 and R2 and stands five clear at the 1st in R3, before losing the lead 21 holes after taking it (b13). Turn: +12 in R3, his worst round to date (b16), including a 9 at the 13th (b26); then a 9 at the 6th at Palmares drops him to the bottom of the Spoon race for the first time (b14, b12). Resolution: back-to-back birdies at the 12th and 13th tie the all-time TEG birdie-streak record (b31, sr01) and change nothing; he drops to the bottom for good at the 17th, fading from 1st after R1 to 5th (b22) and collecting the Spoon at +12, two adrift of Henry Meller (b50) — in the same tournament in which he recorded six birdies or better, an all-time TEG record (sc01).",
+    "beat_ids": [
+      "b50",
+      "b22",
+      "b13",
+      "b16",
+      "b26",
+      "b12",
+      "b14",
+      "b31",
+      "sr01",
+      "sc01"
+    ],
+    "headline_candidates": [
+      "Record Six Birdies, One Wooden Spoon",
+      "From Five Clear To Stone Last",
+      "The Champion Collects The Spoon"
+    ],
+    "chosen_headline": "Record Six Birdies, One Wooden Spoon",
+    "standfirst": "David Mullin arrived as defending champion, led the Trophy by five at the 1st in Round 3 and set an all-time TEG birdie record at Palmares — then finished last, two behind Henry Meller.",
+    "compelling_score": 9,
+    "humour_score": 8
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Stuart Neumann posts the best round in TEG history at Boavista, then hands the whole of it back on the same closing holes a day later",
+      "why_it_matters": "The lowest net round and the lowest gross round TEG had ever recorded, followed immediately by ten shots dropped in three holes on the identical stretch.",
+      "shape": "Setup: in R2 at Boavista, Neumann returns -9 net and +11 gross — the best round in TEG history to date on both counts (b06, b07) — an 82 that is his personal best at the course by seven shots and twelve better than his last visit. Turn: R3 begins with a 7 at the 2nd (b36) and ends with the 16th, 17th and 18th costing him ten shots and three holes without a net par (b42, b47), the last of them a 9 (b10). Resolution: at Palmares he drops eight shots between the 2nd and the 4th (b43, b44) and then closes with three straight pars worth three to par (b17, b23) — the tournament in miniature, brilliance and calamity bolted together with no visible join.",
+      "beat_ids": [
+        "b06",
+        "b07",
+        "b36",
+        "b10",
+        "b42",
+        "b47",
+        "b43",
+        "b44",
+        "b17",
+        "b23"
+      ],
+      "headline_candidates": [
+        "History's Lowest Round, Then A Nine",
+        "Neumann Breaks The Record, Then Himself",
+        "Ten Shots In Three Holes At Boavista"
+      ],
+      "chosen_headline": "History's Lowest Round, Then A Nine",
+      "standfirst": "Stuart Neumann's -9 at Boavista in Round 2 is the lowest round TEG has recorded; twenty-four hours later he dropped ten shots over the same three closing holes.",
+      "compelling_score": 8,
+      "humour_score": 6
+    },
+    {
+      "subject": "Henry Meller, holder of two Wooden Spoons and bottom of the race after Rounds 2 and 3, escapes a third with the best round of his TEG career",
+      "why_it_matters": "Meller had taken the Spoon in two of the last three TEGs and was last in the field for two rounds here, and got out of it by two shots on a course nobody had played.",
+      "shape": "Setup: R2 at Boavista is a catalogue — a 10 at the 16th (b24), a 7 at the 14th (b39), an 8 at the 18th (b34), twelve shots bled from the 14th to the 16th, and a back nine twelve shots adrift of his front (b48) — and he sits bottom of the Wooden Spoon race from the 3rd hole. Turn: after his steady R3 run ends with a double bogey at the 6th (b40), he arrives at Palmares and, despite dropping seven shots and going three holes without a net par from the 9th to the 11th (b35, b32), posts a personal-best -3 net and a personal-best +17 gross (b01, b02), having closed to within 18 of the Jacket lead after trailing by 30 (b33). Resolution: he takes the bottom of the Spoon race back at the 15th, David Mullin drops past him at the 17th, and Meller finishes two clear of the thing he has carried twice.",
+      "beat_ids": [
+        "b24",
+        "b34",
+        "b39",
+        "b48",
+        "b40",
+        "b32",
+        "b35",
+        "b01",
+        "b02",
+        "b33"
+      ],
+      "headline_candidates": [
+        "Meller Escapes The Spoon By Two",
+        "A Ten, Then A Personal Best",
+        "Two-Time Spoon Holder Finally Ducks It"
+      ],
+      "chosen_headline": "Meller Escapes The Spoon By Two",
+      "standfirst": "Last in the field after Rounds 2 and 3, and the owner of a 10 at Boavista's 16th, Henry Meller answered with the best round of his TEG career on a course nobody had seen before.",
+      "compelling_score": 7,
+      "humour_score": 8
+    },
+    {
+      "subject": "Jon Baker loses the TEG 5 Trophy by two while producing a record-tying birdie streak and a personal-best gross round on the final day",
+      "why_it_matters": "Even with an ordinary round in place of his worst, Baker would have won the Trophy — the entire deficit is accounted for by four holes he would rather not revisit.",
+      "shape": "Setup: an 8 at Boavista's 6th in R1 (b49) sets the pattern, though he is level for the lead as late as the 16th that afternoon. Turn: R3 is the ruin — a 9 at the 7th and a 9 at the 18th (b21, b11) around a solid stretch from the 9th to the 12th (b41) — the round that decided the Trophy without anybody noticing at the time. Resolution: at Palmares he makes an 8 at the 5th (b08), then gains five to par over the opening four holes (b25) and birdies the 14th and 15th to tie the all-time TEG birdie-streak record (b27, sr02) on the way to a personal-best +18 gross (b03) and a 12-shot closing of the Jacket gap (b37) — second in both, and the best player in the field never to be leading at the end.",
+      "beat_ids": [
+        "b49",
+        "b21",
+        "b11",
+        "b41",
+        "b08",
+        "b25",
+        "b27",
+        "sr02",
+        "b03",
+        "b37"
+      ],
+      "headline_candidates": [
+        "Second By Two, Undone By Four Holes",
+        "Baker's Two Nines At Boavista",
+        "A Birdie Record And Nothing To Show"
+      ],
+      "chosen_headline": "Second By Two, Undone By Four Holes",
+      "standfirst": "Jon Baker outplayed Gregg Williams over two of the four rounds and still lost the TEG 5 Trophy by two; a pair of nines at Boavista in Round 3 is where it went.",
+      "compelling_score": 8,
+      "humour_score": 6
+    }
+  ],
+  "body_fallback": "none",
+  "prominent_vehicle": "counterfactual",
+  "prominent_palette": "cross_teg_career",
+  "vehicle_fit_response": {
+    "top_scored_vehicle": "dual_narrative",
+    "taken_up": false,
+    "note": "Two outright Trophy leaders is real, but the finish was Williams v Baker and it turns entirely on Baker's worst round, so counterfactual leads; Mullin's fall runs alongside as tragic_arc rather than as half a duet."
+  },
+  "why_the_champion_won": "Inherited rather than seized: Williams won only one round outright but never finished a round worse than 3rd of 5, while David Mullin threw away a five-shot lead from the 1st in R3 and Jon Baker gave back more in his worst round than the two shots he lost by — an ordinary round there and Baker is champion.",
+  "storyline_note": "The Trophy still leads, but the report is threaded through David Mullin's Jacket-and-Spoon double, because Mullin's collapse from a five-shot lead is the mechanism by which Williams won (attribution: inherited) rather than a separate subplot."
+}
