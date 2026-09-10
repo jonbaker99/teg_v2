@@ -17,7 +17,7 @@ Two source files per TEG:
 
 `build_edition(teg)` returns one "edition" dict (schema: see the fields built
 in `build_edition`). Only TEGs with storyline-first artefacts have one —
-currently `AVAILABLE_TEGS`.
+whichever `available_tegs()` finds.
 
 `render_desktop_html(edition, rail="s2")` ports the desktop composite's JS
 (E1/E2 "auto" composition, fill "f1") to Python 1:1 — see
@@ -35,13 +35,62 @@ import html
 import json
 import re
 import statistics
+from functools import lru_cache
 from typing import Any
 
-from teg_analysis.io import read_text_file
+from teg_analysis.io import read_file, read_text_file
 
 COMMENTARY_DIR = "data/commentary"
+COMPLETED_TEGS_CSV = "data/completed_tegs.csv"
 
-AVAILABLE_TEGS = (14, 16, 18)
+
+def artefact_paths(teg: int) -> tuple[str, str]:
+    """The two files an edition is built from, for `teg`."""
+    return (f"{COMMENTARY_DIR}/teg_{teg}_report_storylinefirst_styled.md",
+            f"{COMMENTARY_DIR}/teg_{teg}_storyline_plan.json")
+
+
+@lru_cache(maxsize=None)
+def has_edition(teg: int) -> bool:
+    """Whether `teg` has both storyline-first artefacts, so `build_edition` can run."""
+    for path in artefact_paths(teg):
+        try:
+            read_text_file(path)
+        except Exception:      # noqa: BLE001 - missing, unreadable, or GitHub 404
+            return False
+    return True
+
+
+@lru_cache(maxsize=1)
+def available_tegs() -> tuple[int, ...]:
+    """TEGs with storyline-first artefacts, discovered rather than hardcoded.
+
+    Was a hardcoded `AVAILABLE_TEGS = (14, 16, 18)`, which meant generating a
+    report for a new TEG silently failed to reach the preview page until someone
+    remembered to edit this file.
+
+    Candidates come from `completed_tegs.csv` rather than a directory scan,
+    because there is no volume-aware directory listing on Railway — the same
+    reason `webapp/routes/reports.py` drives its dropdown that way. Each
+    candidate is then probed for both artefacts.
+
+    Probing a *missing* file costs a GitHub round-trip on Railway (`read_text_file`
+    caches hits to the volume but not misses), hence the `lru_cache` on both this
+    and `has_edition`. Call `clear_edition_caches()` after generating new
+    artefacts in a long-lived process; a fresh CLI run starts cold anyway.
+    """
+    try:
+        completed = read_file(COMPLETED_TEGS_CSV)
+        candidates = sorted(int(n) for n in completed["TEGNum"].astype(int).unique())
+    except Exception:          # noqa: BLE001 - no CSV, unreadable, unexpected shape
+        return ()
+    return tuple(t for t in candidates if has_edition(t))
+
+
+def clear_edition_caches() -> None:
+    """Drop memoised artefact discovery, so newly generated reports are seen."""
+    has_edition.cache_clear()
+    available_tegs.cache_clear()
 
 # Priority order for combining kickers on a merged (" / "-joined) heading.
 _KICKER_PRIORITY = ["TROPHY", "GREEN JACKET", "WOODEN SPOON", "SIDEBAR"]
@@ -506,10 +555,11 @@ def build_edition(teg: int) -> dict[str, Any]:
     """Read the two source artefacts for `teg` and return one edition dict.
 
     Raises FileNotFoundError (via `read_text_file`) if either artefact is
-    missing — callers should only call this for `teg in AVAILABLE_TEGS`.
+    missing — callers should only call this for `teg in available_tegs()`.
     """
-    md = read_text_file(f"{COMMENTARY_DIR}/teg_{teg}_report_storylinefirst_styled.md")
-    plan = json.loads(read_text_file(f"{COMMENTARY_DIR}/teg_{teg}_storyline_plan.json"))
+    md_path, plan_path = artefact_paths(teg)
+    md = read_text_file(md_path)
+    plan = json.loads(read_text_file(plan_path))
 
     article_sections, appendix_md = _split_body_sections(md)
 

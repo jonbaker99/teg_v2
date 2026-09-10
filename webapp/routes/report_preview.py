@@ -6,7 +6,8 @@ preview page: NOT linked from `base.html`'s nav, and does not touch
 `/teg-reports` (`webapp/routes/reports.py`) at all. We switch over to this
 layout only once the preview is right, as a separate change.
 
-Only TEGs with storyline-first artefacts (`AVAILABLE_TEGS`) have an edition;
+Only TEGs with storyline-first artefacts (`available_tegs()`, discovered at
+read time) have an edition;
 everything else falls through to `no_report_message`, same pattern as
 `reports.py`.
 
@@ -50,13 +51,26 @@ from fastapi.templating import Jinja2Templates
 from github import GithubException
 
 from teg_analysis.reporting.newspaper_edition import (
-    AVAILABLE_TEGS,
+    available_tegs,
+    clear_edition_caches,
     build_edition,
     choose_arrangement,
     render_desktop_html,
 )
 
 router = APIRouter()
+
+
+# Artefact discovery is memoised in `newspaper_edition` (a missing file costs a
+# GitHub round-trip on Railway), so a newly synced report would not appear until
+# the process restarted. Same wiring as `reports.py`'s own cache clearer.
+try:  # pragma: no cover - trivial wiring
+    from webapp import deps as _deps
+
+    _deps.register_cache_clearer(clear_edition_caches)
+except Exception:  # noqa: BLE001 - never let cache wiring break the route module
+    pass
+
 templates = Jinja2Templates(directory=str(Path(__file__).parent.parent / "templates"))
 
 _VALID_PAL = {"a", "b", "c", "d"}
@@ -86,8 +100,16 @@ def teg_reports_preview(
 
     See the module docstring for the `teg`/`pal`/`sf`/`rail` query params.
     """
-    teg_numbers = sorted(AVAILABLE_TEGS, reverse=True)
-    selected_teg = teg if teg in AVAILABLE_TEGS else teg_numbers[0]
+    editions_available = available_tegs()
+    if not editions_available:
+        return templates.TemplateResponse(
+            "teg_reports_preview.html",
+            {"request": request, "teg_numbers": [], "selected_teg": None,
+             "arrangement": None, "desktop_html": None, "edition_json": None,
+             "no_report_message": "No TEG has storyline-first artefacts yet."},
+        )
+    teg_numbers = sorted(editions_available, reverse=True)
+    selected_teg = teg if teg in editions_available else teg_numbers[0]
     selected_pal = pal if pal in _VALID_PAL else _DEFAULT_PAL
     selected_sf = sf if sf in _VALID_SF else _DEFAULT_SF
     selected_rail = rail if rail in _VALID_RAIL else _DEFAULT_RAIL

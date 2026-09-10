@@ -655,7 +655,7 @@ call, no cost.**
    `chosen_headline`/`standfirst` where present, falling back to `_derive_headline` /
    `_choose_standfirst` only for artefacts written before those fields existed (2026-09-06).
    Reads go through `teg_analysis.io.read_text_file`, so it is volume-then-GitHub aware on Railway
-   and never touches the raw filesystem. `AVAILABLE_TEGS` is the set with artefacts: **14, 16, 18**.
+   and never touches the raw filesystem. `available_tegs()` discovers which TEGs have both artefacts, by probing the TEGs in `completed_tegs.csv` — so generating a report for a new TEG makes it appear without editing any code. Currently 14, 16 and 18.
 
 5. **Render.** Two consumers, from the same edition dict:
    - **The site** — `webapp/routes/report_preview.py` at `/teg-reports-preview`. Desktop renders

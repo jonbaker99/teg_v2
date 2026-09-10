@@ -20,7 +20,7 @@ Served at `/report-layouts/` when the webapp runs (mounted in `webapp/app.py` be
 | `mobile.html` | **The mobile design.** Pattern A is chosen and is the default; B and C remain switchable as the record. |
 | `elements.html` | The element-by-element chooser: ten elements, 4–5 variants each, all on identical copy so only the element varies. Its job is done; it is the tool to reopen any single choice. |
 | `newspaper.html` | The original four directions (A Broadsheet, B Modern editorial, C Sports section, D Back page) that settled the overall approach. Kept as the record. |
-| `editions.json` | Content for TEG 14, 16 and 18, built by `scripts/build_newspaper_edition.py`. **Feeds these prototype pages only** — the live route builds its edition in memory and never reads this file. |
+| `editions.json` | Content for whichever TEGs have storyline-first artefacts, built by `scripts/build_newspaper_edition.py` (discovered, not a fixed list). **Feeds these prototype pages only** — the live route builds its edition in memory and never reads this file. |
 | `checks/check_mobile_patterns.py` | Browser assertions on the mobile patterns. Not in the pytest suite — see [Checks](#checks). |
 
 ## The design
