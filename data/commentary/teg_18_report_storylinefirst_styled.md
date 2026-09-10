@@ -10,6 +10,7 @@
 </section>
 
 ## How Alex Baker, owner of three prior Wooden Spoons, led the Trophy from the fifth hole of round one to the last and won by eight
+<!-- storyline: trophy -->
 
 Alex Baker won the Trophy at TEG 18 in Catalonia with 169 Stableford points, eight clear of runner-up John Patterson. It is the seventh-highest total on record and the second best of his own career. A man who already owns three Wooden Spoons has now led a Trophy from the fifth hole of round one to the last. The record book has no way of registering surprise.
 
@@ -20,6 +21,7 @@ Round two was the same man, operated in reverse. He ran up an 11 at the par-5 18
 He led after round three as well, propped up by 21 points across holes 11 to 16 on the Stadium Course. He led after round four too. He arrived at the 14th with the tournament in his pocket and took a 10 out of it. Then he added an eight at the 17th, in case anyone had missed the first gesture. The lead absorbed both without visible complaint.
 
 ## David Mullin's week of extremes: an 11 in R1, the lowest gross round the Stadium has ever surrendered in R3, and nine shots gone in four holes in R4
+<!-- storyline: d0 -->
 
 David Mullin's trip to Catalonia swung between the best and the worst golf of the four days.
 
@@ -32,6 +34,7 @@ Round four then unravelled over four holes. From the 14th to the 17th he went do
 He finished runner-up in the Green Jacket, 14 shots behind Gregg Williams, who won at +66.
 
 ## John Patterson is bottom of the Wooden Spoon race after four holes of the tournament and finishes as Trophy runner-up, eight points back
+<!-- storyline: d1 -->
 
 John Patterson's tournament was decided at both ends, and the first end came at speed. Four holes into round one on the Tour course he was already bottom of the Wooden Spoon race, down from fourth to fifth on the back of a quadruple-bogey eight at the 3rd and a triple-bogey seven at the 4th. The bleeding continued in an orderly fashion. He lost 22 shots to par across holes 3 to 10 and went seven straight holes, the 3rd to the 9th, without a net par.
 
@@ -42,6 +45,7 @@ The recovery held. In round four he took nine points from holes 4 to 6, and ende
 It was not enough. Alex Baker took the Trophy on 169 points, eight clear, with Patterson runner-up.
 
 ## Gregg Williams, reigning Wooden Spoon holder, improves in every round and turns a wretched R1 into the Green Jacket by fourteen
+<!-- storyline: jacket -->
 
 Gregg Williams started badly. On the Tour course he ran up a nine at the par-five 7th and an eight at the par-four 17th, both quadruple bogeys, and failed to make a par from the 2nd through the 14th before a birdie at the par-five 15th finally stopped the run. Thirteen holes without a par is not a slump so much as a policy. The round came to 31 points.
 
@@ -52,6 +56,7 @@ On the Stadium course a par at the 2nd put him outright in the lead. Four pars f
 He finished on +66, fourteen clear of David Mullin: his own best gross total, and the sixth best ever recorded. The reigning Wooden Spoon holder has spent four days getting steadily better at golf, which is the sort of behaviour that ruins a reputation.
 
 ## Jon Baker arrives as defending Trophy and Jacket champion and leaves 23 points adrift at the bottom, last in three of the four rounds
+<!-- storyline: spoon -->
 
 Jon Baker arrived holding both titles and left holding the Wooden Spoon, his 126 Stableford points the total nobody wants. Twenty-three points adrift at the bottom, last in three rounds out of four. The handover was conducted with impressive efficiency.
 
@@ -72,18 +77,18 @@ The wider numbers tell the same story with less charity. This was his seventh vi
 
 **End of Round 2**
 
-<p class="standings"><span class="standings-header">Trophy Standings:</span> AB 87 | JP 76 | GW 73 | JB 69 | DM 67</p>
-<p class="standings"><span class="standings-header">Green Jacket Standings:</span> JB +39 | GW +41 | DM +50 | JP +52 | AB +60</p>
+<p class="standings"><span class="standings-header">Trophy Standings:</span> AB 87 (R2: 41) | JP 76 (R2: 42) | GW 73 (R2: 42) | JB 69 (R2: 39) | DM 67 (R2: 35)</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> JB +39 (R2: +15) | GW +41 (R2: +14) | DM +50 (R2: +22) | JP +52 (R2: +22) | AB +60 (R2: +34)</p>
 
 **End of Round 3**
 
-<p class="standings"><span class="standings-header">Trophy Standings:</span> AB 131 | JP 119 | GW 116 | DM 111 | JB 97</p>
-<p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +54 | DM +62 | JB +67 | JP +73 | AB +88</p>
+<p class="standings"><span class="standings-header">Trophy Standings:</span> AB 131 (R3: 44) | JP 119 (R3: 43) | GW 116 (R3: 43) | DM 111 (R3: 44) | JB 97 (R3: 28)</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +54 (R3: +13) | DM +62 (R3: +12) | JB +67 (R3: +28) | JP +73 (R3: +21) | AB +88 (R3: +28)</p>
 
 **End of Round 4**
 
-<p class="standings"><span class="standings-header">Trophy Standings:</span> AB 169 | JP 161 | GW 160 | DM 149 | JB 126</p>
-<p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +66 | DM +80 | JB +92 | JP +95 | AB +124</p>
+<p class="standings"><span class="standings-header">Trophy Standings:</span> AB 169 (R4: 38) | JP 161 (R4: 42) | GW 160 (R4: 44) | DM 149 (R4: 38) | JB 126 (R4: 29)</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +66 (R4: +12) | DM +80 (R4: +18) | JB +92 (R4: +25) | JP +95 (R4: +22) | AB +124 (R4: +36)</p>
 
 ## Personal bests and TEG records
 

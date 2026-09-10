@@ -1,6 +1,7 @@
 # Nine Ahead, Two Home: Mullin's Kent Double
 
 ## David Mullin wins the Trophy on 154 points by 2 — a lead built on the first two links and defended by fingernails at Prince's
+<!-- storyline: trophy -->
 
 **Mullin holds on for the Trophy**
 
@@ -13,6 +14,7 @@ Prince's declined to co-operate. In round three he arrived at the par-five 8th w
 That opened the door for Baker, who had trailed by as many as nine. He answered with 10 points across the first three holes of the final round and 11 more from the 13th to the 15th, closing to within two. Then he reached the 16th and made a ten. His four days had begun to come apart considerably earlier, at Littlestone, where he dropped 12 shots across holes 2 to 5.
 
 ## Alex Baker and the 16th hole: two 10s in one TEG, and a Trophy left on the table
+<!-- storyline: d1 -->
 
 **Alex Baker and the 16th**
 
@@ -23,6 +25,7 @@ The Prince's 10 was the more painful for what preceded it. Baker had played the 
 These were the headline numbers, not the only ones. Baker also had an 8 at the 11th at Royal Cinque Ports, a 9 at the 5th and an 8 at the 8th at Littlestone, and an 8 at the 10th at Prince's in round three. Five further holes returning nothing. His round-one 98 at Royal Cinque Ports was still four strokes better than his previous visit, which tells you a good deal about the previous visit.
 
 ## Gregg Williams plays the best gross golf of his TEG life and wins nothing
+<!-- storyline: d2 -->
 
 **Gregg Williams: the best gross golf of his TEG life, and nothing to show for it**
 
@@ -35,6 +38,7 @@ Round three was the correction. He gained twelve points on the day, reaching 39,
 Sunday offered more steadiness in patches, gross pars at the 5th and 6th and again at the 14th and 15th. Having trailed the Green Jacket lead by 18 at one stage, he closed to within 8. Ten shots recovered. Eight still owed.
 
 ## David Mullin's Green Jacket at +68, by 7 — his ninth
+<!-- storyline: jacket -->
 
 David Mullin took the Green Jacket at TEG 14 with a gross total of +68, seven clear of Jon Baker. His ninth. It is the sixth-best Green Jacket total on record and the fourth-best of his own career at the metric.
 
@@ -45,6 +49,7 @@ Behind him the chase was real, and late. Baker trailed by 15 at one point and cl
 The gap never closed far enough. Mullin's margin of seven at the finish flatters the field, given how much larger it had been for most of the four days.
 
 ## Jon Baker, defending Trophy champion, collects the Wooden Spoon on 125 points — 12 adrift of the next worst
+<!-- storyline: spoon -->
 
 Jon Baker finished last in the Stableford count and took the Wooden Spoon with 125 points across the four rounds. The defence of a title can take many forms. He chose this one, and won it by 12, which is a margin of some authority.
 

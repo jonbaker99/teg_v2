@@ -803,7 +803,7 @@ The same stage can be run **outside the pipeline entirely** — in a Cowork fold
 
 Stage 5 also injects **deterministic data blocks** — the safety net that means the facts ship even if the prose skips them:
 
-- **Standings.** `build_round_standings(teg)` computes end-of-round standings; they are injected under each `## Round N` heading. If the writer took a theme-led route with no round headings, a consolidated "Standings by round" appendix is inserted before the player closing instead.
+- **Standings.** `build_round_standings(teg)` computes end-of-round standings; they are injected under each `## Round N` heading. If the writer took a theme-led route with no round headings, a consolidated "Standings by round" appendix is inserted before the player closing instead. Each entry is the **cumulative total with that round's own score in brackets** — `SN 156 (R4: 43)` — so the block answers both "who is winning" and "who had a good day". Round 1 has no bracket, because there the cumulative total *is* the round score. The newspaper edition's compact rail strips the brackets (`_totals_only`); the appendix table keeps them.
 - **Records appendix.** `build_records_block(teg, round=None)` appends a `class="records"` inventory of every personal best, TEG record, nine-hole record and rare feat, de-duplicated across rounds.
 - **At-a-glance.** The `callout at-a-glance-box` names Trophy/Jacket/Spoon winners and annotates each with its ordinal win count from `history_context.build_win_counts()` (e.g. "his 3rd Trophy").
 
@@ -1089,6 +1089,8 @@ Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`t
 - **Structure**: story-led, with rounds as natural blocks. Each round gets a chosen witty headline plus 2 alternate candidates for the archive editor. Chronology is a scaffold, not a constraint — the editor's `narrative_structure` and `narrative_vehicles` set the shape.
 - **Readability** (settled 2026-08-15, in `prompts.VOICE_CORE`): **em-dashes are banned outright** — zero in the report, not a ceiling; sentences average ~15 words with a hard stop around 25, one idea each; comic density is **five to seven landed moments** per report (the `humour6` register). There is no "long sentences that earn their length" exemption — that clause was removed because it contradicted the cap and the cap was consequently ignored 18–31% of the time.
 - **Economy**: 11 construction rules in `WRITER_SYSTEM` (no subject-burying preambles; two equal facts = two sentences; punchline isolation; one dominant idea per paragraph). Length must be earned by facts or images.
+- **Claim selection** (settled 2026-09-10, in `prompts.RANKING_RULE`): **a rank is only cited if it is top 3** — top 3 all-time, top 3 in that player's own career, or top 3 at that course. Everything else ("the 16th-highest Trophy total recorded") is a mid-table fact wearing an ordinal, and the rule covers every phrasing of it ("Nth-best", "one of the top ten", "the Nth time"), in both directions. Firsts and lasts — records, personal bests, course bests/worsts, a first win, last place — are rank 1 and always qualify. Carried by both writers **and both editors**, because the editor is who puts the stat in the plan.
+- **Naming** (settled 2026-09-10, in `prompts.NAMING_RULE`): full name on a player's first appearance; a bare surname thereafter **only if no one else in the field shares it** (with two Bakers, it is "Jon Baker"/"Alex Baker" then "Jon"/"Alex", never "Baker"). Each competition carries its edition on first mention in the body — "the TEG 16 Trophy" or "the 2023 TEG Trophy" — and the short form ("the Trophy", "the Jacket", "the Spoon") every time after.
 - **Faithfulness rules** (enforced in scoring AND in prompts):
   - Use only supplied data; never invent.
   - Honour `outright` vs `level` lead changes — drawing level is not a takeover.
@@ -1103,6 +1105,58 @@ Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`t
   - **Arithmetic must be exact** — any stated total must equal the sum of the per-hole evidence.
   - **No beat IDs in the prose** (`b07`, `cr01`) — they are internal identifiers.
   - **Stroke index is translated, never quoted** (`prompts.STROKE_INDEX_RULE`, shared by both writers). SI 1 is "the hardest hole on the course", SI 18 "the easiest"; SI 4–15 is not noteworthy and should be ignored. Raw `SI 2` in prose reads as machine output. Craft rather than faithfulness, but it is duplicated in both writers so it lives in `prompts.py` with the shared blocks. **Obeyed unreliably** — TEG 8's published report emits raw `SI n` eight times alongside correct translations; a candidate 9th D3 check (`teg_analysis/TODOS.md`).
+
+## Section anchors — how a report section maps back to its plan
+
+Each article section in a storyline-first report carries a machine-readable anchor on the line
+under its heading:
+
+    ## Alex Baker and the 16th hole: two 10s in one TEG
+    <!-- storyline: d1 -->
+
+Keys are `trophy`, `jacket`, `spoon`, or `dN` for the Nth `discovered_storylines` entry; a merged
+section lists both (`d0,spoon`). `newspaper_edition._resolve_section` reads the anchor, falls back
+to exact `subject` matching for reports written before anchors existed, and **degrades rather than
+raising** when neither resolves — the section renders with its own prose and heading, kicker
+`SIDEBAR`, layout scores zero. If the Trophy section is among the casualties, the strongest
+article leads instead of the edition failing to build.
+
+**Why the anchor exists.** Heading text was the join key until 2026-09-10 and broke twice: PR #95
+regenerated the plans with fresh `subject` strings but not the reports, and the fix was applied by
+hand to the *styled* markdown, which is derived and was destroyed by the next `style_report`; and
+the voice pass, told to leave headings alone, does not always comply. Fuzzy matching was tried and
+rejected — measured against ground truth on TEGs 14 and 16, fragment overlap, Jaccard, Dice and
+candidate overlap all put TEG 14's Alex Baker section on the David Mullin trophy storyline, since
+a long `subject` string absorbs any short heading's words.
+
+`RESTYLE_CONTRACT` and `CORRECTIONS_CONTRACT` both instruct the model to reproduce HTML comments
+verbatim. A dropped anchor is silent, so it is worth a D3 check if it ever happens.
+
+## Retrofitting a new rule onto reports already written
+
+A rule added to `prompts.py` reaches the writers and editors immediately, but not the reports
+already on disk. `scripts/apply_report_rules.py` is the narrow retrofit, split by cost:
+
+    # Free, no model call. Re-runs Stage 5 only.
+    python scripts/apply_report_rules.py --tegs 14,16,18 --restyle-only
+
+    # One model call per TEG, then re-style.
+    python scripts/apply_report_rules.py --tegs 14,16,18
+
+**Re-style picks up anything deterministic** — the standings block, the records appendix, the
+at-a-glance box, the newspaper rail. It must run from the **unstyled** report: `_inject_standings`
+is idempotent and skips text that already has a standings block. Note it also re-injects section
+headings from the plan, so a styled file that was hand-patched away from its plan will snap back.
+
+**The corrections pass** (`authoring.apply_corrections`) is for rules about the prose itself. One
+call, `CORRECTIONS_CONTRACT` + the rule constants, permitting exactly two edits: delete a rank
+claim the ranking rule disallows, expand an ambiguous name or first competition mention.
+Everything else frozen. D3 runs over the output and `new_findings` isolates what the pass
+introduced. The original is preserved as `teg_N_report_{label}_precorrections.md`.
+
+**This is deliberately not `restyle_voice`.** That function's contract holds facts and structure
+literally constant, which is what makes it a one-variable voice A/B; a pass that deletes a claim
+would break that property for every future voice comparison.
 
 ## Where to read
 
@@ -1122,6 +1176,7 @@ Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`t
 | `prompts.py` | **Shared prompt blocks — the single source of truth for voice and the common rules.** Imported by both pipelines; edit here to change every prompt at once |
 | `story_plan.py` | Stage 3 + the editor system prompt (incl. the vehicle menu) |
 | `authoring.py` | Stage 4 + all writer/lint/tighten system prompts |
+| `authoring.apply_corrections` | **Retrofit pass** — applies `RANKING_RULE`/`NAMING_RULE` to a finished report in one call, two permitted edits only |
 | `round_report.py` | The per-round pipeline and its prompts |
 | `render.py` | Stage 5 — CSS hooks, standings, records block |
 | `verify.py` | **D3** — mechanical verification of a finished report against the data (8 checks, incl. the em-dash ban) |

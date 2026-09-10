@@ -84,11 +84,21 @@ def test_both_writers_share_the_faithfulness_rules_verbatim(name):
     """The rules that existed twice and were edited independently."""
     assert prompts.SHARED_FAITHFULNESS in WRITER_PROMPTS[name]
     assert prompts.STROKE_INDEX_RULE in WRITER_PROMPTS[name]
+    assert prompts.RANKING_RULE in WRITER_PROMPTS[name]
+    assert prompts.NAMING_RULE in WRITER_PROMPTS[name]
 
 
 @pytest.mark.parametrize("name", sorted(PLANNER_PROMPTS))
 def test_both_planners_share_the_house_voice_summary(name):
     assert prompts.HOUSE_VOICE_SUMMARY in PLANNER_PROMPTS[name]
+
+
+@pytest.mark.parametrize("name", sorted(PLANNER_PROMPTS))
+def test_both_planners_carry_the_selection_and_naming_rules(name):
+    """The editor chooses which facts reach the writer, so a rank that is not
+    worth citing has to be stopped here as well as in the prose."""
+    assert prompts.RANKING_RULE in PLANNER_PROMPTS[name]
+    assert prompts.NAMING_RULE in PLANNER_PROMPTS[name]
 
 
 def test_house_voice_summary_matches_the_voice_it_summarises():
@@ -105,7 +115,8 @@ def test_shared_blocks_are_not_duplicated_within_a_prompt(name):
     """Catches a shared block being re-inlined alongside the import."""
     prompt = ALL_PROMPTS[name]
     for block_name in ("VOICE_CORE", "NAMED_PRINCIPLES", "SHARED_FAITHFULNESS",
-                       "STROKE_INDEX_RULE", "HOUSE_VOICE_SUMMARY"):
+                       "STROKE_INDEX_RULE", "HOUSE_VOICE_SUMMARY",
+                       "RANKING_RULE", "NAMING_RULE"):
         block = getattr(prompts, block_name)
         assert prompt.count(block) <= 1, f"{name} contains {block_name} more than once"
 

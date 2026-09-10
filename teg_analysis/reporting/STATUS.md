@@ -14,6 +14,58 @@
 
 ## START HERE — picking this up in a new chat (2026-09-08)
 
+### Done (2026-09-10): content-selection and naming rules from the TEG 16 review
+
+A content review of `data/commentary/teg_16_report_storylinefirst_styled.md` (what the report
+chooses to say, not how it reads) produced four changes. All are generalised guidance, not
+per-report patches:
+
+- **`prompts.RANKING_RULE`** — a rank is only cited if it is top 3 (all-time, career, or at that
+  course). Triggered by "It is the 16th-highest Trophy total recorded". Wired into both writers
+  and **both editors** — the editor is who selects the stat.
+- **`prompts.NAMING_RULE`** — full name on first appearance; a bare surname only where the field
+  has no other player with it (two Bakers means "Jon"/"Alex", never "Baker"); and each competition
+  carries its edition on first mention in the body ("the TEG 16 Trophy", not "the Trophy").
+- **`render.build_round_standings`** — standings entries now read `SN 156 (R4: 43)`: cumulative
+  total plus that round's own score. R1 has no bracket (the two are the same number).
+- **`newspaper_edition._add_runners_up`** — the rail's runner-up line is name only, no score. The
+  rail's final-standings row strips the new round-score brackets via `_totals_only`; the appendix
+  table keeps them.
+
+Rules are in `prompts.py` and documented in [README.md](README.md) → *Design rules*. There is no
+mechanical D3 check for either new rule yet — a candidate if they turn out to be obeyed
+unreliably, the way `STROKE_INDEX_RULE` is.
+
+**Retrofitting them onto the three reports already on disk** (2026-09-10). `--from voice` cannot
+do it: `restyle_voice` composes `RESTYLE_CONTRACT + voice + WRITER_FAITHFULNESS` and never sees
+`WRITER_CONTRACT`, so the new rules are not in it, and its contract bans removing a fact anyway.
+`--from draft` could not either until now — `scripts/storyline_full_report_experiment.py`'s
+`DRAFT_WRITER_SYSTEM` was a bespoke string rather than built from `prompts.py`, so it went on
+drafting under the old rules; it now imports both constants. The retrofit path is
+`scripts/apply_report_rules.py`: `--restyle-only` is free and picks up the deterministic blocks,
+and the default runs `authoring.apply_corrections` (one call per TEG, two permitted edits) first.
+See [README.md](README.md) → *Retrofitting a new rule onto reports already written*.
+
+**Fixed (2026-09-10): the heading-as-join-key fragility, for good.** Report sections now carry
+`<!-- storyline: trophy -->` anchors and `newspaper_edition` matches on those, falling back to
+exact `subject` matching and then to a degraded section rather than raising. The generator emits
+them; the three existing reports have been backfilled. This is the third time this join has
+broken (PR #95, then the hand-patch destroyed by re-styling); it should be the last. See
+[README.md](README.md) → *Section anchors*.
+
+**Found while doing it: `teg_16_report_storylinefirst_styled.md` had its section headings one
+section out of step.** The styled file carried the plan's `subject` strings, misaligned — the
+Baker-brothers heading sat over the David Mullin section and vice versa. Re-styling from the plan
+replaces them with `chosen_headline` and puts each heading over its own body. All three have now been
+re-styled; **TEG 14 had the same fault, TEG 18 did not.** Three D3 `no_em_dashes`
+warnings remain, all in injected headline and record text, and all pre-existing — the plan's
+headlines carry em-dashes, and so did the `subject` strings they replaced.
+
+The review was cut short at claim 16 of ~60, so the rule list is the four above rather than an
+exhaustive pass. One open content question from that session, not yet decided: whether stroke
+index outside SI 1–3 / 16–18 should ever appear (Jon's ruling: fine occasionally, as long as it is not on every hole — which is
+what `STROKE_INDEX_RULE` already says, so no change made).
+
 ### Regenerating a report, or just part of one
 
 Three stages — **storylines → draft → voice**. `--from` picks where to start (everything before is

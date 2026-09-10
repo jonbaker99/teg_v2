@@ -9,7 +9,8 @@
   <p><strong>Wooden Spoon:</strong> Alex Baker (3rd Spoon)</p>
 </section>
 
-## Stuart Neumann builds and holds the Trophy lead from hole four of R1 to the final putt of R4, winning by 13 after posting the best Stableford score in the field in three of four rounds, on the back of a Trophy record of two prior Wooden Spoons and no wins.
+## Stuart Neumann's first Trophy — 156 points, 13 clear, and never headed after the opening afternoon
+<!-- storyline: trophy -->
 
 **Neumann's first Trophy**
 
@@ -21,7 +22,8 @@ The final round was not flawless. At Estoril's 8th, a par 4 and the hardest hole
 
 Estoril otherwise gave him his best golf of the four days. His 92 there was a course personal best, 14 strokes better than the 106 he posted on his only previous visit in TEG 15. It was the one venue of the four where he improved on his own history, and he chose the day the Trophy was settled to do it.
 
-## Both Baker brothers implode at the same hole in the same round — the par-5 12th at Penha Longa in R3 — Jon making a quintuple bogey and Alex a quadruple bogey within overlapping runs of dropped shots.
+## David Mullin: from the bottom of the Spoon race in R1 to the Estoril course record in R4
+<!-- storyline: d1 -->
 
 David Mullin's tournament ended a very long way from where it started. At Oitavos Dunes in the opening round he ran up a triple-bogey seven at the 10th, a stroke index 4 par four, and the zero points dropped him from second to fifth in the Wooden Spoon race. Fifth in the Spoon race is not a mid-table sort of fifth. It is the bottom of the pile. Round three at Penha Longa was worse in places: a quadruple-bogey eight at the 16th, the hardest hole on the card, after which he composed himself and parred 17 and 18 like a man tidying a room he had just set fire to. The round came to 30 points, and his 98 there was well adrift of his previous best at the course.
 
@@ -29,7 +31,8 @@ Estoril, on the Tuesday, was a different matter. Mullin birdied the 2nd and parr
 
 The total was 45 points, a 15-point improvement on round three. The gross number mattered more. His 80 set a new course record at Estoril, beating the previous mark of 86 established across six prior visits, and bettered his own best there, a 94 at TEG 15, by fourteen strokes. Four days earlier he had been last in the race for the Spoon. Golf is not a fair sport, but it is occasionally a generous one.
 
-## David Mullin follows the worst round of his tournament — a blow-up finish at Penha Longa that leaves him on 30 Stableford points — with an Estoril course-record 80 gross the very next day, the sharpest round-to-round swing in the field. / Alex Baker finishes bottom of the Trophy standings in all four rounds and sets new course-worst records at two different venues — Oitavos Dunes in R1 and Estoril in R4 — via a run of blow-up holes that includes a septuple bogey.
+## The Baker brothers and Penha Longa's 12th / Alex Baker's third Wooden Spoon, back-to-back, 127 points — and two all-time course-worst records to go with it
+<!-- storyline: d0,spoon -->
 
 Alex Baker's tournament began badly and then declined to change course. In the first round at Oitavos Dunes he took nine at the 1st, nine at the 11th and ten at the 17th, signing for 113 gross. That is a new course-worst for Oitavos, beating the previous mark of 111 set across twelve prior visits. Twelve visits' worth of human frailty, surpassed before lunch on day one. At Troia the next day the damage was more concentrated: thirteen shots dropped over the five holes from the 13th to the 17th, three triples followed by two doubles.
 
@@ -39,7 +42,8 @@ Alex was on the same holes, doing much the same thing at a marginally gentler gr
 
 The final round at Estoril separated them. Jon's one lapse came at the 11th, the hardest hole on the card, where he made an eight, and that was the extent of it. Alex's round was a lapse with holes attached. Nine at the 1st. Eight at the 3rd. Nine at the 6th. Fourteen shots bled over the six holes from the 5th to the 10th, every single one a double or worse, an unbroken run of ruin conducted with no apparent loss of composure. Then the 12th, a par four, where he took eleven. A septuple bogey, and the worst score he has ever recorded on a par four in his life. The round came to 107 gross, a second course-worst of the four days, exceeding Estoril's previous high of 106 across six prior visits. He finished on 127 points and collected the Wooden Spoon, his third, and the second in a row. He did not merely lose. He amended the record books at two separate venues while doing it.
 
-## Gregg Williams wins the Green Jacket by posting the best gross score in the field in all four rounds, stretching his lead from 3 shots to 16 despite repeated mid-round wobbles that never once cost him the outright lead.
+## Gregg Williams's second Green Jacket, +66, by 16 shots
+<!-- storyline: jacket -->
 
 Gregg Williams's second Green Jacket was never really in doubt, and the final margin, 16 shots clear of David Mullin, says as much. His gross total of +66 is the fifth-best in the event's history and comfortably the best of his own career. It was, by any measure, thoroughly deserved.
 
@@ -58,18 +62,18 @@ Estoril produced both his best round and his loudest mistake. The 80 was a cours
 
 **End of Round 2**
 
-<p class="standings"><span class="standings-header">Trophy Standings:</span> SN 74 | DM 67 | JB 66 | GW 64 | AB 61</p>
-<p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +40 | JB +44 | DM +45 | SN +56 | AB +76</p>
+<p class="standings"><span class="standings-header">Trophy Standings:</span> SN 74 (R2: 35) | DM 67 (R2: 34) | JB 66 (R2: 32) | GW 64 (R2: 30) | AB 61 (R2: 32)</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +40 (R2: +22) | JB +44 (R2: +23) | DM +45 (R2: +22) | SN +56 (R2: +30) | AB +76 (R2: +34)</p>
 
 **End of Round 3**
 
-<p class="standings"><span class="standings-header">Trophy Standings:</span> SN 113 | GW 101 | JB 99 | DM 97 | AB 94</p>
-<p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +55 | JB +69 | DM +71 | SN +82 | AB +110</p>
+<p class="standings"><span class="standings-header">Trophy Standings:</span> SN 113 (R3: 39) | GW 101 (R3: 37) | JB 99 (R3: 33) | DM 97 (R3: 30) | AB 94 (R3: 33)</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +55 (R3: +15) | JB +69 (R3: +25) | DM +71 (R3: +26) | SN +82 (R3: +26) | AB +110 (R3: +34)</p>
 
 **End of Round 4**
 
-<p class="standings"><span class="standings-header">Trophy Standings:</span> SN 156 | GW 143 | DM 142 | JB 131 | AB 127</p>
-<p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +66 | DM +82 | JB +93 | SN +105 | AB +148</p>
+<p class="standings"><span class="standings-header">Trophy Standings:</span> SN 156 (R4: 43) | GW 143 (R4: 42) | DM 142 (R4: 45) | JB 131 (R4: 32) | AB 127 (R4: 33)</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +66 (R4: +11) | DM +82 (R4: +11) | JB +93 (R4: +24) | SN +105 (R4: +23) | AB +148 (R4: +38)</p>
 
 ## Personal bests and TEG records
 

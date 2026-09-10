@@ -563,6 +563,11 @@ WRITER_CONTRACT = "\n".join((
     _WRITER_STRUCTURE,
     prompts.SCORING_REDUNDANCY_RULE,
     prompts.STROKE_INDEX_RULE,
+    # Selection and naming. Both are contract, not voice: a flat, straight report
+    # would still be wrong to call a total "the 16th-highest recorded" or to write
+    # "Baker" in a field containing two of them.
+    prompts.RANKING_RULE,
+    prompts.NAMING_RULE,
     # Readability is not a matter of register. Both of these sat in the voice
     # half until 2026-08-17, so a `voice=` swap dropped the em-dash ban and the
     # 11 economy rules along with the house humour, which is precisely backwards:
@@ -1053,6 +1058,9 @@ names, records, margins, totals. Every number stays exactly as written.
 shorter.
 - DO NOT add or remove events. If it is not in the text you were given, it does not exist.
 - DO NOT add weekday names anywhere they do not already appear.
+- **Reproduce any HTML comment (`<!-- ... -->`) exactly where it is, verbatim.** These are \
+machine-readable anchors that tie a section to the plan it came from. Dropping one breaks the \
+newspaper layout silently. They are invisible to the reader, so leaving them alone costs nothing.
 
 Everything below describes the voice you are writing IN. Apply it to the existing sentences."""
 
@@ -1168,6 +1176,141 @@ def restyle_voice(teg_num: int, voice_prompt: str, label: str, *,
     return {"teg": teg_num, "label": label, "source_path": source_path,
             "output_path": output_path, "styled_path": styled_path,
             "usage": usage, "findings": findings, "new_findings": new_findings}
+
+
+# ===========================================================================
+# Corrections pass — retrofitting a NEW RULE onto reports already written
+# ===========================================================================
+# Deliberately NOT part of `restyle_voice`, even though both are one call over
+# a finished report. `restyle_voice` is a one-variable A/B: its contract holds
+# facts and structure literally constant so that the only thing that moved is
+# the voice. A pass that DELETES a claim breaks that property, and folding it in
+# would quietly make every future voice comparison a two-variable test.
+#
+# Why it exists at all: `RANKING_RULE` and `NAMING_RULE` (2026-09-10) reached
+# the writers and the editors, but the three storyline-first reports on disk
+# were written before them. The rules are cheap to apply to finished prose and
+# expensive to apply by regenerating — a full rerun re-rolls every subject,
+# headline and section, so it changes far more than the rule does.
+#
+# SCOPE IS THE WHOLE POINT. Two edits are permitted and nothing else. A pass
+# that may rewrite freely is a fabrication opportunity, which is the verdict
+# that keeps critique-revise out of the default chain. D3 runs over the result
+# and `new_findings` isolates anything this pass introduced.
+CORRECTIONS_CONTRACT = """You are applying two specific editorial rules to a finished golf \
+tournament report. This is a CORRECTIONS pass, not a rewrite and not a restyle.
+
+**You may make exactly two kinds of edit. Nothing else.**
+
+1. **Delete a rank claim that the ranking rule does not allow.** Remove the ranking clause and \
+leave the sentence grammatical. Where the sentence exists only to carry the rank, delete the \
+sentence. Where the rank sits alongside a fact that IS allowed (a personal best, a record, a \
+plain total), keep that fact and drop only the disallowed rank.
+2. **Expand a name or a first competition mention so it is unambiguous**, per the naming rule. \
+This is an expansion, never a substitution: the person and the competition stay the same.
+
+**Everything else is frozen.** Same paragraphs, same order, same headings, same sentences, same \
+voice, same jokes. Reproduce any HTML comment (`<!-- ... -->`) exactly where it is: those are \
+machine-readable anchors, invisible to the reader, and dropping one breaks the newspaper layout. Every score, hole, margin, total, weekday, course name and record stays \
+exactly as written. Add nothing. Reorder nothing. Do not improve a sentence you were not sent \
+here to touch, and do not compensate for a deleted clause by writing a new one.
+
+If the report already complies, return it unchanged. Returning the input verbatim is a correct \
+outcome, not a failure."""
+
+
+def apply_corrections(teg_num: int, *, source_label: str = "storylinefirst",
+                      label: Optional[str] = None,
+                      model: Optional[str] = None,
+                      verify: bool = True,
+                      style: bool = True) -> dict:
+    """Apply `RANKING_RULE` + `NAMING_RULE` to a report already on disk. One call.
+
+    Args:
+        teg_num: which TEG.
+        source_label: read `teg_N_report_{source_label}.md` — the UNSTYLED voiced
+            report. Style is re-applied afterwards from the corrected text, so
+            the styled file picks up the current standings/records format too.
+        label: where to write. Defaults to `source_label`, i.e. corrected in
+            place — in which case the original is first copied to
+            `teg_N_report_{source_label}_precorrections.md` so the pass is
+            reversible without git.
+        verify: run D3 over source and output and report which findings are NEW
+            (default True). Same rationale as `restyle_voice`: an extra pass over
+            prose is judged on what it introduced, not on what it inherited.
+        style: also write `{label}_styled.md` (default True).
+
+    Returns {teg, label, source_path, backup_path, output_path, styled_path,
+    usage, findings, new_findings, changed}.
+    """
+    import os
+    import shutil
+
+    from teg_analysis.reporting.render import style_text
+    from teg_analysis.reporting.verify import verify_report
+
+    out_label = _variant_label(label or source_label)
+    source_path = f"{output_dir()}/teg_{teg_num}_report_{source_label}.md"
+    if not os.path.exists(source_path):
+        raise FileNotFoundError(
+            f"{source_path} not found — TEG {teg_num} has no {source_label!r} report "
+            f"to correct. Generate one first, or pass a different source_label.")
+
+    with open(source_path) as f:
+        source_text = f.read()
+
+    backup_path = None
+    if out_label == source_label:
+        backup_path = f"{output_dir()}/teg_{teg_num}_report_{source_label}_precorrections.md"
+        # Never clobber an existing backup: a second run would otherwise
+        # overwrite the true original with the already-corrected text.
+        if not os.path.exists(backup_path):
+            shutil.copyfile(source_path, backup_path)
+
+    system = "\n\n".join((CORRECTIONS_CONTRACT,
+                          "THE RULES YOU ARE APPLYING:",
+                          prompts.RANKING_RULE,
+                          prompts.NAMING_RULE,
+                          WRITER_FAITHFULNESS,
+                          WRITER_OUTPUT_RULE))
+    text, usage = llm.generate_text(system, source_text,
+                                    model=model or llm.DEFAULT_MODEL,
+                                    max_tokens=16000,
+                                    stage="corrections", label=f"teg{teg_num}")
+    text = _strip_beat_ids(text)
+
+    output_path = f"{output_dir()}/teg_{teg_num}_report_{out_label}.md"
+    with open(output_path, "w") as f:
+        f.write(text)
+
+    styled_path = None
+    if style:
+        styled_path = f"{output_dir()}/teg_{teg_num}_report_{out_label}_styled.md"
+        with open(styled_path, "w") as f:
+            f.write(style_text(teg_num, text))
+
+    findings: list = []
+    new_findings: list = []
+    if verify:
+        found = verify_report(teg_num, text=text)
+        findings = [str(f) for f in found]
+        before = Counter((f.rule, f.detail) for f in verify_report(teg_num, text=source_text))
+        for f in found:
+            k = (f.rule, f.detail)
+            if before[k]:
+                before[k] -= 1
+            else:
+                new_findings.append(str(f))
+        if new_findings:
+            print(f"[apply_corrections] WARNING TEG {teg_num}: "
+                  f"{len(new_findings)} NEW fault(s) introduced by this pass:")
+            for line in new_findings:
+                print(f"  {line}")
+    return {"teg": teg_num, "label": out_label, "source_path": source_path,
+            "backup_path": backup_path, "output_path": output_path,
+            "styled_path": styled_path, "usage": usage, "findings": findings,
+            "new_findings": new_findings,
+            "changed": text.strip() != source_text.strip()}
 
 
 # ===========================================================================

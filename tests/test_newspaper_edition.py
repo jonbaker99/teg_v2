@@ -12,6 +12,8 @@ import pytest
 pytestmark = [pytest.mark.unit]
 
 from teg_analysis.reporting.newspaper_edition import (
+    _degraded_storyline,
+    _resolve_section,
     choose_arrangement,
     split_value_qualifier,
 )
@@ -101,3 +103,55 @@ def test_earliest_separator_wins():
         "Alex Baker",
         "— 169 pts (a record)",
     )
+
+
+# ---------------------------------------------------------------------------
+# Section -> storyline matching. The anchor is the key; the heading is only a
+# fallback, because heading text has broken this join twice (see the matcher's
+# comment in `newspaper_edition.py`).
+# ---------------------------------------------------------------------------
+def _plan() -> dict:
+    def sl(subject: str) -> dict:
+        return {"subject": subject, "chosen_headline": "H", "standfirst": "S",
+                "compelling_score": 5, "humour_score": 5}
+    return {"trophy_storyline": sl("Trophy subject"),
+            "jacket_storyline": sl("Jacket subject"),
+            "spoon_storyline": sl("Spoon subject"),
+            "discovered_storylines": [sl("First discovered"), sl("Second discovered")]}
+
+
+def test_anchor_resolves_regardless_of_heading_text():
+    """The whole point: a heading that matches no plan subject still resolves."""
+    plan = _plan()
+    matches = _resolve_section("A heading nobody planned",
+                               "<!-- storyline: d1 -->\n\nProse.", plan)
+    assert matches == [("SIDEBAR", plan["discovered_storylines"][1])]
+
+
+def test_anchor_handles_a_merged_section():
+    plan = _plan()
+    matches = _resolve_section("Anything at all",
+                               "<!-- storyline: d0,spoon -->\n\nProse.", plan)
+    assert [k for k, _ in matches] == ["SIDEBAR", "WOODEN SPOON"]
+
+
+def test_exact_subject_still_matches_when_there_is_no_anchor():
+    """Reports written before anchors existed must keep working unchanged."""
+    plan = _plan()
+    assert _resolve_section("Trophy subject", "Prose.", plan) == [
+        ("TROPHY", plan["trophy_storyline"])]
+
+
+def test_unresolvable_section_degrades_instead_of_raising():
+    """A preview that renders one section plainly beats a preview that 500s."""
+    plan = _plan()
+    matches = _resolve_section("Matches nothing", "No anchor here.", plan)
+    assert matches == [_degraded_storyline("Matches nothing")]
+    assert matches[0][1]["compelling_score"] == 0  # never promoted to lead
+
+
+def test_an_anchor_past_the_end_of_the_plan_degrades():
+    """A regenerated plan can be shorter than the report's anchors expect."""
+    plan = _plan()
+    matches = _resolve_section("Matches nothing", "<!-- storyline: d9 -->", plan)
+    assert matches == [_degraded_storyline("Matches nothing")]

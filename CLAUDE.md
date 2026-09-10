@@ -77,6 +77,11 @@ python -m scripts.export_cowork_kit --tegs 4,14,17 --out DIR # report kit for re
 # Storyline-first reports. Stage flags (--from/--to), costs, recipes:
 #   teg_analysis/reporting/README.md -> "Running only the stages you need"
 python scripts/storyline_full_report_experiment.py --tegs 18
+
+# Retrofit a new content rule onto reports already written, without a full rerun:
+#   teg_analysis/reporting/README.md -> "Retrofitting a new rule onto reports already written"
+python scripts/apply_report_rules.py --tegs 14,16,18 --restyle-only  # deterministic blocks only, no LLM
+python scripts/apply_report_rules.py --tegs 14,16,18                 # + one corrections call per TEG
 ```
 
 > `--plan` and `--paste` hand each prompt off through `data/llm_mailbox` instead of calling the API; the `teg-report-respond` skill answers `--plan` runs, you answer `--paste` runs by hand. Both can run at once. On the Claude-Code-on-the-web container, install pytest into the same interpreter as the deps: `pip install -r requirements.txt && pip install pytest` — bare `pytest` there is a `uv`-isolated binary that can't see pip-installed deps.
