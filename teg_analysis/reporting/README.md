@@ -16,7 +16,7 @@ establish which one you are in before reading anything else.
 | | **Legacy five-stage** | **Storyline-first** |
 |---|---|---|
 | Status | **Current production.** All 17 TEGs (2–18) | **Newer method, script-driven.** TEGs 14, 16, 18 only |
-| Run it with | `python -m teg_analysis.reporting.backfill --tegs N` | `python scripts/storyline_full_report_experiment.py --teg N` |
+| Run it with | `python -m teg_analysis.reporting.backfill --tegs N` | `python scripts/storyline_full_report_experiment.py --tegs N` |
 | Editorial plan | `StoryPlan` → `teg_N_story_plan.json` | `StorylinePlan` → `teg_N_storyline_plan.json` |
 | Shape | one flowing document, rounds as blocks | one lead story plus separate articles |
 | Final artefact | `teg_N_report_styled.md` | `teg_N_report_storylinefirst_styled.md` |
@@ -551,7 +551,7 @@ are unchanged and still serve the legacy round-by-round pipeline (`authoring.py`
 
 #### Storyline-first pipeline — stages and outputs (2026-08-19)
 
-Runs end to end via `scripts/storyline_full_report_experiment.py --teg N`. Not wired into
+Runs end to end via `scripts/storyline_full_report_experiment.py --tegs N`. Not wired into
 `backfill.py` — still an experiment script, not the production path (`report_final.md` /
 `report_styled.md` are untouched by it). Three stages, three file outputs per TEG:
 
@@ -559,8 +559,22 @@ Runs end to end via `scripts/storyline_full_report_experiment.py --teg N`. Not w
    schema above: 3 mandatory anatomy storylines + 0-3 discovered + optional `body_fallback`.
 2. **Structural draft — no voice** — `build_storyline_draft(teg)` → `teg_N_report_storylinedraft.md`.
    One `##` section per storyline, in order (trophy → discovered → fallback → jacket → spoon), each
-   drafted fact-isolated (own `evidence` + scoped `context`, `DRAFT_WRITER_SYSTEM`) by a writer told
-   explicitly *"do not try to be funny or stylish."* Optionally (`--interweave`, **off by default**)
+   drafted by a writer told explicitly *"do not try to be funny or stylish"* (`DRAFT_WRITER_SYSTEM`)
+   and given two things, both scoped to that storyline alone:
+
+   - **`evidence`** — only the beats this storyline's `beat_ids` actually cited. The fact-isolation
+     fix: the writer cannot reach for material the editor did not assign it.
+   - **`context`** — **this is where course and history colour enters the report.** Venue character,
+     plus career history and per-course history for *this storyline's players only*
+     (`_context_for`), as raw numbers with derived prose stripped. Scoped for the same reason the
+     evidence is: it keeps the writer's attention on who the section is about.
+
+   **There is no separate enrichment stage.** Richness is layered in here, at drafting time, not
+   before or after — and it is already on by default. That was settled by an A/B
+   (`scripts/storyline_context_experiment.py`, 2026-08-19): scoped structured context won on 10/10
+   storylines across 2 TEGs — richness +2.4, compellingness +1.7, reads-as-story +1.4, and
+   factual grounding **+0.5 rather than the usual trade-off down**, because it is raw data rather
+   than a competing prose channel. Full result: `STORYLINE_PLAN.md` → *Writer-richness A/B result*. Optionally (`--interweave`, **off by default**)
    storylines whose `beat_ids` overlap 2+ beats merge into one cross-cut section instead of two
    separate ones (`storyline_interweave_experiment.find_overlapping_pairs`, validated 2x on TEG
    16/18 — see `STORYLINE_PLAN.md` → "Interweaving A/B result"). It is off because reports are now
@@ -834,7 +848,7 @@ style_report(teg)  # → teg_N_report_styled.md, ready for the UI
 The storyline-first equivalent is one command, and one more free step to the edition:
 
 ```bash
-python scripts/storyline_full_report_experiment.py --teg 14
+python scripts/storyline_full_report_experiment.py --tegs 14
 #   → teg_14_storyline_plan.json, _report_storylinedraft.md,
 #     _report_storylinefirst.md, _report_storylinefirst_styled.md
 #   add --no-voice to stop after the structural draft

@@ -341,7 +341,7 @@ live in `teg_analysis/reporting/README.md`; per-file detail in that folder's `AR
 | | Legacy five-stage | Storyline-first |
 |---|---|---|
 | Status | **Current production.** All 17 TEGs (2–18) | **Newer method, script-driven.** TEGs 14, 16, 18 |
-| Runs via | `python -m teg_analysis.reporting.backfill --tegs N` | `python scripts/storyline_full_report_experiment.py --teg N` |
+| Runs via | `python -m teg_analysis.reporting.backfill --tegs N` | `python scripts/storyline_full_report_experiment.py --tegs N` |
 | Shape | one flowing document, rounds as blocks | one lead story + separate articles |
 | Final artefact | `teg_N_report_styled.md` | `teg_N_report_storylinefirst_styled.md` |
 | Reaches a reader via | `/teg-reports` — **live** | the newspaper edition — **not live yet**, see below |
@@ -417,12 +417,12 @@ Everything above `assemble_bundle` is shared; everything below it forks.
 | — | `verify_report()` — D3 mechanical checks | *(findings printed)* | you | no |
 | 8L | `style_report()` — standings, records, CSS hooks | `teg_N_report_styled.md` | `/teg-reports` | no |
 
-**Storyline-first** — `scripts/storyline_full_report_experiment.py --teg N` does 4S–7S. `--from draft` re-enters at 5S (reusing the plan), `--from voice` at 6S (reusing the draft) — the same freeze-and-restart idea as the legacy chain's restart recipes:
+**Storyline-first** — `scripts/storyline_full_report_experiment.py --tegs N` does 4S–7S. `--from` picks where to start and `--to` where to stop — `--from draft` re-enters at 5S (reusing the plan), `--from voice` at 6S (reusing the draft), `--to plan` stops after 4S — the same freeze-and-restart idea as the legacy chain's restart recipes:
 
 | # | Step | Writes | Read by | LLM? |
 |---|---|---|---|---|
 | 4S | `build_storyline_plan()` — 3 mandatory + 0–3 discovered storylines, each with `chosen_headline` and `standfirst` | `teg_N_storyline_plan.json` | 5S, 11b | **yes** |
-| 5S | `build_storyline_draft()` — one fact-isolated section per storyline | `teg_N_report_storylinedraft.md` | 6S | **yes**, one call per storyline |
+| 5S | `build_storyline_draft()` — one section per storyline. Each writer sees **only** that storyline's own cited beats (`evidence`) **plus scoped context**: venue character, and career and course history for that storyline's players only, numbers-only. **This is where course detail and history enter the prose** — there is no separate enrichment step | `teg_N_report_storylinedraft.md` | 6S | **yes**, one call per storyline |
 | 6S | `restyle_voice(label="storylinefirst", source_label="storylinedraft")` | `teg_N_report_storylinefirst.md` | 7S | **yes** |
 | 7S | `style_text()` inside the same call | `teg_N_report_storylinefirst_styled.md` | 9, 11b | no |
 

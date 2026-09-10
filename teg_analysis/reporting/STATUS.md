@@ -23,7 +23,11 @@ storyline-first artefacts (`data/commentary/teg_N_storyline_plan.json` +
 15, 17 have never had the storyline-first pipeline run at all — they still only have the older
 `teg_N_report_styled.md`. Run per TEG:
 
-    python scripts/storyline_full_report_experiment.py --teg N
+    python scripts/storyline_full_report_experiment.py --tegs N
+
+(`--tegs` takes `2-18` or `8,9,14` too, so the whole backlog is one command; `--to plan` stops
+after the storyline plan if you want to see what each report would be about before paying for
+prose. A TEG that fails no longer aborts the ones after it.)
 
 **It runs on plan usage too, as of 2026-09-08** — prefix the command with
 `TEG_LLM_PROVIDER=agent` and answer the prompts with the `teg-report-respond` skill, exactly as for
