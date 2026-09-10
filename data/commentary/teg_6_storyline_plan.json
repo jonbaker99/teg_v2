@@ -1,0 +1,176 @@
+{
+  "title": "The Best Round in TEG History, Then Three Days of Hanging On",
+  "title_candidates": [
+    "The Best Round in TEG History, Then Three Days of Hanging On",
+    "Two Leaders in Nine Holes: Williams Survives the Stadium",
+    "Williams Bleeds Fourteen in Five Holes and Wins Anyway",
+    "Baker Led Both, Won Neither"
+  ],
+  "theme": "Gregg Williams won the TEG 6 Trophy in a single afternoon on the Tour course and spent three days declining to give it back; Jon Baker had both trophies in his hands on the Stadium's front nine and returned them at the 9th.",
+  "tone": "house — subverted gravitas, British English, exact detail over exclamation",
+  "opening_hook": "Open in medias res on the 9th at PGA Catalunya - Stadium in R4: Jon Baker outright leader of the TEG 6 Trophy since the 7th, standing on the tee of the course's SI 1 and walking off with a 10 (b01) — then pull back to Round 1 to explain how a five-shot win was assembled by a man who was in the bottom half of a five-man field for three rounds running.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "tragic_arc",
+    "catalogue"
+  ],
+  "competitions": [
+    {
+      "name": "TEG 6 Trophy (Net VP)",
+      "winner_or_loser": "Gregg Williams"
+    },
+    {
+      "name": "TEG 6 Green Jacket (Gross)",
+      "winner_or_loser": "David Mullin"
+    },
+    {
+      "name": "TEG 6 Wooden Spoon",
+      "winner_or_loser": "Henry Meller"
+    }
+  ],
+  "trophy_storyline": {
+    "subject": "Gregg Williams's record -12 in Round 1 bought a lead he spent three rounds refusing to defend, and Jon Baker still lost",
+    "why_it_matters": "The defending champion retained the Trophy on the strength of one historic round and the fact that the only man who got past him could not stay past him for two holes.",
+    "shape": "Setup: at the Tour course Williams posts -12, the best round in TEG history to date, alongside a personal-best gross of +20 (b13, b22), and stands nine clear. Turn: he never wins another round, sits fourth of five after R2 and R4, and on the Stadium bleeds 11 shots over the first four holes and 13 more from the 6th to the 9th — a 9 at the 7th included — until Baker takes the Trophy lead outright at the 7th, ending 59 holes in front (b50, b32, b15, b03). Resolution: Baker's 10 at the 9th hands it straight back, Williams grinds five shots to par from the 10th to the 13th, then loses 14 more from the 14th to the 18th and wins by five at +0 anyway (b01, b08, b06, b04, b16).",
+    "beat_ids": [
+      "b13",
+      "b22",
+      "b04",
+      "b03",
+      "b01",
+      "b50",
+      "b15",
+      "b06",
+      "b32",
+      "b08",
+      "b16"
+    ],
+    "headline_candidates": [
+      "Record Round Buys Williams a Trophy",
+      "Williams Wins It on Day One",
+      "Four Quadruple Bogeys, One Champion"
+    ],
+    "chosen_headline": "Record Round Buys Williams a Trophy",
+    "standfirst": "Gregg Williams's -12 at the Tour course is the lowest round TEG has recorded, and it needed to be: he was in the bottom half of a five-man field for the three days that followed and beat Jon Baker by five.",
+    "compelling_score": 8,
+    "humour_score": 6
+  },
+  "jacket_storyline": {
+    "subject": "David Mullin wins a third straight Green Jacket after his worst gross round to date briefly handed Jon Baker the lead",
+    "why_it_matters": "Mullin arrived as the reigning Wooden Spoon holder with back-to-back Jacket wins and was best in the field in three of the four rounds — the gross title was built, not inherited.",
+    "shape": "Setup: Mullin leads the TEG 6 Green Jacket from the 3rd hole of Round 1, posting 17 and 17 while Jon Baker's own personal-best gross of +18 keeps him within a shot (b07, b21). Turn: at El Prat he signs for +29, his worst gross round to date — a 9 at the 15th and another at the 18th — and loses a lead held for 51 holes on the final green (b09, b12, b29, b02). Resolution: on the Stadium he pars the 8th, 9th and 10th to take it back, survives a 7 at the 5th and seven shots lost from the 14th to the 16th, and when Baker draws level at the 16th it is Baker who makes 8 at the last and loses by four (b30, b24, b25, b20).",
+    "beat_ids": [
+      "b07",
+      "b02",
+      "b09",
+      "b12",
+      "b29",
+      "b30",
+      "b24",
+      "b25",
+      "b21",
+      "b20"
+    ],
+    "headline_candidates": [
+      "Mullin Reclaims the Jacket at the Ninth",
+      "Three Jackets and One +29",
+      "Mullin's Worst Round Nearly Costs Him Green"
+    ],
+    "chosen_headline": "Mullin Reclaims the Jacket at the Ninth",
+    "standfirst": "Fifty-one holes in front, then a +29 at El Prat cost David Mullin the gross lead — and Jon Baker, level with two to play on the Stadium, could not hold it either.",
+    "compelling_score": 7,
+    "humour_score": 4
+  },
+  "spoon_storyline": {
+    "subject": "Henry Meller answers a career-best Round 2 with a Round 3 containing two 10s, and takes a third Wooden Spoon by 17",
+    "why_it_matters": "Meller came in with two prior Wooden Spoons, spent one round as the best player in the field, and still finished 17 adrift of the next worst.",
+    "shape": "Setup: last in the field after Round 1 at the Tour course, Meller goes to Costa Brava and posts -5, a personal best, with a personal-best gross of +17 — nobody in the field beat him that day (b10, b11). Turn: El Prat opens with a 10 at the 1st, which drops him to the bottom of the TEG 6 Wooden Spoon race before anyone has reached the 2nd, and the 8th — SI 2 — produces another 10 (b68, b83, b43). Resolution: he was bottom of the field in three of the four rounds and signed off at +30, seventeen behind David Mullin, the next worst (b31).",
+    "beat_ids": [
+      "b31",
+      "b10",
+      "b11",
+      "b83",
+      "b68",
+      "b43"
+    ],
+    "headline_candidates": [
+      "Two Tens at El Prat Settle It",
+      "Meller's Best Round, and His Third Spoon",
+      "Seventeen Shots Adrift, One Day of Genius"
+    ],
+    "chosen_headline": "Two Tens at El Prat Settle It",
+    "standfirst": "Henry Meller was the best player in the field for exactly one round at Costa Brava; by the first green of the next one he was back at the bottom of the Wooden Spoon race, and there he stayed.",
+    "compelling_score": 7,
+    "humour_score": 8
+  },
+  "discovered_storylines": [
+    {
+      "subject": "Spain's premier course collects on the final day: five men, five separate implosions, and a Trophy that changed hands twice",
+      "why_it_matters": "The closing round on the Stadium course was less a coronation than a shared demolition, and it is the reason a level-par total won the TEG 6 Trophy.",
+      "shape": "Setup: TEG arrives at PGA Catalunya - Stadium, a European Tour design nobody in the field had played, needing only a tidy round to settle two titles. Turn: Gregg Williams makes 9 at the 3rd, 8 at the 6th, 9 at the 7th and 7 at the 16th, losing 11 shots in the first four holes and 14 in the last five; Stuart Neumann makes 10 at the 3rd and drops 12 shots between the 3rd and the 6th, then eight more from the 12th to the 15th; David Mullin adds a 7 at the 5th and loses seven from the 14th to the 16th; Jon Baker makes 10 at the 9th and 8 at the 18th (b47, b45, b32, b39, b50, b06, b05, b17, b19, b40, b25, b26, b28, b01, b20). Resolution: the Trophy lead changed hands twice inside nine holes and the course still had the last word on every card.",
+      "beat_ids": [
+        "b01",
+        "b05",
+        "b17",
+        "b19",
+        "b20",
+        "b25",
+        "b26",
+        "b28",
+        "b32",
+        "b39",
+        "b45",
+        "b47",
+        "b40",
+        "b06",
+        "b15",
+        "b50"
+      ],
+      "headline_candidates": [
+        "The Stadium Course Takes Its Cut",
+        "Five Men, One Course, No Survivors",
+        "Four Quadruple Bogeys and a Trophy"
+      ],
+      "chosen_headline": "The Stadium Course Takes Its Cut",
+      "standfirst": "TEG 6 closed on Spain's premier championship layout with a 10 for Jon Baker at the 9th, a 10 for Stuart Neumann at the 3rd and four quadruple bogeys for the eventual champion.",
+      "compelling_score": 7,
+      "humour_score": 9
+    },
+    {
+      "subject": "Jon Baker leads both the Trophy and the Green Jacket inside the final round and finishes runner-up in both, undone at two holes",
+      "why_it_matters": "Baker had held the outright lead in both competitions on the last day and lost each of them at a single hole, adding two more near-misses to a record of one prior Trophy win and second place in three of the last four TEGs.",
+      "shape": "Setup: a personal-best gross of +18 at the Tour course, built on a front nine 13 shots better than his back, with four holes from the 14th to the 17th without dropping a gross shot (b21, b33, b41, b37). Turn: he survives a 9 at the 8th at El Prat — SI 2 — and takes the Green Jacket lead on the final green after three straight net gains from the 16th, then takes the Trophy lead outright at the 7th on the Stadium (b14, b35, b02, b03). Resolution: a 10 at the 9th returns the Trophy to Gregg Williams within two holes; level for the Jacket again at the 16th, he makes 8 at the last and loses that by four as well (b01, b20).",
+      "beat_ids": [
+        "b21",
+        "b33",
+        "b41",
+        "b37",
+        "b14",
+        "b35",
+        "b02",
+        "b03",
+        "b01",
+        "b20"
+      ],
+      "headline_candidates": [
+        "Baker Led Both, Won Neither",
+        "Level With Two to Play, Beaten by Four",
+        "Two Holes Cost Baker Two Titles"
+      ],
+      "chosen_headline": "Baker Led Both, Won Neither",
+      "standfirst": "Jon Baker took the TEG 6 Trophy lead at the 7th and drew level for the Jacket at the 16th; a 10 at the 9th and an 8 at the last left him second in each.",
+      "compelling_score": 9,
+      "humour_score": 5
+    }
+  ],
+  "body_fallback": "none",
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "decisive_moment",
+  "vehicle_fit_response": {
+    "top_scored_vehicle": "hero_arc",
+    "taken_up": false,
+    "note": "Williams is a defending champion who won again, but he won by never quite being caught rather than by rising — the week is Williams and Baker trading the outright lead inside nine holes of the Stadium, with Baker's collapse the tragic thread and the field's final-day carnage the catalogue behind it."
+  },
+  "why_the_champion_won": "One historic round and then a controlled retreat: Williams's -12 at the Tour course, the best round TEG has recorded, bought a nine-shot lead he then defended badly — three bottom-half rounds, Baker better than him in two of them — and it still held, because Baker took the lead at the 7th in R4 and gave it back with a 10 at the 9th.",
+  "storyline_note": ""
+}
