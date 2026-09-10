@@ -72,18 +72,18 @@ The wider numbers tell the same story with less charity. This was his seventh vi
 
 **End of Round 2**
 
-<p class="standings"><span class="standings-header">Trophy Standings:</span> AB 87 | JP 76 | GW 73 | JB 69 | DM 67</p>
-<p class="standings"><span class="standings-header">Green Jacket Standings:</span> JB +39 | GW +41 | DM +50 | JP +52 | AB +60</p>
+<p class="standings"><span class="standings-header">Trophy Standings:</span> AB 87 (R2: 41) | JP 76 (R2: 42) | GW 73 (R2: 42) | JB 69 (R2: 39) | DM 67 (R2: 35)</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> JB +39 (R2: +15) | GW +41 (R2: +14) | DM +50 (R2: +22) | JP +52 (R2: +22) | AB +60 (R2: +34)</p>
 
 **End of Round 3**
 
-<p class="standings"><span class="standings-header">Trophy Standings:</span> AB 131 | JP 119 | GW 116 | DM 111 | JB 97</p>
-<p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +54 | DM +62 | JB +67 | JP +73 | AB +88</p>
+<p class="standings"><span class="standings-header">Trophy Standings:</span> AB 131 (R3: 44) | JP 119 (R3: 43) | GW 116 (R3: 43) | DM 111 (R3: 44) | JB 97 (R3: 28)</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +54 (R3: +13) | DM +62 (R3: +12) | JB +67 (R3: +28) | JP +73 (R3: +21) | AB +88 (R3: +28)</p>
 
 **End of Round 4**
 
-<p class="standings"><span class="standings-header">Trophy Standings:</span> AB 169 | JP 161 | GW 160 | DM 149 | JB 126</p>
-<p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +66 | DM +80 | JB +92 | JP +95 | AB +124</p>
+<p class="standings"><span class="standings-header">Trophy Standings:</span> AB 169 (R4: 38) | JP 161 (R4: 42) | GW 160 (R4: 44) | DM 149 (R4: 38) | JB 126 (R4: 29)</p>
+<p class="standings"><span class="standings-header">Green Jacket Standings:</span> GW +66 (R4: +12) | DM +80 (R4: +18) | JB +92 (R4: +25) | JP +95 (R4: +22) | AB +124 (R4: +36)</p>
 
 ## Personal bests and TEG records
 
