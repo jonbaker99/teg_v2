@@ -54,6 +54,7 @@ from teg_analysis.reporting.newspaper_edition import (
     available_tegs,
     clear_edition_caches,
     build_edition,
+    for_page,
     choose_arrangement,
     render_desktop_html,
 )
@@ -128,7 +129,7 @@ def teg_reports_preview(
     if edition is not None:
         arrangement = choose_arrangement(edition)
         desktop_html = render_desktop_html(edition, rail=selected_rail)
-        edition_json = json.dumps(edition)
+        edition_json = json.dumps(for_page(edition))
 
     current_switches = {"teg": selected_teg, "pal": selected_pal, "sf": selected_sf, "rail": selected_rail}
 

@@ -36,12 +36,83 @@ import json
 import re
 import statistics
 from functools import lru_cache
-from typing import Any
+from typing import Any, NamedTuple
 
 from teg_analysis.io import read_file, read_text_file
 
 COMMENTARY_DIR = "data/commentary"
 COMPLETED_TEGS_CSV = "data/completed_tegs.csv"
+
+
+class ArticleFilter(NamedTuple):
+    """Which stories make the paper. A presentation choice, applied last.
+
+    Every plan carries three MANDATORY storylines — trophy, jacket, spoon —
+    populated "regardless of how good you judge them to be", plus 0-3 discovered
+    ones. So a weak article is not a bug: the editor was told to write it. This
+    is the lever for not *printing* it.
+
+    Deliberately applied at edition-build time, not earlier. The plan, the draft
+    and the voiced report all still contain every storyline; filtering here means
+    a dropped story is still on disk, still in the styled markdown, and comes back
+    by changing a threshold rather than by regenerating anything.
+
+    Fields:
+        min_compelling / min_humour: floors on each score.
+        match: "all" requires both floors, "any" requires either.
+        min_combined: a rescue path — an article clears the filter if
+            compelling + humour reaches this, whatever `match` says. Lets a
+            9-humour/5-compelling piece survive a compelling floor of 7.
+
+    The default keeps everything, so behaviour is unchanged until a caller opts in.
+    """
+
+    min_compelling: int = 0
+    min_humour: int = 0
+    match: str = "all"
+    min_combined: int = 0
+
+    def keeps(self, article: dict[str, Any]) -> bool:
+        compelling = article.get("compelling") or 0
+        humour = article.get("humour") or 0
+        if self.min_combined and compelling + humour >= self.min_combined:
+            return True
+        hits_compelling = compelling >= self.min_compelling
+        hits_humour = humour >= self.min_humour
+        return hits_compelling or hits_humour if self.match == "any" else (
+            hits_compelling and hits_humour)
+
+    def describe(self) -> str:
+        if self == ArticleFilter():
+            return "no filter (every story printed)"
+        joiner = " or " if self.match == "any" else " and "
+        parts = joiner.join((f"compelling>={self.min_compelling}",
+                             f"humour>={self.min_humour}"))
+        if self.min_combined:
+            parts += f", or combined>={self.min_combined}"
+        return parts
+
+
+KEEP_EVERYTHING = ArticleFilter()
+
+#: The policy every caller gets unless it passes its own — the webapp preview
+#: route included. Change this one constant to change what the paper prints
+#: everywhere; the CLI flags on `scripts/build_newspaper_edition` exist to try a
+#: policy before committing to it here.
+DEFAULT_ARTICLE_FILTER = KEEP_EVERYTHING
+
+
+def filter_articles(articles: list[dict[str, Any]],
+                    article_filter: ArticleFilter) -> tuple[list, list]:
+    """Split `articles` into (kept, dropped) — the lead is never dropped.
+
+    The lead is the report's spine and `render_desktop_html` requires one, so it
+    is exempt however it scores. A tournament always has a winner worth leading on.
+    """
+    kept, dropped = [], []
+    for a in articles:
+        (kept if a.get("is_lead") or article_filter.keeps(a) else dropped).append(a)
+    return kept, dropped
 
 
 def artefact_paths(teg: int) -> tuple[str, str]:
@@ -551,11 +622,32 @@ def _parse_records(appendix_md: str) -> list[dict[str, str]]:
     return records
 
 
-def build_edition(teg: int) -> dict[str, Any]:
+#: Keys `build_edition` returns for the caller's benefit rather than the page's.
+#: Stripped before the edition is serialised — otherwise every prototype page and
+#: every mobile payload would carry the full text of stories deliberately not
+#: shown, which is both wasteful and confusing to anyone reading the JSON.
+_NON_PAGE_KEYS = ("dropped_articles",)
+
+
+def for_page(edition: dict[str, Any]) -> dict[str, Any]:
+    """The edition as the page needs it — internal bookkeeping removed.
+
+    Use at every serialisation boundary: `editions.json`, and the JSON embedded
+    for the mobile renderer.
+    """
+    return {k: v for k, v in edition.items() if k not in _NON_PAGE_KEYS}
+
+
+def build_edition(teg: int,
+                  article_filter: ArticleFilter | None = None) -> dict[str, Any]:
     """Read the two source artefacts for `teg` and return one edition dict.
 
     Raises FileNotFoundError (via `read_text_file`) if either artefact is
     missing — callers should only call this for `teg in available_tegs()`.
+
+    `article_filter` decides which stories are printed; `None` uses
+    `DEFAULT_ARTICLE_FILTER`, which prints all of them. Dropped ones are returned under `"dropped_articles"` rather than
+    discarded, so the caller can say what it left out. Nothing on disk changes.
     """
     md_path, plan_path = artefact_paths(teg)
     md = read_text_file(md_path)
@@ -568,12 +660,16 @@ def build_edition(teg: int) -> dict[str, Any]:
     _add_runners_up(results, standings)
     _add_value_split(results)
 
+    articles, dropped = filter_articles(
+        _parse_articles(article_sections, plan),
+        DEFAULT_ARTICLE_FILTER if article_filter is None else article_filter)
     return {
         "teg": teg,
         "title": _parse_title(md),
         "dateline": _parse_dateline(md),
         "results": results,
-        "articles": _parse_articles(article_sections, plan),
+        "articles": articles,
+        "dropped_articles": dropped,
         "standings": standings,
         "records": _parse_records(appendix_md),
     }

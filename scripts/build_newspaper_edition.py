@@ -30,22 +30,59 @@ import json
 from pathlib import Path
 
 from scripts.inline_editions import main as inline_editions
-from teg_analysis.reporting.newspaper_edition import available_tegs, build_edition
+from teg_analysis.reporting.newspaper_edition import (
+    ArticleFilter,
+    available_tegs,
+    build_edition,
+    for_page,
+)
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 OUTPUT_PATH = REPO_ROOT / "webapp" / "report_layout_prototypes" / "editions.json"
 
 
-def main() -> None:
+def _parse_args(argv=None):
+    import argparse
+
+    ap = argparse.ArgumentParser(
+        prog="python -m scripts.build_newspaper_edition",
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    ap.add_argument("--min-compelling", type=int, default=None,
+                    help="Only print stories scoring at least this (0-10).")
+    ap.add_argument("--min-humour", type=int, default=None,
+                    help="Only print stories scoring at least this (0-10).")
+    ap.add_argument("--match", choices=("all", "any"), default="all",
+                    help="Whether a story must clear BOTH score floors (all, default) "
+                         "or EITHER (any).")
+    ap.add_argument("--min-combined", type=int, default=None,
+                    help="Rescue: print a story whose compelling+humour reaches this "
+                         "even if it misses the floors. Lets a very funny but less "
+                         "compelling piece through.")
+    args = ap.parse_args(argv)
+    if all(v is None for v in (args.min_compelling, args.min_humour, args.min_combined)):
+        return None      # no flags: use the module default
+    return ArticleFilter(min_compelling=args.min_compelling or 0,
+                         min_humour=args.min_humour or 0,
+                         match=args.match,
+                         min_combined=args.min_combined or 0)
+
+
+def main(argv=None) -> None:
     # Discovered, not hardcoded: generating a report for a new TEG used to need
     # someone to remember to edit AVAILABLE_TEGS before it showed up here.
     tegs = available_tegs()
     if not tegs:
         raise SystemExit("no TEG has storyline-first artefacts — nothing to build")
     print(f"Building editions for TEG {', '.join(str(t) for t in tegs)}")
-    editions = [build_edition(teg) for teg in tegs]
+    article_filter = _parse_args(argv)
+    editions = [build_edition(teg, article_filter) for teg in tegs]
+    if article_filter is not None:
+        print(f"Filter: {article_filter.describe()}")
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT_PATH.write_text(json.dumps(editions, indent=2) + "\n", encoding="utf-8")
+    OUTPUT_PATH.write_text(
+        json.dumps([for_page(e) for e in editions], indent=2) + "\n", encoding="utf-8")
     print(f"Wrote {OUTPUT_PATH} ({len(editions)} editions)")
     for edition in editions:
         print(f"\nTEG {edition['teg']}: {edition['title']}")
@@ -57,6 +94,11 @@ def main() -> None:
                 f"(lead={a['is_lead']}, words={a['words']}, "
                 f"compelling={a['compelling']}, humour={a['humour']})"
             )
+        for a in edition["dropped_articles"]:
+            # Named, not silently gone: the story is still in the plan, the draft
+            # and the styled markdown — it just did not make the paper.
+            print(f"  NOT PRINTED [{a['kicker']}] {a['headline']!r} "
+                  f"(compelling={a['compelling']}, humour={a['humour']})")
         print(f"  standings rounds: {[s['round'] for s in edition['standings']]}")
         print(f"  records: {len(edition['records'])}")
 
