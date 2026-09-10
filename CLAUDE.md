@@ -145,7 +145,12 @@ Not a gate to run mechanically — a checklist to think against before calling w
 - `STATUS.md` updated if the change is user-visible or shifts direction.
 - Callers of any renamed or removed function checked; back-compat alias considered explicitly rather than by default.
 - No frontend imports in `teg_analysis/`; no `streamlit/` file touched.
-- Tests run where the change plausibly affects behaviour, not reflexively — the full suite takes ~4 minutes and running it every time wastes the session. Nothing for docs/comments, one module's test file for a prompt/module-scoped change, the full suite once before pushing for review or merging. Say what you ran; don't re-run to feel sure. Suite: `python -m pytest tests/ -v` (Claude-Code-on-the-web pytest caveat: see Development commands).
+- **Run only the tests the change could plausibly break, and only when it could break something.** The full suite takes ~4 minutes; running it by reflex wastes the session and is not a substitute for thinking about blast radius.
+  - **Nothing** for docs, comments, to-do notes, or a script's `--help` text. A syntax check or running the command once is the test.
+  - **The relevant test file(s)** for a change scoped to one module or prompt — `python -m pytest tests/test_<thing>.py -q`. Pick by what imports the code you touched, not by habit.
+  - **The full suite only when the blast radius is genuinely wide**: a shared/core module (`io/`, `core/`, `analysis/pipeline.py`, `deps.py`), a signature or schema other modules depend on, a dependency bump, or a merge that pulled in someone else's changes to code you also touched. Merging on its own is not a reason.
+  - **When in doubt, ask** rather than defaulting to the full suite. "This touches `authoring.py` — want the full suite or just its test file?" costs a line; four minutes costs four minutes.
+  - Say what you ran and why you picked it. Never re-run to feel sure. Suite: `python -m pytest tests/ -v` (Claude-Code-on-the-web pytest caveat: see Development commands).
 
 ## Documentation
 
