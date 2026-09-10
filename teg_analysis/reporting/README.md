@@ -1152,7 +1152,9 @@ headings from the plan, so a styled file that was hand-patched away from its pla
 call, `CORRECTIONS_CONTRACT` + the rule constants, permitting exactly two edits: delete a rank
 claim the ranking rule disallows, expand an ambiguous name or first competition mention.
 Everything else frozen. D3 runs over the output and `new_findings` isolates what the pass
-introduced. The original is preserved as `teg_N_report_{label}_precorrections.md`.
+introduced. The original is preserved as `teg_N_report_{label}_precorrections.md`, which is
+gitignored — it exists so the pass is reversible without git, and in the repo git history
+already holds that text.
 
 **This is deliberately not `restyle_voice`.** That function's contract holds facts and structure
 literally constant, which is what makes it a one-variable voice A/B; a pass that deletes a claim

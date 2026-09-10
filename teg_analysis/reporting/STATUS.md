@@ -32,6 +32,15 @@ per-report patches:
   rail's final-standings row strips the new round-score brackets via `_totals_only`; the appendix
   table keeps them.
 
+**The corrections pass has now been run on all three reports (2026-09-10)**, on plan usage via the
+mailbox. It removed seven disallowed rank claims (TEG 14 ×3, TEG 16 ×2, TEG 18 ×2 — two more than a
+grep for them found, since one sentence carried two and one wrote "sixth best" unhyphenated),
+disambiguated every bare
+"Baker" in TEG 14's two-Baker field, and put the TEG number on each competition's first mention.
+D3 introduced **0** new findings on any of the three, and every section anchor survived its
+pass. The remaining `no_em_dashes` warnings (3/3/6) are pre-existing, in injected headline and
+record text.
+
 Rules are in `prompts.py` and documented in [README.md](README.md) → *Design rules*. There is no
 mechanical D3 check for either new rule yet — a candidate if they turn out to be obeyed
 unreliably, the way `STROKE_INDEX_RULE` is.

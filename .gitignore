@@ -30,6 +30,11 @@ data/llm_mailbox/
 # Model-comparison / experiment output. Throwaway by design: promote the one you
 # want into data/commentary/ (paths.promote_variant) and commit that instead.
 data/commentary/variants/
+
+# Pre-corrections backups written by authoring.apply_corrections. They exist so
+# the pass is reversible without git; in the repo, git history already holds the
+# text they preserve, so committing them is duplication.
+data/commentary/*_precorrections.md
 nul
 
 #nodemodules -> what is this?
