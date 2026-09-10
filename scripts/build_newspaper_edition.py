@@ -1,11 +1,25 @@
-"""CLI: regenerate `webapp/report_layout_prototypes/editions.json`.
-
-The parser (`build_edition`) and its private helpers live in
-`teg_analysis.reporting.newspaper_edition` — UI-agnostic, and shared with
-`webapp/routes/report_preview.py`, which is why it moved out of `scripts/`.
-This file is now just the local dev-tool entry point:
+"""CLI: rebuild the layout prototypes from the current report artefacts.
 
     python -m scripts.build_newspaper_edition
+
+Two steps, always run together, so this does both:
+
+1. Rebuild `webapp/report_layout_prototypes/editions.json` from whichever TEGs
+   have storyline-first artefacts.
+2. Inline it into the prototype pages, which carry the data as a JS literal
+   because a published Artifact cannot fetch a sibling file.
+
+Step 2 used to be a separate `python -m scripts.inline_editions`, and every doc
+wrote the pair with `&&`. Forgetting it left the pages showing older content
+than the artefacts on disk -- which happened three times in a week (PR #95's
+headlines, the 14/16/18 re-sync, PR #100's rule pass). `inline_editions` still
+runs standalone for re-inlining without a rebuild.
+
+The parser (`build_edition`) and its helpers live in
+`teg_analysis.reporting.newspaper_edition` — UI-agnostic, and shared with
+`webapp/routes/report_preview.py`, which is why it is not in `scripts/`. Note
+that route builds its edition per request and never reads `editions.json`, so
+none of this affects the live page.
 
 Also re-exports `build_edition` for anything still importing it from here.
 """
@@ -15,6 +29,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from scripts.inline_editions import main as inline_editions
 from teg_analysis.reporting.newspaper_edition import available_tegs, build_edition
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -44,6 +59,12 @@ def main() -> None:
             )
         print(f"  standings rounds: {[s['round'] for s in edition['standings']]}")
         print(f"  records: {len(edition['records'])}")
+
+    # Step 2. Not optional: a rebuilt editions.json that is not inlined leaves
+    # the prototype pages showing the previous content, which is worse than not
+    # rebuilding at all — it looks done.
+    print()
+    inline_editions()
 
 
 if __name__ == "__main__":

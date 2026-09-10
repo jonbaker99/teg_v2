@@ -24,14 +24,11 @@ Working list for the webapp. Detail references: [PARITY_AUDIT.md](PARITY_AUDIT.m
   Design record: `webapp/report_layout_prototypes/README.md`. Pipeline context: `DATA_FLOW.md` §10.
 
 
-- [ ] **`editions.json` goes stale whenever a styled report changes** — it has drifted three times
-  now (PR #95's headlines, `aebf3c3`'s re-sync, PR #100's rule pass), each time because someone
-  changed `teg_N_report_storylinefirst_styled.md` without re-running
-  `python -m scripts.build_newspaper_edition && python -m scripts.inline_editions`. The two are
-  always run together — every doc writes them with `&&`. Options: fold the inlining into the build
-  script so one command does both; or add a check that fails when the committed `editions.json`
-  does not match what the current artefacts would produce. The live preview route is unaffected
-  (it builds per request); this only bites the static prototype pages.
+- [x] **`editions.json` going stale whenever a styled report changes** — **fixed 2026-09-10.** It
+  drifted three times (PR #95's headlines, `aebf3c3`'s re-sync, PR #100's rule pass), each time
+  because the styled reports changed without someone re-running the inlining. The inlining is now
+  part of `python -m scripts.build_newspaper_edition`, so one command does both;
+  `scripts/inline_editions` still runs standalone to re-inline without a rebuild.
 
 ## NEXT UP
 
