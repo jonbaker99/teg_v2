@@ -667,9 +667,10 @@ call, no cost.**
      (`webapp/static/newspaper_preview.js`), switched by a CSS breakpoint.
      Live, but deliberately not linked from the nav.
    - **The prototypes** — `python -m scripts.build_newspaper_edition` writes
-     `webapp/report_layout_prototypes/editions.json`, then `python -m scripts.inline_editions`
-     inlines it into the prototype pages (they carry data inline because a published Artifact cannot
-     fetch a sibling file). Served at `/report-layouts/`. **`editions.json` feeds only the
+     `webapp/report_layout_prototypes/editions.json` **and** inlines it into the prototype pages
+     (they carry data inline because a published Artifact cannot fetch a sibling file). One command:
+     the inlining used to be a separate `scripts.inline_editions` run, and forgetting it left the
+     pages older than the artefacts three times in a week. Served at `/report-layouts/`. **`editions.json` feeds only the
      prototypes** — the live route calls `build_edition` directly and never reads it.
 
    Design record for the layout itself — chosen elements, composition rule, mobile evidence:

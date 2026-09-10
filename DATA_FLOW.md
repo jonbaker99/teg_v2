@@ -390,7 +390,7 @@ flowchart TD
     R --> NE["newspaper_edition.build_edition(teg)<br/>free, deterministic, NO LLM"]
 
     NE --> W2["/teg-reports-preview<br/>webapp/routes/report_preview.py<br/>live, not linked from nav"]
-    NE --> PR["scripts/build_newspaper_edition<br/>→ editions.json<br/>→ scripts/inline_editions<br/>→ /report-layouts/ prototypes"]
+    NE --> PR["scripts/build_newspaper_edition<br/>→ editions.json + inlines it<br/>→ /report-layouts/ prototypes"]
 
     W1 --> BR["Browser"]
     W2 -.-> BR
@@ -443,7 +443,7 @@ round equivalent.
 | 11a | `/teg-reports` renders `teg_N_report_styled.md` through the `markdown` library | HTML | the reader | no |
 | 11b | `newspaper_edition.build_edition(teg)` parses the styled MD **plus** the storyline plan into one edition dict | *(memory)* | 12a, 12b | no |
 | 12a | `render_desktop_html()` + edition JSON → `/teg-reports-preview` | HTML | the reader — live, but not linked from the nav | no |
-| 12b | `scripts/build_newspaper_edition` → `editions.json`, then `scripts/inline_editions` inlines it into the prototype pages | `editions.json`, `composite.html` etc. | `/report-layouts/` | no |
+| 12b | `scripts/build_newspaper_edition` → writes `editions.json` **and** inlines it into the prototype pages (one command; `scripts/inline_editions` still runs standalone to re-inline without a rebuild) | `editions.json`, `composite.html` etc. | `/report-layouts/` | no |
 
 > `/teg-reports-preview` was unreachable for a merge regression (its router was dropped from
 > `webapp/app.py`); **fixed on `main` in `bb614c0`.** It renders, but is deliberately not linked
