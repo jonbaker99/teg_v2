@@ -5,9 +5,9 @@
 
 **Neumann's first Trophy**
 
-Stuart Neumann won the Trophy at TEG 16 on the Lisbon Coast with 156 Stableford points, finishing 13 clear of Gregg Williams. It is the 16th-highest Trophy total recorded and the second-best of his own career. A man can wait a long time for a first Trophy. Neumann waited, and then won it by rather more than he needed to.
+Stuart Neumann won the Trophy at TEG 16 on the Lisbon Coast with 156 Stableford points, finishing 13 clear of Gregg Williams. It is the second-best of his own career. A man can wait a long time for a first Trophy. Neumann waited, and then won it by rather more than he needed to.
 
-The margin was built early and never surrendered. He held the Trophy lead after round two at Troia, still held it after round three at Penha Longa, and carried it through the closing round at Estoril. Williams, meanwhile, led the Jacket standings at each of those same checkpoints. For three days the two of them occupied separate thrones, and neither gave an inch in his own.
+The margin was built early and never surrendered. He held the Trophy lead after round two at Troia, still held it after round three at Penha Longa, and carried it through the closing round at Estoril. Williams, meanwhile, led the TEG 16 Green Jacket standings at each of those same checkpoints. For three days the two of them occupied separate thrones, and neither gave an inch in his own.
 
 The final round was not flawless. At Estoril's 8th, a par 4 and the hardest hole on the card at stroke index 1, Neumann took nine. A quintuple bogey. Worth no points at all, which is to say the hole may as well not have happened, and in scoring terms it did not. The lead never so much as shifted in its seat. That is what a cushion is for.
 
@@ -16,7 +16,7 @@ Estoril otherwise gave him his best golf of the four days. His 92 there was a co
 ## David Mullin: from the bottom of the Spoon race in R1 to the Estoril course record in R4
 <!-- storyline: d1 -->
 
-David Mullin's tournament ended a very long way from where it started. At Oitavos Dunes in the opening round he ran up a triple-bogey seven at the 10th, a stroke index 4 par four, and the zero points dropped him from second to fifth in the Wooden Spoon race. Fifth in the Spoon race is not a mid-table sort of fifth. It is the bottom of the pile. Round three at Penha Longa was worse in places: a quadruple-bogey eight at the 16th, the hardest hole on the card, after which he composed himself and parred 17 and 18 like a man tidying a room he had just set fire to. The round came to 30 points, and his 98 there was well adrift of his previous best at the course.
+David Mullin's tournament ended a very long way from where it started. At Oitavos Dunes in the opening round he ran up a triple-bogey seven at the 10th, a stroke index 4 par four, and the zero points dropped him from second to fifth in the TEG 16 Wooden Spoon race. Fifth in the Spoon race is not a mid-table sort of fifth. It is the bottom of the pile. Round three at Penha Longa was worse in places: a quadruple-bogey eight at the 16th, the hardest hole on the card, after which he composed himself and parred 17 and 18 like a man tidying a room he had just set fire to. The round came to 30 points, and his 98 there was well adrift of his previous best at the course.
 
 Estoril, on the Tuesday, was a different matter. Mullin birdied the 2nd and parred the 3rd, then wobbled through a bogey-bogey-double stretch at the 4th, 5th and 6th before a birdie at the 7th stopped the slide. The back nine simply held. Nine points from the 11th, 12th and 13th, with pars at 12 and 13, and two more pars at 16 and 17 to finish.
 
@@ -36,7 +36,7 @@ The final round at Estoril separated them. Jon's one lapse came at the 11th, the
 ## Gregg Williams's second Green Jacket, +66, by 16 shots
 <!-- storyline: jacket -->
 
-Gregg Williams's second Green Jacket was never really in doubt, and the final margin, 16 shots clear of David Mullin, says as much. His gross total of +66 is the fifth-best in the event's history and comfortably the best of his own career. It was, by any measure, thoroughly deserved.
+Gregg Williams's second Green Jacket was never really in doubt, and the final margin, 16 shots clear of David Mullin, says as much. His gross total of +66 is comfortably the best of his own career. It was, by any measure, thoroughly deserved.
 
 It was also not tidy. Troia, a course none of the field had seen before, produced a 94 and two of his worst passages of the tournament: four holes from the 8th without a net par, then three straight doubles from the 13th, six gross shots gone in as many holes.
 

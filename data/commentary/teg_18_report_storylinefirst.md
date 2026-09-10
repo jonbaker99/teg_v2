@@ -3,7 +3,7 @@
 ## How Alex Baker, owner of three prior Wooden Spoons, led the Trophy from the fifth hole of round one to the last and won by eight
 <!-- storyline: trophy -->
 
-Alex Baker won the Trophy at TEG 18 in Catalonia with 169 Stableford points, eight clear of runner-up John Patterson. It is the seventh-highest total on record and the second best of his own career. A man who already owns three Wooden Spoons has now led a Trophy from the fifth hole of round one to the last. The record book has no way of registering surprise.
+Alex Baker won the Trophy at TEG 18 in Catalonia with 169 Stableford points, eight clear of runner-up John Patterson. It is the second best of his own career. A man who already owns three Wooden Spoons has now led a Trophy from the fifth hole of round one to the last. The record book has no way of registering surprise.
 
 The points arrived in bursts, with long dry stretches in between. On the Tour Course in round one he took 17 from holes 8 to 12, three-point bogeys either side of pars at the 10th and 11th, then 13 more over holes 14 to 16, including a birdie at the par-5 15th. His 98 that day was his best gross of the four days on that course, though still six shots adrift of the 92 he had once posted there.
 
@@ -16,13 +16,13 @@ He led after round three as well, propped up by 21 points across holes 11 to 16 
 
 David Mullin's trip to Catalonia swung between the best and the worst golf of the four days.
 
-It began badly. On the 15th at the Tour Course in round one, a par 5 of stroke index 5, he ran up an eleven: a sextuple bogey, worth no Stableford points and the worst hole against par of his entire TEG career. Every hole he has ever played, and this one stands alone at the summit. It cost him ground in the Wooden Spoon race too, second in that competition before the hole and fifth after it.
+It began badly. On the 15th at the Tour Course in round one, a par 5 of stroke index 5, he ran up an eleven: a sextuple bogey, worth no Stableford points and the worst hole against par of his entire TEG career. Every hole he has ever played, and this one stands alone at the summit. It cost him ground in the TEG 18 Wooden Spoon race too, second in that competition before the hole and fifth after it.
 
 Round three was the reverse. At the Stadium Course he shot 84 gross, the lowest round the course had ever surrendered, beating the previous record of 89 set across 27 prior visits. It was a personal best there as well. His best in five previous Stadium rounds was 91, and the 84 was eight shots better than his last visit. A course that had spent 27 visits refusing to yield anything under 89 handed him the lot in a single afternoon and asked for nothing in return.
 
 Round four then unravelled over four holes. From the 14th to the 17th he went double bogey, triple bogey, double bogey, double bogey: 6, 8, 5, 6. Nine shots dropped in four holes, four holes without a net par, a single Stableford point on three of them and none at all at the 15th. The Stadium, having given away its record, spent the following day quietly reclaiming the interest.
 
-He finished runner-up in the Green Jacket, 14 shots behind Gregg Williams, who won at +66.
+He finished runner-up in the TEG 18 Green Jacket, 14 shots behind Gregg Williams, who won at +66.
 
 ## John Patterson is bottom of the Wooden Spoon race after four holes of the tournament and finishes as Trophy runner-up, eight points back
 <!-- storyline: d1 -->
@@ -44,7 +44,7 @@ Round two was a different story: 42 points, eleven better. He took nine points f
 
 On the Stadium course a par at the 2nd put him outright in the lead. Four pars from the 2nd to the 5th were worth twelve points before a double bogey at the 6th closed the sequence. In round four he birdied the par-three 5th and gathered nine points from the 8th to the 10th, closing to nine off the Trophy lead having at one stage trailed by fifteen. His 84 that day was his best on the Stadium course, eight strokes better than his last visit there.
 
-He finished on +66, fourteen clear of David Mullin: his own best gross total, and the sixth best ever recorded. The reigning Wooden Spoon holder has spent four days getting steadily better at golf, which is the sort of behaviour that ruins a reputation.
+He finished on +66, fourteen clear of David Mullin: his own best gross total. The reigning Wooden Spoon holder has spent four days getting steadily better at golf, which is the sort of behaviour that ruins a reputation.
 
 ## Jon Baker arrives as defending Trophy and Jacket champion and leaves 23 points adrift at the bottom, last in three of the four rounds
 <!-- storyline: spoon -->
