@@ -91,7 +91,7 @@ from typing import Optional
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 
-from teg_analysis.reporting import llm
+from teg_analysis.reporting import llm, prompts
 from teg_analysis.reporting.authoring import (WRITER_VOICE, _strip_derived_prose,
                                              load_storyline_plan, restyle_voice)
 from teg_analysis.reporting.backfill import parse_teg_spec
@@ -161,6 +161,11 @@ def _fallback_sections(plan: dict, all_beats: list) -> list:
     return []
 
 
+# The two rules below are the SHARED constants, not a paraphrase. This prompt is
+# bespoke to the experiment — it is not built from `build_writer_system` — which
+# is exactly how it went on drafting sections under the pre-2026-09-10 rules
+# after those rules reached every production writer. Import them; don't retype
+# them, and don't let this prompt drift from `prompts.py` again.
 DRAFT_WRITER_SYSTEM = """You are writing one section of a golf tournament report — a \
 single storyline, not the whole report. Plain, clear, factual prose — this is a \
 structural draft, not the final voice; do not try to be funny or stylish. 150-250 \
@@ -172,7 +177,11 @@ colour (a player's history on this course, a career milestone) but any compariso
 you state must follow exactly from its figures; if the arithmetic is not clean, \
 leave it out. Do not let it crowd out `evidence` — this storyline's own beats are \
 still the spine. Every fact you write must trace to `evidence` or `context`. Never \
-invent scores, margins, or comparisons not present in your input."""
+invent scores, margins, or comparisons not present in your input.
+
+WHAT IS WORTH SAYING, and how to name it:
+""" + prompts.RANKING_RULE + """
+""" + prompts.NAMING_RULE
 
 
 def draft_section(storyline: dict, evidence: list, context: dict, model: Optional[str] = None) -> str:

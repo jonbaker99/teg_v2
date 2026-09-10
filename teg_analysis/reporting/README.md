@@ -1055,6 +1055,32 @@ Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`t
   - **No beat IDs in the prose** (`b07`, `cr01`) — they are internal identifiers.
   - **Stroke index is translated, never quoted** (`prompts.STROKE_INDEX_RULE`, shared by both writers). SI 1 is "the hardest hole on the course", SI 18 "the easiest"; SI 4–15 is not noteworthy and should be ignored. Raw `SI 2` in prose reads as machine output. Craft rather than faithfulness, but it is duplicated in both writers so it lives in `prompts.py` with the shared blocks. **Obeyed unreliably** — TEG 8's published report emits raw `SI n` eight times alongside correct translations; a candidate 9th D3 check (`teg_analysis/TODOS.md`).
 
+## Retrofitting a new rule onto reports already written
+
+A rule added to `prompts.py` reaches the writers and editors immediately, but not the reports
+already on disk. `scripts/apply_report_rules.py` is the narrow retrofit, split by cost:
+
+    # Free, no model call. Re-runs Stage 5 only.
+    python scripts/apply_report_rules.py --tegs 14,16,18 --restyle-only
+
+    # One model call per TEG, then re-style.
+    python scripts/apply_report_rules.py --tegs 14,16,18
+
+**Re-style picks up anything deterministic** — the standings block, the records appendix, the
+at-a-glance box, the newspaper rail. It must run from the **unstyled** report: `_inject_standings`
+is idempotent and skips text that already has a standings block. Note it also re-injects section
+headings from the plan, so a styled file that was hand-patched away from its plan will snap back.
+
+**The corrections pass** (`authoring.apply_corrections`) is for rules about the prose itself. One
+call, `CORRECTIONS_CONTRACT` + the rule constants, permitting exactly two edits: delete a rank
+claim the ranking rule disallows, expand an ambiguous name or first competition mention.
+Everything else frozen. D3 runs over the output and `new_findings` isolates what the pass
+introduced. The original is preserved as `teg_N_report_{label}_precorrections.md`.
+
+**This is deliberately not `restyle_voice`.** That function's contract holds facts and structure
+literally constant, which is what makes it a one-variable voice A/B; a pass that deletes a claim
+would break that property for every future voice comparison.
+
 ## Where to read
 
 | File | What |
@@ -1073,6 +1099,7 @@ Both render via the `markdown` library with the `extra`/`sane_lists`/`smarty`/`t
 | `prompts.py` | **Shared prompt blocks — the single source of truth for voice and the common rules.** Imported by both pipelines; edit here to change every prompt at once |
 | `story_plan.py` | Stage 3 + the editor system prompt (incl. the vehicle menu) |
 | `authoring.py` | Stage 4 + all writer/lint/tighten system prompts |
+| `authoring.apply_corrections` | **Retrofit pass** — applies `RANKING_RULE`/`NAMING_RULE` to a finished report in one call, two permitted edits only |
 | `round_report.py` | The per-round pipeline and its prompts |
 | `render.py` | Stage 5 — CSS hooks, standings, records block |
 | `verify.py` | **D3** — mechanical verification of a finished report against the data (8 checks, incl. the em-dash ban) |

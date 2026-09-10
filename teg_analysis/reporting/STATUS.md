@@ -36,6 +36,24 @@ Rules are in `prompts.py` and documented in [README.md](README.md) → *Design r
 mechanical D3 check for either new rule yet — a candidate if they turn out to be obeyed
 unreliably, the way `STROKE_INDEX_RULE` is.
 
+**Retrofitting them onto the three reports already on disk** (2026-09-10). `--from voice` cannot
+do it: `restyle_voice` composes `RESTYLE_CONTRACT + voice + WRITER_FAITHFULNESS` and never sees
+`WRITER_CONTRACT`, so the new rules are not in it, and its contract bans removing a fact anyway.
+`--from draft` could not either until now — `scripts/storyline_full_report_experiment.py`'s
+`DRAFT_WRITER_SYSTEM` was a bespoke string rather than built from `prompts.py`, so it went on
+drafting under the old rules; it now imports both constants. The retrofit path is
+`scripts/apply_report_rules.py`: `--restyle-only` is free and picks up the deterministic blocks,
+and the default runs `authoring.apply_corrections` (one call per TEG, two permitted edits) first.
+See [README.md](README.md) → *Retrofitting a new rule onto reports already written*.
+
+**Found while doing it: `teg_16_report_storylinefirst_styled.md` had its section headings one
+section out of step.** The styled file carried the plan's `subject` strings, misaligned — the
+Baker-brothers heading sat over the David Mullin section and vice versa. Re-styling from the plan
+replaces them with `chosen_headline` and puts each heading over its own body. TEG 16 has been
+re-styled; **14 and 18 have not been checked for the same fault.** Three D3 `no_em_dashes`
+warnings remain, all in injected headline and record text, and all pre-existing — the plan's
+headlines carry em-dashes, and so did the `subject` strings they replaced.
+
 The review was cut short at claim 16 of ~60, so the rule list is the four above rather than an
 exhaustive pass. Remaining known content questions from that session, not yet decided: whether
 sub-headlines must match the body they head (TEG 16's line-24 headline is about the Baker
