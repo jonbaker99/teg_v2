@@ -842,3 +842,25 @@ def test_anatomy_facts_carry_no_statistical_vocabulary():
                 assert banned not in blob, f"TEG {teg}: '{banned}' in {blob}"
             for entry in comp["rounds"]:
                 assert "median" not in entry["standing"]
+
+
+def test_bundle_is_json_serialisable_for_every_teg():
+    """The bundle is `json.dumps`d straight into the prompt, so a pandas-derived
+    scalar anywhere in it kills the run.
+
+    `milestone_records.detect_score_count_records` passed `rec["count"]` through
+    as `np.int64`, breaking TEGs 4, 5, 10, 12, 13 and 15 with "Object of type
+    int64 is not JSON serializable". It went unnoticed for months because the
+    only TEGs ever run through the storyline pipeline — 14, 16, 18 — happen to
+    have no score-count records.
+
+    Asserted without `default=`, so this fails if a leak returns, rather than
+    being papered over by `story_plan._json_default`.
+    """
+    import json
+
+    from teg_analysis.reporting.story_plan import assemble_bundle
+
+    for teg in (4, 15, 18):
+        bundle, _ = assemble_bundle(teg, top_n=None)
+        json.dumps(bundle, ensure_ascii=False)

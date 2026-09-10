@@ -16,6 +16,8 @@ from __future__ import annotations
 import json
 from typing import Literal, Optional, Tuple, get_args
 
+import numpy as np
+
 from pydantic import BaseModel, Field
 
 from teg_analysis.reporting.era import trophy_metric
@@ -1193,7 +1195,8 @@ def build_storyline_plan(teg_num: int, mode: str = "balanced", tone: str = "hous
     bundle, events = assemble_bundle(teg_num, mode=mode, tone=tone,
                                      events_cache=events_cache, venue_cache=venue_cache)
     user_message = ("Plan the report for the following TEG. Use ONLY this data.\n\n"
-                    + json.dumps(bundle, indent=2, ensure_ascii=False))
+                    + json.dumps(bundle, indent=2, ensure_ascii=False,
+                                 default=_json_default))
 
     if dry_run:
         path = f"{output_dir()}/teg_{teg_num}_storyline_plan_prompt.md"
@@ -1222,6 +1225,29 @@ def build_storyline_plan(teg_num: int, mode: str = "balanced", tone: str = "hous
 # ---------------------------------------------------------------------------
 # Bundle assembly
 # ---------------------------------------------------------------------------
+def _json_default(o):
+    """Last-resort encoder for the bundle: unwrap numpy scalars to Python types.
+
+    The bundle is assembled from pandas frames by a dozen detectors and context
+    modules, so a stray `np.int64` reaching `json.dumps` is a recurring hazard
+    rather than a one-off — `milestone_records` leaked one that broke 6 of 17
+    TEGs (4, 5, 10, 12, 13, 15) and went unnoticed because the only TEGs ever
+    run through the storyline pipeline (14, 16, 18) happened to be clean.
+
+    Fix leaks at their source; this is here so the next one degrades into a
+    correct prompt rather than killing a multi-TEG run partway through.
+    """
+    if isinstance(o, (np.integer,)):
+        return int(o)
+    if isinstance(o, (np.floating,)):
+        return float(o)
+    if isinstance(o, (np.bool_,)):
+        return bool(o)
+    if isinstance(o, np.ndarray):
+        return o.tolist()
+    raise TypeError(f"Object of type {type(o).__name__} is not JSON serializable")
+
+
 def assemble_bundle(teg_num: int, mode: str = "balanced", tone: str = "house",
                     top_n: Optional[int] = 50,
                     events_cache: Optional[list] = None,
@@ -1502,7 +1528,8 @@ def build_story_plan(teg_num: int, mode: str = "balanced", tone: str = "house",
     bundle, events = assemble_bundle(teg_num, mode=mode, tone=tone,
                                      events_cache=events_cache, venue_cache=venue_cache)
     user_message = ("Plan the report for the following TEG. Use ONLY this data.\n\n"
-                    + json.dumps(bundle, indent=2, ensure_ascii=False))
+                    + json.dumps(bundle, indent=2, ensure_ascii=False,
+                                 default=_json_default))
 
     if dry_run:
         path = f"{output_dir()}/teg_{teg_num}_story_plan_prompt.md"
