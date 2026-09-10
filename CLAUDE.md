@@ -50,7 +50,7 @@ TEG v2 is a golf tournament analysis project with two architectural layers: a le
 | Report/commentary pipeline | `teg_analysis/reporting/README.md` + `STATUS.md` |
 | **Picking up report work in a new chat** | `teg_analysis/reporting/STATUS.md` → **START HERE** (goals, what changed and why, open workstreams) |
 | How do I test/iterate on a report-pipeline element (voice, weights, structure)? | `teg_analysis/reporting/ARTEFACTS.md` |
-| **How do I regenerate a report, or just part of one?** | Development commands below, then `teg_analysis/reporting/README.md` → *Running only the stages you need* |
+| **How do I regenerate a report, or just part of one?** (which stages, what each costs, plan usage vs API) | `teg_analysis/reporting/README.md` → *Running only the stages you need* |
 | Running reports on plan usage vs API billing; model comparisons | `teg_analysis/reporting/README.md` → *Who answers the prompts* |
 | Streamlit internals (frozen) | `streamlit/README.md` |
 
@@ -74,24 +74,10 @@ python -m teg_analysis.reporting.backfill --tegs 14 --paste gpt5  # paste into a
 python -m teg_analysis.reporting.mailbox status                   # prompts waiting
 python -m scripts.export_cowork_kit --tegs 4,14,17 --out DIR # report kit for rewriting outside the pipeline
 
-# Storyline-first reports (TEGs 14/16/18 so far). Three stages, in order:
-#   storylines -> draft -> voice
-#   storylines  decide what the report is about   draft  plain unfunny prose   voice  house style
-# --from = where to START (everything before it is reused from disk)
-# --to   = where to STOP  (nothing after it runs). Only pay for what you're changing.
-python scripts/storyline_full_report_experiment.py --tegs 18                    # all three
-python scripts/storyline_full_report_experiment.py --tegs 18 --to storylines    # just pick subjects, 1 call
-python scripts/storyline_full_report_experiment.py --tegs 18 --to draft         # stop before styling
-python scripts/storyline_full_report_experiment.py --tegs 18 --from draft       # keep storylines, redo the rest
-python scripts/storyline_full_report_experiment.py --tegs 18 --from voice       # just restyle, 1 call
-python scripts/storyline_full_report_experiment.py --tegs 2-6 --to storylines   # what would these be about?
+# Storyline-first reports. Stage flags (--from/--to), costs, recipes:
+#   teg_analysis/reporting/README.md -> "Running only the stages you need"
+python scripts/storyline_full_report_experiment.py --tegs 18
 ```
-
-> **Both report entry points BILL THE API by default.** For claude.ai plan usage: `--plan` on
-> `backfill`, or prefix `TEG_LLM_PROVIDER=agent` on the storyline script (it has no billing flag),
-> then answer the queued prompts with the `teg-report-respond` skill. **`--plan` is billing;
-> `--to storylines` is a pipeline stage** — unrelated, and that stage was called `plan` until the
-> clash was renamed away. `--tegs` takes `14`, `2-18`, `8,9,14` or a mix.
 
 > `--plan` and `--paste` hand each prompt off through `data/llm_mailbox` instead of calling the API; the `teg-report-respond` skill answers `--plan` runs, you answer `--paste` runs by hand. Both can run at once. On the Claude-Code-on-the-web container, install pytest into the same interpreter as the deps: `pip install -r requirements.txt && pip install pytest` — bare `pytest` there is a `uv`-isolated binary that can't see pip-installed deps.
 
@@ -164,12 +150,10 @@ Not a gate to run mechanically — a checklist to think against before calling w
 - `STATUS.md` updated if the change is user-visible or shifts direction.
 - Callers of any renamed or removed function checked; back-compat alias considered explicitly rather than by default.
 - No frontend imports in `teg_analysis/`; no `streamlit/` file touched.
-- **Run only the tests the change could plausibly break, and only when it could break something.** The full suite takes ~4 minutes; running it by reflex wastes the session and is not a substitute for thinking about blast radius.
-  - **Nothing** for docs, comments, to-do notes, or a script's `--help` text. A syntax check or running the command once is the test.
-  - **The relevant test file(s)** for a change scoped to one module or prompt — `python -m pytest tests/test_<thing>.py -q`. Pick by what imports the code you touched, not by habit.
-  - **The full suite only when the blast radius is genuinely wide**: a shared/core module (`io/`, `core/`, `analysis/pipeline.py`, `deps.py`), a signature or schema other modules depend on, a dependency bump, or a merge that pulled in someone else's changes to code you also touched. Merging on its own is not a reason.
-  - **When in doubt, ask** rather than defaulting to the full suite. "This touches `authoring.py` — want the full suite or just its test file?" costs a line; four minutes costs four minutes.
-  - Say what you ran and why you picked it. Never re-run to feel sure. Suite: `python -m pytest tests/ -v` (Claude-Code-on-the-web pytest caveat: see Development commands).
+- **Run only the tests the change could plausibly break.** The full suite takes ~4 minutes; running it by reflex wastes the session and replaces thinking about blast radius.
+  - **Nothing** for docs, comments, to-dos or `--help` text — running the command once is the test. **The relevant test file** for a module- or prompt-scoped change, picked by what imports the code you touched.
+  - **The full suite only for a genuinely wide blast radius**: a shared/core module (`io/`, `core/`, `analysis/pipeline.py`, `deps.py`), a cross-module signature or schema, a dependency bump, or a merge touching code you also changed. **Merging alone is not a reason.** In doubt, ask — a line costs less than four minutes.
+  - Say what you ran and why. Never re-run to feel sure. Suite: `python -m pytest tests/ -v` (web-container pytest caveat: see Development commands).
 
 ## Documentation
 

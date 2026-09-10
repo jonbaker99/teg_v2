@@ -16,62 +16,9 @@
 
 ### Regenerating a report, or just part of one
 
-Three stages, in order: **storylines → draft → voice.** `--from` = where to start (everything before
-is reused from disk), `--to` = where to stop. Only pay for the stages you are changing.
-
-```bash
-python scripts/storyline_full_report_experiment.py --tegs 18                   # all three
-python scripts/storyline_full_report_experiment.py --tegs 18 --to storylines   # pick subjects only, 1 call
-python scripts/storyline_full_report_experiment.py --tegs 18 --from voice      # restyle only, 1 call
-python scripts/storyline_full_report_experiment.py --tegs 2-6 --to storylines  # across several TEGs
-```
-
-Bills the API unless prefixed `TEG_LLM_PROVIDER=agent` (then answer prompts with
-`teg-report-respond`). `--to storylines` is a **stage**; `--plan` on backfill is **billing** — the
-stage was renamed from `plan` because of that clash. Full explanation: [README.md](README.md) →
-*Running only the stages you need*.
-
-
-### Pending: storyline-first reporting is only done for 3 of 17 TEGs (2026-09-08)
-
-**Generate storyline-first reporting for the other 14 TEGs.** Only TEG 14, 16, 18 have
-storyline-first artefacts (`data/commentary/teg_N_storyline_plan.json` +
-`teg_N_report_storylinefirst_styled.md`); the newspaper layout (`/teg-reports-preview`,
-`teg_analysis/reporting/newspaper_edition.py`) can only ever render a TEG that has these. TEGs 2–13,
-15, 17 have never had the storyline-first pipeline run at all — they still only have the older
-`teg_N_report_styled.md`. Run per TEG:
-
-    python scripts/storyline_full_report_experiment.py --tegs N
-
-(`--tegs` takes `2-18` or `8,9,14` too, so the whole backlog is one command; `--to storylines` stops
-after the storyline plan if you want to see what each report would be about before paying for
-prose. A TEG that fails no longer aborts the ones after it.)
-
-**It runs on plan usage too, as of 2026-09-08** — prefix the command with
-`TEG_LLM_PROVIDER=agent` and answer the prompts with the `teg-report-respond` skill, exactly as for
-a `backfill.py --plan` run. The script has no `--plan`/`--paste` flags of its own, but it never
-needed them: `llm.generate_text`/`generate_structured` dispatch on the provider for every call, so
-the env var is the whole mechanism. What blocked it was a provider-blind
-`if not llm.has_api_key(): sys.exit(1)` guard that aborted an `agent` run before its first call,
-despite `has_api_key`'s own docstring saying only the `api` provider needs a key; the guard now
-checks the provider first. Without the env var it is still real Anthropic API billing
-(`ANTHROPIC_API_KEY`/`TEG_ANTHROPIC_API_KEY`). Still explicitly an experiment script (see its own
-docstring) — not wired into `backfill.py` or any production path.
-After a run, `teg_analysis.reporting.newspaper_edition.AVAILABLE_TEGS` (currently hardcoded
-`(14, 16, 18)`) needs the new TEG numbers added, or the preview won't offer them. Not started yet —
-deliberately, no LLM calls until asked for.
-
-**Fixed (2026-09-08): the 14/16/18 desync from PR #95.** That PR (headline/standfirst fields)
-regenerated `teg_{14,16,18}_storyline_plan.json` with fresh LLM-written `subject` text but not the
-paired `_report_storylinefirst_styled.md`, so `newspaper_edition.py`'s exact-string matching broke
-for all three. Patched by hand rather than a full pipeline re-run (cost/time tradeoff, and a re-run
-would re-roll every `subject`/`chosen_headline` again, non-deterministically): the styled markdown's
-`## ` headings were renamed to the new `subject` text for TEG 14 and 16 (same underlying storylines,
-wording only). TEG 18's regeneration had also **dropped** a storyline outright — John Patterson's
-runner-up story — while its article was still in the markdown; his old `DraftedStoryline` entry
-(pre-headline schema, so no `chosen_headline`/`standfirst` — falls back to derivation, same as any
-other pre-2026-09-06 artefact) was copied back into `discovered_storylines` verbatim to restore the
-pairing. All three verified rendering correctly at `/teg-reports-preview`, full suite green.
+Three stages — **storylines → draft → voice**. `--from` picks where to start (everything before is
+reused from disk), `--to` where to stop, so you only pay for what you are changing. Commands, costs
+per stage, and plan-usage vs API: [README.md](README.md) → *Running only the stages you need*.
 
 ### The report build is now documented end to end (2026-09-08)
 
