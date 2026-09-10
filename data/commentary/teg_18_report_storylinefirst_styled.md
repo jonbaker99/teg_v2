@@ -12,7 +12,7 @@
 ## How Alex Baker, owner of three prior Wooden Spoons, led the Trophy from the fifth hole of round one to the last and won by eight
 <!-- storyline: trophy -->
 
-Alex Baker won the Trophy at TEG 18 in Catalonia with 169 Stableford points, eight clear of runner-up John Patterson. It is the second best of his own career. A man who already owns three Wooden Spoons has now led a Trophy from the fifth hole of round one to the last. The record book has no way of registering surprise.
+Alex Baker won the Trophy at TEG 18 in Catalonia with 169 Stableford points, the second best of his own career and eight points better than runner-up John Patterson. A man who already owns three Wooden Spoons has now led a Trophy from the fifth hole of round one to the last. The record book has no way of registering surprise.
 
 The points arrived in bursts, with long dry stretches in between. On the Tour Course in round one he took 17 from holes 8 to 12, three-point bogeys either side of pars at the 10th and 11th, then 13 more over holes 14 to 16, including a birdie at the par-5 15th. His 98 that day was his best gross of the four days on that course, though still six shots adrift of the 92 he had once posted there.
 
