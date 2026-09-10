@@ -382,6 +382,54 @@ obvious fabrication the players will catch.
 """
 
 # ---------------------------------------------------------------------------
+# What a claim has to be worth to appear at all. Added 2026-09-10 after a content
+# review of the TEG 16 report, which opened by calling the winning total "the
+# 16th-highest Trophy total recorded" — a fact that is true, sounds like a
+# distinction, and is not one.
+#
+# Deliberately a SELECTION rule, not a phrasing rule: the failure is choosing to
+# say it, so no amount of rewriting fixes it. Carried by both writers AND both
+# editors, because the editor is who puts the stat in the plan.
+# ---------------------------------------------------------------------------
+RANKING_RULE = """- **A rank has to be worth citing.** Only state where something places if \
+it is in the TOP THREE of the comparison you are making: top 3 all-time in TEG history, \
+top 3 of that player's own career, or top 3 at that course. Everything else is a number \
+with an ordinal stuck on it. "The 16th-highest Trophy total recorded", "his fourth-best \
+round", "the ninth time it has happened" — none of these is a distinction, and dressing a \
+mid-table fact as a ranking is the fastest way to lose an insider reader.
+- This covers every ranked comparison however it is worded: "Nth-best", "Nth-highest", \
+"Nth-lowest", "one of the top N", "in the top ten", "the Nth time". If you cannot say \
+first, second or third, do not rank it. Give the plain number instead, or leave it out.
+- The same threshold applies in the bad direction. Third-worst is worth saying. \
+Sixteenth-worst is not.
+- Firsts and lasts are always worth citing: a record, a personal best, a course best or \
+worst, a first win, a last place. Those are rank 1 by definition."""
+
+
+# ---------------------------------------------------------------------------
+# Naming. Two failures from the same review, both of which leave the reader
+# unable to identify what is being talked about:
+#   - "Baker" in a field containing two Bakers.
+#   - "Stuart Neumann won the Trophy" — which Trophy? Reports are read one at a
+#     time, years apart, out of context.
+# Under CLARITY in VOICE_CORE in spirit, but mechanical enough to be checkable,
+# so it lives here with the other notation rules rather than in the voice.
+# ---------------------------------------------------------------------------
+NAMING_RULE = """- **Never leave a surname ambiguous.** Give every player their FULL name the \
+first time they appear. After that, the bare surname is allowed ONLY if no other player in \
+this TEG's field shares it. Where two or more players do share a surname, the bare surname \
+is never enough on its own: use the full name, or the first name alone. Check the field \
+before you shorten anything, and apply this in headlines and standfirsts as well as in the \
+body. Context does not disambiguate — the reader is scanning.
+- **Name the edition the first time you name a competition.** In the body of the report the \
+first mention of each competition carries the TEG number or the year: "the TEG 16 Trophy" or \
+"the 2023 TEG Trophy", and likewise "the TEG 16 Green Jacket", "the TEG 16 Wooden Spoon". \
+A bare "the Trophy" on first mention tells a reader arriving cold nothing about which one. \
+Every later mention in the same report uses the short form: "the Trophy", "the Jacket", \
+"the Spoon"."""
+
+
+# ---------------------------------------------------------------------------
 # Stroke index. Craft rather than faithfulness, but duplicated in both writers.
 # ---------------------------------------------------------------------------
 STROKE_INDEX_RULE = """- **Stroke index (SI) for hole colour.** Beat hole evidence may include an `si` field. \

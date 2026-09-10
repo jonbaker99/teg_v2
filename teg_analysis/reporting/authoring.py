@@ -563,6 +563,11 @@ WRITER_CONTRACT = "\n".join((
     _WRITER_STRUCTURE,
     prompts.SCORING_REDUNDANCY_RULE,
     prompts.STROKE_INDEX_RULE,
+    # Selection and naming. Both are contract, not voice: a flat, straight report
+    # would still be wrong to call a total "the 16th-highest recorded" or to write
+    # "Baker" in a field containing two of them.
+    prompts.RANKING_RULE,
+    prompts.NAMING_RULE,
     # Readability is not a matter of register. Both of these sat in the voice
     # half until 2026-08-17, so a `voice=` swap dropped the em-dash ban and the
     # 11 economy rules along with the house humour, which is precisely backwards:

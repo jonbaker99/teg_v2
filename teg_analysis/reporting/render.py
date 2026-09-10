@@ -45,10 +45,12 @@ def build_round_standings(teg_num: int) -> dict:
     metric = trophy_metric(teg_num)
     if metric == "net_vs_par":
         trophy_col = "Cumulative_Tournament_Score_NetVP"
+        trophy_round_col = "Round_Score_NetVP"
         trophy_ascending = True
         trophy_fmt = lambda x: _fmt_signed(int(x))
     else:
         trophy_col = "Cumulative_Tournament_Score_Stableford"
+        trophy_round_col = "Round_Score_Stableford"
         trophy_ascending = False
         trophy_fmt = lambda x: str(int(x))
 
@@ -65,12 +67,24 @@ def build_round_standings(teg_num: int) -> dict:
         jacket = rdf.sort_values(["Cumulative_Tournament_Score_Gross", "Pl"],
                                  ascending=[True, True])
 
+        # Cumulative total, with the round's OWN score alongside it. The
+        # standings alone answer "who is winning" but not "who had a good day",
+        # and a reader reconstructing the tournament wants both. Round 1 is the
+        # exception: there the cumulative total IS the round score, so the
+        # bracket would repeat the number it follows.
+        def _entry(r, cum_col, round_col, fmt) -> str:
+            cum = fmt(r[cum_col])
+            if rnd == 1:
+                return f"{r['Pl']} {cum}"
+            return f"{r['Pl']} {cum} (R{rnd}: {fmt(r[round_col])})"
+
         trophy_str = " | ".join(
-            f"{r['Pl']} {trophy_fmt(r[trophy_col])}"
+            _entry(r, trophy_col, trophy_round_col, trophy_fmt)
             for _, r in trophy.iterrows()
         )
         jacket_str = " | ".join(
-            f"{r['Pl']} {_fmt_signed(int(r['Cumulative_Tournament_Score_Gross']))}"
+            _entry(r, "Cumulative_Tournament_Score_Gross", "Round_Score_Gross",
+                   lambda x: _fmt_signed(int(x)))
             for _, r in jacket.iterrows()
         )
         out[rnd] = (

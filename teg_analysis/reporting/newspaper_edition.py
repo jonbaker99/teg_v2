@@ -353,9 +353,12 @@ def _add_runners_up(results: list[dict[str, Any]], standings: list[dict[str, Any
     jacket = _STANDING_ENTRY_RE.findall(final["jacket"])
 
     def line(entry: tuple[str, str] | None, label: str) -> str:
+        """Name only. The score was dropped 2026-09-10: in the rail it is a bare
+        number with no scale attached, and the full table is two inches below
+        it in the appendix."""
         if not entry:
             return ""
-        return f"{label}: {_player_name(entry[0])} ({entry[1]})"
+        return f"{label}: {_player_name(entry[0])}"
 
     by_label = {
         "Trophy Winner": line(trophy[1] if len(trophy) > 1 else None, "Runner-up"),
@@ -498,6 +501,17 @@ def _result_items_html(edition: dict[str, Any]) -> str:
     return "".join(items)
 
 
+# Standings entries carry the round's own score in brackets ("SN 156 (R4: 43)").
+# That belongs in the appendix table, where there is room for it and a reader is
+# reconstructing the tournament. The rail is the compact summary, so it shows
+# cumulative totals only.
+_ROUND_SCORE_BRACKET_RE = re.compile(r"\s*\(R\d+:[^)]*\)")
+
+
+def _totals_only(standings_row: str) -> str:
+    return _ROUND_SCORE_BRACKET_RE.sub("", standings_row)
+
+
 def _rail_html(edition: dict[str, Any]) -> str:
     items = _result_items_html(edition)
     last = edition["standings"][-1]
@@ -505,8 +519,8 @@ def _rail_html(edition: dict[str, Any]) -> str:
         '<aside class="rail">'
         f'<div class="r5"><p class="r5-title">At a glance</p><ul class="r-list">{items}</ul></div>'
         '<div class="rail-standings">'
-        f'<p class="sb-lab">Final &middot; Trophy</p><p class="sb-row">{_esc(last["trophy"])}</p>'
-        f'<p class="sb-lab">Final &middot; Green Jacket</p><p class="sb-row">{_esc(last["jacket"])}</p>'
+        f'<p class="sb-lab">Final &middot; Trophy</p><p class="sb-row">{_esc(_totals_only(last["trophy"]))}</p>'
+        f'<p class="sb-lab">Final &middot; Green Jacket</p><p class="sb-row">{_esc(_totals_only(last["jacket"]))}</p>'
         "</div></aside>"
     )
 

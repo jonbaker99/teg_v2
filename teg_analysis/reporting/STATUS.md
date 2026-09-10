@@ -14,6 +14,36 @@
 
 ## START HERE — picking this up in a new chat (2026-09-08)
 
+### Done (2026-09-10): content-selection and naming rules from the TEG 16 review
+
+A content review of `data/commentary/teg_16_report_storylinefirst_styled.md` (what the report
+chooses to say, not how it reads) produced four changes. All are generalised guidance, not
+per-report patches:
+
+- **`prompts.RANKING_RULE`** — a rank is only cited if it is top 3 (all-time, career, or at that
+  course). Triggered by "It is the 16th-highest Trophy total recorded". Wired into both writers
+  and **both editors** — the editor is who selects the stat.
+- **`prompts.NAMING_RULE`** — full name on first appearance; a bare surname only where the field
+  has no other player with it (two Bakers means "Jon"/"Alex", never "Baker"); and each competition
+  carries its edition on first mention in the body ("the TEG 16 Trophy", not "the Trophy").
+- **`render.build_round_standings`** — standings entries now read `SN 156 (R4: 43)`: cumulative
+  total plus that round's own score. R1 has no bracket (the two are the same number).
+- **`newspaper_edition._add_runners_up`** — the rail's runner-up line is name only, no score. The
+  rail's final-standings row strips the new round-score brackets via `_totals_only`; the appendix
+  table keeps them.
+
+Rules are in `prompts.py` and documented in [README.md](README.md) → *Design rules*. There is no
+mechanical D3 check for either new rule yet — a candidate if they turn out to be obeyed
+unreliably, the way `STROKE_INDEX_RULE` is.
+
+The review was cut short at claim 16 of ~60, so the rule list is the four above rather than an
+exhaustive pass. Remaining known content questions from that session, not yet decided: whether
+sub-headlines must match the body they head (TEG 16's line-24 headline is about the Baker
+brothers, its paragraphs are about David Mullin), and whether stroke index outside SI 1–3 / 16–18
+should ever appear (Jon's ruling: fine occasionally, as long as it is not on every hole — which is
+what `STROKE_INDEX_RULE` already says, so no change made).
+
+
 ### Pending: storyline-first reporting is only done for 3 of 17 TEGs (2026-09-08)
 
 **Generate storyline-first reporting for the other 14 TEGs.** Only TEG 14, 16, 18 have

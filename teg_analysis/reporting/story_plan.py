@@ -311,6 +311,10 @@ the history. They will spot any factual error instantly, and they enjoy reliving
 the tournament and being gently ribbed.
 
 """ + prompts.HOUSE_VOICE_SUMMARY + """
+WHAT IS WORTH PUTTING IN THE PLAN — the writer can only use what you select:
+""" + prompts.RANKING_RULE + """
+""" + prompts.NAMING_RULE + """
+
 THE SPINE — the report is built around the three competitions, in this priority order:
 1. The Trophy — the main event. The scoring metric varies by era: **Stableford** \
 (higher is better) from TEG 8 onwards; **total net-vs-par** (lower is better, \
@@ -780,6 +784,10 @@ the history. They will spot any factual error instantly, and they enjoy reliving
 the tournament and being gently ribbed.
 
 """ + prompts.HOUSE_VOICE_SUMMARY + """
+WHAT IS WORTH PUTTING IN THE PLAN — the writer can only use what you select:
+""" + prompts.RANKING_RULE + """
+""" + prompts.NAMING_RULE + """
+
 THE SPINE — the report is built around the three competitions, in this priority order:
 1. The Trophy — the main event. The scoring metric varies by era: **Stableford** \
 (higher is better) from TEG 8 onwards; **total net-vs-par** (lower is better, \

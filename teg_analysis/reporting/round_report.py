@@ -258,6 +258,10 @@ AUDIENCE: the players themselves — insiders who know each other, the courses, 
 the history. They will spot any factual error instantly.
 
 """ + prompts.HOUSE_VOICE_SUMMARY + """
+WHAT IS WORTH PUTTING IN THE PLAN — the writer can only use what you select:
+""" + prompts.RANKING_RULE + """
+""" + prompts.NAMING_RULE + """
+
 THIS IS A ROUND REPORT, NOT A TOURNAMENT REPORT.
 - The round is ONE day of the tournament: 18 holes, all players.
 - If `is_final_round` is FALSE: the three competitions (Trophy / Green Jacket / \
@@ -507,6 +511,8 @@ ROUND_WRITER_SYSTEM = "\n".join((
     # explicitly here rather than riding along with the principles.
     prompts.SCORING_REDUNDANCY_RULE,
     prompts.STROKE_INDEX_RULE,
+    prompts.RANKING_RULE,
+    prompts.NAMING_RULE,
     _ROUND_WRITER_RULES,
 ))
 
