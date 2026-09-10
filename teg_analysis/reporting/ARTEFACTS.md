@@ -66,13 +66,13 @@ Everything else in `data/commentary/` is a snapshot or an experiment — see the
 ## The storyline-first files
 
 A parallel set, written only for **TEGs 14, 16 and 18** by
-`scripts/storyline_full_report_experiment.py --teg N`. It never writes `report_final.md` or
+`scripts/storyline_full_report_experiment.py --tegs N`. It never writes `report_final.md` or
 `report_styled.md`, so the two chains cannot collide.
 
 | File | What it is | Made by | Read by |
 |---|---|---|---|
 | `teg_N_storyline_plan.json` | **The storyline plan.** 3 mandatory anatomy storylines (trophy / jacket / spoon) + 0–3 discovered, each with `subject`, `chosen_headline`, `standfirst`, `beat_ids`, `compelling_score`, `humour_score`. A leaner sibling of `StoryPlan` — no `rounds[]`, no `players[]` | `build_storyline_plan()` (LLM) | the draft stage; `build_edition` |
-| `teg_N_report_storylinedraft.md` | **One plain section per storyline.** Fact-isolated, explicitly told not to be funny or stylish. **Start any voice or tone A/B from this file**, never from a styled report — `--from voice` does exactly that, reusing this file and re-running the voice pass alone | one LLM call per storyline | the voice pass |
+| `teg_N_report_storylinedraft.md` | **One plain section per storyline.** Each drafted from that storyline's own cited beats plus scoped context — venue, and its own players' career and course history. **This is the stage where course/history colour enters the prose**; there is no separate enrichment step. Explicitly told not to be funny or stylish. **Start any voice or tone A/B from this file**, never from a styled report — `--from voice` does exactly that, reusing this file and re-running the voice pass alone | one LLM call per storyline | the voice pass |
 | `teg_N_report_storylinefirst.md` | The same draft in the house voice (`WRITER_VOICE`, via `restyle_voice`). D3-verified, with `new_findings` isolating faults this pass introduced | `restyle_voice()` (LLM) | the styler |
 | `teg_N_report_storylinefirst_styled.md` | **What the newspaper edition parses** — the voiced report plus standings, records and CSS hooks | `style_text()` (code, free) | `newspaper_edition.build_edition` |
 

@@ -11,7 +11,7 @@ Full detail — including the report-by-report inventory and pipeline vintages �
 
 **Decisions (blocking — do these first):**
 
-- [x] **Storyline-first reports** — **shipped** (PR #93, 2026-08/09), not "not started" as this line said until 2026-09-08. `StorylinePlan` + `build_storyline_plan` in `story_plan.py`; the three-stage run is `scripts/storyline_full_report_experiment.py --teg N`; artefacts exist for TEGs 14, 16 and 18. Record: [`reporting/STORYLINE_PLAN.md`](reporting/STORYLINE_PLAN.md). Route map: `DATA_FLOW.md` §10.
+- [x] **Storyline-first reports** — **shipped** (PR #93, 2026-08/09), not "not started" as this line said until 2026-09-08. `StorylinePlan` + `build_storyline_plan` in `story_plan.py`; the three-stage run is `scripts/storyline_full_report_experiment.py --tegs N`; artefacts exist for TEGs 14, 16 and 18. Record: [`reporting/STORYLINE_PLAN.md`](reporting/STORYLINE_PLAN.md). Route map: `DATA_FLOW.md` §10.
 - [ ] **Decide storyline-first's status** — it is still script-driven and outside `backfill.py`, so the production path for all 17 TEGs remains the five-stage chain while the settled newspaper layout is built on storyline-first output that only 3 TEGs have. Either promote it into `backfill.py` and generate the other 14, or decide the two coexist. Blocks the `/teg-reports` switch-over (`webapp/TODOS.md`).
 - [x] **Settle the humour dial** — done 2026-08-15. Jon's verdict: "lacking a bit in humour". `humour6` (5-7 comic landings) folded into `prompts.VOICE_CORE`, along with an outright em-dash ban and a ~15-word average sentence target. **Still needs one from-scratch generation to validate** — the dial variants on disk were rewrites of finished reports, not cold generations.
 - [ ] **Generate one TEG cold under the new voice and read it** (~$0.65) — validates humour6 + the em-dash ban end to end. Blocks the full regeneration.
@@ -23,6 +23,8 @@ Full detail — including the report-by-report inventory and pipeline vintages �
   - `--from plan` (default) is the full 7-call run, unchanged.
 
   Verified by provider hand-off rather than by spending calls: under `TEG_LLM_PROVIDER=agent`, `--from voice` raises only the `restyle` request and `--from draft` raises a section-draft request first, neither preceded by a `storyline_plan` request.
+
+  **`--to` and `--tegs` followed (2026-09-10).** `--to {plan,draft,voice}` bounds the other end, so `--to plan` stops after the storyline plan — one call, for deciding what a report is about before spending anything on prose. `--no-voice` stays as a deprecated alias for `--to draft`. `--tegs` now takes the same spec as `backfill` (`14`, `2-18`, `8,9,14`), reusing `backfill.parse_teg_spec` rather than a second parser, and a TEG that fails no longer discards the ones already paid for.
 
 **Then:**
 
