@@ -145,7 +145,10 @@ def detect_score_count_records(teg_num: int, df: Optional[pd.DataFrame] = None) 
             "type": "score_count_record",
             "score_type": rec["score_type"],
             "player": player,
-            "count": rec["count"],
+            # int() not because it is pretty, but because this value is pandas-derived
+            # (np.int64) and the bundle is json.dumps()d into the prompt. See the
+            # `"count": int` contract in this function's docstring.
+            "count": int(rec["count"]),
             "summary_fact": (
                 f"{player} recorded {rec['count']} {label} in "
                 f"TEG {teg_num} — an all-time TEG record"
