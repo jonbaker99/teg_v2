@@ -673,6 +673,32 @@ call, no cost.**
      pages older than the artefacts three times in a week. Served at `/report-layouts/`. **`editions.json` feeds only the
      prototypes** — the live route calls `build_edition` directly and never reads it.
 
+6. **Choose which stories are printed** — optional, and applied last.
+   Every plan carries three **mandatory** storylines (trophy, jacket, spoon), populated *"regardless
+   of how good you judge them to be"*, plus 0–3 discovered. So a weak article is not a fault: the
+   editor was told to write it. `ArticleFilter` is the lever for not *printing* it.
+
+   ```bash
+   # try a policy — writes filtered pages, and names what it left out
+   python -m scripts.build_newspaper_edition --min-compelling 7 --min-humour 5
+   python -m scripts.build_newspaper_edition --min-compelling 8 --match any --min-combined 14
+   python -m scripts.build_newspaper_edition          # no flags: back to printing everything
+   ```
+
+   `--match all` (default) needs both floors, `--match any` needs either, and `--min-combined`
+   rescues a lopsided piece — a 9-humour/5-compelling story survives a compelling floor of 7.
+   **The lead is never dropped**, whatever it scores: the renderer requires one and a tournament
+   always has a winner.
+
+   Filtering is **presentation only, applied at edition-build time**. The plan, the draft and the
+   styled markdown still contain every storyline — a dropped story is still on disk and returns by
+   moving a threshold, not by regenerating anything. Dropped ones come back under
+   `edition["dropped_articles"]` so the CLI can name them, and `for_page()` strips that before
+   serialising so the pages never carry text they don't show.
+
+   Settled on a policy? Set `DEFAULT_ARTICLE_FILTER` in `newspaper_edition.py` — one constant, and
+   the webapp preview picks it up too. The flags exist to try a policy before committing to it.
+
    Design record for the layout itself — chosen elements, composition rule, mobile evidence:
    `webapp/report_layout_prototypes/README.md`.
 

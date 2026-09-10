@@ -155,3 +155,63 @@ def test_an_anchor_past_the_end_of_the_plan_degrades():
     plan = _plan()
     matches = _resolve_section("Matches nothing", "<!-- storyline: d9 -->", plan)
     assert matches == [_degraded_storyline("Matches nothing")]
+
+
+# ---------------------------------------------------------------------------
+# ArticleFilter — which stories make the paper. Presentation only: nothing on
+# disk changes, and a dropped story returns by moving a threshold.
+# ---------------------------------------------------------------------------
+def _scored(compelling, humour, is_lead=False):
+    return {"headline": "x", "compelling": compelling, "humour": humour,
+            "is_lead": is_lead, "kicker": "SIDEBAR"}
+
+
+def test_default_filter_prints_everything():
+    """The default must be a no-op, or adding the filter silently changed reports."""
+    from teg_analysis.reporting.newspaper_edition import KEEP_EVERYTHING, filter_articles
+
+    articles = [_scored(0, 0), _scored(3, 1), _scored(10, 10)]
+    kept, dropped = filter_articles(articles, KEEP_EVERYTHING)
+    assert len(kept) == 3 and dropped == []
+
+
+def test_match_all_requires_both_floors_and_any_requires_either():
+    from teg_analysis.reporting.newspaper_edition import ArticleFilter, filter_articles
+
+    articles = [_scored(9, 2), _scored(2, 9), _scored(9, 9)]
+
+    kept, _ = filter_articles(articles, ArticleFilter(8, 8, match="all"))
+    assert [(a["compelling"], a["humour"]) for a in kept] == [(9, 9)]
+
+    kept, _ = filter_articles(articles, ArticleFilter(8, 8, match="any"))
+    assert [(a["compelling"], a["humour"]) for a in kept] == [(9, 2), (2, 9), (9, 9)]
+
+
+def test_min_combined_rescues_a_lopsided_scored():
+    """A very funny but less compelling piece should survive a compelling floor."""
+    from teg_analysis.reporting.newspaper_edition import ArticleFilter, filter_articles
+
+    lopsided = _scored(5, 9)
+    kept, dropped = filter_articles([lopsided], ArticleFilter(min_compelling=7))
+    assert dropped == [lopsided]
+
+    kept, dropped = filter_articles([lopsided], ArticleFilter(min_compelling=7, min_combined=13))
+    assert kept == [lopsided] and dropped == []
+
+
+def test_the_lead_is_never_dropped():
+    """`render_desktop_html` requires a lead, and a tournament always has a winner."""
+    from teg_analysis.reporting.newspaper_edition import ArticleFilter, filter_articles
+
+    lead = _scored(1, 1, is_lead=True)
+    kept, dropped = filter_articles([lead, _scored(1, 1)], ArticleFilter(10, 10))
+    assert kept == [lead] and len(dropped) == 1
+
+
+def test_dropped_articles_never_reach_the_page():
+    """Otherwise every page carries the text of stories deliberately not shown."""
+    from teg_analysis.reporting.newspaper_edition import for_page
+
+    edition = {"teg": 14, "articles": [], "dropped_articles": [_scored(1, 1)]}
+    assert "dropped_articles" not in for_page(edition)
+    assert for_page(edition)["teg"] == 14
