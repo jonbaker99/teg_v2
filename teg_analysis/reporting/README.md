@@ -869,6 +869,15 @@ html = render_desktop_html(edition)  # what /teg-reports-preview serves
 
 ### Who answers the prompts — the API, a Claude Code session, or you
 
+> **Two different things are called "plan", and confusing them costs money.**
+> **`--plan`** (and `TEG_LLM_PROVIDER`) is about **billing** — who answers the prompts.
+> **`--to plan` / `--from plan`** on the storyline script is a **pipeline stage** — the storyline
+> plan, the editorial decision about what the report is about. They are unrelated.
+> `--tegs 2-6 --to plan` still bills the API unless you also ask for plan usage.
+>
+> **Both entry points bill the API unless told otherwise.** `backfill.py`'s epilog claimed the
+> opposite until 2026-09-10; it was wrong, and `llm.DEFAULT_PROVIDER` has always been `api`.
+
 Every model call goes through `llm.generate_text` / `llm.generate_structured`, and
 those dispatch on a **provider**. Three ways to run, one flag each:
 

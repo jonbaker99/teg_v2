@@ -229,8 +229,10 @@ def main(argv=None) -> int:
     p = argparse.ArgumentParser(
         prog="python -m teg_analysis.reporting.backfill",
         description="Generate tournament and round reports.",
-        epilog="Runs on claude.ai plan usage by default (prompts hand off through "
-               "data/llm_mailbox). Pass --provider api to spend API credit instead.",
+        epilog="BILLS THE ANTHROPIC API BY DEFAULT. Pass --plan to run on claude.ai "
+               "plan usage instead (prompts hand off through data/llm_mailbox for a "
+               "Claude Code session to answer). Note --plan is about BILLING and is "
+               "unrelated to the storyline script's --to plan, which is a pipeline stage.",
     )
     p.add_argument("--tegs", required=True,
                    help="which TEGs: 14, 2-18, or 8,9,14")
