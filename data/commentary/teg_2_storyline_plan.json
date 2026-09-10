@@ -1,0 +1,181 @@
+{
+  "title": "The Book Was Thin, And Mullin Rewrote It Twice",
+  "title_candidates": [
+    "The Book Was Thin, And Mullin Rewrote It Twice",
+    "Baker Leads By Seven, Loses By Seven",
+    "The 14th At Boavista Will See You Now",
+    "Order Restored On The Third Morning"
+  ],
+  "theme": "TEG's first trip abroad, on a course nobody had seen and with a record book barely one tournament thick: Boavista's closing holes mugged the entire field, and David Mullin was the one man who kept his footing — going round better than anyone in TEG history had managed, and then doing it again.",
+  "tone": "house",
+  "opening_hook": "Open at the 11th hole of R2, with Jon Baker seven clear and the TEG 2 Trophy apparently settled, then cut straight to David Mullin's -2 in R3 — the climax matters far more than the build-up, and the collapse in between is the whole story.",
+  "narrative_vehicles": [
+    "dual_narrative",
+    "motif",
+    "ensemble"
+  ],
+  "competitions": [
+    {
+      "name": "Trophy (Net VP)",
+      "winner_or_loser": "David Mullin"
+    },
+    {
+      "name": "Green Jacket (Gross)",
+      "winner_or_loser": "David Mullin"
+    },
+    {
+      "name": "Wooden Spoon",
+      "winner_or_loser": "Henry Meller"
+    }
+  ],
+  "trophy_storyline": {
+    "subject": "How David Mullin won the TEG 2 Trophy: two record rounds either side of a wobble, while Jon Baker's seven-shot lead evaporated in five holes",
+    "why_it_matters": "The Trophy changed hands twice and was effectively settled by the third hole of the final round, and the winning margin ended up exactly the size of the lead Baker once held.",
+    "shape": "Setup: Mullin opens with a level-par net round, the best round in TEG history to date (b30) off the best gross round in TEG history to date (b31), and leads by four — then hands it all back over the last three holes of R2, dropping ten shots without a net par and signing for an 8 at the 18th (b25, b26, b45, b06), while Baker, who led by seven inside that round, posts the +1 of b03 and goes three clear overnight (b41), even after bleeding 13 shots from the 15th with quadruple bogeys at the 17th and 18th (b16, b36, b33). Turn: Baker then loses 12 shots over the first five holes of R3 without a net par among them (b29, b32), Mullin takes the lead outright at the 3rd, and it is never seriously in question again. Resolution: Mullin's -2 and +18 gross are the best round and the best gross round in TEG history to date (b04, b05), Baker adds an 8 at the 15th (b20), and the Trophy is Mullin's at +6 by seven (b02, b46).",
+    "beat_ids": [
+      "b02",
+      "b30",
+      "b31",
+      "b06",
+      "b25",
+      "b26",
+      "b45",
+      "b41",
+      "b03",
+      "b43",
+      "b49",
+      "b16",
+      "b33",
+      "b36",
+      "b29",
+      "b32",
+      "b20",
+      "b04",
+      "b05",
+      "b46"
+    ],
+    "headline_candidates": [
+      "Mullin Breaks His Own Record To Win",
+      "Baker Leads By Seven, Loses By Seven",
+      "Five Holes Cost Baker The Trophy"
+    ],
+    "chosen_headline": "Mullin Breaks His Own Record To Win",
+    "standfirst": "Jon Baker was seven clear inside the second round and three clear overnight, and then dropped twelve shots in the first five holes of the final round at Boavista.",
+    "compelling_score": 9,
+    "humour_score": 5
+  },
+  "jacket_storyline": {
+    "subject": "David Mullin's gross procession to the TEG 2 Green Jacket, and Stuart Neumann's chase from nine behind, then eight, then eleven",
+    "why_it_matters": "It is the one competition nobody ever threatened — Mullin led the gross after every round and won by eleven — and the man who finished closest had two 8s at the same par three to account for.",
+    "shape": "Setup: Mullin's +20 in R1 is the best gross round in TEG history to date (b31) and puts him nine clear, with Stuart Neumann's +29 the nearest thing to a reply (b08) and Neumann's +11 net the third-best round in TEG history to date (b12) — a round that already contained a quintuple-bogey 8 at the 14th and 14 shots lost from the 13th to the 17th (b18, b34, b35). Turn: R2 is the only opening of the tournament, Neumann's +27 (b24) beating Mullin's +28 (b06), but another 8 at the 14th (b09) means the gap closes only to eight. Resolution: Mullin's +18 in R3 is the best gross round in TEG history to date (b05), Neumann steadies himself with a birdie at the 11th (b22) and still finishes eleven adrift as the Jacket goes to Mullin at +66 (b07).",
+    "beat_ids": [
+      "b07",
+      "b31",
+      "b05",
+      "b06",
+      "b08",
+      "b24",
+      "b12",
+      "b09",
+      "b18",
+      "b34",
+      "b35",
+      "b22"
+    ],
+    "headline_candidates": [
+      "Mullin Owns The Gross From Round One",
+      "Neumann Chases, The 14th Interrupts",
+      "Eleven Clear And Never Threatened"
+    ],
+    "chosen_headline": "Mullin Owns The Gross From Round One",
+    "standfirst": "Stuart Neumann posted two rounds good enough to rank among the best gross scores in TEG history to date and still lost the TEG 2 Green Jacket by eleven shots.",
+    "compelling_score": 6,
+    "humour_score": 4
+  },
+  "spoon_storyline": {
+    "subject": "Henry Meller was bottom of the field from the third hole of R1 and never moved, then produced his best golf a day too late",
+    "why_it_matters": "Meller was last in the field in two of the three rounds and finished 12 adrift of Gregg Williams, the next worst, before improving by eleven shots in a final round that changed nothing whatsoever.",
+    "shape": "Setup: Meller drops to the bottom of the TEG 2 Wooden Spoon race at the 3rd hole of the opening round and stays there, bleeding 20 shots between the 11th and the 15th with not one net par among them and an 8 at the par-three 14th inside it (b21, b27, b50). Turn: R2 brings no change of position, and then in R3 he goes round in +20 gross — the second-best gross round in TEG history to date (b01) — an eleven-shot improvement in net terms (b14), opened with a birdie at the 5th and a par at the 6th (b17). Resolution: it lifts him to second in the field for the day and not one place in the standings; the Spoon is his at +39, twelve clear of Williams (b19).",
+    "beat_ids": [
+      "b19",
+      "b21",
+      "b27",
+      "b50",
+      "b01",
+      "b14",
+      "b17"
+    ],
+    "headline_candidates": [
+      "Meller Finds His Game, Keeps The Spoon",
+      "The Spoon Was Sealed By The Third Hole",
+      "Too Late, Meller Plays Like That"
+    ],
+    "chosen_headline": "Meller Finds His Game, Keeps The Spoon",
+    "standfirst": "Bottom of the pile from the third hole of the opening round, Henry Meller answered with one of the best gross rounds in TEG history to date and lost the TEG 2 Wooden Spoon by twelve anyway.",
+    "compelling_score": 8,
+    "humour_score": 8
+  },
+  "discovered_storylines": [
+    {
+      "subject": "The par-three 14th at Boavista collected an 8 or worse from three different players in R1, then took another 8 off Stuart Neumann in R2",
+      "why_it_matters": "One short hole accounts for four of the tournament's biggest single-hole disasters, and it sits in the middle of the stretch where nearly every round in the field came apart.",
+      "shape": "Setup: in R1 the 14th, a par three, hands Gregg Williams a sextuple-bogey 9 (b11), Stuart Neumann an 8 (b18) and Henry Meller an 8 (b50) — one hole, one afternoon, three separate methods. Turn: each of those numbers sits inside a larger haemorrhage, Williams dropping 22 shots from the 12th to the 18th (b13, b47), Meller 20 between the 11th and 15th (b21, b27) and Neumann 14 between the 13th and 17th (b34, b35). Resolution: R2 brings the sequel, Neumann making 8 at the 14th all over again (b09), after which some understanding is apparently reached — R3 passes with no recorded blow-up there at all.",
+      "beat_ids": [
+        "b11",
+        "b18",
+        "b50",
+        "b09",
+        "b13",
+        "b47",
+        "b21",
+        "b27",
+        "b34",
+        "b35"
+      ],
+      "headline_candidates": [
+        "One Par Three, Four Disasters",
+        "The 14th Collects Its Toll",
+        "Boavista's Shortest Hole, Biggest Numbers"
+      ],
+      "chosen_headline": "One Par Three, Four Disasters",
+      "standfirst": "Gregg Williams took nine at Boavista's 14th, Stuart Neumann and Henry Meller took eight apiece, and Neumann came back the following day for another.",
+      "compelling_score": 8,
+      "humour_score": 9
+    },
+    {
+      "subject": "Gregg Williams's tournament measured in nines: one at the 14th, one at the 17th and one at the 12th, spread across R1 and R3",
+      "why_it_matters": "Williams was the next-worst in the field, twelve clear of the Spoon, and his tournament is best understood one hole at a time: three 9s, an 8, and a 22-shot collapse over the closing seven holes of R1 to house them.",
+      "shape": "Setup: Williams plays the last seven holes of R1 in 22 dropped shots (b13), a sextuple-bogey 9 at the par-three 14th (b11) followed three holes later by a quintuple-bogey 9 at the 17th — stroke index 17, one of the easiest holes on the course (b15, b47). Turn: R2 offers variation rather than a cure, a 7 at the 6th (b48), 13 shots gone between the 11th and the 15th without a net par (b23, b37), and an 8 at the last (b42). Resolution: R3 is comfortably his best round of the three and still contains a 9 at the 12th, stroke index 3 (b10); by then the only live question was whether he would finish above Meller, and he did, by twelve.",
+      "beat_ids": [
+        "b13",
+        "b11",
+        "b15",
+        "b47",
+        "b48",
+        "b23",
+        "b37",
+        "b42",
+        "b10"
+      ],
+      "headline_candidates": [
+        "Williams Signs For Three Nines",
+        "Nine At The Easiest Hole On The Course",
+        "A Catalogue Of Fives Dropped At Once"
+      ],
+      "chosen_headline": "Williams Signs For Three Nines",
+      "standfirst": "One at a par three, one at stroke index 17, one at stroke index 3: Gregg Williams spent three days at Boavista finding new places to drop five shots in a single hole.",
+      "compelling_score": 7,
+      "humour_score": 8
+    }
+  ],
+  "body_fallback": "none",
+  "prominent_vehicle": "dual_narrative",
+  "prominent_palette": "records",
+  "vehicle_fit_response": {
+    "top_scored_vehicle": "redemption_arc",
+    "taken_up": false,
+    "note": "Both cited redemptions are real but already housed elsewhere — Mullin's poor-R2-into-strong-R3 IS the Trophy's turn, and Meller's R3 is the punchline of the Spoon — so the two-man Trophy swing and the 14th carried more as frames."
+  },
+  "why_the_champion_won": "Mullin built it: best in the field in R1 and again in R3, the two best rounds in TEG history to date, and although his R2 sagged by ten shots over the closing three holes, Baker gave back more still — twelve dropped in the first five holes of R3 — and even an ordinary round from Baker instead of his worst would still have lost.",
+  "storyline_note": ""
+}
